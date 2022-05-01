@@ -1,6 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -273,16 +272,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 创建StrBuilder对象
-	 *
-	 * @return StrBuilder对象
-	 * @since 4.0.1
-	 */
-	public static StrBuilder strBuilder() {
-		return StrBuilder.create();
-	}
-
-	/**
 	 * 创建StringBuilder对象
 	 *
 	 * @param capacity 初始大小
@@ -290,17 +279,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static StringBuilder builder(final int capacity) {
 		return new StringBuilder(capacity);
-	}
-
-	/**
-	 * 创建StrBuilder对象
-	 *
-	 * @param capacity 初始大小
-	 * @return StrBuilder对象
-	 * @since 4.0.1
-	 */
-	public static StrBuilder strBuilder(final int capacity) {
-		return StrBuilder.create(capacity);
 	}
 
 	/**
@@ -410,17 +388,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String similar(final String str1, final String str2, final int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
-	}
-
-	/**
-	 * 生成随机UUID
-	 *
-	 * @return UUID字符串
-	 * @see IdUtil#randomUUID()
-	 * @since 4.0.10
-	 */
-	public static String uuid() {
-		return IdUtil.randomUUID();
 	}
 
 	/**

@@ -1,8 +1,8 @@
 package cn.hutool.extra.aop;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.extra.aop.aspects.Aspect;
 import cn.hutool.extra.aop.proxy.ProxyFactory;
-import cn.hutool.core.reflect.ClassUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -69,6 +69,6 @@ public final class ProxyUtil {
 	 * @return 代理类
 	 */
 	public static <T> T newProxyInstance(final InvocationHandler invocationHandler, final Class<?>... interfaces) {
-		return newProxyInstance(ClassUtil.getClassLoader(), invocationHandler, interfaces);
+		return newProxyInstance(ClassLoaderUtil.getClassLoader(), invocationHandler, interfaces);
 	}
 }

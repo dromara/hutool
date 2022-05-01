@@ -1,6 +1,5 @@
 package cn.hutool.core.text.escape;
 
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.replacer.StrReplacer;
 import cn.hutool.core.util.CharUtil;
 
@@ -14,7 +13,7 @@ public class NumericEntityUnescaper extends StrReplacer {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
 		final int len = str.length();
 		// 检查以确保以&#开头
 		if (str.charAt(pos) == '&' && pos < len - 2 && str.charAt(pos + 1) == '#') {

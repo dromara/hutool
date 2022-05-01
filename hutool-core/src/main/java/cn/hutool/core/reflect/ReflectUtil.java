@@ -392,7 +392,6 @@ public class ReflectUtil {
 
 	/**
 	 * 获得指定类过滤后的Public方法列表<br>
-	 * TODO 6.x此方法更改返回Method[]
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器

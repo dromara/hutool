@@ -4191,16 +4191,6 @@ public class CharSequenceUtil {
 		return sb;
 	}
 
-	/**
-	 * 创建StrBuilder对象
-	 *
-	 * @param strs 初始字符串列表
-	 * @return StrBuilder对象
-	 */
-	public static StrBuilder strBuilder(final CharSequence... strs) {
-		return StrBuilder.create(strs);
-	}
-
 	// ------------------------------------------------------------------------ getter and setter
 
 	/**

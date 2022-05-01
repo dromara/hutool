@@ -1,7 +1,6 @@
 package cn.hutool.core.text.replacer;
 
 import cn.hutool.core.lang.Chain;
-import cn.hutool.core.text.StrBuilder;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,7 +41,7 @@ public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, Rep
 	}
 
 	@Override
-	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
 		int consumed = 0;
 		for (final StrReplacer strReplacer : replacers) {
 			consumed = strReplacer.replace(str, pos, out);

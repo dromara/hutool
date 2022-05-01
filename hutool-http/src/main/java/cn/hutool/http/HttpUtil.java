@@ -667,7 +667,7 @@ public class HttpUtil {
 		}
 
 		// 始终有参数
-		final StrBuilder urlBuilder = StrBuilder.create(url.length() + queryString.length() + 16);
+		final StringBuilder urlBuilder = new StringBuilder(url.length() + queryString.length() + 16);
 		final int qmIndex = url.indexOf('?');
 		if (qmIndex > 0) {
 			// 原URL带参数，则对这部分参数单独编码（如果选项为进行编码）

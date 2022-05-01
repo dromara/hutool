@@ -1,8 +1,8 @@
 package cn.hutool.extra.template.engine.freemarker;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
@@ -99,7 +99,7 @@ public class FreemarkerEngine implements TemplateEngine {
 
 		switch (config.getResourceMode()) {
 			case CLASSPATH:
-				cfg.setTemplateLoader(new ClassTemplateLoader(ClassUtil.getClassLoader(), config.getPath()));
+				cfg.setTemplateLoader(new ClassTemplateLoader(ClassLoaderUtil.getClassLoader(), config.getPath()));
 				break;
 			case FILE:
 				try {

@@ -1,7 +1,5 @@
 package cn.hutool.core.text.replacer;
 
-import cn.hutool.core.text.StrBuilder;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,7 +49,7 @@ public class LookupReplacer extends StrReplacer {
 	}
 
 	@Override
-	protected int replace(final CharSequence str, final int pos, final StrBuilder out) {
+	protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
 		if (prefixSet.contains(str.charAt(pos))) {
 			int max = this.maxLength;
 			if (pos + this.maxLength > str.length()) {

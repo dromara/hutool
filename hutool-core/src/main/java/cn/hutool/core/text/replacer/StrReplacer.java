@@ -1,7 +1,6 @@
 package cn.hutool.core.text.replacer;
 
 import cn.hutool.core.lang.func.Replacer;
-import cn.hutool.core.text.StrBuilder;
 
 import java.io.Serializable;
 
@@ -23,12 +22,12 @@ public abstract class StrReplacer implements Replacer<CharSequence>, Serializabl
 	 * @param out 输出
 	 * @return 处理的原字符串长度，0表示跳过此字符
 	 */
-	protected abstract int replace(CharSequence str, int pos, StrBuilder out);
+	protected abstract int replace(CharSequence str, int pos, StringBuilder out);
 
 	@Override
 	public CharSequence replace(final CharSequence t) {
 		final int len = t.length();
-		final StrBuilder builder = StrBuilder.create(len);
+		final StringBuilder builder = new StringBuilder(len);
 		int pos = 0;//当前位置
 		int consumed;//处理过的字符数
 		while (pos < len) {

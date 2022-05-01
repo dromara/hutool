@@ -12,13 +12,15 @@ import java.io.Writer;
  */
 public final class FastStringWriter extends Writer {
 
-	private final StrBuilder builder;
+	private static final int DEFAULT_CAPACITY = 16;
+
+	private final StringBuilder builder;
 
 	/**
 	 * 构造
 	 */
 	public FastStringWriter() {
-		this(StrBuilder.DEFAULT_CAPACITY);
+		this(DEFAULT_CAPACITY);
 	}
 
 	/**
@@ -28,9 +30,9 @@ public final class FastStringWriter extends Writer {
 	 */
 	public FastStringWriter(int initialSize) {
 		if (initialSize < 0) {
-			initialSize = StrBuilder.DEFAULT_CAPACITY;
+			initialSize = DEFAULT_CAPACITY;
 		}
-		this.builder = new StrBuilder(initialSize);
+		this.builder = new StringBuilder(initialSize);
 	}
 
 
