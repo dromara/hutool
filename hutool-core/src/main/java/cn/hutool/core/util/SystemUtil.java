@@ -144,4 +144,13 @@ public class SystemUtil {
 			System.setProperty(key, value);
 		}
 	}
+
+	/**
+	 * 获得Java ClassPath路径，不包括 jre
+	 *
+	 * @return Java ClassPath路径，不包括 jre
+	 */
+	public static String[] getJavaClassPaths() {
+		return get("java.class.path").split(get("path.separator"));
+	}
 }

@@ -8,9 +8,10 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
-import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -279,7 +280,7 @@ public class ClassScanner implements Serializable {
 	 * 扫描Java指定的ClassPath路径
 	 */
 	private void scanJavaClassPaths() {
-		final String[] javaClassPaths = ClassUtil.getJavaClassPaths();
+		final String[] javaClassPaths = SystemUtil.getJavaClassPaths();
 		for (String classPath : javaClassPaths) {
 			// bug修复，由于路径中空格和中文导致的Jar找不到
 			classPath = URLDecoder.decode(classPath, CharsetUtil.defaultCharset());

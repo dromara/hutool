@@ -2,9 +2,8 @@ package cn.hutool.core.classloader;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class JarClassLoader extends URLClassLoader {
 	 */
 	public static void loadJar(final URLClassLoader loader, final File jarFile) throws UtilException {
 		try {
-			final Method method = ClassUtil.getDeclaredMethod(URLClassLoader.class, "addURL", URL.class);
+			final Method method = ReflectUtil.getMethod(URLClassLoader.class, "addURL", URL.class);
 			if (null != method) {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
@@ -94,7 +93,7 @@ public class JarClassLoader extends URLClassLoader {
 	 * @param urls 被加载的URL
 	 */
 	public JarClassLoader(final URL[] urls) {
-		super(urls, ClassUtil.getClassLoader());
+		super(urls, ClassLoaderUtil.getClassLoader());
 	}
 
 	/**

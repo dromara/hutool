@@ -1,11 +1,11 @@
 package cn.hutool.core.io.resource;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.net.URL;
 
@@ -69,7 +69,7 @@ public class ClassPathResource extends UrlResource {
 		this.path = path;
 		this.name = StrUtil.isBlank(path) ? null : FileUtil.getName(path);
 
-		this.classLoader = ObjUtil.defaultIfNull(classLoader, ClassUtil::getClassLoader);
+		this.classLoader = ObjUtil.defaultIfNull(classLoader, ClassLoaderUtil::getClassLoader);
 		this.clazz = clazz;
 		initUrl();
 	}

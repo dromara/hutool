@@ -396,26 +396,19 @@ public class ReflectUtil {
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器
-	 * @return 过滤后的方法列表
+	 * @return 过滤后的方法数组
 	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final Filter<Method> filter) {
+	public static Method[] getPublicMethods(final Class<?> clazz, final Filter<Method> filter) {
 		if (null == clazz) {
 			return null;
 		}
 
 		final Method[] methods = getPublicMethods(clazz);
-		final List<Method> methodList;
-		if (null != filter) {
-			methodList = new ArrayList<>();
-			for (final Method method : methods) {
-				if (filter.accept(method)) {
-					methodList.add(method);
-				}
-			}
-		} else {
-			methodList = CollUtil.newArrayList(methods);
+		if(null == filter){
+			return methods;
 		}
-		return methodList;
+
+		return ArrayUtil.filter(methods, filter);
 	}
 
 	/**
@@ -425,7 +418,7 @@ public class ReflectUtil {
 	 * @param excludeMethods 不包括的方法
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
+	public static Method[] getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
 		final HashSet<Method> excludeMethodSet = CollUtil.newHashSet(excludeMethods);
 		return getPublicMethods(clazz, method -> false == excludeMethodSet.contains(method));
 	}
@@ -435,9 +428,9 @@ public class ReflectUtil {
 	 *
 	 * @param clazz              查找方法的类
 	 * @param excludeMethodNames 不包括的方法名列表
-	 * @return 过滤后的方法列表
+	 * @return 过滤后的方法数组
 	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
+	public static Method[] getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
 		final HashSet<String> excludeMethodNameSet = CollUtil.newHashSet(excludeMethodNames);
 		return getPublicMethods(clazz, method -> false == excludeMethodNameSet.contains(method.getName()));
 	}

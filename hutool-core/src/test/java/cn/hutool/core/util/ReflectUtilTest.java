@@ -4,11 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ClassUtilTest.TestSubClass;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -88,14 +87,14 @@ public class ReflectUtilTest {
 
 	@Test
 	public void setFieldTest() {
-		final TestClass testClass = new TestClass();
+		final AClass testClass = new AClass();
 		ReflectUtil.setFieldValue(testClass, "a", "111");
 		Assert.assertEquals(111, testClass.getA());
 	}
 
 	@Test
 	public void invokeTest() {
-		final TestClass testClass = new TestClass();
+		final AClass testClass = new AClass();
 		ReflectUtil.invoke(testClass, "setA", 10);
 		Assert.assertEquals(10, testClass.getA());
 	}
@@ -108,7 +107,7 @@ public class ReflectUtilTest {
 	}
 
 	@Data
-	static class TestClass {
+	static class AClass {
 		private int a;
 	}
 
@@ -220,6 +219,7 @@ public class ReflectUtilTest {
 		}
 	}
 
+	@SuppressWarnings("AbstractMethodOverridesAbstractMethod")
 	interface TestInterface2 extends TestInterface1 {
 		@Override
 		void getB();
@@ -270,5 +270,72 @@ public class ReflectUtilTest {
 
 		final int[] intArray = ReflectUtil.newInstanceIfPossible(int[].class);
 		Assert.assertArrayEquals(new int[0], intArray);
+	}
+
+	@Test
+	public void getPublicMethod() {
+		final Method superPublicMethod = ReflectUtil.getPublicMethod(TestSubClass.class, "publicMethod");
+		Assert.assertNotNull(superPublicMethod);
+		final Method superPrivateMethod = ReflectUtil.getPublicMethod(TestSubClass.class, "privateMethod");
+		Assert.assertNull(superPrivateMethod);
+
+		final Method publicMethod = ReflectUtil.getPublicMethod(TestSubClass.class, "publicSubMethod");
+		Assert.assertNotNull(publicMethod);
+		final Method privateMethod = ReflectUtil.getPublicMethod(TestSubClass.class, "privateSubMethod");
+		Assert.assertNull(privateMethod);
+	}
+
+	@Test
+	public void getDeclaredMethod() {
+		final Method noMethod = ReflectUtil.getMethod(TestSubClass.class, "noMethod");
+		Assert.assertNull(noMethod);
+
+		final Method privateMethod = ReflectUtil.getMethod(TestSubClass.class, "privateMethod");
+		Assert.assertNotNull(privateMethod);
+		final Method publicMethod = ReflectUtil.getMethod(TestSubClass.class, "publicMethod");
+		Assert.assertNotNull(publicMethod);
+
+		final Method publicSubMethod = ReflectUtil.getMethod(TestSubClass.class, "publicSubMethod");
+		Assert.assertNotNull(publicSubMethod);
+		final Method privateSubMethod = ReflectUtil.getMethod(TestSubClass.class, "privateSubMethod");
+		Assert.assertNotNull(privateSubMethod);
+
+	}
+
+	@Test
+	public void getDeclaredField() {
+		final Field noField = ReflectUtil.getField(TestSubClass.class, "noField");
+		Assert.assertNull(noField);
+
+		// 获取不到父类字段
+		final Field field = ReflectUtil.getField(TestSubClass.class, "field");
+		Assert.assertNull(field);
+
+		final Field subField = ReflectUtil.getField(TestSubClass.class, "subField");
+		Assert.assertNotNull(subField);
+	}
+
+	@SuppressWarnings("unused")
+	static class TestClass {
+		private String privateField;
+		protected String field;
+
+		private void privateMethod() {
+		}
+
+		public void publicMethod() {
+		}
+	}
+
+	@SuppressWarnings({"InnerClassMayBeStatic", "unused"})
+	class TestSubClass extends TestClass {
+		private String subField;
+
+		private void privateSubMethod() {
+		}
+
+		public void publicSubMethod() {
+		}
+
 	}
 }

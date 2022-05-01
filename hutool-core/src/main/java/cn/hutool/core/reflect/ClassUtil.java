@@ -5,12 +5,10 @@ import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScanner;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
 import cn.hutool.core.text.StrUtil;
@@ -20,7 +18,6 @@ import cn.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -245,158 +242,6 @@ public class ClassUtil {
 		return ClassScanner.scanPackage(packageName, classFilter);
 	}
 
-	// ----------------------------------------------------------------------------------------- Method
-
-	/**
-	 * 获得指定类中的Public方法名<br>
-	 * 去重重载的方法
-	 *
-	 * @param clazz 类
-	 * @return 方法名Set
-	 */
-	public static Set<String> getPublicMethodNames(final Class<?> clazz) {
-		return ReflectUtil.getPublicMethodNames(clazz);
-	}
-
-	/**
-	 * 获得本类及其父类所有Public方法
-	 *
-	 * @param clazz 查找方法的类
-	 * @return 过滤后的方法列表
-	 */
-	public static Method[] getPublicMethods(final Class<?> clazz) {
-		return ReflectUtil.getPublicMethods(clazz);
-	}
-
-	/**
-	 * 获得指定类过滤后的Public方法列表
-	 *
-	 * @param clazz  查找方法的类
-	 * @param filter 过滤器
-	 * @return 过滤后的方法列表
-	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final Filter<Method> filter) {
-		return ReflectUtil.getPublicMethods(clazz, filter);
-	}
-
-	/**
-	 * 获得指定类过滤后的Public方法列表
-	 *
-	 * @param clazz          查找方法的类
-	 * @param excludeMethods 不包括的方法
-	 * @return 过滤后的方法列表
-	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
-		return ReflectUtil.getPublicMethods(clazz, excludeMethods);
-	}
-
-	/**
-	 * 获得指定类过滤后的Public方法列表
-	 *
-	 * @param clazz              查找方法的类
-	 * @param excludeMethodNames 不包括的方法名列表
-	 * @return 过滤后的方法列表
-	 */
-	public static List<Method> getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
-		return ReflectUtil.getPublicMethods(clazz, excludeMethodNames);
-	}
-
-	/**
-	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回{@code null}
-	 *
-	 * @param clazz      类
-	 * @param methodName 方法名
-	 * @param paramTypes 参数类型
-	 * @return 方法
-	 * @throws SecurityException 无权访问抛出异常
-	 */
-	public static Method getPublicMethod(final Class<?> clazz, final String methodName, final Class<?>... paramTypes) throws SecurityException {
-		return ReflectUtil.getPublicMethod(clazz, methodName, paramTypes);
-	}
-
-	/**
-	 * 获得指定类中的Public方法名<br>
-	 * 去重重载的方法
-	 *
-	 * @param clazz 类
-	 * @return 方法名Set
-	 */
-	public static Set<String> getDeclaredMethodNames(final Class<?> clazz) {
-		return ReflectUtil.getMethodNames(clazz);
-	}
-
-	/**
-	 * 获得声明的所有方法，包括本类及其父类和接口的所有方法和Object类的方法
-	 *
-	 * @param clazz 类
-	 * @return 方法数组
-	 */
-	public static Method[] getDeclaredMethods(final Class<?> clazz) {
-		return ReflectUtil.getMethods(clazz);
-	}
-
-	/**
-	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
-	 *
-	 * @param obj        被查找的对象
-	 * @param methodName 方法名
-	 * @param args       参数
-	 * @return 方法
-	 * @throws SecurityException 无访问权限抛出异常
-	 */
-	public static Method getDeclaredMethodOfObj(final Object obj, final String methodName, final Object... args) throws SecurityException {
-		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
-	}
-
-	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回{@code null}
-	 *
-	 * @param clazz          被查找的类
-	 * @param methodName     方法名
-	 * @param parameterTypes 参数类型
-	 * @return 方法
-	 * @throws SecurityException 无访问权限抛出异常
-	 */
-	public static Method getDeclaredMethod(final Class<?> clazz, final String methodName, final Class<?>... parameterTypes) throws SecurityException {
-		return ReflectUtil.getMethod(clazz, methodName, parameterTypes);
-	}
-
-	// ----------------------------------------------------------------------------------------- Field
-
-	/**
-	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回{@code null}
-	 *
-	 * @param clazz     被查找字段的类
-	 * @param fieldName 字段名
-	 * @return 字段
-	 * @throws SecurityException 安全异常
-	 */
-	public static Field getDeclaredField(final Class<?> clazz, final String fieldName) throws SecurityException {
-		if (null == clazz || StrUtil.isBlank(fieldName)) {
-			return null;
-		}
-		try {
-			return clazz.getDeclaredField(fieldName);
-		} catch (final NoSuchFieldException e) {
-			// e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * 查找指定类中的所有字段（包括非public字段)
-	 *
-	 * @param clazz 被查找字段的类
-	 * @return 字段
-	 * @throws SecurityException 安全异常
-	 */
-	public static Field[] getDeclaredFields(final Class<?> clazz) throws SecurityException {
-		if (null == clazz) {
-			return null;
-		}
-		return clazz.getDeclaredFields();
-	}
-
 	// ----------------------------------------------------------------------------------------- Classpath
 
 	/**
@@ -441,7 +286,7 @@ public class ClassUtil {
 		final String packagePath = packageName.replace(StrUtil.DOT, StrUtil.SLASH);
 		final Enumeration<URL> resources;
 		try {
-			resources = getClassLoader().getResources(packagePath);
+			resources = ClassLoaderUtil.getClassLoader().getResources(packagePath);
 		} catch (final IOException e) {
 			throw new UtilException(e, "Loading classPath [{}] error!", packagePath);
 		}
@@ -472,97 +317,9 @@ public class ClassUtil {
 	 * @since 3.2.1
 	 */
 	public static String getClassPath(final boolean isEncoded) {
-		final URL classPathURL = getClassPathURL();
+		final URL classPathURL = ResourceUtil.getResource(StrUtil.EMPTY);
 		final String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
 		return FileUtil.normalize(url);
-	}
-
-	/**
-	 * 获得ClassPath URL
-	 *
-	 * @return ClassPath URL
-	 */
-	public static URL getClassPathURL() {
-		return getResourceURL(StrUtil.EMPTY);
-	}
-
-	/**
-	 * 获得资源的URL<br>
-	 * 路径用/分隔，例如:
-	 *
-	 * <pre>
-	 * config/a/db.config
-	 * spring/xml/test.xml
-	 * </pre>
-	 *
-	 * @param resource 资源（相对Classpath的路径）
-	 * @return 资源URL
-	 * @see ResourceUtil#getResource(String)
-	 */
-	public static URL getResourceURL(final String resource) throws IORuntimeException {
-		return ResourceUtil.getResource(resource);
-	}
-
-	/**
-	 * 获取指定路径下的资源列表<br>
-	 * 路径格式必须为目录格式,用/分隔，例如:
-	 *
-	 * <pre>
-	 * config/a
-	 * spring/xml
-	 * </pre>
-	 *
-	 * @param resource 资源路径
-	 * @return 资源列表
-	 * @see ResourceUtil#getResources(String)
-	 */
-	public static List<URL> getResources(final String resource) {
-		return ResourceUtil.getResources(resource);
-	}
-
-	/**
-	 * 获得资源相对路径对应的URL
-	 *
-	 * @param resource  资源相对路径
-	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
-	 * @return {@link URL}
-	 * @see ResourceUtil#getResource(String, Class)
-	 */
-	public static URL getResourceUrl(final String resource, final Class<?> baseClass) {
-		return ResourceUtil.getResource(resource, baseClass);
-	}
-
-	/**
-	 * @return 获得Java ClassPath路径，不包括 jre
-	 */
-	public static String[] getJavaClassPaths() {
-		return System.getProperty("java.class.path").split(System.getProperty("path.separator"));
-	}
-
-	/**
-	 * 获取当前线程的{@link ClassLoader}
-	 *
-	 * @return 当前线程的class loader
-	 * @see ClassLoaderUtil#getClassLoader()
-	 */
-	public static ClassLoader getContextClassLoader() {
-		return ClassLoaderUtil.getContextClassLoader();
-	}
-
-	/**
-	 * 获取{@link ClassLoader}<br>
-	 * 获取顺序如下：<br>
-	 *
-	 * <pre>
-	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取{@link ClassLoaderUtil}类对应的ClassLoader
-	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
-	 * </pre>
-	 *
-	 * @return 类加载器
-	 */
-	public static ClassLoader getClassLoader() {
-		return ClassLoaderUtil.getClassLoader();
 	}
 
 	/**
@@ -703,7 +460,7 @@ public class ClassUtil {
 	public static <T> T invoke(final String className, final String methodName, final boolean isSingleton, final Object... args) {
 		final Class<Object> clazz = loadClass(className);
 		try {
-			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
+			final Method method = ReflectUtil.getMethod(clazz, methodName, getClasses(args));
 			if (null == method) {
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
