@@ -433,6 +433,22 @@ public class IdcardUtil {
 
 	/**
 	 * 根据身份编号获取生日，只支持15或18位身份证号码
+	 * 支持自定义返回的生日格式
+	 * @param idcard 身份编号
+	 * @param format 格式类型
+	 * @return 生日
+	 */
+	public static String getBirthByIdCard(String idcard, String format){
+		String birth = getBirth(idcard);
+		if (birth == null || birth.length() != 8){
+			return null;
+		}
+		Date birthday = DateUtil.parse(birth, "yyyyMMdd");
+		return DateUtil.format(birthday, format);
+	}
+
+	/**
+	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 *
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
