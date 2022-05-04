@@ -1,11 +1,9 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.text.StrBuilder;
-
 import java.io.Writer;
 
 /**
- * 借助{@link StrBuilder} 提供快读的字符串写出，相比jdk的StringWriter非线程安全，速度更快。
+ * 借助{@link StringBuilder} 提供快读的字符串写出，相比jdk的StringWriter非线程安全，速度更快。
  *
  * @author looly
  * @since 5.3.3

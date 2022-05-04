@@ -1,8 +1,7 @@
 package cn.hutool.poi.excel.sax;
 
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
@@ -56,9 +55,9 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	private boolean isInSheetData;
 
 	// 上一次的内容
-	private final StrBuilder lastContent = StrUtil.strBuilder();
+	private final StringBuilder lastContent = new StringBuilder();
 	// 上一次的内容
-	private final StrBuilder lastFormula = StrUtil.strBuilder();
+	private final StringBuilder lastFormula = new StringBuilder();
 	// 存储每行的列元素
 	private List<Object> rowCellList = new ArrayList<>();
 
@@ -198,8 +197,8 @@ public class SheetDataSaxHandler extends DefaultHandler {
 		setCellType(attributes);
 
 		// 清空之前的数据
-		lastContent.reset();
-		lastFormula.reset();
+		lastContent.setLength(0);
+		lastFormula.setLength(0);
 	}
 
 	/**
@@ -239,7 +238,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 
 		final String contentStr = StrUtil.trim(lastContent);
 		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
-		if (false == this.lastFormula.isEmpty()) {
+		if (this.lastFormula.length() > 0) {
 			value = new FormulaCellValue(StrUtil.trim(lastFormula), value);
 		}
 		addCellValue(curCell++, value);

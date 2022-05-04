@@ -10,10 +10,9 @@ import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.server.SimpleServer;
 
@@ -528,7 +527,7 @@ public class HttpUtil {
 		if(StrUtil.isEmpty(paramPart)){
 			return paramPart;
 		}
-		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
+		final StringBuilder builder = new StringBuilder(paramPart.length() + 16);
 		final int len = paramPart.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
@@ -572,7 +571,7 @@ public class HttpUtil {
 		// 以&结尾则去除之
 		final int lastIndex = builder.length() - 1;
 		if ('&' == builder.charAt(lastIndex)) {
-			builder.delTo(lastIndex);
+			builder.delete(lastIndex, builder.length());
 		}
 		return builder.toString();
 	}

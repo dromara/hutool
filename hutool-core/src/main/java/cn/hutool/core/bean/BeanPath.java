@@ -3,10 +3,9 @@ package cn.hutool.core.bean;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -222,7 +221,7 @@ public class BeanPath implements Serializable{
 		final List<String> localPatternParts = new ArrayList<>();
 		final int length = expression.length();
 
-		final StrBuilder builder = StrUtil.strBuilder();
+		final StringBuilder builder = new StringBuilder();
 		char c;
 		boolean isNumStart = false;// 下标标识符开始
 		for (int i = 0; i < length; i++) {
@@ -255,7 +254,7 @@ public class BeanPath implements Serializable{
 				if (builder.length() > 0) {
 					localPatternParts.add(unWrapIfPossible(builder));
 				}
-				builder.reset();
+				builder.setLength(0);
 			} else {
 				// 非边界符号，追加字符
 				builder.append(c);

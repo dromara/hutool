@@ -1,9 +1,8 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,8 +79,8 @@ public class NamedSql {
 
 		final int len = namedSql.length();
 
-		final StrBuilder name = StrUtil.strBuilder();
-		final StrBuilder sqlBuilder = StrUtil.strBuilder();
+		final StringBuilder name = new StringBuilder();
+		final StringBuilder sqlBuilder = new StringBuilder();
 		char c;
 		Character nameStartChar = null;
 		for (int i = 0; i < len; i++) {
@@ -108,7 +107,7 @@ public class NamedSql {
 		}
 
 		// 收尾，如果SQL末尾存在变量，处理之
-		if (false == name.isEmpty()) {
+		if (name.length() > 0) {
 			replaceVar(nameStartChar, name, sqlBuilder, paramMap);
 		}
 
@@ -123,8 +122,8 @@ public class NamedSql {
 	 * @param sqlBuilder 结果SQL缓存
 	 * @param paramMap 变量map（非空）
 	 */
-	private void replaceVar(final Character nameStartChar, final StrBuilder name, final StrBuilder sqlBuilder, final Map<String, Object> paramMap){
-		if(name.isEmpty()){
+	private void replaceVar(final Character nameStartChar, final StringBuilder name, final StringBuilder sqlBuilder, final Map<String, Object> paramMap){
+		if(name.length() == 0){
 			if(null != nameStartChar){
 				// 类似于:的情况，需要补上:
 				sqlBuilder.append(nameStartChar);
@@ -158,7 +157,7 @@ public class NamedSql {
 		}
 
 		//清空变量，表示此变量处理结束
-		name.clear();
+		name.setLength(0);
 	}
 
 	/**

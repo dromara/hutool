@@ -70,7 +70,7 @@ public class NamingCase {
 		}
 
 		final int length = str.length();
-		final StrBuilder sb = new StrBuilder();
+		final StringBuilder sb = new StringBuilder();
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);

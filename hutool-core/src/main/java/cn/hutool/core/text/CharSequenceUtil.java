@@ -4248,7 +4248,7 @@ public class CharSequenceUtil {
 	 * @since 4.1.0
 	 */
 	public static String concat(final boolean isNullToEmpty, final CharSequence... strs) {
-		final StrBuilder sb = new StrBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (final CharSequence str : strs) {
 			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
 		}

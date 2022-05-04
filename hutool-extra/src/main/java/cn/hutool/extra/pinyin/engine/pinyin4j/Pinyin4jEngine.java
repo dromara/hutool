@@ -1,8 +1,6 @@
 package cn.hutool.extra.pinyin.engine.pinyin4j;
 
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.pinyin.PinyinEngine;
 import cn.hutool.extra.pinyin.PinyinException;
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -16,7 +14,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  * 封装了Pinyin4j的引擎。
  *
  * <p>
- * pinyin4j(http://sourceforge.net/projects/pinyin4j)封装。
+ * pinyin4j(<a href="http://sourceforge.net/projects/pinyin4j">http://sourceforge.net/projects/pinyin4j</a>)封装。
  * </p>
  *
  * <p>
@@ -84,7 +82,7 @@ public class Pinyin4jEngine implements PinyinEngine {
 
 	@Override
 	public String getPinyin(final String str, final String separator) {
-		final StrBuilder result = StrUtil.strBuilder();
+		final StringBuilder result = new StringBuilder();
 		boolean isFirst = true;
 		final int strLen = str.length();
 		try {

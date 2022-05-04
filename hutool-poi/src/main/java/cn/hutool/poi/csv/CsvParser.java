@@ -4,10 +4,9 @@ import cn.hutool.core.collection.iter.ComputeIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	/**
 	 * 当前读取字段
 	 */
-	private final StrBuilder currentField = new StrBuilder(512);
+	private final StringBuilder currentField = new StringBuilder(512);
 
 	/**
 	 * 标题行
@@ -206,7 +205,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 
 		final List<String> currentFields = new ArrayList<>(maxFieldCount > 0 ? maxFieldCount : DEFAULT_ROW_CAPACITY);
 
-		final StrBuilder currentField = this.currentField;
+		final StringBuilder currentField = this.currentField;
 		final Buffer buf = this.buf;
 		int preChar = this.preChar;//前一个特殊分界字符
 		int copyLen = 0; //拷贝长度
@@ -223,9 +222,10 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					// CSV读取结束
 					finished = true;
 
-					if (currentField.hasContent() || preChar == config.fieldSeparator) {
+					if (currentField.length() > 0 || preChar == config.fieldSeparator) {
 						//剩余部分作为一个字段
-						addField(currentFields, currentField.toStringAndReset());
+						addField(currentFields, currentField.toString());
+						currentField.setLength(0);
 					}
 					break;
 				}
@@ -279,7 +279,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 						copyLen = 0;
 					}
 					buf.mark();
-					addField(currentFields, currentField.toStringAndReset());
+					addField(currentFields, currentField.toString());
+					currentField.setLength(0);
 				} else if (c == config.textDelimiter) {
 					// 引号开始
 					inQuotes = true;
@@ -290,7 +291,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 						buf.appendTo(currentField, copyLen);
 					}
 					buf.mark();
-					addField(currentFields, currentField.toStringAndReset());
+					addField(currentFields, currentField.toString());
+					currentField.setLength(0);
 					preChar = c;
 					break;
 				} else if (c == CharUtil.LF) {
@@ -300,7 +302,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 							buf.appendTo(currentField, copyLen);
 						}
 						buf.mark();
-						addField(currentFields, currentField.toStringAndReset());
+						addField(currentFields, currentField.toString());
+						currentField.setLength(0);
 						preChar = c;
 						break;
 					}
@@ -434,13 +437,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		}
 
 		/**
-		 * 将数据追加到{@link StrBuilder}，追加结束后需手动调用{@link #mark()} 重置读取位置
+		 * 将数据追加到{@link StringBuilder}，追加结束后需手动调用{@link #mark()} 重置读取位置
 		 *
-		 * @param builder {@link StrBuilder}
+		 * @param builder {@link StringBuilder}
 		 * @param length  追加的长度
 		 * @see #mark()
 		 */
-		void appendTo(final StrBuilder builder, final int length) {
+		void appendTo(final StringBuilder builder, final int length) {
 			builder.append(this.buf, this.mark, length);
 		}
 	}

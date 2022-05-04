@@ -4,7 +4,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.id.Pid;
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
@@ -327,7 +326,7 @@ public class RuntimeUtil {
 		final int length = cmd.length();
 		final Stack<Character> stack = new Stack<>();
 		boolean inWrap = false;
-		final StrBuilder cache = StrUtil.strBuilder();
+		final StringBuilder cache = new StringBuilder();
 
 		char c;
 		for (int i = 0; i < length; i++) {
@@ -354,7 +353,7 @@ public class RuntimeUtil {
 						cache.append(c);
 					} else {
 						cmds.add(cache.toString());
-						cache.reset();
+						cache.setLength(0);
 					}
 					break;
 				default:
@@ -363,7 +362,7 @@ public class RuntimeUtil {
 			}
 		}
 
-		if (cache.hasContent()) {
+		if (cache.length() > 0) {
 			cmds.add(cache.toString());
 		}
 
