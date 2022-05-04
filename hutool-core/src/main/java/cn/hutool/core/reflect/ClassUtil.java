@@ -21,9 +21,11 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -685,5 +687,61 @@ public class ClassUtil {
 			return null;
 		}
 		return location.getPath();
+	}
+
+	/**
+	 * 获取指定类的所有父类，结果不包括指定类本身<br>
+	 * 如果无父类，返回一个空的列表
+	 *
+	 * @param clazz 类, 可以为{@code null}
+	 * @return 所有父类列表，参数为{@code null} 则返回{@code null}
+	 */
+	public static List<Class<?>> getSuperClasses(final Class<?> clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		final List<Class<?>> classes = new ArrayList<>();
+		Class<?> superclass = clazz.getSuperclass();
+		while (superclass != null) {
+			classes.add(superclass);
+			superclass = superclass.getSuperclass();
+		}
+		return classes;
+	}
+
+	/**
+	 * 获取指定类及其父类所有的实现接口。<br>
+	 * 结果顺序取决于查找顺序，当前类在前，父类的接口在后。
+	 *
+	 * @param cls 被查找的类
+	 * @return 接口列表，若提供的查找类为{@code null}，返回{@code null}
+	 */
+	public static List<Class<?>> getInterfaces(final Class<?> cls) {
+		if (cls == null) {
+			return null;
+		}
+
+		final LinkedHashSet<Class<?>> interfacesFound = new LinkedHashSet<>();
+		getInterfaces(cls, interfacesFound);
+
+		return new ArrayList<>(interfacesFound);
+	}
+
+	/**
+	 * 获取指定类的的接口列表
+	 *
+	 * @param clazz           指定类
+	 * @param interfacesFound 接口Set
+	 */
+	private static void getInterfaces(Class<?> clazz, final HashSet<Class<?>> interfacesFound) {
+		while (clazz != null) {
+			for (final Class<?> i : clazz.getInterfaces()) {
+				if (interfacesFound.add(i)) {
+					getInterfaces(i, interfacesFound);
+				}
+			}
+
+			clazz = clazz.getSuperclass();
+		}
 	}
 }

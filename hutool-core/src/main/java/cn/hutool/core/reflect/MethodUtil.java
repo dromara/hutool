@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 反射中{@link Method}相关工具类，包括方法获取和方法执行
+ * 反射中{@link Method}相关工具类，包括方法获取和方法执行<br>
+ * TODO 与commons-beanutils相比，Hutool缓存某个类的所有方法，而commons缓存单个方法，须性能测试哪个更加合理。
  *
  * @author looly
  */
