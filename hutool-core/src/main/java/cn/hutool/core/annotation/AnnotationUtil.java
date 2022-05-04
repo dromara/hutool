@@ -1,6 +1,7 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 
@@ -169,11 +170,11 @@ public class AnnotationUtil {
 			return null;
 		}
 
-		final Method method = ReflectUtil.getMethodOfObj(annotation, propertyName);
+		final Method method = MethodUtil.getMethodOfObj(annotation, propertyName);
 		if (null == method) {
 			return null;
 		}
-		return ReflectUtil.invoke(annotation, method);
+		return MethodUtil.invoke(annotation, method);
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class AnnotationUtil {
 			return null;
 		}
 
-		final Method[] methods = ReflectUtil.getMethods(annotationType, t -> {
+		final Method[] methods = MethodUtil.getMethods(annotationType, t -> {
 			if (ArrayUtil.isEmpty(t.getParameterTypes())) {
 				// 只读取无参方法
 				final String name = t.getName();
@@ -205,7 +206,7 @@ public class AnnotationUtil {
 
 		final HashMap<String, Object> result = new HashMap<>(methods.length, 1);
 		for (final Method method : methods) {
-			result.put(method.getName(), ReflectUtil.invoke(annotation, method));
+			result.put(method.getName(), MethodUtil.invoke(annotation, method));
 		}
 		return result;
 	}

@@ -3,7 +3,7 @@ package cn.hutool.core.classloader;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.URLUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,12 +53,12 @@ public class JarClassLoader extends URLClassLoader {
 	 */
 	public static void loadJar(final URLClassLoader loader, final File jarFile) throws UtilException {
 		try {
-			final Method method = ReflectUtil.getMethod(URLClassLoader.class, "addURL", URL.class);
+			final Method method = MethodUtil.getMethod(URLClassLoader.class, "addURL", URL.class);
 			if (null != method) {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (final File jar : jars) {
-					ReflectUtil.invoke(loader, method, jar.toURI().toURL());
+					MethodUtil.invoke(loader, method, jar.toURI().toURL());
 				}
 			}
 		} catch (final IOException e) {

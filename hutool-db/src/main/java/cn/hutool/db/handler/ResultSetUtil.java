@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
@@ -100,7 +101,7 @@ public class ResultSetUtil {
 			setter = (null == pd) ? null : pd.getSetter();
 			if (null != setter) {
 				value = getColumnValue(rs, i, meta.getColumnType(i), TypeUtil.getFirstParamType(setter));
-				ReflectUtil.invokeWithCheck(bean, setter, value);
+				MethodUtil.invokeWithCheck(bean, setter, value);
 			}
 		}
 		return bean;

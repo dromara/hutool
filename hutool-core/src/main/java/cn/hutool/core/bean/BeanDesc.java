@@ -2,6 +2,7 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
@@ -140,7 +141,7 @@ public class BeanDesc implements Serializable {
 	 * @return this
 	 */
 	private BeanDesc init() {
-		final Method[] gettersAndSetters = ReflectUtil.getMethods(this.beanClass, ReflectUtil::isGetterOrSetterIgnoreCase);
+		final Method[] gettersAndSetters = MethodUtil.getMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
 		for (final Field field : ReflectUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类

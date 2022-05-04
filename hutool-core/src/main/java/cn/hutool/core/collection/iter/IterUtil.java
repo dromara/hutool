@@ -8,6 +8,7 @@ import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -1046,7 +1047,7 @@ public class IterUtil {
 
 		// 反射获取
 		try {
-			final Object iterator = ReflectUtil.invoke(obj, "iterator");
+			final Object iterator = MethodUtil.invoke(obj, "iterator");
 			if (iterator instanceof Iterator) {
 				return (Iterator<?>) iterator;
 			}

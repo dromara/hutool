@@ -1,6 +1,6 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
@@ -71,7 +71,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 	 * @return 属性（方法结果）映射
 	 */
 	private Map<String, Object> initAttributes() {
-		final Method[] methods = ReflectUtil.getMethods(this.type);
+		final Method[] methods = MethodUtil.getMethods(this.type);
 		final Map<String, Object> attributes = new HashMap<>(methods.length, 1);
 
 		for (final Method method : methods) {
@@ -80,7 +80,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 				continue;
 			}
 
-			attributes.put(method.getName(), ReflectUtil.invoke(this.annotation, method));
+			attributes.put(method.getName(), MethodUtil.invoke(this.annotation, method));
 		}
 
 		return attributes;

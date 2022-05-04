@@ -3,6 +3,7 @@ package cn.hutool.core.bean;
 import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
@@ -169,7 +170,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @return 执行结果，可能为null
 	 */
 	public Object invoke(final String methodName, final Object... params) {
-		return ReflectUtil.invoke(this.bean, methodName, params);
+		return MethodUtil.invoke(this.bean, methodName, params);
 	}
 
 	/**

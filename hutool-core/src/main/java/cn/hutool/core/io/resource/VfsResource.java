@@ -1,8 +1,8 @@
 package cn.hutool.core.io.resource;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.reflect.MethodUtil;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -63,22 +63,22 @@ public class VfsResource implements Resource {
 	 * @return 文件是否存在
 	 */
 	public boolean exists() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_EXISTS);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_EXISTS);
 	}
 
 	@Override
 	public String getName() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_NAME);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_NAME);
 	}
 
 	@Override
 	public URL getUrl() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_TO_URL);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_TO_URL);
 	}
 
 	@Override
 	public InputStream getStream() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_INPUT_STREAM);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_INPUT_STREAM);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class VfsResource implements Resource {
 	 * @return 最后修改时间
 	 */
 	public long getLastModified() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_LAST_MODIFIED);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_LAST_MODIFIED);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class VfsResource implements Resource {
 	 * @return VFS文件大小
 	 */
 	public long size() {
-		return ReflectUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_SIZE);
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_SIZE);
 	}
 
 }

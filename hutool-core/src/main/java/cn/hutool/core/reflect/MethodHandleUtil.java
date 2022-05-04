@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  * 方法句柄是一个有类型的，可以直接执行的指向底层方法、构造器、field等的引用，可以简单理解为函数指针，它是一种更加底层的查找、调整和调用方法的机制。
  * 参考：
  * <ul>
- *     <li>https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively</li>
+ *     <li><a href="https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively">https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively</a></li>
  * </ul>
  *
  * @author looly
@@ -138,7 +138,7 @@ public class MethodHandleUtil {
 		Assert.notNull(obj, "Object to get method must be not null!");
 		Assert.notBlank(methodName, "Method name must be not blank!");
 
-		final Method method = ReflectUtil.getMethodOfObj(obj, methodName, args);
+		final Method method = MethodUtil.getMethodOfObj(obj, methodName, args);
 		if (null == method) {
 			throw new UtilException("No such method: [{}] from [{}]", methodName, obj.getClass());
 		}

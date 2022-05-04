@@ -1,9 +1,9 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
@@ -57,7 +57,7 @@ public class LambdaUtil {
 	public static <R> Class<R> getRealClass(final Func0<?> func) {
 		final SerializedLambda lambda = resolve(func);
 		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
-		return ClassUtil.loadClass(lambda.getImplClass());
+		return ClassLoaderUtil.loadClass(lambda.getImplClass());
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class LambdaUtil {
 		final SerializedLambda lambda = resolve(func);
 		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
 		final String instantiatedMethodType = lambda.getInstantiatedMethodType();
-		return ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+		return ClassLoaderUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	private static SerializedLambda _resolve(final Serializable func) {
-		return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
+		return cache.computeIfAbsent(func.getClass().getName(), (key) -> MethodUtil.invoke(func, "writeReplace"));
 	}
 	//endregion
 }

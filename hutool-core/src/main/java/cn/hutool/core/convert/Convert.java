@@ -1,17 +1,17 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.TypeReference;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -627,7 +627,7 @@ public class Convert {
 	 * @throws ConvertException 转换器不存在
 	 */
 	public static <T> T convertByClassName(final String className, final Object value) throws ConvertException{
-		return convert(ClassUtil.loadClass(className), value);
+		return convert(ClassLoaderUtil.loadClass(className), value);
 	}
 
 	/**

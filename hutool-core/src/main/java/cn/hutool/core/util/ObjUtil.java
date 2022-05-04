@@ -5,10 +5,10 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.SerializeUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
@@ -441,7 +441,7 @@ public class ObjUtil {
 		T result = ArrayUtil.clone(obj);
 		if (null == result) {
 			if (obj instanceof Cloneable) {
-				result = ReflectUtil.invoke(obj, "clone");
+				result = MethodUtil.invoke(obj, "clone");
 			} else {
 				result = cloneByStream(obj);
 			}

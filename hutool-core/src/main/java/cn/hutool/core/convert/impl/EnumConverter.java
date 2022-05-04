@@ -6,9 +6,9 @@ import cn.hutool.core.lang.EnumItem;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.util.EnumUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ModifierUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.util.EnumUtil;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -96,7 +96,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 				final Class<?> valueClass = value.getClass();
 				for (final Map.Entry<Class<?>, Method> entry : methodMap.entrySet()) {
 					if (ClassUtil.isAssignable(entry.getKey(), valueClass)) {
-						return ReflectUtil.invokeStatic(entry.getValue(), value);
+						return MethodUtil.invokeStatic(entry.getValue(), value);
 					}
 				}
 			}

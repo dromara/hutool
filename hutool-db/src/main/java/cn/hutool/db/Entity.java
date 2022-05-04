@@ -3,7 +3,7 @@ package cn.hutool.db;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -301,7 +301,7 @@ public class Entity extends Dict {
 				result = (Time) obj;
 			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "timeValue");
+				result = MethodUtil.invoke(obj, "timeValue");
 			}
 		}
 		return result;
@@ -316,7 +316,7 @@ public class Entity extends Dict {
 				result = (Date) obj;
 			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "dateValue");
+				result = MethodUtil.invoke(obj, "dateValue");
 			}
 		}
 		return result;
@@ -331,7 +331,7 @@ public class Entity extends Dict {
 				result = (Timestamp) obj;
 			} catch (final Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "timestampValue");
+				result = MethodUtil.invoke(obj, "timestampValue");
 			}
 		}
 		return result;

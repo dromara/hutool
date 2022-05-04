@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class TypeUtilTest {
 
 	@Test
 	public void getEleTypeTest() {
-		final Method method = ReflectUtil.getMethod(TestClass.class, "getList");
+		final Method method = MethodUtil.getMethod(TestClass.class, "getList");
 		final Type type = TypeUtil.getReturnType(method);
 		Assert.assertEquals("java.util.List<java.lang.String>", type.toString());
 
@@ -25,7 +26,7 @@ public class TypeUtilTest {
 
 	@Test
 	public void getParamTypeTest() {
-		final Method method = ReflectUtil.getMethod(TestClass.class, "intTest", Integer.class);
+		final Method method = MethodUtil.getMethod(TestClass.class, "intTest", Integer.class);
 		final Type type = TypeUtil.getParamType(method, 0);
 		Assert.assertEquals(Integer.class, type);
 

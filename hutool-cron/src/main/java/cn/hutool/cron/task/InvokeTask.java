@@ -2,6 +2,7 @@ package cn.hutool.cron.task;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.CronException;
@@ -50,7 +51,7 @@ public class InvokeTask implements Task{
 		if(StrUtil.isBlank(methodName)) {
 			throw new IllegalArgumentException("Method name is blank !");
 		}
-		this.method = ReflectUtil.getPublicMethod(clazz, methodName);
+		this.method = MethodUtil.getPublicMethod(clazz, methodName);
 		if(null == this.method) {
 			throw new IllegalArgumentException("No method with name of [" + methodName + "] !");
 		}
@@ -59,7 +60,7 @@ public class InvokeTask implements Task{
 	@Override
 	public void execute() {
 		try {
-			ReflectUtil.invoke(this.obj, this.method);
+			MethodUtil.invoke(this.obj, this.method);
 		} catch (final UtilException e) {
 			throw new CronException(e.getCause());
 		}

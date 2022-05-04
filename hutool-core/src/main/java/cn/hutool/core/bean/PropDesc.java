@@ -3,7 +3,7 @@ package cn.hutool.core.bean;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -43,8 +43,8 @@ public class PropDesc {
 	 */
 	public PropDesc(final Field field, final Method getter, final Method setter) {
 		this.field = field;
-		this.getter = ClassUtil.setAccessible(getter);
-		this.setter = ClassUtil.setAccessible(setter);
+		this.getter = ReflectUtil.setAccessible(getter);
+		this.setter = ReflectUtil.setAccessible(setter);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class PropDesc {
 	 */
 	public Object getValue(final Object bean) {
 		if (null != this.getter) {
-			return ReflectUtil.invoke(bean, this.getter);
+			return MethodUtil.invoke(bean, this.getter);
 		} else if (ModifierUtil.isPublic(this.field)) {
 			return ReflectUtil.getFieldValue(bean, this.field);
 		}
@@ -223,7 +223,7 @@ public class PropDesc {
 	 */
 	public PropDesc setValue(final Object bean, final Object value) {
 		if (null != this.setter) {
-			ReflectUtil.invoke(bean, this.setter, value);
+			MethodUtil.invoke(bean, this.setter, value);
 		} else if (ModifierUtil.isPublic(this.field)) {
 			ReflectUtil.setFieldValue(bean, this.field, value);
 		}

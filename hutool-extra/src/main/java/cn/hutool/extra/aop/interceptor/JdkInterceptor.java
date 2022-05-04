@@ -1,8 +1,8 @@
 package cn.hutool.extra.aop.interceptor;
 
-import cn.hutool.extra.aop.aspects.Aspect;
-import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.extra.aop.aspects.Aspect;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -47,7 +47,7 @@ public class JdkInterceptor implements InvocationHandler, Serializable {
 			ReflectUtil.setAccessible(method);
 
 			try {
-				result = method.invoke(ClassUtil.isStatic(method) ? null : target, args);
+				result = method.invoke(ModifierUtil.isStatic(method) ? null : target, args);
 			} catch (final InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
 				if (aspect.afterException(target, method, args, e.getTargetException())) {

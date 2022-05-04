@@ -9,9 +9,9 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -244,7 +244,7 @@ public class ReUtil {
 		final Map<String, String> result = MapUtil.newHashMap(m.groupCount());
 		if (m.find()) {
 			// 通过反射获取 namedGroups 方法
-			final Map<String, Integer> map = ReflectUtil.invoke(pattern, "namedGroups");
+			final Map<String, Integer> map = MethodUtil.invoke(pattern, "namedGroups");
 			map.forEach((key, value) -> result.put(key, m.group(value)));
 		}
 		return result;

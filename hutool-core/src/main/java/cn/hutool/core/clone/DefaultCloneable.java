@@ -1,7 +1,7 @@
 package cn.hutool.core.clone;
 
 
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.MethodUtil;
 
 /**
  * 克隆默认实现接口，用于实现返回指定泛型类型的克隆方法
@@ -18,7 +18,7 @@ public interface DefaultCloneable<T> extends java.lang.Cloneable {
 	 */
 	default T clone0() {
 		try {
-			return ReflectUtil.invoke(this, "clone");
+			return MethodUtil.invoke(this, "clone");
 		} catch (final Exception e) {
 			throw new CloneRuntimeException(e);
 		}

@@ -1,7 +1,5 @@
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.reflect.MethodHandleUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,12 +21,12 @@ public class MethodHandleUtilTest {
 		Assert.assertEquals("Quack", duck.quack());
 
 		// 测试子类执行default方法
-		final Method quackMethod = ReflectUtil.getMethod(Duck.class, "quack");
+		final Method quackMethod = MethodUtil.getMethod(Duck.class, "quack");
 		String quack = MethodHandleUtil.invokeSpecial(new BigDuck(), quackMethod);
 		Assert.assertEquals("Quack", quack);
 
 		// 测试反射执行默认方法
-		quack = ReflectUtil.invoke(new Duck() {}, quackMethod);
+		quack = MethodUtil.invoke(new Duck() {}, quackMethod);
 		Assert.assertEquals("Quack", quack);
 	}
 
@@ -37,7 +35,7 @@ public class MethodHandleUtilTest {
 		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
-				ReflectUtil::invoke);
+				MethodUtil::invoke);
 
 		Assert.assertEquals("Quack", duck.quack());
 	}
@@ -47,7 +45,7 @@ public class MethodHandleUtilTest {
 		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
-				ReflectUtil::invoke);
+				MethodUtil::invoke);
 
 		Assert.assertEquals("Quack", duck.quack());
 	}
@@ -56,7 +54,7 @@ public class MethodHandleUtilTest {
 	public void invokeTest(){
 		// 测试执行普通方法
 		final int size = MethodHandleUtil.invokeSpecial(new BigDuck(),
-				ReflectUtil.getMethod(BigDuck.class, "getSize"));
+				MethodUtil.getMethod(BigDuck.class, "getSize"));
 		Assert.assertEquals(36, size);
 	}
 
@@ -64,7 +62,7 @@ public class MethodHandleUtilTest {
 	public void invokeStaticTest(){
 		// 测试执行普通方法
 		final String result = MethodHandleUtil.invoke(null,
-				ReflectUtil.getMethod(Duck.class, "getDuck", int.class), 78);
+				MethodUtil.getMethod(Duck.class, "getDuck", int.class), 78);
 		Assert.assertEquals("Duck 78", result);
 	}
 

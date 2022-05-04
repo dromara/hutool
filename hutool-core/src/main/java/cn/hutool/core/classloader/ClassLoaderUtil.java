@@ -140,11 +140,12 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
+	 * @param <T> 目标类的类型
 	 * @param name 类名
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(final String name) throws UtilException {
+	public static <T> Class<T> loadClass(final String name) throws UtilException {
 		return loadClass(name, true);
 	}
 
@@ -158,12 +159,13 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
+	 * @param <T> 目标类的类型
 	 * @param name          类名
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(final String name, final boolean isInitialized) throws UtilException {
+	public static <T> Class<T> loadClass(final String name, final boolean isInitialized) throws UtilException {
 		return loadClass(name, null, isInitialized);
 	}
 
@@ -185,7 +187,8 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static Class<?> loadClass(String name, ClassLoader classLoader, final boolean isInitialized) throws UtilException {
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> loadClass(String name, ClassLoader classLoader, final boolean isInitialized) throws UtilException {
 		Assert.notNull(name, "Name must not be null");
 
 		// 自动将包名中的"/"替换为"."
@@ -201,7 +204,7 @@ public class ClassLoaderUtil {
 			final ClassLoader finalClassLoader = classLoader;
 			clazz = CLASS_CACHE.computeIfAbsent(Pair.of(name, classLoader), (key)-> doLoadClass(finalName, finalClassLoader, isInitialized));
 		}
-		return clazz;
+		return (Class<T>) clazz;
 	}
 
 	/**
