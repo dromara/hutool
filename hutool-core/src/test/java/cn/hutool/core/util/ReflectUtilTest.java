@@ -308,7 +308,7 @@ public class ReflectUtilTest {
 		Assert.assertNull(noField);
 
 		// 获取不到父类字段
-		final Field field = ReflectUtil.getField(TestSubClass.class, "field");
+		final Field field = ReflectUtil.getDeClearField(TestSubClass.class, "field");
 		Assert.assertNull(field);
 
 		final Field subField = ReflectUtil.getField(TestSubClass.class, "subField");

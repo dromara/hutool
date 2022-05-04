@@ -151,6 +151,20 @@ public class ReflectUtil {
 	}
 
 	/**
+	 * 获取本类定义的指定名称的字段，包括私有字段，但是不包括父类字段
+	 * @param beanClass Bean的Class
+	 * @param name 字段名称
+	 * @return 字段对象，如果未找到返回{@code null}
+	 */
+	public static Field getDeClearField(final Class<?> beanClass, final String name){
+		try {
+			return beanClass.getDeclaredField(name);
+		} catch (NoSuchFieldException e) {
+			return null;
+		}
+	}
+
+	/**
 	 * 获取指定类中字段名和字段对应的有序Map，包括其父类中的字段<br>
 	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
 	 *
