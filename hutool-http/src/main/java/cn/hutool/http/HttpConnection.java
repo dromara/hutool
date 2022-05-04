@@ -1,10 +1,10 @@
 package cn.hutool.http;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.reflect.FieldUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.ssl.DefaultSSLInfo;
 
 import javax.net.ssl.HostnameVerifier;
@@ -453,7 +453,7 @@ public class HttpConnection {
 		// 修改为POST，而且无法调用setRequestMethod方法修改，因此此处使用反射强制修改字段属性值
 		// https://stackoverflow.com/questions/978061/http-get-with-request-body/983458
 		if(method == Method.GET && method != getMethod()){
-			ReflectUtil.setFieldValue(this.conn, "method", Method.GET.name());
+			FieldUtil.setFieldValue(this.conn, "method", Method.GET.name());
 		}
 
 		return out;

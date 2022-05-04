@@ -4,11 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 
@@ -84,7 +84,7 @@ public class ResultSetUtil {
 		}
 
 		//普通bean
-		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
+		final T bean = ConstructorUtil.newInstanceIfPossible(beanClass);
 		//忽略字段大小写
 		final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(beanClass).getPropMap(true);
 		String columnLabel;

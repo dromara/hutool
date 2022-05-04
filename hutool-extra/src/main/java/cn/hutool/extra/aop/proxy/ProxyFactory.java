@@ -1,8 +1,8 @@
 package cn.hutool.extra.aop.proxy;
 
-import cn.hutool.extra.aop.aspects.Aspect;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
+import cn.hutool.extra.aop.aspects.Aspect;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @since 5.3.1
 	 */
 	public <T> T proxy(final T target, final Class<? extends Aspect> aspectClass) {
-		return proxy(target, ReflectUtil.newInstanceIfPossible(aspectClass));
+		return proxy(target, ConstructorUtil.newInstanceIfPossible(aspectClass));
 	}
 
 	/**
@@ -47,7 +47,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @return 代理对象
 	 */
 	public static <T> T createProxy(final T target, final Class<? extends Aspect> aspectClass) {
-		return createProxy(target, ReflectUtil.newInstance(aspectClass));
+		return createProxy(target, ConstructorUtil.newInstance(aspectClass));
 	}
 
 	/**

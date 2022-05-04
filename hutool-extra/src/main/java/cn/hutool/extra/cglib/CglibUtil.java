@@ -1,7 +1,7 @@
 package cn.hutool.extra.cglib;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.beans.BeanMap;
 import net.sf.cglib.core.Converter;
@@ -45,7 +45,7 @@ public class CglibUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copy(final Object source, final Class<T> targetClass, final Converter converter) {
-		final T target = ReflectUtil.newInstanceIfPossible(targetClass);
+		final T target = ConstructorUtil.newInstanceIfPossible(targetClass);
 		copy(source, target, converter);
 		return target;
 	}
@@ -178,6 +178,6 @@ public class CglibUtil {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static <T> T toBean(final Map map, final Class<T> beanClass){
-		return fillBean(map, ReflectUtil.newInstanceIfPossible(beanClass));
+		return fillBean(map, ConstructorUtil.newInstanceIfPossible(beanClass));
 	}
 }

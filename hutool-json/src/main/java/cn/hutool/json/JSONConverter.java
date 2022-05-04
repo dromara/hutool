@@ -7,10 +7,10 @@ import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
 
@@ -78,7 +78,8 @@ public class JSONConverter implements Converter<JSON> {
 		if(targetType instanceof Class){
 			final Class<?> clazz = (Class<?>) targetType;
 			if (JSONBeanParser.class.isAssignableFrom(clazz)){
-				@SuppressWarnings("rawtypes") final JSONBeanParser target = (JSONBeanParser) ReflectUtil.newInstanceIfPossible(clazz);
+				@SuppressWarnings("rawtypes")
+				final JSONBeanParser target = (JSONBeanParser) ConstructorUtil.newInstanceIfPossible(clazz);
 				if(null == target){
 					throw new ConvertException("Can not instance [{}]", targetType);
 				}

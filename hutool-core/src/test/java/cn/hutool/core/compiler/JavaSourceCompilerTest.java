@@ -1,8 +1,8 @@
 package cn.hutool.core.compiler;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.compress.ZipUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class JavaSourceCompilerTest {
 //				.addLibrary(FileUtil.file("D:\\m2_repo\\cn\\hutool\\hutool-all\\5.5.7\\hutool-all-5.5.7.jar"))
 				.compile();
 		final Class<?> clazz = classLoader.loadClass("c.C");
-		final Object obj = ReflectUtil.newInstance(clazz);
+		final Object obj = ConstructorUtil.newInstance(clazz);
 		Assert.assertTrue(String.valueOf(obj).startsWith("c.C@"));
 	}
 

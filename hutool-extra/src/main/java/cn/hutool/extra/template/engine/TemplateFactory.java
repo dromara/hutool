@@ -1,9 +1,9 @@
 package cn.hutool.extra.template.engine;
 
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.util.ServiceLoaderUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateException;
@@ -61,7 +61,7 @@ public class TemplateFactory {
 		final Class<? extends TemplateEngine> customEngineClass = config.getCustomEngine();
 		final TemplateEngine engine;
 		if(null != customEngineClass){
-			engine = ReflectUtil.newInstance(customEngineClass);
+			engine = ConstructorUtil.newInstance(customEngineClass);
 		}else{
 			engine = ServiceLoaderUtil.loadFirstAvailable(TemplateEngine.class);
 		}

@@ -2,8 +2,6 @@ package cn.hutool.setting.dialect;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.getter.BasicTypeGetter;
-import cn.hutool.core.lang.getter.OptBasicTypeGetter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -16,10 +14,12 @@ import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.getter.BasicTypeGetter;
+import cn.hutool.core.lang.getter.OptBasicTypeGetter;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.log.StaticLog;
 
 import java.io.BufferedReader;
@@ -549,7 +549,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @since 4.6.3
 	 */
 	public <T> T toBean(final Class<T> beanClass, final String prefix) {
-		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
+		final T bean = ConstructorUtil.newInstanceIfPossible(beanClass);
 		return fillBean(bean, prefix);
 	}
 

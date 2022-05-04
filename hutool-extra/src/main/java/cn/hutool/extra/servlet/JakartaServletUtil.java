@@ -15,11 +15,11 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.net.URLEncoder;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
+import cn.hutool.core.reflect.ConstructorUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.text.StrUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.Cookie;
@@ -182,7 +182,7 @@ public class JakartaServletUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(final ServletRequest request, final Class<T> beanClass, final boolean isIgnoreError) {
-		return fillBean(request, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
+		return fillBean(request, ConstructorUtil.newInstanceIfPossible(beanClass), isIgnoreError);
 	}
 	// --------------------------------------------------------- fillBean end
 

@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import lombok.Data;
 import org.junit.Assert;
@@ -65,7 +65,7 @@ public class TypeUtilTest {
 	public void getActualTypesTest(){
 		// 测试多层级泛型参数是否能获取成功
 		final Type idType = TypeUtil.getActualType(Level3.class,
-				ReflectUtil.getField(Level3.class, "id"));
+				FieldUtil.getField(Level3.class, "id"));
 
 		Assert.assertEquals(Long.class, idType);
 	}

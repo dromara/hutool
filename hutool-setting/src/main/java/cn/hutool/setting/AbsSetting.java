@@ -5,9 +5,9 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromStringGetter;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -311,7 +311,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @since 5.0.6
 	 */
 	public <T> T toBean(final String group, final Class<T> beanClass) {
-		return toBean(group, ReflectUtil.newInstanceIfPossible(beanClass));
+		return toBean(group, ConstructorUtil.newInstanceIfPossible(beanClass));
 	}
 
 	/**

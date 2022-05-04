@@ -2,8 +2,8 @@ package cn.hutool.cron.task;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.cron.CronException;
 
@@ -44,7 +44,7 @@ public class InvokeTask implements Task{
 		if(null == clazz) {
 			throw new IllegalArgumentException("Load class with name of [" + className + "] fail !");
 		}
-		this.obj = ReflectUtil.newInstanceIfPossible(clazz);
+		this.obj = ConstructorUtil.newInstanceIfPossible(clazz);
 
 		//方法
 		final String methodName = classNameWithMethodName.substring(splitIndex + 1);
