@@ -72,7 +72,7 @@ public class TypeUtil {
 	 * @since 5.4.2
 	 */
 	public static Type getFieldType(final Class<?> clazz, final String fieldName) {
-		return getType(ReflectUtil.getField(clazz, fieldName));
+		return getType(FieldUtil.getField(clazz, fieldName));
 	}
 
 	/**

@@ -2,11 +2,11 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.reflect.ModifierUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.BooleanUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -143,9 +143,9 @@ public class BeanDesc implements Serializable {
 	private BeanDesc init() {
 		final Method[] gettersAndSetters = MethodUtil.getMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
-		for (final Field field : ReflectUtil.getFields(this.beanClass)) {
+		for (final Field field : FieldUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类
-			if (false == ModifierUtil.isStatic(field) && false == ReflectUtil.isOuterClassField(field)) {
+			if (false == ModifierUtil.isStatic(field) && false == FieldUtil.isOuterClassField(field)) {
 				prop = createProp(field, gettersAndSetters);
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
 				this.propMap.putIfAbsent(prop.getFieldName(), prop);

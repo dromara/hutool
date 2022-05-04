@@ -20,6 +20,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 反射中{@link Method}相关工具类，包括方法获取和方法执行
+ *
+ * @author looly
+ */
 public class MethodUtil {
 	/**
 	 * 方法缓存
@@ -69,7 +74,7 @@ public class MethodUtil {
 		}
 
 		final Method[] methods = getPublicMethods(clazz);
-		if(null == filter){
+		if (null == filter) {
 			return methods;
 		}
 

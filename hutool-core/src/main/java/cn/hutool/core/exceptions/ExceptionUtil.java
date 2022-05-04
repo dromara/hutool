@@ -2,9 +2,9 @@ package cn.hutool.core.exceptions;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
@@ -84,7 +84,7 @@ public class ExceptionUtil {
 		if (wrapThrowable.isInstance(throwable)) {
 			return (T) throwable;
 		}
-		return ReflectUtil.newInstance(wrapThrowable, throwable);
+		return ConstructorUtil.newInstance(wrapThrowable, throwable);
 	}
 
 	/**

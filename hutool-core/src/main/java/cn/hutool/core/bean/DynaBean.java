@@ -3,8 +3,8 @@ package cn.hutool.core.bean;
 import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param params    构造Bean所需要的参数
 	 */
 	public DynaBean(final Class<?> beanClass, final Object... params) {
-		this(ReflectUtil.newInstance(beanClass, params));
+		this(ConstructorUtil.newInstance(beanClass, params));
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @param beanClass Bean类
 	 */
 	public DynaBean(final Class<?> beanClass) {
-		this(ReflectUtil.newInstance(beanClass));
+		this(ConstructorUtil.newInstance(beanClass));
 	}
 
 	/**

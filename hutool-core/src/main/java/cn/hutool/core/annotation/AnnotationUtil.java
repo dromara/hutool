@@ -1,9 +1,9 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
@@ -277,7 +277,7 @@ public class AnnotationUtil {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static void setValue(final Annotation annotation, final String annotationField, final Object value) {
-		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+		final Map memberValues = (Map) FieldUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
 		memberValues.put(annotationField, value);
 	}
 

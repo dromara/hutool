@@ -5,14 +5,14 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -179,7 +179,7 @@ public class IterUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueMap(final Iterator<V> iter, final String fieldName) {
-		return toMap(iter, new HashMap<>(), (value) -> (K) ReflectUtil.getFieldValue(value, fieldName));
+		return toMap(iter, new HashMap<>(), (value) -> (K) FieldUtil.getFieldValue(value, fieldName));
 	}
 
 	/**
@@ -196,8 +196,8 @@ public class IterUtil {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueAsMap(final Iterator<?> iter, final String fieldNameForKey, final String fieldNameForValue) {
 		return toMap(iter, new HashMap<>(),
-				(value) -> (K) ReflectUtil.getFieldValue(value, fieldNameForKey),
-				(value) -> (V) ReflectUtil.getFieldValue(value, fieldNameForValue)
+				(value) -> (K) FieldUtil.getFieldValue(value, fieldNameForKey),
+				(value) -> (V) FieldUtil.getFieldValue(value, fieldNameForValue)
 		);
 	}
 
@@ -229,7 +229,7 @@ public class IterUtil {
 			V value;
 			while (iter.hasNext()) {
 				value = iter.next();
-				result.add(ReflectUtil.getFieldValue(value, fieldName));
+				result.add(FieldUtil.getFieldValue(value, fieldName));
 			}
 		}
 		return result;

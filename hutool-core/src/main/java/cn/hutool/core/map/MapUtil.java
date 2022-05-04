@@ -4,10 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Filter;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -244,7 +244,7 @@ public class MapUtil {
 		if (mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			return (Map<K, V>) ReflectUtil.newInstance(mapType);
+			return (Map<K, V>) ConstructorUtil.newInstance(mapType);
 		}
 	}
 
@@ -630,7 +630,7 @@ public class MapUtil {
 			return map;
 		}
 
-		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
+		Map<K, V> map2 = ConstructorUtil.newInstanceIfPossible(map.getClass());
 		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}
@@ -706,7 +706,7 @@ public class MapUtil {
 			return map;
 		}
 
-		Map<K, V> map2 = ReflectUtil.newInstanceIfPossible(map.getClass());
+		Map<K, V> map2 = ConstructorUtil.newInstanceIfPossible(map.getClass());
 		if (null == map2) {
 			map2 = new HashMap<>(map.size(), 1f);
 		}

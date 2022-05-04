@@ -7,9 +7,9 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.map.MapProxy;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -75,7 +75,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 			}
 
 			//限定被转换对象类型
-			return BeanCopier.create(value, ReflectUtil.newInstanceIfPossible(this.beanClass), this.beanType, this.copyOptions).copy();
+			return BeanCopier.create(value, ConstructorUtil.newInstanceIfPossible(this.beanClass), this.beanType, this.copyOptions).copy();
 		} else if(value instanceof byte[]){
 			// 尝试反序列化
 			return ObjUtil.deserialize((byte[])value);

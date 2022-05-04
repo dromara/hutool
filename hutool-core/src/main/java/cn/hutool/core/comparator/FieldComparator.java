@@ -1,7 +1,7 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
@@ -43,7 +43,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 */
 	public FieldComparator(final boolean nullGreater, final Field field) {
 		super(nullGreater, (bean) ->
-				(Comparable<?>) ReflectUtil.getFieldValue(bean,
+				(Comparable<?>) FieldUtil.getFieldValue(bean,
 						Assert.notNull(field, "Field must be not null!")));
 	}
 
@@ -55,7 +55,7 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 * @return 非null字段
 	 */
 	private static Field getNonNullField(final Class<?> beanClass, final String fieldName) {
-		final Field field = ReflectUtil.getField(beanClass, fieldName);
+		final Field field = FieldUtil.getField(beanClass, fieldName);
 		if (field == null) {
 			throw new IllegalArgumentException(StrUtil.format("Field [{}] not found in Class [{}]", fieldName, beanClass.getName()));
 		}

@@ -3,8 +3,8 @@ package cn.hutool.core.util;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
@@ -134,7 +134,7 @@ public class EnumUtil {
 			value = value.toString().trim();
 		}
 
-		final Field[] fields = ReflectUtil.getFields(enumClass);
+		final Field[] fields = FieldUtil.getFields(enumClass);
 		final Enum<?>[] enums = enumClass.getEnumConstants();
 		String fieldName;
 		for (final Field field : fields) {
@@ -144,7 +144,7 @@ public class EnumUtil {
 				continue;
 			}
 			for (final Enum<?> enumObj : enums) {
-				if (ObjUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
+				if (ObjUtil.equal(value, FieldUtil.getFieldValue(enumObj, field))) {
 					return (E) enumObj;
 				}
 			}
@@ -184,7 +184,7 @@ public class EnumUtil {
 		}
 		final List<Object> list = new ArrayList<>(enums.length);
 		for (final Enum<?> e : enums) {
-			list.add(ReflectUtil.getFieldValue(e, fieldName));
+			list.add(FieldUtil.getFieldValue(e, fieldName));
 		}
 		return list;
 	}
@@ -203,7 +203,7 @@ public class EnumUtil {
 	 */
 	public static List<String> getFieldNames(final Class<? extends Enum<?>> clazz) {
 		final List<String> names = new ArrayList<>();
-		final Field[] fields = ReflectUtil.getFields(clazz);
+		final Field[] fields = FieldUtil.getFields(clazz);
 		String name;
 		for (final Field field : fields) {
 			name = field.getName();
@@ -305,7 +305,7 @@ public class EnumUtil {
 		}
 		final Map<String, Object> map = MapUtil.newHashMap(enums.length, true);
 		for (final Enum<?> e : enums) {
-			map.put(e.name(), ReflectUtil.getFieldValue(e, fieldName));
+			map.put(e.name(), FieldUtil.getFieldValue(e, fieldName));
 		}
 		return map;
 	}

@@ -2,7 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -36,7 +36,7 @@ public final class Singleton {
 	public static <T> T get(final Class<T> clazz, final Object... params) {
 		Assert.notNull(clazz, "Class must be not null !");
 		final String key = buildKey(clazz.getName(), params);
-		return get(key, () -> ReflectUtil.newInstance(clazz, params));
+		return get(key, () -> ConstructorUtil.newInstance(clazz, params));
 	}
 
 	/**

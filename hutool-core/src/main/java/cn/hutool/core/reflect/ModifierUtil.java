@@ -2,9 +2,7 @@ package cn.hutool.core.reflect;
 
 import cn.hutool.core.util.ArrayUtil;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 
 /**
@@ -109,63 +107,25 @@ public class ModifierUtil {
 	/**
 	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
 	 *
-	 * @param constructor   构造方法
+	 * @param member        构造、字段或方法
 	 * @param modifierTypes 修饰符枚举
 	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
 	 */
-	public static boolean hasModifier(final Constructor<?> constructor, final ModifierType... modifierTypes) {
-		if (null == constructor || ArrayUtil.isEmpty(modifierTypes)) {
+	public static boolean hasModifier(final Member member, final ModifierType... modifierTypes) {
+		if (null == member || ArrayUtil.isEmpty(modifierTypes)) {
 			return false;
 		}
-		return 0 != (constructor.getModifiers() & modifiersToInt(modifierTypes));
+		return 0 != (member.getModifiers() & modifiersToInt(modifierTypes));
 	}
 
 	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
+	 * 是否是Public成员，可检测包括构造、字段和方法
 	 *
-	 * @param method        方法
-	 * @param modifierTypes 修饰符枚举
-	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
-	 */
-	public static boolean hasModifier(final Method method, final ModifierType... modifierTypes) {
-		if (null == method || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (method.getModifiers() & modifiersToInt(modifierTypes));
-	}
-
-	/**
-	 * 是否同时存在一个或多个修饰符（可能有多个修饰符，如果有指定的修饰符则返回true）
-	 *
-	 * @param field         字段
-	 * @param modifierTypes 修饰符枚举
-	 * @return 是否有指定修饰符，如果有返回true，否则false，如果提供参数为null返回false
-	 */
-	public static boolean hasModifier(final Field field, final ModifierType... modifierTypes) {
-		if (null == field || ArrayUtil.isEmpty(modifierTypes)) {
-			return false;
-		}
-		return 0 != (field.getModifiers() & modifiersToInt(modifierTypes));
-	}
-
-	/**
-	 * 是否是Public字段
-	 *
-	 * @param field 字段
+	 * @param member 构造、字段或方法
 	 * @return 是否是Public
 	 */
-	public static boolean isPublic(final Field field) {
-		return hasModifier(field, ModifierType.PUBLIC);
-	}
-
-	/**
-	 * 是否是Public方法
-	 *
-	 * @param method 方法
-	 * @return 是否是Public
-	 */
-	public static boolean isPublic(final Method method) {
-		return hasModifier(method, ModifierType.PUBLIC);
+	public static boolean isPublic(final Member member) {
+		return hasModifier(member, ModifierType.PUBLIC);
 	}
 
 	/**
@@ -179,35 +139,14 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否是Public构造
+	 * 是否是static成员，包括构造、字段或方法
 	 *
-	 * @param constructor 构造
-	 * @return 是否是Public
-	 */
-	public static boolean isPublic(final Constructor<?> constructor) {
-		return hasModifier(constructor, ModifierType.PUBLIC);
-	}
-
-	/**
-	 * 是否是static字段
-	 *
-	 * @param field 字段
+	 * @param member 构造、字段或方法
 	 * @return 是否是static
 	 * @since 4.0.8
 	 */
-	public static boolean isStatic(final Field field) {
-		return hasModifier(field, ModifierType.STATIC);
-	}
-
-	/**
-	 * 是否是static方法
-	 *
-	 * @param method 方法
-	 * @return 是否是static
-	 * @since 4.0.8
-	 */
-	public static boolean isStatic(final Method method) {
-		return hasModifier(method, ModifierType.STATIC);
+	public static boolean isStatic(final Member member) {
+		return hasModifier(member, ModifierType.STATIC);
 	}
 
 	/**
@@ -222,25 +161,14 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否是合成字段（由java编译器生成的）
+	 * 是否是合成成员（由java编译器生成的）
 	 *
-	 * @param field 字段
+	 * @param member 构造、字段或方法
 	 * @return 是否是合成字段
 	 * @since 5.6.3
 	 */
-	public static boolean isSynthetic(final Field field) {
-		return field.isSynthetic();
-	}
-
-	/**
-	 * 是否是合成方法（由java编译器生成的）
-	 *
-	 * @param method 方法
-	 * @return 是否是合成方法
-	 * @since 5.6.3
-	 */
-	public static boolean isSynthetic(final Method method) {
-		return method.isSynthetic();
+	public static boolean isSynthetic(final Member member) {
+		return member.isSynthetic();
 	}
 
 	/**
@@ -255,14 +183,14 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否抽象方法
+	 * 是否抽象成员
 	 *
-	 * @param method 方法
+	 * @param member 构造、字段或方法
 	 * @return 是否抽象方法
 	 * @since 5.7.23
 	 */
-	public static boolean isAbstract(final Method method) {
-		return hasModifier(method, ModifierType.ABSTRACT);
+	public static boolean isAbstract(final Member member) {
+		return hasModifier(member, ModifierType.ABSTRACT);
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method start
 

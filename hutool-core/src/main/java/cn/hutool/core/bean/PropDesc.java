@@ -3,6 +3,7 @@ package cn.hutool.core.bean;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
@@ -53,7 +54,7 @@ public class PropDesc {
 	 * @return 字段名
 	 */
 	public String getFieldName() {
-		return ReflectUtil.getFieldName(this.field);
+		return FieldUtil.getFieldName(this.field);
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class PropDesc {
 		if (null != this.getter) {
 			return MethodUtil.invoke(bean, this.getter);
 		} else if (ModifierUtil.isPublic(this.field)) {
-			return ReflectUtil.getFieldValue(bean, this.field);
+			return FieldUtil.getFieldValue(bean, this.field);
 		}
 
 		return null;
@@ -225,7 +226,7 @@ public class PropDesc {
 		if (null != this.setter) {
 			MethodUtil.invoke(bean, this.setter, value);
 		} else if (ModifierUtil.isPublic(this.field)) {
-			ReflectUtil.setFieldValue(bean, this.field, value);
+			FieldUtil.setFieldValue(bean, this.field, value);
 		}
 		return this;
 	}

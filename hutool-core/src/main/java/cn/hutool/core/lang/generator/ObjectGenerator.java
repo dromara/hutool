@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.generator;
 
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 
 /**
  * 对象生成器，通过指定对象的Class类型，调用next方法时生成新的对象。
@@ -23,6 +23,6 @@ public class ObjectGenerator<T> implements Generator<T> {
 
 	@Override
 	public T next() {
-		return ReflectUtil.newInstanceIfPossible(this.clazz);
+		return ConstructorUtil.newInstanceIfPossible(this.clazz);
 	}
 }

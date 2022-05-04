@@ -17,13 +17,14 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
+import cn.hutool.core.reflect.FieldUtil;
+import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
-import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.reflect.TypeUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -1010,7 +1011,7 @@ public class CollUtil {
 		// Others，直接实例化
 		else {
 			try {
-				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
+				list = (Collection<T>) ConstructorUtil.newInstance(collectionType);
 			} catch (final Exception e) {
 				// 无法创建当前类型的对象，尝试创建父类型对象
 				final Class<?> superclass = collectionType.getSuperclass();
@@ -1407,7 +1408,7 @@ public class CollUtil {
 			if (bean instanceof Map) {
 				return ((Map<?, ?>) bean).get(fieldName);
 			} else {
-				return ReflectUtil.getFieldValue(bean, fieldName);
+				return FieldUtil.getFieldValue(bean, fieldName);
 			}
 		}, ignoreNull);
 	}
@@ -1500,7 +1501,7 @@ public class CollUtil {
 			}
 
 			// 普通Bean
-			final Object value = ReflectUtil.getFieldValue(t, fieldName);
+			final Object value = FieldUtil.getFieldValue(t, fieldName);
 			return ObjUtil.equal(value, fieldValue);
 		});
 	}
@@ -2648,7 +2649,7 @@ public class CollUtil {
 					// 非Bean放在同一子分组中
 					return 0;
 				}
-				final Object value = ReflectUtil.getFieldValue(t, fieldName);
+				final Object value = FieldUtil.getFieldValue(t, fieldName);
 				final int hash = fieldNameList.indexOf(value);
 				if (hash < 0) {
 					fieldNameList.add(value);

@@ -8,12 +8,13 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
+import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.ModifierUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -298,7 +299,7 @@ public class BeanUtil {
 				return ArrayUtil.map(bean, Object.class, (beanEle) -> getFieldValue(beanEle, fieldNameOrIndex));
 			}
 		} else {// 普通Bean对象
-			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex);
+			return FieldUtil.getFieldValue(bean, fieldNameOrIndex);
 		}
 	}
 
@@ -320,7 +321,7 @@ public class BeanUtil {
 			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
-			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
+			FieldUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
 
@@ -368,7 +369,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T mapToBean(final Map<?, ?> map, final Class<T> beanClass, final boolean isToCamelCase, final CopyOptions copyOptions) {
-		return fillBeanWithMap(map, ReflectUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
+		return fillBeanWithMap(map, ConstructorUtil.newInstanceIfPossible(beanClass), isToCamelCase, copyOptions);
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
@@ -504,7 +505,7 @@ public class BeanUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T toBean(final Object source, final Class<T> clazz, final CopyOptions options) {
-		return toBean(source, () -> ReflectUtil.newInstanceIfPossible(clazz), options);
+		return toBean(source, () -> ConstructorUtil.newInstanceIfPossible(clazz), options);
 	}
 
 	/**
@@ -539,7 +540,7 @@ public class BeanUtil {
 		if (null == beanClass || null == valueProvider) {
 			return null;
 		}
-		return fillBean(ReflectUtil.newInstanceIfPossible(beanClass), valueProvider, copyOptions);
+		return fillBean(ConstructorUtil.newInstanceIfPossible(beanClass), valueProvider, copyOptions);
 	}
 
 	/**
@@ -681,7 +682,7 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final Class<T> tClass, final String... ignoreProperties) {
-		final T target = ReflectUtil.newInstanceIfPossible(tClass);
+		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 		return target;
 	}
@@ -740,7 +741,7 @@ public class BeanUtil {
 			return new ArrayList<>(0);
 		}
 		return collection.stream().map((source) -> {
-			final T target = ReflectUtil.newInstanceIfPossible(targetType);
+			final T target = ConstructorUtil.newInstanceIfPossible(targetType);
 			copyProperties(source, target, copyOptions);
 			return target;
 		}).collect(Collectors.toList());
@@ -793,7 +794,7 @@ public class BeanUtil {
 			return null;
 		}
 
-		final Field[] fields = ReflectUtil.getFields(bean.getClass());
+		final Field[] fields = FieldUtil.getFields(bean.getClass());
 		for (final Field field : fields) {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
@@ -821,12 +822,12 @@ public class BeanUtil {
 			}
 			if (String.class.equals(field.getType())) {
 				// 只有String的Field才处理
-				final String val = (String) ReflectUtil.getFieldValue(bean, field);
+				final String val = (String) FieldUtil.getFieldValue(bean, field);
 				if (null != val) {
 					final String trimVal = StrUtil.trim(val);
 					if (false == val.equals(trimVal)) {
 						// Field Value不为null，且首尾有空格才处理
-						ReflectUtil.setFieldValue(bean, field, trimVal);
+						FieldUtil.setFieldValue(bean, field, trimVal);
 					}
 				}
 			}
@@ -857,12 +858,12 @@ public class BeanUtil {
 	 */
 	public static boolean isEmpty(final Object bean, final String... ignoreFiledNames) {
 		if (null != bean) {
-			for (final Field field : ReflectUtil.getFields(bean.getClass())) {
+			for (final Field field : FieldUtil.getFields(bean.getClass())) {
 				if (ModifierUtil.isStatic(field)) {
 					continue;
 				}
 				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
-						&& null != ReflectUtil.getFieldValue(bean, field)) {
+						&& null != FieldUtil.getFieldValue(bean, field)) {
 					return false;
 				}
 			}
@@ -883,12 +884,12 @@ public class BeanUtil {
 		if (null == bean) {
 			return true;
 		}
-		for (final Field field : ReflectUtil.getFields(bean.getClass())) {
+		for (final Field field : FieldUtil.getFields(bean.getClass())) {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
 			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
-					&& null == ReflectUtil.getFieldValue(bean, field)) {
+					&& null == FieldUtil.getFieldValue(bean, field)) {
 				return true;
 			}
 		}
