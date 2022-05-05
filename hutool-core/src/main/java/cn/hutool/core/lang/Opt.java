@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 
 /**
  * 复制jdk16中的Optional，以及自己进行了一点调整和新增，比jdk8中的Optional多了几个实用的函数<br>
- * 详细见：https://gitee.com/dromara/hutool/pulls/426
+ * 详细见：<a href="https://gitee.com/dromara/hutool/pulls/426">https://gitee.com/dromara/hutool/pulls/426</a>
  *
  * @param <T> 包裹里元素的类型
  * @author VampireAchao
@@ -60,8 +60,7 @@ public class Opt<T> {
 	 * @return Opt
 	 */
 	public static <T> Opt<T> empty() {
-		@SuppressWarnings("unchecked")
-		Opt<T> t = (Opt<T>) EMPTY;
+		@SuppressWarnings("unchecked") final Opt<T> t = (Opt<T>) EMPTY;
 		return t;
 	}
 
@@ -322,7 +321,7 @@ public class Opt<T> {
 			return empty();
 		} else {
 			@SuppressWarnings("unchecked")
-			Opt<U> r = (Opt<U>) mapper.apply(value);
+			final Opt<U> r = (Opt<U>) mapper.apply(value);
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -400,8 +399,7 @@ public class Opt<T> {
 		if (isPresent()) {
 			return this;
 		} else {
-			@SuppressWarnings("unchecked")
-			Opt<T> r = (Opt<T>) supplier.get();
+			@SuppressWarnings("unchecked") final Opt<T> r = (Opt<T>) supplier.get();
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -544,7 +542,7 @@ public class Opt<T> {
 			return false;
 		}
 
-		Opt<?> other = (Opt<?>) obj;
+		final Opt<?> other = (Opt<?>) obj;
 		return Objects.equals(value, other.value);
 	}
 
