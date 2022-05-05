@@ -105,7 +105,7 @@ public class CellUtil {
 			cellType = cell.getCellType();
 		}
 
-		Object value;
+		final Object value;
 		switch (cellType) {
 			case NUMERIC:
 				value = new NumericCellValue(cell).getValue();
@@ -206,7 +206,7 @@ public class CellUtil {
 		if (null == row) {
 			return null;
 		}
-		Cell cell = row.getCell(cellIndex);
+		final Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			return new NullCell(row, cellIndex);
 		}
@@ -262,7 +262,7 @@ public class CellUtil {
 	 * @param sheet {@link Sheet}
 	 * @param x     列号，从0开始
 	 * @param y     行号，从0开始
-	 * @return 是否是合并单元格
+	 * @return 是否是合并单元格，如果提供的sheet为{@code null}，返回{@code false}
 	 */
 	public static boolean isMergedRegion(Sheet sheet, int x, int y) {
 		if (sheet != null) {
@@ -285,6 +285,7 @@ public class CellUtil {
 	 * @param sheet       {@link Sheet}
 	 * @param locationRef 单元格地址标识符，例如A11，B5
 	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
 	 */
 	public static CellRangeAddress getCellRangeAddress(Sheet sheet, String locationRef) {
 		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
@@ -296,6 +297,7 @@ public class CellUtil {
 	 *
 	 * @param cell {@link Cell}
 	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
 	 */
 	public static CellRangeAddress getCellRangeAddress(Cell cell) {
 		return getCellRangeAddress(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
@@ -308,6 +310,7 @@ public class CellUtil {
 	 * @param x     列号，从0开始
 	 * @param y     行号，从0开始
 	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
 	 */
 	public static CellRangeAddress getCellRangeAddress(Sheet sheet, int x, int y) {
 		if (sheet != null) {
@@ -331,7 +334,7 @@ public class CellUtil {
 	 * @param cellStyle {@link CellStyle}
 	 */
 	public static void setMergedRegionStyle(Cell cell, CellStyle cellStyle) {
-		CellRangeAddress cellRangeAddress = getCellRangeAddress(cell);
+		final CellRangeAddress cellRangeAddress = getCellRangeAddress(cell);
 		if (cellRangeAddress != null) {
 			setMergeCellStyle(cellStyle, cellRangeAddress, cell.getSheet());
 		}
@@ -457,7 +460,7 @@ public class CellUtil {
 			anchor.setRow1(cell.getRowIndex());
 			anchor.setRow2(cell.getRowIndex() + 2);
 		}
-		Comment comment = drawing.createCellComment(anchor);
+		final Comment comment = drawing.createCellComment(anchor);
 		comment.setString(factory.createRichTextString(commentText));
 		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
 		cell.setCellComment(comment);
