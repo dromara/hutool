@@ -14,6 +14,7 @@
 * 【core   】     BeanUtil增加beanToMap重载（pr#2292@Github）
 * 【core   】     Assert增加对应的equals及notEquals方法（pr#612@Gitee）
 * 【core   】     Assert增加对应的equals及notEquals方法（pr#612@Gitee）
+* 【core   】     DigestUtil增加sha512方法（issue#2298@Github）
 
 ### 🐞Bug修复
 * 【db     】     修复RedisDS无法设置maxWaitMillis问题（issue#I54TZ9@Gitee）
