@@ -216,9 +216,9 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 			}
 			if (obj instanceof Cell) {
 				final Cell<?, ?, ?> other = (Cell<?, ?, ?>) obj;
-				return ObjUtil.equal(rowKey, other.getRowKey())
-						&& ObjUtil.equal(columnKey, other.getColumnKey())
-						&& ObjUtil.equal(value, other.getValue());
+				return ObjUtil.equals(rowKey, other.getRowKey())
+						&& ObjUtil.equals(columnKey, other.getColumnKey())
+						&& ObjUtil.equals(value, other.getValue());
 			}
 			return false;
 		}

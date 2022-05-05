@@ -50,7 +50,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 */
 	@Override
 	public int compare(final String version1, final String version2) {
-		if(ObjUtil.equal(version1, version2)) {
+		if(ObjUtil.equals(version1, version2)) {
 			return 0;
 		}
 		if (version1 == null && version2 == null) {

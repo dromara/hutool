@@ -117,7 +117,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public List<V> getValues(final K key) {
 		return CollUtil.getAny(
 				this.values,
-				ListUtil.indexOfAll(this.keys, (ele) -> ObjUtil.equal(ele, key))
+				ListUtil.indexOfAll(this.keys, (ele) -> ObjUtil.equals(ele, key))
 		);
 	}
 
@@ -131,7 +131,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public List<K> getKeys(final V value) {
 		return CollUtil.getAny(
 				this.keys,
-				ListUtil.indexOfAll(this.values, (ele) -> ObjUtil.equal(ele, value))
+				ListUtil.indexOfAll(this.values, (ele) -> ObjUtil.equals(ele, value))
 		);
 	}
 

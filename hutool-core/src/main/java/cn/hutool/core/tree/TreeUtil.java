@@ -172,7 +172,7 @@ public class TreeUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> Tree<T> getNode(final Tree<T> node, final T id) {
-		if (ObjUtil.equal(id, node.getId())) {
+		if (ObjUtil.equals(id, node.getId())) {
 			return node;
 		}
 

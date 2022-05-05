@@ -1497,12 +1497,12 @@ public class CollUtil {
 			if (t instanceof Map) {
 				final Map<?, ?> map = (Map<?, ?>) t;
 				final Object value = map.get(fieldName);
-				return ObjUtil.equal(value, fieldValue);
+				return ObjUtil.equals(value, fieldValue);
 			}
 
 			// 普通Bean
 			final Object value = FieldUtil.getFieldValue(t, fieldName);
-			return ObjUtil.equal(value, fieldValue);
+			return ObjUtil.equals(value, fieldValue);
 		});
 	}
 

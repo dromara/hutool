@@ -797,7 +797,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(final T[] array, final Object value, final int beginIndexInclude) {
-		return matchIndex((obj) -> ObjUtil.equal(value, obj), beginIndexInclude, array);
+		return matchIndex((obj) -> ObjUtil.equals(value, obj), beginIndexInclude, array);
 	}
 
 	/**
@@ -810,7 +810,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(final T[] array, final Object value) {
-		return matchIndex((obj) -> ObjUtil.equal(value, obj), array);
+		return matchIndex((obj) -> ObjUtil.equals(value, obj), array);
 	}
 
 	/**
@@ -861,7 +861,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> int lastIndexOf(final T[] array, final Object value, final int endInclude) {
 		if (isNotEmpty(array)) {
 			for (int i = endInclude; i >= 0; i--) {
-				if (ObjUtil.equal(value, array[i])) {
+				if (ObjUtil.equals(value, array[i])) {
 					return i;
 				}
 			}
@@ -1816,7 +1816,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (false == ObjUtil.equals(array[i + firstIndex], subArray[i])) {
 				return indexOfSub(array, firstIndex + 1, subArray);
 			}
 		}
@@ -1861,7 +1861,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (false == ObjUtil.equals(array[i + firstIndex], subArray[i])) {
 				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}

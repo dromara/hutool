@@ -206,7 +206,7 @@ public class Validator {
 	 * @return 当两值都为null或相等返回true
 	 */
 	public static boolean equal(final Object t1, final Object t2) {
-		return ObjUtil.equal(t1, t2);
+		return ObjUtil.equals(t1, t2);
 	}
 
 	/**

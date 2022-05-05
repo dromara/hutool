@@ -144,7 +144,7 @@ public class EnumUtil {
 				continue;
 			}
 			for (final Enum<?> enumObj : enums) {
-				if (ObjUtil.equal(value, FieldUtil.getFieldValue(enumObj, field))) {
+				if (ObjUtil.equals(value, FieldUtil.getFieldValue(enumObj, field))) {
 					return (E) enumObj;
 				}
 			}
