@@ -71,7 +71,7 @@ public class EnjoyEngine implements TemplateEngine {
 		if(null == this.engine){
 			init(TemplateConfig.DEFAULT);
 		}
-		if (ObjUtil.equal(ResourceMode.STRING, this.resourceMode)) {
+		if (ObjUtil.equals(ResourceMode.STRING, this.resourceMode)) {
 			return EnjoyTemplate.wrap(this.engine.getTemplateByString(resource));
 		}
 		return EnjoyTemplate.wrap(this.engine.getTemplate(resource));

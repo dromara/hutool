@@ -4,9 +4,9 @@ import cn.hutool.core.builder.Builder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -249,41 +249,6 @@ public class Mail implements Builder<MimeMessage> {
 	}
 
 	/**
-	 * 增加附件或图片，附件使用{@link DataSource} 形式表示，可以使用{@link FileDataSource}包装文件表示文件附件
-	 *
-	 * @param attachments 附件列表
-	 * @return this
-	 * @since 4.0.9
-	 */
-	public Mail setAttachments(final DataSource... attachments) {
-		if (ArrayUtil.isNotEmpty(attachments)) {
-			final Charset charset = this.mailAccount.getCharset();
-			MimeBodyPart bodyPart;
-			String nameEncoded;
-			try {
-				for (final DataSource attachment : attachments) {
-					bodyPart = new MimeBodyPart();
-					bodyPart.setDataHandler(new DataHandler(attachment));
-					nameEncoded = attachment.getName();
-					if (this.mailAccount.isEncodefilename()) {
-						nameEncoded = InternalMailUtil.encodeText(nameEncoded, charset);
-					}
-					// 普通附件文件名
-					bodyPart.setFileName(nameEncoded);
-					if (StrUtil.startWith(attachment.getContentType(), "image/")) {
-						// 图片附件，用于正文中引用图片
-						bodyPart.setContentID(nameEncoded);
-					}
-					this.multipart.addBodyPart(bodyPart);
-				}
-			} catch (final MessagingException e) {
-				throw new MailException(e);
-			}
-		}
-		return this;
-	}
-
-	/**
 	 * 增加图片，图片的键对应到邮件模板中的占位字符串，图片类型默认为"image/jpeg"
 	 *
 	 * @param cid         图片与占位符，占位符格式为cid:${cid}
@@ -331,6 +296,42 @@ public class Mail implements Builder<MimeMessage> {
 		} finally {
 			IoUtil.close(in);
 		}
+	}
+
+	/**
+	 * 增加附件或图片，附件使用{@link DataSource} 形式表示，可以使用{@link FileDataSource}包装文件表示文件附件
+	 *
+	 * @param attachments 附件列表
+	 * @return this
+	 * @since 4.0.9
+	 */
+	public Mail setAttachments(final DataSource... attachments) {
+		if (ArrayUtil.isNotEmpty(attachments)) {
+			final Charset charset = this.mailAccount.getCharset();
+			MimeBodyPart bodyPart;
+			String nameEncoded;
+			try {
+				for (final DataSource attachment : attachments) {
+					bodyPart = new MimeBodyPart();
+					bodyPart.setDataHandler(new DataHandler(attachment));
+					nameEncoded = attachment.getName();
+					if (this.mailAccount.isEncodefilename()) {
+						nameEncoded = InternalMailUtil.encodeText(nameEncoded, charset);
+					}
+					// 普通附件文件名
+					bodyPart.setFileName(nameEncoded);
+					if (StrUtil.startWith(attachment.getContentType(), "image/")) {
+						// 图片附件，用于正文中引用图片
+						bodyPart.setContentID(nameEncoded);
+						bodyPart.setDisposition(MimeBodyPart.INLINE);
+					}
+					this.multipart.addBodyPart(bodyPart);
+				}
+			} catch (final MessagingException e) {
+				throw new MailException(e);
+			}
+		}
+		return this;
 	}
 
 	/**

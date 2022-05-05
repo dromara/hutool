@@ -66,4 +66,15 @@ public class MailTest {
 		final Properties props = account.getSmtpProps();
 		Assert.assertEquals("true", props.getProperty("mail.debug"));
 	}
+
+	@Test
+	@Ignore
+	public void sendHtmlWithPicsTest() {
+		HashMap<String, InputStream> map = new HashMap<>();
+		map.put("abc", FileUtil.getInputStream("D:/test/abc.png"));
+		map.put("abcd",FileUtil.getInputStream("D:/test/def.png"));
+
+		MailUtil.sendHtml("loolly@aliyun.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:abc\"/><img src=\"cid:abcd\"/>",
+				map);
+	}
 }
