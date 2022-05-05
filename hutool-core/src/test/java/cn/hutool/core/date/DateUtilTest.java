@@ -1065,6 +1065,17 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void isOverlapTest2() {
+		DateTime oneStartTime = DateUtil.parseDate("2021-02-01");
+		DateTime oneEndTime = DateUtil.parseDate("2022-06-30");
+
+		DateTime oneStartTime2 = DateUtil.parseDate("2019-04-05");
+		DateTime oneEndTime2 = DateUtil.parseDate("2021-04-05");
+
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, oneStartTime2, oneEndTime2));
+	}
+
+	@Test
 	public void isInTest(){
 		String sourceStr = "2022-04-19 00:00:00";
 		String startTimeStr = "2022-04-19 00:00:00";

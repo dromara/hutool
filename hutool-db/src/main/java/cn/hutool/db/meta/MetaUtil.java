@@ -82,13 +82,13 @@ public class MetaUtil {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = getCatalog(conn);
+			final String catalog = getCatalog(conn);
 			if (null == schema) {
 				schema = getSchema(conn);
 			}
 
 			final DatabaseMetaData metaData = conn.getMetaData();
-			try (ResultSet rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types))) {
+			try (final ResultSet rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types))) {
 				if (null != rs) {
 					String table;
 					while (rs.next()) {
@@ -116,9 +116,9 @@ public class MetaUtil {
 	 */
 	public static String[] getColumnNames(ResultSet rs) throws DbRuntimeException {
 		try {
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
-			String[] labelNames = new String[columnCount];
+			final ResultSetMetaData rsmd = rs.getMetaData();
+			final int columnCount = rsmd.getColumnCount();
+			final String[] labelNames = new String[columnCount];
 			for (int i = 0; i < labelNames.length; i++) {
 				labelNames[i] = rsmd.getColumnLabel(i + 1);
 			}
@@ -137,17 +137,17 @@ public class MetaUtil {
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public static String[] getColumnNames(DataSource ds, String tableName) {
-		List<String> columnNames = new ArrayList<>();
+		final List<String> columnNames = new ArrayList<>();
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = getCatalog(conn);
-			String schema = getSchema(conn);
+			final String catalog = getCatalog(conn);
+			final String schema = getSchema(conn);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
-			try (ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
+			try (final ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
 				if (null != rs) {
 					while (rs.next()) {
 						columnNames.add(rs.getString("COLUMN_NAME"));
@@ -225,7 +225,7 @@ public class MetaUtil {
 			final DatabaseMetaData metaData = conn.getMetaData();
 
 			// 获得表元数据（表注释）
-			try (ResultSet rs = metaData.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.value()})) {
+			try (final ResultSet rs = metaData.getTables(catalog, schema, tableName, new String[]{TableType.TABLE.value()})) {
 				if (null != rs) {
 					if (rs.next()) {
 						table.setComment(rs.getString("REMARKS"));
@@ -235,7 +235,7 @@ public class MetaUtil {
 			}
 
 			// 获得主键
-			try (ResultSet rs = metaData.getPrimaryKeys(catalog, schema, tableName)) {
+			try (final ResultSet rs = metaData.getPrimaryKeys(catalog, schema, tableName)) {
 				if (null != rs) {
 					while (rs.next()) {
 						table.addPk(rs.getString("COLUMN_NAME"));
@@ -244,7 +244,7 @@ public class MetaUtil {
 			}
 
 			// 获得列
-			try (ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
+			try (final ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
 				if (null != rs) {
 					while (rs.next()) {
 						table.setColumn(Column.create(table, rs));
@@ -253,7 +253,7 @@ public class MetaUtil {
 			}
 
 			// 获得索引信息(since 5.7.23)
-			try (ResultSet rs = metaData.getIndexInfo(catalog, schema, tableName, false, false)) {
+			try (final ResultSet rs = metaData.getIndexInfo(catalog, schema, tableName, false, false)) {
 				final Map<String, IndexInfo> indexInfoMap = new LinkedHashMap<>();
 				if (null != rs) {
 					while (rs.next()) {

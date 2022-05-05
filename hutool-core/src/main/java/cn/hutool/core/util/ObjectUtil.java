@@ -104,7 +104,7 @@ public class ObjectUtil {
 
 		int count;
 		if (obj instanceof Iterator) {
-			Iterator<?> iter = (Iterator<?>) obj;
+			final Iterator<?> iter = (Iterator<?>) obj;
 			count = 0;
 			while (iter.hasNext()) {
 				count++;
@@ -113,7 +113,7 @@ public class ObjectUtil {
 			return count;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration<?> enumeration = (Enumeration<?>) obj;
+			final Enumeration<?> enumeration = (Enumeration<?>) obj;
 			count = 0;
 			while (enumeration.hasMoreElements()) {
 				count++;
@@ -161,9 +161,9 @@ public class ObjectUtil {
 		}
 
 		if (obj instanceof Iterator) {
-			Iterator<?> iter = (Iterator<?>) obj;
+			final Iterator<?> iter = (Iterator<?>) obj;
 			while (iter.hasNext()) {
-				Object o = iter.next();
+				final Object o = iter.next();
 				if (equal(o, element)) {
 					return true;
 				}
@@ -171,9 +171,9 @@ public class ObjectUtil {
 			return false;
 		}
 		if (obj instanceof Enumeration) {
-			Enumeration<?> enumeration = (Enumeration<?>) obj;
+			final Enumeration<?> enumeration = (Enumeration<?>) obj;
 			while (enumeration.hasMoreElements()) {
-				Object o = enumeration.nextElement();
+				final Object o = enumeration.nextElement();
 				if (equal(o, element)) {
 					return true;
 				}
@@ -181,9 +181,9 @@ public class ObjectUtil {
 			return false;
 		}
 		if (obj.getClass().isArray() == true) {
-			int len = Array.getLength(obj);
+			final int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
+				final Object o = Array.get(obj, i);
 				if (equal(o, element)) {
 					return true;
 				}
