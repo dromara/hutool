@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;

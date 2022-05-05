@@ -1,10 +1,8 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.crypto.symmetric.RC4;
 
 public class RC4Test {
 

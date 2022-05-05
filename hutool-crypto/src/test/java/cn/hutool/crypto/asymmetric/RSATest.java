@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test.asymmetric;
+package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.ArrayUtil;
@@ -8,9 +8,6 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
-import cn.hutool.crypto.asymmetric.KeyType;
-import cn.hutool.crypto.asymmetric.RSA;
 import org.junit.Assert;
 import org.junit.Test;
 

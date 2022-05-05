@@ -1,8 +1,7 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.symmetric.ZUC;
 import org.junit.Assert;
 import org.junit.Test;
 

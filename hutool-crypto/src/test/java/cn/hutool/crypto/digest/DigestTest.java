@@ -1,12 +1,10 @@
-package cn.hutool.crypto.test.digest;
+package cn.hutool.crypto.digest;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.crypto.digest.DigestAlgorithm;
-import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.crypto.digest.Digester;
 
 /**
  * 摘要算法单元测试
@@ -72,5 +70,12 @@ public class DigestTest {
 		final String testStr = "Test中文";
 		final String hex = DigestUtil.sha256Hex(testStr);
 		Assert.assertEquals(64, hex.length());
+	}
+
+	@Test
+	public void hash512Test() {
+		final String testStr = "Test中文";
+		final String hex = DigestUtil.sha512Hex(testStr);
+		Assert.assertEquals(128, hex.length());
 	}
 }

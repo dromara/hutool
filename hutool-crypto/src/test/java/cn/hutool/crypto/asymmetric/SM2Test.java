@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test.asymmetric;
+package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
@@ -8,8 +8,6 @@ import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
-import cn.hutool.crypto.asymmetric.KeyType;
-import cn.hutool.crypto.asymmetric.SM2;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.jcajce.spec.OpenSSHPrivateKeySpec;

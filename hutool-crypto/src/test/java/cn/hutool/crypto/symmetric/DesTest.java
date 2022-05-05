@@ -1,10 +1,9 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.DES;
 import org.junit.Assert;
 import org.junit.Test;
 

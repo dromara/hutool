@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -9,12 +9,6 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.crypto.symmetric.DES;
-import cn.hutool.crypto.symmetric.DESede;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import cn.hutool.crypto.symmetric.Vigenere;
 import org.junit.Assert;
 import org.junit.Test;
 

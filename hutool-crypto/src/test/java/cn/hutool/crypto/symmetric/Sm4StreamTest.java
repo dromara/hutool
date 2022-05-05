@@ -1,6 +1,5 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
-import cn.hutool.crypto.symmetric.SM4;
 import org.junit.Ignore;
 import org.junit.Test;
 

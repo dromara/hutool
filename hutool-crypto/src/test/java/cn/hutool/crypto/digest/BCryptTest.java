@@ -1,6 +1,5 @@
-package cn.hutool.crypto.test.digest;
+package cn.hutool.crypto.digest;
 
-import cn.hutool.crypto.digest.BCrypt;
 import org.junit.Assert;
 import org.junit.Test;
 

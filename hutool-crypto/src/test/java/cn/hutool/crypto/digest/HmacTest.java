@@ -1,11 +1,9 @@
-package cn.hutool.crypto.test.digest;
+package cn.hutool.crypto.digest;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.HMac;
-import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.crypto.symmetric.ZUC;
 import org.junit.Assert;
 import org.junit.Test;
