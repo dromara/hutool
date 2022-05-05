@@ -38,14 +38,14 @@ public class AssertTest {
 	}
 
 	@Test
-	public void isEqualsTest() {
+	public void equalsTest() {
 		//String a="ab";
 		//final String b = new String("abc");
 		String a = null;
 		final String b = null;
-		Assert.isEquals(a, b);
-		Assert.isEquals(a, b, "{}不等于{}", a, b);
-		Assert.isEquals(a, b, () -> new RuntimeException(StrUtil.format("{}和{}不相等", a, b)));
+		Assert.equals(a, b);
+		Assert.equals(a, b, "{}不等于{}", a, b);
+		Assert.equals(a, b, () -> new RuntimeException(StrUtil.format("{}和{}不相等", a, b)));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class AssertTest {
 		//String c="19";
 		//final String d = new String("19");
 		String c = null;
-		final String d = null;
+		final String d = "null";
 		//Assert.notEquals(c,d);
 		//Assert.notEquals(c,d,"{}等于{}",c,d);
 		Assert.notEquals(c, d, () -> new RuntimeException(StrUtil.format("{}和{}相等", c, d)));

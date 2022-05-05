@@ -1060,8 +1060,8 @@ public class Assert {
 	 * @param obj2 对象2
 	 * @throws IllegalArgumentException obj1 must be equals obj2
 	 */
-	public static void isEquals(Object obj1, Object obj2) {
-		isEquals(obj1, obj2, "({}) must be equals ({})", obj1, obj2);
+	public static void equals(Object obj1, Object obj2) {
+		equals(obj1, obj2, "({}) must be equals ({})", obj1, obj2);
 	}
 
 	/**
@@ -1076,8 +1076,8 @@ public class Assert {
 	 * @param params           异常信息参数，用于替换"{}"占位符
 	 * @throws IllegalArgumentException obj1 must be equals obj2
 	 */
-	public static void isEquals(Object obj1, Object obj2, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
-		isEquals(obj1, obj2, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	public static void equals(Object obj1, Object obj2, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		equals(obj1, obj2, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
 
 	/**
@@ -1089,7 +1089,7 @@ public class Assert {
 	 * @param <X>           异常类型
 	 * @throws X obj1 must be equals obj2
 	 */
-	public static <X extends Throwable> void isEquals(Object obj1, Object obj2, Supplier<X> errorSupplier) throws X {
+	public static <X extends Throwable> void equals(Object obj1, Object obj2, Supplier<X> errorSupplier) throws X {
 		if (ObjectUtil.notEqual(obj1, obj2)) {
 			throw errorSupplier.get();
 		}
