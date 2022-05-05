@@ -33,7 +33,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return MD5摘要
 	 */
-	public static byte[] md5(final String data, final String charset) {
+	public static byte[] md5(final String data, final Charset charset) {
 		return new MD5().digest(data, charset);
 	}
 
@@ -44,7 +44,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(final String data) {
-		return md5(data, CharsetUtil.NAME_UTF_8);
+		return md5(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -83,17 +83,6 @@ public class DigestUtil {
 	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return MD5摘要的16进制表示
-	 */
-	public static String md5Hex(final String data, final String charset) {
-		return new MD5().digestHex(data, charset);
-	}
-
-	/**
-	 * 计算32位MD5摘要值，并转为16进制字符串
-	 *
-	 * @param data    被摘要数据
-	 * @param charset 编码
-	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
 	 */
 	public static String md5Hex(final String data, final Charset charset) {
@@ -107,7 +96,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(final String data) {
-		return md5Hex(data, CharsetUtil.NAME_UTF_8);
+		return md5Hex(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -218,7 +207,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return SHA-1摘要
 	 */
-	public static byte[] sha1(final String data, final String charset) {
+	public static byte[] sha1(final String data, final Charset charset) {
 		return new Digester(DigestAlgorithm.SHA1).digest(data, charset);
 	}
 
@@ -229,7 +218,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] sha1(final String data) {
-		return sha1(data, CharsetUtil.NAME_UTF_8);
+		return sha1(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -269,7 +258,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return SHA-1摘要的16进制表示
 	 */
-	public static String sha1Hex(final String data, final String charset) {
+	public static String sha1Hex(final String data, final Charset charset) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data, charset);
 	}
 
@@ -280,7 +269,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(final String data) {
-		return sha1Hex(data, CharsetUtil.NAME_UTF_8);
+		return sha1Hex(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -317,18 +306,6 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算SHA-256摘要值
-	 *
-	 * @param data    被摘要数据
-	 * @param charset 编码
-	 * @return SHA-256摘要
-	 * @since 3.0.8
-	 */
-	public static byte[] sha256(final String data, final String charset) {
-		return new Digester(DigestAlgorithm.SHA256).digest(data, charset);
-	}
-
-	/**
 	 * 计算sha256摘要值，使用UTF-8编码
 	 *
 	 * @param data 被摘要数据
@@ -336,7 +313,18 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(final String data) {
-		return sha256(data, CharsetUtil.NAME_UTF_8);
+		return sha256(data, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * 计算SHA-256摘要值
+	 *
+	 * @param data    被摘要数据
+	 * @param charset 编码
+	 * @return SHA-256摘要
+	 */
+	public static byte[] sha256(final String data, final Charset charset) {
+		return new Digester(DigestAlgorithm.SHA256).digest(data, charset);
 	}
 
 	/**
@@ -380,7 +368,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
 	 */
-	public static String sha256Hex(final String data, final String charset) {
+	public static String sha256Hex(final String data, final Charset charset) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data, charset);
 	}
 
@@ -392,7 +380,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(final String data) {
-		return sha256Hex(data, CharsetUtil.NAME_UTF_8);
+		return sha256Hex(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -437,7 +425,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要
 	 * @since 3.0.8
 	 */
-	public static byte[] sha512(final String data, final String charset) {
+	public static byte[] sha512(final String data, final Charset charset) {
 		return new Digester(DigestAlgorithm.SHA512).digest(data, charset);
 	}
 
@@ -448,7 +436,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] sha512(final String data) {
-		return sha512(data, CharsetUtil.NAME_UTF_8);
+		return sha512(data, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -488,7 +476,7 @@ public class DigestUtil {
 	 * @param charset 编码
 	 * @return SHA-512摘要的16进制表示
 	 */
-	public static String sha512Hex(final String data, final String charset) {
+	public static String sha512Hex(final String data, final Charset charset) {
 		return new Digester(DigestAlgorithm.SHA512).digestHex(data, charset);
 	}
 
@@ -499,7 +487,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要的16进制表示
 	 */
 	public static String sha512Hex(final String data) {
-		return sha512Hex(data, CharsetUtil.NAME_UTF_8);
+		return sha512Hex(data, CharsetUtil.UTF_8);
 	}
 
 	/**

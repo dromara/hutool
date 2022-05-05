@@ -159,16 +159,6 @@ public class Digester implements Serializable {
 	}
 
 	// ------------------------------------------------------------------------------------------- Digest
-	/**
-	 * 生成文件摘要
-	 *
-	 * @param data 被摘要数据
-	 * @param charsetName 编码
-	 * @return 摘要
-	 */
-	public byte[] digest(final String data, final String charsetName) {
-		return digest(data, CharsetUtil.charset(charsetName));
-	}
 
 	/**
 	 * 生成文件摘要
@@ -196,17 +186,6 @@ public class Digester implements Serializable {
 	 * 生成文件摘要，并转为16进制字符串
 	 *
 	 * @param data 被摘要数据
-	 * @param charsetName 编码
-	 * @return 摘要
-	 */
-	public String digestHex(final String data, final String charsetName) {
-		return digestHex(data, CharsetUtil.charset(charsetName));
-	}
-
-	/**
-	 * 生成文件摘要，并转为16进制字符串
-	 *
-	 * @param data 被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
 	 * @since 4.6.0
@@ -222,7 +201,7 @@ public class Digester implements Serializable {
 	 * @return 摘要
 	 */
 	public String digestHex(final String data) {
-		return digestHex(data, CharsetUtil.NAME_UTF_8);
+		return digestHex(data, CharsetUtil.UTF_8);
 	}
 
 	/**
