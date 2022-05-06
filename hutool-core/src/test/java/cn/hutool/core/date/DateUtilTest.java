@@ -277,6 +277,12 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void betweenTest3() {
+		long between = DateUtil.between(DateUtil.parse("2020-03-31 23:59:59"), DateUtil.parse("2020-04-01 00:00:00"), DateUnit.SECOND);
+		Assert.assertEquals(1, between);
+	}
+
+	@Test
 	public void formatChineseDateTest() {
 		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true, false);
 		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);
@@ -1056,6 +1062,17 @@ public class DateUtilTest {
 
 		Assert.assertFalse(DateUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
 		Assert.assertFalse(DateUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+	}
+
+	@Test
+	public void isOverlapTest2() {
+		DateTime oneStartTime = DateUtil.parseDate("2021-02-01");
+		DateTime oneEndTime = DateUtil.parseDate("2022-06-30");
+
+		DateTime oneStartTime2 = DateUtil.parseDate("2019-04-05");
+		DateTime oneEndTime2 = DateUtil.parseDate("2021-04-05");
+
+		Assert.assertTrue(DateUtil.isOverlap(oneStartTime, oneEndTime, oneStartTime2, oneEndTime2));
 	}
 
 	@Test

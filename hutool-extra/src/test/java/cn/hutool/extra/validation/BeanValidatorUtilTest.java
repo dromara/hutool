@@ -3,7 +3,7 @@ package cn.hutool.extra.validation;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * java bean 校验工具类单元测试
