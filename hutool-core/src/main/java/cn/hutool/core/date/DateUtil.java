@@ -1,17 +1,17 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.regex.PatternPool;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +20,14 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -1842,8 +1849,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeContains(final DateRange start, final DateRange end) {
-		final List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
-		final List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		final List<DateTime> startDateTimes = ListUtil.toList((Iterable<DateTime>) start);
+		final List<DateTime> endDateTimes = ListUtil.toList((Iterable<DateTime>) end);
 		return startDateTimes.stream().filter(endDateTimes::contains).collect(Collectors.toList());
 	}
 
@@ -1857,8 +1864,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeNotContains(final DateRange start, final DateRange end) {
-		final List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
-		final List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		final List<DateTime> startDateTimes = ListUtil.toList((Iterable<DateTime>) start);
+		final List<DateTime> endDateTimes = ListUtil.toList((Iterable<DateTime>) end);
 		return endDateTimes.stream().filter(item -> !startDateTimes.contains(item)).collect(Collectors.toList());
 	}
 
@@ -1909,7 +1916,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateRange}
 	 */
 	public static List<DateTime> rangeToList(final Date start, final Date end, final DateField unit) {
-		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
+		return ListUtil.toList((Iterable<DateTime>) range(start, end, unit));
 	}
 
 	/**
@@ -1923,7 +1930,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.16
 	 */
 	public static List<DateTime> rangeToList(final Date start, final Date end, final DateField unit, final int step) {
-		return CollUtil.newArrayList((Iterable<DateTime>) new DateRange(start, end, unit, step));
+		return ListUtil.toList((Iterable<DateTime>) new DateRange(start, end, unit, step));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -13,9 +13,9 @@ import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.dialect.Props;
 
@@ -437,7 +437,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return 获得所有分组名
 	 */
 	public List<String> getGroups() {
-		return CollUtil.newArrayList(this.groupedMap.keySet());
+		return ListUtil.toList(this.groupedMap.keySet());
 	}
 
 	/**

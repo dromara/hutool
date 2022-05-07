@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
@@ -59,7 +58,7 @@ public class JSONUtilTest {
 		a2.setDate(DateUtil.date());
 		a2.setName("AAAA222Name");
 
-		final ArrayList<UserA> list = CollUtil.newArrayList(a1, a2);
+		final ArrayList<UserA> list = ListUtil.toList(a1, a2);
 		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("total", 13);
 		map.put("rows", list);

@@ -56,8 +56,8 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	 * @param values 值列表
 	 */
 	public TableMap(final K[] keys, final V[] values) {
-		this.keys = CollUtil.toList(keys);
-		this.values = CollUtil.toList(values);
+		this.keys = ListUtil.toList(keys);
+		this.values = ListUtil.toList(values);
 	}
 
 	@Override

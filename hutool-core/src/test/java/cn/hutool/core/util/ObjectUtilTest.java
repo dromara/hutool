@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
@@ -58,7 +58,7 @@ public class ObjectUtilTest {
 
 	@Test
 	public void toStringTest() {
-		final ArrayList<String> strings = CollUtil.newArrayList("1", "2");
+		final ArrayList<String> strings = ListUtil.toList("1", "2");
 		final String result = ObjUtil.toString(strings);
 		Assert.assertEquals("[1, 2]", result);
 	}

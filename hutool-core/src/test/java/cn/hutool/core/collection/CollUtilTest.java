@@ -35,22 +35,22 @@ public class CollUtilTest {
 
 	@Test
 	public void testPredicateContains() {
-		final ArrayList<String> list = CollUtil.newArrayList("bbbbb", "aaaaa", "ccccc");
+		final ArrayList<String> list = ListUtil.toList("bbbbb", "aaaaa", "ccccc");
 		Assert.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
 		Assert.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
 	}
 
 	@Test
 	public void testRemoveWithAddIf() {
-		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3);
-		final ArrayList<Integer> exceptRemovedList = CollUtil.newArrayList(2, 3);
-		final ArrayList<Integer> exceptResultList = CollUtil.newArrayList(1);
+		ArrayList<Integer> list = ListUtil.toList(1, 2, 3);
+		final ArrayList<Integer> exceptRemovedList = ListUtil.toList(2, 3);
+		final ArrayList<Integer> exceptResultList = ListUtil.toList(1);
 
 		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
 		Assert.assertEquals(list, exceptRemovedList);
 		Assert.assertEquals(resultList, exceptResultList);
 
-		list = CollUtil.newArrayList(1, 2, 3);
+		list = ListUtil.toList(1, 2, 3);
 		resultList = new ArrayList<>();
 		CollUtil.removeWithAddIf(list, resultList, ele -> 1 == ele);
 		Assert.assertEquals(list, exceptRemovedList);
@@ -59,27 +59,27 @@ public class CollUtilTest {
 
 	@Test
 	public void testPadLeft() {
-		List<String> srcList = CollUtil.newArrayList();
-		List<String> answerList = CollUtil.newArrayList("a", "b");
+		List<String> srcList = ListUtil.toList();
+		List<String> answerList = ListUtil.toList("a", "b");
 		CollUtil.padLeft(srcList, 1, "b");
 		CollUtil.padLeft(srcList, 2, "a");
 		Assert.assertEquals(srcList, answerList);
 
-		srcList = CollUtil.newArrayList("a", "b");
-		answerList = CollUtil.newArrayList("a", "b");
+		srcList = ListUtil.toList("a", "b");
+		answerList = ListUtil.toList("a", "b");
 		CollUtil.padLeft(srcList, 2, "a");
 		Assert.assertEquals(srcList, answerList);
 
-		srcList = CollUtil.newArrayList("c");
-		answerList = CollUtil.newArrayList("a", "a", "c");
+		srcList = ListUtil.toList("c");
+		answerList = ListUtil.toList("a", "a", "c");
 		CollUtil.padLeft(srcList, 3, "a");
 		Assert.assertEquals(srcList, answerList);
 	}
 
 	@Test
 	public void testPadRight() {
-		final List<String> srcList = CollUtil.newArrayList("a");
-		final List<String> answerList = CollUtil.newArrayList("a", "b", "b", "b", "b");
+		final List<String> srcList = ListUtil.toList("a");
+		final List<String> answerList = ListUtil.toList("a", "b", "b", "b", "b");
 		CollUtil.padRight(srcList, 5, "b");
 		Assert.assertEquals(srcList, answerList);
 	}
@@ -91,7 +91,7 @@ public class CollUtilTest {
 
 	@Test
 	public void newHashSetTest() {
-		final Set<String> set = CollUtil.newHashSet((String[]) null);
+		final Set<String> set = SetUtil.newHashSet((String[]) null);
 		Assert.assertNotNull(set);
 	}
 
@@ -114,8 +114,8 @@ public class CollUtilTest {
 
 	@Test
 	public void unionTest() {
-		final ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		final ArrayList<String> list1 = ListUtil.toList("a", "b", "b", "c", "d", "x");
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d");
 
 		final Collection<String> union = CollUtil.union(list1, list2);
 
@@ -124,8 +124,8 @@ public class CollUtilTest {
 
 	@Test
 	public void intersectionTest() {
-		final ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		final ArrayList<String> list1 = ListUtil.toList("a", "b", "b", "c", "d", "x");
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d");
 
 		final Collection<String> intersection = CollUtil.intersection(list1, list2);
 		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
@@ -133,12 +133,12 @@ public class CollUtilTest {
 
 	@Test
 	public void intersectionDistinctTest() {
-		final ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
-		final ArrayList<String> list3 = CollUtil.newArrayList();
+		final ArrayList<String> list1 = ListUtil.toList("a", "b", "b", "c", "d", "x");
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d");
+		final ArrayList<String> list3 = ListUtil.toList();
 
 		final Collection<String> intersectionDistinct = CollUtil.intersectionDistinct(list1, list2);
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
+		Assert.assertEquals(SetUtil.newLinkedHashSet("a", "b", "c", "d"), intersectionDistinct);
 
 		final Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
 		Assert.assertTrue(intersectionDistinct2.isEmpty());
@@ -146,8 +146,8 @@ public class CollUtilTest {
 
 	@Test
 	public void disjunctionTest() {
-		final ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		final ArrayList<String> list1 = ListUtil.toList("a", "b", "b", "c", "d", "x");
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("b"));
@@ -163,8 +163,8 @@ public class CollUtilTest {
 	@Test
 	public void disjunctionTest2() {
 		// 任意一个集合为空，差集为另一个集合
-		final ArrayList<String> list1 = CollUtil.newArrayList();
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		final ArrayList<String> list1 = ListUtil.toList();
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertEquals(list2, disjunction);
@@ -175,8 +175,8 @@ public class CollUtilTest {
 	@Test
 	public void disjunctionTest3() {
 		// 无交集下返回共同的元素
-		final ArrayList<String> list1 = CollUtil.newArrayList("1", "2", "3");
-		final ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "c");
+		final ArrayList<String> list1 = ListUtil.toList("1", "2", "3");
+		final ArrayList<String> list2 = ListUtil.toList("a", "b", "c");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("1"));
@@ -196,8 +196,8 @@ public class CollUtilTest {
 
 	@Test
 	public void subtractTest() {
-		final List<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		final List<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		final List<String> list1 = ListUtil.toList("a", "b", "b", "c", "d", "x");
+		final List<String> list2 = ListUtil.toList("a", "b", "b", "b", "c", "d", "x2");
 		final Collection<String> subtract = CollUtil.subtract(list1, list2);
 		Assert.assertEquals(1, subtract.size());
 		Assert.assertEquals("x", subtract.iterator().next());
@@ -236,7 +236,7 @@ public class CollUtilTest {
 		map2.put("c", "值3");
 
 		// ----------------------------------------------------------------------------------------
-		final ArrayList<HashMap<String, String>> list = CollUtil.newArrayList(map1, map2);
+		final ArrayList<HashMap<String, String>> list = ListUtil.toList(map1, map2);
 		final Map<String, List<String>> map = CollUtil.toListMap(list);
 		Assert.assertEquals("值1", map.get("a").get(0));
 		Assert.assertEquals("值2", map.get("a").get(1));
@@ -251,7 +251,7 @@ public class CollUtilTest {
 	public void getFieldValuesTest() {
 		final Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
 		final Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
-		final ArrayList<Dict> list = CollUtil.newArrayList(v1, v2);
+		final ArrayList<Dict> list = ListUtil.toList(v1, v2);
 
 		final List<Object> fieldValues = CollUtil.getFieldValues(list, "name");
 		Assert.assertEquals("张三", fieldValues.get(0));
@@ -260,7 +260,7 @@ public class CollUtilTest {
 
 	@Test
 	public void splitTest() {
-		final ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		final ArrayList<Integer> list = ListUtil.toList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<List<Integer>> split = CollUtil.split(list, 3);
 		Assert.assertEquals(3, split.size());
 		Assert.assertEquals(3, split.get(0).size());
@@ -285,35 +285,35 @@ public class CollUtilTest {
 
 	@Test
 	public void filterTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c");
 
 		final Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
 
-		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
+		Assert.assertEquals(ListUtil.toList("a1", "b1", "c1"), filtered);
 	}
 
 	@Test
 	public void filterTest2() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c");
 
 		final ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+		Assert.assertEquals(ListUtil.toList("b", "c"), filtered);
 	}
 
 	@Test
 	public void filterSetTest() {
-		final Set<String> set = CollUtil.newLinkedHashSet("a", "b", "", "  ", "c");
+		final Set<String> set = SetUtil.newLinkedHashSet("a", "b", "", "  ", "c");
 		final Set<String> filtered = CollUtil.filter(set, StrUtil::isNotBlank);
 
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c"), filtered);
+		Assert.assertEquals(SetUtil.newLinkedHashSet("a", "b", "c"), filtered);
 	}
 
 	@Test
 	public void filterRemoveTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c");
 
 		final List<String> removed = new ArrayList<>();
 		final ArrayList<String> filtered = CollUtil.filter(list, t -> {
@@ -329,45 +329,45 @@ public class CollUtilTest {
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+		Assert.assertEquals(ListUtil.toList("b", "c"), filtered);
 	}
 
 	@Test
 	public void removeNullTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", null, "", "  ");
 
 		final ArrayList<String> filtered = CollUtil.removeNull(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
+		Assert.assertEquals(ListUtil.toList("a", "b", "c", "", "  "), filtered);
 	}
 
 	@Test
 	public void removeEmptyTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", null, "", "  ");
 
 		final ArrayList<String> filtered = CollUtil.removeEmpty(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
+		Assert.assertEquals(ListUtil.toList("a", "b", "c", "  "), filtered);
 	}
 
 	@Test
 	public void removeBlankTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", null, "", "  ");
 
 		final ArrayList<String> filtered = CollUtil.removeBlank(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
-		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
+		Assert.assertEquals(ListUtil.toList("a", "b", "c"), filtered);
 	}
 
 	@Test
 	public void groupTest() {
-		final List<String> list = CollUtil.newArrayList("1", "2", "3", "4", "5", "6");
+		final List<String> list = ListUtil.toList("1", "2", "3", "4", "5", "6");
 		final List<List<String>> group = CollUtil.group(list, null);
 		Assert.assertTrue(group.size() > 0);
 
@@ -375,13 +375,13 @@ public class CollUtilTest {
 			// 按照奇数偶数分类
 			return Integer.parseInt(t) % 2;
 		});
-		Assert.assertEquals(CollUtil.newArrayList("2", "4", "6"), group2.get(0));
-		Assert.assertEquals(CollUtil.newArrayList("1", "3", "5"), group2.get(1));
+		Assert.assertEquals(ListUtil.toList("2", "4", "6"), group2.get(0));
+		Assert.assertEquals(ListUtil.toList("1", "3", "5"), group2.get(1));
 	}
 
 	@Test
 	public void groupByFieldTest() {
-		final List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
+		final List<TestBean> list = ListUtil.toList(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
 		final List<List<TestBean>> groupByField = CollUtil.groupByField(list, "age");
 		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
 		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
@@ -391,7 +391,7 @@ public class CollUtilTest {
 
 	@Test
 	public void sortByPropertyTest() {
-		final List<TestBean> list = CollUtil.newArrayList(
+		final List<TestBean> list = ListUtil.toList(
 				new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
 				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
 				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
@@ -405,7 +405,7 @@ public class CollUtilTest {
 
 	@Test
 	public void sortByPropertyTest2() {
-		final List<TestBean> list = CollUtil.newArrayList(
+		final List<TestBean> list = ListUtil.toList(
 				new TestBean("张三", 0, DateUtil.parse("2018-05-01")), //
 				new TestBean("李四", -12, DateUtil.parse("2018-03-01")), //
 				new TestBean("王五", 23, DateUtil.parse("2018-04-01"))//
@@ -419,7 +419,7 @@ public class CollUtilTest {
 
 	@Test
 	public void fieldValueMapTest() {
-		final List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+		final List<TestBean> list = ListUtil.toList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
 				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
 				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
 		);
@@ -432,7 +432,7 @@ public class CollUtilTest {
 
 	@Test
 	public void fieldValueAsMapTest() {
-		final List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+		final List<TestBean> list = ListUtil.toList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
 				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
 				new TestBean("王五", 14, DateUtil.parse("2018-04-01"))//
 		);
@@ -470,8 +470,8 @@ public class CollUtilTest {
 
 	@Test
 	public void listTest() {
-		final List<Object> list1 = CollUtil.list(false);
-		final List<Object> list2 = CollUtil.list(true);
+		final List<Object> list1 = ListUtil.list(false);
+		final List<Object> list2 = ListUtil.list(true);
 
 		Assert.assertTrue(list1 instanceof ArrayList);
 		Assert.assertTrue(list2 instanceof LinkedList);
@@ -479,8 +479,8 @@ public class CollUtilTest {
 
 	@Test
 	public void listTest2() {
-		final List<String> list1 = CollUtil.list(false, "a", "b", "c");
-		final List<String> list2 = CollUtil.list(true, "a", "b", "c");
+		final List<String> list1 = ListUtil.list(false, "a", "b", "c");
+		final List<String> list2 = ListUtil.list(true, "a", "b", "c");
 		Assert.assertEquals("[a, b, c]", list1.toString());
 		Assert.assertEquals("[a, b, c]", list2.toString());
 	}
@@ -492,15 +492,15 @@ public class CollUtilTest {
 		set.add("b");
 		set.add("c");
 
-		final List<String> list1 = CollUtil.list(false, set);
-		final List<String> list2 = CollUtil.list(true, set);
+		final List<String> list1 = ListUtil.list(false, set);
+		final List<String> list2 = ListUtil.list(true, set);
 		Assert.assertEquals("[a, b, c]", list1.toString());
 		Assert.assertEquals("[a, b, c]", list2.toString());
 	}
 
 	@Test
 	public void getTest() {
-		final HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
+		final HashSet<String> set = SetUtil.set(true, "A", "B", "C", "D");
 		String str = CollUtil.get(set, 2);
 		Assert.assertEquals("C", str);
 
@@ -701,43 +701,43 @@ public class CollUtilTest {
 
 	@Test
 	public void sortPageAllTest() {
-		final List<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		final List<Integer> list = ListUtil.toList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<Integer> sortPageAll = CollUtil.sortPageAll(1, 5, Comparator.reverseOrder(), list);
 
-		Assert.assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
+		Assert.assertEquals(ListUtil.toList(4, 3, 2, 1), sortPageAll);
 	}
 
 	@Test
 	public void containsAnyTest() {
-		final ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
-		final ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1, 9, 11);
+		final ArrayList<Integer> list1 = ListUtil.toList(1, 2, 3, 4, 5);
+		final ArrayList<Integer> list2 = ListUtil.toList(5, 3, 1, 9, 11);
 
 		Assert.assertTrue(CollUtil.containsAny(list1, list2));
 	}
 
 	@Test
 	public void containsAllTest() {
-		final ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
-		final ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1);
+		final ArrayList<Integer> list1 = ListUtil.toList(1, 2, 3, 4, 5);
+		final ArrayList<Integer> list2 = ListUtil.toList(5, 3, 1);
 		Assert.assertTrue(CollUtil.containsAll(list1, list2));
 
-		final ArrayList<Integer> list3 = CollUtil.newArrayList(1);
-		final ArrayList<Integer> list4 = CollUtil.newArrayList();
+		final ArrayList<Integer> list3 = ListUtil.toList(1);
+		final ArrayList<Integer> list4 = ListUtil.toList();
 		Assert.assertTrue(CollUtil.containsAll(list3, list4));
 	}
 
 	@Test
 	public void getLastTest() {
 		// 测试：空数组返回null而不是报错
-		final List<String> test = CollUtil.newArrayList();
+		final List<String> test = ListUtil.toList();
 		final String last = CollUtil.getLast(test);
 		Assert.assertNull(last);
 	}
 
 	@Test
 	public void zipTest() {
-		final Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
-		final Collection<Integer> values = CollUtil.newArrayList(1, 2, 3, 4);
+		final Collection<String> keys = ListUtil.toList("a", "b", "c", "d");
+		final Collection<Integer> values = ListUtil.toList(1, 2, 3, 4);
 
 		final Map<String, Integer> map = CollUtil.zip(keys, values);
 
@@ -751,7 +751,7 @@ public class CollUtilTest {
 
 	@Test
 	public void toMapTest() {
-		final Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
+		final Collection<String> keys = ListUtil.toList("a", "b", "c", "d");
 		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value) -> "key" + value);
 		Assert.assertEquals("a", map.get("keya"));
 		Assert.assertEquals("b", map.get("keyb"));
@@ -778,7 +778,7 @@ public class CollUtilTest {
 
 	@Test
 	public void countMapTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", "c", "a", "b", "d");
 		final Map<String, Integer> countMap = CollUtil.countMap(list);
 
 		Assert.assertEquals(Integer.valueOf(2), countMap.get("a"));
@@ -789,7 +789,7 @@ public class CollUtilTest {
 
 	@Test
 	public void indexOfTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.indexOf(list, (str) -> str.charAt(0) == 'c');
 		Assert.assertEquals(2, i);
 	}
@@ -797,14 +797,14 @@ public class CollUtilTest {
 	@Test
 	public void lastIndexOfTest() {
 		// List有优化
-		final ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		final ArrayList<String> list = ListUtil.toList("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
 		Assert.assertEquals(3, i);
 	}
 
 	@Test
 	public void lastIndexOfSetTest() {
-		final Set<String> list = CollUtil.set(true, "a", "b", "c", "c", "a", "b", "d");
+		final Set<String> list = SetUtil.set(true, "a", "b", "c", "c", "a", "b", "d");
 		// 去重后c排第三
 		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
 		Assert.assertEquals(2, i);
@@ -812,7 +812,7 @@ public class CollUtilTest {
 
 	@Test
 	public void pageTest() {
-		final List<Dict> objects = CollUtil.newArrayList();
+		final List<Dict> objects = ListUtil.toList();
 		for (int i = 0; i < 10; i++) {
 			objects.add(Dict.create().set("name", "姓名：" + i));
 		}

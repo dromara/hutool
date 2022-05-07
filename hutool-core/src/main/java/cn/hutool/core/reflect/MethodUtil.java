@@ -2,7 +2,7 @@ package cn.hutool.core.reflect;
 
 import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -90,7 +90,7 @@ public class MethodUtil {
 	 * @return 过滤后的方法列表
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
-		final HashSet<Method> excludeMethodSet = CollUtil.newHashSet(excludeMethods);
+		final HashSet<Method> excludeMethodSet = SetUtil.newHashSet(excludeMethods);
 		return getPublicMethods(clazz, method -> false == excludeMethodSet.contains(method));
 	}
 
@@ -102,7 +102,7 @@ public class MethodUtil {
 	 * @return 过滤后的方法数组
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
-		final HashSet<String> excludeMethodNameSet = CollUtil.newHashSet(excludeMethodNames);
+		final HashSet<String> excludeMethodNameSet = SetUtil.newHashSet(excludeMethodNames);
 		return getPublicMethods(clazz, method -> false == excludeMethodNameSet.contains(method.getName()));
 	}
 

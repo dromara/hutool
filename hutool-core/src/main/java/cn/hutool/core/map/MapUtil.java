@@ -1,6 +1,7 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Filter;
@@ -408,7 +409,7 @@ public class MapUtil {
 				key = entry.getKey();
 				valueList = resultMap.get(key);
 				if (null == valueList) {
-					valueList = CollUtil.newArrayList(entry.getValue());
+					valueList = ListUtil.toList(entry.getValue());
 					resultMap.put(key, valueList);
 				} else {
 					valueList.add(entry.getValue());
@@ -463,7 +464,7 @@ public class MapUtil {
 			List<V> vList;
 			int vListSize;
 			for (final Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
-				vList = CollUtil.newArrayList(entry.getValue());
+				vList = ListUtil.toList(entry.getValue());
 				vListSize = vList.size();
 				if (index < vListSize) {
 					map.put(entry.getKey(), vList.get(index));

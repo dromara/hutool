@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -574,7 +575,7 @@ public class BeanUtil {
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
 		Editor<String> keyEditor = null;
 		if(ArrayUtil.isNotEmpty(properties)){
-			final Set<String> propertiesSet = CollUtil.set(false, properties);
+			final Set<String> propertiesSet = SetUtil.set(false, properties);
 			keyEditor = property -> propertiesSet.contains(property) ? property : null;
 		}
 

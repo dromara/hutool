@@ -3,14 +3,14 @@ package cn.hutool.core.bean;
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -285,7 +285,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void getPropertyDescriptorsTest() {
-		final HashSet<Object> set = CollUtil.newHashSet();
+		final HashSet<Object> set = SetUtil.newHashSet();
 		final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
 		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			set.add(propertyDescriptor.getName());

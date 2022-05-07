@@ -1,6 +1,5 @@
 package cn.hutool.poi.word;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -49,7 +48,7 @@ public class WordWriterTest {
 		map.put("成绩", 88.32);
 		map.put("是否合格", true);
 
-		writer.addTable(CollUtil.newArrayList(map));
+		writer.addTable(ListUtil.toList(map));
 		writer.flush(FileUtil.file("d:/test/test.docx"));
 	}
 
@@ -72,7 +71,7 @@ public class WordWriterTest {
 		data2.put("是否合格", false);
 		data2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> mapArrayList = CollUtil.newArrayList(data, data2);
+		final ArrayList<Map<String, Object>> mapArrayList = ListUtil.toList(data, data2);
 
 		// 添加段落（标题）
 		writer.addText(new Font("方正小标宋简体", Font.PLAIN, 22), "我是第一部分");

@@ -1,6 +1,7 @@
 package cn.hutool.extra.mail;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharUtil;
@@ -433,7 +434,7 @@ public class MailUtil {
 		} else if (StrUtil.contains(addresses, ';')) {
 			result = StrUtil.splitTrim(addresses, ';');
 		} else {
-			result = CollUtil.newArrayList(addresses);
+			result = ListUtil.toList(addresses);
 		}
 		return result;
 	}

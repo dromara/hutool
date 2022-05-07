@@ -1,6 +1,6 @@
 package cn.hutool.core.regex;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -45,7 +45,7 @@ public class ReUtil {
 	/**
 	 * 正则中需要被转义的关键字
 	 */
-	public final static Set<Character> RE_KEYS = CollUtil.newHashSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
+	public final static Set<Character> RE_KEYS = SetUtil.newHashSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
 
 	/**
 	 * 获得匹配的字符串，获得正则中分组0的内容

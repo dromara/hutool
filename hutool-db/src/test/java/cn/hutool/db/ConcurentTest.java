@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.db.handler.EntityListHandler;
@@ -31,7 +31,7 @@ public class ConcurentTest {
 		for(int i = 0; i < 10000; i++) {
 			ThreadUtil.execute(() -> {
 				final List<Entity> find;
-				find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+				find = db.find(ListUtil.toList("name AS name2"), Entity.create("user"), new EntityListHandler());
 				Console.log(find);
 			});
 		}

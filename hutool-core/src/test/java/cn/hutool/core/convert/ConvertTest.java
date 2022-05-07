@@ -1,12 +1,12 @@
 package cn.hutool.core.convert;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.ByteUtil;
-import cn.hutool.core.codec.HexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -293,7 +293,7 @@ public class ConvertTest {
 	public void toSetTest(){
 		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
 		}, "1,2,3");
-		Assert.assertEquals(CollUtil.set(false, 1,2,3), result);
+		Assert.assertEquals(SetUtil.set(false, 1,2,3), result);
 	}
 
 	@Getter

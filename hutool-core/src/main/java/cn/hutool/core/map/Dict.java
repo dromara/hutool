@@ -2,7 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Pair;
@@ -290,7 +290,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param withoutNames 不需要去除的字段名
 	 */
 	public <T extends Dict> void removeEqual(final T dict, final String... withoutNames) {
-		final HashSet<String> withoutSet = CollUtil.newHashSet(withoutNames);
+		final HashSet<String> withoutSet = SetUtil.newHashSet(withoutNames);
 		for (final Map.Entry<String, Object> entry : dict.entrySet()) {
 			if (withoutSet.contains(entry.getKey())) {
 				continue;

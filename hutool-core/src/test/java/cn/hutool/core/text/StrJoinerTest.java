@@ -1,7 +1,7 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class StrJoinerTest {
 	public void joinMultiArrayTest(){
 		final StrJoiner append = StrJoiner.of(",");
 		append.append(new Object[]{ListUtil.of("1", "2"),
-				CollUtil.newLinkedHashSet("3", "4")
+				SetUtil.newLinkedHashSet("3", "4")
 		});
 		Assert.assertEquals("1,2,3,4", append.toString());
 	}

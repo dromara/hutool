@@ -1,6 +1,6 @@
 package cn.hutool.core.io.resource;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IORuntimeException;
 
 import java.io.BufferedReader;
@@ -32,7 +32,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * @param resources 资源数组
 	 */
 	public MultiResource(final Resource... resources) {
-		this(CollUtil.newArrayList(resources));
+		this(ListUtil.toList(resources));
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 		if(resources instanceof List) {
 			this.resources = (List<Resource>)resources;
 		}else {
-			this.resources = CollUtil.newArrayList(resources);
+			this.resources = ListUtil.toList(resources);
 		}
 	}
 

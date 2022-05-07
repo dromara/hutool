@@ -1,6 +1,6 @@
 package cn.hutool.core.text.dfa;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class DfaTest {
 		// 匹配到【大】，就不再继续匹配了，因此【大土豆】不匹配
 		// 匹配到【刚出锅】，就跳过这三个字了，因此【出锅】不匹配（由于刚首先被匹配，因此长的被匹配，最短匹配只针对第一个字相同选最短）
 		final List<String> matchAll = tree.matchAll(text, -1, false, false);
-		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "土^豆", "刚出锅"));
+		Assert.assertEquals(matchAll, ListUtil.toList("大", "土^豆", "刚出锅"));
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class DfaTest {
 		// 【大】被匹配，最短匹配原则【大土豆】被跳过，【土豆继续被匹配】
 		// 【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
 		final List<String> matchAll = tree.matchAll(text, -1, true, false);
-		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "土^豆", "刚出锅", "出锅"));
+		Assert.assertEquals(matchAll, ListUtil.toList("大", "土^豆", "刚出锅", "出锅"));
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class DfaTest {
 		// 匹配到【大】，由于非密集匹配，因此从下一个字符开始查找，匹配到【土豆】接着被匹配
 		// 由于【刚出锅】被匹配，由于非密集匹配，【出锅】被跳过
 		final List<String> matchAll = tree.matchAll(text, -1, false, true);
-		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "土^豆", "刚出锅"));
+		Assert.assertEquals(matchAll, ListUtil.toList("大", "土^豆", "刚出锅"));
 
 	}
 
@@ -76,7 +76,7 @@ public class DfaTest {
 		// 匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配，由于不跳过已经匹配的关键词，土豆继续被匹配
 		// 【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
 		final List<String> matchAll = tree.matchAll(text, -1, true, true);
-		Assert.assertEquals(matchAll, CollUtil.newArrayList("大", "大土^豆", "土^豆", "刚出锅", "出锅"));
+		Assert.assertEquals(matchAll, ListUtil.toList("大", "大土^豆", "土^豆", "刚出锅", "出锅"));
 
 	}
 
@@ -112,7 +112,7 @@ public class DfaTest {
 		tree.addWord("tio");
 
 		final List<String> all = tree.matchAll("AAAAAAAt-ioBBBBBBB");
-		Assert.assertEquals(all, CollUtil.newArrayList("t-io"));
+		Assert.assertEquals(all, ListUtil.toList("t-io"));
 	}
 
 	@Test

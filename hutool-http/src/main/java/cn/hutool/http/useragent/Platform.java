@@ -1,6 +1,6 @@
 package cn.hutool.http.useragent;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class Platform extends UserAgentInfo {
 	/**
 	 * 支持的移动平台类型
 	 */
-	public static final List<Platform> mobilePlatforms = CollUtil.newArrayList(//
+	public static final List<Platform> mobilePlatforms = ListUtil.of(//
 			WINDOWS_PHONE, //
 			IPAD, //
 			IPOD, //
@@ -65,7 +65,7 @@ public class Platform extends UserAgentInfo {
 	/**
 	 * 支持的桌面平台类型
 	 */
-	public static final List<Platform> desktopPlatforms = CollUtil.newArrayList(//
+	public static final List<Platform> desktopPlatforms = ListUtil.of(//
 			new Platform("Windows", "windows"), //
 			new Platform("Mac", "(macintosh|darwin)"), //
 			new Platform("Linux", "linux"), //

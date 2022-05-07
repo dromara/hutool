@@ -1,6 +1,6 @@
 package cn.hutool.http.server.action;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -58,7 +58,7 @@ public class RootAction implements Action {
 	 */
 	public RootAction(final File rootDir, final String... indexFileNames) {
 		this.rootDir = rootDir;
-		this.indexFileNames = CollUtil.toList(indexFileNames);
+		this.indexFileNames = ListUtil.toList(indexFileNames);
 	}
 
 	@Override

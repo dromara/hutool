@@ -1,6 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.MethodUtil;
@@ -155,7 +156,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final Collection<String> fieldNames) {
 		if (CollUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollUtil.newHashSet(true, fieldNames);
+			this.fieldNames = SetUtil.newHashSet(true, fieldNames);
 		}
 		return this;
 	}
@@ -168,7 +169,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollUtil.newLinkedHashSet(fieldNames);
+			this.fieldNames = SetUtil.newLinkedHashSet(fieldNames);
 		}
 		return this;
 	}

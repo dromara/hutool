@@ -1,6 +1,6 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
@@ -30,7 +30,7 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest2() {
-		final List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		final BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/excel/single_line.xlsx");
 		overtimeWriter.write(row);
 		overtimeWriter.close();
@@ -39,13 +39,13 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		final List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 		for(int i=0; i < 400000; i++) {
 			//超大列表写出测试
 			rows.add(ObjUtil.clone(row1));
@@ -70,13 +70,13 @@ public class BigExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest() {
-		final List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.toList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
 		final BigExcelWriter writer = ExcelUtil.getBigWriter("e:/mergeTest.xlsx");
@@ -114,7 +114,7 @@ public class BigExcelWriteTest {
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = ListUtil.toList(row1, row2);
 
 		// 通过工具类创建writer
 		final String path = "e:/bigWriteMapTest.xlsx";
@@ -174,7 +174,7 @@ public class BigExcelWriteTest {
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		final List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
+		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.toList(bean1, bean2);
 		// 通过工具类创建writer
 		final String file = "e:/bigWriteBeanTest.xlsx";
 		FileUtil.del(file);

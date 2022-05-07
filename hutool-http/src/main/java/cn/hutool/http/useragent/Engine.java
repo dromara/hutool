@@ -1,6 +1,6 @@
 package cn.hutool.http.useragent;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.regex.ReUtil;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class Engine extends UserAgentInfo {
 	/**
 	 * 支持的引擎类型
 	 */
-	public static final List<Engine> engines = CollUtil.newArrayList(
+	public static final List<Engine> engines = ListUtil.of(
 			new Engine("Trident", "trident"),
 			new Engine("Webkit", "webkit"),
 			new Engine("Chrome", "chrome"),

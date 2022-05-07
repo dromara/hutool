@@ -1,13 +1,12 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
 import cn.hutool.poi.excel.style.StyleUtil;
@@ -47,12 +46,12 @@ public class ExcelWriteTest {
 
 	@Test
 	public void writeNoFlushTest(){
-		final List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 
 		final ExcelWriter writer = ExcelUtil.getWriter();
 		writer.write(rows);
@@ -62,13 +61,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void testRowOrColumnCellStyle() {
-		final List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 		final BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("d:/test/style_line.xlsx");
 
 		overtimeWriter.write(rows, true);
@@ -106,7 +105,7 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest2() {
-		final List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
 		overtimeWriter.writeRow(row);
 		overtimeWriter.close();
@@ -118,12 +117,12 @@ public class ExcelWriteTest {
 		final ExcelWriter writer = ExcelUtil.getWriterWithSheet("表格1");
 
 		// 写出第一张表
-		final List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		writer.writeRow(row);
 
 		// 写出第二张表
 		writer.setSheet("表格2");
-		final List<String> row2 = CollUtil.newArrayList("姓名2", "加班日期2", "下班时间2", "加班时长2", "餐补2", "车补次数2", "车补2", "总计2");
+		final List<String> row2 = ListUtil.toList("姓名2", "加班日期2", "下班时间2", "加班时长2", "餐补2", "车补次数2", "车补2", "总计2");
 		writer.writeRow(row2);
 
 		// 生成文件或导出Excel
@@ -135,13 +134,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		final List<?> row1 = CollUtil.newArrayList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 		for (int i = 0; i < 400; i++) {
 			// 超大列表写出测试
 			rows.add(ObjUtil.clone(row1));
@@ -170,13 +169,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest() {
-		final List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.toList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/mergeTest.xlsx");
@@ -214,7 +213,7 @@ public class ExcelWriteTest {
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = ListUtil.toList(row1, row2);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeMapTest.xlsx");
@@ -244,7 +243,7 @@ public class ExcelWriteTest {
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = ListUtil.toList(row1, row2);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("e:/excel/writeMapTest.xlsx");
@@ -326,7 +325,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/writeMapAlias.xlsx";
 		FileUtil.del(file);
@@ -361,7 +360,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
 		// 通过工具类创建writer
 		final String file = "f:/test/test_alias.xlsx";
 		FileUtil.del(file);
@@ -394,7 +393,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
@@ -425,7 +424,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
@@ -459,7 +458,7 @@ public class ExcelWriteTest {
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		final List<cn.hutool.poi.excel.TestBean> rows = CollUtil.newArrayList(bean1, bean2);
+		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.toList(bean1, bean2);
 		// 通过工具类创建writer
 		final String file = "e:/writeBeanTest.xlsx";
 		FileUtil.del(file);
@@ -491,7 +490,7 @@ public class ExcelWriteTest {
 		order1.setNum("456");
 		order1.setBody("body2");
 
-		final List<cn.hutool.poi.excel.OrderExcel> rows = CollUtil.newArrayList(order1, order2);
+		final List<cn.hutool.poi.excel.OrderExcel> rows = ListUtil.toList(order1, order2);
 		// 通过工具类创建writer
 		final String file = "f:/test/writeBeanTest2.xlsx";
 		FileUtil.del(file);
@@ -518,7 +517,7 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void addSelectTest() {
-		final List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("d:/test/single_line.xlsx");
 		overtimeWriter.writeCellValue(3, 4, "AAAA");
 		overtimeWriter.addSelect(3, 4, row.toArray(new String[0]));
@@ -684,13 +683,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeSecHeadRowTest() {
-		final List<?> row1 = CollUtil.newArrayList(1, "aa", "bb", "cc", "dd", "ee");
-		final List<?> row2 = CollUtil.newArrayList(2, "aa1", "bb1", "cc1", "dd1", "ee1");
-		final List<?> row3 = CollUtil.newArrayList(3, "aa2", "bb2", "cc2", "dd2", "ee2");
-		final List<?> row4 = CollUtil.newArrayList(4, "aa3", "bb3", "cc3", "dd3", "ee3");
-		final List<?> row5 = CollUtil.newArrayList(5, "aa4", "bb4", "cc4", "dd4", "ee4");
+		final List<?> row1 = ListUtil.toList(1, "aa", "bb", "cc", "dd", "ee");
+		final List<?> row2 = ListUtil.toList(2, "aa1", "bb1", "cc1", "dd1", "ee1");
+		final List<?> row3 = ListUtil.toList(3, "aa2", "bb2", "cc2", "dd2", "ee2");
+		final List<?> row4 = ListUtil.toList(4, "aa3", "bb3", "cc3", "dd3", "ee3");
+		final List<?> row5 = ListUtil.toList(5, "aa4", "bb4", "cc4", "dd4", "ee4");
 
-		final List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeSecHeadRowTest.xlsx");
@@ -719,7 +718,7 @@ public class ExcelWriteTest {
 		writer.merge(2, 2, 4, 5, "DDEE", true);
 		writer.setCurrentRow(3);
 
-		final List<String> sechead = CollUtil.newArrayList("AA", "BB", "DD", "EE");
+		final List<String> sechead = ListUtil.toList("AA", "BB", "DD", "EE");
 		writer.writeSecHeadRow(sechead);
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);

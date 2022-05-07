@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.annotation.PropIgnore;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -238,7 +238,7 @@ public class JSONObjectTest {
 		userA.setA("A user");
 		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
-		userA.setSqs(CollUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
+		userA.setSqs(ListUtil.toList(new Seq("seq1"), new Seq("seq2")));
 
 		final JSONObject json = JSONUtil.parseObj(userA);
 		final UserA userA2 = json.toBean(UserA.class);
@@ -320,7 +320,7 @@ public class JSONObjectTest {
 		final UserA userA = new UserA();
 		userA.setName("nameTest");
 		userA.setDate(new Date());
-		userA.setSqs(CollUtil.newArrayList(new Seq(null), new Seq("seq2")));
+		userA.setSqs(ListUtil.toList(new Seq(null), new Seq("seq2")));
 
 		final JSONObject json = JSONUtil.parseObj(userA, false);
 
@@ -333,7 +333,7 @@ public class JSONObjectTest {
 		final TestBean bean = new TestBean();
 		bean.setDoubleValue(111.1);
 		bean.setIntValue(123);
-		bean.setList(CollUtil.newArrayList("a", "b", "c"));
+		bean.setList(ListUtil.toList("a", "b", "c"));
 		bean.setStrValue("strTest");
 		bean.setTestEnum(TestEnum.TYPE_B);
 
@@ -565,7 +565,7 @@ public class JSONObjectTest {
 	 *
 	 * @author Looly
 	 */
-	@SuppressWarnings("FieldCanBeLocal")
+	@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeStatic"})
 	public static class SameNameBean {
 		private final String username = "123";
 		private final String userName = "abc";

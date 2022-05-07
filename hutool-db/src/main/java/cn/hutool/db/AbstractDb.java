@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
@@ -554,7 +554,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws DbRuntimeException {
-		return find(CollUtil.newArrayList(fields), where, rsh);
+		return find(ListUtil.toList(fields), where, rsh);
 	}
 
 	/**

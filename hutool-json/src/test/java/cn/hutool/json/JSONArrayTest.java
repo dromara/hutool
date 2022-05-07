@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.FileUtil;
@@ -98,7 +97,7 @@ public class JSONArrayTest {
 		b2.setAkey("aValue2");
 		b2.setBkey("bValue2");
 
-		final ArrayList<KeyBean> list = CollUtil.newArrayList(b1, b2);
+		final ArrayList<KeyBean> list = ListUtil.toList(b1, b2);
 
 		final JSONArray jsonArray = JSONUtil.parseArray(list);
 		Assert.assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));

@@ -1,6 +1,7 @@
 package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 *              @return this
 	 */
 	public WordTree addWords(final String... words) {
-		for (final String word : CollUtil.newHashSet(words)) {
+		for (final String word : SetUtil.newHashSet(words)) {
 			addWord(word);
 		}
 		return this;
