@@ -47,49 +47,49 @@ public class IdcardUtilTest {
 	}
 
 	@Test
-	public void getAgeByIdCardTest() {
+	public void getAgeTest() {
 		final DateTime date = DateUtil.parse("2017-04-10");
 
-		final int age = IdcardUtil.getAgeByIdCard(ID_18, date);
+		final int age = IdcardUtil.getAge(ID_18, date);
 		Assert.assertEquals(age, 38);
 
-		final int age2 = IdcardUtil.getAgeByIdCard(ID_15, date);
+		final int age2 = IdcardUtil.getAge(ID_15, date);
 		Assert.assertEquals(age2, 28);
 	}
 
 	@Test
-	public void getBirthByIdCardTest() {
-		final String birth = IdcardUtil.getBirthByIdCard(ID_18);
+	public void getBirthTest() {
+		final String birth = IdcardUtil.getBirth(ID_18);
 		Assert.assertEquals(birth, "19781216");
 
-		final String birth2 = IdcardUtil.getBirthByIdCard(ID_15);
+		final String birth2 = IdcardUtil.getBirth(ID_15);
 		Assert.assertEquals(birth2, "19880730");
 	}
 
 	@Test
-	public void getProvinceByIdCardTest() {
-		final String province = IdcardUtil.getProvinceByIdCard(ID_18);
+	public void getProvinceTest() {
+		final String province = IdcardUtil.getProvince(ID_18);
 		Assert.assertEquals(province, "江苏");
 
-		final String province2 = IdcardUtil.getProvinceByIdCard(ID_15);
+		final String province2 = IdcardUtil.getProvince(ID_15);
 		Assert.assertEquals(province2, "内蒙古");
 	}
 
 	@Test
-	public void getCityCodeByIdCardTest() {
-		final String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
-		Assert.assertEquals("3210", codeByIdCard);
+	public void getCityCodeTest() {
+		final String code = IdcardUtil.getCityCode(ID_18);
+		Assert.assertEquals("3210", code);
 	}
 
 	@Test
-	public void getDistrictCodeByIdCardTest() {
-		final String codeByIdCard = IdcardUtil.getDistrictCodeByIdCard(ID_18);
-		Assert.assertEquals("321083", codeByIdCard);
+	public void getDistrictCodeTest() {
+		final String code = IdcardUtil.getDistrictCode(ID_18);
+		Assert.assertEquals("321083", code);
 	}
 
 	@Test
-	public void getGenderByIdCardTest() {
-		final int gender = IdcardUtil.getGenderByIdCard(ID_18);
+	public void getGenderTest() {
+		final int gender = IdcardUtil.getGender(ID_18);
 		Assert.assertEquals(1, gender);
 	}
 
