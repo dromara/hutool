@@ -626,6 +626,28 @@ public class IdcardUtil {
 		return new Idcard(idcard);
 	}
 
+	/**
+	 * 港澳居民来往内地通行证，俗称：回乡证，通行证号码组成规则：<br>
+	 * <ul>
+	 *     <li>通行证证件号码共11位。第1位为字母，“H”字头签发给香港居民，“M”字头签发给澳门居民。</li>
+	 *     <li>第2位至第11位为数字，前8位数字为通行证持有人的终身号，后2位数字表示换证次数，首次发证为00，此后依次递增。</li>
+	 * </ul>
+	 * 示例：H12345678、M1234567801
+	 *
+	 * <p>
+	 * 参考文档《港澳居民来往内地通行证号码规则》：
+	 * <a href="https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html">https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html</a>
+	 * </p>
+	 */
+	public static boolean isValidHkMoHomeReturn(final String idCard) {
+		if (StrUtil.isEmpty(idCard)) {
+			return false;
+		}
+		// 规则： H/M + 8位或10位数字
+		// 样本： H1234567890
+		final String reg = "^[HhMm](\\d{8}|\\d{10})$";
+		return idCard.matches(reg);
+	}
 	// ----------------------------------------------------------------------------------- Private method start
 
 	/**
