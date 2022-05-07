@@ -45,11 +45,6 @@ public class Table implements Serializable, Cloneable {
 	 */
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
-	/**
-	 * 表是否存在
-	 */
-	private Boolean exists;
-
 	public static Table create(String tableName) {
 		return new Table(tableName);
 	}
@@ -63,7 +58,6 @@ public class Table implements Serializable, Cloneable {
 	 */
 	public Table(String tableName) {
 		this.setTableName(tableName);
-		this.setExists(false);
 	}
 	// ----------------------------------------------------- Constructor end
 
@@ -179,27 +173,6 @@ public class Table implements Serializable, Cloneable {
 	public void setPkNames(Set<String> pkNames) {
 		this.pkNames = pkNames;
 	}
-
-	/**
-	 * 获取表是否存在
-	 *
-	 * @return 表是否存在
-	 */
-	public Boolean isExists() {
-		return exists;
-	}
-
-	/**
-	 * 设置表是否存在
-	 *
-	 * @param exists 表是否存在
-	 * @return this
-	 */
-	public Table setExists(Boolean exists) {
-		this.exists = exists;
-		return this;
-	}
-
 	// ----------------------------------------------------- Getters and Setters end
 
 	/**
