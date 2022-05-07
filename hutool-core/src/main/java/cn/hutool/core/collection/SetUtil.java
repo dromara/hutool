@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -123,6 +124,17 @@ public class SetUtil {
 			set.add(enumeration.nextElement());
 		}
 		return set;
+	}
+
+	/**
+	 * 新建一个SetFromMap
+	 *
+	 * @param <T> 集合元素类型
+	 * @param map Map
+	 * @return SetFromMap对象
+	 */
+	public static <T> SetFromMap<T> of(final Map<T, Boolean> map) {
+		return new SetFromMap<>(map);
 	}
 
 	/**
