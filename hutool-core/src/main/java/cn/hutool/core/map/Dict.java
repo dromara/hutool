@@ -290,7 +290,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param withoutNames 不需要去除的字段名
 	 */
 	public <T extends Dict> void removeEqual(final T dict, final String... withoutNames) {
-		final HashSet<String> withoutSet = SetUtil.newHashSet(withoutNames);
+		final HashSet<String> withoutSet = SetUtil.of(withoutNames);
 		for (final Map.Entry<String, Object> entry : dict.entrySet()) {
 			if (withoutSet.contains(entry.getKey())) {
 				continue;

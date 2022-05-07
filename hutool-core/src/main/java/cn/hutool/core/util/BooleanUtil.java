@@ -15,7 +15,7 @@ import java.util.Set;
 public class BooleanUtil {
 
 	/** 表示为真的字符串 */
-	private static final Set<String> TRUE_SET = SetUtil.newHashSet("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
+	private static final Set<String> TRUE_SET = SetUtil.of("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
 
 	/**
 	 * 取相反值

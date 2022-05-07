@@ -238,7 +238,7 @@ public class JSONObjectTest {
 		userA.setA("A user");
 		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
-		userA.setSqs(ListUtil.toList(new Seq("seq1"), new Seq("seq2")));
+		userA.setSqs(ListUtil.of(new Seq("seq1"), new Seq("seq2")));
 
 		final JSONObject json = JSONUtil.parseObj(userA);
 		final UserA userA2 = json.toBean(UserA.class);
@@ -320,7 +320,7 @@ public class JSONObjectTest {
 		final UserA userA = new UserA();
 		userA.setName("nameTest");
 		userA.setDate(new Date());
-		userA.setSqs(ListUtil.toList(new Seq(null), new Seq("seq2")));
+		userA.setSqs(ListUtil.of(new Seq(null), new Seq("seq2")));
 
 		final JSONObject json = JSONUtil.parseObj(userA, false);
 
@@ -333,7 +333,7 @@ public class JSONObjectTest {
 		final TestBean bean = new TestBean();
 		bean.setDoubleValue(111.1);
 		bean.setIntValue(123);
-		bean.setList(ListUtil.toList("a", "b", "c"));
+		bean.setList(ListUtil.of("a", "b", "c"));
 		bean.setStrValue("strTest");
 		bean.setTestEnum(TestEnum.TYPE_B);
 

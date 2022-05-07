@@ -46,12 +46,12 @@ public class ExcelWriteTest {
 
 	@Test
 	public void writeNoFlushTest(){
-		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
-		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 
 		final ExcelWriter writer = ExcelUtil.getWriter();
 		writer.write(rows);
@@ -61,13 +61,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void testRowOrColumnCellStyle() {
-		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 		final BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("d:/test/style_line.xlsx");
 
 		overtimeWriter.write(rows, true);
@@ -105,7 +105,7 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest2() {
-		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.of("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
 		overtimeWriter.writeRow(row);
 		overtimeWriter.close();
@@ -117,12 +117,12 @@ public class ExcelWriteTest {
 		final ExcelWriter writer = ExcelUtil.getWriterWithSheet("表格1");
 
 		// 写出第一张表
-		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.of("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		writer.writeRow(row);
 
 		// 写出第二张表
 		writer.setSheet("表格2");
-		final List<String> row2 = ListUtil.toList("姓名2", "加班日期2", "下班时间2", "加班时长2", "餐补2", "车补次数2", "车补2", "总计2");
+		final List<String> row2 = ListUtil.of("姓名2", "加班日期2", "下班时间2", "加班时长2", "餐补2", "车补次数2", "车补2", "总计2");
 		writer.writeRow(row2);
 
 		// 生成文件或导出Excel
@@ -134,13 +134,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		final List<?> row1 = ListUtil.toList("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 		for (int i = 0; i < 400; i++) {
 			// 超大列表写出测试
 			rows.add(ObjUtil.clone(row1));
@@ -169,13 +169,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest() {
-		final List<?> row1 = ListUtil.toList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.toList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.toList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.toList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.toList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
-		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/mergeTest.xlsx");
@@ -213,7 +213,7 @@ public class ExcelWriteTest {
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> rows = ListUtil.toList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = ListUtil.of(row1, row2);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeMapTest.xlsx");
@@ -243,7 +243,7 @@ public class ExcelWriteTest {
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
 
-		final ArrayList<Map<String, Object>> rows = ListUtil.toList(row1, row2);
+		final ArrayList<Map<String, Object>> rows = ListUtil.of(row1, row2);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("e:/excel/writeMapTest.xlsx");
@@ -325,7 +325,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/writeMapAlias.xlsx";
 		FileUtil.del(file);
@@ -360,7 +360,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "f:/test/test_alias.xlsx";
 		FileUtil.del(file);
@@ -393,7 +393,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
@@ -424,7 +424,7 @@ public class ExcelWriteTest {
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
 
-		final List<Map<Object, Object>> rows = ListUtil.toList(row1, row2);
+		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/test_alias.xls";
 		final ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
@@ -458,7 +458,7 @@ public class ExcelWriteTest {
 		bean2.setScore(38.50);
 		bean2.setExamDate(DateUtil.date());
 
-		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.toList(bean1, bean2);
+		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.of(bean1, bean2);
 		// 通过工具类创建writer
 		final String file = "e:/writeBeanTest.xlsx";
 		FileUtil.del(file);
@@ -490,7 +490,7 @@ public class ExcelWriteTest {
 		order1.setNum("456");
 		order1.setBody("body2");
 
-		final List<cn.hutool.poi.excel.OrderExcel> rows = ListUtil.toList(order1, order2);
+		final List<cn.hutool.poi.excel.OrderExcel> rows = ListUtil.of(order1, order2);
 		// 通过工具类创建writer
 		final String file = "f:/test/writeBeanTest2.xlsx";
 		FileUtil.del(file);
@@ -517,7 +517,7 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void addSelectTest() {
-		final List<String> row = ListUtil.toList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		final List<String> row = ListUtil.of("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("d:/test/single_line.xlsx");
 		overtimeWriter.writeCellValue(3, 4, "AAAA");
 		overtimeWriter.addSelect(3, 4, row.toArray(new String[0]));
@@ -674,7 +674,7 @@ public class ExcelWriteTest {
 	public void writeNumberFormatTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/formatTest.xlsx");
 		writer.disableDefaultStyle();
-		writer.writeRow(ListUtil.toList(51.33333333, 90.111111111));
+		writer.writeRow(ListUtil.of(51.33333333, 90.111111111));
 		final CellStyle columnStyle = writer.createCellStyle(0, 0);
 		columnStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("0.00"));
 		writer.close();
@@ -683,13 +683,13 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeSecHeadRowTest() {
-		final List<?> row1 = ListUtil.toList(1, "aa", "bb", "cc", "dd", "ee");
-		final List<?> row2 = ListUtil.toList(2, "aa1", "bb1", "cc1", "dd1", "ee1");
-		final List<?> row3 = ListUtil.toList(3, "aa2", "bb2", "cc2", "dd2", "ee2");
-		final List<?> row4 = ListUtil.toList(4, "aa3", "bb3", "cc3", "dd3", "ee3");
-		final List<?> row5 = ListUtil.toList(5, "aa4", "bb4", "cc4", "dd4", "ee4");
+		final List<?> row1 = ListUtil.of(1, "aa", "bb", "cc", "dd", "ee");
+		final List<?> row2 = ListUtil.of(2, "aa1", "bb1", "cc1", "dd1", "ee1");
+		final List<?> row3 = ListUtil.of(3, "aa2", "bb2", "cc2", "dd2", "ee2");
+		final List<?> row4 = ListUtil.of(4, "aa3", "bb3", "cc3", "dd3", "ee3");
+		final List<?> row5 = ListUtil.of(5, "aa4", "bb4", "cc4", "dd4", "ee4");
 
-		final List<List<?>> rows = ListUtil.toList(row1, row2, row3, row4, row5);
+		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeSecHeadRowTest.xlsx");
@@ -718,7 +718,7 @@ public class ExcelWriteTest {
 		writer.merge(2, 2, 4, 5, "DDEE", true);
 		writer.setCurrentRow(3);
 
-		final List<String> sechead = ListUtil.toList("AA", "BB", "DD", "EE");
+		final List<String> sechead = ListUtil.of("AA", "BB", "DD", "EE");
 		writer.writeSecHeadRow(sechead);
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
@@ -800,7 +800,7 @@ public class ExcelWriteTest {
 	@Ignore
 	public void changeHeaderStyleTest(){
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
-		writer.writeHeadRow(ListUtil.of("姓名", "性别", "年龄"));
+		writer.writeHeadRow(ListUtil.view("姓名", "性别", "年龄"));
 		final CellStyle headCellStyle = writer.getStyleSet().getHeadCellStyle();
 		headCellStyle.setFillForegroundColor(IndexedColors.YELLOW1.index);
 		headCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -816,7 +816,7 @@ public class ExcelWriteTest {
 		FileUtil.del(path);
 
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
-		writer.writeRow(ListUtil.of(22.9f));
+		writer.writeRow(ListUtil.view(22.9f));
 		writer.close();
 	}
 
@@ -826,7 +826,7 @@ public class ExcelWriteTest {
 		// https://gitee.com/dromara/hutool/issues/I466ZZ
 		// 需要输出S_20000314_x5116_0004
 		// 此处加入一个转义前缀：_x005F
-		final List<Object> row = ListUtil.of(new EscapeStrCellSetter("S_20000314_x5116_0004"));
+		final List<Object> row = ListUtil.view(new EscapeStrCellSetter("S_20000314_x5116_0004"));
 
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/_x.xlsx");
 		writer.writeRow(row);
@@ -838,7 +838,7 @@ public class ExcelWriteTest {
 	public void writeLongTest(){
 		//https://gitee.com/dromara/hutool/issues/I49R6U
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
-		writer.write(ListUtil.of(1427545395336093698L));
+		writer.write(ListUtil.view(1427545395336093698L));
 		writer.close();
 	}
 
@@ -849,7 +849,7 @@ public class ExcelWriteTest {
 
 		final Hyperlink hyperlink = writer.createHyperlink(HyperlinkType.URL, "https://hutool.cn");
 
-		writer.write(ListUtil.of(hyperlink));
+		writer.write(ListUtil.view(hyperlink));
 		writer.close();
 	}
 

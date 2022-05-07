@@ -177,7 +177,7 @@ public class CsvUtilTest {
 			String mobile;
 		}
 
-		final List<String> header = ListUtil.of("用户id", "用户名", "手机号");
+		final List<String> header = ListUtil.view("用户id", "用户名", "手机号");
 		final List<CsvRow> row = new ArrayList<>();
 
 		final List<User> datas = new ArrayList<>();

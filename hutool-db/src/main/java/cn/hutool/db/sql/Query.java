@@ -113,7 +113,7 @@ public class Query implements Cloneable {
 	 * @return this
 	 */
 	public Query setFields(final String... fields) {
-		this.fields = ListUtil.toList(fields);
+		this.fields = ListUtil.of(fields);
 		return this;
 	}
 

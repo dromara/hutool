@@ -94,7 +94,7 @@ public class TableUtil {
 			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 		} else {
 			// 其它转为字符串默认输出
-			writeRow(row, ListUtil.toList(rowBean), isWriteKeyAsHead);
+			writeRow(row, ListUtil.of(rowBean), isWriteKeyAsHead);
 			return;
 		}
 

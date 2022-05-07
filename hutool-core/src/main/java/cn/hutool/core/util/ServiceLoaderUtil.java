@@ -102,6 +102,6 @@ public class ServiceLoaderUtil {
 	 * @since 5.4.2
 	 */
 	public static <T> List<T> loadList(final Class<T> clazz, final ClassLoader loader) {
-		return ListUtil.list(false, load(clazz, loader));
+		return ListUtil.of(false, load(clazz, loader));
 	}
 }

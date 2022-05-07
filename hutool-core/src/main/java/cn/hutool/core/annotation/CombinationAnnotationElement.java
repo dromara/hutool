@@ -42,7 +42,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	/**
 	 * 元注解
 	 */
-	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = SetUtil.newHashSet(Target.class, //
+	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = SetUtil.of(Target.class, //
 			Retention.class, //
 			Inherited.class, //
 			Documented.class, //

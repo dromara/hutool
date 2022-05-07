@@ -272,7 +272,7 @@ public class MetaUtil {
 						indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.create(rs));
 					}
 				}
-				table.setIndexInfoList(ListUtil.toList(indexInfoMap.values()));
+				table.setIndexInfoList(ListUtil.of(indexInfoMap.values()));
 			}
 		} catch (final SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);

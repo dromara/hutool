@@ -285,7 +285,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void getPropertyDescriptorsTest() {
-		final HashSet<Object> set = SetUtil.newHashSet();
+		final HashSet<Object> set = SetUtil.of();
 		final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
 		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			set.add(propertyDescriptor.getName());
@@ -326,7 +326,7 @@ public class BeanUtilTest {
 		student.setAge(125);
 		student.setNo(8848L);
 
-		final List<Student> studentList = ListUtil.of(student, student2);
+		final List<Student> studentList = ListUtil.view(student, student2);
 
 		for (int i=0;i<5000;i++){
 			new Thread(()->{
@@ -633,7 +633,7 @@ public class BeanUtilTest {
 		student.setAge(125);
 		student.setNo(8848L);
 
-		final List<Student> studentList = ListUtil.of(student, student2);
+		final List<Student> studentList = ListUtil.view(student, student2);
 		final List<Person> people = BeanUtil.copyToList(studentList, Person.class);
 
 		Assert.assertEquals(studentList.size(), people.size());
@@ -759,7 +759,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void issueI41WKPTest(){
-		final Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
+		final Test1 t1 = new Test1().setStrList(ListUtil.of("list"));
 		final Test2 t2_hu = new Test2();
 		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
 		Assert.assertNull(t2_hu.getStrList());

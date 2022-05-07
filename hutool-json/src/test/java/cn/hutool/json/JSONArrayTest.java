@@ -42,7 +42,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void addNullTest(){
-		final List<String> aaa = ListUtil.of("aaa", null);
+		final List<String> aaa = ListUtil.view("aaa", null);
 		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
 				JSONConfig.create().setIgnoreNullValue(false)));
 		Assert.assertEquals("[\"aaa\",null]", jsonStr);
@@ -97,7 +97,7 @@ public class JSONArrayTest {
 		b2.setAkey("aValue2");
 		b2.setBkey("bValue2");
 
-		final ArrayList<KeyBean> list = ListUtil.toList(b1, b2);
+		final ArrayList<KeyBean> list = ListUtil.of(b1, b2);
 
 		final JSONArray jsonArray = JSONUtil.parseArray(list);
 		Assert.assertEquals("aValue1", jsonArray.getJSONObject(0).getStr("akey"));

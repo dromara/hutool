@@ -575,7 +575,7 @@ public class BeanUtil {
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
 		Editor<String> keyEditor = null;
 		if(ArrayUtil.isNotEmpty(properties)){
-			final Set<String> propertiesSet = SetUtil.set(false, properties);
+			final Set<String> propertiesSet = SetUtil.of(properties);
 			keyEditor = property -> propertiesSet.contains(property) ? property : null;
 		}
 

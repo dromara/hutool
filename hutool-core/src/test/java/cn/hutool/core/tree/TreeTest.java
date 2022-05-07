@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class TreeTest {
 	// 模拟数据
-	static List<TreeNode<String>> nodeList = ListUtil.toList();
+	static List<TreeNode<String>> nodeList = ListUtil.of();
 
 	static {
 		// 模拟数据

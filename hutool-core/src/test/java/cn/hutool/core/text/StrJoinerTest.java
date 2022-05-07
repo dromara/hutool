@@ -33,8 +33,8 @@ public class StrJoinerTest {
 	@Test
 	public void joinMultiArrayTest(){
 		final StrJoiner append = StrJoiner.of(",");
-		append.append(new Object[]{ListUtil.of("1", "2"),
-				SetUtil.newLinkedHashSet("3", "4")
+		append.append(new Object[]{ListUtil.view("1", "2"),
+				SetUtil.ofLinked("3", "4")
 		});
 		Assert.assertEquals("1,2,3,4", append.toString());
 	}

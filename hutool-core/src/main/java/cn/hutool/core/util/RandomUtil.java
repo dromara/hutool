@@ -445,7 +445,7 @@ public class RandomUtil {
 	 */
 	public static <T> List<T> randomEleList(final List<T> source, final int count) {
 		if (count >= source.size()) {
-			return ListUtil.toList(source);
+			return ListUtil.of(source);
 		}
 		final int[] randomList = ArrayUtil.sub(randomInts(source.size()), 0, count);
 		final List<T> result = new ArrayList<>();

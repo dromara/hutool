@@ -465,7 +465,7 @@ public class FileUtilTest {
 	@Test
 	@Ignore
 	public void appendLinesTest(){
-		final List<String> list = ListUtil.toList("a", "b", "c");
+		final List<String> list = ListUtil.of("a", "b", "c");
 		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.UTF_8);
 	}
 

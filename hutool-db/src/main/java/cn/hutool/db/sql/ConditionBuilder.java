@@ -55,7 +55,7 @@ public class ConditionBuilder implements Builder<String> {
 	 * @return 参数列表
 	 */
 	public List<Object> getParamValues() {
-		return ListUtil.unmodifiable(this.paramValues);
+		return ListUtil.view(this.paramValues);
 	}
 
 	/**

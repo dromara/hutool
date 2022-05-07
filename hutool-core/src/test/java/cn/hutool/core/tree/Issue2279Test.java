@@ -1,8 +1,6 @@
 package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.tree.Tree;
-import cn.hutool.core.tree.TreeUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +11,7 @@ public class Issue2279Test {
 
 	@Test
 	public void buildSingleTest() {
-		final List<TestTree> list = ListUtil.of(
+		final List<TestTree> list = ListUtil.view(
 				// 模拟数据
 				new TestTree(1, 0, 1, 1),
 				new TestTree(2, 1, 2, 2),

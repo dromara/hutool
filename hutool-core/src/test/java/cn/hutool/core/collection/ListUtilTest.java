@@ -87,7 +87,7 @@ public class ListUtilTest {
 
 	@Test
 	public void editTest() {
-		final List<String> a = ListUtil.toLinkedList("1", "2", "3");
+		final List<String> a = ListUtil.ofLinked("1", "2", "3");
 		final List<String> filter = (List<String>) CollUtil.edit(a, str -> "edit" + str);
 		Assert.assertEquals("edit1", filter.get(0));
 		Assert.assertEquals("edit2", filter.get(1));
@@ -96,16 +96,16 @@ public class ListUtilTest {
 
 	@Test
 	public void indexOfAll() {
-		final List<String> a = ListUtil.toLinkedList("1", "2", "3", "4", "3", "2", "1");
-		final int[] indexArray = ListUtil.indexOfAll(a, "2"::equals);
+		final List<String> a = ListUtil.ofLinked("1", "2", "3", "4", "3", "2", "1");
+		final int[] indexArray = CollUtil.indexOfAll(a, "2"::equals);
 		Assert.assertArrayEquals(new int[]{1,5}, indexArray);
-		final int[] indexArray2 = ListUtil.indexOfAll(a, "1"::equals);
+		final int[] indexArray2 = CollUtil.indexOfAll(a, "1"::equals);
 		Assert.assertArrayEquals(new int[]{0,6}, indexArray2);
 	}
 
 	@Test
 	public void pageTest() {
-		final List<Integer> a = ListUtil.toLinkedList(1, 2, 3,4,5);
+		final List<Integer> a = ListUtil.ofLinked(1, 2, 3,4,5);
 
 		PageUtil.setFirstPageNo(1);
 		final int[] a_1 = ListUtil.page(1,2,a).stream().mapToInt(Integer::valueOf).toArray();
@@ -174,7 +174,7 @@ public class ListUtilTest {
 
 	@Test
 	public void subTest() {
-		final List<Integer> of = ListUtil.of(1, 2, 3, 4);
+		final List<Integer> of = ListUtil.view(1, 2, 3, 4);
 		final List<Integer> sub = ListUtil.sub(of, 2, 4);
 		sub.remove(0);
 
@@ -192,7 +192,7 @@ public class ListUtilTest {
 			private String name;
 		}
 
-		final List<TestBean> beanList = ListUtil.toList(
+		final List<TestBean> beanList = ListUtil.of(
 				new TestBean(2, "test2"),
 				new TestBean(1, "test1"),
 				new TestBean(5, "test5"),

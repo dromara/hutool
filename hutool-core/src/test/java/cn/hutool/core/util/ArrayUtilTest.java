@@ -323,7 +323,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void toArrayTest() {
-		final ArrayList<String> list = ListUtil.toList("A", "B", "C", "D");
+		final ArrayList<String> list = ListUtil.of("A", "B", "C", "D");
 		final String[] array = ArrayUtil.toArray(list, String.class);
 		Assert.assertEquals("A", array[0]);
 		Assert.assertEquals("B", array[1]);

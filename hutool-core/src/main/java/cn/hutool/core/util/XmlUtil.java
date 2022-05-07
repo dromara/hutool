@@ -1109,7 +1109,7 @@ public class XmlUtil {
 					if (value instanceof List) {
 						((List<Object>) value).add(newValue);
 					} else {
-						result.put(childEle.getNodeName(), ListUtil.toList(value, newValue));
+						result.put(childEle.getNodeName(), ListUtil.of(value, newValue));
 					}
 				} else {
 					result.put(childEle.getNodeName(), newValue);

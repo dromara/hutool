@@ -1017,7 +1017,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			}
 		} else if (rowBean instanceof Hyperlink) {
 			// Hyperlink当成一个值
-			return writeRow(ListUtil.toList(rowBean), isWriteKeyAsHead);
+			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
@@ -1027,7 +1027,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			}
 		} else {
 			// 其它转为字符串默认输出
-			return writeRow(ListUtil.toList(rowBean), isWriteKeyAsHead);
+			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
 		}
 		return writeRow(rowMap, isWriteKeyAsHead);
 	}

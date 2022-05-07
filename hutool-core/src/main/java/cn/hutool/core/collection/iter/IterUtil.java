@@ -519,7 +519,7 @@ public class IterUtil {
 	 * @since 4.0.6
 	 */
 	public static <E> List<E> toList(final Iterator<E> iter) {
-		return ListUtil.toList(iter);
+		return ListUtil.of(iter);
 	}
 
 	/**

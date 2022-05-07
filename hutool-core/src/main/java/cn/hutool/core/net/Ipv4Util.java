@@ -67,7 +67,7 @@ public class Ipv4Util {
 			final String[] param = StrUtil.splitToArray(ipRange, IP_MASK_SPLIT_MARK);
 			return list(param[0], Integer.parseInt(param[1]), isAll);
 		} else {
-			return ListUtil.toList(ipRange);
+			return ListUtil.of(ipRange);
 		}
 	}
 

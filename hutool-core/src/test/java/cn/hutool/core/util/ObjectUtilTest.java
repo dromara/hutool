@@ -58,7 +58,7 @@ public class ObjectUtilTest {
 
 	@Test
 	public void toStringTest() {
-		final ArrayList<String> strings = ListUtil.toList("1", "2");
+		final ArrayList<String> strings = ListUtil.of("1", "2");
 		final String result = ObjUtil.toString(strings);
 		Assert.assertEquals("[1, 2]", result);
 	}

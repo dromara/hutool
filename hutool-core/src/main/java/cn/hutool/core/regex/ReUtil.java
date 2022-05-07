@@ -45,7 +45,7 @@ public class ReUtil {
 	/**
 	 * 正则中需要被转义的关键字
 	 */
-	public final static Set<Character> RE_KEYS = SetUtil.newHashSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
+	public final static Set<Character> RE_KEYS = SetUtil.of('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
 
 	/**
 	 * 获得匹配的字符串，获得正则中分组0的内容

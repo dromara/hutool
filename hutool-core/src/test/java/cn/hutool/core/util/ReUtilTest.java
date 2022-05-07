@@ -82,7 +82,7 @@ public class ReUtilTest {
 	public void findAllTest() {
 		// 查找所有匹配文本
 		final List<String> resultFindAll = ReUtil.findAll("\\w{2}", content, 0, new ArrayList<>());
-		final ArrayList<String> expected = ListUtil.toList("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
+		final ArrayList<String> expected = ListUtil.of("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
 		Assert.assertEquals(expected, resultFindAll);
 	}
 

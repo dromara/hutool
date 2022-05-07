@@ -24,12 +24,12 @@ public class ParseBeanTest {
 		c2.setTest("test2");
 
 		final B b1 = new B();
-		b1.setCs(ListUtil.toList(c1, c2));
+		b1.setCs(ListUtil.of(c1, c2));
 		final B b2 = new B();
-		b2.setCs(ListUtil.toList(c1, c2));
+		b2.setCs(ListUtil.of(c1, c2));
 
 		final A a = new A();
-		a.setBs(ListUtil.toList(b1, b2));
+		a.setBs(ListUtil.of(b1, b2));
 
 		final JSONObject json = JSONUtil.parseObj(a);
 		final A a1 = JSONUtil.toBean(json, A.class);

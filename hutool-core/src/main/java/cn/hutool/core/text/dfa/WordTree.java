@@ -86,7 +86,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 *              @return this
 	 */
 	public WordTree addWords(final String... words) {
-		for (final String word : SetUtil.newHashSet(words)) {
+		for (final String word : SetUtil.of(words)) {
 			addWord(word);
 		}
 		return this;

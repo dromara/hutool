@@ -1288,7 +1288,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] toArray(final Iterator<T> iterator, final Class<T> componentType) {
-		return toArray(ListUtil.toList(iterator), componentType);
+		return toArray(ListUtil.of(iterator), componentType);
 	}
 
 	/**

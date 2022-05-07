@@ -107,7 +107,7 @@ public class CRUDTest {
 
 	@Test
 	public void findTest() {
-		final List<Entity> find = db.find(ListUtil.toList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		final List<Entity> find = db.find(ListUtil.of("name AS name2"), Entity.create("user"), new EntityListHandler());
 		Assert.assertFalse(find.isEmpty());
 	}
 
@@ -168,7 +168,7 @@ public class CRUDTest {
 		Console.log(data1);
 		Console.log(data2);
 
-		final int[] result = db.insert(ListUtil.toList(data1, data2));
+		final int[] result = db.insert(ListUtil.of(data1, data2));
 		Console.log(result);
 	}
 
@@ -185,7 +185,7 @@ public class CRUDTest {
 
 		Console.log(data1);
 
-		final int[] result = db.insert(ListUtil.toList(data1));
+		final int[] result = db.insert(ListUtil.of(data1));
 		Console.log(result);
 	}
 

@@ -34,7 +34,7 @@ public class SensitiveUtilTest {
 
 	@Test
 	public void issue2126(){
-		SensitiveUtil.init(ListUtil.of("赵", "赵阿", "赵阿三"));
+		SensitiveUtil.init(ListUtil.view("赵", "赵阿", "赵阿三"));
 
 		final String result = SensitiveUtil.sensitiveFilter("赵阿三在做什么。", true, null);
 		Assert.assertEquals("***在做什么。", result);

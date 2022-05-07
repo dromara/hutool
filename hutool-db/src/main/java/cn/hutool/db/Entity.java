@@ -156,7 +156,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final Collection<String> fieldNames) {
 		if (CollUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = SetUtil.newHashSet(true, fieldNames);
+			this.fieldNames = SetUtil.of(true, fieldNames);
 		}
 		return this;
 	}
@@ -169,7 +169,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = SetUtil.newLinkedHashSet(fieldNames);
+			this.fieldNames = SetUtil.ofLinked(fieldNames);
 		}
 		return this;
 	}

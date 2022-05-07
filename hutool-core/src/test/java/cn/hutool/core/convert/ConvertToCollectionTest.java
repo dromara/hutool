@@ -128,7 +128,7 @@ public class ConvertToCollectionTest {
 	public void toSetTest() {
 		final Object[] a = { "a", "你", "好", "", 1 };
 		final LinkedHashSet<?> set = Convert.convert(LinkedHashSet.class, a);
-		final ArrayList<?> list = ListUtil.toList(set);
+		final ArrayList<?> list = ListUtil.of(set);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));

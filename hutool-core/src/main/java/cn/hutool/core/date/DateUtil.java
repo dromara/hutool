@@ -1849,8 +1849,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeContains(final DateRange start, final DateRange end) {
-		final List<DateTime> startDateTimes = ListUtil.toList((Iterable<DateTime>) start);
-		final List<DateTime> endDateTimes = ListUtil.toList((Iterable<DateTime>) end);
+		final List<DateTime> startDateTimes = ListUtil.of((Iterable<DateTime>) start);
+		final List<DateTime> endDateTimes = ListUtil.of((Iterable<DateTime>) end);
 		return startDateTimes.stream().filter(endDateTimes::contains).collect(Collectors.toList());
 	}
 
@@ -1864,8 +1864,8 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.21
 	 */
 	public static List<DateTime> rangeNotContains(final DateRange start, final DateRange end) {
-		final List<DateTime> startDateTimes = ListUtil.toList((Iterable<DateTime>) start);
-		final List<DateTime> endDateTimes = ListUtil.toList((Iterable<DateTime>) end);
+		final List<DateTime> startDateTimes = ListUtil.of((Iterable<DateTime>) start);
+		final List<DateTime> endDateTimes = ListUtil.of((Iterable<DateTime>) end);
 		return endDateTimes.stream().filter(item -> !startDateTimes.contains(item)).collect(Collectors.toList());
 	}
 
@@ -1916,7 +1916,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return {@link DateRange}
 	 */
 	public static List<DateTime> rangeToList(final Date start, final Date end, final DateField unit) {
-		return ListUtil.toList((Iterable<DateTime>) range(start, end, unit));
+		return ListUtil.of((Iterable<DateTime>) range(start, end, unit));
 	}
 
 	/**
@@ -1930,7 +1930,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.7.16
 	 */
 	public static List<DateTime> rangeToList(final Date start, final Date end, final DateField unit, final int step) {
-		return ListUtil.toList((Iterable<DateTime>) new DateRange(start, end, unit, step));
+		return ListUtil.of((Iterable<DateTime>) new DateRange(start, end, unit, step));
 	}
 
 	/**

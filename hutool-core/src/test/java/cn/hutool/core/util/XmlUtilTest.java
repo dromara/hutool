@@ -110,7 +110,7 @@ public class XmlUtilTest {
 		final Map<String, Object> map = XmlUtil.xmlToMap(xml);
 
 		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(ListUtil.toList("张三", "李四"), map.get("name"));
+		Assert.assertEquals(ListUtil.of("张三", "李四"), map.get("name"));
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class XmlUtilTest {
 	public void mapToXmlTest2() {
 		// 测试List
 		final Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
-				.put("Town", ListUtil.toList("town1", "town2"))
+				.put("Town", ListUtil.of("town1", "town2"))
 				.build();
 
 		final Document doc = XmlUtil.mapToXml(map, "City");
@@ -158,7 +158,7 @@ public class XmlUtilTest {
 
 	@Test
 	public void readBySaxTest(){
-		final Set<String> eles = SetUtil.newHashSet(
+		final Set<String> eles = SetUtil.of(
 				"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
 		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler(){
 			@Override

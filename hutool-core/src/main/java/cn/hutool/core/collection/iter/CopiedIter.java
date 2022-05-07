@@ -44,7 +44,7 @@ public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	 * @param iterator 被复制的Iterator
 	 */
 	public CopiedIter(final Iterator<E> iterator) {
-		final List<E> eleList = ListUtil.toList(iterator);
+		final List<E> eleList = ListUtil.of(iterator);
 		this.listIterator = eleList.iterator();
 	}
 

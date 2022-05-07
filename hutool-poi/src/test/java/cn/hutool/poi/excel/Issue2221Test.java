@@ -27,7 +27,7 @@ public class Issue2221Test {
 		writer.setOnlyAlias(true);
 
 		// 写入数据
-		final List<Map<Object, Object>> data = ListUtil.of(
+		final List<Map<Object, Object>> data = ListUtil.view(
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人")),
 				MapUtil.ofEntries(MapUtil.entry("androidLc", "1次"), MapUtil.entry("androidAc", "3人"))
 		);
@@ -75,7 +75,7 @@ public class Issue2221Test {
 		writer.merge(0, 0, 3, 4, "新增人数", true);
 
 		// 写入数据
-		final List<Map<Object, Object>> data = ListUtil.of(
+		final List<Map<Object, Object>> data = ListUtil.view(
 				MapUtil.ofEntries(
 						MapUtil.entry("date", "2022-01-01"),
 						MapUtil.entry("androidLc", "1次"),

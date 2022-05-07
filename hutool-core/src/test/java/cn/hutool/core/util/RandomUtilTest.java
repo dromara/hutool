@@ -15,13 +15,13 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomEleSetTest(){
-		final Set<Integer> set = RandomUtil.randomEleSet(ListUtil.toList(1, 2, 3, 4, 5, 6), 2);
+		final Set<Integer> set = RandomUtil.randomEleSet(ListUtil.of(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(set.size(), 2);
 	}
 
 	@Test
 	public void randomElesTest(){
-		final List<Integer> result = RandomUtil.randomEles(ListUtil.toList(1, 2, 3, 4, 5, 6), 2);
+		final List<Integer> result = RandomUtil.randomEles(ListUtil.of(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(result.size(), 2);
 	}
 

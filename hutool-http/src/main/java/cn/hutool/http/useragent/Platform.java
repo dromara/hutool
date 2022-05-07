@@ -49,7 +49,7 @@ public class Platform extends UserAgentInfo {
 	/**
 	 * 支持的移动平台类型
 	 */
-	public static final List<Platform> mobilePlatforms = ListUtil.of(//
+	public static final List<Platform> mobilePlatforms = ListUtil.view(//
 			WINDOWS_PHONE, //
 			IPAD, //
 			IPOD, //
@@ -65,7 +65,7 @@ public class Platform extends UserAgentInfo {
 	/**
 	 * 支持的桌面平台类型
 	 */
-	public static final List<Platform> desktopPlatforms = ListUtil.of(//
+	public static final List<Platform> desktopPlatforms = ListUtil.view(//
 			new Platform("Windows", "windows"), //
 			new Platform("Mac", "(macintosh|darwin)"), //
 			new Platform("Linux", "linux"), //

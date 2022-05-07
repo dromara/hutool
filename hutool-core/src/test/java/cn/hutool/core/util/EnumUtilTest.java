@@ -18,13 +18,13 @@ public class EnumUtilTest {
 	@Test
 	public void getNamesTest() {
 		final List<String> names = EnumUtil.getNames(TestEnum.class);
-		Assert.assertEquals(ListUtil.toList("TEST1", "TEST2", "TEST3"), names);
+		Assert.assertEquals(ListUtil.of("TEST1", "TEST2", "TEST3"), names);
 	}
 
 	@Test
 	public void getFieldValuesTest() {
 		final List<Object> types = EnumUtil.getFieldValues(TestEnum.class, "type");
-		Assert.assertEquals(ListUtil.toList("type1", "type2", "type3"), types);
+		Assert.assertEquals(ListUtil.of("type1", "type2", "type3"), types);
 	}
 
 	@Test

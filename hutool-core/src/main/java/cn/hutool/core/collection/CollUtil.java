@@ -121,7 +121,7 @@ public class CollUtil {
 		final ArrayList<T> list = new ArrayList<>(Math.max(coll1.size(), coll2.size()));
 		final Map<T, Integer> map1 = countMap(coll1);
 		final Map<T, Integer> map2 = countMap(coll2);
-		final Set<T> elts = SetUtil.newHashSet(coll2);
+		final Set<T> elts = SetUtil.of(coll2);
 		elts.addAll(coll1);
 		int m;
 		for (final T t : elts) {
@@ -238,7 +238,7 @@ public class CollUtil {
 			final ArrayList<T> list = new ArrayList<>(Math.min(coll1.size(), coll2.size()));
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
-			final Set<T> elts = SetUtil.newHashSet(coll2);
+			final Set<T> elts = SetUtil.of(coll2);
 			int m;
 			for (final T t : elts) {
 				m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
@@ -347,7 +347,7 @@ public class CollUtil {
 		final List<T> result = new ArrayList<>();
 		final Map<T, Integer> map1 = countMap(coll1);
 		final Map<T, Integer> map2 = countMap(coll2);
-		final Set<T> elts = SetUtil.newHashSet(coll2);
+		final Set<T> elts = SetUtil.of(coll2);
 		elts.addAll(coll1);
 		int m;
 		for (final T t : elts) {
@@ -400,7 +400,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 		if (isEmpty(coll2)) {
-			return ListUtil.list(true, coll1);
+			return ListUtil.of(true, coll1);
 		}
 
 		//将被交数用链表储存，防止因为频繁扩容影响性能
@@ -830,7 +830,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 
-		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.toList(collection);
+		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.of(collection);
 		return sub(list, start, end, step);
 	}
 
@@ -927,7 +927,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Collection<E>, E> T removeAny(final T collection, final E... elesRemoved) {
-		collection.removeAll(SetUtil.newHashSet(elesRemoved));
+		collection.removeAll(SetUtil.of(elesRemoved));
 		return collection;
 	}
 
@@ -1632,7 +1632,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <E> Collection<E> toCollection(final Iterable<E> iterable) {
-		return (iterable instanceof Collection) ? (Collection<E>) iterable : ListUtil.toList(iterable.iterator());
+		return (iterable instanceof Collection) ? (Collection<E>) iterable : ListUtil.of(iterable.iterator());
 	}
 
 	/**
@@ -1787,7 +1787,7 @@ public class CollUtil {
 			iter = StrUtil.splitTrim(ArrayStr, CharUtil.COMMA).iterator();
 		} else {
 			// 其它类型按照单一元素处理
-			iter = ListUtil.toList(value).iterator();
+			iter = ListUtil.of(value).iterator();
 		}
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
@@ -2323,11 +2323,11 @@ public class CollUtil {
 				while (result.size() - 1 < index) {
 					result.add(null);
 				}
-				result.set(index, ListUtil.toList(t));
+				result.set(index, ListUtil.of(t));
 			} else {
 				subList = result.get(index);
 				if (null == subList) {
-					result.set(index, ListUtil.toList(t));
+					result.set(index, ListUtil.of(t));
 				} else {
 					subList.add(t);
 				}

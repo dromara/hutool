@@ -15,7 +15,7 @@ public class PicTransferTest {
 	@Ignore
 	public void findTest() {
 		Db.of().find(
-				ListUtil.of("NAME", "TYPE", "GROUP", "PIC"),
+				ListUtil.view("NAME", "TYPE", "GROUP", "PIC"),
 				Entity.create("PIC_INFO").set("TYPE", 1),
 				rs -> {
 					while(rs.next()){

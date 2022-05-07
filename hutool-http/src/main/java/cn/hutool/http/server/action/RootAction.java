@@ -58,7 +58,7 @@ public class RootAction implements Action {
 	 */
 	public RootAction(final File rootDir, final String... indexFileNames) {
 		this.rootDir = rootDir;
-		this.indexFileNames = ListUtil.toList(indexFileNames);
+		this.indexFileNames = ListUtil.of(indexFileNames);
 	}
 
 	@Override

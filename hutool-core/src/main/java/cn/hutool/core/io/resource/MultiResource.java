@@ -32,7 +32,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * @param resources 资源数组
 	 */
 	public MultiResource(final Resource... resources) {
-		this(ListUtil.toList(resources));
+		this(ListUtil.of(resources));
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 		if(resources instanceof List) {
 			this.resources = (List<Resource>)resources;
 		}else {
-			this.resources = ListUtil.toList(resources);
+			this.resources = ListUtil.of(resources);
 		}
 	}
 

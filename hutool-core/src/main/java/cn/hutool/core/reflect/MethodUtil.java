@@ -90,7 +90,7 @@ public class MethodUtil {
 	 * @return 过滤后的方法列表
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
-		final HashSet<Method> excludeMethodSet = SetUtil.newHashSet(excludeMethods);
+		final HashSet<Method> excludeMethodSet = SetUtil.of(excludeMethods);
 		return getPublicMethods(clazz, method -> false == excludeMethodSet.contains(method));
 	}
 
@@ -102,7 +102,7 @@ public class MethodUtil {
 	 * @return 过滤后的方法数组
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
-		final HashSet<String> excludeMethodNameSet = SetUtil.newHashSet(excludeMethodNames);
+		final HashSet<String> excludeMethodNameSet = SetUtil.of(excludeMethodNames);
 		return getPublicMethods(clazz, method -> false == excludeMethodNameSet.contains(method.getName()));
 	}
 

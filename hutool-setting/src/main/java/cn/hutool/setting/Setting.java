@@ -437,7 +437,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return 获得所有分组名
 	 */
 	public List<String> getGroups() {
-		return ListUtil.toList(this.groupedMap.keySet());
+		return ListUtil.of(this.groupedMap.keySet());
 	}
 
 	/**

@@ -27,7 +27,7 @@ public class MetaUtilTest {
 	@Test
 	public void getTableMetaTest() {
 		final Table table = MetaUtil.getTableMeta(ds, "user");
-		Assert.assertEquals(SetUtil.newHashSet("id"), table.getPkNames());
+		Assert.assertEquals(SetUtil.of("id"), table.getPkNames());
 	}
 
 	@Test

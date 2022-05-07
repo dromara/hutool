@@ -21,7 +21,7 @@ public class Engine extends UserAgentInfo {
 	/**
 	 * 支持的引擎类型
 	 */
-	public static final List<Engine> engines = ListUtil.of(
+	public static final List<Engine> engines = ListUtil.view(
 			new Engine("Trident", "trident"),
 			new Engine("Webkit", "webkit"),
 			new Engine("Chrome", "chrome"),

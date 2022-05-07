@@ -409,7 +409,7 @@ public class MapUtil {
 				key = entry.getKey();
 				valueList = resultMap.get(key);
 				if (null == valueList) {
-					valueList = ListUtil.toList(entry.getValue());
+					valueList = ListUtil.of(entry.getValue());
 					resultMap.put(key, valueList);
 				} else {
 					valueList.add(entry.getValue());
@@ -464,7 +464,7 @@ public class MapUtil {
 			List<V> vList;
 			int vListSize;
 			for (final Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
-				vList = ListUtil.toList(entry.getValue());
+				vList = ListUtil.of(entry.getValue());
 				vListSize = vList.size();
 				if (index < vListSize) {
 					map.put(entry.getKey(), vList.get(index));

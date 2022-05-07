@@ -35,7 +35,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers 观察者列表
 	 */
 	public WatcherChain(final Watcher... watchers) {
-		chain = ListUtil.toList(watchers);
+		chain = ListUtil.of(watchers);
 	}
 
 	@Override

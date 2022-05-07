@@ -434,7 +434,7 @@ public class MailUtil {
 		} else if (StrUtil.contains(addresses, ';')) {
 			result = StrUtil.splitTrim(addresses, ';');
 		} else {
-			result = ListUtil.toList(addresses);
+			result = ListUtil.of(addresses);
 		}
 		return result;
 	}
