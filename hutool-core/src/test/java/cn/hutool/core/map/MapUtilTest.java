@@ -82,7 +82,8 @@ public class MapUtilTest {
 		// 如你所见，它是一个map，key由用户id，value由用户组成
 		Map<Long, User> idUserMap = Stream.iterate(0L, i -> ++i).limit(4).map(i -> User.builder().id(i).name(customers.poll()).build()).collect(Collectors.toMap(User::getId, Function.identity()));
 		// 如你所见，它是一个map，key由分组id，value由用户ids组成，典型的多对多关系
-		Map<Long, List<Long>> groupIdUserIdsMap = groups.stream().flatMap(group -> idUserMap.keySet().stream().map(userId -> UserGroup.builder().groupId(group.getId()).userId(userId).build())).collect(Collectors.groupingBy(UserGroup::getGroupId, Collectors.mapping(UserGroup::getUserId, Collectors.toList())));
+		Map<Long, List<Long>> groupIdUserIdsMap = groups.stream().flatMap(group -> idUserMap.keySet().stream().map(userId -> UserGroup.builder().groupId(group.getId()).userId(userId).build()))
+				.collect(Collectors.groupingBy(UserGroup::getGroupId, Collectors.mapping(UserGroup::getUserId, Collectors.toList())));
 
 		// 神奇的魔法发生了， 分组id和用户ids组成的map，竟然变成了订单编号和用户实体集合组成的map
 		Map<Long, List<User>> groupIdUserMap = MapUtil.map(groupIdUserIdsMap, (groupId, userIds) -> userIds.stream().map(idUserMap::get).collect(Collectors.toList()));
