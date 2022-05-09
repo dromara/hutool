@@ -6,6 +6,7 @@
 # 5.8.1.M1 (2022-05-09)
 
 ### 🐣新特性
+* 【core   】     BooleanUtil增加toBooleanObject方法（issue#I56AG3@Gitee）
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）
 
