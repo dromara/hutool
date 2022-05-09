@@ -4,7 +4,9 @@ import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.core.lang.func.Func0;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * 缓存接口
@@ -47,6 +49,19 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @param timeout 失效时长，单位毫秒
 	 */
 	void put(K key, V object, long timeout);
+
+	/**
+	 * 将对象加入到缓存，使用指定失效时长<br>
+	 * 如果缓存空间满了，{@link #prune()} 将被调用以获得空间来存放新对象
+	 *
+	 * @param key     键
+	 * @param object  缓存的对象
+	 * @param timeout 失效时长
+	 */
+	default void put(K key, V object, Duration timeout) {
+		Objects.requireNonNull(timeout, "timeout cannot be null");
+		this.put(key, object, timeout.toMillis());
+	}
 
 	/**
 	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回{@code null}

@@ -6,6 +6,7 @@ import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.lang.ref.Reference;
+import java.time.Duration;
 
 /**
  * 弱引用缓存<br>
@@ -27,6 +28,14 @@ public class WeakCache<K, V> extends TimedCache<K, V>{
 	 * @param timeout 超时时常，单位毫秒，-1或0表示无限制
 	 */
 	public WeakCache(long timeout) {
+		super(timeout, new WeakConcurrentMap<>());
+	}
+
+	/**
+	 * 构造
+	 * @param timeout 超时时常
+	 */
+	public WeakCache(Duration timeout) {
 		super(timeout, new WeakConcurrentMap<>());
 	}
 

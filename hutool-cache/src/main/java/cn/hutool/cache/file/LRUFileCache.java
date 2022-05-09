@@ -1,6 +1,7 @@
 package cn.hutool.cache.file;
 
 import java.io.File;
+import java.time.Duration;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.impl.LRUCache;
@@ -41,6 +42,16 @@ public class LRUFileCache extends AbstractFileCache{
 	 */
 	public LRUFileCache(int capacity, int maxFileSize, long timeout) {
 		super(capacity, maxFileSize, timeout);
+	}
+
+	/**
+	 * 构造
+	 * @param capacity 缓存容量
+	 * @param maxFileSize 文件最大大小
+	 * @param timeout 默认超时时间
+	 */
+	public LRUFileCache(int capacity, int maxFileSize, Duration timeout) {
+		this(capacity, maxFileSize, timeout.toMillis());
 	}
 
 	@Override

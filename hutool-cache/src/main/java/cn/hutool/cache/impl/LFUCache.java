@@ -1,5 +1,6 @@
 package cn.hutool.cache.impl;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -41,6 +42,16 @@ public class LFUCache<K, V> extends StampedCache<K, V> {
 		this.capacity = capacity;
 		this.timeout = timeout;
 		cacheMap = new HashMap<>(capacity + 1, 1.0f);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param capacity 容量
+	 * @param timeout 过期时长
+	 */
+	public LFUCache(int capacity, Duration timeout) {
+		this(capacity, timeout.toMillis());
 	}
 
 	// ---------------------------------------------------------------- prune

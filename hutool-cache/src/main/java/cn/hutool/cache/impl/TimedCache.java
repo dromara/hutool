@@ -3,6 +3,7 @@ package cn.hutool.cache.impl;
 import cn.hutool.cache.GlobalPruneTimer;
 import cn.hutool.core.lang.mutable.Mutable;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,6 +36,15 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 	/**
 	 * 构造
 	 *
+	 * @param timeout 超时（过期）时长
+	 */
+	public TimedCache(Duration timeout) {
+		this(timeout.toMillis(), new HashMap<>());
+	}
+
+	/**
+	 * 构造
+	 *
 	 * @param timeout 过期时长
 	 * @param map 存储缓存对象的map
 	 */
@@ -42,6 +52,16 @@ public class TimedCache<K, V> extends StampedCache<K, V> {
 		this.capacity = 0;
 		this.timeout = timeout;
 		this.cacheMap = map;
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param timeout 过期时长
+	 * @param map 存储缓存对象的map
+	 */
+	public TimedCache(Duration timeout, Map<Mutable<K>, CacheObj<K, V>> map) {
+		this(timeout.toMillis(), map);
 	}
 
 	// ---------------------------------------------------------------- prune

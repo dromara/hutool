@@ -1,5 +1,6 @@
 package cn.hutool.cache.impl;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -38,6 +39,16 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 		this.capacity = capacity;
 		this.timeout = timeout;
 		cacheMap = new LinkedHashMap<>(capacity + 1, 1.0f, false);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param capacity 容量
+	 * @param timeout  过期时长
+	 */
+	public FIFOCache(int capacity, Duration timeout) {
+		this(capacity, timeout.toMillis());
 	}
 
 	/**
