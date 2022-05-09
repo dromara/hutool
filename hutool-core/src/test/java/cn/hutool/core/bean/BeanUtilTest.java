@@ -192,6 +192,23 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void beanToMapNullPropertiesTest() {
+		final SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		final Map<String, Object> map = BeanUtil.beanToMap(person, (String[])null);
+
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals(14, map.get("age"));
+		Assert.assertEquals("11213232", map.get("openid"));
+		// static属性应被忽略
+		Assert.assertFalse(map.containsKey("SUBNAME"));
+	}
+
+	@Test
 	public void beanToMapTest2() {
 		final SubPerson person = new SubPerson();
 		person.setAge(14);

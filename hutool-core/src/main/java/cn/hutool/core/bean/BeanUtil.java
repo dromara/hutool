@@ -573,14 +573,16 @@ public class BeanUtil {
 	 * @since 5.8.0
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
+		int mapSize = 16;
 		Editor<String> keyEditor = null;
 		if(ArrayUtil.isNotEmpty(properties)){
+			mapSize = properties.length;
 			final Set<String> propertiesSet = SetUtil.of(properties);
 			keyEditor = property -> propertiesSet.contains(property) ? property : null;
 		}
 
 		// 指明了要复制的属性 所以不忽略null值
-		return beanToMap(bean, new LinkedHashMap<>(properties.length, 1), false, keyEditor);
+		return beanToMap(bean, new LinkedHashMap<>(mapSize, 1), false, keyEditor);
 	}
 
 	/**
