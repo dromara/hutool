@@ -1412,7 +1412,7 @@ public class MapUtil {
 	 */
 	public static <K, V> Map.Entry<K, V> entry(final K key, final V value, final boolean isImmutable) {
 		return isImmutable ?
-				new AbstractMap.SimpleEntry<>(key, value) :
-				new AbstractMap.SimpleImmutableEntry<>(key, value);
+				new AbstractMap.SimpleImmutableEntry<>(key, value) :
+				new AbstractMap.SimpleEntry<>(key, value);
 	}
 }

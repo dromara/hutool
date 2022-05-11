@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
@@ -10,7 +11,6 @@ import cn.hutool.core.util.CharUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -271,7 +271,7 @@ public class BeanPath implements Serializable{
 		}
 
 		// 不可变List
-		this.patternParts = Collections.unmodifiableList(localPatternParts);
+		this.patternParts = ListUtil.view(localPatternParts);
 	}
 
 	/**

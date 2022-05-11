@@ -5,7 +5,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.getter.BasicTypeGetter;
@@ -61,16 +60,15 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	}
 
 	/**
-	 * 根据给定的Pair数组创建Dict对象
+	 * 根据给定的Entry数组创建Dict对象
 	 *
 	 * @param pairs 键值对
 	 * @return Dict
-	 * @since 5.4.1
 	 */
 	@SafeVarargs
-	public static Dict of(final Pair<String, Object>... pairs) {
+	public static Dict ofEntries(final Map.Entry<String, Object>... pairs) {
 		final Dict dict = create();
-		for (final Pair<String, Object> pair : pairs) {
+		for (final Map.Entry<String, Object> pair : pairs) {
 			dict.put(pair.getKey(), pair.getValue());
 		}
 		return dict;

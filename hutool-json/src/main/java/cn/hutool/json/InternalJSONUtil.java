@@ -3,7 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.mutable.MutablePair;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.util.ArrayUtil;
@@ -140,7 +140,7 @@ public final class InternalJSONUtil {
 	 * @param value      值
 	 * @return JSONObject
 	 */
-	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Filter<MutablePair<String, Object>> filter) {
+	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Filter<MutableEntry<String, Object>> filter) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;

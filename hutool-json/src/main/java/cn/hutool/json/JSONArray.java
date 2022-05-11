@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.core.lang.mutable.MutablePair;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.JSONWriter;
@@ -416,10 +416,10 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 替换的值，即之前的值
 	 * @since 5.8.0
 	 */
-	public Object set(final int index, Object element, final Filter<MutablePair<Integer, Object>> filter) {
+	public Object set(final int index, Object element, final Filter<MutableEntry<Integer, Object>> filter) {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != filter) {
-			final MutablePair<Integer, Object> pair = new MutablePair<>(index, element);
+			final MutableEntry<Integer, Object> pair = new MutableEntry<>(index, element);
 			if (filter.accept(pair)) {
 				// 使用修改后的值
 				element = pair.getValue();
@@ -515,7 +515,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(final int indentFactor, final Filter<MutablePair<Integer, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Filter<MutableEntry<Integer, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -539,12 +539,12 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutablePair<Integer, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutableEntry<Integer, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginArray();
 
 		CollUtil.forEach(this, (value, index) -> {
-			final MutablePair<Integer, Object> pair = new MutablePair<>(index, value);
+			final MutableEntry<Integer, Object> pair = new MutableEntry<>(index, value);
 			if (null == filter || filter.accept(pair)) {
 				jsonWriter.writeValue(pair.getValue());
 			}
