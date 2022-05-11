@@ -3,16 +3,19 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.1.M1 (2022-05-10)
+# 5.8.1.M1 (2022-05-12)
 
 ### 🐣新特性
 * 【core   】     BooleanUtil增加toBooleanObject方法（issue#I56AG3@Gitee）
 * 【core   】     CharSequenceUtil增加startWithAnyIgnoreCase方法（issue#2312@Github）
 * 【system 】     JavaInfo增加版本（issue#2310@Github）
+* 
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）
 * 【core   】     修复BeanUtil.beanToMap中properties为null的空指针问题（issue#2303@Github）
 * 【db     】     DialectName中修正为POSTGRESQL（issue#2308@Github）
+* 【core   】     修复BeanPath无法识别引号内的内容问题（issue#I56DE0@Gitee）
+* 【core   】     修复Map.entry方法返回可变不可变相反问题
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -188,3 +191,6 @@
 * 【json   】     JSON修复transient设置无效问题（issue#2212@Github）
 * 【core   】     修复IterUtil.getElementType获取结果为null的问题（issue#2222@Github）
 * 【core   】     修复农历转公历在闰月时错误（issue#I4ZSGJ@Gitee）
+
+# 5.7.x 或更早版本
+* [https://gitee.com/dromara/hutool/blob/v5-master/CHANGELOG_5.0-5.7.md](https://gitee.com/dromara/hutool/blob/v5-master/CHANGELOG_5.0-5.7.md)

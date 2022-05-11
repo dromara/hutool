@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.function.BiFunction;
 
 /**
@@ -1433,7 +1432,7 @@ public class MapUtil {
 	 */
 	public static <K, V> Map.Entry<K, V> entry(K key, V value, boolean isImmutable) {
 		return isImmutable ?
-				new AbstractMap.SimpleEntry<>(key, value) :
-				new AbstractMap.SimpleImmutableEntry<>(key, value);
+				new AbstractMap.SimpleImmutableEntry<>(key, value) :
+				new AbstractMap.SimpleEntry<>(key, value);
 	}
 }

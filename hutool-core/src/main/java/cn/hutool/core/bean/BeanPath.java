@@ -1,9 +1,9 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,7 +11,6 @@ import cn.hutool.core.util.StrUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class BeanPath implements Serializable{
 	 * @param expression 表达式
 	 * @return BeanPath
 	 */
-	public static BeanPath create(String expression) {
+	public static BeanPath create(final String expression) {
 		return new BeanPath(expression);
 	}
 
@@ -77,8 +76,17 @@ public class BeanPath implements Serializable{
 	 *
 	 * @param expression 表达式
 	 */
-	public BeanPath(String expression) {
+	public BeanPath(final String expression) {
 		init(expression);
+	}
+
+	/**
+	 * 获取表达式解析后的分段列表
+	 *
+	 * @return 表达式分段列表
+	 */
+	public List<String> getPatternParts(){
+		return this.patternParts;
 	}
 
 	/**
@@ -87,7 +95,7 @@ public class BeanPath implements Serializable{
 	 * @param bean Bean对象或Map或List等
 	 * @return 值，如果对应值不存在，则返回null
 	 */
-	public Object get(Object bean) {
+	public Object get(final Object bean) {
 		return get(this.patternParts, bean, false);
 	}
 
@@ -104,10 +112,16 @@ public class BeanPath implements Serializable{
 	 * @param bean Bean、Map或List
 	 * @param value 值
 	 */
-	public void set(Object bean, Object value) {
+	public void set(final Object bean, final Object value) {
 		set(bean, this.patternParts, value);
 	}
 
+	@Override
+	public String toString() {
+		return this.patternParts.toString();
+	}
+
+	//region Private Methods
 	/**
 	 * 设置表达式指定位置（或filed对应）的值<br>
 	 * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
@@ -122,7 +136,7 @@ public class BeanPath implements Serializable{
 	 * @param patternParts 表达式块列表
 	 * @param value 值
 	 */
-	private void set(Object bean, List<String> patternParts, Object value) {
+	private void set(final Object bean, final List<String> patternParts, final Object value) {
 		Object subBean = get(patternParts, bean, true);
 		if(null == subBean) {
 			set(bean, patternParts.subList(0, patternParts.size() - 1), new HashMap<>());
@@ -132,7 +146,6 @@ public class BeanPath implements Serializable{
 		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取Bean中对应表达式的值
 	 *
@@ -141,7 +154,7 @@ public class BeanPath implements Serializable{
 	 * @param ignoreLast 是否忽略最后一个值，忽略最后一个值则用于set，否则用于read
 	 * @return 值，如果对应值不存在，则返回null
 	 */
-	private Object get(List<String> patternParts, Object bean, boolean ignoreLast) {
+	private Object get(final List<String> patternParts, final Object bean, final boolean ignoreLast) {
 		int length = patternParts.size();
 		if (ignoreLast) {
 			length--;
@@ -166,7 +179,7 @@ public class BeanPath implements Serializable{
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Object getFieldValue(Object bean, String expression) {
+	private static Object getFieldValue(final Object bean, final String expression) {
 		if (StrUtil.isBlank(expression)) {
 			return null;
 		}
@@ -174,8 +187,8 @@ public class BeanPath implements Serializable{
 		if (StrUtil.contains(expression, ':')) {
 			// [start:end:step] 模式
 			final List<String> parts = StrUtil.splitTrim(expression, ':');
-			int start = Integer.parseInt(parts.get(0));
-			int end = Integer.parseInt(parts.get(1));
+			final int start = Integer.parseInt(parts.get(0));
+			final int end = Integer.parseInt(parts.get(1));
 			int step = 1;
 			if (3 == parts.size()) {
 				step = Integer.parseInt(parts.get(2));
@@ -218,13 +231,14 @@ public class BeanPath implements Serializable{
 	 *
 	 * @param expression 表达式
 	 */
-	private void init(String expression) {
-		List<String> localPatternParts = new ArrayList<>();
-		int length = expression.length();
+	private void init(final String expression) {
+		final List<String> localPatternParts = new ArrayList<>();
+		final int length = expression.length();
 
-		final StrBuilder builder = StrUtil.strBuilder();
+		final StringBuilder builder = new StringBuilder();
 		char c;
 		boolean isNumStart = false;// 下标标识符开始
+		boolean isInWrap = false; //标识是否在引号内
 		for (int i = 0; i < length; i++) {
 			c = expression.charAt(i);
 			if (0 == i && '$' == c) {
@@ -233,7 +247,13 @@ public class BeanPath implements Serializable{
 				continue;
 			}
 
-			if (ArrayUtil.contains(EXP_CHARS, c)) {
+			if('\'' == c){
+				// 结束
+				isInWrap = (false == isInWrap);
+				continue;
+			}
+
+			if (false == isInWrap && ArrayUtil.contains(EXP_CHARS, c)) {
 				// 处理边界符号
 				if (CharUtil.BRACKET_END == c) {
 					// 中括号（数字下标）结束
@@ -253,9 +273,9 @@ public class BeanPath implements Serializable{
 					// 每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
 				}
 				if (builder.length() > 0) {
-					localPatternParts.add(unWrapIfPossible(builder));
+					localPatternParts.add(builder.toString());
 				}
-				builder.reset();
+				builder.setLength(0);
 			} else {
 				// 非边界符号，追加字符
 				builder.append(c);
@@ -267,25 +287,12 @@ public class BeanPath implements Serializable{
 			throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, length - 1));
 		} else {
 			if (builder.length() > 0) {
-				localPatternParts.add(unWrapIfPossible(builder));
+				localPatternParts.add(builder.toString());
 			}
 		}
 
 		// 不可变List
-		this.patternParts = Collections.unmodifiableList(localPatternParts);
+		this.patternParts = ListUtil.unmodifiable(localPatternParts);
 	}
-
-	/**
-	 * 对于非表达式去除单引号
-	 *
-	 * @param expression 表达式
-	 * @return 表达式
-	 */
-	private static String unWrapIfPossible(CharSequence expression) {
-		if (StrUtil.containsAny(expression, " = ", " > ", " < ", " like ", ",")) {
-			return expression.toString();
-		}
-		return StrUtil.unWrap(expression, '\'');
-	}
-	// ------------------------------------------------------------------------------------------------------------------------------------- Private method end
+	//endregion
 }
