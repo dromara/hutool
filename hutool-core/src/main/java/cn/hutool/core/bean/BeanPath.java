@@ -67,7 +67,7 @@ public class BeanPath implements Serializable{
 	 * @param expression 表达式
 	 * @return BeanPath
 	 */
-	public static BeanPath create(final String expression) {
+	public static BeanPath of(final String expression) {
 		return new BeanPath(expression);
 	}
 
@@ -78,6 +78,15 @@ public class BeanPath implements Serializable{
 	 */
 	public BeanPath(final String expression) {
 		init(expression);
+	}
+
+	/**
+	 * 获取表达式解析后的分段列表
+	 *
+	 * @return 表达式分段列表
+	 */
+	public List<String> getPatternParts(){
+		return this.patternParts;
 	}
 
 	/**
@@ -107,6 +116,12 @@ public class BeanPath implements Serializable{
 		set(bean, this.patternParts, value);
 	}
 
+	@Override
+	public String toString() {
+		return this.patternParts.toString();
+	}
+
+	//region Private Methods
 	/**
 	 * 设置表达式指定位置（或filed对应）的值<br>
 	 * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
@@ -131,7 +146,6 @@ public class BeanPath implements Serializable{
 		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取Bean中对应表达式的值
 	 *
@@ -224,6 +238,7 @@ public class BeanPath implements Serializable{
 		final StringBuilder builder = new StringBuilder();
 		char c;
 		boolean isNumStart = false;// 下标标识符开始
+		boolean isInWrap = false; //标识是否在引号内
 		for (int i = 0; i < length; i++) {
 			c = expression.charAt(i);
 			if (0 == i && '$' == c) {
@@ -232,7 +247,13 @@ public class BeanPath implements Serializable{
 				continue;
 			}
 
-			if (ArrayUtil.contains(EXP_CHARS, c)) {
+			if('\'' == c){
+				// 结束
+				isInWrap = (false == isInWrap);
+				continue;
+			}
+
+			if (false == isInWrap && ArrayUtil.contains(EXP_CHARS, c)) {
 				// 处理边界符号
 				if (CharUtil.BRACKET_END == c) {
 					// 中括号（数字下标）结束
@@ -252,7 +273,7 @@ public class BeanPath implements Serializable{
 					// 每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
 				}
 				if (builder.length() > 0) {
-					localPatternParts.add(unWrapIfPossible(builder));
+					localPatternParts.add(builder.toString());
 				}
 				builder.setLength(0);
 			} else {
@@ -266,25 +287,12 @@ public class BeanPath implements Serializable{
 			throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, length - 1));
 		} else {
 			if (builder.length() > 0) {
-				localPatternParts.add(unWrapIfPossible(builder));
+				localPatternParts.add(builder.toString());
 			}
 		}
 
 		// 不可变List
 		this.patternParts = ListUtil.view(localPatternParts);
 	}
-
-	/**
-	 * 对于非表达式去除单引号
-	 *
-	 * @param expression 表达式
-	 * @return 表达式
-	 */
-	private static String unWrapIfPossible(final CharSequence expression) {
-		if (StrUtil.containsAny(expression, " = ", " > ", " < ", " like ", ",")) {
-			return expression.toString();
-		}
-		return StrUtil.unWrap(expression, '\'');
-	}
-	// ------------------------------------------------------------------------------------------------------------------------------------- Private method end
+	//endregion
 }

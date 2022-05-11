@@ -86,14 +86,14 @@ public class BeanPathTest {
 
 	@Test
 	public void getTest() {
-		final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
+		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
 		final Object result = pattern.get(tempMap);
 		Assert.assertEquals(1, result);
 	}
 
 	@Test
 	public void setTest() {
-		final BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
+		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		final Object result = pattern.get(tempMap);
 		Assert.assertEquals(2, result);
@@ -101,7 +101,7 @@ public class BeanPathTest {
 
 	@Test
 	public void getMapTest () {
-		final BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
+		final BeanPath pattern = BeanPath.of("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
 		Assert.assertEquals(1, result.get("id"));
@@ -114,7 +114,15 @@ public class BeanPathTest {
 		dataMap.put("aa", "value0");
 		dataMap.put("aa.bb.cc", "value111111");//     key   是类名 格式 带 ' . '
 
-		final BeanPath pattern = BeanPath.create("'aa.bb.cc'");
+		final BeanPath pattern = BeanPath.of("'aa.bb.cc'");
 		Assert.assertEquals("value111111", pattern.get(dataMap));
+	}
+
+	@Test
+	public void compileTest(){
+		final BeanPath of = BeanPath.of("'abc.dd'.ee.ff'.'");
+		Assert.assertEquals("abc.dd", of.getPatternParts().get(0));
+		Assert.assertEquals("ee", of.getPatternParts().get(1));
+		Assert.assertEquals("ff.", of.getPatternParts().get(2));
 	}
 }

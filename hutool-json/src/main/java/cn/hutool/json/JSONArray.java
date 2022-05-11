@@ -192,7 +192,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public Object getByPath(final String expression) {
-		return BeanPath.create(expression).get(this);
+		return BeanPath.of(expression).get(this);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public void putByPath(final String expression, final Object value) {
-		BeanPath.create(expression).set(this, value);
+		BeanPath.of(expression).set(this, value);
 	}
 
 	/**

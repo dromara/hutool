@@ -534,7 +534,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(final String expression) {
-		return (T) BeanPath.create(expression).get(this);
+		return (T) BeanPath.of(expression).get(this);
 	}
 
 	/**

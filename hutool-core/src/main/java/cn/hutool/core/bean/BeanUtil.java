@@ -341,7 +341,7 @@ public class BeanUtil {
 		if (null == bean || StrUtil.isBlank(expression)) {
 			return null;
 		}
-		return (T) BeanPath.create(expression).get(bean);
+		return (T) BeanPath.of(expression).get(bean);
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class BeanUtil {
 	 * @since 4.0.6
 	 */
 	public static void setProperty(final Object bean, final String expression, final Object value) {
-		BeanPath.create(expression).set(bean, value);
+		BeanPath.of(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
