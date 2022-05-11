@@ -10,7 +10,6 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -907,36 +906,6 @@ public class CollUtilTest {
 		Assert.assertEquals(2, distinct.size());
 		Assert.assertEquals("aa", distinct.get(0).getName());
 		Assert.assertEquals("bb", distinct.get(1).getName());
-	}
-
-	@Test
-	public void testCastToSuper() {
-		Collection<Integer> collection=CollUtil.newLinkedList(1,2,3);
-		List<Integer> list = CollUtil.newArrayList(1, 2, 3);
-		Set<Integer> set = CollUtil.newHashSet(1, 2, 3);
-		Map<Integer, Integer> map = new HashMap<>();
-		map.put(1, 1);
-
-		Collection<Number> collection2 = CollUtil.castup(collection);
-		Assert.assertSame(collection, collection2);
-
-		Collection<Integer> collection3 = CollUtil.castdown(collection2);
-		Assert.assertSame(collection2, collection3);
-
-		List<Number> list2 = CollUtil.castup(list);
-		Assert.assertSame(list, list2);
-		List<Integer> list3 = CollUtil.castdown(list2);
-		Assert.assertSame(list2, list3);
-
-		Set<Number> set2 = CollUtil.castup(set);
-		Assert.assertSame(set, set2);
-		Set<Integer> set3 = CollUtil.castdown(set2);
-		Assert.assertSame(set2, set3);
-
-		Map<Number, Serializable> map2 = CollUtil.castup(map);
-		Assert.assertSame(map, map2);
-		Map<Integer, Number> map3 = CollUtil.castdown(map2);
-		Assert.assertSame(map2, map3);
 	}
 
 	@Data
