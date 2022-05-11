@@ -22,6 +22,7 @@ public class CastUtilTest {
 		map.put(1, 1);
 
 		Collection<Number> collection2 = CastUtil.castUp(collection);
+		collection2.add(new Double("123.1"));
 		Assert.assertSame(collection, collection2);
 
 		Collection<Integer> collection3 = CastUtil.castDown(collection2);
