@@ -1097,7 +1097,7 @@ public class FileUtil extends PathUtil {
 	 * 情况如下：
 	 *
 	 * <pre>
-	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下
+	 * 1、src和dest都为目录，则将src下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
 	 * </pre>
@@ -1117,7 +1117,7 @@ public class FileUtil extends PathUtil {
 	 * 情况如下：
 	 *
 	 * <pre>
-	 * 1、src和dest都为目录，则讲src下所有文件（包括子目录）拷贝到dest下
+	 * 1、src和dest都为目录，则将src下所有文件（包括子目录）拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
 	 * </pre>
