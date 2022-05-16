@@ -84,16 +84,17 @@ public class JWTValidatorTest {
 
 	@Test
 	public void issue2329Test(){
-		final long NOW = System.currentTimeMillis();
-		final Date NOW_TIME = new Date(NOW);
-		final long EXPIRED = 3 * 1000L;
-		final Date EXPIRED_TIME = new Date(NOW + EXPIRED);
+		final long now = System.currentTimeMillis();
+		final Date nowTime = new Date(now);
+		final long expired = 3 * 1000L;
+		final Date expiredTime = new Date(now + expired);
 
 		// 使用这种方式生成token
-		final String token = JWT.create().setPayload("sub", "blue-light").setIssuedAt(NOW_TIME).setNotBefore(EXPIRED_TIME)
-				.setExpiresAt(EXPIRED_TIME).setKey("123456".getBytes()).sign();
+		final String token = JWT.create().setPayload("sub", "blue-light").setIssuedAt(nowTime).setNotBefore(expiredTime)
+				.setExpiresAt(expiredTime).setKey("123456".getBytes()).sign();
 
 		// 使用这种方式验证token
-		JWTValidator.of(JWT.of(token)).validateDate(DateUtil.date(NOW + 4000), 10);
+		JWTValidator.of(JWT.of(token)).validateDate(DateUtil.date(now - 4000), 10);
+		JWTValidator.of(JWT.of(token)).validateDate(DateUtil.date(now + 4000), 10);
 	}
 }

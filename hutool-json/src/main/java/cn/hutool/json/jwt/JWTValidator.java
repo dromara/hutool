@@ -242,11 +242,13 @@ public class JWTValidator {
 	 * @throws ValidateException 验证异常
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private static void validateNotBefore(final String fieldName, final Date dateToCheck, final Date now, final long leeway) throws ValidateException {
+	private static void validateNotBefore(final String fieldName, final Date dateToCheck, Date now, final long leeway) throws ValidateException {
 		if (null == dateToCheck) {
 			return;
 		}
-		now.setTime(now.getTime() - leeway * 1000);
+		if(leeway > 0){
+			now = DateUtil.date(now.getTime() - leeway * 1000);
+		}
 		if (dateToCheck.before(now)) {
 			throw new ValidateException("'{}':[{}] is before now:[{}]",
 					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));
