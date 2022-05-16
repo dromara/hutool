@@ -433,6 +433,12 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isEven(a[4]));
 	}
 
-
+	@Test
+	public void toBigIntegerTest(){
+		final Number number=1123123;
+		final Number number2=1123123.123;
+		Assert.assertNotNull(NumberUtil.toBigInteger(number));
+		Assert.assertNotNull(NumberUtil.toBigInteger(number2));
+	}
 
 }

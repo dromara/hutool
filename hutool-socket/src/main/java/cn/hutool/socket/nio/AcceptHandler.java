@@ -27,7 +27,7 @@ public class AcceptHandler implements CompletionHandler<ServerSocketChannel, Nio
 		}
 
 		// SocketChannel通道的可读事件注册到Selector中
-		NioUtil.registerChannel(nioServer.getSelector(), socketChannel, Operation.READ);
+		ChannelUtil.registerChannel(nioServer.getSelector(), socketChannel, Operation.READ);
 	}
 
 	@Override
