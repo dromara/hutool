@@ -2,7 +2,6 @@ package cn.hutool.core.math;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.math.Calculator;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -34,8 +33,7 @@ import java.util.Set;
  * </p>
  * 相关介绍：
  * <ul>
- * <li>http://www.oschina.net/code/snippet_563112_25237</li>
- * <li>https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking</li>
+ * <li><a href="https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking">one-jdk7-bug-thinking</a></li>
  * </ul>
  *
  * @author Looly
@@ -2454,7 +2452,7 @@ public class NumberUtil {
 			return 0L;
 		}
 
-		if (number.startsWith("0x")) {
+		if(StrUtil.startWithIgnoreCase(number, "0x")){
 			// 0x04表示16进制数
 			return Long.parseLong(number.substring(2), 16);
 		}
@@ -2528,6 +2526,11 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(final String numberStr) throws NumberFormatException {
+		if(StrUtil.startWithIgnoreCase(numberStr, "0x")){
+			// 0x04表示16进制数
+			return Long.parseLong(numberStr.substring(2), 16);
+		}
+
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
 			if (format instanceof DecimalFormat) {

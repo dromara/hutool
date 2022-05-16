@@ -294,6 +294,13 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void parseHexNumberTest() {
+		// 千位分隔符去掉
+		final int v1 = NumberUtil.parseNumber("0xff").intValue();
+		Assert.assertEquals(255, v1);
+	}
+
+	@Test
 	public void parseLongTest() {
 		long number = NumberUtil.parseLong("0xFF");
 		Assert.assertEquals(255, number);
