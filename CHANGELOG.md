@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.1.M1 (2022-05-12)
+# 5.8.1.M1 (2022-05-16)
 
 ### 🐣新特性
 * 【core   】     BooleanUtil增加toBooleanObject方法（issue#I56AG3@Gitee）
 * 【core   】     CharSequenceUtil增加startWithAnyIgnoreCase方法（issue#2312@Github）
 * 【system 】     JavaInfo增加版本（issue#2310@Github）
 * 【core   】     新增CastUtil（pr#2313@Github）
+* 【core   】     ByteUtil新增bytesToShort重载（issue#I57FA7@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）
