@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.1.M1</version>
+		<version>5.8.1</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.5</version>
+			<version>3.3.6</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
