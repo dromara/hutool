@@ -11,6 +11,7 @@
 * 【system 】     JavaInfo增加版本（issue#2310@Github）
 * 【core   】     新增CastUtil（pr#2313@Github）
 * 【core   】     ByteUtil新增bytesToShort重载（issue#I57FA7@Gitee）
+* 【core   】     ReflectUtil.invoke方法抛出运行时异常增加InvocationTargetRuntimeException（issue#I57GI2@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）
