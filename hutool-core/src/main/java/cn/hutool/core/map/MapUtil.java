@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.stream.CollectorUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,7 +28,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.function.BiFunction;
 
 /**
@@ -708,7 +708,7 @@ public class MapUtil {
 		if (null == map || null == biFunction) {
 			return MapUtil.newHashMap();
 		}
-		return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue())));
+		return map.entrySet().stream().collect(CollectorUtil.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue()),(l,r)->l));
 	}
 
 	/**
@@ -1432,7 +1432,7 @@ public class MapUtil {
 	 */
 	public static <K, V> Map.Entry<K, V> entry(K key, V value, boolean isImmutable) {
 		return isImmutable ?
-				new AbstractMap.SimpleEntry<>(key, value) :
-				new AbstractMap.SimpleImmutableEntry<>(key, value);
+				new AbstractMap.SimpleImmutableEntry<>(key, value) :
+				new AbstractMap.SimpleEntry<>(key, value);
 	}
 }

@@ -5,6 +5,7 @@ import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
@@ -16,6 +17,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -864,7 +866,7 @@ public class ReflectUtil {
 	 *     Set       -》 HashSet
 	 * </pre>
 	 *
-	 * @param <T>       对象类型
+	 * @param <T>  对象类型
 	 * @param type 被构造的类
 	 * @return 构造后的对象，构造失败返回{@code null}
 	 */
@@ -873,7 +875,7 @@ public class ReflectUtil {
 		Assert.notNull(type);
 
 		// 原始类型
-		if(type.isPrimitive()){
+		if (type.isPrimitive()) {
 			return (T) ClassUtil.getPrimitiveDefaultValue(type);
 		}
 
@@ -985,10 +987,42 @@ public class ReflectUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws UtilException 一些列异常的包装
+	 * @throws InvocationTargetRuntimeException 目标方法执行异常
+	 * @throws UtilException                    {@link IllegalAccessException}异常的包装
+	 */
+	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetRuntimeException, UtilException {
+		try {
+			return invokeRaw(obj, method, args);
+		} catch (InvocationTargetException e) {
+			throw new InvocationTargetRuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * 执行方法
+	 *
+	 * <p>
+	 * 对于用户传入参数会做必要检查，包括：
+	 *
+	 * <pre>
+	 *     1、忽略多余的参数
+	 *     2、参数不够补齐默认值
+	 *     3、传入参数为null，但是目标参数类型为原始类型，做转换
+	 * </pre>
+	 *
+	 * @param <T>    返回对象类型
+	 * @param obj    对象，如果执行静态方法，此值为{@code null}
+	 * @param method 方法（对象方法或static方法都可）
+	 * @param args   参数对象
+	 * @return 结果
+	 * @throws InvocationTargetRuntimeException 目标方法执行异常
+	 * @throws UtilException                    {@link IllegalAccessException}异常的包装
+	 * @since 5.8.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
+	public static <T> T invokeRaw(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalAccessException {
 		setAccessible(method);
 
 		// 检查用户传入参数：
@@ -1025,11 +1059,7 @@ public class ReflectUtil {
 			return MethodHandleUtil.invokeSpecial(obj, method, args);
 		}
 
-		try {
-			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
 	}
 
 	/**
@@ -1041,7 +1071,7 @@ public class ReflectUtil {
 	 * @param methodName 方法名
 	 * @param args       参数列表
 	 * @return 执行结果
-	 * @throws UtilException IllegalAccessException包装
+	 * @throws UtilException IllegalAccessException等异常包装
 	 * @see NullWrapperBean
 	 * @since 3.1.2
 	 */

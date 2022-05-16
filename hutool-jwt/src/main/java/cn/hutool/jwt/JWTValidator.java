@@ -222,7 +222,9 @@ public class JWTValidator {
 		if (null == dateToCheck) {
 			return;
 		}
-		now.setTime(now.getTime() + leeway * 1000);
+		if(leeway > 0){
+			now = DateUtil.date(now.getTime() + leeway * 1000);
+		}
 		if (dateToCheck.after(now)) {
 			throw new ValidateException("'{}':[{}] is after now:[{}]",
 					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));
@@ -244,7 +246,9 @@ public class JWTValidator {
 		if (null == dateToCheck) {
 			return;
 		}
-		now.setTime(now.getTime() - leeway * 1000);
+		if(leeway > 0){
+			now = DateUtil.date(now.getTime() - leeway * 1000);
+		}
 		if (dateToCheck.before(now)) {
 			throw new ValidateException("'{}':[{}] is before now:[{}]",
 					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));

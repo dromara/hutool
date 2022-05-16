@@ -1058,7 +1058,7 @@ public class CollUtil {
 	 * @param <T>        集合元素类型
 	 * @param <K>        唯一键类型
 	 * @param collection 集合
-	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @param override   是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
 	 * @return {@link ArrayList}
 	 * @since 5.8.0
 	 */
