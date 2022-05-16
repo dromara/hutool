@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.1.M1 (2022-05-16)
+# 5.8.1 (2022-05-16)
 
 ### 🐣新特性
 * 【core   】     BooleanUtil增加toBooleanObject方法（issue#I56AG3@Gitee）
@@ -12,6 +12,7 @@
 * 【core   】     新增CastUtil（pr#2313@Github）
 * 【core   】     ByteUtil新增bytesToShort重载（issue#I57FA7@Gitee）
 * 【core   】     ReflectUtil.invoke方法抛出运行时异常增加InvocationTargetRuntimeException（issue#I57GI2@Gitee）
+* 【core   】     NumberUtil.parseNumber支持16进制（issue#2328@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）

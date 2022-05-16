@@ -2524,6 +2524,11 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
+		if(StrUtil.startWithIgnoreCase(numberStr, "0x")){
+			// 0x04表示16进制数
+			return Long.parseLong(numberStr.substring(2), 16);
+		}
+
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
 			if (format instanceof DecimalFormat) {
