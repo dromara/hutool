@@ -5,6 +5,7 @@ import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Singleton;
@@ -13,6 +14,7 @@ import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -536,37 +538,39 @@ public class MethodUtil {
 	 * @return 结果
 	 * @throws UtilException 一些列异常的包装
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws UtilException {
-		ReflectUtil.setAccessible(method);
-
-		// 检查用户传入参数：
-		// 1、忽略多余的参数
-		// 2、参数不够补齐默认值
-		// 3、通过NullWrapperBean传递的参数,会直接赋值null
-		// 4、传入参数为null，但是目标参数类型为原始类型，做转换
-		// 5、传入参数类型不对应，尝试转换类型
-		final Class<?>[] parameterTypes = method.getParameterTypes();
-		final Object[] actualArgs = new Object[parameterTypes.length];
-		if (null != args) {
-			for (int i = 0; i < actualArgs.length; i++) {
-				if (i >= args.length || null == args[i]) {
-					// 越界或者空值
-					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
-				} else if (args[i] instanceof NullWrapperBean) {
-					//如果是通过NullWrapperBean传递的null参数,直接赋值null
-					actualArgs[i] = null;
-				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
-					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
-					if (null != targetValue) {
-						actualArgs[i] = targetValue;
-					}
-				} else {
-					actualArgs[i] = args[i];
-				}
-			}
+		try {
+			return invokeRaw(obj, method, args);
+		} catch (final InvocationTargetException e) {
+			throw new InvocationTargetRuntimeException(e);
+		} catch (final IllegalAccessException e) {
+			throw new UtilException(e);
 		}
+	}
+
+	/**
+	 * 执行方法
+	 *
+	 * <p>
+	 * 对于用户传入参数会做必要检查，包括：
+	 *
+	 * <pre>
+	 *     1、忽略多余的参数
+	 *     2、参数不够补齐默认值
+	 *     3、传入参数为null，但是目标参数类型为原始类型，做转换
+	 * </pre>
+	 *
+	 * @param <T>    返回对象类型
+	 * @param obj    对象，如果执行静态方法，此值为{@code null}
+	 * @param method 方法（对象方法或static方法都可）
+	 * @param args   参数对象
+	 * @return 结果
+	 * @throws InvocationTargetRuntimeException 目标方法执行异常
+	 * @throws IllegalAccessException           访问权限异常
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T invokeRaw(final Object obj, final Method method, final Object... args) throws InvocationTargetException, IllegalAccessException {
+		ReflectUtil.setAccessible(method);
 
 		if (method.isDefault()) {
 			// 当方法是default方法时，尤其对象是代理对象，需使用句柄方式执行
@@ -574,11 +578,7 @@ public class MethodUtil {
 			return MethodHandleUtil.invokeSpecial(obj, method, args);
 		}
 
-		try {
-			return (T) method.invoke(ModifierUtil.isStatic(method) ? null : obj, actualArgs);
-		} catch (final Exception e) {
-			throw new UtilException(e);
-		}
+		return (T) method.invoke(ModifierUtil.isStatic(method) ? null : obj, actualArgs(method, args));
 	}
 
 	/**
@@ -736,5 +736,45 @@ public class MethodUtil {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 检查用户传入参数：
+	 * <ul>
+	 *     <li>1、忽略多余的参数</li>
+	 *     <li>2、参数不够补齐默认值</li>
+	 *     <li>3、通过NullWrapperBean传递的参数,会直接赋值null</li>
+	 *     <li>4、传入参数为null，但是目标参数类型为原始类型，做转换</li>
+	 *     <li>5、传入参数类型不对应，尝试转换类型</li>
+	 * </ul>
+	 *
+	 * @param method 方法
+	 * @param args   参数
+	 * @return 实际的参数数组
+	 */
+	private static Object[] actualArgs(final Method method, final Object[] args) {
+		final Class<?>[] parameterTypes = method.getParameterTypes();
+		final Object[] actualArgs = new Object[parameterTypes.length];
+		if (null != args) {
+			for (int i = 0; i < actualArgs.length; i++) {
+				if (i >= args.length || null == args[i]) {
+					// 越界或者空值
+					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+				} else if (args[i] instanceof NullWrapperBean) {
+					//如果是通过NullWrapperBean传递的null参数,直接赋值null
+					actualArgs[i] = null;
+				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+					if (null != targetValue) {
+						actualArgs[i] = targetValue;
+					}
+				} else {
+					actualArgs[i] = args[i];
+				}
+			}
+		}
+
+		return actualArgs;
 	}
 }
