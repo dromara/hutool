@@ -77,11 +77,24 @@ public class ByteUtil {
 	 * @return short值
 	 */
 	public static short bytesToShort(final byte[] bytes, final ByteOrder byteOrder) {
+		return bytesToShort(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte数组转short<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组，长度必须大于2
+	 * @param start     开始位置
+	 * @param byteOrder 端序
+	 * @return short值
+	 */
+	public static short bytesToShort(final byte[] bytes, final int start, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
-			return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
+			return (short) (bytes[start] & 0xff | (bytes[start + 1] & 0xff) << Byte.SIZE);
 		} else {
-			return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
+			return (short) (bytes[start + 1] & 0xff | (bytes[start] & 0xff) << Byte.SIZE);
 		}
 	}
 
@@ -144,7 +157,7 @@ public class ByteUtil {
 	 * 自定义端序
 	 *
 	 * @param bytes     byte数组
-	 * @param start 开始位置（包含）
+	 * @param start     开始位置（包含）
 	 * @param byteOrder 端序
 	 * @return int值
 	 * @since 5.7.21
@@ -407,9 +420,9 @@ public class ByteUtil {
 	 * @return bytes
 	 */
 	public static byte[] numberToBytes(final Number number, final ByteOrder byteOrder) {
-		if(number instanceof Byte){
+		if (number instanceof Byte) {
 			return new byte[]{number.byteValue()};
-		}else if (number instanceof Double) {
+		} else if (number instanceof Double) {
 			return doubleToBytes((Double) number, byteOrder);
 		} else if (number instanceof Long) {
 			return longToBytes((Long) number, byteOrder);
