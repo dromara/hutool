@@ -102,7 +102,7 @@ public class SshjSftp extends AbstractFtp {
 		this.ssh = new SSHClient();
 		ssh.addHostKeyVerifier(new PromiscuousVerifier());
 		try {
-			ssh.connect(ftpConfig.getHost());
+			ssh.connect(ftpConfig.getHost(), ftpConfig.getPort());
 			ssh.authPassword(ftpConfig.getUser(), ftpConfig.getPassword());
 			ssh.setRemoteCharset(ftpConfig.getCharset());
 			this.sftp = ssh.newSFTPClient();
