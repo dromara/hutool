@@ -63,7 +63,7 @@ public class NumberWordFormatter {
 		int index = -1;
 		double res = value;
 		while (res > 10 && (false == isTwo || index < 1)) {
-			if (res > 1000) {
+			if (res >= 1000) {
 				res = res / 1000;
 				index++;
 			}
