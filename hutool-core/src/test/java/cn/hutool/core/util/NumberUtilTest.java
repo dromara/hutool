@@ -439,6 +439,9 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isEven(a[4]));
 	}
 
-
+	@Test
+	public void divIntegerTest(){
+		Assert.assertEquals(1001013, NumberUtil.div(100101300, (Number) 100).intValue());
+	}
 
 }

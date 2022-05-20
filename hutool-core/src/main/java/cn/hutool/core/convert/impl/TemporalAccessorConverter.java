@@ -84,6 +84,12 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		this.format = format;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<TemporalAccessor> getTargetType() {
+		return (Class<TemporalAccessor>) this.targetType;
+	}
+
 	@Override
 	protected TemporalAccessor convertInternal(Object value) {
 		if (value instanceof Long) {
