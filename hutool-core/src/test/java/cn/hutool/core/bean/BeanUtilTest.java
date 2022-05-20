@@ -568,6 +568,11 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyNullTest() {
+		Assert.assertNull(BeanUtil.copyProperties(null, Food.class));
+	}
+
+	@Test
 	public void copyBeanPropertiesFilterTest() {
 		final Food info = new Food();
 		info.setBookID("0");

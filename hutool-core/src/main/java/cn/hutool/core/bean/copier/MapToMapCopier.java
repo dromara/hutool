@@ -24,7 +24,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 	 * @param source      来源Map
 	 * @param target      目标Bean对象
 	 * @param targetType  目标泛型类型
-	 * @param copyOptions 拷贝选项
+	 * @param copyOptions 拷贝选项，{@code null}使用默认配置
 	 */
 	public MapToMapCopier(final Map source, final Map target, final Type targetType, final CopyOptions copyOptions) {
 		super(source, target, copyOptions);

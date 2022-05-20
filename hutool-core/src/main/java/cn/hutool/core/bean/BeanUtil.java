@@ -685,6 +685,9 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final Class<T> tClass, final String... ignoreProperties) {
+		if(null == source){
+			return null;
+		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 		return target;
@@ -722,6 +725,9 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(final Object source, final Object target, final CopyOptions copyOptions) {
+		if(null == source || null == target){
+			return;
+		}
 		BeanCopier.create(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
 	}
 
