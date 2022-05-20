@@ -36,6 +36,8 @@ import java.util.Set;
  * <li><a href="https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking">one-jdk7-bug-thinking</a></li>
  * </ul>
  *
+ * TODO 需整理精简方法，去掉无用的重载方法。
+ *
  * @author Looly
  */
 public class NumberUtil {

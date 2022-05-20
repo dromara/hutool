@@ -448,4 +448,9 @@ public class NumberUtilTest {
 		Assert.assertNotNull(NumberUtil.toBigInteger(number2));
 	}
 
+	@Test
+	public void divIntegerTest(){
+		System.out.println(NumberUtil.div(100101300, (Number) 100));
+	}
+
 }
