@@ -2772,7 +2772,7 @@ public class NumberUtil {
 	 *
 	 * @param bigDecimal 被转换的值
 	 * @return BigDecimal
-	 * @since 5.8.1
+	 * @since 5.8.2
 	 */
 	public static BigDecimal nullToZero(BigDecimal bigDecimal) {
 		return bigDecimal == null ? BigDecimal.ZERO : bigDecimal;
