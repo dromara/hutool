@@ -2766,4 +2766,15 @@ public class NumberUtil {
 		}
 	}
 	// ------------------------------------------------------------------------------------------- Private method end
+
+	/**
+	 * null转换为BigDecimal<br>
+	 *
+	 * @param bigDecimal 被转换的值
+	 * @return BigDecimal
+	 * @since 5.8.1
+	 */
+	public static BigDecimal nullToZero(BigDecimal bigDecimal) {
+		return bigDecimal == null ? BigDecimal.ZERO : bigDecimal;
+	}
 }
