@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -382,5 +384,12 @@ public class ConvertTest {
 		final double a = 0.45f;
 		final float b = Convert.toFloat(a);
 		Assert.assertEquals(a, b, 5);
+	}
+
+	@Test
+	public void localDateTimeToLocalDateTest(){
+		final LocalDateTime localDateTime = LocalDateTime.now();
+		final LocalDate convert = Convert.convert(LocalDate.class, localDateTime);
+		Assert.assertEquals(localDateTime.toLocalDate(), convert);
 	}
 }

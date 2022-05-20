@@ -3,8 +3,8 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -82,6 +82,12 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 */
 	public void setFormat(final String format) {
 		this.format = format;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<TemporalAccessor> getTargetType() {
+		return (Class<TemporalAccessor>) this.targetType;
 	}
 
 	@Override
