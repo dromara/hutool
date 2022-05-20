@@ -37,7 +37,7 @@ public class Column implements Serializable, Cloneable {
 	/**
 	 * 大小或数据长度
 	 */
-	private int size;
+	private long size;
 	private Integer digit;
 	/**
 	 * 是否为可空
@@ -118,7 +118,7 @@ public class Column implements Serializable, Cloneable {
 		typeName = ReUtil.delLast("\\(\\d+\\)", typeName);
 		this.typeName = typeName;
 
-		this.size = columnMetaRs.getInt("COLUMN_SIZE");
+		this.size = columnMetaRs.getLong("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.comment = columnMetaRs.getString("REMARKS");
 		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
@@ -238,7 +238,7 @@ public class Column implements Serializable, Cloneable {
 	 *
 	 * @return 大小或数据长度
 	 */
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
@@ -248,7 +248,7 @@ public class Column implements Serializable, Cloneable {
 	 * @param size 大小或数据长度
 	 * @return this
 	 */
-	public Column setSize(final int size) {
+	public Column setSize(final long size) {
 		this.size = size;
 		return this;
 	}
