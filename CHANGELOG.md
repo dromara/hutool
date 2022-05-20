@@ -7,6 +7,8 @@
 
 ### 🐣新特性
 * 【core   】     BeanUtil拷贝对象增加空检查（issue#I58CJ3@Gitee）
+* 【db     】     Column#size改为long
+* 
 ### 🐞Bug修复
 * 【extra  】     修复SshjSftp初始化未能代入端口配置问题（issue#2333@Github）
 * 【core   】     修复Convert.numberToSimple转换问题（issue#2334@Github）
