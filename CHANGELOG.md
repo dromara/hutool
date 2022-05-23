@@ -9,6 +9,7 @@
 * 【core   】     BeanUtil拷贝对象增加空检查（issue#I58CJ3@Gitee）
 * 【db     】     Column#size改为long
 * 【core   】     ClassUtil增加isInterface等方法（pr#623@Gitee）
+* 【socket 】     增加ChannelUtil
 * 
 ### 🐞Bug修复
 * 【extra  】     修复SshjSftp初始化未能代入端口配置问题（issue#2333@Github）
