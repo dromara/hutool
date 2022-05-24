@@ -16,6 +16,7 @@
 * 【core   】     修复Convert.numberToSimple转换问题（issue#2334@Github）
 * 【core   】     修复TemporalAccessorConverter导致的转换问题（issue#2341@Github）
 * 【core   】     修复NumberUtil除法空指针问题（issue#I58XKE@Gitee）
+* 【core   】     修复CAR_VIN正则（pr#624@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

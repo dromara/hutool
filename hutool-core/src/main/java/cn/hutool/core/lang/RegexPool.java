@@ -168,7 +168,7 @@ public interface RegexPool {
 	 * 十七位码、车架号
 	 * 车辆的唯一标示
 	 */
-	String CAR_VIN = "^[A-HJ-NPR-Z0-9]{17}$";
+	String CAR_VIN = "^[A-HJ-NPR-Z0-9]{8}[0-9X][A-HJ-NPR-Z0-9]{2}\\d{6}$";
 	/**
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号
 	 * eg:430101758218
