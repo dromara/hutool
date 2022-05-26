@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public class FindBeanTest {
 
 	@Test
 	public void findAllBeanTest() {
-		final List<User> results = db.findAll(Entity.create("user"), User.class);
+		final List<User> results = db.findAll(Entity.of("user"), User.class);
 
 		Assert.assertEquals(4, results.size());
 		Assert.assertEquals(Integer.valueOf(1), results.get(0).getId());
@@ -35,7 +34,7 @@ public class FindBeanTest {
 	@Test
 	@SuppressWarnings("rawtypes")
 	public void findAllListTest() {
-		final List<List> results = db.findAll(Entity.create("user"), List.class);
+		final List<List> results = db.findAll(Entity.of("user"), List.class);
 
 		Assert.assertEquals(4, results.size());
 		Assert.assertEquals(1, results.get(0).get(0));
@@ -44,7 +43,7 @@ public class FindBeanTest {
 
 	@Test
 	public void findAllArrayTest() {
-		final List<Object[]> results = db.findAll(Entity.create("user"), Object[].class);
+		final List<Object[]> results = db.findAll(Entity.of("user"), Object[].class);
 
 		Assert.assertEquals(4, results.size());
 		Assert.assertEquals(1, results.get(0)[0]);
@@ -53,13 +52,13 @@ public class FindBeanTest {
 
 	@Test
 	public void findAllStringTest() {
-		final List<String> results = db.findAll(Entity.create("user"), String.class);
+		final List<String> results = db.findAll(Entity.of("user"), String.class);
 		Assert.assertEquals(4, results.size());
 	}
 
 	@Test
 	public void findAllStringArrayTest() {
-		final List<String[]> results = db.findAll(Entity.create("user"), String[].class);
+		final List<String[]> results = db.findAll(Entity.of("user"), String[].class);
 
 		Assert.assertEquals(4, results.size());
 		Assert.assertEquals("1", results.get(0)[0]);

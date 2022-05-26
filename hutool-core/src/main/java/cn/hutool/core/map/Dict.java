@@ -92,7 +92,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Dict
 	 * @since 5.4.1
 	 */
-	public static Dict of(final Object... keysAndValues) {
+	public static Dict ofKvs(final Object... keysAndValues) {
 		final Dict dict = create();
 
 		String key = null;

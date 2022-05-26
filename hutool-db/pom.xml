@@ -22,7 +22,7 @@
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.20</tomcat-jdbc.version>
 		<druid.version>1.2.9</druid.version>
-		<hikariCP.version>2.4.13</hikariCP.version>
+		<hikariCP.version>4.0.3</hikariCP.version>
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
@@ -60,7 +60,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP-java7</artifactId>
+			<artifactId>HikariCP</artifactId>
 			<version>${hikariCP.version}</version>
 			<exclusions>
 				<exclusion>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.5</version>
+			<version>3.3.6</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -92,12 +92,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-pool2</artifactId>
-					<groupId>org.apache.commons</groupId>
-				</exclusion>
-			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -135,7 +129,7 @@
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>10.2.0.jre8</version>
+			<version>10.2.1.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

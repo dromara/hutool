@@ -15,13 +15,13 @@ public class SessionTest {
 	public void transTest() {
 		final Session session = Session.of("test");
 		session.beginTransaction();
-		session.update(Entity.create().set("age", 76), Entity.create("user").set("name", "unitTestUser"));
+		session.update(Entity.of().set("age", 76), Entity.of("user").set("name", "unitTestUser"));
 		session.commit();
 	}
 
 	@Test
 	@Ignore
 	public void txTest() {
-		Session.of("test").tx(session -> session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser")));
+		Session.of("test").tx(session -> session.update(Entity.of().set("age", 78), Entity.of("user").set("name", "unitTestUser")));
 	}
 }

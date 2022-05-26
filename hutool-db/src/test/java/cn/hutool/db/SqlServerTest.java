@@ -22,7 +22,7 @@ public class SqlServerTest {
 	@Ignore
 	public void insertTest() {
 		for (int id = 100; id < 200; id++) {
-			Db.of("sqlserver").insert(Entity.create("T_USER")//
+			Db.of("sqlserver").insert(Entity.of("T_USER")//
 					.set("ID", id)//
 					.set("name", "测试用户" + id)//
 			);
@@ -32,7 +32,7 @@ public class SqlServerTest {
 	@Test
 	@Ignore
 	public void pageTest() {
-		final PageResult<Entity> result = Db.of("sqlserver").page(Entity.create("T_USER"), new Page(2, 10));
+		final PageResult<Entity> result = Db.of("sqlserver").page(Entity.of("T_USER"), new Page(2, 10));
 		for (final Entity entity : result) {
 			Console.log(entity.get("ID"));
 		}

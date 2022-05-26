@@ -18,7 +18,7 @@ public class EntityTest {
 		user.setId(1);
 		user.setName("test");
 
-		final Entity entity = Entity.create("testTable").parseBean(user);
+		final Entity entity = Entity.of("testTable").parseBean(user);
 		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
 		Assert.assertEquals("test", entity.getStr("name"));
 	}
@@ -29,7 +29,7 @@ public class EntityTest {
 		user.setId(1);
 		user.setName("test");
 
-		final Entity entity = Entity.create().parseBean(user);
+		final Entity entity = Entity.of().parseBean(user);
 		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
 		Assert.assertEquals("test", entity.getStr("name"));
 		Assert.assertEquals("user", entity.getTableName());
@@ -40,7 +40,7 @@ public class EntityTest {
 		final User user = new User();
 		user.setName("test");
 
-		final Entity entity = Entity.create().parseBean(user, false, true);
+		final Entity entity = Entity.of().parseBean(user, false, true);
 
 		Assert.assertFalse(entity.containsKey("id"));
 		Assert.assertEquals("test", entity.getStr("name"));
@@ -49,7 +49,7 @@ public class EntityTest {
 
 	@Test
 	public void entityToBeanIgnoreCaseTest() {
-		final Entity entity = Entity.create().set("ID", 2).set("NAME", "testName");
+		final Entity entity = Entity.of().set("ID", 2).set("NAME", "testName");
 		final User user = entity.toBeanIgnoreCase(User.class);
 
 		Assert.assertEquals(Integer.valueOf(2), user.getId());

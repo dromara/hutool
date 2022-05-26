@@ -139,7 +139,7 @@ public class DaoTemplate {
 		if (pk == null) {
 			return 0;
 		}
-		return this.del(Entity.create(tableName).set(primaryKeyField, pk));
+		return this.del(Entity.of(tableName).set(primaryKeyField, pk));
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class DaoTemplate {
 			return 0;
 		}
 
-		return this.del(Entity.create(tableName).set(field, value));
+		return this.del(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class DaoTemplate {
 			throw new DbRuntimeException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
 		}
 
-		final Entity where = Entity.create(tableName).set(primaryKeyField, pk);
+		final Entity where = Entity.of(tableName).set(primaryKeyField, pk);
 		final Entity record = entity.clone();
 		record.remove(primaryKeyField);
 
@@ -252,7 +252,7 @@ public class DaoTemplate {
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> Entity get(final String field, final T value) throws DbRuntimeException {
-		return this.get(Entity.create(tableName).set(field, value));
+		return this.get(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class DaoTemplate {
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> List<Entity> find(final String field, final T value) throws DbRuntimeException {
-		return this.find(Entity.create(tableName).set(field, value));
+		return this.find(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class DaoTemplate {
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public List<Entity> findAll() throws DbRuntimeException {
-		return this.find(Entity.create(tableName));
+		return this.find(Entity.of(tableName));
 	}
 
 	/**
@@ -377,7 +377,7 @@ public class DaoTemplate {
 	 */
 	private Entity fixEntity(Entity entity) {
 		if (null == entity) {
-			entity = Entity.create(tableName);
+			entity = Entity.of(tableName);
 		} else if (StrUtil.isBlank(entity.getTableName())) {
 			entity.setTableName(tableName);
 		}

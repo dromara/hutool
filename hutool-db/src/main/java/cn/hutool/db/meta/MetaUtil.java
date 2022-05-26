@@ -172,7 +172,7 @@ public class MetaUtil {
 	 */
 	public static Entity createLimitedEntity(final DataSource ds, final String tableName) {
 		final String[] columnNames = getColumnNames(ds, tableName);
-		return Entity.create(tableName).setFieldNames(columnNames);
+		return Entity.of(tableName).setFieldNames(columnNames);
 	}
 
 	/**
