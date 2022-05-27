@@ -941,7 +941,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Collection<E>, E> T filter(final T collection, final Filter<E> filter) {
+	public static <T extends Collection<E>, E> T filter(final T collection, final Predicate<E> filter) {
 		return IterUtil.filter(collection, filter);
 	}
 
