@@ -35,7 +35,7 @@ import java.util.Set;
  * <ul>
  * <li><a href="https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking">one-jdk7-bug-thinking</a></li>
  * </ul>
- *
+ * <p>
  * TODO 需整理精简方法，去掉无用的重载方法。
  *
  * @author Looly
@@ -723,7 +723,7 @@ public class NumberUtil {
 		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
 			return div((BigDecimal) v1, (BigDecimal) v2, scale, roundingMode);
 		}
-		return div(StrUtil.toStringOrNull(v1),StrUtil.toStringOrNull(v2), scale, roundingMode);
+		return div(StrUtil.toStringOrNull(v1), StrUtil.toStringOrNull(v2), scale, roundingMode);
 	}
 
 	/**
@@ -1242,10 +1242,12 @@ public class NumberUtil {
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(final String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (final NumberFormatException e) {
-			return false;
+		if(StrUtil.isNotBlank(s)) {
+			try {
+				Integer.parseInt(s);
+			} catch (final NumberFormatException e) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -1259,10 +1261,12 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		try {
-			Long.parseLong(s);
-		} catch (final NumberFormatException e) {
-			return false;
+		if (StrUtil.isNotBlank(s)) {
+			try {
+				Long.parseLong(s);
+			} catch (final NumberFormatException e) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -1274,11 +1278,13 @@ public class NumberUtil {
 	 * @return 是否为{@link Double}类型
 	 */
 	public static boolean isDouble(final String s) {
-		try {
-			Double.parseDouble(s);
-			return s.contains(".");
-		} catch (final NumberFormatException ignore) {
-			// ignore
+		if (StrUtil.isNotBlank(s)) {
+			try {
+				Double.parseDouble(s);
+				return s.contains(".");
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
 		}
 		return false;
 	}
@@ -2454,7 +2460,7 @@ public class NumberUtil {
 			return 0L;
 		}
 
-		if(StrUtil.startWithIgnoreCase(number, "0x")){
+		if (StrUtil.startWithIgnoreCase(number, "0x")) {
 			// 0x04表示16进制数
 			return Long.parseLong(number.substring(2), 16);
 		}
@@ -2528,7 +2534,7 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(final String numberStr) throws NumberFormatException {
-		if(StrUtil.startWithIgnoreCase(numberStr, "0x")){
+		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
 			// 0x04表示16进制数
 			return Long.parseLong(numberStr.substring(2), 16);
 		}

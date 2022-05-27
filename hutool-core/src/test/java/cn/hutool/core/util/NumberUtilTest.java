@@ -450,7 +450,15 @@ public class NumberUtilTest {
 
 	@Test
 	public void divIntegerTest(){
-		System.out.println(NumberUtil.div(100101300, (Number) 100));
+		final BigDecimal div = NumberUtil.div(100101300, (Number) 100);
+		Assert.assertEquals(1001013, div.intValue());
+	}
+
+	@Test
+	public void isDoubleTest(){
+		Assert.assertFalse(NumberUtil.isDouble(null));
+		Assert.assertFalse(NumberUtil.isDouble(""));
+		Assert.assertFalse(NumberUtil.isDouble("  "));
 	}
 
 }
