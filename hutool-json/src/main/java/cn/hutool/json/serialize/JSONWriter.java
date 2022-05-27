@@ -1,14 +1,15 @@
 package cn.hutool.json.serialize;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONConfig;
@@ -226,7 +227,13 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
-			new JSONArray(value).write(writer, indentFactor, indent);
+			if(value instanceof byte[]){
+				// issue#I59LW4
+				// json内容中的bytes默认转为Base64
+				writeStrValue(Base64.encode((byte[]) value));
+			}else{
+				new JSONArray(value).write(writer, indentFactor, indent);
+			}
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
