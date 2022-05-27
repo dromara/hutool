@@ -144,6 +144,7 @@ public class ObjectMapper {
 		} else if (source instanceof InputStream) {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
+			// bytes按照JSON的二进制流对待
 			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
