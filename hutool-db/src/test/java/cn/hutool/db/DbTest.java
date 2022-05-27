@@ -71,6 +71,12 @@ public class DbTest {
 	}
 
 	@Test
+	public void countByQueryTest() throws SQLException {
+		final long count = Db.use().count(Entity.create("user"));
+		Assert.assertEquals(4, count);
+	}
+
+	@Test
 	public void countTest2() throws SQLException {
 		final long count = Db.use().count("select * from user order by name DESC");
 		Assert.assertEquals(4, count);

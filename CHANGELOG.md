@@ -3,6 +3,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+# 5.8.2 (2022-05-27)
+
+### 🐣新特性
+* 【core   】     BeanUtil拷贝对象增加空检查（issue#I58CJ3@Gitee）
+* 【db     】     Column#size改为long
+* 【core   】     ClassUtil增加isInterface等方法（pr#623@Gitee）
+* 【socket 】     增加ChannelUtil
+
+### 🐞Bug修复
+* 【extra  】     修复SshjSftp初始化未能代入端口配置问题（issue#2333@Github）
+* 【core   】     修复Convert.numberToSimple转换问题（issue#2334@Github）
+* 【core   】     修复TemporalAccessorConverter导致的转换问题（issue#2341@Github）
+* 【core   】     修复NumberUtil除法空指针问题（issue#I58XKE@Gitee）
+* 【core   】     修复CAR_VIN正则（pr#624@Gitee）
+* 【db     】     修复count查询别名问题（issue#I590YB@Gitee）
+* 【json   】     修复json中byte[]无法转换问题（issue#I59LW4@Gitee）
+* 【core   】     修复NumberUtil.isXXX未判空问题（issue#2350@Github）
+* 【core   】     修复Singleton中ConcurrentHashMap在JDK8下的bug引起的可能的死循环问题（issue#2349@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 # 5.8.1 (2022-05-16)
 
 ### 🐣新特性
@@ -13,7 +34,7 @@
 * 【core   】     ByteUtil新增bytesToShort重载（issue#I57FA7@Gitee）
 * 【core   】     ReflectUtil.invoke方法抛出运行时异常增加InvocationTargetRuntimeException（issue#I57GI2@Gitee）
 * 【core   】     NumberUtil.parseNumber支持16进制（issue#2328@Github）
-* 
+
 ### 🐞Bug修复
 * 【core   】     MapUtil.map对null友好，且修复了测试用例中分组问题（pr#614@Gitee）
 * 【core   】     修复BeanUtil.beanToMap中properties为null的空指针问题（issue#2303@Github）

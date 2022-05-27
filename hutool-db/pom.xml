@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.1</version>
+		<version>5.8.2</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -22,12 +22,12 @@
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.20</tomcat-jdbc.version>
 		<druid.version>1.2.9</druid.version>
-		<hikariCP.version>2.4.13</hikariCP.version>
+		<hikariCP.version>4.0.3</hikariCP.version>
 		<mongo4.version>4.6.0</mongo4.version>
 		<sqlite.version>3.36.0.3</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>4.2.2</jedis.version>
+		<jedis.version>4.2.3</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP-java7</artifactId>
+			<artifactId>HikariCP</artifactId>
 			<version>${hikariCP.version}</version>
 			<exclusions>
 				<exclusion>
@@ -156,7 +156,7 @@
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>10.2.0.jre8</version>
+			<version>10.2.1.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

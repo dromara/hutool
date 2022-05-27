@@ -221,6 +221,7 @@ public class ValidatorTest {
 	public void isCarVinTest(){
 		Assert.assertTrue(Validator.isCarVin("LSJA24U62JG269225"));
 		Assert.assertTrue(Validator.isCarVin("LDC613P23A1305189"));
+		Assert.assertFalse(Validator.isCarVin("LOC613P23A1305189"));
 	}
 
 	@Test

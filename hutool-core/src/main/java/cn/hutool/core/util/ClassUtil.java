@@ -1110,4 +1110,26 @@ public class ClassUtil {
 		}
 		return location.getPath();
 	}
+
+	/**
+	 * 是否为抽象类或接口
+	 *
+	 * @param clazz 类
+	 * @return 是否为抽象类或接口
+	 * @since 5.8.2
+	 */
+	public static boolean isAbstractOrInterface(Class<?> clazz) {
+		return isAbstract(clazz) || isInterface(clazz);
+	}
+
+	/**
+	 * 是否为接口
+	 *
+	 * @param clazz 类
+	 * @return 是否为接口
+	 * @since 5.8.2
+	 */
+	public static boolean isInterface(Class<?> clazz) {
+		return clazz.isInterface();
+	}
 }
