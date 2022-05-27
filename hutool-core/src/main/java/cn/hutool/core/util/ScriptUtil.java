@@ -30,7 +30,7 @@ public class ScriptUtil {
 	 * @return {@link ScriptEngine} 实例
 	 */
 	public static ScriptEngine getScript(final String nameOrExtOrMime) {
-		return CACHE.computeIfAbsent(nameOrExtOrMime, () -> createScript(nameOrExtOrMime));
+		return CACHE.computeIfAbsent(nameOrExtOrMime, (key) -> createScript(nameOrExtOrMime));
 	}
 
 	/**

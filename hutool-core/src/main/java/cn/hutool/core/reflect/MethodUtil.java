@@ -320,7 +320,7 @@ public class MethodUtil {
 	public static Method[] getMethods(final Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return METHODS_CACHE.computeIfAbsent(beanClass,
-				() -> getMethodsDirectly(beanClass, true, true));
+				(key) -> getMethodsDirectly(beanClass, true, true));
 	}
 
 	/**

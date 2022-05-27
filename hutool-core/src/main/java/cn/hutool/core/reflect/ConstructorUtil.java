@@ -64,7 +64,7 @@ public class ConstructorUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(final Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, () -> getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, (key) -> getConstructorsDirectly(beanClass));
 	}
 
 	/**
