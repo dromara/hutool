@@ -20,6 +20,7 @@
 * 【db     】     修复count查询别名问题（issue#I590YB@Gitee）
 * 【json   】     修复json中byte[]无法转换问题（issue#I59LW4@Gitee）
 * 【core   】     修复NumberUtil.isXXX未判空问题（issue#2350@Github）
+* 【core   】     修复Singleton中ConcurrentHashMap在JDK8下的bug引起的可能的死循环问题（issue#2349@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

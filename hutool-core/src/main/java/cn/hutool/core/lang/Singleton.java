@@ -52,7 +52,15 @@ public final class Singleton {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Func0<T> supplier) {
-		return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
+		//return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
+		// issues#2349
+		// ConcurrentHashMap.computeIfAbsent在某些情况下会导致死循环问题，此处采用Dubbo的解决方案
+		Object value = POOL.get(key);
+		if(null == value){
+			POOL.putIfAbsent(key, supplier.callWithRuntimeException());
+			value = POOL.get(key);
+		}
+		return (T) value;
 	}
 
 	/**
