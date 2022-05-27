@@ -444,4 +444,11 @@ public class NumberUtilTest {
 		Assert.assertEquals(1001013, NumberUtil.div(100101300, (Number) 100).intValue());
 	}
 
+	@Test
+	public void isDoubleTest(){
+		Assert.assertFalse(NumberUtil.isDouble(null));
+		Assert.assertFalse(NumberUtil.isDouble(""));
+		Assert.assertFalse(NumberUtil.isDouble("  "));
+	}
+
 }
