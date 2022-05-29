@@ -62,6 +62,9 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 		Assert.assertTrue(NumberUtil.isInteger("0"));
 		Assert.assertFalse(NumberUtil.isInteger("23.4"));
+		Assert.assertFalse(NumberUtil.isInteger(null));
+		Assert.assertFalse(NumberUtil.isInteger(""));
+		Assert.assertFalse(NumberUtil.isInteger(" "));
 	}
 
 	@Test
@@ -71,6 +74,9 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isLong("0256"));
 		Assert.assertTrue(NumberUtil.isLong("0"));
 		Assert.assertFalse(NumberUtil.isLong("23.4"));
+		Assert.assertFalse(NumberUtil.isLong(null));
+		Assert.assertFalse(NumberUtil.isLong(""));
+		Assert.assertFalse(NumberUtil.isLong(" "));
 	}
 
 	@Test

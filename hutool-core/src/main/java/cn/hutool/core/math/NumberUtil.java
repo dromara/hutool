@@ -1242,12 +1242,13 @@ public class NumberUtil {
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(final String s) {
-		if(StrUtil.isNotBlank(s)) {
-			try {
-				Integer.parseInt(s);
-			} catch (final NumberFormatException e) {
-				return false;
-			}
+		if(StrUtil.isBlank(s)) {
+			return false;
+		}
+		try {
+			Integer.parseInt(s);
+		} catch (final NumberFormatException e) {
+			return false;
 		}
 		return true;
 	}
@@ -1261,12 +1262,13 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		if (StrUtil.isNotBlank(s)) {
-			try {
-				Long.parseLong(s);
-			} catch (final NumberFormatException e) {
-				return false;
-			}
+		if(StrUtil.isBlank(s)) {
+			return false;
+		}
+		try {
+			Long.parseLong(s);
+		} catch (final NumberFormatException e) {
+			return false;
 		}
 		return true;
 	}
@@ -1278,15 +1280,16 @@ public class NumberUtil {
 	 * @return 是否为{@link Double}类型
 	 */
 	public static boolean isDouble(final String s) {
-		if (StrUtil.isNotBlank(s)) {
-			try {
-				Double.parseDouble(s);
-				return s.contains(".");
-			} catch (final NumberFormatException ignore) {
-				// ignore
-			}
+		if(StrUtil.isBlank(s)) {
+			return false;
 		}
-		return false;
+		try {
+			Double.parseDouble(s);
+			return s.contains(".");
+		} catch (final NumberFormatException ignore) {
+			// ignore
+		}
+		return true;
 	}
 
 	/**
