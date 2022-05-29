@@ -23,8 +23,9 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_HOST = "mail.smtp.host";
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
-	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
 	private static final String SMTP_TIMEOUT = "mail.smtp.timeout";
+	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
+	private static final String SMTP_WRITE_TIMEOUT = "mail.smtp.writetimeout";
 
 	// SSL
 	private static final String STARTTLS_ENABLE = "mail.smtp.starttls.enable";
@@ -121,6 +122,10 @@ public class MailAccount implements Serializable {
 	 * Socket连接超时值，单位毫秒，缺省值不超时
 	 */
 	private long connectionTimeout;
+	/**
+	 * Socket写出超时值，单位毫秒，缺省值不超时
+	 */
+	private long writeTimeout;
 
 	/**
 	 * 自定义的其他属性，此自定义属性会覆盖默认属性
@@ -519,6 +524,18 @@ public class MailAccount implements Serializable {
 	}
 
 	/**
+	 * 设置Socket写出超时值，单位毫秒，缺省值不超时
+	 *
+	 * @param writeTimeout Socket写出超时值，单位毫秒，缺省值不超时
+	 * @return this
+	 * @since 5.8.3
+	 */
+	public MailAccount setWriteTimeout(long writeTimeout) {
+		this.writeTimeout = writeTimeout;
+		return this;
+	}
+
+	/**
 	 * 获取自定义属性列表
 	 *
 	 * @return 自定义参数列表
@@ -562,6 +579,10 @@ public class MailAccount implements Serializable {
 		}
 		if (this.connectionTimeout > 0) {
 			p.put(SMTP_CONNECTION_TIMEOUT, String.valueOf(this.connectionTimeout));
+		}
+		// issue#2355
+		if (this.writeTimeout > 0) {
+			p.put(SMTP_WRITE_TIMEOUT, String.valueOf(this.writeTimeout));
 		}
 
 		p.put(MAIL_DEBUG, String.valueOf(this.debug));
