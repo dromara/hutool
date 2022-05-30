@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【extra  】     mail增加writeTimeout参数支持（issue#2355@Github）
+* 【core   】     FileTypeUtil增加pptx扩展名支持（issue#I5A0GO@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复NumberUtil.isXXX空判断错误（issue#2356@Github）
 

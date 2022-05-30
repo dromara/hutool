@@ -190,6 +190,9 @@ public class FileTypeUtil {
 			} else if ("docx".equalsIgnoreCase(extName)) {
 				// issue#I47JGH
 				typeName = "docx";
+			} else if ("pptx".equalsIgnoreCase(extName)) {
+				// issue#I5A0GO
+				typeName = "pptx";
 			}
 		}
 		return typeName;
