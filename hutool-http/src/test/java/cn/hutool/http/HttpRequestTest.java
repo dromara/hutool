@@ -208,6 +208,7 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void getCookieTest(){
-		HttpRequest.get("http://localhost:8888/getCookier").execute();
+		final HttpResponse execute = HttpRequest.get("http://localhost:8888/getCookier").execute();
+		Console.log(execute.getCookies());
 	}
 }
