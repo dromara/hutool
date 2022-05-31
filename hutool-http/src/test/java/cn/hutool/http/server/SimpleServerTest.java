@@ -1,11 +1,15 @@
 package cn.hutool.http.server;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.multipart.UploadFile;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+
+import java.net.HttpCookie;
 
 public class SimpleServerTest {
 
@@ -54,7 +58,13 @@ public class SimpleServerTest {
 				.addAction("test/zeroStr", (req, res)-> {
 					res.write("0");
 					Console.log("Write 0 OK");
-				})
+				}).addAction("/getCookie", ((request, response) -> {
+					response.setHeader(Header.SET_COOKIE.toString(),
+							ListUtil.of(
+									new HttpCookie("cc", "123").toString(),
+									new HttpCookie("cc", "abc").toString()));
+					response.write("Cookie ok");
+				}))
 				.start();
 	}
 }

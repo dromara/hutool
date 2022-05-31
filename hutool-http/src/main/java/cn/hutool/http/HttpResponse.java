@@ -507,7 +507,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 
 		// 存储服务端设置的Cookie信息
-		GlobalCookieManager.store(httpConnection);
+		GlobalCookieManager.store(httpConnection, this.headers);
 
 		// 获取响应编码
 		final Charset charset = httpConnection.getCharset();
