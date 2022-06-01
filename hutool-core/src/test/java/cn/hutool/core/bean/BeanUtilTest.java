@@ -116,7 +116,7 @@ public class BeanUtilTest {
 		// 错误的类型，此处忽略
 		map.put("age", "aaaaaa");
 
-		final Person person = BeanUtil.toBeanIgnoreError(map, Person.class);
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreError(true));
 		Assert.assertEquals("Joe", person.getName());
 		// 错误的类型，不copy这个字段，使用对象创建的默认值
 		Assert.assertEquals(0, person.getAge());
@@ -128,7 +128,7 @@ public class BeanUtilTest {
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
-		final Person person = BeanUtil.toBeanIgnoreCase(map, Person.class, false);
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreCase(true));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}

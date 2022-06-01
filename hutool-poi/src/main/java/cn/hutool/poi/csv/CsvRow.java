@@ -1,6 +1,7 @@
 package cn.hutool.poi.csv;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Assert;
 
 import java.util.Collection;
@@ -98,7 +99,7 @@ public final class CsvRow implements List<String> {
 	}
 
 	/**
-	 * 一行数据转换为Bean对象
+	 * 一行数据转换为Bean对象，忽略转换错误
 	 *
 	 * @param <T> Bean类型
 	 * @param clazz bean类
@@ -106,7 +107,7 @@ public final class CsvRow implements List<String> {
 	 * @since 5.3.6
 	 */
 	public <T> T toBean(final Class<T> clazz){
-		return BeanUtil.toBeanIgnoreError(getFieldMap(), clazz);
+		return BeanUtil.toBean(getFieldMap(), clazz, CopyOptions.create().setIgnoreError(true));
 	}
 
 	/**

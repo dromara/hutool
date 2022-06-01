@@ -2,6 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
@@ -246,7 +247,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return vo
 	 */
 	public <T> T toBeanIgnoreCase(final Class<T> clazz) {
-		return BeanUtil.toBeanIgnoreCase(this, clazz, false);
+		return BeanUtil.toBean(this, clazz, CopyOptions.create().setIgnoreCase(true));
 	}
 
 	/**
