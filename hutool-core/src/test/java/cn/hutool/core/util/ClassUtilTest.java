@@ -9,12 +9,12 @@ import java.util.Objects;
 
 /**
  * {@link ClassUtil} 单元测试
- * 
+ *
  * @author Looly
  *
  */
 public class ClassUtilTest {
-	
+
 	@Test
 	public void getClassNameTest() {
 		String className = ClassUtil.getClassName(ClassUtil.class, false);
@@ -39,7 +39,7 @@ public class ClassUtilTest {
 	@SuppressWarnings({"unused", "InnerClassMayBeStatic"})
 	class TestSubClass extends TestClass {
 		private String subField;
-		
+
 		private void privateSubMethod() {
 		}
 
@@ -90,13 +90,13 @@ public class ClassUtilTest {
 		Field subField = ClassUtil.getDeclaredField(TestSubClass.class, "subField");
 		Assert.assertNotNull(subField);
 	}
-	
+
 	@Test
 	public void getClassPathTest() {
 		String classPath = ClassUtil.getClassPath();
 		Assert.assertNotNull(classPath);
 	}
-	
+
 	@Test
 	public void getShortClassNameTest() {
 		String className = "cn.hutool.core.util.StrUtil";
@@ -108,5 +108,13 @@ public class ClassUtilTest {
 	public void getLocationPathTest(){
 		final String classDir = ClassUtil.getLocationPath(ClassUtilTest.class);
 		Assert.assertTrue(Objects.requireNonNull(classDir).endsWith("/hutool-core/target/test-classes/"));
+	}
+
+	@Test
+	public void isJarClass(){
+		boolean jarClass = ClassUtil.isJarClass(ClassUtilTest.class);
+		Assert.assertFalse(jarClass);
+		jarClass = ClassUtil.isJarClass(String.class);
+		Assert.assertFalse(jarClass);
 	}
 }

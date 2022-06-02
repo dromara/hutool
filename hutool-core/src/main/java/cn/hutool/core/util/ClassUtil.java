@@ -1078,6 +1078,26 @@ public class ClassUtil {
 				|| clazz.getClassLoader() == null;
 	}
 
+
+	/**
+	 * 是否为JAR包中的类或接口，判断依据：
+	 *
+	 * <pre>
+	 * 1、资源路径以jar:开头
+	 * 2、ClassLoader为null
+	 * </pre>
+	 *
+	 * @param clazz 被检查的类
+	 * @return 是否为JAR包中的类或接口
+	 */
+	public static boolean isJarClass(Class clazz) {
+		URL resource = clazz.getResource("");
+		if (null == resource) {
+			return false;
+		}
+		return resource.toString().startsWith(URLUtil.JAR_URL_PREFIX);
+	}
+
 	/**
 	 * 获取class类路径URL, 不管是否在jar包中都会返回文件夹的路径<br>
 	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
