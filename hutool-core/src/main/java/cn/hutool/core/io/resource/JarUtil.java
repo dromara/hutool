@@ -21,7 +21,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内类所在的目录路径
 	 *
-	 * @param clazz Jar包所在类(任意一个类)
+	 * @param clazz Jar包所属类(任意一个类)
 	 * @return Jar包内类所在的目录路径
 	 */
 	public static String getDir(Class clazz) {
@@ -31,7 +31,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件所在的路径
 	 *
-	 * @param clazz    Jar包所在类(任意一个类)
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @return Jar包内类所在的路径
 	 */
@@ -42,7 +42,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件的资源对象
 	 *
-	 * @param clazz    类的任意
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @return Jar包内文件的资源对象
 	 * @throws IOException
@@ -54,7 +54,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件的数据
 	 *
-	 * @param clazz    Jar包所在类(任意一个类)
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @return Jar包内文件的数据
 	 */
@@ -65,7 +65,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件的数据
 	 *
-	 * @param clazz    Jar包所在类(任意一个类)
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @param charset  字符集
 	 * @return Jar包内文件的数据
@@ -84,7 +84,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件的数据
 	 *
-	 * @param clazz    Jar包所在类(任意一个类)
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @return Jar包内文件的数据
 	 */
@@ -95,7 +95,7 @@ public class JarUtil {
 	/**
 	 * 获取Jar包内文件的数据
 	 *
-	 * @param clazz    Jar包所在类(任意一个类)
+	 * @param clazz    Jar包所属类(任意一个类)
 	 * @param fileName Jar内的文件路径
 	 * @param charset  字符集
 	 * @return Jar包内文件的数据
