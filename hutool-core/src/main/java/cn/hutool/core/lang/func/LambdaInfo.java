@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
  */
 public class LambdaInfo {
 
-	private Type instantiatedType;
+	private final Type[] instantiatedTypes;
 	private final Type[] parameterTypes;
 	private final Type returnType;
 	private final String name;
@@ -41,15 +41,21 @@ public class LambdaInfo {
 		}
 		int index = lambda.getInstantiatedMethodType().indexOf(";)");
 		if (index > -1) {
-			this.instantiatedType = ClassLoaderUtil.loadClass(StrUtil.sub(lambda.getInstantiatedMethodType(), 2, index));
+			String[] instantiatedTypeNames = StrUtil.sub(lambda.getInstantiatedMethodType(), 2, index).split(";L");
+			this.instantiatedTypes = new Type[instantiatedTypeNames.length];
+			for (int i = 0; i < instantiatedTypeNames.length; i++) {
+				this.instantiatedTypes[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
+			}
+		} else {
+			instantiatedTypes = new Type[0];
 		}
 		this.clazz = (Class<?>) FieldUtil.getFieldValue(executable, "clazz");
 		this.executable = executable;
 		this.lambda = lambda;
 	}
 
-	public Type getInstantiatedType() {
-		return instantiatedType;
+	public Type[] getInstantiatedTypes() {
+		return instantiatedTypes;
 	}
 
 	public Type[] getParameterTypes() {

@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
@@ -14,13 +16,15 @@ public class LambdaUtilTest {
 
 	@Test
 	public void getMethodNameTest() {
-		final String methodName = LambdaUtil.getMethodName(MyTeacher::getAge);
+		Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+		final String methodName = LambdaUtil.getMethodName(lambda);
 		Assert.assertEquals("getAge", methodName);
 	}
 
 	@Test
 	public void getFieldNameTest() {
-		final String fieldName = LambdaUtil.getFieldName(MyTeacher::getAge);
+		Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+		final String fieldName = LambdaUtil.getFieldName(lambda);
 		Assert.assertEquals("age", fieldName);
 	}
 
@@ -40,20 +44,45 @@ public class LambdaUtilTest {
 			Assert.assertEquals(MyTeacher.class, ((Class<Array>) lambdaInfo.getReturnType()).getComponentType());
 		}, () -> {
 			// 引用静态方法
-			Func0<String> noArgsStaticMethod = MyTeacher::takeAge;
-			LambdaInfo lambdaInfo = LambdaUtil.resolve(noArgsStaticMethod);
+			Func0<String> lambda = MyTeacher::takeAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
 			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用特定对象的实例方法
-			Func0<String> instantiated = new MyTeacher()::getAge;
-			LambdaInfo lambdaInfo = LambdaUtil.resolve(instantiated);
+			Func0<String> lambda = new MyTeacher()::getAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
 			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用特定类型的任意对象的实例方法
-			Func1<MyTeacher, String> annoInstantiated = MyTeacher::getAge;
-			LambdaInfo lambdaInfo = LambdaUtil.resolve(annoInstantiated);
+			Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
 			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 最最重要的！！！
+			Character character = '0';
+			Integer integer = 0;
+			SerThiCons<Object, Boolean, String> lambda = (obj, bool, str) -> {
+				Objects.nonNull(character);
+				Objects.nonNull(integer);
+			};
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			// 获取闭包使用的参数类型
+			Assert.assertEquals(Character.class, lambdaInfo.getParameterTypes()[0]);
+			Assert.assertEquals(Integer.class, lambdaInfo.getParameterTypes()[1]);
+			// 最后几个是原有lambda的参数类型
+			Assert.assertEquals(Object.class, lambdaInfo.getParameterTypes()[2]);
+			Assert.assertEquals(Boolean.class, lambdaInfo.getParameterTypes()[3]);
+			Assert.assertEquals(String.class, lambdaInfo.getParameterTypes()[4]);
+
+			Assert.assertEquals(void.class, lambdaInfo.getReturnType());
 		}).forEach(Runnable::run);
+
+	}
+
+	interface SerThiCons<P1, P2, P3> extends Consumer3<P1, P2, P3>, Serializable {
 	}
 
 	@Test

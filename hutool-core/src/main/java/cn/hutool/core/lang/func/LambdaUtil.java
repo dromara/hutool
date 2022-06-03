@@ -60,7 +60,7 @@ public class LambdaUtil {
 	@SuppressWarnings("unchecked")
 	public static <R> Class<R> getRealClass(final Serializable func) {
 		LambdaInfo lambdaInfo = resolve(func);
-		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedType).orElseGet(lambdaInfo::getClazz);
+		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
 	}
 
 	/**
@@ -131,12 +131,11 @@ public class LambdaUtil {
 	//region Private methods
 
 	/**
-	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除。
+	 * 解析lambda表达式,没加缓存
 	 *
 	 * <p>
 	 * 通过反射调用实现序列化接口函数对象的writeReplace方法，从而拿到{@link SerializedLambda}<br>
-	 * 该对象中包含了lambda表达式的所有信息。
+	 * 该对象中包含了lambda表达式的大部分信息。
 	 * </p>
 	 *
 	 * @param func 需要解析的 lambda 对象
@@ -147,11 +146,11 @@ public class LambdaUtil {
 			return (SerializedLambda) func;
 		}
 		if (func instanceof Proxy) {
-			throw new UtilException("not support proxy, just for now");
+			throw new IllegalArgumentException("not support proxy, just for now");
 		}
 		final Class<? extends Serializable> clazz = func.getClass();
 		if (!clazz.isSynthetic()) {
-			throw new UtilException("Not a lambda expression: " + clazz.getName());
+			throw new IllegalArgumentException("Not a lambda expression: " + clazz.getName());
 		}
 		final Object serLambda = MethodUtil.invoke(func, "writeReplace");
 		if (Objects.nonNull(serLambda) && serLambda instanceof SerializedLambda) {
