@@ -17,20 +17,20 @@ import java.util.Map;
 
 /**
  * {@link IterUtil} 单元测试
- * @author looly
  *
+ * @author looly
  */
 public class IterUtilTest {
 
 	@Test
-	public void getFirstNonNullTest(){
-		final ArrayList<String> strings = CollUtil.newArrayList(null, null, "123", "456", null);
+	public void getFirstNonNullTest() {
+		final ArrayList<String> strings = ListUtil.of(null, null, "123", "456", null);
 		Assert.assertEquals("123", IterUtil.getFirstNoneNull(strings));
 	}
 
 	@Test
 	public void fieldValueMapTest() {
-		final ArrayList<Car> carList = CollUtil.newArrayList(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
+		final ArrayList<Car> carList = ListUtil.of(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
 		final Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");
 
 		Assert.assertEquals("大众", carNameMap.get("123").getCarName());
@@ -40,30 +40,30 @@ public class IterUtilTest {
 
 	@Test
 	public void joinTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
+		final ArrayList<String> list = ListUtil.of("1", "2", "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join);
 
-		final ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4);
+		final ArrayList<Integer> list1 = ListUtil.of(1, 2, 3, 4);
 		final String join1 = IterUtil.join(list1.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join1);
 
 		// 包装每个节点
-		final ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
+		final ArrayList<String> list2 = ListUtil.of("1", "2", "3", "4");
 		final String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
 		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
 	}
 
 	@Test
 	public void joinWithFuncTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
+		final ArrayList<String> list = ListUtil.of("1", "2", "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
 		Assert.assertEquals("1:2:3:4", join);
 	}
 
 	@Test
 	public void joinWithNullTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("1", null, "3", "4");
+		final ArrayList<String> list = ListUtil.of("1", null, "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
 		Assert.assertEquals("1:null:3:4", join);
 	}
@@ -94,10 +94,10 @@ public class IterUtilTest {
 	}
 
 	@Test
-	public void getElementTypeTest(){
+	public void getElementTypeTest() {
 		final List<Integer> integers = Arrays.asList(null, 1);
 		final Class<?> elementType = IterUtil.getElementType(integers);
-		Assert.assertEquals(Integer.class,elementType);
+		Assert.assertEquals(Integer.class, elementType);
 	}
 
 	@Data
@@ -108,9 +108,9 @@ public class IterUtilTest {
 	}
 
 	@Test
-	public void filterTest(){
-		final List<String> obj2 = ListUtil.toList("3");
-		final List<String> obj = ListUtil.toList("1", "3");
+	public void filterTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
 
 		IterUtil.filter(obj.iterator(), obj2::contains);
 
@@ -119,9 +119,9 @@ public class IterUtilTest {
 	}
 
 	@Test
-	public void filteredTest(){
-		final List<String> obj2 = ListUtil.toList("3");
-		final List<String> obj = ListUtil.toList("1", "3");
+	public void filteredTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
 
 		final FilterIter<String> filtered = IterUtil.filtered(obj.iterator(), obj2::contains);
 
@@ -130,9 +130,9 @@ public class IterUtilTest {
 	}
 
 	@Test
-	public void filterToListTest(){
-		final List<String> obj2 = ListUtil.toList("3");
-		final List<String> obj = ListUtil.toList("1", "3");
+	public void filterToListTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
 
 		final List<String> filtered = IterUtil.filterToList(obj.iterator(), obj2::contains);
 
@@ -142,7 +142,7 @@ public class IterUtilTest {
 
 	@Test
 	public void getTest() {
-		final HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
+		final HashSet<String> set = SetUtil.ofLinked("A", "B", "C", "D");
 		final String str = IterUtil.get(set.iterator(), 2);
 		Assert.assertEquals("C", str);
 	}

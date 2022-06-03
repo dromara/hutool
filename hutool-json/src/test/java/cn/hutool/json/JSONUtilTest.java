@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
@@ -59,7 +58,7 @@ public class JSONUtilTest {
 		a2.setDate(DateUtil.date());
 		a2.setName("AAAA222Name");
 
-		final ArrayList<UserA> list = CollUtil.newArrayList(a1, a2);
+		final ArrayList<UserA> list = ListUtil.of(a1, a2);
 		final HashMap<String, Object> map = MapUtil.newHashMap();
 		map.put("total", 13);
 		map.put("rows", list);
@@ -230,7 +229,7 @@ public class JSONUtilTest {
 	public void toXmlTest(){
 		final JSONObject obj = JSONUtil.createObj();
 		obj.set("key1", "v1")
-				.set("key2", ListUtil.of("a", "b", "c"));
+				.set("key2", ListUtil.view("a", "b", "c"));
 		final String xmlStr = JSONUtil.toXmlStr(obj);
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}

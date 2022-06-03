@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
@@ -82,7 +82,7 @@ public class ReUtilTest {
 	public void findAllTest() {
 		// 查找所有匹配文本
 		final List<String> resultFindAll = ReUtil.findAll("\\w{2}", content, 0, new ArrayList<>());
-		final ArrayList<String> expected = CollUtil.newArrayList("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
+		final ArrayList<String> expected = ListUtil.of("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
 		Assert.assertEquals(expected, resultFindAll);
 	}
 

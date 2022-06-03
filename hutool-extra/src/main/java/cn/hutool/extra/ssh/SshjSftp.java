@@ -25,7 +25,7 @@ import java.util.List;
  *
  * <p>
  * 基于sshj 框架适配。<br>
- * 参考：https://github.com/hierynomus/sshj
+ * 参考：<a href="https://github.com/hierynomus/sshj">https://github.com/hierynomus/sshj</a>
  * </p>
  *
  * @author youyongkun
@@ -102,7 +102,7 @@ public class SshjSftp extends AbstractFtp {
 		this.ssh = new SSHClient();
 		ssh.addHostKeyVerifier(new PromiscuousVerifier());
 		try {
-			ssh.connect(ftpConfig.getHost());
+			ssh.connect(ftpConfig.getHost(), ftpConfig.getPort());
 			ssh.authPassword(ftpConfig.getUser(), ftpConfig.getPassword());
 			ssh.setRemoteCharset(ftpConfig.getCharset());
 			this.sftp = ssh.newSFTPClient();

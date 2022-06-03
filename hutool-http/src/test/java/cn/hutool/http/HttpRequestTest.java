@@ -204,4 +204,11 @@ public class HttpRequestTest {
 		final HttpRequest httpRequest = new HttpRequest(urlBuilder);
 		httpRequest.setMethod(Method.GET).execute();
 	}
+
+	@Test
+	@Ignore
+	public void getCookieTest(){
+		final HttpResponse execute = HttpRequest.get("http://localhost:8888/getCookier").execute();
+		Console.log(execute.getCookies());
+	}
 }

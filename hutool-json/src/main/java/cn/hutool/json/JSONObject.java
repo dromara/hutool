@@ -3,7 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.mutable.MutablePair;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
@@ -126,7 +126,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 * @since 5.8.0
 	 */
-	public JSONObject(final Object source, final JSONConfig config, final Filter<MutablePair<String, Object>> filter) {
+	public JSONObject(final Object source, final JSONConfig config, final Filter<MutableEntry<String, Object>> filter) {
 		this(DEFAULT_CAPACITY, config);
 		ObjectMapper.of(source).map(this, filter);
 	}
@@ -184,7 +184,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public Object getByPath(final String expression) {
-		return BeanPath.create(expression).get(this);
+		return BeanPath.of(expression).get(this);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public void putByPath(final String expression, final Object value) {
-		BeanPath.create(expression).set(this, value);
+		BeanPath.of(expression).set(this, value);
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	public JSONObject set(final String key, final Object value, final Filter<MutablePair<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
+	public JSONObject set(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
 		put(key, value, filter, checkDuplicate);
 		return this;
 	}
@@ -260,7 +260,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */
-	public JSONObject setOnce(final String key, final Object value, final Filter<MutablePair<String, Object>> filter) throws JSONException {
+	public JSONObject setOnce(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
 		return set(key, value, filter, true);
 	}
 
@@ -378,7 +378,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(final int indentFactor, final Filter<MutablePair<String, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Filter<MutableEntry<String, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -402,12 +402,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutablePair<String, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
 			if (null != filter) {
-				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+				final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
 				if (filter.accept(pair)) {
 					// 使用修改后的键值对
 					jsonWriter.writeField(pair.getKey(), pair.getValue());
@@ -439,14 +439,14 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	private Object put(String key, Object value, final Filter<MutablePair<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
+	private Object put(String key, Object value, final Filter<MutableEntry<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
 		if (null == key) {
 			return this;
 		}
 
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != filter) {
-			final MutablePair<String, Object> pair = new MutablePair<>(key, value);
+			final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
 			if (filter.accept(pair)) {
 				// 使用修改后的键值对
 				key = pair.getKey();

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -340,7 +341,7 @@ public class BeanUtil {
 		if (null == bean || StrUtil.isBlank(expression)) {
 			return null;
 		}
-		return (T) BeanPath.create(expression).get(bean);
+		return (T) BeanPath.of(expression).get(bean);
 	}
 
 	/**
@@ -353,7 +354,7 @@ public class BeanUtil {
 	 * @since 4.0.6
 	 */
 	public static void setProperty(final Object bean, final String expression, final Object value) {
-		BeanPath.create(expression).set(bean, value);
+		BeanPath.of(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
@@ -465,36 +466,6 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 对象或Map转Bean，忽略字段转换时发生的异常
-	 *
-	 * @param <T>    转换的Bean类型
-	 * @param source Bean对象或Map
-	 * @param clazz  目标的Bean类型
-	 * @return Bean对象
-	 * @since 5.4.0
-	 */
-	public static <T> T toBeanIgnoreError(final Object source, final Class<T> clazz) {
-		return toBean(source, clazz, CopyOptions.create().setIgnoreError(true));
-	}
-
-	/**
-	 * 对象或Map转Bean，忽略字段转换时发生的异常
-	 *
-	 * @param <T>         转换的Bean类型
-	 * @param source      Bean对象或Map
-	 * @param clazz       目标的Bean类型
-	 * @param ignoreError 是否忽略注入错误
-	 * @return Bean对象
-	 * @since 5.4.0
-	 */
-	public static <T> T toBeanIgnoreCase(final Object source, final Class<T> clazz, final boolean ignoreError) {
-		return toBean(source, clazz,
-				CopyOptions.create()
-						.setIgnoreCase(true)
-						.setIgnoreError(ignoreError));
-	}
-
-	/**
 	 * 对象或Map转Bean
 	 *
 	 * @param <T>     转换的Bean类型
@@ -512,7 +483,7 @@ public class BeanUtil {
 	 * 对象或Map转Bean
 	 *
 	 * @param <T>            转换的Bean类型
-	 * @param source         Bean对象或Map
+	 * @param source         Bean对象或Map或{@link ValueProvider}
 	 * @param targetSupplier 目标的Bean创建器
 	 * @param options        属性拷贝选项
 	 * @return Bean对象
@@ -525,22 +496,6 @@ public class BeanUtil {
 		final T target = targetSupplier.get();
 		copyProperties(source, target, options);
 		return target;
-	}
-
-	/**
-	 * ServletRequest 参数转Bean
-	 *
-	 * @param <T>           Bean类型
-	 * @param beanClass     Bean Class
-	 * @param valueProvider 值提供者
-	 * @param copyOptions   拷贝选项，见 {@link CopyOptions}
-	 * @return Bean
-	 */
-	public static <T> T toBean(final Class<T> beanClass, final ValueProvider<String> valueProvider, final CopyOptions copyOptions) {
-		if (null == beanClass || null == valueProvider) {
-			return null;
-		}
-		return fillBean(ConstructorUtil.newInstanceIfPossible(beanClass), valueProvider, copyOptions);
 	}
 
 	/**
@@ -559,7 +514,6 @@ public class BeanUtil {
 
 		return BeanCopier.create(valueProvider, bean, copyOptions).copy();
 	}
-
 	// --------------------------------------------------------------------------------------------- beanToMap
 
 	/**
@@ -572,14 +526,16 @@ public class BeanUtil {
 	 * @since 5.8.0
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
+		int mapSize = 16;
 		Editor<String> keyEditor = null;
-		if(ArrayUtil.isNotEmpty(properties)){
-			final Set<String> propertiesSet = CollUtil.set(false, properties);
+		if (ArrayUtil.isNotEmpty(properties)) {
+			mapSize = properties.length;
+			final Set<String> propertiesSet = SetUtil.of(properties);
 			keyEditor = property -> propertiesSet.contains(property) ? property : null;
 		}
 
 		// 指明了要复制的属性 所以不忽略null值
-		return beanToMap(bean, new LinkedHashMap<>(properties.length, 1), false, keyEditor);
+		return beanToMap(bean, new LinkedHashMap<>(mapSize, 1), false, keyEditor);
 	}
 
 	/**
@@ -682,6 +638,9 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final Class<T> tClass, final String... ignoreProperties) {
+		if (null == source) {
+			return null;
+		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 		return target;
@@ -719,6 +678,9 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(final Object source, final Object target, final CopyOptions copyOptions) {
+		if (null == source || null == target) {
+			return;
+		}
 		BeanCopier.create(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
 	}
 

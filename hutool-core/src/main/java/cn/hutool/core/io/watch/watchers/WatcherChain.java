@@ -1,6 +1,6 @@
 package cn.hutool.core.io.watch.watchers;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.lang.Chain;
 
@@ -35,7 +35,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers 观察者列表
 	 */
 	public WatcherChain(final Watcher... watchers) {
-		chain = CollUtil.newArrayList(watchers);
+		chain = ListUtil.of(watchers);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.IndexedComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -13,8 +13,8 @@ import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.net.URLEncoder;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
@@ -1017,7 +1017,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			}
 		} else if (rowBean instanceof Hyperlink) {
 			// Hyperlink当成一个值
-			return writeRow(CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
+			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
@@ -1027,7 +1027,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			}
 		} else {
 			// 其它转为字符串默认输出
-			return writeRow(CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
+			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
 		}
 		return writeRow(rowMap, isWriteKeyAsHead);
 	}

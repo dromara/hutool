@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
@@ -417,7 +417,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public int del(final String tableName, final String field, final Object value) throws DbRuntimeException {
-		return del(Entity.create(tableName).set(field, value));
+		return del(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -470,7 +470,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> Entity get(final String tableName, final String field, final T value) throws DbRuntimeException {
-		return this.get(Entity.create(tableName).set(field, value));
+		return this.get(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -554,7 +554,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws DbRuntimeException {
-		return find(CollUtil.newArrayList(fields), where, rsh);
+		return find(ListUtil.of(fields), where, rsh);
 	}
 
 	/**
@@ -620,7 +620,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public List<Entity> findAll(final String tableName) throws DbRuntimeException {
-		return findAll(Entity.create(tableName));
+		return findAll(Entity.of(tableName));
 	}
 
 	/**
@@ -633,7 +633,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public List<Entity> findBy(final String tableName, final String field, final Object value) throws DbRuntimeException {
-		return findAll(Entity.create(tableName).set(field, value));
+		return findAll(Entity.of(tableName).set(field, value));
 	}
 
 	/**
@@ -661,7 +661,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public List<Entity> findLike(final String tableName, final String field, final String value, final LikeType likeType) throws DbRuntimeException {
-		return findAll(Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
+		return findAll(Entity.of(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 
 	/**

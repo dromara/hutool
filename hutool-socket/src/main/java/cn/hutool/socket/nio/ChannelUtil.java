@@ -11,7 +11,7 @@ import java.nio.channels.Selector;
  *
  * @since 5.4.0
  */
-public class NioUtil {
+public class ChannelUtil {
 
 	/**
 	 * 注册通道的指定操作到指定Selector上

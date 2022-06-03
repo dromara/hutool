@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
@@ -85,6 +86,9 @@ public class JSONConverter implements Converter<JSON> {
 				}
 				target.parse(value);
 				return (T) target;
+			} else if(targetType == byte[].class && value instanceof CharSequence){
+				// issue#I59LW4
+				return (T) Base64.decode((CharSequence) value);
 			}
 		}
 

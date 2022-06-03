@@ -157,7 +157,7 @@ public class SheetRidReader extends DefaultHandler {
 	 * @since 5.7.17
 	 */
 	public List<String> getSheetNames() {
-		return ListUtil.toList(this.NAME_RID_MAP.keySet());
+		return ListUtil.of(this.NAME_RID_MAP.keySet());
 	}
 
 	@Override

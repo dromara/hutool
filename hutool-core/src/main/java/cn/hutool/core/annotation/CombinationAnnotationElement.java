@@ -1,6 +1,6 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.map.TableMap;
 
 import java.io.Serializable;
@@ -42,7 +42,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	/**
 	 * 元注解
 	 */
-	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
+	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = SetUtil.of(Target.class, //
 			Retention.class, //
 			Inherited.class, //
 			Documented.class, //

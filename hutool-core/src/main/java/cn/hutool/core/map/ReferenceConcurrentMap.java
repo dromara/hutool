@@ -1,7 +1,6 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReferenceUtil;
 
@@ -141,17 +140,6 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
 		this.purgeStaleKeys();
 		return this.raw.computeIfPresent(ofKey(key, this.lastQueue), (kWeakKey, value) -> remappingFunction.apply(key, value));
-	}
-
-	/**
-	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
-	 *
-	 * @param key      键
-	 * @param supplier 如果不存在回调方法，用于生产值对象
-	 * @return 值对象
-	 */
-	public V computeIfAbsent(final K key, final Func0<? extends V> supplier) {
-		return computeIfAbsent(key, (keyParam) -> supplier.callWithRuntimeException());
 	}
 
 	@SuppressWarnings("unchecked")

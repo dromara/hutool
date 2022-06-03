@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.copier.Copier;
 
 import java.io.Serializable;
@@ -16,9 +17,8 @@ import java.util.Map;
  *     4. Map  转 Map
  * </pre>
  *
- * @author looly
- *
  * @param <T> 目标对象类型
+ * @author looly
  * @since 3.2.3
  */
 public class BeanCopier<T> implements Copier<T>, Serializable {
@@ -29,9 +29,9 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	/**
 	 * 创建BeanCopier
 	 *
-	 * @param <T> 目标Bean类型
-	 * @param source 来源对象，可以是Bean或者Map
-	 * @param target 目标Bean对象
+	 * @param <T>         目标Bean类型
+	 * @param source      来源对象，可以是Bean或者Map
+	 * @param target      目标Bean对象
 	 * @param copyOptions 拷贝属性选项
 	 * @return BeanCopier
 	 */
@@ -42,10 +42,10 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	/**
 	 * 创建BeanCopier
 	 *
-	 * @param <T> 目标Bean类型
-	 * @param source 来源对象，可以是Bean或者Map
-	 * @param target 目标Bean对象
-	 * @param destType 目标的泛型类型，用于标注有泛型参数的Bean对象
+	 * @param <T>         目标Bean类型
+	 * @param source      来源对象，可以是Bean或者Map
+	 * @param target      目标Bean对象
+	 * @param destType    目标的泛型类型，用于标注有泛型参数的Bean对象
 	 * @param copyOptions 拷贝属性选项
 	 * @return BeanCopier
 	 */
@@ -56,13 +56,15 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param source 来源对象，可以是Bean或者Map
-	 * @param target 目标Bean对象
-	 * @param targetType 目标的泛型类型，用于标注有泛型参数的Bean对象
+	 * @param source      来源对象，可以是Bean或者Map，不能为{@code null}
+	 * @param target      目标Bean对象，不能为{@code null}
+	 * @param targetType  目标的泛型类型，用于标注有泛型参数的Bean对象
 	 * @param copyOptions 拷贝属性选项
 	 */
 	@SuppressWarnings("unchecked")
 	public BeanCopier(final Object source, final T target, final Type targetType, final CopyOptions copyOptions) {
+		Assert.notNull(source, "Source bean must be not null!");
+		Assert.notNull(target, "Target bean must be not null!");
 		final Copier<T> copier;
 		if (source instanceof Map) {
 			if (target instanceof Map) {
@@ -70,7 +72,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 			} else {
 				copier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);
 			}
-		}else if(source instanceof ValueProvider){
+		} else if (source instanceof ValueProvider) {
 			//noinspection unchecked
 			copier = new ValueProviderToBeanCopier<>((ValueProvider<String>) source, target, targetType, copyOptions);
 		} else {

@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.collection.partition.AvgPartition;
 import cn.hutool.core.collection.partition.Partition;
 import cn.hutool.core.collection.partition.RandomAccessAvgPartition;
@@ -29,51 +30,53 @@ import java.util.function.Consumer;
  * @author looly
  */
 public class ListUtil {
-	/**
-	 * 新建一个空List
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @return List对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked) {
-		return isLinked ? new LinkedList<>() : new ArrayList<>();
-	}
 
 	/**
-	 * 新建一个List
+	 * 新建一个List<br>
+	 * 如果提供的初始化数组为空，新建默认初始长度的List
 	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @param values   数组
+	 * @param <T>    集合元素类型
+	 * @param values 数组，可以为{@code null}
 	 * @return List对象
 	 * @since 4.1.2
 	 */
 	@SafeVarargs
-	public static <T> List<T> list(final boolean isLinked, final T... values) {
+	public static <T> ArrayList<T> of(final T... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return list(isLinked);
+			return new ArrayList<>();
 		}
-		final List<T> arrayList = isLinked ? new LinkedList<>() : new ArrayList<>(values.length);
+		final ArrayList<T> arrayList = new ArrayList<>(values.length);
 		Collections.addAll(arrayList, values);
 		return arrayList;
 	}
 
 	/**
-	 * 新建一个List
+	 * 新建一个{@link LinkedList}<br>
+	 * 如果提供的初始化数组为空，新建默认初始长度的List
 	 *
-	 * @param <T>        集合元素类型
-	 * @param isLinked   是否新建LinkedList
-	 * @param collection 集合
-	 * @return List对象
-	 * @since 4.1.2
+	 * @param <T>    集合元素类型
+	 * @param values 数组，可以为{@code null}
+	 * @return {@link LinkedList}对象
 	 */
-	public static <T> List<T> list(final boolean isLinked, final Collection<T> collection) {
-		if (null == collection) {
-			return list(isLinked);
+	@SafeVarargs
+	public static <T> LinkedList<T> ofLinked(final T... values) {
+		final LinkedList<T> list = new LinkedList<>();
+		if (ArrayUtil.isNotEmpty(values)) {
+			Collections.addAll(list, values);
 		}
-		return isLinked ? new LinkedList<>(collection) : new ArrayList<>(collection);
+		return list;
+	}
+
+	/**
+	 * 新建一个List<br>
+	 * 如果提供的初始化数组为空，新建默认初始长度的List
+	 *
+	 * @param <T>      集合元素类型
+	 * @param isLinked 是否为链表
+	 * @return List对象
+	 */
+	public static <T> List<T> of(final boolean isLinked) {
+		return isLinked ? ofLinked() : of();
 	}
 
 	/**
@@ -86,31 +89,15 @@ public class ListUtil {
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(final boolean isLinked, final Iterable<T> iterable) {
+	public static <T> List<T> of(final boolean isLinked, final Iterable<T> iterable) {
 		if (null == iterable) {
-			return list(isLinked);
+			return of(isLinked);
 		}
-		return list(isLinked, iterable.iterator());
-	}
-
-	/**
-	 * 新建一个List<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @param iter     {@link Iterator}
-	 * @return ArrayList对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked, final Iterator<T> iter) {
-		final List<T> list = list(isLinked);
-		if (null != iter) {
-			while (iter.hasNext()) {
-				list.add(iter.next());
-			}
+		if (iterable instanceof Collection) {
+			final Collection<T> collection = (Collection<T>) iterable;
+			return isLinked ? new LinkedList<>(collection) : new ArrayList<>(collection);
 		}
-		return list;
+		return of(isLinked, iterable.iterator());
 	}
 
 	/**
@@ -123,78 +110,28 @@ public class ListUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> List<T> list(final boolean isLinked, final Enumeration<T> enumration) {
-		final List<T> list = list(isLinked);
-		if (null != enumration) {
-			while (enumration.hasMoreElements()) {
-				list.add(enumration.nextElement());
+	public static <T> List<T> of(final boolean isLinked, final Enumeration<T> enumration) {
+		return of(isLinked, (Iterator<T>) new EnumerationIter<>(enumration));
+	}
+
+	/**
+	 * 新建一个List<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 *
+	 * @param <T>      集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param iter     {@link Iterator}
+	 * @return ArrayList对象
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> of(final boolean isLinked, final Iterator<T> iter) {
+		final List<T> list = of(isLinked);
+		if (null != iter) {
+			while (iter.hasNext()) {
+				list.add(iter.next());
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * 新建一个ArrayList
-	 *
-	 * @param <T>    集合元素类型
-	 * @param values 数组
-	 * @return ArrayList对象
-	 */
-	@SafeVarargs
-	public static <T> ArrayList<T> toList(final T... values) {
-		return (ArrayList<T>) list(false, values);
-	}
-
-	/**
-	 * 新建LinkedList
-	 *
-	 * @param values 数组
-	 * @param <T>    类型
-	 * @return LinkedList
-	 * @since 4.1.2
-	 */
-	@SafeVarargs
-	public static <T> LinkedList<T> toLinkedList(final T... values) {
-		return (LinkedList<T>) list(true, values);
-	}
-
-	/**
-	 * 数组转为一个不可变List<br>
-	 * 类似于Java9中的List.of
-	 *
-	 * @param ts  对象
-	 * @param <T> 对象类型
-	 * @return 不可修改List
-	 * @since 5.4.3
-	 */
-	@SafeVarargs
-	public static <T> List<T> of(final T... ts) {
-		if (ArrayUtil.isEmpty(ts)) {
-			return Collections.emptyList();
-		}
-		return Collections.unmodifiableList(toList(ts));
-	}
-
-	/**
-	 * 新建一个CopyOnWriteArrayList
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return {@link CopyOnWriteArrayList}
-	 */
-	public static <T> CopyOnWriteArrayList<T> toCopyOnWriteArrayList(final Collection<T> collection) {
-		return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
-	}
-
-	/**
-	 * 新建一个ArrayList
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return ArrayList对象
-	 */
-	public static <T> ArrayList<T> toList(final Collection<T> collection) {
-		return (ArrayList<T>) list(false, collection);
 	}
 
 	/**
@@ -206,8 +143,8 @@ public class ListUtil {
 	 * @return ArrayList对象
 	 * @since 3.1.0
 	 */
-	public static <T> ArrayList<T> toList(final Iterable<T> iterable) {
-		return (ArrayList<T>) list(false, iterable);
+	public static <T> ArrayList<T> of(final Iterable<T> iterable) {
+		return (ArrayList<T>) of(false, iterable);
 	}
 
 	/**
@@ -219,8 +156,8 @@ public class ListUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> toList(final Iterator<T> iterator) {
-		return (ArrayList<T>) list(false, iterator);
+	public static <T> ArrayList<T> of(final Iterator<T> iterator) {
+		return (ArrayList<T>) of(false, iterator);
 	}
 
 	/**
@@ -232,8 +169,71 @@ public class ListUtil {
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> toList(final Enumeration<T> enumeration) {
-		return (ArrayList<T>) list(false, enumeration);
+	public static <T> ArrayList<T> of(final Enumeration<T> enumeration) {
+		return (ArrayList<T>) of(false, enumeration);
+	}
+
+	/**
+	 * 数组转为一个不可变List<br>
+	 * 类似于Java9中的List.of
+	 *
+	 * @param ts  对象
+	 * @param <T> 对象类型
+	 * @return 不可修改List
+	 */
+	@SafeVarargs
+	public static <T> List<T> view(final T... ts) {
+		return view(of(ts));
+	}
+
+	/**
+	 * 转为一个不可变List<br>
+	 * 类似于Java9中的List.of
+	 *
+	 * @param ts  对象
+	 * @param <T> 对象类型
+	 * @return 不可修改List，如果提供List为{@code null}或者空，返回{@link Collections#emptyList()}
+	 */
+	public static <T> List<T> view(final List<T> ts) {
+		if (ArrayUtil.isEmpty(ts)) {
+			return empty();
+		}
+		return Collections.unmodifiableList(ts);
+	}
+
+	/**
+	 * 获取一个空List，这个空List不可变
+	 *
+	 * @param <T> 元素类型
+	 * @return 空的List
+	 * @see Collections#emptyList()
+	 * @since 5.2.6
+	 */
+	public static <T> List<T> empty() {
+		return Collections.emptyList();
+	}
+
+	/**
+	 * 新建一个CopyOnWriteArrayList
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合
+	 * @return {@link CopyOnWriteArrayList}
+	 */
+	public static <T> CopyOnWriteArrayList<T> ofCopyOnWrite(final Collection<T> collection) {
+		return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
+	}
+
+	/**
+	 * 新建一个CopyOnWriteArrayList
+	 *
+	 * @param <T> 集合元素类型
+	 * @param ts  集合
+	 * @return {@link CopyOnWriteArrayList}
+	 */
+	@SafeVarargs
+	public static <T> CopyOnWriteArrayList<T> ofCopyOnWrite(final T... ts) {
+		return (null == ts) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(ts));
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class ListUtil {
 		// 每页条目数大于总数直接返回所有
 		if (resultSize <= pageSize) {
 			if (pageNo < (PageUtil.getFirstPageNo() + 1)) {
-				return unmodifiable(list);
+				return view(list);
 			} else {
 				// 越界直接返回空
 				return new ArrayList<>(0);
@@ -498,33 +498,6 @@ public class ListUtil {
 	 */
 	public static <T> int[] indexOfAll(final List<T> list, final Matcher<T> matcher) {
 		return CollUtil.indexOfAll(list, matcher);
-	}
-
-	/**
-	 * 将对应List转换为不可修改的List
-	 *
-	 * @param list List
-	 * @param <T>  元素类型
-	 * @return 不可修改List
-	 * @since 5.2.6
-	 */
-	public static <T> List<T> unmodifiable(final List<T> list) {
-		if (null == list) {
-			return null;
-		}
-		return Collections.unmodifiableList(list);
-	}
-
-	/**
-	 * 获取一个空List，这个空List不可变
-	 *
-	 * @param <T> 元素类型
-	 * @return 空的List
-	 * @see Collections#emptyList()
-	 * @since 5.2.6
-	 */
-	public static <T> List<T> empty() {
-		return Collections.emptyList();
 	}
 
 	/**

@@ -519,7 +519,7 @@ public class IterUtil {
 	 * @since 4.0.6
 	 */
 	public static <E> List<E> toList(final Iterator<E> iter) {
-		return ListUtil.toList(iter);
+		return ListUtil.of(iter);
 	}
 
 	/**
@@ -710,7 +710,7 @@ public class IterUtil {
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Iterable<E>, E> T filter(final T iter, final Filter<E> filter) {
+	public static <T extends Iterable<E>, E> T filter(final T iter, final Predicate<E> filter) {
 		if (null == iter) {
 			return null;
 		}
@@ -734,13 +734,13 @@ public class IterUtil {
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <E> Iterator<E> filter(final Iterator<E> iter, final Filter<E> filter) {
+	public static <E> Iterator<E> filter(final Iterator<E> iter, final Predicate<E> filter) {
 		if (null == iter || null == filter) {
 			return iter;
 		}
 
 		while (iter.hasNext()) {
-			if (false == filter.accept(iter.next())) {
+			if (false == filter.test(iter.next())) {
 				iter.remove();
 			}
 		}

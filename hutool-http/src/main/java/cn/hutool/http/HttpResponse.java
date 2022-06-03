@@ -128,7 +128,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *     <li>Transfer-Encoding: Chunked</li>
 	 *     <li>Content-Encoding: XXX</li>
 	 * </ul>
-	 * 参考：https://blog.csdn.net/jiang7701037/article/details/86304302
+	 * 参考：<a href="https://blog.csdn.net/jiang7701037/article/details/86304302">https://blog.csdn.net/jiang7701037/article/details/86304302</a>
 	 *
 	 * @return 长度，-1表示服务端未返回或长度无效
 	 * @since 5.7.9
@@ -309,7 +309,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 将响应内容写出到文件-避免未完成的文件<br>
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）<br>
-	 * 来自：https://gitee.com/dromara/hutool/pulls/407<br>
+	 * 来自：<a href="https://gitee.com/dromara/hutool/pulls/407">https://gitee.com/dromara/hutool/pulls/407</a><br>
 	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
 	 *
 	 * @param targetFileOrDir 写出到的文件或目录
@@ -507,7 +507,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 
 		// 存储服务端设置的Cookie信息
-		GlobalCookieManager.store(httpConnection);
+		GlobalCookieManager.store(httpConnection, this.headers);
 
 		// 获取响应编码
 		final Charset charset = httpConnection.getCharset();

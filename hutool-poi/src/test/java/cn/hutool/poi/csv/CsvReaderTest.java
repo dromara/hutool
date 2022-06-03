@@ -202,4 +202,14 @@ public class CsvReaderTest {
 		final CsvReader reader = CsvUtil.getReader(ResourceUtil.getUtf8Reader("test_bean.csv"));
 		reader.stream().limit(2).forEach(Console::log);
 	}
+
+	@Test
+	@Ignore
+	public void issue2306Test(){
+		final CsvReader reader = CsvUtil.getReader(ResourceUtil.getUtf8Reader("d:/test/issue2306.csv"));
+		final CsvData csvData = reader.read();
+		for (CsvRow csvRow : csvData) {
+			Console.log(csvRow);
+		}
+	}
 }

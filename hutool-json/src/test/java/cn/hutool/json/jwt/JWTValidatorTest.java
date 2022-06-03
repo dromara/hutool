@@ -6,6 +6,8 @@ import cn.hutool.json.jwt.signers.JWTSignerUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Date;
+
 public class JWTValidatorTest {
 
 	@Test(expected = ValidateException.class)
@@ -78,5 +80,21 @@ public class JWTValidatorTest {
 				.setExpiresAt(DateUtil.parse("2021-10-13 09:59:00"));
 
 		JWTValidator.of(jwt).validateDate(DateUtil.date());
+	}
+
+	@Test
+	public void issue2329Test(){
+		final long now = System.currentTimeMillis();
+		final Date nowTime = new Date(now);
+		final long expired = 3 * 1000L;
+		final Date expiredTime = new Date(now + expired);
+
+		// 使用这种方式生成token
+		final String token = JWT.create().setPayload("sub", "blue-light").setIssuedAt(nowTime).setNotBefore(expiredTime)
+				.setExpiresAt(expiredTime).setKey("123456".getBytes()).sign();
+
+		// 使用这种方式验证token
+		JWTValidator.of(JWT.of(token)).validateDate(DateUtil.date(now - 4000), 10);
+		JWTValidator.of(JWT.of(token)).validateDate(DateUtil.date(now + 4000), 10);
 	}
 }

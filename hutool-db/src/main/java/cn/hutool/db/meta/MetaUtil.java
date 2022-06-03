@@ -172,7 +172,7 @@ public class MetaUtil {
 	 */
 	public static Entity createLimitedEntity(final DataSource ds, final String tableName) {
 		final String[] columnNames = getColumnNames(ds, tableName);
-		return Entity.create(tableName).setFieldNames(columnNames);
+		return Entity.of(tableName).setFieldNames(columnNames);
 	}
 
 	/**
@@ -272,7 +272,7 @@ public class MetaUtil {
 						indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.create(rs));
 					}
 				}
-				table.setIndexInfoList(ListUtil.toList(indexInfoMap.values()));
+				table.setIndexInfoList(ListUtil.of(indexInfoMap.values()));
 			}
 		} catch (final SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);

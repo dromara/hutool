@@ -184,7 +184,7 @@ public class NeuQuant {
 		int radius;
 		int rad;
 		int alpha;
-		int step;
+		final int step;
 		int delta;
 		final int samplepixels;
 		final byte[] p;

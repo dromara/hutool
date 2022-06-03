@@ -2,8 +2,10 @@ package cn.hutool.core.compiler;
 
 import cn.hutool.core.compress.ZipUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.reflect.ConstructorUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,6 +17,13 @@ import java.io.InputStream;
  * @author lzpeng
  */
 public class JavaSourceCompilerTest {
+
+	@Test
+	@Ignore
+	public void compilerATest(){
+		final boolean compile = CompilerUtil.compile(FileUtil.file("test-compile/a/A.java").getAbsolutePath());
+		Assert.assertTrue(compile);
+	}
 
 	/**
 	 * 测试编译Java源码
@@ -29,6 +38,7 @@ public class JavaSourceCompilerTest {
 						FileUtil.getInputStream("test-compile/a/A$1.class"),
 						FileUtil.getInputStream("test-compile/a/A$InnerClass.class")
 				});
+		Console.log(libFile.getAbsolutePath());
 		final ClassLoader classLoader = CompilerUtil.getCompiler(null)
 				.addSource(FileUtil.file("test-compile/b/B.java"))
 				.addSource("c.C", FileUtil.readUtf8String("test-compile/c/C.java"))

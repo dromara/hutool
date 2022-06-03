@@ -32,7 +32,7 @@ public class QrConfig {
 	protected int foreColor = BLACK;
 	/** 背景色，默认白色，null表示透明 */
 	protected Integer backColor = WHITE;
-	/** 边距1~4 */
+	/** 边距0~4 */
 	protected Integer margin = 2;
 	/** 设置二维码中的信息量，可设置0-40的整数 */
 	protected Integer qrVersion;

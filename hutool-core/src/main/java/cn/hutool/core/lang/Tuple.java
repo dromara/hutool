@@ -64,7 +64,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	 * @since 5.6.6
 	 */
 	public final List<Object> toList() {
-		return ListUtil.toList(this.members);
+		return ListUtil.of(this.members);
 	}
 
 	/**

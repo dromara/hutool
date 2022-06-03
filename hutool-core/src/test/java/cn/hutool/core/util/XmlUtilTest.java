@@ -1,7 +1,8 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapBuilder;
@@ -109,7 +110,7 @@ public class XmlUtilTest {
 		final Map<String, Object> map = XmlUtil.xmlToMap(xml);
 
 		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(CollUtil.newArrayList("张三", "李四"), map.get("name"));
+		Assert.assertEquals(ListUtil.of("张三", "李四"), map.get("name"));
 	}
 
 	@Test
@@ -137,7 +138,7 @@ public class XmlUtilTest {
 	public void mapToXmlTest2() {
 		// 测试List
 		final Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
-				.put("Town", CollUtil.newArrayList("town1", "town2"))
+				.put("Town", ListUtil.of("town1", "town2"))
 				.build();
 
 		final Document doc = XmlUtil.mapToXml(map, "City");
@@ -157,7 +158,7 @@ public class XmlUtilTest {
 
 	@Test
 	public void readBySaxTest(){
-		final Set<String> eles = CollUtil.newHashSet(
+		final Set<String> eles = SetUtil.of(
 				"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
 		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler(){
 			@Override

@@ -74,7 +74,7 @@ public class MailTest {
 		map.put("abc", FileUtil.getInputStream("D:/test/abc.png"));
 		map.put("abcd",FileUtil.getInputStream("D:/test/def.png"));
 
-		MailUtil.sendHtml("loolly@aliyun.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:abc\"/><img src=\"cid:abcd\"/>",
+		MailUtil.sendHtml("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:abc\"/><img src=\"cid:abcd\"/>",
 				map);
 	}
 }

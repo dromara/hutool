@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.db.handler.EntityListHandler;
@@ -26,75 +26,75 @@ public class CRUDTest {
 
 	@Test
 	public void findIsNullTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", "is null"));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", "is null"));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findIsNullTest2() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", "= null"));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", "= null"));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findIsNullTest3() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", null));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", null));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findBetweenTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", "between '18' and '40'"));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", "between '18' and '40'"));
 		Assert.assertEquals(1, results.size());
 	}
 
 	@Test
 	public void findByBigIntegerTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", new BigInteger("12")));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", new BigInteger("12")));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findByBigDecimalTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("age", new BigDecimal("12")));
+		final List<Entity> results = db.findAll(Entity.of("user").set("age", new BigDecimal("12")));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("name", "like \"%三%\""));
+		final List<Entity> results = db.findAll(Entity.of("user").set("name", "like \"%三%\""));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest2() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
+		final List<Entity> results = db.findAll(Entity.of("user").set("name", new Condition("name", "三", LikeType.Contains)));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest3() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
+		final List<Entity> results = db.findAll(Entity.of("user").set("name", new Condition("name", null, LikeType.Contains)));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findInTest() {
-		final List<Entity> results = db.findAll(Entity.create("user").set("id", "in 1,2,3"));
+		final List<Entity> results = db.findAll(Entity.of("user").set("id", "in 1,2,3"));
 		Console.log(results);
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findInTest2() {
-		final List<Entity> results = db.findAll(Entity.create("user")
+		final List<Entity> results = db.findAll(Entity.of("user")
 				.set("id", new Condition("id", new long[]{1, 2, 3})));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findInTest3() {
-		final List<Entity> results = db.findAll(Entity.create("user")
+		final List<Entity> results = db.findAll(Entity.of("user")
 				.set("id", new long[]{1, 2, 3}));
 		Assert.assertEquals(2, results.size());
 	}
@@ -107,7 +107,7 @@ public class CRUDTest {
 
 	@Test
 	public void findTest() {
-		final List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		final List<Entity> find = db.find(ListUtil.of("name AS name2"), Entity.of("user"), new EntityListHandler());
 		Assert.assertFalse(find.isEmpty());
 	}
 
@@ -128,13 +128,13 @@ public class CRUDTest {
 	public void crudTest() {
 
 		// 增
-		final Long id = db.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
+		final Long id = db.insertForGeneratedKey(Entity.of("user").set("name", "unitTestUser").set("age", 66));
 		Assert.assertTrue(id > 0);
 		final Entity result = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(66, result.getInt("age"));
 
 		// 改
-		final int update = db.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
+		final int update = db.update(Entity.of().set("age", 88), Entity.of("user").set("name", "unitTestUser"));
 		Assert.assertTrue(update > 0);
 		final Entity result2 = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(88, result2.getInt("age"));
@@ -168,7 +168,7 @@ public class CRUDTest {
 		Console.log(data1);
 		Console.log(data2);
 
-		final int[] result = db.insert(CollUtil.newArrayList(data1, data2));
+		final int[] result = db.insert(ListUtil.of(data1, data2));
 		Console.log(result);
 	}
 
@@ -185,7 +185,7 @@ public class CRUDTest {
 
 		Console.log(data1);
 
-		final int[] result = db.insert(CollUtil.newArrayList(data1));
+		final int[] result = db.insert(ListUtil.of(data1));
 		Console.log(result);
 	}
 

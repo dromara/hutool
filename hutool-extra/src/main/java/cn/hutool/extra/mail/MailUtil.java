@@ -1,13 +1,14 @@
 package cn.hutool.extra.mail;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
 
-import javax.mail.Authenticator;
-import javax.mail.Session;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Session;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
@@ -433,7 +434,7 @@ public class MailUtil {
 		} else if (StrUtil.contains(addresses, ';')) {
 			result = StrUtil.splitTrim(addresses, ';');
 		} else {
-			result = CollUtil.newArrayList(addresses);
+			result = ListUtil.of(addresses);
 		}
 		return result;
 	}

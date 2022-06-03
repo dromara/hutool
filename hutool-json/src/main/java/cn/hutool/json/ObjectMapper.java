@@ -6,7 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
-import cn.hutool.core.lang.mutable.MutablePair;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -67,7 +67,7 @@ public class ObjectMapper {
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void map(final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+	public void map(final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final Object source = this.source;
 		if (null == source) {
 			return;
@@ -144,6 +144,7 @@ public class ObjectMapper {
 		} else if (source instanceof InputStream) {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
+			// bytes按照JSON的二进制流对待
 			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
@@ -179,7 +180,7 @@ public class ObjectMapper {
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 * @since 5.3.1
 	 */
-	private static void mapFromResourceBundle(final ResourceBundle bundle, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+	private static void mapFromResourceBundle(final ResourceBundle bundle, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final Enumeration<String> keys = bundle.getKeys();
 		while (keys.hasMoreElements()) {
 			final String key = keys.nextElement();
@@ -196,7 +197,7 @@ public class ObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
-	private static void mapFromStr(final CharSequence source, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+	private static void mapFromStr(final CharSequence source, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
@@ -226,7 +227,7 @@ public class ObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作
 	 */
-	private static void mapFromTokener(final JSONTokener x, final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+	private static void mapFromTokener(final JSONTokener x, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		JSONParser.of(x).parseTo(jsonObject, filter);
 	}
 

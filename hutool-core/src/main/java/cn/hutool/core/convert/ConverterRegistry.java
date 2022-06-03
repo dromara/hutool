@@ -258,6 +258,7 @@ public class ConverterRegistry implements Serializable {
 			return converter.convert(value, defaultValue);
 		}
 
+
 		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 		if (null == rowType) {
 			if (null != defaultValue) {

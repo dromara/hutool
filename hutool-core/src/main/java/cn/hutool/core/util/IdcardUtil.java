@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 身份证相关工具类<br>
- * see <a href="https://www.oschina.net/code/snippet_1611_2881">https://www.oschina.net/code/snippet_1611_2881</a>
+ * 身份证相关工具类，参考标准：GB 11643-1999<br>
+ * 标准描述见：<a href="http://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=080D6FBF2BB468F9007657F26D60013E">http://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=080D6FBF2BB468F9007657F26D60013E</a>
  *
  * <p>
- * 本工具并没有对行政区划代码做校验，如有需求，请参阅（2018年10月）：
- * <a href="http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html">http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html</a>
+ * 本工具并没有对行政区划代码做校验，如有需求，请参阅（2020年12月）：
+ * <a href="http://www.mca.gov.cn/article/sj/xzqh/2020/20201201.html">http://www.mca.gov.cn/article/sj/xzqh/2020/20201201.html</a>
  * </p>
  *
  * @author Looly
@@ -118,7 +118,8 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 将15位身份证号码转换为18位
+	 * 将15位身份证号码转换为18位<br>
+	 * 15位身份证号码遵循GB 11643-1989标准。
 	 *
 	 * @param idCard 15位身份编码
 	 * @return 18位身份编码
@@ -425,17 +426,6 @@ public class IdcardUtil {
 	/**
 	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 *
-	 * @param idcard 身份编号
-	 * @return 生日(yyyyMMdd)
-	 * @see #getBirth(String)
-	 */
-	public static String getBirthByIdCard(final String idcard) {
-		return getBirth(idcard);
-	}
-
-	/**
-	 * 根据身份编号获取生日，只支持15或18位身份证号码
-	 *
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
 	 */
@@ -458,8 +448,8 @@ public class IdcardUtil {
 	 * @return 日期
 	 */
 	public static DateTime getBirthDate(final String idCard) {
-		final String birthByIdCard = getBirthByIdCard(idCard);
-		return null == birthByIdCard ? null : DateUtil.parse(birthByIdCard, DatePattern.PURE_DATE_FORMAT);
+		final String birth = getBirth(idCard);
+		return null == birth ? null : DateUtil.parse(birth, DatePattern.PURE_DATE_FORMAT);
 	}
 
 	/**
@@ -468,8 +458,8 @@ public class IdcardUtil {
 	 * @param idcard 身份编号
 	 * @return 年龄
 	 */
-	public static int getAgeByIdCard(final String idcard) {
-		return getAgeByIdCard(idcard, DateUtil.date());
+	public static int getAge(final String idcard) {
+		return getAge(idcard, DateUtil.date());
 	}
 
 	/**
@@ -479,9 +469,8 @@ public class IdcardUtil {
 	 * @param dateToCompare 以此日期为界，计算年龄。
 	 * @return 年龄
 	 */
-	public static int getAgeByIdCard(final String idcard, final Date dateToCompare) {
-		final String birth = getBirthByIdCard(idcard);
-		return DateUtil.age(DateUtil.parse(birth, "yyyyMMdd"), dateToCompare);
+	public static int getAge(final String idcard, final Date dateToCompare) {
+		return DateUtil.age(getBirthDate(idcard), dateToCompare);
 	}
 
 	/**
@@ -490,7 +479,7 @@ public class IdcardUtil {
 	 * @param idcard 身份编号
 	 * @return 生日(yyyy)
 	 */
-	public static Short getYearByIdCard(String idcard) {
+	public static Short getBirthYear(String idcard) {
 		final int len = idcard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
 			return null;
@@ -506,7 +495,7 @@ public class IdcardUtil {
 	 * @param idcard 身份编号
 	 * @return 生日(MM)
 	 */
-	public static Short getMonthByIdCard(String idcard) {
+	public static Short getBirthMonth(String idcard) {
 		final int len = idcard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
 			return null;
@@ -522,7 +511,7 @@ public class IdcardUtil {
 	 * @param idcard 身份编号
 	 * @return 生日(dd)
 	 */
-	public static Short getDayByIdCard(String idcard) {
+	public static Short getBirthDay(String idcard) {
 		final int len = idcard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
 			return null;
@@ -538,7 +527,7 @@ public class IdcardUtil {
 	 * @param idcard 身份编号
 	 * @return 性别(1 : 男 ， 0 : 女)
 	 */
-	public static int getGenderByIdCard(String idcard) {
+	public static int getGender(String idcard) {
 		Assert.notBlank(idcard);
 		final int len = idcard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
@@ -559,7 +548,7 @@ public class IdcardUtil {
 	 * @return 省份编码
 	 * @since 5.7.2
 	 */
-	public static String getProvinceCodeByIdCard(final String idcard) {
+	public static String getProvinceCode(final String idcard) {
 		final int len = idcard.length();
 		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
 			return idcard.substring(0, 2);
@@ -573,8 +562,8 @@ public class IdcardUtil {
 	 * @param idcard 身份编码
 	 * @return 省份名称。
 	 */
-	public static String getProvinceByIdCard(final String idcard) {
-		final String code = getProvinceCodeByIdCard(idcard);
+	public static String getProvince(final String idcard) {
+		final String code = getProvinceCode(idcard);
 		if (StrUtil.isNotBlank(code)) {
 			return CITY_CODES.get(code);
 		}
@@ -588,7 +577,7 @@ public class IdcardUtil {
 	 * @param idcard 身份编码
 	 * @return 地市级编码
 	 */
-	public static String getCityCodeByIdCard(final String idcard) {
+	public static String getCityCode(final String idcard) {
 		final int len = idcard.length();
 		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
 			return idcard.substring(0, 4);
@@ -604,7 +593,7 @@ public class IdcardUtil {
 	 * @return 地市级编码
 	 * @since 5.8.0
 	 */
-	public static String getDistrictCodeByIdCard(final String idcard) {
+	public static String getDistrictCode(final String idcard) {
 		final int len = idcard.length();
 		if (len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH) {
 			return idcard.substring(0, 6);
@@ -637,6 +626,28 @@ public class IdcardUtil {
 		return new Idcard(idcard);
 	}
 
+	/**
+	 * 港澳居民来往内地通行证，俗称：回乡证，通行证号码组成规则：<br>
+	 * <ul>
+	 *     <li>通行证证件号码共11位。第1位为字母，“H”字头签发给香港居民，“M”字头签发给澳门居民。</li>
+	 *     <li>第2位至第11位为数字，前8位数字为通行证持有人的终身号，后2位数字表示换证次数，首次发证为00，此后依次递增。</li>
+	 * </ul>
+	 * 示例：H12345678、M1234567801
+	 *
+	 * <p>
+	 * 参考文档《港澳居民来往内地通行证号码规则》：
+	 * <a href="https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html">https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html</a>
+	 * </p>
+	 */
+	public static boolean isValidHkMoHomeReturn(final String idCard) {
+		if (StrUtil.isEmpty(idCard)) {
+			return false;
+		}
+		// 规则： H/M + 8位或10位数字
+		// 样本： H1234567890
+		final String reg = "^[HhMm](\\d{8}|\\d{10})$";
+		return idCard.matches(reg);
+	}
 	// ----------------------------------------------------------------------------------- Private method start
 
 	/**
@@ -723,11 +734,11 @@ public class IdcardUtil {
 		 * @param idcard 身份证号码
 		 */
 		public Idcard(final String idcard) {
-			this.provinceCode = IdcardUtil.getProvinceCodeByIdCard(idcard);
-			this.cityCode = IdcardUtil.getCityCodeByIdCard(idcard);
+			this.provinceCode = IdcardUtil.getProvinceCode(idcard);
+			this.cityCode = IdcardUtil.getCityCode(idcard);
 			this.birthDate = IdcardUtil.getBirthDate(idcard);
-			this.gender = IdcardUtil.getGenderByIdCard(idcard);
-			this.age = IdcardUtil.getAgeByIdCard(idcard);
+			this.gender = IdcardUtil.getGender(idcard);
+			this.age = IdcardUtil.getAge(idcard);
 		}
 
 		/**

@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * }
  * </pre>
  * <p>
- * 来自：https://github.com/rtyley/animated-gif-lib-for-java
+ * 来自：<a href="https://github.com/rtyley/animated-gif-lib-for-java">https://github.com/rtyley/animated-gif-lib-for-java</a>
  *
  * @author Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick.
  */
@@ -357,10 +357,10 @@ public class GifDecoder {
 		final int NullCode = -1;
 		final int npix = iw * ih;
 		int available;
-		int clear;
+		final int clear;
 		int code_mask;
 		int code_size;
-		int end_of_information;
+		final int end_of_information;
 		int in_code;
 		int old_code;
 		int bits;

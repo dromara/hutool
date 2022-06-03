@@ -218,11 +218,13 @@ public class JWTValidator {
 	 * @param leeway      容忍空间，单位：秒。向后容忍
 	 * @throws ValidateException 验证异常
 	 */
-	private static void validateNotAfter(final String fieldName, final Date dateToCheck, final Date now, final long leeway) throws ValidateException {
+	private static void validateNotAfter(final String fieldName, final Date dateToCheck, Date now, final long leeway) throws ValidateException {
 		if (null == dateToCheck) {
 			return;
 		}
-		now.setTime(now.getTime() + leeway * 1000);
+		if(leeway > 0){
+			now = DateUtil.date(now.getTime() + leeway * 1000);
+		}
 		if (dateToCheck.after(now)) {
 			throw new ValidateException("'{}':[{}] is after now:[{}]",
 					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));
@@ -240,11 +242,13 @@ public class JWTValidator {
 	 * @throws ValidateException 验证异常
 	 */
 	@SuppressWarnings("SameParameterValue")
-	private static void validateNotBefore(final String fieldName, final Date dateToCheck, final Date now, final long leeway) throws ValidateException {
+	private static void validateNotBefore(final String fieldName, final Date dateToCheck, Date now, final long leeway) throws ValidateException {
 		if (null == dateToCheck) {
 			return;
 		}
-		now.setTime(now.getTime() - leeway * 1000);
+		if(leeway > 0){
+			now = DateUtil.date(now.getTime() - leeway * 1000);
+		}
 		if (dateToCheck.before(now)) {
 			throw new ValidateException("'{}':[{}] is before now:[{}]",
 					fieldName, DateUtil.date(dateToCheck), DateUtil.date(now));

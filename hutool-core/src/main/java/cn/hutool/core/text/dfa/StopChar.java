@@ -1,8 +1,8 @@
 package cn.hutool.core.text.dfa;
 
-import java.util.Set;
+import cn.hutool.core.collection.SetUtil;
 
-import cn.hutool.core.collection.CollUtil;
+import java.util.Set;
 
 /**
  * 过滤词及一些简单处理
@@ -11,7 +11,7 @@ import cn.hutool.core.collection.CollUtil;
  */
 public class StopChar {
 	/** 不需要处理的词，如标点符号、空格等 */
-	public static final Set<Character> STOP_WORD = CollUtil.newHashSet(' ', '\'', '、', '。', //
+	public static final Set<Character> STOP_WORD = SetUtil.of(' ', '\'', '、', '。', //
 			'·', 'ˉ', 'ˇ', '々', '—', '～', '‖', '…', '‘', '’', '“', '”', '〔', '〕', '〈', '〉', '《', '》', '「', '」', '『', //
 			'』', '〖', '〗', '【', '】', '±', '＋', '－', '×', '÷', '∧', '∨', '∑', '∏', '∪', '∩', '∈', '√', '⊥', '⊙', '∫', //
 			'∮', '≡', '≌', '≈', '∽', '∝', '≠', '≮', '≯', '≤', '≥', '∞', '∶', '∵', '∴', '∷', '♂', '♀', '°', '′', '〃', //

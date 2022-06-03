@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -15,13 +15,13 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomEleSetTest(){
-		final Set<Integer> set = RandomUtil.randomEleSet(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
+		final Set<Integer> set = RandomUtil.randomEleSet(ListUtil.of(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(set.size(), 2);
 	}
 
 	@Test
 	public void randomElesTest(){
-		final List<Integer> result = RandomUtil.randomEles(CollUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
+		final List<Integer> result = RandomUtil.randomEles(ListUtil.of(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(result.size(), 2);
 	}
 

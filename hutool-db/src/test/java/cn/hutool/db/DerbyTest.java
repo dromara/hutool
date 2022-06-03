@@ -23,10 +23,10 @@ public class DerbyTest {
 		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 
-		db.insert(Entity.create("test").set("a", 1).set("b", 11));
-		db.insert(Entity.create("test").set("a", 2).set("b", 21));
-		db.insert(Entity.create("test").set("a", 3).set("b", 31));
-		db.insert(Entity.create("test").set("a", 4).set("b", 41));
+		db.insert(Entity.of("test").set("a", 1).set("b", 11));
+		db.insert(Entity.of("test").set("a", 2).set("b", 21));
+		db.insert(Entity.of("test").set("a", 3).set("b", 31));
+		db.insert(Entity.of("test").set("a", 4).set("b", 41));
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class DerbyTest {
 	@Test
 	@Ignore
 	public void findTest() throws SQLException {
-		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.create("test"));
+		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.of("test"));
 		Assert.assertEquals(4, query.size());
 	}
 }

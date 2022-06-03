@@ -1,24 +1,46 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ObjectUtilTest {
+public class ObjUtilTest {
 
 	@Test
-	public void equalsTest(){
-		final Object a = null;
-		final Object b = null;
+	public void equalsTest() {
+		Object a = null;
+		Object b = null;
 		Assert.assertTrue(ObjUtil.equals(a, b));
+
+		a = new BigDecimal("1.1");
+		b = new BigDecimal("1.10");
+		Assert.assertTrue(ObjUtil.equals(a, b));
+
+		a = 127;
+		b = 127;
+		Assert.assertTrue(ObjUtil.equals(a, b));
+
+		a = 128;
+		b = 128;
+		Assert.assertTrue(ObjUtil.equals(a, b));
+
+		a = LocalDateTime.of(2022, 5, 29, 22, 11);
+		b = LocalDateTime.of(2022, 5, 29, 22, 11);
+		Assert.assertTrue(ObjUtil.equals(a, b));
+
+		a = 1;
+		b = 1.0;
+		Assert.assertFalse(ObjUtil.equals(a, b));
 	}
 
 	@Test
@@ -33,6 +55,9 @@ public class ObjectUtilTest {
 		map.put("c", "c1");
 		length = ObjUtil.length(map);
 		Assert.assertEquals(3, length);
+
+		final Iterable<Integer> list = ListUtil.of(1, 2, 3);
+		Assert.assertEquals(3, ObjUtil.length(list));
 	}
 
 	@Test
@@ -58,7 +83,7 @@ public class ObjectUtilTest {
 
 	@Test
 	public void toStringTest() {
-		final ArrayList<String> strings = CollUtil.newArrayList("1", "2");
+		final ArrayList<String> strings = ListUtil.of("1", "2");
 		final String result = ObjUtil.toString(strings);
 		Assert.assertEquals("[1, 2]", result);
 	}

@@ -49,7 +49,7 @@ public class Issue2131Test {
 	@Data
 	static class GoodsResponse extends BaseResponse {
 		// 由于定义成了final形式，setXXX无效，导致无法注入。
-		private final List<GoodsItem> collections = ListUtil.list(false);
+		private final List<GoodsItem> collections = ListUtil.of(false);
 	}
 
 	@Data

@@ -67,6 +67,7 @@ public class ObjUtil {
 	 * <li>CharSequence</li>
 	 * <li>Map</li>
 	 * <li>Iterator</li>
+	 * <li>Iterable</li>
 	 * <li>Enumeration</li>
 	 * <li>Array</li>
 	 * </ul>
@@ -89,8 +90,8 @@ public class ObjUtil {
 		}
 
 		int count;
-		if (obj instanceof Iterator) {
-			final Iterator<?> iter = (Iterator<?>) obj;
+		if (obj instanceof Iterator || obj instanceof Iterable) {
+			final Iterator<?> iter = (obj instanceof Iterator) ? (Iterator<?>) obj : ((Iterable<?>) obj).iterator();
 			count = 0;
 			while (iter.hasNext()) {
 				count++;
@@ -107,7 +108,7 @@ public class ObjUtil {
 			}
 			return count;
 		}
-		if (obj.getClass().isArray() == true) {
+		if (obj.getClass().isArray()) {
 			return Array.getLength(obj);
 		}
 		return -1;
@@ -121,6 +122,7 @@ public class ObjUtil {
 	 * <li>Collection</li>
 	 * <li>Map</li>
 	 * <li>Iterator</li>
+	 * <li>Iterable</li>
 	 * <li>Enumeration</li>
 	 * <li>Array</li>
 	 * </ul>
@@ -146,8 +148,8 @@ public class ObjUtil {
 			return ((Map<?, ?>) obj).containsValue(element);
 		}
 
-		if (obj instanceof Iterator) {
-			final Iterator<?> iter = (Iterator<?>) obj;
+		if (obj instanceof Iterator || obj instanceof Iterable) {
+			final Iterator<?> iter = obj instanceof Iterator ? (Iterator<?>) obj : ((Iterable<?>) obj).iterator();
 			while (iter.hasNext()) {
 				final Object o = iter.next();
 				if (equals(o, element)) {

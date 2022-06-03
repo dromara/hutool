@@ -1,15 +1,16 @@
 package cn.hutool.json;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
@@ -748,6 +749,12 @@ public class JSONUtil {
 
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
+				if(object instanceof byte[]){
+					// issue#I59LW4
+					// json内容中的bytes默认转为Base64
+					return Base64.encode((byte[]) object);
+				}
+
 				return new JSONArray(object, jsonConfig);
 			}
 			// JSONObject

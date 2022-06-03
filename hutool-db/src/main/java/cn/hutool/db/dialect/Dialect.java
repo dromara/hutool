@@ -1,6 +1,5 @@
 package cn.hutool.db.dialect;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Page;
 import cn.hutool.db.sql.Order;
@@ -134,7 +133,7 @@ public interface Dialect extends Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	default PreparedStatement psForCount(final Connection conn, final Query query) throws SQLException {
-		return psForFind(conn, query.clone().setFields(ListUtil.toList("count(1)")));
+		return psForCount(conn, SqlBuilder.create().query(query));
 	}
 
 	/**

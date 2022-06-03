@@ -27,7 +27,7 @@
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.33.0</sshj.version>
-		<zxing.version>3.4.1</zxing.version>
+		<zxing.version>3.5.0</zxing.version>
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
@@ -140,11 +140,17 @@
 
 		<!-- 邮件 -->
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>${mail.version}</version>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+			<version>2.1.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>2.0.1</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- SSH安全连接所使用的类库 -->

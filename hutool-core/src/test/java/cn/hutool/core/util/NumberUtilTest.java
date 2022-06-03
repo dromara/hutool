@@ -62,6 +62,9 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 		Assert.assertTrue(NumberUtil.isInteger("0"));
 		Assert.assertFalse(NumberUtil.isInteger("23.4"));
+		Assert.assertFalse(NumberUtil.isInteger(null));
+		Assert.assertFalse(NumberUtil.isInteger(""));
+		Assert.assertFalse(NumberUtil.isInteger(" "));
 	}
 
 	@Test
@@ -71,6 +74,9 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isLong("0256"));
 		Assert.assertTrue(NumberUtil.isLong("0"));
 		Assert.assertFalse(NumberUtil.isLong("23.4"));
+		Assert.assertFalse(NumberUtil.isLong(null));
+		Assert.assertFalse(NumberUtil.isLong(""));
+		Assert.assertFalse(NumberUtil.isLong(" "));
 	}
 
 	@Test
@@ -294,6 +300,13 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void parseHexNumberTest() {
+		// 千位分隔符去掉
+		final int v1 = NumberUtil.parseNumber("0xff").intValue();
+		Assert.assertEquals(255, v1);
+	}
+
+	@Test
 	public void parseLongTest() {
 		long number = NumberUtil.parseLong("0xFF");
 		Assert.assertEquals(255, number);
@@ -433,6 +446,25 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isEven(a[4]));
 	}
 
+	@Test
+	public void toBigIntegerTest(){
+		final Number number=1123123;
+		final Number number2=1123123.123;
+		Assert.assertNotNull(NumberUtil.toBigInteger(number));
+		Assert.assertNotNull(NumberUtil.toBigInteger(number2));
+	}
 
+	@Test
+	public void divIntegerTest(){
+		final BigDecimal div = NumberUtil.div(100101300, (Number) 100);
+		Assert.assertEquals(1001013, div.intValue());
+	}
+
+	@Test
+	public void isDoubleTest(){
+		Assert.assertFalse(NumberUtil.isDouble(null));
+		Assert.assertFalse(NumberUtil.isDouble(""));
+		Assert.assertFalse(NumberUtil.isDouble("  "));
+	}
 
 }

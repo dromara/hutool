@@ -1,12 +1,12 @@
 package cn.hutool.core.convert;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.ByteUtil;
-import cn.hutool.core.codec.HexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -293,7 +295,7 @@ public class ConvertTest {
 	public void toSetTest(){
 		final Set<Integer> result = Convert.convert(new TypeReference<Set<Integer>>() {
 		}, "1,2,3");
-		Assert.assertEquals(CollUtil.set(false, 1,2,3), result);
+		Assert.assertEquals(SetUtil.of(1,2,3), result);
 	}
 
 	@Getter
@@ -382,5 +384,12 @@ public class ConvertTest {
 		final double a = 0.45f;
 		final float b = Convert.toFloat(a);
 		Assert.assertEquals(a, b, 5);
+	}
+
+	@Test
+	public void localDateTimeToLocalDateTest(){
+		final LocalDateTime localDateTime = LocalDateTime.now();
+		final LocalDate convert = Convert.convert(LocalDate.class, localDateTime);
+		Assert.assertEquals(localDateTime.toLocalDate(), convert);
 	}
 }

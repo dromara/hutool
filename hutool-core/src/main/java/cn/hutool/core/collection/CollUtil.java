@@ -55,7 +55,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -122,7 +121,7 @@ public class CollUtil {
 		final ArrayList<T> list = new ArrayList<>(Math.max(coll1.size(), coll2.size()));
 		final Map<T, Integer> map1 = countMap(coll1);
 		final Map<T, Integer> map2 = countMap(coll2);
-		final Set<T> elts = newHashSet(coll2);
+		final Set<T> elts = SetUtil.of(coll2);
 		elts.addAll(coll1);
 		int m;
 		for (final T t : elts) {
@@ -239,7 +238,7 @@ public class CollUtil {
 			final ArrayList<T> list = new ArrayList<>(Math.min(coll1.size(), coll2.size()));
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
-			final Set<T> elts = newHashSet(coll2);
+			final Set<T> elts = SetUtil.of(coll2);
 			int m;
 			for (final T t : elts) {
 				m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
@@ -348,7 +347,7 @@ public class CollUtil {
 		final List<T> result = new ArrayList<>();
 		final Map<T, Integer> map1 = countMap(coll1);
 		final Map<T, Integer> map2 = countMap(coll2);
-		final Set<T> elts = newHashSet(coll2);
+		final Set<T> elts = SetUtil.of(coll2);
 		elts.addAll(coll1);
 		int m;
 		for (final T t : elts) {
@@ -401,7 +400,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 		if (isEmpty(coll2)) {
-			return ListUtil.list(true, coll1);
+			return ListUtil.of(true, coll1);
 		}
 
 		//将被交数用链表储存，防止因为频繁扩容影响性能
@@ -654,300 +653,6 @@ public class CollUtil {
 		return currentAlaDatas;
 	}
 
-	// ----------------------------------------------------------------------------------------------- new HashSet
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T> 集合元素类型
-	 * @param ts  元素数组
-	 * @return HashSet对象
-	 */
-	@SafeVarargs
-	public static <T> HashSet<T> newHashSet(final T... ts) {
-		return set(false, ts);
-	}
-
-	/**
-	 * 新建一个LinkedHashSet
-	 *
-	 * @param <T> 集合元素类型
-	 * @param ts  元素数组
-	 * @return HashSet对象
-	 * @since 4.1.10
-	 */
-	@SafeVarargs
-	public static <T> LinkedHashSet<T> newLinkedHashSet(final T... ts) {
-		return (LinkedHashSet<T>) set(true, ts);
-	}
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回 {@link HashSet}
-	 * @param ts       元素数组
-	 * @return HashSet对象
-	 */
-	@SafeVarargs
-	public static <T> HashSet<T> set(final boolean isSorted, final T... ts) {
-		if (null == ts) {
-			return isSorted ? new LinkedHashSet<>() : new HashSet<>();
-		}
-		final int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>(initialCapacity) : new HashSet<>(initialCapacity);
-		Collections.addAll(set, ts);
-		return set;
-	}
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return HashSet对象
-	 */
-	public static <T> HashSet<T> newHashSet(final Collection<T> collection) {
-		return newHashSet(false, collection);
-	}
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T>        集合元素类型
-	 * @param isSorted   是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
-	 * @param collection 集合，用于初始化Set
-	 * @return HashSet对象
-	 */
-	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Collection<T> collection) {
-		return isSorted ? new LinkedHashSet<>(collection) : new HashSet<>(collection);
-	}
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
-	 * @param iter     {@link Iterator}
-	 * @return HashSet对象
-	 * @since 3.0.8
-	 */
-	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Iterator<T> iter) {
-		if (null == iter) {
-			return set(isSorted, (T[]) null);
-		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
-		while (iter.hasNext()) {
-			set.add(iter.next());
-		}
-		return set;
-	}
-
-	/**
-	 * 新建一个HashSet
-	 *
-	 * @param <T>         集合元素类型
-	 * @param isSorted    是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
-	 * @param enumeration {@link Enumeration}
-	 * @return HashSet对象
-	 * @since 3.0.8
-	 */
-	public static <T> HashSet<T> newHashSet(final boolean isSorted, final Enumeration<T> enumeration) {
-		if (null == enumeration) {
-			return set(isSorted, (T[]) null);
-		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
-		while (enumeration.hasMoreElements()) {
-			set.add(enumeration.nextElement());
-		}
-		return set;
-	}
-
-	// ----------------------------------------------------------------------------------------------- List
-
-	/**
-	 * 新建一个空List
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @return List对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked) {
-		return ListUtil.list(isLinked);
-	}
-
-	/**
-	 * 新建一个List
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @param values   数组
-	 * @return List对象
-	 * @since 4.1.2
-	 */
-	@SafeVarargs
-	public static <T> List<T> list(final boolean isLinked, final T... values) {
-		return ListUtil.list(isLinked, values);
-	}
-
-	/**
-	 * 新建一个List
-	 *
-	 * @param <T>        集合元素类型
-	 * @param isLinked   是否新建LinkedList
-	 * @param collection 集合
-	 * @return List对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked, final Collection<T> collection) {
-		return ListUtil.list(isLinked, collection);
-	}
-
-	/**
-	 * 新建一个List<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @param iterable {@link Iterable}
-	 * @return List对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked, final Iterable<T> iterable) {
-		return ListUtil.list(isLinked, iterable);
-	}
-
-	/**
-	 * 新建一个ArrayList<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param isLinked 是否新建LinkedList
-	 * @param iter     {@link Iterator}
-	 * @return ArrayList对象
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> list(final boolean isLinked, final Iterator<T> iter) {
-		return ListUtil.list(isLinked, iter);
-	}
-
-	/**
-	 * 新建一个List<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>         集合元素类型
-	 * @param isLinked    是否新建LinkedList
-	 * @param enumeration {@link Enumeration}
-	 * @return ArrayList对象
-	 * @since 3.0.8
-	 */
-	public static <T> List<T> list(final boolean isLinked, final Enumeration<T> enumeration) {
-		return ListUtil.list(isLinked, enumeration);
-	}
-
-	/**
-	 * 新建一个ArrayList
-	 *
-	 * @param <T>    集合元素类型
-	 * @param values 数组
-	 * @return ArrayList对象
-	 * @see #toList(Object[])
-	 */
-	@SafeVarargs
-	public static <T> ArrayList<T> newArrayList(final T... values) {
-		return ListUtil.toList(values);
-	}
-
-	/**
-	 * 数组转为ArrayList
-	 *
-	 * @param <T>    集合元素类型
-	 * @param values 数组
-	 * @return ArrayList对象
-	 * @since 4.0.11
-	 */
-	@SafeVarargs
-	public static <T> ArrayList<T> toList(final T... values) {
-		return ListUtil.toList(values);
-	}
-
-	/**
-	 * 新建一个ArrayList
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return ArrayList对象
-	 */
-	public static <T> ArrayList<T> newArrayList(final Collection<T> collection) {
-		return ListUtil.toList(collection);
-	}
-
-	/**
-	 * 新建一个ArrayList<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return ArrayList对象
-	 * @since 3.1.0
-	 */
-	public static <T> ArrayList<T> newArrayList(final Iterable<T> iterable) {
-		return ListUtil.toList(iterable);
-	}
-
-	/**
-	 * 新建一个ArrayList<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterator {@link Iterator}
-	 * @return ArrayList对象
-	 * @since 3.0.8
-	 */
-	public static <T> ArrayList<T> newArrayList(final Iterator<T> iterator) {
-		return ListUtil.toList(iterator);
-	}
-
-	/**
-	 * 新建一个ArrayList<br>
-	 * 提供的参数为null时返回空{@link ArrayList}
-	 *
-	 * @param <T>         集合元素类型
-	 * @param enumeration {@link Enumeration}
-	 * @return ArrayList对象
-	 * @since 3.0.8
-	 */
-	public static <T> ArrayList<T> newArrayList(final Enumeration<T> enumeration) {
-		return ListUtil.toList(enumeration);
-	}
-
-	// ----------------------------------------------------------------------new LinkedList
-
-	/**
-	 * 新建LinkedList
-	 *
-	 * @param values 数组
-	 * @param <T>    类型
-	 * @return LinkedList
-	 * @since 4.1.2
-	 */
-	@SafeVarargs
-	public static <T> LinkedList<T> newLinkedList(final T... values) {
-		return ListUtil.toLinkedList(values);
-	}
-
-	/**
-	 * 新建一个CopyOnWriteArrayList
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return {@link CopyOnWriteArrayList}
-	 */
-	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(final Collection<T> collection) {
-		return ListUtil.toCopyOnWriteArrayList(collection);
-	}
-
 	/**
 	 * 新建{@link BlockingQueue}<br>
 	 * 在队列为空时，获取元素的线程会等待队列变为非空。当队列满时，存储元素的线程会等待队列可用。
@@ -1125,7 +830,7 @@ public class CollUtil {
 			return ListUtil.empty();
 		}
 
-		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.toList(collection);
+		final List<T> list = collection instanceof List ? (List<T>) collection : ListUtil.of(collection);
 		return sub(list, start, end, step);
 	}
 
@@ -1222,7 +927,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Collection<E>, E> T removeAny(final T collection, final E... elesRemoved) {
-		collection.removeAll(newHashSet(elesRemoved));
+		collection.removeAll(SetUtil.of(elesRemoved));
 		return collection;
 	}
 
@@ -1236,7 +941,7 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Collection<E>, E> T filter(final T collection, final Filter<E> filter) {
+	public static <T extends Collection<E>, E> T filter(final T collection, final Predicate<E> filter) {
 		return IterUtil.filter(collection, filter);
 	}
 
@@ -1927,7 +1632,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <E> Collection<E> toCollection(final Iterable<E> iterable) {
-		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
+		return (iterable instanceof Collection) ? (Collection<E>) iterable : ListUtil.of(iterable.iterator());
 	}
 
 	/**
@@ -2082,7 +1787,7 @@ public class CollUtil {
 			iter = StrUtil.splitTrim(ArrayStr, CharUtil.COMMA).iterator();
 		} else {
 			// 其它类型按照单一元素处理
-			iter = CollUtil.newArrayList(value).iterator();
+			iter = ListUtil.of(value).iterator();
 		}
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
@@ -2522,14 +2227,14 @@ public class CollUtil {
 	// ------------------------------------------------------------------------------------------------- forEach
 
 	/**
-	 * 循环遍历 {@link Iterable}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Iterable}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>      集合元素类型
 	 * @param iterable {@link Iterable}
-	 * @param consumer {@link Consumer} 遍历的每条数据处理器
+	 * @param consumer {@link IndexedConsumer} 遍历的每条数据处理器
 	 * @since 5.4.7
 	 */
-	public static <T> void forEach(final Iterable<T> iterable, final Consumer<T> consumer) {
+	public static <T> void forEach(final Iterable<T> iterable, final IndexedConsumer<T> consumer) {
 		if (iterable == null) {
 			return;
 		}
@@ -2537,13 +2242,13 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历 {@link Iterator}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Iterator}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>      集合元素类型
 	 * @param iterator {@link Iterator}
-	 * @param consumer {@link Consumer} 遍历的每条数据处理器
+	 * @param consumer {@link IndexedConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Iterator<T> iterator, final Consumer<T> consumer) {
+	public static <T> void forEach(final Iterator<T> iterator, final IndexedConsumer<T> consumer) {
 		if (iterator == null) {
 			return;
 		}
@@ -2555,13 +2260,13 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历 {@link Enumeration}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Enumeration}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>         集合元素类型
 	 * @param enumeration {@link Enumeration}
-	 * @param consumer    {@link Consumer} 遍历的每条数据处理器
+	 * @param consumer    {@link IndexedConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Enumeration<T> enumeration, final Consumer<T> consumer) {
+	public static <T> void forEach(final Enumeration<T> enumeration, final IndexedConsumer<T> consumer) {
 		if (enumeration == null) {
 			return;
 		}
@@ -2573,15 +2278,15 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理<br>
+	 * 循环遍历Map，使用{@link IndexedKVConsumer} 接受遍历的每条数据，并针对每条数据做处理<br>
 	 * 和JDK8中的map.forEach不同的是，此方法支持index
 	 *
 	 * @param <K>        Key类型
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
-	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
+	 * @param kvConsumer {@link IndexedKVConsumer} 遍历的每条数据处理器
 	 */
-	public static <K, V> void forEach(final Map<K, V> map, final KVConsumer<K, V> kvConsumer) {
+	public static <K, V> void forEach(final Map<K, V> map, final IndexedKVConsumer<K, V> kvConsumer) {
 		if (map == null) {
 			return;
 		}
@@ -2618,11 +2323,11 @@ public class CollUtil {
 				while (result.size() - 1 < index) {
 					result.add(null);
 				}
-				result.set(index, newArrayList(t));
+				result.set(index, ListUtil.of(t));
 			} else {
 				subList = result.get(index);
 				if (null == subList) {
-					result.set(index, newArrayList(t));
+					result.set(index, ListUtil.of(t));
 				} else {
 					subList.add(t);
 				}
@@ -2659,30 +2364,6 @@ public class CollUtil {
 				}
 			}
 		});
-	}
-
-	/**
-	 * 反序给定List，会在原List基础上直接修改
-	 *
-	 * @param <T>  元素类型
-	 * @param list 被反转的List
-	 * @return 反转后的List
-	 * @since 4.0.6
-	 */
-	public static <T> List<T> reverse(final List<T> list) {
-		return ListUtil.reverse(list);
-	}
-
-	/**
-	 * 反序给定List，会创建一个新的List，原List数据不变
-	 *
-	 * @param <T>  元素类型
-	 * @param list 被反转的List
-	 * @return 反转后的List
-	 * @since 4.0.6
-	 */
-	public static <T> List<T> reverseNew(final List<T> list) {
-		return ListUtil.reverseNew(list);
 	}
 
 	/**
@@ -2903,7 +2584,7 @@ public class CollUtil {
 	 * @author Looly
 	 */
 	@FunctionalInterface
-	public interface Consumer<T> extends Serializable {
+	public interface IndexedConsumer<T> extends Serializable {
 		/**
 		 * 接受并处理一个参数
 		 *
@@ -2921,7 +2602,7 @@ public class CollUtil {
 	 * @author Looly
 	 */
 	@FunctionalInterface
-	public interface KVConsumer<K, V> extends Serializable {
+	public interface IndexedKVConsumer<K, V> extends Serializable {
 		/**
 		 * 接受并处理一对参数
 		 *

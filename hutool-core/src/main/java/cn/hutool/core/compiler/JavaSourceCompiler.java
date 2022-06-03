@@ -1,5 +1,6 @@
 package cn.hutool.core.compiler;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -7,11 +8,9 @@ import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -22,11 +21,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Java 源码编译器
@@ -230,40 +226,9 @@ public class JavaSourceCompiler {
 		final List<JavaFileObject> list = new ArrayList<>();
 
 		for (final Resource resource : this.sourceList) {
-			if (resource instanceof FileResource) {
-				final File file = ((FileResource) resource).getFile();
-				FileUtil.walkFiles(file, (subFile) -> list.addAll(JavaFileObjectUtil.getJavaFileObjects(file)));
-			} else {
-				list.add(new JavaSourceFileObject(resource.getName(), resource.getStream()));
-			}
+			list.addAll(JavaFileObjectUtil.getJavaFileObjects(resource));
 		}
 
 		return list;
 	}
-
-	/**
-	 * 通过源码Map获得Java文件对象
-	 *
-	 * @param sourceCodeMap 源码Map
-	 * @return Java文件对象集合
-	 */
-	private Collection<JavaFileObject> getJavaFileObjectByMap(final Map<String, String> sourceCodeMap) {
-		if (MapUtil.isNotEmpty(sourceCodeMap)) {
-			return sourceCodeMap.entrySet().stream()
-					.map(entry -> new JavaSourceFileObject(entry.getKey(), entry.getValue(), CharsetUtil.UTF_8))
-					.collect(Collectors.toList());
-		}
-		return Collections.emptySet();
-	}
-
-	/**
-	 * 通过.java文件创建Java文件对象
-	 *
-	 * @param file .java文件
-	 * @return Java文件对象
-	 */
-	private JavaFileObject getJavaFileObjectByJavaFile(final File file) {
-		return new JavaSourceFileObject(file.toURI());
-	}
-
 }

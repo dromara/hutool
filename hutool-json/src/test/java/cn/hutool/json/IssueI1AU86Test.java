@@ -1,6 +1,6 @@
 package cn.hutool.json;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class IssueI1AU86Test {
 
 	@Test
 	public void toListTest() {
-		final List<String> redisList = CollUtil.newArrayList(
+		final List<String> redisList = ListUtil.of(
 				"{\"updateDate\":1583376342000,\"code\":\"move\",\"id\":1,\"sort\":1,\"name\":\"电影大全\"}",
 				"{\"updateDate\":1583378882000,\"code\":\"zy\",\"id\":3,\"sort\":5,\"name\":\"综艺会\"}"
 		);

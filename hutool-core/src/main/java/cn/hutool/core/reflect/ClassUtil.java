@@ -16,7 +16,6 @@ import cn.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
@@ -462,16 +461,6 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 是否为抽象类
-	 *
-	 * @param clazz 类
-	 * @return 是否为抽象类
-	 */
-	public static boolean isAbstract(final Class<?> clazz) {
-		return Modifier.isAbstract(clazz.getModifiers());
-	}
-
-	/**
 	 * 是否为标准的类<br>
 	 * 这个类必须：
 	 *
@@ -490,7 +479,7 @@ public class ClassUtil {
 	public static boolean isNormalClass(final Class<?> clazz) {
 		return null != clazz //
 				&& false == clazz.isInterface() //
-				&& false == isAbstract(clazz) //
+				&& false == ModifierUtil.isAbstract(clazz) //
 				&& false == clazz.isEnum() //
 				&& false == clazz.isArray() //
 				&& false == clazz.isAnnotation() //

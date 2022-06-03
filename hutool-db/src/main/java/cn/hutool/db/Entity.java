@@ -1,6 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.MethodUtil;
@@ -38,7 +39,7 @@ public class Entity extends Dict {
 	 *
 	 * @return Entity
 	 */
-	public static Entity create() {
+	public static Entity of() {
 		return new Entity();
 	}
 
@@ -48,7 +49,7 @@ public class Entity extends Dict {
 	 * @param tableName 表名
 	 * @return Entity
 	 */
-	public static Entity create(final String tableName) {
+	public static Entity of(final String tableName) {
 		return new Entity(tableName);
 	}
 
@@ -60,7 +61,7 @@ public class Entity extends Dict {
 	 * @return Entity
 	 */
 	public static <T> Entity parse(final T bean) {
-		return create(null).parseBean(bean);
+		return of(null).parseBean(bean);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class Entity extends Dict {
 	 * @return Entity
 	 */
 	public static <T> Entity parse(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
-		return create(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
+		return of(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class Entity extends Dict {
 	 * @return Entity
 	 */
 	public static <T> Entity parseWithUnderlineCase(final T bean) {
-		return create(null).parseBean(bean, true, true);
+		return of(null).parseBean(bean, true, true);
 	}
 	// --------------------------------------------------------------- Static method end
 
@@ -155,7 +156,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final Collection<String> fieldNames) {
 		if (CollUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollUtil.newHashSet(true, fieldNames);
+			this.fieldNames = SetUtil.of(true, fieldNames);
 		}
 		return this;
 	}
@@ -168,7 +169,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(final String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollUtil.newLinkedHashSet(fieldNames);
+			this.fieldNames = SetUtil.ofLinked(fieldNames);
 		}
 		return this;
 	}

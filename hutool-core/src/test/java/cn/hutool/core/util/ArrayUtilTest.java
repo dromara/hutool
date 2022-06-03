@@ -1,6 +1,6 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -323,7 +323,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void toArrayTest() {
-		final ArrayList<String> list = CollUtil.newArrayList("A", "B", "C", "D");
+		final ArrayList<String> list = ListUtil.of("A", "B", "C", "D");
 		final String[] array = ArrayUtil.toArray(list, String.class);
 		Assert.assertEquals("A", array[0]);
 		Assert.assertEquals("B", array[1]);

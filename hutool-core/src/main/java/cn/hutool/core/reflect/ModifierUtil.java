@@ -192,6 +192,27 @@ public class ModifierUtil {
 	public static boolean isAbstract(final Member member) {
 		return hasModifier(member, ModifierType.ABSTRACT);
 	}
+
+	/**
+	 * 是否抽象类
+	 *
+	 * @param clazz 构造、字段或方法
+	 * @return 是否抽象类
+	 * @since 5.7.23
+	 */
+	public static boolean isAbstract(final Class<?> clazz) {
+		return hasModifier(clazz, ModifierType.ABSTRACT);
+	}
+
+	/**
+	 * 是否抽象类
+	 *
+	 * @param clazz 构造、字段或方法
+	 * @return 是否抽象类
+	 */
+	public static boolean isInterface(final Class<?> clazz) {
+		return null != clazz && clazz.isInterface();
+	}
 	//-------------------------------------------------------------------------------------------------------- Private method start
 
 	/**

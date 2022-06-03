@@ -219,7 +219,7 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	public ActiveEntity update(final String primaryKey) {
-		db.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
+		db.update(this, Entity.of().set(primaryKey, this.get(primaryKey)));
 		return this;
 	}
 	// -------------------------------------------------------------------------- CRUD end

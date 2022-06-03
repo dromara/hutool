@@ -1,6 +1,6 @@
 package cn.hutool.db.sql;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
@@ -113,7 +113,7 @@ public class Query implements Cloneable {
 	 * @return this
 	 */
 	public Query setFields(final String... fields) {
-		this.fields = CollUtil.newArrayList(fields);
+		this.fields = ListUtil.of(fields);
 		return this;
 	}
 

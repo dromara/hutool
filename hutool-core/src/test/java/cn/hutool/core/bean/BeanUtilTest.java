@@ -3,14 +3,14 @@ package cn.hutool.core.bean;
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -116,7 +116,7 @@ public class BeanUtilTest {
 		// 错误的类型，此处忽略
 		map.put("age", "aaaaaa");
 
-		final Person person = BeanUtil.toBeanIgnoreError(map, Person.class);
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreError(true));
 		Assert.assertEquals("Joe", person.getName());
 		// 错误的类型，不copy这个字段，使用对象创建的默认值
 		Assert.assertEquals(0, person.getAge());
@@ -128,7 +128,7 @@ public class BeanUtilTest {
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
-		final Person person = BeanUtil.toBeanIgnoreCase(map, Person.class, false);
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreCase(true));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -183,6 +183,23 @@ public class BeanUtilTest {
 		person.setSubName("sub名字");
 
 		final Map<String, Object> map = BeanUtil.beanToMap(person);
+
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals(14, map.get("age"));
+		Assert.assertEquals("11213232", map.get("openid"));
+		// static属性应被忽略
+		Assert.assertFalse(map.containsKey("SUBNAME"));
+	}
+
+	@Test
+	public void beanToMapNullPropertiesTest() {
+		final SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		final Map<String, Object> map = BeanUtil.beanToMap(person, (String[])null);
 
 		Assert.assertEquals("测试A11", map.get("name"));
 		Assert.assertEquals(14, map.get("age"));
@@ -285,7 +302,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void getPropertyDescriptorsTest() {
-		final HashSet<Object> set = CollUtil.newHashSet();
+		final HashSet<Object> set = SetUtil.of();
 		final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
 		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			set.add(propertyDescriptor.getName());
@@ -326,7 +343,7 @@ public class BeanUtilTest {
 		student.setAge(125);
 		student.setNo(8848L);
 
-		final List<Student> studentList = ListUtil.of(student, student2);
+		final List<Student> studentList = ListUtil.view(student, student2);
 
 		for (int i=0;i<5000;i++){
 			new Thread(()->{
@@ -551,6 +568,11 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyNullTest() {
+		Assert.assertNull(BeanUtil.copyProperties(null, Food.class));
+	}
+
+	@Test
 	public void copyBeanPropertiesFilterTest() {
 		final Food info = new Food();
 		info.setBookID("0");
@@ -633,7 +655,7 @@ public class BeanUtilTest {
 		student.setAge(125);
 		student.setNo(8848L);
 
-		final List<Student> studentList = ListUtil.of(student, student2);
+		final List<Student> studentList = ListUtil.view(student, student2);
 		final List<Person> people = BeanUtil.copyToList(studentList, Person.class);
 
 		Assert.assertEquals(studentList.size(), people.size());
@@ -687,7 +709,7 @@ public class BeanUtilTest {
 
 		testPojo.setTestPojo2List(new TestPojo2[]{testPojo2, testPojo3});
 
-		final BeanPath beanPath = BeanPath.create("testPojo2List.age");
+		final BeanPath beanPath = BeanPath.of("testPojo2List.age");
 		final Object o = beanPath.get(testPojo);
 
 		Assert.assertEquals(Integer.valueOf(2), ArrayUtil.get(o, 0));
@@ -759,7 +781,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void issueI41WKPTest(){
-		final Test1 t1 = new Test1().setStrList(ListUtil.toList("list"));
+		final Test1 t1 = new Test1().setStrList(ListUtil.of("list"));
 		final Test2 t2_hu = new Test2();
 		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
 		Assert.assertNull(t2_hu.getStrList());

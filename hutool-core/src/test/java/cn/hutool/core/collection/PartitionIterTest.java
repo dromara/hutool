@@ -22,7 +22,7 @@ public class PartitionIterTest {
 
 	@Test
 	public void iterMaxTest() {
-		final List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 0, 12, 45, 12);
+		final List<Integer> list = ListUtil.view(1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 0, 12, 45, 12);
 		final PartitionIter<Integer> iter = new PartitionIter<>(list.iterator(), 3);
 		int max = 0;
 		for (final List<Integer> lines : iter) {

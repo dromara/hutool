@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Console;
@@ -800,13 +800,13 @@ public class DateUtilTest {
 		Assert.assertEquals("20184", yearAndQuarter);
 
 		final LinkedHashSet<String> yearAndQuarters = DateUtil.yearAndQuarter(DateUtil.parse("2018-09-10"), DateUtil.parse("2018-12-20"));
-		final List<String> list = CollUtil.list(false, yearAndQuarters);
+		final List<String> list = ListUtil.of(false, yearAndQuarters);
 		Assert.assertEquals(2, list.size());
 		Assert.assertEquals("20183", list.get(0));
 		Assert.assertEquals("20184", list.get(1));
 
 		final LinkedHashSet<String> yearAndQuarters2 = DateUtil.yearAndQuarter(DateUtil.parse("2018-10-10"), DateUtil.parse("2018-12-10"));
-		final List<String> list2 = CollUtil.list(false, yearAndQuarters2);
+		final List<String> list2 = ListUtil.of(false, yearAndQuarters2);
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("20184", list2.get(0));
 	}

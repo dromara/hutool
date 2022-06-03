@@ -779,6 +779,28 @@ public class CharSequenceUtil {
 		return false;
 	}
 
+	/**
+	 * 给定字符串是否以任何一个字符串结尾（忽略大小写）<br>
+	 * 给定字符串和数组为空都返回false
+	 *
+	 * @param str      给定字符串
+	 * @param suffixes 需要检测的结尾字符串
+	 * @return 给定字符串是否以任何一个字符串结尾
+	 * @since 6.0.0
+	 */
+	public static boolean startWithAnyIgnoreCase(final CharSequence str, final CharSequence... suffixes) {
+		if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
+			return false;
+		}
+
+		for (final CharSequence suffix : suffixes) {
+			if (startWith(str, suffix, true)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// ------------------------------------------------------------------------ endWith
 
 	/**
@@ -2706,7 +2728,7 @@ public class CharSequenceUtil {
 	 * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
 	 * 例：<br>
 	 * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
-	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
+	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is {} for a<br>
 	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
 	 *
 	 * @param template 文本模板，被替换的部分用 {} 表示，如果模板为null，返回"null"

@@ -38,3 +38,5 @@ splitlongparameters = false
 timeout = 0
 # Socket连接超时值，单位毫秒，缺省值不超时
 connectionTimeout = 0
+# Socket写出超时值，单位毫秒，缺省值不超时
+writeTimeout = 0

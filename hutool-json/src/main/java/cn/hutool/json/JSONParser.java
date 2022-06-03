@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
-import cn.hutool.core.lang.mutable.MutablePair;
+import cn.hutool.core.lang.mutable.MutableEntry;
 
 /**
  * JSON字符串解析器
@@ -41,7 +41,7 @@ public class JSONParser {
 	 * @param jsonObject {@link JSONObject}
 	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 */
-	public void parseTo(final JSONObject jsonObject, final Filter<MutablePair<String, Object>> filter) {
+	public void parseTo(final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;

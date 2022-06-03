@@ -37,7 +37,7 @@ public class DictTest {
 
 	@Test
 	public void ofTest(){
-		final Dict dict = Dict.of(
+		final Dict dict = Dict.ofKvs(
 				"RED", "#FF0000",
 				"GREEN", "#00FF00",
 				"BLUE", "#0000FF"
@@ -50,11 +50,11 @@ public class DictTest {
 
 	@Test
 	public void removeEqualTest(){
-		final Dict dict = Dict.of(
+		final Dict dict = Dict.ofKvs(
 			"key1", null
 		);
 
-		final Dict dict2 = Dict.of(
+		final Dict dict2 = Dict.ofKvs(
 			"key1", null
 		);
 

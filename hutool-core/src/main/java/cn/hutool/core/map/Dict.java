@@ -2,10 +2,10 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.getter.BasicTypeGetter;
@@ -61,16 +61,15 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	}
 
 	/**
-	 * 根据给定的Pair数组创建Dict对象
+	 * 根据给定的Entry数组创建Dict对象
 	 *
 	 * @param pairs 键值对
 	 * @return Dict
-	 * @since 5.4.1
 	 */
 	@SafeVarargs
-	public static Dict of(final Pair<String, Object>... pairs) {
+	public static Dict ofEntries(final Map.Entry<String, Object>... pairs) {
 		final Dict dict = create();
-		for (final Pair<String, Object> pair : pairs) {
+		for (final Map.Entry<String, Object> pair : pairs) {
 			dict.put(pair.getKey(), pair.getValue());
 		}
 		return dict;
@@ -94,7 +93,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Dict
 	 * @since 5.4.1
 	 */
-	public static Dict of(final Object... keysAndValues) {
+	public static Dict ofKvs(final Object... keysAndValues) {
 		final Dict dict = create();
 
 		String key = null;
@@ -248,7 +247,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return vo
 	 */
 	public <T> T toBeanIgnoreCase(final Class<T> clazz) {
-		return BeanUtil.toBeanIgnoreCase(this, clazz, false);
+		return BeanUtil.toBean(this, clazz, CopyOptions.create().setIgnoreCase(true));
 	}
 
 	/**
@@ -290,7 +289,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param withoutNames 不需要去除的字段名
 	 */
 	public <T extends Dict> void removeEqual(final T dict, final String... withoutNames) {
-		final HashSet<String> withoutSet = CollUtil.newHashSet(withoutNames);
+		final HashSet<String> withoutSet = SetUtil.of(withoutNames);
 		for (final Map.Entry<String, Object> entry : dict.entrySet()) {
 			if (withoutSet.contains(entry.getKey())) {
 				continue;
@@ -536,7 +535,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(final String expression) {
-		return (T) BeanPath.create(expression).get(this);
+		return (T) BeanPath.of(expression).get(this);
 	}
 
 	/**

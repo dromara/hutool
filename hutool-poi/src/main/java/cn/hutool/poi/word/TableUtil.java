@@ -1,7 +1,7 @@
 package cn.hutool.poi.word;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
@@ -94,7 +94,7 @@ public class TableUtil {
 			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 		} else {
 			// 其它转为字符串默认输出
-			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
+			writeRow(row, ListUtil.of(rowBean), isWriteKeyAsHead);
 			return;
 		}
 

@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -1109,7 +1109,7 @@ public class XmlUtil {
 					if (value instanceof List) {
 						((List<Object>) value).add(newValue);
 					} else {
-						result.put(childEle.getNodeName(), CollUtil.newArrayList(value, newValue));
+						result.put(childEle.getNodeName(), ListUtil.of(value, newValue));
 					}
 				} else {
 					result.put(childEle.getNodeName(), newValue);

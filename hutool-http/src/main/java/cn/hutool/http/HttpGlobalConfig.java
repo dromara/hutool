@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * HTTP 全局参数配置
@@ -185,10 +187,22 @@ public class HttpGlobalConfig implements Serializable {
 	 * 增加支持的METHOD方法<br>
 	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
 	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
+	 */
+	public static void allowPatch(){
+		AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+			doAllowPatch();
+			return null;
+		});
+	}
+
+	/**
+	 * 增加支持的METHOD方法<br>
+	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
+	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
 	 *
 	 * @since 5.7.4
 	 */
-	synchronized public static void allowPatch() {
+	synchronized private static void doAllowPatch() {
 		if (isAllowPatch) {
 			return;
 		}

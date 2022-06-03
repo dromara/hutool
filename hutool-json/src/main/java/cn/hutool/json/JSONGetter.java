@@ -191,6 +191,16 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	}
 
 	/**
+	 * 获取byte[]数据
+	 *
+	 * @param key 键
+	 * @return 值
+	 */
+	default byte[] getBytes(final K key) {
+		return get(key, byte[].class);
+	}
+
+	/**
 	 * 获取指定类型的对象<br>
 	 * 转换失败或抛出异常
 	 *

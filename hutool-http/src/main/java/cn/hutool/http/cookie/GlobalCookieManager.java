@@ -1,6 +1,7 @@
 package cn.hutool.http.cookie;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.URLUtil;
 import cn.hutool.http.HttpConnection;
 
@@ -85,13 +86,24 @@ public class GlobalCookieManager {
 	 * @param conn {@link HttpConnection}
 	 */
 	public static void store(final HttpConnection conn) {
-		if(null == cookieManager) {
-			// 全局Cookie管理器关闭
+		store(conn, conn.headers());
+	}
+
+	/**
+	 * 存储响应的Cookie信息到本地<br>
+	 * 通过读取
+	 *
+	 * @param conn {@link HttpConnection}
+	 * @param responseHeaders 头信息Map
+	 */
+	public static void store(final HttpConnection conn, final Map<String, List<String>> responseHeaders) {
+		if(null == cookieManager || MapUtil.isEmpty(responseHeaders)) {
+			// 全局Cookie管理器关闭或头信息为空
 			return;
 		}
 
 		try {
-			cookieManager.put(getURI(conn), conn.headers());
+			cookieManager.put(getURI(conn), responseHeaders);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
