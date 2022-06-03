@@ -103,23 +103,10 @@ public class LambdaUtil {
 	/**
 	 * 获取lambda表达式函数（方法）名称
 	 *
-	 * @param <P>  Lambda参数类型
 	 * @param func 函数（无参方法）
 	 * @return 函数名称
 	 */
-	public static <P> String getMethodName(final Func1<P, ?> func) {
-		return resolve(func).getName();
-	}
-
-	/**
-	 * 获取lambda表达式函数（方法）名称
-	 *
-	 * @param <R>  Lambda返回类型
-	 * @param func 函数（无参方法）
-	 * @return 函数名称
-	 * @since 5.7.23
-	 */
-	public static <R> String getMethodName(final Func0<R> func) {
+	public static String getMethodName(final Serializable func) {
 		return resolve(func).getName();
 	}
 
@@ -132,32 +119,12 @@ public class LambdaUtil {
 	 *     <li>其它不满足规则的方法名抛出{@link IllegalArgumentException}</li>
 	 * </ul>
 	 *
-	 * @param <T>  Lambda类型
-	 * @param func 函数（无参方法）
-	 * @return 方法名称
-	 * @throws IllegalArgumentException 非Getter或Setter方法
-	 * @since 5.7.10
-	 */
-	public static <T> String getFieldName(final Func1<T, ?> func) throws IllegalArgumentException {
-		return BeanUtil.getFieldName(getMethodName(func));
-	}
-
-	/**
-	 * 获取lambda表达式Getter或Setter函数（方法）对应的字段名称，规则如下：
-	 * <ul>
-	 *     <li>getXxxx获取为xxxx，如getName得到name。</li>
-	 *     <li>setXxxx获取为xxxx，如setName得到name。</li>
-	 *     <li>isXxxx获取为xxxx，如isName得到name。</li>
-	 *     <li>其它不满足规则的方法名抛出{@link IllegalArgumentException}</li>
-	 * </ul>
-	 *
-	 * @param <T>  Lambda类型
-	 * @param func 函数（无参方法）
+	 * @param func 函数
 	 * @return 方法名称
 	 * @throws IllegalArgumentException 非Getter或Setter方法
 	 * @since 5.7.23
 	 */
-	public static <T> String getFieldName(final Func0<T> func) throws IllegalArgumentException {
+	public static String getFieldName(final Serializable func) throws IllegalArgumentException {
 		return BeanUtil.getFieldName(getMethodName(func));
 	}
 
