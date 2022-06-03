@@ -2,13 +2,18 @@ package cn.hutool.core.lang.func;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
-import java.lang.invoke.MethodHandleInfo;
 import java.lang.invoke.SerializedLambda;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Objects;
 
 /**
  * Lambda相关工具类
@@ -18,7 +23,7 @@ import java.lang.invoke.SerializedLambda;
  */
 public class LambdaUtil {
 
-	private static final WeakConcurrentMap<String, SerializedLambda> cache = new WeakConcurrentMap<>();
+	private static final WeakConcurrentMap<String, LambdaInfo> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
@@ -50,39 +55,49 @@ public class LambdaUtil {
 	 * @param func lambda
 	 * @param <R>  类型
 	 * @return lambda实现类
-	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
-	 * @since 5.8.0
 	 * @author VampireAchao
 	 */
-	public static <R> Class<R> getRealClass(final Func0<?> func) {
-		final SerializedLambda lambda = resolve(func);
-		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
-		return ClassLoaderUtil.loadClass(lambda.getImplClass());
+	@SuppressWarnings("unchecked")
+	public static <R> Class<R> getRealClass(final Serializable func) {
+		LambdaInfo lambdaInfo = resolve(func);
+		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedType).orElseGet(lambdaInfo::getClazz);
 	}
 
 	/**
 	 * 解析lambda表达式,加了缓存。
 	 * 该缓存可能会在任意不定的时间被清除
 	 *
-	 * @param <T>  Lambda类型
 	 * @param func 需要解析的 lambda 对象（无参方法）
 	 * @return 返回解析后的结果
 	 */
-	public static <T> SerializedLambda resolve(final Func1<T, ?> func) {
-		return _resolve(func);
-	}
-
-	/**
-	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除
-	 *
-	 * @param <R>  Lambda返回类型
-	 * @param func 需要解析的 lambda 对象（无参方法）
-	 * @return 返回解析后的结果
-	 * @since 5.7.23
-	 */
-	public static <R> SerializedLambda resolve(final Func0<R> func) {
-		return _resolve(func);
+	public static LambdaInfo resolve(final Serializable func) {
+		return CACHE.computeIfAbsent(func.getClass().getName(), (key) -> {
+			final SerializedLambda serializedLambda = _resolve(func);
+			final String methodName = serializedLambda.getImplMethodName();
+			final Class<?> implClass;
+			ClassLoaderUtil.loadClass(serializedLambda.getImplClass().replace("/", "."), true);
+			try {
+				implClass = Class.forName(serializedLambda.getImplClass().replace("/", "."), true, Thread.currentThread().getContextClassLoader());
+			} catch (ClassNotFoundException e) {
+				throw new UtilException(e);
+			}
+			if ("<init>".equals(methodName)) {
+				for (Constructor<?> constructor : implClass.getDeclaredConstructors()) {
+					if (ReflectUtil.getDescriptor(constructor).equals(serializedLambda.getImplMethodSignature())) {
+						return new LambdaInfo(constructor, serializedLambda);
+					}
+				}
+			} else {
+				Method[] methods = MethodUtil.getMethods(implClass);
+				for (Method method : methods) {
+					if (method.getName().equals(methodName)
+							&& ReflectUtil.getDescriptor(method).equals(serializedLambda.getImplMethodSignature())) {
+						return new LambdaInfo(method, serializedLambda);
+					}
+				}
+			}
+			throw new IllegalStateException("No lambda method found.");
+		});
 	}
 
 	/**
@@ -93,7 +108,7 @@ public class LambdaUtil {
 	 * @return 函数名称
 	 */
 	public static <P> String getMethodName(final Func1<P, ?> func) {
-		return resolve(func).getImplMethodName();
+		return resolve(func).getName();
 	}
 
 	/**
@@ -105,36 +120,7 @@ public class LambdaUtil {
 	 * @since 5.7.23
 	 */
 	public static <R> String getMethodName(final Func0<R> func) {
-		return resolve(func).getImplMethodName();
-	}
-
-	/**
-	 * 通过对象的方法或类的静态方法引用，然后根据{@link SerializedLambda#getInstantiatedMethodType()}获取lambda实现类<br>
-	 * 传入lambda有参数且含有返回值的情况能够匹配到此方法：
-	 * <ul>
-	 * <li>引用特定类型的任意对象的实例方法：<pre>{@code
-	 * Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
-	 * Assert.assertEquals(MyTeacher.class, functionClass);
-	 * }</pre></li>
-	 * <li>引用静态带参方法：<pre>{@code
-	 * Class<MyTeacher> staticFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeAgeBy);
-	 * Assert.assertEquals(MyTeacher.class, staticFunctionClass);
-	 * }</pre></li>
-	 * </ul>
-	 *
-	 * @param func lambda
-	 * @param <P>  方法调用方类型
-	 * @param <R>  返回值类型
-	 * @return lambda实现类
-	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常，见{@link LambdaUtil#checkLambdaTypeCanGetClass}
-	 * @since 5.8.0
-	 * @author VampireAchao
-	 */
-	public static <P, R> Class<P> getRealClass(final Func1<P, R> func) {
-		final SerializedLambda lambda = resolve(func);
-		checkLambdaTypeCanGetClass(lambda.getImplMethodKind());
-		final String instantiatedMethodType = lambda.getInstantiatedMethodType();
-		return ClassLoaderUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+		return resolve(func).getName();
 	}
 
 	/**
@@ -176,18 +162,6 @@ public class LambdaUtil {
 	}
 
 	//region Private methods
-	/**
-	 * 检查是否为支持的类型
-	 *
-	 * @param implMethodKind 支持的lambda类型
-	 * @throws IllegalArgumentException 如果是不支持的方法引用，抛出该异常
-	 */
-	private static void checkLambdaTypeCanGetClass(final int implMethodKind) {
-		if (implMethodKind != MethodHandleInfo.REF_invokeVirtual &&
-				implMethodKind != MethodHandleInfo.REF_invokeStatic) {
-			throw new IllegalArgumentException("该lambda不是合适的方法引用");
-		}
-	}
 
 	/**
 	 * 解析lambda表达式,加了缓存。
@@ -202,7 +176,21 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	private static SerializedLambda _resolve(final Serializable func) {
-		return cache.computeIfAbsent(func.getClass().getName(), (key) -> MethodUtil.invoke(func, "writeReplace"));
+		if (func instanceof SerializedLambda) {
+			return (SerializedLambda) func;
+		}
+		if (func instanceof Proxy) {
+			throw new UtilException("not support proxy, just for now");
+		}
+		final Class<? extends Serializable> clazz = func.getClass();
+		if (!clazz.isSynthetic()) {
+			throw new UtilException("Not a lambda expression: " + clazz.getName());
+		}
+		final Object serLambda = MethodUtil.invoke(func, "writeReplace");
+		if (Objects.nonNull(serLambda) && serLambda instanceof SerializedLambda) {
+			return (SerializedLambda) serLambda;
+		}
+		throw new UtilException("writeReplace result value is not java.lang.invoke.SerializedLambda");
 	}
 	//endregion
 }
