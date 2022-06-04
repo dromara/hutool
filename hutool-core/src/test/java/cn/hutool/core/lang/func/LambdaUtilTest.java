@@ -128,6 +128,10 @@ public class LambdaUtilTest {
 			// 引用父类静态无参方法，能够获取到正确的参数类型
 			Func1<MyTeacher, ?> lambda = MyTeacher::takeIdBy;
 			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 数组测试
+			VoidFunc1<String[]> lambda = (String[] stringList) -> {};
+			Assert.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
 		}).forEach(Runnable::run);
 	}
 

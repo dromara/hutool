@@ -2,7 +2,6 @@ package cn.hutool.core.lang.func;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.reflect.FieldUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
@@ -41,13 +40,22 @@ public class LambdaInfo {
 		}
 		int index = lambda.getInstantiatedMethodType().indexOf(";)");
 		if (index > -1) {
-			String[] instantiatedTypeNames = StrUtil.sub(lambda.getInstantiatedMethodType(), 2, index).split(";L");
-			this.instantiatedTypes = new Type[instantiatedTypeNames.length];
-			for (int i = 0; i < instantiatedTypeNames.length; i++) {
-				this.instantiatedTypes[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
+			boolean isArray = lambda.getInstantiatedMethodType().startsWith("([");
+			if (isArray) {
+				try {
+					this.instantiatedTypes = new Type[]{Class.forName(lambda.getInstantiatedMethodType().replace("/", ".").substring(0, index).substring(1) + ";")};
+				} catch (ClassNotFoundException e) {
+					throw new IllegalStateException(e);
+				}
+			} else {
+				String[] instantiatedTypeNames = lambda.getInstantiatedMethodType().substring(2, index).split(";L");
+				this.instantiatedTypes = new Type[instantiatedTypeNames.length];
+				for (int i = 0; i < instantiatedTypeNames.length; i++) {
+					this.instantiatedTypes[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
+				}
 			}
 		} else {
-			instantiatedTypes = new Type[0];
+			this.instantiatedTypes = new Type[0];
 		}
 		this.clazz = (Class<?>) FieldUtil.getFieldValue(executable, "clazz");
 		this.executable = executable;
