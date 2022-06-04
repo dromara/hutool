@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
@@ -2098,6 +2099,45 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static LocalDateTime toLocalDateTime(Date date) {
 		return LocalDateTimeUtil.of(date);
+	}
+
+	/**
+	 * {@link Date} 转换时区
+	 *
+	 * @param date         {@link Date}
+	 * @param zoneId{@link zoneId}
+	 * @return {@link DateTime}
+	 * @see DateTime(Date,ZoneId)
+	 * @since 5.0.5
+	 */
+	public static DateTime convertTimeZone(Date date, String zoneId) {
+		return new DateTime(date, ZoneUtil.toTimeZone(ZoneId.of(zoneId)));
+	}
+
+	/**
+	 * {@link Date} 转换时区
+	 *
+	 * @param date         {@link Date}
+	 * @param zoneId{@link zoneId}
+	 * @return {@link DateTime}
+	 * @see DateTime(Date, ZoneId )
+	 * @since 5.0.5
+	 */
+	public static DateTime convertTimeZone(Date date, ZoneId zoneId) {
+		return new DateTime(date, ZoneUtil.toTimeZone(zoneId));
+	}
+
+	/**
+	 * {@link Date} 转换时区
+	 *
+	 * @param date           {@link Date}
+	 * @param timeZone{@link timeZone}
+	 * @return {@link DateTime}
+	 * @see DateTime(Date,ZoneId)
+	 * @since 5.0.5
+	 */
+	public static DateTime convertTimeZone(Date date, TimeZone timeZone) {
+		return new DateTime(date, timeZone);
 	}
 
 	/**
