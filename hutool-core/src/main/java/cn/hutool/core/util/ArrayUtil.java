@@ -347,6 +347,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			Array.set(buffer, index, value);
 			return buffer;
 		} else {
+			if(ArrayUtil.isEmpty(buffer)){
+				// issue#I5APJE
+				// 可变长类型在buffer为空的情况下，类型会被擦除，导致报错，此处修正
+				final T[] values = newArray(value.getClass(), 1);
+				values[0] = value;
+				return append(buffer, values);
+			}
 			return append(buffer, value);
 		}
 	}
