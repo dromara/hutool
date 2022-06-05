@@ -1,84 +1,138 @@
 package cn.hutool.core.lang.func;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.lang.invoke.MethodHandleInfo;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.stream.Stream;
 
+@SuppressWarnings("unchecked")
 public class LambdaUtilTest {
 
 	@Test
 	public void getMethodNameTest() {
-		final String methodName = LambdaUtil.getMethodName(MyTeacher::getAge);
+		Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+		final String methodName = LambdaUtil.getMethodName(lambda);
 		Assert.assertEquals("getAge", methodName);
 	}
 
 	@Test
 	public void getFieldNameTest() {
-		final String fieldName = LambdaUtil.getFieldName(MyTeacher::getAge);
+		Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+		final String fieldName = LambdaUtil.getFieldName(lambda);
 		Assert.assertEquals("age", fieldName);
 	}
 
 	@Test
 	public void resolveTest() {
-		// 引用构造函数
-		Assert.assertEquals(MethodHandleInfo.REF_newInvokeSpecial,
-				LambdaUtil.resolve(MyTeacher::new).getImplMethodKind());
-		// 数组构造函数引用
-		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
-				LambdaUtil.resolve(MyTeacher[]::new).getImplMethodKind());
-		// 引用静态方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeStatic,
-				LambdaUtil.resolve(MyTeacher::takeAge).getImplMethodKind());
-		// 引用特定对象的实例方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
-				LambdaUtil.resolve(new MyTeacher()::getAge).getImplMethodKind());
-		// 引用特定类型的任意对象的实例方法
-		Assert.assertEquals(MethodHandleInfo.REF_invokeVirtual,
-				LambdaUtil.resolve(MyTeacher::getAge).getImplMethodKind());
+		Stream.<Runnable>of(() -> {
+			// 引用构造函数
+			Func0<MyTeacher> lambda = MyTeacher::new;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assert.assertEquals(MyTeacher.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 数组构造函数引用(此处数组构造参数)
+			Func1<Integer, MyTeacher[]> lambda = MyTeacher[]::new;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(int.class, lambdaInfo.getParameterTypes()[0]);
+			Assert.assertEquals(MyTeacher.class, ((Class<Array>) lambdaInfo.getReturnType()).getComponentType());
+		}, () -> {
+			// 引用静态方法
+			Func0<String> lambda = MyTeacher::takeAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 引用特定对象的实例方法
+			Func0<String> lambda = new MyTeacher()::getAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 引用特定类型的任意对象的实例方法
+			Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 最最重要的！！！
+			Character character = '0';
+			Integer integer = 0;
+			SerThiCons<Object, Boolean, String> lambda = (obj, bool, str) -> {
+				Objects.nonNull(character);
+				Objects.nonNull(integer);
+			};
+			LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
+			// 获取闭包使用的参数类型
+			Assert.assertEquals(Character.class, lambdaInfo.getParameterTypes()[0]);
+			Assert.assertEquals(Integer.class, lambdaInfo.getParameterTypes()[1]);
+			// 最后几个是原有lambda的参数类型
+			Assert.assertEquals(Object.class, lambdaInfo.getParameterTypes()[2]);
+			Assert.assertEquals(Boolean.class, lambdaInfo.getParameterTypes()[3]);
+			Assert.assertEquals(String.class, lambdaInfo.getParameterTypes()[4]);
+
+			Assert.assertEquals(void.class, lambdaInfo.getReturnType());
+		}).forEach(Runnable::run);
+
 	}
 
+	interface SerThiCons<P1, P2, P3> extends Consumer3<P1, P2, P3>, Serializable {
+	}
 
 	@Test
 	public void getRealClassTest() {
-		// 引用特定类型的任意对象的实例方法
-		final Class<MyTeacher> functionClass = LambdaUtil.getRealClass(MyTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, functionClass);
-		// 枚举测试，不会导致类型擦除
-		final Class<LambdaKindEnum> enumFunctionClass = LambdaUtil.getRealClass(LambdaKindEnum::ordinal);
-		Assert.assertEquals(LambdaKindEnum.class, enumFunctionClass);
-		// 调用父类方法，能获取到正确的子类类型
-		final Class<MyTeacher> superFunctionClass = LambdaUtil.getRealClass(MyTeacher::getId);
-		Assert.assertEquals(MyTeacher.class, superFunctionClass);
-
 		final MyTeacher myTeacher = new MyTeacher();
-		// 引用特定对象的实例方法
-		final Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
-		Assert.assertEquals(MyTeacher.class, supplierClass);
-		// 枚举测试，只能获取到枚举类型
-		final Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaKindEnum.REF_NONE::ordinal);
-		Assert.assertEquals(Enum.class, enumSupplierClass);
-		// 调用父类方法，只能获取到父类类型
-		final Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
-		Assert.assertEquals(Entity.class, superSupplierClass);
-
-		// 引用静态带参方法，能够获取到正确的参数类型
-		final Class<MyTeacher> staticFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeAgeBy);
-		Assert.assertEquals(MyTeacher.class, staticFunctionClass);
-		// 引用父类静态带参方法，只能获取到父类类型
-		final Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
-		Assert.assertEquals(Entity.class, staticSuperFunctionClass);
-
-		// 引用静态无参方法，能够获取到正确的类型
-		final Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
-		Assert.assertEquals(MyTeacher.class, staticSupplierClass);
-		// 引用父类静态无参方法，能够获取到正确的参数类型
-		final Class<MyTeacher> staticSuperSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeIdBy);
-		Assert.assertEquals(MyTeacher.class, staticSuperSupplierClass);
+		Stream.<Runnable>of(() -> {
+			// 引用特定类型的任意对象的实例方法
+			final Func1<MyTeacher, String> lambda = MyTeacher::getAge;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 枚举测试，不会导致类型擦除
+			final Func1<LambdaKindEnum, Integer> lambda = LambdaKindEnum::ordinal;
+			Assert.assertEquals(LambdaKindEnum.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 调用父类方法，能获取到正确的子类类型
+			final Func1<MyTeacher, ?> lambda = MyTeacher::getId;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 引用特定对象的实例方法
+			Func0<String> lambda = myTeacher::getAge;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 枚举测试，只能获取到枚举类型
+			Func0<Integer> lambda = LambdaKindEnum.REF_NONE::ordinal;
+			Assert.assertEquals(Enum.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 调用父类方法，只能获取到父类类型
+			VoidFunc0 lambda = myTeacher::getId;
+			Assert.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 引用静态带参方法，能够获取到正确的参数类型
+			Func1<MyTeacher, String> lambda = MyTeacher::takeAgeBy;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 引用父类静态带参方法，只能获取到父类类型
+			Func0<?> lambda = MyTeacher::takeId;
+			Assert.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 引用静态无参方法，能够获取到正确的类型
+			Func0<String> lambda = MyTeacher::takeAge;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 引用父类静态无参方法，能够获取到正确的参数类型
+			Func1<MyTeacher, ?> lambda = MyTeacher::takeIdBy;
+			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+		}, () -> {
+			// 数组测试
+			VoidFunc1<String[]> lambda = (String[] stringList) -> {};
+			Assert.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
+		}).forEach(Runnable::run);
 	}
 
 	@Data
