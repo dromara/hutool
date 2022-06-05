@@ -30,7 +30,7 @@ import java.util.TimeZone;
  * JDK8+中的{@link LocalDateTime} 工具类封装
  *
  * @author looly
- * @see DateUtil java7和一下版本，使用Date工具类
+ * @see DateUtil java7及其以下版本，使用Date工具类
  * @see DatePattern 常用格式工具类
  * @since 5.3.9
  */

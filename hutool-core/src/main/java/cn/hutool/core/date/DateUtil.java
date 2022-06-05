@@ -97,6 +97,16 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 根据已有{@link Date} 产生新的{@link DateTime}对象，并根据指定时区转换
+	 *
+	 * @param date Date对象
+	 * @return {@link DateTime}对象
+	 */
+	public static DateTime date(final Date date, final TimeZone timeZone) {
+		return new DateTime(date, timeZone);
+	}
+
+	/**
 	 * Long类型时间转为{@link DateTime}<br>
 	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
 	 *
