@@ -60,34 +60,7 @@ public class ReflectUtil {
 			stringBuilder.append('[');
 		}
 		if (currentClass.isPrimitive()) {
-			final char descriptor;
-			// see sun.invoke.util.Wrapper
-			// These must be in the order defined for widening primitive conversions in JLS 5.1.2
-			if (currentClass == boolean.class) {
-				descriptor = 'Z';
-			} else if (currentClass == byte.class) {
-				descriptor = 'B';
-			} else if (currentClass == short.class) {
-				descriptor = 'S';
-			} else if (currentClass == char.class) {
-				descriptor = 'C';
-			} else if (currentClass == int.class) {
-				descriptor = 'I';
-			} else if (currentClass == long.class) {
-				descriptor = 'J';
-			} else if (currentClass == float.class) {
-				descriptor = 'F';
-			} else if (currentClass == double.class) {
-				descriptor = 'D';
-			} else if (currentClass == Object.class) {
-				descriptor = 'L';
-			} else if (currentClass == void.class) {
-				// VOID must be the last type, since it is "assignable" from any other type:
-				descriptor = 'V';
-			} else {
-				throw new AssertionError();
-			}
-			stringBuilder.append(descriptor);
+			stringBuilder.append(getDescriptorChar(currentClass));
 		} else {
 			stringBuilder.append('L').append(currentClass.getName().replace('.', '/')).append(';');
 		}
@@ -95,6 +68,8 @@ public class ReflectUtil {
 	}
 
 	private static char getDescriptorChar(Class<?> currentClass) {
+		// see sun.invoke.util.Wrapper
+		// These must be in the order defined for widening primitive conversions in JLS 5.1.2
 		if (currentClass == Boolean.class || currentClass == boolean.class) {
 			return 'Z';
 		}
