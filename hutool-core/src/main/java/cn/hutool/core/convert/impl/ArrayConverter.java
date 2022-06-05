@@ -1,5 +1,6 @@
 package cn.hutool.core.convert.impl;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
@@ -122,6 +123,16 @@ public class ArrayConverter extends AbstractConverter<Object> {
 		if (value instanceof CharSequence) {
 			if (targetComponentType == char.class || targetComponentType == Character.class) {
 				return convertArrayToArray(value.toString().toCharArray());
+			}
+
+			//issue#2365
+			// 字符串转bytes，首先判断是否为Base64，是则转换，否则按照默认getBytes方法。
+			if(targetComponentType == byte.class){
+				final String str = value.toString();
+				if(Base64.isBase64(str)){
+					return Base64.decode(value.toString());
+				}
+				return str.getBytes();
 			}
 
 			// 单纯字符串情况下按照逗号分隔后劈开

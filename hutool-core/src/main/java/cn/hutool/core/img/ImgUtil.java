@@ -1046,7 +1046,7 @@ public class ImgUtil {
 
 	/**
 	 * 旋转图片为指定角度<br>
-	 * 来自：http://blog.51cto.com/cping1982/130066
+	 * 来自：<a href="http://blog.51cto.com/cping1982/130066">http://blog.51cto.com/cping1982/130066</a>
 	 *
 	 * @param image  目标图像
 	 * @param degree 旋转角度
