@@ -764,13 +764,16 @@ public class Convert {
 	}
 
 	/**
-	 * 半角转全角
+	 * 半角转全角，{@code null}返回{@code null}
 	 *
 	 * @param input String
 	 * @param notConvertSet 不替换的字符集合
-	 * @return 全角字符串.
+	 * @return 全角字符串，{@code null}返回{@code null}
 	 */
 	public static String toSBC(final String input, final Set<Character> notConvertSet) {
+		if(StrUtil.isEmpty(input)){
+			return input;
+		}
 		final char[] c = input.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {
@@ -1096,7 +1099,7 @@ public class Convert {
 	/**
 	 * long转byte数组<br>
 	 * 默认以小端序转换<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param longValue long值
 	 * @return byte数组
@@ -1109,7 +1112,7 @@ public class Convert {
 	/**
 	 * byte数组转long<br>
 	 * 默认以小端序转换<br>
-	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 * from: <a href="https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java">https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java</a>
 	 *
 	 * @param bytes byte数组
 	 * @return long值

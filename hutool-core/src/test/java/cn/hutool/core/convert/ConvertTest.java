@@ -392,4 +392,16 @@ public class ConvertTest {
 		final LocalDate convert = Convert.convert(LocalDate.class, localDateTime);
 		Assert.assertEquals(localDateTime.toLocalDate(), convert);
 	}
+
+	@Test
+	public void toSBCTest(){
+		final String s = Convert.toSBC(null);
+		Assert.assertNull(s);
+	}
+
+	@Test
+	public void toDBCTest(){
+		final String s = Convert.toDBC(null);
+		Assert.assertNull(s);
+	}
 }
