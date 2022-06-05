@@ -348,6 +348,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			Array.set(buffer, index, value);
 			return buffer;
 		} else {
+			if(ArrayUtil.isEmpty(buffer)){
+				final T[] values = newArray(value.getClass(), 1);
+				values[0] = value;
+				return append(buffer, values);
+			}
 			return append(buffer, value);
 		}
 	}
