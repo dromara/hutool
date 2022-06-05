@@ -14,6 +14,7 @@
 * 【db     】     增加DDL封装
 * 【json   】     删除JSONNull
 * 【json   】     实现自定义的类型转换，不影响全局的转换器
+* 【core   】     Converter设计缺陷，需要改造，使用TypeConverter可以更好的兼容细化类型的转换
 
 ### ❌不兼容特性
 
