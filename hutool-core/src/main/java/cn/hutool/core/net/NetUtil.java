@@ -124,7 +124,7 @@ public class NetUtil {
 	 * @return 是否可用
 	 */
 	public static boolean isUsableLocalPort(int port) {
-		if (false == isValidPort(port)) {
+		if (!isValidPort(port)) {
 			// 给定的IP未在指定端口范围中
 			return false;
 		}
@@ -492,7 +492,7 @@ public class NetUtil {
 	public static InetAddress getLocalhost() {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(address -> {
 			// 非loopback地址，指127.*.*.*的地址
-			return false == address.isLoopbackAddress()
+			return !address.isLoopbackAddress()
 					// 需为IPV4地址
 					&& address instanceof Inet4Address;
 		});
@@ -500,7 +500,7 @@ public class NetUtil {
 		if (CollUtil.isNotEmpty(localAddressList)) {
 			InetAddress address2 = null;
 			for (InetAddress inetAddress : localAddressList) {
-				if (false == inetAddress.isSiteLocalAddress()) {
+				if (!inetAddress.isSiteLocalAddress()) {
 					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
 					return inetAddress;
 				} else if (null == address2) {
@@ -727,7 +727,7 @@ public class NetUtil {
 		if (ip != null && ip.indexOf(",") > 0) {
 			final String[] ips = ip.trim().split(",");
 			for (String subIp : ips) {
-				if (false == isUnknown(subIp)) {
+				if (!isUnknown(subIp)) {
 					ip = subIp;
 					break;
 				}
