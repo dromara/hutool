@@ -29,10 +29,19 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获取描述符
+	 * 获取jvm定义的Field Descriptors（字段描述）
 	 *
 	 * @param executable 可执行的反射对象
 	 * @return 描述符
+	 * @apiNote 参考：<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("toString"))                                                                // "()Ljava/lang/String;"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class))                                                         // "(Ljava/lang/Object;)Z"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
+	 * </ul>Object.class.getMethod("hashCode")
 	 */
 	public static String getDescriptor(Executable executable) {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -52,6 +61,13 @@ public class ReflectUtil {
 		throw new IllegalArgumentException("Unknown Executable: " + executable);
 	}
 
+	/**
+	 * 拼接描述符
+	 *
+	 * @param clazz         类
+	 * @param stringBuilder 描述符
+	 * @link <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 */
 	private static void appendDescriptor(Class<?> clazz, StringBuilder stringBuilder) {
 		Class<?> currentClass;
 		for (currentClass = clazz;
@@ -59,7 +75,7 @@ public class ReflectUtil {
 			 currentClass = currentClass.getComponentType()) {
 			stringBuilder.append('[');
 		}
-		if (currentClass.isPrimitive()) {
+		if (ClassUtil.isBasicType(currentClass)) {
 			stringBuilder.append(getDescriptorChar(currentClass));
 		} else {
 			stringBuilder.append('L').append(currentClass.getName().replace('.', '/')).append(';');
@@ -67,9 +83,13 @@ public class ReflectUtil {
 
 	}
 
+	/**
+	 * 获取单个描述符
+	 *
+	 * @param currentClass 当前类
+	 * @return 描述符
+	 */
 	private static char getDescriptorChar(Class<?> currentClass) {
-		// see sun.invoke.util.Wrapper
-		// These must be in the order defined for widening primitive conversions in JLS 5.1.2
 		if (currentClass == Boolean.class || currentClass == boolean.class) {
 			return 'Z';
 		}

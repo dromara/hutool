@@ -1,6 +1,10 @@
 package cn.hutool.core.reflect;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
+import lombok.SneakyThrows;
+import org.junit.Test;
 
 /**
  * 反射工具类单元测试
@@ -104,5 +108,15 @@ public class ReflectUtilTest {
 		public void publicSubMethod() {
 		}
 
+	}
+
+	@Test
+	@SneakyThrows
+	public void testGetDescriptor() {
+		Assert.equals("()I", ReflectUtil.getDescriptor(Object.class.getMethod("hashCode")));
+		Assert.equals("()Ljava/lang/String;", ReflectUtil.getDescriptor(Object.class.getMethod("toString")));
+		Assert.equals("(Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class)));
+		Assert.equals("(Ljava/lang/Class;Ljava/lang/StringBuilder;)V", ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.class, StringBuilder.class)));
+		Assert.equals("([Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class)));
 	}
 }
