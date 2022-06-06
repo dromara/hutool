@@ -1,8 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Converter;
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.convert.TypeConverter;
 import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -14,7 +13,7 @@ import java.util.Collection;
  * @author Looly
  * @since 3.0.8
  */
-public class CollectionConverter implements Converter<Collection<?>> {
+public class CollectionConverter implements TypeConverter {
 
 	/** 集合类型 */
 	private final Type collectionType;
@@ -60,9 +59,8 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	// ---------------------------------------------------------------------------------------------- Constractor end
 
 	@Override
-	public Collection<?> convert(final Object value, final Collection<?> defaultValue) throws IllegalArgumentException {
-		final Collection<?> result = convertInternal(value);
-		return ObjUtil.defaultIfNull(result, defaultValue);
+	public Collection<?> convert(final Type targetType, final Object value) {
+		return convertInternal(value);
 	}
 
 	/**

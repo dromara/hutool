@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @since 4.0.2
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class EnumConverter extends AbstractConverter<Object> {
+public class EnumConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
@@ -39,7 +39,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 	}
 
 	@Override
-	protected Object convertInternal(final Object value) {
+	protected Object convertInternal(final Class<?> targetClass, final Object value) {
 		Enum enumValue = tryConvertEnum(value, this.enumClass);
 		if (null == enumValue && false == value instanceof String) {
 			// 最后尝试先将value转String，再valueOf转换
@@ -51,11 +51,6 @@ public class EnumConverter extends AbstractConverter<Object> {
 		}
 
 		throw new ConvertException("Can not convert {} to {}", value, this.enumClass);
-	}
-
-	@Override
-	public Class getTargetType() {
-		return this.enumClass;
 	}
 
 	/**

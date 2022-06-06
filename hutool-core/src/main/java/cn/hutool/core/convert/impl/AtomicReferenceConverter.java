@@ -1,11 +1,11 @@
 package cn.hutool.core.convert.impl;
 
-import java.lang.reflect.Type;
-import java.util.concurrent.atomic.AtomicReference;
-
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.reflect.TypeUtil;
+
+import java.lang.reflect.Type;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@link AtomicReference}转换器
@@ -13,12 +13,11 @@ import cn.hutool.core.reflect.TypeUtil;
  * @author Looly
  * @since 3.0.8
  */
-@SuppressWarnings("rawtypes")
-public class AtomicReferenceConverter extends AbstractConverter<AtomicReference> {
+public class AtomicReferenceConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected AtomicReference<?> convertInternal(final Object value) {
+	protected AtomicReference<?> convertInternal(final Class<?> targetClass, final Object value) {
 
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;

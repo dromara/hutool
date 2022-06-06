@@ -1,10 +1,10 @@
 package cn.hutool.core.convert.impl;
 
-import java.util.Map;
-
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
+
+import java.util.Map;
 
 /**
  * {@link StackTraceElement} 转换器<br>
@@ -13,11 +13,11 @@ import cn.hutool.core.util.ObjUtil;
  * @author Looly
  * @since 3.0.8
  */
-public class StackTraceElementConverter extends AbstractConverter<StackTraceElement> {
+public class StackTraceElementConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected StackTraceElement convertInternal(final Object value) {
+	protected StackTraceElement convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Map) {
 			final Map<?, ?> map = (Map<?, ?>) value;
 

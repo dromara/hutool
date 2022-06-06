@@ -41,7 +41,9 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class))                                                         // "(Ljava/lang/Object;)Z"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
-	 * </ul>Object.class.getMethod("hashCode")
+	 * </ul>
+	 *
+	 * Object.class.getMethod("hashCode")
 	 */
 	public static String getDescriptor(Executable executable) {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -75,7 +77,7 @@ public class ReflectUtil {
 			 currentClass = currentClass.getComponentType()) {
 			stringBuilder.append('[');
 		}
-		if (ClassUtil.isBasicType(currentClass)) {
+		if (currentClass.isPrimitive()) {
 			stringBuilder.append(getDescriptorChar(currentClass));
 		} else {
 			stringBuilder.append('L').append(currentClass.getName().replace('.', '/')).append(';');

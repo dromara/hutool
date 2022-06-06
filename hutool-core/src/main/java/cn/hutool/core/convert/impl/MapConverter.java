@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Looly
  * @since 3.0.8
  */
-public class MapConverter extends AbstractConverter<Map<?, ?>> {
+public class MapConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	/** Map类型 */
@@ -51,7 +51,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Map<?, ?> convertInternal(final Object value) {
+	protected Map<?, ?> convertInternal(final Class<?> targetClass, final Object value) {
 		Map map;
 		if (value instanceof Map) {
 			final Class<?> valueClass = value.getClass();
@@ -70,7 +70,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		} else if (BeanUtil.isBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 			// 二次转换，转换键值类型
-			map = convertInternal(map);
+			map = convertInternal(targetClass, map);
 		} else {
 			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", value.getClass().getName()));
 		}
@@ -90,11 +90,5 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 			value = TypeUtil.isUnknown(this.valueType) ? value : convert.convert(this.valueType, value);
 			targetMap.put(key, value);
 		});
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public Class<Map<?, ?>> getTargetType() {
-		return (Class<Map<?, ?>>) TypeUtil.getClass(this.mapType);
 	}
 }

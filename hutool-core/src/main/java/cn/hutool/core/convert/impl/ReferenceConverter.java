@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
  * @since 3.0.8
  */
 @SuppressWarnings("rawtypes")
-public class ReferenceConverter extends AbstractConverter<Reference> {
+public class ReferenceConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	private final Class<? extends Reference> targetType;
@@ -32,7 +32,7 @@ public class ReferenceConverter extends AbstractConverter<Reference> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Reference<?> convertInternal(final Object value) {
+	protected Reference<?> convertInternal(final Class<?> targetClass, final Object value) {
 
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;

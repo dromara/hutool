@@ -36,7 +36,7 @@ import java.util.function.Function;
  *
  * @author Looly
  */
-public class NumberConverter extends AbstractConverter<Number> {
+public class NumberConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	private final Class<? extends Number> targetType;
@@ -55,13 +55,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Class<Number> getTargetType() {
-		return (Class<Number>) this.targetType;
-	}
-
-	@Override
-	protected Number convertInternal(final Object value) {
+	protected Number convertInternal(final Class<?> targetClass, final Object value) {
 		return convert(value, this.targetType, this::convertToStr);
 	}
 

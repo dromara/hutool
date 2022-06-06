@@ -11,11 +11,11 @@ import java.util.Optional;
  * @author Looly
  * @since 5.0.0
  */
-public class OptionalConverter extends AbstractConverter<Optional<?>> {
+public class OptionalConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Optional<?> convertInternal(final Object value) {
+	protected Optional<?> convertInternal(final Class<?> targetClass, final Object value) {
 		return Optional.ofNullable(value);
 	}
 

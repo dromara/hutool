@@ -10,11 +10,11 @@ import cn.hutool.core.text.StrUtil;
  * @author Looly
  *
  */
-public class CharacterConverter extends AbstractConverter<Character> {
+public class CharacterConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Character convertInternal(final Object value) {
+	protected Character convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Boolean) {
 			return BooleanUtil.toCharacter((Boolean) value);
 		} else {

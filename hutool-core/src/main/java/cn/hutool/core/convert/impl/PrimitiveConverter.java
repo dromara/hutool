@@ -24,40 +24,25 @@ import java.util.function.Function;
  *
  * @author Looly
  */
-public class PrimitiveConverter extends AbstractConverter<Object> {
+public class PrimitiveConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
-
-	private final Class<?> targetType;
 
 	/**
 	 * 构造<br>
 	 *
-	 * @param clazz 需要转换的原始
 	 * @throws IllegalArgumentException 传入的转换类型非原始类型时抛出
 	 */
-	public PrimitiveConverter(final Class<?> clazz) {
-		if (null == clazz) {
-			throw new NullPointerException("PrimitiveConverter not allow null target type!");
-		} else if (false == clazz.isPrimitive()) {
-			throw new IllegalArgumentException("[" + clazz + "] is not a primitive class!");
-		}
-		this.targetType = clazz;
+	public PrimitiveConverter() {
 	}
 
 	@Override
-	protected Object convertInternal(final Object value) {
-		return PrimitiveConverter.convert(value, this.targetType, this::convertToStr);
+	protected Object convertInternal(final Class<?> targetClass, final Object value) {
+		return PrimitiveConverter.convert(value, targetClass, this::convertToStr);
 	}
 
 	@Override
 	protected String convertToStr(final Object value) {
 		return StrUtil.trim(super.convertToStr(value));
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public Class<Object> getTargetType() {
-		return (Class<Object>) this.targetType;
 	}
 
 	/**

@@ -14,10 +14,9 @@ import java.util.Calendar;
  *
  * @author Looly
  */
-public class DateConverter extends AbstractConverter<java.util.Date> {
+public class DateConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
-	private final Class<? extends java.util.Date> targetType;
 	/**
 	 * 日期格式化
 	 */
@@ -26,20 +25,9 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 	/**
 	 * 构造
 	 *
-	 * @param targetType 目标类型
-	 */
-	public DateConverter(final Class<? extends java.util.Date> targetType) {
-		this.targetType = targetType;
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param targetType 目标类型
 	 * @param format     日期格式
 	 */
-	public DateConverter(final Class<? extends java.util.Date> targetType, final String format) {
-		this.targetType = targetType;
+	public DateConverter(final String format) {
 		this.format = format;
 	}
 
@@ -62,16 +50,16 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 	}
 
 	@Override
-	protected java.util.Date convertInternal(final Object value) {
+	protected java.util.Date convertInternal(Class<?> targetClass, final Object value) {
 		if (value == null || (value instanceof CharSequence && StrUtil.isBlank(value.toString()))) {
 			return null;
 		}
 		if (value instanceof TemporalAccessor) {
-			return wrap(DateUtil.date((TemporalAccessor) value));
+			return wrap(targetClass, DateUtil.date((TemporalAccessor) value));
 		} else if (value instanceof Calendar) {
-			return wrap(DateUtil.date((Calendar) value));
+			return wrap(targetClass, DateUtil.date((Calendar) value));
 		} else if (value instanceof Number) {
-			return wrap(((Number) value).longValue());
+			return wrap(targetClass, ((Number) value).longValue());
 		} else {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);
@@ -79,11 +67,11 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 					? DateUtil.parse(valueStr) //
 					: DateUtil.parse(valueStr, this.format);
 			if (null != dateTime) {
-				return wrap(dateTime);
+				return wrap(targetClass, dateTime);
 			}
 		}
 
-		throw new ConvertException("Can not convert {}:[{}] to {}", value.getClass().getName(), value, this.targetType.getName());
+		throw new ConvertException("Can not convert {}:[{}] to {}", value.getClass().getName(), value, targetClass.getName());
 	}
 
 	/**
@@ -92,25 +80,25 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 	 * @param date Date
 	 * @return 目标类型对象
 	 */
-	private java.util.Date wrap(final DateTime date) {
+	private java.util.Date wrap(Class<?> targetClass, final DateTime date) {
 		// 返回指定类型
-		if (java.util.Date.class == targetType) {
+		if (java.util.Date.class == targetClass) {
 			return date.toJdkDate();
 		}
-		if (DateTime.class == targetType) {
+		if (DateTime.class == targetClass) {
 			return date;
 		}
-		if (java.sql.Date.class == targetType) {
+		if (java.sql.Date.class == targetClass) {
 			return date.toSqlDate();
 		}
-		if (java.sql.Time.class == targetType) {
+		if (java.sql.Time.class == targetClass) {
 			return new java.sql.Time(date.getTime());
 		}
-		if (java.sql.Timestamp.class == targetType) {
+		if (java.sql.Timestamp.class == targetClass) {
 			return date.toTimestamp();
 		}
 
-		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", this.targetType.getName()));
+		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", targetClass.getName()));
 	}
 
 	/**
@@ -119,30 +107,24 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 	 * @param mills Date
 	 * @return 目标类型对象
 	 */
-	private java.util.Date wrap(final long mills) {
+	private java.util.Date wrap(Class<?> targetClass, final long mills) {
 		// 返回指定类型
-		if (java.util.Date.class == targetType) {
+		if (java.util.Date.class == targetClass) {
 			return new java.util.Date(mills);
 		}
-		if (DateTime.class == targetType) {
+		if (DateTime.class == targetClass) {
 			return DateUtil.date(mills);
 		}
-		if (java.sql.Date.class == targetType) {
+		if (java.sql.Date.class == targetClass) {
 			return new java.sql.Date(mills);
 		}
-		if (java.sql.Time.class == targetType) {
+		if (java.sql.Time.class == targetClass) {
 			return new java.sql.Time(mills);
 		}
-		if (java.sql.Timestamp.class == targetType) {
+		if (java.sql.Timestamp.class == targetClass) {
 			return new java.sql.Timestamp(mills);
 		}
 
-		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", this.targetType.getName()));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<java.util.Date> getTargetType() {
-		return (Class<java.util.Date>) this.targetType;
+		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", targetClass.getName()));
 	}
 }

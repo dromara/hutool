@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Looly
  * @since 4.0.2
  */
-public class BeanConverter<T> extends AbstractConverter<T> {
+public class BeanConverter<T> extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	private final Type beanType;
@@ -65,7 +65,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	}
 
 	@Override
-	protected T convertInternal(final Object value) {
+	protected T convertInternal(final Class<?> targetClass, final Object value) {
 		if(value instanceof Map ||
 				value instanceof ValueProvider ||
 				BeanUtil.isBean(value.getClass())) {
@@ -82,10 +82,5 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 		}
 
 		throw new ConvertException("Unsupported source type: {}", value.getClass());
-	}
-
-	@Override
-	public Class<T> getTargetType() {
-		return this.beanClass;
 	}
 }

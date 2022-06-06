@@ -9,7 +9,7 @@ import cn.hutool.core.classloader.ClassLoaderUtil;
  *
  * @author Looly
  */
-public class ClassConverter extends AbstractConverter<Class<?>> {
+public class ClassConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	private final boolean isInitialized;
@@ -32,7 +32,7 @@ public class ClassConverter extends AbstractConverter<Class<?>> {
 	}
 
 	@Override
-	protected Class<?> convertInternal(final Object value) {
+	protected Class<?> convertInternal(final Class<?> targetClass, final Object value) {
 		return ClassLoaderUtil.loadClass(convertToStr(value), isInitialized);
 	}
 
