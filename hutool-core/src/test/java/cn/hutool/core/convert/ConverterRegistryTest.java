@@ -3,6 +3,8 @@ package cn.hutool.core.convert;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
+
 /**
  * ConverterRegistry 单元测试
  * @author Looly
@@ -12,7 +14,7 @@ public class ConverterRegistryTest {
 
 	@Test
 	public void getConverterTest() {
-		final Converter<Object> converter = ConverterRegistry.getInstance().getConverter(CharSequence.class, false);
+		final Converter converter = ConverterRegistry.getInstance().getConverter(CharSequence.class, false);
 		Assert.assertNotNull(converter);
 	}
 
@@ -26,14 +28,14 @@ public class ConverterRegistryTest {
 
 		//此处做为示例自定义CharSequence转换，因为Hutool中已经提供CharSequence转换，请尽量不要替换
 		//替换可能引发关联转换异常（例如覆盖CharSequence转换会影响全局）
-		converterRegistry.putCustom(CharSequence.class, CustomConverter.class);
+		converterRegistry.putCustom(CharSequence.class, new CustomConverter());
 		result = converterRegistry.convert(CharSequence.class, a);
 		Assert.assertEquals("Custom: 454553", result);
 	}
 
-	public static class CustomConverter implements Converter<CharSequence>{
+	public static class CustomConverter implements Converter{
 		@Override
-		public CharSequence convert(final Object value, final CharSequence defaultValue) throws IllegalArgumentException {
+		public Object convert(Type targetType, Object value) throws ConvertException {
 			return "Custom: " + value.toString();
 		}
 	}

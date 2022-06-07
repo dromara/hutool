@@ -17,6 +17,8 @@ import java.util.Calendar;
 public class DateConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	public static final DateConverter INSTANCE = new DateConverter();
+
 	/**
 	 * 日期格式化
 	 */
@@ -24,8 +26,15 @@ public class DateConverter extends AbstractConverter {
 
 	/**
 	 * 构造
+	 */
+	public DateConverter() {
+		this(null);
+	}
+
+	/**
+	 * 构造
 	 *
-	 * @param format     日期格式
+	 * @param format 日期格式
 	 */
 	public DateConverter(final String format) {
 		this.format = format;

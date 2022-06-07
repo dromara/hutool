@@ -8,15 +8,15 @@ public class NumberConverterTest {
 
 	@Test
 	public void toDoubleTest(){
-		final NumberConverter numberConverter = new NumberConverter(Double.class);
-		final Number convert = numberConverter.convert("1,234.55", null);
+		final NumberConverter numberConverter = new NumberConverter();
+		final Number convert = numberConverter.convert(Double.class, "1,234.55", null);
 		Assert.assertEquals(1234.55D, convert);
 	}
 
 	@Test
 	public void toIntegerTest(){
-		final NumberConverter numberConverter = new NumberConverter(Integer.class);
-		final Number convert = numberConverter.convert("1,234.55", null);
+		final NumberConverter numberConverter = new NumberConverter();
+		final Number convert = numberConverter.convert(Integer.class, "1,234.55", null);
 		Assert.assertEquals(1234, convert);
 	}
 }

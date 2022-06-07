@@ -1,7 +1,7 @@
 package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.TypeConverter;
+import cn.hutool.core.convert.Converter;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
@@ -70,7 +70,7 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换
 	 */
-	protected TypeConverter converter = (type, value) ->
+	protected Converter converter = (type, value) ->
 			Convert.convertWithCheck(type, value, null, ignoreError);
 
 	//region create
@@ -308,7 +308,7 @@ public class CopyOptions implements Serializable {
 	 * @return this
 	 * @since 5.8.0
 	 */
-	public CopyOptions setConverter(final TypeConverter converter) {
+	public CopyOptions setConverter(final Converter converter) {
 		this.converter = converter;
 		return this;
 	}

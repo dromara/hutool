@@ -39,24 +39,12 @@ import java.util.function.Function;
 public class NumberConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
-	private final Class<? extends Number> targetType;
+	public static final NumberConverter INSTANCE = new NumberConverter();
 
-	public NumberConverter() {
-		this.targetType = Number.class;
-	}
-
-	/**
-	 * 构造<br>
-	 *
-	 * @param clazz 需要转换的数字类型，默认 {@link Number}
-	 */
-	public NumberConverter(final Class<? extends Number> clazz) {
-		this.targetType = (null == clazz) ? Number.class : clazz;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Number convertInternal(final Class<?> targetClass, final Object value) {
-		return convert(value, this.targetType, this::convertToStr);
+		return convert(value, (Class<? extends Number>) targetClass, this::convertToStr);
 	}
 
 	@Override

@@ -20,15 +20,7 @@ import java.lang.reflect.Type;
 public class ReferenceConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
-	private final Class<? extends Reference> targetType;
-
-	/**
-	 * 构造
-	 * @param targetType {@link Reference}实现类型
-	 */
-	public ReferenceConverter(final Class<? extends Reference> targetType) {
-		this.targetType = targetType;
-	}
+	public static ReferenceConverter INSTANCE = new ReferenceConverter();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -36,7 +28,7 @@ public class ReferenceConverter extends AbstractConverter {
 
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;
-		final Type paramType = TypeUtil.getTypeArgument(targetType);
+		final Type paramType = TypeUtil.getTypeArgument(targetClass);
 		if(false == TypeUtil.isUnknown(paramType)){
 			targetValue = ConverterRegistry.getInstance().convert(paramType, value);
 		}
@@ -44,13 +36,13 @@ public class ReferenceConverter extends AbstractConverter {
 			targetValue = value;
 		}
 
-		if(this.targetType == WeakReference.class){
+		if(targetClass == WeakReference.class){
 			return new WeakReference(targetValue);
-		}else if(this.targetType == SoftReference.class){
+		}else if(targetClass == SoftReference.class){
 			return new SoftReference(targetValue);
 		}
 
-		throw new UnsupportedOperationException(StrUtil.format("Unsupport Reference type: {}", this.targetType.getName()));
+		throw new UnsupportedOperationException(StrUtil.format("Unsupport Reference type: {}", targetClass.getName()));
 	}
 
 }

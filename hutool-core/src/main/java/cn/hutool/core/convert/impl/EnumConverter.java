@@ -25,32 +25,23 @@ import java.util.stream.Collectors;
 public class EnumConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	public static final EnumConverter INSTANCE = new EnumConverter();
+
 	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
-
-	private final Class enumClass;
-
-	/**
-	 * 构造
-	 *
-	 * @param enumClass 转换成的目标Enum类
-	 */
-	public EnumConverter(final Class enumClass) {
-		this.enumClass = enumClass;
-	}
 
 	@Override
 	protected Object convertInternal(final Class<?> targetClass, final Object value) {
-		Enum enumValue = tryConvertEnum(value, this.enumClass);
+		Enum enumValue = tryConvertEnum(value, targetClass);
 		if (null == enumValue && false == value instanceof String) {
 			// 最后尝试先将value转String，再valueOf转换
-			enumValue = Enum.valueOf(this.enumClass, convertToStr(value));
+			enumValue = Enum.valueOf((Class) targetClass, convertToStr(value));
 		}
 
 		if (null != enumValue) {
 			return enumValue;
 		}
 
-		throw new ConvertException("Can not convert {} to {}", value, this.enumClass);
+		throw new ConvertException("Can not convert {} to {}", value, targetClass);
 	}
 
 	/**

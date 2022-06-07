@@ -3,8 +3,8 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.function.Function;
 
@@ -26,6 +26,8 @@ import java.util.function.Function;
  */
 public class PrimitiveConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
+
+	public static final PrimitiveConverter INSTANCE = new PrimitiveConverter();
 
 	/**
 	 * 构造<br>

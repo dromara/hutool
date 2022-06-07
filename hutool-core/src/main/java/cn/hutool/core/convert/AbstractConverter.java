@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Looly
  */
-public abstract class AbstractConverter implements TypeConverter, Serializable {
+public abstract class AbstractConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Override

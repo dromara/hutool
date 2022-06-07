@@ -1,12 +1,15 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.convert.Converter;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Objects;
@@ -17,60 +20,56 @@ import java.util.Objects;
  * @author Looly
  * @since 3.0.8
  */
-public class MapConverter extends AbstractConverter {
+public class MapConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
-
-	/** Map类型 */
-	private final Type mapType;
-	/** 键类型 */
-	private final Type keyType;
-	/** 值类型 */
-	private final Type valueType;
-
-	/**
-	 * 构造，Map的key和value泛型类型自动获取
-	 *
-	 * @param mapType Map类型
-	 */
-	public MapConverter(final Type mapType) {
-		this(mapType, TypeUtil.getTypeArgument(mapType, 0), TypeUtil.getTypeArgument(mapType, 1));
-	}
 
 	/**
 	 * 构造
-	 *
-	 * @param mapType Map类型
-	 * @param keyType 键类型
-	 * @param valueType 值类型
 	 */
-	public MapConverter(final Type mapType, final Type keyType, final Type valueType) {
-		this.mapType = mapType;
-		this.keyType = keyType;
-		this.valueType = valueType;
+	public MapConverter() {
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Map<?, ?> convertInternal(final Class<?> targetClass, final Object value) {
+	public Object convert(Type targetType, Object value) throws ConvertException {
+		if (targetType instanceof TypeReference) {
+			targetType = ((TypeReference<?>) targetType).getType();
+		}
+		final Type keyType = TypeUtil.getTypeArgument(targetType, 0);
+		final Type valueType = TypeUtil.getTypeArgument(targetType, 1);
+
+		return convert(targetType, keyType, valueType, value);
+	}
+
+	/**
+	 * 转换对象为指定键值类型的指定类型Map
+	 *
+	 * @param targetType 目标的Map类型
+	 * @param keyType    键类型
+	 * @param valueType  值类型
+	 * @param value      被转换的值
+	 * @return 转换后的Map
+	 */
+	@SuppressWarnings("rawtypes")
+	public Map<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value) {
 		Map map;
 		if (value instanceof Map) {
 			final Class<?> valueClass = value.getClass();
-			if(valueClass.equals(this.mapType)){
+			if (valueClass.equals(targetType)) {
 				final Type[] typeArguments = TypeUtil.getTypeArguments(valueClass);
 				if (null != typeArguments //
 						&& 2 == typeArguments.length//
-						&& Objects.equals(this.keyType, typeArguments[0]) //
-						&& Objects.equals(this.valueType, typeArguments[1])) {
+						&& Objects.equals(keyType, typeArguments[0]) //
+						&& Objects.equals(valueType, typeArguments[1])) {
 					//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
 					return (Map) value;
 				}
 			}
-			map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
-			convertMapToMap((Map) value, map);
+			map = MapUtil.createMap(TypeUtil.getClass(targetType));
+			convertMapToMap(keyType, valueType, (Map) value, map);
 		} else if (BeanUtil.isBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 			// 二次转换，转换键值类型
-			map = convertInternal(targetClass, map);
+			map = convert(targetType, keyType, valueType, map);
 		} else {
 			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", value.getClass().getName()));
 		}
@@ -80,14 +79,15 @@ public class MapConverter extends AbstractConverter {
 	/**
 	 * Map转Map
 	 *
-	 * @param srcMap 源Map
+	 * @param srcMap    源Map
 	 * @param targetMap 目标Map
 	 */
-	private void convertMapToMap(final Map<?, ?> srcMap, final Map<Object, Object> targetMap) {
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private void convertMapToMap(Type keyType, Type valueType, final Map<?, ?> srcMap, final Map targetMap) {
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
-		srcMap.forEach((key, value)->{
-			key = TypeUtil.isUnknown(this.keyType) ? key : convert.convert(this.keyType, key);
-			value = TypeUtil.isUnknown(this.valueType) ? value : convert.convert(this.valueType, value);
+		srcMap.forEach((key, value) -> {
+			key = TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key);
+			value = TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value);
 			targetMap.put(key, value);
 		});
 	}

@@ -24,14 +24,21 @@ import java.util.List;
  * @author looly
  * @since 4.2.2
  */
-public class JSONConverter implements Converter<JSON> {
+public class JSONConverter implements Converter {
+
+	public static JSONConverter INSTANCE = new JSONConverter();
 
 	static {
 		// 注册到转换中心
 		final ConverterRegistry registry = ConverterRegistry.getInstance();
-		registry.putCustom(JSON.class, JSONConverter.class);
-		registry.putCustom(JSONObject.class, JSONConverter.class);
-		registry.putCustom(JSONArray.class, JSONConverter.class);
+		registry.putCustom(JSON.class, INSTANCE);
+		registry.putCustom(JSONObject.class, INSTANCE);
+		registry.putCustom(JSONArray.class, INSTANCE);
+	}
+
+	@Override
+	public Object convert(Type targetType, Object value) throws ConvertException {
+		return JSONUtil.parse(value);
 	}
 
 	/**
@@ -42,7 +49,7 @@ public class JSONConverter implements Converter<JSON> {
 	 * @return 数组对象
 	 */
 	protected static Object toArray(final JSONArray jsonArray, final Class<?> arrayClass) {
-		return new ArrayConverter(arrayClass).convert(jsonArray, null);
+		return ArrayConverter.INSTANCE.convert(arrayClass, jsonArray, null);
 	}
 
 	/**
@@ -124,9 +131,9 @@ public class JSONConverter implements Converter<JSON> {
 			if(value instanceof JSONGetter
 					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
 				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
-				final Converter<T> converter = new BeanConverter<>(targetType,
-						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
-				return converter.convertWithCheck(value, null, ignoreError);
+				final Converter converter = new BeanConverter(InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
+				return ignoreError ? converter.convert(targetType, value, null)
+						: (T) converter.convert(targetType, value);
 			}
 		}
 
@@ -143,10 +150,5 @@ public class JSONConverter implements Converter<JSON> {
 		}
 
 		return targetValue;
-	}
-
-	@Override
-	public JSON convert(final Object value, final JSON defaultValue) throws IllegalArgumentException {
-		return JSONUtil.parse(value);
 	}
 }

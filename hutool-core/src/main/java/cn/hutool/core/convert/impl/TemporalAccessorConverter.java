@@ -40,10 +40,19 @@ import java.util.Objects;
 public class TemporalAccessorConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	public static final TemporalAccessorConverter INSTANCE = new TemporalAccessorConverter();
+
 	/**
 	 * 日期格式化
 	 */
 	private String format;
+
+	/**
+	 * 构造
+	 */
+	public TemporalAccessorConverter() {
+		this(null);
+	}
 
 	/**
 	 * 构造
