@@ -250,7 +250,9 @@ public class ObjectMapper {
 	 */
 	private static void mapFromBean(final Object bean, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.getConfig());
-		copyOptions.setFieldEditor((entry -> filter.accept(entry) ? entry : null));
+		if(null != filter){
+			copyOptions.setFieldEditor((entry -> filter.accept(entry) ? entry : null));
+		}
 		BeanUtil.beanToMap(bean, jsonObject, copyOptions);
 	}
 }
