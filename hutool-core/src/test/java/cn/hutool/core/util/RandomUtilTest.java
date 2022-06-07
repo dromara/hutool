@@ -1,7 +1,9 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.math.NumberUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -71,5 +73,13 @@ public class RandomUtilTest {
 				Assert.assertFalse(s.contains((String.valueOf(c).toLowerCase(Locale.ROOT))));
 			}
 		}
+	}
+
+	@Test
+	public void generateRandomNumberTest(){
+		final int[] ints = RandomUtil.randomPickInts(5, NumberUtil.range(5, 20));
+		Assert.assertEquals(5, ints.length);
+		final Set<?> set = Convert.convert(Set.class, ints);
+		Assert.assertEquals(5, set.size());
 	}
 }

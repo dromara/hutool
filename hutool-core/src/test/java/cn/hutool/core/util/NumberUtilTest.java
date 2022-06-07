@@ -1,6 +1,5 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.math.NumberUtil;
 import org.junit.Assert;
@@ -9,7 +8,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Set;
 
 /**
  * {@link NumberUtil} 单元测试类
@@ -31,7 +29,7 @@ public class NumberUtilTest {
 	public void addTest2() {
 		final double a = 3.15f;
 		final double b = 4.22;
-		final double result = NumberUtil.add(a, b);
+		final double result = NumberUtil.add(a, b).doubleValue();
 		Assert.assertEquals(7.37, result, 2);
 	}
 
@@ -45,7 +43,10 @@ public class NumberUtilTest {
 
 	@Test
 	public void addTest4() {
-		final BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
+		BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
+		Assert.assertEquals(new BigDecimal("464"), result);
+
+		result = NumberUtil.add(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
 		Assert.assertEquals(new BigDecimal("464"), result);
 	}
 
@@ -53,6 +54,30 @@ public class NumberUtilTest {
 	public void addBlankTest(){
 		final BigDecimal result = NumberUtil.add("123", " ");
 		Assert.assertEquals(new BigDecimal("123"), result);
+	}
+
+	@Test
+	public void subTest() {
+		BigDecimal result = NumberUtil.sub(new BigDecimal("133"), new BigDecimal("331"));
+		Assert.assertEquals(new BigDecimal("-198"), result);
+
+		result = NumberUtil.sub(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
+		Assert.assertEquals(new BigDecimal("-198"), result);
+	}
+
+	@Test
+	public void mulTest() {
+		BigDecimal result = NumberUtil.mul(new BigDecimal("133"), new BigDecimal("331"));
+		Assert.assertEquals(new BigDecimal("44023"), result);
+
+		result = NumberUtil.mul(new BigDecimal[]{new BigDecimal("133"), new BigDecimal("331")});
+		Assert.assertEquals(new BigDecimal("44023"), result);
+	}
+
+	@Test
+	public void mulNullTest(){
+		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
+		Assert.assertEquals(BigDecimal.ZERO, mul);
 	}
 
 	@Test
@@ -90,7 +115,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void divTest() {
-		final double result = NumberUtil.div(0, 1);
+		final double result = NumberUtil.div(0, 1).doubleValue();
 		Assert.assertEquals(0.0, result, 0);
 	}
 
@@ -177,7 +202,7 @@ public class NumberUtilTest {
 	public void decimalFormatTest() {
 		final long c = 299792458;// 光速
 
-		final String format = NumberUtil.decimalFormat(",###", c);
+		final String format = NumberUtil.format(",###", c);
 		Assert.assertEquals("299,792,458", format);
 	}
 
@@ -187,7 +212,7 @@ public class NumberUtilTest {
 		final Double b = 0D;
 
 		final Double c = a / b;
-		Console.log(NumberUtil.decimalFormat("#%", c));
+		Console.log(NumberUtil.format("#%", c));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -195,14 +220,14 @@ public class NumberUtilTest {
 		final Double a = 0D;
 		final Double b = 0D;
 
-		Console.log(NumberUtil.decimalFormat("#%", a / b));
+		Console.log(NumberUtil.format("#%", a / b));
 	}
 
 	@Test
 	public void decimalFormatDoubleTest() {
 		final Double c = 467.8101;
 
-		final String format = NumberUtil.decimalFormat("0.00", c);
+		final String format = NumberUtil.format("0.00", c);
 		Assert.assertEquals("467.81", format);
 	}
 
@@ -210,11 +235,11 @@ public class NumberUtilTest {
 	public void decimalFormatMoneyTest() {
 		final double c = 299792400.543534534;
 
-		final String format = NumberUtil.decimalFormatMoney(c);
+		final String format = NumberUtil.formatMoney(c);
 		Assert.assertEquals("299,792,400.54", format);
 
 		final double value = 0.5;
-		final String money = NumberUtil.decimalFormatMoney(value);
+		final String money = NumberUtil.formatMoney(value);
 		Assert.assertEquals("0.50", money);
 	}
 
@@ -374,27 +399,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void mulTest(){
-		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
-		Assert.assertEquals(BigDecimal.ZERO, mul);
-	}
-
-
-	@Test
 	public void isPowerOfTwoTest() {
 		Assert.assertFalse(NumberUtil.isPowerOfTwo(-1));
 		Assert.assertTrue(NumberUtil.isPowerOfTwo(16));
 		Assert.assertTrue(NumberUtil.isPowerOfTwo(65536));
 		Assert.assertTrue(NumberUtil.isPowerOfTwo(1));
 		Assert.assertFalse(NumberUtil.isPowerOfTwo(17));
-	}
-
-	@Test
-	public void generateRandomNumberTest(){
-		final int[] ints = NumberUtil.generateRandomNumber(10, 20, 5);
-		Assert.assertEquals(5, ints.length);
-		final Set<?> set = Convert.convert(Set.class, ints);
-		Assert.assertEquals(5, set.size());
 	}
 
 	@Test
@@ -406,25 +416,10 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void generateRandomNumberTest2(){
-		// 检查边界
-		final int[] ints = NumberUtil.generateRandomNumber(1, 8, 7);
-		Assert.assertEquals(7, ints.length);
-		final Set<?> set = Convert.convert(Set.class, ints);
-		Assert.assertEquals(7, set.size());
-	}
-
-	@Test
 	public void toPlainNumberTest(){
 		final String num = "5344.34234e3";
 		final String s = new BigDecimal(num).toPlainString();
 		Assert.assertEquals("5344342.34", s);
-	}
-
-	@Test
-	public void generateBySetTest(){
-		final Integer[] integers = NumberUtil.generateBySet(10, 100, 5);
-		Assert.assertEquals(5, integers.length);
 	}
 
 	@Test
@@ -456,7 +451,7 @@ public class NumberUtilTest {
 
 	@Test
 	public void divIntegerTest(){
-		final BigDecimal div = NumberUtil.div(100101300, (Number) 100);
+		final BigDecimal div = NumberUtil.div(100101300, 100);
 		Assert.assertEquals(1001013, div.intValue());
 	}
 

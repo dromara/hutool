@@ -72,7 +72,7 @@ public class NumberWordFormatter {
 				index++;
 			}
 		}
-		return String.format("%s%s", NumberUtil.decimalFormat("#.##", res), NUMBER_SUFFIX[index]);
+		return String.format("%s%s", NumberUtil.format("#.##", res), NUMBER_SUFFIX[index]);
 	}
 
 	/**

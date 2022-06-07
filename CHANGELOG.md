@@ -12,7 +12,6 @@
 * 【core   】     针对JDK8+的日期，统一归档到TimeUtil
 * 【core   】     CopyOptions参数重构
 * 【db     】     增加DDL封装
-* 【json   】     删除JSONNull
 * 【json   】     实现自定义的类型转换，不影响全局的转换器
 
 ### ❌不兼容特性

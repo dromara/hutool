@@ -237,9 +237,9 @@ public class Img implements Serializable {
 					ImgUtil.toBufferedImage(srcImg, this.targetImageType));
 		} else {
 			// 缩放后的图片宽
-			final int width = NumberUtil.mul((Number) srcImg.getWidth(null), scale).intValue();
+			final int width = NumberUtil.mul(srcImg.getWidth(null), scale).intValue();
 			// 缩放后的图片高
-			final int height = NumberUtil.mul((Number) srcImg.getHeight(null), scale).intValue();
+			final int height = NumberUtil.mul(srcImg.getHeight(null), scale).intValue();
 			scale(width, height);
 		}
 		return this;
@@ -280,8 +280,8 @@ public class Img implements Serializable {
 
 		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
 			// png特殊处理，借助AffineTransform可以实现透明度保留
-			final double sx = NumberUtil.div(width, srcWidth);// 宽度缩放比
-			final double sy = NumberUtil.div(height, srcHeight); // 高度缩放比
+			final double sx = NumberUtil.div(width, srcWidth).doubleValue();// 宽度缩放比
+			final double sy = NumberUtil.div(height, srcHeight).doubleValue(); // 高度缩放比
 			this.targetImage = ImgUtil.transform(AffineTransform.getScaleInstance(sx, sy),
 					ImgUtil.toBufferedImage(srcImg, this.targetImageType));
 		} else {
@@ -304,8 +304,8 @@ public class Img implements Serializable {
 		Image srcImage = getValidSrcImg();
 		int srcHeight = srcImage.getHeight(null);
 		int srcWidth = srcImage.getWidth(null);
-		final double heightRatio = NumberUtil.div(height, srcHeight);
-		final double widthRatio = NumberUtil.div(width, srcWidth);
+		final double heightRatio = NumberUtil.div(height, srcHeight).doubleValue();
+		final double widthRatio = NumberUtil.div(width, srcWidth).doubleValue();
 
 		// 浮点数之间的等值判断,基本数据类型不能用==比较,包装数据类型不能用equals来判断。
 		if (NumberUtil.equals(heightRatio, widthRatio)) {
@@ -411,7 +411,7 @@ public class Img implements Serializable {
 		final int height = srcImage.getHeight(null);
 
 		// 通过弧度占比计算弧度
-		arc = NumberUtil.mul(arc, Math.min(width, height));
+		arc = NumberUtil.mul(arc, Math.min(width, height)).doubleValue();
 
 		final BufferedImage targetImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g2 = targetImage.createGraphics();
@@ -590,7 +590,7 @@ public class Img implements Serializable {
 
 	/**
 	 * 旋转图片为指定角度<br>
-	 * 来自：http://blog.51cto.com/cping1982/130066
+	 * 来自：<a href="http://blog.51cto.com/cping1982/130066">http://blog.51cto.com/cping1982/130066</a>
 	 *
 	 * @param degree 旋转角度
 	 * @return 旋转后的图片
