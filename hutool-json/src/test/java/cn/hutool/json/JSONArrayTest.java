@@ -166,7 +166,7 @@ public class JSONArrayTest {
 	@Test
 	public void toListWithNullTest() {
 		final String json = "[null,{'akey':'avalue','bkey':'bvalue'}]";
-		final JSONArray ja = JSONUtil.parseArray(json);
+		final JSONArray ja = JSONUtil.parseArray(json, JSONConfig.of().setIgnoreNullValue(false));
 
 		final List<KeyBean> list = ja.toList(KeyBean.class);
 		Assert.assertNull(list.get(0));
@@ -218,8 +218,13 @@ public class JSONArrayTest {
 
 	@Test
 	public void putToIndexTest(){
-		final JSONArray jsonArray = new JSONArray();
-		jsonArray.put(3, "test");
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.set(3, "test");
+		// 默认忽略null值，因此空位无值，只有一个值
+		Assert.assertEquals(1, jsonArray.size());
+
+		jsonArray = new JSONArray(JSONConfig.of().setIgnoreNullValue(false));
+		jsonArray.set(3, "test");
 		// 第三个位置插入值，0~2都是null
 		Assert.assertEquals(4, jsonArray.size());
 	}

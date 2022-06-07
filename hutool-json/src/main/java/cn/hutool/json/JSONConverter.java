@@ -53,7 +53,7 @@ public class JSONConverter implements Converter {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T jsonConvert(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
-		if (JSONUtil.isNull(value)) {
+		if (null == value) {
 			return null;
 		}
 
@@ -91,7 +91,7 @@ public class JSONConverter implements Converter {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T jsonToBean(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
-		if (JSONUtil.isNull(value)) {
+		if (null == value) {
 			return null;
 		}
 

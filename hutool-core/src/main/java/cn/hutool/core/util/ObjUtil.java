@@ -186,15 +186,13 @@ public class ObjUtil {
 	 *
 	 * <pre>
 	 * 1. == null
-	 * 2. equals(null)
 	 * </pre>
 	 *
 	 * @param obj 对象
 	 * @return 是否为null
 	 */
 	public static boolean isNull(final Object obj) {
-		//noinspection ConstantConditions
-		return null == obj || obj.equals(null);
+		return null == obj;
 	}
 
 	/**

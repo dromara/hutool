@@ -59,8 +59,8 @@ public final class InternalJSONUtil {
 	 * @throws JSONException If the value is or contains an invalid number.
 	 */
 	static String valueToString(final Object value) throws JSONException {
-		if (value == null || value instanceof JSONNull) {
-			return JSONNull.NULL.toString();
+		if (value == null) {
+			return StrUtil.NULL;
 		}
 		if (value instanceof JSONString) {
 			try {
@@ -94,7 +94,7 @@ public final class InternalJSONUtil {
 	public static Object stringToValue(final String string) {
 		// null处理
 		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
-			return JSONNull.NULL;
+			return null;
 		}
 
 		// boolean处理

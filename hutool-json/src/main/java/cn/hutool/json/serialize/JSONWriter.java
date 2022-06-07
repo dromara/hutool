@@ -14,7 +14,6 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONException;
-import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONString;
 import cn.hutool.json.JSONUtil;
@@ -96,6 +95,7 @@ public class JSONWriter extends Writer {
 	 * @return this
 	 */
 	public JSONWriter beginObj() {
+		//noinspection resource
 		writeRaw(CharUtil.DELIM_START);
 		return this;
 	}
@@ -106,6 +106,7 @@ public class JSONWriter extends Writer {
 	 * @return this
 	 */
 	public JSONWriter beginArray() {
+		//noinspection resource
 		writeRaw(CharUtil.BRACKET_START);
 		arrayMode = true;
 		return this;
@@ -118,7 +119,9 @@ public class JSONWriter extends Writer {
 	 */
 	public JSONWriter end() {
 		// 换行缩进
+		//noinspection resource
 		writeLF().writeSpace(indent);
+		//noinspection resource
 		writeRaw(arrayMode ? CharUtil.BRACKET_END : CharUtil.DELIM_END);
 		flush();
 		arrayMode = false;
@@ -135,22 +138,24 @@ public class JSONWriter extends Writer {
 	 */
 	public JSONWriter writeKey(final String key) {
 		if (needSeparator) {
+			//noinspection resource
 			writeRaw(CharUtil.COMMA);
 		}
 		// 换行缩进
+		//noinspection resource
 		writeLF().writeSpace(indentFactor + indent);
 		return writeRaw(JSONUtil.quote(key));
 	}
 
 	/**
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值<br>
-	 * 如果写出的值为{@code null}或者{@link JSONNull}，且配置忽略null，则跳过。
+	 * 如果写出的值为{@code null}，且配置忽略null，则跳过。
 	 *
 	 * @param value 值
 	 * @return this
 	 */
 	public JSONWriter writeValue(final Object value) {
-		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
+		if (null == value && config.isIgnoreNullValue()) {
 			return this;
 		}
 		return writeValueDirect(value);
@@ -159,16 +164,17 @@ public class JSONWriter extends Writer {
 	/**
 	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
 	 *
-	 * @param key 字段名
+	 * @param key   字段名
 	 * @param value 字段值
 	 * @return this
 	 * @since 5.7.6
 	 */
-	public JSONWriter writeField(final String key, final Object value){
-		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
+	public JSONWriter writeField(final String key, final Object value) {
+		if (null == value && config.isIgnoreNullValue()) {
 			return this;
 		}
 
+		//noinspection resource
 		return writeKey(key).writeValueDirect(value);
 	}
 
@@ -192,6 +198,7 @@ public class JSONWriter extends Writer {
 	}
 
 	// ------------------------------------------------------------------------------ Private methods
+
 	/**
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
@@ -201,11 +208,14 @@ public class JSONWriter extends Writer {
 	private JSONWriter writeValueDirect(final Object value) {
 		if (arrayMode) {
 			if (needSeparator) {
+				//noinspection resource
 				writeRaw(CharUtil.COMMA);
 			}
 			// 换行缩进
+			//noinspection resource
 			writeLF().writeSpace(indentFactor + indent);
 		} else {
+			//noinspection resource
 			writeRaw(CharUtil.COLON).writeSpace(1);
 		}
 		needSeparator = true;
@@ -220,24 +230,26 @@ public class JSONWriter extends Writer {
 	 */
 	private JSONWriter writeObjValue(final Object value) {
 		final int indent = indentFactor + this.indent;
-		if (value == null || value instanceof JSONNull) {
-			writeRaw(JSONNull.NULL.toString());
+		if (value == null) {
+			//noinspection resource
+			writeRaw(StrUtil.NULL);
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
 		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
-			if(value instanceof byte[]){
+			if (value instanceof byte[]) {
 				// issue#I59LW4
 				// json内容中的bytes默认转为Base64
 				writeStrValue(Base64.encode((byte[]) value));
-			}else{
+			} else {
 				new JSONArray(value).write(writer, indentFactor, indent);
 			}
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			final String format = (null == config) ? null : config.getDateFormat();
+			//noinspection resource
 			writeRaw(formatDate(value, format));
 		} else if (value instanceof Boolean) {
 			writeBooleanValue((Boolean) value);
@@ -260,6 +272,7 @@ public class JSONWriter extends Writer {
 	private void writeNumberValue(final Number number) {
 		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
 		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
+		//noinspection resource
 		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
 	}
 
@@ -269,6 +282,7 @@ public class JSONWriter extends Writer {
 	 * @param value Boolean值
 	 */
 	private void writeBooleanValue(final Boolean value) {
+		//noinspection resource
 		writeRaw(value.toString());
 	}
 
@@ -287,6 +301,7 @@ public class JSONWriter extends Writer {
 			throw new JSONException(e);
 		}
 		if (null != valueStr) {
+			//noinspection resource
 			writeRaw(valueStr);
 		} else {
 			writeStrValue(jsonString.toString());
@@ -317,6 +332,7 @@ public class JSONWriter extends Writer {
 	private void writeSpace(final int count) {
 		if (indentFactor > 0) {
 			for (int i = 0; i < count; i++) {
+				//noinspection resource
 				writeRaw(CharUtil.SPACE);
 			}
 		}
@@ -329,6 +345,7 @@ public class JSONWriter extends Writer {
 	 */
 	private JSONWriter writeLF() {
 		if (indentFactor > 0) {
+			//noinspection resource
 			writeRaw(CharUtil.LF);
 		}
 		return this;

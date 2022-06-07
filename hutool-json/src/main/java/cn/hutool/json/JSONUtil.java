@@ -716,7 +716,7 @@ public class JSONUtil {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static Object wrap(final Object object, final JSONConfig jsonConfig) {
 		if (object == null) {
-			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
+			return null;
 		}
 		if (object instanceof JSON //
 				|| ObjUtil.isNull(object) //
@@ -834,22 +834,6 @@ public class JSONUtil {
 			return false;
 		}
 		return StrUtil.isWrap(StrUtil.trim(str), '[', ']');
-	}
-
-	/**
-	 * 是否为null对象，null的情况包括：
-	 *
-	 * <pre>
-	 * 1. {@code null}
-	 * 2. {@link JSONNull}
-	 * </pre>
-	 *
-	 * @param obj 对象
-	 * @return 是否为null
-	 * @since 4.5.7
-	 */
-	public static boolean isNull(final Object obj) {
-		return null == obj || obj instanceof JSONNull;
 	}
 
 	/**

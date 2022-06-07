@@ -116,7 +116,7 @@ public class JSONObjectTest {
 		Assert.assertEquals(jsonObject.get("d"), true);
 
 		Assert.assertTrue(jsonObject.containsKey("e"));
-		Assert.assertEquals(jsonObject.get("e"), JSONNull.NULL);
+		Assert.assertNull(jsonObject.get("e"));
 	}
 
 	@Test
@@ -460,7 +460,7 @@ public class JSONObjectTest {
 		json.append("date", DateUtil.parse("2020-06-05 11:16:11"));
 		json.append("bbb", "222");
 		json.append("aaa", "123");
-		Assert.assertEquals("{\"date\":[\"2020-06-05 11:16:11\"],\"bbb\":[\"222\"],\"aaa\":[\"123\"]}", json.toString());
+		Assert.assertEquals("{\"date\":\"2020-06-05 11:16:11\",\"bbb\":\"222\",\"aaa\":\"123\"}", json.toString());
 	}
 
 	@Test
@@ -612,14 +612,14 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void accumulateTest() {
-		final JSONObject jsonObject = JSONUtil.createObj().accumulate("key1", "value1");
+	public void appendTest() {
+		final JSONObject jsonObject = JSONUtil.createObj().append("key1", "value1");
 		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
 
-		jsonObject.accumulate("key1", "value2");
+		jsonObject.append("key1", "value2");
 		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
 
-		jsonObject.accumulate("key1", "value3");
+		jsonObject.append("key1", "value3");
 		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
 	}
 

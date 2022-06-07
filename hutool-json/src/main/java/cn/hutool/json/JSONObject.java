@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutableEntry;
@@ -183,18 +182,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	@Override
-	public Object getByPath(final String expression) {
-		return BeanPath.of(expression).get(this);
-	}
-
-	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
-	}
-
-	@Override
-	public void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression).set(this, value);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), this.config.isIgnoreError());
 	}
 
 	/**
@@ -219,7 +208,23 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject set(final String key, final Object value) throws JSONException {
-		return set(key, value, null, false);
+		put(key, value, null, false);
+		return this;
+	}
+
+	/**
+	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
+	 *
+	 * @param key    键
+	 * @param value  值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @return this
+	 * @throws JSONException 值是无穷数字、键重复抛出异常
+	 * @since 5.8.0
+	 */
+	public JSONObject setOnce(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
+		put(key, value, filter, true);
+		return this;
 	}
 
 	/**
@@ -239,32 +244,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	/**
-	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
-	 *
-	 * @param key   键
-	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException 值是无穷数字、键重复抛出异常
-	 */
-	public JSONObject putOnce(final String key, final Object value) throws JSONException {
-		return setOnce(key, value, null);
-	}
-
-	/**
-	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
-	 *
-	 * @param key    键
-	 * @param value  值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
-	 * @return this
-	 * @throws JSONException 值是无穷数字、键重复抛出异常
-	 * @since 5.8.0
-	 */
-	public JSONObject setOnce(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
-		return set(key, value, filter, true);
-	}
-
-	/**
 	 * 在键和值都为非空的情况下put到JSONObject中
 	 *
 	 * @param key   键
@@ -272,7 +251,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return this.
 	 * @throws JSONException 值是无穷数字
 	 */
-	public JSONObject putOpt(final String key, final Object value) throws JSONException {
+	public JSONObject setOpt(final String key, final Object value) throws JSONException {
 		if (key != null && value != null) {
 			this.set(key, value);
 		}
@@ -287,29 +266,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	/**
-	 * 积累值。类似于set，当key对应value已经存在时，与value组成新的JSONArray. <br>
-	 * 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
-	 *
-	 * @param key   键
-	 * @param value 被积累的值
-	 * @return this.
-	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
-	 */
-	public JSONObject accumulate(final String key, final Object value) throws JSONException {
-		InternalJSONUtil.testValidity(value);
-		final Object object = this.getObj(key);
-		if (object == null) {
-			this.set(key, value);
-		} else if (object instanceof JSONArray) {
-			((JSONArray) object).set(value);
-		} else {
-			this.set(key, JSONUtil.createArray(this.config).set(object).set(value));
-		}
-		return this;
-	}
-
-	/**
-	 * 追加值，如果key无对应值，就添加一个JSONArray，其元素只有value，如果值已经是一个JSONArray，则添加到值JSONArray中。
+	 * 追加值.
+	 * <ul>
+	 *     <li>如果键值对不存在或对应值为{@code null}，则value为单独值</li>
+	 *     <li>如果值是一个{@link JSONArray}，追加之</li>
+	 *     <li>如果值是一个其他值，则和旧值共同组合为一个{@link JSONArray}</li>
+	 * </ul>
 	 *
 	 * @param key   键
 	 * @param value 值
@@ -320,11 +282,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		InternalJSONUtil.testValidity(value);
 		final Object object = this.getObj(key);
 		if (object == null) {
-			this.set(key, new JSONArray(this.config).set(value));
+			this.set(key, value);
 		} else if (object instanceof JSONArray) {
-			this.set(key, ((JSONArray) object).set(value));
+			((JSONArray) object).set(value);
 		} else {
-			throw new JSONException("JSONObject [" + key + "] is not a JSONArray.");
+			this.set(key, JSONUtil.createArray(this.config).set(object).set(value));
 		}
 		return this;
 	}
@@ -435,13 +397,13 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
 	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
-	 * @return this.
+	 * @return 旧值
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
 	private Object put(String key, Object value, final Filter<MutableEntry<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
 		if (null == key) {
-			return this;
+			return null;
 		}
 
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
@@ -453,12 +415,12 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 				value = pair.getValue();
 			} else {
 				// 键值对被过滤
-				return this;
+				return null;
 			}
 		}
 
 		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
-		if (ObjUtil.isNull(value) && ignoreNullValue) {
+		if (null == value && ignoreNullValue) {
 			// 忽略值模式下如果值为空清除key
 			return this.remove(key);
 		} else if (checkDuplicate && containsKey(key)) {

@@ -106,7 +106,7 @@ public class JSONParser {
 			for (; ; ) {
 				if (x.nextClean() == ',') {
 					x.back();
-					jsonArray.addRaw(JSONNull.NULL, filter);
+					jsonArray.addRaw(null, filter);
 				} else {
 					x.back();
 					jsonArray.addRaw(x.nextValue(), filter);
