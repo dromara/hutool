@@ -1,10 +1,12 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * 反射工具类单元测试
@@ -113,10 +115,21 @@ public class ReflectUtilTest {
 	@Test
 	@SneakyThrows
 	public void testGetDescriptor() {
+		// methods
 		Assert.equals("()I", ReflectUtil.getDescriptor(Object.class.getMethod("hashCode")));
 		Assert.equals("()Ljava/lang/String;", ReflectUtil.getDescriptor(Object.class.getMethod("toString")));
 		Assert.equals("(Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class)));
-		Assert.equals("(Ljava/lang/Class;Ljava/lang/StringBuilder;)V", ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.class, StringBuilder.class)));
-		Assert.equals("([Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class)));
+		Assert.equals("(II)I", ReflectUtil.getDescriptor(Integer.class.getDeclaredMethod("compare", int.class, int.class)));
+		Assert.equals("([Ljava/lang/Object;)Ljava/util/List;", ReflectUtil.getDescriptor(Arrays.class.getMethod("asList", Object[].class)));
+		Assert.equals("()V", ReflectUtil.getDescriptor(Object.class.getConstructor()));
+		// clazz
+		Assert.equals("Z", ReflectUtil.getDescriptor(boolean.class));
+		Assert.equals("Ljava/lang/Boolean;", ReflectUtil.getDescriptor(Boolean.class));
+		Assert.equals("[[[D", ReflectUtil.getDescriptor(double[][][].class));
+		Assert.equals("I", ReflectUtil.getDescriptor(int.class));
+		Assert.equals("Ljava/lang/Integer;", ReflectUtil.getDescriptor(Integer.class));
+		Assert.equals("V", ReflectUtil.getDescriptor(void.class));
+		Assert.equals("Ljava/lang/Void;", ReflectUtil.getDescriptor(Void.class));
+		Assert.equals("Ljava/lang/Object;", ReflectUtil.getDescriptor(Object.class));
 	}
 }

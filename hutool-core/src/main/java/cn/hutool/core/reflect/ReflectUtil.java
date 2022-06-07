@@ -33,7 +33,8 @@ public class ReflectUtil {
 	 *
 	 * @param executable 可执行的反射对象
 	 * @return 描述符
-	 * @apiNote 参考：<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @link <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @link <a href="https://public static class.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>
@@ -41,20 +42,19 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class))                                                         // "(Ljava/lang/Object;)Z"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
-	 * </ul>Object.class.getMethod("hashCode")
+	 * </ul>
+	 * @author VampireAchao
 	 */
 	public static String getDescriptor(Executable executable) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append('(');
 		Class<?>[] parameters = executable.getParameterTypes();
 		for (Class<?> parameter : parameters) {
-			appendDescriptor(parameter, stringBuilder);
+			stringBuilder.append(getDescriptor(parameter));
 		}
 		if (executable instanceof Method) {
 			Method method = (Method) executable;
-			stringBuilder.append(')');
-			appendDescriptor(method.getReturnType(), stringBuilder);
-			return stringBuilder.toString();
+			return stringBuilder.append(')').append(getDescriptor(method.getReturnType())).toString();
 		} else if (executable instanceof Constructor) {
 			return stringBuilder.append(")V").toString();
 		}
@@ -62,65 +62,63 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 拼接描述符
+	 * 获取类型描述符，这是编译成class文件后的二进制名称
 	 *
-	 * @param clazz         类
-	 * @param stringBuilder 描述符
+	 * @param clazz 类
 	 * @link <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @link <a href="https://public static class.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code ReflectUtil.getDescriptor(boolean.class)                        "Z"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(Boolean.class)                        "Ljava/lang/Boolean;"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(double[][][].class)                   "[[[D"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(int.class)                            "I"}</li>
+	 *     <li>{@code ReflectUtil.getDescriptor(Integer.class)                        "Ljava/lang/Integer;"}</li>
+	 * </ul>
+	 * @author VampireAchao
 	 */
-	private static void appendDescriptor(Class<?> clazz, StringBuilder stringBuilder) {
+	public static String getDescriptor(Class<?> clazz) {
+		StringBuilder stringBuilder = new StringBuilder();
 		Class<?> currentClass;
 		for (currentClass = clazz;
 			 currentClass.isArray();
 			 currentClass = currentClass.getComponentType()) {
+			// 如果当前是数组描述符
 			stringBuilder.append('[');
 		}
 		if (currentClass.isPrimitive()) {
-			stringBuilder.append(getDescriptorChar(currentClass));
+			// 只有下面九种基础数据类型以及数组，才有独立的描述符
+			final char descriptor;
+			// see sun.invoke.util.Wrapper
+			// These must be in the order defined for widening primitive conversions in JLS 5.1.2
+			if (currentClass == boolean.class) {
+				descriptor = 'Z';
+			} else if (currentClass == byte.class) {
+				descriptor = 'B';
+			} else if (currentClass == short.class) {
+				descriptor = 'S';
+			} else if (currentClass == char.class) {
+				descriptor = 'C';
+			} else if (currentClass == int.class) {
+				descriptor = 'I';
+			} else if (currentClass == long.class) {
+				descriptor = 'J';
+			} else if (currentClass == float.class) {
+				descriptor = 'F';
+			} else if (currentClass == double.class) {
+				descriptor = 'D';
+			} else if (currentClass == void.class) {
+				// VOID must be the last type, since it is "assignable" from any other type:
+				descriptor = 'V';
+			} else {
+				throw new AssertionError();
+			}
+			stringBuilder.append(descriptor);
 		} else {
+			// 否则一律是 "L"+类名.replace('.', '/')+";"格式的对象类型
 			stringBuilder.append('L').append(currentClass.getName().replace('.', '/')).append(';');
 		}
-
-	}
-
-	/**
-	 * 获取单个描述符
-	 *
-	 * @param currentClass 当前类
-	 * @return 描述符
-	 */
-	private static char getDescriptorChar(Class<?> currentClass) {
-		if ( currentClass == boolean.class) {
-			return 'Z';
-		}
-		if ( currentClass == byte.class) {
-			return 'B';
-		}
-		if (currentClass == short.class) {
-			return 'S';
-		}
-		if (currentClass == char.class) {
-			return 'C';
-		}
-		if (currentClass == int.class) {
-			return 'I';
-		}
-		if (currentClass == long.class) {
-			return 'J';
-		}
-		if (currentClass == float.class) {
-			return 'F';
-		}
-		if (currentClass == double.class) {
-			return 'D';
-		}
-		if (currentClass == Object.class) {
-			return 'L';
-		}
-		if (currentClass == void.class) {
-			return 'V';
-		}
-		throw new AssertionError();
+		return stringBuilder.toString();
 	}
 
 }
