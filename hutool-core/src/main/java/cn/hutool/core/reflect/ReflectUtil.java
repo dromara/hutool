@@ -33,7 +33,7 @@ public class ReflectUtil {
 	 *
 	 * @param executable 可执行的反射对象
 	 * @return 描述符
-	 * @apiNote 参考：<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * 参考：<a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>

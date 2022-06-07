@@ -28,12 +28,14 @@ public interface Converter {
 	 * 转换值为指定类型，可选是否不抛异常转换<br>
 	 * 当转换失败时返回默认值
 	 *
-	 * @param value 值
+	 * @param <T>          目标类型
+	 * @param targetType   目标类型
+	 * @param value        值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T convert(final Type targetType, final Object value, final T defaultValue) {
-		return ObjUtil.defaultIfNull((T)convert(targetType, value), defaultValue);
+		return ObjUtil.defaultIfNull((T) convert(targetType, value), defaultValue);
 	}
 }

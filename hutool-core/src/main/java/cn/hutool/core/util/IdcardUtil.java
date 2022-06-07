@@ -638,6 +638,9 @@ public class IdcardUtil {
 	 * 参考文档《港澳居民来往内地通行证号码规则》：
 	 * <a href="https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html">https://www.hmo.gov.cn/fwga_new/wldjnd/201711/t20171120_1333.html</a>
 	 * </p>
+	 *
+	 * @param idCard 身份证号码
+	 * @return 是否有效
 	 */
 	public static boolean isValidHkMoHomeReturn(final String idCard) {
 		if (StrUtil.isEmpty(idCard)) {
