@@ -119,7 +119,7 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 初始化
+	 * 将给定对象转换为{@link JSONArray}
 	 *
 	 * @param jsonArray 目标{@link JSONArray}
 	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
@@ -139,7 +139,7 @@ public class ObjectMapper {
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray, filter);
-		}else if (source instanceof Reader) {
+		} else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof InputStream) {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);

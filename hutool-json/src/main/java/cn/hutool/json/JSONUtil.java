@@ -286,7 +286,7 @@ public class JSONUtil {
 	/**
 	 * 转为JSON字符串，并写出到write
 	 *
-	 * @param json JSON
+	 * @param json   JSON
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
@@ -322,7 +322,7 @@ public class JSONUtil {
 	/**
 	 * 转换为JSON字符串
 	 *
-	 * @param obj 被转为JSON的对象
+	 * @param obj        被转为JSON的对象
 	 * @param jsonConfig JSON配置
 	 * @return JSON字符串
 	 * @since 5.7.12
@@ -340,7 +340,7 @@ public class JSONUtil {
 	/**
 	 * 转换为JSON字符串并写出到writer
 	 *
-	 * @param obj 被转为JSON的对象
+	 * @param obj    被转为JSON的对象
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
@@ -540,9 +540,9 @@ public class JSONUtil {
 	 * person.friends[5].name
 	 * </pre>
 	 *
-	 * @param <T> 值类型
-	 * @param json       {@link JSON}
-	 * @param expression 表达式
+	 * @param <T>          值类型
+	 * @param json         {@link JSON}
+	 * @param expression   表达式
 	 * @param defaultValue 默认值
 	 * @return 对象
 	 * @see JSON#getByPath(String)
@@ -550,11 +550,11 @@ public class JSONUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByPath(final JSON json, final String expression, final T defaultValue) {
-		if((null == json || StrUtil.isBlank(expression))){
+		if ((null == json || StrUtil.isBlank(expression))) {
 			return defaultValue;
 		}
 
-		if(null != defaultValue){
+		if (null != defaultValue) {
 			final Class<T> type = (Class<T>) defaultValue.getClass();
 			return ObjUtil.defaultIfNull(json.getByPath(expression, type), defaultValue);
 		}
@@ -701,7 +701,6 @@ public class JSONUtil {
 	 * 在需要的时候包装对象<br>
 	 * 包装包括：
 	 * <ul>
-	 * <li>{@code null} =》 {@code JSONNull.NULL}</li>
 	 * <li>array or collection =》 JSONArray</li>
 	 * <li>map =》 JSONObject</li>
 	 * <li>standard property (Double, String, et al) =》 原对象</li>
@@ -719,7 +718,6 @@ public class JSONUtil {
 			return null;
 		}
 		if (object instanceof JSON //
-				|| ObjUtil.isNull(object) //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //
@@ -743,13 +741,13 @@ public class JSONUtil {
 
 		try {
 			// fix issue#1399@Github
-			if(object instanceof SQLException){
+			if (object instanceof SQLException) {
 				return object.toString();
 			}
 
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				if(object instanceof byte[]){
+				if (object instanceof byte[]) {
 					// issue#I59LW4
 					// json内容中的bytes默认转为Base64
 					return Base64.encode((byte[]) object);

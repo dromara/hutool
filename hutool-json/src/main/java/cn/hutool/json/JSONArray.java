@@ -368,6 +368,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			if(null == object && config.isIgnoreNullValue()){
 				continue;
 			}
+			this.add(index);
 			list.add(JSONUtil.wrap(object, this.config));
 		}
 		return rawList.addAll(index, list);
