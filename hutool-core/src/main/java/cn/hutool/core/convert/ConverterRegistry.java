@@ -243,7 +243,7 @@ public class ConverterRegistry implements Serializable {
 		}
 
 		// 无法转换
-		throw new ConvertException("Can not Converter from [{}] to [{}]", value.getClass().getName(), type.getTypeName());
+		throw new ConvertException("Can not convert from {}: [{}] to [{}]", value.getClass().getName(), value, type.getTypeName());
 	}
 
 	/**

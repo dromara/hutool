@@ -20,7 +20,7 @@ public class TransientTest {
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
-				JSONConfig.create().setTransientSupport(false));
+				JSONConfig.of().setTransientSupport(false));
 		Assert.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 
@@ -32,7 +32,7 @@ public class TransientTest {
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
-				JSONConfig.create().setTransientSupport(true));
+				JSONConfig.of().setTransientSupport(true));
 		Assert.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 
@@ -43,7 +43,7 @@ public class TransientTest {
 		detailBill.setBizNo("bizNo");
 
 		final JSONObject jsonObject = new JSONObject(detailBill,
-				JSONConfig.create().setTransientSupport(false));
+				JSONConfig.of().setTransientSupport(false));
 
 		final Bill bill = jsonObject.toBean(Bill.class);
 		Assert.assertEquals("3243", bill.getId());
@@ -57,7 +57,7 @@ public class TransientTest {
 		detailBill.setBizNo("bizNo");
 
 		final JSONObject jsonObject = new JSONObject(detailBill,
-				JSONConfig.create().setTransientSupport(true));
+				JSONConfig.of().setTransientSupport(true));
 
 		final Bill bill = jsonObject.toBean(Bill.class);
 		Assert.assertNull(bill.getId());

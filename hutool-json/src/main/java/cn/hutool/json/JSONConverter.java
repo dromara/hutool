@@ -6,7 +6,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -16,7 +15,6 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * JSON转换器
@@ -39,29 +37,6 @@ public class JSONConverter implements Converter {
 	@Override
 	public Object convert(Type targetType, Object value) throws ConvertException {
 		return JSONUtil.parse(value);
-	}
-
-	/**
-	 * JSONArray转数组
-	 *
-	 * @param jsonArray JSONArray
-	 * @param arrayClass 数组元素类型
-	 * @return 数组对象
-	 */
-	protected static Object toArray(final JSONArray jsonArray, final Class<?> arrayClass) {
-		return ArrayConverter.INSTANCE.convert(arrayClass, jsonArray, null);
-	}
-
-	/**
-	 * 将JSONArray转换为指定类型的对量列表
-	 *
-	 * @param <T> 元素类型
-	 * @param jsonArray JSONArray
-	 * @param elementType 对象元素类型
-	 * @return 对象列表
-	 */
-	protected static <T> List<T> toList(final JSONArray jsonArray, final Class<T> elementType) {
-		return Convert.toList(elementType, jsonArray);
 	}
 
 	/**

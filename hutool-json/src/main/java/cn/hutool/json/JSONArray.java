@@ -2,6 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
@@ -66,7 +68,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 3.2.2
 	 */
 	public JSONArray(final int initialCapacity) {
-		this(initialCapacity, JSONConfig.create());
+		this(initialCapacity, JSONConfig.of());
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig::create);
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
 	}
 
 	/**
@@ -107,7 +109,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(final Object object) throws JSONException {
-		this(object, JSONConfig.create());
+		this(object, JSONConfig.of());
 	}
 
 	/**
@@ -332,7 +334,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	@Override
 	@SuppressWarnings({"unchecked"})
 	public <T> T[] toArray(final T[] a) {
-		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
+		return (T[]) ArrayConverter.INSTANCE.convert(a.getClass().getComponentType(), this);
 	}
 
 	@Override
@@ -481,7 +483,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 实体类对象
 	 */
 	public Object toArray(final Class<?> arrayClass) {
-		return JSONConverter.toArray(this, arrayClass);
+		return ArrayConverter.INSTANCE.convert(arrayClass, this);
 	}
 
 	/**
@@ -493,7 +495,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 3.0.8
 	 */
 	public <T> List<T> toList(final Class<T> elementType) {
-		return JSONConverter.toList(this, elementType);
+		return Convert.toList(elementType, this);
 	}
 
 	/**

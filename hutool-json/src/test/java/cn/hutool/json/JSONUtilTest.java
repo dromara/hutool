@@ -191,7 +191,7 @@ public class JSONUtilTest {
 		Assert.assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
 
 		// 不去除多余的0
-		final JSONObject jsonObject = JSONUtil.createObj(JSONConfig.create().setStripTrailingZeros(false))
+		final JSONObject jsonObject = JSONUtil.createObj(JSONConfig.of().setStripTrailingZeros(false))
 				.set("test2", 12.00D);
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 

@@ -199,7 +199,7 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanTest() {
 		final JSONObject subJson = JSONUtil.createObj().set("value1", "strValue1").set("value2", "234");
-		final JSONObject json = JSONUtil.createObj().set("strValue", "strTest").set("intValue", 123)
+		final JSONObject json = JSONUtil.createObj(JSONConfig.of().setIgnoreError(true)).set("strValue", "strTest").set("intValue", 123)
 				// 测试空字符串转对象
 				.set("doubleValue", "")
 				.set("beanValue", subJson)
@@ -453,7 +453,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void setDateFormatTest() {
-		final JSONConfig jsonConfig = JSONConfig.create();
+		final JSONConfig jsonConfig = JSONConfig.of();
 		jsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		final JSONObject json = new JSONObject(jsonConfig);
@@ -465,7 +465,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void setDateFormatTest2() {
-		final JSONConfig jsonConfig = JSONConfig.create();
+		final JSONConfig jsonConfig = JSONConfig.of();
 		jsonConfig.setDateFormat("yyyy#MM#dd");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
@@ -485,7 +485,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void setCustomDateFormatTest() {
-		final JSONConfig jsonConfig = JSONConfig.create();
+		final JSONConfig jsonConfig = JSONConfig.of();
 		jsonConfig.setDateFormat("#sss");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");
@@ -599,7 +599,7 @@ public class JSONObjectTest {
 	@Test(expected = JSONException.class)
 	public void createJSONObjectTest() {
 		// 集合类不支持转为JSONObject
-		new JSONObject(new JSONArray(), JSONConfig.create());
+		new JSONObject(new JSONArray(), JSONConfig.of());
 	}
 
 	@Test
@@ -646,7 +646,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterIncludeTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -658,7 +658,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterExcludeTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -670,7 +670,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void editTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -690,7 +690,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void toUnderLineCaseTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.create())
+		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
 				.set("aKey", "value1")
 				.set("bJob", "value2")
 				.set("cGood", "value3")
@@ -705,7 +705,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void nullToEmptyTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.create().setIgnoreNullValue(false))
+		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of().setIgnoreNullValue(false))
 				.set("a", null)
 				.set("b", "value2");
 

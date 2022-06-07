@@ -201,7 +201,7 @@ public final class InternalJSONUtil {
 	static Map<String, Object> createRawMap(final int capacity, JSONConfig config) {
 		final Map<String, Object> rawHashMap;
 		if (null == config) {
-			config = JSONConfig.create();
+			config = JSONConfig.of();
 		}
 		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {

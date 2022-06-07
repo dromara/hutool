@@ -31,11 +31,11 @@ public class JSONArrayTest {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
 		final JSONObject jsonObject = new JSONObject();
 
-		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.create());
+		JSONArray jsonArray = new JSONArray(jsonObject, JSONConfig.of());
 		Assert.assertEquals(new JSONArray(), jsonArray);
 
 		jsonObject.set("key1", "value1");
-		jsonArray = new JSONArray(jsonObject, JSONConfig.create());
+		jsonArray = new JSONArray(jsonObject, JSONConfig.of());
 		Assert.assertEquals(1, jsonArray.size());
 		Assert.assertEquals("[{\"key1\":\"value1\"}]", jsonArray.toString());
 	}
@@ -44,7 +44,7 @@ public class JSONArrayTest {
 	public void addNullTest(){
 		final List<String> aaa = ListUtil.view("aaa", null);
 		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
-				JSONConfig.create().setIgnoreNullValue(false)));
+				JSONConfig.of().setIgnoreNullValue(false)));
 		Assert.assertEquals("[\"aaa\",null]", jsonStr);
 	}
 
@@ -135,7 +135,7 @@ public class JSONArrayTest {
 	public void toDictListTest() {
 		final String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
 
-		final JSONArray array = JSONUtil.parseArray(jsonArr, JSONConfig.create().setIgnoreError(false));
+		final JSONArray array = JSONUtil.parseArray(jsonArr, JSONConfig.of().setIgnoreError(false));
 
 		final List<Dict> list = JSONUtil.toList(array, Dict.class);
 
@@ -273,7 +273,7 @@ public class JSONArrayTest {
 
 	@Test
 	public void putNullTest(){
-		final JSONArray array = JSONUtil.createArray(JSONConfig.create().setIgnoreNullValue(false));
+		final JSONArray array = JSONUtil.createArray(JSONConfig.of().setIgnoreNullValue(false));
 		array.set(null);
 
 		Assert.assertEquals("[null]", array.toString());

@@ -49,7 +49,7 @@ public class JSONConfig implements Serializable {
 	 *
 	 * @return JSONConfig
 	 */
-	public static JSONConfig create() {
+	public static JSONConfig of() {
 		return new JSONConfig();
 	}
 

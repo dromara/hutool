@@ -46,7 +46,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY有序
 	 */
 	public JSONObject() {
-		this(JSONConfig.create());
+		this(JSONConfig.of());
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 4.1.19
 	 */
 	public JSONObject(final int capacity, final JSONConfig config) {
-		super(InternalJSONUtil.createRawMap(capacity, ObjUtil.defaultIfNull(config, JSONConfig.create())));
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig.create());
+		super(InternalJSONUtil.createRawMap(capacity, ObjUtil.defaultIfNull(config, JSONConfig.of())));
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig.of());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	public JSONObject(final Object source) {
-		this(source, JSONConfig.create().setIgnoreNullValue(InternalJSONUtil.defaultIgnoreNullValue(source)));
+		this(source, JSONConfig.of().setIgnoreNullValue(InternalJSONUtil.defaultIgnoreNullValue(source)));
 	}
 
 	/**

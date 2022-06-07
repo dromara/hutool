@@ -113,7 +113,7 @@ public class JSONUtil {
 	 * @since 3.0.9
 	 */
 	public static JSONObject parseObj(final Object obj, final boolean ignoreNullValue) {
-		return new JSONObject(obj, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
+		return new JSONObject(obj, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class JSONUtil {
 	 * @since 3.2.3
 	 */
 	public static JSONArray parseArray(final Object arrayOrCollection, final boolean ignoreNullValue) {
-		return new JSONArray(arrayOrCollection, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
+		return new JSONArray(arrayOrCollection, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
 	}
 
 	/**
@@ -438,7 +438,7 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(final String jsonString, final Type beanType, final boolean ignoreError) {
-		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
+		return parse(jsonString, JSONConfig.of().setIgnoreError(ignoreError)).toBean(beanType);
 	}
 
 	/**
