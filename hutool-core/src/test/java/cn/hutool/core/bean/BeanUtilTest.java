@@ -71,7 +71,7 @@ public class BeanUtilTest {
 				return true;
 			}
 
-		}, CopyOptions.create());
+		}, CopyOptions.of());
 
 		Assert.assertEquals("张三", person.getName());
 		Assert.assertEquals(18, person.getAge());
@@ -116,7 +116,7 @@ public class BeanUtilTest {
 		// 错误的类型，此处忽略
 		map.put("age", "aaaaaa");
 
-		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreError(true));
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.of().setIgnoreError(true));
 		Assert.assertEquals("Joe", person.getName());
 		// 错误的类型，不copy这个字段，使用对象创建的默认值
 		Assert.assertEquals(0, person.getAge());
@@ -128,7 +128,7 @@ public class BeanUtilTest {
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
-		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setIgnoreCase(true));
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.of().setIgnoreCase(true));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -144,7 +144,7 @@ public class BeanUtilTest {
 		mapping.put("a_name", "name");
 		mapping.put("b_age", "age");
 
-		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
+		final Person person = BeanUtil.toBean(map, Person.class, CopyOptions.of().setFieldMapping(mapping));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
 	}
@@ -159,7 +159,7 @@ public class BeanUtilTest {
 		map.put("age", 12);
 
 		// 非空构造也可以实例化成功
-		final Person2 person = BeanUtil.toBean(map, Person2.class, CopyOptions.create());
+		final Person2 person = BeanUtil.toBean(map, Person2.class, CopyOptions.of());
 		Assert.assertEquals("Joe", person.name);
 		Assert.assertEquals(12, person.age);
 	}
@@ -229,7 +229,10 @@ public class BeanUtilTest {
 		person.setSubName("sub名字");
 
 		final Map<String, Object> map = BeanUtil.beanToMap(person, new LinkedHashMap<>(),
-				CopyOptions.create().setFieldValueEditor((key, value) -> key + "_" + value));
+				CopyOptions.of().setFieldEditor((entry) -> {
+					entry.setValue(entry.getKey() + "_" + entry.getValue());
+					return entry;
+				}));
 		Assert.assertEquals("subName_sub名字", map.get("subName"));
 	}
 
@@ -387,7 +390,7 @@ public class BeanUtilTest {
 		p2.setName("oldName");
 
 		// null值不覆盖目标属性
-		BeanUtil.copyProperties(p1, p2, CopyOptions.create().ignoreNullValue());
+		BeanUtil.copyProperties(p1, p2, CopyOptions.of().ignoreNullValue());
 		Assert.assertEquals("oldName", p2.getName());
 
 		// null覆盖目标属性
@@ -578,7 +581,7 @@ public class BeanUtilTest {
 		info.setBookID("0");
 		info.setCode("");
 		final Food newFood = new Food();
-		final CopyOptions copyOptions = CopyOptions.create().setPropertiesFilter((f, v) -> !(v instanceof CharSequence) || StrUtil.isNotBlank(v.toString()));
+		final CopyOptions copyOptions = CopyOptions.of().setPropertiesFilter((f, v) -> !(v instanceof CharSequence) || StrUtil.isNotBlank(v.toString()));
 		BeanUtil.copyProperties(info, newFood, copyOptions);
 		Assert.assertEquals(info.getBookID(), newFood.getBookID());
 		Assert.assertNull(newFood.getCode());
@@ -592,7 +595,7 @@ public class BeanUtilTest {
 		o.setAge(123);
 		o.setOpenid("asd");
 
-		@SuppressWarnings("unchecked") final CopyOptions copyOptions = CopyOptions.create().setIgnoreProperties(Person::getAge,Person::getOpenid);
+		@SuppressWarnings("unchecked") final CopyOptions copyOptions = CopyOptions.of().setIgnoreProperties(Person::getAge,Person::getOpenid);
 		final Person n = new Person();
 		BeanUtil.copyProperties(o, n, copyOptions);
 
@@ -680,7 +683,12 @@ public class BeanUtilTest {
 				a,
 				new LinkedHashMap<>(),
 				false,
-				key -> Arrays.asList("id", "name", "code", "sortOrder").contains(key) ? key : null);
+				entry -> {
+					if(false == Arrays.asList("id", "name", "code", "sortOrder").contains(entry.getKey())){
+						entry.setKey(null);
+					}
+					return entry;
+				});
 		Assert.assertFalse(f.containsKey(null));
 	}
 
@@ -749,10 +757,13 @@ public class BeanUtilTest {
 		childVo1.setChild_father_name("张无忌");
 		childVo1.setChild_mother_name("赵敏敏");
 
-		final CopyOptions copyOptions = CopyOptions.create().
+		final CopyOptions copyOptions = CopyOptions.of().
 				//setIgnoreNullValue(true).
 				//setIgnoreCase(false).
-						setFieldNameEditor(StrUtil::toCamelCase);
+						setFieldEditor(entry->{
+							entry.setKey(StrUtil.toCamelCase(entry.getKey()));
+							return entry;
+				});
 
 		final ChildVo2 childVo2 = new ChildVo2();
 		BeanUtil.copyProperties(childVo1, childVo2, copyOptions);
@@ -783,7 +794,7 @@ public class BeanUtilTest {
 	public void issueI41WKPTest(){
 		final Test1 t1 = new Test1().setStrList(ListUtil.of("list"));
 		final Test2 t2_hu = new Test2();
-		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.create().setIgnoreError(true));
+		BeanUtil.copyProperties(t1, t2_hu, CopyOptions.of().setIgnoreError(true));
 		Assert.assertNull(t2_hu.getStrList());
 	}
 

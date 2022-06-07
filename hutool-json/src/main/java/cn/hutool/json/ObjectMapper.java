@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
@@ -110,8 +111,7 @@ public class ObjectMapper {
 			mapFromResourceBundle((ResourceBundle) source, jsonObject, filter);
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
-			// TODO 过滤器对Bean无效，需补充。
-			mapFromBean(source, jsonObject);
+			mapFromBean(source, jsonObject, filter);
 		} else {
 			// 不支持对象类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
@@ -248,7 +248,9 @@ public class ObjectMapper {
 	 * @param bean       Bean对象
 	 * @param jsonObject {@link JSONObject}
 	 */
-	private static void mapFromBean(final Object bean, final JSONObject jsonObject) {
-		BeanUtil.beanToMap(bean, jsonObject, InternalJSONUtil.toCopyOptions(jsonObject.getConfig()));
+	private static void mapFromBean(final Object bean, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
+		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.getConfig());
+		copyOptions.setFieldEditor((entry -> filter.accept(entry) ? entry : null));
+		BeanUtil.beanToMap(bean, jsonObject, copyOptions);
 	}
 }

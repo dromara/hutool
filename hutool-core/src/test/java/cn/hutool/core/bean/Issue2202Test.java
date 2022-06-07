@@ -22,7 +22,10 @@ public class Issue2202Test {
 		headerMap.put("wechatpay-timestamp", "timestamp");
 		headerMap.put("wechatpay-signature", "signature");
 		final ResponseSignVerifyParams case1 = BeanUtil.toBean(headerMap, ResponseSignVerifyParams.class,
-				CopyOptions.create().setFieldNameEditor(field -> NamingCase.toCamelCase(field, '-')));
+				CopyOptions.of().setFieldEditor(entry -> {
+					entry.setKey(NamingCase.toCamelCase(entry.getKey(), '-'));
+					return entry;
+				}));
 
 		Assert.assertEquals("serial", case1.getWechatpaySerial());
 		Assert.assertEquals("nonce", case1.getWechatpayNonce());

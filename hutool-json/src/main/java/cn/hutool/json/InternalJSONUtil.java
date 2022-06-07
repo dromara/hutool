@@ -184,7 +184,7 @@ public final class InternalJSONUtil {
 	 * @since 5.8.0
 	 */
 	static CopyOptions toCopyOptions(final JSONConfig config) {
-		return CopyOptions.create()
+		return CopyOptions.of()
 				.setIgnoreCase(config.isIgnoreCase())
 				.setIgnoreError(config.isIgnoreError())
 				.setIgnoreNullValue(config.isIgnoreNullValue())

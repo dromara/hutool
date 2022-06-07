@@ -15,8 +15,9 @@ public class BeanCopyMappingTest {
 	 */
 	@Test
 	public void copyPropertiesTest() {
-		final CopyOptions copyOptions = CopyOptions.create()
+		final CopyOptions copyOptions = CopyOptions.of()
 				.setFieldMapping(MapUtil.of("car", "carNo"));
+
 
 		final B b = B.builder().car("12312312").build();
 		final A a = A.builder().build();
@@ -24,6 +25,7 @@ public class BeanCopyMappingTest {
 		BeanUtil.copyProperties(b, a, copyOptions);
 		BeanUtil.copyProperties(a, c);
 
+		Assert.assertEquals("12312312", a.getCarNo());
 		Assert.assertEquals("12312312", c.getCarNo());
 	}
 

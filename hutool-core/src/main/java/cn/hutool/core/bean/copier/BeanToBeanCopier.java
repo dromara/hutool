@@ -3,6 +3,7 @@ package cn.hutool.core.bean.copier;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -53,22 +54,29 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 				return;
 			}
 
-			sFieldName = copyOptions.editFieldName(sFieldName);
+			// 检查源对象属性是否过滤属性
+			Object sValue = sDesc.getValue(this.source);
+			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
+				return;
+			}
+
+			// 编辑键值对
+			final MutableEntry<String, Object> entry = copyOptions.editField(sFieldName, sValue);
+			if(null == entry){
+				return;
+			}
+			sFieldName = entry.getKey();
 			// 对key做转换，转换后为null的跳过
 			if (null == sFieldName) {
 				return;
 			}
+			sValue = entry.getValue();
 
 			// 检查目标字段可写性
+			// 目标字段检查放在键值对编辑之后，因为键可能被编辑修改
 			final PropDesc tDesc = targetPropDescMap.get(sFieldName);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
-				return;
-			}
-
-			// 检查源对象属性是否过滤属性
-			Object sValue = sDesc.getValue(this.source);
-			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
 				return;
 			}
 
@@ -76,7 +84,6 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 			final Type fieldType = TypeUtil.getActualType(this.targetType, tDesc.getFieldType());
 			//sValue = Convert.convertWithCheck(fieldType, sValue, null, this.copyOptions.ignoreError);
 			sValue = this.copyOptions.convertField(fieldType, sValue);
-			sValue = copyOptions.editFieldValue(sFieldName, sValue);
 
 			// 目标赋值
 			tDesc.setValue(this.target, sValue, copyOptions.ignoreNullValue, copyOptions.ignoreError, copyOptions.override);

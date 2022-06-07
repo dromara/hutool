@@ -169,7 +169,7 @@ public class JakartaServletUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBean(final ServletRequest request, final T bean, final boolean isIgnoreError) {
-		return fillBean(request, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
+		return fillBean(request, bean, CopyOptions.of().setIgnoreError(isIgnoreError));
 	}
 
 	/**

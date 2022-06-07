@@ -3,6 +3,7 @@ package cn.hutool.core.bean.copier;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -63,13 +64,23 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 
 			// 获取目标字段真实类型
 			final Type fieldType = TypeUtil.getActualType(this.targetType ,tDesc.getFieldType());
+			Object sValue = source.value(tFieldName, fieldType);
+			// 编辑键值对
+			final MutableEntry<String, Object> entry = copyOptions.editField(tFieldName, sValue);
+			if(null == entry){
+				return;
+			}
+			tFieldName = entry.getKey();
+			// 对key做转换，转换后为null的跳过
+			if (null == tFieldName) {
+				return;
+			}
+			sValue = entry.getValue();
 
 			// 检查目标对象属性是否过滤属性
-			Object sValue = source.value(tFieldName, fieldType);
 			if (false == copyOptions.testPropertyFilter(tDesc.getField(), sValue)) {
 				return;
 			}
-			sValue = copyOptions.editFieldValue(tFieldName, sValue);
 
 			// 目标赋值
 			tDesc.setValue(this.target, sValue, copyOptions.ignoreNullValue, copyOptions.ignoreError, copyOptions.override);

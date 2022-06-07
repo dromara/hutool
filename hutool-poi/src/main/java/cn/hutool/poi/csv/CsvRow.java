@@ -107,7 +107,7 @@ public final class CsvRow implements List<String> {
 	 * @since 5.3.6
 	 */
 	public <T> T toBean(final Class<T> clazz){
-		return BeanUtil.toBean(getFieldMap(), clazz, CopyOptions.create().setIgnoreError(true));
+		return BeanUtil.toBean(getFieldMap(), clazz, CopyOptions.of().setIgnoreError(true));
 	}
 
 	/**

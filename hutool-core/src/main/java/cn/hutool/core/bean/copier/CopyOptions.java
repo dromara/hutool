@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Converter;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
@@ -12,7 +13,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -37,11 +37,6 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean ignoreNullValue;
 	/**
-	 * 属性过滤器，断言通过的属性才会被复制<br>
-	 * 断言参数中Field为源对象的字段对象,如果源对象为Map，使用目标对象，Object为源对象的对应值
-	 */
-	private BiPredicate<Field, Object> propertiesFilter;
-	/**
 	 * 是否忽略字段注入错误
 	 */
 	protected boolean ignoreError;
@@ -50,14 +45,16 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean ignoreCase;
 	/**
-	 * 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等<br>
-	 * 规则为，{@link Editor#edit(Object)}属性为源对象的字段名称或key，返回值为目标对象的字段名称或key
+	 * 属性过滤器，断言通过的属性才会被复制<br>
+	 * 断言参数中Field为源对象的字段对象,如果源对象为Map，使用目标对象，Object为源对象的对应值
 	 */
-	private Editor<String> fieldNameEditor;
+	private BiPredicate<Field, Object> propertiesFilter;
+
 	/**
-	 * 字段属性值编辑器，用于自定义属性值转换规则，例如null转""等
+	 * 字段属性名和属性值编辑器，，用于自定义属性转换规则（例如驼峰转下划线等），自定义属性值转换规则（例如null转""等）
 	 */
-	protected BiFunction<String, Object, Object> fieldValueEditor;
+	protected Editor<MutableEntry<String, Object>> fieldEditor;
+
 	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
 	 */
@@ -80,7 +77,7 @@ public class CopyOptions implements Serializable {
 	 *
 	 * @return 拷贝选项
 	 */
-	public static CopyOptions create() {
+	public static CopyOptions of() {
 		return new CopyOptions();
 	}
 
@@ -92,7 +89,7 @@ public class CopyOptions implements Serializable {
 	 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
 	 * @return 拷贝选项
 	 */
-	public static CopyOptions create(final Class<?> editable, final boolean ignoreNullValue, final String... ignoreProperties) {
+	public static CopyOptions of(final Class<?> editable, final boolean ignoreNullValue, final String... ignoreProperties) {
 		return new CopyOptions(editable, ignoreNullValue, ignoreProperties);
 	}
 	//endregion
@@ -235,7 +232,11 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setFieldMapping(final Map<String, String> fieldMapping) {
-		return setFieldNameEditor((key -> fieldMapping.getOrDefault(key, key)));
+		return setFieldEditor(entry -> {
+			final String key = entry.getKey();
+			entry.setKey(fieldMapping.getOrDefault(key, key));
+			return entry;
+		});
 	}
 
 	/**
@@ -243,24 +244,12 @@ public class CopyOptions implements Serializable {
 	 * 此转换器只针对源端的字段做转换，请确认转换后与目标端字段一致<br>
 	 * 当转换后的字段名为null时忽略这个字段
 	 *
-	 * @param fieldNameEditor 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等
+	 * @param editor 字段属性编辑器，用于自定义属性转换规则，例如驼峰转下划线等
 	 * @return CopyOptions
 	 * @since 5.4.2
 	 */
-	public CopyOptions setFieldNameEditor(final Editor<String> fieldNameEditor) {
-		this.fieldNameEditor = fieldNameEditor;
-		return this;
-	}
-
-	/**
-	 * 设置字段属性值编辑器，用于自定义属性值转换规则，例如null转""等<br>
-	 *
-	 * @param fieldValueEditor 字段属性值编辑器，用于自定义属性值转换规则，例如null转""等
-	 * @return CopyOptions
-	 * @since 5.7.15
-	 */
-	public CopyOptions setFieldValueEditor(final BiFunction<String, Object, Object> fieldValueEditor) {
-		this.fieldValueEditor = fieldValueEditor;
+	public CopyOptions setFieldEditor(final Editor<MutableEntry<String, Object>> editor) {
+		this.fieldEditor = editor;
 		return this;
 	}
 
@@ -272,9 +261,10 @@ public class CopyOptions implements Serializable {
 	 * @return 编辑后的字段值
 	 * @since 5.7.15
 	 */
-	protected Object editFieldValue(final String fieldName, final Object fieldValue) {
-		return (null != this.fieldValueEditor) ?
-				this.fieldValueEditor.apply(fieldName, fieldValue) : fieldValue;
+	protected MutableEntry<String, Object> editField(final String fieldName, final Object fieldValue) {
+		final MutableEntry<String, Object> entry = new MutableEntry<>(fieldName, fieldValue);
+		return (null != this.fieldEditor) ?
+				this.fieldEditor.edit(entry) : entry;
 	}
 
 	/**
@@ -325,17 +315,6 @@ public class CopyOptions implements Serializable {
 	protected Object convertField(final Type targetType, final Object fieldValue) {
 		return (null != this.converter) ?
 				this.converter.convert(targetType, fieldValue) : fieldValue;
-	}
-
-	/**
-	 * 转换字段名为编辑后的字段名
-	 *
-	 * @param fieldName 字段名
-	 * @return 编辑后的字段名
-	 * @since 5.4.2
-	 */
-	protected String editFieldName(final String fieldName) {
-		return (null != this.fieldNameEditor) ? this.fieldNameEditor.edit(fieldName) : fieldName;
 	}
 
 	/**

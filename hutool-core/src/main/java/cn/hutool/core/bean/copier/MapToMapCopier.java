@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -37,13 +38,20 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			if (null == sKey) {
 				return;
 			}
-			final String sKeyStr = copyOptions.editFieldName(sKey.toString());
-			// 对key做转换，转换后为null的跳过
-			if (null == sKeyStr) {
+
+			// 编辑键值对
+			final MutableEntry<String, Object> entry = copyOptions.editField(sKey.toString(), sValue);
+			if(null == entry){
 				return;
 			}
+			sKey = entry.getKey();
+			// 对key做转换，转换后为null的跳过
+			if (null == sKey) {
+				return;
+			}
+			sValue = entry.getValue();
 
-			final Object targetValue = target.get(sKeyStr);
+			final Object targetValue = target.get(sKey);
 			// 非覆盖模式下，如果目标值存在，则跳过
 			if (false == copyOptions.override && null != targetValue) {
 				return;
@@ -52,13 +60,11 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			// 获取目标值真实类型并转换源值
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if(null != typeArguments){
-				//sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
 				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
-				sValue = copyOptions.editFieldValue(sKeyStr, sValue);
 			}
 
 			// 目标赋值
-			target.put(sKeyStr, sValue);
+			target.put(sKey, sValue);
 		});
 		return this.target;
 	}

@@ -3,6 +3,7 @@ package cn.hutool.core.bean.copier;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.PropDesc;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.reflect.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -52,24 +53,29 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 				return;
 			}
 
-			sFieldName = copyOptions.editFieldName(sFieldName);
-			// 对key做转换，转换后为null的跳过
-			if (null == sFieldName) {
-				return;
-			}
-
 			// 检查源对象属性是否过滤属性
 			Object sValue = sDesc.getValue(this.source);
 			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
 				return;
 			}
 
+			// 编辑键值对
+			final MutableEntry<String, Object> entry = copyOptions.editField(sFieldName, sValue);
+			if(null == entry){
+				return;
+			}
+			sFieldName = entry.getKey();
+			// 对key做转换，转换后为null的跳过
+			if (null == sFieldName) {
+				return;
+			}
+			sValue = entry.getValue();
+
 			// 获取目标值真实类型并转换源值
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if(null != typeArguments){
 				//sValue = Convert.convertWithCheck(typeArguments[1], sValue, null, this.copyOptions.ignoreError);
 				sValue = this.copyOptions.convertField(typeArguments[1], sValue);
-				sValue = copyOptions.editFieldValue(sFieldName, sValue);
 			}
 
 			// 目标赋值

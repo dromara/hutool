@@ -247,7 +247,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return vo
 	 */
 	public <T> T toBeanIgnoreCase(final Class<T> clazz) {
-		return BeanUtil.toBean(this, clazz, CopyOptions.create().setIgnoreCase(true));
+		return BeanUtil.toBean(this, clazz, CopyOptions.of().setIgnoreCase(true));
 	}
 
 	/**
