@@ -92,34 +92,34 @@ public class ReflectUtil {
 	 * @return 描述符
 	 */
 	private static char getDescriptorChar(Class<?> currentClass) {
-		if (currentClass == Boolean.class || currentClass == boolean.class) {
+		if ( currentClass == boolean.class) {
 			return 'Z';
 		}
-		if (currentClass == Byte.class || currentClass == byte.class) {
+		if ( currentClass == byte.class) {
 			return 'B';
 		}
-		if (currentClass == Short.class || currentClass == short.class) {
+		if (currentClass == short.class) {
 			return 'S';
 		}
-		if (currentClass == Character.class || currentClass == char.class) {
+		if (currentClass == char.class) {
 			return 'C';
 		}
-		if (currentClass == Integer.class || currentClass == int.class) {
+		if (currentClass == int.class) {
 			return 'I';
 		}
-		if (currentClass == Long.class || currentClass == long.class) {
+		if (currentClass == long.class) {
 			return 'J';
 		}
-		if (currentClass == Float.class || currentClass == float.class) {
+		if (currentClass == float.class) {
 			return 'F';
 		}
-		if (currentClass == Double.class || currentClass == double.class) {
+		if (currentClass == double.class) {
 			return 'D';
 		}
 		if (currentClass == Object.class) {
 			return 'L';
 		}
-		if (currentClass == Void.class || currentClass == void.class) {
+		if (currentClass == void.class) {
 			return 'V';
 		}
 		throw new AssertionError();
