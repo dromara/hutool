@@ -3,7 +3,7 @@ package cn.hutool.core.collection;
 import cn.hutool.core.collection.iter.LineIter;
 import cn.hutool.core.collection.iter.PartitionIter;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.util.ArrayUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ public class PartitionIterTest {
 		final PartitionIter<Integer> iter = new PartitionIter<>(list.iterator(), 3);
 		int max = 0;
 		for (final List<Integer> lines : iter) {
-			max = NumberUtil.max(max, NumberUtil.max(lines.toArray(new Integer[0])));
+			max = ArrayUtil.max(max, ArrayUtil.max(lines.toArray(new Integer[0])));
 		}
 		Assert.assertEquals(45, max);
 	}

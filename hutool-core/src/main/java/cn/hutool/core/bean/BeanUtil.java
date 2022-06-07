@@ -7,6 +7,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ClassUtil;
@@ -399,7 +400,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(final Map<?, ?> map, final T bean, final boolean isToCamelCase, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.create().setIgnoreError(isIgnoreError));
+		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.of().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -412,7 +413,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMapIgnoreCase(final Map<?, ?> map, final T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreCase(true).setIgnoreError(isIgnoreError));
+		return fillBeanWithMap(map, bean, CopyOptions.of().setIgnoreCase(true).setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -527,15 +528,19 @@ public class BeanUtil {
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
 		int mapSize = 16;
-		Editor<String> keyEditor = null;
+		Editor<MutableEntry<String, Object>> editor = null;
 		if (ArrayUtil.isNotEmpty(properties)) {
 			mapSize = properties.length;
 			final Set<String> propertiesSet = SetUtil.of(properties);
-			keyEditor = property -> propertiesSet.contains(property) ? property : null;
+			editor = entry -> {
+				final String key = entry.getKey();
+				entry.setKey(propertiesSet.contains(key) ? key : null);
+				return entry;
+			};
 		}
 
 		// 指明了要复制的属性 所以不忽略null值
-		return beanToMap(bean, new LinkedHashMap<>(mapSize, 1), false, keyEditor);
+		return beanToMap(bean, new LinkedHashMap<>(mapSize, 1), false, editor);
 	}
 
 	/**
@@ -568,7 +573,11 @@ public class BeanUtil {
 			return null;
 		}
 
-		return beanToMap(bean, targetMap, ignoreNullValue, key -> isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
+		return beanToMap(bean, targetMap, ignoreNullValue, entry -> {
+			final String key = entry.getKey();
+			entry.setKey(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
+			return entry;
+		});
 	}
 
 	/**
@@ -588,15 +597,16 @@ public class BeanUtil {
 	 * @return Map
 	 * @since 4.0.5
 	 */
-	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap, final boolean ignoreNullValue, final Editor<String> keyEditor) {
+	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap,
+												final boolean ignoreNullValue, final Editor<MutableEntry<String, Object>> keyEditor) {
 		if (null == bean) {
 			return null;
 		}
 
 		return BeanCopier.create(bean, targetMap,
-				CopyOptions.create()
+				CopyOptions.of()
 						.setIgnoreNullValue(ignoreNullValue)
-						.setFieldNameEditor(keyEditor)
+						.setFieldEditor(keyEditor)
 		).copy();
 	}
 
@@ -642,7 +652,7 @@ public class BeanUtil {
 			return null;
 		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
-		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
 		return target;
 	}
 
@@ -655,7 +665,7 @@ public class BeanUtil {
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 */
 	public static void copyProperties(final Object source, final Object target, final String... ignoreProperties) {
-		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
+		copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
 	}
 
 	/**
@@ -666,7 +676,7 @@ public class BeanUtil {
 	 * @param ignoreCase 是否忽略大小写
 	 */
 	public static void copyProperties(final Object source, final Object target, final boolean ignoreCase) {
-		BeanCopier.create(source, target, CopyOptions.create().setIgnoreCase(ignoreCase)).copy();
+		BeanCopier.create(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
 	}
 
 	/**
@@ -681,7 +691,7 @@ public class BeanUtil {
 		if (null == source || null == target) {
 			return;
 		}
-		BeanCopier.create(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
+		BeanCopier.create(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::of)).copy();
 	}
 
 	/**
@@ -720,7 +730,7 @@ public class BeanUtil {
 	 * @since 5.6.6
 	 */
 	public static <T> List<T> copyToList(final Collection<?> collection, final Class<T> targetType) {
-		return copyToList(collection, targetType, CopyOptions.create());
+		return copyToList(collection, targetType, CopyOptions.of());
 	}
 
 	/**

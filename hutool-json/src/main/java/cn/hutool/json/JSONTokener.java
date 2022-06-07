@@ -411,7 +411,7 @@ public class JSONTokener {
 			while (true) {
 				if (this.nextClean() == ',') {
 					this.back();
-					jsonArray.add(JSONNull.NULL);
+					jsonArray.add(null);
 				} else {
 					this.back();
 					jsonArray.add(this.nextValue());

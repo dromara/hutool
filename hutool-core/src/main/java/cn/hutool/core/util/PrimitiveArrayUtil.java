@@ -462,63 +462,6 @@ public class PrimitiveArrayUtil {
 		return result;
 	}
 
-	// ---------------------------------------------------------------------- range
-
-	/**
-	 * 生成一个从0开始的数字列表<br>
-	 *
-	 * @param excludedEnd 结束的数字（不包含）
-	 * @return 数字列表
-	 */
-	public static int[] range(final int excludedEnd) {
-		return range(0, excludedEnd, 1);
-	}
-
-	/**
-	 * 生成一个数字列表<br>
-	 * 自动判定正序反序
-	 *
-	 * @param includedStart 开始的数字（包含）
-	 * @param excludedEnd   结束的数字（不包含）
-	 * @return 数字列表
-	 */
-	public static int[] range(final int includedStart, final int excludedEnd) {
-		return range(includedStart, excludedEnd, 1);
-	}
-
-	/**
-	 * 生成一个数字列表<br>
-	 * 自动判定正序反序
-	 *
-	 * @param includedStart 开始的数字（包含）
-	 * @param excludedEnd   结束的数字（不包含）
-	 * @param step          步进
-	 * @return 数字列表
-	 */
-	public static int[] range(int includedStart, int excludedEnd, int step) {
-		if (includedStart > excludedEnd) {
-			final int tmp = includedStart;
-			includedStart = excludedEnd;
-			excludedEnd = tmp;
-		}
-
-		if (step <= 0) {
-			step = 1;
-		}
-
-		final int deviation = excludedEnd - includedStart;
-		int length = deviation / step;
-		if (deviation % step != 0) {
-			length += 1;
-		}
-		final int[] range = new int[length];
-		for (int i = 0; i < length; i++) {
-			range[i] = includedStart;
-			includedStart += step;
-		}
-		return range;
-	}
-
 	// ---------------------------------------------------------------------- split
 
 	/**

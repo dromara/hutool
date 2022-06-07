@@ -36,7 +36,9 @@ public interface JSON extends Cloneable, Serializable {
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	Object getByPath(String expression);
+	default Object getByPath(String expression){
+		return BeanPath.of(expression).get(this);
+	}
 
 	/**
 	 * 设置表达式指定位置（或filed对应）的值<br>
@@ -59,7 +61,9 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param expression 表达式
 	 * @param value      值
 	 */
-	void putByPath(String expression, Object value);
+	default void putByPath(String expression, Object value){
+		BeanPath.of(expression).set(this, value);
+	}
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>

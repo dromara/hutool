@@ -11,11 +11,11 @@ import java.util.concurrent.atomic.AtomicLongArray;
  * @author Looly
  * @since 5.4.5
  */
-public class AtomicLongArrayConverter extends AbstractConverter<AtomicLongArray> {
+public class AtomicLongArrayConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected AtomicLongArray convertInternal(final Object value) {
+	protected AtomicLongArray convertInternal(final Class<?> targetClass, final Object value) {
 		return new AtomicLongArray(Convert.convert(long[].class, value));
 	}
 

@@ -1,11 +1,12 @@
 package cn.hutool.json;
 
-import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
-import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.lang.mutable.MutableEntry;
+import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.JSONWriter;
@@ -66,7 +67,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 3.2.2
 	 */
 	public JSONArray(final int initialCapacity) {
-		this(initialCapacity, JSONConfig.create());
+		this(initialCapacity, JSONConfig.of());
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(final int initialCapacity, final JSONConfig config) {
 		this.rawList = new ArrayList<>(initialCapacity);
-		this.config = ObjUtil.defaultIfNull(config, JSONConfig::create);
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig::of);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(final Object object) throws JSONException {
-		this(object, JSONConfig.create());
+		this(object, JSONConfig.of());
 	}
 
 	/**
@@ -191,18 +192,8 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
-	public Object getByPath(final String expression) {
-		return BeanPath.of(expression).get(this);
-	}
-
-	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
-	}
-
-	@Override
-	public void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression).set(this, value);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), this.config.isIgnoreError());
 	}
 
 	/**
@@ -332,7 +323,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	@Override
 	@SuppressWarnings({"unchecked"})
 	public <T> T[] toArray(final T[] a) {
-		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
+		return (T[]) ArrayConverter.INSTANCE.convert(a.getClass().getComponentType(), this);
 	}
 
 	@Override
@@ -374,6 +365,10 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
 		for (final Object object : c) {
+			if(null == object && config.isIgnoreNullValue()){
+				continue;
+			}
+			this.add(index);
 			list.add(JSONUtil.wrap(object, this.config));
 		}
 		return rawList.addAll(index, list);
@@ -426,25 +421,36 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			}
 		}
 
+		// 越界则追加到指定位置
 		if (index >= size()) {
 			add(index, element);
+			return null;
+		}
+		if(null == element && config.isIgnoreNullValue()){
+			return null;
 		}
 		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
 	}
 
 	@Override
-	public void add(final int index, final Object element) {
-		if (index < 0) {
-			throw new JSONException("JSONArray[{}] not found.", index);
+	public void add(int index, final Object element) {
+		if(null == element && config.isIgnoreNullValue()){
+			return;
 		}
 		if (index < this.size()) {
+			if (index < 0) {
+				index = 0;
+			}
 			InternalJSONUtil.testValidity(element);
 			this.rawList.add(index, JSONUtil.wrap(element, this.config));
 		} else {
-			while (index != this.size()) {
-				this.add(JSONNull.NULL);
+			if(false == config.isIgnoreNullValue()){
+				while (index != this.size()) {
+					// 非末尾，则填充null
+					this.add(null);
+				}
 			}
-			this.set(element);
+			this.add(element);
 		}
 
 	}
@@ -481,7 +487,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @return 实体类对象
 	 */
 	public Object toArray(final Class<?> arrayClass) {
-		return JSONConverter.toArray(this, arrayClass);
+		return ArrayConverter.INSTANCE.convert(arrayClass, this);
 	}
 
 	/**
@@ -493,7 +499,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @since 3.0.8
 	 */
 	public <T> List<T> toList(final Class<T> elementType) {
-		return JSONConverter.toList(this, elementType);
+		return Convert.toList(elementType, this);
 	}
 
 	/**
@@ -580,6 +586,10 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 				// 键值对被过滤
 				return false;
 			}
+		}
+		if(null == obj && config.isIgnoreNullValue()){
+			// 忽略空则不添加
+			return false;
 		}
 		return this.rawList.add(obj);
 	}

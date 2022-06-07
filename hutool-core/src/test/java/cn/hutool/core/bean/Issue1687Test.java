@@ -33,7 +33,7 @@ public class Issue1687Test {
 		sysUserFb.setCustomerId("456");
 
 		// 补救别名错位
-		final CopyOptions copyOptions = CopyOptions.create().setFieldMapping(
+		final CopyOptions copyOptions = CopyOptions.of().setFieldMapping(
 				MapUtil.builder("depart", "depId").build()
 		);
 		final SysUser sysUser = BeanUtil.toBean(sysUserFb, SysUser.class, copyOptions);

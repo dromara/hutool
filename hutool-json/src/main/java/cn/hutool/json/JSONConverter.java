@@ -6,7 +6,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -16,7 +15,6 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * JSON转换器
@@ -24,37 +22,21 @@ import java.util.List;
  * @author looly
  * @since 4.2.2
  */
-public class JSONConverter implements Converter<JSON> {
+public class JSONConverter implements Converter {
+
+	public static JSONConverter INSTANCE = new JSONConverter();
 
 	static {
 		// 注册到转换中心
 		final ConverterRegistry registry = ConverterRegistry.getInstance();
-		registry.putCustom(JSON.class, JSONConverter.class);
-		registry.putCustom(JSONObject.class, JSONConverter.class);
-		registry.putCustom(JSONArray.class, JSONConverter.class);
+		registry.putCustom(JSON.class, INSTANCE);
+		registry.putCustom(JSONObject.class, INSTANCE);
+		registry.putCustom(JSONArray.class, INSTANCE);
 	}
 
-	/**
-	 * JSONArray转数组
-	 *
-	 * @param jsonArray JSONArray
-	 * @param arrayClass 数组元素类型
-	 * @return 数组对象
-	 */
-	protected static Object toArray(final JSONArray jsonArray, final Class<?> arrayClass) {
-		return new ArrayConverter(arrayClass).convert(jsonArray, null);
-	}
-
-	/**
-	 * 将JSONArray转换为指定类型的对量列表
-	 *
-	 * @param <T> 元素类型
-	 * @param jsonArray JSONArray
-	 * @param elementType 对象元素类型
-	 * @return 对象列表
-	 */
-	protected static <T> List<T> toList(final JSONArray jsonArray, final Class<T> elementType) {
-		return Convert.toList(elementType, jsonArray);
+	@Override
+	public Object convert(Type targetType, Object value) throws ConvertException {
+		return JSONUtil.parse(value);
 	}
 
 	/**
@@ -71,7 +53,7 @@ public class JSONConverter implements Converter<JSON> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T jsonConvert(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
-		if (JSONUtil.isNull(value)) {
+		if (null == value) {
 			return null;
 		}
 
@@ -109,7 +91,7 @@ public class JSONConverter implements Converter<JSON> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T jsonToBean(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
-		if (JSONUtil.isNull(value)) {
+		if (null == value) {
 			return null;
 		}
 
@@ -124,9 +106,9 @@ public class JSONConverter implements Converter<JSON> {
 			if(value instanceof JSONGetter
 					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
 				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
-				final Converter<T> converter = new BeanConverter<>(targetType,
-						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
-				return converter.convertWithCheck(value, null, ignoreError);
+				final Converter converter = new BeanConverter(InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
+				return ignoreError ? converter.convert(targetType, value, null)
+						: (T) converter.convert(targetType, value);
 			}
 		}
 
@@ -143,10 +125,5 @@ public class JSONConverter implements Converter<JSON> {
 		}
 
 		return targetValue;
-	}
-
-	@Override
-	public JSON convert(final Object value, final JSON defaultValue) throws IllegalArgumentException {
-		return JSONUtil.parse(value);
 	}
 }

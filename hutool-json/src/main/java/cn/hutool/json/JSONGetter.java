@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -32,10 +33,10 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * key对应值是否为{@code null}或无此key
 	 *
 	 * @param key 键
-	 * @return true 无此key或值为{@code null}或{@link JSONNull#NULL}返回{@code false}，其它返回{@code true}
+	 * @return true 无此key或值为{@code null}返回{@code false}，其它返回{@code true}
 	 */
 	default boolean isNull(final K key) {
-		return JSONUtil.isNull(this.getObj(key));
+		return ObjUtil.isNull(this.getObj(key));
 	}
 
 	/**
@@ -70,7 +71,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 */
 	default JSONArray getJSONArray(final K key) {
 		final Object object = this.getObj(key);
-		if (JSONUtil.isNull(object)) {
+		if (ObjUtil.isNull(object)) {
 			return null;
 		}
 
@@ -89,7 +90,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 */
 	default JSONObject getJSONObject(final K key) {
 		final Object object = this.getObj(key);
-		if (JSONUtil.isNull(object)) {
+		if (ObjUtil.isNull(object)) {
 			return null;
 		}
 
@@ -133,7 +134,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	default Date getDate(final K key, final Date defaultValue) {
 		// 默认转换
 		final Object obj = getObj(key);
-		if (JSONUtil.isNull(obj)) {
+		if (ObjUtil.isNull(obj)) {
 			return defaultValue;
 		}
 		if (obj instanceof Date) {
@@ -167,7 +168,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	default LocalDateTime getLocalDateTime(final K key, final LocalDateTime defaultValue) {
 		// 默认转换
 		final Object obj = getObj(key);
-		if (JSONUtil.isNull(obj)) {
+		if (ObjUtil.isNull(obj)) {
 			return defaultValue;
 		}
 		if (obj instanceof LocalDateTime) {
@@ -228,7 +229,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 */
 	default <T> T get(final K key, final Class<T> type, final boolean ignoreError) throws ConvertException {
 		final Object value = this.getObj(key);
-		if (JSONUtil.isNull(value)) {
+		if (ObjUtil.isNull(value)) {
 			return null;
 		}
 		return JSONConverter.jsonConvert(type, value, ignoreError);

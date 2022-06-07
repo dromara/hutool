@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * 排列A(n, m)<br>
- * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
+ * 排列组合相关类 参考：<a href="http://cgs1999.iteye.com/blog/2327664">http://cgs1999.iteye.com/blog/2327664</a>
  *
  * @author looly
  * @since 4.0.7
@@ -47,9 +47,9 @@ public class Arrangement implements Serializable {
 	 */
 	public static long count(final int n, final int m) {
 		if (n == m) {
-			return NumberUtil.factorial(n);
+			return MathUtil.factorial(n);
 		}
-		return (n > m) ? NumberUtil.factorial(n, n - m) : 0;
+		return (n > m) ? MathUtil.factorial(n, n - m) : 0;
 	}
 
 	/**

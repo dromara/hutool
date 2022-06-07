@@ -1,23 +1,23 @@
 package cn.hutool.core.convert.impl;
 
+import cn.hutool.core.convert.AbstractConverter;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import cn.hutool.core.convert.AbstractConverter;
-
 /**
  * 字符串转换器
  * @author Looly
  *
  */
-public class PathConverter extends AbstractConverter<Path>{
+public class PathConverter extends AbstractConverter{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Path convertInternal(final Object value) {
+	protected Path convertInternal(final Class<?> targetClass, final Object value) {
 		try {
 			if(value instanceof URI){
 				return Paths.get((URI)value);

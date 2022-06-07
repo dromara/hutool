@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.mutable;
 
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.comparator.CompareUtil;
 
 /**
  * 可变 <code>int</code> 类型
@@ -181,7 +181,7 @@ public class MutableInt extends Number implements Comparable<MutableInt>, Mutabl
 	 */
 	@Override
 	public int compareTo(final MutableInt other) {
-		return NumberUtil.compare(this.value, other.value);
+		return CompareUtil.compare(this.value, other.value);
 	}
 
 	// -----------------------------------------------------------------------

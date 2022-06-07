@@ -1,11 +1,11 @@
 package cn.hutool.core.convert.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrUtil;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 日期转换器
@@ -13,7 +13,7 @@ import cn.hutool.core.text.StrUtil;
  * @author Looly
  *
  */
-public class CalendarConverter extends AbstractConverter<Calendar> {
+public class CalendarConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	/** 日期格式化 */
@@ -38,7 +38,7 @@ public class CalendarConverter extends AbstractConverter<Calendar> {
 	}
 
 	@Override
-	protected Calendar convertInternal(final Object value) {
+	protected Calendar convertInternal(final Class<?> targetClass, final Object value) {
 		// Handle Date
 		if (value instanceof Date) {
 			return DateUtil.calendar((Date)value);

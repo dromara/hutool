@@ -59,8 +59,8 @@ public final class InternalJSONUtil {
 	 * @throws JSONException If the value is or contains an invalid number.
 	 */
 	static String valueToString(final Object value) throws JSONException {
-		if (value == null || value instanceof JSONNull) {
-			return JSONNull.NULL.toString();
+		if (value == null) {
+			return StrUtil.NULL;
 		}
 		if (value instanceof JSONString) {
 			try {
@@ -94,7 +94,7 @@ public final class InternalJSONUtil {
 	public static Object stringToValue(final String string) {
 		// null处理
 		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
-			return JSONNull.NULL;
+			return null;
 		}
 
 		// boolean处理
@@ -184,7 +184,7 @@ public final class InternalJSONUtil {
 	 * @since 5.8.0
 	 */
 	static CopyOptions toCopyOptions(final JSONConfig config) {
-		return CopyOptions.create()
+		return CopyOptions.of()
 				.setIgnoreCase(config.isIgnoreCase())
 				.setIgnoreError(config.isIgnoreError())
 				.setIgnoreNullValue(config.isIgnoreNullValue())
@@ -201,7 +201,7 @@ public final class InternalJSONUtil {
 	static Map<String, Object> createRawMap(final int capacity, JSONConfig config) {
 		final Map<String, Object> rawHashMap;
 		if (null == config) {
-			config = JSONConfig.create();
+			config = JSONConfig.of();
 		}
 		final Comparator<String> keyComparator = config.getKeyComparator();
 		if (config.isIgnoreCase()) {

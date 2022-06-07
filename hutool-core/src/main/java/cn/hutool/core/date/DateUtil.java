@@ -99,7 +99,8 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象，并根据指定时区转换
 	 *
-	 * @param date Date对象
+	 * @param date     Date对象
+	 * @param timeZone 时区
 	 * @return {@link DateTime}对象
 	 */
 	public static DateTime date(final Date date, final TimeZone timeZone) {

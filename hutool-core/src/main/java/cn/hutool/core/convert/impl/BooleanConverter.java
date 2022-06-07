@@ -16,11 +16,11 @@ import cn.hutool.core.util.BooleanUtil;
  *
  * @author Looly
  */
-public class BooleanConverter extends AbstractConverter<Boolean> {
+public class BooleanConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Boolean convertInternal(final Object value) {
+	protected Boolean convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Number) {
 			// 0为false，其它数字为true
 			return 0 != ((Number) value).doubleValue();

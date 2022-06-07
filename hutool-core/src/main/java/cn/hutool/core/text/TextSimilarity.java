@@ -42,7 +42,7 @@ public class TextSimilarity {
 		}
 
 		final int commonLength = longestCommonSubstringLength(newStrA, newStrB);
-		return NumberUtil.div(commonLength, temp);
+		return NumberUtil.div(commonLength, temp).doubleValue();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class TextSimilarity {
 
 	/**
 	 * 最长公共子串，采用动态规划算法。 其不要求所求得的字符在所给的字符串中是连续的。<br>
-	 * 算法解析见：https://leetcode-cn.com/problems/longest-common-subsequence/solution/zui-chang-gong-gong-zi-xu-lie-by-leetcod-y7u0/
+	 * 算法解析见：<a href="https://leetcode-cn.com/problems/longest-common-subsequence/solution/zui-chang-gong-gong-zi-xu-lie-by-leetcod-y7u0/">zui-chang-gong-gong-zi-xu-lie-by-leetcod-y7u0</a>
 	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2

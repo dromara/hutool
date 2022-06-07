@@ -36,33 +36,15 @@ import java.util.function.Function;
  *
  * @author Looly
  */
-public class NumberConverter extends AbstractConverter<Number> {
+public class NumberConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
-	private final Class<? extends Number> targetType;
+	public static final NumberConverter INSTANCE = new NumberConverter();
 
-	public NumberConverter() {
-		this.targetType = Number.class;
-	}
-
-	/**
-	 * 构造<br>
-	 *
-	 * @param clazz 需要转换的数字类型，默认 {@link Number}
-	 */
-	public NumberConverter(final Class<? extends Number> clazz) {
-		this.targetType = (null == clazz) ? Number.class : clazz;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
-	public Class<Number> getTargetType() {
-		return (Class<Number>) this.targetType;
-	}
-
 	@Override
-	protected Number convertInternal(final Object value) {
-		return convert(value, this.targetType, this::convertToStr);
+	protected Number convertInternal(final Class<?> targetClass, final Object value) {
+		return convert(value, (Class<? extends Number>) targetClass, this::convertToStr);
 	}
 
 	@Override

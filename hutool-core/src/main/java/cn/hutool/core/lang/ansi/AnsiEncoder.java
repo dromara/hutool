@@ -4,7 +4,6 @@ package cn.hutool.core.lang.ansi;
  * 生成ANSI格式的编码输出
  *
  * @author Phillip Webb
- * @since 1.0.0
  */
 public abstract class AnsiEncoder {
 

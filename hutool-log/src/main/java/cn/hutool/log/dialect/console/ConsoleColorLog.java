@@ -16,6 +16,7 @@ import java.util.function.Function;
  * @since 5.8.0
  */
 public class ConsoleColorLog extends ConsoleLog {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 控制台打印类名的颜色代码

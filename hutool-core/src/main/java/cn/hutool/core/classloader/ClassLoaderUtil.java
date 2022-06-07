@@ -140,7 +140,7 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
-	 * @param <T> 目标类的类型
+	 * @param <T>  目标类的类型
 	 * @param name 类名
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
@@ -159,7 +159,7 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
-	 * @param <T> 目标类的类型
+	 * @param <T>           目标类的类型
 	 * @param name          类名
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
@@ -181,6 +181,7 @@ public class ClassLoaderUtil {
 	 * 3、内部类，例如：java.lang.Thread.State会被转为java.lang.Thread$State加载
 	 * </pre>
 	 *
+	 * @param <T>           加载的类的类型
 	 * @param name          类名
 	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用{@link #getClassLoader()}获取
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
@@ -193,7 +194,7 @@ public class ClassLoaderUtil {
 
 		// 自动将包名中的"/"替换为"."
 		name = name.replace(CharPool.SLASH, CharPool.DOT);
-		if(null == classLoader){
+		if (null == classLoader) {
 			classLoader = getClassLoader();
 		}
 
@@ -202,7 +203,7 @@ public class ClassLoaderUtil {
 		if (clazz == null) {
 			final String finalName = name;
 			final ClassLoader finalClassLoader = classLoader;
-			clazz = CLASS_CACHE.computeIfAbsent(MapUtil.entry(name, classLoader), (key)-> doLoadClass(finalName, finalClassLoader, isInitialized));
+			clazz = CLASS_CACHE.computeIfAbsent(MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
 		}
 		return (Class<T>) clazz;
 	}
@@ -284,14 +285,16 @@ public class ClassLoaderUtil {
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 加载非原始类类，无缓存
-	 * @param name 类名
-	 * @param classLoader {@link ClassLoader}
+	 *
+	 * @param name          类名
+	 * @param classLoader   {@link ClassLoader}
 	 * @param isInitialized 是否初始化
 	 * @return 类
 	 */
-	private static Class<?> doLoadClass(final String name, ClassLoader classLoader, final boolean isInitialized){
+	private static Class<?> doLoadClass(final String name, ClassLoader classLoader, final boolean isInitialized) {
 		Class<?> clazz;
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			// 对象数组"java.lang.String[]"风格

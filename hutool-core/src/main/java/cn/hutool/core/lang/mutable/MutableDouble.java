@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.mutable;
 
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.comparator.CompareUtil;
 
 /**
  * 可变 {@code double} 类型
@@ -180,7 +180,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 */
 	@Override
 	public int compareTo(final MutableDouble other) {
-		return NumberUtil.compare(this.value, other.value);
+		return CompareUtil.compare(this.value, other.value);
 	}
 
 	// -----------------------------------------------------------------------

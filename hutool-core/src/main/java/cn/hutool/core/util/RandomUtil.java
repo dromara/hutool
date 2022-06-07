@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
 import cn.hutool.core.math.NumberUtil;
@@ -50,7 +51,7 @@ public class RandomUtil {
 	 *
 	 * <p>
 	 * 注意：此方法返回的{@link ThreadLocalRandom}不可以在多线程环境下共享对象，否则有重复随机数问题。
-	 * 见：https://www.jianshu.com/p/89dfe990295c
+	 * 见：<a href="https://www.jianshu.com/p/89dfe990295c">https://www.jianshu.com/p/89dfe990295c</a>
 	 * </p>
 	 *
 	 * @return {@link ThreadLocalRandom}
@@ -76,7 +77,7 @@ public class RandomUtil {
 	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
 	 *
 	 * <p>
-	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
+	 * 相关说明见：<a href="https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom">how-to-solve-slow-java-securerandom</a>
 	 *
 	 * @return {@link SecureRandom}
 	 * @since 3.1.2
@@ -90,7 +91,7 @@ public class RandomUtil {
 	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
 	 *
 	 * <p>
-	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
+	 * 相关说明见：<a href="https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom">how-to-solve-slow-java-securerandom</a>
 	 *
 	 * @param seed 随机数种子
 	 * @return {@link SecureRandom}
@@ -104,10 +105,10 @@ public class RandomUtil {
 	/**
 	 * 获取SHA1PRNG的{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
 	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）,在Linux下噪声生成时可能造成较长时间停顿。<br>
-	 * see: http://ifeve.com/jvm-random-and-entropy-source/
+	 * see: <a href="http://ifeve.com/jvm-random-and-entropy-source/">http://ifeve.com/jvm-random-and-entropy-source/</a>
 	 *
 	 * <p>
-	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
+	 * 相关说明见：<a href="https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom">how-to-solve-slow-java-securerandom</a>
 	 *
 	 * @param seed 随机数种子
 	 * @return {@link SecureRandom}
@@ -443,7 +444,7 @@ public class RandomUtil {
 	 * @return 随机列表
 	 * @since 5.2.1
 	 */
-	public static <T> List<T> randomEleList(final List<T> source, final int count) {
+	public static <T> List<T> randomPick(final List<T> source, final int count) {
 		if (count >= source.size()) {
 			return ListUtil.of(source);
 		}
@@ -453,6 +454,30 @@ public class RandomUtil {
 			result.add(source.get(e));
 		}
 		return result;
+	}
+
+	/**
+	 * 生成从种子中获取随机数字
+	 *
+	 * @param size  指定产生随机数的个数
+	 * @param seed  种子，用于取随机数的int池
+	 * @return 随机int数组
+	 * @since 5.4.5
+	 */
+	public static int[] randomPickInts(final int size, final int[] seed) {
+		Assert.isTrue(seed.length >= size, "Size is larger than seed size!");
+
+		final int[] ranArr = new int[size];
+		// 数量你可以自己定义。
+		for (int i = 0; i < size; i++) {
+			// 得到一个位置
+			final int j = RandomUtil.randomInt(seed.length - i);
+			// 得到那个位置的数值
+			ranArr[i] = seed[j];
+			// 将最后一个未用的数字放到这里
+			seed[j] = seed[seed.length - 1 - i];
+		}
+		return ranArr;
 	}
 
 	/**
@@ -487,7 +512,7 @@ public class RandomUtil {
 	 * @since 5.2.1
 	 */
 	public static int[] randomInts(final int length) {
-		final int[] range = ArrayUtil.range(length);
+		final int[] range = NumberUtil.range(length);
 		for (int i = 0; i < length; i++) {
 			final int random = randomInt(i, length);
 			ArrayUtil.swap(range, i, random);

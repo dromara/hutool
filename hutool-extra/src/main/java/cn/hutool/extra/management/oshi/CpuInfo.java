@@ -161,7 +161,7 @@ public class CpuInfo {
 	 * @return 总CPU使用率
 	 */
 	public double getUsed() {
-		return NumberUtil.sub(100, this.free);
+		return NumberUtil.sub(100, this.free).doubleValue();
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class FuncFilter extends AbstractFilter {
 	 *
 	 * @param size     最大值
 	 * @param hashFunc Hash函数
-	 * @return
+	 * @return FuncFilter
 	 */
 	public static FuncFilter of(final int size, final Function<String, Number> hashFunc) {
 		return new FuncFilter(size, hashFunc);

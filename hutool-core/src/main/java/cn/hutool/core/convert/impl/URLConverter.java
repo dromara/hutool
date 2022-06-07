@@ -1,21 +1,21 @@
 package cn.hutool.core.convert.impl;
 
+import cn.hutool.core.convert.AbstractConverter;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-
-import cn.hutool.core.convert.AbstractConverter;
 
 /**
  * URL对象转换器
  * @author Looly
  *
  */
-public class URLConverter extends AbstractConverter<URL>{
+public class URLConverter extends AbstractConverter{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected URL convertInternal(final Object value) {
+	protected URL convertInternal(final Class<?> targetClass, final Object value) {
 		try {
 			if(value instanceof File){
 				return ((File)value).toURI().toURL();

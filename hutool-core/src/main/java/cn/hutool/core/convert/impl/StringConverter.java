@@ -19,11 +19,11 @@ import java.util.TimeZone;
  *
  * @author Looly
  */
-public class StringConverter extends AbstractConverter<String> {
+public class StringConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected String convertInternal(final Object value) {
+	protected String convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof TimeZone) {
 			return ((TimeZone) value).getID();
 		} else if (value instanceof org.w3c.dom.Node) {

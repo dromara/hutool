@@ -10,11 +10,11 @@ import cn.hutool.core.lang.Opt;
  * @author Looly
  * @since 5.7.16
  */
-public class OptConverter extends AbstractConverter<Opt<?>> {
+public class OptConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Opt<?> convertInternal(final Object value) {
+	protected Opt<?> convertInternal(final Class<?> targetClass, final Object value) {
 		return Opt.ofNullable(value);
 	}
 

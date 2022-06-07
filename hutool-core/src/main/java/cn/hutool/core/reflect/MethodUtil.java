@@ -565,7 +565,7 @@ public class MethodUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws InvocationTargetRuntimeException 目标方法执行异常
+	 * @throws InvocationTargetException 目标方法执行异常
 	 * @throws IllegalAccessException           访问权限异常
 	 */
 	@SuppressWarnings("unchecked")

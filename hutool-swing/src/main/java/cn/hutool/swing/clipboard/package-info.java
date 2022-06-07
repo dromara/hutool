@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.swing.clipboard;
+package cn.hutool.swing.clipboard;

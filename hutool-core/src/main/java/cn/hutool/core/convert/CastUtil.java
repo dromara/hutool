@@ -1,5 +1,7 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.lang.Assert;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,18 @@ import java.util.Set;
  * @since 5.8.1
  */
 public class CastUtil {
+
+	/**
+	 * 将指定对象强制转换为指定类型
+	 *
+	 * @param <T>        目标类型
+	 * @param targetType 指定目标类型
+	 * @param value      被转换的对象
+	 * @return 转换后的对象
+	 */
+	public static <T> T castTo(Class<T> targetType, final Object value) {
+		return Assert.notNull(targetType).cast(value);
+	}
 
 	/**
 	 * 泛型集合向上转型。例如将Collection&lt;Integer&gt;转换为Collection&lt;Number&gt;

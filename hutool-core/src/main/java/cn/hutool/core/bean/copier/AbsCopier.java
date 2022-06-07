@@ -23,6 +23,6 @@ public abstract class AbsCopier<S, T> implements Copier<T> {
 	public AbsCopier(final S source, final T target, final CopyOptions copyOptions) {
 		this.source = source;
 		this.target = target;
-		this.copyOptions = ObjUtil.defaultIfNull(copyOptions, CopyOptions::create);
+		this.copyOptions = ObjUtil.defaultIfNull(copyOptions, CopyOptions::of);
 	}
 }

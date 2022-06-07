@@ -1,5 +1,6 @@
 package cn.hutool.json.xml;
 
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
@@ -63,7 +64,7 @@ public class JSONXMLParser {
 					if (x.next() == '[') {
 						string = x.nextCDATA();
 						if (string.length() > 0) {
-							context.accumulate("content", string);
+							context.append("content", string);
 						}
 						return false;
 					}
@@ -126,10 +127,10 @@ public class JSONXMLParser {
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
 						}
-						jsonobject.accumulate(string, keepStrings ? token : InternalJSONUtil.stringToValue((String) token));
+						jsonobject.append(string, keepStrings ? token : InternalJSONUtil.stringToValue((String) token));
 						token = null;
 					} else {
-						jsonobject.accumulate(string, "");
+						jsonobject.append(string, "");
 					}
 
 				} else if (token == XML.SLASH) {
@@ -138,9 +139,9 @@ public class JSONXMLParser {
 						throw x.syntaxError("Misshaped tag");
 					}
 					if (jsonobject.size() > 0) {
-						context.accumulate(tagName, jsonobject);
+						context.append(tagName, jsonobject);
 					} else {
-						context.accumulate(tagName, "");
+						context.append(tagName, StrUtil.EMPTY);
 					}
 					return false;
 
@@ -156,18 +157,18 @@ public class JSONXMLParser {
 						} else if (token instanceof String) {
 							string = (String) token;
 							if (string.length() > 0) {
-								jsonobject.accumulate("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
+								jsonobject.append("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
 							}
 
 						} else if (token == XML.LT) {
 							// Nested element
 							if (parse(x, jsonobject, tagName, keepStrings)) {
 								if (jsonobject.size() == 0) {
-									context.accumulate(tagName, "");
+									context.append(tagName, "");
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
-									context.accumulate(tagName, jsonobject.get("content"));
+									context.append(tagName, jsonobject.get("content"));
 								} else {
-									context.accumulate(tagName, jsonobject);
+									context.append(tagName, jsonobject);
 								}
 								return false;
 							}

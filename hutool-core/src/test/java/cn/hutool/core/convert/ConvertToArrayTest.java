@@ -39,8 +39,8 @@ public class ConvertToArrayTest {
 	public void toIntArrayTestIgnoreComponentErrorTest() {
 		final String[] b = { "a", "1" };
 
-		final ArrayConverter arrayConverter = new ArrayConverter(Integer[].class, true);
-		final Integer[] integerArray = (Integer[]) arrayConverter.convert(b, null);
+		final ArrayConverter arrayConverter = new ArrayConverter(true);
+		final Integer[] integerArray = arrayConverter.convert(Integer[].class, b, null);
 		Assert.assertArrayEquals(integerArray, new Integer[]{null, 1});
 	}
 
@@ -89,8 +89,8 @@ public class ConvertToArrayTest {
 		//字符串转数组
 		final String arrayStr = "1,2,3,4,5";
 		//获取Converter类的方法2，自己实例化相应Converter对象
-		final ArrayConverter c3 = new ArrayConverter(int[].class);
-		final int[] result3 = (int[]) c3.convert(arrayStr, null);
+		final ArrayConverter c3 = new ArrayConverter();
+		final int[] result3 = c3.convert(int[].class, arrayStr, null);
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
 	}
 

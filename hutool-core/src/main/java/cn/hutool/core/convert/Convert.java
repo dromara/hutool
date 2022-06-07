@@ -532,7 +532,11 @@ public class Convert {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <E extends Enum<E>> E toEnum(final Class<E> clazz, final Object value, final E defaultValue) {
-		return (E) (new EnumConverter(clazz)).convertQuietly(value, defaultValue);
+		try{
+			return (E) (new EnumConverter()).convert(clazz, value);
+		} catch (final Exception ignore){
+			return defaultValue;
+		}
 	}
 
 	/**
@@ -558,7 +562,7 @@ public class Convert {
 	 * @since 3.0.8
 	 */
 	public static Collection<?> toCollection(final Class<?> collectionType, final Class<?> elementType, final Object value) {
-		return new CollectionConverter(collectionType, elementType).convert(value, null);
+		return new CollectionConverter().convert(collectionType, elementType, value);
 	}
 
 	/**
@@ -613,7 +617,7 @@ public class Convert {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> toMap(final Class<K> keyType, final Class<V> valueType, final Object value) {
-		return (Map<K, V>) new MapConverter(HashMap.class, keyType, valueType).convert(value, null);
+		return (Map<K, V>) new MapConverter().convert(HashMap.class, keyType, valueType, value);
 	}
 
 	/**

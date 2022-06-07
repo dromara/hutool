@@ -12,11 +12,11 @@ import java.time.temporal.TemporalAmount;
  * @author Looly
  * @since 5.0.0
  */
-public class PeriodConverter extends AbstractConverter<Period> {
+public class PeriodConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Period convertInternal(final Object value) {
+	protected Period convertInternal(final Class<?> targetClass, final Object value) {
 		if(value instanceof TemporalAmount){
 			return Period.from((TemporalAmount) value);
 		}else if(value instanceof Integer){

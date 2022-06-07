@@ -1,9 +1,9 @@
 package cn.hutool.core.convert.impl;
 
-import java.util.Locale;
-
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.text.StrUtil;
+
+import java.util.Locale;
 
 /**
  *
@@ -13,11 +13,11 @@ import cn.hutool.core.text.StrUtil;
  * @author Looly
  * @since 4.5.2
  */
-public class LocaleConverter extends AbstractConverter<Locale> {
+public class LocaleConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Locale convertInternal(final Object value) {
+	protected Locale convertInternal(final Class<?> targetClass, final Object value) {
 		try {
 			final String str = convertToStr(value);
 			if (StrUtil.isEmpty(str)) {

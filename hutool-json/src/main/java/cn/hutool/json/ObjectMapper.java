@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
@@ -110,8 +111,7 @@ public class ObjectMapper {
 			mapFromResourceBundle((ResourceBundle) source, jsonObject, filter);
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
-			// TODO 过滤器对Bean无效，需补充。
-			mapFromBean(source, jsonObject);
+			mapFromBean(source, jsonObject, filter);
 		} else {
 			// 不支持对象类型转换为JSONObject
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
@@ -119,7 +119,7 @@ public class ObjectMapper {
 	}
 
 	/**
-	 * 初始化
+	 * 将给定对象转换为{@link JSONArray}
 	 *
 	 * @param jsonArray 目标{@link JSONArray}
 	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
@@ -139,7 +139,7 @@ public class ObjectMapper {
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray, filter);
-		}else if (source instanceof Reader) {
+		} else if (source instanceof Reader) {
 			mapFromTokener(new JSONTokener((Reader) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof InputStream) {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
@@ -248,7 +248,11 @@ public class ObjectMapper {
 	 * @param bean       Bean对象
 	 * @param jsonObject {@link JSONObject}
 	 */
-	private static void mapFromBean(final Object bean, final JSONObject jsonObject) {
-		BeanUtil.beanToMap(bean, jsonObject, InternalJSONUtil.toCopyOptions(jsonObject.getConfig()));
+	private static void mapFromBean(final Object bean, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
+		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.getConfig());
+		if(null != filter){
+			copyOptions.setFieldEditor((entry -> filter.accept(entry) ? entry : null));
+		}
+		BeanUtil.beanToMap(bean, jsonObject, copyOptions);
 	}
 }

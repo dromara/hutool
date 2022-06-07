@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.img;
+package cn.hutool.swing.img;

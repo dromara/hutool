@@ -297,7 +297,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 			public boolean containsKey(final String key) {
 				return null != getByGroup(key, group);
 			}
-		}, CopyOptions.create());
+		}, CopyOptions.of());
 	}
 
 	/**

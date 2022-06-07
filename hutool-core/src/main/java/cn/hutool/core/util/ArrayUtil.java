@@ -348,7 +348,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			Array.set(buffer, index, value);
 			return buffer;
 		} else {
-			if(ArrayUtil.isEmpty(buffer)){
+			if (ArrayUtil.isEmpty(buffer)) {
 				final T[] values = newArray(value.getClass(), 1);
 				values[0] = value;
 				return append(buffer, values);
@@ -1644,10 +1644,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
 	 * 此方法通过{@link LinkedHashSet} 去重
 	 *
-	 * @param <T>      数组元素类型
-	 * @param <K>      唯一键类型
-	 * @param array    数组
-	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @param <T>             数组元素类型
+	 * @param <K>             唯一键类型
+	 * @param array           数组
+	 * @param uniqueGenerator 唯一键生成器
+	 * @param override        是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
 	 * @return 去重后的数组
 	 * @since 5.8.0
 	 */
@@ -1658,9 +1659,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
-		if(override){
+		if (override) {
 			Collections.addAll(set, array);
-		} else{
+		} else {
 			for (final T t : array) {
 				set.addIfAbsent(t);
 			}

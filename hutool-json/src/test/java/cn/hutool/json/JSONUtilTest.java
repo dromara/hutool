@@ -178,7 +178,7 @@ public class JSONUtilTest {
 	@Test
 	public void customValueTest() {
 		final JSONObject jsonObject = JSONUtil.createObj()
-		.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
+		.set("test2", (JSONString) () -> NumberUtil.format("#.0", 12.00D));
 
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}
@@ -191,7 +191,7 @@ public class JSONUtilTest {
 		Assert.assertEquals("{\"test2\":12}", jsonObjectDefault.toString());
 
 		// 不去除多余的0
-		final JSONObject jsonObject = JSONUtil.createObj(JSONConfig.create().setStripTrailingZeros(false))
+		final JSONObject jsonObject = JSONUtil.createObj(JSONConfig.of().setStripTrailingZeros(false))
 				.set("test2", 12.00D);
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 
