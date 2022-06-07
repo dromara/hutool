@@ -1,9 +1,9 @@
 package cn.hutool.core.lang.mutable;
 
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.comparator.CompareUtil;
 
 /**
- * 可变 <code>float</code> 类型
+ * 可变 {@code float} 类型
  *
  * @see Float
  * @since 3.0.1
@@ -152,12 +152,12 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableFloat}</li>
+	 * 	<li>类型为 {@code MutableFloat}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 *
 	 * @param obj 比对的对象
-	 * @return 相同返回<code>true</code>，否则 <code>false</code>
+	 * @return 相同返回<code>true</code>，否则 {@code false}
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -176,12 +176,12 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	/**
 	 * 比较
 	 *
-	 * @param other 其它 {@link MutableFloat} 对象
+	 * @param other 其它 {@code MutableFloat} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
 	public int compareTo(final MutableFloat other) {
-		return NumberUtil.compare(this.value, other.value);
+		return CompareUtil.compare(this.value, other.value);
 	}
 
 	// -----------------------------------------------------------------------

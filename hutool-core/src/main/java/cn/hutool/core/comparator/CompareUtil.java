@@ -11,6 +11,86 @@ import java.util.function.Function;
  */
 public class CompareUtil {
 
+	// ------------------------------------------------------------------------------------------- compare
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
+	 * @see Character#compare(char, char)
+	 * @since 3.0.1
+	 */
+	public static int compare(final char x, final char y) {
+		return Character.compare(x, y);
+	}
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
+	 * @see Double#compare(double, double)
+	 * @since 3.0.1
+	 */
+	public static int compare(final double x, final double y) {
+		return Double.compare(x, y);
+	}
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
+	 * @see Integer#compare(int, int)
+	 * @since 3.0.1
+	 */
+	public static int compare(final int x, final int y) {
+		return Integer.compare(x, y);
+	}
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
+	 * @see Long#compare(long, long)
+	 * @since 3.0.1
+	 */
+	public static int compare(final long x, final long y) {
+		return Long.compare(x, y);
+	}
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
+	 * @see Short#compare(short, short)
+	 * @since 3.0.1
+	 */
+	public static int compare(final short x, final short y) {
+		return Short.compare(x, y);
+	}
+
+	/**
+	 * 比较两个值的大小
+	 *
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @see Byte#compare(byte, byte)
+	 * @since 3.0.1
+	 */
+	public static int compare(final byte x, final byte y) {
+		return Byte.compare(x, y);
+	}
+
 	/**
 	 * 获取自然排序器，即默认排序器
 	 *

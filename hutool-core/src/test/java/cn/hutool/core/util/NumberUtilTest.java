@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
 /**
@@ -263,18 +262,6 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void maxTest() {
-		final int max = NumberUtil.max(5,4,3,6,1);
-		Assert.assertEquals(6, max);
-	}
-
-	@Test
-	public void minTest() {
-		final int min = NumberUtil.min(5,4,3,6,1);
-		Assert.assertEquals(1, min);
-	}
-
-	@Test
 	public void parseIntTest() {
 		int number = NumberUtil.parseInt("0xFF");
 		Assert.assertEquals(255, number);
@@ -363,42 +350,6 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void factorialTest(){
-		long factorial = NumberUtil.factorial(0);
-		Assert.assertEquals(1, factorial);
-
-		Assert.assertEquals(1L, NumberUtil.factorial(1));
-		Assert.assertEquals(1307674368000L, NumberUtil.factorial(15));
-		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20));
-
-		factorial = NumberUtil.factorial(5, 0);
-		Assert.assertEquals(120, factorial);
-		factorial = NumberUtil.factorial(5, 1);
-		Assert.assertEquals(120, factorial);
-
-		Assert.assertEquals(5, NumberUtil.factorial(5, 4));
-		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20, 0));
-	}
-
-	@Test
-	public void factorialTest2(){
-		long factorial = NumberUtil.factorial(new BigInteger("0")).longValue();
-		Assert.assertEquals(1, factorial);
-
-		Assert.assertEquals(1L, NumberUtil.factorial(new BigInteger("1")).longValue());
-		Assert.assertEquals(1307674368000L, NumberUtil.factorial(new BigInteger("15")).longValue());
-		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(20));
-
-		factorial = NumberUtil.factorial(new BigInteger("5"), new BigInteger("0")).longValue();
-		Assert.assertEquals(120, factorial);
-		factorial = NumberUtil.factorial(new BigInteger("5"), BigInteger.ONE).longValue();
-		Assert.assertEquals(120, factorial);
-
-		Assert.assertEquals(5, NumberUtil.factorial(new BigInteger("5"), new BigInteger("4")).longValue());
-		Assert.assertEquals(2432902008176640000L, NumberUtil.factorial(new BigInteger("20"), BigInteger.ZERO).longValue());
-	}
-
-	@Test
 	public void isPowerOfTwoTest() {
 		Assert.assertFalse(NumberUtil.isPowerOfTwo(-1));
 		Assert.assertTrue(NumberUtil.isPowerOfTwo(16));
@@ -462,4 +413,25 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isDouble("  "));
 	}
 
+	@Test
+	public void rangeTest() {
+		final int[] range = NumberUtil.range(0, 10);
+		Assert.assertEquals(0, range[0]);
+		Assert.assertEquals(1, range[1]);
+		Assert.assertEquals(2, range[2]);
+		Assert.assertEquals(3, range[3]);
+		Assert.assertEquals(4, range[4]);
+		Assert.assertEquals(5, range[5]);
+		Assert.assertEquals(6, range[6]);
+		Assert.assertEquals(7, range[7]);
+		Assert.assertEquals(8, range[8]);
+		Assert.assertEquals(9, range[9]);
+		Assert.assertEquals(10, range[10]);
+	}
+
+	@Test(expected = NegativeArraySizeException.class)
+	public void rangeMinTest() {
+		//noinspection ResultOfMethodCallIgnored
+		NumberUtil.range(0, Integer.MIN_VALUE);
+	}
 }

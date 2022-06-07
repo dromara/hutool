@@ -32,7 +32,6 @@ import java.util.Collection;
  * <li><a href="https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking">one-jdk7-bug-thinking</a></li>
  * </ul>
  * <p>
- * TODO 需整理精简方法，去掉无用的重载方法。
  *
  * @author Looly
  */
@@ -42,14 +41,6 @@ public class NumberUtil {
 	 * 默认除法运算精度
 	 */
 	private static final int DEFAULT_DIV_SCALE = 10;
-
-	/**
-	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
-	 */
-	private static final long[] FACTORIALS = new long[]{
-			1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
-			87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
-			2432902008176640000L};
 
 	/**
 	 * 提供精确的加法运算<br>
@@ -263,7 +254,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal div(Number v1, final Number v2, int scale, final RoundingMode roundingMode) {
 		Assert.notNull(v2, "Divisor must be not null !");
-		if(null == v1){
+		if (null == v1) {
 			v1 = BigDecimal.ZERO;
 		}
 		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
@@ -757,7 +748,7 @@ public class NumberUtil {
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(final String s) {
-		if(StrUtil.isBlank(s)) {
+		if (StrUtil.isBlank(s)) {
 			return false;
 		}
 		try {
@@ -777,7 +768,7 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		if(StrUtil.isBlank(s)) {
+		if (StrUtil.isBlank(s)) {
 			return false;
 		}
 		try {
@@ -795,7 +786,7 @@ public class NumberUtil {
 	 * @return 是否为{@link Double}类型
 	 */
 	public static boolean isDouble(final String s) {
-		if(StrUtil.isBlank(s)) {
+		if (StrUtil.isBlank(s)) {
 			return false;
 		}
 		try {
@@ -827,52 +818,58 @@ public class NumberUtil {
 	// ------------------------------------------------------------------------------------------- range
 
 	/**
-	 * 从0开始给定范围内的整数列表，步进为1
+	 * 生成一个从0开始的数字列表<br>
 	 *
-	 * @param stop 结束（包含）
-	 * @return 整数列表
-	 * @since 3.3.1
+	 * @param stopIncluded 结束的数字（不包含）
+	 * @return 数字列表
 	 */
-	public static int[] range(final int stop) {
-		return range(0, stop);
+	public static int[] range(final int stopIncluded) {
+		return range(0, stopIncluded, 1);
 	}
 
 	/**
-	 * 给定范围内的整数列表，步进为1
+	 * 生成一个数字列表<br>
+	 * 自动判定正序反序
 	 *
-	 * @param start 开始（包含）
-	 * @param stop  结束（包含）
-	 * @return 整数列表
+	 * @param startInclude 开始的数字（包含）
+	 * @param stopIncluded 结束的数字（包含）
+	 * @return 数字列表
 	 */
-	public static int[] range(final int start, final int stop) {
-		return range(start, stop, 1);
+	public static int[] range(final int startInclude, final int stopIncluded) {
+		return range(startInclude, stopIncluded, 1);
 	}
 
 	/**
-	 * 给定范围内的整数列表
+	 * 生成一个数字列表<br>
+	 * 自动判定正序反序
 	 *
-	 * @param includeStart 开始（包含）
-	 * @param includeEnd  结束（包含）
-	 * @param step  步进
-	 * @return 整数列表
+	 * @param startInclude 开始的数字（包含）
+	 * @param stopIncluded 结束的数字（不包含）
+	 * @param step         步进
+	 * @return 数字列表
 	 */
-	public static int[] range(final int includeStart, final int includeEnd, int step) {
-		if (includeStart < includeEnd) {
-			step = Math.abs(step);
-		} else if (includeStart > includeEnd) {
-			step = -Math.abs(step);
-		} else {// start == end
-			return new int[]{includeStart};
+	public static int[] range(int startInclude, int stopIncluded, int step) {
+		if (startInclude > stopIncluded) {
+			final int tmp = startInclude;
+			startInclude = stopIncluded;
+			stopIncluded = tmp;
 		}
 
-		final int size = Math.abs((includeEnd - includeStart) / step) + 1;
-		final int[] values = new int[size];
-		int index = 0;
-		for (int i = includeStart; (step > 0) ? i <= includeEnd : i >= includeEnd; i += step) {
-			values[index] = i;
-			index++;
+		if (step <= 0) {
+			step = 1;
 		}
-		return values;
+
+		final int deviation = stopIncluded + 1 - startInclude;
+		int length = deviation / step;
+		if (deviation % step != 0) {
+			length += 1;
+		}
+		final int[] range = new int[length];
+		for (int i = 0; i < length; i++) {
+			range[i] = startInclude;
+			startInclude += step;
+		}
+		return range;
 	}
 
 	/**
@@ -890,200 +887,29 @@ public class NumberUtil {
 	/**
 	 * 将给定范围内的整数添加到已有集合中
 	 *
-	 * @param start  开始（包含）
-	 * @param stop   结束（包含）
-	 * @param step   步进
-	 * @param values 集合
+	 * @param startInclude 开始（包含）
+	 * @param stopInclude  结束（包含）
+	 * @param step         步进
+	 * @param values       集合
 	 * @return 集合
 	 */
-	public static Collection<Integer> appendRange(final int start, final int stop, int step, final Collection<Integer> values) {
-		if (start < stop) {
+	public static Collection<Integer> appendRange(final int startInclude, final int stopInclude, int step, final Collection<Integer> values) {
+		if (startInclude < stopInclude) {
 			step = Math.abs(step);
-		} else if (start > stop) {
+		} else if (startInclude > stopInclude) {
 			step = -Math.abs(step);
 		} else {// start == end
-			values.add(start);
+			values.add(startInclude);
 			return values;
 		}
 
-		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
+		for (int i = startInclude; (step > 0) ? i <= stopInclude : i >= stopInclude; i += step) {
 			values.add(i);
 		}
 		return values;
 	}
 
 	// ------------------------------------------------------------------------------------------- others
-
-	/**
-	 * 计算阶乘
-	 * <p>
-	 * n! = n * (n-1) * ... * 2 * 1
-	 * </p>
-	 *
-	 * @param n 阶乘起始
-	 * @return 结果
-	 * @since 5.6.0
-	 */
-	public static BigInteger factorial(final BigInteger n) {
-		if (n.equals(BigInteger.ZERO)) {
-			return BigInteger.ONE;
-		}
-		return factorial(n, BigInteger.ZERO);
-	}
-
-	/**
-	 * 计算范围阶乘
-	 * <p>
-	 * factorial(start, end) = start * (start - 1) * ... * (end + 1)
-	 * </p>
-	 *
-	 * @param start 阶乘起始（包含）
-	 * @param end   阶乘结束，必须小于起始（不包括）
-	 * @return 结果
-	 * @since 5.6.0
-	 */
-	public static BigInteger factorial(BigInteger start, BigInteger end) {
-		Assert.notNull(start, "Factorial start must be not null!");
-		Assert.notNull(end, "Factorial end must be not null!");
-		if (start.compareTo(BigInteger.ZERO) < 0 || end.compareTo(BigInteger.ZERO) < 0) {
-			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be > 0, but got start={}, end={}", start, end));
-		}
-
-		if (start.equals(BigInteger.ZERO)) {
-			start = BigInteger.ONE;
-		}
-
-		if (end.compareTo(BigInteger.ONE) < 0) {
-			end = BigInteger.ONE;
-		}
-
-		BigInteger result = start;
-		end = end.add(BigInteger.ONE);
-		while (start.compareTo(end) > 0) {
-			start = start.subtract(BigInteger.ONE);
-			result = result.multiply(start);
-		}
-		return result;
-	}
-
-	/**
-	 * 计算范围阶乘
-	 * <p>
-	 * factorial(start, end) = start * (start - 1) * ... * (end + 1)
-	 * </p>
-	 *
-	 * @param start 阶乘起始（包含）
-	 * @param end   阶乘结束，必须小于起始（不包括）
-	 * @return 结果
-	 * @since 4.1.0
-	 */
-	public static long factorial(final long start, final long end) {
-		// 负数没有阶乘
-		if (start < 0 || end < 0) {
-			throw new IllegalArgumentException(StrUtil.format("Factorial start and end both must be >= 0, but got start={}, end={}", start, end));
-		}
-		if (0L == start || start == end) {
-			return 1L;
-		}
-		if (start < end) {
-			return 0L;
-		}
-		return factorialMultiplyAndCheck(start, factorial(start - 1, end));
-	}
-
-	/**
-	 * 计算范围阶乘中校验中间的计算是否存在溢出，factorial提前做了负数和0的校验，因此这里没有校验数字的正负
-	 *
-	 * @param a 乘数
-	 * @param b 被乘数
-	 * @return 如果 a * b的结果没有溢出直接返回，否则抛出异常
-	 */
-	private static long factorialMultiplyAndCheck(final long a, final long b) {
-		if (a <= Long.MAX_VALUE / b) {
-			return a * b;
-		}
-		throw new IllegalArgumentException(StrUtil.format("Overflow in multiplication: {} * {}", a, b));
-	}
-
-	/**
-	 * 计算阶乘
-	 * <p>
-	 * n! = n * (n-1) * ... * 2 * 1
-	 * </p>
-	 *
-	 * @param n 阶乘起始
-	 * @return 结果
-	 */
-	public static long factorial(final long n) {
-		if (n < 0 || n > 20) {
-			throw new IllegalArgumentException(StrUtil.format("Factorial must have n >= 0 and n <= 20 for n!, but got n = {}", n));
-		}
-		return FACTORIALS[(int) n];
-	}
-
-	/**
-	 * 平方根算法<br>
-	 * 推荐使用 {@link Math#sqrt(double)}
-	 *
-	 * @param x 值
-	 * @return 平方根
-	 */
-	public static long sqrt(long x) {
-		long y = 0;
-		long b = (~Long.MAX_VALUE) >>> 1;
-		while (b > 0) {
-			if (x >= y + b) {
-				x -= y + b;
-				y >>= 1;
-				y += b;
-			} else {
-				y >>= 1;
-			}
-			b >>= 2;
-		}
-		return y;
-	}
-
-	/**
-	 * 可以用于计算双色球、大乐透注数的方法<br>
-	 * 比如大乐透35选5可以这样调用processMultiple(7,5); 就是数学中的：C75=7*6/2*1
-	 *
-	 * @param selectNum 选中小球个数
-	 * @param minNum    最少要选中多少个小球
-	 * @return 注数
-	 */
-	public static int processMultiple(final int selectNum, final int minNum) {
-		final int result;
-		result = mathSubNode(selectNum, minNum) / mathNode(selectNum - minNum);
-		return result;
-	}
-
-	/**
-	 * 最大公约数
-	 *
-	 * @param m 第一个值
-	 * @param n 第二个值
-	 * @return 最大公约数
-	 */
-	public static int divisor(int m, int n) {
-		while (m % n != 0) {
-			final int temp = m % n;
-			m = n;
-			n = temp;
-		}
-		return n;
-	}
-
-	/**
-	 * 最小公倍数
-	 *
-	 * @param m 第一个值
-	 * @param n 第二个值
-	 * @return 最小公倍数
-	 */
-	public static int multiple(final int m, final int n) {
-		return m * n / divisor(m, n);
-	}
 
 	/**
 	 * 获得数字对应的二进制字符串
@@ -1119,86 +945,6 @@ public class NumberUtil {
 	 */
 	public static long binaryToLong(final String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
-	}
-
-	// ------------------------------------------------------------------------------------------- compare
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
-	 * @see Character#compare(char, char)
-	 * @since 3.0.1
-	 */
-	public static int compare(final char x, final char y) {
-		return Character.compare(x, y);
-	}
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
-	 * @see Double#compare(double, double)
-	 * @since 3.0.1
-	 */
-	public static int compare(final double x, final double y) {
-		return Double.compare(x, y);
-	}
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
-	 * @see Integer#compare(int, int)
-	 * @since 3.0.1
-	 */
-	public static int compare(final int x, final int y) {
-		return Integer.compare(x, y);
-	}
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
-	 * @see Long#compare(long, long)
-	 * @since 3.0.1
-	 */
-	public static int compare(final long x, final long y) {
-		return Long.compare(x, y);
-	}
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
-	 * @see Short#compare(short, short)
-	 * @since 3.0.1
-	 */
-	public static int compare(final short x, final short y) {
-		return Short.compare(x, y);
-	}
-
-	/**
-	 * 比较两个值的大小
-	 *
-	 * @param x 第一个值
-	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
-	 * @see Byte#compare(byte, byte)
-	 * @since 3.0.1
-	 */
-	public static int compare(final byte x, final byte y) {
-		return Byte.compare(x, y);
 	}
 
 	/**
@@ -1331,176 +1077,6 @@ public class NumberUtil {
 	 */
 	public static boolean equals(final char c1, final char c2, final boolean ignoreCase) {
 		return CharUtil.equals(c1, c2, ignoreCase);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param <T>         元素类型
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(Comparable[])
-	 * @since 4.0.7
-	 */
-	public static <T extends Comparable<? super T>> T min(final T[] numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(long...)
-	 * @since 4.0.7
-	 */
-	public static long min(final long... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(int...)
-	 * @since 4.0.7
-	 */
-	public static int min(final int... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(short...)
-	 * @since 4.0.7
-	 */
-	public static short min(final short... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(double...)
-	 * @since 4.0.7
-	 */
-	public static double min(final double... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(float...)
-	 * @since 4.0.7
-	 */
-	public static float min(final float... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最小值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最小值
-	 * @see ArrayUtil#min(Comparable[])
-	 * @since 5.0.8
-	 */
-	public static BigDecimal min(final BigDecimal... numberArray) {
-		return ArrayUtil.min(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param <T>         元素类型
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(Comparable[])
-	 * @since 4.0.7
-	 */
-	public static <T extends Comparable<? super T>> T max(final T[] numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(long...)
-	 * @since 4.0.7
-	 */
-	public static long max(final long... numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(int...)
-	 * @since 4.0.7
-	 */
-	public static int max(final int... numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(short...)
-	 * @since 4.0.7
-	 */
-	public static short max(final short... numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(double...)
-	 * @since 4.0.7
-	 */
-	public static double max(final double... numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(float...)
-	 * @since 4.0.7
-	 */
-	public static float max(final float... numberArray) {
-		return ArrayUtil.max(numberArray);
-	}
-
-	/**
-	 * 取最大值
-	 *
-	 * @param numberArray 数字数组
-	 * @return 最大值
-	 * @see ArrayUtil#max(Comparable[])
-	 * @since 5.0.8
-	 */
-	public static BigDecimal max(final BigDecimal... numberArray) {
-		return ArrayUtil.max(numberArray);
 	}
 
 	/**
@@ -2201,21 +1777,4 @@ public class NumberUtil {
 		return false == isOdd(num);
 	}
 
-	// ------------------------------------------------------------------------------------------- Private method start
-	private static int mathSubNode(final int selectNum, final int minNum) {
-		if (selectNum == minNum) {
-			return 1;
-		} else {
-			return selectNum * mathSubNode(selectNum - 1, minNum);
-		}
-	}
-
-	private static int mathNode(final int selectNum) {
-		if (selectNum == 0) {
-			return 1;
-		} else {
-			return selectNum * mathNode(selectNum - 1);
-		}
-	}
-	// ------------------------------------------------------------------------------------------- Private method end
 }

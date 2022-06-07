@@ -1,15 +1,15 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.text.StrUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.hutool.core.text.StrUtil;
-
 /**
  * 组合，即C(n, m)<br>
- * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
+ * 排列组合相关类 参考：<a href="http://cgs1999.iteye.com/blog/2327664">http://cgs1999.iteye.com/blog/2327664</a>
  *
  * @author looly
  * @since 4.0.6
@@ -21,7 +21,7 @@ public class Combination implements Serializable {
 
 	/**
 	 * 组合，即C(n, m)<br>
-	 * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
+	 * 排列组合相关类 参考：<a href="http://cgs1999.iteye.com/blog/2327664">http://cgs1999.iteye.com/blog/2327664</a>
 	 *
 	 * @param datas 用于组合的数据
 	 */
@@ -40,7 +40,7 @@ public class Combination implements Serializable {
 		if (0 == m || n == m) {
 			return 1;
 		}
-		return (n > m) ? NumberUtil.factorial(n, n - m) / NumberUtil.factorial(m) : 0;
+		return (n > m) ? MathUtil.factorial(n, n - m) / MathUtil.factorial(m) : 0;
 	}
 
 	/**

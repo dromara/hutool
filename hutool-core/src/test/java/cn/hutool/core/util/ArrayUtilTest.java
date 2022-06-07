@@ -168,27 +168,6 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void rangeTest() {
-		final int[] range = ArrayUtil.range(0, 10);
-		Assert.assertEquals(0, range[0]);
-		Assert.assertEquals(1, range[1]);
-		Assert.assertEquals(2, range[2]);
-		Assert.assertEquals(3, range[3]);
-		Assert.assertEquals(4, range[4]);
-		Assert.assertEquals(5, range[5]);
-		Assert.assertEquals(6, range[6]);
-		Assert.assertEquals(7, range[7]);
-		Assert.assertEquals(8, range[8]);
-		Assert.assertEquals(9, range[9]);
-	}
-
-	@Test(expected = NegativeArraySizeException.class)
-	public void rangeMinTest() {
-		//noinspection ResultOfMethodCallIgnored
-		ArrayUtil.range(0, Integer.MIN_VALUE);
-	}
-
-	@Test
 	public void maxTest() {
 		final int max = ArrayUtil.max(1, 2, 13, 4, 5);
 		Assert.assertEquals(13, max);

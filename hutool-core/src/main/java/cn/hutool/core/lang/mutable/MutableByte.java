@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.mutable;
 
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.comparator.CompareUtil;
 
 /**
  * 可变 {@code byte} 类型
@@ -186,7 +186,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 */
 	@Override
 	public int compareTo(final MutableByte other) {
-		return NumberUtil.compare(this.value, other.value);
+		return CompareUtil.compare(this.value, other.value);
 	}
 
 	// -----------------------------------------------------------------------

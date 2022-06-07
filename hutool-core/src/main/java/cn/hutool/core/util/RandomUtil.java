@@ -512,7 +512,7 @@ public class RandomUtil {
 	 * @since 5.2.1
 	 */
 	public static int[] randomInts(final int length) {
-		final int[] range = ArrayUtil.range(length);
+		final int[] range = NumberUtil.range(length);
 		for (int i = 0; i < length; i++) {
 			final int random = randomInt(i, length);
 			ArrayUtil.swap(range, i, random);
