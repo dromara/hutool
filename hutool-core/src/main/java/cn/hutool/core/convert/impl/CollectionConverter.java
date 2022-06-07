@@ -16,6 +16,8 @@ import java.util.Collection;
  */
 public class CollectionConverter implements Converter {
 
+	public static CollectionConverter INSTANCE = new CollectionConverter();
+
 	@Override
 	public Collection<?> convert(Type targetType, final Object value) {
 		if (targetType instanceof TypeReference) {

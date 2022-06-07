@@ -30,6 +30,8 @@ import java.util.Map;
 public class BeanConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static BeanConverter INSTANCE = new BeanConverter();
+
 	private final CopyOptions copyOptions;
 
 	/**

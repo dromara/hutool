@@ -41,4 +41,11 @@ public class ConvertToNumberTest {
 		bigDecimal = Convert.toBigDecimal("1L");
 		Assert.assertEquals(1L, bigDecimal.longValue());
 	}
+
+	@Test
+	public void toNumberTest(){
+		// 直接转换为抽象Number，默认使用BigDecimal实现
+		final Number number = Convert.toNumber("1");
+		Assert.assertEquals(BigDecimal.class, number.getClass());
+	}
 }

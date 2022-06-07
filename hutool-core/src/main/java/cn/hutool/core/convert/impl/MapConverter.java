@@ -23,11 +23,7 @@ import java.util.Objects;
 public class MapConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 构造
-	 */
-	public MapConverter() {
-	}
+	public static MapConverter INSTANCE = new MapConverter();
 
 	@Override
 	public Object convert(Type targetType, Object value) throws ConvertException {

@@ -46,6 +46,15 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 当天时间，默认时区
+	 *
+	 * @return {@link LocalDateTime}
+	 */
+	public static LocalDate today() {
+		return LocalDate.now();
+	}
+
+	/**
 	 * {@link Instant}转{@link LocalDateTime}，使用默认时区
 	 *
 	 * @param instant {@link Instant}

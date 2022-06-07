@@ -45,8 +45,6 @@ import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -71,13 +69,9 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.DoubleAdder;
-import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 转换器登记中心
@@ -125,24 +119,8 @@ public class ConverterRegistry implements Serializable {
 	 * 构造
 	 */
 	public ConverterRegistry() {
-		defaultConverter();
-		putCustomBySpi();
-	}
-
-	/**
-	 * 使用SPI加载转换器
-	 */
-	private void putCustomBySpi() {
-		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
-			try {
-				final Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
-				if (null != type) {
-					putCustom(type, converter);
-				}
-			} catch (final Exception ignore) {
-				// 忽略注册失败的
-			}
-		});
+		registerDefault();
+		registerCustomBySpi();
 	}
 
 	/**
@@ -228,6 +206,9 @@ public class ConverterRegistry implements Serializable {
 			return defaultValue;
 		}
 		if (TypeUtil.isUnknown(type)) {
+			if(null == defaultValue){
+				throw new ConvertException("Unsupported convert to unknow type: {}", type);
+			}
 			type = defaultValue.getClass();
 		}
 
@@ -246,8 +227,7 @@ public class ConverterRegistry implements Serializable {
 			if (null != defaultValue) {
 				rowType = (Class<T>) defaultValue.getClass();
 			} else {
-				// 无法识别的泛型类型，按照Object处理
-				return (T) value;
+				throw new ConvertException("Can not get class from type: {}", type);
 			}
 		}
 
@@ -259,7 +239,7 @@ public class ConverterRegistry implements Serializable {
 
 		// 尝试转Bean
 		if (BeanUtil.isBean(rowType)) {
-			return (T) new BeanConverter().convert(type, value);
+			return (T) BeanConverter.INSTANCE.convert(type, value);
 		}
 
 		// 无法转换
@@ -319,21 +299,29 @@ public class ConverterRegistry implements Serializable {
 			return null;
 		}
 
-		// 集合转换（不可以默认强转）
+		// 集合转换（含有泛型参数，不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
-			final CollectionConverter collectionConverter = new CollectionConverter();
-			return (T) collectionConverter.convert(type, value, (Collection<?>) defaultValue);
+			return (T) CollectionConverter.INSTANCE.convert(type, value, (Collection<?>) defaultValue);
 		}
 
-		// Map类型（不可以默认强转）
+		// Map类型（含有泛型参数，不可以默认强转）
 		if (Map.class.isAssignableFrom(rowType)) {
-			final MapConverter mapConverter = new MapConverter();
-			return (T) mapConverter.convert(type, value, (Map<?, ?>) defaultValue);
+			return (T) MapConverter.INSTANCE.convert(type, value, (Map<?, ?>) defaultValue);
 		}
 
 		// 默认强转
 		if (rowType.isInstance(value)) {
 			return (T) value;
+		}
+
+		// 原始类型转换
+		if(rowType.isPrimitive()){
+			return PrimitiveConverter.INSTANCE.convert(type, value, defaultValue);
+		}
+
+		// 数字类型转换
+		if(Number.class.isAssignableFrom(rowType)){
+			return NumberConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 枚举转换
@@ -355,36 +343,13 @@ public class ConverterRegistry implements Serializable {
 	 *
 	 * @return 转换器
 	 */
-	private ConverterRegistry defaultConverter() {
+	private ConverterRegistry registerDefault() {
 		defaultConverterMap = new ConcurrentHashMap<>();
 
-		// 原始类型转换器
-		defaultConverterMap.put(int.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(long.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(byte.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(short.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(float.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(double.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(char.class, PrimitiveConverter.INSTANCE);
-		defaultConverterMap.put(boolean.class, PrimitiveConverter.INSTANCE);
-
 		// 包装类转换器
-		defaultConverterMap.put(Number.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(Integer.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(AtomicInteger.class, NumberConverter.INSTANCE);// since 3.0.8
-		defaultConverterMap.put(Long.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(LongAdder.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(AtomicLong.class, NumberConverter.INSTANCE);// since 3.0.8
-		defaultConverterMap.put(Byte.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(Short.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(Float.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(Double.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(DoubleAdder.class, NumberConverter.INSTANCE);
 		defaultConverterMap.put(Character.class, new CharacterConverter());
 		defaultConverterMap.put(Boolean.class, new BooleanConverter());
 		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
-		defaultConverterMap.put(BigDecimal.class, NumberConverter.INSTANCE);
-		defaultConverterMap.put(BigInteger.class, NumberConverter.INSTANCE);
 		defaultConverterMap.put(CharSequence.class, new StringConverter());
 		defaultConverterMap.put(String.class, new StringConverter());
 
@@ -434,6 +399,22 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
 
 		return this;
+	}
+
+	/**
+	 * 使用SPI加载转换器
+	 */
+	private void registerCustomBySpi() {
+		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
+			try {
+				final Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
+				if (null != type) {
+					putCustom(type, converter);
+				}
+			} catch (final Exception ignore) {
+				// 忽略注册失败的
+			}
+		});
 	}
 	// ----------------------------------------------------------- Private method end
 }
