@@ -298,6 +298,15 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * 获取bodyBytes存储字节码
+	 *
+	 * @return byte[]
+	 */
+	public byte[] bodyBytes() {
+		return this.bodyBytes;
+	}
+
+	/**
 	 * 返回字符集
 	 *
 	 * @return 字符集
