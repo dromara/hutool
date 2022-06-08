@@ -556,6 +556,9 @@ public class IterUtil {
 	 * @since 5.8.0
 	 */
 	public static <E> E get(final Iterator<E> iterator, int index) throws IndexOutOfBoundsException {
+		if(null == iterator){
+			return null;
+		}
 		Assert.isTrue(index >= 0, "[index] must be >= 0");
 		while (iterator.hasNext()) {
 			index--;

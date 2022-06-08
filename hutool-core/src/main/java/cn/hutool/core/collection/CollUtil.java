@@ -1965,19 +1965,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 获取集合的第一个元素
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterator {@link Iterator}
-	 * @return 第一个元素
-	 * @see IterUtil#getFirst(Iterator)
-	 * @since 3.0.1
-	 */
-	public static <T> T getFirst(final Iterator<T> iterator) {
-		return IterUtil.getFirst(iterator);
-	}
-
-	/**
 	 * 获取集合的最后一个元素
 	 *
 	 * @param <T>        集合元素类型
