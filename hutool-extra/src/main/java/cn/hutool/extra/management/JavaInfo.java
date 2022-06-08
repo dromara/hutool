@@ -89,6 +89,30 @@ public class JavaInfo implements Serializable {
 	}
 
 	/**
+	 * 返回1位整型的java版本，（取自系统属性：{@code java.version}）如：7、8、11、15、17、18，返回1位，java10及其之后的版本返回值为2位
+	 * <ul>
+	 *     <li>JDK 1.7.0_80：{@code 7}</li>
+	 *     <li>JDK 1.8.0_211：{@code 8}</li>
+	 *     <li>JDK 11.0.2：{@code 11}</li>
+	 *     <li>JDK 13.0.11：{@code 13}</li>
+	 *     <li>JDK 15.0.7：{@code 15}</li>
+	 *     <li>JDK 17.0.3：{@code 17}</li>
+	 *     <li>JDK 18.0.1.1：{@code 18}</li>
+	 * </ul>
+	 * @since 6.0.1
+	 * @author dazer
+	 */
+	public final int getVersionIntSimple() {
+		if (JAVA_VERSION == null) {
+			return 0;
+		}
+		if (JAVA_VERSION.startsWith("1.")) {
+			return Integer.parseInt(JAVA_VERSION.split("\\.")[1]);
+		}
+		return Integer.parseInt(JAVA_VERSION.split("\\.")[0]);
+	}
+
+	/**
 	 * 取得当前Java impl.的版本的{@code float}值。
 	 *
 	 * @return Java版本的<code>float</code>值或{@code 0}
