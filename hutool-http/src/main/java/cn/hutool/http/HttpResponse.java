@@ -249,6 +249,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return byte[]
 	 */
+	@Override
 	public byte[] bodyBytes() {
 		sync();
 		return this.bodyBytes;

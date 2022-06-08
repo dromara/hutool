@@ -333,6 +333,15 @@ public abstract class HttpBase<T> {
 		return (T) this;
 	}
 
+	/**
+	 * 获取bodyBytes存储字节码
+	 *
+	 * @return byte[]
+	 */
+	public byte[] bodyBytes() {
+		return this.bodyBytes;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = StrUtil.builder();
