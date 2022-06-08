@@ -527,4 +527,11 @@ public class ArrayUtilTest {
 		result = ArrayUtil.replace(g, 0, h);
 		Assert.assertArrayEquals(g, result);
 	}
+
+	@Test
+	public void setOrAppendTest(){
+		String[] arr = new String[0];
+		String[] newArr = ArrayUtil.setOrAppend(arr, 0, "Good");// ClassCastException
+		Assert.assertArrayEquals(new String[]{"Good"}, newArr);
+	}
 }

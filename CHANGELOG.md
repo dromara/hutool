@@ -11,6 +11,9 @@
 * 【core   】     IterUtil.get增加判空（issue#I5B12A@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复NumberUtil.isXXX空判断错误（issue#2356@Github）
+* 【core   】     修复Convert.toSBC空指针问题（issue#I5APKK@Gitee）
+* 【json   】     修复Bean中存在bytes，无法转换问题（issue#2365@Github）
+* 【core   】     ArrayUtil.setOrAppend()传入空数组时，抛出异常（issue#I5APJE@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
