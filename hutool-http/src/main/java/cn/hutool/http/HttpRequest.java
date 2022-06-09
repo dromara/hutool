@@ -32,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -513,14 +514,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		String strValue;
 		if (value instanceof Iterable) {
 			// 列表对象
-			strValue = CollUtil.join((Iterable<?>) value, ",");
+			((Iterable<?>) value).forEach(item -> putToForm(name,item));
+			return this;
 		} else if (ArrayUtil.isArray(value)) {
 			if (File.class == ArrayUtil.getComponentType(value)) {
 				// 多文件
 				return this.form(name, (File[]) value);
 			}
 			// 数组对象
-			strValue = ArrayUtil.join((Object[]) value, ",");
+			Arrays.stream((Object[]) value).forEach(item -> putToForm(name,item));
+			return this;
 		} else {
 			// 其他对象一律转换为字符串
 			strValue = Convert.toStr(value, null);

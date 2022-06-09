@@ -204,4 +204,22 @@ public class HttpRequestTest {
 		HttpRequest httpRequest = new HttpRequest(urlBuilder);
 		httpRequest.setMethod(Method.GET).execute();
 	}
+
+	@Test
+	@Ignore
+	public void putParamArrayTest(){
+		HttpRequest httpRequest = HttpRequest.post("hutool.cn");
+		Map<String, Object> param = new HashMap<>();
+		param.put("test", "测试参数");
+
+		List<String> listParam = new ArrayList<>();
+		listParam.add("集合葫芦娃");
+		listParam.add("大娃,二娃");
+		listParam.add("三娃,四娃,五娃,六娃");
+		param.put("list", listParam);
+		param.put("array", new String[]{"数组葫芦娃","大娃,二娃","三娃,四娃,五娃,六娃"});
+
+		httpRequest.form(param);
+		System.out.println("end");
+	}
 }
