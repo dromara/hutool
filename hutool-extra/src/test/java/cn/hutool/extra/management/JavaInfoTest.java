@@ -10,10 +10,9 @@ public class JavaInfoTest {
 
 	@Test
 	public void isJavaVersionAtLeastTest() {
-		boolean javaVersionAtLeast1 = ManagementUtil.getJavaInfo().isJavaVersionAtLeast(1.8f);
+		final int versionInt = ManagementUtil.getJavaInfo().getVersionIntSimple();
+		Assert.assertTrue(versionInt >= 8);
+		final boolean javaVersionAtLeast1 = ManagementUtil.getJavaInfo().isJavaVersionAtLeast(1.8f);
 		Assert.assertTrue(javaVersionAtLeast1);
-
-		boolean javaVersionAtLeast2 = ManagementUtil.getJavaInfo().isJavaVersionAtLeast(8f);
-		Assert.assertTrue(javaVersionAtLeast2);
 	}
 }

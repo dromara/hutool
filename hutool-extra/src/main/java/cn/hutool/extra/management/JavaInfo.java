@@ -1,7 +1,7 @@
 package cn.hutool.extra.management;
 
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.SystemUtil;
 
 import java.io.Serializable;
@@ -19,14 +19,6 @@ public class JavaInfo implements Serializable {
 	private final String JAVA_VENDOR = SystemUtil.get("java.vendor", false);
 	private final String JAVA_VENDOR_URL = SystemUtil.get("java.vendor.url", false);
 
-	// 1.1--1.3能否识别?
-	private final boolean IS_JAVA_1_1 = getJavaVersionMatches("1.1");
-	private final boolean IS_JAVA_1_2 = getJavaVersionMatches("1.2");
-	private final boolean IS_JAVA_1_3 = getJavaVersionMatches("1.3");
-	private final boolean IS_JAVA_1_4 = getJavaVersionMatches("1.4");
-	private final boolean IS_JAVA_1_5 = getJavaVersionMatches("1.5");
-	private final boolean IS_JAVA_1_6 = getJavaVersionMatches("1.6");
-	private final boolean IS_JAVA_1_7 = getJavaVersionMatches("1.7");
 	private final boolean IS_JAVA_1_8 = getJavaVersionMatches("1.8");
 	private final boolean IS_JAVA_9 =  getJavaVersionMatches("9");
 	private final boolean IS_JAVA_10 = getJavaVersionMatches("10");
@@ -91,7 +83,6 @@ public class JavaInfo implements Serializable {
 	/**
 	 * 返回1位整型的java版本，（取自系统属性：{@code java.version}）如：7、8、11、15、17、18，返回1位，java10及其之后的版本返回值为2位
 	 * <ul>
-	 *     <li>JDK 1.7.0_80：{@code 7}</li>
 	 *     <li>JDK 1.8.0_211：{@code 8}</li>
 	 *     <li>JDK 11.0.2：{@code 11}</li>
 	 *     <li>JDK 13.0.11：{@code 13}</li>
@@ -184,90 +175,6 @@ public class JavaInfo implements Serializable {
 	 * <p>
 	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
 	 *
-	 * @return 如果当前Java版本为1.1，则返回{@code true}
-	 */
-	public final boolean isJava1_1() {
-		return IS_JAVA_1_1;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.2，则返回{@code true}
-	 */
-	public final boolean isJava1_2() {
-		return IS_JAVA_1_2;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.3，则返回{@code true}
-	 */
-	public final boolean isJava1_3() {
-		return IS_JAVA_1_3;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.4，则返回{@code true}
-	 */
-	public final boolean isJava1_4() {
-		return IS_JAVA_1_4;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.5，则返回{@code true}
-	 */
-	public final boolean isJava1_5() {
-		return IS_JAVA_1_5;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.6，则返回{@code true}
-	 */
-	public final boolean isJava1_6() {
-		return IS_JAVA_1_6;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
-	 * @return 如果当前Java版本为1.7，则返回{@code true}
-	 */
-	public final boolean isJava1_7() {
-		return IS_JAVA_1_7;
-	}
-
-	/**
-	 * 判断当前Java的版本。
-	 *
-	 * <p>
-	 * 如果不能取得系统属性{@code java.version}（因为Java安全限制），则总是返回 {@code false}
-	 *
 	 * @return 如果当前Java版本为1.8，则返回{@code true}
 	 */
 	public final boolean isJava1_8() {
@@ -322,32 +229,32 @@ public class JavaInfo implements Serializable {
 		return IS_JAVA_12;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava13() {
 		return IS_JAVA_13;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava14() {
 		return IS_JAVA_14;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava15() {
 		return IS_JAVA_15;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava16() {
 		return IS_JAVA_16;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava17() {
 		return IS_JAVA_17;
 	}
 
-	/**是否是当前java的版本。 @since 6.0.1 */
+	/**是否是当前java的版本。*/
 	public final boolean isJava18() {
 		return IS_JAVA_18;
 	}
