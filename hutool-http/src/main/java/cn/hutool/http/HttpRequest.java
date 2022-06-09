@@ -32,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -513,14 +514,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		String strValue;
 		if (value instanceof Iterable) {
 			// 列表对象
-			strValue = CollUtil.join((Iterable<?>) value, ",");
+			return putParamArray(name,value);
+			// strValue = CollUtil.join((Iterable<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
 			if (File.class == ArrayUtil.getComponentType(value)) {
 				// 多文件
 				return this.form(name, (File[]) value);
 			}
 			// 数组对象
-			strValue = ArrayUtil.join((Object[]) value, ",");
+			return putParamArray(name,value);
+			// strValue = ArrayUtil.join((Object[]) value, ",");
 		} else {
 			// 其他对象一律转换为字符串
 			strValue = Convert.toStr(value, null);
@@ -1346,6 +1349,25 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.form.put(name, value);
 		return this;
 	}
+
+	/**
+	 * 处理参数中的数组和集合
+	 *
+	 * @param name       名
+	 * @param value      值
+	 * @return this
+	 */
+	private HttpRequest putParamArray(String name, Object value) {
+		if (value instanceof Iterable ){
+			// 集合
+			((Iterable<?>) value).forEach(item -> putToForm(name,item));
+		}else if (ArrayUtil.isArray(value)){
+			// 数组
+			Arrays.stream((Object[]) value).forEach(item -> putToForm(name,item));
+		}
+		return this;
+	}
+
 	// ---------------------------------------------------------------- Private method end
 
 }
