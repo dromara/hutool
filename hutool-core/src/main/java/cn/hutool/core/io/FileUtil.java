@@ -3311,6 +3311,19 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 文件名中是在Windows中的保留文件名，包括：
+	 * (CON, PRN, AUX, NUL, COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9,
+	 * LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, and LPT9)
+	 *
+	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
+	 * @return 是否是Windows保留文件名
+	 * @since 5.8.3.M1
+	 */
+	public static boolean matchInvalidFilename(String fileName) {
+		return FileNameUtil.matchInvalidFilename(fileName);
+	}
+
+	/**
 	 * 计算文件CRC32校验码
 	 *
 	 * @param file 文件，不能为目录
