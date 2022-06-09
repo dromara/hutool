@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * <p>需要注意的是，xlsx、docx等Office2007格式，全部识别为zip，因为新版采用了OpenXML格式，这些格式本质上是XML文件打包为zip</p>
  *
+ * TODO 参考：https://github.com/sindresorhus/file-type/blob/main/core.js 重构此工具
+ *
  * @author Looly
  */
 public class FileTypeUtil {
