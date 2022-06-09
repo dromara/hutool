@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.3.M1 (2022-06-08)
+# 5.8.3.M1 (2022-06-09)
 
 ### 🐣新特性
 * 【extra  】     mail增加writeTimeout参数支持（issue#2355@Github）
 * 【core   】     FileTypeUtil增加pptx扩展名支持（issue#I5A0GO@Gitee）
 * 【core   】     IterUtil.get增加判空（issue#I5B12A@Gitee）
+* 【core   】     FileTypeUtil增加webp类型判断（issue#I5BGTF@Gitee）
 ### 🐞Bug修复
 * 【core   】     修复NumberUtil.isXXX空判断错误（issue#2356@Github）
 * 【core   】     修复Convert.toSBC空指针问题（issue#I5APKK@Gitee）

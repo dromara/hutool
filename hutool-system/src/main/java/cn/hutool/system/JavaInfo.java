@@ -17,14 +17,6 @@ public class JavaInfo implements Serializable {
 	private final String JAVA_VENDOR = SystemUtil.get("java.vendor", false);
 	private final String JAVA_VENDOR_URL = SystemUtil.get("java.vendor.url", false);
 
-	// 1.1--1.3能否识别?
-	private final boolean IS_JAVA_1_1 = getJavaVersionMatches("1.1");
-	private final boolean IS_JAVA_1_2 = getJavaVersionMatches("1.2");
-	private final boolean IS_JAVA_1_3 = getJavaVersionMatches("1.3");
-	private final boolean IS_JAVA_1_4 = getJavaVersionMatches("1.4");
-	private final boolean IS_JAVA_1_5 = getJavaVersionMatches("1.5");
-	private final boolean IS_JAVA_1_6 = getJavaVersionMatches("1.6");
-	private final boolean IS_JAVA_1_7 = getJavaVersionMatches("1.7");
 	private final boolean IS_JAVA_1_8 = getJavaVersionMatches("1.8");
 	private final boolean IS_JAVA_9 = getJavaVersionMatches("9");
 	private final boolean IS_JAVA_10 = getJavaVersionMatches("10");
@@ -161,8 +153,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.1，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_1() {
-		return IS_JAVA_1_1;
+		return false;
 	}
 
 	/**
@@ -173,8 +166,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.2，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_2() {
-		return IS_JAVA_1_2;
+		return false;
 	}
 
 	/**
@@ -185,8 +179,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.3，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_3() {
-		return IS_JAVA_1_3;
+		return false;
 	}
 
 	/**
@@ -197,8 +192,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.4，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_4() {
-		return IS_JAVA_1_4;
+		return false;
 	}
 
 	/**
@@ -209,8 +205,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.5，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_5() {
-		return IS_JAVA_1_5;
+		return false;
 	}
 
 	/**
@@ -221,8 +218,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.6，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_6() {
-		return IS_JAVA_1_6;
+		return false;
 	}
 
 	/**
@@ -233,8 +231,9 @@ public class JavaInfo implements Serializable {
 	 *
 	 * @return 如果当前Java版本为1.7，则返回{@code true}
 	 */
+	@Deprecated
 	public final boolean isJava1_7() {
-		return IS_JAVA_1_7;
+		return false;
 	}
 
 	/**
