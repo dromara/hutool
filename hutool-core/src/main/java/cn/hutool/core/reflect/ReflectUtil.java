@@ -33,8 +33,9 @@ public class ReflectUtil {
 	 *
 	 * @param executable 可执行的反射对象
 	 * @return 描述符
-	 * @link <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @link <a href="https://public static class.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>
@@ -43,17 +44,16 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
 	 * </ul>
-	 * @author VampireAchao
 	 */
-	public static String getDescriptor(Executable executable) {
-		StringBuilder stringBuilder = new StringBuilder();
+	public static String getDescriptor(final Executable executable) {
+		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append('(');
-		Class<?>[] parameters = executable.getParameterTypes();
-		for (Class<?> parameter : parameters) {
+		final Class<?>[] parameters = executable.getParameterTypes();
+		for (final Class<?> parameter : parameters) {
 			stringBuilder.append(getDescriptor(parameter));
 		}
 		if (executable instanceof Method) {
-			Method method = (Method) executable;
+			final Method method = (Method) executable;
 			return stringBuilder.append(')').append(getDescriptor(method.getReturnType())).toString();
 		} else if (executable instanceof Constructor) {
 			return stringBuilder.append(")V").toString();
@@ -65,8 +65,10 @@ public class ReflectUtil {
 	 * 获取类型描述符，这是编译成class文件后的二进制名称
 	 *
 	 * @param clazz 类
-	 * @link <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @link <a href="https://public static class.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
+	 * @return 描述字符串
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(boolean.class)                        "Z"}</li>
@@ -75,10 +77,9 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(int.class)                            "I"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(Integer.class)                        "Ljava/lang/Integer;"}</li>
 	 * </ul>
-	 * @author VampireAchao
 	 */
-	public static String getDescriptor(Class<?> clazz) {
-		StringBuilder stringBuilder = new StringBuilder();
+	public static String getDescriptor(final Class<?> clazz) {
+		final StringBuilder stringBuilder = new StringBuilder();
 		Class<?> currentClass;
 		for (currentClass = clazz;
 			 currentClass.isArray();
