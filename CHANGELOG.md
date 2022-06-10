@@ -15,6 +15,7 @@
 * 【core   】     修复Convert.toSBC空指针问题（issue#I5APKK@Gitee）
 * 【json   】     修复Bean中存在bytes，无法转换问题（issue#2365@Github）
 * 【core   】     ArrayUtil.setOrAppend()传入空数组时，抛出异常（issue#I5APJE@Gitee）
+* 【extra  】     JschSessionPool修复空指针检查问题（issue#I5BK4D@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
