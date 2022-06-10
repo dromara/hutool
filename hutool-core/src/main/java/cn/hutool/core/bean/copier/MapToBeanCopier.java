@@ -68,7 +68,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 			}
 
 			// 检查目标字段可写性
-			PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
+			final PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;

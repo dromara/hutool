@@ -815,4 +815,29 @@ public class BeanUtilTest {
 	public static class WkCrmCustomer{
 		private LocalDateTime statusIdUpdateTime;
 	}
+
+	@Test
+	public void valueProviderToBeanTest(){
+		// https://gitee.com/dromara/hutool/issues/I5B4R7
+		CopyOptions copyOptions = CopyOptions.create();
+		Map<String, String> filedMap= new HashMap<>();
+		filedMap.put("name", "sourceId");
+		copyOptions.setFieldMapping(filedMap);
+		TestPojo pojo = BeanUtil.toBean(TestPojo.class, new ValueProvider<String>() {
+			final HashMap<String, Object> map = new HashMap<>();
+			{
+				map.put("sourceId", "123");
+			}
+			@Override
+			public Object value(String key, Type valueType) {
+				return map.get(key);
+			}
+
+			@Override
+			public boolean containsKey(String key) {
+				return map.containsKey(key);
+			}
+		}, copyOptions);
+		Assert.assertEquals("123", pojo.getName());
+	}
 }
