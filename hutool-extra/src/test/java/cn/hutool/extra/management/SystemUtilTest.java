@@ -1,5 +1,6 @@
 package cn.hutool.extra.management;
 
+import cn.hutool.core.util.SystemUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -49,5 +50,13 @@ public class SystemUtilTest {
 		// https://gitee.com/dromara/hutool/issues/I3NM39
 		final UserInfo userInfo = ManagementUtil.getUserInfo();
 		Assert.assertTrue(userInfo.getTempDir().endsWith(File.separator));
+	}
+
+	@Test
+	public void getOsVersionTest(){
+		String s = SystemUtil.get("os.name");
+		Assert.assertNotNull(s);
+		s = SystemUtil.get("os.version");
+		Assert.assertNotNull(s);
 	}
 }
