@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.3.M1</version>
+		<version>5.8.3</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -22,16 +22,16 @@
 		<beetl.version>3.10.0.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
-		<enjoy.version>4.9.21</enjoy.version>
+		<enjoy.version>5.0.0</enjoy.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.33.0</sshj.version>
-		<zxing.version>3.4.1</zxing.version>
+		<zxing.version>3.5.0</zxing.version>
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.6.7</spring-boot.version>
+		<spring-boot.version>2.7.0</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -453,7 +453,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

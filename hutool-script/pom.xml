@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.3.M1</version>
+		<version>5.8.3</version>
 	</parent>
 
 	<artifactId>hutool-script</artifactId>
@@ -19,7 +19,7 @@
 	<properties>
 		<jython.version>2.7.2</jython.version>
 		<luaj.version>3.0.1</luaj.version>
-		<groovy.version>3.0.10</groovy.version>
+		<groovy.version>3.0.11</groovy.version>
 	</properties>
 
 	<dependencies>
