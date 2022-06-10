@@ -68,7 +68,7 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 			if(null == entry){
 				return;
 			}
-			String sFieldName = entry.getKey();
+			final String sFieldName = entry.getKey();
 			// 对key做转换，转换后为null的跳过
 			if (null == sFieldName) {
 				return;

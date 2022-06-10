@@ -51,11 +51,6 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 				return;
 			}
 
-			// 无字段内容跳过
-			if(false == source.containsKey(tFieldName)){
-				return;
-			}
-
 			// 检查目标字段可写性
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
@@ -64,9 +59,8 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 
 			// 获取目标字段真实类型
 			final Type fieldType = TypeUtil.getActualType(this.targetType ,tDesc.getFieldType());
-			Object sValue = source.value(tFieldName, fieldType);
 			// 编辑键值对
-			final MutableEntry<String, Object> entry = copyOptions.editField(tFieldName, sValue);
+			final MutableEntry<String, Object> entry = copyOptions.editField(tFieldName, null);
 			if(null == entry){
 				return;
 			}
@@ -75,7 +69,11 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 			if (null == tFieldName) {
 				return;
 			}
-			sValue = entry.getValue();
+			// 无字段内容跳过
+			if(false == source.containsKey(tFieldName)){
+				return;
+			}
+			final Object sValue = source.value(tFieldName, fieldType);
 
 			// 检查目标对象属性是否过滤属性
 			if (false == copyOptions.testPropertyFilter(tDesc.getField(), sValue)) {
