@@ -17,6 +17,7 @@
 * 【core   】     ArrayUtil.setOrAppend()传入空数组时，抛出异常（issue#I5APJE@Gitee）
 * 【extra  】     JschSessionPool修复空指针检查问题（issue#I5BK4D@Gitee）
 * 【core   】     修复使用ValueProvider中setFieldMapping无效问题（issue#I5B4R7@Gitee）
+* 【json   】     修复byte[]作为JSONArray构造问题（issue#2369@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
