@@ -145,7 +145,15 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
 			// bytes按照JSON的二进制流对待
-			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
+			try{
+				mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
+			} catch (final JSONException ignore){
+				// https://github.com/dromara/hutool/issues/2369
+				// 非标准的二进制流，则按照普通数组对待
+				for(final byte b : (byte[]) source){
+					jsonArray.add(b);
+				}
+			}
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {
