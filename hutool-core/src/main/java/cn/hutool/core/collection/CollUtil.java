@@ -1055,10 +1055,11 @@ public class CollUtil {
 	 * 根据函数生成的KEY去重集合，如根据Bean的某个或者某些字段完成去重。<br>
 	 * 去重可选是保留最先加入的值还是后加入的值
 	 *
-	 * @param <T>        集合元素类型
-	 * @param <K>        唯一键类型
-	 * @param collection 集合
-	 * @param override   是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @param <T>             集合元素类型
+	 * @param <K>             唯一键类型
+	 * @param collection      集合
+	 * @param uniqueGenerator 唯一键生成器
+	 * @param override        是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
 	 * @return {@link ArrayList}
 	 * @since 5.8.0
 	 */

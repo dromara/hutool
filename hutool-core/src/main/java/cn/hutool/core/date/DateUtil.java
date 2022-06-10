@@ -2105,9 +2105,8 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date} 转换时区
 	 *
 	 * @param date         {@link Date}
-	 * @param zoneId{@link zoneId}
+	 * @param zoneId       {@link ZoneId}
 	 * @return {@link DateTime}
-	 * @see DateTime(Date, ZoneId )
 	 * @since 5.8.3
 	 */
 	public static DateTime convertTimeZone(Date date, ZoneId zoneId) {
@@ -2118,9 +2117,8 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date} 转换时区
 	 *
 	 * @param date           {@link Date}
-	 * @param timeZone{@link timeZone}
+	 * @param timeZone       {@link TimeZone}
 	 * @return {@link DateTime}
-	 * @see DateTime(Date,ZoneId)
 	 * @since 5.8.3
 	 */
 	public static DateTime convertTimeZone(Date date, TimeZone timeZone) {

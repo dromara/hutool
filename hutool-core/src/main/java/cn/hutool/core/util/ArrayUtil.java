@@ -1648,6 +1648,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>      数组元素类型
 	 * @param <K>      唯一键类型
 	 * @param array    数组
+	 * @param uniqueGenerator 唯一键生成器
 	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
 	 * @return 去重后的数组
 	 * @since 5.8.0

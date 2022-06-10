@@ -1017,8 +1017,8 @@ public class ReflectUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws InvocationTargetRuntimeException 目标方法执行异常
-	 * @throws UtilException                    {@link IllegalAccessException}异常的包装
+	 * @throws InvocationTargetException 目标方法执行异常
+	 * @throws IllegalAccessException    访问异常
 	 * @since 5.8.1
 	 */
 	@SuppressWarnings("unchecked")
