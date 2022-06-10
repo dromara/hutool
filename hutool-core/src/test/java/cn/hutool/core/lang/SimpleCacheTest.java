@@ -47,6 +47,14 @@ public class SimpleCacheTest {
 	}
 
 	@Test
+	public void getWithPredicateTest(){
+		// 检查predicate空指针
+		final SimpleCache<String, String> cache = new SimpleCache<>();
+		final String value = cache.get("abc", (v)-> v.equals("1"), () -> "123");
+		Assert.assertEquals("123", value);
+	}
+
+	@Test
 	public void getConcurrencyTest(){
 		final SimpleCache<String, String> cache = new SimpleCache<>();
 		final ConcurrencyTester tester = new ConcurrencyTester(9000);

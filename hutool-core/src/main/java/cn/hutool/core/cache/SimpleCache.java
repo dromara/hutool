@@ -96,7 +96,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	public V get(final K key, final Predicate<V> validPredicate, final Func0<V> supplier) {
 		V v = get(key);
-		if((null != validPredicate && false == validPredicate.test(v))){
+		if((null != validPredicate && null != v && false == validPredicate.test(v))){
 			v = null;
 		}
 		if (null == v && null != supplier) {
