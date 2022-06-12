@@ -77,7 +77,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.3.3
 	 */
 	public Sftp(FtpConfig config) {
-		this(config, false);
+		this(config, true);
 	}
 
 	/**
