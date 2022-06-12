@@ -31,7 +31,7 @@ import java.util.Vector;
  *
  * <p>
  * 此类为基于jsch的SFTP实现<br>
- * 参考：https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html
+ * 参考：<a href="https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html">https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html</a>
  * </p>
  *
  * @author looly

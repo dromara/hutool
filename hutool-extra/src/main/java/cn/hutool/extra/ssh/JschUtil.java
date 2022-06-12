@@ -127,6 +127,7 @@ public class JschUtil {
 	 * @param passphrase     私钥文件的密码，可以为null
 	 * @param timeOut        超时时间，单位毫秒
 	 * @return SSH会话
+	 * @since 5.8.4
 	 */
 	public static Session openSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase, int timeOut) {
 		final Session session = createSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
