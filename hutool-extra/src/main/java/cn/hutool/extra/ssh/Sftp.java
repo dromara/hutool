@@ -77,8 +77,21 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.3.3
 	 */
 	public Sftp(FtpConfig config) {
+		this(config, true);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param config FTP配置
+	 * @param init   是否立即初始化
+	 * @since 5.8.4
+	 */
+	public Sftp(FtpConfig config, boolean init) {
 		super(config);
-		init(config);
+		if (init) {
+			init(config);
+		}
 	}
 
 	/**
@@ -100,6 +113,32 @@ public class Sftp extends AbstractFtp {
 	public Sftp(Session session, Charset charset) {
 		super(FtpConfig.create().setCharset(charset));
 		init(session, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param session {@link Session}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(Session session, Charset charset, long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		init(session, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param channel {@link ChannelSftp}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(ChannelSftp channel, Charset charset, long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		init(channel, charset);
 	}
 
 	/**
