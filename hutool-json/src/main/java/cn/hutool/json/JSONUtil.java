@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
@@ -747,12 +746,6 @@ public class JSONUtil {
 
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				if (object instanceof byte[]) {
-					// issue#I59LW4
-					// json内容中的bytes默认转为Base64
-					return Base64.encode((byte[]) object);
-				}
-
 				return new JSONArray(object, jsonConfig);
 			}
 			// JSONObject
