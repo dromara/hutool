@@ -144,13 +144,13 @@ public class ObjectMapper {
 		} else if (source instanceof InputStream) {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
-			// bytes按照JSON的二进制流对待
-			try{
-				mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonArray.getConfig()), jsonArray, filter);
-			} catch (final JSONException ignore){
+			final byte[] bytesSource = (byte[]) source;
+			if('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]){
+				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray, filter);
+			}else{
 				// https://github.com/dromara/hutool/issues/2369
 				// 非标准的二进制流，则按照普通数组对待
-				for(final byte b : (byte[]) source){
+				for(final byte b : bytesSource){
 					jsonArray.add(b);
 				}
 			}

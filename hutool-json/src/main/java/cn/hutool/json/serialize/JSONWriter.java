@@ -1,6 +1,5 @@
 package cn.hutool.json.serialize;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
@@ -226,13 +225,7 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
-			if(value instanceof byte[]){
-				// issue#I59LW4
-				// json内容中的bytes默认转为Base64
-				writeStrValue(Base64.encode((byte[]) value));
-			}else{
-				new JSONArray(value).write(writer, indentFactor, indent);
-			}
+			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
