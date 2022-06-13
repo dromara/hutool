@@ -31,7 +31,7 @@ import java.util.Vector;
  *
  * <p>
  * 此类为基于jsch的SFTP实现<br>
- * 参考：https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html
+ * 参考：<a href="https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html">https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html</a>
  * </p>
  *
  * @author looly
@@ -77,8 +77,21 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.3.3
 	 */
 	public Sftp(final FtpConfig config) {
+		this(config, true);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param config FTP配置
+	 * @param init   是否立即初始化
+	 * @since 5.8.4
+	 */
+	public Sftp(final FtpConfig config, final boolean init) {
 		super(config);
-		init(config);
+		if (init) {
+			init(config);
+		}
 	}
 
 	/**
@@ -110,6 +123,32 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp(final ChannelSftp channel, final Charset charset) {
 		super(FtpConfig.create().setCharset(charset));
+		init(channel, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param session {@link Session}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(final Session session, final Charset charset, final long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		init(session, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param channel {@link ChannelSftp}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(final ChannelSftp channel, final Charset charset, final long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
 		init(channel, charset);
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
