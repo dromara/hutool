@@ -145,12 +145,12 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
-			if('[' == bytesSource[0]){
+			if ('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
 				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray, filter);
-			}else{
+			} else {
 				// https://github.com/dromara/hutool/issues/2369
 				// 非标准的二进制流，则按照普通数组对待
-				for(final byte b : bytesSource){
+				for (final byte b : bytesSource) {
 					jsonArray.add(b);
 				}
 			}
@@ -258,7 +258,7 @@ public class ObjectMapper {
 	 */
 	private static void mapFromBean(final Object bean, final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
 		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.getConfig());
-		if(null != filter){
+		if (null != filter) {
 			copyOptions.setFieldEditor((entry -> filter.accept(entry) ? entry : null));
 		}
 		BeanUtil.beanToMap(bean, jsonObject, copyOptions);

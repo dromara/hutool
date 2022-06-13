@@ -16,7 +16,7 @@ public class IssueI59LW4Test {
 	@Test
 	public void bytesInJSONArrayTest(){
 		final JSONArray jsonArray = JSONUtil.createArray().set(new byte[]{1});
-		Assert.assertEquals("[\"AQ==\"]", jsonArray.toString());
+		Assert.assertEquals("[[1]]", jsonArray.toString());
 
 		final byte[] bytes = jsonArray.getBytes(0);
 		Assert.assertArrayEquals(new byte[]{1}, bytes);
