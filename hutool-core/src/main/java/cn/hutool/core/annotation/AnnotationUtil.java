@@ -2,7 +2,11 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -18,7 +22,10 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -347,5 +354,48 @@ public class AnnotationUtil {
 	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
+	}
+
+	/**
+	 * 方法是否为注解属性方法。 <br />
+	 * 方法无参数，且有返回值的方法认为是注解属性的方法。
+	 *
+	 * @param method 方法
+	 */
+	static boolean isAttributeMethod(Method method) {
+		return method.getParameterCount() == 0 && method.getReturnType() != void.class;
+	}
+
+	/**
+	 * 获取注解的全部属性值获取方法
+	 *
+	 * @param annotationType 注解
+	 * @return 注解的全部属性值
+	 * @throws IllegalArgumentException 当别名属性在注解中不存在，或别名属性的值与原属性的值类型不一致时抛出
+	 */
+	static Map<String, Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
+		// 获取全部注解属性值
+		Map<String, Method> attributeMethods = Stream.of(annotationType.getDeclaredMethods())
+			.filter(AnnotationUtil::isAttributeMethod)
+			.collect(Collectors.toMap(Method::getName, Function.identity()));
+		// 处理别名
+		attributeMethods.forEach((methodName, method) -> {
+			String alias = Opt.ofNullable(method.getAnnotation(Alias.class))
+				.map(Alias::value)
+				.orElse(null);
+			if (ObjectUtil.isNull(alias)) {
+				return;
+			}
+			// 存在别名，则将原本的值替换为别名对应的值
+			Assert.isTrue(attributeMethods.containsKey(alias), "No method for alias: [{}]", alias);
+			Method aliasAttributeMethod = attributeMethods.get(alias);
+			Assert.isTrue(
+				ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
+				"Return type of the alias method [{}] is inconsistent with the original [{}]",
+				aliasAttributeMethod.getClass(), method.getParameterTypes()
+			);
+			attributeMethods.put(methodName, aliasAttributeMethod);
+		});
+		return attributeMethods;
 	}
 }
