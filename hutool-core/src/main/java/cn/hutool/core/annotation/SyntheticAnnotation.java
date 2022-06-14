@@ -2,6 +2,8 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.annotation.scanner.MateAnnotationScanner;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -21,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * 表示一个根注解与根注解上的多层元注解合成的注解
  *
- * <p>假设现有根注解A，A上存在元注解B，B上存在元注解C，则对A解析得到的合成注解X，X作为新的根注解，则CBA都是X的元注解。<br />
+ * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对A解析得到的合成注解X，则CBA都是X的元注解，X为根注解。<br />
  * 通过{@link #isAnnotationPresent(Class)}可确定指定类型是注解是否是该合成注解的元注解，即是否为当前实例的“父类”。
  * 若指定注解是当前实例的元注解，则通过{@link #getAnnotation(Class)}可获得动态代理生成的对应的注解实例。<br />
  * 需要注意的是，由于认为合并注解X以最初的根注解A作为元注解，因此{@link #getAnnotations()}或{@link #getDeclaredAnnotations()}
@@ -33,6 +35,8 @@ import java.util.stream.Stream;
  * 同理，不同层级可能会出现相同的元注解，比如A注解存在元注解B，C，但是C又存在元注解B，因此根据就近原则，A上的元注解B将优先于C上的元注解B生效。
  * 若两相同注解处于同一层级，则按照从其上一级“子注解”的{@link AnnotatedElement#getAnnotations()}的调用顺序排序。<br />
  * {@link #getAnnotation(Class)}获得的代理类实例的属性值遵循该规则。
+ *
+ * <p>同名属性将根据类型彼此隔离，即当不同层级的元注解存在同名的属性，但是属性类型不同时，此时低层级的属性并不会覆盖高层级注解的属性。
  *
  * <p>别名在合成注解中仍然有效，若注解X中任意属性上存在{@link Alias}注解，则{@link Alias#value()}指定的属性值将会覆盖注解属性的本身的值。<br />
  * {@link Alias}注解仅能指定注解X中存在的属性作为别名，不允许指定元注解或子类注解的属性。
@@ -55,7 +59,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	/**
 	 * 属性值缓存
 	 */
-	private final Map<String, Object> attributeCaches;
+	private final Map<String, Map<Class<?>, Object>> attributeCaches;
 
 	/**
 	 * 构造
@@ -108,15 +112,16 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	}
 
 	/**
-	 * 获取属性值，若存在{@link Alias}则获取{@link Alias#value()}指定的别名属性的值
-	 * <p>当不同层级的注解之间存在同名属性时，将优先获取更接近根注解的属性
+	 * 根据指定的属性名与属性类型获取对应的属性值，若存在{@link Alias}则获取{@link Alias#value()}指定的别名属性的值
+	 * <p>当不同层级的注解之间存在同名同类型属性时，将优先获取更接近根注解的属性
 	 *
 	 * @param attributeName 属性名
 	 */
-	public Object getAttribute(String attributeName) {
-		return attributeCaches.computeIfAbsent(attributeName, a -> metaAnnotationMap.values()
+	public Object getAttribute(String attributeName, Class<?> attributeType) {
+		Map<Class<?>, Object> values = attributeCaches.computeIfAbsent(attributeName, t -> MapUtil.newHashMap());
+		return values.computeIfAbsent(attributeType, a -> metaAnnotationMap.values()
 			.stream()
-			.filter(ma -> ma.hasAttribute(attributeName)) // 集合默认是根据distance有序的，故此处无需再排序
+			.filter(ma -> ma.hasAttribute(attributeName, attributeType)) // 集合默认是根据distance有序的，故此处无需再排序
 			.findFirst()
 			.map(ma -> ma.getAttribute(attributeName))
 			.orElse(null)
@@ -154,7 +159,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	}
 
 	/**
-	 * 获取根注解直接声明注解
+	 * 获取根注解直接声明的注解，该方法正常情况下当只返回原注解
 	 *
 	 * @return 直接声明注解
 	 */
@@ -239,6 +244,19 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		}
 
 		/**
+		 * 元注解是否存在该属性，且该属性的值类型是指定类型或其子类
+		 *
+		 * @param attributeName 属性名
+		 * @param returnType 返回值类型
+		 * @return 是否存在该属性
+		 */
+		public boolean hasAttribute(String attributeName, Class<?> returnType) {
+			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
+				.filter(method -> ClassUtil.isAssignable(returnType, method.getReturnType()))
+				.isPresent();
+		}
+
+		/**
 		 * 获取元注解的属性值
 		 *
 		 * @param attributeName 属性名
@@ -304,7 +322,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 				return getToString();
 			}
 			return ObjectUtil.defaultIfNull(
-				syntheticAnnotation.getAttribute(method.getName()),
+				syntheticAnnotation.getAttribute(method.getName(), method.getReturnType()),
 				() -> ReflectUtil.invoke(this, method, args)
 			);
 		}
@@ -317,7 +335,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		private String getToString() {
 			String attributes = Stream.of(annotationType().getDeclaredMethods())
 				.filter(AnnotationUtil::isAttributeMethod)
-				.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName())))
+				.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName(), method.getReturnType())))
 				.collect(Collectors.joining(", "));
 			return StrUtil.format("@{}({})", annotationType().getName(), attributes);
 		}
