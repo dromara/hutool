@@ -23,13 +23,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -970,5 +964,42 @@ public class BeanUtil {
 		} else {
 			throw new IllegalArgumentException("Invalid Getter or Setter name: " + getterOrSetterName);
 		}
+	}
+
+	/**
+	 * 判断source与target的所有公共字段的值是否相同
+	 * @param source 待检测对象1
+	 * @param target 待检测对象2
+	 * @param ignoreProperties 不需要检测的字段
+	 * @return 判断结果，如果为true则证明所有字段的值都相同
+	 */
+	public static boolean isCommonFieldsEqual(Object source, Object target, String...ignoreProperties) {
+
+		if (null == source && null == target) {
+			return true;
+		}
+		if (null == source || null == target) {
+			return false;
+		}
+
+		Map<String, Object> sourceFieldsMap = BeanUtil.beanToMap(source);
+		Map<String, Object> targetFieldsMap = BeanUtil.beanToMap(target);
+
+		Set<String> sourceFields = sourceFieldsMap.keySet();
+		sourceFields.removeAll(Arrays.asList(ignoreProperties));
+
+		for (String field : sourceFields) {
+			Object sourceValue = sourceFieldsMap.get(field);
+			Object targetValue = targetFieldsMap.get(field);
+
+			if (null == sourceValue && null == targetValue) {
+				continue;
+			}
+			if (!sourceValue.equals(targetValue)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

@@ -11,10 +11,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -839,5 +836,53 @@ public class BeanUtilTest {
 			}
 		}, copyOptions);
 		Assert.assertEquals("123", pojo.getName());
+	}
+
+	@Data
+	@EqualsAndHashCode
+	private static class TestUserEntity {
+		private String username;
+		private String name;
+		private Integer age;
+		private Integer sex;
+		private String mobile;
+		private Date createTime;
+	}
+
+	@Data
+	@EqualsAndHashCode
+	private static class TestUserDTO {
+		private String name;
+		private Integer age;
+		private Integer sex;
+		private String mobile;
+	}
+	@Test
+	public void isCommonFieldsEqualTest() {
+		TestUserEntity userEntity = new TestUserEntity();
+		TestUserDTO userDTO = new TestUserDTO();
+
+		userDTO.setAge(20);
+		userDTO.setName("takaki");
+		userDTO.setSex(1);
+		userDTO.setMobile("17812312023");
+
+		BeanUtil.copyProperties(userDTO, userEntity);
+
+		System.out.println("相同字段值测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
+
+		userEntity.setAge(13);
+		System.out.println("修改age字段值后测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
+		System.out.println("忽略age字段后测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age"));
+
+		System.out.println("全null值测试" + BeanUtil.isCommonFieldsEqual(null, null));
+		System.out.println("部分null值测试1" + BeanUtil.isCommonFieldsEqual(null, userEntity));
+		System.out.println("部分null值测试2" + BeanUtil.isCommonFieldsEqual(userEntity, null));
+
+		userEntity.setSex(0);
+		System.out.println(
+				"修改age、sex字段修改后并忽略测试"
+						+ BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex")
+		);
 	}
 }
