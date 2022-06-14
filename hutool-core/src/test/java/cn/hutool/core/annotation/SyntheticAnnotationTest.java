@@ -23,10 +23,10 @@ public class SyntheticAnnotationTest {
 		Assert.assertEquals(syntheticAnnotation.getDeclaredAnnotations()[0], rootAnnotation);
 		Assert.assertEquals(3, syntheticAnnotation.getAnnotations().length);
 
-		Assert.assertEquals(syntheticAnnotation.getAttribute("childValue"), "Child!");
-		Assert.assertEquals(syntheticAnnotation.getAttribute("childValueAlias"), "Child!");
-		Assert.assertEquals(syntheticAnnotation.getAttribute("parentValue"), "Child's Parent!");
-		Assert.assertEquals(syntheticAnnotation.getAttribute("grandParentValue"), "Child's GrandParent!");
+		Assert.assertEquals(syntheticAnnotation.getAttribute("childValue", String.class), "Child!");
+		Assert.assertEquals(syntheticAnnotation.getAttribute("childValueAlias", String.class), "Child!");
+		Assert.assertEquals(syntheticAnnotation.getAttribute("parentValue", String.class), "Child's Parent!");
+		Assert.assertEquals(syntheticAnnotation.getAttribute("grandParentValue", String.class), "Child's GrandParent!");
 
 		Map<Class<? extends Annotation>, SyntheticAnnotation.MetaAnnotation> annotationMap = syntheticAnnotation.getMetaAnnotationMap();
 		ChildAnnotation childAnnotation = syntheticAnnotation.getAnnotation(ChildAnnotation.class);
@@ -34,31 +34,35 @@ public class SyntheticAnnotationTest {
 		Assert.assertNotNull(childAnnotation);
 		Assert.assertEquals(childAnnotation.childValue(), "Child!");
 		Assert.assertEquals(childAnnotation.childValueAlias(), "Child!");
+		Assert.assertEquals(childAnnotation.grandParentType(), Integer.class);
 		Assert.assertEquals(annotationMap, SyntheticAnnotation.of(childAnnotation).getMetaAnnotationMap());
 
 		ParentAnnotation parentAnnotation = syntheticAnnotation.getAnnotation(ParentAnnotation.class);
 		Assert.assertTrue(syntheticAnnotation.isAnnotationPresent(ParentAnnotation.class));
 		Assert.assertNotNull(parentAnnotation);
 		Assert.assertEquals(parentAnnotation.parentValue(), "Child's Parent!");
+		Assert.assertEquals(parentAnnotation.grandParentType(), "java.lang.Void");
 		Assert.assertEquals(annotationMap, SyntheticAnnotation.of(parentAnnotation).getMetaAnnotationMap());
 
 		GrandParentAnnotation grandParentAnnotation = syntheticAnnotation.getAnnotation(GrandParentAnnotation.class);
 		Assert.assertTrue(syntheticAnnotation.isAnnotationPresent(GrandParentAnnotation.class));
 		Assert.assertNotNull(grandParentAnnotation);
 		Assert.assertEquals(grandParentAnnotation.grandParentValue(), "Child's GrandParent!");
+		Assert.assertEquals(grandParentAnnotation.grandParentType(), Integer.class);
 		Assert.assertEquals(annotationMap, SyntheticAnnotation.of(grandParentAnnotation).getMetaAnnotationMap());
 	}
 
 	// 注解结构如下：
 	// AnnotatedClass -> @ChildAnnotation -> @ParentAnnotation -> @GrandParentAnnotation
 	//                                    -> @GrandParentAnnotation
-	@ChildAnnotation(childValueAlias = "Child!")
-	class AnnotatedClass {}
+	@ChildAnnotation(childValueAlias = "Child!", grandParentType = Integer.class)
+	static class AnnotatedClass {}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.ANNOTATION_TYPE })
 	@interface GrandParentAnnotation {
 		String grandParentValue() default "";
+		Class<?> grandParentType() default Void.class;
 	}
 
 	@GrandParentAnnotation(grandParentValue = "Parent's GrandParent!") // 覆盖元注解@GrandParentAnnotation的属性
@@ -66,6 +70,7 @@ public class SyntheticAnnotationTest {
 	@Target({ ElementType.TYPE })
 	@interface ParentAnnotation {
 		String parentValue() default "";
+		String grandParentType() default "java.lang.Void";
 	}
 
 	@GrandParentAnnotation(grandParentValue = "Child's GrandParent!") // 重复的元注解，靠近根注解的优先级高
@@ -76,6 +81,7 @@ public class SyntheticAnnotationTest {
 		String childValueAlias() default "";
 		@Alias("childValueAlias")
 		String childValue() default "";
+		Class<?> grandParentType() default Void.class;
 	}
 
 }
