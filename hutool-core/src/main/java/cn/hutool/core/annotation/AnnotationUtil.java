@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.annotation.scanner.*;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -19,9 +20,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -354,6 +353,43 @@ public class AnnotationUtil {
 	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
+	}
+
+	/**
+	 * 将指定注解实例与其元注解转为合成注解
+	 *
+	 * @param annotation 注解
+	 * @param annotationType 注解类型
+	 * @param <T> 注解类型
+	 * @return 合成注解
+	 * @see SyntheticAnnotation
+	 */
+	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
+		return SyntheticAnnotation.of(annotation).getAnnotation(annotationType);
+	}
+
+	/**
+	 * 获取元素上所有指定注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * @param annotatedElement 可注解元素
+	 * @param annotationType 注解类型
+	 * @param <T> 注解类型
+	 * @return 注解
+	 * @see SyntheticAnnotation
+	 */
+	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedElement, Class<T> annotationType) {
+		AnnotationScanner[] scanners = new AnnotationScanner[] {
+			new MateAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedElement, scanners).stream()
+			.map(SyntheticAnnotation::of)
+			.map(annotation -> annotation.getAnnotation(annotationType))
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
 	}
 
 	/**
