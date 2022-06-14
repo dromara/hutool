@@ -40,18 +40,6 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	}
 
 	/**
-	 * 元注解
-	 */
-	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
-			Retention.class, //
-			Inherited.class, //
-			Documented.class, //
-			SuppressWarnings.class, //
-			Override.class, //
-			Deprecated.class//
-	);
-
-	/**
 	 * 注解类型与注解对象对应表
 	 */
 	private Map<Class<? extends Annotation>, Annotation> annotationMap;
@@ -138,7 +126,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		// 直接注解
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)) {
 				if(test(annotation)){
 					declaredAnnotationMap.put(annotationType, annotation);
 				}
@@ -157,7 +145,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		Class<? extends Annotation> annotationType;
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)) {
 				if(test(annotation)){
 					annotationMap.put(annotationType, annotation);
 				}

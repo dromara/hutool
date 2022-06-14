@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -16,6 +17,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -26,6 +28,58 @@ import java.util.function.Predicate;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+
+	/**
+	 * 元注解
+	 */
+	static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
+		Retention.class, //
+		Inherited.class, //
+		Documented.class, //
+		SuppressWarnings.class, //
+		Override.class, //
+		Deprecated.class//
+	);
+
+	/**
+	 * 是否为Jdk自带的元注解。<br />
+	 * 包括：
+	 * <ul>
+	 *     <li>{@link Target}</li>
+	 *     <li>{@link Retention}</li>
+	 *     <li>{@link Inherited}</li>
+	 *     <li>{@link Documented}</li>
+	 *     <li>{@link SuppressWarnings}</li>
+	 *     <li>{@link Override}</li>
+	 *     <li>{@link Deprecated}</li>
+	 * </ul>
+	 *
+	 * @param annotationType 注解类型
+	 * @return 是否为Jdk自带的元注解
+	 */
+	public static boolean isJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+		return META_ANNOTATIONS.contains(annotationType);
+	}
+
+	/**
+	 * 是否不为Jdk自带的元注解。<br />
+	 * 包括：
+	 * <ul>
+	 *     <li>{@link Target}</li>
+	 *     <li>{@link Retention}</li>
+	 *     <li>{@link Inherited}</li>
+	 *     <li>{@link Documented}</li>
+	 *     <li>{@link SuppressWarnings}</li>
+	 *     <li>{@link Override}</li>
+	 *     <li>{@link Deprecated}</li>
+	 * </ul>
+	 *
+	 * @param annotationType 注解类型
+	 * @return 是否为Jdk自带的元注解
+	 */
+	public static boolean isNotJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+		return !isJdkMateAnnotation(annotationType);
+	}
 
 	/**
 	 * 将指定的被注解的元素转换为组合注解元素
