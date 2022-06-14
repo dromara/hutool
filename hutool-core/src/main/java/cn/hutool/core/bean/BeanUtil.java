@@ -968,10 +968,13 @@ public class BeanUtil {
 
 	/**
 	 * 判断source与target的所有公共字段的值是否相同
+	 *
 	 * @param source 待检测对象1
 	 * @param target 待检测对象2
 	 * @param ignoreProperties 不需要检测的字段
 	 * @return 判断结果，如果为true则证明所有字段的值都相同
+	 * @since 5.8.4
+	 * @author Takak11
 	 */
 	public static boolean isCommonFieldsEqual(Object source, Object target, String...ignoreProperties) {
 
@@ -989,13 +992,7 @@ public class BeanUtil {
 		sourceFields.removeAll(Arrays.asList(ignoreProperties));
 
 		for (String field : sourceFields) {
-			Object sourceValue = sourceFieldsMap.get(field);
-			Object targetValue = targetFieldsMap.get(field);
-
-			if (null == sourceValue && null == targetValue) {
-				continue;
-			}
-			if (!sourceValue.equals(targetValue)) {
+			if(ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))){
 				return false;
 			}
 		}

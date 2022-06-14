@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【extra  】     Sftp增加构造重载，支持超时（pr#653@Gitee）
+* 【core   】     BeanUtil增加isCommonFieldsEqual（pr#653@Gitee）
 * 
 ### 🐞Bug修复
 

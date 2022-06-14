@@ -859,8 +859,8 @@ public class BeanUtilTest {
 	}
 	@Test
 	public void isCommonFieldsEqualTest() {
-		TestUserEntity userEntity = new TestUserEntity();
-		TestUserDTO userDTO = new TestUserDTO();
+		final TestUserEntity userEntity = new TestUserEntity();
+		final TestUserDTO userDTO = new TestUserDTO();
 
 		userDTO.setAge(20);
 		userDTO.setName("takaki");
@@ -869,20 +869,17 @@ public class BeanUtilTest {
 
 		BeanUtil.copyProperties(userDTO, userEntity);
 
-		System.out.println("相同字段值测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
+		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
 
 		userEntity.setAge(13);
-		System.out.println("修改age字段值后测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
-		System.out.println("忽略age字段后测试" + BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age"));
+		Assert.assertFalse(BeanUtil.isCommonFieldsEqual(userDTO, userEntity));
+		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age"));
 
-		System.out.println("全null值测试" + BeanUtil.isCommonFieldsEqual(null, null));
-		System.out.println("部分null值测试1" + BeanUtil.isCommonFieldsEqual(null, userEntity));
-		System.out.println("部分null值测试2" + BeanUtil.isCommonFieldsEqual(userEntity, null));
+		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(null, null));
+		Assert.assertFalse(BeanUtil.isCommonFieldsEqual(null, userEntity));
+		Assert.assertFalse(BeanUtil.isCommonFieldsEqual(userEntity, null));
 
 		userEntity.setSex(0);
-		System.out.println(
-				"修改age、sex字段修改后并忽略测试"
-						+ BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex")
-		);
+		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex"));
 	}
 }
