@@ -6,6 +6,9 @@ import cn.hutool.jwt.signers.JWTSignerUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JWTTest {
 
 	@Test
@@ -87,5 +90,31 @@ public class JWTTest {
 
 		final boolean verify = JWT.of(token).setKey(StrUtil.utf8Bytes("123456")).verify();
 		Assert.assertTrue(verify);
+	}
+
+	@Test
+	public void testGetUserId() {
+		String username = "takaki@163.com";
+		int userId = 123;
+
+		byte[] secret = "312@asd".getBytes();
+		Map<String, Object> payload = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put("username", username);
+				put("userId", userId);
+				put("expire_time", System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15);
+			}
+		};
+
+		String token = JWTUtil.createToken(payload, secret);
+		JWT jwt = JWT.of(token);
+		String usernameResult = jwt.getPayload("username", String.class);
+		Assert.assertEquals(username, usernameResult);
+		Integer userIdResult = jwt.getPayload("userId", Integer.class);
+		Assert.assertEquals((int) userIdResult, userId);
+
+		Assert.assertThrows(JWTException.class, () -> jwt.getPayload("userId", String.class));
+		Assert.assertThrows(IllegalArgumentException.class, () -> jwt.getPayload("test", String.class));
 	}
 }
