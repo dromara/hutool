@@ -233,4 +233,18 @@ public class JSONUtilTest {
 		final String xmlStr = JSONUtil.toXmlStr(obj);
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
+
+	@Test
+	public void toJsonStrOfStringTest(){
+		String a = "a";
+		final String s = JSONUtil.toJsonStr(a);
+		Assert.assertEquals(a, s);
+	}
+
+	@Test
+	public void toJsonStrOfNumberTest(){
+		int a = 1;
+		final String s = JSONUtil.toJsonStr(a);
+		Assert.assertEquals("1", s);
+	}
 }

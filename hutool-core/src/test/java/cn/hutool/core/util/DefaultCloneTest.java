@@ -1,6 +1,7 @@
-package cn.hutool.core.clone;
+package cn.hutool.core.util;
 
 
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Assert;
@@ -18,7 +19,7 @@ public class DefaultCloneTest {
 		oldCar.setId(1);
 		oldCar.setWheelList(Stream.of(new Wheel("h")).collect(Collectors.toList()));
 
-		final Car newCar = oldCar.clone0();
+		final Car newCar = oldCar.clone();
 		Assert.assertEquals(oldCar.getId(), newCar.getId());
 		Assert.assertEquals(oldCar.getWheelList(), newCar.getWheelList());
 
@@ -31,9 +32,18 @@ public class DefaultCloneTest {
 	}
 
 	@Data
-	static class Car implements DefaultCloneable<Car> {
+	static class Car implements Cloneable {
 		private Integer id;
 		private List<Wheel> wheelList;
+
+		@Override
+		public Car clone() {
+			try {
+				return (Car) super.clone();
+			} catch (final CloneNotSupportedException e) {
+				throw new CloneRuntimeException(e);
+			}
+		}
 	}
 
 	@Data

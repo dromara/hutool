@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.SystemUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,10 +14,25 @@ import org.junit.Test;
 import java.lang.reflect.Method;
 
 public class MethodUtilTest {
+	private static final String JAVA_VERSION = SystemUtil.get("java.version", false);
+	private static final boolean isGteJdk15 = getJavaVersion() >= 15;
+	/**
+	 * jdk版本：是否>= jdk15
+	 * jdk15: 删除了 object registerNatives
+	 * @return 反馈jdk版本，如：7、8、11、15、17
+	 * @author dazer
+	 */
+	private static int getJavaVersion() {
+		if (JAVA_VERSION.startsWith("1.")) {
+			return Integer.parseInt(JAVA_VERSION.split("\\.")[1]);
+		}
+		return Integer.parseInt(JAVA_VERSION.split("\\.")[0]);
+	}
+
 	@Test
 	public void getMethodsTest() {
 		Method[] methods = MethodUtil.getMethods(ExamInfoDict.class);
-		Assert.assertEquals(20, methods.length);
+		Assert.assertEquals(isGteJdk15 ? 19 : 20, methods.length);
 
 		//过滤器测试
 		methods = MethodUtil.getMethods(ExamInfoDict.class, t -> Integer.class.equals(t.getReturnType()));
@@ -28,7 +44,7 @@ public class MethodUtilTest {
 		//null过滤器测试
 		methods = MethodUtil.getMethods(ExamInfoDict.class, null);
 
-		Assert.assertEquals(20, methods.length);
+		Assert.assertEquals(isGteJdk15 ? 19 : 20, methods.length);
 		final Method method2 = methods[0];
 		Assert.assertNotNull(method2);
 	}
@@ -110,7 +126,7 @@ public class MethodUtilTest {
 	public void getMethodsFromClassExtends() {
 		// 继承情况下，需解决方法去重问题
 		Method[] methods = MethodUtil.getMethods(ReflectUtilTest.C2.class);
-		Assert.assertEquals(15, methods.length);
+		Assert.assertEquals(isGteJdk15 ? 14 : 15, methods.length);
 
 		// 排除Object中的方法
 		// 3个方法包括类

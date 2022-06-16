@@ -1,9 +1,11 @@
-package cn.hutool.core.util;
+package cn.hutool.extra.xml;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.XmlUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;

@@ -1,4 +1,4 @@
-package cn.hutool.core.clone;
+package cn.hutool.core.exceptions;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.text.StrUtil;

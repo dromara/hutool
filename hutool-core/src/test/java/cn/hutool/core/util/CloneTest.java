@@ -1,5 +1,6 @@
-package cn.hutool.core.clone;
+package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.junit.Assert;
@@ -36,7 +37,7 @@ public class CloneTest {
 	 *
 	 */
 	@Data
-	static class Cat implements Cloneable<Cat>{
+	static class Cat implements Cloneable{
 		private String name = "miaomiao";
 		private int age = 2;
 
@@ -57,8 +58,17 @@ public class CloneTest {
 	 */
 	@EqualsAndHashCode(callSuper = false)
 	@Data
-	static class Dog extends CloneSupport<Dog>{
+	static class Dog implements Cloneable{
 		private String name = "wangwang";
 		private int age = 3;
+
+		@Override
+		public Dog clone() {
+			try {
+				return (Dog) super.clone();
+			} catch (final CloneNotSupportedException e) {
+				throw new CloneRuntimeException(e);
+			}
+		}
 	}
 }

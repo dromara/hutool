@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.extra.xml;
 
 import org.junit.Assert;
 import org.junit.Test;

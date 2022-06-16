@@ -59,7 +59,7 @@ public class LambdaUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <R> Class<R> getRealClass(final Serializable func) {
-		LambdaInfo lambdaInfo = resolve(func);
+		final LambdaInfo lambdaInfo = resolve(func);
 		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
 	}
 
@@ -78,18 +78,18 @@ public class LambdaUtil {
 			ClassLoaderUtil.loadClass(serializedLambda.getImplClass().replace("/", "."), true);
 			try {
 				implClass = Class.forName(serializedLambda.getImplClass().replace("/", "."), true, Thread.currentThread().getContextClassLoader());
-			} catch (ClassNotFoundException e) {
+			} catch (final ClassNotFoundException e) {
 				throw new UtilException(e);
 			}
 			if ("<init>".equals(methodName)) {
-				for (Constructor<?> constructor : implClass.getDeclaredConstructors()) {
+				for (final Constructor<?> constructor : implClass.getDeclaredConstructors()) {
 					if (ReflectUtil.getDescriptor(constructor).equals(serializedLambda.getImplMethodSignature())) {
 						return new LambdaInfo(constructor, serializedLambda);
 					}
 				}
 			} else {
-				Method[] methods = MethodUtil.getMethods(implClass);
-				for (Method method : methods) {
+				final Method[] methods = MethodUtil.getMethods(implClass);
+				for (final Method method : methods) {
 					if (method.getName().equals(methodName)
 							&& ReflectUtil.getDescriptor(method).equals(serializedLambda.getImplMethodSignature())) {
 						return new LambdaInfo(method, serializedLambda);

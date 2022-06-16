@@ -333,6 +333,10 @@ public class JSONUtil {
 		if (obj instanceof CharSequence) {
 			return StrUtil.str((CharSequence) obj);
 		}
+
+		if(obj instanceof Number){
+			return obj.toString();
+		}
 		return toJsonStr(parse(obj, jsonConfig));
 	}
 

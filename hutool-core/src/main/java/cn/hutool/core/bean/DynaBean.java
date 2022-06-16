@@ -1,6 +1,6 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.clone.CloneSupport;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Looly
  * @since 3.0.7
  */
-public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
+public class DynaBean implements Cloneable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final Class<?> beanClass;
@@ -223,5 +223,14 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	@Override
 	public String toString() {
 		return this.bean.toString();
+	}
+
+	@Override
+	public DynaBean clone() {
+		try {
+			return (DynaBean) super.clone();
+		} catch (final CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
 	}
 }

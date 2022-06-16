@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.extra.script;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.resource.ResourceUtil;

@@ -372,7 +372,7 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -464,7 +464,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.19</version>
+			<version>5.3.20</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -489,6 +489,24 @@
 			<artifactId>oshi-core</artifactId>
 			<version>6.1.6</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.4</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

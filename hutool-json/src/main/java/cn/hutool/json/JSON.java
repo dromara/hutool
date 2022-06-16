@@ -1,7 +1,6 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.core.reflect.TypeReference;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -170,17 +169,5 @@ public interface JSON extends Cloneable, Serializable {
 	 */
 	default <T> T toBean(final Type type) {
 		return JSONConverter.jsonConvert(type, this, getConfig());
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>       Bean类型
-	 * @param reference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @return 实体类对象
-	 * @since 4.2.2
-	 */
-	default <T> T toBean(final TypeReference<T> reference) {
-		return toBean(reference.getType());
 	}
 }

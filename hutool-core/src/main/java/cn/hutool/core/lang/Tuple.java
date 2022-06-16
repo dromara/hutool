@@ -1,8 +1,8 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.iter.ArrayIter;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
@@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
  *
  * @author Looly
  */
-public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Serializable {
+public class Tuple implements Iterable<Object>, Serializable, Cloneable {
 	private static final long serialVersionUID = -7689304393482182157L;
 
 	private final Object[] members;
@@ -175,5 +175,14 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	@Override
 	public final Spliterator<Object> spliterator() {
 		return Spliterators.spliterator(this.members, Spliterator.ORDERED);
+	}
+
+	@Override
+	public Tuple clone() {
+		try {
+			return (Tuple) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
 	}
 }

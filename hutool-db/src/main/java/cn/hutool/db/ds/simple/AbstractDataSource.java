@@ -1,6 +1,6 @@
 package cn.hutool.db.ds.simple;
 
-import cn.hutool.core.clone.CloneRuntimeException;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 
 import javax.sql.DataSource;
 import java.io.Closeable;

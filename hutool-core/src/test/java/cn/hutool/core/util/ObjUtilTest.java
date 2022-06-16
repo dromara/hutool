@@ -1,9 +1,9 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,9 +75,18 @@ public class ObjUtilTest {
 		Assert.assertEquals("OK", obj2.doSomeThing());
 	}
 
-	static class Obj extends CloneSupport<Obj> {
+	static class Obj implements Cloneable {
 		public String doSomeThing() {
 			return "OK";
+		}
+
+		@Override
+		public Obj clone() {
+			try {
+				return (Obj) super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new CloneRuntimeException(e);
+			}
 		}
 	}
 

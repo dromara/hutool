@@ -1,6 +1,6 @@
 package cn.hutool.db.ds;
 
-import cn.hutool.core.clone.CloneRuntimeException;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.io.IoUtil;
 
 import javax.sql.DataSource;

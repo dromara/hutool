@@ -1,13 +1,14 @@
 package cn.hutool.db.sql;
 
-import cn.hutool.core.clone.CloneSupport;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.CloneRuntimeException;
+import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.math.NumberUtil;
-import cn.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
  *
  * @author Looly
  */
-public class Condition extends CloneSupport<Condition> {
+public class Condition implements Cloneable, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * SQL中 LIKE 语句查询方式<br>
@@ -360,6 +362,15 @@ public class Condition extends CloneSupport<Condition> {
 		}
 
 		return conditionStrBuilder.toString();
+	}
+
+	@Override
+	public Condition clone() {
+		try {
+			return (Condition) super.clone();
+		} catch (final CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
 	}
 
 	// ----------------------------------------------------------------------------------------------- Private method start
