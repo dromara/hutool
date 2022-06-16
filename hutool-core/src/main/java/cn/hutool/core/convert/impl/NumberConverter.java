@@ -68,7 +68,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 	@Override
 	protected String convertToStr(Object value) {
 		String result = StrUtil.trim(super.convertToStr(value));
-		if (StrUtil.isNotEmpty(result)) {
+		if (null != result && result.length() > 1) {
 			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
 			if (c == 'D' || c == 'L' || c == 'F') {
 				// 类型标识形式（例如123.6D）

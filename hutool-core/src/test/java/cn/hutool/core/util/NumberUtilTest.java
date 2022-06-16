@@ -287,6 +287,12 @@ public class NumberUtilTest {
 		Assert.assertEquals(1482, v1);
 	}
 
+	@Test(expected = NumberFormatException.class)
+	public void parseIntTest3() {
+		int v1 = NumberUtil.parseInt("d");
+		Assert.assertEquals(0, v1);
+	}
+
 	@Test
 	public void parseNumberTest() {
 		// from 5.4.8 issue#I23ORQ@Gitee

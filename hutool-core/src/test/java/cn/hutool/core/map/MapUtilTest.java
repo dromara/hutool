@@ -217,4 +217,11 @@ public class MapUtilTest {
 		Assert.assertEquals(Integer.valueOf(1), map.get("a"));
 		Assert.assertEquals(Integer.valueOf(2), map.get("b"));
 	}
+
+	@Test(expected = NumberFormatException.class)
+	public void getIntTest(){
+		final HashMap<String, String> map = MapUtil.of("age", "d");
+		final Integer age = MapUtil.getInt(map, "age");
+		Assert.assertNotNull(age);
+	}
 }
