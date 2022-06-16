@@ -42,6 +42,9 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 	 * @return the header row - might be {@code null} if no header exists
 	 */
 	public List<String> getHeader() {
+		if(null == this.header){
+			return null;
+		}
 		return Collections.unmodifiableList(this.header);
 	}
 
