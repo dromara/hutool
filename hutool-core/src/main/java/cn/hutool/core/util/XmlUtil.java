@@ -64,7 +64,6 @@ import java.util.Map;
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作
  *
  * @author xiaoleilu
- * @see JAXBUtil
  */
 public class XmlUtil {
 
@@ -1022,7 +1021,6 @@ public class XmlUtil {
 	 * @param node XML节点
 	 * @param bean bean类
 	 * @return bean
-	 * @see JAXBUtil#xmlToBean(String, Class)
 	 * @since 5.2.4
 	 */
 	public static <T> T xmlToBean(final Node node, final Class<T> bean) {
@@ -1124,7 +1122,6 @@ public class XmlUtil {
 	 *
 	 * @param data Map类型数据
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data) {
@@ -1137,7 +1134,6 @@ public class XmlUtil {
 	 * @param data               Map类型数据
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final boolean omitXmlDeclaration) {
@@ -1150,7 +1146,6 @@ public class XmlUtil {
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.8
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName) {
@@ -1164,7 +1159,6 @@ public class XmlUtil {
 	 * @param rootName  根节点名
 	 * @param namespace 命名空间，可以为null
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace) {
@@ -1179,7 +1173,6 @@ public class XmlUtil {
 	 * @param namespace          命名空间，可以为null
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean omitXmlDeclaration) {
@@ -1195,7 +1188,6 @@ public class XmlUtil {
 	 * @param isPretty           是否格式化输出
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean isPretty, final boolean omitXmlDeclaration) {
@@ -1212,7 +1204,6 @@ public class XmlUtil {
 	 * @param isPretty           是否格式化输出
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @return XML格式的字符串
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
@@ -1225,7 +1216,6 @@ public class XmlUtil {
 	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 4.0.9
 	 */
 	public static Document mapToXml(final Map<?, ?> data, final String rootName) {
@@ -1239,7 +1229,6 @@ public class XmlUtil {
 	 * @param rootName  根节点名
 	 * @param namespace 命名空间，可以为null
 	 * @return XML
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.0.4
 	 */
 	public static Document mapToXml(final Map<?, ?> data, final String rootName, final String namespace) {
@@ -1255,7 +1244,6 @@ public class XmlUtil {
 	 *
 	 * @param bean Bean对象
 	 * @return XML
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.3.4
 	 */
 	public static Document beanToXml(final Object bean) {
@@ -1268,7 +1256,6 @@ public class XmlUtil {
 	 * @param bean      Bean对象
 	 * @param namespace 命名空间，可以为null
 	 * @return XML
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.2.4
 	 */
 	public static Document beanToXml(final Object bean, final String namespace) {
@@ -1282,7 +1269,6 @@ public class XmlUtil {
 	 * @param namespace  命名空间，可以为null
 	 * @param ignoreNull 忽略值为{@code null}的属性
 	 * @return XML
-	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.7.10
 	 */
 	public static Document beanToXml(final Object bean, final String namespace, final boolean ignoreNull) {
