@@ -151,7 +151,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public <T> T toBean(final Type type) {
-		return JSON.super.toBean(type, this.config.isIgnoreError());
+		return JSON.super.toBean(type);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), this.config.isIgnoreError());
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class DateConverter extends AbstractConverter {
 	}
 
 	@Override
-	protected java.util.Date convertInternal(Class<?> targetClass, final Object value) {
+	protected java.util.Date convertInternal(final Class<?> targetClass, final Object value) {
 		if (value == null || (value instanceof CharSequence && StrUtil.isBlank(value.toString()))) {
 			return null;
 		}
@@ -89,7 +89,7 @@ public class DateConverter extends AbstractConverter {
 	 * @param date Date
 	 * @return 目标类型对象
 	 */
-	private java.util.Date wrap(Class<?> targetClass, final DateTime date) {
+	private java.util.Date wrap(final Class<?> targetClass, final DateTime date) {
 		// 返回指定类型
 		if (java.util.Date.class == targetClass) {
 			return date.toJdkDate();
@@ -116,7 +116,7 @@ public class DateConverter extends AbstractConverter {
 	 * @param mills Date
 	 * @return 目标类型对象
 	 */
-	private java.util.Date wrap(Class<?> targetClass, final long mills) {
+	private java.util.Date wrap(final Class<?> targetClass, final long mills) {
 		// 返回指定类型
 		if (java.util.Date.class == targetClass) {
 			return new java.util.Date(mills);

@@ -382,7 +382,7 @@ public class JSONUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> T toBean(final String jsonString, final Class<T> beanClass) {
-		return toBean(parseObj(jsonString), beanClass);
+		return toBean(parse(jsonString), beanClass);
 	}
 
 	/**
@@ -397,7 +397,21 @@ public class JSONUtil {
 	 * @since 5.8.0
 	 */
 	public static <T> T toBean(final String jsonString, final JSONConfig config, final Class<T> beanClass) {
-		return toBean(parseObj(jsonString, config), beanClass);
+		return toBean(parse(jsonString, config), beanClass);
+	}
+
+	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出<br>
+	 * 通过{@link JSONConfig}可选是否忽略大小写、忽略null等配置
+	 *
+	 * @param <T>        Bean类型
+	 * @param jsonString JSON字符串
+	 * @param config     JSON配置
+	 * @param type       Bean类型
+	 * @return 实体类对象
+	 */
+	public static <T> T toBean(final String jsonString, final JSONConfig config, final Type type) {
+		return toBean(parse(jsonString, config), type);
 	}
 
 	/**
@@ -413,62 +427,32 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>           Bean类型
-	 * @param jsonString    JSON字符串
-	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @param ignoreError   是否忽略错误
-	 * @return 实体类对象
-	 * @since 4.3.2
-	 */
-	public static <T> T toBean(final String jsonString, final TypeReference<T> typeReference, final boolean ignoreError) {
-		return toBean(jsonString, typeReference.getType(), ignoreError);
-	}
-
-	/**
-	 * JSON字符串转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>         Bean类型
-	 * @param jsonString  JSON字符串
-	 * @param beanType    实体类对象类型
-	 * @param ignoreError 是否忽略错误
-	 * @return 实体类对象
-	 * @since 4.3.2
-	 */
-	public static <T> T toBean(final String jsonString, final Type beanType, final boolean ignoreError) {
-		return parse(jsonString, JSONConfig.of().setIgnoreError(ignoreError)).toBean(beanType);
-	}
-
-	/**
 	 * 转为实体类对象
 	 *
 	 * @param <T>           Bean类型
 	 * @param json          JSONObject
 	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @param ignoreError   是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 4.6.2
 	 */
-	public static <T> T toBean(final JSON json, final TypeReference<T> typeReference, final boolean ignoreError) {
-		return toBean(json, typeReference.getType(), ignoreError);
+	public static <T> T toBean(final JSON json, final TypeReference<T> typeReference) {
+		return toBean(json, typeReference.getType());
 	}
 
 	/**
 	 * 转为实体类对象
 	 *
-	 * @param <T>         Bean类型
-	 * @param json        JSONObject
-	 * @param beanType    实体类对象类型
-	 * @param ignoreError 是否忽略转换错误
+	 * @param <T>      Bean类型
+	 * @param json     JSONObject
+	 * @param beanType 实体类对象类型
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(final JSON json, final Type beanType, final boolean ignoreError) {
+	public static <T> T toBean(final JSON json, final Type beanType) {
 		if (null == json) {
 			return null;
 		}
-		return json.toBean(beanType, ignoreError);
+		return json.toBean(beanType);
 	}
 	// -------------------------------------------------------------------- toBean end
 

@@ -17,7 +17,7 @@ public class Issue2377Test {
 		final String paramBytesStr = JSONUtil.toJsonStr(paramList.get(1));
 		Assert.assertEquals("[10,11]", paramBytesStr);
 
-		final byte[] paramBytes = JSONUtil.toBean(paramBytesStr, byte[].class, false);
+		final byte[] paramBytes = JSONUtil.toBean(paramBytesStr, byte[].class);
 		Assert.assertArrayEquals((byte[]) paramArray[1], paramBytes);
 	}
 }

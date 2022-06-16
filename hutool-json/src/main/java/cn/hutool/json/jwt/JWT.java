@@ -5,9 +5,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.jwt.signers.AlgorithmUtil;
 import cn.hutool.json.jwt.signers.JWTSigner;
@@ -264,6 +264,19 @@ public class JWT implements RegisteredPayload<JWT> {
 	 */
 	public Object getPayload(final String name) {
 		return getPayload().getClaim(name);
+	}
+
+	/**
+	 * 获取payload并获取类型
+	 *
+	 * @param propertyName 需要提取的属性名称
+	 * @param propertyType 需要提取的属性类型
+	 * @return 载荷信息
+	 * @throws ValidateException 传入的类型不匹配payload类型
+	 * @since 6.0.0
+	 */
+	public <T> T getPayload(final String propertyName, final Class<T> propertyType) {
+		return getPayload().getClaimsJson().get(propertyName, propertyType);
 	}
 
 	/**

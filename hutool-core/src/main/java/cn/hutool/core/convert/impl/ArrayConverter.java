@@ -48,7 +48,7 @@ public class ArrayConverter extends AbstractConverter {
 	}
 
 	@Override
-	protected Object convertInternal(Class<?> targetClass, final Object value) {
+	protected Object convertInternal(final Class<?> targetClass, final Object value) {
 		final Class<?> targetComponentType;
 		if (targetClass.isArray()) {
 			targetComponentType = targetClass.getComponentType();

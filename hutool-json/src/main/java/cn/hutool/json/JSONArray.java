@@ -193,7 +193,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), this.config.isIgnoreError());
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public <T> T toBean(final Type type) {
-		return JSON.super.toBean(type, config.isIgnoreError());
+		return JSON.super.toBean(type);
 	}
 
 	/**

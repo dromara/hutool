@@ -1,17 +1,12 @@
 package cn.hutool.json;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 用于JSON的Getter类，提供各种类型的Getter方法
@@ -132,29 +127,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 
 	@Override
 	default Date getDate(final K key, final Date defaultValue) {
-		// 默认转换
-		final Object obj = getObj(key);
-		if (ObjUtil.isNull(obj)) {
-			return defaultValue;
-		}
-		if (obj instanceof Date) {
-			return (Date) obj;
-		}
-
-		final Optional<String> formatOps = Optional.ofNullable(getConfig()).map(JSONConfig::getDateFormat);
-		if (formatOps.isPresent()) {
-			final String format = formatOps.get();
-			if (StrUtil.isNotBlank(format)) {
-				// 用户指定了日期格式，获取日期属性时使用对应格式
-				final String str = Convert.toStr(obj);
-				if (null == str) {
-					return defaultValue;
-				}
-				return DateUtil.parse(str, format);
-			}
-		}
-
-		return Convert.toDate(obj, defaultValue);
+		return get(key, Date.class);
 	}
 
 	/**
@@ -166,29 +139,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @since 5.7.7
 	 */
 	default LocalDateTime getLocalDateTime(final K key, final LocalDateTime defaultValue) {
-		// 默认转换
-		final Object obj = getObj(key);
-		if (ObjUtil.isNull(obj)) {
-			return defaultValue;
-		}
-		if (obj instanceof LocalDateTime) {
-			return (LocalDateTime) obj;
-		}
-
-		final Optional<String> formatOps = Optional.ofNullable(getConfig()).map(JSONConfig::getDateFormat);
-		if (formatOps.isPresent()) {
-			final String format = formatOps.get();
-			if (StrUtil.isNotBlank(format)) {
-				// 用户指定了日期格式，获取日期属性时使用对应格式
-				final String str = Convert.toStr(obj);
-				if (null == str) {
-					return defaultValue;
-				}
-				return LocalDateTimeUtil.parse(str, format);
-			}
-		}
-
-		return Convert.toLocalDateTime(obj, defaultValue);
+		return ObjUtil.defaultIfNull(get(key, LocalDateTime.class), defaultValue);
 	}
 
 	/**
@@ -202,36 +153,21 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	}
 
 	/**
-	 * 获取指定类型的对象<br>
-	 * 转换失败或抛出异常
-	 *
-	 * @param <T>  获取的对象类型
-	 * @param key  键
-	 * @param type 获取对象类型
-	 * @return 对象
-	 * @throws ConvertException 转换异常
-	 * @since 3.0.8
-	 */
-	default <T> T get(final K key, final Class<T> type) throws ConvertException {
-		return get(key, type, false);
-	}
-
-	/**
 	 * 获取指定类型的对象
 	 *
 	 * @param <T>         获取的对象类型
 	 * @param key         键
 	 * @param type        获取对象类型
-	 * @param ignoreError 是否跳过转换失败的对象或值
 	 * @return 对象
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	default <T> T get(final K key, final Class<T> type, final boolean ignoreError) throws ConvertException {
+	default <T> T get(final K key, final Class<T> type) throws ConvertException {
 		final Object value = this.getObj(key);
 		if (ObjUtil.isNull(value)) {
 			return null;
 		}
-		return JSONConverter.jsonConvert(type, value, ignoreError);
+
+		return JSONConverter.jsonConvert(type, value, getConfig());
 	}
 }

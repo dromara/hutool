@@ -1,13 +1,12 @@
 package cn.hutool.json;
 
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.reflect.TypeReference;
 import lombok.Data;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
 
 public class Issue488Test {
 
@@ -15,8 +14,8 @@ public class Issue488Test {
 	public void toBeanTest() {
 		final String jsonStr = ResourceUtil.readUtf8Str("issue488.json");
 
-		final ResultSuccess<List<EmailAddress>> result = JSONUtil.toBean(jsonStr,
-				new TypeReference<ResultSuccess<List<EmailAddress>>>() {}, false);
+		final ResultSuccess<List<EmailAddress>> result = JSONUtil.toBean(jsonStr, JSONConfig.of(),
+				new TypeReference<ResultSuccess<List<EmailAddress>>>() {});
 
 		Assert.assertEquals("https://graph.microsoft.com/beta/$metadata#Collection(microsoft.graph.emailAddress)", result.getContext());
 
@@ -35,8 +34,8 @@ public class Issue488Test {
 	public void toCollctionBeanTest() {
 		final String jsonStr = ResourceUtil.readUtf8Str("issue488Array.json");
 
-		final List<ResultSuccess<List<EmailAddress>>> resultList = JSONUtil.toBean(jsonStr,
-				new TypeReference<List<ResultSuccess<List<EmailAddress>>>>() {}, false);
+		final List<ResultSuccess<List<EmailAddress>>> resultList = JSONUtil.toBean(jsonStr, JSONConfig.of(),
+				new TypeReference<List<ResultSuccess<List<EmailAddress>>>>() {});
 
 		final ResultSuccess<List<EmailAddress>> result = resultList.get(0);
 

@@ -32,8 +32,8 @@ public class Claims implements Serializable {
 	 * @param value 属性值
 	 */
 	protected void setClaim(final String name, final Object value) {
-		init();
 		Assert.notNull(name, "Name must be not null!");
+		init();
 		if (value == null) {
 			claimJSON.remove(name);
 			return;

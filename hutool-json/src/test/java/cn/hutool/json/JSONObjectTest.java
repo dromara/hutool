@@ -218,14 +218,14 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanNullStrTest() {
-		final JSONObject json = JSONUtil.createObj()//
+		final JSONObject json = JSONUtil.createObj(JSONConfig.of().setIgnoreError(true))//
 				.set("strValue", "null")//
 				.set("intValue", 123)//
 				// 子对象对应"null"字符串，如果忽略错误，跳过，否则抛出转换异常
 				.set("beanValue", "null")//
 				.set("list", JSONUtil.createArray().set("a").set("b"));
 
-		final TestBean bean = json.toBean(TestBean.class, true);
+		final TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
@@ -481,6 +481,22 @@ public class JSONObjectTest {
 		// 解析测试
 		final JSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
 		Assert.assertEquals(DateUtil.beginOfDay(date), parse.getDate("date"));
+	}
+
+	@Test
+	public void setDateFormatTest3() {
+		// 自定义格式为只有秒的时间戳，一版用于JWT
+		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat("#sss");
+
+		final Date date = DateUtil.parse("2020-06-05 11:16:11");
+		final JSONObject json = new JSONObject(jsonConfig);
+		json.set("date", date);
+
+		Assert.assertEquals("{\"date\":1591326971}", json.toString());
+
+		// 解析测试
+		final JSONObject parse = JSONUtil.parseObj(json.toString(), jsonConfig);
+		Assert.assertEquals(date, DateUtil.date(parse.getDate("date")));
 	}
 
 	@Test

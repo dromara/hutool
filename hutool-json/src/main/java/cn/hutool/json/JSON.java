@@ -16,6 +16,14 @@ import java.lang.reflect.Type;
 public interface JSON extends Cloneable, Serializable {
 
 	/**
+	 * 获取JSON配置
+	 *
+	 * @return {@link JSONConfig}
+	 * @since 5.3.0
+	 */
+	JSONConfig getConfig();
+
+	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
 	 * <ol>
 	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
@@ -36,7 +44,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	default Object getByPath(String expression){
+	default Object getByPath(final String expression){
 		return BeanPath.of(expression).get(this);
 	}
 
@@ -61,7 +69,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param expression 表达式
 	 * @param value      值
 	 */
-	default void putByPath(String expression, Object value){
+	default void putByPath(final String expression, final Object value){
 		BeanPath.of(expression).set(this, value);
 	}
 
@@ -153,6 +161,18 @@ public interface JSON extends Cloneable, Serializable {
 	}
 
 	/**
+	 * 转为实体类对象
+	 *
+	 * @param <T>         Bean类型
+	 * @param type        {@link Type}
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	default <T> T toBean(final Type type) {
+		return JSONConverter.jsonConvert(type, this, getConfig());
+	}
+
+	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 *
 	 * @param <T>       Bean类型
@@ -162,30 +182,5 @@ public interface JSON extends Cloneable, Serializable {
 	 */
 	default <T> T toBean(final TypeReference<T> reference) {
 		return toBean(reference.getType());
-	}
-
-	/**
-	 * 转为实体类对象
-	 *
-	 * @param <T>  Bean类型
-	 * @param type {@link Type}
-	 * @return 实体类对象
-	 * @since 3.0.8
-	 */
-	default <T> T toBean(final Type type) {
-		return toBean(type, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 *
-	 * @param <T>         Bean类型
-	 * @param type        {@link Type}
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 * @since 4.3.2
-	 */
-	default <T> T toBean(final Type type, final boolean ignoreError) {
-		return JSONConverter.jsonConvert(type, this, ignoreError);
 	}
 }

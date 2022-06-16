@@ -1,10 +1,18 @@
 package cn.hutool.json.jwt;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.jwt.signers.JWTSignerUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JWTTest {
 
@@ -87,5 +95,68 @@ public class JWTTest {
 
 		final boolean verify = JWT.of(token).setKey(StrUtil.utf8Bytes("123456")).verify();
 		Assert.assertTrue(verify);
+	}
+
+	@Data
+	public static class UserTest {
+		private String name;
+		private Integer age;
+	}
+	@Test
+	public void payloadTest() {
+
+		final UserTest bean = new UserTest();
+		bean.setAge(18);
+		bean.setName("takaki");
+
+		final Date date = new Date();
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final Integer num = 18;
+		final String username = "takaki";
+		final HashMap<String, String> map = new HashMap<>();
+		map.put("test1", "1");
+		map.put("test2", "2");
+		final Map<String, Object> payload = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put("username", username);
+				put("bean", bean);
+				put("number", num);
+				put("list", list);
+				put("date", date);
+				put("map", map);
+			}
+		};
+
+		final String token = JWTUtil.createToken(payload, "123".getBytes());
+		final JWT jwt = JWT.of(token);
+		final String strRes = jwt.getPayload("username", String.class);
+		final UserTest beanRes = jwt.getPayload("bean", UserTest.class);
+		final Date dateRes = jwt.getPayload("date", Date.class);
+		final List<?> listRes = jwt.getPayload("list", List.class);
+		final Integer numRes = jwt.getPayload("number", Integer.class);
+		final HashMap<?, ?> mapRes = jwt.getPayload("map", HashMap.class);
+
+		Assert.assertEquals(bean, beanRes);
+		Assert.assertEquals(numRes, num);
+		Assert.assertEquals(username, strRes);
+		Assert.assertEquals(list, listRes);
+
+		final String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
+		final String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals(formattedDate, formattedRes);
+		Assert.assertEquals(map, mapRes);
+	}
+
+	@Test()
+	public void getDateTest(){
+		final String token = JWT.create()
+				.setIssuedAt(DateUtil.parse("2022-02-02"))
+				.setKey("123456".getBytes())
+				.sign();
+
+		// 签发时间早于被检查的时间
+		final Date date = JWT.of(token).getPayload().getClaimsJson().getDate(JWTPayload.ISSUED_AT);
+		Assert.assertEquals("2022-02-02", DateUtil.format(date, DatePattern.NORM_DATE_PATTERN));
 	}
 }

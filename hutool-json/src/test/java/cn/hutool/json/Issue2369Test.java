@@ -13,7 +13,7 @@ public class Issue2369Test {
 		final String s = JSONUtil.toJsonStr(bytes);
 		Assert.assertEquals("[10,11]", s);
 
-		final Object o = JSONUtil.toBean(s, byte[].class, false);
+		final Object o = JSONUtil.toBean(s, byte[].class);
 		Assert.assertArrayEquals(bytes, (byte[])o);
 	}
 }

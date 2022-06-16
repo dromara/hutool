@@ -1,7 +1,8 @@
 package cn.hutool.json;
 
 /**
- * 实现此接口的类可以通过实现{@code parse(value)}方法来将JSON中的值解析为此对象的值
+ * 实现此接口的类可以通过实现{@code parse(value)}方法来将JSON中的值解析为此对象的值<br>
+ * 此接口主要用于可以自定义的Bean对象，而无需全局配置转换器。
  *
  * @author Looly
  * @since 5.7.8
