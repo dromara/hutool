@@ -151,6 +151,14 @@ public class ReUtilTest {
 	}
 
 	@Test
+	public void escapeTest3(){
+		String context = "{prefix}_";
+		String regex = "{prefix}_";
+		final boolean b = ReUtil.isMatch(ReUtil.escape(regex), context);
+		Assert.assertTrue(b);
+	}
+
+	@Test
 	public void getAllGroupsTest() {
 		//转义给定字符串，为正则相关的特殊符号转义
 		Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
