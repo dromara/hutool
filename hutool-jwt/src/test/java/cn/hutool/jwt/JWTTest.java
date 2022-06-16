@@ -1,13 +1,15 @@
 package cn.hutool.jwt;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JWTTest {
 
@@ -92,29 +94,55 @@ public class JWTTest {
 		Assert.assertTrue(verify);
 	}
 
+	@Data
+	public static class UserTest {
+		private String name;
+		private Integer age;
+	}
 	@Test
-	public void testGetUserId() {
-		String username = "takaki@163.com";
-		int userId = 123;
+	public void payloadTest() {
 
-		byte[] secret = "312@asd".getBytes();
+		UserTest bean = new UserTest();
+		bean.setAge(18);
+		bean.setName("takaki");
+
+		Date date = new Date();
+		List<Integer> list = Arrays.asList(1, 2, 3);
+		Integer num = 18;
+		String username = "takaki";
+		HashMap<String, String> map = new HashMap<>();
+		map.put("test1", "1");
+		map.put("test2", "2");
 		Map<String, Object> payload = new HashMap<String, Object>() {
 			private static final long serialVersionUID = 1L;
 			{
 				put("username", username);
-				put("userId", userId);
-				put("expire_time", System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15);
+				put("bean", bean);
+				put("number", num);
+				put("list", list);
+				put("date", date);
+				put("map", map);
 			}
 		};
 
-		String token = JWTUtil.createToken(payload, secret);
+		String token = JWTUtil.createToken(payload, "123".getBytes());
 		JWT jwt = JWT.of(token);
-		String usernameResult = jwt.getPayload("username", String.class);
-		Assert.assertEquals(username, usernameResult);
-		Integer userIdResult = jwt.getPayload("userId", Integer.class);
-		Assert.assertEquals((int) userIdResult, userId);
+		String strRes = jwt.getPayload("username", String.class);
+		UserTest beanRes = jwt.getPayload("bean", UserTest.class);
+		Date dateRes = jwt.getPayload("date", Date.class);
+		List listRes = jwt.getPayload("list", List.class);
+		Integer numRes = jwt.getPayload("number", Integer.class);
+		HashMap mapRes = jwt.getPayload("map", HashMap.class);
 
-		Assert.assertThrows(JWTException.class, () -> jwt.getPayload("userId", String.class));
-		Assert.assertThrows(IllegalArgumentException.class, () -> jwt.getPayload("test", String.class));
+		Assert.assertEquals(bean, beanRes);
+		Assert.assertEquals(numRes, num);
+		Assert.assertEquals(username, strRes);
+		Assert.assertEquals(list, listRes);
+
+		String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
+		String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals(formattedDate, formattedRes);
+		Assert.assertEquals(map, mapRes);
+
 	}
 }

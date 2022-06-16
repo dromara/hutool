@@ -17,6 +17,7 @@ import cn.hutool.jwt.signers.NoneJWTSigner;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyPair;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -268,6 +269,7 @@ public class JWT implements RegisteredPayload<JWT> {
 
 	/**
 	 * 获取payload并获取类型
+	 *
 	 * @param propertyName 需要提取的属性名称
 	 * @param propertyType 需要提取的属性类型
 	 * @return 载荷信息
@@ -281,16 +283,18 @@ public class JWT implements RegisteredPayload<JWT> {
 		try {
 			return propertyType.cast(payload);
 		} catch (ClassCastException e) {
-			StringBuilder builder = new StringBuilder();
-			String errorMessage = builder
-					.append("The ")
-					.append(propertyName)
-					.append(" claim on token is not instance of ")
-					.append(propertyType.getTypeName())
-					.toString();
-
-			throw new JWTException(errorMessage);
+			if (propertyType.equals(Date.class)) {
+				return (T) new Date(((int)payload * 1000L));
+			}
+			JSONObject object = new JSONObject(payload);
+			if (object.isEmpty()) {
+				throw new ValidateException(
+						"Cast Error, check if the param instance of " + propertyType.getTypeName()
+				);
+			}
+			return object.toBean(propertyType);
 		}
+
 	}
 	/**
 	 * 设置JWT载荷信息
