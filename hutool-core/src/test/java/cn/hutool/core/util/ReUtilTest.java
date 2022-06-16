@@ -143,6 +143,14 @@ public class ReUtilTest {
 	}
 
 	@Test
+	public void escapeTest2(){
+		String str = "a[bbbc";
+		String re = "[";
+		final String s = ReUtil.get(ReUtil.escape(re), str, 0);
+		Assert.assertEquals("[", s);
+	}
+
+	@Test
 	public void getAllGroupsTest() {
 		//转义给定字符串，为正则相关的特殊符号转义
 		Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");

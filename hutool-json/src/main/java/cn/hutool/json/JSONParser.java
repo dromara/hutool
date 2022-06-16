@@ -77,6 +77,8 @@ public class JSONParser {
 				case ';':
 				case ',':
 					if (tokener.nextClean() == '}') {
+						// issue#2380
+						// 尾后逗号（Trailing Commas），JSON中虽然不支持，但是ECMAScript 2017支持，此处做兼容。
 						return;
 					}
 					tokener.back();

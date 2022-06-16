@@ -59,7 +59,8 @@ public class StreamExtractor implements Extractor{
 	}
 
 	/**
-	 * 构造
+	 * 构造<br>
+	 * 如果抛出异常，则提供的流将被关闭
 	 *
 	 * @param charset      编码
 	 * @param archiverName 归档包格式，null表示自动检测
@@ -75,6 +76,8 @@ public class StreamExtractor implements Extractor{
 				this.in = factory.createArchiveInputStream(archiverName, in);
 			}
 		} catch (ArchiveException e) {
+			// issue#2384，如果报错可能持有文件句柄，导致无法删除文件
+			IoUtil.close(in);
 			throw new CompressException(e);
 		}
 	}
