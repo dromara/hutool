@@ -204,11 +204,4 @@ public class HttpRequestTest {
 		HttpRequest httpRequest = new HttpRequest(urlBuilder);
 		httpRequest.setMethod(Method.GET).execute();
 	}
-
-	@Test
-	public void get122Test(){
-		String url = "http://122.112.234.240:9007/monitor/devices/real/59312710/all/0";
-		final String s = HttpUtil.get(url);
-		Console.log(s);
-	}
 }
