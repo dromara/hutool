@@ -1,7 +1,8 @@
 package cn.hutool.poi.csv;
 
+import cn.hutool.core.collection.ListUtil;
+
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class CsvData implements Iterable<CsvRow>, Serializable {
 	 * @return the header row - might be {@code null} if no header exists
 	 */
 	public List<String> getHeader() {
-		return Collections.unmodifiableList(this.header);
+		return ListUtil.unmodifiable(this.header);
 	}
 
 	/**

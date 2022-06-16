@@ -1,11 +1,12 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ByteUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -50,7 +51,8 @@ public class NumberConverter extends AbstractConverter {
 	@Override
 	protected String convertToStr(final Object value) {
 		final String result = StrUtil.trim(super.convertToStr(value));
-		if (StrUtil.isNotEmpty(result)) {
+		if (null != result && result.length() > 1) {
+			// 非单个字符才判断末尾的标识符
 			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
 			if (c == 'D' || c == 'L' || c == 'F') {
 				// 类型标识形式（例如123.6D）
@@ -58,6 +60,9 @@ public class NumberConverter extends AbstractConverter {
 			}
 		}
 
+		if(StrUtil.isEmpty(result)){
+			throw new ConvertException("Can not convert empty value to Number!");
+		}
 		return result;
 	}
 
@@ -96,7 +101,7 @@ public class NumberConverter extends AbstractConverter {
 			}
 			final String valueStr = toStrFunc.apply(value);
 			try{
-				return StrUtil.isBlank(valueStr) ? null : Byte.valueOf(valueStr);
+				return Byte.valueOf(valueStr);
 			} catch (final NumberFormatException e){
 				return NumberUtil.parseNumber(valueStr).byteValue();
 			}
@@ -108,7 +113,7 @@ public class NumberConverter extends AbstractConverter {
 			}
 			final String valueStr = toStrFunc.apply((value));
 			try{
-				return StrUtil.isBlank(valueStr) ? null : Short.valueOf(valueStr);
+				return Short.valueOf(valueStr);
 			} catch (final NumberFormatException e){
 				return NumberUtil.parseNumber(valueStr).shortValue();
 			}
@@ -125,7 +130,7 @@ public class NumberConverter extends AbstractConverter {
 				return (int) DateUtil.toInstant((TemporalAccessor) value).toEpochMilli();
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseInt(valueStr);
+			return NumberUtil.parseInt(valueStr);
 		} else if (AtomicInteger.class == targetType) {
 			final Number number = convert(value, Integer.class, toStrFunc);
 			if (null != number) {
@@ -144,7 +149,7 @@ public class NumberConverter extends AbstractConverter {
 				return DateUtil.toInstant((TemporalAccessor) value).toEpochMilli();
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseLong(valueStr);
+			return NumberUtil.parseLong(valueStr);
 		} else if (AtomicLong.class == targetType) {
 			final Number number = convert(value, Long.class, toStrFunc);
 			if (null != number) {
@@ -165,7 +170,7 @@ public class NumberConverter extends AbstractConverter {
 				return BooleanUtil.toFloatObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseFloat(valueStr);
+			return NumberUtil.parseFloat(valueStr);
 		} else if (Double.class == targetType) {
 			if (value instanceof Number) {
 				return NumberUtil.toDouble((Number) value);
@@ -173,7 +178,7 @@ public class NumberConverter extends AbstractConverter {
 				return BooleanUtil.toDoubleObj((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseDouble(valueStr);
+			return NumberUtil.parseDouble(valueStr);
 		} else if (DoubleAdder.class == targetType) {
 			//jdk8 新增
 			final Number number = convert(value, Double.class, toStrFunc);
@@ -193,7 +198,7 @@ public class NumberConverter extends AbstractConverter {
 				return BooleanUtil.toInteger((Boolean) value);
 			}
 			final String valueStr = toStrFunc.apply((value));
-			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseNumber(valueStr);
+			return NumberUtil.parseNumber(valueStr);
 		}
 
 		throw new UnsupportedOperationException(StrUtil.format("Unsupport Number type: {}", targetType.getName()));

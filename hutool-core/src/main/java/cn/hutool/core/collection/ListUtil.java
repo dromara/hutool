@@ -609,4 +609,19 @@ public class ListUtil {
 			}
 		}
 	}
+
+	/**
+	 * 转为只读List
+	 *
+	 * @param <T> 元素类型
+	 * @param c   集合
+	 * @return 只读集合
+	 * @since 6.0.0
+	 */
+	public static <T> List<T> unmodifiable(final List<? extends T> c) {
+		if (null == c) {
+			return null;
+		}
+		return Collections.unmodifiableList(c);
+	}
 }

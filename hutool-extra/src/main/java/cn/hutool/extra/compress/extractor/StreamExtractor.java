@@ -75,6 +75,8 @@ public class StreamExtractor implements Extractor{
 				this.in = factory.createArchiveInputStream(archiverName, in);
 			}
 		} catch (final ArchiveException e) {
+			// issue#2384，如果报错可能持有文件句柄，导致无法删除文件
+			IoUtil.close(in);
 			throw new CompressException(e);
 		}
 	}

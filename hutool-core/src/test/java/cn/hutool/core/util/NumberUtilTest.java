@@ -434,4 +434,10 @@ public class NumberUtilTest {
 		//noinspection ResultOfMethodCallIgnored
 		NumberUtil.range(0, Integer.MIN_VALUE);
 	}
+
+	@Test(expected = NumberFormatException.class)
+	public void parseIntTest3() {
+		int v1 = NumberUtil.parseInt("d");
+		Assert.assertEquals(0, v1);
+	}
 }

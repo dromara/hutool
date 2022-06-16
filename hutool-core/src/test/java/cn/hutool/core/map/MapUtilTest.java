@@ -1,7 +1,6 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrUtil;
 import lombok.Builder;
@@ -217,9 +216,9 @@ public class MapUtilTest {
 		Assert.assertEquals(Integer.valueOf(2), map.get("b"));
 	}
 
-	@Test(expected = ConvertException.class)
+	@Test(expected = NumberFormatException.class)
 	public void getIntTest(){
-		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "D"));
+		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "d"));
 		final Integer a = MapUtil.getInt(map, "a");
 		Assert.assertNotNull(a);
 	}

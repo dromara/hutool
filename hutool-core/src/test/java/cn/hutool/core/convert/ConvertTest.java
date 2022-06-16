@@ -113,6 +113,12 @@ public class ConvertTest {
 		Assert.assertEquals(Integer.valueOf(-1), aInt);
 	}
 
+	@Test(expected = NumberFormatException.class)
+	public void toIntOfExceptionTest(){
+		final Integer d = Convert.convert(Integer.class, "d");
+		Assert.assertNotNull(d);
+	}
+
 	@Test
 	public void toLongTest() {
 		final String a = " 342324545435435";

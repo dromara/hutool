@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ReUtilTest {
-	final String content = "ZZZaaabbbccc中文1234";
+	static final String content = "ZZZaaabbbccc中文1234";
 
 	@Test
 	public void getTest() {
@@ -142,6 +142,22 @@ public class ReUtilTest {
 		//转义给定字符串，为正则相关的特殊符号转义
 		final String escape = ReUtil.escape("我有个$符号{}");
 		Assert.assertEquals("我有个\\$符号\\{\\}", escape);
+	}
+
+	@Test
+	public void escapeTest2(){
+		final String str = "a[bbbc";
+		final String re = "[";
+		final String s = ReUtil.get(ReUtil.escape(re), str, 0);
+		Assert.assertEquals("[", s);
+	}
+
+	@Test
+	public void escapeTest3(){
+		final String context = "{prefix}_";
+		final String regex = "{prefix}_";
+		final boolean b = ReUtil.isMatch(ReUtil.escape(regex), context);
+		Assert.assertTrue(b);
 	}
 
 	@Test

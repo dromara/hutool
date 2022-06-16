@@ -176,6 +176,21 @@ public class SetUtil {
 	}
 
 	/**
+	 * 转为只读Set
+	 *
+	 * @param <T> 元素类型
+	 * @param c   集合
+	 * @return 只读集合
+	 * @since 6.0.0
+	 */
+	public static <T> Set<T> unmodifiable(final Set<? extends T> c) {
+		if (null == c) {
+			return null;
+		}
+		return Collections.unmodifiableSet(c);
+	}
+
+	/**
 	 * 新建一个HashSet
 	 *
 	 * @param <T>      集合元素类型

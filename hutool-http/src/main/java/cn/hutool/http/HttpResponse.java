@@ -395,6 +395,21 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public long writeBody(final String targetFileOrDir) {
 		return writeBody(FileUtil.file(targetFileOrDir));
 	}
+
+	/**
+	 * 设置主体字节码，一版用于拦截器修改响应内容<br>
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
+	 *
+	 * @param bodyBytes 主体
+	 * @return this
+	 */
+	public HttpResponse body(final byte[] bodyBytes) {
+		sync();
+		if (null != bodyBytes) {
+			this.bodyBytes = bodyBytes;
+		}
+		return this;
+	}
 	// ---------------------------------------------------------------- Body end
 
 	@Override
