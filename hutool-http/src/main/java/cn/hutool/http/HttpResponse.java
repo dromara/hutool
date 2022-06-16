@@ -256,6 +256,21 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
+	 * 设置主体字节码<br>
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
+	 *
+	 * @param bodyBytes 主体
+	 * @return this
+	 */
+	public HttpResponse body(byte[] bodyBytes) {
+		sync();
+		if (null != bodyBytes) {
+			this.bodyBytes = bodyBytes;
+		}
+		return this;
+	}
+
+	/**
 	 * 获取响应主体
 	 *
 	 * @return String
