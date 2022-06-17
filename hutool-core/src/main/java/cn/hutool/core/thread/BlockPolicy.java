@@ -3,6 +3,7 @@ package cn.hutool.core.thread;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Consumer;
 
 /**
  * 当任务队列过长时处于阻塞状态，直到添加到队列中
@@ -14,15 +15,35 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class BlockPolicy implements RejectedExecutionHandler {
 
+	/**
+	 * 线程池关闭时，为避免任务丢失，留下处理方法
+	 * 如果需要由调用方来运行，可以{@code new BlockPolicy(Runnable::run)}
+	 */
+	private final Consumer<Runnable> handlerwhenshutdown;
+
+	public BlockPolicy(final Consumer<Runnable> handlerwhenshutdown) {
+		this.handlerwhenshutdown = handlerwhenshutdown;
+	}
+
 	public BlockPolicy() {
+		this(null);
 	}
 
 	@Override
 	public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-		try {
-			e.getQueue().put(r);
-		} catch (InterruptedException ex) {
-			throw new RejectedExecutionException("Task " + r + " rejected from " + e);
+		// 线程池未关闭时，阻塞等待
+		if(!e.isShutdown()){
+			try {
+				e.getQueue().put(r);
+			} catch (InterruptedException ex) {
+				throw new RejectedExecutionException("Task " + r + " rejected from " + e);
+			}
+			return;
+		}
+
+		// 当设置了关闭时候的处理
+		if(null != handlerwhenshutdown){
+			handlerwhenshutdown.accept(r);
 		}
 	}
 }
