@@ -93,4 +93,11 @@ public class ObjectUtilTest {
 		final boolean basicType = ObjectUtil.isBasicType(a);
 		Assert.assertTrue(basicType);
 	}
+
+	@Test
+	public void selfTest() {
+		Object o = new Object();
+		Object self = ObjectUtil.self(o);
+		Assert.assertEquals(o, self);
+	}
 }

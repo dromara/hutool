@@ -658,4 +658,16 @@ public class ObjectUtil {
 	public static boolean isAllNotEmpty(Object... objs) {
 		return ArrayUtil.isAllNotEmpty(objs);
 	}
+
+	/**
+	 * 返回对象本身<br>
+	 * 匿名函数 o -> o 的语法糖
+	 *
+	 * @param object 任意对象
+	 * @return 对象本身
+	 * @param <T> 对象类型
+	 */
+	public static <T> T self(T object) {
+		return object;
+	}
 }
