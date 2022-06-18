@@ -93,4 +93,10 @@ public class ObjectUtilTest {
 		final boolean basicType = ObjectUtil.isBasicType(a);
 		Assert.assertTrue(basicType);
 	}
+
+	@Test
+	public void isNotNullTest(){
+		String a = null;
+		Assert.assertFalse(ObjectUtil.isNotNull(a));
+	}
 }
