@@ -157,7 +157,7 @@ public class SshjSftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 		if (CollUtil.isNotEmpty(infoList)) {
-			return CollUtil.map(infoList, RemoteResourceInfo::getName, true);
+			return CollUtil.map(infoList, RemoteResourceInfo::getName);
 		}
 		return null;
 	}

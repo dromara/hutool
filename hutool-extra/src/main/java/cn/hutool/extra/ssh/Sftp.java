@@ -312,7 +312,7 @@ public class Sftp extends AbstractFtp {
 		if (CollUtil.isEmpty(entries)) {
 			return ListUtil.empty();
 		}
-		return CollUtil.map(entries, LsEntry::getFilename, true);
+		return CollUtil.map(entries, LsEntry::getFilename);
 	}
 
 	/**

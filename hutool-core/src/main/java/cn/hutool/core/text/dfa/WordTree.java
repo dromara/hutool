@@ -223,7 +223,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 */
 	public List<String> matchAll(final String text, final int limit, final boolean isDensityMatch, final boolean isGreedMatch) {
 		final List<FoundWord> matchAllWords = matchAllWords(text, limit, isDensityMatch, isGreedMatch);
-		return CollUtil.map(matchAllWords, FoundWord::toString, true);
+		return CollUtil.map(matchAllWords, FoundWord::toString);
 	}
 
 	/**

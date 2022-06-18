@@ -3,7 +3,6 @@ package cn.hutool.core.collection.iter;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.Matcher;
@@ -30,6 +29,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * {@link Iterable} 和 {@link Iterator} 相关工具类
@@ -682,68 +682,68 @@ public class IterUtil {
 	 * @return 过滤后的集合
 	 * @since 5.7.1
 	 */
-	public static <T> List<T> edit(final Iterable<T> iter, final Editor<T> editor) {
+	public static <T> List<T> edit(final Iterator<T> iter, final UnaryOperator<T> editor) {
 		final List<T> result = new ArrayList<>();
 		if (null == iter) {
 			return result;
 		}
 
 		T modified;
-		for (final T t : iter) {
-			modified = (null == editor) ? t : editor.edit(t);
+		while(iter.hasNext()){
+			modified = (null == editor) ? iter.next() : editor.apply(iter.next());
 			if (null != modified) {
-				result.add(t);
+				result.add(modified);
 			}
 		}
 		return result;
 	}
 
 	/**
-	 * 过滤集合，此方法在原集合上直接修改<br>
-	 * 通过实现Filter接口，完成元素的过滤，这个Filter实现可以实现以下功能：
+	 * 移除集合中满足条件的所有元素，此方法在原集合上直接修改<br>
+	 * 通过实现{@link Predicate}接口，完成元素的移除，可以实现以下功能：
 	 *
 	 * <pre>
-	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回false的对象将被使用{@link Iterator#remove()}方法移除
+	 * 1、移除指定对象，{@link Predicate#test(Object)}方法返回{@code true}的对象将被使用{@link Iterator#remove()}方法移除。
 	 * </pre>
 	 *
 	 * @param <T>    集合类型
 	 * @param <E>    集合元素类型
 	 * @param iter   集合
-	 * @param filter 过滤器接口
+	 * @param predicate 过滤器接口
 	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Iterable<E>, E> T filter(final T iter, final Predicate<E> filter) {
+	public static <T extends Iterable<E>, E> T remove(final T iter, final Predicate<E> predicate) {
 		if (null == iter) {
 			return null;
 		}
 
-		filter(iter.iterator(), filter);
+		remove(iter.iterator(), predicate);
 
 		return iter;
 	}
 
 	/**
-	 * 过滤集合，此方法在原集合上直接修改<br>
-	 * 通过实现Filter接口，完成元素的过滤，这个Filter实现可以实现以下功能：
+	 * 移除集合中满足条件的所有元素，此方法在原集合上直接修改<br>
+	 * 通过实现{@link Predicate}接口，完成元素的移除，可以实现以下功能：
 	 *
 	 * <pre>
-	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回false的对象将被使用{@link Iterator#remove()}方法移除
+	 * 1、移除指定对象，{@link Predicate#test(Object)}方法返回{@code true}的对象将被使用{@link Iterator#remove()}方法移除。
 	 * </pre>
 	 *
 	 * @param <E>    集合元素类型
 	 * @param iter   集合
-	 * @param filter 过滤器接口，删除{@link Filter#accept(Object)}为{@code false}的元素
+	 * @param predicate 过滤器接口，删除{@link Predicate#test(Object)}为{@code true}的元素
 	 * @return 编辑后的集合
-	 * @since 4.6.5
+	 * @since 6.0.0
 	 */
-	public static <E> Iterator<E> filter(final Iterator<E> iter, final Predicate<E> filter) {
-		if (null == iter || null == filter) {
+	public static <E> Iterator<E> remove(final Iterator<E> iter, final Predicate<E> predicate) {
+		if (null == iter || null == predicate) {
 			return iter;
 		}
 
 		while (iter.hasNext()) {
-			if (false == filter.test(iter.next())) {
+			if (predicate.test(iter.next())) {
 				iter.remove();
 			}
 		}

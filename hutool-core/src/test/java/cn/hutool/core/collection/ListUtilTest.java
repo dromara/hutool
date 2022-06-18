@@ -232,4 +232,20 @@ public class ListUtilTest {
 		map = list.get(0);
 		Assert.assertEquals("李四", map.get("2"));
 	}
+
+	@Test
+	public void addAllIfNotContainsTest() {
+		final ArrayList<String> list1 = new ArrayList<>();
+		list1.add("1");
+		list1.add("2");
+		final ArrayList<String> list2 = new ArrayList<>();
+		list2.add("2");
+		list2.add("3");
+		ListUtil.addAllIfNotContains(list1, list2);
+
+		Assert.assertEquals(3, list1.size());
+		Assert.assertEquals("1", list1.get(0));
+		Assert.assertEquals("2", list1.get(1));
+		Assert.assertEquals("3", list1.get(2));
+	}
 }

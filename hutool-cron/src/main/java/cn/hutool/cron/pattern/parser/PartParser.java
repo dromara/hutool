@@ -1,6 +1,6 @@
 package cn.hutool.cron.pattern.parser;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.Month;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.math.NumberUtil;
@@ -104,7 +104,7 @@ public class PartParser {
 
 		final List<String> parts = StrUtil.split(value, StrUtil.C_COMMA);
 		for (final String part : parts) {
-			CollUtil.addAllIfNotContains(values, parseStep(part));
+			ListUtil.addAllIfNotContains(values, parseStep(part));
 		}
 		return values;
 	}

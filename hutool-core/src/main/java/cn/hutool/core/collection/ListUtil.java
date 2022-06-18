@@ -7,7 +7,6 @@ import cn.hutool.core.collection.partition.RandomAccessAvgPartition;
 import cn.hutool.core.collection.partition.RandomAccessPartition;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.PageUtil;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.RandomAccess;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * List相关工具类
@@ -473,12 +473,12 @@ public class ListUtil {
 	 * @return 最后一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int lastIndexOf(final List<T> list, final Matcher<T> matcher) {
+	public static <T> int lastIndexOf(final List<T> list, final Predicate<T> matcher) {
 		if (null != list) {
 			final int size = list.size();
 			if (size > 0) {
 				for (int i = size - 1; i >= 0; i--) {
-					if (null == matcher || matcher.match(list.get(i))) {
+					if (null == matcher || matcher.test(list.get(i))) {
 						return i;
 					}
 				}
@@ -496,7 +496,7 @@ public class ListUtil {
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
-	public static <T> int[] indexOfAll(final List<T> list, final Matcher<T> matcher) {
+	public static <T> int[] indexOfAll(final List<T> list, final Predicate<T> matcher) {
 		return CollUtil.indexOfAll(list, matcher);
 	}
 
@@ -623,5 +623,22 @@ public class ListUtil {
 			return null;
 		}
 		return Collections.unmodifiableList(c);
+	}
+
+	/**
+	 * 将另一个列表中的元素加入到列表中，如果列表中已经存在此元素则忽略之
+	 *
+	 * @param <T>       集合元素类型
+	 * @param list      列表
+	 * @param otherList 其它列表
+	 * @return 此列表
+	 */
+	public static <T> List<T> addAllIfNotContains(final List<T> list, final List<T> otherList) {
+		for (final T t : otherList) {
+			if (false == list.contains(t)) {
+				list.add(t);
+			}
+		}
+		return list;
 	}
 }

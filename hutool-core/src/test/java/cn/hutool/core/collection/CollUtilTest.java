@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
@@ -253,7 +254,8 @@ public class CollUtilTest {
 		final Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
 		final ArrayList<Dict> list = ListUtil.of(v1, v2);
 
-		final List<Object> fieldValues = CollUtil.getFieldValues(list, "name");
+		final List<Object> fieldValues = (List<Object>) CollUtil.getFieldValues(list, "name");
+
 		Assert.assertEquals("张三", fieldValues.get(0));
 		Assert.assertEquals("李四", fieldValues.get(1));
 	}
@@ -284,7 +286,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void filterTest() {
+	public void editTest() {
 		final ArrayList<String> list = ListUtil.of("a", "b", "c");
 
 		final Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
@@ -293,10 +295,10 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void filterTest2() {
+	public void removeTest() {
 		final ArrayList<String> list = ListUtil.of("a", "b", "c");
 
-		final ArrayList<String> filtered = CollUtil.filter(list, t -> false == "a".equals(t));
+		final ArrayList<String> filtered = CollUtil.remove(list, "a"::equals);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -304,9 +306,9 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void filterSetTest() {
+	public void removeForSetTest() {
 		final Set<String> set = SetUtil.ofLinked("a", "b", "", "  ", "c");
-		final Set<String> filtered = CollUtil.filter(set, StrUtil::isNotBlank);
+		final Set<String> filtered = CollUtil.remove(set, StrUtil::isBlank);
 
 		Assert.assertEquals(SetUtil.ofLinked("a", "b", "c"), filtered);
 	}
@@ -316,12 +318,12 @@ public class CollUtilTest {
 		final ArrayList<String> list = ListUtil.of("a", "b", "c");
 
 		final List<String> removed = new ArrayList<>();
-		final ArrayList<String> filtered = CollUtil.filter(list, t -> {
+		final ArrayList<String> filtered = CollUtil.remove(list, t -> {
 			if("a".equals(t)){
 				removed.add(t);
-				return false;
+				return true;
 			}
-			return true;
+			return false;
 		});
 
 		Assert.assertEquals(1, removed.size());
@@ -506,22 +508,6 @@ public class CollUtilTest {
 
 		str = CollUtil.get(set, -1);
 		Assert.assertEquals("D", str);
-	}
-
-	@Test
-	public void addAllIfNotContainsTest() {
-		final ArrayList<String> list1 = new ArrayList<>();
-		list1.add("1");
-		list1.add("2");
-		final ArrayList<String> list2 = new ArrayList<>();
-		list2.add("2");
-		list2.add("3");
-		CollUtil.addAllIfNotContains(list1, list2);
-
-		Assert.assertEquals(3, list1.size());
-		Assert.assertEquals("1", list1.get(0));
-		Assert.assertEquals("2", list1.get(1));
-		Assert.assertEquals("3", list1.get(2));
 	}
 
 	@Test
@@ -915,5 +901,32 @@ public class CollUtilTest {
 		private Integer age;
 		private String gender;
 		private Integer id;
+	}
+
+	@Test
+	public void mapTest(){
+		final ArrayList<String> list = ListUtil.of("a", "b", "c");
+		final List<Object> extract = CollUtil.map(list, (e) -> e + "_1");
+		Assert.assertEquals(ListUtil.of("a_1",  "b_1", "c_1"), extract);
+	}
+
+	@Test
+	public void mapBeanTest(){
+		final List<Person> people = Arrays.asList(
+				new Person("aa", 12, "man", 1),
+				new Person("bb", 13, "woman", 2),
+				new Person("cc", 14, "man", 3),
+				new Person("dd", 15, "woman", 4)
+		);
+
+		final List<Object> extract = CollUtil.map(people, Person::getName);
+		Assert.assertEquals(ListUtil.of("aa", "bb", "cc", "dd"), extract);
+	}
+
+	@Test
+	public void createTest(){
+		final Collection<Object> collection = CollUtil.create(Collections.emptyList().getClass());
+		Console.log(collection.getClass());
+		Assert.assertNotNull(collection);
 	}
 }

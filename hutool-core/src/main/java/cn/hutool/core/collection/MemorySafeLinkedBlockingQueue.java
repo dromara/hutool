@@ -21,7 +21,7 @@ import cn.hutool.core.util.RuntimeUtil;
 
 import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * 内存安全的{@link LinkedBlockingQueue}，可以解决OOM问题。<br>
@@ -35,10 +35,8 @@ import java.util.concurrent.TimeUnit;
  * @author incubator-shenyu
  * @since 6.0.0
  */
-public class MemorySafeLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
-	private static final long serialVersionUID = 8032578371749960142L;
-
-	private long maxFreeMemory;
+public class MemorySafeLinkedBlockingQueue<E> extends CheckedLinkedBlockingQueue<E> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造
@@ -46,8 +44,7 @@ public class MemorySafeLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	 * @param maxFreeMemory 最大剩余内存大小，当实际内存小于这个值时，不再加入元素
 	 */
 	public MemorySafeLinkedBlockingQueue(final long maxFreeMemory) {
-		super(Integer.MAX_VALUE);
-		this.maxFreeMemory = maxFreeMemory;
+		super(new MemoryChecker<>(maxFreeMemory));
 	}
 
 	/**
@@ -58,8 +55,7 @@ public class MemorySafeLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	 */
 	public MemorySafeLinkedBlockingQueue(final Collection<? extends E> c,
 										 final long maxFreeMemory) {
-		super(c);
-		this.maxFreeMemory = maxFreeMemory;
+		super(c, new MemoryChecker<>(maxFreeMemory));
 	}
 
 	/**
@@ -68,7 +64,7 @@ public class MemorySafeLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	 * @param maxFreeMemory the max free memory
 	 */
 	public void setMaxFreeMemory(final int maxFreeMemory) {
-		this.maxFreeMemory = maxFreeMemory;
+		((MemoryChecker<E>) this.checker).maxFreeMemory = maxFreeMemory;
 	}
 
 	/**
@@ -77,34 +73,26 @@ public class MemorySafeLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
 	 * @return the max free memory limit
 	 */
 	public long getMaxFreeMemory() {
-		return maxFreeMemory;
+		return ((MemoryChecker<E>) this.checker).maxFreeMemory;
 	}
 
 	/**
-	 * determine if there is any remaining free memory.<br>
-	 * 剩余内存是否大于给定阈值
+	 * 根据剩余内存判定的检查器
 	 *
-	 * @return {@code true}则表示大于阈值，可以加入元素，否则无法加入
+	 * @param <E> 元素类型
 	 */
-	public boolean hasRemainedMemory() {
-		return FreeMemoryCalculator.INSTANCE.getResult() > maxFreeMemory;
-	}
+	private static class MemoryChecker<E> implements Predicate<E> {
 
-	@Override
-	public void put(final E e) throws InterruptedException {
-		if (hasRemainedMemory()) {
-			super.put(e);
+		private long maxFreeMemory;
+
+		private MemoryChecker(final long maxFreeMemory) {
+			this.maxFreeMemory = maxFreeMemory;
 		}
-	}
 
-	@Override
-	public boolean offer(final E e, final long timeout, final TimeUnit unit) throws InterruptedException {
-		return hasRemainedMemory() && super.offer(e, timeout, unit);
-	}
-
-	@Override
-	public boolean offer(final E e) {
-		return hasRemainedMemory() && super.offer(e);
+		@Override
+		public boolean test(final E e) {
+			return FreeMemoryCalculator.INSTANCE.getResult() > maxFreeMemory;
+		}
 	}
 
 	/**

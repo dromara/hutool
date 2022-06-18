@@ -11,16 +11,14 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.func.Editor;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.stream.StreamUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -60,6 +58,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * 集合相关工具类
@@ -74,6 +74,90 @@ import java.util.function.Supplier;
  */
 public class CollUtil {
 
+	// ---------------------------------------------------------------------- isEmpty
+
+	/**
+	 * 集合是否为空
+	 *
+	 * @param collection 集合
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final Collection<?> collection) {
+		return collection == null || collection.isEmpty();
+	}
+
+	/**
+	 * Iterable是否为空
+	 *
+	 * @param iterable Iterable对象
+	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterable)
+	 */
+	public static boolean isEmpty(final Iterable<?> iterable) {
+		return IterUtil.isEmpty(iterable);
+	}
+
+	/**
+	 * Iterator是否为空
+	 *
+	 * @param Iterator Iterator对象
+	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterator)
+	 */
+	public static boolean isEmpty(final Iterator<?> Iterator) {
+		return IterUtil.isEmpty(Iterator);
+	}
+
+	/**
+	 * Enumeration是否为空
+	 *
+	 * @param enumeration {@link Enumeration}
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final Enumeration<?> enumeration) {
+		return null == enumeration || false == enumeration.hasMoreElements();
+	}
+
+	/**
+	 * Map是否为空
+	 *
+	 * @param map 集合
+	 * @return 是否为空
+	 * @see MapUtil#isEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isEmpty(final Map<?, ?> map) {
+		return MapUtil.isEmpty(map);
+	}
+
+	/**
+	 * 如果给定集合为空，返回默认集合
+	 *
+	 * @param <T>               集合类型
+	 * @param <E>               集合元素类型
+	 * @param collection        集合
+	 * @param defaultCollection 默认数组
+	 * @return 非空（empty）的原集合或默认集合
+	 * @since 4.6.9
+	 */
+	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final T defaultCollection) {
+		return isEmpty(collection) ? defaultCollection : collection;
+	}
+
+	/**
+	 * 如果给定集合为空，返回默认集合
+	 *
+	 * @param <T>        集合类型
+	 * @param <E>        集合元素类型
+	 * @param collection 集合
+	 * @param supplier   默认值懒加载函数
+	 * @return 非空（empty）的原集合或默认集合
+	 * @since 5.7.15
+	 */
+	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final Supplier<? extends T> supplier) {
+		return isEmpty(collection) ? supplier.get() : collection;
+	}
+
 	/**
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
 	 * 空集合使用{@link Collections#emptySet()}
@@ -84,7 +168,7 @@ public class CollUtil {
 	 * @since 4.6.3
 	 */
 	public static <T> Set<T> emptyIfNull(final Set<T> set) {
-		return (null == set) ? Collections.emptySet() : set;
+		return ObjUtil.defaultIfNull(set, Collections.emptySet());
 	}
 
 	/**
@@ -97,7 +181,118 @@ public class CollUtil {
 	 * @since 4.6.3
 	 */
 	public static <T> List<T> emptyIfNull(final List<T> list) {
-		return (null == list) ? Collections.emptyList() : list;
+		return ObjUtil.defaultIfNull(list, Collections.emptyList());
+	}
+
+	// ---------------------------------------------------------------------- isNotEmpty
+
+	/**
+	 * 集合是否为非空
+	 *
+	 * @param collection 集合
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final Collection<?> collection) {
+		return false == isEmpty(collection);
+	}
+
+	/**
+	 * Iterable是否为空
+	 *
+	 * @param iterable Iterable对象
+	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterable)
+	 */
+	public static boolean isNotEmpty(final Iterable<?> iterable) {
+		return IterUtil.isNotEmpty(iterable);
+	}
+
+	/**
+	 * Iterator是否为空
+	 *
+	 * @param Iterator Iterator对象
+	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterator)
+	 */
+	public static boolean isNotEmpty(final Iterator<?> Iterator) {
+		return IterUtil.isNotEmpty(Iterator);
+	}
+
+	/**
+	 * Enumeration是否为空
+	 *
+	 * @param enumeration {@link Enumeration}
+	 * @return 是否为空
+	 */
+	public static boolean isNotEmpty(final Enumeration<?> enumeration) {
+		return null != enumeration && enumeration.hasMoreElements();
+	}
+
+	/**
+	 * 是否包含{@code null}元素
+	 *
+	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
+	 * @return 是否包含{@code null}元素
+	 * @see IterUtil#hasNull(Iterable)
+	 * @since 3.0.7
+	 */
+	public static boolean hasNull(final Iterable<?> iterable) {
+		return IterUtil.hasNull(iterable);
+	}
+
+	/**
+	 * Map是否为非空
+	 *
+	 * @param map 集合
+	 * @return 是否为非空
+	 * @see MapUtil#isNotEmpty(Map)
+	 * @since 5.7.4
+	 */
+	public static boolean isNotEmpty(final Map<?, ?> map) {
+		return MapUtil.isNotEmpty(map);
+	}
+
+	/**
+	 * 去重集合
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合
+	 * @return {@link ArrayList}
+	 */
+	public static <T> ArrayList<T> distinct(final Collection<T> collection) {
+		if (isEmpty(collection)) {
+			return new ArrayList<>();
+		} else if (collection instanceof Set) {
+			return new ArrayList<>(collection);
+		} else {
+			return new ArrayList<>(new LinkedHashSet<>(collection));
+		}
+	}
+
+	/**
+	 * 根据函数生成的KEY去重集合，如根据Bean的某个或者某些字段完成去重。<br>
+	 * 去重可选是保留最先加入的值还是后加入的值
+	 *
+	 * @param <T>             集合元素类型
+	 * @param <K>             唯一键类型
+	 * @param collection      集合
+	 * @param uniqueGenerator 唯一键生成器
+	 * @param override        是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @return {@link ArrayList}
+	 * @since 5.8.0
+	 */
+	public static <T, K> List<T> distinct(final Collection<T> collection, final Function<T, K> uniqueGenerator, final boolean override) {
+		if (isEmpty(collection)) {
+			return new ArrayList<>();
+		}
+
+		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
+		if (override) {
+			set.addAll(collection);
+		} else {
+			set.addAllIfAbsent(collection);
+		}
+		return new ArrayList<>(set);
 	}
 
 	/**
@@ -730,49 +925,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 去重集合
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection 集合
-	 * @return {@link ArrayList}
-	 */
-	public static <T> ArrayList<T> distinct(final Collection<T> collection) {
-		if (isEmpty(collection)) {
-			return new ArrayList<>();
-		} else if (collection instanceof Set) {
-			return new ArrayList<>(collection);
-		} else {
-			return new ArrayList<>(new LinkedHashSet<>(collection));
-		}
-	}
-
-	/**
-	 * 根据函数生成的KEY去重集合，如根据Bean的某个或者某些字段完成去重。<br>
-	 * 去重可选是保留最先加入的值还是后加入的值
-	 *
-	 * @param <T>             集合元素类型
-	 * @param <K>             唯一键类型
-	 * @param collection      集合
-	 * @param uniqueGenerator 唯一键生成器
-	 * @param override        是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
-	 * @return {@link ArrayList}
-	 * @since 5.8.0
-	 */
-	public static <T, K> List<T> distinct(final Collection<T> collection, final Function<T, K> uniqueGenerator, final boolean override) {
-		if (isEmpty(collection)) {
-			return new ArrayList<>();
-		}
-
-		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
-		if (override) {
-			set.addAll(collection);
-		} else {
-			set.addAllIfAbsent(collection);
-		}
-		return new ArrayList<>(set);
-	}
-
-	/**
 	 * 截取列表的部分
 	 *
 	 * @param <T>   集合元素类型
@@ -875,7 +1027,7 @@ public class CollUtil {
 	 * @param editor     编辑器接口，{@code null}返回原集合
 	 * @return 过滤后的集合
 	 */
-	public static <T> Collection<T> edit(final Collection<T> collection, final Editor<T> editor) {
+	public static <T> Collection<T> edit(final Collection<T> collection, final UnaryOperator<T> editor) {
 		if (null == collection || null == editor) {
 			return collection;
 		}
@@ -887,7 +1039,7 @@ public class CollUtil {
 
 		T modified;
 		for (final T t : collection) {
-			modified = editor.edit(t);
+			modified = editor.apply(t);
 			if (null != modified) {
 				collection2.add(modified);
 			}
@@ -897,23 +1049,23 @@ public class CollUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
+	 * 过滤过程通过传入的{@link Predicate}实现来过滤返回需要的元素内容，可以实现以下功能：
 	 *
 	 * <pre>
-	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * 1、过滤出需要的对象，{@link Predicate#test(Object)}方法返回true的对象将被加入结果集合中
 	 * </pre>
 	 *
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
-	 * @param filter     过滤器，{@code null}返回原集合
+	 * @param predicate  过滤器，{@code null}返回原集合
 	 * @return 过滤后的数组
-	 * @since 3.1.0
+	 * @since 6.0.0
 	 */
-	public static <T> Collection<T> filterNew(final Collection<T> collection, final Filter<T> filter) {
-		if (null == collection || null == filter) {
+	public static <T> Collection<T> filter(final Collection<T> collection, final Predicate<T> predicate) {
+		if (null == collection || null == predicate) {
 			return collection;
 		}
-		return edit(collection, t -> filter.accept(t) ? t : null);
+		return edit(collection, t -> predicate.test(t) ? t : null);
 	}
 
 	/**
@@ -942,8 +1094,8 @@ public class CollUtil {
 	 * @return 处理后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Collection<E>, E> T filter(final T collection, final Predicate<E> filter) {
-		return IterUtil.filter(collection, filter);
+	public static <T extends Collection<E>, E> T remove(final T collection, final Predicate<E> filter) {
+		return IterUtil.remove(collection, filter);
 	}
 
 	/**
@@ -956,7 +1108,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E> T removeNull(final T collection) {
-		return filter(collection, Objects::nonNull);
+		return remove(collection, Objects::isNull);
 	}
 
 	/**
@@ -969,7 +1121,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeEmpty(final T collection) {
-		return filter(collection, StrUtil::isNotEmpty);
+		return remove(collection, StrUtil::isEmpty);
 	}
 
 	/**
@@ -982,7 +1134,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(final T collection) {
-		return filter(collection, StrUtil::isNotBlank);
+		return remove(collection, StrUtil::isBlank);
 	}
 
 	/**
@@ -1028,30 +1180,19 @@ public class CollUtil {
 	}
 
 	/**
-	 * 通过Editor抽取集合元素中的某些值返回为新列表<br>
-	 * 例如提供的是一个Bean列表，通过Editor接口实现获取某个字段值，返回这个字段值组成的新列表
+	 * 通过func自定义一个规则，此规则将原集合中的元素转换成新的元素，生成新的列表返回<br>
+	 * 例如提供的是一个Bean列表，通过Function接口实现获取某个字段值，返回这个字段值组成的新列表<br>
+	 * 默认忽略映射后{@code null}的情况
 	 *
+	 * @param <T>        集合元素类型
+	 * @param <R>        返回集合元素类型
 	 * @param collection 原集合
-	 * @param editor     编辑器
+	 * @param func       编辑函数
 	 * @return 抽取后的新列表
+	 * @since 5.3.5
 	 */
-	public static List<Object> extract(final Iterable<?> collection, final Editor<Object> editor) {
-		return extract(collection, editor, false);
-	}
-
-	/**
-	 * 通过Editor抽取集合元素中的某些值返回为新列表<br>
-	 * 例如提供的是一个Bean列表，通过Editor接口实现获取某个字段值，返回这个字段值组成的新列表
-	 *
-	 * @param collection 原集合
-	 * @param editor     编辑器
-	 * @param ignoreNull 是否忽略空值
-	 * @return 抽取后的新列表
-	 * @see #map(Iterable, Function, boolean)
-	 * @since 4.5.7
-	 */
-	public static List<Object> extract(final Iterable<?> collection, final Editor<Object> editor, final boolean ignoreNull) {
-		return map(collection, editor::edit, ignoreNull);
+	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> func) {
+		return map(collection, func, true);
 	}
 
 	/**
@@ -1061,29 +1202,20 @@ public class CollUtil {
 	 * @param <T>        集合元素类型
 	 * @param <R>        返回集合元素类型
 	 * @param collection 原集合
-	 * @param func       编辑函数
+	 * @param mapper     编辑函数
 	 * @param ignoreNull 是否忽略空值，这里的空值包括函数处理前和处理后的null值
 	 * @return 抽取后的新列表
+	 * @see java.util.stream.Stream#map(Function)
 	 * @since 5.3.5
 	 */
-	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> func, final boolean ignoreNull) {
-		final List<R> fieldValueList = new ArrayList<>();
-		if (null == collection) {
-			return fieldValueList;
-		}
-
-		R value;
-		for (final T t : collection) {
-			if (null == t && ignoreNull) {
-				continue;
-			}
-			value = func.apply(t);
-			if (null == value && ignoreNull) {
-				continue;
-			}
-			fieldValueList.add(value);
-		}
-		return fieldValueList;
+	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> mapper, final boolean ignoreNull) {
+		return StreamUtil.of(collection)
+				// 检查映射前的结果
+				.filter((e) -> (false == ignoreNull) || null != e)
+				.map(mapper)
+				// 检查映射后的结果
+				.filter((e) -> (false == ignoreNull) || null != e)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -1095,7 +1227,7 @@ public class CollUtil {
 	 * @return 字段值列表
 	 * @since 3.1.0
 	 */
-	public static List<Object> getFieldValues(final Iterable<?> collection, final String fieldName) {
+	public static Collection<Object> getFieldValues(final Iterable<?> collection, final String fieldName) {
 		return getFieldValues(collection, fieldName, false);
 	}
 
@@ -1131,7 +1263,7 @@ public class CollUtil {
 	 * @since 4.5.6
 	 */
 	public static <T> List<T> getFieldValues(final Iterable<?> collection, final String fieldName, final Class<T> elementType) {
-		final List<Object> fieldValues = getFieldValues(collection, fieldName);
+		final Collection<Object> fieldValues = getFieldValues(collection, fieldName);
 		return Convert.toList(elementType, fieldValues);
 	}
 
@@ -1170,14 +1302,14 @@ public class CollUtil {
 	 *
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
-	 * @param filter     过滤器，满足过滤条件的第一个元素将被返回
+	 * @param predicate  过滤器，满足过滤条件的第一个元素将被返回
 	 * @return 满足过滤条件的第一个元素
 	 * @since 3.1.0
 	 */
-	public static <T> T findOne(final Iterable<T> collection, final Filter<T> filter) {
+	public static <T> T findOne(final Iterable<T> collection, final Predicate<T> predicate) {
 		if (null != collection) {
 			for (final T t : collection) {
-				if (filter.accept(t)) {
+				if (predicate.test(t)) {
 					return t;
 				}
 			}
@@ -1215,16 +1347,16 @@ public class CollUtil {
 	/**
 	 * 集合中匹配规则的数量
 	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @param matcher  匹配器，为空则全部匹配
+	 * @param <T>       集合元素类型
+	 * @param iterable  {@link Iterable}
+	 * @param predicate 匹配器，为空则全部匹配
 	 * @return 匹配数量
 	 */
-	public static <T> int count(final Iterable<T> iterable, final Matcher<T> matcher) {
+	public static <T> int count(final Iterable<T> iterable, final Predicate<T> predicate) {
 		int count = 0;
 		if (null != iterable) {
 			for (final T t : iterable) {
-				if (null == matcher || matcher.match(t)) {
+				if (null == predicate || predicate.test(t)) {
 					count++;
 				}
 			}
@@ -1238,15 +1370,15 @@ public class CollUtil {
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param matcher    匹配器，为空则全部匹配
+	 * @param predicate  匹配器，为空则全部匹配
 	 * @return 第一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int indexOf(final Collection<T> collection, final Matcher<T> matcher) {
+	public static <T> int indexOf(final Collection<T> collection, final Predicate<T> predicate) {
 		if (isNotEmpty(collection)) {
 			int index = 0;
 			for (final T t : collection) {
-				if (null == matcher || matcher.match(t)) {
+				if (null == predicate || predicate.test(t)) {
 					return index;
 				}
 				index++;
@@ -1261,20 +1393,20 @@ public class CollUtil {
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param matcher    匹配器，为空则全部匹配
+	 * @param predicate  匹配器，为空则全部匹配
 	 * @return 最后一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int lastIndexOf(final Collection<T> collection, final Matcher<T> matcher) {
+	public static <T> int lastIndexOf(final Collection<T> collection, final Predicate<T> predicate) {
 		if (collection instanceof List) {
 			// List的查找最后一个有优化算法
-			return ListUtil.lastIndexOf((List<T>) collection, matcher);
+			return ListUtil.lastIndexOf((List<T>) collection, predicate);
 		}
 		int matchIndex = -1;
 		if (isNotEmpty(collection)) {
 			int index = collection.size();
 			for (final T t : collection) {
-				if (null == matcher || matcher.match(t)) {
+				if (null == predicate || predicate.test(t)) {
 					matchIndex = index;
 				}
 				index--;
@@ -1289,174 +1421,22 @@ public class CollUtil {
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param matcher    匹配器，为空则全部匹配
+	 * @param predicate    匹配器，为空则全部匹配
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
-	public static <T> int[] indexOfAll(final Collection<T> collection, final Matcher<T> matcher) {
+	public static <T> int[] indexOfAll(final Collection<T> collection, final Predicate<T> predicate) {
 		final List<Integer> indexList = new ArrayList<>();
 		if (null != collection) {
 			int index = 0;
 			for (final T t : collection) {
-				if (null == matcher || matcher.match(t)) {
+				if (null == predicate || predicate.test(t)) {
 					indexList.add(index);
 				}
 				index++;
 			}
 		}
 		return Convert.convert(int[].class, indexList);
-	}
-
-	// ---------------------------------------------------------------------- isEmpty
-
-	/**
-	 * 集合是否为空
-	 *
-	 * @param collection 集合
-	 * @return 是否为空
-	 */
-	public static boolean isEmpty(final Collection<?> collection) {
-		return collection == null || collection.isEmpty();
-	}
-
-	/**
-	 * 如果给定集合为空，返回默认集合
-	 *
-	 * @param <T>               集合类型
-	 * @param <E>               集合元素类型
-	 * @param collection        集合
-	 * @param defaultCollection 默认数组
-	 * @return 非空（empty）的原集合或默认集合
-	 * @since 4.6.9
-	 */
-	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final T defaultCollection) {
-		return isEmpty(collection) ? defaultCollection : collection;
-	}
-
-	/**
-	 * 如果给定集合为空，返回默认集合
-	 *
-	 * @param <T>        集合类型
-	 * @param <E>        集合元素类型
-	 * @param collection 集合
-	 * @param supplier   默认值懒加载函数
-	 * @return 非空（empty）的原集合或默认集合
-	 * @since 5.7.15
-	 */
-	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final Supplier<? extends T> supplier) {
-		return isEmpty(collection) ? supplier.get() : collection;
-	}
-
-	/**
-	 * Iterable是否为空
-	 *
-	 * @param iterable Iterable对象
-	 * @return 是否为空
-	 * @see IterUtil#isEmpty(Iterable)
-	 */
-	public static boolean isEmpty(final Iterable<?> iterable) {
-		return IterUtil.isEmpty(iterable);
-	}
-
-	/**
-	 * Iterator是否为空
-	 *
-	 * @param Iterator Iterator对象
-	 * @return 是否为空
-	 * @see IterUtil#isEmpty(Iterator)
-	 */
-	public static boolean isEmpty(final Iterator<?> Iterator) {
-		return IterUtil.isEmpty(Iterator);
-	}
-
-	/**
-	 * Enumeration是否为空
-	 *
-	 * @param enumeration {@link Enumeration}
-	 * @return 是否为空
-	 */
-	public static boolean isEmpty(final Enumeration<?> enumeration) {
-		return null == enumeration || false == enumeration.hasMoreElements();
-	}
-
-	/**
-	 * Map是否为空
-	 *
-	 * @param map 集合
-	 * @return 是否为空
-	 * @see MapUtil#isEmpty(Map)
-	 * @since 5.7.4
-	 */
-	public static boolean isEmpty(final Map<?, ?> map) {
-		return MapUtil.isEmpty(map);
-	}
-
-	// ---------------------------------------------------------------------- isNotEmpty
-
-	/**
-	 * 集合是否为非空
-	 *
-	 * @param collection 集合
-	 * @return 是否为非空
-	 */
-	public static boolean isNotEmpty(final Collection<?> collection) {
-		return false == isEmpty(collection);
-	}
-
-	/**
-	 * Iterable是否为空
-	 *
-	 * @param iterable Iterable对象
-	 * @return 是否为空
-	 * @see IterUtil#isNotEmpty(Iterable)
-	 */
-	public static boolean isNotEmpty(final Iterable<?> iterable) {
-		return IterUtil.isNotEmpty(iterable);
-	}
-
-	/**
-	 * Iterator是否为空
-	 *
-	 * @param Iterator Iterator对象
-	 * @return 是否为空
-	 * @see IterUtil#isNotEmpty(Iterator)
-	 */
-	public static boolean isNotEmpty(final Iterator<?> Iterator) {
-		return IterUtil.isNotEmpty(Iterator);
-	}
-
-	/**
-	 * Enumeration是否为空
-	 *
-	 * @param enumeration {@link Enumeration}
-	 * @return 是否为空
-	 */
-	public static boolean isNotEmpty(final Enumeration<?> enumeration) {
-		return null != enumeration && enumeration.hasMoreElements();
-	}
-
-	/**
-	 * 是否包含{@code null}元素
-	 *
-	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
-	 * @return 是否包含{@code null}元素
-	 * @see IterUtil#hasNull(Iterable)
-	 * @since 3.0.7
-	 */
-	public static boolean hasNull(final Iterable<?> iterable) {
-		return IterUtil.hasNull(iterable);
-	}
-
-	/**
-	 * Map是否为非空
-	 *
-	 * @param map 集合
-	 * @return 是否为非空
-	 * @see MapUtil#isNotEmpty(Map)
-	 * @since 5.7.4
-	 */
-	public static boolean isNotEmpty(final Map<?, ?> map) {
-		return MapUtil.isNotEmpty(map);
 	}
 
 	// ---------------------------------------------------------------------- zip
@@ -1862,23 +1842,6 @@ public class CollUtil {
 			Collections.addAll(collection, values);
 		}
 		return collection;
-	}
-
-	/**
-	 * 将另一个列表中的元素加入到列表中，如果列表中已经存在此元素则忽略之
-	 *
-	 * @param <T>       集合元素类型
-	 * @param list      列表
-	 * @param otherList 其它列表
-	 * @return 此列表
-	 */
-	public static <T> List<T> addAllIfNotContains(final List<T> list, final List<T> otherList) {
-		for (final T t : otherList) {
-			if (false == list.contains(t)) {
-				list.add(t);
-			}
-		}
-		return list;
 	}
 
 	/**
@@ -2440,7 +2403,7 @@ public class CollUtil {
 	 * @since 5.2.6
 	 */
 	public static <T> Collection<T> unmodifiable(final Collection<? extends T> c) {
-		if(null == c){
+		if (null == c) {
 			return null;
 		}
 		return Collections.unmodifiableCollection(c);

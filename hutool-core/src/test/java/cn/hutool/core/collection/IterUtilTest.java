@@ -108,11 +108,11 @@ public class IterUtilTest {
 	}
 
 	@Test
-	public void filterTest() {
+	public void removeTest() {
 		final List<String> obj2 = ListUtil.of("3");
 		final List<String> obj = ListUtil.of("1", "3");
 
-		IterUtil.filter(obj.iterator(), obj2::contains);
+		IterUtil.remove(obj.iterator(), (e)-> false == obj2.contains(e));
 
 		Assert.assertEquals(1, obj.size());
 		Assert.assertEquals("3", obj.get(0));
