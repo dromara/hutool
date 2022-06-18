@@ -40,7 +40,7 @@ public class EscapeUtil {
 	 */
 	public static String escapeXml(final CharSequence xml) {
 		final XmlEscape escape = new XmlEscape();
-		return escape.replace(xml).toString();
+		return escape.apply(xml).toString();
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class EscapeUtil {
 	 */
 	public static String unescapeXml(final CharSequence xml) {
 		final XmlUnescape unescape = new XmlUnescape();
-		return unescape.replace(xml).toString();
+		return unescape.apply(xml).toString();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class EscapeUtil {
 	 */
 	public static String escapeHtml4(final CharSequence html) {
 		final Html4Escape escape = new Html4Escape();
-		return escape.replace(html).toString();
+		return escape.apply(html).toString();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class EscapeUtil {
 	 */
 	public static String unescapeHtml4(final CharSequence html) {
 		final Html4Unescape unescape = new Html4Unescape();
-		return unescape.replace(html).toString();
+		return unescape.apply(html).toString();
 	}
 
 	/**
