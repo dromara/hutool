@@ -689,7 +689,7 @@ public class IterUtil {
 		for (T t : iter) {
 			modified = (null == editor) ? t : editor.edit(t);
 			if (null != modified) {
-				result.add(t);
+				result.add(modified);
 			}
 		}
 		return result;

@@ -16,6 +16,7 @@
 * 【extra  】     修复createExtractor中抛出异常后流未关闭问题（pr#2384@Github）
 * 【core   】     修复CsvData.getHeader没有判空导致空指针问题（issue#I5CK7Q@Gitee）
 * 【core   】     修复单字母转换为数字的问题（issue#I5C4K1@Gitee）
+* 【core   】     修复IterUtil.filter无效问题
 
 -------------------------------------------------------------------------------------------------------------
 
