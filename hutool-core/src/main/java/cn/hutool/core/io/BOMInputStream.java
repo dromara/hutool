@@ -8,7 +8,7 @@ import java.io.PushbackInputStream;
 
 /**
  * 读取带BOM头的流内容，{@code getCharset()}方法调用后会得到BOM头的编码，且会去除BOM头<br>
- * BOM定义：http://www.unicode.org/unicode/faq/utf_bom.html<br>
+ * BOM定义：<a href="http://www.unicode.org/unicode/faq/utf_bom.html">http://www.unicode.org/unicode/faq/utf_bom.html</a><br>
  * <ul>
  * <li>00 00 FE FF = UTF-32, big-endian</li>
  * <li>FF FE 00 00 = UTF-32, little-endian</li>
@@ -24,7 +24,7 @@ import java.io.PushbackInputStream;
  * enc = uin.getCharset(); // check and skip possible BOM bytes
  * </code>
  * <br><br>
- * 参考： http://akini.mbnet.fi/java/unicodereader/UnicodeInputStream.java.txt
+ * 参考： <a href="http://akini.mbnet.fi/java/unicodereader/UnicodeInputStream.java.txt">http://www.unicode.org/unicode/faq/utf_bom.html</a>
  *
  * @author looly
  */

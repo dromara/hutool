@@ -1,6 +1,6 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.collection.iter.IterUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.tree.parser.DefaultNodeParser;
 import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjUtil;
@@ -150,7 +150,7 @@ public class TreeUtil {
 	 * @since 5.7.2
 	 */
 	public static <E> Tree<E> buildSingle(final Map<E, Tree<E>> map, final E rootId) {
-		final Tree<E> tree = IterUtil.getFirstNoneNull(map.values());
+		final Tree<E> tree = CollUtil.getFirstNoneNull(map.values());
 		if (null != tree) {
 			final TreeNodeConfig config = tree.getConfig();
 			return TreeBuilder.of(rootId, config)

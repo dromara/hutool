@@ -25,7 +25,7 @@ public class IterUtilTest {
 	@Test
 	public void getFirstNonNullTest() {
 		final ArrayList<String> strings = ListUtil.of(null, null, "123", "456", null);
-		Assert.assertEquals("123", IterUtil.getFirstNoneNull(strings));
+		Assert.assertEquals("123", CollUtil.getFirstNoneNull(strings));
 	}
 
 	@Test

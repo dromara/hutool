@@ -5,9 +5,9 @@ import java.util.zip.Checksum;
 
 /**
  * CRC8 循环冗余校验码（Cyclic Redundancy Check）实现<br>
- * 代码来自：https://github.com/BBSc0der
+ * 代码来自：<a href="https://github.com/BBSc0der">https://github.com/BBSc0der</a>
  *
- * @author Bolek,Looly
+ * @author Bolek, Looly
  * @since 4.4.1
  */
 public class CRC8 implements Checksum, Serializable {
@@ -47,7 +47,7 @@ public class CRC8 implements Checksum, Serializable {
 	}
 
 	/**
-	 * Updates the current checksum with the specified array of bytes. Equivalent to calling <code>update(buffer, 0, buffer.length)</code>.
+	 * Updates the current checksum with the specified array of bytes. Equivalent to calling {@code update(buffer, 0, buffer.length)}.
 	 *
 	 * @param buffer the byte array to update the checksum with
 	 */

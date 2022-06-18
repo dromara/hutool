@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.comparator.ComparableComparator;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
@@ -721,7 +722,7 @@ public class CollUtilTest {
 	@Test
 	public void toMapTest() {
 		final Collection<String> keys = ListUtil.of("a", "b", "c", "d");
-		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value) -> "key" + value);
+		final Map<String, String> map = IterUtil.toMap(keys, (value) -> "key" + value);
 		Assert.assertEquals("a", map.get("keya"));
 		Assert.assertEquals("b", map.get("keyb"));
 		Assert.assertEquals("c", map.get("keyc"));
@@ -735,8 +736,7 @@ public class CollUtilTest {
 		oldMap.put("b", "12");
 		oldMap.put("c", "134");
 
-		final Map<String, Long> map = CollUtil.toMap(oldMap.entrySet(),
-				new HashMap<>(),
+		final Map<String, Long> map = IterUtil.toMap(oldMap.entrySet(),
 				Map.Entry::getKey,
 				entry -> Long.parseLong(entry.getValue()));
 
