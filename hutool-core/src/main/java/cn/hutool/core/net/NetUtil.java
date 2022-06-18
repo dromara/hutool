@@ -461,7 +461,8 @@ public class NetUtil {
 	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
 	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
-	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * 参考：<a href="http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java">
+	 *     http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java</a>
 	 *
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.7
@@ -484,7 +485,7 @@ public class NetUtil {
 	 * <p>
 	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
-	 * 见：https://github.com/dromara/hutool/issues/428
+	 * 见：<a href="https://github.com/dromara/hutool/issues/428">https://github.com/dromara/hutool/issues/428</a>
 	 *
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.1

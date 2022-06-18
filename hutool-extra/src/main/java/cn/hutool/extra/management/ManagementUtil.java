@@ -4,6 +4,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.text.StrUtil;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.PrintWriter;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;
@@ -18,8 +20,11 @@ import java.lang.management.ThreadMXBean;
 import java.util.List;
 
 /**
- * Java的System类封装工具类。<br>
- * 参考：<a href="http://blog.csdn.net/zhongweijian/article/details/7619383">http://blog.csdn.net/zhongweijian/article/details/7619383</a>
+ * Java的JMX（Java Management Extensions）相关封装工具类。<br>
+ * JMX就是Java管理扩展，用来管理和监测 Java 程序。最常用到的就是对于 JVM 的监测和管理，比如 JVM 内存、CPU 使用率、线程数、垃圾收集情况等等。<br>
+ * 参考：
+ * <a href="http://blog.csdn.net/zhongweijian/article/details/7619383">http://blog.csdn.net/zhongweijian/article/details/7619383</a><br>
+ * <a href="https://zhuanlan.zhihu.com/p/166530442">https://zhuanlan.zhihu.com/p/166530442</a>
  *
  * @author Looly
  */
@@ -244,6 +249,32 @@ public class ManagementUtil {
 	 */
 	public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
 		return ManagementFactory.getGarbageCollectorMXBeans();
+	}
+
+	/**
+	 * 获取{@link MBeanServer}<br>
+	 * MBeanServer是负责管理MBean的，一般一个JVM只有一个MBeanServer，所有的MBean都要注册到MBeanServer上，并通过 MBeanServer 对外提供服务。
+	 *
+	 * @return {@link MBeanServer}
+	 * @since 6.0.0
+	 */
+	public static MBeanServer getMBeanServer() {
+		return ManagementFactory.getPlatformMBeanServer();
+	}
+
+	/**
+	 * 注册MBean
+	 *
+	 * @param mBean Mbean对象
+	 * @param name  MBean 的唯一标示
+	 * @since 6.0.0
+	 */
+	public static void registerMBean(final Object mBean, final ObjectName name) {
+		try {
+			getMBeanServer().registerMBean(mBean, name);
+		} catch (final Exception e) {
+			throw new ManagementException(e);
+		}
 	}
 
 	/**
