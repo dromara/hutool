@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -114,7 +115,7 @@ public class ThreadUtil {
 	 * Blocking Coefficient(阻塞系数) = 阻塞时间／（阻塞时间+使用CPU的时间）<br>
 	 * 计算密集型任务的阻塞系数为0，而IO密集型任务的阻塞系数则接近于1。
 	 * <p>
-	 * see: http://blog.csdn.net/partner4java/article/details/9417663
+	 * see: <a href="http://blog.csdn.net/partner4java/article/details/9417663">http://blog.csdn.net/partner4java/article/details/9417663</a>
 	 *
 	 * @param blockingCoefficient 阻塞系数，阻塞因子介于0~1之间的数，阻塞因子越大，线程池中的线程数越多。
 	 * @return {@link ThreadPoolExecutor}
@@ -660,10 +661,10 @@ public class ThreadUtil {
 	 * @param initialDelay          初始延迟，单位毫秒
 	 * @param period                执行周期，单位毫秒
 	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
-	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @return {@link ScheduledExecutorService}
 	 * @since 5.5.8
 	 */
-	public static ScheduledThreadPoolExecutor schedule(final ScheduledThreadPoolExecutor executor,
+	public static ScheduledExecutorService schedule(final ScheduledExecutorService executor,
 													   final Runnable command,
 													   final long initialDelay,
 													   final long period,
@@ -685,10 +686,10 @@ public class ThreadUtil {
 	 * @param period                执行周期
 	 * @param timeUnit              时间单位
 	 * @param fixedRateOrFixedDelay {@code true}表示fixedRate模式，{@code false}表示fixedDelay模式
-	 * @return {@link ScheduledThreadPoolExecutor}
+	 * @return {@link ScheduledExecutorService}
 	 * @since 5.6.5
 	 */
-	public static ScheduledThreadPoolExecutor schedule(ScheduledThreadPoolExecutor executor,
+	public static ScheduledExecutorService schedule(ScheduledExecutorService executor,
 													   final Runnable command,
 													   final long initialDelay,
 													   final long period,
