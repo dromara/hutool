@@ -1,7 +1,6 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
@@ -15,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * JSON对象<br>
@@ -120,14 +120,14 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 *
-	 * @param source JavaBean或者Map对象或者String
-	 * @param config JSON配置文件，{@code null}则使用默认配置
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param source    JavaBean或者Map对象或者String
+	 * @param config    JSON配置文件，{@code null}则使用默认配置
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @since 5.8.0
 	 */
-	public JSONObject(final Object source, final JSONConfig config, final Filter<MutableEntry<String, Object>> filter) {
+	public JSONObject(final Object source, final JSONConfig config, final Predicate<MutableEntry<String, Object>> predicate) {
 		this(DEFAULT_CAPACITY, config);
-		ObjectMapper.of(source).map(this, filter);
+		ObjectMapper.of(source).map(this, predicate);
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
@@ -215,15 +215,15 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	/**
 	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
-	 * @param key    键
-	 * @param value  值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param key       键
+	 * @param value     值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return this
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */
-	public JSONObject setOnce(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
-		put(key, value, filter, true);
+	public JSONObject setOnce(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+		put(key, value, predicate, true);
 		return this;
 	}
 
@@ -232,14 +232,14 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 *
 	 * @param key            键
 	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param predicate      键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	public JSONObject set(final String key, final Object value, final Filter<MutableEntry<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
-		put(key, value, filter, checkDuplicate);
+	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate, final boolean checkDuplicate) throws JSONException {
+		put(key, value, predicate, checkDuplicate);
 		return this;
 	}
 
@@ -336,14 +336,14 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * 支持过滤器，即选择哪些字段或值不写出
 	 *
 	 * @param indentFactor 每层缩进空格数
-	 * @param filter       过滤器，同时可以修改编辑键和值
+	 * @param predicate    过滤器，同时可以修改编辑键和值，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(final int indentFactor, final Filter<MutableEntry<String, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<String, Object>> predicate) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0, filter).toString();
+			return this.write(sw, indentFactor, 0, predicate).toString();
 		}
 	}
 
@@ -359,18 +359,18 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @param writer       writer
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
-	 * @param filter       过滤器，同时可以修改编辑键和值
+	 * @param predicate    过滤器，同时可以修改编辑键和值
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutableEntry<String, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
 		this.forEach((key, value) -> {
-			if (null != filter) {
+			if (null != predicate) {
 				final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
-				if (filter.accept(pair)) {
+				if (predicate.test(pair)) {
 					// 使用修改后的键值对
 					jsonWriter.writeField(pair.getKey(), pair.getValue());
 				}
@@ -395,21 +395,21 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 *
 	 * @param key            键
 	 * @param value          值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter         键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param predicate      键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @param checkDuplicate 是否检查重复键，如果为{@code true}，则出现重复键时抛出{@link JSONException}异常
 	 * @return 旧值
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 * @since 5.8.0
 	 */
-	private Object put(String key, Object value, final Filter<MutableEntry<String, Object>> filter, final boolean checkDuplicate) throws JSONException {
+	private Object put(String key, Object value, final Predicate<MutableEntry<String, Object>> predicate, final boolean checkDuplicate) throws JSONException {
 		if (null == key) {
 			return null;
 		}
 
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
-		if (null != filter) {
+		if (null != predicate) {
 			final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
-			if (filter.accept(pair)) {
+			if (predicate.test(pair)) {
 				// 使用修改后的键值对
 				key = pair.getKey();
 				value = pair.getValue();

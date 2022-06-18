@@ -18,7 +18,7 @@ public class YearValueMatcher implements PartMatcher {
 	}
 
 	@Override
-	public boolean match(final Integer t) {
+	public boolean test(final Integer t) {
 		return valueList.contains(t);
 	}
 

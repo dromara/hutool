@@ -3,7 +3,6 @@ package cn.hutool.json;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.lang.mutable.MutableObj;
@@ -20,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
+import java.util.function.Predicate;
 
 /**
  * JSON数组<br>
@@ -142,13 +142,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 *
 	 * @param object     数组或集合或JSON数组字符串
 	 * @param jsonConfig JSON选项
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @throws JSONException 非数组或集合
 	 * @since 5.8.0
 	 */
-	public JSONArray(final Object object, final JSONConfig jsonConfig, final Filter<Mutable<Object>> filter) throws JSONException {
+	public JSONArray(final Object object, final JSONConfig jsonConfig, final Predicate<Mutable<Object>> predicate) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
-		ObjectMapper.of(object).map(this, filter);
+		ObjectMapper.of(object).map(this, predicate);
 	}
 	// endregion
 
@@ -365,7 +365,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
 		for (final Object object : c) {
-			if(null == object && config.isIgnoreNullValue()){
+			if (null == object && config.isIgnoreNullValue()) {
 				continue;
 			}
 			this.add(index);
@@ -407,15 +407,15 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 *
 	 * @param index   位置
 	 * @param element 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @param filter  过滤器，可以修改值，key（index）无法修改
+	 * @param filter  过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留。
 	 * @return 替换的值，即之前的值
 	 * @since 5.8.0
 	 */
-	public Object set(final int index, Object element, final Filter<MutableEntry<Integer, Object>> filter) {
+	public Object set(final int index, Object element, final Predicate<MutableEntry<Integer, Object>> filter) {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
 		if (null != filter) {
 			final MutableEntry<Integer, Object> pair = new MutableEntry<>(index, element);
-			if (filter.accept(pair)) {
+			if (filter.test(pair)) {
 				// 使用修改后的值
 				element = pair.getValue();
 			}
@@ -426,7 +426,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			add(index, element);
 			return null;
 		}
-		if(null == element && config.isIgnoreNullValue()){
+		if (null == element && config.isIgnoreNullValue()) {
 			return null;
 		}
 		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
@@ -434,7 +434,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public void add(int index, final Object element) {
-		if(null == element && config.isIgnoreNullValue()){
+		if (null == element && config.isIgnoreNullValue()) {
 			return;
 		}
 		if (index < this.size()) {
@@ -444,7 +444,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			InternalJSONUtil.testValidity(element);
 			this.rawList.add(index, JSONUtil.wrap(element, this.config));
 		} else {
-			if(false == config.isIgnoreNullValue()){
+			if (false == config.isIgnoreNullValue()) {
 				while (index != this.size()) {
 					// 非末尾，则填充null
 					this.add(null);
@@ -517,14 +517,14 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * 支持过滤器，即选择哪些字段或值不写出
 	 *
 	 * @param indentFactor 每层缩进空格数
-	 * @param filter       过滤器，可以修改值，key（index）无法修改
+	 * @param predicate    过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(final int indentFactor, final Filter<MutableEntry<Integer, Object>> filter) {
+	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<Integer, Object>> predicate) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0, filter).toString();
+			return this.write(sw, indentFactor, 0, predicate).toString();
 		}
 	}
 
@@ -540,18 +540,18 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 * @param writer       writer
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
-	 * @param filter       过滤器，可以修改值，key（index）无法修改
+	 * @param predicate    过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Filter<MutableEntry<Integer, Object>> filter) throws JSONException {
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Integer, Object>> predicate) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginArray();
 
 		CollUtil.forEach(this, (value, index) -> {
 			final MutableEntry<Integer, Object> pair = new MutableEntry<>(index, value);
-			if (null == filter || filter.accept(pair)) {
+			if (null == predicate || predicate.test(pair)) {
 				jsonWriter.writeValue(pair.getValue());
 			}
 		});
@@ -570,24 +570,24 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/**
 	 * 原始添加，添加的对象不做任何处理
 	 *
-	 * @param obj    添加的对象
-	 * @param filter 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤
+	 * @param obj       添加的对象
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return 是否加入成功
 	 * @since 5.8.0
 	 */
-	protected boolean addRaw(Object obj, final Filter<Mutable<Object>> filter) {
+	protected boolean addRaw(Object obj, final Predicate<Mutable<Object>> predicate) {
 		// 添加前置过滤，通过MutablePair实现过滤、修改键值对等
-		if (null != filter) {
+		if (null != predicate) {
 			final Mutable<Object> mutable = new MutableObj<>(obj);
-			if (filter.accept(mutable)) {
+			if (predicate.test(mutable)) {
 				// 使用修改后的值
 				obj = mutable.get();
-			}else{
+			} else {
 				// 键值对被过滤
 				return false;
 			}
 		}
-		if(null == obj && config.isIgnoreNullValue()){
+		if (null == obj && config.isIgnoreNullValue()) {
 			// 忽略空则不添加
 			return false;
 		}

@@ -7,7 +7,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -36,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -529,7 +529,7 @@ public class BeanUtil {
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final String... properties) {
 		int mapSize = 16;
-		Editor<MutableEntry<String, Object>> editor = null;
+		UnaryOperator<MutableEntry<String, Object>> editor = null;
 		if (ArrayUtil.isNotEmpty(properties)) {
 			mapSize = properties.length;
 			final Set<String> propertiesSet = SetUtil.of(properties);
@@ -583,7 +583,7 @@ public class BeanUtil {
 
 	/**
 	 * 对象转Map<br>
-	 * 通过实现{@link Editor} 可以自定义字段值，如果这个Editor返回null则忽略这个字段，以便实现：
+	 * 通过实现{@link UnaryOperator} 可以自定义字段值，如果这个Editor返回null则忽略这个字段，以便实现：
 	 *
 	 * <pre>
 	 * 1. 字段筛选，可以去除不需要的字段
@@ -599,7 +599,7 @@ public class BeanUtil {
 	 * @since 4.0.5
 	 */
 	public static Map<String, Object> beanToMap(final Object bean, final Map<String, Object> targetMap,
-												final boolean ignoreNullValue, final Editor<MutableEntry<String, Object>> keyEditor) {
+												final boolean ignoreNullValue, final UnaryOperator<MutableEntry<String, Object>> keyEditor) {
 		if (null == bean) {
 			return null;
 		}
@@ -762,7 +762,7 @@ public class BeanUtil {
 	 * @return bean
 	 * @since 5.6.4
 	 */
-	public static <T> T edit(final T bean, final Editor<Field> editor) {
+	public static <T> T edit(final T bean, final UnaryOperator<Field> editor) {
 		if (bean == null) {
 			return null;
 		}
@@ -772,7 +772,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			editor.edit(field);
+			editor.apply(field);
 		}
 		return bean;
 	}

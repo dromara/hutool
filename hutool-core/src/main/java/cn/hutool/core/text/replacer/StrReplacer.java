@@ -1,8 +1,7 @@
 package cn.hutool.core.text.replacer;
 
-import cn.hutool.core.lang.func.Replacer;
-
 import java.io.Serializable;
+import java.util.function.UnaryOperator;
 
 /**
  * 抽象字符串替换类<br>
@@ -11,7 +10,7 @@ import java.io.Serializable;
  * @author looly
  * @since 4.1.5
  */
-public abstract class StrReplacer implements Replacer<CharSequence>, Serializable {
+public abstract class StrReplacer implements UnaryOperator<CharSequence>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -25,7 +24,7 @@ public abstract class StrReplacer implements Replacer<CharSequence>, Serializabl
 	protected abstract int replace(CharSequence str, int pos, StringBuilder out);
 
 	@Override
-	public CharSequence replace(final CharSequence t) {
+	public CharSequence apply(final CharSequence t) {
 		final int len = t.length();
 		final StringBuilder builder = new StringBuilder(len);
 		int pos = 0;//当前位置

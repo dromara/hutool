@@ -1,11 +1,12 @@
 package cn.hutool.core.text.finder;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Matcher;
+
+import java.util.function.Predicate;
 
 /**
  * 字符匹配查找器<br>
- * 查找满足指定{@link Matcher} 匹配的字符所在位置，此类长用于查找某一类字符，如数字等
+ * 查找满足指定{@link Predicate} 匹配的字符所在位置，此类长用于查找某一类字符，如数字等
  *
  * @since 5.7.14
  * @author looly
@@ -13,13 +14,13 @@ import cn.hutool.core.lang.func.Matcher;
 public class CharMatcherFinder extends TextFinder {
 	private static final long serialVersionUID = 1L;
 
-	private final Matcher<Character> matcher;
+	private final Predicate<Character> matcher;
 
 	/**
 	 * 构造
 	 * @param matcher 被查找的字符匹配器
 	 */
-	public CharMatcherFinder(final Matcher<Character> matcher) {
+	public CharMatcherFinder(final Predicate<Character> matcher) {
 		this.matcher = matcher;
 	}
 
@@ -29,13 +30,13 @@ public class CharMatcherFinder extends TextFinder {
 		final int limit = getValidEndIndex();
 		if(negative){
 			for (int i = from; i > limit; i--) {
-				if(matcher.match(text.charAt(i))){
+				if(null == matcher || matcher.test(text.charAt(i))){
 					return i;
 				}
 			}
 		} else {
 			for (int i = from; i < limit; i++) {
-				if(matcher.match(text.charAt(i))){
+				if(null == matcher || matcher.test(text.charAt(i))){
 					return i;
 				}
 			}

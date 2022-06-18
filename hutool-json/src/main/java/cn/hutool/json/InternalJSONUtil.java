@@ -2,15 +2,14 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
+import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -18,6 +17,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -138,9 +138,10 @@ public final class InternalJSONUtil {
 	 * @param jsonObject JSONObject
 	 * @param key        键
 	 * @param value      值
+	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONObject
 	 */
-	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Filter<MutableEntry<String, Object>> filter) {
+	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
@@ -149,11 +150,11 @@ public final class InternalJSONUtil {
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = new JSONObject(target.getConfig());
-				target.setOnce(segment, nextTarget, filter);
+				target.setOnce(segment, nextTarget, predicate);
 			}
 			target = nextTarget;
 		}
-		target.setOnce(path[last], value, filter);
+		target.setOnce(path[last], value, predicate);
 		return jsonObject;
 	}
 

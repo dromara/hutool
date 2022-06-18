@@ -12,7 +12,7 @@ public class AlwaysTrueMatcher implements PartMatcher {
 	public static AlwaysTrueMatcher INSTANCE = new AlwaysTrueMatcher();
 
 	@Override
-	public boolean match(final Integer t) {
+	public boolean test(final Integer t) {
 		return true;
 	}
 

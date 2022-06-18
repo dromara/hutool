@@ -9,7 +9,6 @@ import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 反射中{@link Method}相关工具类，包括方法获取和方法执行<br>
@@ -67,21 +67,21 @@ public class MethodUtil {
 	/**
 	 * 获得指定类过滤后的Public方法列表<br>
 	 *
-	 * @param clazz  查找方法的类
-	 * @param filter 过滤器
+	 * @param clazz     查找方法的类
+	 * @param predicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留，null表示保留全部
 	 * @return 过滤后的方法数组
 	 */
-	public static Method[] getPublicMethods(final Class<?> clazz, final Filter<Method> filter) {
+	public static Method[] getPublicMethods(final Class<?> clazz, final Predicate<Method> predicate) {
 		if (null == clazz) {
 			return null;
 		}
 
 		final Method[] methods = getPublicMethods(clazz);
-		if (null == filter) {
+		if (null == predicate) {
 			return methods;
 		}
 
-		return ArrayUtil.filter(methods, filter);
+		return ArrayUtil.filter(methods, predicate);
 	}
 
 	/**
@@ -298,16 +298,16 @@ public class MethodUtil {
 	/**
 	 * 获得指定类过滤后的Public方法列表
 	 *
-	 * @param clazz  查找方法的类
-	 * @param filter 过滤器
+	 * @param clazz     查找方法的类
+	 * @param predicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留。
 	 * @return 过滤后的方法列表
 	 * @throws SecurityException 安全异常
 	 */
-	public static Method[] getMethods(final Class<?> clazz, final Filter<Method> filter) throws SecurityException {
+	public static Method[] getMethods(final Class<?> clazz, final Predicate<Method> predicate) throws SecurityException {
 		if (null == clazz) {
 			return null;
 		}
-		return ArrayUtil.filter(getMethods(clazz), filter);
+		return ArrayUtil.filter(getMethods(clazz), predicate);
 	}
 
 	/**
@@ -566,7 +566,7 @@ public class MethodUtil {
 	 * @param args   参数对象
 	 * @return 结果
 	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalAccessException           访问权限异常
+	 * @throws IllegalAccessException    访问权限异常
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T invokeRaw(final Object obj, final Method method, final Object... args) throws InvocationTargetException, IllegalAccessException {

@@ -6,9 +6,6 @@ import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Editor;
-import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.text.StrUtil;
@@ -27,6 +24,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -164,7 +163,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T firstMatch(final Matcher<T> matcher, final T... array) {
+	public static <T> T firstMatch(final Predicate<T> matcher, final T... array) {
 		final int index = matchIndex(matcher, array);
 		if (index < 0) {
 			return null;
@@ -183,7 +182,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.6.6
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(final Matcher<T> matcher, final T... array) {
+	public static <T> int matchIndex(final Predicate<T> matcher, final T... array) {
 		return matchIndex(matcher, 0, array);
 	}
 
@@ -198,11 +197,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(final Matcher<T> matcher, final int beginIndexInclude, final T... array) {
-		Assert.notNull(matcher, "Matcher must be not null !");
+	public static <T> int matchIndex(final Predicate<T> matcher, final int beginIndexInclude, final T... array) {
 		if (isNotEmpty(array)) {
 			for (int i = beginIndexInclude; i < array.length; i++) {
-				if (matcher.match(array[i])) {
+				if (null == matcher || matcher.test(array[i])) {
 					return i;
 				}
 			}
@@ -654,7 +652,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 编辑后的数组
 	 * @since 5.3.3
 	 */
-	public static <T> T[] edit(final T[] array, final Editor<T> editor) {
+	public static <T> T[] edit(final T[] array, final UnaryOperator<T> editor) {
 		if (null == editor) {
 			return array;
 		}
@@ -662,7 +660,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		final ArrayList<T> list = new ArrayList<>(array.length);
 		T modified;
 		for (final T t : array) {
-			modified = editor.edit(t);
+			modified = editor.apply(t);
 			if (null != modified) {
 				list.add(modified);
 			}
@@ -676,20 +674,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 *
 	 * <pre>
-	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * 1、过滤出需要的对象，{@link Predicate#test(Object)}为{@code true}对象将被加入结果集合中
 	 * </pre>
 	 *
-	 * @param <T>    数组元素类型
-	 * @param array  数组
-	 * @param filter 过滤器接口，用于定义过滤规则，{@code null}返回原集合
+	 * @param <T>       数组元素类型
+	 * @param array     数组
+	 * @param predicate 过滤器接口，用于定义过滤规则，{@link Predicate#test(Object)}为{@code true}保留，{@code null}返回原集合
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */
-	public static <T> T[] filter(final T[] array, final Filter<T> filter) {
-		if (null == array || null == filter) {
+	public static <T> T[] filter(final T[] array, final Predicate<T> predicate) {
+		if (null == array || null == predicate) {
 			return array;
 		}
-		return edit(array, t -> filter.accept(t) ? t : null);
+		return edit(array, t -> predicate.test(t) ? t : null);
 	}
 
 	/**
@@ -1240,8 +1238,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 连接后的字符串
 	 * @since 5.3.3
 	 */
-	public static <T> String join(final T[] array, final CharSequence conjunction, final Editor<T> editor) {
-		return StrJoiner.of(conjunction).append(array, (t) -> String.valueOf(editor.edit(t))).toString();
+	public static <T> String join(final T[] array, final CharSequence conjunction, final UnaryOperator<T> editor) {
+		return StrJoiner.of(conjunction).append(array, (t) -> String.valueOf(editor.apply(t))).toString();
 	}
 
 	/**

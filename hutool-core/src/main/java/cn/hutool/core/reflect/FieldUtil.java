@@ -4,7 +4,6 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
@@ -13,6 +12,7 @@ import cn.hutool.core.util.ArrayUtil;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 反射中{@link Field}字段工具类，包括字段获取和字段赋值。
@@ -125,13 +125,13 @@ public class FieldUtil {
 	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
 	 *
 	 * @param beanClass   类
-	 * @param fieldFilter field过滤器，过滤掉不需要的field
+	 * @param fieldPredicate field过滤器，过滤掉不需要的field，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 * @since 5.7.14
 	 */
-	public static Field[] getFields(final Class<?> beanClass, final Filter<Field> fieldFilter) throws SecurityException {
-		return ArrayUtil.filter(getFields(beanClass), fieldFilter);
+	public static Field[] getFields(final Class<?> beanClass, final Predicate<Field> fieldPredicate) throws SecurityException {
+		return ArrayUtil.filter(getFields(beanClass), fieldPredicate);
 	}
 
 	/**

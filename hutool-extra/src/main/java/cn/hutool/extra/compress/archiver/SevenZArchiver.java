@@ -3,9 +3,8 @@ package cn.hutool.extra.compress.archiver;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 
@@ -13,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.SeekableByteChannel;
+import java.util.function.Predicate;
 
 /**
  * 7zip格式的归档封装
@@ -77,7 +77,7 @@ public class SevenZArchiver implements Archiver {
 	}
 
 	@Override
-	public SevenZArchiver add(final File file, final String path, final Filter<File> filter) {
+	public SevenZArchiver add(final File file, final String path, final Predicate<File> filter) {
 		try {
 			addInternal(file, path, filter);
 		} catch (final IOException e) {
@@ -118,19 +118,19 @@ public class SevenZArchiver implements Archiver {
 	 *
 	 * @param file   文件或目录
 	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
+	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}保留，null表示保留全部
 	 */
-	private void addInternal(final File file, final String path, final Filter<File> filter) throws IOException {
-		if (null != filter && false == filter.accept(file)) {
+	private void addInternal(final File file, final String path, final Predicate<File> filter) throws IOException {
+		if (null != filter && false == filter.test(file)) {
 			return;
 		}
 		final SevenZOutputFile out = this.sevenZOutputFile;
 
 		final String entryName;
-		if(StrUtil.isNotEmpty(path)){
+		if (StrUtil.isNotEmpty(path)) {
 			// 非空拼接路径，格式为：path/name
 			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + file.getName();
-		} else{
+		} else {
 			// 路径空直接使用文件名或目录名
 			entryName = file.getName();
 		}
@@ -139,7 +139,7 @@ public class SevenZArchiver implements Archiver {
 		if (file.isDirectory()) {
 			// 目录遍历写入
 			final File[] files = file.listFiles();
-			if(ArrayUtil.isNotEmpty(files)){
+			if (ArrayUtil.isNotEmpty(files)) {
 				for (final File childFile : files) {
 					addInternal(childFile, entryName, filter);
 				}

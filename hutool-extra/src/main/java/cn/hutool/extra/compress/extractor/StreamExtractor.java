@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.compress.CompressException;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -16,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.function.Predicate;
 
 /**
  * 数据解压器，即将归档打包的数据释放
@@ -23,15 +23,15 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.5.0
  */
-public class StreamExtractor implements Extractor{
+public class StreamExtractor implements Extractor {
 
 	private final ArchiveInputStream in;
 
 	/**
 	 * 构造
 	 *
-	 * @param charset      编码
-	 * @param file         包文件
+	 * @param charset 编码
+	 * @param file    包文件
 	 */
 	public StreamExtractor(final Charset charset, final File file) {
 		this(charset, null, file);
@@ -85,12 +85,12 @@ public class StreamExtractor implements Extractor{
 	 * 释放（解压）到指定目录，结束后自动关闭流，此方法只能调用一次
 	 *
 	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
+	 * @param predicate 解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Predicate#test(Object)}为{@code true}时释放。
 	 */
 	@Override
-	public void extract(final File targetDir, final Filter<ArchiveEntry> filter) {
+	public void extract(final File targetDir, final Predicate<ArchiveEntry> predicate) {
 		try {
-			extractInternal(targetDir, filter);
+			extractInternal(targetDir, predicate);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -102,16 +102,16 @@ public class StreamExtractor implements Extractor{
 	 * 释放（解压）到指定目录
 	 *
 	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
+	 * @param predicate 解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Predicate#test(Object)}为{@code true}释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(final File targetDir, final Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(final File targetDir, final Predicate<ArchiveEntry> predicate) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final ArchiveInputStream in = this.in;
 		ArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = in.getNextEntry())) {
-			if(null != filter && false == filter.accept(entry)){
+			if (null != predicate && false == predicate.test(entry)) {
 				continue;
 			}
 			if (false == in.canReadEntryData(entry)) {

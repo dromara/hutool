@@ -30,9 +30,9 @@ public class DayOfMonthMatcher extends BoolArrayMatcher {
 	 * @return 是否匹配
 	 */
 	public boolean match(final int value, final int month, final boolean isLeapYear) {
-		return (super.match(value) // 在约定日范围内的某一天
+		return (super.test(value) // 在约定日范围内的某一天
 				//匹配器中用户定义了最后一天（31表示最后一天）
-				|| (value > 27 && match(31) && isLastDayOfMonth(value, month, isLeapYear)));
+				|| (value > 27 && test(31) && isLastDayOfMonth(value, month, isLeapYear)));
 	}
 
 	/**

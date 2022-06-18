@@ -4,9 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
@@ -14,8 +14,6 @@ import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.math.NumberUtil;
-import cn.hutool.core.regex.ReUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -3701,7 +3699,7 @@ public class CharSequenceUtil {
 
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
-	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
+	 * replaceFun可以提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
 	 *
 	 * <pre class="code">
 	 *     replace(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
@@ -3994,12 +3992,12 @@ public class CharSequenceUtil {
 	 * 过滤字符串
 	 *
 	 * @param str    字符串
-	 * @param filter 过滤器，{@link Filter#accept(Object)}返回为{@code true}的保留字符
+	 * @param predicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留字符
 	 * @return 过滤后的字符串
 	 * @since 5.4.0
 	 */
-	public static String filter(final CharSequence str, final Filter<Character> filter) {
-		if (str == null || filter == null) {
+	public static String filter(final CharSequence str, final Predicate<Character> predicate) {
+		if (str == null || predicate == null) {
 			return str(str);
 		}
 
@@ -4008,7 +4006,7 @@ public class CharSequenceUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			if (filter.accept(c)) {
+			if (predicate.test(c)) {
 				sb.append(c);
 			}
 		}
@@ -4361,12 +4359,12 @@ public class CharSequenceUtil {
 	 * @return 是否全部匹配
 	 * @since 3.2.3
 	 */
-	public static boolean isAllCharMatch(final CharSequence value, final Matcher<Character> matcher) {
+	public static boolean isAllCharMatch(final CharSequence value, final Predicate<Character> matcher) {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
 		for (int i = value.length(); --i >= 0; ) {
-			if (false == matcher.match(value.charAt(i))) {
+			if (false == matcher.test(value.charAt(i))) {
 				return false;
 			}
 		}

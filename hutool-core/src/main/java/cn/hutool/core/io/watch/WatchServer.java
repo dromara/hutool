@@ -1,7 +1,6 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Closeable;
@@ -21,6 +20,7 @@ import java.nio.file.WatchService;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 文件监听服务，此服务可以同时监听多个路径。
@@ -129,10 +129,10 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * 执行事件获取并处理
 	 *
 	 * @param action     监听回调函数，实现此函数接口用于处理WatchEvent事件
-	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
+	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤
 	 * @since 5.4.0
 	 */
-	public void watch(final WatchAction action, final Filter<WatchEvent<?>> watchFilter) {
+	public void watch(final WatchAction action, final Predicate<WatchEvent<?>> watchFilter) {
 		final WatchKey wk;
 		try {
 			wk = watchService.take();
@@ -146,7 +146,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 
 		for (final WatchEvent<?> event : wk.pollEvents()) {
 			// 如果监听文件，检查当前事件是否与所监听文件关联
-			if (null != watchFilter && false == watchFilter.accept(event)) {
+			if (null != watchFilter && false == watchFilter.test(event)) {
 				continue;
 			}
 
@@ -160,9 +160,9 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * 执行事件获取并处理
 	 *
 	 * @param watcher     {@link Watcher}
-	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，null表示不过滤
+	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤
 	 */
-	public void watch(final Watcher watcher, final Filter<WatchEvent<?>> watchFilter) {
+	public void watch(final Watcher watcher, final Predicate<WatchEvent<?>> watchFilter) {
 		watch((event, currentPath)->{
 			final WatchEvent.Kind<?> kind = event.kind();
 

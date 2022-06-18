@@ -3,7 +3,6 @@ package cn.hutool.core.compress;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
@@ -13,6 +12,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -134,14 +134,14 @@ public class ZipReader implements Closeable {
 	 * 解压到指定目录中
 	 *
 	 * @param outFile     解压到的目录
-	 * @param entryFilter 过滤器，排除不需要的文件
+	 * @param entryFilter 过滤器，只保留{@link Predicate#test(Object)}结果为{@code true}的文件
 	 * @return 解压的目录
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.12
 	 */
-	public File readTo(final File outFile, final Filter<ZipEntry> entryFilter) throws IORuntimeException {
+	public File readTo(final File outFile, final Predicate<ZipEntry> entryFilter) throws IORuntimeException {
 		read((zipEntry) -> {
-			if (null == entryFilter || entryFilter.accept(zipEntry)) {
+			if (null == entryFilter || entryFilter.test(zipEntry)) {
 				//gitee issue #I4ZDQI
 				String path = zipEntry.getName();
 				if (FileUtil.isWindows()) {

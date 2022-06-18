@@ -1,9 +1,9 @@
 package cn.hutool.poi.excel.sax.handler;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func1;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 抽象行数据处理器，通过实现{@link #handle(int, long, List)} 处理原始数据<br>
@@ -26,7 +26,7 @@ public abstract class AbstractRowHandler<T> implements RowHandler {
 	/**
 	 * 行数据转换函数
 	 */
-	protected Func1<List<Object>, T> convertFunc;
+	protected Function<List<Object>, T> convertFunc;
 
 	/**
 	 * 构造
@@ -45,7 +45,7 @@ public abstract class AbstractRowHandler<T> implements RowHandler {
 		if (rowIndex < this.startRowIndex || rowIndex > this.endRowIndex) {
 			return;
 		}
-		handleData(sheetIndex, rowIndex, convertFunc.callWithRuntimeException(rowCells));
+		handleData(sheetIndex, rowIndex, convertFunc.apply(rowCells));
 	}
 
 	/**

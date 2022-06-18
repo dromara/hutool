@@ -5,10 +5,9 @@ import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Filter;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.JNDIUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.text.StrUtil;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -40,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 
 /**
  * 网络相关工具
@@ -424,11 +424,11 @@ public class NetUtil {
 	/**
 	 * 获取所有满足过滤条件的本地IP地址对象
 	 *
-	 * @param addressFilter 过滤器，null表示不过滤，获取所有地址
+	 * @param addressPredicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤，获取所有地址
 	 * @return 过滤后的地址对象列表
 	 * @since 4.5.17
 	 */
-	public static LinkedHashSet<InetAddress> localAddressList(final Filter<InetAddress> addressFilter) {
+	public static LinkedHashSet<InetAddress> localAddressList(final Predicate<InetAddress> addressPredicate) {
 		final Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -447,7 +447,7 @@ public class NetUtil {
 			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
 			while (inetAddresses.hasMoreElements()) {
 				final InetAddress inetAddress = inetAddresses.nextElement();
-				if (inetAddress != null && (null == addressFilter || addressFilter.accept(inetAddress))) {
+				if (inetAddress != null && (null == addressPredicate || addressPredicate.test(inetAddress))) {
 					ipSet.add(inetAddress);
 				}
 			}
@@ -462,7 +462,7 @@ public class NetUtil {
 	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
 	 * 参考：<a href="http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java">
-	 *     http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java</a>
+	 * http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java</a>
 	 *
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.7

@@ -2,7 +2,6 @@ package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
@@ -623,27 +622,27 @@ public class IterUtil {
 	/**
 	 * 过滤{@link Iterator}并将过滤后满足条件的元素添加到List中
 	 *
-	 * @param <E>    元素类型
-	 * @param iter   {@link Iterator}
-	 * @param filter 过滤器，保留{@link Filter#accept(Object)}为{@code true}的元素
+	 * @param <E>       元素类型
+	 * @param iter      {@link Iterator}
+	 * @param predicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ArrayList
 	 * @since 5.7.22
 	 */
-	public static <E> List<E> filterToList(final Iterator<E> iter, final Predicate<E> filter) {
-		return ListUtil.of(filtered(iter, filter));
+	public static <E> List<E> filterToList(final Iterator<E> iter, final Predicate<E> predicate) {
+		return ListUtil.of(filtered(iter, predicate));
 	}
 
 	/**
 	 * 获取一个新的 {@link FilterIter}，用于过滤指定元素
 	 *
-	 * @param iterator 被包装的 {@link Iterator}
-	 * @param filter   过滤断言，当{@link Filter#accept(Object)}为{@code true}时保留元素，{@code false}抛弃元素
-	 * @param <E>      元素类型
+	 * @param iterator  被包装的 {@link Iterator}
+	 * @param predicate 过滤断言，{@link Predicate#test(Object)}为{@code true}保留元素。
+	 * @param <E>       元素类型
 	 * @return {@link FilterIter}
 	 * @since 5.8.0
 	 */
-	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Predicate<? super E> filter) {
-		return new FilterIter<>(iterator, filter);
+	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Predicate<? super E> predicate) {
+		return new FilterIter<>(iterator, predicate);
 	}
 
 	/**

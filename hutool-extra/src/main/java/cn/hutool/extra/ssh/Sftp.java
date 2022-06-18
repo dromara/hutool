@@ -3,7 +3,6 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
 import cn.hutool.extra.ftp.FtpConfig;
@@ -23,6 +22,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Predicate;
 
 /**
  * SFTP是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。<br>
@@ -302,13 +302,13 @@ public class Sftp extends AbstractFtp {
 	 * 遍历某个目录下所有文件或目录，不会递归遍历<br>
 	 * 此方法自动过滤"."和".."两种目录
 	 *
-	 * @param path   遍历某个目录下所有文件或目录
-	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
+	 * @param path      遍历某个目录下所有文件或目录
+	 * @param predicate 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return 目录或文件名列表
 	 * @since 4.0.5
 	 */
-	public List<String> ls(final String path, final Filter<LsEntry> filter) {
-		final List<LsEntry> entries = lsEntries(path, filter);
+	public List<String> ls(final String path, final Predicate<LsEntry> predicate) {
+		final List<LsEntry> entries = lsEntries(path, predicate);
 		if (CollUtil.isEmpty(entries)) {
 			return ListUtil.empty();
 		}
@@ -331,18 +331,18 @@ public class Sftp extends AbstractFtp {
 	 * 遍历某个目录下所有文件或目录，生成LsEntry列表，不会递归遍历<br>
 	 * 此方法自动过滤"."和".."两种目录
 	 *
-	 * @param path   遍历某个目录下所有文件或目录
-	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
+	 * @param path      遍历某个目录下所有文件或目录
+	 * @param predicate 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return 目录或文件名列表
 	 * @since 5.3.5
 	 */
-	public List<LsEntry> lsEntries(final String path, final Filter<LsEntry> filter) {
+	public List<LsEntry> lsEntries(final String path, final Predicate<LsEntry> predicate) {
 		final List<LsEntry> entryList = new ArrayList<>();
 		try {
 			channel.ls(path, entry -> {
 				final String fileName = entry.getFilename();
 				if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
-					if (null == filter || filter.accept(entry)) {
+					if (null == predicate || predicate.test(entry)) {
 						entryList.add(entry);
 					}
 				}

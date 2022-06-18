@@ -1,8 +1,9 @@
 package cn.hutool.json;
 
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableEntry;
+
+import java.util.function.Predicate;
 
 /**
  * JSON字符串解析器
@@ -39,9 +40,9 @@ public class JSONParser {
 	 * 解析{@link JSONTokener}中的字符到目标的{@link JSONObject}中
 	 *
 	 * @param jsonObject {@link JSONObject}
-	 * @param filter     键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤
+	 * @param predicate  键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public void parseTo(final JSONObject jsonObject, final Filter<MutableEntry<String, Object>> filter) {
+	public void parseTo(final JSONObject jsonObject, final Predicate<MutableEntry<String, Object>> predicate) {
 		final JSONTokener tokener = this.tokener;
 
 		char c;
@@ -69,7 +70,7 @@ public class JSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.setOnce(key, tokener.nextValue(), filter);
+			jsonObject.setOnce(key, tokener.nextValue(), predicate);
 
 			// Pairs are separated by ','.
 
@@ -95,9 +96,9 @@ public class JSONParser {
 	 * 解析JSON字符串到{@link JSONArray}中
 	 *
 	 * @param jsonArray {@link JSONArray}
-	 * @param filter    键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null} 表示不过滤
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null} 表示不过滤，，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public void parseTo(final JSONArray jsonArray, final Filter<Mutable<Object>> filter) {
+	public void parseTo(final JSONArray jsonArray, final Predicate<Mutable<Object>> predicate) {
 		final JSONTokener x = this.tokener;
 
 		if (x.nextClean() != '[') {
@@ -108,10 +109,10 @@ public class JSONParser {
 			for (; ; ) {
 				if (x.nextClean() == ',') {
 					x.back();
-					jsonArray.addRaw(null, filter);
+					jsonArray.addRaw(null, predicate);
 				} else {
 					x.back();
-					jsonArray.addRaw(x.nextValue(), filter);
+					jsonArray.addRaw(x.nextValue(), predicate);
 				}
 				switch (x.nextClean()) {
 					case ',':

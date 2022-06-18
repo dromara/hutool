@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.text.StrUtil;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import java.util.RandomAccess;
+import java.util.function.Predicate;
 
 /**
  * 7z格式数据解压器，即将归档打包的数据释放
@@ -30,7 +30,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param file     包文件
+	 * @param file 包文件
 	 */
 	public SevenZExtractor(final File file) {
 		this(file, null);
@@ -53,7 +53,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param in       包流
+	 * @param in 包流
 	 */
 	public SevenZExtractor(final InputStream in) {
 		this(in, null);
@@ -72,7 +72,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param channel  {@link SeekableByteChannel}
+	 * @param channel {@link SeekableByteChannel}
 	 */
 	public SevenZExtractor(final SeekableByteChannel channel) {
 		this(channel, null);
@@ -92,16 +92,10 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 		}
 	}
 
-	/**
-	 * 释放（解压）到指定目录，结束后自动关闭流，此方法只能调用一次
-	 *
-	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
-	 */
 	@Override
-	public void extract(final File targetDir, final Filter<ArchiveEntry> filter) {
+	public void extract(final File targetDir, final Predicate<ArchiveEntry> predicate) {
 		try {
-			extractInternal(targetDir, filter);
+			extractInternal(targetDir, predicate);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -112,17 +106,17 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 获取满足指定过滤要求的压缩包内的第一个文件流
 	 *
-	 * @param filter 用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时返回对应流。
-	 * @return 满足过滤要求的第一个文件的流,无满足条件的文件返回{@code null}
+	 * @param predicate 用于指定需要释放的文件，null表示不过滤。当{@link Predicate#test(Object)}为{@code true}返回对应流。
+	 * @return 满足过滤要求的第一个文件的流, 无满足条件的文件返回{@code null}
 	 * @since 5.7.14
 	 */
-	public InputStream getFirst(final Filter<ArchiveEntry> filter) {
+	public InputStream getFirst(final Predicate<ArchiveEntry> predicate) {
 		final SevenZFile sevenZFile = this.sevenZFile;
-		for(final SevenZArchiveEntry entry : sevenZFile.getEntries()){
-			if(null != filter && false == filter.accept(entry)){
+		for (final SevenZArchiveEntry entry : sevenZFile.getEntries()) {
+			if (null != predicate && false == predicate.test(entry)) {
 				continue;
 			}
-			if(entry.isDirectory()){
+			if (entry.isDirectory()) {
 				continue;
 			}
 
@@ -143,24 +137,24 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @return 文件流，无文件返回{@code null}
 	 * @since 5.7.14
 	 */
-	public InputStream get(final String entryName){
-		return getFirst((entry)-> StrUtil.equals(entryName, entry.getName()));
+	public InputStream get(final String entryName) {
+		return getFirst((entry) -> StrUtil.equals(entryName, entry.getName()));
 	}
 
 	/**
 	 * 释放（解压）到指定目录
 	 *
 	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
+	 * @param predicate 解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Predicate#test(Object)}为{@code true}时释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(final File targetDir, final Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(final File targetDir, final Predicate<ArchiveEntry> predicate) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final SevenZFile sevenZFile = this.sevenZFile;
 		SevenZArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = this.sevenZFile.getNextEntry())) {
-			if(null != filter && false == filter.accept(entry)){
+			if (null != predicate && false == predicate.test(entry)) {
 				continue;
 			}
 			outItemFile = FileUtil.file(targetDir, entry.getName());
@@ -168,7 +162,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 				// 创建对应目录
 				//noinspection ResultOfMethodCallIgnored
 				outItemFile.mkdirs();
-			} else if(entry.hasStream()){
+			} else if (entry.hasStream()) {
 				// 读取entry对应数据流
 				FileUtil.writeFromStream(new Seven7EntryInputStream(sevenZFile, entry), outItemFile);
 			} else {

@@ -4,10 +4,9 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Filter;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
@@ -21,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * FTP客户端封装<br>
@@ -340,11 +340,11 @@ public class Ftp extends AbstractFtp {
 	 * 此方法自动过滤"."和".."两种目录
 	 *
 	 * @param path   目录
-	 * @param filter 过滤器，null表示不过滤，默认去掉"."和".."两种目录
+	 * @param predicate 过滤器，null表示不过滤，默认去掉"."和".."两种目录
 	 * @return 文件或目录列表
 	 * @since 5.3.5
 	 */
-	public List<FTPFile> lsFiles(final String path, final Filter<FTPFile> filter) {
+	public List<FTPFile> lsFiles(final String path, final Predicate<FTPFile> predicate) {
 		final FTPFile[] ftpFiles = lsFiles(path);
 		if (ArrayUtil.isEmpty(ftpFiles)) {
 			return ListUtil.empty();
@@ -355,7 +355,7 @@ public class Ftp extends AbstractFtp {
 		for (final FTPFile ftpFile : ftpFiles) {
 			fileName = ftpFile.getName();
 			if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
-				if (null == filter || filter.accept(ftpFile)) {
+				if (null == predicate || predicate.test(ftpFile)) {
 					result.add(ftpFile);
 				}
 			}

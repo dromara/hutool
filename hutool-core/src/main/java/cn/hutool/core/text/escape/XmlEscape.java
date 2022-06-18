@@ -5,7 +5,8 @@ import cn.hutool.core.text.replacer.ReplacerChain;
 
 /**
  * XML特殊字符转义<br>
- * 见：https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents<br>
+ * 见：<a href="https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents">
+ *     https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents</a><br>
  *
  * <pre>
  * 	 &amp; (ampersand) 替换为 &amp;amp;

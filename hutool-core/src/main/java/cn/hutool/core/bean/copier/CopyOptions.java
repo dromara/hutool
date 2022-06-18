@@ -2,7 +2,6 @@ package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.Converter;
-import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.mutable.MutableEntry;
@@ -14,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.UnaryOperator;
 
 /**
  * 属性拷贝选项<br>
@@ -53,7 +53,7 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 字段属性名和属性值编辑器，，用于自定义属性转换规则（例如驼峰转下划线等），自定义属性值转换规则（例如null转""等）
 	 */
-	protected Editor<MutableEntry<String, Object>> fieldEditor;
+	protected UnaryOperator<MutableEntry<String, Object>> fieldEditor;
 
 	/**
 	 * 是否支持transient关键字修饰和@Transient注解，如果支持，被修饰的字段或方法对应的字段将被忽略。
@@ -250,7 +250,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 * @since 5.4.2
 	 */
-	public CopyOptions setFieldEditor(final Editor<MutableEntry<String, Object>> editor) {
+	public CopyOptions setFieldEditor(final UnaryOperator<MutableEntry<String, Object>> editor) {
 		this.fieldEditor = editor;
 		return this;
 	}
@@ -266,7 +266,7 @@ public class CopyOptions implements Serializable {
 	protected MutableEntry<String, Object> editField(final String fieldName, final Object fieldValue) {
 		final MutableEntry<String, Object> entry = new MutableEntry<>(fieldName, fieldValue);
 		return (null != this.fieldEditor) ?
-				this.fieldEditor.edit(entry) : entry;
+				this.fieldEditor.apply(entry) : entry;
 	}
 
 	/**

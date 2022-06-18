@@ -5,8 +5,6 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.func.Editor;
-import cn.hutool.core.lang.func.Filter;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
@@ -32,6 +30,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -658,7 +658,7 @@ public class MapUtil {
 	 * @return 编辑后的Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> edit(final Map<K, V> map, final Editor<Entry<K, V>> editor) {
+	public static <K, V> Map<K, V> edit(final Map<K, V> map, final UnaryOperator<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
@@ -673,7 +673,7 @@ public class MapUtil {
 
 		Entry<K, V> modified;
 		for (final Entry<K, V> entry : map.entrySet()) {
-			modified = editor.edit(entry);
+			modified = editor.apply(entry);
 			if (null != modified) {
 				map2.put(modified.getKey(), modified.getValue());
 			}
@@ -689,18 +689,18 @@ public class MapUtil {
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
 	 * </pre>
 	 *
-	 * @param <K>    Key类型
-	 * @param <V>    Value类型
-	 * @param map    Map
-	 * @param filter 过滤器接口，{@code null}返回原Map
+	 * @param <K>       Key类型
+	 * @param <V>       Value类型
+	 * @param map       Map
+	 * @param predicate 过滤器接口，{@link Predicate#test(Object)}为{@code true}保留，{@code null}返回原Map
 	 * @return 过滤后的Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> filter(final Map<K, V> map, final Filter<Entry<K, V>> filter) {
-		if (null == map || null == filter) {
+	public static <K, V> Map<K, V> filter(final Map<K, V> map, final Predicate<Entry<K, V>> predicate) {
+		if (null == map || null == predicate) {
 			return map;
 		}
-		return edit(map, t -> filter.accept(t) ? t : null);
+		return edit(map, t -> predicate.test(t) ? t : null);
 	}
 
 

@@ -3,9 +3,8 @@ package cn.hutool.extra.compress.archiver;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.extra.compress.CompressException;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -17,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.function.Predicate;
 
 /**
  * 数据归档封装，归档即将几个文件或目录打成一个压缩包<br>
@@ -86,26 +86,26 @@ public class StreamArchiver implements Archiver {
 		}
 
 		//特殊设置
-		if(this.out instanceof TarArchiveOutputStream){
-			((TarArchiveOutputStream)out).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-		} else if(this.out instanceof ArArchiveOutputStream){
-			((ArArchiveOutputStream)out).setLongFileMode(ArArchiveOutputStream.LONGFILE_BSD);
+		if (this.out instanceof TarArchiveOutputStream) {
+			((TarArchiveOutputStream) out).setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+		} else if (this.out instanceof ArArchiveOutputStream) {
+			((ArArchiveOutputStream) out).setLongFileMode(ArArchiveOutputStream.LONGFILE_BSD);
 		}
 	}
 
 	/**
 	 * 将文件或目录加入归档包，目录采取递归读取方式按照层级加入
 	 *
-	 * @param file   文件或目录
-	 * @param path   文件或目录的初始路径，null表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
+	 * @param file      文件或目录
+	 * @param path      文件或目录的初始路径，null表示位于根路径
+	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入，null表示全部加入
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	@Override
-	public StreamArchiver add(final File file, final String path, final Filter<File> filter) throws IORuntimeException {
+	public StreamArchiver add(final File file, final String path, final Predicate<File> predicate) throws IORuntimeException {
 		try {
-			addInternal(file, path, filter);
+			addInternal(file, path, predicate);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -140,21 +140,21 @@ public class StreamArchiver implements Archiver {
 	/**
 	 * 将文件或目录加入归档包，目录采取递归读取方式按照层级加入
 	 *
-	 * @param file   文件或目录
-	 * @param path   文件或目录的初始路径，{@code null}表示位于根路径
-	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Filter#accept(Object)}为true时加入。
+	 * @param file      文件或目录
+	 * @param path      文件或目录的初始路径，{@code null}表示位于根路径
+	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入。
 	 */
-	private void addInternal(final File file, final String path, final Filter<File> filter) throws IOException {
-		if (null != filter && false == filter.accept(file)) {
+	private void addInternal(final File file, final String path, final Predicate<File> predicate) throws IOException {
+		if (null != predicate && false == predicate.test(file)) {
 			return;
 		}
 		final ArchiveOutputStream out = this.out;
 
 		final String entryName;
-		if(StrUtil.isNotEmpty(path)){
+		if (StrUtil.isNotEmpty(path)) {
 			// 非空拼接路径，格式为：path/name
 			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + file.getName();
-		} else{
+		} else {
 			// 路径空直接使用文件名或目录名
 			entryName = file.getName();
 		}
@@ -163,9 +163,9 @@ public class StreamArchiver implements Archiver {
 		if (file.isDirectory()) {
 			// 目录遍历写入
 			final File[] files = file.listFiles();
-			if(ArrayUtil.isNotEmpty(files)){
+			if (ArrayUtil.isNotEmpty(files)) {
 				for (final File childFile : files) {
-					addInternal(childFile, entryName, filter);
+					addInternal(childFile, entryName, predicate);
 				}
 			}
 		} else {
