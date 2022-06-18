@@ -54,11 +54,12 @@ public class LambdaUtil {
 	 *
 	 * @param func lambda
 	 * @param <R>  类型
+	 * @param <T>  lambda的类型
 	 * @return lambda实现类
 	 * @author VampireAchao
 	 */
 	@SuppressWarnings("unchecked")
-	public static <R> Class<R> getRealClass(final Serializable func) {
+	public static <R, T extends Serializable> Class<R> getRealClass(final T func) {
 		final LambdaInfo lambdaInfo = resolve(func);
 		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
 	}
@@ -68,9 +69,10 @@ public class LambdaUtil {
 	 * 该缓存可能会在任意不定的时间被清除
 	 *
 	 * @param func 需要解析的 lambda 对象（无参方法）
+	 * @param <T>  lambda的类型
 	 * @return 返回解析后的结果
 	 */
-	public static LambdaInfo resolve(final Serializable func) {
+	public static <T extends Serializable> LambdaInfo resolve(final T func) {
 		return CACHE.computeIfAbsent(func.getClass().getName(), (key) -> {
 			final SerializedLambda serializedLambda = _resolve(func);
 			final String methodName = serializedLambda.getImplMethodName();
@@ -104,9 +106,10 @@ public class LambdaUtil {
 	 * 获取lambda表达式函数（方法）名称
 	 *
 	 * @param func 函数（无参方法）
+	 * @param <T>  lambda的类型
 	 * @return 函数名称
 	 */
-	public static String getMethodName(final Serializable func) {
+	public static <T extends Serializable> String getMethodName(final T func) {
 		return resolve(func).getName();
 	}
 
@@ -120,11 +123,12 @@ public class LambdaUtil {
 	 * </ul>
 	 *
 	 * @param func 函数
+	 * @param <T> lambda的类型
 	 * @return 方法名称
 	 * @throws IllegalArgumentException 非Getter或Setter方法
 	 * @since 5.7.23
 	 */
-	public static String getFieldName(final Serializable func) throws IllegalArgumentException {
+	public static <T extends Serializable> String getFieldName(final T func) throws IllegalArgumentException {
 		return BeanUtil.getFieldName(getMethodName(func));
 	}
 
@@ -139,9 +143,10 @@ public class LambdaUtil {
 	 * </p>
 	 *
 	 * @param func 需要解析的 lambda 对象
+	 * @param <T>  lambda的类型
 	 * @return 返回解析后的结果
 	 */
-	private static SerializedLambda _resolve(final Serializable func) {
+	private static <T extends Serializable> SerializedLambda _resolve(final T func) {
 		if (func instanceof SerializedLambda) {
 			return (SerializedLambda) func;
 		}
