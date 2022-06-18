@@ -1057,23 +1057,24 @@ public class CollUtil {
 	 * 2、修改元素对象，返回集合中为修改后的对象
 	 * </pre>
 	 *
-	 * @param <T>        集合元素类型
+	 * @param <E>        集合元素类型
 	 * @param collection 集合
 	 * @param editor     编辑器接口，{@code null}返回原集合
 	 * @return 过滤后的集合
 	 */
-	public static <T> Collection<T> edit(final Collection<T> collection, final UnaryOperator<T> editor) {
+	@SuppressWarnings("unchecked")
+	public static <T extends Collection<E>, E> T edit(final T collection, final UnaryOperator<E> editor) {
 		if (null == collection || null == editor) {
 			return collection;
 		}
 
-		final Collection<T> collection2 = create(collection.getClass());
+		final T collection2 = (T) create(collection.getClass());
 		if (isEmpty(collection)) {
 			return collection2;
 		}
 
-		T modified;
-		for (final T t : collection) {
+		E modified;
+		for (final E t : collection) {
 			modified = editor.apply(t);
 			if (null != modified) {
 				collection2.add(modified);
@@ -1090,13 +1091,13 @@ public class CollUtil {
 	 * 1、过滤出需要的对象，{@link Predicate#test(Object)}方法返回true的对象将被加入结果集合中
 	 * </pre>
 	 *
-	 * @param <T>        集合元素类型
+	 * @param <E>        集合元素类型
 	 * @param collection 集合
 	 * @param predicate  过滤器，{@code null}返回原集合
 	 * @return 过滤后的数组
 	 * @since 6.0.0
 	 */
-	public static <T> Collection<T> filter(final Collection<T> collection, final Predicate<T> predicate) {
+	public static <T extends Collection<E>, E> T filter(final T collection, final Predicate<E> predicate) {
 		if (null == collection || null == predicate) {
 			return collection;
 		}

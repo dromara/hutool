@@ -58,6 +58,7 @@ public class NullCell implements Cell {
 		return this.row;
 	}
 
+	@Deprecated
 	public void setCellType(final CellType cellType) {
 		throw new UnsupportedOperationException("Can not set any thing to null cell!");
 	}
@@ -72,6 +73,7 @@ public class NullCell implements Cell {
 		return null;
 	}
 
+	@Deprecated
 	public CellType getCellTypeEnum() {
 		return null;
 	}
@@ -81,6 +83,7 @@ public class NullCell implements Cell {
 		return null;
 	}
 
+	@Deprecated
 	public CellType getCachedFormulaResultTypeEnum() {
 		return null;
 	}

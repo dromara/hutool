@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.iter.ArrayIter;
-import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -39,6 +38,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -429,9 +429,9 @@ public class ServletUtil {
 			return MapUtil.empty();
 		}
 
-		return IterUtil.toMap(
-				new ArrayIter<>(httpServletRequest.getCookies()),
+		return MapUtil.putAll(
 				new CaseInsensitiveMap<>(),
+				(Iterator<Cookie>) new ArrayIter<>(httpServletRequest.getCookies()),
 				Cookie::getName);
 	}
 

@@ -1,16 +1,16 @@
 package cn.hutool.http.server;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
@@ -25,7 +25,6 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -221,9 +220,9 @@ public class HttpServerRequest extends HttpServerBase {
 	 */
 	public Map<String, HttpCookie> getCookieMap() {
 		if (null == this.cookieCache) {
-			cookieCache = Collections.unmodifiableMap(CollUtil.toMap(
-					NetUtil.parseCookies(getCookiesStr()),
+			cookieCache = MapUtil.unmodifiable(MapUtil.putAll(
 					new CaseInsensitiveMap<>(),
+					NetUtil.parseCookies(getCookiesStr()),
 					HttpCookie::getName));
 		}
 		return cookieCache;

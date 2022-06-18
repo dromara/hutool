@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Aviator引擎封装<br>
- * 见：https://github.com/killme2008/aviatorscript
+ * 见：<a href="https://github.com/killme2008/aviatorscript">https://github.com/killme2008/aviatorscript</a>
  *
  * @author looly
  * @since 5.5.0
