@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
@@ -318,7 +319,7 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			CollUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
+			ListUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
 			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {

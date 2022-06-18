@@ -1,7 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.iter.IterUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrUtil;
@@ -143,14 +143,14 @@ public class ArrayConverter extends AbstractConverter {
 			}
 		} else if (value instanceof Iterable) {
 			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
-			final List<?> list = IterUtil.toList((Iterable<?>) value);
+			final List<?> list = ListUtil.of((Iterable<?>) value);
 			result = Array.newInstance(targetComponentType, list.size());
 			for (int i = 0; i < list.size(); i++) {
 				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));
 			}
 		} else if (value instanceof Iterator) {
 			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
-			final List<?> list = IterUtil.toList((Iterator<?>) value);
+			final List<?> list = ListUtil.of((Iterator<?>) value);
 			result = Array.newInstance(targetComponentType, list.size());
 			for (int i = 0; i < list.size(); i++) {
 				Array.set(result, i, convertComponentType(targetComponentType, list.get(i)));

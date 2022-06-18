@@ -2,6 +2,8 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.iter.ArrayIter;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Editor;
 import cn.hutool.core.lang.func.Filter;
@@ -9,6 +11,7 @@ import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -292,9 +296,37 @@ public class MapUtil {
 	 */
 	@SafeVarargs
 	public static <K, V> Map<K, V> ofEntries(final Map.Entry<K, V>... entries) {
-		final Map<K, V> map = new HashMap<>();
-		for (final Map.Entry<K, V> pair : entries) {
-			map.put(pair.getKey(), pair.getValue());
+		return ofEntries((Iterator<Entry<K, V>>) new ArrayIter<>(entries));
+	}
+
+	/**
+	 * 将Entry集合转换为HashMap
+	 *
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param entryIter entry集合
+	 * @return Map
+	 */
+	public static <K, V> HashMap<K, V> ofEntries(final Iterable<Entry<K, V>> entryIter) {
+		return ofEntries(IterUtil.getIter(entryIter));
+	}
+
+	/**
+	 * 将Entry集合转换为HashMap
+	 *
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param entryIter entry集合
+	 * @return Map
+	 */
+	public static <K, V> HashMap<K, V> ofEntries(final Iterator<Entry<K, V>> entryIter) {
+		final HashMap<K, V> map = new HashMap<>();
+		if (IterUtil.isNotEmpty(entryIter)) {
+			Entry<K, V> entry;
+			while (entryIter.hasNext()) {
+				entry = entryIter.next();
+				map.put(entry.getKey(), entry.getValue());
+			}
 		}
 		return map;
 	}
@@ -1374,6 +1406,37 @@ public class MapUtil {
 	 * @param map  {@link Map}
 	 * @param keys 键列表
 	 * @return 值列表
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final K... keys) {
+		return valuesOfKeys(map, (Iterator<K>) new ArrayIter<>(keys));
+	}
+
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 3.0.9
+	 */
+	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterable<K> keys) {
+		return valuesOfKeys(map, keys.iterator());
+	}
+
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 *
+	 * @param <K>  键类型
+	 * @param <V>  值类型
+	 * @param map  {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
 	 * @since 5.7.20
 	 */
 	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterator<K> keys) {
@@ -1414,5 +1477,81 @@ public class MapUtil {
 		return isImmutable ?
 				new AbstractMap.SimpleImmutableEntry<>(key, value) :
 				new AbstractMap.SimpleEntry<>(key, value);
+	}
+
+	/**
+	 * 将列表按照给定的键生成器规则和值生成器规则，加入到给定的Map中
+	 *
+	 * @param resultMap 结果Map，通过传入map对象决定结果的Map类型，如果为{@code null}，默认使用HashMap
+	 * @param iterable  值列表
+	 * @param keyMapper Map的键映射
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <K, V> Map<K, V> putAll(final Map<K, V> resultMap, final Iterable<V> iterable, final Function<V, K> keyMapper) {
+		return putAll(resultMap, iterable, keyMapper, Function.identity());
+	}
+
+	/**
+	 * 将列表按照给定的键生成器规则和值生成器规则，加入到给定的Map中
+	 *
+	 * @param resultMap   结果Map，通过传入map对象决定结果的Map类型
+	 * @param iterable    值列表
+	 * @param keyMapper   Map的键映射
+	 * @param valueMapper Map的值映射
+	 * @param <T>         列表值类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <T, K, V> Map<K, V> putAll(final Map<K, V> resultMap, final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
+		return putAll(resultMap, IterUtil.getIter(iterable), keyMapper, valueMapper);
+	}
+
+	/**
+	 * 将列表按照给定的键生成器规则和值生成器规则，加入到给定的Map中
+	 *
+	 * @param resultMap 结果Map，通过传入map对象决定结果的Map类型，如果为{@code null}，默认使用HashMap
+	 * @param iterator  值列表
+	 * @param keyMapper Map的键映射
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <K, V> Map<K, V> putAll(final Map<K, V> resultMap, final Iterator<V> iterator, final Function<V, K> keyMapper) {
+		return putAll(resultMap, iterator, keyMapper, Function.identity());
+	}
+
+	/**
+	 * 将列表按照给定的键生成器规则和值生成器规则，加入到给定的Map中
+	 *
+	 * @param resultMap   结果Map，通过传入map对象决定结果的Map类型，如果为{@code null}，默认使用HashMap
+	 * @param iterator    值列表
+	 * @param keyMapper   Map的键映射
+	 * @param valueMapper Map的值映射
+	 * @param <T>         列表值类型
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @return HashMap
+	 * @since 5.3.6
+	 */
+	public static <T, K, V> Map<K, V> putAll(Map<K, V> resultMap, final Iterator<T> iterator, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
+		if (null == resultMap) {
+			resultMap = MapUtil.newHashMap();
+		}
+		if (ObjUtil.isNull(iterator)) {
+			return resultMap;
+		}
+
+		T value;
+		while (iterator.hasNext()) {
+			value = iterator.next();
+			resultMap.put(keyMapper.apply(value), valueMapper.apply(value));
+		}
+		return resultMap;
 	}
 }

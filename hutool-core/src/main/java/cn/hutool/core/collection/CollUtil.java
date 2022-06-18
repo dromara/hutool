@@ -11,7 +11,6 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ClassUtil;
@@ -64,18 +63,16 @@ import java.util.stream.Collectors;
 /**
  * 集合相关工具类
  * <p>
- * 此工具方法针对{@link Collection}及其实现类封装的工具。
+ * 此工具方法针对{@link Collection}或{@link Iterable}及其实现类封装的工具。
  * <p>
- * 由于{@link Collection} 实现了{@link Iterable}接口，因此部分工具此类不提供，而是在{@link IterUtil} 中提供
  *
- * @author xiaoleilu
+ * @author Looly
  * @see IterUtil
  * @since 3.1.1
  */
 public class CollUtil {
 
 	// ---------------------------------------------------------------------- isEmpty
-
 	/**
 	 * 集合是否为空
 	 *
@@ -869,6 +866,44 @@ public class CollUtil {
 	}
 
 	/**
+	 * 根据给定的集合类型，返回对应的空集合，支持类型包括：
+	 * *
+	 * <pre>
+	 *     1. NavigableSet
+	 *     2. SortedSet
+	 *     3. Set
+	 *     4. List
+	 * </pre>
+	 *
+	 * @param <E>             元素类型
+	 * @param <T>             集合类型
+	 * @param collectionClass 集合类型
+	 * @return 空集合
+	 * @since 5.3.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <E, T extends Collection<E>> T empty(final Class<?> collectionClass) {
+		if (null == collectionClass) {
+			return (T) Collections.emptyList();
+		}
+
+		if (Set.class.isAssignableFrom(collectionClass)) {
+			if (NavigableSet.class == collectionClass) {
+				return (T) Collections.emptyNavigableSet();
+			} else if (SortedSet.class == collectionClass) {
+				return (T) Collections.emptySortedSet();
+			} else {
+				return (T) Collections.emptySet();
+			}
+		} else if (List.class.isAssignableFrom(collectionClass)) {
+			return (T) Collections.emptyList();
+		}
+
+		// 不支持空集合的集合类型
+		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", collectionClass));
+	}
+
+	/**
 	 * 创建新的集合对象
 	 *
 	 * @param <T>            集合类型
@@ -1085,17 +1120,26 @@ public class CollUtil {
 	}
 
 	/**
-	 * 去除指定元素，此方法直接修改原集合
+	 * 移除集合中满足条件的所有元素，此方法在原集合上直接修改<br>
+	 * 通过实现{@link Predicate}接口，完成元素的移除，可以实现以下功能：
 	 *
-	 * @param <T>        集合类型
-	 * @param <E>        集合元素类型
-	 * @param collection 集合
-	 * @param filter     过滤器
-	 * @return 处理后的集合
+	 * <pre>
+	 * 1、移除指定对象，{@link Predicate#test(Object)}方法返回{@code true}的对象将被使用{@link Iterator#remove()}方法移除。
+	 * </pre>
+	 *
+	 * @param <T>       集合类型
+	 * @param <E>       集合元素类型
+	 * @param iter      集合
+	 * @param predicate 过滤器接口
+	 * @return 编辑后的集合
 	 * @since 4.6.5
 	 */
-	public static <T extends Collection<E>, E> T remove(final T collection, final Predicate<E> filter) {
-		return IterUtil.remove(collection, filter);
+	public static <T extends Iterable<E>, E> T remove(final T iter, final Predicate<E> predicate) {
+		if (null == iter) {
+			return null;
+		}
+		IterUtil.remove(iter.iterator(), predicate);
+		return iter;
 	}
 
 	/**
@@ -1298,6 +1342,29 @@ public class CollUtil {
 	}
 
 	/**
+	 * 获取集合的第一个元素，如果集合为空（null或者空集合），返回{@code null}
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素，为空返回{@code null}
+	 */
+	public static <T> T getFirst(final Iterable<T> iterable) {
+		return IterUtil.getFirst(IterUtil.getIter(iterable));
+	}
+
+	/**
+	 * 获取集合的第一个非空元素
+	 *
+	 * @param <T>      集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素
+	 * @since 5.7.2
+	 */
+	public static <T> T getFirstNoneNull(final Iterable<T> iterable) {
+		return IterUtil.getFirstNoneNull(IterUtil.getIter(iterable));
+	}
+
+	/**
 	 * 查找第一个匹配元素对象
 	 *
 	 * @param <T>        集合元素类型
@@ -1306,15 +1373,8 @@ public class CollUtil {
 	 * @return 满足过滤条件的第一个元素
 	 * @since 3.1.0
 	 */
-	public static <T> T findOne(final Iterable<T> collection, final Predicate<T> predicate) {
-		if (null != collection) {
-			for (final T t : collection) {
-				if (predicate.test(t)) {
-					return t;
-				}
-			}
-		}
-		return null;
+	public static <T> T getFirst(final Iterable<T> collection, final Predicate<T> predicate) {
+		return IterUtil.getFirst(IterUtil.getIter(collection), predicate);
 	}
 
 	/**
@@ -1330,8 +1390,8 @@ public class CollUtil {
 	 * @return 满足条件的第一个元素
 	 * @since 3.1.0
 	 */
-	public static <T> T findOneByField(final Iterable<T> collection, final String fieldName, final Object fieldValue) {
-		return findOne(collection, t -> {
+	public static <T> T getFirstByField(final Iterable<T> collection, final String fieldName, final Object fieldValue) {
+		return getFirst(collection, t -> {
 			if (t instanceof Map) {
 				final Map<?, ?> map = (Map<?, ?>) t;
 				final Object value = map.get(fieldName);
@@ -1421,7 +1481,7 @@ public class CollUtil {
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param predicate    匹配器，为空则全部匹配
+	 * @param predicate  匹配器，为空则全部匹配
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
@@ -1507,19 +1567,6 @@ public class CollUtil {
 		}
 
 		return map;
-	}
-
-	/**
-	 * 将Entry集合转换为HashMap
-	 *
-	 * @param <K>       键类型
-	 * @param <V>       值类型
-	 * @param entryIter entry集合
-	 * @return Map
-	 * @see IterUtil#toMap(Iterable)
-	 */
-	public static <K, V> HashMap<K, V> toMap(final Iterable<Entry<K, V>> entryIter) {
-		return IterUtil.toMap(entryIter);
 	}
 
 	/**
@@ -1686,40 +1733,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 集合转换为Map，转换规则为：<br>
-	 * 按照keyFunc函数规则根据元素对象生成Key，元素作为值
-	 *
-	 * @param <K>     Map键类型
-	 * @param <V>     Map值类型
-	 * @param values  数据列表
-	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc 生成key的函数
-	 * @return 生成的map
-	 * @since 5.2.6
-	 */
-	public static <K, V> Map<K, V> toMap(final Iterable<V> values, final Map<K, V> map, final Func1<V, K> keyFunc) {
-		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc);
-	}
-
-	/**
-	 * 集合转换为Map，转换规则为：<br>
-	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
-	 *
-	 * @param <K>       Map键类型
-	 * @param <V>       Map值类型
-	 * @param <E>       元素类型
-	 * @param values    数据列表
-	 * @param map       Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc   生成key的函数
-	 * @param valueFunc 生成值的策略函数
-	 * @return 生成的map
-	 * @since 5.2.6
-	 */
-	public static <K, V, E> Map<K, V> toMap(final Iterable<E> values, final Map<K, V> map, final Func1<E, K> keyFunc, final Func1<E, V> valueFunc) {
-		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc, valueFunc);
-	}
-
-	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
 	 *
@@ -1845,6 +1858,18 @@ public class CollUtil {
 	}
 
 	/**
+	 * 获取集合的最后一个元素
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection {@link Collection}
+	 * @return 最后一个元素
+	 * @since 4.1.10
+	 */
+	public static <T> T getLast(final Collection<T> collection) {
+		return get(collection, -1);
+	}
+
+	/**
 	 * 获取集合中指定下标的元素值，下标可以为负数，例如-1表示最后一个元素<br>
 	 * 如果元素越界，返回null
 	 *
@@ -1912,77 +1937,6 @@ public class CollUtil {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * 获取集合的第一个元素
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return 第一个元素
-	 * @see IterUtil#getFirst(Iterable)
-	 * @since 3.0.1
-	 */
-	public static <T> T getFirst(final Iterable<T> iterable) {
-		return IterUtil.getFirst(iterable);
-	}
-
-	/**
-	 * 获取集合的最后一个元素
-	 *
-	 * @param <T>        集合元素类型
-	 * @param collection {@link Collection}
-	 * @return 最后一个元素
-	 * @since 4.1.10
-	 */
-	public static <T> T getLast(final Collection<T> collection) {
-		return get(collection, -1);
-	}
-
-	/**
-	 * 从Map中获取指定键列表对应的值列表<br>
-	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
-	 *
-	 * @param <K>  键类型
-	 * @param <V>  值类型
-	 * @param map  {@link Map}
-	 * @param keys 键列表
-	 * @return 值列表
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings("unchecked")
-	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final K... keys) {
-		return MapUtil.valuesOfKeys(map, new ArrayIter<>(keys));
-	}
-
-	/**
-	 * 从Map中获取指定键列表对应的值列表<br>
-	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
-	 *
-	 * @param <K>  键类型
-	 * @param <V>  值类型
-	 * @param map  {@link Map}
-	 * @param keys 键列表
-	 * @return 值列表
-	 * @since 3.0.9
-	 */
-	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterable<K> keys) {
-		return valuesOfKeys(map, keys.iterator());
-	}
-
-	/**
-	 * 从Map中获取指定键列表对应的值列表<br>
-	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
-	 *
-	 * @param <K>  键类型
-	 * @param <V>  值类型
-	 * @param map  {@link Map}
-	 * @param keys 键列表
-	 * @return 值列表
-	 * @since 3.0.9
-	 */
-	public static <K, V> ArrayList<V> valuesOfKeys(final Map<K, V> map, final Iterator<K> keys) {
-		return MapUtil.valuesOfKeys(map, keys);
 	}
 
 	// ------------------------------------------------------------------------------------------------- sort
@@ -2318,20 +2272,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 设置或增加元素。当index小于List的长度时，替换指定位置的值，否则在尾部追加
-	 *
-	 * @param <T>     元素类型
-	 * @param list    List列表
-	 * @param index   位置
-	 * @param element 新元素
-	 * @return 原List
-	 * @since 4.1.2
-	 */
-	public static <T> List<T> setOrAppend(final List<T> list, final int index, final T element) {
-		return ListUtil.setOrAppend(list, index, element);
-	}
-
-	/**
 	 * 获取指定Map列表中所有的Key
 	 *
 	 * @param <K>           键类型
@@ -2407,44 +2347,6 @@ public class CollUtil {
 			return null;
 		}
 		return Collections.unmodifiableCollection(c);
-	}
-
-	/**
-	 * 根据给定的集合类型，返回对应的空集合，支持类型包括：
-	 * *
-	 * <pre>
-	 *     1. NavigableSet
-	 *     2. SortedSet
-	 *     3. Set
-	 *     4. List
-	 * </pre>
-	 *
-	 * @param <E>             元素类型
-	 * @param <T>             集合类型
-	 * @param collectionClass 集合类型
-	 * @return 空集合
-	 * @since 5.3.1
-	 */
-	@SuppressWarnings("unchecked")
-	public static <E, T extends Collection<E>> T empty(final Class<?> collectionClass) {
-		if (null == collectionClass) {
-			return (T) Collections.emptyList();
-		}
-
-		if (Set.class.isAssignableFrom(collectionClass)) {
-			if (NavigableSet.class == collectionClass) {
-				return (T) Collections.emptyNavigableSet();
-			} else if (SortedSet.class == collectionClass) {
-				return (T) Collections.emptySortedSet();
-			} else {
-				return (T) Collections.emptySet();
-			}
-		} else if (List.class.isAssignableFrom(collectionClass)) {
-			return (T) Collections.emptyList();
-		}
-
-		// 不支持空集合的集合类型
-		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", collectionClass));
 	}
 
 	/**
@@ -2571,11 +2473,11 @@ public class CollUtil {
 	/**
 	 * 获取Collection或者iterator的大小，此方法可以处理的对象类型如下：
 	 * <ul>
-	 * <li>Collection - the collection size
-	 * <li>Map - the map size
-	 * <li>Array - the array size
-	 * <li>Iterator - the number of elements remaining in the iterator
-	 * <li>Enumeration - the number of elements remaining in the enumeration
+	 *   <li>Collection - the collection size</li>
+	 *   <li>Map - the map size</li>
+	 *   <li>Array - the array size</li>
+	 *   <li>Iterator - the number of elements remaining in the iterator</li>
+	 *   <li>Enumeration - the number of elements remaining in the enumeration</li>
 	 * </ul>
 	 *
 	 * @param object 可以为空的对象

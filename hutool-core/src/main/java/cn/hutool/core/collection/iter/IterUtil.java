@@ -1,11 +1,8 @@
 package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Filter;
-import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
@@ -24,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -179,7 +175,7 @@ public class IterUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueMap(final Iterator<V> iter, final String fieldName) {
-		return toMap(iter, new HashMap<>(), (value) -> (K) FieldUtil.getFieldValue(value, fieldName));
+		return MapUtil.putAll(new HashMap<>(), iter, (value) -> (K) FieldUtil.getFieldValue(value, fieldName));
 	}
 
 	/**
@@ -195,7 +191,7 @@ public class IterUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueAsMap(final Iterator<?> iter, final String fieldNameForKey, final String fieldNameForValue) {
-		return toMap(iter, new HashMap<>(),
+		return MapUtil.putAll(new HashMap<>(), iter,
 				(value) -> (K) FieldUtil.getFieldValue(value, fieldNameForKey),
 				(value) -> (V) FieldUtil.getFieldValue(value, fieldNameForValue)
 		);
@@ -285,24 +281,6 @@ public class IterUtil {
 		}
 
 		return StrJoiner.of(conjunction).append(iterator, func).toString();
-	}
-
-	/**
-	 * 将Entry集合转换为HashMap
-	 *
-	 * @param <K>       键类型
-	 * @param <V>       值类型
-	 * @param entryIter entry集合
-	 * @return Map
-	 */
-	public static <K, V> HashMap<K, V> toMap(final Iterable<Entry<K, V>> entryIter) {
-		final HashMap<K, V> map = new HashMap<>();
-		if (isNotEmpty(entryIter)) {
-			for (final Entry<K, V> entry : entryIter) {
-				map.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return map;
 	}
 
 	/**
@@ -462,64 +440,7 @@ public class IterUtil {
 	 * @since 5.3.6
 	 */
 	public static <T, K, V> Map<K, V> toMap(final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
-		return toMap(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
-	}
-
-	/**
-	 * 将列表转成Map
-	 *
-	 * @param resultMap   结果Map，通过传入map对象决定结果的Map类型
-	 * @param iterable    值列表
-	 * @param keyMapper   Map的键映射
-	 * @param valueMapper Map的值映射
-	 * @param <T>         列表值类型
-	 * @param <K>         键类型
-	 * @param <V>         值类型
-	 * @return HashMap
-	 * @since 5.3.6
-	 */
-	public static <T, K, V> Map<K, V> toMap(Map<K, V> resultMap, final Iterable<T> iterable, final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
-		if (null == resultMap) {
-			resultMap = MapUtil.newHashMap();
-		}
-		if (ObjUtil.isNull(iterable)) {
-			return resultMap;
-		}
-
-		for (final T value : iterable) {
-			resultMap.put(keyMapper.apply(value), valueMapper.apply(value));
-		}
-
-		return resultMap;
-	}
-
-	/**
-	 * Iterator转List<br>
-	 * 不判断，直接生成新的List
-	 *
-	 * @param <E>  元素类型
-	 * @param iter {@link Iterator}
-	 * @return List
-	 * @since 4.0.6
-	 */
-	public static <E> List<E> toList(final Iterable<E> iter) {
-		if (null == iter) {
-			return null;
-		}
-		return toList(iter.iterator());
-	}
-
-	/**
-	 * Iterator转List<br>
-	 * 不判断，直接生成新的List
-	 *
-	 * @param <E>  元素类型
-	 * @param iter {@link Iterator}
-	 * @return List
-	 * @since 4.0.6
-	 */
-	public static <E> List<E> toList(final Iterator<E> iter) {
-		return ListUtil.of(iter);
+		return MapUtil.putAll(MapUtil.newHashMap(), iterable, keyMapper, valueMapper);
 	}
 
 	/**
@@ -556,7 +477,7 @@ public class IterUtil {
 	 * @since 5.8.0
 	 */
 	public static <E> E get(final Iterator<E> iterator, int index) throws IndexOutOfBoundsException {
-		if(null == iterator){
+		if (null == iterator) {
 			return null;
 		}
 		Assert.isTrue(index >= 0, "[index] must be >= 0");
@@ -568,32 +489,6 @@ public class IterUtil {
 			iterator.next();
 		}
 		return null;
-	}
-
-	/**
-	 * 获取集合的第一个元素，如果集合为空（null或者空集合），返回{@code null}
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return 第一个元素，为空返回{@code null}
-	 */
-	public static <T> T getFirst(final Iterable<T> iterable) {
-		return getFirst(getIter(iterable));
-	}
-
-	/**
-	 * 获取集合的第一个非空元素
-	 *
-	 * @param <T>      集合元素类型
-	 * @param iterable {@link Iterable}
-	 * @return 第一个元素
-	 * @since 5.7.2
-	 */
-	public static <T> T getFirstNoneNull(final Iterable<T> iterable) {
-		if (null == iterable) {
-			return null;
-		}
-		return getFirstNoneNull(iterable.iterator());
 	}
 
 	/**
@@ -616,24 +511,24 @@ public class IterUtil {
 	 * @since 5.7.2
 	 */
 	public static <T> T getFirstNoneNull(final Iterator<T> iterator) {
-		return firstMatch(iterator, Objects::nonNull);
+		return getFirst(iterator, Objects::nonNull);
 	}
 
 	/**
 	 * 返回{@link Iterator}中第一个匹配规则的值
 	 *
-	 * @param <T>      数组元素类型
-	 * @param iterator {@link Iterator}
-	 * @param matcher  匹配接口，实现此接口自定义匹配规则
+	 * @param <T>       数组元素类型
+	 * @param iterator  {@link Iterator}
+	 * @param predicate 匹配接口，实现此接口自定义匹配规则
 	 * @return 匹配元素，如果不存在匹配元素或{@link Iterator}为空，返回 {@code null}
 	 * @since 5.7.5
 	 */
-	public static <T> T firstMatch(final Iterator<T> iterator, final Matcher<T> matcher) {
-		Assert.notNull(matcher, "Matcher must be not null !");
+	public static <T> T getFirst(final Iterator<T> iterator, final Predicate<T> predicate) {
+		Assert.notNull(predicate, "Matcher must be not null !");
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				final T next = iterator.next();
-				if (matcher.match(next)) {
+				if (predicate.test(next)) {
 					return next;
 				}
 			}
@@ -689,7 +584,7 @@ public class IterUtil {
 		}
 
 		T modified;
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			modified = (null == editor) ? iter.next() : editor.apply(iter.next());
 			if (null != modified) {
 				result.add(modified);
@@ -706,33 +601,8 @@ public class IterUtil {
 	 * 1、移除指定对象，{@link Predicate#test(Object)}方法返回{@code true}的对象将被使用{@link Iterator#remove()}方法移除。
 	 * </pre>
 	 *
-	 * @param <T>    集合类型
-	 * @param <E>    集合元素类型
-	 * @param iter   集合
-	 * @param predicate 过滤器接口
-	 * @return 编辑后的集合
-	 * @since 4.6.5
-	 */
-	public static <T extends Iterable<E>, E> T remove(final T iter, final Predicate<E> predicate) {
-		if (null == iter) {
-			return null;
-		}
-
-		remove(iter.iterator(), predicate);
-
-		return iter;
-	}
-
-	/**
-	 * 移除集合中满足条件的所有元素，此方法在原集合上直接修改<br>
-	 * 通过实现{@link Predicate}接口，完成元素的移除，可以实现以下功能：
-	 *
-	 * <pre>
-	 * 1、移除指定对象，{@link Predicate#test(Object)}方法返回{@code true}的对象将被使用{@link Iterator#remove()}方法移除。
-	 * </pre>
-	 *
-	 * @param <E>    集合元素类型
-	 * @param iter   集合
+	 * @param <E>       集合元素类型
+	 * @param iter      集合
 	 * @param predicate 过滤器接口，删除{@link Predicate#test(Object)}为{@code true}的元素
 	 * @return 编辑后的集合
 	 * @since 6.0.0
@@ -760,7 +630,7 @@ public class IterUtil {
 	 * @since 5.7.22
 	 */
 	public static <E> List<E> filterToList(final Iterator<E> iter, final Predicate<E> filter) {
-		return toList(filtered(iter, filter));
+		return ListUtil.of(filtered(iter, filter));
 	}
 
 	/**
@@ -774,57 +644,6 @@ public class IterUtil {
 	 */
 	public static <E> FilterIter<E> filtered(final Iterator<? extends E> iterator, final Predicate<? super E> filter) {
 		return new FilterIter<>(iterator, filter);
-	}
-
-	/**
-	 * Iterator转换为Map，转换规则为：<br>
-	 * 按照keyFunc函数规则根据元素对象生成Key，元素作为值
-	 *
-	 * @param <K>      Map键类型
-	 * @param <V>      Map值类型
-	 * @param iterator 数据列表
-	 * @param map      Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc  生成key的函数
-	 * @return 生成的map
-	 * @since 5.2.6
-	 */
-	public static <K, V> Map<K, V> toMap(final Iterator<V> iterator, final Map<K, V> map, final Func1<V, K> keyFunc) {
-		return toMap(iterator, map, keyFunc, (value) -> value);
-	}
-
-	/**
-	 * 集合转换为Map，转换规则为：<br>
-	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
-	 *
-	 * @param <K>       Map键类型
-	 * @param <V>       Map值类型
-	 * @param <E>       元素类型
-	 * @param iterator  数据列表
-	 * @param map       Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc   生成key的函数
-	 * @param valueFunc 生成值的策略函数
-	 * @return 生成的map
-	 * @since 5.2.6
-	 */
-	public static <K, V, E> Map<K, V> toMap(final Iterator<E> iterator, Map<K, V> map, final Func1<E, K> keyFunc, final Func1<E, V> valueFunc) {
-		if (null == iterator) {
-			return map;
-		}
-
-		if (null == map) {
-			map = MapUtil.newHashMap(true);
-		}
-
-		E element;
-		while (iterator.hasNext()) {
-			element = iterator.next();
-			try {
-				map.put(keyFunc.call(element), valueFunc.call(element));
-			} catch (final Exception e) {
-				throw new UtilException(e);
-			}
-		}
-		return map;
 	}
 
 	/**

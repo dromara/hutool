@@ -97,23 +97,6 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void valuesOfKeysTest() {
-		final Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
-		final Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
-
-		final String[] keys = v1.keySet().toArray(new String[0]);
-		final ArrayList<Object> v1s = CollUtil.valuesOfKeys(v1, keys);
-		Assert.assertTrue(v1s.contains(12));
-		Assert.assertTrue(v1s.contains(23));
-		Assert.assertTrue(v1s.contains("张三"));
-
-		final ArrayList<Object> v2s = CollUtil.valuesOfKeys(v2, keys);
-		Assert.assertTrue(v2s.contains(15));
-		Assert.assertTrue(v2s.contains(13));
-		Assert.assertTrue(v2s.contains("李四"));
-	}
-
-	@Test
 	public void unionTest() {
 		final ArrayList<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
 		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");

@@ -1,11 +1,11 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.iter.ArrayIter;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.NamedSql;
@@ -203,7 +203,7 @@ public class StatementUtil {
 		//null参数的类型缓存，避免循环中重复获取类型
 		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
 		for (final Entity entity : entities) {
-			fillParams(ps, CollUtil.valuesOfKeys(entity, fields), nullTypeMap);
+			fillParams(ps, MapUtil.valuesOfKeys(entity, fields), nullTypeMap);
 			ps.addBatch();
 		}
 		return ps;
