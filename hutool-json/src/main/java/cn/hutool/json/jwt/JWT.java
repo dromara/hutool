@@ -269,6 +269,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	/**
 	 * 获取payload并获取类型
 	 *
+	 * @param <T> Bean类型
 	 * @param propertyName 需要提取的属性名称
 	 * @param propertyType 需要提取的属性类型
 	 * @return 载荷信息

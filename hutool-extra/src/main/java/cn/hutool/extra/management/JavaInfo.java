@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 /**
  * 代表Java Implementation的信息。
+ *
  * @see ManagementUtil#getJavaInfo()  使用方式
  */
 public class JavaInfo implements Serializable {
@@ -20,7 +21,7 @@ public class JavaInfo implements Serializable {
 	private final String JAVA_VENDOR_URL = SystemUtil.get("java.vendor.url", false);
 
 	private final boolean IS_JAVA_1_8 = getJavaVersionMatches("1.8");
-	private final boolean IS_JAVA_9 =  getJavaVersionMatches("9");
+	private final boolean IS_JAVA_9 = getJavaVersionMatches("9");
 	private final boolean IS_JAVA_10 = getJavaVersionMatches("10");
 	private final boolean IS_JAVA_11 = getJavaVersionMatches("11");
 	private final boolean IS_JAVA_12 = getJavaVersionMatches("12");
@@ -90,8 +91,10 @@ public class JavaInfo implements Serializable {
 	 *     <li>JDK 17.0.3：{@code 17}</li>
 	 *     <li>JDK 18.0.1.1：{@code 18}</li>
 	 * </ul>
-	 * @since 6.0.1
+	 *
+	 * @return 版本
 	 * @author dazer
+	 * @since 6.0.1
 	 */
 	public final int getVersionIntSimple() {
 		if (JAVA_VERSION == null) {
@@ -229,32 +232,56 @@ public class JavaInfo implements Serializable {
 		return IS_JAVA_12;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本13
+	 */
 	public final boolean isJava13() {
 		return IS_JAVA_13;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本14
+	 */
 	public final boolean isJava14() {
 		return IS_JAVA_14;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本15
+	 */
 	public final boolean isJava15() {
 		return IS_JAVA_15;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本16
+	 */
 	public final boolean isJava16() {
 		return IS_JAVA_16;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本17
+	 */
 	public final boolean isJava17() {
 		return IS_JAVA_17;
 	}
 
-	/**是否是当前java的版本。*/
+	/**
+	 * 是否是当前java的版本。
+	 *
+	 * @return 是否版本18
+	 */
 	public final boolean isJava18() {
 		return IS_JAVA_18;
 	}
