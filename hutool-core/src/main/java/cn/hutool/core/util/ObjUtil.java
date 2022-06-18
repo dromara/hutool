@@ -202,7 +202,7 @@ public class ObjUtil {
 	 * @return 是否为null
 	 */
 	public static boolean isNotNull(final Object obj) {
-		return false == isNull(obj);
+		return null != obj;
 	}
 
 	/**

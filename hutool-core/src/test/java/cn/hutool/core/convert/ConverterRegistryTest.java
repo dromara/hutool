@@ -35,7 +35,7 @@ public class ConverterRegistryTest {
 
 	public static class CustomConverter implements Converter{
 		@Override
-		public Object convert(Type targetType, Object value) throws ConvertException {
+		public Object convert(final Type targetType, final Object value) throws ConvertException {
 			return "Custom: " + value.toString();
 		}
 	}
