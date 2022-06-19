@@ -2,12 +2,16 @@ package cn.hutool.crypto;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.Signature;
 import java.util.Map;
 
 /**
@@ -23,6 +27,37 @@ import java.util.Map;
  * @since 5.7.20
  */
 public class SignUtil {
+
+	/**
+	 * 生成签名对象，仅用于非对称加密
+	 *
+	 * @param asymmetricAlgorithm {@link AsymmetricAlgorithm} 非对称加密算法
+	 * @param digestAlgorithm     {@link DigestAlgorithm} 摘要算法
+	 * @return {@link Signature}
+	 */
+	public static Signature createSignature(final AsymmetricAlgorithm asymmetricAlgorithm, final DigestAlgorithm digestAlgorithm) {
+		return createSignature(SecureUtil.generateAlgorithm(asymmetricAlgorithm, digestAlgorithm));
+	}
+
+	/**
+	 * 创建{@link Signature}签名对象
+	 *
+	 * @param algorithm 算法
+	 * @return {@link Signature}
+	 * @since 5.7.0
+	 */
+	public static Signature createSignature(final String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		final Signature signature;
+		try {
+			signature = (null == provider) ? Signature.getInstance(algorithm) : Signature.getInstance(algorithm, provider);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+
+		return signature;
+	}
 
 	/**
 	 * 创建签名算法对象<br>

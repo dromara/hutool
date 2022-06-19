@@ -1,12 +1,12 @@
 package cn.hutool.crypto.symmetric;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.SecureUtil;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 /**
  * DESede是由DES对称加密算法改进后的一种对称加密算法，又名3DES、TripleDES。<br>
@@ -126,7 +126,7 @@ public class DESede extends SymmetricCrypto {
 	 * @param iv 加盐
 	 */
 	public DESede(final String mode, final String padding, final byte[] key, final byte[] iv) {
-		this(mode, padding, SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue(), key), null == iv ? null : new IvParameterSpec(iv));
+		this(mode, padding, KeyUtil.generateKey(SymmetricAlgorithm.DESede.getValue(), key), null == iv ? null : new IvParameterSpec(iv));
 	}
 
 	/**

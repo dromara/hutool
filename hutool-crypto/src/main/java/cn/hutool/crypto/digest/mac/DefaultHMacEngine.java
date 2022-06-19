@@ -1,6 +1,7 @@
 package cn.hutool.crypto.digest.mac;
 
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.Mac;
@@ -94,7 +95,7 @@ public class DefaultHMacEngine implements MacEngine {
 		try {
 			mac = SecureUtil.createMac(algorithm);
 			if (null == key) {
-				key = SecureUtil.generateKey(algorithm);
+				key = KeyUtil.generateKey(algorithm);
 			}
 			if (null != spec) {
 				mac.init(key, spec);

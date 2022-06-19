@@ -1,12 +1,12 @@
 package cn.hutool.crypto.symmetric;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.SecureUtil;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 /**
  * DES加密算法实现<br>
@@ -113,7 +113,7 @@ public class DES extends SymmetricCrypto {
 	 * @param key 密钥，长度：8的倍数
 	 */
 	public DES(final String mode, final String padding, final byte[] key) {
-		this(mode, padding, SecureUtil.generateKey("DES", key), null);
+		this(mode, padding, KeyUtil.generateKey("DES", key), null);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class DES extends SymmetricCrypto {
 	 * @param iv 加盐
 	 */
 	public DES(final String mode, final String padding, final byte[] key, final byte[] iv) {
-		this(mode, padding, SecureUtil.generateKey("DES", key), null == iv ? null : new IvParameterSpec(iv));
+		this(mode, padding, KeyUtil.generateKey("DES", key), null == iv ? null : new IvParameterSpec(iv));
 	}
 
 	/**

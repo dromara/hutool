@@ -176,7 +176,7 @@ public class SymmetricTest {
 	public void desTest() {
 		final String content = "test中文";
 
-		final byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
+		final byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
 
 		final SymmetricCrypto des = new SymmetricCrypto(SymmetricAlgorithm.DES, key);
 		final byte[] encrypt = des.encrypt(content);
@@ -194,7 +194,7 @@ public class SymmetricTest {
 	public void desTest2() {
 		final String content = "test中文";
 
-		final byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
+		final byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
 
 		final DES des = SecureUtil.des(key);
 		final byte[] encrypt = des.encrypt(content);
@@ -229,7 +229,7 @@ public class SymmetricTest {
 	public void desdeTest() {
 		final String content = "test中文";
 
-		final byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
+		final byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
 
 		final DESede des = SecureUtil.desede(key);
 
@@ -248,7 +248,7 @@ public class SymmetricTest {
 	public void desdeTest2() {
 		final String content = "test中文";
 
-		final byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
+		final byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
 
 		final DESede des = new DESede(Mode.CBC, Padding.PKCS5Padding, key, "12345678".getBytes());
 

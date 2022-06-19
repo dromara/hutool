@@ -243,7 +243,7 @@ public class KeyUtil {
 	/**
 	 * 生成RSA私钥，仅用于非对称加密<br>
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param key 密钥，必须为DER编码存储
 	 * @return RSA私钥 {@link PrivateKey}
@@ -256,7 +256,7 @@ public class KeyUtil {
 	/**
 	 * 生成私钥，仅用于非对称加密<br>
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param algorithm 算法，如RSA、EC、SM2等
 	 * @param key       密钥，PKCS#8格式
@@ -271,7 +271,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成私钥，仅用于非对称加密<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param algorithm 算法，如RSA、EC、SM2等
 	 * @param keySpec   {@link KeySpec}
@@ -309,7 +309,7 @@ public class KeyUtil {
 	/**
 	 * 生成RSA公钥，仅用于非对称加密<br>
 	 * 采用X509证书规范<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param key 密钥，必须为DER编码存储
 	 * @return 公钥 {@link PublicKey}
@@ -322,7 +322,7 @@ public class KeyUtil {
 	/**
 	 * 生成公钥，仅用于非对称加密<br>
 	 * 采用X509证书规范<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param algorithm 算法
 	 * @param key       密钥，必须为DER编码存储
@@ -337,7 +337,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成公钥，仅用于非对称加密<br>
-	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory">...</a>
 	 *
 	 * @param algorithm 算法
 	 * @param keySpec   {@link KeySpec}
@@ -358,7 +358,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
@@ -375,7 +375,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * @param algorithm 非对称加密算法
 	 * @param keySize   密钥模（modulus ）长度
@@ -387,7 +387,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * @param algorithm 非对称加密算法
 	 * @param keySize   密钥模（modulus ）长度
@@ -406,7 +406,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * @param algorithm 非对称加密算法
 	 * @param params    {@link AlgorithmParameterSpec}
@@ -419,7 +419,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * @param algorithm 非对称加密算法
 	 * @param param     {@link AlgorithmParameterSpec}
@@ -433,7 +433,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * <p>
 	 * 对于非对称加密算法，密钥长度有严格限制，具体如下：
@@ -467,7 +467,7 @@ public class KeyUtil {
 
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
-	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
 	 * <p>
 	 * 对于非对称加密算法，密钥长度有严格限制，具体如下：
@@ -663,7 +663,7 @@ public class KeyUtil {
 	/**
 	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
 	 * @param keyFile  证书文件
 	 * @param password 密码
@@ -677,9 +677,9 @@ public class KeyUtil {
 	/**
 	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
@@ -716,7 +716,7 @@ public class KeyUtil {
 	/**
 	 * 读取KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
 	 * @param type     类型
 	 * @param keyFile  证书文件
@@ -737,10 +737,10 @@ public class KeyUtil {
 	/**
 	 * 读取KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
 	 * @param type     类型
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @param password 密码，null表示无密码
 	 * @return {@link KeyStore}
 	 */
@@ -794,9 +794,9 @@ public class KeyUtil {
 	/**
 	 * 读取X.509 Certification文件<br>
 	 * Certification为证书文件<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
-	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @param password 密码
 	 * @param alias    别名
 	 * @return {@link KeyStore}
@@ -809,9 +809,9 @@ public class KeyUtil {
 	/**
 	 * 读取X.509 Certification文件中的公钥<br>
 	 * Certification为证书文件<br>
-	 * see: https://www.cnblogs.com/yinliang/p/10115519.html
+	 * see: <a href="https://www.cnblogs.com/yinliang/p/10115519.html">...</a>
 	 *
-	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @return {@link KeyStore}
 	 * @since 4.5.2
 	 */
@@ -826,9 +826,9 @@ public class KeyUtil {
 	/**
 	 * 读取X.509 Certification文件<br>
 	 * Certification为证书文件<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
-	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @return {@link KeyStore}
 	 * @since 4.4.1
 	 */
@@ -839,10 +839,10 @@ public class KeyUtil {
 	/**
 	 * 读取Certification文件<br>
 	 * Certification为证书文件<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
 	 * @param type     类型，例如X.509
-	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @param password 密码
 	 * @param alias    别名
 	 * @return {@link KeyStore}
@@ -860,10 +860,10 @@ public class KeyUtil {
 	/**
 	 * 读取Certification文件<br>
 	 * Certification为证书文件<br>
-	 * see: http://snowolf.iteye.com/blog/391931
+	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
 	 *
 	 * @param type 类型，例如X.509
-	 * @param in   {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param in   {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
 	 * @return {@link Certificate}
 	 */
 	public static Certificate readCertificate(final String type, final InputStream in) {
@@ -910,7 +910,7 @@ public class KeyUtil {
 
 	/**
 	 * 编码压缩EC公钥（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：<a href="https://www.cnblogs.com/xinzhao/p/8963724.html">...</a>
 	 *
 	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
 	 * @return 压缩得到的X
@@ -922,7 +922,7 @@ public class KeyUtil {
 
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：<a href="https://www.cnblogs.com/xinzhao/p/8963724.html">...</a>
 	 *
 	 * @param encode    压缩公钥
 	 * @param curveName EC曲线名
@@ -935,7 +935,7 @@ public class KeyUtil {
 
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：<a href="https://www.cnblogs.com/xinzhao/p/8963724.html">...</a>
 	 *
 	 * @param encodeByte 压缩公钥
 	 * @param curveName  EC曲线名

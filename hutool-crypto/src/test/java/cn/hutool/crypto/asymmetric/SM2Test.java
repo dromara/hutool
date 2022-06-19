@@ -28,7 +28,7 @@ public class SM2Test {
 
 	@Test
 	public void generateKeyPairTest() {
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
 	}
@@ -37,14 +37,14 @@ public class SM2Test {
 	public void KeyPairOIDTest() {
 		// OBJECT IDENTIFIER 1.2.156.10197.1.301
 		final String OID = "06082A811CCF5501822D";
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		Assert.assertTrue(HexUtil.encodeHexStr(pair.getPrivate().getEncoded()).toUpperCase().contains(OID));
 		Assert.assertTrue(HexUtil.encodeHexStr(pair.getPublic().getEncoded()).toUpperCase().contains(OID));
 	}
 
 	@Test
 	public void sm2CustomKeyTest() {
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		final byte[] privateKey = pair.getPrivate().getEncoded();
 		final byte[] publicKey = pair.getPublic().getEncoded();
 
@@ -167,7 +167,7 @@ public class SM2Test {
 	public void sm2SignAndVerifyUseKeyTest() {
 		final String content = "我是Hanley.";
 
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 
 		final SM2 sm2 = new SM2(pair.getPrivate(), pair.getPublic());
 
@@ -180,7 +180,7 @@ public class SM2Test {
 	public void sm2SignAndVerifyUseKeyTest2() {
 		final String content = "我是Hanley.";
 
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 
 		final SM2 sm2 = new SM2(//
 				HexUtil.encodeHexStr(pair.getPrivate().getEncoded()), //
@@ -194,7 +194,7 @@ public class SM2Test {
 
 	@Test
 	public void sm2PublicKeyEncodeDecodeTest() {
-		final KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		final PublicKey publicKey = pair.getPublic();
 		final byte[] data = KeyUtil.encodeECPublicKey(publicKey);
 		final String encodeHex = HexUtil.encodeHexStr(data);

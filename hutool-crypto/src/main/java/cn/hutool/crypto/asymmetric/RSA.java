@@ -2,7 +2,7 @@ package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.GlobalBouncyCastleProvider;
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.KeyUtil;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
@@ -42,7 +42,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @return {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(final BigInteger modulus, final BigInteger privateExponent) {
-		return SecureUtil.generatePrivateKey(ALGORITHM_RSA.getValue(), new RSAPrivateKeySpec(modulus, privateExponent));
+		return KeyUtil.generatePrivateKey(ALGORITHM_RSA.getValue(), new RSAPrivateKeySpec(modulus, privateExponent));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @return {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(final BigInteger modulus, final BigInteger publicExponent) {
-		return SecureUtil.generatePublicKey(ALGORITHM_RSA.getValue(), new RSAPublicKeySpec(modulus, publicExponent));
+		return KeyUtil.generatePublicKey(ALGORITHM_RSA.getValue(), new RSAPublicKeySpec(modulus, publicExponent));
 	}
 	// ------------------------------------------------------------------ Static method end
 

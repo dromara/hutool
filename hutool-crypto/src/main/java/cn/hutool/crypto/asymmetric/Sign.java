@@ -7,7 +7,9 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.SignUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -124,8 +126,8 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 */
 	public Sign(final String algorithm, final byte[] privateKey, final byte[] publicKey) {
 		this(algorithm, //
-				SecureUtil.generatePrivateKey(algorithm, privateKey), //
-				SecureUtil.generatePublicKey(algorithm, publicKey)//
+				KeyUtil.generatePrivateKey(algorithm, privateKey), //
+				KeyUtil.generatePublicKey(algorithm, publicKey)//
 		);
 	}
 
@@ -165,7 +167,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 */
 	@Override
 	public Sign init(final String algorithm, final PrivateKey privateKey, final PublicKey publicKey) {
-		signature = SecureUtil.createSignature(algorithm);
+		signature = SignUtil.createSignature(algorithm);
 		super.init(algorithm, privateKey, publicKey);
 		return this;
 	}

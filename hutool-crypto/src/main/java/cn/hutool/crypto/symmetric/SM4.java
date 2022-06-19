@@ -1,10 +1,10 @@
 package cn.hutool.crypto.symmetric;
 
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -144,7 +144,7 @@ public class SM4 extends SymmetricCrypto{
 	 */
 	public SM4(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding,//
-				SecureUtil.generateKey(ALGORITHM_NAME, key),//
+				KeyUtil.generateKey(ALGORITHM_NAME, key),//
 				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 

@@ -1,6 +1,5 @@
 package cn.hutool.crypto;
 
-import cn.hutool.crypto.BCUtil;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.junit.Assert;
@@ -9,7 +8,7 @@ import org.junit.Test;
 public class BCUtilTest {
 
 	/**
-	 * 密钥生成来自：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
+	 * 密钥生成来自：<a href="https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg">...</a>
 	 */
 	@Test
 	public void createECPublicKeyParametersTest() {
