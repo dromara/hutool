@@ -109,7 +109,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 				if (null == v || (null != validPredicate && false == validPredicate.test(v))) {
 					try {
 						v = supplier.call();
-					} catch (Exception e) {
+					} catch (Throwable e) {
 						throw new RuntimeException(e);
 					}
 					put(key, v);

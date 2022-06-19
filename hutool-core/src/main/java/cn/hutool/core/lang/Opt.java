@@ -120,9 +120,9 @@ public class Opt<T> {
 	public static <T> Opt<T> ofTry(Func0<T> supplier) {
 		try {
 			return Opt.ofNullable(supplier.call());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			final Opt<T> empty = new Opt<>(null);
-			empty.exception = e;
+			empty.throwable = e;
 			return empty;
 		}
 	}
@@ -131,7 +131,7 @@ public class Opt<T> {
 	 * 包裹里实际的元素
 	 */
 	private final T value;
-	private Exception exception;
+	private Throwable throwable;
 
 	/**
 	 * {@code Opt}的构造函数
@@ -174,8 +174,8 @@ public class Opt<T> {
 	 * @return 异常
 	 * @since 5.7.17
 	 */
-	public Exception getException() {
-		return this.exception;
+	public Throwable getThrowable() {
+		return this.throwable;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public boolean isFail() {
-		return null != this.exception;
+		return null != this.throwable;
 	}
 
 	/**

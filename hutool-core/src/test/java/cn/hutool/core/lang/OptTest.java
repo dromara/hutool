@@ -198,8 +198,8 @@ public class OptTest {
 				}
 			});
 			Assert.assertTrue(
-					(i % 2 == 0 && opt.getException() instanceof IllegalStateException) ||
-							(i % 2 != 0 && opt.getException() instanceof NullPointerException)
+					(i % 2 == 0 && opt.getThrowable() instanceof IllegalStateException) ||
+							(i % 2 != 0 && opt.getThrowable() instanceof NullPointerException)
 			);
 		});
 	}

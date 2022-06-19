@@ -19,9 +19,9 @@ public interface Func0<R> extends Serializable {
 	 * 执行函数
 	 *
 	 * @return 函数执行结果
-	 * @throws Exception 自定义异常
+	 * @throws Throwable Throwable
 	 */
-	R call() throws Exception;
+	R call() throws Throwable;
 
 	/**
 	 * 执行函数，异常包装为RuntimeException
@@ -32,7 +32,7 @@ public interface Func0<R> extends Serializable {
 	default R callWithRuntimeException(){
 		try {
 			return call();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}

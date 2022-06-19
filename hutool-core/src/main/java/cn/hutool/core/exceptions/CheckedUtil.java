@@ -153,12 +153,12 @@ public class CheckedUtil {
 	 * @param <R>         最终返回的数据类型
 	 * @return {@link Func0Rt}
 	 */
-	public static <R> Func0Rt<R> uncheck(Func0<R> expression, Supplier1<RuntimeException, Exception> rteSupplier) {
+	public static <R> Func0Rt<R> uncheck(Func0<R> expression, Supplier1<RuntimeException, Throwable> rteSupplier) {
 		Objects.requireNonNull(expression, "expression can not be null");
 		return () -> {
 			try {
 				return expression.call();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				if (rteSupplier == null) {
 					throw new RuntimeException(e);
 				} else {
