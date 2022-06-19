@@ -315,7 +315,7 @@ public class ClassUtil {
 	 * @since 3.2.1
 	 */
 	public static String getClassPath(final boolean isEncoded) {
-		final URL classPathURL = ResourceUtil.getResource(StrUtil.EMPTY);
+		final URL classPathURL = ResourceUtil.getResourceUrl(StrUtil.EMPTY);
 		final String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
 		return FileUtil.normalize(url);
 	}

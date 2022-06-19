@@ -31,7 +31,7 @@ public class ManifestUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static Manifest getManifest(final Class<?> cls) throws IORuntimeException {
-		final URL url = ResourceUtil.getResource(null, cls);
+		final URL url = ResourceUtil.getResourceUrl(null, cls);
 		final URLConnection connection;
 		try {
 			connection = url.openConnection();

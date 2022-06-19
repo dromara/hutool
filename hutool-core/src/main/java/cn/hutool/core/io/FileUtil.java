@@ -1254,7 +1254,7 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 相对于ClassPath路径
-		final URL url = ResourceUtil.getResource(normalPath, baseClass);
+		final URL url = ResourceUtil.getResourceUrl(normalPath, baseClass);
 		if (null != url) {
 			// 对于jar中文件包含file:前缀，需要去掉此类前缀，在此做标准化，since 3.0.8 解决中文或空格路径被编码的问题
 			return FileUtil.normalize(URLUtil.getDecodedPath(url));

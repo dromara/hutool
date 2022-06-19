@@ -142,7 +142,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		if (null != charset) {
 			this.charset = charset;
 		}
-		this.load(ResourceUtil.getResourceObj(path));
+		this.load(ResourceUtil.getResource(path));
 	}
 
 	/**

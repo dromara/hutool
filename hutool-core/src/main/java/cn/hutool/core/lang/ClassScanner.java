@@ -236,7 +236,7 @@ public class ClassScanner implements Serializable {
 	 * @since 5.7.5
 	 */
 	public Set<Class<?>> scan(final boolean forceScanJavaClassPaths) {
-		for (final URL url : ResourceUtil.getResourceIter(this.packagePath)) {
+		for (final URL url : ResourceUtil.getResourceUrlIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
 					scanFile(new File(URLDecoder.decode(url.getFile(), this.charset)), null);

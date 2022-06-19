@@ -207,10 +207,10 @@ public class URLUtil {
 	 *
 	 * @param pathBaseClassLoader 相对路径（相对于classes）
 	 * @return URL
-	 * @see ResourceUtil#getResource(String)
+	 * @see ResourceUtil#getResourceUrl(String)
 	 */
 	public static URL getURL(final String pathBaseClassLoader) {
-		return ResourceUtil.getResource(pathBaseClassLoader);
+		return ResourceUtil.getResourceUrl(pathBaseClassLoader);
 	}
 
 	/**
@@ -219,10 +219,10 @@ public class URLUtil {
 	 * @param path  相对给定 class所在的路径
 	 * @param clazz 指定class
 	 * @return URL
-	 * @see ResourceUtil#getResource(String, Class)
+	 * @see ResourceUtil#getResourceUrl(String, Class)
 	 */
 	public static URL getURL(final String path, final Class<?> clazz) {
-		return ResourceUtil.getResource(path, clazz);
+		return ResourceUtil.getResourceUrl(path, clazz);
 	}
 
 	/**

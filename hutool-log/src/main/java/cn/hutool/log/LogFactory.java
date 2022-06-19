@@ -176,7 +176,7 @@ public abstract class LogFactory {
 		}
 
 		// 未找到任何可支持的日志库时判断依据：当JDK Logging的配置文件位于classpath中，使用JDK Logging，否则使用Console
-		final URL url = ResourceUtil.getResource("logging.properties");
+		final URL url = ResourceUtil.getResourceUrl("logging.properties");
 		return (null != url) ? new JdkLogFactory() : new ConsoleLogFactory();
 	}
 	// ------------------------------------------------------------------------- Static end
