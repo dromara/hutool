@@ -229,7 +229,7 @@ public class LocalDateTimeUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime parse(CharSequence text, DateTimeFormatter formatter) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 		if (null == formatter) {
@@ -247,7 +247,7 @@ public class LocalDateTimeUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime parse(CharSequence text, String format) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 

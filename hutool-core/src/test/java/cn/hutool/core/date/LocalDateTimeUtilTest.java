@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 
 public class LocalDateTimeUtilTest {
 
@@ -236,5 +235,11 @@ public class LocalDateTimeUtilTest {
 		final Instant instant = DateUtil.parse("2022-02-22").toInstant();
 		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
 		Console.log(of);
+	}
+
+	@Test
+	public void parseBlankTest(){
+		final LocalDateTime parse = LocalDateTimeUtil.parse("");
+		Assert.assertNull(parse);
 	}
 }

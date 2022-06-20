@@ -13,6 +13,7 @@
 * 【core   】     修改ObjectUtil.isNull逻辑（issue#I5COJF@Gitee）
 * 【core   】     BlockPolicy增加线程池关闭后的逻辑（pr#660@Gitee）
 * 【core   】     Ipv4Util增加ipv4ToLong重载（pr#661@Gitee）
+* 【core   】     LocalDateTimeUtil.parse改为blank检查（issue#I5CZJ9@Gitee）
 * 
 ### 🐞Bug修复
 * 【extra  】     修复createExtractor中抛出异常后流未关闭问题（pr#2384@Github）
