@@ -20,7 +20,7 @@ public class LunarInfo {
 	public static final long BASE_DAY = LocalDate.of(BASE_YEAR, 1, 31).toEpochDay();
 
 	/**
-	 * 此表来自：https://github.com/jjonline/calendar.js/blob/master/calendar.js
+	 * 此表来自：<a href="https://github.com/jjonline/calendar.js/blob/master/calendar.js">https://github.com/jjonline/calendar.js/blob/master/calendar.js</a>
 	 * 农历表示：
 	 * 1.  表示当年有无闰年，有的话，为闰月的月份，没有的话，为0。
 	 * 2-4.为除了闰月外的正常月份是大月还是小月，1为30天，0为29天。
