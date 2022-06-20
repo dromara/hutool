@@ -14,6 +14,7 @@
 * 【core   】     BlockPolicy增加线程池关闭后的逻辑（pr#660@Gitee）
 * 【core   】     Ipv4Util增加ipv4ToLong重载（pr#661@Gitee）
 * 【core   】     LocalDateTimeUtil.parse改为blank检查（issue#I5CZJ9@Gitee）
+* 【core   】     BeanPath在空元素时默认加入map，修改根据下标类型赋值List or map（issue#2362@Github）
 * 
 ### 🐞Bug修复
 * 【extra  】     修复createExtractor中抛出异常后流未关闭问题（pr#2384@Github）
