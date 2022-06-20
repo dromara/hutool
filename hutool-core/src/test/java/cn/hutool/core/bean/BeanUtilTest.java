@@ -624,7 +624,7 @@ public class BeanUtilTest {
 	public void setPropertiesTest() {
 		final Map<String, Object> resultMap = MapUtil.newHashMap();
 		BeanUtil.setProperty(resultMap, "codeList[0].name", "张三");
-		Assert.assertEquals("{codeList={0={name=张三}}}", resultMap.toString());
+		Assert.assertEquals("{codeList=[{name=张三}]}", resultMap.toString());
 	}
 
 	@Test
