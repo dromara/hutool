@@ -61,8 +61,9 @@ public class LunarInfo {
 	public static int yearDays(int y) {
 		int i, sum = 348;
 		for (i = 0x8000; i > 0x8; i >>= 1) {
-			if ((getCode(y) & i) != 0)
+			if ((getCode(y) & i) != 0) {
 				sum += 1;
+			}
 		}
 		return (sum + leapDays(y));
 	}
