@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *     </tr>
  * </table>
  *
- * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
+ * 参考：<a href="http://blog.csdn.net/qxc1281/article/details/54021882">http://blog.csdn.net/qxc1281/article/details/54021882</a>
  *
  * @author looly
  * @since 4.0.0
