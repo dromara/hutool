@@ -514,7 +514,7 @@ public class BeanUtil {
 			return bean;
 		}
 
-		return BeanCopier.create(valueProvider, bean, copyOptions).copy();
+		return BeanCopier.of(valueProvider, bean, copyOptions).copy();
 	}
 	// --------------------------------------------------------------------------------------------- beanToMap
 
@@ -604,7 +604,7 @@ public class BeanUtil {
 			return null;
 		}
 
-		return BeanCopier.create(bean, targetMap,
+		return BeanCopier.of(bean, targetMap,
 				CopyOptions.of()
 						.setIgnoreNullValue(ignoreNullValue)
 						.setFieldEditor(keyEditor)
@@ -634,7 +634,7 @@ public class BeanUtil {
 			return null;
 		}
 
-		return BeanCopier.create(bean, targetMap, copyOptions).copy();
+		return BeanCopier.of(bean, targetMap, copyOptions).copy();
 	}
 
 	// --------------------------------------------------------------------------------------------- copyProperties
@@ -677,7 +677,7 @@ public class BeanUtil {
 	 * @param ignoreCase 是否忽略大小写
 	 */
 	public static void copyProperties(final Object source, final Object target, final boolean ignoreCase) {
-		BeanCopier.create(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
+		BeanCopier.of(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
 	}
 
 	/**
@@ -692,7 +692,7 @@ public class BeanUtil {
 		if (null == source || null == target) {
 			return;
 		}
-		BeanCopier.create(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::of)).copy();
+		BeanCopier.of(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::of)).copy();
 	}
 
 	/**

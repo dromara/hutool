@@ -157,7 +157,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			// issue#1891@Github
 			// Instant.from不能完成日期转换
 			//result = Instant.from(temporalAccessor);
-			result = toInstant(LocalDateTimeUtil.of(temporalAccessor));
+			result = toInstant(TimeUtil.of(temporalAccessor));
 		}
 
 		return result;

@@ -33,7 +33,7 @@ public class FileReader extends FileWrapper {
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 * @return FileReader
 	 */
-	public static FileReader create(final File file, final Charset charset){
+	public static FileReader of(final File file, final Charset charset){
 		return new FileReader(file, charset);
 	}
 
@@ -42,7 +42,7 @@ public class FileReader extends FileWrapper {
 	 * @param file 文件
 	 * @return FileReader
 	 */
-	public static FileReader create(final File file){
+	public static FileReader of(final File file){
 		return new FileReader(file);
 	}
 

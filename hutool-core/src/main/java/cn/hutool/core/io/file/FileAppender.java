@@ -78,7 +78,7 @@ public class FileAppender implements Serializable {
 		this.capacity = capacity;
 		this.list = new ArrayList<>(capacity);
 		this.isNewLineMode = isNewLineMode;
-		this.writer = FileWriter.create(destFile, charset);
+		this.writer = FileWriter.of(destFile, charset);
 		this.lock = ObjUtil.defaultIfNull(lock, LockUtil::getNoLock);
 	}
 

@@ -202,7 +202,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 *
 	 * @return this
 	 */
-	public static ExecutorBuilder create() {
+	public static ExecutorBuilder of() {
 		return new ExecutorBuilder();
 	}
 

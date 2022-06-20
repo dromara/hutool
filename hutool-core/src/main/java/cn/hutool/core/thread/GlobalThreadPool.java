@@ -1,10 +1,10 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.exceptions.UtilException;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
-import cn.hutool.core.exceptions.UtilException;
 
 /**
  * 全局公共线程池<br>
@@ -30,7 +30,7 @@ public class GlobalThreadPool {
 		if (null != executor) {
 			executor.shutdownNow();
 		}
-		executor = ExecutorBuilder.create().useSynchronousQueue().build();
+		executor = ExecutorBuilder.of().useSynchronousQueue().build();
 	}
 
 	/**

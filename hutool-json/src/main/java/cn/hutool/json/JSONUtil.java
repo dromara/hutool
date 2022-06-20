@@ -225,7 +225,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSON readJSON(final File file, final Charset charset) throws IORuntimeException {
-		return parse(FileReader.create(file, charset).readString());
+		return parse(FileReader.of(file, charset).readString());
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
-		return parseObj(FileReader.create(file, charset).readString());
+		return parseObj(FileReader.of(file, charset).readString());
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONArray readJSONArray(final File file, final Charset charset) throws IORuntimeException {
-		return parseArray(FileReader.create(file, charset).readString());
+		return parseArray(FileReader.of(file, charset).readString());
 	}
 	// -------------------------------------------------------------------- Read end
 

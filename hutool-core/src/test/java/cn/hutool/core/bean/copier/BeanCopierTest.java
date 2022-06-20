@@ -12,13 +12,13 @@ public class BeanCopierTest {
 	public void beanToMapIgnoreNullTest() {
 		final A a = new A();
 
-		HashMap<Object, Object> map = BeanCopier.create(a, new HashMap<>(), CopyOptions.of()).copy();
+		HashMap<Object, Object> map = BeanCopier.of(a, new HashMap<>(), CopyOptions.of()).copy();
 		Assert.assertEquals(1, map.size());
 		Assert.assertTrue(map.containsKey("value"));
 		Assert.assertNull(map.get("value"));
 
 		// 忽略null的情况下，空字段不写入map
-		map = BeanCopier.create(a, new HashMap<>(), CopyOptions.of().ignoreNullValue()).copy();
+		map = BeanCopier.of(a, new HashMap<>(), CopyOptions.of().ignoreNullValue()).copy();
 		Assert.assertFalse(map.containsKey("value"));
 		Assert.assertEquals(0, map.size());
 	}
@@ -33,7 +33,7 @@ public class BeanCopierTest {
 		final B b = new B();
 		b.setValue("abc");
 
-		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.of().setOverride(false));
+		final BeanCopier<B> copier = BeanCopier.of(a, b, CopyOptions.of().setOverride(false));
 		copier.copy();
 
 		Assert.assertEquals("abc", b.getValue());
@@ -49,7 +49,7 @@ public class BeanCopierTest {
 		final B b = new B();
 		b.setValue("abc");
 
-		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.of());
+		final BeanCopier<B> copier = BeanCopier.of(a, b, CopyOptions.of());
 		copier.copy();
 
 		Assert.assertEquals("123", b.getValue());

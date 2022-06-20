@@ -49,7 +49,7 @@ public class StopWatch {
 	 * @return StopWatch
 	 * @since 5.5.2
 	 */
-	public static StopWatch create(final String id) {
+	public static StopWatch of(final String id) {
 		return new StopWatch(id);
 	}
 

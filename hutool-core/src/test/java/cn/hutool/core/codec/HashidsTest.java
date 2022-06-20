@@ -6,7 +6,7 @@ import org.junit.Test;
 public class HashidsTest {
 	@Test
 	public void hexEncodeDecode() {
-		final Hashids hashids = Hashids.create("my awesome salt".toCharArray());
+		final Hashids hashids = Hashids.of("my awesome salt".toCharArray());
 		final String encoded1 = hashids.encodeFromHex("507f1f77bcf86cd799439011");
 		final String encoded2 = hashids.encodeFromHex("0x507f1f77bcf86cd799439011");
 		final String encoded3 = hashids.encodeFromHex("0X507f1f77bcf86cd799439011");

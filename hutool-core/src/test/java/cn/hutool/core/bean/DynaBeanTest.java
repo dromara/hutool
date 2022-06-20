@@ -14,7 +14,7 @@ public class DynaBeanTest {
 	@Test
 	public void beanTest() {
 		final User user = new User();
-		final DynaBean bean = DynaBean.create(user);
+		final DynaBean bean = DynaBean.of(user);
 		bean.set("name", "李华");
 		bean.set("age", 12);
 
@@ -38,7 +38,7 @@ public class DynaBeanTest {
 	public void beanByStaticClazzConstructorTest() {
 		final String name_before = "李华";
 		final int age_before = 12;
-		final DynaBean bean = DynaBean.create(User.class);
+		final DynaBean bean = DynaBean.of(User.class);
 		bean.set("name", name_before);
 		bean.set("age", age_before);
 

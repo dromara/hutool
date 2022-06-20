@@ -1,13 +1,18 @@
 package cn.hutool.core.io.watch;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.net.URLUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.*;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.net.URLUtil;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.Watchable;
 
 /**
  * 监听工具类<br>
@@ -24,8 +29,8 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final URL url, final WatchEvent.Kind<?>... events) {
-		return create(url, 0, events);
+	public static WatchMonitor of(final URL url, final WatchEvent.Kind<?>... events) {
+		return of(url, 0, events);
 	}
 
 	/**
@@ -36,8 +41,8 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final URL url, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return create(URLUtil.toURI(url), maxDepth, events);
+	public static WatchMonitor of(final URL url, final int maxDepth, final WatchEvent.Kind<?>... events) {
+		return of(URLUtil.toURI(url), maxDepth, events);
 	}
 
 	/**
@@ -47,8 +52,8 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final URI uri, final WatchEvent.Kind<?>... events) {
-		return create(uri, 0, events);
+	public static WatchMonitor of(final URI uri, final WatchEvent.Kind<?>... events) {
+		return of(uri, 0, events);
 	}
 
 	/**
@@ -59,8 +64,8 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final URI uri, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return create(Paths.get(uri), maxDepth, events);
+	public static WatchMonitor of(final URI uri, final int maxDepth, final WatchEvent.Kind<?>... events) {
+		return of(Paths.get(uri), maxDepth, events);
 	}
 
 	/**
@@ -70,8 +75,8 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final File file, final WatchEvent.Kind<?>... events) {
-		return create(file, 0, events);
+	public static WatchMonitor of(final File file, final WatchEvent.Kind<?>... events) {
+		return of(file, 0, events);
 	}
 
 	/**
@@ -82,8 +87,8 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final File file, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return create(file.toPath(), maxDepth, events);
+	public static WatchMonitor of(final File file, final int maxDepth, final WatchEvent.Kind<?>... events) {
+		return of(file.toPath(), maxDepth, events);
 	}
 
 	/**
@@ -93,8 +98,8 @@ public class WatchUtil {
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final String path, final WatchEvent.Kind<?>... events) {
-		return create(path, 0, events);
+	public static WatchMonitor of(final String path, final WatchEvent.Kind<?>... events) {
+		return of(path, 0, events);
 	}
 
 	/**
@@ -105,8 +110,8 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final String path, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return create(Paths.get(path), maxDepth, events);
+	public static WatchMonitor of(final String path, final int maxDepth, final WatchEvent.Kind<?>... events) {
+		return of(Paths.get(path), maxDepth, events);
 	}
 
 	/**
@@ -116,8 +121,8 @@ public class WatchUtil {
 	 * @param events 监听事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final Path path, final WatchEvent.Kind<?>... events) {
-		return create(path, 0, events);
+	public static WatchMonitor of(final Path path, final WatchEvent.Kind<?>... events) {
+		return of(path, 0, events);
 	}
 
 	/**
@@ -128,7 +133,7 @@ public class WatchUtil {
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(final Path path, final int maxDepth, final WatchEvent.Kind<?>... events) {
+	public static WatchMonitor of(final Path path, final int maxDepth, final WatchEvent.Kind<?>... events) {
 		return new WatchMonitor(path, maxDepth, events);
 	}
 
@@ -199,7 +204,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 */
 	public static WatchMonitor createAll(final File file, final int maxDepth, final Watcher watcher) {
-		return createAll(file.toPath(), 0, watcher);
+		return createAll(file.toPath(), maxDepth, watcher);
 	}
 
 	/**
@@ -245,7 +250,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 */
 	public static WatchMonitor createAll(final Path path, final int maxDepth, final Watcher watcher) {
-		final WatchMonitor watchMonitor = create(path, maxDepth, WatchMonitor.EVENTS_ALL);
+		final WatchMonitor watchMonitor = of(path, maxDepth, WatchMonitor.EVENTS_ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}
@@ -323,7 +328,7 @@ public class WatchUtil {
 	 * @since 4.5.2
 	 */
 	public static WatchMonitor createModify(final File file, final int maxDepth, final Watcher watcher) {
-		return createModify(file.toPath(), 0, watcher);
+		return createModify(file.toPath(), maxDepth, watcher);
 	}
 
 	/**
@@ -373,7 +378,7 @@ public class WatchUtil {
 	 * @since 4.5.2
 	 */
 	public static WatchMonitor createModify(final Path path, final int maxDepth, final Watcher watcher) {
-		final WatchMonitor watchMonitor = create(path, maxDepth, WatchMonitor.ENTRY_MODIFY);
+		final WatchMonitor watchMonitor = of(path, maxDepth, WatchMonitor.ENTRY_MODIFY);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}

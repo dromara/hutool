@@ -35,7 +35,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(final int corePoolSize) {
-		final ExecutorBuilder builder = ExecutorBuilder.create();
+		final ExecutorBuilder builder = ExecutorBuilder.of();
 		if (corePoolSize > 0) {
 			builder.setCorePoolSize(corePoolSize);
 		}
@@ -54,7 +54,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor() {
-		return ExecutorBuilder.create().useSynchronousQueue().build();
+		return ExecutorBuilder.of().useSynchronousQueue().build();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newSingleExecutor() {
-		return ExecutorBuilder.create()//
+		return ExecutorBuilder.of()//
 				.setCorePoolSize(1)//
 				.setMaxPoolSize(1)//
 				.setKeepAliveTime(0)//
@@ -85,7 +85,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 */
 	public static ThreadPoolExecutor newExecutor(final int corePoolSize, final int maximumPoolSize) {
-		return ExecutorBuilder.create()
+		return ExecutorBuilder.of()
 				.setCorePoolSize(corePoolSize)
 				.setMaxPoolSize(maximumPoolSize)
 				.build();
@@ -102,7 +102,7 @@ public class ThreadUtil {
 	 * @since 5.4.1
 	 */
 	public static ExecutorService newExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize) {
-		return ExecutorBuilder.create()
+		return ExecutorBuilder.of()
 				.setCorePoolSize(corePoolSize)
 				.setMaxPoolSize(maximumPoolSize)
 				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
@@ -128,7 +128,7 @@ public class ThreadUtil {
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
 		final int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
-		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
+		return ExecutorBuilder.of().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class ThreadUtil {
 												   final int maximumQueueSize,
 												   final String threadNamePrefix,
 												   final RejectedExecutionHandler handler) {
-		return ExecutorBuilder.create()
+		return ExecutorBuilder.of()
 				.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
 				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
 				.setThreadFactory(createThreadFactory(threadNamePrefix))

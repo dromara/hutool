@@ -74,8 +74,8 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 	 * @param salt 加盐值
 	 * @return {@code Hashids}
 	 */
-	public static Hashids create(final char[] salt) {
-		return create(salt, DEFAULT_ALPHABET, -1);
+	public static Hashids of(final char[] salt) {
+		return of(salt, DEFAULT_ALPHABET, -1);
 	}
 
 	/**
@@ -85,8 +85,8 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 	 * @param minLength 限制最小长度，-1表示不限制
 	 * @return {@code Hashids}
 	 */
-	public static Hashids create(final char[] salt, final int minLength) {
-		return create(salt, DEFAULT_ALPHABET, minLength);
+	public static Hashids of(final char[] salt, final int minLength) {
+		return of(salt, DEFAULT_ALPHABET, minLength);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 	 * @param minLength 限制最小长度，-1表示不限制
 	 * @return {@code Hashids}
 	 */
-	public static Hashids create(final char[] salt, final char[] alphabet, final int minLength) {
+	public static Hashids of(final char[] salt, final char[] alphabet, final int minLength) {
 		return new Hashids(salt, alphabet, minLength);
 	}
 	// endregion

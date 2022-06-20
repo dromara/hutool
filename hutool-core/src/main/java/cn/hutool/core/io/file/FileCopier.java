@@ -46,7 +46,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * @param destPath 目标文件路径（相对ClassPath路径或绝对路径）
 	 * @return this
 	 */
-	public static FileCopier create(final String srcPath, final String destPath) {
+	public static FileCopier of(final String srcPath, final String destPath) {
 		return new FileCopier(FileUtil.file(srcPath), FileUtil.file(destPath));
 	}
 
@@ -56,7 +56,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * @param dest 目标文件
 	 * @return this
 	 */
-	public static FileCopier create(final File src, final File dest) {
+	public static FileCopier of(final File src, final File dest) {
 		return new FileCopier(src, dest);
 	}
 	//-------------------------------------------------------------------------------------------------------- static method end

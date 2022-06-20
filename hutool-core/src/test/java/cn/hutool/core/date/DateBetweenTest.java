@@ -69,9 +69,9 @@ public class DateBetweenTest {
 				DateUtil.parse("2020-11-21"),
 				DateUtil.parse("2020-11-23"), false);
 
-		final long betweenWeek2 = LocalDateTimeUtil.between(
-				LocalDateTimeUtil.parse("2020-11-21", "yyy-MM-dd"),
-				LocalDateTimeUtil.parse("2020-11-23", "yyy-MM-dd"),
+		final long betweenWeek2 = TimeUtil.between(
+				TimeUtil.parse("2020-11-21", "yyy-MM-dd"),
+				TimeUtil.parse("2020-11-23", "yyy-MM-dd"),
 				ChronoUnit.WEEKS);
 		Assert.assertEquals(betweenWeek, betweenWeek2);
 	}

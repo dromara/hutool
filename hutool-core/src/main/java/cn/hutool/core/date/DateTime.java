@@ -736,7 +736,7 @@ public class DateTime extends Date {
 	 * @since 5.7.16
 	 */
 	public LocalDateTime toLocalDateTime() {
-		return LocalDateTimeUtil.of(this);
+		return TimeUtil.of(this);
 	}
 
 	/**

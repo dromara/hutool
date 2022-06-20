@@ -1089,7 +1089,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File copy(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.create(src, dest).setOverride(isOverride).copy();
+		return FileCopier.of(src, dest).setOverride(isOverride).copy();
 	}
 
 	/**
@@ -1109,7 +1109,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File copyContent(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
+		return FileCopier.of(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
 	}
 
 	/**
@@ -1130,7 +1130,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.5
 	 */
 	public static File copyFilesFromDir(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOnlyCopyFile(true).setOverride(isOverride).copy();
+		return FileCopier.of(src, dest).setCopyContentIfDir(true).setOnlyCopyFile(true).setOverride(isOverride).copy();
 	}
 
 	/**
@@ -1976,7 +1976,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(final File file) throws IORuntimeException {
-		return FileReader.create(file).readBytes();
+		return FileReader.of(file).readBytes();
 	}
 
 	/**
@@ -2023,7 +2023,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readString(final File file, final Charset charset) throws IORuntimeException {
-		return FileReader.create(file, charset).readString();
+		return FileReader.of(file, charset).readString();
 	}
 
 	/**
@@ -2130,7 +2130,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(final File file, final String charset, final T collection) throws IORuntimeException {
-		return FileReader.create(file, CharsetUtil.charset(charset)).readLines(collection);
+		return FileReader.of(file, CharsetUtil.charset(charset)).readLines(collection);
 	}
 
 	/**
@@ -2144,7 +2144,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(final File file, final Charset charset, final T collection) throws IORuntimeException {
-		return FileReader.create(file, charset).readLines(collection);
+		return FileReader.of(file, charset).readLines(collection);
 	}
 
 	/**
@@ -2299,7 +2299,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void readLines(final File file, final Charset charset, final LineHandler lineHandler) throws IORuntimeException {
-		FileReader.create(file, charset).readLines(lineHandler);
+		FileReader.of(file, charset).readLines(lineHandler);
 	}
 
 	/**
@@ -2387,7 +2387,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T load(final String path, final String charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
+		return FileReader.of(file(path), CharsetUtil.charset(charset)).read(readerHandler);
 	}
 
 	/**
@@ -2402,7 +2402,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T load(final String path, final Charset charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return FileReader.create(file(path), charset).read(readerHandler);
+		return FileReader.of(file(path), charset).read(readerHandler);
 	}
 
 	/**
@@ -2431,7 +2431,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T load(final File file, final Charset charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return FileReader.create(file, charset).read(readerHandler);
+		return FileReader.of(file, charset).read(readerHandler);
 	}
 
 	// -------------------------------------------------------------------------------------------- out start
@@ -2487,7 +2487,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedWriter getWriter(final File file, final Charset charset, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, charset).getWriter(isAppend);
+		return FileWriter.of(file, charset).getWriter(isAppend);
 	}
 
 	/**
@@ -2597,7 +2597,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeString(final String content, final File file, final String charset) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.charset(charset)).write(content);
+		return FileWriter.of(file, CharsetUtil.charset(charset)).write(content);
 	}
 
 	/**
@@ -2610,7 +2610,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeString(final String content, final File file, final Charset charset) throws IORuntimeException {
-		return FileWriter.create(file, charset).write(content);
+		return FileWriter.of(file, charset).write(content);
 	}
 
 	/**
@@ -2675,7 +2675,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File appendString(final String content, final File file, final String charset) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.charset(charset)).append(content);
+		return FileWriter.of(file, CharsetUtil.charset(charset)).append(content);
 	}
 
 	/**
@@ -2688,7 +2688,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File appendString(final String content, final File file, final Charset charset) throws IORuntimeException {
-		return FileWriter.create(file, charset).append(content);
+		return FileWriter.of(file, charset).append(content);
 	}
 
 	/**
@@ -2910,7 +2910,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(final Collection<T> list, final File file, final String charset, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
+		return FileWriter.of(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
 	}
 
 	/**
@@ -2925,7 +2925,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(final Collection<T> list, final File file, final Charset charset, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, charset).writeLines(list, isAppend);
+		return FileWriter.of(file, charset).writeLines(list, isAppend);
 	}
 
 	/**
@@ -2940,7 +2940,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.5
 	 */
 	public static File writeUtf8Map(final Map<?, ?> map, final File file, final String kvSeparator, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.UTF_8).writeMap(map, kvSeparator, isAppend);
+		return FileWriter.of(file, CharsetUtil.UTF_8).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**
@@ -2956,7 +2956,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.5
 	 */
 	public static File writeMap(final Map<?, ?> map, final File file, final Charset charset, final String kvSeparator, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, charset).writeMap(map, kvSeparator, isAppend);
+		return FileWriter.of(file, charset).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**
@@ -2996,7 +2996,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeBytes(final byte[] data, final File dest, final int off, final int len, final boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(dest).write(data, off, len, isAppend);
+		return FileWriter.of(dest).write(data, off, len, isAppend);
 	}
 
 	/**
@@ -3023,7 +3023,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.5.6
 	 */
 	public static File writeFromStream(final InputStream in, final File dest, final boolean isCloseIn) throws IORuntimeException {
-		return FileWriter.create(dest).writeFromStream(in, isCloseIn);
+		return FileWriter.of(dest).writeFromStream(in, isCloseIn);
 	}
 
 	/**
@@ -3048,7 +3048,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long writeToStream(final File file, final OutputStream out) throws IORuntimeException {
-		return FileReader.create(file).writeToStream(out);
+		return FileReader.of(file).writeToStream(out);
 	}
 
 	/**
@@ -3112,7 +3112,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File convertLineSeparator(final File file, final Charset charset, final LineSeparator lineSeparator) {
 		final List<String> lines = readLines(file, charset);
-		return FileWriter.create(file, charset).writeLines(lines, lineSeparator, false);
+		return FileWriter.of(file, charset).writeLines(lines, lineSeparator, false);
 	}
 
 	/**

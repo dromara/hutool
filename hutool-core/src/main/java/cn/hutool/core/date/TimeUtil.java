@@ -27,14 +27,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * JDK8+中的{@link LocalDateTime} 工具类封装
+ * JDK8+中的{@link java.time} 工具类封装
  *
  * @author looly
  * @see DateUtil java7及其以下版本，使用Date工具类
  * @see DatePattern 常用格式工具类
- * @since 5.3.9
+ * @since 6.0.0
  */
-public class LocalDateTimeUtil {
+public class TimeUtil {
 
 	/**
 	 * 当前时间，默认时区
@@ -191,7 +191,7 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDate) {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
-		} else if(temporalAccessor instanceof Instant){
+		} else if (temporalAccessor instanceof Instant) {
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
 		}
 
@@ -220,7 +220,7 @@ public class LocalDateTimeUtil {
 
 		if (temporalAccessor instanceof LocalDateTime) {
 			return ((LocalDateTime) temporalAccessor).toLocalDate();
-		} else if(temporalAccessor instanceof Instant){
+		} else if (temporalAccessor instanceof Instant) {
 			return of(temporalAccessor).toLocalDate();
 		}
 
@@ -251,7 +251,7 @@ public class LocalDateTimeUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime parse(final CharSequence text, final DateTimeFormatter formatter) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 		if (null == formatter) {
@@ -269,7 +269,7 @@ public class LocalDateTimeUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime parse(CharSequence text, final String format) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 
@@ -585,12 +585,11 @@ public class LocalDateTimeUtil {
 	 *     <li>如果一年中的第5天是星期一，则第二周从第5周开始，第1至第4周在第1周</li>
 	 * </ul>
 	 *
-	 *
 	 * @param date 日期（{@link LocalDate} 或者 {@link LocalDateTime}等）
 	 * @return 所在年的第几周
 	 * @since 5.7.21
 	 */
-	public static int weekOfYear(final TemporalAccessor date){
+	public static int weekOfYear(final TemporalAccessor date) {
 		return TemporalAccessorUtil.get(date, WeekFields.ISO.weekOfYear());
 	}
 }

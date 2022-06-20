@@ -34,7 +34,7 @@ public class FileWriter extends FileWrapper {
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 * @return FileWriter
 	 */
-	public static FileWriter create(final File file, final Charset charset) {
+	public static FileWriter of(final File file, final Charset charset) {
 		return new FileWriter(file, charset);
 	}
 
@@ -44,7 +44,7 @@ public class FileWriter extends FileWrapper {
 	 * @param file 文件
 	 * @return FileWriter
 	 */
-	public static FileWriter create(final File file) {
+	public static FileWriter of(final File file) {
 		return new FileWriter(file);
 	}
 

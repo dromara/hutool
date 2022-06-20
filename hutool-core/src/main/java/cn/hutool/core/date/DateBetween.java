@@ -32,7 +32,7 @@ public class DateBetween implements Serializable {
 	 * @return DateBetween
 	 * @since 3.2.3
 	 */
-	public static DateBetween create(final Date begin, final Date end) {
+	public static DateBetween of(final Date begin, final Date end) {
 		return new DateBetween(begin, end);
 	}
 
@@ -46,7 +46,7 @@ public class DateBetween implements Serializable {
 	 * @return DateBetween
 	 * @since 3.2.3
 	 */
-	public static DateBetween create(final Date begin, final Date end, final boolean isAbs) {
+	public static DateBetween of(final Date begin, final Date end, final boolean isAbs) {
 		return new DateBetween(begin, end, isAbs);
 	}
 

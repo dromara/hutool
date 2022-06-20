@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * 时间工具类
  *
  * @author xiaoleilu
- * @see LocalDateTimeUtil java8日志工具类
+ * @see TimeUtil java8日志工具类
  * @see DatePattern 日期常用格式工具类
  */
 public class DateUtil extends CalendarUtil {
@@ -492,7 +492,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String formatLocalDateTime(final LocalDateTime localDateTime) {
-		return LocalDateTimeUtil.formatNormal(localDateTime);
+		return TimeUtil.formatNormal(localDateTime);
 	}
 
 	/**
@@ -503,7 +503,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(final LocalDateTime localDateTime, final String format) {
-		return LocalDateTimeUtil.format(localDateTime, format);
+		return TimeUtil.format(localDateTime, format);
 	}
 
 	/**
@@ -675,7 +675,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return LocalDateTime对象
 	 */
 	public static LocalDateTime parseLocalDateTime(final CharSequence dateStr, final String format) {
-		return LocalDateTimeUtil.parse(dateStr, format);
+		return TimeUtil.parse(dateStr, format);
 	}
 
 	/**
@@ -2050,11 +2050,11 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param instant {@link Instant}
 	 * @return {@link LocalDateTime}
-	 * @see LocalDateTimeUtil#of(Instant)
+	 * @see TimeUtil#of(Instant)
 	 * @since 5.0.5
 	 */
 	public static LocalDateTime toLocalDateTime(final Instant instant) {
-		return LocalDateTimeUtil.of(instant);
+		return TimeUtil.of(instant);
 	}
 
 	/**
@@ -2062,11 +2062,11 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param date {@link Date}
 	 * @return {@link LocalDateTime}
-	 * @see LocalDateTimeUtil#of(Date)
+	 * @see TimeUtil#of(Date)
 	 * @since 5.0.5
 	 */
 	public static LocalDateTime toLocalDateTime(final Date date) {
-		return LocalDateTimeUtil.of(date);
+		return TimeUtil.of(date);
 	}
 
 	/**

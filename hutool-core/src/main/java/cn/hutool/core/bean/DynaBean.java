@@ -28,7 +28,7 @@ public class DynaBean implements Cloneable, Serializable {
 	 * @param bean 普通Bean
 	 * @return DynaBean
 	 */
-	public static DynaBean create(final Object bean) {
+	public static DynaBean of(final Object bean) {
 		return new DynaBean(bean);
 	}
 
@@ -38,7 +38,7 @@ public class DynaBean implements Cloneable, Serializable {
 	 * @param beanClass Bean类
 	 * @return DynaBean
 	 */
-	public static DynaBean create(final Class<?> beanClass) {
+	public static DynaBean of(final Class<?> beanClass) {
 		return new DynaBean(beanClass);
 	}
 
@@ -50,7 +50,7 @@ public class DynaBean implements Cloneable, Serializable {
 	 * @param params    构造Bean所需要的参数
 	 * @return DynaBean
 	 */
-	public static DynaBean create(final Class<?> beanClass, final Object... params) {
+	public static DynaBean of(final Class<?> beanClass, final Object... params) {
 		return new DynaBean(beanClass, params);
 	}
 

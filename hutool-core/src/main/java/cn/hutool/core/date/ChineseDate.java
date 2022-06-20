@@ -48,7 +48,7 @@ public class ChineseDate {
 	 * @param date 公历日期
 	 */
 	public ChineseDate(final Date date) {
-		this(LocalDateTimeUtil.ofDate(date.toInstant()));
+		this(TimeUtil.ofDate(date.toInstant()));
 	}
 
 	/**
