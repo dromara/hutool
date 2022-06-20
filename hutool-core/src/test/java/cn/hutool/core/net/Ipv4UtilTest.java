@@ -86,4 +86,17 @@ public class Ipv4UtilTest {
 		l = Ipv4Util.ipv4ToLong("255.255.255.255");
 		Assert.assertEquals(4294967295L, l);
 	}
+
+	@Test
+	public void ipv4ToLongWithDefaultTest() {
+		String strIP = "不正确的 IP 地址";
+		long defaultValue = 0L;
+		long ipOfLong = Ipv4Util.ipv4ToLong(strIP, defaultValue);
+		Assert.assertEquals(ipOfLong, defaultValue);
+
+		String strIP2 = "255.255.255.255";
+		long defaultValue2 = 0L;
+		long ipOfLong2 = Ipv4Util.ipv4ToLong(strIP2, defaultValue2);
+		Assert.assertEquals(ipOfLong2, 4294967295L);
+	}
 }
