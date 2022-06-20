@@ -110,7 +110,7 @@ public class BeanPathTest {
 
 	@Test
 	public void getKeyWithDotTest () {
-		Map<String, Object> dataMap = new HashMap<>(16);
+		final Map<String, Object> dataMap = new HashMap<>(16);
 		dataMap.put("aa", "value0");
 		dataMap.put("aa.bb.cc", "value111111");//     key   是类名 格式 带 ' . '
 
@@ -124,5 +124,24 @@ public class BeanPathTest {
 		Assert.assertEquals("abc.dd", of.getPatternParts().get(0));
 		Assert.assertEquals("ee", of.getPatternParts().get(1));
 		Assert.assertEquals("ff.", of.getPatternParts().get(2));
+	}
+
+	@Test
+	public void issue2362Test() {
+		final Map<String, Object> map = new HashMap<>();
+
+		BeanPath beanPath = BeanPath.of("list[0].name");
+		beanPath.set(map, "张三");
+		Assert.assertEquals("{list=[{name=张三}]}", map.toString());
+
+		map.clear();
+		beanPath = BeanPath.of("list[1].name");
+		beanPath.set(map, "张三");
+		Assert.assertEquals("{list=[null, {name=张三}]}", map.toString());
+
+		map.clear();
+		beanPath = BeanPath.of("list[0].1.name");
+		beanPath.set(map, "张三");
+		Assert.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
 	}
 }

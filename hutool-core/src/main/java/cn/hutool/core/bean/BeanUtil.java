@@ -319,7 +319,7 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			ListUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
+			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
 			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {

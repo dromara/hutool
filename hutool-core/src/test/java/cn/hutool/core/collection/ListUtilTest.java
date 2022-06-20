@@ -98,56 +98,56 @@ public class ListUtilTest {
 	public void indexOfAll() {
 		final List<String> a = ListUtil.ofLinked("1", "2", "3", "4", "3", "2", "1");
 		final int[] indexArray = CollUtil.indexOfAll(a, "2"::equals);
-		Assert.assertArrayEquals(new int[]{1,5}, indexArray);
+		Assert.assertArrayEquals(new int[]{1, 5}, indexArray);
 		final int[] indexArray2 = CollUtil.indexOfAll(a, "1"::equals);
-		Assert.assertArrayEquals(new int[]{0,6}, indexArray2);
+		Assert.assertArrayEquals(new int[]{0, 6}, indexArray2);
 	}
 
 	@Test
 	public void pageTest() {
-		final List<Integer> a = ListUtil.ofLinked(1, 2, 3,4,5);
+		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
 
 		PageUtil.setFirstPageNo(1);
-		final int[] a_1 = ListUtil.page(1,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a1 = ListUtil.page(1,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a2 = ListUtil.page(2,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a3 = ListUtil.page(3,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a4 = ListUtil.page(4,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1,2},a_1);
-		Assert.assertArrayEquals(new int[]{1,2},a1);
-		Assert.assertArrayEquals(new int[]{3,4},a2);
-		Assert.assertArrayEquals(new int[]{5},a3);
-		Assert.assertArrayEquals(new int[]{},a4);
+		final int[] a_1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a2 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a3 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a4 = ListUtil.page(4, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		Assert.assertArrayEquals(new int[]{1, 2}, a_1);
+		Assert.assertArrayEquals(new int[]{1, 2}, a1);
+		Assert.assertArrayEquals(new int[]{3, 4}, a2);
+		Assert.assertArrayEquals(new int[]{5}, a3);
+		Assert.assertArrayEquals(new int[]{}, a4);
 
 
 		PageUtil.setFirstPageNo(2);
-		final int[] b_1 = ListUtil.page(1,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b1 = ListUtil.page(2,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b2 = ListUtil.page(3,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b3 = ListUtil.page(4,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b4 = ListUtil.page(5,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1,2},b_1);
-		Assert.assertArrayEquals(new int[]{1,2},b1);
-		Assert.assertArrayEquals(new int[]{3,4},b2);
-		Assert.assertArrayEquals(new int[]{5},b3);
-		Assert.assertArrayEquals(new int[]{},b4);
+		final int[] b_1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] b1 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] b2 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] b3 = ListUtil.page(4, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] b4 = ListUtil.page(5, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		Assert.assertArrayEquals(new int[]{1, 2}, b_1);
+		Assert.assertArrayEquals(new int[]{1, 2}, b1);
+		Assert.assertArrayEquals(new int[]{3, 4}, b2);
+		Assert.assertArrayEquals(new int[]{5}, b3);
+		Assert.assertArrayEquals(new int[]{}, b4);
 
 		PageUtil.setFirstPageNo(0);
-		final int[] c_1 = ListUtil.page(-1,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c1 = ListUtil.page(0,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c2 = ListUtil.page(1,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c3 = ListUtil.page(2,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c4 = ListUtil.page(3,2,a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1,2},c_1);
-		Assert.assertArrayEquals(new int[]{1,2},c1);
-		Assert.assertArrayEquals(new int[]{3,4},c2);
-		Assert.assertArrayEquals(new int[]{5},c3);
-		Assert.assertArrayEquals(new int[]{},c4);
+		final int[] c_1 = ListUtil.page(-1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] c1 = ListUtil.page(0, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] c2 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] c3 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] c4 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		Assert.assertArrayEquals(new int[]{1, 2}, c_1);
+		Assert.assertArrayEquals(new int[]{1, 2}, c1);
+		Assert.assertArrayEquals(new int[]{3, 4}, c2);
+		Assert.assertArrayEquals(new int[]{5}, c3);
+		Assert.assertArrayEquals(new int[]{}, c4);
 
 
 		PageUtil.setFirstPageNo(1);
-		final int[] d1 = ListUtil.page(0,8,a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1,2,3,4,5},d1);
+		final int[] d1 = ListUtil.page(0, 8, a).stream().mapToInt(Integer::valueOf).toArray();
+		Assert.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, d1);
 
 		// page with consumer
 		final List<List<Integer>> pageListData = new ArrayList<>();
@@ -198,7 +198,7 @@ public class ListUtilTest {
 				new TestBean(5, "test5"),
 				new TestBean(4, "test4"),
 				new TestBean(3, "test3")
-				);
+		);
 
 		final List<TestBean> order = ListUtil.sortByProperty(beanList, "order");
 		Assert.assertEquals("test1", order.get(0).getName());
@@ -247,5 +247,23 @@ public class ListUtilTest {
 		Assert.assertEquals("1", list1.get(0));
 		Assert.assertEquals("2", list1.get(1));
 		Assert.assertEquals("3", list1.get(2));
+	}
+
+	@Test
+	public void setOrPaddingNullTest() {
+		final List<String> list = new ArrayList<>();
+		list.add("1");
+
+		// 替换原值
+		ListUtil.setOrPadding(list, 0, "a");
+		Assert.assertEquals("[a]", list.toString());
+
+		//append值
+		ListUtil.setOrPadding(list, 1, "a");
+		Assert.assertEquals("[a, a]", list.toString());
+
+		// padding null 后加入值
+		ListUtil.setOrPadding(list, 3, "a");
+		Assert.assertEquals(4, list.size());
 	}
 }

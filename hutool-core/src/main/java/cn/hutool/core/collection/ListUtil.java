@@ -7,6 +7,7 @@ import cn.hutool.core.collection.partition.RandomAccessAvgPartition;
 import cn.hutool.core.collection.partition.RandomAccessPartition;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.PageUtil;
@@ -391,6 +392,45 @@ public class ListUtil {
 		if (index < list.size()) {
 			list.set(index, element);
 		} else {
+			list.add(element);
+		}
+		return list;
+	}
+
+	/**
+	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code null}直到到达index后，设置值
+	 *
+	 * @param <T>     元素类型
+	 * @param list    List列表
+	 * @param index   位置
+	 * @param element 新元素
+	 * @return 原List
+	 * @since 5.8.4
+	 */
+	public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element) {
+		return setOrPadding(list, index, element, null);
+	}
+
+	/**
+	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
+	 *
+	 * @param <T>     元素类型
+	 * @param list    List列表
+	 * @param index   位置
+	 * @param element 新元素
+	 * @param paddingElement 填充的值
+	 * @return 原List
+	 * @since 5。8.4
+	 */
+	public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element, final T paddingElement) {
+		Assert.notNull(list, "List must be not null !");
+		final int size = list.size();
+		if (index < size) {
+			list.set(index, element);
+		} else {
+			for (int i = size; i < index; i++) {
+				list.add(paddingElement);
+			}
 			list.add(element);
 		}
 		return list;
