@@ -2,9 +2,14 @@ package cn.hutool.json.serialize;
 
 import cn.hutool.json.JSON;
 
+import java.lang.reflect.Type;
+
 /**
- * JSON自定义反序列化接口<br>
- * 此接口主要针对一些特殊对象的反序列化自定义转换规则，配合GlobalSerializeMapping，可以全局设定某一类对象的自定义转换，而无需修改发Bean的结构。
+ * JSON自定义反序列化接口，实现JSON to Bean，使用方式为：
+ * <ul>
+ *     <li>定义好反序列化规则，使用{@link GlobalSerializeMapping#put(Type, JSONDeserializer)}，关联指定类型与转换器实现反序列化。</li>
+ *     <li>使Bean实现此接口，调用{@link #deserialize(JSON)}解析字段，返回this即可。</li>
+ * </ul>
  *
  * @param <T> 反序列化后的类型
  * @author Looly

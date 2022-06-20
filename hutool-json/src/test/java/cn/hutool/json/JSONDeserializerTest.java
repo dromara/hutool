@@ -1,10 +1,11 @@
 package cn.hutool.json;
 
+import cn.hutool.json.serialize.JSONDeserializer;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class JSONBeanParserTest {
+public class JSONDeserializerTest {
 
 	@Test
 	public void parseTest(){
@@ -16,15 +17,17 @@ public class JSONBeanParserTest {
 	}
 
 	@Data
-	static class TestBean implements JSONBeanParser<JSONObject>{
+	static class TestBean implements JSONDeserializer<Object> {
 
 		private String name;
 		private String address;
 
 		@Override
-		public void parse(final JSONObject value) {
-			this.name = value.getStr("customName");
-			this.address = value.getStr("customAddress");
+		public Object deserialize(final JSON value) {
+			final JSONObject valueObj = (JSONObject) value;
+			this.name = valueObj.getStr("customName");
+			this.address = valueObj.getStr("customAddress");
+			return this;
 		}
 	}
 }

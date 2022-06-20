@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.serialize.JSONDeserializer;
 
 /**
  * JSON支持<br>
@@ -8,15 +9,15 @@ import cn.hutool.core.bean.BeanUtil;
  *
  * @author Looly
  */
-public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
+public class JSONSupport implements JSONString, JSONDeserializer<Object> {
 
 	/**
 	 * JSON String转Bean
 	 *
 	 * @param jsonString JSON String
 	 */
-	public void parse(final String jsonString) {
-		parse(new JSONObject(jsonString));
+	public void deserialize(final String jsonString) {
+		deserialize(new JSONObject(jsonString));
 	}
 
 	/**
@@ -25,9 +26,10 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	 * @param json JSON
 	 */
 	@Override
-	public void parse(final JSON json) {
+	public Object deserialize(final JSON json) {
 		final JSONSupport support = JSONConverter.jsonToBean(getClass(), json, false);
 		BeanUtil.copyProperties(support, this);
+		return this;
 	}
 
 	/**

@@ -19,4 +19,6 @@ public class UUIDTest {
 		ThreadUtil.concurrencyTest(100, ()-> set.add(UUID.fastUUID().toString()));
 		Assert.assertEquals(100, set.size());
 	}
+
+
 }

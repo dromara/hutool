@@ -46,12 +46,12 @@ public class JSONConverter implements Converter {
 	/**
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean<br>
-	 * 如果遇到{@link JSONBeanParser}，则调用其{@link JSONBeanParser#parse(Object)}方法转换。
+	 * 如果遇到{@link JSONDeserializer}，则调用其{@link JSONDeserializer#deserialize(JSON)}方法转换。
 	 *
-	 * @param <T> 转换后的对象类型
+	 * @param <T>        转换后的对象类型
 	 * @param targetType 目标类型
-	 * @param value 值
-	 * @param config JSON配置项
+	 * @param value      值
+	 * @param config     JSON配置项
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
@@ -62,26 +62,24 @@ public class JSONConverter implements Converter {
 		}
 
 		// since 5.7.8，增加自定义Bean反序列化接口和特殊对象的自定义转换
-		if(targetType instanceof Class){
+		if (targetType instanceof Class) {
 			final Class<?> targetClass = (Class<?>) targetType;
-			if(targetClass.isInstance(value)){
+			if (targetClass.isInstance(value)) {
 				return (T) value;
-			}
-
-			if (JSONBeanParser.class.isAssignableFrom(targetClass)){
-				// 自定义对象转换
-				@SuppressWarnings("rawtypes")
-				final JSONBeanParser target = (JSONBeanParser) ConstructorUtil.newInstanceIfPossible(targetClass);
-				if(null == target){
-					throw new ConvertException("Can not instance [{}]", targetType);
+			} else if (JSONDeserializer.class.isAssignableFrom(targetClass)) {
+				// 自定义反序列化
+				if (value instanceof JSON) {
+					final JSONDeserializer<T> target = (JSONDeserializer<T>) ConstructorUtil.newInstanceIfPossible(targetClass);
+					if (null == target) {
+						throw new ConvertException("Can not instance target: [{}]", targetType);
+					}
+					return target.deserialize((JSON) value);
 				}
-				target.parse(value);
-				return (T) target;
-			} else if(targetClass == byte[].class && value instanceof CharSequence){
+			} else if (targetClass == byte[].class && value instanceof CharSequence) {
 				// bytes二进制反序列化，默认按照Base64对待
 				// issue#I59LW4
 				return (T) Base64.decode((CharSequence) value);
-			}else if(targetClass.isAssignableFrom(Date.class) || targetClass.isAssignableFrom(TemporalAccessor.class)){
+			} else if (targetClass.isAssignableFrom(Date.class) || targetClass.isAssignableFrom(TemporalAccessor.class)) {
 				// 用户指定了日期格式，获取日期属性时使用对应格式
 				final String valueStr = Convert.toStr(value);
 				if (null == valueStr) {
@@ -90,10 +88,10 @@ public class JSONConverter implements Converter {
 
 				// 日期转换，支持自定义日期格式
 				final String format = getDateFormat(config);
-				if(null != format){
-					if(targetClass.isAssignableFrom(Date.class)){
+				if (null != format) {
+					if (targetClass.isAssignableFrom(Date.class)) {
 						return (T) new DateConverter(format).convert(targetClass, valueStr);
-					}else{
+					} else {
 						return (T) new TemporalAccessorConverter(format).convert(targetClass, valueStr);
 					}
 				}
@@ -107,9 +105,9 @@ public class JSONConverter implements Converter {
 	 * JSON递归转换为Bean<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
 	 *
-	 * @param <T> 转换后的对象类型
-	 * @param targetType 目标类型
-	 * @param value 值，JSON格式
+	 * @param <T>         转换后的对象类型
+	 * @param targetType  目标类型
+	 * @param value       值，JSON格式
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
@@ -121,16 +119,18 @@ public class JSONConverter implements Converter {
 			return null;
 		}
 
-		if(value instanceof JSON){
+		if (value instanceof JSON) {
+			final JSON valueJson = (JSON) value;
+			// 全局自定义反序列化
 			final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
-			if(null != deserializer) {
-				return (T) deserializer.deserialize((JSON) value);
+			if (null != deserializer) {
+				return (T) deserializer.deserialize(valueJson);
 			}
 
 			// issue#2212@Github
 			// 在JSONObject转Bean时，读取JSONObject本身的配置文件
-			if(targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
-				final JSONConfig config = ((JSON) value).getConfig();
+			if (targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)) {
+				final JSONConfig config = valueJson.getConfig();
 				final Converter converter = new BeanConverter(InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
 				return ignoreError ? converter.convert(targetType, value, null)
 						: (T) converter.convert(targetType, value);
@@ -154,11 +154,12 @@ public class JSONConverter implements Converter {
 
 	/**
 	 * 获取配置文件中的日期格式，无格式返回{@code null}
+	 *
 	 * @param config JSON配置
 	 * @return 日期格式，无返回{@code null}
 	 */
-	private static String getDateFormat(final JSONConfig config){
-		if(null != config){
+	private static String getDateFormat(final JSONConfig config) {
+		if (null != config) {
 			final String format = config.getDateFormat();
 			if (StrUtil.isNotBlank(format)) {
 				return format;
