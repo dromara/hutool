@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.4.M1 (2022-06-18)
+# 5.8.4.M1 (2022-06-20)
 
 ### 🐣新特性
 * 【extra  】     Sftp增加构造重载，支持超时（pr#653@Gitee）
@@ -11,6 +11,7 @@
 * 【json   】     修改byte[]统一转换为数组形式（issue#2377@Github）
 * 【http   】     HttpResponse增加body方法，支持自定义返回内容（pr#655@Gitee）
 * 【core   】     修改ObjectUtil.isNull逻辑（issue#I5COJF@Gitee）
+* 【core   】     BlockPolicy增加线程池关闭后的逻辑（pr#660@Gitee）
 * 
 ### 🐞Bug修复
 * 【extra  】     修复createExtractor中抛出异常后流未关闭问题（pr#2384@Github）

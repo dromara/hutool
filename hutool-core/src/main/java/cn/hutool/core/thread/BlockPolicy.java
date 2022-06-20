@@ -21,10 +21,18 @@ public class BlockPolicy implements RejectedExecutionHandler {
 	 */
 	private final Consumer<Runnable> handlerwhenshutdown;
 
+	/**
+	 * 构造
+	 *
+	 * @param handlerwhenshutdown 线程池关闭后的执行策略
+	 */
 	public BlockPolicy(final Consumer<Runnable> handlerwhenshutdown) {
 		this.handlerwhenshutdown = handlerwhenshutdown;
 	}
 
+	/**
+	 * 构造
+	 */
 	public BlockPolicy() {
 		this(null);
 	}
@@ -32,18 +40,17 @@ public class BlockPolicy implements RejectedExecutionHandler {
 	@Override
 	public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
 		// 线程池未关闭时，阻塞等待
-		if(!e.isShutdown()){
+		if (false == e.isShutdown()) {
 			try {
 				e.getQueue().put(r);
 			} catch (InterruptedException ex) {
 				throw new RejectedExecutionException("Task " + r + " rejected from " + e);
 			}
-			return;
-		}
-
-		// 当设置了关闭时候的处理
-		if(null != handlerwhenshutdown){
+		} else if (null != handlerwhenshutdown) {
+			// 当设置了关闭时候的处理
 			handlerwhenshutdown.accept(r);
 		}
+
+		// 线程池关闭后，丢弃任务
 	}
 }
