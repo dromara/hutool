@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -166,6 +167,16 @@ public class Ipv4Util {
 //		final long[] ip = Convert.convert(long[].class, StrUtil.split(strIP, CharUtil.DOT));
 //		return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
 		throw new IllegalArgumentException("Invalid IPv4 address!");
+	}
+
+	/**
+	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据, 如果格式不正确返回 defaultValue
+	 * @param strIP IP V4 地址
+	 * @param defaultValue 默认值
+	 * @return long值
+	 */
+	public static long ipv4ToLong(String strIP, long defaultValue) {
+		return Validator.isIpv4(strIP) ? ipv4ToLong(strIP) : defaultValue;
 	}
 
 	/**
