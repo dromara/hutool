@@ -175,8 +175,8 @@ public class DateUtilTest {
 	@Test
 	public void beginOfWeekTest2() {
 		final String beginStr = "2020-03-11";
-		final DateTime date = DateUtil.parseDate(beginStr);
-		final Calendar calendar = date.toCalendar();
+		final DateTime date = DateUtil.parse(beginStr);
+		final Calendar calendar = Objects.requireNonNull(date).toCalendar();
 		final Calendar begin = DateUtil.beginOfWeek(calendar, false);
 		Assert.assertEquals("2020-03-08 00:00:00", DateUtil.date(begin).toString());
 
@@ -208,7 +208,7 @@ public class DateUtilTest {
 
 	@Test
 	public void offsetMonthTest() {
-		final DateTime st = DateUtil.parseDate("2018-05-31");
+		final DateTime st = DateUtil.parse("2018-05-31");
 		final List<DateTime> list = new ArrayList<>();
 		for (int i = 0; i < 4; i++) {
 			list.add(DateUtil.offsetMonth(st, i));
@@ -534,7 +534,7 @@ public class DateUtilTest {
 	@Test
 	public void parseDateTest() {
 		final String dateStr = "2018-4-10";
-		final Date date = DateUtil.parseDate(dateStr);
+		final Date date = DateUtil.parse(dateStr);
 		final String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("2018-04-10", format);
 	}
@@ -610,14 +610,14 @@ public class DateUtilTest {
 	@Test
 	public void parseUTCTest() {
 		String dateStr1 = "2018-09-13T05:34:31Z";
-		DateTime dt = DateUtil.parseUTC(dateStr1);
+		DateTime dt = DateUtil.parse(dateStr1);
 
 		// parse方法支持UTC格式测试
 		final DateTime dt2 = DateUtil.parse(dateStr1);
 		Assert.assertEquals(dt, dt2);
 
 		// 默认使用Pattern对应的时区，即UTC时区
-		String dateStr = dt.toString();
+		String dateStr = Objects.requireNonNull(dt).toString();
 		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
 
 		// 使用当前（上海）时区
@@ -625,13 +625,13 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:32+0800";
-		dt = DateUtil.parseUTC(dateStr1);
-		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		dt = DateUtil.parse(dateStr1);
+		dateStr = Objects.requireNonNull(dt).toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:32", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:33+08:00";
-		dt = DateUtil.parseUTC(dateStr1);
-		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		dt = DateUtil.parse(dateStr1);
+		dateStr = Objects.requireNonNull(dt).toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:33", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:34+0800";
@@ -647,15 +647,15 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-09-13 13:34:35", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:36.999+0800";
-		dt = DateUtil.parseUTC(dateStr1);
+		dt = DateUtil.parse(dateStr1);
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_MS_PATTERN);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-		dateStr = dt.toString(simpleDateFormat);
+		dateStr = Objects.requireNonNull(dt).toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:36.999", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:37.999+08:00";
-		dt = DateUtil.parseUTC(dateStr1);
-		dateStr = dt.toString(simpleDateFormat);
+		dt = DateUtil.parse(dateStr1);
+		dateStr = Objects.requireNonNull(dt).toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:37.999", dateStr);
 
 		dateStr1 = "2018-09-13T13:34:38.999+0800";
@@ -683,16 +683,16 @@ public class DateUtilTest {
 		// issue1503@Github
 		// 检查不同毫秒长度都可以正常匹配
 		String utcTime = "2021-03-30T12:56:51.3Z";
-		DateTime parse = DateUtil.parseUTC(utcTime);
-		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+		DateTime parse = DateUtil.parse(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
 
 		utcTime = "2021-03-30T12:56:51.34Z";
-		parse = DateUtil.parseUTC(utcTime);
-		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+		parse = DateUtil.parse(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
 
 		utcTime = "2021-03-30T12:56:51.345Z";
-		parse = DateUtil.parseUTC(utcTime);
-		Assert.assertEquals("2021-03-30 12:56:51", parse.toString());
+		parse = DateUtil.parse(utcTime);
+		Assert.assertEquals("2021-03-30 12:56:51", Objects.requireNonNull(parse).toString());
 	}
 
 	@Test
@@ -704,7 +704,7 @@ public class DateUtilTest {
 		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
 		final DateTime parse = DateUtil.parse(dateStr, sdf);
 
-		DateTime dateTime = DateUtil.parseCST(dateStr);
+		DateTime dateTime = DateUtil.parse(dateStr);
 		Assert.assertEquals(parse, dateTime);
 
 		dateTime = DateUtil.parse(dateStr);
@@ -858,7 +858,7 @@ public class DateUtilTest {
 	public void ageTest() {
 		final String d1 = "2000-02-29";
 		final String d2 = "2018-02-28";
-		final int age = DateUtil.age(DateUtil.parseDate(d1), DateUtil.parseDate(d2));
+		final int age = DateUtil.age(DateUtil.parse(d1), DateUtil.parse(d2));
 		Assert.assertEquals(18, age);
 	}
 
@@ -866,19 +866,19 @@ public class DateUtilTest {
 	public void ageTest2() {
 		final String d1 = "2019-02-29";
 		final String d2 = "2018-02-28";
-		DateUtil.age(DateUtil.parseDate(d1), DateUtil.parseDate(d2));
+		DateUtil.age(DateUtil.parse(d1), DateUtil.parse(d2));
 	}
 
 	@Test
 	public void localDateTimeTest() {
 		// 测试字符串与LocalDateTime的互相转换
 		final String strDate = "2019-12-01 17:02:30";
-		LocalDateTime ldt = DateUtil.parseLocalDateTime(strDate);
+		LocalDateTime ldt = TimeUtil.parseByISO(strDate);
 		String strDate1 = DateUtil.formatLocalDateTime(ldt);
 		Assert.assertEquals(strDate, strDate1);
 
 		final String strDate2 = "2019-12-01 17:02:30.111";
-		ldt = DateUtil.parseLocalDateTime(strDate2, DatePattern.NORM_DATETIME_MS_PATTERN);
+		ldt = TimeUtil.parse(strDate2, DatePattern.NORM_DATETIME_MS_PATTERN);
 		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(strDate, strDate1);
 	}
@@ -887,7 +887,7 @@ public class DateUtilTest {
 	public void localDateTimeTest2() {
 		// 测试字符串与LocalDateTime的互相转换
 		final String strDate = "2019-12-01";
-		final LocalDateTime localDateTime = DateUtil.parseLocalDateTime(strDate, "yyyy-MM-dd");
+		final LocalDateTime localDateTime = TimeUtil.parse(strDate, "yyyy-MM-dd");
 		Assert.assertEquals(strDate, DateUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN));
 	}
 
@@ -905,8 +905,8 @@ public class DateUtilTest {
 		for (int i = 0; i < 1000; i++) {
 			final String datr = RandomUtil.randomInt(1900, 2099) + "-01-20";
 			final long betweenDay = DateUtil.betweenDay(
-					DateUtil.parseDate("1970-01-01"),
-					DateUtil.parseDate(datr), false);
+					DateUtil.parse("1970-01-01"),
+					DateUtil.parse(datr), false);
 			Assert.assertEquals(Math.abs(LocalDate.parse(datr).toEpochDay()), betweenDay);
 		}
 	}
@@ -972,7 +972,7 @@ public class DateUtilTest {
 		String format = DateUtil.format(DateUtil.parse("2021-07-14 10:05:38"), DatePattern.NORM_DATETIME_FORMATTER);
 		Assert.assertEquals("2021-07-14 10:05:38", format);
 
-		format = DateUtil.format(TimeUtil.parse("2021-07-14T10:05:38"),
+		format = DateUtil.format(TimeUtil.parseByISO("2021-07-14T10:05:38"),
 				"yyyy-MM-dd HH:mm:ss");
 		Assert.assertEquals("2021-07-14 10:05:38", format);
 	}

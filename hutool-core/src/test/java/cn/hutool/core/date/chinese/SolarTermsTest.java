@@ -67,8 +67,8 @@ public class SolarTermsTest {
 
 	@Test
 	public void getTermByDateTest() {
-		Assert.assertEquals("春分", SolarTerms.getTerm(DateUtil.parseDate("2021-03-20")));
-		Assert.assertEquals("处暑", SolarTerms.getTerm(DateUtil.parseDate("2022-08-23")));
+		Assert.assertEquals("春分", SolarTerms.getTerm(DateUtil.parse("2021-03-20")));
+		Assert.assertEquals("处暑", SolarTerms.getTerm(DateUtil.parse("2022-08-23")));
 	}
 
 

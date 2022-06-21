@@ -59,7 +59,7 @@ public class TimeUtilTest {
 
 	@Test
 	public void parseTest4() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56");
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
 	}
 
@@ -83,7 +83,7 @@ public class TimeUtilTest {
 
 	@Test
 	public void parseDateTest() {
-		LocalDate localDate = TimeUtil.parseDate("2020-01-23");
+		LocalDate localDate = TimeUtil.parseDateByISO("2020-01-23");
 		Assert.assertEquals("2020-01-23", localDate.toString());
 
 		localDate = TimeUtil.parseDate("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
@@ -98,7 +98,7 @@ public class TimeUtilTest {
 
 	@Test
 	public void formatTest() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56");
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		String format = TimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals("2020-01-23 12:23:56", format);
 
@@ -121,7 +121,7 @@ public class TimeUtilTest {
 
 	@Test
 	public void offset() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56");
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		LocalDateTime offset = TimeUtil.offset(localDateTime, 1, ChronoUnit.DAYS);
 		// 非同一对象
 		Assert.assertNotSame(localDateTime, offset);
@@ -135,21 +135,21 @@ public class TimeUtilTest {
 	@Test
 	public void between() {
 		final Duration between = TimeUtil.between(
-				TimeUtil.parse("2019-02-02T00:00:00"),
-				TimeUtil.parse("2020-02-02T00:00:00"));
+				TimeUtil.parseByISO("2019-02-02T00:00:00"),
+				TimeUtil.parseByISO("2020-02-02T00:00:00"));
 		Assert.assertEquals(365, between.toDays());
 	}
 
 	@Test
 	public void beginOfDayTest() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56");
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		final LocalDateTime beginOfDay = TimeUtil.beginOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T00:00", beginOfDay.toString());
 	}
 
 	@Test
 	public void endOfDayTest() {
-		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56");
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 
 		LocalDateTime endOfDay = TimeUtil.endOfDay(localDateTime);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
@@ -197,11 +197,11 @@ public class TimeUtilTest {
 		final LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
 		final LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
 
-		final LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
-		final LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
+		final LocalDateTime realStartTime1 = TimeUtil.parseByISO("2022-03-01 08:00:00");
+		final LocalDateTime realEndTime1   = TimeUtil.parseByISO("2022-03-01 10:00:00");
 
-		final LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
-		final LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
+		final LocalDateTime startTime  = TimeUtil.parseByISO("2022-03-23 05:00:00");
+		final LocalDateTime endTime    = TimeUtil.parseByISO("2022-03-23 13:00:00");
 
 		Assert.assertFalse(TimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertFalse(TimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));

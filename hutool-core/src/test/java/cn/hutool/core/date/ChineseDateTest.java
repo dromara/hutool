@@ -6,12 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class ChineseDateTest {
 
 	@Test
 	public void chineseDateTest() {
-		ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-01-25"));
+		ChineseDate date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2020-01-25")));
 		Assert.assertEquals("2020-01-25 00:00:00", date.getGregorianDate().toString());
 		Assert.assertEquals(2020, date.getChineseYear());
 
@@ -28,9 +29,9 @@ public class ChineseDateTest {
 		Assert.assertEquals("春节", date.getFestivals());
 		Assert.assertEquals("庚子鼠年 正月初一", date.toString());
 
-		date = new ChineseDate(DateUtil.parseDate("2020-01-14"));
+		date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2020-01-14")));
 		Assert.assertEquals("己亥猪年 腊月二十", date.toString());
-		date = new ChineseDate(DateUtil.parseDate("2020-01-24"));
+		date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2020-01-24")));
 		Assert.assertEquals("己亥猪年 腊月三十", date.toString());
 
 		Assert.assertEquals("2019-12-30", date.toStringNormal());
@@ -38,16 +39,16 @@ public class ChineseDateTest {
 
 	@Test
 	public void toStringNormalTest(){
-		final ChineseDate date = new ChineseDate(DateUtil.parseDate("2020-03-1"));
+		final ChineseDate date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2020-03-1")));
 		Assert.assertEquals("2020-02-08", date.toStringNormal());
 	}
 
 	@Test
 	public void parseTest(){
-		ChineseDate date = new ChineseDate(DateUtil.parseDate("1996-07-14"));
+		ChineseDate date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("1996-07-14")));
 		Assert.assertEquals("丙子鼠年 五月廿九", date.toString());
 
-		date = new ChineseDate(DateUtil.parseDate("1996-07-15"));
+		date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("1996-07-15")));
 		Assert.assertEquals("丙子鼠年 五月三十", date.toString());
 	}
 
@@ -69,7 +70,7 @@ public class ChineseDateTest {
 	@Test
 	public void getFestivalsTest(){
 		// issue#I1XHSF@Gitee，2023-01-20对应农历腊月29，非除夕
-		final ChineseDate chineseDate = new ChineseDate(DateUtil.parseDate("2023-01-20"));
+		final ChineseDate chineseDate = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2023-01-20")));
 		Assert.assertTrue(StrUtil.isEmpty(chineseDate.getFestivals()));
 	}
 
@@ -77,9 +78,9 @@ public class ChineseDateTest {
 	public void dateTest(){
 		// 修复这两个日期不正确的问题
 		// 问题出在计算与1900-01-31相差天数的问题上了，相差天数非整天
-		ChineseDate date = new ChineseDate(DateUtil.parseDate("1991-09-14"));
+		ChineseDate date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("1991-09-14")));
 		Assert.assertEquals("辛未羊年 八月初七", date.toString());
-		date = new ChineseDate(DateUtil.parseDate("1991-09-15"));
+		date = new ChineseDate(Objects.requireNonNull(DateUtil.parse("1991-09-15")));
 		Assert.assertEquals("辛未羊年 八月初八", date.toString());
 	}
 
@@ -119,7 +120,7 @@ public class ChineseDateTest {
 	@Test
 	public void getChineseMonthTest2(){
 		//https://github.com/dromara/hutool/issues/2112
-		final ChineseDate springFestival = new ChineseDate(DateUtil.parseDate("2022-02-01"));
+		final ChineseDate springFestival = new ChineseDate(Objects.requireNonNull(DateUtil.parse("2022-02-01")));
 		final String chineseMonth = springFestival.getChineseMonth();
 		Assert.assertEquals("一月", chineseMonth);
 	}

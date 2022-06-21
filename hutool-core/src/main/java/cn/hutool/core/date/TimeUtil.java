@@ -232,14 +232,21 @@ public class TimeUtil {
 	}
 
 	/**
-	 * 解析日期时间字符串为{@link LocalDateTime}，仅支持yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30<br>
-	 * 即{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
+	 * 解析日期时间字符串为{@link LocalDateTime}，支持：
+	 * <ul>
+	 *     <li>{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME} yyyy-MM-dd'T'HH:mm:ss格式，例如：2007-12-03T10:15:30</li>
+	 *     <li>yyyy-MM-dd HH:mm:ss</li>
+	 * </ul>
 	 *
 	 * @param text 日期时间字符串
 	 * @return {@link LocalDateTime}
 	 */
-	public static LocalDateTime parse(final CharSequence text) {
-		return parse(text, (DateTimeFormatter) null);
+	public static LocalDateTime parseByISO(final CharSequence text) {
+		if (StrUtil.contains(text, 'T')) {
+			return parse(text, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		}else{
+			return parse(text, DatePattern.NORM_DATETIME_FORMATTER);
+		}
 	}
 
 	/**
@@ -308,7 +315,7 @@ public class TimeUtil {
 	 * @return {@link LocalDate}
 	 * @since 5.3.10
 	 */
-	public static LocalDate parseDate(final CharSequence text) {
+	public static LocalDate parseDateByISO(final CharSequence text) {
 		return parseDate(text, (DateTimeFormatter) null);
 	}
 
