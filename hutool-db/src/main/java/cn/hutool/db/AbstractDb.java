@@ -887,6 +887,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
 	 *
 	 * @param caseInsensitive 否在结果中忽略大小写
+	 * @return this
 	 * @since 5.2.4
 	 */
 	@SuppressWarnings("unchecked")
@@ -908,6 +909,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * 设置 {@link DialectRunner}
 	 *
 	 * @param runner {@link DialectRunner}
+	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
 	public R setRunner(final DialectRunner runner) {
