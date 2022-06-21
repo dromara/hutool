@@ -6,8 +6,8 @@ import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.date.format.parser.CSTDateParser;
-import cn.hutool.core.date.format.parser.DateParser;
 import cn.hutool.core.date.format.parser.NormalDateParser;
+import cn.hutool.core.date.format.parser.PositionDateParser;
 import cn.hutool.core.date.format.parser.PureDateParser;
 import cn.hutool.core.date.format.parser.TimeParser;
 import cn.hutool.core.date.format.parser.UTCDateParser;
@@ -678,7 +678,7 @@ public class DateUtil extends CalendarUtil {
 	 * @param parser  格式化器,{@link FastDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(final CharSequence dateStr, final DateParser parser) {
+	public static DateTime parse(final CharSequence dateStr, final PositionDateParser parser) {
 		return new DateTime(dateStr, parser);
 	}
 
@@ -691,7 +691,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return DateTime对象
 	 * @since 5.7.14
 	 */
-	public static DateTime parse(final CharSequence dateStr, final DateParser parser, final boolean lenient) {
+	public static DateTime parse(final CharSequence dateStr, final PositionDateParser parser, final boolean lenient) {
 		return new DateTime(dateStr, parser, lenient);
 	}
 
