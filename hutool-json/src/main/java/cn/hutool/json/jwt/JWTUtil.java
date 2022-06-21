@@ -29,7 +29,7 @@ public class JWTUtil {
 	 * @return JWT Token
 	 */
 	public static String createToken(final Map<String, Object> headers, final Map<String, Object> payload, final byte[] key) {
-		return JWT.create()
+		return JWT.of()
 				.addHeaders(headers)
 				.addPayloads(payload)
 				.setKey(key)
@@ -56,7 +56,7 @@ public class JWTUtil {
 	 * @return JWT Token
 	 */
 	public static String createToken(final Map<String, Object> headers, final Map<String, Object> payload, final JWTSigner signer) {
-		return JWT.create()
+		return JWT.of()
 				.addHeaders(headers)
 				.addPayloads(payload)
 				.setSigner(signer)

@@ -63,7 +63,7 @@ public class Hutool {
 	 */
 	public static void printAllUtils() {
 		final Set<Class<?>> allUtils = getAllUtils();
-		final ConsoleTable consoleTable = ConsoleTable.create().addHeader("工具类名", "所在包");
+		final ConsoleTable consoleTable = ConsoleTable.of().addHeader("工具类名", "所在包");
 		for (final Class<?> clazz : allUtils) {
 			consoleTable.addBody(clazz.getSimpleName(), clazz.getPackage().getName());
 		}

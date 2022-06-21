@@ -145,8 +145,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final URL url, final Watcher watcher) {
-		return createAll(url, 0, watcher);
+	public static WatchMonitor ofAll(final URL url, final Watcher watcher) {
+		return ofAll(url, 0, watcher);
 	}
 
 	/**
@@ -157,8 +157,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final URL url, final int maxDepth, final Watcher watcher) {
-		return createAll(URLUtil.toURI(url), maxDepth, watcher);
+	public static WatchMonitor ofAll(final URL url, final int maxDepth, final Watcher watcher) {
+		return ofAll(URLUtil.toURI(url), maxDepth, watcher);
 	}
 
 	/**
@@ -168,8 +168,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final URI uri, final Watcher watcher) {
-		return createAll(uri, 0, watcher);
+	public static WatchMonitor ofAll(final URI uri, final Watcher watcher) {
+		return ofAll(uri, 0, watcher);
 	}
 
 	/**
@@ -180,8 +180,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final URI uri, final int maxDepth, final Watcher watcher) {
-		return createAll(Paths.get(uri), maxDepth, watcher);
+	public static WatchMonitor ofAll(final URI uri, final int maxDepth, final Watcher watcher) {
+		return ofAll(Paths.get(uri), maxDepth, watcher);
 	}
 
 	/**
@@ -191,8 +191,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final File file, final Watcher watcher) {
-		return createAll(file, 0, watcher);
+	public static WatchMonitor ofAll(final File file, final Watcher watcher) {
+		return ofAll(file, 0, watcher);
 	}
 
 	/**
@@ -203,8 +203,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final File file, final int maxDepth, final Watcher watcher) {
-		return createAll(file.toPath(), maxDepth, watcher);
+	public static WatchMonitor ofAll(final File file, final int maxDepth, final Watcher watcher) {
+		return ofAll(file.toPath(), maxDepth, watcher);
 	}
 
 	/**
@@ -214,31 +214,8 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final String path, final Watcher watcher) {
-		return createAll(path, 0, watcher);
-	}
-
-	/**
-	 * 创建并初始化监听，监听所有事件
-	 *
-	 * @param path 路径
-	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
-	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
-	 */
-	public static WatchMonitor createAll(final String path, final int maxDepth, final Watcher watcher) {
-		return createAll(Paths.get(path), maxDepth, watcher);
-	}
-
-	/**
-	 * 创建并初始化监听，监听所有事件
-	 *
-	 * @param path 路径
-	 * @param watcher {@link Watcher}
-	 * @return {@link WatchMonitor}
-	 */
-	public static WatchMonitor createAll(final Path path, final Watcher watcher) {
-		return createAll(path, 0, watcher);
+	public static WatchMonitor ofAll(final String path, final Watcher watcher) {
+		return ofAll(path, 0, watcher);
 	}
 
 	/**
@@ -249,7 +226,30 @@ public class WatchUtil {
 	 * @param watcher {@link Watcher}
 	 * @return {@link WatchMonitor}
 	 */
-	public static WatchMonitor createAll(final Path path, final int maxDepth, final Watcher watcher) {
+	public static WatchMonitor ofAll(final String path, final int maxDepth, final Watcher watcher) {
+		return ofAll(Paths.get(path), maxDepth, watcher);
+	}
+
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 *
+	 * @param path 路径
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor ofAll(final Path path, final Watcher watcher) {
+		return ofAll(path, 0, watcher);
+	}
+
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 *
+	 * @param path 路径
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor ofAll(final Path path, final int maxDepth, final Watcher watcher) {
 		final WatchMonitor watchMonitor = of(path, maxDepth, WatchMonitor.EVENTS_ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;

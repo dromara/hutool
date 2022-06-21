@@ -23,7 +23,7 @@ public class TokenizerFactory {
 	 * @since 5.3.3
 	 */
 	public static TokenizerEngine get(){
-		return Singleton.get(TokenizerEngine.class.getName(), TokenizerFactory::create);
+		return Singleton.get(TokenizerEngine.class.getName(), TokenizerFactory::of);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class TokenizerFactory {
 	 *
 	 * @return {@link TokenizerEngine}
 	 */
-	public static TokenizerEngine create() {
+	public static TokenizerEngine of() {
 		final TokenizerEngine engine = doCreate();
 		StaticLog.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;

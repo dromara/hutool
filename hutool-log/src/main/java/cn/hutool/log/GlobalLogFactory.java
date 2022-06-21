@@ -20,7 +20,7 @@ public class GlobalLogFactory {
 		if (null == currentLogFactory) {
 			synchronized (lock) {
 				if (null == currentLogFactory) {
-					currentLogFactory = LogFactory.create();
+					currentLogFactory = LogFactory.of();
 				}
 			}
 		}

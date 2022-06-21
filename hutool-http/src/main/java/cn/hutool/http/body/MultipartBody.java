@@ -42,7 +42,7 @@ public class MultipartBody implements RequestBody {
 	 * @param charset 编码
 	 * @return MultipartBody
 	 */
-	public static MultipartBody create(final Map<String, Object> form, final Charset charset) {
+	public static MultipartBody of(final Map<String, Object> form, final Charset charset) {
 		return new MultipartBody(form, charset);
 	}
 

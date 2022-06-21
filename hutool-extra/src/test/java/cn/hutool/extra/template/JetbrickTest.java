@@ -15,7 +15,7 @@ public class JetbrickTest {
 				.setCustomEngine(JetbrickEngine.class);
 		final TemplateEngine engine = TemplateUtil.createEngine(config);
 		final Template template = engine.getTemplate("jetbrick_test.jetx");
-		final String result = template.render(Dict.create().set("name", "hutool"));
+		final String result = template.render(Dict.of().set("name", "hutool"));
 		Assert.assertEquals("你好,hutool", StrUtil.trim(result));
 	}
 
@@ -26,7 +26,7 @@ public class JetbrickTest {
 				.setCustomEngine(JetbrickEngine.class);
 		final TemplateEngine engine = TemplateUtil.createEngine(config);
 		final Template template = engine.getTemplate("hello,${name}");
-		final String result = template.render(Dict.create().set("name", "hutool"));
+		final String result = template.render(Dict.of().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", StrUtil.trim(result));
 	}
 }

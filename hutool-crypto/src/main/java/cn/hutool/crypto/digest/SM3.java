@@ -25,7 +25,7 @@ public class SM3 extends Digester {
 	 * @return SM3
 	 * @since 4.6.0
 	 */
-	public static SM3 create() {
+	public static SM3 of() {
 		return new SM3();
 	}
 

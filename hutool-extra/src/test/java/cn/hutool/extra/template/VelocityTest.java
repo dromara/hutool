@@ -15,7 +15,7 @@ public class VelocityTest {
 		config.setCharset(CharsetUtil.GBK);
 		final TemplateEngine engine = TemplateUtil.createEngine(config);
 		final Template template = engine.getTemplate("velocity_test_gbk.vtl");
-		final String result = template.render(Dict.create().set("name", "hutool"));
+		final String result = template.render(Dict.of().set("name", "hutool"));
 		Assert.assertEquals("你好,hutool", result);
 	}
 }

@@ -188,7 +188,7 @@ public final class UrlBuilder implements Builder<String> {
 	 *
 	 * @return UrlBuilder
 	 */
-	public static UrlBuilder create() {
+	public static UrlBuilder of() {
 		return new UrlBuilder();
 	}
 

@@ -9,7 +9,7 @@ public class NamingCaseTest {
 
 	@Test
 	public void toCamelCaseTest() {
-		Dict.create()
+		Dict.of()
 				.set("Table_Test_Of_day","tableTestOfDay")
 				.set("TableTestOfDay","TableTestOfDay")
 				.set("abc_1d","abc1d")
@@ -18,14 +18,14 @@ public class NamingCaseTest {
 
 	@Test
 	public void toCamelCaseFromDashedTest() {
-		Dict.create()
+		Dict.of()
 				.set("Table-Test-Of-day","tableTestOfDay")
 				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toCamelCase(key, CharUtil.DASHED)));
 	}
 
 	@Test
 	public void toUnderLineCaseTest() {
-		Dict.create()
+		Dict.of()
 				.set("Table_Test_Of_day", "table_test_of_day")
 				.set("_Table_Test_Of_day_", "_table_test_of_day_")
 				.set("_Table_Test_Of_DAY_", "_table_test_of_DAY_")

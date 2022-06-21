@@ -16,7 +16,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void buildTest() {
-		final String buildUrl = UrlBuilder.create().setHost("www.hutool.cn").build();
+		final String buildUrl = UrlBuilder.of().setHost("www.hutool.cn").build();
 		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
 	}
 
@@ -29,7 +29,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testHost() {
-		final String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("www.hutool.cn").build();
 		Assert.assertEquals("https://www.hutool.cn/", buildUrl);
@@ -37,7 +37,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testHostPort() {
-		final String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.setPort(8080)
@@ -47,7 +47,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testPathAndQuery() {
-		final String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.addPath("/aaa").addPath("bbb")
@@ -60,7 +60,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testQueryWithChinese() {
-		final String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.addPath("/aaa").addPath("bbb")
@@ -73,7 +73,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void testMultiQueryWithChinese() {
-		final String buildUrl = UrlBuilder.create()
+		final String buildUrl = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("www.hutool.cn")
 				.addPath("/s")
@@ -303,7 +303,7 @@ public class UrlBuilderTest {
 
 	@Test
 	public void addPathEncodeTest(){
-		final String url = UrlBuilder.create()
+		final String url = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("domain.cn")
 				.addPath("api")
@@ -317,7 +317,7 @@ public class UrlBuilderTest {
 	@Test
 	public void addPathEncodeTest2(){
 		// https://github.com/dromara/hutool/issues/1912
-		final String url = UrlBuilder.create()
+		final String url = UrlBuilder.of()
 				.setScheme("https")
 				.setHost("domain.cn")
 				.addPath("/api/xxx/bbb")

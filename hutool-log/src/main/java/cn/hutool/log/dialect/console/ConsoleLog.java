@@ -121,7 +121,7 @@ public class ConsoleLog extends AbstractLog {
 		}
 
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("date", DateUtil.formatNow())
 				.set("level", level.toString())
 				.set("name", this.name)

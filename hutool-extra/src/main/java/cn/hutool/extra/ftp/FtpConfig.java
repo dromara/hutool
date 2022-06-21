@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 public class FtpConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static FtpConfig create() {
+	public static FtpConfig of() {
 		return new FtpConfig();
 	}
 

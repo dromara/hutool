@@ -105,7 +105,7 @@ public class CompressUtil {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZArchiver(file);
 		}
-		return StreamArchiver.create(charset, archiverName, file);
+		return StreamArchiver.of(charset, archiverName, file);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class CompressUtil {
 		if (ArchiveStreamFactory.SEVEN_Z.equalsIgnoreCase(archiverName)) {
 			return new SevenZArchiver(out);
 		}
-		return StreamArchiver.create(charset, archiverName, out);
+		return StreamArchiver.of(charset, archiverName, out);
 	}
 
 	/**

@@ -35,7 +35,7 @@ public enum GlobalPruneTimer {
 	 * 构造
 	 */
 	GlobalPruneTimer() {
-		create();
+		init();
 	}
 
 	/**
@@ -50,9 +50,9 @@ public enum GlobalPruneTimer {
 	}
 
 	/**
-	 * 创建定时器
+	 * 初始化定时器
 	 */
-	public void create() {
+	public void init() {
 		if (null != pruneTimer) {
 			shutdownNow();
 		}

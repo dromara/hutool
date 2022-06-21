@@ -32,7 +32,7 @@ public class SqlBuilder implements Builder<String> {
 	 *
 	 * @return SQL构建器
 	 */
-	public static SqlBuilder create() {
+	public static SqlBuilder of() {
 		return new SqlBuilder();
 	}
 
@@ -42,7 +42,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @param wrapper 包装器
 	 * @return SQL构建器
 	 */
-	public static SqlBuilder create(final Wrapper wrapper) {
+	public static SqlBuilder of(final Wrapper wrapper) {
 		return new SqlBuilder(wrapper);
 	}
 
@@ -54,7 +54,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @since 5.5.3
 	 */
 	public static SqlBuilder of(final CharSequence sql) {
-		return create().append(sql);
+		return of().append(sql);
 	}
 
 	/**

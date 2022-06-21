@@ -50,7 +50,7 @@ public class QrConfig {
 	 * @return QrConfig
 	 * @since 4.1.14
 	 */
-	public static QrConfig create() {
+	public static QrConfig of() {
 		return new QrConfig();
 	}
 

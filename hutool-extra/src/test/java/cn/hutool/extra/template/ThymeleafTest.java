@@ -45,7 +45,7 @@ public class ThymeleafTest {
 		// 字符串模板
 		final TemplateEngine engine = new ThymeleafEngine(new TemplateConfig());
 		final Template template = engine.getTemplate("<h3 th:each=\"item : ${list}\" th:text=\"${item.name}\"></h3>");
-		final String render = template.render(Dict.create().set("list", list));
+		final String render = template.render(Dict.of().set("list", list));
 		Assert.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", render);
 	}
 

@@ -14,7 +14,7 @@ import static cn.hutool.core.lang.OptTest.User;
 public class DictTest {
 	@Test
 	public void dictTest(){
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("key1", 1)//int
 				.set("key2", 1000L)//long
 				.set("key3", DateTime.now());//Date
@@ -66,7 +66,7 @@ public class DictTest {
 	@Test
 	public void setFieldsTest() {
 		final User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
-		final Dict dict = Dict.create();
+		final Dict dict = Dict.of();
 		dict.setFields(user::getNickname, user::getUsername);
 		Assert.assertEquals("hutool", dict.get("username"));
 		Assert.assertNull(dict.get("nickname"));

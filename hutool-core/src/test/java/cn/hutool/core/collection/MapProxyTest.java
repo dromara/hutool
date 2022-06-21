@@ -39,7 +39,7 @@ public class MapProxyTest {
 
 	@Test
 	public void classProxyTest() {
-		final Student student = MapProxy.create(new HashMap<>()).toProxyBean(Student.class);
+		final Student student = MapProxy.of(new HashMap<>()).toProxyBean(Student.class);
 		student.setName("小明").setAge(18);
 		Assert.assertEquals(student.getAge(), 18);
 		Assert.assertEquals(student.getName(), "小明");

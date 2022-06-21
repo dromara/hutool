@@ -19,7 +19,7 @@ public class JWTTest {
 	@Test
 	public void createHs256Test(){
 		final byte[] key = "1234567890".getBytes();
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
@@ -59,7 +59,7 @@ public class JWTTest {
 
 	@Test
 	public void createNoneTest(){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
@@ -79,7 +79,7 @@ public class JWTTest {
 	 */
 	@Test(expected = JWTException.class)
 	public void needSignerTest(){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true);
@@ -150,7 +150,7 @@ public class JWTTest {
 
 	@Test()
 	public void getDateTest(){
-		final String token = JWT.create()
+		final String token = JWT.of()
 				.setIssuedAt(DateUtil.parse("2022-02-02"))
 				.setKey("123456".getBytes())
 				.sign();

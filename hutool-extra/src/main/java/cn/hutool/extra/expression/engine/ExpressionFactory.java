@@ -22,7 +22,7 @@ public class ExpressionFactory {
 	 * @return 单例的{@link ExpressionEngine}
 	 */
 	public static ExpressionEngine get(){
-		return Singleton.get(ExpressionEngine.class.getName(), ExpressionFactory::create);
+		return Singleton.get(ExpressionEngine.class.getName(), ExpressionFactory::of);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class ExpressionFactory {
 	 *
 	 * @return {@link ExpressionEngine}
 	 */
-	public static ExpressionEngine create() {
+	public static ExpressionEngine of() {
 		final ExpressionEngine engine = doCreate();
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;

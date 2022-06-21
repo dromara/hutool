@@ -115,7 +115,7 @@ public class XmlUtilTest {
 
 	@Test
 	public void mapToXmlTest() {
-		final Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())//
+		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())//
 				.put("name", "张三")//
 				.put("age", 12)//
 				.put("game", MapUtil.builder(new LinkedHashMap<String, Object>()).put("昵称", "Looly").put("level", 14).build())//
@@ -137,7 +137,7 @@ public class XmlUtilTest {
 	@Test
 	public void mapToXmlTest2() {
 		// 测试List
-		final Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
+		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())
 				.put("Town", ListUtil.of("town1", "town2"))
 				.build();
 
@@ -171,7 +171,7 @@ public class XmlUtilTest {
 	@Test
 	public void mapToXmlTestWithOmitXmlDeclaration() {
 
-		final Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
+		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())
 				.put("name", "ddatsh")
 				.build();
 		final String xml = XmlUtil.mapToXmlStr(map, true);

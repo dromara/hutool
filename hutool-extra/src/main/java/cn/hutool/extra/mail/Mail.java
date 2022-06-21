@@ -91,7 +91,7 @@ public class Mail implements Builder<MimeMessage> {
 	 * @param mailAccount 邮件帐号
 	 * @return Mail
 	 */
-	public static Mail create(final MailAccount mailAccount) {
+	public static Mail of(final MailAccount mailAccount) {
 		return new Mail(mailAccount);
 	}
 
@@ -100,7 +100,7 @@ public class Mail implements Builder<MimeMessage> {
 	 *
 	 * @return Mail
 	 */
-	public static Mail create() {
+	public static Mail of() {
 		return new Mail();
 	}
 

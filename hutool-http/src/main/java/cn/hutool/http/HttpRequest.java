@@ -211,7 +211,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	// ---------------------------------------------------------------- static Http Method end
 
-	private HttpConfig config = HttpConfig.create();
+	private HttpConfig config = HttpConfig.of();
 	private UrlBuilder url;
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
@@ -1141,7 +1141,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.httpConnection = HttpConnection
 				// issue#I50NHQ
 				// 在生成正式URL前，设置自定义编码
-				.create(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
+				.of(this.url.setCharset(this.charset).toURL(this.urlHandler), config.proxy)//
 				.setConnectTimeout(config.connectionTimeout)//
 				.setReadTimeout(config.readTimeout)//
 				.setMethod(this.method)//
@@ -1263,9 +1263,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		final RequestBody body;
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			body = BytesBody.create(this.bodyBytes);
+			body = BytesBody.of(this.bodyBytes);
 		} else {
-			body = FormUrlEncodedBody.create(this.form, this.charset);
+			body = FormUrlEncodedBody.of(this.form, this.charset);
 		}
 		body.writeClose(this.httpConnection.getOutputStream());
 	}
@@ -1277,7 +1277,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException IO异常
 	 */
 	private void sendMultipart() throws IOException {
-		final MultipartBody multipartBody = MultipartBody.create(this.form, this.charset);
+		final MultipartBody multipartBody = MultipartBody.of(this.form, this.charset);
 		//设置表单类型为Multipart（文件上传）
 		this.httpConnection.header(Header.CONTENT_TYPE, multipartBody.getContentType(), true);
 		multipartBody.writeClose(this.httpConnection.getOutputStream());

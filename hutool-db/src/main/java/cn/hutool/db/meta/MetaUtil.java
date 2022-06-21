@@ -207,7 +207,7 @@ public class MetaUtil {
 	 * @since 5.7.22
 	 */
 	public static Table getTableMeta(final DataSource ds, String catalog, String schema, final String tableName) {
-		final Table table = Table.create(tableName);
+		final Table table = Table.of(tableName);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -246,7 +246,7 @@ public class MetaUtil {
 			try (final ResultSet rs = metaData.getColumns(catalog, schema, tableName, null)) {
 				if (null != rs) {
 					while (rs.next()) {
-						table.setColumn(Column.create(table, rs));
+						table.setColumn(Column.of(table, rs));
 					}
 				}
 			}
@@ -269,7 +269,7 @@ public class MetaUtil {
 							indexInfo = new IndexInfo(rs.getBoolean("NON_UNIQUE"), indexName, tableName, schema, catalog);
 							indexInfoMap.put(key, indexInfo);
 						}
-						indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.create(rs));
+						indexInfo.getColumnIndexInfoList().add(ColumnIndexInfo.of(rs));
 					}
 				}
 				table.setIndexInfoList(ListUtil.of(indexInfoMap.values()));

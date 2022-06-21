@@ -136,7 +136,7 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * @param setting 数据库配置项
 	 * @return 日志实现类
 	 */
-	public static DSFactory create(final Setting setting) {
+	public static DSFactory of(final Setting setting) {
 		final DSFactory dsFactory = doCreate(setting);
 		log.debug("Use [{}] DataSource As Default", dsFactory.dataSourceName);
 		return dsFactory;

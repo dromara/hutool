@@ -411,7 +411,7 @@ public class Scheduler implements Serializable {
 			if(null == this.threadExecutor){
 				// 无界线程池，确保每一个需要执行的线程都可以及时运行，同时复用已有线程避免线程重复创建
 				this.threadExecutor = ExecutorBuilder.of().useSynchronousQueue().setThreadFactory(//
-						ThreadFactoryBuilder.create().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
+						ThreadFactoryBuilder.of().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
 				).build();
 			}
 			this.taskLauncherManager = new TaskLauncherManager(this);

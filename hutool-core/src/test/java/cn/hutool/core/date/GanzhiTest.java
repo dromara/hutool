@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.date.chinese.ChineseDate;
 import cn.hutool.core.date.chinese.GanZhi;
 import org.junit.Assert;
 import org.junit.Test;

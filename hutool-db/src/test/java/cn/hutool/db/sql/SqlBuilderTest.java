@@ -7,22 +7,22 @@ public class SqlBuilderTest {
 
 	@Test
 	public void queryNullTest() {
-		final SqlBuilder builder = SqlBuilder.create().select().from("user").where(new Condition("name", "= null"));
+		final SqlBuilder builder = SqlBuilder.of().select().from("user").where(new Condition("name", "= null"));
 		Assert.assertEquals("SELECT * FROM user WHERE name IS NULL", builder.build());
 
-		final SqlBuilder builder2 = SqlBuilder.create().select().from("user").where(new Condition("name", "is null"));
+		final SqlBuilder builder2 = SqlBuilder.of().select().from("user").where(new Condition("name", "is null"));
 		Assert.assertEquals("SELECT * FROM user WHERE name IS NULL", builder2.build());
 
-		final SqlBuilder builder3 = SqlBuilder.create().select().from("user").where(new Condition("name", "!= null"));
+		final SqlBuilder builder3 = SqlBuilder.of().select().from("user").where(new Condition("name", "!= null"));
 		Assert.assertEquals("SELECT * FROM user WHERE name IS NOT NULL", builder3.build());
 
-		final SqlBuilder builder4 = SqlBuilder.create().select().from("user").where(new Condition("name", "is not null"));
+		final SqlBuilder builder4 = SqlBuilder.of().select().from("user").where(new Condition("name", "is not null"));
 		Assert.assertEquals("SELECT * FROM user WHERE name IS NOT NULL", builder4.build());
 	}
 
 	@Test
 	public void orderByTest() {
-		final SqlBuilder builder = SqlBuilder.create().select("id", "username").from("user")
+		final SqlBuilder builder = SqlBuilder.of().select("id", "username").from("user")
 				.join("role", SqlBuilder.Join.INNER)
 				.on("user.id = role.user_id")
 				.where(new Condition("age", ">=", 18),

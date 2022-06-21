@@ -47,7 +47,7 @@ public class QrCodeUtilTest {
 		final String targetPath = FileUtil.isWindows() ? "d:/test/qrcodeWithLogo.jpg" : "~/Desktop/hutool/qrcodeWithLogo.jpg";
 		QrCodeUtil.generate(//
 				"https://hutool.cn/", //
-				QrConfig.create().setImg(icon), //
+				QrConfig.of().setImg(icon), //
 				FileUtil.touch(targetPath));
 	}
 
@@ -91,7 +91,7 @@ public class QrCodeUtilTest {
 
 	@Test
 	public void pdf417Test(){
-		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
+		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.of());
 		Assert.assertNotNull(image);
 	}
 

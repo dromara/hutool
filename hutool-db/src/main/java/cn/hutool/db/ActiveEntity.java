@@ -23,7 +23,7 @@ public class ActiveEntity extends Entity {
 	 *
 	 * @return ActiveEntity
 	 */
-	public static ActiveEntity create() {
+	public static ActiveEntity of() {
 		return new ActiveEntity();
 	}
 
@@ -33,7 +33,7 @@ public class ActiveEntity extends Entity {
 	 * @param tableName 表名
 	 * @return ActiveEntity
 	 */
-	public static ActiveEntity create(final String tableName) {
+	public static ActiveEntity of(final String tableName) {
 		return new ActiveEntity(tableName);
 	}
 
@@ -45,7 +45,7 @@ public class ActiveEntity extends Entity {
 	 * @return ActiveEntity
 	 */
 	public static <T> ActiveEntity parse(final T bean) {
-		return create(null).parseBean(bean);
+		return of(null).parseBean(bean);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ActiveEntity extends Entity {
 	 * @return ActiveEntity
 	 */
 	public static <T> ActiveEntity parse(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
-		return create(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
+		return of(null).parseBean(bean, isToUnderlineCase, ignoreNullValue);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ActiveEntity extends Entity {
 	 * @return ActiveEntity
 	 */
 	public static <T> ActiveEntity parseWithUnderlineCase(final T bean) {
-		return create(null).parseBean(bean, true, true);
+		return of(null).parseBean(bean, true, true);
 	}
 	// --------------------------------------------------------------- Static method end
 

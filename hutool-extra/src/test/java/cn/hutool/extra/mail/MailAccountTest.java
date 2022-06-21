@@ -47,7 +47,7 @@ public class MailAccountTest {
 		mailAccount.setAuth(true);
 		mailAccount.setSslEnable(true);
 
-		final Mail mail = Mail.create(mailAccount)
+		final Mail mail = Mail.of(mailAccount)
 				.setTos("xx@xx.com")
 				.setTitle("邮箱验证")
 				.setContent("您的验证码是：<h3>2333</h3>")

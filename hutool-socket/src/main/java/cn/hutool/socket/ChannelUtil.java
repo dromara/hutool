@@ -29,7 +29,7 @@ public class ChannelUtil {
 		try {
 			return AsynchronousChannelGroup.withFixedThreadPool(//
 					poolSize, // 默认线程池大小
-					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
+					ThreadFactoryBuilder.of().setNamePrefix("Huool-socket-").build()//
 			);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);

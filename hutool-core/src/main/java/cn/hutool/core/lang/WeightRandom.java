@@ -40,7 +40,7 @@ public class WeightRandom<T> implements Serializable {
 	 * @param <T> 权重随机获取的对象类型
 	 * @return WeightRandom
 	 */
-	public static <T> WeightRandom<T> create() {
+	public static <T> WeightRandom<T> of() {
 		return new WeightRandom<>();
 	}
 

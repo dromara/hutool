@@ -9,7 +9,7 @@ public class MapBuilderTest {
 
 	@Test
 	public void conditionPutTest() {
-		final Map<String, String> map = MapBuilder.<String, String>create()
+		final Map<String, String> map = MapBuilder.<String, String>of()
 				.put(true, "a", "1")
 				.put(false, "b", "2")
 				.put(true, "c", () -> getValue(3))

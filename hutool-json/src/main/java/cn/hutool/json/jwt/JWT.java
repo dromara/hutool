@@ -52,7 +52,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *
 	 * @return JWT
 	 */
-	public static JWT create() {
+	public static JWT of() {
 		return new JWT();
 	}
 

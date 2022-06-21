@@ -15,7 +15,7 @@ public class StringHandler implements RsHandler<String>{
 	 * 创建一个 NumberHandler对象
 	 * @return NumberHandler对象
 	 */
-	public static StringHandler create() {
+	public static StringHandler of() {
 		return new StringHandler();
 	}
 

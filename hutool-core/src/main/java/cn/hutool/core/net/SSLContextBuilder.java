@@ -41,7 +41,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 	 *
 	 * @return SSLContextBuilder
 	 */
-	public static SSLContextBuilder create() {
+	public static SSLContextBuilder of() {
 		return new SSLContextBuilder();
 	}
 

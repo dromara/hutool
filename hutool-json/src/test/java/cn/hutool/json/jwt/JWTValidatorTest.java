@@ -18,7 +18,7 @@ public class JWTValidatorTest {
 
 	@Test(expected = ValidateException.class)
 	public void issueAtTest(){
-		final String token = JWT.create()
+		final String token = JWT.of()
 				.setIssuedAt(DateUtil.date())
 				.setKey("123456".getBytes())
 				.sign();
@@ -29,7 +29,7 @@ public class JWTValidatorTest {
 
 	@Test
 	public void issueAtPassTest(){
-		final String token = JWT.create()
+		final String token = JWT.of()
 				.setIssuedAt(DateUtil.date())
 				.setKey("123456".getBytes())
 				.sign();
@@ -40,7 +40,7 @@ public class JWTValidatorTest {
 
 	@Test(expected = ValidateException.class)
 	public void notBeforeTest(){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setNotBefore(DateUtil.date());
 
 		JWTValidator.of(jwt).validateDate(DateUtil.yesterday());
@@ -48,14 +48,14 @@ public class JWTValidatorTest {
 
 	@Test
 	public void notBeforePassTest(){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setNotBefore(DateUtil.date());
 		JWTValidator.of(jwt).validateDate(DateUtil.date());
 	}
 
 	@Test
 	public void validateAlgorithmTest(){
-		final String token = JWT.create()
+		final String token = JWT.of()
 				.setNotBefore(DateUtil.date())
 				.setKey("123456".getBytes())
 				.sign();
@@ -74,7 +74,7 @@ public class JWTValidatorTest {
 
 	@Test(expected = ValidateException.class)
 	public void validateDateTest(){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setPayload("id", 123)
 				.setPayload("username", "hutool")
 				.setExpiresAt(DateUtil.parse("2021-10-13 09:59:00"));
@@ -90,7 +90,7 @@ public class JWTValidatorTest {
 		final Date expiredTime = new Date(now + expired);
 
 		// 使用这种方式生成token
-		final String token = JWT.create().setPayload("sub", "blue-light").setIssuedAt(nowTime).setNotBefore(expiredTime)
+		final String token = JWT.of().setPayload("sub", "blue-light").setIssuedAt(nowTime).setNotBefore(expiredTime)
 				.setExpiresAt(expiredTime).setKey("123456".getBytes()).sign();
 
 		// 使用这种方式验证token

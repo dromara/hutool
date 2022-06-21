@@ -29,7 +29,7 @@ public class FileSystemUtil {
 	 * @param path 文件路径，可以是目录或Zip文件等
 	 * @return {@link FileSystem}
 	 */
-	public static FileSystem create(final String path) {
+	public static FileSystem of(final String path) {
 		try {
 			return FileSystems.newFileSystem(
 					Paths.get(path).toUri(),

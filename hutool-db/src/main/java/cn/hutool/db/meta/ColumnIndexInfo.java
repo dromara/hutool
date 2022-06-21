@@ -21,7 +21,7 @@ public class ColumnIndexInfo implements Serializable, Cloneable {
 	 * @param rs 结果集，通过DatabaseMetaData#getIndexInfo获取
 	 * @return ColumnIndexInfo
 	 */
-	public static ColumnIndexInfo create(final ResultSet rs) {
+	public static ColumnIndexInfo of(final ResultSet rs) {
 		try {
 			return new ColumnIndexInfo(
 					rs.getString("COLUMN_NAME"),

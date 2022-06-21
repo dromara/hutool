@@ -21,7 +21,7 @@ public class HttpConfig {
 	 *
 	 * @return HttpConfig
 	 */
-	public static HttpConfig create() {
+	public static HttpConfig of() {
 		return new HttpConfig();
 	}
 

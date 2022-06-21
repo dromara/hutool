@@ -42,8 +42,8 @@ public class HttpConnection {
 	 * @param proxy  代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection create(final String urlStr, final Proxy proxy) {
-		return create(URLUtil.toUrlForHttp(urlStr), proxy);
+	public static HttpConnection of(final String urlStr, final Proxy proxy) {
+		return of(URLUtil.toUrlForHttp(urlStr), proxy);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class HttpConnection {
 	 * @param proxy 代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection create(final URL url, final Proxy proxy) {
+	public static HttpConnection of(final URL url, final Proxy proxy) {
 		return new HttpConnection(url, proxy);
 	}
 

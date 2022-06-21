@@ -30,7 +30,7 @@ public class ConsoleTable {
 	 * @return ConsoleTable
 	 * @since 5.4.5
 	 */
-	public static ConsoleTable create() {
+	public static ConsoleTable of() {
 		return new ConsoleTable();
 	}
 

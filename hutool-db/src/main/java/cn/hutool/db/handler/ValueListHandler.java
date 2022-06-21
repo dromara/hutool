@@ -17,7 +17,7 @@ public class ValueListHandler implements RsHandler<List<List<Object>>>{
 	 * 创建一个 EntityListHandler对象
 	 * @return EntityListHandler对象
 	 */
-	public static ValueListHandler create() {
+	public static ValueListHandler of() {
 		return new ValueListHandler();
 	}
 

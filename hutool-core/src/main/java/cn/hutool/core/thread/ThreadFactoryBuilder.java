@@ -44,7 +44,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	 *
 	 * @return {@code ThreadFactoryBuilder}
 	 */
-	public static ThreadFactoryBuilder create() {
+	public static ThreadFactoryBuilder of() {
 		return new ThreadFactoryBuilder();
 	}
 

@@ -69,7 +69,7 @@ public class BeanConverter implements Converter, Serializable {
 				BeanUtil.isBean(value.getClass())) {
 			if (value instanceof Map && targetClass.isInterface()) {
 				// 将Map动态代理为Bean
-				return MapProxy.create((Map<?, ?>) value).toProxyBean(targetClass);
+				return MapProxy.of((Map<?, ?>) value).toProxyBean(targetClass);
 			}
 
 			//限定被转换对象类型

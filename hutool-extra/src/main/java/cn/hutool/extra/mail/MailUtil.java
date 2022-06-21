@@ -388,7 +388,7 @@ public class MailUtil {
 	 */
 	private static String send(final MailAccount mailAccount, final boolean useGlobalSession, final Collection<String> tos, final Collection<String> ccs, final Collection<String> bccs, final String subject, final String content,
 							   final Map<String, InputStream> imageMap, final boolean isHtml, final File... files) {
-		final Mail mail = Mail.create(mailAccount).setUseGlobalSession(useGlobalSession);
+		final Mail mail = Mail.of(mailAccount).setUseGlobalSession(useGlobalSession);
 
 		// 可选抄送人
 		if (CollUtil.isNotEmpty(ccs)) {

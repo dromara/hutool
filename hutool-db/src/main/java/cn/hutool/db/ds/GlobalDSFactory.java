@@ -42,7 +42,7 @@ public class GlobalDSFactory {
 		if (null == factory) {
 			synchronized (lock) {
 				if (null == factory) {
-					factory = DSFactory.create(null);
+					factory = DSFactory.of(null);
 				}
 			}
 		}

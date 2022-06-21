@@ -34,7 +34,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	 * @param map 被代理的Map
 	 * @return {@link MapProxy}
 	 */
-	public static MapProxy create(final Map<?, ?> map) {
+	public static MapProxy of(final Map<?, ?> map) {
 		return (map instanceof MapProxy) ? (MapProxy) map : new MapProxy(map);
 	}
 

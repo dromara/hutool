@@ -16,7 +16,7 @@ public class ArchiverTest {
 	@Ignore
 	public void zipTest(){
 		final File file = FileUtil.file("d:/test/compress/test.zip");
-		StreamArchiver.create(CharsetUtil.UTF_8, ArchiveStreamFactory.ZIP, file)
+		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.ZIP, file)
 				.add(FileUtil.file("d:/Java"), (f)->{
 					Console.log("Add: {}", f.getPath());
 					return true;
@@ -28,7 +28,7 @@ public class ArchiverTest {
 	@Ignore
 	public void tarTest(){
 		final File file = FileUtil.file("d:/test/compress/test.tar");
-		StreamArchiver.create(CharsetUtil.UTF_8, ArchiveStreamFactory.TAR, file)
+		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.TAR, file)
 				.add(FileUtil.file("d:/Java"), (f)->{
 					Console.log("Add: {}", f.getPath());
 					return true;
@@ -40,7 +40,7 @@ public class ArchiverTest {
 	@Ignore
 	public void cpioTest(){
 		final File file = FileUtil.file("d:/test/compress/test.cpio");
-		StreamArchiver.create(CharsetUtil.UTF_8, ArchiveStreamFactory.CPIO, file)
+		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.CPIO, file)
 				.add(FileUtil.file("d:/Java"), (f)->{
 					Console.log("Add: {}", f.getPath());
 					return true;

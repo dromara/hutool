@@ -23,7 +23,7 @@ public class TemplateFactory {
 	 * @return 单例的TemplateEngine
 	 */
 	public static TemplateEngine get(){
-		return Singleton.get(TemplateEngine.class.getName(), TemplateFactory::create);
+		return Singleton.get(TemplateEngine.class.getName(), TemplateFactory::of);
 	}
 
 	/**
@@ -33,8 +33,8 @@ public class TemplateFactory {
 	 * @return {@link TemplateEngine}
 	 * @since 5.3.3
 	 */
-	public static TemplateEngine create() {
-		return create(new TemplateConfig());
+	public static TemplateEngine of() {
+		return of(new TemplateConfig());
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class TemplateFactory {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link TemplateEngine}
 	 */
-	public static TemplateEngine create(final TemplateConfig config) {
+	public static TemplateEngine of(final TemplateConfig config) {
 		final TemplateEngine engine = doCreate(config);
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;

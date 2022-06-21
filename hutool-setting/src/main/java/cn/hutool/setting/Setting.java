@@ -63,7 +63,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return Setting
 	 * @since 5.4.3
 	 */
-	public static Setting create() {
+	public static Setting of() {
 		return new Setting();
 	}
 

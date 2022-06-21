@@ -45,7 +45,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 *
 	 * @return Dict
 	 */
-	public static Dict create() {
+	public static Dict of() {
 		return new Dict();
 	}
 
@@ -57,7 +57,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @return Vo
 	 */
 	public static <T> Dict parse(final T bean) {
-		return create().parseBean(bean);
+		return of().parseBean(bean);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 */
 	@SafeVarargs
 	public static Dict ofEntries(final Map.Entry<String, Object>... pairs) {
-		final Dict dict = create();
+		final Dict dict = of();
 		for (final Map.Entry<String, Object> pair : pairs) {
 			dict.put(pair.getKey(), pair.getValue());
 		}
@@ -94,7 +94,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @since 5.4.1
 	 */
 	public static Dict ofKvs(final Object... keysAndValues) {
-		final Dict dict = create();
+		final Dict dict = of();
 
 		String key = null;
 		for (int i = 0; i < keysAndValues.length; i++) {

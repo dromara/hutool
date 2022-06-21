@@ -15,7 +15,7 @@ public class NumberHandler implements RsHandler<Number>{
 	 * 创建一个 NumberHandler对象
 	 * @return NumberHandler对象
 	 */
-	public static NumberHandler create() {
+	public static NumberHandler of() {
 		return new NumberHandler();
 	}
 

@@ -873,7 +873,7 @@ public class MapUtil {
 	 * @since 3.2.0
 	 */
 	public static MapProxy createProxy(final Map<?, ?> map) {
-		return MapProxy.create(map);
+		return MapProxy.of(map);
 	}
 
 	/**

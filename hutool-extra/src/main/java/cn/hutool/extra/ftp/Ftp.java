@@ -141,7 +141,7 @@ public class Ftp extends AbstractFtp {
 	 * @since 5.7.22
 	 */
 	public Ftp(final FTPClient client) {
-		super(FtpConfig.create());
+		super(FtpConfig.of());
 		this.client = client;
 	}
 

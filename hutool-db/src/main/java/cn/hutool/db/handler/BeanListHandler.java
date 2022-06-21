@@ -24,7 +24,7 @@ public class BeanListHandler<E> implements RsHandler<List<E>> {
 	 * @param beanType Bean类型
 	 * @return BeanListHandler对象
 	 */
-	public static <E> BeanListHandler<E> create(final Class<E> beanType) {
+	public static <E> BeanListHandler<E> of(final Class<E> beanType) {
 		return new BeanListHandler<>(beanType);
 	}
 

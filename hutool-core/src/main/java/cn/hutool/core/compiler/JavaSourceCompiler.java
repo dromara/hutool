@@ -75,7 +75,7 @@ public class JavaSourceCompiler {
 	 * @param parent 父类加载器
 	 * @return Java源码编译器
 	 */
-	public static JavaSourceCompiler create(final ClassLoader parent) {
+	public static JavaSourceCompiler of(final ClassLoader parent) {
 		return new JavaSourceCompiler(parent);
 	}
 

@@ -51,7 +51,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	@Override
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		SqlBuilder.validateEntity(entity);
-		final SqlBuilder builder = SqlBuilder.create(wrapper);
+		final SqlBuilder builder = SqlBuilder.of(wrapper);
 
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();

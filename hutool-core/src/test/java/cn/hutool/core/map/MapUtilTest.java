@@ -226,8 +226,8 @@ public class MapUtilTest {
 
 	@Test
 	public void valuesOfKeysTest() {
-		final Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
-		final Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", 23);
+		final Dict v2 = Dict.of().set("age", 13).set("id", 15).set("name", "李四");
 
 		final String[] keys = v1.keySet().toArray(new String[0]);
 		final ArrayList<Object> v1s = MapUtil.valuesOfKeys(v1, keys);

@@ -32,7 +32,7 @@ public class SimpleFtpServer {
 	 *
 	 * @return SimpleFtpServer
 	 */
-	public static SimpleFtpServer create() {
+	public static SimpleFtpServer of() {
 		return new SimpleFtpServer();
 	}
 

@@ -26,8 +26,8 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	 * @return MapBuilder
 	 * @since 5.3.0
 	 */
-	public static <K, V> MapBuilder<K, V> create() {
-		return create(false);
+	public static <K, V> MapBuilder<K, V> of() {
+		return of(false);
 	}
 
 	/**
@@ -39,8 +39,8 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	 * @return MapBuilder
 	 * @since 5.3.0
 	 */
-	public static <K, V> MapBuilder<K, V> create(final boolean isLinked) {
-		return create(MapUtil.newHashMap(isLinked));
+	public static <K, V> MapBuilder<K, V> of(final boolean isLinked) {
+		return of(MapUtil.newHashMap(isLinked));
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	 * @return MapBuilder
 	 * @since 3.2.3
 	 */
-	public static <K, V> MapBuilder<K, V> create(final Map<K, V> map) {
+	public static <K, V> MapBuilder<K, V> of(final Map<K, V> map) {
 		return new MapBuilder<>(map);
 	}
 

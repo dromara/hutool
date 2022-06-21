@@ -27,7 +27,7 @@ public class PageResultHandler implements RsHandler<PageResult<Entity>> {
 	 * @param pageResult 分页结果集空对象
 	 * @return EntityHandler对象
 	 */
-	public static PageResultHandler create(final PageResult<Entity> pageResult) {
+	public static PageResultHandler of(final PageResult<Entity> pageResult) {
 		return new PageResultHandler(pageResult);
 	}
 

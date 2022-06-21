@@ -59,7 +59,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @return 代理对象
 	 */
 	public static <T> T createProxy(final T target, final Aspect aspect) {
-		return create().proxy(target, aspect);
+		return of().proxy(target, aspect);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class ProxyFactory implements Serializable {
 	 *
 	 * @return 代理工厂
 	 */
-	public static ProxyFactory create() {
+	public static ProxyFactory of() {
 		return ServiceLoaderUtil.loadFirstAvailable(ProxyFactory.class);
 	}
 }

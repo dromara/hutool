@@ -22,7 +22,7 @@ public class EntityHandler implements RsHandler<Entity>{
 	 * 创建一个 EntityHandler对象
 	 * @return EntityHandler对象
 	 */
-	public static EntityHandler create() {
+	public static EntityHandler of() {
 		return new EntityHandler();
 	}
 

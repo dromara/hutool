@@ -30,7 +30,7 @@ public class MapConvertTest {
 	@Test
 	public void mapToMapTest() {
 		final Map<String, Object> srcMap = MapBuilder
-				.create(new HashMap<String, Object>())
+				.of(new HashMap<String, Object>())
 				.put("name", "AAA")
 				.put("age", 45).map();
 

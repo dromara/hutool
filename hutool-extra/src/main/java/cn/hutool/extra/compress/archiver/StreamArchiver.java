@@ -41,7 +41,7 @@ public class StreamArchiver implements Archiver {
 	 * @param file         归档输出的文件
 	 * @return StreamArchiver
 	 */
-	public static StreamArchiver create(final Charset charset, final String archiverName, final File file) {
+	public static StreamArchiver of(final Charset charset, final String archiverName, final File file) {
 		return new StreamArchiver(charset, archiverName, file);
 	}
 
@@ -53,7 +53,7 @@ public class StreamArchiver implements Archiver {
 	 * @param out          归档输出的流
 	 * @return StreamArchiver
 	 */
-	public static StreamArchiver create(final Charset charset, final String archiverName, final OutputStream out) {
+	public static StreamArchiver of(final Charset charset, final String archiverName, final OutputStream out) {
 		return new StreamArchiver(charset, archiverName, out);
 	}
 

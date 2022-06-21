@@ -62,7 +62,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CaseInsensitiveMap(final int initialCapacity, final float loadFactor) {
-		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)));
+		this(MapBuilder.of(new HashMap<>(initialCapacity, loadFactor)));
 	}
 
 	/**

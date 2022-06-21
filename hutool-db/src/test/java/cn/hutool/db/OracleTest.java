@@ -23,9 +23,9 @@ public class OracleTest {
 		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		query.setPage(page);
 
-		final SqlBuilder find = SqlBuilder.create(null).query(query).orderBy(page.getOrders());
+		final SqlBuilder find = SqlBuilder.of(null).query(query).orderBy(page.getOrders());
 		final int[] startEnd = page.getStartEnd();
-		final SqlBuilder builder = SqlBuilder.create(null).append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")//
+		final SqlBuilder builder = SqlBuilder.of(null).append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")//
 				.append(find)//
 				.append(" ) row_ where rownum <= ").append(startEnd[1])//
 				.append(") table_alias")//

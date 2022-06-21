@@ -4,7 +4,7 @@ public class SimpleFtpServerTest {
 
 	public static void main(final String[] args) {
 		SimpleFtpServer
-				.create()
+				.of()
 				.addAnonymous("d:/test/ftp/")
 				.start();
 	}

@@ -45,7 +45,7 @@ public class Table implements Serializable, Cloneable {
 	 */
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
-	public static Table create(final String tableName) {
+	public static Table of(final String tableName) {
 		return new Table(tableName);
 	}
 

@@ -456,7 +456,7 @@ public class ThreadUtil {
 	 * @since 4.1.13
 	 */
 	public static ThreadFactoryBuilder createThreadFactoryBuilder() {
-		return ThreadFactoryBuilder.create();
+		return ThreadFactoryBuilder.of();
 	}
 
 	/**
@@ -468,7 +468,7 @@ public class ThreadUtil {
 	 * @since 5.8.0
 	 */
 	public static ThreadFactory createThreadFactory(final String threadNamePrefix) {
-		return ThreadFactoryBuilder.create().setNamePrefix(threadNamePrefix).build();
+		return ThreadFactoryBuilder.of().setNamePrefix(threadNamePrefix).build();
 	}
 
 	/**

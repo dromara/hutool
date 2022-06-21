@@ -22,7 +22,7 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 	 * 创建一个 EntityListHandler对象
 	 * @return EntityListHandler对象
 	 */
-	public static EntityListHandler create() {
+	public static EntityListHandler of() {
 		return new EntityListHandler();
 	}
 

@@ -25,7 +25,7 @@ public class YamlUtilTest {
 	@Test
 	@Ignore
 	public void dumpTest() {
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("name", "hutool")
 				.set("count", 1000);
 

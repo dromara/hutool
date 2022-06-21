@@ -195,8 +195,8 @@ public class WatchMonitor extends WatchServer {
 	 * @param watcher {@link Watcher}
 	 * @return WatchMonitor
 	 */
-	public static WatchMonitor createAll(final URI uri, final Watcher watcher) {
-		return createAll(Paths.get(uri), watcher);
+	public static WatchMonitor ofAll(final URI uri, final Watcher watcher) {
+		return ofAll(Paths.get(uri), watcher);
 	}
 
 	/**
@@ -206,9 +206,9 @@ public class WatchMonitor extends WatchServer {
 	 * @param watcher {@link Watcher}
 	 * @return WatchMonitor
 	 */
-	public static WatchMonitor createAll(final URL url, final Watcher watcher) {
+	public static WatchMonitor ofAll(final URL url, final Watcher watcher) {
 		try {
-			return createAll(Paths.get(url.toURI()), watcher);
+			return ofAll(Paths.get(url.toURI()), watcher);
 		} catch (final URISyntaxException e) {
 			throw new WatchException(e);
 		}
@@ -221,8 +221,8 @@ public class WatchMonitor extends WatchServer {
 	 * @param watcher {@link Watcher}
 	 * @return WatchMonitor
 	 */
-	public static WatchMonitor createAll(final File file, final Watcher watcher) {
-		return createAll(file.toPath(), watcher);
+	public static WatchMonitor ofAll(final File file, final Watcher watcher) {
+		return ofAll(file.toPath(), watcher);
 	}
 
 	/**
@@ -232,8 +232,8 @@ public class WatchMonitor extends WatchServer {
 	 * @param watcher {@link Watcher}
 	 * @return WatchMonitor
 	 */
-	public static WatchMonitor createAll(final String path, final Watcher watcher) {
-		return createAll(Paths.get(path), watcher);
+	public static WatchMonitor ofAll(final String path, final Watcher watcher) {
+		return ofAll(Paths.get(path), watcher);
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class WatchMonitor extends WatchServer {
 	 * @param watcher {@link Watcher}
 	 * @return WatchMonitor
 	 */
-	public static WatchMonitor createAll(final Path path, final Watcher watcher) {
+	public static WatchMonitor ofAll(final Path path, final Watcher watcher) {
 		final WatchMonitor watchMonitor = of(path, EVENTS_ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;

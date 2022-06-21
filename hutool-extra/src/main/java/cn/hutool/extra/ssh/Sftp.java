@@ -111,7 +111,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(final Session session, final Charset charset) {
-		super(FtpConfig.create().setCharset(charset));
+		super(FtpConfig.of().setCharset(charset));
 		init(session, charset);
 	}
 
@@ -122,7 +122,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public Sftp(final ChannelSftp channel, final Charset charset) {
-		super(FtpConfig.create().setCharset(charset));
+		super(FtpConfig.of().setCharset(charset));
 		init(channel, charset);
 	}
 
@@ -135,7 +135,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.8.4
 	 */
 	public Sftp(final Session session, final Charset charset, final long timeOut) {
-		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		super(FtpConfig.of().setCharset(charset).setConnectionTimeout(timeOut));
 		init(session, charset);
 	}
 
@@ -148,7 +148,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.8.4
 	 */
 	public Sftp(final ChannelSftp channel, final Charset charset, final long timeOut) {
-		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		super(FtpConfig.of().setCharset(charset).setConnectionTimeout(timeOut));
 		init(channel, charset);
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end

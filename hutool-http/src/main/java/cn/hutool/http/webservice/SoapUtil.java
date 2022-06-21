@@ -27,7 +27,7 @@ public class SoapUtil {
 	 * @return {@link SoapClient}
 	 */
 	public static SoapClient createClient(final String url) {
-		return SoapClient.create(url);
+		return SoapClient.of(url);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class SoapUtil {
 	 * @return {@link SoapClient}
 	 */
 	public static SoapClient createClient(final String url, final SoapProtocol protocol) {
-		return SoapClient.create(url, protocol);
+		return SoapClient.of(url, protocol);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class SoapUtil {
 	 * @since 4.5.6
 	 */
 	public static SoapClient createClient(final String url, final SoapProtocol protocol, final String namespaceURI) {
-		return SoapClient.create(url, protocol, namespaceURI);
+		return SoapClient.of(url, protocol, namespaceURI);
 	}
 
 	/**

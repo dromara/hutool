@@ -26,7 +26,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers  观察者列表
 	 * @return {@link WatcherChain}
 	 */
-	public static WatcherChain create(final Watcher... watchers) {
+	public static WatcherChain of(final Watcher... watchers) {
 		return new WatcherChain(watchers);
 	}
 

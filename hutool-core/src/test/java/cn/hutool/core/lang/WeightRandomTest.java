@@ -8,7 +8,7 @@ public class WeightRandomTest {
 
 	@Test
 	public void weightRandomTest() {
-		final WeightRandom<String> random = WeightRandom.create();
+		final WeightRandom<String> random = WeightRandom.of();
 		random.add("A", 10);
 		random.add("B", 50);
 		random.add("C", 100);

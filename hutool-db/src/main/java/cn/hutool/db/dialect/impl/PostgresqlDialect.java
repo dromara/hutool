@@ -35,7 +35,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for Postgres.");
 		SqlBuilder.validateEntity(entity);
-		final SqlBuilder builder = SqlBuilder.create(wrapper);
+		final SqlBuilder builder = SqlBuilder.of(wrapper);
 
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();

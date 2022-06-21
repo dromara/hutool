@@ -133,7 +133,7 @@ public interface Dialect extends Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	default PreparedStatement psForCount(final Connection conn, final Query query) throws SQLException {
-		return psForCount(conn, SqlBuilder.create().query(query));
+		return psForCount(conn, SqlBuilder.of().query(query));
 	}
 
 	/**

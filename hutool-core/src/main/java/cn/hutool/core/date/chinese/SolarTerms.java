@@ -1,6 +1,5 @@
 package cn.hutool.core.date.chinese;
 
-import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.math.NumberUtil;

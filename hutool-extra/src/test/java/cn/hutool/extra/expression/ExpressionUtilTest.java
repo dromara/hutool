@@ -16,7 +16,7 @@ public class ExpressionUtilTest {
 
 	@Test
 	public void evalTest(){
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
@@ -28,7 +28,7 @@ public class ExpressionUtilTest {
 	public void jexlTest(){
 		final ExpressionEngine engine = new JexlEngine();
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
@@ -51,7 +51,7 @@ public class ExpressionUtilTest {
 	public void mvelTest(){
 		final ExpressionEngine engine = new MvelEngine();
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
@@ -63,7 +63,7 @@ public class ExpressionUtilTest {
 	public void jfireELTest(){
 		final ExpressionEngine engine = new JfireELEngine();
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
@@ -75,7 +75,7 @@ public class ExpressionUtilTest {
 	public void spELTest(){
 		final ExpressionEngine engine = new SpELEngine();
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
@@ -87,7 +87,7 @@ public class ExpressionUtilTest {
 	public void rhinoTest(){
 		final ExpressionEngine engine = new RhinoEngine();
 
-		final Dict dict = Dict.create()
+		final Dict dict = Dict.of()
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);

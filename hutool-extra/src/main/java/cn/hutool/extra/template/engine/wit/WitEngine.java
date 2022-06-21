@@ -84,7 +84,7 @@ public class WitEngine implements TemplateEngine {
 		Dict dict = null;
 
 		if (null != config) {
-			dict = Dict.create();
+			dict = Dict.of();
 			// 自定义编码
 			dict.set("DEFAULT_ENCODING", config.getCharset());
 

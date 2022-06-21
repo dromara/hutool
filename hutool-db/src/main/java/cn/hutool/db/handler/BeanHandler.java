@@ -23,7 +23,7 @@ public class BeanHandler<E> implements RsHandler<E>{
 	 * @param beanType Bean类型
 	 * @return BeanHandler对象
 	 */
-	public static <E> BeanHandler<E> create(final Class<E> beanType) {
+	public static <E> BeanHandler<E> of(final Class<E> beanType) {
 		return new BeanHandler<>(beanType);
 	}
 

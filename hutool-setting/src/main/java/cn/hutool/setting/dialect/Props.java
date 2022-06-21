@@ -55,7 +55,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @return Setting
 	 * @since 5.4.3
 	 */
-	public static Props create() {
+	public static Props of() {
 		return new Props();
 	}
 

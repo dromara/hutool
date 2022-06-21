@@ -19,7 +19,7 @@ public class BytesBody implements RequestBody {
 	 * @param content body内容，编码后
 	 * @return BytesBody
 	 */
-	public static BytesBody create(final byte[] content){
+	public static BytesBody of(final byte[] content){
 		return new BytesBody(content);
 	}
 

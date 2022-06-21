@@ -19,7 +19,7 @@ public class MD5 extends Digester {
 	 * @return MD5
 	 * @since 4.6.0
 	 */
-	public static MD5 create() {
+	public static MD5 of() {
 		return new MD5();
 	}
 

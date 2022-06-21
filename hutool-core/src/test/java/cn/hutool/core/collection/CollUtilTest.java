@@ -234,8 +234,8 @@ public class CollUtilTest {
 
 	@Test
 	public void getFieldValuesTest() {
-		final Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
-		final Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", 23);
+		final Dict v2 = Dict.of().set("age", 13).set("id", 15).set("name", "李四");
 		final ArrayList<Dict> list = ListUtil.of(v1, v2);
 
 		final List<Object> fieldValues = (List<Object>) CollUtil.getFieldValues(list, "name");
@@ -783,7 +783,7 @@ public class CollUtilTest {
 	public void pageTest() {
 		final List<Dict> objects = ListUtil.of();
 		for (int i = 0; i < 10; i++) {
-			objects.add(Dict.create().set("name", "姓名：" + i));
+			objects.add(Dict.of().set("name", "姓名：" + i));
 		}
 
 		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());

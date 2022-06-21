@@ -70,7 +70,7 @@ public class Column implements Serializable, Cloneable {
 	 * @return 列对象
 	 * @since 5.4.3
 	 */
-	public static Column create(final Table table, final ResultSet columnMetaRs) {
+	public static Column of(final Table table, final ResultSet columnMetaRs) {
 		return new Column(table, columnMetaRs);
 	}
 

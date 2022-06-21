@@ -222,7 +222,7 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer create(final byte[] data) {
+	public static ByteBuffer of(final byte[] data) {
 		return ByteBuffer.wrap(data);
 	}
 
@@ -234,8 +234,8 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer create(final CharSequence data, final Charset charset) {
-		return create(StrUtil.bytes(data, charset));
+	public static ByteBuffer of(final CharSequence data, final Charset charset) {
+		return of(StrUtil.bytes(data, charset));
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class BufferUtil {
 	 * @since 4.5.0
 	 */
 	public static ByteBuffer createUtf8(final CharSequence data) {
-		return create(StrUtil.utf8Bytes(data));
+		return of(StrUtil.utf8Bytes(data));
 	}
 
 	/**

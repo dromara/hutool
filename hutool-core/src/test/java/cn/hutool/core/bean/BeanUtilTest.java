@@ -79,7 +79,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		final Map<String, Object> map = MapBuilder.<String, Object>create()
+		final Map<String, Object> map = MapBuilder.<String, Object>of()
 				.put("Name", "Joe")
 				.put("aGe", 12)
 				.put("openId", "DFDFSDFWERWER")

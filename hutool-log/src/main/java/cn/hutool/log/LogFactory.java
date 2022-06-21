@@ -156,7 +156,7 @@ public abstract class LogFactory {
 	 *
 	 * @return 日志实现类
 	 */
-	public static LogFactory create() {
+	public static LogFactory of() {
 		final LogFactory factory = doCreate();
 		factory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", factory.name);
 		return factory;

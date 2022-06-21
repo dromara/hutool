@@ -21,7 +21,7 @@ public class FormUrlEncodedBody extends BytesBody {
 	 * @param charset 编码
 	 * @return FormUrlEncodedBody
 	 */
-	public static FormUrlEncodedBody create(final Map<String, Object> form, final Charset charset) {
+	public static FormUrlEncodedBody of(final Map<String, Object> form, final Charset charset) {
 		return new FormUrlEncodedBody(form, charset);
 	}
 

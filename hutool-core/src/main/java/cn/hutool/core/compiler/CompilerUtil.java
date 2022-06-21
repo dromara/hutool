@@ -72,9 +72,9 @@ public class CompilerUtil {
 	 *
 	 * @param parent 父{@link ClassLoader}
 	 * @return {@link JavaSourceCompiler}
-	 * @see JavaSourceCompiler#create(ClassLoader)
+	 * @see JavaSourceCompiler#of(ClassLoader)
 	 */
 	public static JavaSourceCompiler getCompiler(final ClassLoader parent) {
-		return JavaSourceCompiler.create(parent);
+		return JavaSourceCompiler.of(parent);
 	}
 }

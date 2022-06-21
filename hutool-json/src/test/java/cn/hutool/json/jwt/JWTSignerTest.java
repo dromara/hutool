@@ -117,7 +117,7 @@ public class JWTSignerTest {
 	}
 
 	private static void signAndVerify(final JWTSigner signer){
-		final JWT jwt = JWT.create()
+		final JWT jwt = JWT.of()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)

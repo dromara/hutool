@@ -582,7 +582,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @since 3.2.2
 	 */
 	public <T> List<T> find(final Entity where, final Class<T> beanClass) throws DbRuntimeException {
-		return find(where.getFieldNames(), where, BeanListHandler.create(beanClass));
+		return find(where.getFieldNames(), where, BeanListHandler.of(beanClass));
 	}
 
 	/**
@@ -594,7 +594,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public List<Entity> findAll(final Entity where) throws DbRuntimeException {
-		return find(where, EntityListHandler.create());
+		return find(where, EntityListHandler.of());
 	}
 
 	/**
@@ -609,7 +609,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @since 3.2.2
 	 */
 	public <T> List<T> findAll(final Entity where, final Class<T> beanClass) throws DbRuntimeException {
-		return find(where, BeanListHandler.create(beanClass));
+		return find(where, BeanListHandler.of(beanClass));
 	}
 
 	/**

@@ -18,7 +18,7 @@ public class TemplateUtil {
 	 * @since 4.1.11
 	 */
 	public static TemplateEngine createEngine() {
-		return TemplateFactory.create();
+		return TemplateFactory.of();
 	}
 
 	/**
@@ -29,6 +29,6 @@ public class TemplateUtil {
 	 * @return {@link TemplateEngine}
 	 */
 	public static TemplateEngine createEngine(final TemplateConfig config) {
-		return TemplateFactory.create(config);
+		return TemplateFactory.of(config);
 	}
 }
