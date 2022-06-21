@@ -4,23 +4,35 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public abstract class AbstractDateBasic implements DateBasic, Serializable {
+/**
+ * 抽象日期基本信息类，包括日期格式、时区、本地化等信息
+ *
+ * @author looly
+ */
+public class SimpleDateBasic implements DateBasic, Serializable {
 	private static final long serialVersionUID = 6333136319870641818L;
 
-	/** The pattern */
-	protected final  String pattern;
-	/** The time zone. */
+	/**
+	 * The pattern
+	 */
+	protected final String pattern;
+	/**
+	 * The time zone.
+	 */
 	protected final TimeZone timeZone;
-	/** The locale. */
+	/**
+	 * The locale.
+	 */
 	protected final Locale locale;
 
 	/**
 	 * 构造，内部使用
-	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
+	 *
+	 * @param pattern  使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 非空时区{@link TimeZone}
-	 * @param locale 非空{@link Locale} 日期地理位置
+	 * @param locale   非空{@link Locale} 日期地理位置
 	 */
-	protected AbstractDateBasic(final String pattern, final TimeZone timeZone, final Locale locale) {
+	protected SimpleDateBasic(final String pattern, final TimeZone timeZone, final Locale locale) {
 		this.pattern = pattern;
 		this.timeZone = timeZone;
 		this.locale = locale;
@@ -48,7 +60,7 @@ public abstract class AbstractDateBasic implements DateBasic, Serializable {
 		if (obj instanceof FastDatePrinter == false) {
 			return false;
 		}
-		final AbstractDateBasic other = (AbstractDateBasic) obj;
+		final SimpleDateBasic other = (SimpleDateBasic) obj;
 		return pattern.equals(other.pattern) && timeZone.equals(other.timeZone) && locale.equals(other.locale);
 	}
 

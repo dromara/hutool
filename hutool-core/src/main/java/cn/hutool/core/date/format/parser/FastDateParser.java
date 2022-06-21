@@ -1,4 +1,8 @@
-package cn.hutool.core.date.format;
+package cn.hutool.core.date.format.parser;
+
+import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.date.format.FastDatePrinter;
+import cn.hutool.core.date.format.SimpleDateBasic;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,7 +34,7 @@ import java.util.regex.Pattern;
  * @see FastDatePrinter
  * @since 2.16.2
  */
-public class FastDateParser extends AbstractDateBasic implements DateParser {
+public class FastDateParser extends SimpleDateBasic implements PositionDateParser {
 	private static final long serialVersionUID = -3199383897950947498L;
 
 	static final Locale JAPANESE_IMPERIAL = new Locale("ja", "JP", "JP");

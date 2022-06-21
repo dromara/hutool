@@ -1,6 +1,7 @@
 package cn.hutool.core.date.format;
 
 import cn.hutool.core.date.DateException;
+import cn.hutool.core.date.format.parser.FastDateParser;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @see FastDateParser
  */
-public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
+public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 	private static final long serialVersionUID = -6305750172255764887L;
 
 	/** 规则列表. */

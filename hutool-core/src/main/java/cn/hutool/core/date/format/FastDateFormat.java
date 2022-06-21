@@ -1,6 +1,8 @@
 package cn.hutool.core.date.format;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.format.parser.FastDateParser;
+import cn.hutool.core.date.format.parser.PositionDateParser;
 
 import java.text.DateFormat;
 import java.text.FieldPosition;
@@ -29,7 +31,7 @@ import java.util.TimeZone;
  * Thanks to Apache Commons Lang 3.5
  * @since 2.16.2
  */
-public class FastDateFormat extends Format implements DateParser, DatePrinter {
+public class FastDateFormat extends Format implements PositionDateParser, DatePrinter {
 	private static final long serialVersionUID = 8097890768636183236L;
 
 	/** FULL locale dependent date or time style. */

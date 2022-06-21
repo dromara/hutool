@@ -1,12 +1,13 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.date.format.parser.DateParser;
+import cn.hutool.core.date.format.parser.PositionDateParser;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.SystemUtil;
 
 import java.sql.Timestamp;
@@ -310,7 +311,7 @@ public class DateTime extends Date {
 	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
 	 * @see DatePattern
 	 */
-	public DateTime(final CharSequence dateStr, final DateParser dateParser) {
+	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser) {
 		this(dateStr, dateParser, SystemUtil.getBoolean(SystemUtil.HUTOOL_DATE_LENIENT, true));
 	}
 
@@ -322,7 +323,7 @@ public class DateTime extends Date {
 	 * @param lenient    是否宽容模式
 	 * @see DatePattern
 	 */
-	public DateTime(final CharSequence dateStr, final DateParser dateParser, final boolean lenient) {
+	public DateTime(final CharSequence dateStr, final PositionDateParser dateParser, final boolean lenient) {
 		this(parse(dateStr, dateParser, lenient));
 	}
 
@@ -1087,7 +1088,7 @@ public class DateTime extends Date {
 	 * @param lenient 是否宽容模式
 	 * @return {@link Calendar}
 	 */
-	private static Calendar parse(final CharSequence dateStr, final DateParser parser, final boolean lenient) {
+	private static Calendar parse(final CharSequence dateStr, final PositionDateParser parser, final boolean lenient) {
 		Assert.notNull(parser, "Parser or DateFromat must be not null !");
 		Assert.notBlank(dateStr, "Date String must be not blank !");
 

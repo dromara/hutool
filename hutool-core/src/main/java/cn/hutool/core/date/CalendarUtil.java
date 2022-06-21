@@ -2,9 +2,10 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.NumberChineseFormatter;
-import cn.hutool.core.date.format.DateParser;
-import cn.hutool.core.date.format.FastDateParser;
+import cn.hutool.core.date.format.parser.DateParser;
+import cn.hutool.core.date.format.parser.FastDateParser;
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.date.format.parser.PositionDateParser;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
 
@@ -758,7 +759,7 @@ public class CalendarUtil {
 	 * @return 解析后的 {@link Calendar}，解析失败返回{@code null}
 	 * @since 5.7.14
 	 */
-	public static Calendar parse(final CharSequence str, final boolean lenient, final DateParser parser) {
+	public static Calendar parse(final CharSequence str, final boolean lenient, final PositionDateParser parser) {
 		final Calendar calendar = Calendar.getInstance(parser.getTimeZone(), parser.getLocale());
 		calendar.clear();
 		calendar.setLenient(lenient);

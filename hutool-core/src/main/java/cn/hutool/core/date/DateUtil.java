@@ -2,16 +2,20 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.comparator.CompareUtil;
-import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.date.format.parser.CSTDateParser;
+import cn.hutool.core.date.format.parser.DateParser;
+import cn.hutool.core.date.format.parser.NormalDateParser;
+import cn.hutool.core.date.format.parser.PureDateParser;
+import cn.hutool.core.date.format.parser.TimeParser;
+import cn.hutool.core.date.format.parser.UTCDateParser;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -657,28 +661,6 @@ public class DateUtil extends CalendarUtil {
 	// ------------------------------------ Parse start ----------------------------------------------
 
 	/**
-	 * 构建LocalDateTime对象<br>
-	 * 格式：yyyy-MM-dd HH:mm:ss
-	 *
-	 * @param dateStr 时间字符串（带格式）
-	 * @return LocalDateTime对象
-	 */
-	public static LocalDateTime parseLocalDateTime(final CharSequence dateStr) {
-		return parseLocalDateTime(dateStr, DatePattern.NORM_DATETIME_PATTERN);
-	}
-
-	/**
-	 * 构建LocalDateTime对象
-	 *
-	 * @param dateStr 时间字符串（带格式）
-	 * @param format  使用{@link DatePattern}定义的格式
-	 * @return LocalDateTime对象
-	 */
-	public static LocalDateTime parseLocalDateTime(final CharSequence dateStr, final String format) {
-		return TimeUtil.parse(dateStr, format);
-	}
-
-	/**
 	 * 构建DateTime对象
 	 *
 	 * @param dateStr    Date字符串
@@ -765,154 +747,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.3.11
 	 */
 	public static DateTime parse(final String str, final String... parsePatterns) throws DateException {
-		return new DateTime(CalendarUtil.parseByPatterns(str, parsePatterns));
-	}
-
-	/**
-	 * 解析日期时间字符串，格式支持：
-	 *
-	 * <pre>
-	 * yyyy-MM-dd HH:mm:ss
-	 * yyyy/MM/dd HH:mm:ss
-	 * yyyy.MM.dd HH:mm:ss
-	 * yyyy年MM月dd日 HH:mm:ss
-	 * </pre>
-	 *
-	 * @param dateString 标准形式的时间字符串
-	 * @return 日期对象
-	 */
-	public static DateTime parseDateTime(CharSequence dateString) {
-		dateString = normalize(dateString);
-		return parse(dateString, DatePattern.NORM_DATETIME_FORMAT);
-	}
-
-	/**
-	 * 解析日期字符串，忽略时分秒，支持的格式包括：
-	 * <pre>
-	 * yyyy-MM-dd
-	 * yyyy/MM/dd
-	 * yyyy.MM.dd
-	 * yyyy年MM月dd日
-	 * </pre>
-	 *
-	 * @param dateString 标准形式的日期字符串
-	 * @return 日期对象
-	 */
-	public static DateTime parseDate(CharSequence dateString) {
-		dateString = normalize(dateString);
-		return parse(dateString, DatePattern.NORM_DATE_FORMAT);
-	}
-
-	/**
-	 * 解析时间，格式HH:mm:ss，日期部分默认为1970-01-01
-	 *
-	 * @param timeString 标准形式的日期字符串
-	 * @return 日期对象
-	 */
-	public static DateTime parseTime(CharSequence timeString) {
-		timeString = normalize(timeString);
-		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
-	}
-
-	/**
-	 * 解析时间，格式HH:mm 或 HH:mm:ss，日期默认为今天
-	 *
-	 * @param timeString 标准形式的日期字符串
-	 * @return 日期对象
-	 * @since 3.1.1
-	 */
-	public static DateTime parseTimeToday(CharSequence timeString) {
-		timeString = StrUtil.format("{} {}", formatToday(), timeString);
-		if (1 == StrUtil.count(timeString, ':')) {
-			// 时间格式为 HH:mm
-			return parse(timeString, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
-		} else {
-			// 时间格式为 HH:mm:ss
-			return parse(timeString, DatePattern.NORM_DATETIME_FORMAT);
-		}
-	}
-
-	/**
-	 * 解析UTC时间，格式：<br>
-	 * <ol>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss+0800</li>
-	 * <li>yyyy-MM-dd'T'HH:mm:ss+08:00</li>
-	 * </ol>
-	 *
-	 * @param utcString UTC时间
-	 * @return 日期对象
-	 * @since 4.1.14
-	 */
-	public static DateTime parseUTC(String utcString) {
-		if (utcString == null) {
-			return null;
-		}
-		final int length = utcString.length();
-		if (StrUtil.contains(utcString, 'Z')) {
-			if (length == DatePattern.UTC_PATTERN.length() - 4) {
-				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
-				return parse(utcString, DatePattern.UTC_FORMAT);
-			}
-
-			final int patternLength = DatePattern.UTC_MS_PATTERN.length();
-			// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
-			// -4 ~ -6范围表示匹配毫秒1~3位的情况
-			if (length <= patternLength - 4 && length >= patternLength - 6) {
-				return parse(utcString, DatePattern.UTC_MS_FORMAT);
-			}
-		} else if (StrUtil.contains(utcString, '+')) {
-			// 去除类似2019-06-01T19:45:43 +08:00加号前的空格
-			utcString = utcString.replace(" +", "+");
-			final String zoneOffset = StrUtil.subAfter(utcString, '+', true);
-			if (StrUtil.isBlank(zoneOffset)) {
-				throw new DateException("Invalid format: [{}]", utcString);
-			}
-			if (false == StrUtil.contains(zoneOffset, ':')) {
-				// +0800转换为+08:00
-				final String pre = StrUtil.subBefore(utcString, '+', true);
-				utcString = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";
-			}
-
-			if (StrUtil.contains(utcString, CharUtil.DOT)) {
-				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
-				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
-			} else {
-				// 格式类似：2018-09-13T05:34:31+08:00
-				return parse(utcString, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
-			}
-		} else {
-			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
-				// 格式类似：2018-09-13T05:34:31
-				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
-			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
-				// 可能为：  2021-03-17T06:31:33.99
-				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
-			}
-		}
-		// 没有更多匹配的时间格式
-		throw new DateException("No format fit for date String [{}] !", utcString);
-	}
-
-	/**
-	 * 解析CST时间，格式：<br>
-	 * <ol>
-	 * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
-	 * </ol>
-	 *
-	 * @param cstString UTC时间
-	 * @return 日期对象
-	 * @since 4.6.9
-	 */
-	public static DateTime parseCST(final CharSequence cstString) {
-		if (cstString == null) {
-			return null;
-		}
-
-		return parse(cstString, DatePattern.JDK_DATETIME_FORMAT);
+		return date(CalendarUtil.parseByPatterns(str, parsePatterns));
 	}
 
 	/**
@@ -951,64 +786,33 @@ public class DateUtil extends CalendarUtil {
 		String dateStr = dateCharSequence.toString();
 		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
 		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
-		final int length = dateStr.length();
 
 		if (NumberUtil.isNumber(dateStr)) {
 			// 纯数字形式
-			if (length == DatePattern.PURE_DATETIME_PATTERN.length()) {
-				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
-			} else if (length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
-				return parse(dateStr, DatePattern.PURE_DATETIME_MS_FORMAT);
-			} else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
-				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
-			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
-				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
-			}
+			return PureDateParser.INSTANCE.parse(dateStr);
 		} else if (ReUtil.isMatch(PatternPool.TIME, dateStr)) {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
-			return parseTimeToday(dateStr);
+			return TimeParser.INSTANCE.parse(dateStr);
 		} else if (StrUtil.containsAnyIgnoreCase(dateStr, wtb)) {
 			// JDK的Date对象toString默认格式，类似于：
 			// Tue Jun 4 16:25:15 +0800 2019
 			// Thu May 16 17:57:18 GMT+08:00 2019
 			// Wed Aug 01 00:00:00 CST 2012
-			return parseCST(dateStr);
+			return CSTDateParser.INSTANCE.parse(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
 			// UTC时间
-			return parseUTC(dateStr);
+			return UTCDateParser.INSTANCE.parse(dateStr);
 		}
 
 		//标准日期格式（包括单个数字的日期时间）
 		dateStr = normalize(dateStr);
 		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
-			final int colonCount = StrUtil.count(dateStr, CharUtil.COLON);
-			switch (colonCount) {
-				case 0:
-					// yyyy-MM-dd
-					return parse(dateStr, DatePattern.NORM_DATE_FORMAT);
-				case 1:
-					// yyyy-MM-dd HH:mm
-					return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_FORMAT);
-				case 2:
-					final int indexOfDot = StrUtil.indexOf(dateStr, CharUtil.DOT);
-					if (indexOfDot > 0) {
-						final int length1 = dateStr.length();
-						// yyyy-MM-dd HH:mm:ss.SSS 或者 yyyy-MM-dd HH:mm:ss.SSSSSS
-						if (length1 - indexOfDot > 4) {
-							// 类似yyyy-MM-dd HH:mm:ss.SSSSSS，采取截断操作
-							dateStr = StrUtil.subPre(dateStr, indexOfDot + 4);
-						}
-						return parse(dateStr, DatePattern.NORM_DATETIME_MS_FORMAT);
-					}
-					// yyyy-MM-dd HH:mm:ss
-					return parse(dateStr, DatePattern.NORM_DATETIME_FORMAT);
-			}
+			return NormalDateParser.INSTANCE.parse(dateStr);
 		}
 
 		// 没有更多匹配的时间格式
 		throw new DateException("No format fit for date String [{}] !", dateStr);
 	}
-
 	// ------------------------------------ Parse end ----------------------------------------------
 
 	// ------------------------------------ Offset start ----------------------------------------------
