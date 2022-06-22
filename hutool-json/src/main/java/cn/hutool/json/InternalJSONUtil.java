@@ -251,7 +251,10 @@ public final class InternalJSONUtil {
 				.setIgnoreCase(config.isIgnoreCase())
 				.setIgnoreError(config.isIgnoreError())
 				.setIgnoreNullValue(config.isIgnoreNullValue())
-				.setTransientSupport(config.isTransientSupport());
+				.setTransientSupport(config.isTransientSupport())
+				// 使用JSON转换器
+				.setConverter((type, value) ->
+						JSONConverter.convertWithCheck(type, value, null, config.isIgnoreError()));
 	}
 
 	/**

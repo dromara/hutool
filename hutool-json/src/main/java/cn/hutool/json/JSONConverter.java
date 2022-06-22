@@ -2,7 +2,6 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
@@ -30,9 +29,10 @@ public class JSONConverter implements Converter {
 
 	public static JSONConverter INSTANCE = new JSONConverter();
 
+	private static final ConverterRegistry registry;
 	static {
 		// 注册到转换中心
-		final ConverterRegistry registry = ConverterRegistry.getInstance();
+		registry = new ConverterRegistry();
 		registry.putCustom(JSON.class, INSTANCE);
 		registry.putCustom(JSONObject.class, INSTANCE);
 		registry.putCustom(JSONArray.class, INSTANCE);
@@ -41,6 +41,29 @@ public class JSONConverter implements Converter {
 	@Override
 	public Object convert(final Type targetType, final Object value) throws ConvertException {
 		return JSONUtil.parse(value);
+	}
+
+	/**
+	 * 转换值为指定类型，可选是否不抛异常转换<br>
+	 * 当转换失败时返回默认值
+	 *
+	 * @param <T> 目标类型
+	 * @param type 目标类型
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @param quietly 是否静默转换，true不抛异常
+	 * @return 转换后的值
+	 * @since 5.3.2
+	 */
+	public static <T> T convertWithCheck(final Type type, final Object value, final T defaultValue, final boolean quietly) {
+		try {
+			return registry.convert(type, value, defaultValue);
+		} catch (final Exception e) {
+			if(quietly){
+				return defaultValue;
+			}
+			throw e;
+		}
 	}
 
 	/**
@@ -81,7 +104,7 @@ public class JSONConverter implements Converter {
 				return (T) Base64.decode((CharSequence) value);
 			} else if (targetClass.isAssignableFrom(Date.class) || targetClass.isAssignableFrom(TemporalAccessor.class)) {
 				// 用户指定了日期格式，获取日期属性时使用对应格式
-				final String valueStr = Convert.toStr(value);
+				final String valueStr = convertWithCheck(String.class, value, null, true);
 				if (null == valueStr) {
 					return null;
 				}
@@ -137,7 +160,7 @@ public class JSONConverter implements Converter {
 			}
 		}
 
-		final T targetValue = Convert.convertWithCheck(targetType, value, null, ignoreError);
+		final T targetValue = convertWithCheck(targetType, value, null, ignoreError);
 
 		if (null == targetValue && false == ignoreError) {
 			if (StrUtil.isBlankIfStr(value)) {
