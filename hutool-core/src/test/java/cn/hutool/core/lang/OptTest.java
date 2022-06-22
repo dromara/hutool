@@ -9,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,19 +46,6 @@ public class OptTest {
 		// 判断包裹内元素是否为空，注意并没有判断空字符串的情况
 		final boolean isEmpty = Opt.empty().isEmpty();
 		Assert.assertTrue(isEmpty);
-	}
-
-	@Test
-	@Ignore
-	public void ifPresentOrElseTest() {
-		// 存在就打印对应的值，不存在则用{@code System.err.println}打印另一句字符串
-		Opt.ofNullable("Hello Hutool!").ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
-
-		Opt.empty().ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
-
-		// 拓展为支持链式调用
-		Opt.empty().ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"))
-				.ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
 	}
 
 	@Test
@@ -127,11 +117,16 @@ public class OptTest {
 		Assert.assertNull(assignException);
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void orElseThrowTest3() {
-		// 获取一个不可能为空的值，否则抛出带自定义消息的自定义异常
-		final Object exceptionWithMessage = Opt.empty().orElseThrow(IllegalStateException::new, "Ops!Something is wrong!");
-		Assert.assertNull(exceptionWithMessage);
+	@Test
+	public void orElseRunTest() {
+		// 判断一个值是否为空，为空执行一段逻辑,否则执行另一段逻辑
+		Map<String, Integer> map = new HashMap<>();
+		final String key = "key";
+		map.put(key, 1);
+		Opt.ofNullable(map.get(key))
+				.ifPresent(v -> map.put(key, v + 1))
+				.orElseRun(() -> map.remove(key));
+		Assert.assertEquals((Object) 2, map.get(key));
 	}
 
 	@Test
@@ -155,14 +150,8 @@ public class OptTest {
 		// 现在，一个ofEmptyAble搞定
 		final List<String> hutool = Opt.ofEmptyAble(Collections.<String>emptyList()).orElseGet(() -> Collections.singletonList("hutool"));
 		Assert.assertEquals(past, hutool);
-		Assert.assertEquals(hutool, Collections.singletonList("hutool"));
-	}
-
-	@Test
-	public void mapOrElseTest() {
-		// 如果值存在就转换为大写，否则打印一句字符串，支持链式调用、转换为其他类型
-		final String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
-		Assert.assertEquals("HUTOOL", hutool);
+		Assert.assertEquals(Collections.singletonList("hutool"), hutool);
+		Assert.assertTrue(Opt.ofEmptyAble(Arrays.asList(null, null, null)).isEmpty());
 	}
 
 	@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "ConstantConditions"})
