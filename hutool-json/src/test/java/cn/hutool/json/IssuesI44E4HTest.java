@@ -15,7 +15,7 @@ public class IssuesI44E4HTest {
 
 	@Test
 	public void deserializerTest(){
-		GlobalSerializeMapping.put(TestDto.class, (JSONDeserializer<TestDto>) json -> {
+		GlobalSerializeMapping.putDeserializer(TestDto.class, (JSONDeserializer<TestDto>) json -> {
 			final TestDto testDto = new TestDto();
 			testDto.setMd(new AcBizModuleMd("name1", ((JSONObject)json).getStr("md")));
 			return testDto;

@@ -4,9 +4,7 @@ import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -14,7 +12,6 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
-import cn.hutool.json.serialize.JSONSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,13 +19,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.sql.SQLException;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * JSON工具类
@@ -334,7 +326,7 @@ public class JSONUtil {
 			return StrUtil.str((CharSequence) obj);
 		}
 
-		if(obj instanceof Number){
+		if (obj instanceof Number) {
 			return obj.toString();
 		}
 		return toJsonStr(parse(obj, jsonConfig));
@@ -685,87 +677,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 在需要的时候包装对象<br>
-	 * 包装包括：
-	 * <ul>
-	 * <li>array or collection =》 JSONArray</li>
-	 * <li>map =》 JSONObject</li>
-	 * <li>standard property (Double, String, et al) =》 原对象</li>
-	 * <li>来自于java包 =》 字符串</li>
-	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
-	 * </ul>
-	 *
-	 * @param object     被包装的对象
-	 * @param jsonConfig JSON选项
-	 * @return 包装后的值，null表示此值需被忽略
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static Object wrap(final Object object, final JSONConfig jsonConfig) {
-		if (object == null) {
-			return null;
-		}
-		if (object instanceof JSON //
-				|| object instanceof JSONString //
-				|| object instanceof CharSequence //
-				|| object instanceof Number //
-				|| ObjUtil.isBasicType(object) //
-		) {
-			return object;
-		}
-
-		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(object.getClass());
-		if (null != serializer) {
-			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
-			if (null != jsonType) {
-				if (serializer instanceof JSONObjectSerializer) {
-					serializer.serialize(new JSONObject(jsonConfig), object);
-				} else if (serializer instanceof JSONArraySerializer) {
-					serializer.serialize(new JSONArray(jsonConfig), object);
-				}
-			}
-		}
-
-		try {
-			// fix issue#1399@Github
-			if (object instanceof SQLException) {
-				return object.toString();
-			}
-
-			// JSONArray
-			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				return new JSONArray(object, jsonConfig);
-			}
-			// JSONObject
-			if (object instanceof Map || object instanceof Map.Entry) {
-				return new JSONObject(object, jsonConfig);
-			}
-
-			// 日期类型原样保存，便于格式化
-			if (object instanceof Date
-					|| object instanceof Calendar
-					|| object instanceof TemporalAccessor
-			) {
-				return object;
-			}
-			// 枚举类保存其字符串形式（4.0.2新增）
-			if (object instanceof Enum) {
-				return object.toString();
-			}
-
-			// Java内部类不做转换
-			if (ClassUtil.isJdkClass(object.getClass())) {
-				return object.toString();
-			}
-
-			// 默认按照JSONObject对待
-			return new JSONObject(object, jsonConfig);
-		} catch (final Exception exception) {
-			return null;
-		}
-	}
-
-	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
 	 *
 	 * @param jsonStr JSON字符串
@@ -832,11 +743,11 @@ public class JSONUtil {
 	 *
 	 * @param type       对象类型
 	 * @param serializer 序列化器实现
-	 * @see GlobalSerializeMapping#put(Type, JSONArraySerializer)
-	 * @since 4.6.5
+	 * @see GlobalSerializeMapping#putSerializer(Type, JSONObjectSerializer)
+	 * @since 6.0.0
 	 */
-	public static void putSerializer(final Type type, final JSONArraySerializer<?> serializer) {
-		GlobalSerializeMapping.put(type, serializer);
+	public static void putSerializer(final Type type, final JSONObjectSerializer<?> serializer) {
+		GlobalSerializeMapping.putSerializer(type, serializer);
 	}
 
 	/**
@@ -844,11 +755,11 @@ public class JSONUtil {
 	 *
 	 * @param type       对象类型
 	 * @param serializer 序列化器实现
-	 * @see GlobalSerializeMapping#put(Type, JSONObjectSerializer)
-	 * @since 4.6.5
+	 * @see GlobalSerializeMapping#putSerializer(Type, JSONArraySerializer)
+	 * @since 6.0.0
 	 */
-	public static void putSerializer(final Type type, final JSONObjectSerializer<?> serializer) {
-		GlobalSerializeMapping.put(type, serializer);
+	public static void putSerializer(final Type type, final JSONArraySerializer<?> serializer) {
+		GlobalSerializeMapping.putSerializer(type, serializer);
 	}
 
 	/**
@@ -856,11 +767,11 @@ public class JSONUtil {
 	 *
 	 * @param type         对象类型
 	 * @param deserializer 反序列化器实现
-	 * @see GlobalSerializeMapping#put(Type, JSONDeserializer)
+	 * @see GlobalSerializeMapping#putDeserializer(Type, JSONDeserializer)
 	 * @since 4.6.5
 	 */
 	public static void putDeserializer(final Type type, final JSONDeserializer<?> deserializer) {
-		GlobalSerializeMapping.put(type, deserializer);
+		GlobalSerializeMapping.putDeserializer(type, deserializer);
 	}
 
 	// --------------------------------------------------------------------------------------------- Private method start

@@ -1,4 +1,4 @@
-package cn.hutool.json;
+package cn.hutool.json.serialize;
 
 /**
  * {@code JSONString}接口定义了一个{@code toJSONString()}<br>

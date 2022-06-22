@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 /**
  * JSON自定义反序列化接口，实现JSON to Bean，使用方式为：
  * <ul>
- *     <li>定义好反序列化规则，使用{@link GlobalSerializeMapping#put(Type, JSONDeserializer)}，关联指定类型与转换器实现反序列化。</li>
+ *     <li>定义好反序列化规则，使用{@link GlobalSerializeMapping#putDeserializer(Type, JSONDeserializer)}，关联指定类型与转换器实现反序列化。</li>
  *     <li>使Bean实现此接口，调用{@link #deserialize(JSON)}解析字段，返回this即可。</li>
  * </ul>
  *

@@ -15,7 +15,7 @@ import java.time.temporal.TemporalAccessor;
  * @author looly
  * @since 5.7.22
  */
-public class TemporalAccessorSerializer implements JSONObjectSerializer<TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
+public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, TemporalAccessor>, JSONDeserializer<TemporalAccessor> {
 
 	private static final String YEAR_KEY = "year";
 	private static final String MONTH_KEY = "month";

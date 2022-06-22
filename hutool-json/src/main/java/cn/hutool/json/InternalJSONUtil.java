@@ -6,14 +6,20 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.serialize.JSONString;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,17 +36,73 @@ public final class InternalJSONUtil {
 	}
 
 	/**
-	 * 如果对象是Number 且是 NaN or infinite，将抛出异常
+	 * 在需要的时候包装对象<br>
+	 * 包装包括：
+	 * <ul>
+	 * <li>array or collection =》 JSONArray</li>
+	 * <li>map =》 JSONObject</li>
+	 * <li>standard property (Double, String, et al) =》 原对象</li>
+	 * <li>来自于java包 =》 字符串</li>
+	 * <li>其它 =》 尝试包装为JSONObject，否则返回{@code null}</li>
+	 * </ul>
 	 *
-	 * @param obj 被检查的对象
-	 * @return 检测后的值
-	 * @throws JSONException If o is a non-finite number.
+	 * @param object     被包装的对象
+	 * @param jsonConfig JSON选项
+	 * @return 包装后的值，null表示此值需被忽略
 	 */
-	static Object testValidity(final Object obj) throws JSONException {
-		if (false == ObjUtil.isValidIfNumber(obj)) {
-			throw new JSONException("JSON does not allow non-finite numbers.");
+	static Object wrap(final Object object, final JSONConfig jsonConfig) {
+		if (object == null) {
+			return null;
 		}
-		return obj;
+		if (object instanceof JSON //
+				|| object instanceof JSONString //
+				|| object instanceof CharSequence //
+				|| object instanceof Number //
+				|| ObjUtil.isBasicType(object) //
+		) {
+			if (false == ObjUtil.isValidIfNumber(object)) {
+				throw new JSONException("JSON does not allow non-finite numbers.");
+			}
+			return object;
+		}
+
+		try {
+			// fix issue#1399@Github
+			if (object instanceof SQLException) {
+				return object.toString();
+			}
+
+			// JSONArray
+			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
+				return new JSONArray(object, jsonConfig);
+			}
+			// JSONObject
+			if (object instanceof Map || object instanceof Map.Entry) {
+				return new JSONObject(object, jsonConfig);
+			}
+
+			// 日期类型做包装，以便自定义输出格式
+			if (object instanceof Date
+					|| object instanceof Calendar
+					|| object instanceof TemporalAccessor
+			) {
+				return object;
+			}
+			// 枚举类保存其字符串形式（4.0.2新增）
+			if (object instanceof Enum) {
+				return object.toString();
+			}
+
+			// Java内部类不做转换
+			if (ClassUtil.isJdkClass(object.getClass())) {
+				return object.toString();
+			}
+
+			// 默认按照JSONObject对待
+			return new JSONObject(object, jsonConfig);
+		} catch (final Exception exception) {
+			return null;
+		}
 	}
 
 	/**
@@ -132,7 +194,7 @@ public final class InternalJSONUtil {
 
 	/**
 	 * 将Property的键转化为JSON形式<br>
-	 * 用于识别类似于：com.luxiaolei.package.hutool这类用点隔开的键<br>
+	 * 用于识别类似于：cn.hutool.json这类用点隔开的键<br>
 	 * 注意：不允许重复键
 	 *
 	 * @param jsonObject JSONObject
@@ -141,7 +203,7 @@ public final class InternalJSONUtil {
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return JSONObject
 	 */
-	static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
@@ -184,7 +246,7 @@ public final class InternalJSONUtil {
 	 * @return {@link CopyOptions}
 	 * @since 5.8.0
 	 */
-	static CopyOptions toCopyOptions(final JSONConfig config) {
+	public static CopyOptions toCopyOptions(final JSONConfig config) {
 		return CopyOptions.of()
 				.setIgnoreCase(config.isIgnoreCase())
 				.setIgnoreError(config.isIgnoreError())

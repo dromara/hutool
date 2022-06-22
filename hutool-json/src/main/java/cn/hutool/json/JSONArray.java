@@ -8,6 +8,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.mapper.ArrayMapper;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -148,7 +149,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(final Object object, final JSONConfig jsonConfig, final Predicate<Mutable<Object>> predicate) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
-		ObjectMapper.of(object).map(this, predicate);
+		ArrayMapper.of(object, predicate).mapTo(this);
 	}
 	// endregion
 
@@ -328,7 +329,18 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public boolean add(final Object e) {
-		return addRaw(JSONUtil.wrap(e, this.config), null);
+		return add(e, null);
+	}
+
+	/**
+	 * 增加元素
+	 *
+	 * @param e         元素对象，自动根据对象类型转换为JSON中的对象
+	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，{@link Predicate#test(Object)}为{@code true}保留
+	 * @return 是否加入成功
+	 */
+	public boolean add(final Object e, final Predicate<Mutable<Object>> predicate) {
+		return addRaw(InternalJSONUtil.wrap(e, this.config), predicate);
 	}
 
 	@Override
@@ -369,7 +381,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 				continue;
 			}
 			this.add(index);
-			list.add(JSONUtil.wrap(object, this.config));
+			list.add(InternalJSONUtil.wrap(object, this.config));
 		}
 		return rawList.addAll(index, list);
 	}
@@ -429,7 +441,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (null == element && config.isIgnoreNullValue()) {
 			return null;
 		}
-		return this.rawList.set(index, JSONUtil.wrap(element, this.config));
+		return this.rawList.set(index, InternalJSONUtil.wrap(element, this.config));
 	}
 
 	@Override
@@ -441,8 +453,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			if (index < 0) {
 				index = 0;
 			}
-			InternalJSONUtil.testValidity(element);
-			this.rawList.add(index, JSONUtil.wrap(element, this.config));
+			this.rawList.add(index, InternalJSONUtil.wrap(element, this.config));
 		} else {
 			if (false == config.isIgnoreNullValue()) {
 				while (index != this.size()) {

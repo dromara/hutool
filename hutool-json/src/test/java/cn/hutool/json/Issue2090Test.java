@@ -1,5 +1,6 @@
 package cn.hutool.json;
 
+import cn.hutool.core.lang.Console;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,7 +11,7 @@ import java.time.LocalTime;
 import java.time.Month;
 
 /**
- * https://github.com/dromara/hutool/issues/2090
+ * <a href="https://github.com/dromara/hutool/issues/2090">https://github.com/dromara/hutool/issues/2090</a>
  */
 public class Issue2090Test {
 
@@ -20,6 +21,7 @@ public class Issue2090Test {
 		test.setLocalDate(LocalDate.now());
 
 		final JSONObject json = JSONUtil.parseObj(test);
+		Console.log(json);
 		final TestBean test1 = json.toBean(TestBean.class);
 		Assert.assertEquals(test, test1);
 	}

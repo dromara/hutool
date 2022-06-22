@@ -5,6 +5,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.mapper.ObjectMapper;
 import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
@@ -127,7 +128,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	public JSONObject(final Object source, final JSONConfig config, final Predicate<MutableEntry<String, Object>> predicate) {
 		this(DEFAULT_CAPACITY, config);
-		ObjectMapper.of(source).map(this, predicate);
+		ObjectMapper.of(source, predicate).mapTo(this);
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
@@ -279,7 +280,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 如果给定键为{@code null}或者键对应的值存在且为非JSONArray
 	 */
 	public JSONObject append(final String key, final Object value) throws JSONException {
-		InternalJSONUtil.testValidity(value);
 		final Object object = this.getObj(key);
 		if (object == null) {
 			this.set(key, value);
@@ -426,6 +426,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		} else if (checkDuplicate && containsKey(key)) {
 			throw new JSONException("Duplicate key \"{}\"", key);
 		}
-		return super.put(key, JSONUtil.wrap(InternalJSONUtil.testValidity(value), this.config));
+		return super.put(key, InternalJSONUtil.wrap(value, this.config));
 	}
 }

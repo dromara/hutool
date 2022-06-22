@@ -2,9 +2,9 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
+import cn.hutool.json.serialize.JSONString;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
@@ -25,8 +25,7 @@ public class JSONUtilTest {
 	 */
 	@Test(expected = JSONException.class)
 	public void parseTest() {
-		final JSONArray jsonArray = JSONUtil.parseArray("[{\"a\":\"a\\x]");
-		Console.log(jsonArray);
+		JSONUtil.parseArray("[{\"a\":\"a\\x]");
 	}
 
 	/**
@@ -107,6 +106,7 @@ public class JSONUtilTest {
 
 	@Test
 	public void toJsonStrFromSortedTest() {
+		//noinspection SerializableInnerClassWithNonSerializableOuterClass
 		final SortedMap<Object, Object> sortedMap = new TreeMap<Object, Object>() {
 			private static final long serialVersionUID = 1L;
 
@@ -236,14 +236,14 @@ public class JSONUtilTest {
 
 	@Test
 	public void toJsonStrOfStringTest(){
-		String a = "a";
+		final String a = "a";
 		final String s = JSONUtil.toJsonStr(a);
 		Assert.assertEquals(a, s);
 	}
 
 	@Test
 	public void toJsonStrOfNumberTest(){
-		int a = 1;
+		final int a = 1;
 		final String s = JSONUtil.toJsonStr(a);
 		Assert.assertEquals("1", s);
 	}

@@ -7,14 +7,10 @@ import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.json.JSON;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONException;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONString;
 import cn.hutool.json.JSONUtil;
 
 import java.io.IOException;
@@ -22,8 +18,6 @@ import java.io.Writer;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * JSON数据写出器<br>
@@ -234,10 +228,6 @@ public class JSONWriter extends Writer {
 			writeRaw(StrUtil.NULL);
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Map || value instanceof Map.Entry) {
-			new JSONObject(value).write(writer, indentFactor, indent);
-		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
-			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
@@ -249,7 +239,7 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof JSONString) {
 			writeJSONStringValue((JSONString) value);
 		} else {
-			writeStrValue(value.toString());
+			writeQuoteStrValue(value.toString());
 		}
 
 		return this;
@@ -297,7 +287,7 @@ public class JSONWriter extends Writer {
 			//noinspection resource
 			writeRaw(valueStr);
 		} else {
-			writeStrValue(jsonString.toString());
+			writeQuoteStrValue(jsonString.toString());
 		}
 	}
 
@@ -309,7 +299,7 @@ public class JSONWriter extends Writer {
 	 *
 	 * @param csq 字符串
 	 */
-	private void writeStrValue(final String csq) {
+	private void writeQuoteStrValue(final String csq) {
 		try {
 			JSONUtil.quote(csq, writer);
 		} catch (final IOException e) {

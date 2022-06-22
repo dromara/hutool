@@ -5,9 +5,7 @@ import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -24,7 +22,6 @@ import cn.hutool.json.test.bean.report.StepReport;
 import cn.hutool.json.test.bean.report.SuiteReport;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -47,13 +44,13 @@ import java.util.Set;
 public class JSONObjectTest {
 
 	@Test
-	@Ignore
 	public void toStringTest() {
 		final String str = "{\"code\": 500, \"data\":null}";
+		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(str);
-		Console.log(jsonObject);
+		Assert.assertEquals("{\"code\":500,\"data\":null}", jsonObject.toString());
 		jsonObject.getConfig().setIgnoreNullValue(true);
-		Console.log(jsonObject.toStringPretty());
+		Assert.assertEquals("{\"code\":500}", jsonObject.toString());
 	}
 
 	@Test
@@ -174,16 +171,6 @@ public class JSONObjectTest {
 		final JSONObject json = new JSONObject(in);
 		Assert.assertEquals(new Integer(0), json.getInt("ok"));
 		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
-	}
-
-	@Test
-	@Ignore
-	public void parseStringWithBomTest() {
-		final String jsonStr = FileUtil.readUtf8String("f:/test/jsontest.txt");
-		final JSONObject json = new JSONObject(jsonStr);
-		final JSONObject json2 = JSONUtil.parseObj(json);
-		Console.log(json);
-		Console.log(json2);
 	}
 
 	@Test

@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.serialize.JSONDeserializer;
+import cn.hutool.json.serialize.JSONString;
 
 /**
  * JSON支持<br>
