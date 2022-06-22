@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.convert.JSONConverter;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONString;
 

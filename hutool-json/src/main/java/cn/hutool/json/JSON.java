@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
+import cn.hutool.json.convert.JSONConverter;
 
 import java.io.Serializable;
 import java.io.StringWriter;

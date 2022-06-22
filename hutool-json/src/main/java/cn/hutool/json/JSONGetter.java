@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.convert.JSONConverter;
 
 import java.time.LocalDateTime;
 import java.util.Date;

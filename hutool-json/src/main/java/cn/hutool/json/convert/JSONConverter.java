@@ -1,7 +1,6 @@
-package cn.hutool.json;
+package cn.hutool.json.convert;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
@@ -12,6 +11,12 @@ import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.InternalJSONUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
 
@@ -79,7 +84,7 @@ public class JSONConverter implements Converter {
 	 * @throws ConvertException 转换失败
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonConvert(final Type targetType, final Object value, final JSONConfig config) throws ConvertException {
+	public static <T> T jsonConvert(final Type targetType, final Object value, final JSONConfig config) throws ConvertException {
 		if (null == value) {
 			return null;
 		}
@@ -98,10 +103,6 @@ public class JSONConverter implements Converter {
 					}
 					return target.deserialize((JSON) value);
 				}
-			} else if (targetClass == byte[].class && value instanceof CharSequence) {
-				// bytes二进制反序列化，默认按照Base64对待
-				// issue#I59LW4
-				return (T) Base64.decode((CharSequence) value);
 			} else if (targetClass.isAssignableFrom(Date.class) || targetClass.isAssignableFrom(TemporalAccessor.class)) {
 				// 用户指定了日期格式，获取日期属性时使用对应格式
 				final String valueStr = convertWithCheck(String.class, value, null, true);
@@ -137,7 +138,7 @@ public class JSONConverter implements Converter {
 	 * @since 5.7.10
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonToBean(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
+	public static <T> T jsonToBean(final Type targetType, final Object value, final boolean ignoreError) throws ConvertException {
 		if (null == value) {
 			return null;
 		}
