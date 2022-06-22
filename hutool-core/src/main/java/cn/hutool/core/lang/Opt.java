@@ -26,13 +26,13 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.text.StrUtil;
 
-import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -92,11 +92,10 @@ public class Opt<T> {
 	 * 返回一个包裹里元素可能为空的{@code Opt}，额外判断了空字符串的情况
 	 *
 	 * @param value 传入需要包裹的元素
-	 * @param <T>   包裹里元素的类型
 	 * @return 一个包裹里元素可能为空，或者为空字符串的 {@code Opt}
 	 */
-	public static <T> Opt<T> ofBlankAble(final T value) {
-		return StrUtil.isBlankIfStr(value) ? empty() : new Opt<>(value);
+	public static Opt<CharSequence> ofBlankAble(final CharSequence value) {
+		return StrUtil.isBlank(value) ? empty() : new Opt<>(value);
 	}
 
 	/**
@@ -109,7 +108,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(final R value) {
-		return CollUtil.isEmpty(value) ? empty() : new Opt<>(value);
+		return CollUtil.isEmpty(value) || Objects.equals(Collections.frequency(value, null), value.size()) ? empty() : new Opt<>(value);
 	}
 
 	/**
@@ -218,56 +217,6 @@ public class Opt<T> {
 	}
 
 	/**
-	 * 如果包裹里的值存在，就执行传入的值存在时的操作({@link Consumer#accept})
-	 * 否则执行传入的值不存在时的操作({@link VoidFunc0}中的{@link VoidFunc0#call()})
-	 *
-	 * <p>
-	 * 例如值存在就打印对应的值，不存在则用{@code Console.error}打印另一句字符串
-	 * <pre>{@code
-	 * Opt.ofNullable("Hello Hutool!").ifPresentOrElse(Console::log, () -> Console.error("Ops!Something is wrong!"));
-	 * }</pre>
-	 *
-	 * @param action      包裹里的值存在时的操作
-	 * @param emptyAction 包裹里的值不存在时的操作
-	 * @return this;
-	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
-	 */
-	public Opt<T> ifPresentOrElse(final Consumer<? super T> action, final VoidFunc0 emptyAction) {
-		if (isPresent()) {
-			action.accept(value);
-		} else {
-			emptyAction.callWithRuntimeException();
-		}
-		return this;
-	}
-
-
-	/**
-	 * 如果包裹里的值存在，就执行传入的值存在时的操作({@link Function#apply(Object)})支持链式调用、转换为其他类型
-	 * 否则执行传入的值不存在时的操作({@link VoidFunc0}中的{@link VoidFunc0#call()})
-	 *
-	 * <p>
-	 * 如果值存在就转换为大写，否则用{@code Console.error}打印另一句字符串
-	 * <pre>{@code
-	 * String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
-	 * }</pre>
-	 *
-	 * @param <U>         map后新的类型
-	 * @param mapper      包裹里的值存在时的操作
-	 * @param emptyAction 包裹里的值不存在时的操作
-	 * @return 新的类型的Opt
-	 * @throws NullPointerException 如果包裹里的值存在时，执行的操作为 {@code null}, 或者包裹里的值不存在时的操作为 {@code null}，则抛出{@code NPE}
-	 */
-	public <U> Opt<U> mapOrElse(final Function<? super T, ? extends U> mapper, final VoidFunc0 emptyAction) {
-		if (isPresent()) {
-			return ofNullable(mapper.apply(value));
-		} else {
-			emptyAction.callWithRuntimeException();
-			return empty();
-		}
-	}
-
-	/**
 	 * 判断包裹里的值存在并且与给定的条件是否满足 ({@link Predicate#test}执行结果是否为true)
 	 * 如果满足条件则返回本身
 	 * 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
@@ -359,12 +308,7 @@ public class Opt<T> {
 	 * @author VampireAchao
 	 */
 	public Opt<T> peek(final Consumer<T> action) throws NullPointerException {
-		Objects.requireNonNull(action);
-		if (isEmpty()) {
-			return Opt.empty();
-		}
-		action.accept(value);
-		return this;
+		return ifPresent(action);
 	}
 
 
@@ -382,8 +326,7 @@ public class Opt<T> {
 	 */
 	@SafeVarargs
 	public final Opt<T> peeks(final Consumer<T>... actions) throws NullPointerException {
-		// 第三个参数 (opts, opt) -> null其实并不会执行到该函数式接口所以直接返回了个null
-		return Stream.of(actions).reduce(this, Opt<T>::peek, (opts, opt) -> null);
+		return peek(Stream.of(actions).reduce(Consumer::andThen).orElseGet(() -> o -> {}));
 	}
 
 	/**
@@ -456,13 +399,29 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 如果包裹里元素的值存在，则返回该值，否则执行传入的操作
+	 *
+	 * @param action 值不存在时执行的操作
+	 * @return 如果包裹里元素的值存在，则返回该值，否则执行传入的操作
+	 * @throws NullPointerException 如果值不存在，并且传入的操作为 {@code null}
+	 */
+	public T orElseRun(Runnable action) {
+		if (isPresent()) {
+			return value;
+		} else {
+			action.run();
+			return null;
+		}
+	}
+
+	/**
 	 * 如果包裹里的值存在，则返回该值，否则抛出 {@code NoSuchElementException}
 	 *
 	 * @return 返回一个不为 {@code null} 的包裹里的值
 	 * @throws NoSuchElementException 如果包裹里的值不存在则抛出该异常
 	 */
 	public T orElseThrow() {
-		return orElseThrow(NoSuchElementException::new, "No value present");
+		return orElseThrow(() -> new NoSuchElementException("No value present"));
 	}
 
 	/**
@@ -480,30 +439,6 @@ public class Opt<T> {
 			return value;
 		} else {
 			throw exceptionSupplier.get();
-		}
-	}
-
-	/**
-	 * 如果包裹里的值存在，则返回该值，否则执行传入的操作，获取异常类型的返回值并抛出
-	 *
-	 * <p>往往是一个包含 自定义消息 构造器的异常 例如
-	 * <pre>{@code
-	 * 		Opt.ofNullable(null).orElseThrow(IllegalStateException::new, "Ops!Something is wrong!");
-	 * }</pre>
-	 *
-	 * @param <X>               异常类型
-	 * @param exceptionFunction 值不存在时执行的操作，返回值继承 {@link Throwable}
-	 * @param message           作为传入操作执行时的参数，一般作为异常自定义提示语
-	 * @return 包裹里不能为空的值
-	 * @throws X                    如果值不存在
-	 * @throws NullPointerException 如果值不存在并且 传入的操作为 {@code null}或者操作执行后的返回值为{@code null}
-	 * @author VampireAchao
-	 */
-	public <X extends Throwable> T orElseThrow(final Function<String, ? extends X> exceptionFunction, final String message) throws X {
-		if (isPresent()) {
-			return value;
-		} else {
-			throw exceptionFunction.apply(message);
 		}
 	}
 
