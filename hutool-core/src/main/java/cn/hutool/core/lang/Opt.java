@@ -405,7 +405,7 @@ public class Opt<T> {
 	 * @return 如果包裹里元素的值存在，则返回该值，否则执行传入的操作
 	 * @throws NullPointerException 如果值不存在，并且传入的操作为 {@code null}
 	 */
-	public T orElseRun(Runnable action) {
+	public T orElseRun(final Runnable action) {
 		if (isPresent()) {
 			return value;
 		} else {

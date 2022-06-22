@@ -6,15 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
@@ -28,7 +27,7 @@ public class OptTest {
 	@Test
 	public void ofBlankAbleTest() {
 		// ofBlankAble相对于ofNullable考虑了字符串为空串的情况
-		final String hutool = Opt.ofBlankAble("").orElse("hutool");
+		final CharSequence hutool = Opt.ofBlankAble("").orElse("hutool");
 		Assert.assertEquals("hutool", hutool);
 	}
 
@@ -120,7 +119,7 @@ public class OptTest {
 	@Test
 	public void orElseRunTest() {
 		// 判断一个值是否为空，为空执行一段逻辑,否则执行另一段逻辑
-		Map<String, Integer> map = new HashMap<>();
+		final Map<String, Integer> map = new HashMap<>();
 		final String key = "key";
 		map.put(key, 1);
 		Opt.ofNullable(map.get(key))
