@@ -6,7 +6,11 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import java.util.function.Predicate;
 
 /**
- * JSON字符串解析器
+ * JSON字符串解析器，实现：
+ * <ul>
+ *     <li>JSON字符串 --&gt; {@link JSONTokener} --&gt; {@link JSONObject}</li>
+ *     <li>JSON字符串 --&gt; {@link JSONTokener} --&gt; {@link JSONArray}</li>
+ * </ul>
  *
  * @author looly
  * @since 5.8.0

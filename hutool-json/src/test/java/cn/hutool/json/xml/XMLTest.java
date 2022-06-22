@@ -2,7 +2,6 @@ package cn.hutool.json.xml;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.json.XML;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
@@ -22,11 +21,11 @@ public class XMLTest {
 	@Test
 	public void escapeTest(){
 		final String xml = "<a>•</a>";
-		final JSONObject jsonObject = XML.toJSONObject(xml);
+		final JSONObject jsonObject = JSONXMLUtil.toJSONObject(xml);
 
 		Assert.assertEquals("{\"a\":\"•\"}", jsonObject.toString());
 
-		final String xml2 = XML.toXml(JSONUtil.parseObj(jsonObject));
+		final String xml2 = JSONXMLUtil.toXml(JSONUtil.parseObj(jsonObject));
 		Assert.assertEquals(xml, xml2);
 	}
 
@@ -34,10 +33,10 @@ public class XMLTest {
 	public void xmlContentTest(){
 		final JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
 
-		String xml = XML.toXml(jsonObject);
+		String xml = JSONXMLUtil.toXml(jsonObject);
 		Assert.assertEquals("123456", xml);
 
-		xml = XML.toXml(jsonObject, null, new String[0]);
+		xml = JSONXMLUtil.toXml(jsonObject, null, new String[0]);
 		Assert.assertEquals("<content>123456</content>", xml);
 	}
 }

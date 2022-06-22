@@ -12,6 +12,7 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
+import cn.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -201,7 +202,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 */
 	public static JSONObject parseFromXml(final String xmlStr) {
-		return XML.toJSONObject(xmlStr);
+		return JSONXMLUtil.toJSONObject(xmlStr);
 	}
 
 	// -------------------------------------------------------------------- Parse end
@@ -362,7 +363,7 @@ public class JSONUtil {
 	 * @return XML字符串
 	 */
 	public static String toXmlStr(final JSON json) {
-		return XML.toXml(json);
+		return JSONXMLUtil.toXml(json);
 	}
 	// -------------------------------------------------------------------- toString end
 
@@ -735,7 +736,7 @@ public class JSONUtil {
 	 * @since 4.0.8
 	 */
 	public static JSONObject xmlToJson(final String xml) {
-		return XML.toJSONObject(xml);
+		return JSONXMLUtil.toJSONObject(xml);
 	}
 
 	/**

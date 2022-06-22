@@ -4,8 +4,6 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.XML;
-import cn.hutool.json.XMLTokener;
 
 /**
  * XML解析器，将XML解析为JSON对象
@@ -50,7 +48,7 @@ public class JSONXMLParser {
 
 		token = x.nextToken();
 
-		if (token == XML.BANG) {
+		if (token == JSONXMLUtil.BANG) {
 			c = x.next();
 			if (c == '-') {
 				if (x.next() == '-') {
@@ -76,19 +74,19 @@ public class JSONXMLParser {
 				token = x.nextMeta();
 				if (token == null) {
 					throw x.syntaxError("Missing '>' after '<!'.");
-				} else if (token == XML.LT) {
+				} else if (token == JSONXMLUtil.LT) {
 					i += 1;
-				} else if (token == XML.GT) {
+				} else if (token == JSONXMLUtil.GT) {
 					i -= 1;
 				}
 			} while (i > 0);
 			return false;
-		} else if (token == XML.QUEST) {
+		} else if (token == JSONXMLUtil.QUEST) {
 
 			// <?
 			x.skipPast("?>");
 			return false;
-		} else if (token == XML.SLASH) {
+		} else if (token == JSONXMLUtil.SLASH) {
 
 			// Close tag </
 
@@ -99,7 +97,7 @@ public class JSONXMLParser {
 			if (!token.equals(name)) {
 				throw x.syntaxError("Mismatched " + name + " and " + token);
 			}
-			if (x.nextToken() != XML.GT) {
+			if (x.nextToken() != JSONXMLUtil.GT) {
 				throw x.syntaxError("Misshaped close tag");
 			}
 			return true;
@@ -122,7 +120,7 @@ public class JSONXMLParser {
 				if (token instanceof String) {
 					string = (String) token;
 					token = x.nextToken();
-					if (token == XML.EQ) {
+					if (token == JSONXMLUtil.EQ) {
 						token = x.nextToken();
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
@@ -133,9 +131,9 @@ public class JSONXMLParser {
 						jsonobject.append(string, "");
 					}
 
-				} else if (token == XML.SLASH) {
+				} else if (token == JSONXMLUtil.SLASH) {
 					// Empty tag <.../>
-					if (x.nextToken() != XML.GT) {
+					if (x.nextToken() != JSONXMLUtil.GT) {
 						throw x.syntaxError("Misshaped tag");
 					}
 					if (jsonobject.size() > 0) {
@@ -145,7 +143,7 @@ public class JSONXMLParser {
 					}
 					return false;
 
-				} else if (token == XML.GT) {
+				} else if (token == JSONXMLUtil.GT) {
 					// Content, between <...> and </...>
 					for (; ; ) {
 						token = x.nextContent();
@@ -160,7 +158,7 @@ public class JSONXMLParser {
 								jsonobject.append("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
 							}
 
-						} else if (token == XML.LT) {
+						} else if (token == JSONXMLUtil.LT) {
 							// Nested element
 							if (parse(x, jsonobject, tagName, keepStrings)) {
 								if (jsonobject.size() == 0) {

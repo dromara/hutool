@@ -12,7 +12,7 @@ import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONParser;
 import cn.hutool.json.JSONTokener;
-import cn.hutool.json.XML;
+import cn.hutool.json.xml.JSONXMLUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONSerializer;
 
@@ -149,7 +149,7 @@ public class ObjectMapper {
 		final String jsonStr = StrUtil.trim(source);
 		if (StrUtil.startWith(jsonStr, '<')) {
 			// 可能为XML
-			XML.toJSONObject(jsonObject, jsonStr, false);
+			JSONXMLUtil.toJSONObject(jsonObject, jsonStr, false);
 			return;
 		}
 		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.getConfig()), jsonObject);

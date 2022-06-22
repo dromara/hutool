@@ -1,8 +1,8 @@
-package cn.hutool.json;
+package cn.hutool.json.xml;
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.json.xml.JSONXMLParser;
-import cn.hutool.json.xml.JSONXMLSerializer;
+import cn.hutool.json.JSONException;
+import cn.hutool.json.JSONObject;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
@@ -11,7 +11,7 @@ import cn.hutool.json.xml.JSONXMLSerializer;
  * @see JSONXMLParser
  * @see JSONXMLSerializer
  */
-public class XML {
+public class JSONXMLUtil {
 
 	/**
 	 * The Character '&amp;'.

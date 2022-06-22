@@ -1,4 +1,8 @@
-package cn.hutool.json;
+package cn.hutool.json.xml;
+
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONException;
+import cn.hutool.json.JSONTokener;
 
 /**
  * XML分析器，继承自JSONTokener，提供XML的语法分析
@@ -15,11 +19,11 @@ public class XMLTokener extends JSONTokener {
 
 	static {
 		entity = new java.util.HashMap<>(8);
-		entity.put("amp", XML.AMP);
-		entity.put("apos", XML.APOS);
-		entity.put("gt", XML.GT);
-		entity.put("lt", XML.LT);
-		entity.put("quot", XML.QUOT);
+		entity.put("amp", JSONXMLUtil.AMP);
+		entity.put("apos", JSONXMLUtil.APOS);
+		entity.put("gt", JSONXMLUtil.GT);
+		entity.put("lt", JSONXMLUtil.LT);
+		entity.put("quot", JSONXMLUtil.QUOT);
 	}
 
 	/**
@@ -73,7 +77,7 @@ public class XMLTokener extends JSONTokener {
 			return null;
 		}
 		if (c == '<') {
-			return XML.LT;
+			return JSONXMLUtil.LT;
 		}
 		sb = new StringBuilder();
 		for (; ; ) {
@@ -130,17 +134,17 @@ public class XMLTokener extends JSONTokener {
 			case 0:
 				throw syntaxError("Misshaped meta tag");
 			case '<':
-				return XML.LT;
+				return JSONXMLUtil.LT;
 			case '>':
-				return XML.GT;
+				return JSONXMLUtil.GT;
 			case '/':
-				return XML.SLASH;
+				return JSONXMLUtil.SLASH;
 			case '=':
-				return XML.EQ;
+				return JSONXMLUtil.EQ;
 			case '!':
-				return XML.BANG;
+				return JSONXMLUtil.BANG;
 			case '?':
-				return XML.QUEST;
+				return JSONXMLUtil.QUEST;
 			case '"':
 			case '\'':
 				q = c;
@@ -197,15 +201,15 @@ public class XMLTokener extends JSONTokener {
 			case '<':
 				throw syntaxError("Misplaced '<'");
 			case '>':
-				return XML.GT;
+				return JSONXMLUtil.GT;
 			case '/':
-				return XML.SLASH;
+				return JSONXMLUtil.SLASH;
 			case '=':
-				return XML.EQ;
+				return JSONXMLUtil.EQ;
 			case '!':
-				return XML.BANG;
+				return JSONXMLUtil.BANG;
 			case '?':
-				return XML.QUEST;
+				return JSONXMLUtil.QUEST;
 
 			// Quoted string
 
