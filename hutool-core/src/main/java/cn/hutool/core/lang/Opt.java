@@ -108,7 +108,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(final R value) {
-		return CollUtil.isEmpty(value) || Collections.frequency(value, null) == value.size() ? empty() : new Opt<>(value);
+		return CollUtil.isEmpty(value) || Objects.equals(Collections.frequency(value, null), value.size()) ? empty() : new Opt<>(value);
 	}
 
 	/**
