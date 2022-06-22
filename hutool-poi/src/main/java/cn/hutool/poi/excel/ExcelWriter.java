@@ -1005,9 +1005,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public ExcelWriter writeRow(final Object rowBean, final boolean isWriteKeyAsHead) {
-		if (rowBean instanceof Iterable) {
-			return writeRow((Iterable<?>) rowBean);
-		}
 		final Map rowMap;
 		if (rowBean instanceof Map) {
 			if (MapUtil.isNotEmpty(this.headerAlias)) {
@@ -1015,6 +1012,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			} else {
 				rowMap = (Map) rowBean;
 			}
+		}else if(rowBean instanceof Iterable){
+			// issue#2398@Github
+			// MapWrapper由于实现了Iterable接口，应该优先按照Map处理
+			return writeRow((Iterable<?>) rowBean);
 		} else if (rowBean instanceof Hyperlink) {
 			// Hyperlink当成一个值
 			return writeRow(ListUtil.of(rowBean), isWriteKeyAsHead);
