@@ -1,7 +1,9 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
@@ -11,9 +13,12 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.serialize.JSONString;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.temporal.TemporalAccessor;
@@ -144,7 +149,7 @@ public final class InternalJSONUtil {
 		} else if (ArrayUtil.isArray(value)) {
 			return new JSONArray(value).toString();
 		} else {
-			return JSONUtil.quote(value.toString());
+			return quote(value.toString());
 		}
 	}
 
@@ -255,7 +260,88 @@ public final class InternalJSONUtil {
 				.setTransientSupport(config.isTransientSupport())
 				// 使用JSON转换器
 				.setConverter((type, value) ->
-						JSONConverter.convertWithCheck(type, value, null, config.isIgnoreError()));
+						JSONConverterOld.convertWithCheck(type, value, null, config.isIgnoreError()));
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param string 字符串
+	 * @return 适合在JSON中显示的字符串
+	 */
+	public static String quote(final String string) {
+		return quote(string, true);
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param string 字符串
+	 * @param isWrap 是否使用双引号包装字符串
+	 * @return 适合在JSON中显示的字符串
+	 * @since 3.3.1
+	 */
+	public static String quote(final String string, final boolean isWrap) {
+		return quote(string, new StringWriter(), isWrap).toString();
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param str    字符串
+	 * @param writer Writer
+	 * @return Writer
+	 * @throws IORuntimeException IO异常
+	 */
+	public static Writer quote(final String str, final Writer writer) throws IORuntimeException {
+		return quote(str, writer, true);
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param str    字符串
+	 * @param writer Writer
+	 * @param isWrap 是否使用双引号包装字符串
+	 * @return Writer
+	 * @throws IORuntimeException IO异常
+	 * @since 3.3.1
+	 */
+	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IORuntimeException {
+		try {
+			return doQuote(str, writer, isWrap);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 转义显示不可见字符
+	 *
+	 * @param str 字符串
+	 * @return 转义后的字符串
+	 */
+	public static String escape(final String str) {
+		if (StrUtil.isEmpty(str)) {
+			return str;
+		}
+
+		final int len = str.length();
+		final StringBuilder builder = new StringBuilder(len);
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			builder.append(escape(c));
+		}
+		return builder.toString();
 	}
 
 	/**
@@ -286,4 +372,82 @@ public final class InternalJSONUtil {
 		}
 		return rawHashMap;
 	}
+
+	// --------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param str    字符串
+	 * @param writer Writer
+	 * @param isWrap 是否使用双引号包装字符串
+	 * @return Writer
+	 * @throws IOException IO异常
+	 * @since 3.3.1
+	 */
+	private static Writer doQuote(final String str, final Writer writer, final boolean isWrap) throws IOException {
+		if (StrUtil.isEmpty(str)) {
+			if (isWrap) {
+				writer.write("\"\"");
+			}
+			return writer;
+		}
+
+		char c; // 当前字符
+		final int len = str.length();
+		if (isWrap) {
+			writer.write('"');
+		}
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			switch (c) {
+				case '\\':
+				case '"':
+					writer.write("\\");
+					writer.write(c);
+					break;
+				default:
+					writer.write(escape(c));
+			}
+		}
+		if (isWrap) {
+			writer.write('"');
+		}
+		return writer;
+	}
+
+	/**
+	 * 转义不可见字符<br>
+	 * 见：<a href="https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF">https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF</a>
+	 *
+	 * @param c 字符
+	 * @return 转义后的字符串
+	 */
+	private static String escape(final char c) {
+		switch (c) {
+			case '\b':
+				return "\\b";
+			case '\t':
+				return "\\t";
+			case '\n':
+				return "\\n";
+			case '\f':
+				return "\\f";
+			case '\r':
+				return "\\r";
+			default:
+				if (c < StrUtil.C_SPACE || //
+						(c >= '\u0080' && c <= '\u00a0') || //
+						(c >= '\u2000' && c <= '\u2010') || //
+						(c >= '\u2028' && c <= '\u202F') || //
+						(c >= '\u2066' && c <= '\u206F')//
+				) {
+					return HexUtil.toUnicodeHex(c);
+				} else {
+					return Character.toString(c);
+				}
+		}
+	}
+	// --------------------------------------------------------------------------------------------- Private method end
 }

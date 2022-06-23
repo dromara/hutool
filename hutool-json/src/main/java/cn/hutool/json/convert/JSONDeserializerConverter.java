@@ -16,7 +16,7 @@ public class JSONDeserializerConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected Object convertInternal(Class<?> targetClass, Object value) {
+	protected Object convertInternal(final Class<?> targetClass, final Object value) {
 		// 自定义反序列化
 		if (value instanceof JSON) {
 			final JSONDeserializer<?> target = (JSONDeserializer<?>) ConstructorUtil.newInstanceIfPossible(targetClass);

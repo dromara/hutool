@@ -11,7 +11,7 @@ public class XMLTest {
 
 	@Test
 	public void toXmlTest(){
-		final JSONObject put = JSONUtil.createObj()
+		final JSONObject put = JSONUtil.ofObj()
 				.set("aaa", "你好")
 				.set("键2", "test");
 		final String s = JSONUtil.toXmlStr(put);
@@ -31,7 +31,7 @@ public class XMLTest {
 
 	@Test
 	public void xmlContentTest(){
-		final JSONObject jsonObject = JSONUtil.createObj().set("content","123456");
+		final JSONObject jsonObject = JSONUtil.ofObj().set("content","123456");
 
 		String xml = JSONXMLUtil.toXml(jsonObject);
 		Assert.assertEquals("123456", xml);

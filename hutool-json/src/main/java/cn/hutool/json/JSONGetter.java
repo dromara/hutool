@@ -3,7 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -55,7 +55,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @since 4.2.2
 	 */
 	default String getStrEscaped(final K key, final String defaultValue) {
-		return JSONUtil.escape(getStr(key, defaultValue));
+		return InternalJSONUtil.escape(getStr(key, defaultValue));
 	}
 
 	/**
@@ -169,6 +169,6 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 			return null;
 		}
 
-		return JSONConverter.jsonConvert(type, value, getConfig());
+		return JSONConverterOld.jsonConvert(type, value, getConfig());
 	}
 }

@@ -5,7 +5,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.mapper.ObjectMapper;
 import cn.hutool.json.serialize.JSONWriter;
 
@@ -185,7 +185,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
+		return JSONConverterOld.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		} else if (object instanceof JSONArray) {
 			((JSONArray) object).set(value);
 		} else {
-			this.set(key, JSONUtil.createArray(this.config).set(object).set(value));
+			this.set(key, JSONUtil.ofArray(this.config).set(object).set(value));
 		}
 		return this;
 	}
@@ -316,7 +316,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 		} else if (value instanceof Float) {
 			this.set(key, (Float) value + 1);
 		} else {
-			throw new JSONException("Unable to increment [" + JSONUtil.quote(key) + "].");
+			throw new JSONException("Unable to increment [" + InternalJSONUtil.quote(key) + "].");
 		}
 		return this;
 	}

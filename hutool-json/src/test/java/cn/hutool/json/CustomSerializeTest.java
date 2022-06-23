@@ -29,7 +29,7 @@ public class CustomSerializeTest {
 		final CustomBean customBean = new CustomBean();
 		customBean.name = "testName";
 
-		final JSONObject obj = JSONUtil.createObj().set("customBean", customBean);
+		final JSONObject obj = JSONUtil.ofObj().set("customBean", customBean);
 		Assert.assertEquals("testName", obj.getJSONObject("customBean").getStr("customName"));
 	}
 

@@ -69,6 +69,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 6.0.0
  */
 public class RegisterConverter implements Converter, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 默认类型转换器

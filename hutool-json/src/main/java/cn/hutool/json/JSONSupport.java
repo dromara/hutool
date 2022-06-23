@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONString;
 
@@ -29,7 +29,7 @@ public class JSONSupport implements JSONString, JSONDeserializer<Object> {
 	 */
 	@Override
 	public Object deserialize(final JSON json) {
-		final JSONSupport support = JSONConverter.jsonToBean(getClass(), json, false);
+		final JSONSupport support = JSONConverterOld.jsonToBean(getClass(), json, false);
 		BeanUtil.copyProperties(support, this);
 		return this;
 	}

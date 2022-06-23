@@ -8,7 +8,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.mapper.ArrayMapper;
 import cn.hutool.json.serialize.JSONWriter;
 
@@ -195,7 +195,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
+		return JSONConverterOld.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	/**

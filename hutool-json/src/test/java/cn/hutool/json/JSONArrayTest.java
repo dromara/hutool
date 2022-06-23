@@ -22,12 +22,11 @@ import java.util.Map;
  * JSONArray单元测试
  *
  * @author Looly
- *
  */
 public class JSONArrayTest {
 
 	@Test()
-	public void createJSONArrayFromJSONObjectTest(){
+	public void createJSONArrayFromJSONObjectTest() {
 		// JSONObject实现了Iterable接口，可以转换为JSONArray
 		final JSONObject jsonObject = new JSONObject();
 
@@ -41,7 +40,7 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void addNullTest(){
+	public void addNullTest() {
 		final List<String> aaa = ListUtil.view("aaa", null);
 		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
 				JSONConfig.of().setIgnoreNullValue(false)));
@@ -51,7 +50,7 @@ public class JSONArrayTest {
 	@Test
 	public void addTest() {
 		// 方法1
-		final JSONArray array = JSONUtil.createArray();
+		final JSONArray array = JSONUtil.ofArray();
 		// 方法2
 		// JSONArray array = new JSONArray();
 		array.add("value1");
@@ -75,12 +74,12 @@ public class JSONArrayTest {
 		Assert.assertFalse(jsonArray.getJSONObject(1).containsKey("result"));
 
 		// 不忽略null，则null的键值对被保留
-		jsonArray = JSONUtil.parseArray(jsonStr, false);
+		jsonArray = JSONUtil.parseArray(jsonStr, JSONConfig.of().setIgnoreNullValue(false));
 		Assert.assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
 	}
 
 	@Test
-	public void parseFileTest() {
+	public void readJSONArrayFromFileTest() {
 		final JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.UTF_8);
 
 		final JSONObject obj0 = array.getJSONObject(0);
@@ -175,11 +174,12 @@ public class JSONArrayTest {
 	}
 
 	@Test(expected = ConvertException.class)
-	public void toListWithErrorTest(){
+	public void toListWithErrorTest() {
 		final String json = "[['aaa',{'akey':'avalue','bkey':'bvalue'}]]";
 		final JSONArray ja = JSONUtil.parseArray(json);
 
-		ja.toBean(new TypeReference<List<List<KeyBean>>>() {});
+		ja.toBean(new TypeReference<List<List<KeyBean>>>() {
+		});
 	}
 
 	@Test
@@ -209,7 +209,7 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void getByPathTest(){
+	public void getByPathTest() {
 		final String jsonStr = "[{\"id\": \"1\",\"name\": \"a\"},{\"id\": \"2\",\"name\": \"b\"}]";
 		final JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
 		Assert.assertEquals("b", jsonArray.getByPath("[1].name"));
@@ -217,7 +217,7 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void putToIndexTest(){
+	public void putToIndexTest() {
 		JSONArray jsonArray = new JSONArray();
 		jsonArray.set(3, "test");
 		// 默认忽略null值，因此空位无值，只有一个值
@@ -231,7 +231,7 @@ public class JSONArrayTest {
 
 	// https://github.com/dromara/hutool/issues/1858
 	@Test
-	public void putTest2(){
+	public void putTest2() {
 		final JSONArray jsonArray = new JSONArray();
 		jsonArray.put(0, 1);
 		Assert.assertEquals(1, jsonArray.size());
@@ -253,8 +253,8 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void filterIncludeTest(){
-		final JSONArray json1 = JSONUtil.createArray()
+	public void filterIncludeTest() {
+		final JSONArray json1 = JSONUtil.ofArray()
 				.set("value1")
 				.set("value2")
 				.set("value3")
@@ -265,8 +265,8 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void filterExcludeTest(){
-		final JSONArray json1 = JSONUtil.createArray()
+	public void filterExcludeTest() {
+		final JSONArray json1 = JSONUtil.ofArray()
 				.set("value1")
 				.set("value2")
 				.set("value3")
@@ -277,8 +277,8 @@ public class JSONArrayTest {
 	}
 
 	@Test
-	public void putNullTest(){
-		final JSONArray array = JSONUtil.createArray(JSONConfig.of().setIgnoreNullValue(false));
+	public void putNullTest() {
+		final JSONArray array = JSONUtil.ofArray(JSONConfig.of().setIgnoreNullValue(false));
 		array.set(null);
 
 		Assert.assertEquals("[null]", array.toString());
@@ -299,7 +299,7 @@ public class JSONArrayTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONArray array = new JSONArray(jsonArr, null, (mutable) -> {
 			final JSONObject o = new JSONObject(mutable.get());
-			if("111".equals(o.getStr("id"))){
+			if ("111".equals(o.getStr("id"))) {
 				o.set("name", "test1_edit");
 			}
 			mutable.set(o);

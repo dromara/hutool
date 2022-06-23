@@ -5,8 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONUtil;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -55,7 +55,7 @@ public class DateJSONString implements JSONString {
 				return dateStr;
 			}
 			//用户定义了日期格式
-			return JSONUtil.quote(dateStr);
+			return InternalJSONUtil.quote(dateStr);
 		}
 
 		//默认使用时间戳

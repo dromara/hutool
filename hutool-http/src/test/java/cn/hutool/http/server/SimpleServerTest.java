@@ -27,7 +27,7 @@ public class SimpleServerTest {
 				)
 				// 返回JSON数据测试
 				.addAction("/restTest", (request, response) -> {
-					final String res = JSONUtil.createObj()
+					final String res = JSONUtil.ofObj()
 							.set("id", 1)
 							.set("method", request.getMethod())
 							.set("request", request.getBody())

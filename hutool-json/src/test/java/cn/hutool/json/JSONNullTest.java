@@ -35,22 +35,22 @@ public class JSONNullTest {
 	@Test
 	public void setNullTest(){
 		// 忽略null
-		String json1 = JSONUtil.createObj().set("key1", null).toString();
+		String json1 = JSONUtil.ofObj().set("key1", null).toString();
 		Assert.assertEquals("{}", json1);
 
 		// 不忽略null
-		json1 = JSONUtil.createObj(JSONConfig.of().setIgnoreNullValue(false)).set("key1", null).toString();
+		json1 = JSONUtil.ofObj(JSONConfig.of().setIgnoreNullValue(false)).set("key1", null).toString();
 		Assert.assertEquals("{\"key1\":null}", json1);
 	}
 
 	@Test
 	public void setNullOfJSONArrayTest(){
 		// 忽略null
-		String json1 = JSONUtil.createArray().set(null).toString();
+		String json1 = JSONUtil.ofArray().set(null).toString();
 		Assert.assertEquals("[]", json1);
 
 		// 不忽略null
-		json1 = JSONUtil.createArray(JSONConfig.of().setIgnoreNullValue(false)).set(null).toString();
+		json1 = JSONUtil.ofArray(JSONConfig.of().setIgnoreNullValue(false)).set(null).toString();
 		Assert.assertEquals("[null]", json1);
 	}
 }

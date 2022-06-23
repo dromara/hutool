@@ -17,7 +17,7 @@ public class RestTest {
 	@Test
 	public void contentTypeTest() {
 		final HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj()
+				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
 		Assert.assertEquals("application/json;charset=UTF-8", request.header("Content-Type"));
@@ -27,7 +27,7 @@ public class RestTest {
 	@Ignore
 	public void postTest() {
 		final HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj()
+				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
 		Console.log(request.execute().body());
@@ -36,7 +36,7 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void postTest2() {
-		final String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.createObj()//
+		final String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.ofObj()//
 				.set("aaa", "aaaValue")
 				.set("键2", "值2").toString());
 		Console.log(result);
@@ -47,7 +47,7 @@ public class RestTest {
 	public void getWithBodyTest() {
 		final HttpRequest request = HttpRequest.get("http://localhost:8888/restTest")//
 				.header(Header.CONTENT_TYPE, "application/json")
-				.body(JSONUtil.createObj()
+				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
 		Console.log(request.execute().body());
@@ -60,7 +60,7 @@ public class RestTest {
 				// Charles代理
 				.setHttpProxy("localhost", 8888)
 				.header("Access-Token","")
-				.body(JSONUtil.createObj()
+				.body(JSONUtil.ofObj()
 						.set("advertiser_ids", new Long[] {1690657248243790L})
 						.set("fields", new String[] {"id", "name", "status"}).toString());
 		Console.log(request);

@@ -66,7 +66,7 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toStringTest3() {
-		final JSONObject json = Objects.requireNonNull(JSONUtil.createObj()//
+		final JSONObject json = Objects.requireNonNull(JSONUtil.ofObj()//
 						.set("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
@@ -74,24 +74,24 @@ public class JSONObjectTest {
 
 	@Test
 	public void toStringWithDateTest() {
-		JSONObject json = JSONUtil.createObj().set("date", DateUtil.parse("2019-05-08 19:18:21"));
+		JSONObject json = JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"));
 		assert json != null;
 		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
 
-		json = Objects.requireNonNull(JSONUtil.createObj().set("date", DateUtil.parse("2019-05-08 19:18:21"))).setDateFormat(DatePattern.NORM_DATE_PATTERN);
+		json = Objects.requireNonNull(JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"))).setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
 	}
 
 
 	@Test
 	public void putAllTest() {
-		final JSONObject json1 = JSONUtil.createObj()
+		final JSONObject json1 = JSONUtil.ofObj()
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
 				.set("d", true);
 
-		final JSONObject json2 = JSONUtil.createObj()
+		final JSONObject json2 = JSONUtil.ofObj()
 				.set("a", "value21")
 				.set("b", "value22");
 
@@ -185,12 +185,12 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanTest() {
-		final JSONObject subJson = JSONUtil.createObj().set("value1", "strValue1").set("value2", "234");
-		final JSONObject json = JSONUtil.createObj(JSONConfig.of().setIgnoreError(true)).set("strValue", "strTest").set("intValue", 123)
+		final JSONObject subJson = JSONUtil.ofObj().set("value1", "strValue1").set("value2", "234");
+		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true)).set("strValue", "strTest").set("intValue", 123)
 				// 测试空字符串转对象
 				.set("doubleValue", "")
 				.set("beanValue", subJson)
-				.set("list", JSONUtil.createArray().set("a").set("b")).set("testEnum", "TYPE_A");
+				.set("list", JSONUtil.ofArray().set("a").set("b")).set("testEnum", "TYPE_A");
 
 		final TestBean bean = json.toBean(TestBean.class);
 		Assert.assertEquals("a", bean.getList().get(0));
@@ -205,12 +205,12 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanNullStrTest() {
-		final JSONObject json = JSONUtil.createObj(JSONConfig.of().setIgnoreError(true))//
+		final JSONObject json = JSONUtil.ofObj(JSONConfig.of().setIgnoreError(true))//
 				.set("strValue", "null")//
 				.set("intValue", 123)//
 				// 子对象对应"null"字符串，如果忽略错误，跳过，否则抛出转换异常
 				.set("beanValue", "null")//
-				.set("list", JSONUtil.createArray().set("a").set("b"));
+				.set("list", JSONUtil.ofArray().set("a").set("b"));
 
 		final TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
@@ -272,10 +272,10 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toBeanTest6() {
-		final JSONObject json = JSONUtil.createObj()
+		final JSONObject json = JSONUtil.ofObj()
 				.set("targetUrl", "http://test.com")
 				.set("success", "true")
-				.set("result", JSONUtil.createObj()
+				.set("result", JSONUtil.ofObj()
 						.set("token", "tokenTest")
 						.set("userId", "测试用户1"));
 
@@ -334,7 +334,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void parseBeanTest3() {
-		final JSONObject json = JSONUtil.createObj()
+		final JSONObject json = JSONUtil.ofObj()
 				.set("code", 22)
 				.set("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
 
@@ -375,7 +375,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void beanTransTest3() {
-		final JSONObject userAJson = JSONUtil.createObj()
+		final JSONObject userAJson = JSONUtil.ofObj()
 				.set("a", "AValue")
 				.set("name", "nameValue")
 				.set("date", "08:00:00");
@@ -430,7 +430,7 @@ public class JSONObjectTest {
 		Assert.assertEquals("张三", jsonObject.getStr("name"));
 		Assert.assertEquals(new Integer(35), jsonObject.getInt("age"));
 
-		final JSONObject json = JSONUtil.createObj()
+		final JSONObject json = JSONUtil.ofObj()
 				.set("name", "张三")
 				.set("age", 35);
 		final BeanWithAlias bean = JSONUtil.toBean(Objects.requireNonNull(json).toString(), BeanWithAlias.class);
@@ -509,7 +509,7 @@ public class JSONObjectTest {
 	@Test
 	public void getTimestampTest() {
 		final String timeStr = "1970-01-01 00:00:00";
-		final JSONObject jsonObject = JSONUtil.createObj().set("time", timeStr);
+		final JSONObject jsonObject = JSONUtil.ofObj().set("time", timeStr);
 		final Timestamp time = jsonObject.get("time", Timestamp.class);
 		Assert.assertEquals("1970-01-01 00:00:00.0", time.toString());
 	}
@@ -616,7 +616,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void appendTest() {
-		final JSONObject jsonObject = JSONUtil.createObj().append("key1", "value1");
+		final JSONObject jsonObject = JSONUtil.ofObj().append("key1", "value1");
 		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
 
 		jsonObject.append("key1", "value2");
@@ -649,7 +649,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterIncludeTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
+		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -661,7 +661,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void filterExcludeTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
+		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -673,7 +673,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void editTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
+		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("a", "value1")
 				.set("b", "value2")
 				.set("c", "value3")
@@ -693,7 +693,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void toUnderLineCaseTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of())
+		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of())
 				.set("aKey", "value1")
 				.set("bJob", "value2")
 				.set("cGood", "value3")
@@ -708,7 +708,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void nullToEmptyTest() {
-		final JSONObject json1 = JSONUtil.createObj(JSONConfig.of().setIgnoreNullValue(false))
+		final JSONObject json1 = JSONUtil.ofObj(JSONConfig.of().setIgnoreNullValue(false))
 				.set("a", null)
 				.set("b", "value2");
 

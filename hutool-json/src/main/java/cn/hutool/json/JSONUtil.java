@@ -1,13 +1,11 @@
 package cn.hutool.json;
 
-import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.convert.JSONConverter;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
@@ -16,11 +14,10 @@ import cn.hutool.json.xml.JSONXMLUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ public class JSONUtil {
 	 *
 	 * @return JSONObject
 	 */
-	public static JSONObject createObj() {
+	public static JSONObject ofObj() {
 		return new JSONObject();
 	}
 
@@ -48,7 +45,7 @@ public class JSONUtil {
 	 * @return JSONObject
 	 * @since 5.2.5
 	 */
-	public static JSONObject createObj(final JSONConfig config) {
+	public static JSONObject ofObj(final JSONConfig config) {
 		return new JSONObject(config);
 	}
 
@@ -57,7 +54,7 @@ public class JSONUtil {
 	 *
 	 * @return JSONArray
 	 */
-	public static JSONArray createArray() {
+	public static JSONArray ofArray() {
 		return new JSONArray();
 	}
 
@@ -68,7 +65,7 @@ public class JSONUtil {
 	 * @return JSONArray
 	 * @since 5.2.5
 	 */
-	public static JSONArray createArray(final JSONConfig config) {
+	public static JSONArray ofArray(final JSONConfig config) {
 		return new JSONArray(config);
 	}
 
@@ -132,18 +129,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * JSON字符串转JSONArray
-	 *
-	 * @param arrayOrCollection 数组或集合对象
-	 * @param ignoreNullValue   是否忽略空值
-	 * @return JSONArray
-	 * @since 3.2.3
-	 */
-	public static JSONArray parseArray(final Object arrayOrCollection, final boolean ignoreNullValue) {
-		return new JSONArray(arrayOrCollection, JSONConfig.of().setIgnoreNullValue(ignoreNullValue));
-	}
-
-	/**
 	 * 转换对象为JSON，如果用户不配置JSONConfig，则JSON的有序与否与传入对象有关。<br>
 	 * 支持的对象：
 	 * <ul>
@@ -156,7 +141,7 @@ public class JSONUtil {
 	 * @return JSON
 	 */
 	public static JSON parse(final Object obj) {
-		return parse(obj, null);
+		return JSONConverter.INSTANCE.convert(obj);
 	}
 
 	/**
@@ -174,25 +159,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config) {
-		if (null == obj) {
-			return null;
-		}
-		final JSON json;
-		if (obj instanceof JSON) {
-			json = (JSON) obj;
-		} else if (obj instanceof CharSequence) {
-			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = isTypeJSONArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
-		} else if (obj instanceof MapWrapper) {
-			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
-			json = parseObj(obj, config);
-		} else if (obj instanceof Iterable || obj instanceof Iterator || ArrayUtil.isArray(obj)) {// 列表
-			json = parseArray(obj, config);
-		} else {// 对象
-			json = parseObj(obj, config);
-		}
-
-		return json;
+		return JSONConverter.of(config).convert(obj);
 	}
 
 	/**
@@ -204,11 +171,9 @@ public class JSONUtil {
 	public static JSONObject parseFromXml(final String xmlStr) {
 		return JSONXMLUtil.toJSONObject(xmlStr);
 	}
-
 	// -------------------------------------------------------------------- Parse end
 
 	// -------------------------------------------------------------------- Read start
-
 	/**
 	 * 读取JSON
 	 *
@@ -218,7 +183,11 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSON readJSON(final File file, final Charset charset) throws IORuntimeException {
-		return parse(FileReader.of(file, charset).readString());
+		try (final Reader reader = FileUtil.getReader(file, charset)) {
+			return parse(reader);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -230,7 +199,11 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
-		return parseObj(FileReader.of(file, charset).readString());
+		try (final Reader reader = FileUtil.getReader(file, charset)) {
+			return parseObj(reader);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -242,7 +215,11 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONArray readJSONArray(final File file, final Charset charset) throws IORuntimeException {
-		return parseArray(FileReader.of(file, charset).readString());
+		try (final Reader reader = FileUtil.getReader(file, charset)) {
+			return parseArray(reader);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 	// -------------------------------------------------------------------- Read end
 
@@ -298,7 +275,7 @@ public class JSONUtil {
 		if (null == json) {
 			return null;
 		}
-		return json.toJSONString(4);
+		return json.toStringPretty();
 	}
 
 	/**
@@ -364,6 +341,18 @@ public class JSONUtil {
 	 */
 	public static String toXmlStr(final JSON json) {
 		return JSONXMLUtil.toXml(json);
+	}
+
+	/**
+	 * XML转JSONObject<br>
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 *
+	 * @param xml XML字符串
+	 * @return JSONObject
+	 * @since 4.0.8
+	 */
+	public static JSONObject xmlToJson(final String xml) {
+		return JSONXMLUtil.toJSONObject(xml);
 	}
 	// -------------------------------------------------------------------- toString end
 
@@ -568,116 +557,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param string 字符串
-	 * @return 适合在JSON中显示的字符串
-	 */
-	public static String quote(final String string) {
-		return quote(string, true);
-	}
-
-	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param string 字符串
-	 * @param isWrap 是否使用双引号包装字符串
-	 * @return 适合在JSON中显示的字符串
-	 * @since 3.3.1
-	 */
-	public static String quote(final String string, final boolean isWrap) {
-		final StringWriter sw = new StringWriter();
-		try {
-			return quote(string, sw, isWrap).toString();
-		} catch (final IOException ignored) {
-			// will never happen - we are writing to a string writer
-			return StrUtil.EMPTY;
-		}
-	}
-
-	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param str    字符串
-	 * @param writer Writer
-	 * @return Writer
-	 * @throws IOException IO异常
-	 */
-	public static Writer quote(final String str, final Writer writer) throws IOException {
-		return quote(str, writer, true);
-	}
-
-	/**
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param str    字符串
-	 * @param writer Writer
-	 * @param isWrap 是否使用双引号包装字符串
-	 * @return Writer
-	 * @throws IOException IO异常
-	 * @since 3.3.1
-	 */
-	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IOException {
-		if (StrUtil.isEmpty(str)) {
-			if (isWrap) {
-				writer.write("\"\"");
-			}
-			return writer;
-		}
-
-		char c; // 当前字符
-		final int len = str.length();
-		if (isWrap) {
-			writer.write('"');
-		}
-		for (int i = 0; i < len; i++) {
-			c = str.charAt(i);
-			switch (c) {
-				case '\\':
-				case '"':
-					writer.write("\\");
-					writer.write(c);
-					break;
-				default:
-					writer.write(escape(c));
-			}
-		}
-		if (isWrap) {
-			writer.write('"');
-		}
-		return writer;
-	}
-
-	/**
-	 * 转义显示不可见字符
-	 *
-	 * @param str 字符串
-	 * @return 转义后的字符串
-	 */
-	public static String escape(final String str) {
-		if (StrUtil.isEmpty(str)) {
-			return str;
-		}
-
-		final int len = str.length();
-		final StringBuilder builder = new StringBuilder(len);
-		char c;
-		for (int i = 0; i < len; i++) {
-			c = str.charAt(i);
-			builder.append(escape(c));
-		}
-		return builder.toString();
-	}
-
-	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
 	 *
 	 * @param jsonStr JSON字符串
@@ -728,18 +607,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * XML转JSONObject<br>
-	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 *
-	 * @param xml XML字符串
-	 * @return JSONObject
-	 * @since 4.0.8
-	 */
-	public static JSONObject xmlToJson(final String xml) {
-		return JSONXMLUtil.toJSONObject(xml);
-	}
-
-	/**
 	 * 加入自定义的序列化器
 	 *
 	 * @param type       对象类型
@@ -774,40 +641,4 @@ public class JSONUtil {
 	public static void putDeserializer(final Type type, final JSONDeserializer<?> deserializer) {
 		GlobalSerializeMapping.putDeserializer(type, deserializer);
 	}
-
-	// --------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 转义不可见字符<br>
-	 * 见：<a href="https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF">https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF</a>
-	 *
-	 * @param c 字符
-	 * @return 转义后的字符串
-	 */
-	private static String escape(final char c) {
-		switch (c) {
-			case '\b':
-				return "\\b";
-			case '\t':
-				return "\\t";
-			case '\n':
-				return "\\n";
-			case '\f':
-				return "\\f";
-			case '\r':
-				return "\\r";
-			default:
-				if (c < StrUtil.C_SPACE || //
-						(c >= '\u0080' && c <= '\u00a0') || //
-						(c >= '\u2000' && c <= '\u2010') || //
-						(c >= '\u2028' && c <= '\u202F') || //
-						(c >= '\u2066' && c <= '\u206F')//
-				) {
-					return HexUtil.toUnicodeHex(c);
-				} else {
-					return Character.toString(c);
-				}
-		}
-	}
-	// --------------------------------------------------------------------------------------------- Private method end
 }

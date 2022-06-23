@@ -1,7 +1,7 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
-import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.convert.JSONConverterOld;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -169,6 +169,6 @@ public interface JSON extends Cloneable, Serializable {
 	 * @since 4.3.2
 	 */
 	default <T> T toBean(final Type type) {
-		return JSONConverter.jsonConvert(type, this, getConfig());
+		return JSONConverterOld.jsonConvert(type, this, getConfig());
 	}
 }

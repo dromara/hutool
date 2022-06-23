@@ -8,10 +8,10 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONException;
-import cn.hutool.json.JSONUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -137,7 +137,7 @@ public class JSONWriter extends Writer {
 		// 换行缩进
 		//noinspection resource
 		writeLF().writeSpace(indentFactor + indent);
-		return writeRaw(JSONUtil.quote(key));
+		return writeRaw(InternalJSONUtil.quote(key));
 	}
 
 	/**
@@ -300,11 +300,7 @@ public class JSONWriter extends Writer {
 	 * @param csq 字符串
 	 */
 	private void writeQuoteStrValue(final String csq) {
-		try {
-			JSONUtil.quote(csq, writer);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		InternalJSONUtil.quote(csq, writer);
 	}
 
 	/**
@@ -386,7 +382,7 @@ public class JSONWriter extends Writer {
 				return dateStr;
 			}
 			//用户定义了日期格式
-			return JSONUtil.quote(dateStr);
+			return InternalJSONUtil.quote(dateStr);
 		}
 
 		//默认使用时间戳
