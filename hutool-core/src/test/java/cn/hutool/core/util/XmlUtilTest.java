@@ -332,4 +332,20 @@ public class XmlUtilTest {
 		final String name = doc.getDocumentElement().getAttribute("name");
 		Assert.assertEquals("aaaa", name);
 	}
+
+	@Test
+	@Ignore
+	public void issueI5DO8ETest(){
+		// 增加子节点后，格式会错乱，JDK的bug
+		XmlUtil.setNamespaceAware(false);
+		final String xmlStr = ResourceUtil.readUtf8Str("issueI5DO8E.xml");
+		final Document doc = XmlUtil.readXML(xmlStr);
+
+		final Element item = doc.createElement("item");
+		item.setAttribute("id", "cover-image");
+		final Element manifestEl = XmlUtil.getElementByXPath("//package/manifest", doc);
+		manifestEl.appendChild(item);
+
+		Console.log(XmlUtil.format(doc));
+	}
 }
