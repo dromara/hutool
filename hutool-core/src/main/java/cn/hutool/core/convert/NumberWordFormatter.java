@@ -5,9 +5,9 @@ import cn.hutool.core.text.StrUtil;
 
 /**
  * 将浮点数类型的number转换成英语的表达方式 <br>
- * 参考博客：http://blog.csdn.net/eric_sunah/article/details/8713226
+ * 参考博客：<a href="http://blog.csdn.net/eric_sunah/article/details/8713226">http://blog.csdn.net/eric_sunah/article/details/8713226</a>
  *
- * @author Looly,totalo
+ * @author Looly, totalo
  * @since 3.0.9
  */
 public class NumberWordFormatter {

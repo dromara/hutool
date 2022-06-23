@@ -357,7 +357,6 @@ public class NumberChineseFormatter {
 
 	/**
 	 * 把中文转换为数字 如 二百二十 220<br>
-	 * 见：https://www.d5.nz/read/sfdlq/text-part0000_split_030.html
 	 * <ul>
 	 *     <li>一百一十二 -》 112</li>
 	 *     <li>一千零一十二 -》 1012</li>

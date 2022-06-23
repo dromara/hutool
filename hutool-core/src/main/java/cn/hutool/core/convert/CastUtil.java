@@ -23,7 +23,7 @@ public class CastUtil {
 	 * @param value      被转换的对象
 	 * @return 转换后的对象
 	 */
-	public static <T> T castTo(Class<T> targetType, final Object value) {
+	public static <T> T castTo(final Class<T> targetType, final Object value) {
 		return Assert.notNull(targetType).cast(value);
 	}
 
@@ -35,7 +35,7 @@ public class CastUtil {
 	 * @return 转换后的集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Collection<T> castUp(Collection<? extends T> collection) {
+	public static <T> Collection<T> castUp(final Collection<? extends T> collection) {
 		return (Collection<T>) collection;
 	}
 
@@ -47,7 +47,7 @@ public class CastUtil {
 	 * @return 转换后的集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Collection<T> castDown(Collection<? super T> collection) {
+	public static <T> Collection<T> castDown(final Collection<? super T> collection) {
 		return (Collection<T>) collection;
 	}
 
@@ -59,7 +59,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> castUp(Set<? extends T> set) {
+	public static <T> Set<T> castUp(final Set<? extends T> set) {
 		return (Set<T>) set;
 	}
 
@@ -71,7 +71,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> castDown(Set<? super T> set) {
+	public static <T> Set<T> castDown(final Set<? super T> set) {
 		return (Set<T>) set;
 	}
 
@@ -83,7 +83,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> castUp(List<? extends T> list) {
+	public static <T> List<T> castUp(final List<? extends T> list) {
 		return (List<T>) list;
 	}
 
@@ -95,7 +95,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> castDown(List<? super T> list) {
+	public static <T> List<T> castDown(final List<? super T> list) {
 		return (List<T>) list;
 	}
 
@@ -108,7 +108,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> castUp(Map<? extends K, ? extends V> map) {
+	public static <K, V> Map<K, V> castUp(final Map<? extends K, ? extends V> map) {
 		return (Map<K, V>) map;
 	}
 
@@ -121,7 +121,7 @@ public class CastUtil {
 	 * @return 泛化集合
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> castDown(Map<? super K, ? super V> map) {
+	public static <K, V> Map<K, V> castDown(final Map<? super K, ? super V> map) {
 		return (Map<K, V>) map;
 	}
 }
