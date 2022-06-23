@@ -22,6 +22,7 @@
 * 【core   】     修复单字母转换为数字的问题（issue#I5C4K1@Gitee）
 * 【core   】     修复IterUtil.filter无效问题
 * 【core   】     修复NumberUtil传入null，返回了true(issue#I5DTSL@Gitee)
+* 【core   】     修复NumberUtil.isDouble问题(pr#2400@Github)
 
 -------------------------------------------------------------------------------------------------------------
 

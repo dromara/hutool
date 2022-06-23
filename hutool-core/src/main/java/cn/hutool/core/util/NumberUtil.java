@@ -1281,11 +1281,10 @@ public class NumberUtil {
 		}
 		try {
 			Double.parseDouble(s);
-			return s.contains(".");
 		} catch (NumberFormatException ignore) {
-			// ignore
+			return false;
 		}
-		return false;
+		return s.contains(".");
 	}
 
 	/**
