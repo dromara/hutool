@@ -1285,7 +1285,7 @@ public class NumberUtil {
 		} catch (NumberFormatException ignore) {
 			// ignore
 		}
-		return true;
+		return false;
 	}
 
 	/**
