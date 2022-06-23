@@ -2671,6 +2671,9 @@ public class NumberUtil {
 	 * @since 4.6.7
 	 */
 	public static boolean isValidNumber(Number number) {
+		if(null == number){
+			return false;
+		}
 		if (number instanceof Double) {
 			return (false == ((Double) number).isInfinite()) && (false == ((Double) number).isNaN());
 		} else if (number instanceof Float) {
