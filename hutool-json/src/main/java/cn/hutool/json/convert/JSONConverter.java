@@ -3,7 +3,7 @@ package cn.hutool.json.convert;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
-import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.TemporalAccessorConverter;
@@ -34,10 +34,10 @@ public class JSONConverter implements Converter {
 
 	public static JSONConverter INSTANCE = new JSONConverter();
 
-	private static final ConverterRegistry registry;
+	private static final CompositeConverter registry;
 	static {
 		// 注册到转换中心
-		registry = new ConverterRegistry();
+		registry = new CompositeConverter();
 		registry.putCustom(JSON.class, INSTANCE);
 		registry.putCustom(JSONObject.class, INSTANCE);
 		registry.putCustom(JSONArray.class, INSTANCE);

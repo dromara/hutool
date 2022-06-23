@@ -745,9 +745,9 @@ public class Convert {
 	 * @since 5.3.2
 	 */
 	public static <T> T convertWithCheck(final Type type, final Object value, final T defaultValue, final boolean quietly) {
-		final ConverterRegistry registry = ConverterRegistry.getInstance();
+		final CompositeConverter compositeConverter = CompositeConverter.getInstance();
 		try {
-			return registry.convert(type, value, defaultValue);
+			return compositeConverter.convert(type, value, defaultValue);
 		} catch (final Exception e) {
 			if(quietly){
 				return defaultValue;

@@ -2,7 +2,7 @@ package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.TypeReference;
@@ -26,7 +26,7 @@ public class MapConverter implements Converter, Serializable {
 	public static MapConverter INSTANCE = new MapConverter();
 
 	@Override
-	public Object convert(Type targetType, Object value) throws ConvertException {
+	public Object convert(Type targetType, final Object value) throws ConvertException {
 		if (targetType instanceof TypeReference) {
 			targetType = ((TypeReference<?>) targetType).getType();
 		}
@@ -79,11 +79,11 @@ public class MapConverter implements Converter, Serializable {
 	 * @param targetMap 目标Map
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private void convertMapToMap(Type keyType, Type valueType, final Map<?, ?> srcMap, final Map targetMap) {
-		final ConverterRegistry convert = ConverterRegistry.getInstance();
+	private void convertMapToMap(final Type keyType, final Type valueType, final Map<?, ?> srcMap, final Map targetMap) {
+		final CompositeConverter convert = CompositeConverter.getInstance();
 		srcMap.forEach((key, value) -> {
-			key = TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key);
-			value = TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value);
+			key = TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key, null);
+			value = TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value, null);
 			targetMap.put(key, value);
 		});
 	}

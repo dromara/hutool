@@ -19,13 +19,15 @@ public abstract class AbstractConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Object convert(Type targetType, final Object value) {
-		Assert.notNull(targetType);
+	public Object convert(final Type targetType, final Object value) {
 		if (null == value) {
 			return null;
 		}
+		if (TypeUtil.isUnknown(targetType)) {
+			throw new ConvertException("Unsupported convert to unKnow type: {}", targetType);
+		}
 
-		Class<?> targetClass = TypeUtil.getClass(targetType);
+		final Class<?> targetClass = TypeUtil.getClass(targetType);
 		Assert.notNull(targetClass, "Target type is not a class!");
 
 		// 尝试强转

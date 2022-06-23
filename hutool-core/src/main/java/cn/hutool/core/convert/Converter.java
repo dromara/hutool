@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
  * 类型转换接口函数，根据给定的值和目标类型，由用户自定义转换规则。
  *
  * @author looly
- * @since 5.8.0
+ * @since 6.0.0
  */
 @FunctionalInterface
 public interface Converter {
@@ -36,6 +36,6 @@ public interface Converter {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T convert(final Type targetType, final Object value, final T defaultValue) {
-		return ObjUtil.defaultIfNull((T) convert(targetType, value), defaultValue);
+		return (T) ObjUtil.defaultIfNull(convert(targetType, value), defaultValue);
 	}
 }

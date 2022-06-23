@@ -1,7 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
-import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.reflect.TypeUtil;
 
@@ -30,7 +30,7 @@ public class ReferenceConverter extends AbstractConverter {
 		Object targetValue = null;
 		final Type paramType = TypeUtil.getTypeArgument(targetClass);
 		if(false == TypeUtil.isUnknown(paramType)){
-			targetValue = ConverterRegistry.getInstance().convert(paramType, value);
+			targetValue = CompositeConverter.getInstance().convert(paramType, value);
 		}
 		if(null == targetValue){
 			targetValue = value;

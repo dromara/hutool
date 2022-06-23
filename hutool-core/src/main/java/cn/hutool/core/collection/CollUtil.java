@@ -9,7 +9,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConverterRegistry;
+import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
@@ -1785,9 +1785,9 @@ public class CollUtil {
 			iter = ListUtil.of(value).iterator();
 		}
 
-		final ConverterRegistry convert = ConverterRegistry.getInstance();
+		final CompositeConverter convert = CompositeConverter.getInstance();
 		while (iter.hasNext()) {
-			collection.add(convert.convert(elementType, iter.next()));
+			collection.add((T) convert.convert(elementType, iter.next()));
 		}
 
 		return collection;
