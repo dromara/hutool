@@ -218,7 +218,16 @@ public class Snowflake implements Serializable {
 		if (timestamp == this.lastTimestamp) {
 			final long sequence = (this.sequence + 1) & SEQUENCE_MASK;
 			if (sequence == 0) {
-				timestamp = tilNextMillis(lastTimestamp);
+				/**
+				 * 1 timeOffset 默认是0,目前的做法是每毫秒生成4096个id以后就自旋等待到下一毫秒，在生成Id
+				 * 2 可以通过 timeOffset 来指定最多向未来多少毫秒以内的时间借用生成的id，从而解决1毫秒生成4096个id以后需要自旋等待的问题
+				 * 3 比如我们指定 timeOffset=10000，就可用最多借用未来10000毫秒的id，应对突发瞬时需求，最大一毫秒允许生成的id数变成4096*10000
+				 */
+                if( timeOffset == 0 ){
+                    timestamp = this.tilNextMillis(this.lastTimestamp);
+                }else{
+                    timestamp = ++timestamp;
+                }
 			}
 			this.sequence = sequence;
 		} else {
