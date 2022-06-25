@@ -226,7 +226,7 @@ public class Snowflake implements Serializable {
                 if( timeOffset == 0 ){
                     timestamp = this.tilNextMillis(this.lastTimestamp);
                 }else{
-                    timestamp = ++timestamp;
+                   timestamp++;
                 }
 			}
 			this.sequence = sequence;
