@@ -263,9 +263,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.7.12
 	 */
 	public static void publishEvent(ApplicationEvent event) {
-		if (null != applicationContext) {
-			applicationContext.publishEvent(event);
-		}
+		publishEvent((Object) event);
 	}
 
 	/**
