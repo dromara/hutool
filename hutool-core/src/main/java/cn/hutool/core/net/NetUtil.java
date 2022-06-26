@@ -429,6 +429,18 @@ public class NetUtil {
 	 * @since 4.5.17
 	 */
 	public static LinkedHashSet<InetAddress> localAddressList(final Predicate<InetAddress> addressPredicate) {
+		return localAddressList(null, addressPredicate);
+	}
+
+	/**
+	 * 获取所有满足过滤条件的本地IP地址对象
+	 *
+	 * @param networkInterfaceFilter 过滤器，null表示不过滤，获取所有网卡
+	 * @param addressPredicate       过滤器，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤，获取所有地址
+	 * @return 过滤后的地址对象列表
+	 * @since 4.5.17
+	 */
+	public static LinkedHashSet<InetAddress> localAddressList(final Predicate<NetworkInterface> networkInterfaceFilter, final Predicate<InetAddress> addressPredicate) {
 		final Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -444,6 +456,9 @@ public class NetUtil {
 
 		while (networkInterfaces.hasMoreElements()) {
 			final NetworkInterface networkInterface = networkInterfaces.nextElement();
+			if (networkInterfaceFilter != null && false == networkInterfaceFilter.test(networkInterface)) {
+				continue;
+			}
 			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
 			while (inetAddresses.hasMoreElements()) {
 				final InetAddress inetAddress = inetAddresses.nextElement();
