@@ -56,7 +56,9 @@ public class TypeAnnotationScanner implements AnnotationScanner {
 	 * 构造一个类注解扫描器
 	 *
 	 * @param includeSupperClass 是否允许扫描父类
-	 * @param includeInterfaces 是否允许扫描父接口
+	 * @param includeInterfaces  是否允许扫描父接口
+	 * @param filter             过滤器
+	 * @param excludeTypes       不包含的类型
 	 */
 	public TypeAnnotationScanner(boolean includeSupperClass, boolean includeInterfaces, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
 		Assert.notNull(filter, "filter must not null");
@@ -161,11 +163,11 @@ public class TypeAnnotationScanner implements AnnotationScanner {
 
 	@Override
 	public List<Annotation> getAnnotations(AnnotatedElement annotatedElement) {
-		return scan((Class<?>)annotatedElement).stream()
-			.map(Class::getAnnotations)
-			.flatMap(Stream::of)
-			.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
-			.collect(Collectors.toList());
+		return scan((Class<?>) annotatedElement).stream()
+				.map(Class::getAnnotations)
+				.flatMap(Stream::of)
+				.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
+				.collect(Collectors.toList());
 	}
 
 	private Class<?> convert(Class<?> target) {

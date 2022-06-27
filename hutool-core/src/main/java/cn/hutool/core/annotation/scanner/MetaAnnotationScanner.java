@@ -48,30 +48,29 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 
 	@Override
 	public boolean support(AnnotatedElement annotatedElement) {
-		return (annotatedElement instanceof Class && ClassUtil.isAssignable(Annotation.class, (Class<?>)annotatedElement));
+		return (annotatedElement instanceof Class && ClassUtil.isAssignable(Annotation.class, (Class<?>) annotatedElement));
 	}
 
 	/**
 	 * 按广度优先扫描指定注解上的元注解，对扫描到的注解与层级索引进行操作
 	 *
 	 * @param consumer 当前层级索引与操作
-	 * @param source 源注解
-	 * @param filter 过滤器
+	 * @param source   源注解
+	 * @param filter   过滤器
 	 * @author huangchengxing
-	 * @date 2022/6/14 13:28
 	 */
 	public void scan(BiConsumer<Integer, Annotation> consumer, Class<? extends Annotation> source, Predicate<Annotation> filter) {
 		filter = ObjectUtil.defaultIfNull(filter, t -> true);
-		Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList(source));
+		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList(source));
 		int distance = 0;
 		do {
-			List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();
-			for (Class<? extends Annotation> type : annotationTypes) {
-				List<Annotation> metaAnnotations = Stream.of(type.getAnnotations())
-					.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
-					.filter(filter)
-					.collect(Collectors.toList());
-				for (Annotation metaAnnotation : metaAnnotations) {
+			final List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();
+			for (final Class<? extends Annotation> type : annotationTypes) {
+				final List<Annotation> metaAnnotations = Stream.of(type.getAnnotations())
+						.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
+						.filter(filter)
+						.collect(Collectors.toList());
+				for (final Annotation metaAnnotation : metaAnnotations) {
 					consumer.accept(distance, metaAnnotation);
 				}
 				deque.addLast(CollStreamUtil.toList(metaAnnotations, Annotation::annotationType));
@@ -83,11 +82,11 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Annotation> getAnnotations(AnnotatedElement annotatedElement) {
-		List<Annotation> annotations = new ArrayList<>();
+		final List<Annotation> annotations = new ArrayList<>();
 		scan(
-			(index, annotation) -> annotations.add(annotation),
-			(Class<? extends Annotation>)annotatedElement,
-			annotation -> ObjectUtil.notEqual(annotation, annotatedElement)
+				(index, annotation) -> annotations.add(annotation),
+				(Class<? extends Annotation>) annotatedElement,
+				annotation -> ObjectUtil.notEqual(annotation, annotatedElement)
 		);
 		return annotations;
 	}

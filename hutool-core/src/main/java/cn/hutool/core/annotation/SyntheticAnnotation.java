@@ -76,6 +76,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	/**
 	 * 基于指定根注解，构建包括其元注解在内的合成注解
 	 *
+	 * @param <T>            注解类型
 	 * @param rootAnnotation 根注解
 	 * @return 合成注解
 	 */
@@ -104,7 +105,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	/**
 	 * 获取根注解类型
 	 *
-	 * @return java.lang.Class<? extends java.lang.annotation.Annotation>
+	 * @return java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;
 	 */
 	@Override
 	public Class<? extends Annotation> annotationType() {
@@ -116,6 +117,8 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	 * <p>当不同层级的注解之间存在同名同类型属性时，将优先获取更接近根注解的属性
 	 *
 	 * @param attributeName 属性名
+	 * @param attributeType 属性类型
+	 * @return 属性
 	 */
 	public Object getAttribute(String attributeName, Class<?> attributeType) {
 		Map<Class<?>, Object> values = attributeCaches.computeIfAbsent(attributeName, t -> MapUtil.newHashMap());
@@ -333,7 +336,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		 * @return toString值
 		 */
 		private String getToString() {
-			String attributes = Stream.of(annotationType().getDeclaredMethods())
+			final String attributes = Stream.of(annotationType().getDeclaredMethods())
 					.filter(AnnotationUtil::isAttributeMethod)
 					.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName(), method.getReturnType())))
 					.collect(Collectors.joining(", "));
