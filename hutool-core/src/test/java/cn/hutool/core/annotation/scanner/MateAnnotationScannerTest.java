@@ -16,7 +16,7 @@ public class MateAnnotationScannerTest {
 
 	@Test
 	public void testMateAnnotationScanner() {
-		AnnotationScanner scanner = new MateAnnotationScanner();
+		AnnotationScanner scanner = new MetaAnnotationScanner();
 		Assert.assertTrue(scanner.support(AnnotationForScannerTest3.class));
 		Map<Class<? extends Annotation>, Annotation> annotations = CollUtil.toMap(scanner.getAnnotations(AnnotationForScannerTest3.class), new HashMap<>(), Annotation::annotationType);
 		Assert.assertEquals(3, annotations.size());
@@ -25,7 +25,7 @@ public class MateAnnotationScannerTest {
 		Assert.assertTrue(annotations.containsKey(AnnotationForScannerTest2.class));
 		Assert.assertFalse(annotations.containsKey(AnnotationForScannerTest3.class));
 
-		scanner = new MateAnnotationScanner(false);
+		scanner = new MetaAnnotationScanner(false);
 		Assert.assertTrue(scanner.support(AnnotationForScannerTest3.class));
 		annotations = CollUtil.toMap(scanner.getAnnotations(AnnotationForScannerTest3.class), new HashMap<>(), Annotation::annotationType);
 		Assert.assertEquals(1, annotations.size());

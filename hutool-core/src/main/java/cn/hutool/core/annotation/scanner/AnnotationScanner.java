@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @see TypeAnnotationScanner
  * @see MethodAnnotationScanner
  * @see FieldAnnotationScanner
- * @see MateAnnotationScanner
+ * @see MetaAnnotationScanner
  */
 public interface AnnotationScanner {
 

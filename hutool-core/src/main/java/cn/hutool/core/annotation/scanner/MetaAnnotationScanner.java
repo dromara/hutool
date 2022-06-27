@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 扫描注解类上存在的注解，支持处理枚举实例或枚举类型 <br />
+ * 扫描注解类上存在的注解，支持处理枚举实例或枚举类型
  * 需要注意，当待解析是枚举类时，有可能与{@link TypeAnnotationScanner}冲突
  *
  * @author huangchengxing
  * @see TypeAnnotationScanner
  */
-public class MateAnnotationScanner implements AnnotationScanner {
+public class MetaAnnotationScanner implements AnnotationScanner {
 
 	/**
 	 * 获取当前注解的元注解后，是否继续递归扫描的元注解的元注解
@@ -35,14 +35,14 @@ public class MateAnnotationScanner implements AnnotationScanner {
 	 *
 	 * @param includeSupperMetaAnnotation 获取当前注解的元注解后，是否继续递归扫描的元注解的元注解
 	 */
-	public MateAnnotationScanner(boolean includeSupperMetaAnnotation) {
+	public MetaAnnotationScanner(boolean includeSupperMetaAnnotation) {
 		this.includeSupperMetaAnnotation = includeSupperMetaAnnotation;
 	}
 
 	/**
 	 * 构造一个元注解扫描器，默认在扫描当前注解上的元注解后，并继续递归扫描元注解
 	 */
-	public MateAnnotationScanner() {
+	public MetaAnnotationScanner() {
 		this(true);
 	}
 
@@ -68,7 +68,7 @@ public class MateAnnotationScanner implements AnnotationScanner {
 			List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();
 			for (Class<? extends Annotation> type : annotationTypes) {
 				List<Annotation> metaAnnotations = Stream.of(type.getAnnotations())
-					.filter(a -> !AnnotationUtil.isJdkMateAnnotation(a.annotationType()))
+					.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
 					.filter(filter)
 					.collect(Collectors.toList());
 				for (Annotation metaAnnotation : metaAnnotations) {

@@ -164,7 +164,7 @@ public class TypeAnnotationScanner implements AnnotationScanner {
 		return scan((Class<?>)annotatedElement).stream()
 			.map(Class::getAnnotations)
 			.flatMap(Stream::of)
-			.filter(a -> !AnnotationUtil.isJdkMateAnnotation(a.annotationType()))
+			.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
 			.collect(Collectors.toList());
 	}
 

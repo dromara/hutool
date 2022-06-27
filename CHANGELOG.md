@@ -17,6 +17,7 @@
 * 【core   】     BeanPath在空元素时默认加入map，修改根据下标类型赋值List or map（issue#2362@Github）
 * 【core   】     localAddressList 添加重构方法（pr#665@Gitee）
 * 【cron   】     从配置文件加载任务时，自定义ID避免重复从配置文件加载（issue#I5E7BM@Gitee）
+* 【core   】     新增注解扫描器和合成注解（pr#654@Gitee）
 * 
 ### 🐞Bug修复
 * 【extra  】     修复createExtractor中抛出异常后流未关闭问题（pr#2384@Github）

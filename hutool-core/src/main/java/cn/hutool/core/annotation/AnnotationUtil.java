@@ -48,7 +48,7 @@ public class AnnotationUtil {
 	);
 
 	/**
-	 * 是否为Jdk自带的元注解。<br />
+	 * 是否为Jdk自带的元注解。<br>
 	 * 包括：
 	 * <ul>
 	 *     <li>{@link Target}</li>
@@ -63,12 +63,12 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类型
 	 * @return 是否为Jdk自带的元注解
 	 */
-	public static boolean isJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+	public static boolean isJdkMetaAnnotation(Class<? extends Annotation> annotationType) {
 		return META_ANNOTATIONS.contains(annotationType);
 	}
 
 	/**
-	 * 是否不为Jdk自带的元注解。<br />
+	 * 是否不为Jdk自带的元注解。<br>
 	 * 包括：
 	 * <ul>
 	 *     <li>{@link Target}</li>
@@ -84,7 +84,7 @@ public class AnnotationUtil {
 	 * @return 是否为Jdk自带的元注解
 	 */
 	public static boolean isNotJdkMateAnnotation(Class<? extends Annotation> annotationType) {
-		return !isJdkMateAnnotation(annotationType);
+		return false == isJdkMetaAnnotation(annotationType);
 	}
 
 	/**
@@ -383,7 +383,7 @@ public class AnnotationUtil {
 	 */
 	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedElement, Class<T> annotationType) {
 		AnnotationScanner[] scanners = new AnnotationScanner[] {
-			new MateAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
 		return AnnotationScanner.scanByAnySupported(annotatedElement, scanners).stream()
 			.map(SyntheticAnnotation::of)

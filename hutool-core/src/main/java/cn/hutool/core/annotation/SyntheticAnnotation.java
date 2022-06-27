@@ -1,6 +1,6 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.annotation.scanner.MateAnnotationScanner;
+import cn.hutool.core.annotation.scanner.MetaAnnotationScanner;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -23,22 +23,22 @@ import java.util.stream.Stream;
 /**
  * 表示一个根注解与根注解上的多层元注解合成的注解
  *
- * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对A解析得到的合成注解X，则CBA都是X的元注解，X为根注解。<br />
+ * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对A解析得到的合成注解X，则CBA都是X的元注解，X为根注解。<br>
  * 通过{@link #isAnnotationPresent(Class)}可确定指定类型是注解是否是该合成注解的元注解，即是否为当前实例的“父类”。
- * 若指定注解是当前实例的元注解，则通过{@link #getAnnotation(Class)}可获得动态代理生成的对应的注解实例。<br />
+ * 若指定注解是当前实例的元注解，则通过{@link #getAnnotation(Class)}可获得动态代理生成的对应的注解实例。<br>
  * 需要注意的是，由于认为合并注解X以最初的根注解A作为元注解，因此{@link #getAnnotations()}或{@link #getDeclaredAnnotations()}
  * 都将只能获得A。
  *
  * <p>不同层级的元注解可能存在同名的属性，此时，若认为该合成注解X在第0层，则根注解A在第1层，B在第2层......以此类推。
- * 层级越低的注解中离根注解距离近，则属性优先级越高，即遵循“就近原则”。<br />
+ * 层级越低的注解中离根注解距离近，则属性优先级越高，即遵循“就近原则”。<br>
  * 举个例子：若CBA同时存在属性y，则将X视为C，B或者A时，获得的y属性的值都与最底层元注解A的值保持一致。
  * 同理，不同层级可能会出现相同的元注解，比如A注解存在元注解B，C，但是C又存在元注解B，因此根据就近原则，A上的元注解B将优先于C上的元注解B生效。
- * 若两相同注解处于同一层级，则按照从其上一级“子注解”的{@link AnnotatedElement#getAnnotations()}的调用顺序排序。<br />
+ * 若两相同注解处于同一层级，则按照从其上一级“子注解”的{@link AnnotatedElement#getAnnotations()}的调用顺序排序。<br>
  * {@link #getAnnotation(Class)}获得的代理类实例的属性值遵循该规则。
  *
  * <p>同名属性将根据类型彼此隔离，即当不同层级的元注解存在同名的属性，但是属性类型不同时，此时低层级的属性并不会覆盖高层级注解的属性。
  *
- * <p>别名在合成注解中仍然有效，若注解X中任意属性上存在{@link Alias}注解，则{@link Alias#value()}指定的属性值将会覆盖注解属性的本身的值。<br />
+ * <p>别名在合成注解中仍然有效，若注解X中任意属性上存在{@link Alias}注解，则{@link Alias#value()}指定的属性值将会覆盖注解属性的本身的值。<br>
  * {@link Alias}注解仅能指定注解X中存在的属性作为别名，不允许指定元注解或子类注解的属性。
  *
  * @author huangchengxing
@@ -120,11 +120,11 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	public Object getAttribute(String attributeName, Class<?> attributeType) {
 		Map<Class<?>, Object> values = attributeCaches.computeIfAbsent(attributeName, t -> MapUtil.newHashMap());
 		return values.computeIfAbsent(attributeType, a -> metaAnnotationMap.values()
-			.stream()
-			.filter(ma -> ma.hasAttribute(attributeName, attributeType)) // 集合默认是根据distance有序的，故此处无需再排序
-			.findFirst()
-			.map(ma -> ma.getAttribute(attributeName))
-			.orElse(null)
+				.stream()
+				.filter(ma -> ma.hasAttribute(attributeName, attributeType)) // 集合默认是根据distance有序的，故此处无需再排序
+				.findFirst()
+				.map(ma -> ma.getAttribute(attributeName))
+				.orElse(null)
 		);
 	}
 
@@ -132,7 +132,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	 * 若合成注解在存在指定元注解，则使用动态代理生成一个对应的注解实例
 	 *
 	 * @param annotationType 注解类型
-	 * @param <T> 注解类型
+	 * @param <T>            注解类型
 	 * @return 注解
 	 */
 	@SuppressWarnings("unchecked")
@@ -140,9 +140,9 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
 		if (metaAnnotationMap.containsKey(annotationType)) {
 			return (T) Proxy.newProxyInstance(
-				annotationType.getClassLoader(),
-				new Class[]{annotationType, Synthesized.class},
-				new SyntheticAnnotationProxy<>(this, annotationType)
+					annotationType.getClassLoader(),
+					new Class[]{annotationType, Synthesized.class},
+					new SyntheticAnnotationProxy<>(this, annotationType)
 			);
 		}
 		return null;
@@ -165,7 +165,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	 */
 	@Override
 	public Annotation[] getDeclaredAnnotations() {
-		return new Annotation[]{ getSource() };
+		return new Annotation[]{getSource()};
 	}
 
 	/**
@@ -174,17 +174,17 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 	private void loadMetaAnnotations() {
 		// 若该注解已经是合成注解，则直接使用已解析好的元注解信息
 		if (source instanceof SyntheticAnnotation.Synthesized) {
-			this.metaAnnotationMap.putAll(((Synthesized)source).getMetaAnnotationMap());
+			this.metaAnnotationMap.putAll(((Synthesized) source).getMetaAnnotationMap());
 			return;
 		}
 		// 扫描元注解
 		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(source, 0));
-		new MateAnnotationScanner().scan(
-			(index, annotation) -> metaAnnotationMap.computeIfAbsent(
-				// 当出现重复的注解时，由于后添加的注解必然层级更高，优先级更低，因此当直接忽略
-				annotation.annotationType(), t -> new MetaAnnotation(annotation, index)
-			),
-			source.annotationType(), null
+		new MetaAnnotationScanner().scan(
+				(index, annotation) -> metaAnnotationMap.computeIfAbsent(
+						// 当出现重复的注解时，由于后添加的注解必然层级更高，优先级更低，因此当直接忽略
+						annotation.annotationType(), t -> new MetaAnnotation(annotation, index)
+				),
+				source.annotationType(), null
 		);
 	}
 
@@ -247,13 +247,13 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		 * 元注解是否存在该属性，且该属性的值类型是指定类型或其子类
 		 *
 		 * @param attributeName 属性名
-		 * @param returnType 返回值类型
+		 * @param returnType    返回值类型
 		 * @return 是否存在该属性
 		 */
 		public boolean hasAttribute(String attributeName, Class<?> returnType) {
 			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-				.filter(method -> ClassUtil.isAssignable(returnType, method.getReturnType()))
-				.isPresent();
+					.filter(method -> ClassUtil.isAssignable(returnType, method.getReturnType()))
+					.isPresent();
 		}
 
 		/**
@@ -264,8 +264,8 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		 */
 		public Object getAttribute(String attributeName) {
 			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-				.map(method -> ReflectUtil.invoke(annotation, method))
-				.orElse(null);
+					.map(method -> ReflectUtil.invoke(annotation, method))
+					.orElse(null);
 		}
 
 	}
@@ -322,8 +322,8 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 				return getToString();
 			}
 			return ObjectUtil.defaultIfNull(
-				syntheticAnnotation.getAttribute(method.getName(), method.getReturnType()),
-				() -> ReflectUtil.invoke(this, method, args)
+					syntheticAnnotation.getAttribute(method.getName(), method.getReturnType()),
+					() -> ReflectUtil.invoke(this, method, args)
 			);
 		}
 
@@ -334,9 +334,9 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		 */
 		private String getToString() {
 			String attributes = Stream.of(annotationType().getDeclaredMethods())
-				.filter(AnnotationUtil::isAttributeMethod)
-				.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName(), method.getReturnType())))
-				.collect(Collectors.joining(", "));
+					.filter(AnnotationUtil::isAttributeMethod)
+					.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName(), method.getReturnType())))
+					.collect(Collectors.joining(", "));
 			return StrUtil.format("@{}({})", annotationType().getName(), attributes);
 		}
 
@@ -346,7 +346,7 @@ public class SyntheticAnnotation<A extends Annotation> implements Annotation, An
 		 * @return hashcode值
 		 */
 		private int getHashCode() {
-			return Objects.hash((Object)syntheticAnnotation.getAnnotations());
+			return Objects.hash((Object) syntheticAnnotation.getAnnotations());
 		}
 
 	}
