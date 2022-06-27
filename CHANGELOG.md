@@ -26,6 +26,7 @@
 * 【core   】     修复IterUtil.filter无效问题
 * 【core   】     修复NumberUtil传入null，返回了true(issue#I5DTSL@Gitee)
 * 【core   】     修复NumberUtil.isDouble问题(pr#2400@Github)
+* 【core   】     修复ZipUtil使用append替换文件时，父目录存在报错问题(issue#I5DRU0@Gitee)
 
 -------------------------------------------------------------------------------------------------------------
 
