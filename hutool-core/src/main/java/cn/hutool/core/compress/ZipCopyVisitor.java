@@ -4,6 +4,7 @@ import cn.hutool.core.text.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
@@ -31,8 +32,8 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 	/**
 	 * 构造
 	 *
-	 * @param source 源Path，或基准路径，用于计算被拷贝文件的相对路径
-	 * @param fileSystem 目标Zip文件
+	 * @param source      源Path，或基准路径，用于计算被拷贝文件的相对路径
+	 * @param fileSystem  目标Zip文件
 	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
 	public ZipCopyVisitor(final Path source, final FileSystem fileSystem, final CopyOption... copyOptions) {
@@ -44,14 +45,17 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 	@Override
 	public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 		final Path targetDir = resolveTarget(dir);
-		if(StrUtil.isNotEmpty(targetDir.toString())){
+		if (StrUtil.isNotEmpty(targetDir.toString())) {
 			// 在目标的Zip文件中的相对位置创建目录
 			try {
 				Files.copy(dir, targetDir, copyOptions);
+			} catch (final DirectoryNotEmptyException ignore) {
+				// 目录已经存在，则跳过
 			} catch (final FileAlreadyExistsException e) {
 				if (false == Files.isDirectory(targetDir)) {
 					throw e;
 				}
+				// 目录非空情况下，跳过创建目录
 			}
 		}
 
