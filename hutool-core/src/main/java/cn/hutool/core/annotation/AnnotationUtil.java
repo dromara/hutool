@@ -1,7 +1,13 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.annotation.scanner.*;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -14,9 +20,11 @@ import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -26,6 +34,58 @@ import java.util.function.Predicate;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+
+	/**
+	 * 元注解
+	 */
+	static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
+		Retention.class, //
+		Inherited.class, //
+		Documented.class, //
+		SuppressWarnings.class, //
+		Override.class, //
+		Deprecated.class//
+	);
+
+	/**
+	 * 是否为Jdk自带的元注解。<br />
+	 * 包括：
+	 * <ul>
+	 *     <li>{@link Target}</li>
+	 *     <li>{@link Retention}</li>
+	 *     <li>{@link Inherited}</li>
+	 *     <li>{@link Documented}</li>
+	 *     <li>{@link SuppressWarnings}</li>
+	 *     <li>{@link Override}</li>
+	 *     <li>{@link Deprecated}</li>
+	 * </ul>
+	 *
+	 * @param annotationType 注解类型
+	 * @return 是否为Jdk自带的元注解
+	 */
+	public static boolean isJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+		return META_ANNOTATIONS.contains(annotationType);
+	}
+
+	/**
+	 * 是否不为Jdk自带的元注解。<br />
+	 * 包括：
+	 * <ul>
+	 *     <li>{@link Target}</li>
+	 *     <li>{@link Retention}</li>
+	 *     <li>{@link Inherited}</li>
+	 *     <li>{@link Documented}</li>
+	 *     <li>{@link SuppressWarnings}</li>
+	 *     <li>{@link Override}</li>
+	 *     <li>{@link Deprecated}</li>
+	 * </ul>
+	 *
+	 * @param annotationType 注解类型
+	 * @return 是否为Jdk自带的元注解
+	 */
+	public static boolean isNotJdkMateAnnotation(Class<? extends Annotation> annotationType) {
+		return !isJdkMateAnnotation(annotationType);
+	}
 
 	/**
 	 * 将指定的被注解的元素转换为组合注解元素
@@ -293,5 +353,85 @@ public class AnnotationUtil {
 	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
+	}
+
+	/**
+	 * 将指定注解实例与其元注解转为合成注解
+	 *
+	 * @param annotation 注解
+	 * @param annotationType 注解类型
+	 * @param <T> 注解类型
+	 * @return 合成注解
+	 * @see SyntheticAnnotation
+	 */
+	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
+		return SyntheticAnnotation.of(annotation).getAnnotation(annotationType);
+	}
+
+	/**
+	 * 获取元素上所有指定注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * @param annotatedElement 可注解元素
+	 * @param annotationType 注解类型
+	 * @param <T> 注解类型
+	 * @return 注解
+	 * @see SyntheticAnnotation
+	 */
+	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedElement, Class<T> annotationType) {
+		AnnotationScanner[] scanners = new AnnotationScanner[] {
+			new MateAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedElement, scanners).stream()
+			.map(SyntheticAnnotation::of)
+			.map(annotation -> annotation.getAnnotation(annotationType))
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * 方法是否为注解属性方法。 <br />
+	 * 方法无参数，且有返回值的方法认为是注解属性的方法。
+	 *
+	 * @param method 方法
+	 */
+	static boolean isAttributeMethod(Method method) {
+		return method.getParameterCount() == 0 && method.getReturnType() != void.class;
+	}
+
+	/**
+	 * 获取注解的全部属性值获取方法
+	 *
+	 * @param annotationType 注解
+	 * @return 注解的全部属性值
+	 * @throws IllegalArgumentException 当别名属性在注解中不存在，或别名属性的值与原属性的值类型不一致时抛出
+	 */
+	static Map<String, Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
+		// 获取全部注解属性值
+		Map<String, Method> attributeMethods = Stream.of(annotationType.getDeclaredMethods())
+			.filter(AnnotationUtil::isAttributeMethod)
+			.collect(Collectors.toMap(Method::getName, Function.identity()));
+		// 处理别名
+		attributeMethods.forEach((methodName, method) -> {
+			String alias = Opt.ofNullable(method.getAnnotation(Alias.class))
+				.map(Alias::value)
+				.orElse(null);
+			if (ObjectUtil.isNull(alias)) {
+				return;
+			}
+			// 存在别名，则将原本的值替换为别名对应的值
+			Assert.isTrue(attributeMethods.containsKey(alias), "No method for alias: [{}]", alias);
+			Method aliasAttributeMethod = attributeMethods.get(alias);
+			Assert.isTrue(
+				ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
+				"Return type of the alias method [{}] is inconsistent with the original [{}]",
+				aliasAttributeMethod.getClass(), method.getParameterTypes()
+			);
+			attributeMethods.put(methodName, aliasAttributeMethod);
+		});
+		return attributeMethods;
 	}
 }
