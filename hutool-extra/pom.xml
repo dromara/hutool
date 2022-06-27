@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.4.M1</version>
+		<version>5.8.4</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -31,7 +31,7 @@
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.7.0</spring-boot.version>
+		<spring-boot.version>2.7.1</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -361,7 +361,7 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.4.M1</version>
+		<version>5.8.4</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -21,7 +21,7 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.20</tomcat-jdbc.version>
-		<druid.version>1.2.10</druid.version>
+		<druid.version>1.2.11</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
 		<mongo4.version>4.6.0</mongo4.version>
@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.3.4</version>
+			<version>42.3.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
