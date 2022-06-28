@@ -8,13 +8,7 @@ import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -27,7 +21,7 @@ public class OptTest {
 	@Test
 	public void ofBlankAbleTest() {
 		// ofBlankAble相对于ofNullable考虑了字符串为空串的情况
-		final CharSequence hutool = Opt.ofBlankAble("").orElse("hutool");
+		final String hutool = Opt.ofBlankAble("").orElse("hutool");
 		Assert.assertEquals("hutool", hutool);
 	}
 

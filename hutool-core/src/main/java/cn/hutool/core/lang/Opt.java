@@ -28,11 +28,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.text.StrUtil;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -94,7 +90,7 @@ public class Opt<T> {
 	 * @param value 传入需要包裹的元素
 	 * @return 一个包裹里元素可能为空，或者为空字符串的 {@code Opt}
 	 */
-	public static Opt<CharSequence> ofBlankAble(final CharSequence value) {
+	public static <T extends CharSequence> Opt<T> ofBlankAble(final T value) {
 		return StrUtil.isBlank(value) ? empty() : new Opt<>(value);
 	}
 
