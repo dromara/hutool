@@ -28,11 +28,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.text.StrUtil;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
