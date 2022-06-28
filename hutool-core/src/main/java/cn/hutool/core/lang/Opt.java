@@ -94,7 +94,7 @@ public class Opt<T> {
 	 * @param value 传入需要包裹的元素
 	 * @return 一个包裹里元素可能为空，或者为空字符串的 {@code Opt}
 	 */
-	public static Opt<CharSequence> ofBlankAble(final CharSequence value) {
+	public static <T extends CharSequence> Opt<T> ofBlankAble(final T value) {
 		return StrUtil.isBlank(value) ? empty() : new Opt<>(value);
 	}
 
