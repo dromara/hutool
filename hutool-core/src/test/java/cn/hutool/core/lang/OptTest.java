@@ -27,7 +27,7 @@ public class OptTest {
 	@Test
 	public void ofBlankAbleTest() {
 		// ofBlankAble相对于ofNullable考虑了字符串为空串的情况
-		final CharSequence hutool = Opt.ofBlankAble("").orElse("hutool");
+		final String hutool = Opt.ofBlankAble("").orElse("hutool");
 		Assert.assertEquals("hutool", hutool);
 	}
 
