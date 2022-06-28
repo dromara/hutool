@@ -8,8 +8,6 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -425,7 +423,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 批量判断字符串是否全部为空白
 	 * @since 6.0.1
 	 */
-	public static boolean isAllBlank(final Collection<String> strs) {
+	public static boolean isAllBlank(final Collection<? extends CharSequence> strs) {
 		if (ArrayUtil.isEmpty(strs)) {
 			return true;
 		}
