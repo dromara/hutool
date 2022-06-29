@@ -47,7 +47,7 @@ public class StrUtilTest {
 
 	@Test
 	public void testIssAllBlank() {
-		List<String> queue = new LinkedList<>();
+		final List<String> queue = new LinkedList<>();
 		queue.add("apple");
 		queue.add("banana");
 		queue.add("cherry");

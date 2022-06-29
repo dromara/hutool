@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -415,23 +414,5 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String format(final CharSequence template, final Map<?, ?> map, final boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
-	}
-
-	/**
-	 * @see CharSequenceUtil#isAllBlank(CharSequence...)
-	 * @param strs 字符串列表
-	 * @return 批量判断字符串是否全部为空白
-	 * @since 6.0.1
-	 */
-	public static boolean isAllBlank(final Collection<? extends CharSequence> strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-		for (final CharSequence str : strs) {
-			if (isNotBlank(str)) {
-				return false;
-			}
-		}
-		return true;
 	}
 }
