@@ -46,7 +46,7 @@ public class WeakConcurrentMapTest {
 	@Test
 	public void getConcurrencyTest(){
 		final WeakConcurrentMap<String, String> cache = new WeakConcurrentMap<>();
-		final ConcurrencyTester tester = new ConcurrencyTester(9000);
+		final ConcurrencyTester tester = new ConcurrencyTester(2000);
 		tester.test(()-> cache.computeIfAbsent("aaa" + RandomUtil.randomInt(2), (key)-> "aaaValue"));
 
 		Assert.assertTrue(tester.getInterval() > 0);
