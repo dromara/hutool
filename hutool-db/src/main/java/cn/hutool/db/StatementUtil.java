@@ -287,6 +287,8 @@ public class StatementUtil {
 	 * @since 4.6.7
 	 */
 	public static int getTypeOfNull(final PreparedStatement ps, final int paramIndex) {
+		Assert.notNull(ps, "ps PreparedStatement must be not null in (getTypeOfNull)!");
+
 		int sqlType = Types.VARCHAR;
 
 		final ParameterMetaData pmd;
