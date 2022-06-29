@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.Normalizer;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,8 +170,8 @@ public class CharSequenceUtil {
 	 * @see CharSequenceUtil#hasBlank(CharSequence...)
 	 * @since 6.0.0
 	 */
-	public static boolean hasBlank(final Collection<? extends CharSequence> strs) {
-		if (ArrayUtil.isEmpty(strs)) {
+	public static boolean hasBlank(final Iterable<? extends CharSequence> strs) {
+		if (CollUtil.isEmpty(strs)) {
 			return true;
 		}
 		for (final CharSequence str : strs) {
@@ -224,7 +223,7 @@ public class CharSequenceUtil {
 	 * @see CharSequenceUtil#isAllBlank(CharSequence...)
 	 * @since 6.0.1
 	 */
-	public static boolean isAllBlank(final Collection<? extends CharSequence> strs) {
+	public static boolean isAllBlank(final Iterable<? extends CharSequence> strs) {
 		if (CollUtil.isNotEmpty(strs)) {
 			for (final CharSequence str : strs) {
 				if (isNotBlank(str)) {
@@ -416,6 +415,27 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * <p>是否包含空字符串。</p>
+	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
+	 *
+	 * @param strs 字符串列表
+	 * @return 是否包含空字符串
+	 * @since 6.0.0
+	 */
+	public static boolean hasEmpty(final Iterable<? extends CharSequence> strs) {
+		if (CollUtil.isEmpty(strs)) {
+			return true;
+		}
+
+		for (final CharSequence str : strs) {
+			if (isEmpty(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
 	 * <br>
@@ -439,15 +459,33 @@ public class CharSequenceUtil {
 	 * @return 所有字符串是否为空白
 	 */
 	public static boolean isAllEmpty(final CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (final CharSequence str : strs) {
-			if (isNotEmpty(str)) {
-				return false;
+		if (ArrayUtil.isNotEmpty(strs)) {
+			for (final CharSequence str : strs) {
+				if (isNotEmpty(str)) {
+					return false;
+				}
 			}
 		}
+
+		return true;
+	}
+
+	/**
+	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
+	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
+	 *
+	 * @param strs 字符串列表
+	 * @return 所有字符串是否为空白
+	 */
+	public static boolean isAllEmpty(final Iterable<? extends CharSequence> strs) {
+		if (CollUtil.isNotEmpty(strs)) {
+			for (final CharSequence str : strs) {
+				if (isNotEmpty(str)) {
+					return false;
+				}
+			}
+		}
+
 		return true;
 	}
 
