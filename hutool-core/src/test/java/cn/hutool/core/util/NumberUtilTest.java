@@ -465,10 +465,10 @@ public class NumberUtilTest {
 
 	@Test
 	public void range(){
-		Assert.assertFalse(NumberUtil.range(new BigDecimal("1"),new BigDecimal("2"),new BigDecimal("12")));
-		Assert.assertTrue(NumberUtil.range(new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("2")));
-		Assert.assertTrue(NumberUtil.range(new BigDecimal("1"),new BigDecimal("0"),new BigDecimal("2")));
-		Assert.assertFalse(NumberUtil.range(new BigDecimal("0.23"),new BigDecimal("0.12"),new BigDecimal("0.22")));
-		Assert.assertTrue(NumberUtil.range(new BigDecimal("-0.12"),new BigDecimal("-0.3"),new BigDecimal("0")));
+		Assert.assertFalse(NumberUtil.isIn(new BigDecimal("1"),new BigDecimal("2"),new BigDecimal("12")));
+		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("2")));
+		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("1"),new BigDecimal("0"),new BigDecimal("2")));
+		Assert.assertFalse(NumberUtil.isIn(new BigDecimal("0.23"),new BigDecimal("0.12"),new BigDecimal("0.22")));
+		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("-0.12"),new BigDecimal("-0.3"),new BigDecimal("0")));
 	}
 }

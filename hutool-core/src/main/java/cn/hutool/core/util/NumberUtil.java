@@ -1821,7 +1821,7 @@ public class NumberUtil {
 	 * @param max           最大值（包含）
 	 * @return 经过检查后的值
 	 **/
-	public static boolean range(final BigDecimal value, final BigDecimal min,final BigDecimal max){
+	public static boolean isIn(final BigDecimal value, final BigDecimal min,final BigDecimal max){
 		Assert.notNull(value);
 		Assert.notNull(min);
 		Assert.notNull(max);
