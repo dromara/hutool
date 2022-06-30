@@ -67,8 +67,8 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	public List<Annotation> getAnnotations(AnnotatedElement annotatedEle) {
 		final List<Annotation> annotations = new ArrayList<>();
 		scan(
-			(index, annotation) -> annotations.add(annotation), annotatedEle,
-			annotation -> ObjectUtil.notEqual(annotation, annotatedEle)
+				(index, annotation) -> annotations.add(annotation), annotatedEle,
+				annotation -> ObjectUtil.notEqual(annotation, annotatedEle)
 		);
 		return annotations;
 	}

@@ -256,7 +256,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 */
 	protected Class<?> convert(Class<?> target) {
 		if (hasConverters) {
-			for (UnaryOperator<Class<?>> converter : converters) {
+			for (final UnaryOperator<Class<?>> converter : converters) {
 				target = converter.apply(target);
 			}
 		}

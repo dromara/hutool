@@ -79,7 +79,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	 */
 	@Override
 	protected Annotation[] getAnnotationsFromTargetClass(AnnotatedElement source, int index, Class<?> targetClass) {
-		Method sourceMethod = (Method) source;
+		final Method sourceMethod = (Method) source;
 		return Stream.of(targetClass.getDeclaredMethods())
 			.filter(superMethod -> !superMethod.isBridge())
 			.filter(superMethod -> hasSameSignature(sourceMethod, superMethod))
@@ -104,11 +104,11 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	 * 该方法是否具备与扫描的方法相同的方法签名
 	 */
 	private boolean hasSameSignature(Method sourceMethod, Method superMethod) {
-		if (!StrUtil.equals(sourceMethod.getName(), superMethod.getName())) {
+		if (false == StrUtil.equals(sourceMethod.getName(), superMethod.getName())) {
 			return false;
 		}
-		Class<?>[] sourceParameterTypes = sourceMethod.getParameterTypes();
-		Class<?>[] targetParameterTypes = superMethod.getParameterTypes();
+		final Class<?>[] sourceParameterTypes = sourceMethod.getParameterTypes();
+		final Class<?>[] targetParameterTypes = superMethod.getParameterTypes();
 		if (sourceParameterTypes.length != targetParameterTypes.length) {
 			return false;
 		}
