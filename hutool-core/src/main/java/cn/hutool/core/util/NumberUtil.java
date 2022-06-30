@@ -1814,6 +1814,24 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value         值
+	 * @param min           最小值（包含）
+	 * @param max           最大值（包含）
+	 * @return 经过检查后的值
+	 **/
+	public static boolean isIn(final BigDecimal value, final BigDecimal min,final BigDecimal max){
+		Assert.notNull(value);
+		Assert.notNull(min);
+		Assert.notNull(max);
+		if(isGreaterOrEqual(value,min) && isLessOrEqual(value,max)){
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
