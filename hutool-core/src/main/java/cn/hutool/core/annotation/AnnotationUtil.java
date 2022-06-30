@@ -33,12 +33,12 @@ public class AnnotationUtil {
 	 * 元注解
 	 */
 	static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //
-		Retention.class, //
-		Inherited.class, //
-		Documented.class, //
-		SuppressWarnings.class, //
-		Override.class, //
-		Deprecated.class//
+			Retention.class, //
+			Inherited.class, //
+			Documented.class, //
+			SuppressWarnings.class, //
+			Override.class, //
+			Deprecated.class//
 	);
 
 	/**
@@ -130,7 +130,7 @@ public class AnnotationUtil {
 	 */
 	public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
 		final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
-			(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
+				(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
 		final T[] result = ArrayUtil.newArray(annotationType, annotations.length);
 		for (int i = 0; i < annotations.length; i++) {
@@ -146,12 +146,12 @@ public class AnnotationUtil {
 	 * @param annotationEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param isToCombination 是否为转换为组合注解，组合注解可以递归获取注解的注解
 	 * @param predicate       过滤器，{@link Predicate#test(Object)}返回{@code true}保留，否则不保留
-	 * @return 注解对象
+	 * @return 注解对象，如果提供的{@link AnnotatedElement}为{@code null}，返回{@code null}
 	 * @since 5.8.0
 	 */
 	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
 		if (null == annotationEle) {
-			return new Annotation[0];
+			return null;
 		}
 
 		if (isToCombination) {
@@ -251,8 +251,8 @@ public class AnnotationUtil {
 				final String name = t.getName();
 				// 跳过自有的几个方法
 				return (false == "hashCode".equals(name)) //
-					&& (false == "toString".equals(name)) //
-					&& (false == "annotationType".equals(name));
+						&& (false == "toString".equals(name)) //
+						&& (false == "annotationType".equals(name));
 			}
 			return false;
 		});
@@ -288,13 +288,13 @@ public class AnnotationUtil {
 		final Target target = annotationType.getAnnotation(Target.class);
 		if (null == target) {
 			return new ElementType[]{ElementType.TYPE, //
-				ElementType.FIELD, //
-				ElementType.METHOD, //
-				ElementType.PARAMETER, //
-				ElementType.CONSTRUCTOR, //
-				ElementType.LOCAL_VARIABLE, //
-				ElementType.ANNOTATION_TYPE, //
-				ElementType.PACKAGE//
+					ElementType.FIELD, //
+					ElementType.METHOD, //
+					ElementType.PARAMETER, //
+					ElementType.CONSTRUCTOR, //
+					ElementType.LOCAL_VARIABLE, //
+					ElementType.ANNOTATION_TYPE, //
+					ElementType.PACKAGE//
 			};
 		}
 		return target.value();
@@ -376,14 +376,14 @@ public class AnnotationUtil {
 	 * @see SyntheticAnnotation
 	 */
 	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
-		AnnotationScanner[] scanners = new AnnotationScanner[] {
-			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		AnnotationScanner[] scanners = new AnnotationScanner[]{
+				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
 		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-			.map(SyntheticAnnotation::of)
-			.map(annotation -> annotation.getAnnotation(annotationType))
-			.filter(Objects::nonNull)
-			.collect(Collectors.toList());
+				.map(SyntheticAnnotation::of)
+				.map(annotation -> annotation.getAnnotation(annotationType))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -457,13 +457,13 @@ public class AnnotationUtil {
 	static Map<String, Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
 		// 获取全部注解属性值
 		Map<String, Method> attributeMethods = Stream.of(annotationType.getDeclaredMethods())
-			.filter(AnnotationUtil::isAttributeMethod)
-			.collect(Collectors.toMap(Method::getName, Function.identity()));
+				.filter(AnnotationUtil::isAttributeMethod)
+				.collect(Collectors.toMap(Method::getName, Function.identity()));
 		// 处理别名
 		attributeMethods.forEach((methodName, method) -> {
 			String alias = Opt.ofNullable(method.getAnnotation(Alias.class))
-				.map(Alias::value)
-				.orElse(null);
+					.map(Alias::value)
+					.orElse(null);
 			if (ObjectUtil.isNull(alias)) {
 				return;
 			}
@@ -471,9 +471,9 @@ public class AnnotationUtil {
 			Assert.isTrue(attributeMethods.containsKey(alias), "No method for alias: [{}]", alias);
 			Method aliasAttributeMethod = attributeMethods.get(alias);
 			Assert.isTrue(
-				ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
-				"Return type of the alias method [{}] is inconsistent with the original [{}]",
-				aliasAttributeMethod.getClass(), method.getParameterTypes()
+					ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
+					"Return type of the alias method [{}] is inconsistent with the original [{}]",
+					aliasAttributeMethod.getClass(), method.getParameterTypes()
 			);
 			attributeMethods.put(methodName, aliasAttributeMethod);
 		});

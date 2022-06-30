@@ -14,14 +14,14 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void getCombinationAnnotationsTest(){
-		Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
+		final Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
 		Assert.assertNotNull(annotations);
 		Assert.assertEquals(3, annotations.length);
 	}
 
 	@Test
 	public void getCombinationAnnotationsWithClassTest(){
-		AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
+		final AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertNotNull(annotations);
 		Assert.assertEquals(2, annotations.length);
 		Assert.assertEquals("测试", annotations[0].value());
@@ -29,7 +29,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void getAnnotationValueTest() {
-		Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
+		final Object value = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertEquals("测试", value);
 
 	}
@@ -40,7 +40,7 @@ public class AnnotationUtilTest {
 		Assert.assertEquals("", ClassWithAnnotation.class.getAnnotation(AnnotationForTest.class).retry());
 
 		// 加别名适配
-		AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
+		final AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertEquals("测试", annotation.retry());
 	}
 
@@ -56,7 +56,7 @@ public class AnnotationUtilTest {
 	public void scanMetaAnnotationTest() {
 		// RootAnnotation -> RootMetaAnnotation1 -> RootMetaAnnotation2 -> RootMetaAnnotation3
 		//                -> RootMetaAnnotation3
-		List<Annotation> annotations = AnnotationUtil.scanMetaAnnotation(RootAnnotation.class);
+		final List<Annotation> annotations = AnnotationUtil.scanMetaAnnotation(RootAnnotation.class);
 		Assert.assertEquals(4, annotations.size());
 		Assert.assertEquals(RootMetaAnnotation3.class, annotations.get(0).annotationType());
 		Assert.assertEquals(RootMetaAnnotation1.class, annotations.get(1).annotationType());
@@ -68,7 +68,7 @@ public class AnnotationUtilTest {
 	public void scanClassTest() {
 		// TargetClass -> TargetSuperClass ----------------------------------> SuperInterface
 		//             -> TargetSuperInterface -> SuperTargetSuperInterface -> SuperInterface
-		List<Annotation> annotations = AnnotationUtil.scanClass(TargetClass.class);
+		final List<Annotation> annotations = AnnotationUtil.scanClass(TargetClass.class);
 		Assert.assertEquals(5, annotations.size());
 		Assert.assertEquals("TargetClass", ((AnnotationForTest)annotations.get(0)).value());
 		Assert.assertEquals("TargetSuperClass", ((AnnotationForTest)annotations.get(1)).value());
@@ -81,9 +81,9 @@ public class AnnotationUtilTest {
 	public void scanMethodTest() {
 		// TargetClass -> TargetSuperClass
 		//             -> TargetSuperInterface
-		Method method = ReflectUtil.getMethod(TargetClass.class, "testMethod");
+		final Method method = ReflectUtil.getMethod(TargetClass.class, "testMethod");
 		Assert.assertNotNull(method);
-		List<Annotation> annotations = AnnotationUtil.scanMethod(method);
+		final List<Annotation> annotations = AnnotationUtil.scanMethod(method);
 		Assert.assertEquals(3, annotations.size());
 		Assert.assertEquals("TargetClass", ((AnnotationForTest)annotations.get(0)).value());
 		Assert.assertEquals("TargetSuperClass", ((AnnotationForTest)annotations.get(1)).value());
