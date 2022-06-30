@@ -1,11 +1,13 @@
 package cn.hutool.core.annotation.scanner;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * 扫描{@link Field}上的注解
@@ -14,14 +16,32 @@ import java.util.List;
  */
 public class FieldAnnotationScanner implements AnnotationScanner {
 
+	/**
+	 * 判断是否支持扫描该注解元素，仅当注解元素是{@link Field}时返回{@code true}
+	 *
+	 * @param annotatedElement 注解元素
+	 * @return 是否支持扫描该注解元素
+	 */
 	@Override
 	public boolean support(AnnotatedElement annotatedElement) {
 		return annotatedElement instanceof Field;
 	}
 
+	/**
+	 * 扫描{@link Field}上直接声明的注解，调用前需要确保调用{@link #support(AnnotatedElement)}返回为true
+	 *
+	 * @param consumer         对获取到的注解和注解对应的层级索引的处理
+	 * @param annotatedElement 注解元素
+	 * @param filter           注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
+	 */
 	@Override
-	public List<Annotation> getAnnotations(AnnotatedElement annotatedElement) {
-		return CollUtil.newArrayList(annotatedElement.getAnnotations());
+	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedElement, Predicate<Annotation> filter) {
+		filter = ObjectUtil.defaultIfNull(filter, annotation -> true);
+		for (Annotation annotation : annotatedElement.getAnnotations()) {
+			if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && filter.test(annotation)) {
+				consumer.accept(0, annotation);
+			}
+		}
 	}
 
 }

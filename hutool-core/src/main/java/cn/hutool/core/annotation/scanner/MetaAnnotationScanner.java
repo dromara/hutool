@@ -31,7 +31,7 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	private final boolean includeSupperMetaAnnotation;
 
 	/**
-	 * 构造
+	 * 构造一个元注解扫描器
 	 *
 	 * @param includeSupperMetaAnnotation 获取当前注解的元注解后，是否继续递归扫描的元注解的元注解
 	 */
@@ -46,9 +46,32 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 		this(true);
 	}
 
+	/**
+	 * 判断是否支持扫描该注解元素，仅当注解元素是{@link Annotation}接口的子类{@link Class}时返回{@code true}
+	 *
+	 * @param annotatedElement 注解元素
+	 * @return 是否支持扫描该注解元素
+	 */
 	@Override
 	public boolean support(AnnotatedElement annotatedElement) {
 		return (annotatedElement instanceof Class && ClassUtil.isAssignable(Annotation.class, (Class<?>) annotatedElement));
+	}
+
+	/**
+	 * 获取注解元素上的全部注解。调用该方法前，需要确保调用{@link #support(AnnotatedElement)}返回为true
+	 *
+	 * @param annotatedElement 注解元素
+	 * @return 注解
+	 */
+	@Override
+	public List<Annotation> getAnnotations(AnnotatedElement annotatedElement) {
+		final List<Annotation> annotations = new ArrayList<>();
+		scan(
+			(index, annotation) -> annotations.add(annotation),
+			annotatedElement,
+			annotation -> ObjectUtil.notEqual(annotation, annotatedElement)
+		);
+		return annotations;
 	}
 
 	/**
@@ -57,19 +80,20 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	 * @param consumer 当前层级索引与操作
 	 * @param source   源注解
 	 * @param filter   过滤器
-	 * @author huangchengxing
 	 */
-	public void scan(BiConsumer<Integer, Annotation> consumer, Class<? extends Annotation> source, Predicate<Annotation> filter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement source, Predicate<Annotation> filter) {
 		filter = ObjectUtil.defaultIfNull(filter, t -> true);
-		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList(source));
+		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>)source));
 		int distance = 0;
 		do {
 			final List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();
 			for (final Class<? extends Annotation> type : annotationTypes) {
 				final List<Annotation> metaAnnotations = Stream.of(type.getAnnotations())
-						.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
-						.filter(filter)
-						.collect(Collectors.toList());
+					.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
+					.filter(filter)
+					.collect(Collectors.toList());
 				for (final Annotation metaAnnotation : metaAnnotations) {
 					consumer.accept(distance, metaAnnotation);
 				}
@@ -77,18 +101,6 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 			}
 			distance++;
 		} while (includeSupperMetaAnnotation && !deque.isEmpty());
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Annotation> getAnnotations(AnnotatedElement annotatedElement) {
-		final List<Annotation> annotations = new ArrayList<>();
-		scan(
-				(index, annotation) -> annotations.add(annotation),
-				(Class<? extends Annotation>) annotatedElement,
-				annotation -> ObjectUtil.notEqual(annotation, annotatedElement)
-		);
-		return annotations;
 	}
 
 }
