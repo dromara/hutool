@@ -151,7 +151,7 @@ public class AnnotationUtil {
 	 */
 	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
 		if (null == annotationEle) {
-			return null;
+			return new Annotation[0];
 		}
 
 		if (isToCombination) {
@@ -438,7 +438,7 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 方法是否为注解属性方法。 <br />
+	 * 方法是否为注解属性方法。 <br>
 	 * 方法无参数，且有返回值的方法认为是注解属性的方法。
 	 *
 	 * @param method 方法

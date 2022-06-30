@@ -159,14 +159,14 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	/**
 	 * 则根据广度优先递归扫描类的层级结构，并对层级结构中类/接口声明的层级索引和它们声明的注解对象进行处理
 	 *
-	 * @param consumer         对获取到的注解和注解对应的层级索引的处理
-	 * @param annotatedElement 注解元素
-	 * @param filter           注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
+	 * @param consumer     对获取到的注解和注解对应的层级索引的处理
+	 * @param annotatedEle 注解元素
+	 * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
 	 */
 	@Override
-	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedElement, Predicate<Annotation> filter) {
+	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
 		filter = ObjectUtil.defaultIfNull(filter, annotation -> true);
-		final Class<?> sourceClass = getClassFormAnnotatedElement(annotatedElement);
+		final Class<?> sourceClass = getClassFormAnnotatedElement(annotatedEle);
 		final Deque<List<Class<?>>> classDeque = CollUtil.newLinkedList(CollUtil.newArrayList(sourceClass));
 		final Set<Class<?>> accessedTypes = new LinkedHashSet<>();
 		int index = 0;
@@ -185,7 +185,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 				// 扫描接口
 				scanInterfaceIfNecessary(nextClassQueue, targetClass);
 				// 处理层级索引和注解
-				final Annotation[] targetAnnotations = getAnnotationsFromTargetClass(annotatedElement, index, targetClass);
+				final Annotation[] targetAnnotations = getAnnotationsFromTargetClass(annotatedEle, index, targetClass);
 				for (final Annotation annotation : targetAnnotations) {
 					if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) || filter.test(annotation)) {
 						consumer.accept(index, annotation);

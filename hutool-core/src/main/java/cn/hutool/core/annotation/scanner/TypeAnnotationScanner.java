@@ -38,23 +38,23 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
 	/**
 	 * 判断是否支持扫描该注解元素，仅当注解元素是{@link Class}接时返回{@code true}
 	 *
-	 * @param annotatedElement 注解元素
+	 * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @return 是否支持扫描该注解元素
 	 */
 	@Override
-	public boolean support(AnnotatedElement annotatedElement) {
-		return annotatedElement instanceof Class;
+	public boolean support(AnnotatedElement annotatedEle) {
+		return annotatedEle instanceof Class;
 	}
 
 	/**
 	 * 将注解元素转为{@link Class}
 	 *
-	 * @param annotatedElement 注解元素
-	 * @return 类
+	 * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @return 要递归的类型
 	 */
 	@Override
-	protected Class<?> getClassFormAnnotatedElement(AnnotatedElement annotatedElement) {
-		return (Class<?>)annotatedElement;
+	protected Class<?> getClassFormAnnotatedElement(AnnotatedElement annotatedEle) {
+		return (Class<?>)annotatedEle;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
 	/**
 	 * 是否允许扫描父类
 	 *
-	 * @param includeSupperClass 是否
+	 * @param includeSupperClass 是否允许扫描父类
 	 * @return 当前实例
 	 */
 	@Override
@@ -84,7 +84,7 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
 	/**
 	 * 是否允许扫描父接口
 	 *
-	 * @param includeInterfaces 是否
+	 * @param includeInterfaces 是否允许扫描父类
 	 * @return 当前实例
 	 */
 	@Override
@@ -94,9 +94,7 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
 
 	/**
 	 * 若类型为jdk代理类，则尝试转换为原始被代理类
-	 * @deprecated replace with {@link AbstractTypeAnnotationScanner.JdkProxyClassConverter}
 	 */
-	@Deprecated
 	public static class JdkProxyClassConverter implements UnaryOperator<Class<?>> {
 		@Override
 		public Class<?> apply(Class<?> sourceClass) {

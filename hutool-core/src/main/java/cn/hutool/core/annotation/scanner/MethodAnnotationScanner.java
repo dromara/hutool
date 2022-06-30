@@ -49,21 +49,19 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	/**
 	 * 判断是否支持扫描该注解元素，仅当注解元素是{@link Method}时返回{@code true}
 	 *
-	 * @param annotatedElement 注解元素
+	 * @param annotatedEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @return boolean 是否支持扫描该注解元素
 	 */
 	@Override
-	public boolean support(AnnotatedElement annotatedElement) {
-		return annotatedElement instanceof Method;
+	public boolean support(AnnotatedElement annotatedEle) {
+		return annotatedEle instanceof Method;
 	}
 
 	/**
 	 * 获取声明该方法的类
 	 *
 	 * @param annotatedElement 注解元素
-	 * @return java.lang.Class<?>
-	 * @author huangchengxing
-	 * @date 2022/6/29 17:21
+	 * @return 要递归的类型
 	 * @see Method#getDeclaringClass()
 	 */
 	@Override
@@ -74,9 +72,10 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	/**
 	 * 若父类/父接口中方法具有相同的方法签名，则返回该方法上的注解
 	 *
-	 * @param source 原始方法
-	 * @param index 类的层级索引
+	 * @param source      原始方法
+	 * @param index       类的层级索引
 	 * @param targetClass 类
+	 * @return 最终所需的目标注解
 	 */
 	@Override
 	protected Annotation[] getAnnotationsFromTargetClass(AnnotatedElement source, int index, Class<?> targetClass) {
@@ -92,7 +91,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	/**
 	 * 设置是否扫描类层级结构中具有相同方法签名的方法
 	 *
-	 * @param scanSuperMethodIfOverride 则是否扫描原方法
+	 * @param scanSuperMethodIfOverride 是否扫描类层级结构中具有相同方法签名的方法
 	 * @return 当前实例
 	 */
 	public MethodAnnotationScanner setScanSameSignatureMethod(boolean scanSuperMethodIfOverride) {
