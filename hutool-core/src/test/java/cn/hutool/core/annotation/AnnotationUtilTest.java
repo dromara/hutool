@@ -1,9 +1,14 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.Annotation;
+import java.lang.annotation.*;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class AnnotationUtilTest {
 
@@ -46,4 +51,93 @@ public class AnnotationUtilTest {
 
 		}
 	}
+
+	@Test
+	public void scanMetaAnnotationTest() {
+		// RootAnnotation -> RootMetaAnnotation1 -> RootMetaAnnotation2 -> RootMetaAnnotation3
+		//                -> RootMetaAnnotation3
+		List<Annotation> annotations = AnnotationUtil.scanMetaAnnotation(RootAnnotation.class);
+		Assert.assertEquals(4, annotations.size());
+		Assert.assertEquals(RootMetaAnnotation3.class, annotations.get(0).annotationType());
+		Assert.assertEquals(RootMetaAnnotation1.class, annotations.get(1).annotationType());
+		Assert.assertEquals(RootMetaAnnotation2.class, annotations.get(2).annotationType());
+		Assert.assertEquals(RootMetaAnnotation3.class, annotations.get(3).annotationType());
+	}
+
+	@Test
+	public void scanClassTest() {
+		// TargetClass -> TargetSuperClass ----------------------------------> SuperInterface
+		//             -> TargetSuperInterface -> SuperTargetSuperInterface -> SuperInterface
+		List<Annotation> annotations = AnnotationUtil.scanClass(TargetClass.class);
+		Assert.assertEquals(5, annotations.size());
+		Assert.assertEquals("TargetClass", ((AnnotationForTest)annotations.get(0)).value());
+		Assert.assertEquals("TargetSuperClass", ((AnnotationForTest)annotations.get(1)).value());
+		Assert.assertEquals("TargetSuperInterface", ((AnnotationForTest)annotations.get(2)).value());
+		Assert.assertEquals("SuperInterface", ((AnnotationForTest)annotations.get(3)).value());
+		Assert.assertEquals("SuperTargetSuperInterface", ((AnnotationForTest)annotations.get(4)).value());
+	}
+
+	@Test
+	public void scanMethodTest() {
+		// TargetClass -> TargetSuperClass
+		//             -> TargetSuperInterface
+		Method method = ReflectUtil.getMethod(TargetClass.class, "testMethod");
+		Assert.assertNotNull(method);
+		List<Annotation> annotations = AnnotationUtil.scanMethod(method);
+		Assert.assertEquals(3, annotations.size());
+		Assert.assertEquals("TargetClass", ((AnnotationForTest)annotations.get(0)).value());
+		Assert.assertEquals("TargetSuperClass", ((AnnotationForTest)annotations.get(1)).value());
+		Assert.assertEquals("TargetSuperInterface", ((AnnotationForTest)annotations.get(2)).value());
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface RootMetaAnnotation3 {}
+
+	@RootMetaAnnotation3
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.ANNOTATION_TYPE)
+	public @interface RootMetaAnnotation2 {}
+
+	@RootMetaAnnotation2
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.ANNOTATION_TYPE)
+	public @interface RootMetaAnnotation1 {}
+
+	@RootMetaAnnotation3
+	@RootMetaAnnotation1
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE_USE)
+	public @interface RootAnnotation {}
+
+	@AnnotationForTest("TargetClass")
+	static class TargetClass extends TargetSuperClass implements TargetSuperInterface {
+
+		@Override
+		@AnnotationForTest("TargetClass")
+		public List<?> testMethod() { return Collections.emptyList(); }
+
+	}
+
+	@AnnotationForTest("TargetSuperClass")
+	static class TargetSuperClass implements SuperInterface {
+
+		@AnnotationForTest("TargetSuperClass")
+		public Collection<?> testMethod() { return Collections.emptyList(); }
+
+	}
+
+	@AnnotationForTest("TargetSuperInterface")
+	interface TargetSuperInterface extends SuperTargetSuperInterface {
+
+		@AnnotationForTest("TargetSuperInterface")
+		Object testMethod();
+
+	}
+
+	@AnnotationForTest("SuperTargetSuperInterface")
+	interface SuperTargetSuperInterface extends SuperInterface{}
+
+	@AnnotationForTest("SuperInterface")
+	interface SuperInterface{}
+
 }

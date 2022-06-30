@@ -10,13 +10,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -136,7 +130,7 @@ public class AnnotationUtil {
 	 */
 	public static <T> T[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Class<T> annotationType) {
 		final Annotation[] annotations = getAnnotations(annotationEle, isToCombination,
-				(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
+			(annotation -> null == annotationType || annotationType.isAssignableFrom(annotation.getClass())));
 
 		final T[] result = ArrayUtil.newArray(annotationType, annotations.length);
 		for (int i = 0; i < annotations.length; i++) {
@@ -157,7 +151,7 @@ public class AnnotationUtil {
 	 */
 	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination, Predicate<Annotation> predicate) {
 		if (null == annotationEle) {
-			return null;
+			return new Annotation[0];
 		}
 
 		if (isToCombination) {
@@ -257,8 +251,8 @@ public class AnnotationUtil {
 				final String name = t.getName();
 				// 跳过自有的几个方法
 				return (false == "hashCode".equals(name)) //
-						&& (false == "toString".equals(name)) //
-						&& (false == "annotationType".equals(name));
+					&& (false == "toString".equals(name)) //
+					&& (false == "annotationType".equals(name));
 			}
 			return false;
 		});
@@ -294,13 +288,13 @@ public class AnnotationUtil {
 		final Target target = annotationType.getAnnotation(Target.class);
 		if (null == target) {
 			return new ElementType[]{ElementType.TYPE, //
-					ElementType.FIELD, //
-					ElementType.METHOD, //
-					ElementType.PARAMETER, //
-					ElementType.CONSTRUCTOR, //
-					ElementType.LOCAL_VARIABLE, //
-					ElementType.ANNOTATION_TYPE, //
-					ElementType.PACKAGE//
+				ElementType.FIELD, //
+				ElementType.METHOD, //
+				ElementType.PARAMETER, //
+				ElementType.CONSTRUCTOR, //
+				ElementType.LOCAL_VARIABLE, //
+				ElementType.ANNOTATION_TYPE, //
+				ElementType.PACKAGE//
 			};
 		}
 		return target.value();
@@ -358,9 +352,9 @@ public class AnnotationUtil {
 	/**
 	 * 将指定注解实例与其元注解转为合成注解
 	 *
-	 * @param annotation 注解
-	 * @param annotationType 注解类型
-	 * @param <T> 注解类型
+	 * @param annotation     注解对象
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
 	 * @return 合成注解
 	 * @see SyntheticAnnotation
 	 */
@@ -375,17 +369,17 @@ public class AnnotationUtil {
 	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
 	 * </ul>
 	 *
-	 * @param annotatedElement 可注解元素
-	 * @param annotationType 注解类型
-	 * @param <T> 注解类型
-	 * @return 注解
+	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
+	 * @return 合成注解
 	 * @see SyntheticAnnotation
 	 */
-	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedElement, Class<T> annotationType) {
+	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
 		AnnotationScanner[] scanners = new AnnotationScanner[] {
 			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
-		return AnnotationScanner.scanByAnySupported(annotatedElement, scanners).stream()
+		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
 			.map(SyntheticAnnotation::of)
 			.map(annotation -> annotation.getAnnotation(annotationType))
 			.filter(Objects::nonNull)
@@ -393,7 +387,58 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 方法是否为注解属性方法。 <br />
+	 * 扫描注解类，以及注解类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认注解外，
+	 * 按元注解对象与{@code annotationType}的距离和{@link Class#getAnnotations()}顺序排序的注解对象集合
+	 *
+	 * @param annotationType 注解类
+	 * @return 注解对象集合
+	 * @see MetaAnnotationScanner
+	 */
+	public static List<Annotation> scanMetaAnnotation(Class<? extends Annotation> annotationType) {
+		return new MetaAnnotationScanner().getIfSupport(annotationType);
+	}
+
+	/**
+	 * <p>扫描类以及类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认元注解外,
+	 * 全部类/接口的{@link Class#getAnnotations()}方法返回的注解对象。<br>
+	 * 层级结构将按广度优先递归，遵循规则如下：
+	 * <ul>
+	 *     <li>同一层级中，优先处理父类，然后再处理父接口；</li>
+	 *     <li>同一个接口在不同层级出现，优先选择层级距离{@code targetClass}更近的接口；</li>
+	 *     <li>同一个接口在相同层级出现，优先选择其子类/子接口被先解析的那个；</li>
+	 * </ul>
+	 * 注解根据其声明类/接口被扫描的顺序排序，若注解都在同一个{@link Class}中被声明，则还会遵循{@link Class#getAnnotations()}的顺序。
+	 *
+	 * @param targetClass 类
+	 * @return 注解对象集合
+	 * @see TypeAnnotationScanner
+	 */
+	public static List<Annotation> scanClass(Class<?> targetClass) {
+		return new TypeAnnotationScanner().getIfSupport(targetClass);
+	}
+
+	/**
+	 * <p>扫描方法，以及该方法所在类的{@link Class}层级结构中的具有相同方法签名的方法，
+	 * 将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认元注解外,
+	 * 全部匹配方法上{@link Method#getAnnotations()}方法返回的注解对象。<br>
+	 * 方法所在类的层级结构将按广度优先递归，遵循规则如下：
+	 * <ul>
+	 *     <li>同一层级中，优先处理父类，然后再处理父接口；</li>
+	 *     <li>同一个接口在不同层级出现，优先选择层级距离{@code targetClass}更近的接口；</li>
+	 *     <li>同一个接口在相同层级出现，优先选择其子类/子接口被先解析的那个；</li>
+	 * </ul>
+	 * 方法上的注解根据方法的声明类/接口被扫描的顺序排序，若注解都在同一个类的同一个方法中被声明，则还会遵循{@link Method#getAnnotations()}的顺序。
+	 *
+	 * @param method 方法
+	 * @return 注解对象集合
+	 * @see MethodAnnotationScanner
+	 */
+	public static List<Annotation> scanMethod(Method method) {
+		return new MethodAnnotationScanner(true).getIfSupport(method);
+	}
+
+	/**
+	 * 方法是否为注解属性方法。 <br>
 	 * 方法无参数，且有返回值的方法认为是注解属性的方法。
 	 *
 	 * @param method 方法
