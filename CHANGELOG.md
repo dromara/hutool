@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core   】     NumberUtil新增isIn方法（pr#669@Gitee）
+* 【core   】     修复注解工具类getAnnotations的NPE问题，注解扫描器添新功能（pr#671@Gitee）
 * 
 ### 🐞Bug修复
 
