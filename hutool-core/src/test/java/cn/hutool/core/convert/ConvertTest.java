@@ -5,8 +5,10 @@ import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.math.Money;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -404,4 +406,36 @@ public class ConvertTest {
 		final String s = Convert.toDBC(null);
 		Assert.assertNull(s);
 	}
+
+	@Test
+	public void testChineseMoneyAmount2Number(){
+		String[] strs = new String[]{
+			"陆万柒仟伍佰伍拾陆圆",
+			"陆万柒仟伍佰伍拾陆元",
+			"叁角",
+			"贰分",
+			"陆万柒仟伍佰伍拾陆元叁角",
+			"陆万柒仟伍佰伍拾陆元贰分",
+			"叁角贰分",
+			"陆万柒仟伍佰伍拾陆元叁角贰分",
+		};
+
+		for(String s: strs) {
+			System.out.println("s="+s+", n="+Convert.chineseMoneyAmount2Number(s));
+		}
+
+		/*
+		 * s=陆万柒仟伍佰伍拾陆圆, n=67556
+		 * s=陆万柒仟伍佰伍拾陆元, n=67556
+		 * s=叁角, n=0.3
+		 * s=贰分, n=0.02
+		 * s=陆万柒仟伍佰伍拾陆元叁角, n=67556.3
+		 * s=陆万柒仟伍佰伍拾陆元贰分, n=67556.02
+		 * s=叁角贰分, n=0.32
+		 * s=陆万柒仟伍佰伍拾陆元叁角贰分, n=67556.32
+		 */
+	}
+
+
+
 }
