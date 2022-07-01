@@ -1,11 +1,13 @@
 package cn.hutool.core.bean;
 
+import cn.hutool.core.annotation.JsonDateFormat;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -24,14 +26,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -714,8 +709,42 @@ public class BeanUtil {
 		if (null == bean) {
 			return null;
 		}
-
-		return BeanCopier.create(bean, targetMap, copyOptions).copy();
+		Map<String, Object> beanMap = BeanCopier.create(bean, targetMap, copyOptions).copy();
+		if (!(bean instanceof Map) && !(bean instanceof ValueProvider)) {
+			for (Field field : ReflectUtil.getFields(bean.getClass())) {
+				if (field.isAnnotationPresent(JsonDateFormat.class)){
+					JsonDateFormat annotation = field.getAnnotation(JsonDateFormat.class);
+					String typeName = field.getType().getTypeName();
+					switch (typeName) {
+						case "java.util.Date": {
+							Date jud = (Date) beanMap.get(field.getName());
+							String format = DateUtil.format(jud, annotation.value());
+							beanMap.put(field.getName(), format);
+							break;
+						}
+						case "java.sql.Date": {
+							java.sql.Date jsd = (java.sql.Date) beanMap.get(field.getName());
+							String format = DateUtil.format(jsd, annotation.value());
+							beanMap.put(field.getName(), format);
+							break;
+						}
+						case "java.sql.Time": {
+							java.sql.Time jst = (java.sql.Time) beanMap.get(field.getName());
+							String format = DateUtil.format(jst, annotation.value());
+							beanMap.put(field.getName(), format);
+							break;
+						}
+						case "java.sql.Timestamp": {
+							java.sql.Timestamp jsts = (java.sql.Timestamp) beanMap.get(field.getName());
+							String format = DateUtil.format(jsts, annotation.value());
+							beanMap.put(field.getName(), format);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return beanMap;
 	}
 
 	// --------------------------------------------------------------------------------------------- copyProperties
