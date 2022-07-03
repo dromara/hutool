@@ -912,4 +912,17 @@ public class CollUtilTest {
 		Console.log(collection.getClass());
 		Assert.assertNotNull(collection);
 	}
+
+	@Test
+	public void transTest(){
+		final List<Person> people = Arrays.asList(
+				new Person("aa", 12, "man", 1),
+				new Person("bb", 13, "woman", 2),
+				new Person("cc", 14, "man", 3),
+				new Person("dd", 15, "woman", 4)
+		);
+
+		final Collection<String> trans = CollUtil.trans(people, Person::getName);
+		Assert.assertEquals("[aa, bb, cc, dd]", trans.toString());
+	}
 }

@@ -947,6 +947,22 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value      值
+	 * @param minInclude 最小值（包含）
+	 * @param maxInclude 最大值（包含）
+	 * @return 经过检查后的值
+	 * @since 5.8.5
+	 */
+	public static boolean isIn(final BigDecimal value, final BigDecimal minInclude, final BigDecimal maxInclude) {
+		Assert.notNull(value);
+		Assert.notNull(minInclude);
+		Assert.notNull(maxInclude);
+		return isGreaterOrEqual(value, minInclude) && isLessOrEqual(value, maxInclude);
+	}
+
+	/**
 	 * 比较大小，参数1 &gt; 参数2 返回true
 	 *
 	 * @param bigNum1 数字1

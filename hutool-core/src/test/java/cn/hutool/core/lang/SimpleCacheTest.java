@@ -57,7 +57,7 @@ public class SimpleCacheTest {
 	@Test
 	public void getConcurrencyTest(){
 		final SimpleCache<String, String> cache = new SimpleCache<>();
-		final ConcurrencyTester tester = new ConcurrencyTester(9000);
+		final ConcurrencyTester tester = new ConcurrencyTester(2000);
 		tester.test(()-> cache.get("aaa", ()-> {
 			ThreadUtil.sleep(200);
 			return "aaaValue";
