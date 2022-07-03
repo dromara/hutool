@@ -2,6 +2,7 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -104,7 +106,10 @@ public class CollectorUtil {
 		final BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
 			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
 			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
-			downstreamAccumulator.accept(container, t);
+			if (ArrayUtil.isArray(container) || Objects.nonNull(t)) {
+				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.stream.Collectors.counting 求null元素个数
+				downstreamAccumulator.accept(container, t);
+			}
 		};
 		final BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
 		@SuppressWarnings("unchecked") final Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
