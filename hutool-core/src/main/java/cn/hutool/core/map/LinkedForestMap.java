@@ -211,6 +211,48 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	}
 
 	/**
+	 * 同时添加父子节点：
+	 * <ul>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
+	 * </ul>
+	 * 该操作等同于：
+	 * <pre>
+	 *     TreeEntry<K, V>  parent = putNode(parentKey, parentValue);
+	 *     TreeEntry<K, V>  child = putNode(childKey, childValue);
+	 *     linkNodes(parentKey, childKey);
+	 * </pre>
+	 *
+	 * @param parentKey   父节点的key
+	 * @param parentValue 父节点的value
+	 * @param childKey    子节点的key
+	 * @param childValue  子节点的值
+	 */
+	@Override
+	public void putLinkedNodes(K parentKey, V parentValue, K childKey, V childValue) {
+		linkNodes(parentKey, childKey, (parent, child) -> {
+			parent.setValue(parentValue);
+			child.setValue(childValue);
+		});
+	}
+
+	/**
+	 * 添加子节点，并为子节点指定父节点：
+	 * <ul>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
+	 * </ul>
+	 *
+	 * @param parentKey  父节点的key
+	 * @param childKey   子节点的key
+	 * @param childValue 子节点的值
+	 */
+	@Override
+	public void putLinkedNodes(K parentKey, K childKey, V childValue) {
+		linkNodes(parentKey, childKey, (parent, child) -> child.setValue(childValue));
+	}
+
+	/**
 	 * 为指定的节点建立父子关系，若{@code parentKey}或{@code childKey}对应节点不存在，则会创建一个对应的值为null的空节点
 	 *
 	 * @param parentKey 父节点的key
@@ -218,7 +260,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	 * @param consumer  对父节点和子节点的操作，允许为null
 	 */
 	@Override
-	public void linkNode(K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
+	public void linkNodes(K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
 		consumer = ObjectUtil.defaultIfNull(consumer, (parent, child) -> {});
 		final TreeEntryNode<K, V> parentNode = nodes.computeIfAbsent(parentKey, t -> new TreeEntryNode<>(null, t));
 		TreeEntryNode<K, V> childNode = nodes.get(childKey);
@@ -358,6 +400,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 *
 		 * @return 当前节点与根节点的距离
 		 */
+		@Override
 		public int getWeight() {
 			return weight;
 		}
@@ -452,6 +495,17 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		@Override
 		public TreeEntryNode<K, V> getParent(K key) {
 			return traverseParentNodes(false, p -> {}, p -> p.equalsKey(key));
+		}
+
+		/**
+		 * 获取以当前节点作为根节点的树结构，然后遍历所有节点
+		 *
+		 * @param includeSelf 是否处理当前节点
+		 * @param nodeConsumer 对节点的处理
+		 */
+		@Override
+		public void forEachChild(boolean includeSelf, Consumer<TreeEntry<K, V>> nodeConsumer) {
+			traverseChildNodes(includeSelf, (index, child) -> nodeConsumer.accept(child), null);
 		}
 
 		/**
@@ -577,7 +631,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		}
 
 		/**
-		 * 获取以当前节点作为根节点的树结构，然后获取该树结构中的当前节点的全部子节点
+		 * 获取以当前节点作为根节点的树结构，然后按广度优先获取该树结构中的当前节点的全部子节点
 		 *
 		 * @return 节点
 		 */

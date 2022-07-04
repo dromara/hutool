@@ -31,9 +31,9 @@ public class LinkedForestMapTest {
 	@Before
 	public void beforeTest() {
 		// a -> b -> c -> d
-		treeNodeMap.linkNode("a", "b");
-		treeNodeMap.linkNode("b", "c");
-		treeNodeMap.linkNode("c", "d");
+		treeNodeMap.linkNodes("a", "b");
+		treeNodeMap.linkNodes("b", "c");
+		treeNodeMap.linkNodes("c", "d");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class LinkedForestMapTest {
 		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), transKey(treeNodeMap.getTreeNodes("d")));
 
 		// 循环依赖
-		Assert.assertThrows(IllegalArgumentException.class, () -> treeNodeMap.linkNode("d", "a"));
+		Assert.assertThrows(IllegalArgumentException.class, () -> treeNodeMap.linkNodes("d", "a"));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class LinkedForestMapTest {
 	@Test
 	public void testReRegisterAfterRemove() {
 		// a -> b -> c -> d
-		treeNodeMap.linkNode("b", "c");
+		treeNodeMap.linkNodes("b", "c");
 		testRegisterBeforeRemove();
 	}
 
@@ -101,8 +101,8 @@ public class LinkedForestMapTest {
 	public void testParallelRegister() {
 		// a -> b -> c --> d
 		//      | -> c2 -> d2
-		treeNodeMap.linkNode("b", "c2");
-		treeNodeMap.linkNode("c2", "d2");
+		treeNodeMap.linkNodes("b", "c2");
+		treeNodeMap.linkNodes("c2", "d2");
 
 		// getDeclaredChildren
 		Assert.assertEquals(CollUtil.newLinkedHashSet("b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getChildNodes("a")));

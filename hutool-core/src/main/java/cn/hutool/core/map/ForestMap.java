@@ -53,7 +53,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 		treeEntryMap.forEach((k, v) -> {
 			if (v.hasParent()) {
 				final TreeEntry<K, V> parent = v.getDeclaredParent();
-				putLinkedNode(parent.getKey(), parent.getValue(), v.getKey(), v.getValue());
+				putLinkedNodes(parent.getKey(), parent.getValue(), v.getKey(), v.getValue());
 			} else {
 				putNode(v.getKey(), v.getValue());
 			}
@@ -99,7 +99,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 		values.forEach(v -> {
 			final K key = keyGenerator.apply(v);
 			final K parentKey = parentKeyGenerator.apply(v);
-			linkNode(parentKey, key);
+			linkNodes(parentKey, key);
 			get(key).setValue(v);
 		});
 	}
@@ -124,42 +124,54 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
 	 * </ul>
 	 * 该操作等同于：
-	 * <pre>
-	 *     TreeEntry<K, V>  parent = putNode(parentKey, parentValue);
-	 *     TreeEntry<K, V>  child = putNode(childKey, childValue);
-	 *     linkNode(parentKey, childKey);
-	 * </pre>
+	 * <pre>{@code
+	 *     putNode(parentKey, parentValue);
+	 *     putNode(childKey, childValue);
+	 *     linkNodes(parentKey, childKey);
+	 * }</pre>
 	 *
 	 * @param parentKey   父节点的key
 	 * @param parentValue 父节点的value
 	 * @param childKey    子节点的key
 	 * @param childValue  子节点的值
 	 */
-	default void putLinkedNode(K parentKey, V parentValue, K childKey, V childValue) {
-		linkNode(parentKey, childKey, (parent, child) -> {
-			parent.setValue(parentValue);
-			child.setValue(childValue);
-		});
+	default void putLinkedNodes(K parentKey, V parentValue, K childKey, V childValue) {
+		putNode(parentKey, parentValue);
+		putNode(childKey, childValue);
+		linkNodes(parentKey, childKey);
 	}
 
 	/**
-	 * 为指定的节点建立父子关系，若{@code parentKey}或{@code childKey}对应节点不存在，则会创建一个对应的值为null的空节点 <br>
+	 * 添加子节点，并为子节点指定父节点：
+	 * <ul>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点不存在，则会根据键值创建一个对应的节点；</li>
+	 *     <li>若{@code parentKey}或{@code childKey}对应的节点存在，则会更新对应节点的值；</li>
+	 * </ul>
+	 *
+	 * @param parentKey  父节点的key
+	 * @param childKey   子节点的key
+	 * @param childValue 子节点的值
+	 */
+	void putLinkedNodes(K parentKey, K childKey, V childValue);
+
+	/**
+	 * 为集合中的指定的节点建立父子关系
 	 *
 	 * @param parentKey 父节点的key
 	 * @param childKey  子节点的key
 	 */
-	default void linkNode(K parentKey, K childKey) {
-		linkNode(parentKey, childKey, null);
+	default void linkNodes(K parentKey, K childKey) {
+		linkNodes(parentKey, childKey, null);
 	}
 
 	/**
-	 * 为指定的节点建立父子关系，若{@code parentKey}或{@code childKey}对应节点不存在，则会创建一个对应的值为null的空节点
+	 * 为集合中的指定的节点建立父子关系
 	 *
 	 * @param parentKey 父节点的key
 	 * @param childKey  子节点的key
 	 * @param consumer  对父节点和子节点的操作，允许为null
 	 */
-	void linkNode(K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer);
+	void linkNodes(K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer);
 
 	/**
 	 * 若{@code parentKey}或{@code childKey}对应节点都存在，则移除指定该父节点与其直接关联的指定子节点间的引用关系

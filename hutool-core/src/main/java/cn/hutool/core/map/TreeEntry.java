@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 允许拥有一个父节点与多个子节点的{@link Map.Entry}实现，
@@ -39,6 +40,13 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	int hashCode();
 
 	// ===================== 父节点相关方法 =====================
+
+	/**
+	 * 获取以当前节点作为叶子节点的树结构，然后获取当前节点与根节点的距离
+	 *
+	 * @return 当前节点与根节点的距离
+	 */
+	int getWeight();
 
 	/**
 	 * 获取以当前节点作为叶子节点的树结构，然后获取该树结构的根节点
@@ -80,6 +88,14 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	default boolean containsParent(K key) {
 		return ObjectUtil.isNotNull(getParent(key));
 	}
+
+	/**
+	 * 获取以当前节点作为根节点的树结构，然后遍历所有节点
+	 *
+	 * @param includeSelf 是否处理当前节点
+	 * @param nodeConsumer 对节点的处理
+	 */
+	void forEachChild(boolean includeSelf, Consumer<TreeEntry<K, V>> nodeConsumer);
 
 	// ===================== 子节点相关方法 =====================
 
