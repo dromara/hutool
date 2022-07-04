@@ -89,6 +89,8 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 		return ObjectUtil.isNotNull(getParent(key));
 	}
 
+	// ===================== 子节点相关方法 =====================
+
 	/**
 	 * 获取以当前节点作为根节点的树结构，然后遍历所有节点
 	 *
@@ -96,8 +98,6 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	 * @param nodeConsumer 对节点的处理
 	 */
 	void forEachChild(boolean includeSelf, Consumer<TreeEntry<K, V>> nodeConsumer);
-
-	// ===================== 子节点相关方法 =====================
 
 	/**
 	 * 获取当前节点直接关联的子节点
