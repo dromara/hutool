@@ -6,24 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
+import java.util.*;
 
-/**
- * {@link LinkedForestMap}的测试用例。
- * <ul>
- *     <li>创建一个树节点Map，构建 a -> b -> c -> d 的别名关系，测试调用结果是否符合期望；</li>
- *     <li>移除 b -> c 之间的引用关系，构建 a -> b, c -> d的结构，测试调用结果是否符合期望；</li>
- *     <li>重新构建 b -> c 之间的引用关系，构建 a -> b -> c -> d的结构，测试调用结果是否符合期望；</li>
- *     <li>
- *         为 b 添加 c2、c2 添加 d2 作为子节点，构建
- *         <pre>
- *             a -> b -> c --> d
- *                  | -> c2 -> d2
- *         </pre>
- *         的结构，测试调用结果是否符合期望；
- *     </li>
- * </ul>
- */
 public class LinkedForestMapTest {
 
 	private final ForestMap<String, String> treeNodeMap = new LinkedForestMap<>(false);
@@ -31,110 +15,351 @@ public class LinkedForestMapTest {
 	@Before
 	public void beforeTest() {
 		// a -> b -> c -> d
-		treeNodeMap.linkNodes("a", "b");
-		treeNodeMap.linkNodes("b", "c");
-		treeNodeMap.linkNodes("c", "d");
+		treeNodeMap.putLinkedNodes("a", "b", "bbb");
+		treeNodeMap.putLinkedNodes("b", "c", "ccc");
+		treeNodeMap.putLinkedNodes("c", "d", "ddd");
+		treeNodeMap.get("a").setValue("aaa");
 	}
 
 	@Test
-	public void testRegisterBeforeRemove() {
-		// containsChildNode
-		Assert.assertTrue(treeNodeMap.containsChildNode("a", "b"));
-		Assert.assertTrue(treeNodeMap.containsChildNode("a", "c"));
-		Assert.assertTrue(treeNodeMap.containsChildNode("a", "d"));
-		Assert.assertFalse(treeNodeMap.containsChildNode("a", "e"));
+	public void testTreeEntry() {
+		TreeEntry<String, String> parent = treeNodeMap.get("b");
+		TreeEntry<String, String> treeEntry = treeNodeMap.get("c");
+		TreeEntry<String, String> child = treeNodeMap.get("d");
 
-		// getChildNodes
-		Assert.assertEquals(CollUtil.newLinkedHashSet("b", "c", "d"), transKey(treeNodeMap.getChildNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("c", "d"), transKey(treeNodeMap.getChildNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("d"), transKey(treeNodeMap.getChildNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet(), transKey(treeNodeMap.getChildNodes("d")));
+		// Entry相关
+		Assert.assertEquals("c", treeEntry.getKey());
+		Assert.assertEquals("ccc", treeEntry.getValue());
 
-		// getRootNode
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("a")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("b")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("c")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("d")));
+		// 父节点相关方法
+		Assert.assertEquals(2, treeEntry.getWeight());
+		Assert.assertEquals(treeNodeMap.get("a"), treeEntry.getRoot());
+		Assert.assertTrue(treeEntry.hasParent());
+		Assert.assertEquals(parent, treeEntry.getDeclaredParent());
+		Assert.assertEquals(treeNodeMap.get("a"), treeEntry.getParent("a"));
+		Assert.assertTrue(treeEntry.containsParent("a"));
 
-		// getTreeNodes
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), transKey(treeNodeMap.getTreeNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), transKey(treeNodeMap.getTreeNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), transKey(treeNodeMap.getTreeNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d"), transKey(treeNodeMap.getTreeNodes("d")));
+		// 子节点相关方法
+		List<TreeEntry<String, String>> nodes = new ArrayList<>();
+		treeEntry.forEachChild(true, nodes::add);
+		Assert.assertEquals(CollUtil.newArrayList(treeEntry, child), nodes);
+		nodes.clear();
+		treeEntry.forEachChild(false, nodes::add);
+		Assert.assertEquals(CollUtil.newArrayList(child), nodes);
 
-		// 循环依赖
-		Assert.assertThrows(IllegalArgumentException.class, () -> treeNodeMap.linkNodes("d", "a"));
+		Assert.assertEquals(CollUtil.newLinkedHashSet(child), new LinkedHashSet<>(treeEntry.getDeclaredChildren().values()));
+		Assert.assertEquals(CollUtil.newLinkedHashSet(child), new LinkedHashSet<>(treeEntry.getChildren().values()));
+		Assert.assertTrue(treeEntry.hasChildren());
+		Assert.assertEquals(treeNodeMap.get("d"), treeEntry.getChild("d"));
+		Assert.assertTrue(treeEntry.containsChild("d"));
 	}
 
 	@Test
-	public void testAfterRemove() {
-		// a -> b, c -> d
-		treeNodeMap.unlinkNode("b", "c");
+	public void putTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
 
-		// getDeclaredChildren
-		Assert.assertEquals(CollUtil.newLinkedHashSet("b"), transKey(treeNodeMap.getChildNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet(), transKey(treeNodeMap.getChildNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("d"), transKey(treeNodeMap.getChildNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet(), transKey(treeNodeMap.getChildNodes("d")));
+		TreeEntry<String, String> treeEntry = new LinkedForestMap.TreeEntryNode<>(null, "a", "aaa");
+		Assert.assertNull(map.put("a", treeEntry));
+		Assert.assertNotEquals(map.get("a"), treeEntry);
+		Assert.assertEquals(map.get("a").getKey(), treeEntry.getKey());
+		Assert.assertEquals(map.get("a").getValue(), treeEntry.getValue());
 
-		// getRootNode
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("a")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("b")));
-		Assert.assertEquals("c", transKey(treeNodeMap.getRootNode("c")));
-		Assert.assertEquals("c", transKey(treeNodeMap.getRootNode("d")));
-
-		// getTreeNodes
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b"), transKey(treeNodeMap.getTreeNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b"), transKey(treeNodeMap.getTreeNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("c", "d"), transKey(treeNodeMap.getTreeNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("c", "d"), transKey(treeNodeMap.getTreeNodes("d")));
+		treeEntry = new LinkedForestMap.TreeEntryNode<>(null, "a", "aaaa");
+		Assert.assertNotNull(map.put("a", treeEntry));
+		Assert.assertNotEquals(map.get("a"), treeEntry);
+		Assert.assertEquals(map.get("a").getKey(), treeEntry.getKey());
+		Assert.assertEquals(map.get("a").getValue(), treeEntry.getValue());
 	}
 
 	@Test
-	public void testReRegisterAfterRemove() {
-		// a -> b -> c -> d
-		treeNodeMap.linkNodes("b", "c");
-		testRegisterBeforeRemove();
+	public void removeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+
+		TreeEntry<String, String> a = map.get("a");
+		TreeEntry<String, String> b = map.get("b");
+		TreeEntry<String, String> c = map.get("c");
+
+		map.remove("b");
+		Assert.assertNull(map.get("b"));
+		Assert.assertFalse(b.hasChildren());
+		Assert.assertFalse(b.hasParent());
+		Assert.assertEquals(a, c.getDeclaredParent());
+		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(a.getDeclaredChildren().values()));
 	}
 
 	@Test
-	public void testParallelRegister() {
-		// a -> b -> c --> d
-		//      | -> c2 -> d2
-		treeNodeMap.linkNodes("b", "c2");
-		treeNodeMap.linkNodes("c2", "d2");
+	public void putAllTest() {
+		ForestMap<String, String> source = new LinkedForestMap<>(false);
+		source.linkNodes("a", "b");
+		source.linkNodes("b", "c");
 
-		// getDeclaredChildren
-		Assert.assertEquals(CollUtil.newLinkedHashSet("b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getChildNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("c", "d", "c2", "d2"), transKey(treeNodeMap.getChildNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("d"), transKey(treeNodeMap.getChildNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet(), transKey(treeNodeMap.getChildNodes("d")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("d2"), transKey(treeNodeMap.getChildNodes("c2")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet(), transKey(treeNodeMap.getChildNodes("d2")));
+		ForestMap<String, String> target = new LinkedForestMap<>(false);
+		target.putAll(source);
 
-		// getRootNode
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("a")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("b")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("c")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("d")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("c2")));
-		Assert.assertEquals("a", transKey(treeNodeMap.getRootNode("d2")));
+		TreeEntry<String, String> a = target.get("a");
+		TreeEntry<String, String> b = target.get("b");
+		TreeEntry<String, String> c = target.get("c");
 
-		// getTreeNodes
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("a")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("b")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("c")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("d")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("c2")));
-		Assert.assertEquals(CollUtil.newLinkedHashSet("a", "b", "c", "d", "c2", "d2"), transKey(treeNodeMap.getTreeNodes("d2")));
+		Assert.assertNotNull(a);
+		Assert.assertEquals("a", a.getKey());
+		Assert.assertEquals(CollUtil.newArrayList(b, c), new ArrayList<>(a.getChildren().values()));
+
+		Assert.assertNotNull(b);
+		Assert.assertEquals("b", b.getKey());
+		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(b.getChildren().values()));
+
+		Assert.assertNotNull(c);
+		Assert.assertEquals("c", c.getKey());
+		Assert.assertEquals(CollUtil.newArrayList(), new ArrayList<>(c.getChildren().values()));
+
 	}
 
-	private static <K, V> Collection<K> transKey(Collection<TreeEntry<K, V>> entryNodes) {
-		return CollStreamUtil.toSet(entryNodes, TreeEntry::getKey);
+	@Test
+	public void clearTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+
+		TreeEntry<String, String> a = map.get("a");
+		TreeEntry<String, String> b = map.get("b");
+		TreeEntry<String, String> c = map.get("c");
+		Assert.assertFalse(a.hasParent());
+		Assert.assertTrue(a.hasChildren());
+		Assert.assertTrue(b.hasParent());
+		Assert.assertTrue(b.hasChildren());
+		Assert.assertTrue(c.hasParent());
+		Assert.assertFalse(c.hasChildren());
+
+		map.clear();
+		Assert.assertTrue(map.isEmpty());
+		Assert.assertFalse(a.hasParent());
+		Assert.assertFalse(a.hasChildren());
+		Assert.assertFalse(b.hasParent());
+		Assert.assertFalse(b.hasChildren());
+		Assert.assertFalse(c.hasParent());
+		Assert.assertFalse(c.hasChildren());
 	}
 
-	private static <K, V> K transKey(TreeEntry<K, V> entryNodes) {
-		return entryNodes.getKey();
+	@Test
+	public void putAllNodeTest() {
+		ForestMap<String, Map<String, String>> map = new LinkedForestMap<>(false);
+
+		Map<String, String> aMap = MapBuilder.<String, String> create()
+			.put("pid", null)
+			.put("id", "a")
+			.build();
+		Map<String, String> bMap = MapBuilder.<String, String> create()
+			.put("pid", "a")
+			.put("id", "b")
+			.build();
+		Map<String, String> cMap = MapBuilder.<String, String> create()
+			.put("pid", "b")
+			.put("id", "c")
+			.build();
+		map.putAllNode(Arrays.asList(aMap, bMap, cMap), m -> m.get("id"), m -> m.get("pid"), true);
+
+		TreeEntry<String, Map<String, String>> a = map.get("a");
+		Assert.assertNotNull(a);
+		TreeEntry<String, Map<String, String>> b = map.get("b");
+		Assert.assertNotNull(b);
+		TreeEntry<String, Map<String, String>> c = map.get("c");
+		Assert.assertNotNull(c);
+
+		Assert.assertNull(a.getDeclaredParent());
+		Assert.assertEquals(a, b.getDeclaredParent());
+		Assert.assertEquals(b, c.getDeclaredParent());
+
+		Assert.assertEquals(aMap, a.getValue());
+		Assert.assertEquals(bMap, b.getValue());
+		Assert.assertEquals(cMap, c.getValue());
+	}
+
+	@Test
+	public void putNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+
+		Assert.assertNull(map.get("a"));
+
+		map.putNode("a", "aaa");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertEquals("aaa", map.get("a").getValue());
+
+		map.putNode("a", "aaaa");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertEquals("aaaa", map.get("a").getValue());
+	}
+
+	@Test
+	public void putLinkedNodesTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+
+		Assert.assertNull(map.get("a"));
+		Assert.assertNull(map.get("b"));
+
+		map.putLinkedNodes("a", "b", "bbb");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertNull(map.get("a").getValue());
+		Assert.assertNotNull(map.get("b"));
+		Assert.assertEquals("bbb", map.get("b").getValue());
+
+		map.putLinkedNodes("a", "b", "bbbb");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertNull(map.get("a").getValue());
+		Assert.assertNotNull(map.get("b"));
+		Assert.assertEquals("bbbb", map.get("b").getValue());
+	}
+
+	@Test
+	public void putLinkedNodesTest2() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+
+		Assert.assertNull(map.get("a"));
+		Assert.assertNull(map.get("b"));
+
+		map.putLinkedNodes("a", "aaa", "b", "bbb");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertEquals("aaa", map.get("a").getValue());
+		Assert.assertNotNull(map.get("b"));
+		Assert.assertEquals("bbb", map.get("b").getValue());
+
+		map.putLinkedNodes("a", "aaaa", "b", "bbbb");
+		Assert.assertNotNull(map.get("a"));
+		Assert.assertEquals("aaaa", map.get("a").getValue());
+		Assert.assertNotNull(map.get("b"));
+		Assert.assertEquals("bbbb", map.get("b").getValue());
+	}
+
+	@Test
+	public void linkNodesTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+
+		TreeEntry<String, String> parent = map.get("a");
+		TreeEntry<String, String> child = map.get("b");
+
+		Assert.assertNotNull(parent);
+		Assert.assertEquals("a", parent.getKey());
+		Assert.assertEquals(child, parent.getChild("b"));
+
+		Assert.assertNotNull(child);
+		Assert.assertEquals("b", child.getKey());
+		Assert.assertEquals(parent, child.getDeclaredParent());
+	}
+
+	@Test
+	public void unlinkNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		TreeEntry<String, String> parent = map.get("a");
+		TreeEntry<String, String> child = map.get("b");
+		map.unlinkNode("a", "b");
+		Assert.assertFalse(child.hasParent());
+		Assert.assertFalse(parent.hasChildren());
+	}
+
+	@Test
+	public void getTreeNodesTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+
+		List<String> expected = CollUtil.newArrayList("a", "b", "c");
+		List<String> actual = CollStreamUtil.toList(map.getTreeNodes("a"), TreeEntry::getKey);
+		Assert.assertEquals(expected, actual);
+		actual = CollStreamUtil.toList(map.getTreeNodes("b"), TreeEntry::getKey);
+		Assert.assertEquals(expected, actual);
+		actual = CollStreamUtil.toList(map.getTreeNodes("c"), TreeEntry::getKey);
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getRootNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+
+		TreeEntry<String, String> root = map.get("a");
+		Assert.assertEquals(root, map.getRootNode("a"));
+		Assert.assertEquals(root, map.getRootNode("b"));
+		Assert.assertEquals(root, map.getRootNode("c"));
+	}
+
+	@Test
+	public void getDeclaredParentNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		TreeEntry<String, String> a = map.get("a");
+		TreeEntry<String, String> b = map.get("b");
+		Assert.assertEquals(a, map.getDeclaredParentNode("b"));
+		Assert.assertEquals(b, map.getDeclaredParentNode("c"));
+	}
+
+	@Test
+	public void getParentNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		TreeEntry<String, String> a = map.get("a");
+		TreeEntry<String, String> b = map.get("b");
+
+		Assert.assertEquals(a, map.getParentNode("c", "a"));
+		Assert.assertEquals(b, map.getParentNode("c", "b"));
+		Assert.assertEquals(a, map.getParentNode("b", "a"));
+		Assert.assertNull(map.getParentNode("a", "a"));
+	}
+
+	@Test
+	public void containsParentNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		Assert.assertTrue(map.containsParentNode("c", "b"));
+		Assert.assertTrue(map.containsParentNode("c", "a"));
+		Assert.assertTrue(map.containsParentNode("b", "a"));
+		Assert.assertFalse(map.containsParentNode("a", "a"));
+	}
+
+	@Test
+	public void containsChildNodeTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		TreeEntry<String, String> b = map.get("b");
+		TreeEntry<String, String> c = map.get("c");
+
+		Assert.assertTrue(map.containsChildNode("a", "b"));
+		Assert.assertTrue(map.containsChildNode("a", "c"));
+		Assert.assertTrue(map.containsChildNode("b", "c"));
+		Assert.assertFalse(map.containsChildNode("c", "c"));
+	}
+
+	@Test
+	public void getDeclaredChildNodesTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		TreeEntry<String, String> b = map.get("b");
+		TreeEntry<String, String> c = map.get("c");
+
+		Assert.assertEquals(CollUtil.newArrayList(b), new ArrayList<>(map.getDeclaredChildNodes("a")));
+		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(map.getDeclaredChildNodes("b")));
+		Assert.assertEquals(CollUtil.newArrayList(), new ArrayList<>(map.getDeclaredChildNodes("c")));
+	}
+
+	@Test
+	public void getChildNodesTest() {
+		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.linkNodes("a", "b");
+		map.linkNodes("b", "c");
+		TreeEntry<String, String> b = map.get("b");
+		TreeEntry<String, String> c = map.get("c");
+
+		Assert.assertEquals(CollUtil.newArrayList(b, c), new ArrayList<>(map.getChildNodes("a")));
+		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(map.getChildNodes("b")));
+		Assert.assertEquals(CollUtil.newArrayList(), new ArrayList<>(map.getChildNodes("c")));
 	}
 
 }
