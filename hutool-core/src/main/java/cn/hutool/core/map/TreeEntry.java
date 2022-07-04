@@ -119,7 +119,7 @@ public interface TreeEntry<K, V> extends Map.Entry<K, V> {
 	 * @return 是否
 	 */
 	default boolean hasChildren() {
-		return CollUtil.isEmpty(getDeclaredChildren());
+		return CollUtil.isNotEmpty(getDeclaredChildren());
 	}
 
 	/**

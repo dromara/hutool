@@ -128,9 +128,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		// 2.将目标的子节点直接将目标的父节点作为父节点
 		if (target.hasParent()) {
 			final TreeEntryNode<K, V> parent = target.getDeclaredParent();
+			final Map<K, TreeEntry<K, V>> targetChildren = target.getChildren();
 			parent.removeDeclaredChild(target.getKey());
-			target.getDeclaredChildren()
-				.forEach((k, c) -> parent.addChild((TreeEntryNode<K, V>)c));
+			target.clear();
+			targetChildren.forEach((k, c) -> parent.addChild((TreeEntryNode<K, V>)c));
 		}
 		return target;
 	}
@@ -577,6 +578,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			), null);
 
 			// 调整该节点的信息
+			child.parent = this;
 			child.traverseChildNodes(true, (i, c) -> {
 				c.root = getRoot();
 				c.weight = i + getWeight() + 1;
@@ -598,14 +600,13 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			}
 
 			// 断开该节点与其父节点的关系
-			child.getDeclaredParent().children.remove(key);
+			this.children.remove(key);
 
-			// 将子节点从当前节点中移除，并重置子节点及其下属节点的相关属性
-			children.remove(child.getKey());
+			// 重置子节点及其下属节点的相关属性
 			child.parent = null;
-			child.traverseChildNodes(true, (index, node) -> {
-				node.root = child;
-				node.weight = index;
+			child.traverseChildNodes(true, (i, c) -> {
+				c.root = child;
+				c.weight = i;
 			}, null);
 		}
 
