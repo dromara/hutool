@@ -380,8 +380,7 @@ public class AnnotationUtil {
 				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
 		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-				.map(SyntheticAnnotation::of)
-				.map(annotation -> annotation.getAnnotation(annotationType))
+				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
