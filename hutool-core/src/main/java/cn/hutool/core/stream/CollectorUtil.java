@@ -3,12 +3,13 @@ package cn.hutool.core.stream;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -99,26 +100,23 @@ public class CollectorUtil {
 	public static <T, K, D, A, M extends Map<K, D>> Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
 																				  Supplier<M> mapFactory,
 																				  Collector<? super T, A, D> downstream) {
-		Supplier<A> downstreamSupplier = downstream.supplier();
-		BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
-		BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
-			K key = Opt.ofNullable(t).map(classifier).orElse(null);
-			A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
+		final Supplier<A> downstreamSupplier = downstream.supplier();
+		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+		final BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
+			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
+			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			downstreamAccumulator.accept(container, t);
 		};
-		BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
-		@SuppressWarnings("unchecked")
-		Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
+		final BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
+		@SuppressWarnings("unchecked") final Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
 
 		if (downstream.characteristics().contains(Collector.Characteristics.IDENTITY_FINISH)) {
 			return new SimpleCollector<>(mangledFactory, accumulator, merger, CH_ID);
 		} else {
-			@SuppressWarnings("unchecked")
-			Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
-			Function<Map<K, A>, M> finisher = intermediate -> {
+			@SuppressWarnings("unchecked") final Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
+			final Function<Map<K, A>, M> finisher = intermediate -> {
 				intermediate.replaceAll((k, v) -> downstreamFinisher.apply(v));
-				@SuppressWarnings("unchecked")
-				M castResult = (M) intermediate;
+				@SuppressWarnings("unchecked") final M castResult = (M) intermediate;
 				return castResult;
 			};
 			return new SimpleCollector<>(mangledFactory, accumulator, merger, finisher, CH_NOID);
@@ -214,5 +212,40 @@ public class CollectorUtil {
 		};
 	}
 
+	/**
+	 * 聚合这种数据类型:{@code Collection<Map<K,V>> => Map<K,List<V>>}
+	 * 其中key相同的value，会累加到List中
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return 聚合后的map
+	 * @since 5.8.5
+	 */
+	public static <K, V> Collector<Map<K, V>, ?, Map<K, List<V>>> reduceListMap() {
+		return reduceListMap(HashMap::new);
+	}
+
+	/**
+	 * 聚合这种数据类型:{@code Collection<Map<K,V>> => Map<K,List<V>>}
+	 * 其中key相同的value，会累加到List中
+	 *
+	 * @param mapSupplier 可自定义map的类型如concurrentHashMap等
+	 * @param <K>         key的类型
+	 * @param <V>         value的类型
+	 * @param <R>         返回值的类型
+	 * @return 聚合后的map
+	 * @since 5.8.5
+	 */
+	public static <K, V, R extends Map<K, List<V>>> Collector<Map<K, V>, ?, R> reduceListMap(final Supplier<R> mapSupplier) {
+		return Collectors.reducing(mapSupplier.get(), value -> {
+					final R result = mapSupplier.get();
+					value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
+					return result;
+				}, (l, r) -> {
+					r.forEach((k, v) -> l.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
+					return l;
+				}
+		);
+	}
 
 }

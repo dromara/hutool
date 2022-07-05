@@ -11,6 +11,7 @@
 * 【core   】     合成注解SyntheticAnnotation提取为接口，并为实现类添加注解选择器和属性处理器（pr#678@Gitee）
 * 【core   】     增加BeanValueProvider（issue#I5FBHV@Gitee）
 * 【core   】     Convert工具类中，新增中文大写数字金额转换为数字工具方法（pr#674@Gitee）
+* 【core   】     新增CollectorUtil.reduceListMap()（pr#676@Gitee）
 * 
 ### 🐞Bug修复
 
