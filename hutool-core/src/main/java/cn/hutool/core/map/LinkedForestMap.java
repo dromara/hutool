@@ -219,8 +219,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	 * </ul>
 	 * 该操作等同于：
 	 * <pre>
-	 *     TreeEntry<K, V>  parent = putNode(parentKey, parentValue);
-	 *     TreeEntry<K, V>  child = putNode(childKey, childValue);
+	 *     TreeEntry&lt;K, V&gt;  parent = putNode(parentKey, parentValue);
+	 *     TreeEntry&lt;K, V&gt;  child = putNode(childKey, childValue);
 	 *     linkNodes(parentKey, childKey);
 	 * </pre>
 	 *
