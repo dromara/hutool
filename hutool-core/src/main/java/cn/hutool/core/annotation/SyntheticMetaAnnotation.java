@@ -6,19 +6,13 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 表示一个根注解与根注解上的多层元注解合成的注解
@@ -148,6 +142,18 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	}
 
 	/**
+	 * 获取已合成的注解
+	 *
+	 * @param annotationType 注解类型
+	 * @return 已合成的注解
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends Annotation> SynthesizedAnnotation<T> getSynthesizedAnnotation(Class<T> annotationType) {
+		return (SynthesizedAnnotation<T>)metaAnnotationMap.get(annotationType);
+	}
+
+	/**
 	 * 获取根注解类型
 	 *
 	 * @return 注解类型
@@ -212,18 +218,11 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 *
 	 * @param annotationType 注解类型
 	 * @return 合成注解对象
+	 * @see SyntheticAnnotationProxy#create(Class, SyntheticAnnotation)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Annotation> T syntheticAnnotation(Class<T> annotationType) {
-		if (metaAnnotationMap.containsKey(annotationType)) {
-			return (T) Proxy.newProxyInstance(
-				annotationType.getClassLoader(),
-				new Class[]{annotationType, Synthesized.class},
-				new SyntheticAnnotationProxy<>(this, annotationType)
-			);
-		}
-		return null;
+		return SyntheticAnnotationProxy.create(annotationType, this);
 	}
 
 	/**
@@ -240,11 +239,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 * 广度优先遍历并缓存该根注解上的全部元注解
 	 */
 	private void loadMetaAnnotations() {
-		// 若该注解已经是合成注解，则直接使用已解析好的元注解信息
-		if (source instanceof SyntheticMetaAnnotation.Synthesized) {
-			this.metaAnnotationMap.putAll(((Synthesized) source).getMetaAnnotationMap());
-			return;
-		}
+		Assert.isFalse(SyntheticAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
 		// 扫描元注解
 		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
 		new MetaAnnotationScanner().scan(
@@ -366,84 +361,4 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 
 	}
 
-	/**
-	 * 表示一个已经被合成的注解
-	 *
-	 * @author huangchengxing
-	 */
-	interface Synthesized {
-
-		/**
-		 * 获取合成注解中已解析的元注解信息
-		 *
-		 * @return 合成注解中已解析的元注解信息
-		 */
-		Map<Class<? extends Annotation>, MetaAnnotation> getMetaAnnotationMap();
-
-		static boolean isMetaAnnotationMapMethod(Method method) {
-			return StrUtil.equals("getMetaAnnotationMap", method.getName());
-		}
-
-	}
-
-	/**
-	 * 合成注解代理类
-	 *
-	 * @author huangchengxing
-	 */
-	static class SyntheticAnnotationProxy<A extends Annotation> implements Annotation, InvocationHandler {
-
-		private final Class<A> annotationType;
-		private final SyntheticMetaAnnotation<?> syntheticMetaAnnotation;
-
-		public SyntheticAnnotationProxy(SyntheticMetaAnnotation<?> syntheticMetaAnnotation, Class<A> annotationType) {
-			this.syntheticMetaAnnotation = syntheticMetaAnnotation;
-			this.annotationType = annotationType;
-		}
-
-		@Override
-		public Class<? extends Annotation> annotationType() {
-			return annotationType;
-		}
-
-		@Override
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-			if (Synthesized.isMetaAnnotationMapMethod(method)) {
-				return syntheticMetaAnnotation.getMetaAnnotationMap();
-			}
-			if (ReflectUtil.isHashCodeMethod(method)) {
-				return getHashCode();
-			}
-			if (ReflectUtil.isToStringMethod(method)) {
-				return getToString();
-			}
-			return ObjectUtil.defaultIfNull(
-					syntheticMetaAnnotation.getAttribute(method.getName(), method.getReturnType()),
-					() -> ReflectUtil.invoke(this, method, args)
-			);
-		}
-
-		/**
-		 * 获取toString值
-		 *
-		 * @return toString值
-		 */
-		private String getToString() {
-			final String attributes = Stream.of(annotationType().getDeclaredMethods())
-					.filter(AnnotationUtil::isAttributeMethod)
-					.map(method -> StrUtil.format("{}={}", method.getName(), syntheticMetaAnnotation.getAttribute(method.getName(), method.getReturnType())))
-					.collect(Collectors.joining(", "));
-			return StrUtil.format("@{}({})", annotationType().getName(), attributes);
-		}
-
-		/**
-		 * 获取hashcode值
-		 *
-		 * @return hashcode值
-		 */
-		private int getHashCode() {
-			return Objects.hash((Object) syntheticMetaAnnotation.getAnnotations());
-		}
-
-	}
 }

@@ -35,21 +35,21 @@ public class SyntheticMetaAnnotationTest {
 		Assert.assertEquals("Child!", childAnnotation.childValue());
 		Assert.assertEquals("Child!", childAnnotation.childValueAlias());
 		Assert.assertEquals(childAnnotation.grandParentType(), Integer.class);
-		Assert.assertEquals(annotationMap, new SyntheticMetaAnnotation<>(childAnnotation).getMetaAnnotationMap());
+		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation<>(childAnnotation));
 
 		ParentAnnotation parentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(ParentAnnotation.class);
 		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(ParentAnnotation.class));
 		Assert.assertNotNull(parentAnnotation);
 		Assert.assertEquals("Child's Parent!", parentAnnotation.parentValue());
 		Assert.assertEquals("java.lang.Void", parentAnnotation.grandParentType());
-		Assert.assertEquals(annotationMap, new SyntheticMetaAnnotation<>(parentAnnotation).getMetaAnnotationMap());
+		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation<>(parentAnnotation));
 
 		GrandParentAnnotation grandParentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(GrandParentAnnotation.class);
 		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(GrandParentAnnotation.class));
 		Assert.assertNotNull(grandParentAnnotation);
 		Assert.assertEquals("Child's GrandParent!", grandParentAnnotation.grandParentValue());
 		Assert.assertEquals(grandParentAnnotation.grandParentType(), Integer.class);
-		Assert.assertEquals(annotationMap, new SyntheticMetaAnnotation<>(grandParentAnnotation).getMetaAnnotationMap());
+		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation<>(grandParentAnnotation));
 	}
 
 	// 注解结构如下：

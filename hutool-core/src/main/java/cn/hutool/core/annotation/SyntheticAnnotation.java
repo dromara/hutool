@@ -6,6 +6,7 @@ import java.lang.reflect.AnnotatedElement;
 /**
  * 表示基于特定规则聚合的一组注解
  *
+ * @param <A> 合成注解类型
  * @author huangchengxing
  */
 public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends Annotation, AnnotatedElement {
@@ -25,6 +26,15 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	SynthesizedAnnotationAttributeProcessor<A> getAttributeProcessor();
 
 	/**
+	 * 获取已合成的注解
+	 *
+	 * @param annotationType 注解类型
+	 * @param <T> 注解类型
+	 * @return 已合成的注解
+	 */
+	<T extends Annotation> SynthesizedAnnotation<T> getSynthesizedAnnotation(Class<T> annotationType);
+
+	/**
 	 * 获取当前的注解类型
 	 *
 	 * @return 注解类型
@@ -38,6 +48,7 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	 * 获取指定注解对象
 	 *
 	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
 	 * @return 注解对象
 	 */
 	@Override
@@ -64,6 +75,7 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	 * 获取合成注解
 	 *
 	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
 	 * @return 类型
 	 */
 	<T extends Annotation> T syntheticAnnotation(Class<T> annotationType);
@@ -80,8 +92,8 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	/**
 	 * 基于指定根注解，构建包括其元注解在内的合成注解
 	 *
-	 * @param <T>            注解类型
 	 * @param rootAnnotation 根注解
+	 * @param <T>            注解类型
 	 * @return 合成注解
 	 */
 	static <T extends Annotation> SyntheticAnnotation<SyntheticMetaAnnotation.MetaAnnotation> of(T rootAnnotation) {
