@@ -23,9 +23,9 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void testTreeEntry() {
-		TreeEntry<String, String> parent = treeNodeMap.get("b");
-		TreeEntry<String, String> treeEntry = treeNodeMap.get("c");
-		TreeEntry<String, String> child = treeNodeMap.get("d");
+		final TreeEntry<String, String> parent = treeNodeMap.get("b");
+		final TreeEntry<String, String> treeEntry = treeNodeMap.get("c");
+		final TreeEntry<String, String> child = treeNodeMap.get("d");
 
 		// Entry相关
 		Assert.assertEquals("c", treeEntry.getKey());
@@ -40,7 +40,7 @@ public class LinkedForestMapTest {
 		Assert.assertTrue(treeEntry.containsParent("a"));
 
 		// 子节点相关方法
-		List<TreeEntry<String, String>> nodes = new ArrayList<>();
+		final List<TreeEntry<String, String>> nodes = new ArrayList<>();
 		treeEntry.forEachChild(true, nodes::add);
 		Assert.assertEquals(CollUtil.newArrayList(treeEntry, child), nodes);
 		nodes.clear();
@@ -56,7 +56,7 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 
 		TreeEntry<String, String> treeEntry = new LinkedForestMap.TreeEntryNode<>(null, "a", "aaa");
 		Assert.assertNull(map.put("a", treeEntry));
@@ -73,13 +73,13 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void removeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
 
-		TreeEntry<String, String> a = map.get("a");
-		TreeEntry<String, String> b = map.get("b");
-		TreeEntry<String, String> c = map.get("c");
+		final TreeEntry<String, String> a = map.get("a");
+		final TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> c = map.get("c");
 
 		map.remove("b");
 		Assert.assertNull(map.get("b"));
@@ -91,16 +91,16 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putAllTest() {
-		ForestMap<String, String> source = new LinkedForestMap<>(false);
+		final ForestMap<String, String> source = new LinkedForestMap<>(false);
 		source.linkNodes("a", "b");
 		source.linkNodes("b", "c");
 
-		ForestMap<String, String> target = new LinkedForestMap<>(false);
+		final ForestMap<String, String> target = new LinkedForestMap<>(false);
 		target.putAll(source);
 
-		TreeEntry<String, String> a = target.get("a");
-		TreeEntry<String, String> b = target.get("b");
-		TreeEntry<String, String> c = target.get("c");
+		final TreeEntry<String, String> a = target.get("a");
+		final TreeEntry<String, String> b = target.get("b");
+		final TreeEntry<String, String> c = target.get("c");
 
 		Assert.assertNotNull(a);
 		Assert.assertEquals("a", a.getKey());
@@ -118,13 +118,13 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void clearTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
 
-		TreeEntry<String, String> a = map.get("a");
-		TreeEntry<String, String> b = map.get("b");
-		TreeEntry<String, String> c = map.get("c");
+		final TreeEntry<String, String> a = map.get("a");
+		final TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> c = map.get("c");
 		Assert.assertFalse(a.hasParent());
 		Assert.assertTrue(a.hasChildren());
 		Assert.assertTrue(b.hasParent());
@@ -144,27 +144,27 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putAllNodeTest() {
-		ForestMap<String, Map<String, String>> map = new LinkedForestMap<>(false);
+		final ForestMap<String, Map<String, String>> map = new LinkedForestMap<>(false);
 
-		Map<String, String> aMap = MapBuilder.<String, String> create()
+		final Map<String, String> aMap = MapBuilder.<String, String> create()
 			.put("pid", null)
 			.put("id", "a")
 			.build();
-		Map<String, String> bMap = MapBuilder.<String, String> create()
+		final Map<String, String> bMap = MapBuilder.<String, String> create()
 			.put("pid", "a")
 			.put("id", "b")
 			.build();
-		Map<String, String> cMap = MapBuilder.<String, String> create()
+		final Map<String, String> cMap = MapBuilder.<String, String> create()
 			.put("pid", "b")
 			.put("id", "c")
 			.build();
 		map.putAllNode(Arrays.asList(aMap, bMap, cMap), m -> m.get("id"), m -> m.get("pid"), true);
 
-		TreeEntry<String, Map<String, String>> a = map.get("a");
+		final TreeEntry<String, Map<String, String>> a = map.get("a");
 		Assert.assertNotNull(a);
-		TreeEntry<String, Map<String, String>> b = map.get("b");
+		final TreeEntry<String, Map<String, String>> b = map.get("b");
 		Assert.assertNotNull(b);
-		TreeEntry<String, Map<String, String>> c = map.get("c");
+		final TreeEntry<String, Map<String, String>> c = map.get("c");
 		Assert.assertNotNull(c);
 
 		Assert.assertNull(a.getDeclaredParent());
@@ -178,7 +178,7 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 
 		Assert.assertNull(map.get("a"));
 
@@ -193,7 +193,7 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putLinkedNodesTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 
 		Assert.assertNull(map.get("a"));
 		Assert.assertNull(map.get("b"));
@@ -213,7 +213,7 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void putLinkedNodesTest2() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 
 		Assert.assertNull(map.get("a"));
 		Assert.assertNull(map.get("b"));
@@ -233,11 +233,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void linkNodesTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 
-		TreeEntry<String, String> parent = map.get("a");
-		TreeEntry<String, String> child = map.get("b");
+		final TreeEntry<String, String> parent = map.get("a");
+		final TreeEntry<String, String> child = map.get("b");
 
 		Assert.assertNotNull(parent);
 		Assert.assertEquals("a", parent.getKey());
@@ -250,10 +250,10 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void unlinkNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
-		TreeEntry<String, String> parent = map.get("a");
-		TreeEntry<String, String> child = map.get("b");
+		final TreeEntry<String, String> parent = map.get("a");
+		final TreeEntry<String, String> child = map.get("b");
 		map.unlinkNode("a", "b");
 		Assert.assertFalse(child.hasParent());
 		Assert.assertFalse(parent.hasChildren());
@@ -261,11 +261,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void getTreeNodesTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
 
-		List<String> expected = CollUtil.newArrayList("a", "b", "c");
+		final List<String> expected = CollUtil.newArrayList("a", "b", "c");
 		List<String> actual = CollStreamUtil.toList(map.getTreeNodes("a"), TreeEntry::getKey);
 		Assert.assertEquals(expected, actual);
 		actual = CollStreamUtil.toList(map.getTreeNodes("b"), TreeEntry::getKey);
@@ -276,11 +276,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void getRootNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
 
-		TreeEntry<String, String> root = map.get("a");
+		final TreeEntry<String, String> root = map.get("a");
 		Assert.assertEquals(root, map.getRootNode("a"));
 		Assert.assertEquals(root, map.getRootNode("b"));
 		Assert.assertEquals(root, map.getRootNode("c"));
@@ -288,22 +288,22 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void getDeclaredParentNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
-		TreeEntry<String, String> a = map.get("a");
-		TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> a = map.get("a");
+		final TreeEntry<String, String> b = map.get("b");
 		Assert.assertEquals(a, map.getDeclaredParentNode("b"));
 		Assert.assertEquals(b, map.getDeclaredParentNode("c"));
 	}
 
 	@Test
 	public void getParentNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
-		TreeEntry<String, String> a = map.get("a");
-		TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> a = map.get("a");
+		final TreeEntry<String, String> b = map.get("b");
 
 		Assert.assertEquals(a, map.getParentNode("c", "a"));
 		Assert.assertEquals(b, map.getParentNode("c", "b"));
@@ -313,7 +313,7 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void containsParentNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
 		Assert.assertTrue(map.containsParentNode("c", "b"));
@@ -324,11 +324,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void containsChildNodeTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
-		TreeEntry<String, String> b = map.get("b");
-		TreeEntry<String, String> c = map.get("c");
+		final TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> c = map.get("c");
 
 		Assert.assertTrue(map.containsChildNode("a", "b"));
 		Assert.assertTrue(map.containsChildNode("a", "c"));
@@ -338,11 +338,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void getDeclaredChildNodesTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
-		TreeEntry<String, String> b = map.get("b");
-		TreeEntry<String, String> c = map.get("c");
+		final TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> c = map.get("c");
 
 		Assert.assertEquals(CollUtil.newArrayList(b), new ArrayList<>(map.getDeclaredChildNodes("a")));
 		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(map.getDeclaredChildNodes("b")));
@@ -351,11 +351,11 @@ public class LinkedForestMapTest {
 
 	@Test
 	public void getChildNodesTest() {
-		ForestMap<String, String> map = new LinkedForestMap<>(false);
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
 		map.linkNodes("a", "b");
 		map.linkNodes("b", "c");
-		TreeEntry<String, String> b = map.get("b");
-		TreeEntry<String, String> c = map.get("c");
+		final TreeEntry<String, String> b = map.get("b");
+		final TreeEntry<String, String> c = map.get("c");
 
 		Assert.assertEquals(CollUtil.newArrayList(b, c), new ArrayList<>(map.getChildNodes("a")));
 		Assert.assertEquals(CollUtil.newArrayList(c), new ArrayList<>(map.getChildNodes("b")));
