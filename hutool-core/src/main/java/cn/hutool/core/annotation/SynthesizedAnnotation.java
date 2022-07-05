@@ -3,23 +3,24 @@ package cn.hutool.core.annotation;
 import java.lang.annotation.Annotation;
 
 /**
- * 表示一个处于合成状态的注解对象
+ * 用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象
  *
  * @author huangchengxing
+ * @see SyntheticAnnotation
  */
 public interface SynthesizedAnnotation extends Annotation {
 
 	/**
 	 * 获取该合成注解对应的根节点
 	 *
-	 * @return 数据源
+	 * @return 合成注解对应的根节点
 	 */
 	Object getRoot();
 
 	/**
 	 * 该合成注解是为根对象
 	 *
-	 * @return 对象
+	 * @return 根对象
 	 */
 	default boolean isRoot() {
 		return getRoot() == this;

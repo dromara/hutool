@@ -86,7 +86,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String)args[0], (Class<?>)args[1]));
 		methods.put("getAttribute", (method, args) -> annotation.getAttribute((String)args[0]));
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
-		for (Method declaredMethod : annotation.getAnnotation().annotationType().getDeclaredMethods()) {
+		for (final Method declaredMethod : annotation.getAnnotation().annotationType().getDeclaredMethods()) {
 			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
 		}
 	}
