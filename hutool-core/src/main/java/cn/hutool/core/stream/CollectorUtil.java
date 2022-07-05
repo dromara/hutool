@@ -2,6 +2,7 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -104,7 +107,10 @@ public class CollectorUtil {
 		final BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
 			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
 			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
-			downstreamAccumulator.accept(container, t);
+			if (ArrayUtil.isArray(container) || Objects.nonNull(t)) {
+				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.stream.Collectors.counting 求null元素个数
+				downstreamAccumulator.accept(container, t);
+			}
 		};
 		final BinaryOperator<Map<K, A>> merger = mapMerger(downstream.combiner());
 		@SuppressWarnings("unchecked") final Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
@@ -209,6 +215,40 @@ public class CollectorUtil {
 			}
 			return m1;
 		};
+	}
+
+	/**
+	 * 聚合这种数据类型:{@code Collection<Map<K,V>> => Map<K,List<V>>}
+	 * 其中key相同的value，会累加到List中
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return 聚合后的map
+	 */
+	public static <K, V> Collector<Map<K, V>, ?, Map<K, List<V>>> reduceListMap() {
+		return reduceListMap(HashMap::new);
+	}
+
+	/**
+	 * 聚合这种数据类型:{@code Collection<Map<K,V>> => Map<K,List<V>>}
+	 * 其中key相同的value，会累加到List中
+	 *
+	 * @param mapSupplier 可自定义map的类型如concurrentHashMap等
+	 * @param <K>         key的类型
+	 * @param <V>         value的类型
+	 * @param <R>         返回值的类型
+	 * @return 聚合后的map
+	 */
+	public static <K, V, R extends Map<K, List<V>>> Collector<Map<K, V>, ?, R> reduceListMap(final Supplier<R> mapSupplier) {
+		return Collectors.reducing(mapSupplier.get(), value -> {
+					R result = mapSupplier.get();
+					value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
+					return result;
+				}, (l, r) -> {
+					r.forEach((k, v) -> l.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
+					return l;
+				}
+		);
 	}
 
 
