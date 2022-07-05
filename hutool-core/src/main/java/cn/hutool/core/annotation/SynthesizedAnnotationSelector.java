@@ -32,6 +32,7 @@ public interface SynthesizedAnnotationSelector {
 	/**
 	 * 比较两个被合成的注解，选择其中的一个并返回
 	 *
+	 * @param <T>           复合注解类型
 	 * @param oldAnnotation 已存在的注解，该参数不允许为空
 	 * @param newAnnotation 新获取的注解，该参数不允许为空
 	 * @return 被合成的注解

@@ -131,7 +131,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			final Map<K, TreeEntry<K, V>> targetChildren = target.getChildren();
 			parent.removeDeclaredChild(target.getKey());
 			target.clear();
-			targetChildren.forEach((k, c) -> parent.addChild((TreeEntryNode<K, V>)c));
+			targetChildren.forEach((k, c) -> parent.addChild((TreeEntryNode<K, V>) c));
 		}
 		return target;
 	}
@@ -174,8 +174,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	@Override
 	public Set<Map.Entry<K, TreeEntry<K, V>>> entrySet() {
 		return nodes.entrySet().stream()
-			.map(this::wrap)
-			.collect(Collectors.toSet());
+				.map(this::wrap)
+				.collect(Collectors.toSet());
 	}
 
 	/**
@@ -262,7 +262,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	 */
 	@Override
 	public void linkNodes(K parentKey, K childKey, BiConsumer<TreeEntry<K, V>, TreeEntry<K, V>> consumer) {
-		consumer = ObjectUtil.defaultIfNull(consumer, (parent, child) -> {});
+		consumer = ObjectUtil.defaultIfNull(consumer, (parent, child) -> {
+		});
 		final TreeEntryNode<K, V> parentNode = nodes.computeIfAbsent(parentKey, t -> new TreeEntryNode<>(null, t));
 		TreeEntryNode<K, V> childNode = nodes.get(childKey);
 
@@ -290,10 +291,10 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			parentNode.addChild(childNode);
 		}
 		// 5.子节点存在，且已经与其他节点构成父子关系，但是不允许子节点直接修改其父节点
-		else{
+		else {
 			throw new IllegalArgumentException(StrUtil.format(
-				"[{}] has been used as child of [{}], can not be overwrite as child of [{}]",
-				childNode.getKey(), childNode.getDeclaredParent().getKey(), parentKey
+					"[{}] has been used as child of [{}], can not be overwrite as child of [{}]",
+					childNode.getKey(), childNode.getDeclaredParent().getKey(), parentKey
 			));
 		}
 		consumer.accept(parentNode, childNode);
@@ -358,18 +359,18 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * 创建一个节点
 		 *
 		 * @param parent 节点的父节点
-		 * @param key 节点的key
+		 * @param key    节点的key
 		 */
 		public TreeEntryNode(TreeEntryNode<K, V> parent, K key) {
-			this(parent, key , null);
+			this(parent, key, null);
 		}
 
 		/**
 		 * 创建一个节点
 		 *
 		 * @param parent 节点的父节点
-		 * @param key 节点的key
-		 * @param value 节点的value
+		 * @param key    节点的key
+		 * @param value  节点的value
 		 */
 		public TreeEntryNode(TreeEntryNode<K, V> parent, K key, V value) {
 			this.parent = parent;
@@ -440,7 +441,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * @return 遍历到的最后一个节点
 		 */
 		TreeEntryNode<K, V> traverseParentNodes(
-			boolean includeCurrent, Consumer<TreeEntryNode<K, V>> consumer, Predicate<TreeEntryNode<K, V>> breakTraverse) {
+				boolean includeCurrent, Consumer<TreeEntryNode<K, V>> consumer, Predicate<TreeEntryNode<K, V>> breakTraverse) {
 			breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, n -> false);
 			TreeEntryNode<K, V> curr = includeCurrent ? this : this.parent;
 			while (ObjectUtil.isNotNull(curr)) {
@@ -472,7 +473,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			if (ObjectUtil.isNotNull(this.root)) {
 				return this.root;
 			} else {
-				this.root = traverseParentNodes(true, p -> {}, p -> !p.hasParent());
+				this.root = traverseParentNodes(true, p -> {
+				}, p -> !p.hasParent());
 			}
 			return this.root;
 		}
@@ -495,13 +497,14 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 */
 		@Override
 		public TreeEntryNode<K, V> getParent(K key) {
-			return traverseParentNodes(false, p -> {}, p -> p.equalsKey(key));
+			return traverseParentNodes(false, p -> {
+			}, p -> p.equalsKey(key));
 		}
 
 		/**
 		 * 获取以当前节点作为根节点的树结构，然后遍历所有节点
 		 *
-		 * @param includeSelf 是否处理当前节点
+		 * @param includeSelf  是否处理当前节点
 		 * @param nodeConsumer 对节点的处理
 		 */
 		@Override
@@ -513,6 +516,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * 指定key与当前节点的key是否相等
 		 *
 		 * @param key 要比较的key
+		 * @return 是否key一致
 		 */
 		public boolean equalsKey(K key) {
 			return ObjectUtil.equal(getKey(), key);
@@ -529,7 +533,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * @return 遍历到的最后一个节点
 		 */
 		TreeEntryNode<K, V> traverseChildNodes(
-			boolean includeCurrent, BiConsumer<Integer, TreeEntryNode<K, V>> consumer, BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
+				boolean includeCurrent, BiConsumer<Integer, TreeEntryNode<K, V>> consumer, BiPredicate<Integer, TreeEntryNode<K, V>> breakTraverse) {
 			breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, (i, n) -> false);
 			final Deque<List<TreeEntryNode<K, V>>> keyNodeDeque = CollUtil.newLinkedList(CollUtil.newArrayList(this));
 			boolean needProcess = includeCurrent;
@@ -572,9 +576,9 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 
 			// 检查循环引用
 			traverseParentNodes(true, s -> Assert.notEquals(
-				s.key, child.key,
-				"circular reference between [{}] and [{}]!",
-				s.key, this.key
+					s.key, child.key,
+					"circular reference between [{}] and [{}]!",
+					s.key, this.key
 			), null);
 
 			// 调整该节点的信息
@@ -594,7 +598,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * @param key 子节点
 		 */
 		void removeDeclaredChild(K key) {
-			TreeEntryNode<K, V> child = children.get(key);
+			final TreeEntryNode<K, V> child = children.get(key);
 			if (ObjectUtil.isNull(child)) {
 				return;
 			}
@@ -618,7 +622,8 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 */
 		@Override
 		public TreeEntryNode<K, V> getChild(K key) {
-			return traverseChildNodes(false, (i, c) -> {}, (i, c) -> c.equalsKey(key));
+			return traverseChildNodes(false, (i, c) -> {
+			}, (i, c) -> c.equalsKey(key));
 		}
 
 		/**
@@ -667,7 +672,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 			if (o == null || this.getClass().equals(o.getClass()) || ClassUtil.isAssignable(this.getClass(), o.getClass())) {
 				return false;
 			}
-			final TreeEntry<?, ?> treeEntry = (TreeEntry<?, ?>)o;
+			final TreeEntry<?, ?> treeEntry = (TreeEntry<?, ?>) o;
 			return ObjectUtil.equals(this.getKey(), treeEntry.getKey());
 		}
 
@@ -707,17 +712,21 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	 */
 	public static class EntryNodeWrapper<K, V, N extends TreeEntry<K, V>> implements Map.Entry<K, TreeEntry<K, V>> {
 		private final N entryNode;
+
 		EntryNodeWrapper(N entryNode) {
 			this.entryNode = entryNode;
 		}
+
 		@Override
 		public K getKey() {
 			return entryNode.getKey();
 		}
+
 		@Override
 		public TreeEntry<K, V> getValue() {
 			return entryNode;
 		}
+
 		@Override
 		public TreeEntry<K, V> setValue(TreeEntry<K, V> value) {
 			throw new UnsupportedOperationException();

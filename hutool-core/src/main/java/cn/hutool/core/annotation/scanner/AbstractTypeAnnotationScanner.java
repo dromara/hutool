@@ -74,7 +74,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 		this.filter = filter;
 		this.excludeTypes = excludeTypes;
 		this.converters = new ArrayList<>();
-		this.typedThis = (T)this;
+		this.typedThis = (T) this;
 	}
 
 	/**
@@ -219,16 +219,22 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 
 	/**
 	 * 当前类是否不需要处理
+	 *
+	 * @param accessedTypes 访问类型
+	 * @param targetClass   目标类型
 	 */
 	protected boolean isNotNeedProcess(Set<Class<?>> accessedTypes, Class<?> targetClass) {
 		return ObjectUtil.isNull(targetClass)
-			|| accessedTypes.contains(targetClass)
-			|| excludeTypes.contains(targetClass)
-			|| filter.negate().test(targetClass);
+				|| accessedTypes.contains(targetClass)
+				|| excludeTypes.contains(targetClass)
+				|| filter.negate().test(targetClass);
 	}
 
 	/**
 	 * 若{@link #includeInterfaces}为{@code true}，则将目标类的父接口也添加到nextClasses
+	 *
+	 * @param nextClasses 下一个类集合
+	 * @param targetClass 目标类型
 	 */
 	protected void scanInterfaceIfNecessary(List<Class<?>> nextClasses, Class<?> targetClass) {
 		if (includeInterfaces) {
@@ -241,6 +247,9 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 
 	/**
 	 * 若{@link #includeSupperClass}为{@code true}，则将目标类的父类也添加到nextClasses
+	 *
+	 * @param nextClassQueue 下一个类队列
+	 * @param targetClass    目标类型
 	 */
 	protected void scanSuperClassIfNecessary(List<Class<?>> nextClassQueue, Class<?> targetClass) {
 		if (includeSupperClass) {
@@ -253,6 +262,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 
 	/**
 	 * 若存在转换器，则使用转换器对目标类进行转换
+	 *
+	 * @param target 目标类
 	 */
 	protected Class<?> convert(Class<?> target) {
 		if (hasConverters) {
