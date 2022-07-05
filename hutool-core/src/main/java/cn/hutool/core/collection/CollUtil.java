@@ -305,9 +305,9 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2) {
 		if (isEmpty(coll1)) {
-			return new ArrayList<>(coll2);
+			return ListUtil.of(coll2);
 		} else if (isEmpty(coll2)) {
-			return new ArrayList<>(coll1);
+			return ListUtil.of(coll1);
 		}
 
 		final ArrayList<T> list = new ArrayList<>(Math.max(coll1.size(), coll2.size()));
@@ -341,7 +341,9 @@ public class CollUtil {
 	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
 		Collection<T> union = union(coll1, coll2);
 		for (final Collection<T> coll : otherColls) {
-			union = union(union, coll);
+			if (isNotEmpty(coll)) {
+				union = union(union, coll);
+			}
 		}
 		return union;
 	}
@@ -373,7 +375,9 @@ public class CollUtil {
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (final Collection<T> otherColl : otherColls) {
-				result.addAll(otherColl);
+				if (isNotEmpty(otherColl)) {
+					result.addAll(otherColl);
+				}
 			}
 		}
 
@@ -407,7 +411,9 @@ public class CollUtil {
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (final Collection<T> otherColl : otherColls) {
-				result.addAll(otherColl);
+				if (isNotEmpty(otherColl)) {
+					result.addAll(otherColl);
+				}
 			}
 		}
 

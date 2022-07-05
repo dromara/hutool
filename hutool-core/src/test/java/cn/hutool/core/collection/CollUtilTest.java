@@ -925,4 +925,53 @@ public class CollUtilTest {
 		final Collection<String> trans = CollUtil.trans(people, Person::getName);
 		Assert.assertEquals("[aa, bb, cc, dd]", trans.toString());
 	}
+
+	@Test
+	public void unionNullTest() {
+		final List<String> list1 = new ArrayList<>();
+		final List<String> list2 = null;
+		final List<String> list3 = null;
+		final Collection<String> union = CollUtil.union(list1, list2, list3);
+		Assert.assertNotNull(union);
+	}
+
+	@Test
+	public void unionDistinctNullTest() {
+		final List<String> list1 = new ArrayList<>();
+		final List<String> list2 = null;
+		final List<String> list3 = null;
+		final Set<String> set = CollUtil.unionDistinct(list1, list2, list3);
+		Assert.assertNotNull(set);
+	}
+
+	@Test
+	public void unionAllNullTest() {
+		final List<String> list1 = new ArrayList<>();
+		final List<String> list2 = null;
+		final List<String> list3 = null;
+		final List<String> list = CollUtil.unionAll(list1, list2, list3);
+		Assert.assertNotNull(list);
+	}
+
+	@Test
+	public void intersectionNullTest() {
+		final List<String> list1 = new ArrayList<>();
+		list1.add("aa");
+		final List<String> list2 = new ArrayList<>();
+		list2.add("aa");
+		final List<String> list3 = null;
+		final Collection<String> collection = CollUtil.intersection(list1, list2, list3);
+		Assert.assertNotNull(collection);
+	}
+
+	@Test
+	public void intersectionDistinctNullTest() {
+		final List<String> list1 = new ArrayList<>();
+		list1.add("aa");
+		final List<String> list2 = null;
+		// list2.add("aa");
+		final List<String> list3 = null;
+		final Collection<String> collection = CollUtil.intersectionDistinct(list1, list2, list3);
+		Assert.assertNotNull(collection);
+	}
 }
