@@ -3,11 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.5.M1 (2022-06-30)
+# 5.8.5.M1 (2022-07-05)
 
 ### 🐣新特性
 * 【core   】     NumberUtil新增isIn方法（pr#669@Gitee）
 * 【core   】     修复注解工具类getAnnotations的NPE问题，注解扫描器添新功能（pr#671@Gitee）
+* 【core   】     合成注解SyntheticAnnotation提取为接口，并为实现类添加注解选择器和属性处理器（pr#678@Gitee）
+* 【core   】     增加BeanValueProvider（issue#I5FBHV@Gitee）
 * 
 ### 🐞Bug修复
 
