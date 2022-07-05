@@ -10,6 +10,7 @@
 * 【core   】     修复注解工具类getAnnotations的NPE问题，注解扫描器添新功能（pr#671@Gitee）
 * 【core   】     合成注解SyntheticAnnotation提取为接口，并为实现类添加注解选择器和属性处理器（pr#678@Gitee）
 * 【core   】     增加BeanValueProvider（issue#I5FBHV@Gitee）
+* 【core   】     Convert工具类中，新增中文大写数字金额转换为数字工具方法（pr#674@Gitee）
 * 
 ### 🐞Bug修复
 

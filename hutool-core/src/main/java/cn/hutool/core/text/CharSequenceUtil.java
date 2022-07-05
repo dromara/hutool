@@ -86,8 +86,7 @@ public class CharSequenceUtil {
 	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isBlank(CharSequence str) {
-		int length;
-
+		final int length;
 		if ((str == null) || ((length = str.length()) == 0)) {
 			return true;
 		}
