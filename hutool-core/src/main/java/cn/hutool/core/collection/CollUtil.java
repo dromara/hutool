@@ -73,6 +73,7 @@ import java.util.stream.Collectors;
 public class CollUtil {
 
 	// ---------------------------------------------------------------------- isEmpty
+
 	/**
 	 * 集合是否为空
 	 *
@@ -1063,6 +1064,7 @@ public class CollUtil {
 	 * 2、修改元素对象，返回集合中为修改后的对象
 	 * </pre>
 	 *
+	 * @param <T>        集合类型
 	 * @param <E>        集合元素类型
 	 * @param collection 集合
 	 * @param editor     编辑器接口，{@code null}返回原集合
@@ -1097,6 +1099,7 @@ public class CollUtil {
 	 * 1、过滤出需要的对象，{@link Predicate#test(Object)}方法返回true的对象将被加入结果集合中
 	 * </pre>
 	 *
+	 * @param <T>        集合类型
 	 * @param <E>        集合元素类型
 	 * @param collection 集合
 	 * @param predicate  过滤器，{@code null}返回原集合
