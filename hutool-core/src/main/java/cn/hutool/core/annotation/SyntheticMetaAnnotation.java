@@ -85,8 +85,9 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解
 	 *
-	 * @param annotation 当前查找的注解类
-	 * @param annotationSelector   合成注解选择器
+	 * @param annotation         当前查找的注解对象
+	 * @param annotationSelector 合成注解选择器
+	 * @param attributeProcessor 注解属性处理器
 	 */
 	public SyntheticMetaAnnotation(
 		Annotation annotation,
@@ -147,7 +148,6 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 * @param annotationType 注解类型
 	 * @return 已合成的注解
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType) {
 		return metaAnnotationMap.get(annotationType);
@@ -308,15 +308,20 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		}
 
 		/**
-		 * 获取根注解到元注解的距离
+		 * 获取该合成注解与根注解之间相隔的层级数
 		 *
-		 * @return 根注解到元注解的距离
+		 * @return 该合成注解与根注解之间相隔的层级数
 		 */
 		@Override
 		public int getVerticalDistance() {
 			return verticalDistance;
 		}
 
+		/**
+		 * 获取该合成注解与根注解之间相隔的注解树
+		 *
+		 * @return 该合成注解与根注解之间相隔的注解树
+		 */
 		@Override
 		public int getHorizontalDistance() {
 			return horizontalDistance;
