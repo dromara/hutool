@@ -110,7 +110,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 	 *     <li>若存在父节点或子节点，则将其断开其与父节点或子节点的引用关系；</li>
 	 *     <li>
 	 *         若同时存在父节点或子节点，则会在删除后将让子节点直接成为父节点的子节点，比如：<br>
-	 *         现有引用关系 a -> b -> c，删除 b 后，将有 a -> c
+	 *         现有引用关系 a -&gt; b -&gt; c，删除 b 后，将有 a -&gt; c
 	 *     </li>
 	 * </ul>
 	 *

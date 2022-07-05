@@ -264,6 +264,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 * 若存在转换器，则使用转换器对目标类进行转换
 	 *
 	 * @param target 目标类
+	 * @return 转换后的类
 	 */
 	protected Class<?> convert(Class<?> target) {
 		if (hasConverters) {
