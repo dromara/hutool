@@ -108,6 +108,9 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
+		if (isEmpty(coll1) && isEmpty(coll2)) {
+			return new ArrayList<>();
+		}
 		if (isEmpty(coll1)) {
 			return new ArrayList<>(coll2);
 		} else if (isEmpty(coll2)) {
@@ -145,6 +148,9 @@ public class CollUtil {
 	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		Collection<T> union = union(coll1, coll2);
 		for (Collection<T> coll : otherColls) {
+			if (isEmpty(coll)) {
+				continue;
+			}
 			union = union(union, coll);
 		}
 		return union;
@@ -177,6 +183,9 @@ public class CollUtil {
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
+				if (isEmpty(otherColl)) {
+					continue;
+				}
 				result.addAll(otherColl);
 			}
 		}
@@ -211,6 +220,9 @@ public class CollUtil {
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
 			for (Collection<T> otherColl : otherColls) {
+				if (isEmpty(otherColl)) {
+					continue;
+				}
 				result.addAll(otherColl);
 			}
 		}

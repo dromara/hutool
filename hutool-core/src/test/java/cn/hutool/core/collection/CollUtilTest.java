@@ -10,21 +10,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * 集合工具类单元测试
@@ -906,6 +892,55 @@ public class CollUtilTest {
 		Assert.assertEquals(2, distinct.size());
 		Assert.assertEquals("aa", distinct.get(0).getName());
 		Assert.assertEquals("bb", distinct.get(1).getName());
+	}
+
+	@Test
+	public void unionNullTest() {
+		List<String> list1 = new ArrayList<>();
+		List<String> list2 = null;
+		List<String> list3 = null;
+		Collection<String> union = CollUtil.union(list1, list2, list3);
+		Assert.assertNotNull(union);
+	}
+
+	@Test
+	public void unionDistinctNullTest() {
+		List<String> list1 = new ArrayList<>();
+		List<String> list2 = null;
+		List<String> list3 = null;
+		Set<String> set = CollUtil.unionDistinct(list1, list2, list3);
+		Assert.assertNotNull(set);
+	}
+
+	@Test
+	public void unionAllNullTest() {
+		List<String> list1 = new ArrayList<>();
+		List<String> list2 = null;
+		List<String> list3 = null;
+		List<String> list = CollUtil.unionAll(list1, list2, list3);
+		Assert.assertNotNull(list);
+	}
+
+	@Test
+	public void intersectionNullTest() {
+		List<String> list1 = new ArrayList<>();
+		list1.add("aa");
+		List<String> list2 = new ArrayList<>();
+		list2.add("aa");
+		List<String> list3 = null;
+		Collection<String> collection = CollUtil.intersection(list1, list2, list3);
+		Assert.assertNotNull(collection);
+	}
+
+	@Test
+	public void intersectionDistinctNullTest() {
+		List<String> list1 = new ArrayList<>();
+		list1.add("aa");
+		List<String> list2 = null;
+		// list2.add("aa");
+		List<String> list3 = null;
+		Collection<String> collection = CollUtil.intersectionDistinct(list1, list2, list3);
+		Assert.assertNotNull(collection);
 	}
 
 	@Data
