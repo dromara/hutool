@@ -43,17 +43,17 @@ import java.util.Map;
  * @see AnnotationUtil
  * @see SynthesizedAnnotationSelector
  */
-public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticAnnotation<SyntheticMetaAnnotation.MetaAnnotation> {
+public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 
 	/**
 	 * 根注解，即当前查找的注解
 	 */
-	private final A source;
+	private final Annotation source;
 
 	/**
 	 * 包含根注解以及其元注解在内的全部注解实例
 	 */
-	private final Map<Class<? extends Annotation>, MetaAnnotation> metaAnnotationMap;
+	private final Map<Class<? extends Annotation>, SynthesizedAnnotation> metaAnnotationMap;
 
 	/**
 	 * 合成注解选择器
@@ -63,7 +63,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	/**
 	 * 合成注解属性处理器
 	 */
-	private final SynthesizedAnnotationAttributeProcessor<SyntheticMetaAnnotation.MetaAnnotation> attributeProcessor;
+	private final SynthesizedAnnotationAttributeProcessor attributeProcessor;
 
 	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解。
@@ -72,12 +72,12 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 *
 	 * @param source 源注解
 	 */
-	public SyntheticMetaAnnotation(A source) {
+	public SyntheticMetaAnnotation(Annotation source) {
 		this(
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
-			new CacheableSynthesizedAnnotationAttributeProcessor<>(
-				Comparator.comparing(MetaAnnotation::getVerticalDistance)
-					.thenComparing(MetaAnnotation::getHorizontalDistance)
+			new CacheableSynthesizedAnnotationAttributeProcessor(
+				Comparator.comparing(SynthesizedAnnotation::getVerticalDistance)
+					.thenComparing(SynthesizedAnnotation::getHorizontalDistance)
 			)
 		);
 	}
@@ -89,9 +89,9 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 * @param annotationSelector   合成注解选择器
 	 */
 	public SyntheticMetaAnnotation(
-		A annotation,
+		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
-		SynthesizedAnnotationAttributeProcessor<SyntheticMetaAnnotation.MetaAnnotation> attributeProcessor) {
+		SynthesizedAnnotationAttributeProcessor attributeProcessor) {
 		Assert.notNull(annotation, "annotation must not null");
 		Assert.notNull(annotationSelector, "annotationSelector must not null");
 		Assert.notNull(attributeProcessor, "attributeProcessor must not null");
@@ -108,7 +108,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 *
 	 * @return 根注解
 	 */
-	public A getSource() {
+	public Annotation getSource() {
 		return source;
 	}
 
@@ -117,7 +117,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 *
 	 * @return 已解析的元注解信息
 	 */
-	Map<Class<? extends Annotation>, MetaAnnotation> getMetaAnnotationMap() {
+	Map<Class<? extends Annotation>, SynthesizedAnnotation> getMetaAnnotationMap() {
 		return metaAnnotationMap;
 	}
 
@@ -137,8 +137,8 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 * @return 合成注解属性处理器
 	 */
 	@Override
-	public SynthesizedAnnotationAttributeProcessor<MetaAnnotation> getAttributeProcessor() {
-		return null;
+	public SynthesizedAnnotationAttributeProcessor getAttributeProcessor() {
+		return this.attributeProcessor;
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Annotation> SynthesizedAnnotation<T> getSynthesizedAnnotation(Class<T> annotationType) {
-		return (SynthesizedAnnotation<T>)metaAnnotationMap.get(annotationType);
+	public SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType) {
+		return metaAnnotationMap.get(annotationType);
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
 		return Opt.ofNullable(annotationType)
 			.map(metaAnnotationMap::get)
-			.map(MetaAnnotation::getAnnotation)
+			.map(SynthesizedAnnotation::getAnnotation)
 			.map(annotationType::cast)
 			.orElse(null);
 	}
@@ -244,8 +244,8 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
 		new MetaAnnotationScanner().scan(
 				(index, annotation) -> {
-						MetaAnnotation oldAnnotation = metaAnnotationMap.get(annotation.annotationType());
-						MetaAnnotation newAnnotation = new MetaAnnotation(source, annotation, index, metaAnnotationMap.size());
+						SynthesizedAnnotation oldAnnotation = metaAnnotationMap.get(annotation.annotationType());
+						SynthesizedAnnotation newAnnotation = new MetaAnnotation(source, annotation, index, metaAnnotationMap.size());
 						if (ObjectUtil.isNull(oldAnnotation)) {
 							metaAnnotationMap.put(annotation.annotationType(), newAnnotation);
 						} else {
@@ -261,7 +261,7 @@ public class SyntheticMetaAnnotation<A extends Annotation> implements SyntheticA
 	 *
 	 * @author huangchengxing
 	 */
-	public static class MetaAnnotation implements Annotation, SynthesizedAnnotation<Annotation> {
+	public static class MetaAnnotation implements Annotation, SynthesizedAnnotation {
 
 		private final Annotation root;
 		private final Annotation annotation;

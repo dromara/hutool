@@ -20,16 +20,15 @@ import java.util.stream.Stream;
 /**
  * 合成注解代理类
  *
- * @param <A> 代理的注解类型
  * @author huangchengxing
  */
-class SyntheticAnnotationProxy<A extends Annotation> implements InvocationHandler {
+class SyntheticAnnotationProxy implements InvocationHandler {
 
-	private final SyntheticAnnotation<?> syntheticAnnotation;
-	private final SynthesizedAnnotation<A> annotation;
+	private final SyntheticAnnotation syntheticAnnotation;
+	private final SynthesizedAnnotation annotation;
 	private final Map<String, BiFunction<Method, Object[], Object>> methods;
 
-	SyntheticAnnotationProxy(SyntheticAnnotation<?> syntheticAnnotation, SynthesizedAnnotation<A> annotation) {
+	SyntheticAnnotationProxy(SyntheticAnnotation syntheticAnnotation, SynthesizedAnnotation annotation) {
 		this.syntheticAnnotation = syntheticAnnotation;
 		this.annotation = annotation;
 		this.methods = new HashMap<>(9);
@@ -45,18 +44,17 @@ class SyntheticAnnotationProxy<A extends Annotation> implements InvocationHandle
 	 *
 	 * @param annotationType      注解类型
 	 * @param syntheticAnnotation 合成注解
-	 * @param <A>                 代理的注解类型
 	 * @return 代理注解
 	 */
 	@SuppressWarnings("unchecked")
-	static <A extends Annotation> A create(
-		Class<A> annotationType, SyntheticAnnotation<?> syntheticAnnotation) {
-		final SynthesizedAnnotation<A> annotation = syntheticAnnotation.getSynthesizedAnnotation(annotationType);
-		final SyntheticAnnotationProxy<A> proxyHandler = new SyntheticAnnotationProxy<>(syntheticAnnotation, annotation);
+	static <T extends Annotation> T create(
+		Class<T> annotationType, SyntheticAnnotation syntheticAnnotation) {
+		final SynthesizedAnnotation annotation = syntheticAnnotation.getSynthesizedAnnotation(annotationType);
+		final SyntheticAnnotationProxy proxyHandler = new SyntheticAnnotationProxy(syntheticAnnotation, annotation);
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
-		return (A) Proxy.newProxyInstance(
+		return (T) Proxy.newProxyInstance(
 			annotationType.getClassLoader(),
 			new Class[]{annotationType, SyntheticProxyAnnotation.class},
 			proxyHandler
@@ -122,21 +120,21 @@ class SyntheticAnnotationProxy<A extends Annotation> implements InvocationHandle
 	 *
 	 * @author huangchengxing
 	 */
-	interface SyntheticProxyAnnotation<A extends Annotation, T extends SynthesizedAnnotation<?>> extends SynthesizedAnnotation<A> {
+	interface SyntheticProxyAnnotation extends SynthesizedAnnotation {
 
 		/**
 		 * 获取该注解所属的合成注解
 		 *
 		 * @return 合成注解
 		 */
-		SyntheticAnnotation<T> getSyntheticAnnotation();
+		SyntheticAnnotation getSyntheticAnnotation();
 
 		/**
 		 * 获取该代理注解对应的已合成注解
 		 *
 		 * @return 理注解对应的已合成注解
 		 */
-		SynthesizedAnnotation<A> getSynthesizedAnnotation();
+		SynthesizedAnnotation getSynthesizedAnnotation();
 
 	}
 

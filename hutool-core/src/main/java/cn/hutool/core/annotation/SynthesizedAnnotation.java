@@ -7,14 +7,14 @@ import java.lang.annotation.Annotation;
  *
  * @author huangchengxing
  */
-public interface SynthesizedAnnotation<T> extends Annotation {
+public interface SynthesizedAnnotation extends Annotation {
 
 	/**
 	 * 获取该合成注解对应的根节点
 	 *
 	 * @return 数据源
 	 */
-	T getRoot();
+	Object getRoot();
 
 	/**
 	 * 该合成注解是为根对象

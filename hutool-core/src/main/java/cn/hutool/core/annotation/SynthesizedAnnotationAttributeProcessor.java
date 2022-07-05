@@ -8,7 +8,7 @@ import java.util.Collection;
  * @author huangchengxing
  */
 @FunctionalInterface
-public interface SynthesizedAnnotationAttributeProcessor<A extends SynthesizedAnnotation<?>> {
+public interface SynthesizedAnnotationAttributeProcessor {
 
 	/**
 	 * 从一批被合成注解中，获取指定名称与类型的属性值
@@ -16,9 +16,9 @@ public interface SynthesizedAnnotationAttributeProcessor<A extends SynthesizedAn
 	 * @param attributeName 属性名称
 	 * @param attributeType 属性类型
 	 * @param synthesizedAnnotations 被合成的注解
-	 * @param <T> 属性类型
+	 * @param <R> 属性类型
 	 * @return 属性值
 	 */
-	<T> T getAttributeValue(String attributeName, Class<T> attributeType, Collection<A> synthesizedAnnotations);
+	<R> R getAttributeValue(String attributeName, Class<R> attributeType, Collection<? extends SynthesizedAnnotation> synthesizedAnnotations);
 
 }

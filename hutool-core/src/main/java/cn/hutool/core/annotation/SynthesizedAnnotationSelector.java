@@ -36,14 +36,14 @@ public interface SynthesizedAnnotationSelector {
 	 * @param newAnnotation 新获取的注解，该参数不允许为空
 	 * @return 被合成的注解
 	 */
-	<T, A extends SynthesizedAnnotation<T>> A choose(A oldAnnotation, A newAnnotation);
+	<T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation);
 
 	/**
 	 * 返回距离根对象更近的注解，当距离一样时优先返回旧注解
 	 */
 	class NearestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
-		public <T, A extends SynthesizedAnnotation<T>> A choose(A oldAnnotation, A newAnnotation) {
+		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
 			return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
 		}
 	}
@@ -53,7 +53,7 @@ public interface SynthesizedAnnotationSelector {
 	 */
 	class NearestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
-		public <T, A extends SynthesizedAnnotation<T>> A choose(A oldAnnotation, A newAnnotation) {
+		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
 			return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
 		}
 	}
@@ -63,7 +63,7 @@ public interface SynthesizedAnnotationSelector {
 	 */
 	class FarthestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
-		public <T, A extends SynthesizedAnnotation<T>> A choose(A oldAnnotation, A newAnnotation) {
+		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
 			return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
 		}
 	}
@@ -73,7 +73,7 @@ public interface SynthesizedAnnotationSelector {
 	 */
 	class FarthestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
-		public <T, A extends SynthesizedAnnotation<T>> A choose(A oldAnnotation, A newAnnotation) {
+		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
 			return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
 		}
 	}

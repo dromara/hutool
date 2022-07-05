@@ -6,10 +6,9 @@ import java.lang.reflect.AnnotatedElement;
 /**
  * 表示基于特定规则聚合的一组注解
  *
- * @param <A> 合成注解类型
  * @author huangchengxing
  */
-public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends Annotation, AnnotatedElement {
+public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 
 	/**
 	 * 获取合成注解选择器
@@ -23,16 +22,15 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	 *
 	 * @return 合成注解属性处理器
 	 */
-	SynthesizedAnnotationAttributeProcessor<A> getAttributeProcessor();
+	SynthesizedAnnotationAttributeProcessor getAttributeProcessor();
 
 	/**
 	 * 获取已合成的注解
 	 *
 	 * @param annotationType 注解类型
-	 * @param <T> 注解类型
 	 * @return 已合成的注解
 	 */
-	<T extends Annotation> SynthesizedAnnotation<T> getSynthesizedAnnotation(Class<T> annotationType);
+	SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType);
 
 	/**
 	 * 获取当前的注解类型
@@ -96,8 +94,8 @@ public interface SyntheticAnnotation<A extends SynthesizedAnnotation<?>> extends
 	 * @param <T>            注解类型
 	 * @return 合成注解
 	 */
-	static <T extends Annotation> SyntheticAnnotation<SyntheticMetaAnnotation.MetaAnnotation> of(T rootAnnotation) {
-		return new SyntheticMetaAnnotation<>(rootAnnotation);
+	static <T extends Annotation> SyntheticAnnotation of(T rootAnnotation) {
+		return new SyntheticMetaAnnotation(rootAnnotation);
 	}
 
 }
