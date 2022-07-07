@@ -1021,7 +1021,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.7.8
 	 */
 	public void then(Consumer<HttpResponse> consumer) {
-		try (HttpResponse response = execute(true)) {
+		try (final HttpResponse response = execute(true)) {
 			consumer.accept(response);
 		}
 	}
@@ -1031,9 +1031,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 处理结束后关闭连接
 	 *
 	 * @param function 响应内容处理函数
+	 * @since 5.8.5
 	 */
 	public <T> T thenFunction(Function<HttpResponse, T> function) {
-		try (HttpResponse response = execute(true)) {
+		try (final HttpResponse response = execute(true)) {
 			return function.apply(response);
 		}
 	}
