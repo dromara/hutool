@@ -222,11 +222,12 @@ public class SyntheticMetaAnnotationTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.METHOD, ElementType.TYPE })
 	@interface AnnotationForceForAliasForTest {
-		@Link(
-			annotation = MetaAnnotationForForceAliasForTest.class,
-			attribute = "name",
-			type = RelationType.FORCE_ALIAS_FOR
-		)
+		//@Link(
+		//	annotation = MetaAnnotationForForceAliasForTest.class,
+		//	attribute = "name",
+		//	type = RelationType.FORCE_ALIAS_FOR
+		//)
+		@ForceAliasFor(annotation = MetaAnnotationForForceAliasForTest.class, attribute = "name")
 		String value() default "";
 	}
 	@AnnotationForceForAliasForTest
