@@ -353,32 +353,9 @@ public class AnnotationUtil {
 	 * @return 合成注解
 	 * @see SynthesizedAnnotationAggregator
 	 */
-	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
+	public static <T extends Annotation> T getSynthesizedAnnotation(Annotation annotation, Class<T> annotationType) {
 		// TODO 缓存合成注解信息，避免重复解析
 		return SynthesizedAnnotationAggregator.of(annotation).synthesize(annotationType);
-	}
-
-	/**
-	 * 获取元素上所有指定注解
-	 * <ul>
-	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
-	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
-	 * </ul>
-	 *
-	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param annotationType 注解类
-	 * @param <T>            注解类型
-	 * @return 合成注解
-	 * @see SynthesizedAnnotationAggregator
-	 */
-	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
-		AnnotationScanner[] scanners = new AnnotationScanner[]{
-				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
-		};
-		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
 	}
 
 	/**
@@ -394,7 +371,7 @@ public class AnnotationUtil {
 	 * @return 合成注解
 	 * @see SynthesizedAnnotationAggregator
 	 */
-	public static <T extends Annotation> T getSyntheticAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
+	public static <T extends Annotation> T getSynthesizedAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
 		T target = annotatedEle.getAnnotation(annotationType);
 		if (ObjectUtil.isNotNull(target)) {
 			return target;
@@ -403,10 +380,33 @@ public class AnnotationUtil {
 			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
 		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
+			.map(annotation -> getSynthesizedAnnotation(annotation, annotationType))
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElse(null);
+	}
+
+	/**
+	 * 获取元素上所有指定注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
+	 * @return 合成注解
+	 * @see SynthesizedAnnotationAggregator
+	 */
+	public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
+		AnnotationScanner[] scanners = new AnnotationScanner[]{
+				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
+				.map(annotation -> getSynthesizedAnnotation(annotation, annotationType))
 				.filter(Objects::nonNull)
-				.findFirst()
-				.orElse(null);
+				.collect(Collectors.toList());
 	}
 
 	/**

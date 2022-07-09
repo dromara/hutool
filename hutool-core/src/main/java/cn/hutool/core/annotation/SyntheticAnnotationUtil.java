@@ -24,7 +24,7 @@ class SyntheticAnnotationUtil {
 	 */
 	static Link getLink(AnnotationAttribute attribute, RelationType... relationTypes) {
 		return Opt.ofNullable(attribute)
-			.map(t -> AnnotationUtil.getSyntheticAnnotation(attribute.getAttribute(), Link.class))
+			.map(t -> AnnotationUtil.getSynthesizedAnnotation(attribute.getAttribute(), Link.class))
 			.filter(a -> ArrayUtil.contains(relationTypes, a.type()))
 			.get();
 	}
