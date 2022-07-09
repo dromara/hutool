@@ -176,6 +176,17 @@ public class SetUtil {
 	}
 
 	/**
+	 * 获取一个初始大小为0的Set，这个空Set可变
+	 *
+	 * @param <T> 元素类型
+	 * @return 空的List
+	 * @since 6.0.0
+	 */
+	public static <T> Set<T> zero() {
+		return new HashSet<>(0, 1);
+	}
+
+	/**
 	 * 转为只读Set
 	 *
 	 * @param <T> 元素类型

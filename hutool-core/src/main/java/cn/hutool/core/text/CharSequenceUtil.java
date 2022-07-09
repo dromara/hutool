@@ -722,6 +722,26 @@ public class CharSequenceUtil extends StrChecker{
 		return null;
 	}
 
+	/**
+	 * 检查指定字符串中是否含给定的所有字符串
+	 *
+	 * @param str       字符串
+	 * @param testChars 检查的字符
+	 * @return 字符串含有非检查的字符，返回false
+	 * @since 4.4.1
+	 */
+	public static boolean containsAll(CharSequence str, CharSequence... testChars) {
+		if (isBlank(str) || ArrayUtil.isEmpty(testChars)) {
+			return false;
+		}
+		for (CharSequence testChar : testChars) {
+			if (false == contains(str, testChar)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// ------------------------------------------------------------------------ indexOf
 
 	/**

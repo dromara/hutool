@@ -35,6 +35,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * http请求类<br>
@@ -1009,8 +1010,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 5.7.8
 	 */
 	public void then(final Consumer<HttpResponse> consumer) {
+		thenFunction(httpResponse -> {
+			consumer.accept(httpResponse);
+			return null;
+		});
+	}
+
+	/**
+	 * 执行Request请求后，对响应内容后续处理<br>
+	 * 处理结束后关闭连接
+	 *
+	 * @param function 响应内容处理函数
+	 * @since 5.8.5
+	 */
+	public <T> T thenFunction(final Function<HttpResponse, T> function) {
 		try (final HttpResponse response = execute(true)) {
-			consumer.accept(response);
+			return function.apply(response);
 		}
 	}
 

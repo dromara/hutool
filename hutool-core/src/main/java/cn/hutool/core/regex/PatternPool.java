@@ -140,7 +140,7 @@ public class PatternPool {
 	public final static Pattern PLATE_NUMBER = Pattern.compile(RegexPool.PLATE_NUMBER);
 
 	/**
-	 * 社会统一信用代码
+	 * 统一社会信用代码
 	 * <pre>
 	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
 	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
@@ -197,7 +197,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(final String regex, final int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-		return POOL.computeIfAbsent(regexWithFlag, (key)-> Pattern.compile(regex, flags));
+		return POOL.computeIfAbsent(regexWithFlag, (key) -> Pattern.compile(regex, flags));
 	}
 
 	/**

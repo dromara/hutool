@@ -160,4 +160,10 @@ public class CharSequenceUtilTest {
 		a = null;
 		Assert.assertNull(CharSequenceUtil.trimToNull(a));
 	}
+
+	@Test
+	public void containsAllTest() {
+		final String a = "2142342422423423";
+		Assert.assertTrue(StrUtil.containsAll(a, "214", "234"));
+	}
 }

@@ -7,7 +7,6 @@ import cn.hutool.core.stream.CollectorUtil;
 import cn.hutool.core.stream.StreamUtil;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 集合的stream操作封装
  *
- * @author 528910437@QQ.COM, VampireAchao&lt;achao1441470436@gmail.com&gt;
+ * @author 528910437@QQ.COM, VampireAchao&lt;achao1441470436@gmail.com&gt;;Lion Li&gt;
  * @since 5.5.2
  */
 public class CollStreamUtil {
@@ -55,7 +54,7 @@ public class CollStreamUtil {
 	 */
 	public static <V, K> Map<K, V> toIdentityMap(final Collection<V> collection, final Function<V, K> key, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return toMap(collection, (v) -> Opt.ofNullable(v).map(key).get(), Function.identity(), isParallel);
 	}
@@ -88,7 +87,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, K, V> Map<K, V> toMap(final Collection<E> collection, final Function<E, K> key, final Function<E, V> value, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
 				.collect(HashMap::new, (m, v) -> m.put(key.apply(v), value.apply(v)), HashMap::putAll);
@@ -122,7 +121,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, K> Map<K, List<E>> groupByKey(final Collection<E> collection, final Function<E, K> key, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return groupBy(collection, key, Collectors.toList(), isParallel);
 	}
@@ -160,7 +159,7 @@ public class CollStreamUtil {
 	public static <E, K, U> Map<K, Map<U, List<E>>> groupBy2Key(final Collection<E> collection, final Function<E, K> key1,
 																final Function<E, U> key2, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return groupBy(collection, key1, CollectorUtil.groupingBy(key2, Collectors.toList()), isParallel);
 	}
@@ -197,7 +196,7 @@ public class CollStreamUtil {
 	public static <E, T, U> Map<T, Map<U, E>> group2Map(final Collection<E> collection,
 														final Function<E, T> key1, final Function<E, U> key2, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection) || key1 == null || key2 == null) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return groupBy(collection, key1, CollectorUtil.toMap(key2, Function.identity(), (l, r) -> l), isParallel);
 	}
@@ -235,7 +234,7 @@ public class CollStreamUtil {
 	public static <E, K, V> Map<K, List<V>> groupKeyValue(final Collection<E> collection, final Function<E, K> key,
 														  final Function<E, V> value, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return groupBy(collection, key, Collectors.mapping(v -> Opt.ofNullable(v).map(value).orElse(null), Collectors.toList()), isParallel);
 	}
@@ -254,7 +253,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, K, D> Map<K, D> groupBy(final Collection<E> collection, final Function<E, K> key, final Collector<E, ?, D> downstream) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return groupBy(collection, key, downstream, false);
 	}
@@ -275,7 +274,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, K, D> Map<K, D> groupBy(final Collection<E> collection, final Function<E, K> key, final Collector<E, ?, D> downstream, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel).collect(CollectorUtil.groupingBy(key, downstream));
 	}
@@ -307,7 +306,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, T> List<T> toList(final Collection<E> collection, final Function<E, T> function, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptyList();
+			return ListUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
 				.map(function)
@@ -342,7 +341,7 @@ public class CollStreamUtil {
 	 */
 	public static <E, T> Set<T> toSet(final Collection<E> collection, final Function<E, T> function, final boolean isParallel) {
 		if (CollUtil.isEmpty(collection)) {
-			return Collections.emptySet();
+			return SetUtil.zero();
 		}
 		return StreamUtil.of(collection, isParallel)
 				.map(function)
@@ -365,11 +364,11 @@ public class CollStreamUtil {
 	 */
 	public static <K, X, Y, V> Map<K, V> merge(Map<K, X> map1, Map<K, Y> map2, final BiFunction<X, Y, V> merge) {
 		if (MapUtil.isEmpty(map1) && MapUtil.isEmpty(map2)) {
-			return Collections.emptyMap();
+			return MapUtil.zero();
 		} else if (MapUtil.isEmpty(map1)) {
-			map1 = Collections.emptyMap();
+			map1 = MapUtil.empty();
 		} else if (MapUtil.isEmpty(map2)) {
-			map2 = Collections.emptyMap();
+			map2 = MapUtil.empty();
 		}
 		final Set<K> key = new HashSet<>();
 		key.addAll(map1.keySet());

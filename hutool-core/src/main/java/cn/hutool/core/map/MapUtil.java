@@ -1352,6 +1352,17 @@ public class MapUtil {
 	}
 
 	/**
+	 * 返回一个初始大小为0的HashMap(初始为0，可加入元素)
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 初始大小为0的HashMap
+	 */
+	public static <K, V> Map<K, V> zero() {
+		return new HashMap<>(0, 1);
+	}
+
+	/**
 	 * 根据传入的Map类型不同，返回对应类型的空Map，支持类型包括：
 	 *
 	 * <pre>

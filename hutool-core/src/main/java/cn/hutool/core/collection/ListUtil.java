@@ -215,6 +215,17 @@ public class ListUtil {
 	}
 
 	/**
+	 * 获取一个初始大小为0的List，这个空List可变
+	 *
+	 * @param <T> 元素类型
+	 * @return 空的List
+	 * @since 6.0.0
+	 */
+	public static <T> List<T> zero() {
+		return new ArrayList<>(0);
+	}
+
+	/**
 	 * 新建一个CopyOnWriteArrayList
 	 *
 	 * @param <T>        集合元素类型
