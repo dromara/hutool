@@ -611,4 +611,12 @@ public class StrUtilTest {
 		String a = "2142342422423423";
 		Assert.assertTrue(StrUtil.isNumeric(a));
 	}
+
+	@Test
+	public void containsAllTest() {
+		String a = "2142342422423423";
+		Assert.assertTrue(StrUtil.containsAll(a, "214", "234"));
+	}
+
+
 }
