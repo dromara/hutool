@@ -19,6 +19,23 @@ public class BooleanUtil {
 	private static final Set<String> FALSE_SET = CollUtil.newHashSet("false", "no", "n", "f", "0", "off", "否", "错", "假", "錯", "×");
 
 	/**
+	 * 验证前端传过来的字符串，是不是正确的bool值
+	 * @param boolStr
+	 * @return boolStr是TRUE_SET、FALSE_SET中的字符串时，才返回true；其余内容返回false
+	 * @author ZRH 455741807@qq.com
+	 */
+	public static boolean verifyBooleanString(String boolStr){
+		if(StrUtil.isBlank(boolStr)){
+			return false;
+		}
+		boolStr = boolStr.toLowerCase();
+		if(TRUE_SET.contains(boolStr) || FALSE_SET.contains(boolStr)){
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * 取相反值
 	 *
 	 * @param bool Boolean值
