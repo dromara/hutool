@@ -15,29 +15,36 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 表示一个根注解与根注解上的多层元注解合成的注解
+ * {@link SyntheticAnnotation}的基本实现，表示一个根注解与根注解上的多层元注解合成的注解
  *
- * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对A解析得到的合成注解X，则CBA都是X的元注解，X为根注解。<br>
- * 通过{@link #isAnnotationPresent(Class)}可确定指定类型是注解是否是该合成注解的元注解，即是否为当前实例的“父类”。
- * 若指定注解是当前实例的元注解，则通过{@link #getAnnotation(Class)}可获得动态代理生成的对应的注解实例。<br>
- * 需要注意的是，由于认为合并注解X以最初的根注解A作为元注解，因此{@link #getAnnotations()}或{@link #getDeclaredAnnotations()}
- * 都将只能获得A。
+ * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对注解A进行解析，
+ * 将得到包含根注解A，以及其元注解B、C在内的合成元注解{@link SyntheticMetaAnnotation}。
+ * 从{@link AnnotatedElement}的角度来说，得到的合成注解是一个同时承载有ABC三个注解对象的被注解元素，
+ * 因此通过调用{@link AnnotatedElement}的相关方法将返回对应符合语义的注解对象。
  *
- * <p>若认为该合成注解X在第0层，则根注解A在第1层，B在第2层......以此类推,
- * 则相同或不同的层级中可能会出现类型相同的注解对象，此时将通过{@link SynthesizedAnnotationSelector}选择出最合适的注解对象，
- * 该注解对象将在合成注解中作为唯一有效的元注解用于进行相关操作。<br>
- * 默认情况下，将选择{@link SynthesizedAnnotationSelector#NEAREST_AND_OLDEST_PRIORITY}选择器实例，
- * 即层级越低的注解离根注解距离近，则该注解优先级越高，即遵循“就近原则”。
+ * <p>在扫描指定根注解及其元注解时，若在不同的层级出现了类型相同的注解实例，
+ * 将会根据实例化时指定的{@link SynthesizedAnnotationSelector}选择最优的注解，
+ * 完成对根注解及其元注解的扫描后，合成注解中每种类型的注解对象都将有且仅有一个。<br>
+ * 默认情况下，将使用{@link SynthesizedAnnotationSelector#NEAREST_AND_OLDEST_PRIORITY}作为选择器，
+ * 此时若出现扫描时得到了多个同类型的注解对象，有且仅有最接近根注解的注解对象会被作为有效注解。
  *
- * <p>合成注解中获取到的注解中可能会具有一些同名且同类型的属性，
- * 此时将根据{@link SynthesizedAnnotationAttributeProcessor}决定如何从这些注解的相同属性中获取属性值。<br>
- * 默认情况下，将选择{@link CacheableSynthesizedAnnotationAttributeProcessor}用于获取属性，
- * 该处理器将选择距离根注解最近的注解中的属性用于获取属性值，{@link #getAnnotation(Class)}获得的代理类实例的属性值遵循该规则。<br>
- * 举个例子：若CBA同时存在属性y，则将X视为C，B或者A时，获得的y属性的值都与最底层元注解A的值保持一致。
- * 若两相同注解处于同一层级，则按照从其上一级“子注解”的{@link AnnotatedElement#getAnnotations()}的调用顺序排序。
+ * <p>当扫描的注解对象经过{@link SynthesizedAnnotationSelector}处理后，
+ * 将会被转为{@link MetaAnnotation}，并使用在实例化时指定的{@link AliasAttributePostProcessor}
+ * 进行后置处理。<br>
+ * 默认情况下，将注册以下后置处理器以对{@link Alias}与{@link Link}和其扩展注解提供支持：
+ * <ul>
+ *     <li>{@link AliasAttributePostProcessor}；</li>
+ *     <li>{@link MirrorLinkAttributePostProcessor}；</li>
+ *     <li>{@link AliasForLinkAttributePostProcessor}；</li>
+ * </ul>
+ * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
- * <p>别名在合成注解中仍然有效，若注解X中任意属性上存在{@link Alias}注解，则{@link Alias#value()}指定的属性值将会覆盖注解属性的本身的值。<br>
- * {@link Alias}注解仅能指定注解X中存在的属性作为别名，不允许指定元注解或子类注解的属性。
+ * <p>{@link SyntheticMetaAnnotation}支持通过{@link #getAttribute(String, Class)}，
+ * 或通过{@link #syntheticAnnotation(Class)}获得注解代理对象后获取指定类型的注解属性值，
+ * 返回的属性值将根据合成注解中对应原始注解属性上的{@link Alias}与{@link Link}注解而有所变化。
+ * 通过当前实例获取属性值时，将经过{@link SynthesizedAnnotationAttributeProcessor}的处理。<br>
+ * 默认情况下，实例将会注册{@link CacheableSynthesizedAnnotationAttributeProcessor}，
+ * 该处理器将令元注解中与子注解类型与名称皆一致的属性被子注解的属性覆盖，并且缓存最终获取到的属性值。
  *
  * @author huangchengxing
  * @see AnnotationUtil
@@ -80,10 +87,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	public SyntheticMetaAnnotation(Annotation source) {
 		this(
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
-			new CacheableSynthesizedAnnotationAttributeProcessor(
-				Comparator.comparing(SynthesizedAnnotation::getVerticalDistance)
-					.thenComparing(SynthesizedAnnotation::getHorizontalDistance)
-			),
+			new CacheableSynthesizedAnnotationAttributeProcessor(),
 			Arrays.asList(
 				new AliasAttributePostProcessor(),
 				new MirrorLinkAttributePostProcessor(),
@@ -118,7 +122,6 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		this.metaAnnotationMap = new LinkedHashMap<>();
 
 		// 初始化元注解信息，并进行后置处理
-		// TODO 缓存元注解信息，避免重复解析
 		loadMetaAnnotations();
 		annotationPostProcessors.forEach(processor ->
 			metaAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
@@ -185,13 +188,13 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	}
 
 	/**
-	 * 获取根注解类型
+	 * 获取全部的已合成注解
 	 *
-	 * @return 注解类型
+	 * @return 合成注解
 	 */
 	@Override
-	public Class<? extends Annotation> annotationType() {
-		return this.getClass();
+	public Collection<SynthesizedAnnotation> getAllSyntheticAnnotations() {
+		return metaAnnotationMap.values();
 	}
 
 	/**
@@ -208,7 +211,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	}
 
 	/**
-	 * 获取被合成的注解
+	 * 获取合成注解中包含的指定注解
 	 *
 	 * @param annotationType 注解类型
 	 * @param <T>            注解类型
@@ -235,13 +238,15 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	}
 
 	/**
-	 * 获取全部注解
+	 * 获取合成注解中包含的全部注解
 	 *
 	 * @return 注解对象
 	 */
 	@Override
 	public Annotation[] getAnnotations() {
-		return getMetaAnnotationMap().values().toArray(new MetaAnnotation[0]);
+		return metaAnnotationMap.values().stream()
+			.map(SynthesizedAnnotation::getAnnotation)
+			.toArray(Annotation[]::new);
 	}
 
 	/**

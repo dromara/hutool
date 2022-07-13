@@ -7,12 +7,16 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
- * 用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象
+ * <p>用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象。<br>
+ * 当对多个合成注解排序时，默认先按{@link #getVerticalDistance()}排序，
+ * 再按{@link #getHorizontalDistance()}排序。
+ * 该顺序应当保证当合成注解与其他注解存在层级关系时，
+ * 离根对象最接近的注解被排在靠前的位置。
  *
  * @author huangchengxing
  * @see SyntheticAnnotation
  */
-public interface SynthesizedAnnotation extends Annotation {
+public interface SynthesizedAnnotation extends Annotation, Comparable<SynthesizedAnnotation> {
 
 	/**
 	 * 获取所属的合成注解
@@ -110,5 +114,16 @@ public interface SynthesizedAnnotation extends Annotation {
 	 * @return 属性值
 	 */
 	Object getAttributeValue(String attributeName);
+
+	/**
+	 * 按{@link #getVerticalDistance()}和{@link #getHorizontalDistance()}排序
+	 *
+	 * @param o {@link SynthesizedAnnotation}对象
+	 * @return 比较值
+	 */
+	@Override
+	default int compareTo(SynthesizedAnnotation o) {
+		return SyntheticAnnotationUtil.getChildPriorityAnnotationCompare().compare(this, o);
+	}
 
 }

@@ -71,6 +71,13 @@ public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 	SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType);
 
 	/**
+	 * 获取全部的合成注解
+	 *
+	 * @return 合成注解
+	 */
+	Collection<SynthesizedAnnotation> getAllSyntheticAnnotations();
+
+	/**
 	 * 获取当前的注解类型
 	 *
 	 * @return 注解类型

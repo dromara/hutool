@@ -6,6 +6,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.Comparator;
 
 /**
  * {@link SyntheticAnnotation}相关工具，用于内部使用
@@ -36,9 +37,21 @@ class SyntheticAnnotationUtil {
 	 */
 	static SynthesizedAnnotation getLinkedAnnotation(
 		Link annotation, SyntheticAnnotation syntheticAnnotation, Class<? extends Annotation> defaultType) {
-		final Class<? extends Annotation> targetAnnotationType = ObjectUtil.equals(annotation.annotation(), Annotation.class) ?
-			defaultType : annotation.annotation();
+		final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
 		return syntheticAnnotation.getSynthesizedAnnotation(targetAnnotationType);
+	}
+
+	/**
+	 * 若{@link Link#annotation()}获取的类型{@link Annotation#getClass()}，则返回{@code defaultType}，
+	 * 否则返回{@link Link#annotation()}指定的类型
+	 *
+	 * @param annotation  {@link Link}注解
+	 * @param defaultType 默认注解类型
+	 * @return 注解类型
+	 */
+	static Class<?> getLinkedAnnotationType(Link annotation, Class<?> defaultType) {
+		return ObjectUtil.equals(annotation.annotation(), Annotation.class) ?
+			defaultType : annotation.annotation();
 	}
 
 	/**
@@ -64,8 +77,19 @@ class SyntheticAnnotationUtil {
 	 */
 	static void checkLinkedAttributeNotNull(AnnotationAttribute original, AnnotationAttribute linkedAttribute, Link annotation) {
 		Assert.notNull(linkedAttribute, "cannot find linked attribute [{}] of original [{}] in [{}]",
-			original.getAttribute(), annotation.attribute(), annotation.annotation()
+			original.getAttribute(), annotation.attribute(),
+			getLinkedAnnotationType(annotation, original.getAnnotationType())
 		);
+	}
+
+	/**
+	 * 获取按{@link SynthesizedAnnotation#getVerticalDistance()}和{@link SynthesizedAnnotation#getHorizontalDistance()}排序的比较器
+	 *
+	 * @return 比较值
+	 */
+	static Comparator<SynthesizedAnnotation> getChildPriorityAnnotationCompare() {
+		return Comparator.comparing(SynthesizedAnnotation::getVerticalDistance)
+			.thenComparing(SynthesizedAnnotation::getHorizontalDistance);
 	}
 
 }

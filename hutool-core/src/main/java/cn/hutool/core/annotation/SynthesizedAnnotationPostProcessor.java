@@ -10,7 +10,18 @@ import java.util.Comparator;
  * 当多个{@link SynthesizedAnnotationPostProcessor}需要一起执行时，将按照{@link #order()}的返回值进行排序，
  * 该值更小的处理器将被优先执行。
  *
+ * <p>该接口存在多个实现类，调用者应当保证在任何时候，对一批后置处理器的调用顺序都符合：
+ * <ul>
+ *     <li>{@link AliasAttributePostProcessor}；</li>
+ *     <li>{@link MirrorLinkAttributePostProcessor}；</li>
+ *     <li>{@link AliasForLinkAttributePostProcessor}；</li>
+ *     <li>其他后置处理器；</li>
+ * </ul>
+ *
  * @author huangchengxing
+ * @see AliasAttributePostProcessor
+ * @see MirrorLinkAttributePostProcessor
+ * @see AliasForLinkAttributePostProcessor
  */
 public interface SynthesizedAnnotationPostProcessor extends Comparable<SynthesizedAnnotationPostProcessor> {
 

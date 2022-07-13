@@ -4,11 +4,9 @@ import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * 合成注解{@link SyntheticMetaAnnotation}的测试用例
@@ -18,8 +16,38 @@ import java.lang.reflect.Method;
 public class SyntheticMetaAnnotationTest {
 
 	@Test
-	public void testSynthesisAnnotation() {
-		ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
+	public void baseSynthesisAnnotationWorkTest() {
+		// AnnotatedClass -> @ChildAnnotation -> @ParentAnnotation -> @GrandParentAnnotation
+		//                                    -> @GrandParentAnnotation
+		final GrandParentAnnotation grandParentAnnotation = ChildAnnotation.class.getAnnotation(GrandParentAnnotation.class);
+		final ParentAnnotation parentAnnotation = ChildAnnotation.class.getAnnotation(ParentAnnotation.class);
+		final ChildAnnotation childAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
+		final SyntheticMetaAnnotation syntheticMetaAnnotation = new SyntheticMetaAnnotation(childAnnotation);
+
+		// Annotation & AnnotatedElement
+		Assert.assertEquals(SyntheticMetaAnnotation.class, syntheticMetaAnnotation.annotationType());
+		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(GrandParentAnnotation.class));
+		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(ParentAnnotation.class));
+		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(ChildAnnotation.class));
+		Assert.assertEquals(grandParentAnnotation, syntheticMetaAnnotation.getAnnotation(GrandParentAnnotation.class));
+		Assert.assertEquals(parentAnnotation, syntheticMetaAnnotation.getAnnotation(ParentAnnotation.class));
+		Assert.assertEquals(childAnnotation, syntheticMetaAnnotation.getAnnotation(ChildAnnotation.class));
+		Assert.assertEquals(
+			Arrays.asList(childAnnotation, grandParentAnnotation, parentAnnotation),
+			Arrays.asList(syntheticMetaAnnotation.getAnnotations())
+		);
+		Assert.assertArrayEquals(new Annotation[]{ childAnnotation }, syntheticMetaAnnotation.getDeclaredAnnotations());
+
+		// 扩展方法
+		Assert.assertNotNull(syntheticMetaAnnotation.getSynthesizedAnnotation(GrandParentAnnotation.class));
+		Assert.assertNotNull(syntheticMetaAnnotation.getSynthesizedAnnotation(ParentAnnotation.class));
+		Assert.assertNotNull(syntheticMetaAnnotation.getSynthesizedAnnotation(ChildAnnotation.class));
+		Assert.assertEquals(3, syntheticMetaAnnotation.getAllSyntheticAnnotations().size());
+	}
+
+	@Test
+	public void synthesisAnnotationAttributeTest() {
+		final ChildAnnotation rootAnnotation = AnnotatedClass.class.getAnnotation(ChildAnnotation.class);
 		SyntheticMetaAnnotation syntheticMetaAnnotation = new SyntheticMetaAnnotation(rootAnnotation);
 		Assert.assertEquals(syntheticMetaAnnotation.getSource(), rootAnnotation);
 		Assert.assertEquals(syntheticMetaAnnotation.annotationType(), SyntheticMetaAnnotation.class);
@@ -32,7 +60,7 @@ public class SyntheticMetaAnnotationTest {
 		Assert.assertEquals("Child's Parent!", syntheticMetaAnnotation.getAttribute("parentValue", String.class));
 		Assert.assertEquals("Child's GrandParent!", syntheticMetaAnnotation.getAttribute("grandParentValue", String.class));
 
-		ChildAnnotation childAnnotation = syntheticMetaAnnotation.syntheticAnnotation(ChildAnnotation.class);
+		final ChildAnnotation childAnnotation = syntheticMetaAnnotation.syntheticAnnotation(ChildAnnotation.class);
 		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(ChildAnnotation.class));
 		Assert.assertNotNull(childAnnotation);
 		Assert.assertEquals("Child!", childAnnotation.childValue());
@@ -40,14 +68,14 @@ public class SyntheticMetaAnnotationTest {
 		Assert.assertEquals(childAnnotation.grandParentType(), Integer.class);
 		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation(childAnnotation));
 
-		ParentAnnotation parentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(ParentAnnotation.class);
+		final ParentAnnotation parentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(ParentAnnotation.class);
 		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(ParentAnnotation.class));
 		Assert.assertNotNull(parentAnnotation);
 		Assert.assertEquals("Child's Parent!", parentAnnotation.parentValue());
 		Assert.assertEquals("java.lang.Void", parentAnnotation.grandParentType());
 		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation(parentAnnotation));
 
-		GrandParentAnnotation grandParentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(GrandParentAnnotation.class);
+		final GrandParentAnnotation grandParentAnnotation = syntheticMetaAnnotation.syntheticAnnotation(GrandParentAnnotation.class);
 		Assert.assertTrue(syntheticMetaAnnotation.isAnnotationPresent(GrandParentAnnotation.class));
 		Assert.assertNotNull(grandParentAnnotation);
 		Assert.assertEquals("Child's GrandParent!", grandParentAnnotation.grandParentValue());
@@ -57,9 +85,9 @@ public class SyntheticMetaAnnotationTest {
 
 	@Test
 	public void linkTest() {
-		Method method = ReflectUtil.getMethod(AnnotationForLinkTest.class, "value");
-		SyntheticAnnotation syntheticAnnotation = new SyntheticMetaAnnotation(method.getAnnotation(AliasFor.class));
-		Link link = syntheticAnnotation.syntheticAnnotation(Link.class);
+		final Method method = ReflectUtil.getMethod(AnnotationForLinkTest.class, "value");
+		final SyntheticAnnotation syntheticAnnotation = new SyntheticMetaAnnotation(method.getAnnotation(AliasFor.class));
+		final Link link = syntheticAnnotation.syntheticAnnotation(Link.class);
 		Assert.assertEquals(AnnotationForLinkTest.class, link.annotation());
 		Assert.assertEquals("name", link.attribute());
 	}
@@ -82,7 +110,7 @@ public class SyntheticMetaAnnotationTest {
 		synthetic = new SyntheticMetaAnnotation(annotation);
 		syntheticAnnotation = synthetic.syntheticAnnotation(AnnotationForMirrorTest.class);
 		AnnotationForMirrorTest finalSyntheticAnnotation = syntheticAnnotation;
-		Assert.assertThrows(IllegalArgumentException.class, () -> finalSyntheticAnnotation.name());
+		Assert.assertThrows(IllegalArgumentException.class, finalSyntheticAnnotation::name);
 	}
 
 	@Test
@@ -132,16 +160,28 @@ public class SyntheticMetaAnnotationTest {
 
 	@Test
 	public void multiAliasForTest() {
-		AnnotationForMultiAliasForTest annotation = ClassForMultiAliasForTest.class.getAnnotation(AnnotationForMultiAliasForTest.class);
-		SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
+		final AnnotationForMultiAliasForTest annotation = ClassForMultiAliasForTest.class.getAnnotation(AnnotationForMultiAliasForTest.class);
+		final SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
 
-		MetaAnnotationForMultiAliasForTest1 metaAnnotation1 = synthetic.syntheticAnnotation(MetaAnnotationForMultiAliasForTest1.class);
+		final MetaAnnotationForMultiAliasForTest1 metaAnnotation1 = synthetic.syntheticAnnotation(MetaAnnotationForMultiAliasForTest1.class);
 		Assert.assertEquals("test", metaAnnotation1.name());
 		Assert.assertEquals("test", metaAnnotation1.value1());
-		MetaAnnotationForMultiAliasForTest2 metaAnnotation2 = synthetic.syntheticAnnotation(MetaAnnotationForMultiAliasForTest2.class);
+		final MetaAnnotationForMultiAliasForTest2 metaAnnotation2 = synthetic.syntheticAnnotation(MetaAnnotationForMultiAliasForTest2.class);
 		Assert.assertEquals("test", metaAnnotation2.value2());
-		AnnotationForMultiAliasForTest childAnnotation = synthetic.syntheticAnnotation(AnnotationForMultiAliasForTest.class);
+		final AnnotationForMultiAliasForTest childAnnotation = synthetic.syntheticAnnotation(AnnotationForMultiAliasForTest.class);
 		Assert.assertEquals("test", childAnnotation.value3());
+	}
+
+	@Test
+	public void implicitAliasTest() {
+		final AnnotationForImplicitAliasTest annotation = ClassForImplicitAliasTest.class.getAnnotation(AnnotationForImplicitAliasTest.class);
+		final SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
+
+		final MetaAnnotationForImplicitAliasTest metaAnnotation = synthetic.syntheticAnnotation(MetaAnnotationForImplicitAliasTest.class);
+		Assert.assertEquals("Meta", metaAnnotation.name());
+		Assert.assertEquals("Foo", metaAnnotation.value());
+		final AnnotationForImplicitAliasTest childAnnotation = synthetic.syntheticAnnotation(AnnotationForImplicitAliasTest.class);
+		Assert.assertEquals("Foo", childAnnotation.value());
 	}
 
 	// 注解结构如下：
@@ -283,5 +323,22 @@ public class SyntheticMetaAnnotationTest {
 	}
 	@AnnotationForMultiAliasForTest(value3 = "test")
 	static class ClassForMultiAliasForTest{}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface MetaAnnotationForImplicitAliasTest {
+		@MirrorFor(attribute = "value")
+		String name() default "";
+		@MirrorFor(attribute = "name")
+		String value() default "";
+	}
+	@MetaAnnotationForImplicitAliasTest("Meta")
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface AnnotationForImplicitAliasTest {
+		String value() default "";
+	}
+	@AnnotationForImplicitAliasTest("Foo")
+	static class ClassForImplicitAliasTest {}
 
 }

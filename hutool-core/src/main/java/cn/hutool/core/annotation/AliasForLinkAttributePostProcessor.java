@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -42,6 +43,7 @@ public class AliasForLinkAttributePostProcessor implements SynthesizedAnnotation
 			final AnnotationAttribute aliasAttribute = aliasAnnotation.getAttributes().get(link.attribute());
 			SyntheticAnnotationUtil.checkLinkedAttributeNotNull(originalAttribute, aliasAttribute, link);
 			SyntheticAnnotationUtil.checkAttributeType(originalAttribute, aliasAttribute);
+			checkCircularDependency(originalAttribute, aliasAttribute);
 
 			// aliasFor
 			if (RelationType.ALIAS_FOR.equals(link.type())) {
@@ -79,6 +81,25 @@ public class AliasForLinkAttributePostProcessor implements SynthesizedAnnotation
 		Opt.ofNullable(target.getAnnotationType())
 			.map(syntheticAnnotation::getSynthesizedAnnotation)
 			.ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old, originalAttribute)));
+	}
+
+	/**
+	 * 检查两个属性是否互为别名
+	 */
+	private void checkCircularDependency(AnnotationAttribute original, AnnotationAttribute alias) {
+		Link annotation = SyntheticAnnotationUtil.getLink(alias, RelationType.ALIAS_FOR, RelationType.FORCE_ALIAS_FOR);
+		if (ObjectUtil.isNull(annotation)) {
+			return;
+		}
+		final Class<?> aliasAnnotationType = SyntheticAnnotationUtil.getLinkedAnnotationType(annotation, alias.getAnnotationType());
+		if (ObjectUtil.notEqual(aliasAnnotationType, original.getAnnotationType())) {
+			return;
+		}
+		Assert.notEquals(
+			annotation.attribute(), original.getAttributeName(),
+			"circular reference between the alias attribute [{}] and the original attribute [{}]",
+			alias.getAttribute(), original.getAttribute()
+		);
 	}
 
 }
