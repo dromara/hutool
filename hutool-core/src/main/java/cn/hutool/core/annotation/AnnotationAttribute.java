@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 /**
  * <p>表示注解的某个属性，等同于绑定的调用对象的{@link Method}方法。<br>
- * 在{@link SynthesizedAnnotationAggregator}的解析以及取值过程中，
+ * 在{@link SynthesizedAggregateAnnotation}的解析以及取值过程中，
  * 可以通过设置{@link SynthesizedAnnotation}的注解属性，
  * 从而使得可以从一个注解对象中属性获取另一个注解对象的属性值
  *

@@ -1,16 +1,15 @@
 package cn.hutool.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 
 /**
- * 表示基于特定规则聚合的一组注解对象
+ * 表示基于特定规则聚合，将一组注解聚合而来的注解对象
  *
  * <p>合成注解一般被用于处理类层级结果中具有直接或间接关联的注解对象，
  * 当实例被创建时，会获取到这些注解对象，并使用{@link SynthesizedAnnotationSelector}对类型相同的注解进行过滤，
  * 并最终得到类型不重复的有效注解对象。这些有效注解将被包装为{@link SynthesizedAnnotation}，
- * 然后最终用于“合成”一个{@link SynthesizedAnnotationAggregator}。<br>
+ * 然后最终用于“合成”一个{@link SynthesizedAggregateAnnotation}。<br>
  * {@link SynthesizedAnnotationSelector}是合成注解生命周期中的第一个钩子，
  * 自定义选择器以拦截原始注解被扫描的过程。
  *
@@ -28,18 +27,23 @@ import java.util.Collection;
  * {@link SynthesizedAnnotationAttributeProcessor}是合成注解生命周期中的第三个钩子，
  * 自定义属性处理器以拦截合成注解的取值过程。
  *
- * <p>合成注解可以作为一个特殊的{@link Annotation}或者{@link AnnotatedElement}，
- * 当调用{@link Annotation}的方法时，应当返回当前实例本身的有效信息，
- * 而当调用{@link AnnotatedElement}的方法时，应当返回用于合成该对象的相关注解的信息。
- *
  * @author huangchengxing
  * @see SynthesizedAnnotation
  * @see SynthesizedAnnotationSelector
  * @see SynthesizedAnnotationAttributeProcessor
  * @see SynthesizedAnnotationPostProcessor
- * @see SynthesizedMetaAnnotationAggregator
+ * @see SynthesizedMetaAggregateAnnotation
  */
-public interface SynthesizedAnnotationAggregator extends Annotation, AnnotationAggregator {
+public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnnotation {
+
+	/**
+	 * 获取在聚合中存在的指定注解对象
+	 *
+	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
+	 * @return 注解对象
+	 */
+	<T extends Annotation> T getAnnotation(Class<T> annotationType);
 
 	/**
 	 * 获取合成注解选择器
@@ -88,6 +92,15 @@ public interface SynthesizedAnnotationAggregator extends Annotation, AnnotationA
 	}
 
 	/**
+	 * 从聚合中获取指定类型的属性值
+	 *
+	 * @param attributeName 属性名称
+	 * @param attributeType 属性类型
+	 * @return 属性值
+	 */
+	Object getAttribute(String attributeName, Class<?> attributeType);
+
+	/**
 	 * 获取合成注解
 	 *
 	 * @param annotationType 注解类型
@@ -103,8 +116,8 @@ public interface SynthesizedAnnotationAggregator extends Annotation, AnnotationA
 	 * @param <T>            注解类型
 	 * @return 合成注解
 	 */
-	static <T extends Annotation> SynthesizedAnnotationAggregator of(T rootAnnotation) {
-		return new SynthesizedMetaAnnotationAggregator(rootAnnotation);
+	static <T extends Annotation> SynthesizedAggregateAnnotation of(T rootAnnotation) {
+		return new SynthesizedMetaAggregateAnnotation(rootAnnotation);
 	}
 
 }

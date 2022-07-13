@@ -45,7 +45,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 	 */
 	@Override
 	protected void processLinkedAttribute(
-		SynthesizedAnnotationAggregator aggregator, Link annotation,
+		SynthesizedAggregateAnnotation aggregator, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
 

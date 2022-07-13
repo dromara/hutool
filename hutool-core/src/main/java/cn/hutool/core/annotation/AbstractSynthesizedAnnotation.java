@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, SynthesizedAnnotation {
 
-	private final SynthesizedAnnotationAggregator owner;
+	private final SynthesizedAggregateAnnotation owner;
 	private final R root;
 	private final Annotation annotation;
 	private final Map<String, AnnotationAttribute> attributeMethodCaches;
@@ -37,7 +37,7 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	 * @param horizontalDistance 距离根对象的垂直距离
 	 */
 	protected AbstractSynthesizedAnnotation(
-		SynthesizedAnnotationAggregator owner, R root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+		SynthesizedAggregateAnnotation owner, R root, Annotation annotation, int verticalDistance, int horizontalDistance) {
 		this.owner = owner;
 		this.root = root;
 		this.annotation = annotation;
@@ -53,7 +53,7 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	 * @return 注解属性
 	 */
 	protected Map<String, AnnotationAttribute> loadAttributeMethods() {
-		return Stream.of(annotation.annotationType().getDeclaredMethods())
+		return Stream.of(ClassUtil.getDeclaredMethods(annotation.annotationType()))
 			.filter(AnnotationUtil::isAttributeMethod)
 			.collect(Collectors.toMap(Method::getName, method -> new CacheableAnnotationAttribute(annotation, method)));
 	}
@@ -136,7 +136,7 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	 * @return 合成注解
 	 */
 	@Override
-	public SynthesizedAnnotationAggregator getOwner() {
+	public SynthesizedAggregateAnnotation getOwner() {
 		return owner;
 	}
 

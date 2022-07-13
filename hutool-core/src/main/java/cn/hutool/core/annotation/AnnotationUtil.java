@@ -351,11 +351,11 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SynthesizedAnnotationAggregator
+	 * @see SynthesizedAggregateAnnotation
 	 */
 	public static <T extends Annotation> T getSynthesizedAnnotation(Annotation annotation, Class<T> annotationType) {
 		// TODO 缓存合成注解信息，避免重复解析
-		return SynthesizedAnnotationAggregator.of(annotation).synthesize(annotationType);
+		return SynthesizedAggregateAnnotation.of(annotation).synthesize(annotationType);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SynthesizedAnnotationAggregator
+	 * @see SynthesizedAggregateAnnotation
 	 */
 	public static <T extends Annotation> T getSynthesizedAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
 		T target = annotatedEle.getAnnotation(annotationType);
@@ -397,7 +397,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SynthesizedAnnotationAggregator
+	 * @see SynthesizedAggregateAnnotation
 	 */
 	public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
 		AnnotationScanner[] scanners = new AnnotationScanner[]{

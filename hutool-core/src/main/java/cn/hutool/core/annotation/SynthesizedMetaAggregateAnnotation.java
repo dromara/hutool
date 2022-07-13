@@ -10,10 +10,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 
 /**
- * {@link SynthesizedAnnotationAggregator}的基本实现，表示一个根注解与根注解上的多层元注解的聚合状态
+ * {@link SynthesizedAggregateAnnotation}的基本实现，表示一个根注解与根注解上的多层元注解的聚合得到的注解
  *
  * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对注解A进行解析，
- * 将得到包含根注解A，以及其元注解B、C在内的合成元注解聚合{@link SynthesizedMetaAnnotationAggregator}。
+ * 将得到包含根注解A，以及其元注解B、C在内的合成元注解聚合{@link SynthesizedMetaAggregateAnnotation}。
  * 从{@link AnnotatedElement}的角度来说，得到的合成注解是一个同时承载有ABC三个注解对象的被注解元素，
  * 因此通过调用{@link AnnotatedElement}的相关方法将返回对应符合语义的注解对象。
  *
@@ -34,7 +34,7 @@ import java.util.*;
  * </ul>
  * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
- * <p>{@link SynthesizedMetaAnnotationAggregator}支持通过{@link #getAttribute(String, Class)}，
+ * <p>{@link SynthesizedMetaAggregateAnnotation}支持通过{@link #getAttribute(String, Class)}，
  * 或通过{@link #synthesize(Class)}获得注解代理对象后获取指定类型的注解属性值，
  * 返回的属性值将根据合成注解中对应原始注解属性上的{@link Alias}与{@link Link}注解而有所变化。
  * 通过当前实例获取属性值时，将经过{@link SynthesizedAnnotationAttributeProcessor}的处理。<br>
@@ -45,7 +45,7 @@ import java.util.*;
  * @see AnnotationUtil
  * @see SynthesizedAnnotationSelector
  */
-public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotationAggregator {
+public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateAnnotation {
 
 	/**
 	 * 根注解，即当前查找的注解
@@ -79,14 +79,14 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 	 *
 	 * @param source 源注解
 	 */
-	public SynthesizedMetaAnnotationAggregator(Annotation source) {
+	public SynthesizedMetaAggregateAnnotation(Annotation source) {
 		this(
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
 			new CacheableSynthesizedAnnotationAttributeProcessor(),
 			Arrays.asList(
-				new AliasAnnotationPostProcessor(),
-				new MirrorLinkAnnotationPostProcessor(),
-				new AliasLinkAnnotationPostProcessor()
+				SynthesizedAnnotationPostProcessor.ALIAS_ANNOTATION_POST_PROCESSOR,
+				SynthesizedAnnotationPostProcessor.MIRROR_LINK_ANNOTATION_POST_PROCESSOR,
+				SynthesizedAnnotationPostProcessor.ALIAS_LINK_ANNOTATION_POST_PROCESSOR
 			)
 		);
 	}
@@ -98,7 +98,7 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 	 * @param annotationSelector 合成注解选择器
 	 * @param attributeProcessor 注解属性处理器
 	 */
-	public SynthesizedMetaAnnotationAggregator(
+	public SynthesizedMetaAggregateAnnotation(
 		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
@@ -240,21 +240,11 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 	 *
 	 * @param annotationType 注解类型
 	 * @return 合成注解对象
-	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAnnotationAggregator)
+	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAggregateAnnotation)
 	 */
 	@Override
 	public <T extends Annotation> T synthesize(Class<T> annotationType) {
 		return SyntheticAnnotationProxy.create(annotationType, this);
-	}
-
-	/**
-	 * 获取根注解直接声明的注解，该方法正常情况下当只返回原注解
-	 *
-	 * @return 直接声明注解
-	 */
-	@Override
-	public Annotation[] getDeclaredAnnotations() {
-		return new Annotation[]{getSource()};
 	}
 
 	/**
@@ -294,7 +284,7 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 		 * @param verticalDistance   距离根对象的水平距离
 		 * @param horizontalDistance 距离根对象的垂直距离
 		 */
-		protected MetaAnnotation(SynthesizedAnnotationAggregator owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+		protected MetaAnnotation(SynthesizedAggregateAnnotation owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
 			super(owner, root, annotation, verticalDistance, horizontalDistance);
 		}
 

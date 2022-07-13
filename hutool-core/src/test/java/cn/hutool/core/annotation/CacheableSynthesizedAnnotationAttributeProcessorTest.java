@@ -39,7 +39,7 @@ public class CacheableSynthesizedAnnotationAttributeProcessorTest {
 		}
 
 		@Override
-		public SynthesizedAnnotationAggregator getOwner() {
+		public SynthesizedAggregateAnnotation getOwner() {
 			return null;
 		}
 

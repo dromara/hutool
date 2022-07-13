@@ -52,7 +52,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 */
 	@Override
 	protected void processLinkedAttribute(
-		SynthesizedAnnotationAggregator aggregator, Link annotation,
+		SynthesizedAggregateAnnotation aggregator, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
 		// 校验别名关系
@@ -70,7 +70,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 * 对指定注解属性进行包装，若该属性已被包装过，则递归以其为根节点的树结构，对树上全部的叶子节点进行包装
 	 */
 	private void wrappingLinkedAttribute(
-		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
+		SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
 		// 不是包装属性
 		if (!aliasAttribute.isWrapped()) {
 			processAttribute(synthesizedAnnotationAggregator, originalAttribute, aliasAttribute, wrapping);
@@ -87,7 +87,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 * 获取指定注解属性，然后将其再进行一层包装
 	 */
 	private void processAttribute(
-		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute,
+		SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute,
 		AnnotationAttribute target, BinaryOperator<AnnotationAttribute> wrapping) {
 		Opt.ofNullable(target.getAnnotationType())
 			.map(synthesizedAnnotationAggregator::getSynthesizedAnnotation)

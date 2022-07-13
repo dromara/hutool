@@ -3,7 +3,7 @@ package cn.hutool.core.annotation;
 import java.util.Collection;
 
 /**
- * 合成注解属性选择器。用于在{@link SynthesizedAnnotationAggregator}中从指定类型的合成注解里获取到对应的属性值
+ * 合成注解属性选择器。用于在{@link SynthesizedAggregateAnnotation}中从指定类型的合成注解里获取到对应的属性值
  *
  * @author huangchengxing
  */

@@ -2,7 +2,7 @@ package cn.hutool.core.annotation;
 
 /**
  * 注解选择器，指定两个注解，选择其中一个返回。<br>
- * 该接口用于在{@link SynthesizedAnnotationAggregator}中用于从一批相同的注解对象中筛选最终用于合成注解对象。
+ * 该接口用于在{@link SynthesizedAggregateAnnotation}中用于从一批相同的注解对象中筛选最终用于合成注解对象。
  *
  * @author huangchengxing
  */

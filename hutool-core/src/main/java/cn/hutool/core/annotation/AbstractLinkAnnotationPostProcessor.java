@@ -21,7 +21,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 
 	/**
 	 * 若一个注解属性上存在{@link Link}注解，注解的{@link Link#type()}返回值在{@link #processTypes()}中存在，
-	 * 且此{@link Link}指定的注解对象在当前的{@link SynthesizedAnnotationAggregator}中存在，
+	 * 且此{@link Link}指定的注解对象在当前的{@link SynthesizedAggregateAnnotation}中存在，
 	 * 则从聚合器中获取类型对应的合成注解对象，与该对象中的指定属性，然后将全部关联数据交给
 	 * {@link #processLinkedAttribute}处理。
 	 *
@@ -29,7 +29,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * @param aggregator 合成注解聚合器
 	 */
 	@Override
-	public void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAnnotationAggregator aggregator) {
+	public void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAggregateAnnotation aggregator) {
 		final Map<String, AnnotationAttribute> attributeMap = new HashMap<>(synthesizedAnnotation.getAttributes());
 		attributeMap.forEach((originalAttributeName, originalAttribute) -> {
 			// 获取注解
@@ -72,7 +72,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * @param linkedAttribute    {@link Link}指向的{@code originalAnnotation}中的关联属性，该参数可能为空
 	 */
 	protected abstract void processLinkedAttribute(
-		SynthesizedAnnotationAggregator aggregator, Link annotation,
+		SynthesizedAggregateAnnotation aggregator, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute
 	);
@@ -100,7 +100,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * @param synthesizedAnnotationAggregator 合成注解
 	 */
 	protected SynthesizedAnnotation getLinkedAnnotation(
-		Link annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator, Class<? extends Annotation> defaultType) {
+		Link annotation, SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, Class<? extends Annotation> defaultType) {
 		final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
 		return synthesizedAnnotationAggregator.getSynthesizedAnnotation(targetAnnotationType);
 	}

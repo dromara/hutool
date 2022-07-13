@@ -38,7 +38,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	/**
 	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
 	 * <ul>
-	 *     <li>当作为{@code annotationType}所指定的类型使用时，其属性将通过合成它的{@link SynthesizedAnnotationAggregator}获取；</li>
+	 *     <li>当作为{@code annotationType}所指定的类型使用时，其属性将通过合成它的{@link SynthesizedAggregateAnnotation}获取；</li>
 	 *     <li>当作为{@link SyntheticProxyAnnotation}或{@link SynthesizedAnnotation}使用时，将可以获得原始注解实例的相关信息；</li>
 	 * </ul>
 	 *
@@ -48,7 +48,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	 */
 	@SuppressWarnings("unchecked")
 	static <T extends Annotation> T create(
-		Class<T> annotationType, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator) {
+		Class<T> annotationType, SynthesizedAggregateAnnotation synthesizedAnnotationAggregator) {
 		final SynthesizedAnnotation annotation = synthesizedAnnotationAggregator.getSynthesizedAnnotation(annotationType);
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
@@ -93,13 +93,13 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String)args[0]));
 		methods.put("getOwner", (method, args) -> annotation.getOwner());
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
-		for (final Method declaredMethod : annotation.getAnnotation().annotationType().getDeclaredMethods()) {
+		for (final Method declaredMethod : ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType())) {
 			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
 		}
 	}
 
 	private String proxyToString() {
-		final String attributes = Stream.of(annotation.annotationType().getDeclaredMethods())
+		final String attributes = Stream.of(ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType()))
 			.filter(AnnotationUtil::isAttributeMethod)
 			.map(method -> StrUtil.format("{}={}", method.getName(), annotation.getOwner().getAttribute(method.getName(), method.getReturnType())))
 			.collect(Collectors.joining(", "));
@@ -134,7 +134,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		 *
 		 * @return 合成注解
 		 */
-		SynthesizedAnnotationAggregator getSynthesizedAnnotationAggregator();
+		SynthesizedAggregateAnnotation getSynthesizedAnnotationAggregator();
 
 		/**
 		 * 获取该代理注解对应的已合成注解

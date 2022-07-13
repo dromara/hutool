@@ -19,7 +19,7 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		MirrorLinkAnnotationPostProcessor processor = new MirrorLinkAnnotationPostProcessor();
 
 		Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();
-		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator = new TestSynthesizedAnnotationAggregator(annotationMap);
+		SynthesizedAggregateAnnotation synthesizedAnnotationAggregator = new TestSynthesizedAggregateAnnotation(annotationMap);
 		AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
 		SynthesizedAnnotation synthesizedAnnotation = new TestSynthesizedAnnotation(synthesizedAnnotationAggregator, annotation);
 		annotationMap.put(annotation.annotationType(), synthesizedAnnotation);
@@ -51,11 +51,11 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		String name() default "";
 	}
 
-	static class TestSynthesizedAnnotationAggregator implements SynthesizedAnnotationAggregator {
+	static class TestSynthesizedAggregateAnnotation implements SynthesizedAggregateAnnotation {
 
 		private final Map<Class<?>, SynthesizedAnnotation> annotationMap;
 
-		public TestSynthesizedAnnotationAggregator(Map<Class<?>, SynthesizedAnnotation> annotationMap) {
+		public TestSynthesizedAggregateAnnotation(Map<Class<?>, SynthesizedAnnotation> annotationMap) {
 			this.annotationMap = annotationMap;
 		}
 
@@ -109,19 +109,15 @@ public class MirrorLinkAnnotationPostProcessorTest {
 			return null;
 		}
 
-		@Override
-		public Annotation[] getDeclaredAnnotations() {
-			return new Annotation[0];
-		}
 	}
 
 	static class TestSynthesizedAnnotation implements SynthesizedAnnotation {
 
 		private final Annotation annotation;
-		private final SynthesizedAnnotationAggregator owner;
+		private final SynthesizedAggregateAnnotation owner;
 		private final Map<String, AnnotationAttribute> attributeMap;
 
-		public TestSynthesizedAnnotation(SynthesizedAnnotationAggregator owner, Annotation annotation) {
+		public TestSynthesizedAnnotation(SynthesizedAggregateAnnotation owner, Annotation annotation) {
 			this.owner = owner;
 			this.attributeMap = new HashMap<>();
 			this.annotation = annotation;
@@ -131,7 +127,7 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		}
 
 		@Override
-		public SynthesizedAnnotationAggregator getOwner() {
+		public SynthesizedAggregateAnnotation getOwner() {
 			return owner;
 		}
 

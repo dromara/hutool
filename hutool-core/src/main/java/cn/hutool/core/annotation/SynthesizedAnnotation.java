@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
- * <p>用于在{@link SynthesizedAnnotationAggregator}中表示一个处于合成状态的注解对象。<br>
+ * <p>用于在{@link SynthesizedAggregateAnnotation}中表示一个处于合成状态的注解对象。<br>
  * 当对多个合成注解排序时，默认使用{@link #DEFAULT_CHILD_PRIORITY_COMPARATOR}进行排序，
  * 从保证合成注解按{@link #getVerticalDistance()}与{@link #getHorizontalDistance()}的返回值保持有序，
  * 从而使得距离根元素更接近的注解对象在被处理是具有更高的优先级。
  *
  * @author huangchengxing
- * @see SynthesizedAnnotationAggregator
+ * @see SynthesizedAggregateAnnotation
  */
 public interface SynthesizedAnnotation extends Annotation, Comparable<SynthesizedAnnotation> {
 
@@ -32,7 +32,7 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 *
 	 * @return 合成注解
 	 */
-	SynthesizedAnnotationAggregator getOwner();
+	SynthesizedAggregateAnnotation getOwner();
 
 	/**
 	 * 获取该合成注解对应的根节点
