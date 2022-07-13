@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class AliasAttributePostProcessorTest {
+public class AliasAnnotationPostProcessorTest {
 
 	@Test
 	public void processTest() {
-		AliasAttributePostProcessor processor = new AliasAttributePostProcessor();
+		AliasAnnotationPostProcessor processor = new AliasAnnotationPostProcessor();
 
 		Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();
 		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator = new TestSynthesizedAnnotationAggregator(annotationMap);

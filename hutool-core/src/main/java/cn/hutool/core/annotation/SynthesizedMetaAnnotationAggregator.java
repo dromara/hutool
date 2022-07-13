@@ -3,16 +3,11 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.annotation.scanner.MetaAnnotationScanner;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * {@link SynthesizedAnnotationAggregator}的基本实现，表示一个根注解与根注解上的多层元注解的聚合状态
@@ -29,13 +24,13 @@ import java.util.stream.Stream;
  * 此时若出现扫描时得到了多个同类型的注解对象，有且仅有最接近根注解的注解对象会被作为有效注解。
  *
  * <p>当扫描的注解对象经过{@link SynthesizedAnnotationSelector}处理后，
- * 将会被转为{@link MetaAnnotation}，并使用在实例化时指定的{@link AliasAttributePostProcessor}
+ * 将会被转为{@link MetaAnnotation}，并使用在实例化时指定的{@link AliasAnnotationPostProcessor}
  * 进行后置处理。<br>
  * 默认情况下，将注册以下后置处理器以对{@link Alias}与{@link Link}和其扩展注解提供支持：
  * <ul>
- *     <li>{@link AliasAttributePostProcessor}；</li>
- *     <li>{@link MirrorLinkAttributePostProcessor}；</li>
- *     <li>{@link AliasForLinkAttributePostProcessor}；</li>
+ *     <li>{@link AliasAnnotationPostProcessor}；</li>
+ *     <li>{@link MirrorLinkAnnotationPostProcessor}；</li>
+ *     <li>{@link AliasLinkAnnotationPostProcessor}；</li>
  * </ul>
  * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
@@ -89,9 +84,9 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
 			new CacheableSynthesizedAnnotationAttributeProcessor(),
 			Arrays.asList(
-				new AliasAttributePostProcessor(),
-				new MirrorLinkAttributePostProcessor(),
-				new AliasForLinkAttributePostProcessor()
+				new AliasAnnotationPostProcessor(),
+				new MirrorLinkAnnotationPostProcessor(),
+				new AliasLinkAnnotationPostProcessor()
 			)
 		);
 	}
@@ -284,160 +279,23 @@ public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotatio
 	}
 
 	/**
-	 * 元注解包装类
+	 * 注解包装类，表示{@link #source}以及{@link #source}所属层级结构中的全部关联注解对象
 	 *
 	 * @author huangchengxing
 	 */
-	public static class MetaAnnotation implements Annotation, SynthesizedAnnotation {
-
-		private final SynthesizedAnnotationAggregator owner;
-		private final Annotation root;
-		private final Annotation annotation;
-		private final Map<String, AnnotationAttribute> attributeMethodCaches;
-		private final int verticalDistance;
-		private final int horizontalDistance;
-
-		public MetaAnnotation(SynthesizedAnnotationAggregator owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
-			this.owner = owner;
-			this.root = root;
-			this.annotation = annotation;
-			this.verticalDistance = verticalDistance;
-			this.horizontalDistance = horizontalDistance;
-			this.attributeMethodCaches = Stream.of(annotation.annotationType().getDeclaredMethods())
-				.filter(AnnotationUtil::isAttributeMethod)
-				.collect(Collectors.toMap(Method::getName, method -> new CacheableAnnotationAttribute(annotation, method)));
-		}
+	public static class MetaAnnotation extends AbstractSynthesizedAnnotation<Annotation> {
 
 		/**
-		 * 获取所属的合成注解
+		 * 创建一个合成注解
 		 *
-		 * @return 合成注解
+		 * @param owner              合成注解所属的合成注解聚合器
+		 * @param root               根对象
+		 * @param annotation         被合成的注解对象
+		 * @param verticalDistance   距离根对象的水平距离
+		 * @param horizontalDistance 距离根对象的垂直距离
 		 */
-		@Override
-		public SynthesizedAnnotationAggregator getOwner() {
-			return owner;
-		}
-
-		/**
-		 * 获取注解类型
-		 *
-		 * @return 注解类型
-		 */
-		@Override
-		public Class<? extends Annotation> annotationType() {
-			return annotation.annotationType();
-		}
-
-		/**
-		 * 获取根注解
-		 *
-		 * @return 根注解
-		 */
-		@Override
-		public Annotation getRoot() {
-			return this.root;
-		}
-
-		/**
-		 * 获取元注解
-		 *
-		 * @return 元注解
-		 */
-		@Override
-		public Annotation getAnnotation() {
-			return annotation;
-		}
-
-		/**
-		 * 获取该合成注解与根注解之间相隔的层级数
-		 *
-		 * @return 该合成注解与根注解之间相隔的层级数
-		 */
-		@Override
-		public int getVerticalDistance() {
-			return verticalDistance;
-		}
-
-		/**
-		 * 获取该合成注解与根注解之间相隔的注解树
-		 *
-		 * @return 该合成注解与根注解之间相隔的注解树
-		 */
-		@Override
-		public int getHorizontalDistance() {
-			return horizontalDistance;
-		}
-
-		/**
-		 * 元注解是否存在该属性
-		 *
-		 * @param attributeName 属性名
-		 * @return 是否存在该属性
-		 */
-		public boolean hasAttribute(String attributeName) {
-			return attributeMethodCaches.containsKey(attributeName);
-		}
-
-		/**
-		 * 元注解是否存在该属性，且该属性的值类型是指定类型或其子类
-		 *
-		 * @param attributeName 属性名
-		 * @param returnType    返回值类型
-		 * @return 是否存在该属性
-		 */
-		@Override
-		public boolean hasAttribute(String attributeName, Class<?> returnType) {
-			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-					.filter(method -> ClassUtil.isAssignable(returnType, method.getAttributeType()))
-					.isPresent();
-		}
-
-		/**
-		 * 获取该注解的全部属性
-		 *
-		 * @return 注解属性
-		 */
-		@Override
-		public Map<String, AnnotationAttribute> getAttributes() {
-			return this.attributeMethodCaches;
-		}
-
-		/**
-		 * 设置属性值
-		 *
-		 * @param attributeName 属性名称
-		 * @param attribute     注解属性
-		 */
-		@Override
-		public void setAttribute(String attributeName, AnnotationAttribute attribute) {
-			attributeMethodCaches.put(attributeName, attribute);
-		}
-
-		/**
-		 * 替换属性值
-		 *
-		 * @param attributeName 属性名
-		 * @param operator      替换操作
-		 */
-		@Override
-		public void replaceAttribute(String attributeName, UnaryOperator<AnnotationAttribute> operator) {
-			AnnotationAttribute old = attributeMethodCaches.get(attributeName);
-			if (ObjectUtil.isNotNull(old)) {
-				attributeMethodCaches.put(attributeName, operator.apply(old));
-			}
-		}
-
-		/**
-		 * 获取属性值
-		 *
-		 * @param attributeName 属性名
-		 * @return 属性值
-		 */
-		@Override
-		public Object getAttributeValue(String attributeName) {
-			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-				.map(AnnotationAttribute::getValue)
-				.get();
+		protected MetaAnnotation(SynthesizedAnnotationAggregator owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+			super(owner, root, annotation, verticalDistance, horizontalDistance);
 		}
 
 	}

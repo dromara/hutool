@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-public class AliasForLinkAttributePostProcessorTest {
+public class MirrorLinkAnnotationPostProcessorTest {
 
 	@Test
-	public void processForceAliasForTest() {
-		AliasForLinkAttributePostProcessor processor = new AliasForLinkAttributePostProcessor();
+	public void processTest() {
+		MirrorLinkAnnotationPostProcessor processor = new MirrorLinkAnnotationPostProcessor();
 
 		Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();
 		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator = new TestSynthesizedAnnotationAggregator(annotationMap);
@@ -27,39 +27,16 @@ public class AliasForLinkAttributePostProcessorTest {
 		processor.process(synthesizedAnnotation, synthesizedAnnotationAggregator);
 		AnnotationAttribute valueAttribute = synthesizedAnnotation.getAttributes().get("value");
 		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value"), valueAttribute.getAttribute());
-		Assert.assertFalse(valueAttribute.isWrapped());
-		Assert.assertEquals(CacheableAnnotationAttribute.class, valueAttribute.getClass());
+		Assert.assertTrue(valueAttribute.isWrapped());
+		Assert.assertEquals(MirroredAnnotationAttribute.class, valueAttribute.getClass());
 
 		AnnotationAttribute nameAttribute = synthesizedAnnotation.getAttributes().get("name");
 		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name"), nameAttribute.getAttribute());
 		Assert.assertTrue(nameAttribute.isWrapped());
-		Assert.assertEquals(ForceAliasedAnnotationAttribute.class, nameAttribute.getClass());
+		Assert.assertEquals(MirroredAnnotationAttribute.class, nameAttribute.getClass());
 
-		Assert.assertEquals(valueAttribute, ((WrappedAnnotationAttribute)nameAttribute).getLinked());
-	}
-
-	@Test
-	public void processAliasForTest() {
-		AliasForLinkAttributePostProcessor processor = new AliasForLinkAttributePostProcessor();
-
-		Map<Class<?>, SynthesizedAnnotation> annotationMap = new HashMap<>();
-		SynthesizedAnnotationAggregator synthesizedAnnotationAggregator = new TestSynthesizedAnnotationAggregator(annotationMap);
-		AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
-		SynthesizedAnnotation synthesizedAnnotation = new TestSynthesizedAnnotation(synthesizedAnnotationAggregator, annotation);
-		annotationMap.put(annotation.annotationType(), synthesizedAnnotation);
-
-		processor.process(synthesizedAnnotation, synthesizedAnnotationAggregator);
-		AnnotationAttribute valueAttribute = synthesizedAnnotation.getAttributes().get("value2");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "value2"), valueAttribute.getAttribute());
-		Assert.assertFalse(valueAttribute.isWrapped());
-		Assert.assertEquals(CacheableAnnotationAttribute.class, valueAttribute.getClass());
-
-		AnnotationAttribute nameAttribute = synthesizedAnnotation.getAttributes().get("name2");
-		Assert.assertEquals(ReflectUtil.getMethod(AnnotationForTest.class, "name2"), nameAttribute.getAttribute());
-		Assert.assertTrue(nameAttribute.isWrapped());
-		Assert.assertEquals(AliasedAnnotationAttribute.class, nameAttribute.getClass());
-
-		Assert.assertEquals(valueAttribute, ((WrappedAnnotationAttribute)nameAttribute).getLinked());
+		Assert.assertEquals(((WrappedAnnotationAttribute)nameAttribute).getLinked(), ((WrappedAnnotationAttribute)valueAttribute).getOriginal());
+		Assert.assertEquals(((WrappedAnnotationAttribute)nameAttribute).getOriginal(), ((WrappedAnnotationAttribute)valueAttribute).getLinked());
 	}
 
 	@AnnotationForTest
@@ -68,13 +45,10 @@ public class AliasForLinkAttributePostProcessorTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.METHOD, ElementType.TYPE })
 	@interface AnnotationForTest {
-		@Link(attribute = "name", type = RelationType.FORCE_ALIAS_FOR)
+		@Link(attribute = "name", type = RelationType.MIRROR_FOR)
 		String value() default "";
+		@Link(attribute = "value", type = RelationType.MIRROR_FOR)
 		String name() default "";
-
-		@Link(attribute = "name2", type = RelationType.ALIAS_FOR)
-		String value2() default "";
-		String name2() default "";
 	}
 
 	static class TestSynthesizedAnnotationAggregator implements SynthesizedAnnotationAggregator {

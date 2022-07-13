@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Assert;
  * 表示存在对应镜像属性的注解属性，当获取值时将根据{@link RelationType#MIRROR_FOR}的规则进行处理
  *
  * @author huangchengxing
- * @see MirrorLinkAttributePostProcessor
+ * @see MirrorLinkAnnotationPostProcessor
  * @see RelationType#MIRROR_FOR
  */
 public class MirroredAnnotationAttribute extends AbstractWrappedAnnotationAttribute {

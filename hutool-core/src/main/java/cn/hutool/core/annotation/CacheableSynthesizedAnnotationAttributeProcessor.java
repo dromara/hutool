@@ -40,7 +40,7 @@ public class CacheableSynthesizedAnnotationAttributeProcessor implements Synthes
 	 * 越靠前的越优先被取值。
 	 */
 	public CacheableSynthesizedAnnotationAttributeProcessor() {
-		this(SyntheticAnnotationUtil.getChildPriorityAnnotationCompare());
+		this(SynthesizedAnnotation.DEFAULT_CHILD_PRIORITY_COMPARATOR);
 	}
 
 	@SuppressWarnings("unchecked")

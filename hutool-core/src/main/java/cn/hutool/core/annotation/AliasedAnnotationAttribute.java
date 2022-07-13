@@ -5,8 +5,7 @@ package cn.hutool.core.annotation;
  * 当别名属性值为默认值时，优先返回原属性的值，当别名属性不为默认值时，优先返回别名属性的值
  *
  * @author huangchengxing
- * @see AliasForLinkAttributePostProcessor
- * @see RelationType#FORCE_ALIAS_FOR
+ * @see AliasLinkAnnotationPostProcessor
  * @see RelationType#ALIAS_FOR
  */
 public class AliasedAnnotationAttribute extends AbstractWrappedAnnotationAttribute {

@@ -36,7 +36,7 @@ public class TypeAnnotationScannerTest {
 		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
 
 		// 不查找父类
-		scanner = new TypeAnnotationScanner().setIncludeSupperClass(false);
+		scanner = new TypeAnnotationScanner().setIncludeSuperClass(false);
 		annotations = scanner.getAnnotations(Example.class);
 		Assert.assertEquals(1, annotations.size());
 		annotations.forEach(a -> Assert.assertEquals(a.annotationType(), AnnotationForScannerTest.class));
@@ -88,7 +88,7 @@ public class TypeAnnotationScannerTest {
 		// 不查找父类
 		map.clear();
 		new TypeAnnotationScanner()
-			.setIncludeSupperClass(false)
+			.setIncludeSuperClass(false)
 			.scan(
 				(index, annotation) -> map.computeIfAbsent(index, i -> new ArrayList<>()).add(annotation),
 				Example.class, null

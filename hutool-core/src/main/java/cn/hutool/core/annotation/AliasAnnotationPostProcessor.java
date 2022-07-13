@@ -11,13 +11,15 @@ import cn.hutool.core.util.ObjectUtil;
 import java.util.Map;
 
 /**
- * 用于处理合成注解属性中{@link Alias}的映射关系，
- * 该处理器会令{@link Alias#value()}指向的属性值强制覆盖当前属性
+ * <p>用于处理注解对象中带有{@link Alias}注解的属性。<br>
+ * 当该处理器执行完毕后，{@link Alias}注解指向的目标注解的属性将会被包装并替换为
+ * {@link ForceAliasedAnnotationAttribute}。
  *
  * @author huangchengxing
+ * @see Alias
  * @see ForceAliasedAnnotationAttribute
  */
-public class AliasAttributePostProcessor implements SynthesizedAnnotationPostProcessor {
+public class AliasAnnotationPostProcessor implements SynthesizedAnnotationPostProcessor {
 
 	@Override
 	public int order() {
@@ -25,8 +27,8 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 	}
 
 	@Override
-	public void process(SynthesizedAnnotation annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator) {
-		final Map<String, AnnotationAttribute> attributeMap = annotation.getAttributes();
+	public void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAnnotationAggregator aggregator) {
+		final Map<String, AnnotationAttribute> attributeMap = synthesizedAnnotation.getAttributes();
 
 		// 记录别名与属性的关系
 		final ForestMap<String, AnnotationAttribute> attributeAliasMappings = new LinkedForestMap<>(false);
@@ -58,7 +60,7 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 				attributeMap.put(attributeName, new ForceAliasedAnnotationAttribute(attribute, resolvedAttribute));
 			}
 		});
-		annotation.setAttributes(attributeMap);
+		synthesizedAnnotation.setAttributes(attributeMap);
 	}
 
 }

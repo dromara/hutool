@@ -5,8 +5,8 @@ package cn.hutool.core.annotation;
  * 当调用{@link #getValue()}时，总是返回{@link #linked}的值
  *
  * @author huangchengxing
- * @see AliasAttributePostProcessor
- * @see AliasForLinkAttributePostProcessor
+ * @see AliasAnnotationPostProcessor
+ * @see AliasLinkAnnotationPostProcessor
  * @see RelationType#ALIAS_FOR
  * @see RelationType#FORCE_ALIAS_FOR
  */

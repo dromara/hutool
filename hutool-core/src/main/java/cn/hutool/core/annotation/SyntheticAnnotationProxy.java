@@ -80,7 +80,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	void loadMethods() {
 		methods.put("toString", (method, args) -> proxyToString());
 		methods.put("hashCode", (method, args) -> proxyHashCode());
-		methods.put("getSynthesizedAnnotation", (method, args) -> proxyGetSyntheticAnnotation());
+		methods.put("getSynthesizedAnnotationAggregator", (method, args) -> proxyGetSynthesizedAnnotationAggregator());
 		methods.put("getSynthesizedAnnotation", (method, args) -> proxyGetSynthesizedAnnotation());
 		methods.put("getRoot", (method, args) -> annotation.getRoot());
 		methods.put("getVerticalDistance", (method, args) -> annotation.getVerticalDistance());
@@ -110,7 +110,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		return Objects.hash(annotation.getOwner(), annotation);
 	}
 
-	private Object proxyGetSyntheticAnnotation() {
+	private Object proxyGetSynthesizedAnnotationAggregator() {
 		return annotation.getOwner();
 	}
 
@@ -134,7 +134,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		 *
 		 * @return 合成注解
 		 */
-		SynthesizedAnnotationAggregator getSyntheticAnnotation();
+		SynthesizedAnnotationAggregator getSynthesizedAnnotationAggregator();
 
 		/**
 		 * 获取该代理注解对应的已合成注解

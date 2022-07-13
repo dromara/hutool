@@ -12,16 +12,16 @@ import java.util.Comparator;
  *
  * <p>该接口存在多个实现类，调用者应当保证在任何时候，对一批后置处理器的调用顺序都符合：
  * <ul>
- *     <li>{@link AliasAttributePostProcessor}；</li>
- *     <li>{@link MirrorLinkAttributePostProcessor}；</li>
- *     <li>{@link AliasForLinkAttributePostProcessor}；</li>
+ *     <li>{@link AliasAnnotationPostProcessor}；</li>
+ *     <li>{@link MirrorLinkAnnotationPostProcessor}；</li>
+ *     <li>{@link AliasLinkAnnotationPostProcessor}；</li>
  *     <li>其他后置处理器；</li>
  * </ul>
  *
  * @author huangchengxing
- * @see AliasAttributePostProcessor
- * @see MirrorLinkAttributePostProcessor
- * @see AliasForLinkAttributePostProcessor
+ * @see AliasAnnotationPostProcessor
+ * @see MirrorLinkAnnotationPostProcessor
+ * @see AliasLinkAnnotationPostProcessor
  */
 public interface SynthesizedAnnotationPostProcessor extends Comparable<SynthesizedAnnotationPostProcessor> {
 
@@ -46,11 +46,11 @@ public interface SynthesizedAnnotationPostProcessor extends Comparable<Synthesiz
 	}
 
 	/**
-	 * 给定指定被合成注解与其所属的合成注解实例，经过处理后返回最终
+	 * 给定指定被合成注解与其所属的合成注解聚合器实例，经过处理后返回最终
 	 *
-	 * @param annotation          被合成的注解
-	 * @param synthesizedAnnotationAggregator 注解所属的合成注解
+	 * @param synthesizedAnnotation 合成的注解
+	 * @param aggregator            合成注解聚合器
 	 */
-	void process(SynthesizedAnnotation annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator);
+	void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAnnotationAggregator aggregator);
 
 }
