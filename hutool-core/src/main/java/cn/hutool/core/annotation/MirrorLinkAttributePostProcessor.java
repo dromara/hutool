@@ -46,10 +46,10 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 
 			// 包装这一对镜像属性，并替换原注解中的对应属性
 			final AnnotationAttribute mirroredOriginalAttribute = new MirroredAnnotationAttribute(originalAttribute, mirrorAttribute);
-			syntheticAnnotation.getSynthesizedAnnotation(originalAttribute.getAttribute().getDeclaringClass())
-				.setAttributes(originalAttributeName, mirroredOriginalAttribute);
+			syntheticAnnotation.getSynthesizedAnnotation(originalAttribute.getAnnotationType())
+				.setAttribute(originalAttributeName, mirroredOriginalAttribute);
 			final AnnotationAttribute mirroredTargetAttribute = new MirroredAnnotationAttribute(mirrorAttribute, originalAttribute);
-			mirrorAnnotation.setAttributes(link.attribute(), mirroredTargetAttribute);
+			mirrorAnnotation.setAttribute(link.attribute(), mirroredTargetAttribute);
 		});
 	}
 
@@ -59,7 +59,7 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 		// 镜像属性返回值必须一致
 		SyntheticAnnotationUtil.checkAttributeType(original, mirror);
 		// 镜像属性上必须存在对应的注解
-		final Link mirrorAttributeAnnotation = mirror.getAnnotation(Link.class);
+		final Link mirrorAttributeAnnotation = SyntheticAnnotationUtil.getLink(mirror, RelationType.MIRROR_FOR);
 		Assert.isTrue(
 			ObjectUtil.isNotNull(mirrorAttributeAnnotation) && RelationType.MIRROR_FOR.equals(mirrorAttributeAnnotation.type()),
 			"mirror attribute [{}] of original attribute [{}] must marked by @Link, and also @LinkType.type() must is [{}]",

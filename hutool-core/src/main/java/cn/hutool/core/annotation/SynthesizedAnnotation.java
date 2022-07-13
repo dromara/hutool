@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 /**
  * 用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象
@@ -82,7 +83,7 @@ public interface SynthesizedAnnotation extends Annotation {
 	 */
 	default void setAttributes(Map<String, AnnotationAttribute> attributes) {
 		if (CollUtil.isNotEmpty(attributes)) {
-			attributes.forEach(this::setAttributes);
+			attributes.forEach(this::setAttribute);
 		}
 	}
 
@@ -92,7 +93,15 @@ public interface SynthesizedAnnotation extends Annotation {
 	 * @param attributeName 属性名称
 	 * @param attribute     注解属性
 	 */
-	void setAttributes(String attributeName, AnnotationAttribute attribute);
+	void setAttribute(String attributeName, AnnotationAttribute attribute);
+
+	/**
+	 * 替换属性值
+	 *
+	 * @param attributeName 属性名
+	 * @param operator      替换操作
+	 */
+	void replaceAttribute(String attributeName, UnaryOperator<AnnotationAttribute> operator);
 
 	/**
 	 * 获取属性值

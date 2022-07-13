@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * <p>用于在同一注解中，或具有一定关联的不同注解的属性中，表明这些属性之间具有特定的关联关系。
  * 在通过{@link SyntheticAnnotation}获取合成注解后，合成注解获取属性值时会根据该注解进行调整。<br />
- * <b>注意：该注解的优先级低于{@link Alias}
+ * <b>注意：该注解的优先级低于{@link Alias}；且与{@link MirrorFor}或{@link AliasFor}一起使用时，将只有被声明在最上面的注解会生效</b>
  *
  * @author huangchengxing
  * @see SyntheticAnnotation

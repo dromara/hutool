@@ -9,33 +9,40 @@ import cn.hutool.core.lang.Assert;
  * @see MirrorLinkAttributePostProcessor
  * @see RelationType#MIRROR_FOR
  */
-public class MirroredAnnotationAttribute extends AnnotationAttributeWrapper implements AnnotationAttribute {
+public class MirroredAnnotationAttribute extends AbstractAnnotationAttributeWrapper {
 
-	private final AnnotationAttribute mirrorAttribute;
-
-	public MirroredAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute mirrorAttribute) {
-		super(origin);
-		this.mirrorAttribute = mirrorAttribute;
+	public MirroredAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute linked) {
+		super(origin, linked);
 	}
 
 	@Override
 	public Object getValue() {
-		boolean originIsDefault = origin.isValueEquivalentToDefaultValue();
-		boolean targetIsDefault = mirrorAttribute.isValueEquivalentToDefaultValue();
-		Object originValue = origin.getValue();
-		Object targetValue = mirrorAttribute.getValue();
+		final boolean originIsDefault = original.isValueEquivalentToDefaultValue();
+		final boolean targetIsDefault = linked.isValueEquivalentToDefaultValue();
+		final Object originValue = original.getValue();
+		final Object targetValue = linked.getValue();
 
 		// 都为默认值，或都为非默认值时，两方法的返回值必须相等
 		if (originIsDefault == targetIsDefault) {
 			Assert.equals(
 				originValue, targetValue,
 				"the values of attributes [{}] and [{}] that mirror each other are different: [{}] <==> [{}]",
-				origin.getAttribute(), mirrorAttribute.getAttribute(), originValue, targetValue
+				original.getAttribute(), linked.getAttribute(), originValue, targetValue
 			);
 			return originValue;
 		}
 
 		// 两者有一者不为默认值时，优先返回非默认值
 		return originIsDefault ? targetValue : originValue;
+	}
+
+	/**
+	 * 当{@link #original}与{@link #linked}都为默认值时返回{@code true}
+	 *
+	 * @return 是否
+	 */
+	@Override
+	public boolean isValueEquivalentToDefaultValue() {
+		return original.isValueEquivalentToDefaultValue() && linked.isValueEquivalentToDefaultValue();
 	}
 }

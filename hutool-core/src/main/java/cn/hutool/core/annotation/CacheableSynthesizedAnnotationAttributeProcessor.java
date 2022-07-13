@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * 带缓存功能的{@link SynthesizedAnnotationAttributeProcessor}实现，
+ * <p>带缓存功能的{@link SynthesizedAnnotationAttributeProcessor}实现，
  * 构建时需要传入比较器，获取属性值时将根据比较器对合成注解进行排序，
  * 然后选择具有所需属性的，排序最靠前的注解用于获取属性值
  *

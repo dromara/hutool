@@ -88,7 +88,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		methods.put("getHorizontalDistance", (method, args) -> annotation.getHorizontalDistance());
 		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String)args[0], (Class<?>)args[1]));
 		methods.put("getAttributes", (method, args) -> annotation.getAttributes());
-		methods.put("setAttributes", (method, args) -> {
+		methods.put("setAttribute", (method, args) -> {
 			throw new UnsupportedOperationException("proxied annotation can not reset attributes");
 		});
 		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String)args[0]));

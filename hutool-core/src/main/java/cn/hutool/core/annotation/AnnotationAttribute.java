@@ -16,8 +16,9 @@ import java.lang.reflect.Method;
  *
  * @author huangchengxing
  * @see SynthesizedAnnotationPostProcessor
- * @see CacheableAnnotationAttribute
  * @see AnnotationAttributeWrapper
+ * @see CacheableAnnotationAttribute
+ * @see AbstractAnnotationAttributeWrapper
  * @see ForceAliasedAnnotationAttribute
  * @see AliasedAnnotationAttribute
  * @see MirroredAnnotationAttribute
@@ -37,6 +38,15 @@ public interface AnnotationAttribute {
 	 * @return 注解属性对应的方法
 	 */
 	Method getAttribute();
+
+	/**
+	 * 获取声明属性的注解类
+	 *
+	 * @return 声明注解的注解类
+	 */
+	default Class<?> getAnnotationType() {
+		return getAttribute().getDeclaringClass();
+	}
 
 	/**
 	 * 获取属性名称
@@ -90,7 +100,7 @@ public interface AnnotationAttribute {
 	 * @return boolean
 	 */
 	default boolean isWrapped() {
-		return this instanceof AnnotationAttributeWrapper;
+		return false;
 	}
 
 }

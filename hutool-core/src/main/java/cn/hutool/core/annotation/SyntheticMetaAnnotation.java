@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -117,6 +118,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		this.metaAnnotationMap = new LinkedHashMap<>();
 
 		// 初始化元注解信息，并进行后置处理
+		// TODO 缓存元注解信息，避免重复解析
 		loadMetaAnnotations();
 		annotationPostProcessors.forEach(processor ->
 			metaAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
@@ -411,8 +413,22 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		 * @param attribute     注解属性
 		 */
 		@Override
-		public void setAttributes(String attributeName, AnnotationAttribute attribute) {
+		public void setAttribute(String attributeName, AnnotationAttribute attribute) {
 			attributeMethodCaches.put(attributeName, attribute);
+		}
+
+		/**
+		 * 替换属性值
+		 *
+		 * @param attributeName 属性名
+		 * @param operator      替换操作
+		 */
+		@Override
+		public void replaceAttribute(String attributeName, UnaryOperator<AnnotationAttribute> operator) {
+			AnnotationAttribute old = attributeMethodCaches.get(attributeName);
+			if (ObjectUtil.isNotNull(old)) {
+				attributeMethodCaches.put(attributeName, operator.apply(old));
+			}
 		}
 
 		/**

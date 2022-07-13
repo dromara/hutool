@@ -359,7 +359,8 @@ public class AnnotationUtil {
 	 * @see SyntheticAnnotation
 	 */
 	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
-		return SyntheticAnnotation.of(annotation).getAnnotation(annotationType);
+		// TODO 缓存合成注解信息，避免重复解析
+		return SyntheticAnnotation.of(annotation).syntheticAnnotation(annotationType);
 	}
 
 	/**
@@ -383,6 +384,30 @@ public class AnnotationUtil {
 				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 获取元素上距离指定元素最接近的合成注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
+	 * @return 合成注解
+	 * @see SyntheticAnnotation
+	 */
+	public static <T extends Annotation> T getSyntheticAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
+		AnnotationScanner[] scanners = new AnnotationScanner[]{
+			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
+				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElse(null);
 	}
 
 	/**

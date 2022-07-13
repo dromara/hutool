@@ -1,9 +1,11 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BinaryOperator;
 
 /**
  * 处理注解中带有{@link Link}注解，且{@link Link#type()}为{@link RelationType#FORCE_ALIAS_FOR}
@@ -22,7 +24,7 @@ public class AliasForLinkAttributePostProcessor implements SynthesizedAnnotation
 
 	@Override
 	public void process(SynthesizedAnnotation annotation, SyntheticAnnotation syntheticAnnotation) {
-		Map<String, AnnotationAttribute> attributeMap = new HashMap<>(annotation.getAttributes());
+		final Map<String, AnnotationAttribute> attributeMap = new HashMap<>(annotation.getAttributes());
 		attributeMap.forEach((originalAttributeName, originalAttribute) -> {
 			// 获取注解
 			final Link link = SyntheticAnnotationUtil.getLink(
@@ -33,7 +35,7 @@ public class AliasForLinkAttributePostProcessor implements SynthesizedAnnotation
 			}
 
 			// 获取注解属性
-			SynthesizedAnnotation aliasAnnotation = SyntheticAnnotationUtil.getLinkedAnnotation(link, syntheticAnnotation, annotation.annotationType());
+			final SynthesizedAnnotation aliasAnnotation = SyntheticAnnotationUtil.getLinkedAnnotation(link, syntheticAnnotation, annotation.annotationType());
 			if (ObjectUtil.isNull(aliasAnnotation)) {
 				return;
 			}
@@ -43,12 +45,40 @@ public class AliasForLinkAttributePostProcessor implements SynthesizedAnnotation
 
 			// aliasFor
 			if (RelationType.ALIAS_FOR.equals(link.type())) {
-				aliasAnnotation.setAttributes(aliasAttribute.getAttributeName(), new AliasedAnnotationAttribute(aliasAttribute, originalAttribute));
+				wrappingLinkedAttribute(syntheticAnnotation, originalAttribute, aliasAttribute, AliasedAnnotationAttribute::new);
 				return;
 			}
 			// forceAliasFor
-			aliasAnnotation.setAttributes(aliasAttribute.getAttributeName(), new ForceAliasedAnnotationAttribute(aliasAttribute, originalAttribute));
+			wrappingLinkedAttribute(syntheticAnnotation, originalAttribute, aliasAttribute, ForceAliasedAnnotationAttribute::new);
 		});
+	}
+
+	/**
+	 * 对指定注解属性进行包装，若该属性已被包装过，则递归以其为根节点的树结构，对树上全部的叶子节点进行包装
+	 */
+	private void wrappingLinkedAttribute(
+		SyntheticAnnotation syntheticAnnotation, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
+		// 不是包装属性
+		if (!aliasAttribute.isWrapped()) {
+			processAttribute(syntheticAnnotation, originalAttribute, aliasAttribute, wrapping);
+			return;
+		}
+		// 是包装属性
+		final AbstractAnnotationAttributeWrapper wrapper = (AbstractAnnotationAttributeWrapper)aliasAttribute;
+		wrapper.getAllLinkedNonWrappedAttributes().forEach(
+			t -> processAttribute(syntheticAnnotation, originalAttribute, t, wrapping)
+		);
+	}
+
+	/**
+	 * 获取指定注解属性，然后将其再进行一层包装
+	 */
+	private void processAttribute(
+		SyntheticAnnotation syntheticAnnotation, AnnotationAttribute originalAttribute,
+		AnnotationAttribute target, BinaryOperator<AnnotationAttribute> wrapping) {
+		Opt.ofNullable(target.getAnnotationType())
+			.map(syntheticAnnotation::getSynthesizedAnnotation)
+			.ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old, originalAttribute)));
 	}
 
 }

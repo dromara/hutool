@@ -26,36 +26,36 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 
 	@Override
 	public void process(SynthesizedAnnotation annotation, SyntheticAnnotation syntheticAnnotation) {
-		Map<String, AnnotationAttribute> attributeMap = annotation.getAttributes();
+		final Map<String, AnnotationAttribute> attributeMap = annotation.getAttributes();
 
 		// 记录别名与属性的关系
-		ForestMap<String, AnnotationAttribute> attributeAliasMappings = new LinkedForestMap<>(false);
+		final ForestMap<String, AnnotationAttribute> attributeAliasMappings = new LinkedForestMap<>(false);
 		attributeMap.forEach((attributeName, attribute) -> {
-			String alias = Opt.ofNullable(attribute.getAnnotation(Alias.class))
+			final String alias = Opt.ofNullable(attribute.getAnnotation(Alias.class))
 				.map(Alias::value)
 				.orElse(null);
 			if (ObjectUtil.isNull(alias)) {
 				return;
 			}
-			AnnotationAttribute aliasAttribute = attributeMap.get(alias);
+			final AnnotationAttribute aliasAttribute = attributeMap.get(alias);
 			Assert.notNull(aliasAttribute, "no method for alias: [{}]", alias);
 			attributeAliasMappings.putLinkedNodes(alias, aliasAttribute, attributeName, attribute);
 		});
 
 		// 处理别名
 		attributeMap.forEach((attributeName, attribute) -> {
-			AnnotationAttribute resolvedAttributeMethod = Opt.ofNullable(attributeName)
+			final AnnotationAttribute resolvedAttribute = Opt.ofNullable(attributeName)
 				.map(attributeAliasMappings::getRootNode)
 				.map(TreeEntry::getValue)
 				.map(aliasAttribute -> (AnnotationAttribute)new ForceAliasedAnnotationAttribute(attribute, aliasAttribute))
 				.orElse(attribute);
 			Assert.isTrue(
-				ObjectUtil.isNull(resolvedAttributeMethod)
-					|| ClassUtil.isAssignable(attribute.getAttribute().getReturnType(), resolvedAttributeMethod.getAttribute().getReturnType()),
+				ObjectUtil.isNull(resolvedAttribute)
+					|| ClassUtil.isAssignable(attribute.getAttributeType(), resolvedAttribute.getAttributeType()),
 				"return type of the root alias method [{}] is inconsistent with the original [{}]",
-				resolvedAttributeMethod.getClass(), attribute.getAttribute().getReturnType()
+				resolvedAttribute.getClass(), attribute.getAttributeType()
 			);
-			attributeMap.put(attributeName, resolvedAttributeMethod);
+			attributeMap.put(attributeName, resolvedAttribute);
 		});
 		annotation.setAttributes(attributeMap);
 	}
