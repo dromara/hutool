@@ -44,7 +44,9 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 			}
 			final AnnotationAttribute linkedAttribute = linkedAnnotation.getAttributes().get(link.attribute());
 			// 处理
-			processLinkedAttribute(aggregator, link, synthesizedAnnotation, originalAttribute,
+			processLinkedAttribute(
+				aggregator, link,
+				synthesizedAnnotation, synthesizedAnnotation.getAttributes().get(originalAttributeName),
 				linkedAnnotation, linkedAttribute
 			);
 		});

@@ -2,6 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * <p>用于处理注解对象中带有{@link Link}注解，且{@link Link#type()}为{@link RelationType#MIRROR_FOR}的属性。<br>
@@ -47,6 +48,17 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 		SynthesizedAnnotationAggregator aggregator, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
+
+		// 镜像属性必然成对出现，因此此处必定存在三种情况：
+		// 1.两属性都不为镜像属性，此时继续进行后续处理；
+		// 2.两属性都为镜像属性，并且指向对方，此时无需后续处理；
+		// 3.两属性仅有任意一属性为镜像属性，此时镜像属性必然未指向当前原始属性，此时应该抛出异常；
+		if (originalAttribute instanceof MirroredAnnotationAttribute
+			|| linkedAttribute instanceof MirroredAnnotationAttribute) {
+			checkMirrored(originalAttribute, linkedAttribute);
+			return;
+		}
+
 		// 校验镜像关系
 		checkMirrorRelation(annotation, originalAttribute, linkedAttribute);
 		// 包装这一对镜像属性，并替换原注解中的对应属性
@@ -54,6 +66,49 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 		originalAnnotation.setAttribute(originalAttribute.getAttributeName(), mirroredOriginalAttribute);
 		final AnnotationAttribute mirroredTargetAttribute = new MirroredAnnotationAttribute(linkedAttribute, originalAttribute);
 		linkedAnnotation.setAttribute(annotation.attribute(), mirroredTargetAttribute);
+	}
+
+	/**
+	 * 检查映射关系是否正确
+	 */
+	private void checkMirrored(AnnotationAttribute original, AnnotationAttribute mirror) {
+		final boolean originalAttributeMirrored = original instanceof MirroredAnnotationAttribute;
+		final boolean mirrorAttributeMirrored = mirror instanceof MirroredAnnotationAttribute;
+
+		// 校验通过
+		final boolean passed = originalAttributeMirrored && mirrorAttributeMirrored
+			&& ObjectUtil.equals(((MirroredAnnotationAttribute)original).getLinked(), ((MirroredAnnotationAttribute)mirror).getOriginal());
+		if (passed) {
+			return;
+		}
+
+		// 校验失败，拼装异常信息用于抛出异常
+		String errorMsg;
+		// 原始字段已经跟其他字段形成镜像
+		if (originalAttributeMirrored && !mirrorAttributeMirrored) {
+			errorMsg = StrUtil.format(
+				"attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
+				original.getAttribute(), mirror.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
+			);
+		}
+		// 镜像字段已经跟其他字段形成镜像
+		else if (!originalAttributeMirrored && mirrorAttributeMirrored) {
+			errorMsg = StrUtil.format(
+				"attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
+				mirror.getAttribute(), original.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked()
+			);
+		}
+		// 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
+		else {
+			errorMsg = StrUtil.format(
+				"attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}] and  [{}] already mirrored for [{}]",
+				mirror.getAttribute(), original.getAttribute(),
+				mirror.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked(),
+				original.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
+			);
+		}
+
+		throw new IllegalArgumentException(errorMsg);
 	}
 
 	/**
