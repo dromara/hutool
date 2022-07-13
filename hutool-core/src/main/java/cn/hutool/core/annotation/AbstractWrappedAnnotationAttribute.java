@@ -8,19 +8,19 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link AnnotationAttributeWrapper}的基本实现
+ * {@link WrappedAnnotationAttribute}的基本实现
  *
  * @author huangchengxing
  * @see ForceAliasedAnnotationAttribute
  * @see AliasedAnnotationAttribute
  * @see MirroredAnnotationAttribute
  */
-public abstract class AbstractAnnotationAttributeWrapper implements AnnotationAttributeWrapper {
+public abstract class AbstractWrappedAnnotationAttribute implements WrappedAnnotationAttribute {
 
 	protected final AnnotationAttribute original;
 	protected final AnnotationAttribute linked;
 
-	protected AbstractAnnotationAttributeWrapper(AnnotationAttribute original, AnnotationAttribute linked) {
+	protected AbstractWrappedAnnotationAttribute(AnnotationAttribute original, AnnotationAttribute linked) {
 		Assert.notNull(original, "target must not null");
 		Assert.notNull(linked, "linked must not null");
 		this.original = original;
@@ -43,7 +43,7 @@ public abstract class AbstractAnnotationAttributeWrapper implements AnnotationAt
 		AnnotationAttribute next = original;
 		while (next != null) {
 			curr = next;
-			next = next.isWrapped() ? ((AnnotationAttributeWrapper)curr).getOriginal() : null;
+			next = next.isWrapped() ? ((WrappedAnnotationAttribute)curr).getOriginal() : null;
 		}
 		return curr;
 	}
@@ -63,7 +63,7 @@ public abstract class AbstractAnnotationAttributeWrapper implements AnnotationAt
 			leafAttributes.add(curr);
 			return;
 		}
-		AnnotationAttributeWrapper wrappedAttribute = (AnnotationAttributeWrapper)curr;
+		WrappedAnnotationAttribute wrappedAttribute = (WrappedAnnotationAttribute)curr;
 		collectLeafAttribute(wrappedAttribute.getOriginal(), leafAttributes);
 		collectLeafAttribute(wrappedAttribute.getLinked(), leafAttributes);
 	}

@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.Comparator;
 
 /**
- * {@link SyntheticAnnotation}相关工具，用于内部使用
+ * {@link SynthesizedAnnotationAggregator}相关工具，用于内部使用
  *
  * @author huangchengxing
  */
@@ -33,12 +33,12 @@ class SyntheticAnnotationUtil {
 	 * 从合成注解中获取{@link Link#type()}指定的注解对象
 	 *
 	 * @param annotation {@link Link}注解
-	 * @param syntheticAnnotation 合成注解
+	 * @param synthesizedAnnotationAggregator 合成注解
 	 */
 	static SynthesizedAnnotation getLinkedAnnotation(
-		Link annotation, SyntheticAnnotation syntheticAnnotation, Class<? extends Annotation> defaultType) {
+		Link annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator, Class<? extends Annotation> defaultType) {
 		final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
-		return syntheticAnnotation.getSynthesizedAnnotation(targetAnnotationType);
+		return synthesizedAnnotationAggregator.getSynthesizedAnnotation(targetAnnotationType);
 	}
 
 	/**
@@ -66,6 +66,17 @@ class SyntheticAnnotationUtil {
 			"return type of the linked attribute [{}] is inconsistent with the original [{}]",
 			original.getAttribute(), alias.getAttribute()
 		);
+	}
+
+	/**
+	 * 检查{@link Link}指向的注解属性是否就是本身
+	 *
+	 * @param original        {@link Link}注解的属性
+	 * @param linked          {@link Link}指向的注解属性
+	 */
+	static void checkLinkedSelf(AnnotationAttribute original, AnnotationAttribute linked) {
+		boolean linkSelf = (original == linked) || ObjectUtil.equals(original.getAttribute(), linked.getAttribute());
+		Assert.isFalse(linkSelf, "cannot link self [{}]", original.getAttribute());
 	}
 
 	/**

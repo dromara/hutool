@@ -20,7 +20,7 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 	}
 
 	@Override
-	public void process(SynthesizedAnnotation annotation, SyntheticAnnotation syntheticAnnotation) {
+	public void process(SynthesizedAnnotation annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator) {
 		Map<String, AnnotationAttribute> attributeMap = new HashMap<>(annotation.getAttributes());
 		attributeMap.forEach((originalAttributeName, originalAttribute) -> {
 			// 跳过已经解析的镜像属性
@@ -35,7 +35,7 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 			}
 
 			// 获取指定镜像属性所在的注解
-			final SynthesizedAnnotation mirrorAnnotation = SyntheticAnnotationUtil.getLinkedAnnotation(link, syntheticAnnotation, annotation.annotationType());
+			final SynthesizedAnnotation mirrorAnnotation = SyntheticAnnotationUtil.getLinkedAnnotation(link, synthesizedAnnotationAggregator, annotation.annotationType());
 			if (ObjectUtil.isNull(mirrorAnnotation)) {
 				return;
 			}
@@ -46,7 +46,7 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 
 			// 包装这一对镜像属性，并替换原注解中的对应属性
 			final AnnotationAttribute mirroredOriginalAttribute = new MirroredAnnotationAttribute(originalAttribute, mirrorAttribute);
-			syntheticAnnotation.getSynthesizedAnnotation(originalAttribute.getAnnotationType())
+			synthesizedAnnotationAggregator.getSynthesizedAnnotation(originalAttribute.getAnnotationType())
 				.setAttribute(originalAttributeName, mirroredOriginalAttribute);
 			final AnnotationAttribute mirroredTargetAttribute = new MirroredAnnotationAttribute(mirrorAttribute, originalAttribute);
 			mirrorAnnotation.setAttribute(link.attribute(), mirroredTargetAttribute);
@@ -65,6 +65,7 @@ public class MirrorLinkAttributePostProcessor implements SynthesizedAnnotationPo
 			"mirror attribute [{}] of original attribute [{}] must marked by @Link, and also @LinkType.type() must is [{}]",
 			mirror.getAttribute(), original.getAttribute(), RelationType.MIRROR_FOR
 		);
+		SyntheticAnnotationUtil.checkLinkedSelf(original, mirror);
 	}
 
 }

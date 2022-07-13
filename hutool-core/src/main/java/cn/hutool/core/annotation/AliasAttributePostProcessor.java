@@ -25,7 +25,7 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 	}
 
 	@Override
-	public void process(SynthesizedAnnotation annotation, SyntheticAnnotation syntheticAnnotation) {
+	public void process(SynthesizedAnnotation annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator) {
 		final Map<String, AnnotationAttribute> attributeMap = annotation.getAttributes();
 
 		// 记录别名与属性的关系
@@ -47,7 +47,6 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 			final AnnotationAttribute resolvedAttribute = Opt.ofNullable(attributeName)
 				.map(attributeAliasMappings::getRootNode)
 				.map(TreeEntry::getValue)
-				.map(aliasAttribute -> (AnnotationAttribute)new ForceAliasedAnnotationAttribute(attribute, aliasAttribute))
 				.orElse(attribute);
 			Assert.isTrue(
 				ObjectUtil.isNull(resolvedAttribute)
@@ -55,7 +54,9 @@ public class AliasAttributePostProcessor implements SynthesizedAnnotationPostPro
 				"return type of the root alias method [{}] is inconsistent with the original [{}]",
 				resolvedAttribute.getClass(), attribute.getAttributeType()
 			);
-			attributeMap.put(attributeName, resolvedAttribute);
+			if (attribute != resolvedAttribute) {
+				attributeMap.put(attributeName, new ForceAliasedAnnotationAttribute(attribute, resolvedAttribute));
+			}
 		});
 		annotation.setAttributes(attributeMap);
 	}

@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
 
-public class AbstractAnnotationAttributeWrapperTest {
+public class AbstractWrappedAnnotationAttributeTest {
 
 	@Test
 	public void workTest() {
@@ -17,7 +17,9 @@ public class AbstractAnnotationAttributeWrapperTest {
 		CacheableAnnotationAttribute valueAttribute = new CacheableAnnotationAttribute(annotation, valueMethod);
 		Method nameMethod = ReflectUtil.getMethod(AnnotationForTest1.class, "name1");
 		CacheableAnnotationAttribute nameAttribute = new CacheableAnnotationAttribute(annotation, nameMethod);
-		TestAnnotationAttributeWrapper nameWrapper = new TestAnnotationAttributeWrapper(nameAttribute, valueAttribute);
+		AbstractWrappedAnnotationAttribute nameWrapper = new TestWrappedAnnotationAttribute(nameAttribute, valueAttribute);
+
+		Assert.assertEquals(nameWrapper.getAnnotation(), annotation);
 
 		// 注解属性
 		Assert.assertEquals(annotation, nameWrapper.getAnnotation());
@@ -40,7 +42,7 @@ public class AbstractAnnotationAttributeWrapperTest {
 		CacheableAnnotationAttribute value1Attribute = new CacheableAnnotationAttribute(annotation1, value1Method);
 		Method name1Method = ReflectUtil.getMethod(AnnotationForTest1.class, "name1");
 		CacheableAnnotationAttribute name1Attribute = new CacheableAnnotationAttribute(annotation1, name1Method);
-		TestAnnotationAttributeWrapper wrapper1 = new TestAnnotationAttributeWrapper(name1Attribute, value1Attribute);
+		AbstractWrappedAnnotationAttribute wrapper1 = new TestWrappedAnnotationAttribute(name1Attribute, value1Attribute);
 		Assert.assertEquals(name1Attribute, wrapper1.getNonWrappedOriginal());
 		Assert.assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute), wrapper1.getAllLinkedNonWrappedAttributes());
 
@@ -48,7 +50,7 @@ public class AbstractAnnotationAttributeWrapperTest {
 		Annotation annotation2 = ClassForTest1.class.getAnnotation(AnnotationForTest2.class);
 		Method value2Method = ReflectUtil.getMethod(AnnotationForTest2.class, "value2");
 		CacheableAnnotationAttribute value2Attribute = new CacheableAnnotationAttribute(annotation2, value2Method);
-		TestAnnotationAttributeWrapper wrapper2 = new TestAnnotationAttributeWrapper(wrapper1, value2Attribute);
+		AbstractWrappedAnnotationAttribute wrapper2 = new TestWrappedAnnotationAttribute(wrapper1, value2Attribute);
 		Assert.assertEquals(name1Attribute, wrapper2.getNonWrappedOriginal());
 		Assert.assertEquals(CollUtil.newArrayList(name1Attribute, value1Attribute, value2Attribute), wrapper2.getAllLinkedNonWrappedAttributes());
 
@@ -56,19 +58,24 @@ public class AbstractAnnotationAttributeWrapperTest {
 		Annotation annotation3 = ClassForTest1.class.getAnnotation(AnnotationForTest3.class);
 		Method value3Method = ReflectUtil.getMethod(AnnotationForTest3.class, "value3");
 		CacheableAnnotationAttribute value3Attribute = new CacheableAnnotationAttribute(annotation3, value3Method);
-		TestAnnotationAttributeWrapper wrapper3 = new TestAnnotationAttributeWrapper(value3Attribute, wrapper2);
+		AbstractWrappedAnnotationAttribute wrapper3 = new TestWrappedAnnotationAttribute(value3Attribute, wrapper2);
 		Assert.assertEquals(value3Attribute, wrapper3.getNonWrappedOriginal());
 		Assert.assertEquals(CollUtil.newArrayList(value3Attribute, name1Attribute, value1Attribute, value2Attribute), wrapper3.getAllLinkedNonWrappedAttributes());
 
 	}
 
-	static class TestAnnotationAttributeWrapper extends AbstractAnnotationAttributeWrapper {
-		protected TestAnnotationAttributeWrapper(AnnotationAttribute original, AnnotationAttribute linked) {
+	static class TestWrappedAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
+		protected TestWrappedAnnotationAttribute(AnnotationAttribute original, AnnotationAttribute linked) {
 			super(original, linked);
 		}
 		@Override
 		public Object getValue() {
 			return linked.getValue();
+		}
+
+		@Override
+		public boolean isValueEquivalentToDefaultValue() {
+			return getOriginal().isValueEquivalentToDefaultValue() && getLinked().isValueEquivalentToDefaultValue();
 		}
 	}
 

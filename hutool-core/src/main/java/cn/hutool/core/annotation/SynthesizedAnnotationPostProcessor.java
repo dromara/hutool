@@ -5,7 +5,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import java.util.Comparator;
 
 /**
- * <p>被合成注解后置处理器，用于在{@link SyntheticAnnotation}加载完所有待合成注解后，
+ * <p>被合成注解后置处理器，用于在{@link SynthesizedAnnotationAggregator}加载完所有待合成注解后，
  * 再对加载好的{@link SynthesizedAnnotation}进行后置处理。<br>
  * 当多个{@link SynthesizedAnnotationPostProcessor}需要一起执行时，将按照{@link #order()}的返回值进行排序，
  * 该值更小的处理器将被优先执行。
@@ -49,8 +49,8 @@ public interface SynthesizedAnnotationPostProcessor extends Comparable<Synthesiz
 	 * 给定指定被合成注解与其所属的合成注解实例，经过处理后返回最终
 	 *
 	 * @param annotation          被合成的注解
-	 * @param syntheticAnnotation 注解所属的合成注解
+	 * @param synthesizedAnnotationAggregator 注解所属的合成注解
 	 */
-	void process(SynthesizedAnnotation annotation, SyntheticAnnotation syntheticAnnotation);
+	void process(SynthesizedAnnotation annotation, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator);
 
 }

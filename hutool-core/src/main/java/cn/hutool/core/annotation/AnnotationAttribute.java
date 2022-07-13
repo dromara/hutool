@@ -1,6 +1,5 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -8,7 +7,7 @@ import java.lang.reflect.Method;
 
 /**
  * <p>表示注解的某个属性，等同于绑定的调用对象的{@link Method}方法。<br>
- * 在{@link SyntheticAnnotation}的解析以及取值过程中，
+ * 在{@link SynthesizedAnnotationAggregator}的解析以及取值过程中，
  * 可以通过设置{@link SynthesizedAnnotation}的注解属性，
  * 从而使得可以从一个注解对象中属性获取另一个注解对象的属性值
  *
@@ -16,9 +15,9 @@ import java.lang.reflect.Method;
  *
  * @author huangchengxing
  * @see SynthesizedAnnotationPostProcessor
- * @see AnnotationAttributeWrapper
+ * @see WrappedAnnotationAttribute
  * @see CacheableAnnotationAttribute
- * @see AbstractAnnotationAttributeWrapper
+ * @see AbstractWrappedAnnotationAttribute
  * @see ForceAliasedAnnotationAttribute
  * @see AliasedAnnotationAttribute
  * @see MirroredAnnotationAttribute
@@ -71,9 +70,7 @@ public interface AnnotationAttribute {
 	 *
 	 * @return 该注解属性的值是否等于默认值
 	 */
-	default boolean isValueEquivalentToDefaultValue() {
-		return ObjectUtil.equals(getValue(), getAttribute().getDefaultValue());
-	}
+	boolean isValueEquivalentToDefaultValue();
 
 	/**
 	 * 获取属性类型
@@ -95,7 +92,7 @@ public interface AnnotationAttribute {
 	}
 
 	/**
-	 * 当前注解属性是否已经被{@link AnnotationAttributeWrapper}包装
+	 * 当前注解属性是否已经被{@link WrappedAnnotationAttribute}包装
 	 *
 	 * @return boolean
 	 */

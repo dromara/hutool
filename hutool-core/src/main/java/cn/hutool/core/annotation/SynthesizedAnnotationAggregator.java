@@ -10,7 +10,7 @@ import java.util.Collection;
  * <p>合成注解一般被用于处理类层级结果中具有直接或间接关联的注解对象，
  * 当实例被创建时，会获取到这些注解对象，并使用{@link SynthesizedAnnotationSelector}对类型相同的注解进行过滤，
  * 并最终得到类型不重复的有效注解对象。这些有效注解将被包装为{@link SynthesizedAnnotation}，
- * 然后最终用于“合成”一个{@link SyntheticAnnotation}。<br>
+ * 然后最终用于“合成”一个{@link SynthesizedAnnotationAggregator}。<br>
  * {@link SynthesizedAnnotationSelector}是合成注解生命周期中的第一个钩子，
  * 自定义选择器以拦截原始注解被扫描的过程。
  *
@@ -21,7 +21,7 @@ import java.util.Collection;
  * {@link SynthesizedAnnotationPostProcessor}是合成注解生命周期中的第二个钩子，
  * 自定义后置处理器以拦截原始在转为待合成注解后的初始化过程。
  *
- * <p>合成注解允许通过{@link #syntheticAnnotation(Class)}合成一个指定的注解对象，
+ * <p>合成注解允许通过{@link #synthesize(Class)}合成一个指定的注解对象，
  * 该方法返回的注解对象可能是原始的注解对象，也有可能通过动态代理的方式生成，
  * 该对象实例的属性不一定来自对象本身，而是来自于经过{@link SynthesizedAnnotationAttributeProcessor}
  * 处理后的、用于合成当前实例的全部关联注解的相关属性。<br>
@@ -37,9 +37,9 @@ import java.util.Collection;
  * @see SynthesizedAnnotationSelector
  * @see SynthesizedAnnotationAttributeProcessor
  * @see SynthesizedAnnotationPostProcessor
- * @see SyntheticMetaAnnotation
+ * @see SynthesizedMetaAnnotationAggregator
  */
-public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
+public interface SynthesizedAnnotationAggregator extends Annotation, AnnotationAggregator {
 
 	/**
 	 * 获取合成注解选择器
@@ -53,14 +53,14 @@ public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 	 *
 	 * @return 合成注解属性处理器
 	 */
-	SynthesizedAnnotationAttributeProcessor getAttributeProcessor();
+	SynthesizedAnnotationAttributeProcessor getAnnotationAttributeProcessor();
 
 	/**
 	 * 获取合成注解属性后置处理器
 	 *
 	 * @return 合成注解属性后置处理器
 	 */
-	Collection<SynthesizedAnnotationPostProcessor> getSynthesizedAnnotationAttributePostProcessors();
+	Collection<SynthesizedAnnotationPostProcessor> getAnnotationAttributePostProcessors();
 
 	/**
 	 * 获取已合成的注解
@@ -75,7 +75,7 @@ public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 	 *
 	 * @return 合成注解
 	 */
-	Collection<SynthesizedAnnotation> getAllSyntheticAnnotations();
+	Collection<SynthesizedAnnotation> getAllSynthesizedAnnotation();
 
 	/**
 	 * 获取当前的注解类型
@@ -88,49 +88,13 @@ public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 	}
 
 	/**
-	 * 获取指定注解对象
-	 *
-	 * @param annotationType 注解类型
-	 * @param <T>            注解类型
-	 * @return 注解对象
-	 */
-	@Override
-	<T extends Annotation> T getAnnotation(Class<T> annotationType);
-
-	/**
-	 * 是否存在指定注解
-	 *
-	 * @param annotationType 注解类型
-	 * @return 是否
-	 */
-	@Override
-	boolean isAnnotationPresent(Class<? extends Annotation> annotationType);
-
-	/**
-	 * 获取全部注解
-	 *
-	 * @return 注解对象
-	 */
-	@Override
-	Annotation[] getAnnotations();
-
-	/**
 	 * 获取合成注解
 	 *
 	 * @param annotationType 注解类型
 	 * @param <T>            注解类型
 	 * @return 类型
 	 */
-	<T extends Annotation> T syntheticAnnotation(Class<T> annotationType);
-
-	/**
-	 * 获取属性值
-	 *
-	 * @param attributeName 属性名称
-	 * @param attributeType 属性类型
-	 * @return 属性值
-	 */
-	Object getAttribute(String attributeName, Class<?> attributeType);
+	<T extends Annotation> T synthesize(Class<T> annotationType);
 
 	/**
 	 * 基于指定根注解，构建包括其元注解在内的合成注解
@@ -139,8 +103,8 @@ public interface SyntheticAnnotation extends Annotation, AnnotatedElement {
 	 * @param <T>            注解类型
 	 * @return 合成注解
 	 */
-	static <T extends Annotation> SyntheticAnnotation of(T rootAnnotation) {
-		return new SyntheticMetaAnnotation(rootAnnotation);
+	static <T extends Annotation> SynthesizedAnnotationAggregator of(T rootAnnotation) {
+		return new SynthesizedMetaAnnotationAggregator(rootAnnotation);
 	}
 
 }

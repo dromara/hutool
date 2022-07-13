@@ -3,8 +3,8 @@ package cn.hutool.core.annotation;
 /**
  * <p>注解属性的关系类型 <br>
  * 若将被{@link Link}注解的属性称为“原始属性”，而在{@link Link}注解中指向的注解属性称为“关联属性”，
- * 则该枚举用于描述“原始属性”与“关联属性”在{@link SyntheticAnnotation}处理过程中的作用关系。<br>
- * 根据在{@link Link#type()}中指定的关系类型的不同，通过{@link SyntheticAnnotation}合成的注解的属性值也将有所变化。
+ * 则该枚举用于描述“原始属性”与“关联属性”在{@link SynthesizedAnnotationAggregator}处理过程中的作用关系。<br>
+ * 根据在{@link Link#type()}中指定的关系类型的不同，通过{@link SynthesizedAnnotationAggregator}合成的注解的属性值也将有所变化。
  *
  * <p>当一个注解中的所有属性同时具备多种关系时，将依次按下述顺序处理：
  * <ol>
@@ -15,7 +15,7 @@ package cn.hutool.core.annotation;
  * </ol>
  *
  * @author huangchengxing
- * @see SyntheticAnnotation
+ * @see SynthesizedAnnotationAggregator
  * @see Link
  */
 public enum RelationType {

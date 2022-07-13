@@ -10,8 +10,8 @@ import java.util.function.UnaryOperator;
 public class SynthesizedAnnotationSelectorTest {
 
 	@Test
-	public void nearestAndOldestPriorityTest() {
-		final SynthesizedAnnotationSelector selector = SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY;
+	public void chooseTest() {
+		final SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndOldestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY;
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
@@ -28,7 +28,7 @@ public class SynthesizedAnnotationSelectorTest {
 
 	@Test
 	public void nearestAndNewestPriorityTest() {
-		final SynthesizedAnnotationSelector selector = SynthesizedAnnotationSelector.NEAREST_AND_NEWEST_PRIORITY;
+		final SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.NearestAndNewestPrioritySelector)SynthesizedAnnotationSelector.NEAREST_AND_NEWEST_PRIORITY;
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
@@ -45,7 +45,7 @@ public class SynthesizedAnnotationSelectorTest {
 
 	@Test
 	public void farthestAndOldestPriorityTest() {
-		final SynthesizedAnnotationSelector selector = SynthesizedAnnotationSelector.FARTHEST_AND_OLDEST_PRIORITY;
+		final SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndOldestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_OLDEST_PRIORITY;
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
@@ -62,7 +62,7 @@ public class SynthesizedAnnotationSelectorTest {
 
 	@Test
 	public void farthestAndNewestPriorityTest() {
-		final SynthesizedAnnotationSelector selector = SynthesizedAnnotationSelector.FARTHEST_AND_NEWEST_PRIORITY;
+		final SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector selector = (SynthesizedAnnotationSelector.FarthestAndNewestPrioritySelector)SynthesizedAnnotationSelector.FARTHEST_AND_NEWEST_PRIORITY;
 
 		TestSynthesizedAnnotation annotation1 = new TestSynthesizedAnnotation(0, 0);
 		TestSynthesizedAnnotation annotation2 = new TestSynthesizedAnnotation(0, 0);
@@ -88,7 +88,7 @@ public class SynthesizedAnnotationSelectorTest {
 		}
 
 		@Override
-		public SyntheticAnnotation getOwner() {
+		public SynthesizedAnnotationAggregator getOwner() {
 			return null;
 		}
 

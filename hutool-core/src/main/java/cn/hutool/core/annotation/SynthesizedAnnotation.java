@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
- * <p>用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象。<br>
+ * <p>用于在{@link SynthesizedAnnotationAggregator}中表示一个处于合成状态的注解对象。<br>
  * 当对多个合成注解排序时，默认先按{@link #getVerticalDistance()}排序，
  * 再按{@link #getHorizontalDistance()}排序。
  * 该顺序应当保证当合成注解与其他注解存在层级关系时，
  * 离根对象最接近的注解被排在靠前的位置。
  *
  * @author huangchengxing
- * @see SyntheticAnnotation
+ * @see SynthesizedAnnotationAggregator
  */
 public interface SynthesizedAnnotation extends Annotation, Comparable<SynthesizedAnnotation> {
 
@@ -23,7 +23,7 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 *
 	 * @return 合成注解
 	 */
-	SyntheticAnnotation getOwner();
+	SynthesizedAnnotationAggregator getOwner();
 
 	/**
 	 * 获取该合成注解对应的根节点
@@ -31,15 +31,6 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 * @return 合成注解对应的根节点
 	 */
 	Object getRoot();
-
-	/**
-	 * 该合成注解是为根对象
-	 *
-	 * @return 根对象
-	 */
-	default boolean isRoot() {
-		return getRoot() == this;
-	}
 
 	/**
 	 * 获取被合成的注解对象

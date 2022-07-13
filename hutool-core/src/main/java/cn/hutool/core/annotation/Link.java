@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * <p>用于在同一注解中，或具有一定关联的不同注解的属性中，表明这些属性之间具有特定的关联关系。
- * 在通过{@link SyntheticAnnotation}获取合成注解后，合成注解获取属性值时会根据该注解进行调整。<br />
+ * 在通过{@link SynthesizedAnnotationAggregator}获取合成注解后，合成注解获取属性值时会根据该注解进行调整。<br />
  *
  * <p>该注解存在三个字注解：{@link MirrorFor}、{@link ForceAliasFor}或{@link AliasFor}，
  * 使用三个子注解等同于{@link Link}。但是需要注意的是，
@@ -14,7 +14,7 @@ import java.lang.annotation.*;
  * <b>注意：该注解的优先级低于{@link Alias}</b>
  *
  * @author huangchengxing
- * @see SyntheticAnnotation
+ * @see SynthesizedAnnotationAggregator
  * @see RelationType
  * @see AliasFor
  * @see MirrorFor

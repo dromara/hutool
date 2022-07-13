@@ -9,7 +9,7 @@ package cn.hutool.core.annotation;
  * @see RelationType#FORCE_ALIAS_FOR
  * @see RelationType#ALIAS_FOR
  */
-public class AliasedAnnotationAttribute extends AbstractAnnotationAttributeWrapper {
+public class AliasedAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
 
 	protected AliasedAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute linked) {
 		super(origin, linked);

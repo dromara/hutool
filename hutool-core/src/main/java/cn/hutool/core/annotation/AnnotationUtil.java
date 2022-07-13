@@ -3,10 +3,7 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.annotation.scanner.*;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
@@ -15,10 +12,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -356,11 +351,11 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SyntheticAnnotation
+	 * @see SynthesizedAnnotationAggregator
 	 */
 	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
 		// TODO 缓存合成注解信息，避免重复解析
-		return SyntheticAnnotation.of(annotation).syntheticAnnotation(annotationType);
+		return SynthesizedAnnotationAggregator.of(annotation).synthesize(annotationType);
 	}
 
 	/**
@@ -374,7 +369,7 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SyntheticAnnotation
+	 * @see SynthesizedAnnotationAggregator
 	 */
 	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
 		AnnotationScanner[] scanners = new AnnotationScanner[]{
@@ -397,9 +392,13 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类
 	 * @param <T>            注解类型
 	 * @return 合成注解
-	 * @see SyntheticAnnotation
+	 * @see SynthesizedAnnotationAggregator
 	 */
 	public static <T extends Annotation> T getSyntheticAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
+		T target = annotatedEle.getAnnotation(annotationType);
+		if (ObjectUtil.isNotNull(target)) {
+			return target;
+		}
 		AnnotationScanner[] scanners = new AnnotationScanner[]{
 			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
 		};
@@ -471,36 +470,4 @@ public class AnnotationUtil {
 		return method.getParameterCount() == 0 && method.getReturnType() != void.class;
 	}
 
-	/**
-	 * 获取注解的全部属性值获取方法
-	 *
-	 * @param annotationType 注解
-	 * @return 注解的全部属性值
-	 * @throws IllegalArgumentException 当别名属性在注解中不存在，或别名属性的值与原属性的值类型不一致时抛出
-	 */
-	static Map<String, Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
-		// 获取全部注解属性值
-		Map<String, Method> attributeMethods = Stream.of(annotationType.getDeclaredMethods())
-				.filter(AnnotationUtil::isAttributeMethod)
-				.collect(Collectors.toMap(Method::getName, Function.identity()));
-		// 处理别名
-		attributeMethods.forEach((methodName, method) -> {
-			String alias = Opt.ofNullable(method.getAnnotation(Alias.class))
-					.map(Alias::value)
-					.orElse(null);
-			if (ObjectUtil.isNull(alias)) {
-				return;
-			}
-			// 存在别名，则将原本的值替换为别名对应的值
-			Assert.isTrue(attributeMethods.containsKey(alias), "No method for alias: [{}]", alias);
-			Method aliasAttributeMethod = attributeMethods.get(alias);
-			Assert.isTrue(
-					ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
-					"Return type of the alias method [{}] is inconsistent with the original [{}]",
-					aliasAttributeMethod.getClass(), method.getParameterTypes()
-			);
-			attributeMethods.put(methodName, aliasAttributeMethod);
-		});
-		return attributeMethods;
-	}
 }

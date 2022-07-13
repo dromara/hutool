@@ -27,7 +27,7 @@ import java.util.Collection;
  * @see AliasedAnnotationAttribute
  * @see MirroredAnnotationAttribute
  */
-public interface AnnotationAttributeWrapper extends AnnotationAttribute {
+public interface WrappedAnnotationAttribute extends AnnotationAttribute {
 
 	// =========================== 新增方法 ===========================
 
@@ -89,9 +89,7 @@ public interface AnnotationAttributeWrapper extends AnnotationAttribute {
 	 * @return 该注解属性的值是否等于默认值
 	 */
 	@Override
-	default boolean isValueEquivalentToDefaultValue() {
-		return getOriginal().isValueEquivalentToDefaultValue() && getLinked().isValueEquivalentToDefaultValue();
-	}
+	boolean isValueEquivalentToDefaultValue();
 
 	/**
 	 * 获取属性类型
@@ -115,7 +113,7 @@ public interface AnnotationAttributeWrapper extends AnnotationAttribute {
 	}
 
 	/**
-	 * 当前注解属性是否已经被{@link AnnotationAttributeWrapper}包装
+	 * 当前注解属性是否已经被{@link WrappedAnnotationAttribute}包装
 	 *
 	 * @return boolean
 	 */

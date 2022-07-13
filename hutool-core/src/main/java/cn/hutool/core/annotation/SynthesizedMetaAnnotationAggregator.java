@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * {@link SyntheticAnnotation}的基本实现，表示一个根注解与根注解上的多层元注解合成的注解
+ * {@link SynthesizedAnnotationAggregator}的基本实现，表示一个根注解与根注解上的多层元注解的聚合状态
  *
  * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对注解A进行解析，
- * 将得到包含根注解A，以及其元注解B、C在内的合成元注解{@link SyntheticMetaAnnotation}。
+ * 将得到包含根注解A，以及其元注解B、C在内的合成元注解聚合{@link SynthesizedMetaAnnotationAggregator}。
  * 从{@link AnnotatedElement}的角度来说，得到的合成注解是一个同时承载有ABC三个注解对象的被注解元素，
  * 因此通过调用{@link AnnotatedElement}的相关方法将返回对应符合语义的注解对象。
  *
@@ -39,8 +39,8 @@ import java.util.stream.Stream;
  * </ul>
  * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
- * <p>{@link SyntheticMetaAnnotation}支持通过{@link #getAttribute(String, Class)}，
- * 或通过{@link #syntheticAnnotation(Class)}获得注解代理对象后获取指定类型的注解属性值，
+ * <p>{@link SynthesizedMetaAnnotationAggregator}支持通过{@link #getAttribute(String, Class)}，
+ * 或通过{@link #synthesize(Class)}获得注解代理对象后获取指定类型的注解属性值，
  * 返回的属性值将根据合成注解中对应原始注解属性上的{@link Alias}与{@link Link}注解而有所变化。
  * 通过当前实例获取属性值时，将经过{@link SynthesizedAnnotationAttributeProcessor}的处理。<br>
  * 默认情况下，实例将会注册{@link CacheableSynthesizedAnnotationAttributeProcessor}，
@@ -50,7 +50,7 @@ import java.util.stream.Stream;
  * @see AnnotationUtil
  * @see SynthesizedAnnotationSelector
  */
-public class SyntheticMetaAnnotation implements SyntheticAnnotation {
+public class SynthesizedMetaAnnotationAggregator implements SynthesizedAnnotationAggregator {
 
 	/**
 	 * 根注解，即当前查找的注解
@@ -84,7 +84,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 *
 	 * @param source 源注解
 	 */
-	public SyntheticMetaAnnotation(Annotation source) {
+	public SynthesizedMetaAnnotationAggregator(Annotation source) {
 		this(
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
 			new CacheableSynthesizedAnnotationAttributeProcessor(),
@@ -103,7 +103,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 * @param annotationSelector 合成注解选择器
 	 * @param attributeProcessor 注解属性处理器
 	 */
-	public SyntheticMetaAnnotation(
+	public SynthesizedMetaAnnotationAggregator(
 		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
@@ -138,15 +138,6 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	}
 
 	/**
-	 * 获取已解析的元注解信息
-	 *
-	 * @return 已解析的元注解信息
-	 */
-	Map<Class<? extends Annotation>, SynthesizedAnnotation> getMetaAnnotationMap() {
-		return metaAnnotationMap;
-	}
-
-	/**
 	 * 获取合成注解选择器
 	 *
 	 * @return 合成注解选择器
@@ -162,7 +153,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 * @return 合成注解属性处理器
 	 */
 	@Override
-	public SynthesizedAnnotationAttributeProcessor getAttributeProcessor() {
+	public SynthesizedAnnotationAttributeProcessor getAnnotationAttributeProcessor() {
 		return this.attributeProcessor;
 	}
 
@@ -172,7 +163,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 * @return 合成注解属性后置处理器
 	 */
 	@Override
-	public Collection<SynthesizedAnnotationPostProcessor> getSynthesizedAnnotationAttributePostProcessors() {
+	public Collection<SynthesizedAnnotationPostProcessor> getAnnotationAttributePostProcessors() {
 		return this.postProcessors;
 	}
 
@@ -193,7 +184,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 * @return 合成注解
 	 */
 	@Override
-	public Collection<SynthesizedAnnotation> getAllSyntheticAnnotations() {
+	public Collection<SynthesizedAnnotation> getAllSynthesizedAnnotation() {
 		return metaAnnotationMap.values();
 	}
 
@@ -254,10 +245,10 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 *
 	 * @param annotationType 注解类型
 	 * @return 合成注解对象
-	 * @see SyntheticAnnotationProxy#create(Class, SyntheticAnnotation)
+	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAnnotationAggregator)
 	 */
 	@Override
-	public <T extends Annotation> T syntheticAnnotation(Class<T> annotationType) {
+	public <T extends Annotation> T synthesize(Class<T> annotationType) {
 		return SyntheticAnnotationProxy.create(annotationType, this);
 	}
 
@@ -299,14 +290,14 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 */
 	public static class MetaAnnotation implements Annotation, SynthesizedAnnotation {
 
-		private final SyntheticAnnotation owner;
+		private final SynthesizedAnnotationAggregator owner;
 		private final Annotation root;
 		private final Annotation annotation;
 		private final Map<String, AnnotationAttribute> attributeMethodCaches;
 		private final int verticalDistance;
 		private final int horizontalDistance;
 
-		public MetaAnnotation(SyntheticAnnotation owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+		public MetaAnnotation(SynthesizedAnnotationAggregator owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
 			this.owner = owner;
 			this.root = root;
 			this.annotation = annotation;
@@ -323,7 +314,7 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		 * @return 合成注解
 		 */
 		@Override
-		public SyntheticAnnotation getOwner() {
+		public SynthesizedAnnotationAggregator getOwner() {
 			return owner;
 		}
 

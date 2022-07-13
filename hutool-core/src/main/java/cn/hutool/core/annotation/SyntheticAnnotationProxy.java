@@ -38,18 +38,18 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	/**
 	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
 	 * <ul>
-	 *     <li>当作为{@code annotationType}所指定的类型使用时，其属性将通过合成它的{@link SyntheticAnnotation}获取；</li>
+	 *     <li>当作为{@code annotationType}所指定的类型使用时，其属性将通过合成它的{@link SynthesizedAnnotationAggregator}获取；</li>
 	 *     <li>当作为{@link SyntheticProxyAnnotation}或{@link SynthesizedAnnotation}使用时，将可以获得原始注解实例的相关信息；</li>
 	 * </ul>
 	 *
 	 * @param annotationType      注解类型
-	 * @param syntheticAnnotation 合成注解
+	 * @param synthesizedAnnotationAggregator 合成注解
 	 * @return 代理注解
 	 */
 	@SuppressWarnings("unchecked")
 	static <T extends Annotation> T create(
-		Class<T> annotationType, SyntheticAnnotation syntheticAnnotation) {
-		final SynthesizedAnnotation annotation = syntheticAnnotation.getSynthesizedAnnotation(annotationType);
+		Class<T> annotationType, SynthesizedAnnotationAggregator synthesizedAnnotationAggregator) {
+		final SynthesizedAnnotation annotation = synthesizedAnnotationAggregator.getSynthesizedAnnotation(annotationType);
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
@@ -83,7 +83,6 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		methods.put("getSyntheticAnnotation", (method, args) -> proxyGetSyntheticAnnotation());
 		methods.put("getSynthesizedAnnotation", (method, args) -> proxyGetSynthesizedAnnotation());
 		methods.put("getRoot", (method, args) -> annotation.getRoot());
-		methods.put("isRoot", (method, args) -> annotation.isRoot());
 		methods.put("getVerticalDistance", (method, args) -> annotation.getVerticalDistance());
 		methods.put("getHorizontalDistance", (method, args) -> annotation.getHorizontalDistance());
 		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String)args[0], (Class<?>)args[1]));
@@ -135,7 +134,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		 *
 		 * @return 合成注解
 		 */
-		SyntheticAnnotation getSyntheticAnnotation();
+		SynthesizedAnnotationAggregator getSyntheticAnnotation();
 
 		/**
 		 * 获取该代理注解对应的已合成注解

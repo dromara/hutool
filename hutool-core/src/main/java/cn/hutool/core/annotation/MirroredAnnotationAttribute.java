@@ -9,7 +9,7 @@ import cn.hutool.core.lang.Assert;
  * @see MirrorLinkAttributePostProcessor
  * @see RelationType#MIRROR_FOR
  */
-public class MirroredAnnotationAttribute extends AbstractAnnotationAttributeWrapper {
+public class MirroredAnnotationAttribute extends AbstractWrappedAnnotationAttribute {
 
 	public MirroredAnnotationAttribute(AnnotationAttribute origin, AnnotationAttribute linked) {
 		super(origin, linked);

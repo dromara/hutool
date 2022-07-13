@@ -17,15 +17,16 @@ public class AliasedAnnotationAttributeTest {
 		final CacheableAnnotationAttribute valueAttribute = new CacheableAnnotationAttribute(annotation, valueMethod);
 		final Method nameMethod = ReflectUtil.getMethod(AnnotationForTest.class, "name");
 		final CacheableAnnotationAttribute nameAttribute = new CacheableAnnotationAttribute(annotation, nameMethod);
-		final AliasedAnnotationAttribute annotationAttribute = new AliasedAnnotationAttribute(valueAttribute, nameAttribute);
+		final AliasedAnnotationAttribute valueAnnotationAttribute = new AliasedAnnotationAttribute(valueAttribute, nameAttribute);
 
 		// 注解属性
-		Assert.assertEquals(annotation, annotationAttribute.getAnnotation());
-		Assert.assertEquals(annotation.annotationType(), annotationAttribute.getAnnotationType());
+		Assert.assertEquals(annotation, valueAnnotationAttribute.getAnnotation());
+		Assert.assertEquals(annotation.annotationType(), valueAnnotationAttribute.getAnnotationType());
 
 		// 方法属性
-		Assert.assertEquals(valueMethod.getName(), annotationAttribute.getAttributeName());
-		Assert.assertEquals(nameMethod.getReturnType(), annotationAttribute.getAttributeType());
+		Assert.assertEquals(valueMethod.getAnnotation(Alias.class), valueAnnotationAttribute.getAnnotation(Alias.class));
+		Assert.assertEquals(valueMethod.getName(), valueAnnotationAttribute.getAttributeName());
+		Assert.assertEquals(nameMethod.getReturnType(), valueAnnotationAttribute.getAttributeType());
 	}
 
 	@Test
@@ -63,6 +64,7 @@ public class AliasedAnnotationAttributeTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.METHOD, ElementType.TYPE })
 	@interface AnnotationForTest {
+		@Alias("value")
 		String value() default "";
 		String name() default "";
 	}
