@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -24,12 +25,11 @@ import java.util.stream.Stream;
  */
 class SyntheticAnnotationProxy implements InvocationHandler {
 
-	private final SyntheticAnnotation syntheticAnnotation;
 	private final SynthesizedAnnotation annotation;
 	private final Map<String, BiFunction<Method, Object[], Object>> methods;
 
-	SyntheticAnnotationProxy(SyntheticAnnotation syntheticAnnotation, SynthesizedAnnotation annotation) {
-		this.syntheticAnnotation = syntheticAnnotation;
+	SyntheticAnnotationProxy(SynthesizedAnnotation annotation) {
+		Assert.notNull(annotation, "annotation must not null");
 		this.annotation = annotation;
 		this.methods = new HashMap<>(9);
 		loadMethods();
@@ -50,7 +50,10 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	static <T extends Annotation> T create(
 		Class<T> annotationType, SyntheticAnnotation syntheticAnnotation) {
 		final SynthesizedAnnotation annotation = syntheticAnnotation.getSynthesizedAnnotation(annotationType);
-		final SyntheticAnnotationProxy proxyHandler = new SyntheticAnnotationProxy(syntheticAnnotation, annotation);
+		if (ObjectUtil.isNull(annotation)) {
+			return null;
+		}
+		final SyntheticAnnotationProxy proxyHandler = new SyntheticAnnotationProxy(annotation);
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
@@ -84,7 +87,12 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 		methods.put("getVerticalDistance", (method, args) -> annotation.getVerticalDistance());
 		methods.put("getHorizontalDistance", (method, args) -> annotation.getHorizontalDistance());
 		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String)args[0], (Class<?>)args[1]));
-		methods.put("getAttribute", (method, args) -> annotation.getAttribute((String)args[0]));
+		methods.put("getAttributes", (method, args) -> annotation.getAttributes());
+		methods.put("setAttributes", (method, args) -> {
+			throw new UnsupportedOperationException("proxied annotation can not reset attributes");
+		});
+		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String)args[0]));
+		methods.put("getOwner", (method, args) -> annotation.getOwner());
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
 		for (final Method declaredMethod : annotation.getAnnotation().annotationType().getDeclaredMethods()) {
 			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
@@ -94,17 +102,17 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	private String proxyToString() {
 		final String attributes = Stream.of(annotation.annotationType().getDeclaredMethods())
 			.filter(AnnotationUtil::isAttributeMethod)
-			.map(method -> StrUtil.format("{}={}", method.getName(), syntheticAnnotation.getAttribute(method.getName(), method.getReturnType())))
+			.map(method -> StrUtil.format("{}={}", method.getName(), annotation.getOwner().getAttribute(method.getName(), method.getReturnType())))
 			.collect(Collectors.joining(", "));
 		return StrUtil.format("@{}({})", annotation.annotationType().getName(), attributes);
 	}
 
 	private int proxyHashCode() {
-		return Objects.hash(syntheticAnnotation, annotation);
+		return Objects.hash(annotation.getOwner(), annotation);
 	}
 
 	private Object proxyGetSyntheticAnnotation() {
-		return syntheticAnnotation;
+		return annotation.getOwner();
 	}
 
 	private Object proxyGetSynthesizedAnnotation() {
@@ -112,7 +120,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	}
 
 	private Object proxyAttributeValue(Method attributeMethod) {
-		return syntheticAnnotation.getAttribute(attributeMethod.getName(), attributeMethod.getReturnType());
+		return annotation.getOwner().getAttribute(attributeMethod.getName(), attributeMethod.getReturnType());
 	}
 
 	/**

@@ -1,6 +1,9 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.collection.CollUtil;
+
 import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * 用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象
@@ -9,6 +12,13 @@ import java.lang.annotation.Annotation;
  * @see SyntheticAnnotation
  */
 public interface SynthesizedAnnotation extends Annotation {
+
+	/**
+	 * 获取所属的合成注解
+	 *
+	 * @return 合成注解
+	 */
+	SyntheticAnnotation getOwner();
 
 	/**
 	 * 获取该合成注解对应的根节点
@@ -59,11 +69,37 @@ public interface SynthesizedAnnotation extends Annotation {
 	boolean hasAttribute(String attributeName, Class<?> returnType);
 
 	/**
+	 * 获取该注解的全部属性
+	 *
+	 * @return 注解属性
+	 */
+	Map<String, AnnotationAttribute> getAttributes();
+
+	/**
+	 * 设置该注解的全部属性
+	 *
+	 * @param attributes 注解属性
+	 */
+	default void setAttributes(Map<String, AnnotationAttribute> attributes) {
+		if (CollUtil.isNotEmpty(attributes)) {
+			attributes.forEach(this::setAttributes);
+		}
+	}
+
+	/**
+	 * 设置属性值
+	 *
+	 * @param attributeName 属性名称
+	 * @param attribute     注解属性
+	 */
+	void setAttributes(String attributeName, AnnotationAttribute attribute);
+
+	/**
 	 * 获取属性值
 	 *
 	 * @param attributeName 属性名
 	 * @return 属性值
 	 */
-	Object getAttribute(String attributeName);
+	Object getAttributeValue(String attributeName);
 
 }

@@ -53,6 +53,61 @@ public class SyntheticMetaAnnotationTest {
 		Assert.assertThrows(IllegalArgumentException.class, () -> new SyntheticMetaAnnotation(grandParentAnnotation));
 	}
 
+	@Test
+	public void mirrorAttributeTest() {
+		AnnotationForMirrorTest annotation = ClassForMirrorTest.class.getAnnotation(AnnotationForMirrorTest.class);
+		SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
+		AnnotationForMirrorTest syntheticAnnotation = synthetic.syntheticAnnotation(AnnotationForMirrorTest.class);
+		Assert.assertEquals("Foo", syntheticAnnotation.name());
+		Assert.assertEquals("Foo", syntheticAnnotation.value());
+
+		annotation = ClassForMirrorTest2.class.getAnnotation(AnnotationForMirrorTest.class);
+		synthetic = new SyntheticMetaAnnotation(annotation);
+		syntheticAnnotation = synthetic.syntheticAnnotation(AnnotationForMirrorTest.class);
+		Assert.assertEquals("Foo", syntheticAnnotation.name());
+		Assert.assertEquals("Foo", syntheticAnnotation.value());
+
+		annotation = ClassForMirrorTest3.class.getAnnotation(AnnotationForMirrorTest.class);
+		synthetic = new SyntheticMetaAnnotation(annotation);
+		syntheticAnnotation = synthetic.syntheticAnnotation(AnnotationForMirrorTest.class);
+		AnnotationForMirrorTest finalSyntheticAnnotation = syntheticAnnotation;
+		Assert.assertThrows(IllegalArgumentException.class, () -> finalSyntheticAnnotation.name());
+	}
+
+	@Test
+	public void aliasForTest() {
+		AnnotationForAliasForTest annotation = ClassForAliasForTest.class.getAnnotation(AnnotationForAliasForTest.class);
+		SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
+		MetaAnnotationForAliasForTest metaAnnotation = synthetic.syntheticAnnotation(MetaAnnotationForAliasForTest.class);
+		Assert.assertEquals("Meta", metaAnnotation.name());
+		AnnotationForAliasForTest childAnnotation = synthetic.syntheticAnnotation(AnnotationForAliasForTest.class);
+		Assert.assertEquals("", childAnnotation.value());
+
+		annotation = ClassForAliasForTest2.class.getAnnotation(AnnotationForAliasForTest.class);
+		synthetic = new SyntheticMetaAnnotation(annotation);
+		metaAnnotation = synthetic.syntheticAnnotation(MetaAnnotationForAliasForTest.class);
+		Assert.assertEquals("Foo", metaAnnotation.name());
+		childAnnotation = synthetic.syntheticAnnotation(AnnotationForAliasForTest.class);
+		Assert.assertEquals("Foo", childAnnotation.value());
+	}
+
+	@Test
+	public void forceAliasForTest() {
+		AnnotationForceForAliasForTest annotation = ClassForForceAliasForTest.class.getAnnotation(AnnotationForceForAliasForTest.class);
+		SyntheticAnnotation synthetic = new SyntheticMetaAnnotation(annotation);
+		MetaAnnotationForForceAliasForTest metaAnnotation = synthetic.syntheticAnnotation(MetaAnnotationForForceAliasForTest.class);
+		Assert.assertEquals("", metaAnnotation.name());
+		AnnotationForceForAliasForTest childAnnotation = synthetic.syntheticAnnotation(AnnotationForceForAliasForTest.class);
+		Assert.assertEquals("", childAnnotation.value());
+
+		annotation = ClassForForceAliasForTest2.class.getAnnotation(AnnotationForceForAliasForTest.class);
+		synthetic = new SyntheticMetaAnnotation(annotation);
+		metaAnnotation = synthetic.syntheticAnnotation(MetaAnnotationForForceAliasForTest.class);
+		Assert.assertEquals("Foo", metaAnnotation.name());
+		childAnnotation = synthetic.syntheticAnnotation(AnnotationForceForAliasForTest.class);
+		Assert.assertEquals("Foo", childAnnotation.value());
+	}
+
 	// 注解结构如下：
 	// AnnotatedClass -> @ChildAnnotation -> @ParentAnnotation -> @GrandParentAnnotation
 	//                                    -> @GrandParentAnnotation
@@ -84,5 +139,62 @@ public class SyntheticMetaAnnotationTest {
 		String childValue() default "";
 		Class<?> grandParentType() default Void.class;
 	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface AnnotationForMirrorTest {
+		@Link(attribute = "name")
+		String value() default "";
+		@Link(attribute = "value")
+		String name() default "";
+	}
+	@AnnotationForMirrorTest("Foo")
+	static class ClassForMirrorTest {}
+	@AnnotationForMirrorTest(name = "Foo")
+	static class ClassForMirrorTest2 {}
+	@AnnotationForMirrorTest(value = "Aoo", name = "Foo")
+	static class ClassForMirrorTest3 {}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface MetaAnnotationForAliasForTest {
+		String name() default "";
+	}
+	@MetaAnnotationForAliasForTest(name = "Meta")
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface AnnotationForAliasForTest {
+		@Link(
+			annotation = MetaAnnotationForAliasForTest.class,
+			attribute = "name",
+			type = RelationType.ALIAS_FOR
+		)
+		String value() default "";
+	}
+	@AnnotationForAliasForTest
+	static class ClassForAliasForTest {}
+	@AnnotationForAliasForTest("Foo")
+	static class ClassForAliasForTest2 {}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface MetaAnnotationForForceAliasForTest {
+		String name() default "";
+	}
+	@MetaAnnotationForForceAliasForTest(name = "Meta")
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@interface AnnotationForceForAliasForTest {
+		@Link(
+			annotation = MetaAnnotationForForceAliasForTest.class,
+			attribute = "name",
+			type = RelationType.FORCE_ALIAS_FOR
+		)
+		String value() default "";
+	}
+	@AnnotationForceForAliasForTest
+	static class ClassForForceAliasForTest {}
+	@AnnotationForceForAliasForTest("Foo")
+	static class ClassForForceAliasForTest2 {}
 
 }

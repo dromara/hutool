@@ -5,14 +5,13 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 表示一个根注解与根注解上的多层元注解合成的注解
@@ -66,6 +65,11 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	private final SynthesizedAnnotationAttributeProcessor attributeProcessor;
 
 	/**
+	 * 合成注解属性处理器
+	 */
+	private final List<SynthesizedAnnotationPostProcessor> postProcessors;
+
+	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解。
 	 * 当层级结构中出现了相同的注解对象时，将优先选择以距离根注解最近，且优先被扫描的注解对象,
 	 * 当获取值时，同样遵循该规则。
@@ -78,6 +82,11 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 			new CacheableSynthesizedAnnotationAttributeProcessor(
 				Comparator.comparing(SynthesizedAnnotation::getVerticalDistance)
 					.thenComparing(SynthesizedAnnotation::getHorizontalDistance)
+			),
+			Arrays.asList(
+				new AliasAttributePostProcessor(),
+				new MirrorLinkAttributePostProcessor(),
+				new AliasForLinkAttributePostProcessor()
 			)
 		);
 	}
@@ -92,16 +101,26 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	public SyntheticMetaAnnotation(
 		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
-		SynthesizedAnnotationAttributeProcessor attributeProcessor) {
+		SynthesizedAnnotationAttributeProcessor attributeProcessor,
+		Collection<? extends SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
 		Assert.notNull(annotation, "annotation must not null");
 		Assert.notNull(annotationSelector, "annotationSelector must not null");
 		Assert.notNull(attributeProcessor, "attributeProcessor must not null");
+		Assert.notNull(annotationPostProcessors, "attributePostProcessors must not null");
 
+		// 初始化属性
 		this.source = annotation;
 		this.annotationSelector = annotationSelector;
 		this.attributeProcessor = attributeProcessor;
+		this.postProcessors = new ArrayList<>(annotationPostProcessors);
+		this.postProcessors.sort(Comparator.comparing(SynthesizedAnnotationPostProcessor::order));
 		this.metaAnnotationMap = new LinkedHashMap<>();
+
+		// 初始化元注解信息，并进行后置处理
 		loadMetaAnnotations();
+		annotationPostProcessors.forEach(processor ->
+			metaAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
+		);
 	}
 
 	/**
@@ -140,6 +159,16 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	@Override
 	public SynthesizedAnnotationAttributeProcessor getAttributeProcessor() {
 		return this.attributeProcessor;
+	}
+
+	/**
+	 * 获取合成注解属性后置处理器
+	 *
+	 * @return 合成注解属性后置处理器
+	 */
+	@Override
+	public Collection<SynthesizedAnnotationPostProcessor> getSynthesizedAnnotationAttributePostProcessors() {
+		return this.postProcessors;
 	}
 
 	/**
@@ -241,11 +270,11 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	private void loadMetaAnnotations() {
 		Assert.isFalse(SyntheticAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
 		// 扫描元注解
-		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
+		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(this, source, source, 0, 0));
 		new MetaAnnotationScanner().scan(
 				(index, annotation) -> {
 						SynthesizedAnnotation oldAnnotation = metaAnnotationMap.get(annotation.annotationType());
-						SynthesizedAnnotation newAnnotation = new MetaAnnotation(source, annotation, index, metaAnnotationMap.size());
+						SynthesizedAnnotation newAnnotation = new MetaAnnotation(this, source, annotation, index, metaAnnotationMap.size());
 						if (ObjectUtil.isNull(oldAnnotation)) {
 							metaAnnotationMap.put(annotation.annotationType(), newAnnotation);
 						} else {
@@ -263,18 +292,32 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 	 */
 	public static class MetaAnnotation implements Annotation, SynthesizedAnnotation {
 
+		private final SyntheticAnnotation owner;
 		private final Annotation root;
 		private final Annotation annotation;
-		private final Map<String, Method> attributeMethodCaches;
+		private final Map<String, AnnotationAttribute> attributeMethodCaches;
 		private final int verticalDistance;
 		private final int horizontalDistance;
 
-		public MetaAnnotation(Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+		public MetaAnnotation(SyntheticAnnotation owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+			this.owner = owner;
 			this.root = root;
 			this.annotation = annotation;
 			this.verticalDistance = verticalDistance;
 			this.horizontalDistance = horizontalDistance;
-			this.attributeMethodCaches = AnnotationUtil.getAttributeMethods(annotation.annotationType());
+			this.attributeMethodCaches = Stream.of(annotation.annotationType().getDeclaredMethods())
+				.filter(AnnotationUtil::isAttributeMethod)
+				.collect(Collectors.toMap(Method::getName, method -> new CacheableAnnotationAttribute(annotation, method)));
+		}
+
+		/**
+		 * 获取所属的合成注解
+		 *
+		 * @return 合成注解
+		 */
+		@Override
+		public SyntheticAnnotation getOwner() {
+			return owner;
 		}
 
 		/**
@@ -347,21 +390,42 @@ public class SyntheticMetaAnnotation implements SyntheticAnnotation {
 		@Override
 		public boolean hasAttribute(String attributeName, Class<?> returnType) {
 			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-					.filter(method -> ClassUtil.isAssignable(returnType, method.getReturnType()))
+					.filter(method -> ClassUtil.isAssignable(returnType, method.getAttributeType()))
 					.isPresent();
 		}
 
 		/**
-		 * 获取元注解的属性值
+		 * 获取该注解的全部属性
 		 *
-		 * @param attributeName 属性名
-		 * @return 元注解的属性值
+		 * @return 注解属性
 		 */
 		@Override
-		public Object getAttribute(String attributeName) {
+		public Map<String, AnnotationAttribute> getAttributes() {
+			return this.attributeMethodCaches;
+		}
+
+		/**
+		 * 设置属性值
+		 *
+		 * @param attributeName 属性名称
+		 * @param attribute     注解属性
+		 */
+		@Override
+		public void setAttributes(String attributeName, AnnotationAttribute attribute) {
+			attributeMethodCaches.put(attributeName, attribute);
+		}
+
+		/**
+		 * 获取属性值
+		 *
+		 * @param attributeName 属性名
+		 * @return 属性值
+		 */
+		@Override
+		public Object getAttributeValue(String attributeName) {
 			return Opt.ofNullable(attributeMethodCaches.get(attributeName))
-					.map(method -> ReflectUtil.invoke(annotation, method))
-					.orElse(null);
+				.map(AnnotationAttribute::getValue)
+				.get();
 		}
 
 	}

@@ -39,7 +39,7 @@ public class CacheableSynthesizedAnnotationAttributeProcessor implements Synthes
 		value = synthesizedAnnotations.stream()
 			.filter(ma -> ma.hasAttribute(attributeName, attributeType))
 			.min(annotationComparator)
-			.map(ma -> ma.getAttribute(attributeName))
+			.map(ma -> ma.getAttributeValue(attributeName))
 			.orElse(null);
 		valueCaches.put(attributeName, attributeType, value);
 		return (T)value;
