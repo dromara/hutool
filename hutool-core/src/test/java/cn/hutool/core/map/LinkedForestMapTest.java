@@ -143,6 +143,14 @@ public class LinkedForestMapTest {
 	}
 
 	@Test
+	public void getNodeValueTest() {
+		final ForestMap<String, String> map = new LinkedForestMap<>(false);
+		map.putNode("a", "aaa");
+		Assert.assertEquals("aaa", map.getNodeValue("a"));
+		Assert.assertNull(map.getNodeValue("b"));
+	}
+
+	@Test
 	public void putAllNodeTest() {
 		final ForestMap<String, Map<String, String>> map = new LinkedForestMap<>(false);
 
