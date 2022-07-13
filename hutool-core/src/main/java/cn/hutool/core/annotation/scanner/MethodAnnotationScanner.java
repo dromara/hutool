@@ -96,7 +96,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	 */
 	public MethodAnnotationScanner setScanSameSignatureMethod(boolean scanSuperMethodIfOverride) {
 		setIncludeInterfaces(scanSuperMethodIfOverride);
-		setIncludeSupperClass(scanSuperMethodIfOverride);
+		setIncludeSuperClass(scanSuperMethodIfOverride);
 		return this;
 	}
 
