@@ -109,6 +109,11 @@ public class MirrorLinkAnnotationPostProcessorTest {
 			return null;
 		}
 
+		@Override
+		public Object getRoot() {
+			return null;
+		}
+
 	}
 
 	static class TestSynthesizedAnnotation implements SynthesizedAnnotation {

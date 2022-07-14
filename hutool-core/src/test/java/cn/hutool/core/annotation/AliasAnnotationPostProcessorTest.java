@@ -106,6 +106,11 @@ public class AliasAnnotationPostProcessorTest {
 		public Object getAttribute(String attributeName, Class<?> attributeType) {
 			return null;
 		}
+
+		@Override
+		public Object getRoot() {
+			return null;
+		}
 	}
 
 	static class TestSynthesizedAnnotation implements SynthesizedAnnotation {

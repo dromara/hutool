@@ -53,6 +53,21 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	private final Annotation source;
 
 	/**
+	 * 根对象
+	 */
+	private final Object root;
+
+	/**
+	 * 距离根对象的垂直距离
+	 */
+	private final int verticalDistance;
+
+	/**
+	 * 距离根对象的水平距离
+	 */
+	private final int horizontalDistance;
+
+	/**
 	 * 包含根注解以及其元注解在内的全部注解实例
 	 */
 	private final Map<Class<? extends Annotation>, SynthesizedAnnotation> metaAnnotationMap;
@@ -94,11 +109,35 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解
 	 *
-	 * @param annotation         当前查找的注解对象
-	 * @param annotationSelector 合成注解选择器
-	 * @param attributeProcessor 注解属性处理器
+	 * @param annotation               当前查找的注解对象
+	 * @param annotationSelector       合成注解选择器
+	 * @param attributeProcessor       注解属性处理器
+	 * @param annotationPostProcessors 注解后置处理器
 	 */
 	public SynthesizedMetaAggregateAnnotation(
+		Annotation annotation,
+		SynthesizedAnnotationSelector annotationSelector,
+		SynthesizedAnnotationAttributeProcessor attributeProcessor,
+		Collection<? extends SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
+		this(
+			null, 0, 0,
+			annotation, annotationSelector, attributeProcessor, annotationPostProcessors
+		);
+	}
+
+	/**
+	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解
+	 *
+	 * @param root                     根对象
+	 * @param verticalDistance         距离根对象的水平距离
+	 * @param horizontalDistance       距离根对象的垂直距离
+	 * @param annotation               当前查找的注解对象
+	 * @param annotationSelector       合成注解选择器
+	 * @param attributeProcessor       注解属性处理器
+	 * @param annotationPostProcessors 注解后置处理器
+	 */
+	SynthesizedMetaAggregateAnnotation(
+		Object root, int verticalDistance, int horizontalDistance,
 		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
@@ -107,6 +146,11 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 		Assert.notNull(annotationSelector, "annotationSelector must not null");
 		Assert.notNull(attributeProcessor, "attributeProcessor must not null");
 		Assert.notNull(annotationPostProcessors, "attributePostProcessors must not null");
+
+		// 初始化坐标
+		this.root = ObjectUtil.defaultIfNull(root, this);
+		this.verticalDistance = verticalDistance;
+		this.horizontalDistance = horizontalDistance;
 
 		// 初始化属性
 		this.source = annotation;
@@ -121,6 +165,36 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 		annotationPostProcessors.forEach(processor ->
 			metaAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
 		);
+	}
+
+	/**
+	 * 获取根对象
+	 *
+	 * @return 根对象
+	 */
+	@Override
+	public Object getRoot() {
+		return root;
+	}
+
+	/**
+	 * 获取与根对象的垂直距离
+	 *
+	 * @return 与根对象的垂直距离
+	 */
+	@Override
+	public int getVerticalDistance() {
+		return verticalDistance;
+	}
+
+	/**
+	 * 获取与根对象的水平距离
+	 *
+	 * @return 获取与根对象的水平距离
+	 */
+	@Override
+	public int getHorizontalDistance() {
+		return horizontalDistance;
 	}
 
 	/**

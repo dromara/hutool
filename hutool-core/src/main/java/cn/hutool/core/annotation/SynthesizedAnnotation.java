@@ -3,7 +3,6 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.collection.CollUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -16,16 +15,7 @@ import java.util.function.UnaryOperator;
  * @author huangchengxing
  * @see SynthesizedAggregateAnnotation
  */
-public interface SynthesizedAnnotation extends Annotation, Comparable<SynthesizedAnnotation> {
-
-	/**
-	 * {@link SynthesizedAnnotation}使用的默认的比较器，
-	 * 按照按{@link #getVerticalDistance()}和{@link #getHorizontalDistance()}的返回值进行排序。<br>
-	 * 一般情况下，排序越小的合成注解应当被优先处理。
-	 */
-	Comparator<SynthesizedAnnotation> DEFAULT_CHILD_PRIORITY_COMPARATOR = Comparator
-		.comparing(SynthesizedAnnotation::getVerticalDistance)
-		.thenComparing(SynthesizedAnnotation::getHorizontalDistance);
+public interface SynthesizedAnnotation extends Annotation, Hierarchical {
 
 	/**
 	 * 获取所属的合成注解聚合器
@@ -33,13 +23,6 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 * @return 合成注解
 	 */
 	SynthesizedAggregateAnnotation getOwner();
-
-	/**
-	 * 获取该合成注解对应的根节点
-	 *
-	 * @return 合成注解对应的根节点
-	 */
-	Object getRoot();
 
 	/**
 	 * 获取被合成的注解对象
@@ -54,6 +37,7 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 *
 	 * @return 合成注解与根对象的垂直距离
 	 */
+	@Override
 	int getVerticalDistance();
 
 	/**
@@ -62,6 +46,7 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 *
 	 * @return 合成注解与根对象的水平距离
 	 */
+	@Override
 	int getHorizontalDistance();
 
 	/**
@@ -114,16 +99,5 @@ public interface SynthesizedAnnotation extends Annotation, Comparable<Synthesize
 	 * @return 属性值
 	 */
 	Object getAttributeValue(String attributeName);
-
-	/**
-	 * 按{@link #getVerticalDistance()}和{@link #getHorizontalDistance()}排序
-	 *
-	 * @param o {@link SynthesizedAnnotation}对象
-	 * @return 比较值
-	 */
-	@Override
-	default int compareTo(SynthesizedAnnotation o) {
-		return DEFAULT_CHILD_PRIORITY_COMPARATOR.compare(this, o);
-	}
 
 }

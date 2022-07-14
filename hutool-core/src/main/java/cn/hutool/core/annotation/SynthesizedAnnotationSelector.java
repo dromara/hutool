@@ -45,7 +45,7 @@ public interface SynthesizedAnnotationSelector {
 	class NearestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.NEAREST_AND_OLDEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -55,7 +55,7 @@ public interface SynthesizedAnnotationSelector {
 	class NearestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.NEAREST_AND_NEWEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -65,7 +65,7 @@ public interface SynthesizedAnnotationSelector {
 	class FarthestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.FARTHEST_AND_OLDEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -75,7 +75,7 @@ public interface SynthesizedAnnotationSelector {
 	class FarthestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.FARTHEST_AND_NEWEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 

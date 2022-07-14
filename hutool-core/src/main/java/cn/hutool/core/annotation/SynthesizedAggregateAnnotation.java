@@ -34,7 +34,33 @@ import java.util.Collection;
  * @see SynthesizedAnnotationPostProcessor
  * @see SynthesizedMetaAggregateAnnotation
  */
-public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnnotation {
+public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnnotation, Hierarchical {
+
+	// ================== hierarchical ==================
+
+	/**
+	 * 距离{@link #getRoot()}返回值的垂直距离，
+	 * 默认聚合注解即为根对象，因此返回0
+	 *
+	 * @return 距离{@link #getRoot()}返回值的水平距离，
+	 */
+	@Override
+	default int getVerticalDistance() {
+		return 0;
+	}
+
+	/**
+	 * 距离{@link #getRoot()}返回值的水平距离，
+	 * 默认聚合注解即为根对象，因此返回0
+	 *
+	 * @return 距离{@link #getRoot()}返回值的水平距离，
+	 */
+	@Override
+	default int getHorizontalDistance() {
+		return 0;
+	}
+
+	// ================== synthesize ==================
 
 	/**
 	 * 获取在聚合中存在的指定注解对象
