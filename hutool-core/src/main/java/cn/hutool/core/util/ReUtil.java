@@ -212,7 +212,7 @@ public class ReUtil {
 
 		ArrayList<String> result = new ArrayList<>();
 		final Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
+		while (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
 			final int groupCount = matcher.groupCount();
 			for (int i = startGroup; i <= groupCount; i++) {
