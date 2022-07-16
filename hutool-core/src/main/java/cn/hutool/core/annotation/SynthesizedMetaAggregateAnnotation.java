@@ -37,7 +37,7 @@ import java.util.Map;
  * </ul>
  * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
- * <p>{@link SynthesizedMetaAggregateAnnotation}支持通过{@link #getAttribute(String, Class)}，
+ * <p>{@link SynthesizedMetaAggregateAnnotation}支持通过{@link #getAttributeValue(String, Class)}，
  * 或通过{@link #synthesize(Class)}获得注解代理对象后获取指定类型的注解属性值，
  * 返回的属性值将根据合成注解中对应原始注解属性上的{@link Alias}与{@link Link}注解而有所变化。
  * 通过当前实例获取属性值时，将经过{@link SynthesizedAnnotationAttributeProcessor}的处理。<br>
@@ -169,7 +169,7 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 */
 	@Override
 	protected Map<Class<? extends Annotation>, SynthesizedAnnotation> loadAnnotations() {
-		Assert.isFalse(SyntheticAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
+		Assert.isFalse(SynthesizedAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
 		Map<Class<? extends Annotation>, SynthesizedAnnotation> annotationMap = new LinkedHashMap<>();
 		annotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
 		new MetaAnnotationScanner().scan(
@@ -206,7 +206,7 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 * @return 属性
 	 */
 	@Override
-	public Object getAttribute(String attributeName, Class<?> attributeType) {
+	public Object getAttributeValue(String attributeName, Class<?> attributeType) {
 		return attributeProcessor.getAttributeValue(attributeName, attributeType, synthesizedAnnotationMap.values());
 	}
 
@@ -254,11 +254,11 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 *
 	 * @param annotationType 注解类型
 	 * @return 合成注解对象
-	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAggregateAnnotation, SynthesizedAnnotation)
+	 * @see SynthesizedAnnotationProxy#create(Class, AnnotationAttributeValueProvider, SynthesizedAnnotation)
 	 */
 	@Override
 	public <T extends Annotation> T synthesize(Class<T> annotationType, SynthesizedAnnotation annotation) {
-		return SyntheticAnnotationProxy.create(annotationType, this, annotation);
+		return SynthesizedAnnotationProxy.create(annotationType, this, annotation);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 *
 	 * @author huangchengxing
 	 */
-	public static class MetaAnnotation extends AbstractSynthesizedAnnotation<Annotation> {
+	public static class MetaAnnotation extends GenericSynthesizedAnnotation<Annotation, Annotation> {
 
 		/**
 		 * 创建一个合成注解

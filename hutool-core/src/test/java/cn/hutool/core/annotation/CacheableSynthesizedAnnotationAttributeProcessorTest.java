@@ -90,6 +90,10 @@ public class CacheableSynthesizedAnnotationAttributeProcessorTest {
 			return null;
 		}
 
+		@Override
+		public Object getAttributeValue(String attributeName, Class<?> attributeType) {
+			return null;
+		}
 	}
 
 }

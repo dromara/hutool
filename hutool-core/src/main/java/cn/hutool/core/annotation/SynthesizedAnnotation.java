@@ -15,7 +15,7 @@ import java.util.function.UnaryOperator;
  * @author huangchengxing
  * @see SynthesizedAggregateAnnotation
  */
-public interface SynthesizedAnnotation extends Annotation, Hierarchical {
+public interface SynthesizedAnnotation extends Annotation, Hierarchical, AnnotationAttributeValueProvider {
 
 	/**
 	 * 获取被合成的注解对象

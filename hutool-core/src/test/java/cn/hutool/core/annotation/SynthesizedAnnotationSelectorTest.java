@@ -136,6 +136,11 @@ public class SynthesizedAnnotationSelectorTest {
 		public Class<? extends Annotation> annotationType() {
 			return null;
 		}
+
+		@Override
+		public Object getAttributeValue(String attributeName, Class<?> attributeType) {
+			return null;
+		}
 	}
 
 }

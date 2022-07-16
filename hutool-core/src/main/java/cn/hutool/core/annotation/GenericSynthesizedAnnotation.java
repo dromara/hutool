@@ -16,12 +16,13 @@ import java.util.stream.Stream;
  * {@link SynthesizedAnnotation}的基本实现
  *
  * @param <R> 根对象类型
+ * @param <T> 注解类型
  * @author huangchengxing
  */
-public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, SynthesizedAnnotation {
+public class GenericSynthesizedAnnotation<R, T extends Annotation> implements Annotation, SynthesizedAnnotation {
 
 	private final R root;
-	private final Annotation annotation;
+	private final T annotation;
 	private final Map<String, AnnotationAttribute> attributeMethodCaches;
 	private final int verticalDistance;
 	private final int horizontalDistance;
@@ -34,8 +35,8 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	 * @param verticalDistance   距离根对象的水平距离
 	 * @param horizontalDistance 距离根对象的垂直距离
 	 */
-	protected AbstractSynthesizedAnnotation(
-		R root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+	protected GenericSynthesizedAnnotation(
+		R root, T annotation, int verticalDistance, int horizontalDistance) {
 		this.root = root;
 		this.annotation = annotation;
 		this.verticalDistance = verticalDistance;
@@ -143,7 +144,7 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	 * @return 注解对象
 	 */
 	@Override
-	public Annotation getAnnotation() {
+	public T getAnnotation() {
 		return annotation;
 	}
 
@@ -179,4 +180,18 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 		return annotation.annotationType();
 	}
 
+	/**
+	 * 获取注解属性值
+	 *
+	 * @param attributeName  属性名称
+	 * @param attributeType  属性类型
+	 * @return 注解属性值
+	 */
+	@Override
+	public Object getAttributeValue(String attributeName, Class<?> attributeType) {
+		return Opt.ofNullable(attributeMethodCaches.get(attributeName))
+			.filter(method -> ClassUtil.isAssignable(attributeType, method.getAttributeType()))
+			.map(AnnotationAttribute::getValue)
+			.get();
+	}
 }

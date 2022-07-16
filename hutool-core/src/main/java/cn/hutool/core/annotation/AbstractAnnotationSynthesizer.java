@@ -8,6 +8,7 @@ import cn.hutool.core.util.ObjectUtil;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -28,6 +29,11 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 	protected final Map<Class<? extends Annotation>, SynthesizedAnnotation> synthesizedAnnotationMap;
 
 	/**
+	 * 已经合成过的注解对象
+	 */
+	private final Map<Class<? extends Annotation>, Annotation> synthesizedProxyAnnotations;
+
+	/**
 	 * 合成注解选择器
 	 */
 	protected final SynthesizedAnnotationSelector annotationSelector;
@@ -38,7 +44,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 	protected final Collection<SynthesizedAnnotationPostProcessor> postProcessors;
 
 	/**
-	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解
+	 * 构造一个注解合成器
 	 *
 	 * @param source                   当前查找的注解对象
 	 * @param annotationSelector       合成注解选择器
@@ -55,6 +61,7 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 		this.postProcessors = CollUtil.unmodifiable(
 			CollUtil.sort(annotationPostProcessors, Comparator.comparing(SynthesizedAnnotationPostProcessor::order))
 		);
+		this.synthesizedProxyAnnotations = new LinkedHashMap<>();
 		this.synthesizedAnnotationMap = MapUtil.unmodifiable(loadAnnotations());
 		annotationPostProcessors.forEach(processor ->
 			synthesizedAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
@@ -136,13 +143,14 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 	 * @param <A>            注解类型
 	 * @return 类型
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <A extends Annotation> A synthesize(Class<A> annotationType) {
-		SynthesizedAnnotation synthesizedAnnotation = synthesizedAnnotationMap.get(annotationType);
-		if (ObjectUtil.isNull(synthesizedAnnotation)) {
-			return null;
-		}
-		return synthesize(annotationType, synthesizedAnnotation);
+		return (A)synthesizedProxyAnnotations.computeIfAbsent(annotationType, type -> {
+			final SynthesizedAnnotation synthesizedAnnotation = synthesizedAnnotationMap.get(annotationType);
+			return ObjectUtil.isNull(synthesizedAnnotation) ?
+				null : synthesize(annotationType, synthesizedAnnotation);
+		});
 	}
 
 }

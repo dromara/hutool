@@ -136,7 +136,7 @@ public class AliasLinkAnnotationPostProcessorTest {
 		}
 
 		@Override
-		public Object getAttribute(String attributeName, Class<?> attributeType) {
+		public Object getAttributeValue(String attributeName, Class<?> attributeType) {
 			return null;
 		}
 
@@ -212,6 +212,11 @@ public class AliasLinkAnnotationPostProcessorTest {
 		@Override
 		public Class<? extends Annotation> annotationType() {
 			return annotation.annotationType();
+		}
+
+		@Override
+		public Object getAttributeValue(String attributeName, Class<?> attributeType) {
+			return null;
 		}
 	}
 

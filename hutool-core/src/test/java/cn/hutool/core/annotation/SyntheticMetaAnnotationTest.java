@@ -60,10 +60,10 @@ public class SyntheticMetaAnnotationTest {
 		Assert.assertEquals(syntheticMetaAnnotation.annotationType(), SynthesizedMetaAggregateAnnotation.class);
 		Assert.assertEquals(3, syntheticMetaAnnotation.getAnnotations().length);
 
-		Assert.assertEquals("Child!", syntheticMetaAnnotation.getAttribute("childValue", String.class));
-		Assert.assertEquals("Child!", syntheticMetaAnnotation.getAttribute("childValueAlias", String.class));
-		Assert.assertEquals("Child's Parent!", syntheticMetaAnnotation.getAttribute("parentValue", String.class));
-		Assert.assertEquals("Child's GrandParent!", syntheticMetaAnnotation.getAttribute("grandParentValue", String.class));
+		Assert.assertEquals("Child!", syntheticMetaAnnotation.getAttributeValue("childValue", String.class));
+		Assert.assertEquals("Child!", syntheticMetaAnnotation.getAttributeValue("childValueAlias", String.class));
+		Assert.assertEquals("Child's Parent!", syntheticMetaAnnotation.getAttributeValue("parentValue", String.class));
+		Assert.assertEquals("Child's GrandParent!", syntheticMetaAnnotation.getAttributeValue("grandParentValue", String.class));
 	}
 
 	@Test

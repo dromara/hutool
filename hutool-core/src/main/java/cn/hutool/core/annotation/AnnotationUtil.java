@@ -355,7 +355,7 @@ public class AnnotationUtil {
 	 */
 	public static <T extends Annotation> T getSynthesizedAnnotation(Annotation annotation, Class<T> annotationType) {
 		// TODO 缓存合成注解信息，避免重复解析
-		return SynthesizedAggregateAnnotation.of(annotation).synthesize(annotationType);
+		return SynthesizedAggregateAnnotation.from(annotation).synthesize(annotationType);
 	}
 
 	/**
