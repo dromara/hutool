@@ -33,7 +33,7 @@ import java.lang.annotation.Annotation;
  * @see SynthesizedAnnotationSelector
  * @see SynthesizedAnnotationAttributeProcessor
  * @see SynthesizedAnnotationPostProcessor
- * @see SynthesizedMetaAggregateAnnotation
+ * @see GenericSynthesizedAggregateAnnotation
  */
 public interface SynthesizedAggregateAnnotation extends AggregateAnnotation, Hierarchical, AnnotationSynthesizer, AnnotationAttributeValueProvider {
 
@@ -98,16 +98,5 @@ public interface SynthesizedAggregateAnnotation extends AggregateAnnotation, Hie
 	 */
 	@Override
 	Object getAttributeValue(String attributeName, Class<?> attributeType);
-
-	/**
-	 * 基于指定根注解，构建包括其元注解在内的合成注解
-	 *
-	 * @param rootAnnotation 根注解
-	 * @param <T>            注解类型
-	 * @return 合成注解
-	 */
-	static <T extends Annotation> SynthesizedAggregateAnnotation from(T rootAnnotation) {
-		return new SynthesizedMetaAggregateAnnotation(rootAnnotation);
-	}
 
 }

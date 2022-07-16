@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.annotation.scanner.AnnotationScanner;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
@@ -44,20 +45,31 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 	protected final Collection<SynthesizedAnnotationPostProcessor> postProcessors;
 
 	/**
+	 * 注解扫描器
+	 */
+	protected final AnnotationScanner annotationScanner;
+
+	/**
 	 * 构造一个注解合成器
 	 *
 	 * @param source                   当前查找的注解对象
 	 * @param annotationSelector       合成注解选择器
 	 * @param annotationPostProcessors 注解后置处理器
+	 * @param annotationScanner        注解扫描器，该扫描器需要支持扫描注解类
 	 */
 	protected AbstractAnnotationSynthesizer(
-		T source, SynthesizedAnnotationSelector annotationSelector, Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
+		T source,
+		SynthesizedAnnotationSelector annotationSelector,
+		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+		AnnotationScanner annotationScanner) {
 		Assert.notNull(source, "source must not null");
 		Assert.notNull(annotationSelector, "annotationSelector must not null");
 		Assert.notNull(annotationPostProcessors, "annotationPostProcessors must not null");
+		Assert.notNull(annotationPostProcessors, "annotationScanner must not null");
 
 		this.source = source;
 		this.annotationSelector = annotationSelector;
+		this.annotationScanner = annotationScanner;
 		this.postProcessors = CollUtil.unmodifiable(
 			CollUtil.sort(annotationPostProcessors, Comparator.comparing(SynthesizedAnnotationPostProcessor::order))
 		);

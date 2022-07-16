@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.annotation.scanner.AnnotationScanner;
 import cn.hutool.core.annotation.scanner.MetaAnnotationScanner;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
@@ -7,16 +8,14 @@ import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
- * {@link SynthesizedAggregateAnnotation}的基本实现，表示一个根注解与根注解上的多层元注解的聚合得到的注解
+ * {@link SynthesizedAggregateAnnotation}的基本实现，表示基于多个注解对象，
+ * 或多个根注解对象与他们的多层元注解对象的聚合得到的注解。
  *
- * <p>假设现有注解A，A上存在元注解B，B上存在元注解C，则对注解A进行解析，
- * 将得到包含根注解A，以及其元注解B、C在内的合成元注解聚合{@link SynthesizedMetaAggregateAnnotation}。
+ * <p>假设现有注解A，若指定的{@link #annotationScanner}支持扫描注解A的元注解，
+ * 且A上存在元注解B，B上存在元注解C，则对注解A进行解析，将得到包含根注解A，以及其元注解B、C在内的合成元注解聚合{@link GenericSynthesizedAggregateAnnotation}。
  * 从{@link AnnotatedElement}的角度来说，得到的合成注解是一个同时承载有ABC三个注解对象的被注解元素，
  * 因此通过调用{@link AnnotatedElement}的相关方法将返回对应符合语义的注解对象。
  *
@@ -37,7 +36,7 @@ import java.util.Map;
  * </ul>
  * 若用户需要自行扩展，则需要保证上述三个处理器被正确注入当前实例。
  *
- * <p>{@link SynthesizedMetaAggregateAnnotation}支持通过{@link #getAttributeValue(String, Class)}，
+ * <p>{@link GenericSynthesizedAggregateAnnotation}支持通过{@link #getAttributeValue(String, Class)}，
  * 或通过{@link #synthesize(Class)}获得注解代理对象后获取指定类型的注解属性值，
  * 返回的属性值将根据合成注解中对应原始注解属性上的{@link Alias}与{@link Link}注解而有所变化。
  * 通过当前实例获取属性值时，将经过{@link SynthesizedAnnotationAttributeProcessor}的处理。<br>
@@ -46,9 +45,16 @@ import java.util.Map;
  *
  * @author huangchengxing
  * @see AnnotationUtil
+ * @see SynthesizedAnnotationProxy
  * @see SynthesizedAnnotationSelector
+ * @see SynthesizedAnnotationAttributeProcessor
+ * @see SynthesizedAnnotationPostProcessor
+ * @see AnnotationSynthesizer
+ * @see AnnotationScanner
  */
-public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthesizer<Annotation> implements SynthesizedAggregateAnnotation {
+public class GenericSynthesizedAggregateAnnotation
+	extends AbstractAnnotationSynthesizer<List<Annotation>>
+	implements SynthesizedAggregateAnnotation {
 
 	/**
 	 * 根对象
@@ -71,13 +77,25 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	private final SynthesizedAnnotationAttributeProcessor attributeProcessor;
 
 	/**
-	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解。
+	 * 基于指定根注解，为其与其元注解的层级结构中的全部注解构造一个合成注解。
 	 * 当层级结构中出现了相同的注解对象时，将优先选择以距离根注解最近，且优先被扫描的注解对象,
 	 * 当获取值时，同样遵循该规则。
 	 *
 	 * @param source 源注解
 	 */
-	public SynthesizedMetaAggregateAnnotation(Annotation source) {
+	public GenericSynthesizedAggregateAnnotation(Annotation... source) {
+		this(Arrays.asList(source), new MetaAnnotationScanner());
+	}
+
+	/**
+	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解。
+	 * 若扫描器支持对注解的层级结构进行扫描，则若层级结构中出现了相同的注解对象时，
+	 * 将优先选择以距离根注解最近，且优先被扫描的注解对象，并且当获取注解属性值时同样遵循该规则。
+	 *
+	 * @param source            源注解
+	 * @param annotationScanner 注解扫描器，该扫描器必须支持扫描注解类
+	 */
+	public GenericSynthesizedAggregateAnnotation(List<Annotation> source, AnnotationScanner annotationScanner) {
 		this(
 			source, SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY,
 			new CacheableSynthesizedAnnotationAttributeProcessor(),
@@ -85,26 +103,29 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 				SynthesizedAnnotationPostProcessor.ALIAS_ANNOTATION_POST_PROCESSOR,
 				SynthesizedAnnotationPostProcessor.MIRROR_LINK_ANNOTATION_POST_PROCESSOR,
 				SynthesizedAnnotationPostProcessor.ALIAS_LINK_ANNOTATION_POST_PROCESSOR
-			)
+			),
+			annotationScanner
 		);
 	}
 
 	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解
 	 *
-	 * @param annotation               当前查找的注解对象
+	 * @param source                   当前查找的注解对象
 	 * @param annotationSelector       合成注解选择器
 	 * @param attributeProcessor       注解属性处理器
 	 * @param annotationPostProcessors 注解后置处理器
+	 * @param annotationScanner        注解扫描器，该扫描器必须支持扫描注解类
 	 */
-	public SynthesizedMetaAggregateAnnotation(
-		Annotation annotation,
+	public GenericSynthesizedAggregateAnnotation(
+		List<Annotation> source,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
-		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
+		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+		AnnotationScanner annotationScanner) {
 		this(
 			null, 0, 0,
-			annotation, annotationSelector, attributeProcessor, annotationPostProcessors
+			source, annotationSelector, attributeProcessor, annotationPostProcessors, annotationScanner
 		);
 	}
 
@@ -114,18 +135,20 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 * @param root                     根对象
 	 * @param verticalDistance         距离根对象的水平距离
 	 * @param horizontalDistance       距离根对象的垂直距离
-	 * @param source               当前查找的注解对象
+	 * @param source                   当前查找的注解对象
 	 * @param annotationSelector       合成注解选择器
 	 * @param attributeProcessor       注解属性处理器
 	 * @param annotationPostProcessors 注解后置处理器
+	 * @param annotationScanner        注解扫描器，该扫描器必须支持扫描注解类
 	 */
-	SynthesizedMetaAggregateAnnotation(
+	GenericSynthesizedAggregateAnnotation(
 		Object root, int verticalDistance, int horizontalDistance,
-		Annotation source,
+		List<Annotation> source,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
-		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
-		super(source, annotationSelector, annotationPostProcessors);
+		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors,
+		AnnotationScanner annotationScanner) {
+		super(source, annotationSelector, annotationPostProcessors, annotationScanner);
 		Assert.notNull(attributeProcessor, "attributeProcessor must not null");
 
 		this.root = ObjectUtil.defaultIfNull(root, this);
@@ -169,21 +192,31 @@ public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthe
 	 */
 	@Override
 	protected Map<Class<? extends Annotation>, SynthesizedAnnotation> loadAnnotations() {
-		Assert.isFalse(SynthesizedAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
 		Map<Class<? extends Annotation>, SynthesizedAnnotation> annotationMap = new LinkedHashMap<>();
-		annotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
-		new MetaAnnotationScanner().scan(
-			(index, annotation) -> {
-				SynthesizedAnnotation oldAnnotation = annotationMap.get(annotation.annotationType());
-				SynthesizedAnnotation newAnnotation = new MetaAnnotation(source, annotation, index, annotationMap.size());
-				if (ObjectUtil.isNull(oldAnnotation)) {
-					annotationMap.put(annotation.annotationType(), newAnnotation);
-				} else {
-					annotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation, newAnnotation));
-				}
-			},
-			source.annotationType(), null
-		);
+
+		// 根注解默认水平坐标为0，根注解的元注解坐标从1开始
+		for (int i = 0; i < source.size(); i++) {
+			final Annotation sourceAnnotation = source.get(i);
+			Assert.isFalse(AnnotationUtil.isSynthesizedAnnotation(sourceAnnotation), "source [{}] has been synthesized");
+			annotationMap.put(sourceAnnotation.annotationType(), new MetaAnnotation(sourceAnnotation, sourceAnnotation, 0, i));
+			Assert.isTrue(
+				annotationScanner.support(sourceAnnotation.annotationType()),
+				"annotation scanner [{}] cannot support scan [{}]",
+				annotationScanner, sourceAnnotation.annotationType()
+			);
+			annotationScanner.scan(
+				(index, annotation) -> {
+					SynthesizedAnnotation oldAnnotation = annotationMap.get(annotation.annotationType());
+					SynthesizedAnnotation newAnnotation = new MetaAnnotation(sourceAnnotation, annotation, index + 1, annotationMap.size());
+					if (ObjectUtil.isNull(oldAnnotation)) {
+						annotationMap.put(annotation.annotationType(), newAnnotation);
+					} else {
+						annotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation, newAnnotation));
+					}
+				},
+				sourceAnnotation.annotationType(), null
+			);
+		}
 		return annotationMap;
 	}
 

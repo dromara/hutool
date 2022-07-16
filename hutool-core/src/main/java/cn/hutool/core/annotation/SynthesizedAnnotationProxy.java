@@ -33,18 +33,17 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 
 	/**
 	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
-	 * <ul>
-	 *     <li>当作为{@code annotationType}所指定的类型使用时，其属性将通过合成它的{@link SynthesizedAggregateAnnotation}获取；</li>
-	 *     <li>当作为{@link SyntheticProxyAnnotation}或{@link SynthesizedAnnotation}使用时，将可以获得原始注解实例的相关信息；</li>
-	 * </ul>
 	 *
 	 * @param annotationType                   注解类型
 	 * @param annotationAttributeValueProvider 注解属性值获取器
+	 * @param annotation                       合成注解
 	 * @return 代理注解
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T create(
-		Class<T> annotationType, AnnotationAttributeValueProvider annotationAttributeValueProvider, SynthesizedAnnotation annotation) {
+		Class<T> annotationType,
+		AnnotationAttributeValueProvider annotationAttributeValueProvider,
+		SynthesizedAnnotation annotation) {
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
@@ -57,6 +56,18 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 			new Class[]{annotationType, SyntheticProxyAnnotation.class},
 			proxyHandler
 		);
+	}
+
+	/**
+	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
+	 *
+	 * @param annotationType 注解类型
+	 * @param annotation     合成注解
+	 * @return 代理注解
+	 */
+	public static <T extends Annotation> T create(
+		Class<T> annotationType, SynthesizedAnnotation annotation) {
+		return create(annotationType, annotation, annotation);
 	}
 
 	/**

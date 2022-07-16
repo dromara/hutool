@@ -355,7 +355,7 @@ public class AnnotationUtil {
 	 */
 	public static <T extends Annotation> T getSynthesizedAnnotation(Annotation annotation, Class<T> annotationType) {
 		// TODO 缓存合成注解信息，避免重复解析
-		return SynthesizedAggregateAnnotation.from(annotation).synthesize(annotationType);
+		return aggregatingFromAnnotationWithMeta(annotation).synthesize(annotationType);
 	}
 
 	/**
@@ -468,6 +468,26 @@ public class AnnotationUtil {
 	 */
 	static boolean isAttributeMethod(Method method) {
 		return method.getParameterCount() == 0 && method.getReturnType() != void.class;
+	}
+
+	/**
+	 * 对指定注解对象进行聚合
+	 *
+	 * @param annotation 注解对象
+	 * @return 聚合注解
+	 */
+	static SynthesizedAggregateAnnotation aggregatingFromAnnotation(Annotation annotation) {
+		return new GenericSynthesizedAggregateAnnotation(Collections.singletonList(annotation), EmptyAnnotationScanner.INSTANCE);
+	}
+
+	/**
+	 * 对指定注解对象及其元注解进行聚合
+	 *
+	 * @param annotation 注解对象
+	 * @return 聚合注解
+	 */
+	static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(Annotation annotation) {
+		return new GenericSynthesizedAggregateAnnotation(annotation);
 	}
 
 }
