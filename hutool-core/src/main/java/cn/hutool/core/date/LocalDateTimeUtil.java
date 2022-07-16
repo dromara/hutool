@@ -581,6 +581,18 @@ public class LocalDateTimeUtil {
 	 * @since 5.8.5
 	 */
 	public static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
-		return date1 != null && date2 != null && date1.toLocalDate().isEqual(date2.toLocalDate());
+		return date1 != null && date2 != null && isSameDay(date1.toLocalDate(), date2.toLocalDate());
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 5.8.5
+	 */
+	public static boolean isSameDay(final LocalDate date1, final LocalDate date2) {
+		return date1 != null && date2 != null && date1.isEqual(date2);
 	}
 }

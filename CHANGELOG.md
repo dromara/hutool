@@ -17,6 +17,7 @@
 * 【core   】     ForestMap添加getNodeValue方法（pr#699@Gitee）
 * 【http   】     优化HttpUtil.isHttp判断，避免NPE（pr#698@Gitee）
 * 【core   】     修复Dict#containsKey方法没区分大小写问题（pr#697@Gitee）
+* 【core   】     增加比较两个LocalDateTime是否为同一天（pr#693@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
