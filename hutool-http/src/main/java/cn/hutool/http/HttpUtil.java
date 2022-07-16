@@ -52,7 +52,7 @@ public class HttpUtil {
 	 * @return 是否https
 	 */
 	public static boolean isHttps(String url) {
-		return url.toLowerCase().startsWith("https:");
+		return StrUtil.startWithIgnoreCase(url, "https:");
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class HttpUtil {
 	 * @since 5.3.8
 	 */
 	public static boolean isHttp(String url) {
-		return url.toLowerCase().startsWith("http:");
+		return StrUtil.startWithIgnoreCase(url, "http:");
 	}
 
 	/**
