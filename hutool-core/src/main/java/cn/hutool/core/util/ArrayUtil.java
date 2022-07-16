@@ -1021,7 +1021,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 获取数组中指定多个下标元素值，组成新数组
 	 *
 	 * @param <T>     数组元素类型
-	 * @param array   数组
+	 * @param array   数组，如果提供为{@code null}则返回{@code null}
 	 * @param indexes 下标列表
 	 * @return 结果
 	 */
@@ -1029,10 +1029,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
+		if(null == indexes){
+			return newArray(array.getClass().getComponentType(), 0);
+		}
 
 		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
-		for (int i : indexes) {
-			result[i] = get(array, i);
+		for (int i = 0; i < indexes.length; i++) {
+			result[i] = ArrayUtil.get(array, indexes[i]);
 		}
 		return result;
 	}

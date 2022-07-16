@@ -19,6 +19,7 @@
 * 【core   】     修复Dict#containsKey方法没区分大小写问题（pr#697@Gitee）
 * 【core   】     增加比较两个LocalDateTime是否为同一天（pr#693@Gitee）
 * 【core   】     增加TemporalAccessorUtil.isIn、LocalDateTimeUtil.isIn（issue#I5HBL0@Gitee）
+* 【core   】     ReUtil增加getAllGroups重载（pr#2455@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
