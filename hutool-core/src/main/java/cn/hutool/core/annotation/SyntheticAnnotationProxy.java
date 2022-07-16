@@ -2,10 +2,10 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -25,11 +25,14 @@ import java.util.stream.Stream;
  */
 class SyntheticAnnotationProxy implements InvocationHandler {
 
+	private final SynthesizedAggregateAnnotation aggregateAnnotation;
 	private final SynthesizedAnnotation annotation;
 	private final Map<String, BiFunction<Method, Object[], Object>> methods;
 
-	SyntheticAnnotationProxy(SynthesizedAnnotation annotation) {
+	SyntheticAnnotationProxy(SynthesizedAggregateAnnotation aggregateAnnotation, SynthesizedAnnotation annotation) {
+		Assert.notNull(aggregateAnnotation, "aggregateAnnotation must not null");
 		Assert.notNull(annotation, "annotation must not null");
+		this.aggregateAnnotation = aggregateAnnotation;
 		this.annotation = annotation;
 		this.methods = new HashMap<>(9);
 		loadMethods();
@@ -43,17 +46,16 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	 * </ul>
 	 *
 	 * @param annotationType      注解类型
-	 * @param synthesizedAnnotationAggregator 合成注解
+	 * @param aggregateAnnotation 合成注解
 	 * @return 代理注解
 	 */
 	@SuppressWarnings("unchecked")
 	static <T extends Annotation> T create(
-		Class<T> annotationType, SynthesizedAggregateAnnotation synthesizedAnnotationAggregator) {
-		final SynthesizedAnnotation annotation = synthesizedAnnotationAggregator.getSynthesizedAnnotation(annotationType);
+		Class<T> annotationType, SynthesizedAggregateAnnotation aggregateAnnotation, SynthesizedAnnotation annotation) {
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
-		final SyntheticAnnotationProxy proxyHandler = new SyntheticAnnotationProxy(annotation);
+		final SyntheticAnnotationProxy proxyHandler = new SyntheticAnnotationProxy(aggregateAnnotation, annotation);
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
@@ -91,7 +93,6 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 			throw new UnsupportedOperationException("proxied annotation can not reset attributes");
 		});
 		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String)args[0]));
-		methods.put("getOwner", (method, args) -> annotation.getOwner());
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
 		for (final Method declaredMethod : ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType())) {
 			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
@@ -101,17 +102,17 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	private String proxyToString() {
 		final String attributes = Stream.of(ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType()))
 			.filter(AnnotationUtil::isAttributeMethod)
-			.map(method -> StrUtil.format("{}={}", method.getName(), annotation.getOwner().getAttribute(method.getName(), method.getReturnType())))
+			.map(method -> CharSequenceUtil.format("{}={}", method.getName(), aggregateAnnotation.getAttribute(method.getName(), method.getReturnType())))
 			.collect(Collectors.joining(", "));
-		return StrUtil.format("@{}({})", annotation.annotationType().getName(), attributes);
+		return CharSequenceUtil.format("@{}({})", annotation.annotationType().getName(), attributes);
 	}
 
 	private int proxyHashCode() {
-		return Objects.hash(annotation.getOwner(), annotation);
+		return Objects.hash(aggregateAnnotation, annotation);
 	}
 
 	private Object proxyGetSynthesizedAnnotationAggregator() {
-		return annotation.getOwner();
+		return aggregateAnnotation;
 	}
 
 	private Object proxyGetSynthesizedAnnotation() {
@@ -119,7 +120,7 @@ class SyntheticAnnotationProxy implements InvocationHandler {
 	}
 
 	private Object proxyAttributeValue(Method attributeMethod) {
-		return annotation.getOwner().getAttribute(attributeMethod.getName(), attributeMethod.getReturnType());
+		return aggregateAnnotation.getAttribute(attributeMethod.getName(), attributeMethod.getReturnType());
 	}
 
 	/**

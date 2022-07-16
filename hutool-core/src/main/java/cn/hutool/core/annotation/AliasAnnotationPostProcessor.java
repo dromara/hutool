@@ -27,7 +27,7 @@ public class AliasAnnotationPostProcessor implements SynthesizedAnnotationPostPr
 	}
 
 	@Override
-	public void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAggregateAnnotation aggregator) {
+	public void process(SynthesizedAnnotation synthesizedAnnotation, AnnotationSynthesizer synthesizer) {
 		final Map<String, AnnotationAttribute> attributeMap = synthesizedAnnotation.getAttributes();
 
 		// 记录别名与属性的关系

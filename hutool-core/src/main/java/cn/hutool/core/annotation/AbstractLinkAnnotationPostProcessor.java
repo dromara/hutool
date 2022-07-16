@@ -26,10 +26,10 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * {@link #processLinkedAttribute}处理。
 	 *
 	 * @param synthesizedAnnotation 合成的注解
-	 * @param aggregator 合成注解聚合器
+	 * @param synthesizer           合成注解聚合器
 	 */
 	@Override
-	public void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAggregateAnnotation aggregator) {
+	public void process(SynthesizedAnnotation synthesizedAnnotation, AnnotationSynthesizer synthesizer) {
 		final Map<String, AnnotationAttribute> attributeMap = new HashMap<>(synthesizedAnnotation.getAttributes());
 		attributeMap.forEach((originalAttributeName, originalAttribute) -> {
 			// 获取注解
@@ -38,14 +38,14 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 				return;
 			}
 			// 获取注解属性
-			final SynthesizedAnnotation linkedAnnotation = getLinkedAnnotation(link, aggregator, synthesizedAnnotation.annotationType());
+			final SynthesizedAnnotation linkedAnnotation = getLinkedAnnotation(link, synthesizer, synthesizedAnnotation.annotationType());
 			if (ObjectUtil.isNull(linkedAnnotation)) {
 				return;
 			}
 			final AnnotationAttribute linkedAttribute = linkedAnnotation.getAttributes().get(link.attribute());
 			// 处理
 			processLinkedAttribute(
-				aggregator, link,
+				synthesizer, link,
 				synthesizedAnnotation, synthesizedAnnotation.getAttributes().get(originalAttributeName),
 				linkedAnnotation, linkedAttribute
 			);
@@ -64,7 +64,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	/**
 	 * 对关联的合成注解对象及其关联属性的处理
 	 *
-	 * @param aggregator         合成注解聚合器
+	 * @param synthesizer        注解合成器
 	 * @param annotation         {@code originalAttribute}上的{@link Link}注解对象
 	 * @param originalAnnotation 当前正在处理的{@link SynthesizedAnnotation}对象
 	 * @param originalAttribute  {@code originalAnnotation}上的待处理的属性
@@ -72,7 +72,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * @param linkedAttribute    {@link Link}指向的{@code originalAnnotation}中的关联属性，该参数可能为空
 	 */
 	protected abstract void processLinkedAttribute(
-		SynthesizedAggregateAnnotation aggregator, Link annotation,
+		AnnotationSynthesizer synthesizer, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute
 	);
@@ -96,13 +96,13 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	/**
 	 * 从合成注解中获取{@link Link#type()}指定的注解对象
 	 *
-	 * @param annotation {@link Link}注解
-	 * @param synthesizedAnnotationAggregator 合成注解
+	 * @param annotation  {@link Link}注解
+	 * @param synthesizer 注解合成器
 	 */
 	protected SynthesizedAnnotation getLinkedAnnotation(
-		Link annotation, SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, Class<? extends Annotation> defaultType) {
+		Link annotation, AnnotationSynthesizer synthesizer, Class<? extends Annotation> defaultType) {
 		final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
-		return synthesizedAnnotationAggregator.getSynthesizedAnnotation(targetAnnotationType);
+		return synthesizer.getSynthesizedAnnotation(targetAnnotationType);
 	}
 
 	/**

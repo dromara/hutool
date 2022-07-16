@@ -20,7 +20,6 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, SynthesizedAnnotation {
 
-	private final SynthesizedAggregateAnnotation owner;
 	private final R root;
 	private final Annotation annotation;
 	private final Map<String, AnnotationAttribute> attributeMethodCaches;
@@ -30,15 +29,13 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 	/**
 	 * 创建一个合成注解
 	 *
-	 * @param owner              合成注解所属的合成注解聚合器
 	 * @param root               根对象
 	 * @param annotation         被合成的注解对象
 	 * @param verticalDistance   距离根对象的水平距离
 	 * @param horizontalDistance 距离根对象的垂直距离
 	 */
 	protected AbstractSynthesizedAnnotation(
-		SynthesizedAggregateAnnotation owner, R root, Annotation annotation, int verticalDistance, int horizontalDistance) {
-		this.owner = owner;
+		R root, Annotation annotation, int verticalDistance, int horizontalDistance) {
 		this.root = root;
 		this.annotation = annotation;
 		this.verticalDistance = verticalDistance;
@@ -128,16 +125,6 @@ public abstract class AbstractSynthesizedAnnotation<R> implements Annotation, Sy
 		return Opt.ofNullable(attributeMethodCaches.get(attributeName))
 			.map(AnnotationAttribute::getValue)
 			.get();
-	}
-
-	/**
-	 * 获取所属的合成注解集合器
-	 *
-	 * @return 合成注解
-	 */
-	@Override
-	public SynthesizedAggregateAnnotation getOwner() {
-		return owner;
 	}
 
 	/**

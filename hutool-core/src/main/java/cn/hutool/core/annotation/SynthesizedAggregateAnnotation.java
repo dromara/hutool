@@ -1,10 +1,10 @@
 package cn.hutool.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
 
 /**
- * 表示基于特定规则聚合，将一组注解聚合而来的注解对象
+ * <p>表示基于特定规则聚合，将一组注解聚合而来的注解对象，
+ * 该注解对象允许根据一定规则“合成”一些跟原始注解属性不一样合成注解。
  *
  * <p>合成注解一般被用于处理类层级结果中具有直接或间接关联的注解对象，
  * 当实例被创建时，会获取到这些注解对象，并使用{@link SynthesizedAnnotationSelector}对类型相同的注解进行过滤，
@@ -28,13 +28,14 @@ import java.util.Collection;
  * 自定义属性处理器以拦截合成注解的取值过程。
  *
  * @author huangchengxing
+ * @see AnnotationSynthesizer
  * @see SynthesizedAnnotation
  * @see SynthesizedAnnotationSelector
  * @see SynthesizedAnnotationAttributeProcessor
  * @see SynthesizedAnnotationPostProcessor
  * @see SynthesizedMetaAggregateAnnotation
  */
-public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnnotation, Hierarchical {
+public interface SynthesizedAggregateAnnotation extends AggregateAnnotation, Hierarchical, AnnotationSynthesizer {
 
 	// ================== hierarchical ==================
 
@@ -72,40 +73,11 @@ public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnn
 	<T extends Annotation> T getAnnotation(Class<T> annotationType);
 
 	/**
-	 * 获取合成注解选择器
-	 *
-	 * @return 合成注解选择器
-	 */
-	SynthesizedAnnotationSelector getAnnotationSelector();
-
-	/**
 	 * 获取合成注解属性处理器
 	 *
 	 * @return 合成注解属性处理器
 	 */
 	SynthesizedAnnotationAttributeProcessor getAnnotationAttributeProcessor();
-
-	/**
-	 * 获取合成注解属性后置处理器
-	 *
-	 * @return 合成注解属性后置处理器
-	 */
-	Collection<SynthesizedAnnotationPostProcessor> getAnnotationAttributePostProcessors();
-
-	/**
-	 * 获取已合成的注解
-	 *
-	 * @param annotationType 注解类型
-	 * @return 已合成的注解
-	 */
-	SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType);
-
-	/**
-	 * 获取全部的合成注解
-	 *
-	 * @return 合成注解
-	 */
-	Collection<SynthesizedAnnotation> getAllSynthesizedAnnotation();
 
 	/**
 	 * 获取当前的注解类型
@@ -125,15 +97,6 @@ public interface SynthesizedAggregateAnnotation extends Annotation, AggregateAnn
 	 * @return 属性值
 	 */
 	Object getAttribute(String attributeName, Class<?> attributeType);
-
-	/**
-	 * 获取合成注解
-	 *
-	 * @param annotationType 注解类型
-	 * @param <T>            注解类型
-	 * @return 类型
-	 */
-	<T extends Annotation> T synthesize(Class<T> annotationType);
 
 	/**
 	 * 基于指定根注解，构建包括其元注解在内的合成注解

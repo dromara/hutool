@@ -43,7 +43,7 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 * 将目标注解属性包装为{@link AliasedAnnotationAttribute}或{@link ForceAliasedAnnotationAttribute}，
 	 * 然后用包装后注解属性在对应的合成注解中替换原始的目标注解属性
 	 *
-	 * @param aggregator         合成注解聚合器
+	 * @param synthesizer        注解合成器
 	 * @param annotation         {@code originalAttribute}上的{@link Link}注解对象
 	 * @param originalAnnotation 当前正在处理的{@link SynthesizedAnnotation}对象
 	 * @param originalAttribute  {@code originalAnnotation}上的待处理的属性
@@ -52,34 +52,34 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 */
 	@Override
 	protected void processLinkedAttribute(
-		SynthesizedAggregateAnnotation aggregator, Link annotation,
+		AnnotationSynthesizer synthesizer, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
 		// 校验别名关系
 		checkAliasRelation(annotation, originalAttribute, linkedAttribute);
 		// 处理aliasFor类型的关系
 		if (RelationType.ALIAS_FOR.equals(annotation.type())) {
-			wrappingLinkedAttribute(aggregator, originalAttribute, linkedAttribute, AliasedAnnotationAttribute::new);
+			wrappingLinkedAttribute(synthesizer, originalAttribute, linkedAttribute, AliasedAnnotationAttribute::new);
 			return;
 		}
 		// 处理forceAliasFor类型的关系
-		wrappingLinkedAttribute(aggregator, originalAttribute, linkedAttribute, ForceAliasedAnnotationAttribute::new);
+		wrappingLinkedAttribute(synthesizer, originalAttribute, linkedAttribute, ForceAliasedAnnotationAttribute::new);
 	}
 
 	/**
 	 * 对指定注解属性进行包装，若该属性已被包装过，则递归以其为根节点的树结构，对树上全部的叶子节点进行包装
 	 */
 	private void wrappingLinkedAttribute(
-		SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
+		AnnotationSynthesizer synthesizer, AnnotationAttribute originalAttribute, AnnotationAttribute aliasAttribute, BinaryOperator<AnnotationAttribute> wrapping) {
 		// 不是包装属性
 		if (!aliasAttribute.isWrapped()) {
-			processAttribute(synthesizedAnnotationAggregator, originalAttribute, aliasAttribute, wrapping);
+			processAttribute(synthesizer, originalAttribute, aliasAttribute, wrapping);
 			return;
 		}
 		// 是包装属性
 		final AbstractWrappedAnnotationAttribute wrapper = (AbstractWrappedAnnotationAttribute)aliasAttribute;
 		wrapper.getAllLinkedNonWrappedAttributes().forEach(
-			t -> processAttribute(synthesizedAnnotationAggregator, originalAttribute, t, wrapping)
+			t -> processAttribute(synthesizer, originalAttribute, t, wrapping)
 		);
 	}
 
@@ -87,10 +87,10 @@ public class AliasLinkAnnotationPostProcessor extends AbstractLinkAnnotationPost
 	 * 获取指定注解属性，然后将其再进行一层包装
 	 */
 	private void processAttribute(
-		SynthesizedAggregateAnnotation synthesizedAnnotationAggregator, AnnotationAttribute originalAttribute,
+		AnnotationSynthesizer synthesizer, AnnotationAttribute originalAttribute,
 		AnnotationAttribute target, BinaryOperator<AnnotationAttribute> wrapping) {
 		Opt.ofNullable(target.getAnnotationType())
-			.map(synthesizedAnnotationAggregator::getSynthesizedAnnotation)
+			.map(synthesizer::getSynthesizedAnnotation)
 			.ifPresent(t -> t.replaceAttribute(target.getAttributeName(), old -> wrapping.apply(old, originalAttribute)));
 	}
 

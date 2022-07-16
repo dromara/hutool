@@ -60,6 +60,11 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		}
 
 		@Override
+		public Object getSource() {
+			return null;
+		}
+
+		@Override
 		public SynthesizedAnnotationSelector getAnnotationSelector() {
 			return null;
 		}
@@ -70,7 +75,7 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		}
 
 		@Override
-		public Collection<SynthesizedAnnotationPostProcessor> getAnnotationAttributePostProcessors() {
+		public Collection<SynthesizedAnnotationPostProcessor> getAnnotationPostProcessors() {
 			return null;
 		}
 
@@ -80,7 +85,7 @@ public class MirrorLinkAnnotationPostProcessorTest {
 		}
 
 		@Override
-		public Collection<SynthesizedAnnotation> getAllSynthesizedAnnotation() {
+		public Map<Class<? extends Annotation>, SynthesizedAnnotation> getAllSynthesizedAnnotation() {
 			return null;
 		}
 
@@ -129,11 +134,6 @@ public class MirrorLinkAnnotationPostProcessorTest {
 			for (Method declaredMethod : annotation.annotationType().getDeclaredMethods()) {
 				attributeMap.put(declaredMethod.getName(), new CacheableAnnotationAttribute(annotation, declaredMethod));
 			}
-		}
-
-		@Override
-		public SynthesizedAggregateAnnotation getOwner() {
-			return owner;
 		}
 
 		@Override

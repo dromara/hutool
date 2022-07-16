@@ -64,8 +64,8 @@ public interface SynthesizedAnnotationPostProcessor extends Comparable<Synthesiz
 	 * 给定指定被合成注解与其所属的合成注解聚合器实例，经过处理后返回最终
 	 *
 	 * @param synthesizedAnnotation 合成的注解
-	 * @param aggregator            合成注解聚合器
+	 * @param synthesizer           注解合成器
 	 */
-	void process(SynthesizedAnnotation synthesizedAnnotation, SynthesizedAggregateAnnotation aggregator);
+	void process(SynthesizedAnnotation synthesizedAnnotation, AnnotationSynthesizer synthesizer);
 
 }

@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * <p>用于处理注解对象中带有{@link Link}注解，且{@link Link#type()}为{@link RelationType#MIRROR_FOR}的属性。<br>
@@ -36,7 +36,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 	 * 将存在镜像关系的合成注解属性分别包装为{@link MirroredAnnotationAttribute}对象，
 	 * 并使用包装后{@link MirroredAnnotationAttribute}替换在它们对应合成注解实例中的{@link AnnotationAttribute}
 	 *
-	 * @param aggregator         合成注解聚合器
+	 * @param synthesizer        注解合成器
 	 * @param annotation         {@code originalAttribute}上的{@link Link}注解对象
 	 * @param originalAnnotation 当前正在处理的{@link SynthesizedAnnotation}对象
 	 * @param originalAttribute  {@code originalAnnotation}上的待处理的属性
@@ -45,7 +45,7 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 	 */
 	@Override
 	protected void processLinkedAttribute(
-		SynthesizedAggregateAnnotation aggregator, Link annotation,
+		AnnotationSynthesizer synthesizer, Link annotation,
 		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
 		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute) {
 
@@ -86,21 +86,21 @@ public class MirrorLinkAnnotationPostProcessor extends AbstractLinkAnnotationPos
 		String errorMsg;
 		// 原始字段已经跟其他字段形成镜像
 		if (originalAttributeMirrored && !mirrorAttributeMirrored) {
-			errorMsg = StrUtil.format(
+			errorMsg = CharSequenceUtil.format(
 				"attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
 				original.getAttribute(), mirror.getAttribute(), ((MirroredAnnotationAttribute)original).getLinked()
 			);
 		}
 		// 镜像字段已经跟其他字段形成镜像
 		else if (!originalAttributeMirrored && mirrorAttributeMirrored) {
-			errorMsg = StrUtil.format(
+			errorMsg = CharSequenceUtil.format(
 				"attribute [{}] cannot mirror for [{}], because it's already mirrored for [{}]",
 				mirror.getAttribute(), original.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked()
 			);
 		}
 		// 两者都形成了镜像，但是都未指向对方，理论上不会存在该情况
 		else {
-			errorMsg = StrUtil.format(
+			errorMsg = CharSequenceUtil.format(
 				"attribute [{}] cannot mirror for [{}], because [{}] already mirrored for [{}] and  [{}] already mirrored for [{}]",
 				mirror.getAttribute(), original.getAttribute(),
 				mirror.getAttribute(), ((MirroredAnnotationAttribute)mirror).getLinked(),

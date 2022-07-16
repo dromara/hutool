@@ -39,11 +39,6 @@ public class CacheableSynthesizedAnnotationAttributeProcessorTest {
 		}
 
 		@Override
-		public SynthesizedAggregateAnnotation getOwner() {
-			return null;
-		}
-
-		@Override
 		public Object getRoot() {
 			return null;
 		}

@@ -7,7 +7,10 @@ import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * {@link SynthesizedAggregateAnnotation}的基本实现，表示一个根注解与根注解上的多层元注解的聚合得到的注解
@@ -45,12 +48,7 @@ import java.util.*;
  * @see AnnotationUtil
  * @see SynthesizedAnnotationSelector
  */
-public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateAnnotation {
-
-	/**
-	 * 根注解，即当前查找的注解
-	 */
-	private final Annotation source;
+public class SynthesizedMetaAggregateAnnotation extends AbstractAnnotationSynthesizer<Annotation> implements SynthesizedAggregateAnnotation {
 
 	/**
 	 * 根对象
@@ -68,24 +66,9 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	private final int horizontalDistance;
 
 	/**
-	 * 包含根注解以及其元注解在内的全部注解实例
-	 */
-	private final Map<Class<? extends Annotation>, SynthesizedAnnotation> metaAnnotationMap;
-
-	/**
-	 * 合成注解选择器
-	 */
-	private final SynthesizedAnnotationSelector annotationSelector;
-
-	/**
 	 * 合成注解属性处理器
 	 */
 	private final SynthesizedAnnotationAttributeProcessor attributeProcessor;
-
-	/**
-	 * 合成注解属性处理器
-	 */
-	private final List<SynthesizedAnnotationPostProcessor> postProcessors;
 
 	/**
 	 * 基于指定根注解，为其层级结构中的全部注解构造一个合成注解。
@@ -118,7 +101,7 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 		Annotation annotation,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
-		Collection<? extends SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
+		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
 		this(
 			null, 0, 0,
 			annotation, annotationSelector, attributeProcessor, annotationPostProcessors
@@ -131,40 +114,24 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	 * @param root                     根对象
 	 * @param verticalDistance         距离根对象的水平距离
 	 * @param horizontalDistance       距离根对象的垂直距离
-	 * @param annotation               当前查找的注解对象
+	 * @param source               当前查找的注解对象
 	 * @param annotationSelector       合成注解选择器
 	 * @param attributeProcessor       注解属性处理器
 	 * @param annotationPostProcessors 注解后置处理器
 	 */
 	SynthesizedMetaAggregateAnnotation(
 		Object root, int verticalDistance, int horizontalDistance,
-		Annotation annotation,
+		Annotation source,
 		SynthesizedAnnotationSelector annotationSelector,
 		SynthesizedAnnotationAttributeProcessor attributeProcessor,
-		Collection<? extends SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
-		Assert.notNull(annotation, "annotation must not null");
-		Assert.notNull(annotationSelector, "annotationSelector must not null");
+		Collection<SynthesizedAnnotationPostProcessor> annotationPostProcessors) {
+		super(source, annotationSelector, annotationPostProcessors);
 		Assert.notNull(attributeProcessor, "attributeProcessor must not null");
-		Assert.notNull(annotationPostProcessors, "attributePostProcessors must not null");
 
-		// 初始化坐标
 		this.root = ObjectUtil.defaultIfNull(root, this);
 		this.verticalDistance = verticalDistance;
 		this.horizontalDistance = horizontalDistance;
-
-		// 初始化属性
-		this.source = annotation;
-		this.annotationSelector = annotationSelector;
 		this.attributeProcessor = attributeProcessor;
-		this.postProcessors = new ArrayList<>(annotationPostProcessors);
-		this.postProcessors.sort(Comparator.comparing(SynthesizedAnnotationPostProcessor::order));
-		this.metaAnnotationMap = new LinkedHashMap<>();
-
-		// 初始化元注解信息，并进行后置处理
-		loadMetaAnnotations();
-		annotationPostProcessors.forEach(processor ->
-			metaAnnotationMap.values().forEach(synthesized -> processor.process(synthesized, this))
-		);
 	}
 
 	/**
@@ -198,22 +165,26 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	}
 
 	/**
-	 * 获取根注解
-	 *
-	 * @return 根注解
-	 */
-	public Annotation getSource() {
-		return source;
-	}
-
-	/**
-	 * 获取合成注解选择器
-	 *
-	 * @return 合成注解选择器
+	 * 按广度优先扫描{@link #source}上的元注解
 	 */
 	@Override
-	public SynthesizedAnnotationSelector getAnnotationSelector() {
-		return this.annotationSelector;
+	protected Map<Class<? extends Annotation>, SynthesizedAnnotation> loadAnnotations() {
+		Assert.isFalse(SyntheticAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
+		Map<Class<? extends Annotation>, SynthesizedAnnotation> annotationMap = new LinkedHashMap<>();
+		annotationMap.put(source.annotationType(), new MetaAnnotation(source, source, 0, 0));
+		new MetaAnnotationScanner().scan(
+			(index, annotation) -> {
+				SynthesizedAnnotation oldAnnotation = annotationMap.get(annotation.annotationType());
+				SynthesizedAnnotation newAnnotation = new MetaAnnotation(source, annotation, index, annotationMap.size());
+				if (ObjectUtil.isNull(oldAnnotation)) {
+					annotationMap.put(annotation.annotationType(), newAnnotation);
+				} else {
+					annotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation, newAnnotation));
+				}
+			},
+			source.annotationType(), null
+		);
+		return annotationMap;
 	}
 
 	/**
@@ -227,37 +198,6 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	}
 
 	/**
-	 * 获取合成注解属性后置处理器
-	 *
-	 * @return 合成注解属性后置处理器
-	 */
-	@Override
-	public Collection<SynthesizedAnnotationPostProcessor> getAnnotationAttributePostProcessors() {
-		return this.postProcessors;
-	}
-
-	/**
-	 * 获取已合成的注解
-	 *
-	 * @param annotationType 注解类型
-	 * @return 已合成的注解
-	 */
-	@Override
-	public SynthesizedAnnotation getSynthesizedAnnotation(Class<?> annotationType) {
-		return metaAnnotationMap.get(annotationType);
-	}
-
-	/**
-	 * 获取全部的已合成注解
-	 *
-	 * @return 合成注解
-	 */
-	@Override
-	public Collection<SynthesizedAnnotation> getAllSynthesizedAnnotation() {
-		return metaAnnotationMap.values();
-	}
-
-	/**
 	 * 根据指定的属性名与属性类型获取对应的属性值，若存在{@link Alias}则获取{@link Alias#value()}指定的别名属性的值
 	 * <p>当不同层级的注解之间存在同名同类型属性时，将优先获取更接近根注解的属性
 	 *
@@ -267,7 +207,7 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	 */
 	@Override
 	public Object getAttribute(String attributeName, Class<?> attributeType) {
-		return attributeProcessor.getAttributeValue(attributeName, attributeType, metaAnnotationMap.values());
+		return attributeProcessor.getAttributeValue(attributeName, attributeType, synthesizedAnnotationMap.values());
 	}
 
 	/**
@@ -280,7 +220,7 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	@Override
 	public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
 		return Opt.ofNullable(annotationType)
-			.map(metaAnnotationMap::get)
+			.map(synthesizedAnnotationMap::get)
 			.map(SynthesizedAnnotation::getAnnotation)
 			.map(annotationType::cast)
 			.orElse(null);
@@ -294,7 +234,7 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	 */
 	@Override
 	public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
-		return metaAnnotationMap.containsKey(annotationType);
+		return synthesizedAnnotationMap.containsKey(annotationType);
 	}
 
 	/**
@@ -304,7 +244,7 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	 */
 	@Override
 	public Annotation[] getAnnotations() {
-		return metaAnnotationMap.values().stream()
+		return synthesizedAnnotationMap.values().stream()
 			.map(SynthesizedAnnotation::getAnnotation)
 			.toArray(Annotation[]::new);
 	}
@@ -314,32 +254,11 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 	 *
 	 * @param annotationType 注解类型
 	 * @return 合成注解对象
-	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAggregateAnnotation)
+	 * @see SyntheticAnnotationProxy#create(Class, SynthesizedAggregateAnnotation, SynthesizedAnnotation)
 	 */
 	@Override
-	public <T extends Annotation> T synthesize(Class<T> annotationType) {
-		return SyntheticAnnotationProxy.create(annotationType, this);
-	}
-
-	/**
-	 * 广度优先遍历并缓存该根注解上的全部元注解
-	 */
-	private void loadMetaAnnotations() {
-		Assert.isFalse(SyntheticAnnotationProxy.isProxyAnnotation(source.getClass()), "source [{}] has been synthesized");
-		// 扫描元注解
-		metaAnnotationMap.put(source.annotationType(), new MetaAnnotation(this, source, source, 0, 0));
-		new MetaAnnotationScanner().scan(
-				(index, annotation) -> {
-						SynthesizedAnnotation oldAnnotation = metaAnnotationMap.get(annotation.annotationType());
-						SynthesizedAnnotation newAnnotation = new MetaAnnotation(this, source, annotation, index, metaAnnotationMap.size());
-						if (ObjectUtil.isNull(oldAnnotation)) {
-							metaAnnotationMap.put(annotation.annotationType(), newAnnotation);
-						} else {
-							metaAnnotationMap.put(annotation.annotationType(), annotationSelector.choose(oldAnnotation, newAnnotation));
-						}
-				},
-				source.annotationType(), null
-		);
+	public <T extends Annotation> T synthesize(Class<T> annotationType, SynthesizedAnnotation annotation) {
+		return SyntheticAnnotationProxy.create(annotationType, this, annotation);
 	}
 
 	/**
@@ -352,14 +271,13 @@ public class SynthesizedMetaAggregateAnnotation implements SynthesizedAggregateA
 		/**
 		 * 创建一个合成注解
 		 *
-		 * @param owner              合成注解所属的合成注解聚合器
 		 * @param root               根对象
 		 * @param annotation         被合成的注解对象
 		 * @param verticalDistance   距离根对象的水平距离
 		 * @param horizontalDistance 距离根对象的垂直距离
 		 */
-		protected MetaAnnotation(SynthesizedAggregateAnnotation owner, Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
-			super(owner, root, annotation, verticalDistance, horizontalDistance);
+		protected MetaAnnotation(Annotation root, Annotation annotation, int verticalDistance, int horizontalDistance) {
+			super(root, annotation, verticalDistance, horizontalDistance);
 		}
 
 	}

@@ -49,7 +49,7 @@ public class SyntheticMetaAnnotationTest {
 		// 属性
 		Assert.assertEquals(SynthesizedAnnotationSelector.NEAREST_AND_OLDEST_PRIORITY, syntheticMetaAnnotation.getAnnotationSelector());
 		Assert.assertEquals(CacheableSynthesizedAnnotationAttributeProcessor.class, syntheticMetaAnnotation.getAnnotationAttributeProcessor().getClass());
-		Assert.assertEquals(3, syntheticMetaAnnotation.getAnnotationAttributePostProcessors().size());
+		Assert.assertEquals(3, syntheticMetaAnnotation.getAnnotationPostProcessors().size());
 	}
 
 	@Test

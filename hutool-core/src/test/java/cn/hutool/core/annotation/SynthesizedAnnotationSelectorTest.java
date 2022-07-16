@@ -88,11 +88,6 @@ public class SynthesizedAnnotationSelectorTest {
 		}
 
 		@Override
-		public SynthesizedAggregateAnnotation getOwner() {
-			return null;
-		}
-
-		@Override
 		public Object getRoot() {
 			return null;
 		}
