@@ -513,4 +513,13 @@ public class ArrayUtilTest {
 		String[] newArr = ArrayUtil.setOrAppend(arr, 0, "Good");// ClassCastException
 		Assert.assertArrayEquals(new String[]{"Good"}, newArr);
 	}
+
+	@Test
+	public void getAnyTest() {
+		final String[] a = {"a", "b", "c", "d", "e"};
+		final Object o = ArrayUtil.getAny(a, 3, 4);
+		final String[] resultO = (String[]) o;
+		final String[] c = {"d", "e"};
+		Assert.assertTrue(ArrayUtil.containsAll(c, resultO[0], resultO[1]));
+	}
 }
