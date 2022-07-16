@@ -184,6 +184,7 @@ public class PageUtil {
 	 * @param totalCount 总数
 	 * @param pageSize   每页数
 	 * @return 总页数
+	 * @since 5.8.5
 	 */
 	public static int totalPage(long totalCount, int pageSize) {
 		if (pageSize == 0) {
@@ -194,7 +195,8 @@ public class PageUtil {
 
 	/**
 	 * 分页彩虹算法<br>
-	 * 来自：https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java<br>
+	 * 来自：<a href="https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java">
+	 *     https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java</a><br>
 	 * 通过传入的信息，生成一个分页列表显示
 	 *
 	 * @param pageNo       当前页
@@ -241,7 +243,8 @@ public class PageUtil {
 
 	/**
 	 * 分页彩虹算法(默认展示10页)<br>
-	 * 来自：https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java
+	 * 来自：<a href="https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java">
+	 *     https://github.com/iceroot/iceroot/blob/master/src/main/java/com/icexxx/util/IceUtil.java</a>
 	 *
 	 * @param currentPage 当前页
 	 * @param pageCount   总页数
