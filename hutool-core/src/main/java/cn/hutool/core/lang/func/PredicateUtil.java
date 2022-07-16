@@ -1,16 +1,13 @@
 package cn.hutool.core.lang.func;
 
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.stream.StreamUtil;
 
-import java.io.Serializable;
-import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * 一些{@link Predicate}相关封装
  *
- * @author looly
+ * @author looly VampireAchao
  * @since 6.0.0
  */
 public class PredicateUtil {
@@ -26,8 +23,8 @@ public class PredicateUtil {
 	 * @param components 多个条件
 	 * @return 复合条件
 	 */
-	public static <T> Predicate<T> and(final Iterable<? extends Predicate<? super T>> components) {
-		return new AndPredicate<>(ListUtil.of(components));
+	public static <T> Predicate<T> and(final Iterable<Predicate<T>> components) {
+		return StreamUtil.of(components, false).reduce(Predicate::and).orElseGet(() -> o -> true);
 	}
 
 	/**
@@ -37,9 +34,9 @@ public class PredicateUtil {
 	 * @param components 多个条件
 	 * @return 复合条件
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Predicate<T> and(final Predicate<? super T>... components) {
-		return new AndPredicate<>(components);
+	@SafeVarargs
+	public static <T> Predicate<T> and(final Predicate<T>... components) {
+		return StreamUtil.of(components).reduce(Predicate::and).orElseGet(() -> o -> true);
 	}
 
 	/**
@@ -49,8 +46,8 @@ public class PredicateUtil {
 	 * @param components 多个条件
 	 * @return 复合条件
 	 */
-	public static <T> Predicate<T> or(final Iterable<? extends Predicate<? super T>> components) {
-		return new OrPredicate<>(ListUtil.of(components));
+	public static <T> Predicate<T> or(final Iterable<Predicate<T>> components) {
+		return StreamUtil.of(components, false).reduce(Predicate::or).orElseGet(() -> o -> false);
 	}
 
 	/**
@@ -60,79 +57,8 @@ public class PredicateUtil {
 	 * @param components 多个条件
 	 * @return 复合条件
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Predicate<T> or(final Predicate<? super T>... components) {
-		return new OrPredicate<>(components);
-	}
-
-	/**
-	 * 多个{@link Predicate}的与，只有所有条件满足才为true，当任意一个条件的test为false，返回false
-	 *
-	 * @param <T> 泛型类型
-	 * @author Guava
-	 */
-	private static class AndPredicate<T> implements Predicate<T>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		private final List<? extends Predicate<? super T>> components;
-
-		@SafeVarargs
-		private AndPredicate(final Predicate<? super T>... components) {
-			this.components = ListUtil.of(components);
-		}
-
-		private AndPredicate(final List<? extends Predicate<? super T>> components) {
-			this.components = components;
-		}
-
-		@Override
-		public boolean test(final T t) {
-			// Avoid using the Iterator to avoid generating garbage
-			//noinspection ForLoopReplaceableByForEach
-			for (int i = 0; i < components.size(); i++) {
-				if (false == components.get(i).test(t)) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return "Predicates.and(" + StrUtil.join(",", this.components) + ")";
-		}
-	}
-
-	/**
-	 * 多个{@link Predicate}的或操作，即当一个条件满足，则全部满足，当任意一个条件的test为true，返回true
-	 *
-	 * @param <T> 泛型类型
-	 * @author Guava
-	 */
-	private static class OrPredicate<T> implements Predicate<T>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		private final List<? extends Predicate<? super T>> components;
-
-		@SafeVarargs
-		private OrPredicate(final Predicate<? super T>... components) {
-			this.components = ListUtil.of(components);
-		}
-
-		private OrPredicate(final List<? extends Predicate<? super T>> components) {
-			this.components = components;
-		}
-
-		@Override
-		public boolean test(final T t) {
-			// Avoid using the Iterator to avoid generating garbage
-			//noinspection ForLoopReplaceableByForEach
-			for (int i = 0; i < components.size(); i++) {
-				if (false == components.get(i).test(t)) {
-					return true;
-				}
-			}
-			return false;
-		}
+	@SafeVarargs
+	public static <T> Predicate<T> or(final Predicate<T>... components) {
+		return StreamUtil.of(components).reduce(Predicate::or).orElseGet(() -> o -> false);
 	}
 }
