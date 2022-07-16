@@ -171,6 +171,8 @@ public class LocalDateTimeUtil {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
 		} else if(temporalAccessor instanceof Instant){
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
+		} else if(temporalAccessor instanceof ZonedDateTime){
+			return ((ZonedDateTime)temporalAccessor).toLocalDateTime();
 		}
 
 		return LocalDateTime.of(
@@ -594,5 +596,19 @@ public class LocalDateTimeUtil {
 	 */
 	public static boolean isSameDay(final LocalDate date1, final LocalDate date2) {
 		return date1 != null && date2 != null && date1.isEqual(date2);
+	}
+
+	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换
+	 *
+	 * @param date      被检查的日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
+	 * @return 是否在范围内
+	 * @since 5.8.5
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate){
+		return TemporalAccessorUtil.isIn(date, beginDate, endDate);
 	}
 }
