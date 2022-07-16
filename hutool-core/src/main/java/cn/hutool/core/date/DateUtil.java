@@ -1854,7 +1854,7 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @param instant {@link Instant}
 	 * @return {@link LocalDateTime}
-	 * @see TimeUtil#of(Instant)
+	 * @see TimeUtil#of(TemporalAccessor)
 	 * @since 5.0.5
 	 */
 	public static LocalDateTime toLocalDateTime(final Instant instant) {
