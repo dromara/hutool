@@ -571,4 +571,16 @@ public class LocalDateTimeUtil {
 	public static int weekOfYear(TemporalAccessor date){
 		return TemporalAccessorUtil.get(date, WeekFields.ISO.weekOfYear());
 	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 5.8.5
+	 */
+	public static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
+		return date1 != null && date2 != null && date1.toLocalDate().isEqual(date2.toLocalDate());
+	}
 }
