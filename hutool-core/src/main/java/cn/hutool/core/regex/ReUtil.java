@@ -206,18 +206,36 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
-	public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0) {
+	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0) {
+		return getAllGroups(pattern, content, withGroup0, false);
+	}
+
+	/**
+	 * 获得匹配的字符串匹配到的所有分组
+	 *
+	 * @param pattern    编译后的正则模式
+	 * @param content    被匹配的内容
+	 * @param withGroup0 是否包括分组0，此分组表示全匹配的信息
+	 * @param findAll 是否查找所有匹配到的内容，{@code false}表示只读取第一个匹配到的内容
+	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
+	 * @since 4.0.13
+	 */
+	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0, boolean findAll) {
 		if (null == content || null == pattern) {
 			return null;
 		}
 
-		final ArrayList<String> result = new ArrayList<>();
+		ArrayList<String> result = new ArrayList<>();
 		final Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
+		while (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
 			final int groupCount = matcher.groupCount();
 			for (int i = startGroup; i <= groupCount; i++) {
 				result.add(matcher.group(i));
+			}
+
+			if(false == findAll){
+				break;
 			}
 		}
 		return result;

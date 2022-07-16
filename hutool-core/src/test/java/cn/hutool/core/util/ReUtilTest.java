@@ -111,7 +111,7 @@ public class ReUtilTest {
 	@Test
 	public void replaceAllTest2() {
 		//此处把1234替换为 ->1234<-
-		final String replaceAll = ReUtil.replaceAll(this.content, "(\\d+)", parameters -> "->" + parameters.group(1) + "<-");
+		final String replaceAll = ReUtil.replaceAll(content, "(\\d+)", parameters -> "->" + parameters.group(1) + "<-");
 		Assert.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 	}
 
