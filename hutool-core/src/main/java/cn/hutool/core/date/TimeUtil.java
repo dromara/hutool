@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -34,7 +35,7 @@ import java.util.TimeZone;
  * @see DatePattern 常用格式工具类
  * @since 6.0.0
  */
-public class TimeUtil {
+public class TimeUtil extends TemporalAccessorUtil{
 
 	/**
 	 * 当前时间，默认时区
@@ -55,16 +56,6 @@ public class TimeUtil {
 	}
 
 	/**
-	 * {@link Instant}转{@link LocalDateTime}，使用默认时区
-	 *
-	 * @param instant {@link Instant}
-	 * @return {@link LocalDateTime}
-	 */
-	public static LocalDateTime of(final Instant instant) {
-		return of(instant, ZoneId.systemDefault());
-	}
-
-	/**
 	 * {@link Instant}转{@link LocalDateTime}，使用UTC时区
 	 *
 	 * @param instant {@link Instant}
@@ -72,19 +63,6 @@ public class TimeUtil {
 	 */
 	public static LocalDateTime ofUTC(final Instant instant) {
 		return of(instant, ZoneId.of("UTC"));
-	}
-
-	/**
-	 * {@link ZonedDateTime}转{@link LocalDateTime}
-	 *
-	 * @param zonedDateTime {@link ZonedDateTime}
-	 * @return {@link LocalDateTime}
-	 */
-	public static LocalDateTime of(final ZonedDateTime zonedDateTime) {
-		if (null == zonedDateTime) {
-			return null;
-		}
-		return zonedDateTime.toLocalDateTime();
 	}
 
 	/**
@@ -193,6 +171,8 @@ public class TimeUtil {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
 		} else if (temporalAccessor instanceof Instant) {
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
+		} else if(temporalAccessor instanceof ZonedDateTime){
+			return ((ZonedDateTime)temporalAccessor).toLocalDateTime();
 		}
 
 		return LocalDateTime.of(
@@ -359,30 +339,8 @@ public class TimeUtil {
 	 * @return 格式化后的字符串
 	 * @since 5.3.11
 	 */
-	public static String formatNormal(final LocalDateTime time) {
+	public static String formatNormal(final ChronoLocalDateTime<?> time) {
 		return format(time, DatePattern.NORM_DATETIME_FORMATTER);
-	}
-
-	/**
-	 * 格式化日期时间为指定格式
-	 *
-	 * @param time      {@link LocalDateTime}
-	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
-	 * @return 格式化后的字符串
-	 */
-	public static String format(final LocalDateTime time, final DateTimeFormatter formatter) {
-		return TemporalAccessorUtil.format(time, formatter);
-	}
-
-	/**
-	 * 格式化日期时间为指定格式
-	 *
-	 * @param time   {@link LocalDateTime}
-	 * @param format 日期格式，类似于yyyy-MM-dd HH:mm:ss,SSS
-	 * @return 格式化后的字符串
-	 */
-	public static String format(final LocalDateTime time, final String format) {
-		return TemporalAccessorUtil.format(time, format);
 	}
 
 	/**
@@ -392,35 +350,8 @@ public class TimeUtil {
 	 * @return 格式化后的字符串
 	 * @since 5.3.11
 	 */
-	public static String formatNormal(final LocalDate date) {
+	public static String formatNormal(final ChronoLocalDate date) {
 		return format(date, DatePattern.NORM_DATE_FORMATTER);
-	}
-
-	/**
-	 * 格式化日期时间为指定格式
-	 *
-	 * @param date      {@link LocalDate}
-	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}; 常量如： {@link DatePattern#NORM_DATE_FORMATTER}, {@link DatePattern#NORM_DATETIME_FORMATTER}
-	 * @return 格式化后的字符串
-	 * @since 5.3.10
-	 */
-	public static String format(final LocalDate date, final DateTimeFormatter formatter) {
-		return TemporalAccessorUtil.format(date, formatter);
-	}
-
-	/**
-	 * 格式化日期时间为指定格式
-	 *
-	 * @param date   {@link LocalDate}
-	 * @param format 日期格式，类似于yyyy-MM-dd, 常量如 {@link DatePattern#NORM_DATE_PATTERN}, {@link DatePattern#NORM_DATETIME_PATTERN}
-	 * @return 格式化后的字符串
-	 * @since 5.3.10
-	 */
-	public static String format(final LocalDate date, final String format) {
-		if (null == date) {
-			return null;
-		}
-		return format(date, DateTimeFormatter.ofPattern(format));
 	}
 
 	/**
@@ -518,18 +449,6 @@ public class TimeUtil {
 	}
 
 	/**
-	 * {@link TemporalAccessor}转换为 时间戳（从1970-01-01T00:00:00Z开始的毫秒数）
-	 *
-	 * @param temporalAccessor Date对象
-	 * @return {@link Instant}对象
-	 * @see TemporalAccessorUtil#toEpochMilli(TemporalAccessor)
-	 * @since 5.4.1
-	 */
-	public static long toEpochMilli(final TemporalAccessor temporalAccessor) {
-		return TemporalAccessorUtil.toEpochMilli(temporalAccessor);
-	}
-
-	/**
 	 * 是否为周末（周六或周日）
 	 *
 	 * @param localDateTime 判定的日期{@link LocalDateTime}
@@ -608,7 +527,7 @@ public class TimeUtil {
 	 * @return 是否为同一天
 	 * @since 5.8.5
 	 */
-	public static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
+	public static boolean isSameDay(final ChronoLocalDateTime<?> date1, final ChronoLocalDateTime<?> date2) {
 		return date1 != null && date2 != null && isSameDay(date1.toLocalDate(), date2.toLocalDate());
 	}
 
@@ -620,7 +539,7 @@ public class TimeUtil {
 	 * @return 是否为同一天
 	 * @since 5.8.5
 	 */
-	public static boolean isSameDay(final LocalDate date1, final LocalDate date2) {
+	public static boolean isSameDay(final ChronoLocalDate date1, final ChronoLocalDate date2) {
 		return date1 != null && date2 != null && date1.isEqual(date2);
 	}
 }

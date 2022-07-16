@@ -162,4 +162,21 @@ public class TemporalAccessorUtil extends TemporalUtil{
 
 		return result;
 	}
+
+	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换
+	 *
+	 * @param date      被检查的日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
+	 * @return 是否在范围内
+	 */
+	public static boolean isIn(TemporalAccessor date, TemporalAccessor beginDate, TemporalAccessor endDate){
+		final long thisMills = TemporalAccessorUtil.toEpochMilli(date);
+		final long beginMills = TemporalAccessorUtil.toEpochMilli(beginDate);
+		final long endMills = TemporalAccessorUtil.toEpochMilli(endDate);
+
+		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
+	}
 }
