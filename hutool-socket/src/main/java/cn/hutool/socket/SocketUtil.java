@@ -23,8 +23,9 @@ public class SocketUtil {
 	 *
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @return 远程端的地址信息，包括host和端口，null表示channel为null或者远程主机未连接
+	 * @throws IORuntimeException IO异常
 	 */
-	public static SocketAddress getRemoteAddress(final AsynchronousSocketChannel channel) {
+	public static SocketAddress getRemoteAddress(final AsynchronousSocketChannel channel) throws IORuntimeException {
 		try {
 			return (null == channel) ? null : channel.getRemoteAddress();
 		} catch (final ClosedChannelException e) {
@@ -41,8 +42,9 @@ public class SocketUtil {
 	 *
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @return 远程主机是否处于连接状态
+	 * @throws IORuntimeException IO异常
 	 */
-	public static boolean isConnected(final AsynchronousSocketChannel channel) {
+	public static boolean isConnected(final AsynchronousSocketChannel channel) throws IORuntimeException{
 		return null != getRemoteAddress(channel);
 	}
 

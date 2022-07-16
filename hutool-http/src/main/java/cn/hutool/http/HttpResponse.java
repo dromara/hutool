@@ -72,6 +72,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 * @since 3.1.2
 	 */
+	@SuppressWarnings("resource")
 	protected HttpResponse(final HttpConnection httpConnection, final HttpConfig config, final Charset charset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.config = config;
@@ -249,6 +250,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return byte[]
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public byte[] bodyBytes() {
 		sync();
@@ -403,6 +405,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param bodyBytes 主体
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public HttpResponse body(final byte[] bodyBytes) {
 		sync();
 		if (null != bodyBytes) {
@@ -479,6 +482,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @return this
 	 * @throws HttpException IO异常
 	 */
+	@SuppressWarnings("resource")
 	private HttpResponse initWithDisconnect() throws HttpException {
 		try {
 			init();

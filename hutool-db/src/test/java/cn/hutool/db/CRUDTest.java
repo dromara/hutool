@@ -185,7 +185,7 @@ public class CRUDTest {
 
 		Console.log(data1);
 
-		final int[] result = db.insert(ListUtil.of(data1));
+		final int[] result = db.insert(ListUtil.of(new Entity[]{data1}));
 		Console.log(result);
 	}
 

@@ -88,7 +88,7 @@ public class ListUtilTest {
 	@Test
 	public void editTest() {
 		final List<String> a = ListUtil.ofLinked("1", "2", "3");
-		final List<String> filter = (List<String>) CollUtil.edit(a, str -> "edit" + str);
+		final List<String> filter = CollUtil.edit(a, str -> "edit" + str);
 		Assert.assertEquals("edit1", filter.get(0));
 		Assert.assertEquals("edit2", filter.get(1));
 		Assert.assertEquals("edit3", filter.get(2));

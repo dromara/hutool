@@ -70,7 +70,7 @@ public abstract class TransMap<K, V> extends MapWrapper<K, V> {
 
 	@Override
 	public boolean replace(final K key, final V oldValue, final V newValue) {
-		return super.replace(customKey(key), customValue(oldValue), customValue(values()));
+		return super.replace(customKey(key), customValue(oldValue), customValue(newValue));
 	}
 
 	@Override

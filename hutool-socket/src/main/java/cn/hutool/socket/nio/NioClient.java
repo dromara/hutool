@@ -3,6 +3,7 @@ package cn.hutool.socket.nio;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.log.Log;
 import cn.hutool.socket.SocketRuntimeException;
 
 import java.io.Closeable;
@@ -21,6 +22,7 @@ import java.util.Iterator;
  * @since 4.4.5
  */
 public class NioClient implements Closeable {
+	private static final Log log = Log.get();
 
 	private Selector selector;
 	private SocketChannel channel;
@@ -32,6 +34,7 @@ public class NioClient implements Closeable {
 	 * @param host 服务器地址
 	 * @param port 端口
 	 */
+	@SuppressWarnings("resource")
 	public NioClient(final String host, final int port) {
 		init(new InetSocketAddress(host, port));
 	}
@@ -41,6 +44,7 @@ public class NioClient implements Closeable {
 	 *
 	 * @param address 服务器地址
 	 */
+	@SuppressWarnings("resource")
 	public NioClient(final InetSocketAddress address) {
 		init(address);
 	}
@@ -91,7 +95,7 @@ public class NioClient implements Closeable {
 			try {
 				doListen();
 			} catch (final IOException e) {
-				e.printStackTrace();
+				log.error("Listen failed", e);
 			}
 		});
 	}

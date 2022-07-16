@@ -14,7 +14,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("resource")
 public class HttpUtilTest {
+
+	@Test
+	public void isHttpTest(){
+		Assert.assertTrue(HttpUtil.isHttp("Http://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttp("HTTP://aaa.bbb"));
+		Assert.assertFalse(HttpUtil.isHttp("FTP://aaa.bbb"));
+	}
+
+	@Test
+	public void isHttpsTest(){
+		Assert.assertTrue(HttpUtil.isHttps("Https://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttps("HTTPS://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttps("https://aaa.bbb"));
+		Assert.assertFalse(HttpUtil.isHttps("ftp://aaa.bbb"));
+	}
 
 	@Test
 	@Ignore

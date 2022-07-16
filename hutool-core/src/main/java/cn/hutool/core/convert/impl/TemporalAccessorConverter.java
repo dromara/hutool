@@ -85,6 +85,8 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	protected TemporalAccessor convertInternal(final Class<?> targetClass, final Object value) {
 		if (value instanceof Long) {
 			return parseFromLong(targetClass, (Long) value);
+		}else if (value instanceof Integer) {
+			return parseFromLong(targetClass, ((Integer) value).longValue());
 		} else if (value instanceof TemporalAccessor) {
 			return parseFromTemporalAccessor(targetClass, (TemporalAccessor) value);
 		} else if (value instanceof Date) {

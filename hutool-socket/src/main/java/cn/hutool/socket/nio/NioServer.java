@@ -3,7 +3,6 @@ package cn.hutool.socket.nio;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -34,6 +33,7 @@ public class NioServer implements Closeable {
 	 *
 	 * @param port 端口
 	 */
+	@SuppressWarnings("resource")
 	public NioServer(final int port) {
 		init(new InetSocketAddress(port));
 	}
@@ -58,6 +58,7 @@ public class NioServer implements Closeable {
 			// 服务器套接字注册到Selector中 并指定Selector监控连接事件
 			this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} catch (final IOException e) {
+			close();
 			throw new IORuntimeException(e);
 		}
 
@@ -140,7 +141,7 @@ public class NioServer implements Closeable {
 				handler.handle(socketChannel);
 			} catch (final Exception e){
 				IoUtil.close(socketChannel);
-				StaticLog.error(e);
+				log.error(e);
 			}
 		}
 	}

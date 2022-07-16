@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.LambdaUtil;
@@ -23,11 +24,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 字典对象，扩充了HashMap中的方法
+ * 字典对象，扩充了LinkedHashMap中的方法
  *
- * @author loolly
+ * @author looly
  */
-public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGetter<String> {
+public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGetter<String> {
 	private static final long serialVersionUID = 6135423866861206530L;
 
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -165,7 +166,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @since 4.5.16
 	 */
 	public Dict(final int initialCapacity, final float loadFactor, final boolean caseInsensitive) {
-		super(initialCapacity, loadFactor);
+		super(new LinkedHashMap<>(initialCapacity, loadFactor));
 		this.caseInsensitive = caseInsensitive;
 	}
 
@@ -569,36 +570,20 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	// -------------------------------------------------------------------- Get end
 
 	@Override
-	public Object get(final Object key) {
-		return super.get(customKey((String) key));
-	}
-
-	@Override
-	public Object put(final String key, final Object value) {
-		return super.put(customKey(key), value);
-	}
-
-	@Override
-	public void putAll(final Map<? extends String, ?> m) {
-		m.forEach(this::put);
-	}
-
-	@Override
 	public Dict clone() {
-		return (Dict) super.clone();
+		try {
+			return (Dict) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
 	}
 
-	/**
-	 * 将Key转为小写
-	 *
-	 * @param key KEY
-	 * @return 小写KEY
-	 */
-	private String customKey(String key) {
+	@Override
+	protected String customKey(Object key) {
 		if (this.caseInsensitive && null != key) {
-			key = key.toLowerCase();
+			key = ((String)key).toLowerCase();
 		}
-		return key;
+		return (String) key;
 	}
 
 	/**

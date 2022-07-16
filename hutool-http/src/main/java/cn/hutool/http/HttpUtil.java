@@ -51,7 +51,7 @@ public class HttpUtil {
 	 * @return 是否https
 	 */
 	public static boolean isHttps(final String url) {
-		return url.toLowerCase().startsWith("https:");
+		return StrUtil.startWithIgnoreCase(url, "https:");
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class HttpUtil {
 	 * @since 5.3.8
 	 */
 	public static boolean isHttp(final String url) {
-		return url.toLowerCase().startsWith("http:");
+		return StrUtil.startWithIgnoreCase(url, "http:");
 	}
 
 	/**
@@ -118,6 +118,7 @@ public class HttpUtil {
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
+	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Charset customCharset) {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
@@ -140,6 +141,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @since 3.2.0
 	 */
+	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
 		return HttpRequest.get(urlString).timeout(timeout).execute().body();
 	}
@@ -151,6 +153,7 @@ public class HttpUtil {
 	 * @param paramMap  post表单数据
 	 * @return 返回数据
 	 */
+	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Map<String, Object> paramMap) {
 		return HttpRequest.get(urlString).form(paramMap).execute().body();
 	}
@@ -164,6 +167,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.3.0
 	 */
+	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Map<String, Object> paramMap, final int timeout) {
 		return HttpRequest.get(urlString).form(paramMap).timeout(timeout).execute().body();
 	}
@@ -188,6 +192,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
+	@SuppressWarnings("resource")
 	public static String post(final String urlString, final Map<String, Object> paramMap, final int timeout) {
 		return HttpRequest.post(urlString).form(paramMap).timeout(timeout).execute().body();
 	}
@@ -224,6 +229,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
+	@SuppressWarnings("resource")
 	public static String post(final String urlString, final String body, final int timeout) {
 		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().body();
 	}
