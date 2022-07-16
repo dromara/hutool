@@ -616,4 +616,10 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
 		return this;
 	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return super.containsKey(customKey((String) key));
+	}
+
 }
