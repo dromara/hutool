@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * @param <T> 注解类型
  * @author huangchengxing
  */
-public class GenericSynthesizedAnnotation<R, T extends Annotation> implements Annotation, SynthesizedAnnotation {
+public class GenericSynthesizedAnnotation<R, T extends Annotation> implements SynthesizedAnnotation {
 
 	private final R root;
 	private final T annotation;
