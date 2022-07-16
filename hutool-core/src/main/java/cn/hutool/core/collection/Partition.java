@@ -24,7 +24,7 @@ public class Partition<T> extends AbstractList<List<T>> {
 	 * 列表分区
 	 *
 	 * @param list 被分区的列表，非空
-	 * @param size 每个分区的长度，必须>0
+	 * @param size 每个分区的长度，必须&gt;0
 	 */
 	public Partition(List<T> list, int size) {
 		this.list = Assert.notNull(list);

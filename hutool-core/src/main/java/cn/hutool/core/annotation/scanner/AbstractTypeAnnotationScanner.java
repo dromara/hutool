@@ -222,6 +222,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 *
 	 * @param accessedTypes 访问类型
 	 * @param targetClass   目标类型
+	 * @return 是否不需要处理
 	 */
 	protected boolean isNotNeedProcess(Set<Class<?>> accessedTypes, Class<?> targetClass) {
 		return ObjectUtil.isNull(targetClass)
