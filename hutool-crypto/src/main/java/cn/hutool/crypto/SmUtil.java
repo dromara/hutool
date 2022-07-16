@@ -256,8 +256,8 @@ public class SmUtil {
 			throw new IORuntimeException(e);
 		}
 
-		final byte[] r = bigIntToFixedLengthBytes(decode[0]);
-		final byte[] s = bigIntToFixedLengthBytes(decode[1]);
+		final byte[] r = toFixedLengthBytes(decode[0]);
+		final byte[] s = toFixedLengthBytes(decode[1]);
 
 		return ArrayUtil.addAll(r, s);
 	}
@@ -313,7 +313,7 @@ public class SmUtil {
 	 * @return 固定长度bytes
 	 * @since 4.5.0
 	 */
-	private static byte[] bigIntToFixedLengthBytes(final BigInteger rOrS) {
+	private static byte[] toFixedLengthBytes(final BigInteger rOrS) {
 		// for sm2p256v1, n is 00fffffffeffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123,
 		// r and s are the result of mod n, so they should be less than n and have length<=32
 		final byte[] rs = rOrS.toByteArray();
