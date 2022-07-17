@@ -1,16 +1,13 @@
 package cn.hutool.core.annotation.scanner;
 
 import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -84,6 +81,7 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	@Override
 	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
 		filter = ObjectUtil.defaultIfNull(filter, t -> true);
+		Set<Class<? extends Annotation>> accessed = new HashSet<>();
 		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>)annotatedEle));
 		int distance = 0;
 		do {
@@ -96,7 +94,14 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 				for (final Annotation metaAnnotation : metaAnnotations) {
 					consumer.accept(distance, metaAnnotation);
 				}
-				deque.addLast(CollStreamUtil.toList(metaAnnotations, Annotation::annotationType));
+				accessed.add(type);
+				List<Class<? extends Annotation>> next = metaAnnotations.stream()
+					.map(Annotation::annotationType)
+					.filter(t -> !accessed.contains(t))
+					.collect(Collectors.toList());
+				if (CollUtil.isNotEmpty(next)) {
+					deque.addLast(next);
+				}
 			}
 			distance++;
 		} while (includeSupperMetaAnnotation && !deque.isEmpty());
