@@ -3,10 +3,8 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.annotation.scanner.*;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 
@@ -15,10 +13,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -321,73 +317,17 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 设置新的注解的属性（字段）值
-	 *
-	 * @param annotation      注解对象
-	 * @param annotationField 注解属性（字段）名称
-	 * @param value           要更新的属性值
-	 * @since 5.5.2
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static void setValue(Annotation annotation, String annotationField, Object value) {
-		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
-		memberValues.put(annotationField, value);
-	}
-
-	/**
-	 * 获取别名支持后的注解
-	 *
-	 * @param annotationEle  被注解的类
-	 * @param annotationType 注解类型Class
-	 * @param <T>            注解类型
-	 * @return 别名支持后的注解
-	 * @since 5.7.23
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
-		final T annotation = getAnnotation(annotationEle, annotationType);
-		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
-	}
-
-	/**
-	 * 将指定注解实例与其元注解转为合成注解
-	 *
-	 * @param annotation     注解对象
-	 * @param annotationType 注解类
-	 * @param <T>            注解类型
-	 * @return 合成注解
-	 * @see SyntheticAnnotation
-	 */
-	public static <T extends Annotation> T getSynthesisAnnotation(Annotation annotation, Class<T> annotationType) {
-		return SyntheticAnnotation.of(annotation).getAnnotation(annotationType);
-	}
-
-	/**
-	 * 获取元素上所有指定注解
-	 * <ul>
-	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
-	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
-	 * </ul>
-	 *
-	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param annotationType 注解类
-	 * @param <T>            注解类型
-	 * @return 合成注解
-	 * @see SyntheticAnnotation
-	 */
-	public static <T extends Annotation> List<T> getAllSynthesisAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
-		AnnotationScanner[] scanners = new AnnotationScanner[]{
-				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
-		};
-		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-				.map(annotation -> getSynthesisAnnotation(annotation, annotationType))
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
-	}
-
-	/**
 	 * 扫描注解类，以及注解类的{@link Class}层级结构中的注解，将返回除了{@link #META_ANNOTATIONS}中指定的JDK默认注解外，
 	 * 按元注解对象与{@code annotationType}的距离和{@link Class#getAnnotations()}顺序排序的注解对象集合
+	 *
+	 * <p>比如：<br>
+	 * 若{@code annotationType}为 A，且A存在元注解B，B又存在元注解C和D，则有：
+	 * <pre>
+	 *                              |-&gt; C.class [@a, @b]
+	 *     A.class -&gt; B.class [@a] -|
+	 *                              |-&gt; D.class [@a, @c]
+	 * </pre>
+	 * 扫描A，则该方法最终将返回 {@code [@a, @a, @b, @a, @c]}
 	 *
 	 * @param annotationType 注解类
 	 * @return 注解对象集合
@@ -407,6 +347,16 @@ public class AnnotationUtil {
 	 *     <li>同一个接口在相同层级出现，优先选择其子类/子接口被先解析的那个；</li>
 	 * </ul>
 	 * 注解根据其声明类/接口被扫描的顺序排序，若注解都在同一个{@link Class}中被声明，则还会遵循{@link Class#getAnnotations()}的顺序。
+	 *
+	 * <p>比如：<br>
+	 * 若{@code targetClass}为{@code A.class}，且{@code A.class}存在父类{@code B.class}、父接口{@code C.class}，
+	 * 三个类的注解声明情况如下：
+	 * <pre>
+	 *                   |-&gt; B.class [@a, @b]
+	 *     A.class [@a] -|
+	 *                   |-&gt; C.class [@a, @c]
+	 * </pre>
+	 * 则该方法最终将返回 {@code [@a, @a, @b, @a, @c]}
 	 *
 	 * @param targetClass 类
 	 * @return 注解对象集合
@@ -428,12 +378,166 @@ public class AnnotationUtil {
 	 * </ul>
 	 * 方法上的注解根据方法的声明类/接口被扫描的顺序排序，若注解都在同一个类的同一个方法中被声明，则还会遵循{@link Method#getAnnotations()}的顺序。
 	 *
+	 * <p>比如：<br>
+	 * 若方法X声明于{@code A.class}，且重载/重写自父类{@code B.class}，并且父类中的方法X由重写至其实现的接口{@code C.class}，
+	 * 三个类的注解声明情况如下：
+	 * <pre>
+	 *     A#X()[@a] -&gt; B#X()[@b] -&gt; C#X()[@c]
+	 * </pre>
+	 * 则该方法最终将返回 {@code [@a, @b, @c]}
+	 *
 	 * @param method 方法
 	 * @return 注解对象集合
 	 * @see MethodAnnotationScanner
 	 */
 	public static List<Annotation> scanMethod(Method method) {
 		return new MethodAnnotationScanner(true).getIfSupport(method);
+	}
+
+	/**
+	 * 设置新的注解的属性（字段）值
+	 *
+	 * @param annotation      注解对象
+	 * @param annotationField 注解属性（字段）名称
+	 * @param value           要更新的属性值
+	 * @since 5.5.2
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static void setValue(Annotation annotation, String annotationField, Object value) {
+		final Map memberValues = (Map) ReflectUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+		memberValues.put(annotationField, value);
+	}
+
+	/**
+	 * 该注解对象是否为通过代理类生成的合成注解
+	 *
+	 * @param annotation 注解对象
+	 * @return 是否
+	 * @see SynthesizedAnnotationProxy#isProxyAnnotation(Class)
+	 */
+	public static boolean isSynthesizedAnnotation(Annotation annotation) {
+		return SynthesizedAnnotationProxy.isProxyAnnotation(annotation.getClass());
+	}
+
+	/**
+	 * 获取别名支持后的注解
+	 *
+	 * @param annotationEle  被注解的类
+	 * @param annotationType 注解类型Class
+	 * @param <T>            注解类型
+	 * @return 别名支持后的注解
+	 * @since 5.7.23
+	 */
+	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
+		final T annotation = getAnnotation(annotationEle, annotationType);
+		return aggregatingFromAnnotation(annotation).synthesize(annotationType);
+	}
+
+	/**
+	 * 将指定注解实例与其元注解转为合成注解
+	 *
+	 * @param annotationType 注解类
+	 * @param annotations    注解对象
+	 * @param <T>            注解类型
+	 * @return 合成注解
+	 * @see SynthesizedAggregateAnnotation
+	 */
+	public static <T extends Annotation> T getSynthesizedAnnotation(Class<T> annotationType, Annotation... annotations) {
+		// TODO 缓存合成注解信息，避免重复解析
+		return Opt.ofNullable(annotations)
+			.filter(ArrayUtil::isNotEmpty)
+			.map(AnnotationUtil::aggregatingFromAnnotationWithMeta)
+			.map(a -> a.synthesize(annotationType))
+			.get();
+	}
+
+	/**
+	 * <p>获取元素上距离指定元素最接近的合成注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * <p>注解合成规则如下：
+	 * 若{@code AnnotatedEle}按顺序从上到下声明了A，B，C三个注解，且三注解存在元注解如下：
+	 * <pre>
+	 *    A -&gt; MA1 -&gt; MA2
+	 *    B -&gt; MB1 -&gt; MB2
+	 *    C -&gt; MC1
+	 * </pre>
+	 * 此时入参{@code annotationType}类型为{@code MB1}，则最终将优先返回基于根注解B合成的合成注解
+	 *
+	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
+	 * @return 合成注解
+	 * @see SynthesizedAggregateAnnotation
+	 */
+	public static <T extends Annotation> T getSynthesizedAnnotation(AnnotatedElement annotatedEle, Class<T> annotationType) {
+		T target = annotatedEle.getAnnotation(annotationType);
+		if (ObjectUtil.isNotNull(target)) {
+			return target;
+		}
+		AnnotationScanner[] scanners = new AnnotationScanner[]{
+			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
+			.map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
+			.filter(Objects::nonNull)
+			.findFirst()
+			.orElse(null);
+	}
+
+	/**
+	 * 获取元素上所有指定注解
+	 * <ul>
+	 *     <li>若元素是类，则递归解析全部父类和全部父接口上的注解;</li>
+	 *     <li>若元素是方法、属性或注解，则只解析其直接声明的注解;</li>
+	 * </ul>
+	 *
+	 * <p>注解合成规则如下：
+	 * 若{@code AnnotatedEle}按顺序从上到下声明了A，B，C三个注解，且三注解存在元注解如下：
+	 * <pre>
+	 *    A -&gt; M1 -&gt; M2
+	 *    B -&gt; M3 -&gt; M1
+	 *    C -&gt; M2
+	 * </pre>
+	 * 此时入参{@code annotationType}类型为{@code M1}，则最终将返回基于根注解A与根注解B合成的合成注解。
+	 *
+	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param annotationType 注解类
+	 * @param <T>            注解类型
+	 * @return 合成注解
+	 * @see SynthesizedAggregateAnnotation
+	 */
+	public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
+		AnnotationScanner[] scanners = new AnnotationScanner[]{
+				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
+		};
+		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
+				.map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 对指定注解对象进行聚合
+	 *
+	 * @param annotations 注解对象
+	 * @return 聚合注解
+	 */
+	public static SynthesizedAggregateAnnotation aggregatingFromAnnotation(Annotation... annotations) {
+		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), EmptyAnnotationScanner.INSTANCE);
+	}
+
+	/**
+	 * 对指定注解对象及其元注解进行聚合
+	 *
+	 * @param annotations 注解对象
+	 * @return 聚合注解
+	 */
+	public static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(Annotation... annotations) {
+		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), new MetaAnnotationScanner());
 	}
 
 	/**
@@ -446,36 +550,4 @@ public class AnnotationUtil {
 		return method.getParameterCount() == 0 && method.getReturnType() != void.class;
 	}
 
-	/**
-	 * 获取注解的全部属性值获取方法
-	 *
-	 * @param annotationType 注解
-	 * @return 注解的全部属性值
-	 * @throws IllegalArgumentException 当别名属性在注解中不存在，或别名属性的值与原属性的值类型不一致时抛出
-	 */
-	static Map<String, Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
-		// 获取全部注解属性值
-		Map<String, Method> attributeMethods = Stream.of(annotationType.getDeclaredMethods())
-				.filter(AnnotationUtil::isAttributeMethod)
-				.collect(Collectors.toMap(Method::getName, Function.identity()));
-		// 处理别名
-		attributeMethods.forEach((methodName, method) -> {
-			String alias = Opt.ofNullable(method.getAnnotation(Alias.class))
-					.map(Alias::value)
-					.orElse(null);
-			if (ObjectUtil.isNull(alias)) {
-				return;
-			}
-			// 存在别名，则将原本的值替换为别名对应的值
-			Assert.isTrue(attributeMethods.containsKey(alias), "No method for alias: [{}]", alias);
-			Method aliasAttributeMethod = attributeMethods.get(alias);
-			Assert.isTrue(
-					ObjectUtil.isNull(aliasAttributeMethod) || ClassUtil.isAssignable(method.getReturnType(), aliasAttributeMethod.getReturnType()),
-					"Return type of the alias method [{}] is inconsistent with the original [{}]",
-					aliasAttributeMethod.getClass(), method.getParameterTypes()
-			);
-			attributeMethods.put(methodName, aliasAttributeMethod);
-		});
-		return attributeMethods;
-	}
 }

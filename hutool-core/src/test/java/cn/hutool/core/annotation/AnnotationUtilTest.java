@@ -42,6 +42,7 @@ public class AnnotationUtilTest {
 		// 加别名适配
 		final AnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertEquals("测试", annotation.retry());
+		Assert.assertTrue(AnnotationUtil.isSynthesizedAnnotation(annotation));
 	}
 
 	@AnnotationForTest("测试")

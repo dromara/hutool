@@ -24,8 +24,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	/**
 	 * 是否允许扫描父类
 	 */
-	// FIXME rename includeSuperClass
-	private boolean includeSupperClass;
+	private boolean includeSuperClass;
 
 	/**
 	 * 是否允许扫描父接口
@@ -60,16 +59,16 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	/**
 	 * 构造一个类注解扫描器
 	 *
-	 * @param includeSupperClass 是否允许扫描父类
+	 * @param includeSuperClass 是否允许扫描父类
 	 * @param includeInterfaces  是否允许扫描父接口
 	 * @param filter             过滤器
 	 * @param excludeTypes       不包含的类型
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractTypeAnnotationScanner(boolean includeSupperClass, boolean includeInterfaces, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
+	protected AbstractTypeAnnotationScanner(boolean includeSuperClass, boolean includeInterfaces, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
 		Assert.notNull(filter, "filter must not null");
 		Assert.notNull(excludeTypes, "excludeTypes must not null");
-		this.includeSupperClass = includeSupperClass;
+		this.includeSuperClass = includeSuperClass;
 		this.includeInterfaces = includeInterfaces;
 		this.filter = filter;
 		this.excludeTypes = excludeTypes;
@@ -82,8 +81,8 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 *
 	 * @return 是否允许扫描父类
 	 */
-	public boolean isIncludeSupperClass() {
-		return includeSupperClass;
+	public boolean isIncludeSuperClass() {
+		return includeSuperClass;
 	}
 
 	/**
@@ -137,11 +136,11 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	/**
 	 * 是否允许扫描父类
 	 *
-	 * @param includeSupperClass 是否
+	 * @param includeSuperClass 是否
 	 * @return 当前实例
 	 */
-	protected T setIncludeSupperClass(boolean includeSupperClass) {
-		this.includeSupperClass = includeSupperClass;
+	protected T setIncludeSuperClass(boolean includeSuperClass) {
+		this.includeSuperClass = includeSuperClass;
 		return typedThis;
 	}
 
@@ -247,13 +246,13 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	}
 
 	/**
-	 * 若{@link #includeSupperClass}为{@code true}，则将目标类的父类也添加到nextClasses
+	 * 若{@link #includeSuperClass}为{@code true}，则将目标类的父类也添加到nextClasses
 	 *
 	 * @param nextClassQueue 下一个类队列
 	 * @param targetClass    目标类型
 	 */
 	protected void scanSuperClassIfNecessary(List<Class<?>> nextClassQueue, Class<?> targetClass) {
-		if (includeSupperClass) {
+		if (includeSuperClass) {
 			final Class<?> superClass = targetClass.getSuperclass();
 			if (!ObjectUtil.equals(superClass, Object.class) && ObjectUtil.isNotNull(superClass)) {
 				nextClassQueue.add(superClass);
