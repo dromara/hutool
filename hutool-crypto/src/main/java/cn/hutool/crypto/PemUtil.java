@@ -2,20 +2,27 @@ package cn.hutool.crypto;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.openssl.*;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.openssl.jcajce.JceOpenSSLPKCS8DecryptorProviderBuilder;
+import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
+import org.bouncycastle.operator.InputDecryptorProvider;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
+import org.bouncycastle.pkcs.PKCSException;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.security.Key;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 
 /**
@@ -43,6 +50,18 @@ public class PemUtil {
 	}
 
 	/**
+	 * 读取加密的 PEM 格式私钥
+	 *
+	 * @param pemStream pem 流
+	 * @param password  私钥的密码
+	 * @return {@link PrivateKey}
+	 * @since 5.8.4
+	 */
+	public static PrivateKey readPemPrivateKey(InputStream pemStream, final char[] password) {
+		return (PrivateKey) readPemKey(pemStream, password);
+	}
+
+	/**
 	 * 读取PEM格式的公钥
 	 *
 	 * @param pemStream pem流
@@ -62,29 +81,63 @@ public class PemUtil {
 	 * @since 5.1.6
 	 */
 	public static Key readPemKey(InputStream keyStream) {
-		final PemObject object = readPemObject(keyStream);
-		final String type = object.getType();
-		if (StrUtil.isNotBlank(type)) {
-			//private
-			if (type.endsWith("EC PRIVATE KEY")) {
-				return KeyUtil.generatePrivateKey("EC", object.getContent());
-			}
-			if (type.endsWith("PRIVATE KEY")) {
-				return KeyUtil.generateRSAPrivateKey(object.getContent());
-			}
+		return readPemKey(keyStream, null);
+	}
 
-			// public
-			if (type.endsWith("EC PUBLIC KEY")) {
-				return KeyUtil.generatePublicKey("EC", object.getContent());
-			} else if (type.endsWith("PUBLIC KEY")) {
-				return KeyUtil.generateRSAPublicKey(object.getContent());
-			} else if (type.endsWith("CERTIFICATE")) {
-				return KeyUtil.readPublicKeyFromCert(IoUtil.toStream(object.getContent()));
+	/**
+	 * 从pem文件中读取公钥或私钥<br/>
+	 * 根据类型返回 {@link PublicKey} 或者 {@link PrivateKey}
+	 *
+	 * @param keyStream pem 流
+	 * @param password  私钥密码
+	 * @return {@link Key}，null 表示无法识别的密钥类型
+	 * @since 5.8.4
+	 */
+	public static Key readPemKey(InputStream keyStream, final char[] password) {
+
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		try (PEMParser pemParser = new PEMParser(new InputStreamReader(keyStream))) {
+
+			Object keyObject = pemParser.readObject();
+
+			JcaPEMKeyConverter pemKeyConverter = new JcaPEMKeyConverter().setProvider(provider);
+
+			if (keyObject instanceof PrivateKeyInfo) {
+				// PrivateKeyInfo
+				return pemKeyConverter.getPrivateKey((PrivateKeyInfo) keyObject);
+			} else if (keyObject instanceof PEMKeyPair) {
+				// PemKeyPair
+				return pemKeyConverter.getKeyPair((PEMKeyPair) keyObject).getPrivate();
+			} else if (keyObject instanceof PKCS8EncryptedPrivateKeyInfo) {
+				// Encrypted PrivateKeyInfo
+				InputDecryptorProvider decryptProvider = new JceOpenSSLPKCS8DecryptorProviderBuilder().setProvider(provider).build(password);
+				PrivateKeyInfo privateKeyInfo = ((PKCS8EncryptedPrivateKeyInfo) keyObject).decryptPrivateKeyInfo(decryptProvider);
+				return pemKeyConverter.getPrivateKey(privateKeyInfo);
+			} else if (keyObject instanceof PEMEncryptedKeyPair) {
+				// Encrypted PemKeyPair
+				PEMDecryptorProvider decryptProvider = new JcePEMDecryptorProviderBuilder().setProvider(provider).build(password);
+				PrivateKeyInfo privateKeyInfo = ((PEMEncryptedKeyPair) keyObject).decryptKeyPair(decryptProvider).getPrivateKeyInfo();
+				return pemKeyConverter.getPrivateKey(privateKeyInfo);
+			} else if (keyObject instanceof SubjectPublicKeyInfo) {
+				// SubjectPublicKeyInfo
+				return pemKeyConverter.getPublicKey((SubjectPublicKeyInfo) keyObject);
+			} else if (keyObject instanceof X509CertificateHolder) {
+				// X509 Certificate
+				return pemKeyConverter.getPublicKey(((X509CertificateHolder) keyObject).getSubjectPublicKeyInfo());
+			} else if (keyObject instanceof X509TrustedCertificateBlock) {
+				// X509 Trusted Certificate
+				return pemKeyConverter.getPublicKey(((X509TrustedCertificateBlock) keyObject).getCertificateHolder().getSubjectPublicKeyInfo());
+			} else if (keyObject instanceof PKCS10CertificationRequest) {
+				// PKCS#10 CSR
+				return pemKeyConverter.getPublicKey(((PKCS10CertificationRequest) keyObject).getSubjectPublicKeyInfo());
+			} else {
+				// 表示无法识别的密钥类型
+				return null;
 			}
+		} catch (IOException | OperatorCreationException | PKCSException e) {
+			throw new RuntimeException(e);
 		}
-
-		//表示无法识别的密钥类型
-		return null;
 	}
 
 	/**
@@ -139,16 +192,13 @@ public class PemUtil {
 	 * @return {@link PrivateKey}
 	 */
 	public static PrivateKey readSm2PemPrivateKey(InputStream keyStream) {
-		try{
-			return KeyUtil.generatePrivateKey("sm2", ECKeyUtil.createOpenSSHPrivateKeySpec(readPem(keyStream)));
-		} finally {
-			IoUtil.close(keyStream);
-		}
+		return readPemPrivateKey(keyStream);
 	}
 
 	/**
 	 * 将私钥或公钥转换为PEM格式的字符串
-	 * @param type 密钥类型（私钥、公钥、证书）
+	 *
+	 * @param type    密钥类型（私钥、公钥、证书）
 	 * @param content 密钥内容
 	 * @return PEM内容
 	 * @since 5.5.9

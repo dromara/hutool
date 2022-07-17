@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.*;
 
 public class PemUtilTest {
 
@@ -50,7 +51,7 @@ public class PemUtilTest {
 
 	@Test
 	public void readECPrivateKeyTest() {
-		PrivateKey privateKey = PemUtil.readSm2PemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		PrivateKey privateKey = PemUtil.readSm2PemPrivateKey(ResourceUtil.getStream("test_ec_sec1_private_key.pem"));
 		SM2 sm2 = new SM2(privateKey, null);
 		sm2.usePlainEncoding();
 
@@ -77,4 +78,46 @@ public class PemUtilTest {
 		boolean verify = sm2.verify(StrUtil.utf8Bytes(content), sign);
 		Assert.assertTrue(verify);
 	}
+
+	@Test
+	public void verifyPemUtilReadKey() {
+		// 公钥
+		// PKCS#10 文件读取公钥
+		PublicKey csrPublicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_ec_certificate_request.csr"));
+
+		// 证书读取公钥
+		PublicKey certPublicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_ec_certificate.cer"));
+
+		// PEM 公钥
+		PublicKey plainPublicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_ec_public_key.pem"));
+
+		// 私钥
+		// 加密的 PEM 私钥
+		PrivateKey encPrivateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_encrypted_private_key.key"), "123456".toCharArray());
+
+		// PKCS#8 私钥
+		PrivateKey pkcs8PrivateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_pkcs8_private_key.key"));
+
+		// SEC 1 私钥
+		PrivateKey sec1PrivateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_sec1_private_key.pem"));
+
+		// 组装还原后的公钥和私钥列表
+		List<PublicKey> publicKeyList = Arrays.asList(csrPublicKey, certPublicKey, plainPublicKey);
+		List<PrivateKey> privateKeyList = Arrays.asList(encPrivateKey, pkcs8PrivateKey, sec1PrivateKey);
+
+		// 做笛卡尔积循环验证
+		for (PrivateKey privateKeyItem : privateKeyList) {
+			for (PublicKey publicKeyItem : publicKeyList) {
+				// 校验公私钥
+				SM2 genSm2 = new SM2(privateKeyItem, publicKeyItem);
+				genSm2.usePlainEncoding();
+
+				String content = "我是Hanley.";
+				byte[] sign = genSm2.sign(StrUtil.utf8Bytes(content));
+				boolean verify = genSm2.verify(StrUtil.utf8Bytes(content), sign);
+				Assert.assertTrue(verify);
+			}
+		}
+	}
+
 }
