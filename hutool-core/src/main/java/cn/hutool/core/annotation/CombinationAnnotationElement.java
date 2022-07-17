@@ -138,7 +138,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		// 直接注解
 		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (false == META_ANNOTATIONS.contains(annotationType)
+					// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
+					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					declaredAnnotationMap.put(annotationType, annotation);
 				}
@@ -157,7 +159,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		Class<? extends Annotation> annotationType;
 		for (final Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (false == META_ANNOTATIONS.contains(annotationType)) {
+			if (false == META_ANNOTATIONS.contains(annotationType)
+					// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
+					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					annotationMap.put(annotationType, annotation);
 				}
