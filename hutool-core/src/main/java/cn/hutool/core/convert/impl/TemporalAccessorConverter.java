@@ -6,10 +6,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
@@ -133,6 +135,12 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLong(final Class<?> targetClass, final Long time) {
+		if(targetClass == Month.class){
+			return Month.of(Math.toIntExact(time));
+		} else if(targetClass == DayOfWeek.class){
+			return DayOfWeek.of(Math.toIntExact(time));
+		}
+
 		return parseFromInstant(targetClass, Instant.ofEpochMilli(time), null);
 	}
 

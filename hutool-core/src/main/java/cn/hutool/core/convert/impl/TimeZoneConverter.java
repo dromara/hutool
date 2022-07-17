@@ -1,7 +1,9 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.date.ZoneUtil;
 
+import java.time.ZoneId;
 import java.util.TimeZone;
 
 /**
@@ -14,6 +16,9 @@ public class TimeZoneConverter extends AbstractConverter{
 
 	@Override
 	protected TimeZone convertInternal(final Class<?> targetClass, final Object value) {
+		if(value instanceof ZoneId){
+			return ZoneUtil.toTimeZone((ZoneId) value);
+		}
 		return TimeZone.getTimeZone(convertToStr(value));
 	}
 

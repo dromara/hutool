@@ -25,6 +25,7 @@ import cn.hutool.core.convert.impl.TimeZoneConverter;
 import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
+import cn.hutool.core.convert.impl.ZoneIdConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.reflect.ClassUtil;
@@ -47,6 +48,7 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -211,6 +213,7 @@ public class RegisterConverter implements Converter, Serializable {
 		// 其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
+		defaultConverterMap.put(ZoneId.class, new ZoneIdConverter());
 		defaultConverterMap.put(Locale.class, new LocaleConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());

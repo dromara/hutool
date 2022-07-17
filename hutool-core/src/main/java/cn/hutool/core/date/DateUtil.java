@@ -1456,29 +1456,6 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 计时器<br>
-	 * 计算某个过程花费的时间，精确到毫秒
-	 *
-	 * @return Timer
-	 */
-	public static TimeInterval timer() {
-		return new TimeInterval();
-
-	}
-
-	/**
-	 * 计时器<br>
-	 * 计算某个过程花费的时间，精确到毫秒
-	 *
-	 * @param isNano 是否使用纳秒计数，false则使用毫秒
-	 * @return Timer
-	 * @since 5.2.3
-	 */
-	public static TimeInterval timer(final boolean isNano) {
-		return new TimeInterval(isNano);
-	}
-
-	/**
 	 * 创建秒表{@link StopWatch}，用于对代码块的执行时间计数
 	 * <p>
 	 * 使用方法如下：

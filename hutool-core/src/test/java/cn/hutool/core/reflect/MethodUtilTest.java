@@ -1,7 +1,6 @@
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;
@@ -88,18 +87,20 @@ public class MethodUtilTest {
 		// 预热
 		getMethodWithReturnTypeCheck(ReflectUtilTest.TestBenchClass.class, false, "getH");
 
-		final TimeInterval timer = DateUtil.timer();
+		final StopWatch timer = new StopWatch();
 		timer.start();
 		for (int i = 0; i < 100000000; i++) {
 			MethodUtil.getMethod(ReflectUtilTest.TestBenchClass.class, false, "getH");
 		}
-		Console.log(timer.interval());
+		timer.stop();
+		Console.log(timer.getLastTaskTimeMillis());
 
-		timer.restart();
+		timer.start();
 		for (int i = 0; i < 100000000; i++) {
 			getMethodWithReturnTypeCheck(ReflectUtilTest.TestBenchClass.class, false, "getH");
 		}
-		Console.log(timer.interval());
+		timer.stop();
+		Console.log(timer.getLastTaskTimeMillis());
 	}
 
 	public static Method getMethodWithReturnTypeCheck(final Class<?> clazz, final boolean ignoreCase, final String methodName, final Class<?>... paramTypes) throws SecurityException {

@@ -2,11 +2,11 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.id.Snowflake;
 import cn.hutool.core.lang.id.IdUtil;
+import cn.hutool.core.lang.id.Snowflake;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -48,18 +48,21 @@ public class IdUtilTest {
 	@Test
 	@Ignore
 	public void benchTest() {
-		final TimeInterval timer = DateUtil.timer();
+		final StopWatch timer = DateUtil.createStopWatch();
+		timer.start();
 		for (int i = 0; i < 1000000; i++) {
 			IdUtil.simpleUUID();
 		}
-		Console.log(timer.interval());
+		timer.stop();
+		Console.log(timer.getLastTaskTimeMillis());
 
-		timer.restart();
+		timer.start();
 		for (int i = 0; i < 1000000; i++) {
 			//noinspection ResultOfMethodCallIgnored
 			UUID.randomUUID().toString().replace("-", "");
 		}
-		Console.log(timer.interval());
+		timer.stop();
+		Console.log(timer.getLastTaskTimeMillis());
 	}
 
 	@Test

@@ -1,7 +1,7 @@
 package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
@@ -68,24 +68,31 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void asyncGetTest() {
-		final TimeInterval timer = DateUtil.timer();
+		final StopWatch timer = DateUtil.createStopWatch();
+		timer.start();
 		final HttpResponse body = HttpRequest.get(url).charset("GBK").executeAsync();
-		final long interval = timer.interval();
-		timer.restart();
+		timer.stop();
+		final long interval = timer.getLastTaskTimeMillis();
+		timer.start();
 		Console.log(body.body());
-		final long interval2 = timer.interval();
+		timer.stop();
+		final long interval2 = timer.getLastTaskTimeMillis();
 		Console.log("Async response spend {}ms, body spend {}ms", interval, interval2);
 	}
 
 	@Test
 	@Ignore
 	public void syncGetTest() {
-		final TimeInterval timer = DateUtil.timer();
+		final StopWatch timer = DateUtil.createStopWatch();
+		timer.start();
 		final HttpResponse body = HttpRequest.get(url).charset("GBK").execute();
-		final long interval = timer.interval();
-		timer.restart();
+		timer.stop();
+		final long interval = timer.getLastTaskTimeMillis();
+
+		timer.start();
 		Console.log(body.body());
-		final long interval2 = timer.interval();
+		timer.stop();
+		final long interval2 = timer.getLastTaskTimeMillis();
 		Console.log("Async response spend {}ms, body spend {}ms", interval, interval2);
 	}
 

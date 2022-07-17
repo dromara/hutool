@@ -1,6 +1,6 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.date.StopWatch;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 public class ConcurrencyTester implements Closeable {
 	private final SyncFinisher sf;
-	private final TimeInterval timeInterval;
+	private final StopWatch timeInterval;
 	private long interval;
 
 	/**
@@ -33,7 +33,7 @@ public class ConcurrencyTester implements Closeable {
 	 */
 	public ConcurrencyTester(final int threadSize) {
 		this.sf = new SyncFinisher(threadSize);
-		this.timeInterval = new TimeInterval();
+		this.timeInterval = new StopWatch();
 	}
 
 	/**
@@ -52,7 +52,8 @@ public class ConcurrencyTester implements Closeable {
 				.setBeginAtSameTime(true)
 				.start();
 
-		this.interval = timeInterval.interval();
+		timeInterval.stop();
+		this.interval = timeInterval.getLastTaskTimeMillis();
 		return this;
 	}
 
@@ -69,7 +70,6 @@ public class ConcurrencyTester implements Closeable {
 	 */
 	public ConcurrencyTester reset(){
 		this.sf.clearWorker();
-		this.timeInterval.restart();
 		return this;
 	}
 
