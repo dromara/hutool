@@ -19,12 +19,16 @@ public @interface ForceAliasFor {
 
 	/**
 	 * 产生关联的注解类型，当不指定时，默认指注释的属性所在的类
+	 *
+	 * @return 关联注解类型
 	 */
 	@Link(annotation = Link.class, attribute = "annotation", type = RelationType.FORCE_ALIAS_FOR)
 	Class<? extends Annotation> annotation() default Annotation.class;
 
 	/**
 	 * {@link #annotation()}指定注解中关联的属性
+	 *
+	 * @return 关联的属性
 	 */
 	@Link(annotation = Link.class, attribute = "attribute", type = RelationType.FORCE_ALIAS_FOR)
 	String attribute() default "";

@@ -34,6 +34,7 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 	/**
 	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
 	 *
+	 * @param <T>                              注解类型
 	 * @param annotationType                   注解类型
 	 * @param annotationAttributeValueProvider 注解属性值获取器
 	 * @param annotation                       合成注解
@@ -41,9 +42,9 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T create(
-		Class<T> annotationType,
-		AnnotationAttributeValueProvider annotationAttributeValueProvider,
-		SynthesizedAnnotation annotation) {
+			Class<T> annotationType,
+			AnnotationAttributeValueProvider annotationAttributeValueProvider,
+			SynthesizedAnnotation annotation) {
 		if (ObjectUtil.isNull(annotation)) {
 			return null;
 		}
@@ -52,26 +53,27 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 			return null;
 		}
 		return (T) Proxy.newProxyInstance(
-			annotationType.getClassLoader(),
-			new Class[]{annotationType, SyntheticProxyAnnotation.class},
-			proxyHandler
+				annotationType.getClassLoader(),
+				new Class[]{annotationType, SyntheticProxyAnnotation.class},
+				proxyHandler
 		);
 	}
 
 	/**
 	 * 创建一个代理注解，生成的代理对象将是{@link SyntheticProxyAnnotation}与指定的注解类的子类。
 	 *
+	 * @param <T>            注解类型
 	 * @param annotationType 注解类型
 	 * @param annotation     合成注解
 	 * @return 代理注解
 	 */
 	public static <T extends Annotation> T create(
-		Class<T> annotationType, SynthesizedAnnotation annotation) {
+			Class<T> annotationType, SynthesizedAnnotation annotation) {
 		return create(annotationType, annotation, annotation);
 	}
 
 	/**
-	 * 该类是否为通过{@link SynthesizedAnnotationProxy}生成的代理类
+	 * 该类是否为通过{@code SynthesizedAnnotationProxy}生成的代理类
 	 *
 	 * @param annotationType 注解类型
 	 * @return 是否
@@ -92,8 +94,8 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		return Opt.ofNullable(methods.get(method.getName()))
-			.map(m -> m.apply(method, args))
-			.orElseGet(() -> ReflectUtil.invoke(this, method, args));
+				.map(m -> m.apply(method, args))
+				.orElseGet(() -> ReflectUtil.invoke(this, method, args));
 	}
 
 	// ========================= 代理方法 =========================
@@ -105,12 +107,12 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 		methods.put("getRoot", (method, args) -> annotation.getRoot());
 		methods.put("getVerticalDistance", (method, args) -> annotation.getVerticalDistance());
 		methods.put("getHorizontalDistance", (method, args) -> annotation.getHorizontalDistance());
-		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String)args[0], (Class<?>)args[1]));
+		methods.put("hasAttribute", (method, args) -> annotation.hasAttribute((String) args[0], (Class<?>) args[1]));
 		methods.put("getAttributes", (method, args) -> annotation.getAttributes());
 		methods.put("setAttribute", (method, args) -> {
 			throw new UnsupportedOperationException("proxied annotation can not reset attributes");
 		});
-		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String)args[0]));
+		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String) args[0]));
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
 		for (final Method declaredMethod : ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType())) {
 			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
@@ -119,11 +121,11 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 
 	private String proxyToString() {
 		final String attributes = Stream.of(ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType()))
-			.filter(AnnotationUtil::isAttributeMethod)
-			.map(method -> CharSequenceUtil.format(
-				"{}={}", method.getName(), proxyAttributeValue(method))
-			)
-			.collect(Collectors.joining(", "));
+				.filter(AnnotationUtil::isAttributeMethod)
+				.map(method -> CharSequenceUtil.format(
+						"{}={}", method.getName(), proxyAttributeValue(method))
+				)
+				.collect(Collectors.joining(", "));
 		return CharSequenceUtil.format("@{}({})", annotation.annotationType().getName(), attributes);
 	}
 

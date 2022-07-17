@@ -45,9 +45,9 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 			final AnnotationAttribute linkedAttribute = linkedAnnotation.getAttributes().get(link.attribute());
 			// 处理
 			processLinkedAttribute(
-				synthesizer, link,
-				synthesizedAnnotation, synthesizedAnnotation.getAttributes().get(originalAttributeName),
-				linkedAnnotation, linkedAttribute
+					synthesizer, link,
+					synthesizedAnnotation, synthesizedAnnotation.getAttributes().get(originalAttributeName),
+					linkedAnnotation, linkedAttribute
 			);
 		});
 	}
@@ -72,9 +72,9 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 * @param linkedAttribute    {@link Link}指向的{@code originalAnnotation}中的关联属性，该参数可能为空
 	 */
 	protected abstract void processLinkedAttribute(
-		AnnotationSynthesizer synthesizer, Link annotation,
-		SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
-		SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute
+			AnnotationSynthesizer synthesizer, Link annotation,
+			SynthesizedAnnotation originalAnnotation, AnnotationAttribute originalAttribute,
+			SynthesizedAnnotation linkedAnnotation, AnnotationAttribute linkedAttribute
 	);
 
 	// =========================== @Link注解的处理 ===========================
@@ -88,9 +88,9 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 */
 	protected Link getLinkAnnotation(AnnotationAttribute attribute, RelationType... relationTypes) {
 		return Opt.ofNullable(attribute)
-			.map(t -> AnnotationUtil.getSynthesizedAnnotation(attribute.getAttribute(), Link.class))
-			.filter(a -> ArrayUtil.contains(relationTypes, a.type()))
-			.get();
+				.map(t -> AnnotationUtil.getSynthesizedAnnotation(attribute.getAttribute(), Link.class))
+				.filter(a -> ArrayUtil.contains(relationTypes, a.type()))
+				.get();
 	}
 
 	/**
@@ -98,9 +98,10 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 *
 	 * @param annotation  {@link Link}注解
 	 * @param synthesizer 注解合成器
+	 * @param defaultType 默认类型
+	 * @return {@link SynthesizedAnnotation}
 	 */
-	protected SynthesizedAnnotation getLinkedAnnotation(
-		Link annotation, AnnotationSynthesizer synthesizer, Class<? extends Annotation> defaultType) {
+	protected SynthesizedAnnotation getLinkedAnnotation(Link annotation, AnnotationSynthesizer synthesizer, Class<? extends Annotation> defaultType) {
 		final Class<?> targetAnnotationType = getLinkedAnnotationType(annotation, defaultType);
 		return synthesizer.getSynthesizedAnnotation(targetAnnotationType);
 	}
@@ -115,7 +116,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 */
 	protected Class<?> getLinkedAnnotationType(Link annotation, Class<?> defaultType) {
 		return ObjectUtil.equals(annotation.annotation(), Annotation.class) ?
-			defaultType : annotation.annotation();
+				defaultType : annotation.annotation();
 	}
 
 	// =========================== 注解属性的校验 ===========================
@@ -128,17 +129,17 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 */
 	protected void checkAttributeType(AnnotationAttribute original, AnnotationAttribute alias) {
 		Assert.equals(
-			original.getAttributeType(), alias.getAttributeType(),
-			"return type of the linked attribute [{}] is inconsistent with the original [{}]",
-			original.getAttribute(), alias.getAttribute()
+				original.getAttributeType(), alias.getAttributeType(),
+				"return type of the linked attribute [{}] is inconsistent with the original [{}]",
+				original.getAttribute(), alias.getAttribute()
 		);
 	}
 
 	/**
 	 * 检查{@link Link}指向的注解属性是否就是本身
 	 *
-	 * @param original        {@link Link}注解的属性
-	 * @param linked          {@link Link}指向的注解属性
+	 * @param original {@link Link}注解的属性
+	 * @param linked   {@link Link}指向的注解属性
 	 */
 	protected void checkLinkedSelf(AnnotationAttribute original, AnnotationAttribute linked) {
 		boolean linkSelf = (original == linked) || ObjectUtil.equals(original.getAttribute(), linked.getAttribute());
@@ -154,8 +155,8 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	 */
 	protected void checkLinkedAttributeNotNull(AnnotationAttribute original, AnnotationAttribute linkedAttribute, Link annotation) {
 		Assert.notNull(linkedAttribute, "cannot find linked attribute [{}] of original [{}] in [{}]",
-			original.getAttribute(), annotation.attribute(),
-			getLinkedAnnotationType(annotation, original.getAnnotationType())
+				original.getAttribute(), annotation.attribute(),
+				getLinkedAnnotationType(annotation, original.getAnnotationType())
 		);
 	}
 
