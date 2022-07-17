@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test;
+package cn.hutool.crypto;
 
 import cn.hutool.crypto.BCUtil;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;

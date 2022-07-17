@@ -21,6 +21,7 @@
 * 【core   】     增加TemporalAccessorUtil.isIn、LocalDateTimeUtil.isIn（issue#I5HBL0@Gitee）
 * 【core   】     ReUtil增加getAllGroups重载（pr#2455@Github）
 * 【core   】     PageUtil#totalPage增加totalCount为long类型的重载方法（pr#2442@Github）
+* 【crypto 】     PemUtil.readPemPrivateKey支持pkcs#1格式，增加OpensslKeyUtil（pr#2456@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）

@@ -1,13 +1,11 @@
-package cn.hutool.crypto.test.digest;
+package cn.hutool.crypto.digest;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.crypto.digest.MD5;
-
 /**
  * MD5 单元测试
- * 
+ *
  * @author Looly
  *
  */

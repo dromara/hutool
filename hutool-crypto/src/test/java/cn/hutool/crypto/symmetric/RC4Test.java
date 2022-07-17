@@ -1,13 +1,11 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.crypto.symmetric.RC4;
-
 public class RC4Test {
-	
+
 	@Test
 	public void testCryptMessage() {
 		String key = "This is pretty long key";
@@ -16,7 +14,7 @@ public class RC4Test {
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
 		Assert.assertEquals(message, msg);
-		
+
 		String message2 = "Hello, World， this is megssage 2";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);
@@ -31,7 +29,7 @@ public class RC4Test {
 		byte[] crypt = rc4.encrypt(message);
 		String msg = rc4.decrypt(crypt);
 		Assert.assertEquals(message, msg);
-		
+
 		String message2 = "这是第二个中文消息！";
 		byte[] crypt2 = rc4.encrypt(message2);
 		String msg2 = rc4.decrypt(crypt2);

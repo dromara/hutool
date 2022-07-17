@@ -1,4 +1,4 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.HexUtil;
@@ -6,7 +6,6 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.symmetric.AES;
 import org.junit.Assert;
 import org.junit.Test;
 

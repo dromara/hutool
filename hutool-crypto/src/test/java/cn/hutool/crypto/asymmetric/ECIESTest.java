@@ -1,9 +1,6 @@
-package cn.hutool.crypto.test.asymmetric;
+package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.asymmetric.AsymmetricCrypto;
-import cn.hutool.crypto.asymmetric.ECIES;
-import cn.hutool.crypto.asymmetric.KeyType;
 import org.junit.Assert;
 import org.junit.Test;
 

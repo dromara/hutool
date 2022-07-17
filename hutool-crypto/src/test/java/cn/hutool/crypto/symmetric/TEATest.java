@@ -1,7 +1,5 @@
-package cn.hutool.crypto.test.symmetric;
+package cn.hutool.crypto.symmetric;
 
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import cn.hutool.crypto.symmetric.XXTEA;
 import org.junit.Assert;
 import org.junit.Test;
 
