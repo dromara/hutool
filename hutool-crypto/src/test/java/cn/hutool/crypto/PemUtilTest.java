@@ -49,7 +49,21 @@ public class PemUtilTest {
 
 	@Test
 	public void readECPrivateKeyTest() {
-		final PrivateKey privateKey = PemUtil.readSm2PemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		final PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_private_key.pem"));
+		final SM2 sm2 = new SM2(privateKey, null);
+		sm2.usePlainEncoding();
+
+		//需要签名的明文,得到明文对应的字节数组
+		final byte[] dataBytes = "我是一段测试aaaa".getBytes(StandardCharsets.UTF_8);
+
+		final byte[] sign = sm2.sign(dataBytes, null);
+		// 64位签名
+		Assert.assertEquals(64, sign.length);
+	}
+
+	@Test
+	public void readECSec1PrivateKeyTest() {
+		final PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_ec_sec1_private_key.pem"));
 		final SM2 sm2 = new SM2(privateKey, null);
 		sm2.usePlainEncoding();
 

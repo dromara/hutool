@@ -67,7 +67,13 @@ public class PemUtil {
 		if (StrUtil.isNotBlank(type)) {
 			//private
 			if (type.endsWith("EC PRIVATE KEY")) {
-				return KeyUtil.generatePrivateKey("EC", object.getContent());
+				try {
+					// 尝试PKCS#8
+					return KeyUtil.generatePrivateKey("EC", object.getContent());
+				} catch (final Exception e) {
+					// 尝试PKCS#1
+					return KeyUtil.generatePrivateKey("EC", ECKeyUtil.createOpenSSHPrivateKeySpec(object.getContent()));
+				}
 			}
 			if (type.endsWith("PRIVATE KEY")) {
 				return KeyUtil.generateRSAPrivateKey(object.getContent());
@@ -75,7 +81,13 @@ public class PemUtil {
 
 			// public
 			if (type.endsWith("EC PUBLIC KEY")) {
-				return KeyUtil.generatePublicKey("EC", object.getContent());
+				try {
+					// 尝试DER
+					return KeyUtil.generatePublicKey("EC", object.getContent());
+				} catch (Exception e) {
+					// 尝试PKCS#1
+					return KeyUtil.generatePublicKey("EC", ECKeyUtil.createOpenSSHPublicKeySpec(object.getContent()));
+				}
 			} else if (type.endsWith("PUBLIC KEY")) {
 				return KeyUtil.generateRSAPublicKey(object.getContent());
 			} else if (type.endsWith("CERTIFICATE")) {
@@ -129,20 +141,6 @@ public class PemUtil {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(pemReader);
-		}
-	}
-
-	/**
-	 * 读取OpenSSL生成的ANS1格式的Pem私钥文件，必须为PKCS#1格式
-	 *
-	 * @param keyStream 私钥pem流
-	 * @return {@link PrivateKey}
-	 */
-	public static PrivateKey readSm2PemPrivateKey(final InputStream keyStream) {
-		try{
-			return KeyUtil.generatePrivateKey("sm2", ECKeyUtil.createOpenSSHPrivateKeySpec(readPem(keyStream)));
-		} finally {
-			IoUtil.close(keyStream);
 		}
 	}
 
