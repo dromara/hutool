@@ -3,7 +3,6 @@ package cn.hutool.crypto;
 import cn.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.openssl.PEMDecryptorProvider;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
@@ -85,23 +84,6 @@ public class OpensslKeyUtil {
 	}
 
 	/**
-	 * 从pem文件中读取公钥或私钥<br>
-	 * 根据类型返回 {@link PublicKey} 或者 {@link PrivateKey}
-	 *
-	 * @param keyStream pem 流
-	 * @param password  私钥密码
-	 * @return {@link Key}，null 表示无法识别的密钥类型
-	 * @since 5.8.5
-	 */
-	public static Key readPemKey(final InputStream keyStream, final char[] password) {
-		try (final PEMParser pemParser = new PEMParser(new InputStreamReader(keyStream))) {
-			return readPemKeyFromKeyObject(pemParser.readObject(), password);
-		} catch (final IOException e) {
-			throw new CryptoException(e);
-		}
-	}
-
-	/**
 	 * 解密{@link PKCS8EncryptedPrivateKeyInfo}为{@link PrivateKeyInfo}
 	 *
 	 * @param pkcs8Info {@link PKCS8EncryptedPrivateKeyInfo}
@@ -134,6 +116,40 @@ public class OpensslKeyUtil {
 			return pemEncryptedKeyPair.decryptKeyPair(decryptProvider);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从pem文件中读取公钥或私钥<br>
+	 * 根据类型返回 {@link PublicKey} 或者 {@link PrivateKey}
+	 *
+	 * @param keyStream pem 流
+	 * @param password  私钥密码
+	 * @return {@link Key}，null 表示无法识别的密钥类型
+	 * @since 5.8.5
+	 */
+	public static Key readPemKey(final InputStream keyStream, final char[] password) {
+		try (final PEMParser pemParser = new PEMParser(new InputStreamReader(keyStream))) {
+			return readPemKeyFromKeyObject(pemParser.readObject(), password);
+		} catch (final IOException e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	/**
+	 * 从pem文件中读取公钥或私钥<br>
+	 * 根据类型返回 {@link PublicKey} 或者 {@link PrivateKey}
+	 *
+	 * @param keyStream pem 流
+	 * @param password  私钥密码
+	 * @return {@link Key}，null 表示无法识别的密钥类型
+	 * @since 5.8.5
+	 */
+	public static KeyPair readPemKeyPair(final InputStream keyStream, final char[] password) {
+		try (final PEMParser pemParser = new PEMParser(new InputStreamReader(keyStream))) {
+			return readPemKeyPairFromKeyObject(pemParser.readObject(), password);
+		} catch (final IOException e) {
+			throw new CryptoException(e);
 		}
 	}
 
@@ -179,6 +195,32 @@ public class OpensslKeyUtil {
 		} else if (keyObject instanceof PKCS10CertificationRequest) {
 			// PKCS#10 CSR
 			return getPublicKey(((PKCS10CertificationRequest) keyObject).getSubjectPublicKeyInfo());
+		} else {
+			// 表示无法识别的密钥类型
+			throw new CryptoException("Unsupported key object type: {}", keyObject.getClass());
+		}
+	}
+
+	/**
+	 * 读取Pem文件中的密钥对，密钥支持包括：<br>
+	 * <ul>
+	 *     <li>{@link PEMKeyPair}，默认读取私钥</li>
+	 *     <li>{@link PEMEncryptedKeyPair}，默认读取私钥</li>
+	 * </ul>
+	 *
+	 * @param keyObject 密钥内容对象
+	 * @param password  密码（部分加密的pem使用）
+	 * @return {@link KeyPair}
+	 * @throws CryptoException 读取异常或不支持的类型
+	 */
+	private static KeyPair readPemKeyPairFromKeyObject(final Object keyObject, final char[] password) throws CryptoException {
+		if (keyObject instanceof PEMKeyPair) {
+			// PemKeyPair
+			return getKeyPair((PEMKeyPair) keyObject);
+		} else if (keyObject instanceof PEMEncryptedKeyPair) {
+			// Encrypted PemKeyPair
+			final PEMKeyPair pemKeyPair = decrypt((PEMEncryptedKeyPair) keyObject, password);
+			return new KeyPair(getPublicKey(pemKeyPair.getPublicKeyInfo()), getPrivateKey(pemKeyPair.getPrivateKeyInfo()));
 		} else {
 			// 表示无法识别的密钥类型
 			throw new CryptoException("Unsupported key object type: {}", keyObject.getClass());
