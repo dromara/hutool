@@ -120,7 +120,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		// 直接注解
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			// 跳过元注解和已经处理过的注解，防止递归调用
+			// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
 			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
 					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
@@ -141,6 +141,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		Class<? extends Annotation> annotationType;
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
+			// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
 			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
 					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
