@@ -27,6 +27,7 @@
 * 【socket 】     修复异常socket没有关闭问题（pr#690@Gitee）
 * 【core   】     修复当时间戳为Integer时时间转换问题（pr#2449@Github）
 * 【core   】     修复bmp文件判断问题（issue#I5H93G@Gitee）
+* 【core   】     修复CombinationAnnotationElement造成递归循环（issue#I5FQGW@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

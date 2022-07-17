@@ -16,14 +16,14 @@ public class AnnotationUtilTest {
 	public void getCombinationAnnotationsTest(){
 		final Annotation[] annotations = AnnotationUtil.getAnnotations(ClassWithAnnotation.class, true);
 		Assert.assertNotNull(annotations);
-		Assert.assertEquals(3, annotations.length);
+		Assert.assertEquals(2, annotations.length);
 	}
 
 	@Test
 	public void getCombinationAnnotationsWithClassTest(){
 		final AnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassWithAnnotation.class, AnnotationForTest.class);
 		Assert.assertNotNull(annotations);
-		Assert.assertEquals(2, annotations.length);
+		Assert.assertEquals(1, annotations.length);
 		Assert.assertEquals("测试", annotations[0].value());
 	}
 

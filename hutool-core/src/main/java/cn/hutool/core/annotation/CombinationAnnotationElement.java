@@ -1,19 +1,13 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.TableMap;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -126,7 +120,9 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		// 直接注解
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)) {
+			// 跳过元注解和已经处理过的注解，防止递归调用
+			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
+					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					declaredAnnotationMap.put(annotationType, annotation);
 				}
@@ -145,7 +141,8 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		Class<? extends Annotation> annotationType;
 		for (Annotation annotation : annotations) {
 			annotationType = annotation.annotationType();
-			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)) {
+			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
+					&& false == declaredAnnotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					annotationMap.put(annotationType, annotation);
 				}
