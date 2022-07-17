@@ -84,6 +84,7 @@ public interface AnnotationAttribute {
 	/**
 	 * 获取属性上的注解
 	 *
+	 * @param <T> 注解类型
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 */

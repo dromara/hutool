@@ -107,7 +107,7 @@ public abstract class AbstractLinkAnnotationPostProcessor implements Synthesized
 	}
 
 	/**
-	 * 若{@link Link#annotation()}获取的类型{@link Annotation#getClass()}，则返回{@code defaultType}，
+	 * 若{@link Link#annotation()}获取的类型{@code Annotation#getClass()}，则返回{@code defaultType}，
 	 * 否则返回{@link Link#annotation()}指定的类型
 	 *
 	 * @param annotation  {@link Link}注解
