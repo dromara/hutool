@@ -5,6 +5,9 @@
 
 # 5.8.5.M1 (2022-07-17)
 
+### ❌不兼容特性
+* 【core   】     合成注解相关功能重构，增加@Link及其子注解（pr#702@Gitee）
+
 ### 🐣新特性
 * 【core   】     NumberUtil新增isIn方法（pr#669@Gitee）
 * 【core   】     修复注解工具类getAnnotations的NPE问题，注解扫描器添新功能（pr#671@Gitee）
