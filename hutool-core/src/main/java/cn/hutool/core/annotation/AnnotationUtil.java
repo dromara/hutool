@@ -461,11 +461,11 @@ public class AnnotationUtil {
 	 * <p>注解合成规则如下：
 	 * 若{@code AnnotatedEle}按顺序从上到下声明了A，B，C三个注解，且三注解存在元注解如下：
 	 * <pre>
-	 *    A -&gt; MA1 -&gt; MA2
-	 *    B -&gt; MB1 -&gt; MB2
-	 *    C -&gt; MC1
+	 *    A -&gt; M3
+	 *    B -&gt; M1 -&gt; M2 -&gt; M3
+	 *    C -&gt; M2 -&gt; M3
 	 * </pre>
-	 * 此时入参{@code annotationType}类型为{@code MB1}，则最终将优先返回基于根注解B合成的合成注解
+	 * 此时入参{@code annotationType}类型为{@code M2}，则最终将优先返回基于根注解B合成的合成注解
 	 *
 	 * @param annotatedEle   {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类
@@ -499,7 +499,7 @@ public class AnnotationUtil {
 	 * 若{@code AnnotatedEle}按顺序从上到下声明了A，B，C三个注解，且三注解存在元注解如下：
 	 * <pre>
 	 *    A -&gt; M1 -&gt; M2
-	 *    B -&gt; M3 -&gt; M1
+	 *    B -&gt; M3 -&gt; M1 -&gt; M2
 	 *    C -&gt; M2
 	 * </pre>
 	 * 此时入参{@code annotationType}类型为{@code M1}，则最终将返回基于根注解A与根注解B合成的合成注解。
