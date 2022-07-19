@@ -25,6 +25,7 @@
 * 【core   】     ReUtil增加getAllGroups重载（pr#2455@Github）
 * 【core   】     PageUtil#totalPage增加totalCount为long类型的重载方法（pr#2442@Github）
 * 【crypto 】     PemUtil.readPemPrivateKey支持pkcs#1格式，增加OpensslKeyUtil（pr#2456@Github）
+* 【core   】     添加了通用的注解扫描器 `GenericAnnotationScanner`，并在 `AnnotationScanner` 接口中统一提供了提前配置好的扫描器静态实例（pr#715@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
@@ -32,6 +33,7 @@
 * 【core   】     修复当时间戳为Integer时时间转换问题（pr#2449@Github）
 * 【core   】     修复bmp文件判断问题（issue#I5H93G@Gitee）
 * 【core   】     修复CombinationAnnotationElement造成递归循环（issue#I5FQGW@Gitee）
+* 【core   】     修复Dict缺少putIfAbsent、computeIfAbsent问题（issue#I5FQGW@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
