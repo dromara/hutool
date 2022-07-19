@@ -14,8 +14,6 @@ import java.util.function.Predicate;
  */
 public class EmptyAnnotationScanner implements AnnotationScanner {
 
-	public static final EmptyAnnotationScanner INSTANCE = new EmptyAnnotationScanner();
-
 	@Override
 	public boolean support(AnnotatedElement annotatedEle) {
 		return true;
