@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -568,6 +569,11 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	// -------------------------------------------------------------------- Get end
 
 	@Override
+	public boolean containsKey(Object key) {
+		return super.containsKey(customKey((String) key));
+	}
+
+	@Override
 	public Object get(Object key) {
 		return super.get(customKey((String) key));
 	}
@@ -586,6 +592,48 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Dict clone() {
 		return (Dict) super.clone();
 	}
+
+	@Override
+	public Object remove(Object key) {
+		return super.remove(customKey((String) key));
+	}
+
+	@Override
+	public boolean remove(Object key, Object value) {
+		return super.remove(customKey((String) key), value);
+	}
+
+	@Override
+	public boolean replace(String key, Object oldValue, Object newValue) {
+		return super.replace(customKey(key), oldValue, newValue);
+	}
+
+	@Override
+	public Object replace(String key, Object value) {
+		return super.replace(customKey(key), value);
+	}
+
+	//---------------------------------------------------------------------------- Override default methods start
+	@Override
+	public Object getOrDefault(Object key, Object defaultValue) {
+		return super.getOrDefault(customKey((String) key), defaultValue);
+	}
+
+	@Override
+	public Object computeIfPresent(final String key, final BiFunction<? super String, ? super Object, ?> remappingFunction) {
+		return super.computeIfPresent(customKey(key), remappingFunction);
+	}
+
+	@Override
+	public Object compute(final String key, final BiFunction<? super String, ? super Object, ?> remappingFunction) {
+		return super.compute(customKey(key), remappingFunction);
+	}
+
+	@Override
+	public Object merge(final String key, final Object value, final BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+		return super.merge(customKey(key), value, remappingFunction);
+	}
+	//---------------------------------------------------------------------------- Override default methods end
 
 	/**
 	 * 将Key转为小写
@@ -616,4 +664,5 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
 		return this;
 	}
+
 }

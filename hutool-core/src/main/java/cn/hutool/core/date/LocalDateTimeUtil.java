@@ -171,6 +171,8 @@ public class LocalDateTimeUtil {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
 		} else if(temporalAccessor instanceof Instant){
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
+		} else if(temporalAccessor instanceof ZonedDateTime){
+			return ((ZonedDateTime)temporalAccessor).toLocalDateTime();
 		}
 
 		return LocalDateTime.of(
@@ -570,5 +572,43 @@ public class LocalDateTimeUtil {
 	 */
 	public static int weekOfYear(TemporalAccessor date){
 		return TemporalAccessorUtil.get(date, WeekFields.ISO.weekOfYear());
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 5.8.5
+	 */
+	public static boolean isSameDay(final LocalDateTime date1, final LocalDateTime date2) {
+		return date1 != null && date2 != null && isSameDay(date1.toLocalDate(), date2.toLocalDate());
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 5.8.5
+	 */
+	public static boolean isSameDay(final LocalDate date1, final LocalDate date2) {
+		return date1 != null && date2 != null && date1.isEqual(date2);
+	}
+
+	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换
+	 *
+	 * @param date      被检查的日期
+	 * @param beginDate 起始日期（包含）
+	 * @param endDate   结束日期（包含）
+	 * @return 是否在范围内
+	 * @since 5.8.5
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate){
+		return TemporalAccessorUtil.isIn(date, beginDate, endDate);
 	}
 }

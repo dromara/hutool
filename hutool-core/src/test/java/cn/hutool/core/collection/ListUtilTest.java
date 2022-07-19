@@ -73,10 +73,14 @@ public class ListUtilTest {
 		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 4);
 		Assert.assertEquals("[[1], [2], [3], [4]]", lists.toString());
 
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);
-		Assert.assertEquals("[[1], [2], [3], [], []]", lists.toString());
 		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);
 		Assert.assertEquals("[[1, 2], [3]]", lists.toString());
+	}
+
+	@Test
+	public void splitAvgTest2() {
+		List<List<Object>> lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);
+		Assert.assertEquals("[[1], [2], [3], [], []]", lists.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

@@ -1,30 +1,21 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.collection.CollUtil;
+
 import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 
 /**
- * 用于在{@link SyntheticAnnotation}中表示一个处于合成状态的注解对象
+ * <p>用于在{@link SynthesizedAggregateAnnotation}中表示一个处于合成状态的注解对象。<br>
+ * 当对多个合成注解排序时，默认使用{@link #DEFAULT_HIERARCHICAL_COMPARATOR}进行排序，
+ * 从保证合成注解按{@link #getVerticalDistance()}与{@link #getHorizontalDistance()}的返回值保持有序，
+ * 从而使得距离根元素更接近的注解对象在被处理是具有更高的优先级。
  *
  * @author huangchengxing
- * @see SyntheticAnnotation
+ * @see SynthesizedAggregateAnnotation
  */
-public interface SynthesizedAnnotation extends Annotation {
-
-	/**
-	 * 获取该合成注解对应的根节点
-	 *
-	 * @return 合成注解对应的根节点
-	 */
-	Object getRoot();
-
-	/**
-	 * 该合成注解是为根对象
-	 *
-	 * @return 根对象
-	 */
-	default boolean isRoot() {
-		return getRoot() == this;
-	}
+public interface SynthesizedAnnotation extends Annotation, Hierarchical, AnnotationAttributeValueProvider {
 
 	/**
 	 * 获取被合成的注解对象
@@ -39,6 +30,7 @@ public interface SynthesizedAnnotation extends Annotation {
 	 *
 	 * @return 合成注解与根对象的垂直距离
 	 */
+	@Override
 	int getVerticalDistance();
 
 	/**
@@ -47,6 +39,7 @@ public interface SynthesizedAnnotation extends Annotation {
 	 *
 	 * @return 合成注解与根对象的水平距离
 	 */
+	@Override
 	int getHorizontalDistance();
 
 	/**
@@ -59,11 +52,45 @@ public interface SynthesizedAnnotation extends Annotation {
 	boolean hasAttribute(String attributeName, Class<?> returnType);
 
 	/**
+	 * 获取该注解的全部属性
+	 *
+	 * @return 注解属性
+	 */
+	Map<String, AnnotationAttribute> getAttributes();
+
+	/**
+	 * 设置该注解的全部属性
+	 *
+	 * @param attributes 注解属性
+	 */
+	default void setAttributes(Map<String, AnnotationAttribute> attributes) {
+		if (CollUtil.isNotEmpty(attributes)) {
+			attributes.forEach(this::setAttribute);
+		}
+	}
+
+	/**
+	 * 设置属性值
+	 *
+	 * @param attributeName 属性名称
+	 * @param attribute     注解属性
+	 */
+	void setAttribute(String attributeName, AnnotationAttribute attribute);
+
+	/**
+	 * 替换属性值
+	 *
+	 * @param attributeName 属性名
+	 * @param operator      替换操作
+	 */
+	void replaceAttribute(String attributeName, UnaryOperator<AnnotationAttribute> operator);
+
+	/**
 	 * 获取属性值
 	 *
 	 * @param attributeName 属性名
 	 * @return 属性值
 	 */
-	Object getAttribute(String attributeName);
+	Object getAttributeValue(String attributeName);
 
 }

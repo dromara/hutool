@@ -73,12 +73,12 @@ public class TypeAnnotationScanner extends AbstractTypeAnnotationScanner<TypeAnn
 	/**
 	 * 是否允许扫描父类
 	 *
-	 * @param includeSupperClass 是否允许扫描父类
+	 * @param includeSuperClass 是否允许扫描父类
 	 * @return 当前实例
 	 */
 	@Override
-	public TypeAnnotationScanner setIncludeSupperClass(boolean includeSupperClass) {
-		return super.setIncludeSupperClass(includeSupperClass);
+	public TypeAnnotationScanner setIncludeSuperClass(boolean includeSuperClass) {
+		return super.setIncludeSuperClass(includeSuperClass);
 	}
 
 	/**
