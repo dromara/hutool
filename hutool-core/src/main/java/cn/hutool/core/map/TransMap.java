@@ -2,6 +2,7 @@ package cn.hutool.core.map;
 
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -97,6 +98,16 @@ public abstract class TransMap<K, V> extends MapWrapper<K, V> {
 	@Override
 	public V merge(final K key, final V value, final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		return super.merge(customKey(key), customValue(value), (v1, v2) -> remappingFunction.apply(customValue(v1), customValue(v2)));
+	}
+
+	@Override
+	public V putIfAbsent(K key, V value) {
+		return super.putIfAbsent(customKey(key), customValue(value));
+	}
+
+	@Override
+	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
+		return super.computeIfAbsent(customKey(key), mappingFunction);
 	}
 	//---------------------------------------------------------------------------- Override default methods end
 
