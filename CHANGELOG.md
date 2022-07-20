@@ -35,6 +35,7 @@
 * 【core   】     修复CombinationAnnotationElement造成递归循环（issue#I5FQGW@Gitee）
 * 【core   】     修复Dict缺少putIfAbsent、computeIfAbsent问题（issue#I5FQGW@Gitee）
 * 【core   】     修复Console.log应该把异常信息输出位置错误问题（pr#716@Gitee）
+* 【core   】     修复UrlBuilder无法配置末尾追加“/”问题（issue#2459@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
