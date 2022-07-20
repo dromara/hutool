@@ -21,6 +21,17 @@ public class UrlBuilderTest {
 	}
 
 	@Test
+	public void buildWithoutSlashTest(){
+		// https://github.com/dromara/hutool/issues/2459
+		String buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).setWithEndTag(false).build();
+		Assert.assertEquals("http://192.168.1.1:8080", buildUrl);
+
+		buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
+				.setWithEndTag(false).build();
+		Assert.assertEquals("http://192.168.1.1:8080?url=http://192.168.1.1/test/1", buildUrl);
+	}
+
+	@Test
 	public void buildTest2() {
 		// path中的+不做处理
 		final String buildUrl = UrlBuilder.ofHttp("http://www.hutool.cn/+8618888888888", CharsetUtil.UTF_8).build();

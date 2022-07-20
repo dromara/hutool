@@ -341,6 +341,22 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
+	 * 是否path的末尾加 /
+	 *
+	 * @param withEngTag 是否path的末尾加 /
+	 * @return this
+	 * @since 5.8.5
+	 */
+	public UrlBuilder setWithEndTag(final boolean withEngTag) {
+		if (null == this.path) {
+			this.path = UrlPath.of();
+		}
+
+		this.path.setWithEndTag(withEngTag);
+		return this;
+	}
+
+	/**
 	 * 增加路径节点，路径节点中的"/"会被转义为"%2F"
 	 *
 	 * @param segment 路径节点
@@ -489,7 +505,7 @@ public final class UrlBuilder implements Builder<String> {
 		final StringBuilder fileBuilder = new StringBuilder();
 
 		// path
-		fileBuilder.append(StrUtil.blankToDefault(getPathStr(), StrUtil.SLASH));
+		fileBuilder.append(getPathStr());
 
 		// query
 		final String query = getQueryStr();

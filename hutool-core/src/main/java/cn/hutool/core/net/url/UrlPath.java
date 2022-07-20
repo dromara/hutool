@@ -25,14 +25,22 @@ public class UrlPath {
 	/**
 	 * 构建UrlPath
 	 *
+	 * @return UrlPath
+	 * @since 6.0.0
+	 */
+	public static UrlPath of() {
+		return new UrlPath();
+	}
+
+	/**
+	 * 构建UrlPath
+	 *
 	 * @param pathStr 初始化的路径字符串
 	 * @param charset decode用的编码，null表示不做decode
 	 * @return UrlPath
 	 */
 	public static UrlPath of(final CharSequence pathStr, final Charset charset) {
-		final UrlPath urlPath = new UrlPath();
-		urlPath.parse(pathStr, charset);
-		return urlPath;
+		return of().parse(pathStr, charset);
 	}
 
 	/**
@@ -100,12 +108,12 @@ public class UrlPath {
 	public UrlPath parse(CharSequence path, final Charset charset) {
 		if (StrUtil.isNotEmpty(path)) {
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
-			if(StrUtil.endWith(path, CharUtil.SLASH)){
+			if (StrUtil.endWith(path, CharUtil.SLASH)) {
 				this.withEngTag = true;
 			}
 
 			path = fixPath(path);
-			if(StrUtil.isNotEmpty(path)){
+			if (StrUtil.isNotEmpty(path)) {
 				final List<String> split = StrUtil.split(path, '/');
 				for (final String seg : split) {
 					addInternal(URLDecoder.decodeForPath(seg, charset), false);
@@ -135,20 +143,21 @@ public class UrlPath {
 	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
 	 * </pre>
 	 *
-	 * @param charset encode编码，null表示不做encode
+	 * @param charset       encode编码，null表示不做encode
 	 * @param encodePercent 是否编码`%`
 	 * @return 如果没有任何内容，则返回空字符串""
 	 * @since 5.8.0
 	 */
 	public String build(final Charset charset, final boolean encodePercent) {
 		if (CollUtil.isEmpty(this.segments)) {
-			return StrUtil.EMPTY;
+			// 没有节点的path取决于是否末尾追加/，如果不追加返回空串，否则返回/
+			return withEngTag ? StrUtil.SLASH : StrUtil.EMPTY;
 		}
 
 		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
 		for (final String segment : segments) {
-			if(builder.length() == 0){
+			if (builder.length() == 0) {
 				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
 				// path的第一部分不允许有":"，其余部分允许
 				// 在此处的Path部分特指host之后的部分，即不包含第一部分
@@ -157,12 +166,15 @@ public class UrlPath {
 				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
 			}
 		}
-		if (StrUtil.isEmpty(builder)) {
-			// 空白追加是保证以/开头
-			builder.append(CharUtil.SLASH);
-		}else if (withEngTag && false == StrUtil.endWith(builder, CharUtil.SLASH)) {
-			// 尾部没有/则追加，否则不追加
-			builder.append(CharUtil.SLASH);
+
+		if (withEngTag) {
+			if (StrUtil.isEmpty(builder)) {
+				// 空白追加是保证以/开头
+				builder.append(CharUtil.SLASH);
+			} else if (false == StrUtil.endWith(builder, CharUtil.SLASH)) {
+				// 尾部没有/则追加，否则不追加
+				builder.append(CharUtil.SLASH);
+			}
 		}
 
 		return builder.toString();
