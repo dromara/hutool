@@ -38,4 +38,10 @@ public class DesTest {
 
 		Assert.assertEquals(content, result);
 	}
+
+	@Test
+	public void issueI5I5B3Test(){
+		final DES des = new DES(Mode.CTS, Padding.PKCS5Padding, "1234567890".getBytes(), "12345678".getBytes());
+		des.encryptHex("root");
+	}
 }
