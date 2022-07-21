@@ -3069,4 +3069,29 @@ public class CollUtil {
 
 		return IterUtil.isEqualList(list1, list2);
 	}
+
+	/**
+	 * 批量处理集合，当集合数据非常大，需要批量处理的使用使用，默认每次500条
+	 * @param list     待处理集合
+	 * @param action   处理操作
+	 */
+	public static <T> void dealListBatch(List<T> list, Consumer<List<T>> action) {
+		dealListBatch(list, 500, action);
+	}
+
+	/**
+	 * 批量处理集合， 当集合数据非常大，需要批量处理的使用使用，按照每次按照指定大小perSize进行处理
+	 * @param list     待处理集合
+	 * @param perSize  每次处理的数量
+	 * @param action   处理操作
+	 */
+	public static <T> void dealListBatch(List<T> list, int perSize, Consumer<List<T>> action) {
+        int cnt = list.size() / perSize;
+        for (int i = 0; i <= cnt; i++) {
+            List<T> tempList = list.subList(i * perSize, Math.min((i + 1) * perSize, list.size()));
+            if (tempList.size() > 0) {
+                action.accept(tempList);
+            }
+        }
+    }
 }
