@@ -89,17 +89,12 @@ public class SystemUtil {
 	 * @return 值
 	 */
 	public static boolean getBoolean(final String key, final boolean defaultValue) {
-		String value = get(key);
+		final String value = get(key);
 		if (value == null) {
 			return defaultValue;
 		}
 
-		value = value.trim().toLowerCase();
-		if (value.isEmpty()) {
-			return true;
-		}
-
-		return Convert.toBool(value, defaultValue);
+		return BooleanUtil.toBoolean(value);
 	}
 
 	/**
