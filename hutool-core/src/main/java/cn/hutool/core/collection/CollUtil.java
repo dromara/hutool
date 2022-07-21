@@ -3086,12 +3086,12 @@ public class CollUtil {
 	 * @param action   处理操作
 	 */
 	public static <T> void dealListBatch(List<T> list, int perSize, Consumer<List<T>> action) {
-        int cnt = list.size() / perSize;
-        for (int i = 0; i <= cnt; i++) {
-            List<T> tempList = list.subList(i * perSize, Math.min((i + 1) * perSize, list.size()));
-            if (tempList.size() > 0) {
-                action.accept(tempList);
-            }
-        }
-    }
+		int cnt = list.size() / perSize;
+		for (int i = 0; i <= cnt; i++) {
+			List<T> tempList = list.subList(i * perSize, Math.min((i + 1) * perSize, list.size()));
+			if (tempList.size() > 0) {
+				action.accept(tempList);
+			}
+		}
+	}
 }
