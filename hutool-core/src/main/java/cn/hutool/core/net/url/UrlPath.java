@@ -142,12 +142,13 @@ public class UrlPath {
 	 */
 	public String build(Charset charset, boolean encodePercent) {
 		if (CollUtil.isEmpty(this.segments)) {
-			return StrUtil.EMPTY;
+			// 没有节点的path取决于是否末尾追加/，如果不追加返回空串，否则返回/
+			return withEngTag ? StrUtil.SLASH : StrUtil.EMPTY;
 		}
 
 		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
-		for (String segment : segments) {
+		for (final String segment : segments) {
 			if(builder.length() == 0){
 				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
 				// path的第一部分不允许有":"，其余部分允许
@@ -157,12 +158,15 @@ public class UrlPath {
 				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
 			}
 		}
-		if (StrUtil.isEmpty(builder)) {
-			// 空白追加是保证以/开头
-			builder.append(CharUtil.SLASH);
-		}else if (withEngTag && false == StrUtil.endWith(builder, CharUtil.SLASH)) {
-			// 尾部没有/则追加，否则不追加
-			builder.append(CharUtil.SLASH);
+
+		if(withEngTag){
+			if (StrUtil.isEmpty(builder)) {
+				// 空白追加是保证以/开头
+				builder.append(CharUtil.SLASH);
+			}else if (false == StrUtil.endWith(builder, CharUtil.SLASH)) {
+				// 尾部没有/则追加，否则不追加
+				builder.append(CharUtil.SLASH);
+			}
 		}
 
 		return builder.toString();

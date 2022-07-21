@@ -1,6 +1,9 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.annotation.scanner.*;
+import cn.hutool.core.annotation.scanner.AnnotationScanner;
+import cn.hutool.core.annotation.scanner.MetaAnnotationScanner;
+import cn.hutool.core.annotation.scanner.MethodAnnotationScanner;
+import cn.hutool.core.annotation.scanner.TypeAnnotationScanner;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Opt;
@@ -334,7 +337,7 @@ public class AnnotationUtil {
 	 * @see MetaAnnotationScanner
 	 */
 	public static List<Annotation> scanMetaAnnotation(Class<? extends Annotation> annotationType) {
-		return new MetaAnnotationScanner().getIfSupport(annotationType);
+		return AnnotationScanner.DIRECTLY_AND_META_ANNOTATION.getAnnotationsIfSupport(annotationType);
 	}
 
 	/**
@@ -363,7 +366,7 @@ public class AnnotationUtil {
 	 * @see TypeAnnotationScanner
 	 */
 	public static List<Annotation> scanClass(Class<?> targetClass) {
-		return new TypeAnnotationScanner().getIfSupport(targetClass);
+		return AnnotationScanner.TYPE_HIERARCHY.getAnnotationsIfSupport(targetClass);
 	}
 
 	/**
@@ -391,7 +394,7 @@ public class AnnotationUtil {
 	 * @see MethodAnnotationScanner
 	 */
 	public static List<Annotation> scanMethod(Method method) {
-		return new MethodAnnotationScanner(true).getIfSupport(method);
+		return AnnotationScanner.TYPE_HIERARCHY.getAnnotationsIfSupport(method);
 	}
 
 	/**
@@ -478,14 +481,12 @@ public class AnnotationUtil {
 		if (ObjectUtil.isNotNull(target)) {
 			return target;
 		}
-		AnnotationScanner[] scanners = new AnnotationScanner[]{
-			new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
-		};
-		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
-			.map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
-			.filter(Objects::nonNull)
-			.findFirst()
-			.orElse(null);
+		return AnnotationScanner.DIRECTLY
+				.getAnnotationsIfSupport(annotatedEle).stream()
+				.map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElse(null);
 	}
 
 	/**
@@ -511,10 +512,8 @@ public class AnnotationUtil {
 	 * @see SynthesizedAggregateAnnotation
 	 */
 	public static <T extends Annotation> List<T> getAllSynthesizedAnnotations(AnnotatedElement annotatedEle, Class<T> annotationType) {
-		AnnotationScanner[] scanners = new AnnotationScanner[]{
-				new MetaAnnotationScanner(), new TypeAnnotationScanner(), new MethodAnnotationScanner(), new FieldAnnotationScanner()
-		};
-		return AnnotationScanner.scanByAnySupported(annotatedEle, scanners).stream()
+		return AnnotationScanner.DIRECTLY
+				.getAnnotationsIfSupport(annotatedEle).stream()
 				.map(annotation -> getSynthesizedAnnotation(annotationType, annotation))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
@@ -527,7 +526,7 @@ public class AnnotationUtil {
 	 * @return 聚合注解
 	 */
 	public static SynthesizedAggregateAnnotation aggregatingFromAnnotation(Annotation... annotations) {
-		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), EmptyAnnotationScanner.INSTANCE);
+		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), AnnotationScanner.NOTHING);
 	}
 
 	/**
@@ -537,7 +536,7 @@ public class AnnotationUtil {
 	 * @return 聚合注解
 	 */
 	public static SynthesizedAggregateAnnotation aggregatingFromAnnotationWithMeta(Annotation... annotations) {
-		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), new MetaAnnotationScanner());
+		return new GenericSynthesizedAggregateAnnotation(Arrays.asList(annotations), AnnotationScanner.DIRECTLY_AND_META_ANNOTATION);
 	}
 
 	/**

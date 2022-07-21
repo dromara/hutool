@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -633,6 +634,17 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Object merge(final String key, final Object value, final BiFunction<? super Object, ? super Object, ?> remappingFunction) {
 		return super.merge(customKey(key), value, remappingFunction);
 	}
+
+	@Override
+	public Object putIfAbsent(String key, Object value) {
+		return super.putIfAbsent(customKey(key), value);
+	}
+
+	@Override
+	public Object computeIfAbsent(String key, Function<? super String, ?> mappingFunction) {
+		return super.computeIfAbsent(customKey(key), mappingFunction);
+	}
+
 	//---------------------------------------------------------------------------- Override default methods end
 
 	/**

@@ -60,9 +60,9 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 * 构造一个类注解扫描器
 	 *
 	 * @param includeSuperClass 是否允许扫描父类
-	 * @param includeInterfaces  是否允许扫描父接口
-	 * @param filter             过滤器
-	 * @param excludeTypes       不包含的类型
+	 * @param includeInterfaces 是否允许扫描父接口
+	 * @param filter            过滤器
+	 * @param excludeTypes      不包含的类型
 	 */
 	@SuppressWarnings("unchecked")
 	protected AbstractTypeAnnotationScanner(boolean includeSuperClass, boolean includeInterfaces, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
@@ -186,7 +186,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 				// 处理层级索引和注解
 				final Annotation[] targetAnnotations = getAnnotationsFromTargetClass(annotatedEle, index, targetClass);
 				for (final Annotation annotation : targetAnnotations) {
-					if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) || filter.test(annotation)) {
+					if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && filter.test(annotation)) {
 						consumer.accept(index, annotation);
 					}
 				}
