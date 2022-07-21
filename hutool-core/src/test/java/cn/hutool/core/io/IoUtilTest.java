@@ -5,8 +5,8 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class IoUtilTest {
 
@@ -32,28 +32,4 @@ public class IoUtilTest {
 			throw new IORuntimeException(e);
 		}
 	}
-
-	@Test
-	public void copyToByteArrayTest() throws Exception {
-		try(InputStream is1 = ResourceUtil.getStream("hutool.jpg");
-			InputStream is2 = ResourceUtil.getStream("hutool.jpg")){
-			byte[] copiedBytes = IoUtil.copyToByteArray(is1);
-			byte[] readBytes = IoUtil.readBytes(is2);
-			Assert.assertArrayEquals(readBytes, copiedBytes);
-		}
-	}
-
-	@Test
-	public void copyToStringTest() throws Exception {
-		String str = "abc123";
-		try(InputStream is1 = new ByteArrayInputStream(str.getBytes(Charset.defaultCharset()));
-			InputStream is2 = new ByteArrayInputStream(str.getBytes(Charset.defaultCharset()))){
-			String copiedString = IoUtil.copyToString(is1, Charset.defaultCharset());
-			String readString = IoUtil.read(is2, Charset.defaultCharset());
-			Assert.assertEquals(readString, copiedString);
-		}
-
-
-	}
-
 }

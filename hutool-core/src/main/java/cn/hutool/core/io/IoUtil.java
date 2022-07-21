@@ -186,45 +186,6 @@ public class IoUtil extends NioUtil {
 		}
 	}
 
-	/**
-	 * 复制InputStream中的内容到byte[]中，并返回复制后的byte[]
-	 * @param in InputStream
-	 * @return 返回从InputStream中复制出来的byte[]内容
-	 * @throws IOException
-	 * @author ZRH 455741807@qq.com
-	 */
-	public static byte[] copyToByteArray(InputStream in) throws IOException {
-		if (in == null) {
-			return new byte[0];
-		}
-		ByteArrayOutputStream out = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
-		copy(in, out);
-		return out.toByteArray();
-	}
-
-	/**
-	 * 复制InputStream中的内容为字符串，并返回字符串内容
-	 * @param in InputStream
-	 * @param charset 编码
-	 * @return 返回从InputStream中复制出来的字符串内容，如果InputStream为null，返回“”
-	 * @throws IOException
-	 * @author ZRH 455741807@qq.com
-	 */
-	public static String copyToString(InputStream in, Charset charset) throws IOException {
-		if (in == null) {
-			return "";
-		}
-
-		StringBuilder out = new StringBuilder(DEFAULT_BUFFER_SIZE);
-		InputStreamReader reader = new InputStreamReader(in, charset);
-		char[] buffer = new char[DEFAULT_BUFFER_SIZE];
-		int charsRead;
-		while ((charsRead = reader.read(buffer)) != -1) {
-			out.append(buffer, 0, charsRead);
-		}
-		return out.toString();
-	}
-
 	// -------------------------------------------------------------------------------------- Copy end
 
 	// -------------------------------------------------------------------------------------- getReader and getWriter start
