@@ -968,6 +968,52 @@ public class JSONUtil {
 		GlobalSerializeMapping.put(type, deserializer);
 	}
 
+	/**
+	 * 验证字符串的真实格式,是否为jsonObj 开销较大,酌情使用
+	 *
+	 * @param jsonStr 字符串
+	 * @return 是否为真正 jsonObj
+	 */
+	public static boolean tryParseObj(String jsonStr) {
+		if (!isTypeJSONObject(jsonStr)) {
+			return false;
+		}
+		try {
+			JSONUtil.parseObj(jsonStr);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 验证字符串的真实格式,是否为 jsonArray 开销较大,酌情使用
+	 *
+	 * @param jsonStr 字符串
+	 * @return 是否为真正的 jsonArray
+	 */
+
+	public static boolean tryParseArray(String jsonStr) {
+		if (!isTypeJSONArray(jsonStr)) {
+			return false;
+		}
+		try {
+			JSONUtil.parseArray(jsonStr);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * 验证字符串的真实格式,是否为 json 开销较大,酌情使用
+	 *
+	 * @param jsonStr 字符串
+	 * @return 是否为真正的 json
+	 */
+	public static boolean tryParse(String jsonStr) {
+		return tryParseObj(jsonStr) || tryParseArray(jsonStr);
+	}
+
 	// --------------------------------------------------------------------------------------------- Private method start
 
 	/**

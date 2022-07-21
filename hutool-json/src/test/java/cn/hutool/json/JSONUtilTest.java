@@ -234,4 +234,33 @@ public class JSONUtilTest {
 		final String xmlStr = JSONUtil.toXmlStr(obj);
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
+
+	@Test
+	public void tryParseTest() {
+		//测试判断字符串真正内容格式
+
+		String s = "{aaaa}";
+		System.out.println(JSONUtil.isTypeJSON(s));
+		System.out.println(JSONUtil.tryParseObj(s));
+		System.out.println(JSONUtil.tryParseArray(s));
+		System.out.println(JSONUtil.tryParse(s));
+
+		String s2 = "{\"id\":\"f2fbbf67-a236-4e08-aa52-a9578cd00fac\"}";
+		System.out.println(JSONUtil.isTypeJSON(s2));
+		System.out.println(JSONUtil.tryParseObj(s2));
+		System.out.println(JSONUtil.tryParseArray(s2));
+		System.out.println(JSONUtil.tryParse(s2));
+
+		/*
+		 * true
+		 * false
+		 * false
+		 * false
+		 *
+		 * true
+		 * true
+		 * false
+		 * true
+		 */
+	}
 }
