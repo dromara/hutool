@@ -18,6 +18,7 @@ public class BCD {
 	 * @return BCD
 	 */
 	public static byte[] strToBcd(String asc) {
+		Assert.notNull(asc, "ASCII must not be null!");
 		int len = asc.length();
 		final int mod = len % 2;
 		if (mod != 0) {

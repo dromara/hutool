@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -183,6 +184,7 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 		 * @return PercentCodec
 		 */
 		public static Builder of(final CharSequence chars) {
+			Assert.notNull(chars, "chars must not be null");
 			final Builder builder = of(new PercentCodec());
 			final int length = chars.length();
 			for (int i = 0; i < length; i++) {

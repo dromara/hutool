@@ -1,10 +1,11 @@
 package cn.hutool.extra.qrcode;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.swing.img.ImgUtil;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -75,8 +76,7 @@ public class QrCodeUtilTest {
 	@Test
 	@Ignore
 	public void generateAsBase64Test2() {
-		final byte[] bytes = FileUtil.readBytes(
-				new File("d:/test/qr.png"));
+		final byte[] bytes = FileUtil.readBytes(new File("d:/test/qr.png"));
 		final String encode = Base64.encode(bytes);
 		final String base641 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png", encode);
 		Assert.assertNotNull(base641);
@@ -84,16 +84,26 @@ public class QrCodeUtilTest {
 
 	@Test
 	@Ignore
-	public void decodeTest3(){
+	public void decodeTest3() {
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		Console.log(decode);
 	}
 
 	@Test
-	public void pdf417Test(){
+	public void pdf417Test() {
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.of());
 		Assert.assertNotNull(image);
 	}
 
-
+	@Test
+	public void generateDataMatrixTest() {
+		final QrConfig qrConfig = QrConfig.of();
+		qrConfig.setShapeHint(SymbolShapeHint.FORCE_RECTANGLE);
+		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
+		Assert.assertNotNull(image);
+		final QrConfig config = QrConfig.of();
+		config.setShapeHint(SymbolShapeHint.FORCE_SQUARE);
+		final BufferedImage imageSquare = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
+		Assert.assertNotNull(imageSquare);
+	}
 }

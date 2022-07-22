@@ -1,10 +1,11 @@
 package cn.hutool.extra.qrcode;
 
-import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.swing.img.ImgUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.awt.Color;
@@ -44,6 +45,10 @@ public class QrConfig {
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
 	protected int ratio = 6;
+	/**
+	 * DATA_MATRIX的符号形状
+	 */
+	protected SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
 
 	/**
 	 * 创建QrConfig
@@ -301,6 +306,17 @@ public class QrConfig {
 	}
 
 	/**
+	 * 设置DATA_MATRIX的符号形状
+	 *
+	 * @param shapeHint DATA_MATRIX的符号形状
+	 * @return this
+	 */
+	public QrConfig setShapeHint(SymbolShapeHint shapeHint) {
+		this.shapeHint = shapeHint;
+		return this;
+	}
+
+	/**
 	 * 转换为Zxing的二维码配置
 	 *
 	 * @return 配置
@@ -331,6 +347,7 @@ public class QrConfig {
 			}
 
 			hints.put(EncodeHintType.ERROR_CORRECTION, value);
+			hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
 		}
 		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);
