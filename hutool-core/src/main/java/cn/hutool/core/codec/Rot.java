@@ -1,5 +1,7 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * RotN（rotate by N places），回转N位密码，是一种简易的替换式密码，也是过去在古罗马开发的凯撒加密的一种变体。<br>
  * 代码来自：https://github.com/orclight/jencrypt
@@ -30,11 +32,11 @@ public class Rot {
 	 * Rot-13编码
 	 *
 	 * @param message 被编码的消息
-	 * @param isEnocdeNumber 是否编码数字
+	 * @param isEncodeNumber 是否编码数字
 	 * @return 编码后的字符串
 	 */
-	public static String encode13(String message, boolean isEnocdeNumber) {
-		return encode(message, 13, isEnocdeNumber);
+	public static String encode13(String message, boolean isEncodeNumber) {
+		return encode(message, 13, isEncodeNumber);
 	}
 
 	/**
@@ -42,15 +44,16 @@ public class Rot {
 	 *
 	 * @param message 被编码的消息
 	 * @param offset 位移，常用位移13
-	 * @param isEnocdeNumber 是否编码数字
+	 * @param isEncodeNumber 是否编码数字
 	 * @return 编码后的字符串
 	 */
-	public static String encode(String message, int offset, boolean isEnocdeNumber) {
+	public static String encode(String message, int offset, boolean isEncodeNumber) {
+		Assert.notNull(message, "message must not be null");
 		final int len = message.length();
 		final char[] chars = new char[len];
 
 		for (int i = 0; i < len; i++) {
-			chars[i] = encodeChar(message.charAt(i), offset, isEnocdeNumber);
+			chars[i] = encodeChar(message.charAt(i), offset, isEncodeNumber);
 		}
 		return new String(chars);
 	}
@@ -85,6 +88,7 @@ public class Rot {
 	 * @return 解码后的字符串
 	 */
 	public static String decode(String rot, int offset, boolean isDecodeNumber) {
+		Assert.notNull(rot, "rot must not be null");
 		final int len = rot.length();
 		final char[] chars = new char[len];
 

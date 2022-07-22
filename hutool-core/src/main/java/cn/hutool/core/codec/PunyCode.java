@@ -44,6 +44,7 @@ public class PunyCode {
 	 * @throws UtilException 计算异常
 	 */
 	public static String encode(CharSequence input, boolean withPrefix) throws UtilException {
+		Assert.notNull(input, "input must not be null!");
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
@@ -126,6 +127,7 @@ public class PunyCode {
 	 * @throws UtilException 计算异常
 	 */
 	public static String decode(String input) throws UtilException {
+		Assert.notNull(input, "input must not be null!");
 		input = StrUtil.removePrefixIgnoreCase(input, PUNY_CODE_PREFIX);
 
 		int n = INITIAL_N;
