@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.5.M1 (2022-07-21)
+# 5.8.5.M1 (2022-07-22)
 
 ### ❌不兼容特性
 * 【core   】     合成注解相关功能重构，增加@Link及其子注解（pr#702@Gitee）
@@ -26,6 +26,8 @@
 * 【core   】     PageUtil#totalPage增加totalCount为long类型的重载方法（pr#2442@Github）
 * 【crypto 】     PemUtil.readPemPrivateKey支持pkcs#1格式，增加OpensslKeyUtil（pr#2456@Github）
 * 【core   】     添加了通用的注解扫描器 `GenericAnnotationScanner`，并在 `AnnotationScanner` 接口中统一提供了提前配置好的扫描器静态实例（pr#715@Github）
+* 【json   】     JSONConfig增加允许重复key配置，解决不规整json序列化的问题（pr#720@Github）
+* 【core   】     完善了codec包下一些方法的入参空校验（pr#719@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
