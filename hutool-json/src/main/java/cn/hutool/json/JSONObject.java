@@ -392,7 +392,9 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			// 忽略值模式下如果值为空清除key
 			this.remove(key);
 		} else {
-			if (checkDuplicate && containsKey(key)) {
+			/*如果允许多个key，就不抛出异常，使用后面的值覆盖前面的值*/
+			boolean ignoreDuplicateKey = this.config.isIgnoreDuplicateKey();
+			if (checkDuplicate && containsKey(key) && false == ignoreDuplicateKey) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 

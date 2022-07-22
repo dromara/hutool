@@ -234,4 +234,14 @@ public class JSONUtilTest {
 		final String xmlStr = JSONUtil.toXmlStr(obj);
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
+
+	@Test
+	public void testDuplicateKey(){
+		String str = "{id:123, name:\"张三\", name:\"李四\"}";
+
+		JSONObject jsonObject = JSONUtil.parseObj(str, JSONConfig.create().setIgnoreDuplicateKey(true));
+		System.out.println(jsonObject.toString());
+
+		Assert.assertNotNull(jsonObject);
+	}
 }
