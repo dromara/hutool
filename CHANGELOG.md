@@ -28,6 +28,7 @@
 * 【core   】     添加了通用的注解扫描器 `GenericAnnotationScanner`，并在 `AnnotationScanner` 接口中统一提供了提前配置好的扫描器静态实例（pr#715@Github）
 * 【json   】     JSONConfig增加允许重复key配置，解决不规整json序列化的问题（pr#720@Github）
 * 【core   】     完善了codec包下一些方法的入参空校验（pr#719@Gitee）
+* 【extra  】     完善QrCodeUtil对于DATA_MATRIX生成的形状随机不可指定的功能（pr#722@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
