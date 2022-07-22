@@ -218,11 +218,11 @@ public final class InternalJSONUtil {
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = new JSONObject(target.getConfig());
-				target.setOnce(segment, nextTarget, predicate);
+				target.set(segment, nextTarget, predicate);
 			}
 			target = nextTarget;
 		}
-		target.setOnce(path[last], value, predicate);
+		target.set(path[last], value, predicate);
 		return jsonObject;
 	}
 
@@ -318,7 +318,7 @@ public final class InternalJSONUtil {
 	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IORuntimeException {
 		try {
 			return doQuote(str, writer, isWrap);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

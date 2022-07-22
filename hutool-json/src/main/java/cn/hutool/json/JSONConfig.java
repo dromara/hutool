@@ -43,6 +43,10 @@ public class JSONConfig implements Serializable {
 	 * 是否去除末尾多余0，例如如果为true,5.0返回5
 	 */
 	private boolean stripTrailingZeros = true;
+	/**
+	 * 是否检查重复key
+	 */
+	private boolean checkDuplicate;
 
 	/**
 	 * 创建默认的配置项
@@ -209,6 +213,28 @@ public class JSONConfig implements Serializable {
 	 */
 	public JSONConfig setStripTrailingZeros(final boolean stripTrailingZeros) {
 		this.stripTrailingZeros = stripTrailingZeros;
+		return this;
+	}
+
+	/**
+	 * 是否检查多个相同的key
+	 *
+	 * @return 是否检查多个相同的key
+	 * @since 5.8.5
+	 */
+	public boolean isCheckDuplicate() {
+		return checkDuplicate;
+	}
+
+	/**
+	 * 是否检查多个相同的key
+	 *
+	 * @param checkDuplicate 是否检查多个相同的key
+	 * @return this
+	 * @since 5.8.5
+	 */
+	public JSONConfig setCheckDuplicate(boolean checkDuplicate) {
+		this.checkDuplicate = checkDuplicate;
 		return this;
 	}
 }

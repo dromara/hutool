@@ -198,7 +198,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	@Override
 	public Object put(final String key, final Object value) throws JSONException {
-		return put(key, value, null, false);
+		return put(key, value, null, getConfig().isCheckDuplicate());
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject set(final String key, final Object value) throws JSONException {
-		put(key, value, null, false);
+		set(key, value, null);
 		return this;
 	}
 
@@ -224,8 +224,8 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 * @since 5.8.0
 	 */
-	public JSONObject setOnce(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
-		put(key, value, predicate, true);
+	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+		put(key, value, predicate, getConfig().isCheckDuplicate());
 		return this;
 	}
 
