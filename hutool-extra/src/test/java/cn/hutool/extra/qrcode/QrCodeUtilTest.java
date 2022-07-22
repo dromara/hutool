@@ -5,6 +5,7 @@ import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -84,15 +85,27 @@ public class QrCodeUtilTest {
 
 	@Test
 	@Ignore
-	public void decodeTest3(){
+	public void decodeTest3() {
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
 		Console.log(decode);
 	}
 
 	@Test
-	public void pdf417Test(){
+	public void pdf417Test() {
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
 		Assert.assertNotNull(image);
+	}
+
+	@Test
+	public void generateDataMatrixTest() {
+		QrConfig qrConfig = QrConfig.create();
+		qrConfig.setShapeHint(SymbolShapeHint.FORCE_RECTANGLE);
+		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
+		Assert.assertNotNull(image);
+		QrConfig config = QrConfig.create();
+		config.setShapeHint(SymbolShapeHint.FORCE_SQUARE);
+		final BufferedImage imageSquare = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
+		Assert.assertNotNull(imageSquare);
 	}
 
 
