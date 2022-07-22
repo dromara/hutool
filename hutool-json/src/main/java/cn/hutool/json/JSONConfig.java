@@ -45,9 +45,9 @@ public class JSONConfig implements Serializable {
 	private boolean stripTrailingZeros = true;
 
 	/**
-	 * 是否忽略多个相同的key
+	 * 是否检查重复key
 	 */
-	private boolean ignoreDuplicateKey = false;
+	private boolean checkDuplicate;
 
 	/**
 	 * 创建默认的配置项
@@ -242,20 +242,24 @@ public class JSONConfig implements Serializable {
 	}
 
 	/**
-	 * 是否忽略多个相同的key
-	 * @return
+	 * 是否检查多个相同的key
+	 *
+	 * @return 是否检查多个相同的key
+	 * @since 5.8.5
 	 */
-	public boolean isIgnoreDuplicateKey() {
-		return ignoreDuplicateKey;
+	public boolean isCheckDuplicate() {
+		return checkDuplicate;
 	}
 
 	/**
-	 * 是否忽略多个相同的key
-	 * @param ignoreDuplicateKey
-	 * @return
+	 * 是否检查多个相同的key
+	 *
+	 * @param checkDuplicate 是否检查多个相同的key
+	 * @return this
+	 * @since 5.8.5
 	 */
-	public JSONConfig setIgnoreDuplicateKey(boolean ignoreDuplicateKey) {
-		this.ignoreDuplicateKey = ignoreDuplicateKey;
+	public JSONConfig setCheckDuplicate(boolean checkDuplicate) {
+		this.checkDuplicate = checkDuplicate;
 		return this;
 	}
 }

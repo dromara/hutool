@@ -69,7 +69,7 @@ public class JSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.setOnce(key, tokener.nextValue(), filter);
+			jsonObject.set(key, tokener.nextValue(), filter, jsonObject.getConfig().isCheckDuplicate());
 
 			// Pairs are separated by ','.
 

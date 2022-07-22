@@ -236,7 +236,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			Object value;
 			for (String name : names) {
 				value = ((Map<?, ?>) source).get(name);
-				this.putOnce(name, value);
+				this.set(name, value, null, getConfig().isCheckDuplicate());
 			}
 		} else {
 			for (String name : names) {
@@ -392,9 +392,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			// 忽略值模式下如果值为空清除key
 			this.remove(key);
 		} else {
-			/*如果允许多个key，就不抛出异常，使用后面的值覆盖前面的值*/
-			boolean ignoreDuplicateKey = this.config.isIgnoreDuplicateKey();
-			if (checkDuplicate && containsKey(key) && false == ignoreDuplicateKey) {
+			if (checkDuplicate && containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 
