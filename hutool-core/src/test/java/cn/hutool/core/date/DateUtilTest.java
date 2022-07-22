@@ -97,6 +97,29 @@ public class DateUtilTest {
 		Assert.assertEquals(date, parse);
 	}
 
+
+	@Test
+	public void formatDuring() {
+		long d = 56123456;
+		String s = DateUtil.formatDuring(d);
+		Assert.assertEquals("15小时35分23秒", s);
+	}
+
+	@Test
+	public void testFormatDuring() {
+		Calendar c = Calendar.getInstance();
+		Date s = c.getTime();
+
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		c.add(Calendar.MINUTE, 2);
+		c.add(Calendar.SECOND, 3);
+		Date e = c.getTime();
+
+		String str = DateUtil.formatDuring(s, e);
+
+		Assert.assertEquals("1天2分3秒", str);
+	}
+
 	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 00:33:23";

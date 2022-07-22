@@ -635,6 +635,57 @@ public class DateUtil extends CalendarUtil {
 
 		return CalendarUtil.formatChineseDate(CalendarUtil.calendar(date), withTime);
 	}
+
+
+	/**
+	 * 返回可读的时间间隔，如1天20小时3分48秒
+	 * @param milliSecond 毫秒
+	 * @author zrh 455741807@qq.com
+	 * @return
+	 */
+	public static String formatDuring(long milliSecond) {
+		final int i1000=1000;
+		if (milliSecond <= 0) {
+			return "小于1毫秒";
+		}
+		if (milliSecond < i1000) {
+			return milliSecond + "毫秒";
+		}
+		String result = "";
+		long days = milliSecond / (1000 * 60 * 60 * 24);
+		long hours = (milliSecond % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+		long minutes = (milliSecond % (1000 * 60 * 60)) / (1000 * 60);
+		long seconds = (milliSecond % (1000 * 60)) / 1000;
+		if (days > 0) {
+			result += days + "天";
+		}
+		if (hours > 0) {
+			result += hours + "小时";
+		}
+		if (minutes > 0) {
+			result += minutes + "分";
+		}
+		if (seconds >= 0) {
+			result += seconds + "秒";
+		}
+		return result;
+	}
+
+	/**
+	 * 返回两个日期之间间隔时间
+	 * @param begin 开始日期
+	 * @param end 结束日期
+	 * @author zrh 455741807@qq.com
+	 * @return
+	 */
+	public static String formatDuring(Date begin, Date end) {
+		if(begin == null || end == null) {
+			return "";
+		}
+		return formatDuring(end.getTime()-begin.getTime());
+	}
+
+
 	// ------------------------------------ Format end ----------------------------------------------
 
 	// ------------------------------------ Parse start ----------------------------------------------
