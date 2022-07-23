@@ -16,6 +16,9 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipFile;
+
+import static cn.hutool.core.util.ZipUtil.unzip;
 
 /**
  * {@link ZipUtil}单元测试
@@ -194,5 +197,19 @@ public class ZipUtilTest {
 				,FileUtil.file("d:\\test\\qr_b.jpg")};
 
 		ZipUtil.zip(FileUtil.file("d:\\test\\qr.zip"),false,dd);
+	}
+
+	@Test
+	public void SizeUnzip() throws IOException {
+		String zipPath = "F:\\BaiduNetdiskDownload\\demo.zip";
+		String outPath = "F:\\BaiduNetdiskDownload\\test";
+		ZipFile zipFile = new ZipFile(zipPath, Charset.forName("GBK"));
+		File file = new File(outPath);
+		// 限制解压文件大小为637KB
+		long size = 637*1024L;
+
+		// 限制解压文件大小为636KB
+		// long size = 636*1024L;
+		unzip(zipFile, file, size);
 	}
 }
