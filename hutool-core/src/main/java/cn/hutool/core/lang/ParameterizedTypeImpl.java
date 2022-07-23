@@ -3,6 +3,8 @@ package cn.hutool.core.lang;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Objects;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -98,5 +100,28 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 			}
 		}
 		return buf;
+	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) obj;
+			if (this == parameterizedType) {
+				return true;
+			} else {
+				Type typeOwnerType = parameterizedType.getOwnerType();
+				Type typeRawType = parameterizedType.getRawType();
+				return Objects.equals(this.ownerType, typeOwnerType)
+					&& Objects.equals(this.rawType, typeRawType)
+					&& Arrays.equals(this.actualTypeArguments, parameterizedType.getActualTypeArguments());
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public int hashCode() {
+		return Arrays.hashCode(this.actualTypeArguments)
+			^ Objects.hashCode(this.ownerType)
+			^ Objects.hashCode(this.rawType);
 	}
 }
