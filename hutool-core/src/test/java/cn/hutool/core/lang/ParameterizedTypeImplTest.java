@@ -1,6 +1,5 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.event.DefaultContextTest;
 import org.junit.Assert;
 import org.junit.Test;
 
