@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.lang.invoke.MethodHandleInfo;
+import java.time.LocalDate;
+import java.util.*;
 
 public class LambdaUtilTest {
 
@@ -79,6 +81,62 @@ public class LambdaUtilTest {
 		// 引用父类静态无参方法，能够获取到正确的参数类型
 		Class<MyTeacher> staticSuperSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeIdBy);
 		Assert.assertEquals(MyTeacher.class, staticSuperSupplierClass);
+	}
+
+	@Test
+	public void callVoidFuncTest() {
+		StringBuilder result = new StringBuilder();
+		Integer params = 3;
+		//将无参函数的执行代码put到Map中，用于动态匹配执行 (可替换过多的if else判断)
+		Map<Integer, VoidFunc0> funcMap = new HashMap<>();
+		funcMap.put(1, () -> result.append("A"));
+		funcMap.put(2, () -> result.append("B"));
+		funcMap.put(3, () -> result.append("C"));
+
+		//forEach匹配要执行的无参函数
+		funcMap.forEach((key, value) -> {
+			boolean isCall = Objects.equals(key, params);
+			LambdaUtil.callVoidFunc(isCall, value);
+		});
+		Assert.assertEquals("C", result.toString());
+	}
+
+	@Test
+	public void callVoidReturnFuncTest() {
+		Integer params = 1;
+		//将无参函数的执行代码put到Map中，并设置类型为LocalDate的返回值
+		Map<Integer, Func0 <LocalDate> > funcMap = new HashMap<>();
+		funcMap.put(1, () ->  LocalDate.of(2022,7,26) );
+		funcMap.put(2, () -> LocalDate.of(2021,7,26));
+		funcMap.put(3, () -> LocalDate.of(2020,7,26));
+
+		//forEach匹配要执行的函数,并获取正确的LocalDate 返回值
+		Optional < LocalDate> resultOptional = funcMap.entrySet().stream().
+				filter(entry -> Objects.equals(entry.getKey(), params)).
+				map(entry-> LambdaUtil.callVoidReturnFunc(true, entry.getValue())).findAny();
+
+		LocalDate result =  resultOptional.orElse(null);
+		Assert.assertEquals(2022, result.getYear());
+		Assert.assertEquals(7, result.getMonthValue());
+		Assert.assertEquals(26, result.getDayOfMonth());
+	}
+
+	@Test
+	public void callParameterReturnFuncTest() {
+		Integer paramsIndex = 1;
+		String params = "test";
+		//将有参函数的执行代码put到Map中，并设置三个不同的返回值
+		Map<Integer, Func1 <String,Object> > funcMap = new HashMap<>();
+		funcMap.put(1, str ->  Integer.MAX_VALUE);
+		funcMap.put(2, str -> "Success");
+		funcMap.put(3, str -> LocalDate.of(2020,7,26));
+
+		//forEach匹配要执行的函数,并获取Object的返回值
+		Optional <Object> resultOptional = funcMap.entrySet().stream().
+				filter(entry -> Objects.equals(entry.getKey(), paramsIndex)).
+				map(entry-> LambdaUtil.callParameterReturnFunc(true, params,entry.getValue())).findAny();
+		Object result = resultOptional.orElse(null);
+		Assert.assertEquals(Integer.MAX_VALUE, result);
 	}
 
 	@Data

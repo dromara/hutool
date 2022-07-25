@@ -9,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandleInfo;
 import java.lang.invoke.SerializedLambda;
+import java.util.Objects;
 
 /**
  * Lambda相关工具类
@@ -205,4 +206,52 @@ public class LambdaUtil {
 		return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
 	}
 	//endregion
+
+
+	/**
+	 * 当条件为true时,执行无参函数里面的代码
+	 *
+	 * @param isCall  是否执行func参数的代码，若为true则执行func参数的代码
+	 * @param func  函数(无参,not null)
+	 */
+	public static void callVoidFunc(boolean isCall, VoidFunc0 func) {
+		Objects.requireNonNull(func,"func can not be null");
+		if (!isCall) {
+			 return  ;
+		}
+		func.callWithRuntimeException();
+	}
+
+	/**
+	 * 当条件为true时,执行无参函数里面的代码，返回相应的值
+	 *
+	 * @param isCall  是否执行func参数的代码，若为true则执行func参数的代码
+	 * @param func  函数(无参,not null)
+	 * @param <R>  Lambda 返回值类型
+	 */
+	public static <R> R callVoidReturnFunc(boolean isCall, Func0<R> func) {
+		Objects.requireNonNull(func,"func can not be null");
+		if (!isCall) {
+			return  null;
+		}
+		return func.callWithRuntimeException();
+	}
+
+	/**
+	 * 当条件为true时,执行有参函数里面的代码,并返回相应的值
+	 *
+	 * @param isCall  是否执行func参数的代码，若为true则执行func参数的代码
+	 * @param parameter  参数
+	 * @param func  函数(有参,not null)
+	 * @param <P>  Lambda 参数值类型
+	 * @param <R>  Lambda 返回值类型
+	 */
+	public static <P,R> R callParameterReturnFunc(boolean isCall,P parameter, Func1<P,R> func) {
+		Objects.requireNonNull(func,"func can not be null");
+		if (!isCall) {
+			 return  null;
+		}
+		return func.callWithRuntimeException(parameter);
+	}
+
 }
