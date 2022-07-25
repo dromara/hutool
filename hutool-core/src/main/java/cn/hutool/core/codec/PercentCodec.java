@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.HexUtil;
@@ -51,6 +52,7 @@ public class PercentCodec implements Serializable {
 	 * @return PercentCodec
 	 */
 	public static PercentCodec of(CharSequence chars) {
+		Assert.notNull(chars, "chars must not be null");
 		final PercentCodec codec = new PercentCodec();
 		final int length = chars.length();
 		for (int i = 0; i < length; i++) {

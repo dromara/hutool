@@ -133,7 +133,7 @@ public final class InternalJSONUtil {
 	/**
 	 * 将Property的键转化为JSON形式<br>
 	 * 用于识别类似于：com.luxiaolei.package.hutool这类用点隔开的键<br>
-	 * 注意：不允许重复键
+	 * 注意：是否允许重复键，取决于JSONObject配置
 	 *
 	 * @param jsonObject JSONObject
 	 * @param key        键
@@ -142,18 +142,18 @@ public final class InternalJSONUtil {
 	 */
 	static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value, Filter<MutablePair<String, Object>> filter) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
-		int last = path.length - 1;
+		final int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {
-			String segment = path[i];
+			final String segment = path[i];
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = new JSONObject(target.getConfig());
-				target.setOnce(segment, nextTarget, filter);
+				target.set(segment, nextTarget, filter, target.getConfig().isCheckDuplicate());
 			}
 			target = nextTarget;
 		}
-		target.setOnce(path[last], value, filter);
+		target.set(path[last], value, filter, target.getConfig().isCheckDuplicate());
 		return jsonObject;
 	}
 

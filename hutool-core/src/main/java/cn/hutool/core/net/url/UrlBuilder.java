@@ -119,7 +119,7 @@ public final class UrlBuilder implements Builder<String> {
 	/**
 	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码
 	 *
-	 * @param url     URL字符串
+	 * @param url URL字符串
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(String url) {
@@ -319,6 +319,22 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
+	 * 是否path的末尾加 /
+	 *
+	 * @param withEngTag 是否path的末尾加 /
+	 * @return this
+	 * @since 5.8.5
+	 */
+	public UrlBuilder setWithEndTag(boolean withEngTag) {
+		if (null == this.path) {
+			this.path = new UrlPath();
+		}
+
+		this.path.setWithEndTag(withEngTag);
+		return this;
+	}
+
+	/**
 	 * 设置路径，例如/aa/bb/cc，将覆盖之前所有的path相关设置
 	 *
 	 * @param path 路径，例如/aa/bb/cc
@@ -501,7 +517,7 @@ public final class UrlBuilder implements Builder<String> {
 		final StringBuilder fileBuilder = new StringBuilder();
 
 		// path
-		fileBuilder.append(StrUtil.blankToDefault(getPathStr(), StrUtil.SLASH));
+		fileBuilder.append(getPathStr());
 
 		// query
 		final String query = getQueryStr();

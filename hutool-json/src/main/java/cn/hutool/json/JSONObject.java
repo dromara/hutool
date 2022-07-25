@@ -236,7 +236,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 			Object value;
 			for (String name : names) {
 				value = ((Map<?, ?>) source).get(name);
-				this.putOnce(name, value);
+				this.set(name, value, null, getConfig().isCheckDuplicate());
 			}
 		} else {
 			for (String name : names) {

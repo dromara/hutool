@@ -31,4 +31,16 @@ public class TemporalAccessorUtilTest {
 				LocalDate.of(2021, 6, 26), "#SSS");
 		Assert.assertEquals("1624636800000", today2);
 	}
+
+	@Test
+	public void isInTest(){
+		final String sourceStr = "2022-04-19 00:00:00";
+		final String startTimeStr = "2022-04-19 00:00:00";
+		final String endTimeStr = "2022-04-19 23:59:59";
+		final boolean between = TemporalAccessorUtil.isIn(
+				LocalDateTimeUtil.parse(sourceStr, DatePattern.NORM_DATETIME_FORMATTER),
+				LocalDateTimeUtil.parse(startTimeStr, DatePattern.NORM_DATETIME_FORMATTER),
+				LocalDateTimeUtil.parse(endTimeStr, DatePattern.NORM_DATETIME_FORMATTER));
+		Assert.assertTrue(between);
+	}
 }

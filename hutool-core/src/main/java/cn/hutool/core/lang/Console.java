@@ -86,7 +86,7 @@ public class Console {
 		out.println(StrUtil.format(template, values));
 		if (null != t) {
 			//noinspection CallToPrintStackTrace
-			t.printStackTrace();
+			t.printStackTrace(out);
 			out.flush();
 		}
 	}

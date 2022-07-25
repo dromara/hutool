@@ -3,7 +3,10 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.5.M1 (2022-07-11)
+# 5.8.5.M1 (2022-07-22)
+
+### ❌不兼容特性
+* 【core   】     合成注解相关功能重构，增加@Link及其子注解（pr#702@Gitee）
 
 ### 🐣新特性
 * 【core   】     NumberUtil新增isIn方法（pr#669@Gitee）
@@ -14,10 +17,29 @@
 * 【core   】     新增CollectorUtil.reduceListMap()（pr#676@Gitee）
 * 【core   】     CollStreamUtil为空返回空的集合变为可编辑（pr#681@Gitee）
 * 【core   】     增加StrUtil.containsAll（pr#2437@Github）
+* 【core   】     ForestMap添加getNodeValue方法（pr#699@Gitee）
+* 【http   】     优化HttpUtil.isHttp判断，避免NPE（pr#698@Gitee）
+* 【core   】     修复Dict#containsKey方法没区分大小写问题（pr#697@Gitee）
+* 【core   】     增加比较两个LocalDateTime是否为同一天（pr#693@Gitee）
+* 【core   】     增加TemporalAccessorUtil.isIn、LocalDateTimeUtil.isIn（issue#I5HBL0@Gitee）
+* 【core   】     ReUtil增加getAllGroups重载（pr#2455@Github）
+* 【core   】     PageUtil#totalPage增加totalCount为long类型的重载方法（pr#2442@Github）
+* 【crypto 】     PemUtil.readPemPrivateKey支持pkcs#1格式，增加OpensslKeyUtil（pr#2456@Github）
+* 【core   】     添加了通用的注解扫描器 `GenericAnnotationScanner`，并在 `AnnotationScanner` 接口中统一提供了提前配置好的扫描器静态实例（pr#715@Github）
+* 【json   】     JSONConfig增加允许重复key配置，解决不规整json序列化的问题（pr#720@Github）
+* 【core   】     完善了codec包下一些方法的入参空校验（pr#719@Gitee）
+* 【extra  】     完善QrCodeUtil对于DATA_MATRIX生成的形状随机不可指定的功能（pr#722@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
 * 【socket 】     修复异常socket没有关闭问题（pr#690@Gitee）
+* 【core   】     修复当时间戳为Integer时时间转换问题（pr#2449@Github）
+* 【core   】     修复bmp文件判断问题（issue#I5H93G@Gitee）
+* 【core   】     修复CombinationAnnotationElement造成递归循环（issue#I5FQGW@Gitee）
+* 【core   】     修复Dict缺少putIfAbsent、computeIfAbsent问题（issue#I5FQGW@Gitee）
+* 【core   】     修复Console.log应该把异常信息输出位置错误问题（pr#716@Gitee）
+* 【core   】     修复UrlBuilder无法配置末尾追加“/”问题（issue#2459@Github）
+* 【core   】     修复SystemPropsUtil.getBoolean方法应该只有值为true时才返回true，其他情况都应该返回false（pr#717@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

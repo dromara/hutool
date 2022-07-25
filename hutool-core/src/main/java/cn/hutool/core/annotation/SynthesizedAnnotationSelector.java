@@ -2,7 +2,7 @@ package cn.hutool.core.annotation;
 
 /**
  * 注解选择器，指定两个注解，选择其中一个返回。<br>
- * 该接口用于在{@link SyntheticAnnotation}中用于从一批相同的注解对象中筛选最终用于合成注解对象。
+ * 该接口用于在{@link SynthesizedAggregateAnnotation}中用于从一批相同的注解对象中筛选最终用于合成注解对象。
  *
  * @author huangchengxing
  */
@@ -45,7 +45,7 @@ public interface SynthesizedAnnotationSelector {
 	class NearestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() < oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.NEAREST_AND_OLDEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -55,7 +55,7 @@ public interface SynthesizedAnnotationSelector {
 	class NearestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() <= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.NEAREST_AND_NEWEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -65,7 +65,7 @@ public interface SynthesizedAnnotationSelector {
 	class FarthestAndOldestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() > oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.FARTHEST_AND_OLDEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 
@@ -75,7 +75,7 @@ public interface SynthesizedAnnotationSelector {
 	class FarthestAndNewestPrioritySelector implements SynthesizedAnnotationSelector {
 		@Override
 		public <T extends SynthesizedAnnotation> T choose(T oldAnnotation, T newAnnotation) {
-			return newAnnotation.getVerticalDistance() >= oldAnnotation.getVerticalDistance() ? newAnnotation : oldAnnotation;
+			return Hierarchical.Selector.FARTHEST_AND_NEWEST_PRIORITY.choose(oldAnnotation, newAnnotation);
 		}
 	}
 

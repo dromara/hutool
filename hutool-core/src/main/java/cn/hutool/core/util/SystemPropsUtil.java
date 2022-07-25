@@ -93,12 +93,7 @@ public class SystemPropsUtil {
 			return defaultValue;
 		}
 
-		value = value.trim().toLowerCase();
-		if (value.isEmpty()) {
-			return true;
-		}
-
-		return Convert.toBool(value, defaultValue);
+		return BooleanUtil.toBoolean(value);
 	}
 
 	/**

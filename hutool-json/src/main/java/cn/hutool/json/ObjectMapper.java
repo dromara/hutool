@@ -88,11 +88,11 @@ public class ObjectMapper {
 		if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				jsonObject.set(Convert.toStr(e.getKey()), e.getValue(), filter, false);
+				jsonObject.set(Convert.toStr(e.getKey()), e.getValue(), filter, jsonObject.getConfig().isCheckDuplicate());
 			}
 		} else if (source instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) source;
-			jsonObject.set(Convert.toStr(entry.getKey()), entry.getValue(), filter, false);
+			jsonObject.set(Convert.toStr(entry.getKey()), entry.getValue(), filter, jsonObject.getConfig().isCheckDuplicate());
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject, filter);

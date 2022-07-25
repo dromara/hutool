@@ -20,14 +20,10 @@ import java.util.stream.Stream;
 public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<MethodAnnotationScanner> implements AnnotationScanner {
 
 	/**
-	 * 构造一个方法注解扫描器
-	 *
-	 * @param scanSameSignatureMethod 是否扫描类层级结构中具有相同方法签名的方法
-	 * @param filter                  过滤器
-	 * @param excludeTypes            不包含的类型
+	 * 构造一个类注解扫描器，仅扫描该方法上直接声明的注解
 	 */
-	public MethodAnnotationScanner(boolean scanSameSignatureMethod, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
-		super(scanSameSignatureMethod, scanSameSignatureMethod, filter, excludeTypes);
+	public MethodAnnotationScanner() {
+		this(false);
 	}
 
 	/**
@@ -40,10 +36,26 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	}
 
 	/**
-	 * 构造一个类注解扫描器，仅扫描该方法上直接声明的注解
+	 * 构造一个方法注解扫描器
+	 *
+	 * @param scanSameSignatureMethod 是否扫描类层级结构中具有相同方法签名的方法
+	 * @param filter                  过滤器
+	 * @param excludeTypes            不包含的类型
 	 */
-	public MethodAnnotationScanner() {
-		this(false);
+	public MethodAnnotationScanner(boolean scanSameSignatureMethod, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
+		super(scanSameSignatureMethod, scanSameSignatureMethod, filter, excludeTypes);
+	}
+
+	/**
+	 * 构造一个方法注解扫描器
+	 *
+	 * @param includeSuperClass 是否允许扫描父类中具有相同方法签名的方法
+	 * @param includeInterfaces 是否允许扫描父接口中具有相同方法签名的方法
+	 * @param filter            过滤器
+	 * @param excludeTypes      不包含的类型
+	 */
+	public MethodAnnotationScanner(boolean includeSuperClass, boolean includeInterfaces, Predicate<Class<?>> filter, Set<Class<?>> excludeTypes) {
+		super(includeSuperClass, includeInterfaces, filter, excludeTypes);
 	}
 
 	/**
@@ -80,7 +92,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	@Override
 	protected Annotation[] getAnnotationsFromTargetClass(AnnotatedElement source, int index, Class<?> targetClass) {
 		final Method sourceMethod = (Method) source;
-		return Stream.of(targetClass.getDeclaredMethods())
+		return Stream.of(ClassUtil.getDeclaredMethods(targetClass))
 			.filter(superMethod -> !superMethod.isBridge())
 			.filter(superMethod -> hasSameSignature(sourceMethod, superMethod))
 			.map(AnnotatedElement::getAnnotations)
@@ -96,7 +108,7 @@ public class MethodAnnotationScanner extends AbstractTypeAnnotationScanner<Metho
 	 */
 	public MethodAnnotationScanner setScanSameSignatureMethod(boolean scanSuperMethodIfOverride) {
 		setIncludeInterfaces(scanSuperMethodIfOverride);
-		setIncludeSupperClass(scanSuperMethodIfOverride);
+		setIncludeSuperClass(scanSuperMethodIfOverride);
 		return this;
 	}
 
