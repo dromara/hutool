@@ -23,18 +23,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -1371,6 +1360,19 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 根据文字创建透明背景的PNG图片
+	 *
+	 * @param str             文字
+	 * @param font            字体{@link Font}
+	 * @param fontColor       字体颜色，默认黑色
+	 * @param out             图片输出地
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void createTransparentImage(String str, Font font, Color fontColor, ImageOutputStream out) throws IORuntimeException {
+		writePng(createImage(str, font, null, fontColor, BufferedImage.TYPE_INT_ARGB), out);
+	}
+
+	/**
 	 * 根据文字创建图片
 	 *
 	 * @param str             文字
@@ -1392,13 +1394,19 @@ public class ImgUtil {
 		int height = unitHeight + 3;
 
 		// 创建图片
-		final BufferedImage image = new BufferedImage(width, height, imageType);
-		final Graphics g = image.getGraphics();
+		BufferedImage image = new BufferedImage(width, height, imageType);
+		Graphics g = image.getGraphics();
 		if (null != backgroundColor) {
 			// 先用背景色填充整张图片,也就是背景
 			g.setColor(backgroundColor);
 			g.fillRect(0, 0, width, height);
+		}else{
+			// 如果没有设置背景色，则设置为透明背景
+			g.dispose();
+			image = image.createGraphics().getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+			g = image.getGraphics();
 		}
+
 		g.setColor(ObjectUtil.defaultIfNull(fontColor, Color.BLACK));
 		g.setFont(font);// 设置画笔字体
 		g.drawString(str, 0, font.getSize());// 画出字符串
