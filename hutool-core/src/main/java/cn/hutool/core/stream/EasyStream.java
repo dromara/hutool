@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.Objects;
+import java.util.OptionalDouble;
 import java.util.Spliterator;
 import java.util.function.*;
 import java.util.stream.Stream;
@@ -263,6 +264,74 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public EasyStream<T> wrap(final Stream<T> stream) {
 		return new EasyStream<>(stream);
 	}
+
+
+
+
+	/**
+	 * 计算int类型总和
+	 *
+	 * @param mapper 映射
+	 * @return int
+	 */
+	public int sum(ToIntFunction<? super T> mapper) {
+		return stream.mapToInt(mapper).sum();
+	}
+
+	/**
+	 * 计算long类型总和
+	 *
+	 * @param mapper 映射
+	 * @return long
+	 */
+	public long sum(ToLongFunction<? super T> mapper) {
+		return stream.mapToLong(mapper).sum();
+	}
+
+
+	/**
+	 * 计算double总和
+	 *
+	 * @param mapper 映射器
+	 * @return double
+	 */
+	public double sum(ToDoubleFunction<? super T> mapper) {
+		return stream.mapToDouble(mapper).sum();
+	}
+
+
+
+	/**
+	 * 计算int平均值
+	 *
+	 * @param mapper 映射器
+	 * @return {@link Integer}
+	 */
+	public OptionalDouble avg(ToIntFunction<? super T> mapper) {
+		return stream.mapToInt(mapper).average();
+	}
+
+	/**
+	 * 计算double平均值
+	 *
+	 * @param mapper 映射
+	 * @return {@link OptionalDouble}
+	 */
+	public OptionalDouble avg(ToDoubleFunction<? super T> mapper) {
+		return stream.mapToDouble(mapper).average();
+	}
+
+
+	/**
+	 * 计算double平均值
+	 *
+	 * @param mapper 映射
+	 * @return {@link OptionalDouble}
+	 */
+	public OptionalDouble avg(ToLongFunction<? super T> mapper) {
+		return stream.mapToLong(mapper).average();
+	}
+
 
 	/**
 	 * 建造者

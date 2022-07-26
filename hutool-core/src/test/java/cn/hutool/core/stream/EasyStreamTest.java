@@ -433,4 +433,13 @@ public class EasyStreamTest {
 		Assert.assertTrue(EasyStream.of(1).isNotEmpty());
 	}
 
+
+	@Test
+	public void testIntSum() {
+		int sum = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).sum(Integer::intValue);
+		Assert.assertEquals(sum,55);
+		double doubleSum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).sum(Double::doubleValue);
+		Assert.assertEquals(doubleSum,59.6);
+	}
+
 }
