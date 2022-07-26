@@ -299,7 +299,8 @@ public class BackgroundRemoval {
 			}
 		}
 
-		Map<String, Integer> map = new HashMap<>(list.size());
+		int initialCapacity = (int) (list.size() / 0.75) + 1;
+		Map<String, Integer> map = new HashMap<>(initialCapacity);
 		for (String string : list) {
 			Integer integer = map.get(string);
 			if (integer == null) {
