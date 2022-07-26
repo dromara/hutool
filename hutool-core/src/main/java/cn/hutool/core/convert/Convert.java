@@ -601,7 +601,7 @@ public class Convert {
 	}
 
 	/**
-	 * 转换为Map，若value原本就是Map，则使用原始类型若不是
+	 * 转换为Map，若value原本就是Map，则转为原始类型，若不是则默认转为HashMap
 	 *
 	 * @param <K> 键类型
 	 * @param <V> 值类型
@@ -613,10 +613,10 @@ public class Convert {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object value) {
-		if(value instanceof Map){
-			return toMap((Class<? extends Map>) value.getClass(), keyType, valueType,value);
-		}else{
-			return toMap(HashMap.class, keyType, valueType,value);
+		if (value instanceof Map) {
+			return toMap((Class<? extends Map>) value.getClass(), keyType, valueType, value);
+		} else {
+			return toMap(HashMap.class, keyType, valueType, value);
 		}
 	}
 

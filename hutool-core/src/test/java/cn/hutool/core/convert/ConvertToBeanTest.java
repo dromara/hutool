@@ -70,7 +70,6 @@ public class ConvertToBeanTest {
 	}
 	@Test
 	public void mapToMapWithSelfTypeTest() {
-
 		CaseInsensitiveMap<String, Integer> caseInsensitiveMap = new CaseInsensitiveMap<>();
 		caseInsensitiveMap.put("jerry", 1);
 		caseInsensitiveMap.put("Jerry", 2);
