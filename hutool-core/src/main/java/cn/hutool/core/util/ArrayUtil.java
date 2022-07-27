@@ -285,7 +285,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == arrayObj) {
 			throw new NullPointerException("Argument [arrayObj] is null !");
 		}
-		if (!arrayObj.getClass().isArray()) {
+		if (Boolean.FALSE.equals(arrayObj.getClass().isArray())) {
 			throw new IllegalArgumentException("Argument [arrayObj] is not array !");
 		}
 		if (null == type) {
@@ -918,7 +918,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean containsAll(T[] array, T... values) {
 		for (T value : values) {
-			if (!contains(array, value)) {
+			if (Boolean.FALSE.equals(contains(array, value))) {
 				return false;
 			}
 		}
@@ -1255,7 +1255,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
-		if (!isArray(array)) {
+		if (Boolean.FALSE.equals(isArray(array))) {
 			throw new IllegalArgumentException(StrUtil.format("[{}] is not a Array!", array.getClass()));
 		}
 
@@ -1638,7 +1638,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isAllNotNull(T... array) {
-		return !hasNull(array);
+		return Boolean.FALSE.equals(hasNull(array));
 	}
 
 	/**
@@ -1843,7 +1843,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (!ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (Boolean.FALSE.equals(ObjectUtil.equal(array[i + firstIndex], subArray[i]))) {
 				return indexOfSub(array, firstIndex + 1, subArray);
 			}
 		}
@@ -1888,7 +1888,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (!ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (Boolean.FALSE.equals(ObjectUtil.equal(array[i + firstIndex], subArray[i]))) {
 				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}
