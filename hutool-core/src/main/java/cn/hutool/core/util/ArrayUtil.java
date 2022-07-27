@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author Looly
  */
+@SuppressWarnings("unused")
 public class ArrayUtil extends PrimitiveArrayUtil {
 
 	// ---------------------------------------------------------------------- isEmpty
@@ -103,7 +104,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Object array) {
-		return false == isEmpty(array);
+		return Boolean.FALSE.equals(isEmpty(array));
 	}
 
 	/**
@@ -284,7 +285,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == arrayObj) {
 			throw new NullPointerException("Argument [arrayObj] is null !");
 		}
-		if (false == arrayObj.getClass().isArray()) {
+		if (!arrayObj.getClass().isArray()) {
 			throw new IllegalArgumentException("Argument [arrayObj] is not array !");
 		}
 		if (null == type) {
@@ -364,15 +365,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array 已有数组
 	 * @param index 位置，大于长度追加，否则替换
 	 * @param value 新值
-	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
-	public static Object setOrAppend(Object array, int index, Object value) {
+	public static void setOrAppend(Object array, int index, Object value) {
 		if (index < length(array)) {
 			Array.set(array, index, value);
-			return array;
 		} else {
-			return append(array, value);
+			append(array, value);
 		}
 	}
 
@@ -919,7 +918,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean containsAll(T[] array, T... values) {
 		for (T value : values) {
-			if (false == contains(array, value)) {
+			if (!contains(array, value)) {
 				return false;
 			}
 		}
@@ -1256,7 +1255,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
-		if (false == isArray(array)) {
+		if (!isArray(array)) {
 			throw new IllegalArgumentException(StrUtil.format("[{}] is not a Array!", array.getClass()));
 		}
 
@@ -1498,11 +1497,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (array == null || random == null || array.length <= 1) {
 			return array;
 		}
-
 		for (int i = array.length; i > 1; i--) {
 			swap(array, i - 1, random.nextInt(i));
 		}
-
 		return array;
 	}
 
@@ -1513,18 +1510,35 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array  数组
 	 * @param index1 位置1
 	 * @param index2 位置2
-	 * @return 交换后的数组，与传入数组为同一对象
 	 * @since 4.0.7
 	 */
-	public static <T> T[] swap(T[] array, int index1, int index2) {
+	public static <T> void swap(T[] array, int index1, int index2) {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Array must not empty !");
 		}
 		T tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
+	}
+
+
+	/**
+	 *  交换两个数组的值（int）通过位运算的方式可以更快的交换位置
+	 * @param array 数组对象
+	 * @param index1 位置1
+	 * @param index2 位置2
+	 * @return 位运算后交换后的数组
+	 */
+	public static int[] swap(int[] array, int index1, int index2) {
+		if (isEmpty(array)) {
+			throw new IllegalArgumentException("Array must not empty !");
+		}
+		array[index1] = array[index1] ^ array[index2];
+		array[index2] = array[index1] ^ array[index2];
+		array[index1] = array[index1] ^ array[index2];
 		return array;
 	}
+
 
 	/**
 	 * 交换数组中两个位置的值
@@ -1591,7 +1605,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static boolean isAllEmpty(Object... args) {
 		for (Object obj : args) {
-			if (false == ObjectUtil.isEmpty(obj)) {
+			if (!ObjectUtil.isEmpty(obj)) {
 				return false;
 			}
 		}
@@ -1606,7 +1620,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static boolean isAllNotEmpty(Object... args) {
-		return false == hasEmpty(args);
+		return !hasEmpty(args);
 	}
 
 	/**
@@ -1619,7 +1633,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isAllNotNull(T... array) {
-		return false == hasNull(array);
+		return !hasNull(array);
 	}
 
 	/**
@@ -1824,7 +1838,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (!ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
 				return indexOfSub(array, firstIndex + 1, subArray);
 			}
 		}
@@ -1869,7 +1883,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		for (int i = 0; i < subArray.length; i++) {
-			if (false == ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
+			if (!ObjectUtil.equal(array[i + firstIndex], subArray[i])) {
 				return lastIndexOfSub(array, firstIndex - 1, subArray);
 			}
 		}
