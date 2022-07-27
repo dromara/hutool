@@ -1523,29 +1523,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 
 	/**
-	 *  交换两个数组的值（int）通过位运算的方式可以更快的交换位置
-	 * @param array 数组对象
-	 * @param index1 位置1
-	 * @param index2 位置2
-	 * @return 位运算后交换后的数组
-	 */
-	public static int[] swap(int[] array, int index1, int index2) {
-		if (isEmpty(array)) {
-			throw new IllegalArgumentException("Array must not empty !");
-		}
-		// 如果两个交换位置相同，相当于没有交换 直接返回原数组
-		if (index1 == index2) {
-			return array;
-		}
-		// xor方式交换 没有引入额外变量，在大数据量的情况下 速度会有所体现
-		array[index1] = array[index1] ^ array[index2];
-		array[index2] = array[index1] ^ array[index2];
-		array[index1] = array[index1] ^ array[index2];
-		return array;
-	}
-
-
-	/**
 	 * 交换数组中两个位置的值
 	 *
 	 * @param array  数组对象
