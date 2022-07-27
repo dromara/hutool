@@ -1533,6 +1533,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (isEmpty(array)) {
 			throw new IllegalArgumentException("Array must not empty !");
 		}
+		// 如果两个交换位置相同，相当于没有交换 直接返回原数组
+		if (index1 == index2) {
+			return array;
+		}
+		// xor方式交换 没有引入额外变量，在大数据量的情况下 速度会有所体现
 		array[index1] = array[index1] ^ array[index2];
 		array[index2] = array[index1] ^ array[index2];
 		array[index1] = array[index1] ^ array[index2];
