@@ -55,6 +55,24 @@ public class BeanCopierTest {
 		Assert.assertEquals("123", b.getValue());
 	}
 
+	/**
+	 * 测试在非覆盖模式下，来源对象值为null则不覆盖
+	 */
+	@Test
+	public void issues2484Test() {
+		final A a = new A();
+		a.setValue(null);
+		final B b = new B();
+		b.setValue("abc");
+
+		final BeanCopier<B> copier = BeanCopier.create(a, b, CopyOptions.create().setOverride(false));
+		copier.copy();
+
+		Assert.assertEquals("abc", b.getValue());
+	}
+
+
+
 	@Data
 	private static class A {
 		private String value;
