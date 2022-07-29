@@ -148,6 +148,7 @@ public class ImgUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void createImageTest() throws IORuntimeException, IOException {
 		ImgUtil.createImage(
 				"版权所有",
@@ -159,6 +160,7 @@ public class ImgUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void createTransparentImageTest() throws IORuntimeException, IOException {
 		ImgUtil.createTransparentImage(
 				"版权所有",

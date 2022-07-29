@@ -1400,11 +1400,6 @@ public class ImgUtil {
 			// 先用背景色填充整张图片,也就是背景
 			g.setColor(backgroundColor);
 			g.fillRect(0, 0, width, height);
-		}else{
-			// 如果没有设置背景色，则设置为透明背景
-			g.dispose();
-			image = image.createGraphics().getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-			g = image.getGraphics();
 		}
 
 		g.setColor(ObjectUtil.defaultIfNull(fontColor, Color.BLACK));
