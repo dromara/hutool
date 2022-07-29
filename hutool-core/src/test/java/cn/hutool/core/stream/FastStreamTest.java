@@ -65,7 +65,10 @@ public class FastStreamTest {
 		List<Integer> orders = Arrays.asList(1, 2, 3);
 		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		Map<Integer, String> toZip = FastStream.of(orders).toZip(list);
-		Assert.assertEquals(new HashMap<Integer, String>() {{
+		Assert.assertEquals(new HashMap<Integer, String>() {
+			private static final long serialVersionUID = 1L;
+
+			{
 			put(1, "dromara");
 			put(2, "hutool");
 			put(3, "sweet");
@@ -85,7 +88,10 @@ public class FastStreamTest {
 	public void testToMap() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		Map<String, Integer> identityMap = FastStream.of(list).toMap(String::valueOf);
-		Assert.assertEquals(new HashMap<String, Integer>() {{
+		Assert.assertEquals(new HashMap<String, Integer>() {
+			private static final long serialVersionUID = 1L;
+
+			{
 			put("1", 1);
 			put("2", 2);
 			put("3", 3);
@@ -97,7 +103,10 @@ public class FastStreamTest {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		Map<String, List<Integer>> group = FastStream.of(list).group(String::valueOf);
 		Assert.assertEquals(
-				new HashMap<String, List<Integer>>() {{
+				new HashMap<String, List<Integer>>() {
+					private static final long serialVersionUID = 1L;
+
+					{
 					put("1", singletonList(1));
 					put("2", singletonList(2));
 					put("3", singletonList(3));
@@ -270,7 +279,7 @@ public class FastStreamTest {
 	}
 
 	@Test
-	void testSub() {
+	public void testSub() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = FastStream.of(list).sub(2).map(FastStream::toList).toList();
 		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),
@@ -280,7 +289,7 @@ public class FastStreamTest {
 	}
 
 	@Test
-	void testSubList() {
+	public void testSubList() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = FastStream.of(list).subList(2).toList();
 		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),

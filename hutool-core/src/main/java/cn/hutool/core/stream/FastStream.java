@@ -3,6 +3,7 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,6 +57,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public static <T> FastStreamBuilder<T> builder() {
 		return new FastStreamBuilder<T>() {
+			private static final long serialVersionUID = 1L;
 			private final Builder<T> streamBuilder = Stream.builder();
 
 			@Override
@@ -133,9 +135,9 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * </p>
 	 *
 	 * @param <T>     元素类型
-	 * @param hasNext 条件值
 	 * @param seed    初始值
-	 * @param f       用上一个元素作为参数执行并返回一个新的元素
+	 * @param hasNext 条件值
+	 * @param next    用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
 	public static <T> FastStream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
@@ -650,6 +652,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * }</pre>
 	 */
 	public <A> A[] toArray(IntFunction<A[]> generator) {
+		//noinspection SuspiciousToArrayCall
 		return stream.toArray(generator);
 	}
 
@@ -1083,7 +1086,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return stream.equals(obj);
+		if (obj instanceof Stream) {
+			return stream.equals(obj);
+		}
+		return false;
 	}
 
 	/**
@@ -1143,7 +1149,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 拼接后的字符串
 	 */
 	public String join() {
-		return join("");
+		return join(StrUtil.EMPTY);
 	}
 
 	/**
@@ -1153,7 +1159,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 拼接后的字符串
 	 */
 	public String join(CharSequence delimiter) {
-		return join(delimiter, "", "");
+		return join(delimiter, StrUtil.EMPTY, StrUtil.EMPTY);
 	}
 
 	/**
@@ -1340,16 +1346,6 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		 * Adds an element to the stream being built.
 		 *
 		 * @param t the element to add
-		 * @throws IllegalStateException if the builder has already transitioned to
-		 *                               the built state
-		 */
-		@Override
-		void accept(T t);
-
-		/**
-		 * Adds an element to the stream being built.
-		 *
-		 * @param t the element to add
 		 * @return {@code this} builder
 		 * @throws IllegalStateException if the builder has already transitioned to
 		 *                               the built state
@@ -1363,18 +1359,6 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			accept(t);
 			return this;
 		}
-
-		/**
-		 * Builds the stream, transitioning this builder to the built state.
-		 * An {@code IllegalStateException} is thrown if there are further attempts
-		 * to operate on the builder after it has entered the built state.
-		 *
-		 * @return the built stream
-		 * @throws IllegalStateException if the builder has already transitioned to
-		 *                               the built state
-		 */
-		FastStream<T> build();
-
 	}
 
 }
