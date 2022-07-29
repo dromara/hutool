@@ -97,7 +97,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -106,8 +106,33 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<tags>
+						<tag>
+							<name>apiNote</name>
+							<placement>a</placement>
+							<head>API Note:</head>
+						</tag>
+						<tag>
+							<name>implSpec</name>
+							<placement>a</placement>
+							<head>Implementation Requirements:</head>
+						</tag>
+						<tag>
+							<name>implNote</name>
+							<placement>a</placement>
+							<head>Implementation Note:</head>
+						</tag>
+						<tag><name>param</name></tag>
+						<tag><name>return</name></tag>
+						<tag><name>throws</name></tag>
+						<tag><name>since</name></tag>
+						<tag><name>version</name></tag>
+						<tag><name>serialData</name></tag>
+						<tag><name>see</name></tag>
+					</tags>
+				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 

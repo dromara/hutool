@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
@@ -246,10 +247,15 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> createMap(final Class<?> mapType) {
-		if (mapType.isAssignableFrom(AbstractMap.class)) {
+		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			return (Map<K, V>) ConstructorUtil.newInstance(mapType);
+			try{
+				return (Map<K, V>) ConstructorUtil.newInstance(mapType);
+			}catch (UtilException e){
+				// 不支持的map类型，返回默认的HashMap
+				return new HashMap<>();
+			}
 		}
 	}
 

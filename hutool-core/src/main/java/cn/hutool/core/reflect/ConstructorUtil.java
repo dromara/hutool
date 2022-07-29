@@ -109,6 +109,9 @@ public class ConstructorUtil {
 	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			final Constructor<T> constructor = getConstructor(clazz);
+			if(null == constructor){
+				throw new UtilException("No constructor for [{}]", clazz);
+			}
 			try {
 				return constructor.newInstance();
 			} catch (final Exception e) {

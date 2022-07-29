@@ -208,11 +208,12 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * 如果两个输入流都是有序的，则结果流是有序的，如果任一输入流是并行的，则结果流是并行的。
 	 * 当结果流关闭时，两个输入流的关闭处理程序都会被调用。
 	 *
+	 * <p>从重复串行流进行拼接时可能会导致深度调用链甚至抛出 {@code StackOverflowException}</p>
+	 *
 	 * @param <T> 元素类型
 	 * @param a   第一个流
 	 * @param b   第二个流
 	 * @return 拼接两个流之后的流
-	 * @implNote 从重复串行流进行拼接时可能会导致深度调用链甚至抛出 {@code StackOverflowException}
 	 */
 	public static <T> FastStream<T> concat(FastStream<? extends T> a, FastStream<? extends T> b) {
 		return new FastStream<>(Stream.concat(a, b));
@@ -279,6 +280,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * 过滤元素，返回与 指定操作结果 匹配 指定值 的元素组成的流
 	 * 这是一个无状态中间操作
 	 *
+	 * @param <R>    返回类型
 	 * @param mapper 操作
 	 * @param value  用来匹配的值
 	 * @return 与 指定操作结果 匹配 指定值 的元素组成的流
@@ -646,10 +648,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <A>       给定的数组类型
 	 * @return 包含此流元素的指定的数组
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
-	 * @apiNote 例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
-	 * <pre>{@code
-	 * String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new);
-	 * }</pre>
+	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
+	 *                             <pre>{@code
+	 *                                                         String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new);
+	 *                                                         }</pre>
 	 */
 	public <A> A[] toArray(IntFunction<A[]> generator) {
 		//noinspection SuspiciousToArrayCall
@@ -658,12 +660,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	/**
 	 * 对元素进行聚合，并返回聚合后的值，相当于在for循环里写sum=sum+ints[i]
-	 * 这是一个终端操作
-	 *
-	 * @param identity    初始值，还用于限定泛型
-	 * @param accumulator 你想要的聚合操作
-	 * @return 聚合计算后的值
-	 * @apiNote 求和、最小值、最大值、平均值和转换成一个String字符串均为聚合操作
+	 * 这是一个终端操作<br>
+	 * 求和、最小值、最大值、平均值和转换成一个String字符串均为聚合操作
 	 * 例如这里对int进行求和可以写成：
 	 *
 	 * <pre>{@code
@@ -675,6 +673,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <pre>{@code
 	 *     Integer sum = integers.reduce(0, Integer::sum);
 	 * }</pre>
+	 *
+	 * @param identity    初始值，还用于限定泛型
+	 * @param accumulator 你想要的聚合操作
+	 * @return 聚合计算后的值
 	 */
 	@Override
 	public T reduce(T identity, BinaryOperator<T> accumulator) {
@@ -698,15 +700,15 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 *     return foundAny ? Optional.of(result) : Optional.empty();
 	 * }</pre>
 	 * 但它不局限于顺序执行，例如并行流等情况下
-	 * 这是一个终端操作
+	 * 这是一个终端操作<br>
+	 * 例如以下场景抛出 NPE ：
+	 * <pre>{@code
+	 *      Optional<Integer> reduce = Stream.<Integer>builder().add(1).add(1).build().reduce((a, b) -> null);
+	 * }</pre>
 	 *
 	 * @param accumulator 你想要的聚合操作
 	 * @return 聚合后用 {@link Optional}包裹的值
 	 * @throws NullPointerException 如果给定的聚合操作中执行后结果为空，并用于下一次执行，则抛出该异常
-	 * @apiNote 例如以下场景抛出 NPE ：
-	 * <pre>{@code
-	 *      Optional<Integer> reduce = Stream.<Integer>builder().add(1).add(1).build().reduce((a, b) -> null);
-	 * }</pre>
 	 * @see #reduce(Object, BinaryOperator)
 	 * @see #min(Comparator)
 	 * @see #max(Comparator)
