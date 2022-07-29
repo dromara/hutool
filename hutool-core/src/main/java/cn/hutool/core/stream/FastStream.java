@@ -522,7 +522,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * 这是一个无状态中间操作
 	 *
 	 * @param action 指定的函数
-	 * @return 返回叠加操作后的Steam
+	 * @return 返回叠加操作后的FastStream
 	 * @apiNote 该方法存在的意义主要是用来调试
 	 * 当你需要查看经过操作管道某处的元素，可以执行以下操作:
 	 * <pre>{@code
@@ -542,7 +542,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	/**
 	 * 返回叠加调用{@link Console#log(Object)}打印出结果的流
 	 *
-	 * @return 返回叠加操作后的Steam
+	 * @return 返回叠加操作后的FastStream
 	 */
 	public FastStream<T> log() {
 		return peek(Console::log);
@@ -1307,6 +1307,31 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		list.removeAll(list.subList(start, start + deleteCount));
 		list.addAll(start, Arrays.asList(items));
 		return FastStream.of(list);
+	}
+
+	/**
+	 * 按指定长度切分为双层流
+	 *
+	 * @param batchSize 指定长度
+	 * @return 切好的流
+	 */
+	public FastStream<FastStream<T>> sub(int batchSize) {
+		List<T> list = toList();
+		if (list.size() <= batchSize) {
+			return FastStream.<FastStream<T>>of(FastStream.of(list)).parallel(isParallel());
+		}
+		return FastStream.iterate(0, i -> i < list.size(), i -> i + batchSize)
+				.map(skip -> FastStream.of(list).skip(skip).limit(batchSize)).parallel(isParallel());
+	}
+
+	/**
+	 * 按指定长度切分为元素为list的流
+	 *
+	 * @param batchSize 指定长度
+	 * @return 切好的流
+	 */
+	public FastStream<List<T>> subList(int batchSize) {
+		return sub(batchSize).map(FastStream::toList);
 	}
 
 	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<FastStream<T>> {

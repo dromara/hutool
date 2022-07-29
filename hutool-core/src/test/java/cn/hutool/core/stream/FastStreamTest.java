@@ -268,4 +268,24 @@ public class FastStreamTest {
 		List<String> zip = FastStream.of(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 	}
+
+	@Test
+	void testSub() {
+		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+		List<List<Integer>> lists = FastStream.of(list).sub(2).map(FastStream::toList).toList();
+		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),
+				Arrays.asList(3, 4),
+				singletonList(5)
+		), lists);
+	}
+
+	@Test
+	void testSubList() {
+		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+		List<List<Integer>> lists = FastStream.of(list).subList(2).toList();
+		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),
+				Arrays.asList(3, 4),
+				singletonList(5)
+		), lists);
+	}
 }
