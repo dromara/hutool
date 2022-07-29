@@ -30,6 +30,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
@@ -550,6 +551,37 @@ public class ZipUtil {
 		if (outFile.exists() && outFile.isFile()) {
 			throw new IllegalArgumentException(
 					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
+		}
+
+		try (final ZipReader reader = new ZipReader(zipFile)) {
+			reader.readTo(outFile);
+		}
+		return outFile;
+	}
+
+	/**
+	 * 限制解压后文件大小
+	 *
+	 * @param zipFile zip文件，附带编码信息，使用完毕自动关闭
+	 * @param outFile 解压到的目录
+	 * @param size 警戒线大小(B)
+	 * @return 解压的目录
+	 * @throws IORuntimeException IO异常
+	 * @since 5.8.5
+	 */
+	public static File unzip(ZipFile zipFile, File outFile, long size) throws IORuntimeException {
+		if (outFile.exists() && outFile.isFile()) {
+			throw new IllegalArgumentException(
+					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
+		}
+		Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+		long zipFileSize = 0L;
+		while(zipEntries.hasMoreElements()) {
+			ZipEntry zipEntry = zipEntries.nextElement();
+			zipFileSize += zipEntry.getSize();
+			if (zipFileSize > size) {
+				throw new IllegalArgumentException("The file size exceeds the limit");
+			}
 		}
 
 		try (final ZipReader reader = new ZipReader(zipFile)) {
