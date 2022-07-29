@@ -133,7 +133,7 @@ public class PatternPool {
 	/**
 	 * 时间正则
 	 */
-	public static final Pattern TIME = Pattern.compile("\\d{1,2}:\\d{1,2}(:\\d{1,2})?");
+	public static final Pattern TIME = Pattern.compile(RegexPool.TIME);
 	/**
 	 * 中国车牌号码（兼容新能源车牌）
 	 */
