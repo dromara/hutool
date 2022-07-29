@@ -263,6 +263,10 @@ public class Base64 {
 	 * @since 5.7.5
 	 */
 	public static boolean isBase64(final byte[] base64Bytes) {
+		if (base64Bytes == null || base64Bytes.length < 3) {
+			return false;
+		}
+
 		boolean hasPadding = false;
 		for (final byte base64Byte : base64Bytes) {
 			if (hasPadding) {

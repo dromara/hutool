@@ -1357,6 +1357,19 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 根据文字创建透明背景的PNG图片
+	 *
+	 * @param str             文字
+	 * @param font            字体{@link Font}
+	 * @param fontColor       字体颜色，默认黑色
+	 * @param out             图片输出地
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void createTransparentImage(String str, Font font, Color fontColor, ImageOutputStream out) throws IORuntimeException {
+		writePng(createImage(str, font, null, fontColor, BufferedImage.TYPE_INT_ARGB), out);
+	}
+
+	/**
 	 * 根据文字创建PNG图片
 	 *
 	 * @param str             文字

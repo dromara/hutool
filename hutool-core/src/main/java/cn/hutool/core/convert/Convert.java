@@ -605,19 +605,38 @@ public class Convert {
 	}
 
 	/**
-	 * 转换为Map
+	 * 转换为Map，若value原本就是Map，则转为原始类型，若不是则默认转为HashMap
 	 *
-	 * @param <K> 键类型
-	 * @param <V> 值类型
-	 * @param keyType 键类型
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param keyType   键类型
 	 * @param valueType 值类型
-	 * @param value 被转换的值
+	 * @param value     被转换的值
 	 * @return {@link Map}
 	 * @since 4.6.8
 	 */
-	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> toMap(final Class<K> keyType, final Class<V> valueType, final Object value) {
-		return (Map<K, V>) new MapConverter().convert(HashMap.class, keyType, valueType, value);
+	public static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object value) {
+		if (value instanceof Map) {
+			return toMap(value.getClass(), keyType, valueType, value);
+		} else {
+			return toMap(HashMap.class, keyType, valueType, value);
+		}
+	}
+
+	/**
+	 * 转换为Map
+	 *
+	 * @param mapType   转后的具体Map类型
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param keyType   键类型
+	 * @param valueType 值类型
+	 * @param value     被转换的值
+	 * @return {@link Map}
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <K, V> Map<K, V> toMap(Class<?> mapType, Class<K> keyType, Class<V> valueType, Object value) {
+		return (Map<K, V>) MapConverter.INSTANCE.convert(mapType, keyType, valueType, value);
 	}
 
 	/**

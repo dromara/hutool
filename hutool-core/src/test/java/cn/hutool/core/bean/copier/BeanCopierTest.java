@@ -64,4 +64,25 @@ public class BeanCopierTest {
 	private static class B {
 		private String value;
 	}
+
+	/**
+	 * 为{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 */
+	@Test
+	public void issues2484Test() {
+		final A a = new A();
+		a.setValue("abc");
+		final B b = new B();
+		b.setValue("123");
+
+		BeanCopier<B> copier = BeanCopier.of(a, b, CopyOptions.of().setOverride(false));
+		copier.copy();
+		Assert.assertEquals("123", b.getValue());
+
+		b.setValue(null);
+		copier = BeanCopier.of(a, b, CopyOptions.of().setOverride(false));
+		copier.copy();
+		Assert.assertEquals("abc", b.getValue());
+	}
+
 }

@@ -86,13 +86,13 @@ public class NetUtil {
 	/**
 	 * 将IPv6地址字符串转为大整数
 	 *
-	 * @param IPv6Str 字符串
+	 * @param ipv6Str 字符串
 	 * @return 大整数, 如发生异常返回 null
 	 * @since 5.5.7
 	 */
-	public static BigInteger ipv6ToBitInteger(final String IPv6Str) {
+	public static BigInteger ipv6ToBigInteger(final String ipv6Str) {
 		try {
-			final InetAddress address = InetAddress.getByName(IPv6Str);
+			final InetAddress address = InetAddress.getByName(ipv6Str);
 			if (address instanceof Inet6Address) {
 				return new BigInteger(1, address.getAddress());
 			}

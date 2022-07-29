@@ -1,10 +1,13 @@
 package cn.hutool.db;
 
+import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * H2数据库单元测试
@@ -45,5 +48,16 @@ public class H2Test {
 		db.upsert(Entity.of("test").set("a",1).set("b",111),"a");
 		final Entity a1=db.get("test","a",1);
 		Assert.assertEquals(Long.valueOf(111),a1.getLong("b"));
+	}
+
+	@Test
+	public void pageTest() {
+		String sql = "select * from test where a = @a and b = :b";
+		Map<String, Object> paramMap = MapUtil.builder(new CaseInsensitiveMap<String, Object>())
+				.put("A", 3)
+				.put("b", 31)
+				.build();
+		final List<Entity> query = Db.of(DS_GROUP_NAME).page(sql, Page.of(0, 3), paramMap);
+		Assert.assertEquals(1, query.size());
 	}
 }

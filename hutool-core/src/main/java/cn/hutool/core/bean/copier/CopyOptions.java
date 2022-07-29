@@ -60,7 +60,7 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean transientSupport = true;
 	/**
-	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，为{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 */
 	protected boolean override = true;
 
@@ -282,7 +282,7 @@ public class CopyOptions implements Serializable {
 	}
 
 	/**
-	 * 设置是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 * 设置是否覆盖目标值，如果不覆盖，会先读取目标对象的值，为{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 *
 	 * @param override 是否覆盖目标值
 	 * @return this

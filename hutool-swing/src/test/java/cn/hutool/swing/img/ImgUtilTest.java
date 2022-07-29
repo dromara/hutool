@@ -1,7 +1,7 @@
 package cn.hutool.swing.img;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.swing.img.ImgUtil;
+import cn.hutool.core.io.IORuntimeException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -147,4 +147,26 @@ public class ImgUtilTest {
 		System.out.println(mainColor);
 	}
 
+	@Test
+	@Ignore
+	public void createImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.WHITE,
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createImageTest.png"))
+		);
+	}
+
+	@Test
+	@Ignore
+	public void createTransparentImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createTransparentImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createTransparentImageTest.png"))
+		);
+	}
 }
