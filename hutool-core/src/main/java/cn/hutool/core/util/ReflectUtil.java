@@ -836,6 +836,9 @@ public class ReflectUtil {
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			final Constructor<T> constructor = getConstructor(clazz);
+			if(null == constructor){
+				throw new UtilException("No constructor for [{}]", clazz);
+			}
 			try {
 				return constructor.newInstance();
 			} catch (Exception e) {

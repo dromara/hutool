@@ -2,6 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Pair;
@@ -242,10 +243,15 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> createMap(Class<?> mapType) {
-		if (mapType.isAssignableFrom(AbstractMap.class)) {
+		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			return (Map<K, V>) ReflectUtil.newInstance(mapType);
+			try{
+				return (Map<K, V>) ReflectUtil.newInstance(mapType);
+			}catch (UtilException e){
+				// 不支持的map类型，返回默认的HashMap
+				return new HashMap<>();
+			}
 		}
 	}
 
