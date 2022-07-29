@@ -90,7 +90,7 @@ public class NetUtil {
 	 * @return 大整数, 如发生异常返回 null
 	 * @since 5.5.7
 	 */
-	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+	public static BigInteger ipv6ToBigInteger(String IPv6Str) {
 		try {
 			InetAddress address = InetAddress.getByName(IPv6Str);
 			if (address instanceof Inet6Address) {
