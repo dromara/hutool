@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.5.M1 (2022-07-22)
+# 5.8.5.M1 (2022-07-29)
 
 ### ❌不兼容特性
 * 【core   】     合成注解相关功能重构，增加@Link及其子注解（pr#702@Gitee）
@@ -29,6 +29,7 @@
 * 【json   】     JSONConfig增加允许重复key配置，解决不规整json序列化的问题（pr#720@Github）
 * 【core   】     完善了codec包下一些方法的入参空校验（pr#719@Gitee）
 * 【extra  】     完善QrCodeUtil对于DATA_MATRIX生成的形状随机不可指定的功能（pr#722@Gitee）
+* 【core   】     修改NetUtil.ipv6ToBigInteger，原方法标记为过期（pr#2485@Github）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
