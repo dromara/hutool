@@ -11,6 +11,8 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +74,13 @@ public class StreamExtractor implements Extractor{
 			in = IoUtil.toBuffered(in);
 			if (StrUtil.isBlank(archiverName)) {
 				this.in = factory.createArchiveInputStream(in);
+			} else if("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)){
+				//issue#I5J33E，支持tgz格式解压
+				try {
+					this.in = new TarArchiveInputStream(new GzipCompressorInputStream(in));
+				} catch (IOException e) {
+					throw new IORuntimeException(e);
+				}
 			} else {
 				this.in = factory.createArchiveInputStream(archiverName, in);
 			}

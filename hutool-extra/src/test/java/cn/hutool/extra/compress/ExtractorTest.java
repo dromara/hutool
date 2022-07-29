@@ -27,4 +27,15 @@ public class ExtractorTest {
 
 		extractor.extract(FileUtil.file("d:/test/compress/test2/"));
 	}
+
+	@Test
+	@Ignore
+	public void tgzTest(){
+		Extractor extractor = 	CompressUtil.createExtractor(
+				CharsetUtil.defaultCharset(),
+				"tgz",
+				FileUtil.file("d:/test/test.tgz"));
+
+		extractor.extract(FileUtil.file("d:/test/tgz/"));
+	}
 }

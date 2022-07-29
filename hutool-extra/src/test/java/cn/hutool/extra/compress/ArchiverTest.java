@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+@SuppressWarnings("resource")
 public class ArchiverTest {
 
 	@Test
@@ -53,7 +54,19 @@ public class ArchiverTest {
 	public void sevenZTest(){
 		final File file = FileUtil.file("d:/test/compress/test.7z");
 		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, ArchiveStreamFactory.SEVEN_Z, file)
-				.add(FileUtil.file("d:/Java/apache-maven-3.6.3"), (f)->{
+				.add(FileUtil.file("d:/Java/apache-maven-3.8.1"), (f)->{
+					Console.log("Add: {}", f.getPath());
+					return true;
+				})
+				.finish().close();
+	}
+
+	@Test
+	@Ignore
+	public void tgzTest(){
+		final File file = FileUtil.file("d:/test/compress/test.tgz");
+		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, "tgz", file)
+				.add(FileUtil.file("d:/Java/apache-maven-3.8.1"), (f)->{
 					Console.log("Add: {}", f.getPath());
 					return true;
 				})

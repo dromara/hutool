@@ -12,6 +12,7 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.ar.ArArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,16 @@ public class StreamArchiver implements Archiver {
 	 * @param targetStream 归档输出的流
 	 */
 	public StreamArchiver(Charset charset, String archiverName, OutputStream targetStream) {
+		if("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)){
+			//issue#I5J33E，支持tgz格式解压
+			try {
+				this.out = new TarArchiveOutputStream(new GzipCompressorOutputStream(targetStream));
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+			return;
+		}
+
 		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
 		try {
 			this.out = factory.createArchiveOutputStream(archiverName, targetStream);
@@ -129,7 +140,7 @@ public class StreamArchiver implements Archiver {
 
 	@Override
 	public void close() {
-		try {
+		try{
 			finish();
 		} catch (Exception ignore) {
 			//ignore
