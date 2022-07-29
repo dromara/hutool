@@ -41,6 +41,7 @@
 * 【core   】     修复Console.log应该把异常信息输出位置错误问题（pr#716@Gitee）
 * 【core   】     修复UrlBuilder无法配置末尾追加“/”问题（issue#2459@Github）
 * 【core   】     修复SystemPropsUtil.getBoolean方法应该只有值为true时才返回true，其他情况都应该返回false（pr#717@Gitee）
+* 【core   】     修复isBase64判断不准确的问题（pr#727@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
