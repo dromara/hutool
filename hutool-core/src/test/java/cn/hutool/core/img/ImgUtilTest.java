@@ -1,6 +1,7 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -144,6 +145,27 @@ public class ImgUtilTest {
 		BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
 		String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
 		System.out.println(mainColor);
+	}
+
+	@Test
+	public void createImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.WHITE,
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createImageTest.png"))
+		);
+	}
+
+	@Test
+	public void createTransparentImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createTransparentImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createTransparentImageTest.png"))
+		);
 	}
 
 }
