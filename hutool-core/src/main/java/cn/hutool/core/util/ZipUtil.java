@@ -124,7 +124,7 @@ public class ZipUtil {
 			}
 		} catch (FileAlreadyExistsException ignored) {
 			// 不覆盖情况下，文件已存在, 跳过
-		} catch (IOException e){
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -262,6 +262,7 @@ public class ZipUtil {
 	 */
 	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
 		validateFiles(zipFile, srcFiles);
+		//noinspection resource
 		ZipWriter.of(zipFile, charset).add(withSrcDir, filter, srcFiles).close();
 		return zipFile;
 	}
@@ -432,6 +433,7 @@ public class ZipUtil {
 	 * @since 5.5.2
 	 */
 	public static File zip(File zipFile, Charset charset, Resource... resources) throws UtilException {
+		//noinspection resource
 		ZipWriter.of(zipFile, charset).add(resources).close();
 		return zipFile;
 	}
@@ -548,15 +550,7 @@ public class ZipUtil {
 	 * @since 4.5.8
 	 */
 	public static File unzip(ZipFile zipFile, File outFile) throws IORuntimeException {
-		if (outFile.exists() && outFile.isFile()) {
-			throw new IllegalArgumentException(
-					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
-		}
-
-		try (final ZipReader reader = new ZipReader(zipFile)) {
-			reader.readTo(outFile);
-		}
-		return outFile;
+		return unzip(zipFile, outFile, -1);
 	}
 
 	/**
@@ -564,23 +558,27 @@ public class ZipUtil {
 	 *
 	 * @param zipFile zip文件，附带编码信息，使用完毕自动关闭
 	 * @param outFile 解压到的目录
-	 * @param size 警戒线大小(B)
+	 * @param limit   限制解压文件大小(单位B)
 	 * @return 解压的目录
 	 * @throws IORuntimeException IO异常
 	 * @since 5.8.5
 	 */
-	public static File unzip(ZipFile zipFile, File outFile, long size) throws IORuntimeException {
+	public static File unzip(ZipFile zipFile, File outFile, long limit) throws IORuntimeException {
 		if (outFile.exists() && outFile.isFile()) {
 			throw new IllegalArgumentException(
 					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
 		}
-		Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-		long zipFileSize = 0L;
-		while(zipEntries.hasMoreElements()) {
-			ZipEntry zipEntry = zipEntries.nextElement();
-			zipFileSize += zipEntry.getSize();
-			if (zipFileSize > size) {
-				throw new IllegalArgumentException("The file size exceeds the limit");
+
+		// pr#726@Gitee
+		if (limit > 0) {
+			final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+			long zipFileSize = 0L;
+			while (zipEntries.hasMoreElements()) {
+				ZipEntry zipEntry = zipEntries.nextElement();
+				zipFileSize += zipEntry.getSize();
+				if (zipFileSize > limit) {
+					throw new IllegalArgumentException("The file size exceeds the limit");
+				}
 			}
 		}
 

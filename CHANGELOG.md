@@ -30,6 +30,7 @@
 * 【core   】     完善了codec包下一些方法的入参空校验（pr#719@Gitee）
 * 【extra  】     完善QrCodeUtil对于DATA_MATRIX生成的形状随机不可指定的功能（pr#722@Gitee）
 * 【core   】     修改NetUtil.ipv6ToBigInteger，原方法标记为过期（pr#2485@Github）
+* 【core   】     ZipUtil新增zip文件解压大小限制，防止zip炸弹（pr#726@Gitee）
 * 
 ### 🐞Bug修复
 * 【core   】     修复CollUtil里面关于可变参数传null造成的crash问题（pr#2428@Github）
