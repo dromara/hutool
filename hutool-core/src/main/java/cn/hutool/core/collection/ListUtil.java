@@ -524,7 +524,7 @@ public class ListUtil {
 	 * @return 最后一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int lastIndexOf(final List<T> list, final Predicate<T> matcher) {
+	public static <T> int lastIndexOf(final List<T> list, final Predicate<? super T> matcher) {
 		if (null != list) {
 			final int size = list.size();
 			if (size > 0) {
