@@ -94,14 +94,14 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 返回包含单个元素的串行流
+	 * 返回包含单个元素的串行流, 如果值为null, 则返回空的流, 不抛出异常
 	 *
 	 * @param t   单个元素
 	 * @param <T> 元素类型
 	 * @return 包含单个元素的串行流
 	 */
 	public static <T> FastStream<T> of(T t) {
-		return new FastStream<>(Stream.of(t));
+		return Opt.ofNullable(t).map(Stream::of).map(FastStream::new).orElseGet(FastStream::empty);
 	}
 
 	/**
