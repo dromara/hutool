@@ -538,10 +538,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 					// 第一次出现的key返回true
 					return null == exists.putIfAbsent(key, Boolean.TRUE);
 				}
-			})).parallel(isParallel());
+			})).parallel();
 		} else {
 			Set<F> exists = new HashSet<>();
-			return of(stream.filter(e -> exists.add(keyExtractor.apply(e)))).parallel(isParallel());
+			return of(stream.filter(e -> exists.add(keyExtractor.apply(e))));
 		}
 	}
 
@@ -1004,7 +1004,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public FastStream<T> reverse() {
 		List<T> list = toList();
 		Collections.reverse(list);
-		return FastStream.of(list, isParallel());
+		return of(list, isParallel());
 	}
 
 	/**
@@ -1403,7 +1403,9 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		if (isParallel()) {
 			resStream = toList().stream();
 		}
-		return of(resStream.map(e -> zipper.apply(e, iterator.hasNext() ? iterator.next() : null)));
+		final FastStream<R> newStream = of(resStream.map(e -> zipper.apply(e, iterator.hasNext() ? iterator.next() : null)));
+		newStream.parallel(isParallel());
+		return newStream;
 	}
 
 	/**
