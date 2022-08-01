@@ -1,10 +1,13 @@
 package cn.hutool.core.stream;
 
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
@@ -62,17 +65,19 @@ public class FastStreamTest {
 
 	@Test
 	public void testToZip() {
-		List<Integer> orders = Arrays.asList(1, 2, 3);
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		Map<Integer, String> toZip = FastStream.of(orders).toZip(list);
-		Assert.assertEquals(new HashMap<Integer, String>() {
-			private static final long serialVersionUID = 1L;
+		List<Integer> orders = Arrays.asList(1, 2, 3, 2);
+		List<String> list = Arrays.asList("dromara", "guava", "sweet", "hutool");
+		final Map<Integer, String> map = MapUtil.<Integer, String>builder()
+				.put(1, "dromara")
+				.put(2, "hutool")
+				.put(3, "sweet")
+				.build();
 
-			{
-			put(1, "dromara");
-			put(2, "hutool");
-			put(3, "sweet");
-		}}, toZip);
+		Map<Integer, String> toZip = FastStream.of(orders).toZip(list);
+		Assert.assertEquals(map, toZip);
+
+		Map<Integer, String> toZipParallel = FastStream.of(orders).parallel().toZip(list);
+		Assert.assertEquals(map, toZipParallel);
 	}
 
 	@Test
@@ -92,10 +97,10 @@ public class FastStreamTest {
 			private static final long serialVersionUID = 1L;
 
 			{
-			put("1", 1);
-			put("2", 2);
-			put("3", 3);
-		}}, identityMap);
+				put("1", 1);
+				put("2", 2);
+				put("3", 3);
+			}}, identityMap);
 	}
 
 	@Test
@@ -107,10 +112,10 @@ public class FastStreamTest {
 					private static final long serialVersionUID = 1L;
 
 					{
-					put("1", singletonList(1));
-					put("2", singletonList(2));
-					put("3", singletonList(3));
-				}}, group);
+						put("1", singletonList(1));
+						put("2", singletonList(2));
+						put("3", singletonList(3));
+					}}, group);
 	}
 
 	@Test
@@ -126,19 +131,29 @@ public class FastStreamTest {
 	public void testMapMulti() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		List<Integer> mapMulti = FastStream.of(list).<Integer>mapMulti((e, buffer) -> {
-			if (e % 2 == 0) {
+			for (int i = 0; i < e; i++) {
 				buffer.accept(e);
 			}
-			buffer.accept(e);
 		}).toList();
-		Assert.assertEquals(Arrays.asList(1, 2, 2, 3), mapMulti);
+		Assert.assertEquals(Arrays.asList(1, 2, 2, 3, 3, 3), mapMulti);
 	}
 
 	@Test
 	public void testDistinct() {
-		List<Integer> list = Arrays.asList(1, 2, 2, 3);
-		List<Integer> distinctBy = FastStream.of(list).distinct(String::valueOf).toList();
-		Assert.assertEquals(Arrays.asList(1, 2, 3), distinctBy);
+		List<Integer> list = ListUtil.of(3, 2, 2, 1, null, null);
+		for (int i = 0; i < 1000; i++) {
+			list.add(i);
+		}
+		// 使用stream去重
+		List<Integer> collect1 = list.stream().distinct().collect(Collectors.toList());
+		List<Integer> collect2 = list.stream().parallel().distinct().collect(Collectors.toList());
+
+		// 使用FastStream去重
+		List<Integer> distinctBy1 = FastStream.of(list).distinct().toList();
+		List<Integer> distinctBy2 = FastStream.of(list).parallel().distinct(String::valueOf).toList();
+
+		Assert.assertEquals(collect1, distinctBy1);
+		Assert.assertEquals(collect2, distinctBy2);
 	}
 
 	@Test
@@ -165,7 +180,7 @@ public class FastStreamTest {
 		List<String> mapIndex = FastStream.of(list).flatMapIdx((e, i) -> FastStream.of(i + 1 + "." + e)).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
 		// 并行流时为-1
-		Assert.assertEquals(Arrays.asList(-1, -1, -1), FastStream.of(1, 2, 3).parallel().mapIdx((e, i) -> i).toList());
+		Assert.assertEquals(Arrays.asList(-1, -1, -1), FastStream.of(1, 2, 3).parallel().flatMapIdx((e, i) -> FastStream.of(i)).toList());
 	}
 
 	@Test
@@ -173,6 +188,9 @@ public class FastStreamTest {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		List<Integer> flatMapIter = FastStream.of(list).<Integer>flatMapIter(e -> null).toList();
 		Assert.assertEquals(Collections.emptyList(), flatMapIter);
+
+		flatMapIter = FastStream.of(list).flatMapIter(e -> Arrays.asList(e, e * 10)).toList();
+		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
 	}
 
 	@Test
@@ -212,9 +230,9 @@ public class FastStreamTest {
 	}
 
 	@Test
-	public void testUnshift() {
+	public void testAddFirst() {
 		List<Integer> list = Arrays.asList(2, 3);
-		List<Integer> unshift = FastStream.of(list).unshift(1).toList();
+		List<Integer> unshift = FastStream.of(list).addFirst(1).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), unshift);
 	}
 
@@ -256,10 +274,10 @@ public class FastStreamTest {
 
 	@Test
 	public void testFindLast() {
-		List<Integer> list = Arrays.asList(1, null, 3);
-		Integer find = FastStream.of(list).findLast(Objects::nonNull);
+		List<Integer> list = ListUtil.of(1, null, 3);
+		Integer find = FastStream.of(list).parallel().findLast(Objects::nonNull);
 		Assert.assertEquals(3, (Object) find);
-		Assert.assertEquals(3, (Object) FastStream.of(list).findLast().orElse(null));
+		Assert.assertEquals(3, (Object) FastStream.of(list).parallel().findLast().orElse(null));
 	}
 
 	@Test
@@ -279,22 +297,24 @@ public class FastStreamTest {
 	}
 
 	@Test
-	public void testSub() {
+	public void testListSplit() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
-		List<List<Integer>> lists = FastStream.of(list).sub(2).map(FastStream::toList).toList();
-		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),
-				Arrays.asList(3, 4),
-				singletonList(5)
-		), lists);
+		List<List<Integer>> lists = FastStream.of(list).split(2).map(FastStream::toList).toList();
+		Assert.assertEquals(ListUtil.split(list, 2), lists);
+
+		// 指定长度 大于等于 列表长度
+		lists = FastStream.of(list).split(list.size()).map(FastStream::toList).toList();
+		Assert.assertEquals(singletonList(list), lists);
 	}
 
 	@Test
-	public void testSubList() {
+	public void testSplitList() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
-		List<List<Integer>> lists = FastStream.of(list).subList(2).toList();
-		Assert.assertEquals(Arrays.asList(Arrays.asList(1, 2),
-				Arrays.asList(3, 4),
-				singletonList(5)
-		), lists);
+		List<List<Integer>> lists = FastStream.of(list).splitList(2).toList();
+		Assert.assertEquals(ListUtil.split(list, 2), lists);
+
+		// 指定长度 大于等于 列表长度
+		lists = FastStream.of(list).splitList(list.size()).toList();
+		Assert.assertEquals(singletonList(list), lists);
 	}
 }

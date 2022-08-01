@@ -1467,7 +1467,7 @@ public class CollUtil {
 	 * @return 最后一个位置
 	 * @since 5.6.6
 	 */
-	public static <T> int lastIndexOf(final Collection<T> collection, final Predicate<T> predicate) {
+	public static <T> int lastIndexOf(final Collection<T> collection, final Predicate<? super T> predicate) {
 		if (collection instanceof List) {
 			// List的查找最后一个有优化算法
 			return ListUtil.lastIndexOf((List<T>) collection, predicate);
