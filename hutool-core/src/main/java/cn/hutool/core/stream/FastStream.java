@@ -60,6 +60,11 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		this.stream = stream;
 	}
 
+	@SafeVarargs
+	private static <E> Stream<E> ofStream(E... values) {
+		return Objects.isNull(values) ? Stream.empty() : Arrays.stream(values);
+	}
+
 	/**
 	 * 返回{@code FastStream}的建造器
 	 *
@@ -101,7 +106,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 包含单个元素的串行流
 	 */
 	public static <T> FastStream<T> of(T t) {
-		return Opt.ofNullable(t).map(Stream::of).map(FastStream::new).orElseGet(FastStream::empty);
+		return new FastStream<>(Stream.of(t));
 	}
 
 	/**
@@ -115,7 +120,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static <T> FastStream<T> of(T... values) {
-		return new FastStream<>(Arrays.stream(values));
+		return new FastStream<>(ofStream(values));
 	}
 
 	/**
@@ -1100,7 +1105,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public FastStream<T> push(T... obj) {
-		return FastStream.concat(this.stream, Stream.of(obj));
+		return FastStream.concat(this.stream, ofStream(obj));
 	}
 
 	/**
@@ -1121,7 +1126,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@SafeVarargs
 	public final FastStream<T> addFirst(T... obj) {
-		return FastStream.concat(Stream.of(obj), this.stream);
+		return FastStream.concat(ofStream(obj), this.stream);
 	}
 
 	/**
