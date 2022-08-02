@@ -1114,7 +1114,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param obj 元素
 	 * @return 流
 	 */
-	public FastStream<T> addFirst(T obj) {
+	public FastStream<T> unshift(T obj) {
 		return FastStream.concat(Stream.of(obj), this.stream);
 	}
 
@@ -1125,7 +1125,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	@SafeVarargs
-	public final FastStream<T> addFirst(T... obj) {
+	public final FastStream<T> unshift(T... obj) {
 		return FastStream.concat(ofStream(obj), this.stream);
 	}
 
