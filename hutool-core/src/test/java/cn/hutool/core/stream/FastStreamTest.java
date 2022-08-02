@@ -100,7 +100,8 @@ public class FastStreamTest {
 				put("1", 1);
 				put("2", 2);
 				put("3", 3);
-			}}, identityMap);
+			}
+		}, identityMap);
 	}
 
 	@Test
@@ -115,7 +116,8 @@ public class FastStreamTest {
 						put("1", singletonList(1));
 						put("2", singletonList(2));
 						put("3", singletonList(3));
-					}}, group);
+					}
+				}, group);
 	}
 
 	@Test
@@ -230,9 +232,9 @@ public class FastStreamTest {
 	}
 
 	@Test
-	public void testAddFirst() {
+	public void testUnshift() {
 		List<Integer> list = Arrays.asList(2, 3);
-		List<Integer> unshift = FastStream.of(list).addFirst(1).toList();
+		List<Integer> unshift = FastStream.of(list).unshift(1).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), unshift);
 	}
 
