@@ -716,10 +716,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <A>       给定的数组类型
 	 * @return 包含此流元素的指定的数组
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
+	 *                             <p>
 	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
-	 *                             <pre>{@code
-	 *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new);
-	 *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 }</pre>
+	 *                             <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
+	 *                             <p>
 	 */
 	@Override
 	public <A> A[] toArray(IntFunction<A[]> generator) {
