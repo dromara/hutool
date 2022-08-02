@@ -8,6 +8,7 @@ import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,10 +61,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		this.stream = stream;
 	}
 
-	@SafeVarargs
-	private static <E> Stream<E> ofStream(E... values) {
-		return Objects.isNull(values) ? Stream.empty() : Arrays.stream(values);
-	}
+	// --------------------------------------------------------------- Static method start
 
 	/**
 	 * 返回{@code FastStream}的建造器
@@ -99,7 +97,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 返回包含单个元素的串行流, 如果值为null, 则返回空的流, 不抛出异常
+	 * 返回包含单个元素的串行流
 	 *
 	 * @param t   单个元素
 	 * @param <T> 元素类型
@@ -120,7 +118,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static <T> FastStream<T> of(T... values) {
-		return new FastStream<>(ofStream(values));
+		return ArrayUtil.isEmpty(values) ? FastStream.empty() : new FastStream<>(Stream.of(values));
 	}
 
 	/**
@@ -279,6 +277,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public static FastStream<String> split(CharSequence str, String regex) {
 		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(FastStream::of).orElseGet(FastStream::empty);
 	}
+
+	// --------------------------------------------------------------- Static method end
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流
@@ -718,8 +718,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
 	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
 	 *                             <pre>{@code
-	 *                                                         String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new);
-	 *                                                         }</pre>
+	 *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new);
+	 *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 }</pre>
 	 */
 	@Override
 	public <A> A[] toArray(IntFunction<A[]> generator) {
@@ -1094,7 +1094,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	public FastStream<T> push(T obj) {
-		return FastStream.concat(this.stream, Stream.of(obj));
+		return FastStream.concat(this.stream, of(obj));
 	}
 
 	/**
@@ -1105,7 +1105,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public FastStream<T> push(T... obj) {
-		return FastStream.concat(this.stream, ofStream(obj));
+		return FastStream.concat(this.stream, of(obj));
 	}
 
 	/**
@@ -1115,7 +1115,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	public FastStream<T> unshift(T obj) {
-		return FastStream.concat(Stream.of(obj), this.stream);
+		return FastStream.concat(of(obj), this.stream);
 	}
 
 	/**
@@ -1126,7 +1126,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@SafeVarargs
 	public final FastStream<T> unshift(T... obj) {
-		return FastStream.concat(ofStream(obj), this.stream);
+		return FastStream.concat(of(obj), this.stream);
 	}
 
 	/**
