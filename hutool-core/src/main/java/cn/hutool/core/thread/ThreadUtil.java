@@ -287,7 +287,7 @@ public class ThreadUtil {
 	 *             e.printStackTrace();
 	 *         }
 	 *         System.out.printf("【%s】同学，已经离开了教室%n", Thread.currentThread().getName());
-	 *         latch.countDown(); // 减1（每离开一个同学，减去1）
+	 *         latch.countDown(); // 减1（每离开一个同学，减去1）,必须执行，可以放到 try...finally中
 	 *     },"同学 - " + x).start();
 	 * }
 	 * latch.await(); // 等待计数为0后再解除阻塞；（等待所有同学离开）
@@ -304,9 +304,36 @@ public class ThreadUtil {
 
 	/**
 	 * 新建一个Phaser，一个同步辅助类，jdk1.7提供，可以完全替代CountDownLatch；
+	 * @since 6.0.1
+	 * @author dazer
 	 *
 	 * Pharser: 移相器、相位器，可重用同步屏障；
 	 * 功能可以替换：{@link CyclicBarrier}（固定线程）循环栅栏、{@link CountDownLatch}（固定计数）倒数计数、加上分层功能
+	 *
+	 * 示例1：等6个同学都离开教室，班长才能锁门。
+	 * <pre>{@code
+	 * Phaser phaser = new Phaser(6); // 总共任务是6
+	 *  for (int x = 0; x < 6; x++) {
+	 *   //具体生产任务，可以用线程池替换
+	 *     new Thread(()->{
+	 *         try {
+	 *           //每个同学在角色待上5秒钟
+	 *             TimeUnit.SECONDS.sleep(5);
+	 *         } catch (InterruptedException e) {
+	 *             e.printStackTrace();
+	 *         }
+	 *         System.out.printf("【%s】同学，已经离开了教室%n", Thread.currentThread().getN
+	 *         phaser.arrive(); // 减1 等价于countDown()方法（每离开一个同学，减去1）,必须执行，可以放到 try...finally中
+	 *     },"同学 - " + x).start();
+	 * }
+	 * phaser.awaitAdvance(phaser.getPhase()); // 等价于latch.await()方法 等待计数为0后再解除阻塞；（等待所有同学离开）
+	 * System.out.println("【主线程】所有同学都离开了教室，开始锁教室大门了。");
+	 * }
+	 * </pre>
+	 *
+	 * 示例2：7个同学，集齐7个龙珠，7个同学一起召唤神龙；
+	 * 只需要：phaser.arrive(); --> phaser.arriveAndAwaitAdvance() //等待其他的线程就位
+	 * 该示例，也可以用：{@link CyclicBarrier} 进行实现
 	 *
 	 * @param taskCount 任务数量
 	 * @return Phaser
