@@ -4,6 +4,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -272,11 +274,45 @@ public class ThreadUtil {
 	/**
 	 * 新建一个CountDownLatch，一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。
 	 *
-	 * @param threadCount 线程数量
+	 * 示例：等6个同学都离开教室，班长才能锁门。
+	 * <pre>{@code
+	 * CountDownLatch latch = new CountDownLatch(6); // 总共任务是6
+	 *  for (int x = 0; x < 6; x++) {
+	 *   //具体生产任务，可以用线程池替换
+	 *     new Thread(()->{
+	 *         try {
+	 *           //每个同学在角色待上5秒钟
+	 *             TimeUnit.SECONDS.sleep(5);
+	 *         } catch (InterruptedException e) {
+	 *             e.printStackTrace();
+	 *         }
+	 *         System.out.printf("【%s】同学，已经离开了教室%n", Thread.currentThread().getName());
+	 *         latch.countDown(); // 减1（每离开一个同学，减去1）
+	 *     },"同学 - " + x).start();
+	 * }
+	 * latch.await(); // 等待计数为0后再解除阻塞；（等待所有同学离开）
+	 * System.out.println("【主线程】所有同学都离开了教室，开始锁教室大门了。");
+	 * }
+	 * </pre>
+	 *
+	 * @param taskCount 任务数量
 	 * @return CountDownLatch
 	 */
-	public static CountDownLatch newCountDownLatch(final int threadCount) {
-		return new CountDownLatch(threadCount);
+	public static CountDownLatch newCountDownLatch(final int taskCount) {
+		return new CountDownLatch(taskCount);
+	}
+
+	/**
+	 * 新建一个Phaser，一个同步辅助类，jdk1.7提供，可以完全替代CountDownLatch；
+	 *
+	 * Pharser: 移相器、相位器，可重用同步屏障；
+	 * 功能可以替换：{@link CyclicBarrier}（固定线程）循环栅栏、{@link CountDownLatch}（固定计数）倒数计数、加上分层功能
+	 *
+	 * @param taskCount 任务数量
+	 * @return Phaser
+	 */
+	public static Phaser newPhaser(final int taskCount) {
+		return new Phaser(taskCount);
 	}
 
 	/**
