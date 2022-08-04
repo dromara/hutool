@@ -281,12 +281,13 @@ public class ThreadUtil {
 	 *   //具体生产任务，可以用线程池替换
 	 *     new Thread(()->{
 	 *         try {
-	 *           //每个同学在角色待上5秒钟
-	 *             TimeUnit.SECONDS.sleep(5);
+	 *           //每个同学在教室待上几秒秒钟
+	 *             int time = ThreadLocalRandom.current().nextInt(1, 5);
+	 *             TimeUnit.SECONDS.sleep(time);
 	 *         } catch (InterruptedException e) {
 	 *             e.printStackTrace();
 	 *         }
-	 *         System.out.printf("【%s】同学，已经离开了教室%n", Thread.currentThread().getName());
+	 *         System.out.printf("同学【%s】，已经离开了教室%n", Thread.currentThread().getName());
 	 *         latch.countDown(); // 减1（每离开一个同学，减去1）,必须执行，可以放到 try...finally中
 	 *     },"同学 - " + x).start();
 	 * }
@@ -317,12 +318,13 @@ public class ThreadUtil {
 	 *   //具体生产任务，可以用线程池替换
 	 *     new Thread(()->{
 	 *         try {
-	 *           //每个同学在角色待上5秒钟
+	 *             //每个同学在教室待上几秒秒钟
+	 *           	int time = ThreadLocalRandom.current().nextInt(1, 5);
 	 *             TimeUnit.SECONDS.sleep(5);
 	 *         } catch (InterruptedException e) {
 	 *             e.printStackTrace();
 	 *         }
-	 *         System.out.printf("【%s】同学，已经离开了教室%n", Thread.currentThread().getN
+	 *         System.out.printf("同学【%s】，已经离开了教室%n", Thread.currentThread().getName());
 	 *         phaser.arrive(); // 减1 等价于countDown()方法（每离开一个同学，减去1）,必须执行，可以放到 try...finally中
 	 *     },"同学 - " + x).start();
 	 * }
