@@ -376,7 +376,7 @@ public class ThreadUtil {
 	 * </pre>
 	 *
 	 * 示例2：7个同学，集齐7个龙珠，7个同学一起召唤神龙；
-	 * 只需要：phaser.arrive(); --> phaser.arriveAndAwaitAdvance() //等待其他的线程就位
+	 * 只需要：phaser.arrive(); --&gt; phaser.arriveAndAwaitAdvance() //等待其他的线程就位
 	 * 该示例，也可以用：{@link CyclicBarrier} 进行实现
 	 *
 	 * @param taskCount 任务数量

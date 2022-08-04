@@ -520,6 +520,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * 返回一个具有去重特征的流 非并行流(顺序流)下对于重复元素，保留遇到顺序中最先出现的元素，并行流情况下不能保证具体保留哪一个
 	 * 这是一个有状态中间操作
 	 *
+	 * @param <F>          参数类型
 	 * @param keyExtractor 去重依据
 	 * @return 一个具有去重特征的流
 	 */
@@ -716,10 +717,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <A>       给定的数组类型
 	 * @return 包含此流元素的指定的数组
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
-	 *                             <p>
-	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
-	 *                             <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
-	 *                             <p>
+	 * <p>
+	 *   例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
+	 *   <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
+	 * </p>
 	 */
 	@Override
 	public <A> A[] toArray(IntFunction<A[]> generator) {
@@ -1460,7 +1461,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	/**
 	 * 按指定长度切分为双层流
 	 * <p>
-	 * 形如：[1,2,3,4,5] -> [[1,2], [3,4], [5,6]]
+	 * 形如：[1,2,3,4,5] -&gt; [[1,2], [3,4], [5,6]]
 	 * </p>
 	 *
 	 * @param batchSize 指定长度, 正整数
@@ -1482,7 +1483,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	/**
 	 * 按指定长度切分为元素为list的流
 	 * <p>
-	 * 形如：[1,2,3,4,5] -> [[1,2], [3,4], [5,6]]
+	 * 形如：[1,2,3,4,5] -&gt; [[1,2], [3,4], [5,6]]
 	 * </p>
 	 *
 	 * @param batchSize 指定长度, 正整数
