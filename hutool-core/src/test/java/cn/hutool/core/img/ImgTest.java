@@ -28,6 +28,15 @@ public class ImgTest {
 
 	@Test
 	@Ignore
+	public void compressWithBackgroundColorTest() {
+		Img.from(FileUtil.file("D:/test/before_compress.png"))
+				.setBackgroundColor(Color.WHITE)
+				.setQuality(0.8)
+				.write(FileUtil.file("D:/test/after_compress.jpg"));
+	}
+
+	@Test
+	@Ignore
 	public void writeTest() {
 		final Img from = Img.from(FileUtil.file("d:/test/81898311-001d6100-95eb-11ea-83c2-a14d7b1010bd.png"));
 		ImgUtil.write(from.getImg(), FileUtil.file("d:/test/dest.jpg"));

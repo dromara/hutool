@@ -1166,10 +1166,25 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static BufferedImage toBufferedImage(Image image, String imageType) {
+		return toBufferedImage(image, imageType, null);
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制<br>
+	 * 默认的，png图片使用 {@link BufferedImage#TYPE_INT_ARGB}模式，其它使用 {@link BufferedImage#TYPE_INT_RGB} 模式
+	 *
+	 * @param image     		{@link Image}
+	 * @param imageType 		目标图片类型，例如jpg或png等
+	 * @param backgroundColor	背景色{@link Color}
+	 * @return {@link BufferedImage}
+	 * @since 4.3.2
+	 */
+	public static BufferedImage toBufferedImage(Image image, String imageType, Color backgroundColor) {
 		final int type = IMAGE_TYPE_PNG.equalsIgnoreCase(imageType)
 				? BufferedImage.TYPE_INT_ARGB
 				: BufferedImage.TYPE_INT_RGB;
-		return toBufferedImage(image, type);
+		return toBufferedImage(image, type, backgroundColor);
 	}
 
 	/**
@@ -1192,6 +1207,30 @@ public class ImgUtil {
 		}
 
 		bufferedImage = copyImage(image, imageType);
+		return bufferedImage;
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
+	 *
+	 * @param image     {@link Image}
+	 * @param imageType 目标图片类型，{@link BufferedImage}中的常量，例如黑白等
+	 * @param backgroundColor	背景色{@link Color}
+	 * @return {@link BufferedImage}
+	 * @since 5.4.7
+	 */
+	public static BufferedImage toBufferedImage(Image image, int imageType, Color backgroundColor) {
+		BufferedImage bufferedImage;
+		if (image instanceof BufferedImage) {
+			bufferedImage = (BufferedImage) image;
+			if (imageType != bufferedImage.getType()) {
+				bufferedImage = copyImage(image, imageType, backgroundColor);
+			}
+			return bufferedImage;
+		}
+
+		bufferedImage = copyImage(image, imageType, backgroundColor);
 		return bufferedImage;
 	}
 
@@ -1562,11 +1601,27 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static boolean write(Image image, String imageType, ImageOutputStream destImageStream, float quality) throws IORuntimeException {
+		return write(image, imageType, destImageStream, quality, null);
+	}
+
+	/**
+	 * 写出图像为指定格式
+	 *
+	 * @param image           {@link Image}
+	 * @param imageType       图片类型（图片扩展名）
+	 * @param destImageStream 写出到的目标流
+	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @param backgroundColor	背景色{@link Color}
+	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
+	 * @throws IORuntimeException IO异常
+	 * @since 4.3.2
+	 */
+	public static boolean write(Image image, String imageType, ImageOutputStream destImageStream, float quality, Color backgroundColor) throws IORuntimeException {
 		if (StrUtil.isBlank(imageType)) {
 			imageType = IMAGE_TYPE_JPG;
 		}
 
-		final BufferedImage bufferedImage = toBufferedImage(image, imageType);
+		final BufferedImage bufferedImage = toBufferedImage(image, imageType, backgroundColor);
 		final ImageWriter writer = getWriter(bufferedImage, imageType);
 		return write(bufferedImage, writer, destImageStream, quality);
 	}
