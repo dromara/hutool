@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.mutable;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * 可变{@code Object}
@@ -8,7 +9,7 @@ import java.io.Serializable;
  * @param <T> 可变的类型
  * @since 3.0.1
  */
-public class MutableObj<T> implements Mutable<T>, Serializable {
+public class MutableObj<T> implements Mutable<T>, Serializable, Consumer<T> {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -48,6 +49,17 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 	@Override
 	public void set(final T value) {
 		this.value = value;
+	}
+
+	/**
+	 * 消费元素
+	 *
+	 * @param t t
+	 * @since 6.0.0
+	 */
+	@Override
+	public void accept(T t) {
+		this.value = t;
 	}
 
 	// -----------------------------------------------------------------------
