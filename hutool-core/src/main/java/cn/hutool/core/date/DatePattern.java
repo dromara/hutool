@@ -11,6 +11,42 @@ import java.util.regex.Pattern;
 /**
  * 日期格式化类，提供常用的日期格式化对象
  *
+ * <p>所有的jdk日期格式模式字符串 jdk18 date format pattern
+ * 	 <a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/time/format/DateTimeFormatter.html">
+ *     <i>jdk date format pattern （Pattern Letters and Symbols） 日期格式模式字符串</i>
+ *   </a>
+ * </p>
+ *
+ * <h2>工具类，提供格式化字符串很多，但是对于具体什么含义，不够清晰，这里进行说明：</h2>
+ * <p>
+ *     <b>常见日期格式模式字符串：</b>
+ *     <ul>
+ *         <li>yyyy-MM-dd	    			示例：2022-08-05</li>
+ *         <li>yyyy年MM月dd日				示例：2022年08月05日</li>
+ *         <li>yyyy-MM-dd HH:mm:ss  		示例：2022-08-05 12:59:59</li>
+ *         <li>yyyy-MM-dd HH:mm:ss.SSS 		示例：2022-08-05 12:59:59.559</li>
+ *         <li>yyyy-MM-dd HH:mm:ss.SSSZ 	示例：2022-08-05 12:59:59.559+0800, 年月日 时分秒 毫秒 时区</li>
+ *         <li>yyyy-MM-dd HH:mm:ss.SSSz 	示例：2022-08-05 12:59:59.559UTC+08:00,年月日 时分秒 毫秒 时区</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z' 示例：2022-08-05T12:59:59.559Z, 其中：''单引号表示转义字符，T:分隔符，Z:一般值UTC,0时区的时间含义</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ   示例：2022-08-05T11:59:59.559+0800, 其中：Z,表示时区</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss.SSSX   示例：2022-08-05T12:59:59.559+08, 其中：X:两位时区，+08表示：东8区，中国时区</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss.SSSXX  示例：2022-08-05T12:59:59.559+0800, 其中：XX:四位时区</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss.SSSXXX 示例：2022-08-05T12:59:59.559+08:00, 其中：XX:五位时区</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss        示例：2022-08-05T12:59:59+08</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ssXXX     示例：2022-08-05T12:59:59+08:00</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ssZ       示例：2022-08-05T12:59:59+0800</li>
+ *         <li>yyyy-MM-dd'T'HH:mm:ss'Z'     示例：2022-08-05T12:59:59Z</li>
+ *         <li>EEE MMM dd HH:mm:ss z yyyy   示例：周五 8月 05 12:59:00 UTC+08:00 2022</li>
+ *         <li>EEE MMM dd HH:mm:ss zzz yyyy 示例：周五 8月 05 12:59:00 UTC+08:00 2022,其中z表示UTC时区，但：1~3个z没有任何区别</li>
+ *         <li>EEE, dd MMM yyyy HH:mm:ss z  示例：周五, 05 8月 2022 12:59:59 UTC+08:00</li>
+ *      </ul>
+ * </p>
+ *
+ * 系统提供的，请查看，有大量定义好的格式化对象，可以直接使用，如：
+ * {@link DateTimeFormatter#ISO_DATE}
+ * {@link DateTimeFormatter#ISO_DATE_TIME}
+ * 查看更多，请参阅上述官方文档
+ *
  * @author Looly
  */
 public class DatePattern {
@@ -291,11 +327,11 @@ public class DatePattern {
 	public static final FastDateFormat UTC_MS_FORMAT = FastDateFormat.getInstance(UTC_MS_PATTERN, TimeZone.getTimeZone("UTC"));
 
 	/**
-	 * UTC时间：yyyy-MM-dd'T'HH:mm:ssZ
+	 * UTC时间：yyyy-MM-dd'T'HH:mm:ss.SSSZ
 	 */
 	public static final String UTC_MS_WITH_ZONE_OFFSET_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	/**
-	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssZ
+	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss.SSSZ
 	 */
 	public static final FastDateFormat UTC_MS_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
 
