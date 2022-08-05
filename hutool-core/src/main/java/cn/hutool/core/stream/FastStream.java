@@ -1,12 +1,12 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.stream.support.StreamHelper;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -61,6 +61,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		this.stream = stream;
 	}
 
+	// region Static method
 	// --------------------------------------------------------------- Static method start
 
 	/**
@@ -157,51 +158,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public static <T> FastStream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
-		Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE,
-				Spliterator.ORDERED | Spliterator.IMMUTABLE) {
-			T prev;
-			boolean started;
-			boolean finished;
-
-			@Override
-			public boolean tryAdvance(Consumer<? super T> action) {
-				Objects.requireNonNull(action);
-				if (finished) {
-					return false;
-				}
-				T t;
-				if (started) {
-					t = next.apply(prev);
-				} else {
-					t = seed;
-					started = true;
-				}
-				if (!hasNext.test(t)) {
-					prev = null;
-					finished = true;
-					return false;
-				}
-				prev = t;
-				action.accept(prev);
-				return true;
-			}
-
-			@Override
-			public void forEachRemaining(Consumer<? super T> action) {
-				Objects.requireNonNull(action);
-				if (finished) {
-					return;
-				}
-				finished = true;
-				T t = started ? next.apply(prev) : seed;
-				prev = null;
-				while (hasNext.test(t)) {
-					action.accept(t);
-					t = next.apply(t);
-				}
-			}
-		};
-		return new FastStream<>(StreamSupport.stream(spliterator, false));
+		return new FastStream<>(StreamHelper.iterate(seed, hasNext, next));
 	}
 
 	/**
@@ -279,6 +236,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	// --------------------------------------------------------------- Static method end
+	// endregion
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流
@@ -303,9 +261,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public <R> FastStream<T> filter(Function<? super T, ? extends R> mapper, R value) {
 		Objects.requireNonNull(mapper);
-		return filter(e -> Objects.equals(Opt.ofNullable(e).map(mapper).get(), value));
+		return filter(e -> Objects.equals(mapper.apply(e), value));
 	}
-
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流，断言带下标，并行流时下标永远为-1
@@ -320,7 +277,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			return filter(e -> predicate.test(e, NOT_FOUND_INDEX));
 		} else {
 			MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			return filter(e -> predicate.test(e, index.increment().get()));
+			return filter(e -> predicate.test(e, index.incrementAndGet()));
 		}
 	}
 
@@ -360,7 +317,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			return map(e -> mapper.apply(e, NOT_FOUND_INDEX));
 		} else {
 			MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			return map(e -> mapper.apply(e, index.increment().get()));
+			return map(e -> mapper.apply(e, index.incrementAndGet()));
 		}
 	}
 
@@ -395,7 +352,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			return flatMap(e -> mapper.apply(e, NOT_FOUND_INDEX));
 		} else {
 			MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			return flatMap(e -> mapper.apply(e, index.increment().get()));
+			return flatMap(e -> mapper.apply(e, index.incrementAndGet()));
 		}
 	}
 
@@ -449,7 +406,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public <R> FastStream<R> flatMapIter(Function<? super T, ? extends Iterable<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
-		return flatMap(w -> Opt.of(w).map(mapper).map(FastStream::of).orElseGet(FastStream::empty));
+		return flatMap(w -> of(mapper.apply(w)));
 	}
 
 	/**
@@ -668,7 +625,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			stream.forEach(e -> action.accept(e, NOT_FOUND_INDEX));
 		} else {
 			MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream.forEach(e -> action.accept(e, index.increment().get()));
+			stream.forEach(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
 
@@ -695,7 +652,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			stream.forEachOrdered(e -> action.accept(e, NOT_FOUND_INDEX));
 		} else {
 			MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream.forEachOrdered(e -> action.accept(e, index.increment().get()));
+			stream.forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
 
@@ -918,8 +875,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 与给定断言匹配的第一个元素
 	 */
-	public T findFirst(Predicate<? super T> predicate) {
-		return stream.filter(predicate).findFirst().orElse(null);
+	public Optional<T> findFirst(Predicate<? super T> predicate) {
+		return stream.filter(predicate).findFirst();
 	}
 
 	/**
@@ -928,7 +885,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 与给定断言匹配的第一个元素的下标，如果不存在则返回-1
 	 */
-	public Integer findFirstIdx(Predicate<? super T> predicate) {
+	public int findFirstIdx(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
 			return NOT_FOUND_INDEX;
@@ -949,13 +906,9 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 最后一个元素
 	 */
 	public Optional<T> findLast() {
-		if (isParallel()) {
-			return Optional.of(toList()).filter(CollUtil::isNotEmpty).map(l -> l.get(l.size() - 1));
-		} else {
-			MutableObj<T> last = new MutableObj<>(null);
-			forEach(last::set);
-			return Optional.ofNullable(last.get());
-		}
+		MutableObj<T> last = new MutableObj<>(null);
+		spliterator().forEachRemaining(last);
+		return Optional.ofNullable(last.get());
 	}
 
 	/**
@@ -964,21 +917,15 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 与给定断言匹配的最后一个元素
 	 */
-	public T findLast(Predicate<? super T> predicate) {
+	public Optional<T> findLast(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			List<T> list = toList();
-			final int index = ListUtil.lastIndexOf(list, predicate);
-			return index == NOT_FOUND_INDEX ? null : list.get(index);
-		} else {
-			MutableObj<T> last = new MutableObj<>(null);
-			forEach(e -> {
-				if (predicate.test(e)) {
-					last.set(e);
-				}
-			});
-			return last.get();
-		}
+		MutableObj<T> last = new MutableObj<>(null);
+		spliterator().forEachRemaining(e -> {
+			if (predicate.test(e)) {
+				last.set(e);
+			}
+		});
+		return Optional.ofNullable(last.get());
 	}
 
 	/**
@@ -987,7 +934,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 与给定断言匹配的最后一个元素的下标，如果不存在则返回-1
 	 */
-	public Integer findLastIdx(Predicate<? super T> predicate) {
+	public int findLastIdx(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
 			return NOT_FOUND_INDEX;
@@ -1008,9 +955,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 反转元素顺序
 	 */
 	public FastStream<T> reverse() {
-		List<T> list = toList();
-		Collections.reverse(list);
-		return of(list, isParallel());
+		//noinspection unchecked
+		final T[] array = (T[]) toArray();
+		ArrayUtil.reverse(array);
+		return of(array).parallel(isParallel()).onClose(stream::close);
 	}
 
 	/**
@@ -1067,6 +1015,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	/**
 	 * 返回一个无序流(无手动排序)
+	 * <p>标记一个流是不在意元素顺序的, 在并行流的某些情况下可以提高性能</p>
 	 *
 	 * @return 无序流
 	 */
@@ -1136,11 +1085,11 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param idx 下标
 	 * @return 指定下标的元素
 	 */
-	public T at(Integer idx) {
-		if (Objects.isNull(idx)) {
-			return null;
-		}
-		return CollUtil.get(toList(), idx);
+	public Optional<T> at(Integer idx) {
+		return Opt.ofNullable(idx).map(i -> {
+			//noinspection unchecked
+			return (T) ArrayUtil.get(toArray(), i);
+		}).toOptional();
 	}
 
 	/**
@@ -1227,28 +1176,29 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 与给定的可迭代对象转换成map，key为现有元素，value为给定可迭代对象迭代的元素<br>
-	 * 至少包含全部的key，如果对应位置上的value不存在，则为null
+	 * 与给定的可迭代对象转换成Map，key为现有元素，value为给定可迭代对象迭代的元素<br>
+	 * Map的大小与两个集合中较小的数量一致, 即, 只合并下标位置相同的部分
 	 *
 	 * @param other 可迭代对象
 	 * @param <R>   可迭代对象迭代的元素类型
-	 * @return map，key为现有元素，value为给定可迭代对象迭代的元素;<br>
-	 * 至少包含全部的key，如果对应位置上的value不存在，则为null;<br>
-	 * 如果key重复, 则保留最后一个关联的value;<br>
+	 * @return map，key为现有元素，value为给定可迭代对象迭代的元素
 	 */
 	public <R> Map<T, R> toZip(Iterable<R> other) {
-		// value对象迭代器
-		final Iterator<R> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
-		if (isParallel()) {
-			List<T> keyList = toList();
-			final Map<T, R> map = MapUtil.newHashMap(keyList.size());
-			for (T key : keyList) {
-				map.put(key, iterator.hasNext() ? iterator.next() : null);
-			}
-			return map;
-		} else {
-			return toMap(Function.identity(), e -> iterator.hasNext() ? iterator.next() : null);
+		final Spliterator<T> keys = spliterator();
+		final Spliterator<R> values = Opt.ofNullable(other).map(Iterable::spliterator).orElseGet(Spliterators::emptySpliterator);
+		// 获取两个Spliterator的中较小的数量
+		// 如果Spliterator经过流操作, getExactSizeIfKnown()可能会返回-1, 所以默认大小为 MapUtil.DEFAULT_INITIAL_CAPACITY
+		final int sizeIfKnown = (int) Math.max(Math.min(keys.getExactSizeIfKnown(), values.getExactSizeIfKnown()), MapUtil.DEFAULT_INITIAL_CAPACITY);
+		final Map<T, R> map = MapUtil.newHashMap(sizeIfKnown);
+		// 保存第一个Spliterator的值
+		MutableObj<T> key = new MutableObj<>();
+		// 保存第二个Spliterator的值
+		MutableObj<R> value = new MutableObj<>();
+		// 当两个Spliterator中都还有剩余元素时
+		while (keys.tryAdvance(key) && values.tryAdvance(value)) {
+			map.put(key.get(), value.get());
 		}
+		return map;
 	}
 
 	/**
@@ -1391,8 +1341,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	/**
 	 * 将 现有元素 与 给定迭代器中对应位置的元素 使用 zipper 转换为新的元素，并返回新元素组成的流<br>
-	 * 新流的数量等于旧流元素的数量<br>
-	 * 使用 zipper 转换时, 如果对应位置上已经没有other元素，则other元素为null<br>
+	 * 新流的数量为两个集合中较小的数量, 即, 只合并下标位置相同的部分<br>
 	 *
 	 * @param other  给定的迭代器
 	 * @param zipper 两个元素的合并器
@@ -1403,15 +1352,21 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public <U, R> FastStream<R> zip(Iterable<U> other,
 									BiFunction<? super T, ? super U, ? extends R> zipper) {
 		Objects.requireNonNull(zipper);
-		// 给定对象迭代器
-		final Iterator<U> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
-		Stream<T> resStream = this.stream;
-		if (isParallel()) {
-			resStream = toList().stream();
+		final Spliterator<T> keys = spliterator();
+		final Spliterator<U> values = Opt.ofNullable(other).map(Iterable::spliterator).orElseGet(Spliterators::emptySpliterator);
+		// 获取两个Spliterator的中较小的数量
+		// 如果Spliterator经过流操作, getExactSizeIfKnown()可能会返回-1, 所以默认大小为 ArrayList.DEFAULT_CAPACITY
+		final int sizeIfKnown = (int) Math.max(Math.min(keys.getExactSizeIfKnown(), values.getExactSizeIfKnown()), 10);
+		final List<R> list = new ArrayList<>(sizeIfKnown);
+		// 保存第一个Spliterator的值
+		MutableObj<T> key = new MutableObj<>();
+		// 保存第二个Spliterator的值
+		MutableObj<U> value = new MutableObj<>();
+		// 当两个Spliterator中都还有剩余元素时
+		while (keys.tryAdvance(key) && values.tryAdvance(value)) {
+			list.add(zipper.apply(key.get(), value.get()));
 		}
-		final FastStream<R> newStream = of(resStream.map(e -> zipper.apply(e, iterator.hasNext() ? iterator.next() : null)));
-		newStream.parallel(isParallel());
-		return newStream;
+		return of(list).parallel(isParallel()).onClose(stream::close);
 	}
 
 	/**
@@ -1422,40 +1377,11 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param items       放入值
 	 * @return 操作后的流
 	 */
-	@SuppressWarnings("unchecked")
-	public FastStream<T> splice(int start, int deleteCount, T... items) {
-		List<T> list = toList();
-		final int size = list.size();
-		// 从后往前查找
-		if (start < 0) {
-			start += size;
-		} else if (start >= size) {
-			// 直接在尾部追加，不删除
-			start = size;
-			deleteCount = 0;
-		}
-		// 起始位置 加上 删除的数量 超过 数据长度，需要重新计算需要删除的数量
-		if (start + deleteCount > size) {
-			deleteCount = size - start;
-		}
-
-		// 新列表的长度
-		final int newSize = size - deleteCount + items.length;
-		List<T> resList = list;
-		// 新列表的长度 大于 旧列表，创建新列表
-		if (newSize > size) {
-			resList = new ArrayList<>(newSize);
-			resList.addAll(list);
-		}
-		// 需要删除的部分
-		if (deleteCount > 0) {
-			resList.subList(start, start + deleteCount).clear();
-		}
-		// 新增的部分
-		if (items.length > 0) {
-			resList.addAll(start, Arrays.asList(items));
-		}
-		return FastStream.of(resList);
+	@SafeVarargs
+	public final FastStream<T> splice(int start, int deleteCount, T... items) {
+		return of(ListUtil.splice(toList(), start, deleteCount, items))
+				.parallel(isParallel())
+				.onClose(stream::close);
 	}
 
 	/**
@@ -1475,9 +1401,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			// 返回第一层只有单个元素的双层流，形如：[[1,2,3,4,5]]
 			return FastStream.<FastStream<T>>of(of(list, isParallel()));
 		}
-		return FastStream.iterate(0, i -> i < size, i -> i + batchSize)
+		return iterate(0, i -> i < size, i -> i + batchSize)
 				.map(skip -> of(list.subList(skip, Math.min(size, skip + batchSize)), isParallel()))
-				.parallel(isParallel());
+				.parallel(isParallel())
+				.onClose(stream::close);
 	}
 
 	/**
@@ -1491,6 +1418,78 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public FastStream<List<T>> splitList(final int batchSize) {
 		return split(batchSize).map(FastStream::toList);
+	}
+
+	/**
+	 * 保留 与指定断言 匹配时的元素, 在第一次不匹配时终止, 抛弃当前(第一个不匹配元素)及后续所有元素
+	 * <p>与 jdk9 中的 takeWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
+	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
+	 * FastStream.iterate(1, i -> i + 1)
+	 *	.parallel()
+	 *	// 顺序执行
+	 * 	.takeWhile(e -> e < 50)
+	 * 	// 并发
+	 * 	.map(e -> e + 1)
+	 * 	// 并发
+	 * 	.map(String::valueOf)
+	 * 	.toList();
+	 * }</pre>
+	 * <p>但是不建议在并行流中使用, 除非你确定 takeWhile 之后的操作能在并行流中受益很多</p>
+	 *
+	 * @param predicate 断言
+	 * @return 与指定断言匹配的元素组成的流
+	 */
+	public FastStream<T> takeWhile(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
+		return of(StreamHelper.takeWhile(stream, predicate));
+	}
+
+	/**
+	 * 保留 与指定断言 匹配的元素, 在第一次不匹配时终止, 抛弃当前(第一个不匹配元素)及后续所有元素
+	 * <p>takeWhile 的别名方法</p>
+	 *
+	 * @param predicate 断言
+	 * @return 与指定断言匹配的元素组成的流
+	 * @see #takeWhile(Predicate)
+	 */
+	public FastStream<T> limit(Predicate<? super T> predicate) {
+		return takeWhile(predicate);
+	}
+
+	/**
+	 * 删除 与指定断言 匹配的元素, 在第一次不匹配时终止, 返回当前(第一个不匹配元素)及剩余元素组成的新流
+	 * <p>与 jdk9 中的 dropWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
+	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
+	 * FastStream.iterate(1, i <= 100, i -> i + 1)
+	 *	.parallel()
+	 *	// 顺序执行
+	 * 	.dropWhile(e -> e < 50)
+	 * 	// 并发
+	 * 	.map(e -> e + 1)
+	 * 	// 并发
+	 * 	.map(String::valueOf)
+	 * 	.toList();
+	 * }</pre>
+	 * <p>但是不建议在并行流中使用, 除非你确定 dropWhile 之后的操作能在并行流中受益很多</p>
+	 *
+	 * @param predicate 断言
+	 * @return 剩余元素组成的流
+	 */
+	public FastStream<T> dropWhile(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
+		return of(StreamHelper.dropWhile(stream, predicate));
+	}
+
+	/**
+	 * 跳过 与断言匹配的元素, 在第一次不匹配时终止, 返回当前(第一个不匹配元素)及剩余元素组成的新流
+	 * <p>dropWhile 的别名方法</p>
+	 *
+	 * @param predicate 断言
+	 * @return 剩余元素组成的流
+	 * @see #dropWhile(Predicate)
+	 */
+	public FastStream<T> skip(Predicate<? super T> predicate) {
+		return dropWhile(predicate);
 	}
 
 	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<FastStream<T>> {

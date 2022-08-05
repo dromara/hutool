@@ -76,7 +76,7 @@ public class FastStreamTest {
 		Map<Integer, String> toZip = FastStream.of(orders).toZip(list);
 		Assert.assertEquals(map, toZip);
 
-		Map<Integer, String> toZipParallel = FastStream.of(orders).parallel().toZip(list);
+		Map<Integer, String> toZipParallel = FastStream.of(orders).parallel().nonNull().toZip(list);
 		Assert.assertEquals(map, toZipParallel);
 	}
 
@@ -241,10 +241,12 @@ public class FastStreamTest {
 	@Test
 	public void testAt() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
-		Assert.assertEquals(1, (Object) FastStream.of(list).at(0));
-		Assert.assertEquals(1, (Object) FastStream.of(list).at(-3));
-		Assert.assertEquals(3, (Object) FastStream.of(list).at(-1));
-		Assert.assertNull(FastStream.of(list).at(-4));
+		Assert.assertEquals(1, (Object) FastStream.of(list).at(0).orElse(null));
+		Assert.assertEquals(2, (Object) FastStream.of(list).at(1).orElse(null));
+		Assert.assertEquals(3, (Object) FastStream.of(list).at(2).orElse(null));
+		Assert.assertEquals(1, (Object) FastStream.of(list).at(-3).orElse(null));
+		Assert.assertEquals(3, (Object) FastStream.of(list).at(-1).orElse(null));
+		Assert.assertNull(FastStream.of(list).at(-4).orElse(null));
 	}
 
 	@Test
@@ -262,32 +264,44 @@ public class FastStreamTest {
 	@Test
 	public void testFindFirst() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
-		Integer find = FastStream.of(list).findFirst(Objects::nonNull);
+		Integer find = FastStream.of(list).findFirst(Objects::nonNull).orElse(null);
 		Assert.assertEquals(1, (Object) find);
 	}
 
 	@Test
 	public void testFindFirstIdx() {
 		List<Integer> list = Arrays.asList(null, 2, 3);
-		Integer idx = FastStream.of(list).findFirstIdx(Objects::nonNull);
-		Assert.assertEquals(1, (Object) idx);
+		Assert.assertEquals(1, FastStream.of(list).findFirstIdx(Objects::nonNull));
 		Assert.assertEquals(-1, (Object) FastStream.of(list).parallel().findFirstIdx(Objects::nonNull));
 	}
 
 	@Test
 	public void testFindLast() {
-		List<Integer> list = ListUtil.of(1, null, 3);
-		Integer find = FastStream.of(list).parallel().findLast(Objects::nonNull);
-		Assert.assertEquals(3, (Object) find);
+		List<Integer> list = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3);
+		Assert.assertEquals(3, (Object) FastStream.of(list).findLast().orElse(null));
 		Assert.assertEquals(3, (Object) FastStream.of(list).parallel().findLast().orElse(null));
+
+		List<Integer> list2 = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3, null);
+		Assert.assertEquals(3, (Object) FastStream.of(list2).parallel().findLast(Objects::nonNull).orElse(null));
+
+		Assert.assertNull(FastStream.of().parallel().findLast(Objects::nonNull).orElse(null));
+		Assert.assertNull(FastStream.of((Object) null).parallel().findLast(Objects::nonNull).orElse(null));
 	}
 
 	@Test
 	public void testFindLastIdx() {
 		List<Integer> list = Arrays.asList(1, null, 3);
-		Integer idx = FastStream.of(list).findLastIdx(Objects::nonNull);
-		Assert.assertEquals(2, (Object) idx);
+		Assert.assertEquals(2, (Object) FastStream.of(list).findLastIdx(Objects::nonNull));
 		Assert.assertEquals(-1, (Object) FastStream.of(list).parallel().findLastIdx(Objects::nonNull));
+	}
+
+	@Test
+	public void testReverse() {
+		final List<Integer> list = ListUtil.of(Stream.iterate(1, i -> i + 1).limit(1000).collect(Collectors.toList()));
+
+		Assert.assertEquals(ListUtil.reverseNew(list), FastStream.of(list).reverse().toList());
+		Assert.assertEquals(ListUtil.empty(), FastStream.of().reverse().toList());
+		Assert.assertEquals(ListUtil.of((Object) null), FastStream.of((Object) null).reverse().toList());
 	}
 
 	@Test
@@ -319,4 +333,59 @@ public class FastStreamTest {
 		lists = FastStream.of(list).splitList(list.size()).toList();
 		Assert.assertEquals(singletonList(list), lists);
 	}
+
+	@Test
+	public void testTakeWhile() {
+		// 1 到 10
+		final List<Integer> list = FastStream.iterate(1, i -> i <= 10, i -> i + 1).toList();
+
+		final List<String> res1 = FastStream.of(list)
+				// 舍弃 5
+				.takeWhile(e -> e < 5)
+				// 过滤奇数
+				.filter(e -> (e & 1) == 0)
+				// 反序
+				.sorted(Comparator.reverseOrder())
+				.map(String::valueOf)
+				.toList();
+		Assert.assertEquals(Arrays.asList("4", "2"), res1);
+
+		final List<Integer> res2 = FastStream.iterate(1, i -> i + 1)
+				.parallel()
+				.takeWhile(e -> e < 5)
+				.map(String::valueOf)
+				.map(Integer::valueOf)
+				.sorted(Comparator.naturalOrder())
+				.toList();
+		Assert.assertEquals(Arrays.asList(1, 2, 3, 4), res2);
+	}
+
+	@Test
+	public void testDropWhile() {
+		// 1 到 10
+		final List<Integer> list = FastStream.iterate(1, i -> i <= 10, i -> i + 1).toList();
+
+		final List<String> res1 = FastStream.of(list)
+				// 舍弃 5之前的数字
+				.dropWhile(e -> e < 5)
+				// 过滤偶数
+				.filter(e -> (e & 1) == 1)
+				// 反序
+				.sorted(Comparator.reverseOrder())
+				.map(String::valueOf)
+				.toList();
+		Assert.assertEquals(Arrays.asList("9", "7", "5"), res1);
+
+		final List<Integer> res2 = FastStream.of(list)
+				.parallel()
+				.dropWhile(e -> e < 5)
+				// 过滤偶数
+				.filter(e -> (e & 1) == 1)
+				.map(String::valueOf)
+				.map(Integer::valueOf)
+				.sorted(Comparator.naturalOrder())
+				.toList();
+		Assert.assertEquals(Arrays.asList(5, 7, 9), res2);
+	}
+
 }

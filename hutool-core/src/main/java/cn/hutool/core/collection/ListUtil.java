@@ -13,6 +13,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.PageUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -691,5 +692,52 @@ public class ListUtil {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 类似js的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice">splice</a>函数
+	 *
+	 * @param start       起始下标, 可以为负数, -1代表最后一个元素
+	 * @param deleteCount 删除个数，必须是正整数
+	 * @param items       放入值
+	 * @return 操作后的流
+	 * @since 6.0.0
+	 */
+	@SafeVarargs
+	public static <T> List<T> splice(List<T> list, int start, int deleteCount, T... items) {
+		if (CollUtil.isEmpty(list)) {
+			return zero();
+		}
+		final int size = list.size();
+		// 从后往前查找
+		if (start < 0) {
+			start += size;
+		} else if (start >= size) {
+			// 直接在尾部追加，不删除
+			start = size;
+			deleteCount = 0;
+		}
+		// 起始位置 加上 删除的数量 超过 数据长度，需要重新计算需要删除的数量
+		if (start + deleteCount > size) {
+			deleteCount = size - start;
+		}
+
+		// 新列表的长度
+		final int newSize = size - deleteCount + items.length;
+		List<T> resList = list;
+		// 新列表的长度 大于 旧列表，创建新列表
+		if (newSize > size) {
+			resList = new ArrayList<>(newSize);
+			resList.addAll(list);
+		}
+		// 需要删除的部分
+		if (deleteCount > 0) {
+			resList.subList(start, start + deleteCount).clear();
+		}
+		// 新增的部分
+		if (ArrayUtil.isNotEmpty(items)) {
+			resList.addAll(start, Arrays.asList(items));
+		}
+		return resList;
 	}
 }
