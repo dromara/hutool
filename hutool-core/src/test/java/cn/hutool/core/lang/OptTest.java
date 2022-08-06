@@ -8,13 +8,7 @@ import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -23,6 +17,12 @@ import java.util.stream.Stream;
  * @author VampireAchao
  */
 public class OptTest {
+
+	@Test
+	public void ofTest() {
+		Assert.assertTrue(Opt.of(Optional.empty()).isEmpty());
+		Assert.assertTrue(Opt.of(Optional.of(1)).isPresent());
+	}
 
 	@Test
 	public void ofBlankAbleTest() {

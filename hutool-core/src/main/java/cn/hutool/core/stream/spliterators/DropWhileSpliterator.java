@@ -1,4 +1,4 @@
-package cn.hutool.core.stream.support;
+package cn.hutool.core.stream.spliterators;
 
 import java.util.Comparator;
 import java.util.Spliterator;
@@ -6,23 +6,23 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * takeWhile 的 Spliterator
+ * dropWhile 的 Spliterator
  * <p>借鉴自StreamEx</p>
  *
  * @author emptypoint
  * @since 6.0.0
  */
-class TakeWhileSpliterator<T> implements Spliterator<T> {
+public class DropWhileSpliterator<T> implements Spliterator<T> {
 
-	static <T> TakeWhileSpliterator<T> create(Spliterator<T> source, Predicate<? super T> predicate) {
-		return new TakeWhileSpliterator<>(source, predicate);
+	public static <T> DropWhileSpliterator<T> create(Spliterator<T> source, Predicate<? super T> predicate) {
+		return new DropWhileSpliterator<>(source, predicate);
 	}
 
 	private final Spliterator<T> source;
 	private final Predicate<? super T> predicate;
-	private boolean isContinue = true;
+	private boolean isFound = false;
 
-	TakeWhileSpliterator(Spliterator<T> source, Predicate<? super T> predicate) {
+	private DropWhileSpliterator(Spliterator<T> source, Predicate<? super T> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
@@ -30,17 +30,22 @@ class TakeWhileSpliterator<T> implements Spliterator<T> {
 	@Override
 	public boolean tryAdvance(Consumer<? super T> action) {
 		boolean hasNext = true;
-		// 如果 还可以继续 并且 流中还有元素 则继续遍历
-		while (isContinue && hasNext) {
+		// 如果 还没找到 并且 流中还有元素 继续找
+		while (!isFound && hasNext) {
 			hasNext = source.tryAdvance(e -> {
-				if (predicate.test(e)) {
+				if (!predicate.test(e)) {
+					// 第一次不匹配
+					isFound = true;
 					action.accept(e);
-				} else {
-					// 终止遍历剩下的元素
-					isContinue = false;
 				}
 			});
 		}
+
+		// 对找到的元素进行后续处理
+		if (isFound) {
+			source.forEachRemaining(action);
+		}
+
 		// 该环节已经处理完成
 		return false;
 	}
@@ -52,12 +57,12 @@ class TakeWhileSpliterator<T> implements Spliterator<T> {
 
 	@Override
 	public long estimateSize() {
-		return isContinue ? source.estimateSize() : 0;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	public int characteristics() {
-		return source.characteristics() & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
+		return source.characteristics() & ~Spliterator.SIZED;
 	}
 
 	@Override
@@ -65,4 +70,3 @@ class TakeWhileSpliterator<T> implements Spliterator<T> {
 		return source.getComparator();
 	}
 }
-
