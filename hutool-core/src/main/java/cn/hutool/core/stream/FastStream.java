@@ -6,7 +6,6 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.stream.support.StreamHelper;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -669,13 +668,15 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	/**
 	 * 返回一个包含此流元素的指定的数组
+	 * <p>
+	 * 例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
+	 * <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
+	 * </p>
 	 *
 	 * @param generator 这里的IntFunction的参数是元素的个数，返回值为数组类型
 	 * @param <A>       给定的数组类型
 	 * @return 包含此流元素的指定的数组
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
-	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
-	 *                             <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
 	 */
 	@Override
 	public <A> A[] toArray(IntFunction<A[]> generator) {
