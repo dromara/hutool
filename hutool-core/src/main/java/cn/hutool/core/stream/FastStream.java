@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.stream.support.StreamHelper;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -1422,8 +1423,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <p>与 jdk9 中的 takeWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
 	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
 	 * FastStream.iterate(1, i -> i + 1)
-	 * 	.parallel()
-	 * 	// 顺序执行
+	 *	.parallel()
+	 *	// 顺序执行
 	 * 	.takeWhile(e -> e < 50)
 	 * 	// 并发
 	 * 	.map(e -> e + 1)
@@ -1458,8 +1459,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <p>与 jdk9 中的 dropWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
 	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
 	 * FastStream.iterate(1, i <= 100, i -> i + 1)
-	 * 	.parallel()
-	 * 	// 顺序执行
+	 *	.parallel()
+	 *	// 顺序执行
 	 * 	.dropWhile(e -> e < 50)
 	 * 	// 并发
 	 * 	.map(e -> e + 1)
