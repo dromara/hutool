@@ -549,11 +549,11 @@ public class RandomUtil {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}
-		final StringBuilder sb = new StringBuilder(length);
-
 		if (length < 1) {
 			length = 1;
 		}
+
+		final StringBuilder sb = new StringBuilder(length);
 		int baseLength = baseString.length();
 		for (int i = 0; i < length; i++) {
 			int number = randomInt(baseLength);
