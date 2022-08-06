@@ -575,11 +575,11 @@ public class RandomUtil {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}
-		final StringBuilder sb = new StringBuilder(length);
-
-		if (length < 1) {
+		if(length < 1){
 			length = 1;
 		}
+
+		final StringBuilder sb = new StringBuilder(length);
 		final int baseLength = baseString.length();
 		for (int i = 0; i < length; i++) {
 			final int number = randomInt(baseLength);

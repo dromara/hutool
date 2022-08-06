@@ -195,4 +195,10 @@ public class CRUDTest {
 				MapUtil.of("ids", new int[]{1, 2, 3}));
 		Assert.assertEquals(2, results.size());
 	}
+
+	@Test
+	@Ignore
+	public void findWithDotTest(){
+		db.find(Entity.of("user").set("WTUR.Other.Rg.S.WTName", "value"));
+	}
 }

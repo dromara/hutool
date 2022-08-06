@@ -193,6 +193,8 @@ public class FastStreamTest {
 
 		flatMapIter = FastStream.of(list).flatMapIter(e -> Arrays.asList(e, e * 10)).toList();
 		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
+		// 不报npe测试
+		Assert.assertTrue(FastStream.of(list).flatMapIter(e -> null).isEmpty());
 	}
 
 	@Test
@@ -310,6 +312,9 @@ public class FastStreamTest {
 		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		List<String> zip = FastStream.of(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
+
+		zip = FastStream.iterate(1, i -> i + 1).zip(list, (e1, e2) -> e1 + "." + e2).toList();
+		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 	}
 
 	@Test
@@ -386,6 +391,11 @@ public class FastStreamTest {
 				.sorted(Comparator.naturalOrder())
 				.toList();
 		Assert.assertEquals(Arrays.asList(5, 7, 9), res2);
+	}
+
+	@Test
+	public void testIsNotEmpty() {
+		Assert.assertTrue(FastStream.of(1).isNotEmpty());
 	}
 
 }

@@ -158,7 +158,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public static <T> FastStream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
-		return new FastStream<>(StreamHelper.iterate(seed, hasNext, next));
+		return new FastStream<>(StreamUtil.iterate(seed, hasNext, next));
 	}
 
 	/**
@@ -674,10 +674,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <A>       给定的数组类型
 	 * @return 包含此流元素的指定的数组
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
-	 * <p>
-	 *   例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
-	 *   <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
-	 * </p>
+	 *                             例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
+	 *                             <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
 	 */
 	@Override
 	public <A> A[] toArray(IntFunction<A[]> generator) {
@@ -1441,7 +1439,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public FastStream<T> takeWhile(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return of(StreamHelper.takeWhile(stream, predicate));
+		return of(StreamUtil.takeWhile(stream, predicate));
 	}
 
 	/**
@@ -1477,7 +1475,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public FastStream<T> dropWhile(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return of(StreamHelper.dropWhile(stream, predicate));
+		return of(StreamUtil.dropWhile(stream, predicate));
 	}
 
 	/**
@@ -1490,6 +1488,24 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public FastStream<T> skip(Predicate<? super T> predicate) {
 		return dropWhile(predicate);
+	}
+
+	/**
+	 * 流是否为空
+	 *
+	 * @return 流是否为空
+	 */
+	public boolean isEmpty() {
+		return !findAny().isPresent();
+	}
+
+	/**
+	 * 流是否不为空
+	 *
+	 * @return 流是否不为空
+	 */
+	public boolean isNotEmpty() {
+		return !isEmpty();
 	}
 
 	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<FastStream<T>> {

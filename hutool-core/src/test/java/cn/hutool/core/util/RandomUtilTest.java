@@ -76,6 +76,12 @@ public class RandomUtilTest {
 	}
 
 	@Test
+	public void randomStringOfLengthTest(){
+		final String s = RandomUtil.randomString("123", -1);
+		Assert.assertNotNull(s);
+	}
+
+	@Test
 	public void generateRandomNumberTest(){
 		final int[] ints = RandomUtil.randomPickInts(5, NumberUtil.range(5, 20));
 		Assert.assertEquals(5, ints.length);
