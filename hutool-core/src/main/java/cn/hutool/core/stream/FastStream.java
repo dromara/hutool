@@ -337,8 +337,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 扩散流操作，可能影响流元素个数，将原有流元素执行mapper操作，并过滤{@code null}元素, 返回多个流所有非空元素组成的流<br>
-	 * 这是一个无状态中间操作
+	 * 扩散流操作，可能影响流元素个数，将原有流元素执行mapper操作，返回多个流所有元素组成的流<br>
+	 * 这是一个无状态中间操作<br>
 	 * 例如，将users里所有user的id和parentId组合在一起，形成一个新的流:
 	 * <pre>{@code
 	 *     FastStream<Long> ids = FastStream.of(users).flatMap(user -> FastStream.of(user.getId(), user.getParentId()));
@@ -409,7 +409,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	/**
 	 * 扩散流操作，可能影响流元素个数，将原有流元素执行mapper操作, 转换为迭代器元素,
-	 * 并过滤迭代器中的 {@code null} 元素，最后返回所有迭代器的所有非空元素组成的流<br>
+	 * 最后返回所有迭代器的所有元素组成的流<br>
 	 * 这是一个无状态中间操作<br>
 	 * 例如，将users里所有user的id和parentId组合在一起，形成一个新的流:
 	 * <pre>{@code
@@ -425,6 +425,17 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		return flatMap(w -> of(mapper.apply(w)));
 	}
 
+	/**
+	 * 扩散流操作，可能影响流元素个数，对过滤后的非{@code null}元素执行mapper操作，转换为迭代器,
+	 * 并过滤迭代器中为{@code null}的元素, 返回所有迭代器的所有非空元素组成的流<br>
+	 * 这是一个无状态中间操作<br>
+	 *
+	 * @param mapper 操作，返回流
+	 * @param <R>    拆分后流的元素类型
+	 * @return 返回叠加拆分操作后的流
+	 * @see #flat(Function)
+	 * @see #nonNull()
+	 */
 	public <R> FastStream<R> flatNonNull(Function<? super T, ? extends Iterable<? extends R>> mapper) {
 		return nonNull().flat(mapper).nonNull();
 	}
