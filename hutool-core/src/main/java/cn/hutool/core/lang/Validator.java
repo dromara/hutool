@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -11,6 +12,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.IdcardUtil;
 
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1194,6 +1196,34 @@ public class Validator {
 	 */
 	public static void validateLength(CharSequence str, int min, int max, String errorMsg) {
 		int len = StrUtil.length(str);
+		if (len < min || len > max) {
+			throw new ValidateException(errorMsg);
+		}
+	}
+
+	/**
+	 * 验证字符串的字节长度是否符合要求，默认采用"utf-8"编码
+	 *
+	 * @param str      字符串
+	 * @param min      最小长度
+	 * @param max      最大长度
+	 * @param errorMsg 错误消息
+	 */
+	public static void validateByteLength(CharSequence str, int min, int max, String errorMsg) {
+		validateByteLength(str, min, max, CharsetUtil.UTF_8, errorMsg);
+	}
+
+	/**
+	 * 验证字符串的字节长度是否符合要求
+	 *
+	 * @param str      字符串
+	 * @param min      最小长度
+	 * @param max      最大长度
+	 * @param charset  字符编码
+	 * @param errorMsg 错误消息
+	 */
+	public static void validateByteLength(CharSequence str, int min, int max, Charset charset, String errorMsg) {
+		int len = StrUtil.byteLength(str, charset);
 		if (len < min || len > max) {
 			throw new ValidateException(errorMsg);
 		}

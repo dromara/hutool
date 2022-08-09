@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -271,6 +273,22 @@ public class ValidatorTest {
 		String s1 = "abc";
 		Assert.assertThrows(ValidateException.class, ()->
 				Validator.validateLength(s1, 6, 8, "请输入6到8位的字符！"));
+	}
+
+	@Test
+	public void validateByteLengthTest() {
+		String s1 = "abc";
+		int len1 = StrUtil.byteLength(s1, CharsetUtil.UTF_8);
+		Assert.assertEquals(len1, 3);
+
+		String s2 = "我ab";
+		int len2 = StrUtil.byteLength(s2, CharsetUtil.UTF_8);
+		Assert.assertEquals(len2, 5);
+
+		//一个汉字在utf-8编码下，占3个字节。
+		Assert.assertThrows(ValidateException.class, ()->
+				Validator.validateByteLength(s2, 1, 3, "您输入的字符串长度超出限制！")
+		);
 	}
 
 	@Test
