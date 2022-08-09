@@ -236,4 +236,88 @@ public class TreeUtil {
 	public static <E> Tree<E> createEmptyNode(final E id) {
 		return new Tree<E>().setId(id);
 	}
+
+	/**
+	 * 深度优先,遍历森林,将森林转换为数组
+	 *
+	 * @param forest 森林
+	 * @param <E>    节点ID类型
+	 * @return 森林所有节点列表
+	 */
+	public static <E> List<Tree<E>> deepFirstForestConvertToList(List<Tree<E>> forest) {
+		if (CollectionUtil.isEmpty(forest)) {
+			return null;
+		}
+		List<Tree<E>> list = new ArrayList<>();
+		forest.forEach(root -> list.addAll(Objects.requireNonNull(deepFirstTreeConvertToList(root))));
+		return list;
+	}
+
+	/**
+	 * 广度优先,遍历森林,将森林转换为数组
+	 *
+	 * @param forest 森林
+	 * @param <E>    节点ID类型
+	 * @return 森林所有节点列表
+	 */
+	public static <E> List<Tree<E>> broadFirstForestConvertToList(List<Tree<E>> forest) {
+		if (CollectionUtil.isEmpty(forest)) {
+			return null;
+		}
+		List<Tree<E>> list = new ArrayList<>();
+		forest.forEach(root -> list.addAll(Objects.requireNonNull(broadFirstTreeConvertToList(root))));
+		return list;
+	}
+
+
+	/**
+	 * 深度优先,遍历树,将树换为数组
+	 *
+	 * @param root 树的根节点
+	 * @param <E>  节点ID类型
+	 * @return 树所有节点列表
+	 */
+	public static <E> List<Tree<E>> deepFirstTreeConvertToList(Tree<E> root) {
+		if (Objects.isNull(root)) {
+			return null;
+		}
+
+		// 入栈,FILO
+		List<Tree<E>> list = new ArrayList<>();
+		Stack<Tree<E>> stack = new Stack<>();
+		stack.add(root);
+		while (!stack.isEmpty()) {
+			Tree<E> node = stack.pop();
+			list.add(node);
+			if (node.hasChild()) {
+				node.getChildren().forEach(stack::push);
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 深度优先,遍历树,将树转换为数组
+	 *
+	 * @param root 树的根节点
+	 * @param <E>  节点ID类型
+	 * @return 树所有节点列表
+	 */
+	public static <E> List<Tree<E>> broadFirstTreeConvertToList(Tree<E> root) {
+		if (Objects.isNull(root)) {
+			return null;
+		}
+
+		// 加入FIFO队列
+		List<Tree<E>> list = new ArrayList<>();
+		Queue<Tree<E>> queue = new LinkedList<>();
+		queue.offer(root);
+		while (!queue.isEmpty()) {
+			Tree<E> node = queue.poll();
+			if (node.hasChild()) {
+				node.getChildren().forEach(queue::offer);
+			}
+		}
+		return list;
+	}
 }
