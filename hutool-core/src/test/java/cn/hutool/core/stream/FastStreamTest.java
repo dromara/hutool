@@ -24,6 +24,12 @@ public class FastStreamTest {
 	}
 
 	@Test
+	public void testGenerate() {
+		List<Integer> list = FastStream.generate(() -> 0).limit(3).toList();
+		Assert.assertEquals(Arrays.asList(0, 0, 0), list);
+	}
+
+	@Test
 	public void testOf() {
 		Assert.assertEquals(3, FastStream.of(Arrays.asList(1, 2, 3), true).count());
 		Assert.assertEquals(3, FastStream.of(1, 2, 3).count());
@@ -141,6 +147,13 @@ public class FastStreamTest {
 	}
 
 	@Test
+	public void testMapNonNull() {
+		List<Integer> list = Arrays.asList(1, 2, 3, null);
+		List<String> mapNonNull = FastStream.of(list).mapNonNull(String::valueOf).toList();
+		Assert.assertEquals(Arrays.asList("1", "2", "3"), mapNonNull);
+	}
+
+	@Test
 	public void testDistinct() {
 		List<Integer> list = ListUtil.of(3, 2, 2, 1, null, null);
 		for (int i = 0; i < 1000; i++) {
@@ -174,6 +187,11 @@ public class FastStreamTest {
 		FastStream.FastStreamBuilder<String> builder = FastStream.builder();
 		FastStream.of(list).forEachOrderedIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
+
+		FastStream.FastStreamBuilder<String> streamBuilder = FastStream.builder();
+		FastStream.of(list).parallel().forEachOrderedIdx((e, i) -> streamBuilder.accept(i + 1 + "." + e));
+		Assert.assertEquals(Arrays.asList("0.dromara", "0.hutool", "0.sweet"), streamBuilder.build().toList());
+
 	}
 
 	@Test
@@ -186,22 +204,22 @@ public class FastStreamTest {
 	}
 
 	@Test
-	public void testFlatIter() {
+	public void testFlat() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 
 		// 一个元素 扩散为 多个元素(迭代器)
-		List<Integer> flatMapIter = FastStream.of(list).flatIter(e -> Arrays.asList(e, e * 10)).toList();
-		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
+		List<Integer> flat = FastStream.of(list).flat(e -> Arrays.asList(e, e * 10)).toList();
+		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flat);
 
 		// 过滤迭代器为null的元素
-		flatMapIter = FastStream.of(list).<Integer>flatIter(e -> null).toList();
-		Assert.assertEquals(Collections.emptyList(), flatMapIter);
+		flat = FastStream.of(list).<Integer>flat(e -> null).toList();
+		Assert.assertEquals(Collections.emptyList(), flat);
 
 		// 自动过滤null元素
-		flatMapIter = FastStream.of(list).flatIter(e -> Arrays.asList(e, null)).toList();
-		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
+		flat = FastStream.of(list).flat(e -> Arrays.asList(e, e > 2 ? e : null)).toList();
+		Assert.assertEquals(ListUtil.of(1, null, 2, null, 3, 3), flat);
 		// 不报npe测试
-		Assert.assertTrue(FastStream.of(list).flatMapIter(e -> null).isEmpty());
+		Assert.assertTrue(FastStream.of(list).flat(e -> null).isEmpty());
 	}
 
 	@Test
@@ -238,6 +256,8 @@ public class FastStreamTest {
 		List<Integer> list = Arrays.asList(1, 2);
 		List<Integer> push = FastStream.of(list).push(3).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), push);
+
+		Assert.assertEquals(Arrays.asList(1, 2, 3, 4), FastStream.of(list).push(3, 4).toList());
 	}
 
 	@Test
@@ -245,6 +265,8 @@ public class FastStreamTest {
 		List<Integer> list = Arrays.asList(2, 3);
 		List<Integer> unshift = FastStream.of(list).unshift(1).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), unshift);
+
+		Assert.assertEquals(Arrays.asList(1, 2, 2, 3), FastStream.of(list).unshift(1, 2).toList());
 	}
 
 	@Test

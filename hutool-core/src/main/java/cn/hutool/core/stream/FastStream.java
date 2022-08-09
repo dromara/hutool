@@ -290,21 +290,6 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 过滤掉 元素 指定字段值为 {@code null} 的元素, 返回剩下元素组成的流<br>
-	 * <pre>{@code
-	 * // 例如, 过滤 id为空 的元素
-	 * .of(userList).nonNull(UserEntity::getId)...
-	 * }</pre>
-	 * 这是一个无状态中间操作<br>
-	 *
-	 * @return 过滤后的流
-	 */
-	public <R> FastStream<T> nonNull(Function<? super T, ? extends R> mapper) {
-		Objects.requireNonNull(mapper);
-		return new FastStream<>(stream.filter(e -> Objects.nonNull(mapper.apply(e))));
-	}
-
-	/**
 	 * 返回与指定函数将元素作为参数执行的结果组成的流
 	 * 这是一个无状态中间操作
 	 *
@@ -330,8 +315,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 新元素组成的流
 	 */
 	public <R> FastStream<R> mapNonNull(Function<? super T, ? extends R> mapper) {
-		final Stream<R> mapStream = this.stream.map(mapper);
-		return new FastStream<>(mapStream.filter(Objects::nonNull));
+		return nonNull().<R>map(mapper).nonNull();
 	}
 
 	/**
@@ -366,7 +350,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@Override
 	public <R> FastStream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
-		return new FastStream<>(stream.flatMap(mapper).filter(Objects::nonNull));
+		return new FastStream<>(stream.flatMap(mapper));
 	}
 
 	/**
@@ -429,16 +413,20 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * 这是一个无状态中间操作<br>
 	 * 例如，将users里所有user的id和parentId组合在一起，形成一个新的流:
 	 * <pre>{@code
-	 *     FastStream<Long> ids = FastStream.of(users).flatMap(user -> FastStream.of(user.getId(), user.getParentId()));
+	 *     FastStream<Long> ids = FastStream.of(users).flat(user -> FastStream.of(user.getId(), user.getParentId()));
 	 * }</pre>
 	 *
 	 * @param mapper 操作，返回可迭代对象
 	 * @param <R>    拆分后流的元素类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <R> FastStream<R> flatIter(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+	public <R> FastStream<R> flat(Function<? super T, ? extends Iterable<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
 		return flatMap(w -> of(mapper.apply(w)));
+	}
+
+	public <R> FastStream<R> flatNonNull(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+		return nonNull().flat(mapper).nonNull();
 	}
 
 	/**
@@ -1457,8 +1445,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <p>与 jdk9 中的 takeWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
 	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
 	 * FastStream.iterate(1, i -> i + 1)
-	 *	.parallel()
-	 *	// 顺序执行
+	 * 	.parallel()
+	 * 	// 顺序执行
 	 * 	.takeWhile(e -> e < 50)
 	 * 	// 并发
 	 * 	.map(e -> e + 1)
@@ -1476,25 +1464,14 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		return of(StreamUtil.takeWhile(stream, predicate));
 	}
 
-	/**
-	 * 保留 与指定断言 匹配的元素, 在第一次不匹配时终止, 抛弃当前(第一个不匹配元素)及后续所有元素
-	 * <p>takeWhile 的别名方法</p>
-	 *
-	 * @param predicate 断言
-	 * @return 与指定断言匹配的元素组成的流
-	 * @see #takeWhile(Predicate)
-	 */
-	public FastStream<T> limit(Predicate<? super T> predicate) {
-		return takeWhile(predicate);
-	}
 
 	/**
 	 * 删除 与指定断言 匹配的元素, 在第一次不匹配时终止, 返回当前(第一个不匹配元素)及剩余元素组成的新流
 	 * <p>与 jdk9 中的 dropWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
 	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
 	 * FastStream.iterate(1, i <= 100, i -> i + 1)
-	 *	.parallel()
-	 *	// 顺序执行
+	 * 	.parallel()
+	 * 	// 顺序执行
 	 * 	.dropWhile(e -> e < 50)
 	 * 	// 并发
 	 * 	.map(e -> e + 1)
@@ -1510,18 +1487,6 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	public FastStream<T> dropWhile(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return of(StreamUtil.dropWhile(stream, predicate));
-	}
-
-	/**
-	 * 跳过 与断言匹配的元素, 在第一次不匹配时终止, 返回当前(第一个不匹配元素)及剩余元素组成的新流
-	 * <p>dropWhile 的别名方法</p>
-	 *
-	 * @param predicate 断言
-	 * @return 剩余元素组成的流
-	 * @see #dropWhile(Predicate)
-	 */
-	public FastStream<T> skip(Predicate<? super T> predicate) {
-		return dropWhile(predicate);
 	}
 
 	/**
