@@ -314,6 +314,7 @@ public class TreeUtil {
 		queue.offer(root);
 		while (!queue.isEmpty()) {
 			Tree<E> node = queue.poll();
+            list.add(node);
 			if (node.hasChild()) {
 				node.getChildren().forEach(queue::offer);
 			}
