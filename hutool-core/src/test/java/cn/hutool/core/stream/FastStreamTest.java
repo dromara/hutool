@@ -186,12 +186,19 @@ public class FastStreamTest {
 	}
 
 	@Test
-	public void testFlatMapIter() {
+	public void testFlatIter() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
-		List<Integer> flatMapIter = FastStream.of(list).<Integer>flatMapIter(e -> null).toList();
+
+		// 一个元素 扩散为 多个元素(迭代器)
+		List<Integer> flatMapIter = FastStream.of(list).flatIter(e -> Arrays.asList(e, e * 10)).toList();
+		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
+
+		// 过滤迭代器为null的元素
+		flatMapIter = FastStream.of(list).<Integer>flatIter(e -> null).toList();
 		Assert.assertEquals(Collections.emptyList(), flatMapIter);
 
-		flatMapIter = FastStream.of(list).flatMapIter(e -> Arrays.asList(e, e * 10)).toList();
+		// 自动过滤null元素
+		flatMapIter = FastStream.of(list).flatIter(e -> Arrays.asList(e, null)).toList();
 		Assert.assertEquals(ListUtil.of(1, 10, 2, 20, 3, 30), flatMapIter);
 		// 不报npe测试
 		Assert.assertTrue(FastStream.of(list).flatMapIter(e -> null).isEmpty());
