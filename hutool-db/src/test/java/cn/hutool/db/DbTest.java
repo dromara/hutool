@@ -133,4 +133,11 @@ public class DbTest {
 			return ps;
 		}), new EntityListHandler());
 	}
+
+	@Test
+	@Ignore
+	public void findWithDotTest() {
+		// 当字段带有点时，导致被拆分分别wrap了，因此此时关闭自动包装即可
+		Db.of().disableWrapper().find(Entity.of("user").set("a.b", "1"));
+	}
 }
