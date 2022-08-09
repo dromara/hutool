@@ -685,6 +685,7 @@ public class ListUtil {
 	 * @param otherList 其它列表
 	 * @return 此列表
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public static <T> List<T> addAllIfNotContains(final List<T> list, final List<T> otherList) {
 		for (final T t : otherList) {
 			if (false == list.contains(t)) {
@@ -695,12 +696,13 @@ public class ListUtil {
 	}
 
 	/**
+	 * 通过删除或替换现有元素或者原地添加新的元素来修改列表，并以列表形式返回被修改的内容。此方法不会改变原列表。
 	 * 类似js的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice">splice</a>函数
 	 *
-	 * @param start       起始下标, 可以为负数, -1代表最后一个元素
+	 * @param start       指定修改的开始位置（从 0 计数）, 可以为负数, -1代表最后一个元素
 	 * @param deleteCount 删除个数，必须是正整数
-	 * @param items       放入值
-	 * @return 操作后的流
+	 * @param items       放入的元素
+	 * @return 结果列表
 	 * @since 6.0.0
 	 */
 	@SafeVarargs

@@ -1063,13 +1063,10 @@ public class Validator {
 		Assert.notNull(value);
 		Assert.notNull(start);
 		Assert.notNull(end);
-		int c1 = DateUtil.compare(value, start);
-		int c2 = DateUtil.compare(value, end);
 
-		if(c1 >= 0 && c2 <= 0){
-			return;
+		if(false == DateUtil.isIn(value, start, end)){
+			throw new ValidateException(errorMsg);
 		}
-		throw new ValidateException(errorMsg);
 	}
 
 	/**

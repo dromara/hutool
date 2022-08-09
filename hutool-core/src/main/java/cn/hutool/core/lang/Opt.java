@@ -137,7 +137,7 @@ public class Opt<T> {
 	 */
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public static <T> Opt<T> of(Optional<T> optional) {
-		return ofNullable(optional).flattedMap(Function.identity());
+		return ofNullable(optional.orElse(null));
 	}
 
 	/**

@@ -938,7 +938,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public Optional<T> findLast() {
 		MutableObj<T> last = new MutableObj<>(null);
-		spliterator().forEachRemaining(last);
+		spliterator().forEachRemaining(last::set);
 		return Optional.ofNullable(last.get());
 	}
 
@@ -1226,7 +1226,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		// 保存第二个Spliterator的值
 		MutableObj<R> value = new MutableObj<>();
 		// 当两个Spliterator中都还有剩余元素时
-		while (keys.tryAdvance(key) && values.tryAdvance(value)) {
+		while (keys.tryAdvance(key::set) && values.tryAdvance(value::set)) {
 			map.put(key.get(), value.get());
 		}
 		return map;
@@ -1394,7 +1394,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		// 保存第二个Spliterator的值
 		MutableObj<U> value = new MutableObj<>();
 		// 当两个Spliterator中都还有剩余元素时
-		while (keys.tryAdvance(key) && values.tryAdvance(value)) {
+		while (keys.tryAdvance(key::set) && values.tryAdvance(value::set)) {
 			list.add(zipper.apply(key.get(), value.get()));
 		}
 		return of(list).parallel(isParallel()).onClose(stream::close);

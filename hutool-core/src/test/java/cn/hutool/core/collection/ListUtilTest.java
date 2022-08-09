@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ListUtilTest {
 
@@ -265,5 +266,17 @@ public class ListUtilTest {
 		// padding null 后加入值
 		ListUtil.setOrPadding(list, 3, "a");
 		Assert.assertEquals(4, list.size());
+	}
+
+	@Test
+	public void ofCopyOnWriteTest(){
+		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite(ListUtil.of("a", "b"));
+		Assert.assertEquals(2, strings.size());
+	}
+
+	@Test
+	public void ofCopyOnWriteTest2(){
+		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite("a", "b");
+		Assert.assertEquals(2, strings.size());
 	}
 }

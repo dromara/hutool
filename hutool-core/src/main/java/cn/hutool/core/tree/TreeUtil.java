@@ -6,8 +6,12 @@ import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * 树工具类
@@ -245,7 +249,7 @@ public class TreeUtil {
 	 * @return 森林所有节点列表
 	 */
 	public static <E> List<Tree<E>> deepFirstForestConvertToList(List<Tree<E>> forest) {
-		if (CollectionUtil.isEmpty(forest)) {
+		if (CollUtil.isEmpty(forest)) {
 			return null;
 		}
 		List<Tree<E>> list = new ArrayList<>();
@@ -261,7 +265,7 @@ public class TreeUtil {
 	 * @return 森林所有节点列表
 	 */
 	public static <E> List<Tree<E>> broadFirstForestConvertToList(List<Tree<E>> forest) {
-		if (CollectionUtil.isEmpty(forest)) {
+		if (CollUtil.isEmpty(forest)) {
 			return null;
 		}
 		List<Tree<E>> list = new ArrayList<>();
@@ -297,7 +301,7 @@ public class TreeUtil {
 	}
 
 	/**
-	 * 深度优先,遍历树,将树转换为数组
+	 * 广度优先,遍历树,将树转换为数组
 	 *
 	 * @param root 树的根节点
 	 * @param <E>  节点ID类型
