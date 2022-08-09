@@ -699,11 +699,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 返回一个包含此流元素的指定的数组
-	 * <p>
-	 * 例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
+	 * 返回一个包含此流元素的指定的数组，例如以下代码编译正常，但运行时会抛出 {@link ArrayStoreException}
 	 * <pre>{@code String[] strings = Stream.<Integer>builder().add(1).build().toArray(String[]::new); }</pre>
-	 * </p>
 	 *
 	 * @param generator 这里的IntFunction的参数是元素的个数，返回值为数组类型
 	 * @param <A>       给定的数组类型
