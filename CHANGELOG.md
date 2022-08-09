@@ -10,6 +10,7 @@
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）
 * 【core   】     修复RandomUtil#randomString 入参length为负数时报错问题（issue#2515@Github）
 * 【core   】     修复SecureUtil传入null的key抛出异常问题（pr#2521@Github）
+* 【core   】     修复UrlBuilder的toURI方法将url重复编码（issue#2503@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -132,4 +132,10 @@ public class DbTest {
 			return ps;
 		}), new EntityListHandler());
 	}
+
+	@Test
+	@Ignore
+	public void findWithDotTest() throws SQLException {
+		Db.use().find(Entity.create("user").set("a.b", "1"));
+	}
 }
