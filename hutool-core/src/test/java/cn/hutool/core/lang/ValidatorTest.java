@@ -1,10 +1,13 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.regex.PatternPool;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Date;
 
 /**
  * 验证器单元测试
@@ -246,6 +249,28 @@ public class ValidatorTest {
 
 		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL, content));
 		Assert.assertTrue(Validator.isMatchRegex(PatternPool.URL_HTTP, content));
+	}
+
+	@Test
+	public void validateBetweenTest(){
+		Date value = DateUtil.parse("2022-08-09 21:22:00");
+		final Date start = DateUtil.parse("2022-08-01 21:22:00");
+		final Date end = DateUtil.parse("2022-09-09 21:22:00");
+
+		Validator.validateBetween(value, start, end, "您选择的日期超出规定范围!");
+		Assert.assertTrue(true);
+
+		final Date value2 = DateUtil.parse("2023-08-09 21:22:00");
+		Assert.assertThrows(ValidateException.class, ()->
+				Validator.validateBetween(value2, start, end, "您选择的日期超出规定范围!")
+		);
+	}
+
+	@Test
+	public void validateLengthTest() {
+		String s1 = "abc";
+		Assert.assertThrows(ValidateException.class, ()->
+				Validator.validateLength(s1, 6, 8, "请输入6到8位的字符！"));
 	}
 
 	@Test

@@ -11,6 +11,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.IdcardUtil;
 
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1047,6 +1048,29 @@ public class Validator {
 	}
 
 	/**
+	 * 检查给定的日期是否在指定范围内
+	 *
+	 * @param value    值
+	 * @param start      最小值（包含）
+	 * @param end      最大值（包含）
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException 验证异常
+	 * @author ZRH 455741807@qq.com
+	 */
+	public static void validateBetween(final Date value, final Date start, final Date end, final String errorMsg) {
+		Assert.notNull(value);
+		Assert.notNull(start);
+		Assert.notNull(end);
+		int c1 = DateUtil.compare(value, start);
+		int c2 = DateUtil.compare(value, end);
+
+		if(c1 >= 0 && c2 <= 0){
+			return;
+		}
+		throw new ValidateException(errorMsg);
+	}
+
+	/**
 	 * 是否是有效的统一社会信用代码
 	 * <pre>
 	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
@@ -1159,5 +1183,19 @@ public class Validator {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
+	}
+
+	/**
+	 * 验证字符的长度是否符合要求
+	 * @param str      字符串
+	 * @param min      最小长度
+	 * @param max      最大长度
+	 * @param errorMsg 错误消息
+	 */
+	public static void validateLength(CharSequence str, int min, int max, String errorMsg) {
+		int len = StrUtil.length(str);
+		if (len < min || len > max) {
+			throw new ValidateException(errorMsg);
+		}
 	}
 }
