@@ -128,6 +128,19 @@ public class Opt<T> {
 	}
 
 	/**
+	 * 根据 {@link Optional} 构造 {@code Opt}
+	 *
+	 * @param optional optional
+	 * @param <T>      包裹的元素类型
+	 * @return 一个包裹里元素可能为空的 {@code Opt}
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	public static <T> Opt<T> of(Optional<T> optional) {
+		return ofNullable(optional).flattedMap(Function.identity());
+	}
+
+	/**
 	 * 包裹里实际的元素
 	 */
 	private final T value;
