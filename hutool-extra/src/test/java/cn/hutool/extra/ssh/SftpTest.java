@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -63,5 +65,15 @@ public class SftpTest {
 	@Ignore
 	public void delDirTest() {
 		sshjSftp.delDir("/home/test/temp");
+	}
+
+	@Test
+	@Ignore
+	public void mkdirAndUploadTest() {
+		Sftp sftp = new Sftp("ip",22,"user","pwd");
+		String dir = "/home/test/temp/a/b";
+		//sftp.upload(dir,true, "123.ss", new ByteArrayInputStream("123".getBytes(StandardCharsets.UTF_8)));
+		sftp.upload(dir,true,new File("C:\\Users\\akwangl\\Downloads\\temp\\辽宁_20190718_104324.CIME"));
+
 	}
 }

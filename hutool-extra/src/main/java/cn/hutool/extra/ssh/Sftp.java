@@ -17,6 +17,7 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -507,6 +508,39 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
+	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与file文件名相同。
+	 * 覆盖模式
+	 *
+	 * @param destPath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param mkdirDestPath 为 true时，如果服务端路径不存在，则创建
+	 * @param file     需要上传的文件
+	 * @return 是否成功
+	 */
+	public boolean upload(String destPath, boolean mkdirDestPath, File file) {
+		if (mkdirDestPath && !containsFile(destPath)) {
+			this.mkDirs(destPath);
+		}
+		put(FileUtil.getAbsolutePath(file), destPath);
+		return true;
+	}
+
+	/**
+	 * 是否包含该文件
+	 *
+	 * @param fileDir 文件绝对路径
+	 * @return true:包含 false:不包含
+	 * @author youyongkun
+	 * @since 5.7.18
+	 */
+	public boolean containsFile(String fileDir) {
+		try {
+			channel.lstat(fileDir);
+			return true;
+		} catch (SftpException e) {
+			return false;
+		}
+	}
+	/**
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
@@ -526,7 +560,31 @@ public class Sftp extends AbstractFtp {
 		put(fileStream, destPath, null, Mode.OVERWRITE);
 		return true;
 	}
-
+	/**
+	 * 上传文件到指定目录，可选：
+	 *
+	 * <pre>
+	 * 1. path为null或""上传到当前路径
+	 * 2. path为相对路径则相对于当前路径的子路径
+	 * 3. path为绝对路径则上传到此路径
+	 * </pre>
+	 *
+	 * @param destPath   服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param mkdirDestPath 为 true时，如果服务端路径不存在，则创建
+	 * @param fileName   文件名
+	 * @param fileStream 文件流
+	 * @return 是否上传成功
+	 * @since 5.7.16
+	 */
+	public boolean upload(String destPath, boolean mkdirDestPath, String fileName, InputStream fileStream) {
+		destPath = StrUtil.addSuffixIfNot(destPath, StrUtil.SLASH);
+		if (mkdirDestPath && !containsFile(destPath)) {
+			this.mkDirs(destPath);
+		}
+		destPath += StrUtil.removePrefix(fileName, StrUtil.SLASH);
+		put(fileStream, destPath, null, Mode.OVERWRITE);
+		return true;
+	}
 	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
 	 *
