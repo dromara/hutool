@@ -1,6 +1,7 @@
 package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -74,6 +75,17 @@ public class TreeTest {
 		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.walk((tr)-> ids.add(tr.getId()));
 
+		Assert .assertEquals(7, ids.size());
+	}
+
+	@Test
+	public void walkBroadFirstTest(){
+		final List<String> ids = new ArrayList<>();
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		Console.log(tree);
+		tree.walk((tr)-> ids.add(tr.getId()), true);
+
+		Console.log(ids);
 		Assert .assertEquals(7, ids.size());
 	}
 

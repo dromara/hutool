@@ -11,7 +11,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -187,16 +190,47 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	}
 
 	/**
-	 * 递归树并处理子树下的节点：
+	 * 递归树并处理子树下的节点，采用深度优先遍历方式。
 	 *
 	 * @param consumer 节点处理器
 	 * @since 5.7.16
 	 */
 	public void walk(final Consumer<Tree<T>> consumer) {
-		consumer.accept(this);
-		final List<Tree<T>> children = getChildren();
-		if (CollUtil.isNotEmpty(children)) {
-			children.forEach((tree) -> tree.walk(consumer));
+		walk(consumer, false);
+	}
+
+	/**
+	 * 递归树并处理子树下的节点
+	 *
+	 * @param consumer 节点处理器
+	 * @param broadFirst 是否广度优先遍历
+	 * @since 6.0.0
+	 */
+	public void walk(final Consumer<Tree<T>> consumer, final boolean broadFirst) {
+		if (broadFirst) { // 广度优先遍历
+			// 加入FIFO队列
+			final Queue<Tree<T>> queue = new LinkedList<>();
+			queue.offer(this);
+			while (false == queue.isEmpty()) {
+				final Tree<T> node = queue.poll();
+				consumer.accept(node);
+				final List<Tree<T>> children = node.getChildren();
+				if (CollUtil.isNotEmpty(children)) {
+					children.forEach(queue::offer);
+				}
+			}
+		} else { // 深度优先遍历
+			// 入栈,FILO
+			final Stack<Tree<T>> stack = new Stack<>();
+			stack.add(this);
+			while (false == stack.isEmpty()) {
+				final Tree<T> node = stack.pop();
+				consumer.accept(node);
+				final List<Tree<T>> children = node.getChildren();
+				if (CollUtil.isNotEmpty(children)) {
+					children.forEach(stack::push);
+				}
+			}
 		}
 	}
 

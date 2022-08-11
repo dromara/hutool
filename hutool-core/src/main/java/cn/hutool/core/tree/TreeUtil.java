@@ -6,12 +6,9 @@ import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
-import java.util.Stack;
 
 /**
  * 树工具类
@@ -242,87 +239,20 @@ public class TreeUtil {
 	}
 
 	/**
-	 * 深度优先,遍历森林,将森林转换为数组
-	 *
-	 * @param forest 森林
-	 * @param <E>    节点ID类型
-	 * @return 森林所有节点列表
-	 */
-	public static <E> List<Tree<E>> deepFirstForestConvertToList(List<Tree<E>> forest) {
-		if (CollUtil.isEmpty(forest)) {
-			return null;
-		}
-		List<Tree<E>> list = new ArrayList<>();
-		forest.forEach(root -> list.addAll(Objects.requireNonNull(deepFirstTreeConvertToList(root))));
-		return list;
-	}
-
-	/**
-	 * 广度优先,遍历森林,将森林转换为数组
-	 *
-	 * @param forest 森林
-	 * @param <E>    节点ID类型
-	 * @return 森林所有节点列表
-	 */
-	public static <E> List<Tree<E>> broadFirstForestConvertToList(List<Tree<E>> forest) {
-		if (CollUtil.isEmpty(forest)) {
-			return null;
-		}
-		List<Tree<E>> list = new ArrayList<>();
-		forest.forEach(root -> list.addAll(Objects.requireNonNull(broadFirstTreeConvertToList(root))));
-		return list;
-	}
-
-
-	/**
 	 * 深度优先,遍历树,将树换为数组
 	 *
-	 * @param root 树的根节点
-	 * @param <E>  节点ID类型
+	 * @param root       树的根节点
+	 * @param broadFirst 是否广度优先遍历
+	 * @param <E>        节点ID类型
 	 * @return 树所有节点列表
 	 */
-	public static <E> List<Tree<E>> deepFirstTreeConvertToList(Tree<E> root) {
+	public static <E> List<Tree<E>> toList(final Tree<E> root, final boolean broadFirst) {
 		if (Objects.isNull(root)) {
 			return null;
 		}
+		final List<Tree<E>> list = new ArrayList<>();
+		root.walk(list::add, broadFirst);
 
-		// 入栈,FILO
-		List<Tree<E>> list = new ArrayList<>();
-		Stack<Tree<E>> stack = new Stack<>();
-		stack.add(root);
-		while (!stack.isEmpty()) {
-			Tree<E> node = stack.pop();
-			list.add(node);
-			if (node.hasChild()) {
-				node.getChildren().forEach(stack::push);
-			}
-		}
-		return list;
-	}
-
-	/**
-	 * 广度优先,遍历树,将树转换为数组
-	 *
-	 * @param root 树的根节点
-	 * @param <E>  节点ID类型
-	 * @return 树所有节点列表
-	 */
-	public static <E> List<Tree<E>> broadFirstTreeConvertToList(Tree<E> root) {
-		if (Objects.isNull(root)) {
-			return null;
-		}
-
-		// 加入FIFO队列
-		List<Tree<E>> list = new ArrayList<>();
-		Queue<Tree<E>> queue = new LinkedList<>();
-		queue.offer(root);
-		while (!queue.isEmpty()) {
-			Tree<E> node = queue.poll();
-            list.add(node);
-			if (node.hasChild()) {
-				node.getChildren().forEach(queue::offer);
-			}
-		}
 		return list;
 	}
 }
