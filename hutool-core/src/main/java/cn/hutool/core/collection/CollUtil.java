@@ -148,12 +148,12 @@ public class CollUtil {
 	 * @param <T>        集合类型
 	 * @param <E>        集合元素类型
 	 * @param collection 集合
-	 * @param supplier   默认值懒加载函数
+	 * @param defaultSupplier   默认值懒加载函数
 	 * @return 非空（empty）的原集合或默认集合
 	 * @since 5.7.15
 	 */
-	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final Supplier<? extends T> supplier) {
-		return isEmpty(collection) ? supplier.get() : collection;
+	public static <T extends Collection<E>, E> T defaultIfEmpty(final T collection, final Function<T, T> handler, final Supplier<? extends T> defaultSupplier) {
+		return isEmpty(collection) ? defaultSupplier.get() : handler.apply(collection);
 	}
 
 	/**
@@ -2545,5 +2545,30 @@ public class CollUtil {
 		}
 
 		return IterUtil.isEqualList(list1, list2);
+	}
+
+	/**
+	 * 一个对象不为空且不存在于该集合中时，加入到该集合中<br>
+	 * <pre>
+	 *     null, null => false
+	 *     [], null => false
+	 *     null, "123" => false
+	 *     ["123"], "123" => false
+	 *     [], "123" => true
+	 *     ["456"], "123" => true
+	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} => true
+	 * </pre>
+	 * @param collection 被加入的集合
+	 * @param object 要添加到集合的对象
+	 * @param <T> 集合元素类型
+	 * @param <S> 要添加的元素类型【为集合元素类型的类型或子类型】
+	 * @return 是否添加成功
+	 * @author Cloud-Style
+	 */
+	public static <T, S extends T> boolean addIfAbsent(Collection<T> collection, S object) {
+		if (object == null || collection == null || collection.contains(object)) {
+			return false;
+		}
+		return collection.add(object);
 	}
 }

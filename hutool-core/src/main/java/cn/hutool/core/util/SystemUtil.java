@@ -2,7 +2,6 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.text.StrUtil;
 
 import java.util.Properties;
 
@@ -32,7 +31,7 @@ public class SystemUtil {
 	 * @see System#getenv(String)
 	 */
 	public static String get(final String name, final String defaultValue) {
-		return StrUtil.nullToDefault(get(name, false), defaultValue);
+		return ObjUtil.defaultIfNull(get(name, false), defaultValue);
 	}
 
 	/**

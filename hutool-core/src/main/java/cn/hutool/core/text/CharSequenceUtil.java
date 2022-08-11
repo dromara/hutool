@@ -14,6 +14,7 @@ import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * {@link CharSequence} 相关工具类封装
@@ -32,7 +34,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 5.5.3
  */
-public class CharSequenceUtil extends StrChecker{
+public class CharSequenceUtil extends StrChecker {
 
 	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
 
@@ -44,79 +46,11 @@ public class CharSequenceUtil extends StrChecker{
 	/**
 	 * 当给定字符串为null时，转换为Empty
 	 *
-	 * @param str 被检查的字符串
-	 * @return 原字符串或者空串
-	 * @see #nullToEmpty(CharSequence)
-	 * @since 4.6.3
-	 */
-	public static String emptyIfNull(final CharSequence str) {
-		return nullToEmpty(str);
-	}
-
-	/**
-	 * 当给定字符串为null时，转换为Empty
-	 *
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
 	 */
 	public static String nullToEmpty(final CharSequence str) {
-		return nullToDefault(str, EMPTY);
-	}
-
-	/**
-	 * 如果字符串是 {@code null}，则返回指定默认字符串，否则返回字符串本身。
-	 *
-	 * <pre>
-	 * nullToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * nullToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;&quot;
-	 * nullToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
-	 * nullToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        要转换的字符串
-	 * @param defaultStr 默认字符串
-	 * @return 字符串本身或指定的默认字符串
-	 */
-	public static String nullToDefault(final CharSequence str, final String defaultStr) {
-		return (str == null) ? defaultStr : str.toString();
-	}
-
-	/**
-	 * 如果字符串是{@code null}或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
-	 *
-	 * <pre>
-	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
-	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        要转换的字符串
-	 * @param defaultStr 默认字符串
-	 * @return 字符串本身或指定的默认字符串
-	 * @since 4.1.0
-	 */
-	public static String emptyToDefault(final CharSequence str, final String defaultStr) {
-		return isEmpty(str) ? defaultStr : str.toString();
-	}
-
-	/**
-	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
-	 *
-	 * <pre>
-	 * blankToDefault(null, &quot;default&quot;)  = &quot;default&quot;
-	 * blankToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
-	 * blankToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
-	 * blankToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
-	 * </pre>
-	 *
-	 * @param str        要转换的字符串
-	 * @param defaultStr 默认字符串
-	 * @return 字符串本身或指定的默认字符串
-	 * @since 4.1.0
-	 */
-	public static String blankToDefault(final CharSequence str, final String defaultStr) {
-		return isBlank(str) ? defaultStr : str.toString();
+		return ObjUtil.defaultIfNull(str, EMPTY).toString();
 	}
 
 	/**
@@ -125,8 +59,85 @@ public class CharSequenceUtil extends StrChecker{
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
 	 */
-	public static String emptyToNull(final CharSequence str) {
-		return isEmpty(str) ? null : str.toString();
+	public static <T extends CharSequence> T emptyToNull(final T str) {
+		return isEmpty(str) ? null : str;
+	}
+
+	/**
+	 * 如果给定对象为{@code null}或者 "" 返回默认值
+	 *
+	 * <pre>
+	 *   defaultIfEmpty(null, null)      = null
+	 *   defaultIfEmpty(null, "")        = ""
+	 *   defaultIfEmpty("", "zz")      = "zz"
+	 *   defaultIfEmpty(" ", "zz")      = " "
+	 *   defaultIfEmpty("abc", *)        = "abc"
+	 * </pre>
+	 *
+	 * @param <T>          对象类型（必须实现CharSequence接口）
+	 * @param str          被检查对象，可能为{@code null}
+	 * @param defaultValue 被检查对象为{@code null}或者 ""返回的默认值，可以为{@code null}或者 ""
+	 * @return 被检查对象为{@code null}或者 ""返回默认值，否则返回原值
+	 * @since 5.0.4
+	 */
+	public static <T extends CharSequence> T defaultIfEmpty(final T str, final T defaultValue) {
+		return StrUtil.isEmpty(str) ? defaultValue : str;
+	}
+
+	/**
+	 * 如果给定对象为{@code null}或者{@code ""}返回defaultHandler处理的结果, 否则返回自定义handler处理后的返回值
+	 *
+	 * @param <T>             被检查对象类型
+	 * @param <V>             结果类型
+	 * @param str             String 类型
+	 * @param handler         非empty的处理方法
+	 * @param defaultSupplier empty时的处理方法
+	 * @return 处理后的返回值
+	 */
+	public static <T extends CharSequence, V> V defaultIfEmpty(final T str, final Function<T, V> handler, final Supplier<? extends V> defaultSupplier) {
+		if (isNotEmpty(str)) {
+			return handler.apply(str);
+		}
+		return defaultSupplier.get();
+	}
+
+	/**
+	 * 如果给定对象为{@code null}或者""或者空白符返回默认值
+	 *
+	 * <pre>
+	 *   defaultIfBlank(null, null)      = null
+	 *   defaultIfBlank(null, "")        = ""
+	 *   defaultIfBlank("", "zz")      = "zz"
+	 *   defaultIfBlank(" ", "zz")      = "zz"
+	 *   defaultIfBlank("abc", *)        = "abc"
+	 * </pre>
+	 *
+	 * @param <T>          对象类型（必须实现CharSequence接口）
+	 * @param str          被检查对象，可能为{@code null}
+	 * @param defaultValue 被检查对象为{@code null}或者 ""或者空白符返回的默认值，可以为{@code null}或者 ""或者空白符
+	 * @return 被检查对象为{@code null}或者 ""或者空白符返回默认值，否则返回原值
+	 * @since 5.0.4
+	 */
+	public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultValue) {
+		return StrUtil.isBlank(str) ? defaultValue : str;
+	}
+
+	/**
+	 * 如果被检查对象为 {@code null} 或 "" 或 空白字符串时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
+	 *
+	 * @param str             被检查对象
+	 * @param handler         非blank的处理方法
+	 * @param defaultSupplier 默认值提供者
+	 * @param <T>             对象类型（必须实现CharSequence接口）
+	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
+	 * @since 5.7.20
+	 */
+	public static <T extends CharSequence, V> V defaultIfBlank(final T str, final Function<T, V> handler, final Supplier<? extends V> defaultSupplier) {
+		if (StrUtil.isBlank(str)) {
+			return defaultSupplier.get();
+		}
+		return handler.apply(str);
 	}
 
 	// ------------------------------------------------------------------------ Trim

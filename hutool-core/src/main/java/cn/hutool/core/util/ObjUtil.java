@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -282,130 +283,36 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 如果被检查对象为 {@code null}， 返回默认值（由 defaultValueSupplier 提供）；否则直接返回
+	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
 	 *
-	 * @param source               被检查对象
-	 * @param defaultValueSupplier 默认值提供者
-	 * @param <T>                  对象类型
-	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
-	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
-	 * @since 5.7.20
+	 * @param <T>          被检查对象类型
+	 * @param source       Object 类型对象
+	 * @param defaultSupplier 默认为空的处理逻辑
+	 * @return 处理后的返回值
+	 * @since 5.4.6
 	 */
-	public static <T> T defaultIfNull(final T source, final Supplier<? extends T> defaultValueSupplier) {
-		if (isNull(source)) {
-			return defaultValueSupplier.get();
+	public static <T> T defaultIfNull(final T source, final Supplier<? extends T> defaultSupplier) {
+		if (isNotNull(source)) {
+			return source;
 		}
-		return source;
+		return defaultSupplier.get();
 	}
 
 	/**
 	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
 	 *
+	 * @param <T>          被检查对象类型
 	 * @param source       Object 类型对象
-	 * @param handle       非空时自定义的处理方法
-	 * @param defaultValue 默认为空的返回值
-	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @param handler      非空时自定义的处理方法
+	 * @param defaultSupplier 默认为空的处理逻辑
 	 * @return 处理后的返回值
-	 * @since 5.4.6
+	 * @since 6.0.0
 	 */
-	public static <T> T defaultIfNull(final Object source, final Supplier<? extends T> handle, final T defaultValue) {
+	public static <T> T defaultIfNull(final Object source, final Function<Object, T> handler, final Supplier<? extends T> defaultSupplier) {
 		if (isNotNull(source)) {
-			return handle.get();
+			return handler.apply(source);
 		}
-		return defaultValue;
-	}
-
-	/**
-	 * 如果给定对象为{@code null}或者""返回默认值, 否则返回自定义handle处理后的返回值
-	 *
-	 * @param str          String 类型
-	 * @param handle       自定义的处理方法
-	 * @param defaultValue 默认为空的返回值
-	 * @param <T>          被检查对象为{@code null}或者 ""返回默认值，否则返回自定义handle处理后的返回值
-	 * @return 处理后的返回值
-	 * @since 5.4.6
-	 */
-	public static <T> T defaultIfEmpty(final String str, final Supplier<? extends T> handle, final T defaultValue) {
-		if (StrUtil.isNotEmpty(str)) {
-			return handle.get();
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * 如果给定对象为{@code null}或者 "" 返回默认值
-	 *
-	 * <pre>
-	 * ObjectUtil.defaultIfEmpty(null, null)      = null
-	 * ObjectUtil.defaultIfEmpty(null, "")        = ""
-	 * ObjectUtil.defaultIfEmpty("", "zz")      = "zz"
-	 * ObjectUtil.defaultIfEmpty(" ", "zz")      = " "
-	 * ObjectUtil.defaultIfEmpty("abc", *)        = "abc"
-	 * </pre>
-	 *
-	 * @param <T>          对象类型（必须实现CharSequence接口）
-	 * @param str          被检查对象，可能为{@code null}
-	 * @param defaultValue 被检查对象为{@code null}或者 ""返回的默认值，可以为{@code null}或者 ""
-	 * @return 被检查对象为{@code null}或者 ""返回默认值，否则返回原值
-	 * @since 5.0.4
-	 */
-	public static <T extends CharSequence> T defaultIfEmpty(final T str, final T defaultValue) {
-		return StrUtil.isEmpty(str) ? defaultValue : str;
-	}
-
-	/**
-	 * 如果被检查对象为 {@code null} 或 "" 时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
-	 *
-	 * @param str                  被检查对象
-	 * @param defaultValueSupplier 默认值提供者
-	 * @param <T>                  对象类型（必须实现CharSequence接口）
-	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
-	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
-	 * @since 5.7.20
-	 */
-	public static <T extends CharSequence> T defaultIfEmpty(final T str, final Supplier<? extends T> defaultValueSupplier) {
-		if (StrUtil.isEmpty(str)) {
-			return defaultValueSupplier.get();
-		}
-		return str;
-	}
-
-	/**
-	 * 如果给定对象为{@code null}或者""或者空白符返回默认值
-	 *
-	 * <pre>
-	 * ObjectUtil.defaultIfBlank(null, null)      = null
-	 * ObjectUtil.defaultIfBlank(null, "")        = ""
-	 * ObjectUtil.defaultIfBlank("", "zz")      = "zz"
-	 * ObjectUtil.defaultIfBlank(" ", "zz")      = "zz"
-	 * ObjectUtil.defaultIfBlank("abc", *)        = "abc"
-	 * </pre>
-	 *
-	 * @param <T>          对象类型（必须实现CharSequence接口）
-	 * @param str          被检查对象，可能为{@code null}
-	 * @param defaultValue 被检查对象为{@code null}或者 ""或者空白符返回的默认值，可以为{@code null}或者 ""或者空白符
-	 * @return 被检查对象为{@code null}或者 ""或者空白符返回默认值，否则返回原值
-	 * @since 5.0.4
-	 */
-	public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultValue) {
-		return StrUtil.isBlank(str) ? defaultValue : str;
-	}
-
-	/**
-	 * 如果被检查对象为 {@code null} 或 "" 或 空白字符串时，返回默认值（由 defaultValueSupplier 提供）；否则直接返回
-	 *
-	 * @param str                  被检查对象
-	 * @param defaultValueSupplier 默认值提供者
-	 * @param <T>                  对象类型（必须实现CharSequence接口）
-	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
-	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
-	 * @since 5.7.20
-	 */
-	public static <T extends CharSequence> T defaultIfBlank(final T str, final Supplier<? extends T> defaultValueSupplier) {
-		if (StrUtil.isBlank(str)) {
-			return defaultValueSupplier.get();
-		}
-		return str;
+		return defaultSupplier.get();
 	}
 
 	/**
@@ -607,8 +514,8 @@ public class ObjUtil {
 	 *
 	 * @param objs 被检查对象
 	 * @return 是否存在
-	 * @since 5.5.3
 	 * @see ArrayUtil#hasNull(Object[])
+	 * @since 5.5.3
 	 */
 	public static boolean hasNull(final Object... objs) {
 		return ArrayUtil.hasNull(objs);

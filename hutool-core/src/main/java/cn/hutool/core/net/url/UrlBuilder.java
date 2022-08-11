@@ -237,7 +237,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return 协议，例如http
 	 */
 	public String getSchemeWithDefault() {
-		return StrUtil.emptyToDefault(this.scheme, DEFAULT_SCHEME);
+		return StrUtil.defaultIfEmpty(this.scheme, DEFAULT_SCHEME);
 	}
 
 	/**

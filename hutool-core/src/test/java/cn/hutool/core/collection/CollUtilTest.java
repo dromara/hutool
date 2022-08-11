@@ -9,6 +9,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.Function;
 
 /**
  * 集合工具类单元测试
@@ -34,6 +38,21 @@ import java.util.SortedSet;
  * @author looly
  */
 public class CollUtilTest {
+
+	@Test
+	public void defaultIfEmpty() {
+		ArrayList<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), ListUtil.of("1"));
+		Assert.assertEquals(ListUtil.of("1"), strings);
+
+		strings = CollUtil.defaultIfEmpty(null, ListUtil.of("1"));
+		Assert.assertEquals(ListUtil.of("1"), strings);
+	}
+
+	@Test
+	public void defaultIfEmpty2() {
+		ArrayList<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), Function.identity(), () -> ListUtil.of("1"));
+		Assert.assertEquals(ListUtil.of("1"), strings);
+	}
 
 	@Test
 	public void testPredicateContains() {
@@ -973,5 +992,40 @@ public class CollUtilTest {
 		final List<String> list3 = null;
 		final Collection<String> collection = CollUtil.intersectionDistinct(list1, list2, list3);
 		Assert.assertNotNull(collection);
+	}
+
+	@Test
+	public void addIfAbsentTest() {
+		// 为false的情况
+		Assert.assertFalse(CollUtil.addIfAbsent(null, null));
+		Assert.assertFalse(CollUtil.addIfAbsent(ListUtil.of(), null));
+		Assert.assertFalse(CollUtil.addIfAbsent(null, "123"));
+		Assert.assertFalse(CollUtil.addIfAbsent(ListUtil.of("123"), "123"));
+		Assert.assertFalse(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+				new Animal("jack", 20)));
+
+		// 正常情况
+		Assert.assertTrue(CollUtil.addIfAbsent(ListUtil.of("456"), "123"));
+		Assert.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+				new Dog("jack", 20)));
+		Assert.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
+				new Animal("tom", 20)));
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	static class Animal {
+		private String name;
+		private Integer age;
+	}
+
+	@ToString(callSuper = true)
+	@EqualsAndHashCode(callSuper = true)
+	@Data
+	static class Dog extends Animal {
+		public Dog(String name, Integer age) {
+			super(name, age);
+		}
 	}
 }

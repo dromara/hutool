@@ -1,9 +1,12 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.regex.Pattern;
 
 public class CharSequenceUtilTest {
@@ -165,5 +168,31 @@ public class CharSequenceUtilTest {
 	public void containsAllTest() {
 		final String a = "2142342422423423";
 		Assert.assertTrue(StrUtil.containsAll(a, "214", "234"));
+	}
+
+	@Test
+	public void defaultIfEmptyTest() {
+		final String emptyValue = "";
+		final Instant result1 = CharSequenceUtil.defaultIfEmpty(emptyValue,
+				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+		Assert.assertNotNull(result1);
+
+		final String dateStr = "2020-10-23 15:12:30";
+		final Instant result2 = CharSequenceUtil.defaultIfEmpty(dateStr,
+				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+		Assert.assertNotNull(result2);
+	}
+
+	@Test
+	public void defaultIfBlankTest() {
+		final String emptyValue = " ";
+		final Instant result1 = CharSequenceUtil.defaultIfBlank(emptyValue,
+				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+		Assert.assertNotNull(result1);
+
+		final String dateStr = "2020-10-23 15:12:30";
+		final Instant result2 = CharSequenceUtil.defaultIfBlank(dateStr,
+				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
+		Assert.assertNotNull(result2);
 	}
 }

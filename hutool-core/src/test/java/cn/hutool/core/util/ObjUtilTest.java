@@ -99,25 +99,14 @@ public class ObjUtilTest {
 
 	@Test
 	public void defaultIfNullTest() {
-		final String nullValue = null;
 		final String dateStr = "2020-10-23 15:12:30";
 		final Instant result1 = ObjUtil.defaultIfNull(dateStr,
-				() -> DateUtil.parse(dateStr, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+				(v) -> DateUtil.parse(v.toString(), DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assert.assertNotNull(result1);
-		final Instant result2 = ObjUtil.defaultIfNull(nullValue,
-				() -> DateUtil.parse(nullValue, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
-		Assert.assertNotNull(result2);
-	}
 
-	@Test
-	public void defaultIfEmptyTest() {
-		final String emptyValue = "";
-		final String dateStr = "2020-10-23 15:12:30";
-		final Instant result1 = ObjUtil.defaultIfEmpty(emptyValue,
-				() -> DateUtil.parse(emptyValue, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
-		Assert.assertNotNull(result1);
-		final Instant result2 = ObjUtil.defaultIfEmpty(dateStr,
-				() -> DateUtil.parse(dateStr, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+		final String nullValue = null;
+		final Instant result2 = ObjUtil.defaultIfNull(nullValue,
+				(v) -> DateUtil.parse(v.toString(), DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assert.assertNotNull(result2);
 	}
 
