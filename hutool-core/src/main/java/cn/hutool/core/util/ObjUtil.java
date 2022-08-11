@@ -368,34 +368,6 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 序列化<br>
-	 * 对象必须实现Serializable接口
-	 *
-	 * @param <T> 对象类型
-	 * @param obj 要被序列化的对象
-	 * @return 序列化后的字节码
-	 */
-	public static <T> byte[] serialize(final T obj) {
-		return SerializeUtil.serialize(obj);
-	}
-
-	/**
-	 * 反序列化<br>
-	 * 对象必须实现Serializable接口
-	 *
-	 * <p>
-	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
-	 * </p>
-	 *
-	 * @param <T>   对象类型
-	 * @param bytes 反序列化的字节码
-	 * @return 反序列化后的对象
-	 */
-	public static <T> T deserialize(final byte[] bytes) {
-		return SerializeUtil.deserialize(bytes);
-	}
-
-	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
 	 *
 	 * @param object 被检查对象，{@code null}返回{@code false}
@@ -497,58 +469,5 @@ public class ObjUtil {
 		}
 
 		return Convert.toStr(obj);
-	}
-
-	/**
-	 * 存在多少个{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 *
-	 * @param objs 被检查的对象,一个或者多个
-	 * @return 存在{@code null}的数量
-	 */
-	public static int emptyCount(final Object... objs) {
-		return ArrayUtil.emptyCount(objs);
-	}
-
-	/**
-	 * 是否存在{@code null}对象，通过{@link ObjUtil#isNull(Object)} 判断元素
-	 *
-	 * @param objs 被检查对象
-	 * @return 是否存在
-	 * @see ArrayUtil#hasNull(Object[])
-	 * @since 5.5.3
-	 */
-	public static boolean hasNull(final Object... objs) {
-		return ArrayUtil.hasNull(objs);
-	}
-
-	/**
-	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 *
-	 * @param objs 被检查对象
-	 * @return 是否存在
-	 * @see ArrayUtil#hasEmpty(Object...)
-	 */
-	public static boolean hasEmpty(final Object... objs) {
-		return ArrayUtil.hasEmpty(objs);
-	}
-
-	/**
-	 * 是否全都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 *
-	 * @param objs 被检查的对象,一个或者多个
-	 * @return 是否都为空
-	 */
-	public static boolean isAllEmpty(final Object... objs) {
-		return ArrayUtil.isAllEmpty(objs);
-	}
-
-	/**
-	 * 是否全都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 *
-	 * @param objs 被检查的对象,一个或者多个
-	 * @return 是否都不为空
-	 */
-	public static boolean isAllNotEmpty(final Object... objs) {
-		return ArrayUtil.isAllNotEmpty(objs);
 	}
 }

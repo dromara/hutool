@@ -1,5 +1,6 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.io.SerializeUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Before;
@@ -19,8 +20,8 @@ public class TolerantMapTest {
 
 	@Test
 	public void testSerialize() {
-		final byte[] bytes = ObjUtil.serialize(map);
-		final TolerantMap<String, String> serializedMap = ObjUtil.deserialize(bytes);
+		final byte[] bytes = SerializeUtil.serialize(map);
+		final TolerantMap<String, String> serializedMap = SerializeUtil.deserialize(bytes);
 		assert serializedMap != map;
 		assert map.equals(serializedMap);
 	}

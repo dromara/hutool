@@ -116,4 +116,11 @@ public class ObjUtilTest {
 		final boolean basicType = ObjUtil.isBasicType(a);
 		Assert.assertTrue(basicType);
 	}
+
+	@Test
+	public void cloneIfPossibleTest() {
+		String a = "a";
+		final String a2 = ObjUtil.cloneIfPossible(a);
+		Assert.assertNotSame(a, a2);
+	}
 }

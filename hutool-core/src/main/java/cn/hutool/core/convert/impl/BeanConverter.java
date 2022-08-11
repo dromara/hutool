@@ -6,11 +6,11 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
+import cn.hutool.core.io.SerializeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
-import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -76,7 +76,7 @@ public class BeanConverter implements Converter, Serializable {
 			return BeanCopier.of(value, ConstructorUtil.newInstanceIfPossible(targetClass), targetType, this.copyOptions).copy();
 		} else if (value instanceof byte[]) {
 			// 尝试反序列化
-			return ObjUtil.deserialize((byte[]) value);
+			return SerializeUtil.deserialize((byte[]) value);
 		}
 
 		throw new ConvertException("Unsupported source type: {}", value.getClass());

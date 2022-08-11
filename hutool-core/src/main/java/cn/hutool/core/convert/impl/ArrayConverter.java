@@ -4,11 +4,11 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.SerializeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -160,7 +160,7 @@ public class ArrayConverter extends AbstractConverter {
 			result = ByteUtil.numberToBytes((Number)value);
 		} else if (value instanceof Serializable && byte.class == targetComponentType) {
 			// 用户可能想序列化指定对象
-			result = ObjUtil.serialize(value);
+			result = SerializeUtil.serialize(value);
 		} else {
 			// everything else:
 			result = convertToSingleElementArray(targetComponentType, value);
