@@ -7,6 +7,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -746,6 +749,24 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void addIfAbsentTest() {
+		// 为false的情况
+		Assert.assertFalse(CollUtil.addIfAbsent(null, null));
+		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(), null));
+		Assert.assertFalse(CollUtil.addIfAbsent(null, "123"));
+		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList("123"), "123"));
+		Assert.assertFalse(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+				new Animal("jack", 20)));
+
+		// 正常情况
+		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList("456"), "123"));
+		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+				new Dog("jack", 20)));
+		Assert.assertTrue(CollUtil.addIfAbsent(CollUtil.newArrayList(new Animal("jack", 20)),
+				new Animal("tom", 20)));
+	}
+
+	@Test
 	public void mapToMapTest(){
 		final HashMap<String, String> oldMap = new HashMap<>();
 		oldMap.put("a", "1");
@@ -950,5 +971,23 @@ public class CollUtilTest {
 		private Integer age;
 		private String gender;
 		private Integer id;
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	static class Animal {
+		private String name;
+		private Integer age;
+	}
+
+	@ToString(callSuper = true)
+	@EqualsAndHashCode(callSuper = true)
+	@Data
+	static class Dog extends Animal {
+
+		public Dog(String name, Integer age) {
+			super(name, age);
+		}
 	}
 }

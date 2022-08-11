@@ -2076,6 +2076,32 @@ public class CollUtil {
 	}
 
 	/**
+	 * 一个对象不为空且不存在于该集合中时，加入到该集合中<br>
+	 * <pre>
+	 *     null, null => false
+	 *     [], null => false
+	 *     null, "123" => false
+	 *     ["123"], "123" => false
+	 *     [], "123" => true
+	 *     ["456"], "123" => true
+	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} => true
+	 * </pre>
+	 * @param collection 被加入的集合
+	 * @param object 要添加到集合的对象
+	 * @param <T> 集合元素类型
+	 * @param <S> 要添加的元素类型【为集合元素类型的类型或子类型】
+	 * @return 是否添加成功
+	 * @author Cloud-Style
+	 */
+	public static <T, S extends T> boolean addIfAbsent(Collection<T> collection, S object) {
+		if (object == null || collection == null || collection.contains(object)) {
+			return false;
+		}
+
+		return collection.add(object);
+	}
+
+	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
 	 *
