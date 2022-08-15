@@ -834,7 +834,7 @@ public class DateUtil extends CalendarUtil {
 		if (utcString == null) {
 			return null;
 		}
-		int length = utcString.length();
+		final int length = utcString.length();
 		if (StrUtil.contains(utcString, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
 				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
@@ -871,6 +871,9 @@ public class DateUtil extends CalendarUtil {
 			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
+			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 5) {
+				// 格式类似：2018-09-13T05:34
+				return parse(utcString + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);

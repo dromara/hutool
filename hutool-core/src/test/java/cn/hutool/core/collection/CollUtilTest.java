@@ -990,4 +990,11 @@ public class CollUtilTest {
 			super(name, age);
 		}
 	}
+
+	@Test
+	public void getFirstTest(){
+		final List<?> nullList = null;
+		final Object first = CollUtil.getFirst(nullList);
+		Assert.assertNull(first);
+	}
 }
