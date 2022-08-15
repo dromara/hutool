@@ -1,9 +1,11 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.date.format.parser.CSTDateParser;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
@@ -20,12 +22,12 @@ import java.util.regex.Pattern;
  * <h2>工具类，提供格式化字符串很多，但是对于具体什么含义，不够清晰，这里进行说明：</h2>
  * <b>常见日期格式模式字符串：</b>
  * <ul>
- *    <li>yyyy-MM-dd	    			示例：2022-08-05</li>
- *    <li>yyyy年MM月dd日				示例：2022年08月05日</li>
- *    <li>yyyy-MM-dd HH:mm:ss  		示例：2022-08-05 12:59:59</li>
- *    <li>yyyy-MM-dd HH:mm:ss.SSS 		示例：2022-08-05 12:59:59.559</li>
- *    <li>yyyy-MM-dd HH:mm:ss.SSSZ 	示例：2022-08-05 12:59:59.559+0800, 年月日 时分秒 毫秒 时区</li>
- *    <li>yyyy-MM-dd HH:mm:ss.SSSz 	示例：2022-08-05 12:59:59.559UTC+08:00,年月日 时分秒 毫秒 时区</li>
+ *    <li>yyyy-MM-dd                   示例：2022-08-05</li>
+ *    <li>yyyy年MM月dd日                示例：2022年08月05日</li>
+ *    <li>yyyy-MM-dd HH:mm:ss          示例：2022-08-05 12:59:59</li>
+ *    <li>yyyy-MM-dd HH:mm:ss.SSS      示例：2022-08-05 12:59:59.559</li>
+ *    <li>yyyy-MM-dd HH:mm:ss.SSSZ     示例：2022-08-05 12:59:59.559+0800, 年月日 时分秒 毫秒 时区</li>
+ *    <li>yyyy-MM-dd HH:mm:ss.SSSz     示例：2022-08-05 12:59:59.559UTC+08:00,年月日 时分秒 毫秒 时区</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z' 示例：2022-08-05T12:59:59.559Z, 其中：''单引号表示转义字符，T:分隔符，Z:一般值UTC,0时区的时间含义</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ   示例：2022-08-05T11:59:59.559+0800, 其中：Z,表示时区</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSSX   示例：2022-08-05T12:59:59.559+08, 其中：X:两位时区，+08表示：东8区，中国时区</li>
@@ -44,6 +46,9 @@ import java.util.regex.Pattern;
  * {@link DateTimeFormatter#ISO_DATE}
  * {@link DateTimeFormatter#ISO_DATE_TIME}
  * 查看更多，请参阅上述官方文档
+ *
+ * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
+ * 参见：{@link CSTDateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
  *
  * @author Looly
  */
