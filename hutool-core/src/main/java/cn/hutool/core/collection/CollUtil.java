@@ -2078,13 +2078,13 @@ public class CollUtil {
 	/**
 	 * 一个对象不为空且不存在于该集合中时，加入到该集合中<br>
 	 * <pre>
-	 *     null, null => false
-	 *     [], null => false
-	 *     null, "123" => false
-	 *     ["123"], "123" => false
-	 *     [], "123" => true
-	 *     ["456"], "123" => true
-	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} => true
+	 *     null, null -&gt; false
+	 *     [], null -&gt; false
+	 *     null, "123" -&gt; false
+	 *     ["123"], "123" -&gt; false
+	 *     [], "123" -&gt; true
+	 *     ["456"], "123" -&gt; true
+	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} -&gt; true
 	 * </pre>
 	 * @param collection 被加入的集合
 	 * @param object 要添加到集合的对象
