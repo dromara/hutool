@@ -2441,6 +2441,11 @@ public class NumberUtil {
 			return 0;
 		}
 
+		if(StrUtil.containsIgnoreCase(number, "E")){
+			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
+			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
+		}
+
 		if (StrUtil.startWithIgnoreCase(number, "0x")) {
 			// 0x04表示16进制数
 			return Integer.parseInt(number.substring(2), 16);
