@@ -3753,6 +3753,70 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 替换字符串中最后一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @return 替换后的字符串
+	 */
+	public static String replaceLast(CharSequence str, CharSequence searchStr, CharSequence replacedStr) {
+		return replaceLast(str, searchStr, replacedStr, false);
+	}
+
+	/**
+	 * 替换字符串中最后一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @param ignoreCase  是否忽略大小写
+	 * @return 替换后的字符串
+	 */
+	public static String replaceLast(CharSequence str, CharSequence searchStr, CharSequence replacedStr, boolean ignoreCase) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		int lastIndex = lastIndexOf(str, searchStr, str.length(), ignoreCase);
+		if (INDEX_NOT_FOUND == lastIndex) {
+			return str(str);
+		}
+		return replace(str, lastIndex, searchStr, replacedStr, ignoreCase);
+	}
+
+	/**
+	 * 替换字符串中第一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @return 替换后的字符串
+	 */
+	public static String replaceFirst(CharSequence str, CharSequence searchStr, CharSequence replacedStr) {
+		return replaceFirst(str, searchStr, replacedStr, false);
+	}
+
+	/**
+	 * 替换字符串中第一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @param ignoreCase  是否忽略大小写
+	 * @return 替换后的字符串
+	 */
+	public static String replaceFirst(CharSequence str, CharSequence searchStr, CharSequence replacedStr, boolean ignoreCase) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		int startInclude = indexOf(str, searchStr, 0, ignoreCase);
+		if (INDEX_NOT_FOUND == startInclude) {
+			return str(str);
+		}
+		return replace(str, startInclude, startInclude + searchStr.length(), replacedStr);
+	}
+
+	/**
 	 * 替换指定字符串的指定区间内字符为"*"
 	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtil(脱敏工具类)
 	 *
