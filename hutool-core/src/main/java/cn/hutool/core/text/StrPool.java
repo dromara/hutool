@@ -57,6 +57,26 @@ public interface StrPool {
 	char C_COMMA = CharPool.COMMA;
 
 	/**
+	 * 字符串常量：分号";"
+	 */
+	char C_SEMICOLON = CharPool.SEMICOLON;
+
+	/**
+	 * 中文顿号
+	 */
+	char C_COMMA_CN = CharPool.COMMA_CN;
+
+	/**
+	 * 字符串常量：星号"*"
+	 */
+	char C_ASTERISK = CharPool.ASTERISK;
+
+	/**
+	 * 字符串常量：井号"#"
+	 */
+	char C_POUND = CharPool.POUND;
+
+	/**
 	 * 字符常量：花括号（左） <code>'{'</code>
 	 */
 	char C_DELIM_START = CharPool.DELIM_START;
@@ -145,6 +165,26 @@ public interface StrPool {
 	String COMMA = ",";
 
 	/**
+	 * 字符串常量：分号";"
+	 */
+	String SEMICOLON = ";";
+
+	/**
+	 * 中文顿号
+	 */
+	String COMMA_CN = "、";
+
+	/**
+	 * 字符串常量：星号"*"
+	 */
+	String ASTERISK = "*";
+
+	/**
+	 * 字符串常量：井号"#"
+	 */
+	String POUND = "#";
+
+	/**
 	 * 字符串常量：花括号（左） <code>"{"</code>
 	 */
 	String DELIM_START = "{";
@@ -173,7 +213,6 @@ public interface StrPool {
 	 * 字符串常量：艾特 {@code "@"}
 	 */
 	String AT = "@";
-
 
 	/**
 	 * 字符串常量：HTML 空格转义 {@code "&nbsp;" -> " "}

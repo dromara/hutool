@@ -48,6 +48,26 @@ public interface CharPool {
 	 */
 	char COMMA = ',';
 	/**
+	 * 字符串常量：分号";"
+	 */
+	char SEMICOLON = ';';
+
+	/**
+	 * 中文顿号
+	 */
+	char COMMA_CN = '、';
+
+	/**
+	 * 字符串常量：星号"*"
+	 */
+	char ASTERISK = '*';
+
+	/**
+	 * 字符串常量：井号"#"
+	 */
+	char POUND = '#';
+
+	/**
 	 * 字符常量：花括号（左） <code>'{'</code>
 	 */
 	char DELIM_START = '{';
