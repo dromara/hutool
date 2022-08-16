@@ -123,7 +123,7 @@ public class TreeUtil {
 	 */
 	public static <T, E> Tree<E> buildSingle(List<T> list, E rootId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
 		return TreeBuilder.of(rootId, treeNodeConfig)
-				.append(list, nodeParser).build();
+				.append(list, rootId, nodeParser).build();
 	}
 
 	/**
