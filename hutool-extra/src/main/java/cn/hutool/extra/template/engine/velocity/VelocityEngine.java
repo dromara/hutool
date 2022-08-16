@@ -1,6 +1,7 @@
 package cn.hutool.extra.template.engine.velocity;
 
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
@@ -134,7 +135,7 @@ public class VelocityEngine implements TemplateEngine {
 			case WEB_ROOT:
 				ve.setProperty(Velocity.RESOURCE_LOADER, "webapp");
 				ve.setProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.servlet.WebappLoader");
-				ve.setProperty("webapp.resource.loader.path", StrUtil.nullToDefault(config.getPath(), StrUtil.SLASH));
+				ve.setProperty("webapp.resource.loader.path", ObjUtil.defaultIfNull(config.getPath(), StrUtil.SLASH));
 				break;
 			case STRING:
 				ve.setProperty(Velocity.RESOURCE_LOADER, "str");

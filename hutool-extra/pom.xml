@@ -26,12 +26,12 @@
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.33.0</sshj.version>
+		<sshj.version>0.34.0</sshj.version>
 		<zxing.version>3.5.0</zxing.version>
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.6.7</spring-boot.version>
+		<spring-boot.version>2.7.2</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -61,6 +61,7 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
+			<!-- 版本固定5.0.0，可以支持jdk8 -->
 			<version>5.0.0</version>
 			<scope>provided</scope>
 			<optional>true</optional>
@@ -273,7 +274,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.11.1</version>
+			<version>8.11.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -464,7 +465,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.20</version>
+			<version>5.3.22</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -487,7 +488,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.1.6</version>
+			<version>6.2.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

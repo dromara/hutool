@@ -61,7 +61,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 */
 	public String getStrNotEmpty(final String key, final String group, final String defaultValue) {
 		final String value = getByGroup(key, group);
-		return ObjUtil.defaultIfEmpty(value, defaultValue);
+		return StrUtil.defaultIfEmpty(value, defaultValue);
 	}
 
 	/**

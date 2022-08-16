@@ -2,7 +2,7 @@ package cn.hutool.extra.management;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Singleton;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -446,6 +446,6 @@ public class ManagementUtil {
 	 * @param value   值
 	 */
 	protected static void append(final StringBuilder builder, final String caption, final Object value) {
-		builder.append(caption).append(StrUtil.nullToDefault(Convert.toStr(value), "[n/a]")).append("\n");
+		builder.append(caption).append(ObjUtil.defaultIfNull(Convert.toStr(value), "[n/a]")).append("\n");
 	}
 }
