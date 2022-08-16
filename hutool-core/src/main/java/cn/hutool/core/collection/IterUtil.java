@@ -575,6 +575,11 @@ public class IterUtil {
 	 * @return 第一个元素，为空返回{@code null}
 	 */
 	public static <T> T getFirst(Iterable<T> iterable) {
+		if (iterable instanceof List) {
+			List<T> list = (List<T>) iterable;
+			return CollUtil.isEmpty(list) ? null: list.get(0);
+		}
+
 		return getFirst(getIter(iterable));
 	}
 

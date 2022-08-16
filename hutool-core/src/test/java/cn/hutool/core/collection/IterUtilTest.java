@@ -5,6 +5,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +20,18 @@ import java.util.Map;
  *
  */
 public class IterUtilTest {
+
+	@Test
+	public void getFirst() {
+		Assert.assertNull(IterUtil.getFirst((Iterable<Object>) null));
+		Assert.assertNull(IterUtil.getFirst(CollUtil.newArrayList()));
+
+		Assert.assertEquals("1", IterUtil.getFirst(CollUtil.newArrayList("1", "2", "3")));
+		ArrayDeque<String> deque = new ArrayDeque<>();
+		deque.add("3");
+		deque.add("4");
+		Assert.assertEquals("3", IterUtil.getFirst(deque));
+	}
 
 	@Test
 	public void getFirstNonNullTest(){
