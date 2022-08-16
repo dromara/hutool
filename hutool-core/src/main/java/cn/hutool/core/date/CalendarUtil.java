@@ -109,7 +109,7 @@ public class CalendarUtil {
 	 * 修改日期为某个时间字段四舍五入时间
 	 *
 	 * @param calendar  {@link Calendar}
-	 * @param dateField 时间字段
+	 * @param dateField 时间字段，即保留到哪个日期字段
 	 * @return 原{@link Calendar}
 	 */
 	public static Calendar round(final Calendar calendar, final DateField dateField) {

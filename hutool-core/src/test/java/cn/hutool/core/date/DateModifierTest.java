@@ -1,9 +1,9 @@
 package cn.hutool.core.date;
 
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Date;
 
 public class DateModifierTest {
 
@@ -115,5 +115,15 @@ public class DateModifierTest {
 		// 年
 		begin = DateUtil.ceiling(date, DateField.YEAR);
 		Assert.assertEquals("2017-12-31 23:59:59.999", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
+
+	@Test
+	public void roundTest(){
+		// issues#I5M2I0
+		final String dateStr = "2022-08-12 14:59:21.500";
+		final Date date = DateUtil.parse(dateStr);
+
+		final DateTime dateTime = DateUtil.round(date, DateField.SECOND);
+		Assert.assertEquals("2022-08-12 14:59:21.999", dateTime.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
 }
