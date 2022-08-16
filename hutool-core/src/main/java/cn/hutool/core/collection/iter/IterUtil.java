@@ -89,9 +89,9 @@ public class IterUtil {
 	/**
 	 * 是否包含{@code null}元素<br>
 	 * <ul>
-	 *     <list>Iterator为{@code null}，返回{@code true}</list>
-	 *     <list>Iterator为空集合，即元素个数为0，返回{@code false}</list>
-	 *     <list>Iterator中元素为""，返回{@code false}</list>
+	 *     <li>Iterator为{@code null}，返回{@code true}</li>
+	 *     <li>Iterator为空集合，即元素个数为0，返回{@code false}</li>
+	 *     <li>Iterator中元素为""，返回{@code false}</li>
 	 * </ul>
 	 *
 	 * @param iter 被检查的{@link Iterator}对象，如果为{@code null} 返回true

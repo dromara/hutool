@@ -145,10 +145,11 @@ public class CollUtil {
 	/**
 	 * 如果给定集合为空，返回默认集合
 	 *
-	 * @param <T>        集合类型
-	 * @param <E>        集合元素类型
-	 * @param collection 集合
-	 * @param defaultSupplier   默认值懒加载函数
+	 * @param <T>             集合类型
+	 * @param <E>             集合元素类型
+	 * @param collection      集合
+	 * @param handler         非空的处理函数
+	 * @param defaultSupplier 默认值懒加载函数
 	 * @return 非空（empty）的原集合或默认集合
 	 * @since 5.7.15
 	 */
@@ -229,9 +230,9 @@ public class CollUtil {
 	/**
 	 * 是否包含{@code null}元素<br>
 	 * <ul>
-	 *     <list>集合为{@code null}，返回{@code true}</list>
-	 *     <list>集合为空集合，即元素个数为0，返回{@code false}</list>
-	 *     <list>集合中元素为""，返回{@code false}</list>
+	 *     <li>集合为{@code null}，返回{@code true}</li>
+	 *     <li>集合为空集合，即元素个数为0，返回{@code false}</li>
+	 *     <li>集合中元素为""，返回{@code false}</li>
 	 * </ul>
 	 *
 	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
@@ -1366,7 +1367,7 @@ public class CollUtil {
 	public static <T> T getFirst(final Iterable<T> iterable) {
 		if (iterable instanceof List) {
 			final List<T> list = (List<T>) iterable;
-			return CollUtil.isEmpty(list) ? null: list.get(0);
+			return CollUtil.isEmpty(list) ? null : list.get(0);
 		}
 		return IterUtil.getFirst(IterUtil.getIter(iterable));
 	}
@@ -2567,10 +2568,11 @@ public class CollUtil {
 	 *     ["456"], "123" => true
 	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} => true
 	 * </pre>
+	 *
 	 * @param collection 被加入的集合
-	 * @param object 要添加到集合的对象
-	 * @param <T> 集合元素类型
-	 * @param <S> 要添加的元素类型【为集合元素类型的类型或子类型】
+	 * @param object     要添加到集合的对象
+	 * @param <T>        集合元素类型
+	 * @param <S>        要添加的元素类型【为集合元素类型的类型或子类型】
 	 * @return 是否添加成功
 	 * @author Cloud-Style
 	 */
