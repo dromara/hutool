@@ -84,6 +84,21 @@ public class HttpDownloader {
 	}
 
 	/**
+	 * 下载文件，返回字节数组
+	 *
+	 * @param url url
+	 * @param targetFileOrDir 目标文件或目录
+	 * @param timeout 超时
+	 * @param streamProgress 流进展
+	 * @return {@link byte[]}
+	 */
+	public static byte[] downloadBytes(String url, File targetFileOrDir, int timeout, StreamProgress streamProgress) {
+		HttpResponse httpResponse = requestDownload(url, timeout);
+		httpResponse.writeBody(targetFileOrDir, streamProgress );
+		return httpResponse.bodyBytes;
+	}
+
+	/**
 	 * 下载远程文件
 	 *
 	 * @param url            请求的url

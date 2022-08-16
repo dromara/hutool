@@ -393,6 +393,19 @@ public class HttpUtil {
 	/**
 	 * 下载远程文件
 	 *
+	 * @param url 请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout 超时，单位毫秒，-1表示默认超时
+	 * @param streamProgress 进度条
+	 * @return {@link byte[]}
+	 */
+	public static byte[] downloadBytes(String url, File destFile, int timeout, StreamProgress streamProgress) {
+		return HttpDownloader.downloadBytes(url, destFile, timeout, streamProgress);
+	}
+
+	/**
+	 * 下载远程文件
+	 *
 	 * @param url        请求的url
 	 * @param out        将下载内容写到输出流中 {@link OutputStream}
 	 * @param isCloseOut 是否关闭输出流
