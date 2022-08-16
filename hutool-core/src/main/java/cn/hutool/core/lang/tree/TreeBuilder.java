@@ -196,8 +196,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		return append(map);
 	}
 
-
-
 	/**
 	 * 重置Builder，实现复用
 	 *
