@@ -87,17 +87,12 @@ public class IterUtil {
 	}
 
 	/**
-	 * 是否包含{@code null}元素
-	 *
-	 * @param iter 被检查的{@link Iterable}对象，如果为{@code null} 返回true
-	 * @return 是否包含{@code null}元素
-	 */
-	public static boolean hasNull(final Iterable<?> iter) {
-		return hasNull(null == iter ? null : iter.iterator());
-	}
-
-	/**
-	 * 是否包含{@code null}元素
+	 * 是否包含{@code null}元素<br>
+	 * <ul>
+	 *     <list>Iterator为{@code null}，返回{@code true}</list>
+	 *     <list>Iterator为空集合，即元素个数为0，返回{@code false}</list>
+	 *     <list>Iterator中元素为""，返回{@code false}</list>
+	 * </ul>
 	 *
 	 * @param iter 被检查的{@link Iterator}对象，如果为{@code null} 返回true
 	 * @return 是否包含{@code null}元素

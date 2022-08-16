@@ -267,7 +267,7 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 补充Math.ceilDiv() JDK8中添加了和Math.floorDiv()但却没有ceilDiv()
+	 * 补充Math.ceilDiv() JDK8中添加了和 {@link Math#floorDiv(int, int)} 但却没有ceilDiv()
 	 *
 	 * @param v1 被除数
 	 * @param v2 除数
@@ -1448,6 +1448,7 @@ public class NumberUtil {
 	 * 4、空串返回0
 	 * 5、.123形式返回0（按照小于0的小数对待）
 	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、科学计数法抛出NumberFormatException异常
 	 * </pre>
 	 *
 	 * @param number 数字，支持0x开头、0开头和普通十进制
@@ -1458,6 +1459,11 @@ public class NumberUtil {
 	public static int parseInt(final String number) throws NumberFormatException {
 		if (StrUtil.isBlank(number)) {
 			return 0;
+		}
+
+		if(StrUtil.containsIgnoreCase(number, "E")){
+			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
+			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
 		}
 
 		if (StrUtil.startWithIgnoreCase(number, "0x")) {

@@ -227,15 +227,20 @@ public class CollUtil {
 	}
 
 	/**
-	 * 是否包含{@code null}元素
+	 * 是否包含{@code null}元素<br>
+	 * <ul>
+	 *     <list>集合为{@code null}，返回{@code true}</list>
+	 *     <list>集合为空集合，即元素个数为0，返回{@code false}</list>
+	 *     <list>集合中元素为""，返回{@code false}</list>
+	 * </ul>
 	 *
 	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
 	 * @return 是否包含{@code null}元素
-	 * @see IterUtil#hasNull(Iterable)
+	 * @see IterUtil#hasNull(Iterator)
 	 * @since 3.0.7
 	 */
 	public static boolean hasNull(final Iterable<?> iterable) {
-		return IterUtil.hasNull(iterable);
+		return IterUtil.hasNull(IterUtil.getIter(iterable));
 	}
 
 	/**
@@ -1359,6 +1364,10 @@ public class CollUtil {
 	 * @return 第一个元素，为空返回{@code null}
 	 */
 	public static <T> T getFirst(final Iterable<T> iterable) {
+		if (iterable instanceof List) {
+			final List<T> list = (List<T>) iterable;
+			return CollUtil.isEmpty(list) ? null: list.get(0);
+		}
 		return IterUtil.getFirst(IterUtil.getIter(iterable));
 	}
 

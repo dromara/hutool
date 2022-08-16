@@ -64,6 +64,9 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return new DateTime(source, DatePattern.UTC_SIMPLE_FORMAT);
+			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 5) {
+				// 格式类似：2018-09-13T05:34
+				return new DateTime(source + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				return new DateTime(source, DatePattern.UTC_SIMPLE_MS_FORMAT);
