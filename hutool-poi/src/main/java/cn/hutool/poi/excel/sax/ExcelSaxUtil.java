@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -140,8 +141,8 @@ public class ExcelSaxUtil {
 	public static int countNullCell(final String preRef, final String ref) {
 		// excel2007最大行数是1048576，最大列数是16384，最后一列列名是XFD
 		// 数字代表列，去掉列信息
-		String preXfd = StrUtil.nullToDefault(preRef, "@").replaceAll("\\d+", "");
-		String xfd = StrUtil.nullToDefault(ref, "@").replaceAll("\\d+", "");
+		String preXfd = ObjUtil.defaultIfNull(preRef, "@").replaceAll("\\d+", "");
+		String xfd = ObjUtil.defaultIfNull(ref, "@").replaceAll("\\d+", "");
 
 		// A表示65，@表示64，如果A算作1，那@代表0
 		// 填充最大位数3
