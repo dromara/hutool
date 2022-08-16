@@ -56,6 +56,7 @@ public class CharSequenceUtil extends StrChecker {
 	/**
 	 * 当给定字符串为空字符串时，转换为{@code null}
 	 *
+	 * @param <T> 字符串类型
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
 	 */
@@ -129,6 +130,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param handler         非blank的处理方法
 	 * @param defaultSupplier 默认值提供者
 	 * @param <T>             对象类型（必须实现CharSequence接口）
+	 * @param <V>             结果类型
 	 * @return 被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20

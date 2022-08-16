@@ -2560,13 +2560,13 @@ public class CollUtil {
 	/**
 	 * 一个对象不为空且不存在于该集合中时，加入到该集合中<br>
 	 * <pre>
-	 *     null, null => false
-	 *     [], null => false
-	 *     null, "123" => false
-	 *     ["123"], "123" => false
-	 *     [], "123" => true
-	 *     ["456"], "123" => true
-	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} => true
+	 *     null, null -&gt; false
+	 *     [], null -&gt; false
+	 *     null, "123" -&gt; false
+	 *     ["123"], "123" -&gt; false
+	 *     [], "123" -&gt; true
+	 *     ["456"], "123" -&gt; true
+	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} -&gt; true
 	 * </pre>
 	 *
 	 * @param collection 被加入的集合
@@ -2576,7 +2576,7 @@ public class CollUtil {
 	 * @return 是否添加成功
 	 * @author Cloud-Style
 	 */
-	public static <T, S extends T> boolean addIfAbsent(Collection<T> collection, S object) {
+	public static <T, S extends T> boolean addIfAbsent(final Collection<T> collection, final S object) {
 		if (object == null || collection == null || collection.contains(object)) {
 			return false;
 		}
