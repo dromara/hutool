@@ -576,7 +576,7 @@ public class IterUtil {
 	 */
 	public static <T> T getFirst(Iterable<T> iterable) {
 		if (iterable instanceof List) {
-			List<T> list = (List<T>) iterable;
+			final List<T> list = (List<T>) iterable;
 			return CollUtil.isEmpty(list) ? null: list.get(0);
 		}
 
