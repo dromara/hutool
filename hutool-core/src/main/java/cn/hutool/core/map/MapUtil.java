@@ -433,25 +433,15 @@ public class MapUtil {
 	 * @return Map
 	 */
 	public static <K, V> Map<K, List<V>> toListMap(final Iterable<? extends Map<K, V>> mapList) {
-		final HashMap<K, List<V>> resultMap = new HashMap<>();
+		final Map<K, List<V>> resultMap = new HashMap<>();
 		if (CollUtil.isEmpty(mapList)) {
 			return resultMap;
 		}
 
-		Set<Entry<K, V>> entrySet;
 		for (final Map<K, V> map : mapList) {
-			entrySet = map.entrySet();
-			K key;
-			List<V> valueList;
-			for (final Entry<K, V> entry : entrySet) {
-				key = entry.getKey();
-				valueList = resultMap.get(key);
-				if (null == valueList) {
-					valueList = ListUtil.of(entry.getValue());
-					resultMap.put(key, valueList);
-				} else {
-					valueList.add(entry.getValue());
-				}
+			for (final Entry<K, V> entry : map.entrySet()) {
+				resultMap.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
+						.add(entry.getValue());
 			}
 		}
 
@@ -488,35 +478,31 @@ public class MapUtil {
 	 * @return Map列表
 	 */
 	public static <K, V> List<Map<K, V>> toMapList(final Map<K, ? extends Iterable<V>> listMap) {
-		final List<Map<K, V>> resultList = new ArrayList<>();
 		if (isEmpty(listMap)) {
-			return resultList;
+			return ListUtil.zero();
 		}
 
-		boolean isEnd;// 是否结束。标准是元素列表已耗尽
-		int index = 0;// 值索引
-		Map<K, V> map;
-		do {
-			isEnd = true;
-			map = new HashMap<>();
-			List<V> vList;
-			int vListSize;
-			for (final Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
-				vList = ListUtil.of(entry.getValue());
-				vListSize = vList.size();
-				if (index < vListSize) {
-					map.put(entry.getKey(), vList.get(index));
-					if (index != vListSize - 1) {
-						// 当值列表中还有更多值（非最后一个），继续循环
-						isEnd = false;
-					}
+		final List<Map<K, V>> resultList = new ArrayList<>();
+		for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
+			final Iterator<V> iterator = IterUtil.getIter(entry.getValue());
+			if (IterUtil.isEmpty(iterator)) {
+				continue;
+			}
+			final K key = entry.getKey();
+			// 对已经存在的map添加元素
+			for (Map<K, V> map : resultList) {
+				// 还可以继续添加元素
+				if (iterator.hasNext()) {
+					map.put(key, iterator.next());
+				} else {
+					break;
 				}
 			}
-			if (false == map.isEmpty()) {
-				resultList.add(map);
+			// entry的value的个数 大于 当前列表的size, 直接新增map
+			while (iterator.hasNext()) {
+				resultList.add(MapUtil.of(key, iterator.next()));
 			}
-			index++;
-		} while (false == isEnd);
+		}
 
 		return resultList;
 	}
