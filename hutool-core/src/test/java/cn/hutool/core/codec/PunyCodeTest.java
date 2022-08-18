@@ -15,4 +15,12 @@ public class PunyCodeTest {
 		decode = PunyCode.decode("xn--Hutool-ux9js33tgln");
 		Assert.assertEquals(text, decode);
 	}
+
+	@Test
+	public void encodeEncodeDomainTest(){
+		String domain = "赵新虎.中国";
+		String strPunyCode = PunyCode.encodeDomain(domain);
+		String decode = PunyCode.decodeDomain(strPunyCode);
+		Assert.assertEquals(decode, domain);
+	}
 }

@@ -30,7 +30,7 @@ public class PunyCode {
 	 * @return
 	 * @throws UtilException
 	 */
-	private static String encodeDomain(String domain) throws UtilException{
+	public static String encodeDomain(String domain) throws UtilException{
 		Assert.notNull(domain, "domain must not be null!");
 		String[] split = domain.split("\\.");
 		StringBuilder outStringBuilder = new StringBuilder();
@@ -154,7 +154,7 @@ public class PunyCode {
 	 * @return
 	 * @throws UtilException
 	 */
-	private static String decodeDomain(String domain) throws UtilException{
+	public static String decodeDomain(String domain) throws UtilException{
 		Assert.notNull(domain, "domain must not be null!");
 		String[] split = domain.split("\\.");
 		StringBuilder outStringBuilder = new StringBuilder();
