@@ -31,7 +31,6 @@ import cn.hutool.core.text.StrUtil;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -109,7 +108,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(final R value) {
-		return CollUtil.isEmpty(value) || Objects.equals(Collections.frequency(value, null), value.size()) ? empty() : new Opt<>(value);
+		return CollUtil.isEmpty(value) || CollUtil.getFirstNoneNull(value) == null ? empty() : new Opt<>(value);
 	}
 
 	/**
