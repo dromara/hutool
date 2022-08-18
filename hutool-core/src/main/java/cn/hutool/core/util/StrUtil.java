@@ -468,5 +468,4 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
 	}
-
 }
