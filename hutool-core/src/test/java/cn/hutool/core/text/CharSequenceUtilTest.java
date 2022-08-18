@@ -195,4 +195,18 @@ public class CharSequenceUtilTest {
 				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
 		Assert.assertNotNull(result2);
 	}
+
+	@Test
+	public void replaceLastTest() {
+		final String str = "i am jack and jack";
+		final String result = StrUtil.replaceLast(str, "JACK", null, true);
+		Assert.assertEquals(result, "i am jack and ");
+	}
+
+	@Test
+	public void replaceFirstTest() {
+		final String str = "yes and yes i do";
+		final String result = StrUtil.replaceFirst(str, "YES", "", true);
+		Assert.assertEquals(result, " and yes i do");
+	}
 }

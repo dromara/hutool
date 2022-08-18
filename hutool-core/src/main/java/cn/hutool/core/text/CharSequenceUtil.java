@@ -8,6 +8,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.finder.CharFinder;
+import cn.hutool.core.text.finder.CharMatcherFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.text.split.SplitUtil;
@@ -743,11 +744,11 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 字符串含有非检查的字符，返回false
 	 * @since 4.4.1
 	 */
-	public static boolean containsAll(CharSequence str, CharSequence... testChars) {
+	public static boolean containsAll(final CharSequence str, final CharSequence... testChars) {
 		if (isBlank(str) || ArrayUtil.isEmpty(testChars)) {
 			return false;
 		}
-		for (CharSequence testChar : testChars) {
+		for (final CharSequence testChar : testChars) {
 			if (false == contains(str, testChar)) {
 				return false;
 			}
@@ -798,6 +799,23 @@ public class CharSequenceUtil extends StrChecker {
 			return INDEX_NOT_FOUND;
 		}
 		return new CharFinder(searchChar).setText(text).setEndIndex(end).start(start);
+	}
+
+	/**
+	 * 指定范围内查找指定字符
+	 *
+	 * @param text       字符串
+	 * @param matcher    被查找的字符匹配器
+	 * @param start      起始位置，如果小于0，从0开始查找
+	 * @param end        终止位置，如果超过str.length()则默认查找到字符串末尾
+	 * @return 位置
+	 * @since 6.0.0
+	 */
+	public static int indexOf(final CharSequence text, final Predicate<Character> matcher, final int start, final int end) {
+		if (isEmpty(text)) {
+			return INDEX_NOT_FOUND;
+		}
+		return new CharMatcherFinder(matcher).setText(text).setEndIndex(end).start(start);
 	}
 
 	/**
@@ -3181,6 +3199,46 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	// ------------------------------------------------------------------------ replace
+
+	/**
+	 * 替换字符串中第一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @param ignoreCase  是否忽略大小写
+	 * @return 替换后的字符串
+	 */
+	public static String replaceFirst(final CharSequence str, final CharSequence searchStr, final CharSequence replacedStr, final boolean ignoreCase) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		final int startInclude = indexOf(str, searchStr, 0, ignoreCase);
+		if (INDEX_NOT_FOUND == startInclude) {
+			return str(str);
+		}
+		return replace(str, startInclude, startInclude + searchStr.length(), replacedStr);
+	}
+
+	/**
+	 * 替换字符串中最后一个指定字符串
+	 *
+	 * @param str         字符串
+	 * @param searchStr   被查找的字符串
+	 * @param replacedStr 被替换的字符串
+	 * @param ignoreCase  是否忽略大小写
+	 * @return 替换后的字符串
+	 */
+	public static String replaceLast(final CharSequence str, final CharSequence searchStr, final CharSequence replacedStr, final boolean ignoreCase) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		final int lastIndex = lastIndexOf(str, searchStr, str.length(), ignoreCase);
+		if (INDEX_NOT_FOUND == lastIndex) {
+			return str(str);
+		}
+		return replace(str, lastIndex, searchStr, replacedStr, ignoreCase);
+	}
 
 	/**
 	 * 替换字符串中的指定字符串，忽略大小写

@@ -3,6 +3,9 @@ package cn.hutool.core.codec;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+
+import java.util.List;
 
 /**
  * Punycode是一个根据RFC 3492标准而制定的编码系统，主要用于把域名从地方语言所采用的Unicode编码转换成为可用于DNS系统的编码
@@ -23,6 +26,27 @@ public class PunyCode {
 	private static final char DELIMITER = '-';
 
 	public static final String PUNY_CODE_PREFIX = "xn--";
+
+	/**
+	 * 将域名编码为PunyCode，会忽略"."的编码
+	 *
+	 * @param domain 域名
+	 * @return 编码后的域名
+	 * @throws UtilException 计算异常
+	 */
+	public static String encodeDomain(final String domain) throws UtilException {
+		Assert.notNull(domain, "domain must not be null!");
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() * 4);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
+			}
+			result.append(encode(str, true));
+		}
+
+		return result.toString();
+	}
 
 	/**
 	 * 将内容编码为PunyCode
@@ -48,9 +72,9 @@ public class PunyCode {
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
-		final StringBuilder output = new StringBuilder();
-		// Copy all basic code points to the output
 		final int length = input.length();
+		final StringBuilder output = new StringBuilder(length * 4);
+		// Copy all basic code points to the output
 		int b = 0;
 		for (int i = 0; i < length; i++) {
 			final char c = input.charAt(i);
@@ -120,6 +144,27 @@ public class PunyCode {
 	}
 
 	/**
+	 * 解码 PunyCode为域名
+	 *
+	 * @param domain 域名
+	 * @return 解码后的域名
+	 * @throws UtilException 计算异常
+	 */
+	public static String decodeDomain(final String domain) throws UtilException {
+		Assert.notNull(domain, "domain must not be null!");
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
+			}
+			result.append(decode(str));
+		}
+
+		return result.toString();
+	}
+
+	/**
 	 * 解码 PunyCode为字符串
 	 *
 	 * @param input PunyCode
@@ -133,7 +178,8 @@ public class PunyCode {
 		int n = INITIAL_N;
 		int i = 0;
 		int bias = INITIAL_BIAS;
-		final StringBuilder output = new StringBuilder();
+		final int length = input.length();
+		final StringBuilder output = new StringBuilder(length / 4 + 1);
 		int d = input.lastIndexOf(DELIMITER);
 		if (d > 0) {
 			for (int j = 0; j < d; j++) {
@@ -146,7 +192,6 @@ public class PunyCode {
 		} else {
 			d = 0;
 		}
-		final int length = input.length();
 		while (d < length) {
 			final int oldi = i;
 			int w = 1;
