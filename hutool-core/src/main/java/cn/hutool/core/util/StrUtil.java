@@ -469,23 +469,4 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		return StrFormatter.format(template, map, ignoreNull);
 	}
 
-	/**
-	 * <p>指定字符串数组中，是否包含空字符串。</p>
-	 * <p>如果传入参数对象不是为空,则返回false。如果传入的参数不是String则返回false 如果字符串包含字母,不区分大小写,则返回true</p>
-	 * @param obj 对象
-	 * @return 如果为字符串,是否有字母
-	 */
-	public static boolean hasLetter(Object obj) {
-		if (null == obj) {
-			return false;
-		} else if (obj instanceof String) {
-			char[] chars = ((String) obj).toCharArray();
-			for (char c : chars){
-				if (CharUtil.isLetter(c)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 }
