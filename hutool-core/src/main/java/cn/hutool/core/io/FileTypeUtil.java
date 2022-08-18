@@ -194,6 +194,8 @@ public class FileTypeUtil {
 			} else if ("pptx".equalsIgnoreCase(extName)) {
 				// issue#I5A0GO
 				typeName = "pptx";
+			} else if ("zip".equalsIgnoreCase(extName)) {
+				typeName = "zip";
 			}
 		}
 		return typeName;
