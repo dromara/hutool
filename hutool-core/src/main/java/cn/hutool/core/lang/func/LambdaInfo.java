@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.reflect.FieldUtil;
+import cn.hutool.core.text.StrPool;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
@@ -30,34 +30,42 @@ public class LambdaInfo {
 			this.parameterTypes = method.getGenericParameterTypes();
 			this.returnType = method.getGenericReturnType();
 			this.name = method.getName();
+			this.clazz = method.getDeclaringClass();
 		} else if (executable instanceof Constructor) {
 			final Constructor<?> constructor = (Constructor<?>) executable;
 			this.parameterTypes = constructor.getGenericParameterTypes();
 			this.returnType = constructor.getDeclaringClass();
 			this.name = constructor.getName();
+			this.clazz = constructor.getDeclaringClass();
 		} else {
 			throw new IllegalArgumentException("Unsupported executable type: " + executable.getClass());
 		}
 		final int index = lambda.getInstantiatedMethodType().indexOf(";)");
 		if (index > -1) {
-			final boolean isArray = lambda.getInstantiatedMethodType().startsWith("([");
-			if (isArray) {
-				try {
-					this.instantiatedTypes = new Type[]{Class.forName(lambda.getInstantiatedMethodType().replace("/", ".").substring(0, index).substring(1) + ";")};
-				} catch (final ClassNotFoundException e) {
-					throw new IllegalStateException(e);
+			final String className = lambda.getInstantiatedMethodType().substring(1, index + 1);
+			final String[] instantiatedTypeNames = className.split(";");
+			final Type[] types = new Type[instantiatedTypeNames.length];
+			for (int i = 0; i < instantiatedTypeNames.length; i++) {
+				final boolean isArray = instantiatedTypeNames[i].startsWith(StrPool.BRACKET_START);
+				if (isArray && !instantiatedTypeNames[i].endsWith(";")) {
+					// 如果是数组，需要以 ";" 结尾才能加载
+					instantiatedTypeNames[i] += ";";
+				} else {
+					if (instantiatedTypeNames[i].startsWith("L")) {
+						// 如果以 "L" 开头，删除 L
+						instantiatedTypeNames[i] = instantiatedTypeNames[i].substring(1);
+					}
+					if (instantiatedTypeNames[i].endsWith(";")) {
+						// 如果以 ";" 结尾，删除 ";"
+						instantiatedTypeNames[i] = instantiatedTypeNames[i].substring(0, instantiatedTypeNames[i].length() - 1);
+					}
 				}
-			} else {
-				final String[] instantiatedTypeNames = lambda.getInstantiatedMethodType().substring(2, index).split(";L");
-				this.instantiatedTypes = new Type[instantiatedTypeNames.length];
-				for (int i = 0; i < instantiatedTypeNames.length; i++) {
-					this.instantiatedTypes[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
-				}
+				types[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
 			}
+			this.instantiatedTypes = types;
 		} else {
 			this.instantiatedTypes = new Type[0];
 		}
-		this.clazz = (Class<?>) FieldUtil.getFieldValue(executable, "clazz");
 		this.executable = executable;
 		this.lambda = lambda;
 	}

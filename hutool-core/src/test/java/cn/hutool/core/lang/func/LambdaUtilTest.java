@@ -7,11 +7,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unchecked")
 public class LambdaUtilTest {
 
 	@Test
@@ -29,7 +27,7 @@ public class LambdaUtilTest {
 	}
 
 	@Test
-	public void resolveTest() {
+	public <T> void resolveTest() {
 		Stream.<Runnable>of(() -> {
 			// 引用构造函数
 			final Func0<MyTeacher> lambda = MyTeacher::new;
@@ -41,7 +39,7 @@ public class LambdaUtilTest {
 			final Func1<Integer, MyTeacher[]> lambda = MyTeacher[]::new;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
 			Assert.assertEquals(int.class, lambdaInfo.getParameterTypes()[0]);
-			Assert.assertEquals(MyTeacher.class, ((Class<Array>) lambdaInfo.getReturnType()).getComponentType());
+			Assert.assertEquals(MyTeacher[].class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用静态方法
 			final Func0<String> lambda = MyTeacher::takeAge;
@@ -80,6 +78,12 @@ public class LambdaUtilTest {
 			Assert.assertEquals(String.class, lambdaInfo.getParameterTypes()[4]);
 
 			Assert.assertEquals(void.class, lambdaInfo.getReturnType());
+		}, () -> {
+			// 一些特殊的lambda
+			Assert.assertEquals("T[]", LambdaUtil.<Func<Object, Stream<?>>>resolve(Stream::of).getParameterTypes()[0].getTypeName());
+			Assert.assertEquals(MyTeacher[][].class, LambdaUtil.<Func1<Integer, MyTeacher[][]>>resolve(MyTeacher[][]::new).getReturnType());
+			Assert.assertEquals(Integer[][][].class, LambdaUtil.<VoidFunc1<Integer[][][]>>resolve(a -> {}).getParameterTypes()[0]);
+			Assert.assertEquals(Integer[][][].class, LambdaUtil.resolve((Serializable & Consumer3<Integer[][][], Integer[][], Integer>) (a, b, c) -> {}).getParameterTypes()[0]);
 		}).forEach(Runnable::run);
 
 	}
