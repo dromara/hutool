@@ -171,6 +171,30 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		return append(map);
 	}
 
+	/**
+	 * 增加节点列表，增加的节点是不带子节点的
+	 *
+	 * @param list       Bean列表
+	 * @param <T>        Bean类型
+	 * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
+	 * @return this
+	 */
+	public <T> TreeBuilder<E> append(List<T> list, E rootId, NodeParser<T, E> nodeParser) {
+		checkBuilt();
+
+		final TreeNodeConfig config = this.root.getConfig();
+		final Map<E, Tree<E>> map = new LinkedHashMap<>(list.size(), 1);
+		Tree<E> node;
+		for (T t : list) {
+			node = new Tree<>(config);
+			nodeParser.parse(t, node);
+			if (!rootId.getClass().equals(node.getId().getClass())) {
+				throw new IllegalArgumentException("rootId type is node.getId().getClass()!");
+			}
+			map.put(node.getId(), node);
+		}
+		return append(map);
+	}
 
 	/**
 	 * 重置Builder，实现复用
