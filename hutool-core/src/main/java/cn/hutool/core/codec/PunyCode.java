@@ -25,6 +25,35 @@ public class PunyCode {
 	public static final String PUNY_CODE_PREFIX = "xn--";
 
 	/**
+	 * punycode转码域名
+	 * @param domain
+	 * @return
+	 * @throws UtilException
+	 */
+	public static String encodeDomain(String domain) throws UtilException{
+		Assert.notNull(domain, "domain must not be null!");
+		String[] split = domain.split("\\.");
+		StringBuilder outStringBuilder = new StringBuilder();
+		for (String string: split) {
+			boolean encode = false;
+			for (int index=0; index<string.length(); index++) {
+				char c = string.charAt(index);
+				if (!isBasic(c)) {
+					encode = true;
+					break;
+				}
+			}
+			if (encode) {
+				outStringBuilder.append(PunyCode.encode(string, true));
+			} else {
+				outStringBuilder.append(string);
+			}
+			outStringBuilder.append(".");
+		}
+		return outStringBuilder.substring(0, outStringBuilder.length() - 1);
+	}
+
+	/**
 	 * 将内容编码为PunyCode
 	 *
 	 * @param input 字符串
@@ -117,6 +146,27 @@ public class PunyCode {
 			output.insert(0, PUNY_CODE_PREFIX);
 		}
 		return output.toString();
+	}
+
+	/**
+	 * 解码punycode域名
+	 * @param domain
+	 * @return
+	 * @throws UtilException
+	 */
+	public static String decodeDomain(String domain) throws UtilException{
+		Assert.notNull(domain, "domain must not be null!");
+		String[] split = domain.split("\\.");
+		StringBuilder outStringBuilder = new StringBuilder();
+		for (String string: split) {
+			if (string.startsWith(PUNY_CODE_PREFIX)) {
+				outStringBuilder.append(decode(string));
+			} else {
+				outStringBuilder.append(string);
+			}
+			outStringBuilder.append(".");
+		}
+		return outStringBuilder.substring(0, outStringBuilder.length() - 1);
 	}
 
 	/**
