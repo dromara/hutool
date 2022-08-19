@@ -59,11 +59,11 @@ public class IterUtil {
 	/**
 	 * Iterator是否为空
 	 *
-	 * @param Iterator Iterator对象
+	 * @param iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final Iterator<?> Iterator) {
-		return null == Iterator || false == Iterator.hasNext();
+	public static boolean isEmpty(final Iterator<?> iterator) {
+		return null == iterator || false == iterator.hasNext();
 	}
 
 	/**
@@ -79,11 +79,11 @@ public class IterUtil {
 	/**
 	 * Iterator是否为空
 	 *
-	 * @param Iterator Iterator对象
+	 * @param iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(final Iterator<?> Iterator) {
-		return null != Iterator && Iterator.hasNext();
+	public static boolean isNotEmpty(final Iterator<?> iterator) {
+		return null != iterator && iterator.hasNext();
 	}
 
 	/**
@@ -145,12 +145,10 @@ public class IterUtil {
 	 * @return {@link Map}
 	 */
 	public static <T> Map<T, Integer> countMap(final Iterator<T> iter) {
-		final HashMap<T, Integer> countMap = new HashMap<>();
+		final Map<T, Integer> countMap = new HashMap<>();
 		if (null != iter) {
-			T t;
 			while (iter.hasNext()) {
-				t = iter.next();
-				countMap.put(t, countMap.getOrDefault(t, 0) + 1);
+				countMap.merge(iter.next(), 1, Integer::sum);
 			}
 		}
 		return countMap;
@@ -447,11 +445,11 @@ public class IterUtil {
 	 * @return {@link Iterator}
 	 */
 	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
-		return new EnumerationIter<>(e);
+		return new EnumerationIter<>(Objects.requireNonNull(e));
 	}
 
 	/**
-	 * {@link Iterator} 转为 {@link Iterable}
+	 * {@link Iterator} 转为 {@link Iterable}, 但是仅可使用一次
 	 *
 	 * @param <E>  元素类型
 	 * @param iter {@link Iterator}
@@ -838,6 +836,7 @@ public class IterUtil {
 	 *
 	 * @param obj 可以获取{@link Iterator}的对象
 	 * @return {@link Iterator}，如果提供对象为{@code null}，返回{@code null}
+	 * @since 5.8.0
 	 */
 	public static Iterator<?> getIter(final Object obj) {
 		if (obj == null) {

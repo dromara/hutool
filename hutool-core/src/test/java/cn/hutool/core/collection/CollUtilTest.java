@@ -29,8 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.Stack;
 import java.util.function.Function;
 
 /**
@@ -816,8 +818,14 @@ public class CollUtilTest {
 	public void lastIndexOfTest() {
 		// List有优化
 		final ArrayList<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
-		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'c');
-		Assert.assertEquals(3, i);
+		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'a');
+		Assert.assertEquals(4, i);
+
+		final Queue<Integer> set = new ArrayDeque<>(Arrays.asList(1, 2, 3, 3, 2, 1));
+		Assert.assertEquals(5, CollUtil.lastIndexOf(set, num -> num.equals(1)));
+		Assert.assertEquals(4, CollUtil.lastIndexOf(set, num -> num.equals(2)));
+		Assert.assertEquals(3, CollUtil.lastIndexOf(set, num -> num.equals(3)));
+		Assert.assertEquals(-1, CollUtil.lastIndexOf(set, num -> num.equals(4)));
 	}
 
 	@Test
@@ -1003,6 +1011,11 @@ public class CollUtilTest {
 		final List<String> list3 = null;
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
 		Assert.assertNotNull(list);
+
+		Assert.assertEquals(
+				ListUtil.of(1, 2, 3, 4),
+				CollUtil.unionAll(ListUtil.of(1), ListUtil.of(2), ListUtil.of(3), ListUtil.of(4))
+		);
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -1074,5 +1087,53 @@ public class CollUtilTest {
 		deque.add("3");
 		deque.add("4");
 		Assert.assertEquals("3", CollUtil.getFirst(deque));
+	}
+
+	@Test
+	public void popPartTest() {
+		final Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < 10; i++) {
+			stack.push(i);
+		}
+		final List<Integer> popPart1 = CollUtil.popPart(stack, 3);
+		Assert.assertEquals(ListUtil.of(9, 8, 7), popPart1);
+		Assert.assertEquals(7, stack.size());
+
+		final ArrayDeque<Integer> queue = new ArrayDeque<>();
+		for (int i = 0; i < 10; i++) {
+			queue.push(i);
+		}
+		final List<Integer> popPart2 = CollUtil.popPart(queue, 3);
+		Assert.assertEquals(ListUtil.of(9, 8, 7), popPart2);
+		Assert.assertEquals(7, queue.size());
+	}
+
+	@Test
+	public void isEqualListTest() {
+		final List<Integer> list = ListUtil.of(1, 2, 3, 4);
+		Assert.assertTrue(CollUtil.isEqualList(null, null));
+		Assert.assertTrue(CollUtil.isEqualList(ListUtil.of(), ListUtil.of()));
+		Assert.assertTrue(CollUtil.isEqualList(list, list));
+		Assert.assertTrue(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 4)));
+
+		Assert.assertFalse(CollUtil.isEqualList(null, ListUtil.of()));
+		Assert.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 3)));
+		Assert.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
+		Assert.assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
+	}
+
+	@Test
+	public void isEqualsTest() {
+		final List<Integer> list = ListUtil.of(1, 2, 3, 4);
+		Assert.assertTrue(CollUtil.isEquals(null, null));
+		Assert.assertTrue(CollUtil.isEquals(ListUtil.of(), ListUtil.of()));
+		Assert.assertTrue(CollUtil.isEquals(list, list));
+		Assert.assertTrue(CollUtil.isEquals(list, ListUtil.of(1, 2, 3, 4)));
+		Assert.assertTrue(CollUtil.isEquals(list, ListUtil.of(4, 3, 2, 1)));
+		Assert.assertTrue(CollUtil.isEquals(list, SetUtil.of(4, 3, 2, 1)));
+
+		Assert.assertFalse(CollUtil.isEquals(null, ListUtil.of()));
+		Assert.assertFalse(CollUtil.isEquals(list, ListUtil.of(1, 2, 3, 3)));
+		Assert.assertFalse(CollUtil.isEquals(list, ListUtil.of(1, 2, 3)));
 	}
 }
