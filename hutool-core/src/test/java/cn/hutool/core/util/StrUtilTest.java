@@ -618,5 +618,17 @@ public class StrUtilTest {
 		Assert.assertTrue(StrUtil.containsAll(a, "214", "234"));
 	}
 
+	@Test
+	public void replaceLastTest() {
+		String str = "i am jackjack";
+		String result = StrUtil.replaceLast(str, "JACK", null, true);
+		Assert.assertEquals(result, "i am jack");
+	}
 
+	@Test
+	public void replaceFirstTest() {
+		String str = "yesyes i do";
+		String result = StrUtil.replaceFirst(str, "YES", "", true);
+		Assert.assertEquals(result, "yes i do");
+	}
 }
