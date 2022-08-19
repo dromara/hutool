@@ -154,9 +154,15 @@ public class CollectionOperation<E> {
 	 */
 	public Set<E> intersectionDistinct() {
 		final Collection<E>[] colls = this.colls;
-		// 任意容器为空, 则返回空集
 		if (ArrayUtil.isEmpty(colls)) {
 			return SetUtil.zeroLinked();
+		}
+
+		// 任意容器为空, 则返回空集
+		for (Collection<E> coll : colls) {
+			if(CollUtil.isEmpty(coll)){
+				return SetUtil.zeroLinked();
+			}
 		}
 
 		final Set<E> result = SetUtil.of(true, colls[0]);

@@ -177,6 +177,7 @@ public class CollUtilTest {
 		Assert.assertEquals(SetUtil.ofLinked("a", "b", "c", "d"), intersectionDistinct);
 
 		final Collection<String> intersectionDistinct2 = CollUtil.intersectionDistinct(list1, list2, list3);
+		Console.log(intersectionDistinct2);
 		Assert.assertTrue(intersectionDistinct2.isEmpty());
 	}
 
