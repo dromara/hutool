@@ -4495,4 +4495,24 @@ public class CharSequenceUtil {
 		}
 		return str + repeat(fixedChar, fixedLength);
 	}
+
+	/**
+	 * <p>指定字符串数组中，是否包含空字符串。</p>
+	 * <p>如果传入参数对象不是为空,则返回false。如果字符串包含字母,不区分大小写,则返回true</p>
+	 *
+	 * @param str 对象
+	 * @return 如果为字符串, 是否有字母
+	 */
+	public static boolean hasLetter(CharSequence str) {
+		if (null == str) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (CharUtil.isLetter(str.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
