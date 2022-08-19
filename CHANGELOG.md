@@ -13,6 +13,7 @@
 * 【core   】     增加Tree add 类型校验（pr#2542@Github）
 * 【core   】     增加PunyCode处理完整域名（pr#2543@Github）
 * 【core   】     增加替换字符串中第一个指定字符串和最后一个指定字符串方法（pr#2533@Github）
+* 【jwt    】     JWT补充部分算法（pr#2546@Github）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）
