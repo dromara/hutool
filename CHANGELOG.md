@@ -11,6 +11,7 @@
 * 【core   】     NumberUtil.parseInt忽略科学计数法（issue#I5M55F@Gitee）
 * 【core   】     IterUtil.getFirst优化（pr#753@Gitee）
 * 【core   】     增加Tree add 类型校验（pr#2542@Github）
+* 【core   】     增加PunyCode处理完整域名（pr#2543@Github）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）

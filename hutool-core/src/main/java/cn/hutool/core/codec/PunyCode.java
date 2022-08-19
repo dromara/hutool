@@ -2,7 +2,10 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.List;
 
 /**
  * Punycode是一个根据RFC 3492标准而制定的编码系统，主要用于把域名从地方语言所采用的Unicode编码转换成为可用于DNS系统的编码
@@ -26,31 +29,23 @@ public class PunyCode {
 
 	/**
 	 * punycode转码域名
-	 * @param domain
-	 * @return
-	 * @throws UtilException
+	 *
+	 * @param domain 域名
+	 * @return 编码后的域名
+	 * @throws UtilException 计算异常
 	 */
-	public static String encodeDomain(String domain) throws UtilException{
+	public static String encodeDomain(String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		String[] split = domain.split("\\.");
-		StringBuilder outStringBuilder = new StringBuilder();
-		for (String string: split) {
-			boolean encode = false;
-			for (int index=0; index<string.length(); index++) {
-				char c = string.charAt(index);
-				if (!isBasic(c)) {
-					encode = true;
-					break;
-				}
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() * 4);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
 			}
-			if (encode) {
-				outStringBuilder.append(PunyCode.encode(string, true));
-			} else {
-				outStringBuilder.append(string);
-			}
-			outStringBuilder.append(".");
+			result.append(encode(str, true));
 		}
-		return outStringBuilder.substring(0, outStringBuilder.length() - 1);
+
+		return result.toString();
 	}
 
 	/**
@@ -150,23 +145,23 @@ public class PunyCode {
 
 	/**
 	 * 解码punycode域名
-	 * @param domain
-	 * @return
-	 * @throws UtilException
+	 *
+	 * @param domain PunyCode域名
+	 * @return 解码后的域名
+	 * @throws UtilException 计算异常
 	 */
-	public static String decodeDomain(String domain) throws UtilException{
+	public static String decodeDomain(String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		String[] split = domain.split("\\.");
-		StringBuilder outStringBuilder = new StringBuilder();
-		for (String string: split) {
-			if (string.startsWith(PUNY_CODE_PREFIX)) {
-				outStringBuilder.append(decode(string));
-			} else {
-				outStringBuilder.append(string);
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
 			}
-			outStringBuilder.append(".");
+			result.append(decode(str));
 		}
-		return outStringBuilder.substring(0, outStringBuilder.length() - 1);
+
+		return result.toString();
 	}
 
 	/**
