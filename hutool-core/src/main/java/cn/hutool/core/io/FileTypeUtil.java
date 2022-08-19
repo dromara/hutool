@@ -184,6 +184,8 @@ public class FileTypeUtil {
 				typeName = "war";
 			} else if ("ofd".equalsIgnoreCase(extName)) {
 				typeName = "ofd";
+			} else if ("apk".equalsIgnoreCase(extName)) {
+				typeName = "apk";
 			}
 		} else if ("jar".equals(typeName)) {
 			// wps编辑过的.xlsx文件与.jar的开头相同,通过扩展名判断
@@ -196,6 +198,10 @@ public class FileTypeUtil {
 			} else if ("pptx".equalsIgnoreCase(extName)) {
 				// issue#I5A0GO
 				typeName = "pptx";
+			} else if ("zip".equalsIgnoreCase(extName)) {
+				typeName = "zip";
+			} else if ("apk".equalsIgnoreCase(extName)) {
+				typeName = "apk";
 			}
 		}
 		return typeName;
