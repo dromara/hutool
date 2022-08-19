@@ -1608,12 +1608,12 @@ public class CollUtil {
 		}
 		int matchIndex = -1;
 		if (isNotEmpty(collection)) {
-			int index = collection.size();
+			int index = 0;
 			for (T t : collection) {
 				if (null == matcher || matcher.match(t)) {
 					matchIndex = index;
 				}
-				index--;
+				index++;
 			}
 		}
 		return matchIndex;
