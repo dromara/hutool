@@ -364,28 +364,13 @@ public class CollUtil {
 	 * 结果：[a, b, c]，此结果中只保留了一个c
 	 *
 	 * @param <T>        集合元素类型
-	 * @param coll1      集合1
-	 * @param coll2      集合2
-	 * @param otherColls 其它集合
+	 * @param colls 集合列表
 	 * @return 交集的集合，返回 {@link LinkedHashSet}
 	 * @since 5.3.9
 	 */
 	@SafeVarargs
-	public static <T> Set<T> intersectionDistinct(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
-		// 任意容器为空, 则返回空集
-		if (isEmpty(coll1) || isEmpty(coll2) || ArrayUtil.hasEmpty((Object[]) otherColls)) {
-			return new LinkedHashSet<>();
-		}
-		final Set<T> result = new LinkedHashSet<>(coll1);
-		result.retainAll(coll2);
-
-		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (final Collection<T> otherColl : otherColls) {
-				result.retainAll(otherColl);
-			}
-		}
-
-		return result;
+	public static <T> Set<T> intersectionDistinct(final Collection<T>... colls) {
+		return CollectionOperation.of(colls).intersectionDistinct();
 	}
 
 	/**
@@ -407,30 +392,7 @@ public class CollUtil {
 	 * @return 差集的集合，返回 {@link ArrayList}
 	 */
 	public static <T> Collection<T> disjunction(final Collection<T> coll1, final Collection<T> coll2) {
-		if (isEmpty(coll1) || isEmpty(coll2)) {
-			if (isEmpty(coll1) && isEmpty(coll2)) {
-				return ListUtil.zero();
-			} else if (isEmpty(coll1)) {
-				return coll2;
-			} else if (isEmpty(coll2)) {
-				return coll1;
-			}
-		}
-
-		final List<T> result = new ArrayList<>();
-		final Map<T, Integer> map1 = countMap(coll1);
-		final Map<T, Integer> map2 = countMap(coll2);
-		// 两个集合的全部元素
-		final Set<T> elements = SetUtil.of(map1.keySet());
-		elements.addAll(map2.keySet());
-		// 元素的个数为 该元素在两个集合中的个数的差
-		for (final T t : elements) {
-			final int amount = Math.abs(map1.getOrDefault(t, 0) - map2.getOrDefault(t, 0));
-			for (int i = 0; i < amount; i++) {
-				result.add(t);
-			}
-		}
-		return result;
+		return CollectionOperation.of(coll1, coll2).disjunction();
 	}
 
 	/**
@@ -469,23 +431,7 @@ public class CollUtil {
 	 * @since 5.3.5
 	 */
 	public static <T> List<T> subtractToList(final Collection<T> coll1, final Collection<T> coll2) {
-
-		if (isEmpty(coll1)) {
-			return ListUtil.empty();
-		}
-		if (isEmpty(coll2)) {
-			return ListUtil.of(true, coll1);
-		}
-
-		//将被交数用链表储存，防止因为频繁扩容影响性能
-		final List<T> result = new LinkedList<>();
-		final Set<T> set = new HashSet<>(coll2);
-		for (final T t : coll1) {
-			if (false == set.contains(t)) {
-				result.add(t);
-			}
-		}
-		return result;
+		return CollectionOperation.of(coll1, coll2).subtract();
 	}
 
 	/**
@@ -588,37 +534,8 @@ public class CollUtil {
 			return false;
 		}
 
-		// 针对Set的优化
-		if (coll1 instanceof Set) {
-			//noinspection SuspiciousMethodCalls
-			return coll1.containsAll(coll2);
-		}
-
-		final Iterator<?> iterator = coll1.iterator();
-		// 保存 集合1 已经遍历过的元素
-		final Set<Object> elementsAlreadySeen = new HashSet<>();
-		for (final Object curElement : coll2) {
-			// 集合2的当前元素 已经在集合1中
-			if (elementsAlreadySeen.contains(curElement)) {
-				continue;
-			}
-
-			// 集合2的当前元素 是否在集合1中
-			boolean foundCurrentElement = false;
-			while (iterator.hasNext()) {
-				final Object next = iterator.next();
-				elementsAlreadySeen.add(next);
-				if (Objects.equals(curElement, next)) {
-					foundCurrentElement = true;
-					break;
-				}
-			}
-			// 集合2的当前元素 不在集合1中, 显然不是子集
-			if (!foundCurrentElement) {
-				return false;
-			}
-		}
-		return true;
+		//noinspection SuspiciousMethodCalls
+		return coll1.containsAll(coll2);
 	}
 
 	/**
@@ -1771,11 +1688,14 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> T get(final Collection<T> collection, int index) {
-		if (isEmpty(collection)) {
+		if (null == collection) {
 			return null;
 		}
 
 		final int size = collection.size();
+		if (0 == size) {
+			return null;
+		}
 		if (index < 0) {
 			index += size;
 		}
@@ -2193,10 +2113,10 @@ public class CollUtil {
 		if (isEmpty(mapCollection)) {
 			return ListUtil.zero();
 		}
-		// 统计每个map的values的大小总和
+		// 统计每个map的大小总和
 		int size = 0;
 		for (final Map<?, V> map : mapCollection) {
-			size += size(map.values());
+			size += map.size();
 		}
 		if (size == 0) {
 			return ListUtil.zero();
@@ -2446,41 +2366,6 @@ public class CollUtil {
 		}
 
 		return IterUtil.isEqualList(list1, list2);
-	}
-
-	/**
-	 * 判断两个集合是否包含相同的元素(包括个数)
-	 *
-	 * @param coll1 集合1
-	 * @param coll2 集合2
-	 * @return 两个集合是否相同
-	 * @since 6.0.0
-	 */
-	public static boolean isEquals(final Collection<?> coll1, final Collection<?> coll2) {
-		if (coll1 == coll2) {
-			return true;
-		}
-		if (coll1 == null || coll2 == null || coll1.size() != coll2.size()) {
-			return false;
-		}
-		// 针对 Set 的优化
-		if (coll1 instanceof Set || coll2 instanceof Set) {
-			//noinspection SuspiciousMethodCalls
-			return coll1 instanceof Set ? coll1.containsAll(coll2) : coll2.containsAll(coll1);
-		}
-
-		// 给集合1的每个元素计数
-		//noinspection unchecked
-		final Map<Object, Integer> countMap1 = countMap((Iterable<Object>) coll1);
-
-		for (final Object e : coll2) {
-			// 该元素若存在, 则个数减去1, 若不存在则个数为-1
-			final Integer amount = countMap1.merge(e, -1, Integer::sum);
-			if (amount < 0) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	/**

@@ -1121,19 +1121,4 @@ public class CollUtilTest {
 		Assert.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
 		Assert.assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
 	}
-
-	@Test
-	public void isEqualsTest() {
-		final List<Integer> list = ListUtil.of(1, 2, 3, 4);
-		Assert.assertTrue(CollUtil.isEquals(null, null));
-		Assert.assertTrue(CollUtil.isEquals(ListUtil.of(), ListUtil.of()));
-		Assert.assertTrue(CollUtil.isEquals(list, list));
-		Assert.assertTrue(CollUtil.isEquals(list, ListUtil.of(1, 2, 3, 4)));
-		Assert.assertTrue(CollUtil.isEquals(list, ListUtil.of(4, 3, 2, 1)));
-		Assert.assertTrue(CollUtil.isEquals(list, SetUtil.of(4, 3, 2, 1)));
-
-		Assert.assertFalse(CollUtil.isEquals(null, ListUtil.of()));
-		Assert.assertFalse(CollUtil.isEquals(list, ListUtil.of(1, 2, 3, 3)));
-		Assert.assertFalse(CollUtil.isEquals(list, ListUtil.of(1, 2, 3)));
-	}
 }
