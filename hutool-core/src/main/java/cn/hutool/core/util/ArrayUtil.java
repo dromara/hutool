@@ -1565,15 +1565,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
+	 * 如果提供数组本身为空，
 	 *
 	 * @param args 被检查对象
 	 * @return 是否存在
 	 * @since 4.5.18
 	 */
-	public static boolean hasEmpty(final Object... args) {
+	public static <T> boolean hasEmpty(final T[] args) {
 		if (isNotEmpty(args)) {
-			for (final Object element : args) {
+			for (final T element : args) {
 				if (ObjUtil.isEmpty(element)) {
 					return true;
 				}
@@ -1589,8 +1590,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否都为空
 	 * @since 4.5.18
 	 */
-	public static boolean isAllEmpty(final Object... args) {
-		for (final Object obj : args) {
+	public static <T> boolean isAllEmpty(final T[] args) {
+		for (final T obj : args) {
 			if (false == ObjUtil.isEmpty(obj)) {
 				return false;
 			}

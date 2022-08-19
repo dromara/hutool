@@ -162,6 +162,7 @@ public class CollUtilTest {
 
 		final Collection<String> intersection = CollUtil.intersection(list1, list2);
 		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
+		Assert.assertEquals(0, CollUtil.count(intersection, "x"::equals));
 	}
 
 	@Test
