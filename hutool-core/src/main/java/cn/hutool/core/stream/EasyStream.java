@@ -48,7 +48,7 @@ import java.util.stream.*;
  * @see java.util.stream.Stream
  * @since 6.0.0
  */
-public class FastStream<T> implements Stream<T>, Iterable<T> {
+public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	/**
 	 * 代表不存在的下标, 一般用于并行流的下标, 或者未找到元素时的下标
 	 */
@@ -56,7 +56,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 
 	protected final Stream<T> stream;
 
-	FastStream(Stream<T> stream) {
+	EasyStream(Stream<T> stream) {
 		this.stream = stream;
 	}
 
@@ -80,8 +80,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 			}
 
 			@Override
-			public FastStream<T> build() {
-				return new FastStream<>(streamBuilder.build());
+			public EasyStream<T> build() {
+				return new EasyStream<>(streamBuilder.build());
 			}
 		};
 	}
@@ -92,8 +92,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <T> 元素类型
 	 * @return 一个空的串行流
 	 */
-	public static <T> FastStream<T> empty() {
-		return new FastStream<>(Stream.empty());
+	public static <T> EasyStream<T> empty() {
+		return new EasyStream<>(Stream.empty());
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <T> 元素类型
 	 * @return 包含单个元素的串行流
 	 */
-	public static <T> FastStream<T> of(T t) {
-		return new FastStream<>(Stream.of(t));
+	public static <T> EasyStream<T> of(T t) {
+		return new EasyStream<>(Stream.of(t));
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
-	public static <T> FastStream<T> of(T... values) {
-		return ArrayUtil.isEmpty(values) ? FastStream.empty() : new FastStream<>(Stream.of(values));
+	public static <T> EasyStream<T> of(T... values) {
+		return ArrayUtil.isEmpty(values) ? EasyStream.empty() : new EasyStream<>(Stream.of(values));
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <p>
 	 * 例如
 	 * {@code FastStream.iterate(0, i -> i + 1)}
-	 * 就可以创建从0开始，每次+1的无限流，使用{@link FastStream#limit(long)}可以限制元素个数
+	 * 就可以创建从0开始，每次+1的无限流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
 	 * @param <T>  元素类型
@@ -135,8 +135,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param f    用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
-	public static <T> FastStream<T> iterate(final T seed, final UnaryOperator<T> f) {
-		return new FastStream<>(Stream.iterate(seed, f));
+	public static <T> EasyStream<T> iterate(final T seed, final UnaryOperator<T> f) {
+		return new EasyStream<>(Stream.iterate(seed, f));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * <p>
 	 * 例如
 	 * {@code FastStream.iterate(0, i -> i < 3, i -> ++i)}
-	 * 就可以创建包含元素0,1,2的流，使用{@link FastStream#limit(long)}可以限制元素个数
+	 * 就可以创建包含元素0,1,2的流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
 	 * @param <T>     元素类型
@@ -154,10 +154,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param next    用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
-	public static <T> FastStream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+	public static <T> EasyStream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
-		return new FastStream<>(StreamUtil.iterate(seed, hasNext, next));
+		return new EasyStream<>(StreamUtil.iterate(seed, hasNext, next));
 	}
 
 	/**
@@ -169,8 +169,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param s   用来生成元素的 {@code Supplier}
 	 * @return 无限串行无序流
 	 */
-	public static <T> FastStream<T> generate(Supplier<T> s) {
-		return new FastStream<>(Stream.generate(s));
+	public static <T> EasyStream<T> generate(Supplier<T> s) {
+		return new EasyStream<>(Stream.generate(s));
 	}
 
 	/**
@@ -185,8 +185,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param b   第二个流
 	 * @return 拼接两个流之后的流
 	 */
-	public static <T> FastStream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
-		return new FastStream<>(Stream.concat(a, b));
+	public static <T> EasyStream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
+		return new EasyStream<>(Stream.concat(a, b));
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <T>      元素类型
 	 * @return 流
 	 */
-	public static <T> FastStream<T> of(Iterable<T> iterable) {
+	public static <T> EasyStream<T> of(Iterable<T> iterable) {
 		return of(iterable, false);
 	}
 
@@ -208,8 +208,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <T>      元素类型
 	 * @return 流
 	 */
-	public static <T> FastStream<T> of(Iterable<T> iterable, boolean parallel) {
-		return Opt.ofNullable(iterable).map(Iterable::spliterator).map(spliterator -> StreamSupport.stream(spliterator, parallel)).map(FastStream::new).orElseGet(FastStream::empty);
+	public static <T> EasyStream<T> of(Iterable<T> iterable, boolean parallel) {
+		return Opt.ofNullable(iterable).map(Iterable::spliterator).map(spliterator -> StreamSupport.stream(spliterator, parallel)).map(EasyStream::new).orElseGet(EasyStream::empty);
 	}
 
 	/**
@@ -219,8 +219,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <T>    元素类型
 	 * @return 流
 	 */
-	public static <T> FastStream<T> of(Stream<T> stream) {
-		return new FastStream<>(Objects.requireNonNull(stream));
+	public static <T> EasyStream<T> of(Stream<T> stream) {
+		return new EasyStream<>(Objects.requireNonNull(stream));
 	}
 
 	/**
@@ -230,8 +230,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param regex 正则
 	 * @return 拆分后元素组成的流
 	 */
-	public static FastStream<String> split(CharSequence str, String regex) {
-		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(FastStream::of).orElseGet(FastStream::empty);
+	public static EasyStream<String> split(CharSequence str, String regex) {
+		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(EasyStream::of).orElseGet(EasyStream::empty);
 	}
 
 	// --------------------------------------------------------------- Static method end
@@ -245,8 +245,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 返回叠加过滤操作后的流
 	 */
 	@Override
-	public FastStream<T> filter(Predicate<? super T> predicate) {
-		return new FastStream<>(stream.filter(predicate));
+	public EasyStream<T> filter(Predicate<? super T> predicate) {
+		return new EasyStream<>(stream.filter(predicate));
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param value  用来匹配的值
 	 * @return 与 指定操作结果 匹配 指定值 的元素组成的流
 	 */
-	public <R> FastStream<T> filter(Function<? super T, ? extends R> mapper, R value) {
+	public <R> EasyStream<T> filter(Function<? super T, ? extends R> mapper, R value) {
 		Objects.requireNonNull(mapper);
 		return filter(e -> Objects.equals(mapper.apply(e), value));
 	}
@@ -270,7 +270,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 返回叠加过滤操作后的流
 	 */
-	public FastStream<T> filterIdx(BiPredicate<? super T, Integer> predicate) {
+	public EasyStream<T> filterIdx(BiPredicate<? super T, Integer> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
 			return filter(e -> predicate.test(e, NOT_FOUND_INDEX));
@@ -285,8 +285,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 *
 	 * @return 过滤后的流
 	 */
-	public FastStream<T> nonNull() {
-		return new FastStream<>(stream.filter(Objects::nonNull));
+	public EasyStream<T> nonNull() {
+		return new EasyStream<>(stream.filter(Objects::nonNull));
 	}
 
 	/**
@@ -298,8 +298,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 返回叠加操作后的流
 	 */
 	@Override
-	public <R> FastStream<R> map(Function<? super T, ? extends R> mapper) {
-		return new FastStream<>(stream.map(mapper));
+	public <R> EasyStream<R> map(Function<? super T, ? extends R> mapper) {
+		return new EasyStream<>(stream.map(mapper));
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    函数执行后返回的类型
 	 * @return 新元素组成的流
 	 */
-	public <R> FastStream<R> mapNonNull(Function<? super T, ? extends R> mapper) {
+	public <R> EasyStream<R> mapNonNull(Function<? super T, ? extends R> mapper) {
 		return nonNull().<R>map(mapper).nonNull();
 	}
 
@@ -326,7 +326,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    函数执行后返回的类型
 	 * @return 返回叠加操作后的流
 	 */
-	public <R> FastStream<R> mapIdx(BiFunction<? super T, Integer, ? extends R> mapper) {
+	public <R> EasyStream<R> mapIdx(BiFunction<? super T, Integer, ? extends R> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isParallel()) {
 			return map(e -> mapper.apply(e, NOT_FOUND_INDEX));
@@ -349,8 +349,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 返回叠加拆分操作后的流
 	 */
 	@Override
-	public <R> FastStream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
-		return new FastStream<>(stream.flatMap(mapper));
+	public <R> EasyStream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
+		return new EasyStream<>(stream.flatMap(mapper));
 	}
 
 	/**
@@ -361,7 +361,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    拆分后流的元素类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <R> FastStream<R> flatMapIdx(BiFunction<? super T, Integer, ? extends Stream<? extends R>> mapper) {
+	public <R> EasyStream<R> flatMapIdx(BiFunction<? super T, Integer, ? extends Stream<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isParallel()) {
 			return flatMap(e -> mapper.apply(e, NOT_FOUND_INDEX));
@@ -372,7 +372,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 和{@link FastStream#map(Function)}一样，只不过函数的返回值必须为int类型
+	 * 和{@link EasyStream#map(Function)}一样，只不过函数的返回值必须为int类型
 	 * 这是一个无状态中间操作
 	 *
 	 * @param mapper 返回值为int类型的函数
@@ -384,7 +384,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 和{@link FastStream#map(Function)}一样，只不过函数的返回值必须为long类型
+	 * 和{@link EasyStream#map(Function)}一样，只不过函数的返回值必须为long类型
 	 * 这是一个无状态中间操作
 	 *
 	 * @param mapper 返回值为long类型的函数
@@ -396,7 +396,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 和{@link FastStream#map(Function)}一样，只不过函数的返回值必须为double类型
+	 * 和{@link EasyStream#map(Function)}一样，只不过函数的返回值必须为double类型
 	 * 这是一个无状态中间操作
 	 *
 	 * @param mapper 返回值为double类型的函数
@@ -420,7 +420,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    拆分后流的元素类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <R> FastStream<R> flat(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+	public <R> EasyStream<R> flat(Function<? super T, ? extends Iterable<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
 		return flatMap(w -> of(mapper.apply(w)));
 	}
@@ -436,7 +436,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @see #flat(Function)
 	 * @see #nonNull()
 	 */
-	public <R> FastStream<R> flatNonNull(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+	public <R> EasyStream<R> flatNonNull(Function<? super T, ? extends Iterable<? extends R>> mapper) {
 		return nonNull().flat(mapper).nonNull();
 	}
 
@@ -484,10 +484,10 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    拆分后流的元素类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <R> FastStream<R> mapMulti(BiConsumer<? super T, ? super FastStreamBuilder<R>> mapper) {
+	public <R> EasyStream<R> mapMulti(BiConsumer<? super T, ? super FastStreamBuilder<R>> mapper) {
 		Objects.requireNonNull(mapper);
 		return flatMap(e -> {
-			FastStreamBuilder<R> buffer = FastStream.builder();
+			FastStreamBuilder<R> buffer = EasyStream.builder();
 			mapper.accept(e, buffer);
 			return buffer.build();
 		});
@@ -500,8 +500,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 一个具有去重特征的流
 	 */
 	@Override
-	public FastStream<T> distinct() {
-		return new FastStream<>(stream.distinct());
+	public EasyStream<T> distinct() {
+		return new EasyStream<>(stream.distinct());
 	}
 
 	/**
@@ -512,7 +512,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param keyExtractor 去重依据
 	 * @return 一个具有去重特征的流
 	 */
-	public <F> FastStream<T> distinct(Function<? super T, F> keyExtractor) {
+	public <F> EasyStream<T> distinct(Function<? super T, F> keyExtractor) {
 		Objects.requireNonNull(keyExtractor);
 		if (isParallel()) {
 			ConcurrentHashMap<F, Boolean> exists = MapUtil.newConcurrentHashMap();
@@ -548,8 +548,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 一个元素按自然顺序排序的流
 	 */
 	@Override
-	public FastStream<T> sorted() {
-		return new FastStream<>(stream.sorted());
+	public EasyStream<T> sorted() {
+		return new EasyStream<>(stream.sorted());
 	}
 
 	/**
@@ -562,8 +562,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 一个元素按指定的Comparator排序的流
 	 */
 	@Override
-	public FastStream<T> sorted(Comparator<? super T> comparator) {
-		return new FastStream<>(stream.sorted(comparator));
+	public EasyStream<T> sorted(Comparator<? super T> comparator) {
+		return new EasyStream<>(stream.sorted(comparator));
 	}
 
 	/**
@@ -584,8 +584,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * }</pre>
 	 */
 	@Override
-	public FastStream<T> peek(Consumer<? super T> action) {
-		return new FastStream<>(stream.peek(action));
+	public EasyStream<T> peek(Consumer<? super T> action) {
+		return new EasyStream<>(stream.peek(action));
 	}
 
 	/**
@@ -593,7 +593,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 *
 	 * @return 返回叠加操作后的FastStream
 	 */
-	public FastStream<T> log() {
+	public EasyStream<T> log() {
 		return peek(Console::log);
 	}
 
@@ -605,8 +605,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 截取后的流
 	 */
 	@Override
-	public FastStream<T> limit(long maxSize) {
-		return new FastStream<>(stream.limit(maxSize));
+	public EasyStream<T> limit(long maxSize) {
+		return new EasyStream<>(stream.limit(maxSize));
 	}
 
 	/**
@@ -617,8 +617,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 丢弃前面n个元素后的剩余元素组成的流
 	 */
 	@Override
-	public FastStream<T> skip(long n) {
-		return new FastStream<>(stream.skip(n));
+	public EasyStream<T> skip(long n) {
+		return new EasyStream<>(stream.skip(n));
 	}
 
 	/**
@@ -627,7 +627,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 串行流
 	 */
 	@Override
-	public FastStream<T> sequential() {
+	public EasyStream<T> sequential() {
 		//noinspection ResultOfMethodCallIgnored
 		stream.sequential();
 		return this;
@@ -982,7 +982,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 *
 	 * @return 反转元素顺序
 	 */
-	public FastStream<T> reverse() {
+	public EasyStream<T> reverse() {
 		//noinspection unchecked
 		final T[] array = (T[]) toArray();
 		ArrayUtil.reverse(array);
@@ -1025,7 +1025,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 并行流
 	 */
 	@Override
-	public FastStream<T> parallel() {
+	public EasyStream<T> parallel() {
 		//noinspection ResultOfMethodCallIgnored
 		stream.parallel();
 		return this;
@@ -1037,7 +1037,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param parallel 是否并行
 	 * @return 流
 	 */
-	public FastStream<T> parallel(boolean parallel) {
+	public EasyStream<T> parallel(boolean parallel) {
 		return parallel ? parallel() : sequential();
 	}
 
@@ -1048,8 +1048,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 无序流
 	 */
 	@Override
-	public FastStream<T> unordered() {
-		return new FastStream<>(stream.unordered());
+	public EasyStream<T> unordered() {
+		return new EasyStream<>(stream.unordered());
 	}
 
 	/**
@@ -1059,7 +1059,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	@Override
-	public FastStream<T> onClose(Runnable closeHandler) {
+	public EasyStream<T> onClose(Runnable closeHandler) {
 		//noinspection ResultOfMethodCallIgnored
 		stream.onClose(closeHandler);
 		return this;
@@ -1071,8 +1071,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param obj 元素
 	 * @return 流
 	 */
-	public FastStream<T> push(T obj) {
-		return FastStream.concat(this.stream, of(obj));
+	public EasyStream<T> push(T obj) {
+		return EasyStream.concat(this.stream, of(obj));
 	}
 
 	/**
@@ -1082,8 +1082,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	@SuppressWarnings("unchecked")
-	public FastStream<T> push(T... obj) {
-		return FastStream.concat(this.stream, of(obj));
+	public EasyStream<T> push(T... obj) {
+		return EasyStream.concat(this.stream, of(obj));
 	}
 
 	/**
@@ -1092,8 +1092,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param obj 元素
 	 * @return 流
 	 */
-	public FastStream<T> unshift(T obj) {
-		return FastStream.concat(of(obj), this.stream);
+	public EasyStream<T> unshift(T obj) {
+		return EasyStream.concat(of(obj), this.stream);
 	}
 
 	/**
@@ -1103,8 +1103,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 流
 	 */
 	@SafeVarargs
-	public final FastStream<T> unshift(T... obj) {
-		return FastStream.concat(of(obj), this.stream);
+	public final EasyStream<T> unshift(T... obj) {
+		return EasyStream.concat(of(obj), this.stream);
 	}
 
 	/**
@@ -1377,7 +1377,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    合并后的结果对象类型
 	 * @return 合并后的结果对象的流
 	 */
-	public <U, R> FastStream<R> zip(Iterable<U> other,
+	public <U, R> EasyStream<R> zip(Iterable<U> other,
 									BiFunction<? super T, ? super U, ? extends R> zipper) {
 		Objects.requireNonNull(zipper);
 		final Spliterator<T> keys = spliterator();
@@ -1406,7 +1406,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @return 操作后的流
 	 */
 	@SafeVarargs
-	public final FastStream<T> splice(int start, int deleteCount, T... items) {
+	public final EasyStream<T> splice(int start, int deleteCount, T... items) {
 		return of(ListUtil.splice(toList(), start, deleteCount, items))
 				.parallel(isParallel())
 				.onClose(stream::close);
@@ -1421,13 +1421,13 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param batchSize 指定长度, 正整数
 	 * @return 切好的流
 	 */
-	public FastStream<FastStream<T>> split(final int batchSize) {
+	public EasyStream<EasyStream<T>> split(final int batchSize) {
 		List<T> list = toList();
 		final int size = list.size();
 		// 指定长度 大于等于 列表长度
 		if (size <= batchSize) {
 			// 返回第一层只有单个元素的双层流，形如：[[1,2,3,4,5]]
-			return FastStream.<FastStream<T>>of(of(list, isParallel()));
+			return EasyStream.<EasyStream<T>>of(of(list, isParallel()));
 		}
 		return iterate(0, i -> i < size, i -> i + batchSize)
 				.map(skip -> of(list.subList(skip, Math.min(size, skip + batchSize)), isParallel()))
@@ -1444,8 +1444,8 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param batchSize 指定长度, 正整数
 	 * @return 切好的流
 	 */
-	public FastStream<List<T>> splitList(final int batchSize) {
-		return split(batchSize).map(FastStream::toList);
+	public EasyStream<List<T>> splitList(final int batchSize) {
+		return split(batchSize).map(EasyStream::toList);
 	}
 
 	/**
@@ -1467,7 +1467,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 与指定断言匹配的元素组成的流
 	 */
-	public FastStream<T> takeWhile(Predicate<? super T> predicate) {
+	public EasyStream<T> takeWhile(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return of(StreamUtil.takeWhile(stream, predicate));
 	}
@@ -1492,7 +1492,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 	 * @param predicate 断言
 	 * @return 剩余元素组成的流
 	 */
-	public FastStream<T> dropWhile(Predicate<? super T> predicate) {
+	public EasyStream<T> dropWhile(Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return of(StreamUtil.dropWhile(stream, predicate));
 	}
@@ -1515,7 +1515,7 @@ public class FastStream<T> implements Stream<T>, Iterable<T> {
 		return !isEmpty();
 	}
 
-	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<FastStream<T>> {
+	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
 
 		/**
 		 * Adds an element to the stream being built.
