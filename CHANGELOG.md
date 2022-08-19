@@ -17,6 +17,7 @@
 * 【core   】     修复SecureUtil传入null的key抛出异常问题（pr#2521@Github）
 * 【core   】     修复UrlBuilder的toURI方法将url重复编码（issue#2503@Github）
 * 【core   】     修复CollUtil.lastIndexOf序号错误问题
+* 【core   】     修复 zip 被识别成 jar 和 apk 被识别成 jar 或 zip 的问题（pr#2548@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
