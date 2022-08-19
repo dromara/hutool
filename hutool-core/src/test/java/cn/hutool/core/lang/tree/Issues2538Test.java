@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.tree;
 
+import lombok.Data;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -56,36 +57,10 @@ public class Issues2538Test {
 		}
 	}
 
+	@Data
 	public static class Test {
-
 		private long id;
-
 		private long parentId;
-
 		private String name;
-
-		public long getId() {
-			return id;
-		}
-
-		public void setId(long id) {
-			this.id = id;
-		}
-
-		public long getParentId() {
-			return parentId;
-		}
-
-		public void setParentId(long parentId) {
-			this.parentId = parentId;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
 	}
 }
