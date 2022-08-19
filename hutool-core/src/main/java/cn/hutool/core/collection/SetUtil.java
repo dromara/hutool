@@ -192,6 +192,7 @@ public class SetUtil {
 	 * @param <T> 元素类型
 	 * @param c   集合
 	 * @return 只读集合
+	 * @see Collections#unmodifiableSet(Set)
 	 * @since 6.0.0
 	 */
 	public static <T> Set<T> unmodifiable(final Set<? extends T> c) {

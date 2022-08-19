@@ -6,8 +6,8 @@ import cn.hutool.core.collection.iter.IteratorEnumeration;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.CompositeConverter;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
@@ -298,62 +298,18 @@ public class CollUtil {
 	}
 
 	/**
-	 * 两个集合的并集<br>
-	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
-	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
-	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
-	 *
-	 * @param <T>   集合元素类型
-	 * @param coll1 集合1
-	 * @param coll2 集合2
-	 * @return 并集的集合，返回 {@link ArrayList}
-	 */
-	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2) {
-		if (isEmpty(coll1)) {
-			return ListUtil.of(coll2);
-		} else if (isEmpty(coll2)) {
-			return ListUtil.of(coll1);
-		}
-
-		// 给每个元素计数
-		final Map<T, Integer> map1 = countMap(coll1);
-		final Map<T, Integer> map2 = countMap(coll2);
-		// 两个集合的全部元素
-		final Set<T> elements = SetUtil.of(map1.keySet());
-		elements.addAll(map2.keySet());
-		// 并集, 每个元素至少会有一个
-		final List<T> list = new ArrayList<>(elements.size());
-		for (final T t : elements) {
-			// 每个元素 保留最多的个数
-			int amount = Math.max(map1.getOrDefault(t, 0), map2.getOrDefault(t, 0));
-			for (int i = 0; i < amount; i++) {
-				list.add(t);
-			}
-		}
-		return list;
-	}
-
-	/**
 	 * 多个集合的并集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
 	 *
-	 * @param <T>        集合元素类型
-	 * @param coll1      集合1
-	 * @param coll2      集合2
-	 * @param otherColls 其它集合
+	 * @param <T>   集合元素类型
+	 * @param colls 集合数组
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
-		Collection<T> union = union(coll1, coll2);
-		for (final Collection<T> coll : otherColls) {
-			if (isNotEmpty(coll)) {
-				union = union(union, coll);
-			}
-		}
-		return union;
+	public static <T> Collection<T> union(final Collection<T>... colls) {
+		return CollectionOperation.of(colls).union();
 	}
 
 	/**
@@ -362,34 +318,13 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c]，此结果中只保留了一个c
 	 *
-	 * @param <T>        集合元素类型
-	 * @param coll1      集合1
-	 * @param coll2      集合2
-	 * @param otherColls 其它集合
+	 * @param <T>   集合元素类型
+	 * @param colls 列表集合
 	 * @return 并集的集合，返回 {@link LinkedHashSet}
 	 */
 	@SafeVarargs
-	public static <T> Set<T> unionDistinct(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
-		final Set<T> result;
-		if (isEmpty(coll1)) {
-			result = new LinkedHashSet<>();
-		} else {
-			result = new LinkedHashSet<>(coll1);
-		}
-
-		if (isNotEmpty(coll2)) {
-			result.addAll(coll2);
-		}
-
-		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (final Collection<T> otherColl : otherColls) {
-				if (isNotEmpty(otherColl)) {
-					result.addAll(otherColl);
-				}
-			}
-		}
-
-		return result;
+	public static <T> Set<T> unionDistinct(final Collection<T>... colls) {
+		return CollectionOperation.of(colls).unionDistinct();
 	}
 
 	/**
@@ -398,73 +333,13 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c, a, b, c, c]
 	 *
-	 * @param <T>        集合元素类型
-	 * @param coll1      集合1
-	 * @param coll2      集合2
-	 * @param otherColls 其它集合
+	 * @param <T>   集合元素类型
+	 * @param colls 集合数组
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> List<T> unionAll(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
-		// 先统计所有集合的元素数量, 避免扩容
-		int totalSize = size(coll1) + size(coll2);
-		for (Collection<T> coll : otherColls) {
-			totalSize += size(coll);
-		}
-		if (totalSize == 0) {
-			return ListUtil.zero();
-		}
-		final List<T> result = new ArrayList<>(totalSize);
-
-		if (isNotEmpty(coll1)) {
-			result.addAll(coll1);
-		}
-		if (isNotEmpty(coll2)) {
-			result.addAll(coll2);
-		}
-
-		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (final Collection<T> otherColl : otherColls) {
-				if (isNotEmpty(otherColl)) {
-					result.addAll(otherColl);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * 两个集合的交集<br>
-	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
-	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
-	 * 结果：[a, b, c, c]，此结果中只保留了两个c
-	 *
-	 * @param <T>   集合元素类型
-	 * @param coll1 集合1
-	 * @param coll2 集合2
-	 * @return 交集的集合，返回 {@link ArrayList}
-	 */
-	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2) {
-		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
-			final Map<T, Integer> map1 = countMap(coll1);
-			final Map<T, Integer> map2 = countMap(coll2);
-
-			boolean isFirstSmaller = map1.keySet().size() <= map2.keySet().size();
-			// 只需要遍历数量较少的集合的元素
-			final Set<T> elements = SetUtil.of(isFirstSmaller ? map1.keySet() : map2.keySet());
-			// 交集的元素个数 最多为 较少集合的元素个数
-			final List<T> list = new ArrayList<>(isFirstSmaller ? coll1.size() : coll2.size());
-			for (final T t : elements) {
-				int amount = Math.min(map1.getOrDefault(t, 0), map2.getOrDefault(t, 0));
-				for (int i = 0; i < amount; i++) {
-					list.add(t);
-				}
-			}
-			return list;
-		}
-
-		return ListUtil.zero();
+	public static <T> List<T> unionAll(final Collection<T>... colls) {
+		return CollectionOperation.of(colls).unionAll();
 	}
 
 	/**
@@ -473,26 +348,13 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c]，此结果中只保留了两个c
 	 *
-	 * @param <T>        集合元素类型
-	 * @param coll1      集合1
-	 * @param coll2      集合2
-	 * @param otherColls 其它集合
+	 * @param <T>   集合元素类型
+	 * @param colls 集合列表
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
-		// 任意容器为空, 则返回空集
-		if (isEmpty(coll1) || isEmpty(coll2) || ArrayUtil.hasEmpty((Object[]) otherColls)) {
-			return ListUtil.zero();
-		}
-		Collection<T> intersection = intersection(coll1, coll2);
-		if (ArrayUtil.isEmpty(otherColls)) {
-			return intersection;
-		}
-		for (final Collection<T> coll : otherColls) {
-			intersection = intersection(intersection, coll);
-		}
-		return intersection;
+	public static <T> Collection<T> intersection(final Collection<T>... colls) {
+		return CollectionOperation.of(colls).intersection();
 	}
 
 	/**
@@ -563,7 +425,7 @@ public class CollUtil {
 		elements.addAll(map2.keySet());
 		// 元素的个数为 该元素在两个集合中的个数的差
 		for (final T t : elements) {
-			int amount = Math.abs(map1.getOrDefault(t, 0) - map2.getOrDefault(t, 0));
+			final int amount = Math.abs(map1.getOrDefault(t, 0) - map2.getOrDefault(t, 0));
 			for (int i = 0; i < amount; i++) {
 				result.add(t);
 			}
@@ -691,7 +553,7 @@ public class CollUtil {
 		if (isEmpty(coll1) || isEmpty(coll2)) {
 			return false;
 		}
-		boolean isFirstSmaller = coll1.size() <= coll2.size();
+		final boolean isFirstSmaller = coll1.size() <= coll2.size();
 		// 用元素较少的集合来遍历
 		final Collection<?> smallerColl = isFirstSmaller ? coll1 : coll2;
 		// 用元素较多的集合构造Set, 用于快速判断是否有相同元素
@@ -2333,7 +2195,7 @@ public class CollUtil {
 		}
 		// 统计每个map的values的大小总和
 		int size = 0;
-		for (Map<?, V> map : mapCollection) {
+		for (final Map<?, V> map : mapCollection) {
 			size += size(map.values());
 		}
 		if (size == 0) {
@@ -2611,7 +2473,7 @@ public class CollUtil {
 		//noinspection unchecked
 		final Map<Object, Integer> countMap1 = countMap((Iterable<Object>) coll1);
 
-		for (Object e : coll2) {
+		for (final Object e : coll2) {
 			// 该元素若存在, 则个数减去1, 若不存在则个数为-1
 			final Integer amount = countMap1.merge(e, -1, Integer::sum);
 			if (amount < 0) {
