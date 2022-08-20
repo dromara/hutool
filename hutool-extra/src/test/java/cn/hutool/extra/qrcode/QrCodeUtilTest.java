@@ -118,4 +118,12 @@ public class QrCodeUtilTest {
 		FileUtil.writeString(svg, "d:/test/qr.svg", StandardCharsets.UTF_8);
 	}
 
+	@Test
+	public void generateAsciiArtTest() {
+		QrConfig qrConfig = QrConfig.create();
+		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱古古怪怪");
+		Assert.assertNotNull(asciiArt);
+		System.out.println(asciiArt);
+	}
+
 }

@@ -109,6 +109,38 @@ public class QrCodeUtil {
 	}
 
 	/**
+	 * @param content 内容
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String generateAsAsciiArt(String content) {
+		return generateAsAsciiArt(content, 0,0,1);
+	}
+	/**
+	 * @param content 内容
+	 * @param qrConfig 二维码配置，仅长、宽、边距配置有效
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String generateAsAsciiArt(String content, QrConfig qrConfig) {
+		BitMatrix bitMatrix = encode(content, qrConfig);
+		return toAsciiArt(bitMatrix);
+	}
+
+	/**
+	 * @param content 内容
+	 * @param width 宽
+	 * @param height 长
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String generateAsAsciiArt(String content,int width, int height,int margin) {
+		QrConfig qrConfig = new QrConfig(width, height).setMargin(margin);
+		return generateAsAsciiArt( content,  qrConfig);
+	}
+
+
+	/**
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
 	 *
 	 * @param content 内容
@@ -493,6 +525,35 @@ public class QrCodeUtil {
 				"<path d=\"" + sb + "\" stroke=\"rgba(" + fore.getRed() + "," + fore.getGreen() + "," + fore.getBlue() + "," + fore.getAlpha() + ")\" /> \n" +
 				(StrUtil.isBlank(logoBase64) ? "" : "<image xlink:href=\"" + logoBase64 + "\" height=\"" + logoHeight + "\" width=\"" + logoWidth + "\" y=\"" + logoY + "\" x=\"" + logoX + "\" />\n") +
 				"</svg>";
+	}
+
+	/**
+	 * @param bitMatrix
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String toAsciiArt(BitMatrix bitMatrix) {
+		int width = bitMatrix.getWidth();
+		int height = bitMatrix.getHeight();
+		StringBuilder result = new StringBuilder(height * (width + 1));
+		for (int i = 0; i <= height; i += 2) {
+			for (int j = 0; j < width; j++) {
+				boolean tp = bitMatrix.get(i, j);
+				boolean bt = i + 1 >= height || bitMatrix.get(i + 1, j);
+				if (tp && bt) {
+					result.append(' ');//'\u0020'
+				} else if (tp) {
+					result.append('▄');//'\u2584'
+				} else if (bt) {
+					result.append('▀');//'\u2580'
+				} else {
+					result.append('█');//'\u2588'
+				}
+
+			}
+			result.append('\n');
+		}
+		return result.toString();
 	}
 
 	/**
