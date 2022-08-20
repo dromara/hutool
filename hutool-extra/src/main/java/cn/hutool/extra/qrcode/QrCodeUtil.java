@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Binarizer;
 import com.google.zxing.BinaryBitmap;
@@ -18,8 +19,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,6 +95,17 @@ public class QrCodeUtil {
 	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType) {
 		final BufferedImage img = generate(content, qrConfig);
 		return ImgUtil.toBase64DataUri(img, imageType);
+	}
+
+	/**
+	 * @param content   内容
+	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @return SVG矢量图（字符串）
+	 * @since 5.8.6
+	 */
+	public static String generateAsSvg(String content, QrConfig qrConfig) {
+		BitMatrix bitMatrix = encode(content, qrConfig);
+		return toSVG(bitMatrix, qrConfig);
 	}
 
 	/**
@@ -418,6 +429,70 @@ public class QrCodeUtil {
 			}
 		}
 		return image;
+	}
+
+	/**
+	 * @param matrix BitMatrix
+	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @return SVG矢量图（字符串）
+	 * @since 5.8.6
+	 */
+	public static String toSVG(BitMatrix matrix,QrConfig qrConfig) {
+		return toSVG(matrix, qrConfig.getForeColor(), qrConfig.getBackColor(),qrConfig.img,qrConfig.getRatio());
+	}
+
+	/**
+	 * BitMatrix转SVG(字符串)
+	 *
+	 * @param matrix    BitMatrix
+	 * @param foreColor 前景色
+	 * @param backColor 背景色(null表示透明背景)
+	 * @param ratio 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 * @return SVG矢量图（字符串）
+	 * @since 5.8.6
+	 */
+	public static String toSVG(BitMatrix matrix,int foreColor, Integer backColor,Image logoImg,int ratio) {
+		StringBuilder sb = new StringBuilder();
+		int qrWidth = matrix.getWidth();
+		int qrHeight = matrix.getHeight();
+		int moduleHeight = (qrHeight == 1) ? qrWidth / 2 : 1;
+		for (int y = 0; y < qrHeight; y++) {
+			for (int x = 0; x < qrWidth; x++) {
+				if (matrix.get(x, y)) {
+					sb.append(" M" + x + "," + y + "h1v" + moduleHeight + "h-1z");
+				}
+			}
+		}
+		qrHeight *= moduleHeight;
+		String logoBase64 = "";
+		int logoWidth = 0;
+		int logoHeight = 0;
+		int logoX = 0;
+		int logoY = 0;
+		if (logoImg != null) {
+			logoBase64 = ImgUtil.toBase64DataUri(logoImg, "png");
+			// 按照最短的边做比例缩放
+			if (qrWidth < qrHeight) {
+				logoWidth = qrWidth / ratio;
+				logoHeight = logoImg.getHeight(null) * logoWidth / logoImg.getWidth(null);
+			} else {
+				logoHeight = qrHeight / ratio;
+				logoWidth = logoImg.getWidth(null) * logoHeight / logoImg.getHeight(null);
+			}
+			logoX = (qrWidth - logoWidth) / 2;
+			logoY = (qrHeight - logoHeight) / 2;
+
+		}
+		Color fore = new Color(foreColor, true);
+		Color back = new Color(backColor, true);
+		return "<svg width=\"" + qrWidth + "\" height=\"" + qrHeight + "\" \n" +
+				(backColor == null ? "" : "style=\"background-color:rgba(" + back.getRed() + "," + back.getGreen() + "," + back.getBlue() + "," + back.getAlpha() + ")\"\n") +
+				"viewBox=\"0 0 " + qrWidth + " " + qrHeight + "\" \n" +
+				"xmlns=\"http://www.w3.org/2000/svg\" \n" +
+				"xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n" +
+				"<path d=\"" + sb + "\" stroke=\"rgba(" + fore.getRed() + "," + fore.getGreen() + "," + fore.getBlue() + "," + fore.getAlpha() + ")\" /> \n" +
+				(StrUtil.isBlank(logoBase64) ? "" : "<image xlink:href=\"" + logoBase64 + "\" height=\"" + logoHeight + "\" width=\"" + logoWidth + "\" y=\"" + logoY + "\" x=\"" + logoX + "\" />\n") +
+				"</svg>";
 	}
 
 	/**

@@ -5,6 +5,7 @@ import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 二维码工具类单元测试
@@ -108,5 +110,12 @@ public class QrCodeUtilTest {
 		Assert.assertNotNull(imageSquare);
 	}
 
+	@Test
+	public void generateSvgTest() {
+		QrConfig qrConfig = QrConfig.create().setImg("d:/test/logo.png").setForeColor(Color.GREEN).setBackColor(Color.pink);
+		String svg = QrCodeUtil.generateAsSvg("https://hutool.cn/", qrConfig);
+		Assert.assertNotNull(svg);
+		FileUtil.writeString(svg, "d:/test/qr.svg", StandardCharsets.UTF_8);
+	}
 
 }
