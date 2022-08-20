@@ -32,4 +32,29 @@ public class CompareUtilTest {
 		list.sort(CompareUtil.comparingPinyin(e -> e, true));
 		Assert.assertEquals(list, descendingOrderResult);
 	}
+
+	@Test
+	public void comparingIndexedTest() {
+		List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+		List<String> index = ListUtil.view("2", "1", "3", "4");
+
+		//错误，排序压根没有生效...
+		data.sort(CompareUtil.comparingIndexed(e -> e, index));
+		System.out.println(data);
+		//[1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		Assert.assertEquals(data, ListUtil.view("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+
+		//正确排序，index.toArray()
+		data.sort(CompareUtil.comparingIndexed(e -> e, index.toArray()));
+		System.out.println(data);
+		//[5, 6, 7, 8, 9, 10, 2, 2, 1, 1, 3, 3, 4, 4]
+		Assert.assertEquals(data, ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"));
+
+		//正确排序，array
+		String[] indexArray = new String[] {"2", "1", "3", "4"};
+		data.sort(CompareUtil.comparingIndexed(e -> e, indexArray));
+		System.out.println(data);
+		//[5, 6, 7, 8, 9, 10, 2, 2, 1, 1, 3, 3, 4, 4]
+		Assert.assertEquals(data, ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"));
+	}
 }
