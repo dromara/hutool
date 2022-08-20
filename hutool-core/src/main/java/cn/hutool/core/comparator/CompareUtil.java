@@ -96,6 +96,14 @@ public class CompareUtil {
 	/**
 	 * 获取自然排序器，即默认排序器
 	 *
+	 * <ul>
+	 *     <li>如需对null友好操作如下</li>
+	 *     <li><code>Comparator.nullsFirst(Comparator.naturalOrder())</code></li>
+	 *     <li><code>Comparator.nullsLast(Comparator.naturalOrder())</code></li>
+	 *     <li><code>Comparator.nullsLast(CompareUtil.naturalComparator())</code></li>
+	 *     <li><code>Comparator.nullsFirst(CompareUtil.naturalComparator())</code></li>
+	 * </ul>
+	 *
 	 * @param <E> 排序节点类型
 	 * @return 默认排序器
 	 * @since 5.7.21
