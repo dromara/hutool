@@ -30,7 +30,7 @@ public class QrConfig {
 	/** 长 */
 	protected int height;
 	/** 前景色（二维码颜色） */
-	protected int foreColor = BLACK;
+	protected Integer foreColor = BLACK;
 	/** 背景色，默认白色，null表示透明 */
 	protected Integer backColor = WHITE;
 	/** 边距1~4 */

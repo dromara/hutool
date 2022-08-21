@@ -3,20 +3,15 @@ package cn.hutool.extra.qrcode;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.lang.ansi.*;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.ansi.Ansi8BitColor;
+import cn.hutool.core.lang.ansi.AnsiElement;
+import cn.hutool.core.lang.ansi.AnsiEncoder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Binarizer;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.WriterException;
+import com.google.zxing.*;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
@@ -27,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +37,9 @@ import java.util.Map;
  * @since 4.0.2
  */
 public class QrCodeUtil {
+
+	public static final String QR_TYPE_SVG = "svg";// SVG矢量图格式
+	public static final String QR_TYPE_TXT = "txt";// Ascii Art字符画文本
 
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
@@ -186,8 +185,22 @@ public class QrCodeUtil {
 	 * @return 目标文件
 	 */
 	public static File generate(String content, int width, int height, File targetFile) {
-		final BufferedImage image = generate(content, width, height);
-		ImgUtil.write(image, targetFile);
+		String extName = FileUtil.extName(targetFile);
+		switch (extName) {
+			case QR_TYPE_SVG:
+				String svg = generateAsSvg(content, new QrConfig(width, height));
+				FileUtil.writeString(svg, targetFile, StandardCharsets.UTF_8);
+				break;
+			case QR_TYPE_TXT:
+				String txt = generateAsAsciiArt(content, new QrConfig(width, height));
+				FileUtil.writeString(txt, targetFile, StandardCharsets.UTF_8);
+				break;
+			default:
+				final BufferedImage image = generate(content, width, height);
+				ImgUtil.write(image, targetFile);
+				break;
+		}
+
 		return targetFile;
 	}
 
@@ -201,23 +214,48 @@ public class QrCodeUtil {
 	 * @since 4.1.2
 	 */
 	public static File generate(String content, QrConfig config, File targetFile) {
-		final BufferedImage image = generate(content, config);
-		ImgUtil.write(image, targetFile);
+		String extName = FileUtil.extName(targetFile);
+		switch (extName) {
+			case QR_TYPE_SVG:
+				final String svg = generateAsSvg(content, config);
+				FileUtil.writeString(svg, targetFile, StandardCharsets.UTF_8);
+				break;
+			case QR_TYPE_TXT:
+				final String txt = generateAsAsciiArt(content, config);
+				FileUtil.writeString(txt, targetFile, StandardCharsets.UTF_8);
+				break;
+			default:
+				final BufferedImage image = generate(content, config);
+				ImgUtil.write(image, targetFile);
+				break;
+		}
 		return targetFile;
 	}
 
 	/**
 	 * 生成二维码到输出流
 	 *
-	 * @param content   文本内容
-	 * @param width     宽度
-	 * @param height    高度
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
-	 * @param out       目标流
+	 * @param content    文本内容
+	 * @param width      宽度
+	 * @param height     高度
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
+	 * @param out        目标流
 	 */
-	public static void generate(String content, int width, int height, String imageType, OutputStream out) {
-		final BufferedImage image = generate(content, width, height);
-		ImgUtil.write(image, imageType, out);
+	public static void generate(String content, int width, int height, String targetType, OutputStream out) {
+		switch (targetType) {
+			case QR_TYPE_SVG:
+				final String svg = generateAsSvg(content, new QrConfig(width, height));
+				IoUtil.writeUtf8(out, false, svg);
+				break;
+			case QR_TYPE_TXT:
+				final String txt = generateAsAsciiArt(content, new QrConfig(width, height));
+				IoUtil.writeUtf8(out, false, txt);
+				break;
+			default:
+				final BufferedImage image = generate(content, width, height);
+				ImgUtil.write(image, targetType, out);
+				break;
+		}
 	}
 
 	/**
@@ -225,13 +263,25 @@ public class QrCodeUtil {
 	 *
 	 * @param content   文本内容
 	 * @param config    二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param out       目标流
 	 * @since 4.1.2
 	 */
-	public static void generate(String content, QrConfig config, String imageType, OutputStream out) {
-		final BufferedImage image = generate(content, config);
-		ImgUtil.write(image, imageType, out);
+	public static void generate(String content, QrConfig config, String targetType, OutputStream out) {
+		switch (targetType) {
+			case QR_TYPE_SVG:
+				final String svg = generateAsSvg(content, config);
+				IoUtil.writeUtf8(out, false, svg);
+				break;
+			case QR_TYPE_TXT:
+				final String txt = generateAsAsciiArt(content, config);
+				IoUtil.writeUtf8(out, false, txt);
+				break;
+			default:
+				final BufferedImage image = generate(content, config);
+				ImgUtil.write(image, targetType, out);
+				break;
+		}
 	}
 
 	/**
@@ -479,7 +529,7 @@ public class QrCodeUtil {
 	 * @since 5.8.6
 	 */
 	public static String toSVG(BitMatrix matrix, QrConfig qrConfig) {
-		return toSVG(matrix, qrConfig.getForeColor(), qrConfig.getBackColor(), qrConfig.img, qrConfig.getRatio());
+		return toSVG(matrix, qrConfig.foreColor, qrConfig.backColor, qrConfig.img, qrConfig.getRatio());
 	}
 
 	/**
@@ -524,16 +574,24 @@ public class QrCodeUtil {
 			logoY = (qrHeight - logoHeight) / 2;
 
 		}
+
 		Color fore = new Color(foreColor, true);
-		Color back = new Color(backColor, true);
-		return "<svg width=\"" + qrWidth + "\" height=\"" + qrHeight + "\" \n" +
-				(backColor == null ? "" : "style=\"background-color:rgba(" + back.getRed() + "," + back.getGreen() + "," + back.getBlue() + "," + back.getAlpha() + ")\"\n") +
-				"viewBox=\"0 0 " + qrWidth + " " + qrHeight + "\" \n" +
-				"xmlns=\"http://www.w3.org/2000/svg\" \n" +
-				"xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n" +
-				"<path d=\"" + sb + "\" stroke=\"rgba(" + fore.getRed() + "," + fore.getGreen() + "," + fore.getBlue() + "," + fore.getAlpha() + ")\" /> \n" +
-				(StrUtil.isBlank(logoBase64) ? "" : "<image xlink:href=\"" + logoBase64 + "\" height=\"" + logoHeight + "\" width=\"" + logoWidth + "\" y=\"" + logoY + "\" x=\"" + logoX + "\" />\n") +
-				"</svg>";
+
+		StringBuilder result = StrUtil.builder();
+		result.append("<svg width=\"" + qrWidth + "\" height=\"" + qrHeight + "\" \n");
+		if (backColor != null) {
+			Color back = new Color(backColor, true);
+			result.append("style=\"background-color:rgba(" + back.getRed() + "," + back.getGreen() + "," + back.getBlue() + "," + back.getAlpha() + ")\"\n");
+		}
+		result.append("viewBox=\"0 0 " + qrWidth + " " + qrHeight + "\" \n");
+		result.append("xmlns=\"http://www.w3.org/2000/svg\" \n");
+		result.append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n");
+		result.append("<path d=\"" + sb + "\" stroke=\"rgba(" + fore.getRed() + "," + fore.getGreen() + "," + fore.getBlue() + "," + fore.getAlpha() + ")\" /> \n");
+		if (StrUtil.isNotBlank(logoBase64)) {
+			result.append("<image xlink:href=\"" + logoBase64 + "\" height=\"" + logoHeight + "\" width=\"" + logoWidth + "\" y=\"" + logoY + "\" x=\"" + logoX + "\" />\n");
+		}
+		result.append("</svg>");
+		return result.toString();
 	}
 
 	/**
@@ -547,8 +605,9 @@ public class QrCodeUtil {
 		int width = bitMatrix.getWidth();
 		int height = bitMatrix.getHeight();
 
-		AnsiElement foreground = Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.getForeColor()));
-		AnsiElement background = Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.getBackColor()));
+
+		AnsiElement foreground = qrConfig.foreColor == null ? null : Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.foreColor));
+		AnsiElement background = qrConfig.backColor == null ? null : Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.backColor));
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {

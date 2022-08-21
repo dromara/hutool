@@ -4,19 +4,19 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.ansi.Ansi8BitColor;
-import cn.hutool.core.lang.ansi.AnsiEncoder;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.common.BitMatrix;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -41,7 +41,7 @@ public class QrCodeUtilTest {
 		// 背景色透明
 		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);
-		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
+		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.txt" : "~/Desktop/hutool/qrcodeCustom.svg";
 		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
 	}
 
@@ -120,19 +120,47 @@ public class QrCodeUtilTest {
 				.setMargin(1);
 		String svg = QrCodeUtil.generateAsSvg("https://hutool.cn/", qrConfig);
 		Assert.assertNotNull(svg);
-		FileUtil.writeString(svg, "d:/test/qr.svg", StandardCharsets.UTF_8);
 	}
 
 	@Test
 	public void generateAsciiArtTest() {
 		QrConfig qrConfig = QrConfig.create()
-				.setForeColor(new Color(0,255,0))
-				.setBackColor(new Color(0,0,0))
+				.setForeColor(new Color(255,0,255))
+				.setBackColor(new Color(0,255,0))
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
 		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
 		Assert.assertNotNull(asciiArt);
 		System.out.println(asciiArt);
+	}
+
+	@Test
+	public void generateToFileTest() {
+		QrConfig qrConfig = QrConfig.create()
+				.setForeColor(Color.BLUE)
+				.setBackColor(new Color(0,200,255))
+				.setWidth(0)
+				.setHeight(0).setMargin(1);
+		File qrFile = QrCodeUtil.generate("https://hutool.cn/", qrConfig, FileUtil.touch("d:/test/ascii_art_qr_code.txt"));
+		BufferedReader reader = FileUtil.getReader(qrFile, StandardCharsets.UTF_8);
+		reader.lines().forEach(System.out::println);
+	}
+
+	@Test
+	public void generateToStreamTest() {
+		QrConfig qrConfig = QrConfig.create()
+				.setForeColor(Color.BLUE)
+				.setBackColor(new Color(0,200,255))
+				.setWidth(0)
+				.setHeight(0).setMargin(1);
+		String filepath = "d:/test/qr_stream_to_txt.txt";
+		try (BufferedOutputStream outputStream = FileUtil.getOutputStream(filepath)) {
+			QrCodeUtil.generate("https://hutool.cn/", qrConfig,"txt", outputStream);
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		BufferedReader reader = FileUtil.getReader(filepath, StandardCharsets.UTF_8);
+		reader.lines().forEach(System.out::println);
 	}
 
 }
