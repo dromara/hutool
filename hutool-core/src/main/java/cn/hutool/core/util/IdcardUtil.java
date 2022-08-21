@@ -30,11 +30,11 @@ public class IdcardUtil {
 	/**
 	 * 中国公民身份证号码最小长度。
 	 */
-	private static final int CHINA_ID_MIN_LENGTH = 15;
+	public static final int CHINA_ID_MIN_LENGTH = 15;
 	/**
 	 * 中国公民身份证号码最大长度。
 	 */
-	private static final int CHINA_ID_MAX_LENGTH = 18;
+	public static final int CHINA_ID_MAX_LENGTH = 18;
 	/**
 	 * 每位加权因子
 	 */
