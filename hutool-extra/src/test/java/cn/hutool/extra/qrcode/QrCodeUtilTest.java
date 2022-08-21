@@ -4,6 +4,8 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.ansi.Ansi8BitColor;
+import cn.hutool.core.lang.ansi.AnsiEncoder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
@@ -112,7 +114,10 @@ public class QrCodeUtilTest {
 
 	@Test
 	public void generateSvgTest() {
-		QrConfig qrConfig = QrConfig.create().setImg("d:/test/logo.png").setForeColor(Color.GREEN).setBackColor(Color.pink);
+		QrConfig qrConfig = QrConfig.create().setImg("d:/test/logo.png")
+				.setForeColor(Color.GREEN)
+				.setBackColor(Color.pink)
+				.setMargin(1);
 		String svg = QrCodeUtil.generateAsSvg("https://hutool.cn/", qrConfig);
 		Assert.assertNotNull(svg);
 		FileUtil.writeString(svg, "d:/test/qr.svg", StandardCharsets.UTF_8);
@@ -120,8 +125,12 @@ public class QrCodeUtilTest {
 
 	@Test
 	public void generateAsciiArtTest() {
-		QrConfig qrConfig = QrConfig.create();
-		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/呱呱呱呱呱呱呱呱呱呱呱呱呱呱呱古古怪怪");
+		QrConfig qrConfig = QrConfig.create()
+				.setForeColor(new Color(0,255,0))
+				.setBackColor(new Color(0,0,0))
+				.setWidth(0)
+				.setHeight(0).setMargin(1);
+		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
 		Assert.assertNotNull(asciiArt);
 		System.out.println(asciiArt);
 	}

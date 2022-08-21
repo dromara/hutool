@@ -3,7 +3,9 @@ package cn.hutool.extra.qrcode;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.lang.ansi.*;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Binarizer;
@@ -98,8 +100,8 @@ public class QrCodeUtil {
 	}
 
 	/**
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param content  内容
+	 * @param qrConfig 二维码配置，包括长、宽、边距、颜色等
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
@@ -109,34 +111,39 @@ public class QrCodeUtil {
 	}
 
 	/**
+	 * 生成ASCII Art字符画形式的二维码
+	 *
 	 * @param content 内容
-	 * @return ASCII Art字符画形式的二维码
+	 * @return ASCII Art字符画形式的二维码字符串
 	 * @since 5.8.6
 	 */
 	public static String generateAsAsciiArt(String content) {
-		return generateAsAsciiArt(content, 0,0,1);
+		return generateAsAsciiArt(content, 0, 0, 1);
 	}
+
 	/**
-	 * @param content 内容
+	 * 生成ASCII Art字符画形式的二维码
+	 *
+	 * @param content  内容
 	 * @param qrConfig 二维码配置，仅长、宽、边距配置有效
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
 	public static String generateAsAsciiArt(String content, QrConfig qrConfig) {
 		BitMatrix bitMatrix = encode(content, qrConfig);
-		return toAsciiArt(bitMatrix);
+		return toAsciiArt(bitMatrix, qrConfig);
 	}
 
 	/**
 	 * @param content 内容
-	 * @param width 宽
-	 * @param height 长
+	 * @param width   宽
+	 * @param height  长
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
-	public static String generateAsAsciiArt(String content,int width, int height,int margin) {
+	public static String generateAsAsciiArt(String content, int width, int height, int margin) {
 		QrConfig qrConfig = new QrConfig(width, height).setMargin(margin);
-		return generateAsAsciiArt( content,  qrConfig);
+		return generateAsAsciiArt(content, qrConfig);
 	}
 
 
@@ -464,13 +471,15 @@ public class QrCodeUtil {
 	}
 
 	/**
-	 * @param matrix BitMatrix
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * BitMatrix转SVG(字符串)
+	 *
+	 * @param matrix   BitMatrix
+	 * @param qrConfig 二维码配置，包括长、宽、边距、颜色等
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
-	public static String toSVG(BitMatrix matrix,QrConfig qrConfig) {
-		return toSVG(matrix, qrConfig.getForeColor(), qrConfig.getBackColor(),qrConfig.img,qrConfig.getRatio());
+	public static String toSVG(BitMatrix matrix, QrConfig qrConfig) {
+		return toSVG(matrix, qrConfig.getForeColor(), qrConfig.getBackColor(), qrConfig.img, qrConfig.getRatio());
 	}
 
 	/**
@@ -479,11 +488,11 @@ public class QrCodeUtil {
 	 * @param matrix    BitMatrix
 	 * @param foreColor 前景色
 	 * @param backColor 背景色(null表示透明背景)
-	 * @param ratio 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 * @param ratio     二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
-	public static String toSVG(BitMatrix matrix,int foreColor, Integer backColor,Image logoImg,int ratio) {
+	public static String toSVG(BitMatrix matrix, int foreColor, Integer backColor, Image logoImg, int ratio) {
 		StringBuilder sb = new StringBuilder();
 		int qrWidth = matrix.getWidth();
 		int qrHeight = matrix.getHeight();
@@ -528,33 +537,64 @@ public class QrCodeUtil {
 	}
 
 	/**
+	 * BitMatrix转ASCII Art字符画形式的二维码
+	 *
 	 * @param bitMatrix
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
-	public static String toAsciiArt(BitMatrix bitMatrix) {
+	public static String toAsciiArt(BitMatrix bitMatrix, QrConfig qrConfig) {
 		int width = bitMatrix.getWidth();
 		int height = bitMatrix.getHeight();
-		StringBuilder result = new StringBuilder(height * (width + 1));
+
+		AnsiElement foreground = Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.getForeColor()));
+		AnsiElement background = Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.getBackColor()));
+
+		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {
+			StringBuilder rowBuilder = new StringBuilder();
 			for (int j = 0; j < width; j++) {
 				boolean tp = bitMatrix.get(i, j);
 				boolean bt = i + 1 >= height || bitMatrix.get(i + 1, j);
 				if (tp && bt) {
-					result.append(' ');//'\u0020'
+					rowBuilder.append(' ');//'\u0020'
 				} else if (tp) {
-					result.append('▄');//'\u2584'
+					rowBuilder.append('▄');//'\u2584'
 				} else if (bt) {
-					result.append('▀');//'\u2580'
+					rowBuilder.append('▀');//'\u2580'
 				} else {
-					result.append('█');//'\u2588'
+					rowBuilder.append('█');//'\u2588'
 				}
-
 			}
-			result.append('\n');
+			builder.append(AnsiEncoder.encode(foreground, background, rowBuilder)).append('\n');
 		}
-		return result.toString();
+		return builder.toString();
 	}
+
+	/**
+	 * rgb转Ansi8Bit值
+	 *
+	 * @param rgb rgb颜色值
+	 * @return Ansi8bit颜色值
+	 * @since 5.8.6
+	 */
+	private static int rgbToAnsi8BitValue(int rgb) {
+		int l;
+		int r = (rgb >> 16) & 0xff;
+		int g = (rgb >> 8) & 0xff;
+		int b = (rgb) & 0xff;
+		if (r < 0) r += 256;
+		if (g < 0) g += 256;
+		if (b < 0) b += 256;
+		if (r == g && g == b) {
+			int i = (int) (NumberUtil.div(NumberUtil.mul(r - 10.625, 23), (255 - 10.625), 0));
+			l = i >= 0 ? 232 + i : 0;
+		} else {
+			l = 16 + (int) (36 * NumberUtil.div(NumberUtil.mul(r, 5), 255, 0)) + (int) (6.0 * (g / 256.0 * 6.0)) + (int) (b / 256.0 * 6.0);
+		}
+		return l;
+	}
+
 
 	/**
 	 * 创建解码选项
