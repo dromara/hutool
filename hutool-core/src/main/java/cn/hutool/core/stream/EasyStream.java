@@ -1384,7 +1384,7 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 																			Map<R, List<T>> pIdValuesMap,
 																			List<T> parents) {
 		MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
-		Consumer<List<T>> recursive = values -> EasyStream.of(values).forEach(value -> {
+		Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
 			List<T> children = pIdValuesMap.get(idGetter.apply(value));
 			childrenSetter.accept(value, children);
 			recursiveRef.get().accept(children);
