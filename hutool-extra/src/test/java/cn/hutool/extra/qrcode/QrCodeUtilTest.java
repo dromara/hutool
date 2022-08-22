@@ -135,8 +135,8 @@ public class QrCodeUtilTest {
 	@Test
 	public void generateAsciiArtTest() {
 		QrConfig qrConfig = QrConfig.create()
-				.setForeColor(new Color(255,0,255))
-				.setBackColor(new Color(0,255,0))
+				.setForeColor(Color.BLUE)
+				.setBackColor(Color.MAGENTA)
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
 		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);

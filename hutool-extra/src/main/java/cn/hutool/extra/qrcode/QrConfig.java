@@ -147,7 +147,9 @@ public class QrConfig {
 	 * @since 5.1.1
 	 */
 	public QrConfig setForeColor(Color foreColor) {
-		if(null != foreColor){
+		if(null == foreColor){
+			this.foreColor = null;
+		} else {
 			this.foreColor = foreColor.getRGB();
 		}
 		return this;
