@@ -44,6 +44,18 @@ public class QrCodeUtilTest {
 		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
 		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
 	}
+	@Test
+//	@Ignore
+	public void generateNoCustomColorTest() {
+		QrConfig config = new QrConfig();
+		config.setMargin(0);
+		config.setForeColor(null);
+		// 背景色透明
+		config.setBackColor(null);
+		config.setErrorCorrection(ErrorCorrectionLevel.H);
+		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
+		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
+	}
 
 	@Test
 	@Ignore
@@ -143,6 +155,18 @@ public class QrCodeUtilTest {
 		Assert.assertNotNull(asciiArt);
 		System.out.println(asciiArt);
 	}
+	@Test
+	public void generateAsciiArtNoCustomColorTest() {
+		QrConfig qrConfig = QrConfig.create()
+				.setForeColor(null)
+				.setBackColor(null)
+				.setWidth(0)
+				.setHeight(0).setMargin(1);
+		String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
+		Assert.assertNotNull(asciiArt);
+		System.out.println(asciiArt);
+	}
+
 
 	@Test
 	public void generateToFileTest() {
