@@ -18,32 +18,34 @@ import java.util.function.*;
 import java.util.stream.*;
 
 /**
- * 对Stream的封装和拓展，作者经对比了vavr、eclipse-collection、stream-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
- * Stream为集合提供了一些易用api，它让开发人员能使用声明式编程的方式去编写代码
- * 它分为中间操作和结束操作
- * 中间操作分为
+ * <p>{@link Stream}的扩展实现，基于原生Stream进行了封装和增强。<br />
+ * 作者经对比了vavr、eclipse-collection、stream-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
+ * Stream为集合提供了一些易用api，它让开发人员能使用声明式编程的方式去编写代码。
+ *
+ * <h3>中间操作和结束操作</h3>
+ * <p>针对流的操作分为分为<em>中间操作</em>和<em>结束操作</em>,
+ * 流只有在<em>结束操作</em>时才会真正触发执行以往的<em>中间操作</em>。<br />
+ * <strong>中间操作</strong>：
  * <ul>
+ *     <li>无状态中间操作: 表示不用等待 所有元素的当前操作执行完 就可以执行的操作，不依赖之前历史操作的流的状态；</li>
+ *     <li>有状态中间操作: 表示需要等待 所有元素的当前操作执行完 才能执行的操作,依赖之前历史操作的流的状态；</li>
+ * </ul>
+ * <strong>结束操作</strong>：
+ * <ul>
+ *     <li>短路结束操作: 表示不用等待 所有元素的当前操作执行完 就可以执行的操作；</li>
+ *     <li>非短路结束操作: 表示需要等待 所有元素的当前操作执行完 才能执行的操作；</li>
+ * </ul>
+ *
+ * <h3>串行流与并行流</h3>
+ * <p>流分为<em>串行流</em>和<em>并行流</em>两类：
+ * <ul>
+ *     <li>串行流：针对流的所有操作都会通过当前线程完成；</li>
  *     <li>
- * 			无状态中间操作: 表示不用等待 所有元素的当前操作执行完 就可以执行的操作，不依赖之前历史操作的流的状态
- *     </li>
- *     <li>
- *         有状态中间操作: 表示需要等待 所有元素的当前操作执行完 才能执行的操作,依赖之前历史操作的流的状态
+ *         并行流：针对流的操作会通过拆分器{@link Spliterator}拆分为多个异步任务{@link java.util.concurrent.ForkJoinTask}执行，
+ *         这些异步任务默认使用{@link java.util.concurrent.ForkJoinPool}线程池进行管理；
  *     </li>
  * </ul>
- * 结束操作分为
- * <ul>
- *     <li>
- *   	短路结束操作: 表示不用等待 所有元素的当前操作执行完 就可以执行的操作
- *     </li>
- *     <li>
- *       非短路结束操作: 表示需要等待 所有元素的当前操作执行完 才能执行的操作
- *     </li>
- * </ul>
- * 流只有在 结束操作 时才会真正触发执行以往的 中间操作
- * <p>
- * 它分为串行流和并行流
- * 并行流会使用拆分器{@link Spliterator}将操作拆分为多个异步任务{@link java.util.concurrent.ForkJoinTask}执行
- * 这些异步任务默认使用{@link java.util.concurrent.ForkJoinPool}线程池进行管理
+ * 不同类型的流可以通过{@link #sequential()}或{@link #parallel()}互相转换。
  *
  * @author VampireAchao
  * @author emptypoint
