@@ -122,11 +122,14 @@ public class QrCodeUtilTest {
 	@Test
 	public void generateSvgTest() {
 		QrConfig qrConfig = QrConfig.create().setImg("d:/test/logo.png")
-				.setForeColor(Color.GREEN)
+				.setForeColor(Color.blue)
 				.setBackColor(Color.pink)
+				.setRatio(8)
+				.setErrorCorrection(ErrorCorrectionLevel.M)
 				.setMargin(1);
 		String svg = QrCodeUtil.generateAsSvg("https://hutool.cn/", qrConfig);
 		Assert.assertNotNull(svg);
+		FileUtil.writeString(svg, FileUtil.touch("d:/test/hutool_qr.svg"),StandardCharsets.UTF_8);
 	}
 
 	@Test
