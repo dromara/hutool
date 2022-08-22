@@ -1,6 +1,7 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
@@ -8,6 +9,7 @@ import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,7 +110,7 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	}
 
 	/**
-	 * 返回包含指定元素的串行流
+	 * 返回包含指定元素的串行流，若输入数组为{@code null}或空，则返回一个空的串行流
 	 *
 	 * @param values 指定元素
 	 * @param <T>    元素类型
@@ -119,6 +121,40 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	@SuppressWarnings("varargs")
 	public static <T> EasyStream<T> of(T... values) {
 		return ArrayUtil.isEmpty(values) ? EasyStream.empty() : new EasyStream<>(Stream.of(values));
+	}
+
+	/**
+	 * 通过实现了{@link Iterable}接口的对象创建串行流，若输入对象为{@code null}，则返回一个空的串行流
+	 *
+	 * @param iterable 实现了{@link Iterable}接口的对象
+	 * @param <T>      元素类型
+	 * @return 流
+	 */
+	public static <T> EasyStream<T> of(Iterable<T> iterable) {
+		return of(iterable, false);
+	}
+
+	/**
+	 * 通过传入的{@link Iterable}创建流，若输入对象为{@code null}，则返回一个空的串行流
+	 *
+	 * @param iterable {@link Iterable}
+	 * @param parallel 是否并行
+	 * @param <T>      元素类型
+	 * @return 流
+	 */
+	public static <T> EasyStream<T> of(Iterable<T> iterable, boolean parallel) {
+		return Opt.ofNullable(iterable).map(Iterable::spliterator).map(spliterator -> StreamSupport.stream(spliterator, parallel)).map(EasyStream::new).orElseGet(EasyStream::empty);
+	}
+
+	/**
+	 * 通过传入的{@link Stream}创建流，若输入对象为{@code null}，则返回一个空的串行流
+	 *
+	 * @param stream {@link Stream}
+	 * @param <T>    元素类型
+	 * @return 流
+	 */
+	public static <T> EasyStream<T> of(Stream<T> stream) {
+		return ObjUtil.isNull(stream) ? EasyStream.empty() : new EasyStream<>(stream);
 	}
 
 	/**
@@ -187,40 +223,6 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public static <T> EasyStream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
 		return new EasyStream<>(Stream.concat(a, b));
-	}
-
-	/**
-	 * 通过实现了{@link Iterable}接口的对象创建串行流
-	 *
-	 * @param iterable 实现了{@link Iterable}接口的对象
-	 * @param <T>      元素类型
-	 * @return 流
-	 */
-	public static <T> EasyStream<T> of(Iterable<T> iterable) {
-		return of(iterable, false);
-	}
-
-	/**
-	 * 通过传入的{@link Iterable}创建流
-	 *
-	 * @param iterable {@link Iterable}
-	 * @param parallel 是否并行
-	 * @param <T>      元素类型
-	 * @return 流
-	 */
-	public static <T> EasyStream<T> of(Iterable<T> iterable, boolean parallel) {
-		return Opt.ofNullable(iterable).map(Iterable::spliterator).map(spliterator -> StreamSupport.stream(spliterator, parallel)).map(EasyStream::new).orElseGet(EasyStream::empty);
-	}
-
-	/**
-	 * 通过传入的{@link Stream}创建流
-	 *
-	 * @param stream {@link Stream}
-	 * @param <T>    元素类型
-	 * @return 流
-	 */
-	public static <T> EasyStream<T> of(Stream<T> stream) {
-		return new EasyStream<>(Objects.requireNonNull(stream));
 	}
 
 	/**
@@ -1513,6 +1515,18 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 */
 	public boolean isNotEmpty() {
 		return !isEmpty();
+	}
+
+	/**
+	 * 将当前流转为另一对象。用于提供针对流本身而非流中元素的操作
+	 *
+	 * @param <R>       转换类型
+	 * @param transform 转换
+	 * @return 转换后的流
+	 */
+	public <R> Optional<R> transform(Function<EasyStream<T>, R> transform) {
+		Assert.notNull(transform, "transform must not null");
+		return Optional.ofNullable(transform.apply(this));
 	}
 
 	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
