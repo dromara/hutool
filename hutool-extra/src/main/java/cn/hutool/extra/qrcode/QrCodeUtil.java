@@ -11,6 +11,7 @@ import cn.hutool.core.lang.ansi.AnsiEncoder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.google.zxing.*;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.GlobalHistogramBinarizer;
@@ -46,12 +47,12 @@ public class QrCodeUtil {
 	 *
 	 * @param content    内容
 	 * @param qrConfig   二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType  图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType  类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, String logoBase64) {
-		return generateAsBase64(content, qrConfig, imageType, Base64.decode(logoBase64));
+	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, String logoBase64) {
+		return generateAsBase64(content, qrConfig, targetType, Base64.decode(logoBase64));
 	}
 
 	/**
@@ -59,12 +60,12 @@ public class QrCodeUtil {
 	 *
 	 * @param content   内容
 	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, byte[] logo) {
-		return generateAsBase64(content, qrConfig, imageType, ImgUtil.toImage(logo));
+	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, byte[] logo) {
+		return generateAsBase64(content, qrConfig, targetType, ImgUtil.toImage(logo));
 	}
 
 	/**
@@ -72,13 +73,13 @@ public class QrCodeUtil {
 	 *
 	 * @param content   内容
 	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType, Image logo) {
+	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, Image logo) {
 		qrConfig.setImg(logo);
-		return generateAsBase64(content, qrConfig, imageType);
+		return generateAsBase64(content, qrConfig, targetType);
 	}
 
 	/**
@@ -90,12 +91,36 @@ public class QrCodeUtil {
 	 *
 	 * @param content   内容
 	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String imageType) {
-		final BufferedImage img = generate(content, qrConfig);
-		return ImgUtil.toBase64DataUri(img, imageType);
+	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType) {
+		String result;
+		switch (targetType) {
+			case QR_TYPE_SVG:
+				String svg = generateAsSvg(content, qrConfig);
+				result = svgToBase64(svg);
+				break;
+			case QR_TYPE_TXT:
+				String txt = generateAsAsciiArt(content, qrConfig);
+				result = txtToBase64(txt);
+				break;
+			default:
+				final BufferedImage img = generate(content, qrConfig);
+				result =  ImgUtil.toBase64DataUri(img, targetType);
+				break;
+		}
+
+
+		return result;
+	}
+
+	private static String txtToBase64(String txt) {
+		return URLUtil.getDataUri("text/plain", "base64", Base64.encode(txt));
+	}
+
+	private static String svgToBase64(String svg) {
+		return URLUtil.getDataUri("image/svg+xml", "base64", Base64.encode(svg));
 	}
 
 	/**

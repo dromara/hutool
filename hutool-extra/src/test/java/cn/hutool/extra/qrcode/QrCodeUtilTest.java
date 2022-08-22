@@ -41,7 +41,7 @@ public class QrCodeUtilTest {
 		// 背景色透明
 		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);
-		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.txt" : "~/Desktop/hutool/qrcodeCustom.svg";
+		String path = FileUtil.isWindows() ? "d:/test/qrcodeCustom.png" : "~/Desktop/hutool/qrcodeCustom.png";
 		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.touch(path));
 	}
 
@@ -85,6 +85,13 @@ public class QrCodeUtilTest {
 		String encode = Base64.encode(bytes);
 		String base641 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png", encode);
 		Assert.assertNotNull(base641);
+	}
+
+	@Test
+	public void generateAsBase64Test3() {
+		String base64 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "svg");
+		Assert.assertNotNull(base64);
+		System.out.println(base64);
 	}
 
 	@Test
