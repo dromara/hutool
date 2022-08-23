@@ -551,6 +551,8 @@ public class EasyStreamTest {
 			// this is an accessible parameterless constructor.
 		}
 	}
+
+	@Test
 	public void testTransform() {
 		final boolean result = EasyStream.of(1, 2, 3)
 			.transform(EasyStream::toList)
