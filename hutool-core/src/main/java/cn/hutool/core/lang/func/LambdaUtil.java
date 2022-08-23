@@ -61,7 +61,7 @@ public class LambdaUtil {
 	@SuppressWarnings("unchecked")
 	public static <R, T extends Serializable> Class<R> getRealClass(final T func) {
 		final LambdaInfo lambdaInfo = resolve(func);
-		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
+		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedMethodParameterTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
 	}
 
 	/**
