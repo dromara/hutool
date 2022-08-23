@@ -1,5 +1,7 @@
 package cn.hutool.core.comparator;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
@@ -93,6 +95,14 @@ public class CompareUtil {
 
 	/**
 	 * 获取自然排序器，即默认排序器
+	 *
+	 * <ul>
+	 *     <li>如需对null友好操作如下</li>
+	 *     <li><code>Comparator.nullsFirst(Comparator.naturalOrder())</code></li>
+	 *     <li><code>Comparator.nullsLast(Comparator.naturalOrder())</code></li>
+	 *     <li><code>Comparator.nullsLast(CompareUtil.naturalComparator())</code></li>
+	 *     <li><code>Comparator.nullsFirst(CompareUtil.naturalComparator())</code></li>
+	 * </ul>
 	 *
 	 * @param <E> 排序节点类型
 	 * @return 默认排序器
@@ -236,6 +246,7 @@ public class CompareUtil {
 	/**
 	 * 索引比较器<br>
 	 * 通过keyExtractor函数，提取对象的某个属性或规则，根据提供的排序数组，完成比较<br>
+	 * objs中缺失的，默认排序在前面(atEndIfMiss=false)<br>
 	 *
 	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
 	 * @param objs         参与排序的数组，数组的元素位置决定了对象的排序先后
@@ -245,8 +256,29 @@ public class CompareUtil {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final U... objs) {
+	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final U[] objs) {
 		return comparingIndexed(keyExtractor, false, objs);
+	}
+
+	/**
+	 * 索引比较器<br>
+	 * 通过keyExtractor函数，提取对象的某个属性或规则，根据提供的排序数组，完成比较<br>
+	 * objs中缺失的，默认排序在前面(atEndIfMiss=false)<br>
+	 *
+	 * @param keyExtractor 从对象中提取中文(参与比较的内容)
+	 * @param objs         参与排序的集合对象，数组的元素位置决定了对象的排序先后
+	 * @param <T>          对象类型
+	 * @param <U>          数组对象类型
+	 * @return 索引比较器
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final Collection<U> objs) {
+		U[] array = null;
+		if (objs != null && objs.size() > 0) {
+			array = objs.toArray((U[]) Array.newInstance(objs.iterator().next().getClass(), objs.size()));
+		}
+		return comparingIndexed(keyExtractor, false, array);
 	}
 
 	/**
@@ -254,8 +286,8 @@ public class CompareUtil {
 	 * 通过keyExtractor函数，提取对象的某个属性或规则，根据提供的排序数组，完成比较<br>
 	 *
 	 * @param keyExtractor 从对象中提取排序键的函数(参与比较的内容)
-	 * @param atEndIfMiss  如果不在列表中是否排在后边
-	 * @param objs         参与排序的数组，数组的元素位置决定了对象的排序先后
+	 * @param atEndIfMiss  如果不在列表中是否排在后边; true:排在后边; false:排在前边
+	 * @param objs         参与排序的数组，数组的元素位置决定了对象的排序先后, 示例：<code>int[] objs = new int[]{3, 2, 1, 4, 5,6};</code>
 	 * @param <T>          对象类型
 	 * @param <U>          数组对象类型
 	 * @return 索引比较器
