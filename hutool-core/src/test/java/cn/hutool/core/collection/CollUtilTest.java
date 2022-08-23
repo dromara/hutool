@@ -1,7 +1,7 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.collection.iter.IterUtil;
-import cn.hutool.core.comparator.ComparableComparator;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.Dict;
@@ -858,9 +858,9 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void sortComparableTest() {
+	public void sortNaturalTest() {
 		final List<String> of = ListUtil.of("a", "c", "b");
-		final List<String> sort = CollUtil.sort(of, new ComparableComparator<>());
+		final List<String> sort = CollUtil.sort(of, CompareUtil.natural());
 		Assert.assertEquals("a,b,c", CollUtil.join(sort, ","));
 	}
 
