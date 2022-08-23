@@ -196,5 +196,16 @@ public class QrCodeUtilTest {
 		BufferedReader reader = FileUtil.getReader(filepath, StandardCharsets.UTF_8);
 		reader.lines().forEach(System.out::println);
 	}
+	@Test
+	public void comparePngAndAsciiArtTest() {
+		QrConfig qrConfig = QrConfig.create()
+				.setForeColor(null)
+				.setBackColor(null)
+				.setWidth(0)
+				.setHeight(0).setMargin(1);
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.jpg"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.txt"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.png"));
+	}
 
 }
