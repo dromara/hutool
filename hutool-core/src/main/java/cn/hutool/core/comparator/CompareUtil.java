@@ -1,7 +1,7 @@
 package cn.hutool.core.comparator;
 
-import java.lang.reflect.Array;
-import java.util.Collection;
+import cn.hutool.core.util.ArrayUtil;
+
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
@@ -98,19 +98,50 @@ public class CompareUtil {
 	 *
 	 * <ul>
 	 *     <li>如需对null友好操作如下</li>
-	 *     <li><code>Comparator.nullsFirst(Comparator.naturalOrder())</code></li>
-	 *     <li><code>Comparator.nullsLast(Comparator.naturalOrder())</code></li>
-	 *     <li><code>Comparator.nullsLast(CompareUtil.naturalComparator())</code></li>
-	 *     <li><code>Comparator.nullsFirst(CompareUtil.naturalComparator())</code></li>
+	 *     <li><code>Comparator.nullsLast(CompareUtil.natural())</code></li>
+	 *     <li><code>Comparator.nullsFirst(CompareUtil.natural())</code></li>
 	 * </ul>
 	 *
 	 * @param <E> 排序节点类型
 	 * @return 默认排序器
 	 * @since 5.7.21
 	 */
-	@SuppressWarnings("unchecked")
-	public static <E extends Comparable<? super E>> Comparator<E> naturalComparator() {
-		return ComparableComparator.INSTANCE;
+	public static <E extends Comparable<? super E>> Comparator<E> natural() {
+		return Comparator.naturalOrder();
+	}
+
+	/**
+	 * 获取反序排序器，即默认自然排序的反序排序器
+	 *
+	 * <ul>
+	 *     <li>如需对null友好操作如下</li>
+	 *     <li><code>Comparator.nullsLast(CompareUtil.naturalReverse())</code></li>
+	 *     <li><code>Comparator.nullsFirst(CompareUtil.naturalReverse())</code></li>
+	 * </ul>
+	 *
+	 * @param <E> 排序节点类型
+	 * @return 默认排序器
+	 * @since 6.0.0
+	 */
+	public static <E extends Comparable<? super E>> Comparator<E> naturalReverse() {
+		return Comparator.reverseOrder();
+	}
+
+	/**
+	 * 获取反序排序器，即默认排序器
+	 *
+	 * <ul>
+	 *     <li>如需对null友好操作如下</li>
+	 *     <li><code>Comparator.nullsLast(CompareUtil.reverse())</code></li>
+	 *     <li><code>Comparator.nullsFirst(CompareUtil.reverse())</code></li>
+	 * </ul>
+	 *
+	 * @param <E> 排序节点类型
+	 * @return 默认排序器
+	 * @since 6.0.0
+	 */
+	public static <E extends Comparable<? super E>> Comparator<E> reverse(final Comparator<E> comparator) {
+		return null == comparator ? naturalReverse() : comparator.reversed();
 	}
 
 	/**
@@ -255,7 +286,6 @@ public class CompareUtil {
 	 * @return 索引比较器
 	 * @since 5.8.0
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final U[] objs) {
 		return comparingIndexed(keyExtractor, false, objs);
 	}
@@ -273,12 +303,8 @@ public class CompareUtil {
 	 * @since 6.0.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final Collection<U> objs) {
-		U[] array = null;
-		if (objs != null && objs.size() > 0) {
-			array = objs.toArray((U[]) Array.newInstance(objs.iterator().next().getClass(), objs.size()));
-		}
-		return comparingIndexed(keyExtractor, false, array);
+	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final Iterable<U> objs) {
+		return comparingIndexed(keyExtractor, false, ArrayUtil.toArray(objs, (Class<U>) objs.iterator().next().getClass()));
 	}
 
 	/**

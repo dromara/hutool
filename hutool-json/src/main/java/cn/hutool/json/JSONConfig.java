@@ -75,7 +75,7 @@ public class JSONConfig implements Serializable {
 	 * @since 5.7.21
 	 */
 	public JSONConfig setNatureKeyComparator() {
-		return setKeyComparator(CompareUtil.naturalComparator());
+		return setKeyComparator(CompareUtil.natural());
 	}
 
 	/**
