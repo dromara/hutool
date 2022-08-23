@@ -358,7 +358,7 @@ public class QrCodeUtil {
 	 */
 	public static BufferedImage generate(String content, BarcodeFormat format, QrConfig config) {
 		final BitMatrix bitMatrix = encode(content, format, config);
-		final BufferedImage image = toImage(bitMatrix, config.foreColor != null ? config.foreColor : 0xFF000000, config.backColor);
+		final BufferedImage image = toImage(bitMatrix, config.foreColor != null ? config.foreColor : Color.BLACK.getRGB(), config.backColor);
 		final Image logoImg = config.img;
 		if (null != logoImg && BarcodeFormat.QR_CODE == format) {
 			// 只有二维码可以贴图
