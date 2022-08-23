@@ -427,4 +427,13 @@ public class EasyStreamTest {
 		Assert.assertTrue(EasyStream.of(1).isNotEmpty());
 	}
 
+	@Test
+	public void testTransform() {
+		boolean result = EasyStream.of(1, 2, 3)
+			.transform(EasyStream::toList)
+			.map(List::isEmpty)
+			.orElse(false);
+		Assert.assertFalse(result);
+	}
+
 }
