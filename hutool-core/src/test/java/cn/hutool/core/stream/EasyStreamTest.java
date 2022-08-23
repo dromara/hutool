@@ -24,13 +24,13 @@ public class EasyStreamTest {
 
 	@Test
 	public void testBuilder() {
-		List<Integer> list = EasyStream.<Integer>builder().add(1).add(2).add(3).build().toList();
+		final List<Integer> list = EasyStream.<Integer>builder().add(1).add(2).add(3).build().toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), list);
 	}
 
 	@Test
 	public void testGenerate() {
-		List<Integer> list = EasyStream.generate(() -> 0).limit(3).toList();
+		final List<Integer> list = EasyStream.generate(() -> 0).limit(3).toList();
 		Assert.assertEquals(Arrays.asList(0, 0, 0), list);
 	}
 
@@ -43,58 +43,58 @@ public class EasyStreamTest {
 
 	@Test
 	public void testSplit() {
-		List<Integer> list = EasyStream.split("1,2,3", ",").map(Integer::valueOf).toList();
+		final List<Integer> list = EasyStream.split("1,2,3", ",").map(Integer::valueOf).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), list);
 	}
 
 	@Test
 	public void testIterator() {
-		List<Integer> list = EasyStream.iterate(0, i -> i < 3, i -> ++i).toList();
+		final List<Integer> list = EasyStream.iterate(0, i -> i < 3, i -> ++i).toList();
 		Assert.assertEquals(Arrays.asList(0, 1, 2), list);
 	}
 
 	@Test
 	public void testToCollection() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		List<String> toCollection = EasyStream.of(list).map(String::valueOf).toColl(LinkedList::new);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<String> toCollection = EasyStream.of(list).map(String::valueOf).toColl(LinkedList::new);
 		Assert.assertEquals(Arrays.asList("1", "2", "3"), toCollection);
 	}
 
 	@Test
 	public void testToList() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		List<String> toList = EasyStream.of(list).map(String::valueOf).toList();
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<String> toList = EasyStream.of(list).map(String::valueOf).toList();
 		Assert.assertEquals(Arrays.asList("1", "2", "3"), toList);
 	}
 
 	@Test
 	public void testToSet() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		Set<String> toSet = EasyStream.of(list).map(String::valueOf).toSet();
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final Set<String> toSet = EasyStream.of(list).map(String::valueOf).toSet();
 		Assert.assertEquals(new HashSet<>(Arrays.asList("1", "2", "3")), toSet);
 	}
 
 	@Test
 	public void testToZip() {
-		List<Integer> orders = Arrays.asList(1, 2, 3, 2);
-		List<String> list = Arrays.asList("dromara", "guava", "sweet", "hutool");
+		final List<Integer> orders = Arrays.asList(1, 2, 3, 2);
+		final List<String> list = Arrays.asList("dromara", "guava", "sweet", "hutool");
 		final Map<Integer, String> map = MapUtil.<Integer, String>builder()
 				.put(1, "dromara")
 				.put(2, "hutool")
 				.put(3, "sweet")
 				.build();
 
-		Map<Integer, String> toZip = EasyStream.of(orders).toZip(list);
+		final Map<Integer, String> toZip = EasyStream.of(orders).toZip(list);
 		Assert.assertEquals(map, toZip);
 
-		Map<Integer, String> toZipParallel = EasyStream.of(orders).parallel().nonNull().toZip(list);
+		final Map<Integer, String> toZipParallel = EasyStream.of(orders).parallel().nonNull().toZip(list);
 		Assert.assertEquals(map, toZipParallel);
 	}
 
 	@Test
 	public void testJoin() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		String joining = EasyStream.of(list).join();
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final String joining = EasyStream.of(list).join();
 		Assert.assertEquals("123", joining);
 		Assert.assertEquals("1,2,3", EasyStream.of(list).join(","));
 		Assert.assertEquals("(1,2,3)", EasyStream.of(list).join(",", "(", ")"));
@@ -102,8 +102,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testToMap() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		Map<String, Integer> identityMap = EasyStream.of(list).toMap(String::valueOf);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final Map<String, Integer> identityMap = EasyStream.of(list).toMap(String::valueOf);
 		Assert.assertEquals(new HashMap<String, Integer>() {
 			private static final long serialVersionUID = 1L;
 
@@ -117,8 +117,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testGroup() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		Map<String, List<Integer>> group = EasyStream.of(list).group(String::valueOf);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final Map<String, List<Integer>> group = EasyStream.of(list).group(String::valueOf);
 		Assert.assertEquals(
 				new HashMap<String, List<Integer>>() {
 					private static final long serialVersionUID = 1L;
@@ -133,8 +133,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testMapIdx() {
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		List<String> mapIndex = EasyStream.of(list).mapIdx((e, i) -> i + 1 + "." + e).toList();
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final List<String> mapIndex = EasyStream.of(list).mapIdx((e, i) -> i + 1 + "." + e).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
 		// 并行流时为-1
 		Assert.assertEquals(Arrays.asList(-1, -1, -1), EasyStream.of(1, 2, 3).parallel().mapIdx((e, i) -> i).toList());
@@ -142,8 +142,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testMapMulti() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		List<Integer> mapMulti = EasyStream.of(list).<Integer>mapMulti((e, buffer) -> {
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> mapMulti = EasyStream.of(list).<Integer>mapMulti((e, buffer) -> {
 			for (int i = 0; i < e; i++) {
 				buffer.accept(e);
 			}
@@ -153,24 +153,24 @@ public class EasyStreamTest {
 
 	@Test
 	public void testMapNonNull() {
-		List<Integer> list = Arrays.asList(1, 2, 3, null);
-		List<String> mapNonNull = EasyStream.of(list).mapNonNull(String::valueOf).toList();
+		final List<Integer> list = Arrays.asList(1, 2, 3, null);
+		final List<String> mapNonNull = EasyStream.of(list).mapNonNull(String::valueOf).toList();
 		Assert.assertEquals(Arrays.asList("1", "2", "3"), mapNonNull);
 	}
 
 	@Test
 	public void testDistinct() {
-		List<Integer> list = ListUtil.of(3, 2, 2, 1, null, null);
+		final List<Integer> list = ListUtil.of(3, 2, 2, 1, null, null);
 		for (int i = 0; i < 1000; i++) {
 			list.add(i);
 		}
 		// 使用stream去重
-		List<Integer> collect1 = list.stream().distinct().collect(Collectors.toList());
-		List<Integer> collect2 = list.stream().parallel().distinct().collect(Collectors.toList());
+		final List<Integer> collect1 = list.stream().distinct().collect(Collectors.toList());
+		final List<Integer> collect2 = list.stream().parallel().distinct().collect(Collectors.toList());
 
 		// 使用FastStream去重
-		List<Integer> distinctBy1 = EasyStream.of(list).distinct().toList();
-		List<Integer> distinctBy2 = EasyStream.of(list).parallel().distinct(String::valueOf).toList();
+		final List<Integer> distinctBy1 = EasyStream.of(list).distinct().toList();
+		final List<Integer> distinctBy2 = EasyStream.of(list).parallel().distinct(String::valueOf).toList();
 
 		Assert.assertEquals(collect1, distinctBy1);
 		Assert.assertEquals(collect2, distinctBy2);
@@ -178,8 +178,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testForeachIdx() {
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
 		EasyStream.of(list).forEachIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
 		// 并行流时为-1
@@ -188,12 +188,12 @@ public class EasyStreamTest {
 
 	@Test
 	public void testForEachOrderedIdx() {
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
 		EasyStream.of(list).forEachOrderedIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
 
-		EasyStream.FastStreamBuilder<String> streamBuilder = EasyStream.builder();
+		final EasyStream.FastStreamBuilder<String> streamBuilder = EasyStream.builder();
 		EasyStream.of(list).parallel().forEachOrderedIdx((e, i) -> streamBuilder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("0.dromara", "0.hutool", "0.sweet"), streamBuilder.build().toList());
 
@@ -201,8 +201,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFlatMapIdx() {
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		List<String> mapIndex = EasyStream.of(list).flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList();
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final List<String> mapIndex = EasyStream.of(list).flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
 		// 并行流时为-1
 		Assert.assertEquals(Arrays.asList(-1, -1, -1), EasyStream.of(1, 2, 3).parallel().flatMapIdx((e, i) -> EasyStream.of(i)).toList());
@@ -210,7 +210,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFlat() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
 
 		// 一个元素 扩散为 多个元素(迭代器)
 		List<Integer> flat = EasyStream.of(list).flat(e -> Arrays.asList(e, e * 10)).toList();
@@ -229,15 +229,15 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFilter() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		List<Integer> filterIndex = EasyStream.of(list).filter(String::valueOf, "1").toList();
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> filterIndex = EasyStream.of(list).filter(String::valueOf, "1").toList();
 		Assert.assertEquals(Collections.singletonList(1), filterIndex);
 	}
 
 	@Test
 	public void testFilterIdx() {
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		List<String> filterIndex = EasyStream.of(list).filterIdx((e, i) -> i < 2).toList();
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final List<String> filterIndex = EasyStream.of(list).filterIdx((e, i) -> i < 2).toList();
 		Assert.assertEquals(Arrays.asList("dromara", "hutool"), filterIndex);
 		// 并行流时为-1
 		Assert.assertEquals(3L, EasyStream.of(1, 2, 3).parallel().filterIdx((e, i) -> i == -1).count());
@@ -245,8 +245,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testNonNull() {
-		List<Integer> list = Arrays.asList(1, null, 2, 3);
-		List<Integer> nonNull = EasyStream.of(list).nonNull().toList();
+		final List<Integer> list = Arrays.asList(1, null, 2, 3);
+		final List<Integer> nonNull = EasyStream.of(list).nonNull().toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), nonNull);
 	}
 
@@ -258,8 +258,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testPush() {
-		List<Integer> list = Arrays.asList(1, 2);
-		List<Integer> push = EasyStream.of(list).push(3).toList();
+		final List<Integer> list = Arrays.asList(1, 2);
+		final List<Integer> push = EasyStream.of(list).push(3).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), push);
 
 		Assert.assertEquals(Arrays.asList(1, 2, 3, 4), EasyStream.of(list).push(3, 4).toList());
@@ -267,8 +267,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testUnshift() {
-		List<Integer> list = Arrays.asList(2, 3);
-		List<Integer> unshift = EasyStream.of(list).unshift(1).toList();
+		final List<Integer> list = Arrays.asList(2, 3);
+		final List<Integer> unshift = EasyStream.of(list).unshift(1).toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3), unshift);
 
 		Assert.assertEquals(Arrays.asList(1, 2, 2, 3), EasyStream.of(list).unshift(1, 2).toList());
@@ -276,7 +276,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testAt() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
 		Assert.assertEquals(1, (Object) EasyStream.of(list).at(0).orElse(null));
 		Assert.assertEquals(2, (Object) EasyStream.of(list).at(1).orElse(null));
 		Assert.assertEquals(3, (Object) EasyStream.of(list).at(2).orElse(null));
@@ -287,7 +287,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testSplice() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
 		Assert.assertEquals(Arrays.asList(1, 2, 2, 3), EasyStream.of(list).splice(1, 0, 2).toList());
 		Assert.assertEquals(Arrays.asList(1, 2, 3, 3), EasyStream.of(list).splice(3, 1, 3).toList());
 		Assert.assertEquals(Arrays.asList(1, 2, 4), EasyStream.of(list).splice(2, 1, 4).toList());
@@ -299,25 +299,25 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFindFirst() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
-		Integer find = EasyStream.of(list).findFirst(Objects::nonNull).orElse(null);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
+		final Integer find = EasyStream.of(list).findFirst(Objects::nonNull).orElse(null);
 		Assert.assertEquals(1, (Object) find);
 	}
 
 	@Test
 	public void testFindFirstIdx() {
-		List<Integer> list = Arrays.asList(null, 2, 3);
+		final List<Integer> list = Arrays.asList(null, 2, 3);
 		Assert.assertEquals(1, EasyStream.of(list).findFirstIdx(Objects::nonNull));
 		Assert.assertEquals(-1, (Object) EasyStream.of(list).parallel().findFirstIdx(Objects::nonNull));
 	}
 
 	@Test
 	public void testFindLast() {
-		List<Integer> list = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3);
+		final List<Integer> list = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3);
 		Assert.assertEquals(3, (Object) EasyStream.of(list).findLast().orElse(null));
 		Assert.assertEquals(3, (Object) EasyStream.of(list).parallel().findLast().orElse(null));
 
-		List<Integer> list2 = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3, null);
+		final List<Integer> list2 = ListUtil.of(1, 2, 4, 5, 6, 7, 8, 9, 10, 3, null);
 		Assert.assertEquals(3, (Object) EasyStream.of(list2).parallel().findLast(Objects::nonNull).orElse(null));
 
 		Assert.assertNull(EasyStream.of().parallel().findLast(Objects::nonNull).orElse(null));
@@ -326,7 +326,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFindLastIdx() {
-		List<Integer> list = Arrays.asList(1, null, 3);
+		final List<Integer> list = Arrays.asList(1, null, 3);
 		Assert.assertEquals(2, (Object) EasyStream.of(list).findLastIdx(Objects::nonNull));
 		Assert.assertEquals(-1, (Object) EasyStream.of(list).parallel().findLastIdx(Objects::nonNull));
 	}
@@ -342,8 +342,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testZip() {
-		List<Integer> orders = Arrays.asList(1, 2, 3);
-		List<String> list = Arrays.asList("dromara", "hutool", "sweet");
+		final List<Integer> orders = Arrays.asList(1, 2, 3);
+		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		List<String> zip = EasyStream.of(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 
@@ -353,7 +353,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testListSplit() {
-		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = EasyStream.of(list).split(2).map(EasyStream::toList).toList();
 		Assert.assertEquals(ListUtil.split(list, 2), lists);
 
@@ -364,7 +364,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testSplitList() {
-		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = EasyStream.of(list).splitList(2).toList();
 		Assert.assertEquals(ListUtil.split(list, 2), lists);
 
@@ -551,4 +551,12 @@ public class EasyStreamTest {
 			// this is an accessible parameterless constructor.
 		}
 	}
+	public void testTransform() {
+		final boolean result = EasyStream.of(1, 2, 3)
+			.transform(EasyStream::toList)
+			.map(List::isEmpty)
+			.orElse(false);
+		Assert.assertFalse(result);
+	}
+
 }

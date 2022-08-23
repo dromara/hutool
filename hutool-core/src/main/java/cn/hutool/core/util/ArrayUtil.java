@@ -14,7 +14,6 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -1307,22 +1306,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] toArray(final Iterable<T> iterable, final Class<T> componentType) {
-		return toArray(CollUtil.toCollection(iterable), componentType);
+		return CollUtil.toCollection(iterable).toArray(newArray(componentType, 0));
 	}
-
-	/**
-	 * 将集合转为数组
-	 *
-	 * @param <T>           数组元素类型
-	 * @param collection    集合
-	 * @param componentType 集合元素类型
-	 * @return 数组
-	 * @since 3.0.9
-	 */
-	public static <T> T[] toArray(final Collection<T> collection, final Class<T> componentType) {
-		return collection.toArray(newArray(componentType, 0));
-	}
-
 	// ---------------------------------------------------------------------- remove
 
 	/**
