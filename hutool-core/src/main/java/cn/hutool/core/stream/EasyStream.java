@@ -643,7 +643,7 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 * 				.filter(e -> e.length() > 3)
 	 * 				.peekIdx((e,i) -> System.out.println("Filtered value: " + e + " Filtered idx:" + i))
 	 * 				.map(String::toUpperCase)
-	 * 				.peekIdx((e,i) -> System.out.println("Mapped value: " + e + " Filtered idx:" + i))
+	 * 				.peekIdx((e,i) -> System.out.println("Mapped value: " + e + " Mapped idx:" + i))
 	 * 				.collect(Collectors.toList());
 	 * }</pre>
 	 */
