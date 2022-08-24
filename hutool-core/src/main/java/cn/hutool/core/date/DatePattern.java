@@ -11,9 +11,10 @@ import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 /**
- * 日期格式化类，提供常用的日期格式化对象
+ * 日期格式化类，提供常用的日期格式化对象<br>
+ * 参考：<a href="https://www.ietf.org/rfc/rfc3339.txt">rfc3339</a>
  *
- * <p>所有的jdk日期格式模式字符串 jdk18 date format pattern
+ * <p>所有的jdk日期格式模式字符串
  * <a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/time/format/DateTimeFormatter.html">
  * <i>jdk date format pattern （Pattern Letters and Symbols） 日期格式模式字符串</i>
  * </a>
@@ -47,7 +48,7 @@ import java.util.regex.Pattern;
  * {@link DateTimeFormatter#ISO_DATE_TIME}
  * 查看更多，请参阅上述官方文档
  * </p>
- *
+ * <p>
  * <br/>
  * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
  * 参见：{@link CSTDateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
@@ -57,11 +58,11 @@ import java.util.regex.Pattern;
  * 如：“09:30 UTC”表示为“09:30Z”或“T0930Z”，其中：Z 是 +00:00 的缩写，意思是 UTC(零时分秒的偏移量).
  * <ul>
  *     <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
- *     <li>正确示例：2022-08-23T15:20:46UTC</li>
- *     <li>正确示例：2022-08-23T15:20:46 UTC</li>
- *     <li>正确示例：2022-08-23T15:20:46+0000</li>
- *     <li>正确示例：2022-08-23T15:20:46 +0000</li>
- *     <li>错误示例：2022-08-23T15:20:46Z，必须把“String dateTimeStr = dateTimeStr.replace("Z", " UTC");”</li>
+ *     <li>2022-08-23T15:20:46UTC</li>
+ *     <li>2022-08-23T15:20:46 UTC</li>
+ *     <li>2022-08-23T15:20:46+0000</li>
+ *     <li>2022-08-23T15:20:46 +0000</li>
+ *     <li>2022-08-23T15:20:46Z</li>
  * </ul>
  * </p>
  *
