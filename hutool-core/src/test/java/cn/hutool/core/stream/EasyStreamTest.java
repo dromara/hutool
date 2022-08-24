@@ -209,6 +209,26 @@ public class EasyStreamTest {
 	}
 
 	@Test
+	public void testPeek(){
+		EasyStream.of("one", "two", "three", "four")
+				.filter(e -> e.length() == 4)
+				.peek(e -> Assert.assertEquals("four", e))
+				.map(String::toUpperCase)
+				.peek(e -> Assert.assertEquals("FOUR", e))
+				.collect(Collectors.toList());
+	}
+
+	@Test
+	public void testPeekIdx(){
+		EasyStream.of("one", "two", "three", "four")
+				.filter(e -> e.length() == 4)
+				.peekIdx((e,i) -> Assert.assertEquals("four:0", e + ":" + i))
+				.map(String::toUpperCase)
+				.peekIdx((e,i) -> Assert.assertEquals("FOUR:0", e + ":" + i))
+				.collect(Collectors.toList());
+	}
+
+	@Test
 	public void testFlat() {
 		final List<Integer> list = Arrays.asList(1, 2, 3);
 
