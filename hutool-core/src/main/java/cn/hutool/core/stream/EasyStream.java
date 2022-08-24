@@ -1364,6 +1364,95 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 		return collect(CollectorUtil.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
 	}
 
+	/**
+	 * 将集合转换为树，默认用 {@code parentId == null} 作为顶部，内置一个小递归
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
+	 * @param <R>            此处是id、parentId的泛型限制
+	 * @return list 组装好的树
+	 * eg:
+	 * {@code List studentTree = EasyStream.of(students).toTree(Student::getId, Student::getParentId, Student::setChildren) }
+	 */
+	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
+													Function<T, R> pIdGetter,
+													BiConsumer<T, List<T>> childrenSetter) {
+		Map<R, List<T>> pIdValuesMap = group(pIdGetter);
+		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, pIdValuesMap, pIdValuesMap.get(null));
+	}
+
+	/**
+	 * 将集合转换为树，自定义树顶部的判断条件，内置一个小递归(没错，lambda可以写递归)
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
+	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
+	 * @param <R>             此处是id、parentId的泛型限制
+	 * @return list 组装好的树
+	 * eg:
+	 * {@code List studentTree = EasyStream.of(students).toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent) }
+	 */
+
+	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
+													Function<T, R> pIdGetter,
+													BiConsumer<T, List<T>> childrenSetter,
+													Predicate<T> parentPredicate) {
+		List<T> list = toList();
+		List<T> parents = EasyStream.of(list).filter(e ->
+						// 此处是为了适配 parentPredicate.test空指针 情况
+						// 因为Predicate.test的返回值是boolean，所以如果 e -> null 这种返回null的情况，会直接抛出NPE
+						Opt.ofTry(() -> parentPredicate.test(e)).filter(Boolean::booleanValue).isPresent())
+				.toList();
+		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, EasyStream.of(list).group(pIdGetter), parents);
+	}
+
+	/**
+	 * toTree的内联函数，内置一个小递归(没错，lambda可以写递归)
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param childrenSetter children的setter对应的lambda，可以写作 {@code Student::setChildren}
+	 * @param pIdValuesMap   parentId和值组成的map，用来降低复杂度
+	 * @param parents        顶部数据
+	 * @param <R>            此处是id的泛型限制
+	 * @return list 组装好的树
+	 */
+	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(Function<T, R> idGetter,
+																			BiConsumer<T, List<T>> childrenSetter,
+																			Map<R, List<T>> pIdValuesMap,
+																			List<T> parents) {
+		MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
+		Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
+			List<T> children = pIdValuesMap.get(idGetter.apply(value));
+			childrenSetter.accept(value, children);
+			recursiveRef.get().accept(children);
+		});
+		recursiveRef.set(recursive);
+		recursive.accept(parents);
+		return parents;
+	}
+
+	/**
+	 * 将树递归扁平化为集合，内置一个小递归(没错，lambda可以写递归)
+	 * 这是一个无状态中间操作
+	 *
+	 * @param childrenGetter 获取子节点的lambda，可以写作 {@code Student::getChildren}
+	 * @param childrenSetter 设置子节点的lambda，可以写作 {@code Student::setChildren}
+	 * @return EasyStream 一个流
+	 * eg:
+	 * {@code List students = EasyStream.of(studentTree).flatTree(Student::getChildren, Student::setChildren).toList() }
+	 */
+	public EasyStream<T> flatTree(Function<T, List<T>> childrenGetter, BiConsumer<T, List<T>> childrenSetter) {
+		MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
+		Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e)).flat(recursiveRef.get()).unshift(e);
+		recursiveRef.set(recursive);
+		return flat(recursive).peek(e -> childrenSetter.accept(e, null));
+	}
+
 
 	/**
 	 * 通过给定分组依据进行分组
