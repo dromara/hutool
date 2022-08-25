@@ -22,6 +22,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class BeanUtil {
 	 * <pre>
 	 *     1、是否存在只有一个参数的setXXX方法
 	 *     2、是否存在public类型的字段
+	 *     3、是否实现Serializable
 	 * </pre>
 	 *
 	 * @param clazz 待测试类
@@ -79,7 +81,7 @@ public class BeanUtil {
 	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isBean(Class<?> clazz) {
-		return hasSetter(clazz) || hasPublicField(clazz);
+		return hasSetter(clazz) || hasPublicField(clazz) || clazz instanceof Serializable;
 	}
 
 	/**
