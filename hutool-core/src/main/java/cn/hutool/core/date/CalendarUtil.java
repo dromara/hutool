@@ -9,6 +9,7 @@ import cn.hutool.core.date.format.parser.PositionDateParser;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.ParsePosition;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -48,6 +49,16 @@ public class CalendarUtil {
 		} else {
 			return calendar(date.getTime());
 		}
+	}
+
+	/**
+	 * 转换为Calendar对象
+	 *
+	 * @param calendar 日期对象
+	 * @return Calendar对象
+	 */
+	public static Calendar calendar(final XMLGregorianCalendar calendar) {
+		return calendar.toGregorianCalendar();
 	}
 
 	/**

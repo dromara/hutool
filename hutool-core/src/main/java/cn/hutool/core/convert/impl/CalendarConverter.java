@@ -4,6 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrUtil;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,6 +49,10 @@ public class CalendarConverter extends AbstractConverter {
 		if (value instanceof Long) {
 			//此处使用自动拆装箱
 			return DateUtil.calendar((Long)value);
+		}
+
+		if(value instanceof XMLGregorianCalendar){
+			return DateUtil.calendar((XMLGregorianCalendar) value);
 		}
 
 		final String valueStr = convertToStr(value);

@@ -17,6 +17,7 @@ import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -78,7 +79,7 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date}类型时间转为{@link DateTime}<br>
 	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 *
-	 * @param date Long类型Date（Unix时间戳）
+	 * @param date {@link Date}
 	 * @return 时间对象
 	 * @since 3.0.7
 	 */
@@ -87,6 +88,17 @@ public class DateUtil extends CalendarUtil {
 			return (DateTime) date;
 		}
 		return dateNew(date);
+	}
+
+	/**
+	 * {@link XMLGregorianCalendar}类型时间转为{@link DateTime}
+	 *
+	 * @param date {@link XMLGregorianCalendar}
+	 * @return 时间对象
+	 * @since 6.0.0
+	 */
+	public static DateTime date(final XMLGregorianCalendar date) {
+		return date(date.toGregorianCalendar());
 	}
 
 	/**

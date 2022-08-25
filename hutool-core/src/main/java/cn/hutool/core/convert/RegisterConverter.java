@@ -25,6 +25,7 @@ import cn.hutool.core.convert.impl.TimeZoneConverter;
 import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
+import cn.hutool.core.convert.impl.XMLGregorianCalendarConverter;
 import cn.hutool.core.convert.impl.ZoneIdConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
@@ -32,6 +33,7 @@ import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -183,6 +185,7 @@ public class RegisterConverter implements Converter, Serializable {
 
 		// 日期时间
 		defaultConverterMap.put(Calendar.class, new CalendarConverter());
+		defaultConverterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
 		defaultConverterMap.put(java.util.Date.class, DateConverter.INSTANCE);
 		defaultConverterMap.put(DateTime.class, DateConverter.INSTANCE);
 		defaultConverterMap.put(java.sql.Date.class, DateConverter.INSTANCE);
