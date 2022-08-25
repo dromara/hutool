@@ -1,10 +1,7 @@
 package cn.hutool.core.map.multi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * 值作为集合List的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
@@ -15,55 +12,35 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 4.3.3
  */
-public class ListValueMap<K, V> extends AbsCollValueMap<K, V, List<V>> {
+public class ListValueMap<K, V> extends AbsCollValueMap<K, V> {
 	private static final long serialVersionUID = 6044017508487827899L;
 
 	// ------------------------------------------------------------------------- Constructor start
+
 	/**
-	 * 构造
+	 *  基于{@code mapFactory}创建一个值为{@link List}的多值映射集合
+	 *
+	 * @param mapFactory 创建集合的工厂反方
+	 */
+	public ListValueMap(Supplier<Map<K, Collection<V>>> mapFactory) {
+		super(mapFactory);
+	}
+
+	/**
+	 *  基于{@link HashMap}创建一个值为{@link List}的多值映射集合
+	 *
+	 * @param map 提供数据的原始集合
+	 */
+	public ListValueMap(Map<K, Collection<V>> map) {
+		super(map);
+	}
+
+	/**
+	 * 基于{@link HashMap}创建一个值为{@link List}的多值映射集合
 	 */
 	public ListValueMap() {
-		this(DEFAULT_INITIAL_CAPACITY);
 	}
 
-	/**
-	 * 构造
-	 *
-	 * @param initialCapacity 初始大小
-	 */
-	public ListValueMap(final int initialCapacity) {
-		this(initialCapacity, DEFAULT_LOAD_FACTOR);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param m Map
-	 */
-	public ListValueMap(final Map<? extends K, ? extends Collection<V>> m) {
-		this(DEFAULT_LOAD_FACTOR, m);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param loadFactor 加载因子
-	 * @param m Map
-	 */
-	public ListValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m) {
-		this(m.size(), loadFactor);
-		this.putAllValues(m);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param initialCapacity 初始大小
-	 * @param loadFactor 加载因子
-	 */
-	public ListValueMap(final int initialCapacity, final float loadFactor) {
-		super(new HashMap<>(initialCapacity, loadFactor));
-	}
 	// ------------------------------------------------------------------------- Constructor end
 
 	@Override

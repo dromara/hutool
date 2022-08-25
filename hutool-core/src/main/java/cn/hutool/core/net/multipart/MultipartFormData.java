@@ -3,11 +3,12 @@ package cn.hutool.core.net.multipart;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.multi.ListValueMap;
+import cn.hutool.core.map.multi.MultiValueMap;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,9 +21,9 @@ import java.util.Set;
 public class MultipartFormData {
 
 	/** 请求参数 */
-	private final ListValueMap<String, String> requestParameters = new ListValueMap<>();
+	private final MultiValueMap<String, String> requestParameters = new ListValueMap<>();
 	/** 请求文件 */
-	private final ListValueMap<String, UploadFile> requestFiles = new ListValueMap<>();
+	private final MultiValueMap<String, UploadFile> requestFiles = new ListValueMap<>();
 	/** 上传选项 */
 	private final UploadSetting setting;
 
@@ -101,9 +102,9 @@ public class MultipartFormData {
 	 * @return null未找到，否则返回值
 	 */
 	public String getParam(final String paramName) {
-		final List<String> values = getListParam(paramName);
+		final Collection<String> values = getListParam(paramName);
 		if (CollUtil.isNotEmpty(values)) {
-			return values.get(0);
+			return CollUtil.get(values, 0);
 		}
 		return null;
 	}
@@ -122,7 +123,7 @@ public class MultipartFormData {
 	 * @return 数组表单值
 	 */
 	public String[] getArrayParam(final String paramName) {
-		final List<String> listParam = getListParam(paramName);
+		final Collection<String> listParam = getListParam(paramName);
 		if(null != listParam){
 			return listParam.toArray(new String[0]);
 		}
@@ -136,7 +137,7 @@ public class MultipartFormData {
 	 * @return 数组表单值
 	 * @since 5.3.0
 	 */
-	public List<String> getListParam(final String paramName) {
+	public Collection<String> getListParam(final String paramName) {
 		return requestParameters.get(paramName);
 	}
 
@@ -154,7 +155,7 @@ public class MultipartFormData {
 	 *
 	 * @return 所有属性的集合
 	 */
-	public ListValueMap<String, String> getParamListMap() {
+	public MultiValueMap<String, String> getParamListMap() {
 		return this.requestParameters;
 	}
 
@@ -181,7 +182,7 @@ public class MultipartFormData {
 	 * @return 上传的文件列表
 	 */
 	public UploadFile[] getFiles(final String paramName) {
-		final List<UploadFile> fileList = getFileList(paramName);
+		final Collection<UploadFile> fileList = getFileList(paramName);
 		if(null != fileList){
 			return fileList.toArray(new UploadFile[0]);
 		}
@@ -196,7 +197,7 @@ public class MultipartFormData {
 	 * @return 上传的文件列表
 	 * @since 5.3.0
 	 */
-	public List<UploadFile> getFileList(final String paramName) {
+	public Collection<UploadFile> getFileList(final String paramName) {
 		return requestFiles.get(paramName);
 	}
 
@@ -223,7 +224,7 @@ public class MultipartFormData {
 	 *
 	 * @return 文件映射
 	 */
-	public ListValueMap<String, UploadFile> getFileListValueMap() {
+	public MultiValueMap<String, UploadFile> getFileListValueMap() {
 		return this.requestFiles;
 	}
 

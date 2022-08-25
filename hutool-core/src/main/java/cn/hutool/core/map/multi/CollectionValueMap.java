@@ -6,97 +6,67 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
- * 值作为集合的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示<br>
- * 此类可以通过传入函数自定义集合类型的创建规则
+ * <p>{@link MultiValueMap}的通用实现，可视为值为{@link Collection}集合的{@link Map}集合。<br>
+ * 构建时指定一个工厂方法用于生成原始的{@link Map}集合，然后再指定一个工厂方法用于生成自定义类型的值集合。<br>
+ * 当调用{@link MultiValueMap}中格式为“putXXX”的方法时，将会为key创建值集合，并将key相同的值追加到集合中
  *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author looly
  * @since 4.3.3
  */
-public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V, Collection<V>> {
+public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
+
 	private static final long serialVersionUID = 9012989578038102983L;
 
-	private final Func0<Collection<V>> collectionCreateFunc;
+	private final Func0<Collection<V>> collFactory;
 
 	// ------------------------------------------------------------------------- Constructor start
 
 	/**
-	 * 构造
+	 * 创建一个多值映射集合，基于{@code mapFactory}与{@code collFactory}实现
+	 *
+	 * @param mapFactory 生成集合的工厂方法
+	 * @param collFactory 生成值集合的工厂方法
+	 */
+	public CollectionValueMap(Supplier<Map<K, Collection<V>>> mapFactory, Func0<Collection<V>> collFactory) {
+		super(mapFactory);
+		this.collFactory = collFactory;
+	}
+
+	/**
+	 * 创建一个多值映射集合，默认基于{@link HashMap}与{@code collFactory}生成的集合实现
+	 *
+	 * @param collFactory 生成值集合的工厂方法
+	 */
+	public CollectionValueMap(Func0<Collection<V>> collFactory) {
+		this.collFactory = collFactory;
+	}
+
+	/**
+	 * 创建一个多值映射集合，默认基于{@link HashMap}与{@link ArrayList}实现
 	 */
 	public CollectionValueMap() {
-		this(DEFAULT_INITIAL_CAPACITY);
+		this.collFactory = ArrayList::new;
 	}
 
 	/**
-	 * 构造
+	 * 创建一个多值映射集合，默认基于{@link HashMap}与{@link ArrayList}实现
 	 *
-	 * @param initialCapacity 初始大小
+	 * @param map 提供数据的原始集合
 	 */
-	public CollectionValueMap(final int initialCapacity) {
-		this(initialCapacity, DEFAULT_LOAD_FACTOR);
+	public CollectionValueMap(Map<K, Collection<V>> map) {
+		super(map);
+		this.collFactory = ArrayList::new;
 	}
 
-	/**
-	 * 构造
-	 *
-	 * @param m Map
-	 */
-	public CollectionValueMap(final Map<? extends K, ? extends Collection<V>> m) {
-		this(DEFAULT_LOAD_FACTOR, m);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param loadFactor 加载因子
-	 * @param m          Map
-	 */
-	public CollectionValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m) {
-		this(loadFactor, m, ArrayList::new);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param initialCapacity 初始大小
-	 * @param loadFactor      加载因子
-	 */
-	public CollectionValueMap(final int initialCapacity, final float loadFactor) {
-		this(initialCapacity, loadFactor, ArrayList::new);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param loadFactor           加载因子
-	 * @param m                    Map
-	 * @param collectionCreateFunc Map中值的集合创建函数
-	 * @since 5.7.4
-	 */
-	public CollectionValueMap(final float loadFactor, final Map<? extends K, ? extends Collection<V>> m, final Func0<Collection<V>> collectionCreateFunc) {
-		this(m.size(), loadFactor, collectionCreateFunc);
-		this.putAll(m);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param initialCapacity      初始大小
-	 * @param loadFactor           加载因子
-	 * @param collectionCreateFunc Map中值的集合创建函数
-	 * @since 5.7.4
-	 */
-	public CollectionValueMap(final int initialCapacity, final float loadFactor, final Func0<Collection<V>> collectionCreateFunc) {
-		super(new HashMap<>(initialCapacity, loadFactor));
-		this.collectionCreateFunc = collectionCreateFunc;
-	}
 	// ------------------------------------------------------------------------- Constructor end
 
 	@Override
 	protected Collection<V> createCollection() {
-		return collectionCreateFunc.callWithRuntimeException();
+		return collFactory.callWithRuntimeException();
 	}
 }
