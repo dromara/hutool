@@ -1,11 +1,13 @@
 package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -55,12 +57,12 @@ public class UrlPath {
 	}
 
 	/**
-	 * 获取path的节点列表
+	 * 获取path的节点列表，如果列表为空，返回{@link ListUtil#empty()}
 	 *
 	 * @return 节点列表
 	 */
 	public List<String> getSegments() {
-		return this.segments;
+		return ObjUtil.defaultIfNull(this.segments, ListUtil.empty());
 	}
 
 	/**

@@ -470,4 +470,13 @@ public class UrlBuilderTest {
 
 		Assert.assertEquals("127.0.0.1:8080", builder.getAuthority());
 	}
+
+	@Test
+	public void addPathTest(){
+		//https://gitee.com/dromara/hutool/issues/I5O4ML
+		UrlBuilder.of().addPath("");
+		UrlBuilder.of().addPath("/");
+		UrlBuilder.of().addPath("//");
+		UrlBuilder.of().addPath("//a");
+	}
 }
