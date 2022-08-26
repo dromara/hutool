@@ -623,7 +623,12 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 检查指定字符串中是否只包含给定的字符
+	 * 检查指定字符串中是否只包含给定的字符<br>
+	 * <ul>
+	 *     <li>str 是 null，testChars 也是 null，直接返回 true</li>
+	 *     <li>str 是 null，testChars 不是 null，直接返回 true</li>
+	 *     <li>str 不是 null，testChars 是 null，直接返回 false</li>
+	 * </ul>
 	 *
 	 * @param str       字符串
 	 * @param testChars 检查的字符
