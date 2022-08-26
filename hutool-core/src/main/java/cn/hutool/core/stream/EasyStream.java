@@ -25,6 +25,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -526,7 +527,7 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 * @param <R>    拆分后流的元素类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <R> EasyStream<R> mapMulti(final BiConsumer<? super T, ? super FastStreamBuilder<R>> mapper) {
+	public <R> EasyStream<R> mapMulti(final BiConsumer<? super T, ? super Consumer<R>> mapper) {
 		Objects.requireNonNull(mapper);
 		return flatMap(e -> {
 			final FastStreamBuilder<R> buffer = EasyStream.builder();
@@ -630,6 +631,31 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 		return new EasyStream<>(stream.peek(action));
 	}
 
+	/**
+	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标，并行流时下标永远为-1
+	 * 这是一个无状态中间操作
+	 * @param action 指定的函数
+	 * @return 返回叠加操作后的FastStream
+	 * @apiNote 该方法存在的意义主要是用来调试
+	 * 当你需要查看经过操作管道某处的元素和下标，可以执行以下操作:
+	 * <pre>{@code
+	 *     .of("one", "two", "three", "four")
+	 * 				.filter(e -> e.length() > 3)
+	 * 				.peekIdx((e,i) -> System.out.println("Filtered value: " + e + " Filtered idx:" + i))
+	 * 				.map(String::toUpperCase)
+	 * 				.peekIdx((e,i) -> System.out.println("Mapped value: " + e + " Mapped idx:" + i))
+	 * 				.collect(Collectors.toList());
+	 * }</pre>
+	 */
+	public EasyStream<T> peekIdx(BiConsumer<? super T, Integer> action) {
+		Objects.requireNonNull(action);
+		if (isParallel()) {
+			return peek(e -> action.accept(e, NOT_FOUND_INDEX));
+		} else {
+			AtomicInteger index = new AtomicInteger(NOT_FOUND_INDEX);
+			return peek(e -> action.accept(e, index.incrementAndGet()));
+		}
+	}
 	/**
 	 * 返回叠加调用{@link Console#log(Object)}打印出结果的流
 	 *
