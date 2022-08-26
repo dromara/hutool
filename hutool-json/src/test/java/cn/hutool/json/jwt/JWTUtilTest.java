@@ -43,6 +43,24 @@ public class JWTUtilTest {
 		Assert.assertEquals(true, jwt.getPayload("admin"));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void parseNullTest(){
+		// https://gitee.com/dromara/hutool/issues/I5OCQB
+		JWTUtil.parseToken(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void parseEmptyTest(){
+		// https://gitee.com/dromara/hutool/issues/I5OCQB
+		JWTUtil.parseToken("");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void parseBlankTest(){
+		// https://gitee.com/dromara/hutool/issues/I5OCQB
+		JWTUtil.parseToken("  ");
+	}
+
 	@Test
 	public void verifyTest(){
 		final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +

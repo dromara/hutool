@@ -88,10 +88,12 @@ public class JWT implements RegisteredPayload<JWT> {
 	/**
 	 * 解析JWT内容
 	 *
-	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz
+	 * @param token JWT Token字符串，格式为xxxx.yyyy.zzzz，不能为空
 	 * @return this
+	 * @throws IllegalArgumentException 给定字符串为空
 	 */
-	public JWT parse(final String token) {
+	public JWT parse(final String token) throws IllegalArgumentException {
+		Assert.notBlank(token, "Token String must be not blank!");
 		final List<String> tokens = splitToken(token);
 		this.tokens = tokens;
 		this.header.parse(tokens.get(0), this.charset);
@@ -269,7 +271,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	/**
 	 * 获取payload并获取类型
 	 *
-	 * @param <T> Bean类型
+	 * @param <T>          Bean类型
 	 * @param propertyName 需要提取的属性名称
 	 * @param propertyType 需要提取的属性类型
 	 * @return 载荷信息
