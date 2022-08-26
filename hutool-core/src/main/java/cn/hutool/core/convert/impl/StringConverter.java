@@ -3,6 +3,7 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.XmlUtil;
 
@@ -12,7 +13,10 @@ import java.lang.reflect.Type;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 /**
  * 字符串转换器，提供各种对象转换为字符串的逻辑封装
@@ -22,8 +26,34 @@ import java.util.TimeZone;
 public class StringConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	private Map<Class<?>, Function<Object, String>> stringer;
+
+	/**
+	 * 加入自定义对象类型的toString规则
+	 *
+	 * @param clazz 类型
+	 * @param stringFunction 序列化函数
+	 * @return this
+	 */
+	public StringConverter putStringer(Class<?> clazz, Function<Object, String> stringFunction){
+		if(null == stringer){
+			stringer = new HashMap<>();
+		}
+		stringer.put(clazz, stringFunction);
+		return this;
+	}
+
 	@Override
 	protected String convertInternal(final Class<?> targetClass, final Object value) {
+
+		// 自定义toString
+		if(MapUtil.isNotEmpty(stringer)){
+			final Function<Object, String> stringFunction = stringer.get(targetClass);
+			if(null != stringFunction){
+				return stringFunction.apply(value);
+			}
+		}
+
 		if (value instanceof TimeZone) {
 			return ((TimeZone) value).getID();
 		} else if (value instanceof org.w3c.dom.Node) {
