@@ -159,7 +159,7 @@ public class CollectionOperation<E> {
 		}
 
 		// 任意容器为空, 则返回空集
-		for (Collection<E> coll : colls) {
+		for (final Collection<E> coll : colls) {
 			if(CollUtil.isEmpty(coll)){
 				return SetUtil.zeroLinked();
 			}
