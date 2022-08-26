@@ -303,7 +303,7 @@ public class NumberUtil {
 	 * @return 新值
 	 */
 	public static String roundStr(final double v, final int scale) {
-		return round(v, scale).toString();
+		return round(v, scale).toPlainString();
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(final String numberStr, final int scale) {
-		return round(numberStr, scale).toString();
+		return round(numberStr, scale).toPlainString();
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(final double v, final int scale, final RoundingMode roundingMode) {
-		return round(v, scale, roundingMode).toString();
+		return round(v, scale, roundingMode).toPlainString();
 	}
 
 	/**
@@ -425,7 +425,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(final String numberStr, final int scale, final RoundingMode roundingMode) {
-		return round(numberStr, scale, roundingMode).toString();
+		return round(numberStr, scale, roundingMode).toPlainString();
 	}
 
 	/**
