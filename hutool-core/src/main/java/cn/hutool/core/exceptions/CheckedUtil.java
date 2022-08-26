@@ -11,6 +11,7 @@ import cn.hutool.core.lang.func.VoidFunc1;
 import java.util.Objects;
 
 /**
+ * TODO 按照https://github.com/dromara/hutool/issues/2549修改。
  * 方便的执行会抛出受检查类型异常的方法调用或者代码段
  * <p>
  * 该工具通过函数式的方式将那些需要抛出受检查异常的表达式或者代码段转化成一个 cn.hutool.core.lang.func.Func* 对象
