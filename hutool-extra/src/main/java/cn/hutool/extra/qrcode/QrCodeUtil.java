@@ -130,7 +130,7 @@ public class QrCodeUtil {
 	 * @since 5.8.6
 	 */
 	public static String generateAsSvg(String content, QrConfig qrConfig) {
-		BitMatrix bitMatrix = encode(content, qrConfig);
+		final BitMatrix bitMatrix = encode(content, qrConfig);
 		return toSVG(bitMatrix, qrConfig);
 	}
 
@@ -154,7 +154,7 @@ public class QrCodeUtil {
 	 * @since 5.8.6
 	 */
 	public static String generateAsAsciiArt(String content, QrConfig qrConfig) {
-		BitMatrix bitMatrix = encode(content, qrConfig);
+		final BitMatrix bitMatrix = encode(content, qrConfig);
 		return toAsciiArt(bitMatrix, qrConfig);
 	}
 
@@ -627,12 +627,12 @@ public class QrCodeUtil {
 	 * @since 5.8.6
 	 */
 	public static String toAsciiArt(BitMatrix bitMatrix, QrConfig qrConfig) {
-		int width = bitMatrix.getWidth();
-		int height = bitMatrix.getHeight();
+		final int width = bitMatrix.getWidth();
+		final int height = bitMatrix.getHeight();
 
 
-		AnsiElement foreground = qrConfig.foreColor == null ? null : Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.foreColor));
-		AnsiElement background = qrConfig.backColor == null ? null : Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.backColor));
+		final AnsiElement foreground = qrConfig.foreColor == null ? null : Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.foreColor));
+		final AnsiElement background = qrConfig.backColor == null ? null : Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.backColor));
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {
@@ -663,15 +663,13 @@ public class QrCodeUtil {
 	 * @since 5.8.6
 	 */
 	private static int rgbToAnsi8BitValue(int rgb) {
-		int l;
-		int r = (rgb >> 16) & 0xff;
-		int g = (rgb >> 8) & 0xff;
-		int b = (rgb) & 0xff;
-		if (r < 0) r += 256;
-		if (g < 0) g += 256;
-		if (b < 0) b += 256;
+		final int r = (rgb >> 16) & 0xff;
+		final int g = (rgb >> 8) & 0xff;
+		final int b = (rgb) & 0xff;
+
+		final int l;
 		if (r == g && g == b) {
-			int i = (int) (NumberUtil.div(NumberUtil.mul(r - 10.625, 23), (255 - 10.625), 0));
+			final int i = (int) (NumberUtil.div(NumberUtil.mul(r - 10.625, 23), (255 - 10.625), 0));
 			l = i >= 0 ? 232 + i : 0;
 		} else {
 			l = 16 + (int) (36 * NumberUtil.div(NumberUtil.mul(r, 5), 255, 0)) + (int) (6.0 * (g / 256.0 * 6.0)) + (int) (b / 256.0 * 6.0);
