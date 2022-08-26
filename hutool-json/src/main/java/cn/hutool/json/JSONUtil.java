@@ -568,6 +568,29 @@ public class JSONUtil {
 	}
 
 	/**
+	 * JSON对象是否为空，以下情况返回true<br>
+	 * <ul>
+	 *     <li>null</li>
+	 *     <li>{@link JSONArray#isEmpty()}</li>
+	 *     <li>{@link JSONObject#isEmpty()}</li>
+	 * </ul>
+	 *
+	 * @param json JSONObject或JSONArray
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final JSON json){
+		if(null == json){
+			return true;
+		}
+		if(json instanceof JSONObject){
+			return ((JSONObject) json).isEmpty();
+		} else if(json instanceof JSONArray){
+			return ((JSONArray) json).isEmpty();
+		}
+		return false;
+	}
+
+	/**
 	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
 	 *
 	 * @param str 字符串
