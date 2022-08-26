@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ public class Assert {
 	 * @param supplier   指定断言不通过时抛出的异常
 	 * @throws X if expression is {@code false}
 	 */
+	@Contract("false, _ -> fail")
 	public static <X extends Throwable> void isTrue(boolean expression, Supplier<? extends X> supplier) throws X {
 		if (false == expression) {
 			throw supplier.get();
@@ -50,6 +52,7 @@ public class Assert {
 	 * @param params           参数列表
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
+	@Contract("false, _, _ -> fail")
 	public static void isTrue(boolean expression, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		isTrue(expression, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -64,6 +67,7 @@ public class Assert {
 	 * @param expression 布尔值
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
+	@Contract("false -> fail")
 	public static void isTrue(boolean expression) throws IllegalArgumentException {
 		isTrue(expression, "[Assertion failed] - this expression must be true");
 	}
@@ -84,6 +88,7 @@ public class Assert {
 	 * @throws X if expression is {@code false}
 	 * @since 5.4.5
 	 */
+	@Contract("true, _ -> fail")
 	public static <X extends Throwable> void isFalse(boolean expression, Supplier<X> errorSupplier) throws X {
 		if (expression) {
 			throw errorSupplier.get();
@@ -102,6 +107,7 @@ public class Assert {
 	 * @param params           参数列表
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
+	@Contract("true, _, _ -> fail")
 	public static void isFalse(boolean expression, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		isFalse(expression, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -116,6 +122,7 @@ public class Assert {
 	 * @param expression 布尔值
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
+	@Contract("true -> fail")
 	public static void isFalse(boolean expression) throws IllegalArgumentException {
 		isFalse(expression, "[Assertion failed] - this expression must be false");
 	}
@@ -136,6 +143,7 @@ public class Assert {
 	 * @throws X if the object is not {@code null}
 	 * @since 5.4.5
 	 */
+	@Contract("!null, _ -> fail")
 	public static <X extends Throwable> void isNull(Object object, Supplier<X> errorSupplier) throws X {
 		if (null != object) {
 			throw errorSupplier.get();
@@ -154,6 +162,7 @@ public class Assert {
 	 * @param params           参数列表
 	 * @throws IllegalArgumentException if the object is not {@code null}
 	 */
+	@Contract("!null, _, _ -> fail")
 	public static void isNull(Object object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		isNull(object, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -168,6 +177,7 @@ public class Assert {
 	 * @param object 被检查对象
 	 * @throws IllegalArgumentException if the object is not {@code null}
 	 */
+	@Contract("!null -> fail")
 	public static void isNull(Object object) throws IllegalArgumentException {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
@@ -192,6 +202,7 @@ public class Assert {
 	 * @throws X if the object is {@code null}
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <T, X extends Throwable> T notNull(T object, Supplier<X> errorSupplier) throws X {
 		if (null == object) {
 			throw errorSupplier.get();
@@ -213,6 +224,7 @@ public class Assert {
 	 * @return 被检查后的对象
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notNull(object, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -229,6 +241,7 @@ public class Assert {
 	 * @return 非空对象
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
+	@Contract("null -> fail")
 	public static <T> T notNull(T object) throws IllegalArgumentException {
 		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
 	}
@@ -253,6 +266,7 @@ public class Assert {
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <T extends CharSequence, X extends Throwable> T notEmpty(T text, Supplier<X> errorSupplier) throws X {
 		if (StrUtil.isEmpty(text)) {
 			throw errorSupplier.get();
@@ -275,6 +289,7 @@ public class Assert {
 	 * @throws IllegalArgumentException 被检查字符串为空
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T extends CharSequence> T notEmpty(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notEmpty(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -292,6 +307,7 @@ public class Assert {
 	 * @throws IllegalArgumentException 被检查字符串为空
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 */
+	@Contract("null -> fail")
 	public static <T extends CharSequence> T notEmpty(T text) throws IllegalArgumentException {
 		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
 	}
@@ -314,6 +330,7 @@ public class Assert {
 	 * @throws X 被检查字符串为空白
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 */
+	@Contract("null, _ -> fail")
 	public static <T extends CharSequence, X extends Throwable> T notBlank(T text, Supplier<X> errorMsgSupplier) throws X {
 		if (StrUtil.isBlank(text)) {
 			throw errorMsgSupplier.get();
@@ -336,6 +353,7 @@ public class Assert {
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T extends CharSequence> T notBlank(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notBlank(text, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -353,6 +371,7 @@ public class Assert {
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 */
+	@Contract("null -> fail")
 	public static <T extends CharSequence> T notBlank(T text) throws IllegalArgumentException {
 		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
 	}
@@ -377,6 +396,7 @@ public class Assert {
 	 * @see StrUtil#contains(CharSequence, CharSequence)
 	 * @since 5.4.5
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T extends CharSequence, X extends Throwable> T notContain(CharSequence textToSearch, T substring, Supplier<X> errorSupplier) throws X {
 		if (StrUtil.contains(textToSearch, substring)) {
 			throw errorSupplier.get();
@@ -398,6 +418,7 @@ public class Assert {
 	 * @return 被检查的子串
 	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
+	@Contract("null, _, _, _ -> fail")
 	public static String notContain(String textToSearch, String substring, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notContain(textToSearch, substring, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -414,6 +435,7 @@ public class Assert {
 	 * @return 被检查的子串
 	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
+	@Contract("null, _ -> fail")
 	public static String notContain(String textToSearch, String substring) throws IllegalArgumentException {
 		return notContain(textToSearch, substring, "[Assertion failed] - this String argument must not contain the substring [{}]", substring);
 	}
@@ -438,6 +460,7 @@ public class Assert {
 	 * @see ArrayUtil#isNotEmpty(Object[])
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <T, X extends Throwable> T[] notEmpty(T[] array, Supplier<X> errorSupplier) throws X {
 		if (ArrayUtil.isEmpty(array)) {
 			throw errorSupplier.get();
@@ -459,6 +482,7 @@ public class Assert {
 	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T> T[] notEmpty(T[] array, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notEmpty(array, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -475,6 +499,7 @@ public class Assert {
 	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
 	 */
+	@Contract("null -> fail")
 	public static <T> T[] notEmpty(T[] array) throws IllegalArgumentException {
 		return notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
 	}
@@ -498,6 +523,7 @@ public class Assert {
 	 * @see ArrayUtil#hasNull(Object[])
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <T, X extends Throwable> T[] noNullElements(T[] array, Supplier<X> errorSupplier) throws X {
 		if (ArrayUtil.hasNull(array)) {
 			throw errorSupplier.get();
@@ -519,6 +545,7 @@ public class Assert {
 	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array contains a {@code null} element
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <T> T[] noNullElements(T[] array, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return noNullElements(array, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -535,6 +562,7 @@ public class Assert {
 	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array contains a {@code null} element
 	 */
+	@Contract("null -> fail")
 	public static <T> T[] noNullElements(T[] array) throws IllegalArgumentException {
 		return noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
 	}
@@ -559,6 +587,7 @@ public class Assert {
 	 * @see CollUtil#isNotEmpty(Iterable)
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <E, T extends Iterable<E>, X extends Throwable> T notEmpty(T collection, Supplier<X> errorSupplier) throws X {
 		if (CollUtil.isEmpty(collection)) {
 			throw errorSupplier.get();
@@ -581,6 +610,7 @@ public class Assert {
 	 * @return 非空集合
 	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <E, T extends Iterable<E>> T notEmpty(T collection, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notEmpty(collection, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -598,6 +628,7 @@ public class Assert {
 	 * @return 被检查集合
 	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
 	 */
+	@Contract("null -> fail")
 	public static <E, T extends Iterable<E>> T notEmpty(T collection) throws IllegalArgumentException {
 		return notEmpty(collection, "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
 	}
@@ -623,6 +654,7 @@ public class Assert {
 	 * @see MapUtil#isNotEmpty(Map)
 	 * @since 5.4.5
 	 */
+	@Contract("null, _ -> fail")
 	public static <K, V, T extends Map<K, V>, X extends Throwable> T notEmpty(T map, Supplier<X> errorSupplier) throws X {
 		if (MapUtil.isEmpty(map)) {
 			throw errorSupplier.get();
@@ -646,6 +678,7 @@ public class Assert {
 	 * @return 被检查的Map
 	 * @throws IllegalArgumentException if the map is {@code null} or has no entries
 	 */
+	@Contract("null, _, _ -> fail")
 	public static <K, V, T extends Map<K, V>> T notEmpty(T map, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		return notEmpty(map, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
@@ -664,6 +697,7 @@ public class Assert {
 	 * @return 被检查的Map
 	 * @throws IllegalArgumentException if the map is {@code null} or has no entries
 	 */
+	@Contract("null -> fail")
 	public static <K, V, T extends Map<K, V>> T notEmpty(T map) throws IllegalArgumentException {
 		return notEmpty(map, "[Assertion failed] - this map must not be empty; it must contain at least one entry");
 	}

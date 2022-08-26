@@ -16,4 +16,19 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool核心，包括集合、字符串、Bean等工具</description>
 
+	<properties>
+		<!-- versions -->
+		<jetbrains-annotations.version>23.0.0</jetbrains-annotations.version>
+	</properties>
+
+	<dependencies>
+		<!--A set of annotations used for code inspection support and code documentation.-->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>${jetbrains-annotations.version}</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 </project>
