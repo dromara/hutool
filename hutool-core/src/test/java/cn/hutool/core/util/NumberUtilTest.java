@@ -137,6 +137,9 @@ public class NumberUtilTest {
 	public void roundStrTest() {
 		final String roundStr = NumberUtil.roundStr(2.647, 2);
 		Assert.assertEquals(roundStr, "2.65");
+
+		final String roundStr1 = NumberUtil.roundStr(0, 10);
+		Assert.assertEquals(roundStr1, "0.0000000000");
 	}
 
 	@Test
