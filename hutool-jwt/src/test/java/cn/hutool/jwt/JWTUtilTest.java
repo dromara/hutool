@@ -43,6 +43,12 @@ public class JWTUtilTest {
 		Assert.assertEquals(true, jwt.getPayload("admin"));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void parseNullTest(){
+		// https://gitee.com/dromara/hutool/issues/I5OCQB
+		JWTUtil.parseToken(null);
+	}
+
 	@Test
 	public void verifyTest(){
 		String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +

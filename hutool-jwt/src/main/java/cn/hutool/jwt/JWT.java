@@ -92,6 +92,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return this
 	 */
 	public JWT parse(String token) {
+		Assert.notBlank(token, "Token String must be not blank!");
 		final List<String> tokens = splitToken(token);
 		this.tokens = tokens;
 		this.header.parse(tokens.get(0), this.charset);

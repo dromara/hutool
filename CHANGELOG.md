@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.6.M1 (2022-08-26)
+# 5.8.6.M1 (2022-08-27)
 
 ### 🐣新特性
 * 【core   】     CollUtil新增addIfAbsent方法（pr#750@Gitee）
@@ -16,6 +16,7 @@
 * 【jwt    】     JWT补充部分算法（pr#2546@Github）
 * 【core   】     NumberUtil.roundStr() 修改为使用toPlainString（pr#775@Gitee）
 * 【extra  】     QrCodeUtil新增SVG格式、Ascii Art字符画格式（pr#763@Gitee）
+* 【jwt    】     JWTUtil的parseToken增加空值异常抛出（issue#I5OCQB@Gitee）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）
