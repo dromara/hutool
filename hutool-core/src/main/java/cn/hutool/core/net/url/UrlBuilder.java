@@ -187,8 +187,19 @@ public final class UrlBuilder implements Builder<String> {
 	 * 创建空的UrlBuilder
 	 *
 	 * @return UrlBuilder
+	 * @deprecated 请使用 {@link #of()}
 	 */
+	@Deprecated
 	public static UrlBuilder create() {
+		return new UrlBuilder();
+	}
+
+	/**
+	 * 创建空的UrlBuilder
+	 *
+	 * @return UrlBuilder
+	 */
+	public static UrlBuilder of() {
 		return new UrlBuilder();
 	}
 

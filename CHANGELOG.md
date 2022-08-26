@@ -25,6 +25,7 @@
 * 【core   】     修复UrlBuilder的toURI方法将url重复编码（issue#2503@Github）
 * 【core   】     修复CollUtil.lastIndexOf序号错误问题
 * 【core   】     修复zip被识别成jar和apk被识别成jar或zip的问题（pr#2548@Github）
+* 【core   】     修复UrlBuilder.addPath 方法传入非有效路径字符串时，会出现空指针异常的问题（issue#I5O4ML@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
