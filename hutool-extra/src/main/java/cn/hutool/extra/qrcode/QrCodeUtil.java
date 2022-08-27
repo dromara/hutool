@@ -47,7 +47,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content    内容
-	 * @param qrConfig   二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType  类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
@@ -60,7 +60,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
@@ -73,7 +73,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
@@ -91,7 +91,7 @@ public class QrCodeUtil {
 	 * </p>
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
@@ -126,7 +126,7 @@ public class QrCodeUtil {
 
 	/**
 	 * @param content  内容
-	 * @param qrConfig 二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig 二维码配置，包括宽度、高度、边距、颜色等
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
@@ -191,7 +191,7 @@ public class QrCodeUtil {
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
 	 *
 	 * @param content 内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 图片的byte[]
 	 * @since 4.1.2
 	 */
@@ -234,7 +234,7 @@ public class QrCodeUtil {
 	 * 生成二维码到文件，二维码图片格式取决于文件的扩展名
 	 *
 	 * @param content    文本内容
-	 * @param config     二维码配置，包括长、宽、边距、颜色等
+	 * @param config     二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetFile 目标文件，扩展名决定输出格式
 	 * @return 目标文件
 	 * @since 4.1.2
@@ -288,7 +288,7 @@ public class QrCodeUtil {
 	 * 生成二维码到输出流
 	 *
 	 * @param content   文本内容
-	 * @param config    二维码配置，包括长、宽、边距、颜色等
+	 * @param config    二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param out       目标流
 	 * @since 4.1.2
@@ -403,7 +403,7 @@ public class QrCodeUtil {
 	 * 将文本内容编码为二维码
 	 *
 	 * @param content 文本内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
@@ -455,11 +455,11 @@ public class QrCodeUtil {
 	/**
 	 * 解码二维码或条形码图片为文本
 	 *
-	 * @param qrCodeInputstream 二维码输入流
+	 * @param qrCodeInputStream 二维码输入流
 	 * @return 解码文本
 	 */
-	public static String decode(InputStream qrCodeInputstream) {
-		return decode(ImgUtil.read(qrCodeInputstream));
+	public static String decode(InputStream qrCodeInputStream) {
+		return decode(ImgUtil.read(qrCodeInputStream));
 	}
 
 	/**
