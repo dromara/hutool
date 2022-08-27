@@ -3,11 +3,11 @@ package cn.hutool.extra.qrcode;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class QrCodeUtilTest {
 	@Test
 	public void generateTest() {
 		final BufferedImage image = QrCodeUtil.generate("https://hutool.cn/", 300, 300);
-		Assert.assertNotNull(image);
+		Assert.notNull(image);
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class QrCodeUtilTest {
 	@Ignore
 	public void decodeTest() {
 		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/pic/qr.png"));
-		Console.log(decode);
+		//Console.log(decode);
 	}
 
 	@Test
@@ -80,13 +80,13 @@ public class QrCodeUtilTest {
 	public void decodeTest2() {
 		// 条形码
 		final String decode = QrCodeUtil.decode(FileUtil.file("d:/test/90.png"));
-		Console.log(decode);
+		//Console.log(decode);
 	}
 
 	@Test
 	public void generateAsBase64Test() {
 		final String base64 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png");
-		Assert.assertNotNull(base64);
+		Assert.notNull(base64);
 	}
 
 	@Test
@@ -96,27 +96,27 @@ public class QrCodeUtilTest {
 				new File("d:/test/qr.png"));
 		final String encode = Base64.encode(bytes);
 		final String base641 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "png", encode);
-		Assert.assertNotNull(base641);
+		Assert.notNull(base641);
 	}
 
 	@Test
 	public void generateAsBase64Test3() {
 		final String base64 = QrCodeUtil.generateAsBase64("https://hutool.cn/", new QrConfig(400, 400), "svg");
-		Assert.assertNotNull(base64);
-		System.out.println(base64);
+		Assert.notNull(base64);
+		//Console.log(base64);
 	}
 
 	@Test
 	@Ignore
 	public void decodeTest3() {
 		final String decode = QrCodeUtil.decode(ImgUtil.read("d:/test/qr_a.png"), false, true);
-		Console.log(decode);
+		//Console.log(decode);
 	}
 
 	@Test
 	public void pdf417Test() {
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.PDF_417, QrConfig.create());
-		Assert.assertNotNull(image);
+		Assert.notNull(image);
 	}
 
 	@Test
@@ -124,11 +124,11 @@ public class QrCodeUtilTest {
 		final QrConfig qrConfig = QrConfig.create();
 		qrConfig.setShapeHint(SymbolShapeHint.FORCE_RECTANGLE);
 		final BufferedImage image = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
-		Assert.assertNotNull(image);
+		Assert.notNull(image);
 		final QrConfig config = QrConfig.create();
 		config.setShapeHint(SymbolShapeHint.FORCE_SQUARE);
 		final BufferedImage imageSquare = QrCodeUtil.generate("content111", BarcodeFormat.DATA_MATRIX, qrConfig);
-		Assert.assertNotNull(imageSquare);
+		Assert.notNull(imageSquare);
 	}
 
 	@Test
@@ -142,7 +142,7 @@ public class QrCodeUtilTest {
 				.setErrorCorrection(ErrorCorrectionLevel.M)
 				.setMargin(1);
 		final String svg = QrCodeUtil.generateAsSvg("https://hutool.cn/", qrConfig);
-		Assert.assertNotNull(svg);
+		Assert.notNull(svg);
 		FileUtil.writeString(svg, FileUtil.touch("d:/test/hutool_qr.svg"),StandardCharsets.UTF_8);
 	}
 
@@ -154,8 +154,8 @@ public class QrCodeUtilTest {
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
 		final String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
-		Assert.assertNotNull(asciiArt);
-		//Console.log(asciiArt);
+		Assert.notNull(asciiArt);
+		Console.log(asciiArt);
 	}
 
 	@Test
@@ -166,7 +166,7 @@ public class QrCodeUtilTest {
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
 		final String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
-		Assert.assertNotNull(asciiArt);
+		Assert.notNull(asciiArt);
 		//Console.log(asciiArt);
 	}
 
@@ -180,8 +180,8 @@ public class QrCodeUtilTest {
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
 		final File qrFile = QrCodeUtil.generate("https://hutool.cn/", qrConfig, FileUtil.touch("d:/test/ascii_art_qr_code.txt"));
-		final BufferedReader reader = FileUtil.getReader(qrFile, StandardCharsets.UTF_8);
-		reader.lines().forEach(System.out::println);
+		//final BufferedReader reader = FileUtil.getReader(qrFile, StandardCharsets.UTF_8);
+		//reader.lines().forEach(Console::log);
 	}
 
 	@Test
@@ -198,21 +198,21 @@ public class QrCodeUtilTest {
 		}catch (final IOException e){
 			e.printStackTrace();
 		}
-		final BufferedReader reader = FileUtil.getReader(filepath, StandardCharsets.UTF_8);
-		reader.lines().forEach(System.out::println);
+		//final BufferedReader reader = FileUtil.getReader(filepath, StandardCharsets.UTF_8);
+		//reader.lines().forEach(Console::log);
 	}
 
 	@Test
 	@Ignore
-	public void comparePngAndAsciiArtTest() {
+	public void comparePngAndSvgAndAsciiArtTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setForeColor(null)
 				.setBackColor(null)
 				.setWidth(0)
 				.setHeight(0).setMargin(1);
-		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.jpg"));
-		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.txt"));
-		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/default.png"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.jpg"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.txt"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.png"));
 	}
 
 }

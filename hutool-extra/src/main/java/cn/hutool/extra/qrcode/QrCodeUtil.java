@@ -5,11 +5,11 @@ import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.ansi.Ansi8BitColor;
+import cn.hutool.core.lang.ansi.AnsiColorWrapper;
+import cn.hutool.core.lang.ansi.AnsiColors;
 import cn.hutool.core.lang.ansi.AnsiElement;
 import cn.hutool.core.lang.ansi.AnsiEncoder;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.google.zxing.*;
@@ -41,6 +41,7 @@ public class QrCodeUtil {
 
 	public static final String QR_TYPE_SVG = "svg";// SVG矢量图格式
 	public static final String QR_TYPE_TXT = "txt";// Ascii Art字符画文本
+	private static final AnsiColors ansiColors= new AnsiColors(AnsiColors.BitDepth.EIGHT);
 
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
@@ -631,8 +632,8 @@ public class QrCodeUtil {
 		final int height = bitMatrix.getHeight();
 
 
-		final AnsiElement foreground = qrConfig.foreColor == null ? null : Ansi8BitColor.foreground(rgbToAnsi8BitValue(qrConfig.foreColor));
-		final AnsiElement background = qrConfig.backColor == null ? null : Ansi8BitColor.background(rgbToAnsi8BitValue(qrConfig.backColor));
+		final AnsiElement foreground = qrConfig.foreColor == null ? null : rgbToAnsi8BitElement(qrConfig.foreColor, AnsiColorWrapper.ForeOrBack.FORE);
+		final AnsiElement background = qrConfig.backColor == null ? null : rgbToAnsi8BitElement(qrConfig.backColor, AnsiColorWrapper.ForeOrBack.BACK);
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {
@@ -655,26 +656,16 @@ public class QrCodeUtil {
 		return builder.toString();
 	}
 
-	/**
-	 * rgb转Ansi8Bit值
+/*	*//**
+	 * rgb转AnsiElement
 	 *
 	 * @param rgb rgb颜色值
-	 * @return Ansi8bit颜色值
+	 * @param foreOrBack 前景or背景
+	 * @return AnsiElement
 	 * @since 5.8.6
 	 */
-	private static int rgbToAnsi8BitValue(int rgb) {
-		final int r = (rgb >> 16) & 0xff;
-		final int g = (rgb >> 8) & 0xff;
-		final int b = (rgb) & 0xff;
-
-		final int l;
-		if (r == g && g == b) {
-			final int i = (int) (NumberUtil.div(NumberUtil.mul(r - 10.625, 23), (255 - 10.625), 0));
-			l = i >= 0 ? 232 + i : 0;
-		} else {
-			l = 16 + (int) (36 * NumberUtil.div(NumberUtil.mul(r, 5), 255, 0)) + (int) (6.0 * (g / 256.0 * 6.0)) + (int) (b / 256.0 * 6.0);
-		}
-		return l;
+	private static AnsiElement rgbToAnsi8BitElement(int rgb,AnsiColorWrapper.ForeOrBack foreOrBack) {
+		return ansiColors.findClosest(new Color(rgb)).toAnsiElement(foreOrBack);
 	}
 
 
