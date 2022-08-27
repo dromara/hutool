@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.ansi;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.Objects;
 
@@ -39,9 +40,19 @@ public class AnsiColorWrapper {
 	public AnsiElement toAnsiElement(ForeOrBack foreOrBack){
 		if (bitDepth== AnsiColors.BitDepth.FOUR){
 			if (foreOrBack == ForeOrBack.FORE){
-				return AnsiColor.valueOf(String.valueOf(code));
+				for (AnsiColor item : AnsiColor.values()) {
+					if (StrUtil.equals(item.toString(), StrUtil.toString(code))) {
+						return item;
+					}
+				}
+				throw new IllegalArgumentException(StrUtil.format("No matched AnsiColor instance,code={}",code));
 			}
-			return AnsiBackground.valueOf(String.valueOf(code + 10));
+			for (AnsiBackground item : AnsiBackground.values()) {
+				if (StrUtil.equals(item.toString(), StrUtil.toString(code+10))) {
+					return item;
+				}
+			}
+			throw new IllegalArgumentException(StrUtil.format("No matched Background instance,code=",code));
 		}
 		if (foreOrBack == ForeOrBack.FORE){
 			return Ansi8BitColor.foreground(code);
