@@ -25,9 +25,19 @@ public class QrConfig {
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
 
-	/** 宽 */
+
+	/**
+	 * 宽度（单位：像素或▄）
+	 * <div>当二维码类型为一般图片或者SVG时，单位是像素<div/>
+	 * <div>当二维码类型Ascii Art字符画时，单位是字符▄或▀的大小<div/>
+	 */
 	protected int width;
-	/** 长 */
+
+	/**
+	 * 高度（单位：像素或▄）
+	 * <div>当二维码类型为一般图片或者SVG时，单位是像素<div/>
+	 * <div>当二维码类型Ascii Art字符画时，单位是字符▄或▀的大小<div/>
+	 */
 	protected int height;
 	/** 前景色（二维码颜色） */
 	protected Integer foreColor = BLACK;
