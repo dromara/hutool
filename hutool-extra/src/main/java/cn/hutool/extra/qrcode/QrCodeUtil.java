@@ -150,7 +150,7 @@ public class QrCodeUtil {
 	 * 生成ASCII Art字符画形式的二维码
 	 *
 	 * @param content  内容
-	 * @param qrConfig 二维码配置，仅长、宽、边距配置有效
+	 * @param qrConfig 二维码配置，仅宽度、高度、边距配置有效
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
@@ -161,8 +161,8 @@ public class QrCodeUtil {
 
 	/**
 	 * @param content 内容
-	 * @param width   宽
-	 * @param height  长
+	 * @param width   宽度（单位：字符▄的大小）
+	 * @param height  高度（单位：字符▄的大小）
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
@@ -176,8 +176,8 @@ public class QrCodeUtil {
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
 	 *
 	 * @param content 内容
-	 * @param width   宽度
-	 * @param height  高度
+	 * @param width   宽度（单位：像素）
+	 * @param height  高度（单位：像素）
 	 * @return 图片的byte[]
 	 * @since 4.0.10
 	 */
@@ -205,8 +205,8 @@ public class QrCodeUtil {
 	 * 生成二维码到文件，二维码图片格式取决于文件的扩展名
 	 *
 	 * @param content    文本内容
-	 * @param width      宽度
-	 * @param height     高度
+	 * @param width      宽度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
+	 * @param height     高度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
 	 * @param targetFile 目标文件，扩展名决定输出格式
 	 * @return 目标文件
 	 */
@@ -262,8 +262,8 @@ public class QrCodeUtil {
 	 * 生成二维码到输出流
 	 *
 	 * @param content    文本内容
-	 * @param width      宽度
-	 * @param height     高度
+	 * @param width      宽度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
+	 * @param height     高度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param out        目标流
 	 */
@@ -314,8 +314,8 @@ public class QrCodeUtil {
 	 * 生成二维码图片
 	 *
 	 * @param content 文本内容
-	 * @param width   宽度
-	 * @param height  高度
+	 * @param width   宽度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
+	 * @param height  高度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
 	 * @return 二维码图片（黑白）
 	 */
 	public static BufferedImage generate(String content, int width, int height) {
@@ -327,8 +327,8 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式，可选二维码或者条形码
-	 * @param width   宽度
-	 * @param height  高度
+	 * @param width   宽度（单位：像素）
+	 * @param height  高度（单位：像素）
 	 * @return 二维码图片（黑白）
 	 */
 	public static BufferedImage generate(String content, BarcodeFormat format, int width, int height) {
@@ -339,7 +339,7 @@ public class QrCodeUtil {
 	 * 生成二维码图片
 	 *
 	 * @param content 文本内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.2
 	 */
@@ -353,7 +353,7 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式，可选二维码、条形码等
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.14
 	 */
@@ -391,8 +391,8 @@ public class QrCodeUtil {
 	 * 将文本内容编码为二维码
 	 *
 	 * @param content 文本内容
-	 * @param width   宽度
-	 * @param height  高度
+	 * @param width   宽度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
+	 * @param height  高度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
 	 * @return {@link BitMatrix}
 	 */
 	public static BitMatrix encode(String content, int width, int height) {
@@ -416,8 +416,8 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式枚举
-	 * @param width   宽度
-	 * @param height  高度
+	 * @param width   宽度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
+	 * @param height  高度（单位：类型为一般图片或SVG时，单位是像素，类型为 Ascii Art 字符画时，单位是字符▄或▀的大小）
 	 * @return {@link BitMatrix}
 	 */
 	public static BitMatrix encode(String content, BarcodeFormat format, int width, int height) {
@@ -429,7 +429,7 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式枚举
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
@@ -550,7 +550,7 @@ public class QrCodeUtil {
 	 * BitMatrix转SVG(字符串)
 	 *
 	 * @param matrix   BitMatrix
-	 * @param qrConfig 二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig 二维码配置，包括宽度、高度、边距、颜色等
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
@@ -576,7 +576,7 @@ public class QrCodeUtil {
 		for (int y = 0; y < qrHeight; y++) {
 			for (int x = 0; x < qrWidth; x++) {
 				if (matrix.get(x, y)) {
-					sb.append(" M" + x + "," + y + "h1v" + moduleHeight + "h-1z");
+					sb.append(" M").append(x).append(",").append(y).append("h1v").append(moduleHeight).append("h-1z");
 				}
 			}
 		}
@@ -604,17 +604,17 @@ public class QrCodeUtil {
 		Color fore = new Color(foreColor, true);
 
 		StringBuilder result = StrUtil.builder();
-		result.append("<svg width=\"" + qrWidth + "\" height=\"" + qrHeight + "\" \n");
+		result.append("<svg width=\"").append(qrWidth).append("\" height=\"").append(qrHeight).append("\" \n");
 		if (backColor != null) {
 			Color back = new Color(backColor, true);
-			result.append("style=\"background-color:rgba(" + back.getRed() + "," + back.getGreen() + "," + back.getBlue() + "," + back.getAlpha() + ")\"\n");
+			result.append("style=\"background-color:rgba(").append(back.getRed()).append(",").append(back.getGreen()).append(",").append(back.getBlue()).append(",").append(back.getAlpha()).append(")\"\n");
 		}
-		result.append("viewBox=\"0 0 " + qrWidth + " " + qrHeight + "\" \n");
+		result.append("viewBox=\"0 0 ").append(qrWidth).append(" ").append(qrHeight).append("\" \n");
 		result.append("xmlns=\"http://www.w3.org/2000/svg\" \n");
 		result.append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n");
-		result.append("<path d=\"" + sb + "\" stroke=\"rgba(" + fore.getRed() + "," + fore.getGreen() + "," + fore.getBlue() + "," + fore.getAlpha() + ")\" /> \n");
+		result.append("<path d=\"").append(sb).append("\" stroke=\"rgba(").append(fore.getRed()).append(",").append(fore.getGreen()).append(",").append(fore.getBlue()).append(",").append(fore.getAlpha()).append(")\" /> \n");
 		if (StrUtil.isNotBlank(logoBase64)) {
-			result.append("<image xlink:href=\"" + logoBase64 + "\" height=\"" + logoHeight + "\" width=\"" + logoWidth + "\" y=\"" + logoY + "\" x=\"" + logoX + "\" />\n");
+			result.append("<image xlink:href=\"").append(logoBase64).append("\" height=\"").append(logoHeight).append("\" width=\"").append(logoWidth).append("\" y=\"").append(logoY).append("\" x=\"").append(logoX).append("\" />\n");
 		}
 		result.append("</svg>");
 		return result.toString();
@@ -623,7 +623,7 @@ public class QrCodeUtil {
 	/**
 	 * BitMatrix转ASCII Art字符画形式的二维码
 	 *
-	 * @param bitMatrix
+	 * @param bitMatrix BitMatrix
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
