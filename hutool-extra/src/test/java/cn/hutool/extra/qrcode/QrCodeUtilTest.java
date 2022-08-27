@@ -207,12 +207,13 @@ public class QrCodeUtilTest {
 	public void comparePngAndSvgAndAsciiArtTest() {
 		final QrConfig qrConfig = QrConfig.create()
 				.setForeColor(null)
-				.setBackColor(null)
-				.setWidth(0)
-				.setHeight(0).setMargin(1);
+				.setBackColor(Color.WHITE)
+				.setWidth(200)
+				.setHeight(200).setMargin(1);
 		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.jpg"));
 		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.txt"));
 		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.png"));
+		QrCodeUtil.generate("https://hutool.cn", qrConfig, FileUtil.touch("d:/test/compare/config_null_color.svg"));
 	}
 
 }

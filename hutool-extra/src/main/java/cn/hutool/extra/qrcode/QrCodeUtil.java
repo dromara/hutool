@@ -568,7 +568,7 @@ public class QrCodeUtil {
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
-	public static String toSVG(BitMatrix matrix, int foreColor, Integer backColor, Image logoImg, int ratio) {
+	public static String toSVG(BitMatrix matrix, Integer foreColor, Integer backColor, Image logoImg, int ratio) {
 		StringBuilder sb = new StringBuilder();
 		int qrWidth = matrix.getWidth();
 		int qrHeight = matrix.getHeight();
@@ -601,8 +601,6 @@ public class QrCodeUtil {
 
 		}
 
-		Color fore = new Color(foreColor, true);
-
 		StringBuilder result = StrUtil.builder();
 		result.append("<svg width=\"").append(qrWidth).append("\" height=\"").append(qrHeight).append("\" \n");
 		if (backColor != null) {
@@ -612,7 +610,12 @@ public class QrCodeUtil {
 		result.append("viewBox=\"0 0 ").append(qrWidth).append(" ").append(qrHeight).append("\" \n");
 		result.append("xmlns=\"http://www.w3.org/2000/svg\" \n");
 		result.append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n");
-		result.append("<path d=\"").append(sb).append("\" stroke=\"rgba(").append(fore.getRed()).append(",").append(fore.getGreen()).append(",").append(fore.getBlue()).append(",").append(fore.getAlpha()).append(")\" /> \n");
+		result.append("<path d=\"").append(sb).append("\" ");
+		if (foreColor!=null){
+			Color fore = new Color(foreColor, true);
+			result.append("stroke=\"rgba(").append(fore.getRed()).append(",").append(fore.getGreen()).append(",").append(fore.getBlue()).append(",").append(fore.getAlpha()).append(")\"");
+		}
+		result.append(" /> \n");
 		if (StrUtil.isNotBlank(logoBase64)) {
 			result.append("<image xlink:href=\"").append(logoBase64).append("\" height=\"").append(logoHeight).append("\" width=\"").append(logoWidth).append("\" y=\"").append(logoY).append("\" x=\"").append(logoX).append("\" />\n");
 		}
