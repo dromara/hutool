@@ -2,7 +2,7 @@ package cn.hutool.core.lang.ansi;
 
 import cn.hutool.core.lang.Assert;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.util.Collections;
 import java.util.LinkedHashMap;
