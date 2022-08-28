@@ -1025,7 +1025,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
-		if(null == indexes){
+		if (null == indexes) {
 			return newArray(array.getClass().getComponentType(), 0);
 		}
 
@@ -1553,6 +1553,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
 	 * 如果提供数组本身为空，
 	 *
+	 * @param <T>  元素类型
 	 * @param args 被检查对象
 	 * @return 是否存在
 	 * @since 4.5.18

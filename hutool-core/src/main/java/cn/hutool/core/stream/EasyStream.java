@@ -1181,11 +1181,9 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 * @param idx 下标
 	 * @return 指定下标的元素
 	 */
+	@SuppressWarnings("unchecked")
 	public Optional<T> at(final Integer idx) {
-		return Opt.ofNullable(idx).map(i -> {
-			//noinspection unchecked
-			return (T) ArrayUtil.get(toArray(), i);
-		}).toOptional();
+		return Opt.ofNullable(idx).map(i -> (T) ArrayUtil.get(toArray(), i)).toOptional();
 	}
 
 	/**
