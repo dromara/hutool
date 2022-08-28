@@ -132,11 +132,12 @@ public class CompareUtil {
 	 *
 	 * <ul>
 	 *     <li>如需对null友好操作如下</li>
-	 *     <li><code>Comparator.nullsLast(CompareUtil.reverse())</code></li>
-	 *     <li><code>Comparator.nullsFirst(CompareUtil.reverse())</code></li>
+	 *     <li>{@code Comparator.nullsLast(CompareUtil.reverse())}</li>
+	 *     <li>{@code Comparator.nullsFirst(CompareUtil.reverse())}</li>
 	 * </ul>
 	 *
 	 * @param <E> 排序节点类型
+	 * @param comparator 排序器
 	 * @return 默认排序器
 	 * @since 6.0.0
 	 */

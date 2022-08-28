@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * </a>
  * </p>
  *
- * <h2>工具类，提供格式化字符串很多，但是对于具体什么含义，不够清晰，这里进行说明：</h2>
+ * <p>工具类，提供格式化字符串很多，但是对于具体什么含义，不够清晰，这里进行说明：</p>
  * <b>常见日期格式模式字符串：</b>
  * <ul>
  *    <li>yyyy-MM-dd                   示例：2022-08-05</li>
@@ -48,14 +48,16 @@ import java.util.regex.Pattern;
  * {@link DateTimeFormatter#ISO_DATE_TIME}
  * 查看更多，请参阅上述官方文档
  * </p>
+ *
  * <p>
- * <br/>
  * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
  * 参见：{@link CSTDateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
+ *</p>
  *
  * <p>
  * 特殊说明：UTC时间，世界标准时间，0时区的时间，伦敦时间，可以直接加Z表示不加空格，
  * 如：“09:30 UTC”表示为“09:30Z”或“T0930Z”，其中：Z 是 +00:00 的缩写，意思是 UTC(零时分秒的偏移量).
+ * </p>
  * <ul>
  *     <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
  *     <li>2022-08-23T15:20:46UTC</li>
@@ -64,7 +66,6 @@ import java.util.regex.Pattern;
  *     <li>2022-08-23T15:20:46 +0000</li>
  *     <li>2022-08-23T15:20:46Z</li>
  * </ul>
- * </p>
  *
  * @author Looly
  */
