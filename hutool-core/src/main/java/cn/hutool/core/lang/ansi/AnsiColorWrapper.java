@@ -41,23 +41,23 @@ public class AnsiColorWrapper {
 		if (bitDepth== AnsiColors.BitDepth.FOUR){
 			if (foreOrBack == ForeOrBack.FORE){
 				for (AnsiColor item : AnsiColor.values()) {
-					if (StrUtil.equals(item.toString(), StrUtil.toString(code))) {
+					if (StrUtil.equals(item.toString(), StrUtil.toString(this.code))) {
 						return item;
 					}
 				}
-				throw new IllegalArgumentException(StrUtil.format("No matched AnsiColor instance,code={}",code));
+				throw new IllegalArgumentException(StrUtil.format("No matched AnsiColor instance,code={}",this.code));
 			}
 			for (AnsiBackground item : AnsiBackground.values()) {
-				if (StrUtil.equals(item.toString(), StrUtil.toString(code+10))) {
+				if (StrUtil.equals(item.toString(), StrUtil.toString(this.code+10))) {
 					return item;
 				}
 			}
-			throw new IllegalArgumentException(StrUtil.format("No matched Background instance,code={}",code));
+			throw new IllegalArgumentException(StrUtil.format("No matched Background instance,code={}",this.code));
 		}
 		if (foreOrBack == ForeOrBack.FORE){
-			return Ansi8BitColor.foreground(code);
+			return Ansi8BitColor.foreground(this.code);
 		}
-		return Ansi8BitColor.background(code);
+		return Ansi8BitColor.background(this.code);
 	}
 
 	@Override
@@ -69,11 +69,11 @@ public class AnsiColorWrapper {
 			return false;
 		}
 		AnsiColorWrapper that = (AnsiColorWrapper) o;
-		return code == that.code && bitDepth == that.bitDepth;
+		return this.code == that.code && this.bitDepth == that.bitDepth;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(code, bitDepth);
+		return Objects.hash(this.code, this.bitDepth);
 	}
 }
