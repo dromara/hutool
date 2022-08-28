@@ -1572,6 +1572,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 是否存都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
+	 * @param <T> 元素类型
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 是否都为空
 	 * @since 4.5.18
