@@ -21,7 +21,7 @@ public final class AnsiColors {
 	private static final Map<AnsiColorWrapper, LabColor> ANSI_COLOR_MAP;
 
 	static {
-		Map<AnsiColorWrapper, LabColor> colorMap = new LinkedHashMap<>();
+		Map<AnsiColorWrapper, LabColor> colorMap = new LinkedHashMap<>(16);
 		colorMap.put(new AnsiColorWrapper(30,BitDepth.FOUR), new LabColor(0x000000));
 		colorMap.put(new AnsiColorWrapper(31,BitDepth.FOUR), new LabColor(0xAA0000));
 		colorMap.put(new AnsiColorWrapper(32,BitDepth.FOUR), new LabColor(0x00AA00));
@@ -81,7 +81,7 @@ public final class AnsiColors {
 
 	private Map<AnsiColorWrapper, LabColor> getLookup(BitDepth bitDepth) {
 		if (bitDepth == BitDepth.EIGHT) {
-			Map<AnsiColorWrapper, LabColor> lookup = new LinkedHashMap<>();
+			Map<AnsiColorWrapper, LabColor> lookup = new LinkedHashMap<>(256);
 			for (int i = 0; i < ANSI_8BIT_COLOR_CODE_LOOKUP.length; i++) {
 				lookup.put(new AnsiColorWrapper(i,BitDepth.EIGHT), new LabColor(ANSI_8BIT_COLOR_CODE_LOOKUP[i]));
 			}
