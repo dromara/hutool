@@ -1050,8 +1050,8 @@ public class EasyStream<T> implements Stream<T>, Iterable<T> {
 	 *
 	 * @return 反转元素顺序
 	 */
+	@SuppressWarnings("unchecked")
 	public EasyStream<T> reverse() {
-		//noinspection unchecked
 		final T[] array = (T[]) toArray();
 		ArrayUtil.reverse(array);
 		return of(array).parallel(isParallel()).onClose(stream::close);
