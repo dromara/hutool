@@ -30,10 +30,11 @@ public class AnsiEncoderTest {
 				Color.RED,				Color.WHITE,
 				Color.YELLOW
 		};
-		for (Color foreColor : colorArray) {
-			AnsiElement foreElement = ansiColors.findClosest(foreColor).toAnsiElement(AnsiColorWrapper.ForeOrBack.FORE);
+		for (int i = 0; i < colorArray.length; i++) {
+			Color foreColor = colorArray[i];
+			AnsiElement foreElement = ansiColors.findClosest(foreColor).toAnsiElement(ForeOrBack.FORE);
 			Color backColor = new Color(255 - foreColor.getRed(), 255 - foreColor.getGreen(), 255 - foreColor.getBlue());
-			AnsiElement backElement = ansiColors.findClosest(backColor).toAnsiElement(AnsiColorWrapper.ForeOrBack.BACK);
+			AnsiElement backElement = ansiColors.findClosest(backColor).toAnsiElement(ForeOrBack.BACK);
 			String encode = AnsiEncoder.encode(foreElement, backElement, text);
 			//Console.print( i%2==1?encode+"\n":encode);
 		}
@@ -56,8 +57,8 @@ public class AnsiEncoderTest {
 					count++;
 					if (count<from)continue;
 					if (count>until)break;
-					AnsiElement backElement4bit = ansiColors4Bit.findClosest(new Color(r,g,b)).toAnsiElement(AnsiColorWrapper.ForeOrBack.BACK);
-					AnsiElement backElement8bit = ansiColors8Bit.findClosest(new Color(r,g,b)).toAnsiElement(AnsiColorWrapper.ForeOrBack.BACK);
+					AnsiElement backElement4bit = ansiColors4Bit.findClosest(new Color(r,g,b)).toAnsiElement(ForeOrBack.BACK);
+					AnsiElement backElement8bit = ansiColors8Bit.findClosest(new Color(r,g,b)).toAnsiElement(ForeOrBack.BACK);
 					String encode4 = AnsiEncoder.encode( backElement4bit,text4);
 					String encode8 = AnsiEncoder.encode( backElement8bit,text8);
 					//Console.log(StrUtil.format(encode4,r,g,b)+StrUtil.format(encode8,r,g,b));

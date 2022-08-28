@@ -60,21 +60,6 @@ public class AnsiColorWrapper {
 		return Ansi8BitColor.background(code);
 	}
 
-	/**
-	 * 区分前景还是背景
-	 */
-	public enum ForeOrBack{
-
-		/**
-		 * 前景
-		 */
-		FORE,
-		/**
-		 * 背景
-		 */
-		BACK,
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

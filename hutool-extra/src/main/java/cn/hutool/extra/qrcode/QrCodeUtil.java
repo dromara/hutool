@@ -5,10 +5,7 @@ import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.ansi.AnsiColorWrapper;
-import cn.hutool.core.lang.ansi.AnsiColors;
-import cn.hutool.core.lang.ansi.AnsiElement;
-import cn.hutool.core.lang.ansi.AnsiEncoder;
+import cn.hutool.core.lang.ansi.*;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -637,8 +634,8 @@ public class QrCodeUtil {
 		final int height = bitMatrix.getHeight();
 
 
-		final AnsiElement foreground = qrConfig.foreColor == null ? null : rgbToAnsi8BitElement(qrConfig.foreColor, AnsiColorWrapper.ForeOrBack.FORE);
-		final AnsiElement background = qrConfig.backColor == null ? null : rgbToAnsi8BitElement(qrConfig.backColor, AnsiColorWrapper.ForeOrBack.BACK);
+		final AnsiElement foreground = qrConfig.foreColor == null ? null : rgbToAnsi8BitElement(qrConfig.foreColor, ForeOrBack.FORE);
+		final AnsiElement background = qrConfig.backColor == null ? null : rgbToAnsi8BitElement(qrConfig.backColor, ForeOrBack.BACK);
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {
@@ -669,7 +666,7 @@ public class QrCodeUtil {
 	 * @return AnsiElement
 	 * @since 5.8.6
 	 */
-	private static AnsiElement rgbToAnsi8BitElement(int rgb,AnsiColorWrapper.ForeOrBack foreOrBack) {
+	private static AnsiElement rgbToAnsi8BitElement(int rgb,ForeOrBack foreOrBack) {
 		return ansiColors.findClosest(new Color(rgb)).toAnsiElement(foreOrBack);
 	}
 
