@@ -84,7 +84,7 @@ public class FilterIter<E> implements Iterator<E> {
 	private boolean setNextObject() {
 		while (iterator.hasNext()) {
 			final E object = iterator.next();
-			if (null != filter && filter.test(object)) {
+			if (null == filter || filter.test(object)) {
 				nextObject = object;
 				nextObjectSet = true;
 				return true;
