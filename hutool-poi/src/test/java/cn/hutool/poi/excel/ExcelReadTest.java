@@ -251,4 +251,21 @@ public class ExcelReadTest {
 		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read_row_npe.xlsx"));
 		reader.readColumn(0, 1);
 	}
+
+	@Test
+	public void readIssueTest() {
+		//https://gitee.com/dromara/hutool/issues/I5OSFC
+		final ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read.xlsx"));
+		final List<Map<String, Object>> read = reader.read(1,2,2);
+		for (Map<String, Object> map : read) {
+			Console.log(map);
+		}
+		//超出lastIndex 抛出相应提示：startRowIndex row index 4 is greater than last row index 2.
+		//而非:Illegal Capacity: -1
+		try {
+			final List<Map<String, Object>> readGreaterIndex = reader.read(1,4,4);
+		} catch (Exception e) {
+			Console.log(e.toString());
+		}
+	}
 }

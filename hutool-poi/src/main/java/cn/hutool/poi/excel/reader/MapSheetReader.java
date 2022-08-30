@@ -44,7 +44,9 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		if (headerRowIndex < firstRowNum) {
 			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is lower than first row index {}.", headerRowIndex, firstRowNum));
 		} else if (headerRowIndex > lastRowNum) {
-			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is greater than last row index {}.", headerRowIndex, firstRowNum));
+			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is greater than last row index {}.", headerRowIndex, lastRowNum));
+		} else if (startRowIndex > lastRowNum) {
+			throw new IndexOutOfBoundsException(StrUtil.format("startRowIndex row index {} is greater than last row index {}.", startRowIndex, lastRowNum));
 		}
 		final int startRowIndex = Math.max(this.startRowIndex, firstRowNum);// 读取起始行（包含）
 		final int endRowIndex = Math.min(this.endRowIndex, lastRowNum);// 读取结束行（包含）

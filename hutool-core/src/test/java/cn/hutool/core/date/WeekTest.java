@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.DayOfWeek;
+import java.util.Calendar;
 
 public class WeekTest {
 
@@ -46,6 +47,9 @@ public class WeekTest {
 		Assert.assertEquals(Week.THURSDAY, Week.of(DayOfWeek.THURSDAY));
 		Assert.assertEquals(Week.FRIDAY, Week.of(DayOfWeek.FRIDAY));
 		Assert.assertEquals(Week.SATURDAY, Week.of(DayOfWeek.SATURDAY));
+		Assert.assertEquals(Week.SATURDAY, Week.of(Calendar.SATURDAY));
+		Assert.assertNull(Week.of(10));
+		Assert.assertNull(Week.of(-1));
 	}
 
 	@Test
@@ -57,5 +61,18 @@ public class WeekTest {
 		Assert.assertEquals(DayOfWeek.FRIDAY, Week.FRIDAY.toJdkDayOfWeek());
 		Assert.assertEquals(DayOfWeek.SATURDAY, Week.SATURDAY.toJdkDayOfWeek());
 		Assert.assertEquals(DayOfWeek.SUNDAY, Week.SUNDAY.toJdkDayOfWeek());
+	}
+
+	@Test
+	public void toChineseTest(){
+		Assert.assertEquals("周一",Week.MONDAY.toChinese("周"));
+		Assert.assertEquals("星期一",Week.MONDAY.toChinese("星期"));
+		Assert.assertEquals("星期二",Week.TUESDAY.toChinese("星期"));
+		Assert.assertEquals("星期三",Week.WEDNESDAY.toChinese("星期"));
+		Assert.assertEquals("星期四",Week.THURSDAY.toChinese("星期"));
+		Assert.assertEquals("星期五",Week.FRIDAY.toChinese("星期"));
+		Assert.assertEquals("星期六",Week.SATURDAY.toChinese("星期"));
+		Assert.assertEquals("星期日",Week.SUNDAY.toChinese("星期"));
+		Assert.assertEquals("星期一",Week.MONDAY.toChinese());
 	}
 }
