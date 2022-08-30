@@ -267,7 +267,7 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			// issue#2572@Github
 			if(value instanceof TemporalAccessor){
-				if(value instanceof DayOfWeek || value instanceof java.time.Month || value instanceof Era || value instanceof MonthDay){
+				if(value instanceof DayOfWeek || value instanceof Era || value instanceof MonthDay){
 					writeStrValue(value.toString());
 					return this;
 				}

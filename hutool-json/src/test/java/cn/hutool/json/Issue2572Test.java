@@ -32,7 +32,7 @@ public class Issue2572Test {
 		months.add(Month.DECEMBER);
 		final JSONObject obj = new JSONObject();
 		obj.set("months", months);
-		Assert.assertEquals("{\"months\":[\"DECEMBER\"]}", obj.toString());
+		Assert.assertEquals("{\"months\":[12]}", obj.toString());
 
 		final Map<String, Set<Month>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<Month>>>() {
 		});
