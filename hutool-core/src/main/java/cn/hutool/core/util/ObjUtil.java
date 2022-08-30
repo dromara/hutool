@@ -13,7 +13,11 @@ import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -305,8 +309,7 @@ public class ObjUtil {
 	 * @return 处理后的返回值
 	 * @since 6.0.0
 	 */
-	public static <T, R> R defaultIfNull(
-		final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
+	public static <T, R> R defaultIfNull(final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
 		if (isNotNull(source)) {
 			return handler.apply(source);
 		}

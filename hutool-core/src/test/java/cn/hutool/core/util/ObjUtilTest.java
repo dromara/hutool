@@ -82,7 +82,7 @@ public class ObjUtilTest {
 		public Obj clone() {
 			try {
 				return (Obj) super.clone();
-			} catch (CloneNotSupportedException e) {
+			} catch (final CloneNotSupportedException e) {
 				throw new CloneRuntimeException(e);
 			}
 		}
@@ -122,7 +122,7 @@ public class ObjUtilTest {
 
 	@Test
 	public void cloneIfPossibleTest() {
-		String a = "a";
+		final String a = "a";
 		final String a2 = ObjUtil.cloneIfPossible(a);
 		Assert.assertNotSame(a, a2);
 	}
