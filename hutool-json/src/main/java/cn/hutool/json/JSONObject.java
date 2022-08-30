@@ -541,7 +541,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(int indentFactor, Filter<MutablePair<String, Object>> filter) {
+	public String toJSONString(int indentFactor, Filter<MutablePair<Object, Object>> filter) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, filter).toString();
@@ -565,20 +565,10 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<String, Object>> filter) throws JSONException {
+	public Writer write(Writer writer, int indentFactor, int indent, Filter<MutablePair<Object, Object>> filter) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
-		this.forEach((key, value) -> {
-			if (null != filter) {
-				final MutablePair<String, Object> pair = new MutablePair<>(key, value);
-				if (filter.accept(pair)) {
-					// 使用修改后的键值对
-					jsonWriter.writeField(pair.getKey(), pair.getValue());
-				}
-			} else {
-				jsonWriter.writeField(key, value);
-			}
-		});
+		this.forEach((key, value) -> jsonWriter.writeField(new MutablePair<>(key, value), filter));
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;

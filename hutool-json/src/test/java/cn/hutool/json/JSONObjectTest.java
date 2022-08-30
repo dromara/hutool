@@ -698,7 +698,7 @@ public class JSONObjectTest {
 				.set("d", true);
 
 		final String s = json1.toJSONString(0, (pair) -> {
-			pair.setKey(StrUtil.toUnderlineCase(pair.getKey()));
+			pair.setKey(StrUtil.toUnderlineCase(pair.getKey().toString()));
 			return true;
 		});
 		Assert.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);

@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -152,7 +154,7 @@ public class JSONWriter extends Writer {
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
-		return writeValueDirect(value);
+		return writeValueDirect(value, null);
 	}
 
 	/**
@@ -162,12 +164,37 @@ public class JSONWriter extends Writer {
 	 * @param value 字段值
 	 * @return this
 	 * @since 5.7.6
+	 * @deprecated 请使用 {@link #writeField(MutablePair, Filter)}
 	 */
+	@Deprecated
 	public JSONWriter writeField(String key, Object value){
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
-		return writeKey(key).writeValueDirect(value);
+		return writeKey(key).writeValueDirect(value, null);
+	}
+
+	/**
+	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
+	 *
+	 * @param pair 键值对
+	 * @param filter 键值对的过滤器，可以编辑键值对
+	 * @return this
+	 * @since 5.8.6
+	 */
+	public JSONWriter writeField(MutablePair<Object, Object> pair, Filter<MutablePair<Object, Object>> filter){
+		if(JSONUtil.isNull(pair.getValue()) && config.isIgnoreNullValue()){
+			return this;
+		}
+
+		if (null == filter || filter.accept(pair)) {
+			if(false == arrayMode){
+				// JSONArray只写值，JSONObject写键值对
+				writeKey(StrUtil.toString(pair.getKey()));
+			}
+			return writeValueDirect(pair.getValue(), filter);
+		}
+		return this;
 	}
 
 	@Override
@@ -194,9 +221,10 @@ public class JSONWriter extends Writer {
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
 	 * @param value 值
+	 * @param filter 键值对过滤器
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(Object value) {
+	private JSONWriter writeValueDirect(Object value, Filter<MutablePair<Object, Object>> filter) {
 		if (arrayMode) {
 			if (needSeparator) {
 				writeRaw(CharUtil.COMMA);
@@ -207,21 +235,26 @@ public class JSONWriter extends Writer {
 			writeRaw(CharUtil.COLON).writeSpace(1);
 		}
 		needSeparator = true;
-		return writeObjValue(value);
+		return writeObjValue(value, filter);
 	}
 
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *
 	 * @param value 值
+	 * @param filter 过滤器
 	 * @return this
 	 */
-	private JSONWriter writeObjValue(Object value) {
+	private JSONWriter writeObjValue(Object value, Filter<MutablePair<Object, Object>> filter) {
 		final int indent = indentFactor + this.indent;
 		if (value == null || value instanceof JSONNull) {
 			writeRaw(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
-			((JSON) value).write(writer, indentFactor, indent);
+			if(value instanceof JSONObject){
+				((JSONObject) value).write(writer, indentFactor, indent, filter);
+			}else if(value instanceof JSONArray){
+				((JSONArray) value).write(writer, indentFactor, indent, filter);
+			}
 		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
