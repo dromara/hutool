@@ -14,7 +14,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testToCombination() {
-		CombinationAnnotationElement element = AnnotationUtil.toCombination(ClassForTest.class);
+		final CombinationAnnotationElement element = AnnotationUtil.toCombination(ClassForTest.class);
 		Assert.assertEquals(2, element.getAnnotations().length);
 	}
 
@@ -28,7 +28,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetCombinationAnnotations() {
-		MetaAnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassForTest.class, MetaAnnotationForTest.class);
+		final MetaAnnotationForTest[] annotations = AnnotationUtil.getCombinationAnnotations(ClassForTest.class, MetaAnnotationForTest.class);
 		Assert.assertEquals(1, annotations.length);
 	}
 
@@ -51,7 +51,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetAnnotation() {
-		MetaAnnotationForTest annotation = AnnotationUtil.getAnnotation(ClassForTest.class, MetaAnnotationForTest.class);
+		final MetaAnnotationForTest annotation = AnnotationUtil.getAnnotation(ClassForTest.class, MetaAnnotationForTest.class);
 		Assert.assertNotNull(annotation);
 	}
 
@@ -62,7 +62,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetAnnotationValue() {
-		AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
+		final AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
 		Assert.assertEquals(annotation.value(), AnnotationUtil.getAnnotationValue(ClassForTest.class, AnnotationForTest.class));
 		Assert.assertEquals(annotation.value(), AnnotationUtil.getAnnotationValue(ClassForTest.class, AnnotationForTest.class, "value"));
 		Assert.assertNull(AnnotationUtil.getAnnotationValue(ClassForTest.class, AnnotationForTest.class, "property"));
@@ -70,8 +70,8 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetAnnotationValueMap() {
-		AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
-		Map<String, Object> valueMap = AnnotationUtil.getAnnotationValueMap(ClassForTest.class, AnnotationForTest.class);
+		final AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
+		final Map<String, Object> valueMap = AnnotationUtil.getAnnotationValueMap(ClassForTest.class, AnnotationForTest.class);
 		Assert.assertNotNull(valueMap);
 		Assert.assertEquals(1, valueMap.size());
 		Assert.assertEquals(annotation.value(), valueMap.get("value"));
@@ -79,13 +79,13 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetRetentionPolicy() {
-		RetentionPolicy policy = AnnotationForTest.class.getAnnotation(Retention.class).value();
+		final RetentionPolicy policy = AnnotationForTest.class.getAnnotation(Retention.class).value();
 		Assert.assertEquals(policy, AnnotationUtil.getRetentionPolicy(AnnotationForTest.class));
 	}
 
 	@Test
 	public void testGetTargetType() {
-		ElementType[] types = AnnotationForTest.class.getAnnotation(Target.class).value();
+		final ElementType[] types = AnnotationForTest.class.getAnnotation(Target.class).value();
 		Assert.assertArrayEquals(types, AnnotationUtil.getTargetType(AnnotationForTest.class));
 	}
 
@@ -101,8 +101,8 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testSetValue() {
-		AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
-		String newValue = "is a new value";
+		final AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
+		final String newValue = "is a new value";
 		Assert.assertNotEquals(newValue, annotation.value());
 		AnnotationUtil.setValue(annotation, "value", newValue);
 		Assert.assertEquals(newValue, annotation.value());
@@ -110,7 +110,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void testGetAnnotationAlias() {
-		MetaAnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(AnnotationForTest.class, MetaAnnotationForTest.class);
+		final MetaAnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(AnnotationForTest.class, MetaAnnotationForTest.class);
 		Assert.assertEquals(annotation.value(), annotation.alias());
 		Assert.assertEquals(MetaAnnotationForTest.class, annotation.annotationType());
 	}
