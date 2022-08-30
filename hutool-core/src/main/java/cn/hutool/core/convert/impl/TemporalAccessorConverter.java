@@ -12,10 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.Era;
+import java.time.chrono.IsoEra;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -113,6 +116,16 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			return null;
 		}
 
+		if(DayOfWeek.class == targetClass){
+			return DayOfWeek.valueOf(StrUtil.toString(value));
+		} else if(Month.class == targetClass){
+			return Month.valueOf(StrUtil.toString(value));
+		} else if(Era.class == targetClass){
+			return IsoEra.valueOf(StrUtil.toString(value));
+		} else if(MonthDay.class == targetClass){
+			return MonthDay.parse(value);
+		}
+
 		final Instant instant;
 		final ZoneId zoneId;
 		if (null != this.format) {
@@ -139,6 +152,8 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			return Month.of(Math.toIntExact(time));
 		} else if(targetClass == DayOfWeek.class){
 			return DayOfWeek.of(Math.toIntExact(time));
+		} else if(Era.class == targetClass){
+			return IsoEra.of(Math.toIntExact(time));
 		}
 
 		return parseFromInstant(targetClass, Instant.ofEpochMilli(time), null);
@@ -151,6 +166,14 @@ public class TemporalAccessorConverter extends AbstractConverter {
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromTemporalAccessor(final Class<?> targetClass, final TemporalAccessor temporalAccessor) {
+		if(DayOfWeek.class == targetClass){
+			return DayOfWeek.from(temporalAccessor);
+		} else if(Month.class == targetClass){
+			return Month.from(temporalAccessor);
+		} else if(MonthDay.class == targetClass){
+			return MonthDay.from(temporalAccessor);
+		}
+
 		TemporalAccessor result = null;
 		if (temporalAccessor instanceof LocalDateTime) {
 			result = parseFromLocalDateTime(targetClass, (LocalDateTime) temporalAccessor);

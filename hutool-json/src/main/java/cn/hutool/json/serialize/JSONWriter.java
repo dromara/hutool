@@ -16,6 +16,9 @@ import cn.hutool.json.JSONException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.DayOfWeek;
+import java.time.MonthDay;
+import java.time.chrono.Era;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -237,6 +240,14 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
+			// issue#2572@Github
+			if(value instanceof TemporalAccessor){
+				if(value instanceof DayOfWeek || value instanceof java.time.Month || value instanceof Era || value instanceof MonthDay){
+					writeQuoteStrValue(value.toString());
+					return this;
+				}
+			}
+
 			final String format = (null == config) ? null : config.getDateFormat();
 			//noinspection resource
 			writeRaw(formatDate(value, format));
