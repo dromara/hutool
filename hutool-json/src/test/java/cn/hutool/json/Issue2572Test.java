@@ -19,7 +19,7 @@ public class Issue2572Test {
 		weeks.add(DayOfWeek.MONDAY);
 		final JSONObject obj = new JSONObject();
 		obj.set("weeks", weeks);
-		Assert.assertEquals("{\"weeks\":[\"MONDAY\"]}", obj.toString());
+		Assert.assertEquals("{\"weeks\":[1]}", obj.toString());
 
 		final Map<String, Set<DayOfWeek>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<DayOfWeek>>>() {
 		});

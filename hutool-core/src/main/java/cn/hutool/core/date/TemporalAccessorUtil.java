@@ -3,15 +3,18 @@ package cn.hutool.core.date;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.StrUtil;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.Era;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
@@ -94,7 +97,7 @@ public class TemporalAccessorUtil extends TemporalUtil{
 			return null;
 		}
 
-		if(time instanceof Month){
+		if(time instanceof DayOfWeek || time instanceof java.time.Month || time instanceof Era || time instanceof MonthDay){
 			return time.toString();
 		}
 
@@ -120,6 +123,10 @@ public class TemporalAccessorUtil extends TemporalUtil{
 	public static long toEpochMilli(TemporalAccessor temporalAccessor) {
 		if(temporalAccessor instanceof Month){
 			return ((Month) temporalAccessor).getValue();
+		} else if(temporalAccessor instanceof DayOfWeek){
+			return ((DayOfWeek) temporalAccessor).getValue();
+		} else if(temporalAccessor instanceof Era){
+			return ((Era) temporalAccessor).getValue();
 		}
 		return toInstant(temporalAccessor).toEpochMilli();
 	}
