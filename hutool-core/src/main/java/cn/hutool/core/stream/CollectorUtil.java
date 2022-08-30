@@ -244,6 +244,23 @@ public class CollectorUtil {
 	}
 
 	/**
+	 * 将流转为{@link EntryStream}
+	 *
+	 * @param keyMapper   键的映射方法
+	 * @param valueMapper 值的映射方法
+	 * @param <T>         输入元素类型
+	 * @param <K>         元素的键类型
+	 * @param <V>         元素的值类型
+	 * @return 收集器
+	 */
+	public static <T, K, V> Collector<T, List<T>, EntryStream<K, V>> toEntryStream(
+		Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper) {
+		Objects.requireNonNull(keyMapper);
+		Objects.requireNonNull(valueMapper);
+		return transform(ArrayList::new, list -> EntryStream.of(list, keyMapper, valueMapper));
+	}
+
+	/**
 	 * 将流转为{@link EasyStream}
 	 *
 	 * @param <T> 输入元素类型
