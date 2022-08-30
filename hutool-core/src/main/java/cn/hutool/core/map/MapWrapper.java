@@ -1,16 +1,13 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,7 +32,9 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 * 默认初始大小
 	 */
 	protected static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
-
+	/**
+	 * 原始集合
+	 */
 	private Map<K, V> raw;
 
 	/**
@@ -52,9 +51,11 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	/**
 	 * 构造
 	 *
-	 * @param raw 被包装的Map
+	 * @param raw 被包装的Map，不允许为{@code null}
+	 * @throws NullPointerException 当被包装的集合为{@code null}时抛出
 	 */
 	public MapWrapper(final Map<K, V> raw) {
+		Assert.notNull(raw, "raw must not null");
 		this.raw = raw;
 	}
 
