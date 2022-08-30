@@ -28,6 +28,7 @@
 * 【core   】     修复zip被识别成jar和apk被识别成jar或zip的问题（pr#2548@Github）
 * 【core   】     修复UrlBuilder.addPath 方法传入非有效路径字符串时，会出现空指针异常的问题（issue#I5O4ML@Gitee）
 * 【core   】     修复FilterIter当参数filter为空时存在问题（issue#I5OG7U@Gitee）
+* 【poi    】     修复Excel读取提示信息错误（issue#I5OSFC@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
