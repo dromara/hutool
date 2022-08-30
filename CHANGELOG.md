@@ -33,6 +33,7 @@
 * 【core   】     修复FilterIter当参数filter为空时存在问题（issue#I5OG7U@Gitee）
 * 【poi    】     修复Excel读取提示信息错误（issue#I5OSFC@Gitee）
 * 【json   】     解决JSONObject#write无法递归的bug（issue#I5OMSC@Gitee）
+* 【json   】     修复DayOfWeek转json异常问题（issue#2572@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
