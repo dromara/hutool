@@ -16,9 +16,7 @@ import cn.hutool.json.JSONException;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.time.DayOfWeek;
 import java.time.MonthDay;
-import java.time.chrono.Era;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,8 +137,7 @@ public class JSONWriter extends Writer {
 	 */
 	@SuppressWarnings({"UnusedReturnValue", "resource"})
 	public JSONWriter writeField(final MutableEntry<Object, Object> pair, final Predicate<MutableEntry<Object, Object>> predicate) {
-		final Object value = pair.getValue();
-		if (null == value && config.isIgnoreNullValue()) {
+		if (null == pair.getValue() && config.isIgnoreNullValue()) {
 			return this;
 		}
 
@@ -151,13 +148,12 @@ public class JSONWriter extends Writer {
 			}
 		}
 
-		final Object key = pair.getKey();
 		if(false == arrayMode){
 			// JSONObject模式，写出键，否则只输出值
-			writeKey(StrUtil.toString(key));
+			writeKey(StrUtil.toString(pair.getKey()));
 		}
 
-		return writeValueDirect(value, predicate);
+		return writeValueDirect(pair.getValue(), predicate);
 	}
 
 	/**
@@ -241,11 +237,9 @@ public class JSONWriter extends Writer {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			// issue#2572@Github
-			if(value instanceof TemporalAccessor){
-				if(value instanceof DayOfWeek || value instanceof java.time.Month || value instanceof Era || value instanceof MonthDay){
-					writeQuoteStrValue(value.toString());
-					return this;
-				}
+			if(value instanceof MonthDay){
+				writeQuoteStrValue(value.toString());
+				return this;
 			}
 
 			final String format = (null == config) ? null : config.getDateFormat();

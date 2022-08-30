@@ -18,7 +18,7 @@ public class Issue2572Test {
 		weeks.add(DayOfWeek.MONDAY);
 		final JSONObject obj = new JSONObject();
 		obj.set("weeks", weeks);
-		Assert.assertEquals("{\"weeks\":[\"MONDAY\"]}", obj.toString());
+		Assert.assertEquals("{\"weeks\":[1]}", obj.toString());
 
 		final Map<String, Set<DayOfWeek>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<DayOfWeek>>>() {
 		});
@@ -31,7 +31,7 @@ public class Issue2572Test {
 		months.add(Month.DECEMBER);
 		final JSONObject obj = new JSONObject();
 		obj.set("months", months);
-		Assert.assertEquals("{\"months\":[\"DECEMBER\"]}", obj.toString());
+		Assert.assertEquals("{\"months\":[12]}", obj.toString());
 
 		final Map<String, Set<Month>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<Month>>>() {
 		});
