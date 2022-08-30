@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @param <V> 值类型
  * @author looly
  * @since 5.7.4
+ * @see CollectionValueMap
  * @see SetValueMap
  * @see ListValueMap
  */
@@ -59,7 +60,6 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	}
 
 	// ------------------------------------------------------------------------- Constructor end
-
 
 	/**
 	 * 将集合中的全部元素对追加到指定键对应的值集合中，效果等同于：

@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
  * <p>一个键对应多个值的集合{@link Map}实现，提供针对键对应的值集合中的元素而非值集合本身的一些快捷操作，
  * 本身可作为一个值为{@link Collection}类型的{@link Map}使用。<br>
  *
- * <h3>值集合类型</h3>
+ * <p>值集合类型</p>
  * <p>值集合的类型由接口的实现类自行维护，当通过{@link MultiValueMap}定义的方法进行增删改操作时，
  * 实现类应保证通过通过实例方法获得的集合类型都一致。但是若用户直接通过{@link Map}定义的方法进行增删改操作时，
  * 实例无法保证通过实例方法获得的集合类型都一致。<br>
  * 因此，若无必要则更推荐通过{@link MultiValueMap}定义的方法进行操作。
  *
- * <h3>对值集合的修改</h3>
+ * <p>对值集合的修改</p>
  * <p>当通过实例方法获得值集合时，若该集合允许修改，则对值集合的修改将会影响到其所属的{@link MultiValueMap}实例，反之亦然。
  * 因此当同时遍历当前实例或者值集合时，若存在写操作，则需要注意可能引发的{@link ConcurrentModificationException}。
  *
@@ -40,6 +40,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param value 键对应的新值集合
 	 * @return 旧值集合
 	 */
+	@SuppressWarnings("AbstractMethodOverridesAbstractMethod")
 	@Override
 	Collection<V> put(K key, Collection<V> value);
 
@@ -49,6 +50,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 *
 	 * @param map 需要更新的键值对集合
 	 */
+	@SuppressWarnings("AbstractMethodOverridesAbstractMethod")
 	@Override
 	void putAll(Map<? extends K, ? extends Collection<V>> map);
 
@@ -100,6 +102,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param values 待添加的值
 	 * @return boolean
 	 */
+	@SuppressWarnings("unchecked")
 	default boolean putValues(final K key, final V... values) {
 		return ArrayUtil.isNotEmpty(values) && putAllValues(key, Arrays.asList(values));
 	}
@@ -138,6 +141,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * @param values 值数组
 	 * @return 是否成功删除
 	 */
+	@SuppressWarnings("unchecked")
 	default boolean removeValues(final K key, final V... values) {
 		return ArrayUtil.isNotEmpty(values) && removeAllValues(key, Arrays.asList(values));
 	}
@@ -188,6 +192,18 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	MultiValueMap<K, V> replaceAllValues(BiFunction<K, V, V> operate);
 
 	// =================== read operate ===================
+
+	/**
+	 * 获取指定序号的值，若值不存在，返回{@code null}
+	 *
+	 * @param key   键
+	 * @param index 第几个值的索引，越界返回null
+	 * @return 值或null
+	 */
+	default V getValue(K key, int index) {
+		final Collection<V> collection = get(key);
+		return CollUtil.get(collection, index);
+	}
 
 	/**
 	 * 获取键对应的值，若值不存在，则返回{@link Collections#emptyList()}。效果等同于：
