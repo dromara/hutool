@@ -219,9 +219,8 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
-## 📌公众号
+## 📌 知识星球
 
 <div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
-	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
+	<img src="https://hutool.cn/images/dromara/zsxq.jpg" height="150">
 </div>
