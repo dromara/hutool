@@ -1,12 +1,14 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.json.convert.JSONConverterOld;
 
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.function.Predicate;
 
 /**
  * JSON接口
@@ -22,6 +24,13 @@ public interface JSON extends Cloneable, Serializable {
 	 * @since 5.3.0
 	 */
 	JSONConfig getConfig();
+
+	/**
+	 * JSON大小，对于JSONObject，是键值对的多少，JSONArray则是元素的个数
+	 *
+	 * @return 大小
+	 */
+	int size();
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
@@ -44,7 +53,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	default Object getByPath(final String expression){
+	default Object getByPath(final String expression) {
 		return BeanPath.of(expression).get(this);
 	}
 
@@ -69,7 +78,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param expression 表达式
 	 * @param value      值
 	 */
-	default void putByPath(final String expression, final Object value){
+	default void putByPath(final String expression, final Object value) {
 		BeanPath.of(expression).set(this, value);
 	}
 
@@ -121,7 +130,7 @@ public interface JSON extends Cloneable, Serializable {
 	default String toJSONString(final int indentFactor) throws JSONException {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0).toString();
+			return this.write(sw, indentFactor, 0, null).toString();
 		}
 	}
 
@@ -134,7 +143,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @throws JSONException JSON相关异常
 	 */
 	default Writer write(final Writer writer) throws JSONException {
-		return this.write(writer, 0, 0);
+		return this.write(writer, 0, 0, null);
 	}
 
 	/**
@@ -144,10 +153,11 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param writer       writer
 	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @param indent       本级别缩进量
+	 * @param predicate    过滤器，可以修改值，key（index）无法修改，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
-	Writer write(Writer writer, int indentFactor, int indent) throws JSONException;
+	Writer write(Writer writer, int indentFactor, int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException;
 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
@@ -163,8 +173,8 @@ public interface JSON extends Cloneable, Serializable {
 	/**
 	 * 转为实体类对象
 	 *
-	 * @param <T>         Bean类型
-	 * @param type        {@link Type}
+	 * @param <T>  Bean类型
+	 * @param type {@link Type}
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */

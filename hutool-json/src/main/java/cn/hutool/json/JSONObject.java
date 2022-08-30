@@ -341,16 +341,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @return JSON字符串
 	 * @since 5.7.15
 	 */
-	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<String, Object>> predicate) {
+	public String toJSONString(final int indentFactor, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final StringWriter sw = new StringWriter();
 		synchronized (sw.getBuffer()) {
 			return this.write(sw, indentFactor, 0, predicate).toString();
 		}
-	}
-
-	@Override
-	public Writer write(final Writer writer, final int indentFactor, final int indent) throws JSONException {
-		return write(writer, indentFactor, indent, null);
 	}
 
 	/**
@@ -365,20 +360,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @throws JSONException JSON相关异常
 	 * @since 5.7.15
 	 */
-	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
+	@Override
+	public Writer write(final Writer writer, final int indentFactor, final int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException {
 		final JSONWriter jsonWriter = JSONWriter.of(writer, indentFactor, indent, config)
 				.beginObj();
-		this.forEach((key, value) -> {
-			if (null != predicate) {
-				final MutableEntry<String, Object> pair = new MutableEntry<>(key, value);
-				if (predicate.test(pair)) {
-					// 使用修改后的键值对
-					jsonWriter.writeField(pair.getKey(), pair.getValue());
-				}
-			} else {
-				jsonWriter.writeField(key, value);
-			}
-		});
+		this.forEach((key, value) -> jsonWriter.writeField(new MutableEntry<>(key, value), predicate));
 		jsonWriter.end();
 		// 此处不关闭Writer，考虑writer后续还需要填内容
 		return writer;
