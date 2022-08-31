@@ -73,7 +73,12 @@ public abstract class AbstractFtp implements Closeable {
 	 * @since 5.7.5
 	 */
 	public boolean isDir(String dir) {
-		return cd(dir);
+		final String workDir = pwd();
+		try {
+			return cd(dir);
+		} finally {
+			cd(workDir);
+		}
 	}
 
 	/**

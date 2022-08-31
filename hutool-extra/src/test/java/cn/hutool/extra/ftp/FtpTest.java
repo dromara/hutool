@@ -90,4 +90,14 @@ public class FtpTest {
 					FileUtil.file("d:/test/download/" + name));
 		}
 	}
+
+	@Test
+	@Ignore
+	public void isDirTest() throws Exception {
+		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+			Console.log(ftp.pwd());
+			ftp.isDir("/test");
+			Console.log(ftp.pwd());
+		}
+	}
 }
