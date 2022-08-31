@@ -19,8 +19,8 @@ public class PunyCodeTest {
 	@Test
 	public void encodeEncodeDomainTest(){
 		String domain = "赵新虎.中国";
-		String strPunyCode = PunyCode.encode(domain);
-		String decode = PunyCode.decode(strPunyCode);
+		String encode = PunyCode.encode(domain);
+		String decode = PunyCode.decode(encode);
 		Assert.assertEquals(decode, domain);
 	}
 }
