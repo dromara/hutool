@@ -74,7 +74,7 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	CaseInsensitiveMap(MapBuilder<K, V> emptyMapBuilder) {
 		super(emptyMapBuilder.build(), (key)->{
 			if (key instanceof CharSequence) {
-				key = key.toString().toLowerCase();
+				key = key.toString();
 			}
 			//noinspection unchecked
 			return (K) key;
