@@ -100,13 +100,15 @@ public abstract class AbstractFtp implements Closeable {
 		// 目录验证
 		if (isDir(path)) {
 			return true;
-		} else {
-			if (CharUtil.isFileSeparator(path.charAt(path.length() - 1))) {
-				return false;
-			}
+		}
+		if (CharUtil.isFileSeparator(path.charAt(path.length() - 1))) {
+			return false;
+		}
+		final String fileName = FileUtil.getName(path);
+		if (".".equals(fileName) || "..".equals(fileName)) {
+			return false;
 		}
 		// 文件验证
-		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		final List<String> names;
 		try {
