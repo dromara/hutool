@@ -139,13 +139,13 @@ public class PunyCode {
 
 	/**
 	 * 解码punycode域名
-	 * @param domain
+	 * @param punycode
 	 * @return
 	 * @throws UtilException
 	 */
-	public static String decode(String domain) throws UtilException{
-		Assert.notNull(domain, "domain must not be null!");
-		String[] split = domain.split("\\.");
+	public static String decode(String punycode) throws UtilException{
+		Assert.notNull(punycode, "punycode must not be null!");
+		String[] split = punycode.split("\\.");
 		StringBuilder outStringBuilder = new StringBuilder();
 		for (String string: split) {
 			if (string.startsWith(PUNY_CODE_PREFIX)) {
