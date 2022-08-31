@@ -44,24 +44,13 @@ public class PunyCode {
 				}
 			}
 			if (encode) {
-				outStringBuilder.append(PunyCode.encode(string, true));
+				outStringBuilder.append(encode(string, true));
 			} else {
 				outStringBuilder.append(string);
 			}
 			outStringBuilder.append(".");
 		}
 		return outStringBuilder.substring(0, outStringBuilder.length() - 1);
-	}
-
-	/**
-	 * 将内容编码为PunyCode
-	 *
-	 * @param input 字符串
-	 * @return PunyCode字符串
-	 * @throws UtilException 计算异常
-	 */
-	public static String encode(CharSequence input) throws UtilException {
-		return encode(input, false);
 	}
 
 	/**
