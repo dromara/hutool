@@ -100,4 +100,37 @@ public class FtpTest {
 			Console.log(ftp.pwd());
 		}
 	}
+
+	@Test
+	@Ignore
+	public void existSftpTest() throws Exception {
+		try (Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
+			Console.log(ftp.pwd());
+			Console.log(ftp.exist("/home/test"));
+			Console.log(ftp.exist("/home/test/"));
+			Console.log(ftp.exist("/home/test//////"));
+			Console.log(ftp.exist("/home/test/file1"));
+			Console.log(ftp.exist("/home/test/file1/"));
+			Console.log(ftp.exist("///////////"));
+			Console.log(ftp.exist("./"));
+			Console.log(ftp.exist("./file1"));
+			Console.log(ftp.pwd());
+		}
+	}
+
+	@Test
+	@Ignore
+	public void existFtpTest() throws Exception {
+		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+			Console.log(ftp.exist("/test/"));
+			Console.log(ftp.exist("/test/"));
+			Console.log(ftp.exist("/test//////"));
+			Console.log(ftp.exist("/file1"));
+			Console.log(ftp.exist("/file1/"));
+			Console.log(ftp.exist("///////////"));
+			Console.log(ftp.exist("./"));
+			Console.log(ftp.exist("./file1"));
+			Console.log(ftp.pwd());
+		}
+	}
 }

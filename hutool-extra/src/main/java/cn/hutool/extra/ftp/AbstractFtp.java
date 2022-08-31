@@ -2,6 +2,7 @@ package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -96,6 +97,15 @@ public abstract class AbstractFtp implements Closeable {
 	 * @return 是否存在
 	 */
 	public boolean exist(String path) {
+		// 目录验证
+		if (isDir(path)) {
+			return true;
+		} else {
+			if (CharUtil.isFileSeparator(path.charAt(path.length() - 1))) {
+				return false;
+			}
+		}
+		// 文件验证
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		final List<String> names;
