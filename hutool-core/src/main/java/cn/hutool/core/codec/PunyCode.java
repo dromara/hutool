@@ -30,7 +30,7 @@ public class PunyCode {
 	 * @return
 	 * @throws UtilException
 	 */
-	public static String encodeDomain(String domain) throws UtilException{
+	public static String encode(String domain) throws UtilException{
 		Assert.notNull(domain, "domain must not be null!");
 		String[] split = domain.split("\\.");
 		StringBuilder outStringBuilder = new StringBuilder();
@@ -44,7 +44,7 @@ public class PunyCode {
 				}
 			}
 			if (encode) {
-				outStringBuilder.append(encode(string, true));
+				outStringBuilder.append(encodeSingle(string, true));
 			} else {
 				outStringBuilder.append(string);
 			}
@@ -61,7 +61,7 @@ public class PunyCode {
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(CharSequence input, boolean withPrefix) throws UtilException {
+	public static String encodeSingle(CharSequence input, boolean withPrefix) throws UtilException {
 		Assert.notNull(input, "input must not be null!");
 		int n = INITIAL_N;
 		int delta = 0;
@@ -143,13 +143,13 @@ public class PunyCode {
 	 * @return
 	 * @throws UtilException
 	 */
-	public static String decodeDomain(String domain) throws UtilException{
+	public static String decode(String domain) throws UtilException{
 		Assert.notNull(domain, "domain must not be null!");
 		String[] split = domain.split("\\.");
 		StringBuilder outStringBuilder = new StringBuilder();
 		for (String string: split) {
 			if (string.startsWith(PUNY_CODE_PREFIX)) {
-				outStringBuilder.append(decode(string));
+				outStringBuilder.append(decodeSingle(string));
 			} else {
 				outStringBuilder.append(string);
 			}
@@ -165,7 +165,7 @@ public class PunyCode {
 	 * @return 字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String decode(String input) throws UtilException {
+	public static String decodeSingle(String input) throws UtilException {
 		Assert.notNull(input, "input must not be null!");
 		input = StrUtil.removePrefixIgnoreCase(input, PUNY_CODE_PREFIX);
 
