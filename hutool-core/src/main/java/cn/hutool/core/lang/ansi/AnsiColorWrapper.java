@@ -52,7 +52,7 @@ public class AnsiColorWrapper {
 					return item;
 				}
 			}
-			throw new IllegalArgumentException(StrUtil.format("No matched Background instance,code={}",this.code));
+			throw new IllegalArgumentException(StrUtil.format("No matched AnsiBackground instance,code={}",this.code));
 		}
 		if (foreOrBack == ForeOrBack.FORE){
 			return Ansi8BitColor.foreground(this.code);
