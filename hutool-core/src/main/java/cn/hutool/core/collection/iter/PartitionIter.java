@@ -1,11 +1,12 @@
 package cn.hutool.core.collection.iter;
 
-import cn.hutool.core.collection.iter.IterableIter;
+import cn.hutool.core.lang.Assert;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 分批迭代工具，可以分批处理数据
@@ -36,9 +37,11 @@ public class PartitionIter<T> implements IterableIter<List<T>>, Serializable {
 	 *
 	 * @param iterator      迭代器
 	 * @param partitionSize 每批大小，最后一批不满一批算一批
+	 * @throws IllegalArgumentException 当{@code partitionSize}小于等于0，或{@code iterator}为{@code null}时抛出
 	 */
 	public PartitionIter(final Iterator<T> iterator, final int partitionSize) {
-		this.iterator = iterator;
+		Assert.isTrue(partitionSize > 0, "partition size must greater than 0");
+		this.iterator = Objects.requireNonNull(iterator);
 		this.partitionSize = partitionSize;
 	}
 

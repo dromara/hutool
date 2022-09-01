@@ -39,7 +39,7 @@ public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	}
 
 	/**
-	 * 构造
+	 * 构造，当{@code iterator}为空时，默认复制一个空迭代器
 	 *
 	 * @param iterator 被复制的Iterator
 	 */
