@@ -331,7 +331,7 @@ public class ObjUtil {
 	 * <p>克隆对象
 	 * <ol>
 	 *     <li>如果对象是数组，则等同于{@link ArrayUtil#clone(Object)}；</li>
-	 *     <li>如果对象实现了{@link Cloneable}接口，调用其{@link Cloneable#clone()}方法；</li>
+	 *     <li>如果对象实现了{@link Cloneable}接口，调用其{@code Cloneable#clone()}方法；</li>
 	 *     <li>如果对象实现了{@link Serializable}接口，执行深度克隆；</li>
 	 *     <li>不符合上述任意情况则返回{@code null}；</li>
 	 * </ol>
@@ -475,7 +475,7 @@ public class ObjUtil {
 	 * <p>将对象转为字符串
 	 * <ul>
 	 *     <li>若对象为{@code null}，则返回“null”；</li>
-	 *     <li>若对象为{@link Map}，则返回{@link Map#toString()}；</li>
+	 *     <li>若对象为{@link Map}，则返回{@code Map#toString()}；</li>
 	 *     <li>若对象为其他类型，则调用{@link Convert#toStr(Object)}进行转换；</li>
 	 * </ul>
 	 *
