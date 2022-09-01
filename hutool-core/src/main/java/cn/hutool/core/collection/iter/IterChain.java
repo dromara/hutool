@@ -1,11 +1,9 @@
 package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.lang.Chain;
+import cn.hutool.core.util.ArrayUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * 组合{@link Iterator}，将多个{@link Iterator}组合在一起，便于集中遍历。<br>
@@ -28,16 +26,27 @@ public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T
 	/**
 	 * 构造
 	 * @param iterators 多个{@link Iterator}
+	 * @throws IllegalArgumentException 当存在重复的迭代器，或添加的迭代器中存在{@code null}时抛出
 	 */
 	@SafeVarargs
 	public IterChain(final Iterator<T>... iterators) {
-		for (final Iterator<T> iterator : iterators) {
-			addChain(iterator);
+		if (ArrayUtil.isNotEmpty(iterators)) {
+			for (final Iterator<T> iterator : iterators) {
+				addChain(iterator);
+			}
 		}
 	}
 
+	/**
+	 * 添加迭代器
+	 *
+	 * @param iterator 迭代器
+	 * @return 当前实例
+	 * @throws IllegalArgumentException 当迭代器被重复添加，或待添加的迭代器为{@code null}时抛出
+	 */
 	@Override
 	public IterChain<T> addChain(final Iterator<T> iterator) {
+		Objects.requireNonNull(iterator);
 		if (allIterators.contains(iterator)) {
 			throw new IllegalArgumentException("Duplicate iterator");
 		}

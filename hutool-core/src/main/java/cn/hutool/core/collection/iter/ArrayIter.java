@@ -3,6 +3,7 @@ package cn.hutool.core.collection.iter;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * 数组Iterator对象
@@ -75,7 +76,7 @@ public class ArrayIter<E> implements IterableIter<E>, ResettableIter<E>, Seriali
 	 * @throws NullPointerException     array对象为null
 	 */
 	public ArrayIter(final Object array, final int startIndex, final int endIndex) {
-		this.endIndex = Array.getLength(array);
+		this.endIndex = Array.getLength(Objects.requireNonNull(array));
 		if (endIndex > 0 && endIndex < this.endIndex) {
 			this.endIndex = endIndex;
 		}
