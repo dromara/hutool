@@ -28,15 +28,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * 写出Excel单元测试
@@ -885,4 +877,36 @@ public class ExcelWriteTest {
 		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
+
+	/**
+	 * 测试注解模型属性后的写excel中 顺序、别名、忽略 特性是否生效
+	 *
+	 * @Author dningcheng
+	 **/
+	@Test
+	@Ignore
+	public static void writeModelAnnotationTest(){
+
+		String path = "/Users/ellie/Desktop/writeModel.xlsx";
+		FileUtil.del(path);
+
+		final ExcelWriter writer = ExcelUtil.getWriter(path);
+
+		List<TestAnnoBean> dataList = new ArrayList<>();
+		dataList.add(TestAnnoBean.builder()
+				.age(28)
+				.name("张三")
+				.score(100D)
+				.examDate(new Date())
+				.isPass(true).build());
+		dataList.add(TestAnnoBean.builder()
+				.age(24)
+				.name("李四")
+				.score(15D)
+				.examDate(new Date())
+				.isPass(false).build());
+		writer.write(dataList);
+		writer.close();
+	}
+
 }

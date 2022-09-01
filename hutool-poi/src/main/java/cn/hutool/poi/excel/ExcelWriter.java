@@ -15,8 +15,10 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.poi.excel.annotation.HeadTitle;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
+import cn.hutool.poi.excel.model.Title;
 import cn.hutool.poi.excel.style.Align;
 import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,6 +39,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -44,6 +47,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -81,6 +88,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 标题项对应列号缓存，每次写标题更新此缓存
 	 */
 	private Map<String, Integer> headLocationCache;
+	/**
+	 * 是否未解析过模型字段注解(解析过则不为null)
+	 */
+	private Set<String> ignoreFields = new HashSet<>();
 
 	// -------------------------------------------------------------------------- Constructor start
 
@@ -1019,11 +1030,19 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			// Hyperlink当成一个值
 			return writeRow(CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
+			//读取模型的注解，尝试从注解解析表头信息
+			this.doCheckAndInitHeader(rowBean);
+
+			//写数据
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
 				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getCachedAliasComparator()), false, false);
+				// 检测是否通过注解设置了忽略属性，有则进行移除
+				if(!ignoreFields.isEmpty()){
+					rowMap.keySet().removeAll(ignoreFields);
+				}
 			}
 		} else {
 			// 其它转为字符串默认输出
@@ -1379,5 +1398,54 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		return aliasComparator;
 	}
+
+	/**
+	 * @Description 检测并初始化excel表头别名、顺序、以及忽略字段
+	 * @Date 2022/9/1 下午7:51
+	 * @Author dningcheng
+	 * @since 5.8.6
+	**/
+	private void doCheckAndInitHeader(Object rowBean){
+		// 基础判断
+		if(this.headerAlias != null){
+			// 已经处理过了
+			return;
+		}
+		this.headerAlias = new LinkedHashMap<>();
+		//正式解析
+		Class<?> aClass = rowBean.getClass();
+		Field[] declaredFields = aClass.getDeclaredFields();
+		List<Title> sortTitle = new ArrayList<>();
+		List<Title> noneSortTitle = new ArrayList<>();
+		for (Field field : declaredFields){
+			HeadTitle headTitle = field.getAnnotation(HeadTitle.class);
+			String fieldName = field.getName();
+			// 读取注解信息
+			if(headTitle != null){
+				boolean ignore = headTitle.ignore();
+				if(ignore){
+					this.ignoreFields.add(fieldName);
+					continue;
+				}
+				// 解析并填充表头名
+				String title = headTitle.title();
+				if(null == title || title.trim().isEmpty()){
+					title = fieldName;
+				}
+				// 解析顺序
+				int index = headTitle.index();
+				sortTitle.add(new Title(index,fieldName,title));
+			}else {
+				noneSortTitle.add(new Title(0,fieldName,fieldName));
+			}
+		}
+		//排序进行添加
+		Collections.sort(sortTitle, Comparator.comparingInt(Title::getIndex));
+		sortTitle.addAll(noneSortTitle);
+		for (Title title : sortTitle){
+			this.headerAlias.put(title.getField(),title.getTitle());
+		}
+	}
+
 	// -------------------------------------------------------------------------- Private method end
 }
