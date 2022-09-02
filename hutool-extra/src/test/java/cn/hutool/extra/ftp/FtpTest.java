@@ -106,6 +106,12 @@ public class FtpTest {
 	public void existSftpTest() throws Exception {
 		try (Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
 			Console.log(ftp.pwd());
+			Console.log(ftp.exist(null));
+			Console.log(ftp.exist(""));
+			Console.log(ftp.exist("."));
+			Console.log(ftp.exist(".."));
+			Console.log(ftp.exist("/"));
+			Console.log(ftp.exist("a"));
 			Console.log(ftp.exist("/home/test"));
 			Console.log(ftp.exist("/home/test/"));
 			Console.log(ftp.exist("/home/test//////"));
@@ -122,11 +128,13 @@ public class FtpTest {
 	@Ignore
 	public void existFtpTest() throws Exception {
 		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+			Console.log(ftp.pwd());
 			Console.log(ftp.exist(null));
 			Console.log(ftp.exist(""));
 			Console.log(ftp.exist("."));
 			Console.log(ftp.exist(".."));
 			Console.log(ftp.exist("/"));
+			Console.log(ftp.exist("a"));
 			Console.log(ftp.exist("/test"));
 			Console.log(ftp.exist("/test/"));
 			Console.log(ftp.exist("/test//////"));

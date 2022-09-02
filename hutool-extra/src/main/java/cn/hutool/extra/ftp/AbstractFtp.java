@@ -112,7 +112,7 @@ public abstract class AbstractFtp implements Closeable {
 			return false;
 		}
 		// 文件验证
-		final String dir = StrUtil.removeSuffix(path, fileName);
+		final String dir = StrUtil.emptyToDefault(StrUtil.removeSuffix(path, fileName), ".");
 		final List<String> names;
 		try {
 			names = ls(dir);
