@@ -122,6 +122,11 @@ public class FtpTest {
 	@Ignore
 	public void existFtpTest() throws Exception {
 		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+			Console.log(ftp.exist(null));
+			Console.log(ftp.exist(""));
+			Console.log(ftp.exist("."));
+			Console.log(ftp.exist(".."));
+			Console.log(ftp.exist("/"));
 			Console.log(ftp.exist("/test"));
 			Console.log(ftp.exist("/test/"));
 			Console.log(ftp.exist("/test//////"));
@@ -132,9 +137,7 @@ public class FtpTest {
 			Console.log(ftp.exist("///////////"));
 			Console.log(ftp.exist("./"));
 			Console.log(ftp.exist("./file1"));
-			Console.log(ftp.exist("."));
 			Console.log(ftp.exist("./2/3/4/.."));
-			Console.log(ftp.ls("./2/3/4/.."));
 			Console.log(ftp.pwd());
 		}
 	}

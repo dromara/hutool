@@ -97,6 +97,9 @@ public abstract class AbstractFtp implements Closeable {
 	 * @return 是否存在
 	 */
 	public boolean exist(String path) {
+		if (StrUtil.isBlank(path)) {
+			return false;
+		}
 		// 目录验证
 		if (isDir(path)) {
 			return true;
