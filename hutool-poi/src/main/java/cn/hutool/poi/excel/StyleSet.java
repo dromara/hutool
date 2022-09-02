@@ -63,8 +63,8 @@ public class StyleSet implements Serializable {
 
 		// 默认数字格式
 		cellStyleForNumber = StyleUtil.cloneCellStyle(workbook, this.cellStyle);
-		// 2表示：0.00
-		cellStyleForNumber.setDataFormat((short) 2);
+		// 0表示：General
+		cellStyleForNumber.setDataFormat((short) 0);
 
 		// 默认日期格式
 		this.cellStyleForDate = StyleUtil.cloneCellStyle(workbook, this.cellStyle);

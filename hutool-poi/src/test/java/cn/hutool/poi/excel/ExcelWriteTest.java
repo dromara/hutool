@@ -821,6 +821,19 @@ public class ExcelWriteTest {
 	}
 
 	@Test
+	//@Ignore
+	public void writeDoubleTest(){
+		// https://gitee.com/dromara/hutool/issues/I5PI5C
+		final String path = "d:/test/doubleTest.xlsx";
+		FileUtil.del(path);
+
+		final ExcelWriter writer = ExcelUtil.getWriter(path);
+		writer.disableDefaultStyle();
+		writer.writeRow(ListUtil.view(0.427d));
+		writer.close();
+	}
+
+	@Test
 	@Ignore
 	public void issueI466ZZTest(){
 		// https://gitee.com/dromara/hutool/issues/I466ZZ
