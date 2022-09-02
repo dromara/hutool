@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -327,7 +328,7 @@ public class EntryStreamTest {
 		Map<Integer, Integer> result = EntryStream.of(map).toMap();
 		Assert.assertEquals(map, result);
 
-		result = EntryStream.of(map).toMap(LinkedHashMap::new);
+		result = EntryStream.of(map).toMap((Supplier<Map<Integer, Integer>>)LinkedHashMap::new);
 		Assert.assertEquals(new LinkedHashMap<>(map), result);
 
 		result = EntryStream.of(map).toMap(LinkedHashMap::new, (t1, t2) -> t1);

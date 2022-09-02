@@ -22,7 +22,7 @@ import java.util.stream.StreamSupport;
  * @param <V> 值类型
  * @author huangchengxing
  */
-public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStream<K, V>> {
+public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K, V>, EntryStream<K, V>> {
 
 	/**
 	 * 默认的空键值对
@@ -157,7 +157,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public EntryStream<K, V> distinctByKey() {
 		Set<K> accessed = new ConcurrentHashSet<>(16);
-		return convertToStreamImpl(stream.filter(e -> {
+		return wrapping(stream.filter(e -> {
 			K key = e.getKey();
 			if (accessed.contains(key)) {
 				return false;
@@ -174,7 +174,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public EntryStream<K, V> distinctByValue() {
 		Set<V> accessed = new ConcurrentHashSet<>(16);
-		return convertToStreamImpl(stream.filter(e -> {
+		return wrapping(stream.filter(e -> {
 			V val = e.getValue();
 			if (accessed.contains(val)) {
 				return false;
@@ -299,7 +299,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> append(K key, V value) {
-		return convertToStreamImpl(Stream.concat(stream, Stream.of(ofEntry(key, value))));
+		return wrapping(Stream.concat(stream, Stream.of(ofEntry(key, value))));
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> prepend(K key, V value) {
-		return convertToStreamImpl(Stream.concat(Stream.of(ofEntry(key, value)), stream));
+		return wrapping(Stream.concat(Stream.of(ofEntry(key, value)), stream));
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
 			.map(EntryStream::ofEntry);
-		return convertToStreamImpl(Stream.concat(stream, contacted));
+		return wrapping(Stream.concat(stream, contacted));
 	}
 
 	/**
@@ -340,7 +340,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
 			.map(EntryStream::ofEntry);
-		return convertToStreamImpl(Stream.concat(contacted, stream));
+		return wrapping(Stream.concat(contacted, stream));
 	}
 
 	/**
@@ -744,7 +744,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 * @return 实现类
 	 */
 	@Override
-	public EntryStream<K, V> convertToStreamImpl(Stream<Map.Entry<K, V>> stream) {
+	public EntryStream<K, V> wrapping(Stream<Map.Entry<K, V>> stream) {
 		return new EntryStream<>(stream);
 	}
 

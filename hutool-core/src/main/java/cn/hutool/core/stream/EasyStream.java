@@ -1,23 +1,16 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -56,11 +49,7 @@ import java.util.stream.StreamSupport;
  * @see java.util.stream.Stream
  * @since 6.0.0
  */
-public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements Stream<T>, Iterable<T> {
-	/**
-	 * 代表不存在的下标, 一般用于并行流的下标, 或者未找到元素时的下标
-	 */
-	private static final int NOT_FOUND_INDEX = -1;
+public class EasyStream<T> extends AbstractEnhancedStreamWrapper<T, EasyStream<T>> {
 
 	/**
 	 * 构造
@@ -267,32 +256,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	}
 
 	/**
-	 * 过滤元素，返回与指定断言匹配的元素组成的流，断言带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
-	 *
-	 * @param predicate 断言
-	 * @return 返回叠加过滤操作后的流
-	 */
-	public EasyStream<T> filterIdx(final BiPredicate<? super T, Integer> predicate) {
-		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return filter(e -> predicate.test(e, NOT_FOUND_INDEX));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			return filter(e -> predicate.test(e, index.incrementAndGet()));
-		}
-	}
-
-	/**
-	 * 过滤掉空元素
-	 *
-	 * @return 过滤后的流
-	 */
-	public EasyStream<T> nonNull() {
-		return new EasyStream<>(stream.filter(Objects::nonNull));
-	}
-
-	/**
 	 * 返回与指定函数将元素作为参数执行的结果组成的流
 	 * 这是一个无状态中间操作
 	 *
@@ -460,175 +423,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	}
 
 	/**
-	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
-	 * @param action 指定的函数
-	 * @return 返回叠加操作后的FastStream
-	 * @apiNote 该方法存在的意义主要是用来调试
-	 * 当你需要查看经过操作管道某处的元素和下标，可以执行以下操作:
-	 * <pre>{@code
-	 *     .of("one", "two", "three", "four")
-	 * 				.filter(e -> e.length() > 3)
-	 * 				.peekIdx((e,i) -> System.out.println("Filtered value: " + e + " Filtered idx:" + i))
-	 * 				.map(String::toUpperCase)
-	 * 				.peekIdx((e,i) -> System.out.println("Mapped value: " + e + " Mapped idx:" + i))
-	 * 				.collect(Collectors.toList());
-	 * }</pre>
-	 */
-	public EasyStream<T> peekIdx(BiConsumer<? super T, Integer> action) {
-		Objects.requireNonNull(action);
-		if (isParallel()) {
-			return peek(e -> action.accept(e, NOT_FOUND_INDEX));
-		} else {
-			AtomicInteger index = new AtomicInteger(NOT_FOUND_INDEX);
-			return peek(e -> action.accept(e, index.incrementAndGet()));
-		}
-	}
-
-	/**
-	 * 返回叠加调用{@link Console#log(Object)}打印出结果的流
-	 *
-	 * @return 返回叠加操作后的FastStream
-	 */
-	public EasyStream<T> log() {
-		return peek(Console::log);
-	}
-
-	/**
-	 * 对流里面的每一个元素执行一个操作，操作带下标，并行流时下标永远为-1
-	 * 这是一个终端操作
-	 *
-	 * @param action 操作
-	 */
-	public void forEachIdx(final BiConsumer<? super T, Integer> action) {
-		Objects.requireNonNull(action);
-		if (isParallel()) {
-			stream.forEach(e -> action.accept(e, NOT_FOUND_INDEX));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream.forEach(e -> action.accept(e, index.incrementAndGet()));
-		}
-	}
-
-	/**
-	 * 对流里面的每一个元素按照顺序执行一个操作，操作带下标，并行流时下标永远为-1
-	 * 这是一个终端操作
-	 *
-	 * @param action 操作
-	 */
-	public void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
-		Objects.requireNonNull(action);
-		if (isParallel()) {
-			stream.forEachOrdered(e -> action.accept(e, NOT_FOUND_INDEX));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream.forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
-		}
-	}
-
-	/**
-	 * 获取与给定断言匹配的第一个元素
-	 *
-	 * @param predicate 断言
-	 * @return 与给定断言匹配的第一个元素
-	 */
-	public Optional<T> findFirst(final Predicate<? super T> predicate) {
-		return stream.filter(predicate).findFirst();
-	}
-
-	/**
-	 * 获取与给定断言匹配的第一个元素的下标，并行流下标永远为-1
-	 *
-	 * @param predicate 断言
-	 * @return 与给定断言匹配的第一个元素的下标，如果不存在则返回-1
-	 */
-	public int findFirstIdx(final Predicate<? super T> predicate) {
-		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_INDEX;
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			//noinspection ResultOfMethodCallIgnored
-			stream.filter(e -> {
-				index.increment();
-				return predicate.test(e);
-			}).findFirst();
-			return index.get();
-		}
-	}
-
-	/**
-	 * 获取最后一个元素
-	 *
-	 * @return 最后一个元素
-	 */
-	public Optional<T> findLast() {
-		final MutableObj<T> last = new MutableObj<>(null);
-		spliterator().forEachRemaining(last::set);
-		return Optional.ofNullable(last.get());
-	}
-
-	/**
-	 * 获取与给定断言匹配的最后一个元素
-	 *
-	 * @param predicate 断言
-	 * @return 与给定断言匹配的最后一个元素
-	 */
-	public Optional<T> findLast(final Predicate<? super T> predicate) {
-		Objects.requireNonNull(predicate);
-		final MutableObj<T> last = new MutableObj<>(null);
-		spliterator().forEachRemaining(e -> {
-			if (predicate.test(e)) {
-				last.set(e);
-			}
-		});
-		return Optional.ofNullable(last.get());
-	}
-
-	/**
-	 * 获取与给定断言匹配的最后一个元素的下标，并行流下标永远为-1
-	 *
-	 * @param predicate 断言
-	 * @return 与给定断言匹配的最后一个元素的下标，如果不存在则返回-1
-	 */
-	public int findLastIdx(final Predicate<? super T> predicate) {
-		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_INDEX;
-		} else {
-			final MutableInt idxRef = new MutableInt(NOT_FOUND_INDEX);
-			forEachIdx((e, i) -> {
-				if (predicate.test(e)) {
-					idxRef.set(i);
-				}
-			});
-			return idxRef.get();
-		}
-	}
-
-	/**
-	 * 反转顺序
-	 *
-	 * @return 反转元素顺序
-	 */
-	@SuppressWarnings("unchecked")
-	public EasyStream<T> reverse() {
-		final T[] array = (T[]) toArray();
-		ArrayUtil.reverse(array);
-		return of(array).parallel(isParallel()).onClose(stream::close);
-	}
-
-	/**
-	 * 更改流的并行状态
-	 *
-	 * @param parallel 是否并行
-	 * @return 流
-	 */
-	public EasyStream<T> parallel(final boolean parallel) {
-		return parallel ? parallel() : sequential();
-	}
-
-	/**
 	 * 与给定元素组成的流合并，成为新的流
 	 *
 	 * @param obj 元素
@@ -638,16 +432,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 		return EasyStream.concat(this.stream, of(obj));
 	}
 
-	/**
-	 * 与给定元素组成的流合并，成为新的流
-	 *
-	 * @param obj 元素
-	 * @return 流
-	 */
-	@SuppressWarnings("unchecked")
-	public EasyStream<T> push(final T... obj) {
-		return EasyStream.concat(this.stream, of(obj));
-	}
 
 	/**
 	 * 给定元素组成的流与当前流合并，成为新的流
@@ -659,27 +443,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 		return EasyStream.concat(of(obj), this.stream);
 	}
 
-	/**
-	 * 给定元素组成的流与当前流合并，成为新的流
-	 *
-	 * @param obj 元素
-	 * @return 流
-	 */
-	@SafeVarargs
-	public final EasyStream<T> unshift(final T... obj) {
-		return EasyStream.concat(of(obj), this.stream);
-	}
-
-	/**
-	 * 获取流中指定下标的元素，如果是负数，则从最后一个开始数起
-	 *
-	 * @param idx 下标
-	 * @return 指定下标的元素
-	 */
-	@SuppressWarnings("unchecked")
-	public Optional<T> at(final Integer idx) {
-		return Opt.ofNullable(idx).map(i -> (T) ArrayUtil.get(toArray(), i)).toOptional();
-	}
 
 	/**
 	 * 根据一个原始的流，返回一个新包装类实例
@@ -688,156 +451,8 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * @return 实现类
 	 */
 	@Override
-	protected EasyStream<T> convertToStreamImpl(Stream<T> stream) {
+	public EasyStream<T> wrapping(Stream<T> stream) {
 		return new EasyStream<>(stream);
-	}
-
-	/**
-	 * 转换成集合
-	 *
-	 * @param collectionFactory 集合工厂(可以是集合构造器)
-	 * @param <C>               集合类型
-	 * @return 集合
-	 */
-	public <C extends Collection<T>> C toColl(final Supplier<C> collectionFactory) {
-		return collect(Collectors.toCollection(collectionFactory));
-	}
-
-	/**
-	 * 转换为ArrayList
-	 *
-	 * @return list
-	 */
-	public List<T> toList() {
-		return collect(Collectors.toList());
-	}
-
-	/**
-	 * 转换为HashSet
-	 *
-	 * @return hashSet
-	 */
-	public Set<T> toSet() {
-		return collect(Collectors.toSet());
-	}
-
-	/**
-	 * 与给定的可迭代对象转换成Map，key为现有元素，value为给定可迭代对象迭代的元素<br>
-	 * Map的大小与两个集合中较小的数量一致, 即, 只合并下标位置相同的部分
-	 *
-	 * @param other 可迭代对象
-	 * @param <R>   可迭代对象迭代的元素类型
-	 * @return map，key为现有元素，value为给定可迭代对象迭代的元素
-	 */
-	public <R> Map<T, R> toZip(final Iterable<R> other) {
-		final Spliterator<T> keys = spliterator();
-		final Spliterator<R> values = Opt.ofNullable(other).map(Iterable::spliterator).orElseGet(Spliterators::emptySpliterator);
-		// 获取两个Spliterator的中较小的数量
-		// 如果Spliterator经过流操作, getExactSizeIfKnown()可能会返回-1, 所以默认大小为 MapUtil.DEFAULT_INITIAL_CAPACITY
-		final int sizeIfKnown = (int) Math.max(Math.min(keys.getExactSizeIfKnown(), values.getExactSizeIfKnown()), MapUtil.DEFAULT_INITIAL_CAPACITY);
-		final Map<T, R> map = MapUtil.newHashMap(sizeIfKnown);
-		// 保存第一个Spliterator的值
-		final MutableObj<T> key = new MutableObj<>();
-		// 保存第二个Spliterator的值
-		final MutableObj<R> value = new MutableObj<>();
-		// 当两个Spliterator中都还有剩余元素时
-		while (keys.tryAdvance(key::set) && values.tryAdvance(value::set)) {
-			map.put(key.get(), value.get());
-		}
-		return map;
-	}
-
-	/**
-	 * 返回拼接后的字符串
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public String join() {
-		return join(StrUtil.EMPTY);
-	}
-
-	/**
-	 * 返回拼接后的字符串
-	 *
-	 * @param delimiter 分隔符
-	 * @return 拼接后的字符串
-	 */
-	public String join(final CharSequence delimiter) {
-		return join(delimiter, StrUtil.EMPTY, StrUtil.EMPTY);
-	}
-
-	/**
-	 * 返回拼接后的字符串
-	 *
-	 * @param delimiter 分隔符
-	 * @param prefix    前缀
-	 * @param suffix    后缀
-	 * @return 拼接后的字符串
-	 */
-	public String join(final CharSequence delimiter,
-					   final CharSequence prefix,
-					   final CharSequence suffix) {
-		return map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
-	}
-
-	/**
-	 * 转换为map，key为给定操作执行后的返回值,value为当前元素
-	 *
-	 * @param keyMapper 指定的key操作
-	 * @param <K>       key类型
-	 * @return map
-	 */
-	public <K> Map<K, T> toMap(final Function<? super T, ? extends K> keyMapper) {
-		return toMap(keyMapper, Function.identity());
-	}
-
-	/**
-	 * 转换为map，key,value为给定操作执行后的返回值
-	 *
-	 * @param keyMapper   指定的key操作
-	 * @param valueMapper 指定value操作
-	 * @param <K>         key类型
-	 * @param <U>         value类型
-	 * @return map
-	 */
-	public <K, U> Map<K, U> toMap(final Function<? super T, ? extends K> keyMapper,
-								  final Function<? super T, ? extends U> valueMapper) {
-		return toMap(keyMapper, valueMapper, (l, r) -> r);
-	}
-
-	/**
-	 * 转换为map，key,value为给定操作执行后的返回值
-	 *
-	 * @param keyMapper     指定的key操作
-	 * @param valueMapper   指定value操作
-	 * @param mergeFunction 合并操作
-	 * @param <K>           key类型
-	 * @param <U>           value类型
-	 * @return map
-	 */
-	public <K, U> Map<K, U> toMap(final Function<? super T, ? extends K> keyMapper,
-								  final Function<? super T, ? extends U> valueMapper,
-								  final BinaryOperator<U> mergeFunction) {
-		return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
-	}
-
-	/**
-	 * 转换为map，key,value为给定操作执行后的返回值
-	 *
-	 * @param keyMapper     指定的key操作
-	 * @param valueMapper   指定value操作
-	 * @param mergeFunction 合并操作
-	 * @param mapSupplier   map工厂
-	 * @param <K>           key类型
-	 * @param <U>           value类型
-	 * @param <M>           map类型
-	 * @return map
-	 */
-	public <K, U, M extends Map<K, U>> M toMap(final Function<? super T, ? extends K> keyMapper,
-											   final Function<? super T, ? extends U> valueMapper,
-											   final BinaryOperator<U> mergeFunction,
-											   final Supplier<M> mapSupplier) {
-		return collect(CollectorUtil.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
 	}
 
 	/**
@@ -929,51 +544,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 		return flat(recursive).peek(e -> childrenSetter.accept(e, null));
 	}
 
-
-	/**
-	 * 通过给定分组依据进行分组
-	 *
-	 * @param classifier 分组依据
-	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-	 * @return {@link Collector}
-	 */
-	public <K> Map<K, List<T>> group(final Function<? super T, ? extends K> classifier) {
-		return group(classifier, Collectors.toList());
-	}
-
-	/**
-	 * 通过给定分组依据进行分组
-	 *
-	 * @param classifier 分组依据
-	 * @param downstream 下游操作
-	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-	 * @param <D>        下游操作对应返回类型，也是Map中value的类型
-	 * @param <A>        下游操作在进行中间操作时对应类型
-	 * @return {@link Collector}
-	 */
-	public <K, A, D> Map<K, D> group(final Function<? super T, ? extends K> classifier,
-									 final Collector<? super T, A, D> downstream) {
-		return group(classifier, HashMap::new, downstream);
-	}
-
-	/**
-	 * 通过给定分组依据进行分组
-	 *
-	 * @param classifier 分组依据
-	 * @param mapFactory 提供的map
-	 * @param downstream 下游操作
-	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-	 * @param <D>        下游操作对应返回类型，也是Map中value的类型
-	 * @param <A>        下游操作在进行中间操作时对应类型
-	 * @param <M>        最后返回结果Map类型
-	 * @return {@link Collector}
-	 */
-	public <K, D, A, M extends Map<K, D>> M group(final Function<? super T, ? extends K> classifier,
-												  final Supplier<M> mapFactory,
-												  final Collector<? super T, A, D> downstream) {
-		return collect(CollectorUtil.groupingBy(classifier, mapFactory, downstream));
-	}
-
 	/**
 	 * 将 现有元素 与 给定迭代器中对应位置的元素 使用 zipper 转换为新的元素，并返回新元素组成的流<br>
 	 * 新流的数量为两个集合中较小的数量, 即, 只合并下标位置相同的部分<br>
@@ -1002,21 +572,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 			list.add(zipper.apply(key.get(), value.get()));
 		}
 		return of(list).parallel(isParallel()).onClose(stream::close);
-	}
-
-	/**
-	 * 类似js的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice">splice</a>函数
-	 *
-	 * @param start       起始下标
-	 * @param deleteCount 删除个数，正整数
-	 * @param items       放入值
-	 * @return 操作后的流
-	 */
-	@SafeVarargs
-	public final EasyStream<T> splice(final int start, final int deleteCount, final T... items) {
-		return of(ListUtil.splice(toList(), start, deleteCount, items))
-				.parallel(isParallel())
-				.onClose(stream::close);
 	}
 
 	/**
@@ -1053,85 +608,6 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 */
 	public EasyStream<List<T>> splitList(final int batchSize) {
 		return split(batchSize).map(EasyStream::toList);
-	}
-
-	/**
-	 * 保留 与指定断言 匹配时的元素, 在第一次不匹配时终止, 抛弃当前(第一个不匹配元素)及后续所有元素
-	 * <p>与 jdk9 中的 takeWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
-	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
-	 * FastStream.iterate(1, i -> i + 1)
-	 * 	.parallel()
-	 * 	// 顺序执行
-	 * 	.takeWhile(e -> e < 50)
-	 * 	// 并发
-	 * 	.map(e -> e + 1)
-	 * 	// 并发
-	 * 	.map(String::valueOf)
-	 * 	.toList();
-	 * }</pre>
-	 * <p>但是不建议在并行流中使用, 除非你确定 takeWhile 之后的操作能在并行流中受益很多</p>
-	 *
-	 * @param predicate 断言
-	 * @return 与指定断言匹配的元素组成的流
-	 */
-	public EasyStream<T> takeWhile(final Predicate<? super T> predicate) {
-		Objects.requireNonNull(predicate);
-		return of(StreamUtil.takeWhile(stream, predicate));
-	}
-
-
-	/**
-	 * 删除 与指定断言 匹配的元素, 在第一次不匹配时终止, 返回当前(第一个不匹配元素)及剩余元素组成的新流
-	 * <p>与 jdk9 中的 dropWhile 方法不太一样, 这里的实现是个 顺序的、有状态的中间操作</p>
-	 * <pre>本环节中是顺序执行的, 但是后续操作可以支持并行流: {@code
-	 * FastStream.iterate(1, i <= 100, i -> i + 1)
-	 * 	.parallel()
-	 * 	// 顺序执行
-	 * 	.dropWhile(e -> e < 50)
-	 * 	// 并发
-	 * 	.map(e -> e + 1)
-	 * 	// 并发
-	 * 	.map(String::valueOf)
-	 * 	.toList();
-	 * }</pre>
-	 * <p>但是不建议在并行流中使用, 除非你确定 dropWhile 之后的操作能在并行流中受益很多</p>
-	 *
-	 * @param predicate 断言
-	 * @return 剩余元素组成的流
-	 */
-	public EasyStream<T> dropWhile(final Predicate<? super T> predicate) {
-		Objects.requireNonNull(predicate);
-		return of(StreamUtil.dropWhile(stream, predicate));
-	}
-
-	/**
-	 * 流是否为空
-	 *
-	 * @return 流是否为空
-	 */
-	public boolean isEmpty() {
-		return !findAny().isPresent();
-	}
-
-	/**
-	 * 流是否不为空
-	 *
-	 * @return 流是否不为空
-	 */
-	public boolean isNotEmpty() {
-		return !isEmpty();
-	}
-
-	/**
-	 * 将当前流转为另一对象。用于提供针对流本身而非流中元素的操作
-	 *
-	 * @param <R>       转换类型
-	 * @param transform 转换
-	 * @return 转换后的流
-	 */
-	public <R> Optional<R> transform(final Function<EasyStream<T>, R> transform) {
-		Assert.notNull(transform, "transform must not null");
-		return Optional.ofNullable(transform.apply(this));
 	}
 
 	public interface FastStreamBuilder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
