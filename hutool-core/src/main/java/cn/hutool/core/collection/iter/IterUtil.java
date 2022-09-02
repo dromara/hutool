@@ -183,6 +183,7 @@ public class IterUtil {
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
+	 * @param <R> 返回元素类型
 	 * @param <V>       对象类型
 	 * @param iterable  对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
@@ -196,6 +197,7 @@ public class IterUtil {
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
+	 * @param <R> 返回元素类型
 	 * @param <V>       对象类型
 	 * @param iter      对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
