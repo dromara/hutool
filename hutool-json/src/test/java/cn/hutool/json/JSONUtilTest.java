@@ -151,25 +151,33 @@ public class JSONUtilTest {
 		final String json = "[1,2,3,\"4\"]";
 
 		final List<Integer> list = JSONUtil.toList(json, Integer.class);
+
 		Assert.assertEquals(1, list.get(0).intValue());
 		Assert.assertEquals(2, list.get(1).intValue());
 		Assert.assertEquals(3, list.get(2).intValue());
 		Assert.assertEquals(4, list.get(3).intValue());
+
+		// 默认为 java.util.ArrayList 类型
+		Assert.assertEquals(ArrayList.class, list.getClass());
 	}
 
 	@Test
 	public void toMapTest() {
 		final String json = "{\"a\":1,\"b\":\"2\"}";
 
-		// 使用toMap，get方法不会报错
+		// 使用toMap，get方法不会报错（推荐）
 		final Map<String, Integer> map = JSONUtil.toMap(json, String.class, Integer.class, false);
 		Assert.assertEquals(1, map.get("a").intValue());
 		Assert.assertEquals(2, map.get("b").intValue());
 
-		// 使用toBean，get方法会报错
+		// 使用toBean，get方法会报错（不推荐）
 		final Map<String, Integer> map2 = JSONUtil.toBean(json, Map.class);
 		Assert.assertEquals(1, map2.get("a").intValue());
 		Assert.assertThrows(ClassCastException.class, () -> map2.get("b").intValue()); // 会报错，所以推荐使用toMap方法明确key和value的类型
+
+		// 默认为 java.util.HashMap 类型
+		Assert.assertEquals(HashMap.class, map.getClass());
+		Assert.assertEquals(HashMap.class, map2.getClass());
 	}
 
 	@Test
