@@ -1,0 +1,32 @@
+name: "Test"
+
+on:
+  push:
+    branches: [ v5-dev, v6-dev ]
+  pull_request:
+    branches: [ v5-dev, v6-dev ]
+
+jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    steps:
+      # step 1
+      - name: "Checkout"
+        uses: actions/checkout@v2.4.0
+
+      # step 2
+      - name: "Setup Java JDK"
+        uses: actions/setup-java@v2.5.0
+        with:
+          distribution: 'zulu'
+          java-version: 8
+
+      # step 3
+      - name: "Run Test With Maven"
+        run: |
+          mvn clean test -e -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn;
+
+      # step 4
+      - name: "Codecov"
+        uses: codecov/codecov-action@v2.1.0
