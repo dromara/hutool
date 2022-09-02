@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ArrayUtil;
@@ -321,7 +322,7 @@ public class JSONUtil {
 	/**
 	 * 转为JSON字符串，并写出到write
 	 *
-	 * @param json JSON
+	 * @param json   JSON
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
@@ -357,7 +358,7 @@ public class JSONUtil {
 	/**
 	 * 转换为JSON字符串
 	 *
-	 * @param obj 被转为JSON的对象
+	 * @param obj        被转为JSON的对象
 	 * @param jsonConfig JSON配置
 	 * @return JSON字符串
 	 * @since 5.7.12
@@ -375,7 +376,7 @@ public class JSONUtil {
 	/**
 	 * 转换为JSON字符串并写出到writer
 	 *
-	 * @param obj 被转为JSON的对象
+	 * @param obj    被转为JSON的对象
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
@@ -535,6 +536,66 @@ public class JSONUtil {
 	}
 
 	/**
+	 * 将JSON字符串转换为Map，默认为HashList
+	 *
+	 * @param <K>         键类型
+	 * @param <V>         值类型
+	 * @param jsonString  JSON字符串
+	 * @param keyType     键类型
+	 * @param valueType   值类型
+	 * @param ignoreError 是否忽略转换错误
+	 * @return Map
+	 * @since 5.8.6
+	 */
+	public static <K, V> Map<K, V> toMap(String jsonString, Class<K> keyType, Class<V> valueType, boolean ignoreError) {
+		Type type = new ParameterizedTypeImpl(new Type[]{keyType, valueType}, null, Map.class);
+		return toBean(jsonString, type, ignoreError);
+	}
+
+	/**
+	 * 将JSON字符串转换为Map，默认为HashList
+	 *
+	 * @param <K>       键类型
+	 * @param <V>       值类型
+	 * @param json      JSONObject
+	 * @param keyType   键类型
+	 * @param valueType 值类型
+	 * @return Map
+	 * @since 5.8.6
+	 */
+	public static <K, V> Map<K, V> toMap(JSONObject json, Class<K> keyType, Class<V> valueType) {
+		Type type = new ParameterizedTypeImpl(new Type[]{keyType, valueType}, null, Map.class);
+		return json.toBean(type);
+	}
+
+	/**
+	 * 将JSON字符串转换为Map，默认为HashList
+	 *
+	 * @param <V>         值类型
+	 * @param jsonString  JSON字符串
+	 * @param valueType   值类型
+	 * @param ignoreError 是否忽略转换错误
+	 * @return Map
+	 * @since 5.8.6
+	 */
+	public static <V> Map<String, V> toMap(String jsonString, Class<V> valueType, boolean ignoreError) {
+		return toMap(jsonString, String.class, valueType, ignoreError);
+	}
+
+	/**
+	 * 将JSON字符串转换为Map，默认为HashList
+	 *
+	 * @param <V>       值类型
+	 * @param json      JSONObject
+	 * @param valueType 值类型
+	 * @return Map
+	 * @since 5.8.6
+	 */
+	public static <V> Map<String, V> toMap(JSONObject json, Class<V> valueType) {
+		return toMap(json, String.class, valueType);
+	}
+
+	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
 	 * <ol>
 	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
@@ -575,9 +636,9 @@ public class JSONUtil {
 	 * person.friends[5].name
 	 * </pre>
 	 *
-	 * @param <T> 值类型
-	 * @param json       {@link JSON}
-	 * @param expression 表达式
+	 * @param <T>          值类型
+	 * @param json         {@link JSON}
+	 * @param expression   表达式
 	 * @param defaultValue 默认值
 	 * @return 对象
 	 * @see JSON#getByPath(String)
@@ -585,11 +646,11 @@ public class JSONUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getByPath(JSON json, String expression, T defaultValue) {
-		if((null == json || StrUtil.isBlank(expression))){
+		if ((null == json || StrUtil.isBlank(expression))){
 			return defaultValue;
 		}
 
-		if(null != defaultValue){
+		if (null != defaultValue){
 			final Class<T> type = (Class<T>) defaultValue.getClass();
 			return ObjectUtil.defaultIfNull(json.getByPath(expression, type), defaultValue);
 		}
@@ -778,7 +839,7 @@ public class JSONUtil {
 
 		try {
 			// fix issue#1399@Github
-			if(object instanceof SQLException){
+			if (object instanceof SQLException) {
 				return object.toString();
 			}
 

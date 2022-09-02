@@ -15,6 +15,7 @@ import org.junit.Test;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -112,10 +113,11 @@ public class JSONUtilTest {
 			private static final long serialVersionUID = 1L;
 
 			{
-			put("attributes", "a");
-			put("b", "b");
-			put("c", "c");
-		}};
+				put("attributes", "a");
+				put("b", "b");
+				put("c", "c");
+			}
+		};
 
 		Assert.assertEquals("{\"attributes\":\"a\",\"b\":\"b\",\"c\":\"c\"}", JSONUtil.toJsonStr(sortedMap));
 	}
@@ -142,6 +144,32 @@ public class JSONUtilTest {
 		Assert.assertEquals("男", propJson.getStr("gender"));
 		Assert.assertEquals(18, propJson.getInt("age").intValue());
 		// Assert.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
+	}
+
+	@Test
+	public void toListTest() {
+		final String json = "[1,2,3,\"4\"]";
+
+		final List<Integer> list = JSONUtil.toList(json, Integer.class);
+		Assert.assertEquals(1, list.get(0).intValue());
+		Assert.assertEquals(2, list.get(1).intValue());
+		Assert.assertEquals(3, list.get(2).intValue());
+		Assert.assertEquals(4, list.get(3).intValue());
+	}
+
+	@Test
+	public void toMapTest() {
+		final String json = "{\"a\":1,\"b\":\"2\"}";
+
+		// 使用toMap，get方法不会报错
+		final Map<String, Integer> map = JSONUtil.toMap(json, String.class, Integer.class, false);
+		Assert.assertEquals(1, map.get("a").intValue());
+		Assert.assertEquals(2, map.get("b").intValue());
+
+		// 使用toBean，get方法会报错
+		final Map<String, Integer> map2 = JSONUtil.toBean(json, Map.class);
+		Assert.assertEquals(1, map2.get("a").intValue());
+		Assert.assertThrows(ClassCastException.class, () -> map2.get("b").intValue()); // 会报错，所以推荐使用toMap方法明确key和value的类型
 	}
 
 	@Test
@@ -179,7 +207,7 @@ public class JSONUtilTest {
 	@Test
 	public void customValueTest() {
 		final JSONObject jsonObject = JSONUtil.createObj()
-		.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
+			.set("test2", (JSONString) () -> NumberUtil.decimalFormat("#.0", 12.00D));
 
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}
@@ -212,7 +240,7 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void sqlExceptionTest(){
+	public void sqlExceptionTest() {
 		//https://github.com/dromara/hutool/issues/1399
 		// SQLException实现了Iterable接口，默认是遍历之，会栈溢出，修正后只返回string
 		final JSONObject set = JSONUtil.createObj().set("test", new SQLException("test"));
@@ -220,14 +248,14 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void parseBigNumberTest(){
+	public void parseBigNumberTest() {
 		// 科学计数法使用BigDecimal处理，默认输出非科学计数形式
 		final String str = "{\"test\":100000054128897953e4}";
 		Assert.assertEquals("{\"test\":1000000541288979530000}", JSONUtil.parseObj(str).toString());
 	}
 
 	@Test
-	public void toXmlTest(){
+	public void toXmlTest() {
 		final JSONObject obj = JSONUtil.createObj();
 		obj.set("key1", "v1")
 				.set("key2", ListUtil.of("a", "b", "c"));
@@ -236,7 +264,7 @@ public class JSONUtilTest {
 	}
 
 	@Test
-	public void duplicateKeyFalseTest(){
+	public void duplicateKeyFalseTest() {
 		final String str = "{id:123, name:\"张三\", name:\"李四\"}";
 
 		final JSONObject jsonObject = JSONUtil.parseObj(str, JSONConfig.create().setCheckDuplicate(false));
@@ -244,7 +272,7 @@ public class JSONUtilTest {
 	}
 
 	@Test(expected = JSONException.class)
-	public void duplicateKeyTrueTest(){
+	public void duplicateKeyTrueTest() {
 		final String str = "{id:123, name:\"张三\", name:\"李四\"}";
 
 		final JSONObject jsonObject = JSONUtil.parseObj(str, JSONConfig.create().setCheckDuplicate(true));
