@@ -43,4 +43,11 @@ public class RuntimeUtilTest {
 		final int pid = RuntimeUtil.getPid();
 		Assert.assertTrue(pid > 0);
 	}
+
+	@Test
+	public void getProcessorCountTest(){
+		int cpu = RuntimeUtil.getProcessorCount();
+		Console.log("cpu个数：{}", cpu);
+		Assert.assertTrue(cpu > 0);
+	}
 }
