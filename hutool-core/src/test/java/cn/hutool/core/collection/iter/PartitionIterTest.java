@@ -13,7 +13,7 @@ import java.util.Iterator;
 public class PartitionIterTest {
 
 	@Test
-	public void hasNext() {
+	public void testHasNext() {
 		Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
 		PartitionIter<Integer> partitionIter = new PartitionIter<>(iter, 2);
 		Assert.assertTrue(partitionIter.hasNext());
@@ -21,7 +21,7 @@ public class PartitionIterTest {
 	}
 
 	@Test
-	public void next() {
+	public void testNext() {
 		Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
 		PartitionIter<Integer> partitionIter = new PartitionIter<>(iter, 2);
 		Assert.assertEquals(Arrays.asList(1, 2), partitionIter.next());
