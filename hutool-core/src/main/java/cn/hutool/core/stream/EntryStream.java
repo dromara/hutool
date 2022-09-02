@@ -1,6 +1,7 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.util.ObjUtil;
@@ -13,15 +14,20 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * <p>针对键值对对象{@link Map.Entry}特化的增强流，
- * 本身可视为一个元素类型为{@link Map.Entry}的{@link Stream}。<br>
- * 用于支持流式处理{@link Map}集合中的、或具有潜在可能转为{@link Map}集合的数据。
+ * <p>参考StreamEx的EntryStream与vavr的Map，是针对键值对对象{@link Map.Entry}特化的增强流实现。<br>
+ * 本身可视为一个元素类型为{@link Map.Entry}的{@link Stream}，
+ * 用于支持流式处理{@link Map}集合中的、或其他键值对类型的数据。
  *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author huangchengxing
  */
 public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStream<K, V>> {
+
+	/**
+	 * 默认的空键值对
+	 */
+	private static final Map.Entry<?, ?> EMPTY_ENTRY = new AbstractMap.SimpleImmutableEntry<>(null, null);
 
 	/**
 	 * 根据键与值的集合创建键值对流，若两集合在相同下标的位置找不到对应的键或值，则使用{@code null}填充。<br>
@@ -51,7 +57,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		final Iterator<A> keyItr = keys.iterator();
 		final Iterator<B> valueItr = values.iterator();
 		while (keyItr.hasNext() || valueItr.hasNext()) {
-			entries.add(new Entry<>(
+			entries.add(ofEntry(
 				keyItr.hasNext() ? keyItr.next() : null,
 				valueItr.hasNext() ? valueItr.next() : null
 			));
@@ -106,7 +112,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 			return empty();
 		}
 		final Stream<Map.Entry<A, B>> stream = StreamSupport.stream(source.spliterator(), false)
-			.map(t -> new Entry<>(keyMapper.apply(t), valueMapper.apply(t)));
+			.map(t -> ofEntry(keyMapper.apply(t), valueMapper.apply(t)));
 		return new EntryStream<>(stream);
 	}
 
@@ -121,7 +127,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public static <A, B> EntryStream<A, B> of(Stream<? extends Map.Entry<A, B>> stream) {
 		return ObjUtil.isNull(stream) ?
-			empty() : new EntryStream<>(stream.map(Entry::new));
+			empty() : new EntryStream<>(stream.map(EntryStream::ofEntry));
 	}
 
 	/**
@@ -142,19 +148,6 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		super(stream);
 	}
 
-	// ================================ override ================================
-
-	/**
-	 * 根据一个原始的流，返回一个新包装类实例
-	 *
-	 * @param stream 流
-	 * @return 实现类
-	 */
-	@Override
-	protected EntryStream<K, V> convertToStreamImpl(Stream<Map.Entry<K, V>> stream) {
-		return new EntryStream<>(stream);
-	}
-
 	// ================================ 中间操作 ================================
 
 	/**
@@ -164,7 +157,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public EntryStream<K, V> distinctByKey() {
 		Set<K> accessed = new ConcurrentHashSet<>(16);
-		return new EntryStream<>(stream.filter(e -> {
+		return convertToStreamImpl(stream.filter(e -> {
 			K key = e.getKey();
 			if (accessed.contains(key)) {
 				return false;
@@ -181,7 +174,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public EntryStream<K, V> distinctByValue() {
 		Set<V> accessed = new ConcurrentHashSet<>(16);
-		return new EntryStream<>(stream.filter(e -> {
+		return convertToStreamImpl(stream.filter(e -> {
 			V val = e.getValue();
 			if (accessed.contains(val)) {
 				return false;
@@ -229,6 +222,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 *
 	 * @return {@link EntryStream}实例
 	 */
+	@Override
 	public EntryStream<K, V> nonNull() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getKey()) && ObjUtil.isNotNull(e.getValue()));
 	}
@@ -304,8 +298,49 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 * @param value 值
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> push(K key, V value) {
-		return new EntryStream<>(Stream.concat(stream, Stream.of(new Entry<>(key, value))));
+	public EntryStream<K, V> append(K key, V value) {
+		return convertToStreamImpl(Stream.concat(stream, Stream.of(ofEntry(key, value))));
+	}
+
+	/**
+	 * 项当前流队首追加元素
+	 *
+	 * @param key   键
+	 * @param value 值
+	 * @return {@link EntryStream}实例
+	 */
+	public EntryStream<K, V> prepend(K key, V value) {
+		return convertToStreamImpl(Stream.concat(Stream.of(ofEntry(key, value)), stream));
+	}
+
+	/**
+	 * 将输入元素转为流，返回一个前半段为当前流，后半段为新流的新{@link EasyStream}实例
+	 *
+	 * @param entries 键值对
+	 * @return {@link EntryStream}实例
+	 */
+	public EntryStream<K, V> append(Iterable<? extends Map.Entry<K, V>> entries) {
+		if (IterUtil.isEmpty(entries)) {
+			return this;
+		}
+		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
+			.map(EntryStream::ofEntry);
+		return convertToStreamImpl(Stream.concat(stream, contacted));
+	}
+
+	/**
+	 * 将输入元素转为流，返回一个前半段为新流，后半段为当前流的新{@link EasyStream}实例
+	 *
+	 * @param entries 键值对
+	 * @return {@link EntryStream}实例
+	 */
+	public EntryStream<K, V> prepend(Iterable<? extends Map.Entry<K, V>> entries) {
+		if (IterUtil.isEmpty(entries)) {
+			return this;
+		}
+		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
+			.map(EntryStream::ofEntry);
+		return convertToStreamImpl(Stream.concat(contacted, stream));
 	}
 
 	/**
@@ -336,7 +371,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	public <N> EntryStream<N, V> mapKeys(Function<? super K, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
-			stream.map(e -> new Entry<>(mapper.apply(e.getKey()), e.getValue()))
+			stream.map(e -> ofEntry(mapper.apply(e.getKey()), e.getValue()))
 		);
 	}
 
@@ -350,7 +385,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	public <N> EntryStream<K, N> mapValues(Function<? super V, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
-			stream.map(e -> new Entry<>(e.getKey(), mapper.apply(e.getValue())))
+			stream.map(e -> ofEntry(e.getKey(), mapper.apply(e.getValue())))
 		);
 	}
 
@@ -417,7 +452,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		return new EntryStream<>(
 			stream.flatMap(e -> keyMapper
 				.apply(e.getKey())
-				.map(newKey -> new Entry<>(newKey, e.getValue()))
+				.map(newKey -> ofEntry(newKey, e.getValue()))
 			)
 		);
 	}
@@ -441,7 +476,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		return new EntryStream<>(
 			stream.flatMap(e -> valueMapper
 				.apply(e.getValue())
-				.map(newVal -> new Entry<>(e.getKey(), newVal))
+				.map(newVal -> ofEntry(e.getKey(), newVal))
 			)
 		);
 	}
@@ -625,7 +660,7 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 	 */
 	public EntryStream<V, K> inverse() {
 		return new EntryStream<>(
-			stream.map(e -> new Entry<>(e.getValue(), e.getKey()))
+			stream.map(e -> ofEntry(e.getValue(), e.getKey()))
 		);
 	}
 
@@ -683,85 +718,34 @@ public class EntryStream<K, V> extends StreamWrapper<Map.Entry<K, V>, EntryStrea
 		return super.noneMatch(e -> predicate.test(e.getKey(), e.getValue()));
 	}
 
+	// ========================= private =========================
+
 	/**
-	 * {@link Map.Entry}的基本实现
+	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
 	 */
-	static class Entry<K, V> implements Map.Entry<K, V> {
+	@SuppressWarnings("unchecked")
+	private static <K, V> Map.Entry<K, V> ofEntry(Map.Entry<K, V> entry) {
+		return ObjUtil.defaultIfNull(
+			entry, e -> ofEntry(e.getKey(), e.getValue()), (Map.Entry<K, V>)EMPTY_ENTRY
+		);
+	}
 
-		/**
-		 * 键
-		 */
-		private final K key;
+	/**
+	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
+	 */
+	private static <K, V> Map.Entry<K, V> ofEntry(K key, V value) {
+		return new AbstractMap.SimpleImmutableEntry<>(key, value);
+	}
 
-		/**
-		 * 值
-		 */
-		private V val;
-
-		/**
-		 * 创建一个简单键值对对象
-		 *
-		 * @param key 键
-		 * @param val 值
-		 */
-		public Entry(K key, V val) {
-			this.key = key;
-			this.val = val;
-		}
-
-		/**
-		 * 创建一个简单键值对对象
-		 *
-		 * @param entry 键值对
-		 */
-		public Entry(Map.Entry<K, V> entry) {
-			if (ObjUtil.isNull(entry)) {
-				this.key = null;
-				this.val = null;
-			} else {
-				this.key = entry.getKey();
-				this.val = entry.getValue();
-			}
-		}
-
-		/**
-		 * 获取键
-		 *
-		 * @return 键
-		 */
-		@Override
-		public K getKey() {
-			return key;
-		}
-
-		/**
-		 * 获取值
-		 *
-		 * @return 值
-		 */
-		@Override
-		public V getValue() {
-			return val;
-		}
-
-		/**
-		 * 设置值
-		 *
-		 * @param value 值
-		 * @return 旧值
-		 */
-		@Override
-		public V setValue(V value) {
-			V old = val;
-			val = value;
-			return old;
-		}
-
-		@Override
-		public String toString() {
-			return "{" + key + "=" + val + '}';
-		}
-
+	/**
+	 * 根据一个原始的流，返回一个新包装类实例
+	 *
+	 * @param stream 流
+	 * @return 实现类
+	 */
+	@Override
+	public EntryStream<K, V> convertToStreamImpl(Stream<Map.Entry<K, V>> stream) {
+		return new EntryStream<>(stream);
 	}
 
 	/**

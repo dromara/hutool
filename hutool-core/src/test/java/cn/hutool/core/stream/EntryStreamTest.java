@@ -116,8 +116,8 @@ public class EntryStreamTest {
 		Assert.assertEquals(
 			5,
 			EntryStream.of(Arrays.asList(1, 2, 3), Function.identity(), Function.identity())
-				.push(4, 4)
-				.push(5, 5)
+				.append(4, 4)
+				.append(5, 5)
 				.count()
 		);
 
