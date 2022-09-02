@@ -531,32 +531,6 @@ public class JSONUtil {
 	}
 
 	/**
-	 * 设置表达式指定位置（或filed对应）的值<br>
-	 * 若表达式指向一个JSONArray则设置其坐标对应位置的值，若指向JSONObject则put对应key的值<br>
-	 * 注意：如果为JSONArray，则设置值得下标不能大于已有JSONArray的长度<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * <p>
-	 * 表达式栗子：
-	 *
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 *
-	 * @param json       JSON，可以为JSONObject或JSONArray
-	 * @param expression 表达式
-	 * @param value      值
-	 */
-	public static void putByPath(final JSON json, final String expression, final Object value) {
-		json.putByPath(expression, value);
-	}
-
-	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
 	 *
 	 * @param jsonStr JSON字符串

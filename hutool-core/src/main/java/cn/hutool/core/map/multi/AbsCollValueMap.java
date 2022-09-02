@@ -1,22 +1,30 @@
 package cn.hutool.core.map.multi;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapWrapper;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
- * 值作为集合的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
+ * {@link MultiValueMap}的基本实现
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @param <C> 集合类型
  * @author looly
  * @since 5.7.4
+ * @see CollectionValueMap
+ * @see SetValueMap
+ * @see ListValueMap
  */
-public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends MapWrapper<K, C> {
+public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>> implements MultiValueMap<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -27,94 +35,131 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	// ------------------------------------------------------------------------- Constructor start
 
 	/**
-	 * 构造
+	 * 使用{@code mapFactory}创建的集合构造一个多值映射Map集合
+	 *
+	 * @param mapFactory 生成集合的工厂方法
 	 */
-	public AbsCollValueMap() {
-		this(DEFAULT_INITIAL_CAPACITY);
+	protected AbsCollValueMap(Supplier<Map<K, Collection<V>>> mapFactory) {
+		super(mapFactory);
 	}
 
 	/**
-	 * 构造
+	 * 基于{@link HashMap}构造一个多值映射集合
 	 *
-	 * @param initialCapacity 初始大小
+	 * @param map 提供初始数据的集合
 	 */
-	public AbsCollValueMap(final int initialCapacity) {
-		this(initialCapacity, DEFAULT_LOAD_FACTOR);
+	protected AbsCollValueMap(Map<K, Collection<V>> map) {
+		super(new HashMap<>(map));
 	}
 
 	/**
-	 * 构造
-	 *
-	 * @param m Map
+	 * 基于{@link HashMap}构造一个多值映射集合
 	 */
-	public AbsCollValueMap(final Map<? extends K, C> m) {
-		this(DEFAULT_LOAD_FACTOR, m);
+	protected AbsCollValueMap() {
+		super(new HashMap<>(16));
 	}
 
-	/**
-	 * 构造
-	 *
-	 * @param loadFactor 加载因子
-	 * @param m          Map
-	 */
-	public AbsCollValueMap(final float loadFactor, final Map<? extends K, C> m) {
-		this(m.size(), loadFactor);
-		this.putAll(m);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param initialCapacity 初始大小
-	 * @param loadFactor      加载因子
-	 */
-	public AbsCollValueMap(final int initialCapacity, final float loadFactor) {
-		super(new HashMap<>(initialCapacity, loadFactor));
-	}
 	// ------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 放入所有value
+	 * 将集合中的全部元素对追加到指定键对应的值集合中，效果等同于：
+	 * <pre>{@code
+	 * coll.forEach(t -> map.putValue(key, t))
+	 * }</pre>
 	 *
-	 * @param m valueMap
-	 * @since 5.7.4
+	 * @param key  键
+	 * @param coll 待添加的值集合
+	 * @return 是否成功添加
 	 */
-	public void putAllValues(final Map<? extends K, ? extends Collection<V>> m) {
-		if(null != m){
-			m.forEach((key, valueColl) -> {
-				if(null != valueColl){
-					valueColl.forEach((value) -> putValue(key, value));
-				}
-			});
+	@Override
+	public boolean putAllValues(K key, Collection<V> coll) {
+		if (ObjUtil.isNull(coll)) {
+			return false;
 		}
+		return super.computeIfAbsent(key, k -> createCollection())
+			.addAll(coll);
 	}
 
 	/**
-	 * 放入Value<br>
-	 * 如果键对应值列表有值，加入，否则创建一个新列表后加入
+	 * 向指定键对应的值集合追加值，效果等同于：
+	 * <pre>{@code
+	 * map.computeIfAbsent(key, k -> new Collection()).add(value)
+	 * }</pre>
 	 *
 	 * @param key   键
 	 * @param value 值
+	 * @return 是否成功添加
 	 */
-	public void putValue(final K key, final V value) {
-		C collection = this.get(key);
-		if (null == collection) {
-			collection = createCollection();
-			this.put(key, collection);
-		}
-		collection.add(value);
+	@Override
+	public boolean putValue(K key, V value) {
+		return super.computeIfAbsent(key, k -> createCollection())
+			.add(value);
 	}
 
 	/**
-	 * 获取值
+	 * 将值从指定键下的值集合中删除
 	 *
 	 * @param key   键
-	 * @param index 第几个值的索引，越界返回null
-	 * @return 值或null
+	 * @param value 值
+	 * @return 是否成功删除
 	 */
-	public V get(final K key, final int index) {
-		final Collection<V> collection = get(key);
-		return CollUtil.get(collection, index);
+	@Override
+	public boolean removeValue(K key, V value) {
+		return Opt.ofNullable(super.get(key))
+			.map(t -> t.remove(value))
+			.orElse(false);
+	}
+
+	/**
+	 * 将一批值从指定键下的值集合中删除
+	 *
+	 * @param key   键
+	 * @param values 值
+	 * @return 是否成功删除
+	 */
+	@Override
+	public boolean removeAllValues(K key, Collection<V> values) {
+		if (CollUtil.isEmpty(values)) {
+			return false;
+		}
+		Collection<V> coll = get(key);
+		return ObjUtil.isNotNull(coll) && coll.removeAll(values);
+	}
+
+	/**
+	 * 根据条件过滤所有值集合中的值，并以新值生成新的值集合，新集合中的值集合类型与当前实例的默认值集合类型保持一致
+	 *
+	 * @param filter 判断方法
+	 * @return 当前实例
+	 */
+	@Override
+	public MultiValueMap<K, V> filterAllValues(BiPredicate<K, V> filter) {
+		entrySet().forEach(e -> {
+			K k = e.getKey();
+			Collection<V> coll = e.getValue().stream()
+				.filter(v -> filter.test(k, v))
+				.collect(Collectors.toCollection(this::createCollection));
+			e.setValue(coll);
+		});
+		return this;
+	}
+
+	/**
+	 * 根据条件替换所有值集合中的值，并以新值生成新的值集合，新集合中的值集合类型与当前实例的默认值集合类型保持一致
+	 *
+	 * @param operate 替换方法
+	 * @return 当前实例
+	 */
+	@Override
+	public MultiValueMap<K, V> replaceAllValues(BiFunction<K, V, V> operate) {
+		entrySet().forEach(e -> {
+			K k = e.getKey();
+			Collection<V> coll = e.getValue().stream()
+				.map(v -> operate.apply(k, v))
+				.collect(Collectors.toCollection(this::createCollection));
+			e.setValue(coll);
+		});
+		return this;
 	}
 
 	/**
@@ -123,5 +168,6 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 *
 	 * @return {@link Collection}
 	 */
-	protected abstract C createCollection();
+	protected abstract Collection<V> createCollection();
+
 }

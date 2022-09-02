@@ -25,7 +25,6 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -303,7 +302,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @since 5.5.8
 	 */
 	public String getParam(final String name){
-		return getParams().get(name, 0);
+		return getParams().getValue(name, 0);
 	}
 
 	/**
@@ -313,7 +312,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 参数值
 	 * @since 5.5.8
 	 */
-	public List<String> getParams(final String name){
+	public Collection<String> getParams(final String name){
 		return getParams().get(name);
 	}
 

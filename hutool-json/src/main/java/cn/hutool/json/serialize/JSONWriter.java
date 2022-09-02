@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
@@ -15,9 +16,11 @@ import cn.hutool.json.JSONException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.function.Predicate;
 
 /**
  * JSON数据写出器<br>
@@ -124,53 +127,53 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
+	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容<br>
+	 * 在{@link #arrayMode} 为 {@code true} 时，key是数字，此时不写出键，只写值
+	 *
+	 * @param pair      键值对
+	 * @param predicate 过滤修改器
+	 * @return this
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings({"UnusedReturnValue", "resource"})
+	public JSONWriter writeField(final MutableEntry<Object, Object> pair, final Predicate<MutableEntry<Object, Object>> predicate) {
+		if (null == pair.getValue() && config.isIgnoreNullValue()) {
+			return this;
+		}
+
+		if (null != predicate) {
+			if (false == predicate.test(pair)) {
+				// 使用修改后的键值对
+				return this;
+			}
+		}
+
+		if(false == arrayMode){
+			// JSONObject模式，写出键，否则只输出值
+			writeKey(StrUtil.toString(pair.getKey()));
+		}
+
+		return writeValueDirect(pair.getValue(), predicate);
+	}
+
+	/**
 	 * 写出键，自动处理分隔符和缩进，并包装键名
 	 *
 	 * @param key 键名
 	 * @return this
 	 */
+	@SuppressWarnings({"resource", "UnusedReturnValue"})
 	public JSONWriter writeKey(final String key) {
 		if (needSeparator) {
 			//noinspection resource
 			writeRaw(CharUtil.COMMA);
 		}
 		// 换行缩进
-		//noinspection resource
 		writeLF().writeSpace(indentFactor + indent);
 		return writeRaw(InternalJSONUtil.quote(key));
 	}
 
-	/**
-	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值<br>
-	 * 如果写出的值为{@code null}，且配置忽略null，则跳过。
-	 *
-	 * @param value 值
-	 * @return this
-	 */
-	public JSONWriter writeValue(final Object value) {
-		if (null == value && config.isIgnoreNullValue()) {
-			return this;
-		}
-		return writeValueDirect(value);
-	}
-
-	/**
-	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
-	 *
-	 * @param key   字段名
-	 * @param value 字段值
-	 * @return this
-	 * @since 5.7.6
-	 */
-	public JSONWriter writeField(final String key, final Object value) {
-		if (null == value && config.isIgnoreNullValue()) {
-			return this;
-		}
-
-		//noinspection resource
-		return writeKey(key).writeValueDirect(value);
-	}
-
+	@SuppressWarnings({"SpellCheckingInspection", "NullableProblems"})
 	@Override
 	public void write(final char[] cbuf, final int off, final int len) throws IOException {
 		this.writer.write(cbuf, off, len);
@@ -195,10 +198,11 @@ public class JSONWriter extends Writer {
 	/**
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
-	 * @param value 值
+	 * @param value     值
+	 * @param predicate 过滤修改器
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(final Object value) {
+	private JSONWriter writeValueDirect(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		if (arrayMode) {
 			if (needSeparator) {
 				//noinspection resource
@@ -212,25 +216,32 @@ public class JSONWriter extends Writer {
 			writeRaw(CharUtil.COLON).writeSpace(1);
 		}
 		needSeparator = true;
-		return writeObjValue(value);
+		return writeObjValue(value, predicate);
 	}
 
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *
-	 * @param value 值
+	 * @param value     值
+	 * @param predicate 过滤修改器
 	 * @return this
 	 */
-	private JSONWriter writeObjValue(final Object value) {
+	private JSONWriter writeObjValue(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final int indent = indentFactor + this.indent;
 		if (value == null) {
 			//noinspection resource
 			writeRaw(StrUtil.NULL);
 		} else if (value instanceof JSON) {
-			((JSON) value).write(writer, indentFactor, indent);
+			((JSON) value).write(writer, indentFactor, indent, predicate);
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
+			// issue#2572@Github
+			if(value instanceof MonthDay){
+				writeQuoteStrValue(value.toString());
+				return this;
+			}
+
 			final String format = (null == config) ? null : config.getDateFormat();
 			//noinspection resource
 			writeRaw(formatDate(value, format));

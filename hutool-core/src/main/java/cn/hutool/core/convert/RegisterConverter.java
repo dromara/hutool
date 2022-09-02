@@ -42,11 +42,14 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
@@ -201,6 +204,10 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(ZonedDateTime.class, TemporalAccessorConverter.INSTANCE);
 		defaultConverterMap.put(OffsetDateTime.class, TemporalAccessorConverter.INSTANCE);
 		defaultConverterMap.put(OffsetTime.class, TemporalAccessorConverter.INSTANCE);
+		defaultConverterMap.put(DayOfWeek.class, TemporalAccessorConverter.INSTANCE);
+		defaultConverterMap.put(Month.class, TemporalAccessorConverter.INSTANCE);
+		defaultConverterMap.put(MonthDay.class, TemporalAccessorConverter.INSTANCE);
+
 		defaultConverterMap.put(Period.class, new PeriodConverter());
 		defaultConverterMap.put(Duration.class, new DurationConverter());
 

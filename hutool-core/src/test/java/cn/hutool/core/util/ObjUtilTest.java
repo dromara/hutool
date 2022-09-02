@@ -1,18 +1,16 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.CloneRuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ObjUtilTest {
 
@@ -84,7 +82,7 @@ public class ObjUtilTest {
 		public Obj clone() {
 			try {
 				return (Obj) super.clone();
-			} catch (CloneNotSupportedException e) {
+			} catch (final CloneNotSupportedException e) {
 				throw new CloneRuntimeException(e);
 			}
 		}
@@ -99,15 +97,20 @@ public class ObjUtilTest {
 
 	@Test
 	public void defaultIfNullTest() {
-		final String dateStr = "2020-10-23 15:12:30";
-		final Instant result1 = ObjUtil.defaultIfNull(dateStr,
-				(v) -> DateUtil.parse(v.toString(), DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result1);
+		final Object val1 = new Object();
+		final Object val2 = new Object();
 
-		final String nullValue = null;
-		final Instant result2 = ObjUtil.defaultIfNull(nullValue,
-				(v) -> DateUtil.parse(v.toString(), DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result2);
+		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, () -> val2));
+		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, () -> val2));
+
+		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, val2));
+		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, val2));
+
+		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), () -> val2));
+		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), () -> val2));
+
+		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), val2));
+		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), val2));
 	}
 
 	@Test
@@ -119,7 +122,7 @@ public class ObjUtilTest {
 
 	@Test
 	public void cloneIfPossibleTest() {
-		String a = "a";
+		final String a = "a";
 		final String a2 = ObjUtil.cloneIfPossible(a);
 		Assert.assertNotSame(a, a2);
 	}
