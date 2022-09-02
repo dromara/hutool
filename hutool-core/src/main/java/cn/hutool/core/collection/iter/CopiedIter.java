@@ -1,8 +1,10 @@
 package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class CopiedIter<E> implements IterableIter<E>, Serializable {
 	 * @param iterator 被复制的Iterator
 	 */
 	public CopiedIter(final Iterator<E> iterator) {
-		final List<E> eleList = ListUtil.of(iterator);
+		final List<E> eleList = ListUtil.of(ObjUtil.defaultIfNull(iterator, Collections.emptyIterator()));
 		this.listIterator = eleList.iterator();
 	}
 

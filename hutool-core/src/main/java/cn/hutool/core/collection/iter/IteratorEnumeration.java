@@ -16,6 +16,8 @@ public class IteratorEnumeration<E> implements Enumeration<E>, Serializable{
 
 	private final Iterator<E> iterator;
 
+
+
 	/**
 	 * 构造
 	 * @param iterator {@link Iterator}对象
