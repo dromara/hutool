@@ -462,8 +462,8 @@ public class LocalDateTimeUtil {
 	 * 则本方法会判断 time ∈ (start, end] 是否成立
 	 *
 	 * @param time           被比较的时间
-	 * @param start      开始时间, 应小于等于结束时间
-	 * @param end        结束时间，应大于等于开始时间
+	 * @param start          开始时间, 应小于等于结束时间
+	 * @param end            结束时间，应大于等于开始时间
 	 * @param isIncludeStart 时间范围是否包含开始时间
 	 * @param isIncludeEnd   时间范围是否包含结束时间
 	 * @return true-在范围内，false-不在范围内
@@ -472,6 +472,14 @@ public class LocalDateTimeUtil {
 	 */
 	public static boolean isBetween(LocalDateTime time, LocalDateTime start, LocalDateTime end,
 									boolean isIncludeStart, boolean isIncludeEnd) {
+		if (time == null || start == null || end == null) {
+			throw new IllegalArgumentException("时间参数不可为null");
+		}
+
+		if(end.isBefore(start)){
+			throw new IllegalArgumentException("结束时间应大于等于开始时间");
+		}
+
 		// 先判断是否满足 time ∈ (start, end)
 		boolean isBetween = time.isAfter(start) && time.isBefore(end);
 

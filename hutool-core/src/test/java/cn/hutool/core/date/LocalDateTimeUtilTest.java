@@ -164,6 +164,12 @@ public class LocalDateTimeUtilTest {
 		Assert.assertFalse(LocalDateTimeUtil.isBetween(start, start, end, false, false));
 		Assert.assertTrue(LocalDateTimeUtil.isBetween(end, start, end, false, true));
 		Assert.assertFalse(LocalDateTimeUtil.isBetween(end, start, end, false, false));
+
+		// 异常入参
+		Assert.assertThrows(IllegalArgumentException.class, ()->LocalDateTimeUtil.isBetween(null, start, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, ()->LocalDateTimeUtil.isBetween(start, null, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, ()->LocalDateTimeUtil.isBetween(start, start, null, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, ()->LocalDateTimeUtil.isBetween(start, end, start, false, false));
 	}
 
 	@Test
