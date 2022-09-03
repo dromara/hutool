@@ -140,6 +140,33 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void isBetween() {
+		// 时间范围 8点-9点
+		LocalDateTime start = LocalDateTime.parse("2019-02-02T08:00:00");
+		LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
+
+		// 不在时间范围内 用例
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T06:00:00"), start, end));
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T13:00:00"), start, end));
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-01T08:00:00"), start, end));
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-03T09:00:00"), start, end));
+
+		// 在时间范围内 用例
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T08:00:00"), start, end));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T08:00:01"), start, end));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T08:11:00"), start, end));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T08:22:00"), start, end));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T08:59:59"), start, end));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(LocalDateTime.parse("2019-02-02T09:00:00"), start, end));
+
+		// 测试边界条件
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(start, start, end, true, false));
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(start, start, end, false, false));
+		Assert.assertTrue(LocalDateTimeUtil.isBetween(end, start, end, false, true));
+		Assert.assertFalse(LocalDateTimeUtil.isBetween(end, start, end, false, false));
+	}
+
+	@Test
 	public void beginOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		final LocalDateTime beginOfDay = LocalDateTimeUtil.beginOfDay(localDateTime);
