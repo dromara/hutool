@@ -451,83 +451,6 @@ public class LocalDateTimeUtil {
 		return Period.between(startTimeInclude, endTimeExclude);
 	}
 
-
-	/**
-	 * 判断指定时间time是否在开始时间startTime和结束时间endTime范围内。
-	 * <p>
-	 * 通过isIncludeStart, isIncludeEnd参数控制时间范围区间是否为开区间
-	 * <p>
-	 * 例如：传入参数：isIncludeStart=true, isIncludeEnd=false
-	 * <p>
-	 * 则本方法会判断 time ∈ (start, end] 是否成立
-	 *
-	 * @param time           被比较的时间
-	 * @param start          开始时间, 应小于等于结束时间
-	 * @param end            结束时间，应大于等于开始时间
-	 * @param isIncludeStart 时间范围是否包含开始时间
-	 * @param isIncludeEnd   时间范围是否包含结束时间
-	 * @return true-在范围内，false-不在范围内
-	 * @author FengBaoheng
-	 * @since 5.8.6
-	 */
-	public static boolean isBetween(LocalDateTime time, LocalDateTime start, LocalDateTime end,
-									boolean isIncludeStart, boolean isIncludeEnd) {
-		if (time == null || start == null || end == null) {
-			throw new IllegalArgumentException("时间参数不可为null");
-		}
-
-		if(end.isBefore(start)){
-			throw new IllegalArgumentException("结束时间应大于等于开始时间");
-		}
-
-		// 先判断是否满足 time ∈ (start, end)
-		boolean isBetween = time.isAfter(start) && time.isBefore(end);
-
-		// 若不满足，则再判断是否在时间范围的边界上
-		if (!isBetween && isIncludeStart) {
-			isBetween = time.equals(start);
-		}
-
-		if (!isBetween && isIncludeEnd) {
-			isBetween = time.equals(end);
-		}
-
-		return isBetween;
-	}
-
-	/**
-	 * 判断指定时间time是否在开始时间startTime和结束时间endTime范围内。
-	 * <p>
-	 * 也即判断 time ∈ [startTime, endTime] 是否成立
-	 *
-	 * @param time      被比较的时间
-	 * @param startTime 开始时间, 应小于等于结束时间
-	 * @param endTime   结束时间，应大于等于开始时间
-	 * @return true-在范围内，false-不在范围内
-	 * @author FengBaoheng
-	 * @since 5.8.6
-	 */
-	public static boolean isBetween(LocalDateTime time, LocalDateTime startTime, LocalDateTime endTime) {
-		return isBetween(time, startTime, endTime, true, true);
-	}
-
-
-	/**
-	 * 判断当前时间（默认时区）是否在开始时间startTime和结束时间endTime范围内。
-	 * <p>
-	 * 也即判断 当前时间 ∈ [startTime, endTime] 是否成立
-	 *
-	 * @param startTime 开始时间, 应小于等于结束时间
-	 * @param endTime   结束时间，应大于等于开始时间
-	 * @return true-在范围内，false-不在范围内
-	 * @author FengBaoheng
-	 * @since 5.8.6
-	 */
-	public static boolean isBetween(LocalDateTime startTime, LocalDateTime endTime) {
-		return isBetween(LocalDateTimeUtil.now(), startTime, endTime);
-	}
-
-
 	/**
 	 * 修改为一天的开始时间，例如：2020-02-02 00:00:00,000
 	 *
@@ -676,6 +599,20 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 判断当前时间（默认时区）是否在指定范围内<br>
+	 * 起始时间和结束时间可以互换
+	 *
+	 * @param beginDate 起始时间（包含）
+	 * @param endDate   结束时间（包含）
+	 * @return 是否在范围内
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate) {
+		return TemporalAccessorUtil.isIn(LocalDateTimeUtil.now(), beginDate, endDate);
+	}
+
+	/**
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
 	 *
@@ -685,7 +622,26 @@ public class LocalDateTimeUtil {
 	 * @return 是否在范围内
 	 * @since 5.8.5
 	 */
-	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate){
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate) {
 		return TemporalAccessorUtil.isIn(date, beginDate, endDate);
+	}
+
+	/**
+	 * 判断当前时间（默认时区）是否在指定范围内<br>
+	 * 起始时间和结束时间可以互换<br>
+	 * 通过includeBegin, includeEnd参数控制时间范围区间是否为开区间，例如：传入参数：includeBegin=true, includeEnd=false，
+	 * 则本方法会判断 date ∈ (beginDate, endDate] 是否成立
+	 *
+	 * @param beginDate    起始时间（包含）
+	 * @param endDate      结束时间（包含）
+	 * @param includeBegin 时间范围是否包含起始时间
+	 * @param includeEnd   时间范围是否包含结束时间
+	 * @return 是否在范围内
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate,
+							   ChronoLocalDateTime<?> endDate, boolean includeBegin, boolean includeEnd) {
+		return TemporalAccessorUtil.isIn(date, beginDate, endDate, includeBegin, includeEnd);
 	}
 }
