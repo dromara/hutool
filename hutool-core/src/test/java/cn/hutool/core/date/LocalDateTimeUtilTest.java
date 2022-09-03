@@ -168,6 +168,11 @@ public class LocalDateTimeUtilTest {
 		// begin、end互换
 		Assert.assertTrue(LocalDateTimeUtil.isIn(begin, end, begin, true, true));
 
+		// 比较当前时间范围
+		LocalDateTime now = LocalDateTime.now();
+		Assert.assertTrue(LocalDateTimeUtil.isIn(now.minusHours(1L), now.plusHours(1L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now.minusHours(1L), now.minusHours(2L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now.plusHours(1L), now.plusHours(2L)));
 
 		// 异常入参
 		Assert.assertThrows(IllegalArgumentException.class, () -> LocalDateTimeUtil.isIn(null, begin, end, false, false));
