@@ -599,6 +599,20 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
+	 * 判断当前时间（默认时区）是否在指定范围内<br>
+	 * 起始时间和结束时间可以互换
+	 *
+	 * @param beginDate 起始时间（包含）
+	 * @param endDate   结束时间（包含）
+	 * @return 是否在范围内
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate) {
+		return TemporalAccessorUtil.isIn(LocalDateTimeUtil.now(), beginDate, endDate);
+	}
+
+	/**
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
 	 *
@@ -608,7 +622,26 @@ public class LocalDateTimeUtil {
 	 * @return 是否在范围内
 	 * @since 5.8.5
 	 */
-	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate){
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate) {
 		return TemporalAccessorUtil.isIn(date, beginDate, endDate);
+	}
+
+	/**
+	 * 判断当前时间（默认时区）是否在指定范围内<br>
+	 * 起始时间和结束时间可以互换<br>
+	 * 通过includeBegin, includeEnd参数控制时间范围区间是否为开区间，例如：传入参数：includeBegin=true, includeEnd=false，
+	 * 则本方法会判断 date ∈ (beginDate, endDate] 是否成立
+	 *
+	 * @param beginDate    起始时间（包含）
+	 * @param endDate      结束时间（包含）
+	 * @param includeBegin 时间范围是否包含起始时间
+	 * @param includeEnd   时间范围是否包含结束时间
+	 * @return 是否在范围内
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static boolean isIn(ChronoLocalDateTime<?> date, ChronoLocalDateTime<?> beginDate,
+							   ChronoLocalDateTime<?> endDate, boolean includeBegin, boolean includeEnd) {
+		return TemporalAccessorUtil.isIn(date, beginDate, endDate, includeBegin, includeEnd);
 	}
 }

@@ -140,6 +140,47 @@ public class LocalDateTimeUtilTest {
 	}
 
 	@Test
+	public void isIn() {
+		// 时间范围 8点-9点
+		LocalDateTime begin = LocalDateTime.parse("2019-02-02T08:00:00");
+		LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
+
+		// 不在时间范围内 用例
+		Assert.assertFalse(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T06:00:00"), begin, end));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T13:00:00"), begin, end));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-01T08:00:00"), begin, end));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-03T09:00:00"), begin, end));
+
+		// 在时间范围内 用例
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:00"), begin, end));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:01"), begin, end));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:11:00"), begin, end));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:22:00"), begin, end));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:59:59"), begin, end));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T09:00:00"), begin, end));
+
+		// 测试边界条件
+		Assert.assertTrue(LocalDateTimeUtil.isIn(begin, begin, end, true, false));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(begin, begin, end, false, false));
+		Assert.assertTrue(LocalDateTimeUtil.isIn(end, begin, end, false, true));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(end, begin, end, false, false));
+
+		// begin、end互换
+		Assert.assertTrue(LocalDateTimeUtil.isIn(begin, end, begin, true, true));
+
+		// 比较当前时间范围
+		LocalDateTime now = LocalDateTime.now();
+		Assert.assertTrue(LocalDateTimeUtil.isIn(now.minusHours(1L), now.plusHours(1L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now.minusHours(1L), now.minusHours(2L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now.plusHours(1L), now.plusHours(2L)));
+
+		// 异常入参
+		Assert.assertThrows(IllegalArgumentException.class, () -> LocalDateTimeUtil.isIn(null, begin, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, () -> LocalDateTimeUtil.isIn(begin, null, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, () -> LocalDateTimeUtil.isIn(begin, begin, null, false, false));
+	}
+
+	@Test
 	public void beginOfDayTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56");
 		final LocalDateTime beginOfDay = LocalDateTimeUtil.beginOfDay(localDateTime);
