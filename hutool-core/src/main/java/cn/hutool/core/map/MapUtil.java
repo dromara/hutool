@@ -12,22 +12,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -507,6 +493,32 @@ public class MapUtil {
 		} while (false == isEnd);
 
 		return resultList;
+	}
+
+	/**
+	 * 根据给定的entry列表，根据entry的key进行分组;
+	 *
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @param entries entry列表
+	 * @return entries
+	 */
+	public static <K, V> Map<K, List<V>> grouping(Iterable<Map.Entry<K, V>> entries) {
+		final Map<K, List<V>> map = new HashMap<>(DEFAULT_INITIAL_CAPACITY);
+		if (CollUtil.isEmpty(entries)) {
+			return map;
+		}
+		for (Map.Entry<K, V> pair : entries) {
+			if (map.containsKey(pair.getKey())) {
+				List<V> values = map.get(pair.getKey());
+				values.add(pair.getValue());
+			} else {
+				List<V> values = CollUtil.<V>newArrayList();
+				values.add(pair.getValue());
+				map.put(pair.getKey(), values);
+			}
+		}
+		return map;
 	}
 
 	/**
