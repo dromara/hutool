@@ -462,6 +462,7 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	/**
 	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标，并行流时下标永远为-1
 	 * 这是一个无状态中间操作
+	 *
 	 * @param action 指定的函数
 	 * @return 返回叠加操作后的FastStream
 	 * @apiNote 该方法存在的意义主要是用来调试
@@ -475,12 +476,12 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * 				.collect(Collectors.toList());
 	 * }</pre>
 	 */
-	public EasyStream<T> peekIdx(BiConsumer<? super T, Integer> action) {
+	public EasyStream<T> peekIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
 		if (isParallel()) {
 			return peek(e -> action.accept(e, NOT_FOUND_INDEX));
 		} else {
-			AtomicInteger index = new AtomicInteger(NOT_FOUND_INDEX);
+			final AtomicInteger index = new AtomicInteger(NOT_FOUND_INDEX);
 			return peek(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
@@ -688,7 +689,7 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * @return 实现类
 	 */
 	@Override
-	protected EasyStream<T> convertToStreamImpl(Stream<T> stream) {
+	protected EasyStream<T> convertToStreamImpl(final Stream<T> stream) {
 		return new EasyStream<>(stream);
 	}
 
@@ -852,10 +853,10 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * eg:
 	 * {@code List studentTree = EasyStream.of(students).toTree(Student::getId, Student::getParentId, Student::setChildren) }
 	 */
-	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
-													Function<T, R> pIdGetter,
-													BiConsumer<T, List<T>> childrenSetter) {
-		Map<R, List<T>> pIdValuesMap = group(pIdGetter);
+	public <R extends Comparable<R>> List<T> toTree(final Function<T, R> idGetter,
+													final Function<T, R> pIdGetter,
+													final BiConsumer<T, List<T>> childrenSetter) {
+		final Map<R, List<T>> pIdValuesMap = group(pIdGetter);
 		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, pIdValuesMap, pIdValuesMap.get(null));
 	}
 
@@ -873,12 +874,12 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * {@code List studentTree = EasyStream.of(students).toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent) }
 	 */
 
-	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
-													Function<T, R> pIdGetter,
-													BiConsumer<T, List<T>> childrenSetter,
-													Predicate<T> parentPredicate) {
-		List<T> list = toList();
-		List<T> parents = EasyStream.of(list).filter(e ->
+	public <R extends Comparable<R>> List<T> toTree(final Function<T, R> idGetter,
+													final Function<T, R> pIdGetter,
+													final BiConsumer<T, List<T>> childrenSetter,
+													final Predicate<T> parentPredicate) {
+		final List<T> list = toList();
+		final List<T> parents = EasyStream.of(list).filter(e ->
 						// 此处是为了适配 parentPredicate.test空指针 情况
 						// 因为Predicate.test的返回值是boolean，所以如果 e -> null 这种返回null的情况，会直接抛出NPE
 						Opt.ofTry(() -> parentPredicate.test(e)).filter(Boolean::booleanValue).isPresent())
@@ -897,13 +898,13 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * @param <R>            此处是id的泛型限制
 	 * @return list 组装好的树
 	 */
-	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(Function<T, R> idGetter,
-																			BiConsumer<T, List<T>> childrenSetter,
-																			Map<R, List<T>> pIdValuesMap,
-																			List<T> parents) {
-		MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
-		Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
-			List<T> children = pIdValuesMap.get(idGetter.apply(value));
+	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(final Function<T, R> idGetter,
+																			final BiConsumer<T, List<T>> childrenSetter,
+																			final Map<R, List<T>> pIdValuesMap,
+																			final List<T> parents) {
+		final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
+		final Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
+			final List<T> children = pIdValuesMap.get(idGetter.apply(value));
 			childrenSetter.accept(value, children);
 			recursiveRef.get().accept(children);
 		});
@@ -922,9 +923,9 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	 * eg:
 	 * {@code List students = EasyStream.of(studentTree).flatTree(Student::getChildren, Student::setChildren).toList() }
 	 */
-	public EasyStream<T> flatTree(Function<T, List<T>> childrenGetter, BiConsumer<T, List<T>> childrenSetter) {
-		MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
-		Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e)).flat(recursiveRef.get()).unshift(e);
+	public EasyStream<T> flatTree(final Function<T, List<T>> childrenGetter, final BiConsumer<T, List<T>> childrenSetter) {
+		final MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
+		final Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e)).flat(recursiveRef.get()).unshift(e);
 		recursiveRef.set(recursive);
 		return flat(recursive).peek(e -> childrenSetter.accept(e, null));
 	}

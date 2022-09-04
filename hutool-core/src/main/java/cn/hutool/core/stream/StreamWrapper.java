@@ -22,7 +22,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 *
 	 * @param stream 包装的流对象
 	 */
-	protected StreamWrapper(Stream<T> stream) {
+	protected StreamWrapper(final Stream<T> stream) {
 		Objects.requireNonNull(stream, "stream must not null");
 		this.stream = stream;
 	}
@@ -35,7 +35,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 返回叠加过滤操作后的流
 	 */
 	@Override
-	public I filter(Predicate<? super T> predicate) {
+	public I filter(final Predicate<? super T> predicate) {
 		return convertToStreamImpl(stream.filter(predicate));
 	}
 
@@ -47,7 +47,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 叠加操作后元素类型全为int的流
 	 */
 	@Override
-	public IntStream mapToInt(ToIntFunction<? super T> mapper) {
+	public IntStream mapToInt(final ToIntFunction<? super T> mapper) {
 		return stream.mapToInt(mapper);
 	}
 
@@ -59,7 +59,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 叠加操作后元素类型全为long的流
 	 */
 	@Override
-	public LongStream mapToLong(ToLongFunction<? super T> mapper) {
+	public LongStream mapToLong(final ToLongFunction<? super T> mapper) {
 		return stream.mapToLong(mapper);
 	}
 
@@ -71,7 +71,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 叠加操作后元素类型全为double的流
 	 */
 	@Override
-	public DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper) {
+	public DoubleStream mapToDouble(final ToDoubleFunction<? super T> mapper) {
 		return stream.mapToDouble(mapper);
 	}
 
@@ -83,7 +83,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 返回叠加拆分操作后的IntStream
 	 */
 	@Override
-	public IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper) {
+	public IntStream flatMapToInt(final Function<? super T, ? extends IntStream> mapper) {
 		return stream.flatMapToInt(mapper);
 	}
 
@@ -95,7 +95,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 返回叠加拆分操作后的LongStream
 	 */
 	@Override
-	public LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper) {
+	public LongStream flatMapToLong(final Function<? super T, ? extends LongStream> mapper) {
 		return stream.flatMapToLong(mapper);
 	}
 
@@ -107,7 +107,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 返回叠加拆分操作后的DoubleStream
 	 */
 	@Override
-	public DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
+	public DoubleStream flatMapToDouble(final Function<? super T, ? extends DoubleStream> mapper) {
 		return stream.flatMapToDouble(mapper);
 	}
 
@@ -145,7 +145,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 一个元素按指定的Comparator排序的流
 	 */
 	@Override
-	public I sorted(Comparator<? super T> comparator) {
+	public I sorted(final Comparator<? super T> comparator) {
 		return convertToStreamImpl(stream.sorted(comparator));
 	}
 
@@ -167,7 +167,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * }</pre>
 	 */
 	@Override
-	public I peek(Consumer<? super T> action) {
+	public I peek(final Consumer<? super T> action) {
 		return convertToStreamImpl(stream.peek(action));
 	}
 
@@ -179,7 +179,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 截取后的流
 	 */
 	@Override
-	public I limit(long maxSize) {
+	public I limit(final long maxSize) {
 		return convertToStreamImpl(stream.limit(maxSize));
 	}
 
@@ -191,7 +191,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 丢弃前面n个元素后的剩余元素组成的流
 	 */
 	@Override
-	public I skip(long n) {
+	public I skip(final long n) {
 		return convertToStreamImpl(stream.skip(n));
 	}
 
@@ -202,7 +202,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @param action 操作
 	 */
 	@Override
-	public void forEach(Consumer<? super T> action) {
+	public void forEach(final Consumer<? super T> action) {
 		stream.forEach(action);
 	}
 
@@ -213,7 +213,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @param action 操作
 	 */
 	@Override
-	public void forEachOrdered(Consumer<? super T> action) {
+	public void forEachOrdered(final Consumer<? super T> action) {
 		stream.forEachOrdered(action);
 	}
 
@@ -238,7 +238,8 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
 	 */
 	@Override
-	public <A> A[] toArray(IntFunction<A[]> generator) {
+	public <A> A[] toArray(final IntFunction<A[]> generator) {
+		//noinspection SuspiciousToArrayCall
 		return stream.toArray(generator);
 	}
 
@@ -263,7 +264,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 聚合计算后的值
 	 */
 	@Override
-	public T reduce(T identity, BinaryOperator<T> accumulator) {
+	public T reduce(final T identity, final BinaryOperator<T> accumulator) {
 		return stream.reduce(identity, accumulator);
 	}
 
@@ -298,7 +299,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @see #max(Comparator)
 	 */
 	@Override
-	public Optional<T> reduce(BinaryOperator<T> accumulator) {
+	public Optional<T> reduce(final BinaryOperator<T> accumulator) {
 		return stream.reduce(accumulator);
 	}
 
@@ -315,7 +316,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @see #reduce(Object, BinaryOperator)
 	 */
 	@Override
-	public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner) {
+	public <U> U reduce(final U identity, final BiFunction<U, ? super T, U> accumulator, final BinaryOperator<U> combiner) {
 		return stream.reduce(identity, accumulator, combiner);
 	}
 
@@ -333,7 +334,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * }</pre>
 	 */
 	@Override
-	public <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner) {
+	public <R> R collect(final Supplier<R> supplier, final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
 		return stream.collect(supplier, accumulator, combiner);
 	}
 
@@ -347,7 +348,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 收集后的容器
 	 */
 	@Override
-	public <R, A> R collect(Collector<? super T, A, R> collector) {
+	public <R, A> R collect(final Collector<? super T, A, R> collector) {
 		return stream.collect(collector);
 	}
 
@@ -358,7 +359,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 最小值
 	 */
 	@Override
-	public Optional<T> min(Comparator<? super T> comparator) {
+	public Optional<T> min(final Comparator<? super T> comparator) {
 		return stream.min(comparator);
 	}
 
@@ -369,7 +370,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 最大值
 	 */
 	@Override
-	public Optional<T> max(Comparator<? super T> comparator) {
+	public Optional<T> max(final Comparator<? super T> comparator) {
 		return stream.max(comparator);
 	}
 
@@ -390,7 +391,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 是否有任何一个元素满足给定断言
 	 */
 	@Override
-	public boolean anyMatch(Predicate<? super T> predicate) {
+	public boolean anyMatch(final Predicate<? super T> predicate) {
 		return stream.anyMatch(predicate);
 	}
 
@@ -401,7 +402,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 是否所有元素满足给定断言
 	 */
 	@Override
-	public boolean allMatch(Predicate<? super T> predicate) {
+	public boolean allMatch(final Predicate<? super T> predicate) {
 		return stream.allMatch(predicate);
 	}
 
@@ -412,7 +413,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 是否没有元素满足给定断言
 	 */
 	@Override
-	public boolean noneMatch(Predicate<? super T> predicate) {
+	public boolean noneMatch(final Predicate<? super T> predicate) {
 		return stream.noneMatch(predicate);
 	}
 
@@ -504,7 +505,7 @@ abstract class StreamWrapper<T, I extends Stream<T>> implements Stream<T>, Itera
 	 * @return 流
 	 */
 	@Override
-	public I onClose(Runnable closeHandler) {
+	public I onClose(final Runnable closeHandler) {
 		return convertToStreamImpl(stream.onClose(closeHandler));
 	}
 

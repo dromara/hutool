@@ -209,7 +209,7 @@ public class EasyStreamTest {
 	}
 
 	@Test
-	public void testPeek(){
+	public void testPeek() {
 		EasyStream.of("one", "two", "three", "four")
 				.filter(e -> e.length() == 4)
 				.peek(e -> Assert.assertEquals("four", e))
@@ -219,12 +219,12 @@ public class EasyStreamTest {
 	}
 
 	@Test
-	public void testPeekIdx(){
+	public void testPeekIdx() {
 		EasyStream.of("one", "two", "three", "four")
 				.filter(e -> e.length() == 4)
-				.peekIdx((e,i) -> Assert.assertEquals("four:0", e + ":" + i))
+				.peekIdx((e, i) -> Assert.assertEquals("four:0", e + ":" + i))
 				.map(String::toUpperCase)
-				.peekIdx((e,i) -> Assert.assertEquals("FOUR:0", e + ":" + i))
+				.peekIdx((e, i) -> Assert.assertEquals("FOUR:0", e + ":" + i))
 				.collect(Collectors.toList());
 	}
 
@@ -455,7 +455,7 @@ public class EasyStreamTest {
 	@Test
 	public void testToTree() {
 		Consumer<Object> test = o -> {
-			List<Student> studentTree = EasyStream
+			final List<Student> studentTree = EasyStream
 					.of(
 							Student.builder().id(1L).name("dromara").build(),
 							Student.builder().id(2L).name("baomidou").build(),
@@ -488,7 +488,7 @@ public class EasyStreamTest {
 			), studentTree);
 		};
 		test = test.andThen(o -> {
-			List<Student> studentTree = EasyStream
+			final List<Student> studentTree = EasyStream
 					.of(
 							Student.builder().id(1L).name("dromara").matchParent(true).build(),
 							Student.builder().id(2L).name("baomidou").matchParent(true).build(),
@@ -525,7 +525,7 @@ public class EasyStreamTest {
 
 	@Test
 	public void testFlatTree() {
-		List<Student> studentTree = asList(
+		final List<Student> studentTree = asList(
 				Student.builder().id(1L).name("dromara")
 						.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
 										.children(singletonList(Student.builder().id(6L).name("looly").parentId(3L).build()))
@@ -575,9 +575,9 @@ public class EasyStreamTest {
 	@Test
 	public void testTransform() {
 		final boolean result = EasyStream.of(1, 2, 3)
-			.transform(EasyStream::toList)
-			.map(List::isEmpty)
-			.orElse(false);
+				.transform(EasyStream::toList)
+				.map(List::isEmpty)
+				.orElse(false);
 		Assert.assertFalse(result);
 	}
 
