@@ -107,7 +107,7 @@ public class MapUtil {
 	 * @since 3.0.4
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isLinked) {
-		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
+		final int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
 		return isLinked ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
 	}
 
@@ -504,19 +504,19 @@ public class MapUtil {
 	 * @return entries
 	 */
 	public static <K, V> Map<K, List<V>> grouping(Iterable<Map.Entry<K, V>> entries) {
-		final Map<K, List<V>> map = new HashMap<>(DEFAULT_INITIAL_CAPACITY);
+		final Map<K, List<V>> map = new HashMap<>();
 		if (CollUtil.isEmpty(entries)) {
 			return map;
 		}
-		for (Map.Entry<K, V> pair : entries) {
+		for (final Map.Entry<K, V> pair : entries) {
+			final List<V> values;
 			if (map.containsKey(pair.getKey())) {
-				List<V> values = map.get(pair.getKey());
-				values.add(pair.getValue());
+				values = map.get(pair.getKey());
 			} else {
-				List<V> values = CollUtil.<V>newArrayList();
-				values.add(pair.getValue());
+				values = new ArrayList<>();
 				map.put(pair.getKey(), values);
 			}
+			values.add(pair.getValue());
 		}
 		return map;
 	}

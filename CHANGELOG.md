@@ -23,6 +23,7 @@
 * 【extra  】     resource.loader等过期参数替换（issue#2571@Github）
 * 【core   】     添加ObjectUtil的别名工具类ObjUtil
 * 【core   】     扩展LocalDateTimeUtil.isIn方法使用场景（pr#2589@Github）
+* 【core   】     MapUtil增加根据entry分组（pr#2591@Github）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）
