@@ -174,7 +174,7 @@ public abstract class HttpBase<T> {
 		}
 
 		for (final Entry<String, String> entry : headers.entrySet()) {
-			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), isOverride);
+			this.header(entry.getKey(), StrUtil.emptyIfNull(entry.getValue()), isOverride);
 		}
 		return (T) this;
 	}
@@ -207,7 +207,7 @@ public abstract class HttpBase<T> {
 		for (final Entry<String, List<String>> entry : headers.entrySet()) {
 			name = entry.getKey();
 			for (final String value : entry.getValue()) {
-				this.header(name, StrUtil.nullToEmpty(value), isOverride);
+				this.header(name, StrUtil.emptyIfNull(value), isOverride);
 			}
 		}
 		return (T) this;
@@ -227,7 +227,7 @@ public abstract class HttpBase<T> {
 		}
 
 		for (final Entry<String, String> entry : headers.entrySet()) {
-			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), false);
+			this.header(entry.getKey(), StrUtil.emptyIfNull(entry.getValue()), false);
 		}
 		return (T) this;
 	}
