@@ -768,11 +768,16 @@ public class JSONUtil {
 		if (null != serializer) {
 			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
 			if (null != jsonType) {
+				final JSON json;
 				if (serializer instanceof JSONObjectSerializer) {
-					serializer.serialize(new JSONObject(jsonConfig), object);
+					json = new JSONObject(jsonConfig);
 				} else if (serializer instanceof JSONArraySerializer) {
-					serializer.serialize(new JSONArray(jsonConfig), object);
+					json = new JSONArray(jsonConfig);
+				} else{
+					throw new JSONException("Unsupported JSONSerializer type: " + serializer.getClass());
 				}
+				serializer.serialize(json, object);
+				return json;
 			}
 		}
 
@@ -810,7 +815,7 @@ public class JSONUtil {
 
 			// 默认按照JSONObject对待
 			return new JSONObject(object, jsonConfig);
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			return null;
 		}
 	}

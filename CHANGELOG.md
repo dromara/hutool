@@ -38,6 +38,7 @@
 * 【json   】     解决JSONObject#write无法递归的bug（issue#I5OMSC@Gitee）
 * 【json   】     修复DayOfWeek转json异常问题（issue#2572@Github）
 * 【extra  】     Ftp方法isDir和exist修复及改进（pr#2574@Github）
+* 【json   】     修复JSON反序列化时，引用字段类型的自定义JsonDeserializer无效（issue#2555@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -28,7 +28,7 @@ public class JSONConverter implements Converter<JSON> {
 
 	static {
 		// 注册到转换中心
-		ConverterRegistry registry = ConverterRegistry.getInstance();
+		final ConverterRegistry registry = ConverterRegistry.getInstance();
 		registry.putCustom(JSON.class, JSONConverter.class);
 		registry.putCustom(JSONObject.class, JSONConverter.class);
 		registry.putCustom(JSONArray.class, JSONConverter.class);
