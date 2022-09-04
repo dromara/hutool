@@ -13,7 +13,6 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.serialize.JSONString;
 
 import java.io.IOException;
@@ -257,8 +256,7 @@ public final class InternalJSONUtil {
 				.setIgnoreNullValue(config.isIgnoreNullValue())
 				.setTransientSupport(config.isTransientSupport())
 				// 使用JSON转换器
-				.setConverter((type, value) ->
-						JSONConverterOld.convertWithCheck(type, value, null, config.isIgnoreError()));
+				.setConverter(config.getConverter());
 	}
 
 	/**
