@@ -9,12 +9,10 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
-import cn.hutool.json.serialize.JSONSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -761,24 +759,6 @@ public class JSONUtil {
 				|| ObjectUtil.isBasicType(object) //
 		) {
 			return object;
-		}
-
-		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(object.getClass());
-		if (null != serializer) {
-			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
-			if (null != jsonType) {
-				final JSON json;
-				if (serializer instanceof JSONObjectSerializer) {
-					json = new JSONObject(jsonConfig);
-				} else if (serializer instanceof JSONArraySerializer) {
-					json = new JSONArray(jsonConfig);
-				} else{
-					throw new JSONException("Unsupported JSONSerializer type: " + serializer.getClass());
-				}
-				serializer.serialize(json, object);
-				return json;
-			}
 		}
 
 		try {

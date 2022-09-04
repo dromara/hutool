@@ -285,8 +285,8 @@ public class ConverterRegistry implements Serializable {
 				final Class<?> clazz = ClassLoaderUtil.loadClass("cn.hutool.json.BeanConverterForJSON");
 				return ((Converter<T>)ReflectUtil.newInstance(clazz, type)).convert(value, defaultValue);
 			}catch (final Throwable ignore){
-				return new BeanConverter<T>(type).convert(value, defaultValue);
 			}
+			return new BeanConverter<T>(type).convert(value, defaultValue);
 		}
 
 		// 无法转换

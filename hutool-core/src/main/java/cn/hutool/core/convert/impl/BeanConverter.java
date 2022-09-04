@@ -31,7 +31,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 
 	private final Type beanType;
 	private final Class<T> beanClass;
-	protected CopyOptions copyOptions;
+	private final CopyOptions copyOptions;
 
 	/**
 	 * 构造，默认转换选项，注入失败的字段忽略
