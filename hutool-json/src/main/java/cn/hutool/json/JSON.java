@@ -107,7 +107,9 @@ public interface JSON extends Cloneable, Serializable {
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	<T> T getByPath(String expression, Class<T> resultType);
+	default <T> T getByPath(final String expression, final Class<T> resultType){
+		return JSONConverterOld.jsonConvert(resultType, getByPath(expression), getConfig());
+	}
 
 	/**
 	 * 格式化打印JSON，缩进为4个空格
@@ -158,17 +160,6 @@ public interface JSON extends Cloneable, Serializable {
 	 * @throws JSONException JSON相关异常
 	 */
 	Writer write(Writer writer, int indentFactor, int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException;
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>   Bean类型
-	 * @param clazz 实体类
-	 * @return 实体类对象
-	 */
-	default <T> T toBean(final Class<T> clazz) {
-		return toBean((Type) clazz);
-	}
 
 	/**
 	 * 转为实体类对象

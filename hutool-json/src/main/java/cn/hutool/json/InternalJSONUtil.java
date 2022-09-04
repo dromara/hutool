@@ -207,9 +207,8 @@ public final class InternalJSONUtil {
 	 * @param key        键
 	 * @param value      值
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
-	 * @return JSONObject
 	 */
-	public static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
@@ -223,7 +222,6 @@ public final class InternalJSONUtil {
 			target = nextTarget;
 		}
 		target.set(path[last], value, predicate);
-		return jsonObject;
 	}
 
 	/**
@@ -296,11 +294,10 @@ public final class InternalJSONUtil {
 	 *
 	 * @param str    字符串
 	 * @param writer Writer
-	 * @return Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Writer quote(final String str, final Writer writer) throws IORuntimeException {
-		return quote(str, writer, true);
+	public static void quote(final String str, final Writer writer) throws IORuntimeException {
+		quote(str, writer, true);
 	}
 
 	/**

@@ -5,7 +5,6 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.mapper.ObjectMapper;
 import cn.hutool.json.serialize.JSONWriter;
 
@@ -181,11 +180,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Override
 	public Object getObj(final String key, final Object defaultValue) {
 		return this.getOrDefault(key, defaultValue);
-	}
-
-	@Override
-	public <T> T getByPath(final String expression, final Class<T> resultType) {
-		return JSONConverterOld.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	/**
