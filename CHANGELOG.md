@@ -21,6 +21,8 @@
 * 【extra  】     QrCodeUtil新增SVG格式、Ascii Art字符画格式（pr#763@Gitee）
 * 【jwt    】     JWTUtil的parseToken增加空值异常抛出（issue#I5OCQB@Gitee）
 * 【extra  】     resource.loader等过期参数替换（issue#2571@Github）
+* 【core   】     添加ObjectUtil的别名工具类ObjUtil
+* 【core   】     扩展LocalDateTimeUtil.isIn方法使用场景（pr#2589@Github）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）

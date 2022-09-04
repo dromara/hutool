@@ -599,20 +599,6 @@ public class LocalDateTimeUtil {
 	}
 
 	/**
-	 * 判断当前时间（默认时区）是否在指定范围内<br>
-	 * 起始时间和结束时间可以互换
-	 *
-	 * @param beginDate 起始时间（包含）
-	 * @param endDate   结束时间（包含）
-	 * @return 是否在范围内
-	 * @author FengBaoheng
-	 * @since 5.8.6
-	 */
-	public static boolean isIn(ChronoLocalDateTime<?> beginDate, ChronoLocalDateTime<?> endDate) {
-		return TemporalAccessorUtil.isIn(LocalDateTimeUtil.now(), beginDate, endDate);
-	}
-
-	/**
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
 	 *

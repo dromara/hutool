@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.Objects;
 
 public class LocalDateTimeUtilTest {
 
@@ -21,7 +22,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void ofTest() {
-		String dateStr = "2020-01-23T12:23:56";
+		final String dateStr = "2020-01-23T12:23:56";
 		final DateTime dt = DateUtil.parse(dateStr);
 
 		LocalDateTime of = LocalDateTimeUtil.of(dt);
@@ -35,25 +36,25 @@ public class LocalDateTimeUtilTest {
 	@Test
 	public void parseOffsetTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2021-07-30T16:27:27+08:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-		Assert.assertEquals("2021-07-30T16:27:27", localDateTime.toString());
+		Assert.assertEquals("2021-07-30T16:27:27", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
-		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
+		Assert.assertEquals("2020-01-23T12:23:56", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest2() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("2020-01-23", DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("2020-01-23T00:00", localDateTime.toString());
+		Assert.assertEquals("2020-01-23T00:00", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest3() {
 		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("12:23:56", DatePattern.NORM_TIME_PATTERN);
-		Assert.assertEquals("12:23:56", localDateTime.toLocalTime().toString());
+		Assert.assertEquals("12:23:56", Objects.requireNonNull(localDateTime).toLocalTime().toString());
 	}
 
 	@Test
@@ -64,20 +65,20 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void parseTest5() {
-		LocalDateTime localDateTime = LocalDateTimeUtil.parse("19940121183604", "yyyyMMddHHmmss");
-		Assert.assertEquals("1994-01-21T18:36:04", localDateTime.toString());
+		final LocalDateTime localDateTime = LocalDateTimeUtil.parse("19940121183604", "yyyyMMddHHmmss");
+		Assert.assertEquals("1994-01-21T18:36:04", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest6() {
 		LocalDateTime localDateTime = LocalDateTimeUtil.parse("19940121183604682", "yyyyMMddHHmmssSSS");
-		Assert.assertEquals("1994-01-21T18:36:04.682", localDateTime.toString());
+		Assert.assertEquals("1994-01-21T18:36:04.682", Objects.requireNonNull(localDateTime).toString());
 
 		localDateTime = LocalDateTimeUtil.parse("1994012118360468", "yyyyMMddHHmmssSS");
-		Assert.assertEquals("1994-01-21T18:36:04.680", localDateTime.toString());
+		Assert.assertEquals("1994-01-21T18:36:04.680", Objects.requireNonNull(localDateTime).toString());
 
 		localDateTime = LocalDateTimeUtil.parse("199401211836046", "yyyyMMddHHmmssS");
-		Assert.assertEquals("1994-01-21T18:36:04.600", localDateTime.toString());
+		Assert.assertEquals("1994-01-21T18:36:04.600", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
@@ -91,7 +92,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
-		LocalDate localDate = LocalDateTimeUtil.parseDate("2020-1-1", "yyyy-M-d");
+		final LocalDate localDate = LocalDateTimeUtil.parseDate("2020-1-1", "yyyy-M-d");
 		Assert.assertEquals("2020-01-01", localDate.toString());
 	}
 
@@ -139,11 +140,12 @@ public class LocalDateTimeUtilTest {
 		Assert.assertEquals(365, between.toDays());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isIn() {
 		// 时间范围 8点-9点
-		LocalDateTime begin = LocalDateTime.parse("2019-02-02T08:00:00");
-		LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
+		final LocalDateTime begin = LocalDateTime.parse("2019-02-02T08:00:00");
+		final LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
 
 		// 不在时间范围内 用例
 		Assert.assertFalse(LocalDateTimeUtil.isIn(LocalDateTime.parse("2019-02-02T06:00:00"), begin, end));
@@ -169,10 +171,10 @@ public class LocalDateTimeUtilTest {
 		Assert.assertTrue(LocalDateTimeUtil.isIn(begin, end, begin, true, true));
 
 		// 比较当前时间范围
-		LocalDateTime now = LocalDateTime.now();
-		Assert.assertTrue(LocalDateTimeUtil.isIn(now.minusHours(1L), now.plusHours(1L)));
-		Assert.assertFalse(LocalDateTimeUtil.isIn(now.minusHours(1L), now.minusHours(2L)));
-		Assert.assertFalse(LocalDateTimeUtil.isIn(now.plusHours(1L), now.plusHours(2L)));
+		final LocalDateTime now = LocalDateTime.now();
+		Assert.assertTrue(LocalDateTimeUtil.isIn(now, now.minusHours(1L), now.plusHours(1L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now, now.minusHours(1L), now.minusHours(2L)));
+		Assert.assertFalse(LocalDateTimeUtil.isIn(now, now.plusHours(1L), now.plusHours(2L)));
 
 		// 异常入参
 		Assert.assertThrows(IllegalArgumentException.class, () -> LocalDateTimeUtil.isIn(null, begin, end, false, false));
@@ -224,24 +226,24 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void isOverlapTest(){
-		LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
-		LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
+		final LocalDateTime oneStartTime = LocalDateTime.of(2022, 1, 1, 10, 10, 10);
+		final LocalDateTime oneEndTime = LocalDateTime.of(2022, 1, 1, 11, 10, 10);
 
-		LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
-		LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
+		final LocalDateTime oneStartTime2 = LocalDateTime.of(2022, 1, 1, 11, 20, 10);
+		final LocalDateTime oneEndTime2 = LocalDateTime.of(2022, 1, 1, 11, 30, 10);
 
-		LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
-		LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
+		final LocalDateTime oneStartTime3 = LocalDateTime.of(2022, 1, 1, 11, 40, 10);
+		final LocalDateTime oneEndTime3 = LocalDateTime.of(2022, 1, 1, 11, 50, 10);
 
 		//真实请假数据
-		LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
-		LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
+		final LocalDateTime realStartTime = LocalDateTime.of(2022, 1, 1, 11, 49, 10);
+		final LocalDateTime realEndTime = LocalDateTime.of(2022, 1, 1, 12, 0, 10);
 
-		LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
-		LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
+		final LocalDateTime realStartTime1 = DateUtil.parseLocalDateTime("2022-03-01 08:00:00");
+		final LocalDateTime realEndTime1   = DateUtil.parseLocalDateTime("2022-03-01 10:00:00");
 
-		LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
-		LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
+		final LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
+		final LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
 
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
@@ -253,7 +255,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void weekOfYearTest(){
-		LocalDate date1 = LocalDate.of(2021, 12, 31);
+		final LocalDate date1 = LocalDate.of(2021, 12, 31);
 		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
 		Assert.assertEquals(52, weekOfYear1);
 
@@ -263,7 +265,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void weekOfYearTest2(){
-		LocalDate date1 = LocalDate.of(2022, 1, 31);
+		final LocalDate date1 = LocalDate.of(2022, 1, 31);
 		final int weekOfYear1 = LocalDateTimeUtil.weekOfYear(date1);
 		Assert.assertEquals(5, weekOfYear1);
 
@@ -273,7 +275,7 @@ public class LocalDateTimeUtilTest {
 
 	@Test
 	public void ofTest2(){
-		final Instant instant = DateUtil.parse("2022-02-22").toInstant();
+		final Instant instant = Objects.requireNonNull(DateUtil.parse("2022-02-22")).toInstant();
 		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
 		Console.log(of);
 	}
