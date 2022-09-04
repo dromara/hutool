@@ -3,12 +3,15 @@ package cn.hutool.json.jwt;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.json.jwt.signers.AlgorithmUtil;
+import cn.hutool.json.jwt.signers.JWTSigner;
 import cn.hutool.json.jwt.signers.JWTSignerUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -158,5 +161,15 @@ public class JWTTest {
 		// 签发时间早于被检查的时间
 		final Date date = JWT.of(token).getPayload().getClaimsJson().getDate(JWTPayload.ISSUED_AT);
 		Assert.assertEquals("2022-02-02", DateUtil.format(date, DatePattern.NORM_DATE_PATTERN));
+	}
+
+	@Test
+	public void issue2581Test(){
+		final Map<String, Object> map = new HashMap<>();
+		map.put("test2", 22222222222222L);
+		final JWTSigner jwtSigner = JWTSignerUtil.createSigner(AlgorithmUtil.getAlgorithm("HS256"), Base64.getDecoder().decode("abcdefghijklmn"));
+		final String sign = JWT.of().addPayloads(map).sign(jwtSigner);
+		final Object test2 = JWT.of(sign).getPayload().getClaim("test2");
+		Assert.assertEquals(Long.class, test2.getClass());
 	}
 }
