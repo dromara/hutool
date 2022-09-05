@@ -1,6 +1,8 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -23,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -109,6 +112,17 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else if (value instanceof Calendar) {
 			final Calendar calendar = (Calendar) value;
 			return parseFromInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
+		} else if (value instanceof Map) {
+			final Map<?, ?> map = (Map<?, ?>) value;
+			if (LocalDate.class.equals(this.targetType)) {
+				return LocalDate.of(Convert.toInt(map.get("year")), Convert.toInt(map.get("month")), Convert.toInt(map.get("day")));
+			} else if (LocalDateTime.class.equals(this.targetType)) {
+				return LocalDateTime.of(Convert.toInt(map.get("year")), Convert.toInt(map.get("month")), Convert.toInt(map.get("day")),
+						Convert.toInt(map.get("hour")), Convert.toInt(map.get("minute")), Convert.toInt(map.get("second")), Convert.toInt(map.get("second")));
+			} else if (LocalTime.class.equals(this.targetType)) {
+				return LocalTime.of(Convert.toInt(map.get("hour")), Convert.toInt(map.get("minute")), Convert.toInt(map.get("second")), Convert.toInt(map.get("nano")));
+			}
+			throw new ConvertException("Unsupported type: [{}] from map: [{}]", this.targetType, map);
 		} else {
 			return parseFromCharSequence(convertToStr(value));
 		}

@@ -12,7 +12,7 @@ public class Issue2447Test {
 		Time time = new Time();
 		time.setTime(LocalDateTime.of(1970, 1, 2, 10, 0, 1, 0));
 		String timeStr = JSONUtil.toJsonStr(time);
-		Assert.assertEquals(timeStr, "{\"time\":93601000}");
+		Assert.assertEquals("{\"time\":93601000}", timeStr);
 		Assert.assertEquals(JSONUtil.toBean(timeStr, Time.class).getTime(), time.getTime());
 	}
 
