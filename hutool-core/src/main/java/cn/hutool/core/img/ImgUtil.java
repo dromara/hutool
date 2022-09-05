@@ -439,6 +439,18 @@ public class ImgUtil {
 	 *
 	 * @param srcImageFile 源图像文件
 	 * @param destDir      切片目标文件夹
+	 * @param rows         目标切片行数。默认2，必须是范围 [1, 20] 之内
+	 * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
+	 */
+	public static void sliceByRowsAndCols(File srcImageFile, File destDir, int rows, int cols) {
+		sliceByRowsAndCols(srcImageFile, destDir, IMAGE_TYPE_JPEG, rows, cols);
+	}
+
+	/**
+	 * 图像切割（指定切片的行数和列数）
+	 *
+	 * @param srcImageFile 源图像文件
+	 * @param destDir      切片目标文件夹
 	 * @param format       目标文件格式
 	 * @param rows         目标切片行数。默认2，必须是范围 [1, 20] 之内
 	 * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
@@ -456,9 +468,22 @@ public class ImgUtil {
 	 *
 	 * @param srcImage 源图像，如果非{@link BufferedImage}，则默认使用RGB模式
 	 * @param destDir  切片目标文件夹
+	 * @param rows     目标切片行数。默认2，必须是范围 [1, 20] 之内
+	 * @param cols     目标切片列数。默认2，必须是范围 [1, 20] 之内
+	 */
+	public static void sliceByRowsAndCols(Image srcImage, File destDir, int rows, int cols) {
+		sliceByRowsAndCols(srcImage, destDir, IMAGE_TYPE_JPEG, rows, cols);
+	}
+
+	/**
+	 * 图像切割（指定切片的行数和列数），默认RGB模式
+	 *
+	 * @param srcImage 源图像，如果非{@link BufferedImage}，则默认使用RGB模式
+	 * @param destDir  切片目标文件夹
 	 * @param format   目标文件格式
 	 * @param rows     目标切片行数。默认2，必须是范围 [1, 20] 之内
 	 * @param cols     目标切片列数。默认2，必须是范围 [1, 20] 之内
+	 * @since 5.8.6
 	 */
 	public static void sliceByRowsAndCols(Image srcImage, File destDir, String format, int rows, int cols) {
 		if (false == destDir.exists()) {

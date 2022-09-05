@@ -25,6 +25,7 @@
 * 【core   】     扩展LocalDateTimeUtil.isIn方法使用场景（pr#2589@Github）
 * 【core   】     MapUtil增加根据entry分组（pr#2591@Github）
 * 【core   】     优化 getProcessorCount 潜在的获取不到的问题（pr#792@Gitee）
+* 【core   】     ImgUtil增加sliceByRowsAndCols重载方法支持自定义图片格式（pr#793@Gitee）
 * 
 ### 🐞Bug修复
 * 【http   】     修复https下可能的Patch、Get请求失效问题（issue#I3Z3DH@Gitee）
