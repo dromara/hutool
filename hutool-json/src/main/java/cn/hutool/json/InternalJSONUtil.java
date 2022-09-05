@@ -199,7 +199,7 @@ public final class InternalJSONUtil {
 	 * @return Map
 	 */
 	static Map<String, Object> createRawMap(int capacity, JSONConfig config) {
-		Map<String, Object> rawHashMap;
+		final Map<String, Object> rawHashMap;
 		if (null == config) {
 			config = JSONConfig.create();
 		}
