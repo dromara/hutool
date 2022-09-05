@@ -55,7 +55,7 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
 				return targetType.cast(value);
 			}
-			T result = convertInternal(value);
+			final T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);
 		} else {
 			throw new IllegalArgumentException(

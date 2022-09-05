@@ -1,4 +1,5 @@
 import cn.hutool.json.JSON;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.serialize.JSONDeserializer;
@@ -23,7 +24,20 @@ public class Issue2555Test {
 		Assert.assertEquals("{\"myType\":{\"addr\":\"addrValue1\"}}", json);
 
 		//MyDeserializer不会被调用
-		final SimpleObj simpleObj2 = JSONUtil.toBean(json, SimpleObj.class);
+		final JSONObject jsonObject = JSONUtil.parseObj(json, JSONConfig.create().setIgnoreError(false));
+		final SimpleObj simpleObj2 = jsonObject.toBean(SimpleObj.class);
+		Assert.assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
+	}
+
+	@Test
+	public void deserTest(){
+		JSONUtil.putDeserializer(MyType.class, new MyDeserializer());
+
+		final String jsonStr = "{\"myType\":{\"addr\":\"addrValue1\"}}";
+
+		//MyDeserializer不会被调用
+		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr, JSONConfig.create().setIgnoreError(false));
+		final SimpleObj simpleObj2 = jsonObject.toBean(SimpleObj.class);
 		Assert.assertEquals("addrValue1", simpleObj2.getMyType().getAddress());
 	}
 
