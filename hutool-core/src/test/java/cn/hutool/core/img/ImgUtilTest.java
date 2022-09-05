@@ -89,7 +89,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void sliceByRowsAndColsTest() {
-		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
+		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/temp/2.png"), FileUtil.file("d:/temp/slice/png"),ImgUtil.IMAGE_TYPE_PNG, 1, 5);
 	}
 
 	@Test
