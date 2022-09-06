@@ -39,7 +39,8 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param <R>    合并后的结果对象类型
 	 * @return 合并后的结果对象的流
 	 */
-	default <U, R> EasyStream<R> zip(final Iterable<U> other,
+	default <U, R> EasyStream<R> zip(
+		final Iterable<U> other,
 		final BiFunction<? super T, ? super U, ? extends R> zipper) {
 		Objects.requireNonNull(zipper);
 		final Spliterator<T> keys = spliterator();
@@ -104,7 +105,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param <V>         值类型
 	 * @return {@link EntryStream}实例
 	 */
-	default <K, V> EntryStream<K, V> toEntries(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+	default <K, V> EntryStream<K, V> toEntries(final Function<T, K> keyMapper, final Function<T, V> valueMapper) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
 		return new EntryStream<>(map(t -> EntryStream.ofEntry(keyMapper.apply(t), valueMapper.apply(t))));
@@ -117,7 +118,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param <K>         键类型
 	 * @return {@link EntryStream}实例
 	 */
-	default <K> EntryStream<K, T> toEntries(Function<T, K> keyMapper) {
+	default <K> EntryStream<K, T> toEntries(final Function<T, K> keyMapper) {
 		return toEntries(keyMapper, Function.identity());
 	}
 
@@ -273,7 +274,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * 				.collect(Collectors.toList());
 	 * }</pre>
 	 */
-	default S peekIdx(BiConsumer<? super T, Integer> action) {
+	default S peekIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
 		if (isParallel()) {
 			return peek(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
@@ -331,7 +332,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param iterable 集合
 	 * @return {@link EntryStream}实例
 	 */
-	default S append(Iterable<? extends T> iterable) {
+	default S append(final Iterable<? extends T> iterable) {
 		if (IterUtil.isEmpty(iterable)) {
 			return wrapping(this);
 		}
@@ -345,7 +346,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param iterable 集合
 	 * @return {@link EntryStream}实例
 	 */
-	default S prepend(Iterable<? extends T> iterable) {
+	default S prepend(final Iterable<? extends T> iterable) {
 		if (IterUtil.isEmpty(iterable)) {
 			return wrapping(this);
 		}
@@ -484,11 +485,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param childrenSetter 设置子节点的lambda，可以写作 {@code Student::setChildren}
 	 * @return EasyStream 一个流
 	 */
-	default S flatTree(Function<T, List<T>> childrenGetter, BiConsumer<T, List<T>> childrenSetter) {
+	default S flatTree(final Function<T, List<T>> childrenGetter, final BiConsumer<T, List<T>> childrenSetter) {
 		Objects.requireNonNull(childrenGetter);
 		Objects.requireNonNull(childrenSetter);
-		MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
-		Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e))
+		final MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
+		final Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e))
 			.flat(recursiveRef.get())
 			.unshift(e);
 		recursiveRef.set(recursive);

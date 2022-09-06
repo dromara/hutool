@@ -42,7 +42,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @param source 被包装的流
 	 * @return S
 	 */
-	S wrapping(Stream<T> source);
+	S wrapping(final Stream<T> source);
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流
@@ -52,7 +52,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 返回叠加过滤操作后的流
 	 */
 	@Override
-	default S filter(Predicate<? super T> predicate) {
+	default S filter(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return wrapping(stream().filter(predicate));
 	}
@@ -65,7 +65,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 叠加操作后元素类型全为int的流
 	 */
 	@Override
-	default IntStream mapToInt(ToIntFunction<? super T> mapper) {
+	default IntStream mapToInt(final ToIntFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().mapToInt(mapper);
 	}
@@ -78,7 +78,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 叠加操作后元素类型全为long的流
 	 */
 	@Override
-	default LongStream mapToLong(ToLongFunction<? super T> mapper) {
+	default LongStream mapToLong(final ToLongFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().mapToLong(mapper);
 	}
@@ -91,7 +91,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 叠加操作后元素类型全为double的流
 	 */
 	@Override
-	default DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper) {
+	default DoubleStream mapToDouble(final ToDoubleFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().mapToDouble(mapper);
 	}
@@ -104,7 +104,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 返回叠加拆分操作后的IntStream
 	 */
 	@Override
-	default IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper) {
+	default IntStream flatMapToInt(final Function<? super T, ? extends IntStream> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().flatMapToInt(mapper);
 	}
@@ -117,7 +117,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 返回叠加拆分操作后的LongStream
 	 */
 	@Override
-	default LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper) {
+	default LongStream flatMapToLong(final Function<? super T, ? extends LongStream> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().flatMapToLong(mapper);
 	}
@@ -130,7 +130,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 返回叠加拆分操作后的DoubleStream
 	 */
 	@Override
-	default DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
+	default DoubleStream flatMapToDouble(final Function<? super T, ? extends DoubleStream> mapper) {
 		Objects.requireNonNull(mapper);
 		return stream().flatMapToDouble(mapper);
 	}
@@ -169,7 +169,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 一个元素按指定的Comparator排序的流
 	 */
 	@Override
-	default S sorted(Comparator<? super T> comparator) {
+	default S sorted(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
 		return wrapping(stream().sorted(comparator));
 	}
@@ -192,7 +192,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * }</pre>
 	 */
 	@Override
-	default S peek(Consumer<? super T> action) {
+	default S peek(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
 		return wrapping(stream().peek(action));
 	}
@@ -205,7 +205,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 截取后的流
 	 */
 	@Override
-	default S limit(long maxSize) {
+	default S limit(final long maxSize) {
 		return wrapping(stream().limit(maxSize));
 	}
 
@@ -217,7 +217,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 丢弃前面n个元素后的剩余元素组成的流
 	 */
 	@Override
-	default S skip(long n) {
+	default S skip(final long n) {
 		return wrapping(stream().skip(n));
 	}
 
@@ -228,7 +228,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @param action 操作
 	 */
 	@Override
-	default void forEach(Consumer<? super T> action) {
+	default void forEach(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
 		stream().forEach(action);
 	}
@@ -240,7 +240,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @param action 操作
 	 */
 	@Override
-	default void forEachOrdered(Consumer<? super T> action) {
+	default void forEachOrdered(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
 		stream().forEachOrdered(action);
 	}
@@ -266,7 +266,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @throws ArrayStoreException 如果元素转换失败，例如不是该元素类型及其父类，则抛出该异常
 	 */
 	@Override
-	default <A> A[] toArray(IntFunction<A[]> generator) {
+	default <A> A[] toArray(final IntFunction<A[]> generator) {
 		Objects.requireNonNull(generator);
 		return stream().toArray(generator);
 	}
@@ -292,7 +292,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 聚合计算后的值
 	 */
 	@Override
-	default T reduce(T identity, BinaryOperator<T> accumulator) {
+	default T reduce(final T identity, final BinaryOperator<T> accumulator) {
 		Objects.requireNonNull(accumulator);
 		return stream().reduce(identity, accumulator);
 	}
@@ -328,7 +328,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @see #max(Comparator)
 	 */
 	@Override
-	default Optional<T> reduce(BinaryOperator<T> accumulator) {
+	default Optional<T> reduce(final BinaryOperator<T> accumulator) {
 		Objects.requireNonNull(accumulator);
 		return stream().reduce(accumulator);
 	}
@@ -346,7 +346,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @see #reduce(Object, BinaryOperator)
 	 */
 	@Override
-	default <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner) {
+	default <U> U reduce(final U identity, final BiFunction<U, ? super T, U> accumulator, final BinaryOperator<U> combiner) {
 		Objects.requireNonNull(accumulator);
 		Objects.requireNonNull(combiner);
 		return stream().reduce(identity, accumulator, combiner);
@@ -366,7 +366,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * }</pre>
 	 */
 	@Override
-	default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner) {
+	default <R> R collect(final Supplier<R> supplier, final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
 		Objects.requireNonNull(supplier);
 		Objects.requireNonNull(accumulator);
 		Objects.requireNonNull(combiner);
@@ -383,7 +383,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 收集后的容器
 	 */
 	@Override
-	default <R, A> R collect(Collector<? super T, A, R> collector) {
+	default <R, A> R collect(final Collector<? super T, A, R> collector) {
 		Objects.requireNonNull(collector);
 		return stream().collect(collector);
 	}
@@ -395,7 +395,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 最小值
 	 */
 	@Override
-	default Optional<T> min(Comparator<? super T> comparator) {
+	default Optional<T> min(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
 		return stream().min(comparator);
 	}
@@ -407,7 +407,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 最大值
 	 */
 	@Override
-	default Optional<T> max(Comparator<? super T> comparator) {
+	default Optional<T> max(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
 		return stream().max(comparator);
 	}
@@ -429,7 +429,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 是否有任何一个元素满足给定断言
 	 */
 	@Override
-	default boolean anyMatch(Predicate<? super T> predicate) {
+	default boolean anyMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return stream().anyMatch(predicate);
 	}
@@ -441,7 +441,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 是否所有元素满足给定断言
 	 */
 	@Override
-	default boolean allMatch(Predicate<? super T> predicate) {
+	default boolean allMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return stream().allMatch(predicate);
 	}
@@ -453,7 +453,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 是否没有元素满足给定断言
 	 */
 	@Override
-	default boolean noneMatch(Predicate<? super T> predicate) {
+	default boolean noneMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		return stream().noneMatch(predicate);
 	}

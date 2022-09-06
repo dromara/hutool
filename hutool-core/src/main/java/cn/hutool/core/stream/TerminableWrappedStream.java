@@ -71,7 +71,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param <C>               集合类型
 	 * @return 集合
 	 */
-	default <C extends Collection<T>> C toColl(Supplier<C> collectionFactory) {
+	default <C extends Collection<T>> C toColl(final Supplier<C> collectionFactory) {
 		Objects.requireNonNull(collectionFactory);
 		return stream().collect(Collectors.toCollection(collectionFactory));
 	}
@@ -88,7 +88,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
      * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
-    default <K> Map<K, T> toMap(Function<? super T, ? extends K> keyMapper) {
+    default <K> Map<K, T> toMap(final Function<? super T, ? extends K> keyMapper) {
         return this.toMap(keyMapper, Function.identity());
     }
 
@@ -103,7 +103,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toMap(
-        Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+		final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
         return this.toMap(keyMapper, valueMapper, (l, r) -> r);
     }
 
@@ -118,7 +118,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toUnmodifiableMap(
-        Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+		final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
         return Collections.unmodifiableMap(this.toMap(keyMapper, valueMapper));
     }
 
@@ -134,9 +134,9 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toMap(
-        Function<? super T, ? extends K> keyMapper,
-        Function<? super T, ? extends U> valueMapper,
-        BinaryOperator<U> mergeFunction) {
+		final Function<? super T, ? extends K> keyMapper,
+		final Function<? super T, ? extends U> valueMapper,
+		final BinaryOperator<U> mergeFunction) {
         return this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
     }
 
@@ -152,9 +152,9 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toUnmodifiableMap(
-        Function<? super T, ? extends K> keyMapper,
-        Function<? super T, ? extends U> valueMapper,
-        BinaryOperator<U> mergeFunction) {
+		final Function<? super T, ? extends K> keyMapper,
+		final Function<? super T, ? extends U> valueMapper,
+		final BinaryOperator<U> mergeFunction) {
         return Collections.unmodifiableMap(
 			this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new)
 		);
@@ -173,9 +173,9 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
      * @return map
      */
     default <K, U, M extends Map<K, U>> M toMap(
-        Function<? super T, ? extends K> keyMapper,
-        Function<? super T, ? extends U> valueMapper,
-        BinaryOperator<U> mergeFunction,
+		final Function<? super T, ? extends K> keyMapper,
+		final Function<? super T, ? extends U> valueMapper,
+		final BinaryOperator<U> mergeFunction,
         Supplier<M> mapSupplier) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
@@ -198,12 +198,12 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
      * 至少包含全部的key，如果对应位置上的value不存在，则为null;<br>
      * 如果key重复, 则保留最后一个关联的value;<br>
      */
-    default <R> Map<T, R> toZip(Iterable<R> other) {
+    default <R> Map<T, R> toZip(final Iterable<R> other) {
 		Objects.requireNonNull(other);
         // value对象迭代器
         final Iterator<R> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
         if (this.isParallel()) {
-            List<T> keyList = toList();
+			final List<T> keyList = toList();
             final Map<T, R> map = new HashMap<>(keyList.size());
             for (T key : keyList) {
                 map.put(key, iterator.hasNext() ? iterator.next() : null);
@@ -364,7 +364,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return 拼接后的字符串
 	 * @see #join(CharSequence, CharSequence, CharSequence)
 	 */
-	default String join(CharSequence delimiter) {
+	default String join(final CharSequence delimiter) {
 		return this.join(delimiter, "", "");
 	}
 
@@ -376,7 +376,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param suffix    后缀
 	 * @return 拼接后的字符串
 	 */
-	default String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+	default String join(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
 		return stream().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
 	}
 
@@ -392,7 +392,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return map
 	 * @see #group(Function, Supplier, Collector)
 	 */
-	default <K> Map<K, List<T>> group(Function<? super T, ? extends K> classifier) {
+	default <K> Map<K, List<T>> group(final Function<? super T, ? extends K> classifier) {
 		return this.group(classifier, Collectors.toList());
 	}
 
@@ -408,7 +408,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #group(Function, Supplier, Collector)
 	 */
 	default <K, A, D> Map<K, D> group(
-		Function<? super T, ? extends K> classifier, Collector<? super T, A, D> downstream) {
+		final Function<? super T, ? extends K> classifier, final Collector<? super T, A, D> downstream) {
 		return this.group(classifier, HashMap::new, downstream);
 	}
 
@@ -426,9 +426,9 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see CollectorUtil#groupingBy(Function, Supplier, Collector)
 	 */
 	default <K, D, A, M extends Map<K, D>> M group(
-		Function<? super T, ? extends K> classifier,
-		Supplier<M> mapFactory,
-		Collector<? super T, A, D> downstream) {
+		final Function<? super T, ? extends K> classifier,
+		final Supplier<M> mapFactory,
+		final Collector<? super T, A, D> downstream) {
 		Objects.requireNonNull(classifier);
 		Objects.requireNonNull(mapFactory);
 		Objects.requireNonNull(downstream);
@@ -442,7 +442,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return map
 	 * @see #partitioning(Predicate, Collector)
 	 */
-	default Map<Boolean, List<T>> partitioning(Predicate<T> predicate) {
+	default Map<Boolean, List<T>> partitioning(final Predicate<T> predicate) {
 		return this.partitioning(predicate, ArrayList::new);
 	}
 
@@ -454,7 +454,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return map
 	 * @see #partitioning(Predicate, Collector)
 	 */
-	default <C extends Collection<T>> Map<Boolean, C> partitioning(Predicate<T> predicate, Supplier<C> collFactory) {
+	default <C extends Collection<T>> Map<Boolean, C> partitioning(final Predicate<T> predicate, final Supplier<C> collFactory) {
 		return this.partitioning(predicate, Collectors.toCollection(collFactory));
 	}
 
@@ -466,7 +466,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param <R> 返回值类型
 	 * @return map
 	 */
-	default <R> Map<Boolean, R> partitioning(Predicate<T> predicate, Collector<T, ?, R> downstream) {
+	default <R> Map<Boolean, R> partitioning(final Predicate<T> predicate, final Collector<T, ?, R> downstream) {
 		Objects.requireNonNull(predicate);
 		Objects.requireNonNull(downstream);
 		return stream().collect(Collectors.partitioningBy(predicate, downstream));

@@ -181,7 +181,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(collect2, distinctBy2);
 
 		Assert.assertEquals(
-			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).count()
+			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
 		);
 	}
 

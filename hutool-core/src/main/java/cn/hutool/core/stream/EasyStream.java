@@ -262,7 +262,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @return 实现类
 	 */
 	@Override
-	public EasyStream<T> wrapping(Stream<T> stream) {
+	public EasyStream<T> wrapping(final Stream<T> stream) {
 		return new EasyStream<>(stream);
 	}
 
@@ -281,10 +281,11 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 	toTree(Student::getId, Student::getParentId, Student::setChildren);
 	 * }</pre>
 	 */
-	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
-													Function<T, R> pIdGetter,
-													BiConsumer<T, List<T>> childrenSetter) {
-		Map<R, List<T>> pIdValuesMap = group(pIdGetter);
+	public <R extends Comparable<R>> List<T> toTree(
+		final Function<T, R> idGetter,
+		final Function<T, R> pIdGetter,
+		final BiConsumer<T, List<T>> childrenSetter) {
+		final Map<R, List<T>> pIdValuesMap = group(pIdGetter);
 		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, pIdValuesMap, pIdValuesMap.get(null));
 	}
 
@@ -305,13 +306,14 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * }</pre>
 	 */
 
-	public <R extends Comparable<R>> List<T> toTree(Function<T, R> idGetter,
-													Function<T, R> pIdGetter,
-													BiConsumer<T, List<T>> childrenSetter,
-													Predicate<T> parentPredicate) {
+	public <R extends Comparable<R>> List<T> toTree(
+		final Function<T, R> idGetter,
+		final Function<T, R> pIdGetter,
+		final BiConsumer<T, List<T>> childrenSetter,
+		final Predicate<T> parentPredicate) {
 		Objects.requireNonNull(parentPredicate);
-		List<T> list = toList();
-		List<T> parents = EasyStream.of(list).filter(e ->
+		final List<T> list = toList();
+		final List<T> parents = EasyStream.of(list).filter(e ->
 						// 此处是为了适配 parentPredicate.test空指针 情况
 						// 因为Predicate.test的返回值是boolean，所以如果 e -> null 这种返回null的情况，会直接抛出NPE
 						Opt.ofTry(() -> parentPredicate.test(e)).filter(Boolean::booleanValue).isPresent())
@@ -330,15 +332,16 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @param <R>            此处是id的泛型限制
 	 * @return list 组装好的树
 	 */
-	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(Function<T, R> idGetter,
-																			BiConsumer<T, List<T>> childrenSetter,
-																			Map<R, List<T>> pIdValuesMap,
-																			List<T> parents) {
+	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(
+		final Function<T, R> idGetter,
+		final BiConsumer<T, List<T>> childrenSetter,
+		final Map<R, List<T>> pIdValuesMap,
+		final List<T> parents) {
 		Objects.requireNonNull(idGetter);
 		Objects.requireNonNull(childrenSetter);
 		Objects.requireNonNull(pIdValuesMap);
-		MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
-		Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
+		final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
+		final Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
 			List<T> children = pIdValuesMap.get(idGetter.apply(value));
 			childrenSetter.accept(value, children);
 			recursiveRef.get().accept(children);

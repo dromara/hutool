@@ -35,7 +35,7 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	 * @param stream 包装的流对象
 	 * @throws NullPointerException 当{@code stream}为{@code null}时抛出
 	 */
-	protected AbstractEnhancedWrappedStream(Stream<T> stream) {
+	protected AbstractEnhancedWrappedStream(final Stream<T> stream) {
 		this.stream = Objects.requireNonNull(stream, "stream must not null");
 	}
 
@@ -56,7 +56,7 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	 * @return 是否相等
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		return obj instanceof Stream && stream.equals(obj);
 	}
 

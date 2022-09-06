@@ -38,7 +38,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param values 值集合
 	 * @return {@link EntryStream}实例
 	 */
-	public static <A, B> EntryStream<A, B> merge(Iterable<A> keys, Iterable<B> values) {
+	public static <A, B> EntryStream<A, B> merge(final Iterable<A> keys, final Iterable<B> values) {
 		final boolean hasKeys = ObjUtil.isNotNull(keys);
 		final boolean hasValues = ObjUtil.isNotNull(values);
 		// 皆为空
@@ -75,7 +75,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <B> 值类型
 	 * @return {@link EntryStream}实例
 	 */
-	public static <A, B> EntryStream<A, B> of(Map<A, B> map) {
+	public static <A, B> EntryStream<A, B> of(final Map<A, B> map) {
 		return ObjUtil.isNull(map) ?
 			empty() : of(map.entrySet());
 	}
@@ -90,7 +90,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <B> 值类型
 	 * @return {@link EntryStream}实例
 	 */
-	public static <A, B> EntryStream<A, B> of(Iterable<? extends Map.Entry<A, B>> entries) {
+	public static <A, B> EntryStream<A, B> of(final Iterable<? extends Map.Entry<A, B>> entries) {
 		return ObjUtil.isNull(entries) ?
 			empty() : of(StreamSupport.stream(entries.spliterator(), false));
 	}
@@ -106,7 +106,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	public static <T, A, B> EntryStream<A, B> of(
-		Iterable<T> source, Function<? super T, ? extends A> keyMapper, Function<? super T, ? extends B> valueMapper) {
+		final Iterable<T> source, final Function<? super T, ? extends A> keyMapper, final Function<? super T, ? extends B> valueMapper) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
 		if (ObjUtil.isNull(source)) {
@@ -126,7 +126,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <B> 值类型
 	 * @return {@link EntryStream}实例
 	 */
-	public static <A, B> EntryStream<A, B> of(Stream<? extends Map.Entry<A, B>> stream) {
+	public static <A, B> EntryStream<A, B> of(final Stream<? extends Map.Entry<A, B>> stream) {
 		return ObjUtil.isNull(stream) ?
 			empty() : new EntryStream<>(stream.map(EntryStream::ofEntry));
 	}
@@ -145,7 +145,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 构造
 	 */
-	EntryStream(Stream<Map.Entry<K, V>> stream) {
+	EntryStream(final Stream<Map.Entry<K, V>> stream) {
 		super(stream);
 	}
 
@@ -157,9 +157,10 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> distinctByKey() {
-		Set<K> accessed = new ConcurrentHashSet<>(16);
+		// FIXME fix happen NPE when has null key
+		final Set<K> accessed = new ConcurrentHashSet<>(16);
 		return wrapping(stream.filter(e -> {
-			K key = e.getKey();
+			final K key = e.getKey();
 			if (accessed.contains(key)) {
 				return false;
 			}
@@ -174,9 +175,10 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> distinctByValue() {
-		Set<V> accessed = new ConcurrentHashSet<>(16);
+		// FIXME fix happen NPE when has null value
+		final Set<V> accessed = new ConcurrentHashSet<>(16);
 		return wrapping(stream.filter(e -> {
-			V val = e.getValue();
+			final V val = e.getValue();
 			if (accessed.contains(val)) {
 				return false;
 			}
@@ -191,7 +193,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param filter 判断条件
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> filter(BiPredicate<? super K, ? super V> filter) {
+	public EntryStream<K, V> filter(final BiPredicate<? super K, ? super V> filter) {
 		Objects.requireNonNull(filter);
 		return super.filter(e -> filter.test(e.getKey(), e.getValue()));
 	}
@@ -202,7 +204,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param filter 判断条件
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> filterByKey(Predicate<? super K> filter) {
+	public EntryStream<K, V> filterByKey(final Predicate<? super K> filter) {
 		Objects.requireNonNull(filter);
 		return super.filter(e -> filter.test(e.getKey()));
 	}
@@ -213,7 +215,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param filter 判断条件
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> filterByValue(Predicate<? super V> filter) {
+	public EntryStream<K, V> filterByValue(final Predicate<? super V> filter) {
 		Objects.requireNonNull(filter);
 		return super.filter(e -> filter.test(e.getValue()));
 	}
@@ -251,7 +253,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param consumer 操作
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> peekKey(Consumer<? super K> consumer) {
+	public EntryStream<K, V> peekKey(final Consumer<? super K> consumer) {
 		Objects.requireNonNull(consumer);
 		return super.peek(e -> consumer.accept(e.getKey()));
 	}
@@ -262,7 +264,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param consumer 操作
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> peekValue(Consumer<? super V> consumer) {
+	public EntryStream<K, V> peekValue(final Consumer<? super V> consumer) {
 		Objects.requireNonNull(consumer);
 		return super.peek(e -> consumer.accept(e.getValue()));
 	}
@@ -273,7 +275,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param comparator 排序器
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> sortByKey(Comparator<? super K> comparator) {
+	public EntryStream<K, V> sortByKey(final Comparator<? super K> comparator) {
 		Objects.requireNonNull(comparator);
 		return sorted(Map.Entry.comparingByKey(comparator));
 	}
@@ -284,7 +286,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param comparator 排序器
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> sortByValue(Comparator<? super V> comparator) {
+	public EntryStream<K, V> sortByValue(final Comparator<? super V> comparator) {
 		Objects.requireNonNull(comparator);
 		return sorted(Map.Entry.comparingByValue(comparator));
 	}
@@ -298,7 +300,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param value 值
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> push(K key, V value) {
+	public EntryStream<K, V> push(final K key, final V value) {
 		return wrapping(Stream.concat(stream, Stream.of(ofEntry(key, value))));
 	}
 
@@ -309,7 +311,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param value 值
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> unshift(K key, V value) {
+	public EntryStream<K, V> unshift(final K key, final V value) {
 		return wrapping(Stream.concat(Stream.of(ofEntry(key, value)), stream));
 	}
 
@@ -320,7 +322,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	@Override
-	public EntryStream<K, V> append(Iterable<? extends Map.Entry<K, V>> entries) {
+	public EntryStream<K, V> append(final Iterable<? extends Map.Entry<K, V>> entries) {
 		if (IterUtil.isEmpty(entries)) {
 			return this;
 		}
@@ -336,7 +338,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	@Override
-	public EntryStream<K, V> prepend(Iterable<? extends Map.Entry<K, V>> entries) {
+	public EntryStream<K, V> prepend(final Iterable<? extends Map.Entry<K, V>> entries) {
 		if (IterUtil.isEmpty(entries)) {
 			return this;
 		}
@@ -370,7 +372,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <N>    新的键类型
 	 * @return {@link EntryStream}实例
 	 */
-	public <N> EntryStream<N, V> mapKeys(Function<? super K, ? extends N> mapper) {
+	public <N> EntryStream<N, V> mapKeys(final Function<? super K, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
 			stream.map(e -> ofEntry(mapper.apply(e.getKey()), e.getValue()))
@@ -384,7 +386,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <N>    新的值类型
 	 * @return {@link EntryStream}实例
 	 */
-	public <N> EntryStream<K, N> mapValues(Function<? super V, ? extends N> mapper) {
+	public <N> EntryStream<K, N> mapValues(final Function<? super V, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
 			stream.map(e -> ofEntry(e.getKey(), mapper.apply(e.getValue())))
@@ -400,7 +402,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 返回叠加操作后的流
 	 */
 	@Override
-	public <R> EasyStream<R> map(Function<? super Map.Entry<K, V>, ? extends R> mapper) {
+	public <R> EasyStream<R> map(final Function<? super Map.Entry<K, V>, ? extends R> mapper) {
 		Objects.requireNonNull(mapper);
 		return EasyStream.of(stream.map(mapper));
 	}
@@ -412,7 +414,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <N>    函数执行后返回流中元素的类型
 	 * @return 映射后的单对象组成的流
 	 */
-	public <N> EasyStream<N> map(BiFunction<? super K, ? super V, ? extends N> mapper) {
+	public <N> EasyStream<N> map(final BiFunction<? super K, ? super V, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return EasyStream.of(stream.map(e -> mapper.apply(e.getKey(), e.getValue())));
 	}
@@ -430,7 +432,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 返回叠加拆分操作后的流
 	 */
 	@Override
-	public <R> EasyStream<R> flatMap(Function<? super Map.Entry<K, V>, ? extends Stream<? extends R>> mapper) {
+	public <R> EasyStream<R> flatMap(final Function<? super Map.Entry<K, V>, ? extends Stream<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
 		return EasyStream.of(stream.flatMap(mapper));
 	}
@@ -449,7 +451,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <N>       新的键类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <N> EntryStream<N, V> flatMapKey(Function<? super K, Stream<? extends N>> keyMapper) {
+	public <N> EntryStream<N, V> flatMapKey(final Function<? super K, Stream<? extends N>> keyMapper) {
 		Objects.requireNonNull(keyMapper);
 		return new EntryStream<>(
 			stream.flatMap(e -> keyMapper
@@ -473,7 +475,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <N>         新的值类型
 	 * @return 返回叠加拆分操作后的流
 	 */
-	public <N> EntryStream<K, N> flatMapValue(Function<? super V, Stream<? extends N>> valueMapper) {
+	public <N> EntryStream<K, N> flatMapValue(final Function<? super V, Stream<? extends N>> valueMapper) {
 		Objects.requireNonNull(valueMapper);
 		return new EntryStream<>(
 			stream.flatMap(e -> valueMapper
@@ -493,7 +495,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 * @see Collectors#toMap(Function, Function, BinaryOperator, Supplier)
 	 */
-	public Map<K, V> toMap(Supplier<Map<K, V>> mapFactory, BinaryOperator<V> operator) {
+	public Map<K, V> toMap(final Supplier<Map<K, V>> mapFactory, final BinaryOperator<V> operator) {
 		Objects.requireNonNull(mapFactory);
 		Objects.requireNonNull(operator);
 		return super.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, operator, mapFactory));
@@ -506,7 +508,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 * @see Collectors#toMap(Function, Function, BinaryOperator)
 	 */
-	public Map<K, V> toMap(Supplier<Map<K, V>> mapFactory) {
+	public Map<K, V> toMap(final Supplier<Map<K, V>> mapFactory) {
 		Objects.requireNonNull(mapFactory);
 		return super.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (t1, t2) -> t2, mapFactory));
 	}
@@ -533,7 +535,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @see Collectors#groupingBy(Function, Supplier, Collector)
 	 */
 	public <N> Table<N, K, V> toTable(
-		BiFunction<? super K, ? super V, ? extends N> rowKeyMapper, Supplier<Map<K, V>> colMapFactory, BinaryOperator<V> operator) {
+		final BiFunction<? super K, ? super V, ? extends N> rowKeyMapper,
+		final Supplier<Map<K, V>> colMapFactory,
+		final BinaryOperator<V> operator) {
 		Objects.requireNonNull(rowKeyMapper);
 		Objects.requireNonNull(colMapFactory);
 		Objects.requireNonNull(operator);
@@ -553,7 +557,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 * @throws IllegalArgumentException 当父集合或子集合中的键重复时抛出
 	 */
-	public <N> Table<N, K, V> toTable(BiFunction<? super K, ? super V, ? extends N> rowKeyMapper) {
+	public <N> Table<N, K, V> toTable(final BiFunction<? super K, ? super V, ? extends N> rowKeyMapper) {
 		return toTable(rowKeyMapper, HashMap::new, throwingMerger());
 	}
 
@@ -567,7 +571,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 */
 	public <N> Table<N, K, V> toTableByKey(
-		Function<? super K, ? extends N> rowKeyMapper, Supplier<Map<K, V>> colMapFactory, BinaryOperator<V> operator) {
+		final Function<? super K, ? extends N> rowKeyMapper,
+		final Supplier<Map<K, V>> colMapFactory,
+		final BinaryOperator<V> operator) {
 		return toTable((k, v) -> rowKeyMapper.apply(k), colMapFactory, operator);
 	}
 
@@ -579,7 +585,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 * @throws IllegalArgumentException 当父集合或子集合中的键重复时抛出
 	 */
-	public <N> Table<N, K, V> toTableByKey(Function<? super K, ? extends N> rowKeyMapper) {
+	public <N> Table<N, K, V> toTableByKey(final Function<? super K, ? extends N> rowKeyMapper) {
 		return toTable((k, v) -> rowKeyMapper.apply(k));
 	}
 
@@ -593,7 +599,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 */
 	public <N> Table<N, K, V> toTableByValue(
-		Function<? super V, ? extends N> rowKeyMapper, Supplier<Map<K, V>> colMapFactory, BinaryOperator<V> operator) {
+		final Function<? super V, ? extends N> rowKeyMapper,
+		final Supplier<Map<K, V>> colMapFactory,
+		final BinaryOperator<V> operator) {
 		return toTable((k, v) -> rowKeyMapper.apply(v), colMapFactory, operator);
 	}
 
@@ -605,7 +613,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 * @throws IllegalArgumentException 当父集合或子集合中的键重复时抛出
 	 */
-	public <N> Table<N, K, V> toTableByValue(Function<? super V, ? extends N> rowKeyMapper) {
+	public <N> Table<N, K, V> toTableByValue(final Function<? super V, ? extends N> rowKeyMapper) {
 		return toTable((k, v) -> rowKeyMapper.apply(v));
 	}
 
@@ -625,7 +633,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <C>       值集合的类型
 	 * @return 集合
 	 */
-	public <C extends Collection<V>> Map<K, C> groupByKey(Collector<V, ?, C> collector) {
+	public <C extends Collection<V>> Map<K, C> groupByKey(final Collector<V, ?, C> collector) {
 		return groupByKey((Supplier<Map<K,C>>)HashMap::new, collector);
 	}
 
@@ -638,7 +646,8 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <M>       返回的map集合类型
 	 * @return 集合
 	 */
-	public <C extends Collection<V>, M extends Map<K, C>> M groupByKey(Supplier<M> mapFactory, Collector<V, ?, C> collector) {
+	public <C extends Collection<V>, M extends Map<K, C>> M groupByKey(
+		final Supplier<M> mapFactory, final Collector<V, ?, C> collector) {
 		return super.collect(Collectors.groupingBy(
 			Map.Entry::getKey, mapFactory,
 			CollectorUtil.transform(ArrayList::new, s -> s.stream().map(Map.Entry::getValue).collect(collector))
@@ -650,7 +659,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param consumer 操作
 	 */
-	public void forEach(BiConsumer<K, V> consumer) {
+	public void forEach(final BiConsumer<K, V> consumer) {
 		Objects.requireNonNull(consumer);
 		super.forEach(e -> consumer.accept(e.getKey(), e.getValue()));
 	}
@@ -673,7 +682,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <R>       返回值类型
 	 * @return 收集容器
 	 */
-	public <R> R collectKeys(Collector<K, ?, R> collector) {
+	public <R> R collectKeys(final Collector<K, ?, R> collector) {
 		return toKeyStream().collect(collector);
 	}
 
@@ -684,7 +693,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <R>       返回值类型
 	 * @return 收集容器
 	 */
-	public <R> R collectValues(Collector<V, ?, R> collector) {
+	public <R> R collectValues(final Collector<V, ?, R> collector) {
 		return toValueStream().collect(collector);
 	}
 
@@ -694,7 +703,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param predicate 判断条件
 	 * @return 是否
 	 */
-	public boolean anyMatch(BiPredicate<? super K, ? super V> predicate) {
+	public boolean anyMatch(final BiPredicate<? super K, ? super V> predicate) {
 		return super.anyMatch(e -> predicate.test(e.getKey(), e.getValue()));
 	}
 
@@ -704,7 +713,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param predicate 判断条件
 	 * @return 是否
 	 */
-	public boolean allMatch(BiPredicate<? super K, ? super V> predicate) {
+	public boolean allMatch(final BiPredicate<? super K, ? super V> predicate) {
 		Objects.requireNonNull(predicate);
 		return super.allMatch(e -> predicate.test(e.getKey(), e.getValue()));
 	}
@@ -715,7 +724,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param predicate 判断条件
 	 * @return 是否
 	 */
-	public boolean noneMatch(BiPredicate<? super K, ? super V> predicate) {
+	public boolean noneMatch(final BiPredicate<? super K, ? super V> predicate) {
 		Objects.requireNonNull(predicate);
 		return super.noneMatch(e -> predicate.test(e.getKey(), e.getValue()));
 	}
@@ -726,7 +735,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
 	 */
 	@SuppressWarnings("unchecked")
-	static <K, V> Map.Entry<K, V> ofEntry(Map.Entry<K, V> entry) {
+	static <K, V> Map.Entry<K, V> ofEntry(final Map.Entry<K, V> entry) {
 		return ObjUtil.defaultIfNull(
 			entry, e -> ofEntry(e.getKey(), e.getValue()), (Map.Entry<K, V>)EMPTY_ENTRY
 		);
@@ -735,7 +744,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
 	 */
-	static <K, V> Map.Entry<K, V> ofEntry(K key, V value) {
+	static <K, V> Map.Entry<K, V> ofEntry(final K key, final V value) {
 		return new AbstractMap.SimpleImmutableEntry<>(key, value);
 	}
 
@@ -746,7 +755,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 实现类
 	 */
 	@Override
-	public EntryStream<K, V> wrapping(Stream<Map.Entry<K, V>> stream) {
+	public EntryStream<K, V> wrapping(final Stream<Map.Entry<K, V>> stream) {
 		return new EntryStream<>(stream);
 	}
 
