@@ -32,6 +32,7 @@ public class FilterIter<E> implements Iterator<E> {
 	 *
 	 * @param iterator 被包装的{@link Iterator}
 	 * @param filter   过滤函数，{@code null}表示不过滤
+	 * @throws NullPointerException {@code iterator}为{@code null}时抛出
 	 */
 	public FilterIter(final Iterator<? extends E> iterator, final Predicate<? super E> filter) {
 		this.iterator = Assert.notNull(iterator);

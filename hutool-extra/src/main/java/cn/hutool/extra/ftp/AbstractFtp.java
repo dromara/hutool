@@ -2,8 +2,9 @@ package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -73,7 +74,12 @@ public abstract class AbstractFtp implements Closeable {
 	 * @since 5.7.5
 	 */
 	public boolean isDir(final String dir) {
-		return cd(dir);
+		final String workDir = pwd();
+		try {
+			return cd(dir);
+		} finally {
+			cd(workDir);
+		}
 	}
 
 	/**
@@ -85,14 +91,35 @@ public abstract class AbstractFtp implements Closeable {
 	public abstract boolean mkdir(String dir);
 
 	/**
-	 * 文件或目录是否存在
+	 * 文件或目录是否存在<br>
+	 * <ul>
+	 *     <li>提供路径为空则返回{@code false}</li>
+	 *     <li>提供路径非目录但是以'/'或'\'结尾返回{@code false}</li>
+	 *     <li>文件名是'.'或者'..'返回{@code false}</li>
+	 * </ul>
 	 *
 	 * @param path 目录
 	 * @return 是否存在
 	 */
 	public boolean exist(final String path) {
+		if (StrUtil.isBlank(path)) {
+			return false;
+		}
+		// 目录验证
+		if (isDir(path)) {
+			return true;
+		}
+		if (CharUtil.isFileSeparator(path.charAt(path.length() - 1))) {
+			return false;
+		}
+
 		final String fileName = FileUtil.getName(path);
-		final String dir = StrUtil.removeSuffix(path, fileName);
+		if (".".equals(fileName) || "..".equals(fileName)) {
+			return false;
+		}
+
+		// 文件验证
+		final String dir = StrUtil.defaultIfEmpty(StrUtil.removeSuffix(path, fileName), ".");
 		final List<String> names;
 		try {
 			names = ls(dir);
@@ -180,7 +207,7 @@ public abstract class AbstractFtp implements Closeable {
 
 	/**
 	 * 下载文件-避免未完成的文件<br>
-	 * 来自：https://gitee.com/dromara/hutool/pulls/407<br>
+	 * 来自：<a href="https://gitee.com/dromara/hutool/pulls/407">https://gitee.com/dromara/hutool/pulls/407</a><br>
 	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
 	 *
 	 * @param path     文件路径

@@ -3,7 +3,6 @@ package cn.hutool.json;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverterOld;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -163,12 +162,13 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
+	@SuppressWarnings("unchecked")
 	default <T> T get(final K key, final Class<T> type) throws ConvertException {
 		final Object value = this.getObj(key);
 		if (ObjUtil.isNull(value)) {
 			return null;
 		}
 
-		return JSONConverterOld.jsonConvert(type, value, getConfig());
+		return (T) getConfig().getConverter().convert(type, value);
 	}
 }

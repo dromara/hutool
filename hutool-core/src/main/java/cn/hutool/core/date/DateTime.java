@@ -783,11 +783,7 @@ public class DateTime extends Date {
 	 * @since 3.0.8
 	 */
 	public boolean isIn(final Date beginDate, final Date endDate) {
-		final long beginMills = beginDate.getTime();
-		final long endMills = endDate.getTime();
-		final long thisMills = this.getTime();
-
-		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
+		return DateUtil.isIn(this, beginDate, endDate);
 	}
 
 	/**

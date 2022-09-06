@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.Objects;
 
 public class TimeUtilTest {
@@ -234,7 +233,49 @@ public class TimeUtilTest {
 	@Test
 	public void ofTest2(){
 		final Instant instant = Objects.requireNonNull(DateUtil.parse("2022-02-22")).toInstant();
-		final LocalDateTime of = TimeUtil.of((TemporalAccessor) instant);
+		final LocalDateTime of = TimeUtil.of(instant);
 		Console.log(of);
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	@Test
+	public void isInTest() {
+		// 时间范围 8点-9点
+		final LocalDateTime begin = LocalDateTime.parse("2019-02-02T08:00:00");
+		final LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
+
+		// 不在时间范围内 用例
+		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T06:00:00"), begin, end));
+		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T13:00:00"), begin, end));
+		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-01T08:00:00"), begin, end));
+		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-03T09:00:00"), begin, end));
+
+		// 在时间范围内 用例
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:00"), begin, end));
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:01"), begin, end));
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:11:00"), begin, end));
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:22:00"), begin, end));
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:59:59"), begin, end));
+		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T09:00:00"), begin, end));
+
+		// 测试边界条件
+		Assert.assertTrue(TimeUtil.isIn(begin, begin, end, true, false));
+		Assert.assertFalse(TimeUtil.isIn(begin, begin, end, false, false));
+		Assert.assertTrue(TimeUtil.isIn(end, begin, end, false, true));
+		Assert.assertFalse(TimeUtil.isIn(end, begin, end, false, false));
+
+		// begin、end互换
+		Assert.assertTrue(TimeUtil.isIn(begin, end, begin, true, true));
+
+		// 比较当前时间范围
+		final LocalDateTime now = LocalDateTime.now();
+		Assert.assertTrue(TimeUtil.isIn(now, now.minusHours(1L), now.plusHours(1L)));
+		Assert.assertFalse(TimeUtil.isIn(now, now.minusHours(1L), now.minusHours(2L)));
+		Assert.assertFalse(TimeUtil.isIn(now, now.plusHours(1L), now.plusHours(2L)));
+
+		// 异常入参
+		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(null, begin, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, null, end, false, false));
+		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, begin, null, false, false));
 	}
 }

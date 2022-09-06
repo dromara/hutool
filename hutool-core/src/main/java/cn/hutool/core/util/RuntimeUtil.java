@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 系统运行时工具类，用于执行系统命令的工具
@@ -234,11 +235,21 @@ public class RuntimeUtil {
 	/**
 	 * 获得JVM可用的处理器数量（一般为CPU核心数）
 	 *
+	 * <p>
+	 *     这里做一个特殊的处理,在特殊的CPU上面，会有获取不到CPU数量的情况，所以这里做一个保护;
+	 *     默认给一个7，真实的CPU基本都是偶数，方便区分。
+	 *     如果不做处理，会出现创建线程池时{@link ThreadPoolExecutor}，抛出异常：{@link IllegalArgumentException}
+	 *</p>
+	 *
 	 * @return 可用的处理器数量
 	 * @since 5.3.0
 	 */
 	public static int getProcessorCount() {
-		return Runtime.getRuntime().availableProcessors();
+		int cpu = Runtime.getRuntime().availableProcessors();
+		if (cpu <= 0) {
+			cpu = 7;
+		}
+		return cpu;
 	}
 
 	/**

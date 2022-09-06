@@ -38,7 +38,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	public String get(final String group, final String key) {
 		readLock.lock();
 		try {
-			final LinkedHashMap<String, String> map = this.get(StrUtil.nullToEmpty(group));
+			final LinkedHashMap<String, String> map = this.get(StrUtil.emptyIfNull(group));
 			if (MapUtil.isNotEmpty(map)) {
 				return map.get(key);
 			}
@@ -88,7 +88,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 此key之前存在的值，如果没有返回null
 	 */
 	public String put(String group, final String key, final String value) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		writeLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.computeIfAbsent(group, k -> new LinkedHashMap<>());
@@ -121,7 +121,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 被删除的值，如果值不存在，返回null
 	 */
 	public String remove(String group, final String key) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		writeLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -141,7 +141,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 是否为空
 	 */
 	public boolean isEmpty(String group) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -172,7 +172,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 是否包含key
 	 */
 	public boolean containsKey(String group, final String key) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -193,7 +193,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 是否包含值
 	 */
 	public boolean containsValue(String group, final String value) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -213,7 +213,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return this
 	 */
 	public GroupedMap clear(String group) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		writeLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -243,7 +243,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 键Set
 	 */
 	public Set<String> keySet(String group) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -263,7 +263,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 值
 	 */
 	public Collection<String> values(String group) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);
@@ -293,7 +293,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 键值对
 	 */
 	public Set<Entry<String, String>> entrySet(String group) {
-		group = StrUtil.nullToEmpty(group).trim();
+		group = StrUtil.emptyIfNull(group).trim();
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> valueMap = this.get(group);

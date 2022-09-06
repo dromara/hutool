@@ -1381,11 +1381,49 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.0.8
 	 */
 	public static boolean isIn(final Date date, final Date beginDate, final Date endDate) {
-		if (date instanceof DateTime) {
-			return ((DateTime) date).isIn(beginDate, endDate);
-		} else {
-			return new DateTime(date).isIn(beginDate, endDate);
+		return isIn(date, beginDate, endDate, true, true);
+	}
+
+	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换<br>
+	 * 通过includeBegin, includeEnd参数控制日期范围区间是否为开区间，例如：传入参数：includeBegin=true, includeEnd=false，
+	 * 则本方法会判断 date ∈ (beginDate, endDate] 是否成立
+	 *
+	 * @param date         被检查的日期
+	 * @param beginDate    起始日期
+	 * @param endDate      结束日期
+	 * @param includeBegin 时间范围是否包含起始日期
+	 * @param includeEnd   时间范围是否包含结束日期
+	 * @return 是否在范围内
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static boolean isIn(final Date date, final Date beginDate, final Date endDate,
+							   final boolean includeBegin, final boolean includeEnd) {
+		if (date == null || beginDate == null || endDate == null) {
+			throw new IllegalArgumentException("参数不可为null");
 		}
+
+		final long thisMills = date.getTime();
+		final long beginMills = beginDate.getTime();
+		final long endMills =  endDate.getTime();
+		final long rangeMin = Math.min(beginMills, endMills);
+		final long rangeMax = Math.max(beginMills, endMills);
+
+		// 先判断是否满足 date ∈ (beginDate, endDate)
+		boolean isIn = rangeMin < thisMills && thisMills < rangeMax;
+
+		// 若不满足，则再判断是否在时间范围的边界上
+		if (false == isIn && includeBegin) {
+			isIn = thisMills == rangeMin;
+		}
+
+		if (false == isIn && includeEnd) {
+			isIn = thisMills == rangeMax;
+		}
+
+		return isIn;
 	}
 
 	/**

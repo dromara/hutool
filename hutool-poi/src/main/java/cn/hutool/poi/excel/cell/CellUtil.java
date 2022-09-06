@@ -449,7 +449,7 @@ public class CellUtil {
 		}
 		final Comment comment = drawing.createCellComment(anchor);
 		comment.setString(factory.createRichTextString(commentText));
-		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
+		comment.setAuthor(StrUtil.emptyIfNull(commentAuthor));
 		cell.setCellComment(comment);
 	}
 

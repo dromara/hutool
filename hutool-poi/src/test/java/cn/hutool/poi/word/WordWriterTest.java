@@ -4,11 +4,14 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.Font;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -93,5 +96,29 @@ public class WordWriterTest {
 		list2.add(list);
 		word07Writer.addTable(list);
 		word07Writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeBeanAsTableTest(){
+		final List<Vo> of = ListUtil.of(
+				new Vo("测试1", new BigDecimal(12), new BigDecimal(2)),
+				new Vo("测试2", new BigDecimal(13), new BigDecimal(2)),
+				new Vo("测试3", new BigDecimal(15), new BigDecimal(3)),
+				new Vo("测试4", new BigDecimal(112), new BigDecimal(5))
+		);
+
+		WordUtil.getWriter()
+				.addTable(of)
+				.flush(FileUtil.file("d:/test/beanValueTest.docx"))
+				.close();
+	}
+
+	@Data
+	@AllArgsConstructor
+	private static class Vo{
+		private String name;
+		private BigDecimal amount;
+		private BigDecimal onYear;
 	}
 }

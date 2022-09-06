@@ -164,7 +164,7 @@ public class ZipWriter implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ZipWriter add(String path, final InputStream in) throws IORuntimeException {
-		path = StrUtil.nullToEmpty(path);
+		path = StrUtil.emptyIfNull(path);
 		if (null == in) {
 			// 空目录需要检查路径规范性，目录以"/"结尾
 			path = StrUtil.addSuffixIfNot(path, StrUtil.SLASH);

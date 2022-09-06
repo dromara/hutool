@@ -1,5 +1,7 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.util.RuntimeUtil;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -129,7 +131,7 @@ public class ThreadUtil {
 		}
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
-		final int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
+		final int poolSize = (int) (RuntimeUtil.getProcessorCount() / (1 - blockingCoefficient));
 		return ExecutorBuilder.of().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
 	}
 

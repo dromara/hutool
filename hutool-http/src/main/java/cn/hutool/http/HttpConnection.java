@@ -213,7 +213,7 @@ public class HttpConnection {
 			for (final Entry<String, List<String>> entry : headerMap.entrySet()) {
 				name = entry.getKey();
 				for (final String value : entry.getValue()) {
-					this.header(name, StrUtil.nullToEmpty(value), isOverride);
+					this.header(name, StrUtil.emptyIfNull(value), isOverride);
 				}
 			}
 		}

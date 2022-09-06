@@ -190,7 +190,7 @@ public class ResourceUtil {
 	 * @return {@link URL}
 	 */
 	public static URL getResourceUrl(String resource, final Class<?> baseClass) {
-		resource = StrUtil.nullToEmpty(resource);
+		resource = StrUtil.emptyIfNull(resource);
 		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
 	}
 

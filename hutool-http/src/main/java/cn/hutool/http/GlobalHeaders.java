@@ -180,7 +180,7 @@ public enum GlobalHeaders {
 		for (final Entry<String, List<String>> entry : headers.entrySet()) {
 			name = entry.getKey();
 			for (final String value : entry.getValue()) {
-				this.header(name, StrUtil.nullToEmpty(value), false);
+				this.header(name, StrUtil.emptyIfNull(value), false);
 			}
 		}
 		return this;

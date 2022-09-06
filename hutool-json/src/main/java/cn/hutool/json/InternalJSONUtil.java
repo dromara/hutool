@@ -13,7 +13,6 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.convert.JSONConverterOld;
 import cn.hutool.json.serialize.JSONString;
 
 import java.io.IOException;
@@ -207,9 +206,8 @@ public final class InternalJSONUtil {
 	 * @param key        键
 	 * @param value      值
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
-	 * @return JSONObject
 	 */
-	public static JSONObject propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
+	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
 		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
@@ -223,7 +221,6 @@ public final class InternalJSONUtil {
 			target = nextTarget;
 		}
 		target.set(path[last], value, predicate);
-		return jsonObject;
 	}
 
 	/**
@@ -259,8 +256,7 @@ public final class InternalJSONUtil {
 				.setIgnoreNullValue(config.isIgnoreNullValue())
 				.setTransientSupport(config.isTransientSupport())
 				// 使用JSON转换器
-				.setConverter((type, value) ->
-						JSONConverterOld.convertWithCheck(type, value, null, config.isIgnoreError()));
+				.setConverter(config.getConverter());
 	}
 
 	/**
@@ -296,11 +292,10 @@ public final class InternalJSONUtil {
 	 *
 	 * @param str    字符串
 	 * @param writer Writer
-	 * @return Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Writer quote(final String str, final Writer writer) throws IORuntimeException {
-		return quote(str, writer, true);
+	public static void quote(final String str, final Writer writer) throws IORuntimeException {
+		quote(str, writer, true);
 	}
 
 	/**

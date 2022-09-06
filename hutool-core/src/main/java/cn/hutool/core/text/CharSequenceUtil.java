@@ -50,7 +50,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
 	 */
-	public static String nullToEmpty(final CharSequence str) {
+	public static String emptyIfNull(final CharSequence str) {
 		return ObjUtil.defaultIfNull(str, EMPTY).toString();
 	}
 
@@ -61,7 +61,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param str 被转换的字符串
 	 * @return 转换后的字符串
 	 */
-	public static <T extends CharSequence> T emptyToNull(final T str) {
+	public static <T extends CharSequence> T nullIfEmpty(final T str) {
 		return isEmpty(str) ? null : str;
 	}
 
@@ -809,10 +809,10 @@ public class CharSequenceUtil extends StrChecker {
 	/**
 	 * 指定范围内查找指定字符
 	 *
-	 * @param text       字符串
-	 * @param matcher    被查找的字符匹配器
-	 * @param start      起始位置，如果小于0，从0开始查找
-	 * @param end        终止位置，如果超过str.length()则默认查找到字符串末尾
+	 * @param text    字符串
+	 * @param matcher 被查找的字符匹配器
+	 * @param start   起始位置，如果小于0，从0开始查找
+	 * @param end     终止位置，如果超过str.length()则默认查找到字符串末尾
 	 * @return 位置
 	 * @since 6.0.0
 	 */
@@ -2521,7 +2521,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 包装后的字符串
 	 */
 	public static String wrap(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
+		return emptyIfNull(prefix).concat(emptyIfNull(str)).concat(emptyIfNull(suffix));
 	}
 
 	/**
@@ -3990,7 +3990,7 @@ public class CharSequenceUtil extends StrChecker {
 	public static String concat(final boolean isNullToEmpty, final CharSequence... strs) {
 		final StringBuilder sb = new StringBuilder();
 		for (final CharSequence str : strs) {
-			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
+			sb.append(isNullToEmpty ? emptyIfNull(str) : str);
 		}
 		return sb.toString();
 	}

@@ -406,7 +406,7 @@ public class UrlQuery {
 	private void addParam(final String key, final String value, final Charset charset) {
 		if (null != key) {
 			final String actualKey = URLDecoder.decode(key, charset, isFormUrlEncoded);
-			this.query.put(actualKey, StrUtil.nullToEmpty(URLDecoder.decode(value, charset, isFormUrlEncoded)));
+			this.query.put(actualKey, StrUtil.emptyIfNull(URLDecoder.decode(value, charset, isFormUrlEncoded)));
 		} else if (null != value) {
 			// name为空，value作为name，value赋值null
 			this.query.put(URLDecoder.decode(value, charset, isFormUrlEncoded), null);

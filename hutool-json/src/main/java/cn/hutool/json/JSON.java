@@ -2,7 +2,6 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.lang.mutable.MutableEntry;
-import cn.hutool.json.convert.JSONConverterOld;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -107,7 +106,10 @@ public interface JSON extends Cloneable, Serializable {
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	<T> T getByPath(String expression, Class<T> resultType);
+	@SuppressWarnings("unchecked")
+	default <T> T getByPath(final String expression, final Class<T> resultType){
+		return (T) getConfig().getConverter().convert(resultType, getByPath(expression));
+	}
 
 	/**
 	 * 格式化打印JSON，缩进为4个空格
@@ -160,17 +162,6 @@ public interface JSON extends Cloneable, Serializable {
 	Writer write(Writer writer, int indentFactor, int indent, final Predicate<MutableEntry<Object, Object>> predicate) throws JSONException;
 
 	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>   Bean类型
-	 * @param clazz 实体类
-	 * @return 实体类对象
-	 */
-	default <T> T toBean(final Class<T> clazz) {
-		return toBean((Type) clazz);
-	}
-
-	/**
 	 * 转为实体类对象
 	 *
 	 * @param <T>  Bean类型
@@ -178,7 +169,8 @@ public interface JSON extends Cloneable, Serializable {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
+	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
-		return JSONConverterOld.jsonConvert(type, this, getConfig());
+		return (T) getConfig().getConverter().convert(type, this);
 	}
 }

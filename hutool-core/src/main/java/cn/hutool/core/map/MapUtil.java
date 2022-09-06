@@ -7,7 +7,6 @@ import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
-import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -16,7 +15,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +38,7 @@ import java.util.stream.Collectors;
  * @author Looly
  * @since 3.1.1
  */
-public class MapUtil {
+public class MapUtil extends MapGetUtil {
 
 	/**
 	 * 默认初始大小
@@ -250,9 +247,9 @@ public class MapUtil {
 		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			try{
+			try {
 				return (Map<K, V>) ConstructorUtil.newInstance(mapType);
-			}catch (UtilException e){
+			} catch (final UtilException e) {
 				// 不支持的map类型，返回默认的HashMap
 				return new HashMap<>();
 			}
@@ -483,14 +480,14 @@ public class MapUtil {
 		}
 
 		final List<Map<K, V>> resultList = new ArrayList<>();
-		for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
+		for (final Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
 			final Iterator<V> iterator = IterUtil.getIter(entry.getValue());
 			if (IterUtil.isEmpty(iterator)) {
 				continue;
 			}
 			final K key = entry.getKey();
 			// 对已经存在的map添加元素
-			for (Map<K, V> map : resultList) {
+			for (final Map<K, V> map : resultList) {
 				// 还可以继续添加元素
 				if (iterator.hasNext()) {
 					map.put(key, iterator.next());
@@ -967,319 +964,6 @@ public class MapUtil {
 	}
 
 	/**
-	 * 获取Map指定key的值，并转换为字符串
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static String getStr(final Map<?, ?> map, final Object key) {
-		return get(map, key, String.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为字符串
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static String getStr(final Map<?, ?> map, final Object key, final String defaultValue) {
-		return get(map, key, String.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Integer
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Integer getInt(final Map<?, ?> map, final Object key) {
-		return get(map, key, Integer.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Integer
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Integer getInt(final Map<?, ?> map, final Object key, final Integer defaultValue) {
-		return get(map, key, Integer.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Double
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Double getDouble(final Map<?, ?> map, final Object key) {
-		return get(map, key, Double.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Double
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Double getDouble(final Map<?, ?> map, final Object key, final Double defaultValue) {
-		return get(map, key, Double.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Float
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Float getFloat(final Map<?, ?> map, final Object key) {
-		return get(map, key, Float.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Float
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Float getFloat(final Map<?, ?> map, final Object key, final Float defaultValue) {
-		return get(map, key, Float.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Short
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Short getShort(final Map<?, ?> map, final Object key) {
-		return get(map, key, Short.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Short
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Short getShort(final Map<?, ?> map, final Object key, final Short defaultValue) {
-		return get(map, key, Short.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Bool
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Boolean getBool(final Map<?, ?> map, final Object key) {
-		return get(map, key, Boolean.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Bool
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Boolean getBool(final Map<?, ?> map, final Object key, final Boolean defaultValue) {
-		return get(map, key, Boolean.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Character
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Character getChar(final Map<?, ?> map, final Object key) {
-		return get(map, key, Character.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Character
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Character getChar(final Map<?, ?> map, final Object key, final Character defaultValue) {
-		return get(map, key, Character.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Long
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static Long getLong(final Map<?, ?> map, final Object key) {
-		return get(map, key, Long.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为Long
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static Long getLong(final Map<?, ?> map, final Object key, final Long defaultValue) {
-		return get(map, key, Long.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为{@link Date}
-	 *
-	 * @param map Map
-	 * @param key 键
-	 * @return 值
-	 * @since 4.1.2
-	 */
-	public static Date getDate(final Map<?, ?> map, final Object key) {
-		return get(map, key, Date.class);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为{@link Date}
-	 *
-	 * @param map          Map
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 4.1.2
-	 */
-	public static Date getDate(final Map<?, ?> map, final Object key, final Date defaultValue) {
-		return get(map, key, Date.class, defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型
-	 *
-	 * @param <T>  目标值类型
-	 * @param map  Map
-	 * @param key  键
-	 * @param type 值类型
-	 * @return 值
-	 * @since 4.0.6
-	 */
-	public static <T> T get(final Map<?, ?> map, final Object key, final Class<T> type) {
-		return get(map, key, type, null);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型
-	 *
-	 * @param <T>          目标值类型
-	 * @param map          Map
-	 * @param key          键
-	 * @param type         值类型
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static <T> T get(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型，此方法在转换失败后不抛异常，返回null。
-	 *
-	 * @param <T>          目标值类型
-	 * @param map          Map
-	 * @param key          键
-	 * @param type         值类型
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.5.3
-	 */
-	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final Class<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型
-	 *
-	 * @param <T>  目标值类型
-	 * @param map  Map
-	 * @param key  键
-	 * @param type 值类型
-	 * @return 值
-	 * @since 4.5.12
-	 */
-	public static <T> T get(final Map<?, ?> map, final Object key, final TypeReference<T> type) {
-		return get(map, key, type, null);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型
-	 *
-	 * @param <T>          目标值类型
-	 * @param map          Map
-	 * @param key          键
-	 * @param type         值类型
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.3.11
-	 */
-	public static <T> T get(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convert(type, map.get(key), defaultValue);
-	}
-
-	/**
-	 * 获取Map指定key的值，并转换为指定类型，转换失败后返回null，不抛异常
-	 *
-	 * @param <T>          目标值类型
-	 * @param map          Map
-	 * @param key          键
-	 * @param type         值类型
-	 * @param defaultValue 默认值
-	 * @return 值
-	 * @since 5.5.3
-	 */
-	public static <T> T getQuietly(final Map<?, ?> map, final Object key, final TypeReference<T> type, final T defaultValue) {
-		return null == map ? defaultValue : Convert.convertQuietly(type, map.get(key), defaultValue);
-	}
-
-	/**
 	 * 重命名键<br>
 	 * 实现方式为一处然后重新put，当旧的key不存在直接返回<br>
 	 * 当新的key存在，抛出{@link IllegalArgumentException} 异常
@@ -1556,5 +1240,33 @@ public class MapUtil {
 			resultMap.put(keyMapper.apply(value), valueMapper.apply(value));
 		}
 		return resultMap;
+	}
+
+	/**
+	 * 根据给定的entry列表，根据entry的key进行分组;
+	 *
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @param entries entry列表
+	 * @return entries
+	 * @since 5.8.6
+	 */
+	public static <K, V> Map<K, List<V>> grouping(final Iterable<Map.Entry<K, V>> entries) {
+		if (CollUtil.isEmpty(entries)) {
+			return zero();
+		}
+
+		final Map<K, List<V>> map = new HashMap<>();
+		for (final Map.Entry<K, V> pair : entries) {
+			final List<V> values;
+			if (map.containsKey(pair.getKey())) {
+				values = map.get(pair.getKey());
+			} else {
+				values = ListUtil.of();
+				map.put(pair.getKey(), values);
+			}
+			values.add(pair.getValue());
+		}
+		return map;
 	}
 }

@@ -47,14 +47,14 @@ public class CollectorUtilTest {
 
 	@Test
 	public void testToEasyStream() {
-		Stream<Integer> stream =Stream.of(1, 2, 3, 4)
+		final Stream<Integer> stream =Stream.of(1, 2, 3, 4)
 			.collect(CollectorUtil.toEasyStream());
 		Assert.assertEquals(EasyStream.class, stream.getClass());
 	}
 
 	@Test
 	public void testToEntryStream() {
-		Map<String, Integer> map = Stream.of(1, 2, 3, 4, 5)
+		final Map<String, Integer> map = Stream.of(1, 2, 3, 4, 5)
 			// 转为EntryStream
 			.collect(CollectorUtil.toEntryStream(Function.identity(), String::valueOf))
 			// 过滤偶数

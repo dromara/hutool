@@ -450,12 +450,13 @@ public class ImgUtil {
 	 *
 	 * @param srcImageFile 源图像文件
 	 * @param destDir      切片目标文件夹
+	 * @param formatName   格式名称，即图片格式后缀
 	 * @param rows         目标切片行数。默认2，必须是范围 [1, 20] 之内
 	 * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
-	public static void sliceByRowsAndCols(final File srcImageFile, final File destDir, final int rows, final int cols) {
+	public static void sliceByRowsAndCols(final File srcImageFile, final File destDir, final String formatName, final int rows, final int cols) {
 		try {
-			sliceByRowsAndCols(ImageIO.read(srcImageFile), destDir, rows, cols);
+			sliceByRowsAndCols(ImageIO.read(srcImageFile), destDir, formatName, rows, cols);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -464,12 +465,13 @@ public class ImgUtil {
 	/**
 	 * 图像切割（指定切片的行数和列数），默认RGB模式
 	 *
-	 * @param srcImage 源图像，如果非{@link BufferedImage}，则默认使用RGB模式
-	 * @param destDir  切片目标文件夹
-	 * @param rows     目标切片行数。默认2，必须是范围 [1, 20] 之内
-	 * @param cols     目标切片列数。默认2，必须是范围 [1, 20] 之内
+	 * @param srcImage   源图像，如果非{@link BufferedImage}，则默认使用RGB模式
+	 * @param destDir    切片目标文件夹
+	 * @param formatName 格式名称，即图片格式后缀
+	 * @param rows       目标切片行数。默认2，必须是范围 [1, 20] 之内
+	 * @param cols       目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
-	public static void sliceByRowsAndCols(final Image srcImage, final File destDir, int rows, int cols) {
+	public static void sliceByRowsAndCols(final Image srcImage, final File destDir, final String formatName, int rows, int cols) {
 		if (false == destDir.exists()) {
 			FileUtil.mkdir(destDir);
 		} else if (false == destDir.isDirectory()) {
@@ -497,7 +499,7 @@ public class ImgUtil {
 				for (int j = 0; j < cols; j++) {
 					tag = cut(bi, new Rectangle(j * destWidth, i * destHeight, destWidth, destHeight));
 					// 输出为文件
-					ImageIO.write(toRenderedImage(tag), IMAGE_TYPE_JPEG, new File(destDir, "_r" + i + "_c" + j + ".jpg"));
+					ImageIO.write(toRenderedImage(tag), formatName, new File(destDir, "_r" + i + "_c" + j + ".jpg"));
 				}
 			}
 		} catch (final IOException e) {
@@ -1359,10 +1361,10 @@ public class ImgUtil {
 	/**
 	 * 根据文字创建透明背景的PNG图片
 	 *
-	 * @param str             文字
-	 * @param font            字体{@link Font}
-	 * @param fontColor       字体颜色，默认黑色
-	 * @param out             图片输出地
+	 * @param str       文字
+	 * @param font      字体{@link Font}
+	 * @param fontColor 字体颜色，默认黑色
+	 * @param out       图片输出地
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void createTransparentImage(String str, Font font, Color fontColor, ImageOutputStream out) throws IORuntimeException {
@@ -2072,7 +2074,7 @@ public class ImgUtil {
 				r = (pixel & 0xff0000) >> 16;
 				g = (pixel & 0xff00) >> 8;
 				b = (pixel & 0xff);
-				if(matchFilters(r, g, b, rgbFilters)){
+				if (matchFilters(r, g, b, rgbFilters)) {
 					continue;
 				}
 				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
@@ -2100,13 +2102,14 @@ public class ImgUtil {
 
 	/**
 	 * 给定RGB是否匹配过滤器中任何一个RGB颜色
-	 * @param r R
-	 * @param g G
-	 * @param b B
+	 *
+	 * @param r          R
+	 * @param g          G
+	 * @param b          B
 	 * @param rgbFilters 颜色过滤器
 	 * @return 是否匹配
 	 */
-	private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters){
+	private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters) {
 		if (rgbFilters != null && rgbFilters.length > 0) {
 			for (final int[] rgbFilter : rgbFilters) {
 				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {

@@ -15,4 +15,5 @@ public interface IterableIter<T> extends Iterable<T>, Iterator<T> {
 	default Iterator<T> iterator() {
 		return this;
 	}
+
 }

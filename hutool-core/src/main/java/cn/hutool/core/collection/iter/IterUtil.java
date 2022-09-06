@@ -11,16 +11,7 @@ import cn.hutool.core.util.ObjUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -192,32 +183,35 @@ public class IterUtil {
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
+	 * @param <R> 返回元素类型
 	 * @param <V>       对象类型
 	 * @param iterable  对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.6.2
 	 */
-	public static <V> List<Object> fieldValueList(final Iterable<V> iterable, final String fieldName) {
+	public static <V, R> List<R> fieldValueList(final Iterable<V> iterable, final String fieldName) {
 		return fieldValueList(getIter(iterable), fieldName);
 	}
 
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
+	 * @param <R> 返回元素类型
 	 * @param <V>       对象类型
 	 * @param iter      对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.0.10
 	 */
-	public static <V> List<Object> fieldValueList(final Iterator<V> iter, final String fieldName) {
-		final List<Object> result = new ArrayList<>();
+	@SuppressWarnings("unchecked")
+	public static <V, R> List<R> fieldValueList(final Iterator<V> iter, final String fieldName) {
+		final List<R> result = new ArrayList<>();
 		if (null != iter) {
 			V value;
 			while (iter.hasNext()) {
 				value = iter.next();
-				result.add(FieldUtil.getFieldValue(value, fieldName));
+				result.add((R)FieldUtil.getFieldValue(value, fieldName));
 			}
 		}
 		return result;
@@ -378,7 +372,7 @@ public class IterUtil {
 	}
 
 	/**
-	 * 将列表转成值为List的HashMap
+	 * 将列表转成值为List的Map集合
 	 *
 	 * @param resultMap   结果Map，可自定义结果Map类型
 	 * @param iterable    值列表
@@ -702,38 +696,40 @@ public class IterUtil {
 	}
 
 	/**
-	 * 判断两个{@link Iterable} 是否元素和顺序相同，返回{@code true}的条件是：
+	 * <p>判断两个{@link Iterable}中的元素与其顺序是否相同 <br>
+	 * 当满足下列情况时返回{@code true}：
 	 * <ul>
-	 *     <li>两个{@link Iterable}必须长度相同</li>
-	 *     <li>两个{@link Iterable}元素相同index的对象必须equals，满足{@link Objects#equals(Object, Object)}</li>
+	 *     <li>两个{@link Iterable}都为{@code null}；</li>
+	 *     <li>两个{@link Iterable}满足{@code iterable1 == iterable2}；</li>
+	 *     <li>两个{@link Iterable}所有具有相同下标的元素皆满足{@link Objects#equals(Object, Object)}；</li>
 	 * </ul>
 	 * 此方法来自Apache-Commons-Collections4。
 	 *
-	 * @param list1 列表1
-	 * @param list2 列表2
+	 * @param iterable1 列表1
+	 * @param iterable2 列表2
 	 * @return 是否相同
 	 * @since 5.6.0
 	 */
-	public static boolean isEqualList(final Iterable<?> list1, final Iterable<?> list2) {
-		if (list1 == list2) {
+	public static boolean isEqualList(final Iterable<?> iterable1, final Iterable<?> iterable2) {
+		if (iterable1 == iterable2) {
 			return true;
 		}
-
-		final Iterator<?> it1 = list1.iterator();
-		final Iterator<?> it2 = list2.iterator();
+		if (iterable1 == null || iterable2 == null) {
+			return false;
+		}
+		final Iterator<?> iter1 = iterable1.iterator();
+		final Iterator<?> iter2 = iterable2.iterator();
 		Object obj1;
 		Object obj2;
-		while (it1.hasNext() && it2.hasNext()) {
-			obj1 = it1.next();
-			obj2 = it2.next();
-
+		while (iter1.hasNext() && iter2.hasNext()) {
+			obj1 = iter1.next();
+			obj2 = iter2.next();
 			if (false == Objects.equals(obj1, obj2)) {
 				return false;
 			}
 		}
-
 		// 当两个Iterable长度不一致时返回false
-		return false == (it1.hasNext() || it2.hasNext());
+		return false == (iter1.hasNext() || iter2.hasNext());
 	}
 
 	/**
