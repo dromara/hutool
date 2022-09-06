@@ -5,7 +5,7 @@ import java.util.function.*;
 import java.util.stream.*;
 
 /**
- * <p>{@link Stream}实例的包装器，用于增强原始的{@link Stream}，提供一些额外的中间与终端操作 <br>
+ * <p>{@link Stream}实例的包装器，用于增强原始的{@link Stream}，提供一些额外的中间与终端操作。 <br>
  * 默认提供两个可用实现：
  * <ul>
  *     <li>{@link EasyStream}：针对单元素的通用增强流实现；</li>
@@ -30,19 +30,20 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	int NOT_FOUND_ELEMENT_INDEX = -1;
 
 	/**
-	 * 获取被包装的原始流
+	 * 获取被当前实例包装的流对象
 	 *
-	 * @return 被包装的原始流
+	 * @return 被当前实例包装的流对象
 	 */
-	Stream<T> stream();
+	Stream<T> unwrap();
 
 	/**
-	 * 将一个原始流包装为指定类型的增强流
+	 * 将一个原始流包装为指定类型的增强流 <br>
+	 * 若{@code source}于当前实例包装的流并不相同，则该增强流与当前实例无关联关系
 	 *
 	 * @param source 被包装的流
-	 * @return S
+	 * @return 包装后的流
 	 */
-	S wrapping(final Stream<T> source);
+	S wrap(final Stream<T> source);
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流
@@ -54,7 +55,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default S filter(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return wrapping(stream().filter(predicate));
+		return wrap(unwrap().filter(predicate));
 	}
 
 	/**
@@ -67,7 +68,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default IntStream mapToInt(final ToIntFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().mapToInt(mapper);
+		return unwrap().mapToInt(mapper);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default LongStream mapToLong(final ToLongFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().mapToLong(mapper);
+		return unwrap().mapToLong(mapper);
 	}
 
 	/**
@@ -93,7 +94,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default DoubleStream mapToDouble(final ToDoubleFunction<? super T> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().mapToDouble(mapper);
+		return unwrap().mapToDouble(mapper);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default IntStream flatMapToInt(final Function<? super T, ? extends IntStream> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().flatMapToInt(mapper);
+		return unwrap().flatMapToInt(mapper);
 	}
 
 	/**
@@ -119,7 +120,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default LongStream flatMapToLong(final Function<? super T, ? extends LongStream> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().flatMapToLong(mapper);
+		return unwrap().flatMapToLong(mapper);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default DoubleStream flatMapToDouble(final Function<? super T, ? extends DoubleStream> mapper) {
 		Objects.requireNonNull(mapper);
-		return stream().flatMapToDouble(mapper);
+		return unwrap().flatMapToDouble(mapper);
 	}
 
 	/**
@@ -143,7 +144,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S distinct() {
-		return wrapping(stream().distinct());
+		return wrap(unwrap().distinct());
 	}
 
 	/**
@@ -156,7 +157,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S sorted() {
-		return wrapping(stream().sorted());
+		return wrap(unwrap().sorted());
 	}
 
 	/**
@@ -171,7 +172,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default S sorted(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
-		return wrapping(stream().sorted(comparator));
+		return wrap(unwrap().sorted(comparator));
 	}
 
 	/**
@@ -194,7 +195,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default S peek(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
-		return wrapping(stream().peek(action));
+		return wrap(unwrap().peek(action));
 	}
 
 	/**
@@ -206,7 +207,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S limit(final long maxSize) {
-		return wrapping(stream().limit(maxSize));
+		return wrap(unwrap().limit(maxSize));
 	}
 
 	/**
@@ -218,7 +219,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S skip(final long n) {
-		return wrapping(stream().skip(n));
+		return wrap(unwrap().skip(n));
 	}
 
 	/**
@@ -230,7 +231,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default void forEach(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
-		stream().forEach(action);
+		unwrap().forEach(action);
 	}
 
 	/**
@@ -242,7 +243,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default void forEachOrdered(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
-		stream().forEachOrdered(action);
+		unwrap().forEachOrdered(action);
 	}
 
 	/**
@@ -253,7 +254,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default Object[] toArray() {
-		return stream().toArray();
+		return unwrap().toArray();
 	}
 
 	/**
@@ -268,7 +269,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default <A> A[] toArray(final IntFunction<A[]> generator) {
 		Objects.requireNonNull(generator);
-		return stream().toArray(generator);
+		return unwrap().toArray(generator);
 	}
 
 	/**
@@ -294,7 +295,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default T reduce(final T identity, final BinaryOperator<T> accumulator) {
 		Objects.requireNonNull(accumulator);
-		return stream().reduce(identity, accumulator);
+		return unwrap().reduce(identity, accumulator);
 	}
 
 	/**
@@ -303,7 +304,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * <pre>{@code
 	 *     boolean foundAny = false;
 	 *     T result = null;
-	 *     for (T element : this stream) {
+	 *     for (T element : this unwrap) {
 	 *         if (!foundAny) {
 	 *             foundAny = true;
 	 *             result = element;
@@ -330,7 +331,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default Optional<T> reduce(final BinaryOperator<T> accumulator) {
 		Objects.requireNonNull(accumulator);
-		return stream().reduce(accumulator);
+		return unwrap().reduce(accumulator);
 	}
 
 	/**
@@ -349,7 +350,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	default <U> U reduce(final U identity, final BiFunction<U, ? super T, U> accumulator, final BinaryOperator<U> combiner) {
 		Objects.requireNonNull(accumulator);
 		Objects.requireNonNull(combiner);
-		return stream().reduce(identity, accumulator, combiner);
+		return unwrap().reduce(identity, accumulator, combiner);
 	}
 
 	/**
@@ -370,7 +371,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 		Objects.requireNonNull(supplier);
 		Objects.requireNonNull(accumulator);
 		Objects.requireNonNull(combiner);
-		return stream().collect(supplier, accumulator, combiner);
+		return unwrap().collect(supplier, accumulator, combiner);
 	}
 
 	/**
@@ -385,7 +386,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default <R, A> R collect(final Collector<? super T, A, R> collector) {
 		Objects.requireNonNull(collector);
-		return stream().collect(collector);
+		return unwrap().collect(collector);
 	}
 
 	/**
@@ -397,7 +398,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default Optional<T> min(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
-		return stream().min(comparator);
+		return unwrap().min(comparator);
 	}
 
 	/**
@@ -409,7 +410,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default Optional<T> max(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
-		return stream().max(comparator);
+		return unwrap().max(comparator);
 	}
 
 	/**
@@ -419,7 +420,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default long count() {
-		return stream().count();
+		return unwrap().count();
 	}
 
 	/**
@@ -431,7 +432,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default boolean anyMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return stream().anyMatch(predicate);
+		return unwrap().anyMatch(predicate);
 	}
 
 	/**
@@ -443,7 +444,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default boolean allMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return stream().allMatch(predicate);
+		return unwrap().allMatch(predicate);
 	}
 
 	/**
@@ -455,7 +456,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default boolean noneMatch(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return stream().noneMatch(predicate);
+		return unwrap().noneMatch(predicate);
 	}
 
 	/**
@@ -465,7 +466,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default Optional<T> findFirst() {
-		return stream().findFirst();
+		return unwrap().findFirst();
 	}
 
 	/**
@@ -475,7 +476,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default Optional<T> findAny() {
-		return stream().findAny();
+		return unwrap().findAny();
 	}
 
 	/**
@@ -485,7 +486,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default Iterator<T> iterator() {
-		return stream().iterator();
+		return unwrap().iterator();
 	}
 
 	/**
@@ -495,7 +496,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default Spliterator<T> spliterator() {
-		return stream().spliterator();
+		return unwrap().spliterator();
 	}
 
 	/**
@@ -505,7 +506,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default boolean isParallel() {
-		return stream().isParallel();
+		return unwrap().isParallel();
 	}
 
 	/**
@@ -515,7 +516,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S sequential() {
-		return wrapping(stream().sequential());
+		return wrap(unwrap().sequential());
 	}
 
 	/**
@@ -525,7 +526,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S parallel() {
-		return wrapping(stream().parallel());
+		return wrap(unwrap().parallel());
 	}
 
 	/**
@@ -536,7 +537,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S unordered() {
-		return wrapping(stream().unordered());
+		return wrap(unwrap().unordered());
 	}
 
 	/**
@@ -547,7 +548,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default S onClose(Runnable closeHandler) {
-		return wrapping(stream().onClose(closeHandler));
+		return wrap(unwrap().onClose(closeHandler));
 	}
 
 	/**
@@ -557,7 +558,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 */
 	@Override
 	default void close() {
-		stream().close();
+		unwrap().close();
 	}
 
 	/**

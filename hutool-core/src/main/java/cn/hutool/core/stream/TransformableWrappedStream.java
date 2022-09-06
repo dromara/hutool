@@ -57,7 +57,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		while (keys.tryAdvance(key::set) && values.tryAdvance(value::set)) {
 			list.add(zipper.apply(key.get(), value.get()));
 		}
-		return EasyStream.of(list).parallel(isParallel()).onClose(stream()::close);
+		return EasyStream.of(list).parallel(isParallel()).onClose(unwrap()::close);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		return EasyStream.iterate(0, i -> i < size, i -> i + batchSize)
 			.map(skip -> EasyStream.of(list.subList(skip, Math.min(size, skip + batchSize)), isParallel()))
 			.parallel(isParallel())
-			.onClose(stream()::close);
+			.onClose(unwrap()::close);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default S reverse() {
 		final T[] array = (T[]) toArray();
 		ArrayUtil.reverse(array);
-		return wrapping(Stream.of(array)).parallel(isParallel());
+		return wrap(Stream.of(array)).parallel(isParallel());
 	}
 
 	/**
@@ -156,8 +156,8 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @return 操作后的流
 	 */
 	default S splice(final int start, final int deleteCount, final T... items) {
-		final List<T> elements = stream().collect(Collectors.toList());
-		return wrapping(ListUtil.splice(elements, start, deleteCount, items).stream())
+		final List<T> elements = unwrap().collect(Collectors.toList());
+		return wrap(ListUtil.splice(elements, start, deleteCount, items).stream())
 			.parallel(isParallel());
 	}
 
@@ -187,7 +187,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S takeWhile(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return wrapping(StreamUtil.takeWhile(stream(), predicate));
+		return wrap(StreamUtil.takeWhile(unwrap(), predicate));
 	}
 
 	/**
@@ -216,7 +216,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S dropWhile(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return wrapping(StreamUtil.dropWhile(stream(), predicate));
+		return wrap(StreamUtil.dropWhile(unwrap(), predicate));
 	}
 
 	/**
@@ -234,7 +234,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 			// 标记是否出现过null值，用于保留第一个出现的null
 			// 由于ConcurrentHashMap的key不能为null，所以用此变量来标记
 			final AtomicBoolean hasNull = new AtomicBoolean(false);
-			return EasyStream.of(stream().filter(e -> {
+			return EasyStream.of(unwrap().filter(e -> {
 				final F key = keyExtractor.apply(e);
 				if (key == null) {
 					// 已经出现过null值，跳过该值
@@ -250,7 +250,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 			})).parallel();
 		} else {
 			final Set<F> exists = new HashSet<>();
-			return EasyStream.of(stream().filter(e -> exists.add(keyExtractor.apply(e))));
+			return EasyStream.of(unwrap().filter(e -> exists.add(keyExtractor.apply(e))));
 		}
 	}
 
@@ -305,11 +305,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	@SuppressWarnings("unchecked")
 	default S push(final T... obj) {
-		Stream<T> result = stream();
+		Stream<T> result = unwrap();
 		if (ArrayUtil.isNotEmpty(obj)) {
-			result = Stream.concat(stream(), Stream.of(obj));
+			result = Stream.concat(unwrap(), Stream.of(obj));
 		}
-		return wrapping(result);
+		return wrap(result);
 	}
 
 	/**
@@ -319,11 +319,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @return 流
 	 */
 	default S unshift(final T... obj) {
-		Stream<T> result = stream();
+		Stream<T> result = unwrap();
 		if (ArrayUtil.isNotEmpty(obj)) {
-			result = Stream.concat(Stream.of(obj), stream());
+			result = Stream.concat(Stream.of(obj), unwrap());
 		}
-		return wrapping(result);
+		return wrap(result);
 	}
 
 	/**
@@ -334,10 +334,10 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S append(final Iterable<? extends T> iterable) {
 		if (IterUtil.isEmpty(iterable)) {
-			return wrapping(this);
+			return wrap(this);
 		}
 		final Stream<? extends T> contacted = StreamSupport.stream(iterable.spliterator(), isParallel());
-		return wrapping(Stream.concat(this, contacted));
+		return wrap(Stream.concat(this, contacted));
 	}
 
 	/**
@@ -348,10 +348,10 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S prepend(final Iterable<? extends T> iterable) {
 		if (IterUtil.isEmpty(iterable)) {
-			return wrapping(this);
+			return wrap(this);
 		}
 		final Stream<? extends T> contacted = StreamSupport.stream(iterable.spliterator(), isParallel());
-		return wrapping(Stream.concat(contacted, this));
+		return wrap(Stream.concat(contacted, this));
 	}
 
 	// endregion
@@ -417,7 +417,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	@Override
 	default <R> EasyStream<R> flatMap(final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
-		return new EasyStream<>(stream().flatMap(mapper));
+		return new EasyStream<>(unwrap().flatMap(mapper));
 	}
 
 	/**
@@ -493,7 +493,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 			.flat(recursiveRef.get())
 			.unshift(e);
 		recursiveRef.set(recursive);
-		return wrapping(flatMap(recursive).peek(e -> childrenSetter.accept(e, null)));
+		return wrap(flatMap(recursive).peek(e -> childrenSetter.accept(e, null)));
 	}
 
 	// endregion
@@ -511,7 +511,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	@Override
 	default <R> EasyStream<R> map(final Function<? super T, ? extends R> mapper) {
 		Objects.requireNonNull(mapper);
-		return new EasyStream<>(stream().map(mapper));
+		return new EasyStream<>(unwrap().map(mapper));
 	}
 
 	/**

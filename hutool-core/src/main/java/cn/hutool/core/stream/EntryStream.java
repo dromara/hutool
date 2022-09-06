@@ -159,7 +159,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public EntryStream<K, V> distinctByKey() {
 		// FIXME fix happen NPE when has null key
 		final Set<K> accessed = new ConcurrentHashSet<>(16);
-		return wrapping(stream.filter(e -> {
+		return wrap(stream.filter(e -> {
 			final K key = e.getKey();
 			if (accessed.contains(key)) {
 				return false;
@@ -177,7 +177,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public EntryStream<K, V> distinctByValue() {
 		// FIXME fix happen NPE when has null value
 		final Set<V> accessed = new ConcurrentHashSet<>(16);
-		return wrapping(stream.filter(e -> {
+		return wrap(stream.filter(e -> {
 			final V val = e.getValue();
 			if (accessed.contains(val)) {
 				return false;
@@ -301,7 +301,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> push(final K key, final V value) {
-		return wrapping(Stream.concat(stream, Stream.of(ofEntry(key, value))));
+		return wrap(Stream.concat(stream, Stream.of(ofEntry(key, value))));
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return {@link EntryStream}实例
 	 */
 	public EntryStream<K, V> unshift(final K key, final V value) {
-		return wrapping(Stream.concat(Stream.of(ofEntry(key, value)), stream));
+		return wrap(Stream.concat(Stream.of(ofEntry(key, value)), stream));
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
 			.map(EntryStream::ofEntry);
-		return wrapping(Stream.concat(stream, contacted));
+		return wrap(Stream.concat(stream, contacted));
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
 			.map(EntryStream::ofEntry);
-		return wrapping(Stream.concat(contacted, stream));
+		return wrap(Stream.concat(contacted, stream));
 	}
 
 	/**
@@ -442,9 +442,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 然后再返回由这些流中所有元素组成的流新{@link EntryStream}串行流。<br>
 	 * 效果类似：
 	 * <pre>{@code
-	 * // stream = [{a = 1}, {b = 2}, {c = 3}]
-	 * stream.flatMapKey(key -> Stream.of(key + "1", key + "2"));
-	 * // stream = [{a1 = 1}, {a2 = 1}, {b1 = 2}, {b2 = 2}, {c1 = 3}, {c2 = 3}]
+	 * // unwrap = [{a = 1}, {b = 2}, {c = 3}]
+	 * unwrap.flatMapKey(key -> Stream.of(key + "1", key + "2"));
+	 * // unwrap = [{a1 = 1}, {a2 = 1}, {b1 = 2}, {b2 = 2}, {c1 = 3}, {c2 = 3}]
 	 * }</pre>
 	 *
 	 * @param keyMapper 值转映射方法
@@ -466,9 +466,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 然后再返回由这些流中所有元素组成的流新{@link EntryStream}串行流。<br>
 	 * 效果类似：
 	 * <pre>{@code
-	 * // stream = [{a = 1}, {b = 2}, {c = 3}]
-	 * stream.flatMapValue(num -> Stream.of(num, num+1));
-	 * // stream = [{a = 1}, {a = 2}, {b = 2}, {b = 3}, {c = 3}, {c = 4}]
+	 * // unwrap = [{a = 1}, {b = 2}, {c = 3}]
+	 * unwrap.flatMapValue(num -> Stream.of(num, num+1));
+	 * // unwrap = [{a = 1}, {a = 2}, {b = 2}, {b = 3}, {c = 3}, {c = 4}]
 	 * }</pre>
 	 *
 	 * @param valueMapper 值转映射方法
@@ -755,7 +755,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 实现类
 	 */
 	@Override
-	public EntryStream<K, V> wrapping(final Stream<Map.Entry<K, V>> stream) {
+	public EntryStream<K, V> wrap(final Stream<Map.Entry<K, V>> stream) {
 		return new EntryStream<>(stream);
 	}
 

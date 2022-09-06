@@ -73,7 +73,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default <C extends Collection<T>> C toColl(final Supplier<C> collectionFactory) {
 		Objects.requireNonNull(collectionFactory);
-		return stream().collect(Collectors.toCollection(collectionFactory));
+		return unwrap().collect(Collectors.toCollection(collectionFactory));
 	}
 
     // endregion
@@ -181,7 +181,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 		Objects.requireNonNull(valueMapper);
 		Objects.requireNonNull(mergeFunction);
 		Objects.requireNonNull(mapSupplier);
-        return stream().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
+        return unwrap().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
     }
 
     // endregion
@@ -227,7 +227,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default <R> Optional<R> transform(final Function<? super S, R> transform) {
 		Objects.requireNonNull(transform);
-		return Optional.ofNullable(transform.apply(wrapping(this)));
+		return Optional.ofNullable(transform.apply(wrap(this)));
 	}
 
 	/**
@@ -238,7 +238,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default Optional<T> findFirst(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		return stream().filter(predicate).findFirst();
+		return unwrap().filter(predicate).findFirst();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 			return NOT_FOUND_ELEMENT_INDEX;
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			stream().filter(e -> {
+			unwrap().filter(e -> {
 				index.increment();
 				return predicate.test(e);
 			}).findFirst();
@@ -377,7 +377,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return 拼接后的字符串
 	 */
 	default String join(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
-		return stream().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
+		return unwrap().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
 	}
 
 	// endregion
@@ -432,7 +432,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 		Objects.requireNonNull(classifier);
 		Objects.requireNonNull(mapFactory);
 		Objects.requireNonNull(downstream);
-		return stream().collect(CollectorUtil.groupingBy(classifier, mapFactory, downstream));
+		return unwrap().collect(CollectorUtil.groupingBy(classifier, mapFactory, downstream));
 	}
 
 	/**
@@ -440,10 +440,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 *
 	 * @param predicate 判断条件
 	 * @return map
-	 * @see #partitioning(Predicate, Collector)
+	 * @see #partition(Predicate, Collector)
 	 */
-	default Map<Boolean, List<T>> partitioning(final Predicate<T> predicate) {
-		return this.partitioning(predicate, ArrayList::new);
+	default Map<Boolean, List<T>> partition(final Predicate<T> predicate) {
+		return this.partition(predicate, ArrayList::new);
 	}
 
 	/**
@@ -452,10 +452,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param predicate 判断条件
 	 * @param collFactory 提供的集合
 	 * @return map
-	 * @see #partitioning(Predicate, Collector)
+	 * @see #partition(Predicate, Collector)
 	 */
-	default <C extends Collection<T>> Map<Boolean, C> partitioning(final Predicate<T> predicate, final Supplier<C> collFactory) {
-		return this.partitioning(predicate, Collectors.toCollection(collFactory));
+	default <C extends Collection<T>> Map<Boolean, C> partition(final Predicate<T> predicate, final Supplier<C> collFactory) {
+		return this.partition(predicate, Collectors.toCollection(collFactory));
 	}
 
 	/**
@@ -466,10 +466,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param <R> 返回值类型
 	 * @return map
 	 */
-	default <R> Map<Boolean, R> partitioning(final Predicate<T> predicate, final Collector<T, ?, R> downstream) {
+	default <R> Map<Boolean, R> partition(final Predicate<T> predicate, final Collector<T, ?, R> downstream) {
 		Objects.requireNonNull(predicate);
 		Objects.requireNonNull(downstream);
-		return stream().collect(Collectors.partitioningBy(predicate, downstream));
+		return unwrap().collect(Collectors.partitioningBy(predicate, downstream));
 	}
 
 	// endregion
@@ -485,10 +485,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
 		if (isParallel()) {
-			stream().forEach(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
+			unwrap().forEach(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			stream().forEach(e -> action.accept(e, index.incrementAndGet()));
+			unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
 
@@ -501,10 +501,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
 		if (isParallel()) {
-			stream().forEachOrdered(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
+			unwrap().forEachOrdered(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			stream().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
+			unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
 

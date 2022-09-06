@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * <p>单元素的扩展流实现。基于原生Stream进行了封装和增强。<br>
- * 作者经对比了vavr、eclipse-collection、stream-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
+ * 作者经对比了vavr、eclipse-collection、unwrap-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
  * Stream为集合提供了一些易用api，它让开发人员能使用声明式编程的方式去编写代码。
  *
  * <p>中间操作和结束操作</p>
@@ -67,7 +67,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 返回{@code FastStream}的建造器
 	 *
 	 * @param <T> 元素的类型
-	 * @return a stream builder
+	 * @return a unwrap builder
 	 */
 	public static <T> Builder<T> builder() {
 		return new Builder<T>() {
@@ -262,7 +262,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @return 实现类
 	 */
 	@Override
-	public EasyStream<T> wrapping(final Stream<T> stream) {
+	public EasyStream<T> wrap(final Stream<T> stream) {
 		return new EasyStream<>(stream);
 	}
 
@@ -359,7 +359,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public interface Builder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
 
 		/**
-		 * Adds an element to the stream being built.
+		 * Adds an element to the unwrap being built.
 		 *
 		 * @param t the element to add
 		 * @return {@code this} builder

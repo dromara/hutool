@@ -172,9 +172,9 @@ public class AbstractEnhancedWrappedStreamTest {
 			put(Boolean.FALSE, asList(1, 3));
 		}};
 
-		Map<Boolean, List<Integer>> partition = wrap(list).partitioning(t -> (t & 1) == 0, Collectors.toList());
+		Map<Boolean, List<Integer>> partition = wrap(list).partition(t -> (t & 1) == 0, Collectors.toList());
 		Assert.assertEquals(map, partition);
-		partition = wrap(list).partitioning(t -> (t & 1) == 0);
+		partition = wrap(list).partition(t -> (t & 1) == 0);
 		Assert.assertEquals(map, partition);
 	}
 
@@ -681,14 +681,14 @@ public class AbstractEnhancedWrappedStreamTest {
 		 * 创建一个流包装器
 		 *
 		 * @param stream 包装的流对象
-		 * @throws NullPointerException 当{@code stream}为{@code null}时抛出
+		 * @throws NullPointerException 当{@code unwrap}为{@code null}时抛出
 		 */
 		protected Wrapper(Stream<T> stream) {
 			super(stream);
 		}
 
 		@Override
-		public Wrapper<T> wrapping(Stream<T> source) {
+		public Wrapper<T> wrap(Stream<T> source) {
 			return new Wrapper<>(source);
 		}
 

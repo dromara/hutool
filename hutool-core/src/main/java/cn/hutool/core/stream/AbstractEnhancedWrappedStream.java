@@ -25,7 +25,7 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	 * 获取被包装的元素流实例
 	 */
 	@Override
-	public Stream<T> stream() {
+	public Stream<T> unwrap() {
 		return stream;
 	}
 
@@ -33,10 +33,10 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	 * 创建一个流包装器
 	 *
 	 * @param stream 包装的流对象
-	 * @throws NullPointerException 当{@code stream}为{@code null}时抛出
+	 * @throws NullPointerException 当{@code unwrap}为{@code null}时抛出
 	 */
 	protected AbstractEnhancedWrappedStream(final Stream<T> stream) {
-		this.stream = Objects.requireNonNull(stream, "stream must not null");
+		this.stream = Objects.requireNonNull(stream, "unwrap must not null");
 	}
 
 	/**

@@ -102,7 +102,7 @@ public class CollectorUtil {
 			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
 			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			if (ArrayUtil.isArray(container) || Objects.nonNull(t)) {
-				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.stream.Collectors.counting 求null元素个数
+				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.unwrap.Collectors.counting 求null元素个数
 				downstreamAccumulator.accept(container, t);
 			}
 		};
