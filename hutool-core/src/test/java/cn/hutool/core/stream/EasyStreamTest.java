@@ -22,8 +22,8 @@ public class EasyStreamTest {
 
 	@Test
 	public void testConcat() {
-		Stream<Integer> stream1 = Stream.of(1, 2);
-		Stream<Integer> stream2 = Stream.of(3, 4);
+		final Stream<Integer> stream1 = Stream.of(1, 2);
+		final Stream<Integer> stream2 = Stream.of(3, 4);
 		Assert.assertEquals(4, EasyStream.concat(stream1, stream2).count());
 	}
 

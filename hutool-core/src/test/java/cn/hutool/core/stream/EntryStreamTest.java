@@ -46,12 +46,12 @@ public class EntryStreamTest {
 
 	@Test
 	public void testOf() {
-		Map<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("1", "1");
 		Assert.assertEquals(1, EntryStream.of(map).count());
 		Assert.assertEquals(0, EntryStream.of((Map<String, String>)null).count());
 
-		Set<Map.Entry<Integer, Integer>> entries = new HashSet<>();
+		final Set<Map.Entry<Integer, Integer>> entries = new HashSet<>();
 		entries.add(new Entry<>(1, 1));
 		entries.add(null);
 		Assert.assertEquals(2, EntryStream.of(entries).count());
@@ -61,7 +61,7 @@ public class EntryStreamTest {
 		Assert.assertEquals(2, new EntryStream<>(entries.stream()).count());
 		Assert.assertThrows(NullPointerException.class, () -> new EntryStream<>(null));
 
-		Iterable<Integer> iterable = Arrays.asList(1, 2, null);
+		final Iterable<Integer> iterable = Arrays.asList(1, 2, null);
 		Assert.assertEquals(3, EntryStream.of(iterable, Function.identity(), Function.identity()).count());
 		Assert.assertEquals(0, EntryStream.of(null, Function.identity(), Function.identity()).count());
 	}
@@ -73,7 +73,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testDistinctByKey() {
-		long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
+		final long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.distinctByKey()
 			.count();
 		Assert.assertEquals(2, count);
@@ -81,7 +81,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testDistinctByValue() {
-		long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
+		final long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.distinctByValue()
 			.count();
 		Assert.assertEquals(2, count);
@@ -89,7 +89,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFilter() {
-		long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
+		final long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.filter((k, v) -> k == 1 && v == 1)
 			.count();
 		Assert.assertEquals(1, count);
@@ -97,7 +97,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFilterByKey() {
-		long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
+		final long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.filterByKey(k -> k == 1)
 			.count();
 		Assert.assertEquals(2, count);
@@ -105,7 +105,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFilterByValue() {
-		long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
+		final long count = EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.filterByValue(v -> v == 1)
 			.count();
 		Assert.assertEquals(2, count);
@@ -113,7 +113,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testPeekKey() {
-		List<Integer> keys = new ArrayList<>();
+		final List<Integer> keys = new ArrayList<>();
 		EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.peekKey(keys::add)
 			.count();
@@ -122,7 +122,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testPeekValue() {
-		List<Integer> values = new ArrayList<>();
+		final List<Integer> values = new ArrayList<>();
 		EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.peekValue(values::add)
 			.count();
@@ -153,11 +153,11 @@ public class EntryStreamTest {
 
 	@Test
 	public void testAppend() {
-		Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
 			put(1, 1);
 			put(2, 2);
 		}};
-		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
 			put(3, 3);
 			put(4, 4);
 		}};
@@ -175,11 +175,11 @@ public class EntryStreamTest {
 
 	@Test
 	public void testPrepend() {
-		Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
 			put(1, 1);
 			put(2, 2);
 		}};
-		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
 			put(3, 3);
 			put(4, 4);
 		}};
@@ -197,7 +197,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testSortByKey() {
-		List<Map.Entry<Integer, Integer>> entries = EntryStream.of(Arrays.asList(new Entry<>(3, 1), new Entry<>(2, 1), new Entry<>(4, 1), new Entry<>(1, 1)))
+		final List<Map.Entry<Integer, Integer>> entries = EntryStream.of(Arrays.asList(new Entry<>(3, 1), new Entry<>(2, 1), new Entry<>(4, 1), new Entry<>(1, 1)))
 			.sortByKey(Comparator.comparingInt(Integer::intValue))
 			.collect(Collectors.toList());
 		Assert.assertEquals(
@@ -208,7 +208,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testSortByValue() {
-		List<Map.Entry<Integer, Integer>> entries = EntryStream.of(Arrays.asList(new Entry<>(4, 4), new Entry<>(2, 2), new Entry<>(1, 1), new Entry<>(3, 3)))
+		final List<Map.Entry<Integer, Integer>> entries = EntryStream.of(Arrays.asList(new Entry<>(4, 4), new Entry<>(2, 2), new Entry<>(1, 1), new Entry<>(3, 3)))
 			.sortByValue(Comparator.comparingInt(Integer::intValue))
 			.collect(Collectors.toList());
 		Assert.assertEquals(
@@ -219,7 +219,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToValueStream() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -230,7 +230,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToKeyStream() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -241,7 +241,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testCollectKey() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -251,7 +251,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testCollectValue() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -261,7 +261,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testMapKeys() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -276,7 +276,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testMapValues() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -291,7 +291,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testMap() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -311,7 +311,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFlatMap() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -323,11 +323,11 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFlatMapValue() {
-		Map<String, Integer> map = new HashMap<>();
+		final Map<String, Integer> map = new HashMap<>();
 		map.put("class1", 1);
 		map.put("class2", 2);
 		map.put("class3", 3);
-		List<String> values = EntryStream.of(map)
+		final List<String> values = EntryStream.of(map)
 			.flatMapKey(k -> Stream.of(k + "'s student1", k + "'s student2"))
 			.map((k, v) -> v + "=" + k)
 			.sorted()
@@ -344,11 +344,11 @@ public class EntryStreamTest {
 
 	@Test
 	public void testInverse() {
-		Map<String, String> map = new HashMap<>();
+		final Map<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 		map.put("key2", "value2");
 		map.put("key3", "value3");
-		List<String> results = EntryStream.of(map)
+		final List<String> results = EntryStream.of(map)
 			.inverse()
 			.map((k, v) -> k + "=" + v)
 			.collect(Collectors.toList());
@@ -360,11 +360,11 @@ public class EntryStreamTest {
 
 	@Test
 	public void testFlatMapKey() {
-		Map<Integer, String> map = new HashMap<>();
+		final Map<Integer, String> map = new HashMap<>();
 		map.put(1, "class1");
 		map.put(2, "class2");
 		map.put(3, "class3");
-		List<String> values = EntryStream.of(map)
+		final List<String> values = EntryStream.of(map)
 			.flatMapValue(v -> Stream.of(v + "'s student1", v + "'s student2"))
 			.map((k, v) -> k + "=" + v)
 			.collect(Collectors.toList());
@@ -380,13 +380,13 @@ public class EntryStreamTest {
 
 	@Test
 	public void testForEach() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
 
-		List<Integer> keys = new ArrayList<>();
-		List<Integer> values = new ArrayList<>();
+		final List<Integer> keys = new ArrayList<>();
+		final List<Integer> values = new ArrayList<>();
 		EntryStream.of(map).forEach((k ,v) -> {
 			keys.add(k);
 			values.add(v);
@@ -397,7 +397,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToMap() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -414,7 +414,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToTable() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -438,7 +438,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToTableByKey() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -462,7 +462,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testToTableByValue() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
@@ -486,19 +486,19 @@ public class EntryStreamTest {
 
 	@Test
 	public void testGroupByKey() {
-		Map<Integer, List<Integer>> map1 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
+		final Map<Integer, List<Integer>> map1 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
 			.groupByKey();
 		Assert.assertEquals(2, map1.size());
 		Assert.assertEquals(Arrays.asList(1, 1), map1.get(1));
 		Assert.assertEquals(Arrays.asList(2, 2), map1.get(2));
 
-		Map<Integer, Set<Integer>> map2 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
+		final Map<Integer, Set<Integer>> map2 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
 			.groupByKey(Collectors.toSet());
 		Assert.assertEquals(2, map2.size());
 		Assert.assertEquals(Collections.singleton(1), map2.get(1));
 		Assert.assertEquals(Collections.singleton(2), map2.get(2));
 
-		Map<Integer, Set<Integer>> map3 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
+		final Map<Integer, Set<Integer>> map3 = EntryStream.of(Arrays.asList(1, 1, 2, 2), Function.identity(), Function.identity())
 			.groupByKey(LinkedHashMap::new, Collectors.toSet());
 		Assert.assertEquals(2, map3.size());
 		Assert.assertEquals(Collections.singleton(1), map3.get(1));
@@ -531,7 +531,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testNonNull() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
 		Assert.assertEquals(0, EntryStream.of(map).nonNullKeyValue().count());
@@ -539,7 +539,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testKeyNonNull() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
 		Assert.assertEquals(1, EntryStream.of(map).nonNullKey().count());
@@ -547,7 +547,7 @@ public class EntryStreamTest {
 
 	@Test
 	public void testValueNonNull() {
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
 		Assert.assertEquals(1, EntryStream.of(map).nonNullValue().count());

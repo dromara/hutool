@@ -25,43 +25,43 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testToList() {
-		List<Integer> list = asList(1, 2, 3);
-		List<Integer> toList = wrap(list).toList();
+		final List<Integer> list = asList(1, 2, 3);
+		final List<Integer> toList = wrap(list).toList();
 		Assert.assertEquals(list, toList);
 	}
 
 	@Test
 	public void testToUnmodifiableList() {
-		List<Integer> list = wrap(1, 2, 3)
+		final List<Integer> list = wrap(1, 2, 3)
 			.toUnmodifiableList();
 		Assert.assertThrows(UnsupportedOperationException.class, () -> list.remove(0));
 	}
 
 	@Test
 	public void testToSet() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Set<String> toSet = wrap(list).map(String::valueOf).toSet();
 		Assert.assertEquals(new HashSet<>(asList("1", "2", "3")), toSet);
 	}
 
 	@Test
 	public void testToUnmodifiableSet() {
-		Set<Integer> set = wrap(1, 2, 3)
+		final Set<Integer> set = wrap(1, 2, 3)
 			.toUnmodifiableSet();
 		Assert.assertThrows(UnsupportedOperationException.class, () -> set.remove(0));
 	}
 
 	@Test
 	public void testToCollection() {
-		List<Integer> list = asList(1, 2, 3);
-		List<String> toCollection = wrap(list).map(String::valueOf).toColl(LinkedList::new);
+		final List<Integer> list = asList(1, 2, 3);
+		final List<String> toCollection = wrap(list).map(String::valueOf).toColl(LinkedList::new);
 		Assert.assertEquals(asList("1", "2", "3"), toCollection);
 	}
 
 	@Test
 	public void testToMap() {
-		List<Integer> list = asList(1, 2, 3);
-		Map<String, Integer> identityMap = wrap(list).toMap(String::valueOf);
+		final List<Integer> list = asList(1, 2, 3);
+		final Map<String, Integer> identityMap = wrap(list).toMap(String::valueOf);
 		Assert.assertEquals(new HashMap<String, Integer>() {{
 			put("1", 1);
 			put("2", 2);
@@ -71,17 +71,17 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testToUnmodifiableMap() {
-		Map<Integer, Integer> map1 = wrap(1, 2, 3).toUnmodifiableMap(Function.identity(), Function.identity());
+		final Map<Integer, Integer> map1 = wrap(1, 2, 3).toUnmodifiableMap(Function.identity(), Function.identity());
 		Assert.assertThrows(UnsupportedOperationException.class, () -> map1.remove(1));
-		Map<Integer, Integer> map2 = wrap(1, 2, 3).toUnmodifiableMap(Function.identity(), Function.identity(), (t1, t2) -> t1);
+		final Map<Integer, Integer> map2 = wrap(1, 2, 3).toUnmodifiableMap(Function.identity(), Function.identity(), (t1, t2) -> t1);
 		Assert.assertThrows(UnsupportedOperationException.class, () -> map2.remove(1));
 	}
 
 	@Test
 	public void testToZip() {
-		List<Integer> orders = asList(1, 2, 3);
-		List<String> list = asList("dromara", "hutool", "sweet");
-		Map<Integer, String> toZip = wrap(orders).toZip(list);
+		final List<Integer> orders = asList(1, 2, 3);
+		final List<String> list = asList("dromara", "hutool", "sweet");
+		final Map<Integer, String> toZip = wrap(orders).toZip(list);
 		Assert.assertEquals(new HashMap<Integer, String>() {{
 			put(1, "dromara");
 			put(2, "hutool");
@@ -91,38 +91,38 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testTransform() {
-		List<Integer> list = wrap(1, 2, 3).transform(Wrapper::toList).orElse(null);
+		final List<Integer> list = wrap(1, 2, 3).transform(Wrapper::toList).orElse(null);
 		Assert.assertEquals(asList(1, 2, 3), list);
 	}
 
 	@Test
 	public void testFindFirst() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Assert.assertEquals((Integer)1, wrap(list).findFirst(t -> (t & 1) == 1).orElse(null));
 		Assert.assertEquals((Integer)1, wrap(list).filter(t -> (t & 1) == 1).findFirst().orElse(null));
 	}
 
 	@Test
 	public void testFindFirstIdx() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Assert.assertEquals(1, wrap(list).findFirstIdx(t -> (t & 1) == 0));
 	}
 
 	@Test
 	public void testFindLast() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Assert.assertEquals((Integer)3, wrap(list).findLast(t -> (t & 1) == 1).orElse(null));
 	}
 
 	@Test
 	public void testFindLastIdx() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Assert.assertEquals(1, wrap(list).findLastIdx(t -> (t & 1) == 0));
 	}
 
 	@Test
 	public void testAt() {
-		List<Integer> list = asList(1, 2, 3);
+		final List<Integer> list = asList(1, 2, 3);
 		Assert.assertEquals((Integer)3, wrap(list).at(2).orElse(null));
 	}
 
@@ -140,8 +140,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testJoining() {
-		List<Integer> list = asList(1, 2, 3);
-		String joining = wrap(list).join();
+		final List<Integer> list = asList(1, 2, 3);
+		final String joining = wrap(list).join();
 		Assert.assertEquals("123", joining);
 		Assert.assertEquals("1,2,3", wrap(list).join(","));
 		Assert.assertEquals("(1,2,3)", wrap(list).join(",", "(", ")"));
@@ -149,8 +149,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testGrouping() {
-		List<Integer> list = asList(1, 2, 3);
-		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>() {{
+		final List<Integer> list = asList(1, 2, 3);
+		final Map<String, List<Integer>> map = new HashMap<String, List<Integer>>() {{
 			put("1", singletonList(1));
 			put("2", singletonList(2));
 			put("3", singletonList(3));
@@ -166,8 +166,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testPartitioning() {
-		List<Integer> list = asList(1, 2, 3);
-		Map<Boolean, List<Integer>> map = new HashMap<Boolean, List<Integer>>() {{
+		final List<Integer> list = asList(1, 2, 3);
+		final Map<Boolean, List<Integer>> map = new HashMap<Boolean, List<Integer>>() {{
 			put(Boolean.TRUE, singletonList(2));
 			put(Boolean.FALSE, asList(1, 3));
 		}};
@@ -180,8 +180,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testForEachIdx() {
-		List<Integer> elements = new ArrayList<>();
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		wrap(1, 2, 3).forEachIdx((t, i) -> {
 			elements.add(t);
 			indexes.add(i);
@@ -192,8 +192,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testForEachOrderedIdx() {
-		List<Integer> elements = new ArrayList<>();
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		wrap(1, 2, 3).forEachOrderedIdx((t, i) -> {
 			elements.add(t);
 			indexes.add(i);
@@ -204,33 +204,33 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testForEachOrdered() {
-		List<Integer> elements = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
 		wrap(1, 2, 3).forEachOrdered(elements::add);
 		Assert.assertEquals(asList(1, 2, 3), elements);
 	}
 
 	@Test
 	public void testForEach() {
-		List<Integer> elements = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
 		wrap(1, 2, 3).forEach(elements::add);
 		Assert.assertEquals(asList(1, 2, 3), elements);
 	}
 
 	@Test
 	public void testMapToInt() {
-		int[] array = wrap(1, 2, 3).mapToInt(Integer::intValue).toArray();
+		final int[] array = wrap(1, 2, 3).mapToInt(Integer::intValue).toArray();
 		Assert.assertArrayEquals(new int[] {1, 2, 3}, array);
 	}
 
 	@Test
 	public void testMapToLong() {
-		long[] array = wrap(1L, 2L, 3L).mapToLong(Long::intValue).toArray();
+		final long[] array = wrap(1L, 2L, 3L).mapToLong(Long::intValue).toArray();
 		Assert.assertArrayEquals(new long[] {1L, 2L, 3L}, array);
 	}
 
 	@Test
 	public void testMapToDouble() {
-		double[] array = wrap(1d, 2d, 3d).mapToDouble(Double::intValue).toArray();
+		final double[] array = wrap(1d, 2d, 3d).mapToDouble(Double::intValue).toArray();
 		Assert.assertEquals(1d, array[0], 0.01);
 		Assert.assertEquals(2d, array[1], 0.01);
 		Assert.assertEquals(3d, array[2], 0.01);
@@ -238,19 +238,19 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testFlatMapToInt() {
-		int[] array = wrap(1, 2, 3).flatMapToInt(IntStream::of).toArray();
+		final int[] array = wrap(1, 2, 3).flatMapToInt(IntStream::of).toArray();
 		Assert.assertArrayEquals(new int[] {1, 2, 3}, array);
 	}
 
 	@Test
 	public void testFlatMapToLong() {
-		long[] array = wrap(1L, 2L, 3L).flatMapToLong(LongStream::of).toArray();
+		final long[] array = wrap(1L, 2L, 3L).flatMapToLong(LongStream::of).toArray();
 		Assert.assertArrayEquals(new long[] {1L, 2L, 3L}, array);
 	}
 
 	@Test
 	public void testFlatMapToDouble() {
-		double[] array = wrap(1d, 2d, 3d).flatMapToDouble(DoubleStream::of).toArray();
+		final double[] array = wrap(1d, 2d, 3d).flatMapToDouble(DoubleStream::of).toArray();
 		Assert.assertEquals(1d, array[0], 0.01);
 		Assert.assertEquals(2d, array[1], 0.01);
 		Assert.assertEquals(3d, array[2], 0.01);
@@ -258,21 +258,21 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testSorted() {
-		List<Integer> list = wrap(3, 1, 2).sorted().toList();
+		final List<Integer> list = wrap(3, 1, 2).sorted().toList();
 		Assert.assertEquals(asList(1, 2, 3), list);
 	}
 
 	@Test
 	public void testPeek() {
-		List<Integer> elements = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
 		wrap(1, 2, 3).peek(elements::add).exec();
 		Assert.assertEquals(asList(1, 2, 3), elements);
 	}
 
 	@Test
 	public void testPeekIdx() {
-		List<Integer> elements = new ArrayList<>();
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> elements = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		wrap(1, 2, 3).peekIdx((t, i) -> {
 			elements.add(t);
 			indexes.add(i);
@@ -280,8 +280,8 @@ public class AbstractEnhancedWrappedStreamTest {
 		Assert.assertEquals(asList(1, 2, 3), elements);
 		Assert.assertEquals(asList(0, 1, 2), indexes);
 
-		Set<Integer> elements2 = new HashSet<>();
-		Set<Integer> indexes2 = new HashSet<>();
+		final Set<Integer> elements2 = new HashSet<>();
+		final Set<Integer> indexes2 = new HashSet<>();
 		wrap(1, 2, null).parallel().peekIdx((t, i) -> {
 			elements2.add(t);
 			indexes2.add(i);
@@ -292,13 +292,13 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testLimit() {
-		List<Integer> list = wrap(1, 2, 3).limit(2L).toList();
+		final List<Integer> list = wrap(1, 2, 3).limit(2L).toList();
 		Assert.assertEquals(asList(1, 2), list);
 	}
 
 	@Test
 	public void testSkip() {
-		List<Integer> list = wrap(1, 2, 3).skip(1L).toList();
+		final List<Integer> list = wrap(1, 2, 3).skip(1L).toList();
 		Assert.assertEquals(asList(2, 3), list);
 	}
 
@@ -366,8 +366,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testIterator() {
-		Iterator<Integer> iter1 = Stream.of(1, 2, 3).iterator();
-		Iterator<Integer> iter2 = wrap(1, 2, 3).iterator();
+		final Iterator<Integer> iter1 = Stream.of(1, 2, 3).iterator();
+		final Iterator<Integer> iter2 = wrap(1, 2, 3).iterator();
 		while (iter1.hasNext() && iter2.hasNext()) {
 			Assert.assertEquals(iter1.next(), iter2.next());
 		}
@@ -375,8 +375,8 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testSpliterator() {
-		Spliterator<Integer> iter1 = Stream.of(1, 2, 3).spliterator();
-		Spliterator<Integer> iter2 = wrap(1, 2, 3).spliterator();
+		final Spliterator<Integer> iter1 = Stream.of(1, 2, 3).spliterator();
+		final Spliterator<Integer> iter2 = wrap(1, 2, 3).spliterator();
 			Assert.assertEquals(iter1.trySplit().estimateSize(), iter2.trySplit().estimateSize());
 	}
 
@@ -397,14 +397,14 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testOnClose() {
-		AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+		final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 		wrap(Stream.of(1, 2, 3).onClose(() -> atomicBoolean.set(true))).close();
 		Assert.assertTrue(atomicBoolean.get());
 	}
 
 	@Test
 	public void testClose() {
-		Wrapper<Integer> stream = wrap(Stream.of(1, 2, 3));
+		final Wrapper<Integer> stream = wrap(Stream.of(1, 2, 3));
 		stream.close();
 		Assert.assertThrows(IllegalStateException.class, stream::exec);
 	}
@@ -500,7 +500,7 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testFilterIdx() {
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		Assert.assertEquals(
 			asList(1, 3),
 			wrap(1, 2, 3).filterIdx((t, i) -> {
@@ -527,7 +527,7 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testFlatMapIdx() {
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		Assert.assertEquals(
 			asList(1, 2, 3), wrap(1, 2, 3).flatMapIdx((t, i) -> {
 				indexes.add(i);
@@ -553,7 +553,7 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testFlatTree() {
-		Tree root = new Tree(1, asList(new Tree(2, asList(new Tree(3, Collections.emptyList())))));
+		final Tree root = new Tree(1, asList(new Tree(2, asList(new Tree(3, Collections.emptyList())))));
 		Assert.assertEquals(3L, wrap(root).flatTree(Tree::getChildren, Tree::setChildren).count());
 	}
 
@@ -573,7 +573,7 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testMapIdx() {
-		List<Integer> indexes = new ArrayList<>();
+		final List<Integer> indexes = new ArrayList<>();
 		Assert.assertEquals(
 			asList("1", "2", "3"), wrap(1, 2, 3).mapIdx((t, i) -> {
 				indexes.add(i);
@@ -595,25 +595,25 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testHashCode() {
-		Stream<Integer> stream = Stream.of(1, 2, 3);
+		final Stream<Integer> stream = Stream.of(1, 2, 3);
 		Assert.assertEquals(stream.hashCode(), wrap(stream).hashCode());
 	}
 
 	@Test
 	public void testEquals() {
-		Stream<Integer> stream = Stream.of(1, 2, 3);
+		final Stream<Integer> stream = Stream.of(1, 2, 3);
 		Assert.assertEquals(wrap(stream), stream);
 	}
 
 	@Test
 	public void testToString() {
-		Stream<Integer> stream = Stream.of(1, 2, 3);
+		final Stream<Integer> stream = Stream.of(1, 2, 3);
 		Assert.assertEquals(stream.toString(), wrap(stream).toString());
 	}
 
 	@Test
 	public void testToEntries() {
-		Map<Integer, Integer> expect = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>(){{
 			put(1, 1);
 			put(2, 2);
 			put(3, 3);
