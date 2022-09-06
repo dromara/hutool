@@ -9,70 +9,26 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * {@link StreamWrapper}的扩展，为实现类提供更多终端操作方法
+ * {@link WrappedStream}的扩展，用于为实现类提供更多终端操作方法的增强接口，
+ * 该接口提供的方法，返回值类型都不为{@link Stream}。
  *
  * @param <T> 流中的元素类型
- * @param <I> 链式调用获得的实现类类型
+ * @param <S> {@link TerminableWrappedStream}的实现类类型
  * @author huangchengxing
+ * @since 6.0.0
  */
-public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T, I>> extends StreamWrapper<T, I> {
-
-    // region ============ join ============
-
-    /**
-     * 返回拼接后的字符串
-     *
-     * @return 拼接后的字符串
-     */
-    default String join() {
-        return this.join("");
-    }
-
-    /**
-     * 返回拼接后的字符串
-     *
-     * @param delimiter 分隔符
-     * @return 拼接后的字符串
-     */
-    default String join(CharSequence delimiter) {
-        return this.join(delimiter, "", "");
-    }
-
-    /**
-     * 返回拼接后的字符串
-     *
-     * @param delimiter 分隔符
-     * @param prefix    前缀
-     * @param suffix    后缀
-     * @return 拼接后的字符串
-     */
-    default String join(CharSequence delimiter,
-        CharSequence prefix,
-        CharSequence suffix) {
-        return stream().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
-    }
-
-    // endregion
+public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T, S>> extends WrappedStream<T, S> {
 
     // region ============ to collection ============
-
-    /**
-     * 转换成集合
-     *
-     * @param collectionFactory 集合工厂(可以是集合构造器)
-     * @param <C>               集合类型
-     * @return 集合
-     */
-    default <C extends Collection<T>> C toColl(Supplier<C> collectionFactory) {
-        return stream().collect(Collectors.toCollection(collectionFactory));
-    }
 
     /**
      * 转换为{@link ArrayList}
      *
      * @return 集合
+	 * @see #toColl(Supplier)
      */
     default List<T> toList() {
         return this.toColl(ArrayList::new);
@@ -82,7 +38,8 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * 换为不可变集合
      *
      * @return 集合
-     */
+	 * @see #toColl(Supplier)
+	 */
     default List<T> toUnmodifiableList() {
         return Collections.unmodifiableList(this.toList());
     }
@@ -91,7 +48,8 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * 转换为HashSet
      *
      * @return 集合
-     */
+	 * @see #toColl(Supplier)
+	 */
     default Set<T> toSet() {
         return this.toColl(HashSet::new);
     }
@@ -100,10 +58,23 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * 换为不可变集合
      *
      * @return 集合
-     */
+	 * @see #toColl(Supplier)
+	 */
     default Set<T> toUnmodifiableSet() {
         return Collections.unmodifiableSet(this.toSet());
     }
+
+	/**
+	 * 转换成集合
+	 *
+	 * @param collectionFactory 集合工厂(可以是集合构造器)
+	 * @param <C>               集合类型
+	 * @return 集合
+	 */
+	default <C extends Collection<T>> C toColl(Supplier<C> collectionFactory) {
+		Objects.requireNonNull(collectionFactory);
+		return stream().collect(Collectors.toCollection(collectionFactory));
+	}
 
     // endregion
 
@@ -115,6 +86,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * @param keyMapper 指定的key操作
      * @param <K>       key类型
      * @return map
+	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K> Map<K, T> toMap(Function<? super T, ? extends K> keyMapper) {
         return this.toMap(keyMapper, Function.identity());
@@ -128,6 +100,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * @param <K>         key类型
      * @param <U>         value类型
      * @return map
+	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toMap(
         Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
@@ -142,6 +115,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * @param <K>         key类型
      * @param <U>         value类型
      * @return map
+	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toUnmodifiableMap(
         Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
@@ -157,6 +131,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * @param <K>           key类型
      * @param <U>           value类型
      * @return map
+	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toMap(
         Function<? super T, ? extends K> keyMapper,
@@ -174,6 +149,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * @param <K>           key类型
      * @param <U>           value类型
      * @return map
+	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     default <K, U> Map<K, U> toUnmodifiableMap(
         Function<? super T, ? extends K> keyMapper,
@@ -201,6 +177,10 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
         Function<? super T, ? extends U> valueMapper,
         BinaryOperator<U> mergeFunction,
         Supplier<M> mapSupplier) {
+		Objects.requireNonNull(keyMapper);
+		Objects.requireNonNull(valueMapper);
+		Objects.requireNonNull(mergeFunction);
+		Objects.requireNonNull(mapSupplier);
         return stream().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
     }
 
@@ -219,6 +199,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
      * 如果key重复, 则保留最后一个关联的value;<br>
      */
     default <R> Map<T, R> toZip(Iterable<R> other) {
+		Objects.requireNonNull(other);
         // value对象迭代器
         final Iterator<R> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
         if (this.isParallel()) {
@@ -235,128 +216,19 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 
     // endregion
 
-    // region ============ group ============
-
-    /**
-     * 通过给定分组依据进行分组
-     *
-     * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
-     * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-     * @return map
-     */
-    default <K> Map<K, List<T>> group(Function<? super T, ? extends K> classifier) {
-        return this.group(classifier, Collectors.toList());
-    }
-
-    /**
-     * 通过给定分组依据进行分组
-     *
-     * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
-     * @param downstream 下游操作
-     * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-     * @param <D>        下游操作对应返回类型，也是Map中value的类型
-     * @param <A>        下游操作在进行中间操作时对应类型
-     * @return map
-     */
-    default <K, A, D> Map<K, D> group(
-        Function<? super T, ? extends K> classifier, Collector<? super T, A, D> downstream) {
-        return this.group(classifier, HashMap::new, downstream);
-    }
-
-    /**
-     * 通过给定分组依据进行分组
-     *
-     * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
-     * @param mapFactory 提供的map
-     * @param downstream 下游操作
-     * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
-     * @param <D>        下游操作对应返回类型，也是Map中value的类型
-     * @param <A>        下游操作在进行中间操作时对应类型
-     * @param <M>        最后返回结果Map类型
-     * @return map
-	 * @see CollectorUtil#groupingBy(Function, Supplier, Collector)
-     */
-    default <K, D, A, M extends Map<K, D>> M group(
-        Function<? super T, ? extends K> classifier,
-        Supplier<M> mapFactory,
-        Collector<? super T, A, D> downstream) {
-        return stream().collect(CollectorUtil.groupingBy(classifier, mapFactory, downstream));
-    }
-
-    /**
-     * 根据给定判断条件分组
-     *
-     * @param predicate 判断条件
-     * @return map
-     */
-    default Map<Boolean, List<T>> partition(Predicate<T> predicate) {
-        return this.partition(predicate, ArrayList::new);
-    }
-
-    /**
-     * 根据给定判断条件分组
-     *
-     * @param predicate 判断条件
-     * @param collFactory 提供的集合
-     * @return map
-     */
-    default <C extends Collection<T>> Map<Boolean, C> partition(Predicate<T> predicate, Supplier<C> collFactory) {
-        return this.partition(predicate, Collectors.toCollection(collFactory));
-    }
-
-    /**
-     * 根据给定判断条件分组
-     *
-     * @param predicate  判断条件
-     * @param downstream 下游操作
-     * @param <R> 返回值类型
-     * @return map
-     */
-    default <R> Map<Boolean, R> partition(Predicate<T> predicate, Collector<T, ?, R> downstream) {
-        return stream().collect(Collectors.partitioningBy(predicate, downstream));
-    }
-
-    // endregion
-
-	// region ============ foreach ============
+	// region ============ to optional ============
 
 	/**
-	 * 对流里面的每一个元素执行一个操作，操作带下标，并行流时下标永远为-1
-	 * 这是一个终端操作
+	 * 将当前流转为另一对象。用于提供针对流本身而非流中元素的操作
 	 *
-	 * @param action 操作
+	 * @param <R>       转换类型
+	 * @param transform 转换
+	 * @return 转换后的流
 	 */
-	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
-		Objects.requireNonNull(action);
-		if (isParallel()) {
-			stream().forEach(e -> action.accept(e, NOT_FOUND_INDEX));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream().forEach(e -> action.accept(e, index.incrementAndGet()));
-		}
+	default <R> Optional<R> transform(final Function<? super S, R> transform) {
+		Objects.requireNonNull(transform);
+		return Optional.ofNullable(transform.apply(wrapping(this)));
 	}
-
-	/**
-	 * 对流里面的每一个元素按照顺序执行一个操作，操作带下标，并行流时下标永远为-1
-	 * 这是一个终端操作
-	 *
-	 * @param action 操作
-	 */
-	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
-		Objects.requireNonNull(action);
-		if (isParallel()) {
-			stream().forEachOrdered(e -> action.accept(e, NOT_FOUND_INDEX));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
-			stream().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
-		}
-	}
-
-	// endregion
-
-	// region ============ find & get ============
-
-
 
 	/**
 	 * 获取与给定断言匹配的第一个元素
@@ -365,6 +237,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 	 * @return 与给定断言匹配的第一个元素
 	 */
 	default Optional<T> findFirst(final Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
 		return stream().filter(predicate).findFirst();
 	}
 
@@ -377,9 +250,9 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 	default int findFirstIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
-			return NOT_FOUND_INDEX;
+			return NOT_FOUND_ELEMENT_INDEX;
 		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_INDEX);
+			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			stream().filter(e -> {
 				index.increment();
 				return predicate.test(e);
@@ -425,9 +298,9 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 	default int findLastIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
-			return NOT_FOUND_INDEX;
+			return NOT_FOUND_ELEMENT_INDEX;
 		} else {
-			final MutableInt idxRef = new MutableInt(NOT_FOUND_INDEX);
+			final MutableInt idxRef = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			forEachIdx((e, i) -> {
 				if (predicate.test(e)) {
 					idxRef.set(i);
@@ -450,7 +323,7 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 
 	// endregion
 
-	// region ============ is ============
+	// region ============ to boolean ============
 
 	/**
 	 * 流是否为空
@@ -468,6 +341,171 @@ public interface TerminableStreamWrapper<T, I extends TerminableStreamWrapper<T,
 	 */
 	default boolean isNotEmpty() {
 		return !isEmpty();
+	}
+
+	// endregion
+
+	// region ============ join ============
+
+	/**
+	 * 返回拼接后的字符串
+	 *
+	 * @return 拼接后的字符串
+	 * @see #join(CharSequence, CharSequence, CharSequence)
+	 */
+	default String join() {
+		return this.join("");
+	}
+
+	/**
+	 * 返回拼接后的字符串
+	 *
+	 * @param delimiter 分隔符
+	 * @return 拼接后的字符串
+	 * @see #join(CharSequence, CharSequence, CharSequence)
+	 */
+	default String join(CharSequence delimiter) {
+		return this.join(delimiter, "", "");
+	}
+
+	/**
+	 * 返回拼接后的字符串
+	 *
+	 * @param delimiter 分隔符
+	 * @param prefix    前缀
+	 * @param suffix    后缀
+	 * @return 拼接后的字符串
+	 */
+	default String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+		return stream().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
+	}
+
+	// endregion
+
+	// region ============ group ============
+
+	/**
+	 * 通过给定分组依据进行分组
+	 *
+	 * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
+	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
+	 * @return map
+	 * @see #group(Function, Supplier, Collector)
+	 */
+	default <K> Map<K, List<T>> group(Function<? super T, ? extends K> classifier) {
+		return this.group(classifier, Collectors.toList());
+	}
+
+	/**
+	 * 通过给定分组依据进行分组
+	 *
+	 * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
+	 * @param downstream 下游操作
+	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
+	 * @param <D>        下游操作对应返回类型，也是Map中value的类型
+	 * @param <A>        下游操作在进行中间操作时对应类型
+	 * @return map
+	 * @see #group(Function, Supplier, Collector)
+	 */
+	default <K, A, D> Map<K, D> group(
+		Function<? super T, ? extends K> classifier, Collector<? super T, A, D> downstream) {
+		return this.group(classifier, HashMap::new, downstream);
+	}
+
+	/**
+	 * 通过给定分组依据进行分组
+	 *
+	 * @param classifier 分组依据，得到的键为{@code null}时不会抛出异常
+	 * @param mapFactory 提供的map
+	 * @param downstream 下游操作
+	 * @param <K>        实体中的分组依据对应类型，也是Map中key的类型
+	 * @param <D>        下游操作对应返回类型，也是Map中value的类型
+	 * @param <A>        下游操作在进行中间操作时对应类型
+	 * @param <M>        最后返回结果Map类型
+	 * @return map
+	 * @see CollectorUtil#groupingBy(Function, Supplier, Collector)
+	 */
+	default <K, D, A, M extends Map<K, D>> M group(
+		Function<? super T, ? extends K> classifier,
+		Supplier<M> mapFactory,
+		Collector<? super T, A, D> downstream) {
+		Objects.requireNonNull(classifier);
+		Objects.requireNonNull(mapFactory);
+		Objects.requireNonNull(downstream);
+		return stream().collect(CollectorUtil.groupingBy(classifier, mapFactory, downstream));
+	}
+
+	/**
+	 * 根据给定判断条件分组
+	 *
+	 * @param predicate 判断条件
+	 * @return map
+	 * @see #partitioning(Predicate, Collector)
+	 */
+	default Map<Boolean, List<T>> partitioning(Predicate<T> predicate) {
+		return this.partitioning(predicate, ArrayList::new);
+	}
+
+	/**
+	 * 根据给定判断条件分组
+	 *
+	 * @param predicate 判断条件
+	 * @param collFactory 提供的集合
+	 * @return map
+	 * @see #partitioning(Predicate, Collector)
+	 */
+	default <C extends Collection<T>> Map<Boolean, C> partitioning(Predicate<T> predicate, Supplier<C> collFactory) {
+		return this.partitioning(predicate, Collectors.toCollection(collFactory));
+	}
+
+	/**
+	 * 根据给定判断条件分组
+	 *
+	 * @param predicate  判断条件
+	 * @param downstream 下游操作
+	 * @param <R> 返回值类型
+	 * @return map
+	 */
+	default <R> Map<Boolean, R> partitioning(Predicate<T> predicate, Collector<T, ?, R> downstream) {
+		Objects.requireNonNull(predicate);
+		Objects.requireNonNull(downstream);
+		return stream().collect(Collectors.partitioningBy(predicate, downstream));
+	}
+
+	// endregion
+
+	// region ============ foreach ============
+
+	/**
+	 * 对流里面的每一个元素执行一个操作，操作带下标，并行流时下标永远为-1
+	 * 这是一个终端操作
+	 *
+	 * @param action 操作
+	 */
+	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
+		Objects.requireNonNull(action);
+		if (isParallel()) {
+			stream().forEach(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
+		} else {
+			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+			stream().forEach(e -> action.accept(e, index.incrementAndGet()));
+		}
+	}
+
+	/**
+	 * 对流里面的每一个元素按照顺序执行一个操作，操作带下标，并行流时下标永远为-1
+	 * 这是一个终端操作
+	 *
+	 * @param action 操作
+	 */
+	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
+		Objects.requireNonNull(action);
+		if (isParallel()) {
+			stream().forEachOrdered(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
+		} else {
+			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+			stream().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
+		}
 	}
 
 	// endregion

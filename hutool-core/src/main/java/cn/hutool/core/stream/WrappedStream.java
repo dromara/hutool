@@ -1,41 +1,33 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.util.ObjUtil;
-
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
 /**
- * <p>表示一个用于增强原始{@link Stream}对象的包装器，当调用{@link Stream}中的方法时，
- * 将会代理到被包装的原始流对象，并返回指定的包装器实例。
+ * <p>{@link Stream}实例的包装器，用于增强原始的{@link Stream}，提供一些额外的中间与终端操作 <br>
+ * 默认提供两个可用实现：
+ * <ul>
+ *     <li>{@link EasyStream}：针对单元素的通用增强流实现；</li>
+ *     <li>{@link EntryStream}：针对键值对类型元素的增强流实现；</li>
+ * </ul>
  *
  * @param <T> 流中的元素类型
- * @param <I> 链式调用获得的实现类类型
+ * @param <S> {@link WrappedStream}的实现类类型
  * @author huangchengxing
- * @see TerminableStreamWrapper
- * @see TransformableStreamWrapper
- * @see AbstractEnhancedStreamWrapper
+ * @see TerminableWrappedStream
+ * @see TransformableWrappedStream
+ * @see AbstractEnhancedWrappedStream
+ * @see EasyStream
+ * @see EntryStream
+ * @since 6.0.0
  */
-public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<T>, Iterable<T> {
+public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<T>, Iterable<T> {
 
 	/**
 	 * 代表不存在的下标, 一般用于并行流的下标, 或者未找到元素时的下标
 	 */
-	int NOT_FOUND_INDEX = -1;
-
-	/**
-	 * 将一个流包装为简单增强流，若{@code stream}为{@code null}则默认返回一个空串行流
-	 *
-	 * @param stream 被包装的流
-	 * @return {@link SimpleStreamWrapper}实例
-	 */
-	static <T> SimpleStreamWrapper<T> create(Stream<T> stream) {
-		return new SimpleStreamWrapper<>(ObjUtil.defaultIfNull(stream, Stream.empty()));
-	}
+	int NOT_FOUND_ELEMENT_INDEX = -1;
 
 	/**
 	 * 获取被包装的原始流
@@ -48,9 +40,9 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * 将一个原始流包装为指定类型的增强流
 	 *
 	 * @param source 被包装的流
-	 * @return I
+	 * @return S
 	 */
-	I wrapping(Stream<T> source);
+	S wrapping(Stream<T> source);
 
 	/**
 	 * 过滤元素，返回与指定断言匹配的元素组成的流
@@ -60,7 +52,8 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 返回叠加过滤操作后的流
 	 */
 	@Override
-	default I filter(Predicate<? super T> predicate) {
+	default S filter(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
 		return wrapping(stream().filter(predicate));
 	}
 
@@ -73,6 +66,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default IntStream mapToInt(ToIntFunction<? super T> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().mapToInt(mapper);
 	}
 
@@ -85,6 +79,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default LongStream mapToLong(ToLongFunction<? super T> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().mapToLong(mapper);
 	}
 
@@ -97,6 +92,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().mapToDouble(mapper);
 	}
 
@@ -109,6 +105,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().flatMapToInt(mapper);
 	}
 
@@ -121,6 +118,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().flatMapToLong(mapper);
 	}
 
@@ -133,6 +131,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
+		Objects.requireNonNull(mapper);
 		return stream().flatMapToDouble(mapper);
 	}
 
@@ -143,7 +142,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 一个具有去重特征的流
 	 */
 	@Override
-	default I distinct() {
+	default S distinct() {
 		return wrapping(stream().distinct());
 	}
 
@@ -156,7 +155,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 一个元素按自然顺序排序的流
 	 */
 	@Override
-	default I sorted() {
+	default S sorted() {
 		return wrapping(stream().sorted());
 	}
 
@@ -170,7 +169,8 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 一个元素按指定的Comparator排序的流
 	 */
 	@Override
-	default I sorted(Comparator<? super T> comparator) {
+	default S sorted(Comparator<? super T> comparator) {
+		Objects.requireNonNull(comparator);
 		return wrapping(stream().sorted(comparator));
 	}
 
@@ -192,7 +192,8 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * }</pre>
 	 */
 	@Override
-	default I peek(Consumer<? super T> action) {
+	default S peek(Consumer<? super T> action) {
+		Objects.requireNonNull(action);
 		return wrapping(stream().peek(action));
 	}
 
@@ -204,7 +205,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 截取后的流
 	 */
 	@Override
-	default I limit(long maxSize) {
+	default S limit(long maxSize) {
 		return wrapping(stream().limit(maxSize));
 	}
 
@@ -216,7 +217,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 丢弃前面n个元素后的剩余元素组成的流
 	 */
 	@Override
-	default I skip(long n) {
+	default S skip(long n) {
 		return wrapping(stream().skip(n));
 	}
 
@@ -228,6 +229,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default void forEach(Consumer<? super T> action) {
+		Objects.requireNonNull(action);
 		stream().forEach(action);
 	}
 
@@ -239,6 +241,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default void forEachOrdered(Consumer<? super T> action) {
+		Objects.requireNonNull(action);
 		stream().forEachOrdered(action);
 	}
 
@@ -264,6 +267,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default <A> A[] toArray(IntFunction<A[]> generator) {
+		Objects.requireNonNull(generator);
 		return stream().toArray(generator);
 	}
 
@@ -289,6 +293,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default T reduce(T identity, BinaryOperator<T> accumulator) {
+		Objects.requireNonNull(accumulator);
 		return stream().reduce(identity, accumulator);
 	}
 
@@ -324,6 +329,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default Optional<T> reduce(BinaryOperator<T> accumulator) {
+		Objects.requireNonNull(accumulator);
 		return stream().reduce(accumulator);
 	}
 
@@ -341,6 +347,8 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner) {
+		Objects.requireNonNull(accumulator);
+		Objects.requireNonNull(combiner);
 		return stream().reduce(identity, accumulator, combiner);
 	}
 
@@ -359,6 +367,9 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner) {
+		Objects.requireNonNull(supplier);
+		Objects.requireNonNull(accumulator);
+		Objects.requireNonNull(combiner);
 		return stream().collect(supplier, accumulator, combiner);
 	}
 
@@ -373,6 +384,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default <R, A> R collect(Collector<? super T, A, R> collector) {
+		Objects.requireNonNull(collector);
 		return stream().collect(collector);
 	}
 
@@ -384,6 +396,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default Optional<T> min(Comparator<? super T> comparator) {
+		Objects.requireNonNull(comparator);
 		return stream().min(comparator);
 	}
 
@@ -395,6 +408,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default Optional<T> max(Comparator<? super T> comparator) {
+		Objects.requireNonNull(comparator);
 		return stream().max(comparator);
 	}
 
@@ -416,6 +430,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default boolean anyMatch(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
 		return stream().anyMatch(predicate);
 	}
 
@@ -427,6 +442,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default boolean allMatch(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
 		return stream().allMatch(predicate);
 	}
 
@@ -438,6 +454,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 */
 	@Override
 	default boolean noneMatch(Predicate<? super T> predicate) {
+		Objects.requireNonNull(predicate);
 		return stream().noneMatch(predicate);
 	}
 
@@ -497,7 +514,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 串行流
 	 */
 	@Override
-	default I sequential() {
+	default S sequential() {
 		return wrapping(stream().sequential());
 	}
 
@@ -507,7 +524,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 并行流
 	 */
 	@Override
-	default I parallel() {
+	default S parallel() {
 		return wrapping(stream().parallel());
 	}
 
@@ -518,7 +535,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 无序流
 	 */
 	@Override
-	default I unordered() {
+	default S unordered() {
 		return wrapping(stream().unordered());
 	}
 
@@ -529,7 +546,7 @@ public interface StreamWrapper<T, I extends StreamWrapper<T, I>> extends Stream<
 	 * @return 流
 	 */
 	@Override
-	default I onClose(Runnable closeHandler) {
+	default S onClose(Runnable closeHandler) {
 		return wrapping(stream().onClose(closeHandler));
 	}
 

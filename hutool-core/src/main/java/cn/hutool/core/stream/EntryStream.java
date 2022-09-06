@@ -14,15 +14,16 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * <p>参考StreamEx的EntryStream与vavr的Map，是针对键值对对象{@link Map.Entry}特化的增强流实现。<br>
+ * <p>参考StreamEx的EntryStream与vavr的Map，是针对键值对对象{@link Map.Entry}特化的单元素增强流实现。<br>
  * 本身可视为一个元素类型为{@link Map.Entry}的{@link Stream}，
  * 用于支持流式处理{@link Map}集合中的、或其他键值对类型的数据。
  *
  * @param <K> 键类型
  * @param <V> 值类型
  * @author huangchengxing
+ * @since 6.0.0
  */
-public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K, V>, EntryStream<K, V>> {
+public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K, V>, EntryStream<K, V>> {
 
 	/**
 	 * 默认的空键值对
@@ -222,8 +223,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 *
 	 * @return {@link EntryStream}实例
 	 */
-	@Override
-	public EntryStream<K, V> nonNull() {
+	public EntryStream<K, V> nonNullKeyValue() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getKey()) && ObjUtil.isNotNull(e.getValue()));
 	}
 
@@ -232,7 +232,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 *
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> keyNonNull() {
+	public EntryStream<K, V> nonNullKey() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getKey()));
 	}
 
@@ -241,7 +241,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 *
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> valueNonNull() {
+	public EntryStream<K, V> nonNullValue() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getValue()));
 	}
 
@@ -298,7 +298,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 * @param value 值
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> append(K key, V value) {
+	public EntryStream<K, V> push(K key, V value) {
 		return wrapping(Stream.concat(stream, Stream.of(ofEntry(key, value))));
 	}
 
@@ -309,7 +309,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 * @param value 值
 	 * @return {@link EntryStream}实例
 	 */
-	public EntryStream<K, V> prepend(K key, V value) {
+	public EntryStream<K, V> unshift(K key, V value) {
 		return wrapping(Stream.concat(Stream.of(ofEntry(key, value)), stream));
 	}
 
@@ -319,6 +319,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 * @param entries 键值对
 	 * @return {@link EntryStream}实例
 	 */
+	@Override
 	public EntryStream<K, V> append(Iterable<? extends Map.Entry<K, V>> entries) {
 		if (IterUtil.isEmpty(entries)) {
 			return this;
@@ -334,6 +335,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 * @param entries 键值对
 	 * @return {@link EntryStream}实例
 	 */
+	@Override
 	public EntryStream<K, V> prepend(Iterable<? extends Map.Entry<K, V>> entries) {
 		if (IterUtil.isEmpty(entries)) {
 			return this;
@@ -724,7 +726,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
 	 */
 	@SuppressWarnings("unchecked")
-	private static <K, V> Map.Entry<K, V> ofEntry(Map.Entry<K, V> entry) {
+	static <K, V> Map.Entry<K, V> ofEntry(Map.Entry<K, V> entry) {
 		return ObjUtil.defaultIfNull(
 			entry, e -> ofEntry(e.getKey(), e.getValue()), (Map.Entry<K, V>)EMPTY_ENTRY
 		);
@@ -733,7 +735,7 @@ public class EntryStream<K, V> extends AbstractEnhancedStreamWrapper<Map.Entry<K
 	/**
 	 * 将键值对转为{@link AbstractMap.SimpleImmutableEntry}
 	 */
-	private static <K, V> Map.Entry<K, V> ofEntry(K key, V value) {
+	static <K, V> Map.Entry<K, V> ofEntry(K key, V value) {
 		return new AbstractMap.SimpleImmutableEntry<>(key, value);
 	}
 

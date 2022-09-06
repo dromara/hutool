@@ -31,6 +31,17 @@ public class EntryStreamTest {
 			EntryStream.merge(Arrays.asList(1, 2), Arrays.asList(1, 2, 3))
 				.collectKeys(Collectors.toList())
 		);
+
+		Assert.assertEquals(
+			Arrays.asList(1, 2),
+			EntryStream.merge(null, Arrays.asList(1, 2))
+				.collectValues(Collectors.toList())
+		);
+		Assert.assertEquals(
+			Arrays.asList(1, 2),
+			EntryStream.merge(Arrays.asList(1, 2), null)
+				.collectKeys(Collectors.toList())
+		);
 	}
 
 	@Test
@@ -38,15 +49,21 @@ public class EntryStreamTest {
 		Map<String, String> map = new HashMap<>();
 		map.put("1", "1");
 		Assert.assertEquals(1, EntryStream.of(map).count());
+		Assert.assertEquals(0, EntryStream.of((Map<String, String>)null).count());
 
 		Set<Map.Entry<Integer, Integer>> entries = new HashSet<>();
 		entries.add(new Entry<>(1, 1));
 		entries.add(null);
 		Assert.assertEquals(2, EntryStream.of(entries).count());
+		Assert.assertEquals(0, EntryStream.of((Set<Map.Entry<Integer, Integer>>)null).count());
 		Assert.assertEquals(2, EntryStream.of(entries.stream()).count());
+		Assert.assertEquals(0, EntryStream.of((Stream<Map.Entry<Integer, Integer>>)null).count());
+		Assert.assertEquals(2, new EntryStream<>(entries.stream()).count());
+		Assert.assertThrows(NullPointerException.class, () -> new EntryStream<>(null));
 
 		Iterable<Integer> iterable = Arrays.asList(1, 2, null);
 		Assert.assertEquals(3, EntryStream.of(iterable, Function.identity(), Function.identity()).count());
+		Assert.assertEquals(0, EntryStream.of(null, Function.identity(), Function.identity()).count());
 	}
 
 	@Test
@@ -117,11 +134,65 @@ public class EntryStreamTest {
 		Assert.assertEquals(
 			5,
 			EntryStream.of(Arrays.asList(1, 2, 3), Function.identity(), Function.identity())
-				.append(4, 4)
-				.append(5, 5)
+				.push(4, 4)
+				.push(5, 5)
 				.count()
 		);
+	}
 
+	@Test
+	public void testUnshift() {
+		Assert.assertEquals(
+			5,
+			EntryStream.of(Arrays.asList(1, 2, 3), Function.identity(), Function.identity())
+				.unshift(4, 4)
+				.unshift(5, 5)
+				.count()
+		);
+	}
+
+	@Test
+	public void testAppend() {
+		Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+			put(1, 1);
+			put(2, 2);
+		}};
+		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+			put(3, 3);
+			put(4, 4);
+		}};
+		Assert.assertEquals(
+			new ArrayList<Map.Entry<Integer, Integer>>(){{
+				addAll(map1.entrySet());
+				addAll(map2.entrySet());
+			}},
+			EntryStream.of(map1).append(map2.entrySet()).toList()
+		);
+		Assert.assertEquals(
+			new ArrayList<>(map1.entrySet()), EntryStream.of(map1).append(null).toList()
+		);
+	}
+
+	@Test
+	public void testPrepend() {
+		Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+			put(1, 1);
+			put(2, 2);
+		}};
+		Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+			put(3, 3);
+			put(4, 4);
+		}};
+		Assert.assertEquals(
+			new ArrayList<Map.Entry<Integer, Integer>>(){{
+				addAll(map2.entrySet());
+				addAll(map1.entrySet());
+			}},
+			EntryStream.of(map1).prepend(map2.entrySet()).toList()
+		);
+		Assert.assertEquals(
+			new ArrayList<>(map1.entrySet()), EntryStream.of(map1).prepend(null).toList()
+		);
 	}
 
 	@Test
@@ -228,6 +299,12 @@ public class EntryStreamTest {
 			Arrays.asList("11", "22", "33"),
 			EntryStream.of(map)
 				.map((k, v) -> k.toString() + v.toString())
+				.collect(Collectors.toList())
+		);
+		Assert.assertEquals(
+			Arrays.asList("11", "22", "33"),
+			EntryStream.of(map)
+				.map(e -> e.getKey().toString() + e.getValue().toString())
 				.collect(Collectors.toList())
 		);
 	}
@@ -457,7 +534,7 @@ public class EntryStreamTest {
 		Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
-		Assert.assertEquals(0, EntryStream.of(map).nonNull().count());
+		Assert.assertEquals(0, EntryStream.of(map).nonNullKeyValue().count());
 	}
 
 	@Test
@@ -465,7 +542,7 @@ public class EntryStreamTest {
 		Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
-		Assert.assertEquals(1, EntryStream.of(map).keyNonNull().count());
+		Assert.assertEquals(1, EntryStream.of(map).nonNullKey().count());
 	}
 
 	@Test
@@ -473,7 +550,7 @@ public class EntryStreamTest {
 		Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, null);
 		map.put(null, 1);
-		Assert.assertEquals(1, EntryStream.of(map).valueNonNull().count());
+		Assert.assertEquals(1, EntryStream.of(map).nonNullValue().count());
 	}
 
 	private static class Entry<K, V> implements Map.Entry<K, V> {
