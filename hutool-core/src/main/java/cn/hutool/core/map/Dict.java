@@ -7,10 +7,11 @@ import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.getter.BasicTypeGetter;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
@@ -564,7 +565,7 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	 * @see BeanPath#get(Object)
 	 * @since 5.7.14
 	 */
-	public <T> T getByPath(final String expression, final Class<T> resultType) {
+	public <T> T getByPath(final String expression, final Type resultType) {
 		return Convert.convert(resultType, getByPath(expression));
 	}
 	// -------------------------------------------------------------------- Get end
@@ -573,7 +574,7 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	public Dict clone() {
 		try {
 			return (Dict) super.clone();
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			throw new CloneRuntimeException(e);
 		}
 	}
