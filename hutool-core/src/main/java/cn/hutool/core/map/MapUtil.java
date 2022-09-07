@@ -1258,13 +1258,7 @@ public class MapUtil extends MapGetUtil {
 
 		final Map<K, List<V>> map = new HashMap<>();
 		for (final Map.Entry<K, V> pair : entries) {
-			final List<V> values;
-			if (map.containsKey(pair.getKey())) {
-				values = map.get(pair.getKey());
-			} else {
-				values = ListUtil.of();
-				map.put(pair.getKey(), values);
-			}
+			final List<V> values = map.computeIfAbsent(pair.getKey(), k -> new ArrayList<>());
 			values.add(pair.getValue());
 		}
 		return map;
