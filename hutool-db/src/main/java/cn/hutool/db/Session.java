@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.lang.func.VoidFunc1;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
@@ -249,16 +249,16 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	}
 
 	/**
-	 * 在事务中执行操作，通过实现{@link VoidFunc1}接口的call方法执行多条SQL语句从而完成事务
+	 * 在事务中执行操作，通过实现{@link SerConsumer}接口的call方法执行多条SQL语句从而完成事务
 	 *
 	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
 	 * @throws DbRuntimeException SQL异常
 	 * @since 3.2.3
 	 */
-	public void tx(final VoidFunc1<Session> func) throws DbRuntimeException {
+	public void tx(final SerConsumer<Session> func) throws DbRuntimeException {
 		try {
 			beginTransaction();
-			func.call(this);
+			func.accept(this);
 			commit();
 		} catch (final Throwable e) {
 			quietRollback();

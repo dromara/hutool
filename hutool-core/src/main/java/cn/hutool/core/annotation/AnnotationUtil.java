@@ -112,7 +112,7 @@ public class AnnotationUtil {
 		if (null == predicate) {
 			return result;
 		}
-		return ArrayUtil.filter(result, predicate::test);
+		return ArrayUtil.filter(result, predicate);
 	}
 
 	/**

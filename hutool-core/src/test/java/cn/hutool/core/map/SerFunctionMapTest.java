@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-public class FuncMapTest {
+public class SerFunctionMapTest {
 
 	@Test
 	public void putGetTest(){

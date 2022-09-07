@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.MapUtil;
 
 import java.util.Collection;
@@ -144,7 +144,7 @@ public class ActiveEntity extends Entity {
 	 * @return this
 	 */
 	@Override
-	public ActiveEntity setFields(final Func0<?>... fields) {
+	public ActiveEntity setFields(final SerSupplier<?>... fields) {
 		return (ActiveEntity) super.setFields(fields);
 	}
 

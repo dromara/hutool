@@ -7,7 +7,7 @@ import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.getter.BasicTypeGetter;
 
@@ -581,7 +581,7 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	@Override
 	protected String customKey(Object key) {
 		if (this.caseInsensitive && null != key) {
-			key = ((String)key).toLowerCase();
+			key = ((String) key).toLowerCase();
 		}
 		return (String) key;
 	}
@@ -598,8 +598,8 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	 * @return this
 	 * @since 5.7.23
 	 */
-	public Dict setFields(final Func0<?>... fields) {
-		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
+	public Dict setFields(final SerSupplier<?>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
 		return this;
 	}
 }

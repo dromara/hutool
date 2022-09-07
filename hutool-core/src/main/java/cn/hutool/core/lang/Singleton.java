@@ -1,7 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -51,14 +51,14 @@ public final class Singleton {
 	 * @since 5.3.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T get(final String key, final Func0<T> supplier) {
+	public static <T> T get(final String key, final SerSupplier<T> supplier) {
 		//return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
 		// issues#2349
 		// ConcurrentHashMap.computeIfAbsent在某些情况下会导致死循环问题，此处采用Dubbo的解决方案
 
 		Object value = POOL.get(key);
-		if(null == value){
-			POOL.putIfAbsent(key, supplier.callWithRuntimeException());
+		if (null == value) {
+			POOL.putIfAbsent(key, supplier.get());
 			value = POOL.get(key);
 		}
 		return (T) value;
@@ -104,12 +104,12 @@ public final class Singleton {
 	/**
 	 * 判断某个类的对象是否存在
 	 *
-	 * @param clazz 类
+	 * @param clazz  类
 	 * @param params 构造参数
 	 * @return 是否存在
 	 */
-	public static boolean exists(final Class<?> clazz, final Object... params){
-		if (null != clazz){
+	public static boolean exists(final Class<?> clazz, final Object... params) {
+		if (null != clazz) {
 			final String key = buildKey(clazz.getName(), params);
 			return POOL.containsKey(key);
 		}
@@ -121,7 +121,7 @@ public final class Singleton {
 	 *
 	 * @return 非重复的类集合
 	 */
-	public static Set<Class<?>> getExistClass(){
+	public static Set<Class<?>> getExistClass() {
 		return POOL.values().stream().map(Object::getClass).collect(Collectors.toSet());
 	}
 

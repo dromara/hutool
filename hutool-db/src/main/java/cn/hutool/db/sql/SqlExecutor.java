@@ -1,7 +1,7 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.iter.ArrayIter;
-import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
@@ -289,10 +289,10 @@ public class SqlExecutor {
 	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public static <T> T query(final Connection conn, final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
+	public static <T> T query(final Connection conn, final SerFunction<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
 		PreparedStatement ps = null;
 		try {
-			ps = statementFunc.callWithRuntimeException(conn);
+			ps = statementFunc.apply(conn);
 			return executeQuery(ps, rsh);
 		} finally {
 			DbUtil.close(ps);

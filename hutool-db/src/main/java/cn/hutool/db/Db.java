@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.lang.func.VoidFunc1;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
@@ -114,7 +114,7 @@ public class Db extends AbstractDb<Db> {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(final VoidFunc1<Db> func) throws SQLException {
+	public Db tx(final SerConsumer<Db> func) throws SQLException {
 		return tx(null, func);
 	}
 
@@ -127,7 +127,7 @@ public class Db extends AbstractDb<Db> {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(final TransactionLevel transactionLevel, final VoidFunc1<Db> func) throws SQLException {
+	public Db tx(final TransactionLevel transactionLevel, final SerConsumer<Db> func) throws SQLException {
 		final Connection conn = getConnection();
 
 		// 检查是否支持事务
@@ -151,7 +151,7 @@ public class Db extends AbstractDb<Db> {
 
 		// 执行事务
 		try {
-			func.call(this);
+			func.accept(this);
 			// 提交
 			conn.commit();
 		} catch (final Throwable e) {
