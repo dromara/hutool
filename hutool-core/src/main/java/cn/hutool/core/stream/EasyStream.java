@@ -778,7 +778,7 @@ public class EasyStream<T> extends StreamWrapper<T, EasyStream<T>> implements St
 	public String join(final CharSequence delimiter,
 					   final CharSequence prefix,
 					   final CharSequence suffix) {
-		return map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
+		return map(String::valueOf).collect(CollectorUtil.joining(delimiter, prefix, suffix, Function.identity()));
 	}
 
 	/**
