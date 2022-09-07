@@ -22,7 +22,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * @param t the input argument
 	 * @return {@code true} if the input argument matches the predicate,
 	 * otherwise {@code false}
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
 	boolean testing(T t) throws Exception;
 
@@ -34,10 +34,10 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * otherwise {@code false}
 	 */
 	@Override
-	default boolean test(T t) {
+	default boolean test(final T t) {
 		try {
 			return testing(t);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -50,7 +50,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * @return lambda
 	 */
 	@SafeVarargs
-	static <T> SerPredicate<T> multiAnd(SerPredicate<T>... predicates) {
+	static <T> SerPredicate<T> multiAnd(final SerPredicate<T>... predicates) {
 		return Stream.of(predicates).reduce(SerPredicate::and).orElseGet(() -> o -> true);
 	}
 
@@ -62,7 +62,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * @return lambda
 	 */
 	@SafeVarargs
-	static <T> SerPredicate<T> multiOr(SerPredicate<T>... predicates) {
+	static <T> SerPredicate<T> multiOr(final SerPredicate<T>... predicates) {
 		return Stream.of(predicates).reduce(SerPredicate::or).orElseGet(() -> o -> false);
 	}
 
@@ -76,7 +76,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * @return a predicate that tests if two arguments are equal according
 	 * to {@link Objects#equals(Object, Object)}
 	 */
-	static <T> SerPredicate<T> isEqual(Object... targetRef) {
+	static <T> SerPredicate<T> isEqual(final Object... targetRef) {
 		return (null == targetRef)
 				? Objects::isNull
 				: object -> Stream.of(targetRef).allMatch(target -> target.equals(object));
@@ -98,7 +98,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * AND of this predicate and the {@code other} predicate
 	 * @throws NullPointerException if other is null
 	 */
-	default SerPredicate<T> and(SerPredicate<? super T> other) {
+	default SerPredicate<T> and(final SerPredicate<? super T> other) {
 		Objects.requireNonNull(other);
 		return t -> test(t) && other.test(t);
 	}
@@ -131,7 +131,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * OR of this predicate and the {@code other} predicate
 	 * @throws NullPointerException if other is null
 	 */
-	default SerPredicate<T> or(SerPredicate<? super T> other) {
+	default SerPredicate<T> or(final SerPredicate<? super T> other) {
 		Objects.requireNonNull(other);
 		return t -> test(t) || other.test(t);
 	}

@@ -19,9 +19,8 @@ public interface SerSupplier<T> extends Supplier<T>, Serializable {
 	 * Gets a result.
 	 *
 	 * @return a result
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	T getting() throws Exception;
 
 	/**
@@ -33,7 +32,7 @@ public interface SerSupplier<T> extends Supplier<T>, Serializable {
 	default T get() {
 		try {
 			return getting();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -46,7 +45,7 @@ public interface SerSupplier<T> extends Supplier<T>, Serializable {
 	 * @return lambda
 	 */
 	@SafeVarargs
-	static <T> SerSupplier<T> last(SerSupplier<T>... serSups) {
+	static <T> SerSupplier<T> last(final SerSupplier<T>... serSups) {
 		return Stream.of(serSups).reduce((l, r) -> r).orElseGet(() -> () -> null);
 	}
 

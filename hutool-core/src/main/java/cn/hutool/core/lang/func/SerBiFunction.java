@@ -21,9 +21,8 @@ public interface SerBiFunction<T, U, R> extends BiFunction<T, U, R>, Serializabl
 	 * @param t the first function argument
 	 * @param u the second function argument
 	 * @return the function result
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	R applying(T t, U u) throws Exception;
 
 	/**
@@ -34,10 +33,10 @@ public interface SerBiFunction<T, U, R> extends BiFunction<T, U, R>, Serializabl
 	 * @return the function result
 	 */
 	@Override
-	default R apply(T t, U u) {
+	default R apply(final T t, final U u) {
 		try {
 			return this.applying(t, u);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -55,7 +54,7 @@ public interface SerBiFunction<T, U, R> extends BiFunction<T, U, R>, Serializabl
 	 * applies the {@code after} function
 	 * @throws NullPointerException if after is null
 	 */
-	default <V> SerBiFunction<T, U, V> andThen(SerFunction<? super R, ? extends V> after) {
+	default <V> SerBiFunction<T, U, V> andThen(final SerFunction<? super R, ? extends V> after) {
 		Objects.requireNonNull(after);
 		return (T t, U u) -> after.apply(this.apply(t, u));
 	}

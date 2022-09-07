@@ -20,9 +20,8 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * Performs this operation on the given argument.
 	 *
 	 * @param t the input argument
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	void accepting(T t) throws Exception;
 
 	/**
@@ -31,10 +30,10 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * @param t the input argument
 	 */
 	@Override
-	default void accept(T t) {
+	default void accept(final T t) {
 		try {
 			accepting(t);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -47,7 +46,7 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * @return lambda
 	 */
 	@SafeVarargs
-	static <T> SerConsumer<T> multi(SerConsumer<T>... consumers) {
+	static <T> SerConsumer<T> multi(final SerConsumer<T>... consumers) {
 		return Stream.of(consumers).reduce(SerConsumer::andThen).orElseGet(() -> o -> {});
 	}
 
@@ -63,7 +62,7 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * operation followed by the {@code after} operation
 	 * @throws NullPointerException if {@code after} is null
 	 */
-	default SerConsumer<T> andThen(SerConsumer<? super T> after) {
+	default SerConsumer<T> andThen(final SerConsumer<? super T> after) {
 		Objects.requireNonNull(after);
 		return (T t) -> {
 			accept(t);
