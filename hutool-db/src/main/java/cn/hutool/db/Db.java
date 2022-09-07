@@ -151,7 +151,7 @@ public class Db extends AbstractDb<Db> {
 
 		// 执行事务
 		try {
-			func.call(this);
+			func.accept(this);
 			// 提交
 			conn.commit();
 		} catch (final Throwable e) {
