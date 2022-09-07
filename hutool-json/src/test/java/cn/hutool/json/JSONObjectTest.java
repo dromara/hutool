@@ -472,7 +472,7 @@ public class JSONObjectTest {
 
 	@Test
 	public void setDateFormatTest3() {
-		// 自定义格式为只有秒的时间戳，一版用于JWT
+		// 自定义格式为只有秒的时间戳，一般用于JWT
 		final JSONConfig jsonConfig = JSONConfig.of().setDateFormat("#sss");
 
 		final Date date = DateUtil.parse("2020-06-05 11:16:11");

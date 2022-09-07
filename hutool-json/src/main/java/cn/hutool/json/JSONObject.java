@@ -10,7 +10,6 @@ import cn.hutool.json.serialize.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -148,11 +147,6 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	public JSONObject setDateFormat(final String format) {
 		this.config.setDateFormat(format);
 		return this;
-	}
-
-	@Override
-	public <T> T toBean(final Type type) {
-		return JSON.super.toBean(type);
 	}
 
 	/**

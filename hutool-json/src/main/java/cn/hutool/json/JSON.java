@@ -1,7 +1,10 @@
 package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanPath;
+import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.convert.Converter;
 import cn.hutool.core.lang.mutable.MutableEntry;
+import cn.hutool.json.convert.JSONConverter;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -14,7 +17,7 @@ import java.util.function.Predicate;
  *
  * @author Looly
  */
-public interface JSON extends Cloneable, Serializable {
+public interface JSON extends Converter, Cloneable, Serializable {
 
 	/**
 	 * 获取JSON配置
@@ -171,6 +174,11 @@ public interface JSON extends Cloneable, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T toBean(final Type type) {
-		return (T) getConfig().getConverter().convert(type, this);
+		return (T) convert(type, this);
+	}
+
+	@Override
+	default Object convert(Type targetType, Object value) throws ConvertException {
+		return JSONConverter.of(getConfig()).convert(targetType, value);
 	}
 }
