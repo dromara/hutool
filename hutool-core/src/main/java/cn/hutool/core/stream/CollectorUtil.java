@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 /**
  * 可变的汇聚操作{@link Collector} 相关工具封装
  *
- * @author looly, VampireAchao
+ * @author looly
+ * @author VampireAchao
+ * @author huangchengxing
  * @since 5.6.7
  */
 public class CollectorUtil {
@@ -100,7 +102,7 @@ public class CollectorUtil {
 			final K key = Opt.ofNullable(t).map(classifier).orElse(null);
 			final A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
 			if (ArrayUtil.isArray(container) || Objects.nonNull(t)) {
-				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.stream.Collectors.counting 求null元素个数
+				// 如果是数组类型，不需要判空，场景——分组后需要使用：java.util.unwrap.Collectors.counting 求null元素个数
 				downstreamAccumulator.accept(container, t);
 			}
 		};
@@ -272,11 +274,26 @@ public class CollectorUtil {
 	 * 将流转为{@link EntryStream}
 	 *
 	 * @param keyMapper   键的映射方法
+	 * @param <T>         输入元素类型
+	 * @param <K>         元素的键类型
+	 * @return 收集器
+	 * @since 6.0.0
+	 */
+	public static <T, K> Collector<T, List<T>, EntryStream<K, T>> toEntryStream(
+		Function<? super T, ? extends K> keyMapper) {
+		return toEntryStream(keyMapper, Function.identity());
+	}
+
+	/**
+	 * 将流转为{@link EntryStream}
+	 *
+	 * @param keyMapper   键的映射方法
 	 * @param valueMapper 值的映射方法
 	 * @param <T>         输入元素类型
 	 * @param <K>         元素的键类型
 	 * @param <V>         元素的值类型
 	 * @return 收集器
+	 * @since 6.0.0
 	 */
 	public static <T, K, V> Collector<T, List<T>, EntryStream<K, V>> toEntryStream(
 			final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends V> valueMapper) {
@@ -290,6 +307,7 @@ public class CollectorUtil {
 	 *
 	 * @param <T> 输入元素类型
 	 * @return 收集器
+	 * @since 6.0.0
 	 */
 	public static <T> Collector<T, ?, EasyStream<T>> toEasyStream() {
 		return transform(ArrayList::new, EasyStream::of);
@@ -300,7 +318,7 @@ public class CollectorUtil {
 	 * 返回的收集器的效果等同于：
 	 * <pre>{@code
 	 * 	Collection<T> coll = Stream.of(a, b, c, d)
-	 * 		.collect(Collectors.toCollection(collFactory));
+	 * 		.collect(Collectors.toColl(collFactory));
 	 * 	R result = mapper.apply(coll);
 	 * }</pre>
 	 *
@@ -310,6 +328,7 @@ public class CollectorUtil {
 	 * @param <T>         输入元素类型
 	 * @param <C>         中间收集输入元素的集合类型
 	 * @return 收集器
+	 * @since 6.0.0
 	 */
 	public static <T, R, C extends Collection<T>> Collector<T, C, R> transform(
 			final Supplier<C> collFactory, final Function<C, R> mapper) {
@@ -336,6 +355,7 @@ public class CollectorUtil {
 	 * @param <R>    返回值类型
 	 * @param <T>    输入元素类型
 	 * @return 收集器
+	 * @since 6.0.0
 	 */
 	public static <T, R> Collector<T, List<T>, R> transform(final Function<List<T>, R> mapper) {
 		return transform(ArrayList::new, mapper);

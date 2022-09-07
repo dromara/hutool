@@ -1,9 +1,7 @@
 package cn.hutool.core.stream;
 
-
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
 import org.junit.Assert;
@@ -21,6 +19,13 @@ import static java.util.Collections.singletonList;
  * @author VampireAchao
  */
 public class EasyStreamTest {
+
+	@Test
+	public void testConcat() {
+		final Stream<Integer> stream1 = Stream.of(1, 2);
+		final Stream<Integer> stream2 = Stream.of(3, 4);
+		Assert.assertEquals(4, EasyStream.concat(stream1, stream2).count());
+	}
 
 	@Test
 	public void testBuilder() {
@@ -54,7 +59,7 @@ public class EasyStreamTest {
 	}
 
 	@Test
-	public void testToCollection() {
+	public void testToColl() {
 		final List<Integer> list = Arrays.asList(1, 2, 3);
 		final List<String> toCollection = EasyStream.of(list).map(String::valueOf).toColl(LinkedList::new);
 		Assert.assertEquals(Arrays.asList("1", "2", "3"), toCollection);
@@ -168,18 +173,22 @@ public class EasyStreamTest {
 		final List<Integer> collect1 = list.stream().distinct().collect(Collectors.toList());
 		final List<Integer> collect2 = list.stream().parallel().distinct().collect(Collectors.toList());
 
-		// 使用FastStream去重
+		// 使用EasyStream去重
 		final List<Integer> distinctBy1 = EasyStream.of(list).distinct().toList();
 		final List<Integer> distinctBy2 = EasyStream.of(list).parallel().distinct(String::valueOf).toList();
 
 		Assert.assertEquals(collect1, distinctBy1);
 		Assert.assertEquals(collect2, distinctBy2);
+
+		Assert.assertEquals(
+			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
+		);
 	}
 
 	@Test
 	public void testForeachIdx() {
 		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		final EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
+		final EasyStream.Builder<String> builder = EasyStream.builder();
 		EasyStream.of(list).forEachIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
 		// 并行流时为-1
@@ -189,11 +198,11 @@ public class EasyStreamTest {
 	@Test
 	public void testForEachOrderedIdx() {
 		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		final EasyStream.FastStreamBuilder<String> builder = EasyStream.builder();
+		final EasyStream.Builder<String> builder = EasyStream.builder();
 		EasyStream.of(list).forEachOrderedIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
 
-		final EasyStream.FastStreamBuilder<String> streamBuilder = EasyStream.builder();
+		final EasyStream.Builder<String> streamBuilder = EasyStream.builder();
 		EasyStream.of(list).parallel().forEachOrderedIdx((e, i) -> streamBuilder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("0.dromara", "0.hutool", "0.sweet"), streamBuilder.build().toList());
 
@@ -361,39 +370,6 @@ public class EasyStreamTest {
 	}
 
 	@Test
-	public void testZip() {
-		final List<Integer> orders = Arrays.asList(1, 2, 3);
-		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
-		List<String> zip = EasyStream.of(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
-		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
-
-		zip = EasyStream.iterate(1, i -> i + 1).zip(list, (e1, e2) -> e1 + "." + e2).toList();
-		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
-	}
-
-	@Test
-	public void testListSplit() {
-		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
-		List<List<Integer>> lists = EasyStream.of(list).split(2).map(EasyStream::toList).toList();
-		Assert.assertEquals(ListUtil.split(list, 2), lists);
-
-		// 指定长度 大于等于 列表长度
-		lists = EasyStream.of(list).split(list.size()).map(EasyStream::toList).toList();
-		Assert.assertEquals(singletonList(list), lists);
-	}
-
-	@Test
-	public void testSplitList() {
-		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
-		List<List<Integer>> lists = EasyStream.of(list).splitList(2).toList();
-		Assert.assertEquals(ListUtil.split(list, 2), lists);
-
-		// 指定长度 大于等于 列表长度
-		lists = EasyStream.of(list).splitList(list.size()).toList();
-		Assert.assertEquals(singletonList(list), lists);
-	}
-
-	@Test
 	public void testTakeWhile() {
 		// 1 到 10
 		final List<Integer> list = EasyStream.iterate(1, i -> i <= 10, i -> i + 1).toList();
@@ -557,7 +533,7 @@ public class EasyStreamTest {
 	}
 
 	@Data
-	@Builder
+	@lombok.Builder
 	public static class Student {
 		private String name;
 		private Integer age;
