@@ -269,6 +269,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default <A> A[] toArray(final IntFunction<A[]> generator) {
 		Objects.requireNonNull(generator);
+		//noinspection SuspiciousToArrayCall
 		return unwrap().toArray(generator);
 	}
 
@@ -547,7 +548,7 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	 * @return 流
 	 */
 	@Override
-	default S onClose(Runnable closeHandler) {
+	default S onClose(final Runnable closeHandler) {
 		return wrap(unwrap().onClose(closeHandler));
 	}
 

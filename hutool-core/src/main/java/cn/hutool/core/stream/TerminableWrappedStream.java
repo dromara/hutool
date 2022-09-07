@@ -173,10 +173,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
      * @return map
      */
     default <K, U, M extends Map<K, U>> M toMap(
-		final Function<? super T, ? extends K> keyMapper,
-		final Function<? super T, ? extends U> valueMapper,
-		final BinaryOperator<U> mergeFunction,
-        Supplier<M> mapSupplier) {
+			final Function<? super T, ? extends K> keyMapper,
+			final Function<? super T, ? extends U> valueMapper,
+			final BinaryOperator<U> mergeFunction,
+			final Supplier<M> mapSupplier) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
 		Objects.requireNonNull(mergeFunction);
@@ -205,7 +205,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
         if (this.isParallel()) {
 			final List<T> keyList = toList();
             final Map<T, R> map = new HashMap<>(keyList.size());
-            for (T key : keyList) {
+            for (final T key : keyList) {
                 map.put(key, iterator.hasNext() ? iterator.next() : null);
             }
             return map;

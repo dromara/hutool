@@ -155,6 +155,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param items       放入值
 	 * @return 操作后的流
 	 */
+	@SuppressWarnings("unchecked")
 	default S splice(final int start, final int deleteCount, final T... items) {
 		final List<T> elements = unwrap().collect(Collectors.toList());
 		return wrap(ListUtil.splice(elements, start, deleteCount, items).stream())
@@ -279,7 +280,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		if (isParallel()) {
 			return peek(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
 		} else {
-			AtomicInteger index = new AtomicInteger(NOT_FOUND_ELEMENT_INDEX);
+			final AtomicInteger index = new AtomicInteger(NOT_FOUND_ELEMENT_INDEX);
 			return peek(e -> action.accept(e, index.incrementAndGet()));
 		}
 	}
@@ -318,6 +319,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @param obj 元素
 	 * @return 流
 	 */
+	@SuppressWarnings({"SpellCheckingInspection", "unchecked"})
 	default S unshift(final T... obj) {
 		Stream<T> result = unwrap();
 		if (ArrayUtil.isNotEmpty(obj)) {
@@ -489,6 +491,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		Objects.requireNonNull(childrenGetter);
 		Objects.requireNonNull(childrenSetter);
 		final MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
+		@SuppressWarnings("unchecked")
 		final Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e))
 			.flat(recursiveRef.get())
 			.unshift(e);
