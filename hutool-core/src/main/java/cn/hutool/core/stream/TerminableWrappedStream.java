@@ -377,7 +377,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @return 拼接后的字符串
 	 */
 	default String join(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
-		return unwrap().map(String::valueOf).collect(Collectors.joining(delimiter, prefix, suffix));
+		return unwrap().map(String::valueOf).collect(CollectorUtil.joining(delimiter, prefix, suffix, Function.identity()));
 	}
 
 	// endregion
