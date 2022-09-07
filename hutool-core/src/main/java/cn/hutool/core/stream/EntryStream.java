@@ -61,8 +61,8 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 		final Iterator<V> valueItr = values.iterator();
 		while (keyItr.hasNext() || valueItr.hasNext()) {
 			entries.add(ofEntry(
-				keyItr.hasNext() ? keyItr.next() : null,
-				valueItr.hasNext() ? valueItr.next() : null
+					keyItr.hasNext() ? keyItr.next() : null,
+					valueItr.hasNext() ? valueItr.next() : null
 			));
 		}
 		return of(entries);
@@ -116,7 +116,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 			return empty();
 		}
 		final Stream<Map.Entry<K, V>> stream = StreamSupport.stream(source.spliterator(), false)
-				.map(t -> new Entry<>(keyMapper.apply(t), valueMapper.apply(t)));
+				.map(t -> ofEntry(keyMapper.apply(t), valueMapper.apply(t)));
 		return new EntryStream<>(stream);
 	}
 
@@ -131,7 +131,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 */
 	public static <K, V> EntryStream<K, V> of(Stream<? extends Map.Entry<K, V>> stream) {
 		return ObjUtil.isNull(stream) ?
-				empty() : new EntryStream<>(stream.map(Entry::new));
+				empty() : new EntryStream<>(stream.map(EntryStream::ofEntry));
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 			return this;
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
-			.map(EntryStream::ofEntry);
+				.map(EntryStream::ofEntry);
 		return wrap(Stream.concat(stream, contacted));
 	}
 
@@ -346,7 +346,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 			return this;
 		}
 		final Stream<Map.Entry<K, V>> contacted = StreamSupport.stream(entries.spliterator(), isParallel())
-			.map(EntryStream::ofEntry);
+				.map(EntryStream::ofEntry);
 		return wrap(Stream.concat(contacted, stream));
 	}
 
@@ -378,7 +378,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public <N> EntryStream<N, V> mapKeys(final Function<? super K, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
-			stream.map(e -> ofEntry(mapper.apply(e.getKey()), e.getValue()))
+				stream.map(e -> ofEntry(mapper.apply(e.getKey()), e.getValue()))
 		);
 	}
 
@@ -392,7 +392,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public <N> EntryStream<K, N> mapValues(final Function<? super V, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
 		return new EntryStream<>(
-			stream.map(e -> ofEntry(e.getKey(), mapper.apply(e.getValue())))
+				stream.map(e -> ofEntry(e.getKey(), mapper.apply(e.getValue())))
 		);
 	}
 
@@ -457,10 +457,10 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public <N> EntryStream<N, V> flatMapKey(final Function<? super K, Stream<? extends N>> keyMapper) {
 		Objects.requireNonNull(keyMapper);
 		return new EntryStream<>(
-			stream.flatMap(e -> keyMapper
-				.apply(e.getKey())
-				.map(newKey -> ofEntry(newKey, e.getValue()))
-			)
+				stream.flatMap(e -> keyMapper
+						.apply(e.getKey())
+						.map(newKey -> ofEntry(newKey, e.getValue()))
+				)
 		);
 	}
 
@@ -481,10 +481,10 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	public <N> EntryStream<K, N> flatMapValue(final Function<? super V, Stream<? extends N>> valueMapper) {
 		Objects.requireNonNull(valueMapper);
 		return new EntryStream<>(
-			stream.flatMap(e -> valueMapper
-				.apply(e.getValue())
-				.map(newVal -> ofEntry(e.getKey(), newVal))
-			)
+				stream.flatMap(e -> valueMapper
+						.apply(e.getValue())
+						.map(newVal -> ofEntry(e.getKey(), newVal))
+				)
 		);
 	}
 
@@ -644,7 +644,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @return 集合
 	 */
 	public <C extends Collection<V>, M extends Map<K, C>> M groupByKey(
-		final Supplier<M> mapFactory, final Collector<V, ?, C> collector) {
+			final Supplier<M> mapFactory, final Collector<V, ?, C> collector) {
 		return super.collect(Collectors.groupingBy(
 				Map.Entry::getKey, mapFactory,
 				CollectorUtil.transform(ArrayList::new, s -> s.stream().map(Map.Entry::getValue).collect(collector))
@@ -668,7 +668,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 */
 	public EntryStream<V, K> inverse() {
 		return new EntryStream<>(
-			stream.map(e -> ofEntry(e.getValue(), e.getKey()))
+				stream.map(e -> ofEntry(e.getValue(), e.getKey()))
 		);
 	}
 
@@ -734,7 +734,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	@SuppressWarnings("unchecked")
 	static <K, V> Map.Entry<K, V> ofEntry(final Map.Entry<K, V> entry) {
 		return ObjUtil.defaultIfNull(
-			entry, e -> ofEntry(e.getKey(), e.getValue()), (Map.Entry<K, V>)EMPTY_ENTRY
+				entry, e -> ofEntry(e.getKey(), e.getValue()), (Map.Entry<K, V>) EMPTY_ENTRY
 		);
 	}
 
