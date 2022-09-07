@@ -192,7 +192,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	}
 
 	/**
-	 * <<p>删除流中与断言匹配的元素，当遇到第一个不匹配的元素时终止，返回由剩余不匹配的元素组成的流。<br>
+	 * 删除流中与断言匹配的元素，当遇到第一个不匹配的元素时终止，返回由剩余不匹配的元素组成的流。<br>
 	 * eg:
 	 * <pre>{@code
 	 * EasyStream.of(1, 2, 3, 4, 5)

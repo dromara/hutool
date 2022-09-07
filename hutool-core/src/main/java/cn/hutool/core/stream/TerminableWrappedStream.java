@@ -449,6 +449,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	/**
 	 * 根据给定判断条件分组
 	 *
+	 * @param <C> 值类型
 	 * @param predicate 判断条件
 	 * @param collFactory 提供的集合
 	 * @return map
