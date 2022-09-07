@@ -31,6 +31,8 @@ public class SM2Test {
 		final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
+
+		new SM2(pair.getPrivate(), pair.getPublic());
 	}
 
 	@Test
@@ -318,5 +320,10 @@ public class SM2Test {
 
 		// 04占位一个字节
 		Assert.assertEquals(65, sm2.getQ(false).length);
+	}
+
+	@Test
+	public void issuesI5PWQ4Test(){
+
 	}
 }
