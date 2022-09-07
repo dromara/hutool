@@ -150,6 +150,34 @@ public class CollectorUtil {
 		return groupingBy(classifier, Collectors.toList());
 	}
 
+
+	/**
+	 * 对null友好的 toMap 操作的 {@link Collector}实现，默认使用HashMap
+	 *
+	 * @param keyMapper   指定map中的key
+	 * @param valueMapper 指定map中的value
+	 * @param <T>         实体类型
+	 * @param <K>         map中key的类型
+	 * @param <U>         map中value的类型
+	 * @return 对null友好的 toMap 操作的 {@link Collector}实现
+	 */
+	public static <T, K, U> Collector<T, ?, Map<K, U>> toMap(final Function<? super T, ? extends K> keyMapper,
+															 final Function<? super T, ? extends U> valueMapper) {
+		return toMap(keyMapper, valueMapper, (l, r) -> r);
+	}
+
+	/**
+	 * 对null友好的 toMap 操作的 {@link Collector}实现，默认使用HashMap
+	 *
+	 * @param keyMapper 指定map中的key
+	 * @param <T>       实体类型
+	 * @param <K>       map中key的类型
+	 * @return 对null友好的 toMap 操作的 {@link Collector}实现
+	 */
+	public static <T, K> Collector<T, ?, Map<K, T>> toMap(final Function<? super T, ? extends K> keyMapper) {
+		return toMap(keyMapper, Function.identity());
+	}
+
 	/**
 	 * 对null友好的 toMap 操作的 {@link Collector}实现，默认使用HashMap
 	 *
@@ -162,8 +190,8 @@ public class CollectorUtil {
 	 * @return 对null友好的 toMap 操作的 {@link Collector}实现
 	 */
 	public static <T, K, U> Collector<T, ?, Map<K, U>> toMap(final Function<? super T, ? extends K> keyMapper,
-									 final Function<? super T, ? extends U> valueMapper,
-									 final BinaryOperator<U> mergeFunction) {
+															 final Function<? super T, ? extends U> valueMapper,
+															 final BinaryOperator<U> mergeFunction) {
 		return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
 	}
 
