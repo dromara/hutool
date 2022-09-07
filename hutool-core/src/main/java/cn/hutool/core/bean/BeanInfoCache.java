@@ -1,6 +1,6 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.ReferenceConcurrentMap;
 import cn.hutool.core.map.WeakConcurrentMap;
 
@@ -42,8 +42,8 @@ public enum BeanInfoCache {
 	public Map<String, PropertyDescriptor> getPropertyDescriptorMap(
 			final Class<?> beanClass,
 			final boolean ignoreCase,
-			final Func0<Map<String, PropertyDescriptor>> supplier) {
-		return getCache(ignoreCase).computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
+			final SerSupplier<Map<String, PropertyDescriptor>> supplier) {
+		return getCache(ignoreCase).computeIfAbsent(beanClass, (key) -> supplier.get());
 	}
 
 	/**

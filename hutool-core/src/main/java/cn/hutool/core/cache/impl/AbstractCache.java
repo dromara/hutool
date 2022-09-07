@@ -2,7 +2,7 @@ package cn.hutool.core.cache.impl;
 
 import cn.hutool.core.cache.Cache;
 import cn.hutool.core.cache.CacheListener;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 
@@ -92,6 +92,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	// ---------------------------------------------------------------- put end
 
 	// ---------------------------------------------------------------- get start
+
 	/**
 	 * @return 命中数
 	 */
@@ -107,7 +108,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public V get(final K key, final boolean isUpdateLastAccess, final Func0<V> supplier) {
+	public V get(final K key, final boolean isUpdateLastAccess, final SerSupplier<V> supplier) {
 		V v = get(key, isUpdateLastAccess);
 		if (null == v && null != supplier) {
 			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
@@ -117,11 +118,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				// 双重检查锁，防止在竞争锁的过程中已经有其它线程写入
 				final CacheObj<K, V> co = getWithoutLock(key);
 				if (null == co || co.isExpired()) {
-					try {
-						v = supplier.call();
-					} catch (final Exception e) {
-						throw new RuntimeException(e);
-					}
+					v = supplier.get();
 					put(key, v, this.timeout);
 				} else {
 					v = co.get(isUpdateLastAccess);
@@ -136,11 +133,12 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	/**
 	 * 获取键对应的{@link CacheObj}
+	 *
 	 * @param key 键，实际使用时会被包装为{@link MutableObj}
 	 * @return {@link CacheObj}
 	 * @since 5.8.0
 	 */
-	protected CacheObj<K, V> getWithoutLock(final K key){
+	protected CacheObj<K, V> getWithoutLock(final K key) {
 		return this.cacheMap.get(MutableObj.of(key));
 	}
 	// ---------------------------------------------------------------- get end
@@ -151,6 +149,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		return new CacheValuesIterator<>(copiedIterator);
 	}
 	// ---------------------------------------------------------------- prune start
+
 	/**
 	 * 清理实现<br>
 	 * 子类实现此方法时无需加锁
@@ -224,7 +223,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return 所有键
 	 * @since 5.5.9
 	 */
-	public Set<K> keySet(){
+	public Set<K> keySet() {
 		return this.cacheMap.keySet().stream().map(Mutable::get).collect(Collectors.toSet());
 	}
 
@@ -260,10 +259,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	/**
 	 * 获取所有{@link CacheObj}值的{@link Iterator}形式
+	 *
 	 * @return {@link Iterator}
 	 * @since 5.8.0
 	 */
-	protected Iterator<CacheObj<K, V>> cacheObjIter(){
+	protected Iterator<CacheObj<K, V>> cacheObjIter() {
 		return this.cacheMap.values().iterator();
 	}
 }

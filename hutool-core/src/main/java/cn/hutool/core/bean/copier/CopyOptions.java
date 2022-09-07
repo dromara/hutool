@@ -2,8 +2,8 @@ package cn.hutool.core.bean.copier;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.Converter;
-import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -178,7 +178,7 @@ public class CopyOptions implements Serializable {
 	 * @since 5.8.0
 	 */
 	@SuppressWarnings("unchecked")
-	public <P, R> CopyOptions setIgnoreProperties(final Func1<P, R>... funcs) {
+	public <P, R> CopyOptions setIgnoreProperties(final SerFunction<P, R>... funcs) {
 		final Set<String> ignoreProperties = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
 		return setPropertiesFilter((field, o) -> false == ignoreProperties.contains(field.getName()));
 	}

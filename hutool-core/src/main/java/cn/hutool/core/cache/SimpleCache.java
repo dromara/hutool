@@ -1,7 +1,7 @@
 package cn.hutool.core.cache;
 
 import cn.hutool.core.collection.iter.TransIter;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.WeakConcurrentMap;
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @author Looly
+ * @author Looly, VampireAchao
  */
 public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -75,18 +75,18 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	}
 
 	/**
-	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回SerSupplier回调产生的对象
 	 *
 	 * @param key      键
 	 * @param supplier 如果不存在回调方法，用于生产值对象
 	 * @return 值对象
 	 */
-	public V get(final K key, final Func0<V> supplier) {
+	public V get(final K key, final SerSupplier<V> supplier) {
 		return get(key, null, supplier);
 	}
 
 	/**
-	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回SerSupplier回调产生的对象
 	 *
 	 * @param key            键
 	 * @param validPredicate 检查结果对象是否可用，如是否断开连接等
@@ -94,9 +94,9 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @return 值对象
 	 * @since 5.7.9
 	 */
-	public V get(final K key, final Predicate<V> validPredicate, final Func0<V> supplier) {
+	public V get(final K key, final Predicate<V> validPredicate, final SerSupplier<V> supplier) {
 		V v = get(key);
-		if((null != validPredicate && null != v && false == validPredicate.test(v))){
+		if ((null != validPredicate && null != v && false == validPredicate.test(v))) {
 			v = null;
 		}
 		if (null == v && null != supplier) {
@@ -107,11 +107,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
 				v = get(key);
 				if (null == v || (null != validPredicate && false == validPredicate.test(v))) {
-					try {
-						v = supplier.call();
-					} catch (final Exception e) {
-						throw new RuntimeException(e);
-					}
+					v = supplier.get();
 					put(key, v);
 				}
 			} finally {
@@ -172,7 +168,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 
 	@Override
 	public Iterator<Map.Entry<K, V>> iterator() {
-		return new TransIter<>(this.rawMap.entrySet().iterator(), (entry)-> new Map.Entry<K, V>() {
+		return new TransIter<>(this.rawMap.entrySet().iterator(), (entry) -> new Map.Entry<K, V>() {
 			@Override
 			public K getKey() {
 				return entry.getKey().get();

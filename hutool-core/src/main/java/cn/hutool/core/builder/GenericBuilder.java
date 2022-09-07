@@ -1,11 +1,6 @@
 package cn.hutool.core.builder;
 
-import cn.hutool.core.lang.func.Consumer3;
-import cn.hutool.core.lang.func.Supplier1;
-import cn.hutool.core.lang.func.Supplier2;
-import cn.hutool.core.lang.func.Supplier3;
-import cn.hutool.core.lang.func.Supplier4;
-import cn.hutool.core.lang.func.Supplier5;
+import cn.hutool.core.lang.func.SerConsumer3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +53,7 @@ import java.util.function.Supplier;
  *
  * <p>注意：本工具类支持调用的构造方法的参数数量不超过5个，一般方法的参数数量不超过2个，更多的参数不利于阅读和维护。</p>
  *
- * @author TomXin
+ * @author TomXin VampireAchao
  * @since 5.7.21
  */
 public class GenericBuilder<T> implements Builder<T> {
@@ -84,7 +79,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	}
 
 	/**
-	 * 通过无参数实例化器创建GenericBuilder
+	 * 通过Supplier创建GenericBuilder
 	 *
 	 * @param instant 实例化器
 	 * @param <T>     目标类型
@@ -93,92 +88,6 @@ public class GenericBuilder<T> implements Builder<T> {
 	public static <T> GenericBuilder<T> of(final Supplier<T> instant) {
 		return new GenericBuilder<>(instant);
 	}
-
-	/**
-	 * 通过1参数实例化器创建GenericBuilder
-	 *
-	 * @param instant 实例化器
-	 * @param p1      参数一
-	 * @param <T>     目标类型
-	 * @param <P1>    参数一类型
-	 * @return GenericBuilder对象
-	 */
-	public static <T, P1> GenericBuilder<T> of(final Supplier1<T, P1> instant, final P1 p1) {
-		return of(instant.toSupplier(p1));
-	}
-
-	/**
-	 * 通过2参数实例化器创建GenericBuilder
-	 *
-	 * @param instant 实例化器
-	 * @param p1      参数一
-	 * @param p2      参数二
-	 * @param <T>     目标类型
-	 * @param <P1>    参数一类型
-	 * @param <P2>    参数二类型
-	 * @return GenericBuilder对象
-	 */
-	public static <T, P1, P2> GenericBuilder<T> of(final Supplier2<T, P1, P2> instant, final P1 p1, final P2 p2) {
-		return of(instant.toSupplier(p1, p2));
-	}
-
-	/**
-	 * 通过3参数实例化器创建GenericBuilder
-	 *
-	 * @param instant 实例化器
-	 * @param p1      参数一
-	 * @param p2      参数二
-	 * @param p3      参数三
-	 * @param <T>     目标类型
-	 * @param <P1>    参数一类型
-	 * @param <P2>    参数二类型
-	 * @param <P3>    参数三类型
-	 * @return GenericBuilder对象
-	 */
-	public static <T, P1, P2, P3> GenericBuilder<T> of(final Supplier3<T, P1, P2, P3> instant, final P1 p1, final P2 p2, final P3 p3) {
-		return of(instant.toSupplier(p1, p2, p3));
-	}
-
-	/**
-	 * 通过4参数实例化器创建GenericBuilder
-	 *
-	 * @param instant 实例化器
-	 * @param p1      参数一
-	 * @param p2      参数二
-	 * @param p3      参数三
-	 * @param p4      参数四
-	 * @param <T>     目标类型
-	 * @param <P1>    参数一类型
-	 * @param <P2>    参数二类型
-	 * @param <P3>    参数三类型
-	 * @param <P4>    参数四类型
-	 * @return GenericBuilder对象
-	 */
-	public static <T, P1, P2, P3, P4> GenericBuilder<T> of(final Supplier4<T, P1, P2, P3, P4> instant, final P1 p1, final P2 p2, final P3 p3, final P4 p4) {
-		return of(instant.toSupplier(p1, p2, p3, p4));
-	}
-
-	/**
-	 * 通过5参数实例化器创建GenericBuilder
-	 *
-	 * @param instant 实例化器
-	 * @param p1      参数一
-	 * @param p2      参数二
-	 * @param p3      参数三
-	 * @param p4      参数四
-	 * @param p5      参数五
-	 * @param <T>     目标类型
-	 * @param <P1>    参数一类型
-	 * @param <P2>    参数二类型
-	 * @param <P3>    参数三类型
-	 * @param <P4>    参数四类型
-	 * @param <P5>    参数五类型
-	 * @return GenericBuilder对象
-	 */
-	public static <T, P1, P2, P3, P4, P5> GenericBuilder<T> of(final Supplier5<T, P1, P2, P3, P4, P5> instant, final P1 p1, final P2 p2, final P3 p3, final P4 p4, final P5 p5) {
-		return of(instant.toSupplier(p1, p2, p3, p4, p5));
-	}
-
 
 	/**
 	 * 调用无参数方法
@@ -215,7 +124,7 @@ public class GenericBuilder<T> implements Builder<T> {
 	 * @param <P2>     参数二类型
 	 * @return GenericBuilder对象
 	 */
-	public <P1, P2> GenericBuilder<T> with(final Consumer3<T, P1, P2> consumer, final P1 p1, final P2 p2) {
+	public <P1, P2> GenericBuilder<T> with(final SerConsumer3<T, P1, P2> consumer, final P1 p1, final P2 p2) {
 		modifiers.add(instant -> consumer.accept(instant, p1, p2));
 		return this;
 	}

@@ -1,7 +1,7 @@
 package cn.hutool.core.cache;
 
 import cn.hutool.core.cache.impl.CacheObj;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @author Looly, jodd
+ * @author Looly, jodd, VampireAchao
  */
 public interface Cache<K, V> extends Iterable<V>, Serializable {
 
@@ -64,7 +64,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	}
 
 	/**
-	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回SerSupplier回调产生的对象
 	 * <p>
 	 * 调用此方法时，会检查上次调用时间，如果与当前时间差值大于超时时间返回{@code null}，否则返回值。
 	 * <p>
@@ -74,12 +74,12 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @param supplier 如果不存在回调方法，用于生产值对象
 	 * @return 值对象
 	 */
-	default V get(final K key, final Func0<V> supplier) {
+	default V get(final K key, final SerSupplier<V> supplier) {
 		return get(key, true, supplier);
 	}
 
 	/**
-	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回SerSupplier回调产生的对象
 	 * <p>
 	 * 调用此方法时，会检查上次调用时间，如果与当前时间差值大于超时时间返回{@code null}，否则返回值。
 	 * <p>
@@ -90,7 +90,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @param supplier           如果不存在回调方法，用于生产值对象
 	 * @return 值对象
 	 */
-	V get(K key, boolean isUpdateLastAccess, Func0<V> supplier);
+	V get(K key, boolean isUpdateLastAccess, SerSupplier<V> supplier);
 
 	/**
 	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回{@code null}
@@ -168,7 +168,7 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	 * @return this
 	 * @since 5.5.2
 	 */
-	default Cache<K, V> setListener(final CacheListener<K, V> listener){
+	default Cache<K, V> setListener(final CacheListener<K, V> listener) {
 		return this;
 	}
 }

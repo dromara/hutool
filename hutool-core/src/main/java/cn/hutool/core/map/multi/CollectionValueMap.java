@@ -1,6 +1,6 @@
 package cn.hutool.core.map.multi;
 
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,17 +22,17 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 
 	private static final long serialVersionUID = 9012989578038102983L;
 
-	private final Func0<Collection<V>> collFactory;
+	private final SerSupplier<Collection<V>> collFactory;
 
 	// ------------------------------------------------------------------------- Constructor start
 
 	/**
 	 * 创建一个多值映射集合，基于{@code mapFactory}与{@code collFactory}实现
 	 *
-	 * @param mapFactory 生成集合的工厂方法
+	 * @param mapFactory  生成集合的工厂方法
 	 * @param collFactory 生成值集合的工厂方法
 	 */
-	public CollectionValueMap(Supplier<Map<K, Collection<V>>> mapFactory, Func0<Collection<V>> collFactory) {
+	public CollectionValueMap(Supplier<Map<K, Collection<V>>> mapFactory, SerSupplier<Collection<V>> collFactory) {
 		super(mapFactory);
 		this.collFactory = collFactory;
 	}
@@ -42,7 +42,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param collFactory 生成值集合的工厂方法
 	 */
-	public CollectionValueMap(Func0<Collection<V>> collFactory) {
+	public CollectionValueMap(SerSupplier<Collection<V>> collFactory) {
 		this.collFactory = collFactory;
 	}
 
@@ -67,6 +67,6 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 
 	@Override
 	protected Collection<V> createCollection() {
-		return collFactory.callWithRuntimeException();
+		return collFactory.get();
 	}
 }

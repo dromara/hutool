@@ -2,7 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.SetUtil;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
@@ -180,7 +180,7 @@ public class Entity extends Dict {
 	 * @return this
 	 */
 	@Override
-	public Entity setFields(final Func0<?>... fields) {
+	public Entity setFields(final SerSupplier<?>... fields) {
 		return (Entity) super.setFields(fields);
 	}
 

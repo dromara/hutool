@@ -1,8 +1,8 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
@@ -240,12 +240,12 @@ public class EnumUtil {
 	 * @param <C>       字段类型
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
-	public static <E extends Enum<E>, C> E getBy(final Func1<E, C> condition, final C value) {
+	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition, final C value) {
 		Class<E> implClass = LambdaUtil.getRealClass(condition);
 		if (Enum.class.equals(implClass)) {
 			implClass = LambdaUtil.getRealClass(condition);
 		}
-		return Arrays.stream(implClass.getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
+		return Arrays.stream(implClass.getEnumConstants()).filter(e -> condition.apply(e).equals(value)).findAny().orElse(null);
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class EnumUtil {
 	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
 	 * @since 5.8.0
 	 */
-	public static <E extends Enum<E>, F, C> F getFieldBy(final Func1<E, F> field,
+	public static <E extends Enum<E>, F, C> F getFieldBy(final SerFunction<E, F> field,
 														 final Function<E, C> condition, final C value) {
 		Class<E> implClass = LambdaUtil.getRealClass(field);
 		if (Enum.class.equals(implClass)) {
@@ -270,7 +270,7 @@ public class EnumUtil {
 				// 过滤
 				.filter(e -> condition.apply(e).equals(value))
 				// 获取第一个并转换为结果
-				.findFirst().map(field::callWithRuntimeException).orElse(null);
+				.findFirst().map(field).orElse(null);
 	}
 
 	/**

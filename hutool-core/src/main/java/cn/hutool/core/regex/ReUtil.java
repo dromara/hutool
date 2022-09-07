@@ -2,10 +2,9 @@ package cn.hutool.core.regex;
 
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
@@ -216,7 +215,7 @@ public class ReUtil {
 	 * @param pattern    编译后的正则模式
 	 * @param content    被匹配的内容
 	 * @param withGroup0 是否包括分组0，此分组表示全匹配的信息
-	 * @param findAll 是否查找所有匹配到的内容，{@code false}表示只读取第一个匹配到的内容
+	 * @param findAll    是否查找所有匹配到的内容，{@code false}表示只读取第一个匹配到的内容
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
@@ -234,7 +233,7 @@ public class ReUtil {
 				result.add(matcher.group(i));
 			}
 
-			if(false == findAll){
+			if (false == findAll) {
 				break;
 			}
 		}
@@ -911,7 +910,7 @@ public class ReUtil {
 	 * @return 替换后的文本
 	 * @since 4.2.2
 	 */
-	public static String replaceAll(final CharSequence str, final String regex, final Func1<Matcher, String> replaceFun) {
+	public static String replaceAll(final CharSequence str, final String regex, final SerFunction<Matcher, String> replaceFun) {
 		return replaceAll(str, Pattern.compile(regex), replaceFun);
 	}
 
@@ -930,7 +929,7 @@ public class ReUtil {
 	 * @return 替换后的字符串
 	 * @since 4.2.2
 	 */
-	public static String replaceAll(final CharSequence str, final Pattern pattern, final Func1<Matcher, String> replaceFun) {
+	public static String replaceAll(final CharSequence str, final Pattern pattern, final SerFunction<Matcher, String> replaceFun) {
 		if (StrUtil.isEmpty(str)) {
 			return StrUtil.str(str);
 		}
@@ -938,11 +937,7 @@ public class ReUtil {
 		final Matcher matcher = pattern.matcher(str);
 		final StringBuffer buffer = new StringBuffer();
 		while (matcher.find()) {
-			try {
-				matcher.appendReplacement(buffer, replaceFun.call(matcher));
-			} catch (final Exception e) {
-				throw new UtilException(e);
-			}
+			matcher.appendReplacement(buffer, replaceFun.apply(matcher));
 		}
 		matcher.appendTail(buffer);
 		return buffer.toString();

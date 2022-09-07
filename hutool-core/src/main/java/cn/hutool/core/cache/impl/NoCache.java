@@ -1,7 +1,7 @@
 package cn.hutool.core.cache.impl;
 
 import cn.hutool.core.cache.Cache;
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 
 import java.util.Iterator;
 
@@ -10,7 +10,7 @@ import java.util.Iterator;
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @author Looly,jodd
+ * @author Looly, jodd, VampireAchao
  */
 public class NoCache<K, V> implements Cache<K, V> {
 	private static final long serialVersionUID = 1L;
@@ -51,17 +51,13 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
-	public V get(final K key, final Func0<V> supplier) {
+	public V get(final K key, final SerSupplier<V> supplier) {
 		return get(key, true, supplier);
 	}
 
 	@Override
-	public V get(final K key, final boolean isUpdateLastAccess, final Func0<V> supplier) {
-		try {
-			return (null == supplier) ? null : supplier.call();
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
-		}
+	public V get(final K key, final boolean isUpdateLastAccess, final SerSupplier<V> supplier) {
+		return (null == supplier) ? null : supplier.get();
 	}
 
 	@Override

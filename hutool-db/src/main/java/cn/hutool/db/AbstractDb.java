@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
@@ -191,7 +191,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 * @since 5.7.17
 	 */
-	public <T> T query(final Func1<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
+	public <T> T query(final SerFunction<Connection, PreparedStatement> statementFunc, final RsHandler<T> rsh) throws DbRuntimeException {
 		Connection conn = null;
 		try {
 			conn = this.getConnection();

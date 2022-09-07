@@ -1,6 +1,6 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 /**
@@ -22,8 +22,8 @@ public enum BeanDescCache {
 	 * @return 属性名和{@link BeanDesc}映射
 	 * @since 5.4.2
 	 */
-	public BeanDesc getBeanDesc(final Class<?> beanClass, final Func0<BeanDesc> supplier) {
-		return bdCache.computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
+	public BeanDesc getBeanDesc(final Class<?> beanClass, final SerSupplier<BeanDesc> supplier) {
+		return bdCache.computeIfAbsent(beanClass, (key) -> supplier.get());
 	}
 
 	/**

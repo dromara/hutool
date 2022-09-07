@@ -52,7 +52,7 @@ public class GenericBuilderTest {
 
 		// 多参数构造
 		final Box box1 = GenericBuilder
-				.of(Box::new, 2048L, "Hello Partner!", 222, 333, 444)
+				.of(() -> new Box(2048L, "Hello Partner!", 222, 333, 444))
 				.with(Box::alis)
 				.build();
 
@@ -65,10 +65,10 @@ public class GenericBuilderTest {
 	}
 
 	@Test
-	public void buildMapTest(){
+	public void buildMapTest() {
 		//Map创建
 		final HashMap<String, String> colorMap = GenericBuilder
-				.of(HashMap<String,String>::new)
+				.of(HashMap<String, String>::new)
 				.with(Map::put, "red", "#FF0000")
 				.with(Map::put, "yellow", "#FFFF00")
 				.with(Map::put, "blue", "#0000FF")

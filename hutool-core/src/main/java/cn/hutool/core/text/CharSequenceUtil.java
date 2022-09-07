@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.finder.CharFinder;
@@ -3430,10 +3430,10 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param pattern    用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
 	 * @return 替换后的字符串
-	 * @see ReUtil#replaceAll(CharSequence, java.util.regex.Pattern, Func1)
+	 * @see ReUtil#replaceAll(CharSequence, java.util.regex.Pattern, SerFunction)
 	 * @since 4.2.2
 	 */
-	public static String replace(final CharSequence str, final java.util.regex.Pattern pattern, final Func1<java.util.regex.Matcher, String> replaceFun) {
+	public static String replace(final CharSequence str, final java.util.regex.Pattern pattern, final SerFunction<java.util.regex.Matcher, String> replaceFun) {
 		return ReUtil.replaceAll(str, pattern, replaceFun);
 	}
 
@@ -3444,10 +3444,10 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param regex      用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
 	 * @return 替换后的字符串
-	 * @see ReUtil#replaceAll(CharSequence, String, Func1)
+	 * @see ReUtil#replaceAll(CharSequence, String, SerFunction)
 	 * @since 4.2.2
 	 */
-	public static String replace(final CharSequence str, final String regex, final Func1<java.util.regex.Matcher, String> replaceFun) {
+	public static String replace(final CharSequence str, final String regex, final SerFunction<java.util.regex.Matcher, String> replaceFun) {
 		return ReUtil.replaceAll(str, regex, replaceFun);
 	}
 
