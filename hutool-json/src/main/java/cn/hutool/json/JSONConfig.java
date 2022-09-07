@@ -7,6 +7,7 @@ import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.TemporalAccessorConverter;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.json.convert.JSONConverter;
 
 import java.io.Serializable;
 import java.time.temporal.TemporalAccessor;
@@ -59,6 +60,12 @@ public class JSONConfig implements Serializable {
 	 */
 	private Converter converter = (type, value)->{
 		final Class<?> rawType = TypeUtil.getClass(type);
+		if(null == rawType){
+			return value;
+		}
+		if(JSON.class.isAssignableFrom(rawType)){
+			return JSONConverter.INSTANCE.toJSON(value);
+		}
 		if(Date.class.isAssignableFrom(rawType) || TemporalAccessor.class.isAssignableFrom(rawType)){
 			// 用户指定了日期格式，获取日期属性时使用对应格式
 			final String valueStr = Convert.convertWithCheck(String.class, value, null, isIgnoreError());

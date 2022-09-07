@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
+import cn.hutool.core.convert.RegisterConverter;
 import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.MapConverter;
@@ -41,6 +42,11 @@ import java.util.Map;
  */
 public class JSONConverter implements Converter {
 	public static final JSONConverter INSTANCE = new JSONConverter(null);
+
+	static {
+		RegisterConverter.getInstance().putCustom(JSONObject.class, INSTANCE);
+		RegisterConverter.getInstance().putCustom(JSONArray.class, INSTANCE);
+	}
 
 	/**
 	 * 创建JSON转换器
@@ -139,6 +145,12 @@ public class JSONConverter implements Converter {
 		final T result = toSpecial(targetType, rawType, json);
 		if (null != result) {
 			return result;
+		}
+
+		// 标准转换器
+		final Converter converter = RegisterConverter.getInstance().getConverter(targetType, true);
+		if (null != converter) {
+			return (T) converter.convert(targetType, json);
 		}
 
 		// 尝试转Bean
