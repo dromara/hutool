@@ -23,7 +23,7 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 * @return lambda
 	 */
 	@SafeVarargs
-	static <T, U> SerBiConsumer<T, U> multi(SerBiConsumer<T, U>... consumers) {
+	static <T, U> SerBiConsumer<T, U> multi(final SerBiConsumer<T, U>... consumers) {
 		return Stream.of(consumers).reduce(SerBiConsumer::andThen).orElseGet(() -> (o, q) -> {});
 	}
 
@@ -32,9 +32,8 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 *
 	 * @param t the first input argument
 	 * @param u the second input argument
-	 * @throws Exception wrappered checked exceptions for easy using
+	 * @throws Exception wrapped checked exceptions for easy using
 	 */
-	@SuppressWarnings("all")
 	void accepting(T t, U u) throws Exception;
 
 	/**
@@ -44,10 +43,10 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 * @param u the second input argument
 	 */
 	@Override
-	default void accept(T t, U u) {
+	default void accept(final T t, final U u) {
 		try {
 			accepting(t, u);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -64,7 +63,7 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 * operation followed by the {@code after} operation
 	 * @throws NullPointerException if {@code after} is null
 	 */
-	default SerBiConsumer<T, U> andThen(SerBiConsumer<? super T, ? super U> after) {
+	default SerBiConsumer<T, U> andThen(final SerBiConsumer<? super T, ? super U> after) {
 		Objects.requireNonNull(after);
 		return (l, r) -> {
 			accepting(l, r);

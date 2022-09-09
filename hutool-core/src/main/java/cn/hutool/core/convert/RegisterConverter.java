@@ -29,9 +29,6 @@ import cn.hutool.core.convert.impl.XMLGregorianCalendarConverter;
 import cn.hutool.core.convert.impl.ZoneIdConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.reflect.TypeUtil;
-import cn.hutool.core.util.ServiceLoaderUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -79,6 +76,25 @@ public class RegisterConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例 没有绑定关系，而且只有被调用到才会装载，从而实现了延迟加载
+	 */
+	private static class SingletonHolder {
+		/**
+		 * 静态初始化器，由JVM来保证线程安全
+		 */
+		private static final CompositeConverter INSTANCE = new CompositeConverter();
+	}
+
+	/**
+	 * 获得单例的 ConverterRegistry
+	 *
+	 * @return ConverterRegistry
+	 */
+	public static CompositeConverter getInstance() {
+		return RegisterConverter.SingletonHolder.INSTANCE;
+	}
+
+	/**
 	 * 默认类型转换器
 	 */
 	private Map<Type, Converter> defaultConverterMap;
@@ -92,7 +108,6 @@ public class RegisterConverter implements Converter, Serializable {
 	 */
 	public RegisterConverter() {
 		registerDefault();
-		registerCustomBySpi();
 	}
 
 	@Override
@@ -232,21 +247,5 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
-	}
-
-	/**
-	 * 使用SPI加载转换器
-	 */
-	private void registerCustomBySpi() {
-		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
-			try {
-				final Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
-				if (null != type) {
-					putCustom(type, converter);
-				}
-			} catch (final Exception ignore) {
-				// 忽略注册失败的
-			}
-		});
 	}
 }

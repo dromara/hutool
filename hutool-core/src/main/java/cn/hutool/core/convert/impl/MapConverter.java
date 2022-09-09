@@ -67,7 +67,7 @@ public class MapConverter implements Converter, Serializable {
 			// 二次转换，转换键值类型
 			map = convert(targetType, keyType, valueType, map);
 		} else {
-			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", value.getClass().getName()));
+			throw new UnsupportedOperationException(StrUtil.format("Unsupported toMap value type: {}", value.getClass().getName()));
 		}
 		return map;
 	}

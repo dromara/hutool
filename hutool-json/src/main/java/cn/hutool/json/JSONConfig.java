@@ -1,10 +1,18 @@
 package cn.hutool.json;
 
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.Converter;
+import cn.hutool.core.convert.impl.DateConverter;
+import cn.hutool.core.convert.impl.TemporalAccessorConverter;
+import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.json.convert.JSONConverter;
 
 import java.io.Serializable;
+import java.time.temporal.TemporalAccessor;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * JSON配置项
@@ -50,7 +58,33 @@ public class JSONConfig implements Serializable {
 	/**
 	 * 自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
 	 */
-	private Converter converter;
+	private Converter converter = (type, value)->{
+		final Class<?> rawType = TypeUtil.getClass(type);
+		if(null == rawType){
+			return value;
+		}
+		if(JSON.class.isAssignableFrom(rawType)){
+			return JSONConverter.INSTANCE.toJSON(value);
+		}
+		if(Date.class.isAssignableFrom(rawType) || TemporalAccessor.class.isAssignableFrom(rawType)){
+			// 用户指定了日期格式，获取日期属性时使用对应格式
+			final String valueStr = Convert.convertWithCheck(String.class, value, null, isIgnoreError());
+			if (null == valueStr) {
+				return null;
+			}
+
+			// 日期转换，支持自定义日期格式
+			final String format = getDateFormat();
+			if (StrUtil.isNotBlank(format)) {
+				if (Date.class.isAssignableFrom(rawType)) {
+					return new DateConverter(format).convert(type, value);
+				} else {
+					return new TemporalAccessorConverter(format).convert(type, value);
+				}
+			}
+		}
+		return Convert.convertWithCheck(type, value, null, isIgnoreError());
+	};
 
 	/**
 	 * 创建默认的配置项

@@ -98,18 +98,20 @@ public class CompositeConverter extends RegisterConverter {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T convert(Type type, final Object value, final T defaultValue, final boolean isCustomFirst) throws ConvertException {
-		if (TypeUtil.isUnknown(type) && null == defaultValue) {
-			// 对于用户不指定目标类型的情况，返回原值
-			return (T) value;
-		}
 		if (ObjUtil.isNull(value)) {
 			return defaultValue;
 		}
 		if (TypeUtil.isUnknown(type)) {
+			// 对于用户不指定目标类型的情况，返回原值
 			if(null == defaultValue){
-				throw new ConvertException("Unsupported convert to unKnow type: {}", type);
+				return (T) value;
 			}
 			type = defaultValue.getClass();
+		}
+
+		// value本身实现了Converter接口，直接调用
+		if(value instanceof Converter){
+			return ((Converter) value).convert(type, value, defaultValue);
 		}
 
 		if (type instanceof TypeReference) {

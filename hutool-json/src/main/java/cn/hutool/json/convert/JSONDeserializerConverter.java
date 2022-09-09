@@ -15,6 +15,8 @@ import cn.hutool.json.serialize.JSONDeserializer;
 public class JSONDeserializerConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	public static final JSONDeserializerConverter INSTANCE = new JSONDeserializerConverter();
+
 	@Override
 	protected Object convertInternal(final Class<?> targetClass, final Object value) {
 		// 自定义反序列化

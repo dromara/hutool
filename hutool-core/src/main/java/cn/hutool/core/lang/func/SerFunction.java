@@ -19,9 +19,8 @@ public interface SerFunction<T, R> extends Function<T, R>, Serializable {
 	 *
 	 * @param t the function argument
 	 * @return the function result
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	R applying(T t) throws Exception;
 
 	/**

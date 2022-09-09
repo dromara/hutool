@@ -57,6 +57,11 @@ public class BeanConverter implements Converter, Serializable {
 			return null;
 		}
 
+		// value本身实现了Converter接口，直接调用
+		if(value instanceof Converter){
+			return ((Converter) value).convert(targetType, value);
+		}
+
 		Class<?> targetClass = TypeUtil.getClass(targetType);
 		Assert.notNull(targetClass, "Target type is not a class!");
 
@@ -79,6 +84,6 @@ public class BeanConverter implements Converter, Serializable {
 			return SerializeUtil.deserialize((byte[]) value);
 		}
 
-		throw new ConvertException("Unsupported source type: {}", value.getClass());
+		throw new ConvertException("Unsupported source type: [{}] to [{}]", value.getClass(), targetType);
 	}
 }

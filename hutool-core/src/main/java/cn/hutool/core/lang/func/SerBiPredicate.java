@@ -23,9 +23,8 @@ public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
 	 * @param u the second input argument
 	 * @return {@code true} if the input arguments match the predicate,
 	 * otherwise {@code false}
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	boolean testing(T t, U u) throws Exception;
 
 	/**
@@ -37,10 +36,10 @@ public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
 	 * otherwise {@code false}
 	 */
 	@Override
-	default boolean test(T t, U u) {
+	default boolean test(final T t, final U u) {
 		try {
 			return testing(t, u);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -62,7 +61,7 @@ public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
 	 * AND of this predicate and the {@code other} predicate
 	 * @throws NullPointerException if other is null
 	 */
-	default SerBiPredicate<T, U> and(SerBiPredicate<? super T, ? super U> other) {
+	default SerBiPredicate<T, U> and(final SerBiPredicate<? super T, ? super U> other) {
 		Objects.requireNonNull(other);
 		return (T t, U u) -> test(t, u) && other.test(t, u);
 	}
@@ -95,7 +94,7 @@ public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
 	 * OR of this predicate and the {@code other} predicate
 	 * @throws NullPointerException if other is null
 	 */
-	default SerBiPredicate<T, U> or(SerBiPredicate<? super T, ? super U> other) {
+	default SerBiPredicate<T, U> or(final SerBiPredicate<? super T, ? super U> other) {
 		Objects.requireNonNull(other);
 		return (T t, U u) -> test(t, u) || other.test(t, u);
 	}

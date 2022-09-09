@@ -20,9 +20,8 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 *
 	 * @param t the function argument
 	 * @return the function result
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	T applying(T t) throws Exception;
 
 	/**
@@ -32,10 +31,10 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 * @return the function result
 	 */
 	@Override
-	default T apply(T t) {
+	default T apply(final T t) {
 		try {
 			return applying(t);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -61,7 +60,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 * @return identity after casting
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, R, F extends Function<T, R>> SerUnaryOperator<T> casting(F function) {
+	static <T, R, F extends Function<T, R>> SerUnaryOperator<T> casting(final F function) {
 		return t -> (T) function.apply(t);
 	}
 

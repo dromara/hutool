@@ -24,10 +24,9 @@ public interface SerRunnable extends Runnable, Serializable {
 	 * The general contract of the method <code>run</code> is that it may
 	 * take any action whatsoever.
 	 *
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 * @see Thread#run()
 	 */
-	@SuppressWarnings("all")
 	void running() throws Exception;
 
 	/**
@@ -45,7 +44,7 @@ public interface SerRunnable extends Runnable, Serializable {
 	default void run() {
 		try {
 			running();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -56,7 +55,7 @@ public interface SerRunnable extends Runnable, Serializable {
 	 * @param serRunnableArray lambda
 	 * @return lambda
 	 */
-	static SerRunnable multi(SerRunnable... serRunnableArray) {
+	static SerRunnable multi(final SerRunnable... serRunnableArray) {
 		return () -> Stream.of(serRunnableArray).forEach(SerRunnable::run);
 	}
 

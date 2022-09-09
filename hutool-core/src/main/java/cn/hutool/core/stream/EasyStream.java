@@ -342,7 +342,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		Objects.requireNonNull(pIdValuesMap);
 		final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
 		final Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
-			List<T> children = pIdValuesMap.get(idGetter.apply(value));
+			final List<T> children = pIdValuesMap.get(idGetter.apply(value));
 			childrenSetter.accept(value, children);
 			recursiveRef.get().accept(children);
 		});

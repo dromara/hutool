@@ -22,9 +22,8 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	 * @param t the first function argument
 	 * @param u the second function argument
 	 * @return the function result
-	 * @throws Exception wrappered checked exceptions
+	 * @throws Exception wrapped checked exceptions
 	 */
-	@SuppressWarnings("all")
 	T applying(T t, T u) throws Exception;
 
 	/**
@@ -35,10 +34,10 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	 * @return the function result
 	 */
 	@Override
-	default T apply(T t, T u) {
+	default T apply(final T t, final T u) {
 		try {
 			return this.applying(t, u);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -53,7 +52,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	 * according to the supplied {@code Comparator}
 	 * @throws NullPointerException if the argument is null
 	 */
-	static <T> SerBinaryOperator<T> minBy(Comparator<? super T> comparator) {
+	static <T> SerBinaryOperator<T> minBy(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
 		return (a, b) -> comparator.compare(a, b) <= 0 ? a : b;
 	}
@@ -68,7 +67,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	 * according to the supplied {@code Comparator}
 	 * @throws NullPointerException if the argument is null
 	 */
-	static <T> SerBinaryOperator<T> maxBy(Comparator<? super T> comparator) {
+	static <T> SerBinaryOperator<T> maxBy(final Comparator<? super T> comparator) {
 		Objects.requireNonNull(comparator);
 		return (a, b) -> comparator.compare(a, b) >= 0 ? a : b;
 	}

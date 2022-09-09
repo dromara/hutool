@@ -141,7 +141,7 @@ public class JSONUtil {
 	 * @return JSON
 	 */
 	public static JSON parse(final Object obj) {
-		return JSONConverter.INSTANCE.convert(obj);
+		return JSONConverter.INSTANCE.toJSON(obj);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSON parse(final Object obj, final JSONConfig config) {
-		return JSONConverter.of(config).convert(obj);
+		return JSONConverter.of(config).toJSON(obj);
 	}
 
 	/**

@@ -1022,6 +1022,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @param <T> 结果类型
 	 * @param function 响应内容处理函数
+	 * @return 结果值
 	 * @since 5.8.5
 	 */
 	public <T> T thenFunction(final Function<HttpResponse, T> function) {

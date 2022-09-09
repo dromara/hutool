@@ -67,7 +67,7 @@ public class DateConverter extends AbstractConverter {
 			return wrap(targetClass, DateUtil.date((TemporalAccessor) value));
 		} else if (value instanceof Calendar) {
 			return wrap(targetClass, DateUtil.date((Calendar) value));
-		} else if (value instanceof Number) {
+		} else if (null == this.format && value instanceof Number) {
 			return wrap(targetClass, ((Number) value).longValue());
 		} else {
 			// 统一按照字符串处理
