@@ -23,7 +23,7 @@ import java.util.stream.StreamSupport;
  *
  * @param <T> 流中的元素类型
  * @param <S> {@link TransformableWrappedStream}的实现类类型
- * @author huangchengxing
+ * @author huangchengxing VampireAchao
  * @since 6.0.0
  */
 public interface TransformableWrappedStream<T, S extends TransformableWrappedStream<T, S>> extends WrappedStream<T, S> {
