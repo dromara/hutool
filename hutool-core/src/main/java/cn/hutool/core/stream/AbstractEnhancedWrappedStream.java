@@ -8,7 +8,7 @@ import java.util.stream.Stream;
  *
  * @param <T> 流中的元素类型
  * @param <S> {@link AbstractEnhancedWrappedStream}的实现类类型
- * @author huangchengxing
+ * @author huangchengxing VampireAchao
  * @see EasyStream
  * @see EntryStream
  * @since 6.0.0
