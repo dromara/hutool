@@ -51,7 +51,7 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	 */
 	@Override
 	public boolean support(AnnotatedElement annotatedEle) {
-		return (annotatedEle instanceof Class && ClassUtil.isAssignable(Annotation.class, (Class<?>)annotatedEle));
+		return (annotatedEle instanceof Class && ClassUtil.isAssignable(Annotation.class, (Class<?>) annotatedEle));
 	}
 
 	/**
@@ -80,25 +80,25 @@ public class MetaAnnotationScanner implements AnnotationScanner {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-		filter = ObjectUtil.defaultIfNull(filter, t -> true);
+		filter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
 		Set<Class<? extends Annotation>> accessed = new HashSet<>();
-		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>)annotatedEle));
+		final Deque<List<Class<? extends Annotation>>> deque = CollUtil.newLinkedList(CollUtil.newArrayList((Class<? extends Annotation>) annotatedEle));
 		int distance = 0;
 		do {
 			final List<Class<? extends Annotation>> annotationTypes = deque.removeFirst();
 			for (final Class<? extends Annotation> type : annotationTypes) {
 				final List<Annotation> metaAnnotations = Stream.of(type.getAnnotations())
-					.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
-					.filter(filter)
-					.collect(Collectors.toList());
+						.filter(a -> !AnnotationUtil.isJdkMetaAnnotation(a.annotationType()))
+						.filter(filter)
+						.collect(Collectors.toList());
 				for (final Annotation metaAnnotation : metaAnnotations) {
 					consumer.accept(distance, metaAnnotation);
 				}
 				accessed.add(type);
 				List<Class<? extends Annotation>> next = metaAnnotations.stream()
-					.map(Annotation::annotationType)
-					.filter(t -> !accessed.contains(t))
-					.collect(Collectors.toList());
+						.map(Annotation::annotationType)
+						.filter(t -> !accessed.contains(t))
+						.collect(Collectors.toList());
 				if (CollUtil.isNotEmpty(next)) {
 					deque.addLast(next);
 				}

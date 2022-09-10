@@ -160,7 +160,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(Date date, TimeZone timeZone) {
-		this(ObjectUtil.defaultIfNull(date, Date::new).getTime(), timeZone);
+		this(ObjectUtil.defaultIfNull(date, new Date()).getTime(), timeZone);
 	}
 
 	/**

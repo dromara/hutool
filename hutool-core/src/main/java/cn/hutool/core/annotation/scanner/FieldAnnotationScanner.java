@@ -36,7 +36,7 @@ public class FieldAnnotationScanner implements AnnotationScanner {
 	 */
 	@Override
 	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-		filter = ObjectUtil.defaultIfNull(filter, annotation -> true);
+		filter = ObjectUtil.defaultIfNull(filter, a -> annotation -> true);
 		for (final Annotation annotation : annotatedEle.getAnnotations()) {
 			if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && filter.test(annotation)) {
 				consumer.accept(0, annotation);

@@ -442,7 +442,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 */
 		TreeEntryNode<K, V> traverseParentNodes(
 				boolean includeCurrent, Consumer<TreeEntryNode<K, V>> consumer, Predicate<TreeEntryNode<K, V>> breakTraverse) {
-			breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, n -> false);
+			breakTraverse = ObjectUtil.defaultIfNull(breakTraverse, a -> n -> false);
 			TreeEntryNode<K, V> curr = includeCurrent ? this : this.parent;
 			while (ObjectUtil.isNotNull(curr)) {
 				consumer.accept(curr);
