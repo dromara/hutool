@@ -3,7 +3,6 @@ package cn.hutool.core.stream;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
@@ -24,7 +23,7 @@ import java.util.stream.StreamSupport;
  *
  * @param <T> 流中的元素类型
  * @param <S> {@link TransformableWrappedStream}的实现类类型
- * @author huangchengxing
+ * @author huangchengxing VampireAchao
  * @since 6.0.0
  */
 public interface TransformableWrappedStream<T, S extends TransformableWrappedStream<T, S>> extends WrappedStream<T, S> {
@@ -40,24 +39,15 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 * @return 合并后的结果对象的流
 	 */
 	default <U, R> EasyStream<R> zip(
-		final Iterable<U> other,
-		final BiFunction<? super T, ? super U, ? extends R> zipper) {
+			final Iterable<U> other,
+			final BiFunction<? super T, ? super U, ? extends R> zipper) {
 		Objects.requireNonNull(zipper);
-		final Spliterator<T> keys = spliterator();
-		final Spliterator<U> values = Opt.ofNullable(other).map(Iterable::spliterator).orElseGet(Spliterators::emptySpliterator);
-		// 获取两个Spliterator的中较小的数量
-		// 如果Spliterator经过流操作, getExactSizeIfKnown()可能会返回-1, 所以默认大小为 ArrayList.DEFAULT_CAPACITY
-		final int sizeIfKnown = (int) Math.max(Math.min(keys.getExactSizeIfKnown(), values.getExactSizeIfKnown()), 10);
-		final List<R> list = new ArrayList<>(sizeIfKnown);
-		// 保存第一个Spliterator的值
-		final MutableObj<T> key = new MutableObj<>();
-		// 保存第二个Spliterator的值
-		final MutableObj<U> value = new MutableObj<>();
-		// 当两个Spliterator中都还有剩余元素时
-		while (keys.tryAdvance(key::set) && values.tryAdvance(value::set)) {
-			list.add(zipper.apply(key.get(), value.get()));
+		Map<Integer, T> idxIdentityMap = mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
+		Map<Integer, U> idxOtherMap = EasyStream.of(other).mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
+		if (idxIdentityMap.size() <= idxOtherMap.size()) {
+			return EasyStream.of(idxIdentityMap.keySet(), isParallel()).map(k -> zipper.apply(idxIdentityMap.get(k), idxOtherMap.get(k)));
 		}
-		return EasyStream.of(list).parallel(isParallel()).onClose(unwrap()::close);
+		return EasyStream.of(idxOtherMap.keySet(), isParallel()).map(k -> zipper.apply(idxIdentityMap.get(k), idxOtherMap.get(k)));
 	}
 
 	/**
@@ -78,9 +68,9 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 			return EasyStream.<EasyStream<T>>of(EasyStream.of(list, isParallel()));
 		}
 		return EasyStream.iterate(0, i -> i < size, i -> i + batchSize)
-			.map(skip -> EasyStream.of(list.subList(skip, Math.min(size, skip + batchSize)), isParallel()))
-			.parallel(isParallel())
-			.onClose(unwrap()::close);
+				.map(skip -> EasyStream.of(list.subList(skip, Math.min(size, skip + batchSize)), isParallel()))
+				.parallel(isParallel())
+				.onClose(unwrap()::close);
 	}
 
 	/**
@@ -114,8 +104,8 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	/**
 	 * 将当前流转为键值对流
 	 *
-	 * @param keyMapper   键的映射方法
-	 * @param <K>         键类型
+	 * @param keyMapper 键的映射方法
+	 * @param <K>       键类型
 	 * @return {@link EntryStream}实例
 	 */
 	default <K> EntryStream<K, T> toEntries(final Function<T, K> keyMapper) {
@@ -159,7 +149,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default S splice(final int start, final int deleteCount, final T... items) {
 		final List<T> elements = unwrap().collect(Collectors.toList());
 		return wrap(ListUtil.splice(elements, start, deleteCount, items).stream())
-			.parallel(isParallel());
+				.parallel(isParallel());
 	}
 
 	/**
@@ -262,6 +252,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	/**
 	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标，并行流时下标永远为-1
 	 * 这是一个无状态中间操作
+	 *
 	 * @param action 指定的函数
 	 * @return 返回叠加操作后的FastStream
 	 * @apiNote 该方法存在的意义主要是用来调试
@@ -491,10 +482,9 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		Objects.requireNonNull(childrenGetter);
 		Objects.requireNonNull(childrenSetter);
 		final MutableObj<Function<T, EasyStream<T>>> recursiveRef = new MutableObj<>();
-		@SuppressWarnings("unchecked")
-		final Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e))
-			.flat(recursiveRef.get())
-			.unshift(e);
+		@SuppressWarnings("unchecked") final Function<T, EasyStream<T>> recursive = e -> EasyStream.of(childrenGetter.apply(e))
+				.flat(recursiveRef.get())
+				.unshift(e);
 		recursiveRef.set(recursive);
 		return wrap(flatMap(recursive).peek(e -> childrenSetter.accept(e, null)));
 	}

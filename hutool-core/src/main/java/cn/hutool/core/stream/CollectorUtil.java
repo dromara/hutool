@@ -134,7 +134,7 @@ public class CollectorUtil {
 	 * @return {@link Collector}
 	 */
 	public static <T, K, A, D> Collector<T, ?, Map<K, D>> groupingBy(final Function<? super T, ? extends K> classifier,
-										  final Collector<? super T, A, D> downstream) {
+																	 final Collector<? super T, A, D> downstream) {
 		return groupingBy(classifier, HashMap::new, downstream);
 	}
 
@@ -273,14 +273,14 @@ public class CollectorUtil {
 	/**
 	 * 将流转为{@link EntryStream}
 	 *
-	 * @param keyMapper   键的映射方法
-	 * @param <T>         输入元素类型
-	 * @param <K>         元素的键类型
+	 * @param keyMapper 键的映射方法
+	 * @param <T>       输入元素类型
+	 * @param <K>       元素的键类型
 	 * @return 收集器
 	 * @since 6.0.0
 	 */
 	public static <T, K> Collector<T, List<T>, EntryStream<K, T>> toEntryStream(
-		Function<? super T, ? extends K> keyMapper) {
+			Function<? super T, ? extends K> keyMapper) {
 		return toEntryStream(keyMapper, Function.identity());
 	}
 
@@ -361,4 +361,14 @@ public class CollectorUtil {
 		return transform(ArrayList::new, mapper);
 	}
 
+	/**
+	 * 用于{@code Stream<Entry>} 转 Map 的情况
+	 *
+	 * @param <K> key类型
+	 * @param <V> value类型
+	 * @return map
+	 */
+	public static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> entryToMap() {
+		return toMap(Map.Entry::getKey, Map.Entry::getValue);
+	}
 }

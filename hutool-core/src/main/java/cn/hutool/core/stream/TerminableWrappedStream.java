@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  *
  * @param <T> 流中的元素类型
  * @param <S> {@link TerminableWrappedStream}的实现类类型
- * @author huangchengxing
+ * @author huangchengxing VampireAchao
  * @since 6.0.0
  */
 public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T, S>> extends WrappedStream<T, S> {
