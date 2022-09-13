@@ -1283,7 +1283,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 包装类数组转为原始类型数组
+	 * 包装类数组转为原始类型数组<br>
+	 * {@code null} 按照 {@code false} 对待
 	 *
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
