@@ -123,7 +123,17 @@ public class ObjUtilTest {
 
 		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), val2));
 		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), val2));
+
+		SerializableBean obj = new SerializableBean(null);
+		SerializableBean objNull = null;
+		String result3 = ObjUtil.defaultIfNull(obj, Object::toString, "fail");
+		Assert.assertNotNull(result3);
+
+		String result4 = ObjUtil.defaultIfNull(objNull, Object::toString, () -> "fail");
+		Assert.assertNotNull(result4);
 	}
+
+
 
 	@Test
 	public void cloneTest() {
