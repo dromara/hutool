@@ -119,6 +119,11 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return this
 	 */
 	public JWT setKey(final byte[] key) {
+		// 检查头信息中是否有算法信息
+		final String algorithmId = (String) this.header.getClaim(JWTHeader.ALGORITHM);
+		if (StrUtil.isNotBlank(algorithmId)) {
+			return setSigner(algorithmId, key);
+		}
 		return setSigner(JWTSignerUtil.hs256(key));
 	}
 
@@ -316,19 +321,33 @@ public class JWT implements RegisteredPayload<JWT> {
 	}
 
 	/**
-	 * 签名生成JWT字符串
+	 * 签名生成JWT字符串，计算方式为（以HS256为例）：
+	 * <pre>
+	 * HMACSHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
+	 * </pre>
 	 *
-	 * @param signer JWT签名器
+	 * <p>此方法会补充如下的header：</p>
+	 * <ul>
+	 *     <li>当用户未定义"typ"时，赋默认值："JWT"</li>
+	 *     <li>当用户未定义"alg"时，根据传入的{@link JWTSigner}对象类型，赋值对应ID</li>
+	 * </ul>
+	 *
+	 * @param signer 自定义JWT签名器，非空
 	 * @return JWT字符串
 	 */
 	public String sign(final JWTSigner signer) {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
 
+		// 检查tye信息
+		final String type = (String) this.header.getClaim(JWTHeader.TYPE);
+		if (StrUtil.isBlank(type)) {
+			this.header.setType("JWT");
+		}
+
 		// 检查头信息中是否有算法信息
-		final String claim = (String) this.header.getClaim(JWTHeader.ALGORITHM);
-		if (StrUtil.isBlank(claim)) {
-			this.header.setClaim(JWTHeader.ALGORITHM,
-					AlgorithmUtil.getId(signer.getAlgorithm()));
+		final String algorithm = (String) this.header.getClaim(JWTHeader.ALGORITHM);
+		if (StrUtil.isBlank(algorithm)) {
+			this.header.setAlgorithm(AlgorithmUtil.getId(signer.getAlgorithm()));
 		}
 
 		final String headerBase64 = Base64.encodeUrlSafe(this.header.toString(), charset);
@@ -378,9 +397,10 @@ public class JWT implements RegisteredPayload<JWT> {
 	}
 
 	/**
-	 * 验证JWT Token是否有效
+	 * 使用指定签名器，验证JWT Token是否有效<br>
+	 * 如果签名器为{@code null}，或者{@link NoneJWTSigner}，表示这个JWT无签名，签名部分必须为空
 	 *
-	 * @param signer 签名器（签名算法）
+	 * @param signer 签名器（签名算法），如果为{@code null}，默认为{@link NoneJWTSigner}
 	 * @return 是否有效
 	 */
 	public boolean verify(JWTSigner signer) {

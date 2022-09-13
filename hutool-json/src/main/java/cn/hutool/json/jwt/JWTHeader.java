@@ -30,10 +30,36 @@ public class JWTHeader extends Claims {
 	public static String KEY_ID = "kid";
 
 	/**
-	 * 构造，初始化默认(typ=JWT)
+	 * 增加“alg”头信息
+	 *
+	 * @param algorithm 算法ID，如HS265
+	 * @return this
 	 */
-	public JWTHeader() {
-		setClaim(TYPE, "JWT");
+	public JWTHeader setAlgorithm(final String algorithm) {
+		setClaim(ALGORITHM, algorithm);
+		return this;
+	}
+
+	/**
+	 * 增加“typ”头信息
+	 *
+	 * @param type 类型，如JWT
+	 * @return this
+	 */
+	public JWTHeader setType(final String type) {
+		setClaim(TYPE, type);
+		return this;
+	}
+
+	/**
+	 * 增加“cty”头信息
+	 *
+	 * @param contentType 内容类型
+	 * @return this
+	 */
+	public JWTHeader setContentType(final String contentType) {
+		setClaim(CONTENT_TYPE, contentType);
+		return this;
 	}
 
 	/**
