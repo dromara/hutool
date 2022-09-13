@@ -68,10 +68,10 @@ public class ObjectUtilTest {
 		final String nullValue = null;
 		final String dateStr = "2020-10-23 15:12:30";
 		Instant result1 = ObjectUtil.defaultIfNull(dateStr,
-				() -> DateUtil.parse(dateStr, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result1);
 		Instant result2 = ObjectUtil.defaultIfNull(nullValue,
-				() -> DateUtil.parse(nullValue, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result2);
 
 		Obj obj = new Obj();
@@ -88,10 +88,10 @@ public class ObjectUtilTest {
 		final String emptyValue = "";
 		final String dateStr = "2020-10-23 15:12:30";
 		Instant result1 = ObjectUtil.defaultIfEmpty(emptyValue,
-				() -> DateUtil.parse(emptyValue, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result1);
 		Instant result2 = ObjectUtil.defaultIfEmpty(dateStr,
-				() -> DateUtil.parse(dateStr, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result2);
 	}
 
@@ -102,6 +102,7 @@ public class ObjectUtilTest {
 		Assert.assertTrue(basicType);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isNotNullTest() {
 		String a = null;
