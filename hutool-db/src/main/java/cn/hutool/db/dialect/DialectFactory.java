@@ -103,6 +103,8 @@ public class DialectFactory implements DriverNamePool{
 			driver = DRIVER_SQLLITE3;
 		} else if (nameContainsProductInfo.contains("sqlserver") || nameContainsProductInfo.contains("microsoft")) {
 			driver = DRIVER_SQLSERVER;
+		} else if (nameContainsProductInfo.contains("hive2")) {
+			driver = DRIVER_HIVE2;
 		} else if (nameContainsProductInfo.contains("hive")) {
 			driver = DRIVER_HIVE;
 		} else if (nameContainsProductInfo.contains("h2")) {
