@@ -112,12 +112,17 @@ public class JWT implements RegisteredPayload<JWT> {
 	}
 
 	/**
-	 * 设置密钥，默认算法是：HS256(HmacSHA256)
+	 * 设置密钥，如果头部指定了算法，直接使用，否则默认算法是：HS256(HmacSHA256)
 	 *
 	 * @param key 密钥
 	 * @return this
 	 */
 	public JWT setKey(byte[] key) {
+		// 检查头信息中是否有算法信息
+		final String claim = (String) this.header.getClaim(JWTHeader.ALGORITHM);
+		if (StrUtil.isNotBlank(claim)) {
+			return setSigner(JWTSignerUtil.createSigner(claim, key));
+		}
 		return setSigner(JWTSignerUtil.hs256(key));
 	}
 
@@ -309,9 +314,15 @@ public class JWT implements RegisteredPayload<JWT> {
 	public String sign(JWTSigner signer) {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
 
+		// 检查tye信息
+		final String type = (String) this.header.getClaim(JWTHeader.TYPE);
+		if (StrUtil.isBlank(type)) {
+			this.header.setClaim(JWTHeader.TYPE, "JWT");
+		}
+
 		// 检查头信息中是否有算法信息
-		final String claim = (String) this.header.getClaim(JWTHeader.ALGORITHM);
-		if (StrUtil.isBlank(claim)) {
+		final String algorithm = (String) this.header.getClaim(JWTHeader.ALGORITHM);
+		if (StrUtil.isBlank(algorithm)) {
 			this.header.setClaim(JWTHeader.ALGORITHM,
 					AlgorithmUtil.getId(signer.getAlgorithm()));
 		}

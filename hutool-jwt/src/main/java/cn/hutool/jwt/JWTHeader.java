@@ -32,9 +32,7 @@ public class JWTHeader extends Claims {
 	/**
 	 * 构造，初始化默认(typ=JWT)
 	 */
-	public JWTHeader() {
-		setClaim(TYPE, "JWT");
-	}
+	public JWTHeader() {}
 
 	/**
 	 * 增加“kid”头信息
