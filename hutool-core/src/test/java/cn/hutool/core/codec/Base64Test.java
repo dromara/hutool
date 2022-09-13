@@ -89,4 +89,12 @@ public class Base64Test {
 		final String decodeStr = Base64.decodeStr(encode);
 		Assert.assertEquals(str, decodeStr);
 	}
+
+	@Test
+	public void issuesI5QR4WTest(){
+		String a = java.util.Base64.getEncoder().encodeToString("111".getBytes()); //java.util.Base64
+		String b = Base64.encode("111"); //cn.hutool.core.codec.Base64
+
+		Assert.assertEquals(a, b);
+	}
 }
