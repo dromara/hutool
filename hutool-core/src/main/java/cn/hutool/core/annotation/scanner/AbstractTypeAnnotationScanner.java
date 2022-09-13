@@ -164,7 +164,7 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 	 */
 	@Override
 	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-		filter = ObjectUtil.defaultIfNull(filter, annotation -> true);
+		filter = ObjectUtil.defaultIfNull(filter, a -> annotation -> true);
 		final Class<?> sourceClass = getClassFormAnnotatedElement(annotatedEle);
 		final Deque<List<Class<?>>> classDeque = CollUtil.newLinkedList(CollUtil.newArrayList(sourceClass));
 		final Set<Class<?>> accessedTypes = new LinkedHashSet<>();

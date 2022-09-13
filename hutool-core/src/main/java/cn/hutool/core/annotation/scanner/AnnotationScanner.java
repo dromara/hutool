@@ -174,7 +174,7 @@ public interface AnnotationScanner {
 	 * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
 	 */
 	default void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-		filter = ObjectUtil.defaultIfNull(filter, annotation -> true);
+		filter = ObjectUtil.defaultIfNull(filter, (a)->annotation -> true);
 		for (final Annotation annotation : annotatedEle.getAnnotations()) {
 			if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && filter.test(annotation)) {
 				consumer.accept(0, annotation);

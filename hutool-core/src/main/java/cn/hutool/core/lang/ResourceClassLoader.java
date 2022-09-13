@@ -31,7 +31,7 @@ public class ResourceClassLoader<T extends Resource> extends SecureClassLoader {
 	 */
 	public ResourceClassLoader(ClassLoader parentClassLoader, Map<String, T> resourceMap) {
 		super(ObjectUtil.defaultIfNull(parentClassLoader, ClassLoaderUtil::getClassLoader));
-		this.resourceMap = ObjectUtil.defaultIfNull(resourceMap, HashMap::new);
+		this.resourceMap = ObjectUtil.defaultIfNull(resourceMap, new HashMap<>());
 		this.cacheClassMap = new HashMap<>();
 	}
 

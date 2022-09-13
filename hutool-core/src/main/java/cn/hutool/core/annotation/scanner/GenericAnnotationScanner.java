@@ -75,16 +75,16 @@ public class GenericAnnotationScanner implements AnnotationScanner {
 	 * @param enableScanSupperInterface 是否扫描父接口
 	 */
 	public GenericAnnotationScanner(
-		boolean enableScanMetaAnnotation,
-		boolean enableScanSupperClass,
-		boolean enableScanSupperInterface) {
+			boolean enableScanMetaAnnotation,
+			boolean enableScanSupperClass,
+			boolean enableScanSupperInterface) {
 
 		this.metaScanner = enableScanMetaAnnotation ? new MetaAnnotationScanner() : new EmptyAnnotationScanner();
 		this.typeScanner = new TypeAnnotationScanner(
-			enableScanSupperClass, enableScanSupperInterface, a -> true, Collections.emptySet()
+				enableScanSupperClass, enableScanSupperInterface, a -> true, Collections.emptySet()
 		);
 		this.methodScanner = new MethodAnnotationScanner(
-			enableScanSupperClass, enableScanSupperInterface, a -> true, Collections.emptySet()
+				enableScanSupperClass, enableScanSupperInterface, a -> true, Collections.emptySet()
 		);
 		this.elementScanner = new ElementAnnotationScanner();
 	}
@@ -98,7 +98,7 @@ public class GenericAnnotationScanner implements AnnotationScanner {
 	 */
 	@Override
 	public void scan(BiConsumer<Integer, Annotation> consumer, AnnotatedElement annotatedEle, Predicate<Annotation> filter) {
-		filter = ObjectUtil.defaultIfNull(filter, t -> true);
+		filter = ObjectUtil.defaultIfNull(filter, a -> t -> true);
 		if (ObjectUtil.isNull(annotatedEle)) {
 			return;
 		}
@@ -125,10 +125,10 @@ public class GenericAnnotationScanner implements AnnotationScanner {
 	 * @param filter       注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。
 	 */
 	private void scanElements(
-		AnnotationScanner scanner,
-		BiConsumer<Integer, Annotation> consumer,
-		AnnotatedElement annotatedEle,
-		Predicate<Annotation> filter) {
+			AnnotationScanner scanner,
+			BiConsumer<Integer, Annotation> consumer,
+			AnnotatedElement annotatedEle,
+			Predicate<Annotation> filter) {
 		// 扫描类上注解
 		final ListValueMap<Integer, Annotation> classAnnotations = new ListValueMap<>(new LinkedHashMap<>());
 		scanner.scan((index, annotation) -> {
@@ -139,10 +139,10 @@ public class GenericAnnotationScanner implements AnnotationScanner {
 
 		// 扫描元注解
 		classAnnotations.forEach((index, annotations) ->
-			annotations.forEach(annotation -> {
-				consumer.accept(index, annotation);
-				metaScanner.scan(consumer, annotation.annotationType(), filter);
-			})
+				annotations.forEach(annotation -> {
+					consumer.accept(index, annotation);
+					metaScanner.scan(consumer, annotation.annotationType(), filter);
+				})
 		);
 	}
 

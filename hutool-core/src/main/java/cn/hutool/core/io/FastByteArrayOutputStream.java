@@ -117,7 +117,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 */
 	public String toString(Charset charset) {
 		return new String(toByteArray(),
-				ObjectUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
+				ObjectUtil.defaultIfNull(charset, CharsetUtil.defaultCharset()));
 	}
 
 }
