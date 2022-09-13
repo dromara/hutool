@@ -116,7 +116,7 @@ public class ThreadUtil {
 	 * Blocking Coefficient(阻塞系数) = 阻塞时间／（阻塞时间+使用CPU的时间）<br>
 	 * 计算密集型任务的阻塞系数为0，而IO密集型任务的阻塞系数则接近于1。
 	 * <p>
-	 * see: http://blog.csdn.net/partner4java/article/details/9417663
+	 * see: <a href="http://blog.csdn.net/partner4java/article/details/9417663">http://blog.csdn.net/partner4java/article/details/9417663</a>
 	 *
 	 * @param blockingCoefficient 阻塞系数，阻塞因子介于0~1之间的数，阻塞因子越大，线程池中的线程数越多。
 	 * @return {@link ThreadPoolExecutor}
@@ -633,6 +633,7 @@ public class ThreadUtil {
 	 * @return {@link ConcurrencyTester}
 	 * @since 4.5.8
 	 */
+	@SuppressWarnings("resource")
 	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
 	}
@@ -653,8 +654,8 @@ public class ThreadUtil {
 	 * 注意：此方法的延迟和周期的单位均为毫秒。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
@@ -677,8 +678,8 @@ public class ThreadUtil {
 	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
