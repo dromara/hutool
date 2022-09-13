@@ -274,8 +274,7 @@ public class ThreadUtil {
 	}
 
 	/**
-	 * 新建一个CountDownLatch，一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。
-	 *
+	 * 新建一个CountDownLatch，一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。<br>
 	 * 示例：等6个同学都离开教室，班长才能锁门。
 	 * <pre>{@code
 	 * CountDownLatch latch = new CountDownLatch(6); // 总共任务是6
@@ -297,7 +296,7 @@ public class ThreadUtil {
 	 * System.out.println("【主线程】所有同学都离开了教室，开始锁教室大门了。");
 	 * }
 	 * </pre>
-	 *
+	 * <p>
 	 * 该示例，也可以用：{@link Phaser} 移相器 进行实现
 	 *
 	 * @param taskCount 任务数量
@@ -308,8 +307,7 @@ public class ThreadUtil {
 	}
 
 	/**
-	 * 新建一个CycleBarrier 循环栅栏，一个同步辅助类
-	 *
+	 * 新建一个CycleBarrier 循环栅栏，一个同步辅助类<br>
 	 * 示例：7个同学，集齐7个龙珠，7个同学一起召唤神龙；前后集齐了2次
 	 * <pre>{@code
 	 *         AtomicInteger times = new AtomicInteger();
@@ -338,8 +336,9 @@ public class ThreadUtil {
 	 *             }, "线程 - " + x).start();
 	 *         }
 	 * }</pre>
-	 *
+	 * <p>
 	 * 该示例，也可以用：{@link Phaser} 移相器 进行实现
+	 *
 	 * @param taskCount 任务数量
 	 * @return 循环栅栏
 	 */
@@ -349,12 +348,13 @@ public class ThreadUtil {
 
 	/**
 	 * 新建一个Phaser，一个同步辅助类，jdk1.7提供，可以完全替代CountDownLatch；
-	 * @since 6.0.1
+	 *
+	 * @param taskCount 任务数量
+	 * @return Phaser
 	 * @author dazer
-	 *
+	 * <p>
 	 * Pharser: 移相器、相位器，可重用同步屏障；
-	 * 功能可以替换：{@link CyclicBarrier}（固定线程）循环栅栏、{@link CountDownLatch}（固定计数）倒数计数、加上分层功能
-	 *
+	 * 功能可以替换：{@link CyclicBarrier}（固定线程）循环栅栏、{@link CountDownLatch}（固定计数）倒数计数、加上分层功能<br>
 	 * 示例1：等6个同学都离开教室，班长才能锁门。
 	 * <pre>{@code
 	 * Phaser phaser = new Phaser(6); // 总共任务是6
@@ -376,13 +376,11 @@ public class ThreadUtil {
 	 * System.out.println("【主线程】所有同学都离开了教室，开始锁教室大门了。");
 	 * }
 	 * </pre>
-	 *
+	 * <p>
 	 * 示例2：7个同学，集齐7个龙珠，7个同学一起召唤神龙；
 	 * 只需要：phaser.arrive(); --&gt; phaser.arriveAndAwaitAdvance() //等待其他的线程就位
 	 * 该示例，也可以用：{@link CyclicBarrier} 进行实现
-	 *
-	 * @param taskCount 任务数量
-	 * @return Phaser
+	 * @since 6.0.1
 	 */
 	public static Phaser newPhaser(final int taskCount) {
 		return new Phaser(taskCount);
@@ -741,6 +739,7 @@ public class ThreadUtil {
 	 * @return {@link ConcurrencyTester}
 	 * @since 4.5.8
 	 */
+	@SuppressWarnings("resource")
 	public static ConcurrencyTester concurrencyTest(final int threadSize, final Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
 	}
@@ -761,8 +760,8 @@ public class ThreadUtil {
 	 * 注意：此方法的延迟和周期的单位均为毫秒。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
@@ -774,10 +773,10 @@ public class ThreadUtil {
 	 * @since 5.5.8
 	 */
 	public static ScheduledExecutorService schedule(final ScheduledExecutorService executor,
-													   final Runnable command,
-													   final long initialDelay,
-													   final long period,
-													   final boolean fixedRateOrFixedDelay) {
+													final Runnable command,
+													final long initialDelay,
+													final long period,
+													final boolean fixedRateOrFixedDelay) {
 		return schedule(executor, command, initialDelay, period, TimeUnit.MILLISECONDS, fixedRateOrFixedDelay);
 	}
 
@@ -785,8 +784,8 @@ public class ThreadUtil {
 	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
@@ -799,11 +798,11 @@ public class ThreadUtil {
 	 * @since 5.6.5
 	 */
 	public static ScheduledExecutorService schedule(ScheduledExecutorService executor,
-													   final Runnable command,
-													   final long initialDelay,
-													   final long period,
-													   final TimeUnit timeUnit,
-													   final boolean fixedRateOrFixedDelay) {
+													final Runnable command,
+													final long initialDelay,
+													final long period,
+													final TimeUnit timeUnit,
+													final boolean fixedRateOrFixedDelay) {
 		if (null == executor) {
 			executor = createScheduledExecutor(2);
 		}
