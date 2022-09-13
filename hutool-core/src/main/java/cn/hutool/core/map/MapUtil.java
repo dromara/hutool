@@ -12,10 +12,25 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Map相关工具类
@@ -1446,5 +1461,20 @@ public class MapUtil {
 		return isImmutable ?
 				new AbstractMap.SimpleImmutableEntry<>(key, value) :
 				new AbstractMap.SimpleEntry<>(key, value);
+	}
+
+	/**
+	 * 方法来自MyBatis，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。<br>
+	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
+	 * This class should be removed once we drop Java 8 support.
+	 *
+	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
+	 */
+	public static <K, V> V computeIfAbsent(Map<K, V> map, K key, Function<K, V> mappingFunction) {
+		final V value = map.get(key);
+		if (value != null) {
+			return value;
+		}
+		return map.computeIfAbsent(key, mappingFunction);
 	}
 }

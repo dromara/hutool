@@ -4,6 +4,7 @@ import cn.hutool.core.collection.TransIter;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.io.Serializable;
@@ -101,7 +102,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 		}
 		if (null == v && null != supplier) {
 			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
-			final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
+			final Lock keyLock = MapUtil.computeIfAbsent(this.keyLockMap, key, k -> new ReentrantLock());
 			keyLock.lock();
 			try {
 				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
