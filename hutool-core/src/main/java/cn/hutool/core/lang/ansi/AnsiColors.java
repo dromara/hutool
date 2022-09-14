@@ -1,9 +1,8 @@
 package cn.hutool.core.lang.ansi;
 
-import cn.hutool.core.lang.Assert;
+import cn.hutool.core.img.LabColor;
 
 import java.awt.Color;
-import java.awt.color.ColorSpace;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -115,59 +114,6 @@ public final class AnsiColors {
 			}
 		}
 		return closest;
-	}
-
-	/**
-	 * 表示以 LAB 形式存储的颜色。
-	 */
-	private static final class LabColor {
-
-		private static final ColorSpace XYZ_COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_CIEXYZ);
-
-		private final double l;
-
-		private final double a;
-
-		private final double b;
-
-		LabColor(Integer rgb) {
-			this((rgb != null) ? new Color(rgb) : null);
-		}
-
-		LabColor(Color color) {
-			Assert.notNull(color, "Color must not be null");
-			float[] lab = fromXyz(color.getColorComponents(XYZ_COLOR_SPACE, null));
-			this.l = lab[0];
-			this.a = lab[1];
-			this.b = lab[2];
-		}
-
-		private float[] fromXyz(float[] xyz) {
-			return fromXyz(xyz[0], xyz[1], xyz[2]);
-		}
-
-		private float[] fromXyz(float x, float y, float z) {
-			double l = (f(y) - 16.0) * 116.0;
-			double a = (f(x) - f(y)) * 500.0;
-			double b = (f(y) - f(z)) * 200.0;
-			return new float[] { (float) l, (float) a, (float) b };
-		}
-
-		private double f(double t) {
-			return (t > (216.0 / 24389.0)) ? Math.cbrt(t) : (1.0 / 3.0) * Math.pow(29.0 / 6.0, 2) * t + (4.0 / 29.0);
-		}
-
-		// See https://en.wikipedia.org/wiki/Color_difference#CIE94
-		double getDistance(LabColor other) {
-			double c1 = Math.sqrt(this.a * this.a + this.b * this.b);
-			double deltaC = c1 - Math.sqrt(other.a * other.a + other.b * other.b);
-			double deltaA = this.a - other.a;
-			double deltaB = this.b - other.b;
-			double deltaH = Math.sqrt(Math.max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
-			return Math.sqrt(Math.max(0.0, Math.pow((this.l - other.l), 2)
-					+ Math.pow(deltaC / (1 + 0.045 * c1), 2) + Math.pow(deltaH / (1 + 0.015 * c1), 2.0)));
-		}
-
 	}
 
 	/**
