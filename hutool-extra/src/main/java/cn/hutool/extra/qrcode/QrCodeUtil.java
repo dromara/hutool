@@ -40,14 +40,14 @@ public class QrCodeUtil {
 
 	public static final String QR_TYPE_SVG = "svg";// SVG矢量图格式
 	public static final String QR_TYPE_TXT = "txt";// Ascii Art字符画文本
-	private static final AnsiColors ansiColors= new AnsiColors(AnsiColors.BitDepth.EIGHT);
+	private static final AnsiColors ansiColors = new AnsiColors(AnsiColors.BitDepth.EIGHT);
 
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content    内容
 	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
-	 * @param targetType  类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
 	 */
@@ -58,10 +58,10 @@ public class QrCodeUtil {
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
+	 * @param content    内容
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
-	 * @param logo      logo 图片的byte[]
+	 * @param logo       logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
 	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, byte[] logo) {
@@ -71,10 +71,10 @@ public class QrCodeUtil {
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
+	 * @param content    内容
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
-	 * @param logo      logo 图片的byte[]
+	 * @param logo       logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
 	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, Image logo) {
@@ -89,8 +89,8 @@ public class QrCodeUtil {
 	 * 输出格式为: data:image/[type];base64,[data]
 	 * </p>
 	 *
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
+	 * @param content    内容
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
@@ -107,7 +107,7 @@ public class QrCodeUtil {
 				break;
 			default:
 				final BufferedImage img = generate(content, qrConfig);
-				result =  ImgUtil.toBase64DataUri(img, targetType);
+				result = ImgUtil.toBase64DataUri(img, targetType);
 				break;
 		}
 
@@ -162,6 +162,7 @@ public class QrCodeUtil {
 	 * @param content 内容
 	 * @param width   宽度（单位：字符▄的大小）
 	 * @param height  高度（单位：字符▄的大小）
+	 * @param margin  边距大小（1~4）
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
@@ -286,10 +287,10 @@ public class QrCodeUtil {
 	/**
 	 * 生成二维码到输出流
 	 *
-	 * @param content   文本内容
-	 * @param config    二维码配置，包括宽度、高度、边距、颜色等
+	 * @param content    文本内容
+	 * @param config     二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
-	 * @param out       目标流
+	 * @param out        目标流
 	 * @since 4.1.2
 	 */
 	public static void generate(String content, QrConfig config, String targetType, OutputStream out) {
@@ -563,6 +564,7 @@ public class QrCodeUtil {
 	 * @param matrix    BitMatrix
 	 * @param foreColor 前景色
 	 * @param backColor 背景色(null表示透明背景)
+	 * @param logoImg   LOGO图片
 	 * @param ratio     二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
@@ -610,7 +612,7 @@ public class QrCodeUtil {
 		result.append("xmlns=\"http://www.w3.org/2000/svg\" \n");
 		result.append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n");
 		result.append("<path d=\"").append(sb).append("\" ");
-		if (foreColor!=null){
+		if (foreColor != null) {
 			Color fore = new Color(foreColor, true);
 			result.append("stroke=\"rgba(").append(fore.getRed()).append(",").append(fore.getGreen()).append(",").append(fore.getBlue()).append(",").append(fore.getAlpha()).append(")\"");
 		}
@@ -626,6 +628,7 @@ public class QrCodeUtil {
 	 * BitMatrix转ASCII Art字符画形式的二维码
 	 *
 	 * @param bitMatrix BitMatrix
+	 * @param qrConfig  QR设置
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
@@ -658,15 +661,17 @@ public class QrCodeUtil {
 		return builder.toString();
 	}
 
-/*	*//**
+	/*	*/
+
+	/**
 	 * rgb转AnsiElement
 	 *
-	 * @param rgb rgb颜色值
+	 * @param rgb        rgb颜色值
 	 * @param foreOrBack 前景or背景
 	 * @return AnsiElement
 	 * @since 5.8.6
 	 */
-	private static AnsiElement rgbToAnsi8BitElement(int rgb,ForeOrBack foreOrBack) {
+	private static AnsiElement rgbToAnsi8BitElement(int rgb, ForeOrBack foreOrBack) {
 		return ansiColors.findClosest(new Color(rgb)).toAnsiElement(foreOrBack);
 	}
 
