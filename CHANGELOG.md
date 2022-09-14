@@ -10,6 +10,7 @@
 * 【jwt    】     优化JWT自动识别header中的算法，并可自定义header中key的顺序（issue#I5QRUO@Gitee）
 * 【core   】     IdcardUtil增加convert18To15方法（issue#I5QYCP@Gitee）
 * 【core   】     新增AnsiColors(改自Spring Boot)、AnsiColorWrapper，优化QrCodeUtil（pr#778@Gitee）
+* 【core   】     TemplateUtil的实现类增加getRawEngine方法（issues#2530@Github）
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.defaultIfXXX中NPE问题（pr#2603@Github）

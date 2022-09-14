@@ -1,5 +1,15 @@
 package cn.hutool.extra.template;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.standard.StandardDialect;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,22 +18,27 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
-
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
-import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
-
 /**
  * Thymeleaf单元测试
- * 
+ *
  * @author looly
  *
  */
 public class ThymeleafTest {
+
+	/**
+	 * <a href="https://github.com/dromara/hutool/issues/2530">...</a>
+	 * 自定义操作原始引擎
+	 */
+	@Test
+	@Ignore
+	public void addDialectTest(){
+		final TemplateEngine engine = TemplateUtil.createEngine();
+		if(engine instanceof ThymeleafEngine){
+			final org.thymeleaf.TemplateEngine rawEngine = ((ThymeleafEngine) engine).getRawEngine();
+			rawEngine.addDialect(new StandardDialect());
+		}
+	}
 
 	@Test
 	public void thymeleafEngineTest() {
