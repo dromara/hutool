@@ -1464,17 +1464,19 @@ public class MapUtil {
 	}
 
 	/**
-	 * 方法来自MyBatis，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。<br>
+	 * 方法来自Dubbo，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。<br>
+	 * issues#2349<br>
 	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
 	 * This class should be removed once we drop Java 8 support.
 	 *
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
 	public static <K, V> V computeIfAbsent(Map<K, V> map, K key, Function<K, V> mappingFunction) {
-		final V value = map.get(key);
-		if (value != null) {
-			return value;
+		V value = map.get(key);
+		if(null == value){
+			map.putIfAbsent(key, mappingFunction.apply(key));
+			value = map.get(key);
 		}
-		return map.computeIfAbsent(key, mappingFunction);
+		return value;
 	}
 }

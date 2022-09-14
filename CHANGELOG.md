@@ -18,6 +18,7 @@
 * 【db     】     修复Hive2驱动无法识别问题（issue#2606@Github）
 * 【core   】     修复computeIfAbsent问题（issue#I5PTN3@Gitee）
 * 【extra  】     修复Ftp中路径问题（issue#I5R2DE@Gitee）
+* 【core   】     修复ConcurrentHashMap.computeIfAbsent缺陷导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 
