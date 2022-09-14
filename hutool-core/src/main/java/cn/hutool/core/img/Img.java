@@ -60,6 +60,10 @@ public class Img implements Serializable {
 	 * 图片输出质量，用于压缩
 	 */
 	private float quality = -1;
+	/**
+	 * 图片背景色
+	 */
+	private Color backgroundColor;
 
 	/**
 	 * 从Path读取图片并开始处理
@@ -213,6 +217,17 @@ public class Img implements Serializable {
 		} else {
 			this.quality = 1;
 		}
+		return this;
+	}
+
+	/**
+	 * 设置图片的背景色
+	 *
+	 * @param backgroundColor{@link Color} 背景色
+	 * @return this
+	 */
+	public Img setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
 		return this;
 	}
 
@@ -709,7 +724,7 @@ public class Img implements Serializable {
 		final Image targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
 		Assert.notNull(targetImage, "Target image is null !");
 
-		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality);
+		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality, this.backgroundColor);
 	}
 
 	/**
