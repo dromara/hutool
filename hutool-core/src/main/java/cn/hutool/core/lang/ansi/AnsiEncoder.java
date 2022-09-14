@@ -10,7 +10,7 @@ public abstract class AnsiEncoder {
 	private static final String ENCODE_JOIN = ";";
 	private static final String ENCODE_START = "\033[";
 	private static final String ENCODE_END = "m";
-	private static final String RESET = "0;" + AnsiColor.DEFAULT;
+	private static final String RESET = "0;" + Ansi4BitColor.DEFAULT;
 
 	/**
 	 * 创建ANSI字符串，参数中的{@link AnsiElement}会被转换为编码形式。

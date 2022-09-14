@@ -10,6 +10,13 @@ package cn.hutool.core.lang.ansi;
 public interface AnsiElement {
 
 	/**
+	 * 获取ANSI代码
+	 * @return ANSI代码
+	 * @since 5.8.7
+	 */
+	int getCode();
+
+	/**
 	 * @return ANSI转义编码
 	 */
 	@Override

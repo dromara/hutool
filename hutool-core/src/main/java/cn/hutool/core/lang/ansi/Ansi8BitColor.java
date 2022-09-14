@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.ansi;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjUtil;
 
 /**
  * ANSI 8-bit前景或背景色（即8位编码，共256种颜色（2^8） ）<br>
@@ -18,7 +19,7 @@ import cn.hutool.core.lang.Assert;
  * @see #background(int)
  * @since 5.8.0
  */
-public final class Ansi8BitColor implements AnsiElement {
+public class Ansi8BitColor implements AnsiElement {
 
 	private static final String PREFIX_FORE = "38;5;";
 	private static final String PREFIX_BACK = "48;5;";
@@ -29,7 +30,7 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @param code 颜色代码(0-255)
 	 * @return 前景色ANSI颜色实例
 	 */
-	public static Ansi8BitColor foreground(final int code) {
+	public static Ansi8BitColor foreground(int code) {
 		return new Ansi8BitColor(PREFIX_FORE, code);
 	}
 
@@ -39,7 +40,7 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @param code 颜色代码(0-255)
 	 * @return 背景色ANSI颜色实例
 	 */
-	public static Ansi8BitColor background(final int code) {
+	public static Ansi8BitColor background(int code) {
 		return new Ansi8BitColor(PREFIX_BACK, code);
 	}
 
@@ -53,22 +54,32 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @param code   颜色代码(0-255)
 	 * @throws IllegalArgumentException 颜色代码不在0~255范围内
 	 */
-	private Ansi8BitColor(final String prefix, final int code) {
+	private Ansi8BitColor(String prefix, int code) {
 		Assert.isTrue(code >= 0 && code <= 255, "Code must be between 0 and 255");
 		this.prefix = prefix;
 		this.code = code;
 	}
 
+	/**
+	 * 获取颜色代码(0-255)
+	 *
+	 * @return 颜色代码(0 - 255)
+	 */
 	@Override
-	public boolean equals(final Object obj) {
+	public int getCode() {
+		return this.code;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		final Ansi8BitColor other = (Ansi8BitColor) obj;
-		return this.prefix.equals(other.prefix) && this.code == other.code;
+		Ansi8BitColor other = (Ansi8BitColor) obj;
+		return ObjUtil.equals(this.prefix, other.prefix) && this.code == other.code;
 	}
 
 	@Override
