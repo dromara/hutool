@@ -375,7 +375,7 @@ public class Ftp extends AbstractFtp {
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			if (false == isDir(path)) {
+			if (false == cd(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
 			}
 		}
@@ -439,7 +439,7 @@ public class Ftp extends AbstractFtp {
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		if (false == isDir(dir)) {
+		if (false == cd(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
@@ -557,7 +557,7 @@ public class Ftp extends AbstractFtp {
 
 		if (StrUtil.isNotBlank(destPath)) {
 			mkDirs(destPath);
-			if (false == isDir(destPath)) {
+			if (false == cd(destPath)) {
 				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", destPath);
 			}
 		}
@@ -665,7 +665,7 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (false == isDir(path)) {
+		if (false == cd(path)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 

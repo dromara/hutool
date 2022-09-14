@@ -12,6 +12,7 @@
 * 【core   】     修复ObjectUtil.defaultIfXXX中NPE问题（pr#2603@Github）
 * 【db     】     修复Hive2驱动无法识别问题（issue#2606@Github）
 * 【core   】     修复computeIfAbsent问题（issue#I5PTN3@Gitee）
+* 【extra  】     修复Ftp中路径问题（issue#I5R2DE@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
