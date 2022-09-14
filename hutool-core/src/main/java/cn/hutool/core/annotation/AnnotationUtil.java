@@ -4,20 +4,18 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -295,4 +293,50 @@ public class AnnotationUtil {
 		final T annotation = getAnnotation(annotationEle, annotationType);
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
 	}
+
+	/**
+	 * 获取注解属性
+	 *
+	 * @param annotationType 注解类型
+	 * @return 注解属性
+	 * @see 6.0.0
+	 */
+	public static Method[] getAnnotationAttributes(final Class<? extends Annotation> annotationType) {
+		// TODO 改为通过带缓存的反射工具类完成
+		Objects.requireNonNull(annotationType);
+		return Stream.of(annotationType.getDeclaredMethods())
+			.filter(AnnotationUtil::isAnnotationAttribute)
+			.toArray(Method[]::new);
+	}
+
+	/**
+	 * 该方法是否是注解属性，需要满足下述条件：
+	 * <ul>
+	 *     <li>不是{@link Object#equals(Object)}；</li>
+	 *     <li>不是{@link Object#hashCode()}；</li>
+	 *     <li>不是{@link Object#toString()}；</li>
+	 *     <li>不是桥接方法；</li>
+	 *     <li>不是合成方法；</li>
+	 *     <li>不是静态方法；</li>
+	 *     <li>是公共方法；</li>
+	 *     <li>方法必须没有参数；</li>
+	 *     <li>方法必须有返回值（返回值类型不为{@link Void}）；</li>
+	 * </ul>
+	 *
+	 * @param attribute 方法对象
+	 * @return 是否
+	 * @see 6.0.0
+	 */
+	public static boolean isAnnotationAttribute(final Method attribute) {
+		return !MethodUtil.isEqualsMethod(attribute)
+			&& !MethodUtil.isHashCodeMethod(attribute)
+			&& !MethodUtil.isToStringMethod(attribute)
+			&& ArrayUtil.isEmpty(attribute.getParameterTypes())
+			&& ObjUtil.notEquals(attribute.getReturnType(), Void.class)
+			&& !Modifier.isStatic(attribute.getModifiers())
+			&& Modifier.isPublic(attribute.getModifiers())
+			&& !attribute.isBridge()
+			&& !attribute.isSynthetic();
+	}
+
 }
