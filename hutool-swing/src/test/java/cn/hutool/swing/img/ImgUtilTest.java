@@ -121,7 +121,7 @@ public class ImgUtilTest {
 
 	@Test
 	public void toHexTest(){
-		final String s = ImgUtil.toHex(Color.RED);
+		final String s = ColorUtil.toHex(Color.RED);
 		Assert.assertEquals("#FF0000", s);
 	}
 
@@ -143,7 +143,7 @@ public class ImgUtilTest {
 	@Test
 	public void getMainColor() throws MalformedURLException {
 		final BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
-		final String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
+		final String mainColor = ColorUtil.getMainColor(read, new int[]{64,84,116});
 		System.out.println(mainColor);
 	}
 

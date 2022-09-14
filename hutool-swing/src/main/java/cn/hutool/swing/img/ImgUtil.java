@@ -1,18 +1,15 @@
 package cn.hutool.swing.img;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.math.NumberUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -54,11 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 /**
  * 图片处理工具类：<br>
@@ -75,12 +68,6 @@ public class ImgUtil {
 	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
 	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
-
-	/**
-	 * RGB颜色范围上限
-	 */
-	private static final int RGB_COLOR_BOUND = 256;
-
 
 	// ---------------------------------------------------------------------------------------------------------------------- scale
 
@@ -1438,43 +1425,6 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 根据文件创建字体<br>
-	 * 首先尝试创建{@link Font#TRUETYPE_FONT}字体，此类字体无效则创建{@link Font#TYPE1_FONT}
-	 *
-	 * @param fontFile 字体文件
-	 * @return {@link Font}
-	 * @since 3.0.9
-	 */
-	public static Font createFont(final File fontFile) {
-		return FontUtil.createFont(fontFile);
-	}
-
-	/**
-	 * 根据文件创建字体<br>
-	 * 首先尝试创建{@link Font#TRUETYPE_FONT}字体，此类字体无效则创建{@link Font#TYPE1_FONT}
-	 *
-	 * @param fontStream 字体流
-	 * @return {@link Font}
-	 * @since 3.0.9
-	 */
-	public static Font createFont(final InputStream fontStream) {
-		return FontUtil.createFont(fontStream);
-	}
-
-	/**
-	 * 创建{@link Graphics2D}
-	 *
-	 * @param image {@link BufferedImage}
-	 * @param color {@link Color}背景颜色以及当前画笔颜色
-	 * @return {@link Graphics2D}
-	 * @see GraphicsUtil#createGraphics(BufferedImage, Color)
-	 * @since 3.2.3
-	 */
-	public static Graphics2D createGraphics(final BufferedImage image, final Color color) {
-		return GraphicsUtil.createGraphics(image, color);
-	}
-
-	/**
 	 * 写出图像为JPG格式
 	 *
 	 * @param image           {@link Image}
@@ -1890,154 +1840,6 @@ public class ImgUtil {
 	// -------------------------------------------------------------------------------------------------------------------- Color
 
 	/**
-	 * Color对象转16进制表示，例如#fcf6d6
-	 *
-	 * @param color {@link Color}
-	 * @return 16进制的颜色值，例如#fcf6d6
-	 * @since 4.1.14
-	 */
-	public static String toHex(final Color color) {
-		return toHex(color.getRed(), color.getGreen(), color.getBlue());
-	}
-
-	/**
-	 * RGB颜色值转换成十六进制颜色码
-	 *
-	 * @param r 红(R)
-	 * @param g 绿(G)
-	 * @param b 蓝(B)
-	 * @return 返回字符串形式的 十六进制颜色码 如
-	 */
-	public static String toHex(final int r, final int g, final int b) {
-		// rgb 小于 255
-		if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-			throw new IllegalArgumentException("RGB must be 0~255!");
-		}
-		return String.format("#%02X%02X%02X", r, g, b);
-	}
-
-	/**
-	 * 16进制的颜色值转换为Color对象，例如#fcf6d6
-	 *
-	 * @param hex 16进制的颜色值，例如#fcf6d6
-	 * @return {@link Color}
-	 * @since 4.1.14
-	 */
-	public static Color hexToColor(final String hex) {
-		return getColor(Integer.parseInt(StrUtil.removePrefix(hex, "#"), 16));
-	}
-
-	/**
-	 * 获取一个RGB值对应的颜色
-	 *
-	 * @param rgb RGB值
-	 * @return {@link Color}
-	 * @since 4.1.14
-	 */
-	public static Color getColor(final int rgb) {
-		return new Color(rgb);
-	}
-
-	/**
-	 * 将颜色值转换成具体的颜色类型 汇集了常用的颜色集，支持以下几种形式：
-	 *
-	 * <pre>
-	 * 1. 颜色的英文名（大小写皆可）
-	 * 2. 16进制表示，例如：#fcf6d6或者$fcf6d6
-	 * 3. RGB形式，例如：13,148,252
-	 * </pre>
-	 * <p>
-	 * 方法来自：com.lnwazg.kit
-	 *
-	 * @param colorName 颜色的英文名，16进制表示或RGB表示
-	 * @return {@link Color}
-	 * @since 4.1.14
-	 */
-	public static Color getColor(String colorName) {
-		if (StrUtil.isBlank(colorName)) {
-			return null;
-		}
-		colorName = colorName.toUpperCase();
-
-		if ("BLACK".equals(colorName)) {
-			return Color.BLACK;
-		} else if ("WHITE".equals(colorName)) {
-			return Color.WHITE;
-		} else if ("LIGHTGRAY".equals(colorName) || "LIGHT_GRAY".equals(colorName)) {
-			return Color.LIGHT_GRAY;
-		} else if ("GRAY".equals(colorName)) {
-			return Color.GRAY;
-		} else if ("DARKGRAY".equals(colorName) || "DARK_GRAY".equals(colorName)) {
-			return Color.DARK_GRAY;
-		} else if ("RED".equals(colorName)) {
-			return Color.RED;
-		} else if ("PINK".equals(colorName)) {
-			return Color.PINK;
-		} else if ("ORANGE".equals(colorName)) {
-			return Color.ORANGE;
-		} else if ("YELLOW".equals(colorName)) {
-			return Color.YELLOW;
-		} else if ("GREEN".equals(colorName)) {
-			return Color.GREEN;
-		} else if ("MAGENTA".equals(colorName)) {
-			return Color.MAGENTA;
-		} else if ("CYAN".equals(colorName)) {
-			return Color.CYAN;
-		} else if ("BLUE".equals(colorName)) {
-			return Color.BLUE;
-		} else if ("DARKGOLD".equals(colorName)) {
-			// 暗金色
-			return hexToColor("#9e7e67");
-		} else if ("LIGHTGOLD".equals(colorName)) {
-			// 亮金色
-			return hexToColor("#ac9c85");
-		} else if (StrUtil.startWith(colorName, '#')) {
-			return hexToColor(colorName);
-		} else if (StrUtil.startWith(colorName, '$')) {
-			// 由于#在URL传输中无法传输，因此用$代替#
-			return hexToColor("#" + colorName.substring(1));
-		} else {
-			// rgb值
-			final List<String> rgb = StrUtil.split(colorName, ',');
-			if (3 == rgb.size()) {
-				final Integer r = Convert.toInt(rgb.get(0));
-				final Integer g = Convert.toInt(rgb.get(1));
-				final Integer b = Convert.toInt(rgb.get(2));
-				if (false == ArrayUtil.hasNull(r, g, b)) {
-					return new Color(r, g, b);
-				}
-			} else {
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 生成随机颜色
-	 *
-	 * @return 随机颜色
-	 * @since 3.1.2
-	 */
-	public static Color randomColor() {
-		return randomColor(null);
-	}
-
-	/**
-	 * 生成随机颜色
-	 *
-	 * @param random 随机对象 {@link Random}
-	 * @return 随机颜色
-	 * @since 3.1.2
-	 */
-	public static Color randomColor(Random random) {
-		if (null == random) {
-			random = RandomUtil.getRandom();
-		}
-		return new Color(random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND));
-	}
-
-	/**
 	 * 获得修正后的矩形坐标位置，变为以背景中心为基准坐标（即x,y == 0,0时，处于背景正中）
 	 *
 	 * @param rectangle        矩形
@@ -2051,73 +1853,6 @@ public class ImgUtil {
 				rectangle.x + (Math.abs(backgroundWidth - rectangle.width) / 2), //
 				rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
 		);
-	}
-
-	/**
-	 * 获取给定图片的主色调，背景填充用
-	 *
-	 * @param image      {@link BufferedImage}
-	 * @param rgbFilters 过滤多种颜色
-	 * @return {@link String} #ffffff
-	 * @since 5.6.7
-	 */
-	public static String getMainColor(final BufferedImage image, final int[]... rgbFilters) {
-		int r, g, b;
-		final Map<String, Long> countMap = new HashMap<>();
-		final int width = image.getWidth();
-		final int height = image.getHeight();
-		final int minx = image.getMinX();
-		final int miny = image.getMinY();
-		for (int i = minx; i < width; i++) {
-			for (int j = miny; j < height; j++) {
-				final int pixel = image.getRGB(i, j);
-				r = (pixel & 0xff0000) >> 16;
-				g = (pixel & 0xff00) >> 8;
-				b = (pixel & 0xff);
-				if (matchFilters(r, g, b, rgbFilters)) {
-					continue;
-				}
-				countMap.merge(r + "-" + g + "-" + b, 1L, Long::sum);
-			}
-		}
-		String maxColor = null;
-		long maxCount = 0;
-		for (final Map.Entry<String, Long> entry : countMap.entrySet()) {
-			final String key = entry.getKey();
-			final Long count = entry.getValue();
-			if (count > maxCount) {
-				maxColor = key;
-				maxCount = count;
-			}
-		}
-		final String[] splitRgbStr = StrUtil.splitToArray(maxColor, '-');
-		String rHex = Integer.toHexString(Integer.parseInt(splitRgbStr[0]));
-		String gHex = Integer.toHexString(Integer.parseInt(splitRgbStr[1]));
-		String bHex = Integer.toHexString(Integer.parseInt(splitRgbStr[2]));
-		rHex = rHex.length() == 1 ? "0" + rHex : rHex;
-		gHex = gHex.length() == 1 ? "0" + gHex : gHex;
-		bHex = bHex.length() == 1 ? "0" + bHex : bHex;
-		return "#" + rHex + gHex + bHex;
-	}
-
-	/**
-	 * 给定RGB是否匹配过滤器中任何一个RGB颜色
-	 *
-	 * @param r          R
-	 * @param g          G
-	 * @param b          B
-	 * @param rgbFilters 颜色过滤器
-	 * @return 是否匹配
-	 */
-	private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters) {
-		if (rgbFilters != null && rgbFilters.length > 0) {
-			for (final int[] rgbFilter : rgbFilters) {
-				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	// ------------------------------------------------------------------------------------------------------ 背景图换算

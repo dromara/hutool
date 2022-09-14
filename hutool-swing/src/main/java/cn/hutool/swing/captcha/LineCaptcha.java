@@ -2,8 +2,8 @@ package cn.hutool.swing.captcha;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.swing.img.ColorUtil;
 import cn.hutool.swing.img.GraphicsUtil;
-import cn.hutool.swing.img.ImgUtil;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -88,7 +88,7 @@ public class LineCaptcha extends AbstractCaptcha {
 			final int ys = random.nextInt(height);
 			final int xe = xs + random.nextInt(width / 8);
 			final int ye = ys + random.nextInt(height / 8);
-			g.setColor(ImgUtil.randomColor(random));
+			g.setColor(ColorUtil.randomColor(random));
 			g.drawLine(xs, ys, xe, ye);
 		}
 	}

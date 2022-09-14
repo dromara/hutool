@@ -1,9 +1,9 @@
 package cn.hutool.swing.captcha;
 
-import cn.hutool.swing.img.GraphicsUtil;
-import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.swing.img.ColorUtil;
+import cn.hutool.swing.img.GraphicsUtil;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -57,7 +57,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 	@Override
 	public Image createImage(final String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImgUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
+		final Graphics2D g = GraphicsUtil.createGraphics(image, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 随机画干扰圈圈
 		drawInterfere(g);
@@ -92,7 +92,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 		final ThreadLocalRandom random = RandomUtil.getRandom();
 
 		for (int i = 0; i < this.interfereCount; i++) {
-			g.setColor(ImgUtil.randomColor(random));
+			g.setColor(ColorUtil.randomColor(random));
 			g.drawOval(random.nextInt(width), random.nextInt(height), random.nextInt(height >> 1), random.nextInt(height >> 1));
 		}
 	}

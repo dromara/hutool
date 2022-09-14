@@ -1,9 +1,9 @@
 package cn.hutool.swing.captcha;
 
-import cn.hutool.swing.img.GraphicsUtil;
-import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.swing.img.ColorUtil;
+import cn.hutool.swing.img.GraphicsUtil;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -65,7 +65,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 		// 扭曲
 		shear(g, this.width, this.height, ObjUtil.defaultIfNull(this.background, Color.WHITE));
 		// 画干扰线
-		drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ImgUtil.randomColor());
+		drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ColorUtil.randomColor());
 
 		return image;
 	}

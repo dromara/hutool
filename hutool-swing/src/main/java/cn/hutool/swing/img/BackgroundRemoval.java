@@ -132,7 +132,7 @@ public class BackgroundRemoval {
 			for (int x = image.getMinX(); x < image.getWidth(); x++) {
 				// 获取像素的16进制
 				int rgb = image.getRGB(x, y);
-				final String hex = ImgUtil.toHex((rgb & 0xff0000) >> 16, (rgb & 0xff00) >> 8, (rgb & 0xff));
+				final String hex = ColorUtil.toHex((rgb & 0xff0000) >> 16, (rgb & 0xff00) >> 8, (rgb & 0xff));
 				final boolean isTrue = ArrayUtil.contains(removeRgb, hex) ||
 						areColorsWithinTolerance(hexToRgb(mainColor), new Color(Integer.parseInt(hex.substring(1), 16)), tolerance);
 				if (isTrue) {
@@ -181,28 +181,28 @@ public class BackgroundRemoval {
 		final int height = image.getHeight() - 1;
 		// 左上
 		final int leftUpPixel = image.getRGB(1, 1);
-		final String leftUp = ImgUtil.toHex((leftUpPixel & 0xff0000) >> 16, (leftUpPixel & 0xff00) >> 8, (leftUpPixel & 0xff));
+		final String leftUp = ColorUtil.toHex((leftUpPixel & 0xff0000) >> 16, (leftUpPixel & 0xff00) >> 8, (leftUpPixel & 0xff));
 		// 上中
 		final int upMiddlePixel = image.getRGB(width / 2, 1);
-		final String upMiddle = ImgUtil.toHex((upMiddlePixel & 0xff0000) >> 16, (upMiddlePixel & 0xff00) >> 8, (upMiddlePixel & 0xff));
+		final String upMiddle = ColorUtil.toHex((upMiddlePixel & 0xff0000) >> 16, (upMiddlePixel & 0xff00) >> 8, (upMiddlePixel & 0xff));
 		// 右上
 		final int rightUpPixel = image.getRGB(width, 1);
-		final String rightUp = ImgUtil.toHex((rightUpPixel & 0xff0000) >> 16, (rightUpPixel & 0xff00) >> 8, (rightUpPixel & 0xff));
+		final String rightUp = ColorUtil.toHex((rightUpPixel & 0xff0000) >> 16, (rightUpPixel & 0xff00) >> 8, (rightUpPixel & 0xff));
 		// 右中
 		final int rightMiddlePixel = image.getRGB(width, height / 2);
-		final String rightMiddle = ImgUtil.toHex((rightMiddlePixel & 0xff0000) >> 16, (rightMiddlePixel & 0xff00) >> 8, (rightMiddlePixel & 0xff));
+		final String rightMiddle = ColorUtil.toHex((rightMiddlePixel & 0xff0000) >> 16, (rightMiddlePixel & 0xff00) >> 8, (rightMiddlePixel & 0xff));
 		// 右下
 		final int lowerRightPixel = image.getRGB(width, height);
-		final String lowerRight = ImgUtil.toHex((lowerRightPixel & 0xff0000) >> 16, (lowerRightPixel & 0xff00) >> 8, (lowerRightPixel & 0xff));
+		final String lowerRight = ColorUtil.toHex((lowerRightPixel & 0xff0000) >> 16, (lowerRightPixel & 0xff00) >> 8, (lowerRightPixel & 0xff));
 		// 下中
 		final int lowerMiddlePixel = image.getRGB(width / 2, height);
-		final String lowerMiddle = ImgUtil.toHex((lowerMiddlePixel & 0xff0000) >> 16, (lowerMiddlePixel & 0xff00) >> 8, (lowerMiddlePixel & 0xff));
+		final String lowerMiddle = ColorUtil.toHex((lowerMiddlePixel & 0xff0000) >> 16, (lowerMiddlePixel & 0xff00) >> 8, (lowerMiddlePixel & 0xff));
 		// 左下
 		final int leftLowerPixel = image.getRGB(1, height);
-		final String leftLower = ImgUtil.toHex((leftLowerPixel & 0xff0000) >> 16, (leftLowerPixel & 0xff00) >> 8, (leftLowerPixel & 0xff));
+		final String leftLower = ColorUtil.toHex((leftLowerPixel & 0xff0000) >> 16, (leftLowerPixel & 0xff00) >> 8, (leftLowerPixel & 0xff));
 		// 左中
 		final int leftMiddlePixel = image.getRGB(1, height / 2);
-		final String leftMiddle = ImgUtil.toHex((leftMiddlePixel & 0xff0000) >> 16, (leftMiddlePixel & 0xff00) >> 8, (leftMiddlePixel & 0xff));
+		final String leftMiddle = ColorUtil.toHex((leftMiddlePixel & 0xff0000) >> 16, (leftMiddlePixel & 0xff00) >> 8, (leftMiddlePixel & 0xff));
 		// 需要删除的RGB元素
 		return new String[]{leftUp, upMiddle, rightUp, rightMiddle, lowerRight, lowerMiddle, leftLower, leftMiddle};
 	}
@@ -323,7 +323,7 @@ public class BackgroundRemoval {
 		// rgb 的数量只有3个
 		final int rgbLength = 3;
 		if (strings.length == rgbLength) {
-			return ImgUtil.toHex(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]),
+			return ColorUtil.toHex(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]),
 					Integer.parseInt(strings[2]));
 		}
 		return StrUtil.EMPTY;
