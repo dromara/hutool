@@ -157,7 +157,7 @@ public class RedisDS implements Closeable, Serializable {
 	}
 
 	/**
-	 * 从Redis中获取值
+	 * 从Redis中设置值
 	 *
 	 * @param key 键
 	 * @param value 值
