@@ -50,7 +50,7 @@ public class ClassLoaderUtil {
 	 * 原始类型名和其class对应表，例如：int =》 int.class
 	 */
 	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new ConcurrentHashMap<>(32);
-	private static final WeakConcurrentMap<Map.Entry<String, ClassLoader>, Class<?>> CLASS_CACHE = new WeakConcurrentMap<>();
+	private static final Map<Map.Entry<String, ClassLoader>, Class<?>> CLASS_CACHE = new WeakConcurrentMap<>();
 
 	static {
 		final List<Class<?>> primitiveTypes = new ArrayList<>(32);
@@ -203,7 +203,7 @@ public class ClassLoaderUtil {
 		if (clazz == null) {
 			final String finalName = name;
 			final ClassLoader finalClassLoader = classLoader;
-			clazz = CLASS_CACHE.computeIfAbsent(MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
+			clazz = MapUtil.computeIfAbsent(CLASS_CACHE, MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
 		}
 		return (Class<T>) clazz;
 	}

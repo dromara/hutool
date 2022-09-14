@@ -1,6 +1,7 @@
 package cn.hutool.extra.script;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
 
@@ -30,7 +31,7 @@ public class ScriptUtil {
 	 * @return {@link ScriptEngine} 实例
 	 */
 	public static ScriptEngine getScript(final String nameOrExtOrMime) {
-		return CACHE.computeIfAbsent(nameOrExtOrMime, (key) -> createScript(nameOrExtOrMime));
+		return MapUtil.computeIfAbsent(CACHE, nameOrExtOrMime, (key) -> createScript(nameOrExtOrMime));
 	}
 
 	/**

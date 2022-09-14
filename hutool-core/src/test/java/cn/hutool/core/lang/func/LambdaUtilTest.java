@@ -27,7 +27,7 @@ public class LambdaUtilTest {
 	}
 
 	@Test
-	public <T> void resolveTest() {
+	public void resolveTest() {
 		Stream.<Runnable>of(() -> {
 			// 引用构造函数
 			final SerSupplier<MyTeacher> lambda = MyTeacher::new;
@@ -116,7 +116,6 @@ public class LambdaUtilTest {
 			Assert.assertEquals(Enum.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 调用父类方法，只能获取到父类类型
-			//noinspection ResultOfMethodCallIgnored
 			final SerSupplier<?> lambda = myTeacher::getId;
 			Assert.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {

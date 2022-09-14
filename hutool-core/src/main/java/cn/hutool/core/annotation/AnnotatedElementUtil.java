@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
  * 并提供诸如基于{@link Alias}的属性别名、基于父子注解间的属性值覆盖等特殊的属性映射机制支持。
  *
  * <p><strong>搜索层级结构</strong>
- * <p>参考 Spring 中<code>AnnotatedElementUtils</code>，
+ * <p>参考 Spring 中{@code AnnotatedElementUtils}，
  * 工具类提供<em>get</em>以及<em>find</em>两种语义的搜索：
  * <ul>
  *     <li><em>get</em>：表示搜索范围仅限于指定的{@link AnnotatedElement}本身；</li>
@@ -494,7 +495,7 @@ public class AnnotatedElementUtil {
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
 	private static MetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedMetaElementCache(final AnnotatedElement element) {
-		return RESOLVED_ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
+		return MapUtil.computeIfAbsent(RESOLVED_ELEMENT_CACHE, element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> ResolvedAnnotationMapping.create(source, annotation, true)
 		));
 	}
@@ -506,7 +507,7 @@ public class AnnotatedElementUtil {
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
 	private static MetaAnnotatedElement<GenericAnnotationMapping> getMetaElementCache(final AnnotatedElement element) {
-		return ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
+		return MapUtil.computeIfAbsent(ELEMENT_CACHE, element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		));
 	}

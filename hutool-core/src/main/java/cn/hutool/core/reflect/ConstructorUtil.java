@@ -2,6 +2,7 @@ package cn.hutool.core.reflect;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -64,7 +65,7 @@ public class ConstructorUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(final Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, (key) -> getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) MapUtil.computeIfAbsent(CONSTRUCTORS_CACHE, beanClass, (key) -> getConstructorsDirectly(beanClass));
 	}
 
 	/**

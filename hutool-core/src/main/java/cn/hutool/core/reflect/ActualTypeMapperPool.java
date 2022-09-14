@@ -1,6 +1,7 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,7 +27,7 @@ public class ActualTypeMapperPool {
 	 * @return 泛型对应关系Map
 	 */
 	public static Map<Type, Type> get(final Type type) {
-		return CACHE.computeIfAbsent(type, (key) -> createTypeMap(type));
+		return MapUtil.computeIfAbsent(CACHE, type, (key) -> createTypeMap(type));
 	}
 
 	/**

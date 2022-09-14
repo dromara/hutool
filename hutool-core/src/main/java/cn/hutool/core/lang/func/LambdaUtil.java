@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ReflectUtil;
@@ -73,7 +74,7 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	public static <T extends Serializable> LambdaInfo resolve(final T func) {
-		return CACHE.computeIfAbsent(func.getClass().getName(), (key) -> {
+		return MapUtil.computeIfAbsent(CACHE, func.getClass().getName(), (key) -> {
 			final SerializedLambda serializedLambda = _resolve(func);
 			final String methodName = serializedLambda.getImplMethodName();
 			final Class<?> implClass;
