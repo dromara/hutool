@@ -23,4 +23,11 @@ public interface TemplateEngine {
 	 */
 	Template getTemplate(String resource);
 
+	/**
+	 * 获取原始引擎的钩子方法，用于自定义特殊属性，如插件等
+	 *
+	 * @return 对应模板实现的引擎对象
+	 * @since 6.0.0
+	 */
+	Object getRawEngine();
 }

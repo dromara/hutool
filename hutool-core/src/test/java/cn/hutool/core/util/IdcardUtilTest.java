@@ -47,6 +47,12 @@ public class IdcardUtilTest {
 	}
 
 	@Test
+	public void convert18To15Test() {
+		String idcard15 = IdcardUtil.convert18To15("150102198807303035");
+		Assert.assertEquals(ID_15, idcard15);
+	}
+
+	@Test
 	public void getAgeTest() {
 		final DateTime date = DateUtil.parse("2017-04-10");
 

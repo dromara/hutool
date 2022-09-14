@@ -150,6 +150,19 @@ public class IdcardUtil {
 	}
 
 	/**
+	 * 将18位身份证号码转换为15位
+	 *
+	 * @param  idCard 18位身份编码
+	 * @return 15位身份编码
+	 */
+	public static String convert18To15(String idCard) {
+		if (StrUtil.isNotBlank(idCard) && IdcardUtil.isValidCard18(idCard)) {
+			return idCard.substring(0, 6) + idCard.substring(8, idCard.length() - 1);
+		}
+		return idCard;
+	}
+
+	/**
 	 * 是否有效身份证号，忽略X的大小写<br>
 	 * 如果身份证号码中含有空格始终返回{@code false}
 	 *

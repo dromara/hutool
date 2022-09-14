@@ -1,10 +1,10 @@
 package cn.hutool.extra.template.engine.rythm;
 
-import java.util.Properties;
-
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
+
+import java.util.Properties;
 
 /**
  * Rythm模板引擎<br>
@@ -65,6 +65,17 @@ public class RythmEngine implements TemplateEngine {
 			init(TemplateConfig.DEFAULT);
 		}
 		return RythmTemplate.wrap(this.engine.getTemplate(resource));
+	}
+
+	/**
+	 * 获取原始引擎的钩子方法，用于自定义特殊属性，如插件等
+	 *
+	 * @return {@link org.rythmengine.RythmEngine}
+	 * @since 5.8.7
+	 */
+	@Override
+	public org.rythmengine.RythmEngine getRawEngine() {
+		return this.engine;
 	}
 
 	/**
