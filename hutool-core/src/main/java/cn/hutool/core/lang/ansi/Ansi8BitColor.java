@@ -59,6 +59,16 @@ public final class Ansi8BitColor implements AnsiElement {
 		this.code = code;
 	}
 
+	/**
+	 * 获取颜色代码(0-255)
+	 *
+	 * @return 颜色代码(0 - 255)
+	 */
+	@Override
+	public int getCode() {
+		return this.code;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

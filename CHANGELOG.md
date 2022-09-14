@@ -3,12 +3,13 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.7.M1 (2022-09-14)
+# 5.8.7.M1 (2022-09-15)
 
 ### 🐣新特性
 * 【core   】     BooleanUtil的andOfWrap和orOfWrap()忽略null（issue#2599@Github）
 * 【jwt    】     优化JWT自动识别header中的算法，并可自定义header中key的顺序（issue#I5QRUO@Gitee）
 * 【core   】     IdcardUtil增加convert18To15方法（issue#I5QYCP@Gitee）
+* 【core   】     新增AnsiColors(改自Spring Boot)、AnsiColorWrapper，优化QrCodeUtil（pr#778@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.defaultIfXXX中NPE问题（pr#2603@Github）

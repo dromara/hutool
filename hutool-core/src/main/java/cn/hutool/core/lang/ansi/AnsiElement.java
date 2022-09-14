@@ -15,4 +15,12 @@ public interface AnsiElement {
 	@Override
 	String toString();
 
+	/**
+	 * 获取ANSI代码，默认返回-1
+	 * @return ANSI代码
+	 * @since 5.8.7
+	 */
+	default int getCode(){
+		return -1;
+	}
 }

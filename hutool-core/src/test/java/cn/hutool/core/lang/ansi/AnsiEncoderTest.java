@@ -1,12 +1,11 @@
 package cn.hutool.core.lang.ansi;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class AnsiEncoderTest {
 
@@ -36,7 +35,7 @@ public class AnsiEncoderTest {
 			Color backColor = new Color(255 - foreColor.getRed(), 255 - foreColor.getGreen(), 255 - foreColor.getBlue());
 			AnsiElement backElement = ansiColors.findClosest(backColor).toAnsiElement(ForeOrBack.BACK);
 			String encode = AnsiEncoder.encode(foreElement, backElement, text);
-			//Console.print( i%2==1?encode+"\n":encode);
+			Console.print( i%2==1?encode+"\n":encode);
 		}
 	}
 

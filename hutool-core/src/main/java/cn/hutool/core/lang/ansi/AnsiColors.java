@@ -21,102 +21,27 @@ public final class AnsiColors {
 	private static final Map<AnsiColorWrapper, LabColor> ANSI_COLOR_MAP;
 
 	/**
-	 * @see AnsiColor#BLACK
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BLACK = 30;
-
-	/**
-	 * @see AnsiColor#RED
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_RED = 31;
-
-	/**
-	 * @see AnsiColor#GREEN
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_GREEN = 32;
-
-	/**
-	 * @see AnsiColor#YELLOW
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_YELLOW = 33;
-
-	/**
-	 * @see AnsiColor#BLUE
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BLUE = 34;
-
-	/**
-	 * @see AnsiColor#MAGENTA
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_MAGENTA = 35;
-
-	/**
-	 * @see AnsiColor#CYAN
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_CYAN = 36;
-
-	/**
-	 * @see AnsiColor#WHITE
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_WHITE = 37;
-
-	/**
-	 * @see AnsiColor#BRIGHT_BLACK
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_BLACK = 90;
-
-	/**
-	 * @see AnsiColor#BRIGHT_RED
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_RED = 91;
-
-	/**
-	 * @see AnsiColor#BRIGHT_GREEN
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_GREEN = 92;
-
-	/**
-	 * @see AnsiColor#BRIGHT_YELLOW
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_YELLOW = 93;
-
-	/**
-	 * @see AnsiColor#BRIGHT_BLUE
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_BLUE = 94;
-
-	/**
-	 * @see AnsiColor#BRIGHT_MAGENTA
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_MAGENTA = 95;
-
-	/**
-	 * @see AnsiColor#BRIGHT_CYAN
-	 */
-	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_CYAN = 96;
-
-	/**
 	 * @see AnsiColor#BRIGHT_WHITE
 	 */
 	private static final int CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_WHITE = 97;
 
 	static {
-		Map<AnsiColorWrapper, LabColor> colorMap = new LinkedHashMap<>(16);
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BLACK, BitDepth.FOUR), new LabColor(0x000000));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_RED, BitDepth.FOUR), new LabColor(0xAA0000));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_GREEN, BitDepth.FOUR), new LabColor(0x00AA00));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_YELLOW, BitDepth.FOUR), new LabColor(0xAA5500));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BLUE, BitDepth.FOUR), new LabColor(0x0000AA));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_MAGENTA, BitDepth.FOUR), new LabColor(0xAA00AA));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_CYAN, BitDepth.FOUR), new LabColor(0x00AAAA));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_WHITE, BitDepth.FOUR), new LabColor(0xAAAAAA));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_BLACK, BitDepth.FOUR), new LabColor(0x555555));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_RED, BitDepth.FOUR), new LabColor(0xFF5555));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_GREEN, BitDepth.FOUR), new LabColor(0x55FF00));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_YELLOW, BitDepth.FOUR), new LabColor(0xFFFF55));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_BLUE, BitDepth.FOUR), new LabColor(0x5555FF));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_MAGENTA, BitDepth.FOUR), new LabColor(0xFF55FF));
-		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_CYAN, BitDepth.FOUR), new LabColor(0x55FFFF));
+		Map<AnsiColorWrapper, LabColor> colorMap = new LinkedHashMap<>(16, 1);
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BLACK.getCode(), BitDepth.FOUR), new LabColor(0x000000));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.RED.getCode(), BitDepth.FOUR), new LabColor(0xAA0000));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.GREEN.getCode(), BitDepth.FOUR), new LabColor(0x00AA00));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.YELLOW.getCode(), BitDepth.FOUR), new LabColor(0xAA5500));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BLUE.getCode(), BitDepth.FOUR), new LabColor(0x0000AA));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.MAGENTA.getCode(), BitDepth.FOUR), new LabColor(0xAA00AA));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.CYAN.getCode(), BitDepth.FOUR), new LabColor(0x00AAAA));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.WHITE.getCode(), BitDepth.FOUR), new LabColor(0xAAAAAA));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_BLACK.getCode(), BitDepth.FOUR), new LabColor(0x555555));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_RED.getCode(), BitDepth.FOUR), new LabColor(0xFF5555));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_GREEN.getCode(), BitDepth.FOUR), new LabColor(0x55FF00));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_YELLOW.getCode(), BitDepth.FOUR), new LabColor(0xFFFF55));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_BLUE.getCode(), BitDepth.FOUR), new LabColor(0x5555FF));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_MAGENTA.getCode(), BitDepth.FOUR), new LabColor(0xFF55FF));
+		colorMap.put(new AnsiColorWrapper(AnsiColor.BRIGHT_CYAN.getCode(), BitDepth.FOUR), new LabColor(0x55FFFF));
 		colorMap.put(new AnsiColorWrapper(CODE_OF_4_BIT_ANSI_COLOR_BRIGHT_WHITE, BitDepth.FOUR), new LabColor(0xFFFFFF));
 		ANSI_COLOR_MAP = Collections.unmodifiableMap(colorMap);
 	}
@@ -152,7 +77,7 @@ public final class AnsiColors {
 	private final Map<AnsiColorWrapper, LabColor> lookup;
 
 	/**
-	 * 创建具有指定位深度的新 {@link AnsiColors} 实例。
+	 * 创建具有指定位深度的新 {@code AnsiColors} 实例。
 	 * @param bitDepth 所需的位深度
 	 */
 	public AnsiColors(BitDepth bitDepth) {
@@ -161,7 +86,7 @@ public final class AnsiColors {
 
 	private Map<AnsiColorWrapper, LabColor> getLookup(BitDepth bitDepth) {
 		if (bitDepth == BitDepth.EIGHT) {
-			Map<AnsiColorWrapper, LabColor> lookup = new LinkedHashMap<>(256);
+			final Map<AnsiColorWrapper, LabColor> lookup = new LinkedHashMap<>(256, 1);
 			for (int i = 0; i < ANSI_8BIT_COLOR_CODE_LOOKUP.length; i++) {
 				lookup.put(new AnsiColorWrapper(i,BitDepth.EIGHT), new LabColor(ANSI_8BIT_COLOR_CODE_LOOKUP[i]));
 			}
@@ -239,7 +164,7 @@ public final class AnsiColors {
 			double deltaA = this.a - other.a;
 			double deltaB = this.b - other.b;
 			double deltaH = Math.sqrt(Math.max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
-			return Math.sqrt(Math.max(0.0, Math.pow((this.l - other.l) / (1.0), 2)
+			return Math.sqrt(Math.max(0.0, Math.pow((this.l - other.l), 2)
 					+ Math.pow(deltaC / (1 + 0.045 * c1), 2) + Math.pow(deltaH / (1 + 0.015 * c1), 2.0)));
 		}
 
