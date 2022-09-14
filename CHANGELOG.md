@@ -8,6 +8,8 @@
 ### 🐣新特性
 * 【core   】     BooleanUtil的andOfWrap和orOfWrap()忽略null（issue#2599@Github）
 * 【jwt    】     优化JWT自动识别header中的算法，并可自定义header中key的顺序（issue#I5QRUO@Gitee）
+* 【core   】     IdcardUtil增加convert18To15方法（issue#I5QYCP@Gitee）
+
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.defaultIfXXX中NPE问题（pr#2603@Github）
 * 【db     】     修复Hive2驱动无法识别问题（issue#2606@Github）
