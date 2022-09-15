@@ -1,31 +1,20 @@
 package cn.hutool.extra.qrcode;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.swing.img.Img;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.swing.img.ImgUtil;
-import cn.hutool.core.util.CharsetUtil;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Binarizer;
-import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,44 +29,33 @@ import java.util.Map;
  */
 public class QrCodeUtil {
 
+	public static final String QR_TYPE_SVG = "svg";// SVG矢量图格式
+	public static final String QR_TYPE_TXT = "txt";// Ascii Art字符画文本
+
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content    内容
 	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
-	 * @param imageType  图片类型（图片扩展名），见{@link ImgUtil}
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final String logoBase64) {
-		return generateAsBase64(content, qrConfig, imageType, Base64.decode(logoBase64));
+	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, String logoBase64) {
+		return generateAsBase64DataUri(content, qrConfig, targetType, Base64.decode(logoBase64));
 	}
 
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
-	 * @param logo      logo 图片的byte[]
+	 * @param content    内容
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
+	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
+	 * @param logo       logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final byte[] logo) {
-		return generateAsBase64(content, qrConfig, imageType, ImgUtil.toImage(logo));
-	}
-
-	/**
-	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
-	 *
-	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
-	 * @param logo      logo 图片的byte[]
-	 * @return 图片 Base64 编码字符串
-	 */
-	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType, final Image logo) {
-		qrConfig.setImg(logo);
-		return generateAsBase64(content, qrConfig, imageType);
+	public static String generateAsBase64DataUri(String content, QrConfig qrConfig, String targetType, byte[] logo) {
+		return generateAsBase64DataUri(content, qrConfig.setImg(ImgUtil.toImage(logo)), targetType);
 	}
 
 	/**
@@ -92,7 +70,7 @@ public class QrCodeUtil {
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String imageType) {
+	public static String generateAsBase64DataUri(final String content, final QrConfig qrConfig, final String imageType) {
 		final BufferedImage img = generate(content, qrConfig);
 		return ImgUtil.toBase64DataUri(img, imageType);
 	}
@@ -193,32 +171,7 @@ public class QrCodeUtil {
 	 * @return 二维码图片（黑白）
 	 */
 	public static BufferedImage generate(final String content, final int width, final int height) {
-		return generate(content, new QrConfig(width, height));
-	}
-
-	/**
-	 * 生成二维码或条形码图片
-	 *
-	 * @param content 文本内容
-	 * @param format  格式，可选二维码或者条形码
-	 * @param width   宽度
-	 * @param height  高度
-	 * @return 二维码图片（黑白）
-	 */
-	public static BufferedImage generate(final String content, final BarcodeFormat format, final int width, final int height) {
-		return generate(content, format, new QrConfig(width, height));
-	}
-
-	/**
-	 * 生成二维码图片
-	 *
-	 * @param content 文本内容
-	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
-	 * @return 二维码图片（黑白）
-	 * @since 4.1.2
-	 */
-	public static BufferedImage generate(final String content, final QrConfig config) {
-		return generate(content, BarcodeFormat.QR_CODE, config);
+		return generate(content, QrConfig.of(width, height));
 	}
 
 	/**
@@ -226,102 +179,26 @@ public class QrCodeUtil {
 	 * 只有二维码时QrConfig中的图片才有效
 	 *
 	 * @param content 文本内容
-	 * @param format  格式，可选二维码、条形码等
 	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.14
 	 */
-	public static BufferedImage generate(final String content, final BarcodeFormat format, final QrConfig config) {
-		final BitMatrix bitMatrix = encode(content, format, config);
-		final BufferedImage image = toImage(bitMatrix, config.foreColor, config.backColor);
-		final Image logoImg = config.img;
-		if (null != logoImg && BarcodeFormat.QR_CODE == format) {
-			// 只有二维码可以贴图
-			final int qrWidth = image.getWidth();
-			final int qrHeight = image.getHeight();
-			final int width;
-			final int height;
-			// 按照最短的边做比例缩放
-			if (qrWidth < qrHeight) {
-				width = qrWidth / config.ratio;
-				height = logoImg.getHeight(null) * width / logoImg.getWidth(null);
-			} else {
-				height = qrHeight / config.ratio;
-				width = logoImg.getWidth(null) * height / logoImg.getHeight(null);
-			}
-
-			Img.from(image).pressImage(//
-					Img.from(logoImg).round(0.3).getImg(), // 圆角
-					new Rectangle(width, height), //
-					1//
-			);
-		}
-		return image;
+	public static BufferedImage generate(final String content, final QrConfig config) {
+		return new QrImage(content, ObjUtil.defaultIfNull(config, QrConfig::new));
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------- encode
 
 	/**
-	 * 将文本内容编码为二维码
-	 *
-	 * @param content 文本内容
-	 * @param width   宽度
-	 * @param height  高度
-	 * @return {@link BitMatrix}
-	 */
-	public static BitMatrix encode(final String content, final int width, final int height) {
-		return encode(content, BarcodeFormat.QR_CODE, width, height);
-	}
-
-	/**
-	 * 将文本内容编码为二维码
-	 *
-	 * @param content 文本内容
-	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
-	 * @return {@link BitMatrix}
-	 * @since 4.1.2
-	 */
-	public static BitMatrix encode(final String content, final QrConfig config) {
-		return encode(content, BarcodeFormat.QR_CODE, config);
-	}
-
-	/**
 	 * 将文本内容编码为条形码或二维码
 	 *
 	 * @param content 文本内容
-	 * @param format  格式枚举
-	 * @param width   宽度
-	 * @param height  高度
-	 * @return {@link BitMatrix}
-	 */
-	public static BitMatrix encode(final String content, final BarcodeFormat format, final int width, final int height) {
-		return encode(content, format, new QrConfig(width, height));
-	}
-
-	/**
-	 * 将文本内容编码为条形码或二维码
-	 *
-	 * @param content 文本内容
-	 * @param format  格式枚举
-	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色、格式等
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
-	public static BitMatrix encode(final String content, final BarcodeFormat format, QrConfig config) {
-		final MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-		if (null == config) {
-			// 默认配置
-			config = new QrConfig();
-		}
-
-		final BitMatrix bitMatrix;
-		try {
-			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints(format));
-		} catch (final WriterException e) {
-			throw new QrCodeException(e);
-		}
-
-		return bitMatrix;
+	public static BitMatrix encode(final CharSequence content, final QrConfig config) {
+		return QrEncoder.of(config).encode(content);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------- decode
@@ -368,7 +245,7 @@ public class QrCodeUtil {
 	 * @since 4.3.1
 	 */
 	public static String decode(final Image image, final boolean isTryHarder, final boolean isPureBarcode) {
-		return decode(image, buildHints(isTryHarder, isPureBarcode));
+		return QrDecoder.of(isTryHarder, isPureBarcode).decode(image);
 	}
 
 	/**
@@ -382,17 +259,7 @@ public class QrCodeUtil {
 	 * @since 5.7.12
 	 */
 	public static String decode(final Image image, final Map<DecodeHintType, Object> hints) {
-		final MultiFormatReader formatReader = new MultiFormatReader();
-		formatReader.setHints(hints);
-
-		final LuminanceSource source = new BufferedImageLuminanceSource(ImgUtil.toBufferedImage(image));
-
-		Result result = _decode(formatReader, new HybridBinarizer(source));
-		if (null == result) {
-			result = _decode(formatReader, new GlobalHistogramBinarizer(source));
-		}
-
-		return null != result ? result.getText() : null;
+		return QrDecoder.of(hints).decode(image);
 	}
 
 	/**
@@ -421,39 +288,46 @@ public class QrCodeUtil {
 	}
 
 	/**
-	 * 创建解码选项
-	 *
-	 * @param isTryHarder   是否优化精度
-	 * @param isPureBarcode 是否使用复杂模式，扫描带logo的二维码设为true
-	 * @return 选项Map
+	 * @param content  内容
+	 * @param qrConfig 二维码配置，包括宽度、高度、边距、颜色等
+	 * @return SVG矢量图（字符串）
+	 * @since 5.8.6
 	 */
-	private static Map<DecodeHintType, Object> buildHints(final boolean isTryHarder, final boolean isPureBarcode) {
-		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
-		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.NAME_UTF_8);
-
-		// 优化精度
-		if (isTryHarder) {
-			hints.put(DecodeHintType.TRY_HARDER, true);
-		}
-		// 复杂模式，开启PURE_BARCODE模式
-		if (isPureBarcode) {
-			hints.put(DecodeHintType.PURE_BARCODE, true);
-		}
-		return hints;
+	public static String generateAsSvg(String content, QrConfig qrConfig) {
+		return toSVG(encode(content, qrConfig), qrConfig);
 	}
 
 	/**
-	 * 解码多种类型的码，包括二维码和条形码
+	 * BitMatrix转SVG(字符串)
 	 *
-	 * @param formatReader {@link MultiFormatReader}
-	 * @param binarizer    {@link Binarizer}
-	 * @return {@link Result}
+	 * @param matrix BitMatrix
+	 * @param config {@link QrConfig}
+	 * @return SVG矢量图（字符串）
 	 */
-	private static Result _decode(final MultiFormatReader formatReader, final Binarizer binarizer) {
-		try {
-			return formatReader.decodeWithState(new BinaryBitmap(binarizer));
-		} catch (final NotFoundException e) {
-			return null;
-		}
+	public static String toSVG(BitMatrix matrix, QrConfig config) {
+		return new QrSVG(matrix, config).toString();
+	}
+
+	/**
+	 * 生成ASCII Art字符画形式的二维码
+	 *
+	 * @param content  内容
+	 * @param qrConfig 二维码配置，仅宽度、高度、边距配置有效
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String generateAsAsciiArt(String content, QrConfig qrConfig) {
+		return toAsciiArt(encode(content, qrConfig), qrConfig);
+	}
+
+	/**
+	 * BitMatrix转ASCII Art字符画形式的二维码
+	 *
+	 * @param bitMatrix BitMatrix
+	 * @return ASCII Art字符画形式的二维码
+	 * @since 5.8.6
+	 */
+	public static String toAsciiArt(BitMatrix bitMatrix, QrConfig qrConfig) {
+		return new QrAsciiArt(bitMatrix, qrConfig).toString();
 	}
 }

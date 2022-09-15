@@ -25,25 +25,45 @@ public class QrConfig {
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
 
-	/** 宽度 */
+	/**
+	 * 宽度
+	 */
 	protected int width;
-	/** 高度 */
+	/**
+	 * 高度
+	 */
 	protected int height;
-	/** 前景色（二维码颜色） */
+	/**
+	 * 前景色（二维码颜色）
+	 */
 	protected Integer foreColor = BLACK;
-	/** 背景色，默认白色，null表示透明 */
+	/**
+	 * 背景色，默认白色，null表示透明
+	 */
 	protected Integer backColor = WHITE;
-	/** 边距0~4 */
+	/**
+	 * 边距0~4
+	 */
 	protected Integer margin = 2;
-	/** 设置二维码中的信息量，可设置0-40的整数 */
+	/**
+	 * 设置二维码中的信息量，可设置0-40的整数
+	 */
 	protected Integer qrVersion;
-	/** 纠错级别 */
+	/**
+	 * 纠错级别
+	 */
 	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
-	/** 编码 */
+	/**
+	 * 编码
+	 */
 	protected Charset charset = CharsetUtil.UTF_8;
-	/** 二维码中的Logo */
+	/**
+	 * 二维码中的Logo
+	 */
 	protected Image img;
-	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
+	/**
+	 * 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 */
 	protected int ratio = 6;
 	/**
 	 * DATA_MATRIX的符号形状
@@ -51,12 +71,30 @@ public class QrConfig {
 	protected SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
 
 	/**
+	 * 生成码的格式，默认为二维码
+	 */
+	protected BarcodeFormat format = BarcodeFormat.QR_CODE;
+
+	/**
 	 * 创建QrConfig
+	 *
 	 * @return QrConfig
 	 * @since 4.1.14
 	 */
 	public static QrConfig of() {
 		return new QrConfig();
+	}
+
+	/**
+	 * 创建QrConfig
+	 *
+	 * @param width  宽
+	 * @param height 高
+	 * @return QrConfig
+	 * @since 4.1.14
+	 */
+	public static QrConfig of(final int width, final int height) {
+		return new QrConfig(width, height);
 	}
 
 	/**
@@ -69,8 +107,8 @@ public class QrConfig {
 	/**
 	 * 构造
 	 *
-	 * @param width 宽
-	 * @param height 长
+	 * @param width  宽
+	 * @param height 高
 	 */
 	public QrConfig(final int width, final int height) {
 		this.width = width;
@@ -134,7 +172,7 @@ public class QrConfig {
 	 * @since 5.1.1
 	 */
 	public QrConfig setForeColor(final Color foreColor) {
-		if(null == foreColor){
+		if (null == foreColor) {
 			this.foreColor = null;
 		} else {
 			this.foreColor = foreColor.getRGB();
@@ -159,7 +197,7 @@ public class QrConfig {
 	 * @since 5.1.1
 	 */
 	public QrConfig setBackColor(final Color backColor) {
-		if(null == backColor){
+		if (null == backColor) {
 			this.backColor = null;
 		} else {
 			this.backColor = backColor.getRGB();
@@ -319,21 +357,32 @@ public class QrConfig {
 	}
 
 	/**
+	 * 获取码格式
+	 *
+	 * @return 码格式，默认为二维码
+	 */
+	public BarcodeFormat getFormat() {
+		return format;
+	}
+
+	/**
+	 * 设置码格式，默认二维码
+	 *
+	 * @param format 码格式
+	 * @return this
+	 */
+	public QrConfig setFormat(BarcodeFormat format) {
+		this.format = format;
+		return this;
+	}
+
+
+	/**
 	 * 转换为Zxing的二维码配置
 	 *
 	 * @return 配置
 	 */
 	public HashMap<EncodeHintType, Object> toHints() {
-		return toHints(BarcodeFormat.QR_CODE);
-	}
-
-	/**
-	 * 转换为Zxing的二维码配置
-	 *
-	 * @param format 格式，根据格式不同，{@link #errorCorrection}的值类型有所不同
-	 * @return 配置
-	 */
-	public HashMap<EncodeHintType, Object> toHints(final BarcodeFormat format) {
 		// 配置
 		final HashMap<EncodeHintType, Object> hints = new HashMap<>();
 		if (null != this.charset) {
@@ -341,7 +390,7 @@ public class QrConfig {
 		}
 		if (null != this.errorCorrection) {
 			final Object value;
-			if(BarcodeFormat.AZTEC == format || BarcodeFormat.PDF_417 == format){
+			if (BarcodeFormat.AZTEC == format || BarcodeFormat.PDF_417 == format) {
 				// issue#I4FE3U@Gitee
 				value = this.errorCorrection.getBits();
 			} else {
@@ -354,7 +403,7 @@ public class QrConfig {
 		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);
 		}
-		if (null != this.qrVersion){
+		if (null != this.qrVersion) {
 			hints.put(EncodeHintType.QR_VERSION, this.qrVersion);
 		}
 		return hints;

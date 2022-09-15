@@ -17,6 +17,11 @@ public class QrSVG {
 	private final BitMatrix matrix;
 	private final QrConfig qrConfig;
 
+	/**
+	 * 构造
+	 * @param matrix {@link BitMatrix}
+	 * @param qrConfig {@link QrConfig}
+	 */
 	public QrSVG(BitMatrix matrix, QrConfig qrConfig) {
 		this.matrix = matrix;
 		this.qrConfig = qrConfig;

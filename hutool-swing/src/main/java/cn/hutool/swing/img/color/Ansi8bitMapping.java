@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
  * @author Tom Xin
  */
 public class Ansi8bitMapping extends AnsiLabMapping {
-	public static final Ansi8bitMapping INSTANCE = new Ansi8bitMapping();
-
 	private static final int[] ANSI_8BIT_COLOR_CODE_LOOKUP = new int[] { 0x000000, 0x800000, 0x008000, 0x808000,
 			0x000080, 0x800080, 0x008080, 0xc0c0c0, 0x808080, 0xff0000, 0x00ff00, 0xffff00, 0x0000ff, 0xff00ff,
 			0x00ffff, 0xffffff, 0x000000, 0x00005f, 0x000087, 0x0000af, 0x0000d7, 0x0000ff, 0x005f00, 0x005f5f,
@@ -39,6 +37,8 @@ public class Ansi8bitMapping extends AnsiLabMapping {
 			0x1c1c1c, 0x262626, 0x303030, 0x3a3a3a, 0x444444, 0x4e4e4e, 0x585858, 0x626262, 0x6c6c6c, 0x767676,
 			0x808080, 0x8a8a8a, 0x949494, 0x9e9e9e, 0xa8a8a8, 0xb2b2b2, 0xbcbcbc, 0xc6c6c6, 0xd0d0d0, 0xdadada,
 			0xe4e4e4, 0xeeeeee };
+
+	public static final Ansi8bitMapping INSTANCE = new Ansi8bitMapping();
 
 	public Ansi8bitMapping() {
 		ansiLabMap = new LinkedHashMap<>(256, 1);

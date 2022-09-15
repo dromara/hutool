@@ -200,6 +200,18 @@ public class ColorUtil {
 	/**
 	 * AWT的{@link Color}颜色转换为ANSI颜色，由于取最接近颜色，故可能有色差
 	 *
+	 * @param rgb        RGB颜色
+	 * @param is8Bit       是否8bit的ANSI颜色
+	 * @param isBackground 是否背景色
+	 * @return ANSI颜色
+	 */
+	public static AnsiElement toAnsiColor(int rgb, boolean is8Bit, boolean isBackground) {
+		return toAnsiColor(getColor(rgb), is8Bit, isBackground);
+	}
+
+	/**
+	 * AWT的{@link Color}颜色转换为ANSI颜色，由于取最接近颜色，故可能有色差
+	 *
 	 * @param color        {@link Color}
 	 * @param is8Bit       是否8bit的ANSI颜色
 	 * @param isBackground 是否背景色
