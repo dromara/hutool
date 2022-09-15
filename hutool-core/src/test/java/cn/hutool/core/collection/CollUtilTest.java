@@ -834,7 +834,7 @@ public class CollUtilTest {
 
 		final List<Long> result = CollUtil.subtractToList(list1, list2);
 		Assert.assertEquals(1, result.size());
-		Assert.assertEquals(1L, result.get(0), 1);
+		Assert.assertEquals(1L, (long)result.get(0));
 	}
 
 	@Test

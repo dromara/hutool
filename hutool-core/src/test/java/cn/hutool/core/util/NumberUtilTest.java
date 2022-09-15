@@ -23,15 +23,15 @@ public class NumberUtilTest {
 		final Float a = 3.15f;
 		final Double b = 4.22;
 		final double result = NumberUtil.add(a, b).doubleValue();
-		Assert.assertEquals(7.37, result, 2);
+		Assert.assertEquals(7.37, result, 0);
 	}
 
 	@Test
 	public void addTest2() {
-		final double a = 3.15f;
+		final double a = 3.15f;//精度丢失
 		final double b = 4.22;
 		final double result = NumberUtil.add(a, b);
-		Assert.assertEquals(7.37, result, 2);
+		Assert.assertEquals(7.37, result, 0.01);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class NumberUtilTest {
 		final float a = 3.15f;
 		final double b = 4.22;
 		final double result = NumberUtil.add(a, b, a, b).doubleValue();
-		Assert.assertEquals(14.74, result, 2);
+		Assert.assertEquals(14.74, result, 0);
 	}
 
 	@Test

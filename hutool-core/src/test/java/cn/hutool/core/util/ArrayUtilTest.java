@@ -197,7 +197,7 @@ public class ArrayUtilTest {
 		Assert.assertEquals(13, maxLong);
 
 		double maxDouble = ArrayUtil.max(1D, 2.4D, 13.0D, 4.55D, 5D);
-		Assert.assertEquals(13.0, maxDouble, 2);
+		Assert.assertEquals(13.0, maxDouble, 0);
 
 		BigDecimal one = new BigDecimal("1.00");
 		BigDecimal two = new BigDecimal("2.0");
@@ -220,7 +220,7 @@ public class ArrayUtilTest {
 		Assert.assertEquals(1, minLong);
 
 		double minDouble = ArrayUtil.min(1D, 2.4D, 13.0D, 4.55D, 5D);
-		Assert.assertEquals(1.0, minDouble, 2);
+		Assert.assertEquals(1.0, minDouble, 0);
 	}
 
 	@Test
