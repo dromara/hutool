@@ -419,12 +419,12 @@ public class ConvertTest {
 		 */
 		Assert.assertEquals(67556, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆圆").longValue());
 		Assert.assertEquals(67556, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元").longValue());
-		Assert.assertEquals(0.3D, Convert.chineseMoneyToNumber("叁角").doubleValue(), 2);
-		Assert.assertEquals(0.02, Convert.chineseMoneyToNumber("贰分").doubleValue(), 2);
-		Assert.assertEquals(67556.3, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 2);
-		Assert.assertEquals(67556.02, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 2);
-		Assert.assertEquals(0.32, Convert.chineseMoneyToNumber("叁角贰分").doubleValue(), 2);
-		Assert.assertEquals(67556.32, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 2);
+		Assert.assertEquals(0.3D, Convert.chineseMoneyToNumber("叁角").doubleValue(), 0);
+		Assert.assertEquals(0.02, Convert.chineseMoneyToNumber("贰分").doubleValue(), 0);
+		Assert.assertEquals(67556.3, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角").doubleValue(), 0);
+		Assert.assertEquals(67556.02, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元贰分").doubleValue(), 0);
+		Assert.assertEquals(0.32, Convert.chineseMoneyToNumber("叁角贰分").doubleValue(), 0);
+		Assert.assertEquals(67556.32, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
 	}
 
 

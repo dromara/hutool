@@ -237,7 +237,6 @@ public class NumberChineseFormatter {
 
 	/**
 	 * 中文大写数字金额转换为数字，返回结果以元为单位的BigDecimal类型数字
-	 *
 	 * 如：
 	 * 	“陆万柒仟伍佰伍拾陆元叁角贰分”返回“67556.32”
 	 * 	“叁角贰分”返回“0.32”
@@ -310,8 +309,8 @@ public class NumberChineseFormatter {
 		}
 
 		BigDecimal amount = new BigDecimal(y);
-		amount = amount.add(BigDecimal.valueOf(j).divide(BigDecimal.TEN, RoundingMode.HALF_UP));
-		amount = amount.add(BigDecimal.valueOf(f).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP));
+		amount = amount.add(BigDecimal.valueOf(j).divide(BigDecimal.TEN, 2, RoundingMode.HALF_UP));
+		amount = amount.add(BigDecimal.valueOf(f).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
 		return amount;
 	}
 
@@ -440,7 +439,6 @@ public class NumberChineseFormatter {
 
 	/**
 	 * 把中文转换为数字 如 二百二十 220<br>
-	 * 见：https://www.d5.nz/read/sfdlq/text-part0000_split_030.html
 	 * <ul>
 	 *     <li>一百一十二 -》 112</li>
 	 *     <li>一千零一十二 -》 1012</li>
