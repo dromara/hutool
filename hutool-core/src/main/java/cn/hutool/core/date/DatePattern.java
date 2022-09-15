@@ -67,6 +67,8 @@ import java.util.regex.Pattern;
  *     <li>2022-08-23T15:20:46Z</li>
  * </ul>
  *
+ * 其他格式见：<a href="https://ijmacd.github.io/rfc3339-iso8601/">https://ijmacd.github.io/rfc3339-iso8601/</a>
+ *
  * @author Looly
  */
 public class DatePattern {

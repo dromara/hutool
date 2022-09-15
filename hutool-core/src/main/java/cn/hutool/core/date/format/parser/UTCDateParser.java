@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.format.DefaultDateBasic;
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 
@@ -22,6 +23,7 @@ import cn.hutool.core.util.CharUtil;
  * @since 6.0.0
  */
 public class UTCDateParser extends DefaultDateBasic implements DateParser {
+	private static final long serialVersionUID = 1L;
 
 	public static UTCDateParser INSTANCE = new UTCDateParser();
 
@@ -58,6 +60,22 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31+08:00
+				return new DateTime(source, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+			}
+		} else if(ReUtil.contains("-\\d{2}:?00", source)){
+			// Issue#2612，类似 2022-09-14T23:59:00-08:00 或者 2022-09-14T23:59:00-0800
+
+			// 去除类似2019-06-01T19:45:43 -08:00加号前的空格
+			source = source.replace(" -", "-");
+			if(':' != source.charAt(source.length() - 3)){
+				source = source.substring(0, source.length() - 2) + ":00";
+			}
+
+			if (StrUtil.contains(source, CharUtil.DOT)) {
+				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
+				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+			} else {
+				// 格式类似：2018-09-13T05:34:31-08:00
 				return new DateTime(source, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
 			}
 		} else {
