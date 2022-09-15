@@ -6,13 +6,22 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -221,7 +230,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default <F> EasyStream<T> distinct(final Function<? super T, F> keyExtractor) {
 		Objects.requireNonNull(keyExtractor);
 		if (isParallel()) {
-			final ConcurrentHashMap<F, Boolean> exists = MapUtil.newConcurrentHashMap();
+			final SafeConcurrentHashMap<F, Boolean> exists = new SafeConcurrentHashMap<>();
 			// 标记是否出现过null值，用于保留第一个出现的null
 			// 由于ConcurrentHashMap的key不能为null，所以用此变量来标记
 			final AtomicBoolean hasNull = new AtomicBoolean(false);

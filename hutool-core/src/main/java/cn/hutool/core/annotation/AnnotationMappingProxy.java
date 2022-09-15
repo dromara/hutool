@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 
@@ -11,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -80,7 +80,7 @@ public final class AnnotationMappingProxy<T extends Annotation> implements Invoc
 	private AnnotationMappingProxy(final AnnotationMapping<T> annotation) {
 		int methodCount = annotation.getAttributes().length;
 		this.methods = new HashMap<>(methodCount + 5);
-		this.valueCache = new ConcurrentHashMap<>(methodCount);
+		this.valueCache = new SafeConcurrentHashMap<>(methodCount);
 		this.mapping = annotation;
 		loadMethods();
 	}

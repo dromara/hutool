@@ -9,6 +9,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
@@ -44,7 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Looly
  * @since 3.2.0
  */
+@SuppressWarnings("resource")
 public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
@@ -938,7 +939,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeHeadRow(final Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		this.headLocationCache = new ConcurrentHashMap<>();
+		this.headLocationCache = new SafeConcurrentHashMap<>();
 		final Row row = this.sheet.createRow(this.currentRow.getAndIncrement());
 		int i = 0;
 		Cell cell;

@@ -1265,16 +1265,16 @@ public class MapUtil extends MapGetUtil {
 	}
 
 	/**
-	 * 方法来自Dubbo，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。<br>
-	 * issues#2349<br>
+	 * 如果 key 对应的 value 不存在，则使用获取 mappingFunction 重新计算后的值，并保存为该 key 的 value，否则返回 value。<br>
+	 * 方法来自Dubbo，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。（issues#2349）<br>
 	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
 	 * This class should be removed once we drop Java 8 support.
 	 *
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
-	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<K, V> mappingFunction) {
+	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {
 		V value = map.get(key);
-		if(null == value){
+		if (null == value) {
 			map.putIfAbsent(key, mappingFunction.apply(key));
 			value = map.get(key);
 		}

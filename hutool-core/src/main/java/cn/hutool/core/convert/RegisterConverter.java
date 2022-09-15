@@ -29,6 +29,7 @@ import cn.hutool.core.convert.impl.XMLGregorianCalendarConverter;
 import cn.hutool.core.convert.impl.ZoneIdConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -60,7 +61,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
@@ -176,7 +176,7 @@ public class RegisterConverter implements Converter, Serializable {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
-					customConverterMap = new ConcurrentHashMap<>();
+					customConverterMap = new SafeConcurrentHashMap<>();
 				}
 			}
 		}
@@ -188,7 +188,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 * 注册默认转换器
 	 */
 	private void registerDefault() {
-		defaultConverterMap = new ConcurrentHashMap<>();
+		defaultConverterMap = new SafeConcurrentHashMap<>(64);
 
 		// 包装类转换器
 		defaultConverterMap.put(Character.class, new CharacterConverter());

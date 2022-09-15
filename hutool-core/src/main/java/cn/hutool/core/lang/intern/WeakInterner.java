@@ -1,6 +1,5 @@
 package cn.hutool.core.lang.intern;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 /**
@@ -18,6 +17,6 @@ public class WeakInterner<T> implements Interner<T>{
 		if(null == sample){
 			return null;
 		}
-		return MapUtil.computeIfAbsent(cache, sample, (key)->sample);
+		return cache.computeIfAbsent(sample, (key)->sample);
 	}
 }

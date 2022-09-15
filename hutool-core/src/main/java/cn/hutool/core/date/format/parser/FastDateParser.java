@@ -3,6 +3,7 @@ package cn.hutool.core.date.format.parser;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.FastDatePrinter;
 import cn.hutool.core.date.format.SimpleDateBasic;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +23,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -453,7 +453,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	private static ConcurrentMap<Locale, Strategy> getCache(final int field) {
 		synchronized (CACHES) {
 			if (CACHES[field] == null) {
-				CACHES[field] = new ConcurrentHashMap<>(3);
+				CACHES[field] = new SafeConcurrentHashMap<>(3);
 			}
 			return CACHES[field];
 		}

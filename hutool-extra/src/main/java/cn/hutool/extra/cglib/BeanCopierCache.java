@@ -1,6 +1,5 @@
 package cn.hutool.extra.cglib;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
 import net.sf.cglib.beans.BeanCopier;
@@ -44,7 +43,7 @@ public enum BeanCopierCache {
 	 */
 	public BeanCopier get(final Class<?> srcClass, final Class<?> targetClass, final boolean useConverter) {
 		final String key = genKey(srcClass, targetClass, useConverter);
-		return MapUtil.computeIfAbsent(cache, key, (k) -> BeanCopier.create(srcClass, targetClass, useConverter));
+		return cache.computeIfAbsent(key, (k) -> BeanCopier.create(srcClass, targetClass, useConverter));
 	}
 
 	/**

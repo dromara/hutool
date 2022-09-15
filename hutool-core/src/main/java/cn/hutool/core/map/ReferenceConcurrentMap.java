@@ -133,7 +133,7 @@ public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterab
 	@Override
 	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
 		this.purgeStaleKeys();
-		return MapUtil.computeIfAbsent(this.raw, ofKey(key, this.lastQueue), kWeakKey -> mappingFunction.apply(key));
+		return this.raw.computeIfAbsent(ofKey(key, this.lastQueue), kWeakKey -> mappingFunction.apply(key));
 	}
 
 	@Override

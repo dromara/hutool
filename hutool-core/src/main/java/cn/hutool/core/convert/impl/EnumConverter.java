@@ -118,7 +118,7 @@ public class EnumConverter extends AbstractConverter {
 	 * @return 转换方法map，key为方法参数类型，value为方法
 	 */
 	private static Map<Class<?>, Method> getMethodMap(final Class<?> enumClass) {
-		return MapUtil.computeIfAbsent(VALUE_OF_METHOD_CACHE, enumClass, (key) -> Arrays.stream(enumClass.getMethods())
+		return VALUE_OF_METHOD_CACHE.computeIfAbsent(enumClass, (key) -> Arrays.stream(enumClass.getMethods())
 				.filter(ModifierUtil::isStatic)
 				.filter(m -> m.getReturnType() == enumClass)
 				.filter(m -> m.getParameterCount() == 1)

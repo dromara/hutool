@@ -1,6 +1,7 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,8 +61,8 @@ public final class HTMLFilter {
 	private static final Pattern P_BOTH_ARROWS = Pattern.compile("<>");
 
 	// @xxx could grow large... maybe use sesat's ReferenceMap
-	private static final ConcurrentMap<String, Pattern> P_REMOVE_PAIR_BLANKS = new ConcurrentHashMap<>();
-	private static final ConcurrentMap<String, Pattern> P_REMOVE_SELF_BLANKS = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, Pattern> P_REMOVE_PAIR_BLANKS = new SafeConcurrentHashMap<>();
+	private static final ConcurrentMap<String, Pattern> P_REMOVE_SELF_BLANKS = new SafeConcurrentHashMap<>();
 
 	/**
 	 * set of allowed html elements, along with allowed attributes for each element

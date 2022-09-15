@@ -3,7 +3,6 @@ package cn.hutool.core.map;
 import cn.hutool.core.util.ReferenceUtil;
 
 import java.lang.ref.Reference;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -16,12 +15,13 @@ import java.util.concurrent.ConcurrentMap;
  * @since 5.8.0
  */
 public class WeakConcurrentMap<K, V> extends ReferenceConcurrentMap<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造
 	 */
 	public WeakConcurrentMap() {
-		this(new ConcurrentHashMap<>());
+		this(new SafeConcurrentHashMap<>());
 	}
 
 	/**

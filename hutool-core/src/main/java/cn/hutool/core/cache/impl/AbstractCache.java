@@ -5,11 +5,11 @@ import cn.hutool.core.cache.CacheListener;
 import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,7 +35,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	/**
 	 * 写的时候每个key一把锁，降低锁的粒度
 	 */
-	protected final Map<K, Lock> keyLockMap = new ConcurrentHashMap<>();
+	protected final Map<K, Lock> keyLockMap = new SafeConcurrentHashMap<>();
 
 	/**
 	 * 返回缓存容量，{@code 0}表示无大小限制

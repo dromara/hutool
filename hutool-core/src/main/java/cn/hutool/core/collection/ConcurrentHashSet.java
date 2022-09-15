@@ -1,10 +1,11 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
+
 import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 通过{@link ConcurrentHashMap}实现的线程安全HashSet
+ * 通过{@link SafeConcurrentHashMap}实现的线程安全HashSet
  *
  * @author Looly
  *
@@ -20,7 +21,7 @@ public class ConcurrentHashSet<E> extends SetFromMap<E> {
 	 * 触发因子为默认的0.75
 	 */
 	public ConcurrentHashSet() {
-		super(new ConcurrentHashMap<>());
+		super(new SafeConcurrentHashMap<>());
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class ConcurrentHashSet<E> extends SetFromMap<E> {
 	 * @param initialCapacity 初始大小
 	 */
 	public ConcurrentHashSet(final int initialCapacity) {
-		super(new ConcurrentHashMap<>(initialCapacity));
+		super(new SafeConcurrentHashMap<>(initialCapacity));
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class ConcurrentHashSet<E> extends SetFromMap<E> {
 	 * @param loadFactor 加载因子。此参数决定数据增长时触发的百分比
 	 */
 	public ConcurrentHashSet(final int initialCapacity, final float loadFactor) {
-		super(new ConcurrentHashMap<>(initialCapacity, loadFactor));
+		super(new SafeConcurrentHashMap<>(initialCapacity, loadFactor));
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class ConcurrentHashSet<E> extends SetFromMap<E> {
 	 * @param concurrencyLevel 线程并发度
 	 */
 	public ConcurrentHashSet(final int initialCapacity, final float loadFactor, final int concurrencyLevel) {
-		super(new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel));
+		super(new SafeConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel));
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class ConcurrentHashSet<E> extends SetFromMap<E> {
 	 * @param iter {@link Iterable}
 	 */
 	public ConcurrentHashSet(final Iterable<E> iter) {
-		super(iter instanceof  Collection ? new ConcurrentHashMap<>((int)(((Collection<E>)iter).size() / 0.75f)) : new ConcurrentHashMap<>());
+		super(iter instanceof  Collection ? new SafeConcurrentHashMap<>(((Collection<E>)iter).size()) : new SafeConcurrentHashMap<>());
 		if(iter instanceof Collection) {
 			this.addAll((Collection<E>)iter);
 		}else {

@@ -116,7 +116,7 @@ public class FieldUtil {
 	 */
 	public static Field[] getFields(final Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return MapUtil.computeIfAbsent(FIELDS_CACHE, beanClass, (key) -> getFieldsDirectly(beanClass, true));
+		return FIELDS_CACHE.computeIfAbsent(beanClass, (key) -> getFieldsDirectly(beanClass, true));
 	}
 
 

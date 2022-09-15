@@ -4,6 +4,7 @@ import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.StrUtil;
@@ -15,7 +16,6 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link ClassLoader}工具类
@@ -49,7 +49,7 @@ public class ClassLoaderUtil {
 	/**
 	 * 原始类型名和其class对应表，例如：int =》 int.class
 	 */
-	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new ConcurrentHashMap<>(32);
+	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new SafeConcurrentHashMap<>(32);
 	private static final Map<Map.Entry<String, ClassLoader>, Class<?>> CLASS_CACHE = new WeakConcurrentMap<>();
 
 	static {
@@ -203,7 +203,7 @@ public class ClassLoaderUtil {
 		if (clazz == null) {
 			final String finalName = name;
 			final ClassLoader finalClassLoader = classLoader;
-			clazz = MapUtil.computeIfAbsent(CLASS_CACHE, MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
+			clazz = CLASS_CACHE.computeIfAbsent(MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
 		}
 		return (Class<T>) clazz;
 	}

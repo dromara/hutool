@@ -1,5 +1,6 @@
 package cn.hutool.json.serialize;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.json.JSON;
 
 import java.lang.reflect.Type;
@@ -22,8 +23,8 @@ public class GlobalSerializeMapping {
 	private static Map<Type, JSONDeserializer<?>> deserializerMap;
 
 	static {
-		serializerMap = new ConcurrentHashMap<>();
-		deserializerMap = new ConcurrentHashMap<>();
+		serializerMap = new SafeConcurrentHashMap<>();
+		deserializerMap = new SafeConcurrentHashMap<>();
 
 		final TemporalAccessorSerializer localDateSerializer = new TemporalAccessorSerializer(LocalDate.class);
 		serializerMap.put(LocalDate.class, localDateSerializer);

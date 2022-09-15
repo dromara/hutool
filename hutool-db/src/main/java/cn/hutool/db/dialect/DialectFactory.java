@@ -1,6 +1,7 @@
 package cn.hutool.db.dialect;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.impl.AnsiSqlDialect;
@@ -16,7 +17,6 @@ import cn.hutool.log.StaticLog;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 方言工厂类
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DialectFactory implements DriverNamePool{
 
-	private static final Map<DataSource, Dialect> DIALECT_POOL = new ConcurrentHashMap<>();
+	private static final Map<DataSource, Dialect> DIALECT_POOL = new SafeConcurrentHashMap<>();
 
 	private DialectFactory() {
 	}
@@ -170,11 +170,7 @@ public class DialectFactory implements DriverNamePool{
 			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
 			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (ds) {
-				dialect = DIALECT_POOL.get(ds);
-				if(null == dialect) {
-					dialect = newDialect(ds);
-					DIALECT_POOL.put(ds, dialect);
-				}
+				dialect = DIALECT_POOL.computeIfAbsent(ds, DialectFactory::newDialect);
 			}
 		}
 		return dialect;

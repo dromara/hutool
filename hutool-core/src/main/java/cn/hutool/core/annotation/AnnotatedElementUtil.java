@@ -1,6 +1,5 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -495,7 +494,7 @@ public class AnnotatedElementUtil {
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
 	private static MetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedMetaElementCache(final AnnotatedElement element) {
-		return MapUtil.computeIfAbsent(RESOLVED_ELEMENT_CACHE, element, ele -> MetaAnnotatedElement.create(
+		return RESOLVED_ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> ResolvedAnnotationMapping.create(source, annotation, true)
 		));
 	}
@@ -507,7 +506,7 @@ public class AnnotatedElementUtil {
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
 	private static MetaAnnotatedElement<GenericAnnotationMapping> getMetaElementCache(final AnnotatedElement element) {
-		return MapUtil.computeIfAbsent(ELEMENT_CACHE, element, ele -> MetaAnnotatedElement.create(
+		return ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		));
 	}

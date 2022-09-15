@@ -2,6 +2,7 @@ package cn.hutool.db.ds;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
@@ -12,7 +13,6 @@ import cn.hutool.setting.Setting;
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 抽象数据源工厂<br>
@@ -54,7 +54,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 		DbUtil.setShowSqlGlobal(setting);
 
 		this.setting = setting;
-		this.dsMap = new ConcurrentHashMap<>();
+		this.dsMap = new SafeConcurrentHashMap<>();
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package cn.hutool.core.regex;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.util.regex.Pattern;
@@ -198,7 +197,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(final String regex, final int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-		return MapUtil.computeIfAbsent(POOL, regexWithFlag, (key) -> Pattern.compile(regex, flags));
+		return POOL.computeIfAbsent(regexWithFlag, (key) -> Pattern.compile(regex, flags));
 	}
 
 	/**

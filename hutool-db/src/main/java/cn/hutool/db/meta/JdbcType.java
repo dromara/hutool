@@ -1,7 +1,7 @@
 package cn.hutool.db.meta;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JDBC中字段类型枚举
@@ -63,7 +63,8 @@ public enum JdbcType {
 		this.typeCode = code;
 	}
 
-	private static final Map<Integer, JdbcType> CODE_MAP = new ConcurrentHashMap<>(100, 1);
+	// 此处无写操作，使用HashMap没有线程安全问题
+	private static final Map<Integer, JdbcType> CODE_MAP = new HashMap<>(128, 1);
 	static {
 		for (final JdbcType type : JdbcType.values()) {
 			CODE_MAP.put(type.typeCode, type);
@@ -74,7 +75,7 @@ public enum JdbcType {
 	 * 通过{@link java.sql.Types}中对应int值找到enum值
 	 *
 	 * @param code Jdbc type值
-	 * @return {@link JdbcType}
+	 * @return {@code JdbcType}
 	 */
 	public static JdbcType valueOf(final int code) {
 		return CODE_MAP.get(code);

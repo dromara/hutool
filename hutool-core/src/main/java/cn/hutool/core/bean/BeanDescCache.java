@@ -1,7 +1,6 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.func.SerSupplier;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 
 /**
@@ -24,7 +23,7 @@ public enum BeanDescCache {
 	 * @since 5.4.2
 	 */
 	public BeanDesc getBeanDesc(final Class<?> beanClass, final SerSupplier<BeanDesc> supplier) {
-		return MapUtil.computeIfAbsent(bdCache, beanClass, (key) -> supplier.get());
+		return bdCache.computeIfAbsent(beanClass, (key) -> supplier.get());
 	}
 
 	/**
