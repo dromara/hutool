@@ -41,4 +41,11 @@ public class ClassUtilTest {
 		final String classDir = ClassUtil.getLocationPath(ClassUtilTest.class);
 		Assert.assertTrue(Objects.requireNonNull(classDir).endsWith("/hutool-core/target/test-classes/"));
 	}
+
+	@Test
+	public void isAssignableTest(){
+		Assert.assertTrue(ClassUtil.isAssignable(int.class, int.class));
+		Assert.assertTrue(ClassUtil.isAssignable(int.class, Integer.class));
+		Assert.assertFalse(ClassUtil.isAssignable(int.class, String.class));
+	}
 }

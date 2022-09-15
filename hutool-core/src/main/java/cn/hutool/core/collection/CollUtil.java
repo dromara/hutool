@@ -2163,7 +2163,7 @@ public class CollUtil {
 	 * @return 只读集合
 	 * @since 5.2.6
 	 */
-	public static <T> Collection<T> unmodifiable(final Collection<? extends T> c) {
+	public static <T> Collection<T> view(final Collection<? extends T> c) {
 		if (null == c) {
 			return null;
 		}

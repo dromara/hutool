@@ -206,7 +206,7 @@ public class UrlQuery {
 	 * @return 查询的Map，只读
 	 */
 	public Map<CharSequence, CharSequence> getQueryMap() {
-		return MapUtil.unmodifiable(this.query);
+		return MapUtil.view(this.query);
 	}
 
 	/**

@@ -219,7 +219,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 */
 	public Map<String, HttpCookie> getCookieMap() {
 		if (null == this.cookieCache) {
-			cookieCache = MapUtil.unmodifiable(MapUtil.putAll(
+			cookieCache = MapUtil.view(MapUtil.putAll(
 					new CaseInsensitiveMap<>(),
 					NetUtil.parseCookies(getCookiesStr()),
 					HttpCookie::getName));

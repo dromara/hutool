@@ -195,42 +195,42 @@ public class MapUtil extends MapGetUtil {
 	}
 
 	/**
-	 * 新建一个初始容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY} 的ConcurrentHashMap
+	 * 新建一个初始容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY} 的{@link SafeConcurrentHashMap}
 	 *
 	 * @param <K> key的类型
 	 * @param <V> value的类型
-	 * @return ConcurrentHashMap
+	 * @return {@link SafeConcurrentHashMap}
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
-		return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
+	public static <K, V> ConcurrentHashMap<K, V> newSafeConcurrentHashMap() {
+		return new SafeConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
 	}
 
 	/**
-	 * 新建一个ConcurrentHashMap
+	 * 新建一个{@link SafeConcurrentHashMap}
 	 *
 	 * @param size 初始容量，当传入的容量小于等于0时，容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY}
 	 * @param <K>  key的类型
 	 * @param <V>  value的类型
-	 * @return ConcurrentHashMap
+	 * @return {@link SafeConcurrentHashMap}
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final int size) {
+	public static <K, V> ConcurrentHashMap<K, V> newSafeConcurrentHashMap(final int size) {
 		final int initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
-		return new ConcurrentHashMap<>(initCapacity);
+		return new SafeConcurrentHashMap<>(initCapacity);
 	}
 
 	/**
-	 * 传入一个Map将其转化为ConcurrentHashMap类型
+	 * 传入一个Map将其转化为{@link SafeConcurrentHashMap}类型
 	 *
 	 * @param map map
 	 * @param <K> key的类型
 	 * @param <V> value的类型
-	 * @return ConcurrentHashMap
+	 * @return {@link SafeConcurrentHashMap}
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(final Map<K, V> map) {
+	public static <K, V> ConcurrentHashMap<K, V> newSafeConcurrentHashMap(final Map<K, V> map) {
 		if (isEmpty(map)) {
 			return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
 		}
-		return new ConcurrentHashMap<>(map);
+		return new SafeConcurrentHashMap<>(map);
 	}
 
 	/**
@@ -888,7 +888,7 @@ public class MapUtil extends MapGetUtil {
 	 * @return 不修改Map
 	 * @since 5.2.6
 	 */
-	public static <K, V> Map<K, V> unmodifiable(final Map<K, V> map) {
+	public static <K, V> Map<K, V> view(final Map<K, V> map) {
 		return Collections.unmodifiableMap(map);
 	}
 
@@ -1270,6 +1270,11 @@ public class MapUtil extends MapGetUtil {
 	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
 	 * This class should be removed once we drop Java 8 support.
 	 *
+	 * @param <K>             键类型
+	 * @param <V>             值类型
+	 * @param map             Map，一般用于线程安全的Map
+	 * @param key             键
+	 * @param mappingFunction 值计算函数
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
 	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {

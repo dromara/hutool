@@ -55,7 +55,7 @@ public class ClassLoaderUtil {
 	static {
 		final List<Class<?>> primitiveTypes = new ArrayList<>(32);
 		// 加入原始类型
-		primitiveTypes.addAll(BasicType.PRIMITIVE_WRAPPER_MAP.keySet());
+		primitiveTypes.addAll(BasicType.getPrimitiveSet());
 		// 加入原始类型数组类型
 		primitiveTypes.add(boolean[].class);
 		primitiveTypes.add(byte[].class);

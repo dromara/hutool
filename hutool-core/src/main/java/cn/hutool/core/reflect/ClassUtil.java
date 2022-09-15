@@ -363,10 +363,7 @@ public class ClassUtil {
 	 * @return 是否为包装类型
 	 */
 	public static boolean isPrimitiveWrapper(final Class<?> clazz) {
-		if (null == clazz) {
-			return false;
-		}
-		return BasicType.WRAPPER_PRIMITIVE_MAP.containsKey(clazz);
+		return BasicType.isPrimitiveWrapper(clazz);
 	}
 
 	/**
@@ -450,12 +447,11 @@ public class ClassUtil {
 
 		// 基本类型
 		if (targetType.isPrimitive()) {
-			// 原始类型
-			final Class<?> resolvedPrimitive = BasicType.WRAPPER_PRIMITIVE_MAP.get(sourceType);
-			return targetType.equals(resolvedPrimitive);
+			// 目标为原始类型
+			return targetType.equals(BasicType.unWrap(sourceType));
 		} else {
-			// 包装类型
-			final Class<?> resolvedWrapper = BasicType.PRIMITIVE_WRAPPER_MAP.get(sourceType);
+			// 目标为包装类型
+			final Class<?> resolvedWrapper = BasicType.wrap(sourceType, true);
 			return resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper);
 		}
 	}

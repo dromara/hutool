@@ -299,7 +299,7 @@ public class AnnotationUtil {
 	 *
 	 * @param annotationType 注解类型
 	 * @return 注解属性
-	 * @see 6.0.0
+	 * @since 6.0.0
 	 */
 	public static Method[] getAnnotationAttributes(final Class<? extends Annotation> annotationType) {
 		// TODO 改为通过带缓存的反射工具类完成
@@ -325,7 +325,7 @@ public class AnnotationUtil {
 	 *
 	 * @param attribute 方法对象
 	 * @return 是否
-	 * @see 6.0.0
+	 * @since 6.0.0
 	 */
 	public static boolean isAnnotationAttribute(final Method attribute) {
 		return !MethodUtil.isEqualsMethod(attribute)
