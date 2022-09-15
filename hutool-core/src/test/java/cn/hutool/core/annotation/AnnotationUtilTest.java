@@ -1,16 +1,25 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.util.ObjUtil;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.annotation.*;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
  * test for {@link AnnotationUtil}
  */
 public class AnnotationUtilTest {
+
+	@Test
+	public void testGetDeclaredAnnotations() {
+		Annotation[] annotations = AnnotationUtil.getDeclaredAnnotations(ClassForTest.class);
+		Assert.assertArrayEquals(annotations, ClassForTest.class.getDeclaredAnnotations());
+		Assert.assertSame(annotations, AnnotationUtil.getDeclaredAnnotations(ClassForTest.class));
+	}
 
 	@Test
 	public void testToCombination() {
@@ -113,6 +122,21 @@ public class AnnotationUtilTest {
 		final MetaAnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(AnnotationForTest.class, MetaAnnotationForTest.class);
 		Assert.assertEquals(annotation.value(), annotation.alias());
 		Assert.assertEquals(MetaAnnotationForTest.class, annotation.annotationType());
+	}
+
+	@Test
+	public void testGetAnnotationAttributes() {
+		Method[] methods = AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class);
+		Assert.assertSame(methods, AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class));
+		Assert.assertEquals(1, methods.length);
+		Assert.assertArrayEquals(AnnotationForTest.class.getDeclaredMethods(), methods);
+	}
+
+	@SneakyThrows
+	@Test
+	public void testIsAnnotationAttribute() {
+		Assert.assertFalse(AnnotationUtil.isAnnotationAttribute(AnnotationForTest.class.getMethod("equals", Object.class)));
+		Assert.assertTrue(AnnotationUtil.isAnnotationAttribute(AnnotationForTest.class.getMethod("value")));
 	}
 
 	@Target(ElementType.TYPE_USE)

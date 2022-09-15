@@ -170,7 +170,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		Arrays.fill(this.resolvedAttributes, NOT_FOUND_INDEX);
 
 		// 若有必要，解析属性
-		// TODO 可能的改进：flag改为枚举，使得可以自行选择：1.只支持属性别名，2.只支持属性覆盖，3.两个都支持，4.两个都不支持
+		// TODO flag改为枚举，使得可以自行选择：1.只支持属性别名，2.只支持属性覆盖，3.两个都支持，4.两个都不支持
 		this.resolved = resolveAttribute && resolveAttributes();
 	}
 
@@ -178,6 +178,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 * 解析属性
 	 */
 	private boolean resolveAttributes() {
+		// TODO 支持处理@PropIgnore，被标记的属性无法被覆写，也不会被别名关联
 		// 解析同一注解中的别名
 		resolveAliasAttributes();
 		// 使用子注解覆写当前注解中的属性
@@ -525,8 +526,8 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 
 		// 根据AliasSet更新关联的属性
 		Stream.of(aliasSets).filter(Objects::nonNull).forEach(set -> {
-			final int resolvedIndex = set.resolve();
-			set.forEach(index -> resolvedAttributes[index] = resolvedIndex);
+			final int effectiveAttributeIndex = set.determineEffectiveAttribute();
+			set.forEach(index -> resolvedAttributes[index] = effectiveAttributeIndex);
 		});
 	}
 
@@ -616,7 +617,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		 *     <li>若有多个属性具有非默认值，则要求所有的非默认值都必须相等，若符合并返回该首个具有非默认值的属性，否则报错；</li>
 		 * </ul>
 		 */
-		private int resolve() {
+		private int determineEffectiveAttribute() {
 			int resolvedIndex = NOT_FOUND_INDEX;
 			boolean hasNotDef = false;
 			Object lastValue = null;

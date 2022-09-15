@@ -21,8 +21,11 @@ import java.util.stream.Stream;
  * 并且在当前实例中，{@link Inherited}注解将不生效，
  * 即通过<em>directly</em>方法将无法获得父类上带有{@link Inherited}的注解。
  *
- * <p>当通过静态工厂方法创建时，该实例与关联的{@link ResolvedAnnotationMapping}都会针对{@link ResolvedAnnotationMapping}进行缓存，
- * 从而避免频繁的反射与代理造成不必要的性能损耗。
+ * <p>在一个{@link MetaAnnotatedElement}中，
+ * {@link AnnotatedElement}上同类型的注解或元注解只会被保留一个，
+ * 即当出现两个根注解都具有相同元注解时，仅有第一个根注解上的元注解会被保留，
+ * 因此当通过{@link #getAnnotationsByType(Class)}
+ * 或{@link #getDeclaredAnnotationsByType(Class)}方法用于只能获得一个注解对象。
  *
  * @author huangchengxing
  * @see ResolvedAnnotationMapping
@@ -214,6 +217,34 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 		return getAnnotationMappings().values().iterator();
 	}
 
+	/**
+	 * 比较两个实例是否相等
+	 *
+	 * @param o 对象
+	 * @return 是否
+	 */
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final MetaAnnotatedElement<?> that = (MetaAnnotatedElement<?>)o;
+		return element.equals(that.element) && mappingFactory.equals(that.mappingFactory);
+	}
+
+	/**
+	 * 获取实例的哈希值
+	 *
+	 * @return 哈希值
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(element, mappingFactory);
+	}
+
 	// ========================= protected =========================
 
 	/**
@@ -270,7 +301,7 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 	 */
 	private void initAnnotationMappings(final Map<Class<? extends Annotation>, T> mappings) {
 		final Deque<T> deque = new LinkedList<>();
-		Arrays.stream(element.getDeclaredAnnotations())
+		Arrays.stream(AnnotationUtil.getDeclaredAnnotations(element))
 			.filter(m -> isNeedMapping(mappings, m))
 			.map(annotation -> createMapping(null, annotation))
 			.filter(Objects::nonNull)
@@ -283,40 +314,11 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 			}
 			// 保存该注解，并将其需要处理的元注解也加入队列
 			mappings.put(mapping.annotationType(), mapping);
-			Stream.of(mapping.annotationType().getDeclaredAnnotations())
+			Stream.of(AnnotationUtil.getDeclaredAnnotations(mapping.annotationType()))
 				.map(annotation -> createMapping(mapping, annotation))
 				.filter(Objects::nonNull)
 				.filter(m -> isNeedMapping(mappings, m))
 				.forEach(deque::addLast);
 		}
-	}
-
-	/**
-	 * 比较两个实例是否相等
-	 *
-	 * @param o 对象
-	 * @return 是否
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		MetaAnnotatedElement<?> that = (MetaAnnotatedElement<?>)o;
-		return element.equals(that.element) && mappingFactory.equals(that.mappingFactory);
-	}
-
-	/**
-	 * 获取实例的哈希值
-	 *
-	 * @return 哈希值
-	 */
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(element, mappingFactory);
 	}
 }

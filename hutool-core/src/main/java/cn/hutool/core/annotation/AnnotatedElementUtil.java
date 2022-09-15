@@ -93,11 +93,35 @@ import java.util.stream.Stream;
  *     </li>
  * </ul>
  *
+ * <p><strong>可重复注解支持</strong>
+ * <p>工具类中格式为<em>findAllXXX</em>或<em>getAllXXX</em>格式的方法，
+ * 支持获得{@link AnnotatedElement}上的可重复注解。
+ * 此处的可重复注解定义包括两方面：
+ * <ul>
+ *     <li>
+ *         若{@link AnnotatedElement}存在直接声明的注解，该注解有且仅有一个<em>value</em>属性，
+ *         该属性类型为注解数组，且数组中注解被{@link java.lang.annotation.Repeatable}注解，
+ *         则认为被包括的注解为可重复注解；<br>
+ *         eg:<br>
+ *         A上存在注解<em>X</em>，该注解是一个容器注解，内部可重复注解<em>Y</em>，
+ *         包含解析后，得到注解<em>X</em>与它包含的可重复注解<em>Y</em>；
+ *     </li>
+ *     <li>
+ *         若{@link AnnotatedElement}存在直接声明的注解，该注解与其他根注解皆有相同的元注解，
+ *         则获得元注解时，可以获得多个该相同的元注解。<br>
+ *         eg:<br>
+ *         A上存在注解<em>X</em>、<em>Y</em>，两者皆有元注解<em>Z</em>，
+ *         则通过{@link AnnotatedElement}可以获得两个<em>Z</em>
+ *     </li>
+ * </ul>
+ *
  * @author huangchengxing
  * @see ResolvedAnnotationMapping
  * @see GenericAnnotationMapping
  * @see HierarchicalAnnotatedElements
+ * @see RepeatableMetaAnnotatedElement
  * @see MetaAnnotatedElement
+ * @see RepeatableAnnotationCollector
  * @since 6.0.0
  */
 public class AnnotatedElementUtil {
@@ -111,6 +135,16 @@ public class AnnotatedElementUtil {
 	 * 不支持属性解析的{@link MetaAnnotatedElement}缓存
 	 */
 	private static final Map<AnnotatedElement, MetaAnnotatedElement<GenericAnnotationMapping>> ELEMENT_CACHE = new WeakConcurrentMap<>();
+
+	/**
+	 * 不支持属性解析的{@link RepeatableMetaAnnotatedElement}缓存
+	 */
+	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping>> RESOLVED_REPEATABLE_ELEMENT_CACHE = new WeakConcurrentMap<>();
+
+	/**
+	 * 不支持属性解析的{@link RepeatableMetaAnnotatedElement}缓存
+	 */
+	private static final Map<AnnotatedElement, RepeatableMetaAnnotatedElement<GenericAnnotationMapping>> REPEATABLE_ELEMENT_CACHE = new WeakConcurrentMap<>();
 
 	// region ========== find ==========
 
@@ -140,7 +174,8 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
-	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上，获取所有该类型的注解或元注解
+	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上直接声明的注解、
+	 * 这些注解包含的可重复注解，以及上述所有注解的元注解中获取指定类型注解
 	 *
 	 * @param element {@link AnnotatedElement}
 	 * @param annotationType 注解类型
@@ -148,7 +183,7 @@ public class AnnotatedElementUtil {
 	 * @return 注解对象
 	 */
 	public static <T extends Annotation> T[] findAllAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
-		return toHierarchyMetaElement(element, false)
+		return toHierarchyRepeatableMetaElement(element, false)
 			.getAnnotationsByType(annotationType);
 	}
 
@@ -190,7 +225,8 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
-	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上，获取所有该类型的注解或元注解。<br>
+	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上直接声明的注解、
+	 * 这些注解包含的可重复注解，以及上述所有注解的元注解中获取指定类型注解。<br>
 	 * 得到的注解支持基于{@link Alias}的别名、及子注解对元注解中同名同类型属性进行覆写的特殊机制。
 	 *
 	 * @param element {@link AnnotatedElement}
@@ -199,7 +235,7 @@ public class AnnotatedElementUtil {
 	 * @return 注解对象
 	 */
 	public static <T extends Annotation> T[] findAllResolvedAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
-		return toHierarchyMetaElement(element, true)
+		return toHierarchyRepeatableMetaElement(element, true)
 			.getAnnotationsByType(annotationType);
 	}
 
@@ -221,7 +257,8 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
-	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上获取所有该类型的注解
+	 * 从{@code element}上直接声明的注解、这些注解包含的可重复注解，
+	 * 以及上述所有注解的元注解中获取指定类型注解。
 	 *
 	 * @param element {@link AnnotatedElement}
 	 * @param annotationType 注解类型
@@ -229,7 +266,7 @@ public class AnnotatedElementUtil {
 	 * @return 注解对象
 	 */
 	public static <T extends Annotation> T[] findAllDirectlyAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
-		return toHierarchyMetaElement(element, false)
+		return toHierarchyRepeatableMetaElement(element, false)
 			.getDeclaredAnnotationsByType(annotationType);
 	}
 
@@ -271,7 +308,8 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
-	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上获取所有该类型的注解。<br>
+	 * 从{@code element}所处层级结构的所有{@link AnnotatedElement}上直接声明的注解、
+	 * 这些注解包含的可重复注解，以及上述所有注解的元注解中获取指定类型注解。<br>
 	 * 得到的注解支持基于{@link Alias}的别名、及子注解对元注解中同名同类型属性进行覆写的特殊机制。
 	 *
 	 * @param element {@link AnnotatedElement}
@@ -280,7 +318,7 @@ public class AnnotatedElementUtil {
 	 * @return 注解对象
 	 */
 	public static <T extends Annotation> T[] findAllDirectlyResolvedAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
-		return toHierarchyMetaElement(element, true)
+		return toHierarchyRepeatableMetaElement(element, true)
 			.getDeclaredAnnotationsByType(annotationType);
 	}
 
@@ -325,6 +363,19 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
+	 * 从{@code element}上直接声明的注解、这些注解包含的可重复注解，以及上述所有注解的元注解中获取指定类型注解
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
+	 * @return 注解对象
+	 */
+	public static <T extends Annotation> T[] getAllAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
+		return toRepeatableMetaElement(element, false)
+			.getAnnotationsByType(annotationType);
+	}
+
+	/**
 	 * 从{@code element}上，获取所有的注解或元注解。<br>
 	 * 得到的注解支持基于{@link Alias}的别名机制。
 	 *
@@ -350,6 +401,20 @@ public class AnnotatedElementUtil {
 			.getAnnotations();
 	}
 
+	/**
+	 * 从{@code element}上直接声明的注解、这些注解包含的可重复注解，以及上述所有注解的元注解中获取指定类型注解<br>
+	 * 得到的注解支持基于{@link Alias}的别名机制。
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
+	 * @return 注解对象
+	 */
+	public static <T extends Annotation> T[] getAllResolvedAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
+		return toRepeatableMetaElement(element, true)
+			.getAnnotationsByType(annotationType);
+	}
+
 	// endregion
 
 	// region ========== get & direct ==========
@@ -365,6 +430,19 @@ public class AnnotatedElementUtil {
 	public static <T extends Annotation> T getDirectlyAnnotation(final AnnotatedElement element, final Class<T> annotationType) {
 		return toMetaElement(element, false)
 			.getDeclaredAnnotation(annotationType);
+	}
+
+	/**
+	 * 从{@code element}上直接声明的注解、这些注解包含的可重复注解中获取指定类型注解
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
+	 * @return 注解对象
+	 */
+	public static <T extends Annotation> T[] getAllDirectlyAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
+		return toRepeatableMetaElement(element, false)
+			.getDeclaredAnnotationsByType(annotationType);
 	}
 
 	/**
@@ -404,6 +482,19 @@ public class AnnotatedElementUtil {
 			.getDeclaredAnnotations();
 	}
 
+	/**
+	 * 从{@code element}上直接声明的注解、这些注解包含的可重复注解中获取指定类型注解
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @param annotationType 注解类型
+	 * @param <T>            注解类型
+	 * @return 注解对象
+	 */
+	public static <T extends Annotation> T[] getAllDirectlyResolvedAnnotations(final AnnotatedElement element, final Class<T> annotationType) {
+		return toRepeatableMetaElement(element, true)
+			.getDeclaredAnnotationsByType(annotationType);
+	}
+
 	// endregion
 
 	// region ========== to element ==========
@@ -428,6 +519,29 @@ public class AnnotatedElementUtil {
 			return HierarchicalAnnotatedElements.create(element, (es, e) -> getResolvedMetaElementCache(e));
 		}
 		return HierarchicalAnnotatedElements.create(element, (es, e) -> getMetaElementCache(e));
+	}
+
+	/**
+	 * <p>扫描{@code element}所处层级结构中的{@link AnnotatedElement}，
+	 * 并将其全部转为{@link RepeatableMetaAnnotatedElement}后，
+	 * 再把所有对象合并为{@link HierarchicalAnnotatedElements}。<br>
+	 * 得到的对象可访问{@code element}所处层级结构中所有{@link AnnotatedElement}上的直接声明的注解，
+	 * 这些注解包含的可重复注解，以及上述注解的所有元注解。
+	 *
+	 * @param element  元素
+	 * @param resolved 是否解析注解属性，若为{@code true}则获得的注解将支持属性别名以及属性覆盖机制
+	 * @return {@link HierarchicalAnnotatedElements}实例
+	 * @see #getRepeatableMetaElementCache(AnnotatedElement)
+	 * @see #getResolvedRepeatableMetaElementCache(AnnotatedElement)
+	 */
+	public static AnnotatedElement toHierarchyRepeatableMetaElement(final AnnotatedElement element, final boolean resolved) {
+		if (Objects.isNull(element)) {
+			return emptyElement();
+		}
+		if (resolved) {
+			return HierarchicalAnnotatedElements.create(element, (es, e) -> getResolvedRepeatableMetaElementCache(e));
+		}
+		return HierarchicalAnnotatedElements.create(element, (es, e) -> getRepeatableMetaElementCache(e));
 	}
 
 	/**
@@ -457,6 +571,49 @@ public class AnnotatedElementUtil {
 	public static AnnotatedElement toMetaElement(final AnnotatedElement element, final boolean resolved) {
 		return ObjUtil.defaultIfNull(
 			element, e -> resolved ? getResolvedMetaElementCache(e) : getMetaElementCache(e), emptyElement()
+		);
+	}
+
+	/**
+	 * 将{@link AnnotatedElement}转为{@link RepeatableMetaAnnotatedElement}，
+	 * 得到的对象可访问{@link AnnotatedElement}上的直接声明的注解，这些注解包含的可重复注解，以及上述注解的所有元注解。
+	 *
+	 * @param element  元素
+	 * @param resolved 是否解析注解属性，若为{@code true}则获得的注解将支持属性别名以及属性覆盖机制
+	 * @return {@link AnnotatedElement}实例
+	 * @see #getMetaElementCache(AnnotatedElement)
+	 * @see #getResolvedMetaElementCache(AnnotatedElement)
+	 */
+	public static AnnotatedElement toRepeatableMetaElement(final AnnotatedElement element, final boolean resolved) {
+		return ObjUtil.defaultIfNull(
+			element, e -> resolved ? getResolvedRepeatableMetaElementCache(e) : getRepeatableMetaElementCache(e), emptyElement()
+		);
+	}
+
+	/**
+	 * <p>将{@link AnnotatedElement}转为{@link RepeatableMetaAnnotatedElement}，
+	 * 得到的对象可访问{@link AnnotatedElement}上的直接声明的注解，
+	 * 通过{@code collector}从这些注解获得的可重复注解，以及上述注解的所有元注解。<br>
+	 * 注意：方法将不会通过缓存结果，因此每次调用都需要重新通过反射并获得相关注解。
+	 *
+	 * @param collector 可重复注解收集器，为{@code null}时等同于{@link RepeatableAnnotationCollector#none()}
+	 * @param element   元素
+	 * @param resolved  是否解析注解属性，若为{@code true}则获得的注解将支持属性别名以及属性覆盖机制
+	 * @return {@link AnnotatedElement}实例
+	 */
+	public static AnnotatedElement toRepeatableMetaElement(
+		final AnnotatedElement element, RepeatableAnnotationCollector collector, final boolean resolved) {
+		if (Objects.isNull(element)) {
+			return emptyElement();
+		}
+		collector = ObjUtil.defaultIfNull(collector, RepeatableAnnotationCollector.none());
+		if (resolved) {
+			return RepeatableMetaAnnotatedElement.create(
+				collector, element, (source, annotation) -> ResolvedAnnotationMapping.create((ResolvedAnnotationMapping)source, annotation, true)
+			);
+		}
+		return RepeatableMetaAnnotatedElement.create(
+			collector, element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		);
 	}
 
@@ -500,13 +657,37 @@ public class AnnotatedElementUtil {
 	}
 
 	/**
-	 * 创建一个支持注解解析的{@link MetaAnnotatedElement}
+	 * 创建一个不支持注解解析的{@link MetaAnnotatedElement}
 	 *
 	 * @param element {@link AnnotatedElement}
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
 	private static MetaAnnotatedElement<GenericAnnotationMapping> getMetaElementCache(final AnnotatedElement element) {
 		return ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
+			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
+		));
+	}
+
+	/**
+	 * 创建一个支持注解解析的{@link RepeatableMetaAnnotatedElement}
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @return {@link MetaAnnotatedElement}实例
+	 */
+	private static RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedRepeatableMetaElementCache(final AnnotatedElement element) {
+		return RESOLVED_REPEATABLE_ELEMENT_CACHE.computeIfAbsent(element, ele -> RepeatableMetaAnnotatedElement.create(
+			element, (source, annotation) -> ResolvedAnnotationMapping.create(source, annotation, true)
+		));
+	}
+
+	/**
+	 * 创建一个不支持注解解析的{@link RepeatableMetaAnnotatedElement}
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @return {@link MetaAnnotatedElement}实例
+	 */
+	private static RepeatableMetaAnnotatedElement<GenericAnnotationMapping> getRepeatableMetaElementCache(final AnnotatedElement element) {
+		return REPEATABLE_ELEMENT_CACHE.computeIfAbsent(element, ele -> RepeatableMetaAnnotatedElement.create(
 			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		));
 	}

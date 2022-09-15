@@ -172,7 +172,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	@Override
 	public Annotation[] getDeclaredAnnotations() {
 		return getElementMappings().stream()
-			.map(AnnotatedElement::getDeclaredAnnotations)
+			.map(AnnotationUtil::getDeclaredAnnotations)
 			.filter(ArrayUtil::isNotEmpty)
 			.flatMap(Stream::of)
 			.toArray(Annotation[]::new);
