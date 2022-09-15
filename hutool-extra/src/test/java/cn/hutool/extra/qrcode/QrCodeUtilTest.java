@@ -4,17 +4,15 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -155,7 +153,7 @@ public class QrCodeUtilTest {
 				.setHeight(0).setMargin(1);
 		final String asciiArt = QrCodeUtil.generateAsAsciiArt("https://hutool.cn/",qrConfig);
 		Assert.notNull(asciiArt);
-		Console.log(asciiArt);
+		//Console.log(asciiArt);
 	}
 
 	@Test
