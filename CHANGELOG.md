@@ -20,6 +20,7 @@
 * 【core   】     修复computeIfAbsent问题（issue#I5PTN3@Gitee）
 * 【extra  】     修复Ftp中路径问题（issue#I5R2DE@Gitee）
 * 【core   】     修复ConcurrentHashMap.computeIfAbsent缺陷导致的问题
+* 【core   】     修复DateUtil.parseUTC时对-的处理问题（issue#2612@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
