@@ -231,9 +231,9 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testMapToDouble() {
 		final double[] array = wrap(1d, 2d, 3d).mapToDouble(Double::intValue).toArray();
-		Assert.assertEquals(1d, array[0], 0.01);
-		Assert.assertEquals(2d, array[1], 0.01);
-		Assert.assertEquals(3d, array[2], 0.01);
+		Assert.assertEquals(1d, array[0], 0);
+		Assert.assertEquals(2d, array[1], 0);
+		Assert.assertEquals(3d, array[2], 0);
 	}
 
 	@Test
@@ -251,9 +251,9 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testFlatMapToDouble() {
 		final double[] array = wrap(1d, 2d, 3d).flatMapToDouble(DoubleStream::of).toArray();
-		Assert.assertEquals(1d, array[0], 0.01);
-		Assert.assertEquals(2d, array[1], 0.01);
-		Assert.assertEquals(3d, array[2], 0.01);
+		Assert.assertEquals(1d, array[0], 0);
+		Assert.assertEquals(2d, array[1], 0);
+		Assert.assertEquals(3d, array[2], 0);
 	}
 
 	@Test

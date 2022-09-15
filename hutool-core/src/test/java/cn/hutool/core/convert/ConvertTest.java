@@ -165,7 +165,7 @@ public class ConvertTest {
 	public void toNumberTest() {
 		final Object a = "12.45";
 		final Number number = Convert.toNumber(a);
-		Assert.assertEquals(12.45D, number.doubleValue(), 2);
+		Assert.assertEquals(12.45D, number.doubleValue(), 0);
 	}
 
 	@Test
@@ -368,28 +368,28 @@ public class ConvertTest {
 		final String hex2 = "CD0CCB43";
 		final byte[] value = HexUtil.decodeHex(hex2);
 		final float f = Convert.toFloat(value);
-		Assert.assertEquals(406.1F, f, 2);
+		Assert.assertEquals(406.1F, f, 0);
 	}
 
 	@Test
 	public void floatToDoubleTest(){
 		final float a = 0.45f;
 		final double b = Convert.toDouble(a);
-		Assert.assertEquals(a, b, 5);
+		Assert.assertEquals(0.45D, b, 0);
 	}
 
 	@Test
 	public void floatToDoubleAddrTest(){
 		final float a = 0.45f;
 		final DoubleAdder adder = Convert.convert(DoubleAdder.class, a);
-		Assert.assertEquals(a, adder.doubleValue(), 5);
+		Assert.assertEquals(0.45D, adder.doubleValue(), 0);
 	}
 
 	@Test
 	public void doubleToFloatTest(){
 		final double a = 0.45f;
 		final float b = Convert.toFloat(a);
-		Assert.assertEquals(a, b, 5);
+		Assert.assertEquals(a, b, 0);
 	}
 
 	@Test

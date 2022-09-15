@@ -97,7 +97,7 @@ public class ByteUtilTest {
 
 		final byte[] bytesLong = ByteUtil.floatToBytes(f1, ByteOrder.LITTLE_ENDIAN);
 		final float f2 = ByteUtil.bytesToFloat(bytesLong, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(f1, f2, 2);
+		Assert.assertEquals(f1, f2, 0);
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class ByteUtilTest {
 		final byte[] bytesLong = ByteUtil.floatToBytes(f1, ByteOrder.BIG_ENDIAN);
 		final float f2 = ByteUtil.bytesToFloat(bytesLong, ByteOrder.BIG_ENDIAN);
 
-		Assert.assertEquals(f1, f2, 2);
+		Assert.assertEquals(f1, f2, 0);
 	}
 
 	@Test

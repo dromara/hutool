@@ -21,7 +21,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = ExpressionUtil.eval("a-(b-c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = engine.eval("a-(b-c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = engine.eval("a-(b-c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = engine.eval("a-(b-c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = engine.eval("#a-(#b-#c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class ExpressionUtilTest {
 				.set("b", 45)
 				.set("c", -199.100);
 		final Object eval = engine.eval("a-(b-c)", dict);
-		Assert.assertEquals(-143.8, (double)eval, 2);
+		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
 }

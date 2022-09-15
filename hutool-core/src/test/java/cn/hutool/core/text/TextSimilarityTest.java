@@ -16,7 +16,7 @@ public class TextSimilarityTest {
 		final String b = "一个文本，独一无二的文本";
 
 		final double degree = TextSimilarity.similar(a, b);
-		Assert.assertEquals(0.8571428571428571D, degree, 16);
+		Assert.assertEquals(0.8461538462D, degree, 0.0000000001);
 
 		final String similarPercent = TextSimilarity.similar(a, b, 2);
 		Assert.assertEquals("84.62%", similarPercent);
@@ -28,7 +28,7 @@ public class TextSimilarityTest {
 		final String b = "一个文本，独一无二的文本,#,>>?#$%^%$&^&^%";
 
 		final double degree = TextSimilarity.similar(a, b);
-		Assert.assertEquals(0.8571428571428571D, degree, 16);
+		Assert.assertEquals(0.8461538462D, degree, 0.0001);
 
 		final String similarPercent = TextSimilarity.similar(a, b, 2);
 		Assert.assertEquals("84.62%", similarPercent);
