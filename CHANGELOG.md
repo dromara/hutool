@@ -12,6 +12,7 @@
 * 【core   】     新增AnsiColors(改自Spring Boot)、AnsiColorWrapper，优化QrCodeUtil（pr#778@Gitee）
 * 【core   】     TemplateUtil的实现类增加getRawEngine方法（issues#2530@Github）
 * 【core   】     ImgUtil中颜色相关方法剥离到ColorUtil中
+* 【core   】     增加SafeConcurrentHashMap
 
 ### 🐞Bug修复
 * 【core   】     修复ObjectUtil.defaultIfXXX中NPE问题（pr#2603@Github）

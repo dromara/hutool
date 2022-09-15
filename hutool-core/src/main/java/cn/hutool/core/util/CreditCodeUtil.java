@@ -1,9 +1,9 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -36,7 +36,7 @@ public class CreditCodeUtil {
 	private static final Map<Character, Integer> CODE_INDEX_MAP;
 
 	static {
-		CODE_INDEX_MAP = new ConcurrentHashMap<>();
+		CODE_INDEX_MAP = new SafeConcurrentHashMap<>(BASE_CODE_ARRAY.length);
 		for (int i = 0; i < BASE_CODE_ARRAY.length; i++) {
 			CODE_INDEX_MAP.put(BASE_CODE_ARRAY[i], i);
 		}

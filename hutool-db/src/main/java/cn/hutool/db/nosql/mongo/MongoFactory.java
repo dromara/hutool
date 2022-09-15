@@ -1,13 +1,13 @@
 package cn.hutool.db.nosql.mongo;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.setting.Setting;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link MongoDS}工厂类，用于创建
@@ -24,7 +24,7 @@ public class MongoFactory {
 	/**
 	 * 数据源池
 	 */
-	private static final Map<String, MongoDS> DS_MAP = new ConcurrentHashMap<>();
+	private static final Map<String, MongoDS> DS_MAP = new SafeConcurrentHashMap<>();
 
 	// JVM关闭前关闭MongoDB连接
 	static {
@@ -42,14 +42,7 @@ public class MongoFactory {
 	 */
 	public static MongoDS getDS(String host, int port) {
 		final String key = host + ":" + port;
-		MongoDS ds = DS_MAP.get(key);
-		if (null == ds) {
-			// 没有在池中加入之
-			ds = new MongoDS(host, port);
-			DS_MAP.put(key, ds);
-		}
-
-		return ds;
+		return DS_MAP.computeIfAbsent(key, (k)->new MongoDS(host, port));
 	}
 
 	/**

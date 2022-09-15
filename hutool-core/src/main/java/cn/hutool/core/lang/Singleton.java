@@ -1,14 +1,13 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.lang.func.Func0;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public final class Singleton {
 
-	private static final ConcurrentHashMap<String, Object> POOL = new ConcurrentHashMap<>();
+	private static final SafeConcurrentHashMap<String, Object> POOL = new SafeConcurrentHashMap<>();
 
 	private Singleton() {
 	}
@@ -53,7 +52,7 @@ public final class Singleton {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Func0<T> supplier) {
-		return (T) MapUtil.computeIfAbsent(POOL, key, (k)-> supplier.callWithRuntimeException());
+		return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
 	}
 
 	/**

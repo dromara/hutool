@@ -1,6 +1,7 @@
 package cn.hutool.core.text;
 
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,9 +62,9 @@ public class AntPathMatcher {
 
 	private volatile Boolean cachePatterns;
 
-	private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<>(256);
+	private final Map<String, String[]> tokenizedPatternCache = new SafeConcurrentHashMap<>(256);
 
-	private final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<>(256);
+	private final Map<String, AntPathStringMatcher> stringMatcherCache = new SafeConcurrentHashMap<>(256);
 
 
 	/**

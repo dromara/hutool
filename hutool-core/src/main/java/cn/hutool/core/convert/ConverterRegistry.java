@@ -36,6 +36,7 @@ import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -74,7 +75,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
@@ -172,7 +172,7 @@ public class ConverterRegistry implements Serializable {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
-					customConverterMap = new ConcurrentHashMap<>();
+					customConverterMap = new SafeConcurrentHashMap<>();
 				}
 			}
 		}
@@ -384,7 +384,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换器
 	 */
 	private ConverterRegistry defaultConverter() {
-		defaultConverterMap = new ConcurrentHashMap<>();
+		defaultConverterMap = new SafeConcurrentHashMap<>();
 
 		// 原始类型转换器
 		defaultConverterMap.put(int.class, new PrimitiveConverter(int.class));

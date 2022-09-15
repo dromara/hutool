@@ -1,13 +1,13 @@
 package cn.hutool.setting.profile;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Profile可以让我们定义一系列的配置信息，然后指定其激活条件。<br>
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <li>develop =》 ${classpath}/develop/db.setting</li>
  * <li>production =》 ${classpath}/production/db.setting</li>
  * </ol>
- * 
+ *
  * @author Looly
  *
  */
@@ -36,7 +36,7 @@ public class Profile implements Serializable {
 	/** 是否使用变量 */
 	private boolean useVar;
 	/** 配置文件缓存 */
-	private final Map<String, Setting> settingMap = new ConcurrentHashMap<>();
+	private final Map<String, Setting> settingMap = new SafeConcurrentHashMap<>();
 
 	// -------------------------------------------------------------------------------- Constructor start
 	/**
@@ -48,7 +48,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 构造，编码UTF-8，不使用变量
-	 * 
+	 *
 	 * @param profile 环境
 	 */
 	public Profile(String profile) {
@@ -57,7 +57,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param profile 环境
 	 * @param charset 编码
 	 * @param useVar 是否使用变量
@@ -71,7 +71,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 获取当前环境下的配置文件
-	 * 
+	 *
 	 * @param name 文件名，如果没有扩展名，默认为.setting
 	 * @return 当前环境下配置文件
 	 */
@@ -87,7 +87,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 设置环境
-	 * 
+	 *
 	 * @param profile 环境
 	 * @return 自身
 	 */
@@ -98,7 +98,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 设置编码
-	 * 
+	 *
 	 * @param charset 编码
 	 * @return 自身
 	 */
@@ -109,7 +109,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 设置是否使用变量
-	 * 
+	 *
 	 * @param useVar 变量
 	 * @return 自身
 	 */
@@ -120,7 +120,7 @@ public class Profile implements Serializable {
 
 	/**
 	 * 清空所有环境的配置文件
-	 * 
+	 *
 	 * @return 自身
 	 */
 	public Profile clear() {
@@ -131,7 +131,7 @@ public class Profile implements Serializable {
 	// -------------------------------------------------------------------------------- Private method start
 	/**
 	 * 修正文件名
-	 * 
+	 *
 	 * @param name 文件名
 	 * @return 修正后的文件名
 	 */
