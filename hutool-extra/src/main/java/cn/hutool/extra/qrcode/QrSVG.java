@@ -61,7 +61,7 @@ public class QrSVG {
 
 		}
 
-		StringBuilder result = StrUtil.builder();
+		final StringBuilder result = StrUtil.builder();
 		result.append("<svg width=\"").append(qrWidth).append("\" height=\"").append(qrHeight).append("\" \n");
 		if (backColor != null) {
 			Color back = new Color(backColor, true);
