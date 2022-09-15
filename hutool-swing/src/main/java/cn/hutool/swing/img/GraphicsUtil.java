@@ -1,6 +1,7 @@
 package cn.hutool.swing.img;
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.swing.img.color.ColorUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

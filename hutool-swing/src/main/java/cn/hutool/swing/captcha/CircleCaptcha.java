@@ -2,7 +2,7 @@ package cn.hutool.swing.captcha;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.swing.img.ColorUtil;
+import cn.hutool.swing.img.color.ColorUtil;
 import cn.hutool.swing.img.GraphicsUtil;
 
 import java.awt.Color;

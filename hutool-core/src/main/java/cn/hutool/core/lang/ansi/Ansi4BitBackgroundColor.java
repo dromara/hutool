@@ -113,9 +113,42 @@ public enum Ansi4BitBackgroundColor implements AnsiElement {
 		return this.code;
 	}
 
+	/**
+	 * 获取ANSI颜色代码
+	 *
+	 * @param isBackground 是否背景色
+	 * @return 颜色代码
+	 */
+	public int getCode(boolean isBackground) {
+		return isBackground ? this.code : this.code - 10;
+	}
+
+	/**
+	 * 获取背景色对应的前景色
+	 *
+	 * @return 前景色
+	 */
+	public Ansi4BitColor asForeground() {
+		return Ansi4BitColor.of(getCode(false));
+	}
+
 	@Override
 	public String toString() {
 		return StrUtil.toString(this.code);
 	}
 
+	/**
+	 * 根据code查找对应的Ansi4BitBackgroundColor
+	 *
+	 * @param code Ansi 4bit 颜色代码
+	 * @return Ansi4BitBackgroundColor
+	 */
+	public static Ansi4BitBackgroundColor of(int code) {
+		for (Ansi4BitBackgroundColor item : Ansi4BitBackgroundColor.values()) {
+			if (item.getCode() == code) {
+				return item;
+			}
+		}
+		throw new IllegalArgumentException(StrUtil.format("No matched Ansi4BitBackgroundColor instance,code={}", code));
+	}
 }

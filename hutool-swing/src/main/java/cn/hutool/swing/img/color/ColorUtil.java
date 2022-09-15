@@ -1,6 +1,9 @@
-package cn.hutool.swing.img;
+package cn.hutool.swing.img.color;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.ansi.Ansi4BitColor;
+import cn.hutool.core.lang.ansi.Ansi8BitColor;
+import cn.hutool.core.lang.ansi.AnsiElement;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -192,6 +195,30 @@ public class ColorUtil {
 			random = RandomUtil.getRandom();
 		}
 		return new Color(random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND), random.nextInt(RGB_COLOR_BOUND));
+	}
+
+	/**
+	 * AWT的{@link Color}颜色转换为ANSI颜色，由于取最接近颜色，故可能有色差
+	 *
+	 * @param color        {@link Color}
+	 * @param is8Bit       是否8bit的ANSI颜色
+	 * @param isBackground 是否背景色
+	 * @return ANSI颜色
+	 */
+	public static AnsiElement toAnsiColor(Color color, boolean is8Bit, boolean isBackground) {
+		if (is8Bit) {
+			final Ansi8BitColor ansiElement = (Ansi8BitColor) Ansi8bitMapping.INSTANCE.lookupClosest(color);
+			if (isBackground) {
+				return ansiElement.asBackground();
+			}
+			return ansiElement;
+		} else {
+			final Ansi4BitColor ansiElement = (Ansi4BitColor) Ansi4bitMapping.INSTANCE.lookupClosest(color);
+			if (isBackground) {
+				return ansiElement.asBackground();
+			}
+			return ansiElement;
+		}
 	}
 
 	/**

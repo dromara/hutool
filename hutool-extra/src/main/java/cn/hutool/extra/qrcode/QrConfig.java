@@ -25,9 +25,9 @@ public class QrConfig {
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
 
-	/** 宽 */
+	/** 宽度 */
 	protected int width;
-	/** 长 */
+	/** 高度 */
 	protected int height;
 	/** 前景色（二维码颜色） */
 	protected int foreColor = BLACK;

@@ -2,6 +2,7 @@ package cn.hutool.swing.img;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.swing.img.color.ColorUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

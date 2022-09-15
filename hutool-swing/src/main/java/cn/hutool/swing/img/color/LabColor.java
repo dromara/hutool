@@ -1,4 +1,4 @@
-package cn.hutool.swing.img;
+package cn.hutool.swing.img.color;
 
 import cn.hutool.core.lang.Assert;
 

@@ -44,7 +44,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content    内容
-	 * @param qrConfig   二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
 	 * @param imageType  图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
@@ -57,7 +57,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
@@ -70,7 +70,7 @@ public class QrCodeUtil {
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param logo      logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
@@ -88,7 +88,7 @@ public class QrCodeUtil {
 	 * </p>
 	 *
 	 * @param content   内容
-	 * @param qrConfig  二维码配置，包括长、宽、边距、颜色等
+	 * @param qrConfig  二维码配置，包括宽度、高度、边距、颜色等
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @return 图片 Base64 编码字符串
 	 */
@@ -116,7 +116,7 @@ public class QrCodeUtil {
 	 * 生成PNG格式的二维码图片，以byte[]形式表示
 	 *
 	 * @param content 内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 图片的byte[]
 	 * @since 4.1.2
 	 */
@@ -145,7 +145,7 @@ public class QrCodeUtil {
 	 * 生成二维码到文件，二维码图片格式取决于文件的扩展名
 	 *
 	 * @param content    文本内容
-	 * @param config     二维码配置，包括长、宽、边距、颜色等
+	 * @param config     二维码配置，包括宽度、高度、边距、颜色等
 	 * @param targetFile 目标文件，扩展名决定输出格式
 	 * @return 目标文件
 	 * @since 4.1.2
@@ -174,7 +174,7 @@ public class QrCodeUtil {
 	 * 生成二维码到输出流
 	 *
 	 * @param content   文本内容
-	 * @param config    二维码配置，包括长、宽、边距、颜色等
+	 * @param config    二维码配置，包括宽度、高度、边距、颜色等
 	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param out       目标流
 	 * @since 4.1.2
@@ -213,7 +213,7 @@ public class QrCodeUtil {
 	 * 生成二维码图片
 	 *
 	 * @param content 文本内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.2
 	 */
@@ -227,7 +227,7 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式，可选二维码、条形码等
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return 二维码图片（黑白）
 	 * @since 4.1.14
 	 */
@@ -277,7 +277,7 @@ public class QrCodeUtil {
 	 * 将文本内容编码为二维码
 	 *
 	 * @param content 文本内容
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */
@@ -303,7 +303,7 @@ public class QrCodeUtil {
 	 *
 	 * @param content 文本内容
 	 * @param format  格式枚举
-	 * @param config  二维码配置，包括长、宽、边距、颜色等
+	 * @param config  二维码配置，包括宽度、高度、边距、颜色等
 	 * @return {@link BitMatrix}
 	 * @since 4.1.2
 	 */

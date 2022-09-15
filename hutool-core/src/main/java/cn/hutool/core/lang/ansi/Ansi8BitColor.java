@@ -70,6 +70,30 @@ public class Ansi8BitColor implements AnsiElement {
 		return this.code;
 	}
 
+	/**
+	 * 转换为前景色
+	 *
+	 * @return 前景色
+	 */
+	public Ansi8BitColor asForeground() {
+		if (PREFIX_FORE.equals(this.prefix)) {
+			return this;
+		}
+		return Ansi8BitColor.foreground(this.code);
+	}
+
+	/**
+	 * 转换为背景色
+	 *
+	 * @return 背景色
+	 */
+	public Ansi8BitColor asBackground() {
+		if (PREFIX_BACK.equals(this.prefix)) {
+			return this;
+		}
+		return Ansi8BitColor.background(this.code);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

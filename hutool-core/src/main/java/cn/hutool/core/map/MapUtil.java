@@ -1275,6 +1275,7 @@ public class MapUtil extends MapGetUtil {
 	 * @param map             Map，一般用于线程安全的Map
 	 * @param key             键
 	 * @param mappingFunction 值计算函数
+	 * @return 值
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
 	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {
