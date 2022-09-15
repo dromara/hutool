@@ -30,7 +30,7 @@ public class QrConfig {
 	/** 高度 */
 	protected int height;
 	/** 前景色（二维码颜色） */
-	protected int foreColor = BLACK;
+	protected Integer foreColor = BLACK;
 	/** 背景色，默认白色，null表示透明 */
 	protected Integer backColor = WHITE;
 	/** 边距0~4 */
@@ -134,7 +134,9 @@ public class QrConfig {
 	 * @since 5.1.1
 	 */
 	public QrConfig setForeColor(final Color foreColor) {
-		if(null != foreColor){
+		if(null == foreColor){
+			this.foreColor = null;
+		} else {
 			this.foreColor = foreColor.getRGB();
 		}
 		return this;
