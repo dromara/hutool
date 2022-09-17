@@ -1,6 +1,5 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Spliterators;
 import java.util.function.Function;
@@ -52,9 +52,10 @@ public class StreamUtil {
 	 */
 	public static <T> Stream<T> of(Iterable<T> iterable, boolean parallel) {
 		Assert.notNull(iterable, "Iterable must be not null!");
-		return StreamSupport.stream(
-				Spliterators.spliterator(CollUtil.toCollection(iterable), 0),
-				parallel);
+
+		return iterable instanceof Collection ?
+				((Collection<T>) iterable).stream() :
+				StreamSupport.stream(iterable.spliterator(), parallel);
 	}
 
 	/**
