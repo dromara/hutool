@@ -29,6 +29,11 @@ public class FileNameUtil {
 	public static final String EXT_JAR = ".jar";
 
 	/**
+	 * 在Jar中的路径jar的扩展名形式
+	 */
+	public static final String EXT_JAR_PATH = ".jar!";
+
+	/**
 	 * 类Unix路径分隔符
 	 */
 	public static final char UNIX_SEPARATOR = CharUtil.SLASH;
@@ -40,7 +45,7 @@ public class FileNameUtil {
 	/**
 	 * Windows下文件名中的无效字符
 	 */
-	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
+	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|\r\n]");
 
 	/**
 	 * 特殊后缀

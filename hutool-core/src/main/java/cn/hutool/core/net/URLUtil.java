@@ -1,15 +1,15 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.url.UrlQuery;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -438,7 +438,7 @@ public class URLUtil {
 	public static boolean isJarFileURL(final URL url) {
 		Assert.notNull(url, "URL must be not null");
 		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
-				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
+				url.getPath().toLowerCase().endsWith(FileNameUtil.EXT_JAR));
 	}
 
 	/**

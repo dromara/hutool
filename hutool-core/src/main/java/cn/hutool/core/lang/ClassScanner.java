@@ -3,8 +3,8 @@ package cn.hutool.core.lang;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.iter.EnumerationIter;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
@@ -298,14 +298,14 @@ public class ClassScanner implements Serializable {
 	private void scanFile(final File file, final String rootDir) {
 		if (file.isFile()) {
 			final String fileName = file.getAbsolutePath();
-			if (fileName.endsWith(FileUtil.CLASS_EXT)) {
+			if (fileName.endsWith(FileNameUtil.EXT_CLASS)) {
 				final String className = fileName//
 						// 8为classes长度，fileName.length() - 6为".class"的长度
 						.substring(rootDir.length(), fileName.length() - 6)//
 						.replace(File.separatorChar, CharUtil.DOT);//
 				//加入满足条件的类
 				addIfAccept(className);
-			} else if (fileName.endsWith(FileUtil.JAR_FILE_EXT)) {
+			} else if (fileName.endsWith(FileNameUtil.EXT_JAR)) {
 				try {
 					scanJar(new JarFile(file));
 				} catch (final IOException e) {
@@ -332,7 +332,7 @@ public class ClassScanner implements Serializable {
 		for (final JarEntry entry : new EnumerationIter<>(jar.entries())) {
 			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
 			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
-				if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
+				if (name.endsWith(FileNameUtil.EXT_CLASS) && false == entry.isDirectory()) {
 					final String className = name//
 							.substring(0, name.length() - 6)//
 							.replace(CharUtil.SLASH, CharUtil.DOT);//

@@ -69,22 +69,6 @@ import java.util.zip.Checksum;
 public class FileUtil extends PathUtil {
 
 	/**
-	 * Class文件扩展名
-	 */
-	public static final String CLASS_EXT = FileNameUtil.EXT_CLASS;
-	/**
-	 * Jar文件扩展名
-	 */
-	public static final String JAR_FILE_EXT = FileNameUtil.EXT_JAR;
-	/**
-	 * 在Jar中的路径jar的扩展名形式
-	 */
-	public static final String JAR_PATH_EXT = ".jar!";
-	/**
-	 * 当Path为文件形式时, path会加入一个表示文件的前缀
-	 */
-	public static final String PATH_FILE_PRE = URLUtil.FILE_URL_PREFIX;
-	/**
 	 * 文件路径分隔符<br>
 	 * 在Unix和Linux下 是{@code '/'}; 在Windows下是 {@code '\'}
 	 */
@@ -94,6 +78,7 @@ public class FileUtil extends PathUtil {
 	 * 在Unix和Linux下 是{@code ':'}; 在Windows下是 {@code ';'}
 	 */
 	public static final String PATH_SEPARATOR = File.pathSeparator;
+
 	/**
 	 * 绝对路径判断正则
 	 */
@@ -271,7 +256,7 @@ public class FileUtil extends PathUtil {
 		if (path == null) {
 			return new ArrayList<>(0);
 		}
-		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
+		int index = path.lastIndexOf(FileNameUtil.EXT_JAR_PATH);
 		if (index < 0) {
 			// 普通目录
 			final List<String> paths = new ArrayList<>();
@@ -287,7 +272,7 @@ public class FileUtil extends PathUtil {
 		// jar文件
 		path = getAbsolutePath(path);
 		// jar文件中的路径
-		index = index + FileUtil.JAR_FILE_EXT.length();
+		index = index + FileNameUtil.EXT_JAR.length();
 		JarFile jarFile = null;
 		try {
 			jarFile = new JarFile(path.substring(0, index));
