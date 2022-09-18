@@ -321,7 +321,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		final Map<R, List<T>> pId2ChildrenMap = of(nodeList).group(pIdGetter);
 		List<T> parents = ListUtil.of();
 
-		for (T node : nodeList) {
+		of(nodeList, true).forEach(node -> {
 			if (parentPredicate.test(node)) {
 				parents.add(node);
 			}
@@ -330,7 +330,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 			if (children != null) {
 				childrenSetter.accept(node, children);
 			}
-		}
+		});
 		return parents;
 	}
 
