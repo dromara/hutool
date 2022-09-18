@@ -1,6 +1,7 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -307,17 +308,13 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 */
 
 	public <R extends Comparable<R>> List<T> toTree(
-		final Function<T, R> idGetter,
-		final Function<T, R> pIdGetter,
-		final BiConsumer<T, List<T>> childrenSetter,
-		final Predicate<T> parentPredicate) {
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final SerFunction<T, Boolean> parentPredicate) {
 		Objects.requireNonNull(parentPredicate);
 		final List<T> list = toList();
-		final List<T> parents = EasyStream.of(list).filter(e ->
-						// 此处是为了适配 parentPredicate.test空指针 情况
-						// 因为Predicate.test的返回值是boolean，所以如果 e -> null 这种返回null的情况，会直接抛出NPE
-						Opt.ofTry(() -> parentPredicate.test(e)).filter(Boolean::booleanValue).isPresent())
-				.toList();
+		final List<T> parents = EasyStream.of(list).filter(e -> Boolean.TRUE.equals(parentPredicate.apply(e))).toList();
 		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, EasyStream.of(list).group(pIdGetter), parents);
 	}
 
