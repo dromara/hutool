@@ -449,13 +449,13 @@ public class UrlBuilderTest {
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void issues2503Test() throws URISyntaxException {
-		String duplicate = UrlBuilder.ofHttp("127.0.0.1:8080")
+		final String duplicate = UrlBuilder.ofHttp("127.0.0.1:8080")
 				.addQuery("param[0].field", "编码")
 				.toURI()
 				.toString();
 		Assert.assertEquals("http://127.0.0.1:8080?param%5B0%5D.field=%E7%BC%96%E7%A0%81", duplicate);
 
-		String normal = UrlBuilder.ofHttp("127.0.0.1:8080")
+		final String normal = UrlBuilder.ofHttp("127.0.0.1:8080")
 				.addQuery("param[0].field", "编码")
 				.toURL()
 				.toURI()

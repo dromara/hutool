@@ -20,7 +20,7 @@ public class QrAsciiArt {
 	 * @param matrix {@link BitMatrix}
 	 * @param qrConfig {@link QrConfig}
 	 */
-	public QrAsciiArt(BitMatrix matrix, QrConfig qrConfig) {
+	public QrAsciiArt(final BitMatrix matrix, final QrConfig qrConfig) {
 		this.matrix = matrix;
 		this.qrConfig = qrConfig;
 	}
@@ -34,12 +34,12 @@ public class QrAsciiArt {
 		final AnsiElement foreground = qrConfig.foreColor == null ? null : ColorUtil.toAnsiColor(qrConfig.foreColor, true, false);
 		final AnsiElement background = qrConfig.backColor == null ? null : ColorUtil.toAnsiColor(qrConfig.backColor, true, true);
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i <= height; i += 2) {
-			StringBuilder rowBuilder = new StringBuilder();
+			final StringBuilder rowBuilder = new StringBuilder();
 			for (int j = 0; j < width; j++) {
-				boolean tp = matrix.get(i, j);
-				boolean bt = i + 1 >= height || matrix.get(i + 1, j);
+				final boolean tp = matrix.get(i, j);
+				final boolean bt = i + 1 >= height || matrix.get(i + 1, j);
 				if (tp && bt) {
 					rowBuilder.append(' ');//'\u0020'
 				} else if (tp) {

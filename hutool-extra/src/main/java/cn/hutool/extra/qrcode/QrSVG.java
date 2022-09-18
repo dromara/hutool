@@ -2,6 +2,7 @@ package cn.hutool.extra.qrcode;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.swing.img.ImgUtil;
+import cn.hutool.swing.img.color.ColorUtil;
 import com.google.zxing.common.BitMatrix;
 
 import java.awt.Color;
@@ -22,7 +23,7 @@ public class QrSVG {
 	 * @param matrix {@link BitMatrix}
 	 * @param qrConfig {@link QrConfig}
 	 */
-	public QrSVG(BitMatrix matrix, QrConfig qrConfig) {
+	public QrSVG(final BitMatrix matrix, final QrConfig qrConfig) {
 		this.matrix = matrix;
 		this.qrConfig = qrConfig;
 	}
@@ -35,9 +36,9 @@ public class QrSVG {
 		final int ratio = qrConfig.ratio;
 
 		final StringBuilder sb = new StringBuilder();
-		int qrWidth = matrix.getWidth();
+		final int qrWidth = matrix.getWidth();
 		int qrHeight = matrix.getHeight();
-		int moduleHeight = (qrHeight == 1) ? qrWidth / 2 : 1;
+		final int moduleHeight = (qrHeight == 1) ? qrWidth / 2 : 1;
 		for (int y = 0; y < qrHeight; y++) {
 			for (int x = 0; x < qrWidth; x++) {
 				if (matrix.get(x, y)) {
@@ -69,16 +70,16 @@ public class QrSVG {
 		final StringBuilder result = StrUtil.builder();
 		result.append("<svg width=\"").append(qrWidth).append("\" height=\"").append(qrHeight).append("\" \n");
 		if (backColor != null) {
-			Color back = new Color(backColor, true);
-			result.append("style=\"background-color:rgba(").append(back.getRed()).append(",").append(back.getGreen()).append(",").append(back.getBlue()).append(",").append(back.getAlpha()).append(")\"\n");
+			final Color back = new Color(backColor, true);
+			result.append("style=\"background-color:").append(ColorUtil.toCssRgba(back)).append("\"\n");
 		}
 		result.append("viewBox=\"0 0 ").append(qrWidth).append(" ").append(qrHeight).append("\" \n");
 		result.append("xmlns=\"http://www.w3.org/2000/svg\" \n");
 		result.append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" >\n");
 		result.append("<path d=\"").append(sb).append("\" ");
 		if (foreColor != null) {
-			Color fore = new Color(foreColor, true);
-			result.append("stroke=\"rgba(").append(fore.getRed()).append(",").append(fore.getGreen()).append(",").append(fore.getBlue()).append(",").append(fore.getAlpha()).append(")\"");
+			final Color fore = new Color(foreColor, true);
+			result.append("stroke=\"").append(ColorUtil.toCssRgba(fore)).append("\"");
 		}
 		result.append(" /> \n");
 		if (StrUtil.isNotBlank(logoBase64)) {

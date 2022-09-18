@@ -21,7 +21,7 @@ public class QrEncoder implements Encoder<CharSequence, BitMatrix> {
 	 * @param config {@link QrConfig}
 	 * @return QrEncoder
 	 */
-	public static QrEncoder of(QrConfig config) {
+	public static QrEncoder of(final QrConfig config) {
 		return new QrEncoder(config);
 	}
 
@@ -32,12 +32,12 @@ public class QrEncoder implements Encoder<CharSequence, BitMatrix> {
 	 *
 	 * @param config {@link QrConfig}
 	 */
-	public QrEncoder(QrConfig config) {
+	public QrEncoder(final QrConfig config) {
 		this.config = ObjUtil.defaultIfNull(config, QrConfig::of);
 	}
 
 	@Override
-	public BitMatrix encode(CharSequence content) {
+	public BitMatrix encode(final CharSequence content) {
 		final MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
 		final BitMatrix bitMatrix;

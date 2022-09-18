@@ -4,8 +4,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.ansi.Ansi4BitColor;
 import cn.hutool.core.lang.ansi.Ansi8BitColor;
 import cn.hutool.core.lang.ansi.AnsiElement;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.Color;
@@ -22,10 +22,67 @@ import java.util.Random;
  */
 public class ColorUtil {
 
+	private static final Map<String, Color> COLOR_MAPPING;
+	static {
+		final Map<String, Color> colorMap = MapUtil
+				.builder("BLACK", Color.BLACK)
+				.put("WHITE", Color.WHITE)
+				.put("LIGHTGRAY", Color.LIGHT_GRAY)
+				.put("LIGHT_GRAY", Color.LIGHT_GRAY)
+				.put("GRAY", Color.GRAY)
+				.put("DARKGRAY", Color.DARK_GRAY)
+				.put("DARK_GRAY", Color.DARK_GRAY)
+				.put("RED", Color.RED)
+				.put("PINK", Color.PINK)
+				.put("ORANGE", Color.ORANGE)
+				.put("YELLOW", Color.YELLOW)
+				.put("GREEN", Color.GREEN)
+				.put("MAGENTA", Color.MAGENTA)
+				.put("CYAN", Color.CYAN)
+				.put("BLUE", Color.BLUE)
+				// 暗金色
+				.put("DARKGOLD", hexToColor("#9e7e67"))
+				.put("DARK_GOLD", hexToColor("#9e7e67"))
+				// 亮金色
+				.put("LIGHTGOLD", hexToColor("#ac9c85"))
+				.put("LIGHT_GOLD", hexToColor("#ac9c85"))
+				.build();
+		COLOR_MAPPING = MapUtil.view(colorMap);
+	}
+
 	/**
 	 * RGB颜色范围上限
 	 */
 	private static final int RGB_COLOR_BOUND = 256;
+
+	/**
+	 * 将颜色转换为CSS的rgba表示形式，输出结果格式为：rgba(red, green, blue)
+	 * @param color AWT颜色
+	 * @return rgb(red, green, blue)
+	 */
+	public static String toCssRgb(final Color color){
+		return StrUtil.builder()
+				.append("rgb(")
+				.append(color.getRed()).append(",")
+				.append(color.getGreen()).append(",")
+				.append(color.getBlue()).append(")")
+				.toString();
+	}
+
+	/**
+	 * 将颜色转换为CSS的rgba表示形式，输出结果格式为：rgba(red, green, blue, alpha)
+	 * @param color AWT颜色
+	 * @return rgba(red, green, blue, alpha)
+	 */
+	public static String toCssRgba(final Color color){
+		return StrUtil.builder()
+				.append("rgba(")
+				.append(color.getRed()).append(",")
+				.append(color.getGreen()).append(",")
+				.append(color.getBlue()).append(",")
+				.append(color.getAlpha() / 255D).append(")")
+				.toString();
+	}
 
 	/**
 	 * Color对象转16进制表示，例如#fcf6d6
@@ -34,7 +91,7 @@ public class ColorUtil {
 	 * @return 16进制的颜色值，例如#fcf6d6
 	 * @since 4.1.14
 	 */
-	public static String toHex(Color color) {
+	public static String toHex(final Color color) {
 		return toHex(color.getRed(), color.getGreen(), color.getBlue());
 	}
 
@@ -46,7 +103,7 @@ public class ColorUtil {
 	 * @param b 蓝(B)
 	 * @return 返回字符串形式的 十六进制颜色码 如
 	 */
-	public static String toHex(int r, int g, int b) {
+	public static String toHex(final int r, final int g, final int b) {
 		// rgb 小于 255
 		if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
 			throw new IllegalArgumentException("RGB must be 0~255!");
@@ -61,6 +118,7 @@ public class ColorUtil {
 	 * 1. 颜色的英文名（大小写皆可）
 	 * 2. 16进制表示，例如：#fcf6d6或者$fcf6d6
 	 * 3. RGB形式，例如：13,148,252
+	 * 4. RGBA形式，例如：13,148,252,1
 	 * </pre>
 	 * <p>
 	 * 方法来自：com.lnwazg.kit
@@ -75,57 +133,40 @@ public class ColorUtil {
 		}
 		colorName = colorName.toUpperCase();
 
-		if ("BLACK".equals(colorName)) {
-			return Color.BLACK;
-		} else if ("WHITE".equals(colorName)) {
-			return Color.WHITE;
-		} else if ("LIGHTGRAY".equals(colorName) || "LIGHT_GRAY".equals(colorName)) {
-			return Color.LIGHT_GRAY;
-		} else if ("GRAY".equals(colorName)) {
-			return Color.GRAY;
-		} else if ("DARKGRAY".equals(colorName) || "DARK_GRAY".equals(colorName)) {
-			return Color.DARK_GRAY;
-		} else if ("RED".equals(colorName)) {
-			return Color.RED;
-		} else if ("PINK".equals(colorName)) {
-			return Color.PINK;
-		} else if ("ORANGE".equals(colorName)) {
-			return Color.ORANGE;
-		} else if ("YELLOW".equals(colorName)) {
-			return Color.YELLOW;
-		} else if ("GREEN".equals(colorName)) {
-			return Color.GREEN;
-		} else if ("MAGENTA".equals(colorName)) {
-			return Color.MAGENTA;
-		} else if ("CYAN".equals(colorName)) {
-			return Color.CYAN;
-		} else if ("BLUE".equals(colorName)) {
-			return Color.BLUE;
-		} else if ("DARKGOLD".equals(colorName)) {
-			// 暗金色
-			return hexToColor("#9e7e67");
-		} else if ("LIGHTGOLD".equals(colorName)) {
-			// 亮金色
-			return hexToColor("#ac9c85");
-		} else if (StrUtil.startWith(colorName, '#')) {
+		// 预定义颜色别名
+		final Color color = COLOR_MAPPING.get(colorName);
+		if(null != color){
+			return color;
+		}
+
+		// 16进制
+		if (StrUtil.startWith(colorName, '#')) {
 			return hexToColor(colorName);
 		} else if (StrUtil.startWith(colorName, '$')) {
 			// 由于#在URL传输中无法传输，因此用$代替#
 			return hexToColor("#" + colorName.substring(1));
-		} else {
-			// rgb值
-			final List<String> rgb = StrUtil.split(colorName, ',');
-			if (3 == rgb.size()) {
-				final Integer r = Convert.toInt(rgb.get(0));
-				final Integer g = Convert.toInt(rgb.get(1));
-				final Integer b = Convert.toInt(rgb.get(2));
-				if (false == ArrayUtil.hasNull(r, g, b)) {
-					return new Color(r, g, b);
-				}
-			} else {
-				return null;
-			}
 		}
+
+		// RGB值和RGBA
+		final List<String> rgb = StrUtil.split(colorName, ',');
+		final int size = rgb.size();
+
+		if(3 == size){
+			// RGB
+			final Integer[] rgbIntegers = Convert.toIntArray(rgb);
+			return new Color(rgbIntegers[0], rgbIntegers[1], rgbIntegers[2]);
+		}
+		if(4 == size){
+			// RGBA
+			final Float[] rgbFloats = Convert.toFloatArray(rgb);
+			Float a = rgbFloats[3];
+			if(a < 1){
+				// 识别CSS形式
+				a *= 255;
+			}
+			return new Color(rgbFloats[0], rgbFloats[1], rgbFloats[2], a);
+		}
+
 		return null;
 	}
 
@@ -136,7 +177,7 @@ public class ColorUtil {
 	 * @return {@link Color}
 	 * @since 4.1.14
 	 */
-	public static Color getColor(int rgb) {
+	public static Color getColor(final int rgb) {
 		return new Color(rgb);
 	}
 
@@ -147,7 +188,7 @@ public class ColorUtil {
 	 * @return {@link Color}
 	 * @since 4.1.14
 	 */
-	public static Color hexToColor(String hex) {
+	public static Color hexToColor(final String hex) {
 		return getColor(Integer.parseInt(StrUtil.removePrefix(hex, "#"), 16));
 	}
 
@@ -158,18 +199,20 @@ public class ColorUtil {
 	 * @param color2 颜色2
 	 * @return 叠加后的颜色
 	 */
-	public static Color add(Color color1, Color color2) {
-		double r1 = color1.getRed();
-		double g1 = color1.getGreen();
-		double b1 = color1.getBlue();
-		double a1 = color1.getAlpha();
-		double r2 = color2.getRed();
-		double g2 = color2.getGreen();
-		double b2 = color2.getBlue();
-		double a2 = color2.getAlpha();
-		int r = (int) ((r1 * a1 / 255 + r2 * a2 / 255) / (a1 / 255 + a2 / 255));
-		int g = (int) ((g1 * a1 / 255 + g2 * a2 / 255) / (a1 / 255 + a2 / 255));
-		int b = (int) ((b1 * a1 / 255 + b2 * a2 / 255) / (a1 / 255 + a2 / 255));
+	public static Color add(final Color color1, final Color color2) {
+		final double r1 = color1.getRed();
+		final double g1 = color1.getGreen();
+		final double b1 = color1.getBlue();
+		final double a1 = color1.getAlpha();
+
+		final double r2 = color2.getRed();
+		final double g2 = color2.getGreen();
+		final double b2 = color2.getBlue();
+		final double a2 = color2.getAlpha();
+
+		final int r = (int) ((r1 * a1 / 255 + r2 * a2 / 255) / (a1 / 255 + a2 / 255));
+		final int g = (int) ((g1 * a1 / 255 + g2 * a2 / 255) / (a1 / 255 + a2 / 255));
+		final int b = (int) ((b1 * a1 / 255 + b2 * a2 / 255) / (a1 / 255 + a2 / 255));
 		return new Color(r, g, b);
 	}
 
@@ -205,7 +248,7 @@ public class ColorUtil {
 	 * @param isBackground 是否背景色
 	 * @return ANSI颜色
 	 */
-	public static AnsiElement toAnsiColor(int rgb, boolean is8Bit, boolean isBackground) {
+	public static AnsiElement toAnsiColor(final int rgb, final boolean is8Bit, final boolean isBackground) {
 		return toAnsiColor(getColor(rgb), is8Bit, isBackground);
 	}
 
@@ -217,7 +260,7 @@ public class ColorUtil {
 	 * @param isBackground 是否背景色
 	 * @return ANSI颜色
 	 */
-	public static AnsiElement toAnsiColor(Color color, boolean is8Bit, boolean isBackground) {
+	public static AnsiElement toAnsiColor(final Color color, final boolean is8Bit, final boolean isBackground) {
 		if (is8Bit) {
 			final Ansi8BitColor ansiElement = (Ansi8BitColor) Ansi8bitMapping.INSTANCE.lookupClosest(color);
 			if (isBackground) {
@@ -241,16 +284,16 @@ public class ColorUtil {
 	 * @return {@link String} #ffffff
 	 * @since 5.6.7
 	 */
-	public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
+	public static String getMainColor(final BufferedImage image, final int[]... rgbFilters) {
 		int r, g, b;
-		Map<String, Long> countMap = new HashMap<>();
-		int width = image.getWidth();
-		int height = image.getHeight();
-		int minx = image.getMinX();
-		int miny = image.getMinY();
+		final Map<String, Long> countMap = new HashMap<>();
+		final int width = image.getWidth();
+		final int height = image.getHeight();
+		final int minx = image.getMinX();
+		final int miny = image.getMinY();
 		for (int i = minx; i < width; i++) {
 			for (int j = miny; j < height; j++) {
-				int pixel = image.getRGB(i, j);
+				final int pixel = image.getRGB(i, j);
 				r = (pixel & 0xff0000) >> 16;
 				g = (pixel & 0xff00) >> 8;
 				b = (pixel & 0xff);
@@ -262,9 +305,9 @@ public class ColorUtil {
 		}
 		String maxColor = null;
 		long maxCount = 0;
-		for (Map.Entry<String, Long> entry : countMap.entrySet()) {
-			String key = entry.getKey();
-			Long count = entry.getValue();
+		for (final Map.Entry<String, Long> entry : countMap.entrySet()) {
+			final String key = entry.getKey();
+			final Long count = entry.getValue();
 			if (count > maxCount) {
 				maxColor = key;
 				maxCount = count;
@@ -289,9 +332,9 @@ public class ColorUtil {
 	 * @param rgbFilters 颜色过滤器
 	 * @return 是否匹配
 	 */
-	private static boolean matchFilters(int r, int g, int b, int[]... rgbFilters) {
+	private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters) {
 		if (rgbFilters != null && rgbFilters.length > 0) {
-			for (int[] rgbFilter : rgbFilters) {
+			for (final int[] rgbFilter : rgbFilters) {
 				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
 					return true;
 				}

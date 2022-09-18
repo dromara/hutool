@@ -41,7 +41,7 @@ public class QrCodeUtil {
 	 * @param logoBase64 logo 图片的 base64 编码
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64(String content, QrConfig qrConfig, String targetType, String logoBase64) {
+	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String targetType, final String logoBase64) {
 		return generateAsBase64DataUri(content, qrConfig, targetType, Base64.decode(logoBase64));
 	}
 
@@ -54,7 +54,7 @@ public class QrCodeUtil {
 	 * @param logo       logo 图片的byte[]
 	 * @return 图片 Base64 编码字符串
 	 */
-	public static String generateAsBase64DataUri(String content, QrConfig qrConfig, String targetType, byte[] logo) {
+	public static String generateAsBase64DataUri(final String content, final QrConfig qrConfig, final String targetType, final byte[] logo) {
 		return generateAsBase64DataUri(content, qrConfig.setImg(ImgUtil.toImage(logo)), targetType);
 	}
 
@@ -293,7 +293,7 @@ public class QrCodeUtil {
 	 * @return SVG矢量图（字符串）
 	 * @since 5.8.6
 	 */
-	public static String generateAsSvg(String content, QrConfig qrConfig) {
+	public static String generateAsSvg(final String content, final QrConfig qrConfig) {
 		return toSVG(encode(content, qrConfig), qrConfig);
 	}
 
@@ -304,7 +304,7 @@ public class QrCodeUtil {
 	 * @param config {@link QrConfig}
 	 * @return SVG矢量图（字符串）
 	 */
-	public static String toSVG(BitMatrix matrix, QrConfig config) {
+	public static String toSVG(final BitMatrix matrix, final QrConfig config) {
 		return new QrSVG(matrix, config).toString();
 	}
 
@@ -316,7 +316,7 @@ public class QrCodeUtil {
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
-	public static String generateAsAsciiArt(String content, QrConfig qrConfig) {
+	public static String generateAsAsciiArt(final String content, final QrConfig qrConfig) {
 		return toAsciiArt(encode(content, qrConfig), qrConfig);
 	}
 
@@ -327,7 +327,7 @@ public class QrCodeUtil {
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
-	public static String toAsciiArt(BitMatrix bitMatrix, QrConfig qrConfig) {
+	public static String toAsciiArt(final BitMatrix bitMatrix, final QrConfig qrConfig) {
 		return new QrAsciiArt(bitMatrix, qrConfig).toString();
 	}
 }
