@@ -425,11 +425,6 @@ public class UrlBuilderTest {
 	}
 
 	@Test
-	public void issue2242Test() {
-
-	}
-
-	@Test
 	public void issue2243Test() {
 		// https://github.com/dromara/hutool/issues/2243
 		// 如果用户已经做了%编码，不应该重复编码
