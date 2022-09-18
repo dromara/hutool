@@ -1,10 +1,10 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -317,21 +317,27 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		Objects.requireNonNull(parentPredicate);
 
 		List<T> nodeList = toList();
+		// 根据 父id 分组，让key为null的组中全是根节点
+		final Function<T, R> pIdClassifier = node -> {
+			R parentId = pIdGetter.apply(node);
+			// 父id为null（另类的根节点），或者是根节点
+			if (parentId == null || parentPredicate.test(node)) {
+				return null;
+			}
+			return parentId;
+		};
 		// 父id 关联的 子节点列表
-		final Map<R, List<T>> pId2ChildrenMap = of(nodeList).group(pIdGetter);
-		List<T> parents = ListUtil.of();
+		final Map<R, List<T>> pId2ChildrenMap = of(nodeList).group(pIdClassifier);
 
 		of(nodeList, true).forEach(node -> {
-			if (parentPredicate.test(node)) {
-				parents.add(node);
-			}
 			// 设置 该节点的子节点列表
 			final List<T> children = pId2ChildrenMap.get(idGetter.apply(node));
 			if (children != null) {
 				childrenSetter.accept(node, children);
 			}
 		});
-		return parents;
+		// 返回根节点列表
+		return pId2ChildrenMap.getOrDefault(null, Collections.emptyList());
 	}
 
 	/**
