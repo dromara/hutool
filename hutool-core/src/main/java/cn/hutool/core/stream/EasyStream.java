@@ -313,11 +313,8 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		final Predicate<T> parentPredicate) {
 		Objects.requireNonNull(parentPredicate);
 		final List<T> list = toList();
-		final List<T> parents = EasyStream.of(list).filter(e ->
-						// 此处是为了适配 parentPredicate.test空指针 情况
-						// 因为Predicate.test的返回值是boolean，所以如果 e -> null 这种返回null的情况，会直接抛出NPE
-						Opt.ofTry(() -> parentPredicate.test(e)).filter(Boolean::booleanValue).isPresent())
-				.toList();
+		// 根节点列表
+		final List<T> parents = EasyStream.of(list).filter(parentPredicate).toList();
 		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, EasyStream.of(list).group(pIdGetter), parents);
 	}
 

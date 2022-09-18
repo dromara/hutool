@@ -476,7 +476,7 @@ public class EasyStreamTest {
 							Student.builder().id(8L).name("jobob").parentId(5L).build()
 					)
 					// just 4 lambda ,top by condition
-					.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
+					.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::isMatchParent);
 			Assert.assertEquals(asList(
 					Student.builder().id(1L).name("dromara").matchParent(true)
 							.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
@@ -540,7 +540,7 @@ public class EasyStreamTest {
 		private Long id;
 		private Long parentId;
 		private List<Student> children;
-		private Boolean matchParent = false;
+		private boolean matchParent;
 
 		@Tolerate
 		public Student() {
