@@ -487,7 +487,7 @@ public class CollectorUtil {
 				childrenSetter.accept(parent, children);
 				recursiveRef.get().accept(children);
 			});
-			List<T> parents = parentFactory.apply(pIdValuesMap);
+			final List<T> parents = parentFactory.apply(pIdValuesMap);
 			if (!parents.isEmpty()) {
 				recursiveRef.set(recursive);
 				recursiveRef.get().accept(parents);
