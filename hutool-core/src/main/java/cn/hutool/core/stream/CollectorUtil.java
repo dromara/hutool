@@ -370,7 +370,7 @@ public class CollectorUtil {
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点，内置一个递归，注意内存开销
+	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -394,7 +394,7 @@ public class CollectorUtil {
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == pidValue} 来判断树的根节点，可以为null，内置一个递归，注意内存开销
+	 * <p>将集合转换为树，默认用 {@code parentId == pidValue} 来判断树的根节点，可以为null
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -421,7 +421,7 @@ public class CollectorUtil {
 	}
 
 	/**
-	 * 将集合转换为树，自定义根节点的判断条件,内置一个递归，注意内存开销
+	 * 将集合转换为树，自定义根节点的判断条件
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
 	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -462,7 +462,7 @@ public class CollectorUtil {
 	}
 
 	/**
-	 * toTree的内联函数，内置一个小递归(没错，lambda可以写递归)
+	 * toTree的内联函数
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}

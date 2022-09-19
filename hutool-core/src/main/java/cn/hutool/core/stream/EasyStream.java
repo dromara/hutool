@@ -265,7 +265,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点，内置一个递归，注意内存开销
+	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -288,7 +288,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * 将集合转换为树，自定义根节点的判断条件,内置一个递归，注意内存开销
+	 * 将集合转换为树，自定义根节点的判断条件
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
 	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
