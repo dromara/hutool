@@ -445,7 +445,7 @@ public class CollectorUtil {
 			final BiConsumer<T, List<T>> childrenSetter,
 			final Predicate<T> parentPredicate,
 			final boolean isParallel) {
-		List<T> parents = new ArrayList<>();
+		final List<T> parents = new ArrayList<>();
 		return Collectors.collectingAndThen(groupingBy(pIdGetter,
 						new SimpleCollector<>(ArrayList::new,
 								(acc, e) -> {
