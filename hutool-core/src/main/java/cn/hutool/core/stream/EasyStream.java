@@ -4,9 +4,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.*;
@@ -267,7 +265,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
+	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点，内置一个递归，注意内存开销
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -280,18 +278,17 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * List<Student> studentTree = EasyStream.of(students).
 	 * 	toTree(Student::getId, Student::getParentId, Student::setChildren);
 	 * }</pre>
+	 * @author VampireAchao
 	 */
 	public <R extends Comparable<R>> List<T> toTree(
-		final Function<T, R> idGetter,
-		final Function<T, R> pIdGetter,
-		final BiConsumer<T, List<T>> childrenSetter) {
-		// 使用 parentId == null 判断是否为根节点
-		final Predicate<T> parentPredicate = node -> null == pIdGetter.apply(node);
-		return toTree(idGetter, pIdGetter, childrenSetter, parentPredicate);
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter) {
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, isParallel()));
 	}
 
 	/**
-	 * 将集合转换为树，自定义根节点的判断条件
+	 * 将集合转换为树，自定义根节点的判断条件,内置一个递归，注意内存开销
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
 	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
@@ -305,39 +302,14 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * List<Student> studentTree = EasyStream.of(students).
 	 * 	.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
 	 * }</pre>
+	 * @author VampireAchao
 	 */
 	public <R extends Comparable<R>> List<T> toTree(
-		final Function<T, R> idGetter,
-		final Function<T, R> pIdGetter,
-		final BiConsumer<T, List<T>> childrenSetter,
-		final Predicate<T> parentPredicate) {
-		Objects.requireNonNull(idGetter);
-		Objects.requireNonNull(pIdGetter);
-		Objects.requireNonNull(childrenSetter);
-		Objects.requireNonNull(parentPredicate);
-
-		List<T> nodeList = toList();
-		// 根据 父id 分组，让key为null的组中全是根节点
-		final Function<T, R> pIdClassifier = node -> {
-			// 该节点是根节点, 分到 父id 为null的组中
-			if (parentPredicate.test(node)) {
-				return null;
-			}
-			// 返回 父id
-			return pIdGetter.apply(node);
-		};
-		// 父id 关联的 子节点列表
-		final Map<R, List<T>> pId2ChildrenMap = of(nodeList).group(pIdClassifier);
-
-		of(nodeList, true).forEach(node -> {
-			// 设置 该节点的子节点列表
-			final List<T> children = pId2ChildrenMap.get(idGetter.apply(node));
-			if (children != null) {
-				childrenSetter.accept(node, children);
-			}
-		});
-		// 返回根节点列表
-		return pId2ChildrenMap.getOrDefault(null, Collections.emptyList());
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final Predicate<T> parentPredicate) {
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, parentPredicate, isParallel()));
 	}
 
 	/**
