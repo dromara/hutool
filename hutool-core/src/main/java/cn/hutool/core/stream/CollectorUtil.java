@@ -444,7 +444,7 @@ public class CollectorUtil {
 			final Function<T, R> pIdGetter,
 			final BiConsumer<T, List<T>> childrenSetter,
 			final Predicate<T> parentPredicate,
-			boolean isParallel) {
+			final boolean isParallel) {
 		List<T> parents = new ArrayList<>();
 		return Collectors.collectingAndThen(groupingBy(pIdGetter,
 						new SimpleCollector<>(ArrayList::new,
@@ -479,7 +479,7 @@ public class CollectorUtil {
 			final Function<T, R> idGetter,
 			final Function<Map<R, List<T>>, List<T>> parentFactory,
 			final BiConsumer<T, List<T>> childrenSetter,
-			boolean isParallel) {
+			final boolean isParallel) {
 		return pIdValuesMap -> {
 			final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
 			final Consumer<List<T>> recursive = parents -> EasyStream.of(parents, isParallel).forEach(parent -> {
