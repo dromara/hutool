@@ -54,7 +54,7 @@ public class StreamUtil {
 		Assert.notNull(iterable, "Iterable must be not null!");
 
 		return iterable instanceof Collection ?
-				((Collection<T>) iterable).stream() :
+				parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
 				StreamSupport.stream(iterable.spliterator(), parallel);
 	}
 

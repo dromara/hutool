@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -25,21 +26,27 @@ public class StreamUtilTest {
 		Assert.assertThrows(IllegalArgumentException.class, () -> StreamUtil.of((Iterator<Object>) null));
 	}
 
+	@SuppressWarnings({"RedundantOperationOnEmptyContainer", "RedundantCollectionOperation"})
 	@Test
-	public void streamTestEmptyIterator() {
+	public void streamTestEmptyListToIterator() {
 		assertStreamIsEmpty(StreamUtil.of(new ArrayList<>().iterator()));
 	}
 
 	@Test
+	public void streamTestEmptyIterator() {
+		assertStreamIsEmpty(StreamUtil.of(Collections.emptyIterator()));
+	}
+
+	@Test
 	public void streamTestOrdinaryIterator() {
-		ArrayList<Integer> arrayList = CollUtil.newArrayList(1, 2, 3);
+		final ArrayList<Integer> arrayList = CollUtil.newArrayList(1, 2, 3);
 		Assert.assertArrayEquals(new Integer[]{1, 2, 3}, StreamUtil.of(arrayList.iterator()).toArray());
 
-		HashSet<Integer> hashSet = CollUtil.newHashSet(1, 2, 3);
+		final HashSet<Integer> hashSet = CollUtil.newHashSet(1, 2, 3);
 		Assert.assertEquals(hashSet, StreamUtil.of(hashSet.iterator()).collect(Collectors.toSet()));
 	}
 
-	void assertStreamIsEmpty(Stream<?> stream) {
+	void assertStreamIsEmpty(final Stream<?> stream) {
 		Assert.assertNotNull(stream);
 		Assert.assertEquals(0, stream.toArray().length);
 	}
