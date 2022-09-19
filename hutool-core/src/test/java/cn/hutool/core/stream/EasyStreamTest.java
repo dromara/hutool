@@ -182,7 +182,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(collect2, distinctBy2);
 
 		Assert.assertEquals(
-			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
+				4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
 		);
 	}
 
@@ -477,7 +477,7 @@ public class EasyStreamTest {
 							Student.builder().id(8L).name("jobob").parentId(5L).build()
 					)
 					// just 4 lambda ,top by condition
-					.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
+					.toTree(Student::getId, Student::getParentId, Student::setChildren, s -> BooleanUtil.isTrue(s.getMatchParent()));
 			Assert.assertEquals(asList(
 					Student.builder().id(1L).name("dromara").matchParent(true)
 							.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
@@ -546,10 +546,6 @@ public class EasyStreamTest {
 		@Tolerate
 		public Student() {
 			// this is an accessible parameterless constructor.
-		}
-
-		public Boolean getMatchParent() {
-			return BooleanUtil.isTrue(matchParent);
 		}
 	}
 
