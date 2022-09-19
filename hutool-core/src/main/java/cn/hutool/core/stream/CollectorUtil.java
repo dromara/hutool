@@ -1,7 +1,6 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -481,18 +480,14 @@ public class CollectorUtil {
 			final BiConsumer<T, List<T>> childrenSetter,
 			final boolean isParallel) {
 		return pIdValuesMap -> {
-			final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
-			final Consumer<List<T>> recursive = parents -> EasyStream.of(parents, isParallel).forEach(parent -> {
-				final List<T> children = pIdValuesMap.get(idGetter.apply(parent));
-				childrenSetter.accept(parent, children);
-				recursiveRef.get().accept(children);
-			});
-			final List<T> parents = parentFactory.apply(pIdValuesMap);
-			if (false == parents.isEmpty()) {
-				recursiveRef.set(recursive);
-				recursiveRef.get().accept(parents);
-			}
-			return parents;
+			EasyStream.of(pIdValuesMap.values(), isParallel).flat(Function.identity())
+					.forEach(value -> {
+						final List<T> children = pIdValuesMap.get(idGetter.apply(value));
+						if (children != null) {
+							childrenSetter.accept(value, children);
+						}
+					});
+			return parentFactory.apply(pIdValuesMap);
 		};
 	}
 
