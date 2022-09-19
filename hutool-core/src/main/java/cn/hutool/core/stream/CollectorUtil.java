@@ -399,6 +399,7 @@ public class CollectorUtil {
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
 	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param pidValue       pid的值
 	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
 	 * @param isParallel     是否并行去组装，数据量特别大时使用
 	 * @param <T>            此处是元素类型
@@ -428,6 +429,7 @@ public class CollectorUtil {
 	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
 	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
+	 * @param isParallel      是否并行处理
 	 * @param <T>             此处是元素类型
 	 * @param <R>             此处是id、parentId的泛型限制
 	 * @return list 组装好的树 <br>
