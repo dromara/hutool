@@ -95,11 +95,11 @@ public class MurmurHash implements Serializable{
 		int k1 = 0;
 		switch (length - idx) {
 		case 3:
-			k1 ^= data[idx + 2] << 16;
+			k1 ^= (data[idx + 2] & 0xff) << 16;
 		case 2:
-			k1 ^= data[idx + 1] << 8;
+			k1 ^= (data[idx + 1] & 0xff) << 8;
 		case 1:
-			k1 ^= data[idx];
+			k1 ^= (data[idx] & 0xff);
 
 			// mix functions
 			k1 *= C1_32;
