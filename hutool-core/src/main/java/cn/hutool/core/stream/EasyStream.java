@@ -319,12 +319,12 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		List<T> nodeList = toList();
 		// 根据 父id 分组，让key为null的组中全是根节点
 		final Function<T, R> pIdClassifier = node -> {
-			R parentId = pIdGetter.apply(node);
-			// 父id为null（另类的根节点），或者是根节点
-			if (parentId == null || parentPredicate.test(node)) {
+			// 该节点是根节点, 分到 父id 为null的组中
+			if (parentPredicate.test(node)) {
 				return null;
 			}
-			return parentId;
+			// 返回 父id
+			return pIdGetter.apply(node);
 		};
 		// 父id 关联的 子节点列表
 		final Map<R, List<T>> pId2ChildrenMap = of(nodeList).group(pIdClassifier);
