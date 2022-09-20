@@ -40,7 +40,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testToSet() {
 		final List<Integer> list = asList(1, 2, 3);
-		Set<String> toSet = wrap(list).map(String::valueOf).toSet();
+		final Set<String> toSet = wrap(list).map(String::valueOf).toSet();
 		Assert.assertEquals(new HashSet<>(asList("1", "2", "3")), toSet);
 	}
 
@@ -636,7 +636,7 @@ public class AbstractEnhancedWrappedStreamTest {
 		List<String> zip = wrap(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 
-		zip = wrap((Stream<? extends Object>) EasyStream.iterate(1, i -> i + 1)).limit(10).zip(list, (e1, e2) -> e1 + "." + e2).toList();
+		zip = this.wrap((Stream<Integer>)EasyStream.iterate(1, i -> i + 1)).limit(10).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 	}
 
@@ -663,15 +663,15 @@ public class AbstractEnhancedWrappedStreamTest {
 	}
 
 	@SafeVarargs
-	private static <T> Wrapper<T> wrap(T... array) {
+	private final <T> Wrapper<T> wrap(final T... array) {
 		return new Wrapper<>(Stream.of(array));
 	}
 
-	private static <T> Wrapper<T> wrap(Iterable<T> iterable) {
+	private <T> Wrapper<T> wrap(final Iterable<T> iterable) {
 		return new Wrapper<>(StreamSupport.stream(iterable.spliterator(), false));
 	}
 
-	private static <T> Wrapper<T> wrap(Stream<T> stream) {
+	private <T> Wrapper<T> wrap(final Stream<T> stream) {
 		return new Wrapper<>(stream);
 	}
 
@@ -683,12 +683,12 @@ public class AbstractEnhancedWrappedStreamTest {
 		 * @param stream 包装的流对象
 		 * @throws NullPointerException 当{@code unwrap}为{@code null}时抛出
 		 */
-		protected Wrapper(Stream<T> stream) {
+		protected Wrapper(final Stream<T> stream) {
 			super(stream);
 		}
 
 		@Override
-		public Wrapper<T> wrap(Stream<T> source) {
+		public Wrapper<T> wrap(final Stream<T> source) {
 			return new Wrapper<>(source);
 		}
 
