@@ -17,10 +17,27 @@ public class PunyCodeTest {
 	}
 
 	@Test
+	public void encodeDecodeTest2(){
+		// 无需编码和解码
+		String text = "Hutool";
+		String strPunyCode = PunyCode.encode(text);
+		Assert.assertEquals("Hutool", strPunyCode);
+	}
+
+	@Test
 	public void encodeEncodeDomainTest(){
 		String domain = "赵新虎.中国";
 		String strPunyCode = PunyCode.encodeDomain(domain);
 		String decode = PunyCode.decodeDomain(strPunyCode);
 		Assert.assertEquals(decode, domain);
+	}
+
+	@Test
+	public void encodeEncodeDomainTest2(){
+		String domain = "赵新虎.com";
+		String strPunyCode = PunyCode.encodeDomain(domain);
+		Assert.assertEquals("xn--efvz93e52e.com", strPunyCode);
+		String decode = PunyCode.decodeDomain(strPunyCode);
+		Assert.assertEquals(domain, decode);
 	}
 }
