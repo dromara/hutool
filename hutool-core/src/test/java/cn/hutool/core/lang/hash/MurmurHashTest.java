@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MurMurHashTest {
+public class MurmurHashTest {
 
 	@Test
 	public void hash32Test() {
