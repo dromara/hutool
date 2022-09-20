@@ -470,7 +470,7 @@ public class HashUtil {
 	 * @return hash值
 	 * @since 4.3.3
 	 */
-	public static long[] murmur128(final byte[] data) {
+	public static Number128 murmur128(final byte[] data) {
 		return MurmurHash.hash128(data);
 	}
 

@@ -4,20 +4,20 @@ import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MurMurHashTest {
+public class MurmurHashTest {
 
 	@Test
 	public void hash32Test() {
 		int hv = MurmurHash.hash32(StrUtil.utf8Bytes("你"));
-		Assert.assertEquals(222142701, hv);
+		Assert.assertEquals(-1898877446, hv);
 
 		hv = MurmurHash.hash32(StrUtil.utf8Bytes("你好"));
-		Assert.assertEquals(1188098267, hv);
+		Assert.assertEquals(337357348, hv);
 
 		hv = MurmurHash.hash32(StrUtil.utf8Bytes("见到你很高兴"));
-		Assert.assertEquals(-1898490321, hv);
+		Assert.assertEquals(1101306141, hv);
 		hv = MurmurHash.hash32(StrUtil.utf8Bytes("我们将通过生成一个大的文件的方式来检验各种方法的执行效率因为这种方式在结束的时候需要执行文件"));
-		Assert.assertEquals(-1713131054, hv);
+		Assert.assertEquals(-785444229, hv);
 	}
 
 	@Test
