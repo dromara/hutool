@@ -453,7 +453,9 @@ public class CollectorUtil {
 									if (parentPredicate.test(e)) {
 										parents.add(e);
 									}
-									acc.add(e);
+									if (idGetter.apply(e) != null) {
+										acc.add(e);
+									}
 								},
 								(left, right) -> {
 									left.addAll(right);

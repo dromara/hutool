@@ -22,47 +22,47 @@ import java.util.stream.Stream;
  */
 public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T, S>> extends WrappedStream<T, S> {
 
-    // region ============ to collection ============
+	// region ============ to collection ============
 
-    /**
-     * 转换为{@link ArrayList}
-     *
-     * @return 集合
-	 * @see #toColl(Supplier)
-     */
-    default List<T> toList() {
-        return this.toColl(ArrayList::new);
-    }
-
-    /**
-     * 换为不可变集合
-     *
-     * @return 集合
+	/**
+	 * 转换为{@link ArrayList}
+	 *
+	 * @return 集合
 	 * @see #toColl(Supplier)
 	 */
-    default List<T> toUnmodifiableList() {
-        return Collections.unmodifiableList(this.toList());
-    }
+	default List<T> toList() {
+		return this.toColl(ArrayList::new);
+	}
 
-    /**
-     * 转换为HashSet
-     *
-     * @return 集合
+	/**
+	 * 换为不可变集合
+	 *
+	 * @return 集合
 	 * @see #toColl(Supplier)
 	 */
-    default Set<T> toSet() {
-        return this.toColl(HashSet::new);
-    }
+	default List<T> toUnmodifiableList() {
+		return Collections.unmodifiableList(this.toList());
+	}
 
-    /**
-     * 换为不可变集合
-     *
-     * @return 集合
+	/**
+	 * 转换为HashSet
+	 *
+	 * @return 集合
 	 * @see #toColl(Supplier)
 	 */
-    default Set<T> toUnmodifiableSet() {
-        return Collections.unmodifiableSet(this.toSet());
-    }
+	default Set<T> toSet() {
+		return this.toColl(HashSet::new);
+	}
+
+	/**
+	 * 换为不可变集合
+	 *
+	 * @return 集合
+	 * @see #toColl(Supplier)
+	 */
+	default Set<T> toUnmodifiableSet() {
+		return Collections.unmodifiableSet(this.toSet());
+	}
 
 	/**
 	 * 转换成集合
@@ -76,103 +76,103 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 		return unwrap().collect(Collectors.toCollection(collectionFactory));
 	}
 
-    // endregion
+	// endregion
 
-    // region ============ to map ============
+	// region ============ to map ============
 
-    /**
-     * 转换为map，key为给定操作执行后的返回值,value为当前元素
-     *
-     * @param keyMapper 指定的key操作
-     * @param <K>       key类型
-     * @return map
+	/**
+	 * 转换为map，key为给定操作执行后的返回值,value为当前元素
+	 *
+	 * @param keyMapper 指定的key操作
+	 * @param <K>       key类型
+	 * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
-     */
-    default <K> Map<K, T> toMap(final Function<? super T, ? extends K> keyMapper) {
-        return this.toMap(keyMapper, Function.identity());
-    }
+	 */
+	default <K> Map<K, T> toMap(final Function<? super T, ? extends K> keyMapper) {
+		return this.toMap(keyMapper, Function.identity());
+	}
 
-    /**
-     * 转换为map，key,value为给定操作执行后的返回值
-     *
-     * @param keyMapper   指定的key操作
-     * @param valueMapper 指定value操作
-     * @param <K>         key类型
-     * @param <U>         value类型
-     * @return map
+	/**
+	 * 转换为map，key,value为给定操作执行后的返回值
+	 *
+	 * @param keyMapper   指定的key操作
+	 * @param valueMapper 指定value操作
+	 * @param <K>         key类型
+	 * @param <U>         value类型
+	 * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
-     */
-    default <K, U> Map<K, U> toMap(
-		final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
-        return this.toMap(keyMapper, valueMapper, (l, r) -> r);
-    }
+	 */
+	default <K, U> Map<K, U> toMap(
+			final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
+		return this.toMap(keyMapper, valueMapper, (l, r) -> r);
+	}
 
-    /**
-     * 转换为不可变map，key,value为给定操作执行后的返回值
-     *
-     * @param keyMapper   指定的key操作
-     * @param valueMapper 指定value操作
-     * @param <K>         key类型
-     * @param <U>         value类型
-     * @return map
+	/**
+	 * 转换为不可变map，key,value为给定操作执行后的返回值
+	 *
+	 * @param keyMapper   指定的key操作
+	 * @param valueMapper 指定value操作
+	 * @param <K>         key类型
+	 * @param <U>         value类型
+	 * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
-     */
-    default <K, U> Map<K, U> toUnmodifiableMap(
-		final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
-        return Collections.unmodifiableMap(this.toMap(keyMapper, valueMapper));
-    }
+	 */
+	default <K, U> Map<K, U> toUnmodifiableMap(
+			final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends U> valueMapper) {
+		return Collections.unmodifiableMap(this.toMap(keyMapper, valueMapper));
+	}
 
-    /**
-     * 转换为map，key,value为给定操作执行后的返回值
-     *
-     * @param keyMapper     指定的key操作
-     * @param valueMapper   指定value操作
-     * @param mergeFunction 合并操作
-     * @param <K>           key类型
-     * @param <U>           value类型
-     * @return map
+	/**
+	 * 转换为map，key,value为给定操作执行后的返回值
+	 *
+	 * @param keyMapper     指定的key操作
+	 * @param valueMapper   指定value操作
+	 * @param mergeFunction 合并操作
+	 * @param <K>           key类型
+	 * @param <U>           value类型
+	 * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
-     */
-    default <K, U> Map<K, U> toMap(
-		final Function<? super T, ? extends K> keyMapper,
-		final Function<? super T, ? extends U> valueMapper,
-		final BinaryOperator<U> mergeFunction) {
-        return this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
-    }
+	 */
+	default <K, U> Map<K, U> toMap(
+			final Function<? super T, ? extends K> keyMapper,
+			final Function<? super T, ? extends U> valueMapper,
+			final BinaryOperator<U> mergeFunction) {
+		return this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
+	}
 
-    /**
-     * 转换为不可变map，key,value为给定操作执行后的返回值
-     *
-     * @param keyMapper     指定的key操作
-     * @param valueMapper   指定value操作
-     * @param mergeFunction 合并操作
-     * @param <K>           key类型
-     * @param <U>           value类型
-     * @return map
+	/**
+	 * 转换为不可变map，key,value为给定操作执行后的返回值
+	 *
+	 * @param keyMapper     指定的key操作
+	 * @param valueMapper   指定value操作
+	 * @param mergeFunction 合并操作
+	 * @param <K>           key类型
+	 * @param <U>           value类型
+	 * @return map
 	 * @see #toMap(Function, Function, BinaryOperator, Supplier)
-     */
-    default <K, U> Map<K, U> toUnmodifiableMap(
-		final Function<? super T, ? extends K> keyMapper,
-		final Function<? super T, ? extends U> valueMapper,
-		final BinaryOperator<U> mergeFunction) {
-        return Collections.unmodifiableMap(
-			this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new)
+	 */
+	default <K, U> Map<K, U> toUnmodifiableMap(
+			final Function<? super T, ? extends K> keyMapper,
+			final Function<? super T, ? extends U> valueMapper,
+			final BinaryOperator<U> mergeFunction) {
+		return Collections.unmodifiableMap(
+				this.toMap(keyMapper, valueMapper, mergeFunction, HashMap::new)
 		);
-    }
+	}
 
-    /**
-     * 转换为map，key,value为给定操作执行后的返回值
-     *
-     * @param keyMapper     指定的key操作
-     * @param valueMapper   指定value操作
-     * @param mergeFunction 合并操作
-     * @param mapSupplier   map工厂
-     * @param <K>           key类型
-     * @param <U>           value类型
-     * @param <M>           map类型
-     * @return map
-     */
-    default <K, U, M extends Map<K, U>> M toMap(
+	/**
+	 * 转换为map，key,value为给定操作执行后的返回值
+	 *
+	 * @param keyMapper     指定的key操作
+	 * @param valueMapper   指定value操作
+	 * @param mergeFunction 合并操作
+	 * @param mapSupplier   map工厂
+	 * @param <K>           key类型
+	 * @param <U>           value类型
+	 * @param <M>           map类型
+	 * @return map
+	 */
+	default <K, U, M extends Map<K, U>> M toMap(
 			final Function<? super T, ? extends K> keyMapper,
 			final Function<? super T, ? extends U> valueMapper,
 			final BinaryOperator<U> mergeFunction,
@@ -181,40 +181,89 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 		Objects.requireNonNull(valueMapper);
 		Objects.requireNonNull(mergeFunction);
 		Objects.requireNonNull(mapSupplier);
-        return unwrap().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
-    }
+		return unwrap().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier));
+	}
 
-    // endregion
+	/**
+	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
+	 * @param <R>            此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = EasyStream.of(students).
+	 * 	toTree(Student::getId, Student::getParentId, Student::setChildren);
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	default <R extends Comparable<R>> List<T> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter) {
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, isParallel()));
+	}
 
-    // region ============ to zip ============
+	/**
+	 * 将集合转换为树，自定义根节点的判断条件
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
+	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
+	 * @param <R>             此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = EasyStream.of(students).
+	 * 	.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	default <R extends Comparable<R>> List<T> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final Predicate<T> parentPredicate) {
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, parentPredicate, isParallel()));
+	}
 
-    /**
-     * 与给定的可迭代对象转换成map，key为现有元素，value为给定可迭代对象迭代的元素<br>
-     * 至少包含全部的key，如果对应位置上的value不存在，则为null
-     *
-     * @param other 可迭代对象
-     * @param <R>   可迭代对象迭代的元素类型
-     * @return map，key为现有元素，value为给定可迭代对象迭代的元素;<br>
-     * 至少包含全部的key，如果对应位置上的value不存在，则为null;<br>
-     * 如果key重复, 则保留最后一个关联的value;<br>
-     */
-    default <R> Map<T, R> toZip(final Iterable<R> other) {
+
+	// endregion
+
+	// region ============ to zip ============
+
+	/**
+	 * 与给定的可迭代对象转换成map，key为现有元素，value为给定可迭代对象迭代的元素<br>
+	 * 至少包含全部的key，如果对应位置上的value不存在，则为null
+	 *
+	 * @param other 可迭代对象
+	 * @param <R>   可迭代对象迭代的元素类型
+	 * @return map，key为现有元素，value为给定可迭代对象迭代的元素;<br>
+	 * 至少包含全部的key，如果对应位置上的value不存在，则为null;<br>
+	 * 如果key重复, 则保留最后一个关联的value;<br>
+	 */
+	default <R> Map<T, R> toZip(final Iterable<R> other) {
 		Objects.requireNonNull(other);
-        // value对象迭代器
-        final Iterator<R> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
-        if (this.isParallel()) {
+		// value对象迭代器
+		final Iterator<R> iterator = Opt.ofNullable(other).map(Iterable::iterator).orElseGet(Collections::emptyIterator);
+		if (this.isParallel()) {
 			final List<T> keyList = toList();
-            final Map<T, R> map = new HashMap<>(keyList.size());
-            for (final T key : keyList) {
-                map.put(key, iterator.hasNext() ? iterator.next() : null);
-            }
-            return map;
-        } else {
-            return this.toMap(Function.identity(), e -> iterator.hasNext() ? iterator.next() : null);
-        }
-    }
+			final Map<T, R> map = new HashMap<>(keyList.size());
+			for (final T key : keyList) {
+				map.put(key, iterator.hasNext() ? iterator.next() : null);
+			}
+			return map;
+		} else {
+			return this.toMap(Function.identity(), e -> iterator.hasNext() ? iterator.next() : null);
+		}
+	}
 
-    // endregion
+	// endregion
 
 	// region ============ to optional ============
 
@@ -408,7 +457,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see #group(Function, Supplier, Collector)
 	 */
 	default <K, A, D> Map<K, D> group(
-		final Function<? super T, ? extends K> classifier, final Collector<? super T, A, D> downstream) {
+			final Function<? super T, ? extends K> classifier, final Collector<? super T, A, D> downstream) {
 		return this.group(classifier, HashMap::new, downstream);
 	}
 
@@ -426,9 +475,9 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @see CollectorUtil#groupingBy(Function, Supplier, Collector)
 	 */
 	default <K, D, A, M extends Map<K, D>> M group(
-		final Function<? super T, ? extends K> classifier,
-		final Supplier<M> mapFactory,
-		final Collector<? super T, A, D> downstream) {
+			final Function<? super T, ? extends K> classifier,
+			final Supplier<M> mapFactory,
+			final Collector<? super T, A, D> downstream) {
 		Objects.requireNonNull(classifier);
 		Objects.requireNonNull(mapFactory);
 		Objects.requireNonNull(downstream);
@@ -449,8 +498,8 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	/**
 	 * 根据给定判断条件分组
 	 *
-	 * @param <C> 值类型
-	 * @param predicate 判断条件
+	 * @param <C>         值类型
+	 * @param predicate   判断条件
 	 * @param collFactory 提供的集合
 	 * @return map
 	 * @see #partition(Predicate, Collector)
@@ -464,7 +513,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 *
 	 * @param predicate  判断条件
 	 * @param downstream 下游操作
-	 * @param <R> 返回值类型
+	 * @param <R>        返回值类型
 	 * @return map
 	 */
 	default <R> Map<Boolean, R> partition(final Predicate<T> predicate, final Collector<T, ?, R> downstream) {

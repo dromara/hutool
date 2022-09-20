@@ -265,54 +265,6 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
-	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
-	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
-	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
-	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
-	 * @param <R>            此处是id、parentId的泛型限制
-	 * @return list 组装好的树 <br>
-	 * eg:
-	 * <pre>{@code
-	 * List<Student> studentTree = EasyStream.of(students).
-	 * 	toTree(Student::getId, Student::getParentId, Student::setChildren);
-	 * }</pre>
-	 * @author VampireAchao
-	 */
-	public <R extends Comparable<R>> List<T> toTree(
-			final Function<T, R> idGetter,
-			final Function<T, R> pIdGetter,
-			final BiConsumer<T, List<T>> childrenSetter) {
-		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, isParallel()));
-	}
-
-	/**
-	 * 将集合转换为树，自定义根节点的判断条件
-	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
-	 *
-	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
-	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
-	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
-	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
-	 * @param <R>             此处是id、parentId的泛型限制
-	 * @return list 组装好的树 <br>
-	 * eg:
-	 * <pre>{@code
-	 * List<Student> studentTree = EasyStream.of(students).
-	 * 	.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
-	 * }</pre>
-	 * @author VampireAchao
-	 */
-	public <R extends Comparable<R>> List<T> toTree(
-			final Function<T, R> idGetter,
-			final Function<T, R> pIdGetter,
-			final BiConsumer<T, List<T>> childrenSetter,
-			final Predicate<T> parentPredicate) {
-		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, parentPredicate, isParallel()));
-	}
-
-	/**
 	 * 建造者
 	 *
 	 * @author VampireAchao
