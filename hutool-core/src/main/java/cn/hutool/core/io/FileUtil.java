@@ -3463,6 +3463,8 @@ public class FileUtil extends PathUtil {
 				contentType = "application/x-rar-compressed";
 			} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
 				contentType = "application/x-7z-compressed";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
+				contentType = "application/widget";
 			}
 		}
 
