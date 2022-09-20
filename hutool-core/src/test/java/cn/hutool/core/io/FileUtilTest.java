@@ -446,6 +446,10 @@ public class FileUtilTest {
 		Assert.assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType);
 		mimeType = FileUtil.getMimeType("test.pptx");
 		Assert.assertEquals("application/vnd.openxmlformats-officedocument.presentationml.presentation", mimeType);
+
+		// pr#2617@Github
+		mimeType = FileUtil.getMimeType("test.wgt");
+		Assert.assertEquals("application/widget", mimeType);
 	}
 
 	@Test
