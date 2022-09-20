@@ -42,7 +42,14 @@ public class PunyCode {
 			if (result.length() != 0) {
 				result.append(CharUtil.DOT);
 			}
-			result.append(encode(str, true));
+			boolean encode = false;
+			for (int i=0;i<str.length();i++) {
+				if (!isBasic(str.charAt(i))) {
+					encode = true;
+					break;
+				}
+			}
+			result.append(encode ? encode(str, true) : str);
 		}
 
 		return result.toString();
@@ -152,13 +159,14 @@ public class PunyCode {
 	 */
 	public static String decodeDomain(String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
+		domain = domain.toLowerCase();
 		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
 		for (final String str : split) {
 			if (result.length() != 0) {
 				result.append(CharUtil.DOT);
 			}
-			result.append(decode(str));
+			result.append(str.startsWith(PUNY_CODE_PREFIX) ? decode(str) : str);
 		}
 
 		return result.toString();
