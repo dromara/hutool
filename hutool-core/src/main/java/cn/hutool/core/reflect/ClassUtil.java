@@ -6,7 +6,6 @@ import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.ClassScanner;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.net.URLUtil;
 import cn.hutool.core.text.StrUtil;

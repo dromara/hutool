@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.reflect;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.collection.CollUtil;

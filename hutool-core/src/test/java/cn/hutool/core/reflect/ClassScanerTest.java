@@ -1,5 +1,7 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.reflect;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.reflect.ClassScanner;
 import org.junit.Ignore;
 import org.junit.Test;
 
