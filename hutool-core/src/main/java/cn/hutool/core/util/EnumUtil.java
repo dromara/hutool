@@ -247,6 +247,19 @@ public class EnumUtil {
 	}
 
 	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
+	 *
+	 * @param condition   条件字段
+	 * @param value       条件字段值
+	 * @param defaultEnum 条件找不到则返回结果使用这个
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 * @since 5.8.8
+	 */
+	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value, E defaultEnum) {
+		return ObjectUtil.defaultIfNull(getBy(condition, value), defaultEnum);
+	}
+
+	/**
 	 * 通过 某字段对应值 获取 枚举中另一字段值，获取不到时为 {@code null}
 	 *
 	 * @param field     你想要获取的字段
