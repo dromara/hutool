@@ -1,10 +1,8 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.codec.hash;
 
+import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.text.Simhash;
-import cn.hutool.core.text.StrUtil;
 
 public class SimhashTest {
 
@@ -14,7 +12,7 @@ public class SimhashTest {
 		final String text2 = "我是 一个 普通 字符串";
 
 		final Simhash simhash = new Simhash();
-		final long hash = simhash.hash(StrUtil.split(text1, ' '));
+		final long hash = simhash.hash64(StrUtil.split(text1, ' '));
 		Assert.assertTrue(hash != 0);
 
 		simhash.store(hash);

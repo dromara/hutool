@@ -1,5 +1,6 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
+import cn.hutool.core.codec.Number128;
 import cn.hutool.core.util.ByteUtil;
 
 import java.nio.ByteOrder;
@@ -13,35 +14,35 @@ import java.util.Arrays;
  * 官方实现：https://github.com/jandrewrogers/MetroHash
  * 官方文档：http://www.jandrewrogers.com/2015/05/27/metrohash/
  * Go语言实现：https://github.com/linvon/cuckoo-filter/blob/main/vendor/github.com/dgryski/go-metro/
+ *
  * @author li
  */
-public class MetroHash {
+public class MetroHash implements Hash64<byte[]>, Hash128<byte[]> {
+	public static MetroHash INSTANCE = new MetroHash();
 
-	/**
-	 * hash64 种子加盐
-	 */
-	private final static long k0_64 = 0xD6D018F5;
-	private final static long k1_64 = 0xA2AA033B;
-	private final static long k2_64 = 0x62992FC1;
-	private final static long k3_64 = 0x30BC5B29;
+	@Override
+	public Number encode(final byte[] bytes) {
+		return hash64(bytes);
+	}
 
-	/**
-	 * hash128 种子加盐
-	 */
-	private final static long k0_128 = 0xC83A91E1;
-	private final static long k1_128 = 0x8648DBDB;
-	private final static long k2_128 = 0x7BDEC03B;
-	private final static long k3_128 = 0x2F5870A5;
-
-	public static long hash64(final byte[] data) {
+	@Override
+	public long hash64(final byte[] data) {
 		return hash64(data, 1337);
 	}
 
-	public static Number128 hash128(final byte[] data) {
-		return hash128(data, 1337);
-	}
+	/**
+	 * 计算64位Hash值
+	 *
+	 * @param data 数据
+	 * @param seed 种子
+	 * @return hash64
+	 */
+	public long hash64(final byte[] data, final long seed) {
+		final long k0_64 = 0xD6D018F5;
+		final long k1_64 = 0xA2AA033B;
+		final long k2_64 = 0x62992FC1;
+		final long k3_64 = 0x30BC5B29;
 
-	public static long hash64(final byte[] data, final long seed) {
 		byte[] buffer = data;
 		long hash = (seed + k2_64) * k0_64;
 
@@ -113,7 +114,24 @@ public class MetroHash {
 		return hash;
 	}
 
-	public static Number128 hash128(final byte[] data, final long seed) {
+	@Override
+	public Number128 hash128(final byte[] data) {
+		return hash128(data, 1337);
+	}
+
+	/**
+	 * 计算128位hash值
+	 *
+	 * @param data 数据
+	 * @param seed 种子
+	 * @return hash128
+	 */
+	public Number128 hash128(final byte[] data, final long seed) {
+		final long k0_128 = 0xC83A91E1;
+		final long k1_128 = 0x8648DBDB;
+		final long k2_128 = 0x7BDEC03B;
+		final long k3_128 = 0x2F5870A5;
+
 		byte[] buffer = data;
 
 		long v0, v1, v2, v3;
@@ -193,6 +211,7 @@ public class MetroHash {
 	}
 
 
+	// region =========== Private methods
 	private static long littleEndian64(final byte[] b, final int start) {
 		return ByteUtil.bytesToLong(b, start, ByteOrder.LITTLE_ENDIAN);
 	}
@@ -214,4 +233,5 @@ public class MetroHash {
 	private static long rotateRight(final long val, final int shift) {
 		return (val >> shift) | (val << (64 - shift));
 	}
+	// endregion =========== Private methods
 }

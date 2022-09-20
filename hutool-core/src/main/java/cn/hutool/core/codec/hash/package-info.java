@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;

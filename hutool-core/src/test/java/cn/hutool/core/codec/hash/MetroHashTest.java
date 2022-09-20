@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
 
 import cn.hutool.core.util.CharsetUtil;
@@ -16,20 +16,20 @@ public class MetroHashTest {
 
 	@Test
 	public void testEmpty() {
-		Assert.assertEquals("31290877cceaea29", HexUtil.toHex(MetroHash.hash64(StrUtil.utf8Bytes(""), 0)));
+		Assert.assertEquals("31290877cceaea29", HexUtil.toHex(MetroHash.INSTANCE.hash64(StrUtil.utf8Bytes(""), 0)));
 	}
 
 	@Test
 	public void metroHash64Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long hash64 = MetroHash.hash64(str);
+		final long hash64 = MetroHash.INSTANCE.hash64(str);
 		Assert.assertEquals(62920234463891865L, hash64);
 	}
 
 	@Test
 	public void metroHash128Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long[] hash128 = MetroHash.hash128(str).getLongArray();
+		final long[] hash128 = MetroHash.INSTANCE.hash128(str).getLongArray();
 		Assert.assertEquals(4956592424592439349L, hash128[0]);
 		Assert.assertEquals(6301214698325086246L, hash128[1]);
 	}
@@ -43,13 +43,13 @@ public class MetroHashTest {
 		final String[] strArray = getRandomStringArray();
 		final long startCity = System.currentTimeMillis();
 		for (final String s : strArray) {
-			CityHash.hash64(s.getBytes());
+			CityHash.INSTANCE.hash64(s.getBytes());
 		}
 		final long endCity = System.currentTimeMillis();
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash.hash64(StrUtil.utf8Bytes(s));
+			MetroHash.INSTANCE.hash64(StrUtil.utf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 
@@ -67,13 +67,13 @@ public class MetroHashTest {
 		final String[] strArray = getRandomStringArray();
 		final long startCity = System.currentTimeMillis();
 		for (final String s : strArray) {
-			CityHash.hash128(s.getBytes());
+			CityHash.INSTANCE.hash128(s.getBytes());
 		}
 		final long endCity = System.currentTimeMillis();
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash.hash128(StrUtil.utf8Bytes(s));
+			MetroHash.INSTANCE.hash128(StrUtil.utf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 

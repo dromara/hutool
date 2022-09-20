@@ -1,6 +1,4 @@
-package cn.hutool.core.text;
-
-import cn.hutool.core.lang.hash.MurmurHash;
+package cn.hutool.core.codec.hash;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -23,16 +21,22 @@ import java.util.concurrent.locks.StampedLock;
  * @author Looly, litaoxiao
  * @since 4.3.3
  */
-public class Simhash {
+public class Simhash implements Hash64<Collection<? extends CharSequence>> {
 
 	private final int bitNum = 64;
-	/** 存储段数，默认按照4段进行simhash存储 */
+	/**
+	 * 存储段数，默认按照4段进行simhash存储
+	 */
 	private final int fracCount;
 	private final int fracBitNum;
-	/** 汉明距离的衡量标准，小于此距离标准表示相似 */
+	/**
+	 * 汉明距离的衡量标准，小于此距离标准表示相似
+	 */
 	private final int hammingThresh;
 
-	/** 按照分段存储simhash，查找更快速 */
+	/**
+	 * 按照分段存储simhash，查找更快速
+	 */
 	private final List<Map<String, List<Long>>> storage;
 	private final StampedLock lock = new StampedLock();
 
@@ -46,7 +50,7 @@ public class Simhash {
 	/**
 	 * 构造
 	 *
-	 * @param fracCount 存储段数
+	 * @param fracCount     存储段数
 	 * @param hammingThresh 汉明距离的衡量标准
 	 */
 	public Simhash(final int fracCount, final int hammingThresh) {
@@ -65,13 +69,14 @@ public class Simhash {
 	 * @param segList 分词的词列表
 	 * @return Hash值
 	 */
-	public long hash(final Collection<? extends CharSequence> segList) {
+	@Override
+	public long hash64(final Collection<? extends CharSequence> segList) {
 		final int bitNum = this.bitNum;
 		// 按照词语的hash值，计算simHashWeight(低位对齐)
 		final int[] weight = new int[bitNum];
 		long wordHash;
 		for (final CharSequence seg : segList) {
-			wordHash = MurmurHash.hash64(seg);
+			wordHash = MurmurHash.INSTANCE.hash64(seg);
 			for (int i = 0; i < bitNum; i++) {
 				if (((wordHash >> i) & 1) == 1)
 					weight[i] += 1;
@@ -96,7 +101,7 @@ public class Simhash {
 	 * @return 是否重复
 	 */
 	public boolean equals(final Collection<? extends CharSequence> segList) {
-		final long simhash = hash(segList);
+		final long simhash = hash64(segList);
 		final List<String> fracList = splitSimhash(simhash);
 		final int hammingThresh = this.hammingThresh;
 
@@ -153,6 +158,7 @@ public class Simhash {
 	}
 
 	//------------------------------------------------------------------------------------------------------ Private method start
+
 	/**
 	 * 计算汉明距离
 	 *

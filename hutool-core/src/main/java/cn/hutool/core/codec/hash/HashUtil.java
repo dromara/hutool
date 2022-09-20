@@ -1,4 +1,6 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
+
+import cn.hutool.core.codec.Number128;
 
 /**
  * Hash算法大全<br>
@@ -449,7 +451,7 @@ public class HashUtil {
 	 * @since 4.3.3
 	 */
 	public static int murmur32(final byte[] data) {
-		return MurmurHash.hash32(data);
+		return MurmurHash.INSTANCE.hash32(data);
 	}
 
 	/**
@@ -460,7 +462,7 @@ public class HashUtil {
 	 * @since 4.3.3
 	 */
 	public static long murmur64(final byte[] data) {
-		return MurmurHash.hash64(data);
+		return MurmurHash.INSTANCE.hash64(data);
 	}
 
 	/**
@@ -471,7 +473,7 @@ public class HashUtil {
 	 * @since 4.3.3
 	 */
 	public static Number128 murmur128(final byte[] data) {
-		return MurmurHash.hash128(data);
+		return MurmurHash.INSTANCE.hash128(data);
 	}
 
 	/**
@@ -482,7 +484,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static int cityHash32(final byte[] data) {
-		return CityHash.hash32(data);
+		return CityHash.INSTANCE.hash32(data);
 	}
 
 	/**
@@ -494,7 +496,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long cityHash64(final byte[] data, final long seed) {
-		return CityHash.hash64(data, seed);
+		return CityHash.INSTANCE.hash64(data, seed);
 	}
 
 	/**
@@ -507,7 +509,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long cityHash64(final byte[] data, final long seed0, final long seed1) {
-		return CityHash.hash64(data, seed0, seed1);
+		return CityHash.INSTANCE.hash64(data, seed0, seed1);
 	}
 
 	/**
@@ -518,7 +520,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long cityHash64(final byte[] data) {
-		return CityHash.hash64(data);
+		return CityHash.INSTANCE.hash64(data);
 	}
 
 	/**
@@ -529,7 +531,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long[] cityHash128(final byte[] data) {
-		return CityHash.hash128(data).getLongArray();
+		return CityHash.INSTANCE.hash128(data).getLongArray();
 	}
 
 	/**
@@ -541,7 +543,7 @@ public class HashUtil {
 	 * @since 5.2.5
 	 */
 	public static long[] cityHash128(final byte[] data, final Number128 seed) {
-		return CityHash.hash128(data, seed).getLongArray();
+		return CityHash.INSTANCE.hash128(data, seed).getLongArray();
 	}
 
 	/**
@@ -552,7 +554,7 @@ public class HashUtil {
 	 * @return hash值
 	 */
 	public static long metroHash64(final byte[] data, final long seed) {
-		return MetroHash.hash64(data, seed);
+		return MetroHash.INSTANCE.hash64(data, seed);
 	}
 
 	/**
@@ -562,7 +564,7 @@ public class HashUtil {
 	 * @return hash值
 	 */
 	public static long metroHash64(final byte[] data) {
-		return MetroHash.hash64(data);
+		return MetroHash.INSTANCE.hash64(data);
 	}
 
 	/**
@@ -573,7 +575,7 @@ public class HashUtil {
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
 	public static long[] metroHash128(final byte[] data, final long seed) {
-		return MetroHash.hash128(data, seed).getLongArray();
+		return MetroHash.INSTANCE.hash128(data, seed).getLongArray();
 	}
 
 	/**
@@ -583,7 +585,7 @@ public class HashUtil {
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
 	public static long[] metroHash128(final byte[] data) {
-		return MetroHash.hash128(data).getLongArray();
+		return MetroHash.INSTANCE.hash128(data).getLongArray();
 	}
 
 	/**

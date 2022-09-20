@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec;
 
 /**
  * 128位数字表示，分高位和低位

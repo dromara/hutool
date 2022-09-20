@@ -1,10 +1,10 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
+import cn.hutool.core.codec.Number128;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 
-import java.io.Serializable;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
@@ -20,8 +20,8 @@ import java.nio.charset.Charset;
  * @author looly, Simhash4J
  * @since 4.3.3
  */
-public class MurmurHash implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>{
+	public static final MurmurHash INSTANCE = new MurmurHash();
 
 	// Constants for 32 bit variant
 	private static final int C1_32 = 0xcc9e2d51;
@@ -45,13 +45,18 @@ public class MurmurHash implements Serializable {
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 	private static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 
+	@Override
+	public Number encode(final byte[] bytes) {
+		return hash128(bytes);
+	}
+
 	/**
 	 * Murmur3 32-bit Hash值计算
 	 *
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static int hash32(final CharSequence data) {
+	public int hash32(final CharSequence data) {
 		return hash32(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -61,7 +66,8 @@ public class MurmurHash implements Serializable {
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static int hash32(final byte[] data) {
+	@Override
+	public int hash32(final byte[] data) {
 		return hash32(data, data.length, DEFAULT_SEED);
 	}
 
@@ -73,7 +79,7 @@ public class MurmurHash implements Serializable {
 	 * @param seed   种子，默认0
 	 * @return Hash值
 	 */
-	public static int hash32(final byte[] data, final int length, final int seed) {
+	public int hash32(final byte[] data, final int length, final int seed) {
 		return hash32(data, 0, length, seed);
 	}
 
@@ -86,7 +92,7 @@ public class MurmurHash implements Serializable {
 	 * @param seed   种子，默认0
 	 * @return Hash值
 	 */
-	public static int hash32(final byte[] data, final int offset, final int length, final int seed) {
+	public int hash32(final byte[] data, final int offset, final int length, final int seed) {
 		int hash = seed;
 		final int nblocks = length >> 2;
 
@@ -127,7 +133,7 @@ public class MurmurHash implements Serializable {
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static long hash64(final CharSequence data) {
+	public long hash64(final CharSequence data) {
 		return hash64(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -138,7 +144,8 @@ public class MurmurHash implements Serializable {
 	 * @param data 数据
 	 * @return Hash值
 	 */
-	public static long hash64(final byte[] data) {
+	@Override
+	public long hash64(final byte[] data) {
 		return hash64(data, data.length, DEFAULT_SEED);
 	}
 
@@ -151,7 +158,7 @@ public class MurmurHash implements Serializable {
 	 * @param seed   种子，默认0
 	 * @return Hash值
 	 */
-	public static long hash64(final byte[] data, final int length, final int seed) {
+	public long hash64(final byte[] data, final int length, final int seed) {
 		long hash = seed;
 		final int nblocks = length >> 3;
 
@@ -205,7 +212,7 @@ public class MurmurHash implements Serializable {
 	 * @param data 数据
 	 * @return Hash值 (2 longs)
 	 */
-	public static Number128 hash128(final CharSequence data) {
+	public Number128 hash128(final CharSequence data) {
 		return hash128(StrUtil.bytes(data, DEFAULT_CHARSET));
 	}
 
@@ -215,7 +222,8 @@ public class MurmurHash implements Serializable {
 	 * @param data -数据
 	 * @return Hash值 (2 longs)
 	 */
-	public static Number128 hash128(final byte[] data) {
+	@Override
+	public Number128 hash128(final byte[] data) {
 		return hash128(data, data.length, DEFAULT_SEED);
 	}
 
@@ -227,7 +235,7 @@ public class MurmurHash implements Serializable {
 	 * @param seed   种子，默认0
 	 * @return Hash值(2 longs)
 	 */
-	public static Number128 hash128(final byte[] data, final int length, final int seed) {
+	public Number128 hash128(final byte[] data, final int length, final int seed) {
 		return hash128(data, 0, length, seed);
 	}
 
@@ -240,7 +248,7 @@ public class MurmurHash implements Serializable {
 	 * @param seed   种子，默认0
 	 * @return Hash值(2 longs)
 	 */
-	public static Number128 hash128(final byte[] data, final int offset, final int length, int seed) {
+	public Number128 hash128(final byte[] data, final int offset, final int length, int seed) {
 		// 避免负数的种子
 		seed &= 0xffffffffL;
 

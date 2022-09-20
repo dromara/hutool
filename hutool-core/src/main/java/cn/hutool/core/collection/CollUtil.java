@@ -9,7 +9,7 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.hash.Hash32;
+import cn.hutool.core.codec.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;

@@ -1,4 +1,4 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
 import java.io.Serializable;
 import java.util.Collection;

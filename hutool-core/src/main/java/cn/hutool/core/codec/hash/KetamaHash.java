@@ -1,7 +1,6 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.text.StrUtil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,10 +11,10 @@ import java.security.NoSuchAlgorithmException;
  * @author looly
  * @since 5.7.20
  */
-public class KetamaHash implements Hash64<String>, Hash32<String> {
+public class KetamaHash implements Hash64<byte[]>, Hash32<byte[]> {
 
 	@Override
-	public long hash64(final String key) {
+	public long hash64(final byte[] key) {
 		final byte[] bKey = md5(key);
 		return ((long) (bKey[3] & 0xFF) << 24)
 				| ((long) (bKey[2] & 0xFF) << 16)
@@ -24,12 +23,12 @@ public class KetamaHash implements Hash64<String>, Hash32<String> {
 	}
 
 	@Override
-	public int hash32(final String key) {
+	public int hash32(final byte[] key) {
 		return (int) (hash64(key) & 0xffffffffL);
 	}
 
 	@Override
-	public Number hash(final String key) {
+	public Number encode(final byte[] key) {
 		return hash64(key);
 	}
 
@@ -39,13 +38,13 @@ public class KetamaHash implements Hash64<String>, Hash32<String> {
 	 * @param key 被计算的键
 	 * @return MD5值
 	 */
-	private static byte[] md5(final String key) {
+	private static byte[] md5(final byte[] key) {
 		final MessageDigest md5;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (final NoSuchAlgorithmException e) {
 			throw new UtilException("MD5 algorithm not suooport!", e);
 		}
-		return md5.digest(StrUtil.utf8Bytes(key));
+		return md5.digest(key);
 	}
 }

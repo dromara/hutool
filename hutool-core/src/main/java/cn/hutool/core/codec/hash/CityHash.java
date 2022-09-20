@@ -1,5 +1,6 @@
-package cn.hutool.core.lang.hash;
+package cn.hutool.core.codec.hash;
 
+import cn.hutool.core.codec.Number128;
 import cn.hutool.core.util.ByteUtil;
 
 import java.util.Arrays;
@@ -15,18 +16,22 @@ import java.util.Arrays;
  * @author hexiufeng
  * @since 5.2.5
  */
-public class CityHash {
+public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>{
+	public static CityHash INSTANCE = new CityHash();
 
 	// Some primes between 2^63 and 2^64 for various uses.
 	private static final long k0 = 0xc3a5c85c97cb3127L;
 	private static final long k1 = 0xb492b66fbe98f273L;
 	private static final long k2 = 0x9ae16a3b2f90404fL;
-	private static final long kMul = 0x9ddfea08eb382d69L;
 
 	// Magic numbers for 32-bit hashing.  Copied from Murmur3.
 	private static final int c1 = 0xcc9e2d51;
 	private static final int c2 = 0x1b873593;
 
+	@Override
+	public Number encode(final byte[] bytes) {
+		return hash64(bytes);
+	}
 
 	/**
 	 * 计算32位City Hash值
@@ -34,7 +39,8 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static int hash32(final byte[] data) {
+	@Override
+	public int hash32(final byte[] data) {
 		final int len = data.length;
 		if (len <= 24) {
 			return len <= 12 ?
@@ -117,7 +123,8 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static long hash64(final byte[] data) {
+	@Override
+	public long hash64(final byte[] data) {
 		int len = data.length;
 		if (len <= 32) {
 			if (len <= 16) {
@@ -168,7 +175,7 @@ public class CityHash {
 	 * @param seed1 种子2
 	 * @return hash值
 	 */
-	public static long hash64(final byte[] data, final long seed0, final long seed1) {
+	public long hash64(final byte[] data, final long seed0, final long seed1) {
 		return hashLen16(hash64(data) - seed0, seed1);
 	}
 
@@ -179,7 +186,7 @@ public class CityHash {
 	 * @param seed 种子2
 	 * @return hash值
 	 */
-	public static long hash64(final byte[] data, final long seed) {
+	public long hash64(final byte[] data, final long seed) {
 		return hash64(data, k2, seed);
 	}
 
@@ -189,7 +196,8 @@ public class CityHash {
 	 * @param data 数据
 	 * @return hash值
 	 */
-	public static Number128 hash128(final byte[] data) {
+	@Override
+	public Number128 hash128(final byte[] data) {
 		final int len = data.length;
 		return len >= 16 ?
 				hash128(data, 16,
@@ -204,12 +212,12 @@ public class CityHash {
 	 * @param seed 种子
 	 * @return hash值
 	 */
-	public static Number128 hash128(final byte[] data, final Number128 seed) {
+	public Number128 hash128(final byte[] data, final Number128 seed) {
 		return hash128(data, 0, seed);
 	}
 
 	//------------------------------------------------------------------------------------------------------- Private method start
-	private static Number128 hash128(final byte[] byteArray, final int start, final Number128 seed) {
+	private Number128 hash128(final byte[] byteArray, final int start, final Number128 seed) {
 		int len = byteArray.length - start;
 
 		if (len < 128) {
@@ -283,7 +291,7 @@ public class CityHash {
 
 	}
 
-	private static int hash32Len0to4(final byte[] byteArray) {
+	private int hash32Len0to4(final byte[] byteArray) {
 		int b = 0;
 		int c = 9;
 		final int len = byteArray.length;
@@ -294,7 +302,7 @@ public class CityHash {
 		return fmix(mur(b, mur(len, c)));
 	}
 
-	private static int hash32Len5to12(final byte[] byteArray) {
+	private int hash32Len5to12(final byte[] byteArray) {
 		final int len = byteArray.length;
 		int a = len;
 		int b = len * 5;
@@ -306,7 +314,7 @@ public class CityHash {
 		return fmix(mur(c, mur(b, mur(a, d))));
 	}
 
-	private static int hash32Len13to24(final byte[] byteArray) {
+	private int hash32Len13to24(final byte[] byteArray) {
 		final int len = byteArray.length;
 		final int a = fetch32(byteArray, (len >>> 1) - 4);
 		final int b = fetch32(byteArray, 4);
@@ -319,7 +327,7 @@ public class CityHash {
 		return fmix(mur(f, mur(e, mur(d, mur(c, mur(b, mur(a, h)))))));
 	}
 
-	private static long hashLen0to16(final byte[] byteArray) {
+	private long hashLen0to16(final byte[] byteArray) {
 		final int len = byteArray.length;
 		if (len >= 8) {
 			final long mul = k2 + len * 2L;
@@ -346,7 +354,7 @@ public class CityHash {
 	}
 
 	// This probably works well for 16-byte strings as well, but it may be overkill in that case.
-	private static long hashLen17to32(final byte[] byteArray) {
+	private long hashLen17to32(final byte[] byteArray) {
 		final int len = byteArray.length;
 		final long mul = k2 + len * 2L;
 		final long a = fetch64(byteArray, 0) * k1;
@@ -357,7 +365,7 @@ public class CityHash {
 				a + rotate64(b + k2, 18) + c, mul);
 	}
 
-	private static long hashLen33to64(final byte[] byteArray) {
+	private long hashLen33to64(final byte[] byteArray) {
 		final int len = byteArray.length;
 		final long mul = k2 + len * 2L;
 		long a = fetch64(byteArray, 0) * k2;
@@ -407,12 +415,13 @@ public class CityHash {
 		return b;
 	}
 
-	private static long hashLen16(final long u, final long v) {
+	private long hashLen16(final long u, final long v) {
 		return hash128to64(new Number128(u, v));
 	}
 
-	private static long hash128to64(final Number128 number128) {
+	private long hash128to64(final Number128 number128) {
 		// Murmur-inspired hashing.
+		final long kMul = 0x9ddfea08eb382d69L;
 		long a = (number128.getLowValue() ^ number128.getHighValue()) * kMul;
 		a ^= (a >>> 47);
 		long b = (number128.getHighValue() ^ a) * kMul;
@@ -434,7 +443,7 @@ public class CityHash {
 		return h;
 	}
 
-	private static int mur(int a, int h) {
+	private int mur(int a, int h) {
 		// Helper from Murmur3 for combining two 32-bit values.
 		a *= c1;
 		a = rotate32(a, 17);
@@ -466,7 +475,7 @@ public class CityHash {
 				b);
 	}
 
-	private static Number128 cityMurmur(final byte[] byteArray, final Number128 seed) {
+	private Number128 cityMurmur(final byte[] byteArray, final Number128 seed) {
 		final int len = byteArray.length;
 		long a = seed.getLowValue();
 		long b = seed.getHighValue();
