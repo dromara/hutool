@@ -25,24 +25,24 @@ public class IterateSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
 	 * Creates a spliterator reporting the given estimated size and
 	 * additionalCharacteristics.
 	 */
-	IterateSpliterator(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+	IterateSpliterator(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
 		super(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.IMMUTABLE);
 		this.seed = seed;
 		this.hasNext = hasNext;
 		this.next = next;
 	}
 
-	public static <T> IterateSpliterator<T> create(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+	public static <T> IterateSpliterator<T> create(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
 		return new IterateSpliterator<>(seed, hasNext, next);
 	}
 
 	@Override
-	public boolean tryAdvance(Consumer<? super T> action) {
+	public boolean tryAdvance(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
 		if (finished) {
 			return false;
 		}
-		T t;
+		final T t;
 		if (started) {
 			t = next.apply(prev);
 		} else {
@@ -60,7 +60,7 @@ public class IterateSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
 	}
 
 	@Override
-	public void forEachRemaining(Consumer<? super T> action) {
+	public void forEachRemaining(final Consumer<? super T> action) {
 		Objects.requireNonNull(action);
 		if (finished) {
 			return;

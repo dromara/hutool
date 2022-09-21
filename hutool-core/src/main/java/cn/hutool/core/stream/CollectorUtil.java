@@ -277,7 +277,7 @@ public class CollectorUtil {
 	 * @since 6.0.0
 	 */
 	public static <T, K> Collector<T, List<T>, EntryStream<K, T>> toEntryStream(
-			Function<? super T, ? extends K> keyMapper) {
+			final Function<? super T, ? extends K> keyMapper) {
 		return toEntryStream(keyMapper, Function.identity());
 	}
 

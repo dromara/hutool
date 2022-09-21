@@ -14,7 +14,7 @@ import java.util.function.Predicate;
  */
 public class DropWhileSpliterator<T> implements Spliterator<T> {
 
-	public static <T> DropWhileSpliterator<T> create(Spliterator<T> source, Predicate<? super T> predicate) {
+	public static <T> DropWhileSpliterator<T> create(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		return new DropWhileSpliterator<>(source, predicate);
 	}
 
@@ -22,13 +22,13 @@ public class DropWhileSpliterator<T> implements Spliterator<T> {
 	private final Predicate<? super T> predicate;
 	private boolean isFound = false;
 
-	private DropWhileSpliterator(Spliterator<T> source, Predicate<? super T> predicate) {
+	private DropWhileSpliterator(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
 
 	@Override
-	public boolean tryAdvance(Consumer<? super T> action) {
+	public boolean tryAdvance(final Consumer<? super T> action) {
 		boolean hasNext = true;
 		// 如果 还没找到 并且 流中还有元素 继续找
 		while (!isFound && hasNext) {

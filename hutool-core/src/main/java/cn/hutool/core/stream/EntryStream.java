@@ -38,7 +38,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <V>    值类型
 	 * @param keys   键集合
 	 * @param values 值集合
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public static <K, V> EntryStream<K, V> merge(final Iterable<K> keys, final Iterable<V> values) {
 		final boolean hasKeys = ObjUtil.isNotNull(keys);
@@ -75,7 +75,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param map 集合
 	 * @param <K> 键类型
 	 * @param <V> 值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public static <K, V> EntryStream<K, V> of(final Map<K, V> map) {
 		return ObjUtil.isNull(map) ?
@@ -90,7 +90,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param entries {@link Iterable}实例
 	 * @param <K>     键类型
 	 * @param <V>     值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public static <K, V> EntryStream<K, V> of(final Iterable<? extends Map.Entry<K, V>> entries) {
 		return ObjUtil.isNull(entries) ?
@@ -106,10 +106,10 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param <T>         元素类型
 	 * @param <K>         键类型
 	 * @param <V>         值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public static <T, K, V> EntryStream<K, V> of(
-			final Iterable<T> source, Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper) {
+			final Iterable<T> source, final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends V> valueMapper) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
 		if (ObjUtil.isNull(source)) {
@@ -127,9 +127,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * @param stream 流
 	 * @param <K>    键类型
 	 * @param <V>    值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
-	public static <K, V> EntryStream<K, V> of(Stream<? extends Map.Entry<K, V>> stream) {
+	public static <K, V> EntryStream<K, V> of(final Stream<? extends Map.Entry<K, V>> stream) {
 		return ObjUtil.isNull(stream) ?
 				empty() : new EntryStream<>(stream.map(EntryStream::ofEntry));
 	}
@@ -139,7 +139,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param <K> 键类型
 	 * @param <V> 值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public static <K, V> EntryStream<K, V> empty() {
 		return new EntryStream<>(Stream.empty());
@@ -157,7 +157,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 根据键去重，默认丢弃靠后的
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> distinctByKey() {
 		// FIXME fix happen NPE when has null key
@@ -175,7 +175,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 根据值去重，默认丢弃靠后的
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> distinctByValue() {
 		// FIXME fix happen NPE when has null value
@@ -194,7 +194,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 根据键和值过滤键值对
 	 *
 	 * @param filter 判断条件
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> filter(final BiPredicate<? super K, ? super V> filter) {
 		Objects.requireNonNull(filter);
@@ -205,7 +205,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 根据键过滤键值对
 	 *
 	 * @param filter 判断条件
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> filterByKey(final Predicate<? super K> filter) {
 		Objects.requireNonNull(filter);
@@ -216,7 +216,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 根据值过滤键值对
 	 *
 	 * @param filter 判断条件
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> filterByValue(final Predicate<? super V> filter) {
 		Objects.requireNonNull(filter);
@@ -226,7 +226,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 过滤流中键值对本身、键值对中的值或键为{@code null}的元素
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> nonNullKeyValue() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getKey()) && ObjUtil.isNotNull(e.getValue()));
@@ -235,7 +235,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 过滤流中键值对本身，或键值对的键为{@code null}的元素
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> nonNullKey() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getKey()));
@@ -244,7 +244,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 过滤流中键值对本身，或键值对的值为{@code null}的元素
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> nonNullValue() {
 		return super.filter(e -> ObjUtil.isNotNull(e) && ObjUtil.isNotNull(e.getValue()));
@@ -254,7 +254,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 检查键
 	 *
 	 * @param consumer 操作
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> peekKey(final Consumer<? super K> consumer) {
 		Objects.requireNonNull(consumer);
@@ -265,7 +265,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 检查值
 	 *
 	 * @param consumer 操作
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> peekValue(final Consumer<? super V> consumer) {
 		Objects.requireNonNull(consumer);
@@ -276,7 +276,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 根据键排序
 	 *
 	 * @param comparator 排序器
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> sortByKey(final Comparator<? super K> comparator) {
 		Objects.requireNonNull(comparator);
@@ -287,7 +287,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 根据值排序
 	 *
 	 * @param comparator 排序器
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> sortByValue(final Comparator<? super V> comparator) {
 		Objects.requireNonNull(comparator);
@@ -301,7 +301,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param key   键
 	 * @param value 值
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> push(final K key, final V value) {
 		return wrap(Stream.concat(stream, Stream.of(ofEntry(key, value))));
@@ -312,7 +312,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param key   键
 	 * @param value 值
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<K, V> unshift(final K key, final V value) {
 		return wrap(Stream.concat(Stream.of(ofEntry(key, value)), stream));
@@ -322,7 +322,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 将输入元素转为流，返回一个前半段为当前流，后半段为新流的新{@link EasyStream}实例
 	 *
 	 * @param entries 键值对
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	@Override
 	public EntryStream<K, V> append(final Iterable<? extends Map.Entry<K, V>> entries) {
@@ -338,7 +338,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * 将输入元素转为流，返回一个前半段为新流，后半段为当前流的新{@link EasyStream}实例
 	 *
 	 * @param entries 键值对
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	@Override
 	public EntryStream<K, V> prepend(final Iterable<? extends Map.Entry<K, V>> entries) {
@@ -373,7 +373,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param mapper 映射方法
 	 * @param <N>    新的键类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public <N> EntryStream<N, V> mapKeys(final Function<? super K, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
@@ -387,7 +387,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 *
 	 * @param mapper 映射方法
 	 * @param <N>    新的值类型
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public <N> EntryStream<K, N> mapValues(final Function<? super V, ? extends N> mapper) {
 		Objects.requireNonNull(mapper);
@@ -442,7 +442,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 
 	/**
 	 * <p>将原有流的键执行mapper操作映射为流，流中的所有所有元素仍然对应原本的值，
-	 * 然后再返回由这些流中所有元素组成的流新{@link EntryStream}串行流。<br>
+	 * 然后再返回由这些流中所有元素组成的流新{@code EntryStream}串行流。<br>
 	 * 效果类似：
 	 * <pre>{@code
 	 * // unwrap = [{a = 1}, {b = 2}, {c = 3}]
@@ -466,7 +466,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 
 	/**
 	 * <p>将原有流的值执行mapper操作映射为流，流中的所有所有元素仍然对应原本的键，
-	 * 然后再返回由这些流中所有元素组成的流新{@link EntryStream}串行流。<br>
+	 * 然后再返回由这些流中所有元素组成的流新{@code EntryStream}串行流。<br>
 	 * 效果类似：
 	 * <pre>{@code
 	 * // unwrap = [{a = 1}, {b = 2}, {c = 3}]
@@ -664,7 +664,7 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	/**
 	 * 将键值对翻转
 	 *
-	 * @return {@link EntryStream}实例
+	 * @return {@code EntryStream}实例
 	 */
 	public EntryStream<V, K> inverse() {
 		return new EntryStream<>(
@@ -760,7 +760,9 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	 * key重复时直接抛出异常
 	 */
 	private static <T> BinaryOperator<T> throwingMerger() {
-		return (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));};
+		return (u, v) -> {
+			throw new IllegalStateException(String.format("Duplicate key %s", u));
+		};
 	}
 
 }
