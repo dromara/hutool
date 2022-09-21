@@ -13,7 +13,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -267,5 +269,27 @@ public class ReflectUtilTest {
 
 		int[] intArray = ReflectUtil.newInstanceIfPossible(int[].class);
 		Assert.assertArrayEquals(new int[0], intArray);
+	}
+
+	public static class JdbcDialects {
+		private static final List<Number> DIALECTS =
+				Arrays.asList(1L, 2L, 3L);
+	}
+
+	@Test
+	public void setFieldValueTest() {
+		String fieldName = "DIALECTS";
+		final List<Number> dialects =
+				Arrays.asList(
+						1,
+						2,
+						3,
+						99
+				);
+		Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+		ReflectUtil.removeFinalModify(field);
+		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+
+		Assert.assertEquals(dialects, ReflectUtil.getFieldValue(JdbcDialects.class, fieldName));
 	}
 }
