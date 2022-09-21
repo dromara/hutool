@@ -86,10 +86,10 @@ public class SimpleDataSource extends AbstractDataSource {
 		}
 
 		init(//
-				config.getAndRemoveStr(DSFactory.KEY_ALIAS_URL), //
-				config.getAndRemoveStr(DSFactory.KEY_ALIAS_USER), //
-				config.getAndRemoveStr(DSFactory.KEY_ALIAS_PASSWORD), //
-				config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER)//
+				config.getAndRemove(DSFactory.KEY_ALIAS_URL), //
+				config.getAndRemove(DSFactory.KEY_ALIAS_USER), //
+				config.getAndRemove(DSFactory.KEY_ALIAS_PASSWORD), //
+				config.getAndRemove(DSFactory.KEY_ALIAS_DRIVER)//
 		);
 
 		// 其它连接参数

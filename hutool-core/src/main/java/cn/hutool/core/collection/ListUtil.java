@@ -177,7 +177,8 @@ public class ListUtil {
 
 	/**
 	 * 数组转为一个不可变List<br>
-	 * 类似于Java9中的List.of
+	 * 类似于Java9中的List.of<br>
+	 * 不同于Arrays.asList，此方法的原数组修改时，并不会影响List。
 	 *
 	 * @param ts  对象
 	 * @param <T> 对象类型
@@ -708,7 +709,7 @@ public class ListUtil {
 	 * @since 6.0.0
 	 */
 	@SafeVarargs
-	public static <T> List<T> splice(List<T> list, int start, int deleteCount, T... items) {
+	public static <T> List<T> splice(final List<T> list, int start, int deleteCount, final T... items) {
 		if (CollUtil.isEmpty(list)) {
 			return zero();
 		}

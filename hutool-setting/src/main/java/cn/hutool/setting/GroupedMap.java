@@ -35,12 +35,12 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param key 键
 	 * @return 值，如果分组不存在或者值不存在则返回null
 	 */
-	public String get(final String group, final String key) {
+	public String get(final CharSequence group, final CharSequence key) {
 		readLock.lock();
 		try {
 			final LinkedHashMap<String, String> map = this.get(StrUtil.emptyIfNull(group));
 			if (MapUtil.isNotEmpty(map)) {
-				return map.get(key);
+				return map.get(StrUtil.str(key));
 			}
 		} finally {
 			readLock.unlock();

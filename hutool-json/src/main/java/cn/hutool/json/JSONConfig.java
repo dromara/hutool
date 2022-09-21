@@ -271,7 +271,7 @@ public class JSONConfig implements Serializable {
 	 * @return this
 	 * @since 5.8.5
 	 */
-	public JSONConfig setCheckDuplicate(boolean checkDuplicate) {
+	public JSONConfig setCheckDuplicate(final boolean checkDuplicate) {
 		this.checkDuplicate = checkDuplicate;
 		return this;
 	}

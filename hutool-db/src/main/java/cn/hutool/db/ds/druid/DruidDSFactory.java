@@ -49,7 +49,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 		// Druid中也可以通过 druid.connectProperties 属性设置
 		String connValue;
 		for (final String key : KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemoveStr(key);
+			connValue = poolSetting.getAndRemove(key);
 			if(StrUtil.isNotBlank(connValue)){
 				ds.addConnectionProperty(key, connValue);
 			}

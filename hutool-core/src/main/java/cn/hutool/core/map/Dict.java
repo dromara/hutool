@@ -9,15 +9,10 @@ import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.func.SerSupplier;
-import cn.hutool.core.lang.getter.BasicTypeGetter;
+import cn.hutool.core.lang.getter.TypeGetter;
 
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,7 +24,7 @@ import java.util.Objects;
  *
  * @author looly
  */
-public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGetter<String> {
+public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<String> {
 	private static final long serialVersionUID = 6135423866861206530L;
 
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -352,10 +347,9 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	// -------------------------------------------------------------------- Set end
 
 	// -------------------------------------------------------------------- Get start
-
 	@Override
-	public Object getObj(final String key) {
-		return super.get(key);
+	public Object getObj(final String key, final Object defaultValue) {
+		return getOrDefault(key, defaultValue);
 	}
 
 	/**
@@ -366,151 +360,9 @@ public class Dict extends CustomKeyMap<String, Object> implements BasicTypeGette
 	 * @return 字段值
 	 * @since 4.6.3
 	 */
-	public <T> T getBean(final String attr) {
-		return get(attr, null);
-	}
-
-	/**
-	 * 获得特定类型值
-	 *
-	 * @param <T>          值类型
-	 * @param attr         字段名
-	 * @param defaultValue 默认值
-	 * @return 字段值
-	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(final String attr, final T defaultValue) {
-		final Object result = get(attr);
-		return (T) (result != null ? result : defaultValue);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public String getStr(final String attr) {
-		return Convert.toStr(get(attr), null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public Integer getInt(final String attr) {
-		return Convert.toInt(get(attr), null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public Long getLong(final String attr) {
-		return Convert.toLong(get(attr), null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public Float getFloat(final String attr) {
-		return Convert.toFloat(get(attr), null);
-	}
-
-	@Override
-	public Short getShort(final String attr) {
-		return Convert.toShort(get(attr), null);
-	}
-
-	@Override
-	public Character getChar(final String attr) {
-		return Convert.toChar(get(attr), null);
-	}
-
-	@Override
-	public Double getDouble(final String attr) {
-		return Convert.toDouble(get(attr), null);
-	}
-
-	@Override
-	public Byte getByte(final String attr) {
-		return Convert.toByte(get(attr), null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public Boolean getBool(final String attr) {
-		return Convert.toBool(get(attr), null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public BigDecimal getBigDecimal(final String attr) {
-		return Convert.toBigDecimal(get(attr));
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public BigInteger getBigInteger(final String attr) {
-		return Convert.toBigInteger(get(attr));
-	}
-
-	@Override
-	public <E extends Enum<E>> E getEnum(final Class<E> clazz, final String key) {
-		return Convert.toEnum(clazz, get(key));
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public byte[] getBytes(final String attr) {
-		return get(attr, null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	@Override
-	public Date getDate(final String attr) {
-		return get(attr, null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public Time getTime(final String attr) {
-		return get(attr, null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public Timestamp getTimestamp(final String attr) {
-		return get(attr, null);
-	}
-
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public Number getNumber(final String attr) {
-		return get(attr, null);
+	public <T> T getBean(final String attr) {
+		return (T) get(attr);
 	}
 
 	/**

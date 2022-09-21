@@ -4,11 +4,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.io.resource.UrlResource;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
@@ -85,6 +82,11 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	protected Resource resource;
 
+	/**
+	 * 当获取key对应值为{@code null}时是否打印debug日志提示用户，默认{@code false}
+	 */
+	private boolean logIfNull;
+
 	private SettingLoader settingLoader;
 	private WatchMonitor watchMonitor;
 
@@ -137,32 +139,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public Setting(final File configFile, final Charset charset, final boolean isUseVariable) {
 		Assert.notNull(configFile, "Null setting file define!");
-		this.init(new FileResource(configFile), charset, isUseVariable);
-	}
-
-	/**
-	 * 构造，相对于classes读取文件
-	 *
-	 * @param path          相对ClassPath路径或绝对路径
-	 * @param clazz         基准类
-	 * @param charset       字符集
-	 * @param isUseVariable 是否使用变量
-	 */
-	public Setting(final String path, final Class<?> clazz, final Charset charset, final boolean isUseVariable) {
-		Assert.notBlank(path, "Blank setting path !");
-		this.init(new ClassPathResource(path, clazz), charset, isUseVariable);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param url           设定文件的URL
-	 * @param charset       字符集
-	 * @param isUseVariable 是否使用变量
-	 */
-	public Setting(final URL url, final Charset charset, final boolean isUseVariable) {
-		Assert.notNull(url, "Null setting url define!");
-		this.init(new UrlResource(url), charset, isUseVariable);
+		this.init(ResourceUtil.getResource(configFile), charset, isUseVariable);
 	}
 
 	/**
@@ -278,26 +255,12 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	@Override
-	public String getByGroup(final String key, final String group) {
-		return this.groupedMap.get(group, key);
-	}
-
-	/**
-	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
-	 *
-	 * @param keys 键列表，常用于别名
-	 * @return 值
-	 * @since 3.1.2
-	 */
-	public Object getAndRemove(final String... keys) {
-		Object value = null;
-		for (final String key : keys) {
-			value = remove(key);
-			if (null != value) {
-				break;
-			}
+	public Object getObjByGroup(final CharSequence key, final CharSequence group, final Object defaultValue) {
+		final String result = this.groupedMap.get(group, key);
+		if (result == null && logIfNull) {
+			StaticLog.debug("No key [{}] in group [{}] !", key, group);
 		}
-		return value;
+		return result;
 	}
 
 	/**
@@ -307,7 +270,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return 字符串值
 	 * @since 3.1.2
 	 */
-	public String getAndRemoveStr(final String... keys) {
+	public String getAndRemove(final String... keys) {
 		String value = null;
 		for (final String key : keys) {
 			value = remove(key);
@@ -467,6 +430,16 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		return this;
 	}
 
+	/**
+	 * 设置当获取key对应值为{@code null}时是否打印debug日志提示用户
+	 * @param logIfNull 当获取key对应值为{@code null}时是否打印debug日志提示用户
+	 * @return this
+	 */
+	public Setting setLogIfNull(final boolean logIfNull){
+		this.logIfNull = logIfNull;
+		return this;
+	}
+
 	// ------------------------------------------------- Map interface with group
 
 	/**
@@ -499,17 +472,6 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public boolean containsValue(final String group, final String value) {
 		return this.groupedMap.containsValue(group, value);
-	}
-
-	/**
-	 * 获取分组对应的值，如果分组不存在或者值不存在则返回null
-	 *
-	 * @param group 分组
-	 * @param key   键
-	 * @return 值，如果分组不存在或者值不存在则返回null
-	 */
-	public String get(final String group, final String key) {
-		return this.groupedMap.get(group, key);
 	}
 
 	/**
@@ -666,7 +628,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	@Override
 	public String get(final Object key) {
-		return this.groupedMap.get(DEFAULT_GROUP, Convert.toStr(key));
+		return getStr((String)key);
 	}
 
 	/**
@@ -689,7 +651,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	@Override
 	public String remove(final Object key) {
-		return this.groupedMap.remove(DEFAULT_GROUP, Convert.toStr(key));
+		return remove(DEFAULT_GROUP, key);
 	}
 
 	/**

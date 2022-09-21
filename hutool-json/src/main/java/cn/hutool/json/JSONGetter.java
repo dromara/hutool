@@ -1,11 +1,9 @@
 package cn.hutool.json;
 
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.lang.getter.TypeGetter;
 import cn.hutool.core.util.ObjUtil;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -14,7 +12,7 @@ import java.util.List;
  * @param <K> Key类型
  * @author Looly
  */
-public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
+public interface JSONGetter<K> extends TypeGetter<K> {
 
 	/**
 	 * 获取JSON配置
@@ -126,49 +124,12 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	}
 
 	@Override
-	default Date getDate(final K key, final Date defaultValue) {
-		return get(key, Date.class);
-	}
-
-	/**
-	 * 获取{@link LocalDateTime}类型值
-	 *
-	 * @param key          键
-	 * @param defaultValue 默认值
-	 * @return {@link LocalDateTime}
-	 * @since 5.7.7
-	 */
-	default LocalDateTime getLocalDateTime(final K key, final LocalDateTime defaultValue) {
-		return ObjUtil.defaultIfNull(get(key, LocalDateTime.class), defaultValue);
-	}
-
-	/**
-	 * 获取byte[]数据
-	 *
-	 * @param key 键
-	 * @return 值
-	 */
-	default byte[] getBytes(final K key) {
-		return get(key, byte[].class);
-	}
-
-	/**
-	 * 获取指定类型的对象
-	 *
-	 * @param <T>         获取的对象类型
-	 * @param key         键
-	 * @param type        获取对象类型
-	 * @return 对象
-	 * @throws ConvertException 转换异常
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings("unchecked")
-	default <T> T get(final K key, final Class<T> type) throws ConvertException {
+	default <T> T get(final K key, final Type type, final T defaultValue) {
 		final Object value = this.getObj(key);
 		if (ObjUtil.isNull(value)) {
-			return null;
+			return defaultValue;
 		}
 
-		return (T) getConfig().getConverter().convert(type, value);
+		return (T) getConfig().getConverter().convert(type, value, defaultValue);
 	}
 }

@@ -7,13 +7,13 @@ public class SettingUtilTest {
 
 	@Test
 	public void getTest() {
-		final String driver = SettingUtil.get("test").get("demo", "driver");
+		final String driver = SettingUtil.get("test").getStrByGroup("driver", "demo");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 
 	@Test
 	public void getTest2() {
-		final String driver = SettingUtil.get("example/example").get("demo", "key");
+		final String driver = SettingUtil.get("example/example").getStrByGroup("key", "demo");
 		Assert.assertEquals("value", driver);
 	}
 
@@ -21,7 +21,7 @@ public class SettingUtilTest {
 	public void getFirstFoundTest() {
 		//noinspection ConstantConditions
 		final String driver = SettingUtil.getFirstFound("test2", "test")
-				.get("demo", "driver");
+				.getStrByGroup("driver", "demo");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 }

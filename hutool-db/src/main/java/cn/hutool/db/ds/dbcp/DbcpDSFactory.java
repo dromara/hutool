@@ -38,7 +38,7 @@ public class DbcpDSFactory extends AbstractDSFactory {
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
 		for (final String key : KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemoveStr(key);
+			connValue = poolSetting.getAndRemove(key);
 			if(StrUtil.isNotBlank(connValue)){
 				ds.addConnectionProperty(key, connValue);
 			}

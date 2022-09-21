@@ -1,11 +1,11 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.lang.getter.TypeGetter;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -21,7 +21,7 @@ import java.util.Set;
  * @author looly
  * @since 3.2.0
  */
-public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObjectGetter<Object>, InvocationHandler, Serializable {
+public class MapProxy implements Map<Object, Object>, TypeGetter<Object>, InvocationHandler, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
@@ -32,7 +32,7 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 	 * 此类对Map做一次包装，提供各种getXXX方法
 	 *
 	 * @param map 被代理的Map
-	 * @return {@link MapProxy}
+	 * @return {@code MapProxy}
 	 */
 	public static MapProxy of(final Map<?, ?> map) {
 		return (map instanceof MapProxy) ? (MapProxy) map : new MapProxy(map);
@@ -47,10 +47,10 @@ public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObject
 		this.map = map;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getObj(final Object key, final Object defaultValue) {
-		final Object value = map.get(key);
-		return null != value ? value : defaultValue;
+		return map.getOrDefault(key, defaultValue);
 	}
 
 	@Override

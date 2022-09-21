@@ -1,8 +1,6 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.setting.dialect.Props;
 import lombok.Data;
 import org.junit.Assert;
@@ -16,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Setting单元测试
+ * Props单元测试
  *
  * @author Looly
  *
@@ -25,7 +23,7 @@ public class PropsTest {
 
 	@Before
 	public void init() {
-		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
+		//LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
 	}
 
 	@Test
@@ -53,7 +51,7 @@ public class PropsTest {
 
 	@Test
 	public void toBeanTest() {
-		final Props props = Props.getProp("to_bean_test.properties");
+		final Props props = Props.of("to_bean_test.properties");
 
 		final ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
 		Assert.assertEquals("mailer@mail.com", cfg.getHost());

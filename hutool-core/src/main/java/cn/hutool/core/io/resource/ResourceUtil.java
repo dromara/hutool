@@ -10,6 +10,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.URLUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -209,5 +210,27 @@ public class ResourceUtil {
 			}
 		}
 		return new ClassPathResource(path);
+	}
+
+	/**
+	 * 获取{@link UrlResource} 资源对象
+	 *
+	 * @param url URL
+	 * @return {@link Resource} 资源对象
+	 * @since 6.0.0
+	 */
+	public static Resource getResource(final URL url) {
+		return new UrlResource(url);
+	}
+
+	/**
+	 * 获取{@link FileResource} 资源对象
+	 *
+	 * @param file {@link File}
+	 * @return {@link Resource} 资源对象
+	 * @since 6.0.0
+	 */
+	public static Resource getResource(final File file) {
+		return new FileResource(file);
 	}
 }
