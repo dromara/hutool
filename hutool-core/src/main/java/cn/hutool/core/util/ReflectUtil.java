@@ -1112,20 +1112,18 @@ public class ReflectUtil {
 
 	/**
 	 * 设置final的field字段可以被修改
-	 * <p>
-	 *     只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
-	 *     <p>以下属性，编译器会内联优化，无法通过反射修改：</p>
-	 *     <ul>
-	 *         <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
-	 *         <li> Literal String 类型(直接双引号字符串)</li>
-	 *     </ul>
-	 *     <h3>以下属性，可以通过反射修改：</h3>
-	 *     <ul>
-	 *         <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
-	 *         <li>字符串，通过 new String("")实例化</li>
-	 *         <li>自定义java类</li>
-	 *     </ul>
-	 * </p>
+	 * 只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
+	 * <p>以下属性，编译器会内联优化，无法通过反射修改：</p>
+	 * <ul>
+	 *     <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
+	 *     <li> Literal String 类型(直接双引号字符串)</li>
+	 * </ul>
+	 * <h3>以下属性，可以通过反射修改：</h3>
+	 * <ul>
+	 *     <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
+	 *     <li>字符串，通过 new String("")实例化</li>
+	 *     <li>自定义java类</li>
+	 * </ul>
 	 * <pre class="code">
 	 * {@code
 	 *      //示例，移除final修饰符
@@ -1133,12 +1131,13 @@ public class ReflectUtil {
 	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
 	 * 		ReflectUtil.removeFinalModify(field);
 	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
-	 * 	}
+	 *    }
 	 * </pre>
+	 *
 	 * @param field 被修改的field，不可以为空
 	 * @throws UtilException IllegalAccessException等异常包装
-	 * @since 5.8.8
 	 * @author dazer
+	 * @since 5.8.8
 	 */
 	public static void removeFinalModify(Field field) {
 		ModifierUtil.removeFinalModify(field);
