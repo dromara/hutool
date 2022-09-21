@@ -544,7 +544,7 @@ public class ClassUtil {
 	 * @return 包名
 	 */
 	public static String getPackagePath(final Class<?> clazz) {
-		return getPackage(clazz).replace(StrUtil.C_DOT, StrUtil.C_SLASH);
+		return getPackage(clazz).replace(CharUtil.DOT, CharUtil.SLASH);
 	}
 
 	/**

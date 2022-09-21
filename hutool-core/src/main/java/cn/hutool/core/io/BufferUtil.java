@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
 
@@ -166,9 +167,9 @@ public class BufferUtil {
 		while (buffer.hasRemaining()) {
 			b = buffer.get();
 			charIndex++;
-			if (b == StrUtil.C_CR) {
+			if (b == CharUtil.CR) {
 				canEnd = true;
-			} else if (b == StrUtil.C_LF) {
+			} else if (b == CharUtil.LF) {
 				return canEnd ? charIndex - 2 : charIndex - 1;
 			} else {
 				// 只有\r无法确认换行

@@ -65,7 +65,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final Condition[] where = query.getWhere();
 		if (ArrayUtil.isEmpty(where)) {
-			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
+			// 对于无条件删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
 		}
 		final SqlBuilder delete = SqlBuilder.of(wrapper).delete(query.getFirstTableName()).where(where);
@@ -79,7 +79,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final Condition[] where = query.getWhere();
 		if (ArrayUtil.isEmpty(where)) {
-			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
+			// 对于无条件地删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepare statement for update everything.");
 		}
 

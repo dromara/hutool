@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class ZodiacTest {
 
@@ -13,7 +12,7 @@ public class ZodiacTest {
 		Assert.assertEquals("摩羯座", Zodiac.getZodiac(Month.JANUARY, 19));
 		Assert.assertEquals("水瓶座", Zodiac.getZodiac(Month.JANUARY, 20));
 		Assert.assertEquals("巨蟹座", Zodiac.getZodiac(6, 17));
-		Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = Calendar.getInstance();
 		calendar.set(2022, Calendar.JULY, 17);
 		Assert.assertEquals("巨蟹座", Zodiac.getZodiac(calendar.getTime()));
 		Assert.assertEquals("巨蟹座", Zodiac.getZodiac(calendar));
@@ -25,7 +24,7 @@ public class ZodiacTest {
 		Assert.assertEquals("狗", Zodiac.getChineseZodiac(1994));
 		Assert.assertEquals("狗", Zodiac.getChineseZodiac(2018));
 		Assert.assertEquals("猪", Zodiac.getChineseZodiac(2019));
-		Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = Calendar.getInstance();
 		calendar.set(2022, Calendar.JULY, 17);
 		Assert.assertEquals("虎", Zodiac.getChineseZodiac(calendar.getTime()));
 		Assert.assertEquals("虎", Zodiac.getChineseZodiac(calendar));

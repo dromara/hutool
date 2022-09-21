@@ -296,15 +296,13 @@ public class JschUtil {
 	 *
 	 * @param session   需要解除端口映射的SSH会话
 	 * @param localPort 需要解除的本地端口
-	 * @return 解除成功与否
 	 */
-	public static boolean unBindPort(final Session session, final int localPort) {
+	public static void unBindPort(final Session session, final int localPort) {
 		try {
 			session.delPortForwardingL(localPort);
 		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
-		return true;
 	}
 
 	/**

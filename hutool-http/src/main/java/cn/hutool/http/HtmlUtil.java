@@ -1,8 +1,9 @@
 package cn.hutool.http;
 
-import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.escape.EscapeUtil;
+import cn.hutool.core.util.XmlUtil;
 
 /**
  * HTML工具类
@@ -16,14 +17,7 @@ import cn.hutool.core.text.StrUtil;
  */
 public class HtmlUtil {
 
-	public static final String NBSP = StrUtil.HTML_NBSP;
-	public static final String AMP = StrUtil.HTML_AMP;
-	public static final String QUOTE = StrUtil.HTML_QUOTE;
-	public static final String APOS = StrUtil.HTML_APOS;
-	public static final String LT = StrUtil.HTML_LT;
-	public static final String GT = StrUtil.HTML_GT;
-
-	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
+	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<\\s*?/[^<]*?>)|(<[^<]*?/\\s*?>)";
 	public static final String RE_SCRIPT = "<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
 
 	private static final char[][] TEXT = new char[64][];
@@ -35,10 +29,10 @@ public class HtmlUtil {
 
 		// special HTML characters
 		TEXT['\''] = "&#039;".toCharArray(); // 单引号 ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"'] = QUOTE.toCharArray(); // 单引号
-		TEXT['&'] = AMP.toCharArray(); // &符
-		TEXT['<'] = LT.toCharArray(); // 小于号
-		TEXT['>'] = GT.toCharArray(); // 大于号
+		TEXT['"'] = XmlUtil.QUOTE.toCharArray(); // 单引号
+		TEXT['&'] = XmlUtil.AMP.toCharArray(); // &符
+		TEXT['<'] = XmlUtil.LT.toCharArray(); // 小于号
+		TEXT['>'] = XmlUtil.GT.toCharArray(); // 大于号
 	}
 
 	/**

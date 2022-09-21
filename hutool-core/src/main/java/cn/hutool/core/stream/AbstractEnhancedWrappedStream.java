@@ -17,7 +17,7 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	implements TerminableWrappedStream<T, S>, TransformableWrappedStream<T, S> {
 
 	/**
-	 * 原始的流实例
+	 * 原始流实例
 	 */
 	protected final Stream<T> stream;
 

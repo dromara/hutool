@@ -432,7 +432,7 @@ public final class InternalJSONUtil {
 			case '\r':
 				return "\\r";
 			default:
-				if (c < StrUtil.C_SPACE || //
+				if (c < CharUtil.SPACE || //
 						(c >= '\u0080' && c <= '\u00a0') || //
 						(c >= '\u2000' && c <= '\u2010') || //
 						(c >= '\u2028' && c <= '\u202F') || //

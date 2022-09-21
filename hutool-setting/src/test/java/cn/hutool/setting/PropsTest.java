@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.setting.dialect.Props;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -20,11 +19,6 @@ import java.util.Objects;
  *
  */
 public class PropsTest {
-
-	@Before
-	public void init() {
-		//LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
-	}
 
 	@Test
 	public void propTest() {

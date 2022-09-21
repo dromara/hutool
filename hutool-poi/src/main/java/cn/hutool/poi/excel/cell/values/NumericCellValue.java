@@ -1,13 +1,14 @@
 package cn.hutool.poi.excel.cell.values;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.poi.excel.ExcelDateUtil;
 import cn.hutool.poi.excel.cell.CellValue;
-import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.NumberToTextConverter;
+
+import java.util.Date;
 
 /**
  * 数字类型单元格值<br>
@@ -48,7 +49,7 @@ public class NumericCellValue implements CellValue<Object> {
 
 			final String format = style.getDataFormatString();
 			// 普通数字
-			if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
+			if (null != format && format.indexOf(CharUtil.DOT) < 0) {
 				final long longPart = (long) value;
 				if (((double) longPart) == value) {
 					// 对于无小数部分的数字类型，转为Long

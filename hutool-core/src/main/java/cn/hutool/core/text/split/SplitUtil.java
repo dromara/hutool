@@ -54,7 +54,7 @@ public class SplitUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> splitPath(final CharSequence str, final int limit) {
-		return split(str, StrUtil.C_SLASH, limit, true, true);
+		return split(str, CharUtil.SLASH, limit, true, true);
 	}
 
 	/**

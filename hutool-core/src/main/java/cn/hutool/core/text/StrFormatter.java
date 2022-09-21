@@ -1,6 +1,7 @@
 package cn.hutool.core.text;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.util.Map;
 
@@ -67,8 +68,8 @@ public class StrFormatter {
 			}
 
 			// 转义符
-			if (delimIndex > 0 && strPattern.charAt(delimIndex - 1) == StrUtil.C_BACKSLASH) {// 转义符
-				if (delimIndex > 1 && strPattern.charAt(delimIndex - 2) == StrUtil.C_BACKSLASH) {// 双转义符
+			if (delimIndex > 0 && strPattern.charAt(delimIndex - 1) == CharUtil.BACKSLASH) {// 转义符
+				if (delimIndex > 1 && strPattern.charAt(delimIndex - 2) == CharUtil.BACKSLASH) {// 双转义符
 					// 转义符之前还有一个转义符，占位符依旧有效
 					sbuf.append(strPattern, handledPosition, delimIndex - 1);
 					sbuf.append(StrUtil.utf8Str(argArray[argIndex]));

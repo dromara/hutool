@@ -1306,7 +1306,7 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 给定的路径已经是绝对路径了
-		return StrUtil.C_SLASH == path.charAt(0) || ReUtil.isMatch(PATTERN_PATH_ABSOLUTE, path);
+		return CharUtil.SLASH == path.charAt(0) || ReUtil.isMatch(PATTERN_PATH_ABSOLUTE, path);
 	}
 
 	/**
@@ -1600,7 +1600,7 @@ public class FileUtil extends PathUtil {
 		if (prefixIndex > -1) {
 			// 可能Windows风格路径
 			prefix = pathToUse.substring(0, prefixIndex + 1);
-			if (StrUtil.startWith(prefix, StrUtil.C_SLASH)) {
+			if (StrUtil.startWith(prefix, CharUtil.SLASH)) {
 				// 去除类似于/C:这类路径开头的斜杠
 				prefix = prefix.substring(1);
 			}
@@ -1616,7 +1616,7 @@ public class FileUtil extends PathUtil {
 			pathToUse = pathToUse.substring(1);
 		}
 
-		final List<String> pathList = StrUtil.split(pathToUse, StrUtil.C_SLASH);
+		final List<String> pathList = StrUtil.split(pathToUse, CharUtil.SLASH);
 
 		final List<String> pathElements = new LinkedList<>();
 		int tops = 0;
@@ -1887,6 +1887,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static BOMInputStream getBOMInputStream(final File file) throws IORuntimeException {
 		try {
+			//noinspection IOStreamConstructor
 			return new BOMInputStream(new FileInputStream(file));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -2431,6 +2432,7 @@ public class FileUtil extends PathUtil {
 	public static BufferedOutputStream getOutputStream(final File file) throws IORuntimeException {
 		final OutputStream out;
 		try {
+			//noinspection IOStreamConstructor
 			out = new FileOutputStream(touch(file));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);

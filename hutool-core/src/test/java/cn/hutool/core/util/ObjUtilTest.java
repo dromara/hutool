@@ -70,18 +70,20 @@ public class ObjUtilTest {
 		Assert.assertTrue(ObjUtil.contains(new int[]{1,2,3,4,5}, 1));
 		Assert.assertFalse(ObjUtil.contains(null, 1));
 		Assert.assertTrue(ObjUtil.contains("123", "3"));
-		Map<Integer, Integer> map = new HashMap<>();
+		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
 		Assert.assertTrue(ObjUtil.contains(map, 1));
 		Assert.assertTrue(ObjUtil.contains(Arrays.asList(1, 2, 3).iterator(), 2));
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isNullTest() {
 		Assert.assertTrue(ObjUtil.isNull(null));
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isNotNullTest() {
 		Assert.assertFalse(ObjUtil.isNotNull(null));
@@ -124,12 +126,12 @@ public class ObjUtilTest {
 		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), val2));
 		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), val2));
 
-		SerializableBean obj = new SerializableBean(null);
-		SerializableBean objNull = null;
-		String result3 = ObjUtil.defaultIfNull(obj, Object::toString, "fail");
+		final SerializableBean obj = new SerializableBean(null);
+		final SerializableBean objNull = null;
+		final String result3 = ObjUtil.defaultIfNull(obj, Object::toString, "fail");
 		Assert.assertNotNull(result3);
 
-		String result4 = ObjUtil.defaultIfNull(objNull, Object::toString, () -> "fail");
+		final String result4 = ObjUtil.defaultIfNull(objNull, Object::toString, () -> "fail");
 		Assert.assertNotNull(result4);
 	}
 
@@ -242,6 +244,7 @@ public class ObjUtilTest {
 	@RequiredArgsConstructor
 	@EqualsAndHashCode
 	private static class SerializableBean implements Serializable {
+		private static final long serialVersionUID = -7759522980793544334L;
 		private final Integer id;
 	}
 
@@ -251,6 +254,7 @@ public class ObjUtilTest {
 		private final Integer id;
 	}
 
+	@SuppressWarnings("unused")
 	private interface TypeArgument<A, B> {};
 
 }

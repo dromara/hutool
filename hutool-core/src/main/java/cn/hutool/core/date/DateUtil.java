@@ -16,6 +16,7 @@ import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
@@ -1624,7 +1625,7 @@ public class DateUtil extends CalendarUtil {
 			return 0;
 		}
 
-		final List<String> hms = StrUtil.splitTrim(timeStr, StrUtil.C_COLON, 3);
+		final List<String> hms = StrUtil.splitTrim(timeStr, CharUtil.COLON, 3);
 		final int lastIndex = hms.size() - 1;
 
 		int result = 0;
