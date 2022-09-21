@@ -304,6 +304,7 @@ public class ReflectUtil {
 	 * 设置字段值<br>
 	 * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换<br>
 	 * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值（见 {@link ClassUtil#getDefaultValue(Class)}）
+	 * 如果是final字段，setFieldValue，调用这可以先调用 {@link ReflectUtil#removeFinalModify(Field)}方法去除final修饰符<br>
 	 *
 	 * @param obj       对象,static字段则此处传Class
 	 * @param fieldName 字段名
@@ -322,7 +323,8 @@ public class ReflectUtil {
 	/**
 	 * 设置字段值<br>
 	 * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换<br>
-	 * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值（见 {@link ClassUtil#getDefaultValue(Class)}）
+	 * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值（见 {@link ClassUtil#getDefaultValue(Class)}）<br>
+	 * 如果是final字段，setFieldValue，调用这可以先调用 {@link ReflectUtil#removeFinalModify(Field)}方法去除final修饰符
 	 *
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
@@ -346,10 +348,7 @@ public class ReflectUtil {
 			value = ClassUtil.getDefaultValue(fieldType);
 		}
 
-		// 设置private私有（私有方法、属性、类）可以被外部方式
 		setAccessible(field);
-		// 设置final字段可以被修改
-		setFieldModify(field);
 		try {
 			field.set(obj instanceof Class ? null : obj, value);
 		} catch (IllegalAccessException e) {
@@ -1129,12 +1128,19 @@ public class ReflectUtil {
 	 *         <li>自定义java类</li>
 	 *     </ul>
 	 * </p>
+	 * <code>
+	 *      //示例，移除final修饰符
+	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
+	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+	 * 		ReflectUtil.removeFinalModify(field);
+	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+	 * </code>
 	 * @param field 被修改的field，不可以为空
 	 * @throws UtilException IllegalAccessException等异常包装
 	 * @since 5.8.8
 	 * @author dazer
 	 */
-	public static void setFieldModify(Field field) {
+	public static void removeFinalModify(Field field) {
 		if (field != null) {
 			if (ModifierUtil.hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
 				//将字段的访问权限设为true：即去除private修饰符的影响

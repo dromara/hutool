@@ -286,7 +286,10 @@ public class ReflectUtilTest {
 						3,
 						99
 				);
+		Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+		ReflectUtil.removeFinalModify(field);
 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+
 		Assert.assertEquals(dialects, ReflectUtil.getFieldValue(JdbcDialects.class, fieldName));
 	}
 }
