@@ -618,6 +618,7 @@ public class LocalDateTimeUtil {
 	 * 通过includeBegin, includeEnd参数控制时间范围区间是否为开区间，例如：传入参数：includeBegin=true, includeEnd=false，
 	 * 则本方法会判断 date ∈ (beginDate, endDate] 是否成立
 	 *
+	 * @param date 被判定的日期
 	 * @param beginDate    起始时间（包含）
 	 * @param endDate      结束时间（包含）
 	 * @param includeBegin 时间范围是否包含起始时间

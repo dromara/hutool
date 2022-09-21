@@ -247,9 +247,9 @@ public class MapUtil {
 		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			try{
+			try {
 				return (Map<K, V>) ReflectUtil.newInstance(mapType);
-			}catch (UtilException e){
+			} catch (UtilException e) {
 				// 不支持的map类型，返回默认的HashMap
 				return new HashMap<>();
 			}
@@ -735,7 +735,7 @@ public class MapUtil {
 		if (null == map || null == biFunction) {
 			return MapUtil.newHashMap();
 		}
-		return map.entrySet().stream().collect(CollectorUtil.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue()),(l,r)->l));
+		return map.entrySet().stream().collect(CollectorUtil.toMap(Map.Entry::getKey, m -> biFunction.apply(m.getKey(), m.getValue()), (l, r) -> l));
 	}
 
 	/**
@@ -1469,11 +1469,16 @@ public class MapUtil {
 	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
 	 * This class should be removed once we drop Java 8 support.
 	 *
+	 * @param <K>             键类型
+	 * @param <V>             值类型
+	 * @param map             Map
+	 * @param key             键
+	 * @param mappingFunction 值不存在时值的生成函数
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
 	public static <K, V> V computeIfAbsent(Map<K, V> map, K key, Function<? super K, ? extends V> mappingFunction) {
 		V value = map.get(key);
-		if(null == value){
+		if (null == value) {
 			map.putIfAbsent(key, mappingFunction.apply(key));
 			value = map.get(key);
 		}

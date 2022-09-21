@@ -249,6 +249,8 @@ public class EnumUtil {
 	/**
 	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
 	 *
+	 * @param <E>         枚举类型
+	 * @param <C>         字段类型
 	 * @param condition   条件字段
 	 * @param value       条件字段值
 	 * @param defaultEnum 条件找不到则返回结果使用这个

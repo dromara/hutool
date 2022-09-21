@@ -269,7 +269,6 @@ public class ModifierUtil {
 	 * 设置final的field字段可以被修改
 	 * <p>
 	 *     只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
-	 *     <br/>
 	 *     <h3>以下属性，编译器会内联优化，无法通过反射修改：</h3>
 	 *     <ul>
 	 *         <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
@@ -282,13 +281,13 @@ public class ModifierUtil {
 	 *         <li>自定义java类</li>
 	 *     </ul>
 	 * </p>
-	 * <code>
+	 * <pre class="code">
 	 *      //示例，移除final修饰符
 	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
 	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
 	 * 		ReflectUtil.removeFinalModify(field);
 	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
-	 * </code>
+	 * </pre>
 	 * @param field 被修改的field，不可以为空
 	 * @throws UtilException IllegalAccessException等异常包装
 	 * @since 5.8.8
