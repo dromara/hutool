@@ -285,7 +285,7 @@ public class RepeatableMetaAnnotatedElement<T extends AnnotationMapping<Annotati
 	 * 若当前注解是可重复注解的容器，则将其平铺后把可重复注解加入{@link #aggregations}
 	 */
 	private List<Aggregation> collectRepeatable(final Annotation annotation) {
-		return repeatableCollector.getRepeatableAnnotations(annotation, true)
+		return repeatableCollector.getAllRepeatableAnnotations(annotation)
 			.stream()
 			.map(a -> new Aggregation(a, Objects.equals(a, annotation)))
 			.collect(Collectors.toList());

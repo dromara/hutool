@@ -32,9 +32,20 @@ public interface RepeatableAnnotationCollector {
 	}
 
 	/**
-	 * 当注解中有且仅有一个名为{@code value}的属性时，
+	 * <p>当注解中有且仅有一个名为{@code value}的属性时，
 	 * 若该属性类型为注解数组，且该数组对应的注解类型被{@link Repeatable}注解，
-	 * 则收集器将返回该属性中包括的可重复注解。
+	 * 则收集器将返回该属性中包括的可重复注解。<br>
+	 * eg:
+	 * <pre><code>
+	 * // 容器注解
+	 * {@literal @}interface Annotation {
+	 * 	Item[] value() default {};
+	 * }
+	 * // 可重复注解
+	 * {@literal @}Repeatable(Annotation.class)
+	 * {@literal @}interface Item {}
+	 * </code></pre>
+	 * 解析任意{@code Annotation}注解对象，则可以获得{@code value}属性中的{@code Item}注解对象
 	 *
 	 * @return {@link RepeatableAnnotationCollector}实例
 	 * @see Standard
@@ -55,9 +66,19 @@ public interface RepeatableAnnotationCollector {
 	}
 
 	/**
-	 * 当注解中存在有属性为注解数组，且该数组对应的注解类型被{@link Repeatable}注解时，
+	 * <p>当注解中存在有属性为注解数组，且该数组对应的注解类型被{@link Repeatable}注解时，
 	 * 认为该属性包含可重复注解。<br>
-	 * 收集器将返回所有符合上述条件的属性中的可重复注解。
+	 * 收集器将返回所有符合上述条件的属性中的可重复注解。<br>
+	 * eg:
+	 * <pre><code>
+	 * {@literal @}interface Annotation {
+	 * 	Item1[] items1() default {};
+	 * 	Item2[] items2() default {};
+	 * }
+	 * </code></pre>
+	 * 解析任意{@code Annotation}注解对象，
+	 * 则可以获得{@code items1}属性中的{@code Item1}注解对象，
+	 * 以及{@code items2}属性中的{@code Item2}注解对象，
 	 *
 	 * @return {@link RepeatableAnnotationCollector}实例
 	 */
@@ -67,26 +88,39 @@ public interface RepeatableAnnotationCollector {
 
 	/**
 	 * <p>若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的注解对象。
-	 * 若包含的注解对象也是可重复注解的容器注解，则继续解析直到获得所有非容器注解为止。
+	 * 若包含的注解对象也是可重复注解的容器注解，则继续解析直到获得所有非容器注解为止。<br>
+	 * eg:
+	 * 若存在嵌套关系{@code a -> b -> c}，
+	 * 则解析注解<em>a</em>，则将得到全部<em>c</em>注解。<br>
+	 * 如果注解不包含可重复注解，则返回<em>a</em>本身。
 	 *
 	 * @param annotation 容器注解
 	 * @return 容器注解中的可重复注解，若{@code annotation}不为容器注解，则数组中仅有其本身一个对象
 	 */
-	List<Annotation> getRepeatableAnnotations(final Annotation annotation);
+	List<Annotation> getFinalRepeatableAnnotations(final Annotation annotation);
 
 	/**
 	 * <p>若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的注解对象。
 	 * 若包含的注解对象也是可重复注解的容器注解，则继续解析直到获得所有非容器注解为止。<br>
-	 * 当{@code accumulate}为{@code true}时，返回结果为全量的注解。
+	 * eg:
+	 * 若存在嵌套关系{@code a -> b -> c}，则解析注解<em>a</em>,
+	 * 将获得全部<em>a</em>、<em>b</em>、<em>c</em>注解。<br>
+	 * 如果注解不包含可重复注解，则返回<em>a</em>本身。
 	 *
 	 * @param annotation 容器注解
-	 * @param accumulate 是否累加
 	 * @return 容器注解中的可重复注解，若{@code annotation}不为容器注解，则数组中仅有其本身一个对象
 	 */
-	List<Annotation> getRepeatableAnnotations(final Annotation annotation, final boolean accumulate);
+	List<Annotation> getAllRepeatableAnnotations(final Annotation annotation);
 
 	/**
-	 * 若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的指定类型注解对象
+	 * <p>若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的指定类型注解对象。<br>
+	 * eg:
+	 * 若存在嵌套关系{@code a -> b -> c}，则：
+	 * <ul>
+	 *     <li>解析注解<em>a</em>：可获得<em>a</em>、<em>b</em>、<em>c</em>；</li>
+	 *     <li>解析注解<em>b</em>：可获得<em>b</em>、<em>c</em>；</li>
+	 *     <li>解析注解<em>c</em>：只可获得<em>c</em>；</li>
+	 * </ul>
 	 *
 	 * @param annotation     容器注解
 	 * @param annotationType 注解类型
@@ -112,7 +146,7 @@ public interface RepeatableAnnotationCollector {
 		 * @return 空集合
 		 */
 		@Override
-		public List<Annotation> getRepeatableAnnotations(final Annotation annotation) {
+		public List<Annotation> getFinalRepeatableAnnotations(final Annotation annotation) {
 			return Objects.isNull(annotation) ?
 				Collections.emptyList() : Collections.singletonList(annotation);
 		}
@@ -124,7 +158,7 @@ public interface RepeatableAnnotationCollector {
 		 * @return 空集合
 		 */
 		@Override
-		public List<Annotation> getRepeatableAnnotations(final Annotation annotation, final boolean accumulate) {
+		public List<Annotation> getAllRepeatableAnnotations(final Annotation annotation) {
 			return Objects.isNull(annotation) ?
 				Collections.emptyList() : Collections.singletonList(annotation);
 		}
@@ -159,22 +193,25 @@ public interface RepeatableAnnotationCollector {
 		 * @return 容器注解中的可重复注解，若{@code annotation}不为容器注解，则数组中仅有其本身一个对象
 		 */
 		@Override
-		public final List<Annotation> getRepeatableAnnotations(final Annotation annotation) {
-			return getRepeatableAnnotations(annotation, false);
+		public final List<Annotation> getFinalRepeatableAnnotations(final Annotation annotation) {
+			return find(annotation, null, false);
 		}
 
 		/**
 		 * <p>若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的注解对象。
 		 * 若包含的注解对象也是可重复注解的容器注解，则继续解析直到获得所有非容器注解为止。<br>
 		 * 当{@code accumulate}为{@code true}时，返回结果为全量的注解。
+		 * eg:
+		 * 若存在嵌套关系{@code a -> b -> c}，则解析注解<em>a</em>,
+		 * 将获得全部<em>a</em>、<em>b</em>、<em>c</em>注解。
+		 * 如果注解不包含可重复注解，则返回其本身。
 		 *
 		 * @param annotation 容器注解
-		 * @param accumulate 是否累加
 		 * @return 容器注解中的可重复注解，若{@code annotation}不为容器注解，则数组中仅有其本身一个对象
 		 */
 		@Override
-		public final List<Annotation> getRepeatableAnnotations(final Annotation annotation, final boolean accumulate) {
-			return find(annotation, null, accumulate);
+		public List<Annotation> getAllRepeatableAnnotations(Annotation annotation) {
+			return find(annotation, null, true);
 		}
 
 		/**
