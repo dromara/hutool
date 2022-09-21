@@ -572,6 +572,7 @@ public class AnnotatedElementUtilTest {
 
 	// ================= interface =================
 
+	@Annotation6
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation5 {}

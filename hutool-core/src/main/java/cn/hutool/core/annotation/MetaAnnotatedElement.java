@@ -10,7 +10,6 @@ import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.Stream;
 
 /**
  * <p>注解元素映射，用于包装一个{@link AnnotatedElement}，然后将被包装的元素上，
@@ -314,11 +313,15 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 			}
 			// 保存该注解，并将其需要处理的元注解也加入队列
 			mappings.put(mapping.annotationType(), mapping);
-			Stream.of(AnnotationUtil.getDeclaredAnnotations(mapping.annotationType()))
-				.map(annotation -> createMapping(mapping, annotation))
-				.filter(Objects::nonNull)
-				.filter(m -> isNeedMapping(mappings, m))
-				.forEach(deque::addLast);
+			for (final Annotation annotation : AnnotationUtil.getDeclaredAnnotations(mapping.annotationType())) {
+				if (mappings.containsKey(annotation.annotationType())) {
+					continue;
+				}
+				final T m = createMapping(mapping, annotation);
+				if (Objects.nonNull(m) && isNeedMapping(mappings, m)) {
+					deque.addLast(m);
+				}
+			}
 		}
 	}
 }

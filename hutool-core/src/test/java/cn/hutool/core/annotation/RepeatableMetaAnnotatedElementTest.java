@@ -199,6 +199,7 @@ public class RepeatableMetaAnnotatedElementTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation3 { }
 
+	@Annotation4 // 循环引用
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation4 { }

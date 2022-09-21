@@ -10,7 +10,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>支持可重复注解的增强{@link AnnotatedElement}，
@@ -347,11 +346,15 @@ public class RepeatableMetaAnnotatedElement<T extends AnnotationMapping<Annotati
 					continue;
 				}
 				collectedMappings.put(source.annotationType(), source);
-				Stream.of(AnnotationUtil.getDeclaredAnnotations(source.annotationType()))
-					.map(annotation -> mappingFactory.apply(source, annotation))
-					.filter(Objects::nonNull)
-					.filter(m -> isNeedMapping(collectedMappings, m))
-					.forEach(deque::addLast);
+				for (final Annotation annotation : AnnotationUtil.getDeclaredAnnotations(source.annotationType())) {
+					if (collectedMappings.containsKey(annotation.annotationType())) {
+						continue;
+					}
+					final T mapping = mappingFactory.apply(source, annotation);
+					if (Objects.nonNull(mapping) && isNeedMapping(collectedMappings, mapping)) {
+						deque.addLast(mapping);
+					}
+				}
 			}
 			return collectedMappings;
 		}
