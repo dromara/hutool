@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -261,6 +263,58 @@ public class ModifierUtil {
 	 */
 	public static boolean isAbstract(Method method) {
 		return hasModifier(method, ModifierType.ABSTRACT);
+	}
+
+	/**
+	 * 设置final的field字段可以被修改
+	 * <p>
+	 *     只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
+	 *     <br/>
+	 *     <h3>以下属性，编译器会内联优化，无法通过反射修改：</h3>
+	 *     <ul>
+	 *         <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
+	 *         <li> Literal String 类型(直接双引号字符串)</li>
+	 *     </ul>
+	 *     <h3>以下属性，可以通过反射修改：</h3>
+	 *     <ul>
+	 *         <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
+	 *         <li>字符串，通过 new String("")实例化</li>
+	 *         <li>自定义java类</li>
+	 *     </ul>
+	 * </p>
+	 * <code>
+	 *      //示例，移除final修饰符
+	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
+	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+	 * 		ReflectUtil.removeFinalModify(field);
+	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+	 * </code>
+	 * @param field 被修改的field，不可以为空
+	 * @throws UtilException IllegalAccessException等异常包装
+	 * @since 5.8.8
+	 * @author dazer
+	 */
+	public static void removeFinalModify(Field field) {
+		if (field != null) {
+			if (hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+				//将字段的访问权限设为true：即去除private修饰符的影响
+				if (false == field.isAccessible()) {
+					field.setAccessible(true);
+				}
+				try {
+					//去除final修饰符的影响，将字段设为可修改的
+					final Field modifiersField = Field.class.getDeclaredField("modifiers");
+					//Field 的 modifiers 是私有的
+					modifiersField.setAccessible(true);
+					//& ：位与运算符，按位与；  运算规则：两个数都转为二进制，然后从高位开始比较，如果两个数都为1则为1，否则为0。
+					//~ ：位非运算符，按位取反；运算规则：转成二进制，如果位为0，结果是1，如果位为1，结果是0.
+					modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+				} catch (final NoSuchFieldException | IllegalAccessException e) {
+					//内部，工具类，基本不抛出异常
+					throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+				}
+			}
+		}
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method start
 
