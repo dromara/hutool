@@ -628,7 +628,9 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testToEntries() {
-		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {{
+		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {
+			private static final long serialVersionUID = 1L;
+			{
 			put(1, 1);
 			put(2, 2);
 			put(3, 3);
