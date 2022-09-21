@@ -127,7 +127,7 @@ public class AnnotationUtilTest {
 	@Test
 	public void testGetAnnotationAttributes() {
 		Method[] methods = AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class);
-		Assert.assertSame(methods, AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class));
+		Assert.assertArrayEquals(methods, AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class));
 		Assert.assertEquals(1, methods.length);
 		Assert.assertArrayEquals(AnnotationForTest.class.getDeclaredMethods(), methods);
 	}

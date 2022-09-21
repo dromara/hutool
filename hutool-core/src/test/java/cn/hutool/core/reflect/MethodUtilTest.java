@@ -82,6 +82,18 @@ public class MethodUtilTest {
 	}
 
 	@Test
+	public void getDeclaredMethodsTest() {
+		Class<?> type = ReflectUtilTest.TestBenchClass.class;
+		Method[] methods = type.getDeclaredMethods();
+		Assert.assertArrayEquals(methods, MethodUtil.getDeclaredMethods(type));
+		Assert.assertSame(MethodUtil.getDeclaredMethods(type), MethodUtil.getDeclaredMethods(type));
+
+		type = Object.class;
+		methods = type.getDeclaredMethods();
+		Assert.assertArrayEquals(methods, MethodUtil.getDeclaredMethods(type));
+	}
+
+	@Test
 	@Ignore
 	public void getMethodBenchTest() {
 		// 预热

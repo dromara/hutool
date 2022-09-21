@@ -28,11 +28,6 @@ import java.util.stream.Stream;
 public class AnnotationUtil {
 
 	/**
-	 * 注解属性缓存
-	 */
-	private static final Map<Class<? extends Annotation>, Method[]> ANNOTATION_ATTRIBUTES_CACHE = new WeakConcurrentMap<>();
-
-	/**
 	 * 直接声明的注解缓存
 	 */
 	private static final Map<AnnotatedElement, Annotation[]> DECLARED_ANNOTATIONS_CACHE = new WeakConcurrentMap<>();
@@ -324,11 +319,9 @@ public class AnnotationUtil {
 	 * @since 6.0.0
 	 */
 	public static Method[] getAnnotationAttributes(final Class<? extends Annotation> annotationType) {
-		return MapUtil.computeIfAbsent(
-			ANNOTATION_ATTRIBUTES_CACHE, annotationType, type -> Stream.of(annotationType.getDeclaredMethods())
+		return Stream.of(MethodUtil.getDeclaredMethods(annotationType))
 			.filter(AnnotationUtil::isAnnotationAttribute)
-			.toArray(Method[]::new)
-		);
+			.toArray(Method[]::new);
 	}
 
 	/**
