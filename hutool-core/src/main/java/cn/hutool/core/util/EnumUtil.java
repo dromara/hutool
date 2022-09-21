@@ -251,13 +251,15 @@ public class EnumUtil {
 	/**
 	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
 	 *
-	 * @param condition 条件字段
-	 * @param value     条件字段值
-	 * @param defaultEnum     条件找不到则返回结果使用这个
+	 * @param condition   条件字段
+	 * @param value       条件字段值
+	 * @param defaultEnum 条件找不到则返回结果使用这个
+	 * @param <C>         值类型
+	 * @param <E>         枚举类型
 	 * @return 对应枚举 ，获取不到时为 {@code null}
 	 */
 	public static <E extends Enum<E>, C> E getBy(final SerFunction<E, C> condition, final C value, final E defaultEnum) {
-		return ObjUtil.defaultIfNull(getBy(condition,value), defaultEnum);
+		return ObjUtil.defaultIfNull(getBy(condition, value), defaultEnum);
 	}
 
 	/**
