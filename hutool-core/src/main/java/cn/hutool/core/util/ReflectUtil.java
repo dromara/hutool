@@ -1114,7 +1114,7 @@ public class ReflectUtil {
 	 * 设置final的field字段可以被修改
 	 * <p>
 	 *     只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
-	 *     <h3>以下属性，编译器会内联优化，无法通过反射修改：</h3>
+	 *     <p>以下属性，编译器会内联优化，无法通过反射修改：</p>
 	 *     <ul>
 	 *         <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
 	 *         <li> Literal String 类型(直接双引号字符串)</li>
@@ -1127,11 +1127,13 @@ public class ReflectUtil {
 	 *     </ul>
 	 * </p>
 	 * <pre class="code">
+	 * {@code
 	 *      //示例，移除final修饰符
 	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
 	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
 	 * 		ReflectUtil.removeFinalModify(field);
 	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+	 * 	}
 	 * </pre>
 	 * @param field 被修改的field，不可以为空
 	 * @throws UtilException IllegalAccessException等异常包装

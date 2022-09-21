@@ -1475,6 +1475,7 @@ public class MapUtil {
 	 * @param key             键
 	 * @param mappingFunction 值不存在时值的生成函数
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
+	 * @return 值
 	 */
 	public static <K, V> V computeIfAbsent(Map<K, V> map, K key, Function<? super K, ? extends V> mappingFunction) {
 		V value = map.get(key);

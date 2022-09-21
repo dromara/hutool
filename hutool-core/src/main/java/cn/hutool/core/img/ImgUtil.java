@@ -2071,7 +2071,6 @@ public class ImgUtil {
 	 * @param image      {@link BufferedImage}
 	 * @param rgbFilters 过滤多种颜色
 	 * @return {@link String} #ffffff
-	 * @see ColorUtil#getMainColor(BufferedImage, int[]...)
 	 * @since 5.6.7
 	 */
 	public static String getMainColor(BufferedImage image, int[]... rgbFilters) {
