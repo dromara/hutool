@@ -29,8 +29,14 @@ import java.util.Map;
  */
 public class QrCodeUtil {
 
-	public static final String QR_TYPE_SVG = "svg";// SVG矢量图格式
-	public static final String QR_TYPE_TXT = "txt";// Ascii Art字符画文本
+	/**
+	 * SVG矢量图格式
+	 */
+	public static final String QR_TYPE_SVG = "svg";
+	/**
+	 * Ascii Art字符画文本
+	 */
+	public static final String QR_TYPE_TXT = "txt";
 
 	/**
 	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
@@ -324,6 +330,7 @@ public class QrCodeUtil {
 	 * BitMatrix转ASCII Art字符画形式的二维码
 	 *
 	 * @param bitMatrix BitMatrix
+	 * @param qrConfig  QR设置
 	 * @return ASCII Art字符画形式的二维码
 	 * @since 5.8.6
 	 */
