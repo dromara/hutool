@@ -1112,7 +1112,6 @@ public class ReflectUtil {
 		return accessibleObject;
 	}
 
-
 	/**
 	 * 设置final的field字段可以被修改
 	 * @param field 被修改的field，不可以为空
@@ -1121,20 +1120,24 @@ public class ReflectUtil {
 	 * @author dazer
 	 */
 	public static void setFieldModify(Field field) {
-		if (ModifierUtil.hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
-			//将字段的访问权限设为true：即去除private修饰符的影响
-			if (!field.isAccessible()) {
-				field.setAccessible(true);
-			}
-			try {
-				//去除final修饰符的影响，将字段设为可修改的
-				Field modifiersField = Field.class.getDeclaredField("modifiers");
-				//Field 的 modifiers 是私有的
-				modifiersField.setAccessible(true);
-				modifiersField.setInt(field, field.getModifiers() &~ Modifier.FINAL);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				//内部，工具类，基本不抛出异常
-				throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+		if (field != null) {
+			if (ModifierUtil.hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+				//将字段的访问权限设为true：即去除private修饰符的影响
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+				try {
+					//去除final修饰符的影响，将字段设为可修改的
+					Field modifiersField = Field.class.getDeclaredField("modifiers");
+					//Field 的 modifiers 是私有的
+					modifiersField.setAccessible(true);
+					//& ：位与运算符，按位与；  运算规则：两个数都转为二进制，然后从高位开始比较，如果两个数都为1则为1，否则为0。
+					//~ ：位非运算符，按位取反；运算规则：转成二进制，如果位为0，结果是1，如果位为1，结果是0.
+					modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+				} catch (NoSuchFieldException | IllegalAccessException e) {
+					//内部，工具类，基本不抛出异常
+					throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+				}
 			}
 		}
 	}
