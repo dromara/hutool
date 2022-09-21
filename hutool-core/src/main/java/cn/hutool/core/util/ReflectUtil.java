@@ -9,6 +9,7 @@ import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
+import java.lang.reflect.Modifier;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
@@ -345,7 +346,10 @@ public class ReflectUtil {
 			value = ClassUtil.getDefaultValue(fieldType);
 		}
 
+		// 设置private私有（私有方法、属性、类）可以被外部方式
 		setAccessible(field);
+		// 设置final字段可以被修改
+		setFieldModify(field);
 		try {
 			field.set(obj instanceof Class ? null : obj, value);
 		} catch (IllegalAccessException e) {
@@ -1106,6 +1110,33 @@ public class ReflectUtil {
 			accessibleObject.setAccessible(true);
 		}
 		return accessibleObject;
+	}
+
+
+	/**
+	 * 设置final的field字段可以被修改
+	 * @param field 被修改的field，不可以为空
+	 * @throws UtilException IllegalAccessException等异常包装
+	 * @since 5.8.8
+	 * @author dazer
+	 */
+	public static void setFieldModify(Field field) {
+		if (ModifierUtil.hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+			//将字段的访问权限设为true：即去除private修饰符的影响
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
+			try {
+				//去除final修饰符的影响，将字段设为可修改的
+				Field modifiersField = Field.class.getDeclaredField("modifiers");
+				//Field 的 modifiers 是私有的
+				modifiersField.setAccessible(true);
+				modifiersField.setInt(field, field.getModifiers() &~ Modifier.FINAL);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				//内部，工具类，基本不抛出异常
+				throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+			}
+		}
 	}
 
 	/**
