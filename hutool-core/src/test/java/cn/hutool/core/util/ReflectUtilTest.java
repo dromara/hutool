@@ -271,6 +271,11 @@ public class ReflectUtilTest {
 		Assert.assertArrayEquals(new int[0], intArray);
 	}
 
+	public static class JdbcDialects {
+		private static final List<Number> DIALECTS =
+				Arrays.asList(1L, 2L, 3L);
+	}
+
 	@Test
 	public void setFieldValueTest() {
 		String fieldName = "DIALECTS";
