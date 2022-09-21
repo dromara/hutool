@@ -1,7 +1,7 @@
-package cn.hutool.core.swing;
+package cn.hutool.swing;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.swing.clipboard.ClipboardUtil;
+import cn.hutool.swing.clipboard.ClipboardUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
