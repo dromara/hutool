@@ -5,7 +5,6 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -20,9 +19,9 @@ import java.util.stream.Collectors;
  *         即当{@link AnnotatedElement}存在多个根注解有相同的元注解时，这些元注解会都会被扫描到；
  *     </li>
  *     <li>
- *         支持扫描{@link AnnotatedElement}可重复注解，即当{@link AnnotatedElement}上直接声明的注解
- *         有且仅有一个类型为注解数组的{@code value}属性，且数组中注解类上存在{@link Repeatable}，
- *         则认为该注解为容器注解，将会自动将其展开直到不为容器注解为止。<br>
+ *         支持扫描{@link AnnotatedElement}可重复注解，即当当前实例指定的{@link RepeatableAnnotationCollector}
+ *         支持从{@link AnnotatedElement}上直接声明的注解中获得可重复注解时，
+ *         则将会自动将其展开直到不为容器注解为止。<br>
  *         eg：<br>
  *         A上存在注解<em>X</em>，该注解是一个容器注解，内部可重复注解<em>Y</em>，
  *         包含解析后，得到注解<em>X</em>与可重复注解<em>Y</em>,<br>
