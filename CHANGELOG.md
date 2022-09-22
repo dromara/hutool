@@ -16,6 +16,7 @@
 * 【core   】     修复FileNameUtil.cleanInvalid无法去除换行符问题（issue#I5RMZV@Gitee）
 * 【core   】     修复murmur3_32实现错误（pr#2616@Github）
 * 【core   】     修复PunyCode处理域名的问题（pr#2620@Github）
+* 【core   】     修复ObjectUtil.defaultIfNull去掉误加的deprecated（issue#I5SIZT@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

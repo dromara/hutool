@@ -307,7 +307,6 @@ public class ObjectUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	@Deprecated
 	public static <T> T defaultIfNull(T source, Supplier<? extends T> defaultValueSupplier) {
 		if (isNull(source)) {
 			return defaultValueSupplier.get();
@@ -341,6 +340,7 @@ public class ObjectUtil {
 	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
 	 * @return 处理后的返回值
 	 * @since 5.4.6
+	 * @deprecated 当str为{@code null}时，handle使用了str相关的方法引用会导致空指针问题
 	 */
 	@Deprecated
 	public static <T> T defaultIfNull(Object source, Supplier<? extends T> handle, final T defaultValue) {
@@ -376,6 +376,7 @@ public class ObjectUtil {
 	 * @param <T>          被检查对象为{@code null}或者 ""返回默认值，否则返回自定义handle处理后的返回值
 	 * @return 处理后的返回值
 	 * @since 5.4.6
+	 * @deprecated 当str为{@code null}时，handle使用了str相关的方法引用会导致空指针问题
 	 */
 	@Deprecated
 	public static <T> T defaultIfEmpty(String str, Supplier<? extends T> handle, final T defaultValue) {
@@ -433,7 +434,6 @@ public class ObjectUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	@Deprecated
 	public static <T extends CharSequence> T defaultIfEmpty(T str, Supplier<? extends T> defaultValueSupplier) {
 		if (StrUtil.isEmpty(str)) {
 			return defaultValueSupplier.get();
@@ -489,7 +489,6 @@ public class ObjectUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	@Deprecated
 	public static <T extends CharSequence> T defaultIfBlank(T str, Supplier<? extends T> defaultValueSupplier) {
 		if (StrUtil.isBlank(str)) {
 			return defaultValueSupplier.get();
