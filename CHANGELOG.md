@@ -3,13 +3,14 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.8.M1 (2022-09-21)
+# 5.8.8.M1 (2022-09-22)
 
 ### 🐣新特性
 * 【core   】     StreamUtil.of方法新增对 Iterator 支持；StreamUtil.of(Iterable) 方法优化（pr#807@Gitee）
 * 【core   】     增加.wgt格式的MimeType（pr#2617@Github）
 * 【core   】     EnumUtil.getBy增加带默认值重载（issue#I5RZU6@Gitee）
 * 【core   】     ModifierUtil和ReflectUtil增加removeFinalModify（pr#810@Gitee）
+* 【core   】     AbsCollValueMap添加removeValue和removeValues方法，用于list value值移除（pr#813@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复FileNameUtil.cleanInvalid无法去除换行符问题（issue#I5RMZV@Gitee）

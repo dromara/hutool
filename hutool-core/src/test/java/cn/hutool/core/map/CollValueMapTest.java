@@ -2,7 +2,6 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.map.multi.SetValueMap;
 import org.junit.Assert;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import java.util.HashSet;
 
 public class CollValueMapTest {
+
 	@Test
 	public void testListValueMapRemove() {
 		final ListValueMap<String, String> entries = new ListValueMap<>();
@@ -25,7 +25,6 @@ public class CollValueMapTest {
 		entries.putValue("three","11");
 
 		entries.removeValue("one","22");
-		Console.log(entries);
 
 		Assert.assertEquals(ListUtil.of("11","33","22"), entries.get("one"));
 
