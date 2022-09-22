@@ -38,6 +38,31 @@ public class AnnotatedElementUtilTest {
 	};
 
 	@Test
+	public void testClearCaches() {
+		AnnotatedElement type = Foo.class;
+
+		AnnotatedElement element = AnnotatedElementUtil.getResolvedMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getResolvedMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getResolvedMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getRepeatableMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getRepeatableMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getRepeatableMetaElementCache(type));
+	}
+
+	@Test
 	public void testIsAnnotated() {
 		Assert.assertTrue(AnnotatedElementUtil.isAnnotated(Foo.class, Annotation1.class));
 		Assert.assertTrue(AnnotatedElementUtil.isAnnotated(Foo.class, Annotation2.class));

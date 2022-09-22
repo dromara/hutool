@@ -354,4 +354,11 @@ public class AnnotationUtil {
 			&& !attribute.isSynthetic();
 	}
 
+	/**
+	 * 清空相关缓存
+	 */
+	public static void clearCaches() {
+		DECLARED_ANNOTATIONS_CACHE.clear();
+	}
+
 }

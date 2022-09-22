@@ -19,6 +19,9 @@ public class AnnotationUtilTest {
 		Annotation[] annotations = AnnotationUtil.getDeclaredAnnotations(ClassForTest.class);
 		Assert.assertArrayEquals(annotations, ClassForTest.class.getDeclaredAnnotations());
 		Assert.assertSame(annotations, AnnotationUtil.getDeclaredAnnotations(ClassForTest.class));
+
+		AnnotationUtil.clearCaches();
+		Assert.assertNotSame(annotations, AnnotationUtil.getDeclaredAnnotations(ClassForTest.class));
 	}
 
 	@Test

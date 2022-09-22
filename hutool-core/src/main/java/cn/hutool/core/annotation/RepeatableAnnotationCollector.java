@@ -87,6 +87,14 @@ public interface RepeatableAnnotationCollector {
 	}
 
 	/**
+	 * 清空单例缓存
+	 */
+	static void clearSingletonCaches() {
+		Standard.INSTANCE.repeatableMethodCache.clear();
+		Full.INSTANCE.repeatableMethodCache.clear();
+	}
+
+	/**
 	 * <p>若一个注解是可重复注解的容器注解，则尝试通过其属性获得获得包含的注解对象。
 	 * 若包含的注解对象也是可重复注解的容器注解，则继续解析直到获得所有非容器注解为止。<br>
 	 * eg:

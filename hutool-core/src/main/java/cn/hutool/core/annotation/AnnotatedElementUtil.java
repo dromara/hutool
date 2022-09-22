@@ -103,8 +103,8 @@ import java.util.stream.Stream;
  *         该属性类型为注解数组，且数组中注解被{@link java.lang.annotation.Repeatable}注解，
  *         则认为被包括的注解为可重复注解；<br>
  *         eg:<br>
- *         A上存在注解<em>X</em>，该注解是一个容器注解，内部可重复注解<em>Y</em>，
- *         包含解析后，得到注解<em>X</em>与它包含的可重复注解<em>Y</em>；
+ *         A上存在注解<em>X</em>，该注解是一个容器注解，内部包含可重复注解<em>Y</em>，
+ *         解析<em>X</em>后，得到注解<em>X</em>与它包含的可重复注解<em>Y</em>；
  *     </li>
  *     <li>
  *         若{@link AnnotatedElement}存在直接声明的注解，该注解与其他根注解皆有相同的元注解，
@@ -114,6 +114,12 @@ import java.util.stream.Stream;
  *         则通过{@link AnnotatedElement}可以获得两个<em>Z</em>
  *     </li>
  * </ul>
+ *
+ * <p><strong>缓存</strong>
+ * <p>为了避免注解以及{@link AnnotatedElement}层级结构解析过程中的大量反射调用，
+ * 工具类为{@link AnnotatedElement}及其元注解信息进行了缓存。<br>
+ * 缓存功能默认基于{@link WeakConcurrentMap}实现，会在gc时自动回收部分缓存数据。
+ * 但是若有必要，也可以调用{@link #clearCaches()}方法主动清空缓存。
  *
  * @author huangchengxing
  * @see ResolvedAnnotationMapping
@@ -650,7 +656,7 @@ public class AnnotatedElementUtil {
 	 * @param element {@link AnnotatedElement}
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
-	private static MetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedMetaElementCache(final AnnotatedElement element) {
+	static MetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedMetaElementCache(final AnnotatedElement element) {
 		return RESOLVED_ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> ResolvedAnnotationMapping.create(source, annotation, true)
 		));
@@ -662,7 +668,7 @@ public class AnnotatedElementUtil {
 	 * @param element {@link AnnotatedElement}
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
-	private static MetaAnnotatedElement<GenericAnnotationMapping> getMetaElementCache(final AnnotatedElement element) {
+	static MetaAnnotatedElement<GenericAnnotationMapping> getMetaElementCache(final AnnotatedElement element) {
 		return ELEMENT_CACHE.computeIfAbsent(element, ele -> MetaAnnotatedElement.create(
 			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		));
@@ -674,7 +680,7 @@ public class AnnotatedElementUtil {
 	 * @param element {@link AnnotatedElement}
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
-	private static RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedRepeatableMetaElementCache(final AnnotatedElement element) {
+	static RepeatableMetaAnnotatedElement<ResolvedAnnotationMapping> getResolvedRepeatableMetaElementCache(final AnnotatedElement element) {
 		return RESOLVED_REPEATABLE_ELEMENT_CACHE.computeIfAbsent(element, ele -> RepeatableMetaAnnotatedElement.create(
 			element, (source, annotation) -> ResolvedAnnotationMapping.create(source, annotation, true)
 		));
@@ -686,13 +692,33 @@ public class AnnotatedElementUtil {
 	 * @param element {@link AnnotatedElement}
 	 * @return {@link MetaAnnotatedElement}实例
 	 */
-	private static RepeatableMetaAnnotatedElement<GenericAnnotationMapping> getRepeatableMetaElementCache(final AnnotatedElement element) {
+	static RepeatableMetaAnnotatedElement<GenericAnnotationMapping> getRepeatableMetaElementCache(final AnnotatedElement element) {
 		return REPEATABLE_ELEMENT_CACHE.computeIfAbsent(element, ele -> RepeatableMetaAnnotatedElement.create(
 			element, (source, annotation) -> GenericAnnotationMapping.create(annotation, Objects.isNull(source))
 		));
 	}
 
 	// endregion
+
+	/**
+	 * 清空相关缓存，包括：
+	 * <ul>
+	 *     <li>{@link AnnotatedElementUtil}中的{@link AnnotatedElement}及{@link  AnnotationMapping}缓存；</li>
+	 *     <li>{@link AnnotationUtil}中的{@link AnnotatedElement}上直接声明的注解缓存；</li>
+	 *     <li>{@link RepeatableAnnotationCollector}中单例的注解属性缓存；</li>
+	 * </ul>
+	 *
+	 * @see AnnotationUtil#clearCaches()
+	 * @see RepeatableAnnotationCollector#clearSingletonCaches()
+	 */
+	public static void clearCaches() {
+		ELEMENT_CACHE.clear();
+		RESOLVED_ELEMENT_CACHE.clear();
+		REPEATABLE_ELEMENT_CACHE.clear();
+		RESOLVED_REPEATABLE_ELEMENT_CACHE.clear();
+		RepeatableAnnotationCollector.clearSingletonCaches();
+		AnnotationUtil.clearCaches();
+	}
 
 	/**
 	 * 由一组注解聚合来的{@link AnnotatedElement}
