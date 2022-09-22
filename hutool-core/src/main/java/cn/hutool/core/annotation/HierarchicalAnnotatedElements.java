@@ -2,6 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -172,7 +173,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	@Override
 	public Annotation[] getDeclaredAnnotations() {
 		return getElementMappings().stream()
-			.map(AnnotatedElement::getDeclaredAnnotations)
+			.map(AnnotationUtil::getDeclaredAnnotations)
 			.filter(ArrayUtil::isNotEmpty)
 			.flatMap(Stream::of)
 			.toArray(Annotation[]::new);
@@ -357,8 +358,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 			if (!isMethod) {
 				collectElement(mappings, type);
 			} else {
-				// TODO 改为通过带缓存的反射工具类完成
-				Stream.of(type.getDeclaredMethods())
+				Stream.of(MethodUtil.getDeclaredMethods(type))
 					.filter(method -> isMatchMethod(methodSource, method))
 					.forEach(method -> collectElement(mappings, method));
 			}

@@ -1,0 +1,220 @@
+package cn.hutool.core.annotation;
+
+import cn.hutool.core.text.CharSequenceUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.lang.annotation.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * test for {@link RepeatableAnnotationCollector}
+ *
+ * @author huangchengxing
+ */
+public class RepeatableAnnotationCollectorTest {
+
+	private static final Annotation1 ANNOTATION1 = Foo.class.getAnnotation(Annotation1.class);
+	private static final List<Annotation2> ANNOTATION2S = Arrays.asList(ANNOTATION1.value());
+	private static final List<Annotation3> ANNOTATION3S = ANNOTATION2S.stream()
+		.map(Annotation2::value)
+		.flatMap(Stream::of)
+		.collect(Collectors.toList());
+	private static final List<Annotation> ANNOTATIONS = new ArrayList<>();
+	static {
+		ANNOTATIONS.add(ANNOTATION1);
+		ANNOTATIONS.addAll(ANNOTATION2S);
+		ANNOTATIONS.addAll(ANNOTATION3S);
+	}
+
+	private static final BiPredicate<Annotation, Method> PREDICATE = (annotation, attribute) -> {
+		// 属性名需为“value”
+		if (!CharSequenceUtil.equals("value", attribute.getName())) {
+			return false;
+		}
+		final Class<?> attributeType = attribute.getReturnType();
+		// 返回值类型需为数组
+		return attributeType.isArray()
+			// 且数组元素需为注解
+			&& attributeType.getComponentType()
+			.isAnnotation()
+			// 该注解类必须被@Repeatable注解，但不要求与当前属性的声明方法一致
+			&& attributeType.getComponentType()
+			.isAnnotationPresent(Repeatable.class);
+	};
+
+	@Test
+	public void testNone() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.none();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.none());
+
+		Assert.assertEquals(0, collector.getFinalRepeatableAnnotations(null).size());
+
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		Assert.assertEquals(Collections.singletonList(annotation), collector.getFinalRepeatableAnnotations(annotation));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getFinalRepeatableAnnotations(annotation3));
+
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getRepeatableAnnotations(annotation3, Annotation3.class));
+		Assert.assertTrue(collector.getRepeatableAnnotations(annotation3, Annotation1.class).isEmpty());
+		Assert.assertTrue(collector.getRepeatableAnnotations(null, Annotation1.class).isEmpty());
+	}
+
+	@Test
+	public void testNoneWhenAccumulate() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.none();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.none());
+
+		Assert.assertEquals(0, collector.getAllRepeatableAnnotations(null).size());
+
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		Assert.assertEquals(Collections.singletonList(annotation), collector.getAllRepeatableAnnotations(annotation));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getAllRepeatableAnnotations(annotation3));
+	}
+
+	@Test
+	public void testGenericCollector() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.standard();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.standard());
+
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		List<Annotation3> annotations = Stream.of(annotation.value())
+			.map(Annotation2::value)
+			.flatMap(Stream::of)
+			.collect(Collectors.toList());
+		Assert.assertEquals(annotations, collector.getFinalRepeatableAnnotations(annotation));
+		Assert.assertEquals(ANNOTATION3S, collector.getFinalRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getFinalRepeatableAnnotations(annotation3));
+
+		Assert.assertEquals(Collections.singletonList(ANNOTATION1), collector.getRepeatableAnnotations(ANNOTATION1, Annotation1.class));
+		Assert.assertEquals(ANNOTATION2S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation2.class));
+		Assert.assertEquals(ANNOTATION3S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation3.class));
+	}
+
+	@Test
+	public void testGenericCollectorWhenAccumulate() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.standard();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.standard());
+
+		List<Annotation> annotations = new ArrayList<>();
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		annotations.add(annotation);
+		annotations.addAll(Arrays.asList(annotation.value()));
+		Stream.of(annotation.value())
+			.map(Annotation2::value)
+			.flatMap(Stream::of)
+			.forEach(annotations::add);
+		Assert.assertEquals(annotations, collector.getAllRepeatableAnnotations(annotation));
+
+		Assert.assertEquals(ANNOTATIONS, collector.getAllRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getAllRepeatableAnnotations(annotation3));
+	}
+
+	@Test
+	public void testConditionCollector() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.condition(PREDICATE);
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		List<Annotation3> annotations = Stream.of(annotation.value())
+			.map(Annotation2::value)
+			.flatMap(Stream::of)
+			.collect(Collectors.toList());
+		Assert.assertEquals(annotations, collector.getFinalRepeatableAnnotations(annotation));
+
+		Assert.assertEquals(ANNOTATION3S, collector.getFinalRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getFinalRepeatableAnnotations(annotation3));
+
+		Assert.assertEquals(Collections.singletonList(ANNOTATION1), collector.getRepeatableAnnotations(ANNOTATION1, Annotation1.class));
+		Assert.assertEquals(ANNOTATION2S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation2.class));
+		Assert.assertEquals(ANNOTATION3S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation3.class));
+	}
+
+	@Test
+	public void testConditionCollectorWhenAccumulate() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.condition(PREDICATE);
+
+		List<Annotation> annotations = new ArrayList<>();
+		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		annotations.add(annotation);
+		annotations.addAll(Arrays.asList(annotation.value()));
+		Stream.of(annotation.value())
+			.map(Annotation2::value)
+			.flatMap(Stream::of)
+			.forEach(annotations::add);
+		Assert.assertEquals(annotations, collector.getAllRepeatableAnnotations(annotation));
+		Assert.assertEquals(ANNOTATIONS, collector.getAllRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getAllRepeatableAnnotations((annotation3)));
+	}
+
+	@Test
+	public void testFullCollector() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.full();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.full());
+
+		Assert.assertEquals(ANNOTATION3S, collector.getFinalRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getFinalRepeatableAnnotations(annotation3));
+
+		Assert.assertEquals(Collections.singletonList(ANNOTATION1), collector.getRepeatableAnnotations(ANNOTATION1, Annotation1.class));
+		Assert.assertEquals(ANNOTATION2S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation2.class));
+		Assert.assertEquals(ANNOTATION3S, collector.getRepeatableAnnotations(ANNOTATION1, Annotation3.class));
+	}
+
+	@Test
+	public void testFullCollectorWhenAccumulate() {
+		RepeatableAnnotationCollector collector = RepeatableAnnotationCollector.full();
+		Assert.assertSame(collector, RepeatableAnnotationCollector.full());
+
+		Assert.assertEquals(ANNOTATIONS, collector.getAllRepeatableAnnotations(ANNOTATION1));
+
+		Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
+		Assert.assertEquals(Collections.singletonList(annotation3), collector.getAllRepeatableAnnotations(annotation3));
+	}
+
+	@Target(ElementType.TYPE_USE)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Annotation1 {
+		Annotation2[] value() default {};
+	}
+
+	@Repeatable(Annotation1.class)
+	@Target(ElementType.TYPE_USE)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Annotation2 {
+		Annotation3[] value() default {};
+	}
+
+	@Repeatable(Annotation2.class)
+	@Target(ElementType.TYPE_USE)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Annotation3 {
+		int value();
+		String name() default "";
+	}
+
+	@Annotation3(Integer.MIN_VALUE)
+	@Annotation1({
+		@Annotation2({@Annotation3(1), @Annotation3(2)}),
+		@Annotation2({@Annotation3(3), @Annotation3(4)})
+	})
+	private static class Foo {}
+
+}

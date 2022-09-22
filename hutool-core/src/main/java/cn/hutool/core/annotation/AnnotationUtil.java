@@ -1,6 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -13,7 +15,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -25,6 +26,22 @@ import java.util.stream.Stream;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+
+	/**
+	 * 直接声明的注解缓存
+	 */
+	private static final Map<AnnotatedElement, Annotation[]> DECLARED_ANNOTATIONS_CACHE = new WeakConcurrentMap<>();
+
+	/**
+	 * 获取直接声明的注解，若已有缓存则从缓存中获取
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @return 注解
+	 * @since 6.0.0
+	 */
+	public static Annotation[] getDeclaredAnnotations(AnnotatedElement element) {
+		return MapUtil.computeIfAbsent(DECLARED_ANNOTATIONS_CACHE, element, AnnotatedElement::getDeclaredAnnotations);
+	}
 
 	/**
 	 * 将指定的被注解的元素转换为组合注解元素
@@ -295,16 +312,14 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 获取注解属性
+	 * 获取注解属性，若已有缓存则从缓存中获取
 	 *
 	 * @param annotationType 注解类型
 	 * @return 注解属性
 	 * @since 6.0.0
 	 */
 	public static Method[] getAnnotationAttributes(final Class<? extends Annotation> annotationType) {
-		// TODO 改为通过带缓存的反射工具类完成
-		Objects.requireNonNull(annotationType);
-		return Stream.of(annotationType.getDeclaredMethods())
+		return Stream.of(MethodUtil.getDeclaredMethods(annotationType))
 			.filter(AnnotationUtil::isAnnotationAttribute)
 			.toArray(Method[]::new);
 	}
@@ -337,6 +352,13 @@ public class AnnotationUtil {
 			&& Modifier.isPublic(attribute.getModifiers())
 			&& !attribute.isBridge()
 			&& !attribute.isSynthetic();
+	}
+
+	/**
+	 * 清空相关缓存
+	 */
+	public static void clearCaches() {
+		DECLARED_ANNOTATIONS_CACHE.clear();
 	}
 
 }
