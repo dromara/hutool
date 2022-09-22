@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapWrapper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -80,9 +81,9 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	 * @since 5.7.4
 	 */
 	public void putAllValues(Map<? extends K, ? extends Collection<V>> m) {
-		if(null != m){
+		if (null != m) {
 			m.forEach((key, valueColl) -> {
-				if(null != valueColl){
+				if (null != valueColl) {
 					valueColl.forEach((value) -> putValue(key, value));
 				}
 			});
@@ -115,6 +116,30 @@ public abstract class AbsCollValueMap<K, V, C extends Collection<V>> extends Map
 	public V get(K key, int index) {
 		final Collection<V> collection = get(key);
 		return CollUtil.get(collection, index);
+	}
+
+	/**
+	 * 移除value集合中的某个值
+	 *
+	 * @param key   键
+	 * @param value 集合中的某个值
+	 * @return 是否删除成功
+	 */
+	public boolean removeValue(K key, V value) {
+		C collection = this.get(key);
+		return null != collection && collection.remove(value);
+	}
+
+	/**
+	 * 移除value集合中的某些值
+	 *
+	 * @param key   键
+	 * @param values 集合中的某些值
+	 * @return 是否删除成功
+	 */
+	public boolean removeValues(K key, Collection<V> values) {
+		C collection = this.get(key);
+		return null != collection && collection.removeAll(values);
 	}
 
 	/**
