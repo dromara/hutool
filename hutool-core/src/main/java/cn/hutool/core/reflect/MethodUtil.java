@@ -198,18 +198,20 @@ public class MethodUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
 						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
 						//排除桥接方法，pr#1965@Github
-						&& false == method.isBridge()) {
-					return method;
+						//排除协变桥接方法，pr#1965@Github
+						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
@@ -265,17 +267,18 @@ public class MethodUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						// 排除桥接方法
-						&& false == method.isBridge()) {
-					return method;
+						//排除协变桥接方法，pr#1965@Github
+						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**

@@ -115,6 +115,7 @@ public class MethodUtilTest {
 		Console.log(timer.getLastTaskTimeMillis());
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static Method getMethodWithReturnTypeCheck(final Class<?> clazz, final boolean ignoreCase, final String methodName, final Class<?>... paramTypes) throws SecurityException {
 		if (null == clazz || StrUtil.isBlank(methodName)) {
 			return null;
@@ -193,6 +194,26 @@ public class MethodUtilTest {
 		Assert.assertNotNull(publicSubMethod);
 		final Method privateSubMethod = MethodUtil.getMethod(ReflectUtilTest.TestSubClass.class, "privateSubMethod");
 		Assert.assertNotNull(privateSubMethod);
+	}
 
+	@Test
+	public void issue2625Test(){
+		// 内部类继承的情况下父类方法会被定义为桥接方法，因此按照pr#1965@Github判断返回值的继承关系来代替判断桥接。
+		final Method getThis = MethodUtil.getMethod(A.C.class, "getThis");
+		Assert.assertTrue(getThis.isBridge());
+	}
+
+	@SuppressWarnings("InnerClassMayBeStatic")
+	public class A{
+
+		public class C extends B{
+
+		}
+
+		protected class B{
+			public B getThis(){
+				return this;
+			}
+		}
 	}
 }

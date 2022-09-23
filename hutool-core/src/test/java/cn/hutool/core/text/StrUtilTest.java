@@ -695,4 +695,10 @@ public class StrUtilTest {
 		Assert.assertTrue(CharSequenceUtil.isAllBlank("\u2000"));
 		Assert.assertTrue(CharSequenceUtil.isAllBlank("\u2001"));
 	}
+
+	@Test
+	public void issue2628Test(){
+		final String s = StrUtil.indexedFormat("a{0,number,#}", 1234567);
+		Assert.assertEquals("a1234567", s);
+	}
 }
