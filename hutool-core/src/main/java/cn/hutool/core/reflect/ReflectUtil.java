@@ -30,12 +30,6 @@ public class ReflectUtil {
 
 	/**
 	 * 获取jvm定义的Field Descriptors（字段描述）
-	 *
-	 * @param executable 可执行的反射对象
-	 * @return 描述符
-	 * @author VampireAchao
-	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>
@@ -44,9 +38,15 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
 	 * </ul>
+	 *
+	 * @param executable 可执行的反射对象
+	 * @return 描述符
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
 	public static String getDescriptor(final Executable executable) {
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(32);
 		stringBuilder.append('(');
 		final Class<?>[] parameters = executable.getParameterTypes();
 		for (final Class<?> parameter : parameters) {
@@ -63,12 +63,6 @@ public class ReflectUtil {
 
 	/**
 	 * 获取类型描述符，这是编译成class文件后的二进制名称
-	 *
-	 * @param clazz 类
-	 * @return 描述字符串
-	 * @author VampireAchao
-	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(boolean.class)                        "Z"}</li>
@@ -77,9 +71,15 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(int.class)                            "I"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(Integer.class)                        "Ljava/lang/Integer;"}</li>
 	 * </ul>
+	 *
+	 * @param clazz 类
+	 * @return 描述字符串
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
 	public static String getDescriptor(final Class<?> clazz) {
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(32);
 		Class<?> currentClass;
 		for (currentClass = clazz;
 			 currentClass.isArray();
