@@ -19,16 +19,15 @@ public class RhinoEngine implements ExpressionEngine {
 
 	@Override
 	public Object eval(final String expression, final Map<String, Object> context) {
-		final Context ctx = Context.enter();
-		final Scriptable scope = ctx.initStandardObjects();
-		if (MapUtil.isNotEmpty(context)) {
-			context.forEach((key, value)->{
-				// 将java对象转为js对象后放置于JS的作用域中
-				ScriptableObject.putProperty(scope, key, Context.javaToJS(value, scope));
-			});
-		}
-		final Object result = ctx.evaluateString(scope, expression, "rhino.js", 1, null);
-		Context.exit();
-		return result;
+		try(final Context ctx = Context.enter()){
+			final Scriptable scope = ctx.initStandardObjects();
+			if (MapUtil.isNotEmpty(context)) {
+				context.forEach((key, value)->{
+					// 将java对象转为js对象后放置于JS的作用域中
+					ScriptableObject.putProperty(scope, key, Context.javaToJS(value, scope));
+				});
+			}
+			return ctx.evaluateString(scope, expression, "rhino.js", 1, null);
+		} // auto close
 	}
 }

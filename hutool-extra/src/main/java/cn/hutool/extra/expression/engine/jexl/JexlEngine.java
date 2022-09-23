@@ -17,6 +17,9 @@ public class JexlEngine implements ExpressionEngine {
 
 	private final org.apache.commons.jexl3.JexlEngine engine;
 
+	/**
+	 * 构造
+	 */
 	public JexlEngine(){
 		engine = (new JexlBuilder()).cache(512).strict(true).silent(false).create();
 	}
