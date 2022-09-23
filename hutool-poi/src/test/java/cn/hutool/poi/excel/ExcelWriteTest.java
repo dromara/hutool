@@ -106,7 +106,7 @@ public class ExcelWriteTest {
 	@Ignore
 	public void writeTest2() {
 		final List<String> row = ListUtil.of("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
-		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
+		final ExcelWriter overtimeWriter = ExcelUtil.getWriter("d:/test/excel/single_line.xlsx");
 		overtimeWriter.writeRow(row);
 		overtimeWriter.close();
 	}
@@ -126,7 +126,7 @@ public class ExcelWriteTest {
 		writer.writeRow(row2);
 
 		// 生成文件或导出Excel
-		writer.flush(FileUtil.file("f:/test/writeWithSheetTest.xlsx"));
+		writer.flush(FileUtil.file("d:/test/writeWithSheetTest.xlsx"));
 
 		writer.close();
 	}
