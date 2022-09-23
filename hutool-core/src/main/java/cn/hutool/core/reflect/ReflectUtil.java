@@ -1,12 +1,25 @@
 package cn.hutool.core.reflect;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * 反射工具类
+ *
+ * <p>
+ *     本工具类，v6.x进行了重构，原来{@link ReflectUtil}中的方法大部分被移动到了
+ *     {@link FieldUtil}、{@link MethodUtil}、{@link ModifierUtil}、{@link ConstructorUtil}等中，
+ *     其他相关方法请参考<strong>cn.hutool.core.reflect</strong>包下的类,相关类
+ * </p>
+ * <p>常用方法变更</p>
+ * <ul>
+ *     <li>反射修改属性</li>
+ *     <li>{@code ReflectUtil#setFieldValue(Object, String, Object)} --p {@link FieldUtil#setFieldValue(Object, String, Object)}</li>
+ *     <li>修改private修饰可被外部访问</li>
+ *     <li>{@code ReflectUtil.setAccessible(ReflectUtil.getMethodByName(Xxx.class, "xxxMethodName"))} --p {@link ReflectUtil#setAccessible(AccessibleObject)} --p {@link MethodUtil#getMethodByName(Class, String)} </li>
+ *     <li>移除final属性</li>
+ *     <li>{@code ReflectUtil.removeFinalModify(Field)} --p {@link  ModifierUtil#removeFinalModify(Field)}</li>
+ * </ul>
+ *
  *
  * @author Looly
  * @since 3.0.9
