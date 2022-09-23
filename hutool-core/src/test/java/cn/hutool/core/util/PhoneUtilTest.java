@@ -14,17 +14,20 @@ public class PhoneUtilTest {
 
 	@Test
 	public void testCheck() {
-		String mobile = "13612345678";
+		String mobile = "+8613612345678";
+		String pureMobile = "13612345678";
 		String tel = "010-88993108";
 		String errMobile = "136123456781";
 		String errTel = "010-889931081";
 
 		Assert.assertTrue(PhoneUtil.isMobile(mobile));
+		Assert.assertTrue(PhoneUtil.isPureMobile(pureMobile));
 		Assert.assertTrue(PhoneUtil.isTel(tel));
 		Assert.assertTrue(PhoneUtil.isPhone(mobile));
 		Assert.assertTrue(PhoneUtil.isPhone(tel));
 
 		Assert.assertFalse(PhoneUtil.isMobile(errMobile));
+		Assert.assertFalse(PhoneUtil.isPureMobile(mobile));
 		Assert.assertFalse(PhoneUtil.isTel(errTel));
 		Assert.assertFalse(PhoneUtil.isPhone(errMobile));
 		Assert.assertFalse(PhoneUtil.isPhone(errTel));

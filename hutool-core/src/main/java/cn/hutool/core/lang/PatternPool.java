@@ -55,17 +55,20 @@ public class PatternPool {
 	 */
 	public final static Pattern EMAIL = Pattern.compile(RegexPool.EMAIL, Pattern.CASE_INSENSITIVE);
 	/**
-	 * 移动电话
+	 * 中国大陆移动电话
+	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+11位数字
+	 * 中国大陆 +86 Mainland China
 	 */
 	public final static Pattern MOBILE = Pattern.compile(RegexPool.MOBILE);
 	/**
+	 * 不带区号的移动电话
+	 * eg: 中国大陆：180 4953 1399，11位数字
+	 */
+	public final static Pattern PURE_MOBILE = Pattern.compile(RegexPool.PURE_MOBILE);
+	/**
 	 * 中国香港移动电话
 	 * eg: 中国香港： +852 5100 4810， 三位区域码+10位数字, 中国香港手机号码8位数
-	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+13位数字
-	 * 中国大陆 +86 Mainland China
-	 * 中国香港 +852 Hong Kong
-	 * 中国澳门 +853 Macao
-	 * 中国台湾 +886 Taiwan
+	 * 中国香港 +852 Hong Kong 国际域名缩写：HK
 	 */
 	public final static Pattern MOBILE_HK = Pattern.compile(RegexPool.MOBILE_HK);
 	/**
@@ -76,7 +79,7 @@ public class PatternPool {
 	public final static Pattern MOBILE_TW = Pattern.compile(RegexPool.MOBILE_TW);
 	/**
 	 * 中国澳门移动电话
-	 * eg: 中国台湾： +853 68 00000， 三位区域码 +号码以数字6开头 + 7位数字, 中国台湾手机号码8位数
+	 * eg: 中国澳门： +853 68 00000， 三位区域码 +号码以数字6开头 + 7位数字, 中国澳门手机号码8位数
 	 * 中国澳门 +853 Macao 国际域名缩写：MO
 	 */
 	public final static Pattern MOBILE_MO = Pattern.compile(RegexPool.MOBILE_MO);

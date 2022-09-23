@@ -29,6 +29,17 @@ public class PhoneUtil {
 	}
 
 	/**
+	 * 验证是否为没有区号的手机号码（中国）
+	 *
+	 * @param value 值
+	 * @return 是否为没有区号的手机号码（中国）
+	 * @since 5.8.8
+	 */
+	public static boolean isPureMobile(CharSequence value) {
+		return Validator.isMatchRegex(PatternPool.PURE_MOBILE, value);
+	}
+
+	/**
 	 * 验证是否为手机号码（香港）
 	 * @param value 手机号码
 	 * @return 是否为香港手机号码
