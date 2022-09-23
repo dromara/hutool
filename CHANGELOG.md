@@ -18,6 +18,7 @@
 * 【core   】     修复PunyCode处理域名的问题（pr#2620@Github）
 * 【core   】     修复ObjectUtil.defaultIfNull去掉误加的deprecated（issue#I5SIZT@Gitee）
 * 【core   】     修复ReflectUtil 反射方法中桥接判断问题（issue#2625@Github）
+* 【poi    】     修复ExcelWriter导出List<Map>引起的个数混乱问题（issue#2627@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
