@@ -8,6 +8,9 @@ package cn.hutool.core.text.finder;
  */
 public interface Finder {
 
+	/**
+	 * 未找到的的位置表示，用-1表示
+	 */
 	int INDEX_NOT_FOUND = -1;
 
 	/**
@@ -28,9 +31,10 @@ public interface Finder {
 
 	/**
 	 * 复位查找器，用于重用对象
+	 *
 	 * @return this
 	 */
-	default Finder reset(){
+	default Finder reset() {
 		return this;
 	}
 }

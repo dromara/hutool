@@ -37,6 +37,10 @@ import java.util.function.Supplier;
  */
 public class CharSequenceUtil extends StrChecker {
 
+	/**
+	 * 未找到的的位置表示，用-1表示
+	 * @see Finder#INDEX_NOT_FOUND
+	 */
 	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
 
 	/**
