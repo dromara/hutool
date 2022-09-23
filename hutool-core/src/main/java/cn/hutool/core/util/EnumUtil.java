@@ -325,15 +325,15 @@ public class EnumUtil {
 	}
 
 	/**
-	 * 判断某个值是存在枚举中
+	 * 判断指定名称的枚举是否存在
 	 *
 	 * @param <E>       枚举类型
 	 * @param enumClass 枚举类
-	 * @param val       需要查找的值
+	 * @param name      需要查找的枚举名
 	 * @return 是否存在
 	 */
-	public static <E extends Enum<E>> boolean contains(final Class<E> enumClass, final String val) {
-		return EnumUtil.getEnumMap(enumClass).containsKey(val);
+	public static <E extends Enum<E>> boolean contains(final Class<E> enumClass, final String name) {
+		return getEnumMap(enumClass).containsKey(name);
 	}
 
 	/**
