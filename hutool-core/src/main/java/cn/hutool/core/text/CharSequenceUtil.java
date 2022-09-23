@@ -3366,12 +3366,12 @@ public class CharSequenceUtil extends StrChecker {
 			return originalStr;
 		}
 
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(originalStr.length());
 		for (int i = 0; i < strLength; i++) {
 			if (i >= startInclude && i < endExclude) {
 				stringBuilder.append(replacedChar);
 			} else {
-				stringBuilder.append(new String(strCodePoints, i, 1));
+				stringBuilder.appendCodePoint(strCodePoints[i]);
 			}
 		}
 		return stringBuilder.toString();
@@ -3406,13 +3406,14 @@ public class CharSequenceUtil extends StrChecker {
 			return originalStr;
 		}
 
-		final StringBuilder stringBuilder = new StringBuilder();
+		// 新字符串长度 <= 旧长度 - (被替换区间codePoints数量) + 替换字符串长度
+		final StringBuilder stringBuilder = new StringBuilder(originalStr.length() - (endExclude - startInclude) + replacedStr.length());
 		for (int i = 0; i < startInclude; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
+			stringBuilder.appendCodePoint(strCodePoints[i]);
 		}
 		stringBuilder.append(replacedStr);
 		for (int i = endExclude; i < strLength; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
+			stringBuilder.appendCodePoint(strCodePoints[i]);
 		}
 		return stringBuilder.toString();
 	}

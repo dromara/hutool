@@ -13,7 +13,6 @@ import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Objects;
 
 /**
  * Lambda相关工具类
@@ -23,7 +22,7 @@ import java.util.Objects;
  */
 public class LambdaUtil {
 
-	private static final WeakConcurrentMap<String, LambdaInfo> CACHE = new WeakConcurrentMap<>();
+	private static final WeakConcurrentMap<Object, LambdaInfo> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
@@ -73,16 +72,10 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	public static <T extends Serializable> LambdaInfo resolve(final T func) {
-		return CACHE.computeIfAbsent(func.getClass().getName(), (key) -> {
+		return CACHE.computeIfAbsent(func, (key) -> {
 			final SerializedLambda serializedLambda = _resolve(func);
 			final String methodName = serializedLambda.getImplMethodName();
-			final Class<?> implClass;
-			ClassLoaderUtil.loadClass(serializedLambda.getImplClass().replace("/", "."), true);
-			try {
-				implClass = Class.forName(serializedLambda.getImplClass().replace("/", "."), true, Thread.currentThread().getContextClassLoader());
-			} catch (final ClassNotFoundException e) {
-				throw new UtilException(e);
-			}
+			final Class<?> implClass = ClassLoaderUtil.loadClass(serializedLambda.getImplClass(), true);
 			if ("<init>".equals(methodName)) {
 				for (final Constructor<?> constructor : implClass.getDeclaredConstructors()) {
 					if (ReflectUtil.getDescriptor(constructor).equals(serializedLambda.getImplMethodSignature())) {
@@ -160,7 +153,7 @@ public class LambdaUtil {
 			throw new IllegalArgumentException("Not a lambda expression: " + clazz.getName());
 		}
 		final Object serLambda = MethodUtil.invoke(func, "writeReplace");
-		if (Objects.nonNull(serLambda) && serLambda instanceof SerializedLambda) {
+		if (serLambda instanceof SerializedLambda) {
 			return (SerializedLambda) serLambda;
 		}
 		throw new UtilException("writeReplace result value is not java.lang.invoke.SerializedLambda");
