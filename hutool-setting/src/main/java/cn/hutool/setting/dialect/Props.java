@@ -11,6 +11,10 @@ import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.LambdaInfo;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.getter.TypeGetter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
@@ -27,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -231,6 +236,19 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	}
 
 	/**
+	 * 根据lambda的方法引用，获取
+	 *
+	 * @param func 方法引用
+	 * @param <P>  参数类型
+	 * @param <T>  返回值类型
+	 * @return 获取表达式对应属性和返回的对象
+	 */
+	public <P, T> T get(final SerFunction<P, T> func) {
+		final LambdaInfo lambdaInfo = LambdaUtil.resolve(func);
+		return get(lambdaInfo.getFieldName(), lambdaInfo.getReturnType());
+	}
+
+	/**
 	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
 	 *
 	 * @param keys 键列表，常用于别名
@@ -353,8 +371,24 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	 * @param key   属性键
 	 * @param value 属性值
 	 */
-	public void setProperty(final String key, final Object value) {
+	public void set(final String key, final Object value) {
 		super.setProperty(key, value.toString());
+	}
+
+	/**
+	 * 通过lambda批量设置值<br>
+	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
+	 * <pre>
+	 *     User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
+	 *     Setting.of().setFields(user::getNickname, user::getUsername);
+	 * </pre>
+	 *
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	public Props setFields(final SerSupplier<?>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
+		return this;
 	}
 
 	/**

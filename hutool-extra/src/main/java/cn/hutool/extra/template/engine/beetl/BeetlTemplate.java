@@ -1,6 +1,6 @@
 package cn.hutool.extra.template.engine.beetl;
 
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.extra.template.Template;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author looly
  */
-public class BeetlTemplate extends AbstractTemplate implements Serializable{
+public class BeetlTemplate implements Template, Serializable{
 	private static final long serialVersionUID = -8157926902932567280L;
 
 	private final org.beetl.core.Template rawTemplate;

@@ -2,7 +2,7 @@ package cn.hutool.extra.template.engine.freemarker;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateException;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author looly
  */
-public class FreemarkerTemplate extends AbstractTemplate implements Serializable{
+public class FreemarkerTemplate implements Template, Serializable{
 	private static final long serialVersionUID = -8157926902932567280L;
 
 	freemarker.template.Template rawTemplate;

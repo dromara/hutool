@@ -2,7 +2,7 @@ package cn.hutool.extra.template.engine.jetbrick;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.extra.template.Template;
 import jetbrick.template.JetTemplate;
 
 import java.io.OutputStream;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author looly
  * @since 5.7.21
  */
-public class JetbrickTemplate extends AbstractTemplate implements Serializable{
+public class JetbrickTemplate implements Template, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private final JetTemplate rawTemplate;

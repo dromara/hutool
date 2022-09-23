@@ -7,7 +7,9 @@ import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.LambdaInfo;
 import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.getter.TypeGetter;
 
@@ -350,6 +352,19 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	@Override
 	public Object getObj(final String key, final Object defaultValue) {
 		return getOrDefault(key, defaultValue);
+	}
+
+	/**
+	 * 根据lambda的方法引用，获取
+	 *
+	 * @param func 方法引用
+	 * @param <P>  参数类型
+	 * @param <T>  返回值类型
+	 * @return 获取表达式对应属性和返回的对象
+	 */
+	public <P, T> T get(final SerFunction<P, T> func) {
+		final LambdaInfo lambdaInfo = LambdaUtil.resolve(func);
+		return get(lambdaInfo.getFieldName(), lambdaInfo.getReturnType());
 	}
 
 	/**

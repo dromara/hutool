@@ -3,6 +3,9 @@ package cn.hutool.setting;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.lang.func.LambdaInfo;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.getter.GroupedTypeGetter;
 import cn.hutool.core.lang.getter.TypeGetter;
 import cn.hutool.core.reflect.ConstructorUtil;
@@ -33,6 +36,19 @@ public abstract class AbsSetting implements TypeGetter<CharSequence>,
 	@Override
 	public Object getObj(final CharSequence key, final Object defaultValue) {
 		return ObjUtil.defaultIfNull(getObjByGroup(key, DEFAULT_GROUP), defaultValue);
+	}
+
+	/**
+	 * 根据lambda的方法引用，获取
+	 *
+	 * @param func 方法引用
+	 * @param <P>  参数类型
+	 * @param <T>  返回值类型
+	 * @return 获取表达式对应属性和返回的对象
+	 */
+	public <P, T> T get(final SerFunction<P, T> func) {
+		final LambdaInfo lambdaInfo = LambdaUtil.resolve(func);
+		return get(lambdaInfo.getFieldName(), lambdaInfo.getReturnType());
 	}
 
 	/**

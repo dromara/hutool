@@ -3,9 +3,9 @@ package cn.hutool.extra.template.engine.velocity;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.extra.template.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author looly
  *
  */
-public class VelocityTemplate extends AbstractTemplate implements Serializable {
+public class VelocityTemplate implements Template, Serializable {
 	private static final long serialVersionUID = -132774960373894911L;
 
 	private final org.apache.velocity.Template rawTemplate;

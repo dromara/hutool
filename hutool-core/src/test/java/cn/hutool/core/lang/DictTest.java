@@ -3,13 +3,14 @@ package cn.hutool.core.lang;
 import cn.hutool.core.builder.GenericBuilder;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.Dict;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static cn.hutool.core.lang.OptTest.User;
 
 public class DictTest {
 	@Test
@@ -70,5 +71,16 @@ public class DictTest {
 		dict.setFields(user::getNickname, user::getUsername);
 		Assert.assertEquals("hutool", dict.get("username"));
 		Assert.assertNull(dict.get("nickname"));
+
+		// get by lambda
+		Assert.assertEquals("hutool", dict.get(User::getUsername));
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	static class User {
+		private String username;
+		private String nickname;
 	}
 }

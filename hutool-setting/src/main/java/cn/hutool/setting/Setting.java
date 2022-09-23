@@ -10,6 +10,8 @@ import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -21,6 +23,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -574,6 +577,22 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public Setting set(final String key, final String value) {
 		this.put(key, value);
+		return this;
+	}
+
+	/**
+	 * 通过lambda批量设置值<br>
+	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
+	 * <pre>
+	 *     User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
+	 *     Setting.of().setFields(user::getNickname, user::getUsername);
+	 * </pre>
+	 *
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	public Setting setFields(final SerSupplier<String>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
 		return this;
 	}
 

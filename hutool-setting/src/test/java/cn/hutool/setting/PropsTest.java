@@ -67,11 +67,11 @@ public class PropsTest {
 	public void toBeanWithNullPrefixTest(){
 		final Props configProp = new Props();
 
-		configProp.setProperty("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
-		configProp.setProperty("isInit", true);
-		configProp.setProperty("stairPlan", 1);
-		configProp.setProperty("stageNum", 2);
-		configProp.setProperty("version", 3);
+		configProp.set("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
+		configProp.set("isInit", true);
+		configProp.set("stairPlan", 1);
+		configProp.set("stageNum", 2);
+		configProp.set("version", 3);
 		final SystemConfig systemConfig = configProp.toBean(SystemConfig.class);
 
 		Assert.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());

@@ -2,7 +2,6 @@ package cn.hutool.extra.template.engine.wit;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.extra.template.AbstractTemplate;
 import org.febit.wit.Template;
 
 import java.io.OutputStream;
@@ -15,7 +14,7 @@ import java.util.Map;
  *
  * @author looly
  */
-public class WitTemplate extends AbstractTemplate implements Serializable{
+public class WitTemplate implements cn.hutool.extra.template.Template, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private final Template rawTemplate;

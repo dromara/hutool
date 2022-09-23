@@ -5,7 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.extra.template.Template;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author looly
  * @since 4.1.11
  */
-public class ThymeleafTemplate extends AbstractTemplate implements Serializable {
+public class ThymeleafTemplate implements Template, Serializable {
 	private static final long serialVersionUID = 781284916568562509L;
 
 	private final TemplateEngine engine;
@@ -35,7 +35,7 @@ public class ThymeleafTemplate extends AbstractTemplate implements Serializable 
 	 * @param engine Thymeleaf的模板引擎对象 {@link TemplateEngine}
 	 * @param template 模板路径或模板内容
 	 * @param charset 编码
-	 * @return {@link ThymeleafTemplate}
+	 * @return {@code ThymeleafTemplate}
 	 */
 	public static ThymeleafTemplate wrap(final TemplateEngine engine, final String template, final Charset charset) {
 		return (null == engine) ? null : new ThymeleafTemplate(engine, template, charset);
