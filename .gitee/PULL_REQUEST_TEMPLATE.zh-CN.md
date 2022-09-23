@@ -1,15 +1,15 @@
-### 说明
+### 📣说明
 
 1. 请确认你提交的PR是到'v6-dev'分支，否则我会手动修改代码并关闭PR。
 2. 请确认没有更改代码风格（如tab缩进）
 3. 新特性添加请确认注释完备，如有必要，请在src/test/java下添加Junit测试用例
 
-### 修改描述(包括说明bug修复或者添加新特性)
+### 🔧修改描述(包括说明bug修复或者添加新特性)
 
 1. [bug修复] balabala……
 2. [新特性]  balabala……
 
-### 提交前自测
+### 😊提交前自测
 > 请在提交前自测确保代码没有问题，提交新代码应包含：测试用例、通过(mvn javadoc:javadoc)检验详细注释。
 
 1. 本地如有多个JDK版本，可以设置临时JDk版本,如：`export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_331.jdk/Contents/Home`，具体替换为本地jdk目录
