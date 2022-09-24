@@ -495,4 +495,25 @@ public class CollectorUtil {
 		};
 	}
 
+
+	/**
+	 * <p>过滤</p >
+	 *
+	 * @param predicate  断言
+	 * @param downstream 下游操作
+	 * @param <T>        元素类型
+	 * @param <A>        中间类型
+	 * @param <R>        结束类型
+	 * @return 一个用于过滤元素的 {@link java.util.stream.Collector}
+	 * @author TanShengYuan
+	 */
+	public static <T, A, R>
+	Collector<T, ?, R> filtering(final Predicate<? super T> predicate,
+								 final Collector<? super T, A, R> downstream) {
+		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+		return new SimpleCollector<>(downstream.supplier(),
+				(r, t) -> Opt.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
+				downstream.combiner(), downstream.finisher(),
+				downstream.characteristics());
+	}
 }
