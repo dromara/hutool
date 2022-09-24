@@ -20,6 +20,7 @@
 * 【core   】     修复ReflectUtil 反射方法中桥接判断问题（issue#2625@Github）
 * 【poi    】     修复ExcelWriter导出List<Map>引起的个数混乱问题（issue#2627@Github）
 * 【poi    】     修复ExcelReader读取时间变成12小时形式问题（issue#I5Q1TW@Gitee）
+* 【db     】     修复DB工具分页查询的时候oracle数据库会把ROWNUM_也带出来问题（issue#2618@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
