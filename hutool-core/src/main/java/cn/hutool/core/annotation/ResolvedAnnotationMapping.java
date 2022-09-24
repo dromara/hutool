@@ -2,8 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.multi.MultiValueMap;
-import cn.hutool.core.map.multi.SetValueMap;
+import cn.hutool.core.map.multi.Graph;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -479,8 +478,8 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	private void resolveAliasAttributes() {
 		final Map<Method, Integer> attributeIndexes = new HashMap<>(attributes.length);
 
+		final Graph<Method> methodGraph = new Graph<>();
 		// 解析被作为别名的关联属性，根据节点关系构建邻接表
-		final MultiValueMap<Method, Method> aliasedMethods = new SetValueMap<>();
 		for (int i = 0; i < attributes.length; i++) {
 			// 获取属性上的@Alias注解
 			final Method attribute = attributes[i];
@@ -492,15 +491,14 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 			// 获取别名属性
 			final Method aliasAttribute = getAliasAttribute(attribute, attributeAnnotation);
 			Objects.requireNonNull(aliasAttribute);
-			aliasedMethods.putValue(aliasAttribute, attribute);
-			aliasedMethods.putValue(attribute, aliasAttribute);
+			methodGraph.putEdge(aliasAttribute, attribute);
 		}
 
 		// 按广度优先遍历邻接表，将属于同一张图上的节点分为一组，并为其建立AliasSet
 		final Set<Method> accessed = new HashSet<>(attributes.length);
 		final Set<Method> group = new LinkedHashSet<>();
 		final Deque<Method> deque = new LinkedList<>();
-		for (final Method target : aliasedMethods.keySet()) {
+		for (final Method target : methodGraph.keySet()) {
 			group.clear();
 			deque.addLast(target);
 			while (!deque.isEmpty()) {
@@ -512,7 +510,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 				accessed.add(curr);
 				// 将其添加到关系组
 				group.add(curr);
-				Collection<Method> aliases = aliasedMethods.get(curr);
+				final Collection<Method> aliases = methodGraph.getAdjacentPoints(curr);
 				if (CollUtil.isNotEmpty(aliases)) {
 					deque.addAll(aliases);
 				}
