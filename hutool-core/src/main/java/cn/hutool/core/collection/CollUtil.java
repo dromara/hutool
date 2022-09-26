@@ -207,27 +207,39 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
-		final List<T> result;
-		if (isEmpty(coll1)) {
-			result = new ArrayList<>();
-		} else {
-			result = new ArrayList<>(coll1);
+		if (CollUtil.isEmpty(coll1) && CollUtil.isEmpty(coll2) && ArrayUtil.isEmpty(otherColls)) {
+			return Collections.emptyList();
 		}
 
-		if (isNotEmpty(coll2)) {
-			result.addAll(coll2);
-		}
-
-		if (ArrayUtil.isNotEmpty(otherColls)) {
+		// 计算元素总数
+		int totalSize = 0;
+		totalSize += size(coll1);
+		totalSize += size(coll2);
+		if (otherColls != null) {
 			for (Collection<T> otherColl : otherColls) {
-				if (isEmpty(otherColl)) {
-					continue;
-				}
-				result.addAll(otherColl);
+				totalSize += size(otherColl);
 			}
 		}
 
-		return result;
+		// 根据size创建，防止多次扩容
+		List<T> res = new ArrayList<>(totalSize);
+		if (coll1 != null) {
+			res.addAll(coll1);
+		}
+		if (coll2 != null) {
+			res.addAll(coll2);
+		}
+		if (otherColls == null) {
+			return res;
+		}
+
+		for (Collection<T> otherColl : otherColls) {
+			if (otherColl != null) {
+				res.addAll(otherColl);
+			}
+		}
+
+		return res;
 	}
 
 	/**
