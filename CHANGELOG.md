@@ -11,6 +11,7 @@
 * 【core   】     EnumUtil.getBy增加带默认值重载（issue#I5RZU6@Gitee）
 * 【core   】     ModifierUtil和ReflectUtil增加removeFinalModify（pr#810@Gitee）
 * 【core   】     AbsCollValueMap添加removeValue和removeValues方法，用于list value值移除（pr#813@Gitee）
+* 【extra  】     hutool-extra ftp 支持上传文件或目录（pr#821@Gitee）
 
 ### 🐞Bug修复
 * 【core   】     修复FileNameUtil.cleanInvalid无法去除换行符问题（issue#I5RMZV@Gitee）

@@ -591,38 +591,6 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 递归上传文件（支持目录）
-	 *
-	 * @param destPath   目录路径
-	 * @param uploadFile 上传文件或目录
-	 */
-	public void recursiveUpload(String destPath, final File uploadFile) {
-		if (uploadFile.isFile()) {
-			this.upload(destPath, uploadFile);
-			return;
-		}
-		File[] files = uploadFile.listFiles();
-		if (Objects.isNull(files)) {
-			return;
-		}
-
-		//第一次只处理文件，防止目录在前面导致先处理子孙目录，而引发文件所在目录不正确
-		for (File f : files) {
-			if (f.isFile()) {
-				this.upload(destPath, f);
-			}
-		}
-		//第二次只处理目录
-		for (File f : files) {
-			if (f.isDirectory()) {
-				destPath = destPath + File.separator + f.getName();
-				this.mkDirs(destPath);
-				recursiveUpload(destPath, f);
-			}
-		}
-	}
-
-	/**
 	 * 下载文件
 	 *
 	 * @param path    文件路径，包含文件名
@@ -750,6 +718,38 @@ public class Ftp extends AbstractFtp {
 				this.client.disconnect();
 			}
 			this.client = null;
+		}
+	}
+
+	/**
+	 * 递归上传文件（支持目录）
+	 *
+	 * @param destPath   目录路径
+	 * @param uploadFile 上传文件或目录
+	 */
+	private void recursiveUpload(String destPath, final File uploadFile) {
+		if (uploadFile.isFile()) {
+			this.upload(destPath, uploadFile);
+			return;
+		}
+		final File[] files = uploadFile.listFiles();
+		if (Objects.isNull(files)) {
+			return;
+		}
+
+		//第一次只处理文件，防止目录在前面导致先处理子孙目录，而引发文件所在目录不正确
+		for (final File f : files) {
+			if (f.isFile()) {
+				this.upload(destPath, f);
+			}
+		}
+		//第二次只处理目录
+		for (final File f : files) {
+			if (f.isDirectory()) {
+				destPath = destPath + "/" + f.getName();
+				this.mkDirs(destPath);
+				recursiveUpload(destPath, f);
+			}
 		}
 	}
 }
