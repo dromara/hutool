@@ -163,13 +163,13 @@ public abstract class AbstractFtp implements Closeable {
 			if (StrUtil.isNotEmpty(s)) {
 				boolean exist = true;
 				try {
-					if (false == cd(s)) {
+					if (!cd(s)) {
 						exist = false;
 					}
 				} catch (FtpException e) {
 					exist = false;
 				}
-				if (false == exist) {
+				if (!exist) {
 					//目录不存在时创建
 					mkdir(s);
 					cd(s);
