@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * FTP客户端封装<br>
@@ -30,7 +31,7 @@ import java.util.List;
  * 1、filezila server ;根目录一般都是空
  * 2、linux vsftpd ; 使用的 系统用户的目录，这里往往都是不是根目录，如：/home/ftpuser/ftp
  *
- * @author looly
+ * @author looly, xhzou
  * @since 4.1.8
  */
 public class Ftp extends AbstractFtp {
@@ -569,6 +570,54 @@ public class Ftp extends AbstractFtp {
 		} finally {
 			if (this.backToPwd) {
 				cd(pwd);
+			}
+		}
+	}
+
+	/**
+	 * 上传文件或目录（包含当前及子孙目录的所有文件）
+	 *
+	 * @param destPath   目标路径
+	 * @param uploadFile 上传文件或目录
+	 */
+	public void uploadFileOrDirectory(String destPath, final File uploadFile) {
+		if (uploadFile.isFile()) {
+			this.upload(destPath, uploadFile);
+			return;
+		}
+
+		this.mkDirs(destPath);
+		recursiveUpload(destPath, uploadFile);
+	}
+
+	/**
+	 * 递归上传文件（支持目录）
+	 *
+	 * @param destPath   目录路径
+	 * @param uploadFile 上传文件或目录
+	 */
+	public void recursiveUpload(String destPath, final File uploadFile) {
+		if (uploadFile.isFile()) {
+			this.upload(destPath, uploadFile);
+			return;
+		}
+		File[] files = uploadFile.listFiles();
+		if (Objects.isNull(files)) {
+			return;
+		}
+
+		//第一次只处理文件，防止目录在前面导致先处理子孙目录，而引发文件所在目录不正确
+		for (File f : files) {
+			if (f.isFile()) {
+				this.upload(destPath, f);
+			}
+		}
+		//第二次只处理目录
+		for (File f : files) {
+			if (f.isDirectory()) {
+				destPath = destPath + File.separator + f.getName();
+				this.mkDirs(destPath);
+				recursiveUpload(destPath, f);
 			}
 		}
 	}

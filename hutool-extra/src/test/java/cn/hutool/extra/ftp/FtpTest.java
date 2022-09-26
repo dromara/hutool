@@ -35,6 +35,15 @@ public class FtpTest {
 
 	@Test
 	@Ignore
+	public void uploadDirectorTest() {
+		final Ftp ftp = new Ftp("localhost");
+
+		ftp.uploadFileOrDirectory("/temp", FileUtil.file("d:/test/"));
+		IoUtil.close(ftp);
+	}
+
+	@Test
+	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {
 		Ftp ftp = new Ftp("looly.centos");
 
