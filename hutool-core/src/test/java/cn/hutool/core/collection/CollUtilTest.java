@@ -941,6 +941,7 @@ public class CollUtilTest {
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
 		Assert.assertNotNull(list);
 
+		@SuppressWarnings("ConfusingArgumentToVarargsMethod")
 		final List<String> resList2 = CollUtil.unionAll(null, null, null);
 		Assert.assertNotNull(resList2);
 	}
@@ -972,6 +973,7 @@ public class CollUtilTest {
 	public void unionAllOtherIsNullTest() {
 		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
+		@SuppressWarnings("ConfusingArgumentToVarargsMethod")
 		final List<Integer> list = CollUtil.unionAll(list1, list2, null);
 		Assert.assertNotNull(list);
 		Assert.assertArrayEquals(

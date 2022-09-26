@@ -21,7 +21,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * FTP客户端封装<br>
@@ -522,9 +521,9 @@ public class Ftp extends AbstractFtp {
 	 * @throws IORuntimeException IO异常
 	 */
 	public boolean upload(String destPath, String fileName, File file) throws IORuntimeException {
-		try (InputStream in = FileUtil.getInputStream(file)) {
+		try (final InputStream in = FileUtil.getInputStream(file)) {
 			return upload(destPath, fileName, in);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -547,7 +546,7 @@ public class Ftp extends AbstractFtp {
 	public boolean upload(String destPath, String fileName, InputStream fileStream) throws IORuntimeException {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -575,19 +574,38 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 上传文件或目录（包含当前及子孙目录的所有文件）
+	 * 递归上传文件（支持目录）<br>
+	 * 上传时，如果uploadFile为目录，只复制目录下所有目录和文件到目标路径下，并不会复制目录本身<br>
+	 * 上传时，自动创建父级目录
 	 *
-	 * @param destPath   目标路径
+	 * @param remotePath 目录路径
 	 * @param uploadFile 上传文件或目录
 	 */
-	public void uploadFileOrDirectory(String destPath, final File uploadFile) {
-		if (uploadFile.isFile()) {
-			this.upload(destPath, uploadFile);
+	public void uploadFileOrDirectory(final String remotePath, final File uploadFile) {
+		if (false == FileUtil.isDirectory(uploadFile)) {
+			this.upload(remotePath, uploadFile);
 			return;
 		}
 
-		this.mkDirs(destPath);
-		recursiveUpload(destPath, uploadFile);
+		final File[] files = uploadFile.listFiles();
+		if (ArrayUtil.isEmpty(files)) {
+			return;
+		}
+
+		final List<File> dirs = new ArrayList<>(files.length);
+		//第一次只处理文件，防止目录在前面导致先处理子目录，而引发文件所在目录不正确
+		for (final File f : files) {
+			if (f.isDirectory()) {
+				dirs.add(f);
+			} else {
+				this.upload(remotePath, f);
+			}
+		}
+		//第二次只处理目录
+		for (final File f : dirs) {
+			final String dir = FileUtil.normalize(remotePath + "/" + f.getName());
+			upload(dir, f);
+		}
 	}
 
 	/**
@@ -718,38 +736,6 @@ public class Ftp extends AbstractFtp {
 				this.client.disconnect();
 			}
 			this.client = null;
-		}
-	}
-
-	/**
-	 * 递归上传文件（支持目录）
-	 *
-	 * @param destPath   目录路径
-	 * @param uploadFile 上传文件或目录
-	 */
-	private void recursiveUpload(String destPath, final File uploadFile) {
-		if (uploadFile.isFile()) {
-			this.upload(destPath, uploadFile);
-			return;
-		}
-		final File[] files = uploadFile.listFiles();
-		if (Objects.isNull(files)) {
-			return;
-		}
-
-		//第一次只处理文件，防止目录在前面导致先处理子孙目录，而引发文件所在目录不正确
-		for (final File f : files) {
-			if (f.isFile()) {
-				this.upload(destPath, f);
-			}
-		}
-		//第二次只处理目录
-		for (final File f : files) {
-			if (f.isDirectory()) {
-				destPath = destPath + "/" + f.getName();
-				this.mkDirs(destPath);
-				recursiveUpload(destPath, f);
-			}
 		}
 	}
 }

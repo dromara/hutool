@@ -208,7 +208,7 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		if (CollUtil.isEmpty(coll1) && CollUtil.isEmpty(coll2) && ArrayUtil.isEmpty(otherColls)) {
-			return Collections.emptyList();
+			return new ArrayList<>(0);
 		}
 
 		// 计算元素总数
@@ -216,13 +216,13 @@ public class CollUtil {
 		totalSize += size(coll1);
 		totalSize += size(coll2);
 		if (otherColls != null) {
-			for (Collection<T> otherColl : otherColls) {
+			for (final Collection<T> otherColl : otherColls) {
 				totalSize += size(otherColl);
 			}
 		}
 
 		// 根据size创建，防止多次扩容
-		List<T> res = new ArrayList<>(totalSize);
+		final List<T> res = new ArrayList<>(totalSize);
 		if (coll1 != null) {
 			res.addAll(coll1);
 		}
@@ -233,7 +233,7 @@ public class CollUtil {
 			return res;
 		}
 
-		for (Collection<T> otherColl : otherColls) {
+		for (final Collection<T> otherColl : otherColls) {
 			if (otherColl != null) {
 				res.addAll(otherColl);
 			}

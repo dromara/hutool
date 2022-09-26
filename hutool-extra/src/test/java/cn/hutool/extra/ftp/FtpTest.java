@@ -7,6 +7,7 @@ import cn.hutool.extra.ssh.Sftp;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FtpTest {
@@ -14,7 +15,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void cdTest() {
-		Ftp ftp = new Ftp("looly.centos");
+		final Ftp ftp = new Ftp("looly.centos");
 
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
@@ -25,9 +26,9 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void uploadTest() {
-		Ftp ftp = new Ftp("localhost");
+		final Ftp ftp = new Ftp("localhost");
 
-		boolean upload = ftp.upload("/temp", FileUtil.file("d:/test/test.zip"));
+		final boolean upload = ftp.upload("/temp", FileUtil.file("d:/test/test.zip"));
 		Console.log(upload);
 
 		IoUtil.close(ftp);
@@ -45,7 +46,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {
-		Ftp ftp = new Ftp("looly.centos");
+		final Ftp ftp = new Ftp("looly.centos");
 
 		Console.log("打印pwd: " + ftp.pwd());
 
@@ -54,7 +55,7 @@ public class FtpTest {
 
 		try{
 			Console.log("打印pwd: " + ftp.pwd());
-		}catch (FtpException e) {
+		}catch (final FtpException e) {
 			e.printStackTrace();
 		}
 
@@ -69,7 +70,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void recursiveDownloadFolder() {
-		Ftp ftp = new Ftp("looly.centos");
+		final Ftp ftp = new Ftp("looly.centos");
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
 		IoUtil.close(ftp);
@@ -78,7 +79,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void recursiveDownloadFolderSftp() {
-		Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
+		final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
 
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
@@ -90,20 +91,22 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void downloadTest() {
-		Ftp ftp = new Ftp("localhost");
-
-		List<String> fileNames = ftp.ls("temp/");
-		for(String name: fileNames) {
-			ftp.download("",
-					name,
-					FileUtil.file("d:/test/download/" + name));
+		try(final Ftp ftp = new Ftp("localhost")){
+			final List<String> fileNames = ftp.ls("temp/");
+			for(final String name: fileNames) {
+				ftp.download("",
+						name,
+						FileUtil.file("d:/test/download/" + name));
+			}
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Test
 	@Ignore
 	public void isDirTest() throws Exception {
-		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+		try (final Ftp ftp = new Ftp("127.0.0.1", 21)) {
 			Console.log(ftp.pwd());
 			ftp.isDir("/test");
 			Console.log(ftp.pwd());
@@ -113,7 +116,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void existSftpTest() throws Exception {
-		try (Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
+		try (final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
 			Console.log(ftp.pwd());
 			Console.log(ftp.exist(null));
 			Console.log(ftp.exist(""));
@@ -136,7 +139,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void existFtpTest() throws Exception {
-		try (Ftp ftp = new Ftp("127.0.0.1", 21)) {
+		try (final Ftp ftp = new Ftp("127.0.0.1", 21)) {
 			Console.log(ftp.pwd());
 			Console.log(ftp.exist(null));
 			Console.log(ftp.exist(""));
