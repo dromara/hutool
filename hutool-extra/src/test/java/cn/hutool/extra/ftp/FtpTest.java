@@ -27,7 +27,7 @@ public class FtpTest {
 	public void uploadTest() {
 		final Ftp ftp = new Ftp("localhost");
 
-		final boolean upload = ftp.upload("/temp", FileUtil.file("d:/test/test.zip"));
+		final boolean upload = ftp.uploadFile("/temp", FileUtil.file("d:/test/test.zip"));
 		Console.log(upload);
 
 		IoUtil.close(ftp);

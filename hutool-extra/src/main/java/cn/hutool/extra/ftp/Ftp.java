@@ -269,10 +269,11 @@ public class Ftp extends AbstractFtp {
 
 	/**
 	 * 是否执行完操作返回当前目录
+	 *
 	 * @return 执行完操作是否返回当前目录
 	 * @since 5.7.17
 	 */
-	public boolean isBackToPwd(){
+	public boolean isBackToPwd() {
 		return this.backToPwd;
 	}
 
@@ -340,7 +341,7 @@ public class Ftp extends AbstractFtp {
 	 * 遍历某个目录下所有文件和目录，不会递归遍历<br>
 	 * 此方法自动过滤"."和".."两种目录
 	 *
-	 * @param path   目录
+	 * @param path      目录
 	 * @param predicate 过滤器，null表示不过滤，默认去掉"."和".."两种目录
 	 * @return 文件或目录列表
 	 * @since 5.3.5
@@ -408,6 +409,7 @@ public class Ftp extends AbstractFtp {
 	 *
 	 * @param path 路径
 	 * @return 状态int，服务端不同，返回不同
+	 * @throws IORuntimeException IO异常
 	 * @since 5.4.3
 	 */
 	public int stat(final String path) throws IORuntimeException {
@@ -491,39 +493,42 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. destPath为null或""上传到当前路径
-	 * 2. destPath为相对路径则相对于当前路径的子路径
-	 * 3. destPath为绝对路径则上传到此路径
+	 * 1. remotePath为null或""上传到当前路径
+	 * 2. remotePath为相对路径则相对于当前路径的子路径
+	 * 3. remotePath为绝对路径则上传到此路径
 	 * </pre>
 	 *
-	 * @param destPath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
-	 * @param file     文件
+	 * @param remotePath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param file       文件
 	 * @return 是否上传成功
 	 */
 	@Override
-	public boolean upload(final String destPath, final File file) {
+	public boolean uploadFile(final String remotePath, final File file) {
 		Assert.notNull(file, "file to upload is null !");
-		return upload(destPath, file.getName(), file);
+		if (false == FileUtil.isFile(file)) {
+			throw new FtpException("[{}] is not a file!", file);
+		}
+		return uploadFile(remotePath, file.getName(), file);
 	}
 
 	/**
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. destPath为null或""上传到当前路径
-	 * 2. destPath为相对路径则相对于当前路径的子路径
-	 * 3. destPath为绝对路径则上传到此路径
+	 * 1. remotePath为null或""上传到当前路径
+	 * 2. remotePath为相对路径则相对于当前路径的子路径
+	 * 3. remotePath为绝对路径则上传到此路径
 	 * </pre>
 	 *
-	 * @param file     文件
-	 * @param destPath     服务端路径，可以为{@code null} 或者相对路径或绝对路径
-	 * @param fileName 自定义在服务端保存的文件名
+	 * @param file       文件
+	 * @param remotePath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param fileName   自定义在服务端保存的文件名
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(final String destPath, final String fileName, final File file) throws IORuntimeException {
+	public boolean uploadFile(final String remotePath, final String fileName, final File file) throws IORuntimeException {
 		try (final InputStream in = FileUtil.getInputStream(file)) {
-			return upload(destPath, fileName, in);
+			return uploadFile(remotePath, fileName, in);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -533,18 +538,18 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. destPath为null或""上传到当前路径
-	 * 2. destPath为相对路径则相对于当前路径的子路径
-	 * 3. destPath为绝对路径则上传到此路径
+	 * 1. remotePath为null或""上传到当前路径
+	 * 2. remotePath为相对路径则相对于当前路径的子路径
+	 * 3. remotePath为绝对路径则上传到此路径
 	 * </pre>
 	 *
-	 * @param destPath       服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param remotePath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName   文件名
 	 * @param fileStream 文件流
 	 * @return 是否上传成功
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean upload(final String destPath, final String fileName, final InputStream fileStream) throws IORuntimeException {
+	public boolean uploadFile(final String remotePath, final String fileName, final InputStream fileStream) throws IORuntimeException {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 		} catch (final IOException e) {
@@ -556,10 +561,10 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (StrUtil.isNotBlank(destPath)) {
-			mkDirs(destPath);
-			if (false == cd(destPath)) {
-				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", destPath);
+		if (StrUtil.isNotBlank(remotePath)) {
+			mkDirs(remotePath);
+			if (false == cd(remotePath)) {
+				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", remotePath);
 			}
 		}
 
@@ -571,6 +576,41 @@ public class Ftp extends AbstractFtp {
 			if (this.backToPwd) {
 				cd(pwd);
 			}
+		}
+	}
+
+	/**
+	 * 递归上传文件（支持目录）<br>
+	 * 上传时，如果uploadFile为目录，只复制目录下所有目录和文件到目标路径下，并不会复制目录本身<br>
+	 * 上传时，自动创建父级目录
+	 *
+	 * @param remotePath 目录路径
+	 * @param uploadFile 上传文件或目录
+	 */
+	public void upload(final String remotePath, final File uploadFile) {
+		if (false == FileUtil.isDirectory(uploadFile)) {
+			this.uploadFile(remotePath, uploadFile);
+			return;
+		}
+
+		final File[] files = uploadFile.listFiles();
+		if (ArrayUtil.isEmpty(files)) {
+			return;
+		}
+
+		final List<File> dirs = new ArrayList<>(files.length);
+		//第一次只处理文件，防止目录在前面导致先处理子目录，而引发文件所在目录不正确
+		for (final File f : files) {
+			if (f.isDirectory()) {
+				dirs.add(f);
+			} else {
+				this.uploadFile(remotePath, f);
+			}
+		}
+		//第二次只处理目录
+		for (final File f : dirs) {
+			final String dir = FileUtil.normalize(remotePath + "/" + f.getName());
+			upload(dir, f);
 		}
 	}
 

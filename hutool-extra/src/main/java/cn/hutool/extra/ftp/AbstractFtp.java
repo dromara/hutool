@@ -195,7 +195,7 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param file     需要上传的文件
 	 * @return 是否成功
 	 */
-	public abstract boolean upload(String destPath, File file);
+	public abstract boolean uploadFile(String destPath, File file);
 
 	/**
 	 * 下载文件
