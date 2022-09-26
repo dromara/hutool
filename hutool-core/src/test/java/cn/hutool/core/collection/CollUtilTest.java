@@ -940,6 +940,54 @@ public class CollUtilTest {
 		final List<String> list3 = null;
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
 		Assert.assertNotNull(list);
+
+		final List<String> resList2 = CollUtil.unionAll(null, null, null);
+		Assert.assertNotNull(resList2);
+	}
+
+	@Test
+	public void unionAllOrdinaryTest() {
+		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
+		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
+		final List<Integer> list3 = CollectionUtil.newArrayList(4, 5, 6);
+		final List<Integer> list = CollUtil.unionAll(list1, list2, list3);
+		Assert.assertNotNull(list);
+		Assert.assertArrayEquals(
+				CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3, 4, 5, 6).toArray(),
+				list.toArray());
+	}
+
+	@Test
+	public void unionAllTwoOrdinaryTest() {
+		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
+		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
+		final List<Integer> list = CollUtil.unionAll(list1, list2);
+		Assert.assertNotNull(list);
+		Assert.assertArrayEquals(
+				CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
+				list.toArray());
+	}
+
+	@Test
+	public void unionAllOtherIsNullTest() {
+		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
+		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
+		final List<Integer> list = CollUtil.unionAll(list1, list2, null);
+		Assert.assertNotNull(list);
+		Assert.assertArrayEquals(
+				CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
+				list.toArray());
+	}
+
+	@Test
+	public void unionAllOtherTwoNullTest() {
+		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
+		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
+		final List<Integer> list = CollUtil.unionAll(list1, list2, null, null);
+		Assert.assertNotNull(list);
+		Assert.assertArrayEquals(
+				CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
+				list.toArray());
 	}
 
 	@Test
