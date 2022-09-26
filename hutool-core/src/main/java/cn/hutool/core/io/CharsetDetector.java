@@ -60,7 +60,7 @@ public class CharsetDetector {
 	 * @return 编码
 	 */
 	public static Charset detect(InputStream in, Charset... charsets) {
-		return detect(IoUtil.DEFAULT_BUFFER_SIZE, in, charsets);
+		return detect(IoUtil.DEFAULT_LARGE_BUFFER_SIZE, in, charsets);
 	}
 
 	/**
