@@ -169,7 +169,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>2.1.212</version>
+			<version>2.1.214</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
