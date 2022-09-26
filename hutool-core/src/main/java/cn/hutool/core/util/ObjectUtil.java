@@ -324,7 +324,7 @@ public class ObjectUtil {
 	 * @throws NullPointerException {@code defaultValueSupplier == null} 时，抛出
 	 * @since 5.7.20
 	 */
-	public static <T> T defaultIfNull(T source, Function<T , ? extends T> defaultValueSupplier) {
+	public static <T> T defaultIfNull(T source, Function<T, ? extends T> defaultValueSupplier) {
 		if (isNull(source)) {
 			return defaultValueSupplier.apply(null);
 		}
@@ -353,14 +353,15 @@ public class ObjectUtil {
 	/**
 	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
 	 *
+	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
+	 * @param <R>          被检查的对象类型
 	 * @param source       Object 类型对象
 	 * @param handle       非空时自定义的处理方法
 	 * @param defaultValue 默认为空的返回值
-	 * @param <T>          被检查对象为{@code null}返回默认值，否则返回自定义handle处理后的返回值
 	 * @return 处理后的返回值
 	 * @since 5.4.6
 	 */
-	public static <T,R> T defaultIfNull(R source, Function<R, ? extends T> handle, final T defaultValue) {
+	public static <T, R> T defaultIfNull(R source, Function<R, ? extends T> handle, final T defaultValue) {
 		if (isNotNull(source)) {
 			return handle.apply(source);
 		}

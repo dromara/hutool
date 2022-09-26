@@ -1030,8 +1030,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 执行Request请求后，对响应内容后续处理<br>
 	 * 处理结束后关闭连接
 	 *
+	 * @param <T> 处理结果类型
 	 * @param function 响应内容处理函数
 	 * @since 5.8.5
+	 * @return 处理结果
 	 */
 	public <T> T thenFunction(Function<HttpResponse, T> function) {
 		try (final HttpResponse response = execute(true)) {
