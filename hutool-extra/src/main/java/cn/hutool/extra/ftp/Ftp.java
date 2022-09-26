@@ -220,7 +220,7 @@ public class Ftp extends AbstractFtp {
 			throw new IORuntimeException(e);
 		}
 		final int replyCode = client.getReplyCode(); // 是否成功登录服务器
-		if (!FTPReply.isPositiveCompletion(replyCode)) {
+		if (false == FTPReply.isPositiveCompletion(replyCode)) {
 			try {
 				client.disconnect();
 			} catch (IOException e) {
@@ -355,7 +355,7 @@ public class Ftp extends AbstractFtp {
 		String fileName;
 		for (FTPFile ftpFile : ftpFiles) {
 			fileName = ftpFile.getName();
-			if (!StrUtil.equals(".", fileName) && !StrUtil.equals("..", fileName)) {
+			if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
 				if (null == filter || filter.accept(ftpFile)) {
 					result.add(ftpFile);
 				}
@@ -376,7 +376,7 @@ public class Ftp extends AbstractFtp {
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			if (!cd(path)) {
+			if (false == cd(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
 			}
 		}
@@ -440,7 +440,7 @@ public class Ftp extends AbstractFtp {
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		if (!cd(dir)) {
+		if (false == cd(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
@@ -471,7 +471,7 @@ public class Ftp extends AbstractFtp {
 			childPath = StrUtil.format("{}/{}", dirPath, name);
 			if (ftpFile.isDirectory()) {
 				// 上级和本级目录除外
-				if (!".".equals(name) && !"..".equals(name)) {
+				if (false == ".".equals(name) && false == "..".equals(name)) {
 					delDir(childPath);
 				}
 			} else {
@@ -558,7 +558,7 @@ public class Ftp extends AbstractFtp {
 
 		if (StrUtil.isNotBlank(destPath)) {
 			mkDirs(destPath);
-			if (!cd(destPath)) {
+			if (false == cd(destPath)) {
 				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", destPath);
 			}
 		}
@@ -651,9 +651,9 @@ public class Ftp extends AbstractFtp {
 			srcFile = StrUtil.format("{}/{}", sourcePath, fileName);
 			destFile = FileUtil.file(destDir, fileName);
 
-			if (!ftpFile.isDirectory()) {
+			if (false == ftpFile.isDirectory()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (!FileUtil.exist(destFile)
+				if (false == FileUtil.exist(destFile)
 						|| (ftpFile.getTimestamp().getTimeInMillis() > destFile.lastModified())) {
 					download(srcFile, destFile);
 				}
@@ -677,7 +677,7 @@ public class Ftp extends AbstractFtp {
 		if (outFile.isDirectory()) {
 			outFile = new File(outFile, fileName);
 		}
-		if (!outFile.exists()) {
+		if (false == outFile.exists()) {
 			FileUtil.touch(outFile);
 		}
 		try (OutputStream out = FileUtil.getOutputStream(outFile)) {
@@ -714,7 +714,7 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (!cd(path)) {
+		if (false == cd(path)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
