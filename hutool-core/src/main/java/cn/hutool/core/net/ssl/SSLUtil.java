@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.ssl;
 
 import cn.hutool.core.io.IORuntimeException;
 

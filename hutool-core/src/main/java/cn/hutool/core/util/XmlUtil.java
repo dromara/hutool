@@ -1487,7 +1487,6 @@ public class XmlUtil {
 		 */
 		private void examineNode(final Node node, final boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
-			//noinspection ConstantConditions
 			if (null != attributes) {
 				final int length = attributes.getLength();
 				for (int i = 0; i < length; i++) {

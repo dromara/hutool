@@ -178,7 +178,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	}
 
 	@Override
-	default Object convert(Type targetType, Object value) throws ConvertException {
+	default Object convert(final Type targetType, final Object value) throws ConvertException {
 		return JSONConverter.of(getConfig()).convert(targetType, value);
 	}
 }

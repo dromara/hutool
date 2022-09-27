@@ -6,9 +6,6 @@ import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
-import cn.hutool.core.net.FormUrlencoded;
-import cn.hutool.core.net.RFC3986;
-import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
@@ -234,7 +231,7 @@ public class UrlQuery {
 	 * @return URL查询字符串
 	 */
 	public String build(final Charset charset) {
-		return build(charset, true);
+		return build(charset, null != charset);
 	}
 
 	/**

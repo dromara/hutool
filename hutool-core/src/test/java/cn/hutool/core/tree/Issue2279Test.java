@@ -19,7 +19,7 @@ public class Issue2279Test {
 				new TestTree(4, 2, 4, 4)
 		);
 
-		final List<Tree<String>> stringTree = TreeUtil.build(list, "0",
+		final List<MapTree<String>> stringTree = TreeUtil.build(list, "0",
 				(object, treeNode) -> {
 					treeNode.setId(object.getId());
 					treeNode.setName(object.getName());
@@ -28,7 +28,7 @@ public class Issue2279Test {
 				}
 		);
 
-		final Tree<String> result = stringTree.get(0);
+		final MapTree<String> result = stringTree.get(0);
 		Assert.assertEquals(2, result.getChildren().size());
 	}
 

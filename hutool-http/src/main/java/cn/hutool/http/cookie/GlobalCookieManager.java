@@ -2,7 +2,7 @@ package cn.hutool.http.cookie;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.http.HttpConnection;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package cn.hutool.core.builder;
+package cn.hutool.core.lang.builder;
 
 import cn.hutool.core.lang.func.SerConsumer3;
 
@@ -55,6 +55,7 @@ import java.util.function.Supplier;
  *
  * @author TomXin VampireAchao
  * @since 5.7.21
+ * @param <T> 构建对象类型
  */
 public class GenericBuilder<T> implements Builder<T> {
 	private static final long serialVersionUID = 1L;

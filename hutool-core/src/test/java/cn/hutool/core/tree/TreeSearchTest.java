@@ -1,8 +1,5 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.tree.Tree;
-import cn.hutool.core.tree.TreeNode;
-import cn.hutool.core.tree.TreeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,10 +27,10 @@ public class TreeSearchTest {
 
 	@Test
 	public void searchNode() {
-		final List<Tree<Long>> treeItems= TreeUtil.build(all_menu, 0L);
+		final List<MapTree<Long>> treeItems= TreeUtil.build(all_menu, 0L);
 
-		final Tree<Long> tree=treeItems.get(0);
-		final Tree<Long> searchResult=tree.getNode(3L);
+		final MapTree<Long> tree=treeItems.get(0);
+		final MapTree<Long> searchResult=tree.getNode(3L);
 
 		Assert.assertEquals("module-B", searchResult.getName());
 	}

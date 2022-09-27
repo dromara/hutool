@@ -3,7 +3,7 @@ package cn.hutool.http;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.net.SSLProtocols;
+import cn.hutool.core.net.ssl.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;

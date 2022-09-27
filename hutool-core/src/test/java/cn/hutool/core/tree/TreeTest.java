@@ -31,16 +31,16 @@ public class TreeTest {
 
 	@Test
 	public void sampleTreeTest() {
-		final List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
-		for (final Tree<String> tree : treeList) {
+		final List<MapTree<String>> treeList = TreeUtil.build(nodeList, "0");
+		for (final MapTree<String> tree : treeList) {
 			Assert.assertNotNull(tree);
 			Assert.assertEquals("0", tree.getParentId());
 //			Console.log(tree);
 		}
 
 		// 测试通过子节点查找父节点
-		final Tree<String> rootNode0 = treeList.get(0);
-		final Tree<String> parent = rootNode0.getChildren().get(0).getParent();
+		final MapTree<String> rootNode0 = treeList.get(0);
+		final MapTree<String> parent = rootNode0.getChildren().get(0).getParent();
 		Assert.assertEquals(rootNode0, parent);
 	}
 
@@ -55,7 +55,7 @@ public class TreeTest {
 		treeNodeConfig.setDeep(2);
 
 		//转换器
-		final List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
+		final List<MapTree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
 				(treeNode, tree) -> {
 					tree.setId(treeNode.getId());
 					tree.setParentId(treeNode.getParentId());
@@ -72,7 +72,7 @@ public class TreeTest {
 	@Test
 	public void walkTest(){
 		final List<String> ids = new ArrayList<>();
-		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.walk((tr)-> ids.add(tr.getId()));
 
 		Assert .assertEquals(7, ids.size());
@@ -81,7 +81,7 @@ public class TreeTest {
 	@Test
 	public void walkBroadFirstTest(){
 		final List<String> ids = new ArrayList<>();
-		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		Console.log(tree);
 		tree.walk((tr)-> ids.add(tr.getId()), true);
 
@@ -91,8 +91,8 @@ public class TreeTest {
 
 	@Test
 	public void cloneTreeTest(){
-		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
-		final Tree<String> cloneTree = tree.cloneTree();
+		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final MapTree<String> cloneTree = tree.cloneTree();
 
 		final List<String> ids = new ArrayList<>();
 		cloneTree.walk((tr)-> ids.add(tr.getId()));
@@ -103,7 +103,7 @@ public class TreeTest {
 	@Test
 	public void filterTest(){
 		// 经过过滤，丢掉"用户添加"节点
-		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.filter((t)->{
 			final CharSequence name = t.getName();
 			return null != name && name.toString().contains("店铺");
@@ -116,10 +116,10 @@ public class TreeTest {
 
 	@Test
 	public void filterNewTest(){
-		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 
 		// 经过过滤，生成新的树
-		final Tree<String> newTree = tree.filterNew((t)->{
+		final MapTree<String> newTree = tree.filterNew((t)->{
 			final CharSequence name = t.getName();
 			return null != name && name.toString().contains("店铺");
 		});

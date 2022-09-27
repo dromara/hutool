@@ -11,7 +11,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.reflect.ConstructorUtil;

@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.ssl;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedTrustManager;

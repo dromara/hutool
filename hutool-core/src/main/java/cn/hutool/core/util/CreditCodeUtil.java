@@ -25,6 +25,9 @@ import java.util.regex.Pattern;
  */
 public class CreditCodeUtil {
 
+	/**
+	 * 统一社会信用代码正则
+	 */
 	public static final Pattern CREDIT_CODE_PATTERN = PatternPool.CREDIT_CODE;
 
 	/**

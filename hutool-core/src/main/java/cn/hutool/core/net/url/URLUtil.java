@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.url;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
@@ -7,7 +7,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 

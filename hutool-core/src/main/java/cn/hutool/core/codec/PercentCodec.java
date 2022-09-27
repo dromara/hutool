@@ -166,7 +166,9 @@ public class PercentCodec implements Encoder<byte[], byte[]>, Serializable {
 	 * @author looly
 	 * @since 6.0.0
 	 */
-	public static class Builder implements cn.hutool.core.builder.Builder<PercentCodec> {
+	public static class Builder implements cn.hutool.core.lang.builder.Builder<PercentCodec> {
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * 从已知PercentCodec创建PercentCodec，会复制给定PercentCodec的安全字符
 		 *

@@ -1,6 +1,6 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.builder.GenericBuilder;
+import cn.hutool.core.lang.builder.GenericBuilder;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.map.Dict;
 import lombok.AllArgsConstructor;

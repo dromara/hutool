@@ -1,5 +1,6 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.net.url.URLUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

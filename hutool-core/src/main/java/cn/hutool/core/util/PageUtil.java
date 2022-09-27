@@ -174,7 +174,7 @@ public class PageUtil {
 	 * @param pageSize   每页数
 	 * @return 总页数
 	 */
-	public static int totalPage(int totalCount, int pageSize) {
+	public static int totalPage(final int totalCount, final int pageSize) {
 		return totalPage((long) totalCount, pageSize);
 	}
 
@@ -186,7 +186,7 @@ public class PageUtil {
 	 * @return 总页数
 	 * @since 5.8.5
 	 */
-	public static int totalPage(long totalCount, int pageSize) {
+	public static int totalPage(final long totalCount, final int pageSize) {
 		if (pageSize == 0) {
 			return 0;
 		}

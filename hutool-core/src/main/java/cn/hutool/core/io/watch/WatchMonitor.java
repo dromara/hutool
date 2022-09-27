@@ -4,7 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.File;

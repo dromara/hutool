@@ -7,7 +7,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;

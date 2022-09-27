@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.url;
 
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;

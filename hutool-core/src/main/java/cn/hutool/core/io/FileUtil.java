@@ -20,7 +20,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.compress.ZipUtil;
 
 import java.io.BufferedInputStream;

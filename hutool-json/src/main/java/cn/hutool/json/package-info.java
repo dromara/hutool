@@ -6,9 +6,9 @@
  * </ul>
  * JSON封装主要包括JSON表示和JSON转换：
  *
- * <pre>
- *     Java对象   &lt;----&gt;   JSON对象   &lt;----&gt; JSON字符串
- * </pre>
+ * <pre>{@code
+ *     Java对象   <---->   JSON对象   <---->    JSON字符串
+ * }</pre>
  *
  *
  * @author looly

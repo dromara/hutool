@@ -1,6 +1,6 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.ssl;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;

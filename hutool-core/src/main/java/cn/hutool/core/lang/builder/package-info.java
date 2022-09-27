@@ -5,4 +5,4 @@
  * @author looly
  *
  */
-package cn.hutool.core.builder;
+package cn.hutool.core.lang.builder;

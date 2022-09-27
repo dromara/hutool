@@ -1,11 +1,9 @@
 package cn.hutool.core.net.url;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.RFC3986;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -63,7 +61,7 @@ public final class UrlBuilder implements Builder<String> {
 	 * 是否需要编码`%`<br>
 	 * 区别对待，如果是，则生成URL时需要重新全部编码，否则跳过所有`%`
 	 */
-	private boolean needEncodePercent;
+	private final boolean needEncodePercent;
 
 	/**
 	 * 使用URI构建UrlBuilder
@@ -119,7 +117,7 @@ public final class UrlBuilder implements Builder<String> {
 	/**
 	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码
 	 *
-	 * @param url     URL字符串
+	 * @param url URL字符串
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(final String url) {
@@ -197,6 +195,8 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public UrlBuilder() {
 		this.charset = CharsetUtil.UTF_8;
+		// 编码非空情况下做解码
+		this.needEncodePercent = true;
 	}
 
 	/**

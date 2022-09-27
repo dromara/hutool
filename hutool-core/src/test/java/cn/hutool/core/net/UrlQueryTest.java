@@ -1,6 +1,7 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.CharsetUtil;

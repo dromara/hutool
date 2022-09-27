@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.core.net.ssl;
 
 /**
  * SSL或TLS协议

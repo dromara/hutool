@@ -1,7 +1,7 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.SSLUtil;
+import cn.hutool.core.net.ssl.SSLUtil;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;

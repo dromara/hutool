@@ -1,6 +1,6 @@
 package cn.hutool.db.sql;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;

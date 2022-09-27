@@ -2,7 +2,7 @@ package cn.hutool.core.compiler;
 
 
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.ByteArrayInputStream;

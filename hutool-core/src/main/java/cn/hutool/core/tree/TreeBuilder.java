@@ -1,6 +1,6 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.tree.parser.NodeParser;
@@ -17,11 +17,11 @@ import java.util.Map;
  *
  * @param <E> ID类型
  */
-public class TreeBuilder<E> implements Builder<Tree<E>> {
+public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	private static final long serialVersionUID = 1L;
 
-	private final Tree<E> root;
-	private final Map<E, Tree<E>> idTreeMap;
+	private final MapTree<E> root;
+	private final Map<E, MapTree<E>> idTreeMap;
 	private boolean isBuild;
 
 	/**
@@ -54,7 +54,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param config 配置
 	 */
 	public TreeBuilder(final E rootId, final TreeNodeConfig config) {
-		root = new Tree<>(config);
+		root = new MapTree<>(config);
 		root.setId(rootId);
 		this.idTreeMap = new HashMap<>();
 	}
@@ -127,7 +127,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param map 节点列表
 	 * @return this
 	 */
-	public TreeBuilder<E> append(final Map<E, Tree<E>> map) {
+	public TreeBuilder<E> append(final Map<E, MapTree<E>> map) {
 		checkBuilt();
 
 		this.idTreeMap.putAll(map);
@@ -140,10 +140,10 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param trees 节点列表
 	 * @return this
 	 */
-	public TreeBuilder<E> append(final Iterable<Tree<E>> trees) {
+	public TreeBuilder<E> append(final Iterable<MapTree<E>> trees) {
 		checkBuilt();
 
-		for (final Tree<E> tree : trees) {
+		for (final MapTree<E> tree : trees) {
 			this.idTreeMap.put(tree.getId(), tree);
 		}
 		return this;
@@ -161,10 +161,10 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		checkBuilt();
 
 		final TreeNodeConfig config = this.root.getConfig();
-		final Map<E, Tree<E>> map = new LinkedHashMap<>(list.size(), 1);
-		Tree<E> node;
+		final Map<E, MapTree<E>> map = new LinkedHashMap<>(list.size(), 1);
+		MapTree<E> node;
 		for (final T t : list) {
-			node = new Tree<>(config);
+			node = new MapTree<>(config);
 			nodeParser.parse(t, node);
 			map.put(node.getId(), node);
 		}
@@ -185,7 +185,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	}
 
 	@Override
-	public Tree<E> build() {
+	public MapTree<E> build() {
 		checkBuilt();
 
 		buildFromMap();
@@ -211,7 +211,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 *
 	 * @return 树列表
 	 */
-	public List<Tree<E>> buildList() {
+	public List<MapTree<E>> buildList() {
 		if (isBuild) {
 			// 已经构建过了
 			return this.root.getChildren();
@@ -227,9 +227,9 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			return;
 		}
 
-		final Map<E, Tree<E>> eTreeMap = MapUtil.sortByValue(this.idTreeMap, false);
+		final Map<E, MapTree<E>> eTreeMap = MapUtil.sortByValue(this.idTreeMap, false);
 		E parentId;
-		for (final Tree<E> node : eTreeMap.values()) {
+		for (final MapTree<E> node : eTreeMap.values()) {
 			if (null == node) {
 				continue;
 			}
@@ -239,7 +239,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 				continue;
 			}
 
-			final Tree<E> parentNode = eTreeMap.get(parentId);
+			final MapTree<E> parentNode = eTreeMap.get(parentId);
 			if (null != parentNode) {
 				parentNode.addChildren(node);
 			}
@@ -265,7 +265,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @param currentDepp 当前层级
 	 * @param maxDeep     最大层级
 	 */
-	private void cutTree(final Tree<E> tree, final int currentDepp, final int maxDeep) {
+	private void cutTree(final MapTree<E> tree, final int currentDepp, final int maxDeep) {
 		if (null == tree) {
 			return;
 		}
@@ -275,9 +275,9 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			return;
 		}
 
-		final List<Tree<E>> children = tree.getChildren();
+		final List<MapTree<E>> children = tree.getChildren();
 		if (CollUtil.isNotEmpty(children)) {
-			for (final Tree<E> child : children) {
+			for (final MapTree<E> child : children) {
 				cutTree(child, currentDepp + 1, maxDeep);
 			}
 		}

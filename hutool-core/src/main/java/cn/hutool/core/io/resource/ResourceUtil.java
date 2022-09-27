@@ -7,7 +7,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 
 import java.io.BufferedReader;
 import java.io.File;

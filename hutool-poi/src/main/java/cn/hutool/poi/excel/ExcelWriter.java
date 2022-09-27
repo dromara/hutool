@@ -13,7 +13,7 @@ import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
-import cn.hutool.core.net.URLEncoder;
+import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.poi.excel.cell.CellLocation;

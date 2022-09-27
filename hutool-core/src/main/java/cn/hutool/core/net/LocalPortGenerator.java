@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 4.0.3
  *
  */
-public class LocalPortGenerater implements Serializable{
+public class LocalPortGenerator implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 备选的本地端口 */
@@ -23,7 +23,7 @@ public class LocalPortGenerater implements Serializable{
 	 *
 	 * @param beginPort 起始端口号
 	 */
-	public LocalPortGenerater(final int beginPort) {
+	public LocalPortGenerator(final int beginPort) {
 		alternativePort = new AtomicInteger(beginPort);
 	}
 

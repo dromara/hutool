@@ -268,7 +268,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 *
 	 * @author VampireAchao
 	 */
-	public interface Builder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
+	public interface Builder<T> extends Consumer<T>, cn.hutool.core.lang.builder.Builder<EasyStream<T>> {
 
 		/**
 		 * Adds an element to the unwrap being built.
