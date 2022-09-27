@@ -1742,14 +1742,14 @@ public class CharSequenceUtil extends StrChecker {
 	/**
 	 * 切割指定位置之前部分的字符串
 	 * <p>安全的subString,允许：string为null，允许string长度小于toIndexExclude长度</p>
-	 * <pre>
+	 * <pre>{@code
 	 *      Assert.assertEquals(StrUtil.subPre(null, 3), null);
 	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
 	 * 		Assert.assertEquals(StrUtil.subPre("abc", 3), "abc");
 	 * 		Assert.assertEquals(StrUtil.subPre("abcd", 3), "abc");
 	 * 		Assert.assertEquals(StrUtil.subPre("abcd", -3), "a");
 	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
-	 * </pre>
+	 * }</pre>
 	 *
 	 * @param string         字符串
 	 * @param toIndexExclude 切割到的位置（不包括）
