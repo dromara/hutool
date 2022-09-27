@@ -281,6 +281,16 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void subPreTest() {
+		Assert.assertEquals(StrUtil.subPre(null, 3), null);
+		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+		Assert.assertEquals(StrUtil.subPre("abc", 3), "abc");
+		Assert.assertEquals(StrUtil.subPre("abcd", 3), "abc");
+		Assert.assertEquals(StrUtil.subPre("abcd", -3), "a");
+		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+	}
+
+	@Test
 	public void subByCodePointTest() {
 		// 🤔👍🍓🤔
 		final String test = "\uD83E\uDD14\uD83D\uDC4D\uD83C\uDF53\uD83E\uDD14";
