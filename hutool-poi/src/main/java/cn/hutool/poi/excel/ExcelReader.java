@@ -2,8 +2,8 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.SerBiConsumer;
 import cn.hutool.poi.excel.cell.CellEditor;
-import cn.hutool.poi.excel.cell.CellHandler;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.reader.BeanSheetReader;
 import cn.hutool.poi.excel.reader.ColumnSheetReader;
@@ -252,7 +252,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param cellHandler 单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
 	 */
-	public void read(final CellHandler cellHandler) {
+	public void read(final SerBiConsumer<Cell, Object> cellHandler) {
 		read(0, Integer.MAX_VALUE, cellHandler);
 	}
 
@@ -265,7 +265,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @param cellHandler   单元格处理器，用于处理读到的单元格及其数据
 	 * @since 5.3.8
 	 */
-	public void read(int startRowIndex, int endRowIndex, final CellHandler cellHandler) {
+	public void read(int startRowIndex, int endRowIndex, final SerBiConsumer<Cell, Object> cellHandler) {
 		checkNotClosed();
 
 		startRowIndex = Math.max(startRowIndex, this.sheet.getFirstRowNum());// 读取起始行（包含）
@@ -280,7 +280,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 				Cell cell;
 				for (short x = 0; x < columnSize; x++) {
 					cell = row.getCell(x);
-					cellHandler.handle(cell, CellUtil.getCellValue(cell));
+					cellHandler.accept(cell, CellUtil.getCellValue(cell));
 				}
 			}
 		}

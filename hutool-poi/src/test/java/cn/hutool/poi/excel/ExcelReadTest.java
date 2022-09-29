@@ -2,10 +2,11 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.func.SerBiConsumer;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.poi.excel.cell.CellHandler;
 import lombok.Data;
+import org.apache.poi.ss.usermodel.Cell;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -231,7 +232,7 @@ public class ExcelReadTest {
 	@Ignore
 	public void readNullRowTest(){
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/1.-.xls");
-		reader.read((CellHandler) Console::log);
+		reader.read((SerBiConsumer<Cell, Object>) Console::log);
 	}
 
 	@Test

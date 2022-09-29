@@ -2,8 +2,8 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.LineHandler;
 import cn.hutool.core.io.watch.SimpleWatcher;
+import cn.hutool.core.lang.func.SerConsumer;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -21,16 +21,16 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 
 	private final RandomAccessFile randomAccessFile;
 	private final Charset charset;
-	private final LineHandler lineHandler;
+	private final SerConsumer<String> lineHandler;
 
 	/**
 	 * 构造
 	 *
 	 * @param randomAccessFile {@link RandomAccessFile}
 	 * @param charset 编码
-	 * @param lineHandler 行处理器{@link LineHandler}实现
+	 * @param lineHandler 行处理器{@link SerConsumer}实现
 	 */
-	public LineReadWatcher(final RandomAccessFile randomAccessFile, final Charset charset, final LineHandler lineHandler) {
+	public LineReadWatcher(final RandomAccessFile randomAccessFile, final Charset charset, final SerConsumer<String> lineHandler) {
 		this.randomAccessFile = randomAccessFile;
 		this.charset = charset;
 		this.lineHandler = lineHandler;
@@ -45,7 +45,7 @@ public class LineReadWatcher extends SimpleWatcher implements Runnable {
 	public void onModify(final WatchEvent<?> event, final Path currentPath) {
 		final RandomAccessFile randomAccessFile = this.randomAccessFile;
 		final Charset charset = this.charset;
-		final LineHandler lineHandler = this.lineHandler;
+		final SerConsumer<String> lineHandler = this.lineHandler;
 
 		try {
 			final long currentLength = randomAccessFile.length();

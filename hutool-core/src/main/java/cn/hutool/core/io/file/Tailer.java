@@ -4,8 +4,8 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.LineHandler;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -30,12 +30,15 @@ import java.util.concurrent.TimeUnit;
 public class Tailer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static final LineHandler CONSOLE_HANDLER = new ConsoleLineHandler();
+	/**
+	 * 控制台打印的处理类
+	 */
+	public static final SerConsumer<String> CONSOLE_HANDLER = new ConsoleLineHandler();
 
 	/** 编码 */
 	private final Charset charset;
 	/** 行处理器 */
-	private final LineHandler lineHandler;
+	private final SerConsumer<String> lineHandler;
 	/** 初始读取的行数 */
 	private final int initReadLine;
 	/** 定时任务检查间隔时长 */
@@ -50,7 +53,7 @@ public class Tailer implements Serializable {
 	 * @param file 文件
 	 * @param lineHandler 行处理器
 	 */
-	public Tailer(final File file, final LineHandler lineHandler) {
+	public Tailer(final File file, final SerConsumer<String> lineHandler) {
 		this(file, lineHandler, 0);
 	}
 
@@ -61,7 +64,7 @@ public class Tailer implements Serializable {
 	 * @param lineHandler 行处理器
 	 * @param initReadLine 启动时预读取的行数
 	 */
-	public Tailer(final File file, final LineHandler lineHandler, final int initReadLine) {
+	public Tailer(final File file, final SerConsumer<String> lineHandler, final int initReadLine) {
 		this(file, CharsetUtil.UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
 	}
 
@@ -72,7 +75,7 @@ public class Tailer implements Serializable {
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
 	 */
-	public Tailer(final File file, final Charset charset, final LineHandler lineHandler) {
+	public Tailer(final File file, final Charset charset, final SerConsumer<String> lineHandler) {
 		this(file, charset, lineHandler, 0, DateUnit.SECOND.getMillis());
 	}
 
@@ -85,7 +88,7 @@ public class Tailer implements Serializable {
 	 * @param initReadLine 启动时预读取的行数
 	 * @param period 检查间隔
 	 */
-	public Tailer(final File file, final Charset charset, final LineHandler lineHandler, final int initReadLine, final long period) {
+	public Tailer(final File file, final Charset charset, final SerConsumer<String> lineHandler, final int initReadLine, final long period) {
 		checkFile(file);
 		this.charset = charset;
 		this.lineHandler = lineHandler;
@@ -188,7 +191,7 @@ public class Tailer implements Serializable {
 
 			// 输出缓存栈中的内容
 			while (false == stack.isEmpty()) {
-				this.lineHandler.handle(stack.pop());
+				this.lineHandler.accept(stack.pop());
 			}
 		}
 
@@ -221,9 +224,10 @@ public class Tailer implements Serializable {
 	 * @author looly
 	 * @since 4.5.2
 	 */
-	public static class ConsoleLineHandler implements LineHandler {
+	public static class ConsoleLineHandler implements SerConsumer<String> {
+		private static final long serialVersionUID = 1L;
 		@Override
-		public void handle(final String line) {
+		public void accepting(final String line) {
 			Console.log(line);
 		}
 	}

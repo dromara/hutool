@@ -56,7 +56,7 @@ public class CoordinateUtil {
 	 * WGS84 转换为 火星坐标系 (GCJ-02)
 	 *
 	 * @param lng 经度值
-	 * @param lat 维度值
+	 * @param lat 纬度值
 	 * @return 火星坐标 (GCJ-02)
 	 */
 	public static Coordinate wgs84ToGcj02(final double lng, final double lat) {
@@ -67,7 +67,7 @@ public class CoordinateUtil {
 	 * WGS84 坐标转为 百度坐标系 (BD-09) 坐标
 	 *
 	 * @param lng 经度值
-	 * @param lat 维度值
+	 * @param lat 纬度值
 	 * @return bd09 坐标
 	 */
 	public static Coordinate wgs84ToBd09(final double lng, final double lat) {

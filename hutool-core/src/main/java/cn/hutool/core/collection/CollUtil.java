@@ -1,6 +1,7 @@
 package cn.hutool.core.collection;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.codec.hash.Hash32;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.collection.iter.IteratorEnumeration;
 import cn.hutool.core.comparator.CompareUtil;
@@ -9,7 +10,8 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.codec.hash.Hash32;
+import cn.hutool.core.lang.func.SerBiConsumer;
+import cn.hutool.core.lang.func.SerConsumer3;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
@@ -21,7 +23,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
@@ -1942,14 +1943,14 @@ public class CollUtil {
 	// ------------------------------------------------------------------------------------------------- forEach
 
 	/**
-	 * 循环遍历 {@link Iterable}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Iterable}，使用{@link SerBiConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>      集合元素类型
 	 * @param iterable {@link Iterable}
-	 * @param consumer {@link IndexedConsumer} 遍历的每条数据处理器
+	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 * @since 5.4.7
 	 */
-	public static <T> void forEach(final Iterable<T> iterable, final IndexedConsumer<T> consumer) {
+	public static <T> void forEach(final Iterable<T> iterable, final SerBiConsumer<T, Integer> consumer) {
 		if (iterable == null) {
 			return;
 		}
@@ -1957,13 +1958,13 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历 {@link Iterator}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Iterator}，使用{@link SerBiConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>      集合元素类型
 	 * @param iterator {@link Iterator}
-	 * @param consumer {@link IndexedConsumer} 遍历的每条数据处理器
+	 * @param consumer {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Iterator<T> iterator, final IndexedConsumer<T> consumer) {
+	public static <T> void forEach(final Iterator<T> iterator, final SerBiConsumer<T, Integer> consumer) {
 		if (iterator == null) {
 			return;
 		}
@@ -1975,13 +1976,13 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历 {@link Enumeration}，使用{@link IndexedConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历 {@link Enumeration}，使用{@link SerBiConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 *
 	 * @param <T>         集合元素类型
 	 * @param enumeration {@link Enumeration}
-	 * @param consumer    {@link IndexedConsumer} 遍历的每条数据处理器
+	 * @param consumer    {@link SerBiConsumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(final Enumeration<T> enumeration, final IndexedConsumer<T> consumer) {
+	public static <T> void forEach(final Enumeration<T> enumeration, final SerBiConsumer<T, Integer> consumer) {
 		if (enumeration == null) {
 			return;
 		}
@@ -1993,15 +1994,15 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历Map，使用{@link IndexedKVConsumer} 接受遍历的每条数据，并针对每条数据做处理<br>
+	 * 循环遍历Map，使用{@link SerConsumer3} 接受遍历的每条数据，并针对每条数据做处理<br>
 	 * 和JDK8中的map.forEach不同的是，此方法支持index
 	 *
 	 * @param <K>        Key类型
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
-	 * @param kvConsumer {@link IndexedKVConsumer} 遍历的每条数据处理器
+	 * @param kvConsumer {@link SerConsumer3} 遍历的每条数据处理器
 	 */
-	public static <K, V> void forEach(final Map<K, V> map, final IndexedKVConsumer<K, V> kvConsumer) {
+	public static <K, V> void forEach(final Map<K, V> map, final SerConsumer3<K, V, Integer> kvConsumer) {
 		if (map == null) {
 			return;
 		}
@@ -2259,46 +2260,6 @@ public class CollUtil {
 	public static <E, K, V> void setValueByMap(final Iterable<E> iterable, final Map<K, V> map, final Function<E, K> keyGenerate, final BiConsumer<E, V> biConsumer) {
 		iterable.forEach(x -> Optional.ofNullable(map.get(keyGenerate.apply(x))).ifPresent(y -> biConsumer.accept(x, y)));
 	}
-
-	// ---------------------------------------------------------------------------------------------- Interface start
-
-	/**
-	 * 针对一个参数做相应的操作<br>
-	 * 此函数接口与JDK8中Consumer不同是多提供了index参数，用于标记遍历对象是第几个。
-	 *
-	 * @param <T> 处理参数类型
-	 * @author Looly
-	 */
-	@FunctionalInterface
-	public interface IndexedConsumer<T> extends Serializable {
-		/**
-		 * 接受并处理一个参数
-		 *
-		 * @param value 参数值
-		 * @param index 参数在集合中的索引
-		 */
-		void accept(T value, int index);
-	}
-
-	/**
-	 * 针对两个参数做相应的操作，例如Map中的KEY和VALUE
-	 *
-	 * @param <K> KEY类型
-	 * @param <V> VALUE类型
-	 * @author Looly
-	 */
-	@FunctionalInterface
-	public interface IndexedKVConsumer<K, V> extends Serializable {
-		/**
-		 * 接受并处理一对参数
-		 *
-		 * @param key   键
-		 * @param value 值
-		 * @param index 参数在集合中的索引
-		 */
-		void accept(K key, V value, int index);
-	}
-	// ---------------------------------------------------------------------------------------------- Interface end
 
 	/**
 	 * 获取Collection或者iterator的大小，此方法可以处理的对象类型如下：

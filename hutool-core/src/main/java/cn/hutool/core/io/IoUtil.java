@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.copy.ReaderWriterCopier;
 import cn.hutool.core.io.copy.StreamCopier;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;
@@ -621,7 +622,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(final Reader reader, final T collection) throws IORuntimeException {
-		readLines(reader, (LineHandler) collection::add);
+		readLines(reader, (SerConsumer<String>) collection::add);
 		return collection;
 	}
 
@@ -633,7 +634,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
 	 */
-	public static void readUtf8Lines(final InputStream in, final LineHandler lineHandler) throws IORuntimeException {
+	public static void readUtf8Lines(final InputStream in, final SerConsumer<String> lineHandler) throws IORuntimeException {
 		readLines(in, CharsetUtil.UTF_8, lineHandler);
 	}
 
@@ -646,7 +647,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public static void readLines(final InputStream in, final Charset charset, final LineHandler lineHandler) throws IORuntimeException {
+	public static void readLines(final InputStream in, final Charset charset, final SerConsumer<String> lineHandler) throws IORuntimeException {
 		readLines(getReader(in, charset), lineHandler);
 	}
 
@@ -659,12 +660,12 @@ public class IoUtil extends NioUtil {
 	 * @param lineHandler 行处理接口，实现handle方法用于编辑一行的数据后入到指定地方
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void readLines(final Reader reader, final LineHandler lineHandler) throws IORuntimeException {
+	public static void readLines(final Reader reader, final SerConsumer<String> lineHandler) throws IORuntimeException {
 		Assert.notNull(reader);
 		Assert.notNull(lineHandler);
 
 		for (final String line : lineIter(reader)) {
-			lineHandler.handle(line);
+			lineHandler.accept(line);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.func.SerBiConsumer;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Closeable;
@@ -132,7 +133,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param watchFilter 监听过滤接口，通过实现此接口过滤掉不需要监听的情况，{@link Predicate#test(Object)}为{@code true}保留，null表示不过滤
 	 * @since 5.4.0
 	 */
-	public void watch(final WatchAction action, final Predicate<WatchEvent<?>> watchFilter) {
+	public void watch(final SerBiConsumer<WatchEvent<?>, Path> action, final Predicate<WatchEvent<?>> watchFilter) {
 		final WatchKey wk;
 		try {
 			wk = watchService.take();
@@ -150,7 +151,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 				continue;
 			}
 
-			action.doAction(event, currentPath);
+			action.accept(event, currentPath);
 		}
 
 		wk.reset();

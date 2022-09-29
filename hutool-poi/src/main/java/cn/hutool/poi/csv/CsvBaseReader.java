@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 
@@ -125,7 +126,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param csvStr     CSV字符串
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 */
-	public void readFromStr(final String csvStr, final CsvRowHandler rowHandler) {
+	public void readFromStr(final String csvStr, final SerConsumer<CsvRow> rowHandler) {
 		read(parse(new StringReader(csvStr)), rowHandler);
 	}
 
@@ -242,7 +243,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 * @throws IORuntimeException IO异常
 	 */
-	public void read(final Reader reader, final CsvRowHandler rowHandler) throws IORuntimeException {
+	public void read(final Reader reader, final SerConsumer<CsvRow> rowHandler) throws IORuntimeException {
 		read(parse(reader), rowHandler);
 	}
 
@@ -256,10 +257,10 @@ public class CsvBaseReader implements Serializable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	private void read(final CsvParser csvParser, final CsvRowHandler rowHandler) throws IORuntimeException {
+	private void read(final CsvParser csvParser, final SerConsumer<CsvRow> rowHandler) throws IORuntimeException {
 		try {
 			while (csvParser.hasNext()){
-				rowHandler.handle(csvParser.next());
+				rowHandler.accept(csvParser.next());
 			}
 		} finally {
 			IoUtil.close(csvParser);
