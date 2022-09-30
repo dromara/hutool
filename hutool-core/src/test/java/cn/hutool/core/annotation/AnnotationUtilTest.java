@@ -1,5 +1,7 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,6 +37,12 @@ public class AnnotationUtilTest {
 	}
 
 	@Test
+	public void getAnnotationValueTest2() {
+		String[] names = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest::names);
+		Assert.assertTrue(ArrayUtil.equals(names, new String[]{"测试1", "测试2"}));
+	}
+
+	@Test
 	public void getAnnotationSyncAlias() {
 		// 直接获取
 		Assert.assertEquals("", ClassWithAnnotation.class.getAnnotation(AnnotationForTest.class).retry());
@@ -45,7 +53,7 @@ public class AnnotationUtilTest {
 		Assert.assertTrue(AnnotationUtil.isSynthesizedAnnotation(annotation));
 	}
 
-	@AnnotationForTest("测试")
+	@AnnotationForTest(value = "测试", names = {"测试1", "测试2"})
 	@RepeatAnnotationForTest
 	static class ClassWithAnnotation{
 		public void test(){
