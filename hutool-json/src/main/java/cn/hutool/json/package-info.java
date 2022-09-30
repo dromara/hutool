@@ -7,7 +7,9 @@
  * JSON封装主要包括JSON表示和JSON转换：
  *
  * <pre>{@code
- *     Java对象   <---->   JSON对象   <---->    JSON字符串
+ *               <--JSONConverter--              <---JSONParser----
+ *     Java对象  <----------------->   JSON对象   <----------------->    JSON字符串
+ *               ------mapper----->              ---JSONWriter---->
  * }</pre>
  *
  *

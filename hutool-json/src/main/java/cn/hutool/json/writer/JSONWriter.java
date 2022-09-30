@@ -1,4 +1,4 @@
-package cn.hutool.json.serialize;
+package cn.hutool.json.writer;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.mutable.MutableEntry;
@@ -9,6 +9,8 @@ import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONException;
+import cn.hutool.json.serialize.DateJSONString;
+import cn.hutool.json.serialize.JSONString;
 
 import java.io.IOException;
 import java.io.Writer;

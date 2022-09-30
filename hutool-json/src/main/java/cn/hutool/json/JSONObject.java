@@ -10,7 +10,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.mapper.ObjectMapper;
-import cn.hutool.json.serialize.JSONWriter;
+import cn.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;

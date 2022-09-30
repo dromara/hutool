@@ -9,7 +9,7 @@ import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.mapper.ArrayMapper;
-import cn.hutool.json.serialize.JSONWriter;
+import cn.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
