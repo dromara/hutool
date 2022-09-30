@@ -9,11 +9,10 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.*;
 
 import java.lang.annotation.*;
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -238,16 +237,18 @@ public class AnnotationUtil {
 	 * @param <A>            注解类型
 	 * @param <R>            注解类型值
 	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param annotationType 注解类型
 	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 */
-	public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Class<A> annotationType, Func1<A, R> propertyName)  {
+	public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Func1<A, R> propertyName)  {
 		if(propertyName == null) {
 			return null;
 		}else {
-			return getAnnotationValue(annotationEle,annotationType, LambdaUtil.getMethodName(propertyName));
+			final SerializedLambda lambda = LambdaUtil.resolve(propertyName);
+			final String instantiatedMethodType = lambda.getInstantiatedMethodType();
+			Class<A> annotationClass = ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+			return getAnnotationValue(annotationEle,annotationClass, lambda.getImplMethodName());
 		}
 	}
 
