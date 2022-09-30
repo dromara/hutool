@@ -26,4 +26,6 @@ public @interface AnnotationForTest {
 
 	@Alias("value")
 	String retry() default "";
+
+	String[] names() default "";
 }
