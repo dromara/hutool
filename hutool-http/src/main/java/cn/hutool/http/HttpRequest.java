@@ -832,7 +832,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
-		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
+		if(isFollowRedirects && config.maxRedirectCount <= 0){
+			// 默认两次跳转
+			return setMaxRedirectCount(2);
+		}
+		return this;
 	}
 
 	/**
