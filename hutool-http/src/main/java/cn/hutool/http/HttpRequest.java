@@ -8,6 +8,7 @@ import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.ssl.SSLUtil;
@@ -1226,7 +1227,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
-					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
+
+					final UrlBuilder redirectUrl;
+					String location = httpConnection.header(Header.LOCATION);
+					if(false == HttpUtil.isHttp(location) && false == HttpUtil.isHttps(location)){
+						// issue#I5TPSY
+						// location可能为相对路径
+						if(false == location.startsWith("/")){
+							location = StrUtil.addSuffixIfNot(this.url.getPathStr(), "/") + location;
+						}
+						redirectUrl = UrlBuilder.of(this.url.getScheme(), this.url.getHost(), this.url.getPort()
+								, location, null, null, this.charset);
+					} else{
+						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
+					}
+
+					Console.log(redirectUrl);
+					setUrl(redirectUrl);
 					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
 						// 重定向不再走过滤器

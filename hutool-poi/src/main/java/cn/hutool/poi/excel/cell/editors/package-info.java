@@ -3,4 +3,4 @@
  * @author looly
  *
  */
-package cn.hutool.poi.excel.editors;
+package cn.hutool.poi.excel.cell.editors;

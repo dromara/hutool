@@ -1060,4 +1060,12 @@ public class DateUtilTest {
 				DateUtil.parse(sourceStr));
 		Assert.assertTrue(between);
 	}
+
+	@Test
+	public void isLastDayTest(){
+		final DateTime dateTime = DateUtil.parse("2022-09-30");
+		final int dayOfMonth  = DateUtil.getLastDayOfMonth(dateTime);
+		Assert.assertEquals(dayOfMonth, Objects.requireNonNull(dateTime).dayOfMonth());
+		Assert.assertTrue("not is last day of this month !!",DateUtil.isLastDayOfMonth(dateTime));
+	}
 }

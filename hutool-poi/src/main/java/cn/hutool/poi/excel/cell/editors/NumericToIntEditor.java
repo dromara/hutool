@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel.editors;
+package cn.hutool.poi.excel.cell.editors;
 
 import org.apache.poi.ss.usermodel.Cell;
 
