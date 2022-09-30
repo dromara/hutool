@@ -1,6 +1,8 @@
 package cn.hutool.core.lang.getter;
 
+import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.Converter;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -89,7 +91,21 @@ public interface TypeGetter<K> {
 	 * @return 结果值
 	 */
 	default <T> T get(final K key, final Type type, final T defaultValue) {
-		return Convert.convert(type, getObj(key), defaultValue);
+		return get(key, type, CompositeConverter.getInstance(), defaultValue);
+	}
+
+	/**
+	 * 获取指定类型的值，默认自动转换值类型
+	 *
+	 * @param <T>          目标类型
+	 * @param key          键
+	 * @param type         目标类型
+	 * @param converter    自定义转换器
+	 * @param defaultValue 默认值
+	 * @return 结果值
+	 */
+	default <T> T get(final K key, final Type type, final Converter converter, final T defaultValue) {
+		return converter.convert(type, getObj(key), defaultValue);
 	}
 
 	/**

@@ -130,6 +130,6 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 			return defaultValue;
 		}
 
-		return (T) getConfig().getConverter().convert(type, value, defaultValue);
+		return get(key, type, getConfig().getConverter(), defaultValue);
 	}
 }

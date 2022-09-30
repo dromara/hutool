@@ -1,8 +1,6 @@
 package cn.hutool.json.serialize;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.convert.Converter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
@@ -10,7 +8,6 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSONConfig;
 
-import java.lang.reflect.Type;
 import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -23,7 +20,7 @@ import java.util.Date;
  * @author looly
  * @since 6.0.0
  */
-public class DateJSONString implements JSONString, Converter {
+public class DateJSONString implements JSONString {
 
 	final Object dateObj;
 	final JSONConfig jsonConfig;
@@ -44,7 +41,8 @@ public class DateJSONString implements JSONString, Converter {
 	 *
 	 * @return 日期对象
 	 */
-	public Object getDateObj() {
+	@Override
+	public Object getRaw() {
 		return this.dateObj;
 	}
 
@@ -56,11 +54,6 @@ public class DateJSONString implements JSONString, Converter {
 		}
 
 		return formatDate(this.dateObj, this.jsonConfig.getDateFormat());
-	}
-
-	@Override
-	public Object convert(Type targetType, Object value) throws ConvertException {
-		return Convert.convert(targetType, this.dateObj);
 	}
 
 	/**

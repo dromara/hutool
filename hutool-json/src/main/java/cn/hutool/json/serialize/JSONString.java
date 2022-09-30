@@ -7,6 +7,7 @@ package cn.hutool.json.serialize;
  * @author Looly
  *
  */
+@FunctionalInterface
 public interface JSONString {
 
 	/**
@@ -15,4 +16,13 @@ public interface JSONString {
 	 * @return JSON字符串
 	 */
 	String toJSONString();
+
+	/**
+	 * 获取原始的对象，默认为this
+	 *
+	 * @return 原始对象
+	 */
+	default Object getRaw() {
+		return this;
+	}
 }
