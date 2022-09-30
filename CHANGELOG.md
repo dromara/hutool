@@ -6,6 +6,8 @@
 # 5.8.9.M1 (2022-09-30)
 
 ### 🐣新特性
+* 【core   】     DateUtil增加isLastDayOfMonth、getLastDayOfMonth方法（pr#824@Gitee）
+
 ### 🐞Bug修复
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）
 * 【http   】     修复Http重定向时相对路径导致的问题（issue#I5TPSY@Gitee）

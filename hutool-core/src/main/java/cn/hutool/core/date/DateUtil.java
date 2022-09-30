@@ -2249,22 +2249,22 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 是否为本月最后一天
-	 * @param dateTime {@link DateTime}
+	 * @param date {@link Date}
 	 * @return 是否为本月最后一天
-	 * @since 5.8.8
+	 * @since 5.8.9
 	 */
-	public static boolean isLastDayOfMonth(DateTime dateTime){
-		return dateTime.dayOfMonth()==getLastDayOfMonth(dateTime);
+	public static boolean isLastDayOfMonth(Date date){
+		return date(date).isLastDayOfMonth();
 	}
 
 	/**
 	 * 获得本月的最后一天
-	 * @param dateTime {@link DateTime}
+	 * @param date {@link Date}
 	 * @return 天
-	 * @since 5.8.8
+	 * @since 5.8.9
 	 */
-	public static int getLastDayOfMonth(DateTime dateTime){
-		return Month.getLastDay(dateTime.month(),dateTime.isLeapYear());
+	public static int getLastDayOfMonth(Date date){
+		return date(date).getLastDayOfMonth();
 	}
 
 	// ------------------------------------------------------------------------ Private method start
