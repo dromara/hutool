@@ -10,6 +10,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -377,5 +381,16 @@ public class HttpUtilTest {
 
 		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
 		Console.log(request.execute().body());
+	}
+
+	@Test
+//	@Ignore
+	public void downloadTest() throws IOException {
+		// 此URL有3次重定向, 需要请求4次
+		String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
+		HttpGlobalConfig.setMaxRedirectCount(20);
+		Path temp = Files.createTempFile("tmp", ".exe");
+		File file = HttpUtil.downloadFileFromUrl(url, temp.toFile());
+		Console.log(file);
 	}
 }
