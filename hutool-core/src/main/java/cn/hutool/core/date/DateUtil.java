@@ -2247,6 +2247,26 @@ public class DateUtil extends CalendarUtil {
 		return startTime.before(realEndTime) && endTime.after(realStartTime);
 	}
 
+	/**
+	 * 是否为本月最后一天
+	 * @param dateTime {@link DateTime}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.8
+	 */
+	public static boolean isLastDayOfMonth(DateTime dateTime){
+		return dateTime.dayOfMonth()==getLastDayOfMonth(dateTime);
+	}
+
+	/**
+	 * 获得本月的最后一天
+	 * @param dateTime {@link DateTime}
+	 * @return 天
+	 * @since 5.8.8
+	 */
+	public static int getLastDayOfMonth(DateTime dateTime){
+		return Month.getLastDay(dateTime.month(),dateTime.isLeapYear());
+	}
+
 	// ------------------------------------------------------------------------ Private method start
 
 	/**
