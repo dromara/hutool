@@ -234,22 +234,22 @@ public class AnnotationUtil {
 	 * 获取指定注解属性的值<br>
 	 * 如果无指定的属性方法返回null
 	 *
-	 * @param <A>            注解类型
-	 * @param <R>            注解类型值
-	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
-	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
+	 * @param <A>           注解类型
+	 * @param <R>           注解类型值
+	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param propertyName  属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 * @since 5.8.9
 	 */
-	public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Func1<A, R> propertyName)  {
-		if(propertyName == null) {
+	public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Func1<A, R> propertyName) {
+		if (propertyName == null) {
 			return null;
-		}else {
+		} else {
 			final SerializedLambda lambda = LambdaUtil.resolve(propertyName);
 			final String instantiatedMethodType = lambda.getInstantiatedMethodType();
-			Class<A> annotationClass = ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
-			return getAnnotationValue(annotationEle,annotationClass, lambda.getImplMethodName());
+			final Class<A> annotationClass = ClassUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+			return getAnnotationValue(annotationEle, annotationClass, lambda.getImplMethodName());
 		}
 	}
 
@@ -472,10 +472,10 @@ public class AnnotationUtil {
 	public static <T extends Annotation> T getSynthesizedAnnotation(Class<T> annotationType, Annotation... annotations) {
 		// TODO 缓存合成注解信息，避免重复解析
 		return Opt.ofNullable(annotations)
-			.filter(ArrayUtil::isNotEmpty)
-			.map(AnnotationUtil::aggregatingFromAnnotationWithMeta)
-			.map(a -> a.synthesize(annotationType))
-			.get();
+				.filter(ArrayUtil::isNotEmpty)
+				.map(AnnotationUtil::aggregatingFromAnnotationWithMeta)
+				.map(a -> a.synthesize(annotationType))
+				.get();
 	}
 
 	/**

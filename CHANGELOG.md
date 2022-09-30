@@ -13,6 +13,7 @@
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）
 * 【http   】     修复Http重定向时相对路径导致的问题（issue#I5TPSY@Gitee）
 * 【http   】     修复Http重定全局设置无效问题（pr#2639@Github）
+* 【core   】     修复ReUtil.replaceAll替换变量错误问题（pr#2639@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

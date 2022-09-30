@@ -828,13 +828,26 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
 	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
 	 *
+	 * <p>
+	 * 需要注意的是，当设置为{@code true}时，如果全局重定向次数非0，直接复用，否则设置默认2次。<br>
+	 * 当设置为{@code false}时，无论全局是否设置次数，都设置为0。<br>
+	 * 不调用此方法的情况下，使用全局默认的次数。
+	 * </p>
+	 *
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
-		if(isFollowRedirects && config.maxRedirectCount <= 0){
-			// 默认两次跳转
-			return setMaxRedirectCount(2);
+		if (isFollowRedirects) {
+			if (config.maxRedirectCount <= 0) {
+				// 默认两次跳转
+				return setMaxRedirectCount(2);
+			}
+		} else {
+			// 手动强制关闭重定向，此时不受全局重定向设置影响
+			if (config.maxRedirectCount < 0) {
+				return setMaxRedirectCount(0);
+			}
 		}
 		return this;
 	}
@@ -1034,10 +1047,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 执行Request请求后，对响应内容后续处理<br>
 	 * 处理结束后关闭连接
 	 *
-	 * @param <T> 处理结果类型
+	 * @param <T>      处理结果类型
 	 * @param function 响应内容处理函数
-	 * @since 5.8.5
 	 * @return 处理结果
+	 * @since 5.8.5
 	 */
 	public <T> T thenFunction(Function<HttpResponse, T> function) {
 		try (final HttpResponse response = execute(true)) {
@@ -1242,15 +1255,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				if (HttpStatus.isRedirected(responseCode)) {
 					final UrlBuilder redirectUrl;
 					String location = httpConnection.header(Header.LOCATION);
-					if(false == HttpUtil.isHttp(location) && false == HttpUtil.isHttps(location)){
+					if (false == HttpUtil.isHttp(location) && false == HttpUtil.isHttps(location)) {
 						// issue#I5TPSY
 						// location可能为相对路径
-						if(false == location.startsWith("/")){
+						if (false == location.startsWith("/")) {
 							location = StrUtil.addSuffixIfNot(this.url.getPathStr(), "/") + location;
 						}
 						redirectUrl = UrlBuilder.of(this.url.getScheme(), this.url.getHost(), this.url.getPort()
 								, location, null, null, this.charset);
-					} else{
+					} else {
 						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 					}
 					setUrl(redirectUrl);
