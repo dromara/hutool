@@ -1,13 +1,13 @@
 package cn.hutool.swing.captcha;
 
-import cn.hutool.swing.captcha.generator.CodeGenerator;
-import cn.hutool.swing.captcha.generator.RandomGenerator;
 import cn.hutool.core.codec.Base64;
-import cn.hutool.swing.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
+import cn.hutool.swing.captcha.generator.CodeGenerator;
+import cn.hutool.swing.captcha.generator.RandomGenerator;
+import cn.hutool.swing.img.ImgUtil;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

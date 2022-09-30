@@ -1,7 +1,7 @@
 package cn.hutool.swing;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 
 import java.awt.Desktop;
 import java.io.File;
