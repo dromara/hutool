@@ -1,14 +1,25 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.func.LambdaInfo;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -39,7 +50,7 @@ public class AnnotationUtil {
 	 * @return 注解
 	 * @since 6.0.0
 	 */
-	public static Annotation[] getDeclaredAnnotations(AnnotatedElement element) {
+	public static Annotation[] getDeclaredAnnotations(final AnnotatedElement element) {
 		return MapUtil.computeIfAbsent(DECLARED_ANNOTATIONS_CACHE, element, AnnotatedElement::getDeclaredAnnotations);
 	}
 
@@ -166,6 +177,28 @@ public class AnnotationUtil {
 	 */
 	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
 		return getAnnotationValue(annotationEle, annotationType, "value");
+	}
+
+	/**
+	 * 获取指定注解属性的值<br>
+	 * 如果无指定的属性方法返回null
+	 *
+	 * @param <A>            注解类型
+	 * @param <R>            注解类型值
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
+	 * @return 注解对象
+	 * @throws UtilException 调用注解中的方法时执行异常
+	 */
+	public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle, final SerFunction<A, R> propertyName)  {
+		if(propertyName == null) {
+			return null;
+		}else {
+			final LambdaInfo lambda = LambdaUtil.resolve(propertyName);
+			final String instantiatedMethodType = lambda.getLambda().getInstantiatedMethodType();
+			final Class<A> annotationClass = ClassLoaderUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+			return getAnnotationValue(annotationEle,annotationClass, lambda.getLambda().getImplMethodName());
+		}
 	}
 
 	/**
