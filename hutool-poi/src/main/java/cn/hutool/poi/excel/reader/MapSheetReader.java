@@ -46,13 +46,14 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 		} else if (headerRowIndex > lastRowNum) {
 			throw new IndexOutOfBoundsException(StrUtil.format("Header row index {} is greater than last row index {}.", headerRowIndex, lastRowNum));
 		} else if (startRowIndex > lastRowNum) {
-			throw new IndexOutOfBoundsException(StrUtil.format("startRowIndex row index {} is greater than last row index {}.", startRowIndex, lastRowNum));
+			// issue#I5U1JA 只有标题行的Excel，起始行是1，标题行（最后的行号是0）
+			return ListUtil.empty();
 		}
 		final int startRowIndex = Math.max(this.startRowIndex, firstRowNum);// 读取起始行（包含）
 		final int endRowIndex = Math.min(this.endRowIndex, lastRowNum);// 读取结束行（包含）
 
 		// 读取header
-		List<String> headerList = aliasHeader(readRow(sheet, headerRowIndex));
+		final List<String> headerList = aliasHeader(readRow(sheet, headerRowIndex));
 
 		final List<Map<String, Object>> result = new ArrayList<>(endRowIndex - startRowIndex + 1);
 		List<Object> rowList;
