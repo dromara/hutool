@@ -2004,6 +2004,26 @@ public class DateUtil extends CalendarUtil {
 		return startTime.before(realEndTime) && endTime.after(realStartTime);
 	}
 
+	/**
+	 * 是否为本月最后一天
+	 * @param date {@link Date}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.8
+	 */
+	public static boolean isLastDayOfMonth(final Date date){
+		return date(date).isLastDayOfMonth();
+	}
+
+	/**
+	 * 获得本月的最后一天
+	 * @param date {@link Date}
+	 * @return 天
+	 * @since 5.8.8
+	 */
+	public static int getLastDayOfMonth(final Date date){
+		return date(date).getLastDayOfMonth();
+	}
+
 	// ------------------------------------------------------------------------ Private method start
 
 	/**
