@@ -2,14 +2,11 @@ package cn.hutool.json.writer;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.mutable.MutableEntry;
-import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONException;
-import cn.hutool.json.serialize.DateJSONString;
 import cn.hutool.json.serialize.JSONString;
 
 import java.io.IOException;
@@ -83,6 +80,15 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
+	 * 获取JSON配置
+	 *
+	 * @return {@link JSONConfig}
+	 */
+	public JSONConfig getConfig() {
+		return this.config;
+	}
+
+	/**
 	 * JSONObject写出开始，默认写出"{"
 	 *
 	 * @return this
@@ -145,7 +151,7 @@ public class JSONWriter extends Writer {
 			}
 		}
 
-		if(false == arrayMode){
+		if (false == arrayMode) {
 			// JSONObject模式，写出键，否则只输出值
 			writeKey(StrUtil.toString(pair.getKey()));
 		}
@@ -190,6 +196,75 @@ public class JSONWriter extends Writer {
 		this.writer.close();
 	}
 
+	/**
+	 * 写出字符串值，并包装引号并转义字符<br>
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param csq 字符串
+	 */
+	public void writeQuoteStrValue(final String csq) {
+		InternalJSONUtil.quote(csq, writer);
+	}
+
+	/**
+	 * 写出空格
+	 *
+	 * @param count 空格数
+	 */
+	public void writeSpace(final int count) {
+		if (indentFactor > 0) {
+			for (int i = 0; i < count; i++) {
+				//noinspection resource
+				writeRaw(CharUtil.SPACE);
+			}
+		}
+	}
+
+	/**
+	 * 写出换换行符
+	 *
+	 * @return this
+	 */
+	public JSONWriter writeLF() {
+		if (indentFactor > 0) {
+			//noinspection resource
+			writeRaw(CharUtil.LF);
+		}
+		return this;
+	}
+
+	/**
+	 * 写入原始字符串值，不做任何处理
+	 *
+	 * @param csq 字符串
+	 * @return this
+	 */
+	public JSONWriter writeRaw(final String csq) {
+		try {
+			writer.append(csq);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return this;
+	}
+
+	/**
+	 * 写入原始字符值，不做任何处理
+	 *
+	 * @param c 字符串
+	 * @return this
+	 */
+	public JSONWriter writeRaw(final char c) {
+		try {
+			writer.write(c);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return this;
+	}
+
 	// ------------------------------------------------------------------------------ Private methods
 
 	/**
@@ -231,133 +306,17 @@ public class JSONWriter extends Writer {
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent, predicate);
 		} else if (value instanceof Number) {
-			writeNumberValue((Number) value);
+			NumberValueWriter.INSTANCE.write(this, (Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
-			//noinspection resource
-			writeRaw(new DateJSONString(value, config).toJSONString());
+			DateValueWriter.INSTANCE.write(this, value);
 		} else if (value instanceof Boolean) {
-			writeBooleanValue((Boolean) value);
+			BooleanValueWriter.INSTANCE.write(this, (Boolean) value);
 		} else if (value instanceof JSONString) {
-			writeJSONStringValue((JSONString) value);
+			JSONStringValueWriter.INSTANCE.write(this, (JSONString) value);
 		} else {
 			writeQuoteStrValue(value.toString());
 		}
 
-		return this;
-	}
-
-	/**
-	 * 写出数字，根据{@link JSONConfig#isStripTrailingZeros()} 配置不同，写出不同数字<br>
-	 * 主要针对Double型是否去掉小数点后多余的0<br>
-	 * 此方法输出的值不包装引号。
-	 *
-	 * @param number 数字
-	 */
-	private void writeNumberValue(final Number number) {
-		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
-		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
-		//noinspection resource
-		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
-	}
-
-	/**
-	 * 写出Boolean值，直接写出true或false,不适用引号包装
-	 *
-	 * @param value Boolean值
-	 */
-	private void writeBooleanValue(final Boolean value) {
-		//noinspection resource
-		writeRaw(value.toString());
-	}
-
-	/**
-	 * 输出实现了{@link JSONString}接口的对象，通过调用{@link JSONString#toJSONString()}获取JSON字符串<br>
-	 * {@link JSONString}按照JSON对象对待，此方法输出的JSON字符串不包装引号。<br>
-	 * 如果toJSONString()返回null，调用toString()方法并使用双引号包装。
-	 *
-	 * @param jsonString {@link JSONString}
-	 */
-	private void writeJSONStringValue(final JSONString jsonString) {
-		final String valueStr;
-		try {
-			valueStr = jsonString.toJSONString();
-		} catch (final Exception e) {
-			throw new JSONException(e);
-		}
-		if (null != valueStr) {
-			//noinspection resource
-			writeRaw(valueStr);
-		} else {
-			writeQuoteStrValue(jsonString.toString());
-		}
-	}
-
-	/**
-	 * 写出字符串值，并包装引号并转义字符<br>
-	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
-	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 *
-	 * @param csq 字符串
-	 */
-	private void writeQuoteStrValue(final String csq) {
-		InternalJSONUtil.quote(csq, writer);
-	}
-
-	/**
-	 * 写出空格
-	 *
-	 * @param count 空格数
-	 */
-	private void writeSpace(final int count) {
-		if (indentFactor > 0) {
-			for (int i = 0; i < count; i++) {
-				//noinspection resource
-				writeRaw(CharUtil.SPACE);
-			}
-		}
-	}
-
-	/**
-	 * 写出换换行符
-	 *
-	 * @return this
-	 */
-	private JSONWriter writeLF() {
-		if (indentFactor > 0) {
-			//noinspection resource
-			writeRaw(CharUtil.LF);
-		}
-		return this;
-	}
-
-	/**
-	 * 写入原始字符串值，不做任何处理
-	 *
-	 * @param csq 字符串
-	 * @return this
-	 */
-	private JSONWriter writeRaw(final String csq) {
-		try {
-			writer.append(csq);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return this;
-	}
-
-	/**
-	 * 写入原始字符值，不做任何处理
-	 *
-	 * @param c 字符串
-	 * @return this
-	 */
-	private JSONWriter writeRaw(final char c) {
-		try {
-			writer.write(c);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
 		return this;
 	}
 }
