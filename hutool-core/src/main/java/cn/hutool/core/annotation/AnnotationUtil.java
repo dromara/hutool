@@ -240,6 +240,7 @@ public class AnnotationUtil {
 	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
+	 * @since 5.8.9
 	 */
 	public static <A extends Annotation, R> R getAnnotationValue(AnnotatedElement annotationEle, Func1<A, R> propertyName)  {
 		if(propertyName == null) {

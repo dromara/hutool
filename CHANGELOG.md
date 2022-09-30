@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core   】     DateUtil增加isLastDayOfMonth、getLastDayOfMonth方法（pr#824@Gitee）
+* 【core   】     AnnotationUtil类支持Lambda获取某注解属性值（pr#827@Gitee）
 
 ### 🐞Bug修复
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）

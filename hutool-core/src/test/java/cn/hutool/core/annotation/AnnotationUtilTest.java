@@ -1,12 +1,15 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +41,7 @@ public class AnnotationUtilTest {
 
 	@Test
 	public void getAnnotationValueTest2() {
-		String[] names = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest::names);
+		final String[] names = AnnotationUtil.getAnnotationValue(ClassWithAnnotation.class, AnnotationForTest::names);
 		Assert.assertTrue(ArrayUtil.equals(names, new String[]{"测试1", "测试2"}));
 	}
 
