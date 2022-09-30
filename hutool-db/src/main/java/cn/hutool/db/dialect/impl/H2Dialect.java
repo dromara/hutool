@@ -40,7 +40,7 @@ public class H2Dialect extends AnsiSqlDialect {
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for H2 MERGE SQL.");
 		SqlBuilder.validateEntity(entity);
-		final SqlBuilder builder = SqlBuilder.of(wrapper);
+		final SqlBuilder builder = SqlBuilder.of(quoteWrapper);
 
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
@@ -54,15 +54,15 @@ public class H2Dialect extends AnsiSqlDialect {
 					placeHolder.append(", ");
 				}
 
-				fieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
+				fieldsPart.append((null != quoteWrapper) ? quoteWrapper.wrap(field) : field);
 				placeHolder.append("?");
 				builder.addParams(value);
 			}
 		});
 
 		String tableName = entity.getTableName();
-		if (null != this.wrapper) {
-			tableName = this.wrapper.wrap(tableName);
+		if (null != this.quoteWrapper) {
+			tableName = this.quoteWrapper.wrap(tableName);
 		}
 		builder.append("MERGE INTO ").append(tableName)
 				// 字段列表

@@ -2,6 +2,7 @@ package cn.hutool.db.ds;
 
 import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.func.Wrapper;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  * @author looly
  * @since 4.3.2
  */
-public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
+public class DataSourceWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cloneable {
 
 	private final DataSource ds;
 	private final String driver;
@@ -62,6 +63,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	 *
 	 * @return 原始数据源
 	 */
+	@Override
 	public DataSource getRaw() {
 		return this.ds;
 	}

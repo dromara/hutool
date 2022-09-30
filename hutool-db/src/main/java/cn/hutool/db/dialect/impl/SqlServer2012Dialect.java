@@ -4,7 +4,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.Page;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 /**
  * SQLServer2012 方言
@@ -17,7 +17,7 @@ public class SqlServer2012Dialect extends AnsiSqlDialect {
 
 	public SqlServer2012Dialect() {
 		//双引号和中括号适用，双引号更广泛
-		 wrapper = new Wrapper('"');
+		 quoteWrapper = new QuoteWrapper('"');
 	}
 
 	@Override

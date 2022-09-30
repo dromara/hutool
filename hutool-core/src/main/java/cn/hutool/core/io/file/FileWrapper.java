@@ -1,12 +1,13 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.func.Wrapper;
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.File;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 文件包装器，扩展文件对象
@@ -14,7 +15,7 @@ import cn.hutool.core.util.CharsetUtil;
  * @author Looly
  *
  */
-public class FileWrapper implements Serializable{
+public class FileWrapper implements Wrapper<File>, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	protected File file;
@@ -40,7 +41,8 @@ public class FileWrapper implements Serializable{
 	 * 获得文件
 	 * @return 文件
 	 */
-	public File getFile() {
+	@Override
+	public File getRaw() {
 		return file;
 	}
 

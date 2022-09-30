@@ -12,12 +12,12 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 /**
- * 包装器<br>
+ * 字段和表明包装器<br>
  * 主要用于字段名的包装（在字段名的前后加字符，例如反引号来避免与数据库的关键字冲突）
  *
  * @author Looly
  */
-public class Wrapper implements Serializable {
+public class QuoteWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -29,7 +29,10 @@ public class Wrapper implements Serializable {
 	 */
 	private Character sufWrapQuote;
 
-	public Wrapper() {
+	/**
+	 * 构造
+	 */
+	public QuoteWrapper() {
 	}
 
 	/**
@@ -37,7 +40,7 @@ public class Wrapper implements Serializable {
 	 *
 	 * @param wrapQuote 单包装字符
 	 */
-	public Wrapper(final Character wrapQuote) {
+	public QuoteWrapper(final Character wrapQuote) {
 		this.preWrapQuote = wrapQuote;
 		this.sufWrapQuote = wrapQuote;
 	}
@@ -48,7 +51,7 @@ public class Wrapper implements Serializable {
 	 * @param preWrapQuote 前置包装符号
 	 * @param sufWrapQuote 后置包装符号
 	 */
-	public Wrapper(final Character preWrapQuote, final Character sufWrapQuote) {
+	public QuoteWrapper(final Character preWrapQuote, final Character sufWrapQuote) {
 		this.preWrapQuote = preWrapQuote;
 		this.sufWrapQuote = sufWrapQuote;
 	}

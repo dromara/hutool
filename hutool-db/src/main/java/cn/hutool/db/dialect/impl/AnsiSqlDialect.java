@@ -13,7 +13,7 @@ import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,21 +29,21 @@ import java.util.Set;
 public class AnsiSqlDialect implements Dialect {
 	private static final long serialVersionUID = 2088101129774974580L;
 
-	protected Wrapper wrapper = new Wrapper();
+	protected QuoteWrapper quoteWrapper = new QuoteWrapper();
 
 	@Override
-	public Wrapper getWrapper() {
-		return this.wrapper;
+	public QuoteWrapper getWrapper() {
+		return this.quoteWrapper;
 	}
 
 	@Override
-	public void setWrapper(final Wrapper wrapper) {
-		this.wrapper = wrapper;
+	public void setWrapper(final QuoteWrapper quoteWrapper) {
+		this.quoteWrapper = quoteWrapper;
 	}
 
 	@Override
 	public PreparedStatement psForInsert(final Connection conn, final Entity entity) throws SQLException {
-		final SqlBuilder insert = SqlBuilder.of(wrapper).insert(entity, this.dialectName());
+		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entity, this.dialectName());
 
 		return StatementUtil.prepareStatement(conn, insert);
 	}
@@ -54,7 +54,7 @@ public class AnsiSqlDialect implements Dialect {
 			throw new DbRuntimeException("Entities for batch insert is empty !");
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
-		final SqlBuilder insert = SqlBuilder.of(wrapper).insert(entities[0], this.dialectName());
+		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
 		final Set<String> fields = CollUtil.filter(entities[0].keySet(), StrUtil::isNotBlank);
 		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
 	}
@@ -68,7 +68,7 @@ public class AnsiSqlDialect implements Dialect {
 			// 对于无条件删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
 		}
-		final SqlBuilder delete = SqlBuilder.of(wrapper).delete(query.getFirstTableName()).where(where);
+		final SqlBuilder delete = SqlBuilder.of(quoteWrapper).delete(query.getFirstTableName()).where(where);
 
 		return StatementUtil.prepareStatement(conn, delete);
 	}
@@ -83,7 +83,7 @@ public class AnsiSqlDialect implements Dialect {
 			throw new SQLException("No 'WHERE' condition, we can't prepare statement for update everything.");
 		}
 
-		final SqlBuilder update = SqlBuilder.of(wrapper).update(entity).where(where);
+		final SqlBuilder update = SqlBuilder.of(quoteWrapper).update(entity).where(where);
 
 		return StatementUtil.prepareStatement(conn, update);
 	}
@@ -100,7 +100,7 @@ public class AnsiSqlDialect implements Dialect {
 			throw new DbRuntimeException("Table name must be not empty !");
 		}
 
-		final SqlBuilder find = SqlBuilder.of(wrapper).query(query);
+		final SqlBuilder find = SqlBuilder.of(quoteWrapper).query(query);
 		return psForPage(conn, find, query.getPage());
 	}
 

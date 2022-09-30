@@ -166,7 +166,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return 加密或解密
 	 */
 	public Cipher getCipher() {
-		return cipherWrapper.getCipher();
+		return cipherWrapper.getRaw();
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.6.8
 	 */
 	public byte[] update(final byte[] data) {
-		final Cipher cipher = cipherWrapper.getCipher();
+		final Cipher cipher = cipherWrapper.getRaw();
 		lock.lock();
 		try {
 			return cipher.update(paddingDataWithZero(data, cipher.getBlockSize()));
@@ -383,7 +383,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	private SymmetricCrypto initParams(final String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
 			byte[] iv = Opt.ofNullable(cipherWrapper)
-					.map(CipherWrapper::getCipher).map(Cipher::getIV).get();
+					.map(CipherWrapper::getRaw).map(Cipher::getIV).get();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {
@@ -412,7 +412,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
 	private Cipher initMode(final int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		return this.cipherWrapper.initMode(mode, this.secretKey).getCipher();
+		return this.cipherWrapper.initMode(mode, this.secretKey).getRaw();
 	}
 
 	/**

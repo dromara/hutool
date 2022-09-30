@@ -1,5 +1,7 @@
 package cn.hutool.db.sql;
 
+import cn.hutool.core.lang.func.Wrapper;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -35,7 +37,7 @@ import java.util.Calendar;
  * @author looly
  * @since 4.1.0
  */
-public class StatementWrapper implements PreparedStatement {
+public class StatementWrapper implements PreparedStatement, Wrapper<PreparedStatement> {
 
 	private final PreparedStatement rawStatement;
 
@@ -544,4 +546,8 @@ public class StatementWrapper implements PreparedStatement {
 		rawStatement.setNClob(parameterIndex, reader);
 	}
 
+	@Override
+	public PreparedStatement getRaw() {
+		return rawStatement;
+	}
 }

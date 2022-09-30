@@ -1,8 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import lombok.Data;
@@ -39,14 +36,14 @@ public class Issue2555Test {
 
 	public static class MySerializer implements JSONObjectSerializer<MyType> {
 		@Override
-		public void serialize(JSONObject json, MyType bean) {
+		public void serialize(final JSONObject json, final MyType bean) {
 			json.set("addr", bean.getAddress());
 		}
 	}
 
 	public static class MyDeserializer implements JSONDeserializer<MyType> {
 		@Override
-		public MyType deserialize(JSON json) {
+		public MyType deserialize(final JSON json) {
 			final MyType myType = new MyType();
 			myType.setAddress(((JSONObject)json).getStr("addr"));
 			return myType;

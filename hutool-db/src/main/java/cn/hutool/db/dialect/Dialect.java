@@ -5,7 +5,7 @@ import cn.hutool.db.Page;
 import cn.hutool.db.sql.Order;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -24,14 +24,14 @@ public interface Dialect extends Serializable {
 	/**
 	 * @return 包装器
 	 */
-	Wrapper getWrapper();
+	QuoteWrapper getWrapper();
 
 	/**
 	 * 设置包装器
 	 *
-	 * @param wrapper 包装器
+	 * @param quoteWrapper 包装器
 	 */
-	void setWrapper(Wrapper wrapper);
+	void setWrapper(QuoteWrapper quoteWrapper);
 
 	// -------------------------------------------- Execute
 
