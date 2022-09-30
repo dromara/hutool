@@ -825,14 +825,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
+	 * 设置是否打开重定向，如果打开默认重定向次数为{@link HttpConfig#getMaxRedirectCount()}<br>
 	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
 	 *
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
-		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
+		return setMaxRedirectCount(isFollowRedirects ? config.getMaxRedirectCount() : 0);
 	}
 
 	/**
@@ -1236,7 +1236,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
-					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
+//					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
+					// fix issue 2638
+					setUrl(buildRedirectUrl(httpConnection.header(Header.LOCATION)));
 					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
 						// 重定向不再走过滤器
@@ -1361,6 +1363,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		this.form.put(name, value);
 		return this;
+	}
+
+	/**
+	 * 构建重定向url, 兼容path路径
+	 * @param location 重定向返回的location头值
+	 * @return UrlBuilder
+	 */
+	private UrlBuilder buildRedirectUrl(String location) {
+		String url = location;
+		if (url.startsWith("/")) {
+			url = this.url.getDomain() + location;
+		}
+		return UrlBuilder.ofHttpWithoutEncode(url);
 	}
 	// ---------------------------------------------------------------- Private method end
 

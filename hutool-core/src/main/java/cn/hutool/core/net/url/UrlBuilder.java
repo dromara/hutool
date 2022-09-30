@@ -480,6 +480,21 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
+	 * 获取域名, 包括协议和地址和端口
+	 * @return 请求域名, 例如 https://www.google.com
+	 */
+	public String getDomain(){
+		String domain = this.getSchemeWithDefault()
+				+ "://"+this.getHost();
+		if (this.getPort() > 0) {
+			if ((domain.startsWith("https://") && this.getPort() != 443) || (domain.startsWith("http://") && this.getPort() != 80)) {
+				domain += ":" + this.getPort();
+			}
+		}
+		return domain;
+	}
+
+	/**
 	 * 获取编码，用于URLEncode和URLDecode
 	 *
 	 * @return 编码

@@ -155,6 +155,14 @@ public class HttpConfig {
 	}
 
 	/**
+	 * 获取设置的最大重定向次数
+	 * @return 最大重定向次数
+	 */
+	public int getMaxRedirectCount() {
+		return this.maxRedirectCount;
+	}
+
+	/**
 	 * 设置域名验证器<br>
 	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
 	 *
