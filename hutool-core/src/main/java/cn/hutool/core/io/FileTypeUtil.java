@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
@@ -35,16 +36,35 @@ public class FileTypeUtil {
 			}
 		});
 
-		FILE_TYPE_MAP.put("ffd8ff", "jpg"); // JPEG (jpg)
-		FILE_TYPE_MAP.put("89504e47", "png"); // PNG (png)
-		FILE_TYPE_MAP.put("4749463837", "gif"); // GIF (gif)
-		FILE_TYPE_MAP.put("4749463839", "gif"); // GIF (gif)
-		FILE_TYPE_MAP.put("49492a00227105008037", "tif"); // TIFF (tif)
+		// 2-byte signatures
 		// https://github.com/sindresorhus/file-type/blob/main/core.js#L90
-		FILE_TYPE_MAP.put("424d", "bmp"); // 位图(bmp)
+		FILE_TYPE_MAP.put("424D", "bmp"); // 位图(bmp)
+		FILE_TYPE_MAP.put("0B77", "ac3");
+		FILE_TYPE_MAP.put("7801", "dmg");
+		FILE_TYPE_MAP.put("4D5A", "exe");
+		FILE_TYPE_MAP.put("1FA0", "Z");
+		FILE_TYPE_MAP.put("1F9D", "Z");
+
+		// 3-byte signatures
+		// https://github.com/sindresorhus/file-type/blob/main/core.js#L149
+		FILE_TYPE_MAP.put("474946", "gif"); // GIF (gif)
+		FILE_TYPE_MAP.put("FFd8FF", "jpg"); // JPEG (jpg)
+		FILE_TYPE_MAP.put("4949BC", "jxr"); // jxr
+		FILE_TYPE_MAP.put("1F8B08", "gz"); //  gzip
+		FILE_TYPE_MAP.put("425A68", "bz2"); // bz2
+
+		// check string
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("MP+"), "mpc");
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("FLIF"), "flif");
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("8BPS"), "psd");// Photoshop (psd)
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("MPCK"), "mpc");
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("FORM"), "aif");// Musepack, SV8
+		FILE_TYPE_MAP.put(HexUtil.encodeHexStr("icns"), "icns");
+
+		FILE_TYPE_MAP.put("89504e47", "png"); // PNG (png)
+		FILE_TYPE_MAP.put("49492a00227105008037", "tif"); // TIFF (tif)
 		FILE_TYPE_MAP.put("41433130313500000000", "dwg"); // CAD (dwg)
 		FILE_TYPE_MAP.put("7b5c727466315c616e73", "rtf"); // Rich Text Format (rtf)
-		FILE_TYPE_MAP.put("38425053000100000000", "psd"); // Photoshop (psd)
 		FILE_TYPE_MAP.put("46726f6d3a203d3f6762", "eml"); // Email [Outlook Express 6] (eml)
 		FILE_TYPE_MAP.put("5374616E64617264204A", "mdb"); // MS Access (mdb)
 		FILE_TYPE_MAP.put("252150532D41646F6265", "ps");
