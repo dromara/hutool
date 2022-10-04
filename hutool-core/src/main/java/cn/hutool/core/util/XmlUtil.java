@@ -463,7 +463,7 @@ public class XmlUtil {
 	 * @param doc                XML文档
 	 * @param charset            编码
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */
@@ -1171,7 +1171,7 @@ public class XmlUtil {
 	 * @param data               Map类型数据
 	 * @param rootName           根节点名
 	 * @param namespace          命名空间，可以为null
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
