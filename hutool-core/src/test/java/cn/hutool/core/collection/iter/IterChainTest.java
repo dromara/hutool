@@ -14,8 +14,8 @@ public class IterChainTest {
 
 	@Test
 	public void testAddChain() {
-		Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
-		Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
+		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
+		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
 		IterChain<Integer> iterChain = new IterChain<>();
 		Assert.assertSame(iterChain, iterChain.addChain(iter1));
 		Assert.assertSame(iterChain, iterChain.addChain(iter2));
@@ -27,7 +27,7 @@ public class IterChainTest {
 
 	@Test
 	public void testHasNext() {
-		IterChain<Integer> iterChain = new IterChain<>();
+		final IterChain<Integer> iterChain = new IterChain<>();
 		Assert.assertFalse(iterChain.hasNext());
 		Assert.assertFalse(iterChain.addChain(Collections.emptyIterator()).hasNext());
 		Assert.assertTrue(iterChain.addChain(Arrays.asList(3, 4).iterator()).hasNext());
@@ -35,9 +35,9 @@ public class IterChainTest {
 
 	@Test
 	public void testNext() {
-		Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
-		Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
-		IterChain<Integer> iterChain = new IterChain<>();
+		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
+		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
+		final IterChain<Integer> iterChain = new IterChain<>();
 		Assert.assertSame(iterChain, iterChain.addChain(iter1));
 		Assert.assertSame(iterChain, iterChain.addChain(iter2));
 		Assert.assertEquals((Integer)1, iterChain.next());
@@ -48,20 +48,20 @@ public class IterChainTest {
 
 	@Test
 	public void testRemove() {
-		IterChain<Integer> iterChain = new IterChain<>();
+		final IterChain<Integer> iterChain = new IterChain<>();
 		iterChain.addChain(Arrays.asList(1, 2).iterator());
 		Assert.assertThrows(IllegalStateException.class, iterChain::remove);
 	}
 
 	@Test
 	public void testIterator() {
-		Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
-		Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
-		IterChain<Integer> iterChain = new IterChain<>();
+		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
+		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
+		final IterChain<Integer> iterChain = new IterChain<>();
 		Assert.assertSame(iterChain, iterChain.addChain(iter1));
 		Assert.assertSame(iterChain, iterChain.addChain(iter2));
 
-		Iterator<Iterator<Integer>> iterators = iterChain.iterator();
+		final Iterator<Iterator<Integer>> iterators = iterChain.iterator();
 		Assert.assertSame(iter1, iterators.next());
 		Assert.assertSame(iter2, iterators.next());
 	}

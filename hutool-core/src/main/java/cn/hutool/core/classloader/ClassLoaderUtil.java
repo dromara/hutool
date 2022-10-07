@@ -8,6 +8,7 @@ import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -40,7 +41,7 @@ public class ClassLoaderUtil {
 	/**
 	 * 包名分界符: '.'
 	 */
-	private static final char PACKAGE_SEPARATOR = StrUtil.C_DOT;
+	private static final char PACKAGE_SEPARATOR = CharUtil.DOT;
 	/**
 	 * 内部类分界符: '$'
 	 */

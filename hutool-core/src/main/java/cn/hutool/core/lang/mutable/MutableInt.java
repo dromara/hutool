@@ -3,7 +3,7 @@ package cn.hutool.core.lang.mutable;
 import cn.hutool.core.comparator.CompareUtil;
 
 /**
- * 可变 <code>int</code> 类型
+ * 可变 {@code int} 类型
  *
  * @see Integer
  * @since 3.0.1

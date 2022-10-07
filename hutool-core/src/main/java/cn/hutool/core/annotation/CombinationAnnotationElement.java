@@ -4,11 +4,7 @@ import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.map.TableMap;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Collection;
@@ -115,7 +111,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param element 元素
 	 */
 	private void init(final AnnotatedElement element) {
-		final Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
+		final Annotation[] declaredAnnotations = AnnotationUtil.getDeclaredAnnotations(element);
 		this.declaredAnnotationMap = new TableMap<>();
 		parseDeclared(declaredAnnotations);
 
@@ -145,7 +141,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 					declaredAnnotationMap.put(annotationType, annotation);
 				}
 				// 测试不通过的注解，不影响继续递归
-				parseDeclared(annotationType.getDeclaredAnnotations());
+				parseDeclared(AnnotationUtil.getDeclaredAnnotations(annotationType));
 			}
 		}
 	}

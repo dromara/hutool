@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 
 import java.util.Map;
 import java.util.function.Supplier;

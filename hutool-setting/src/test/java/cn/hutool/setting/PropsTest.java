@@ -1,12 +1,9 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.setting.dialect.Props;
 import lombok.Data;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,17 +13,12 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Setting单元测试
+ * Props单元测试
  *
  * @author Looly
  *
  */
 public class PropsTest {
-
-	@Before
-	public void init() {
-		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
-	}
 
 	@Test
 	public void propTest() {
@@ -53,7 +45,7 @@ public class PropsTest {
 
 	@Test
 	public void toBeanTest() {
-		final Props props = Props.getProp("to_bean_test.properties");
+		final Props props = Props.of("to_bean_test.properties");
 
 		final ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
 		Assert.assertEquals("mailer@mail.com", cfg.getHost());
@@ -75,11 +67,11 @@ public class PropsTest {
 	public void toBeanWithNullPrefixTest(){
 		final Props configProp = new Props();
 
-		configProp.setProperty("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
-		configProp.setProperty("isInit", true);
-		configProp.setProperty("stairPlan", 1);
-		configProp.setProperty("stageNum", 2);
-		configProp.setProperty("version", 3);
+		configProp.set("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
+		configProp.set("isInit", true);
+		configProp.set("stairPlan", 1);
+		configProp.set("stageNum", 2);
+		configProp.set("version", 3);
 		final SystemConfig systemConfig = configProp.toBean(SystemConfig.class);
 
 		Assert.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());

@@ -296,6 +296,7 @@ public class AnimatedGifEncoder {
 	public boolean start(final String file) {
 		boolean ok;
 		try {
+			//noinspection IOStreamConstructor
 			out = new BufferedOutputStream(new FileOutputStream(file));
 			ok = start(out);
 			closeStream = true;
@@ -305,6 +306,9 @@ public class AnimatedGifEncoder {
 		return started = ok;
 	}
 
+	/**
+	 * @return 是否开始
+	 */
 	public boolean isStarted() {
 		return started;
 	}
@@ -339,7 +343,7 @@ public class AnimatedGifEncoder {
 		pixels = null;
 		colorDepth = 8;
 		palSize = 7;
-		// get closest match to transparent color if specified
+		// get the closest match to transparent color if specified
 		if (transparent != null) {
 			transIndex = transparentExactMatch ? findExact(transparent) : findClosest(transparent);
 		}
@@ -377,7 +381,7 @@ public class AnimatedGifEncoder {
 	/**
 	 * Returns true if the exact matching color is existing, and used in the color palette, otherwise, return false.
 	 * This method has to be called before finishing the image,
-	 * because after finished the palette is destroyed and it will always return false.
+	 * because after finished the palette is destroyed, and it will always return false.
 	 *
 	 * @param c 颜色
 	 * @return 颜色是否存在

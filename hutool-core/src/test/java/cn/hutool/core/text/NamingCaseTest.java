@@ -41,4 +41,10 @@ public class NamingCaseTest {
 				.set("DEPT_NAME","DEPT_NAME")
 				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toUnderlineCase(key)));
 	}
+
+	@Test
+	public void issueI5TVMUTest(){
+		// https://gitee.com/dromara/hutool/issues/I5TVMU
+		Assert.assertEquals("t1C1", NamingCase.toUnderlineCase("t1C1"));
+	}
 }

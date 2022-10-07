@@ -1,6 +1,7 @@
 package cn.hutool.core.regex;
 
 import cn.hutool.core.collection.SetUtil;
+import cn.hutool.core.comparator.StrLengthComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
@@ -878,7 +879,8 @@ public class ReUtil {
 		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
-			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new HashSet<>());
+			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1,
+					new TreeSet<>(StrLengthComparator.INSTANCE.reversed()));
 			final StringBuffer sb = new StringBuffer();
 			do {
 				String replacement = replacementTemplate;

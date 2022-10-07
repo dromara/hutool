@@ -1,4 +1,4 @@
-package cn.hutool.core.swing.clipboard;
+package cn.hutool.swing.clipboard;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;

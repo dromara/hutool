@@ -3,8 +3,6 @@ package cn.hutool.core.net.url;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.RFC3986;
-import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;

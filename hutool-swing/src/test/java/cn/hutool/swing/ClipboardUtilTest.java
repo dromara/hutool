@@ -1,9 +1,8 @@
-package cn.hutool.core.swing;
+package cn.hutool.swing;
 
+import cn.hutool.swing.clipboard.ClipboardUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 /**
  * 剪贴板工具类单元测试

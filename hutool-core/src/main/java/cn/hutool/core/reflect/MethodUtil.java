@@ -15,11 +15,7 @@ import cn.hutool.core.util.ArrayUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -33,6 +29,10 @@ public class MethodUtil {
 	 * 方法缓存
 	 */
 	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
+	/**
+	 * 直接声明的方法缓存
+	 */
+	private static final WeakConcurrentMap<Class<?>, Method[]> DECLARED_METHODS_CACHE = new WeakConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- method
 
@@ -198,18 +198,20 @@ public class MethodUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
 						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
 						//排除桥接方法，pr#1965@Github
-						&& false == method.isBridge()) {
-					return method;
+						//排除协变桥接方法，pr#1965@Github
+						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
@@ -265,17 +267,18 @@ public class MethodUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						// 排除桥接方法
-						&& false == method.isBridge()) {
-					return method;
+						//排除协变桥接方法，pr#1965@Github
+						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
@@ -321,6 +324,19 @@ public class MethodUtil {
 		Assert.notNull(beanClass);
 		return METHODS_CACHE.computeIfAbsent(beanClass,
 				(key) -> getMethodsDirectly(beanClass, true, true));
+	}
+
+	/**
+	 * 获得类中所有直接声明方法，不包括其父类中的方法
+	 *
+	 * @param beanClass 类，非{@code null}
+	 * @return 方法列表
+	 * @throws SecurityException 安全检查异常
+	 */
+	public static Method[] getDeclaredMethods(final Class<?> beanClass) throws SecurityException {
+		Assert.notNull(beanClass);
+		return DECLARED_METHODS_CACHE.computeIfAbsent(beanClass,
+			key -> getMethodsDirectly(beanClass, false, Objects.equals(Object.class, beanClass)));
 	}
 
 	/**

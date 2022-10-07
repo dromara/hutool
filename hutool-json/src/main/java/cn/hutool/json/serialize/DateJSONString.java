@@ -8,6 +8,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSONConfig;
 
+import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,23 +25,46 @@ public class DateJSONString implements JSONString {
 	final Object dateObj;
 	final JSONConfig jsonConfig;
 
+	/**
+	 * 构造
+	 *
+	 * @param dateObj    日期对象，支持包括Date、Calendar、TemporalAccessor
+	 * @param jsonConfig JSON配置
+	 */
 	public DateJSONString(final Object dateObj, final JSONConfig jsonConfig) {
 		this.dateObj = dateObj;
 		this.jsonConfig = jsonConfig;
 	}
 
+	/**
+	 * 获取原始的日期对象{@link Date}、{@link Calendar}、{@link TemporalAccessor}
+	 *
+	 * @return 日期对象
+	 */
+	@Override
+	public Object getRaw() {
+		return this.dateObj;
+	}
+
 	@Override
 	public String toJSONString() {
-		return formatDate(this.jsonConfig.getDateFormat());
+		// issue#2572@Github
+		if (dateObj instanceof MonthDay) {
+			return InternalJSONUtil.quote(dateObj.toString());
+		}
+
+		return formatDate(this.dateObj, this.jsonConfig.getDateFormat());
 	}
 
 	/**
-	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
+	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串<br>
+	 * 如果给定的格式是时间戳，直接返回时间戳字符串，如果是给定字符串格式，返回带双引号包装的字符串
 	 *
-	 * @param format 格式
+	 * @param dateObj Date或者Calendar对象
+	 * @param format  格式
 	 * @return 日期字符串
 	 */
-	private String formatDate(final String format) {
+	private static String formatDate(final Object dateObj, final String format) {
 		if (StrUtil.isNotBlank(format)) {
 			final String dateStr;
 			if (dateObj instanceof TemporalAccessor) {

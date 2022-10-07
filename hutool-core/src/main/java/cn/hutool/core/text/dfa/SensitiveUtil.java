@@ -3,6 +3,7 @@ package cn.hutool.core.text.dfa;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.function.Predicate;
  */
 public final class SensitiveUtil {
 
-	public static final char DEFAULT_SEPARATOR = StrUtil.C_COMMA;
+	public static final char DEFAULT_SEPARATOR = CharUtil.COMMA;
 	private static final WordTree sensitiveTree = new WordTree();
 
 	/**

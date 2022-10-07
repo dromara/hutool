@@ -7,7 +7,7 @@ import cn.hutool.db.Entity;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 	private static final long serialVersionUID = 3889210427543389642L;
 
 	public PostgresqlDialect() {
-		wrapper = new Wrapper('"');
+		quoteWrapper = new QuoteWrapper('"');
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		Assert.notEmpty(keys, "Keys must be not empty for Postgres.");
 		SqlBuilder.validateEntity(entity);
-		final SqlBuilder builder = SqlBuilder.of(wrapper);
+		final SqlBuilder builder = SqlBuilder.of(quoteWrapper);
 
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
@@ -51,7 +51,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 					updateHolder.append(", ");
 				}
 
-				final String wrapedField = (null != wrapper) ? wrapper.wrap(field) : field;
+				final String wrapedField = (null != quoteWrapper) ? quoteWrapper.wrap(field) : field;
 				fieldsPart.append(wrapedField);
 				updateHolder.append(wrapedField).append("=EXCLUDED.").append(field);
 				placeHolder.append("?");
@@ -60,8 +60,8 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 		});
 
 		String tableName = entity.getTableName();
-		if (null != this.wrapper) {
-			tableName = this.wrapper.wrap(tableName);
+		if (null != this.quoteWrapper) {
+			tableName = this.quoteWrapper.wrap(tableName);
 		}
 		builder.append("INSERT INTO ").append(tableName)
 				// 字段列表

@@ -1,6 +1,6 @@
 package cn.hutool.core.thread;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.Thread.UncaughtExceptionHandler;

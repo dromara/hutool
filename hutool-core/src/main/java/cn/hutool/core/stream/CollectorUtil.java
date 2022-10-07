@@ -5,10 +5,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -280,7 +277,7 @@ public class CollectorUtil {
 	 * @since 6.0.0
 	 */
 	public static <T, K> Collector<T, List<T>, EntryStream<K, T>> toEntryStream(
-			Function<? super T, ? extends K> keyMapper) {
+			final Function<? super T, ? extends K> keyMapper) {
 		return toEntryStream(keyMapper, Function.identity());
 	}
 
@@ -370,5 +367,153 @@ public class CollectorUtil {
 	 */
 	public static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> entryToMap() {
 		return toMap(Map.Entry::getKey, Map.Entry::getValue);
+	}
+
+	/**
+	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
+	 * @param isParallel     是否并行去组装，数据量特别大时使用
+	 * @param <T>            此处是元素类型
+	 * @param <R>            此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = students.stream().collect(toTree(Student::getId, Student::getParentId, Student::setChildren, isParallel));
+	 * }</pre>
+	 */
+	public static <R extends Comparable<R>, T> Collector<T, ?, List<T>> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final boolean isParallel) {
+		return toTree(idGetter, pIdGetter, null, childrenSetter, isParallel);
+	}
+
+	/**
+	 * <p>将集合转换为树，默认用 {@code parentId == pidValue} 来判断树的根节点，可以为null
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param pidValue       pid的值
+	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
+	 * @param isParallel     是否并行去组装，数据量特别大时使用
+	 * @param <T>            此处是元素类型
+	 * @param <R>            此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = students.stream().collect(toTree(Student::getId, Student::getParentId, 0L, Student::setChildren, isParallel));
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	public static <R extends Comparable<R>, T> Collector<T, ?, List<T>> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final R pidValue,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final boolean isParallel) {
+		return Collectors.collectingAndThen(groupingBy(pIdGetter, Collectors.toList()),
+				getChildrenFromMapByPidAndSet(idGetter, pIdValuesMap -> pIdValuesMap.get(pidValue), childrenSetter, isParallel));
+	}
+
+	/**
+	 * 将集合转换为树，自定义根节点的判断条件
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
+	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
+	 * @param isParallel      是否并行处理
+	 * @param <T>             此处是元素类型
+	 * @param <R>             此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = EasyStream.of(students).
+	 * 	.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	public static <R extends Comparable<R>, T> Collector<T, ?, List<T>> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final Predicate<T> parentPredicate,
+			final boolean isParallel) {
+		final List<T> parents = new ArrayList<>();
+		return Collectors.collectingAndThen(groupingBy(pIdGetter,
+						new SimpleCollector<>(ArrayList::new,
+								(acc, e) -> {
+									if (parentPredicate.test(e)) {
+										parents.add(e);
+									}
+									if (idGetter.apply(e) != null) {
+										acc.add(e);
+									}
+								},
+								(left, right) -> {
+									left.addAll(right);
+									return left;
+								},
+								CH_ID)),
+				getChildrenFromMapByPidAndSet(idGetter, pIdValuesMap -> parents, childrenSetter, isParallel));
+	}
+
+	/**
+	 * toTree的内联函数
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param parentFactory  顶部数据工厂方法
+	 * @param childrenSetter children的setter对应的lambda，可以写作 {@code Student::setChildren}
+	 * @param isParallel     是否并行处理
+	 * @param <T>            此处是元素类型
+	 * @param <R>            此处是id的泛型限制
+	 * @return list 组装好的树
+	 * @author VampireAchao
+	 */
+	private static <R extends Comparable<R>, T> Function<Map<R, List<T>>, List<T>> getChildrenFromMapByPidAndSet(
+			final Function<T, R> idGetter,
+			final Function<Map<R, List<T>>, List<T>> parentFactory,
+			final BiConsumer<T, List<T>> childrenSetter,
+			final boolean isParallel) {
+		return pIdValuesMap -> {
+			EasyStream.of(pIdValuesMap.values(), isParallel).flat(Function.identity())
+					.forEach(value -> {
+						final List<T> children = pIdValuesMap.get(idGetter.apply(value));
+						if (children != null) {
+							childrenSetter.accept(value, children);
+						}
+					});
+			return parentFactory.apply(pIdValuesMap);
+		};
+	}
+
+
+	/**
+	 * <p>过滤</p >
+	 *
+	 * @param predicate  断言
+	 * @param downstream 下游操作
+	 * @param <T>        元素类型
+	 * @param <A>        中间类型
+	 * @param <R>        结束类型
+	 * @return 一个用于过滤元素的 {@link java.util.stream.Collector}
+	 * @author TanShengYuan
+	 */
+	public static <T, A, R>
+	Collector<T, ?, R> filtering(final Predicate<? super T> predicate,
+								 final Collector<? super T, A, R> downstream) {
+		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+		return new SimpleCollector<>(downstream.supplier(),
+				(r, t) -> Opt.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
+				downstream.combiner(), downstream.finisher(),
+				downstream.characteristics());
 	}
 }

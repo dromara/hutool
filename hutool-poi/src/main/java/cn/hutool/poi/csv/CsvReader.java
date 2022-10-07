@@ -3,6 +3,7 @@ package cn.hutool.poi.csv;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.func.SerConsumer;
 
 import java.io.Closeable;
 import java.io.File;
@@ -120,7 +121,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	public void read(final CsvRowHandler rowHandler) throws IORuntimeException {
+	public void read(final SerConsumer<CsvRow> rowHandler) throws IORuntimeException {
 		read(this.reader, rowHandler);
 	}
 

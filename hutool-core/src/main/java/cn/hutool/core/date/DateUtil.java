@@ -16,6 +16,7 @@ import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
@@ -1624,7 +1625,7 @@ public class DateUtil extends CalendarUtil {
 			return 0;
 		}
 
-		final List<String> hms = StrUtil.splitTrim(timeStr, StrUtil.C_COLON, 3);
+		final List<String> hms = StrUtil.splitTrim(timeStr, CharUtil.COLON, 3);
 		final int lastIndex = hms.size() - 1;
 
 		int result = 0;
@@ -2001,6 +2002,26 @@ public class DateUtil extends CalendarUtil {
 		// 则有交集的逻辑为 !(x>b||a>y)
 		// 根据德摩根公式，可化简为 x<=b && a<=y
 		return startTime.before(realEndTime) && endTime.after(realStartTime);
+	}
+
+	/**
+	 * 是否为本月最后一天
+	 * @param date {@link Date}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.8
+	 */
+	public static boolean isLastDayOfMonth(final Date date){
+		return date(date).isLastDayOfMonth();
+	}
+
+	/**
+	 * 获得本月的最后一天
+	 * @param date {@link Date}
+	 * @return 天
+	 * @since 5.8.8
+	 */
+	public static int getLastDayOfMonth(final Date date){
+		return date(date).getLastDayOfMonth();
 	}
 
 	// ------------------------------------------------------------------------ Private method start

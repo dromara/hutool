@@ -1,6 +1,5 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.stream.spliterators.DropWhileSpliterator;
@@ -13,6 +12,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
@@ -58,9 +59,33 @@ public class StreamUtil {
 	 */
 	public static <T> Stream<T> of(final Iterable<T> iterable, final boolean parallel) {
 		Assert.notNull(iterable, "Iterable must be not null!");
-		return StreamSupport.stream(
-				Spliterators.spliterator(CollUtil.toCollection(iterable), 0),
-				parallel);
+		return iterable instanceof Collection ?
+				parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
+				StreamSupport.stream(iterable.spliterator(), parallel);
+	}
+
+	/**
+	 * {@link Iterator} 转换为 {@link Stream}
+	 * @param iterator 迭代器
+	 * @param <T> 集合元素类型
+	 * @return {@link Stream}
+	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 */
+	public static <T> Stream<T> ofIter(final Iterator<T> iterator) {
+		return ofIter(iterator, false);
+	}
+
+	/**
+	 * {@link Iterator} 转换为 {@link Stream}
+	 * @param iterator 迭代器
+	 * @param parallel 是否并行
+	 * @param <T> 集合元素类型
+	 * @return {@link Stream}
+	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 */
+	public static <T> Stream<T> ofIter(final Iterator<T> iterator, final boolean parallel) {
+		Assert.notNull(iterator, "iterator must not be null!");
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
 	/**
@@ -160,7 +185,7 @@ public class StreamUtil {
 	 * @param next    用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
-	public static <T> Stream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+	public static <T> Stream<T> iterate(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
 		requireNonNull(next);
 		requireNonNull(hasNext);
 		return StreamSupport.stream(IterateSpliterator.create(seed, hasNext, next), false);
@@ -177,7 +202,7 @@ public class StreamUtil {
 	 * @param predicate 断言
 	 * @return 与指定断言匹配的元素组成的流
 	 */
-	public static <T> Stream<T> takeWhile(Stream<T> source, Predicate<? super T> predicate) {
+	public static <T> Stream<T> takeWhile(final Stream<T> source, final Predicate<? super T> predicate) {
 		requireNonNull(source);
 		requireNonNull(predicate);
 		return createStatefulNewStream(source, TakeWhileSpliterator.create(source.spliterator(), predicate));
@@ -194,7 +219,7 @@ public class StreamUtil {
 	 * @param predicate 断言
 	 * @return 剩余元素组成的流
 	 */
-	public static <T> Stream<T> dropWhile(Stream<T> source, Predicate<? super T> predicate) {
+	public static <T> Stream<T> dropWhile(final Stream<T> source, final Predicate<? super T> predicate) {
 		requireNonNull(source);
 		requireNonNull(predicate);
 		return createStatefulNewStream(source, DropWhileSpliterator.create(source.spliterator(), predicate));
@@ -214,7 +239,7 @@ public class StreamUtil {
 	 * @param <R>            新流的元素类型
 	 * @return 新流
 	 */
-	private static <T, R> Stream<R> createStatefulNewStream(Stream<T> source, Spliterator<R> newSpliterator) {
+	private static <T, R> Stream<R> createStatefulNewStream(final Stream<T> source, final Spliterator<R> newSpliterator) {
 		// 创建新流
 		Stream<R> newStream = StreamSupport.stream(newSpliterator, source.isParallel());
 		// 如果旧流是并行流, 新流主动调用一个有状态的操作, 虽然没有意义, 但是可以让后续的无状态节点正常并发

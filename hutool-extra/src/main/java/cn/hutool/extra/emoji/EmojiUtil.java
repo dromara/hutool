@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 基于https://github.com/vdurmont/emoji-java的Emoji表情工具类
  * <p>
- * emoji-java文档以及别名列表见：https://github.com/vdurmont/emoji-java
+ * emoji-java文档以及别名列表见：<a href="https://github.com/vdurmont/emoji-java">...</a>
  *
  * @author looly
  * @since 4.2.1
@@ -65,9 +65,9 @@ public class EmojiUtil {
 	 * 例如：
 	 *
 	 * <pre>
-	 *  <code>:smile:</code>  替换为 <code>😄</code>
-	 * <code>&amp;#128516;</code> 替换为 <code>😄</code>
-	 * <code>:boy|type_6:</code> 替换为 <code>👦🏿</code>
+	 *  {@code :smile:}  替换为 {@code 😄}
+	 * {@code &#128516;} 替换为 {@code 😄}
+	 * {@code :boy|type_6:} 替换为 {@code 👦🏿}
 	 * </pre>
 	 *
 	 * @param str 包含Emoji别名或者HTML表现形式的字符串
@@ -80,22 +80,22 @@ public class EmojiUtil {
 	/**
 	 * 将字符串中的Unicode Emoji字符转换为别名表现形式（两个":"包围的格式）
 	 * <p>
-	 * 例如： <code>😄</code> 转换为 <code>:smile:</code>
+	 * 例如： {@code 😄} 转换为 {@code :smile:}
 	 *
 	 * <p>
 	 * {@link FitzpatrickAction}参数被设置为{@link FitzpatrickAction#PARSE}，则别名后会增加"|"并追加fitzpatrick类型
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>:boy|type_6:</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code :boy|type_6:}
 	 *
 	 * <p>
 	 * {@link FitzpatrickAction}参数被设置为{@link FitzpatrickAction#REMOVE}，则别名后的"|"和类型将被去除
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>:boy:</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code :boy:}
 	 *
 	 * <p>
 	 * {@link FitzpatrickAction}参数被设置为{@link FitzpatrickAction#IGNORE}，则别名后的类型将被忽略
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>:boy:🏿</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code :boy:🏿}
 	 *
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
@@ -107,7 +107,7 @@ public class EmojiUtil {
 	/**
 	 * 将字符串中的Unicode Emoji字符转换为别名表现形式（两个":"包围的格式），别名后会增加"|"并追加fitzpatrick类型
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>:boy|type_6:</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code :boy|type_6:}
 	 *
 	 * @param str               包含Emoji Unicode字符的字符串
 	 * @param fitzpatrickAction {@link FitzpatrickAction}
@@ -120,7 +120,7 @@ public class EmojiUtil {
 	/**
 	 * 将字符串中的Unicode Emoji字符转换为HTML 16进制表现形式
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>&amp;#x1f466;</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code &#x1f466;}
 	 *
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
@@ -132,7 +132,7 @@ public class EmojiUtil {
 	/**
 	 * 将字符串中的Unicode Emoji字符转换为HTML表现形式（Hex方式）
 	 * <p>
-	 * 例如：<code>👦🏿</code> 转换为 <code>&amp;#128102;</code>
+	 * 例如：{@code 👦🏿} 转换为 {@code &#128102;}
 	 *
 	 * @param str 包含Emoji Unicode字符的字符串
 	 * @return 替换后的字符串
@@ -144,8 +144,8 @@ public class EmojiUtil {
 	/**
 	 * 将字符串中的Unicode Emoji字符转换为HTML表现形式，例如：
 	 * <pre>
-	 * 如果为hex形式，<code>👦🏿</code> 转换为 <code>&amp;#x1f466;</code>
-	 * 否则，<code>👦🏿</code> 转换为 <code>&amp;#128102;</code>
+	 * 如果为hex形式，{@code 👦🏿} 转换为 {@code &#x1f466;}
+	 * 否则，{@code 👦🏿} 转换为 {@code &#128102;}
 	 * </pre>
 	 *
 	 * @param str   包含Emoji Unicode字符的字符串

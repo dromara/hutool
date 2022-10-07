@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
@@ -201,9 +202,9 @@ public class ExceptionUtil {
 	 */
 	public static String stacktraceToOneLineString(final Throwable throwable, final int limit) {
 		final Map<Character, String> replaceCharToStrMap = new HashMap<>();
-		replaceCharToStrMap.put(StrUtil.C_CR, StrUtil.SPACE);
-		replaceCharToStrMap.put(StrUtil.C_LF, StrUtil.SPACE);
-		replaceCharToStrMap.put(StrUtil.C_TAB, StrUtil.SPACE);
+		replaceCharToStrMap.put(CharUtil.CR, StrUtil.SPACE);
+		replaceCharToStrMap.put(CharUtil.LF, StrUtil.SPACE);
+		replaceCharToStrMap.put(CharUtil.TAB, StrUtil.SPACE);
 
 		return stacktraceToString(throwable, limit, replaceCharToStrMap);
 	}

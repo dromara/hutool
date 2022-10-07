@@ -1,19 +1,31 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.func.LambdaInfo;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -25,6 +37,22 @@ import java.util.stream.Stream;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+
+	/**
+	 * 直接声明的注解缓存
+	 */
+	private static final Map<AnnotatedElement, Annotation[]> DECLARED_ANNOTATIONS_CACHE = new WeakConcurrentMap<>();
+
+	/**
+	 * 获取直接声明的注解，若已有缓存则从缓存中获取
+	 *
+	 * @param element {@link AnnotatedElement}
+	 * @return 注解
+	 * @since 6.0.0
+	 */
+	public static Annotation[] getDeclaredAnnotations(final AnnotatedElement element) {
+		return MapUtil.computeIfAbsent(DECLARED_ANNOTATIONS_CACHE, element, AnnotatedElement::getDeclaredAnnotations);
+	}
 
 	/**
 	 * 将指定的被注解的元素转换为组合注解元素
@@ -149,6 +177,28 @@ public class AnnotationUtil {
 	 */
 	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
 		return getAnnotationValue(annotationEle, annotationType, "value");
+	}
+
+	/**
+	 * 获取指定注解属性的值<br>
+	 * 如果无指定的属性方法返回null
+	 *
+	 * @param <A>            注解类型
+	 * @param <R>            注解类型值
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
+	 * @return 注解对象
+	 * @throws UtilException 调用注解中的方法时执行异常
+	 */
+	public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle, final SerFunction<A, R> propertyName)  {
+		if(propertyName == null) {
+			return null;
+		}else {
+			final LambdaInfo lambda = LambdaUtil.resolve(propertyName);
+			final String instantiatedMethodType = lambda.getLambda().getInstantiatedMethodType();
+			final Class<A> annotationClass = ClassLoaderUtil.loadClass(StrUtil.sub(instantiatedMethodType, 2, StrUtil.indexOf(instantiatedMethodType, ';')));
+			return getAnnotationValue(annotationEle,annotationClass, lambda.getLambda().getImplMethodName());
+		}
 	}
 
 	/**
@@ -295,16 +345,14 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 获取注解属性
+	 * 获取注解属性，若已有缓存则从缓存中获取
 	 *
 	 * @param annotationType 注解类型
 	 * @return 注解属性
 	 * @since 6.0.0
 	 */
 	public static Method[] getAnnotationAttributes(final Class<? extends Annotation> annotationType) {
-		// TODO 改为通过带缓存的反射工具类完成
-		Objects.requireNonNull(annotationType);
-		return Stream.of(annotationType.getDeclaredMethods())
+		return Stream.of(MethodUtil.getDeclaredMethods(annotationType))
 			.filter(AnnotationUtil::isAnnotationAttribute)
 			.toArray(Method[]::new);
 	}
@@ -337,6 +385,13 @@ public class AnnotationUtil {
 			&& Modifier.isPublic(attribute.getModifiers())
 			&& !attribute.isBridge()
 			&& !attribute.isSynthetic();
+	}
+
+	/**
+	 * 清空相关缓存
+	 */
+	public static void clearCaches() {
+		DECLARED_ANNOTATIONS_CACHE.clear();
 	}
 
 }

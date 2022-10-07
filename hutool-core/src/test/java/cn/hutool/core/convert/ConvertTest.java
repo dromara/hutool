@@ -360,6 +360,8 @@ public class ConvertTest {
 		final String str = "33020000210909112800000124";
 		final BigDecimal bigDecimal = Convert.toBigDecimal(str);
 		Assert.assertEquals(str, bigDecimal.toPlainString());
+
+		Assert.assertNull(Convert.toBigDecimal("  "));
 	}
 
 	@Test

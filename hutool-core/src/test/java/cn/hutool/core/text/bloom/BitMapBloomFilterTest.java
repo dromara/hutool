@@ -1,6 +1,6 @@
 package cn.hutool.core.text.bloom;
 
-import cn.hutool.core.lang.hash.HashUtil;
+import cn.hutool.core.codec.hash.HashUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

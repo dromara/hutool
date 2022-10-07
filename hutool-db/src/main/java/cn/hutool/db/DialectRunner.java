@@ -13,7 +13,7 @@ import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -428,16 +428,16 @@ public class DialectRunner implements Serializable {
 	 * @param wrapperChar 包装字符，字符会在SQL生成时位于表名和字段名两边，null时表示取消包装
 	 */
 	public void setWrapper(final Character wrapperChar) {
-		setWrapper(new Wrapper(wrapperChar));
+		setWrapper(new QuoteWrapper(wrapperChar));
 	}
 
 	/**
 	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
 	 *
-	 * @param wrapper 包装器，null表示取消包装
+	 * @param quoteWrapper 包装器，null表示取消包装
 	 */
-	public void setWrapper(final Wrapper wrapper) {
-		this.dialect.setWrapper(wrapper);
+	public void setWrapper(final QuoteWrapper quoteWrapper) {
+		this.dialect.setWrapper(quoteWrapper);
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 

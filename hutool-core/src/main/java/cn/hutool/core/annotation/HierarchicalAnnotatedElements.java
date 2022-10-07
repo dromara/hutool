@@ -2,6 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  * 并将其包装为{@link MetaAnnotatedElement}。 <br>
  * eg: <br>
  * 若存在元素<em>A</em>有对应父类与父接口<em>B</em>，<em>C</em>，
- * 则根据<em>A</em>生成的{@link HierarchicalAnnotatedElements}实例将同时包含<em>A</em>，<em>B</em>，<em>C</em>,
+ * 则根据<em>A</em>生成的{@code HierarchicalAnnotatedElements}实例将同时包含<em>A</em>，<em>B</em>，<em>C</em>,
  * 该实例同时支持对这三个实例上直接声明的注解，以及这些注解的元注解进行访问。
  *
  * <p><strong>注解搜索范围</strong>
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  *             <li>被保存的所有{@link AnnotatedElement}上直接声明的注解，及这些注解的元注解；</li>
  *             <li>若是类，则包括其所有父类和所有父接口上声明的注解和元注解；</li>
  *             <li>
- *                 若是方法，且不是静态/私有/被<code>final</code>修饰的方法时，
+ *                 若是方法，且不是静态/私有/被{@code final}修饰的方法时，
  *                 则额外获取包括其声明类的所有父类和所有父接口中，与该方法具有相同方法签名的方法上的注解和元注解；
  *             </li>
  *         </ol>
@@ -69,9 +70,9 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	/**
 	 * 创建一个分层注解元素
 	 *
-	 * @param element 被包装的元素，若元素已是{@link HierarchicalAnnotatedElements}，则返回其本身
-	 * @return {@link HierarchicalAnnotatedElements}实例，
-	 * 当{@code element}也是一个{@link HierarchicalAnnotatedElements}时，返回{@code element}本身
+	 * @param element 被包装的元素，若元素已是{@code HierarchicalAnnotatedElements}，则返回其本身
+	 * @return {@code HierarchicalAnnotatedElements}实例，
+	 * 当{@code element}也是一个{@code HierarchicalAnnotatedElements}时，返回{@code element}本身
 	 */
 	public static HierarchicalAnnotatedElements create(final AnnotatedElement element) {
 		return create(element, (es, e) -> e);
@@ -80,10 +81,10 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	/**
 	 * 创建一个分层注解元素
 	 *
-	 * @param element        被包装的元素，若元素已是{@link HierarchicalAnnotatedElements}，则返回其本身
+	 * @param element        被包装的元素，若元素已是{@code HierarchicalAnnotatedElements}，则返回其本身
 	 * @param elementFactory 创建{@link AnnotatedElement}的工厂方法，当返回{@code null}时将忽略该元素
-	 * @return {@link HierarchicalAnnotatedElements}实例，
-	 * 当{@code element}也是一个{@link HierarchicalAnnotatedElements}时，返回{@code element}本身
+	 * @return {@code HierarchicalAnnotatedElements}实例，
+	 * 当{@code element}也是一个{@code HierarchicalAnnotatedElements}时，返回{@code element}本身
 	 */
 	public static HierarchicalAnnotatedElements create(
 		final AnnotatedElement element,
@@ -156,8 +157,6 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * @param <A>            注解类型
 	 * @return 注解对象
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
 	public <A extends Annotation> A[] getAnnotationsByType(final Class<A> annotationType) {
 		return getElementMappings().stream()
 			.map(e -> e.getAnnotationsByType(annotationType))
@@ -174,7 +173,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	@Override
 	public Annotation[] getDeclaredAnnotations() {
 		return getElementMappings().stream()
-			.map(AnnotatedElement::getDeclaredAnnotations)
+			.map(AnnotationUtil::getDeclaredAnnotations)
 			.filter(ArrayUtil::isNotEmpty)
 			.flatMap(Stream::of)
 			.toArray(Annotation[]::new);
@@ -239,14 +238,14 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * @return 是否
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		HierarchicalAnnotatedElements that = (HierarchicalAnnotatedElements)o;
+		final HierarchicalAnnotatedElements that = (HierarchicalAnnotatedElements)o;
 		return elementFactory.equals(that.elementFactory) && source.equals(that.source);
 	}
 
@@ -294,8 +293,8 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	/**
 	 * 将元素转为{@link MetaAnnotatedElement}后添加至{@code mappings}
 	 */
-	private void collectElement(Set<AnnotatedElement> elements, final AnnotatedElement element) {
-		AnnotatedElement target = elementFactory.apply(elements, element);
+	private void collectElement(final Set<AnnotatedElement> elements, final AnnotatedElement element) {
+		final AnnotatedElement target = elementFactory.apply(elements, element);
 		if (Objects.nonNull(target)) {
 			elements.add(target);
 		}
@@ -309,7 +308,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 		if (Objects.isNull(elementMappings)) {
 			synchronized (this) {
 				if (Objects.isNull(elementMappings)) {
-					Set<AnnotatedElement> mappings = initElementMappings();
+					final Set<AnnotatedElement> mappings = initElementMappings();
 					elementMappings = Collections.unmodifiableSet(mappings);
 				}
 			}
@@ -320,7 +319,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * 遍历层级结构，获取层级结构中所有关联的{@link AnnotatedElement}，并添加到{@link #elementMappings}
 	 */
 	private Set<AnnotatedElement> initElementMappings() {
-		Set<AnnotatedElement> mappings = new LinkedHashSet<>();
+		final Set<AnnotatedElement> mappings = new LinkedHashSet<>();
 		// 原始元素是类
 		if (source instanceof Class) {
 			scanHierarchy(mappings, (Class<?>)source, false, source);
@@ -344,8 +343,8 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 * 按广度优先，遍历{@code type}的父类以及父接口，并从类上/类中指定方法上获得所需的注解
 	 */
 	private void scanHierarchy(
-		Set<AnnotatedElement> mappings, Class<?> type, final boolean isMethod, final AnnotatedElement source) {
-		Method methodSource = isMethod ? (Method)source : null;
+			final Set<AnnotatedElement> mappings, Class<?> type, final boolean isMethod, final AnnotatedElement source) {
+		final Method methodSource = isMethod ? (Method)source : null;
 		final Deque<Class<?>> deque = new LinkedList<>();
 		deque.addLast(type);
 		final Set<Class<?>> accessed = new HashSet<>();
@@ -359,8 +358,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 			if (!isMethod) {
 				collectElement(mappings, type);
 			} else {
-				// TODO 改为通过带缓存的反射工具类完成
-				Stream.of(type.getDeclaredMethods())
+				Stream.of(MethodUtil.getDeclaredMethods(type))
 					.filter(method -> isMatchMethod(methodSource, method))
 					.forEach(method -> collectElement(mappings, method));
 			}
@@ -379,7 +377,7 @@ public class HierarchicalAnnotatedElements implements AnnotatedElement, Iterable
 	 *     <li>该类不为{@link Object}；</li>
 	 * </ul>
 	 */
-	private boolean isNeedMapping(Class<?> type, Set<Class<?>> accessedTypes) {
+	private boolean isNeedMapping(final Class<?> type, final Set<Class<?>> accessedTypes) {
 		return Objects.nonNull(type)
 			&& !accessedTypes.contains(type)
 			&& !Objects.equals(type, Object.class);

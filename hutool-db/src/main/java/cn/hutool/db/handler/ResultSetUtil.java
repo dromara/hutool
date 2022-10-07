@@ -150,9 +150,16 @@ public class ResultSetUtil {
 	 */
 	public static <T extends Entity> T toEntity(final T row, final int columnCount, final ResultSetMetaData meta, final ResultSet rs, final boolean withMetaInfo) throws SQLException {
 		int type;
+		String columnLabel;
 		for (int i = 1; i <= columnCount; i++) {
 			type = meta.getColumnType(i);
-			row.put(meta.getColumnLabel(i), getColumnValue(rs, i, type, null));
+			columnLabel = meta.getColumnLabel(i);
+			if("rownum_".equalsIgnoreCase(columnLabel)){
+				// issue#2618@Github
+				// 分页时会查出rownum字段，此处忽略掉读取
+				continue;
+			}
+			row.put(columnLabel, getColumnValue(rs, i, type, null));
 		}
 		if (withMetaInfo) {
 			try {

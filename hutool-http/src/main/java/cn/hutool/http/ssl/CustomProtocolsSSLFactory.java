@@ -1,7 +1,7 @@
 package cn.hutool.http.ssl;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.net.SSLUtil;
+import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.core.util.ArrayUtil;
 
 import javax.net.ssl.SSLSocket;

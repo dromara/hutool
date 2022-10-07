@@ -533,7 +533,7 @@ public class Convert {
 	@SuppressWarnings("unchecked")
 	public static <E extends Enum<E>> E toEnum(final Class<E> clazz, final Object value, final E defaultValue) {
 		try{
-			return (E) (new EnumConverter()).convert(clazz, value);
+			return (E) EnumConverter.INSTANCE.convert(clazz, value);
 		} catch (final Exception ignore){
 			return defaultValue;
 		}
@@ -615,7 +615,7 @@ public class Convert {
 	 * @return {@link Map}
 	 * @since 4.6.8
 	 */
-	public static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object value) {
+	public static <K, V> Map<K, V> toMap(final Class<K> keyType, final Class<V> valueType, final Object value) {
 		if (value instanceof Map) {
 			return toMap(value.getClass(), keyType, valueType, value);
 		} else {
@@ -635,7 +635,7 @@ public class Convert {
 	 * @return {@link Map}
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <K, V> Map<K, V> toMap(Class<?> mapType, Class<K> keyType, Class<V> valueType, Object value) {
+	public static <K, V> Map<K, V> toMap(final Class<?> mapType, final Class<K> keyType, final Class<V> valueType, final Object value) {
 		return (Map<K, V>) MapConverter.INSTANCE.convert(mapType, keyType, valueType, value);
 	}
 
@@ -1049,7 +1049,6 @@ public class Convert {
 
 	/**
 	 * 中文大写数字金额转换为数字，返回结果以元为单位的BigDecimal类型数字
-	 *
 	 * 如：
 	 * 	“陆万柒仟伍佰伍拾陆元叁角贰分”返回“67556.32”
 	 * 	“叁角贰分”返回“0.32”

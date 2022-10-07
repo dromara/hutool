@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 /**
  * SerBiConsumer
  *
+ * @param <T> 第一个参数类型
+ * @param <U> 第二个参数类型
  * @author VampireAchao
  */
 @FunctionalInterface
@@ -24,7 +26,8 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 */
 	@SafeVarargs
 	static <T, U> SerBiConsumer<T, U> multi(final SerBiConsumer<T, U>... consumers) {
-		return Stream.of(consumers).reduce(SerBiConsumer::andThen).orElseGet(() -> (o, q) -> {});
+		return Stream.of(consumers).reduce(SerBiConsumer::andThen).orElseGet(() -> (o, q) -> {
+		});
 	}
 
 	/**
@@ -79,6 +82,7 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 * @return 什么也不做
 	 */
 	static <T, U> SerBiConsumer<T, U> nothing() {
-		return (l, r) -> {};
+		return (l, r) -> {
+		};
 	}
 }

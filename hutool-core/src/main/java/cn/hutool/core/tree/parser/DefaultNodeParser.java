@@ -1,7 +1,7 @@
 package cn.hutool.core.tree.parser;
 
 import cn.hutool.core.tree.TreeNode;
-import cn.hutool.core.tree.Tree;
+import cn.hutool.core.tree.MapTree;
 import cn.hutool.core.map.MapUtil;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class DefaultNodeParser<T> implements NodeParser<TreeNode<T>, T> {
 
 	@Override
-	public void parse(final TreeNode<T> treeNode, final Tree<T> tree) {
+	public void parse(final TreeNode<T> treeNode, final MapTree<T> tree) {
 		tree.setId(treeNode.getId());
 		tree.setParentId(treeNode.getParentId());
 		tree.setWeight(treeNode.getWeight());

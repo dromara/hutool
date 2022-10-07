@@ -6,7 +6,7 @@ import cn.hutool.db.Page;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	private static final long serialVersionUID = -3734718212043823636L;
 
 	public MysqlDialect() {
-		wrapper = new Wrapper('`');
+		quoteWrapper = new QuoteWrapper('`');
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 	@Override
 	public PreparedStatement psForUpsert(final Connection conn, final Entity entity, final String... keys) throws SQLException {
 		SqlBuilder.validateEntity(entity);
-		final SqlBuilder builder = SqlBuilder.of(wrapper);
+		final SqlBuilder builder = SqlBuilder.of(quoteWrapper);
 
 		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
@@ -67,7 +67,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 					updateHolder.append(", ");
 				}
 
-				field = (null != wrapper) ? wrapper.wrap(field) : field;
+				field = (null != quoteWrapper) ? quoteWrapper.wrap(field) : field;
 				fieldsPart.append(field);
 				updateHolder.append(field).append("=values(").append(field).append(")");
 				placeHolder.append("?");
@@ -76,8 +76,8 @@ public class MysqlDialect extends AnsiSqlDialect{
 		});
 
 		String tableName = entity.getTableName();
-		if (null != this.wrapper) {
-			tableName = this.wrapper.wrap(tableName);
+		if (null != this.quoteWrapper) {
+			tableName = this.quoteWrapper.wrap(tableName);
 		}
 		builder.append("INSERT INTO ").append(tableName)
 				// 字段列表

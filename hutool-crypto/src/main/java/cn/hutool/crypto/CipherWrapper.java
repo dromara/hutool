@@ -1,5 +1,7 @@
 package cn.hutool.crypto;
 
+import cn.hutool.core.lang.func.Wrapper;
+
 import javax.crypto.Cipher;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -18,7 +20,7 @@ import java.security.spec.AlgorithmParameterSpec;
  * @author looly
  * @since 5.7.17
  */
-public class CipherWrapper {
+public class CipherWrapper implements Wrapper<Cipher> {
 
 	private final Cipher cipher;
 	/**
@@ -85,7 +87,8 @@ public class CipherWrapper {
 	 *
 	 * @return {@link Cipher}
 	 */
-	public Cipher getCipher() {
+	@Override
+	public Cipher getRaw() {
 		return this.cipher;
 	}
 

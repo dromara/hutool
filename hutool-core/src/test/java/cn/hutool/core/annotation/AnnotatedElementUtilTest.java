@@ -38,6 +38,31 @@ public class AnnotatedElementUtilTest {
 	};
 
 	@Test
+	public void testClearCaches() {
+		AnnotatedElement type = Foo.class;
+
+		AnnotatedElement element = AnnotatedElementUtil.getResolvedMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getResolvedMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getResolvedMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getResolvedRepeatableMetaElementCache(type));
+
+		element = AnnotatedElementUtil.getRepeatableMetaElementCache(type);
+		Assert.assertSame(element, AnnotatedElementUtil.getRepeatableMetaElementCache(type));
+		AnnotatedElementUtil.clearCaches();
+		Assert.assertNotSame(element, AnnotatedElementUtil.getRepeatableMetaElementCache(type));
+	}
+
+	@Test
 	public void testIsAnnotated() {
 		Assert.assertTrue(AnnotatedElementUtil.isAnnotated(Foo.class, Annotation1.class));
 		Assert.assertTrue(AnnotatedElementUtil.isAnnotated(Foo.class, Annotation2.class));
@@ -244,6 +269,25 @@ public class AnnotatedElementUtilTest {
 	}
 
 	@Test
+	public void testGetAllAnnotations() {
+		Annotation3[] resolvedAnnotation3s = AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation3.class);
+		Assert.assertEquals(1, resolvedAnnotation3s.length);
+		Assert.assertEquals(ANNOTATION3, resolvedAnnotation3s[0]); // value与alias互为别名
+
+		Annotation2[] resolvedAnnotation2s = AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation2.class);
+		Assert.assertEquals(1, resolvedAnnotation2s.length);
+		Assert.assertEquals(ANNOTATION2, resolvedAnnotation2s[0]); // value与alias互为别名
+
+		Annotation1[] resolvedAnnotation1s = AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation1.class);
+		Assert.assertEquals(1, resolvedAnnotation1s.length);
+		Assert.assertEquals(ANNOTATION1, resolvedAnnotation1s[0]);
+
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation4.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation5.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllAnnotations(Foo.class, Annotation6.class).length);
+	}
+
+	@Test
 	public void testGetResolvedAnnotation() {
 		Annotation3 resolvedAnnotation3 = AnnotatedElementUtil.getResolvedAnnotation(Foo.class, Annotation3.class);
 		Assert.assertNotNull(resolvedAnnotation3);
@@ -262,6 +306,33 @@ public class AnnotatedElementUtilTest {
 		Assert.assertNull(AnnotatedElementUtil.getResolvedAnnotation(Foo.class, Annotation4.class));
 		Assert.assertNull(AnnotatedElementUtil.getResolvedAnnotation(Foo.class, Annotation5.class));
 		Assert.assertNull(AnnotatedElementUtil.getResolvedAnnotation(Foo.class, Annotation6.class));
+	}
+
+	@Test
+	public void testGetAllResolvedAnnotations() {
+		Annotation3[] resolvedAnnotation3s = AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation3.class);
+		Assert.assertEquals(1, resolvedAnnotation3s.length);
+		Annotation3 resolvedAnnotation3 = resolvedAnnotation3s[0];
+		Assert.assertNotNull(resolvedAnnotation3);
+		Assert.assertEquals(resolvedAnnotation3.alias(), ANNOTATION3.value());
+		Assert.assertEquals(resolvedAnnotation3.alias(), resolvedAnnotation3.value()); // value与alias互为别名
+
+		Annotation2[] resolvedAnnotation2s = AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation2.class);
+		Assert.assertEquals(1, resolvedAnnotation2s.length);
+		Annotation2 resolvedAnnotation2 = resolvedAnnotation2s[0];
+		Assert.assertNotNull(resolvedAnnotation2);
+		Assert.assertEquals(resolvedAnnotation2.num(), ANNOTATION3.num()); // num属性被Annotation3.num覆盖
+
+		Annotation1[] resolvedAnnotation1s = AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation1.class);
+		Assert.assertEquals(1, resolvedAnnotation1s.length);
+		Annotation1 resolvedAnnotation1 = resolvedAnnotation1s[0];
+		Assert.assertNotNull(resolvedAnnotation1);
+		Assert.assertEquals(ANNOTATION3.value(), resolvedAnnotation1.value()); // value属性被Annotation3.value覆盖
+		Assert.assertEquals(resolvedAnnotation1.value(), resolvedAnnotation1.alias()); // value与alias互为别名
+
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation4.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation5.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllResolvedAnnotations(Foo.class, Annotation6.class).length);
 	}
 
 	@Test
@@ -300,6 +371,20 @@ public class AnnotatedElementUtilTest {
 	}
 
 	@Test
+	public void testGetAllDirectlyAnnotations() {
+		Annotation3[] resolvedAnnotation3s = AnnotatedElementUtil.getAllDirectlyAnnotations(Foo.class, Annotation3.class);
+		Assert.assertEquals(1, resolvedAnnotation3s.length);
+		Annotation3 resolvedAnnotation3 = resolvedAnnotation3s[0];
+		Assert.assertEquals(ANNOTATION3, resolvedAnnotation3);
+
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation2.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation1.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation4.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation5.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation6.class).length);
+	}
+
+	@Test
 	public void testGetDirectlyAnnotations() {
 		Annotation[] annotations = AnnotatedElementUtil.getDirectlyAnnotations(Foo.class);
 		Assert.assertEquals(1, annotations.length);
@@ -318,6 +403,22 @@ public class AnnotatedElementUtilTest {
 		Assert.assertNull(AnnotatedElementUtil.getDirectlyResolvedAnnotation(Foo.class, Annotation4.class));
 		Assert.assertNull(AnnotatedElementUtil.getDirectlyResolvedAnnotation(Foo.class, Annotation5.class));
 		Assert.assertNull(AnnotatedElementUtil.getDirectlyResolvedAnnotation(Foo.class, Annotation6.class));
+	}
+
+	@Test
+	public void testGetDirectlyAllResolvedAnnotations() {
+		Annotation3[] resolvedAnnotation3s = AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation3.class);
+		Assert.assertEquals(1, resolvedAnnotation3s.length);
+		Annotation3 resolvedAnnotation3 = resolvedAnnotation3s[0];
+		Assert.assertNotNull(resolvedAnnotation3);
+		Assert.assertEquals(resolvedAnnotation3.alias(), ANNOTATION3.value());
+		Assert.assertEquals(resolvedAnnotation3.alias(), resolvedAnnotation3.value()); // value与alias互为别名
+
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation2.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation1.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation4.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation5.class).length);
+		Assert.assertEquals(0, AnnotatedElementUtil.getAllDirectlyResolvedAnnotations(Foo.class, Annotation6.class).length);
 	}
 
 	@Test
@@ -345,6 +446,39 @@ public class AnnotatedElementUtilTest {
 
 		// 解析注解属性
 		AnnotatedElement resolvedElement = AnnotatedElementUtil.toHierarchyMetaElement(Foo.class, true);
+		Annotation3 resolvedAnnotation3 = resolvedElement.getAnnotation(Annotation3.class);
+		Assert.assertNotNull(resolvedAnnotation3);
+		Assert.assertEquals(resolvedAnnotation3.alias(), ANNOTATION3.value());
+		Assert.assertEquals(resolvedAnnotation3.alias(), resolvedAnnotation3.value()); // value与alias互为别名
+
+		Annotation2 resolvedAnnotation2 = resolvedElement.getAnnotation(Annotation2.class);
+		Assert.assertNotNull(resolvedAnnotation2);
+		Assert.assertEquals(resolvedAnnotation2.num(), ANNOTATION3.num()); // num属性被Annotation3.num覆盖
+
+		Annotation1 resolvedAnnotation1 = resolvedElement.getAnnotation(Annotation1.class);
+		Assert.assertNotNull(resolvedAnnotation1);
+		Assert.assertEquals(ANNOTATION3.value(), resolvedAnnotation1.value()); // value属性被Annotation3.value覆盖
+		Assert.assertEquals(resolvedAnnotation1.value(), resolvedAnnotation1.alias()); // value与alias互为别名
+
+		Assert.assertEquals(ANNOTATION4, resolvedElement.getAnnotation(Annotation4.class));
+		Assert.assertEquals(ANNOTATION6, resolvedElement.getAnnotation(Annotation6.class));
+		Assert.assertEquals(ANNOTATION5, resolvedElement.getAnnotation(Annotation5.class));
+	}
+
+	@Test
+	public void testToHierarchyRepeatableMetaElement() {
+		Assert.assertNotNull(AnnotatedElementUtil.toHierarchyRepeatableMetaElement(null, false));
+		Assert.assertNotNull(AnnotatedElementUtil.toHierarchyRepeatableMetaElement(null, true));
+		AnnotatedElement element = AnnotatedElementUtil.toHierarchyRepeatableMetaElement(Foo.class, false);
+
+		// 带有元注解
+		Assert.assertArrayEquals(ANNOTATIONS, element.getAnnotations());
+
+		// 不带元注解
+		Assert.assertArrayEquals(DECLARED_ANNOTATIONS, element.getDeclaredAnnotations());
+
+		// 解析注解属性
+		AnnotatedElement resolvedElement = AnnotatedElementUtil.toHierarchyRepeatableMetaElement(Foo.class, true);
 		Annotation3 resolvedAnnotation3 = resolvedElement.getAnnotation(Annotation3.class);
 		Assert.assertNotNull(resolvedAnnotation3);
 		Assert.assertEquals(resolvedAnnotation3.alias(), ANNOTATION3.value());
@@ -402,6 +536,36 @@ public class AnnotatedElementUtilTest {
 	}
 
 	@Test
+	public void testToRepeatableMetaElement() {
+		Assert.assertNotNull(AnnotatedElementUtil.toRepeatableMetaElement(null, RepeatableAnnotationCollector.none(), false));
+		Assert.assertNotNull(AnnotatedElementUtil.toRepeatableMetaElement(null, RepeatableAnnotationCollector.none(), true));
+
+		// 不解析注解属性
+		AnnotatedElement element = AnnotatedElementUtil.toRepeatableMetaElement(Foo.class, RepeatableAnnotationCollector.none(), false);
+		Assert.assertEquals(element, AnnotatedElementUtil.toRepeatableMetaElement(Foo.class, RepeatableAnnotationCollector.none(), false)); // 第二次获取时从缓存中获取
+		Assert.assertArrayEquals(new Annotation[]{ANNOTATION3, ANNOTATION2, ANNOTATION1}, element.getAnnotations());
+
+		// 解析注解属性
+		element = AnnotatedElementUtil.toRepeatableMetaElement(Foo.class, RepeatableAnnotationCollector.none(), true);
+		Assert.assertEquals(element, AnnotatedElementUtil.toRepeatableMetaElement(Foo.class, RepeatableAnnotationCollector.none(), true)); // 第二次获取时从缓存中获取
+		Assert.assertEquals(3, element.getAnnotations().length);
+
+		Annotation3 resolvedAnnotation3 = element.getAnnotation(Annotation3.class);
+		Assert.assertNotNull(resolvedAnnotation3);
+		Assert.assertEquals(resolvedAnnotation3.alias(), ANNOTATION3.value());
+		Assert.assertEquals(resolvedAnnotation3.alias(), resolvedAnnotation3.value()); // value与alias互为别名
+
+		Annotation2 resolvedAnnotation2 = element.getAnnotation(Annotation2.class);
+		Assert.assertNotNull(resolvedAnnotation2);
+		Assert.assertEquals(resolvedAnnotation2.num(), ANNOTATION3.num()); // num属性被Annotation3.num覆盖
+
+		Annotation1 resolvedAnnotation1 = element.getAnnotation(Annotation1.class);
+		Assert.assertNotNull(resolvedAnnotation1);
+		Assert.assertEquals(ANNOTATION3.value(), resolvedAnnotation1.value()); // value属性被Annotation3.value覆盖
+		Assert.assertEquals(resolvedAnnotation1.value(), resolvedAnnotation1.alias()); // value与alias互为别名
+	}
+
+	@Test
 	public void testAsElement() {
 		Annotation[] annotations = new Annotation[]{ANNOTATION1, ANNOTATION2};
 		Assert.assertNotNull(AnnotatedElementUtil.asElement());
@@ -433,6 +597,7 @@ public class AnnotatedElementUtilTest {
 
 	// ================= interface =================
 
+	@Annotation6
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation5 {}
@@ -474,6 +639,22 @@ public class AnnotatedElementUtilTest {
 		int num() default Integer.MIN_VALUE;
 	}
 
+	/**
+	 * <p>Foo.class上注解情况如下：
+	 * <pre>{@code
+	 * annotation3 => annotation2 => annotation1
+	 * }</pre>
+	 *
+	 * <p>Super.class上注解情况如下：
+	 * <pre>{@code
+	 * annotation4
+	 * }</pre>
+	 *
+	 * <p>Interface.class上注解情况如下：
+	 * <pre>{@code
+	 * annotation6 => annotation5 => annotation6【循环引用】
+	 * }</pre>
+	 */
 	@Annotation3(value = "foo", num = Integer.MAX_VALUE)
 	private static class Foo extends Super implements Interface {}
 

@@ -11,9 +11,10 @@ import java.util.stream.Stream;
  *
  * @author VampireAchao
  * @see Supplier
+ * @param <R> 返回值类型
  */
 @FunctionalInterface
-public interface SerSupplier<T> extends Supplier<T>, Serializable {
+public interface SerSupplier<R> extends Supplier<R>, Serializable {
 
 	/**
 	 * Gets a result.
@@ -21,7 +22,7 @@ public interface SerSupplier<T> extends Supplier<T>, Serializable {
 	 * @return a result
 	 * @throws Exception wrapped checked exceptions
 	 */
-	T getting() throws Exception;
+	R getting() throws Exception;
 
 	/**
 	 * Gets a result.
@@ -29,7 +30,7 @@ public interface SerSupplier<T> extends Supplier<T>, Serializable {
 	 * @return a result
 	 */
 	@Override
-	default T get() {
+	default R get() {
 		try {
 			return getting();
 		} catch (final Exception e) {

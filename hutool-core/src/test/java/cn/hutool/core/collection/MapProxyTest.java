@@ -1,14 +1,13 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.map.MapProxy;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import cn.hutool.core.map.MapProxy;
 
 public class MapProxyTest {
 
@@ -26,6 +25,7 @@ public class MapProxyTest {
 		Assert.assertFalse(keys.isEmpty());
 
 		final Set<Entry<Object,Object>> entrys = mapProxy.entrySet();
+		//noinspection ConstantConditions
 		Assert.assertFalse(entrys.isEmpty());
 	}
 

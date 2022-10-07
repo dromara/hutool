@@ -16,12 +16,12 @@ import java.util.stream.Stream;
 public interface SerRunnable extends Runnable, Serializable {
 
 	/**
-	 * When an object implementing interface <code>Runnable</code> is used
+	 * When an object implementing interface {@code Runnable} is used
 	 * to create a thread, starting the thread causes the object's
-	 * <code>run</code> method to be called in that separately executing
+	 * {@code run} method to be called in that separately executing
 	 * thread.
 	 * <p>
-	 * The general contract of the method <code>run</code> is that it may
+	 * The general contract of the method {@code run} is that it may
 	 * take any action whatsoever.
 	 *
 	 * @throws Exception wrapped checked exceptions
@@ -30,12 +30,12 @@ public interface SerRunnable extends Runnable, Serializable {
 	void running() throws Exception;
 
 	/**
-	 * When an object implementing interface <code>Runnable</code> is used
+	 * When an object implementing interface {@code Runnable} is used
 	 * to create a thread, starting the thread causes the object's
-	 * <code>run</code> method to be called in that separately executing
+	 * {@code run} method to be called in that separately executing
 	 * thread.
 	 * <p>
-	 * The general contract of the method <code>run</code> is that it may
+	 * The general contract of the method {@code run} is that it may
 	 * take any action whatsoever.
 	 *
 	 * @see Thread#run()

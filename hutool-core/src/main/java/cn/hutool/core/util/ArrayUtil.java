@@ -64,7 +64,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 数组是否为空<br>
 	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回true<br>
 	 * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回false<br>
-	 * 如果此对象为数组对象，数组长度大于0情况下返回false，否则返回true
+	 * 如果此对象为数组对象，数组长度大于0的情况下返回false，否则返回true
 	 *
 	 * @param array 数组
 	 * @return 是否为空

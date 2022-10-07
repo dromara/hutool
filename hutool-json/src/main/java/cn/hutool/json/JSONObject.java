@@ -1,17 +1,22 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.LambdaInfo;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.lang.func.SerFunction;
+import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.mapper.ObjectMapper;
-import cn.hutool.json.serialize.JSONWriter;
+import cn.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -177,6 +182,18 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	}
 
 	/**
+	 * 根据lambda的方法引用，获取
+	 * @param func 方法引用
+	 * @param <P> 参数类型
+	 * @param <T> 返回值类型
+	 * @return 获取表达式对应属性和返回的对象
+	 */
+	public <P, T> T get(final SerFunction<P, T> func){
+		final LambdaInfo lambdaInfo = LambdaUtil.resolve(func);
+		return get(lambdaInfo.getFieldName(), lambdaInfo.getReturnType());
+	}
+
+	/**
 	 * PUT 键值对到JSONObject中，在忽略null模式下，如果值为{@code null}，将此键移除
 	 *
 	 * @param key   键
@@ -199,6 +216,22 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	public JSONObject set(final String key, final Object value) throws JSONException {
 		set(key, value, null);
+		return this;
+	}
+
+	/**
+	 * 通过lambda批量设置值<br>
+	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
+	 * <pre>
+	 *     User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
+	 *     (new JSONObject()).setFields(user::getNickname, user::getUsername);
+	 * </pre>
+	 *
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	public JSONObject setFields(final SerSupplier<?>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
 		return this;
 	}
 

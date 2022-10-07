@@ -43,7 +43,7 @@ public class Engine extends UserAgentInfo {
 	 */
 	public Engine(final String name, final String regex) {
 		super(name, regex);
-		this.versionPattern = Pattern.compile(name + "[/\\- ]([\\d\\w.\\-]+)", Pattern.CASE_INSENSITIVE);
+		this.versionPattern = Pattern.compile(name + "[/\\- ]([\\w.\\-]+)", Pattern.CASE_INSENSITIVE);
 	}
 
 	/**

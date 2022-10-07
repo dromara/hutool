@@ -34,8 +34,10 @@ public class OshiTest {
 	@Test
 	@Ignore
 	public void getUsedTest() {
-		while (true) {
+		int i = 0;
+		while (i < 1000) {
 			Console.log(OshiUtil.getCpuInfo().getUsed());
+			i++;
 		}
 	}
 }

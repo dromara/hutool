@@ -183,7 +183,7 @@ public class SshjSftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean upload(final String destPath, final File file) {
+	public boolean uploadFile(final String destPath, final File file) {
 		try {
 			sftp.put(new FileSystemFile(file), destPath);
 			return containsFile(destPath);

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
  */
 public class TakeWhileSpliterator<T> implements Spliterator<T> {
 
-	public static <T> TakeWhileSpliterator<T> create(Spliterator<T> source, Predicate<? super T> predicate) {
+	public static <T> TakeWhileSpliterator<T> create(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		return new TakeWhileSpliterator<>(source, predicate);
 	}
 
@@ -22,13 +22,13 @@ public class TakeWhileSpliterator<T> implements Spliterator<T> {
 	private final Predicate<? super T> predicate;
 	private boolean isContinue = true;
 
-	TakeWhileSpliterator(Spliterator<T> source, Predicate<? super T> predicate) {
+	TakeWhileSpliterator(final Spliterator<T> source, final Predicate<? super T> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
 
 	@Override
-	public boolean tryAdvance(Consumer<? super T> action) {
+	public boolean tryAdvance(final Consumer<? super T> action) {
 		boolean hasNext = true;
 		// 如果 还可以继续 并且 流中还有元素 则继续遍历
 		while (isContinue && hasNext) {

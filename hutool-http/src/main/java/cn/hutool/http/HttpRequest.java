@@ -10,12 +10,12 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
-import cn.hutool.core.net.SSLUtil;
+import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.body.BytesBody;
 import cn.hutool.http.body.FormUrlEncodedBody;
 import cn.hutool.http.body.MultipartBody;
@@ -817,11 +817,28 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
 	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
 	 *
+	 * <p>
+	 *     需要注意的是，当设置为{@code true}时，如果全局重定向次数非0，直接复用，否则设置默认2次。<br>
+	 *     当设置为{@code false}时，无论全局是否设置次数，都设置为0。<br>
+	 *     不调用此方法的情况下，使用全局默认的次数。
+	 * </p>
+	 *
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(final boolean isFollowRedirects) {
-		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
+		if (isFollowRedirects) {
+			if (config.maxRedirectCount <= 0) {
+				// 默认两次跳转
+				return setMaxRedirectCount(2);
+			}
+		} else {
+			// 手动强制关闭重定向，此时不受全局重定向设置影响
+			if (config.maxRedirectCount < 0) {
+				return setMaxRedirectCount(0);
+			}
+		}
+		return this;
 	}
 
 	/**
@@ -1020,7 +1037,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 执行Request请求后，对响应内容后续处理<br>
 	 * 处理结束后关闭连接
 	 *
-	 * @param <T> 结果类型
+	 * @param <T>      结果类型
 	 * @param function 响应内容处理函数
 	 * @return 结果值
 	 * @since 5.8.5
@@ -1226,7 +1243,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
-					setUrl(UrlBuilder.ofHttpWithoutEncode(httpConnection.header(Header.LOCATION)));
+
+					final UrlBuilder redirectUrl;
+					String location = httpConnection.header(Header.LOCATION);
+					if (false == HttpUtil.isHttp(location) && false == HttpUtil.isHttps(location)) {
+						// issue#I5TPSY
+						// location可能为相对路径
+						if (false == location.startsWith("/")) {
+							location = StrUtil.addSuffixIfNot(this.url.getPathStr(), "/") + location;
+						}
+						redirectUrl = UrlBuilder.of(this.url.getScheme(), this.url.getHost(), this.url.getPort()
+								, location, null, null, this.charset);
+					} else {
+						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
+					}
+
+					setUrl(redirectUrl);
 					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
 						// 重定向不再走过滤器

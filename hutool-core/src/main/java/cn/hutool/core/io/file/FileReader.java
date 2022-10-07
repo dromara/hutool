@@ -3,9 +3,9 @@ package cn.hutool.core.io.file;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -179,7 +179,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public void readLines(final LineHandler lineHandler) throws IORuntimeException{
+	public void readLines(final SerConsumer<String> lineHandler) throws IORuntimeException{
 		BufferedReader reader = null;
 		try {
 			reader = FileUtil.getReader(file, charset);

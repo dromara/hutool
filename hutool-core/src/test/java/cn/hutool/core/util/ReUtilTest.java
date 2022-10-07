@@ -204,4 +204,12 @@ public class ReUtilTest {
 		Assert.assertEquals(map.get("month"), "10");
 		Assert.assertEquals(map.get("day"), "11");
 	}
+
+	@Test
+	public void issuesI5TQDRTest(){
+		final Pattern patternIp = Pattern.compile("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))"
+				+ "|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})");
+		final String s = ReUtil.replaceAll("1.2.3.4", patternIp, "$1.**.**.$10");
+		Assert.assertEquals("1.**.**.4", s);
+	}
 }

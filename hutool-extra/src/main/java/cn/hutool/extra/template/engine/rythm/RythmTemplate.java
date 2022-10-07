@@ -2,7 +2,7 @@ package cn.hutool.extra.template.engine.rythm;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.reflect.TypeReference;
-import cn.hutool.extra.template.AbstractTemplate;
+import cn.hutool.extra.template.Template;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @author looly
  *
  */
-public class RythmTemplate extends AbstractTemplate implements Serializable {
+public class RythmTemplate implements Template, Serializable {
 	private static final long serialVersionUID = -132774960373894911L;
 
 	private final org.rythmengine.template.ITemplate rawTemplate;
@@ -24,7 +24,7 @@ public class RythmTemplate extends AbstractTemplate implements Serializable {
 	 * 包装Rythm模板
 	 *
 	 * @param template Rythm的模板对象 {@link org.rythmengine.template.ITemplate}
-	 * @return {@link RythmTemplate}
+	 * @return {@code RythmTemplate}
 	 */
 	public static RythmTemplate wrap(final org.rythmengine.template.ITemplate template) {
 		return (null == template) ? null : new RythmTemplate(template);

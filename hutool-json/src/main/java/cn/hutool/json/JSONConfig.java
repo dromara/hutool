@@ -8,6 +8,7 @@ import cn.hutool.core.convert.impl.TemporalAccessorConverter;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.json.convert.JSONConverter;
+import cn.hutool.json.serialize.JSONString;
 
 import java.io.Serializable;
 import java.time.temporal.TemporalAccessor;
@@ -56,9 +57,17 @@ public class JSONConfig implements Serializable {
 	 */
 	private boolean checkDuplicate;
 	/**
-	 * 自定义的类型转换器，用于在序列化、反序列化操作中实现对象类型转换
+	 * 自定义的类型转换器，用于在getXXX操作中自动转换类型
 	 */
 	private Converter converter = (type, value)->{
+		if(null == value){
+			return null;
+		}
+		if(value instanceof JSONString){
+			// 被JSONString包装的对象，获取其原始类型
+			value = ((JSONString) value).getRaw();
+		}
+
 		final Class<?> rawType = TypeUtil.getClass(type);
 		if(null == rawType){
 			return value;
@@ -67,12 +76,6 @@ public class JSONConfig implements Serializable {
 			return JSONConverter.INSTANCE.toJSON(value);
 		}
 		if(Date.class.isAssignableFrom(rawType) || TemporalAccessor.class.isAssignableFrom(rawType)){
-			// 用户指定了日期格式，获取日期属性时使用对应格式
-			final String valueStr = Convert.convertWithCheck(String.class, value, null, isIgnoreError());
-			if (null == valueStr) {
-				return null;
-			}
-
 			// 日期转换，支持自定义日期格式
 			final String format = getDateFormat();
 			if (StrUtil.isNotBlank(format)) {
@@ -271,7 +274,7 @@ public class JSONConfig implements Serializable {
 	 * @return this
 	 * @since 5.8.5
 	 */
-	public JSONConfig setCheckDuplicate(boolean checkDuplicate) {
+	public JSONConfig setCheckDuplicate(final boolean checkDuplicate) {
 		this.checkDuplicate = checkDuplicate;
 		return this;
 	}

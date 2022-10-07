@@ -220,6 +220,9 @@ public class StrUtilTest {
 		Assert.assertEquals("aa****dd", string);
 		string = StrUtil.replace("aabbccdd", 2, 12, '*');
 		Assert.assertEquals("aa******", string);
+
+		String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, '*');
+		Assert.assertEquals("\uD83D\uDE00a****ccdd", emoji);
 	}
 
 	@Test
@@ -275,6 +278,16 @@ public class StrUtilTest {
 		final String a = "abcderghigh";
 		final String pre = StrUtil.sub(a, -5, a.length());
 		Assert.assertEquals("ghigh", pre);
+	}
+
+	@Test
+	public void subPreTest() {
+		Assert.assertEquals(StrUtil.subPre(null, 3), null);
+		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+		Assert.assertEquals(StrUtil.subPre("abc", 3), "abc");
+		Assert.assertEquals(StrUtil.subPre("abcd", 3), "abc");
+		Assert.assertEquals(StrUtil.subPre("abcd", -3), "a");
+		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
 	}
 
 	@Test
@@ -627,6 +640,9 @@ public class StrUtilTest {
 		final String replace = "SSM15930297701BeryAllen";
 		final String result = StrUtil.replace(replace, 5, 12, "***");
 		Assert.assertEquals("SSM15***01BeryAllen", result);
+
+		String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
+		Assert.assertEquals("\uD83D\uDE00a***ccdd", emoji);
 	}
 
 	@Test
@@ -694,5 +710,11 @@ public class StrUtilTest {
 		Assert.assertTrue(CharSequenceUtil.isAllBlank("\u180E"));
 		Assert.assertTrue(CharSequenceUtil.isAllBlank("\u2000"));
 		Assert.assertTrue(CharSequenceUtil.isAllBlank("\u2001"));
+	}
+
+	@Test
+	public void issue2628Test(){
+		final String s = StrUtil.indexedFormat("a{0,number,#}", 1234567);
+		Assert.assertEquals("a1234567", s);
 	}
 }

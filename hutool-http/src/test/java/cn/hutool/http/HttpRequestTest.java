@@ -2,8 +2,9 @@ package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.StopWatch;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.net.SSLProtocols;
+import cn.hutool.core.net.ssl.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;
@@ -19,6 +20,7 @@ import java.util.Map;
  *
  * @author Looly
  */
+@SuppressWarnings("resource")
 public class HttpRequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
 
@@ -217,5 +219,35 @@ public class HttpRequestTest {
 	public void getCookieTest(){
 		final HttpResponse execute = HttpRequest.get("http://localhost:8888/getCookier").execute();
 		Console.log(execute.getCookies());
+	}
+
+	@Test
+	public void optionsTest() {
+		final HttpRequest options = HttpRequest.options("https://hutool.cn");
+		Assert.notNull(options.toString());
+	}
+
+	@Test
+	public void deleteTest() {
+		final HttpRequest options = HttpRequest.delete("https://hutool.cn");
+		Assert.notNull(options.toString());
+	}
+
+	@Test
+	public void traceTest() {
+		final HttpRequest options = HttpRequest.trace("https://hutool.cn");
+		Assert.notNull(options.toString());
+	}
+
+	@Test
+	public void getToStringTest() {
+		final HttpRequest a = HttpRequest.get("https://hutool.cn/").form("a", 1);
+		Assert.notNull(a.toString());
+	}
+
+	@Test
+	public void postToStringTest() {
+		final HttpRequest a = HttpRequest.post("https://hutool.cn/").form("a", 1);
+		Console.log(a.toString());
 	}
 }

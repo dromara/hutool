@@ -40,7 +40,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testToSet() {
 		final List<Integer> list = asList(1, 2, 3);
-		Set<String> toSet = wrap(list).map(String::valueOf).toSet();
+		final Set<String> toSet = wrap(list).map(String::valueOf).toSet();
 		Assert.assertEquals(new HashSet<>(asList("1", "2", "3")), toSet);
 	}
 
@@ -62,11 +62,15 @@ public class AbstractEnhancedWrappedStreamTest {
 	public void testToMap() {
 		final List<Integer> list = asList(1, 2, 3);
 		final Map<String, Integer> identityMap = wrap(list).toMap(String::valueOf);
-		Assert.assertEquals(new HashMap<String, Integer>() {{
-			put("1", 1);
-			put("2", 2);
-			put("3", 3);
-		}}, identityMap);
+		Assert.assertEquals(new HashMap<String, Integer>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				put("1", 1);
+				put("2", 2);
+				put("3", 3);
+			}
+		}, identityMap);
 	}
 
 	@Test
@@ -82,11 +86,15 @@ public class AbstractEnhancedWrappedStreamTest {
 		final List<Integer> orders = asList(1, 2, 3);
 		final List<String> list = asList("dromara", "hutool", "sweet");
 		final Map<Integer, String> toZip = wrap(orders).toZip(list);
-		Assert.assertEquals(new HashMap<Integer, String>() {{
-			put(1, "dromara");
-			put(2, "hutool");
-			put(3, "sweet");
-		}}, toZip);
+		Assert.assertEquals(new HashMap<Integer, String>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				put(1, "dromara");
+				put(2, "hutool");
+				put(3, "sweet");
+			}
+		}, toZip);
 	}
 
 	@Test
@@ -150,11 +158,15 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testGrouping() {
 		final List<Integer> list = asList(1, 2, 3);
-		final Map<String, List<Integer>> map = new HashMap<String, List<Integer>>() {{
-			put("1", singletonList(1));
-			put("2", singletonList(2));
-			put("3", singletonList(3));
-		}};
+		final Map<String, List<Integer>> map = new HashMap<String, List<Integer>>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				put("1", singletonList(1));
+				put("2", singletonList(2));
+				put("3", singletonList(3));
+			}
+		};
 
 		Map<String, List<Integer>> group = wrap(list).group(String::valueOf, HashMap::new, Collectors.toList());
 		Assert.assertEquals(map, group);
@@ -167,10 +179,13 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testPartitioning() {
 		final List<Integer> list = asList(1, 2, 3);
-		final Map<Boolean, List<Integer>> map = new HashMap<Boolean, List<Integer>>() {{
-			put(Boolean.TRUE, singletonList(2));
-			put(Boolean.FALSE, asList(1, 3));
-		}};
+		final Map<Boolean, List<Integer>> map = new HashMap<Boolean, List<Integer>>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put(Boolean.TRUE, singletonList(2));
+				put(Boolean.FALSE, asList(1, 3));
+			}
+		};
 
 		Map<Boolean, List<Integer>> partition = wrap(list).partition(t -> (t & 1) == 0, Collectors.toList());
 		Assert.assertEquals(map, partition);
@@ -553,7 +568,7 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testFlatTree() {
-		final Tree root = new Tree(1, asList(new Tree(2, asList(new Tree(3, Collections.emptyList())))));
+		final Tree root = new Tree(1, ListUtil.of(new Tree(2, ListUtil.of(new Tree(3, Collections.emptyList())))));
 		Assert.assertEquals(3L, wrap(root).flatTree(Tree::getChildren, Tree::setChildren).count());
 	}
 
@@ -567,7 +582,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	@Test
 	public void testMapNonNull() {
 		Assert.assertEquals(
-				asList("3"), wrap(null, 2, 3, 4).mapNonNull(t -> ((t & 1) == 0) ? null : String.valueOf(t)).toList()
+				ListUtil.of("3"), wrap(null, 2, 3, 4).mapNonNull(t -> ((t & 1) == 0) ? null : String.valueOf(t)).toList()
 		);
 	}
 
@@ -613,7 +628,9 @@ public class AbstractEnhancedWrappedStreamTest {
 
 	@Test
 	public void testToEntries() {
-		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {{
+		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {
+			private static final long serialVersionUID = 1L;
+			{
 			put(1, 1);
 			put(2, 2);
 			put(3, 3);
@@ -636,7 +653,7 @@ public class AbstractEnhancedWrappedStreamTest {
 		List<String> zip = wrap(orders).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 
-		zip = wrap((Stream<? extends Object>) EasyStream.iterate(1, i -> i + 1)).limit(10).zip(list, (e1, e2) -> e1 + "." + e2).toList();
+		zip = this.wrap((Stream<Integer>) EasyStream.iterate(1, i -> i + 1)).limit(10).zip(list, (e1, e2) -> e1 + "." + e2).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), zip);
 	}
 
@@ -663,15 +680,15 @@ public class AbstractEnhancedWrappedStreamTest {
 	}
 
 	@SafeVarargs
-	private static <T> Wrapper<T> wrap(T... array) {
+	private final <T> Wrapper<T> wrap(final T... array) {
 		return new Wrapper<>(Stream.of(array));
 	}
 
-	private static <T> Wrapper<T> wrap(Iterable<T> iterable) {
+	private <T> Wrapper<T> wrap(final Iterable<T> iterable) {
 		return new Wrapper<>(StreamSupport.stream(iterable.spliterator(), false));
 	}
 
-	private static <T> Wrapper<T> wrap(Stream<T> stream) {
+	private <T> Wrapper<T> wrap(final Stream<T> stream) {
 		return new Wrapper<>(stream);
 	}
 
@@ -683,12 +700,12 @@ public class AbstractEnhancedWrappedStreamTest {
 		 * @param stream 包装的流对象
 		 * @throws NullPointerException 当{@code unwrap}为{@code null}时抛出
 		 */
-		protected Wrapper(Stream<T> stream) {
+		protected Wrapper(final Stream<T> stream) {
 			super(stream);
 		}
 
 		@Override
-		public Wrapper<T> wrap(Stream<T> source) {
+		public Wrapper<T> wrap(final Stream<T> source) {
 			return new Wrapper<>(source);
 		}
 

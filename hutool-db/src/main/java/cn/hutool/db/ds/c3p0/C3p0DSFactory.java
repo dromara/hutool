@@ -46,7 +46,7 @@ public class C3p0DSFactory extends AbstractDSFactory {
 		final Props connProps = new Props();
 		String connValue;
 		for (final String key : KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemoveStr(key);
+			connValue = poolSetting.getAndRemove(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);
 			}

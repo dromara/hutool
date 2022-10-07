@@ -30,7 +30,7 @@ public class Ansi8BitColor implements AnsiElement {
 	 * @param code 颜色代码(0-255)
 	 * @return 前景色ANSI颜色实例
 	 */
-	public static Ansi8BitColor foreground(int code) {
+	public static Ansi8BitColor foreground(final int code) {
 		return new Ansi8BitColor(PREFIX_FORE, code);
 	}
 
@@ -40,7 +40,7 @@ public class Ansi8BitColor implements AnsiElement {
 	 * @param code 颜色代码(0-255)
 	 * @return 背景色ANSI颜色实例
 	 */
-	public static Ansi8BitColor background(int code) {
+	public static Ansi8BitColor background(final int code) {
 		return new Ansi8BitColor(PREFIX_BACK, code);
 	}
 
@@ -52,9 +52,9 @@ public class Ansi8BitColor implements AnsiElement {
 	 *
 	 * @param prefix 前缀
 	 * @param code   颜色代码(0-255)
-	 * @throws IllegalArgumentException 颜色代码不在0~255范围内
+	 * @throws IllegalArgumentException 颜色代码不在 0~255 范围内
 	 */
-	private Ansi8BitColor(String prefix, int code) {
+	private Ansi8BitColor(final String prefix, final int code) {
 		Assert.isTrue(code >= 0 && code <= 255, "Code must be between 0 and 255");
 		this.prefix = prefix;
 		this.code = code;
@@ -95,14 +95,14 @@ public class Ansi8BitColor implements AnsiElement {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		Ansi8BitColor other = (Ansi8BitColor) obj;
+		final Ansi8BitColor other = (Ansi8BitColor) obj;
 		return ObjUtil.equals(this.prefix, other.prefix) && this.code == other.code;
 	}
 

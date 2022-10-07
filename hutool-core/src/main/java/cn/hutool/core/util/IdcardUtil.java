@@ -708,7 +708,7 @@ public class IdcardUtil {
 			case 0:
 				return '1';
 			default:
-				return StrUtil.C_SPACE;
+				return CharUtil.SPACE;
 		}
 	}
 

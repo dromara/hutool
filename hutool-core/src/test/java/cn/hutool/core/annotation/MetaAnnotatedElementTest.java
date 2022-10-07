@@ -111,6 +111,7 @@ public class MetaAnnotatedElementTest {
 			new Annotation[]{ annotation4 },
 			element.getAnnotationsByType(Annotation4.class)
 		);
+		Assert.assertEquals(0, element.getAnnotationsByType(None.class).length);
 	}
 
 	@Test
@@ -121,6 +122,7 @@ public class MetaAnnotatedElementTest {
 			new Annotation[]{ annotation4 },
 			element.getDeclaredAnnotationsByType(Annotation4.class)
 		);
+		Assert.assertEquals(0, element.getDeclaredAnnotationsByType(None.class).length);
 	}
 
 	@Test
@@ -168,6 +170,12 @@ public class MetaAnnotatedElementTest {
 		Assert.assertSame(source, element.getElement());
 	}
 
+	@Annotation4 // 循环引用
+	@Target(ElementType.TYPE_USE)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface None { }
+
+	@Annotation4 // 循环引用
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation1 {

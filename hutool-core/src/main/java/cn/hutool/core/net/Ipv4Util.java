@@ -22,6 +22,9 @@ import java.util.regex.Matcher;
  */
 public class Ipv4Util {
 
+	/**
+	 * 本地IP：127.0.0.1
+	 */
 	public static final String LOCAL_IP = "127.0.0.1";
 
 	/**
@@ -162,9 +165,6 @@ public class Ipv4Util {
 		if (matcher.matches()) {
 			return matchAddress(matcher);
 		}
-//		Validator.validateIpv4(strIP, "Invalid IPv4 address!");
-//		final long[] ip = Convert.convert(long[].class, StrUtil.split(strIP, CharUtil.DOT));
-//		return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
 		throw new IllegalArgumentException("Invalid IPv4 address!");
 	}
 

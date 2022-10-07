@@ -1,12 +1,25 @@
 package cn.hutool.core.reflect;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * 反射工具类
+ *
+ * <p>
+ *     本工具类，v6.x进行了重构，原来{@link ReflectUtil}中的方法大部分被移动到了
+ *     {@link FieldUtil}、{@link MethodUtil}、{@link ModifierUtil}、{@link ConstructorUtil}等中，
+ *     其他相关方法请参考<strong>cn.hutool.core.reflect</strong>包下的类,相关类
+ * </p>
+ * <p>常用方法变更</p>
+ * <ul>
+ *     <li>反射修改属性</li>
+ *     <li>{@code ReflectUtil#setFieldValue(Object, String, Object)} --p {@link FieldUtil#setFieldValue(Object, String, Object)}</li>
+ *     <li>修改private修饰可被外部访问</li>
+ *     <li>{@code ReflectUtil.setAccessible(ReflectUtil.getMethodByName(Xxx.class, "xxxMethodName"))} --p {@link ReflectUtil#setAccessible(AccessibleObject)} --p {@link MethodUtil#getMethodByName(Class, String)} </li>
+ *     <li>移除final属性</li>
+ *     <li>{@code ReflectUtil.removeFinalModify(Field)} --p {@link  ModifierUtil#removeFinalModify(Field)}</li>
+ * </ul>
+ *
  *
  * @author Looly
  * @since 3.0.9
@@ -30,12 +43,6 @@ public class ReflectUtil {
 
 	/**
 	 * 获取jvm定义的Field Descriptors（字段描述）
-	 *
-	 * @param executable 可执行的反射对象
-	 * @return 描述符
-	 * @author VampireAchao
-	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(Object.class.getMethod("hashCode"))                                                                 // "()I"}</li>
@@ -44,9 +51,15 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(ReflectUtil.class.getDeclaredMethod("appendDescriptor", Class.clas, StringBuilder.class))     // "(Ljava/lang/Class;Ljava/lang/StringBuilder;)V"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(ArrayUtil.class.getMethod("isEmpty", Object[].class))                                         // "([Ljava/lang/Object;)Z"}</li>
 	 * </ul>
+	 *
+	 * @param executable 可执行的反射对象
+	 * @return 描述符
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
 	public static String getDescriptor(final Executable executable) {
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(32);
 		stringBuilder.append('(');
 		final Class<?>[] parameters = executable.getParameterTypes();
 		for (final Class<?> parameter : parameters) {
@@ -63,12 +76,6 @@ public class ReflectUtil {
 
 	/**
 	 * 获取类型描述符，这是编译成class文件后的二进制名称
-	 *
-	 * @param clazz 类
-	 * @return 描述字符串
-	 * @author VampireAchao
-	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
-	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 * <p>例：</p>
 	 * <ul>
 	 *     <li>{@code ReflectUtil.getDescriptor(boolean.class)                        "Z"}</li>
@@ -77,9 +84,15 @@ public class ReflectUtil {
 	 *     <li>{@code ReflectUtil.getDescriptor(int.class)                            "I"}</li>
 	 *     <li>{@code ReflectUtil.getDescriptor(Integer.class)                        "Ljava/lang/Integer;"}</li>
 	 * </ul>
+	 *
+	 * @param clazz 类
+	 * @return 描述字符串
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
 	public static String getDescriptor(final Class<?> clazz) {
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(32);
 		Class<?> currentClass;
 		for (currentClass = clazz;
 			 currentClass.isArray();

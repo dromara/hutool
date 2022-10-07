@@ -5,6 +5,7 @@ import cn.hutool.core.date.Month;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;
@@ -102,7 +103,7 @@ public class PartParser {
 	private List<Integer> parseArray(final String value) {
 		final List<Integer> values = new ArrayList<>();
 
-		final List<String> parts = StrUtil.split(value, StrUtil.C_COMMA);
+		final List<String> parts = StrUtil.split(value, CharUtil.COMMA);
 		for (final String part : parts) {
 			ListUtil.addAllIfNotContains(values, parseStep(part));
 		}
@@ -122,7 +123,7 @@ public class PartParser {
 	 * @return List
 	 */
 	private List<Integer> parseStep(final String value) {
-		final List<String> parts = StrUtil.split(value, StrUtil.C_SLASH);
+		final List<String> parts = StrUtil.split(value, CharUtil.SLASH);
 		final int size = parts.size();
 
 		final List<Integer> results;

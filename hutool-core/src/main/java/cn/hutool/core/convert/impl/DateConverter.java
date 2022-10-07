@@ -17,6 +17,9 @@ import java.util.Calendar;
 public class DateConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static final DateConverter INSTANCE = new DateConverter();
 
 	/**

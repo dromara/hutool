@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -83,5 +84,11 @@ public class FileTypeUtilTest {
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		final String type = FileTypeUtil.getType(inputStream);
 		Console.log(type);
+	}
+
+	@Test
+	public void getHexTest() {
+		final String id3 = HexUtil.encodeHexStr("8BPS");
+		Console.log(id3);
 	}
 }

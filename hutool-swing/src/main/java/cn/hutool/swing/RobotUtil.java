@@ -1,8 +1,8 @@
 package cn.hutool.swing;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.swing.clipboard.ClipboardUtil;
 import cn.hutool.swing.img.ImgUtil;
-import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 import java.awt.AWTException;
 import java.awt.Rectangle;

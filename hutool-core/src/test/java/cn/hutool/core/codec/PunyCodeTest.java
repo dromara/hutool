@@ -17,6 +17,14 @@ public class PunyCodeTest {
 	}
 
 	@Test
+	public void encodeDecodeTest2(){
+		// 无需编码和解码
+		String text = "Hutool";
+		String strPunyCode = PunyCode.encode(text);
+		Assert.assertEquals("Hutool", strPunyCode);
+	}
+
+	@Test
 	public void encodeDecodeDomainTest() {
 		// 全中文
 		final String text = "百度.中国";
@@ -32,7 +40,7 @@ public class PunyCodeTest {
 		// 中英文分段
 		final String text = "hutool.中国";
 		final String strPunyCode = PunyCode.encodeDomain(text);
-		Assert.assertEquals("xn--hutool-.xn--fiqs8s", strPunyCode);
+		Assert.assertEquals("hutool.xn--fiqs8s", strPunyCode);
 
 		final String decode = PunyCode.decodeDomain(strPunyCode);
 		Assert.assertEquals(text, decode);
@@ -47,5 +55,14 @@ public class PunyCodeTest {
 
 		final String decode = PunyCode.decodeDomain(strPunyCode);
 		Assert.assertEquals(text, decode);
+	}
+
+	@Test
+	public void encodeEncodeDomainTest2(){
+		String domain = "赵新虎.com";
+		String strPunyCode = PunyCode.encodeDomain(domain);
+		Assert.assertEquals("xn--efvz93e52e.com", strPunyCode);
+		String decode = PunyCode.decodeDomain(strPunyCode);
+		Assert.assertEquals(domain, decode);
 	}
 }

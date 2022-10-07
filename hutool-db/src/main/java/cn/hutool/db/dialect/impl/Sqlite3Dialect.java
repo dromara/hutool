@@ -1,7 +1,7 @@
 package cn.hutool.db.dialect.impl;
 
 import cn.hutool.db.dialect.DialectName;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 /**
  * SqlLite3方言
@@ -12,9 +12,9 @@ public class Sqlite3Dialect extends AnsiSqlDialect{
 	private static final long serialVersionUID = -3527642408849291634L;
 
 	public Sqlite3Dialect() {
-		wrapper = new Wrapper('[', ']');
+		quoteWrapper = new QuoteWrapper('[', ']');
 	}
-	
+
 	@Override
 	public String dialectName() {
 		return DialectName.SQLITE3.name();

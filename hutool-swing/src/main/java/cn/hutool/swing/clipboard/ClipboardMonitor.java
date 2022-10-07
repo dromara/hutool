@@ -1,4 +1,4 @@
-package cn.hutool.core.swing.clipboard;
+package cn.hutool.swing.clipboard;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -17,6 +17,9 @@ import java.util.Set;
  * @since 4.5.6
  */
 public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
+	/**
+	 * 监听器单例
+	 */
 	INSTANCE;
 
 	/** 默认重试此时：10 */

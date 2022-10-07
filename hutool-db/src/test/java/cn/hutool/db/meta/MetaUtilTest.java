@@ -16,7 +16,7 @@ import java.util.List;
  *
  */
 public class MetaUtilTest {
-	DataSource ds = DSFactory.get("test");
+	final DataSource ds = DSFactory.get("test");
 
 	@Test
 	public void getTablesTest() {

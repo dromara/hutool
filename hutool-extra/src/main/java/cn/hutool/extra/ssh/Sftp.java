@@ -473,11 +473,11 @@ public class Sftp extends AbstractFtp {
 	/**
 	 * 将本地文件或者文件夹同步（覆盖）上传到远程路径
 	 *
-	 * @param file       文件或者文件夹
 	 * @param remotePath 远程路径
+	 * @param file       文件或者文件夹
 	 * @since 5.7.6
 	 */
-	public void syncUpload(final File file, final String remotePath) {
+	public void upload(final String remotePath, final File file) {
 		if (false == FileUtil.exist(file)) {
 			return;
 		}
@@ -489,19 +489,22 @@ public class Sftp extends AbstractFtp {
 			for (final File fileItem : files) {
 				if (fileItem.isDirectory()) {
 					final String mkdir = FileUtil.normalize(remotePath + "/" + fileItem.getName());
-					this.syncUpload(fileItem, mkdir);
+					this.upload(mkdir, fileItem);
 				} else {
-					this.syncUpload(fileItem, remotePath);
+					this.uploadFile(remotePath, fileItem);
 				}
 			}
 		} else {
-			this.mkDirs(remotePath);
-			this.upload(remotePath, file);
+			this.uploadFile(remotePath, file);
 		}
 	}
 
 	@Override
-	public boolean upload(final String destPath, final File file) {
+	public boolean uploadFile(final String destPath, final File file) {
+		if(false == FileUtil.isFile(file)){
+			throw new FtpException("[{}] is not a file!", file);
+		}
+		this.mkDirs(destPath);
 		put(FileUtil.getAbsolutePath(file), destPath);
 		return true;
 	}
@@ -521,7 +524,7 @@ public class Sftp extends AbstractFtp {
 	 * @return 是否上传成功
 	 * @since 5.7.16
 	 */
-	public boolean upload(String destPath, final String fileName, final InputStream fileStream) {
+	public boolean uploadFile(String destPath, final String fileName, final InputStream fileStream) {
 		destPath = StrUtil.addSuffixIfNot(destPath, StrUtil.SLASH) + StrUtil.removePrefix(fileName, StrUtil.SLASH);
 		put(fileStream, destPath, null, Mode.OVERWRITE);
 		return true;

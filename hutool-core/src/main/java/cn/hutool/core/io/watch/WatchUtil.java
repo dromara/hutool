@@ -1,7 +1,7 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 
 import java.io.File;
 import java.io.IOException;

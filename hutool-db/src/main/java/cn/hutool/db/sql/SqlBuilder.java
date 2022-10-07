@@ -1,6 +1,6 @@
 package cn.hutool.db.sql;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -39,11 +39,11 @@ public class SqlBuilder implements Builder<String> {
 	/**
 	 * 创建SQL构建器
 	 *
-	 * @param wrapper 包装器
+	 * @param quoteWrapper 包装器
 	 * @return SQL构建器
 	 */
-	public static SqlBuilder of(final Wrapper wrapper) {
-		return new SqlBuilder(wrapper);
+	public static SqlBuilder of(final QuoteWrapper quoteWrapper) {
+		return new SqlBuilder(quoteWrapper);
 	}
 
 	/**
@@ -112,14 +112,14 @@ public class SqlBuilder implements Builder<String> {
 	/**
 	 * 包装器
 	 */
-	private Wrapper wrapper;
+	private QuoteWrapper quoteWrapper;
 
 	// --------------------------------------------------------------- Constructor start
 	public SqlBuilder() {
 	}
 
-	public SqlBuilder(final Wrapper wrapper) {
-		this.wrapper = wrapper;
+	public SqlBuilder(final QuoteWrapper quoteWrapper) {
+		this.quoteWrapper = quoteWrapper;
 	}
 	// --------------------------------------------------------------- Constructor end
 
@@ -172,7 +172,7 @@ public class SqlBuilder implements Builder<String> {
 					placeHolder.append(", ");
 				}
 
-				fieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
+				fieldsPart.append((null != quoteWrapper) ? quoteWrapper.wrap(field) : field);
 				if (isOracle && OracleDialect.isNextVal(value)) {
 					// Oracle的特殊自增键，通过字段名.nextval获得下一个值
 					placeHolder.append(value);
@@ -192,9 +192,9 @@ public class SqlBuilder implements Builder<String> {
 		}
 
 		String tableName = entity.getTableName();
-		if (null != this.wrapper) {
+		if (null != this.quoteWrapper) {
 			// 包装表名 entity = wrapper.wrap(entity);
-			tableName = this.wrapper.wrap(tableName);
+			tableName = this.quoteWrapper.wrap(tableName);
 		}
 		sql.append(tableName)
 				.append(" (").append(fieldsPart).append(") VALUES (")//
@@ -214,9 +214,9 @@ public class SqlBuilder implements Builder<String> {
 			throw new DbRuntimeException("Table name is blank !");
 		}
 
-		if (null != wrapper) {
+		if (null != quoteWrapper) {
 			// 包装表名
-			tableName = wrapper.wrap(tableName);
+			tableName = quoteWrapper.wrap(tableName);
 		}
 
 		sql.append("DELETE FROM ").append(tableName);
@@ -235,9 +235,9 @@ public class SqlBuilder implements Builder<String> {
 		validateEntity(entity);
 
 		String tableName = entity.getTableName();
-		if (null != wrapper) {
+		if (null != quoteWrapper) {
 			// 包装表名
-			tableName = wrapper.wrap(tableName);
+			tableName = quoteWrapper.wrap(tableName);
 		}
 
 		sql.append("UPDATE ").append(tableName).append(" SET ");
@@ -246,7 +246,7 @@ public class SqlBuilder implements Builder<String> {
 				if (paramValues.size() > 0) {
 					sql.append(", ");
 				}
-				sql.append((null != wrapper) ? wrapper.wrap(field) : field).append(" = ? ");
+				sql.append((null != quoteWrapper) ? quoteWrapper.wrap(field) : field).append(" = ? ");
 				this.paramValues.add(value);// 更新不对空做处理，因为存在清空字段的情况
 			}
 		});
@@ -280,9 +280,9 @@ public class SqlBuilder implements Builder<String> {
 		if (CollUtil.isEmpty(fields)) {
 			sql.append("*");
 		} else {
-			if (null != wrapper) {
+			if (null != quoteWrapper) {
 				// 包装字段名
-				fields = wrapper.wrap(fields);
+				fields = quoteWrapper.wrap(fields);
 			}
 			sql.append(CollUtil.join(fields, StrUtil.COMMA));
 		}
@@ -321,9 +321,9 @@ public class SqlBuilder implements Builder<String> {
 			throw new DbRuntimeException("Table name is blank in table names !");
 		}
 
-		if (null != wrapper) {
+		if (null != quoteWrapper) {
 			// 包装表名
-			tableNames = wrapper.wrap(tableNames);
+			tableNames = quoteWrapper.wrap(tableNames);
 		}
 
 		sql.append(" FROM ").append(ArrayUtil.join(tableNames, StrUtil.COMMA));
@@ -369,7 +369,7 @@ public class SqlBuilder implements Builder<String> {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> SqlBuilder in(final String field, final T... values) {
-		sql.append(wrapper.wrap(field)).append(" IN ").append("(").append(ArrayUtil.join(values, StrUtil.COMMA)).append(")");
+		sql.append(quoteWrapper.wrap(field)).append(" IN ").append("(").append(ArrayUtil.join(values, StrUtil.COMMA)).append(")");
 		return this;
 	}
 
@@ -381,9 +381,9 @@ public class SqlBuilder implements Builder<String> {
 	 */
 	public SqlBuilder groupBy(String... fields) {
 		if (ArrayUtil.isNotEmpty(fields)) {
-			if (null != wrapper) {
+			if (null != quoteWrapper) {
 				// 包装字段名
-				fields = wrapper.wrap(fields);
+				fields = quoteWrapper.wrap(fields);
 			}
 
 			sql.append(" GROUP BY ").append(ArrayUtil.join(fields, StrUtil.COMMA));
@@ -436,9 +436,9 @@ public class SqlBuilder implements Builder<String> {
 		boolean isFirst = true;
 		for (final Order order : orders) {
 			field = order.getField();
-			if (null != wrapper) {
+			if (null != quoteWrapper) {
 				// 包装字段名
-				field = wrapper.wrap(field);
+				field = quoteWrapper.wrap(field);
 			}
 			if (StrUtil.isBlank(field)) {
 				continue;
@@ -473,9 +473,9 @@ public class SqlBuilder implements Builder<String> {
 
 		if (null != join) {
 			sql.append(StrUtil.SPACE).append(join).append(" JOIN ");
-			if (null != wrapper) {
+			if (null != quoteWrapper) {
 				// 包装表名
-				tableName = wrapper.wrap(tableName);
+				tableName = quoteWrapper.wrap(tableName);
 			}
 			sql.append(tableName);
 		}
@@ -623,9 +623,9 @@ public class SqlBuilder implements Builder<String> {
 			return StrUtil.EMPTY;
 		}
 
-		if (null != wrapper) {
+		if (null != quoteWrapper) {
 			// 包装字段名
-			conditions = wrapper.wrap(conditions);
+			conditions = quoteWrapper.wrap(conditions);
 		}
 
 		return ConditionBuilder.of(conditions).build(this.paramValues);

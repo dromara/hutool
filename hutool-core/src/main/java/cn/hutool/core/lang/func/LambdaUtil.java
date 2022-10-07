@@ -13,7 +13,6 @@ import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Objects;
 
 /**
  * Lambda相关工具类
@@ -23,33 +22,35 @@ import java.util.Objects;
  */
 public class LambdaUtil {
 
-	private static final WeakConcurrentMap<String, LambdaInfo> CACHE = new WeakConcurrentMap<>();
+	private static final WeakConcurrentMap<Object, LambdaInfo> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
 	 * 传入lambda无参数但含有返回值的情况能够匹配到此方法：
 	 * <ul>
-	 * <li>引用特定对象的实例方法：<pre>{@code
-	 * MyTeacher myTeacher = new MyTeacher();
-	 * Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
-	 * Assert.assertEquals(MyTeacher.class, supplierClass);
-	 * }</pre></li>
-	 * <li>引用静态无参方法：<pre>{@code
-	 * Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
-	 * Assert.assertEquals(MyTeacher.class, staticSupplierClass);
-	 * }</pre></li>
+	 * 		<li>引用特定对象的实例方法：<pre>{@code
+	 * 			MyTeacher myTeacher = new MyTeacher();
+	 * 			Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
+	 * 			Assert.assertEquals(MyTeacher.class, supplierClass);
+	 * 			}</pre>
+	 * 		</li>
+	 * 		<li>引用静态无参方法：<pre>{@code
+	 * 			Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
+	 * 			Assert.assertEquals(MyTeacher.class, staticSupplierClass);
+	 * 			}</pre>
+	 * 		</li>
 	 * </ul>
 	 * 在以下场景无法获取到正确类型
 	 * <pre>{@code
-	 * // 枚举测试，只能获取到枚举类型
-	 * Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum.REF_NONE::ordinal);
-	 * Assert.assertEquals(Enum.class, enumSupplierClass);
-	 * // 调用父类方法，只能获取到父类类型
-	 * Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
-	 * Assert.assertEquals(Entity.class, superSupplierClass);
-	 * // 引用父类静态带参方法，只能获取到父类类型
-	 * Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
-	 * Assert.assertEquals(Entity.class, staticSuperFunctionClass);
+	 * 		// 枚举测试，只能获取到枚举类型
+	 * 		Class<Enum<?>> enumSupplierClass = LambdaUtil.getRealClass(LambdaUtil.LambdaKindEnum.REF_NONE::ordinal);
+	 * 		Assert.assertEquals(Enum.class, enumSupplierClass);
+	 * 		// 调用父类方法，只能获取到父类类型
+	 * 		Class<Entity<?>> superSupplierClass = LambdaUtil.getRealClass(myTeacher::getId);
+	 * 		Assert.assertEquals(Entity.class, superSupplierClass);
+	 * 		// 引用父类静态带参方法，只能获取到父类类型
+	 * 		Class<Entity<?>> staticSuperFunctionClass = LambdaUtil.getRealClass(MyTeacher::takeId);
+	 * 		Assert.assertEquals(Entity.class, staticSuperFunctionClass);
 	 * }</pre>
 	 *
 	 * @param func lambda
@@ -61,7 +62,10 @@ public class LambdaUtil {
 	@SuppressWarnings("unchecked")
 	public static <R, T extends Serializable> Class<R> getRealClass(final T func) {
 		final LambdaInfo lambdaInfo = resolve(func);
-		return (Class<R>) Opt.of(lambdaInfo).map(LambdaInfo::getInstantiatedMethodParameterTypes).filter(types -> types.length != 0).map(types -> types[types.length - 1]).orElseGet(lambdaInfo::getClazz);
+		return (Class<R>) Opt.of(lambdaInfo)
+				.map(LambdaInfo::getInstantiatedMethodParameterTypes)
+				.filter(types -> types.length != 0).map(types -> types[types.length - 1])
+				.orElseGet(lambdaInfo::getClazz);
 	}
 
 	/**
@@ -73,16 +77,10 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	public static <T extends Serializable> LambdaInfo resolve(final T func) {
-		return CACHE.computeIfAbsent(func.getClass().getName(), (key) -> {
+		return CACHE.computeIfAbsent(func, (key) -> {
 			final SerializedLambda serializedLambda = _resolve(func);
 			final String methodName = serializedLambda.getImplMethodName();
-			final Class<?> implClass;
-			ClassLoaderUtil.loadClass(serializedLambda.getImplClass().replace("/", "."), true);
-			try {
-				implClass = Class.forName(serializedLambda.getImplClass().replace("/", "."), true, Thread.currentThread().getContextClassLoader());
-			} catch (final ClassNotFoundException e) {
-				throw new UtilException(e);
-			}
+			final Class<?> implClass = ClassLoaderUtil.loadClass(serializedLambda.getImplClass(), true);
 			if ("<init>".equals(methodName)) {
 				for (final Constructor<?> constructor : implClass.getDeclaredConstructors()) {
 					if (ReflectUtil.getDescriptor(constructor).equals(serializedLambda.getImplMethodSignature())) {
@@ -160,7 +158,7 @@ public class LambdaUtil {
 			throw new IllegalArgumentException("Not a lambda expression: " + clazz.getName());
 		}
 		final Object serLambda = MethodUtil.invoke(func, "writeReplace");
-		if (Objects.nonNull(serLambda) && serLambda instanceof SerializedLambda) {
+		if (serLambda instanceof SerializedLambda) {
 			return (SerializedLambda) serLambda;
 		}
 		throw new UtilException("writeReplace result value is not java.lang.invoke.SerializedLambda");

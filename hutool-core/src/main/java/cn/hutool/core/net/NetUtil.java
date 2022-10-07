@@ -48,9 +48,12 @@ import java.util.function.Predicate;
  */
 public class NetUtil {
 
+	/**
+	 * 本地IP
+	 */
 	public final static String LOCAL_IP = Ipv4Util.LOCAL_IP;
 
-	public static String localhostName;
+	private static String localhostName;
 
 	/**
 	 * 默认最小端口，1024
@@ -841,8 +844,7 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获取DNS信息，如TXT信息：
-	 *
+	 * 获取DNS信息，如TXT信息：<br>
 	 * <pre class="code">
 	 *     NetUtil.attrNames("hutool.cn", "TXT")
 	 * </pre>

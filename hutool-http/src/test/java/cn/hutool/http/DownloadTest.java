@@ -9,6 +9,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -187,5 +190,16 @@ public class DownloadTest {
 		} finally {
 			FileUtil.del(file1);
 		}
+	}
+
+	@Test
+	//@Ignore
+	public void downloadTeamViewerTest() throws IOException {
+		// 此URL有3次重定向, 需要请求4次
+		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
+		HttpGlobalConfig.setMaxRedirectCount(20);
+		final Path temp = Files.createTempFile("tmp", ".exe");
+		final File file = HttpUtil.downloadFileFromUrl(url, temp.toFile());
+		Console.log(file.length());
 	}
 }

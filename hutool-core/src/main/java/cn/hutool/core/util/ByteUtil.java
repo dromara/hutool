@@ -29,6 +29,9 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class ByteUtil {
 
+	/**
+	 * 默认字节序：大端在前，小端在后
+	 */
 	public static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
 	/**
 	 * CPU的字节序

@@ -1,4 +1,4 @@
-package cn.hutool.core.img;
+package cn.hutool.swing.img;
 
 import java.awt.Image;
 
@@ -10,15 +10,25 @@ import java.awt.Image;
  */
 public enum ScaleType {
 
-	/** 默认 */
+	/**
+	 * 默认
+	 */
 	DEFAULT(Image.SCALE_DEFAULT),
-	/** 快速 */
+	/**
+	 * 快速
+	 */
 	FAST(Image.SCALE_FAST),
-	/** 平滑 */
+	/**
+	 * 平滑
+	 */
 	SMOOTH(Image.SCALE_SMOOTH),
-	/** 使用 ReplicateScaleFilter 类中包含的图像缩放算法 */
+	/**
+	 * 使用 ReplicateScaleFilter 类中包含的图像缩放算法
+	 */
 	REPLICATE(Image.SCALE_REPLICATE),
-	/** Area Averaging算法 */
+	/**
+	 * Area Averaging算法
+	 */
 	AREA_AVERAGING(Image.SCALE_AREA_AVERAGING);
 
 	/**
@@ -37,6 +47,11 @@ public enum ScaleType {
 
 	private final int value;
 
+	/**
+	 * 获取值
+	 *
+	 * @return 值
+	 */
 	public int getValue() {
 		return this.value;
 	}

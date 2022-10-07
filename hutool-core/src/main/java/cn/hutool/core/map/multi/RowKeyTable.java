@@ -1,6 +1,6 @@
 package cn.hutool.core.map.multi;
 
-import cn.hutool.core.builder.Builder;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.iter.ComputeIter;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.collection.iter.TransIter;

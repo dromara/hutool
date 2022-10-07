@@ -17,7 +17,7 @@ import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.QuoteWrapper;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
@@ -33,6 +33,7 @@ import java.util.Map;
  * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作<br>
  * 提供抽象方法getConnection和closeConnection，用于自定义数据库连接的打开和关闭
  *
+ * @param <R> return this类型
  * @author looly
  */
 public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnectionHolder implements Serializable {
@@ -925,19 +926,19 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @since 4.0.0
 	 */
 	public R setWrapper(final Character wrapperChar) {
-		return setWrapper(new Wrapper(wrapperChar));
+		return setWrapper(new QuoteWrapper(wrapperChar));
 	}
 
 	/**
 	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
 	 *
-	 * @param wrapper 包装器，null表示取消包装
+	 * @param quoteWrapper 包装器，null表示取消包装
 	 * @return this
 	 * @since 4.0.0
 	 */
 	@SuppressWarnings("unchecked")
-	public R setWrapper(final Wrapper wrapper) {
-		this.runner.setWrapper(wrapper);
+	public R setWrapper(final QuoteWrapper quoteWrapper) {
+		this.runner.setWrapper(quoteWrapper);
 		return (R) this;
 	}
 
@@ -949,7 +950,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @since 4.5.7
 	 */
 	public R disableWrapper() {
-		return setWrapper((Wrapper) null);
+		return setWrapper((QuoteWrapper) null);
 	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 

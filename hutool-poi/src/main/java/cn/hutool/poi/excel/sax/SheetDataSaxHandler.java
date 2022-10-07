@@ -20,6 +20,7 @@ import java.util.List;
  * <pre>
  * &lt;sheetData&gt;&lt;/sheetData&gt;
  * </pre>
+ *
  * @since 5.5.3
  */
 public class SheetDataSaxHandler extends DefaultHandler {
@@ -61,7 +62,12 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	// 存储每行的列元素
 	private List<Object> rowCellList = new ArrayList<>();
 
-	public SheetDataSaxHandler(final RowHandler rowHandler){
+	/**
+	 * 构造
+	 *
+	 * @param rowHandler 行处理器
+	 */
+	public SheetDataSaxHandler(final RowHandler rowHandler) {
 		this.rowHandler = rowHandler;
 	}
 
@@ -155,7 +161,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 					lastFormula.append(ch, start, length);
 					break;
 			}
-		} else{
+		} else {
 			// 按理说内容应该为"<v>内容</v>"，但是某些特别的XML内容不在v或f标签中，此处做一些兼容
 			// issue#1303@Github
 			lastContent.append(ch, start, length);

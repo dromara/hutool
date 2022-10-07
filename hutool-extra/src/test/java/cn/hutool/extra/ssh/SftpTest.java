@@ -42,7 +42,7 @@ public class SftpTest {
 	@Test
 	@Ignore
 	public void uploadTest() {
-		sshjSftp.upload("/home/test/temp/", new File("C:\\Users\\akwangl\\Downloads\\temp\\辽宁_20190718_104324.CIME"));
+		sshjSftp.uploadFile("/home/test/temp/", new File("C:\\Users\\akwangl\\Downloads\\temp\\辽宁_20190718_104324.CIME"));
 	}
 
 	@Test

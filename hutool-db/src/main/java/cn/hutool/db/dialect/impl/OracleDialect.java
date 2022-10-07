@@ -35,8 +35,8 @@ public class OracleDialect extends AnsiSqlDialect {
 		return find
 				.insertPreFragment("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")
 				.append(" ) row_ where rownum <= ").append(startEnd[1])//
-				.append(") table_alias")//
-				.append(" where table_alias.rownum_ > ").append(startEnd[0]);//
+				.append(") table_alias_")//
+				.append(" where table_alias_.rownum_ > ").append(startEnd[0]);//
 	}
 
 	@Override

@@ -4,7 +4,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -322,7 +323,7 @@ public class WatchMonitor extends WatchServer {
 			if (null != lastPathEle) {
 				final String lastPathEleStr = lastPathEle.toString();
 				//带有点表示有扩展名，按照未创建的文件对待。Linux下.d的为目录，排除之
-				if (StrUtil.contains(lastPathEleStr, StrUtil.C_DOT) && false == StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
+				if (StrUtil.contains(lastPathEleStr, CharUtil.DOT) && false == StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
 					this.filePath = this.path;
 					this.path = this.filePath.getParent();
 				}

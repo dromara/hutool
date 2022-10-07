@@ -1,16 +1,33 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
  * test for {@link AnnotationUtil}
  */
 public class AnnotationUtilTest {
+
+	@Test
+	public void testGetDeclaredAnnotations() {
+		final Annotation[] annotations = AnnotationUtil.getDeclaredAnnotations(ClassForTest.class);
+		Assert.assertArrayEquals(annotations, ClassForTest.class.getDeclaredAnnotations());
+		Assert.assertSame(annotations, AnnotationUtil.getDeclaredAnnotations(ClassForTest.class));
+
+		AnnotationUtil.clearCaches();
+		Assert.assertNotSame(annotations, AnnotationUtil.getDeclaredAnnotations(ClassForTest.class));
+	}
 
 	@Test
 	public void testToCombination() {
@@ -73,7 +90,7 @@ public class AnnotationUtilTest {
 		final AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
 		final Map<String, Object> valueMap = AnnotationUtil.getAnnotationValueMap(ClassForTest.class, AnnotationForTest.class);
 		Assert.assertNotNull(valueMap);
-		Assert.assertEquals(1, valueMap.size());
+		Assert.assertEquals(2, valueMap.size());
 		Assert.assertEquals(annotation.value(), valueMap.get("value"));
 	}
 
@@ -115,6 +132,27 @@ public class AnnotationUtilTest {
 		Assert.assertEquals(MetaAnnotationForTest.class, annotation.annotationType());
 	}
 
+	@Test
+	public void testGetAnnotationAttributes() {
+		final Method[] methods = AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class);
+		Assert.assertArrayEquals(methods, AnnotationUtil.getAnnotationAttributes(AnnotationForTest.class));
+		Assert.assertEquals(2, methods.length);
+		Assert.assertArrayEquals(AnnotationForTest.class.getDeclaredMethods(), methods);
+	}
+
+	@SneakyThrows
+	@Test
+	public void testIsAnnotationAttribute() {
+		Assert.assertFalse(AnnotationUtil.isAnnotationAttribute(AnnotationForTest.class.getMethod("equals", Object.class)));
+		Assert.assertTrue(AnnotationUtil.isAnnotationAttribute(AnnotationForTest.class.getMethod("value")));
+	}
+
+	@Test
+	public void getAnnotationValueTest2() {
+		final String[] names = AnnotationUtil.getAnnotationValue(ClassForTest.class, AnnotationForTest::names);
+		Assert.assertTrue(ArrayUtil.equals(names, new String[]{"测试1", "测试2"}));
+	}
+
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface MetaAnnotationForTest{
@@ -128,9 +166,10 @@ public class AnnotationUtilTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface AnnotationForTest{
 		String value() default "";
+		String[] names() default "";
 	}
 
-	@AnnotationForTest("foo")
+	@AnnotationForTest(value = "foo", names = {"测试1", "测试2"})
 	private static class ClassForTest{}
 
 }

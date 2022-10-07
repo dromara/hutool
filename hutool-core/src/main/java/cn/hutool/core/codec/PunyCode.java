@@ -85,6 +85,10 @@ public class PunyCode {
 		}
 		// Append delimiter
 		if (b > 0) {
+			if(b == length){
+				// 无需要编码的字符
+				return output.toString();
+			}
 			output.append(DELIMITER);
 		}
 		int h = b;
@@ -158,7 +162,7 @@ public class PunyCode {
 			if (result.length() != 0) {
 				result.append(CharUtil.DOT);
 			}
-			result.append(decode(str));
+			result.append(StrUtil.startWithIgnoreEquals(str, PUNY_CODE_PREFIX) ? decode(str) : str);
 		}
 
 		return result.toString();

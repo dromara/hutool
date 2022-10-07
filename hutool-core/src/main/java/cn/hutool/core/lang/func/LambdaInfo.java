@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.func;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrPool;
@@ -11,28 +12,42 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * 存放lambda信息
+ * 存放lambda信息<br>
+ * 此类是{@link SerializedLambda}信息的扩充和补充类，包括：
+ * <ul>
+ *     <li>实例化后的对象方法参数类型，一般用于方法引用</li>
+ * </ul>
  *
  * @author VampireAchao
  */
 public class LambdaInfo {
 
 	private static final Type[] EMPTY_TYPE = new Type[0];
+	// 实例对象的方法参数类型
 	private final Type[] instantiatedMethodParameterTypes;
+	// 方法或构造的参数类型
 	private final Type[] parameterTypes;
 	private final Type returnType;
+	// 方法名或构造名称
 	private final String name;
 	private final Executable executable;
 	private final Class<?> clazz;
 	private final SerializedLambda lambda;
 
+	/**
+	 * 构造
+	 *
+	 * @param executable 构造对象{@link Constructor}或方法对象{@link Method}
+	 * @param lambda     实现了序列化接口的lambda表达式
+	 */
 	public LambdaInfo(final Executable executable, final SerializedLambda lambda) {
+		Assert.notNull(executable, "executable must be not null!");
 		// return type
 		final boolean isMethod = executable instanceof Method;
 		final boolean isConstructor = executable instanceof Constructor;
 		Assert.isTrue(isMethod || isConstructor, "Unsupported executable type: " + executable.getClass());
 		this.returnType = isMethod ?
-			((Method)executable).getGenericReturnType() : ((Constructor<?>)executable).getDeclaringClass();
+				((Method) executable).getGenericReturnType() : ((Constructor<?>) executable).getDeclaringClass();
 
 		// lambda info
 		this.parameterTypes = executable.getGenericParameterTypes();
@@ -42,15 +57,89 @@ public class LambdaInfo {
 		this.lambda = lambda;
 
 		// types
-		final int index = lambda.getInstantiatedMethodType().indexOf(";)");
-		this.instantiatedMethodParameterTypes = (index > -1) ? getInstantiatedMethodParamTypes(lambda, index) : EMPTY_TYPE;
+		final String instantiatedMethodType = lambda.getInstantiatedMethodType();
+		final int index = instantiatedMethodType.indexOf(";)");
+		this.instantiatedMethodParameterTypes = (index > -1) ?
+				getInstantiatedMethodParamTypes(instantiatedMethodType.substring(1, index + 1)) : EMPTY_TYPE;
+	}
+
+	/**
+	 * 实例方法参数类型
+	 *
+	 * @return 实例方法参数类型
+	 */
+	public Type[] getInstantiatedMethodParameterTypes() {
+		return instantiatedMethodParameterTypes;
+	}
+
+	/**
+	 * 获得构造或方法参数类型列表
+	 *
+	 * @return 参数类型列表
+	 */
+	public Type[] getParameterTypes() {
+		return parameterTypes;
+	}
+
+	/**
+	 * 获取返回值类型（方法引用）
+	 *
+	 * @return 返回值类型
+	 */
+	public Type getReturnType() {
+		return returnType;
+	}
+
+	/**
+	 * 方法或构造名称
+	 *
+	 * @return 方法或构造名称
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 字段名称，主要用于方法名称截取，方法名称必须为getXXX、isXXX、setXXX
+	 *
+	 * @return getter或setter对应的字段名称
+	 */
+	public String getFieldName() {
+		return BeanUtil.getFieldName(getName());
+	}
+
+	/**
+	 * 方法或构造对象
+	 *
+	 * @return 方法或构造对象
+	 */
+	public Executable getExecutable() {
+		return executable;
+	}
+
+	/**
+	 * 方法或构造所在类
+	 *
+	 * @return 方法或构造所在类
+	 */
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+
+	/**
+	 * 获得Lambda表达式对象
+	 *
+	 * @return 获得Lambda表达式对象
+	 */
+	public SerializedLambda getLambda() {
+		return lambda;
 	}
 
 	/**
 	 * 根据lambda对象的方法签名信息，解析获得实际的参数类型
 	 */
-	private Type[] getInstantiatedMethodParamTypes(SerializedLambda lambda, int index) {
-		final String className = lambda.getInstantiatedMethodType().substring(1, index + 1);
+	private static Type[] getInstantiatedMethodParamTypes(final String className) {
 		final String[] instantiatedTypeNames = className.split(";");
 		final Type[] types = new Type[instantiatedTypeNames.length];
 		for (int i = 0; i < instantiatedTypeNames.length; i++) {
@@ -71,33 +160,5 @@ public class LambdaInfo {
 			types[i] = ClassLoaderUtil.loadClass(instantiatedTypeNames[i]);
 		}
 		return types;
-	}
-
-	public Type[] getInstantiatedMethodParameterTypes() {
-		return instantiatedMethodParameterTypes;
-	}
-
-	public Type[] getParameterTypes() {
-		return parameterTypes;
-	}
-
-	public Type getReturnType() {
-		return returnType;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Executable getExecutable() {
-		return executable;
-	}
-
-	public Class<?> getClazz() {
-		return clazz;
-	}
-
-	public SerializedLambda getLambda() {
-		return lambda;
 	}
 }

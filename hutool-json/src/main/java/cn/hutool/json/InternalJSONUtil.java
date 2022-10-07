@@ -91,6 +91,7 @@ public final class InternalJSONUtil {
 					|| object instanceof Calendar
 					|| object instanceof TemporalAccessor
 			) {
+				// 日期类型保存原始类型，用于在writer时自定义转字符串
 				return object;
 			}
 			// 枚举类保存其字符串形式（4.0.2新增）
@@ -432,7 +433,7 @@ public final class InternalJSONUtil {
 			case '\r':
 				return "\\r";
 			default:
-				if (c < StrUtil.C_SPACE || //
+				if (c < CharUtil.SPACE || //
 						(c >= '\u0080' && c <= '\u00a0') || //
 						(c >= '\u2000' && c <= '\u2010') || //
 						(c >= '\u2028' && c <= '\u202F') || //

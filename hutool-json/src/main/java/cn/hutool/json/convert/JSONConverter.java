@@ -41,6 +41,9 @@ import java.util.Map;
  * @since 6.0.0
  */
 public class JSONConverter implements Converter {
+	/**
+	 * 单例
+	 */
 	public static final JSONConverter INSTANCE = new JSONConverter(null);
 
 	static {

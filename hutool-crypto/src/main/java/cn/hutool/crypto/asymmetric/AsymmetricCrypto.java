@@ -289,7 +289,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @since 5.4.3
 	 */
 	public Cipher getCipher() {
-		return this.cipherWrapper.getCipher();
+		return this.cipherWrapper.getRaw();
 	}
 
 	/**
@@ -364,6 +364,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @throws InvalidKeyException                异常KEY错误
 	 */
 	private Cipher initMode(final int mode, final Key key) throws InvalidAlgorithmParameterException, InvalidKeyException {
-		return this.cipherWrapper.initMode(mode, key).getCipher();
+		return this.cipherWrapper.initMode(mode, key).getRaw();
 	}
 }

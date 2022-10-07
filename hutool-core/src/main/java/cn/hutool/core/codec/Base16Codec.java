@@ -13,7 +13,13 @@ import cn.hutool.core.text.StrUtil;
  */
 public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequence, byte[]> {
 
+	/**
+	 * 编码解码器：小写
+	 */
 	public static final Base16Codec CODEC_LOWER = new Base16Codec(true);
+	/**
+	 * 编码解码器：大写
+	 */
 	public static final Base16Codec CODEC_UPPER = new Base16Codec(false);
 
 	private final char[] alphabets;

@@ -490,7 +490,7 @@ public class Condition implements Cloneable, Serializable {
 			}
 		}
 
-		final List<String> strs = StrUtil.split(valueStr, StrUtil.C_SPACE, 2);
+		final List<String> strs = StrUtil.split(valueStr, CharUtil.SPACE, 2);
 		if (strs.size() < 2) {
 			return;
 		}

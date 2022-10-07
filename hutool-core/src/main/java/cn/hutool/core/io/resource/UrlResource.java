@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.net.URLUtil;
+import cn.hutool.core.net.url.URLUtil;
 
 import java.io.File;
 import java.io.InputStream;

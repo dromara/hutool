@@ -7,7 +7,7 @@ import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.cell.setters.CellSetterFactory;
 import cn.hutool.poi.excel.cell.values.ErrorCellValue;
 import cn.hutool.poi.excel.cell.values.NumericCellValue;
-import cn.hutool.poi.excel.editors.TrimEditor;
+import cn.hutool.poi.excel.cell.editors.TrimEditor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;

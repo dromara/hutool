@@ -19,23 +19,31 @@ public class ExcelDateUtil {
 	 */
 	private static final int[] customFormats = new int[]{28, 30, 31, 32, 33, 55, 56, 57, 58};
 
-	public static boolean isDateFormat(final Cell cell){
+	/**
+	 * 是否日期格式
+	 *
+	 * @param cell 单元格
+	 * @return 是否日期格式
+	 */
+	public static boolean isDateFormat(final Cell cell) {
 		return isDateFormat(cell, null);
 	}
 
 	/**
 	 * 判断是否日期格式
-	 * @param cell 单元格
+	 *
+	 * @param cell        单元格
 	 * @param cfEvaluator {@link ConditionalFormattingEvaluator}
 	 * @return 是否日期格式
 	 */
-	public static boolean isDateFormat(final Cell cell, final ConditionalFormattingEvaluator cfEvaluator){
+	public static boolean isDateFormat(final Cell cell, final ConditionalFormattingEvaluator cfEvaluator) {
 		final ExcelNumberFormat nf = ExcelNumberFormat.from(cell, cfEvaluator);
 		return isDateFormat(nf);
 	}
 
 	/**
 	 * 判断是否日期格式
+	 *
 	 * @param numFmt {@link ExcelNumberFormat}
 	 * @return 是否日期格式
 	 */

@@ -98,8 +98,8 @@ public class CompareUtil {
 	 *
 	 * <ul>
 	 *     <li>如需对null友好操作如下</li>
-	 *     <li><code>Comparator.nullsLast(CompareUtil.natural())</code></li>
-	 *     <li><code>Comparator.nullsFirst(CompareUtil.natural())</code></li>
+	 *     <li>{@code Comparator.nullsLast(CompareUtil.natural())}</li>
+	 *     <li>{@code Comparator.nullsFirst(CompareUtil.natural())}</li>
 	 * </ul>
 	 *
 	 * @param <E> 排序节点类型
@@ -115,8 +115,8 @@ public class CompareUtil {
 	 *
 	 * <ul>
 	 *     <li>如需对null友好操作如下</li>
-	 *     <li><code>Comparator.nullsLast(CompareUtil.naturalReverse())</code></li>
-	 *     <li><code>Comparator.nullsFirst(CompareUtil.naturalReverse())</code></li>
+	 *     <li>{@code Comparator.nullsLast(CompareUtil.naturalReverse())}</li>
+	 *     <li>{@code Comparator.nullsFirst(CompareUtil.naturalReverse())}</li>
 	 * </ul>
 	 *
 	 * @param <E> 排序节点类型
@@ -314,7 +314,7 @@ public class CompareUtil {
 	 *
 	 * @param keyExtractor 从对象中提取排序键的函数(参与比较的内容)
 	 * @param atEndIfMiss  如果不在列表中是否排在后边; true:排在后边; false:排在前边
-	 * @param objs         参与排序的数组，数组的元素位置决定了对象的排序先后, 示例：<code>int[] objs = new int[]{3, 2, 1, 4, 5,6};</code>
+	 * @param objs         参与排序的数组，数组的元素位置决定了对象的排序先后, 示例：{@code int[] objs = new int[]{3, 2, 1, 4, 5,6};}
 	 * @param <T>          对象类型
 	 * @param <U>          数组对象类型
 	 * @return 索引比较器

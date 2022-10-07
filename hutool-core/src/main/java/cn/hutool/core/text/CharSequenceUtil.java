@@ -37,6 +37,10 @@ import java.util.function.Supplier;
  */
 public class CharSequenceUtil extends StrChecker {
 
+	/**
+	 * 未找到的的位置表示，用-1表示
+	 * @see Finder#INDEX_NOT_FOUND
+	 */
 	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
 
 	/**
@@ -1737,6 +1741,15 @@ public class CharSequenceUtil extends StrChecker {
 
 	/**
 	 * 切割指定位置之前部分的字符串
+	 * <p>安全的subString,允许：string为null，允许string长度小于toIndexExclude长度</p>
+	 * <pre>{@code
+	 *      Assert.assertEquals(StrUtil.subPre(null, 3), null);
+	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+	 * 		Assert.assertEquals(StrUtil.subPre("abc", 3), "abc");
+	 * 		Assert.assertEquals(StrUtil.subPre("abcd", 3), "abc");
+	 * 		Assert.assertEquals(StrUtil.subPre("abcd", -3), "a");
+	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+	 * }</pre>
 	 *
 	 * @param string         字符串
 	 * @param toIndexExclude 切割到的位置（不包括）
@@ -3366,12 +3379,12 @@ public class CharSequenceUtil extends StrChecker {
 			return originalStr;
 		}
 
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(originalStr.length());
 		for (int i = 0; i < strLength; i++) {
 			if (i >= startInclude && i < endExclude) {
 				stringBuilder.append(replacedChar);
 			} else {
-				stringBuilder.append(new String(strCodePoints, i, 1));
+				stringBuilder.appendCodePoint(strCodePoints[i]);
 			}
 		}
 		return stringBuilder.toString();
@@ -3406,13 +3419,14 @@ public class CharSequenceUtil extends StrChecker {
 			return originalStr;
 		}
 
-		final StringBuilder stringBuilder = new StringBuilder();
+		// 新字符串长度 <= 旧长度 - (被替换区间codePoints数量) + 替换字符串长度
+		final StringBuilder stringBuilder = new StringBuilder(originalStr.length() - (endExclude - startInclude) + replacedStr.length());
 		for (int i = 0; i < startInclude; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
+			stringBuilder.appendCodePoint(strCodePoints[i]);
 		}
 		stringBuilder.append(replacedStr);
 		for (int i = endExclude; i < strLength; i++) {
-			stringBuilder.append(new String(strCodePoints, i, 1));
+			stringBuilder.appendCodePoint(strCodePoints[i]);
 		}
 		return stringBuilder.toString();
 	}
@@ -3420,7 +3434,6 @@ public class CharSequenceUtil extends StrChecker {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 *
 	 * <pre class="code">
 	 *     replace(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"

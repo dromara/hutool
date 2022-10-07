@@ -19,7 +19,7 @@ public class JSONStrFormatter {
 	/**
 	 * 换行符
 	 */
-	private static final char NEW_LINE = StrUtil.C_LF;
+	private static final char NEW_LINE = CharUtil.LF;
 
 	/**
 	 * 返回格式化JSON字符串。

@@ -3,7 +3,7 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.LocalPortGenerater;
+import cn.hutool.core.net.LocalPortGenerator;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
 import com.jcraft.jsch.*;
@@ -31,7 +31,7 @@ public class JschUtil {
 	/**
 	 * 本地端口生成器
 	 */
-	private static final LocalPortGenerater portGenerater = new LocalPortGenerater(10000);
+	private static final LocalPortGenerator portGenerater = new LocalPortGenerator(10000);
 
 	/**
 	 * 生成一个本地端口，用于远程端口映射
@@ -296,15 +296,13 @@ public class JschUtil {
 	 *
 	 * @param session   需要解除端口映射的SSH会话
 	 * @param localPort 需要解除的本地端口
-	 * @return 解除成功与否
 	 */
-	public static boolean unBindPort(final Session session, final int localPort) {
+	public static void unBindPort(final Session session, final int localPort) {
 		try {
 			session.delPortForwardingL(localPort);
 		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		}
-		return true;
 	}
 
 	/**

@@ -17,15 +17,15 @@ public class SettingTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final Setting setting = new Setting("test.setting", true);
 
-		final String driver = setting.getByGroup("driver", "demo");
+		final String driver = setting.getStrByGroup("driver", "demo");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 
 		//本分组变量替换
-		final String user = setting.getByGroup("user", "demo");
+		final String user = setting.getStrByGroup("user", "demo");
 		Assert.assertEquals("rootcom.mysql.jdbc.Driver", user);
 
 		//跨分组变量替换
-		final String user2 = setting.getByGroup("user2", "demo");
+		final String user2 = setting.getStrByGroup("user2", "demo");
 		Assert.assertEquals("rootcom.mysql.jdbc.Driver", user2);
 
 		//默认值测试
@@ -50,9 +50,9 @@ public class SettingTest {
 		setting.setByGroup("user", "group3", "root3");
 		setting.set("user", "root4");
 
-		Assert.assertEquals("root", setting.getByGroup("user", "group1"));
-		Assert.assertEquals("root2", setting.getByGroup("user", "group2"));
-		Assert.assertEquals("root3", setting.getByGroup("user", "group3"));
+		Assert.assertEquals("root", setting.getStrByGroup("user", "group1"));
+		Assert.assertEquals("root2", setting.getStrByGroup("user", "group2"));
+		Assert.assertEquals("root3", setting.getStrByGroup("user", "group3"));
 		Assert.assertEquals("root4", setting.get("user"));
 	}
 

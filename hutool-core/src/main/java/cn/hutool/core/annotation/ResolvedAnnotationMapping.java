@@ -2,8 +2,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.multi.MultiValueMap;
-import cn.hutool.core.map.multi.SetValueMap;
+import cn.hutool.core.map.multi.Graph;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -170,7 +169,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		Arrays.fill(this.resolvedAttributes, NOT_FOUND_INDEX);
 
 		// 若有必要，解析属性
-		// TODO 可能的改进：flag改为枚举，使得可以自行选择：1.只支持属性别名，2.只支持属性覆盖，3.两个都支持，4.两个都不支持
+		// TODO flag改为枚举，使得可以自行选择：1.只支持属性别名，2.只支持属性覆盖，3.两个都支持，4.两个都不支持
 		this.resolved = resolveAttribute && resolveAttributes();
 	}
 
@@ -178,6 +177,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 * 解析属性
 	 */
 	private boolean resolveAttributes() {
+		// TODO 支持处理@PropIgnore，被标记的属性无法被覆写，也不会被别名关联
 		// 解析同一注解中的别名
 		resolveAliasAttributes();
 		// 使用子注解覆写当前注解中的属性
@@ -478,8 +478,8 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	private void resolveAliasAttributes() {
 		final Map<Method, Integer> attributeIndexes = new HashMap<>(attributes.length);
 
+		final Graph<Method> methodGraph = new Graph<>();
 		// 解析被作为别名的关联属性，根据节点关系构建邻接表
-		final MultiValueMap<Method, Method> aliasedMethods = new SetValueMap<>();
 		for (int i = 0; i < attributes.length; i++) {
 			// 获取属性上的@Alias注解
 			final Method attribute = attributes[i];
@@ -491,15 +491,14 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 			// 获取别名属性
 			final Method aliasAttribute = getAliasAttribute(attribute, attributeAnnotation);
 			Objects.requireNonNull(aliasAttribute);
-			aliasedMethods.putValue(aliasAttribute, attribute);
-			aliasedMethods.putValue(attribute, aliasAttribute);
+			methodGraph.putEdge(aliasAttribute, attribute);
 		}
 
 		// 按广度优先遍历邻接表，将属于同一张图上的节点分为一组，并为其建立AliasSet
 		final Set<Method> accessed = new HashSet<>(attributes.length);
 		final Set<Method> group = new LinkedHashSet<>();
 		final Deque<Method> deque = new LinkedList<>();
-		for (final Method target : aliasedMethods.keySet()) {
+		for (final Method target : methodGraph.keySet()) {
 			group.clear();
 			deque.addLast(target);
 			while (!deque.isEmpty()) {
@@ -511,7 +510,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 				accessed.add(curr);
 				// 将其添加到关系组
 				group.add(curr);
-				Collection<Method> aliases = aliasedMethods.get(curr);
+				final Collection<Method> aliases = methodGraph.getAdjacentPoints(curr);
 				if (CollUtil.isNotEmpty(aliases)) {
 					deque.addAll(aliases);
 				}
@@ -525,8 +524,8 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 
 		// 根据AliasSet更新关联的属性
 		Stream.of(aliasSets).filter(Objects::nonNull).forEach(set -> {
-			final int resolvedIndex = set.resolve();
-			set.forEach(index -> resolvedAttributes[index] = resolvedIndex);
+			final int effectiveAttributeIndex = set.determineEffectiveAttribute();
+			set.forEach(index -> resolvedAttributes[index] = effectiveAttributeIndex);
 		});
 	}
 
@@ -616,7 +615,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		 *     <li>若有多个属性具有非默认值，则要求所有的非默认值都必须相等，若符合并返回该首个具有非默认值的属性，否则报错；</li>
 		 * </ul>
 		 */
-		private int resolve() {
+		private int determineEffectiveAttribute() {
 			int resolvedIndex = NOT_FOUND_INDEX;
 			boolean hasNotDef = false;
 			Object lastValue = null;

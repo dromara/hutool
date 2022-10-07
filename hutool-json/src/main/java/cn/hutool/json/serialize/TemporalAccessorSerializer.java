@@ -10,7 +10,12 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAccessor;
 
 /**
- * {@link TemporalAccessor}的JSON自定义序列化实现
+ * {@link TemporalAccessor}的JSON自定义序列化实现，支持包括：<br>
+ * <ul>
+ *     <li>LocalDate</li>
+ *     <li>LocalDateTime</li>
+ *     <li>LocalTime</li>
+ * </ul>
  *
  * @author looly
  * @since 5.7.22
@@ -27,6 +32,11 @@ public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, Te
 
 	private final Class<? extends TemporalAccessor> temporalAccessorClass;
 
+	/**
+	 * 构造
+	 *
+	 * @param temporalAccessorClass TemporalAccessor实现类型
+	 */
 	public TemporalAccessorSerializer(final Class<? extends TemporalAccessor> temporalAccessorClass) {
 		this.temporalAccessorClass = temporalAccessorClass;
 	}

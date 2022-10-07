@@ -1,13 +1,9 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.func.SerFunction;
-import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.*;
@@ -268,92 +264,11 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * <p>将集合转换为树，默认用 {@code parentId == null} 作为顶部，内置一个小递归
-	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
-	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
-	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
-	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
-	 * @param <R>            此处是id、parentId的泛型限制
-	 * @return list 组装好的树 <br>
-	 * eg:
-	 * <pre>{@code
-	 * List<Student> studentTree = EasyStream.of(students).
-	 * 	toTree(Student::getId, Student::getParentId, Student::setChildren);
-	 * }</pre>
-	 */
-	public <R extends Comparable<R>> List<T> toTree(
-		final Function<T, R> idGetter,
-		final Function<T, R> pIdGetter,
-		final BiConsumer<T, List<T>> childrenSetter) {
-		final Map<R, List<T>> pIdValuesMap = group(pIdGetter);
-		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, pIdValuesMap, pIdValuesMap.get(null));
-	}
-
-	/**
-	 * 将集合转换为树，自定义树顶部的判断条件，内置一个小递归(没错，lambda可以写递归)
-	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
-	 *
-	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
-	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
-	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
-	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
-	 * @param <R>             此处是id、parentId的泛型限制
-	 * @return list 组装好的树 <br>
-	 * eg:
-	 * <pre>{@code
-	 * List<Student> studentTree = EasyStream.of(students).
-	 * 	.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
-	 * }</pre>
-	 */
-
-	public <R extends Comparable<R>> List<T> toTree(
-			final Function<T, R> idGetter,
-			final Function<T, R> pIdGetter,
-			final BiConsumer<T, List<T>> childrenSetter,
-			final SerFunction<T, Boolean> parentPredicate) {
-		Objects.requireNonNull(parentPredicate);
-		final List<T> list = toList();
-		final List<T> parents = EasyStream.of(list).filter(e -> Boolean.TRUE.equals(parentPredicate.apply(e))).toList();
-		return getChildrenFromMapByPidAndSet(idGetter, childrenSetter, EasyStream.of(list).group(pIdGetter), parents);
-	}
-
-	/**
-	 * toTree的内联函数，内置一个小递归(没错，lambda可以写递归)
-	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
-	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
-	 * @param childrenSetter children的setter对应的lambda，可以写作 {@code Student::setChildren}
-	 * @param pIdValuesMap   parentId和值组成的map，用来降低复杂度
-	 * @param parents        顶部数据
-	 * @param <R>            此处是id的泛型限制
-	 * @return list 组装好的树
-	 */
-	private <R extends Comparable<R>> List<T> getChildrenFromMapByPidAndSet(
-		final Function<T, R> idGetter,
-		final BiConsumer<T, List<T>> childrenSetter,
-		final Map<R, List<T>> pIdValuesMap,
-		final List<T> parents) {
-		Objects.requireNonNull(idGetter);
-		Objects.requireNonNull(childrenSetter);
-		Objects.requireNonNull(pIdValuesMap);
-		final MutableObj<Consumer<List<T>>> recursiveRef = new MutableObj<>();
-		final Consumer<List<T>> recursive = values -> EasyStream.of(values, isParallel()).forEach(value -> {
-			final List<T> children = pIdValuesMap.get(idGetter.apply(value));
-			childrenSetter.accept(value, children);
-			recursiveRef.get().accept(children);
-		});
-		recursiveRef.set(recursive);
-		recursive.accept(parents);
-		return parents;
-	}
-
-	/**
 	 * 建造者
 	 *
 	 * @author VampireAchao
 	 */
-	public interface Builder<T> extends Consumer<T>, cn.hutool.core.builder.Builder<EasyStream<T>> {
+	public interface Builder<T> extends Consumer<T>, cn.hutool.core.lang.builder.Builder<EasyStream<T>> {
 
 		/**
 		 * Adds an element to the unwrap being built.

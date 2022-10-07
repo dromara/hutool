@@ -30,10 +30,10 @@ public interface SerFunction<T, R> extends Function<T, R>, Serializable {
 	 * @return the function result
 	 */
 	@Override
-	default R apply(T t) {
+	default R apply(final T t) {
 		try {
 			return applying(t);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}

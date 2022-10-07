@@ -15,6 +15,9 @@ import cn.hutool.json.serialize.JSONDeserializer;
 public class JSONDeserializerConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static final JSONDeserializerConverter INSTANCE = new JSONDeserializerConverter();
 
 	@Override

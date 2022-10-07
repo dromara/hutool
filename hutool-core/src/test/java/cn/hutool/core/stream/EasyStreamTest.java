@@ -2,6 +2,7 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.BooleanUtil;
 import lombok.Data;
 import lombok.experimental.Tolerate;
 import org.junit.Assert;
@@ -181,7 +182,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(collect2, distinctBy2);
 
 		Assert.assertEquals(
-			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
+				4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
 		);
 	}
 
@@ -476,7 +477,7 @@ public class EasyStreamTest {
 							Student.builder().id(8L).name("jobob").parentId(5L).build()
 					)
 					// just 4 lambda ,top by condition
-					.toTree(Student::getId, Student::getParentId, Student::setChildren, Student::getMatchParent);
+					.toTree(Student::getId, Student::getParentId, Student::setChildren, s -> BooleanUtil.isTrue(s.getMatchParent()));
 			Assert.assertEquals(asList(
 					Student.builder().id(1L).name("dromara").matchParent(true)
 							.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
@@ -540,7 +541,7 @@ public class EasyStreamTest {
 		private Long id;
 		private Long parentId;
 		private List<Student> children;
-		private Boolean matchParent = false;
+		private Boolean matchParent;
 
 		@Tolerate
 		public Student() {

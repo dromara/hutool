@@ -18,7 +18,7 @@ public class NullOutputStream extends OutputStream {
 	public static final NullOutputStream NULL_OUTPUT_STREAM = new NullOutputStream();
 
 	/**
-	 * 什么也不做，写出到<code>/dev/null</code>.
+	 * 什么也不做，写出到{@code /dev/null}.
 	 *
 	 * @param b 写出的数据
 	 * @param off 开始位置
@@ -30,7 +30,7 @@ public class NullOutputStream extends OutputStream {
 	}
 
 	/**
-	 * 什么也不做，写出到 <code>/dev/null</code>.
+	 * 什么也不做，写出到 {@code /dev/null}.
 	 *
 	 * @param b 写出的数据
 	 */
@@ -40,7 +40,7 @@ public class NullOutputStream extends OutputStream {
 	}
 
 	/**
-	 * 什么也不做，写出到 <code>/dev/null</code>.
+	 * 什么也不做，写出到 {@code /dev/null}.
 	 *
 	 * @param b 写出的数据
 	 * @throws IOException 不抛出

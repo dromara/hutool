@@ -8,6 +8,7 @@ import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
@@ -273,28 +274,28 @@ public class Entity extends Dict {
 	// -------------------------------------------------------------------- Get start
 
 	/**
-	 * 获得Clob类型结果
+	 * 获得Clob类型结果，如果结果类型非Clob，不做转换，直接抛出异常
 	 *
 	 * @param field 参数
 	 * @return Clob
 	 */
 	public Clob getClob(final String field) {
-		return get(field, null);
+		return (Clob) get(field);
 	}
 
 	/**
-	 * 获得Blob类型结果
+	 * 获得Blob类型结果，如果结果类型非Blob，不做转换，直接抛出异常
 	 *
 	 * @param field 参数
 	 * @return Blob
 	 * @since 3.0.6
 	 */
 	public Blob getBlob(final String field) {
-		return get(field, null);
+		return (Blob) get(field);
 	}
 
 	@Override
-	public Time getTime(final String field) {
+	public Time getSqlTime(final String field, final Time defaultValue) {
 		final Object obj = get(field);
 		Time result = null;
 		if (null != obj) {
@@ -305,11 +306,11 @@ public class Entity extends Dict {
 				result = MethodUtil.invoke(obj, "timeValue");
 			}
 		}
-		return result;
+		return ObjUtil.defaultIfNull(result, defaultValue);
 	}
 
 	@Override
-	public Date getDate(final String field) {
+	public Date getDate(final String field, final Date defaultValue) {
 		final Object obj = get(field);
 		Date result = null;
 		if (null != obj) {
@@ -320,11 +321,11 @@ public class Entity extends Dict {
 				result = MethodUtil.invoke(obj, "dateValue");
 			}
 		}
-		return result;
+		return ObjUtil.defaultIfNull(result, defaultValue);
 	}
 
 	@Override
-	public Timestamp getTimestamp(final String field) {
+	public Timestamp getSqlTimestamp(final String field, final Timestamp defaultValue) {
 		final Object obj = get(field);
 		Timestamp result = null;
 		if (null != obj) {
@@ -335,12 +336,12 @@ public class Entity extends Dict {
 				result = MethodUtil.invoke(obj, "timestampValue");
 			}
 		}
-		return result;
+		return ObjUtil.defaultIfNull(result, defaultValue);
 	}
 
 	@Override
-	public String getStr(final String field) {
-		return getStr(field, CharsetUtil.UTF_8);
+	public String getStr(final String field, final String defaultValue) {
+		return getStr(field, CharsetUtil.UTF_8, defaultValue);
 	}
 
 	/**
@@ -350,10 +351,9 @@ public class Entity extends Dict {
 	 * @param field   字段名
 	 * @param charset 编码
 	 * @return 字段对应值
-	 * @since 3.0.6
 	 */
-	public String getStr(final String field, final Charset charset) {
-		final Object obj = get(field);
+	public String getStr(final String field, final Charset charset, final String defaultValue) {
+		final Object obj = getObj(field, defaultValue);
 		if (obj instanceof Clob) {
 			return SqlUtil.clobToStr((Clob) obj);
 		} else if (obj instanceof Blob) {
@@ -362,7 +362,7 @@ public class Entity extends Dict {
 			final RowId rowId = (RowId) obj;
 			return StrUtil.str(rowId.getBytes(), charset);
 		}
-		return super.getStr(field);
+		return super.getStr(field, defaultValue);
 	}
 
 	/**

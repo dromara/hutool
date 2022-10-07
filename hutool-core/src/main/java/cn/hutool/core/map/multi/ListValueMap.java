@@ -22,7 +22,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param mapFactory 创建集合的工厂反方
 	 */
-	public ListValueMap(Supplier<Map<K, Collection<V>>> mapFactory) {
+	public ListValueMap(final Supplier<Map<K, Collection<V>>> mapFactory) {
 		super(mapFactory);
 	}
 
@@ -31,7 +31,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V> {
 	 *
 	 * @param map 提供数据的原始集合
 	 */
-	public ListValueMap(Map<K, Collection<V>> map) {
+	public ListValueMap(final Map<K, Collection<V>> map) {
 		super(map);
 	}
 
