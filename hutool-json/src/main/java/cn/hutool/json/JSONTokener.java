@@ -71,6 +71,7 @@ public class JSONTokener {
 	 *
 	 * @param inputStream InputStream
 	 * @param config      JSON配置
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public JSONTokener(final InputStream inputStream, final JSONConfig config) throws JSONException {
 		this(IoUtil.getUtf8Reader(inputStream), config);
@@ -89,6 +90,8 @@ public class JSONTokener {
 
 	/**
 	 * 将标记回退到第一个字符，重新开始解析新的JSON
+	 *
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public void back() throws JSONException {
 		if (this.usePrevious || this.index <= 0) {
@@ -111,6 +114,7 @@ public class JSONTokener {
 	 * 源字符串是否有更多的字符
 	 *
 	 * @return 如果未达到结尾返回true，否则false
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public boolean more() throws JSONException {
 		this.next();
@@ -272,11 +276,11 @@ public class JSONTokener {
 	}
 
 	/**
-	 * Get the text up but not including the specified character or the end of line, whichever comes first. <br>
 	 * 获得从当前位置直到分隔符（不包括分隔符）或行尾的的所有字符。
 	 *
 	 * @param delimiter 分隔符
 	 * @return 字符串
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public String nextTo(final char delimiter) throws JSONException {
 		final StringBuilder sb = new StringBuilder();
@@ -297,6 +301,7 @@ public class JSONTokener {
 	 *
 	 * @param delimiters A set of delimiter characters.
 	 * @return A string, trimmed.
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public String nextTo(final String delimiters) throws JSONException {
 		char c;
@@ -314,9 +319,9 @@ public class JSONTokener {
 	}
 
 	/**
-	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONObject.NULL
+	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 *
-	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONObject.NULL
+	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 * @throws JSONException 语法错误
 	 */
 	public Object nextValue() throws JSONException {
@@ -360,6 +365,7 @@ public class JSONTokener {
 	 *
 	 * @param to 需要定位的字符
 	 * @return 定位的字符，如果字符未找到返回0
+	 * @throws JSONException IO异常
 	 */
 	public char skipTo(final char to) throws JSONException {
 		char c;
@@ -378,8 +384,8 @@ public class JSONTokener {
 					return c;
 				}
 			} while (c != to);
-		} catch (final IOException exception) {
-			throw new JSONException(exception);
+		} catch (final IOException e) {
+			throw new JSONException(e);
 		}
 		this.back();
 		return c;
@@ -394,43 +400,6 @@ public class JSONTokener {
 	 */
 	public JSONException syntaxError(final String message) {
 		return new JSONException(message + this);
-	}
-
-	/**
-	 * 转为 {@link JSONArray}
-	 *
-	 * @return {@link JSONArray}
-	 */
-	public JSONArray toJSONArray() {
-		final JSONArray jsonArray = new JSONArray(this.config);
-		if (this.nextClean() != '[') {
-			throw this.syntaxError("A JSONArray text must start with '['");
-		}
-		if (this.nextClean() != ']') {
-			this.back();
-			while (true) {
-				if (this.nextClean() == ',') {
-					this.back();
-					jsonArray.add(null);
-				} else {
-					this.back();
-					jsonArray.add(this.nextValue());
-				}
-				switch (this.nextClean()) {
-					case ',':
-						if (this.nextClean() == ']') {
-							return jsonArray;
-						}
-						this.back();
-						break;
-					case ']':
-						return jsonArray;
-					default:
-						throw this.syntaxError("Expected a ',' or ']'");
-				}
-			}
-		}
-		return jsonArray;
 	}
 
 	/**

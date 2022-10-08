@@ -4,6 +4,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
@@ -76,7 +77,7 @@ public class JSONWriter extends Writer {
 		this.writer = writer;
 		this.indentFactor = indentFactor;
 		this.indent = indent;
-		this.config = config;
+		this.config = ObjUtil.defaultIfNull(config, JSONConfig.of());
 	}
 
 	/**
@@ -298,12 +299,21 @@ public class JSONWriter extends Writer {
 	 * @param predicate 过滤修改器
 	 * @return this
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private JSONWriter writeObjValue(final Object value, final Predicate<MutableEntry<Object, Object>> predicate) {
 		final int indent = indentFactor + this.indent;
+
+		// 自定义规则
+		final JSONValueWriter valueWriter = InternalJSONUtil.getValueWriter(value);
+		if(null != valueWriter){
+			valueWriter.write(this, value);
+			return this;
+		}
+
 		if (value == null) {
 			//noinspection resource
 			writeRaw(StrUtil.NULL);
-		} else if (value instanceof JSON) {
+		}else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent, predicate);
 		} else if (value instanceof Number) {
 			NumberValueWriter.INSTANCE.write(this, (Number) value);

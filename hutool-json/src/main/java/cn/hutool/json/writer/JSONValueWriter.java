@@ -1,5 +1,7 @@
 package cn.hutool.json.writer;
 
+import java.io.IOException;
+
 /**
  * JSON的值自定义写出
  *
@@ -14,6 +16,7 @@ public interface JSONValueWriter<T> {
 	 *
 	 * @param writer {@link JSONWriter}
 	 * @param value  被写出的值
+	 * @throws IOException IO异常
 	 */
 	void write(JSONWriter writer, T value);
 }
