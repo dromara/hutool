@@ -295,14 +295,14 @@ public class AbstractEnhancedWrappedStreamTest {
 		Assert.assertEquals(asList(1, 2, 3), elements);
 		Assert.assertEquals(asList(0, 1, 2), indexes);
 
-		final Set<Integer> elements2 = new HashSet<>();
-		final Set<Integer> indexes2 = new HashSet<>();
+		final Set<Integer> elements2 = Collections.synchronizedSet(new HashSet<>());
+		final Set<Integer> indexes2 = Collections.synchronizedSet(new HashSet<>());
 		wrap(1, 2, null).parallel().peekIdx((t, i) -> {
 			elements2.add(t);
 			indexes2.add(i);
 		}).exec();
-		Assert.assertEquals(new HashSet<>(asList(1, null, 2)).toString(), elements2.toString());
-		Assert.assertEquals(new HashSet<>(asList(-1, -1, -1)).toString(), indexes2.toString());
+		Assert.assertEquals(new HashSet<>(asList(1, null, 2)), elements2);
+		Assert.assertEquals(new HashSet<>(asList(-1, -1, -1)), indexes2);
 	}
 
 	@Test
