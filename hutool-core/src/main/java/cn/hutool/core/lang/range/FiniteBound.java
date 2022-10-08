@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.range;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.util.Objects;
 
@@ -93,29 +94,11 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 			return -1;
 		}
 		// 两值不相等，直接比较边界值
-		if (!Objects.equals(getValue(), bound.getValue())) {
+		if (ObjUtil.notEquals(getValue(), bound.getValue())) {
 			return getValue().compareTo(bound.getValue());
 		}
 		// 两边界值相等
 		return compareIfSameBoundValue(bound);
-	}
-
-	/**
-	 * 当两个边界的值不相等时，判断它们在坐标轴上位置的先后顺序
-	 */
-	private int compareIfSameBoundValue(final Bound<T> bound) {
-		final BoundType bt1 = this.getType();
-		final BoundType bt2 = bound.getType();
-		// 两边界类型相同，说明连边界重合
-		if (bt1 == bt2) {
-			return 0;
-		}
-		// 一为左边界，一为右边界，则左边界恒在右边界后
-		if (bt1.isDislocated(bt2)) {
-			return bt1.isLowerBound() ? 1 : -1;
-		}
-		// 都为左边界，则封闭边界在前，若都为右边界，则封闭边界在后
-		return Integer.compare(bt1.getCode(), bt2.getCode());
 	}
 
 	/**
@@ -188,5 +171,23 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 		return CharSequenceUtil.format(
 				"{x | x {} {}}", type.getOperator(), value
 		);
+	}
+
+	/**
+	 * 当两个边界的值不相等时，判断它们在坐标轴上位置的先后顺序
+	 */
+	private int compareIfSameBoundValue(final Bound<T> bound) {
+		final BoundType bt1 = this.getType();
+		final BoundType bt2 = bound.getType();
+		// 两边界类型相同，说明连边界重合
+		if (bt1 == bt2) {
+			return 0;
+		}
+		// 一为左边界，一为右边界，则左边界恒在右边界后
+		if (bt1.isDislocated(bt2)) {
+			return bt1.isLowerBound() ? 1 : -1;
+		}
+		// 都为左边界，则封闭边界在前，若都为右边界，则封闭边界在后
+		return Integer.compare(bt1.getCode(), bt2.getCode());
 	}
 }

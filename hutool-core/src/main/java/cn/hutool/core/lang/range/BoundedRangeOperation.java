@@ -150,8 +150,9 @@ public class BoundedRangeOperation {
 				.orElse(boundedRange);
 	}
 
+	// region ========== 判断交并集 ==========
 	/**
-	 * {@code other}是否与当前区间相交
+	 * {@code boundedRange}是否与{@code other}相交
 	 *
 	 * @param <T>          可比较对象类型
 	 * @param boundedRange 区间
@@ -163,7 +164,7 @@ public class BoundedRangeOperation {
 	}
 
 	/**
-	 * {@code other}是否与当前区间不相交
+	 * {@code boundedRange}是否与{@code other}前区间不相交
 	 *
 	 * @param <T>          可比较对象类型
 	 * @param boundedRange 区间
@@ -176,4 +177,5 @@ public class BoundedRangeOperation {
 		return boundedRange.getLowerBound().compareTo(other.getUpperBound()) > 0
 				|| boundedRange.getUpperBound().compareTo(other.getLowerBound()) < 0;
 	}
+	// endregion
 }

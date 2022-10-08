@@ -299,7 +299,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		// 上界小于下界时为空
 		return compareValue > 0
 				// 上下界的边界值相等，且不为退化区间是为空
-				|| !(low.getType().isClose() && up.getType().isClose());
+				|| false == (low.getType().isClose() && up.getType().isClose());
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * {@code other}是否是当前区间的子集
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isSuperset(final BoundedRange<T> other) {
@@ -358,7 +358,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * {@code other}是否是当前区间的子集
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isProperSuperset(final BoundedRange<T> other) {
@@ -369,7 +369,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * 当前区间是否是{@code other}的子集
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isSubset(final BoundedRange<T> other) {
@@ -380,7 +380,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * 当前区间是否是{@code other}的真子集
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isProperSubset(final BoundedRange<T> other) {
@@ -391,34 +391,21 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * {@code other}是否与当前区间不相交
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isDisjoint(final BoundedRange<T> other) {
-		return getLowerBound().compareTo(other.getUpperBound()) > 0
-				|| getUpperBound().compareTo(other.getLowerBound()) < 0;
+		return BoundedRangeOperation.isDisjoint(this, other);
 	}
 
 	/**
 	 * {@code other}是否与当前区间相交：
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 是否
 	 */
 	public boolean isIntersected(final BoundedRange<T> other) {
-		return !isDisjoint(other);
-	}
-
-	/**
-	 * {@code other}与当前区间是否相等
-	 *
-	 * @param other 另一区间
-	 * @return 是否
-	 */
-	public boolean isEquals(final BoundedRange<T> other) {
-		Objects.requireNonNull(other);
-		return other.getLowerBound().compareTo(getLowerBound()) == 0
-				&& other.getUpperBound().compareTo(getUpperBound()) == 0;
+		return BoundedRangeOperation.isIntersected(this, other);
 	}
 
 	/**
@@ -441,7 +428,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	/**
 	 * 若{@code other}与当前区间相交，则将其与当前区间合并。
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 合并后的新区间，若两区间不相交则返回当前集合
 	 */
 	public BoundedRange<T> unionIfIntersected(final BoundedRange<T> other) {

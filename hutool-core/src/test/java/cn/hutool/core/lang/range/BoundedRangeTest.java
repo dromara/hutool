@@ -54,8 +54,8 @@ public class BoundedRangeTest {
 
 		// isXXX
 		Assert.assertFalse(range.isDisjoint(BoundedRange.open(0, 5)));
-		Assert.assertTrue(range.isEquals(range));
-		Assert.assertFalse(range.isEquals(BoundedRange.open(0, 5)));
+		Assert.assertEquals(range, range);
+		Assert.assertNotEquals(range, BoundedRange.open(0, 5));
 		Assert.assertTrue(range.isIntersected(BoundedRange.open(0, 5)));
 		Assert.assertTrue(range.isIntersected(range));
 		Assert.assertFalse(range.isSubset(BoundedRange.open(0, 5)));
@@ -101,7 +101,7 @@ public class BoundedRangeTest {
 		Assert.assertFalse(range.test(-1));
 
 		// isXXX
-		Assert.assertTrue(range.isEquals(range));
+		Assert.assertEquals(range, range);
 		Assert.assertTrue(range.isDisjoint(BoundedRange.open(-5, 0))); // (-5, 0)
 		Assert.assertTrue(range.isDisjoint(BoundedRange.close(-5, 0))); // [-5, 0]
 		Assert.assertTrue(range.isIntersected(BoundedRange.close(-5, 1))); // [-5, 1]
@@ -142,7 +142,7 @@ public class BoundedRangeTest {
 		Assert.assertFalse(range.test(-1));
 
 		// isXXX
-		Assert.assertTrue(range.isEquals(range));
+		Assert.assertEquals(range, range);
 		Assert.assertTrue(range.isDisjoint(BoundedRange.open(-5, 0))); // (-5, 0)
 		Assert.assertTrue(range.isDisjoint(BoundedRange.close(-5, 0))); // [-5, 0]
 		Assert.assertTrue(range.isIntersected(BoundedRange.open(-5, 1))); // [-5, 1]

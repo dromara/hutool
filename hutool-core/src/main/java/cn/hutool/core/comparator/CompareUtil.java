@@ -352,4 +352,98 @@ public class CompareUtil {
 	public static <T extends Comparable<? super T>> T max(final T t1, final T t2) {
 		return compare(t1, t2) >= 0 ? t1 : t2;
 	}
+
+	/**
+	 * {@code null}安全的检查两个对象是否相同，通过调用{@code compare(c1, c2) == 0}完成
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return 是否相等
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean equals(final T c1, final T c2) {
+		return compare(c1, c2) == 0;
+	}
+
+	/**
+	 * c1是否大于c2，通过调用{@code compare(c1, c2) > 0}完成
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return c1是否大于c2
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean gt(final T c1, final T c2) {
+		return compare(c1, c2) > 0;
+	}
+
+	/**
+	 * c1是否大于或等于c2，通过调用{@code compare(c1, c2) >= 0}完成
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return c1是否大于或等于c2
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean ge(final T c1, final T c2) {
+		return compare(c1, c2) >= 0;
+	}
+
+	/**
+	 * c1是否大小于c2，通过调用{@code compare(c1, c2) < 0}完成
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return c1是否小于c2
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean lt(final T c1, final T c2) {
+		return compare(c1, c2) < 0;
+	}
+
+	/**
+	 * c1是否小于或等于c2，通过调用{@code compare(c1, c2) <= 0}完成
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return c1是否小于或等于c2
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean le(final T c1, final T c2) {
+		return compare(c1, c2) <= 0;
+	}
+
+	/**
+	 * 给定的{@code value}是否在{@code c1}和{@code c2}的范围内<br>
+	 * 即 {@code min(c1,c2) <= value <= max(c1,c2)}
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param value 检查的对象，可以为{@code null}
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return 给定的{@code value}是否在{@code c1}和{@code c2}的范围内
+	 */
+	public static <T extends Comparable<? super T>> boolean isIn(final T value, final T c1, final T c2) {
+		return ge(value, min(c1, c2)) && le(value, max(c1, c2));
+	}
+
+	/**
+	 * 给定的{@code value}是否在{@code c1}和{@code c2}的范围内，但是不包括边界<br>
+	 * 即 {@code min(c1,c2) < value < max(c1,c2)}
+	 *
+	 * @param <T> 被比较对象类型
+	 * @param value 检查的对象，可以为{@code null}
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
+	 * @return c1是否小于或等于c2
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> boolean isInExclusive(final T value, final T c1, final T c2) {
+		return gt(value, min(c1, c2)) && lt(value, max(c1, c2));
+	}
 }
