@@ -301,8 +301,8 @@ public class AbstractEnhancedWrappedStreamTest {
 			elements2.add(t);
 			indexes2.add(i);
 		}).exec();
-		Assert.assertEquals(new HashSet<>(asList(1, null, 2)), elements2);
-		Assert.assertEquals(new HashSet<>(asList(-1, -1, -1)), indexes2);
+		Assert.assertEquals(new HashSet<>(asList(1, null, 2)).toString(), elements2.toString());
+		Assert.assertEquals(new HashSet<>(asList(-1, -1, -1)).toString(), indexes2.toString());
 	}
 
 	@Test
