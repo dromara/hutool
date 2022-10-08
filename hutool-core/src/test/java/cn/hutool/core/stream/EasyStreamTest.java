@@ -434,6 +434,8 @@ public class EasyStreamTest {
 		Consumer<Object> test = o -> {
 			final List<Student> studentTree = EasyStream
 					.of(
+							// 会过滤掉id为null的元素
+							Student.builder().name("top").build(),
 							Student.builder().id(1L).name("dromara").build(),
 							Student.builder().id(2L).name("baomidou").build(),
 							Student.builder().id(3L).name("hutool").parentId(1L).build(),

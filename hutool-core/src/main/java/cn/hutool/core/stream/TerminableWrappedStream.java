@@ -188,7 +188,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId} 会过滤掉id为null的元素
 	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
 	 * @param <R>            此处是id、parentId的泛型限制
@@ -211,7 +211,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * 将集合转换为树，自定义根节点的判断条件
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
-	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId} 会过滤掉id为null的元素
 	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
 	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }

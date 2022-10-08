@@ -373,7 +373,7 @@ public class CollectorUtil {
 	 * <p>将集合转换为树，默认用 {@code parentId == null} 来判断树的根节点
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId} 会过滤掉id为null的元素
 	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
 	 * @param isParallel     是否并行去组装，数据量特别大时使用
@@ -397,7 +397,7 @@ public class CollectorUtil {
 	 * <p>将集合转换为树，默认用 {@code parentId == pidValue} 来判断树的根节点，可以为null
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
-	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId} 会过滤掉id为null的元素
 	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param pidValue       pid的值
 	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
@@ -417,7 +417,7 @@ public class CollectorUtil {
 			final R pidValue,
 			final BiConsumer<T, List<T>> childrenSetter,
 			final boolean isParallel) {
-		return Collectors.collectingAndThen(groupingBy(pIdGetter, Collectors.toList()),
+		return Collectors.collectingAndThen(filtering(e -> idGetter.apply(e) != null, groupingBy(pIdGetter, Collectors.toList())),
 				getChildrenFromMapByPidAndSet(idGetter, pIdValuesMap -> pIdValuesMap.get(pidValue), childrenSetter, isParallel));
 	}
 
@@ -425,7 +425,7 @@ public class CollectorUtil {
 	 * 将集合转换为树，自定义根节点的判断条件
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作
 	 *
-	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param idGetter        id的getter对应的lambda，可以写作 {@code Student::getId} 会过滤掉id为null的元素
 	 * @param pIdGetter       parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
 	 * @param childrenSetter  children的setter对应的lambda，可以写作 {@code Student::setChildren}
 	 * @param parentPredicate 树顶部的判断条件，可以写作 {@code s -> Objects.equals(s.getParentId(),0L) }
@@ -447,21 +447,12 @@ public class CollectorUtil {
 			final Predicate<T> parentPredicate,
 			final boolean isParallel) {
 		final List<T> parents = new ArrayList<>();
-		return Collectors.collectingAndThen(groupingBy(pIdGetter,
-						new SimpleCollector<>(ArrayList::new,
-								(acc, e) -> {
-									if (parentPredicate.test(e)) {
-										parents.add(e);
-									}
-									if (idGetter.apply(e) != null) {
-										acc.add(e);
-									}
-								},
-								(left, right) -> {
-									left.addAll(right);
-									return left;
-								},
-								CH_ID)),
+		return Collectors.collectingAndThen(filtering(e -> {
+					if (parentPredicate.test(e)) {
+						parents.add(e);
+					}
+					return idGetter.apply(e) != null;
+				}, groupingBy(pIdGetter)),
 				getChildrenFromMapByPidAndSet(idGetter, pIdValuesMap -> parents, childrenSetter, isParallel));
 	}
 
