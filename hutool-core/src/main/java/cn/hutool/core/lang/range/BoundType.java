@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.range;
 
 /**
- * 边界类型
+ * 边界类型枚举
  *
  * @author huangchengxing
  * @since 6.0.0
@@ -45,6 +45,9 @@ public enum BoundType {
 
 	/**
 	 * 构造
+	 * @param symbol 符号，如`[`或`(`等
+	 * @param operator 运算符，如`<`等
+	 * @param code 是否为开区间
 	 */
 	BoundType(final String symbol, final String operator, final int code) {
 		this.symbol = symbol;
@@ -85,7 +88,7 @@ public enum BoundType {
 	 * @param boundType 另一边界类型
 	 * @return 是否
 	 */
-	public boolean isDislocated(BoundType boundType) {
+	public boolean isDislocated(final BoundType boundType) {
 		return code * boundType.code < 0;
 	}
 

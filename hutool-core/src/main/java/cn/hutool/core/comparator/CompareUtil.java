@@ -136,7 +136,7 @@ public class CompareUtil {
 	 *     <li>{@code Comparator.nullsFirst(CompareUtil.reverse())}</li>
 	 * </ul>
 	 *
-	 * @param <E> 排序节点类型
+	 * @param <E>        排序节点类型
 	 * @param comparator 排序器
 	 * @return 默认排序器
 	 * @since 6.0.0
@@ -325,5 +325,31 @@ public class CompareUtil {
 		Objects.requireNonNull(keyExtractor);
 		final IndexedComparator<U> indexedComparator = new IndexedComparator<>(atEndIfMiss, objs);
 		return (o1, o2) -> indexedComparator.compare(keyExtractor.apply(o1), keyExtractor.apply(o2));
+	}
+
+	/**
+	 * 取两个值中的最小值，大小相同返回第一个值
+	 *
+	 * @param <T> 值类型
+	 * @param t1  第一个值
+	 * @param t2  第二个值
+	 * @return 最小值
+	 * @since 6.0.0
+	 */
+	public static <T extends Comparable<? super T>> T min(final T t1, final T t2) {
+		return compare(t1, t2) <= 0 ? t1 : t2;
+	}
+
+	/**
+	 * 取两个值中的最大值，大小相同返回第一个值
+	 *
+	 * @param <T> 值类型
+	 * @param t1  第一个值
+	 * @param t2  第二个值
+	 * @return 最大值
+	 * @since 6.0.0
+	 */
+	public static <T extends Comparable<? super T>> T max(final T t1, final T t2) {
+		return compare(t1, t2) >= 0 ? t1 : t2;
 	}
 }
