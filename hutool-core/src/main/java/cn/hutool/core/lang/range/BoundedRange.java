@@ -1,8 +1,6 @@
 package cn.hutool.core.lang.range;
 
-import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Opt;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -54,22 +52,13 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	private static final BoundedRange ALL = new BoundedRange(Bound.noneLowerBound(), Bound.noneUpperBound());
 
 	/**
-	 * 下界
-	 */
-	private final Bound<T> lowerBound;
-
-	/**
-	 * 上界
-	 */
-	private final Bound<T> upperBound;
-
-	/**
 	 * 构建一个上下界皆无限大的区间，即{@code {x | -∞ < x < +∞}}
 	 *
+	 * @param <T> 比较对象类型
 	 * @return 区间
 	 */
 	@SuppressWarnings("unchecked")
-	static <T extends Comparable<? super T>> BoundedRange<T> all() {
+	public static <T extends Comparable<? super T>> BoundedRange<T> all() {
 		return ALL;
 	}
 
@@ -83,7 +72,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws IllegalArgumentException 当创建的区间表示的集合为空时抛出
 	 * @throws NullPointerException     上界或下界为{@code null}时抛出
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> close(final T lowerBound, final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> close(final T lowerBound, final T upperBound) {
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
@@ -103,7 +92,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws IllegalArgumentException 当创建的区间表示的集合为空时抛出
 	 * @throws NullPointerException     上界或下界为{@code null}时抛出
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> open(final T lowerBound, final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> open(final T lowerBound, final T upperBound) {
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
@@ -121,7 +110,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws IllegalArgumentException 当创建的区间表示的集合为空时抛出
 	 * @throws NullPointerException     上界或下界为{@code null}时抛出
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> closeOpen(final T lowerBound, final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> closeOpen(final T lowerBound, final T upperBound) {
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
@@ -142,7 +131,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws IllegalArgumentException 当创建的区间表示的集合为空时抛出
 	 * @throws NullPointerException     上界或下界为{@code null}时抛出
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> openClose(final T lowerBound, final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> openClose(final T lowerBound, final T upperBound) {
 		Objects.requireNonNull(lowerBound);
 		Objects.requireNonNull(upperBound);
 		return checkEmpty(
@@ -162,7 +151,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws NullPointerException 下界为{@code null}时抛出
 	 * @see Bound#toRange()
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> greaterThan(final T lowerBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> greaterThan(final T lowerBound) {
 		return Bound.greaterThan(lowerBound).toRange();
 	}
 
@@ -175,7 +164,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws NullPointerException 下界为{@code null}时抛出
 	 * @see Bound#toRange()
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> atLeast(final T lowerBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> atLeast(final T lowerBound) {
 		return Bound.atLeast(lowerBound).toRange();
 	}
 
@@ -188,7 +177,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws NullPointerException 上界为{@code null}时抛出
 	 * @see Bound#toRange()
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> lessThan(final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> lessThan(final T upperBound) {
 		return Bound.lessThan(upperBound).toRange();
 	}
 
@@ -201,9 +190,19 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @throws NullPointerException 上界为{@code null}时抛出
 	 * @see Bound#toRange()
 	 */
-	static <T extends Comparable<? super T>> BoundedRange<T> atMost(final T upperBound) {
+	public static <T extends Comparable<? super T>> BoundedRange<T> atMost(final T upperBound) {
 		return Bound.atMost(upperBound).toRange();
 	}
+
+	/**
+	 * 下界
+	 */
+	private final Bound<T> lowerBound;
+
+	/**
+	 * 上界
+	 */
+	private final Bound<T> upperBound;
 
 	/**
 	 * 构造
@@ -446,62 +445,37 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 合并后的新区间，若两区间不相交则返回当前集合
 	 */
 	public BoundedRange<T> unionIfIntersected(final BoundedRange<T> other) {
-		Objects.requireNonNull(other);
-		if (isDisjoint(other)) {
-			return this;
-		}
-		return new BoundedRange<>(
-				CompareUtil.min(getLowerBound(), other.getLowerBound()),
-				CompareUtil.max(getUpperBound(), other.getUpperBound())
-		);
+		return BoundedRangeOperation.unionIfIntersected(this, other);
 	}
 
 	/**
 	 * 获得包含当前区间与指定区间的最小的区间
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 包含当前区间与指定区间的最小的区间
 	 */
 	public BoundedRange<T> span(final BoundedRange<T> other) {
-		Objects.requireNonNull(other);
-		return new BoundedRange<>(
-				CompareUtil.min(getLowerBound(), other.getLowerBound()),
-				CompareUtil.max(getUpperBound(), other.getUpperBound())
-		);
+		return BoundedRangeOperation.span(this, other);
 	}
 
 	/**
 	 * 若{@code other}与当前区间不相连，则获得两区间中间的间隔部分
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 代表间隔部分的区间，若两区间相交则返回{@code null}
 	 */
 	public BoundedRange<T> gap(final BoundedRange<T> other) {
-		Objects.requireNonNull(other);
-		if (isIntersected(other)) {
-			return null;
-		}
-		return new BoundedRange<>(
-				CompareUtil.min(getUpperBound(), other.getUpperBound()).negate(),
-				CompareUtil.max(getLowerBound(), other.getLowerBound()).negate()
-		);
+		return BoundedRangeOperation.gap(this, other);
 	}
 
 	/**
 	 * 若{@code other}与当前区间相交，则获得该区间与当前区间的交集
 	 *
-	 * @param other 另一区间
+	 * @param other 另一个区间
 	 * @return 代表交集的区间，若无交集则返回{@code null}
 	 */
 	public BoundedRange<T> intersection(final BoundedRange<T> other) {
-		Objects.requireNonNull(other);
-		if (isDisjoint(other)) {
-			return null;
-		}
-		return new BoundedRange<>(
-				CompareUtil.min(getLowerBound(), other.getLowerBound()),
-				CompareUtil.max(getUpperBound(), other.getUpperBound())
-		);
+		return BoundedRangeOperation.intersection(this, other);
 	}
 
 	/**
@@ -511,10 +485,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 区间
 	 */
 	public BoundedRange<T> subGreatThan(final T min) {
-		return Opt.ofNullable(min)
-				.filter(this)
-				.map(t -> new BoundedRange<>(Bound.greaterThan(t), getUpperBound()))
-				.orElse(this);
+		return BoundedRangeOperation.subGreatThan(this, min);
 	}
 
 	/**
@@ -524,10 +495,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 区间
 	 */
 	public BoundedRange<T> subAtLeast(final T min) {
-		return Opt.ofNullable(min)
-				.filter(this)
-				.map(t -> new BoundedRange<>(Bound.atLeast(t), getUpperBound()))
-				.orElse(this);
+		return BoundedRangeOperation.subAtLeast(this, min);
 	}
 
 	/**
@@ -537,10 +505,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 区间
 	 */
 	public BoundedRange<T> subLessThan(final T max) {
-		return Opt.ofNullable(max)
-				.filter(this)
-				.map(t -> new BoundedRange<>(getLowerBound(), Bound.lessThan(max)))
-				.orElse(this);
+		return BoundedRangeOperation.subLessThan(this, max);
 	}
 
 	/**
@@ -550,10 +515,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 	 * @return 区间
 	 */
 	public BoundedRange<T> subAtMost(final T max) {
-		return Opt.ofNullable(max)
-				.filter(this)
-				.map(t -> new BoundedRange<>(getLowerBound(), Bound.atMost(max)))
-				.orElse(this);
+		return BoundedRangeOperation.subAtMost(this, max);
 	}
 
 	// endregion

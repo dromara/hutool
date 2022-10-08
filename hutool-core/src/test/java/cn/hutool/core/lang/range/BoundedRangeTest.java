@@ -10,7 +10,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testEquals() {
-		BoundedRange<Integer> range = new BoundedRange<>(
+		final BoundedRange<Integer> range = new BoundedRange<>(
 			Bound.greaterThan(0), Bound.lessThan(10)
 		);
 		Assert.assertEquals(range, range);
@@ -25,7 +25,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testHashCode() {
-		int hasCode = new BoundedRange<>(
+		final int hasCode = new BoundedRange<>(
 			Bound.greaterThan(0), Bound.lessThan(10)
 		).hashCode();
 		Assert.assertEquals(hasCode, new BoundedRange<>(
@@ -38,7 +38,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testAll() {
-		BoundedRange<Integer> range = BoundedRange.all();
+		final BoundedRange<Integer> range = BoundedRange.all();
 		Assert.assertEquals("(-∞, +∞)", range.toString());
 
 		// getBound
@@ -83,7 +83,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testOpen() {
-		BoundedRange<Integer> range = BoundedRange.open(0, 5);
+		final BoundedRange<Integer> range = BoundedRange.open(0, 5);
 		Assert.assertEquals("(0, 5)", range.toString());
 
 		// getBound
@@ -125,7 +125,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testClose() {
-		BoundedRange<Integer> range = BoundedRange.close(0, 5);
+		final BoundedRange<Integer> range = BoundedRange.close(0, 5);
 		Assert.assertEquals("[0, 5]", range.toString());
 
 		// getBound
@@ -168,7 +168,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testOpenClose() {
-		BoundedRange<Integer> range = BoundedRange.openClose(0, 5);
+		final BoundedRange<Integer> range = BoundedRange.openClose(0, 5);
 		Assert.assertEquals("(0, 5]", range.toString());
 
 		// getBound
@@ -187,7 +187,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testCloseOpen() {
-		BoundedRange<Integer> range = BoundedRange.closeOpen(0, 5);
+		final BoundedRange<Integer> range = BoundedRange.closeOpen(0, 5);
 		Assert.assertEquals("[0, 5)", range.toString());
 
 		// getBound
@@ -206,7 +206,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testGreatThan() {
-		BoundedRange<Integer> range = BoundedRange.greaterThan(0);
+		final BoundedRange<Integer> range = BoundedRange.greaterThan(0);
 		Assert.assertEquals("(0, +∞)", range.toString());
 
 		// getBound
@@ -225,7 +225,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testAtLeast() {
-		BoundedRange<Integer> range = BoundedRange.atLeast(0);
+		final BoundedRange<Integer> range = BoundedRange.atLeast(0);
 		Assert.assertEquals("[0, +∞)", range.toString());
 
 		// getBound
@@ -244,7 +244,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testLessThan() {
-		BoundedRange<Integer> range = BoundedRange.lessThan(5);
+		final BoundedRange<Integer> range = BoundedRange.lessThan(5);
 		Assert.assertEquals("(-∞, 5)", range.toString());
 
 		// getBound
@@ -263,7 +263,7 @@ public class BoundedRangeTest {
 
 	@Test
 	public void testAtMost() {
-		BoundedRange<Integer> range = BoundedRange.atMost(5);
+		final BoundedRange<Integer> range = BoundedRange.atMost(5);
 		Assert.assertEquals("(-∞, 5]", range.toString());
 
 		// getBound

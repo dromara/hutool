@@ -24,6 +24,13 @@ import java.util.Set;
  */
 public class CollectionOperation<E> {
 
+	/**
+	 * 创建运算对象
+	 *
+	 * @param colls 集合列表
+	 * @param <E>   元素类型
+	 * @return CollectionOperation
+	 */
 	@SafeVarargs
 	public static <E> CollectionOperation<E> of(final Collection<E>... colls) {
 		return new CollectionOperation<>(colls);
@@ -160,14 +167,14 @@ public class CollectionOperation<E> {
 
 		// 任意容器为空, 则返回空集
 		for (final Collection<E> coll : colls) {
-			if(CollUtil.isEmpty(coll)){
+			if (CollUtil.isEmpty(coll)) {
 				return SetUtil.zeroLinked();
 			}
 		}
 
 		final Set<E> result = SetUtil.of(true, colls[0]);
 		for (int i = 1; i < colls.length; i++) {
-			if(CollUtil.isNotEmpty(colls[i])){
+			if (CollUtil.isNotEmpty(colls[i])) {
 				result.retainAll(colls[i]);
 			}
 		}
@@ -215,7 +222,7 @@ public class CollectionOperation<E> {
 	 */
 	public List<E> subtract() {
 		final Collection<E>[] colls = this.colls;
-		if(ArrayUtil.isEmpty(colls)){
+		if (ArrayUtil.isEmpty(colls)) {
 			return ListUtil.zero();
 		}
 		final List<E> result = ListUtil.of(colls[0]);
@@ -226,6 +233,7 @@ public class CollectionOperation<E> {
 	}
 
 	// region private methods
+
 	/**
 	 * 两个集合的并集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
@@ -315,12 +323,12 @@ public class CollectionOperation<E> {
 	 * @return 差集的集合，返回 {@link ArrayList}
 	 */
 	private static <T> Collection<T> _disjunction(final Collection<T> coll1, final Collection<T> coll2) {
-		if(CollUtil.isEmpty(coll1)){
-			if(CollUtil.isEmpty(coll2)){
+		if (CollUtil.isEmpty(coll1)) {
+			if (CollUtil.isEmpty(coll2)) {
 				return ListUtil.zero();
 			}
 			return coll2;
-		} else if(CollUtil.isEmpty(coll2)){
+		} else if (CollUtil.isEmpty(coll2)) {
 			return coll1;
 		}
 

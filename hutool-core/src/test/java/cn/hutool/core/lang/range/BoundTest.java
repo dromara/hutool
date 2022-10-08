@@ -6,29 +6,30 @@ import org.junit.Test;
 /**
  * test for {@link Bound}
  */
+@SuppressWarnings("EqualsWithItself")
 public class BoundTest {
 
 	@Test
 	public void testEquals() {
-		Bound<Integer> bound = new Bound.FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND);
+		final Bound<Integer> bound = new FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND);
 		Assert.assertEquals(bound, bound);
-		Assert.assertEquals(bound, new Bound.FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND));
-		Assert.assertNotEquals(bound, new Bound.FiniteBound<>(2, BoundType.OPEN_UPPER_BOUND));
-		Assert.assertNotEquals(bound, new Bound.FiniteBound<>(1, BoundType.OPEN_LOWER_BOUND));
+		Assert.assertEquals(bound, new FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND));
+		Assert.assertNotEquals(bound, new FiniteBound<>(2, BoundType.OPEN_UPPER_BOUND));
+		Assert.assertNotEquals(bound, new FiniteBound<>(1, BoundType.OPEN_LOWER_BOUND));
 		Assert.assertNotEquals(bound, null);
 	}
 
 	@Test
 	public void testHashCode() {
-		int hashCode = new Bound.FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND).hashCode();
-		Assert.assertEquals(hashCode, new Bound.FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND).hashCode());
-		Assert.assertNotEquals(hashCode, new Bound.FiniteBound<>(2, BoundType.OPEN_UPPER_BOUND).hashCode());
-		Assert.assertNotEquals(hashCode, new Bound.FiniteBound<>(1, BoundType.OPEN_LOWER_BOUND).hashCode());
+		final int hashCode = new FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND).hashCode();
+		Assert.assertEquals(hashCode, new FiniteBound<>(1, BoundType.OPEN_UPPER_BOUND).hashCode());
+		Assert.assertNotEquals(hashCode, new FiniteBound<>(2, BoundType.OPEN_UPPER_BOUND).hashCode());
+		Assert.assertNotEquals(hashCode, new FiniteBound<>(1, BoundType.OPEN_LOWER_BOUND).hashCode());
 	}
 
 	@Test
 	public void testNoneLowerBound() {
-		Bound<Integer> bound = Bound.noneLowerBound();
+		final Bound<Integer> bound = Bound.noneLowerBound();
 		// negate
 		Assert.assertEquals(bound, bound.negate());
 		// test
@@ -49,7 +50,7 @@ public class BoundTest {
 
 	@Test
 	public void testNoneUpperBound() {
-		Bound<Integer> bound = Bound.noneUpperBound();
+		final Bound<Integer> bound = Bound.noneUpperBound();
 		// negate
 		Assert.assertEquals(bound, bound.negate());
 		// test
