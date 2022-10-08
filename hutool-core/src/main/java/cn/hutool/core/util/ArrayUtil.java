@@ -1394,8 +1394,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	@SafeVarargs
-	public static <T extends Comparable<? super T>> T min(final T... numberArray) {
+	public static <T extends Comparable<? super T>> T min(final T[] numberArray) {
 		return min(numberArray, null);
 	}
 
@@ -1429,8 +1428,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	@SafeVarargs
-	public static <T extends Comparable<? super T>> T max(final T... numberArray) {
+	public static <T extends Comparable<? super T>> T max(final T[] numberArray) {
 		return max(numberArray, null);
 	}
 
