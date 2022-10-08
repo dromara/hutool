@@ -1,12 +1,13 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IssueI5TPSYTest {
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void redirectTest() {
 		final String url = "https://bsxt.gdzwfw.gov.cn/UnifiedReporting/auth/newIndex";
 		final HttpResponse res = HttpUtil.createGet(url).setFollowRedirects(true)
