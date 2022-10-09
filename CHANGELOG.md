@@ -9,6 +9,7 @@
 * 【core   】     DateUtil增加isLastDayOfMonth、getLastDayOfMonth方法（pr#824@Gitee）
 * 【core   】     AnnotationUtil类支持Lambda获取某注解属性值（pr#827@Gitee）
 * 【core   】     CharUtil.isBlank添加Hangul Filler字符（issue#I5UGSQ@Gitee）
+* 【poi    】     优化合并单元格读取（issue#I5UJZ1@Gitee）
 
 ### 🐞Bug修复
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）
