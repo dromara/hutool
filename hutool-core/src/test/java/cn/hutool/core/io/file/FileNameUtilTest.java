@@ -13,4 +13,10 @@ public class FileNameUtilTest {
 		name = FileNameUtil.cleanInvalid("\r1\r\n2\n");
 		Assert.assertEquals("12", name);
 	}
+
+	@Test
+	public void mainNameTest() {
+		final String s = FileNameUtil.mainName("abc.tar.gz");
+		Assert.assertEquals("abc", s);
+	}
 }
