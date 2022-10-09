@@ -179,6 +179,14 @@ public class FileNameUtil {
 		if (0 == len) {
 			return fileName;
 		}
+
+		//issue#2642，多级扩展名的主文件名
+		for (final CharSequence specialSuffix : SPECIAL_SUFFIX) {
+			if(StrUtil.endWith(fileName, "." + specialSuffix)){
+				return StrUtil.subPre(fileName, len - specialSuffix.length() - 1);
+			}
+		}
+
 		if (CharUtil.isFileSeparator(fileName.charAt(len - 1))) {
 			len--;
 		}
