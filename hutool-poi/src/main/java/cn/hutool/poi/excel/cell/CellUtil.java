@@ -466,10 +466,7 @@ public class CellUtil {
 	 * @since 5.4.5
 	 */
 	private static Cell getCellIfMergedRegion(final Sheet sheet, final int x, final int y) {
-		final int sheetMergeCount = sheet.getNumMergedRegions();
-		CellRangeAddress ca;
-		for (int i = 0; i < sheetMergeCount; i++) {
-			ca = sheet.getMergedRegion(i);
+		for (final CellRangeAddress ca : sheet.getMergedRegions()) {
 			if (ca.isInRange(y, x)) {
 				return SheetUtil.getCell(sheet, ca.getFirstRow(), ca.getFirstColumn());
 			}
