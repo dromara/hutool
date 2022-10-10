@@ -58,7 +58,10 @@ public class CharUtilTest {
 
 	@Test
 	public void issueI5UGSQTest(){
-		final Character c = '\u3164';
+		char c = '\u3164';
+		Assert.assertTrue(CharUtil.isBlankChar(c));
+
+		c = '\u2800';
 		Assert.assertTrue(CharUtil.isBlankChar(c));
 	}
 }
