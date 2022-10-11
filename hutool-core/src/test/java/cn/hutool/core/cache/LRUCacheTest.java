@@ -1,6 +1,8 @@
 package cn.hutool.core.cache;
 
 import cn.hutool.core.cache.impl.LRUCache;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
@@ -63,5 +65,17 @@ public class LRUCacheTest {
 			sb2.append(cache.get(i));
 		}
 		Assert.assertEquals("null123456789", sb2.toString());
+	}
+
+	@Test
+	public void issue2647Test(){
+		final LRUCache<String, Integer> cache = CacheUtil.newLRUCache(3,1);
+		cache.setListener((key, value) -> Console.log("Start remove k-v, key:{}, value:{}", key, value));
+
+		for (int i = 0; i < 10; i++) {
+			cache.put(StrUtil.format("key-{}", i), i);
+		}
+
+		Assert.assertEquals(3, cache.size());
 	}
 }
