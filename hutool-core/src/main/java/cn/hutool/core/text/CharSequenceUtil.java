@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * {@link CharSequence} 相关工具类封装
@@ -296,6 +297,17 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 如果字符串是 {@code null}，则返回指定默认字符串，否则返回字符串本身。
+	 *
+	 * @param str        			要转换的字符串
+	 * @param defaultStrSupplier	默认字符串提供者
+	 * @return 字符串本身或指定的默认字符串
+	 */
+	public static String nullToDefault(CharSequence str, Supplier<String> defaultStrSupplier) {
+		return (str == null) ? defaultStrSupplier.get() : str.toString();
+	}
+
+	/**
 	 * 如果字符串是{@code null}或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
@@ -315,6 +327,17 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 如果字符串是{@code null}或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
+	 *
+	 * @param str        			要转换的字符串
+	 * @param defaultStrSupplier	默认字符串提供者
+	 * @return 字符串本身或指定的默认字符串
+	 */
+	public static String emptyToDefault(CharSequence str, Supplier<String> defaultStrSupplier) {
+		return isEmpty(str) ? defaultStrSupplier.get() : str.toString();
+	}
+
+	/**
 	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
 	 *
 	 * <pre>
@@ -331,6 +354,17 @@ public class CharSequenceUtil {
 	 */
 	public static String blankToDefault(CharSequence str, String defaultStr) {
 		return isBlank(str) ? defaultStr : str.toString();
+	}
+
+	/**
+	 * 如果字符串是{@code null}或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
+	 *
+	 * @param str					要转换的字符串
+	 * @param defaultStrSupplier	默认字符串提供者
+	 * @return 字符串本身或指定的默认字符串
+	 */
+	public static String blankToDefault(CharSequence str, Supplier<String> defaultStrSupplier) {
+		return isBlank(str) ? defaultStrSupplier.get() : str.toString();
 	}
 
 	/**

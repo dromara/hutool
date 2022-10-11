@@ -160,4 +160,33 @@ public class CharSequenceUtilTest {
 		a = null;
 		Assert.assertNull(CharSequenceUtil.trimToNull(a));
 	}
+
+	@Test
+	public void nullToDefaultTest() {
+		Assert.assertEquals(CharSequenceUtil.nullToDefault(null, this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.nullToDefault("", this::defaultStrSupplier), "");
+		Assert.assertEquals(CharSequenceUtil.nullToDefault(" ", this::defaultStrSupplier), " ");
+		Assert.assertEquals(CharSequenceUtil.nullToDefault("a", this::defaultStrSupplier), "a");
+	}
+
+	@Test
+	public void emptyToDefaultTest() {
+		Assert.assertEquals(CharSequenceUtil.emptyToDefault(null, this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.emptyToDefault("", this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.emptyToDefault(" ", this::defaultStrSupplier), " ");
+		Assert.assertEquals(CharSequenceUtil.emptyToDefault("a", this::defaultStrSupplier), "a");
+	}
+
+	@Test
+	public void blankToDefaultTest() {
+		Assert.assertEquals(CharSequenceUtil.blankToDefault(null, this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.blankToDefault("", this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.blankToDefault(" ", this::defaultStrSupplier), "Hutool NO.1");
+		Assert.assertEquals(CharSequenceUtil.blankToDefault("a", this::defaultStrSupplier), "a");
+	}
+
+	private String defaultStrSupplier() {
+		System.out.println("我被执行了");
+		return "Hutool NO.1";
+	}
 }
