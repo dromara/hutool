@@ -126,7 +126,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
-	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
+	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000L
 	 *
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
