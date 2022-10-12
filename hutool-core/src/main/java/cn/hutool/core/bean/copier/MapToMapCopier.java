@@ -49,7 +49,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 				return;
 			}
 			// 忽略空值
-			if (false == copyOptions.ignoreNullValue && sValue == null) {
+			if (true == copyOptions.ignoreNullValue && sValue == null) {
 				return;
 			}
 
