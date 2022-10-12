@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Map转换单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -18,23 +18,23 @@ public class MapConvertTest {
 
 	@Test
 	public void beanToMapTest() {
-		User user = new User();
+		final User user = new User();
 		user.setName("AAA");
 		user.setAge(45);
 
-		HashMap<?, ?> map = Convert.convert(HashMap.class, user);
+		final HashMap<?, ?> map = Convert.convert(HashMap.class, user);
 		Assert.assertEquals("AAA", map.get("name"));
 		Assert.assertEquals(45, map.get("age"));
 	}
 
 	@Test
 	public void mapToMapTest() {
-		Map<String, Object> srcMap = MapBuilder
+		final Map<String, Object> srcMap = MapBuilder
 				.create(new HashMap<String, Object>())
 				.put("name", "AAA")
 				.put("age", 45).map();
 
-		LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
+		final LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
 		Assert.assertEquals("AAA", map.get("name"));
 		Assert.assertEquals(45, map.get("age"));
 	}
@@ -47,7 +47,7 @@ public class MapConvertTest {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void setName(final String name) {
 			this.name = name;
 		}
 
@@ -55,7 +55,7 @@ public class MapConvertTest {
 			return age;
 		}
 
-		public void setAge(int age) {
+		public void setAge(final int age) {
 			this.age = age;
 		}
 	}

@@ -423,6 +423,21 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyPropertiesMapToMapIgnoreNullTest() {
+		// 测试MapToMap
+		final Map<String, Object> p1 = new HashMap<>();
+		p1.put("isSlow", true);
+		p1.put("name", "测试");
+		p1.put("subName", null);
+
+		final Map<String, Object> map = MapUtil.newHashMap();
+		BeanUtil.copyProperties(p1, map, CopyOptions.create().setIgnoreNullValue(true));
+		Assert.assertTrue((Boolean) map.get("isSlow"));
+		Assert.assertEquals("测试", map.get("name"));
+		Assert.assertFalse(map.containsKey("subName"));
+	}
+
+	@Test
 	public void trimBeanStrFieldsTest() {
 		final Person person = new Person();
 		person.setAge(1);

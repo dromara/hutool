@@ -37,6 +37,11 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			if (null == sKey) {
 				return;
 			}
+			// 忽略空值
+			if (true == copyOptions.ignoreNullValue && sValue == null) {
+				return;
+			}
+
 			final String sKeyStr = copyOptions.editFieldName(sKey.toString());
 			// 对key做转换，转换后为null的跳过
 			if (null == sKeyStr) {
@@ -46,10 +51,6 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 			final Object targetValue = target.get(sKeyStr);
 			// 非覆盖模式下，如果目标值存在，则跳过
 			if (false == copyOptions.override && null != targetValue) {
-				return;
-			}
-			// 忽略空值
-			if (true == copyOptions.ignoreNullValue && sValue == null) {
 				return;
 			}
 
