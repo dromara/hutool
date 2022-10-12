@@ -4,3 +4,4 @@ cn.hutool.extra.expression.engine.mvel.MvelEngine
 cn.hutool.extra.expression.engine.jfireel.JfireELEngine
 cn.hutool.extra.expression.engine.spel.SpELEngine
 cn.hutool.extra.expression.engine.rhino.RhinoEngine
+cn.hutool.extra.expression.engine.qlexpress.QLExpressEngine

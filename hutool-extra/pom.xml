@@ -453,7 +453,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.20</version>
+			<version>5.3.23</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -461,6 +461,13 @@
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
 			<version>1.7.14</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>QLExpress</artifactId>
+			<version>3.3.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
