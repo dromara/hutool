@@ -4,6 +4,7 @@ import cn.hutool.core.map.Dict;
 import cn.hutool.extra.expression.engine.jexl.JexlEngine;
 import cn.hutool.extra.expression.engine.jfireel.JfireELEngine;
 import cn.hutool.extra.expression.engine.mvel.MvelEngine;
+import cn.hutool.extra.expression.engine.qlexpress.QLExpressEngine;
 import cn.hutool.extra.expression.engine.rhino.RhinoEngine;
 import cn.hutool.extra.expression.engine.spel.SpELEngine;
 import org.junit.Assert;
@@ -86,6 +87,18 @@ public class ExpressionUtilTest {
 	@Test
 	public void rhinoTest(){
 		final ExpressionEngine engine = new RhinoEngine();
+
+		final Dict dict = Dict.of()
+				.set("a", 100.3)
+				.set("b", 45)
+				.set("c", -199.100);
+		final Object eval = engine.eval("a-(b-c)", dict);
+		Assert.assertEquals(-143.8, (double)eval, 0);
+	}
+
+	@Test
+	public void qlExpressTest(){
+		final ExpressionEngine engine = new QLExpressEngine();
 
 		final Dict dict = Dict.of()
 				.set("a", 100.3)

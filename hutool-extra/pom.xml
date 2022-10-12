@@ -31,7 +31,7 @@
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.7.2</spring-boot.version>
+		<spring-boot.version>2.7.4</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -430,7 +430,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.3.1</version>
+			<version>5.3.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -465,7 +465,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.22</version>
+			<version>5.3.23</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -473,6 +473,13 @@
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
 			<version>1.7.14</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>QLExpress</artifactId>
+			<version>3.3.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
