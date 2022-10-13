@@ -2774,18 +2774,6 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(final byte[] array) {
-		return isSortedASC(array);
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
 	public static boolean isSortedASC(final byte[] array) {
 		if (array == null) {
 			return false;
@@ -2820,18 +2808,6 @@ public class PrimitiveArrayUtil {
 		}
 
 		return true;
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
-	public static boolean isSorted(final short[] array) {
-		return isSortedASC(array);
 	}
 
 	/**
@@ -2886,18 +2862,6 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(final char[] array) {
-		return isSortedASC(array);
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
 	public static boolean isSortedASC(final char[] array) {
 		if (array == null) {
 			return false;
@@ -2932,18 +2896,6 @@ public class PrimitiveArrayUtil {
 		}
 
 		return true;
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
-	public static boolean isSorted(final int[] array) {
-		return isSortedASC(array);
 	}
 
 	/**
@@ -2998,18 +2950,6 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(final long[] array) {
-		return isSortedASC(array);
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
 	public static boolean isSortedASC(final long[] array) {
 		if (array == null) {
 			return false;
@@ -3054,18 +2994,6 @@ public class PrimitiveArrayUtil {
 	 * @author FengBaoheng
 	 * @since 5.5.2
 	 */
-	public static boolean isSorted(final double[] array) {
-		return isSortedASC(array);
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
 	public static boolean isSortedASC(final double[] array) {
 		if (array == null) {
 			return false;
@@ -3100,18 +3028,6 @@ public class PrimitiveArrayUtil {
 		}
 
 		return true;
-	}
-
-	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
-	 *
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
-	 */
-	public static boolean isSorted(final float[] array) {
-		return isSortedASC(array);
 	}
 
 	/**
