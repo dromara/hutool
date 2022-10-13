@@ -292,6 +292,26 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
+	 * 获取端口，如果未自定义返回协议默认端口
+	 *
+	 * @return 端口
+	 */
+	public int getPortWithDefault() {
+		int port = getPort();
+		if (port != -1) {
+			return port;
+		}
+		switch (this.scheme) {
+			case "http":
+				return 80;
+			case "https":
+				return 443;
+			default:
+				return port;
+		}
+	}
+
+	/**
 	 * 设置端口，默认-1
 	 *
 	 * @param port 端口，默认-1
