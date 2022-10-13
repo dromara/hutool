@@ -19,7 +19,7 @@ public class UrlBuilderTest {
 		UrlBuilder builder = UrlBuilder.of();
 		final String buildUrl = builder.setHost("www.hutool.cn").build();
 		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
-		Assert.assertEquals(buildUrl, builder.getPortWithDefault(), 80);
+		Assert.assertEquals(buildUrl, 80, builder.getPortWithDefault());
 	}
 
 	@Test
@@ -28,9 +28,11 @@ public class UrlBuilderTest {
 		String buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).setWithEndTag(false).build();
 		Assert.assertEquals("http://192.168.1.1:8080", buildUrl);
 
-		buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
+		UrlBuilder urlBuilder = UrlBuilder.of();
+		buildUrl = urlBuilder.setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
 				.setWithEndTag(false).build();
 		Assert.assertEquals("http://192.168.1.1:8080?url=http://192.168.1.1/test/1", buildUrl);
+		Assert.assertEquals(buildUrl, 8080, urlBuilder.getPortWithDefault());
 	}
 
 	@Test
