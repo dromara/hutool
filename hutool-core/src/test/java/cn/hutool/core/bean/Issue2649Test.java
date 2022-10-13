@@ -30,8 +30,11 @@ public class Issue2649Test {
 
 		final StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		@SuppressWarnings("unused")
-		final List<View2> view2s = BeanUtil.copyToList(view1List, View2.class);
+
+		for (int i = 0; i < 50; i++) {
+			@SuppressWarnings("unused")
+			final List<View2> view2s = BeanUtil.copyToList(view1List, View2.class);
+		}
 		stopWatch.stop();
 		Console.log(stopWatch.getTotalTimeSeconds());
 	}
