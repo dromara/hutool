@@ -298,17 +298,11 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public int getPortWithDefault() {
 		int port = getPort();
-		if (port != -1) {
+		if (port > 0) {
 			return port;
 		}
-		switch (this.scheme) {
-			case "http":
-				return 80;
-			case "https":
-				return 443;
-			default:
-				return port;
-		}
+		URL url = this.toURL();
+		return url.getDefaultPort();
 	}
 
 	/**
