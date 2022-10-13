@@ -1,7 +1,7 @@
 package cn.hutool.core.net.url;
 
-import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -277,6 +277,21 @@ public final class UrlBuilder implements Builder<String> {
 	 * @return 端口，默认-1
 	 */
 	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * 获取端口，如果未自定义返回协议默认端口
+	 *
+	 * @return 端口
+	 * @since 5.8.9
+	 */
+	public int getPortWithDefault() {
+		int port = getPort();
+		if (port <= 0) {
+			port = toURL().getDefaultPort();
+			return port;
+		}
 		return port;
 	}
 
