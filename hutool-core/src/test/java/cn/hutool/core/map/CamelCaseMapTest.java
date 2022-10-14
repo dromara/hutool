@@ -26,12 +26,12 @@ public class CamelCaseMapTest {
 	public void testSerializable() {
 		CamelCaseMap<String, String> map = new CamelCaseMap<>();
 		map.put("serializable_key", "OK");
-		CamelCaseMap<String, String> unSerializableMap = SerializeUtil.deserialize(SerializeUtil.serialize(map));
-		Assert.assertEquals("OK", unSerializableMap.get("serializable_key"));
-		Assert.assertEquals("OK", unSerializableMap.get("serializableKey"));
-		unSerializableMap.put("serializable_func", "OK");
-		Assert.assertEquals("OK", unSerializableMap.get("serializable_func"));
-		Assert.assertEquals("OK", unSerializableMap.get("serializableFunc"));
+		CamelCaseMap<String, String> deSerializableMap = SerializeUtil.deserialize(SerializeUtil.serialize(map));
+		Assert.assertEquals("OK", deSerializableMap.get("serializable_key"));
+		Assert.assertEquals("OK", deSerializableMap.get("serializableKey"));
+		deSerializableMap.put("serializable_func", "OK");
+		Assert.assertEquals("OK", deSerializableMap.get("serializable_func"));
+		Assert.assertEquals("OK", deSerializableMap.get("serializableFunc"));
 	}
 
 
