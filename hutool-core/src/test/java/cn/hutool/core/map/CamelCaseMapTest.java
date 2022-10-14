@@ -23,7 +23,7 @@ public class CamelCaseMapTest {
 	}
 
 	@Test
-	public void testSerializable() {
+	public void serializableKeyFuncTest() {
 		CamelCaseMap<String, String> map = new CamelCaseMap<>();
 		map.put("serializable_key", "OK");
 		CamelCaseMap<String, String> deSerializableMap = SerializeUtil.deserialize(SerializeUtil.serialize(map));
