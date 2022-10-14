@@ -2,8 +2,10 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 驼峰Key风格的Map<br>
@@ -72,7 +74,8 @@ public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	 * @param emptyMapBuilder Map构造器，必须构造空的Map
 	 */
 	CamelCaseMap(MapBuilder<K, V> emptyMapBuilder) {
-		super(emptyMapBuilder.build(), (key) -> {
+		// issue#I5VRHW@Gitee 使Function可以被序列化
+		super(emptyMapBuilder.build(), (Function<Object, K> & Serializable)(key) -> {
 			if (key instanceof CharSequence) {
 				key = StrUtil.toCamelCase(key.toString());
 			}
