@@ -327,7 +327,7 @@ public class ReflectUtil {
 	 *
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
-	 * @param value     值，当值类型与字段类型不匹配时，会尝试转换
+	 * @param value 值，当值类型与字段类型不匹配时，会尝试转换
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
@@ -544,10 +544,10 @@ public class ReflectUtil {
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
-						//排除协变桥接方法，pr#1965@Github
-						&& (res == null
-						|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null
+					|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
 					res = method;
 				}
 			}
@@ -613,9 +613,9 @@ public class ReflectUtil {
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						//排除协变桥接方法，pr#1965@Github
-						&& (res == null
-						|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null
+					|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
 					res = method;
 				}
 			}
@@ -665,7 +665,7 @@ public class ReflectUtil {
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return METHODS_CACHE.computeIfAbsent(beanClass,
-				() -> getMethodsDirectly(beanClass, true, true));
+			() -> getMethodsDirectly(beanClass, true, true));
 	}
 
 	/**
@@ -715,8 +715,8 @@ public class ReflectUtil {
 	 */
 	public static boolean isEqualsMethod(Method method) {
 		if (method == null ||
-				1 != method.getParameterCount() ||
-				false == "equals".equals(method.getName())) {
+			1 != method.getParameterCount() ||
+			false == "equals".equals(method.getName())) {
 			return false;
 		}
 		return (method.getParameterTypes()[0] == Object.class);
@@ -730,8 +730,8 @@ public class ReflectUtil {
 	 */
 	public static boolean isHashCodeMethod(Method method) {
 		return method != null//
-				&& "hashCode".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "hashCode".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -742,8 +742,8 @@ public class ReflectUtil {
 	 */
 	public static boolean isToStringMethod(Method method) {
 		return method != null//
-				&& "toString".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "toString".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -846,7 +846,7 @@ public class ReflectUtil {
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			final Constructor<T> constructor = getConstructor(clazz);
-			if(null == constructor){
+			if (null == constructor) {
 				throw new UtilException("No constructor for [{}]", clazz);
 			}
 			try {
@@ -1056,7 +1056,7 @@ public class ReflectUtil {
 					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
 					}
