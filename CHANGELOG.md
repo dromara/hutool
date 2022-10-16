@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.9.M1 (2022-10-13)
+# 5.8.9.M1 (2022-10-16)
 
 ### 🐣新特性
 * 【core   】     DateUtil增加isLastDayOfMonth、getLastDayOfMonth方法（pr#824@Gitee）
@@ -12,6 +12,7 @@
 * 【poi    】     优化合并单元格读取（issue#I5UJZ1@Gitee）
 * 【extra  】     增加QLExpress支持（issue#2653@Github）
 * 【core   】     UrlBuilder增加getPortWithDefault方法（pr#835@Gitee）
+* 【core   】     FuncKeyMap的子类，传入可被序列化的keyFunc（pr#838@Gitee）
 
 ### 🐞Bug修复
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）
