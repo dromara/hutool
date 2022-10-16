@@ -23,6 +23,7 @@
 * 【core   】     修复FileNameUtil.mainName二级扩展名获取错误问题（issue#2642@Github）
 * 【cache  】     修复LRUCache移除事件监听失效问题（issue#2647@Github）
 * 【core   】     修复MapToMap中ignoreNullValue无效问题（issue#2647@Github）
+* 【core   】     修复ReflectUtil.invokeRaw方法转换失败抛出异常问题（pr#837@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
