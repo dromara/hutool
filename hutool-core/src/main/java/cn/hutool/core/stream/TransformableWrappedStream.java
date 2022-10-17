@@ -9,19 +9,10 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -51,8 +42,8 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 			final Iterable<U> other,
 			final BiFunction<? super T, ? super U, ? extends R> zipper) {
 		Objects.requireNonNull(zipper);
-		final Map<Integer, T> idxIdentityMap = mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
-		final Map<Integer, U> idxOtherMap = EasyStream.of(other).mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
+		Map<Integer, T> idxIdentityMap = mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
+		Map<Integer, U> idxOtherMap = EasyStream.of(other).mapIdx((e, idx) -> MapUtil.entry(idx, e)).collect(CollectorUtil.entryToMap());
 		if (idxIdentityMap.size() <= idxOtherMap.size()) {
 			return EasyStream.of(idxIdentityMap.keySet(), isParallel()).map(k -> zipper.apply(idxIdentityMap.get(k), idxOtherMap.get(k)));
 		}
@@ -259,8 +250,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	// region ============ peek ============
 
 	/**
-	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
+	 * 返回与指定函数将元素作为参数执行后组成的流。操作带下标
 	 *
 	 * @param action 指定的函数
 	 * @return 返回叠加操作后的FastStream
@@ -278,7 +268,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default S peekIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
 		if (isParallel()) {
-			return peek(e -> action.accept(e, NOT_FOUND_ELEMENT_INDEX));
+			final Map<Integer, T> idxMap = easyStream().toIdxMap();
+			return transform(EasyStream.of(idxMap.entrySet())
+					.parallel(isParallel())
+					.peek(e -> action.accept(e.getValue(), e.getKey()))
+					.map(Map.Entry::getValue));
 		} else {
 			final AtomicInteger index = new AtomicInteger(NOT_FOUND_ELEMENT_INDEX);
 			return peek(e -> action.accept(e, index.incrementAndGet()));
@@ -370,8 +364,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	}
 
 	/**
-	 * 过滤元素，返回与指定断言匹配的元素组成的流，断言带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
+	 * 过滤元素，返回与指定断言匹配的元素组成的流，断言带下标
 	 *
 	 * @param predicate 断言
 	 * @return 返回叠加过滤操作后的流
@@ -379,7 +372,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default S filterIdx(final BiPredicate<? super T, Integer> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
-			return filter(e -> predicate.test(e, NOT_FOUND_ELEMENT_INDEX));
+			final Map<Integer, T> idxMap = easyStream().toIdxMap();
+			return transform(EasyStream.of(idxMap.entrySet())
+					.parallel(isParallel())
+					.filter(e -> predicate.test(e.getValue(), e.getKey()))
+					.map(Map.Entry::getValue));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return filter(e -> predicate.test(e, index.incrementAndGet()));
@@ -423,8 +420,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	}
 
 	/**
-	 * 扩散流操作，可能影响流元素个数，将原有流元素执行mapper操作，返回多个流所有元素组成的流，操作带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
+	 * 扩散流操作，可能影响流元素个数，将原有流元素执行mapper操作，返回多个流所有元素组成的流，操作带下标
 	 *
 	 * @param mapper 操作，返回流
 	 * @param <R>    拆分后流的元素类型
@@ -433,7 +429,10 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default <R> EasyStream<R> flatMapIdx(final BiFunction<? super T, Integer, ? extends Stream<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isParallel()) {
-			return flatMap(e -> mapper.apply(e, NOT_FOUND_ELEMENT_INDEX));
+			final Map<Integer, T> idxMap = easyStream().toIdxMap();
+			return EasyStream.of(idxMap.entrySet())
+					.parallel(isParallel())
+					.flatMap(e -> mapper.apply(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return flatMap(e -> mapper.apply(e, index.incrementAndGet()));
@@ -534,8 +533,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	}
 
 	/**
-	 * 返回与指定函数将元素作为参数执行的结果组成的流，操作带下标，并行流时下标永远为-1
-	 * 这是一个无状态中间操作
+	 * 返回与指定函数将元素作为参数执行的结果组成的流，操作带下标
 	 *
 	 * @param mapper 指定的函数
 	 * @param <R>    函数执行后返回的类型
@@ -544,7 +542,10 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	default <R> EasyStream<R> mapIdx(final BiFunction<? super T, Integer, ? extends R> mapper) {
 		Objects.requireNonNull(mapper);
 		if (isParallel()) {
-			return map(e -> mapper.apply(e, NOT_FOUND_ELEMENT_INDEX));
+			final Map<Integer, T> idxMap = easyStream().toIdxMap();
+			return EasyStream.of(idxMap.entrySet())
+					.parallel(isParallel())
+					.map(e -> mapper.apply(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return map(e -> mapper.apply(e, index.incrementAndGet()));

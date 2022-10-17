@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -142,8 +143,9 @@ public class EasyStreamTest {
 		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		final List<String> mapIndex = EasyStream.of(list).mapIdx((e, i) -> i + 1 + "." + e).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
-		// 并行流时为-1
-		Assert.assertEquals(Arrays.asList(-1, -1, -1), EasyStream.of(1, 2, 3).parallel().mapIdx((e, i) -> i).toList());
+		// 并行流时正常
+		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"),
+				EasyStream.of("dromara", "hutool", "sweet").parallel().mapIdx((e, i) -> i + 1 + "." + e).toList());
 	}
 
 	@Test
@@ -192,8 +194,10 @@ public class EasyStreamTest {
 		final EasyStream.Builder<String> builder = EasyStream.builder();
 		EasyStream.of(list).forEachIdx((e, i) -> builder.accept(i + 1 + "." + e));
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), builder.build().toList());
-		// 并行流时为-1
-		EasyStream.of(1, 2, 3).parallel().forEachIdx((e, i) -> Assert.assertEquals(-1, (Object) i));
+		// 并行流时正常
+		final AtomicInteger total = new AtomicInteger(0);
+		EasyStream.of("dromara", "hutool", "sweet").parallel().forEachIdx((e, i) -> total.addAndGet(i));
+		Assert.assertEquals(3, total.get());
 	}
 
 	@Test
@@ -205,7 +209,7 @@ public class EasyStreamTest {
 
 		final EasyStream.Builder<String> streamBuilder = EasyStream.builder();
 		EasyStream.of(list).parallel().forEachOrderedIdx((e, i) -> streamBuilder.accept(i + 1 + "." + e));
-		Assert.assertEquals(Arrays.asList("0.dromara", "0.hutool", "0.sweet"), streamBuilder.build().toList());
+		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), streamBuilder.build().toList());
 
 	}
 
@@ -214,8 +218,10 @@ public class EasyStreamTest {
 		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		final List<String> mapIndex = EasyStream.of(list).flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList();
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
-		// 并行流时为-1
-		Assert.assertEquals(Arrays.asList(-1, -1, -1), EasyStream.of(1, 2, 3).parallel().flatMapIdx((e, i) -> EasyStream.of(i)).toList());
+		// 并行流时正常
+		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"),
+				EasyStream.of("dromara", "hutool", "sweet").parallel()
+						.flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList());
 	}
 
 	@Test
@@ -269,8 +275,9 @@ public class EasyStreamTest {
 		final List<String> list = Arrays.asList("dromara", "hutool", "sweet");
 		final List<String> filterIndex = EasyStream.of(list).filterIdx((e, i) -> i < 2).toList();
 		Assert.assertEquals(Arrays.asList("dromara", "hutool"), filterIndex);
-		// 并行流时为-1
-		Assert.assertEquals(3L, EasyStream.of(1, 2, 3).parallel().filterIdx((e, i) -> i == -1).count());
+		// 并行流时正常
+		Assert.assertEquals(Arrays.asList("dromara", "hutool"),
+				EasyStream.of("dromara", "hutool", "sweet").parallel().filterIdx((e, i) -> i < 2).toList());
 	}
 
 	@Test
@@ -434,8 +441,6 @@ public class EasyStreamTest {
 		Consumer<Object> test = o -> {
 			final List<Student> studentTree = EasyStream
 					.of(
-							// 会过滤掉id为null的元素
-							Student.builder().name("top").build(),
 							Student.builder().id(1L).name("dromara").build(),
 							Student.builder().id(2L).name("baomidou").build(),
 							Student.builder().id(3L).name("hutool").parentId(1L).build(),

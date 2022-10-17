@@ -295,14 +295,8 @@ public class AbstractEnhancedWrappedStreamTest {
 		Assert.assertEquals(asList(1, 2, 3), elements);
 		Assert.assertEquals(asList(0, 1, 2), indexes);
 
-		final Set<Integer> elements2 = Collections.synchronizedSet(new HashSet<>());
-		final Set<Integer> indexes2 = Collections.synchronizedSet(new HashSet<>());
-		wrap(1, 2, null).parallel().peekIdx((t, i) -> {
-			elements2.add(t);
-			indexes2.add(i);
-		}).exec();
-		Assert.assertEquals(new HashSet<>(asList(1, null, 2)), elements2);
-		Assert.assertEquals(new HashSet<>(asList(-1, -1, -1)), indexes2);
+		wrap("one", "two", "three", "four").parallel().filter(e -> e.length() == 4)
+				.peekIdx((e, i) -> Assert.assertEquals("four:0", e + ":" + i)).exec();
 	}
 
 	@Test
@@ -631,10 +625,11 @@ public class AbstractEnhancedWrappedStreamTest {
 		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {
 			private static final long serialVersionUID = 1L;
 			{
-			put(1, 1);
-			put(2, 2);
-			put(3, 3);
-		}};
+				put(1, 1);
+				put(2, 2);
+				put(3, 3);
+			}
+		};
 		Map<Integer, Integer> map = EasyStream.of(1, 2, 3)
 				.toEntries(Function.identity(), Function.identity())
 				.toMap();
@@ -707,6 +702,18 @@ public class AbstractEnhancedWrappedStreamTest {
 		@Override
 		public Wrapper<T> wrap(final Stream<T> source) {
 			return new Wrapper<>(source);
+		}
+
+		/**
+		 * 转换为子类实现
+		 *
+		 * @param stream 流
+		 * @return 子类实现
+		 */
+		@Override
+		public Wrapper<T> transform(final Stream<T> stream) {
+			this.stream = stream;
+			return this;
 		}
 
 	}
