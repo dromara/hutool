@@ -32,6 +32,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class StreamUtil {
 
+	/**
+	 * @param array 数组
+	 * @param <T>   元素类型
+	 * @return {@link Stream}
+	 */
 	@SafeVarargs
 	public static <T> Stream<T> of(final T... array) {
 		Assert.notNull(array, "Array must be not null!");
@@ -66,8 +71,9 @@ public class StreamUtil {
 
 	/**
 	 * {@link Iterator} 转换为 {@link Stream}
+	 *
 	 * @param iterator 迭代器
-	 * @param <T> 集合元素类型
+	 * @param <T>      集合元素类型
 	 * @return {@link Stream}
 	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
 	 */
@@ -77,9 +83,10 @@ public class StreamUtil {
 
 	/**
 	 * {@link Iterator} 转换为 {@link Stream}
+	 *
 	 * @param iterator 迭代器
 	 * @param parallel 是否并行
-	 * @param <T> 集合元素类型
+	 * @param <T>      集合元素类型
 	 * @return {@link Stream}
 	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
 	 */

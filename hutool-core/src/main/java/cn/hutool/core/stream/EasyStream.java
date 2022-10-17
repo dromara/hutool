@@ -40,6 +40,7 @@ import java.util.stream.StreamSupport;
  * </ul>
  * 不同类型的流可以通过{@link #sequential()}或{@link #parallel()}互相转换。
  *
+ * @param <T> 对象类型
  * @author VampireAchao
  * @author emptypoint
  * @author huangchengxing
@@ -270,7 +271,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @return 子类实现
 	 */
 	@Override
-	public EasyStream<T> transform(Stream<T> stream) {
+	public EasyStream<T> transform(final Stream<T> stream) {
 		this.stream = stream;
 		return this;
 	}
