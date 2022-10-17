@@ -19,7 +19,7 @@ public abstract class AbstractEnhancedWrappedStream<T, S extends AbstractEnhance
 	/**
 	 * 原始流实例
 	 */
-	protected final Stream<T> stream;
+	protected Stream<T> stream;
 
 	/**
 	 * 获取被包装的元素流实例
