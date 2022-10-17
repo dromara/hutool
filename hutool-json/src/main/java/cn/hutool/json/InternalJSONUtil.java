@@ -9,25 +9,26 @@ import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveTreeMap;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
+import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.json.serialize.GlobalSerializeMapping;
+import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.writer.GlobalValueWriterMapping;
+import cn.hutool.json.writer.JSONValueWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -56,9 +57,11 @@ public final class InternalJSONUtil {
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
 	static Object wrap(final Object object, final JSONConfig jsonConfig) {
-		if (object == null) {
-			return null;
+		// null和自定义对象原样存储
+		if (null == object || null != InternalJSONUtil.getValueWriter(object)) {
+			return object;
 		}
+
 		if (object instanceof JSON //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
@@ -369,7 +372,44 @@ public final class InternalJSONUtil {
 		return rawHashMap;
 	}
 
+	/**
+	 * 根据值类型获取{@link JSONValueWriter}，首先判断对象是否实现了{@link JSONValueWriter}接口<br>
+	 * 如果未实现从{@link GlobalValueWriterMapping}中查找全局的writer，否则返回null。
+	 *
+	 * @param value 值
+	 * @param <T>   值类型
+	 * @return {@link JSONValueWriter}
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> JSONValueWriter<T> getValueWriter(final T value) {
+		if (value instanceof JSONValueWriter) {
+			return (JSONValueWriter<T>) value;
+		}
+		// 全局自定义序列化，支持null的自定义写出
+		return (JSONValueWriter<T>) GlobalValueWriterMapping.get(null == value ? null : value.getClass());
+	}
+
+	/**
+	 * 根据目标类型，获取对应的{@link JSONDeserializer}，首先判断是否实现了{@link JSONDeserializer}接口<br>
+	 * 如果未实现从{@link GlobalSerializeMapping}中查找全局的{@link JSONDeserializer}，否则返回null
+	 *
+	 * @param targetType 目标类型
+	 * @param <T> 目标类型
+	 * @return {@link JSONDeserializer}
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> JSONDeserializer<T> getDeserializer(final Type targetType) {
+		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
+		if (null != rawType && JSONDeserializer.class.isAssignableFrom(rawType)) {
+			return (JSONDeserializer<T>) ConstructorUtil.newInstanceIfPossible(rawType);
+		}
+
+		// 全局自定义反序列化（优先级低于实现JSONDeserializer接口）
+		return (JSONDeserializer<T>) GlobalSerializeMapping.getDeserializer(targetType);
+	}
+
 	// --------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>

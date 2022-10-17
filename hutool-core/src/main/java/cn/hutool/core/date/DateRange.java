@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.lang.Range;
+import cn.hutool.core.lang.range.Range;
 
 import java.util.Date;
 

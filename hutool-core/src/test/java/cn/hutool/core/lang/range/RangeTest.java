@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.range;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateRange;

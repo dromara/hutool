@@ -63,6 +63,9 @@ public class ArrayUtilTest {
 	public void newArrayTest() {
 		final String[] newArray = ArrayUtil.newArray(String.class, 3);
 		Assert.assertEquals(3, newArray.length);
+
+		final Object[] newArray2 = ArrayUtil.newArray(3);
+		Assert.assertEquals(3, newArray2.length);
 	}
 
 	@Test
@@ -508,10 +511,20 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void setOrAppendTest(){
-		String[] arr = new String[0];
-		String[] newArr = ArrayUtil.setOrAppend(arr, 0, "Good");// ClassCastException
+	public void setOrAppendTest() {
+		final String[] arr = new String[0];
+		final String[] newArr = ArrayUtil.setOrAppend(arr, 0, "Good");// ClassCastException
 		Assert.assertArrayEquals(new String[]{"Good"}, newArr);
+
+		// 非空数组替换第一个元素
+		int[] arr2 = new int[]{1};
+		int[] o = ArrayUtil.setOrAppend(arr2, 0, 2);
+		Assert.assertArrayEquals(new int[]{2}, o);
+
+		// 空数组追加
+		arr2 = new int[0];
+		o = ArrayUtil.setOrAppend(arr2, 0, 2);
+		Assert.assertArrayEquals(new int[]{2}, o);
 	}
 
 	@Test
@@ -521,5 +534,47 @@ public class ArrayUtilTest {
 		final String[] resultO = (String[]) o;
 		final String[] c = {"d", "e"};
 		Assert.assertTrue(ArrayUtil.containsAll(c, resultO[0], resultO[1]));
+	}
+
+	@Test
+	public void hasNonNullTest() {
+		String[] a = {null, "e"};
+		Assert.assertTrue(ArrayUtil.hasNonNull(a));
+
+		a = new String[]{null, null};
+		Assert.assertFalse(ArrayUtil.hasNonNull(a));
+
+		a = new String[]{"", null};
+		Assert.assertTrue(ArrayUtil.hasNonNull(a));
+
+		a = new String[]{null};
+		Assert.assertFalse(ArrayUtil.hasNonNull(a));
+
+		a = new String[]{};
+		Assert.assertFalse(ArrayUtil.hasNonNull(a));
+
+		a = null;
+		Assert.assertFalse(ArrayUtil.hasNonNull(a));
+	}
+
+	@Test
+	public void isAllNullTest() {
+		String[] a = {null, "e"};
+		Assert.assertFalse(ArrayUtil.isAllNull(a));
+
+		a = new String[]{null, null};
+		Assert.assertTrue(ArrayUtil.isAllNull(a));
+
+		a = new String[]{"", null};
+		Assert.assertFalse(ArrayUtil.isAllNull(a));
+
+		a = new String[]{null};
+		Assert.assertTrue(ArrayUtil.isAllNull(a));
+
+		a = new String[]{};
+		Assert.assertTrue(ArrayUtil.isAllNull(a));
+
+		a = null;
+		Assert.assertTrue(ArrayUtil.isAllNull(a));
 	}
 }

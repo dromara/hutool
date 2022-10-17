@@ -10,12 +10,11 @@ import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
+import cn.hutool.json.writer.JSONValueWriter;
+import cn.hutool.json.writer.JSONWriter;
 import cn.hutool.json.xml.JSONXMLUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -296,7 +295,18 @@ public class JSONUtil {
 	 * @return JSON字符串
 	 * @since 5.7.12
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
+		// 自定义规则，优先级高于全局规则
+		final JSONValueWriter valueWriter = InternalJSONUtil.getValueWriter(obj);
+		if(null != valueWriter){
+			final StringWriter stringWriter = new StringWriter();
+			final JSONWriter jsonWriter = JSONWriter.of(stringWriter, 0, 0, null);
+			// 用户对象自定义实现了JSONValueWriter接口，理解为需要自定义输出
+			valueWriter.write(jsonWriter, obj);
+			return stringWriter.toString();
+		}
+
 		if (null == obj) {
 			return null;
 		}

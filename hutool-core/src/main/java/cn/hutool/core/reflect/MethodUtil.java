@@ -336,7 +336,7 @@ public class MethodUtil {
 	public static Method[] getDeclaredMethods(final Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return DECLARED_METHODS_CACHE.computeIfAbsent(beanClass,
-			key -> getMethodsDirectly(beanClass, false, Objects.equals(Object.class, beanClass)));
+				key -> getMethodsDirectly(beanClass, false, Objects.equals(Object.class, beanClass)));
 	}
 
 	/**
@@ -781,7 +781,7 @@ public class MethodUtil {
 					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
 					}

@@ -193,7 +193,7 @@ public class DownloadTest {
 	}
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void downloadTeamViewerTest() throws IOException {
 		// 此URL有3次重定向, 需要请求4次
 		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";

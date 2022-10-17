@@ -2,39 +2,33 @@ package cn.hutool.json.convert;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.BeanCopier;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.RegisterConverter;
-import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.convert.impl.MapConverter;
+import cn.hutool.core.convert.impl.*;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.json.InternalJSONUtil;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONException;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import cn.hutool.json.serialize.GlobalSerializeMapping;
+import cn.hutool.json.*;
 import cn.hutool.json.serialize.JSONDeserializer;
+import cn.hutool.json.serialize.JSONString;
 
 import java.lang.reflect.Type;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
  * JSON转换器，实现Object对象转换为{@link JSON}，支持的对象：
  * <ul>
- *     <li>String: 转换为相应的对象</li>
- *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
- *     <li>Bean对象：转为JSONObject</li>
+ *     <li>任意支持的对象，转换为JSON</li>
+ *     <li>JSOn转换为指定对象Bean</li>
  * </ul>
  *
  * @author looly
@@ -73,27 +67,40 @@ public class JSONConverter implements Converter {
 	}
 
 	@Override
-	public Object convert(Type targetType, final Object obj) throws ConvertException {
-		if (null == obj) {
+	public Object convert(Type targetType, Object value) throws ConvertException {
+		if (null == value) {
 			return null;
 		}
-
-		// 对象转JSON
-		if (targetType instanceof JSON) {
-			return toJSON(obj);
+		if (value instanceof JSONString) {
+			// 被JSONString包装的对象，获取其原始类型
+			value = ((JSONString) value).getRaw();
 		}
 
 		// JSON转对象
-		if (obj instanceof JSON) {
+		if (value instanceof JSON) {
 			if (targetType instanceof TypeReference) {
+				// 还原原始类型
 				targetType = ((TypeReference<?>) targetType).getType();
 			}
-			return toBean(targetType, (JSON) obj);
+			return toBean(targetType, (JSON) value);
 		}
 
-		// 无法转换
-		throw new JSONException("Can not convert from {}: [{}] to [{}]",
-				obj.getClass().getName(), obj, targetType.getTypeName());
+		// 对象转JSON
+		final Class<?> targetClass = TypeUtil.getClass(targetType);
+		if(null != targetClass){
+			if (JSON.class.isAssignableFrom(targetClass)) {
+				return toJSON(value);
+			}
+			// 自定义日期格式
+			if(Date.class.isAssignableFrom(targetClass) || TemporalAccessor.class.isAssignableFrom(targetClass)){
+				final Object date = toDateWithFormat(targetClass, value);
+				if(null != date){
+					return date;
+				}
+			}
+		}
+
+		return Convert.convertWithCheck(targetType, value, null, config.isIgnoreError());
 	}
 
 	/**
@@ -127,22 +134,30 @@ public class JSONConverter implements Converter {
 		return json;
 	}
 
+	// ----------------------------------------------------------- Private method start
+
+	/**
+	 * JSON转Bean
+	 *
+	 * @param <T>        目标类型
+	 * @param targetType 目标类型，
+	 * @param json       JSON
+	 * @return bean
+	 */
 	@SuppressWarnings("unchecked")
 	private <T> T toBean(final Type targetType, final JSON json) {
-		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
-		if(null != rawType && JSONDeserializer.class.isAssignableFrom(rawType)){
-			return (T) JSONDeserializerConverter.INSTANCE.convert(targetType, json);
-		}
 
-		// 全局自定义反序列化（优先级低于实现JSONDeserializer接口）
-		final JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
+		// 自定义对象反序列化
+		final JSONDeserializer<Object> deserializer = InternalJSONUtil.getDeserializer(targetType);
 		if (null != deserializer) {
 			return (T) deserializer.deserialize(json);
 		}
 
-		// 其他转换不支持非Class的泛型类型
+		final Class<T> rawType = (Class<T>) TypeUtil.getClass(targetType);
 		if (null == rawType) {
-			throw new JSONException("Can not get class from type: {}", targetType);
+			// 当目标类型不确定时，返回原JSON
+			return (T) json;
+			//throw new JSONException("Can not get class from type: {}", targetType);
 		}
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = toSpecial(targetType, rawType, json);
@@ -164,7 +179,7 @@ public class JSONConverter implements Converter {
 		}
 
 		// 跳过异常时返回null
-		if(json.getConfig().isIgnoreError()){
+		if (json.getConfig().isIgnoreError()) {
 			return null;
 		}
 
@@ -172,8 +187,6 @@ public class JSONConverter implements Converter {
 		throw new JSONException("Can not convert from {}: [{}] to [{}]",
 				json.getClass().getName(), json, targetType.getTypeName());
 	}
-
-	// ----------------------------------------------------------- Private method start
 
 	/**
 	 * 特殊类型转换<br>
@@ -218,6 +231,19 @@ public class JSONConverter implements Converter {
 		}
 
 		// 表示非需要特殊转换的对象
+		return null;
+	}
+
+	private Object toDateWithFormat(final Class<?> targetClass, final Object value){
+		// 日期转换，支持自定义日期格式
+		final String format = config.getDateFormat();
+		if (StrUtil.isNotBlank(format)) {
+			if (Date.class.isAssignableFrom(targetClass)) {
+				return new DateConverter(format).convert(targetClass, value);
+			} else {
+				return new TemporalAccessorConverter(format).convert(targetClass, value);
+			}
+		}
 		return null;
 	}
 	// ----------------------------------------------------------- Private method end

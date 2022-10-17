@@ -55,4 +55,13 @@ public class CharUtilTest {
 		Assert.assertEquals('⑫', CharUtil.toCloseByNumber(12));
 		Assert.assertEquals('⑳', CharUtil.toCloseByNumber(20));
 	}
+
+	@Test
+	public void issueI5UGSQTest(){
+		char c = '\u3164';
+		Assert.assertTrue(CharUtil.isBlankChar(c));
+
+		c = '\u2800';
+		Assert.assertTrue(CharUtil.isBlankChar(c));
+	}
 }

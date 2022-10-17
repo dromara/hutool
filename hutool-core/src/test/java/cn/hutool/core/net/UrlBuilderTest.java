@@ -16,8 +16,11 @@ public class UrlBuilderTest {
 
 	@Test
 	public void buildTest() {
-		final String buildUrl = UrlBuilder.of().setHost("www.hutool.cn").build();
+		final UrlBuilder builder = UrlBuilder.of();
+		final String buildUrl = builder.setHost("www.hutool.cn").build();
+
 		Assert.assertEquals("http://www.hutool.cn/", buildUrl);
+		Assert.assertEquals(buildUrl, 80, builder.getPortWithDefault());
 	}
 
 	@Test
@@ -26,9 +29,11 @@ public class UrlBuilderTest {
 		String buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).setWithEndTag(false).build();
 		Assert.assertEquals("http://192.168.1.1:8080", buildUrl);
 
-		buildUrl = UrlBuilder.of().setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
+		final UrlBuilder urlBuilder = UrlBuilder.of();
+		buildUrl = urlBuilder.setScheme("http").setHost("192.168.1.1").setPort(8080).addQuery("url", "http://192.168.1.1/test/1")
 				.setWithEndTag(false).build();
 		Assert.assertEquals("http://192.168.1.1:8080?url=http://192.168.1.1/test/1", buildUrl);
+		Assert.assertEquals(buildUrl, 8080, urlBuilder.getPortWithDefault());
 	}
 
 	@Test
@@ -459,7 +464,7 @@ public class UrlBuilderTest {
 	}
 
 	@Test
-	public void getAuthorityTest(){
+	public void getAuthorityTest() {
 		final UrlBuilder builder = UrlBuilder.ofHttp("127.0.0.1:8080")
 				.addQuery("param[0].field", "编码");
 
@@ -467,7 +472,7 @@ public class UrlBuilderTest {
 	}
 
 	@Test
-	public void addPathTest(){
+	public void addPathTest() {
 		//https://gitee.com/dromara/hutool/issues/I5O4ML
 		UrlBuilder.of().addPath("");
 		UrlBuilder.of().addPath("/");

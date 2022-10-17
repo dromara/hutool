@@ -181,7 +181,6 @@ public class AbstractEnhancedWrappedStreamTest {
 		final List<Integer> list = asList(1, 2, 3);
 		final Map<Boolean, List<Integer>> map = new HashMap<Boolean, List<Integer>>() {
 			private static final long serialVersionUID = 1L;
-
 			{
 				put(Boolean.TRUE, singletonList(2));
 				put(Boolean.FALSE, asList(1, 3));
@@ -625,7 +624,6 @@ public class AbstractEnhancedWrappedStreamTest {
 	public void testToEntries() {
 		final Map<Integer, Integer> expect = new HashMap<Integer, Integer>() {
 			private static final long serialVersionUID = 1L;
-
 			{
 				put(1, 1);
 				put(2, 2);

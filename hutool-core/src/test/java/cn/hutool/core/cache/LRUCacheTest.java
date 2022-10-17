@@ -1,6 +1,7 @@
 package cn.hutool.core.cache;
 
 import cn.hutool.core.cache.impl.LRUCache;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
@@ -8,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 见：<a href="https://github.com/dromara/hutool/issues/1895">https://github.com/dromara/hutool/issues/1895</a><br>
@@ -63,5 +65,24 @@ public class LRUCacheTest {
 			sb2.append(cache.get(i));
 		}
 		Assert.assertEquals("null123456789", sb2.toString());
+	}
+
+	@Test
+	public void issue2647Test(){
+		final AtomicInteger removeCount = new AtomicInteger();
+
+		final LRUCache<String, Integer> cache = CacheUtil.newLRUCache(3,1);
+		cache.setListener((key, value) -> {
+			// 共移除7次
+			removeCount.incrementAndGet();
+			//Console.log("Start remove k-v, key:{}, value:{}", key, value);
+		});
+
+		for (int i = 0; i < 10; i++) {
+			cache.put(StrUtil.format("key-{}", i), i);
+		}
+
+		Assert.assertEquals(7, removeCount.get());
+		Assert.assertEquals(3, cache.size());
 	}
 }

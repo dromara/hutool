@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableEntry;
+import cn.hutool.core.util.CharUtil;
 
 import java.util.function.Predicate;
 
@@ -80,7 +81,7 @@ public class JSONParser {
 
 			switch (tokener.nextClean()) {
 				case ';':
-				case ',':
+				case CharUtil.COMMA:
 					if (tokener.nextClean() == '}') {
 						// issue#2380
 						// 尾后逗号（Trailing Commas），JSON中虽然不支持，但是ECMAScript 2017支持，此处做兼容。
@@ -111,7 +112,7 @@ public class JSONParser {
 		if (x.nextClean() != ']') {
 			x.back();
 			for (; ; ) {
-				if (x.nextClean() == ',') {
+				if (x.nextClean() == CharUtil.COMMA) {
 					x.back();
 					jsonArray.addRaw(null, predicate);
 				} else {
@@ -119,7 +120,7 @@ public class JSONParser {
 					jsonArray.addRaw(x.nextValue(), predicate);
 				}
 				switch (x.nextClean()) {
-					case ',':
+					case CharUtil.COMMA:
 						if (x.nextClean() == ']') {
 							return;
 						}

@@ -1,7 +1,9 @@
 package cn.hutool.core.map;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 忽略大小写的Map<br>
@@ -73,7 +75,8 @@ public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	CaseInsensitiveMap(final MapBuilder<K, V> emptyMapBuilder) {
-		super(emptyMapBuilder.build(), (key)->{
+		// issue#I5VRHW@Gitee 使Function可以被序列化
+		super(emptyMapBuilder.build(), (Function<Object, K> & Serializable)(key)->{
 			if (key instanceof CharSequence) {
 				key = key.toString().toLowerCase();
 			}

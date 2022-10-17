@@ -1,5 +1,6 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.range;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.lock.NoLock;
 
 import java.io.Serializable;
