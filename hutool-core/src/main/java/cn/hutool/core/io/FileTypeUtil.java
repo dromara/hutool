@@ -188,6 +188,8 @@ public class FileTypeUtil {
 				typeName = "doc";
 			} else if ("msi".equalsIgnoreCase(extName)) {
 				typeName = "msi";
+			} else if ("ppt".equalsIgnoreCase(extName)) {
+				typeName = "ppt";
 			}
 		} else if ("zip".equals(typeName)) {
 			// zip可能为docx、xlsx、pptx、jar、war、ofd等格式，扩展名辅助判断

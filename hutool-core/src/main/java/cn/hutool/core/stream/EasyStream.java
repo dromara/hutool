@@ -40,6 +40,7 @@ import java.util.stream.StreamSupport;
  * </ul>
  * 不同类型的流可以通过{@link #sequential()}或{@link #parallel()}互相转换。
  *
+ * @param <T> 对象类型
  * @author VampireAchao
  * @author emptypoint
  * @author huangchengxing
