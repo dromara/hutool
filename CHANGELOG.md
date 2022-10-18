@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.9.M1 (2022-10-16)
+# 5.8.9.M1 (2022-10-18)
 
 ### 🐣新特性
 * 【core   】     DateUtil增加isLastDayOfMonth、getLastDayOfMonth方法（pr#824@Gitee）
@@ -14,6 +14,7 @@
 * 【core   】     UrlBuilder增加getPortWithDefault方法（pr#835@Gitee）
 * 【core   】     FuncKeyMap的子类，传入可被序列化的keyFunc（pr#838@Gitee）
 * 【extra  】     SpringUtil支持SpringBoot3自动配置（pr#839@Gitee）
+* 【core  】      FileTypeUtil增加ppt识别（issue#2663@Github）
 
 ### 🐞Bug修复
 * 【poi    】     修复ExcelReader读取只有标题行报错问题（issue#I5U1JA@Gitee）
