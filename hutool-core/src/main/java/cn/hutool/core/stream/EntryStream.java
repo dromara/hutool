@@ -757,18 +757,6 @@ public class EntryStream<K, V> extends AbstractEnhancedWrappedStream<Map.Entry<K
 	}
 
 	/**
-	 * 转换为子类实现
-	 *
-	 * @param stream 流
-	 * @return 子类实现
-	 */
-	@Override
-	public EntryStream<K, V> transform(Stream<Map.Entry<K, V>> stream) {
-		this.stream = stream;
-		return this;
-	}
-
-	/**
 	 * key重复时直接抛出异常
 	 */
 	private static <T> BinaryOperator<T> throwingMerger() {

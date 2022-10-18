@@ -704,18 +704,6 @@ public class AbstractEnhancedWrappedStreamTest {
 			return new Wrapper<>(source);
 		}
 
-		/**
-		 * 转换为子类实现
-		 *
-		 * @param stream 流
-		 * @return 子类实现
-		 */
-		@Override
-		public Wrapper<T> transform(final Stream<T> stream) {
-			this.stream = stream;
-			return this;
-		}
-
 	}
 
 	@Setter

@@ -269,7 +269,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		Objects.requireNonNull(action);
 		if (isParallel()) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
-			return transform(EasyStream.of(idxMap.entrySet())
+			return wrap(EasyStream.of(idxMap.entrySet())
 					.parallel(isParallel())
 					.peek(e -> action.accept(e.getValue(), e.getKey()))
 					.map(Map.Entry::getValue));
@@ -373,7 +373,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
-			return transform(EasyStream.of(idxMap.entrySet())
+			return wrap(EasyStream.of(idxMap.entrySet())
 					.parallel(isParallel())
 					.filter(e -> predicate.test(e.getValue(), e.getKey()))
 					.map(Map.Entry::getValue));
