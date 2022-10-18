@@ -290,18 +290,6 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	// region ============ to optional ============
 
 	/**
-	 * 将当前流转为另一对象。用于提供针对流本身而非流中元素的操作
-	 *
-	 * @param <R>       转换类型
-	 * @param transform 转换
-	 * @return 转换后的流
-	 */
-	default <R> Optional<R> transform(final Function<? super S, R> transform) {
-		Objects.requireNonNull(transform);
-		return Optional.ofNullable(transform.apply(wrap(this)));
-	}
-
-	/**
 	 * 获取与给定断言匹配的第一个元素
 	 *
 	 * @param predicate 断言
