@@ -156,7 +156,16 @@ public class UrlQuery {
 	 */
 	public UrlQuery addAll(Map<? extends CharSequence, ?> queryMap) {
 		if (MapUtil.isNotEmpty(queryMap)) {
-			queryMap.forEach(this::add);
+			if (queryMap instanceof TableMap) {
+				// TableMap 允许重复的 key，需要单独处理
+				@SuppressWarnings("unchecked")
+				TableMap<? extends CharSequence, ?> tableMap = ((TableMap<? extends CharSequence, ?>) queryMap);
+				for (Map.Entry<? extends CharSequence, ?> entry : tableMap) {
+					add(entry.getKey(), entry.getValue());
+				}
+			} else {
+				queryMap.forEach(this::add);
+			}
 		}
 		return this;
 	}

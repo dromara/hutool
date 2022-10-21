@@ -1,6 +1,7 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.CharsetUtil;
@@ -143,5 +144,19 @@ public class UrlQueryTest {
 		String queryStr = "signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D";
 		final UrlQuery query = UrlQuery.of(queryStr, null);
 		Assert.assertEquals(queryStr, query.toString());
+	}
+
+	@Test
+	public void buildUsingTableMapTest() {
+		// https://github.com/dromara/hutool/issues/2671
+		TableMap<String, String> value = new TableMap<>();
+		value.put("keys", "01");
+		value.put("keys", "02");
+		value.put("keys", "03");
+		value.put("keys", "01");
+		value.put("keys", "01");
+
+		String result = UrlQuery.of(value, true).build(StandardCharsets.UTF_8);
+		Assert.assertEquals("keys=01&keys=02&keys=03&keys=01&keys=01", result);
 	}
 }
