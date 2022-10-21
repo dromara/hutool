@@ -127,6 +127,10 @@ public class IdcardUtilTest {
 		// 台湾人在大陆身份证
 		isValidCard18 = IdcardUtil.isValidCard18("830000200209060065");
 		Assert.assertTrue(isValidCard18);
+
+		// 身份证允许调用为空null
+		isValidCard18 = !IdcardUtil.isValidCard18(null);
+		Assert.assertTrue(isValidCard18);
 	}
 
 	@Test
