@@ -72,7 +72,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 * @since 3.1.2
 	 */
-	@SuppressWarnings("resource")
 	protected HttpResponse(final HttpConnection httpConnection, final HttpConfig config, final Charset charset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.config = config;
@@ -479,18 +478,15 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 3、持有Http流，并不关闭流
 	 * </pre>
 	 *
-	 * @return this
 	 * @throws HttpException IO异常
 	 */
-	@SuppressWarnings("resource")
-	private HttpResponse initWithDisconnect() throws HttpException {
+	private void initWithDisconnect() throws HttpException {
 		try {
 			init();
 		} catch (final HttpException e) {
 			this.httpConnection.disconnectQuietly();
 			throw e;
 		}
-		return this;
 	}
 
 	/**
@@ -503,10 +499,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 3、持有Http流，并不关闭流
 	 * </pre>
 	 *
-	 * @return this
 	 * @throws HttpException IO异常
 	 */
-	private HttpResponse init() throws HttpException {
+	@SuppressWarnings("resource")
+	private void init() throws HttpException {
 		// 获取响应状态码
 		try {
 			this.status = httpConnection.responseCode();
@@ -517,7 +513,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			// 服务器无返回内容，忽略之
 		}
 
-
 		// 读取响应头信息
 		try {
 			this.headers = httpConnection.headers();
@@ -525,6 +520,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			// ignore
 			// StaticLog.warn(e, e.getMessage());
 		}
+
 
 		// 存储服务端设置的Cookie信息
 		GlobalCookieManager.store(httpConnection, this.headers);
@@ -540,7 +536,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		this.in = new HttpInputStream(this);
 
 		// 同步情况下强制同步
-		return this.isAsync ? this : forceSync();
+		if (!this.isAsync) {
+			forceSync();
+		}
 	}
 
 	/**
@@ -641,6 +639,5 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 		return fileName;
 	}
-
 	// ---------------------------------------------------------------- Private method end
 }
