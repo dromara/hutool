@@ -1,6 +1,7 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import lombok.Builder;
@@ -223,5 +224,12 @@ public class MapUtilTest {
 		final HashMap<String, String> map = MapUtil.of("age", "d");
 		final Integer age = MapUtil.getInt(map, "age");
 		Assert.assertNotNull(age);
+	}
+
+	@Test
+	public void joinIgnoreNullTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
+		final String s = MapUtil.joinIgnoreNull(v1, ",", "=");
+		Assert.assertEquals("id=12,name=张三", s);
 	}
 }
