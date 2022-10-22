@@ -45,7 +45,7 @@ import java.util.TreeMap;
 public class ExcelWriteTest {
 
 	@Test
-	public void writeNoFlushTest(){
+	public void writeNoFlushTest() {
 		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
 		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
 		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
@@ -617,7 +617,7 @@ public class ExcelWriteTest {
 
 		final Font headFont = writer.createFont();
 		headFont.setBold(true);
-		headFont.setFontHeightInPoints((short)50);
+		headFont.setFontHeightInPoints((short) 50);
 		headFont.setFontName("Microsoft YaHei");
 		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
 
@@ -755,20 +755,20 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeTest3(){
+	public void mergeTest3() {
 		// https://github.com/dromara/hutool/issues/1696
 
-		final List<Map<String,Object>> list = new ArrayList<>();
-		final Map<String,Object> map = new HashMap<>();
-		map.put("xmnf","2021");
+		final List<Map<String, Object>> list = new ArrayList<>();
+		final Map<String, Object> map = new HashMap<>();
+		map.put("xmnf", "2021");
 		list.add(map);
 
-		final Map<String,Object> map1 = new HashMap<>();
-		map1.put("xmnf",new XSSFRichTextString("9999"));
+		final Map<String, Object> map1 = new HashMap<>();
+		map1.put("xmnf", new XSSFRichTextString("9999"));
 		list.add(map1);
 
-		final Map<String,Object> map2 = new HashMap<>();
-		map2.put("xmnf","2019");
+		final Map<String, Object> map2 = new HashMap<>();
+		map2.put("xmnf", "2019");
 		list.add(map2);
 
 		//通过工具类创建writer
@@ -785,7 +785,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeForDateTest(){
+	public void mergeForDateTest() {
 		// https://github.com/dromara/hutool/issues/1911
 
 		//通过工具类创建writer
@@ -798,7 +798,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void changeHeaderStyleTest(){
+	public void changeHeaderStyleTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/headerStyle.xlsx");
 		writer.writeHeadRow(ListUtil.view("姓名", "性别", "年龄"));
 		final CellStyle headCellStyle = writer.getStyleSet().getHeadCellStyle();
@@ -810,7 +810,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeFloatTest(){
+	public void writeFloatTest() {
 		//issue https://gitee.com/dromara/hutool/issues/I43U9G
 		final String path = "d:/test/floatTest.xlsx";
 		FileUtil.del(path);
@@ -822,7 +822,7 @@ public class ExcelWriteTest {
 
 	@Test
 	//@Ignore
-	public void writeDoubleTest(){
+	public void writeDoubleTest() {
 		// https://gitee.com/dromara/hutool/issues/I5PI5C
 		final String path = "d:/test/doubleTest.xlsx";
 		FileUtil.del(path);
@@ -835,7 +835,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void issueI466ZZTest(){
+	public void issueI466ZZTest() {
 		// https://gitee.com/dromara/hutool/issues/I466ZZ
 		// 需要输出S_20000314_x5116_0004
 		// 此处加入一个转义前缀：_x005F
@@ -848,7 +848,7 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeLongTest(){
+	public void writeLongTest() {
 		//https://gitee.com/dromara/hutool/issues/I49R6U
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/long.xlsx");
 		writer.write(ListUtil.view(1427545395336093698L));
@@ -857,8 +857,8 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void writeHyperlinkTest(){
-			final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
+	public void writeHyperlinkTest() {
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/hyperlink.xlsx");
 
 		final Hyperlink hyperlink = writer.createHyperlink(HyperlinkType.URL, "https://hutool.cn");
 
@@ -868,12 +868,12 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
-	public void mergeNumberTest(){
-		final File tempFile=new File("d:/test/mergeNumber.xlsx");
+	public void mergeNumberTest() {
+		final File tempFile = new File("d:/test/mergeNumber.xlsx");
 		FileUtil.del(tempFile);
 
-		final BigExcelWriter writer= new BigExcelWriter(tempFile);
-		writer.merge(0,1,2,2,3.99,false);
+		final BigExcelWriter writer = new BigExcelWriter(tempFile);
+		writer.merge(0, 1, 2, 2, 3.99, false);
 		writer.close();
 	}
 
@@ -892,7 +892,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	public void getDispositionTest(){
+	public void getDispositionTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter(true);
 		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.UTF_8);
 		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);

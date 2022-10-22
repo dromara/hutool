@@ -2,7 +2,7 @@ package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.poi.excel.cell.FormulaCellValue;
+import cn.hutool.poi.excel.cell.values.FormulaCellValue;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.xssf.model.SharedStrings;
