@@ -78,4 +78,28 @@ public class CollectorUtilTest {
 				.put(3, 1L)
 				.build(), map);
 	}
+
+	@Test
+	public void testGroupingByAfterValueMapped() {
+		List<Integer> list = Arrays.asList(1, 1, 2, 2, 3, 4);
+		Map<Boolean, Set<String>> map = list.stream()
+			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf, LinkedHashSet::new, LinkedHashMap::new));
+
+		Assert.assertEquals(LinkedHashMap.class, map.getClass());
+		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
+		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
+
+		map = list.stream()
+			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf, LinkedHashSet::new));
+		Assert.assertEquals(HashMap.class, map.getClass());
+		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
+		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
+
+		Map<Boolean, List<String>> map2 = list.stream()
+			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf));
+		Assert.assertEquals(Arrays.asList("2", "2", "4"), map2.get(Boolean.TRUE));
+		Assert.assertEquals(Arrays.asList("1", "1", "3"), map2.get(Boolean.FALSE));
+
+	}
+
 }
