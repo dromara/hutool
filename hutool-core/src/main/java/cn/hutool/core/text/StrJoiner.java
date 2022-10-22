@@ -9,6 +9,7 @@ import cn.hutool.core.util.ObjUtil;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -196,7 +197,14 @@ public class StrJoiner implements Appendable, Serializable {
 	}
 
 	/**
-	 * 追加对象到拼接器中
+	 * 追加对象到拼接器中，支持：<br>
+	 * <ul>
+	 *     <li>null，按照 {@link #nullMode} 策略追加</li>
+	 *     <li>array，逐个追加</li>
+	 *     <li>{@link Iterator}，逐个追加</li>
+	 *     <li>{@link Iterable}，逐个追加</li>
+	 *     <li>{@link Map.Entry}，追加键，分隔符，再追加值</li>
+	 * </ul>
 	 *
 	 * @param obj 对象，支持数组、集合等
 	 * @return this
@@ -210,6 +218,9 @@ public class StrJoiner implements Appendable, Serializable {
 			append((Iterator<?>) obj);
 		} else if (obj instanceof Iterable) {
 			append(((Iterable<?>) obj).iterator());
+		}else if (obj instanceof Map.Entry) {
+			final Map.Entry<?, ?> entry = (Map.Entry<?, ?>) obj;
+			append(entry.getKey()).append(entry.getValue());
 		} else {
 			append(ObjUtil.toString(obj));
 		}

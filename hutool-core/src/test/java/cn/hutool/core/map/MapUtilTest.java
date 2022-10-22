@@ -240,4 +240,11 @@ public class MapUtilTest {
 		Assert.assertTrue(v2s.contains(13));
 		Assert.assertTrue(v2s.contains("李四"));
 	}
+
+	@Test
+	public void joinIgnoreNullTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
+		final String s = MapUtil.joinIgnoreNull(v1, ",", "=");
+		Assert.assertEquals("id=12,name=张三", s);
+	}
 }

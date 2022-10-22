@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.iter.IterUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
@@ -605,28 +604,30 @@ public class MapUtil extends MapGetUtil {
 	 * @return 连接后的字符串，map和otherParams为空返回""
 	 * @since 3.1.1
 	 */
-	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator, final boolean isIgnoreNull, final String... otherParams) {
-		final StringBuilder strBuilder = StrUtil.builder();
-		boolean isFirst = true;
-		if (isNotEmpty(map)) {
-			for (final Entry<K, V> entry : map.entrySet()) {
-				if (false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
-					if (isFirst) {
-						isFirst = false;
-					} else {
-						strBuilder.append(separator);
-					}
-					strBuilder.append(Convert.toStr(entry.getKey())).append(keyValueSeparator).append(Convert.toStr(entry.getValue()));
-				}
-			}
-		}
-		// 补充其它字符串到末尾，默认无分隔符
-		if (ArrayUtil.isNotEmpty(otherParams)) {
-			for (final String otherParam : otherParams) {
-				strBuilder.append(otherParam);
-			}
-		}
-		return strBuilder.toString();
+	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator,
+									 final boolean isIgnoreNull, final String... otherParams) {
+		return join(map, separator, keyValueSeparator, (entry) -> false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null, otherParams);
+	}
+
+	/**
+	 * 将map转成字符串
+	 *
+	 * @param <K>               键类型
+	 * @param <V>               值类型
+	 * @param map               Map，为空返回otherParams拼接
+	 * @param separator         entry之间的连接符
+	 * @param keyValueSeparator kv之间的连接符
+	 * @param predicate         键值对过滤
+	 * @param otherParams       其它附加参数字符串（例如密钥）
+	 * @return 连接后的字符串，map和otherParams为空返回""
+	 * @since 3.1.1
+	 */
+	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator,
+									 final Predicate<Entry<K, V>> predicate, final String... otherParams) {
+		return MapJoiner.of(separator, keyValueSeparator)
+				.append(map, predicate)
+				.append(otherParams)
+				.toString();
 	}
 
 	// ----------------------------------------------------------------------------------------------- filter

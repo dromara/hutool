@@ -183,7 +183,7 @@ public class IterUtil {
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
-	 * @param <R> 返回元素类型
+	 * @param <R>       返回元素类型
 	 * @param <V>       对象类型
 	 * @param iterable  对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
@@ -197,7 +197,7 @@ public class IterUtil {
 	/**
 	 * 获取指定Bean列表中某个字段，生成新的列表
 	 *
-	 * @param <R> 返回元素类型
+	 * @param <R>       返回元素类型
 	 * @param <V>       对象类型
 	 * @param iter      对象列表
 	 * @param fieldName 字段名（会通过反射获取其值）
@@ -211,7 +211,7 @@ public class IterUtil {
 			V value;
 			while (iter.hasNext()) {
 				value = iter.next();
-				result.add((R)FieldUtil.getFieldValue(value, fieldName));
+				result.add((R) FieldUtil.getFieldValue(value, fieldName));
 			}
 		}
 		return result;
@@ -460,6 +460,7 @@ public class IterUtil {
 	 * @param index    位置
 	 * @param <E>      元素类型
 	 * @return 元素，找不到元素返回{@code null}
+	 * @throws IndexOutOfBoundsException index < 0时报错
 	 * @since 5.8.0
 	 */
 	public static <E> E get(final Iterator<E> iterator, int index) throws IndexOutOfBoundsException {
