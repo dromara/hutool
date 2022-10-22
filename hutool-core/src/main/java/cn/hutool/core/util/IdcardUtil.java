@@ -274,7 +274,7 @@ public class IdcardUtil {
 	 * @since 5.5.7
 	 */
 	public static boolean isValidCard18(final String idcard, final boolean ignoreCase) {
-		if (CHINA_ID_MAX_LENGTH != idcard.length()) {
+		if (StrUtil.isBlank(idcard) || CHINA_ID_MAX_LENGTH != idcard.length()) {
 			return false;
 		}
 
@@ -307,7 +307,7 @@ public class IdcardUtil {
 	 * @return 是否合法
 	 */
 	public static boolean isValidCard15(final String idcard) {
-		if (CHINA_ID_MIN_LENGTH != idcard.length()) {
+		if (StrUtil.isBlank(idcard) || CHINA_ID_MIN_LENGTH != idcard.length()) {
 			return false;
 		}
 		if (ReUtil.isMatch(PatternPool.NUMBERS, idcard)) {
@@ -410,6 +410,9 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidHKCard(final String idcard) {
+		if (StrUtil.isBlank(idcard)) {
+			return false;
+		}
 		String card = idcard.replaceAll("[()]", "");
 		int sum;
 		if (card.length() == 9) {
