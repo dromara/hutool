@@ -2,6 +2,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Serializable;
@@ -14,6 +15,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * 可重复键和值的Map<br>
@@ -86,7 +89,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	public V get(Object key) {
 		//noinspection SuspiciousMethodCalls
 		final int index = keys.indexOf(key);
-		if (index > -1 && index < values.size()) {
+		if (index > -1) {
 			return values.get(index);
 		}
 		return null;
@@ -101,7 +104,7 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	 */
 	public K getKey(V value) {
 		final int index = values.indexOf(value);
-		if (index > -1 && index < keys.size()) {
+		if (index > -1) {
 			return keys.get(index);
 		}
 		return null;
@@ -142,17 +145,32 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 		return null;
 	}
 
+	/**
+	 * 移除指定的所有键和对应的所有值
+	 *
+	 * @param key 键
+	 * @return 最后一个移除的值
+	 */
 	@Override
 	public V remove(Object key) {
+		V lastValue = null;
+		int index;
 		//noinspection SuspiciousMethodCalls
-		int index = keys.indexOf(key);
-		if (index > -1) {
-			keys.remove(index);
-			if (index < values.size()) {
-				values.remove(index);
-			}
+		while ((index = keys.indexOf(key)) > -1) {
+			lastValue = removeByIndex(index);
 		}
-		return null;
+		return lastValue;
+	}
+
+	/**
+	 * 移除指定位置的键值对
+	 *
+	 * @param index 位置，不能越界
+	 * @return 移除的值
+	 */
+	public V removeByIndex(final int index) {
+		keys.remove(index);
+		return values.remove(index);
 	}
 
 	@Override
@@ -227,5 +245,86 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 				"keys=" + keys +
 				", values=" + values +
 				'}';
+	}
+
+	@Override
+	public void forEach(final BiConsumer<? super K, ? super V> action) {
+		for (int i = 0; i < size(); i++) {
+			action.accept(keys.get(i), values.get(i));
+		}
+	}
+
+	@Override
+	public boolean remove(final Object key, final Object value) {
+		boolean removed = false;
+		for (int i = 0; i < size(); i++) {
+			if (ObjUtil.equals(key, keys.get(i)) && ObjUtil.equals(value, values.get(i))) {
+				removeByIndex(i);
+				removed = true;
+				// 移除当前元素，下个元素前移
+				i--;
+			}
+		}
+		return removed;
+	}
+
+	@Override
+	public void replaceAll(final BiFunction<? super K, ? super V, ? extends V> function) {
+		for (int i = 0; i < size(); i++) {
+			final V newValue = function.apply(keys.get(i), values.get(i));
+			values.set(i, newValue);
+		}
+	}
+
+	@Override
+	public boolean replace(final K key, final V oldValue, final V newValue) {
+		for (int i = 0; i < size(); i++) {
+			if (ObjUtil.equals(key, keys.get(i)) && ObjUtil.equals(oldValue, values.get(i))) {
+				values.set(i, newValue);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 替换指定key的所有值为指定值
+	 *
+	 * @param key   指定的key
+	 * @param value 替换的值
+	 * @return 最后替换的值
+	 */
+	@Override
+	public V replace(final K key, final V value) {
+		V lastValue = null;
+		for (int i = 0; i < size(); i++) {
+			if (ObjUtil.equals(key, keys.get(i))) {
+				lastValue = values.set(i, value);
+			}
+		}
+		return lastValue;
+	}
+
+	@SuppressWarnings("NullableProblems")
+	@Override
+	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+		if(null == remappingFunction){
+			return null;
+		}
+
+		V lastValue = null;
+		for (int i = 0; i < size(); i++) {
+			if (ObjUtil.equals(key, keys.get(i))) {
+				final V newValue = remappingFunction.apply(key, values.get(i));
+				if(null != newValue){
+					lastValue = values.set(i, newValue);
+				} else{
+					removeByIndex(i);
+					// 移除当前元素，下个元素前移
+					i--;
+				}
+			}
+		}
+		return lastValue;
 	}
 }
