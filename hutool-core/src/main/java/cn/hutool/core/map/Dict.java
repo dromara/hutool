@@ -97,7 +97,8 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 
 		String key = null;
 		for (int i = 0; i < keysAndValues.length; i++) {
-			if (i % 2 == 0) {
+			// 偶数
+			if ((i & 1) == 0) {
 				key = Convert.toStr(keysAndValues[i]);
 			} else {
 				dict.put(key, keysAndValues[i]);
@@ -258,7 +259,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @return 自己
 	 */
 	public <T> Dict parseBean(final T bean) {
-		Assert.notNull(bean, "Bean class must be not null");
+		Assert.notNull(bean, "Bean must not be null");
 		this.putAll(BeanUtil.beanToMap(bean));
 		return this;
 	}
@@ -274,7 +275,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @return 自己
 	 */
 	public <T> Dict parseBean(final T bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
-		Assert.notNull(bean, "Bean class must be not null");
+		Assert.notNull(bean, "Bean must not be null");
 		this.putAll(BeanUtil.beanToMap(bean, isToUnderlineCase, ignoreNullValue));
 		return this;
 	}
