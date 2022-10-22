@@ -603,12 +603,4 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 		}
 	}
 
-	/**
-	 * 转换为子类实现
-	 *
-	 * @param stream 流
-	 * @return 子类实现
-	 */
-	S transform(Stream<T> stream);
-
 }

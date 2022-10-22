@@ -556,13 +556,4 @@ public class EasyStreamTest {
 		}
 	}
 
-	@Test
-	public void testTransform() {
-		final boolean result = EasyStream.of(1, 2, 3)
-				.transform(EasyStream::toList)
-				.map(List::isEmpty)
-				.orElse(false);
-		Assert.assertFalse(result);
-	}
-
 }

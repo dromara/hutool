@@ -265,18 +265,6 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 	/**
-	 * 转换为子类实现
-	 *
-	 * @param stream 流
-	 * @return 子类实现
-	 */
-	@Override
-	public EasyStream<T> transform(final Stream<T> stream) {
-		this.stream = stream;
-		return this;
-	}
-
-	/**
 	 * 建造者
 	 *
 	 * @author VampireAchao
