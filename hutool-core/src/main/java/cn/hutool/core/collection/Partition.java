@@ -45,7 +45,7 @@ public class Partition<T> extends AbstractList<List<T>> {
 		final int total = list.size();
 		// 类似于判断余数，当总数非整份size时，多余的数>=1，则相当于被除数多一个size，做到+1目的
 		// 类似于：if(total % size > 0){length += 1;}
-		return (total + size - 1) / size;
+		return Math.ceil(total / (float) size);
 	}
 
 	@Override
