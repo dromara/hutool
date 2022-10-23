@@ -272,7 +272,7 @@ public class DialectRunner implements Serializable {
 
 		String selectSql = sqlBuilder.build();
 		// 去除order by 子句
-		final int orderByIndex = StrUtil.indexOfIgnoreCase(selectSql, " order by");
+		final int orderByIndex = StrUtil.lastIndexOfIgnoreCase(selectSql, " order by");
 		if (orderByIndex > 0) {
 			selectSql = StrUtil.subPre(selectSql, orderByIndex);
 		}
