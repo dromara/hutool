@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PartitionTest {
@@ -52,5 +53,18 @@ public class PartitionTest {
 		}
 
 		return list;
+	}
+
+	@Test
+	public void testSize() {
+		final List<Integer> emptyList = Collections.emptyList();
+		Partition<Integer> partition = new Partition<>(emptyList, 10);
+
+		Assert.assertTrue(partition.isEmpty());
+
+		final List<Integer> singletonList = Collections.singletonList(1);
+		partition = new Partition<>(singletonList, 10);
+		Assert.assertFalse(partition.isEmpty());
+		Assert.assertEquals(1, partition.size());
 	}
 }
