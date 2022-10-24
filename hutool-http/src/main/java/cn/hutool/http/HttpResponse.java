@@ -622,15 +622,25 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
-	 * 从Content-Disposition头中获取文件名
+	 * 从Content-Disposition头中获取文件名，默认为 filename
 	 *
 	 * @return 文件名，empty表示无
 	 */
-	private String getFileNameFromDisposition() {
+	public String getFileNameFromDisposition() {
+		return getFileNameFromDisposition("filename");
+	}
+
+	/**
+	 * 从Content-Disposition头中获取文件名
+	 * @param paramName 文件参数名
+	 *
+	 * @return 文件名，empty表示无
+	 */
+	public String getFileNameFromDisposition(String paramName) {
 		String fileName = null;
 		final String disposition = header(Header.CONTENT_DISPOSITION);
 		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
+			fileName = ReUtil.get(paramName+"=\"(.*?)\"", disposition, 1);
 			if (StrUtil.isBlank(fileName)) {
 				fileName = StrUtil.subAfter(disposition, "filename=", true);
 			}
