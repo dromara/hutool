@@ -43,6 +43,9 @@ public class Partition<T> extends AbstractList<List<T>> {
 		// 此处采用动态计算，以应对list变
 		final int size = this.size;
 		final int total = list.size();
+
+		if (0 == total) return 0;
+
 		// 类似于判断余数，当总数非整份size时，多余的数>=1，则相当于被除数多一个size，做到+1目的
 		// 类似于：if(total % size > 0){length += 1;}
 		return (total + size - 1) / size;
