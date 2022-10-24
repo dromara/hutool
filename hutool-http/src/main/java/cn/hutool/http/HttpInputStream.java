@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.ByteArrayInputStream;
@@ -92,17 +93,27 @@ public class HttpInputStream extends InputStream {
 			return;
 		}
 
-		if (response.isGzip() && false == (response.in instanceof GZIPInputStream)) {
+		final String contentEncoding = response.contentEncoding();
+		if (StrUtil.equalsIgnoreCase("gzip", contentEncoding) && false == (response.in instanceof GZIPInputStream)) {
 			// Accept-Encoding: gzip
 			try {
 				this.in = new GZIPInputStream(this.in);
-			} catch (final IOException e) {
+			} catch (final IOException ignore) {
 				// 在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
 				// ignore
 			}
-		} else if (response.isDeflate() && false == (this.in instanceof InflaterInputStream)) {
+		} else if (StrUtil.equalsIgnoreCase("deflate", contentEncoding) && false == (this.in instanceof InflaterInputStream)) {
 			// Accept-Encoding: defalte
 			this.in = new InflaterInputStream(this.in, new Inflater(true));
+		} else{
+			final Class<? extends InputStream> streamClass = GlobalCompressStreamRegister.INSTANCE.get(contentEncoding);
+			if(null != streamClass){
+				try {
+					this.in = ConstructorUtil.newInstance(streamClass, this.in);
+				} catch (final Exception ignore) {
+					// 对于构造错误的压缩算法，跳过之
+				}
+			}
 		}
 	}
 }

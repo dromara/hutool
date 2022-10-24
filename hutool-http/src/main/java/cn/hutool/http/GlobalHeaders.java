@@ -18,6 +18,9 @@ import java.util.Map.Entry;
  * @author looly
  */
 public enum GlobalHeaders {
+	/**
+	 * 单例对象
+	 */
 	INSTANCE;
 
 	/**
