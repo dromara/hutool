@@ -8,7 +8,9 @@ import cn.hutool.core.lang.Assert;
  * see http://cuisuqiang.iteye.com/blog/1429956
  * @author Looly
  *
+ * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
  */
+@Deprecated
 public class BCD {
 
 	/**
