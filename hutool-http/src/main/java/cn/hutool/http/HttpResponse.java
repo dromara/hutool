@@ -10,6 +10,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import java.io.ByteArrayInputStream;
@@ -303,7 +304,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public long writeBody(final File targetFileOrDir, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
-		final File outFile = completeFileNameFromHeader(targetFileOrDir);
+		final File outFile = completeFileNameFromHeader(targetFileOrDir, null);
 		return writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
 	}
 
@@ -323,7 +324,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public long writeBody(final File targetFileOrDir, String tempFileSuffix, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
-		File outFile = completeFileNameFromHeader(targetFileOrDir);
+		File outFile = completeFileNameFromHeader(targetFileOrDir, null);
 
 		if (StrUtil.isBlank(tempFileSuffix)) {
 			tempFileSuffix = ".temp";
@@ -365,7 +366,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public File writeBodyForFile(final File targetFileOrDir, final StreamProgress streamProgress) {
 		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
 
-		final File outFile = completeFileNameFromHeader(targetFileOrDir);
+		final File outFile = completeFileNameFromHeader(targetFileOrDir, null);
 		writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
 
 		return outFile;
@@ -440,17 +441,18 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 从响应头补全下载文件名
 	 *
 	 * @param targetFileOrDir 目标文件夹或者目标文件
+	 * @param customParamName 自定义的参数名称，如果传入{@code null}，默认使用"filename"
 	 * @return File 保存的文件
 	 * @since 5.4.1
 	 */
-	public File completeFileNameFromHeader(final File targetFileOrDir) {
+	public File completeFileNameFromHeader(final File targetFileOrDir, final String customParamName) {
 		if (false == targetFileOrDir.isDirectory()) {
 			// 非目录直接返回
 			return targetFileOrDir;
 		}
 
 		// 从头信息中获取文件名
-		String fileName = getFileNameFromDisposition();
+		String fileName = getFileNameFromDisposition(ObjUtil.defaultIfNull(customParamName, "filename"));
 		if (StrUtil.isBlank(fileName)) {
 			final String path = httpConnection.getUrl().getPath();
 			// 从路径中获取文件名
@@ -464,6 +466,25 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 		return FileUtil.file(targetFileOrDir, fileName);
+	}
+
+	/**
+	 * 从Content-Disposition头中获取文件名
+	 *
+	 * @param paramName 文件名的参数名
+	 * @return 文件名，empty表示无
+	 * @since 5.8.10
+	 */
+	public String getFileNameFromDisposition(final String paramName) {
+		String fileName = null;
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get(paramName + "=\"(.*?)\"", disposition, 1);
+			if (StrUtil.isBlank(fileName)) {
+				fileName = StrUtil.subAfter(disposition, paramName + "=", true);
+			}
+		}
+		return fileName;
 	}
 
 	// ---------------------------------------------------------------- Private method start
@@ -621,23 +642,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 		return copyLength;
-	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名
-	 *
-	 * @return 文件名，empty表示无
-	 */
-	private String getFileNameFromDisposition() {
-		String fileName = null;
-		final String disposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(disposition, "filename=", true);
-			}
-		}
-		return fileName;
 	}
 	// ---------------------------------------------------------------- Private method end
 }
