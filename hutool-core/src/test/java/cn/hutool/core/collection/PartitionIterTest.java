@@ -5,6 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PartitionIterTest {
@@ -27,5 +28,41 @@ public class PartitionIterTest {
 			max = NumberUtil.max(max, NumberUtil.max(lines.toArray(new Integer[0])));
 		}
 		Assert.assertEquals(45, max);
+	}
+
+	@Test
+	public void getSize() {
+		List<Integer> mockedList = makingList(19);
+		Partition<Integer> partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(2, partition.size());
+
+		mockedList = makingList(11);
+		partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(2, partition.size());
+
+		mockedList = makingList(10);
+		partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(1, partition.size());
+
+		mockedList = makingList(9);
+		partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(1, partition.size());
+
+		mockedList = makingList(5);
+		partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(1, partition.size());
+
+		mockedList = makingList(0);
+		partition = new Partition<>(mockedList, 10);
+		Assert.assertEquals(0, partition.size());
+	}
+
+	private List<Integer> makingList(int length) {
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < length; i++) {
+			list.add(i);
+		}
+
+		return list;
 	}
 }
