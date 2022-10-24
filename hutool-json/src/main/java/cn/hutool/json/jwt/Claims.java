@@ -1,6 +1,6 @@
 package cn.hutool.json.jwt;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONConfig;

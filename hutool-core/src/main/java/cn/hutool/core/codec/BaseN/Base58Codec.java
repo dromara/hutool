@@ -1,5 +1,7 @@
-package cn.hutool.core.codec;
+package cn.hutool.core.codec.BaseN;
 
+import cn.hutool.core.codec.Decoder;
+import cn.hutool.core.codec.Encoder;
 import cn.hutool.core.text.StrUtil;
 
 import java.util.Arrays;

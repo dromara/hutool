@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;

@@ -1,6 +1,6 @@
 package cn.hutool.crypto.symmetric;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;

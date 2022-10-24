@@ -1,4 +1,4 @@
-package cn.hutool.core.codec;
+package cn.hutool.core.codec.BaseN;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;

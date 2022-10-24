@@ -1,6 +1,6 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;

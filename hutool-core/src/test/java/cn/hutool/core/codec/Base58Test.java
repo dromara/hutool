@@ -1,5 +1,6 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.codec.BaseN.Base58;
 import org.junit.Assert;
 import org.junit.Test;
 

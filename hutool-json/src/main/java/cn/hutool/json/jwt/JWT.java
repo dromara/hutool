@@ -1,6 +1,6 @@
 package cn.hutool.json.jwt;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;

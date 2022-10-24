@@ -1,6 +1,6 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.crypto.CipherWrapper;
 import cn.hutool.crypto.CryptoException;

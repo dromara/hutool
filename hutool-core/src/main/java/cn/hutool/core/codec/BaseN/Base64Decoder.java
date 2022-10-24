@@ -1,5 +1,6 @@
-package cn.hutool.core.codec;
+package cn.hutool.core.codec.BaseN;
 
+import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.util.ArrayUtil;
 
@@ -10,7 +11,7 @@ import cn.hutool.core.util.ArrayUtil;
  * @author looly
  *
  */
-public class Base64Decoder implements Decoder<byte[], byte[]>{
+public class Base64Decoder implements Decoder<byte[], byte[]> {
 
 	public static Base64Decoder INSTANCE = new Base64Decoder();
 

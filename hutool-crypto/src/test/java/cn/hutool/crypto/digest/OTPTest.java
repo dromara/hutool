@@ -1,6 +1,6 @@
 package cn.hutool.crypto.digest;
 
-import cn.hutool.core.codec.Base32;
+import cn.hutool.core.codec.BaseN.Base32;
 import cn.hutool.crypto.digest.otp.HOTP;
 import cn.hutool.crypto.digest.otp.TOTP;
 import org.junit.Assert;

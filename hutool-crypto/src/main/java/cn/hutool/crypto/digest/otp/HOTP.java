@@ -1,6 +1,6 @@
 package cn.hutool.crypto.digest.otp;
 
-import cn.hutool.core.codec.Base32;
+import cn.hutool.core.codec.BaseN.Base32;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;

@@ -1,6 +1,6 @@
 package cn.hutool.json.jwt.signers;
 
-import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.asymmetric.Sign;

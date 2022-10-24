@@ -1,11 +1,9 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.BCD;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.SecureUtil;
 
 import java.io.InputStream;
@@ -17,7 +15,6 @@ import java.nio.charset.Charset;
  *     <li>从bytes解密</li>
  *     <li>从Hex(16进制)解密</li>
  *     <li>从Base64解密</li>
- *     <li>从BCD解密</li>
  * </ul>
  *
  * @author looly
@@ -81,57 +78,5 @@ public interface AsymmetricDecryptor {
 	 */
 	default String decryptStr(final String data, final KeyType keyType) {
 		return decryptStr(data, keyType, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 解密BCD
-	 *
-	 * @param data    数据
-	 * @param keyType 密钥类型
-	 * @return 解密后的密文
-	 * @since 4.1.0
-	 */
-	default byte[] decryptFromBcd(final String data, final KeyType keyType) {
-		return decryptFromBcd(data, keyType, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 分组解密
-	 *
-	 * @param data    数据
-	 * @param keyType 密钥类型
-	 * @param charset 加密前编码
-	 * @return 解密后的密文
-	 * @since 4.1.0
-	 */
-	default byte[] decryptFromBcd(final String data, final KeyType keyType, final Charset charset) {
-		Assert.notNull(data, "Bcd string must be not null!");
-		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
-		return decrypt(dataBytes, keyType);
-	}
-
-	/**
-	 * 解密为字符串，密文需为BCD格式
-	 *
-	 * @param data    数据，BCD格式
-	 * @param keyType 密钥类型
-	 * @param charset 加密前编码
-	 * @return 解密后的密文
-	 * @since 4.5.2
-	 */
-	default String decryptStrFromBcd(final String data, final KeyType keyType, final Charset charset) {
-		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
-	}
-
-	/**
-	 * 解密为字符串，密文需为BCD格式，编码为UTF-8格式
-	 *
-	 * @param data    数据，BCD格式
-	 * @param keyType 密钥类型
-	 * @return 解密后的密文
-	 * @since 4.5.2
-	 */
-	default String decryptStrFromBcd(final String data, final KeyType keyType) {
-		return decryptStrFromBcd(data, keyType, CharsetUtil.UTF_8);
 	}
 }
