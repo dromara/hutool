@@ -502,4 +502,12 @@ public class FileUtilTest {
 		path = "test\\aaa.txt";
 		Assert.assertFalse(FileUtil.isAbsolutePath(path));
 	}
+
+	@Test
+	@Ignore
+	public void copyTest2(){
+		final File copy = FileUtil.copy("d:/test/qrcodeCustom.png", "d:/test/pic", false);
+		// 当复制文件到目标目录的时候，返回复制的目标文件，而非目录
+		Console.log(copy);
+	}
 }

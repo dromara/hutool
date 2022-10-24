@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【http  】      HttpResponse增加getFileNameFromDisposition方法（pr#2676@Github）
+* 【core  】      FileUtil.copy，当来源为文件时，返回文件而非目录
 
 ### 🐞Bug修复
 * 【db    】      修复分页时order by截断问题（issue#I5X6FM@Gitee）
