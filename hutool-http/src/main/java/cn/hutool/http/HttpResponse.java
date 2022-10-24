@@ -626,7 +626,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return 文件名，empty表示无
 	 */
-	private String getFileNameFromDisposition() {
+	public String getFileNameFromDisposition() {
 		return getFileNameFromDisposition("filename");
 	}
 
@@ -636,7 +636,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return 文件名，empty表示无
 	 */
-	private String getFileNameFromDisposition(String paramName) {
+	public String getFileNameFromDisposition(String paramName) {
 		String fileName = null;
 		final String disposition = header(Header.CONTENT_DISPOSITION);
 		if (StrUtil.isNotBlank(disposition)) {
