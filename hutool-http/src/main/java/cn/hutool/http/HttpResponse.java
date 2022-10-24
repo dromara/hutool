@@ -7,6 +7,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -448,7 +449,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 
 		// 从头信息中获取文件名
-		String fileName = getFileNameFromDisposition();
+		String fileName = getFileNameFromDisposition(null);
 		if (StrUtil.isBlank(fileName)) {
 			final String path = httpConnection.getUrl().getPath();
 			// 从路径中获取文件名
@@ -462,6 +463,25 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 		return FileUtil.file(targetFileOrDir, fileName);
+	}
+
+	/**
+	 * 从Content-Disposition头中获取文件名
+	 * @param paramName 文件参数名
+	 *
+	 * @return 文件名，empty表示无
+	 */
+	public String getFileNameFromDisposition(String paramName) {
+		paramName = ObjUtil.defaultIfNull(paramName, "filename");
+		String fileName = null;
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get(paramName+"=\"(.*?)\"", disposition, 1);
+			if (StrUtil.isBlank(fileName)) {
+				fileName = StrUtil.subAfter(disposition, paramName + "=", true);
+			}
+		}
+		return fileName;
 	}
 
 	// ---------------------------------------------------------------- Private method start
@@ -620,33 +640,5 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 		return copyLength;
 	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名，默认为 filename
-	 *
-	 * @return 文件名，empty表示无
-	 */
-	public String getFileNameFromDisposition() {
-		return getFileNameFromDisposition("filename");
-	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名
-	 * @param paramName 文件参数名
-	 *
-	 * @return 文件名，empty表示无
-	 */
-	public String getFileNameFromDisposition(String paramName) {
-		String fileName = null;
-		final String disposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get(paramName+"=\"(.*?)\"", disposition, 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(disposition, "filename=", true);
-			}
-		}
-		return fileName;
-	}
-
 	// ---------------------------------------------------------------- Private method end
 }
