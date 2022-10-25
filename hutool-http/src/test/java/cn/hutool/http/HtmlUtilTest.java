@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.http.html.HtmlUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

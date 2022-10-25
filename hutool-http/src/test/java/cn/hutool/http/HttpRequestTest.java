@@ -115,9 +115,11 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void getDeflateTest() {
-		final String res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
-				.execute().body();
-		Console.log(res);
+		final HttpResponse res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
+				.header(Header.ACCEPT_ENCODING, "deflate")
+				.execute();
+		Console.log(res.header(Header.CONTENT_ENCODING));
+		Console.log(res.body());
 	}
 
 	@Test

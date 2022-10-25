@@ -1,9 +1,11 @@
 package cn.hutool.http;
 
+import cn.hutool.core.compress.InflaterInputStream;
 import cn.hutool.core.map.CaseInsensitiveMap;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 /**
  * 全局响应内容压缩解压器注册中心<br>
@@ -23,7 +25,12 @@ public enum GlobalCompressStreamRegister {
 	 */
 	private final Map<String, Class<? extends InputStream>> compressMap = new CaseInsensitiveMap<>();
 
+	/**
+	 * 构造，初始化默认的压缩算法
+	 */
 	GlobalCompressStreamRegister() {
+		compressMap.put("gzip", GZIPInputStream.class);
+		compressMap.put("deflate", InflaterInputStream.class);
 	}
 
 	/**

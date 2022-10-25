@@ -1,9 +1,11 @@
-package cn.hutool.http;
+package cn.hutool.http.html;
 
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.util.XmlUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * HTML工具类
@@ -13,18 +15,23 @@ import cn.hutool.core.util.XmlUtil;
  * 比如去掉指定标签（例如广告栏等）、去除JS、去掉样式等等，这些操作都可以使用此工具类完成。
  *
  * @author xiaoleilu
- *
  */
 public class HtmlUtil {
 
-	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<\\s*?/[^<]*?>)|(<[^<]*?/\\s*?>)";
-	public static final String RE_SCRIPT = "<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
+	/**
+	 * HTML标签正则
+	 */
+	public static final Pattern RE_HTML_MARK = Pattern.compile("(<[^<]*?>)|(<\\s*?/[^<]*?>)|(<[^<]*?/\\s*?>)", Pattern.CASE_INSENSITIVE);
+	/**
+	 * script标签正则
+	 */
+	public static final Pattern RE_SCRIPT = Pattern.compile("<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
 
 	private static final char[][] TEXT = new char[64][];
 
 	static {
 		for (int i = 0; i < 64; i++) {
-			TEXT[i] = new char[] { (char) i };
+			TEXT[i] = new char[]{(char) i};
 		}
 
 		// special HTML characters
@@ -75,14 +82,24 @@ public class HtmlUtil {
 	 * @return 清除标签后的文本
 	 */
 	public static String cleanHtmlTag(final String content) {
-		return content.replaceAll(RE_HTML_MARK, "");
+		return ReUtil.replaceAll(content, RE_HTML_MARK, "");
+	}
+
+	/**
+	 * 清除所有script标签，包括内容
+	 *
+	 * @param content 文本
+	 * @return 清除标签后的文本
+	 */
+	public static String removeScriptTag(final String content) {
+		return ReUtil.replaceAll(content, RE_SCRIPT, "");
 	}
 
 	/**
 	 * 清除指定HTML标签和被标签包围的内容<br>
 	 * 不区分大小写
 	 *
-	 * @param content 文本
+	 * @param content  文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
@@ -94,7 +111,7 @@ public class HtmlUtil {
 	 * 清除指定HTML标签，不包括内容<br>
 	 * 不区分大小写
 	 *
-	 * @param content 文本
+	 * @param content  文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
@@ -106,9 +123,9 @@ public class HtmlUtil {
 	 * 清除指定HTML标签<br>
 	 * 不区分大小写
 	 *
-	 * @param content 文本
+	 * @param content        文本
 	 * @param withTagContent 是否去掉被包含在标签中的内容
-	 * @param tagNames 要清除的标签
+	 * @param tagNames       要清除的标签
 	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, final boolean withTagContent, final String... tagNames) {
@@ -136,7 +153,7 @@ public class HtmlUtil {
 	 * 去除HTML标签中的属性，如果多个标签有相同属性，都去除
 	 *
 	 * @param content 文本
-	 * @param attrs 属性名（不区分大小写）
+	 * @param attrs   属性名（不区分大小写）
 	 * @return 处理后的文本
 	 */
 	public static String removeHtmlAttr(String content, final String... attrs) {
@@ -156,7 +173,7 @@ public class HtmlUtil {
 	/**
 	 * 去除指定标签的所有属性
 	 *
-	 * @param content 内容
+	 * @param content  内容
 	 * @param tagNames 指定标签
 	 * @return 处理后的文本
 	 */

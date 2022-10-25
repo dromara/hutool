@@ -1,4 +1,4 @@
-package cn.hutool.http;
+package cn.hutool.http.html;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.SafeConcurrentHashMap;

@@ -7,19 +7,17 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 
 /**
  * HTTP输入流，此流用于包装Http请求响应内容的流，用于解析各种压缩、分段的响应流内容
  *
  * @author Looly
- *
  */
 public class HttpInputStream extends InputStream {
 
-	/** 原始流 */
+	/**
+	 * 原始流
+	 */
 	private InputStream in;
 
 	/**
@@ -89,30 +87,17 @@ public class HttpInputStream extends InputStream {
 
 		// 在一些情况下，返回的流为null，此时提供状态码说明
 		if (null == this.in) {
-			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", response.status).getBytes());
+			this.in = new ByteArrayInputStream(StrUtil.format("Error request, null response with status: {}", response.status).getBytes());
 			return;
 		}
 
 		final String contentEncoding = response.contentEncoding();
-		if (StrUtil.equalsIgnoreCase("gzip", contentEncoding) && false == (response.in instanceof GZIPInputStream)) {
-			// Accept-Encoding: gzip
+		final Class<? extends InputStream> streamClass = GlobalCompressStreamRegister.INSTANCE.get(contentEncoding);
+		if (null != streamClass) {
 			try {
-				this.in = new GZIPInputStream(this.in);
-			} catch (final IOException ignore) {
-				// 在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
-				// ignore
-			}
-		} else if (StrUtil.equalsIgnoreCase("deflate", contentEncoding) && false == (this.in instanceof InflaterInputStream)) {
-			// Accept-Encoding: defalte
-			this.in = new InflaterInputStream(this.in, new Inflater(true));
-		} else{
-			final Class<? extends InputStream> streamClass = GlobalCompressStreamRegister.INSTANCE.get(contentEncoding);
-			if(null != streamClass){
-				try {
-					this.in = ConstructorUtil.newInstance(streamClass, this.in);
-				} catch (final Exception ignore) {
-					// 对于构造错误的压缩算法，跳过之
-				}
+				this.in = ConstructorUtil.newInstance(streamClass, this.in);
+			} catch (final Exception ignore) {
+				// 对于构造错误的压缩算法，跳过之
 			}
 		}
 	}
