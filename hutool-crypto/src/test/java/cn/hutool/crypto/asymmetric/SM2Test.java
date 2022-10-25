@@ -76,18 +76,6 @@ public class SM2Test {
 	}
 
 	@Test
-	public void sm2BcdTest() {
-		final String text = "我是一段测试aaaa";
-
-		final SM2 sm2 = SmUtil.sm2();
-
-		// 公钥加密，私钥解密
-		final String encryptStr = sm2.encryptBcd(text, KeyType.PublicKey);
-		final String decryptStr = StrUtil.utf8Str(sm2.decryptFromBcd(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text, decryptStr);
-	}
-
-	@Test
 	public void sm2Base64Test() {
 		final String textBase = "我是一段特别长的测试";
 		final StringBuilder text = new StringBuilder();

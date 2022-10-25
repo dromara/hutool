@@ -138,23 +138,6 @@ public class RSATest {
 	}
 
 	@Test
-	public void rsaBcdTest() {
-		final String text = "我是一段测试aaaa";
-
-		final RSA rsa = new RSA();
-
-		// 公钥加密，私钥解密
-		final String encryptStr = rsa.encryptBcd(text, KeyType.PublicKey);
-		final String decryptStr = StrUtil.utf8Str(rsa.decryptFromBcd(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text, decryptStr);
-
-		// 私钥加密，公钥解密
-		final String encrypt2 = rsa.encryptBcd(text, KeyType.PrivateKey);
-		final String decrypt2 = StrUtil.utf8Str(rsa.decryptFromBcd(encrypt2, KeyType.PublicKey));
-		Assert.assertEquals(text, decrypt2);
-	}
-
-	@Test
 	public void rsaBase64Test() {
 		final String textBase = "我是一段特别长的测试";
 		final StringBuilder text = new StringBuilder();
