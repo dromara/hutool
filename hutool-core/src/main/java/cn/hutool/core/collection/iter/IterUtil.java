@@ -460,7 +460,7 @@ public class IterUtil {
 	 * @param index    位置
 	 * @param <E>      元素类型
 	 * @return 元素，找不到元素返回{@code null}
-	 * @throws IndexOutOfBoundsException index < 0时报错
+	 * @throws IndexOutOfBoundsException index &lt; 0时报错
 	 * @since 5.8.0
 	 */
 	public static <E> E get(final Iterator<E> iterator, int index) throws IndexOutOfBoundsException {
