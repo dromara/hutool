@@ -2,6 +2,9 @@ package cn.hutool.http;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.meta.Header;
 import org.junit.Ignore;
 import org.junit.Test;
 

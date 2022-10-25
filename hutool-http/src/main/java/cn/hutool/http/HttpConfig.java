@@ -2,6 +2,9 @@ package cn.hutool.http;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.ssl.SSLUtil;
+import cn.hutool.http.client.engine.jdk.HttpInterceptor;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -28,40 +31,40 @@ public class HttpConfig {
 	/**
 	 * 默认连接超时
 	 */
-	int connectionTimeout = HttpGlobalConfig.getTimeout();
+	public int connectionTimeout = HttpGlobalConfig.getTimeout();
 	/**
 	 * 默认读取超时
 	 */
-	int readTimeout = HttpGlobalConfig.getTimeout();
+	public int readTimeout = HttpGlobalConfig.getTimeout();
 
 	/**
 	 * 是否禁用缓存
 	 */
-	boolean isDisableCache;
+	public boolean isDisableCache;
 
 	/**
 	 * 最大重定向次数
 	 */
-	int maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
+	public int maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
 
 	/**
 	 * 代理
 	 */
-	Proxy proxy;
+	public Proxy proxy;
 
 	/**
 	 * HostnameVerifier，用于HTTPS安全连接
 	 */
-	HostnameVerifier hostnameVerifier;
+	public HostnameVerifier hostnameVerifier;
 	/**
 	 * SSLSocketFactory，用于HTTPS安全连接
 	 */
-	SSLSocketFactory ssf;
+	public SSLSocketFactory ssf;
 
 	/**
 	 * Chuncked块大小，0或小于0表示不设置Chuncked模式
 	 */
-	int blockSize;
+	public int blockSize;
 
 	/**
 	 * 获取是否忽略响应读取时可能的EOF异常。<br>
@@ -79,16 +82,16 @@ public class HttpConfig {
 	/**
 	 * 请求前的拦截器，用于在请求前重新编辑请求
 	 */
-	final HttpInterceptor.Chain<HttpRequest> requestInterceptors = GlobalInterceptor.INSTANCE.getCopiedRequestInterceptor();
+	public final HttpInterceptor.Chain<HttpRequest> requestInterceptors = GlobalInterceptor.INSTANCE.getCopiedRequestInterceptor();
 	/**
 	 * 响应后的拦截器，用于在响应后处理逻辑
 	 */
-	final HttpInterceptor.Chain<HttpResponse> responseInterceptors = GlobalInterceptor.INSTANCE.getCopiedResponseInterceptor();
+	public final HttpInterceptor.Chain<HttpResponse> responseInterceptors = GlobalInterceptor.INSTANCE.getCopiedResponseInterceptor();
 
 	/**
 	 * 重定向时是否使用拦截器
 	 */
-	boolean interceptorOnRedirect;
+	public boolean interceptorOnRedirect;
 
 	/**
 	 * 设置超时，单位：毫秒<br>
@@ -296,5 +299,14 @@ public class HttpConfig {
 	public HttpConfig setInterceptorOnRedirect(final boolean interceptorOnRedirect) {
 		this.interceptorOnRedirect = interceptorOnRedirect;
 		return this;
+	}
+
+	/**
+	 * 获取是否忽略响应读取时可能的EOF异常。
+	 *
+	 * @return 是否忽略响应读取时可能的EOF异常。
+	 */
+	public boolean isIgnoreEOFError() {
+		return ignoreEOFError;
 	}
 }

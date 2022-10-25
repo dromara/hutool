@@ -13,7 +13,11 @@ import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.http.cookie.GlobalCookieManager;
+import cn.hutool.http.client.HttpDownloader;
+import cn.hutool.http.client.cookie.GlobalCookieManager;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.meta.ContentType;
+import cn.hutool.http.meta.Method;
 import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;

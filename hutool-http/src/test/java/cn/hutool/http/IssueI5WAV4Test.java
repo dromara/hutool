@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.http.client.engine.jdk.HttpRequest;
 import cn.hutool.json.JSONUtil;
 import org.junit.Ignore;
 import org.junit.Test;

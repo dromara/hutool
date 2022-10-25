@@ -1,6 +1,6 @@
 package cn.hutool.http.server;
 
-import cn.hutool.http.ContentType;
+import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.HttpUtil;
 
 public class BlankServerTest {

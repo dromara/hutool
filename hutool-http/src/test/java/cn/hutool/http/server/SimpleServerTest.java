@@ -4,8 +4,8 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.multipart.UploadFile;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.Header;
+import cn.hutool.http.meta.ContentType;
+import cn.hutool.http.meta.Header;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 

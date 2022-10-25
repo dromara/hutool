@@ -1,6 +1,8 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.meta.Header;
 import cn.hutool.json.JSONUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -20,7 +22,7 @@ public class RestTest {
 				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
-		Assert.assertEquals("application/json;charset=UTF-8", request.header("Content-Type"));
+		Assert.assertEquals("application/json;charset=UTF-8", request.header(Header.CONTENT_TYPE));
 	}
 
 	@Test

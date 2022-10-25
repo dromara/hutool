@@ -7,6 +7,10 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.ssl.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.meta.Header;
+import cn.hutool.http.meta.Method;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -213,7 +217,7 @@ public class HttpRequestTest {
 		urlBuilder.setScheme("https").setHost("hutool.cn");
 
 		final HttpRequest httpRequest = new HttpRequest(urlBuilder);
-		httpRequest.setMethod(Method.GET).execute();
+		httpRequest.method(Method.GET).execute();
 	}
 
 	@Test

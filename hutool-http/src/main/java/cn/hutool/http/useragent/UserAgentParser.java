@@ -28,7 +28,7 @@ public class UserAgentParser {
 		userAgent.setVersion(browser.getVersion(userAgentString));
 
 		// 浏览器引擎
-		final Engine engine = parseEngine(userAgentString);
+		final BrowserEngine engine = parseEngine(userAgentString);
 		userAgent.setEngine(engine);
 		userAgent.setEngineVersion(engine.getVersion(userAgentString));
 
@@ -67,13 +67,13 @@ public class UserAgentParser {
 	 * @param userAgentString User-Agent字符串
 	 * @return 引擎类型
 	 */
-	private static Engine parseEngine(final String userAgentString) {
-		for (final Engine engine : Engine.engines) {
+	private static BrowserEngine parseEngine(final String userAgentString) {
+		for (final BrowserEngine engine : BrowserEngine.engines) {
 			if (engine.isMatch(userAgentString)) {
 				return engine;
 			}
 		}
-		return Engine.Unknown;
+		return BrowserEngine.Unknown;
 	}
 
 	/**

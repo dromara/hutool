@@ -1,6 +1,8 @@
 package cn.hutool.http;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.meta.Header;
 import org.brotli.dec.BrotliInputStream;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,5 +1,9 @@
 package cn.hutool.http;
 
+import cn.hutool.http.client.engine.jdk.HttpInterceptor;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
+
 /**
  * 全局的拦截器<br>
  * 包括请求拦截器和响应拦截器
@@ -69,7 +73,7 @@ public enum GlobalInterceptor {
 	/**
 	 * 复制请求过滤器列表
 	 *
-	 * @return {@link cn.hutool.http.HttpInterceptor.Chain}
+	 * @return {@link HttpInterceptor.Chain}
 	 */
 	HttpInterceptor.Chain<HttpRequest> getCopiedRequestInterceptor() {
 		final HttpInterceptor.Chain<HttpRequest> copied = new HttpInterceptor.Chain<>();
@@ -82,7 +86,7 @@ public enum GlobalInterceptor {
 	/**
 	 * 复制响应过滤器列表
 	 *
-	 * @return {@link cn.hutool.http.HttpInterceptor.Chain}
+	 * @return {@link HttpInterceptor.Chain}
 	 */
 	HttpInterceptor.Chain<HttpResponse> getCopiedResponseInterceptor() {
 		final HttpInterceptor.Chain<HttpResponse> copied = new HttpInterceptor.Chain<>();

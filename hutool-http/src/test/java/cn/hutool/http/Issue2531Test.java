@@ -3,6 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

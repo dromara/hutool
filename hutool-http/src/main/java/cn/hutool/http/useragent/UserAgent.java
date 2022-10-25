@@ -41,7 +41,7 @@ public class UserAgent implements Serializable {
 	/**
 	 * 引擎类型
 	 */
-	private Engine engine;
+	private BrowserEngine engine;
 	/**
 	 * 引擎版本
 	 */
@@ -144,7 +144,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @return 引擎类型
 	 */
-	public Engine getEngine() {
+	public BrowserEngine getEngine() {
 		return engine;
 	}
 
@@ -153,7 +153,7 @@ public class UserAgent implements Serializable {
 	 *
 	 * @param engine 引擎类型
 	 */
-	public void setEngine(final Engine engine) {
+	public void setEngine(final BrowserEngine engine) {
 		this.engine = engine;
 	}
 

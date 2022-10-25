@@ -3,7 +3,7 @@ package cn.hutool.http;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.http.cookie.GlobalCookieManager;
+import cn.hutool.http.client.cookie.GlobalCookieManager;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

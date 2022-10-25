@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -6,10 +6,10 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HttpBase;
+import cn.hutool.http.client.engine.jdk.HttpBase;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import cn.hutool.http.client.engine.jdk.HttpRequest;
+import cn.hutool.http.client.engine.jdk.HttpResponse;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
