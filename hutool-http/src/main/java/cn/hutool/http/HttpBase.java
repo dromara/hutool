@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * http基类
+ * http基类，提供请求和响应共用的属性和方法。
  *
  * @param <T> 子类类型，方便链式编程
  * @author Looly
@@ -347,8 +347,8 @@ public abstract class HttpBase<T> {
 		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
 		for (final Entry<String, List<String>> entry : this.headers.entrySet()) {
-			sb.append("    ").append(
-							entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
+			sb.append("    ")
+					.append(entry.getKey()).append(":").append(CollUtil.join(entry.getValue(), ","))
 					.append(StrUtil.CRLF);
 		}
 

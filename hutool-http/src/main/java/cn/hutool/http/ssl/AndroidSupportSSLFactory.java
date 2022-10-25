@@ -18,6 +18,11 @@ public class AndroidSupportSSLFactory extends CustomProtocolsSSLFactory {
 	private static final String[] protocols = {
 			SSLProtocols.SSLv3, SSLProtocols.TLSv1, SSLProtocols.TLSv11, SSLProtocols.TLSv12};
 
+	/**
+	 * 构造
+	 *
+	 * @throws IORuntimeException IO异常
+	 */
 	public AndroidSupportSSLFactory() throws IORuntimeException {
 		super(protocols);
 	}
