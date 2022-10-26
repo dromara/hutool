@@ -2,6 +2,7 @@ package cn.hutool.http.client.body;
 
 import cn.hutool.core.io.resource.Resource;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -45,5 +46,10 @@ public class ResourceBody implements RequestBody {
 	@Override
 	public void write(final OutputStream out) {
 		resource.writeTo(out);
+	}
+
+	@Override
+	public InputStream getStream() {
+		return resource.getStream();
 	}
 }

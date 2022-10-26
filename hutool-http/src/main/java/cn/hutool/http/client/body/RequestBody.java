@@ -1,7 +1,9 @@
 package cn.hutool.http.client.body;
 
+import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -28,5 +30,16 @@ public interface RequestBody {
 		} finally {
 			IoUtil.close(out);
 		}
+	}
+
+	/**
+	 * 获取body资源流
+	 *
+	 * @return {@link InputStream}
+	 */
+	default InputStream getStream() {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		writeClose(out);
+		return IoUtil.toStream(out);
 	}
 }

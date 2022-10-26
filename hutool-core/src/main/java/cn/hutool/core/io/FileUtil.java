@@ -1,6 +1,6 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.compress.ZipUtil;
 import cn.hutool.core.io.file.FileCopier;
 import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.io.file.FileNameUtil;
@@ -14,15 +14,15 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerConsumer;
+import cn.hutool.core.net.url.URLUtil;
+import cn.hutool.core.reflect.ClassUtil;
+import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.reflect.ClassUtil;
-import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.net.url.URLUtil;
-import cn.hutool.core.compress.ZipUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -52,7 +52,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -411,33 +410,13 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 获取临时文件路径（绝对路径）
-	 *
-	 * @return 临时文件路径
-	 * @since 4.0.6
-	 */
-	public static String getTmpDirPath() {
-		return System.getProperty("java.io.tmpdir");
-	}
-
-	/**
 	 * 获取临时文件目录
 	 *
 	 * @return 临时文件目录
 	 * @since 4.0.6
 	 */
 	public static File getTmpDir() {
-		return file(getTmpDirPath());
-	}
-
-	/**
-	 * 获取用户路径（绝对路径）
-	 *
-	 * @return 用户路径
-	 * @since 4.0.6
-	 */
-	public static String getUserHomePath() {
-		return System.getProperty("user.home");
+		return file(SystemUtil.getTmpDirPath());
 	}
 
 	/**
@@ -447,7 +426,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.6
 	 */
 	public static File getUserHomeDir() {
-		return file(getUserHomePath());
+		return file(SystemUtil.getUserHomePath());
 	}
 
 	/**
@@ -1232,7 +1211,7 @@ public class FileUtil extends PathUtil {
 		if (path == null) {
 			normalPath = StrUtil.EMPTY;
 		} else {
-			normalPath = normalize(path);
+			normalPath = FileNameUtil.normalize(path);
 			if (isAbsolutePath(normalPath)) {
 				// 给定的路径已经是绝对路径了
 				return normalPath;
@@ -1243,7 +1222,7 @@ public class FileUtil extends PathUtil {
 		final URL url = ResourceUtil.getResourceUrl(normalPath, baseClass);
 		if (null != url) {
 			// 对于jar中文件包含file:前缀，需要去掉此类前缀，在此做标准化，since 3.0.8 解决中文或空格路径被编码的问题
-			return FileUtil.normalize(URLUtil.getDecodedPath(url));
+			return FileNameUtil.normalize(URLUtil.getDecodedPath(url));
 		}
 
 		// 如果资源不存在，则返回一个拼接的资源绝对路径
@@ -1255,7 +1234,7 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 资源不存在的情况下使用标准化路径有问题，使用原始路径拼接后标准化路径
-		return normalize(classPath.concat(Objects.requireNonNull(path)));
+		return FileNameUtil.normalize(classPath.concat(Objects.requireNonNull(path)));
 	}
 
 	/**
@@ -1290,7 +1269,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 给定路径已经是绝对路径<br>
-	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断<br>
+	 * 此方法并没有针对路径做标准化，建议先执行{@link FileNameUtil#normalize(String)}方法标准化路径后判断<br>
 	 * 绝对路径判断条件是：
 	 * <ul>
 	 *     <li>以/开头的路径</li>
@@ -1573,84 +1552,7 @@ public class FileUtil extends PathUtil {
 	 * @return 修复后的路径
 	 */
 	public static String normalize(final String path) {
-		if (path == null) {
-			return null;
-		}
-
-		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
-		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
-		// 去除file:前缀
-		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
-
-		// 识别home目录形式，并转换为绝对路径
-		if (StrUtil.startWith(pathToUse, '~')) {
-			pathToUse = getUserHomePath() + pathToUse.substring(1);
-		}
-
-		// 统一使用斜杠
-		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
-		// 去除开头空白符，末尾空白符合法，不去除
-		pathToUse = StrUtil.trimStart(pathToUse);
-		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
-		if (path.startsWith("\\\\")) {
-			pathToUse = "\\" + pathToUse;
-		}
-
-		String prefix = StrUtil.EMPTY;
-		final int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
-		if (prefixIndex > -1) {
-			// 可能Windows风格路径
-			prefix = pathToUse.substring(0, prefixIndex + 1);
-			if (StrUtil.startWith(prefix, CharUtil.SLASH)) {
-				// 去除类似于/C:这类路径开头的斜杠
-				prefix = prefix.substring(1);
-			}
-			if (false == prefix.contains(StrUtil.SLASH)) {
-				pathToUse = pathToUse.substring(prefixIndex + 1);
-			} else {
-				// 如果前缀中包含/,说明非Windows风格path
-				prefix = StrUtil.EMPTY;
-			}
-		}
-		if (pathToUse.startsWith(StrUtil.SLASH)) {
-			prefix += StrUtil.SLASH;
-			pathToUse = pathToUse.substring(1);
-		}
-
-		final List<String> pathList = StrUtil.split(pathToUse, CharUtil.SLASH);
-
-		final List<String> pathElements = new LinkedList<>();
-		int tops = 0;
-		String element;
-		for (int i = pathList.size() - 1; i >= 0; i--) {
-			element = pathList.get(i);
-			// 只处理非.的目录，即只处理非当前目录
-			if (false == StrUtil.DOT.equals(element)) {
-				if (StrUtil.DOUBLE_DOT.equals(element)) {
-					tops++;
-				} else {
-					if (tops > 0) {
-						// 有上级目录标记时按照个数依次跳过
-						tops--;
-					} else {
-						// Normal path element found.
-						pathElements.add(0, element);
-					}
-				}
-			}
-		}
-
-		// issue#1703@Github
-		if (tops > 0 && StrUtil.isEmpty(prefix)) {
-			// 只有相对路径补充开头的..，绝对路径直接忽略之
-			while (tops-- > 0) {
-				//遍历完节点发现还有上级标注（即开头有一个或多个..），补充之
-				// Normal path element found.
-				pathElements.add(0, StrUtil.DOUBLE_DOT);
-			}
-		}
-
-		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
+		return FileNameUtil.normalize(path);
 	}
 
 	/**
@@ -1693,8 +1595,8 @@ public class FileUtil extends PathUtil {
 	public static String subPath(String dirPath, String filePath) {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
 
-			dirPath = StrUtil.removeSuffix(normalize(dirPath), "/");
-			filePath = normalize(filePath);
+			dirPath = StrUtil.removeSuffix(FileNameUtil.normalize(dirPath), "/");
+			filePath = FileNameUtil.normalize(filePath);
 
 			final String result = StrUtil.removePrefixIgnoreCase(filePath, dirPath);
 			return StrUtil.removePrefix(result, "/");

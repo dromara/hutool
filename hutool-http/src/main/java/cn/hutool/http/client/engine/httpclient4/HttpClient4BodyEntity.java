@@ -1,12 +1,9 @@
 package cn.hutool.http.client.engine.httpclient4;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.http.client.body.BytesBody;
 import cn.hutool.http.client.body.RequestBody;
-import cn.hutool.http.client.body.ResourceBody;
 import org.apache.http.entity.AbstractHttpEntity;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -17,7 +14,7 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 6.0.0
  */
-public class RequestBodyEntity extends AbstractHttpEntity {
+public class HttpClient4BodyEntity extends AbstractHttpEntity {
 
 	private final RequestBody body;
 
@@ -29,7 +26,7 @@ public class RequestBodyEntity extends AbstractHttpEntity {
 	 * @param chunked     是否块模式传输
 	 * @param body        {@link RequestBody}
 	 */
-	public RequestBodyEntity(final String contentType, final Charset charset, final boolean chunked, final RequestBody body) {
+	public HttpClient4BodyEntity(final String contentType, final Charset charset, final boolean chunked, final RequestBody body) {
 		super();
 		setContentType(contentType);
 		setContentEncoding(null == charset ? null : charset.name());
@@ -46,13 +43,7 @@ public class RequestBodyEntity extends AbstractHttpEntity {
 
 	@Override
 	public InputStream getContent() {
-		if (body instanceof ResourceBody) {
-			return ((ResourceBody) body).getResource().getStream();
-		} else {
-			final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-			body.writeClose(out);
-			return new ByteArrayInputStream(out.toByteArray());
-		}
+		return body.getStream();
 	}
 
 	@Override

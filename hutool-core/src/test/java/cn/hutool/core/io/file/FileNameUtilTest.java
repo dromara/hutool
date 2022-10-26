@@ -18,4 +18,31 @@ public class FileNameUtilTest {
 		final String s = FileNameUtil.mainName("abc.tar.gz");
 		Assert.assertEquals("abc", s);
 	}
+
+	@Test
+	public void normalizeTest() {
+		Assert.assertEquals("/foo/", FileNameUtil.normalize("/foo//"));
+		Assert.assertEquals("/foo/", FileNameUtil.normalize("/foo/./"));
+		Assert.assertEquals("/bar", FileNameUtil.normalize("/foo/../bar"));
+		Assert.assertEquals("/bar/", FileNameUtil.normalize("/foo/../bar/"));
+		Assert.assertEquals("/baz", FileNameUtil.normalize("/foo/../bar/../baz"));
+		Assert.assertEquals("/", FileNameUtil.normalize("/../"));
+		Assert.assertEquals("foo", FileNameUtil.normalize("foo/bar/.."));
+		Assert.assertEquals("../bar", FileNameUtil.normalize("foo/../../bar"));
+		Assert.assertEquals("bar", FileNameUtil.normalize("foo/../bar"));
+		Assert.assertEquals("/server/bar", FileNameUtil.normalize("//server/foo/../bar"));
+		Assert.assertEquals("/bar", FileNameUtil.normalize("//server/../bar"));
+		Assert.assertEquals("C:/bar", FileNameUtil.normalize("C:\\foo\\..\\bar"));
+		//
+		Assert.assertEquals("C:/bar", FileNameUtil.normalize("C:\\..\\bar"));
+		Assert.assertEquals("../../bar", FileNameUtil.normalize("../../bar"));
+		Assert.assertEquals("C:/bar", FileNameUtil.normalize("/C:/bar"));
+		Assert.assertEquals("C:", FileNameUtil.normalize("C:"));
+		Assert.assertEquals("\\/192.168.1.1/Share/", FileNameUtil.normalize("\\\\192.168.1.1\\Share\\"));
+	}
+
+	@Test
+	public void normalizeBlankTest() {
+		Assert.assertEquals("C:/aaa ", FileNameUtil.normalize("C:\\aaa "));
+	}
 }

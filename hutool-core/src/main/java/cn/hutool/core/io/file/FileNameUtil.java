@@ -1,10 +1,15 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.SystemUtil;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -285,6 +290,120 @@ public class FileNameUtil {
 	 */
 	public static boolean isType(final String fileName, final String... extNames) {
 		return StrUtil.equalsAnyIgnoreCase(extName(fileName), extNames);
+	}
+
+	/**
+	 * 修复路径<br>
+	 * 如果原路径尾部有分隔符，则保留为标准分隔符（/），否则不保留
+	 * <ol>
+	 * <li>1. 统一用 /</li>
+	 * <li>2. 多个 / 转换为一个 /</li>
+	 * <li>3. 去除左边空格</li>
+	 * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
+	 * </ol>
+	 * <p>
+	 * 栗子：
+	 *
+	 * <pre>
+	 * "/foo//" =》 "/foo/"
+	 * "/foo/./" =》 "/foo/"
+	 * "/foo/../bar" =》 "/bar"
+	 * "/foo/../bar/" =》 "/bar/"
+	 * "/foo/../bar/../baz" =》 "/baz"
+	 * "/../" =》 "/"
+	 * "foo/bar/.." =》 "foo"
+	 * "foo/../bar" =》 "bar"
+	 * "foo/../../bar" =》 "bar"
+	 * "//server/foo/../bar" =》 "/server/bar"
+	 * "//server/../bar" =》 "/bar"
+	 * "C:\\foo\\..\\bar" =》 "C:/bar"
+	 * "C:\\..\\bar" =》 "C:/bar"
+	 * "~/foo/../bar/" =》 "~/bar/"
+	 * "~/../bar" =》 普通用户运行是'bar的home目录'，ROOT用户运行是'/bar'
+	 * </pre>
+	 *
+	 * @param path 原路径
+	 * @return 修复后的路径
+	 */
+	public static String normalize(final String path) {
+		if (path == null) {
+			return null;
+		}
+
+		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
+		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
+		// 去除file:前缀
+		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
+
+		// 识别home目录形式，并转换为绝对路径
+		if (StrUtil.startWith(pathToUse, '~')) {
+			pathToUse = SystemUtil.getUserHomePath() + pathToUse.substring(1);
+		}
+
+		// 统一使用斜杠
+		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
+		// 去除开头空白符，末尾空白符合法，不去除
+		pathToUse = StrUtil.trimStart(pathToUse);
+		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
+		if (path.startsWith("\\\\")) {
+			pathToUse = "\\" + pathToUse;
+		}
+
+		String prefix = StrUtil.EMPTY;
+		final int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
+		if (prefixIndex > -1) {
+			// 可能Windows风格路径
+			prefix = pathToUse.substring(0, prefixIndex + 1);
+			if (StrUtil.startWith(prefix, CharUtil.SLASH)) {
+				// 去除类似于/C:这类路径开头的斜杠
+				prefix = prefix.substring(1);
+			}
+			if (false == prefix.contains(StrUtil.SLASH)) {
+				pathToUse = pathToUse.substring(prefixIndex + 1);
+			} else {
+				// 如果前缀中包含/,说明非Windows风格path
+				prefix = StrUtil.EMPTY;
+			}
+		}
+		if (pathToUse.startsWith(StrUtil.SLASH)) {
+			prefix += StrUtil.SLASH;
+			pathToUse = pathToUse.substring(1);
+		}
+
+		final List<String> pathList = StrUtil.split(pathToUse, CharUtil.SLASH);
+
+		final List<String> pathElements = new LinkedList<>();
+		int tops = 0;
+		String element;
+		for (int i = pathList.size() - 1; i >= 0; i--) {
+			element = pathList.get(i);
+			// 只处理非.的目录，即只处理非当前目录
+			if (false == StrUtil.DOT.equals(element)) {
+				if (StrUtil.DOUBLE_DOT.equals(element)) {
+					tops++;
+				} else {
+					if (tops > 0) {
+						// 有上级目录标记时按照个数依次跳过
+						tops--;
+					} else {
+						// Normal path element found.
+						pathElements.add(0, element);
+					}
+				}
+			}
+		}
+
+		// issue#1703@Github
+		if (tops > 0 && StrUtil.isEmpty(prefix)) {
+			// 只有相对路径补充开头的..，绝对路径直接忽略之
+			while (tops-- > 0) {
+				//遍历完节点发现还有上级标注（即开头有一个或多个..），补充之
+				// Normal path element found.
+				pathElements.add(0, StrUtil.DOUBLE_DOT);
+			}
+		}
+
+		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
 	}
 	// -------------------------------------------------------------------------------------------- name end
 }

@@ -147,4 +147,23 @@ public class SystemUtil {
 	public static String[] getJavaClassPaths() {
 		return get("java.class.path").split(get("path.separator"));
 	}
+
+	/**
+	 * 获取用户路径（绝对路径）
+	 *
+	 * @return 用户路径
+	 */
+	public static String getUserHomePath() {
+		return get("user.home");
+	}
+
+	/**
+	 * 获取临时文件路径（绝对路径）
+	 *
+	 * @return 临时文件路径
+	 * @since 4.0.6
+	 */
+	public static String getTmpDirPath() {
+		return get("java.io.tmpdir");
+	}
 }

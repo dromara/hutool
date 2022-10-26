@@ -739,6 +739,19 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * {@link FastByteArrayOutputStream}转为{@link ByteArrayInputStream}
+	 *
+	 * @param out {@link FastByteArrayOutputStream}
+	 * @return 字节流
+	 */
+	public static ByteArrayInputStream toStream(final FastByteArrayOutputStream out) {
+		if (out == null) {
+			return null;
+		}
+		return new ByteArrayInputStream(out.toByteArray());
+	}
+
+	/**
 	 * 转换为{@link BufferedInputStream}
 	 *
 	 * @param in {@link InputStream}

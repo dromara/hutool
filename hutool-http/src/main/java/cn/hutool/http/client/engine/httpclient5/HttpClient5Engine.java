@@ -84,7 +84,7 @@ public class HttpClient5Engine implements ClientEngine {
 
 		// 填充自定义消息体
 		final RequestBody body = message.body();
-		request.setEntity(new RequestBodyEntity(
+		request.setEntity(new HttpClient5BodyEntity(
 				// 用户自定义的内容类型
 				message.header(cn.hutool.http.meta.Header.CONTENT_TYPE),
 				// 用户自定义编码

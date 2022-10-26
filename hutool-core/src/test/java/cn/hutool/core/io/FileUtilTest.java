@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.SystemUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -142,41 +143,14 @@ public class FileUtilTest {
 	}
 
 	@Test
-	public void normalizeTest() {
-		Assert.assertEquals("/foo/", FileUtil.normalize("/foo//"));
-		Assert.assertEquals("/foo/", FileUtil.normalize("/foo/./"));
-		Assert.assertEquals("/bar", FileUtil.normalize("/foo/../bar"));
-		Assert.assertEquals("/bar/", FileUtil.normalize("/foo/../bar/"));
-		Assert.assertEquals("/baz", FileUtil.normalize("/foo/../bar/../baz"));
-		Assert.assertEquals("/", FileUtil.normalize("/../"));
-		Assert.assertEquals("foo", FileUtil.normalize("foo/bar/.."));
-		Assert.assertEquals("../bar", FileUtil.normalize("foo/../../bar"));
-		Assert.assertEquals("bar", FileUtil.normalize("foo/../bar"));
-		Assert.assertEquals("/server/bar", FileUtil.normalize("//server/foo/../bar"));
-		Assert.assertEquals("/bar", FileUtil.normalize("//server/../bar"));
-		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
-		//
-		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
-		Assert.assertEquals("../../bar", FileUtil.normalize("../../bar"));
-		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
-		Assert.assertEquals("C:", FileUtil.normalize("C:"));
-		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
-	}
-
-	@Test
-	public void normalizeBlankTest() {
-		Assert.assertEquals("C:/aaa ", FileUtil.normalize("C:\\aaa "));
-	}
-
-	@Test
 	public void normalizeHomePathTest() {
-		final String home = FileUtil.getUserHomePath().replace('\\', '/');
+		final String home = SystemUtil.getUserHomePath().replace('\\', '/');
 		Assert.assertEquals(home + "/bar/", FileUtil.normalize("~/foo/../bar/"));
 	}
 
 	@Test
 	public void normalizeHomePathTest2() {
-		final String home = FileUtil.getUserHomePath().replace('\\', '/');
+		final String home = SystemUtil.getUserHomePath().replace('\\', '/');
 		// 多个~应该只替换开头的
 		Assert.assertEquals(home + "/~bar/", FileUtil.normalize("~/foo/../~bar/"));
 	}
