@@ -2,9 +2,6 @@ package cn.hutool.http;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.ssl.SSLUtil;
-import cn.hutool.http.client.engine.jdk.HttpInterceptor;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -80,15 +77,6 @@ public class HttpConfig {
 	boolean decodeUrl = HttpGlobalConfig.isDecodeUrl();
 
 	/**
-	 * 请求前的拦截器，用于在请求前重新编辑请求
-	 */
-	public final HttpInterceptor.Chain<HttpRequest> requestInterceptors = GlobalInterceptor.INSTANCE.getCopiedRequestInterceptor();
-	/**
-	 * 响应后的拦截器，用于在响应后处理逻辑
-	 */
-	public final HttpInterceptor.Chain<HttpResponse> responseInterceptors = GlobalInterceptor.INSTANCE.getCopiedResponseInterceptor();
-
-	/**
 	 * 重定向时是否使用拦截器
 	 */
 	public boolean interceptorOnRedirect;
@@ -125,7 +113,7 @@ public class HttpConfig {
 	}
 
 	/**
-	 * 设置连接超时，单位：毫秒
+	 * 设置读取超时，单位：毫秒
 	 *
 	 * @param milliseconds 超时毫秒数
 	 * @return this
@@ -265,28 +253,6 @@ public class HttpConfig {
 	 */
 	public HttpConfig setDecodeUrl(final boolean decodeUrl) {
 		this.decodeUrl = decodeUrl;
-		return this;
-	}
-
-	/**
-	 * 设置拦截器，用于在请求前重新编辑请求
-	 *
-	 * @param interceptor 拦截器实现
-	 * @return this
-	 */
-	public HttpConfig addRequestInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
-		this.requestInterceptors.addChain(interceptor);
-		return this;
-	}
-
-	/**
-	 * 设置拦截器，用于在请求前重新编辑请求
-	 *
-	 * @param interceptor 拦截器实现
-	 * @return this
-	 */
-	public HttpConfig addResponseInterceptor(final HttpInterceptor<HttpResponse> interceptor) {
-		this.responseInterceptors.addChain(interceptor);
 		return this;
 	}
 

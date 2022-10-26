@@ -22,7 +22,7 @@ import java.util.Map;
  * @author looly
  */
 @SuppressWarnings("unchecked")
-public abstract class FormBody<T extends FormBody<T>> implements RequestBody {
+public abstract class FormBody<T extends FormBody<T>> implements HttpBody {
 	/**
 	 * 存储表单数据
 	 */

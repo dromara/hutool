@@ -1,5 +1,6 @@
 package cn.hutool.http.client.body;
 
+import cn.hutool.core.io.resource.HttpResource;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.http.HttpUtil;
 
@@ -30,6 +31,6 @@ public class StringBody extends ResourceBody {
 	 * @param charset     自定义编码
 	 */
 	public StringBody(final String body, final String contentType, final Charset charset) {
-		super(new StringResource(body, contentType, charset));
+		super(new HttpResource(new StringResource(body, contentType, charset), contentType));
 	}
 }

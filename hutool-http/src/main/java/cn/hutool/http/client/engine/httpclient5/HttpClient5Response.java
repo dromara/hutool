@@ -81,7 +81,7 @@ public class HttpClient5Response implements Response {
 	}
 
 	@Override
-	public String body() throws HttpException {
+	public String bodyStr() throws HttpException {
 		try {
 			return EntityUtils.toString(rawRes.getEntity(), charset());
 		} catch (final IOException e) {

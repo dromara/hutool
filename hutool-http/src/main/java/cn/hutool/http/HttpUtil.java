@@ -124,7 +124,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Charset customCharset) {
-		return HttpRequest.get(urlString).charset(customCharset).execute().body();
+		return HttpRequest.get(urlString).charset(customCharset).execute().bodyStr();
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
-		return HttpRequest.get(urlString).timeout(timeout).execute().body();
+		return HttpRequest.get(urlString).timeout(timeout).execute().bodyStr();
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Map<String, Object> paramMap) {
-		return HttpRequest.get(urlString).form(paramMap).execute().body();
+		return HttpRequest.get(urlString).form(paramMap).execute().bodyStr();
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Map<String, Object> paramMap, final int timeout) {
-		return HttpRequest.get(urlString).form(paramMap).timeout(timeout).execute().body();
+		return HttpRequest.get(urlString).form(paramMap).timeout(timeout).execute().bodyStr();
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String post(final String urlString, final Map<String, Object> paramMap, final int timeout) {
-		return HttpRequest.post(urlString).form(paramMap).timeout(timeout).execute().body();
+		return HttpRequest.post(urlString).form(paramMap).timeout(timeout).execute().bodyStr();
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String post(final String urlString, final String body, final int timeout) {
-		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().body();
+		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().bodyStr();
 	}
 
 	// ---------------------------------------------------------------------------------------- download

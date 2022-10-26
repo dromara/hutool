@@ -186,22 +186,6 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void addInterceptorTest() {
-		HttpUtil.createGet("https://hutool.cn")
-				.addInterceptor(Console::log)
-				.addResponseInterceptor((res)-> Console.log(res.getStatus()))
-				.execute();
-	}
-
-	@Test
-	@Ignore
-	public void addGlobalInterceptorTest() {
-		GlobalInterceptor.INSTANCE.addRequestInterceptor(Console::log);
-		HttpUtil.createGet("https://hutool.cn").execute();
-	}
-
-	@Test
-	@Ignore
 	public void getWithFormTest(){
 		final String url = "https://postman-echo.com/get";
 		final Map<String, Object> map = new HashMap<>();

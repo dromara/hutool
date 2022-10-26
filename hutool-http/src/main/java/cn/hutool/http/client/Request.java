@@ -4,10 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.client.body.RequestBody;
+import cn.hutool.http.client.body.HttpBody;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class Request implements Headers<Request> {
+public class Request implements HeaderOperation<Request> {
 
 	/**
 	 * 构建一个HTTP请求<br>
@@ -70,7 +71,7 @@ public class Request implements Headers<Request> {
 	/**
 	 * 请求方法
 	 */
-	private Method method = Method.GET;
+	private Method method;
 	/**
 	 * 请求的URL
 	 */
@@ -78,8 +79,24 @@ public class Request implements Headers<Request> {
 	/**
 	 * 存储头信息
 	 */
-	private final Map<String, List<String>> headers = new HashMap<>();
-	private RequestBody body;
+	private final Map<String, List<String>> headers;
+	/**
+	 * 请求体
+	 */
+	private HttpBody body;
+	/**
+	 * 最大重定向次数
+	 */
+	private int maxRedirectCount;
+
+	/**
+	 * 默认构造
+	 */
+	public Request() {
+		method = Method.GET;
+		headers = new HashMap<>();
+		maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
+	}
 
 	/**
 	 * 获取Http请求方法
@@ -195,7 +212,7 @@ public class Request implements Headers<Request> {
 	 *
 	 * @return this
 	 */
-	public RequestBody body() {
+	public HttpBody body() {
 		return this.body;
 	}
 
@@ -205,8 +222,35 @@ public class Request implements Headers<Request> {
 	 * @param body 请求体，可以是文本、表单、流、byte[] 或 Multipart
 	 * @return this
 	 */
-	public Request body(final RequestBody body) {
+	public Request body(final HttpBody body) {
 		this.body = body;
+
+		// 根据内容赋值默认Content-Type
+		if (StrUtil.isBlank(header(Header.CONTENT_TYPE))) {
+			header(Header.CONTENT_TYPE, body.getContentType(), true);
+		}
+
+		return this;
+	}
+
+	/**
+	 * 获取最大重定向请求次数
+	 *
+	 * @return 最大重定向请求次数
+	 */
+	public int maxRedirectCount() {
+		return maxRedirectCount;
+	}
+
+	/**
+	 * 设置最大重定向次数<br>
+	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向
+	 *
+	 * @param maxRedirectCount 最大重定向次数
+	 * @return this
+	 */
+	public Request setMaxRedirectCount(final int maxRedirectCount) {
+		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
 		return this;
 	}
 }

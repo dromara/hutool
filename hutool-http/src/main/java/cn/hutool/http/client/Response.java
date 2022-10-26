@@ -1,10 +1,12 @@
 package cn.hutool.http.client;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.http.meta.Header;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.http.client.body.ResponseBody;
+import cn.hutool.http.meta.Header;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -50,13 +52,31 @@ public interface Response extends Closeable {
 	InputStream bodyStream();
 
 	/**
+	 * 获取响应体，包含服务端返回的内容和Content-Type信息
+	 * @return {@link ResponseBody}
+	 */
+	default ResponseBody body(){
+		return new ResponseBody(this, true);
+	}
+
+	/**
 	 * 获取响应主体
 	 *
 	 * @return String
 	 * @throws HttpException 包装IO异常
 	 */
-	default String body() throws HttpException {
-		return HttpUtil.getString(bodyStream(), charset(), true);
+	default String bodyStr() throws HttpException {
+		return HttpUtil.getString(bodyBytes(), charset(), true);
+	}
+
+	/**
+	 * 获取响应流字节码<br>
+	 * 此方法会转为同步模式
+	 *
+	 * @return byte[]
+	 */
+	default byte[] bodyBytes() {
+		return IoUtil.readBytes(bodyStream());
 	}
 
 	/**

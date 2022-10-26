@@ -134,6 +134,23 @@ public class FileNameUtil {
 	}
 
 	/**
+	 * 增加临时扩展名
+	 *
+	 * @param fileName 文件名
+	 * @param suffix 临时扩展名，如果为空，使用`.temp`
+	 * @return 临时文件名
+	 */
+	public static String addTempSuffix(final String fileName, String suffix){
+		if (StrUtil.isBlank(suffix)) {
+			suffix = ".temp";
+		} else {
+			suffix = StrUtil.addPrefixIfNot(suffix, StrUtil.DOT);
+		}
+
+		return fileName + suffix;
+	}
+
+	/**
 	 * 返回主文件名
 	 *
 	 * @param file 文件

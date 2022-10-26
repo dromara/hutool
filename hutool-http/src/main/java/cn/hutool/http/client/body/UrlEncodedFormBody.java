@@ -3,6 +3,7 @@ package cn.hutool.http.client.body;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.http.meta.ContentType;
 
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -41,5 +42,10 @@ public class UrlEncodedFormBody extends FormBody<UrlEncodedFormBody> {
 	public void write(final OutputStream out) {
 		final byte[] bytes = StrUtil.bytes(UrlQuery.of(form, true).build(charset), charset);
 		IoUtil.write(out, false, bytes);
+	}
+
+	@Override
+	public String getContentType() {
+		return ContentType.FORM_URLENCODED.toString(charset);
 	}
 }

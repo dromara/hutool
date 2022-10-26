@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * 定义请求体接口
  */
-public interface RequestBody {
+public interface HttpBody {
 
 	/**
 	 * 写出数据，不关闭流
@@ -17,6 +17,13 @@ public interface RequestBody {
 	 * @param out out流
 	 */
 	void write(OutputStream out);
+
+	/**
+	 * 获取Content-Type
+	 *
+	 * @return Content-Type值
+	 */
+	String getContentType();
 
 	/**
 	 * 写出并关闭{@link OutputStream}

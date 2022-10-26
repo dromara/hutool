@@ -16,32 +16,30 @@ import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.GlobalHeaders;
-import cn.hutool.http.meta.Header;
 import cn.hutool.http.HttpConfig;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.meta.HttpStatus;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.http.meta.Method;
 import cn.hutool.http.client.body.BytesBody;
-import cn.hutool.http.client.body.UrlEncodedFormBody;
 import cn.hutool.http.client.body.MultipartBody;
-import cn.hutool.http.client.body.RequestBody;
+import cn.hutool.http.client.body.HttpBody;
+import cn.hutool.http.client.body.UrlEncodedFormBody;
 import cn.hutool.http.client.cookie.GlobalCookieManager;
+import cn.hutool.http.meta.ContentType;
+import cn.hutool.http.meta.Header;
+import cn.hutool.http.meta.HttpStatus;
+import cn.hutool.http.meta.Method;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.CookieManager;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -353,28 +351,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Http Request Header start
 
 	/**
-	 * 设置contentType
-	 *
-	 * @param contentType contentType
-	 * @return HttpRequest
-	 */
-	public HttpRequest contentType(final String contentType) {
-		header(Header.CONTENT_TYPE, contentType);
-		return this;
-	}
-
-	/**
-	 * 设置是否为长连接
-	 *
-	 * @param isKeepAlive 是否长连接
-	 * @return HttpRequest
-	 */
-	public HttpRequest keepAlive(final boolean isKeepAlive) {
-		header(Header.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
-		return this;
-	}
-
-	/**
 	 * @return 获取是否为长连接
 	 */
 	public boolean isKeepAlive() {
@@ -410,35 +386,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置Cookie<br>
 	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
 	 *
-	 * @param cookies Cookie值数组，如果为{@code null}则设置无效，使用默认Cookie行为
-	 * @return this
-	 * @since 5.4.1
-	 */
-	public HttpRequest cookie(final Collection<HttpCookie> cookies) {
-		return cookie(CollUtil.isEmpty(cookies) ? null : cookies.toArray(new HttpCookie[0]));
-	}
-
-	/**
-	 * 设置Cookie<br>
-	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
-	 *
-	 * @param cookies Cookie值数组，如果为{@code null}则设置无效，使用默认Cookie行为
-	 * @return this
-	 * @since 3.1.1
-	 */
-	public HttpRequest cookie(final HttpCookie... cookies) {
-		if (ArrayUtil.isEmpty(cookies)) {
-			return disableCookie();
-		}
-		// 名称/值对之间用分号和空格 ('; ')
-		// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cookie
-		return cookie(ArrayUtil.join(cookies, "; "));
-	}
-
-	/**
-	 * 设置Cookie<br>
-	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
-	 *
 	 * @param cookie Cookie值，如果为{@code null}则设置无效，使用默认Cookie行为
 	 * @return this
 	 * @since 3.0.7
@@ -446,27 +393,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest cookie(final String cookie) {
 		this.cookie = cookie;
 		return this;
-	}
-
-	/**
-	 * 禁用默认Cookie行为，此方法调用后会将Cookie置为空。<br>
-	 * 如果想重新启用Cookie，请调用：{@link #cookie(String)}方法自定义Cookie。<br>
-	 * 如果想启动默认的Cookie行为（自动回填服务器传回的Cookie），则调用{@link #enableDefaultCookie()}
-	 *
-	 * @return this
-	 * @since 3.0.7
-	 */
-	public HttpRequest disableCookie() {
-		return cookie(StrUtil.EMPTY);
-	}
-
-	/**
-	 * 打开默认的Cookie行为（自动回填服务器传回的Cookie）
-	 *
-	 * @return this
-	 */
-	public HttpRequest enableDefaultCookie() {
-		return cookie((String) null);
 	}
 	// ---------------------------------------------------------------- Http Request Header end
 
@@ -948,42 +874,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置拦截器，用于在请求前重新编辑请求
-	 *
-	 * @param interceptor 拦截器实现
-	 * @return this
-	 * @see #addRequestInterceptor(HttpInterceptor)
-	 * @since 5.7.16
-	 */
-	public HttpRequest addInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
-		return addRequestInterceptor(interceptor);
-	}
-
-	/**
-	 * 设置拦截器，用于在请求前重新编辑请求
-	 *
-	 * @param interceptor 拦截器实现
-	 * @return this
-	 * @since 5.8.0
-	 */
-	public HttpRequest addRequestInterceptor(final HttpInterceptor<HttpRequest> interceptor) {
-		config.addRequestInterceptor(interceptor);
-		return this;
-	}
-
-	/**
-	 * 设置拦截器，用于在请求前重新编辑请求
-	 *
-	 * @param interceptor 拦截器实现
-	 * @return this
-	 * @since 5.8.0
-	 */
-	public HttpRequest addResponseInterceptor(final HttpInterceptor<HttpResponse> interceptor) {
-		config.addResponseInterceptor(interceptor);
-		return this;
-	}
-
-	/**
 	 * 执行Reuqest请求
 	 *
 	 * @return this
@@ -1013,7 +903,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(final boolean isAsync) {
-		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors);
+		return doExecute(isAsync);
 	}
 
 	/**
@@ -1074,41 +964,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return proxyAuth(HttpUtil.buildBasicAuth(username, password, charset));
 	}
 
-	/**
-	 * 令牌验证，生成的头类似于："Authorization: Bearer XXXXX"，一般用于JWT
-	 *
-	 * @param token 令牌内容
-	 * @return HttpRequest
-	 * @since 5.5.3
-	 */
-	public HttpRequest bearerAuth(final String token) {
-		return auth("Bearer " + token);
-	}
-
-	/**
-	 * 验证，简单插入Authorization头
-	 *
-	 * @param content 验证内容
-	 * @return HttpRequest
-	 * @since 5.2.4
-	 */
-	public HttpRequest auth(final String content) {
-		header(Header.AUTHORIZATION, content, true);
-		return this;
-	}
-
-	/**
-	 * 验证，简单插入Authorization头
-	 *
-	 * @param content 验证内容
-	 * @return HttpRequest
-	 * @since 5.4.6
-	 */
-	public HttpRequest proxyAuth(final String content) {
-		header(Header.PROXY_AUTHORIZATION, content, true);
-		return this;
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = StrUtil.builder();
@@ -1123,18 +978,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 执行Reuqest请求
 	 *
 	 * @param isAsync              是否异步
-	 * @param requestInterceptors  请求拦截器列表
-	 * @param responseInterceptors 响应拦截器列表
 	 * @return this
 	 */
-	private HttpResponse doExecute(final boolean isAsync, final HttpInterceptor.Chain<HttpRequest> requestInterceptors,
-								   final HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
-		if (null != requestInterceptors) {
-			for (final HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
-				interceptor.process(this);
-			}
-		}
-
+	private HttpResponse doExecute(final boolean isAsync) {
 		// 初始化URL
 		urlWithParamIfGet();
 		// 初始化 connection
@@ -1147,14 +993,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if (null == httpResponse) {
-			httpResponse = new HttpResponse(this.httpConnection, this.config, this.charset, isAsync, isIgnoreResponseBody());
-		}
-
-		// 拦截响应
-		if (null != responseInterceptors) {
-			for (final HttpInterceptor<HttpResponse> interceptor : responseInterceptors) {
-				interceptor.process(httpResponse);
-			}
+			httpResponse = new HttpResponse(this.httpConnection, this.config.isIgnoreEOFError(), this.charset, isAsync, isIgnoreResponseBody());
 		}
 
 		return httpResponse;
@@ -1186,16 +1025,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		if (null != this.cookie) {
 			// 当用户自定义Cookie时，全局Cookie自动失效
-			this.httpConnection.setCookie(this.cookie);
+			this.httpConnection.cookie(this.cookie);
 		} else {
 			// 读取全局Cookie信息并附带到请求中
 			GlobalCookieManager.add(this.httpConnection);
 		}
 
 		// 是否禁用缓存
-		if (config.isDisableCache) {
-			this.httpConnection.disableCache();
-		}
+		this.httpConnection.setDisableCache(config.isDisableCache);
 	}
 
 	/**
@@ -1229,17 +1066,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpResponse sendRedirectIfPossible(final boolean isAsync) {
 		// 手动实现重定向
 		if (config.maxRedirectCount > 0) {
-			final int responseCode;
+			final int code;
 			try {
-				responseCode = httpConnection.responseCode();
+				code = httpConnection.getCode();
 			} catch (final IOException e) {
 				// 错误时静默关闭连接
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
 
-			if (responseCode != HttpURLConnection.HTTP_OK) {
-				if (HttpStatus.isRedirected(responseCode)) {
+			if (code != HttpURLConnection.HTTP_OK) {
+				if (HttpStatus.isRedirected(code)) {
 
 					final UrlBuilder redirectUrl;
 					String location = httpConnection.header(Header.LOCATION);
@@ -1258,9 +1095,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					setUrl(redirectUrl);
 					if (redirectCount < config.maxRedirectCount) {
 						redirectCount++;
-						// 重定向不再走过滤器
-						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
-								config.interceptorOnRedirect ? config.responseInterceptors : null);
+						return doExecute(isAsync);
 					}
 				}
 			}
@@ -1307,7 +1142,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		final RequestBody body;
+		final HttpBody body;
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 			body = BytesBody.of(this.bodyBytes);
 		} else {

@@ -7,7 +7,7 @@ import cn.hutool.http.HttpException;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
-import cn.hutool.http.client.body.RequestBody;
+import cn.hutool.http.client.body.HttpBody;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -83,7 +83,7 @@ public class HttpClient5Engine implements ClientEngine {
 		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
 
 		// 填充自定义消息体
-		final RequestBody body = message.body();
+		final HttpBody body = message.body();
 		request.setEntity(new HttpClient5BodyEntity(
 				// 用户自定义的内容类型
 				message.header(cn.hutool.http.meta.Header.CONTENT_TYPE),

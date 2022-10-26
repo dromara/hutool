@@ -1,30 +1,19 @@
 package cn.hutool.http.client.engine.jdk;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.stream.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.url.URLEncoder;
-import cn.hutool.core.regex.ReUtil;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.http.meta.Header;
-import cn.hutool.http.HttpConfig;
 import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.client.Response;
+import cn.hutool.http.client.body.ResponseBody;
 import cn.hutool.http.client.cookie.GlobalCookieManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.EOFException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -36,12 +25,14 @@ import java.util.Map.Entry;
  *
  * @author Looly
  */
-public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
+public class HttpResponse extends HttpBase<HttpResponse> implements Response, Closeable {
 
 	/**
-	 * Http配置
+	 * 是否忽略响应读取时可能的EOF异常。<br>
+	 * 在Http协议中，对于Transfer-Encoding: Chunked在正常情况下末尾会写入一个Length为0的的chunk标识完整结束。<br>
+	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
 	 */
-	protected HttpConfig config;
+	protected boolean ignoreEOFError;
 	/**
 	 * 持有连接对象
 	 */
@@ -71,15 +62,14 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 构造
 	 *
 	 * @param httpConnection {@link HttpConnection}
-	 * @param config         Http配置
+	 * @param ignoreEOFError 是否忽略响应读取时可能的EOF异常
 	 * @param charset        编码，从请求编码中获取默认编码
 	 * @param isAsync        是否异步
 	 * @param isIgnoreBody   是否忽略读取响应体
-	 * @since 3.1.2
 	 */
-	protected HttpResponse(final HttpConnection httpConnection, final HttpConfig config, final Charset charset, final boolean isAsync, final boolean isIgnoreBody) {
+	protected HttpResponse(final HttpConnection httpConnection, final boolean ignoreEOFError, final Charset charset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
-		this.config = config;
+		this.ignoreEOFError = ignoreEOFError;
 		this.charset = charset;
 		this.isAsync = isAsync;
 		this.ignoreBody = isIgnoreBody;
@@ -91,18 +81,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return 状态码
 	 */
+	@Override
 	public int getStatus() {
 		return this.status;
-	}
-
-	/**
-	 * 请求是否成功，判断依据为：状态码范围在200~299内。
-	 *
-	 * @return 是否成功请求
-	 * @since 4.1.9
-	 */
-	public boolean isOk() {
-		return this.status >= 200 && this.status < 300;
 	}
 
 	/**
@@ -117,56 +98,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	// ---------------------------------------------------------------- Http Response Header start
-
-	/**
-	 * 获取内容编码
-	 *
-	 * @return String
-	 */
-	public String contentEncoding() {
-		return header(Header.CONTENT_ENCODING);
-	}
-
-	/**
-	 * 获取内容长度，以下情况长度无效：
-	 * <ul>
-	 *     <li>Transfer-Encoding: Chunked</li>
-	 *     <li>Content-Encoding: XXX</li>
-	 * </ul>
-	 * 参考：<a href="https://blog.csdn.net/jiang7701037/article/details/86304302">https://blog.csdn.net/jiang7701037/article/details/86304302</a>
-	 *
-	 * @return 长度，-1表示服务端未返回或长度无效
-	 * @since 5.7.9
-	 */
-	public long contentLength() {
-		long contentLength = Convert.toLong(header(Header.CONTENT_LENGTH), -1L);
-		if (contentLength > 0 && (isChunked() || StrUtil.isNotBlank(contentEncoding()))) {
-			//按照HTTP协议规范，在 Transfer-Encoding和Content-Encoding设置后 Content-Length 无效。
-			contentLength = -1;
-		}
-		return contentLength;
-	}
-
-	/**
-	 * 是否为Transfer-Encoding:Chunked的内容
-	 *
-	 * @return 是否为Transfer-Encoding:Chunked的内容
-	 * @since 4.6.2
-	 */
-	public boolean isChunked() {
-		final String transferEncoding = header(Header.TRANSFER_ENCODING);
-		return "Chunked".equalsIgnoreCase(transferEncoding);
-	}
-
-	/**
-	 * 获取本次请求服务器返回的Cookie信息
-	 *
-	 * @return Cookie字符串
-	 * @since 3.1.1
-	 */
-	public String getCookieStr() {
-		return header(Header.SET_COOKIE);
-	}
 
 	/**
 	 * 获取Cookie
@@ -220,11 +151,17 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return 响应流
 	 */
+	@Override
 	public InputStream bodyStream() {
 		if (isAsync) {
 			return this.in;
 		}
 		return new ByteArrayInputStream(this.bodyBytes);
+	}
+
+	@Override
+	public ResponseBody body() {
+		return new ResponseBody(this, this.ignoreEOFError);
 	}
 
 	/**
@@ -241,148 +178,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	}
 
 	/**
-	 * 获取响应主体
-	 *
-	 * @return String
-	 * @throws HttpException 包装IO异常
-	 */
-	public String body() throws HttpException {
-		return HttpUtil.getString(bodyBytes(), this.charset, null == this.charsetFromResponse);
-	}
-
-	/**
-	 * 将响应内容写出到{@link OutputStream}<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param out            写出的流
-	 * @param isCloseOut     是否关闭输出流
-	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
-	 * @return 写出bytes数
-	 * @since 3.3.2
-	 */
-	public long writeBody(final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
-		Assert.notNull(out, "[out] must be not null!");
-		final long contentLength = contentLength();
-		try {
-			return copyBody(bodyStream(), out, contentLength, streamProgress, this.config.isIgnoreEOFError());
-		} finally {
-			IoUtil.close(this);
-			if (isCloseOut) {
-				IoUtil.close(out);
-			}
-		}
-	}
-
-	/**
-	 * 将响应内容写出到文件<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param targetFileOrDir 写出到的文件或目录
-	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
-	 * @return 写出bytes数
-	 * @since 3.3.2
-	 */
-	public long writeBody(final File targetFileOrDir, final StreamProgress streamProgress) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
-
-		final File outFile = completeFileNameFromHeader(targetFileOrDir, null);
-		return writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
-	}
-
-	/**
-	 * 将响应内容写出到文件-避免未完成的文件<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）<br>
-	 * 来自：<a href="https://gitee.com/dromara/hutool/pulls/407">https://gitee.com/dromara/hutool/pulls/407</a><br>
-	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
-	 *
-	 * @param targetFileOrDir 写出到的文件或目录
-	 * @param tempFileSuffix  临时文件后缀，默认".temp"
-	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
-	 * @return 写出bytes数
-	 * @since 5.7.12
-	 */
-	public long writeBody(final File targetFileOrDir, String tempFileSuffix, final StreamProgress streamProgress) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
-
-		File outFile = completeFileNameFromHeader(targetFileOrDir, null);
-
-		if (StrUtil.isBlank(tempFileSuffix)) {
-			tempFileSuffix = ".temp";
-		} else {
-			tempFileSuffix = StrUtil.addPrefixIfNot(tempFileSuffix, StrUtil.DOT);
-		}
-
-		// 目标文件真实名称
-		final String fileName = outFile.getName();
-		// 临时文件名称
-		final String tempFileName = fileName + tempFileSuffix;
-
-		// 临时文件
-		outFile = new File(outFile.getParentFile(), tempFileName);
-
-		final long length;
-		try {
-			length = writeBody(outFile, streamProgress);
-			// 重命名下载好的临时文件
-			FileUtil.rename(outFile, fileName, true);
-		} catch (final Throwable e) {
-			// 异常则删除临时文件
-			FileUtil.del(outFile);
-			throw new HttpException(e);
-		}
-		return length;
-	}
-
-	/**
-	 * 将响应内容写出到文件<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param targetFileOrDir 写出到的文件
-	 * @param streamProgress  进度显示接口，通过实现此接口显示下载进度
-	 * @return 写出的文件
-	 * @since 5.6.4
-	 */
-	public File writeBodyForFile(final File targetFileOrDir, final StreamProgress streamProgress) {
-		Assert.notNull(targetFileOrDir, "[targetFileOrDir] must be not null!");
-
-		final File outFile = completeFileNameFromHeader(targetFileOrDir, null);
-		writeBody(FileUtil.getOutputStream(outFile), true, streamProgress);
-
-		return outFile;
-	}
-
-	/**
-	 * 将响应内容写出到文件<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param targetFileOrDir 写出到的文件或目录
-	 * @return 写出bytes数
-	 * @since 3.3.2
-	 */
-	public long writeBody(final File targetFileOrDir) {
-		return writeBody(targetFileOrDir, null);
-	}
-
-	/**
-	 * 将响应内容写出到文件<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param targetFileOrDir 写出到的文件或目录的路径
-	 * @return 写出bytes数
-	 * @since 3.3.2
-	 */
-	public long writeBody(final String targetFileOrDir) {
-		return writeBody(FileUtil.file(targetFileOrDir));
-	}
-
-	/**
-	 * 设置主体字节码，一版用于拦截器修改响应内容<br>
+	 * 设置主体字节码，一般用于拦截器修改响应内容<br>
 	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
 	 *
 	 * @param bodyBytes 主体
@@ -420,54 +216,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		return sb.toString();
 	}
 
-	/**
-	 * 从响应头补全下载文件名
-	 *
-	 * @param targetFileOrDir 目标文件夹或者目标文件
-	 * @param customParamName 自定义的参数名称，如果传入{@code null}，默认使用"filename"
-	 * @return File 保存的文件
-	 * @since 5.4.1
-	 */
-	public File completeFileNameFromHeader(final File targetFileOrDir, final String customParamName) {
-		if (false == targetFileOrDir.isDirectory()) {
-			// 非目录直接返回
-			return targetFileOrDir;
-		}
-
-		// 从头信息中获取文件名
-		String fileName = getFileNameFromDisposition(ObjUtil.defaultIfNull(customParamName, "filename"));
-		if (StrUtil.isBlank(fileName)) {
-			final String path = httpConnection.getUrl().getPath();
-			// 从路径中获取文件名
-			fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
-			if (StrUtil.isBlank(fileName)) {
-				// 编码后的路径做为文件名
-				fileName = URLEncoder.encodeQuery(path, charset);
-			} else {
-				// issue#I4K0FS@Gitee
-				fileName = URLEncoder.encodeQuery(fileName, charset);
-			}
-		}
-		return FileUtil.file(targetFileOrDir, fileName);
-	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名
-	 *
-	 * @param paramName 文件名的参数名
-	 * @return 文件名，empty表示无
-	 * @since 5.8.10
-	 */
-	public String getFileNameFromDisposition(final String paramName) {
-		String fileName = null;
-		final String disposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get(paramName + "=\"(.*?)\"", disposition, 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(disposition, paramName + "=", true);
-			}
-		}
-		return fileName;
+	@Override
+	public String header(final String name) {
+		return super.header(name);
 	}
 
 	// ---------------------------------------------------------------- Private method start
@@ -509,7 +260,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	private void init() throws HttpException {
 		// 获取响应状态码
 		try {
-			this.status = httpConnection.responseCode();
+			this.status = httpConnection.getCode();
 		} catch (final IOException e) {
 			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
@@ -529,11 +280,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 存储服务端设置的Cookie信息
 		GlobalCookieManager.store(httpConnection, this.headers);
 
-		// 获取响应编码
-		final Charset charset = httpConnection.getCharset();
-		this.charsetFromResponse = charset;
-		if (null != charset) {
-			this.charset = charset;
+		// 获取响应编码，如果非空，替换用户定义的编码
+		final Charset charsetFromResponse = httpConnection.getCharset();
+		if (null != charsetFromResponse) {
+			this.charset = charsetFromResponse;
 		}
 
 		// 获取响应内容流
@@ -591,40 +341,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 		final long contentLength = contentLength();
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream((int) contentLength);
-		copyBody(in, out, contentLength, null, this.config.isIgnoreEOFError());
+		body().writeClose(out);
 		this.bodyBytes = out.toByteArray();
-	}
-
-	/**
-	 * 将响应内容写出到{@link OutputStream}<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param in               输入流
-	 * @param out              写出的流
-	 * @param contentLength    总长度，-1表示未知
-	 * @param streamProgress   进度显示接口，通过实现此接口显示下载进度
-	 * @param isIgnoreEOFError 是否忽略响应读取时可能的EOF异常
-	 * @return 拷贝长度
-	 */
-	private static long copyBody(final InputStream in, final OutputStream out, final long contentLength, final StreamProgress streamProgress, final boolean isIgnoreEOFError) {
-		if (null == out) {
-			throw new NullPointerException("[out] is null!");
-		}
-
-		long copyLength = -1;
-		try {
-			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
-		} catch (final IORuntimeException e) {
-			//noinspection StatementWithEmptyBody
-			if (isIgnoreEOFError
-					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {
-				// 忽略读取HTTP流中的EOF错误
-			} else {
-				throw e;
-			}
-		}
-		return copyLength;
 	}
 	// ---------------------------------------------------------------- Private method end
 }

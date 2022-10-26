@@ -1,5 +1,6 @@
 package cn.hutool.http.client.body;
 
+import cn.hutool.core.io.resource.HttpResource;
 import cn.hutool.core.io.resource.Resource;
 
 import java.io.InputStream;
@@ -11,9 +12,9 @@ import java.io.OutputStream;
  * @author looly
  * @since 6.0.0
  */
-public class ResourceBody implements RequestBody {
+public class ResourceBody implements HttpBody {
 
-	private final Resource resource;
+	private final HttpResource resource;
 
 	/**
 	 * 创建 Http request body
@@ -21,7 +22,7 @@ public class ResourceBody implements RequestBody {
 	 * @param resource body内容
 	 * @return BytesBody
 	 */
-	public static ResourceBody of(final Resource resource) {
+	public static ResourceBody of(final HttpResource resource) {
 		return new ResourceBody(resource);
 	}
 
@@ -30,7 +31,7 @@ public class ResourceBody implements RequestBody {
 	 *
 	 * @param resource Body内容
 	 */
-	public ResourceBody(final Resource resource) {
+	public ResourceBody(final HttpResource resource) {
 		this.resource = resource;
 	}
 
@@ -51,5 +52,10 @@ public class ResourceBody implements RequestBody {
 	@Override
 	public InputStream getStream() {
 		return resource.getStream();
+	}
+
+	@Override
+	public String getContentType() {
+		return this.resource.getContentType();
 	}
 }

@@ -7,7 +7,7 @@ import cn.hutool.http.HttpException;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
-import cn.hutool.http.client.body.RequestBody;
+import cn.hutool.http.client.body.HttpBody;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -87,7 +87,7 @@ public class HttpClient4Engine implements ClientEngine {
 		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
 
 		// 填充自定义消息体
-		final RequestBody body = message.body();
+		final HttpBody body = message.body();
 		request.setEntity(new HttpClient4BodyEntity(
 				// 用户自定义的内容类型
 				message.header(cn.hutool.http.meta.Header.CONTENT_TYPE),

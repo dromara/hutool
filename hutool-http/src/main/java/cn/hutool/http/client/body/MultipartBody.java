@@ -59,6 +59,7 @@ public class MultipartBody extends FormBody<MultipartBody> {
 	public MultipartBody(final Map<String, Object> form, final Charset charset, final String boundary) {
 		super(form, charset);
 		this.boundary = boundary;
+
 	}
 
 	/**
@@ -66,6 +67,7 @@ public class MultipartBody extends FormBody<MultipartBody> {
 	 *
 	 * @return Multipart的Content-Type类型
 	 */
+	@Override
 	public String getContentType() {
 		return CONTENT_TYPE_MULTIPART_PREFIX + boundary;
 	}

@@ -6,7 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.meta.Header;
-import cn.hutool.http.client.Headers;
+import cn.hutool.http.client.HeaderOperation;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.Map.Entry;
  * @author Looly
  */
 @SuppressWarnings("unchecked")
-public abstract class HttpBase<T extends HttpBase<T>> implements Headers<T> {
+public abstract class HttpBase<T extends HttpBase<T>> implements HeaderOperation<T> {
 
 	/**
 	 * 默认的请求编码、URL的encode、decode编码
@@ -253,8 +253,17 @@ public abstract class HttpBase<T extends HttpBase<T>> implements Headers<T> {
 	 *
 	 * @return 字符集
 	 */
-	public String charset() {
+	public String charsetName() {
 		return charset.name();
+	}
+
+	/**
+	 * 返回字符集
+	 *
+	 * @return 字符集
+	 */
+	public Charset charset() {
+		return this.charset;
 	}
 
 	/**

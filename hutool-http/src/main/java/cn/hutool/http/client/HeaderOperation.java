@@ -1,6 +1,7 @@
 package cn.hutool.http.client;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.http.meta.Header;
@@ -11,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * HTTP请求头的存储和相关方法
+ * HTTP请求头的存储和读取相关方法
  *
  * @param <T> 返回对象类型，方便链式编程
  */
 @SuppressWarnings("unchecked")
-public interface Headers<T extends Headers<T>> {
+public interface HeaderOperation<T extends HeaderOperation<T>> {
 
 	// region -----------------------------------------------------------  headers
 
@@ -98,6 +99,27 @@ public interface Headers<T extends Headers<T>> {
 	 */
 	default T header(final String name, final String value) {
 		return header(name, value, true);
+	}
+
+	/**
+	 * 设置请求头<br>
+	 * 不覆盖原有请求头
+	 *
+	 * @param headerMap  请求头
+	 * @param isOverride 是否覆盖
+	 * @return this
+	 */
+	default T header(final Map<String, List<String>> headerMap, final boolean isOverride) {
+		if (MapUtil.isNotEmpty(headerMap)) {
+			String name;
+			for (final Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
+				name = entry.getKey();
+				for (final String value : entry.getValue()) {
+					this.header(name, StrUtil.emptyIfNull(value), isOverride);
+				}
+			}
+		}
+		return (T) this;
 	}
 
 	/**

@@ -1,13 +1,12 @@
 package cn.hutool.http.client.engine.jdk;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.http.meta.Header;
+import cn.hutool.http.client.HeaderOperation;
 import cn.hutool.http.meta.Method;
 import cn.hutool.http.ssl.DefaultSSLInfo;
 
@@ -21,23 +20,21 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * http连接对象，对HttpURLConnection的包装
  *
  * @author Looly
  */
-public class HttpConnection {
+public class HttpConnection implements HeaderOperation<HttpConnection> {
 
 	private final URL url;
 	private final Proxy proxy;
-	private HttpURLConnection conn;
+	private final HttpURLConnection conn;
 
 	/**
 	 * 创建HttpConnection
@@ -61,7 +58,7 @@ public class HttpConnection {
 		return new HttpConnection(url, proxy);
 	}
 
-	// --------------------------------------------------------------- Constructor start
+	// region --------------------------------------------------------------- Constructor
 
 	/**
 	 * 构造HttpConnection
@@ -74,31 +71,14 @@ public class HttpConnection {
 		this.proxy = proxy;
 
 		// 初始化Http连接
-		initConn();
-	}
-
-	// --------------------------------------------------------------- Constructor end
-
-	/**
-	 * 初始化连接相关信息
-	 *
-	 * @return HttpConnection
-	 * @since 4.4.1
-	 */
-	public HttpConnection initConn() {
-		try {
-			this.conn = openHttp();
-		} catch (final IOException e) {
-			throw new HttpException(e);
-		}
-
+		this.conn = HttpUrlConnectionUtil.openHttp(url, proxy);
 		// 默认读取响应内容
 		this.conn.setDoInput(true);
-
-		return this;
 	}
 
-	// --------------------------------------------------------------- Getters And Setters start
+	// endregion --------------------------------------------------------------- Constructor
+
+	// region --------------------------------------------------------------- Getters And Setters
 
 	/**
 	 * 获取请求方法,GET/POST
@@ -165,127 +145,15 @@ public class HttpConnection {
 		return conn;
 	}
 
-	// --------------------------------------------------------------- Getters And Setters end
-
-	// ---------------------------------------------------------------- Headers start
-
 	/**
-	 * 设置请求头<br>
-	 * 当请求头存在时，覆盖之
+	 * 是否禁用缓存
 	 *
-	 * @param header     头名
-	 * @param value      头值
-	 * @param isOverride 是否覆盖旧值
-	 * @return HttpConnection
-	 */
-	public HttpConnection header(final String header, final String value, final boolean isOverride) {
-		if (null != this.conn) {
-			if (isOverride) {
-				this.conn.setRequestProperty(header, value);
-			} else {
-				this.conn.addRequestProperty(header, value);
-			}
-		}
-
-		return this;
-	}
-
-	/**
-	 * 设置请求头<br>
-	 * 当请求头存在时，覆盖之
-	 *
-	 * @param header     头名
-	 * @param value      头值
-	 * @param isOverride 是否覆盖旧值
-	 * @return HttpConnection
-	 */
-	public HttpConnection header(final Header header, final String value, final boolean isOverride) {
-		return header(header.toString(), value, isOverride);
-	}
-
-	/**
-	 * 设置请求头<br>
-	 * 不覆盖原有请求头
-	 *
-	 * @param headerMap  请求头
-	 * @param isOverride 是否覆盖
-	 * @return this
-	 */
-	public HttpConnection header(final Map<String, List<String>> headerMap, final boolean isOverride) {
-		if (MapUtil.isNotEmpty(headerMap)) {
-			String name;
-			for (final Entry<String, List<String>> entry : headerMap.entrySet()) {
-				name = entry.getKey();
-				for (final String value : entry.getValue()) {
-					this.header(name, StrUtil.emptyIfNull(value), isOverride);
-				}
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * 获取Http请求头
-	 *
-	 * @param name Header名
-	 * @return Http请求头值
-	 */
-	public String header(final String name) {
-		return this.conn.getHeaderField(name);
-	}
-
-	/**
-	 * 获取Http请求头
-	 *
-	 * @param name Header名
-	 * @return Http请求头值
-	 */
-	public String header(final Header name) {
-		return header(name.toString());
-	}
-
-	/**
-	 * 获取所有Http请求头
-	 *
-	 * @return Http请求头Map
-	 */
-	public Map<String, List<String>> headers() {
-		return this.conn.getHeaderFields();
-	}
-
-	// ---------------------------------------------------------------- Headers end
-
-	/**
-	 * 设置https请求参数<br>
-	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
-	 *
-	 * @param hostnameVerifier 域名验证器，非https传入null
-	 * @param ssf              SSLSocketFactory，非https传入null
-	 * @return this
-	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
-	 */
-	public HttpConnection setHttpsInfo(final HostnameVerifier hostnameVerifier, final SSLSocketFactory ssf) throws HttpException {
-		final HttpURLConnection conn = this.conn;
-
-		if (conn instanceof HttpsURLConnection) {
-			// Https请求
-			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
-			// 验证域
-			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
-			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
-		}
-
-		return this;
-	}
-
-	/**
-	 * 关闭缓存
-	 *
+	 * @param isDisableCache 是否禁用缓存
 	 * @return this
 	 * @see HttpURLConnection#setUseCaches(boolean)
 	 */
-	public HttpConnection disableCache() {
-		this.conn.setUseCaches(false);
+	public HttpConnection setDisableCache(final boolean isDisableCache) {
+		this.conn.setUseCaches(!isDisableCache);
 		return this;
 	}
 
@@ -331,15 +199,25 @@ public class HttpConnection {
 	}
 
 	/**
-	 * 设置Cookie
+	 * 设置https请求参数<br>
+	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
 	 *
-	 * @param cookie Cookie
+	 * @param hostnameVerifier 域名验证器，非https传入null
+	 * @param ssf              SSLSocketFactory，非https传入null
 	 * @return this
+	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
 	 */
-	public HttpConnection setCookie(final String cookie) {
-		if (cookie != null) {
-			header(Header.COOKIE, cookie, true);
+	public HttpConnection setHttpsInfo(final HostnameVerifier hostnameVerifier, final SSLSocketFactory ssf) throws HttpException {
+		final HttpURLConnection conn = this.conn;
+
+		if (conn instanceof HttpsURLConnection) {
+			// Https请求
+			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
+			// 验证域
+			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
+			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
 		}
+
 		return this;
 	}
 
@@ -367,6 +245,55 @@ public class HttpConnection {
 		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
 		return this;
 	}
+
+	// endregion --------------------------------------------------------------- Getters And Setters
+
+	// region ---------------------------------------------------------------- Headers
+
+	/**
+	 * 设置请求头<br>
+	 * 当请求头存在时，覆盖之
+	 *
+	 * @param header     头名
+	 * @param value      头值
+	 * @param isOverride 是否覆盖旧值
+	 * @return HttpConnection
+	 */
+	@Override
+	public HttpConnection header(final String header, final String value, final boolean isOverride) {
+		if (null != this.conn) {
+			if (isOverride) {
+				this.conn.setRequestProperty(header, value);
+			} else {
+				this.conn.addRequestProperty(header, value);
+			}
+		}
+
+		return this;
+	}
+
+	/**
+	 * 获取Http请求头
+	 *
+	 * @param name Header名
+	 * @return Http请求头值
+	 */
+	@Override
+	public String header(final String name) {
+		return this.conn.getHeaderField(name);
+	}
+
+	/**
+	 * 获取所有Http请求头
+	 *
+	 * @return Http请求头Map
+	 */
+	@Override
+	public Map<String, List<String>> headers() {
+		return this.conn.getHeaderFields();
+	}
+
+	// endregion---------------------------------------------------------------- Headers
 
 	/**
 	 * 连接
@@ -456,7 +383,7 @@ public class HttpConnection {
 		// 在sun.net.www.protocol.http.HttpURLConnection.getOutputStream0方法中，会把GET方法
 		// 修改为POST，而且无法调用setRequestMethod方法修改，因此此处使用反射强制修改字段属性值
 		// https://stackoverflow.com/questions/978061/http-get-with-request-body/983458
-		if(method == Method.GET && method != getMethod()){
+		if (method == Method.GET && method != getMethod()) {
 			FieldUtil.setFieldValue(this.conn, "method", Method.GET.name());
 		}
 
@@ -469,7 +396,7 @@ public class HttpConnection {
 	 * @return 响应码
 	 * @throws IOException IO异常
 	 */
-	public int responseCode() throws IOException {
+	public int getCode() throws IOException {
 		if (null != this.conn) {
 			return this.conn.getResponseCode();
 		}
@@ -521,32 +448,4 @@ public class HttpConnection {
 		return sb.toString();
 	}
 
-	// --------------------------------------------------------------- Private Method start
-
-	/**
-	 * 初始化http或https请求参数<br>
-	 * 有些时候https请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
-	 *
-	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
-	 */
-	private HttpURLConnection openHttp() throws IOException {
-		final URLConnection conn = openConnection();
-		if (false == conn instanceof HttpURLConnection) {
-			// 防止其它协议造成的转换异常
-			throw new HttpException("'{}' of URL [{}] is not a http connection, make sure URL is format for http.", conn.getClass().getName(), this.url);
-		}
-
-		return (HttpURLConnection) conn;
-	}
-
-	/**
-	 * 建立连接
-	 *
-	 * @return {@link URLConnection}
-	 * @throws IOException IO异常
-	 */
-	private URLConnection openConnection() throws IOException {
-		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
-	}
-	// --------------------------------------------------------------- Private Method end
 }
