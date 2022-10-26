@@ -90,7 +90,7 @@ public class JWTValidator {
 	 * @since 5.7.3
 	 */
 	public JWTValidator validateDate() throws ValidateException {
-		return validateDate(DateUtil.beginOfSecond(DateUtil.date()));
+		return validateDate(DateUtil.beginOfSecond(DateUtil.now()));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class JWTValidator {
 	private static void validateDate(final JWTPayload payload, Date now, final long leeway) throws ValidateException {
 		if (null == now) {
 			// 默认当前时间
-			now = DateUtil.date();
+			now = DateUtil.now();
 			// truncate millis
 			now.setTime(now.getTime() / 1000 * 1000);
 		}

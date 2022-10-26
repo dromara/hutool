@@ -229,7 +229,7 @@ public class UrlBuilderTest {
 	@Test
 	public void endWithSlashTest() {
 		// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
-		final String today = DateUtil.date().toString("yyyyMMdd");
+		final String today = DateUtil.now().toString("yyyyMMdd");
 		final String getWorkDayUrl = "https://tool.bitefu.net/jiari/?info=1&d=" + today;
 		final UrlBuilder builder = UrlBuilder.ofHttp(getWorkDayUrl, CharsetUtil.UTF_8);
 		Assert.assertEquals(getWorkDayUrl, builder.toString());

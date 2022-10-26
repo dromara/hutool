@@ -39,7 +39,7 @@ public class DateUtilTest {
 	@Test
 	public void nowTest() {
 		// 当前时间
-		final Date date = DateUtil.date();
+		final Date date = DateUtil.now();
 		Assert.assertNotNull(date);
 		// 当前时间
 		final Date date2 = DateUtil.date(Calendar.getInstance());
@@ -54,6 +54,12 @@ public class DateUtilTest {
 		// 当前日期字符串，格式：yyyy-MM-dd
 		final String today = DateUtil.formatToday();
 		Assert.assertNotNull(today);
+	}
+
+	@Test
+	public void todayTest() {
+		final String s = DateUtil.today().toString();
+		Assert.assertTrue(s.endsWith("00:00:00"));
 	}
 
 	@Test
@@ -737,7 +743,7 @@ public class DateUtilTest {
 
 	@Test
 	public void endOfYearTest() {
-		final DateTime date = DateUtil.date();
+		final DateTime date = DateUtil.now();
 		date.setField(DateField.YEAR, 2019);
 		final DateTime endOfYear = DateUtil.endOfYear(date);
 		Assert.assertEquals("2019-12-31 23:59:59", endOfYear.toString());

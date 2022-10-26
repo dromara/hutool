@@ -652,7 +652,7 @@ public class RandomUtil {
 	 * @since 4.0.8
 	 */
 	public static DateTime randomDay(final int min, final int max) {
-		return randomDate(DateUtil.date(), DateField.DAY_OF_YEAR, min, max);
+		return randomDate(DateUtil.now(), DateField.DAY_OF_YEAR, min, max);
 	}
 
 	/**
@@ -667,7 +667,7 @@ public class RandomUtil {
 	 */
 	public static DateTime randomDate(Date baseDate, final DateField dateField, final int min, final int max) {
 		if (null == baseDate) {
-			baseDate = DateUtil.date();
+			baseDate = DateUtil.now();
 		}
 
 		return DateUtil.offset(baseDate, dateField, randomInt(min, max));

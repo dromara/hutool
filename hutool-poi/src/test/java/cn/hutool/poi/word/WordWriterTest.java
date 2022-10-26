@@ -65,14 +65,14 @@ public class WordWriterTest {
 		data.put("年龄", 23);
 		data.put("成绩", 80.5);
 		data.put("是否合格", true);
-		data.put("考试日期", DateUtil.date());
+		data.put("考试日期", DateUtil.now());
 
 		final Map<String, Object> data2 = new LinkedHashMap<>();
 		data2.put("姓名", "李四");
 		data2.put("年龄", 4);
 		data2.put("成绩", 59);
 		data2.put("是否合格", false);
-		data2.put("考试日期", DateUtil.date());
+		data2.put("考试日期", DateUtil.now());
 
 		final ArrayList<Map<String, Object>> mapArrayList = ListUtil.of(data, data2);
 

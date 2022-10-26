@@ -46,11 +46,11 @@ public class ExcelWriteTest {
 
 	@Test
 	public void writeNoFlushTest() {
-		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.now(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.now(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.now(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.now(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.now(), 28.00);
 		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 
 		final ExcelWriter writer = ExcelUtil.getWriter();
@@ -61,11 +61,11 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void testRowOrColumnCellStyle() {
-		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.now(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.now(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.now(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.now(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.now(), 28.00);
 
 		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 		final BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("d:/test/style_line.xlsx");
@@ -134,11 +134,11 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void writeTest() {
-		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aaaaa", "bb", "cc", "dd", DateUtil.now(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.now(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.now(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.now(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.now(), 28.00);
 
 		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 		for (int i = 0; i < 400; i++) {
@@ -169,11 +169,11 @@ public class ExcelWriteTest {
 	@Test
 	@Ignore
 	public void mergeTest() {
-		final List<?> row1 = ListUtil.of("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
-		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
-		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
-		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
-		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+		final List<?> row1 = ListUtil.of("aa", "bb", "cc", "dd", DateUtil.now(), 3.22676575765);
+		final List<?> row2 = ListUtil.of("aa1", "bb1", "cc1", "dd1", DateUtil.now(), 250.7676);
+		final List<?> row3 = ListUtil.of("aa2", "bb2", "cc2", "dd2", DateUtil.now(), 0.111);
+		final List<?> row4 = ListUtil.of("aa3", "bb3", "cc3", "dd3", DateUtil.now(), 35);
+		final List<?> row5 = ListUtil.of("aa4", "bb4", "cc4", "dd4", DateUtil.now(), 28.00);
 
 		final List<List<?>> rows = ListUtil.of(row1, row2, row3, row4, row5);
 
@@ -204,14 +204,14 @@ public class ExcelWriteTest {
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
+		row1.put("考试日期", DateUtil.now());
 
 		final Map<String, Object> row2 = new LinkedHashMap<>();
 		row2.put("姓名", "李四");
 		row2.put("年龄", 33);
 		row2.put("成绩", 59.50);
 		row2.put("是否合格", false);
-		row2.put("考试日期", DateUtil.date());
+		row2.put("考试日期", DateUtil.now());
 
 		final ArrayList<Map<String, Object>> rows = ListUtil.of(row1, row2);
 
@@ -234,14 +234,14 @@ public class ExcelWriteTest {
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
+		row1.put("考试日期", DateUtil.now());
 
 		final Map<String, Object> row2 = new LinkedHashMap<>();
 		row2.put("姓名", "李四");
 		row2.put("年龄", 33);
 		row2.put("成绩", 59.50);
 		row2.put("是否合格", false);
-		row2.put("考试日期", DateUtil.date());
+		row2.put("考试日期", DateUtil.now());
 
 		final ArrayList<Map<String, Object>> rows = ListUtil.of(row1, row2);
 
@@ -271,7 +271,7 @@ public class ExcelWriteTest {
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
+		row1.put("考试日期", DateUtil.now());
 
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest2.xlsx");
@@ -290,7 +290,7 @@ public class ExcelWriteTest {
 		row1.put("年龄", 23);
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
-		row1.put("考试日期", DateUtil.date());
+		row1.put("考试日期", DateUtil.now());
 
 		// 通过工具类创建writer
 		final String path = "f:/test/writeMapWithStyleTest.xlsx";
@@ -317,13 +317,13 @@ public class ExcelWriteTest {
 		row1.put("age", 22);
 		row1.put("isPass", true);
 		row1.put("score", 66.30);
-		row1.put("examDate", DateUtil.date());
+		row1.put("examDate", DateUtil.now());
 		final Map<Object, Object> row2 = new LinkedHashMap<>();
 		row2.put("name", "李四");
 		row2.put("age", 233);
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
-		row2.put("examDate", DateUtil.date());
+		row2.put("examDate", DateUtil.now());
 
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
@@ -352,13 +352,13 @@ public class ExcelWriteTest {
 		row1.put("age", 22);
 		row1.put("isPass", true);
 		row1.put("score", 66.30);
-		row1.put("examDate", DateUtil.date());
+		row1.put("examDate", DateUtil.now());
 		final Map<Object, Object> row2 = new LinkedHashMap<>();
 		row2.put("name", "李四");
 		row2.put("age", 233);
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
-		row2.put("examDate", DateUtil.date());
+		row2.put("examDate", DateUtil.now());
 
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
@@ -385,13 +385,13 @@ public class ExcelWriteTest {
 		row1.put("age", 22);
 		row1.put("isPass", true);
 		row1.put("score", 66.30);
-		row1.put("examDate", DateUtil.date());
+		row1.put("examDate", DateUtil.now());
 		final Map<Object, Object> row2 = new LinkedHashMap<>();
 		row2.put("name", "李四");
 		row2.put("age", 233);
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
-		row2.put("examDate", DateUtil.date());
+		row2.put("examDate", DateUtil.now());
 
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
@@ -415,14 +415,14 @@ public class ExcelWriteTest {
 		row1.put("age", 22);
 		row1.put("isPass", true);
 		row1.put("score", 66.30);
-		row1.put("examDate", DateUtil.date());
+		row1.put("examDate", DateUtil.now());
 
 		final Map<Object, Object> row2 = new LinkedHashMap<>();
 		row2.put("name", "李四");
 //		row2.put("age", 233);
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
-		row2.put("examDate", DateUtil.date());
+		row2.put("examDate", DateUtil.now());
 
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
@@ -449,14 +449,14 @@ public class ExcelWriteTest {
 		bean1.setAge(22);
 		bean1.setPass(true);
 		bean1.setScore(66.30);
-		bean1.setExamDate(DateUtil.date());
+		bean1.setExamDate(DateUtil.now());
 
 		final cn.hutool.poi.excel.TestBean bean2 = new cn.hutool.poi.excel.TestBean();
 		bean2.setName("李四");
 		bean2.setAge(28);
 		bean2.setPass(false);
 		bean2.setScore(38.50);
-		bean2.setExamDate(DateUtil.date());
+		bean2.setExamDate(DateUtil.now());
 
 		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.of(bean1, bean2);
 		// 通过工具类创建writer
@@ -792,7 +792,7 @@ public class ExcelWriteTest {
 		final String path = "d:/test/mergeForDate.xlsx";
 		FileUtil.del(path);
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
-		writer.merge(0, 3, 0, 2, DateUtil.date(), false);
+		writer.merge(0, 3, 0, 2, DateUtil.now(), false);
 		writer.close();
 	}
 

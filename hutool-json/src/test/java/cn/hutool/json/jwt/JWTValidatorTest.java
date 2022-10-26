@@ -13,13 +13,13 @@ public class JWTValidatorTest {
 	@Test(expected = ValidateException.class)
 	public void expiredAtTest(){
 		final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0Nzc1OTJ9.isvT0Pqx0yjnZk53mUFSeYFJLDs-Ls9IsNAm86gIdZo";
-		JWTValidator.of(token).validateDate(DateUtil.date());
+		JWTValidator.of(token).validateDate(DateUtil.now());
 	}
 
 	@Test(expected = ValidateException.class)
 	public void issueAtTest(){
 		final String token = JWT.of()
-				.setIssuedAt(DateUtil.date())
+				.setIssuedAt(DateUtil.now())
 				.setKey("123456".getBytes())
 				.sign();
 
@@ -30,18 +30,18 @@ public class JWTValidatorTest {
 	@Test
 	public void issueAtPassTest(){
 		final String token = JWT.of()
-				.setIssuedAt(DateUtil.date())
+				.setIssuedAt(DateUtil.now())
 				.setKey("123456".getBytes())
 				.sign();
 
 		// 签发时间早于被检查的时间
-		JWTValidator.of(token).validateDate(DateUtil.date());
+		JWTValidator.of(token).validateDate(DateUtil.now());
 	}
 
 	@Test(expected = ValidateException.class)
 	public void notBeforeTest(){
 		final JWT jwt = JWT.of()
-				.setNotBefore(DateUtil.date());
+				.setNotBefore(DateUtil.now());
 
 		JWTValidator.of(jwt).validateDate(DateUtil.yesterday());
 	}
@@ -49,14 +49,14 @@ public class JWTValidatorTest {
 	@Test
 	public void notBeforePassTest(){
 		final JWT jwt = JWT.of()
-				.setNotBefore(DateUtil.date());
-		JWTValidator.of(jwt).validateDate(DateUtil.date());
+				.setNotBefore(DateUtil.now());
+		JWTValidator.of(jwt).validateDate(DateUtil.now());
 	}
 
 	@Test
 	public void validateAlgorithmTest(){
 		final String token = JWT.of()
-				.setNotBefore(DateUtil.date())
+				.setNotBefore(DateUtil.now())
 				.setKey("123456".getBytes())
 				.sign();
 
@@ -79,7 +79,7 @@ public class JWTValidatorTest {
 				.setPayload("username", "hutool")
 				.setExpiresAt(DateUtil.parse("2021-10-13 09:59:00"));
 
-		JWTValidator.of(jwt).validateDate(DateUtil.date());
+		JWTValidator.of(jwt).validateDate(DateUtil.now());
 	}
 
 	@Test

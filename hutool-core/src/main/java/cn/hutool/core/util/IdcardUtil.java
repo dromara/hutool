@@ -475,7 +475,7 @@ public class IdcardUtil {
 	 * @return 年龄
 	 */
 	public static int getAge(final String idcard) {
-		return getAge(idcard, DateUtil.date());
+		return getAge(idcard, DateUtil.now());
 	}
 
 	/**

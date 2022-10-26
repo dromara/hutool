@@ -30,7 +30,7 @@ public class CronPatternTest {
 		pattern = CronPattern.of("* * * * *");
 
 		// 测试时，秒归零，则任意时间匹配
-		assertMatch(pattern, DateUtil.beginOfMinute(DateUtil.date()).toString());
+		assertMatch(pattern, DateUtil.beginOfMinute(DateUtil.now()).toString());
 	}
 
 	@Test

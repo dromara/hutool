@@ -28,7 +28,7 @@ public class AioServerTest {
 				if(false == data.hasRemaining()) {
 					final StringBuilder response = StrUtil.builder()//
 							.append("HTTP/1.1 200 OK\r\n")//
-							.append("Date: ").append(DateUtil.formatHttpDate(DateUtil.date())).append("\r\n")//
+							.append("Date: ").append(DateUtil.formatHttpDate(DateUtil.now())).append("\r\n")//
 							.append("Content-Type: text/html; charset=UTF-8\r\n")//
 							.append("\r\n")
 							.append("Hello Hutool socket");//

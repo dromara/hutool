@@ -62,8 +62,17 @@ public class DateUtil extends CalendarUtil {
 	 *
 	 * @return 当前时间
 	 */
-	public static DateTime date() {
+	public static DateTime now() {
 		return new DateTime();
+	}
+
+	/**
+	 * 当天开始的时间，结果类似：2022-10-26 00:00:00
+	 *
+	 * @return 当天开始的时间
+	 */
+	public static DateTime today() {
+		return new DateTime(beginOfDay(Calendar.getInstance()));
 	}
 
 	/**
@@ -73,7 +82,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 4.6.2
 	 */
 	public static DateTime dateSecond() {
-		return beginOfSecond(date());
+		return beginOfSecond(now());
 	}
 
 	/**
@@ -393,56 +402,56 @@ public class DateUtil extends CalendarUtil {
 	 * @return 今年
 	 */
 	public static int thisYear() {
-		return year(date());
+		return year(now());
 	}
 
 	/**
 	 * @return 当前月份
 	 */
 	public static int thisMonth() {
-		return month(date());
+		return month(now());
 	}
 
 	/**
 	 * @return 当前月份 {@link Month}
 	 */
 	public static Month thisMonthEnum() {
-		return monthEnum(date());
+		return monthEnum(now());
 	}
 
 	/**
 	 * @return 当前日期所在年份的第几周
 	 */
 	public static int thisWeekOfYear() {
-		return weekOfYear(date());
+		return weekOfYear(now());
 	}
 
 	/**
 	 * @return 当前日期所在月份的第几周
 	 */
 	public static int thisWeekOfMonth() {
-		return weekOfMonth(date());
+		return weekOfMonth(now());
 	}
 
 	/**
 	 * @return 当前日期是这个日期所在月份的第几天
 	 */
 	public static int thisDayOfMonth() {
-		return dayOfMonth(date());
+		return dayOfMonth(now());
 	}
 
 	/**
 	 * @return 当前日期是星期几
 	 */
 	public static int thisDayOfWeek() {
-		return dayOfWeek(date());
+		return dayOfWeek(now());
 	}
 
 	/**
 	 * @return 当前日期是星期几 {@link Week}
 	 */
 	public static Week thisDayOfWeekEnum() {
-		return dayOfWeekEnum(date());
+		return dayOfWeekEnum(now());
 	}
 
 	/**
@@ -450,28 +459,28 @@ public class DateUtil extends CalendarUtil {
 	 * @return 当前日期的小时数部分<br>
 	 */
 	public static int thisHour(final boolean is24HourClock) {
-		return hour(date(), is24HourClock);
+		return hour(now(), is24HourClock);
 	}
 
 	/**
 	 * @return 当前日期的分钟数部分<br>
 	 */
 	public static int thisMinute() {
-		return minute(date());
+		return minute(now());
 	}
 
 	/**
 	 * @return 当前日期的秒数部分<br>
 	 */
 	public static int thisSecond() {
-		return second(date());
+		return second(now());
 	}
 
 	/**
 	 * @return 当前日期的毫秒数部分<br>
 	 */
 	public static int thisMillisecond() {
-		return millisecond(date());
+		return millisecond(now());
 	}
 	// -------------------------------------------------------------- Part of Date end
 
@@ -1408,7 +1417,7 @@ public class DateUtil extends CalendarUtil {
 
 		final long thisMills = date.getTime();
 		final long beginMills = beginDate.getTime();
-		final long endMills =  endDate.getTime();
+		final long endMills = endDate.getTime();
 		final long rangeMin = Math.min(beginMills, endMills);
 		final long rangeMax = Math.max(beginMills, endMills);
 
@@ -1584,7 +1593,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 年龄
 	 */
 	public static int ageOfNow(final Date birthDay) {
-		return age(birthDay, date());
+		return age(birthDay, now());
 	}
 
 	/**
@@ -1607,7 +1616,7 @@ public class DateUtil extends CalendarUtil {
 	public static int age(final Date birthday, Date dateToCompare) {
 		Assert.notNull(birthday, "Birthday can not be null !");
 		if (null == dateToCompare) {
-			dateToCompare = date();
+			dateToCompare = now();
 		}
 		return age(birthday.getTime(), dateToCompare.getTime());
 	}
@@ -2006,21 +2015,23 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 是否为本月最后一天
+	 *
 	 * @param date {@link Date}
 	 * @return 是否为本月最后一天
 	 * @since 5.8.8
 	 */
-	public static boolean isLastDayOfMonth(final Date date){
+	public static boolean isLastDayOfMonth(final Date date) {
 		return date(date).isLastDayOfMonth();
 	}
 
 	/**
 	 * 获得本月的最后一天
+	 *
 	 * @param date {@link Date}
 	 * @return 天
 	 * @since 5.8.8
 	 */
-	public static int getLastDayOfMonth(final Date date){
+	public static int getLastDayOfMonth(final Date date) {
 		return date(date).getLastDayOfMonth();
 	}
 

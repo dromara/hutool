@@ -388,7 +388,7 @@ public class JWT implements RegisteredPayload<JWT> {
 
 		// 校验时间字段
 		try {
-			JWTValidator.of(this).validateDate(DateUtil.date(), leeway);
+			JWTValidator.of(this).validateDate(DateUtil.now(), leeway);
 		} catch (final ValidateException e) {
 			return false;
 		}

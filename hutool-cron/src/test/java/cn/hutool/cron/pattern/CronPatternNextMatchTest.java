@@ -14,7 +14,7 @@ public class CronPatternNextMatchTest {
 	public void nextMatchAllAfterTest() {
 		// 匹配所有，返回下一秒的时间
 		CronPattern pattern = new CronPattern("* * * * * * *");
-		DateTime date = DateUtil.truncate(DateUtil.date(), DateField.SECOND);
+		DateTime date = DateUtil.truncate(DateUtil.now(), DateField.SECOND);
 		Calendar calendar = pattern.nextMatchAfter(date.toCalendar());
 		Assert.assertEquals(date.getTime(), DateUtil.date(calendar).getTime());
 

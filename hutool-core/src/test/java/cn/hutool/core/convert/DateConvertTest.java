@@ -17,7 +17,7 @@ public class DateConvertTest {
 		final Date value = Convert.toDate(a);
 		Assert.assertEquals(a, DateUtil.formatDate(value));
 
-		final long timeLong = DateUtil.date().getTime();
+		final long timeLong = DateUtil.now().getTime();
 		final Date value2 = Convert.toDate(timeLong);
 		Assert.assertEquals(timeLong, value2.getTime());
 	}
@@ -48,7 +48,7 @@ public class DateConvertTest {
 		final java.sql.Date value = Convert.convert(java.sql.Date.class, a);
 		Assert.assertEquals("2017-05-06", value.toString());
 
-		final long timeLong = DateUtil.date().getTime();
+		final long timeLong = DateUtil.now().getTime();
 		final java.sql.Date value2 = Convert.convert(java.sql.Date.class, timeLong);
 		Assert.assertEquals(timeLong, value2.getTime());
 	}

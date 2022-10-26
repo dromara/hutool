@@ -1,9 +1,9 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -22,6 +22,7 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalUnit;
 import java.time.temporal.WeekFields;
 import java.util.Date;
@@ -35,7 +36,7 @@ import java.util.TimeZone;
  * @see DatePattern 常用格式工具类
  * @since 6.0.0
  */
-public class TimeUtil extends TemporalAccessorUtil{
+public class TimeUtil extends TemporalAccessorUtil {
 
 	/**
 	 * 当前时间，默认时区
@@ -171,8 +172,8 @@ public class TimeUtil extends TemporalAccessorUtil{
 			return ((LocalDate) temporalAccessor).atStartOfDay();
 		} else if (temporalAccessor instanceof Instant) {
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
-		} else if(temporalAccessor instanceof ZonedDateTime){
-			return ((ZonedDateTime)temporalAccessor).toLocalDateTime();
+		} else if (temporalAccessor instanceof ZonedDateTime) {
+			return ((ZonedDateTime) temporalAccessor).toLocalDateTime();
 		}
 
 		return LocalDateTime.of(
@@ -224,7 +225,7 @@ public class TimeUtil extends TemporalAccessorUtil{
 	public static LocalDateTime parseByISO(final CharSequence text) {
 		if (StrUtil.contains(text, 'T')) {
 			return parse(text, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-		}else{
+		} else {
 			return parse(text, DatePattern.NORM_DATETIME_FORMATTER);
 		}
 	}
@@ -446,6 +447,16 @@ public class TimeUtil extends TemporalAccessorUtil{
 			return time.with(LocalTime.of(23, 59, 59));
 		}
 		return time.with(LocalTime.MAX);
+	}
+
+	/**
+	 * 获取给定日期月底的时间
+	 *
+	 * @param time 日期时间
+	 * @return 月底
+	 */
+	public static LocalDateTime endOfMonth(final LocalDateTime time) {
+		return time.with(TemporalAdjusters.lastDayOfMonth());
 	}
 
 	/**

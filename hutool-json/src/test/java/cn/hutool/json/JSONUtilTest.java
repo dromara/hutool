@@ -50,11 +50,11 @@ public class JSONUtilTest {
 	public void toJsonStrTest() {
 		final UserA a1 = new UserA();
 		a1.setA("aaaa");
-		a1.setDate(DateUtil.date());
+		a1.setDate(DateUtil.now());
 		a1.setName("AAAAName");
 		final UserA a2 = new UserA();
 		a2.setA("aaaa222");
-		a2.setDate(DateUtil.date());
+		a2.setDate(DateUtil.now());
 		a2.setName("AAAA222Name");
 
 		final ArrayList<UserA> list = ListUtil.of(a1, a2);
