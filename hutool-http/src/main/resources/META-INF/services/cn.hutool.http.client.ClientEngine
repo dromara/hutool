@@ -1,0 +1,3 @@
+cn.hutool.http.client.engine.httpclient5.HttpClient5Engine
+cn.hutool.http.client.engine.httpclient4.HttpClient4Engine
+cn.hutool.http.client.engine.okhttp.OkHttpEngine
