@@ -56,7 +56,7 @@ public class VelocityTemplate implements Template, Serializable {
 		if(null == charset) {
 			loadEncoding();
 		}
-		render(bindingMap, IoUtil.getWriter(out, CharsetUtil.charset(this.charset)));
+		render(bindingMap, IoUtil.toWriter(out, CharsetUtil.charset(this.charset)));
 	}
 
 	/**

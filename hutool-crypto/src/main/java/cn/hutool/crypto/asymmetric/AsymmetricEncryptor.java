@@ -62,18 +62,6 @@ public interface AsymmetricEncryptor {
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
 	 */
-	default byte[] encrypt(final String data, final String charset, final KeyType keyType) {
-		return encrypt(StrUtil.bytes(data, charset), keyType);
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @param keyType 私钥或公钥 {@link KeyType}
-	 * @return 加密后的bytes
-	 */
 	default byte[] encrypt(final String data, final Charset charset, final KeyType keyType) {
 		return encrypt(StrUtil.bytes(data, charset), keyType);
 	}

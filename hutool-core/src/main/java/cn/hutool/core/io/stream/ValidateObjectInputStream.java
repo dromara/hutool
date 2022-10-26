@@ -1,4 +1,4 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.stream;
 
 import cn.hutool.core.collection.CollUtil;
 

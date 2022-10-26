@@ -416,7 +416,7 @@ public class PathUtil {
 	 * @since 4.0.0
 	 */
 	public static BufferedReader getReader(final Path path, final Charset charset) throws IORuntimeException {
-		return IoUtil.getReader(getInputStream(path), charset);
+		return IoUtil.toReader(getInputStream(path), charset);
 	}
 
 	/**

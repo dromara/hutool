@@ -465,7 +465,7 @@ public class URLUtil {
 	 * @since 3.2.1
 	 */
 	public static BufferedReader getReader(final URL url, final Charset charset) {
-		return IoUtil.getReader(getStream(url), charset);
+		return IoUtil.toReader(getStream(url), charset);
 	}
 
 	/**

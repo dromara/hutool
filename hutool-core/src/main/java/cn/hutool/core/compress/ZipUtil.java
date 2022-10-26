@@ -2,7 +2,7 @@ package cn.hutool.core.compress;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -721,7 +721,7 @@ public class ZipUtil {
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
 	 */
-	public static byte[] gzip(final String content, final String charset) throws UtilException {
+	public static byte[] gzip(final String content, final Charset charset) throws UtilException {
 		return gzip(StrUtil.bytes(content, charset));
 	}
 
@@ -840,7 +840,7 @@ public class ZipUtil {
 	 * @return 压缩后的字节流
 	 * @since 4.1.4
 	 */
-	public static byte[] zlib(final String content, final String charset, final int level) {
+	public static byte[] zlib(final String content, final Charset charset, final int level) {
 		return zlib(StrUtil.bytes(content, charset), level);
 	}
 

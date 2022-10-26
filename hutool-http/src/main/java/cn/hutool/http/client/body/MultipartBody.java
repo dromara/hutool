@@ -17,32 +17,48 @@ import java.util.Map;
  * @author looly
  * @since 5.3.5
  */
-public class MultipartBody implements RequestBody {
+public class MultipartBody extends FormBody<MultipartBody> {
 
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = ContentType.MULTIPART.getValue() + "; boundary=";
 
 	/**
-	 * 存储表单数据
-	 */
-	private final Map<String, Object> form;
-	/**
-	 * 编码
-	 */
-	private final Charset charset;
-	/**
 	 * 边界
 	 */
-	private final String boundary = HttpGlobalConfig.getBoundary();
+	private final String boundary;
 
 	/**
-	 * 根据已有表单内容，构建MultipartBody
+	 * 根据已有表单内容，构建MultipartBody，使用全局默认的边界符{@link HttpGlobalConfig#getBoundary()}
 	 *
 	 * @param form    表单
 	 * @param charset 编码
 	 * @return MultipartBody
 	 */
 	public static MultipartBody of(final Map<String, Object> form, final Charset charset) {
-		return new MultipartBody(form, charset);
+		return of(form, charset, HttpGlobalConfig.getBoundary());
+	}
+
+	/**
+	 * 根据已有表单内容，构建MultipartBody
+	 *
+	 * @param form     表单
+	 * @param charset  编码
+	 * @param boundary Multipart边界符
+	 * @return MultipartBody
+	 */
+	public static MultipartBody of(final Map<String, Object> form, final Charset charset, final String boundary) {
+		return new MultipartBody(form, charset, boundary);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param form     表单
+	 * @param charset  编码
+	 * @param boundary Multipart边界符
+	 */
+	public MultipartBody(final Map<String, Object> form, final Charset charset, final String boundary) {
+		super(form, charset);
+		this.boundary = boundary;
 	}
 
 	/**
@@ -52,17 +68,6 @@ public class MultipartBody implements RequestBody {
 	 */
 	public String getContentType() {
 		return CONTENT_TYPE_MULTIPART_PREFIX + boundary;
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param form    表单
-	 * @param charset 编码
-	 */
-	public MultipartBody(final Map<String, Object> form, final Charset charset) {
-		this.form = form;
-		this.charset = charset;
 	}
 
 	/**

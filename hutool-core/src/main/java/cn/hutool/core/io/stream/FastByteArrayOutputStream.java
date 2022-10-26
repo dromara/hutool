@@ -1,5 +1,7 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.stream;
 
+import cn.hutool.core.io.FastByteBuffer;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 

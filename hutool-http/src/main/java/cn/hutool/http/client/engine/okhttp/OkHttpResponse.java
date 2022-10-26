@@ -1,6 +1,6 @@
 package cn.hutool.http.client.engine.okhttp;
 
-import cn.hutool.core.io.EmptyInputStream;
+import cn.hutool.core.io.stream.EmptyInputStream;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpUtil;

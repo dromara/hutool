@@ -54,7 +54,7 @@ public class FreemarkerTemplate implements Template, Serializable{
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
-		render(bindingMap, IoUtil.getWriter(out, Charset.forName(this.rawTemplate.getEncoding())));
+		render(bindingMap, IoUtil.toWriter(out, Charset.forName(this.rawTemplate.getEncoding())));
 	}
 
 }

@@ -122,7 +122,7 @@ public class PemUtil {
 	 * @since 4.5.2
 	 */
 	public static PemObject readPemObject(final InputStream keyStream) {
-		return readPemObject(IoUtil.getUtf8Reader(keyStream));
+		return readPemObject(IoUtil.toUtf8Reader(keyStream));
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class PemUtil {
 	 * @since 5.1.6
 	 */
 	public static void writePemObject(final PemObjectGenerator pemObject, final OutputStream keyStream) {
-		writePemObject(pemObject, IoUtil.getUtf8Writer(keyStream));
+		writePemObject(pemObject, IoUtil.toUtf8Writer(keyStream));
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package cn.hutool.http.client.engine.jdk;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;

@@ -2506,7 +2506,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param charset 编码
 	 * @return byteBuffer
 	 */
-	public static ByteBuffer byteBuffer(final CharSequence str, final String charset) {
+	public static ByteBuffer byteBuffer(final CharSequence str, final Charset charset) {
 		return ByteBuffer.wrap(bytes(str, charset));
 	}
 

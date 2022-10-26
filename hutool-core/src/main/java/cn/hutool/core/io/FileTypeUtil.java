@@ -155,7 +155,7 @@ public class FileTypeUtil {
 	 * @throws IORuntimeException 读取流引起的异常
 	 */
 	public static String getType(final InputStream in) throws IORuntimeException {
-		return getType(IoUtil.readHex28Upper(in));
+		return getType(readHex28Upper(in));
 	}
 
 
@@ -261,5 +261,27 @@ public class FileTypeUtil {
 	 */
 	public static String getTypeByPath(final String path) throws IORuntimeException {
 		return getType(FileUtil.file(path));
+	}
+
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 *
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String readHex28Upper(final InputStream in) throws IORuntimeException {
+		return IoUtil.readHex(in, 28, false);
+	}
+
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 *
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String readHex28Lower(final InputStream in) throws IORuntimeException {
+		return IoUtil.readHex(in, 28, true);
 	}
 }

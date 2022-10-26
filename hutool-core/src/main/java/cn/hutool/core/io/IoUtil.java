@@ -1,15 +1,18 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.collection.iter.LineIter;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.copy.FileChannelCopier;
 import cn.hutool.core.io.copy.ReaderWriterCopier;
 import cn.hutool.core.io.copy.StreamCopier;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.StreamReader;
+import cn.hutool.core.io.stream.StreamWriter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerConsumer;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,23 +29,17 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PushbackInputStream;
 import java.io.PushbackReader;
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
-import java.util.zip.Checksum;
 
 /**
  * IO工具类<br>
@@ -52,7 +49,7 @@ import java.util.zip.Checksum;
  */
 public class IoUtil extends NioUtil {
 
-	// -------------------------------------------------------------------------------------- Copy start
+	// region -------------------------------------------------------------------------------------- Copy
 
 	/**
 	 * 将Reader中的内容复制到Writer中 使用默认缓存大小，拷贝后不关闭Reader
@@ -96,15 +93,17 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 将Reader中的内容复制到Writer中，拷贝后不关闭Reader
 	 *
-	 * @param reader         Reader
-	 * @param writer         Writer
-	 * @param bufferSize     缓存大小
-	 * @param count          最大长度
-	 * @param streamProgress 进度处理器
+	 * @param reader         Reader，非空
+	 * @param writer         Writer，非空
+	 * @param bufferSize     缓存大小，-1表示默认
+	 * @param count          最大长度，-1表示无限制
+	 * @param streamProgress 进度处理器，{@code null}表示无
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long copy(final Reader reader, final Writer writer, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
+		Assert.notNull(reader, "Reader is null !");
+		Assert.notNull(writer, "Writer is null !");
 		return new ReaderWriterCopier(bufferSize, count, streamProgress).copy(reader, writer);
 	}
 
@@ -153,13 +152,15 @@ public class IoUtil extends NioUtil {
 	 * @param in             输入流
 	 * @param out            输出流
 	 * @param bufferSize     缓存大小
-	 * @param count          总拷贝长度
+	 * @param count          总拷贝长度，-1表示无限制
 	 * @param streamProgress 进度条
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
 	public static long copy(final InputStream in, final OutputStream out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
+		Assert.notNull(in, "InputStream is null !");
+		Assert.notNull(out, "OutputStream is null !");
 		return new StreamCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 
@@ -175,42 +176,22 @@ public class IoUtil extends NioUtil {
 		Assert.notNull(in, "FileInputStream is null!");
 		Assert.notNull(out, "FileOutputStream is null!");
 
-		FileChannel inChannel = null;
-		FileChannel outChannel = null;
-		try {
-			inChannel = in.getChannel();
-			outChannel = out.getChannel();
-			return copy(inChannel, outChannel);
-		} finally {
-			close(outChannel);
-			close(inChannel);
-		}
+		return FileChannelCopier.of().copy(in, out);
 	}
 
-	// -------------------------------------------------------------------------------------- Copy end
+	// endregion -------------------------------------------------------------------------------------- Copy
 
-	// -------------------------------------------------------------------------------------- getReader and getWriter start
+	// region -------------------------------------------------------------------------------------- toReader and toWriter
 
 	/**
-	 * 获得一个文件读取器，默认使用UTF-8编码
+	 * 获得一个文件读取器，默认使用 UTF-8 编码
 	 *
 	 * @param in 输入流
 	 * @return BufferedReader对象
 	 * @since 5.1.6
 	 */
-	public static BufferedReader getUtf8Reader(final InputStream in) {
-		return getReader(in, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 从{@link BOMInputStream}中获取Reader
-	 *
-	 * @param in {@link BOMInputStream}
-	 * @return {@link BufferedReader}
-	 * @since 5.5.8
-	 */
-	public static BufferedReader getReader(final BOMInputStream in) {
-		return getReader(in, CharsetUtil.charset(in.getCharset()));
+	public static BufferedReader toUtf8Reader(final InputStream in) {
+		return toReader(in, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -220,7 +201,7 @@ public class IoUtil extends NioUtil {
 	 * @return {@link BomReader}
 	 * @since 5.7.14
 	 */
-	public static BomReader getBomReader(final InputStream in) {
+	public static BomReader toBomReader(final InputStream in) {
 		return new BomReader(in);
 	}
 
@@ -231,7 +212,7 @@ public class IoUtil extends NioUtil {
 	 * @param charset 字符集
 	 * @return BufferedReader对象
 	 */
-	public static BufferedReader getReader(final InputStream in, final Charset charset) {
+	public static BufferedReader toReader(final InputStream in, final Charset charset) {
 		if (null == in) {
 			return null;
 		}
@@ -247,43 +228,14 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 获得{@link BufferedReader}<br>
-	 * 如果是{@link BufferedReader}强转返回，否则新建。如果提供的Reader为null返回null
-	 *
-	 * @param reader 普通Reader，如果为null返回null
-	 * @return {@link BufferedReader} or null
-	 * @since 3.0.9
-	 */
-	public static BufferedReader getReader(final Reader reader) {
-		if (null == reader) {
-			return null;
-		}
-
-		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
-	}
-
-	/**
-	 * 获得{@link PushbackReader}<br>
-	 * 如果是{@link PushbackReader}强转返回，否则新建
-	 *
-	 * @param reader       普通Reader
-	 * @param pushBackSize 推后的byte数
-	 * @return {@link PushbackReader}
-	 * @since 3.1.0
-	 */
-	public static PushbackReader getPushBackReader(final Reader reader, final int pushBackSize) {
-		return (reader instanceof PushbackReader) ? (PushbackReader) reader : new PushbackReader(reader, pushBackSize);
-	}
-
-	/**
 	 * 获得一个Writer，默认编码UTF-8
 	 *
 	 * @param out 输入流
 	 * @return OutputStreamWriter对象
 	 * @since 5.1.6
 	 */
-	public static OutputStreamWriter getUtf8Writer(final OutputStream out) {
-		return getWriter(out, CharsetUtil.UTF_8);
+	public static OutputStreamWriter toUtf8Writer(final OutputStream out) {
+		return toWriter(out, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -293,7 +245,7 @@ public class IoUtil extends NioUtil {
 	 * @param charset 字符集
 	 * @return OutputStreamWriter对象
 	 */
-	public static OutputStreamWriter getWriter(final OutputStream out, final Charset charset) {
+	public static OutputStreamWriter toWriter(final OutputStream out, final Charset charset) {
 		if (null == out) {
 			return null;
 		}
@@ -304,9 +256,9 @@ public class IoUtil extends NioUtil {
 			return new OutputStreamWriter(out, charset);
 		}
 	}
-	// -------------------------------------------------------------------------------------- getReader and getWriter end
+	// endregion -------------------------------------------------------------------------------------- toReader and toWriter
 
-	// -------------------------------------------------------------------------------------- read start
+	// region -------------------------------------------------------------------------------------- read
 
 	/**
 	 * 从流中读取UTF8编码的内容
@@ -353,25 +305,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.5.3
 	 */
 	public static FastByteArrayOutputStream read(final InputStream in, final boolean isClose) throws IORuntimeException {
-		final FastByteArrayOutputStream out;
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			try {
-				out = new FastByteArrayOutputStream(in.available());
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			}
-		} else {
-			out = new FastByteArrayOutputStream();
-		}
-		try {
-			copy(in, out);
-		} finally {
-			if (isClose) {
-				close(in);
-			}
-		}
-		return out;
+		return StreamReader.of(in, isClose).read();
 	}
 
 	/**
@@ -431,28 +365,7 @@ public class IoUtil extends NioUtil {
 	 * @since 5.0.4
 	 */
 	public static byte[] readBytes(final InputStream in, final boolean isClose) throws IORuntimeException {
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			final byte[] result;
-			try {
-				final int available = in.available();
-				result = new byte[available];
-				final int readLength = in.read(result);
-				if (readLength != available) {
-					throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", available, readLength));
-				}
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			} finally {
-				if (isClose) {
-					close(in);
-				}
-			}
-			return result;
-		}
-
-		// 未知bytes总量的流
-		return read(in, isClose).toByteArray();
+		return StreamReader.of(in, isClose).readBytes();
 	}
 
 	/**
@@ -464,16 +377,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(final InputStream in, final int length) throws IORuntimeException {
-		if (null == in) {
-			return null;
-		}
-		if (length <= 0) {
-			return new byte[0];
-		}
-
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream(length);
-		copy(in, out, DEFAULT_BUFFER_SIZE, length, null);
-		return out.toByteArray();
+		return StreamReader.of(in, false).readBytes(length);
 	}
 
 	/**
@@ -490,99 +394,21 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
-	 *
-	 * @param in {@link InputStream}
-	 * @return 16进制字符串
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String readHex28Upper(final InputStream in) throws IORuntimeException {
-		return readHex(in, 28, false);
-	}
-
-	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
-	 *
-	 * @param in {@link InputStream}
-	 * @return 16进制字符串
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String readHex28Lower(final InputStream in) throws IORuntimeException {
-		return readHex(in, 28, true);
-	}
-
-	/**
-	 * 从流中读取对象，即对象的反序列化
-	 *
-	 * <p>
-	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
-	 * </p>
-	 *
-	 * @param <T> 读取对象的类型
-	 * @param in  输入流
-	 * @return 输出流
-	 * @throws IORuntimeException IO异常
-	 * @throws UtilException      ClassNotFoundException包装
-	 */
-	public static <T> T readObj(final InputStream in) throws IORuntimeException, UtilException {
-		return readObj(in, null);
-	}
-
-	/**
 	 * 从流中读取对象，即对象的反序列化，读取后不关闭流
 	 *
 	 * <p>
 	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
 	 * </p>
 	 *
-	 * @param <T>   读取对象的类型
-	 * @param in    输入流
-	 * @param clazz 读取对象类型
+	 * @param <T>           读取对象的类型
+	 * @param in            输入流
+	 * @param acceptClasses 读取对象类型
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
 	 * @throws UtilException      ClassNotFoundException包装
 	 */
-	public static <T> T readObj(final InputStream in, final Class<T> clazz) throws IORuntimeException, UtilException {
-		try {
-			return readObj((in instanceof ValidateObjectInputStream) ?
-							(ValidateObjectInputStream) in : new ValidateObjectInputStream(in),
-					clazz);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	/**
-	 * 从流中读取对象，即对象的反序列化，读取后不关闭流
-	 *
-	 * <p>
-	 * 此方法使用了{@link ValidateObjectInputStream}中的黑白名单方式过滤类，用于避免反序列化漏洞<br>
-	 * 通过构造{@link ValidateObjectInputStream}，调用{@link ValidateObjectInputStream#accept(Class[])}
-	 * 或者{@link ValidateObjectInputStream#refuse(Class[])}方法添加可以被序列化的类或者禁止序列化的类。
-	 * </p>
-	 *
-	 * @param <T>   读取对象的类型
-	 * @param in    输入流，使用{@link ValidateObjectInputStream}中的黑白名单方式过滤类，用于避免反序列化漏洞
-	 * @param clazz 读取对象类型
-	 * @return 输出流
-	 * @throws IORuntimeException IO异常
-	 * @throws UtilException      ClassNotFoundException包装
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T readObj(final ValidateObjectInputStream in, final Class<T> clazz) throws IORuntimeException, UtilException {
-		if (in == null) {
-			throw new IllegalArgumentException("The InputStream must not be null");
-		}
-		if(null != clazz){
-			in.accept(clazz);
-		}
-		try {
-			return (T) in.readObject();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e);
-		}
+	public static <T> T readObj(final InputStream in, final Class<?>... acceptClasses) throws IORuntimeException, UtilException {
+		return StreamReader.of(in, false).readObj(acceptClasses);
 	}
 
 	/**
@@ -609,7 +435,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(final InputStream in, final Charset charset, final T collection) throws IORuntimeException {
-		return readLines(getReader(in, charset), collection);
+		return readLines(toReader(in, charset), collection);
 	}
 
 	/**
@@ -648,7 +474,7 @@ public class IoUtil extends NioUtil {
 	 * @since 3.0.9
 	 */
 	public static void readLines(final InputStream in, final Charset charset, final SerConsumer<String> lineHandler) throws IORuntimeException {
-		readLines(getReader(in, charset), lineHandler);
+		readLines(toReader(in, charset), lineHandler);
 	}
 
 	/**
@@ -669,7 +495,20 @@ public class IoUtil extends NioUtil {
 		}
 	}
 
-	// -------------------------------------------------------------------------------------- read end
+	// endregion -------------------------------------------------------------------------------------- read
+
+	// region -------------------------------------------------------------------------------------- toStream
+
+	/**
+	 * String 转为UTF-8编码的字节流流
+	 *
+	 * @param content 内容
+	 * @return 字节流
+	 * @since 4.5.1
+	 */
+	public static ByteArrayInputStream toUtf8Stream(final String content) {
+		return toStream(content, CharsetUtil.UTF_8);
+	}
 
 	/**
 	 * String 转为流
@@ -683,17 +522,6 @@ public class IoUtil extends NioUtil {
 			return null;
 		}
 		return toStream(StrUtil.bytes(content, charset));
-	}
-
-	/**
-	 * String 转为UTF-8编码的字节流流
-	 *
-	 * @param content 内容
-	 * @return 字节流
-	 * @since 4.5.1
-	 */
-	public static ByteArrayInputStream toUtf8Stream(final String content) {
-		return toStream(content, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -870,6 +698,19 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * 获得{@link PushbackReader}<br>
+	 * 如果是{@link PushbackReader}强转返回，否则新建
+	 *
+	 * @param reader       普通Reader
+	 * @param pushBackSize 推后的byte数
+	 * @return {@link PushbackReader}
+	 * @since 3.1.0
+	 */
+	public static PushbackReader toPushBackReader(final Reader reader, final int pushBackSize) {
+		return (reader instanceof PushbackReader) ? (PushbackReader) reader : new PushbackReader(reader, pushBackSize);
+	}
+
+	/**
 	 * 转换为{@link PushbackInputStream}<br>
 	 * 如果传入的输入流已经是{@link PushbackInputStream}，强转返回，否则新建一个
 	 *
@@ -918,6 +759,31 @@ public class IoUtil extends NioUtil {
 
 		return pushbackInputStream;
 	}
+	// endregion -------------------------------------------------------------------------------------- toStream
+
+	// region ----------------------------------------------------------------------------------------------- write
+
+	/**
+	 * 将byte[]写到流中，并关闭目标流
+	 *
+	 * @param out     输出流
+	 * @param content 写入的内容
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void writeClose(final OutputStream out, final byte[] content) throws IORuntimeException {
+		write(out, true, content);
+	}
+
+	/**
+	 * 将byte[]写到流中，并关闭目标流
+	 *
+	 * @param out     输出流
+	 * @param content 写入的内容
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void write(final OutputStream out, final byte[] content) throws IORuntimeException {
+		write(out, false, content);
+	}
 
 	/**
 	 * 将byte[]写到流中
@@ -928,15 +794,7 @@ public class IoUtil extends NioUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void write(final OutputStream out, final boolean isCloseOut, final byte[] content) throws IORuntimeException {
-		try {
-			out.write(content);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			if (isCloseOut) {
-				close(out);
-			}
-		}
+		StreamWriter.of(out, isCloseOut).write(content);
 	}
 
 	/**
@@ -963,35 +821,7 @@ public class IoUtil extends NioUtil {
 	 * @since 3.0.9
 	 */
 	public static void write(final OutputStream out, final Charset charset, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
-		OutputStreamWriter osw = null;
-		try {
-			osw = getWriter(out, charset);
-			for (final Object content : contents) {
-				if (content != null) {
-					osw.write(Convert.toStr(content, StrUtil.EMPTY));
-				}
-			}
-			osw.flush();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			if (isCloseOut) {
-				close(osw);
-			}
-		}
-	}
-
-	/**
-	 * 将多部分内容写到流中
-	 *
-	 * @param out        输出流
-	 * @param isCloseOut 写入完毕是否关闭输出流
-	 * @param obj        写入的对象内容
-	 * @throws IORuntimeException IO异常
-	 * @since 5.3.3
-	 */
-	public static void writeObj(final OutputStream out, final boolean isCloseOut, final Serializable obj) throws IORuntimeException {
-		writeObjects(out, isCloseOut, obj);
+		StreamWriter.of(out, isCloseOut).writeStr(charset, contents);
 	}
 
 	/**
@@ -1002,24 +832,10 @@ public class IoUtil extends NioUtil {
 	 * @param contents   写入的内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writeObjects(final OutputStream out, final boolean isCloseOut, final Serializable... contents) throws IORuntimeException {
-		ObjectOutputStream osw = null;
-		try {
-			osw = out instanceof ObjectOutputStream ? (ObjectOutputStream) out : new ObjectOutputStream(out);
-			for (final Object content : contents) {
-				if (content != null) {
-					osw.writeObject(content);
-				}
-			}
-			osw.flush();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			if (isCloseOut) {
-				close(osw);
-			}
-		}
+	public static void writeObjects(final OutputStream out, final boolean isCloseOut, final Object... contents) throws IORuntimeException {
+		StreamWriter.of(out, isCloseOut).writeObj(contents);
 	}
+	// endregion ----------------------------------------------------------------------------------------------- write
 
 	/**
 	 * 从缓存中刷出数据
@@ -1060,7 +876,7 @@ public class IoUtil extends NioUtil {
 	 * @param obj 可关闭对象
 	 * @since 4.3.2
 	 */
-	public static void closeIfPosible(final Object obj) {
+	public static void closeIfPossible(final Object obj) {
 		if (obj instanceof AutoCloseable) {
 			close((AutoCloseable) obj);
 		}
@@ -1112,8 +928,8 @@ public class IoUtil extends NioUtil {
 	 * @since 4.0.6
 	 */
 	public static boolean contentEquals(Reader input1, Reader input2) throws IORuntimeException {
-		input1 = getReader(input1);
-		input2 = getReader(input2);
+		input1 = toBuffered(input1);
+		input2 = toBuffered(input2);
 
 		try {
 			int ch = input1.read();
@@ -1143,8 +959,8 @@ public class IoUtil extends NioUtil {
 	 * @since 4.0.6
 	 */
 	public static boolean contentEqualsIgnoreEOL(final Reader input1, final Reader input2) throws IORuntimeException {
-		final BufferedReader br1 = getReader(input1);
-		final BufferedReader br2 = getReader(input2);
+		final BufferedReader br1 = toBuffered(input1);
+		final BufferedReader br2 = toBuffered(input2);
 
 		try {
 			String line1 = br1.readLine();
@@ -1157,54 +973,6 @@ public class IoUtil extends NioUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-	}
-
-	/**
-	 * 计算流CRC32校验码，计算后关闭流
-	 *
-	 * @param in 文件，不能为目录
-	 * @return CRC32值
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.6
-	 */
-	public static long checksumCRC32(final InputStream in) throws IORuntimeException {
-		return checksum(in, new CRC32()).getValue();
-	}
-
-	/**
-	 * 计算流的校验码，计算后关闭流
-	 *
-	 * @param in       流
-	 * @param checksum {@link Checksum}
-	 * @return Checksum
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.10
-	 */
-	public static Checksum checksum(InputStream in, Checksum checksum) throws IORuntimeException {
-		Assert.notNull(in, "InputStream is null !");
-		if (null == checksum) {
-			checksum = new CRC32();
-		}
-		try {
-			in = new CheckedInputStream(in, checksum);
-			IoUtil.copy(in, new NullOutputStream());
-		} finally {
-			IoUtil.close(in);
-		}
-		return checksum;
-	}
-
-	/**
-	 * 计算流的校验码，计算后关闭流
-	 *
-	 * @param in       流
-	 * @param checksum {@link Checksum}
-	 * @return Checksum
-	 * @throws IORuntimeException IO异常
-	 * @since 5.4.0
-	 */
-	public static long checksumValue(final InputStream in, final Checksum checksum) {
-		return checksum(in, checksum).getValue();
 	}
 
 	/**
@@ -1256,12 +1024,13 @@ public class IoUtil extends NioUtil {
 
 	/**
 	 * {@link ByteArrayOutputStream} 转换为String
-	 * @param out {@link ByteArrayOutputStream}
+	 *
+	 * @param out     {@link ByteArrayOutputStream}
 	 * @param charset 编码
 	 * @return 字符串
 	 * @since 5.7.17
 	 */
-	public static String toStr(final ByteArrayOutputStream out, final Charset charset){
+	public static String toStr(final ByteArrayOutputStream out, final Charset charset) {
 		try {
 			return out.toString(charset.name());
 		} catch (final UnsupportedEncodingException e) {

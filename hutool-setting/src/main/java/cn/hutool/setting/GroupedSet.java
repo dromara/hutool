@@ -194,7 +194,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		super.clear();
 		BufferedReader reader = null;
 		try {
-			reader = IoUtil.getReader(settingStream, charset);
+			reader = IoUtil.toReader(settingStream, charset);
 			// 分组
 			String group;
 			LinkedHashSet<String> valueSet = null;

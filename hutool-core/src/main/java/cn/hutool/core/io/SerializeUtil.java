@@ -1,8 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;

@@ -26,7 +26,7 @@ import cn.hutool.http.meta.HttpStatus;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.meta.Method;
 import cn.hutool.http.client.body.BytesBody;
-import cn.hutool.http.client.body.FormUrlEncodedBody;
+import cn.hutool.http.client.body.UrlEncodedFormBody;
 import cn.hutool.http.client.body.MultipartBody;
 import cn.hutool.http.client.body.RequestBody;
 import cn.hutool.http.client.cookie.GlobalCookieManager;
@@ -1311,7 +1311,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 			body = BytesBody.of(this.bodyBytes);
 		} else {
-			body = FormUrlEncodedBody.of(this.form, this.charset);
+			body = UrlEncodedFormBody.of(this.form, this.charset);
 		}
 		body.writeClose(this.httpConnection.getOutputStream());
 	}

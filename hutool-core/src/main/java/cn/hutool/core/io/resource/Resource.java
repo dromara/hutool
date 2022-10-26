@@ -86,7 +86,7 @@ public interface Resource {
 	 * @return {@link BufferedReader}
 	 */
 	default BufferedReader getReader(final Charset charset) {
-		return IoUtil.getReader(getStream(), charset);
+		return IoUtil.toReader(getStream(), charset);
 	}
 
 	/**

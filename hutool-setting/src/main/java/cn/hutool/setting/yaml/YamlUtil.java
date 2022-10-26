@@ -50,7 +50,7 @@ public class YamlUtil {
 	 * @return 加载的内容，默认Map
 	 */
 	public static <T> T load(final InputStream in, final Class<T> type) {
-		return load(IoUtil.getBomReader(in), type);
+		return load(IoUtil.toBomReader(in), type);
 	}
 
 	/**

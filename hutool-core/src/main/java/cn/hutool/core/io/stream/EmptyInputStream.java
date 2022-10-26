@@ -1,4 +1,4 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.stream;
 
 import java.io.InputStream;
 

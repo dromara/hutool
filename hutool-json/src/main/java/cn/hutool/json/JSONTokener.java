@@ -74,7 +74,7 @@ public class JSONTokener {
 	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public JSONTokener(final InputStream inputStream, final JSONConfig config) throws JSONException {
-		this(IoUtil.getUtf8Reader(inputStream), config);
+		this(IoUtil.toUtf8Reader(inputStream), config);
 	}
 
 	/**

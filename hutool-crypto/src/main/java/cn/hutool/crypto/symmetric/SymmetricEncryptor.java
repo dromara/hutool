@@ -69,17 +69,6 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的bytes
 	 */
-	default byte[] encrypt(final String data, final String charset) {
-		return encrypt(StrUtil.bytes(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的bytes
-	 */
 	default byte[] encrypt(final String data, final Charset charset) {
 		return encrypt(StrUtil.bytes(data, charset));
 	}
@@ -91,30 +80,8 @@ public interface SymmetricEncryptor {
 	 * @param charset 编码
 	 * @return 加密后的Hex
 	 */
-	default String encryptHex(final String data, final String charset) {
-		return HexUtil.encodeHexStr(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Hex
-	 */
 	default String encryptHex(final String data, final Charset charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
-	}
-
-	/**
-	 * 加密
-	 *
-	 * @param data    被加密的字符串
-	 * @param charset 编码
-	 * @return 加密后的Base64
-	 */
-	default String encryptBase64(final String data, final String charset) {
-		return Base64.encode(encrypt(data, charset));
 	}
 
 	/**

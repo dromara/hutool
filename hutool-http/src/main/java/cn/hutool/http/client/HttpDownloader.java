@@ -1,6 +1,6 @@
 package cn.hutool.http.client;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.http.HttpException;

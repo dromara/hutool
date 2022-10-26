@@ -1,6 +1,6 @@
 package cn.hutool.crypto;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Encoding;

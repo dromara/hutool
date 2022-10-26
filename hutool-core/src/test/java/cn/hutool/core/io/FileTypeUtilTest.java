@@ -1,6 +1,6 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -12,21 +12,32 @@ import java.io.IOException;
 
 /**
  * 文件类型判断单元测试
- * @author Looly
  *
+ * @author Looly
  */
 public class FileTypeUtilTest {
 
 	@Test
-	@Ignore
-	public void fileTypeUtilTest() {
+	public void getTypeTest() {
+		final String type = FileTypeUtil.getType(ResourceUtil.getStream("hutool.jpg"));
+		Assert.assertEquals("jpg", type);
+	}
+
+	@Test
+	public void customTypeTest() {
 		final File file = FileUtil.file("hutool.jpg");
 		final String type = FileTypeUtil.getType(file);
 		Assert.assertEquals("jpg", type);
 
-		FileTypeUtil.putFileType("ffd8ffe000104a464946", "new_jpg");
+		final String oldType = FileTypeUtil.putFileType("ffd8ffe000104a464946", "new_jpg");
+		Assert.assertNull(oldType);
+
 		final String newType = FileTypeUtil.getType(file);
 		Assert.assertEquals("new_jpg", newType);
+
+		FileTypeUtil.removeFileType("ffd8ffe000104a464946");
+		final String type2 = FileTypeUtil.getType(file);
+		Assert.assertEquals("jpg", type2);
 	}
 
 	@Test
@@ -49,7 +60,7 @@ public class FileTypeUtilTest {
 	@Ignore
 	public void ofdTest() {
 		final File file = FileUtil.file("e:/test.ofd");
-		final String hex = IoUtil.readHex28Upper(FileUtil.getInputStream(file));
+		final String hex = FileTypeUtil.readHex28Upper(FileUtil.getInputStream(file));
 		Console.log(hex);
 		final String type = FileTypeUtil.getType(file);
 		Console.log(type);
@@ -72,13 +83,14 @@ public class FileTypeUtilTest {
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		inputStream.mark(0);
 		final String type = FileTypeUtil.getType(inputStream);
+		Assert.assertEquals("jpg", type);
 
 		inputStream.reset();
 	}
 
 	@Test
 	@Ignore
-	public void webpTest(){
+	public void webpTest() {
 		// https://gitee.com/dromara/hutool/issues/I5BGTF
 		final File file = FileUtil.file("d:/test/a.webp");
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
@@ -87,8 +99,14 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	public void getHexTest() {
-		final String id3 = HexUtil.encodeHexStr("8BPS");
-		Console.log(id3);
+	public void readHex28LowerTest() {
+		final String s = FileTypeUtil.readHex28Lower(ResourceUtil.getStream("hutool.jpg"));
+		Assert.assertEquals("ffd8ffe000104a46494600010101006000600000ffe1095845786966", s);
+	}
+
+	@Test
+	public void readHex28UpperTest() {
+		final String s = FileTypeUtil.readHex28Upper(ResourceUtil.getStream("hutool.jpg"));
+		Assert.assertEquals("FFD8FFE000104A46494600010101006000600000FFE1095845786966", s);
 	}
 }

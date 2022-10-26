@@ -1,6 +1,6 @@
 package cn.hutool.core.net.multipart;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

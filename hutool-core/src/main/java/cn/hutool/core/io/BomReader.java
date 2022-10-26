@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.io.stream.BOMInputStream;
 import cn.hutool.core.lang.Assert;
 
 import java.io.IOException;
@@ -46,9 +47,10 @@ public class BomReader extends Reader {
 		}
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
-	public int read(final char[] cbuf, final int off, final int len) throws IOException {
-		return reader.read(cbuf, off, len);
+	public int read(final char[] buffer, final int off, final int len) throws IOException {
+		return reader.read(buffer, off, len);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package cn.hutool.core.collection.iter;
 
-import cn.hutool.core.collection.iter.ComputeIter;
-import cn.hutool.core.collection.iter.IterableIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
@@ -49,7 +47,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 * @throws IllegalArgumentException reader为null抛出此异常
 	 */
 	public LineIter(final InputStream in, final Charset charset) throws IllegalArgumentException {
-		this(IoUtil.getReader(in, charset));
+		this(IoUtil.toReader(in, charset));
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 */
 	public LineIter(final Reader reader) throws IllegalArgumentException {
 		Assert.notNull(reader, "Reader must not be null");
-		this.bufferedReader = IoUtil.getReader(reader);
+		this.bufferedReader = IoUtil.toBuffered(reader);
 	}
 
 	// -----------------------------------------------------------------------

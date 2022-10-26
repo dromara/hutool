@@ -63,7 +63,7 @@ public class ThymeleafTemplate implements Template, Serializable {
 
 	@Override
 	public void render(final Map<?, ?> bindingMap, final OutputStream out) {
-		render(bindingMap, IoUtil.getWriter(out, this.charset));
+		render(bindingMap, IoUtil.toWriter(out, this.charset));
 	}
 
 }

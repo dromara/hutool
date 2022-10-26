@@ -1,6 +1,8 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.io.copy.ChannelCopier;
+import cn.hutool.core.io.copy.FileChannelCopier;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
@@ -60,74 +62,35 @@ public class NioUtil {
 	 * 拷贝流<br>
 	 * 本方法不会关闭流
 	 *
-	 * @param in             输入流
-	 * @param out            输出流
-	 * @param bufferSize     缓存大小
-	 * @param count          最大长度
-	 * @param streamProgress 进度条
+	 * @param in             输入流， 非空
+	 * @param out            输出流， 非空
+	 * @param bufferSize     缓存大小，-1表示默认
+	 * @param count          最大长度，-1表示无限制
+	 * @param streamProgress 进度条，{@code null}表示无进度条
 	 * @return 传输的byte数
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.8
 	 */
 	public static long copyByNIO(final InputStream in, final OutputStream out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
+		Assert.notNull(in, "InputStream channel is null!");
+		Assert.notNull(out, "OutputStream channel is null!");
 		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
 	}
 
 	/**
 	 * 拷贝文件Channel，使用NIO，拷贝后不会关闭channel
 	 *
-	 * @param inChannel  {@link FileChannel}
-	 * @param outChannel {@link FileChannel}
+	 * @param in  {@link FileChannel}，非空
+	 * @param out {@link FileChannel}，非空
 	 * @return 拷贝的字节数
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.3
 	 */
-	public static long copy(final FileChannel inChannel, final FileChannel outChannel) throws IORuntimeException {
-		Assert.notNull(inChannel, "In channel is null!");
-		Assert.notNull(outChannel, "Out channel is null!");
+	public static long copy(final FileChannel in, final FileChannel out) throws IORuntimeException {
+		Assert.notNull(in, "In channel is null!");
+		Assert.notNull(out, "Out channel is null!");
 
-		try {
-			return copySafely(inChannel, outChannel);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	/**
-	 * 文件拷贝实现
-	 *
-	 * <pre>
-	 * FileChannel#transferTo 或 FileChannel#transferFrom 的实现是平台相关的，需要确保低版本平台的兼容性
-	 * 例如 android 7以下平台在使用 ZipInputStream 解压文件的过程中，
-	 * 通过 FileChannel#transferFrom 传输到文件时，其返回值可能小于 totalBytes，不处理将导致文件内容缺失
-	 *
-	 * // 错误写法，dstChannel.transferFrom 返回值小于 zipEntry.getSize()，导致解压后文件内容缺失
-	 * try (InputStream srcStream = zipFile.getInputStream(zipEntry);
-	 * 		ReadableByteChannel srcChannel = Channels.newChannel(srcStream);
-	 * 		FileOutputStream fos = new FileOutputStream(saveFile);
-	 * 		FileChannel dstChannel = fos.getChannel()) {
-	 * 		dstChannel.transferFrom(srcChannel, 0, zipEntry.getSize());
-	 *  }
-	 * </pre>
-	 *
-	 * @param inChannel  输入通道
-	 * @param outChannel 输出通道
-	 * @return 输入通道的字节数
-	 * @throws IOException 发生IO错误
-	 * @link http://androidxref.com/6.0.1_r10/xref/libcore/luni/src/main/java/java/nio/FileChannelImpl.java
-	 * @link http://androidxref.com/7.0.0_r1/xref/libcore/ojluni/src/main/java/sun/nio/ch/FileChannelImpl.java
-	 * @link http://androidxref.com/7.0.0_r1/xref/libcore/ojluni/src/main/native/FileChannelImpl.c
-	 * @author z8g
-	 * @since 5.7.21
-	 */
-	private static long copySafely(final FileChannel inChannel, final FileChannel outChannel) throws IOException {
-		final long totalBytes = inChannel.size();
-		for (long pos = 0, remaining = totalBytes; remaining > 0; ) { // 确保文件内容不会缺失
-			final long writeBytes = inChannel.transferTo(pos, remaining, outChannel); // 实际传输的字节数
-			pos += writeBytes;
-			remaining -= writeBytes;
-		}
-		return totalBytes;
+		return FileChannelCopier.of().copy(in, out);
 	}
 
 	/**
@@ -184,6 +147,8 @@ public class NioUtil {
 	 * @since 5.7.8
 	 */
 	public static long copy(final ReadableByteChannel in, final WritableByteChannel out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
+		Assert.notNull(in, "In channel is null!");
+		Assert.notNull(out, "Out channel is null!");
 		return new ChannelCopier(bufferSize, count, streamProgress).copy(in, out);
 	}
 

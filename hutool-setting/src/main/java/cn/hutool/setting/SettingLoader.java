@@ -103,7 +103,7 @@ public class SettingLoader {
 		this.groupedMap.clear();
 		BufferedReader reader = null;
 		try {
-			reader = IoUtil.getReader(settingStream, this.charset);
+			reader = IoUtil.toReader(settingStream, this.charset);
 			// 分组
 			String group = null;
 

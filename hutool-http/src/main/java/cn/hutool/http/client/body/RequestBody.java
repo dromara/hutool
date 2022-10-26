@@ -1,6 +1,6 @@
 package cn.hutool.http.client.body;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
 
 import java.io.InputStream;

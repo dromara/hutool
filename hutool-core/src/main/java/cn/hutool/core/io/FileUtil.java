@@ -11,6 +11,7 @@ import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.io.stream.BOMInputStream;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerConsumer;
@@ -58,8 +59,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 /**
  * 文件工具类
@@ -1804,8 +1803,8 @@ public class FileUtil extends PathUtil {
 	 * @return BufferedReader对象
 	 * @since 5.5.8
 	 */
-	public static BufferedReader getBOMReader(final File file) {
-		return IoUtil.getReader(getBOMInputStream(file));
+	public static BomReader getBOMReader(final File file) {
+		return IoUtil.toBomReader(getBOMInputStream(file));
 	}
 
 	/**
@@ -1839,7 +1838,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedReader getReader(final File file, final Charset charset) throws IORuntimeException {
-		return IoUtil.getReader(getInputStream(file), charset);
+		return IoUtil.toReader(getInputStream(file), charset);
 	}
 
 	/**
@@ -3027,39 +3026,6 @@ public class FileUtil extends PathUtil {
 	 */
 	public static boolean containsInvalid(final String fileName) {
 		return FileNameUtil.containsInvalid(fileName);
-	}
-
-	/**
-	 * 计算文件CRC32校验码
-	 *
-	 * @param file 文件，不能为目录
-	 * @return CRC32值
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.6
-	 */
-	public static long checksumCRC32(final File file) throws IORuntimeException {
-		return checksum(file, new CRC32()).getValue();
-	}
-
-	/**
-	 * 计算文件校验码
-	 *
-	 * @param file     文件，不能为目录
-	 * @param checksum {@link Checksum}
-	 * @return Checksum
-	 * @throws IORuntimeException IO异常
-	 * @since 4.0.6
-	 */
-	public static Checksum checksum(final File file, final Checksum checksum) throws IORuntimeException {
-		Assert.notNull(file, "File is null !");
-		if (file.isDirectory()) {
-			throw new IllegalArgumentException("Checksums can't be computed on directories");
-		}
-		try {
-			return IoUtil.checksum(new FileInputStream(file), checksum);
-		} catch (final FileNotFoundException e) {
-			throw new IORuntimeException(e);
-		}
 	}
 
 	/**

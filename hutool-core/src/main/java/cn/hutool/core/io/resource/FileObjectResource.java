@@ -65,7 +65,7 @@ public class FileObjectResource implements Resource {
 	@Override
 	public BufferedReader getReader(final Charset charset) {
 		try {
-			return IoUtil.getReader(this.fileObject.openReader(false));
+			return IoUtil.toBuffered(this.fileObject.openReader(false));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

@@ -75,7 +75,7 @@ public class CharSequenceResource implements Resource, Serializable {
 
 	@Override
 	public BufferedReader getReader(final Charset charset) {
-		return IoUtil.getReader(new StringReader(this.data.toString()));
+		return IoUtil.toBuffered(new StringReader(this.data.toString()));
 	}
 
 	@Override

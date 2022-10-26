@@ -1,4 +1,4 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,20 +10,24 @@ import java.io.OutputStream;
  * @author looly
  * @since 4.0.6
  */
-public class NullOutputStream extends OutputStream {
+public class EmptyOutputStream extends OutputStream {
 
 	/**
 	 * 单例
 	 */
-	public static final NullOutputStream NULL_OUTPUT_STREAM = new NullOutputStream();
+	public static final EmptyOutputStream INSTANCE = new EmptyOutputStream();
+
+	private EmptyOutputStream() {
+	}
 
 	/**
 	 * 什么也不做，写出到{@code /dev/null}.
 	 *
-	 * @param b 写出的数据
+	 * @param b   写出的数据
 	 * @param off 开始位置
 	 * @param len 长度
 	 */
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void write(final byte[] b, final int off, final int len) {
 		// to /dev/null
@@ -45,6 +49,7 @@ public class NullOutputStream extends OutputStream {
 	 * @param b 写出的数据
 	 * @throws IOException 不抛出
 	 */
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void write(final byte[] b) throws IOException {
 		// to /dev/null
