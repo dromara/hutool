@@ -1,5 +1,6 @@
-package cn.hutool.core.io;
+package cn.hutool.core.util;
 
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 
 import java.io.File;

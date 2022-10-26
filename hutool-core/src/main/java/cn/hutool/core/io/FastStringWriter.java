@@ -8,6 +8,7 @@ import java.io.Writer;
  * @author looly
  * @since 5.3.3
  */
+@SuppressWarnings("NullableProblems")
 public final class FastStringWriter extends Writer {
 
 	private static final int DEFAULT_CAPACITY = 16;

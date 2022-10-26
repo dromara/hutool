@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * 使用方法如下：
  *
- * <pre>
- * StopWatch stopWatch = new StopWatch("任务名称");
+ * <pre>{@code
+ * StopWatch stopWatch = StopWatch.of("任务名称");
  *
  * // 任务1
  * stopWatch.start("任务一");
@@ -35,12 +35,21 @@ import java.util.concurrent.TimeUnit;
  * // 打印出耗时
  * Console.log(stopWatch.prettyPrint());
  *
- * </pre>
+ * }</pre>
  *
  * @author Spring Framework, Looly
  * @since 4.6.6
  */
 public class StopWatch {
+
+	/**
+	 * 创建计时任务（秒表）
+	 *
+	 * @return StopWatch
+	 */
+	public static StopWatch of() {
+		return new StopWatch();
+	}
 
 	/**
 	 * 创建计时任务（秒表）

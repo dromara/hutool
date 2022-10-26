@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.ManifestUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
