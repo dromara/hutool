@@ -1,6 +1,7 @@
 package cn.hutool.http.client.body;
 
 import cn.hutool.core.io.resource.BytesResource;
+import cn.hutool.core.io.resource.HttpResource;
 
 /**
  * bytes类型的Http request body，主要发送编码后的表单数据或rest body（如JSON或XML）
@@ -25,6 +26,6 @@ public class BytesBody extends ResourceBody {
 	 * @param content Body内容，编码后
 	 */
 	public BytesBody(final byte[] content) {
-		super(new BytesResource(content));
+		super(new HttpResource(new BytesResource(content), null));
 	}
 }

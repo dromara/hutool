@@ -19,7 +19,7 @@ public class IssueI5WAV4Test {
 		map.put("flightID", 2879);
 
 
-		final String body = HttpRequest.get("http://localhost:8884/api/test/testHttpUtilGetWithBody").body(JSONUtil.toJsonStr(map)).execute().body();
+		final String body = HttpRequest.get("http://localhost:8884/api/test/testHttpUtilGetWithBody").body(JSONUtil.toJsonStr(map)).execute().bodyStr();
 		System.out.println("使用hutool返回结果:" + body);
 	}
 }

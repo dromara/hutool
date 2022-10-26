@@ -574,7 +574,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 返回结果
 	 */
 	public String send(final boolean pretty) {
-		final String body = sendForResponse().body();
+		final String body = sendForResponse().bodyStr();
 		return pretty ? XmlUtil.format(body) : body;
 	}
 

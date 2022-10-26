@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.6.4
  */
+@SuppressWarnings("resource")
 public class HttpDownloader {
 
 	/**
@@ -50,10 +51,10 @@ public class HttpDownloader {
 	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout         超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress  进度条
-	 * @return 文件大小
+	 * @return 文件
 	 */
-	public static long downloadFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
-		return requestDownload(url, timeout).writeBody(targetFileOrDir, streamProgress);
+	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
+		return requestDownload(url, timeout).body().write(targetFileOrDir, streamProgress);
 	}
 
 	/**
@@ -66,11 +67,11 @@ public class HttpDownloader {
 	 * @param tempFileSuffix  临时文件后缀，默认".temp"
 	 * @param timeout         超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress  进度条
-	 * @return 下载大小
+	 * @return 文件
 	 * @since 5.7.12
 	 */
-	public long downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
-		return requestDownload(url, timeout).writeBody(targetFileOrDir, tempFileSuffix, streamProgress);
+	public File downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
+		return requestDownload(url, timeout).body().write(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class HttpDownloader {
 	 * @return 文件
 	 */
 	public static File downloadForFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
-		return requestDownload(url, timeout).writeBodyForFile(targetFileOrDir, streamProgress);
+		return requestDownload(url, timeout).body().write(targetFileOrDir, streamProgress);
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class HttpDownloader {
 	public static long download(final String url, final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] is null !");
 
-		return requestDownload(url, -1).writeBody(out, isCloseOut, streamProgress);
+		return requestDownload(url, -1).body().write(out, isCloseOut, streamProgress);
 	}
 
 	/**

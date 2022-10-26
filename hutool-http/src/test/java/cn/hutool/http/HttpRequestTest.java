@@ -31,7 +31,7 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void getHttpsTest() {
-		final String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().body();
+		final String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().bodyStr();
 		Console.log(body);
 	}
 
@@ -48,7 +48,7 @@ public class HttpRequestTest {
 	public void getCookiesTest() {
 		// 检查在Connection关闭情况下Cookie是否可以正常获取
 		final HttpResponse res = HttpRequest.get("https://www.oschina.net/").execute();
-		final String body = res.body();
+		final String body = res.bodyStr();
 		Console.log(res.getCookies());
 		Console.log(body);
 	}
@@ -129,7 +129,7 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void bodyTest() {
-		final String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().body();
+		final String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().bodyStr();
 		Console.log(ddddd1);
 	}
 

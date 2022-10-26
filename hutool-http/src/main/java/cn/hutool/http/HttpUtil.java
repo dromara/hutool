@@ -279,9 +279,9 @@ public class HttpUtil {
 	 *
 	 * @param url  请求的url
 	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @return 文件大小
+	 * @return 文件
 	 */
-	public static long downloadFile(final String url, final String dest) {
+	public static File downloadFile(final String url, final String dest) {
 		return downloadFile(url, FileUtil.file(dest));
 	}
 
@@ -290,9 +290,9 @@ public class HttpUtil {
 	 *
 	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @return 文件大小
+	 * @return 文件
 	 */
-	public static long downloadFile(final String url, final File destFile) {
+	public static File downloadFile(final String url, final File destFile) {
 		return downloadFile(url, destFile, null);
 	}
 
@@ -302,10 +302,10 @@ public class HttpUtil {
 	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout  超时，单位毫秒，-1表示默认超时
-	 * @return 文件大小
+	 * @return 文件
 	 * @since 4.0.4
 	 */
-	public static long downloadFile(final String url, final File destFile, final int timeout) {
+	public static File downloadFile(final String url, final File destFile, final int timeout) {
 		return downloadFile(url, destFile, timeout, null);
 	}
 
@@ -315,9 +315,9 @@ public class HttpUtil {
 	 * @param url            请求的url
 	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param streamProgress 进度条
-	 * @return 文件大小
+	 * @return 文件
 	 */
-	public static long downloadFile(final String url, final File destFile, final StreamProgress streamProgress) {
+	public static File downloadFile(final String url, final File destFile, final StreamProgress streamProgress) {
 		return downloadFile(url, destFile, -1, streamProgress);
 	}
 
@@ -328,10 +328,10 @@ public class HttpUtil {
 	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout        超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress 进度条
-	 * @return 文件大小
+	 * @return 文件
 	 * @since 4.0.4
 	 */
-	public static long downloadFile(final String url, final File destFile, final int timeout, final StreamProgress streamProgress) {
+	public static File downloadFile(final String url, final File destFile, final int timeout, final StreamProgress streamProgress) {
 		return HttpDownloader.downloadFile(url, destFile, timeout, streamProgress);
 	}
 
@@ -473,8 +473,8 @@ public class HttpUtil {
 	 * key1=v1&amp;key2=&amp;key3=v3
 	 * </pre>
 	 *
-	 * @param paramMap 表单数据
-	 * @param charset  编码，null表示不encode键值对
+	 * @param paramMap         表单数据
+	 * @param charset          编码，null表示不encode键值对
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 * @return url参数
 	 * @since 5.7.16
@@ -534,7 +534,7 @@ public class HttpUtil {
 	 * @since 4.5.2
 	 */
 	public static String normalizeParams(final String paramPart, final Charset charset) {
-		if(StrUtil.isEmpty(paramPart)){
+		if (StrUtil.isEmpty(paramPart)) {
 			return paramPart;
 		}
 		final StringBuilder builder = new StringBuilder(paramPart.length() + 16);
