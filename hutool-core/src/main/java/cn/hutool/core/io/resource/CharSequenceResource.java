@@ -85,7 +85,7 @@ public class CharSequenceResource implements Resource, Serializable {
 
 	@Override
 	public byte[] readBytes() throws IORuntimeException {
-		return this.data.toString().getBytes(this.charset);
+		return StrUtil.bytes(this.data, this.charset);
 	}
 
 }
