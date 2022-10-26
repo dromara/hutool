@@ -1,17 +1,11 @@
 package cn.hutool.http;
 
-import cn.hutool.core.reflect.FieldUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.client.cookie.GlobalCookieManager;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * HTTP 全局参数配置
@@ -31,7 +25,6 @@ public class HttpGlobalConfig implements Serializable {
 	 * 底层调用：{@link HttpURLConnection#setConnectTimeout(int)} 同时设置: 连接超时
 	 */
 	private static int timeout = -1;
-	private static boolean isAllowPatch = false;
 	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
 	private static int maxRedirectCount = 0;
 	private static boolean ignoreEOFError = true;
@@ -181,49 +174,5 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
-	}
-
-	/**
-	 * 增加支持的METHOD方法<br>
-	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
-	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
-	 */
-	public static void allowPatch(){
-		AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-			doAllowPatch();
-			return null;
-		});
-	}
-
-	/**
-	 * 增加支持的METHOD方法<br>
-	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
-	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
-	 *
-	 * @since 5.7.4
-	 */
-	synchronized private static void doAllowPatch() {
-		if (isAllowPatch) {
-			return;
-		}
-		final Field methodsField = FieldUtil.getField(HttpURLConnection.class, "methods");
-		if (null == methodsField) {
-			throw new HttpException("None static field [methods] with Java version: [{}]", System.getProperty("java.version"));
-		}
-
-		// 去除final修饰
-		FieldUtil.setFieldValue(methodsField, "modifiers", methodsField.getModifiers() & ~Modifier.FINAL);
-		final String[] methods = {
-				"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
-		};
-		FieldUtil.setFieldValue(null, methodsField, methods);
-
-		// 检查注入是否成功
-		final Object staticFieldValue = FieldUtil.getStaticFieldValue(methodsField);
-		if (false == ArrayUtil.equals(methods, staticFieldValue)) {
-			throw new HttpException("Inject value to field [methods] failed!");
-		}
-
-		isAllowPatch = true;
 	}
 }

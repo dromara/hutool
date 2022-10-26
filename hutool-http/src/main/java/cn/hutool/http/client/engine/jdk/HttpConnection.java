@@ -5,10 +5,9 @@ import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.http.meta.Header;
 import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpGlobalConfig;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
 import cn.hutool.http.ssl.DefaultSSLInfo;
 
@@ -125,7 +124,7 @@ public class HttpConnection {
 
 			// 增加PATCH方法支持
 			if (Method.PATCH.equals(method)) {
-				HttpGlobalConfig.allowPatch();
+				HttpUrlConnectionUtil.allowPatch();
 			}
 		}
 

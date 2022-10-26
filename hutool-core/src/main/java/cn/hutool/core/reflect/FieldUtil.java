@@ -84,7 +84,7 @@ public class FieldUtil {
 	public static Field getDeClearField(final Class<?> beanClass, final String name) {
 		try {
 			return beanClass.getDeclaredField(name);
-		} catch (NoSuchFieldException e) {
+		} catch (final NoSuchFieldException e) {
 			return null;
 		}
 	}
@@ -124,7 +124,7 @@ public class FieldUtil {
 	 * 获得一个类中所有满足条件的字段列表，包括其父类中的字段<br>
 	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
 	 *
-	 * @param beanClass   类
+	 * @param beanClass      类
 	 * @param fieldPredicate field过滤器，过滤掉不需要的field，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
@@ -252,6 +252,17 @@ public class FieldUtil {
 		final Field field = getField((obj instanceof Class) ? (Class<?>) obj : obj.getClass(), fieldName);
 		Assert.notNull(field, "Field [{}] is not exist in [{}]", fieldName, obj.getClass().getName());
 		setFieldValue(obj, field, value);
+	}
+
+	/**
+	 * 设置静态（static）字段值
+	 *
+	 * @param field 字段
+	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @throws UtilException UtilException 包装IllegalAccessException异常
+	 */
+	public static void setStaticFieldValue(final Field field, final Object value) throws UtilException {
+		setFieldValue(null, field, value);
 	}
 
 	/**
