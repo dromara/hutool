@@ -70,7 +70,9 @@ public class NioUtil {
 	 * @since 5.7.8
 	 */
 	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, long count, StreamProgress streamProgress) throws IORuntimeException {
-		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
+		final long copySize = copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
+		IoUtil.flush(out);
+		return copySize;
 	}
 
 	/**
