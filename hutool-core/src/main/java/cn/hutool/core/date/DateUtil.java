@@ -14,6 +14,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -2265,6 +2266,23 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static int getLastDayOfMonth(Date date){
 		return date(date).getLastDayOfMonth();
+	}
+
+	/**
+	 * 检查字符串是否是一个符合格式的正确日期
+	 * @param dateStr 日期的字符串
+	 * @param format 日期的格式化格式
+	 * @return 是否是符合格式正确的日期
+	 */
+	public static boolean isRightDate(CharSequence dateStr, String format) {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+			Date date = dateFormat.parse((String) dateStr);
+			String formatDate = dateFormat.format(date);
+			return dateStr.toString().equals(formatDate);
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 
 	// ------------------------------------------------------------------------ Private method start

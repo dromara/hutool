@@ -1102,4 +1102,14 @@ public class DateUtilTest {
 		Assert.assertEquals(dayOfMonth,dateTime.dayOfMonth());
 		Assert.assertTrue("not is last day of this month !!",DateUtil.isLastDayOfMonth(dateTime));
 	}
+
+	@Test
+	public void isRightDateTest() {
+		String format = "yyyyMMdd";
+		boolean rightDate = DateUtil.isRightDate("20220101", format);
+		Assert.assertTrue(rightDate);
+		rightDate = DateUtil.isRightDate("20220231", format);
+		Assert.assertFalse(rightDate);
+	}
+
 }
