@@ -1,10 +1,10 @@
 package cn.hutool.http.client.body;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.stream.SyncInputStream;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
@@ -13,8 +13,9 @@ import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
 
-import java.io.EOFException;
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -23,25 +24,25 @@ import java.io.OutputStream;
  *
  * @author looly
  */
-public class ResponseBody implements HttpBody {
+public class ResponseBody implements HttpBody, Closeable {
 
 	private final Response response;
 	/**
-	 * 是否忽略响应读取时可能的EOF异常。<br>
-	 * 在Http协议中，对于Transfer-Encoding: Chunked在正常情况下末尾会写入一个Length为0的的chunk标识完整结束。<br>
-	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
+	 * Http请求原始流
 	 */
-	private final boolean isIgnoreEOFError;
+	private final SyncInputStream bodyStream;
 
 	/**
 	 * 构造
 	 *
 	 * @param response         响应体
+	 * @param in               HTTP主体响应流
+	 * @param isAsync          是否异步模式
 	 * @param isIgnoreEOFError 是否忽略EOF错误
 	 */
-	public ResponseBody(final Response response, final boolean isIgnoreEOFError) {
+	public ResponseBody(final Response response, final InputStream in, final boolean isAsync, final boolean isIgnoreEOFError) {
 		this.response = response;
-		this.isIgnoreEOFError = isIgnoreEOFError;
+		this.bodyStream = new SyncInputStream(in, response.contentLength(), isAsync, isIgnoreEOFError);
 	}
 
 	@Override
@@ -51,12 +52,31 @@ public class ResponseBody implements HttpBody {
 
 	@Override
 	public InputStream getStream() {
-		return response.bodyStream();
+		return this.bodyStream;
 	}
 
 	@Override
 	public void write(final OutputStream out) {
 		write(out, false, null);
+	}
+
+	/**
+	 * 同步数据到内存，以bytes形式存储
+	 *
+	 * @return this
+	 */
+	public ResponseBody sync() {
+		this.bodyStream.sync();
+		return this;
+	}
+
+	/**
+	 * 获取响应内容的bytes
+	 *
+	 * @return 响应内容bytes
+	 */
+	public byte[] getBytes() {
+		return this.bodyStream.readBytes();
 	}
 
 	/**
@@ -72,9 +92,8 @@ public class ResponseBody implements HttpBody {
 	 */
 	public long write(final OutputStream out, final boolean isCloseOut, final StreamProgress streamProgress) {
 		Assert.notNull(out, "[out] must be not null!");
-		final long contentLength = response.contentLength();
 		try {
-			return copyBody(getStream(), out, contentLength, streamProgress, isIgnoreEOFError);
+			return this.bodyStream.copyTo(out, streamProgress);
 		} finally {
 			if (isCloseOut) {
 				IoUtil.close(out);
@@ -165,6 +184,11 @@ public class ResponseBody implements HttpBody {
 		return outFile;
 	}
 
+	@Override
+	public void close() throws IOException {
+		this.bodyStream.close();
+	}
+
 	// region ---------------------------------------------------------------------------- Private Methods
 
 	/**
@@ -206,38 +230,6 @@ public class ResponseBody implements HttpBody {
 			}
 		}
 		return fileName;
-	}
-
-	/**
-	 * 将响应内容写出到{@link OutputStream}<br>
-	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
-	 * 写出后会关闭Http流（异步模式）
-	 *
-	 * @param in               输入流
-	 * @param out              写出的流
-	 * @param contentLength    总长度，-1表示未知
-	 * @param streamProgress   进度显示接口，通过实现此接口显示下载进度
-	 * @param isIgnoreEOFError 是否忽略响应读取时可能的EOF异常
-	 * @return 拷贝长度
-	 */
-	private static long copyBody(final InputStream in, final OutputStream out, final long contentLength, final StreamProgress streamProgress, final boolean isIgnoreEOFError) {
-		if (null == out) {
-			throw new NullPointerException("[out] is null!");
-		}
-
-		long copyLength = -1;
-		try {
-			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
-		} catch (final IORuntimeException e) {
-			//noinspection StatementWithEmptyBody
-			if (isIgnoreEOFError
-					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {
-				// 忽略读取HTTP流中的EOF错误
-			} else {
-				throw e;
-			}
-		}
-		return copyLength;
 	}
 	// endregion ---------------------------------------------------------------------------- Private Methods
 }

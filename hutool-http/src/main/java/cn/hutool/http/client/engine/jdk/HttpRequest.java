@@ -50,6 +50,7 @@ import java.util.function.Function;
  *
  * @author Looly
  */
+@Deprecated
 public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- static Http Method start

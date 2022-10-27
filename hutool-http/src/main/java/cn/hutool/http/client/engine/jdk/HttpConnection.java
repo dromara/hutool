@@ -5,7 +5,6 @@ import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.http.client.HeaderOperation;
 import cn.hutool.http.meta.Method;
 import cn.hutool.http.ssl.DefaultSSLInfo;
@@ -20,8 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
 
@@ -401,38 +398,6 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 			return this.conn.getResponseCode();
 		}
 		return 0;
-	}
-
-	/**
-	 * 获得字符集编码<br>
-	 * 从Http连接的头信息中获得字符集<br>
-	 * 从ContentType中获取
-	 *
-	 * @return 字符集编码
-	 */
-	public String getCharsetName() {
-		return HttpUtil.getCharset(conn);
-	}
-
-	/**
-	 * 获取字符集编码<br>
-	 * 从Http连接的头信息中获得字符集<br>
-	 * 从ContentType中获取
-	 *
-	 * @return {@link Charset}编码
-	 * @since 3.0.9
-	 */
-	public Charset getCharset() {
-		Charset charset = null;
-		final String charsetName = getCharsetName();
-		if (StrUtil.isNotBlank(charsetName)) {
-			try {
-				charset = Charset.forName(charsetName);
-			} catch (final UnsupportedCharsetException e) {
-				// ignore
-			}
-		}
-		return charset;
 	}
 
 	@Override

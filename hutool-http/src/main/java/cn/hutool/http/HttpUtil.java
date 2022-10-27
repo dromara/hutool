@@ -704,7 +704,7 @@ public class HttpUtil {
 	 * @param conn HTTP连接对象
 	 * @return 字符集
 	 */
-	public static String getCharset(final HttpURLConnection conn) {
+	public static Charset getCharset(final HttpURLConnection conn) {
 		if (conn == null) {
 			return null;
 		}
@@ -719,7 +719,19 @@ public class HttpUtil {
 	 * @return 字符集
 	 * @since 5.2.6
 	 */
-	public static String getCharset(final String contentType) {
+	public static Charset getCharset(final String contentType) {
+		return CharsetUtil.parse(getCharsetName(contentType), null);
+	}
+
+	/**
+	 * 从Http连接的头信息中获得字符集<br>
+	 * 从ContentType中获取
+	 *
+	 * @param contentType Content-Type
+	 * @return 字符集
+	 * @since 5.2.6
+	 */
+	public static String getCharsetName(final String contentType) {
 		if (StrUtil.isBlank(contentType)) {
 			return null;
 		}

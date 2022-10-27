@@ -1,11 +1,8 @@
 package cn.hutool.http.client.engine.okhttp;
 
 import cn.hutool.core.io.stream.EmptyInputStream;
-import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.client.Response;
-import cn.hutool.http.meta.Header;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
@@ -46,12 +43,7 @@ public class OkHttpResponse implements Response {
 
 	@Override
 	public Charset charset() {
-		final String contentType = rawRes.header(Header.CONTENT_TYPE.getValue());
-		if(StrUtil.isNotEmpty(contentType)){
-			final String charset = HttpUtil.getCharset(contentType);
-			CharsetUtil.parse(charset, this.requestCharset);
-		}
-		return this.requestCharset;
+		return ObjUtil.defaultIfNull(Response.super.charset(), requestCharset);
 	}
 
 	@Override

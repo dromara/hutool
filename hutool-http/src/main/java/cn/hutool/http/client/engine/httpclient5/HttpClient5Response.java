@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -67,8 +66,7 @@ public class HttpClient5Response implements Response {
 
 	@Override
 	public Charset charset() {
-		final Charset charset = ContentType.parse(rawRes.getEntity().getContentType()).getCharset();
-		return ObjUtil.defaultIfNull(charset, requestCharset);
+		return ObjUtil.defaultIfNull(Response.super.charset(), requestCharset);
 	}
 
 	@Override

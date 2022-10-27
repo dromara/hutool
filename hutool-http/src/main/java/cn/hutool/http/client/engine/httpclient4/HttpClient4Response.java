@@ -8,7 +8,6 @@ import cn.hutool.http.client.Response;
 import org.apache.http.Header;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -67,8 +66,7 @@ public class HttpClient4Response implements Response {
 
 	@Override
 	public Charset charset() {
-		final Charset charset = ContentType.parse(rawRes.getEntity().getContentType().getValue()).getCharset();
-		return ObjUtil.defaultIfNull(charset, requestCharset);
+		return ObjUtil.defaultIfNull(Response.super.charset(), requestCharset);
 	}
 
 	@Override

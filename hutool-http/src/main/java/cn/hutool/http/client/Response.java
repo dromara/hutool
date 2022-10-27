@@ -1,7 +1,6 @@
 package cn.hutool.http.client;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpUtil;
@@ -37,11 +36,13 @@ public interface Response extends Closeable {
 	String header(final String name);
 
 	/**
-	 * 获取字符集编码
+	 * 获取字符集编码，默认为响应头中的编码
 	 *
 	 * @return 字符集
 	 */
-	Charset charset();
+	default Charset charset(){
+		return HttpUtil.getCharset(header(Header.CONTENT_TYPE));
+	}
 
 	/**
 	 * 获得服务区响应流<br>
@@ -56,7 +57,7 @@ public interface Response extends Closeable {
 	 * @return {@link ResponseBody}
 	 */
 	default ResponseBody body(){
-		return new ResponseBody(this, true);
+		return new ResponseBody(this, bodyStream(), false, true);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public interface Response extends Closeable {
 	 * @return byte[]
 	 */
 	default byte[] bodyBytes() {
-		return IoUtil.readBytes(bodyStream());
+		return body().getBytes();
 	}
 
 	/**
