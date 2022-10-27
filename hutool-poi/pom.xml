@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<poi.version>4.1.2</poi.version>
+		<poi.version>5.2.2</poi.version>
 	</properties>
 
 	<dependencies>
