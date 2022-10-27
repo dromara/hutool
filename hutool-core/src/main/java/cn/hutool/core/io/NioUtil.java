@@ -74,7 +74,9 @@ public class NioUtil {
 	public static long copyByNIO(final InputStream in, final OutputStream out, final int bufferSize, final long count, final StreamProgress streamProgress) throws IORuntimeException {
 		Assert.notNull(in, "InputStream channel is null!");
 		Assert.notNull(out, "OutputStream channel is null!");
-		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
+		final long copySize = copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, count, streamProgress);
+		IoUtil.flush(out);
+		return copySize;
 	}
 
 	/**
