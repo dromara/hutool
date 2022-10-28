@@ -139,6 +139,30 @@ public class HtmlUtil {
 	}
 
 	/**
+	 * 清除指定HTML标签和被标签包围的内容<br>
+	 * 不区分大小写
+	 *
+	 * @param content 文本
+	 * @param elementById 需要清除的标签对应的id元素值
+	 * @param tagNames 要清除的标签
+	 * @return 去除标签后的文本
+	 */
+	public static String removeHtmlTag(String content, String elementById, String... tagNames) {
+		String regex;
+		elementById = StrUtil.isBlank(elementById) ? "" : elementById.trim();
+		for (String tagName : tagNames) {
+			if (StrUtil.isBlank(tagName)) {
+				continue;
+			}
+			tagName = tagName.trim();
+			// (?i)表示其后面的表达式忽略大小写
+			regex = StrUtil.format("(?i)<{}(\\s+[^>]*?(id=\"{}\"){1}[^>]*?)?/?>(.*?</{}>)?", tagName, elementById, tagName);
+			content = ReUtil.delAll(regex, content); // 非自闭标签小写
+		}
+		return content;
+	}
+
+	/**
 	 * 去除HTML标签中的属性，如果多个标签有相同属性，都去除
 	 *
 	 * @param content 文本
