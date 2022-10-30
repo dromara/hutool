@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.Calculator;
@@ -13,6 +14,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * 数字工具类<br>
@@ -190,6 +192,27 @@ public class NumberUtil {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 提供精确的加法运算<br>
+	 * 如果传入多个值为null或者空，则返回0
+	 *
+	 * @param items       元素列表，为null的忽略
+	 * @param valueGetter 元素的数值字段获取函数
+	 * @param <T>         元素类型
+	 * @param <V>         数值类型
+	 * @return 和
+	 * @author FengBaoheng
+	 * @since 5.8.6
+	 */
+	public static <T, V extends Number> BigDecimal add(Collection<T> items, Function<? super T, ? extends V> valueGetter) {
+		if (CollUtil.isEmpty(items) || valueGetter == null) {
+			return BigDecimal.ZERO;
+		}
+
+		Number[] values = CollUtil.map(items, valueGetter, true).toArray(new Number[0]);
+		return add(values);
 	}
 
 	/**

@@ -1,13 +1,16 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import lombok.Getter;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,6 +49,52 @@ public class NumberUtilTest {
 	public void addTest4() {
 		final BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
 		Assert.assertEquals(new BigDecimal("464"), result);
+	}
+
+	/**
+	 * 测试泛型元素求和
+	 */
+	@Test
+	public void addTest5() {
+		// 父类
+		@Getter
+		class Person {
+			private final Integer age;
+
+			public Person(Integer age) {
+				this.age = age;
+			}
+		}
+
+		// 学生子类
+		@Getter
+		class Student extends Person {
+			private final BigDecimal score;
+
+			public Student(Integer age, BigDecimal score) {
+				super(age);
+				this.score = score;
+			}
+		}
+
+		Student s1 = new Student(10, new BigDecimal("100"));
+		Student s2 = new Student(9, new BigDecimal("60.5"));
+		Student s3 = new Student(11, null);
+		Student s4 = new Student(null, new BigDecimal("90.5"));
+		Student s5 = new Student(null, null);
+		List<Student> students = ListUtil.of(s1, s2, s3, s4, s5, null);
+
+		BigDecimal sumAge = NumberUtil.add(students, Person::getAge);
+		Assert.assertEquals(new BigDecimal("30"), sumAge);
+
+		BigDecimal sumScore = NumberUtil.add(students, Student::getScore);
+		Assert.assertEquals(new BigDecimal("251.0"), sumScore);
+
+		Assert.assertEquals(BigDecimal.ZERO, NumberUtil.add(students, null));
+
+		Assert.assertEquals(BigDecimal.ZERO, NumberUtil.add(ListUtil.empty(), Student::getScore));
+
+		Assert.assertEquals(BigDecimal.ZERO, NumberUtil.add(null, Student::getScore));
 	}
 
 	@Test
