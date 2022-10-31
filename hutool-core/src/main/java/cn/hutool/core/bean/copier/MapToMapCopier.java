@@ -54,6 +54,12 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (true == copyOptions.testMapKeyFilter(sKey)) {
+				return;
+			}
+
+
 			// 获取目标值真实类型并转换源值
 			final Type[] typeArguments = TypeUtil.getTypeArguments(this.targetType);
 			if (null != typeArguments) {
