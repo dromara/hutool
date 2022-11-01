@@ -1,11 +1,15 @@
 package cn.hutool.http;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
+import java.util.Map;
 import java.io.Serializable;
+import java.util.Properties;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.CookieManager;
@@ -20,6 +24,26 @@ import java.net.HttpURLConnection;
 public class HttpGlobalConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+
+	// 根据环境变量和系统变量配置默认值
+	static {
+		String propertyPrefix = "hutool.http.global.";
+		// 获取环境变量
+		Map<String, String> systemEnvironment = System.getenv();
+		// 获取系统变量
+		Properties systemProperties = System.getProperties();
+		// 用系统变量覆盖环境变量
+		systemProperties.forEach((k, v) -> systemEnvironment.put(k.toString(), String.valueOf(v)));
+		// config
+		timeout = NumberUtil.parseInt(systemEnvironment.getOrDefault(propertyPrefix + "timeout", "-1"));
+		isAllowPatch = BooleanUtil.toBoolean(systemEnvironment.getOrDefault(propertyPrefix + "is_allow_patch", "false"));
+		boundary = "--------------------Hutool_" +
+				systemEnvironment.getOrDefault(propertyPrefix + "boundary", RandomUtil.randomString(16));
+		maxRedirectCount = NumberUtil.parseInt(systemEnvironment.getOrDefault(propertyPrefix + "max_redirect_count", "0"));
+		ignoreEOFError = BooleanUtil.toBoolean(systemEnvironment.getOrDefault(propertyPrefix + "ignore_eof_error", "true"));
+		decodeUrl = BooleanUtil.toBoolean(systemEnvironment.getOrDefault(propertyPrefix + "decode_url", "false"));
+	}
+
 	/**
 	 * -1: 含义，永不超时。
 	 * 如果：设置timeout = 3s(3000 ms), 那一次请求最大超时：就是：6s
@@ -28,12 +52,12 @@ public class HttpGlobalConfig implements Serializable {
 	 * 底层调用：{@link HttpURLConnection#setReadTimeout(int)} 同时设置: 读取超时
 	 * 底层调用：{@link HttpURLConnection#setConnectTimeout(int)} 同时设置: 连接超时
 	 */
-	private static int timeout = -1;
-	private static boolean isAllowPatch = false;
-	private static String boundary = "--------------------Hutool_" + RandomUtil.randomString(16);
-	private static int maxRedirectCount = 0;
-	private static boolean ignoreEOFError = true;
-	private static boolean decodeUrl = false;
+	private static int timeout;
+	private static boolean isAllowPatch;
+	private static String boundary;
+	private static int maxRedirectCount;
+	private static boolean ignoreEOFError;
+	private static boolean decodeUrl;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -63,6 +87,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 获取全局默认的Multipart边界
 	 *
 	 * @return 全局默认的Multipart边界
+	 *
 	 * @since 5.7.17
 	 */
 	public static String getBoundary() {
@@ -73,6 +98,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 设置默认的Multipart边界
 	 *
 	 * @param customBoundary 自定义Multipart边界
+	 *
 	 * @since 5.7.17
 	 */
 	synchronized public static void setBoundary(String customBoundary) {
@@ -84,6 +110,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 如果设置为1，表示重定向一次，即请求两次
 	 *
 	 * @return 全局默认的最大重定向次数
+	 *
 	 * @since 5.7.19
 	 */
 	public static int getMaxRedirectCount() {
@@ -95,6 +122,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 如果设置为1，表示重定向一次，即请求两次
 	 *
 	 * @param customMaxRedirectCount 全局默认的最大重定向次数
+	 *
 	 * @since 5.7.19
 	 */
 	synchronized public static void setMaxRedirectCount(int customMaxRedirectCount) {
@@ -107,6 +135,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
 	 *
 	 * @return 是否忽略响应读取时可能的EOF异常
+	 *
 	 * @since 5.7.20
 	 */
 	public static boolean isIgnoreEOFError() {
@@ -119,6 +148,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 如果服务端未遵循这个规范或响应没有正常结束，会报EOF异常，此选项用于是否忽略这个异常。
 	 *
 	 * @param customIgnoreEOFError 是否忽略响应读取时可能的EOF异常。
+	 *
 	 * @since 5.7.20
 	 */
 	synchronized public static void setIgnoreEOFError(boolean customIgnoreEOFError) {
@@ -131,6 +161,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
 	 *
 	 * @return 是否忽略解码URL
+	 *
 	 * @since 5.7.22
 	 */
 	public static boolean isDecodeUrl() {
@@ -143,6 +174,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 按照RFC3986规范，在发送请求时，全部编码之。如果为{@code false}，则不会解码已经编码的内容，在请求时只编码需要编码的部分。
 	 *
 	 * @param customDecodeUrl 是否忽略解码URL
+	 *
 	 * @since 5.7.22
 	 */
 	synchronized public static void setDecodeUrl(boolean customDecodeUrl) {
@@ -153,6 +185,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 获取Cookie管理器，用于自定义Cookie管理
 	 *
 	 * @return {@link CookieManager}
+	 *
 	 * @see GlobalCookieManager#getCookieManager()
 	 * @since 4.1.0
 	 */
@@ -164,6 +197,7 @@ public class HttpGlobalConfig implements Serializable {
 	 * 自定义{@link CookieManager}
 	 *
 	 * @param customCookieManager 自定义的{@link CookieManager}
+	 *
 	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 * @since 4.5.14
 	 */
@@ -206,7 +240,7 @@ public class HttpGlobalConfig implements Serializable {
 
 		// 检查注入是否成功
 		final Object staticFieldValue = ReflectUtil.getStaticFieldValue(methodsField);
-		if (false == ArrayUtil.equals(methods, staticFieldValue)) {
+		if (!ArrayUtil.equals(methods, staticFieldValue)) {
 			throw new HttpException("Inject value to field [methods] failed!");
 		}
 
