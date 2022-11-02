@@ -22,9 +22,8 @@ import java.util.Map;
  * 方言工厂类
  *
  * @author loolly
- *
  */
-public class DialectFactory implements DriverNamePool{
+public class DialectFactory implements DriverNamePool {
 
 	private static final Map<DataSource, Dialect> DIALECT_POOL = new SafeConcurrentHashMap<>();
 
@@ -80,6 +79,17 @@ public class DialectFactory implements DriverNamePool{
 	 * @return 驱动
 	 */
 	public static String identifyDriver(String nameContainsProductInfo) {
+		return identifyDriver(nameContainsProductInfo, null);
+	}
+
+	/**
+	 * 通过JDBC URL等信息识别JDBC驱动名
+	 *
+	 * @param nameContainsProductInfo 包含数据库标识的字符串
+	 * @param classLoader             类加载器，{@code null}表示默认上下文的类加载器
+	 * @return 驱动
+	 */
+	public static String identifyDriver(String nameContainsProductInfo, ClassLoader classLoader) {
 		if (StrUtil.isBlank(nameContainsProductInfo)) {
 			return null;
 		}
@@ -88,15 +98,15 @@ public class DialectFactory implements DriverNamePool{
 
 		// 首先判断是否为标准的JDBC URL，截取jdbc:xxxx:中间部分
 		final String name = ReUtil.getGroup1("jdbc:(.*?):", nameContainsProductInfo);
-		if(StrUtil.isNotBlank(name)){
+		if (StrUtil.isNotBlank(name)) {
 			nameContainsProductInfo = name;
 		}
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql") || nameContainsProductInfo.contains("cobar")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
+			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6, classLoader) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
 		} else if (nameContainsProductInfo.contains("oracle")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
+			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE, classLoader) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
 		} else if (nameContainsProductInfo.contains("postgresql")) {
 			driver = DRIVER_POSTGRESQL;
 		} else if (nameContainsProductInfo.contains("sqlite")) {
@@ -161,12 +171,13 @@ public class DialectFactory implements DriverNamePool{
 
 	/**
 	 * 获取共享方言
+	 *
 	 * @param ds 数据源，每一个数据源对应一个唯一方言
 	 * @return {@link Dialect}方言
 	 */
 	public static Dialect getDialect(DataSource ds) {
 		Dialect dialect = DIALECT_POOL.get(ds);
-		if(null == dialect) {
+		if (null == dialect) {
 			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
 			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (ds) {
