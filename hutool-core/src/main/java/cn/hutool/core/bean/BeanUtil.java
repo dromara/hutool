@@ -812,12 +812,12 @@ public class BeanUtil {
 	 * 判断Bean是否为非空对象，非空对象表示本身不为{@code null}或者含有非{@code null}属性的对象
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
 	 * @since 5.0.7
 	 */
-	public static boolean isNotEmpty(final Object bean, final String... ignoreFiledNames) {
-		return false == isEmpty(bean, ignoreFiledNames);
+	public static boolean isNotEmpty(final Object bean, final String... ignoreFieldNames) {
+		return false == isEmpty(bean, ignoreFieldNames);
 	}
 
 	/**
@@ -825,17 +825,17 @@ public class BeanUtil {
 	 * 此方法不判断static属性
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
 	 * @since 4.1.10
 	 */
-	public static boolean isEmpty(final Object bean, final String... ignoreFiledNames) {
+	public static boolean isEmpty(final Object bean, final String... ignoreFieldNames) {
 		if (null != bean) {
 			for (final Field field : FieldUtil.getFields(bean.getClass())) {
 				if (ModifierUtil.isStatic(field)) {
 					continue;
 				}
-				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+				if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
 						&& null != FieldUtil.getFieldValue(bean, field)) {
 					return false;
 				}
@@ -849,11 +849,11 @@ public class BeanUtil {
 	 * 对象本身为{@code null}也返回true
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否包含值为<code>null</code>的属性，{@code true} - 包含 / {@code false} - 不包含
 	 * @since 4.1.10
 	 */
-	public static boolean hasNullField(final Object bean, final String... ignoreFiledNames) {
+	public static boolean hasNullField(final Object bean, final String... ignoreFieldNames) {
 		if (null == bean) {
 			return true;
 		}
@@ -861,7 +861,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+			if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
 					&& null == FieldUtil.getFieldValue(bean, field)) {
 				return true;
 			}
