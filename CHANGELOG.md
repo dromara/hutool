@@ -7,7 +7,7 @@
 
 ### 🐣新特性
 * 【http  】      HttpResponse增加getFileNameFromDisposition方法（pr#2676@Github）
-* 【core  】      FileUtil.copy，当来源为文件时，返回文件而非目录
+* 【core  】      FileUtil.copy，当来源为文件时，返回文件而非目录（issue#I5YCVL@Gitee）
 * 【db    】      DialectFactory增加identifyDriver重载（issue#I5YWI6@Gitee）
 
 ### 🐞Bug修复
