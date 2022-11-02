@@ -61,8 +61,6 @@ public class DruidDSFactory extends AbstractDSFactory {
 		ds.configFromPropety(druidProps);
 
 		//issue#I4ZKCW 某些非属性设置单独设置
-		String[] specialKeys = {"druid.connectionErrorRetryAttempts", "druid.breakAfterAcquireFailure"};
-
 		// connectionErrorRetryAttempts
 		final String connectionErrorRetryAttemptsKey = "druid.connectionErrorRetryAttempts";
 		if(druidProps.containsKey(connectionErrorRetryAttemptsKey)){
