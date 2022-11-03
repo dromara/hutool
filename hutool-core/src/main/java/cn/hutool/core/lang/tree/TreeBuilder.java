@@ -7,7 +7,6 @@ import cn.hutool.core.lang.tree.parser.NodeParser;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	public TreeBuilder(E rootId, TreeNodeConfig config) {
 		root = new Tree<>(config);
 		root.setId(rootId);
-		this.idTreeMap = new HashMap<>();
+		this.idTreeMap = new LinkedHashMap<>();
 	}
 
 	/**
