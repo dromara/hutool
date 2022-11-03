@@ -200,7 +200,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param <U>         value类型
 	 * @return map
 	 */
-	default <U> Map<Integer, U> toIdxMap(Function<? super T, ? extends U> valueMapper) {
+	default <U> Map<Integer, U> toIdxMap(final Function<? super T, ? extends U> valueMapper) {
 		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 		return EasyStream.of(toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
 	}
