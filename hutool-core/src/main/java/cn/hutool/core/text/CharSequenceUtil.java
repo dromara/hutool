@@ -2132,15 +2132,22 @@ public class CharSequenceUtil {
 
 	/**
 	 * 截取字符串,从指定位置开始,截取指定长度的字符串<br>
-	 * author weibaohui
+	 * 如果fromIndex为正数，则向后截取指定length长度，如果为负数，则向前截取length长度。
 	 *
 	 * @param input     原始字符串
 	 * @param fromIndex 开始的index,包括
 	 * @param length    要截取的长度
 	 * @return 截取后的字符串
+	 * @author weibaohui
 	 */
 	public static String subWithLength(String input, int fromIndex, int length) {
-		return sub(input, fromIndex, fromIndex + length);
+		final int toIndex;
+		if(fromIndex < 0){
+			toIndex = fromIndex - length;
+		}else{
+			toIndex = fromIndex + length;
+		}
+		return sub(input, fromIndex, toIndex);
 	}
 
 	/**

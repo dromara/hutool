@@ -16,6 +16,7 @@
 * 【core  】      由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此BCD标记为弃用（issue#I5XEC6@Gitee）
 * 【core  】      修复IoUtil.copyByNIO方法写出时没有flush的问题
 * 【core  】      修复TreeBuilder中使用HashMap导致默认乱序问题（issue#I5Z8C5@Gitee）
+* 【core  】      修复StrUtil.subWithLength负数问题（issue#I5YN49@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.9 (2022-10-22)
