@@ -230,7 +230,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	}
 
 	/**
-	 * <p>将集合转换为树，传入 {@code parentId == value} 来判断树的根节点
+	 * <p>将集合转换为树，传入 {@code parentId == pidValue} 来判断树的根节点
 	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
 	 *
 	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
