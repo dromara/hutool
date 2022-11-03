@@ -1810,8 +1810,21 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param length    要截取的长度
 	 * @return 截取后的字符串
 	 */
-	public static String subWithLength(final String input, final int fromIndex, final int length) {
-		return sub(input, fromIndex, fromIndex + length);
+	public static String subByLength(final String input, final int fromIndex, final int length) {
+		if (isEmpty(input)) {
+			return null;
+		}
+		if (length <= 0) {
+			return EMPTY;
+		}
+
+		final int toIndex;
+		if(fromIndex < 0){
+			toIndex = fromIndex - length;
+		}else{
+			toIndex = fromIndex + length;
+		}
+		return sub(input, fromIndex, toIndex);
 	}
 
 	/**

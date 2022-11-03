@@ -240,4 +240,11 @@ public class HttpRequestTest {
 		final HttpRequest a = HttpRequest.post("https://hutool.cn/").form("a", 1);
 		Console.log(a.toString());
 	}
+
+	@Test
+	@Ignore
+	public void issueI5Y68WTest() {
+		final HttpResponse httpResponse = HttpRequest.get("http://82.157.17.173:8100/app/getAddress").execute();
+		Console.log(httpResponse.body());
+	}
 }

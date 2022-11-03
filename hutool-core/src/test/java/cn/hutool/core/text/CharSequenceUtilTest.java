@@ -212,4 +212,10 @@ public class CharSequenceUtilTest {
 		final String result = StrUtil.replaceFirst(str, "YES", "", true);
 		Assert.assertEquals(result, " and yes i do");
 	}
+
+	@Test
+	public void issueI5YN49Test() {
+		final String str = "A5E6005700000000000000000000000000000000000000090D0100000000000001003830";
+		Assert.assertEquals("38", StrUtil.subByLength(str,-2,2));
+	}
 }

@@ -1,13 +1,12 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.tree.parser.NodeParser;
+import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.tree.parser.NodeParser;
 import cn.hutool.core.util.ObjUtil;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class TreeBuilder<E> implements Builder<MapTree<E>> {
 	public TreeBuilder(final E rootId, final TreeNodeConfig config) {
 		root = new MapTree<>(config);
 		root.setId(rootId);
-		this.idTreeMap = new HashMap<>();
+		this.idTreeMap = new LinkedHashMap<>();
 	}
 
 	/**
