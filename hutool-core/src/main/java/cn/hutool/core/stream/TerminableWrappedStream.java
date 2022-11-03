@@ -226,7 +226,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 			final Function<T, R> idGetter,
 			final Function<T, R> pIdGetter,
 			final BiConsumer<T, List<T>> childrenSetter) {
-		return toTree(idGetter, pIdGetter, null, childrenSetter);
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, isParallel()));
 	}
 
 	/**
