@@ -226,7 +226,32 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 			final Function<T, R> idGetter,
 			final Function<T, R> pIdGetter,
 			final BiConsumer<T, List<T>> childrenSetter) {
-		return collect(CollectorUtil.toTree(idGetter, pIdGetter, childrenSetter, isParallel()));
+		return toTree(idGetter, pIdGetter, null, childrenSetter);
+	}
+
+	/**
+	 * <p>将集合转换为树，传入 {@code parentId == value} 来判断树的根节点
+	 * 因为需要在当前传入数据里查找，所以这是一个结束操作 <br>
+	 *
+	 * @param idGetter       id的getter对应的lambda，可以写作 {@code Student::getId}
+	 * @param pIdGetter      parentId的getter对应的lambda，可以写作 {@code Student::getParentId}
+	 * @param pIdValue       parentId的值，支持 {@code null}
+	 * @param childrenSetter children的setter对应的lambda，可以写作{ @code Student::setChildren}
+	 * @param <R>            此处是id、parentId的泛型限制
+	 * @return list 组装好的树 <br>
+	 * eg:
+	 * <pre>{@code
+	 * List<Student> studentTree = EasyStream.of(students).
+	 * 	toTree(Student::getId, Student::getParentId, 0L, Student::setChildren);
+	 * }</pre>
+	 * @author VampireAchao
+	 */
+	default <R extends Comparable<R>> List<T> toTree(
+			final Function<T, R> idGetter,
+			final Function<T, R> pIdGetter,
+			final R pIdValue,
+			final BiConsumer<T, List<T>> childrenSetter) {
+		return collect(CollectorUtil.toTree(idGetter, pIdGetter, pIdValue, childrenSetter, isParallel()));
 	}
 
 	/**
