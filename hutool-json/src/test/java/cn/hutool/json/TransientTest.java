@@ -1,6 +1,7 @@
 package cn.hutool.json;
 
 import lombok.Data;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class TransientTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
 				JSONConfig.create().setTransientSupport(false));
-		Assert.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
+		Assert.assertThat(jsonObject.toString(), CoreMatchers.anyOf(CoreMatchers.is("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}"), CoreMatchers.is("{\"bizNo\":\"bizNo\",\"id\":\"3243\"}")));
 	}
 
 	@Test
