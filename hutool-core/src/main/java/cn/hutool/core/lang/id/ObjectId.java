@@ -1,14 +1,9 @@
 package cn.hutool.core.lang.id;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.RandomUtil;
 
-import java.net.NetworkInterface;
-import java.nio.ByteBuffer;
-import java.util.Enumeration;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,37 +13,41 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <pre>
  * 1. Time 时间戳。
  * 2. Machine 所在主机的唯一标识符，一般是机器主机名的散列值。
- * 3. PID 进程ID。确保同一机器中不冲突
+ * 3. 随机数
  * 4. INC 自增计数器。确保同一秒内产生objectId的唯一性。
  * </pre>
  *
  * <table summary="" border="1">
  *     <tr>
  *         <td>时间戳</td>
- *         <td>机器ID</td>
- *         <td>进程ID</td>
+ *         <td>随机数</td>
  *         <td>自增计数器</td>
  *     </tr>
  *     <tr>
  *         <td>4</td>
- *         <td>3</td>
- *         <td>2</td>
- *         <td>3</td>
+ *         <td>4</td>
+ *         <td>4</td>
  *     </tr>
  * </table>
- *
- * 参考：<a href="http://blog.csdn.net/qxc1281/article/details/54021882">http://blog.csdn.net/qxc1281/article/details/54021882</a>
+ * <p>
+ * 参考：<a href="https://github.com/mongodb/mongo-java-driver/blob/master/bson/src/main/org/bson/types/ObjectId.java">...</a>
  *
  * @author looly
  * @since 4.0.0
- *
  */
 public class ObjectId {
-
-	/** 线程安全的下一个随机数,每次生成自增+1 */
+	/**
+	 * 16进制字符
+	 */
+	private static final char[] HEX_UNIT = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	/**
+	 * 线程安全的下一个随机数,每次生成自增+1
+	 */
 	private static final AtomicInteger NEXT_INC = new AtomicInteger(RandomUtil.randomInt());
-	/** 机器信息 */
-	private static final int MACHINE = getMachinePiece() | getProcessPiece();
+	/**
+	 * 机器信息
+	 */
+	private static final char[] MACHINE_CODE = initMachineCode();
 
 	/**
 	 * 给定的字符串是否为有效的ObjectId
@@ -90,21 +89,31 @@ public class ObjectId {
 	 * @since 4.1.15
 	 */
 	public static byte[] nextBytes() {
-		final ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
-		bb.putInt((int) DateUtil.currentSeconds());// 4位
-		bb.putInt(MACHINE);// 4位
-		bb.putInt(NEXT_INC.getAndIncrement());// 4位
-
-		return bb.array();
+		return next().getBytes();
 	}
 
 	/**
-	 * 获取一个objectId用下划线分割
+	 * 获取一个objectId【没有下划线】。
 	 *
 	 * @return objectId
 	 */
 	public static String next() {
-		return next(false);
+		final char[] ids = new char[24];
+		int epoch = (int) ((System.currentTimeMillis() / 1000));
+		// 4位字节 ： 时间戳
+		for (int i = 7; i >= 0; i--) {
+			ids[i] = HEX_UNIT[(epoch & 15)];
+			epoch >>>= 4;
+		}
+		// 4位字节 ： 随机数
+		System.arraycopy(MACHINE_CODE, 0, ids, 8, 8);
+		// 4位字节： 自增序列。溢出后，相当于从0开始算。
+		int seq = NEXT_INC.incrementAndGet();
+		for (int i = 23; i >= 16; i--) {
+			ids[i] = HEX_UNIT[(seq & 15)];
+			seq >>>= 4;
+		}
+		return new String(ids);
 	}
 
 	/**
@@ -114,78 +123,41 @@ public class ObjectId {
 	 * @return objectId
 	 */
 	public static String next(final boolean withHyphen) {
-		final byte[] array = nextBytes();
-		final StringBuilder buf = new StringBuilder(withHyphen ? 26 : 24);
-		int t;
-		for (int i = 0; i < array.length; i++) {
-			if (withHyphen && i % 4 == 0 && i != 0) {
-				buf.append("-");
-			}
-			t = array[i] & 0xff;
-			if (t < 16) {
-				buf.append('0');
-			}
-			buf.append(Integer.toHexString(t));
-
+		if (false == withHyphen) {
+			return next();
 		}
-		return buf.toString();
-	}
-
-	// ----------------------------------------------------------------------------------------- Private method start
-	/**
-	 * 获取机器码片段
-	 *
-	 * @return 机器码片段
-	 */
-	private static int getMachinePiece() {
-		// 机器码
-		int machinePiece;
-		try {
-			final StringBuilder netSb = new StringBuilder();
-			// 返回机器所有的网络接口
-			final Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
-			// 遍历网络接口
-			while (e.hasMoreElements()) {
-				final NetworkInterface ni = e.nextElement();
-				// 网络接口信息
-				netSb.append(ni.toString());
-			}
-			// 保留后两位
-			machinePiece = netSb.toString().hashCode() << 16;
-		} catch (final Throwable e) {
-			// 出问题随机生成,保留后两位
-			machinePiece = (RandomUtil.randomInt()) << 16;
+		final char[] ids = new char[26];
+		ids[8] = '-';
+		ids[17] = '-';
+		int epoch = (int) ((System.currentTimeMillis() / 1000));
+		// 4位字节 ： 时间戳
+		for (int i = 7; i >= 0; i--) {
+			ids[i] = HEX_UNIT[(epoch & 15)];
+			epoch >>>= 4;
 		}
-		return machinePiece;
+		// 4位字节 ： 随机数
+		System.arraycopy(MACHINE_CODE, 0, ids, 9, 8);
+		// 4位字节： 自增序列。溢出后，相当于从0开始算。
+		int seq = NEXT_INC.incrementAndGet();
+		for (int i = 25; i >= 18; i--) {
+			ids[i] = HEX_UNIT[(seq & 15)];
+			seq >>>= 4;
+		}
+		return new String(ids);
 	}
 
 	/**
-	 * 获取进程码片段
+	 * 初始化机器码
 	 *
-	 * @return 进程码片段
+	 * @return 机器码
 	 */
-	private static int getProcessPiece() {
-		// 进程码
-		// 因为静态变量类加载可能相同,所以要获取进程ID + 加载对象的ID值
-		final int processPiece;
-		// 进程ID初始化
-		int processId;
-		try {
-			processId = RuntimeUtil.getPid();
-		} catch (final Throwable t) {
-			processId = RandomUtil.randomInt();
+	private static char[] initMachineCode() {
+		// 机器码 : 4位随机数，8个字节。避免docker容器中生成相同机器码的bug
+		final char[] macAndPid = new char[8];
+		final Random random = new Random();
+		for (int i = 7; i >= 0; i--) {
+			macAndPid[i] = HEX_UNIT[random.nextInt() & 15];
 		}
-
-		final ClassLoader loader = ClassLoaderUtil.getClassLoader();
-		// 返回对象哈希码,无论是否重写hashCode方法
-		final int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
-
-		// 进程ID + 对象加载ID
-		// 保留前2位
-		final String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
-		processPiece = processSb.hashCode() & 0xFFFF;
-
-		return processPiece;
+		return macAndPid;
 	}
-	// ----------------------------------------------------------------------------------------- Private method end
 }
