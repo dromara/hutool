@@ -23,4 +23,18 @@ public class ClassLoaderUtilTest {
 		final Class<Object> objectClass = ClassLoaderUtil.loadClass(s);
 		Assert.assertEquals(Dict[].class, objectClass);
 	}
+
+	@Test
+	public void loadInnerClassTest() {
+		String name = ClassLoaderUtil.loadClass("cn.hutool.core.util.ClassLoaderUtilTest.A").getName();
+		Assert.assertEquals("cn.hutool.core.util.ClassLoaderUtilTest$A", name);
+		name = ClassLoaderUtil.loadClass("cn.hutool.core.util.ClassLoaderUtilTest.A.B").getName();
+		Assert.assertEquals("cn.hutool.core.util.ClassLoaderUtilTest$A$B", name);
+	}
+
+	private static class A{
+		private static class B{
+
+		}
+	}
 }

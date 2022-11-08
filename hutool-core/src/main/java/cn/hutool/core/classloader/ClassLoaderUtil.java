@@ -3,9 +3,7 @@ package cn.hutool.core.classloader;
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.SafeConcurrentHashMap;
-import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
@@ -19,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link ClassLoader}工具类
+ * {@link ClassLoader}工具类<br>
+ * 此工具类加载的类，不提供缓存，缓存应由实现的ClassLoader完成。
  *
  * @author Looly
  * @since 3.0.9
@@ -51,7 +50,6 @@ public class ClassLoaderUtil {
 	 * 原始类型名和其class对应表，例如：int =》 int.class
 	 */
 	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new SafeConcurrentHashMap<>(32);
-	private static final Map<Map.Entry<String, ClassLoader>, Class<?>> CLASS_CACHE = new WeakConcurrentMap<>();
 
 	static {
 		final List<Class<?>> primitiveTypes = new ArrayList<>(32);
@@ -199,12 +197,9 @@ public class ClassLoaderUtil {
 			classLoader = getClassLoader();
 		}
 
-		// 加载原始类型和缓存中的类
 		Class<?> clazz = loadPrimitiveClass(name);
 		if (clazz == null) {
-			final String finalName = name;
-			final ClassLoader finalClassLoader = classLoader;
-			clazz = CLASS_CACHE.computeIfAbsent(MapUtil.entry(name, classLoader), (key) -> doLoadClass(finalName, finalClassLoader, isInitialized));
+			clazz = doLoadClass(name, classLoader, isInitialized);
 		}
 		return (Class<T>) clazz;
 	}
@@ -291,11 +286,13 @@ public class ClassLoaderUtil {
 	 * 加载非原始类类，无缓存
 	 *
 	 * @param name          类名
-	 * @param classLoader   {@link ClassLoader}
+	 * @param classLoader   {@link ClassLoader}，必须非空
 	 * @param isInitialized 是否初始化
 	 * @return 类
 	 */
-	private static Class<?> doLoadClass(final String name, ClassLoader classLoader, final boolean isInitialized) {
+	private static Class<?> doLoadClass(String name, final ClassLoader classLoader, final boolean isInitialized) {
+		// 去除尾部多余的"."
+		name = StrUtil.trim(name, 1, (c)-> CharUtil.DOT == c);
 		Class<?> clazz;
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			// 对象数组"java.lang.String[]"风格
@@ -314,9 +311,6 @@ public class ClassLoaderUtil {
 			clazz = Array.newInstance(elementClass, 0).getClass();
 		} else {
 			// 加载普通类
-			if (null == classLoader) {
-				classLoader = getClassLoader();
-			}
 			try {
 				clazz = Class.forName(name, isInitialized, classLoader);
 			} catch (final ClassNotFoundException ex) {
@@ -339,18 +333,41 @@ public class ClassLoaderUtil {
 	 * @return 类名对应的类
 	 * @since 4.1.20
 	 */
-	private static Class<?> tryLoadInnerClass(final String name, final ClassLoader classLoader, final boolean isInitialized) {
+	private static Class<?> tryLoadInnerClass(String name, final ClassLoader classLoader, final boolean isInitialized) {
 		// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
-		final int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
-		if (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
-			final String innerClassName = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
-			try {
-				return Class.forName(innerClassName, isInitialized, classLoader);
-			} catch (final ClassNotFoundException ex2) {
-				// 尝试获取内部类失败时，忽略之。
+		int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
+		Class<?> clazz = null;
+		while (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
+			if(false == Character.isUpperCase(name.charAt(lastDotIndex + 1))){
+				// 类名必须大写，非大写的类名跳过
+				break;
 			}
+			name = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
+			clazz = forName(name, isInitialized, classLoader);
+			if(null != clazz){
+				break;
+			}
+
+			lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
 		}
-		return null;
+		return clazz;
+	}
+
+	/**
+	 * 加载指定名称的类
+	 *
+	 * @param name 类名
+	 * @param initialize 是否初始化
+	 * @param loader {@link ClassLoader}
+	 * @return 指定名称对应的类，如果不存在类，返回{@code null}
+	 */
+	private static Class<?> forName(final String name, final boolean initialize, final ClassLoader loader){
+		try {
+			return Class.forName(name, initialize, loader);
+		} catch (final ClassNotFoundException ex2) {
+			// 尝试获取内部类失败时，忽略之。
+			return null;
+		}
 	}
 	// ----------------------------------------------------------------------------------- Private method end
 }
