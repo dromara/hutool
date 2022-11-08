@@ -57,10 +57,11 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	 * @param close     占位符结束符号，不允许为空
 	 * @param escape    转义符
 	 */
-	public PlaceholderParser(UnaryOperator<String> processor, String open, String close, char escape) {
+	public PlaceholderParser(
+		final UnaryOperator<String> processor, final String open, final String close, final char escape) {
 		Assert.isFalse(StrChecker.isEmpty(open), "开始符号不能为空");
 		Assert.isFalse(StrChecker.isEmpty(close), "结束符号不能为空");
-		this.processor = processor;
+		this.processor = Objects.requireNonNull(processor);
 		this.open = open;
 		this.openLength = open.length();
 		this.close = close;
@@ -75,7 +76,8 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	 * @param open      占位符开始符号，不允许为空
 	 * @param close     占位符结束符号，不允许为空
 	 */
-	public PlaceholderParser(UnaryOperator<String> processor, String open, String close) {
+	public PlaceholderParser(
+		final UnaryOperator<String> processor, final String open, final String close) {
 		this(processor, open, close, '\\');
 	}
 
@@ -86,8 +88,7 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	 * @return 处理后的字符串
 	 */
 	@Override
-	public String apply(String text) {
-		Objects.requireNonNull(processor);
+	public String apply(final String text) {
 		if (StrChecker.isEmpty(text)) {
 			return StrChecker.EMPTY;
 		}
