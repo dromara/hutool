@@ -67,6 +67,16 @@ public class ClassScanner implements Serializable {
 	private final Set<Class<?>> classes = new HashSet<>();
 
 	/**
+	 * 忽略loadClass时的错误
+	 */
+	private boolean ignoreLoadError = false;
+
+	/**
+	 * 获取加载错误的类名列表
+	 */
+	private final Set<String> classesOfLoadError = new HashSet<>();
+
+	/**
 	 * 扫描指定包路径下所有包含指定注解的类，包括其他加载的jar或者类
 	 *
 	 * @param packageName     包路径
@@ -222,6 +232,19 @@ public class ClassScanner implements Serializable {
 	}
 
 	/**
+	 * 扫描
+	 *
+	 * @param forceScanJavaClassPaths 是否强制扫描其他位于classpath关联jar中的类
+	 * @param ignoreLoadError  是否或略扫描时loadClass的异常
+	 * @return 类集合
+	 *
+	 */
+	public Set<Class<?>> scan(boolean forceScanJavaClassPaths,boolean ignoreLoadError){
+		this.ignoreLoadError = ignoreLoadError;
+		return scan(forceScanJavaClassPaths);
+	}
+
+	/**
 	 * 扫描包路径下满足class过滤器条件的所有class文件
 	 *
 	 * @param forceScanJavaClassPaths 是否强制扫描其他位于classpath关联jar中的类
@@ -229,6 +252,11 @@ public class ClassScanner implements Serializable {
 	 * @since 5.7.5
 	 */
 	public Set<Class<?>> scan(boolean forceScanJavaClassPaths) {
+
+		//多次扫描时,清理上次扫描历史
+		this.classes.clear();
+		this.classesOfLoadError.clear();
+
 		for (URL url : ResourceUtil.getResourceIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
@@ -267,7 +295,19 @@ public class ClassScanner implements Serializable {
 		this.classLoader = classLoader;
 	}
 
+	/**
+	 * 忽略加载错误扫描后，可以获得之前扫描时加载错误的类名字集合
+	 */
+	public Set<String> getClassesOfLoadError(){
+		return Collections.unmodifiableSet(this.classesOfLoadError);
+	}
+
 	// --------------------------------------------------------------------------------------------------- Private method start
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 
 	/**
 	 * 扫描Java指定的ClassPath路径
@@ -341,7 +381,7 @@ public class ClassScanner implements Serializable {
 	 * @param className 类名
 	 * @return 加载的类
 	 */
-	private Class<?> loadClass(String className) {
+	protected Class<?> loadClass(String className) {
 		ClassLoader loader = this.classLoader;
 		if (null == loader) {
 			loader = ClassLoaderUtil.getClassLoader();
@@ -353,10 +393,16 @@ public class ClassScanner implements Serializable {
 			clazz = Class.forName(className, this.initialize, loader);
 		} catch (NoClassDefFoundError | ClassNotFoundException e) {
 			// 由于依赖库导致的类无法加载，直接跳过此类
+			classesOfLoadError.add(className);
 		} catch (UnsupportedClassVersionError e) {
 			// 版本导致的不兼容的类，跳过
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			classesOfLoadError.add(className);
+		} catch (Throwable e){
+			if(!this.ignoreLoadError) {
+				throw new RuntimeException(e);
+			}else{
+				classesOfLoadError.add(className);
+			}
 		}
 		return clazz;
 	}
