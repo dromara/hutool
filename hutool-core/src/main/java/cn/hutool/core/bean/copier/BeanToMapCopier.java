@@ -57,6 +57,11 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sFieldName)) {
+				return;
+			}
+
 			// 检查源对象属性是否过滤属性
 			Object sValue = sDesc.getValue(this.source);
 			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {

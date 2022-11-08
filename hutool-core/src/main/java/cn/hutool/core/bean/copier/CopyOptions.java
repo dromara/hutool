@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.TypeConverter;
 import cn.hutool.core.lang.Editor;
@@ -12,8 +13,6 @@ import cn.hutool.core.util.ReflectUtil;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -74,7 +73,7 @@ public class CopyOptions implements Serializable {
 	/**
 	 * 源对象和目标对象都是 {@code Map} 时, 需要忽略的源对象 {@code Map} key
 	 */
-	private Set<Object> ignoreKeySet;
+	private Set<String> ignoreKeySet;
 
 	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换
@@ -188,8 +187,8 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setIgnoreProperties(String... ignoreProperties) {
-		this.setIgnoreKeySet(ignoreProperties);
-		return setPropertiesFilter((field, o) -> false == ArrayUtil.contains(ignoreProperties, field.getName()));
+		this.ignoreKeySet = CollUtil.newHashSet(ignoreProperties);
+		return this;
 	}
 
 	/**
@@ -203,8 +202,8 @@ public class CopyOptions implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <P, R> CopyOptions setIgnoreProperties(Func1<P, R>... funcs) {
-		final Set<String> ignoreProperties = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
-		return setPropertiesFilter((field, o) -> false == ignoreProperties.contains(field.getName()));
+		this.ignoreKeySet = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
+		return this;
 	}
 
 	/**
@@ -226,16 +225,6 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions ignoreError() {
 		return setIgnoreError(true);
-	}
-
-	/**
-	 * 设置忽略源 {@link Map} key set
-	 * @param ignoreProperties 忽略的key
-	 * @return CopyOptions
-	 */
-	public CopyOptions setIgnoreKeySet(String... ignoreProperties) {
-		this.ignoreKeySet = new HashSet<>(Arrays.asList(ignoreProperties));
-		return this;
 	}
 
 	/**
@@ -388,7 +377,7 @@ public class CopyOptions implements Serializable {
 	 * @param key {@link Map} key
 	 * @return 是否保留
 	 */
-	protected boolean testMapKeyFilter(Object key) {
-		return this.ignoreKeySet.contains(key);
+	protected boolean testKeyFilter(Object key) {
+		return CollUtil.isEmpty(this.ignoreKeySet) || false == this.ignoreKeySet.contains(key);
 	}
 }

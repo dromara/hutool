@@ -67,6 +67,11 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sKeyStr)) {
+				return;
+			}
+
 			// 检查目标字段可写性
 			final PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {

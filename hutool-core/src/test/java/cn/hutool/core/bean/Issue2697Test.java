@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -13,12 +14,14 @@ public class Issue2697Test {
 
 	@Test
 	public void mapToMapTest(){
-		Map<String, String> mapA = new HashMap<>(16);
+		final Map<String, String> mapA = new HashMap<>(16);
 		mapA.put("12", "21");
 		mapA.put("121", "21");
 		mapA.put("122", "21");
-		Map<String, String> mapB = new HashMap<>(16);
+		final Map<String, String> mapB = new HashMap<>(16);
 		BeanUtil.copyProperties(mapA, mapB, "12");
-		System.out.println(mapB);
+
+		Assert.assertEquals(2, mapB.size());
+		Assert.assertFalse(mapB.containsKey("12"));
 	}
 }
