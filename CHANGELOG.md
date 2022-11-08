@@ -18,6 +18,7 @@
 * 【core  】      修复IoUtil.copyByNIO方法写出时没有flush的问题
 * 【core  】      修复TreeBuilder中使用HashMap导致默认乱序问题（issue#I5Z8C5@Gitee）
 * 【core  】      修复StrUtil.subWithLength负数问题（issue#I5YN49@Gitee）
+* 【core  】      修复DefaultTrustManager空指针问题（issue#2716@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.9 (2022-10-22)
