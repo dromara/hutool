@@ -19,6 +19,7 @@
 * 【core  】      修复TreeBuilder中使用HashMap导致默认乱序问题（issue#I5Z8C5@Gitee）
 * 【core  】      修复StrUtil.subWithLength负数问题（issue#I5YN49@Gitee）
 * 【core  】      修复DefaultTrustManager空指针问题（issue#2716@Github）
+* 【core  】      修复时间轮添加任务线程安全问题（pr#2712@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.9 (2022-10-22)
