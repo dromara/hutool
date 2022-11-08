@@ -821,7 +821,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	//@Ignore
+	@Ignore
 	public void writeDoubleTest() {
 		// https://gitee.com/dromara/hutool/issues/I5PI5C
 		final String path = "d:/test/doubleTest.xlsx";

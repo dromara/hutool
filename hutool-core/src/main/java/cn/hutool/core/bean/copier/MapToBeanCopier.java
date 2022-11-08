@@ -6,8 +6,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.reflect.TypeUtil;
+import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;

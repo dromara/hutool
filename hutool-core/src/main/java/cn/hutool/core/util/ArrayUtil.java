@@ -515,8 +515,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array   原数组
 	 * @param newSize 新的数组大小
 	 * @return 调整后的新数组
-	 * @since 4.6.7
 	 * @see System#arraycopy(Object, int, Object, int, int)
+	 * @since 4.6.7
 	 */
 	public static Object resize(final Object array, final int newSize) {
 		if (newSize < 0) {
@@ -581,8 +581,37 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
+	 * 数组复制，缘数组和目标数组都是从位置0开始复制，复制长度为源数组的长度
+	 *
+	 * @param <T>  目标数组类型
+	 * @param src  源数组
+	 * @param dest 目标数组
+	 * @return 目标数组
+	 */
+	public static <T> T copy(final Object src, final T dest) {
+		return copy(src, dest, length(src));
+	}
+
+	/**
+	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
+	 * 数组复制，缘数组和目标数组都是从位置0开始复制
+	 *
+	 * @param <T>  目标数组类型
+	 * @param src    源数组
+	 * @param dest   目标数组
+	 * @param length 拷贝数组长度
+	 * @return 目标数组
+	 * @since 3.0.6
+	 */
+	public static <T> T copy(final Object src, final T dest, final int length) {
+		return copy(src, 0, dest, 0, length);
+	}
+
+	/**
+	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制
 	 *
+	 * @param <T>  目标数组类型
 	 * @param src     源数组
 	 * @param srcPos  源数组开始位置
 	 * @param dest    目标数组
@@ -591,25 +620,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 目标数组
 	 * @since 3.0.6
 	 */
-	public static Object copy(final Object src, final int srcPos, final Object dest, final int destPos, final int length) {
+	public static <T> T copy(final Object src, final int srcPos, final T dest, final int destPos, final int length) {
 		//noinspection SuspiciousSystemArraycopy
 		System.arraycopy(src, srcPos, dest, destPos, length);
-		return dest;
-	}
-
-	/**
-	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
-	 * 数组复制，缘数组和目标数组都是从位置0开始复制
-	 *
-	 * @param src    源数组
-	 * @param dest   目标数组
-	 * @param length 拷贝数组长度
-	 * @return 目标数组
-	 * @since 3.0.6
-	 */
-	public static Object copy(final Object src, final Object dest, final int length) {
-		//noinspection SuspiciousSystemArraycopy
-		System.arraycopy(src, 0, dest, 0, length);
 		return dest;
 	}
 

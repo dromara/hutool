@@ -3,10 +3,8 @@ package cn.hutool.core.io;
 import cn.hutool.core.io.stream.BOMInputStream;
 import cn.hutool.core.lang.Assert;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -29,9 +27,7 @@ import java.io.UnsupportedEncodingException;
  * @author looly
  * @since 5.7.14
  */
-public class BomReader extends Reader {
-
-	private InputStreamReader reader;
+public class BomReader extends ReaderWrapper {
 
 	/**
 	 * 构造
@@ -39,22 +35,22 @@ public class BomReader extends Reader {
 	 * @param in 流
 	 */
 	public BomReader(final InputStream in) {
+		super(initReader(in));
+	}
+
+	/**
+	 * 初始化为{@link InputStreamReader}，将给定流转换为{@link BOMInputStream}
+	 *
+	 * @param in {@link InputStream}
+	 * @return {@link InputStreamReader}
+	 */
+	private static InputStreamReader initReader(final InputStream in) {
 		Assert.notNull(in, "InputStream must be not null!");
 		final BOMInputStream bin = (in instanceof BOMInputStream) ? (BOMInputStream) in : new BOMInputStream(in);
 		try {
-			this.reader = new InputStreamReader(bin, bin.getCharset());
-		} catch (final UnsupportedEncodingException ignore) {
+			return new InputStreamReader(bin, bin.getCharset());
+		} catch (final UnsupportedEncodingException e) {
+			throw new IORuntimeException(e);
 		}
-	}
-
-	@SuppressWarnings("NullableProblems")
-	@Override
-	public int read(final char[] buffer, final int off, final int len) throws IOException {
-		return reader.read(buffer, off, len);
-	}
-
-	@Override
-	public void close() throws IOException {
-		reader.close();
 	}
 }
