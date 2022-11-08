@@ -165,7 +165,7 @@ public class ClassLoaderUtil {
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
 	public static <T> Class<T> loadClass(final String name, final boolean isInitialized) throws UtilException {
-		return loadClass(name, null, isInitialized);
+		return loadClass(name, isInitialized, null);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class ClassLoaderUtil {
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> loadClass(String name, ClassLoader classLoader, final boolean isInitialized) throws UtilException {
+	public static <T> Class<T> loadClass(String name, final boolean isInitialized, ClassLoader classLoader) throws UtilException {
 		Assert.notNull(name, "Name must not be null");
 
 		// 自动将包名中的"/"替换为"."
@@ -199,7 +199,7 @@ public class ClassLoaderUtil {
 
 		Class<?> clazz = loadPrimitiveClass(name);
 		if (clazz == null) {
-			clazz = doLoadClass(name, classLoader, isInitialized);
+			clazz = doLoadClass(name, isInitialized, classLoader);
 		}
 		return (Class<T>) clazz;
 	}
@@ -252,7 +252,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * 指定类是否被提供，使用默认ClassLoader<br>
-	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
+	 * 通过调用{@link #loadClass(String, boolean, ClassLoader)}方法尝试加载指定类名的类，如果加载失败返回false<br>
 	 * 加载失败的原因可能是此类不存在或其关联引用类不存在
 	 *
 	 * @param className 类名
@@ -264,7 +264,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * 指定类是否被提供<br>
-	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
+	 * 通过调用{@link #loadClass(String, boolean, ClassLoader)}方法尝试加载指定类名的类，如果加载失败返回false<br>
 	 * 加载失败的原因可能是此类不存在或其关联引用类不存在
 	 *
 	 * @param className   类名
@@ -273,7 +273,7 @@ public class ClassLoaderUtil {
 	 */
 	public static boolean isPresent(final String className, final ClassLoader classLoader) {
 		try {
-			loadClass(className, classLoader, false);
+			loadClass(className, false, classLoader);
 			return true;
 		} catch (final Throwable ex) {
 			return false;
@@ -286,28 +286,28 @@ public class ClassLoaderUtil {
 	 * 加载非原始类类，无缓存
 	 *
 	 * @param name          类名
-	 * @param classLoader   {@link ClassLoader}，必须非空
 	 * @param isInitialized 是否初始化
+	 * @param classLoader   {@link ClassLoader}，必须非空
 	 * @return 类
 	 */
-	private static Class<?> doLoadClass(String name, final ClassLoader classLoader, final boolean isInitialized) {
+	private static Class<?> doLoadClass(String name, final boolean isInitialized, final ClassLoader classLoader) {
 		// 去除尾部多余的"."
-		name = StrUtil.trim(name, 1, (c)-> CharUtil.DOT == c);
+		name = StrUtil.trim(name, 1, (c) -> CharUtil.DOT == c);
 		Class<?> clazz;
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			// 对象数组"java.lang.String[]"风格
 			final String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
-			final Class<?> elementClass = loadClass(elementClassName, classLoader, isInitialized);
+			final Class<?> elementClass = loadClass(elementClassName, isInitialized, classLoader);
 			clazz = Array.newInstance(elementClass, 0).getClass();
 		} else if (name.startsWith(NON_PRIMITIVE_ARRAY_PREFIX) && name.endsWith(";")) {
 			// "[Ljava.lang.String;" 风格
 			final String elementName = name.substring(NON_PRIMITIVE_ARRAY_PREFIX.length(), name.length() - 1);
-			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+			final Class<?> elementClass = loadClass(elementName, isInitialized, classLoader);
 			clazz = Array.newInstance(elementClass, 0).getClass();
 		} else if (name.startsWith(INTERNAL_ARRAY_PREFIX)) {
 			// "[[I" 或 "[[Ljava.lang.String;" 风格
 			final String elementName = name.substring(INTERNAL_ARRAY_PREFIX.length());
-			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+			final Class<?> elementClass = loadClass(elementName, isInitialized, classLoader);
 			clazz = Array.newInstance(elementClass, 0).getClass();
 		} else {
 			// 加载普通类
@@ -338,13 +338,13 @@ public class ClassLoaderUtil {
 		int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
 		Class<?> clazz = null;
 		while (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
-			if(false == Character.isUpperCase(name.charAt(lastDotIndex + 1))){
+			if (false == Character.isUpperCase(name.charAt(lastDotIndex + 1))) {
 				// 类名必须大写，非大写的类名跳过
 				break;
 			}
 			name = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
 			clazz = forName(name, isInitialized, classLoader);
-			if(null != clazz){
+			if (null != clazz) {
 				break;
 			}
 
@@ -356,12 +356,12 @@ public class ClassLoaderUtil {
 	/**
 	 * 加载指定名称的类
 	 *
-	 * @param name 类名
+	 * @param name       类名
 	 * @param initialize 是否初始化
-	 * @param loader {@link ClassLoader}
+	 * @param loader     {@link ClassLoader}
 	 * @return 指定名称对应的类，如果不存在类，返回{@code null}
 	 */
-	private static Class<?> forName(final String name, final boolean initialize, final ClassLoader loader){
+	private static Class<?> forName(final String name, final boolean initialize, final ClassLoader loader) {
 		try {
 			return Class.forName(name, initialize, loader);
 		} catch (final ClassNotFoundException ex2) {

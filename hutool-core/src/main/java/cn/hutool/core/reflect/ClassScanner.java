@@ -348,7 +348,7 @@ public class ClassScanner implements Serializable {
 	 * @param className 类名
 	 * @return 加载的类
 	 */
-	private Class<?> loadClass(final String className) {
+	protected Class<?> loadClass(final String className) {
 		ClassLoader loader = this.classLoader;
 		if (null == loader) {
 			loader = ClassLoaderUtil.getClassLoader();
