@@ -72,6 +72,14 @@ public class ClassScanner implements Serializable {
 	 * 扫描结果集
 	 */
 	private final Set<Class<?>> classes = new HashSet<>();
+	/**
+	 * 忽略loadClass时的错误
+	 */
+	private boolean ignoreLoadError = false;
+	/**
+	 * 获取加载错误的类名列表
+	 */
+	private final Set<String> classesOfLoadError = new HashSet<>();
 
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类，包括其他加载的jar或者类
@@ -194,7 +202,7 @@ public class ClassScanner implements Serializable {
 	/**
 	 * 构造，默认UTF-8编码
 	 *
-	 * @param packageName 包名，所有包传入""或者null
+	 * @param packageName    包名，所有包传入""或者null
 	 * @param classPredicate 过滤器，无需传入null
 	 */
 	public ClassScanner(final String packageName, final Predicate<Class<?>> classPredicate) {
@@ -204,9 +212,9 @@ public class ClassScanner implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param packageName 包名，所有包传入""或者null
+	 * @param packageName    包名，所有包传入""或者null
 	 * @param classPredicate 过滤器，无需传入null
-	 * @param charset     编码
+	 * @param charset        编码
 	 */
 	public ClassScanner(String packageName, final Predicate<Class<?>> classPredicate, final Charset charset) {
 		packageName = StrUtil.emptyIfNull(packageName);
@@ -236,6 +244,10 @@ public class ClassScanner implements Serializable {
 	 * @since 5.7.5
 	 */
 	public Set<Class<?>> scan(final boolean forceScanJavaClassPaths) {
+		//多次扫描时,清理上次扫描历史
+		this.classes.clear();
+		this.classesOfLoadError.clear();
+
 		for (final URL url : ResourceUtil.getResourceUrlIter(this.packagePath)) {
 			switch (url.getProtocol()) {
 				case "file":
@@ -253,6 +265,24 @@ public class ClassScanner implements Serializable {
 		}
 
 		return Collections.unmodifiableSet(this.classes);
+	}
+
+	/**
+	 * 忽略加载错误扫描后，可以获得之前扫描时加载错误的类名字集合
+	 *
+	 * @return 加载错误的类名字集合
+	 */
+	public Set<String> getClassesOfLoadError() {
+		return Collections.unmodifiableSet(this.classesOfLoadError);
+	}
+
+	/**
+	 * 设置是否忽略所有错误
+	 *
+	 * @param ignoreLoadError 是否忽略错误
+	 */
+	public void setIgnoreLoadError(final boolean ignoreLoadError) {
+		this.ignoreLoadError = ignoreLoadError;
 	}
 
 	/**
@@ -363,7 +393,13 @@ public class ClassScanner implements Serializable {
 		} catch (final UnsupportedClassVersionError e) {
 			// 版本导致的不兼容的类，跳过
 		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			classesOfLoadError.add(className);
+		} catch (final Throwable e){
+			if(false == this.ignoreLoadError) {
+				throw new RuntimeException(e);
+			}else{
+				classesOfLoadError.add(className);
+			}
 		}
 		return clazz;
 	}
