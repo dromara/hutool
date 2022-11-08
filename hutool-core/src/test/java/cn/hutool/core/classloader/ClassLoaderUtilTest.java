@@ -1,11 +1,16 @@
-package cn.hutool.core.util;
+package cn.hutool.core.classloader;
 
-import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.map.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ClassLoaderUtilTest {
+
+	@Test
+	public void isPresentTest() {
+		final boolean present = ClassLoaderUtil.isPresent("cn.hutool.core.classloader.ClassLoaderUtil");
+		Assert.assertTrue(present);
+	}
 
 	@Test
 	public void loadClassTest() {
@@ -26,12 +31,13 @@ public class ClassLoaderUtilTest {
 
 	@Test
 	public void loadInnerClassTest() {
-		String name = ClassLoaderUtil.loadClass("cn.hutool.core.util.ClassLoaderUtilTest.A").getName();
-		Assert.assertEquals("cn.hutool.core.util.ClassLoaderUtilTest$A", name);
-		name = ClassLoaderUtil.loadClass("cn.hutool.core.util.ClassLoaderUtilTest.A.B").getName();
-		Assert.assertEquals("cn.hutool.core.util.ClassLoaderUtilTest$A$B", name);
+		String name = ClassLoaderUtil.loadClass("cn.hutool.core.classloader.ClassLoaderUtilTest.A").getName();
+		Assert.assertEquals("cn.hutool.core.classloader.ClassLoaderUtilTest$A", name);
+		name = ClassLoaderUtil.loadClass("cn.hutool.core.classloader.ClassLoaderUtilTest.A.B").getName();
+		Assert.assertEquals("cn.hutool.core.classloader.ClassLoaderUtilTest$A$B", name);
 	}
 
+	@SuppressWarnings("unused")
 	private static class A{
 		private static class B{
 
