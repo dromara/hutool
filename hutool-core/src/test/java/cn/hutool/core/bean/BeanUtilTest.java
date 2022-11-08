@@ -685,6 +685,30 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyListTest2() {
+		final Student student = new Student();
+		student.setName("张三");
+		student.setAge(123);
+		student.setNo(3158L);
+
+		final Student student2 = new Student();
+		student2.setName("李四");
+		student2.setAge(125);
+		student2.setNo(8848L);
+
+		final List<Student> studentList = ListUtil.view(student, student2);
+		final List<Person> people = BeanUtil.copyToList(studentList, Person.class, CopyOptions.of().setFieldMapping(MapUtil.of("no", "openid")));
+
+		Assert.assertEquals(studentList.size(), people.size());
+		for (int i = 0; i < studentList.size(); i++) {
+			Assert.assertEquals(studentList.get(i).getName(), people.get(i).getName());
+			Assert.assertEquals(studentList.get(i).getAge(), people.get(i).getAge());
+			Assert.assertEquals(studentList.get(i).getNo().toString(), people.get(i).getOpenid());
+		}
+
+	}
+
+	@Test
 	public void toMapTest() {
 		// 测试转map的时候返回key
 		final PrivilegeIClassification a = new PrivilegeIClassification();
