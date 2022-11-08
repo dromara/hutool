@@ -12,6 +12,8 @@ import cn.hutool.core.util.ReflectUtil;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -68,6 +70,11 @@ public class CopyOptions implements Serializable {
 	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 */
 	protected boolean override = true;
+
+	/**
+	 * 源对象和目标对象都是 {@code Map} 时, 需要忽略的源对象 {@code Map} key
+	 */
+	private Set<Object> ignoreKeySet;
 
 	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换
@@ -181,6 +188,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setIgnoreProperties(String... ignoreProperties) {
+		this.setIgnoreKeySet(ignoreProperties);
 		return setPropertiesFilter((field, o) -> false == ArrayUtil.contains(ignoreProperties, field.getName()));
 	}
 
@@ -218,6 +226,16 @@ public class CopyOptions implements Serializable {
 	 */
 	public CopyOptions ignoreError() {
 		return setIgnoreError(true);
+	}
+
+	/**
+	 * 设置忽略源 {@link Map} key set
+	 * @param ignoreProperties 忽略的key
+	 * @return CopyOptions
+	 */
+	public CopyOptions setIgnoreKeySet(String... ignoreProperties) {
+		this.ignoreKeySet = new HashSet<>(Arrays.asList(ignoreProperties));
+		return this;
 	}
 
 	/**
@@ -362,5 +380,15 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean testPropertyFilter(Field field, Object value) {
 		return null == this.propertiesFilter || this.propertiesFilter.test(field, value);
+	}
+
+	/**
+	 * 测试是否保留key, {@code true} 不保留， {@code false} 保留
+	 *
+	 * @param key {@link Map} key
+	 * @return 是否保留
+	 */
+	protected boolean testMapKeyFilter(Object key) {
+		return this.ignoreKeySet.contains(key);
 	}
 }
