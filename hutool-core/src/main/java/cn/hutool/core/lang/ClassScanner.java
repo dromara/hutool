@@ -222,6 +222,17 @@ public class ClassScanner implements Serializable {
 	}
 
 	/**
+	 * 设置是否忽略loadClass时的错误
+	 *
+	 * @param ignoreLoadError 忽略loadClass时的错误
+	 * @return this
+	 */
+	public ClassScanner setIgnoreLoadError(boolean ignoreLoadError) {
+		this.ignoreLoadError = ignoreLoadError;
+		return this;
+	}
+
+	/**
 	 * 扫描包路径下满足class过滤器条件的所有class文件<br>
 	 * 此方法首先扫描指定包名下的资源目录，如果未扫描到，则扫描整个classpath中所有加载的类
 	 *
@@ -229,19 +240,6 @@ public class ClassScanner implements Serializable {
 	 */
 	public Set<Class<?>> scan() {
 		return scan(false);
-	}
-
-	/**
-	 * 扫描
-	 *
-	 * @param forceScanJavaClassPaths 是否强制扫描其他位于classpath关联jar中的类
-	 * @param ignoreLoadError  是否或略扫描时loadClass的异常
-	 * @return 类集合
-	 *
-	 */
-	public Set<Class<?>> scan(boolean forceScanJavaClassPaths,boolean ignoreLoadError){
-		this.ignoreLoadError = ignoreLoadError;
-		return scan(forceScanJavaClassPaths);
 	}
 
 	/**
@@ -298,7 +296,7 @@ public class ClassScanner implements Serializable {
 	/**
 	 * 忽略加载错误扫描后，可以获得之前扫描时加载错误的类名字集合
 	 */
-	public Set<String> getClassesOfLoadError(){
+	public Set<String> getClassesOfLoadError() {
 		return Collections.unmodifiableSet(this.classesOfLoadError);
 	}
 
@@ -397,10 +395,10 @@ public class ClassScanner implements Serializable {
 		} catch (UnsupportedClassVersionError e) {
 			// 版本导致的不兼容的类，跳过
 			classesOfLoadError.add(className);
-		} catch (Throwable e){
-			if(!this.ignoreLoadError) {
+		} catch (Throwable e) {
+			if (false == this.ignoreLoadError) {
 				throw new RuntimeException(e);
-			}else{
+			} else {
 				classesOfLoadError.add(className);
 			}
 		}

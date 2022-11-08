@@ -37,8 +37,9 @@ public class ClassScanerTest {
 	@Test
 	@Ignore
 	public void scanAllPackageIgnoreLoadErrorTest(){
-		ClassScanner classScanner = new ClassScanner(null, null);
-		final Set<Class<?>> classes = classScanner.scan(false,true);
+		final ClassScanner classScanner = new ClassScanner(null, null);
+		classScanner.setIgnoreLoadError(true);
+		final Set<Class<?>> classes = classScanner.scan(false);
 		Console.log(classes.size());
 		Console.log(classScanner.getClassesOfLoadError());
 	}

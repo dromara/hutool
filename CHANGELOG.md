@@ -10,6 +10,7 @@
 * 【core  】      FileUtil.copy，当来源为文件时，返回文件而非目录（issue#I5YCVL@Gitee）
 * 【db    】      DialectFactory增加identifyDriver重载（issue#I5YWI6@Gitee）
 * 【core  】      去除ClassloaderUtil的Cache（issue#I5YWI6@Gitee）
+* 【core  】      ClassScanner 增加忽略加载错误类的扫描方法（pr#855@Gitee）
 
 ### 🐞Bug修复
 * 【db    】      修复分页时order by截断问题（issue#I5X6FM@Gitee）
