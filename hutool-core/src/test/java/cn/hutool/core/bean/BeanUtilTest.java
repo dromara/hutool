@@ -342,9 +342,9 @@ public class BeanUtilTest {
 		student.setNo(3158L);
 
 		final Student student2 = new Student();
-		student.setName("李四");
-		student.setAge(125);
-		student.setNo(8848L);
+		student2.setName("李四");
+		student2.setAge(125);
+		student2.setNo(8848L);
 
 		final List<Student> studentList = ListUtil.view(student, student2);
 
@@ -669,9 +669,9 @@ public class BeanUtilTest {
 		student.setNo(3158L);
 
 		final Student student2 = new Student();
-		student.setName("李四");
-		student.setAge(125);
-		student.setNo(8848L);
+		student2.setName("李四");
+		student2.setAge(125);
+		student2.setNo(8848L);
 
 		final List<Student> studentList = ListUtil.view(student, student2);
 		final List<Person> people = BeanUtil.copyToList(studentList, Person.class);
