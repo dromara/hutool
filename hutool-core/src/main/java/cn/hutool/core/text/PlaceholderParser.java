@@ -1,5 +1,6 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 
 import java.util.Objects;
@@ -102,7 +103,7 @@ public class PlaceholderParser implements UnaryOperator<String> {
 
 		// 开始匹配
 		char[] src = text.toCharArray();
-		final StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder(src.length);
 		StringBuilder expression = new StringBuilder();
 		while (openCursor > -1) {
 
@@ -136,15 +137,14 @@ public class PlaceholderParser implements UnaryOperator<String> {
 				}
 			}
 
-			// 未能找到结束符号，说明匹配结束
+			// 未能找到结束符号，说明匹配异常
 			if (end == -1) {
-				result.append(src, openCursor, src.length - openCursor);
-				closeCursor = src.length;
+				throw new UtilException("\"{}\" 中字符下标 {} 处的开始符没有找到对应的结束符", text, openCursor);
 			}
 			// 找到结束符号，将开始到结束符号之间的字符串替换为指定表达式
 			else {
 				result.append(processor.apply(expression.toString()));
-				expression = new StringBuilder();
+				expression.setLength(0);
 				// 完成当前占位符的处理匹配，寻找下一个
 				closeCursor = end + close.length();
 			}
