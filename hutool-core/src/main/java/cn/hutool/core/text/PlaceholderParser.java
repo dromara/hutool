@@ -17,6 +17,7 @@ import java.util.function.UnaryOperator;
  * }</pre>
  *
  * @author huangchengxing
+ * @author emptypoint
  */
 public class PlaceholderParser implements UnaryOperator<String> {
 
