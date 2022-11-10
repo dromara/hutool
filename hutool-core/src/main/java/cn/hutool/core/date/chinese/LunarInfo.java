@@ -25,6 +25,8 @@ public class LunarInfo {
 	 * 1.  表示当年有无闰年，有的话，为闰月的月份，没有的话，为0。
 	 * 2-4.为除了闰月外的正常月份是大月还是小月，1为30天，0为29天。
 	 * 5.  表示闰月是大月还是小月，仅当存在闰月的情况下有意义。
+	 *
+	 * <p>需要注意的是，2057年的节气时间有误差，这个存在争议，见：https://github.com/jjonline/calendar.js/issues/11#issuecomment-607126524</p>
 	 */
 	private static final long[] LUNAR_CODE = new long[]{
 			0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,//1900-1909
@@ -49,7 +51,9 @@ public class LunarInfo {
 			0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252,//2090-2099
 	};
 
-	// 支持的最大年限
+	/**
+	 * 支持的最大年限
+	 */
 	public static final int MAX_YEAR = BASE_YEAR + LUNAR_CODE.length - 1;
 
 	/**
