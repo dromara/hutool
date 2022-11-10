@@ -142,15 +142,15 @@ public class BeanPath implements Serializable {
 	 * @param patternParts 表达式块列表
 	 * @param value        值
 	 */
-	private Object set(final Object bean, final List<String> patternParts, final boolean nextNumberPart, final Object value) {
+	private void set(final Object bean, final List<String> patternParts, final boolean nextNumberPart, final Object value) {
 		Object subBean = this.get(patternParts, bean, true);
 		if (null == subBean) {
 			final List<String> parentParts = getParentParts(patternParts);
-			// 避免get方法的重复调用
-			subBean = this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
+			this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
+			//set中有可能做过转换，因此此处重新获取bean
+			subBean = this.get(patternParts, bean, true);
 		}
 		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
-		return value;
 	}
 
 	/**

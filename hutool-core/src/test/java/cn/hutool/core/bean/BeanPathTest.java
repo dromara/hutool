@@ -2,6 +2,7 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
+import cn.hutool.core.map.Dict;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,5 +144,12 @@ public class BeanPathTest {
 		beanPath = BeanPath.of("list[0].1.name");
 		beanPath.set(map, "张三");
 		Assert.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
+	}
+
+	@Test
+	public void putByPathTest() {
+		final Dict dict = new Dict();
+		BeanPath.of("aa.bb").set(dict, "BB");
+		Assert.assertEquals("{aa={bb=BB}}", dict.toString());
 	}
 }
