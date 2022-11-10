@@ -1071,6 +1071,11 @@ public class DateUtilTest {
 
 		Assert.assertFalse(DateUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
 		Assert.assertFalse(DateUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+
+		Assert.assertTrue(DateUtil.isOverlap(startTime,startTime,startTime,startTime));
+		Assert.assertTrue(DateUtil.isOverlap(startTime,startTime,startTime,endTime));
+		Assert.assertFalse(DateUtil.isOverlap(startTime,startTime,endTime,endTime));
+		Assert.assertTrue(DateUtil.isOverlap(startTime,endTime,endTime,endTime));
 	}
 
 	@Test
