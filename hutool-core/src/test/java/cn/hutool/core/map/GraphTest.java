@@ -147,7 +147,7 @@ public class GraphTest {
 		Assert.assertEquals(asSet(2, 0), graph.getAdjacentPoints(3));
 	}
 
-
+	@SafeVarargs
 	private static <T> Set<T> asSet(T... ts) {
 		return new LinkedHashSet<>(Arrays.asList(ts));
 	}

@@ -1036,15 +1036,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
-
+		final int length = Array.getLength(array);
 		if (index < 0) {
-			index += Array.getLength(array);
+			index += length;
 		}
-		try {
-			return (T) Array.get(array, index);
-		} catch (final ArrayIndexOutOfBoundsException e) {
+		if (index < 0 || index >= length) {
 			return null;
 		}
+		return (T) Array.get(array, index);
 	}
 
 	/**
