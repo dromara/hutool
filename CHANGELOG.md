@@ -23,6 +23,7 @@
 * 【core  】      修复DefaultTrustManager空指针问题（issue#2716@Github）
 * 【core  】      修复时间轮添加任务线程安全问题（pr#2712@Github）
 * 【core  】      修复 BeanUtil#copyProperties 源对象与目标对象都是 Map 时设置忽略属性无效问题（pr#2698@Github）
+* 【core  】      修复ChineseDate传入农历日期非闰月时获取公历错误问题（issue#I5YB1A@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.9 (2022-10-22)

@@ -80,7 +80,7 @@ public class ChineseDate {
 
 		year = iYear;
 		// 计算农历月份
-		int leapMonth = LunarInfo.leapMonth(iYear); // 闰哪个月,1-12
+		final int leapMonth = LunarInfo.leapMonth(iYear); // 闰哪个月,1-12
 		// 用当年的天数offset,逐个减去每月（农历）的天数，求出当天是本月的第几天
 		int month;
 		int daysOfMonth;
@@ -136,6 +136,11 @@ public class ChineseDate {
 	 * @since 5.7.18
 	 */
 	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay, boolean isLeapMonth) {
+		if(chineseMonth != LunarInfo.leapMonth(chineseYear)){
+			// issue#I5YB1A，用户传入的月份可能非闰月，此时此参数无效。
+			isLeapMonth = false;
+		}
+
 		this.day = chineseDay;
 		// 当月是闰月的后边的月定义为闰月，如润的是五月，则5表示五月，6表示润五月
 		this.isLeapMonth = isLeapMonth;
