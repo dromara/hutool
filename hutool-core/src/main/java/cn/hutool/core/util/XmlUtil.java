@@ -308,6 +308,9 @@ public class XmlUtil {
 
 			// 3.得到解读器
 			reader = parse.getXMLReader();
+			// 防止XEE攻击，见：https://www.jianshu.com/p/1a857905b22c
+			reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
+			reader.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (final ParserConfigurationException | SAXException e) {
@@ -616,6 +619,8 @@ public class XmlUtil {
 	public static void transform(final Source source, final Result result, final String charset, final int indent, final boolean omitXmlDeclaration) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
+			// 防止XXE攻击，见：https://www.jianshu.com/p/1a857905b22c
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			final Transformer xformer = factory.newTransformer();
 			if (indent > 0) {
 				xformer.setOutputProperty(OutputKeys.INDENT, "yes");

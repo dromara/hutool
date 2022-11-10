@@ -213,8 +213,9 @@ class LZWEncoder {
 			if (free_ent < maxmaxcode) {
 				codetab[i] = free_ent++; // code -> hashtable
 				htab[i] = fcode;
-			} else
+			} else {
 				cl_block(outs);
+			}
 		}
 		// Put out the final code.
 		output(ent, outs);

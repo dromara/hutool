@@ -55,7 +55,6 @@ public class JarClassLoader extends URLClassLoader {
 		try {
 			final Method method = MethodUtil.getMethod(URLClassLoader.class, "addURL", URL.class);
 			if (null != method) {
-				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (final File jar : jars) {
 					MethodUtil.invoke(loader, method, jar.toURI().toURL());
