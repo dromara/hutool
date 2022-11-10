@@ -6,11 +6,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeUtil;
 import cn.hutool.core.date.Zodiac;
-import cn.hutool.core.date.chinese.ChineseMonth;
-import cn.hutool.core.date.chinese.GanZhi;
-import cn.hutool.core.date.chinese.LunarFestival;
-import cn.hutool.core.date.chinese.LunarInfo;
-import cn.hutool.core.date.chinese.SolarTerms;
 import cn.hutool.core.text.StrUtil;
 
 import java.time.LocalDate;
@@ -140,7 +135,12 @@ public class ChineseDate {
 	 * @param isLeapMonth  当前月份是否闰月
 	 * @since 5.7.18
 	 */
-	public ChineseDate(final int chineseYear, final int chineseMonth, final int chineseDay, final boolean isLeapMonth) {
+	public ChineseDate(final int chineseYear, final int chineseMonth, final int chineseDay, boolean isLeapMonth) {
+		if(chineseMonth != LunarInfo.leapMonth(chineseYear)){
+			// issue#I5YB1A，用户传入的月份可能非闰月，此时此参数无效。
+			isLeapMonth = false;
+		}
+
 		this.day = chineseDay;
 		// 当月是闰月的后边的月定义为闰月，如润的是五月，则5表示五月，6表示润五月
 		this.isLeapMonth = isLeapMonth;

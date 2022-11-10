@@ -12,29 +12,29 @@ public class InternUtil {
 	 * 创建WeakHshMap实现的字符串规范化器
 	 *
 	 * @param <T> 规范对象的类型
-	 * @return {@link Interner}
+	 * @return {@link Intern}
 	 */
-	public static <T> Interner<T> createWeakInterner(){
-		return new WeakInterner<>();
+	public static <T> Intern<T> ofWeak(){
+		return new WeakIntern<>();
 	}
 
 	/**
 	 * 创建JDK默认实现的字符串规范化器
 	 *
-	 * @return {@link Interner}
+	 * @return {@link Intern}
 	 * @see String#intern()
 	 */
-	public static Interner<String> createJdkInterner(){
-		return new JdkStringInterner();
+	public static Intern<String> ofString(){
+		return new StringIntern();
 	}
 
 	/**
 	 * 创建字符串规范化器
 	 *
 	 * @param isWeak 是否创建使用WeakHashMap实现的Interner
-	 * @return {@link Interner}
+	 * @return {@link Intern}
 	 */
-	public static Interner<String> createStringInterner(final boolean isWeak){
-		return isWeak ? createWeakInterner() : createJdkInterner();
+	public static Intern<String> of(final boolean isWeak){
+		return isWeak ? ofWeak() : ofString();
 	}
 }

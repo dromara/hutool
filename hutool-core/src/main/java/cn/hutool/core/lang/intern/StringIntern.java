@@ -6,7 +6,7 @@ package cn.hutool.core.lang.intern;
  * @author looly
  * @since 5.4.3
  */
-public class JdkStringInterner implements Interner<String>{
+public class StringIntern implements Intern<String> {
 	@Override
 	public String intern(final String sample) {
 		if(null == sample){

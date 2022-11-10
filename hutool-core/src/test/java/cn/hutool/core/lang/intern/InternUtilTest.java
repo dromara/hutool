@@ -12,13 +12,13 @@ public class InternUtilTest {
 	@SuppressWarnings("StringOperationCanBeSimplified")
 	@Test
 	public void weakTest(){
-		final Interner<String> interner = InternUtil.createWeakInterner();
+		final Intern<String> intern = InternUtil.ofWeak();
 		final String a1 = RandomUtil.randomString(RandomUtil.randomInt(100));
 		final String a2 = new String(a1);
 
 		Assert.assertNotSame(a1, a2);
 
-		Assert.assertSame(interner.intern(a1), interner.intern(a2));
+		Assert.assertSame(intern.intern(a1), intern.intern(a2));
 	}
 
 }

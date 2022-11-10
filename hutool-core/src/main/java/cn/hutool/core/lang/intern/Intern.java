@@ -9,7 +9,7 @@ package cn.hutool.core.lang.intern;
  * @author looly
  * @since 5.4.3
  */
-public interface Interner<T> {
+public interface Intern<T> {
 
 	/**
 	 * 返回指定对象对应的规范化对象，sample对象可能有多个，但是这些对象如果都equals，则返回的是同一个对象
