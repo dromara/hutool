@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.10.M1 (2022-11-08)
+# 5.8.10.M1 (2022-11-10)
 
 ### 🐣新特性
 * 【http  】      HttpResponse增加getFileNameFromDisposition方法（pr#2676@Github）
@@ -11,6 +11,7 @@
 * 【db    】      DialectFactory增加identifyDriver重载（issue#I5YWI6@Gitee）
 * 【core  】      去除ClassloaderUtil的Cache（issue#I5YWI6@Gitee）
 * 【core  】      ClassScanner 增加忽略加载错误类的扫描方法（pr#855@Gitee）
+* 【core  】      优化BeanPath.set方法，避免多次重复调用get方法（pr#865@Gitee）
 
 ### 🐞Bug修复
 * 【db    】      修复分页时order by截断问题（issue#I5X6FM@Gitee）
