@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.10.M1 (2022-11-10)
+# 5.8.10.M1 (2022-11-11)
 
 ### 🐣新特性
 * 【http  】      HttpResponse增加getFileNameFromDisposition方法（pr#2676@Github）
@@ -11,6 +11,7 @@
 * 【db    】      DialectFactory增加identifyDriver重载（issue#I5YWI6@Gitee）
 * 【core  】      去除ClassloaderUtil的Cache（issue#I5YWI6@Gitee）
 * 【core  】      ClassScanner 增加忽略加载错误类的扫描方法（pr#855@Gitee）
+* 【core  】      DateUtil和LocalDateTimeUtil添加区间退化为点，点与区间，点与点之间关系判断。（pr#2725@Github）
 
 ### 🐞Bug修复
 * 【db    】      修复分页时order by截断问题（issue#I5X6FM@Gitee）
