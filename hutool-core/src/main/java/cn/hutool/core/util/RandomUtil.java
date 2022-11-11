@@ -511,7 +511,7 @@ public class RandomUtil {
 	/**
 	 * 获得一个随机的十六进制数
 	 *
-	 * @param length 字符串的长度
+	 * @param length 十六进制数的长度
 	 * @return 十六进制数
 	 * @since 5.8.10
 	 */
@@ -533,7 +533,7 @@ public class RandomUtil {
 	/**
 	 * 获得一个随机的十六进制数（其中字母大写）
 	 *
-	 * @param length 字符串的长度
+	 * @param length 十六进制数的长度
 	 * @return 十六进制数
 	 * @since 5.8.10
 	 */
