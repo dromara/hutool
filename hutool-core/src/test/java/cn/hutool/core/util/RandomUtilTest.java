@@ -72,4 +72,20 @@ public class RandomUtilTest {
 			}
 		}
 	}
+
+	@Test
+	@Ignore
+	public void randomHexTest() {
+		for (int i = 0; i < 100; i++) {
+			Console.log(RandomUtil.randomHex(32));
+		}
+	}
+
+	@Test
+	@Ignore
+	public void randomHexUpperTest() {
+		for (int i = 0; i < 100; i++) {
+			Console.log(RandomUtil.randomHexUpper(32));
+		}
+	}
 }

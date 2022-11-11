@@ -39,6 +39,10 @@ public class RandomUtil {
 	 */
 	public static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
 	/**
+	 * 用于随机选的十六进制数
+	 */
+	public static final String BASE_HEX = StrUtil.sub(BASE_CHAR,0,6) + BASE_NUMBER;
+	/**
 	 * 用于随机选的字符和数字
 	 */
 	public static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
@@ -505,6 +509,17 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 获得一个随机的十六进制数
+	 *
+	 * @param length 字符串的长度
+	 * @return 十六进制数
+	 * @since 5.8.10
+	 */
+	public static String randomHex(int length) {
+		return randomString(BASE_HEX, length);
+	}
+
+	/**
 	 * 获得一个随机的字符串（只包含数字和大写字符）
 	 *
 	 * @param length 字符串的长度
@@ -513,6 +528,17 @@ public class RandomUtil {
 	 */
 	public static String randomStringUpper(int length) {
 		return randomString(BASE_CHAR_NUMBER, length).toUpperCase();
+	}
+
+	/**
+	 * 获得一个随机的十六进制数（其中字母大写）
+	 *
+	 * @param length 字符串的长度
+	 * @return 十六进制数
+	 * @since 5.8.10
+	 */
+	public static String randomHexUpper(int length) {
+		return randomString(BASE_HEX, length).toUpperCase();
 	}
 
 	/**
