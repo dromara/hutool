@@ -100,7 +100,7 @@ public class BeanPath implements Serializable {
 	 * @return 值，如果对应值不存在，则返回null
 	 */
 	public Object get(final Object bean) {
-		return get(this.patternParts, bean, false);
+		return get(this.patternParts, bean);
 	}
 
 	/**
@@ -118,7 +118,35 @@ public class BeanPath implements Serializable {
 	 */
 	public void set(final Object bean, final Object value) {
 		Objects.requireNonNull(bean);
-		set(bean, this.patternParts, lastIsNumber(this.patternParts), value);
+
+		Object subBean = bean, previousBean;
+		boolean isFirst = true;
+		String patternPart;
+		// 尝试找到倒数第二个子对象, 最终需要设置它的字段值
+		int length = patternParts.size() - 1;
+		for (int i = 0; i < length; i++) {
+			patternPart = patternParts.get(i);
+			// 保存当前操作的bean, 以便subBean不存在时, 可以用来填充缺失的子对象
+			previousBean = subBean;
+			// 获取当前对象的子对象
+			subBean = getFieldValue(subBean, patternPart);
+			if (null == subBean) {
+				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
+				if (isFirst && false == this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
+					subBean = bean;
+					isFirst = false;
+				} else {
+					// 填充缺失的子对象, 根据下一个表达式决定填充的值, 如果是整数(下标)则使用列表, 否则当做Map对象
+					subBean = NumberUtil.isInteger(patternParts.get(i + 1)) ? new ArrayList<>() : new HashMap<>();
+					BeanUtil.setFieldValue(previousBean, patternPart, subBean);
+					// 上面setFieldValue中有可能发生对象转换, 因此此处重新获取子对象
+					// 欲知详情请自行阅读FieldUtil.setFieldValue(Object, Field, Object)
+					subBean = BeanUtil.getFieldValue(previousBean, patternPart);
+				}
+			}
+		}
+		// 设置最终的字段值
+		BeanUtil.setFieldValue(subBean, patternParts.get(length), value);
 	}
 
 	@Override
@@ -129,68 +157,16 @@ public class BeanPath implements Serializable {
 	//region Private Methods
 
 	/**
-	 * 设置表达式指定位置（或filed对应）的值<br>
-	 * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
-	 * 注意：
-	 *
-	 * <pre>
-	 * 1. 如果为List，如果下标不大于List长度，则替换原有值，否则追加值
-	 * 2. 如果为数组，如果下标不大于数组长度，则替换原有值，否则追加值
-	 * </pre>
-	 *
-	 * @param bean         Bean、Map或List
-	 * @param patternParts 表达式块列表
-	 * @param value        值
-	 */
-	private void set(final Object bean, final List<String> patternParts, final boolean nextNumberPart, final Object value) {
-		Object subBean = this.get(patternParts, bean, true);
-		if (null == subBean) {
-			final List<String> parentParts = getParentParts(patternParts);
-			this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
-			//set中有可能做过转换，因此此处重新获取bean
-			subBean = this.get(patternParts, bean, true);
-		}
-		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
-	}
-
-	/**
-	 * 判断path列表中末尾的标记是否为数字
-	 *
-	 * @param patternParts path列表
-	 * @return 是否为数字
-	 */
-	private static boolean lastIsNumber(List<String> patternParts) {
-		return NumberUtil.isInteger(patternParts.get(patternParts.size() - 1));
-	}
-
-	/**
-	 * 获取父级路径列表
-	 *
-	 * @param patternParts 路径列表
-	 * @return 父级路径列表
-	 */
-	private static List<String> getParentParts(List<String> patternParts) {
-		return patternParts.subList(0, patternParts.size() - 1);
-	}
-
-	/**
 	 * 获取Bean中对应表达式的值
 	 *
 	 * @param patternParts 表达式分段列表
 	 * @param bean         Bean对象或Map或List等
-	 * @param ignoreLast   是否忽略最后一个值，忽略最后一个值则用于set，否则用于read
 	 * @return 值，如果对应值不存在，则返回null
 	 */
-	private Object get(final List<String> patternParts, final Object bean, final boolean ignoreLast) {
-		int length = patternParts.size();
-		if (ignoreLast) {
-			length--;
-		}
+	private Object get(final List<String> patternParts, final Object bean) {
 		Object subBean = bean;
 		boolean isFirst = true;
-		String patternPart;
-		for (int i = 0; i < length; i++) {
-			patternPart = patternParts.get(i);
+		for (String patternPart : patternParts) {
 			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
