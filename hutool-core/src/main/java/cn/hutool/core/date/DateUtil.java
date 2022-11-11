@@ -1995,13 +1995,19 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 检查两个时间段是否有时间重叠<br>
-	 * 重叠指两个时间段是否有交集
+	 * 重叠指两个时间段是否有交集，注意此方法时间段重合时如：
+	 * <ul>
+	 *     <li>此方法未纠正开始时间小于结束时间</li>
+	 *     <li>当realStartTime和realEndTime或startTime和endTime相等时,退化为判断区间是否包含点</li>
+	 *     <li>当realStartTime和realEndTime和startTime和endTime相等时,退化为判断点与点是否相等</li>
+	 * </ul>
+	 * See <a href="https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html">准确的区间关系参考:艾伦区间代数</a>
 	 *
 	 * @param realStartTime 第一个时间段的开始时间
 	 * @param realEndTime   第一个时间段的结束时间
 	 * @param startTime     第二个时间段的开始时间
 	 * @param endTime       第二个时间段的结束时间
-	 * @return true 表示时间有重合
+	 * @return true 表示时间有重合或包含或相等
 	 * @since 5.7.22
 	 */
 	public static boolean isOverlap(final Date realStartTime, final Date realEndTime,
@@ -2009,8 +2015,8 @@ public class DateUtil extends CalendarUtil {
 
 		// x>b||a>y 无交集
 		// 则有交集的逻辑为 !(x>b||a>y)
-		// 根据德摩根公式，可化简为 x<=b && a<=y
-		return startTime.before(realEndTime) && endTime.after(realStartTime);
+		// 根据德摩根公式，可化简为 x<=b && a<=y 即 realStartTime<=endTime && startTime<=realEndTime
+		return realStartTime.compareTo(endTime) <=0 && startTime.compareTo(realEndTime) <= 0;
 	}
 
 	/**

@@ -208,6 +208,11 @@ public class TimeUtilTest {
 
 		Assert.assertFalse(TimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
 		Assert.assertFalse(TimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+
+		Assert.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,startTime));
+		Assert.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,endTime));
+		Assert.assertFalse(TimeUtil.isOverlap(startTime,startTime,endTime,endTime));
+		Assert.assertTrue(TimeUtil.isOverlap(startTime,endTime,endTime,endTime));
 	}
 
 	@Test
