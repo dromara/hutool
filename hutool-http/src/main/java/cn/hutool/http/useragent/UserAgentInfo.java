@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 public class UserAgentInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 未知类型
+	 */
 	public static final String NameUnknown = "Unknown";
 
 	/** 信息名称 */
