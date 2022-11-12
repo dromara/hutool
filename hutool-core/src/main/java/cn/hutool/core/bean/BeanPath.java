@@ -123,7 +123,7 @@ public class BeanPath implements Serializable {
 		boolean isFirst = true;
 		String patternPart;
 		// 尝试找到倒数第二个子对象, 最终需要设置它的字段值
-		int length = patternParts.size() - 1;
+		final int length = patternParts.size() - 1;
 		for (int i = 0; i < length; i++) {
 			patternPart = patternParts.get(i);
 			// 保存当前操作的bean, 以便subBean不存在时, 可以用来填充缺失的子对象
