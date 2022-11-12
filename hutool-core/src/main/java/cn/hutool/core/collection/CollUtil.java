@@ -13,41 +13,12 @@ import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -1003,15 +974,15 @@ public class CollUtil {
 	}
 
 	/**
-	 * 创建新的集合对象
+	 * 创建新的集合对象，返回具体的泛型集合
 	 *
-	 * @param <T>            集合类型
-	 * @param collectionType 集合类型
+	 * @param <T>            集合元素类型
+	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
 	 * @return 集合类型对应的实例
-	 * @since 3.0.8
+	 * @since v5
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> create(Class<?> collectionType) {
+	private static <T> Collection<T> doCreate(Class<?> collectionType, Class<T> elementType) {
 		Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
@@ -1032,7 +1003,7 @@ public class CollUtil {
 				return CompareUtil.compare(o1.toString(), o2.toString());
 			});
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
-			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
+			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) elementType);
 		}
 
 		// List
@@ -1056,6 +1027,32 @@ public class CollUtil {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 创建新的集合对象，返回具体的泛型集合
+	 *
+	 * @param <T>            集合元素类型
+	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
+	 * @return 集合类型对应的实例
+	 * @since v5
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> Collection<T> create(Class<?> collectionType, Class<T> elementType) {
+		return doCreate(collectionType, elementType);
+	}
+
+	/**
+	 * 创建新的集合对象
+	 *
+	 * @param <T>            集合类型
+	 * @param collectionType 集合类型
+	 * @return 集合类型对应的实例
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> Collection<T> create(Class<?> collectionType) {
+		return doCreate(collectionType, null);
 	}
 
 	/**
@@ -2098,10 +2095,11 @@ public class CollUtil {
 	 *     ["456"], "123" -&gt; true
 	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} -&gt; true
 	 * </pre>
+	 *
 	 * @param collection 被加入的集合
-	 * @param object 要添加到集合的对象
-	 * @param <T> 集合元素类型
-	 * @param <S> 要添加的元素类型【为集合元素类型的类型或子类型】
+	 * @param object     要添加到集合的对象
+	 * @param <T>        集合元素类型
+	 * @param <S>        要添加的元素类型【为集合元素类型的类型或子类型】
 	 * @return 是否添加成功
 	 * @author Cloud-Style
 	 */
