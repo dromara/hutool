@@ -412,4 +412,18 @@ public class UserAgentUtilTest {
 		final UserAgent ua = UserAgentUtil.parse(uaStr);
 		Assert.assertEquals("Linux", ua.getOs().toString());
 	}
+
+	@Test
+	public void issueI60UOPTest() {
+		final String uaStr = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36 dingtalk-win/1.0.0 nw(0.14.7) DingTalk(6.5.40-Release.9059101) Mojo/1.0.0 Native AppType(release) Channel/201200";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("DingTalk-win", ua.getBrowser().toString());
+		Assert.assertEquals("6.5.40-Release.9059101", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("10.0", ua.getOsVersion());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
 }
