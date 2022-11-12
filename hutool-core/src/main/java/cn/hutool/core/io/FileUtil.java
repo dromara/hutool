@@ -3044,6 +3044,21 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
+	 * 获取指定文件的父路径
+	 *
+	 * <pre>
+	 * getParent(file("d:/aaa/bbb/cc/ddd")) -》 "d:/aaa/bbb/cc"
+	 * </pre>
+	 *
+	 * @param file  目录或文件
+	 * @return 路径File，如果不存在返回null
+	 * @since 6.0.0
+	 */
+	public static File getParent(final File file) {
+		return getParent(file, 1);
+	}
+
+	/**
 	 * 获取指定层级的父路径
 	 *
 	 * <pre>

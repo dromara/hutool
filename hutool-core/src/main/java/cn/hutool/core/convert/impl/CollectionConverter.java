@@ -16,6 +16,9 @@ import java.util.Collection;
  */
 public class CollectionConverter implements Converter {
 
+	/**
+	 * 单例实体
+	 */
 	public static CollectionConverter INSTANCE = new CollectionConverter();
 
 	@Override
@@ -36,7 +39,8 @@ public class CollectionConverter implements Converter {
 	 * @return 转换后的集合对象
 	 */
 	public Collection<?> convert(final Type collectionType, final Type elementType, final Object value) {
-		final Collection<Object> collection = CollUtil.create(TypeUtil.getClass(collectionType));
+		// pr#2684，兼容EnumSet创建
+		final Collection<?> collection = CollUtil.create(TypeUtil.getClass(collectionType), TypeUtil.getClass(elementType));
 		return CollUtil.addAll(collection, value, elementType);
 	}
 }

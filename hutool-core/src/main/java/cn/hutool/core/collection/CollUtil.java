@@ -10,10 +10,10 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.CompositeConverter;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerBiConsumer;
 import cn.hutool.core.lang.func.SerConsumer3;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -32,7 +32,6 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumSet;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -714,15 +713,28 @@ public class CollUtil {
 	}
 
 	/**
-	 * 创建新的集合对象
+	 * 创建新的集合对象，返回具体的泛型集合
 	 *
-	 * @param <T>            集合类型
+	 * @param <T>            集合元素类型，rawtype 如 ArrayList.class, EnumSet.class ...
 	 * @param collectionType 集合类型
 	 * @return 集合类型对应的实例
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> Collection<T> create(final Class<?> collectionType) {
+		return create(collectionType, null);
+	}
+
+	/**
+	 * 创建新的集合对象，返回具体的泛型集合
+	 *
+	 * @param <T>            集合元素类型，rawtype 如 ArrayList.class, EnumSet.class ...
+	 * @param collectionType 集合类型
+	 * @param elementType    集合元素类，只用于EnumSet创建，如果创建EnumSet，则此参数必须非空
+	 * @return 集合类型对应的实例
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> Collection<T> create(final Class<?> collectionType, final Class<T> elementType) {
 		final Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
@@ -743,7 +755,7 @@ public class CollUtil {
 				return CompareUtil.compare(o1.toString(), o2.toString());
 			});
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
-			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
+			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) Assert.notNull(elementType));
 		}
 
 		// List
@@ -1313,6 +1325,7 @@ public class CollUtil {
 				index++;
 			}
 		}
+
 		return Convert.convert(int[].class, indexList);
 	}
 
@@ -1387,34 +1400,6 @@ public class CollUtil {
 	}
 
 	/**
-	 * 将数组转换为Map（HashMap），支持数组元素类型为：
-	 *
-	 * <pre>
-	 * Map.Entry
-	 * 长度大于1的数组（取前两个值），如果不满足跳过此元素
-	 * Iterable 长度也必须大于1（取前两个值），如果不满足跳过此元素
-	 * Iterator 长度也必须大于1（取前两个值），如果不满足跳过此元素
-	 * </pre>
-	 *
-	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = CollectionUtil.toMap(new String[][] {{
-	 *     {"RED", "#FF0000"},
-	 *     {"GREEN", "#00FF00"},
-	 *     {"BLUE", "#0000FF"}});
-	 * </pre>
-	 * <p>
-	 * 参考：commons-lang
-	 *
-	 * @param array 数组。元素类型为Map.Entry、数组、Iterable、Iterator
-	 * @return {@link HashMap}
-	 * @see MapUtil#of(Object[])
-	 * @since 3.0.8
-	 */
-	public static HashMap<Object, Object> toMap(final Object[] array) {
-		return MapUtil.of(array);
-	}
-
-	/**
 	 * 将集合转换为排序后的TreeSet
 	 *
 	 * @param <T>        集合元素类型
@@ -1439,32 +1424,6 @@ public class CollUtil {
 	 */
 	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
 		return new IteratorEnumeration<>(Objects.requireNonNull(iter));
-	}
-
-	/**
-	 * Enumeration转换为Iterator
-	 * <p>
-	 * Adapt the specified {@code Enumeration} to the {@code Iterator} interface
-	 *
-	 * @param <E> 集合元素类型
-	 * @param e   {@link Enumeration}
-	 * @return {@link Iterator}
-	 * @see IterUtil#asIterator(Enumeration)
-	 */
-	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
-		return IterUtil.asIterator(e);
-	}
-
-	/**
-	 * {@link Iterator} 转为 {@link Iterable}, 但是仅可使用一次
-	 *
-	 * @param <E>  元素类型
-	 * @param iter {@link Iterator}
-	 * @return {@link Iterable}
-	 * @see IterUtil#asIterable(Iterator)
-	 */
-	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-		return IterUtil.asIterable(iter);
 	}
 
 	/**
