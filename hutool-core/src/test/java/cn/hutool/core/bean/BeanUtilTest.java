@@ -653,16 +653,18 @@ public class BeanUtilTest {
 
 	@Test
 	public void beanWithEnumSetTest() {
-		Vto v1 = new Vto();
+		final Vto v1 = new Vto();
 		v1.setVersions(EnumSet.allOf(Version.class));
-		System.out.println(BeanUtil.copyProperties(v1, Vto.class));
+		final Vto v2 = BeanUtil.copyProperties(v1, Vto.class);
+		Assert.assertNotNull(v2);
+		Assert.assertNotNull(v2.getVersions());
 	}
 
 	@Test
 	public void enumSetTest() {
 		final Collection<Version> objects = CollUtil.create(EnumSet.class, Version.class);
-		System.out.println(objects.getClass());
-		System.out.println(objects);
+		Assert.assertNotNull(objects);
+		Assert.assertTrue(EnumSet.class.isAssignableFrom(objects.getClass()));
 	}
 
 	static class Station extends Tree<Long> {}

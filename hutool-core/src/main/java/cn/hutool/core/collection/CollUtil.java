@@ -7,6 +7,7 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
@@ -964,13 +965,25 @@ public class CollUtil {
 	 * @since 3.3.0
 	 */
 	public static <T> BlockingQueue<T> newBlockingQueue(int capacity, boolean isLinked) {
-		BlockingQueue<T> queue;
+		final BlockingQueue<T> queue;
 		if (isLinked) {
 			queue = new LinkedBlockingDeque<>(capacity);
 		} else {
 			queue = new ArrayBlockingQueue<>(capacity);
 		}
 		return queue;
+	}
+
+	/**
+	 * 创建新的集合对象
+	 *
+	 * @param <T>            集合类型
+	 * @param collectionType 集合类型
+	 * @return 集合类型对应的实例
+	 * @since 3.0.8
+	 */
+	public static <T> Collection<T> create(Class<?> collectionType) {
+		return create(collectionType, null);
 	}
 
 	/**
@@ -982,8 +995,8 @@ public class CollUtil {
 	 * @since v5
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private static <T> Collection<T> doCreate(Class<?> collectionType, Class<T> elementType) {
-		Collection<T> list;
+	public static <T> Collection<T> create(Class<?> collectionType, Class<T> elementType) {
+		final Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
 			list = new ArrayList<>();
@@ -1003,7 +1016,7 @@ public class CollUtil {
 				return CompareUtil.compare(o1.toString(), o2.toString());
 			});
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
-			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) elementType);
+			list = (Collection<T>) EnumSet.noneOf(Assert.notNull((Class<Enum>) elementType));
 		}
 
 		// List
@@ -1017,7 +1030,7 @@ public class CollUtil {
 		else {
 			try {
 				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 无法创建当前类型的对象，尝试创建父类型对象
 				final Class<?> superclass = collectionType.getSuperclass();
 				if (null != superclass && collectionType != superclass) {
@@ -1027,32 +1040,6 @@ public class CollUtil {
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * 创建新的集合对象，返回具体的泛型集合
-	 *
-	 * @param <T>            集合元素类型
-	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
-	 * @return 集合类型对应的实例
-	 * @since v5
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> create(Class<?> collectionType, Class<T> elementType) {
-		return doCreate(collectionType, elementType);
-	}
-
-	/**
-	 * 创建新的集合对象
-	 *
-	 * @param <T>            集合类型
-	 * @param collectionType 集合类型
-	 * @return 集合类型对应的实例
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> Collection<T> create(Class<?> collectionType) {
-		return doCreate(collectionType, null);
 	}
 
 	/**
