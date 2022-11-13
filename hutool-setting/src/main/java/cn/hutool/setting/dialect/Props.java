@@ -23,7 +23,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.log.StaticLog;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -190,12 +189,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	public void load(final Resource resource) {
 		Assert.notNull(resource, "Props resource must be not null!");
 		this.resource = resource;
-
-		try (final BufferedReader reader = resource.getReader(charset)) {
-			super.load(reader);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		PropsLoaderUtil.loadTo(this, resource, this.charset);
 	}
 
 	/**

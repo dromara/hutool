@@ -8,6 +8,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.url.URLUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -174,9 +175,26 @@ public class ResourceUtil {
 	 * @since 4.1.5
 	 */
 	public static EnumerationIter<URL> getResourceUrlIter(final String resource) {
+		return getResourceUrlIter(resource, null);
+	}
+
+	/**
+	 * 获取指定路径下的资源Iterator<br>
+	 * 路径格式必须为目录格式,用/分隔，例如:
+	 *
+	 * <pre>
+	 * config/a
+	 * spring/xml
+	 * </pre>
+	 *
+	 * @param resource    资源路径
+	 * @param classLoader {@link ClassLoader}
+	 * @return 资源列表
+	 */
+	public static EnumerationIter<URL> getResourceUrlIter(final String resource, final ClassLoader classLoader) {
 		final Enumeration<URL> resources;
 		try {
-			resources = ClassLoaderUtil.getClassLoader().getResources(resource);
+			resources = ObjUtil.defaultIfNull(classLoader, ClassLoaderUtil.getClassLoader()).getResources(resource);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -232,5 +250,31 @@ public class ResourceUtil {
 	 */
 	public static Resource getResource(final File file) {
 		return new FileResource(file);
+	}
+
+	/**
+	 * 获取同名的所有资源
+	 *
+	 * @param resource 资源名
+	 * @return {@link MultiResource}
+	 */
+	public static MultiResource getResources(final String resource) {
+		return getResources(resource, null);
+	}
+
+	/**
+	 * 获取同名的所有资源
+	 *
+	 * @param resource    资源名
+	 * @param classLoader {@link ClassLoader}，{@code null}表示使用默认的当前上下文ClassLoader
+	 * @return {@link MultiResource}
+	 */
+	public static MultiResource getResources(final String resource, final ClassLoader classLoader) {
+		final EnumerationIter<URL> iter = getResourceUrlIter(resource, classLoader);
+		final MultiResource resources = new MultiResource();
+		for (final URL url : iter) {
+			resources.add(getResource(url));
+		}
+		return resources;
 	}
 }

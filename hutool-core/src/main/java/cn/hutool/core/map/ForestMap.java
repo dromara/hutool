@@ -37,7 +37,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @see #putNode(Object, Object)
 	 */
 	@Override
-	default TreeEntry<K, V> put(K key, TreeEntry<K, V> node) {
+	default TreeEntry<K, V> put(final K key, final TreeEntry<K, V> node) {
 		return putNode(key, node.getValue());
 	}
 
@@ -47,7 +47,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param treeEntryMap 节点集合
 	 */
 	@Override
-	default void putAll(Map<? extends K, ? extends TreeEntry<K, V>> treeEntryMap) {
+	default void putAll(final Map<? extends K, ? extends TreeEntry<K, V>> treeEntryMap) {
 		if (CollUtil.isEmpty(treeEntryMap)) {
 			return;
 		}
@@ -73,7 +73,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param ignoreNullNode     是否获取到的key为null的子节点/父节点
 	 */
 	default <C extends Collection<V>> void putAllNode(
-			C values, Function<V, K> keyGenerator, Function<V, K> parentKeyGenerator, boolean ignoreNullNode) {
+			final C values, final Function<V, K> keyGenerator, final Function<V, K> parentKeyGenerator, final boolean ignoreNullNode) {
 		if (CollUtil.isEmpty(values)) {
 			return;
 		}
@@ -137,7 +137,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param childKey    子节点的key
 	 * @param childValue  子节点的值
 	 */
-	default void putLinkedNodes(K parentKey, V parentValue, K childKey, V childValue) {
+	default void putLinkedNodes(final K parentKey, final V parentValue, final K childKey, final V childValue) {
 		putNode(parentKey, parentValue);
 		putNode(childKey, childValue);
 		linkNodes(parentKey, childKey);
@@ -162,7 +162,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param parentKey 父节点的key
 	 * @param childKey  子节点的key
 	 */
-	default void linkNodes(K parentKey, K childKey) {
+	default void linkNodes(final K parentKey, final K childKey) {
 		linkNodes(parentKey, childKey, null);
 	}
 
@@ -192,7 +192,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key 指定节点的key
 	 * @return 节点
 	 */
-	default Set<TreeEntry<K, V>> getTreeNodes(K key) {
+	default Set<TreeEntry<K, V>> getTreeNodes(final K key) {
 		final TreeEntry<K, V> target = get(key);
 		if (ObjUtil.isNull(target)) {
 			return Collections.emptySet();
@@ -209,7 +209,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key 指定节点的key
 	 * @return 节点
 	 */
-	default TreeEntry<K, V> getRootNode(K key) {
+	default TreeEntry<K, V> getRootNode(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getRoot)
 				.orElse(null);
@@ -222,7 +222,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key 指定节点的key
 	 * @return 节点
 	 */
-	default TreeEntry<K, V> getDeclaredParentNode(K key) {
+	default TreeEntry<K, V> getDeclaredParentNode(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getDeclaredParent)
 				.orElse(null);
@@ -235,7 +235,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param parentKey 指定父节点key
 	 * @return 节点
 	 */
-	default TreeEntry<K, V> getParentNode(K key, K parentKey) {
+	default TreeEntry<K, V> getParentNode(final K key, final K parentKey) {
 		return Opt.ofNullable(get(key))
 				.map(t -> t.getParent(parentKey))
 				.orElse(null);
@@ -248,7 +248,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param parentKey 指定父节点的key
 	 * @return 是否
 	 */
-	default boolean containsParentNode(K key, K parentKey) {
+	default boolean containsParentNode(final K key, final K parentKey) {
 		return Opt.ofNullable(get(key))
 				.map(m -> m.containsParent(parentKey))
 				.orElse(false);
@@ -260,7 +260,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key 节点的key
 	 * @return 节点值，若节点不存在，或节点值为null都将返回null
 	 */
-	default V getNodeValue(K key) {
+	default V getNodeValue(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getValue)
 				.get();
@@ -275,7 +275,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param childKey  子节点
 	 * @return 是否
 	 */
-	default boolean containsChildNode(K parentKey, K childKey) {
+	default boolean containsChildNode(final K parentKey, final K childKey) {
 		return Opt.ofNullable(get(parentKey))
 				.map(m -> m.containsChild(childKey))
 				.orElse(false);
@@ -288,7 +288,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key key
 	 * @return 节点
 	 */
-	default Collection<TreeEntry<K, V>> getDeclaredChildNodes(K key) {
+	default Collection<TreeEntry<K, V>> getDeclaredChildNodes(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getDeclaredChildren)
 				.map(Map::values)
@@ -302,7 +302,7 @@ public interface ForestMap<K, V> extends Map<K, TreeEntry<K, V>> {
 	 * @param key key
 	 * @return 该节点的全部子节点
 	 */
-	default Collection<TreeEntry<K, V>> getChildNodes(K key) {
+	default Collection<TreeEntry<K, V>> getChildNodes(final K key) {
 		return Opt.ofNullable(get(key))
 				.map(TreeEntry::getChildren)
 				.map(Map::values)
