@@ -2,6 +2,7 @@ package cn.hutool.core.text;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharUtil;
 
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -52,41 +53,41 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	private final char escape;
 
 	/**
-	 * 创建一个占位符解析器
-	 *
-	 * @param processor 占位符处理器
-	 * @param open      占位符开始符号，不允许为空
-	 * @param close     占位符结束符号，不允许为空
-	 * @param escape    转义符
-	 */
-	public PlaceholderParser(
-		final UnaryOperator<String> processor, final String open, final String close, final char escape) {
-		Assert.isFalse(StrChecker.isEmpty(open), "开始符号不能为空");
-		Assert.isFalse(StrChecker.isEmpty(close), "结束符号不能为空");
-		this.processor = Objects.requireNonNull(processor);
-		this.open = open;
-		this.openLength = open.length();
-		this.close = close;
-		this.closeLength = close.length();
-		this.escape = escape;
-	}
-
-	/**
 	 * 创建一个占位符解析器，默认转义符为{@code "\"}
 	 *
 	 * @param processor 占位符处理器
-	 * @param open      占位符开始符号，不允许为空
-	 * @param close     占位符结束符号，不允许为空
+	 * @param prefix    占位符开始符号，不允许为空
+	 * @param suffix    占位符结束符号，不允许为空
 	 */
 	public PlaceholderParser(
-		final UnaryOperator<String> processor, final String open, final String close) {
-		this(processor, open, close, '\\');
+			final UnaryOperator<String> processor, final String prefix, final String suffix) {
+		this(processor, prefix, suffix, CharUtil.BACKSLASH);
+	}
+
+	/**
+	 * 创建一个占位符解析器
+	 *
+	 * @param processor 占位符处理器
+	 * @param prefix      占位符开始符号，不允许为空
+	 * @param suffix     占位符结束符号，不允许为空
+	 * @param escape    转义符
+	 */
+	public PlaceholderParser(
+			final UnaryOperator<String> processor, final String prefix, final String suffix, final char escape) {
+		Assert.isFalse(StrChecker.isEmpty(prefix), "开始符号不能为空");
+		Assert.isFalse(StrChecker.isEmpty(suffix), "结束符号不能为空");
+		this.processor = Objects.requireNonNull(processor);
+		this.open = prefix;
+		this.openLength = prefix.length();
+		this.close = suffix;
+		this.closeLength = suffix.length();
+		this.escape = escape;
 	}
 
 	/**
 	 * 解析并替换字符串中的占位符
 	 *
-	 * @param text      待解析的字符串
+	 * @param text 待解析的字符串
 	 * @return 处理后的字符串
 	 */
 	@Override
@@ -103,9 +104,9 @@ public class PlaceholderParser implements UnaryOperator<String> {
 		}
 
 		// 开始匹配
-		char[] src = text.toCharArray();
+		final char[] src = text.toCharArray();
 		final StringBuilder result = new StringBuilder(src.length);
-		StringBuilder expression = new StringBuilder();
+		final StringBuilder expression = new StringBuilder();
 		while (openCursor > -1) {
 
 			// 开始符号是否被转义，若是则跳过并寻找下一个开始符号
