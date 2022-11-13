@@ -2,16 +2,16 @@ package cn.hutool.setting;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.LineReader;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.SystemUtil;
 import cn.hutool.log.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,9 +101,9 @@ public class SettingLoader {
 	 */
 	synchronized public boolean load(final InputStream settingStream) throws IOException {
 		this.groupedMap.clear();
-		BufferedReader reader = null;
+		LineReader reader = null;
 		try {
-			reader = IoUtil.toReader(settingStream, this.charset);
+			reader = new LineReader(settingStream, this.charset);
 			// 分组
 			String group = null;
 

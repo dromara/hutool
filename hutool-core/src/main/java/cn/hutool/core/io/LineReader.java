@@ -1,22 +1,44 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.collection.iter.ComputeIter;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.util.Iterator;
 
 /**
- * 行读取器，类似于BufferedInputStream，支持注释和多行转义
- * TODO 待实现
+ * 行读取器，类似于BufferedInputStream，支持多行转义，规则如下：<br>
+ * <ul>
+ *     <li>支持'\n'和'\r\n'两种换行符，不支持'\r'换行符</li>
+ *     <li>如果想读取转义符，必须定义为'\\'</li>
+ *     <li>多行转义后的换行符和空格都会被忽略</li>
+ * </ul>
+ * <p>
+ * 例子：
+ * <pre>
+ * a=1\
+ *   2
+ * </pre>
+ * 读出后就是{@code a=12}
  *
  * @author looly
+ * @since 6.0.0
  */
-public class LineReader extends ReaderWrapper {
+public class LineReader extends ReaderWrapper implements Iterable<String> {
 
 	/**
-	 * 注释标识符
+	 * 构造
+	 *
+	 * @param in      {@link InputStream}
+	 * @param charset 编码
 	 */
-	private char[] commentFlags;
+	public LineReader(final InputStream in, final Charset charset) {
+		this(IoUtil.toReader(in, charset));
+	}
 
 	/**
 	 * 构造
@@ -24,22 +46,7 @@ public class LineReader extends ReaderWrapper {
 	 * @param reader {@link Reader}
 	 */
 	public LineReader(final Reader reader) {
-		super(reader);
-	}
-
-	/**
-	 * 设置注释行标识符
-	 *
-	 * @param commentFlags 注释行标识符
-	 * @return this
-	 */
-	public LineReader setCommentFlags(final char... commentFlags) {
-		if (ArrayUtil.isEmpty(commentFlags)) {
-			// 无注释行
-			this.commentFlags = null;
-		}
-		this.commentFlags = ArrayUtil.copy(commentFlags, new char[commentFlags.length]);
-		return this;
+		super(IoUtil.toBuffered(reader));
 	}
 
 	/**
@@ -49,6 +56,60 @@ public class LineReader extends ReaderWrapper {
 	 * @throws IOException IO异常
 	 */
 	public String readLine() throws IOException {
-		return null;
+		StringBuilder str = null;
+		// 换行符前是否为转义符
+		boolean precedingBackslash = false;
+		int c;
+		while ((c = read()) > 0) {
+			if (null == str) {
+				// 只有有字符的情况下才初始化行，否则为行结束
+				str = StrUtil.builder(1024);
+			}
+			if (CharUtil.BACKSLASH == c) {
+				// 转义符转义，行尾需要使用'\'时，使用转义符转义，即`\\`
+				if (false == precedingBackslash) {
+					// 转义符，添加标识，但是不加入字符
+					precedingBackslash = true;
+					continue;
+				} else {
+					precedingBackslash = false;
+				}
+			} else {
+				if (precedingBackslash) {
+					// 转义模式下，跳过转义符后的所有空白符
+					if (CharUtil.isBlankChar(c)) {
+						continue;
+					}
+					// 遇到普通字符，关闭转义
+					precedingBackslash = false;
+				} else if (CharUtil.LF == c) {
+					// 非转义状态下，表示行的结束
+					// 如果换行符是`\r\n`，删除末尾的`\r`
+					final int lastIndex = str.length() - 1;
+					if (lastIndex >= 0 && CharUtil.CR == str.charAt(lastIndex)) {
+						str.deleteCharAt(lastIndex);
+					}
+					break;
+				}
+			}
+
+			str.append((char) c);
+		}
+
+		return StrUtil.toStringOrNull(str);
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return new ComputeIter<String>() {
+			@Override
+			protected String computeNext() {
+				try {
+					return readLine();
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
 	}
 }

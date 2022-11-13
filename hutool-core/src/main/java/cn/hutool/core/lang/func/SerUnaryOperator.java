@@ -9,6 +9,7 @@ import java.util.function.UnaryOperator;
 /**
  * 可序列化的UnaryOperator
  *
+ * @param <T> 参数类型
  * @author VampireAchao
  * @see UnaryOperator
  */

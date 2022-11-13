@@ -194,7 +194,7 @@ public class ResourceUtil {
 	public static EnumerationIter<URL> getResourceUrlIter(final String resource, final ClassLoader classLoader) {
 		final Enumeration<URL> resources;
 		try {
-			resources = ObjUtil.defaultIfNull(classLoader, ClassLoaderUtil.getClassLoader()).getResources(resource);
+			resources = ObjUtil.defaultIfNull(classLoader, ClassLoaderUtil::getClassLoader).getResources(resource);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
