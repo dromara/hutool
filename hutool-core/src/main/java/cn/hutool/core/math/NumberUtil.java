@@ -805,9 +805,16 @@ public class NumberUtil {
 	 * @param n 数字
 	 * @return 是否是质数
 	 */
-	public static boolean isPrimes(final int n) {
+	public static boolean isPrime(final int n) {
 		Assert.isTrue(n > 1, "The number must be > 1");
-		for (int i = 2; i <= Math.sqrt(n); i++) {
+		if (n <= 3) {
+			return true;
+		} else if ((n & 1) == 0) {
+			// 快速排除偶数
+			return false;
+		}
+		final int end = (int) Math.sqrt(n);
+		for (int i = 3; i <= end; i += 2) {
 			if (n % i == 0) {
 				return false;
 			}

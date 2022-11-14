@@ -459,4 +459,18 @@ public class NumberUtilTest {
 		//noinspection ResultOfMethodCallIgnored
 		NumberUtil.range(0, Integer.MIN_VALUE);
 	}
+
+	@Test
+	public void isPrimeTest(){
+		Assert.assertTrue(NumberUtil.isPrime(2));
+		Assert.assertTrue(NumberUtil.isPrime(3));
+		Assert.assertTrue(NumberUtil.isPrime(7));
+		Assert.assertTrue(NumberUtil.isPrime(17));
+		Assert.assertTrue(NumberUtil.isPrime(296731));
+		Assert.assertTrue(NumberUtil.isPrime(99999989));
+
+		Assert.assertFalse(NumberUtil.isPrime(4));
+		Assert.assertFalse(NumberUtil.isPrime(296733));
+		Assert.assertFalse(NumberUtil.isPrime(20_4123_2399));
+	}
 }
