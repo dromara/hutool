@@ -336,7 +336,7 @@ public class ByteUtil {
 	 * @return float值
 	 * @since 5.7.18
 	 */
-	public static double bytesToFloat(byte[] bytes) {
+	public static float bytesToFloat(byte[] bytes) {
 		return bytesToFloat(bytes, DEFAULT_ORDER);
 	}
 
