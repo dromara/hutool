@@ -29,6 +29,7 @@
 * 【core  】      修复key为弱引用 value为强引用 会导致key无法被回收 弱引用失效问题（pr#2723@Github）
 * 【core  】      修复BeanUtil.copyProperties 包含EnumSet ，类型转换异常问题（pr#2684@Github）
 * 【extra 】      修复Ftp.uploadFileOrDirectory上传目录错误调用错误问题（issue#I5R2DE@Gitee）
+* 【extra 】      修复字节数组转float 返回类型却是double的bug（pr#867@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.9 (2022-10-22)
