@@ -1087,9 +1087,7 @@ public class CollUtil {
 					.filter(Objects::nonNull)
 					.collect(Collectors.toList());
 		}
-		return StreamUtil.of(collection)
-				.map(mapper)
-				.collect(Collectors.toList());
+		return StreamUtil.of(collection).map(mapper).collect(Collectors.toList());
 	}
 
 	/**
