@@ -433,7 +433,7 @@ public class ListUtil {
 	 * @param element 新元素
 	 * @param paddingElement 填充的值
 	 * @return 原List
-	 * @since 5。8.4
+	 * @since 5.8.4
 	 */
 	public static <T> List<T> setOrPadding(final List<T> list, final int index, final T element, final T paddingElement) {
 		Assert.notNull(list, "List must be not null !");
