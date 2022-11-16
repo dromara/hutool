@@ -363,7 +363,7 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c]，此结果中只保留了一个c
 	 *
-	 * @param <T>   集合元素类型
+	 * @param <T>        集合元素类型
 	 * @param colls 集合列表
 	 * @return 交集的集合，返回 {@link LinkedHashSet}
 	 * @since 5.3.9
@@ -1078,16 +1078,13 @@ public class CollUtil {
 	 * @since 5.3.5
 	 */
 	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> mapper, final boolean ignoreNull) {
-		if (ignoreNull) {
-			return StreamUtil.of(collection)
-					// 检查映射前的结果
-					.filter(Objects::nonNull)
-					.map(mapper)
-					// 检查映射后的结果
-					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
-		}
-		return StreamUtil.of(collection).map(mapper).collect(Collectors.toList());
+		return StreamUtil.of(collection)
+				// 检查映射前的结果
+				.filter((e) -> (false == ignoreNull) || null != e)
+				.map(mapper)
+				// 检查映射后的结果
+				.filter((e) -> (false == ignoreNull) || null != e)
+				.collect(Collectors.toList());
 	}
 
 	/**
