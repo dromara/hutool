@@ -1028,7 +1028,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型
 	 * @param array 数组对象
 	 * @param index 下标，支持负数
-	 * @return 值
+	 * @return 值，越界返回null
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")
@@ -1037,14 +1037,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return null;
 		}
 
+		final int length = Array.getLength(array);
 		if (index < 0) {
-			index += Array.getLength(array);
+			index += length;
 		}
-		try {
-			return (T) Array.get(array, index);
-		} catch (final ArrayIndexOutOfBoundsException e) {
+		if (index < 0 || index >= length) {
 			return null;
 		}
+		return (T) Array.get(array, index);
 	}
 
 	/**
