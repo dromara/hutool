@@ -69,6 +69,12 @@ public class StreamExtractor implements Extractor{
 	 * @param in           包流
 	 */
 	public StreamExtractor(Charset charset, String archiverName, InputStream in) {
+		// issue#2736 自定义ArchiveInputStream
+		if(in instanceof ArchiveInputStream){
+			this.in = (ArchiveInputStream) in;
+			return;
+		}
+
 		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
 		try {
 			in = IoUtil.toBuffered(in);
