@@ -15,7 +15,7 @@ public class GraphTest {
 
 	@Test
 	public void testPutEdge() {
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 0);
@@ -30,7 +30,7 @@ public class GraphTest {
 		// 0 -- 1
 		// |    |
 		// 3 -- 2
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 3);
@@ -53,7 +53,7 @@ public class GraphTest {
 
 	@Test
 	public void removeEdge() {
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		Assert.assertTrue(graph.containsEdge(0, 1));
 
@@ -66,7 +66,7 @@ public class GraphTest {
 		// 0 -- 1
 		// |    |
 		// 3 -- 2
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 3);
@@ -87,7 +87,7 @@ public class GraphTest {
 		// 0 -- 1
 		// |    |
 		// 3 -- 2
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 3);
@@ -113,7 +113,7 @@ public class GraphTest {
 		// 0 -- 1
 		// |    |
 		// 3 -- 2
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 3);
@@ -130,7 +130,7 @@ public class GraphTest {
 		// 0 -- 1
 		// |    |
 		// 3 -- 2
-		final Graph<Integer> graph = new Graph<>();
+		Graph<Integer> graph = new Graph<>();
 		graph.putEdge(0, 1);
 		graph.putEdge(1, 2);
 		graph.putEdge(2, 3);
@@ -147,8 +147,8 @@ public class GraphTest {
 		Assert.assertEquals(asSet(2, 0), graph.getAdjacentPoints(3));
 	}
 
-	@SafeVarargs
-	private static <T> Set<T> asSet(final T... ts) {
+
+	private static <T> Set<T> asSet(T... ts) {
 		return new LinkedHashSet<>(Arrays.asList(ts));
 	}
 
