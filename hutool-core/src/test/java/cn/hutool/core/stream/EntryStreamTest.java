@@ -4,7 +4,16 @@ import cn.hutool.core.map.multi.Table;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -116,7 +125,7 @@ public class EntryStreamTest {
 		final List<Integer> keys = new ArrayList<>();
 		EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.peekKey(keys::add)
-			.count();
+			.collect(Collectors.toList());
 		Assert.assertEquals(Arrays.asList(1, 1, 2, 2), keys);
 	}
 
@@ -125,7 +134,7 @@ public class EntryStreamTest {
 		final List<Integer> values = new ArrayList<>();
 		EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.peekValue(values::add)
-			.count();
+			.collect(Collectors.toList());
 		Assert.assertEquals(Arrays.asList(1, 2, 1, 2), values);
 	}
 
