@@ -264,6 +264,7 @@ public class CharUtil implements CharPool {
 				|| c == '\u3164'
 				// Braille Pattern Blank
 				|| c == '\u2800'
+				// MONGOLIAN VOWEL SEPARATOR
 				|| c == '\u180e';
 	}
 
