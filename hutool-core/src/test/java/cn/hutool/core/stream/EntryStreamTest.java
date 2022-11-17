@@ -125,7 +125,7 @@ public class EntryStreamTest {
 		final List<Integer> keys = new ArrayList<>();
 		EntryStream.of(Arrays.asList(new Entry<>(1, 1), new Entry<>(1, 2), new Entry<>(2, 1), new Entry<>(2, 2)))
 			.peekKey(keys::add)
-			.collect(Collectors.toList());
+			.toList();
 		Assert.assertEquals(Arrays.asList(1, 1, 2, 2), keys);
 	}
 
