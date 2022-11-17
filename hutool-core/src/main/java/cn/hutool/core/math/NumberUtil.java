@@ -639,9 +639,10 @@ public class NumberUtil {
 	 * 3、科学计数法形式（1234E3）
 	 * 4、类型标识形式（123D）
 	 * 5、正负数标识形式（+123、-234）
+	 * 6、八进制数字(0开头)
 	 * </pre>
 	 *
-	 * @param str 字符串值
+	 * @param str 字符串值, 不可以含有任何空白字符
 	 * @return 是否为数字
 	 */
 	public static boolean isNumber(final CharSequence str) {
@@ -656,8 +657,8 @@ public class NumberUtil {
 		boolean foundDigit = false;
 		// deal with any possible sign up front
 		final int start = (chars[0] == '-' || chars[0] == '+') ? 1 : 0;
-		if (sz > start + 1) {
-			if (chars[start] == '0' && (chars[start + 1] == 'x' || chars[start + 1] == 'X')) {
+		if (sz > start + 1 && chars[start] == '0' && !StrUtil.contains(str, CharUtil.DOT)) { // leading 0, skip if is a decimal number
+			if (chars[start + 1] == 'x' || chars[start + 1] == 'X') { // leading 0x/0X
 				int i = start + 2;
 				if (i == sz) {
 					return false; // str == "0x"
@@ -665,6 +666,16 @@ public class NumberUtil {
 				// checking hex (it can't be anything else)
 				for (; i < chars.length; i++) {
 					if ((chars[i] < '0' || chars[i] > '9') && (chars[i] < 'a' || chars[i] > 'f') && (chars[i] < 'A' || chars[i] > 'F')) {
+						return false;
+					}
+				}
+				return true;
+			}
+			if (Character.isDigit(chars[start + 1])) {
+				// leading 0, but not hex, must be octal
+				int i = start + 1;
+				for (; i < chars.length; i++) {
+					if (chars[i] < '0' || chars[i] > '7') {
 						return false;
 					}
 				}
@@ -730,8 +741,8 @@ public class NumberUtil {
 				return foundDigit;
 			}
 			if (chars[i] == 'l' || chars[i] == 'L') {
-				// not allowing L with an exponent
-				return foundDigit && !hasExp;
+				// not allowing L with an exponent or decimal point
+				return foundDigit && !hasExp && !hasDecPoint;
 			}
 			// last character is illegal
 			return false;
