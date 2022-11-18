@@ -90,7 +90,7 @@ public class SpringUtilTest {
 
 	@Test
 	public void isActiveProfiles() {
-		boolean activeProfiles = Arrays.asList(new String[] {"qas", "pp"}).contains("qa");
+		boolean activeProfiles = Arrays.asList(new String[] {"qa", "pp"}).contains("qa");
 		Assert.assertTrue(activeProfiles);
 	}
 
