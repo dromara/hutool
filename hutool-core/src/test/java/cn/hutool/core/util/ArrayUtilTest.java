@@ -577,4 +577,25 @@ public class ArrayUtilTest {
 		a = null;
 		Assert.assertTrue(ArrayUtil.isAllNull(a));
 	}
+
+	@Test
+	public void testInsertPrimitive() {
+		final boolean[] booleans = new boolean[10];
+		final byte[] bytes = new byte[10];
+		final char[] chars = new char[10];
+		final short[] shorts = new short[10];
+		final int[] ints = new int[10];
+		final long[] longs = new long[10];
+		final float[] floats = new float[10];
+		final double[] doubles = new double[10];
+
+		boolean[] insert1 = ArrayUtil.insert(booleans, 0, 0, 1, 2);
+		byte[] insert2 = ArrayUtil.insert(bytes, 0, 1, 2, 3);
+		char[] insert3 = ArrayUtil.insert(chars, 0, 1, 2, 3);
+		short[] insert4 = ArrayUtil.insert(shorts, 0, 1, 2, 3);
+		int[] insert5 = ArrayUtil.insert(ints, 0, 1, 2, 3);
+		long[] insert6 = ArrayUtil.insert(longs, 0, 1, 2, 3);
+		float[] insert7 = ArrayUtil.insert(floats, 0, 1, 2, 3);
+		double[] insert8 = ArrayUtil.insert(doubles, 0, 1, 2, 3);
+	}
 }
