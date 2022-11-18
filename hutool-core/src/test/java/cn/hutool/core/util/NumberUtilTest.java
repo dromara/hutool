@@ -104,11 +104,73 @@ public class NumberUtilTest {
 
 	@Test
 	public void isNumberTest() {
-		Assert.assertTrue(NumberUtil.isNumber("28.55"));
-		Assert.assertTrue(NumberUtil.isNumber("0"));
-		Assert.assertTrue(NumberUtil.isNumber("+100.10"));
-		Assert.assertTrue(NumberUtil.isNumber("-22.022"));
-		Assert.assertTrue(NumberUtil.isNumber("0X22"));
+		privateIsNumberTest("28.55", true);
+		privateIsNumberTest("12345", true);
+		privateIsNumberTest("1234.5", true);
+		privateIsNumberTest(".12345", true);
+		privateIsNumberTest("1234E5", true);
+		privateIsNumberTest("1234E+5", true);
+		privateIsNumberTest("1234E-5", true);
+		privateIsNumberTest("123.4E5", true);
+		privateIsNumberTest("-1234", true);
+		privateIsNumberTest("-1234.5", true);
+		privateIsNumberTest("-.12345", true);
+		privateIsNumberTest("-1234E5", true);
+		privateIsNumberTest("0", true);
+		privateIsNumberTest("0.1", true); // LANG-1216
+		privateIsNumberTest("-0", true);
+		privateIsNumberTest("01234", true);
+		privateIsNumberTest("-01234", true);
+		privateIsNumberTest("-0xABC123", true);
+		privateIsNumberTest("-0x0", true);
+		privateIsNumberTest("123.4E21D", true);
+		privateIsNumberTest("-221.23F", true);
+		privateIsNumberTest("22338L", true);
+
+		privateIsNumberTest(null, false);
+		privateIsNumberTest("", false);
+		privateIsNumberTest(" ", false);
+		privateIsNumberTest("\r\n\t", false);
+		privateIsNumberTest("--2.3", false);
+		privateIsNumberTest(".12.3", false);
+		privateIsNumberTest("-123E", false);
+		privateIsNumberTest("-123E+-212", false);
+		privateIsNumberTest("-123E2.12", false);
+		privateIsNumberTest("0xGF", false);
+		privateIsNumberTest("0xFAE-1", false);
+		privateIsNumberTest(".", false);
+		privateIsNumberTest("-0ABC123", false);
+		privateIsNumberTest("123.4E-D", false);
+		privateIsNumberTest("123.4ED", false);
+		privateIsNumberTest("1234E5l", false);
+		privateIsNumberTest("11a", false);
+		privateIsNumberTest("1a", false);
+		privateIsNumberTest("a", false);
+		privateIsNumberTest("11g", false);
+		privateIsNumberTest("11z", false);
+		privateIsNumberTest("11def", false);
+		privateIsNumberTest("11d11", false);
+		privateIsNumberTest("11 11", false);
+		privateIsNumberTest(" 1111", false);
+		privateIsNumberTest("1111 ", false);
+
+		privateIsNumberTest("2.", true); // LANG-521
+		privateIsNumberTest("1.1L", false); // LANG-664
+		privateIsNumberTest("+0xF", true); // LANG-1645
+		privateIsNumberTest("+0xFFFFFFFF", true); // LANG-1645
+		privateIsNumberTest("+0xFFFFFFFFFFFFFFFF", true); // LANG-1645
+		privateIsNumberTest(".0", true); // LANG-1646
+		privateIsNumberTest("0.", true); // LANG-1646
+		privateIsNumberTest("0.D", true); // LANG-1646
+		privateIsNumberTest("0e1", true); // LANG-1646
+		privateIsNumberTest("0e1D", true); // LANG-1646
+		privateIsNumberTest(".D", false); // LANG-1646
+		privateIsNumberTest(".e10", false); // LANG-1646
+		privateIsNumberTest(".e10D", false); // LANG-1646
+	}
+
+	private void privateIsNumberTest(final String numStr, final boolean expected) {
+		Assert.assertEquals(expected, NumberUtil.isNumber(numStr));
 	}
 
 	@Test
