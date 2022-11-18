@@ -104,7 +104,24 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
-		return (T) getBeanFactory().getBean(name);
+		return (T)getBeanFactory().getBean(name);
+	}
+
+	/**
+	 * 通过name获取 Bean
+	 *
+	 * @param name        bean名称
+	 * @param defaultBean 默认的bean
+	 * @param <T>
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getBean(String name, T defaultBean) {
+		try {
+			return (T)getBeanFactory().getBean(name);
+		} catch (Exception e) {
+			return defaultBean;
+		}
 	}
 
 	/**
@@ -116,6 +133,22 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 */
 	public static <T> T getBean(Class<T> clazz) {
 		return getBeanFactory().getBean(clazz);
+	}
+
+	/**
+	 * 通过class获取Bean
+	 *
+	 * @param clazz       Bean类
+	 * @param defaultBean 默认的bean
+	 * @param <T>         Bean类型
+	 * @return
+	 */
+	public static <T> T getBean(Class<T> clazz, T defaultBean) {
+		try {
+			return getBeanFactory().getBean(clazz);
+		} catch (Exception e) {
+			return defaultBean;
+		}
 	}
 
 	/**
@@ -205,6 +238,23 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 			return null;
 		}
 		return applicationContext.getEnvironment().getActiveProfiles();
+	}
+
+	/**
+	 * 判断当前环境与预期是否一致
+	 *
+	 * @param active 预期环境
+	 * @return
+	 */
+	public static boolean isActiveProfiles(String... active) {
+		if (null == applicationContext) {
+			return false;
+		}
+		String activeProfile = getActiveProfile();
+		if (activeProfile == null) {
+			return false;
+		}
+		return Arrays.asList(active).contains(activeProfile);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,18 +81,25 @@ public class SpringUtilTest {
 
 	@Test
 	public void getBeanWithTypeReferenceTest() {
-		Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {});
+		Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {
+		});
 		Assert.assertNotNull(mapBean);
 		Assert.assertEquals("value1", mapBean.get("key1"));
 		Assert.assertEquals("value2", mapBean.get("key2"));
 	}
 
+	@Test
+	public void isActiveProfiles() {
+		boolean activeProfiles = Arrays.asList(new String[] {"qas", "pp"}).contains("qa");
+		Assert.assertTrue(activeProfiles);
+	}
+
 	@Data
-	public static class Demo2{
+	public static class Demo2 {
 		private long id;
 		private String name;
 
-		@Bean(name="testDemo")
+		@Bean(name = "testDemo")
 		public Demo2 generateDemo() {
 			Demo2 demo = new Demo2();
 			demo.setId(12345);
