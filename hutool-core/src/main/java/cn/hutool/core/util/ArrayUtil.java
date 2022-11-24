@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
@@ -461,9 +462,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			index = (index % len) + len;
 		}
 
-		final T[] result = newArray(array.getClass().getComponentType(), Math.max(len, index) + newElements.length);
+		// 已有数组的元素类型
+		final Class<?> originComponentType = array.getClass().getComponentType();
+		Object newEleArr = newElements;
+		// 如果 已有数组的元素类型是 原始类型，则需要转换 新元素数组 为该类型，避免ArrayStoreException
+		if (originComponentType.isPrimitive()) {
+			newEleArr = Convert.convert(array.getClass(), newElements);
+		}
+		final Object result = Array.newInstance(originComponentType, Math.max(len, index) + newElements.length);
 		System.arraycopy(array, 0, result, 0, Math.min(len, index));
-		System.arraycopy(newElements, 0, result, index, newElements.length);
+		System.arraycopy(newEleArr, 0, result, index, newElements.length);
 		if (index < len) {
 			System.arraycopy(array, index, result, index + newElements.length, len - index);
 		}
