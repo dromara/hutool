@@ -145,7 +145,8 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
-			if('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]){
+			// 如果是普通的的byte[], 要避免下标越界
+			if (bytesSource.length > 1 && '[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
 				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray, filter);
 			}else{
 				// https://github.com/dromara/hutool/issues/2369
