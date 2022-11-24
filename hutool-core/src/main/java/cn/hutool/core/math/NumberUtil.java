@@ -761,7 +761,6 @@ public class NumberUtil {
 	 * 		<li>8进制(以0开头)</li>
 	 * 		<li>16进制(以0x或者0X开头)</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param s 校验的字符串, 只能含有 正负号、数字字符 和 {@literal X/x}
 	 * @return 是否为 {@link Integer}类型
@@ -769,7 +768,7 @@ public class NumberUtil {
 	 * @see Integer#decode(String)
 	 */
 	public static boolean isInteger(final String s) {
-		if (!isNumber(s)) {
+		if (false == isNumber(s)) {
 			return false;
 		}
 		try {
@@ -790,7 +789,6 @@ public class NumberUtil {
 	 * 		<li>8进制(以0开头)</li>
 	 * 		<li>16进制(以0x或者0X开头)</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param s 校验的字符串, 只能含有 正负号、数字字符、{@literal X/x} 和 后缀{@literal L/l}
 	 * @return 是否为 {@link Long}类型
@@ -798,7 +796,7 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		if (!isNumber(s)) {
+		if (false == isNumber(s)) {
 			return false;
 		}
 		final char lastChar = s.charAt(s.length() - 1);
