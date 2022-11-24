@@ -80,26 +80,50 @@ public class NumberUtilTest {
 
 	@Test
 	public void isIntegerTest() {
-		Assert.assertTrue(NumberUtil.isInteger("-12"));
-		Assert.assertTrue(NumberUtil.isInteger("256"));
-		Assert.assertTrue(NumberUtil.isInteger("0256"));
-		Assert.assertTrue(NumberUtil.isInteger("0"));
-		Assert.assertFalse(NumberUtil.isInteger("23.4"));
-		Assert.assertFalse(NumberUtil.isInteger(null));
-		Assert.assertFalse(NumberUtil.isInteger(""));
-		Assert.assertFalse(NumberUtil.isInteger(" "));
+		String[] validNumArr = {"0", "-0", "+0", "12", "+12", "1234567890", "2147483647", "-2147483648",
+				"0x012345678", "0X012345678", "0xabcdef", "-0xabcdef", "0x12abcdef", "0x7FFFFFFF", "-0x80000000",
+				"01234567", "017777777777", "-020000000000"
+		};
+		privateIsIntegerTest(validNumArr, true);
+
+		String[] invalidNumArr = {null, "", "  ", "+", "+1.", ".1", "99L", "99D", "99F", "12.3", "123e1", "-12.3", "1.2.3",
+				"2147483648", "0x80000000", "020000000000", "-2147483649", "-0x80000001", "-020000000001", "-020000000001",
+				"a", "+a", "123abc", "09"
+		};
+		privateIsIntegerTest(invalidNumArr, false);
+	}
+
+	private void privateIsIntegerTest(final String[] numStrArr, final boolean expected) {
+		for (String numStr : numStrArr) {
+			Assert.assertEquals("未通过的数字为: " + numStr, expected, NumberUtil.isInteger(numStr));
+		}
 	}
 
 	@Test
 	public void isLongTest() {
-		Assert.assertTrue(NumberUtil.isLong("-12"));
-		Assert.assertTrue(NumberUtil.isLong("256"));
-		Assert.assertTrue(NumberUtil.isLong("0256"));
-		Assert.assertTrue(NumberUtil.isLong("0"));
-		Assert.assertFalse(NumberUtil.isLong("23.4"));
-		Assert.assertFalse(NumberUtil.isLong(null));
-		Assert.assertFalse(NumberUtil.isLong(""));
-		Assert.assertFalse(NumberUtil.isLong(" "));
+		String[] validNumArr = {
+				"0", "0L", "-0L", "+0L", "12", "+12", "1234567890123456789", "99L",
+				"2147483648", "0x80000000", "020000000000", "-2147483649", "-0x80000001", "-020000000001", "-020000000001",
+				"9223372036854775807", "-9223372036854775808",
+				"0x0123456789", "0X0123456789", "0x123456789abcdef", "0xabcdef123456789", "0x7FFFFFFF", "-0x80000000",
+				"0x7fffffffffffffff", "-0x8000000000000000",
+				"01234567", "0777777777777777777777", "-01000000000000000000000"
+		};
+		privateIsLongTest(validNumArr, true);
+
+		String[] invalidNumArr = {null, "", "  ", "+", "+1.", ".1", "99D", "99F", "12.3", "123e1", "-12.3", "1.2.3",
+				"a", "+a", "123abc", "09",
+				"9223372036854775808", "-9223372036854775809",
+				"0x8000000000000000", "-0x8000000000000001",
+				"01000000000000000000000", "-01000000000000000000001"
+		};
+		privateIsLongTest(invalidNumArr, false);
+	}
+
+	private void privateIsLongTest(final String[] numStrArr, final boolean expected) {
+		for (String numStr : numStrArr) {
+			Assert.assertEquals("未通过的数字为: " + numStr, expected, NumberUtil.isLong(numStr));
+		}
 	}
 
 	@Test
@@ -498,6 +522,22 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isDouble(null));
 		Assert.assertFalse(NumberUtil.isDouble(""));
 		Assert.assertFalse(NumberUtil.isDouble("  "));
+		Assert.assertFalse(NumberUtil.isDouble("1"));
+		Assert.assertFalse(NumberUtil.isDouble("-1"));
+		Assert.assertFalse(NumberUtil.isDouble("+1"));
+		Assert.assertFalse(NumberUtil.isDouble("0.1."));
+		Assert.assertFalse(NumberUtil.isDouble("01"));
+		Assert.assertFalse(NumberUtil.isDouble("NaN"));
+		Assert.assertFalse(NumberUtil.isDouble("-NaN"));
+		Assert.assertFalse(NumberUtil.isDouble("-Infinity"));
+
+		Assert.assertTrue(NumberUtil.isDouble("0."));
+		Assert.assertTrue(NumberUtil.isDouble("0.1"));
+		Assert.assertTrue(NumberUtil.isDouble("-0.1"));
+		Assert.assertTrue(NumberUtil.isDouble("+0.1"));
+		Assert.assertTrue(NumberUtil.isDouble("0.110"));
+		Assert.assertTrue(NumberUtil.isDouble("00.1"));
+		Assert.assertTrue(NumberUtil.isDouble("01.1"));
 	}
 
 	@Test

@@ -753,18 +753,28 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 判断String是否是整数<br>
-	 * 支持10进制
+	 * 判断字符串是否是整数
 	 *
-	 * @param s String
-	 * @return 是否为整数
+	 * <p>支持格式:
+	 * <ol>
+	 * 		<li>10进制, 不能包含前导零</li>
+	 * 		<li>8进制(以0开头)</li>
+	 * 		<li>16进制(以0x或者0X开头)</li>
+	 * </ol>
+	 * </p>
+	 *
+	 * @param s 校验的字符串, 只能含有 正负号、数字字符 和 {@literal X/x}
+	 * @return 是否为 {@link Integer}类型
+	 * @apiNote 6.0.0 支持8进制和16进制
+	 * @see Integer#decode(String)
 	 */
 	public static boolean isInteger(final String s) {
-		if (StrUtil.isBlank(s)) {
+		if (!isNumber(s)) {
 			return false;
 		}
 		try {
-			Integer.parseInt(s);
+			//noinspection ResultOfMethodCallIgnored
+			Integer.decode(s);
 		} catch (final NumberFormatException e) {
 			return false;
 		}
@@ -773,18 +783,31 @@ public class NumberUtil {
 
 	/**
 	 * 判断字符串是否是Long类型<br>
-	 * 支持10进制
 	 *
-	 * @param s String
-	 * @return 是否为{@link Long}类型
+	 * <p>支持格式:
+	 * <ol>
+	 * 		<li>10进制, 不能包含前导零</li>
+	 * 		<li>8进制(以0开头)</li>
+	 * 		<li>16进制(以0x或者0X开头)</li>
+	 * </ol>
+	 * </p>
+	 *
+	 * @param s 校验的字符串, 只能含有 正负号、数字字符、{@literal X/x} 和 后缀{@literal L/l}
+	 * @return 是否为 {@link Long}类型
+	 * @apiNote 6.0.0 支持8进制和16进制数字
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		if (StrUtil.isBlank(s)) {
+		if (!isNumber(s)) {
 			return false;
 		}
+		final char lastChar = s.charAt(s.length() - 1);
+		if (lastChar == 'l' || lastChar == 'L') {
+			return true;
+		}
 		try {
-			Long.parseLong(s);
+			//noinspection ResultOfMethodCallIgnored
+			Long.decode(s);
 		} catch (final NumberFormatException e) {
 			return false;
 		}
@@ -795,7 +818,7 @@ public class NumberUtil {
 	 * 判断字符串是否是浮点数
 	 *
 	 * @param s String
-	 * @return 是否为{@link Double}类型
+	 * @return 是否为 {@link Double}类型
 	 */
 	public static boolean isDouble(final String s) {
 		if (StrUtil.isBlank(s)) {
