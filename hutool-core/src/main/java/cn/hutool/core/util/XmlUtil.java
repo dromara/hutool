@@ -67,7 +67,7 @@ import java.util.Map;
 public class XmlUtil {
 
 	/**
-	 * 字符串常量：XML 空格转义 {@code "&nbsp;" -> " "}
+	 * 字符串常量：XML 不间断空格转义 {@code "&nbsp;" -> " "}
 	 */
 	public static final String NBSP = "&nbsp;";
 
