@@ -31,18 +31,18 @@ public class HexUtil {
 	 * @return 是否为16进制
 	 */
 	public static boolean isHexNumber(final String value) {
-		final int index = (value.startsWith("-") ? 1 : 0);
-		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
-			try {
-				//noinspection ResultOfMethodCallIgnored
-				Long.decode(value);
-			} catch (final NumberFormatException e) {
-				return false;
-			}
-			return true;
+		int index = (value.startsWith("-") ? 1 : 0);
+		if (value.startsWith("0x", index) || value.startsWith("0X", index)) {
+			index += 2;
+		} else if (value.startsWith("#", index)) {
+			index ++;
 		}
-
-		return false;
+		try {
+			new BigInteger(value.substring(index), 16);
+		} catch (final NumberFormatException e) {
+			return false;
+		}
+		return true;
 	}
 
 	// ---------------------------------------------------------------------------------------------------- encode

@@ -40,9 +40,16 @@ public class HexUtilTest {
 
 	@Test
 	public void isHexNumberTest() {
-		final String a = "0x3544534F444";
-		final boolean isHex = HexUtil.isHexNumber(a);
-		Assert.assertTrue(isHex);
+		String a = "0x3544534F444";
+		Assert.assertTrue(HexUtil.isHexNumber(a));
+
+		// https://gitee.com/dromara/hutool/issues/I62H7K
+		a = "0x0000000000000001158e460913d00000";
+		Assert.assertTrue(HexUtil.isHexNumber(a));
+
+		// 错误的
+		a = "0x0000001000T00001158e460913d00000";
+		Assert.assertFalse(HexUtil.isHexNumber(a));
 	}
 
 	@Test
