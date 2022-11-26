@@ -135,7 +135,7 @@ public class Opt<T> {
 	 * @since 6.0.0
 	 */
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	public static <T> Opt<T> of(Optional<T> optional) {
+	public static <T> Opt<T> of(final Optional<T> optional) {
 		return ofNullable(optional.orElse(null));
 	}
 
