@@ -174,8 +174,8 @@ public class SyncFinisher implements Closeable {
 			} else {
 				this.executorService.shutdown();
 			}
+			this.executorService = null;
 		}
-		this.executorService = null;
 
 		clearWorker();
 	}

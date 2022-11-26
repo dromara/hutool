@@ -19,4 +19,26 @@ public class BiMapTest {
 		Assert.assertEquals("aaa", biMap.getKey(111));
 		Assert.assertEquals("bbb", biMap.getKey(222));
 	}
+
+	@Test
+	public void computeIfAbsentTest(){
+		final BiMap<String, Integer> biMap = new BiMap<>(new HashMap<>());
+		biMap.put("aaa", 111);
+		biMap.put("bbb", 222);
+
+		biMap.computeIfAbsent("ccc", s -> 333);
+		Assert.assertEquals(new Integer(333), biMap.get("ccc"));
+		Assert.assertEquals("ccc", biMap.getKey(333));
+	}
+
+	@Test
+	public void putIfAbsentTest(){
+		final BiMap<String, Integer> biMap = new BiMap<>(new HashMap<>());
+		biMap.put("aaa", 111);
+		biMap.put("bbb", 222);
+
+		biMap.putIfAbsent("ccc", 333);
+		Assert.assertEquals(new Integer(333), biMap.get("ccc"));
+		Assert.assertEquals("ccc", biMap.getKey(333));
+	}
 }

@@ -1,6 +1,8 @@
 package cn.hutool.core.map;
 
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * 双向Map<br>
@@ -82,5 +84,50 @@ public class BiMap<K, V> extends MapWrapper<K, V> {
 	 */
 	public K getKey(final V value) {
 		return getInverse().get(value);
+	}
+
+	@Override
+	public V putIfAbsent(final K key, final V value) {
+		if (null != this.inverse) {
+			this.inverse.putIfAbsent(value, key);
+		}
+		return super.putIfAbsent(key, value);
+	}
+
+	@Override
+	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
+		final V result = super.computeIfAbsent(key, mappingFunction);
+		resetInverseMap();
+		return result;
+	}
+
+	@Override
+	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+		final V result = super.computeIfPresent(key, remappingFunction);
+		resetInverseMap();
+		return result;
+	}
+
+	@Override
+	public V compute(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+		final V result = super.compute(key, remappingFunction);
+		resetInverseMap();
+		return result;
+	}
+
+	@Override
+	public V merge(final K key, final V value, final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		final V result = super.merge(key, value, remappingFunction);
+		resetInverseMap();
+		return result;
+	}
+
+	/**
+	 * 重置反转的Map，如果反转map为空，则不操作。
+	 */
+	private void resetInverseMap() {
+		if (null != this.inverse) {
+			inverse = null;
+		}
 	}
 }
