@@ -7,6 +7,8 @@
 
 ### 🐣新特性
 * 【core  】      CharUtil.isBlankChar增加\u180e（pr#2738@Github）
+* 【core  】      SyncFinisher线程同步结束器添加立即结束方法（pr#879@Gitee）
+* 
 ### 🐞Bug修复
 * 【json  】      修复普通byte数组转JSONArray时的异常（pr#875@Gitee）
 * 【core  】      修复ArrayUtil.insert()不支持原始类型数组的问题（pr#874@Gitee）
