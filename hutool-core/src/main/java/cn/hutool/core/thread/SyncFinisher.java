@@ -160,6 +160,24 @@ public class SyncFinisher implements Closeable {
 	}
 
 	/**
+	 * 立即结束线程池所有线程。此方法执行两种情况：
+	 * <ol>
+	 *     <li>执行start(true)后，调用此方法结束线程池回收资源</li>
+	 *     <li>执行start(false)后，用户自行判断结束点执行此方法</li>
+	 * </ol>
+	 *
+	 * @since 5.6.6
+	 */
+	public void stopNow(){
+		if(null != this.executorService){
+			this.executorService.shutdownNow();
+		}
+		this.executorService = null;
+
+		clearWorker();
+	}
+
+	/**
 	 * 清空工作线程对象
 	 */
 	public void clearWorker() {
