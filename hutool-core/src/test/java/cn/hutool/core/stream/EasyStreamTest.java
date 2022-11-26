@@ -2,19 +2,14 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.BooleanUtil;
-import lombok.Data;
-import lombok.experimental.Tolerate;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -434,126 +429,6 @@ public class EasyStreamTest {
 	@Test
 	public void testIsNotEmpty() {
 		Assert.assertTrue(EasyStream.of(1).isNotEmpty());
-	}
-
-	@Test
-	public void testToTree() {
-		Consumer<Object> test = o -> {
-			final List<Student> studentTree = EasyStream
-					.of(
-							Student.builder().id(1L).name("dromara").build(),
-							Student.builder().id(2L).name("baomidou").build(),
-							Student.builder().id(3L).name("hutool").parentId(1L).build(),
-							Student.builder().id(4L).name("sa-token").parentId(1L).build(),
-							Student.builder().id(5L).name("mybatis-plus").parentId(2L).build(),
-							Student.builder().id(6L).name("looly").parentId(3L).build(),
-							Student.builder().id(7L).name("click33").parentId(4L).build(),
-							Student.builder().id(8L).name("jobob").parentId(5L).build()
-					)
-					// just 3 lambda,top parentId is null
-					.toTree(Student::getId, Student::getParentId, Student::setChildren);
-			Assert.assertEquals(asList(
-					Student.builder().id(1L).name("dromara")
-							.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
-											.children(singletonList(Student.builder().id(6L).name("looly").parentId(3L).build()))
-											.build(),
-									Student.builder().id(4L).name("sa-token").parentId(1L)
-											.children(singletonList(Student.builder().id(7L).name("click33").parentId(4L).build()))
-											.build()))
-							.build(),
-					Student.builder().id(2L).name("baomidou")
-							.children(singletonList(
-									Student.builder().id(5L).name("mybatis-plus").parentId(2L)
-											.children(singletonList(
-													Student.builder().id(8L).name("jobob").parentId(5L).build()
-											))
-											.build()))
-							.build()
-			), studentTree);
-		};
-		test = test.andThen(o -> {
-			final List<Student> studentTree = EasyStream
-					.of(
-							Student.builder().id(1L).name("dromara").matchParent(true).build(),
-							Student.builder().id(2L).name("baomidou").matchParent(true).build(),
-							Student.builder().id(3L).name("hutool").parentId(1L).build(),
-							Student.builder().id(4L).name("sa-token").parentId(1L).build(),
-							Student.builder().id(5L).name("mybatis-plus").parentId(2L).build(),
-							Student.builder().id(6L).name("looly").parentId(3L).build(),
-							Student.builder().id(7L).name("click33").parentId(4L).build(),
-							Student.builder().id(8L).name("jobob").parentId(5L).build()
-					)
-					// just 4 lambda ,top by condition
-					.toTree(Student::getId, Student::getParentId, Student::setChildren, s -> BooleanUtil.isTrue(s.getMatchParent()));
-			Assert.assertEquals(asList(
-					Student.builder().id(1L).name("dromara").matchParent(true)
-							.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
-											.children(singletonList(Student.builder().id(6L).name("looly").parentId(3L).build()))
-											.build(),
-									Student.builder().id(4L).name("sa-token").parentId(1L)
-											.children(singletonList(Student.builder().id(7L).name("click33").parentId(4L).build()))
-											.build()))
-							.build(),
-					Student.builder().id(2L).name("baomidou").matchParent(true)
-							.children(singletonList(
-									Student.builder().id(5L).name("mybatis-plus").parentId(2L)
-											.children(singletonList(
-													Student.builder().id(8L).name("jobob").parentId(5L).build()
-											))
-											.build()))
-							.build()
-			), studentTree);
-		});
-		test.accept(new Object());
-	}
-
-	@Test
-	public void testFlatTree() {
-		final List<Student> studentTree = asList(
-				Student.builder().id(1L).name("dromara")
-						.children(asList(Student.builder().id(3L).name("hutool").parentId(1L)
-										.children(singletonList(Student.builder().id(6L).name("looly").parentId(3L).build()))
-										.build(),
-								Student.builder().id(4L).name("sa-token").parentId(1L)
-										.children(singletonList(Student.builder().id(7L).name("click33").parentId(4L).build()))
-										.build()))
-						.build(),
-				Student.builder().id(2L).name("baomidou")
-						.children(singletonList(
-								Student.builder().id(5L).name("mybatis-plus").parentId(2L)
-										.children(singletonList(
-												Student.builder().id(8L).name("jobob").parentId(5L).build()
-										))
-										.build()))
-						.build()
-		);
-		Assert.assertEquals(asList(
-				Student.builder().id(1L).name("dromara").build(),
-				Student.builder().id(2L).name("baomidou").build(),
-				Student.builder().id(3L).name("hutool").parentId(1L).build(),
-				Student.builder().id(4L).name("sa-token").parentId(1L).build(),
-				Student.builder().id(5L).name("mybatis-plus").parentId(2L).build(),
-				Student.builder().id(6L).name("looly").parentId(3L).build(),
-				Student.builder().id(7L).name("click33").parentId(4L).build(),
-				Student.builder().id(8L).name("jobob").parentId(5L).build()
-		), EasyStream.of(studentTree).flatTree(Student::getChildren, Student::setChildren).sorted(Comparator.comparingLong(Student::getId)).toList());
-
-	}
-
-	@Data
-	@lombok.Builder
-	public static class Student {
-		private String name;
-		private Integer age;
-		private Long id;
-		private Long parentId;
-		private List<Student> children;
-		private Boolean matchParent;
-
-		@Tolerate
-		public Student() {
-			// this is an accessible parameterless constructor.
-		}
 	}
 
 }
