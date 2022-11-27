@@ -132,7 +132,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 			findChildren(list, pIdValuesMap);
 			return parents;
 		}
-		final List<T> parents = new ArrayList<>(list.size());
+		final List<T> parents = new ArrayList<>();
 		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list).peek(e -> {
 			if (parentPredicate.test(e)) {
 				parents.add(e);
