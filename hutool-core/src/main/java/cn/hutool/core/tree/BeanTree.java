@@ -122,14 +122,13 @@ public class BeanTree<T, R extends Comparable<R>> {
 	public List<T> toTree(final List<T> list) {
 		if (Objects.isNull(parentPredicate)) {
 			final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
-					.peek(e -> Objects.requireNonNull(idGetter.apply(e),
-							() -> StrUtil.format("primary key {} must not null", LambdaUtil.getFieldName(idGetter))
+					.peek(e -> Objects.requireNonNull(idGetter.apply(e), "The id of tree node must not be null")
 					)).group(pidGetter);
 			final List<T> parents = pIdValuesMap.getOrDefault(pidValue, new ArrayList<>());
 			findChildren(list, pIdValuesMap);
 			return parents;
 		}
-		final List<T> parents = new ArrayList<>(list.size());
+		final List<T> parents = new ArrayList<>();
 		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list).peek(e -> {
 			if (parentPredicate.test(e)) {
 				parents.add(e);
@@ -142,6 +141,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 
 	/**
 	 * 将树扁平化为集合，相当于将树里的所有节点都放到一个集合里
+	 * <p>本方法会主动将节点的子集合字段置为null</p>
 	 *
 	 * @param tree 树
 	 * @return 集合
