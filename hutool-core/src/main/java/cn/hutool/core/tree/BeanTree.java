@@ -146,6 +146,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 
 	/**
 	 * 将树扁平化为集合，相当于将树里的所有节点都放到一个集合里
+	 * <p>本方法会主动将节点的子集合字段置为null</p>
 	 *
 	 * @param tree 树
 	 * @return 集合
