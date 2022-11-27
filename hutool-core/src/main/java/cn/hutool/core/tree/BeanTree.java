@@ -1,6 +1,5 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.*;
 import cn.hutool.core.stream.EasyStream;
@@ -67,12 +66,9 @@ public class BeanTree<T, R extends Comparable<R>> {
 					 final SerFunction<T, List<T>> childrenGetter,
 					 final SerBiConsumer<T, List<T>> childrenSetter) {
 		this.idGetter = Objects.requireNonNull(idGetter, "idGetter must not be null");
-		this.pidGetter = pidGetter;
+		this.pidGetter = Objects.requireNonNull(pidGetter, "pidGetter must not be null");
 		this.pidValue = pidValue;
 		this.parentPredicate = parentPredicate;
-		if (Objects.isNull(pidGetter) && Objects.isNull(parentPredicate)) {
-			throw new UtilException("pidGetter and parentPredicate can not be null at the same time");
-		}
 		this.childrenGetter = Objects.requireNonNull(childrenGetter, "childrenGetter must not be null");
 		this.childrenSetter = Objects.requireNonNull(childrenSetter, "childrenSetter must not be null");
 	}
@@ -114,7 +110,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 																	  final SerPredicate<T> parentPredicate,
 																	  final SerFunction<T, List<T>> childrenGetter,
 																	  final SerBiConsumer<T, List<T>> childrenSetter) {
-		return new BeanTree<>(idGetter, pidGetter, null, parentPredicate, childrenGetter, childrenSetter);
+		return new BeanTree<>(idGetter, pidGetter, null, Objects.requireNonNull(parentPredicate, "parentPredicate must not be null"), childrenGetter, childrenSetter);
 	}
 
 	/**
