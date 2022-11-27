@@ -80,7 +80,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 *
 	 * @param idGetter       主键getter，例如 {@code JavaBean::getId}
 	 * @param pidGetter      外键getter，例如 {@code JavaBean::getParentId}
-	 * @param pidValue       外键的值，例如 {@code null}
+	 * @param pidValue       根节点的外键值，例如 {@code null}
 	 * @param childrenGetter 子集getter，例如 {@code JavaBean::getChildren}
 	 * @param childrenSetter 子集setter，例如 {@code JavaBean::setChildren}
 	 * @param <T>            Bean类型
@@ -100,7 +100,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 *
 	 * @param idGetter        主键getter，例如 {@code JavaBean::getId}
 	 * @param pidGetter       外键getter，例如 {@code JavaBean::getParentId}
-	 * @param parentPredicate 父节点判断条件，例如 {@code o -> Objects.isNull(o.getParentId())}
+	 * @param parentPredicate 根节点判断条件，例如 {@code o -> Objects.isNull(o.getParentId())}
 	 * @param childrenGetter  子集getter，例如 {@code JavaBean::getChildren}
 	 * @param childrenSetter  子集setter，例如 {@code JavaBean::setChildren}
 	 * @param <T>             Bean类型
@@ -155,7 +155,8 @@ public class BeanTree<T, R extends Comparable<R>> {
 
 	/**
 	 * 树的过滤操作，本方法一般适用于寻找某人所在部门以及所有上级部门类似的逻辑
-	 * 通过{@link SerPredicate}指定的过滤规则，本节点或子节点满足过滤条件，则保留当前节点，否则抛弃节点及其子节点
+	 * 通过{@link SerPredicate}指定的过滤规则，本节点或子节点满足过滤条件，则保留当前节点，否则抛弃节点及其子节点<br>
+	 * 即，一条路径上只要有一个节点符合条件，就保留整条路径上的节点
 	 *
 	 * @param tree      树
 	 * @param condition 节点过滤规则函数，只需处理本级节点本身即可，{@link SerPredicate#test(Object)}为{@code true}保留
