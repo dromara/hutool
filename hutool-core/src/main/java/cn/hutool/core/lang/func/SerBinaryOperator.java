@@ -12,6 +12,7 @@ import java.util.function.BinaryOperator;
  *
  * @author VampireAchao
  * @since 2022/6/8
+ * @param <T> 参数和返回值类型
  */
 @FunctionalInterface
 public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {

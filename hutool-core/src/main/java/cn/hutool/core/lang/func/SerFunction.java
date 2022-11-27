@@ -8,6 +8,8 @@ import java.util.function.Function;
 /**
  * 可序列化的Function
  *
+ * @param <T> 参数类型
+ * @param <R> 返回值类型
  * @author VampireAchao
  * @see Function
  */

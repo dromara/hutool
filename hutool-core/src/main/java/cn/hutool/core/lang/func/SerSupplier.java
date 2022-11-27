@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 /**
  * 可序列化的Supplier
  *
+ * @param <R> 返回值类型
  * @author VampireAchao
  * @see Supplier
- * @param <R> 返回值类型
  */
 @FunctionalInterface
 public interface SerSupplier<R> extends Supplier<R>, Serializable {

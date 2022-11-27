@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 /**
  * 可序列化的Consumer
  *
+ * @param <T> 参数类型
  * @author VampireAchao
  * @see Consumer
  */
@@ -47,7 +48,8 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 */
 	@SafeVarargs
 	static <T> SerConsumer<T> multi(final SerConsumer<T>... consumers) {
-		return Stream.of(consumers).reduce(SerConsumer::andThen).orElseGet(() -> o -> {});
+		return Stream.of(consumers).reduce(SerConsumer::andThen).orElseGet(() -> o -> {
+		});
 	}
 
 	/**
@@ -77,6 +79,7 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * @return nothing
 	 */
 	static <T> SerConsumer<T> nothing() {
-		return t -> {};
+		return t -> {
+		};
 	}
 }

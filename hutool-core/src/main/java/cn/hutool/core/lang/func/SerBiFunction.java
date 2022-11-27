@@ -9,6 +9,9 @@ import java.util.function.BiFunction;
 /**
  * SerBiFunction
  *
+ * @param <T> 参数1的类型
+ * @param <U> 参数2的类型
+ * @param <R> 返回值类型
  * @author VampireAchao
  * @since 2022/6/8
  */

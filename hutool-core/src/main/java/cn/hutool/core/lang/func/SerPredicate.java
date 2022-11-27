@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  *
  * @author VampireAchao
  * @see Predicate
+ * @param <T> 参数类型
  */
 @FunctionalInterface
 public interface SerPredicate<T> extends Predicate<T>, Serializable {

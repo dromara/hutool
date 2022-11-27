@@ -34,6 +34,11 @@ public class ComposeFunction<A, B, C> implements Function<A, C>, Serializable {
 	private final Function<B, C> g;
 	private final Function<A, ? extends B> f;
 
+	/**
+	 * 构造
+	 * @param g 函数1
+	 * @param f 函数2
+	 */
 	public ComposeFunction(final Function<B, C> g, final Function<A, ? extends B> f) {
 		this.g = Assert.notNull(g);
 		this.f = Assert.notNull(f);

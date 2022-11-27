@@ -7,10 +7,12 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 
 /**
- * SerBiPred
+ * 可序列化的BiPredicate
  *
+ * @param <T> 参数1的类型
+ * @param <U> 参数2的类型
  * @author VampireAchao
- * @since 2022/6/8
+ * @since 6.0.0
  */
 @FunctionalInterface
 public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
