@@ -1,11 +1,10 @@
 package cn.hutool.core.tree;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.func.SerBiConsumer;
-import cn.hutool.core.lang.func.SerConsumer;
-import cn.hutool.core.lang.func.SerFunction;
-import cn.hutool.core.lang.func.SerPredicate;
+import cn.hutool.core.lang.func.*;
 import cn.hutool.core.stream.EasyStream;
+import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,12 +66,15 @@ public class BeanTree<T, R extends Comparable<R>> {
 					 final SerPredicate<T> parentPredicate,
 					 final SerFunction<T, List<T>> childrenGetter,
 					 final SerBiConsumer<T, List<T>> childrenSetter) {
-		this.idGetter = idGetter;
+		this.idGetter = Objects.requireNonNull(idGetter, "idGetter must not be null");
 		this.pidGetter = pidGetter;
 		this.pidValue = pidValue;
 		this.parentPredicate = parentPredicate;
-		this.childrenGetter = childrenGetter;
-		this.childrenSetter = childrenSetter;
+		if (Objects.isNull(pidGetter) && Objects.isNull(parentPredicate)) {
+			throw new UtilException("pidGetter and parentPredicate can not be null at the same time");
+		}
+		this.childrenGetter = Objects.requireNonNull(childrenGetter, "childrenGetter must not be null");
+		this.childrenSetter = Objects.requireNonNull(childrenSetter, "childrenSetter must not be null");
 	}
 
 	/**
@@ -123,19 +125,22 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 */
 	public List<T> toTree(final List<T> list) {
 		if (Objects.isNull(parentPredicate)) {
-			final Map<R, List<T>> pIdValuesMap = EasyStream.of(list).filter(e -> Objects.nonNull(idGetter.apply(e))).group(pidGetter);
+			final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
+					.peek(e -> Objects.requireNonNull(idGetter.apply(e),
+							() -> StrUtil.format("primary key {} must not null", LambdaUtil.getFieldName(idGetter))
+					)).group(pidGetter);
 			final List<T> parents = pIdValuesMap.getOrDefault(pidValue, new ArrayList<>());
-			getChildrenFromMapByPidAndSet(pIdValuesMap);
+			findChildren(list, pIdValuesMap);
 			return parents;
 		}
 		final List<T> parents = new ArrayList<>(list.size());
-		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list).filter(e -> {
+		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list).peek(e -> {
 			if (parentPredicate.test(e)) {
 				parents.add(e);
 			}
-			return Objects.nonNull(idGetter.apply(e));
+			Objects.requireNonNull(idGetter.apply(e));
 		}).group(pidGetter);
-		getChildrenFromMapByPidAndSet(pIdValuesMap);
+		findChildren(list, pIdValuesMap);
 		return parents;
 	}
 
@@ -163,6 +168,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 * @return 过滤后的树
 	 */
 	public List<T> filter(final List<T> tree, final SerPredicate<T> condition) {
+		Objects.requireNonNull(condition, "filter condition must be not null");
 		final AtomicReference<Predicate<T>> recursiveRef = new AtomicReference<>();
 		final Predicate<T> recursive = SerPredicate.multiOr(condition::test,
 				e -> Opt.ofEmptyAble(childrenGetter.apply(e))
@@ -181,6 +187,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 * @return 树
 	 */
 	public List<T> forEach(final List<T> tree, final SerConsumer<T> action) {
+		Objects.requireNonNull(action, "action must be not null");
 		final AtomicReference<Consumer<T>> recursiveRef = new AtomicReference<>();
 		final Consumer<T> recursive = SerConsumer.multi(action::accept,
 				e -> Opt.ofEmptyAble(childrenGetter.apply(e))
@@ -193,16 +200,16 @@ public class BeanTree<T, R extends Comparable<R>> {
 	/**
 	 * 内联函数，获取子集并设置到父节点
 	 *
+	 * @param list         集合
 	 * @param pIdValuesMap 父id与子集的映射
 	 */
-	private void getChildrenFromMapByPidAndSet(final Map<R, List<T>> pIdValuesMap) {
-		EasyStream.of(pIdValuesMap.values()).flat(Function.identity())
-				.forEach(value -> {
-					final List<T> children = pIdValuesMap.get(idGetter.apply(value));
-					if (children != null) {
-						childrenSetter.accept(value, children);
-					}
-				});
+	private void findChildren(final List<T> list, final Map<R, List<T>> pIdValuesMap) {
+		EasyStream.of(list).forEach(value -> {
+			final List<T> children = pIdValuesMap.get(idGetter.apply(value));
+			if (children != null) {
+				childrenSetter.accept(value, children);
+			}
+		});
 	}
 
 }
