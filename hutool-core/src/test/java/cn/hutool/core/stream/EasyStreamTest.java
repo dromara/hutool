@@ -181,7 +181,9 @@ public class EasyStreamTest {
 		final List<Integer> distinctBy2 = EasyStream.of(list).parallel().distinct(String::valueOf).toList();
 
 		Assert.assertEquals(collect1, distinctBy1);
-		Assert.assertEquals(collect2, distinctBy2);
+
+		// 并行流测试
+		Assert.assertEquals(ListUtil.sort(collect2), ListUtil.sort(distinctBy2));
 
 		Assert.assertEquals(
 				4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
