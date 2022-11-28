@@ -31,6 +31,8 @@ import java.util.function.Predicate;
  * <pre>{@code final List<JavaBean> javaBeanList = beanTree.flat(originJavaBeanTree);}</pre>
  *
  * @author VampireAchao
+ * @author emptypoint
+ * @author CreateSequence
  * 最后，引用一句电影经典台词： 无处安放的双手，以及无处安放的灵魂。——《Hello!树先生》
  */
 public class BeanTree<T, R extends Comparable<R>> {
