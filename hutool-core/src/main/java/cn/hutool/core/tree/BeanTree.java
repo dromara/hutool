@@ -120,10 +120,13 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 * @return 转换后的树
 	 */
 	public List<T> toTree(final List<T> list) {
-		if (Objects.isNull(parentPredicate)) {
-			final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
-					.peek(e -> Objects.requireNonNull(idGetter.apply(e), "The id of tree node must not be null")
-					)).group(pidGetter);
+		if (CollUtil.isEmpty(list)) {
+			return ListUtil.zero();
+		}
+        	if (Objects.isNull(parentPredicate)) {
+            		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
+                    			.peek(e -> Objects.requireNonNull(idGetter.apply(e), "The id of tree node must not be null")
+                    			).group(pidGetter);
 			final List<T> parents = pIdValuesMap.getOrDefault(pidValue, new ArrayList<>());
 			findChildren(list, pIdValuesMap);
 			return parents;
