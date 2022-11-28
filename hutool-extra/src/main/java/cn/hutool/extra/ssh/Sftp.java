@@ -390,7 +390,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
-	 * 打开指定目录，如果指定路径非目录或不存在返回false
+	 * 打开指定目录，如果指定路径非目录或不存在抛出异常
 	 *
 	 * @param directory directory
 	 * @return 是否打开目录
