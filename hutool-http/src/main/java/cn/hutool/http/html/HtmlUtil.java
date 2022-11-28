@@ -27,19 +27,22 @@ public class HtmlUtil {
 	 */
 	public static final Pattern RE_SCRIPT = Pattern.compile("<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
 
-	private static final char[][] TEXT = new char[64][];
+	private static final char[][] TEXT = new char[256][];
 
 	static {
-		for (int i = 0; i < 64; i++) {
+		// ascii码值最大的是【0x7f=127】，扩展ascii码值最大的是【0xFF=255】，
+		// 因为ASCII码使用指定的7位或8位二进制数组合来表示128或256种可能的字符，标准ASCII码也叫基础ASCII码。
+		for (int i = 0; i < 256; i++) {
 			TEXT[i] = new char[]{(char) i};
 		}
 
 		// special HTML characters
 		TEXT['\''] = "&#039;".toCharArray(); // 单引号 ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"'] = XmlUtil.QUOTE.toCharArray(); // 单引号
+		TEXT['"'] = XmlUtil.QUOTE.toCharArray(); // 双引号
 		TEXT['&'] = XmlUtil.AMP.toCharArray(); // &符
 		TEXT['<'] = XmlUtil.LT.toCharArray(); // 小于号
 		TEXT['>'] = XmlUtil.GT.toCharArray(); // 大于号
+		TEXT[' '] = XmlUtil.NBSP.toCharArray(); // 不断开空格（non-breaking space，缩写nbsp。ASCII值是32：是用键盘输入的空格；ASCII值是160：不间断空格，即 &nbsp，所产生的空格，作用是在页面换行时不被打断）
 	}
 
 	/**
@@ -201,7 +204,7 @@ public class HtmlUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = text.charAt(i);
-			if (c < 64) {
+			if (c < 256) {
 				buffer.append(TEXT[c]);
 			} else {
 				buffer.append(c);
