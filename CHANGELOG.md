@@ -9,6 +9,7 @@
 * 【core  】      CharUtil.isBlankChar增加\u180e（pr#2738@Github）
 * 【core  】      SyncFinisher线程同步结束器添加立即结束方法（pr#879@Gitee）
 * 【core  】      HtmlUtil中escape方法，增加不断开空格（nbsp）转译，防止xss攻击（pr#2755@Github）
+* 【extra 】      修正sftp.cd方法 方法注释和实际效果不符（issue#2758@Github）
 * 
 ### 🐞Bug修复
 * 【json  】      修复普通byte数组转JSONArray时的异常（pr#875@Gitee）
