@@ -194,7 +194,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	}
 
 	/**
-	 * 内联函数，获取子集并设置到父节点
+	 * 内联函数，设置每个节点的子集
 	 *
 	 * @param list         集合
 	 * @param pIdValuesMap 父id与子集的映射
