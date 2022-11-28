@@ -135,6 +135,16 @@ public class HtmlUtilTest {
 	}
 
 	@Test
+	public void escapeTest2() {
+		char c = ' '; // 不断开空格（non-breaking space，缩写nbsp。)
+		Assert.assertEquals(c, 160);
+		String html = "<html><body> </body></html>";
+		String escape = HtmlUtil.escape(html);
+		Assert.assertEquals("&lt;html&gt;&lt;body&gt;&nbsp;&lt;/body&gt;&lt;/html&gt;", escape);
+		Assert.assertEquals(" ", HtmlUtil.unescape("&nbsp;"));
+	}
+
+	@Test
 	public void filterTest() {
 		String html = "<alert></alert>";
 		String filter = HtmlUtil.filter(html);
