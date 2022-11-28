@@ -204,12 +204,12 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 * @param pIdValuesMap 父id与子集的映射
 	 */
 	private void findChildren(final List<T> list, final Map<R, List<T>> pIdValuesMap) {
-		EasyStream.of(list).forEach(value -> {
-			final List<T> children = pIdValuesMap.get(idGetter.apply(value));
+		for (T node : list) {
+			final List<T> children = pIdValuesMap.get(idGetter.apply(node));
 			if (children != null) {
-				childrenSetter.accept(value, children);
+				childrenSetter.accept(node, children);
 			}
-		});
+		}
 	}
 
 }
