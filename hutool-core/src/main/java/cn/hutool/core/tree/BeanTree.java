@@ -3,7 +3,6 @@ package cn.hutool.core.tree;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.*;
 import cn.hutool.core.stream.EasyStream;
-import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
