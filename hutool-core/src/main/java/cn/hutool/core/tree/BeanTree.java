@@ -1,5 +1,7 @@
 package cn.hutool.core.tree;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.*;
 import cn.hutool.core.stream.EasyStream;
