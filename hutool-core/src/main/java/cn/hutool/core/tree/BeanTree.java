@@ -129,8 +129,8 @@ public class BeanTree<T, R extends Comparable<R>> {
 		}
         	if (Objects.isNull(parentPredicate)) {
             		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
-                    			.peek(e -> Assert.notNull(idGetter.apply(e), "The id of tree node must not be null {}", e))
-                    			).group(pidGetter);
+                    			.peek(e -> Objects.requireNonNull(idGetter.apply(e), () -> "The id of tree node must not be null " + e))
+                    			.group(pidGetter);
 			final List<T> parents = pIdValuesMap.getOrDefault(pidValue, new ArrayList<>());
 			findChildren(list, pIdValuesMap);
 			return parents;
