@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<bouncycastle.version>1.71</bouncycastle.version>
+		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>
 
 	<dependencies>

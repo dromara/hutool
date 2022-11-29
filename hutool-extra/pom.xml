@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.10.0.RELEASE</beetl.version>
+		<beetl.version>3.13.0.RELEASE</beetl.version>
 		<rythm.version>1.4.1</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.21</enjoy.version>
@@ -31,7 +31,7 @@
 		<net.version>3.8.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.7.4</spring-boot.version>
+		<spring-boot.version>2.7.5</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -430,7 +430,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.3.2</version>
+			<version>5.3.3</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -465,7 +465,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.23</version>
+			<version>5.3.24</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -495,13 +495,13 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.2.2</version>
+			<version>6.3.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.6</version>
+			<version>2.3.7</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

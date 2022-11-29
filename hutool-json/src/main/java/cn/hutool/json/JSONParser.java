@@ -50,19 +50,26 @@ public class JSONParser {
 	public void parseTo(final JSONObject jsonObject, final Predicate<MutableEntry<String, Object>> predicate) {
 		final JSONTokener tokener = this.tokener;
 
-		char c;
-		String key;
-
 		if (tokener.nextClean() != '{') {
 			throw tokener.syntaxError("A JSONObject text must begin with '{'");
 		}
+
+		char prev;
+		char c;
+		String key;
 		while (true) {
+			prev = tokener.getPrevious();
 			c = tokener.nextClean();
 			switch (c) {
 				case 0:
 					throw tokener.syntaxError("A JSONObject text must end with '}'");
 				case '}':
 					return;
+				case '{':
+				case '[':
+					if(prev=='{') {
+						throw tokener.syntaxError("A JSONObject can not directly nest another JSONObject or JSONArray.");
+					}
 				default:
 					tokener.back();
 					key = tokener.nextValue().toString();
