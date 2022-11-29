@@ -17,6 +17,7 @@
 * 【core  】      修复ArrayUtil.insert()不支持原始类型数组的问题（pr#874@Gitee）
 * 【core  】      修复HexUtil.isHexNumber()判断逻辑超出long的精度问题（issue#I62H7K@Gitee）
 * 【core  】      修复BiMap中未重写computeIfAbsent和putIfAbsent导致双向查找出问题（issue#I62X8O@Gitee）
+* 【json  】      修复JSON解析栈溢出部分问题（issue#2746@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
