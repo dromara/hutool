@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.EscapeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -57,6 +58,10 @@ public class HtmlUtil {
 	 * @return 转义后的文本
 	 */
 	public static String escape(String text) {
+		if (StrUtil.isBlank(text)) {
+			return text;
+		}
+
 		return encode(text);
 	}
 
@@ -184,11 +189,8 @@ public class HtmlUtil {
 	 * @return 编码后的字符
 	 */
 	private static String encode(String text) {
-		int len;
-		if ((text == null) || ((len = text.length()) == 0)) {
-			return StrUtil.EMPTY;
-		}
-		StringBuilder buffer = new StringBuilder(len + (len >> 2));
+		final int len = text.length();
+		final StrBuilder buffer = StrBuilder.create(len + (len >> 2));
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = text.charAt(i);
