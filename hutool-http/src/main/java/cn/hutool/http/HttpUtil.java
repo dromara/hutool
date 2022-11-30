@@ -128,7 +128,6 @@ public class HttpUtil {
 	 *
 	 * @param request HTTP请求
 	 * @return HTTP响应
-	 * @see ClientEngineFactory#get()#send(Request)
 	 */
 	public static Response send(final Request request){
 		return ClientEngineFactory.get().send(request);
