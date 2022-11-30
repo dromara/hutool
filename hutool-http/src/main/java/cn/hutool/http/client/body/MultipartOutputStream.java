@@ -1,16 +1,16 @@
 package cn.hutool.http.client.body;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.HttpResource;
 import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.core.io.resource.HttpResource;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.meta.ContentType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -159,7 +159,7 @@ public class MultipartOutputStream extends OutputStream {
 		} else if (StrUtil.isNotEmpty(fileName)) {
 			// 根据name的扩展名指定互联网媒体类型，默认二进制流数据
 			write(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE,
-					HttpUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue())));
+					FileUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue())));
 		}
 
 		// 内容

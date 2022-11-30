@@ -3,8 +3,9 @@ package cn.hutool.http.client;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.http.client.body.ResponseBody;
+import cn.hutool.http.html.HtmlUtil;
+import cn.hutool.http.meta.ContentTypeUtil;
 import cn.hutool.http.meta.Header;
 
 import java.io.Closeable;
@@ -51,7 +52,7 @@ public interface Response extends Closeable {
 	 * @return 字符集
 	 */
 	default Charset charset() {
-		return HttpUtil.getCharset(header(Header.CONTENT_TYPE));
+		return ContentTypeUtil.getCharset(header(Header.CONTENT_TYPE));
 	}
 
 	/**
@@ -78,7 +79,7 @@ public interface Response extends Closeable {
 	 * @throws HttpException 包装IO异常
 	 */
 	default String bodyStr() throws HttpException {
-		return HttpUtil.getString(bodyBytes(), charset(), true);
+		return HtmlUtil.getString(bodyBytes(), charset(), true);
 	}
 
 	/**

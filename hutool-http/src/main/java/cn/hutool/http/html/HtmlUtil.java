@@ -1,10 +1,14 @@
 package cn.hutool.http.html;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.escape.EscapeUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.XmlUtil;
 
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 
 /**
@@ -26,6 +30,10 @@ public class HtmlUtil {
 	 * script标签正则
 	 */
 	public static final Pattern RE_SCRIPT = Pattern.compile("<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
+	/**
+	 * 正则：匹配meta标签的编码信息
+	 */
+	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 
 	private static final char[][] TEXT = new char[256][];
 
@@ -221,5 +229,59 @@ public class HtmlUtil {
 	 */
 	public static String filter(final String htmlContent) {
 		return new HTMLFilter().filter(htmlContent);
+	}
+
+	/**
+	 * 从流中读取内容<br>
+	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
+	 *
+	 * @param in                      输入流
+	 * @param charset                 字符集
+	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
+	 * @return 内容
+	 */
+	public static String getString(final InputStream in, final Charset charset, final boolean isGetCharsetFromContent) {
+		final byte[] contentBytes = IoUtil.readBytes(in);
+		return getString(contentBytes, charset, isGetCharsetFromContent);
+	}
+
+	/**
+	 * 从流中读取内容<br>
+	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
+	 *
+	 * @param contentBytes            内容byte数组
+	 * @param charset                 字符集
+	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
+	 * @return 内容
+	 */
+	public static String getString(final byte[] contentBytes, Charset charset, final boolean isGetCharsetFromContent) {
+		if (null == contentBytes) {
+			return null;
+		}
+
+		if (null == charset) {
+			charset = CharsetUtil.UTF_8;
+		}
+		String content = new String(contentBytes, charset);
+		if (isGetCharsetFromContent) {
+			final String charsetInContentStr = ReUtil.get(META_CHARSET_PATTERN, content, 1);
+			if (StrUtil.isNotBlank(charsetInContentStr)) {
+				Charset charsetInContent = null;
+				try {
+					charsetInContent = Charset.forName(charsetInContentStr);
+				} catch (final Exception e) {
+					if (StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8") || StrUtil.containsIgnoreCase(charsetInContentStr, "utf8")) {
+						charsetInContent = CharsetUtil.UTF_8;
+					} else if (StrUtil.containsIgnoreCase(charsetInContentStr, "gbk")) {
+						charsetInContent = CharsetUtil.GBK;
+					}
+					// ignore
+				}
+				if (null != charsetInContent && false == charset.equals(charsetInContent)) {
+					content = new String(contentBytes, charsetInContent);
+				}
+			}
+		}
+		return content;
 	}
 }

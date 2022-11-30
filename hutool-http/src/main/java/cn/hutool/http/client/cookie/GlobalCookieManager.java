@@ -29,6 +29,16 @@ public class GlobalCookieManager {
 	}
 
 	/**
+	 * 关闭Cookie
+	 *
+	 * @see GlobalCookieManager#setCookieManager(CookieManager)
+	 * @since 5.6.5
+	 */
+	public static void closeCookie() {
+		setCookieManager(null);
+	}
+
+	/**
 	 * 自定义{@link CookieManager}
 	 *
 	 * @param customCookieManager 自定义的{@link CookieManager}

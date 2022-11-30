@@ -23,6 +23,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.SystemUtil;
 
 import java.io.BufferedInputStream;
@@ -3142,6 +3143,17 @@ public class FileUtil extends PathUtil {
 			}
 		}
 		return file;
+	}
+
+	/**
+	 * 根据文件扩展名获得MimeType
+	 *
+	 * @param filePath     文件路径或文件名
+	 * @param defaultValue 当获取MimeType为null时的默认值
+	 * @return MimeType
+	 */
+	public static String getMimeType(final String filePath, final String defaultValue) {
+		return ObjUtil.defaultIfNull(getMimeType(filePath), defaultValue);
 	}
 
 	/**

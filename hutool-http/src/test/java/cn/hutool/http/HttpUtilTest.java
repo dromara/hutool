@@ -137,27 +137,6 @@ public class HttpUtilTest {
 	}
 
 	@Test
-	public void getCharsetTest() {
-		String charsetName = ReUtil.get(HttpUtil.CHARSET_PATTERN, "Charset=UTF-8;fq=0.9", 1);
-		Assert.assertEquals("UTF-8", charsetName);
-
-		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=utf-8", 1);
-		Assert.assertEquals("utf-8", charsetName);
-		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset='utf-8'", 1);
-		Assert.assertEquals("utf-8", charsetName);
-		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=\"utf-8\"", 1);
-		Assert.assertEquals("utf-8", charsetName);
-		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
-		Assert.assertEquals("utf-8", charsetName);
-	}
-
-	@Test
-	public void getMimeTypeTest() {
-		final String mimeType = HttpUtil.getMimeType("aaa.aaa");
-		Assert.assertNull(mimeType);
-	}
-
-	@Test
 	@Ignore
 	public void getWeixinTest(){
 		// 测试特殊URL，即URL中有&amp;情况是否请求正常

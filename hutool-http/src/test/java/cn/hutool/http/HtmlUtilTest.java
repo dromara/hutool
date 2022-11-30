@@ -1,6 +1,8 @@
 package cn.hutool.http;
 
+import cn.hutool.core.regex.ReUtil;
 import cn.hutool.http.html.HtmlUtil;
+import cn.hutool.http.meta.ContentTypeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -181,5 +183,20 @@ public class HtmlUtilTest {
 		final String html = "<div class=\"test_div\" width=\"120\"></div>";
 		final String result = HtmlUtil.removeAllHtmlAttr(html, "div");
 		Assert.assertEquals("<div></div>", result);
+	}
+
+	@Test
+	public void getCharsetTest() {
+		String charsetName = ReUtil.get(ContentTypeUtil.CHARSET_PATTERN, "Charset=UTF-8;fq=0.9", 1);
+		Assert.assertEquals("UTF-8", charsetName);
+
+		charsetName = ReUtil.get(HtmlUtil.META_CHARSET_PATTERN, "<meta charset=utf-8", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HtmlUtil.META_CHARSET_PATTERN, "<meta charset='utf-8'", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HtmlUtil.META_CHARSET_PATTERN, "<meta charset=\"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HtmlUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
 	}
 }

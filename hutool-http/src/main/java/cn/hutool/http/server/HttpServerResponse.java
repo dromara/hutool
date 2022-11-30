@@ -4,12 +4,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.URLEncoder;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.HttpStatus;
-import cn.hutool.http.HttpUtil;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -391,7 +390,7 @@ public class HttpServerResponse extends HttpServerBase {
 		if(StrUtil.isBlank(fileName)){
 			fileName = file.getName();
 		}
-		final String contentType = ObjUtil.defaultIfNull(HttpUtil.getMimeType(fileName), "application/octet-stream");
+		final String contentType = FileUtil.getMimeType(fileName, ContentType.OCTET_STREAM.getValue());
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);

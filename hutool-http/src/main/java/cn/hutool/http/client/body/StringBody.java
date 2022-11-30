@@ -2,7 +2,7 @@ package cn.hutool.http.client.body;
 
 import cn.hutool.core.io.resource.HttpResource;
 import cn.hutool.core.io.resource.StringResource;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.http.meta.ContentTypeUtil;
 
 import java.nio.charset.Charset;
 
@@ -20,7 +20,7 @@ public class StringBody extends ResourceBody {
 	 * @param charset 自定义编码
 	 */
 	public StringBody(final String body, final Charset charset) {
-		this(body, HttpUtil.getContentTypeByRequestBody(body), charset);
+		this(body, ContentTypeUtil.getContentTypeByRequestBody(body), charset);
 	}
 
 	/**
