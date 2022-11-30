@@ -1,11 +1,10 @@
 package cn.hutool.http.client;
 
-import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.client.engine.ClientEngineFactory;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -49,6 +48,29 @@ public class HttpDownloader {
 	 *
 	 * @param url             请求的url
 	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @return 文件
+	 */
+	public static File downloadFile(final String url, final File targetFileOrDir) {
+		return downloadFile(url, targetFileOrDir, -1);
+	}
+
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url             请求的url
+	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout         超时，单位毫秒，-1表示默认超时
+	 * @return 文件
+	 */
+	public static File downloadFile(final String url, final File targetFileOrDir, final int timeout) {
+		return downloadFile(url, targetFileOrDir, timeout, null);
+	}
+
+	/**
+	 * 下载远程文件
+	 *
+	 * @param url             请求的url
+	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param timeout         超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress  进度条
 	 * @return 文件
@@ -75,19 +97,6 @@ public class HttpDownloader {
 	}
 
 	/**
-	 * 下载远程文件，返回文件
-	 *
-	 * @param url             请求的url
-	 * @param targetFileOrDir 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param timeout         超时，单位毫秒，-1表示默认超时
-	 * @param streamProgress  进度条
-	 * @return 文件
-	 */
-	public static File downloadForFile(final String url, final File targetFileOrDir, final int timeout, final StreamProgress streamProgress) {
-		return requestDownload(url, timeout).body().write(targetFileOrDir, streamProgress);
-	}
-
-	/**
 	 * 下载远程文件
 	 *
 	 * @param url            请求的url
@@ -110,12 +119,12 @@ public class HttpDownloader {
 	 * @return HttpResponse
 	 * @since 5.4.1
 	 */
-	private static HttpResponse requestDownload(final String url, final int timeout) {
+	private static Response requestDownload(final String url, final int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
 
-		final HttpResponse response = HttpUtil.createGet(url, true)
-				.timeout(timeout)
-				.executeAsync();
+		final Response response = ClientEngineFactory.get()
+				.setConfig(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
+				.send(Request.of(url));
 
 		if (response.isOk()) {
 			return response;

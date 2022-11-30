@@ -21,12 +21,14 @@ import java.util.stream.Collectors;
  * <p>当通过实例方法获得值集合时，若该集合允许修改，则对值集合的修改将会影响到其所属的{@link MultiValueMap}实例，反之亦然。
  * 因此当同时遍历当前实例或者值集合时，若存在写操作，则需要注意可能引发的{@link ConcurrentModificationException}。
  *
+ * @param <K> 键类型
+ * @param <V> 值类型
  * @author huangchengxing
- * @since  6.0.0
  * @see AbsCollValueMap
  * @see CollectionValueMap
  * @see ListValueMap
  * @see SetValueMap
+ * @since 6.0.0
  */
 public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 
@@ -64,7 +66,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * 	Collection<V> coll = entry.getValues();
 	 * 	for (V val : coll) {
 	 * 		map.putValue(key, val)
-	 * 	}
+	 *    }
 	 * }
 	 * }</pre>
 	 *
@@ -81,7 +83,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * <pre>{@code
 	 * 	for (V val : coll) {
 	 * 		map.putValue(key, val)
-	 * 	}
+	 *    }
 	 * }</pre>
 	 *
 	 * @param key  键
@@ -95,7 +97,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * <pre>{@code
 	 * 	for (V val : values) {
 	 * 		map.putValue(key, val)
-	 * 	}
+	 *    }
 	 * }</pre>
 	 *
 	 * @param key    键
@@ -137,7 +139,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	/**
 	 * 将一批值从指定键下的值集合中删除
 	 *
-	 * @param key   键
+	 * @param key    键
 	 * @param values 值数组
 	 * @return 是否成功删除
 	 */
@@ -149,7 +151,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	/**
 	 * 将一批值从指定键下的值集合中删除
 	 *
-	 * @param key   键
+	 * @param key    键
 	 * @param values 值集合
 	 * @return 是否成功删除
 	 */
@@ -236,7 +238,7 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 * 	Collection<V> coll = entry.getValues();
 	 * 	for (V val : coll) {
 	 * 		consumer.accept(key, val);
-	 * 	}
+	 *    }
 	 * }
 	 * }</pre>
 	 *
@@ -259,8 +261,8 @@ public interface MultiValueMap<K, V> extends Map<K, Collection<V>> {
 	 */
 	default Collection<V> allValues() {
 		return values().stream()
-			.flatMap(Collection::stream)
-			.collect(Collectors.toList());
+				.flatMap(Collection::stream)
+				.collect(Collectors.toList());
 	}
 
 }

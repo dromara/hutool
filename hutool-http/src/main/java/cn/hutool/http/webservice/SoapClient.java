@@ -3,13 +3,14 @@ package cn.hutool.http.webservice;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.client.engine.jdk.HttpBase;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.client.Request;
+import cn.hutool.http.client.Response;
+import cn.hutool.http.client.engine.ClientEngineFactory;
+import cn.hutool.http.client.engine.jdk.HttpBase;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -542,7 +543,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 返回结果
 	 */
 	public SOAPMessage sendForMessage() {
-		final HttpResponse res = sendForResponse();
+		final Response res = sendForResponse();
 		final MimeHeaders headers = new MimeHeaders();
 		for (final Entry<String, List<String>> entry : res.headers().entrySet()) {
 			if (StrUtil.isNotEmpty(entry.getKey())) {
@@ -585,15 +586,13 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 *
 	 * @return 响应对象
 	 */
-	public HttpResponse sendForResponse() {
-		return HttpRequest.post(this.url)//
-				.setFollowRedirects(true)//
-				.setConnectionTimeout(this.connectionTimeout)
-				.setReadTimeout(this.readTimeout)
-				.contentType(getXmlContentType())//
-				.header(this.headers())
-				.body(getMsgStr(false))//
-				.executeAsync();
+	public Response sendForResponse() {
+		final Request request = Request.of(this.url)
+				.setMaxRedirectCount(2)
+				.contentType(getXmlContentType())
+				.header(this.headers, false)
+				.body(getMsgStr(false));
+		return ClientEngineFactory.get().send(request);
 	}
 
 	/**

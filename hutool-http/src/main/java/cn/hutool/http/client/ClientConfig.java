@@ -46,11 +46,11 @@ public class ClientConfig {
 	/**
 	 * 是否禁用缓存
 	 */
-	public boolean disableCache;
+	private boolean disableCache;
 	/**
 	 * 代理
 	 */
-	public Proxy proxy;
+	private Proxy proxy;
 
 	/**
 	 * 构造

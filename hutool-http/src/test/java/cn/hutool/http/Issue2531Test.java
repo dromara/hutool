@@ -3,8 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.client.Request;
+import cn.hutool.http.client.Response;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,10 +23,10 @@ public class Issue2531Test {
 		final String queryParam = MapUtil.join(map, "&", "=");//返回str=+123
 		Console.log(queryParam);
 
-		final HttpRequest request = HttpUtil.createGet("http://localhost:8888/formTest?" + queryParam);
+		final Request request = Request.of("http://localhost:8888/formTest?" + queryParam);
 		//request.setUrl("http://localhost:8888/formTest" + "?" + queryParam);
 		//noinspection resource
-		final HttpResponse execute = request.execute();
+		final Response execute = request.send();
 		Console.log(execute.body());
 	}
 

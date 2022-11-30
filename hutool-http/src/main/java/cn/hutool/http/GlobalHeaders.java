@@ -3,7 +3,6 @@ package cn.hutool.http;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
 import cn.hutool.http.meta.Header;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Map.Entry;
 
 /**
  * 全局头部信息<br>
- * 所有Http请求将共用此全局头部信息，除非在{@link HttpRequest}中自定义头部信息覆盖之
+ * 所有Http请求将共用此全局头部信息
  *
  * @author looly
  */

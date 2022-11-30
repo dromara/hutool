@@ -47,7 +47,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return header值
 	 */
 	default String header(final Header header) {
-		return header(header.name());
+		return header(header.getValue());
 	}
 
 	/**

@@ -3,6 +3,7 @@ package cn.hutool.http.client.engine.jdk;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.client.ClientConfig;
@@ -25,7 +26,7 @@ import java.net.HttpURLConnection;
  */
 public class JdkClientEngine implements ClientEngine {
 
-	private final ClientConfig config;
+	private ClientConfig config;
 	private HttpConnection conn;
 	/**
 	 * 重定向次数计数器，内部使用
@@ -35,13 +36,21 @@ public class JdkClientEngine implements ClientEngine {
 	/**
 	 * 构造
 	 */
-	public JdkClientEngine() {
-		this.config = ClientConfig.of();
+	public JdkClientEngine() {}
+
+	@Override
+	public JdkClientEngine setConfig(final ClientConfig config) {
+		this.config = config;
+		if(null != this.conn){
+			this.conn.disconnectQuietly();
+			this.conn = null;
+		}
+		return this;
 	}
 
 	@Override
 	public Response send(final Request message) {
-		return send(message, false);
+		return send(message, true);
 	}
 
 	/**
@@ -113,8 +122,10 @@ public class JdkClientEngine implements ClientEngine {
 	 * @return {@link HttpConnection}
 	 */
 	private HttpConnection buildConn(final Request message) {
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+
 		final HttpConnection conn = HttpConnection
-				.of(message.url().toURL(), config.proxy)
+				.of(message.url().toURL(), config.getProxy())
 				.setConnectTimeout(config.getConnectionTimeout())
 				.setReadTimeout(config.getReadTimeout())
 				.setMethod(message.method())//

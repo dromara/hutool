@@ -4,11 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.net.ssl.SSLProtocols;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.http.client.Request;
+import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
 import org.junit.Ignore;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link HttpRequest}单元测试
+ * {@link Request}单元测试
  *
  * @author Looly
  */
@@ -30,16 +30,9 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void getHttpsTest() {
-		final String body = HttpRequest.get("https://www.hutool.cn/").timeout(10).execute().bodyStr();
-		Console.log(body);
-	}
-
-	@Test
-	@Ignore
 	public void getHttpsThenTest() {
-		HttpRequest
-				.get("https://hutool.cn")
+		Request.of("https://hutool.cn")
+				.send()
 				.then(response -> Console.log(response.body()));
 	}
 
@@ -47,9 +40,9 @@ public class HttpRequestTest {
 	@Ignore
 	public void getCookiesTest() {
 		// 检查在Connection关闭情况下Cookie是否可以正常获取
-		final HttpResponse res = HttpRequest.get("https://www.oschina.net/").execute();
+		final Response res = Request.of("https://www.oschina.net/").send();
 		final String body = res.bodyStr();
-		Console.log(res.getCookies());
+		Console.log(res.getCookieStr());
 		Console.log(body);
 	}
 
@@ -58,14 +51,14 @@ public class HttpRequestTest {
 	public void toStringTest() {
 		final String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
 
-		final HttpRequest request = HttpRequest.get(url).body("a=乌海");
+		final Request request = Request.of(url).body("a=乌海");
 		Console.log(request.toString());
 	}
 
 	@Test
 	@Ignore
 	public void asyncHeadTest() {
-		final HttpResponse response = HttpRequest.head(url).execute();
+		final Response response = Request.of(url).method(Method.HEAD).send();
 		final Map<String, List<String>> headers = response.headers();
 		Console.log(headers);
 		Console.log(response.body());
@@ -76,7 +69,7 @@ public class HttpRequestTest {
 	public void asyncGetTest() {
 		final StopWatch timer = DateUtil.createStopWatch();
 		timer.start();
-		final HttpResponse body = HttpRequest.get(url).charset("GBK").executeAsync();
+		final Response body = Request.of(url).charset(CharsetUtil.GBK).send();
 		timer.stop();
 		final long interval = timer.getLastTaskTimeMillis();
 		timer.start();
@@ -91,7 +84,7 @@ public class HttpRequestTest {
 	public void syncGetTest() {
 		final StopWatch timer = DateUtil.createStopWatch();
 		timer.start();
-		final HttpResponse body = HttpRequest.get(url).charset("GBK").execute();
+		final Response body = Request.of(url).charset(CharsetUtil.GBK).send();
 		timer.stop();
 		final long interval = timer.getLastTaskTimeMillis();
 
@@ -104,24 +97,10 @@ public class HttpRequestTest {
 
 	@Test
 	@Ignore
-	public void customGetTest() {
-		// 自定义构建HTTP GET请求，发送Http GET请求，针对HTTPS安全加密，可以自定义SSL
-		final HttpRequest request = HttpRequest.get(url)
-				// 自定义返回编码
-				.charset(CharsetUtil.GBK)
-				// 禁用缓存
-				.disableCache()
-				// 自定义SSL版本
-				.setSSLProtocol(SSLProtocols.TLSv12);
-		Console.log(request.execute().body());
-	}
-
-	@Test
-	@Ignore
 	public void getDeflateTest() {
-		final HttpResponse res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
+		final Response res = Request.of("https://comment.bilibili.com/67573272.xml")
 				.header(Header.ACCEPT_ENCODING, "deflate")
-				.execute();
+				.send();
 		Console.log(res.header(Header.CONTENT_ENCODING));
 		Console.log(res.body());
 	}
@@ -129,7 +108,7 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void bodyTest() {
-		final String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().bodyStr();
+		final String ddddd1 = Request.of("https://baijiahao.baidu.com/s").body("id=1625528941695652600").send().bodyStr();
 		Console.log(ddddd1);
 	}
 
@@ -149,9 +128,9 @@ public class HttpRequestTest {
 		map.put("size", "2");
 		map.put("sizes", list);
 
-		HttpRequest
-				.get("http://localhost:8888/get")
-				.form(map)
+		Request
+				.of("http://localhost:8888/get")
+				.form(map).send()
 				.then(resp -> Console.log(resp.body()));
 	}
 
@@ -159,9 +138,9 @@ public class HttpRequestTest {
 	@Ignore
 	public void getWithoutEncodeTest() {
 		final String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
-		final HttpRequest get = HttpUtil.createGet(url);
-		Console.log(get.getUrl());
-		final HttpResponse execute = get.execute();
+		final Request get = Request.of(url);
+		Console.log(get.url());
+		final Response execute = get.send();
 		Console.log(execute.body());
 	}
 
@@ -176,11 +155,11 @@ public class HttpRequestTest {
 
 		// 方式1：全局设置
 		HttpGlobalConfig.setMaxRedirectCount(1);
-		HttpResponse execute = HttpRequest.get(url).execute();
+		Response execute = Request.of(url).send();
 		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
 
 		// 方式2，单独设置
-		execute = HttpRequest.get(url).setMaxRedirectCount(1).execute();
+		execute = Request.of(url).setMaxRedirectCount(1).send();
 		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
 	}
 
@@ -190,8 +169,8 @@ public class HttpRequestTest {
 		final String url = "https://postman-echo.com/get";
 		final Map<String, Object> map = new HashMap<>();
 		map.put("aaa", "application+1@qqq.com");
-		final HttpRequest request =HttpUtil.createGet(url).form(map);
-		Console.log(request.execute().body());
+		final Request request =Request.of(url).form(map);
+		Console.log(request.send().body());
 	}
 
 	@Test
@@ -200,51 +179,51 @@ public class HttpRequestTest {
 		final UrlBuilder urlBuilder = new UrlBuilder();
 		urlBuilder.setScheme("https").setHost("hutool.cn");
 
-		final HttpRequest httpRequest = new HttpRequest(urlBuilder);
-		httpRequest.method(Method.GET).execute();
+		final Request httpRequest = Request.of(urlBuilder);
+		httpRequest.method(Method.GET).send();
 	}
 
 	@Test
 	@Ignore
 	public void getCookieTest(){
-		final HttpResponse execute = HttpRequest.get("http://localhost:8888/getCookier").execute();
-		Console.log(execute.getCookies());
+		final Response execute = Request.of("http://localhost:8888/getCookier").send();
+		Console.log(execute.getCookieStr());
 	}
 
 	@Test
 	public void optionsTest() {
-		final HttpRequest options = HttpRequest.options("https://hutool.cn");
+		final Request options = Request.of("https://hutool.cn").method(Method.OPTIONS);
 		Assert.notNull(options.toString());
 	}
 
 	@Test
 	public void deleteTest() {
-		final HttpRequest options = HttpRequest.delete("https://hutool.cn");
+		final Request options = Request.of("https://hutool.cn").method(Method.DELETE);
 		Assert.notNull(options.toString());
 	}
 
 	@Test
 	public void traceTest() {
-		final HttpRequest options = HttpRequest.trace("https://hutool.cn");
+		final Request options = Request.of("https://hutool.cn").method(Method.TRACE);
 		Assert.notNull(options.toString());
 	}
 
 	@Test
 	public void getToStringTest() {
-		final HttpRequest a = HttpRequest.get("https://hutool.cn/").form("a", 1);
+		final Request a = Request.of("https://hutool.cn/").form(MapUtil.of("a", 1));
 		Assert.notNull(a.toString());
 	}
 
 	@Test
 	public void postToStringTest() {
-		final HttpRequest a = HttpRequest.post("https://hutool.cn/").form("a", 1);
+		final Request a = Request.of("https://hutool.cn/").method(Method.POST).form(MapUtil.of("a", 1));
 		Console.log(a.toString());
 	}
 
 	@Test
 	@Ignore
 	public void issueI5Y68WTest() {
-		final HttpResponse httpResponse = HttpRequest.get("http://82.157.17.173:8100/app/getAddress").execute();
+		final Response httpResponse = Request.of("http://82.157.17.173:8100/app/getAddress").send();
 		Console.log(httpResponse.body());
 	}
 }

@@ -10,6 +10,9 @@ import cn.hutool.http.meta.Header;
 import java.io.Closeable;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 响应内容接口，包括响应状态码、HTTP消息头、响应体等信息
@@ -36,11 +39,18 @@ public interface Response extends Closeable {
 	String header(final String name);
 
 	/**
+	 * 获取headers
+	 *
+	 * @return Headers Map
+	 */
+	Map<String, List<String>> headers();
+
+	/**
 	 * 获取字符集编码，默认为响应头中的编码
 	 *
 	 * @return 字符集
 	 */
-	default Charset charset(){
+	default Charset charset() {
 		return HttpUtil.getCharset(header(Header.CONTENT_TYPE));
 	}
 
@@ -54,9 +64,10 @@ public interface Response extends Closeable {
 
 	/**
 	 * 获取响应体，包含服务端返回的内容和Content-Type信息
+	 *
 	 * @return {@link ResponseBody}
 	 */
-	default ResponseBody body(){
+	default ResponseBody body() {
 		return new ResponseBody(this, bodyStream(), false, true);
 	}
 
@@ -151,5 +162,14 @@ public interface Response extends Closeable {
 	 */
 	default String getCookieStr() {
 		return header(Header.SET_COOKIE);
+	}
+
+	/**
+	 * 链式处理结果
+	 *
+	 * @param consumer {@link Consumer}
+	 */
+	default void then(final Consumer<Response> consumer) {
+		consumer.accept(this);
 	}
 }

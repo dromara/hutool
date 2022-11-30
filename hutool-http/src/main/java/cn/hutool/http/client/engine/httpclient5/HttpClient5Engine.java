@@ -1,16 +1,20 @@
 package cn.hutool.http.client.engine.httpclient5;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpException;
+import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.HttpBody;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.Header;
@@ -21,6 +25,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Apache HttpClient5的HTTP请求引擎
@@ -30,20 +35,27 @@ import java.util.Map;
  */
 public class HttpClient5Engine implements ClientEngine {
 
-	private final CloseableHttpClient engine;
+	private ClientConfig config;
+	private CloseableHttpClient engine;
 
 	/**
 	 * 构造
 	 */
-	public HttpClient5Engine() {
-		this.engine = HttpClients.custom()
-				// 设置默认头信息
-				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()))
-				.build();
+	public HttpClient5Engine() {}
+
+	@Override
+	public HttpClient5Engine setConfig(final ClientConfig config) {
+		this.config = config;
+		// 重置客户端
+		IoUtil.close(this.engine);
+		this.engine = null;
+		return this;
 	}
 
 	@Override
 	public Response send(final Request message) {
+		initEngine();
+
 		final ClassicHttpRequest request = buildRequest(message);
 		final CloseableHttpResponse response;
 		try {
@@ -63,6 +75,33 @@ public class HttpClient5Engine implements ClientEngine {
 	@Override
 	public void close() throws IOException {
 		this.engine.close();
+	}
+
+	/**
+	 * 初始化引擎
+	 */
+	private void initEngine(){
+		if(null != this.engine){
+			return;
+		}
+
+		RequestConfig requestConfig = null;
+		if(null != this.config){
+			requestConfig = RequestConfig.custom()
+					.setConnectTimeout(this.config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
+					.setConnectionRequestTimeout(this.config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
+					.setResponseTimeout(this.config.getReadTimeout(), TimeUnit.MILLISECONDS)
+					.build();
+		}
+
+		final HttpClientBuilder builder = HttpClients.custom()
+				// 设置默认头信息
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
+
+		// TODO 设置代理
+
+		this.engine = builder.build();
 	}
 
 	/**

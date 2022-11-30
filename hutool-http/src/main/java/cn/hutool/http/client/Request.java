@@ -1,19 +1,23 @@
 package cn.hutool.http.client;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpGlobalConfig;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.http.client.body.HttpBody;
+import cn.hutool.http.client.body.StringBody;
+import cn.hutool.http.client.body.UrlEncodedFormBody;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +100,9 @@ public class Request implements HeaderOperation<Request> {
 		method = Method.GET;
 		headers = new HashMap<>();
 		maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
+
+		// 全局默认请求头
+		header(GlobalHeaders.INSTANCE.headers(), false);
 	}
 
 	/**
@@ -198,9 +205,7 @@ public class Request implements HeaderOperation<Request> {
 
 		final List<String> values = headers.get(name.trim());
 		if (isOverride || CollUtil.isEmpty(values)) {
-			final ArrayList<String> valueList = new ArrayList<>();
-			valueList.add(value);
-			headers.put(name.trim(), valueList);
+			headers.put(name.trim(), ListUtil.of(value));
 		} else {
 			values.add(value.trim());
 		}
@@ -217,6 +222,26 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	/**
+	 * 添加请求表单内容
+	 *
+	 * @param formMap 表单内容
+	 * @return this
+	 */
+	public Request form(final Map<String, Object> formMap) {
+		return body(new UrlEncodedFormBody(formMap, charset()));
+	}
+
+	/**
+	 * 添加字符串请求体
+	 *
+	 * @param body 请求体
+	 * @return this
+	 */
+	public Request body(final String body) {
+		return body(new StringBody(body, charset()));
+	}
+
+	/**
 	 * 添加请求体
 	 *
 	 * @param body 请求体，可以是文本、表单、流、byte[] 或 Multipart
@@ -227,7 +252,7 @@ public class Request implements HeaderOperation<Request> {
 
 		// 根据内容赋值默认Content-Type
 		if (StrUtil.isBlank(header(Header.CONTENT_TYPE))) {
-			header(Header.CONTENT_TYPE, body.getContentType(), true);
+			header(Header.CONTENT_TYPE, body.getContentType(charset()), true);
 		}
 
 		return this;
@@ -252,5 +277,14 @@ public class Request implements HeaderOperation<Request> {
 	public Request setMaxRedirectCount(final int maxRedirectCount) {
 		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
 		return this;
+	}
+
+	/**
+	 * 发送请求
+	 *
+	 * @return 响应内容
+	 */
+	public Response send() {
+		return HttpUtil.send(this);
 	}
 }

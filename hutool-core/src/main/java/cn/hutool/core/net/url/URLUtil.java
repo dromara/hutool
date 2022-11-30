@@ -558,7 +558,6 @@ public class URLUtil {
 
 		if (StrUtil.isNotEmpty(body)) {
 			// 去除开头的\或者/
-			//noinspection ConstantConditions
 			body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
 			// 替换\为/
 			body = body.replace("\\", "/");

@@ -13,6 +13,11 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HttpClient响应包装<br>
@@ -57,6 +62,17 @@ public class HttpClient5Response implements Response {
 		}
 
 		return null;
+	}
+
+	@Override
+	public Map<String, List<String>> headers() {
+		final Header[] headers = rawRes.getHeaders();
+		final HashMap<String, List<String>> result = new LinkedHashMap<>(headers.length, 1);
+		for (final Header header : headers) {
+			final List<String> valueList = result.computeIfAbsent(header.getName(), k -> new ArrayList<>());
+			valueList.add(header.getValue());
+		}
+		return result;
 	}
 
 	@Override

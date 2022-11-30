@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * 定义请求体接口
@@ -24,6 +25,20 @@ public interface HttpBody {
 	 * @return Content-Type值
 	 */
 	String getContentType();
+
+	/**
+	 * 获取指定编码的Content-Type，类似于：application/json;charset=UTF-8
+	 * @param charset 编码
+	 * @return Content-Type
+	 */
+	default String getContentType(final Charset charset){
+		final String contentType = getContentType();
+		if(null == contentType){
+			return null;
+		}
+
+		return contentType + ";charset=" + charset.name();
+	}
 
 	/**
 	 * 写出并关闭{@link OutputStream}

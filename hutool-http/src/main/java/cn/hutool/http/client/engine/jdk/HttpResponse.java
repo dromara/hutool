@@ -95,6 +95,7 @@ public class HttpResponse implements Response, Closeable {
 	 *
 	 * @return Headers Map
 	 */
+	@Override
 	public Map<String, List<String>> headers() {
 		return Collections.unmodifiableMap(headers);
 	}
@@ -234,7 +235,6 @@ public class HttpResponse implements Response, Closeable {
 	 *
 	 * @throws HttpException IO异常
 	 */
-	@SuppressWarnings("resource")
 	private void init(final boolean isAsync, final boolean isIgnoreBody) throws HttpException {
 		// 获取响应状态码
 		try {

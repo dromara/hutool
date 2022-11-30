@@ -1,6 +1,8 @@
 package cn.hutool.http.client.engine.okhttp;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
@@ -8,6 +10,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.internal.http.HttpMethod;
 
 import java.io.IOException;
+import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 /**
  * OkHttp3客户端引擎封装
@@ -17,7 +21,8 @@ import java.io.IOException;
  */
 public class OkHttpEngine implements ClientEngine {
 
-	private final OkHttpClient client;
+	private ClientConfig config;
+	private OkHttpClient client;
 
 	/**
 	 * 构造
@@ -27,7 +32,17 @@ public class OkHttpEngine implements ClientEngine {
 	}
 
 	@Override
+	public OkHttpEngine setConfig(final ClientConfig config) {
+		this.config = config;
+		// 重置客户端
+		this.client = null;
+		return this;
+	}
+
+	@Override
 	public Response send(final Request message) {
+		initEngine();
+
 		final okhttp3.Response response;
 		try {
 			response = client.newCall(buildRequest(message)).execute();
@@ -49,6 +64,28 @@ public class OkHttpEngine implements ClientEngine {
 	}
 
 	/**
+	 * 初始化引擎
+	 */
+	private void initEngine() {
+		if (null != this.client) {
+			return;
+		}
+
+		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
+		final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+				.connectTimeout(config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
+				.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+
+		// 设置代理
+		final Proxy proxy = config.getProxy();
+		if(null != proxy){
+			builder.proxy(proxy);
+		}
+
+		this.client = builder.build();
+	}
+
+	/**
 	 * 构建请求体
 	 *
 	 * @param message {@link Request}
@@ -59,9 +96,9 @@ public class OkHttpEngine implements ClientEngine {
 				.url(message.url().toURL());
 
 		final String method = message.method().name();
-		if(HttpMethod.permitsRequestBody(method)){
+		if (HttpMethod.permitsRequestBody(method)) {
 			builder.method(method, new OkHttpRequestBody(message.body()));
-		}else{
+		} else {
 			builder.method(method, null);
 		}
 

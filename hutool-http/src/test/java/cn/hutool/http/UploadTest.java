@@ -1,16 +1,17 @@
 package cn.hutool.http;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.lang.Console;
-import cn.hutool.http.client.engine.jdk.HttpRequest;
-import cn.hutool.http.client.engine.jdk.HttpResponse;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.http.client.Request;
+import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
+import cn.hutool.http.meta.Method;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,12 +31,18 @@ public class UploadTest {
 		final File file = FileUtil.file("d:\\图片1.JPG");
 		final File file2 = FileUtil.file("d:\\图片3.png");
 
+		final Map<String, Object> form = MapUtil.builder(new HashMap<String, Object>())
+				.put("file", new MultiFileResource(file2, file))
+				.put("fileType", "图片")
+				.build();
+
 		// 方法一：自定义构建表单
-		final HttpRequest request = HttpRequest//
-				.post("http://localhost:8888/file")//
-				.form("file", file2, file)//
-				.form("fileType", "图片");
-		final HttpResponse response = request.execute();
+		final Request request = Request//
+				.of("http://localhost:8888/file")//
+				.method(Method.POST)
+				.form(form);
+		//noinspection resource
+		final Response response = request.send();
 		Console.log(response.body());
 	}
 
@@ -54,36 +61,18 @@ public class UploadTest {
 
 	@Test
 	@Ignore
-	public void uploadTest2() {
-		//客户端
-		final String url = "http://192.168.1.200:8888/meta/upload/img";
-		final Path file = Paths.get("D:\\test\\testBigData_upload.xlsx");
-		final Map<String, String> headers = new HashMap<>(16);
-		headers.put("md5", "aaaaaaaa");
-
-		final Map<String, Object> params = new HashMap<>(16);
-		params.put("fileName", file.toFile().getName());
-		params.put("file", file.toFile());
-		final HttpRequest httpRequest = HttpRequest.post(url)
-				.setChunkedStreamingMode(1024 * 1024)
-				.headerMap(headers, false)
-				.form(params);
-		final HttpResponse httpResponse = httpRequest.execute();
-		Console.log(httpResponse);
-	}
-
-	@Test
-	@Ignore
 	public void smmsTest(){
 		// https://github.com/dromara/hutool/issues/2079
 		// hutool的user agent 被封了
 		final String token = "test";
 		final String url = "https://sm.ms/api/v2/upload";
-		final String result = HttpUtil.createPost(url)
+		//noinspection resource
+		final String result = Request.of(url)
+				.method(Method.POST)
 				.header(Header.USER_AGENT, "PostmanRuntime/7.28.4")
 				.auth(token)
-				.form("smfile", FileUtil.file("d:/test/qrcodeCustom.png"))
-				.execute().bodyStr();
+				.form(MapUtil.of("smfile", FileUtil.file("d:/test/qrcodeCustom.png")))
+				.send().bodyStr();
 
 		Console.log(result);
 	}

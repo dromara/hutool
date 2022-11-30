@@ -1,14 +1,18 @@
 package cn.hutool.http.client.engine.httpclient4;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpException;
+import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.HttpBody;
+
 import org.apache.http.Header;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -29,20 +33,27 @@ import java.util.Map;
  */
 public class HttpClient4Engine implements ClientEngine {
 
-	private final CloseableHttpClient engine;
+	private ClientConfig config;
+	private CloseableHttpClient engine;
 
 	/**
 	 * 构造
 	 */
-	public HttpClient4Engine() {
-		this.engine = HttpClients.custom()
-				// 设置默认头信息
-				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()))
-				.build();
+	public HttpClient4Engine() {}
+
+	@Override
+	public HttpClient4Engine setConfig(final ClientConfig config) {
+		this.config = config;
+		// 重置客户端
+		IoUtil.close(this.engine);
+		this.engine = null;
+		return this;
 	}
 
 	@Override
 	public Response send(final Request message) {
+		initEngine();
+
 		final HttpEntityEnclosingRequestBase request = buildRequest(message);
 		final CloseableHttpResponse response;
 		try {
@@ -62,6 +73,29 @@ public class HttpClient4Engine implements ClientEngine {
 	@Override
 	public void close() throws IOException {
 		this.engine.close();
+	}
+
+	/**
+	 * 初始化引擎
+	 */
+	private void initEngine(){
+		if(null != this.engine){
+			return;
+		}
+
+		RequestConfig requestConfig = null;
+		if(null != this.config){
+			requestConfig = RequestConfig.custom()
+					.setConnectTimeout(this.config.getConnectionTimeout())
+					.setConnectionRequestTimeout(this.config.getConnectionTimeout())
+					.build();
+		}
+
+		this.engine = HttpClients.custom()
+				// 设置默认头信息
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()))
+				.build();
 	}
 
 	/**

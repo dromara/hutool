@@ -11,6 +11,13 @@ import java.io.Closeable;
 public interface ClientEngine extends Closeable {
 
 	/**
+	 * 设置客户端引擎参数，如超时、代理等信息
+	 * @param config 客户端设置
+	 * @return this
+	 */
+	ClientEngine setConfig(ClientConfig config);
+
+	/**
 	 * 发送HTTP请求
 	 * @param message HTTP请求消息
 	 * @return 响应内容
