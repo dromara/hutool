@@ -1,5 +1,6 @@
 package cn.hutool.extra.validation;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.validation.BeanValidationResult.ErrorMessage;
 
 import jakarta.validation.*;
@@ -23,7 +24,7 @@ public class ValidationUtil {
 	private static final Validator validator;
 
 	static {
-		try(final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+		try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
 			validator = factory.getValidator();
 		}
 	}
@@ -52,15 +53,16 @@ public class ValidationUtil {
 	/**
 	 * 校验对象,校验不通过，直接抛出给调用者
 	 * 说明：如果Bean对象内部有非基本类型对象，需要把内部对象取出，进行手动多次调用,本方法
-	 * @param object        待校验对象
-	 * @param groups        待校验的组
-	 * @throws ValidationException  校验不通过，则报 ValidationException 异常，调用者进行捕获，直接响应给前端用户
+	 *
+	 * @param object 待校验对象
+	 * @param groups 待校验的组
+	 * @throws ValidationException 校验不通过，则报 ValidationException 异常，调用者进行捕获，直接响应给前端用户
 	 */
-	public static void validateThrowException(Object object, Class<?>... groups)
+	public static void validateAndThrowFirst(final Object object, final Class<?>... groups)
 			throws ValidationException {
-		Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object, groups);
-		if (!constraintViolations.isEmpty()) {
-			ConstraintViolation<Object> constraint = constraintViolations.iterator().next();
+		final Set<ConstraintViolation<Object>> constraintViolations = validate(object, groups);
+		if (CollUtil.isNotEmpty(constraintViolations)) {
+			final ConstraintViolation<Object> constraint = constraintViolations.iterator().next();
 			throw new ValidationException(constraint.getMessage());
 		}
 	}
@@ -93,7 +95,7 @@ public class ValidationUtil {
 	/**
 	 * 校验bean的某一个属性
 	 *
-	 * @param <T>  bean类型
+	 * @param <T>          bean类型
 	 * @param bean         bean
 	 * @param propertyName 属性名称
 	 * @param groups       验证分组
