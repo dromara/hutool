@@ -743,8 +743,8 @@ public class NetUtil {
 	 */
 	public static String getMultistageReverseProxyIp(String ip) {
 		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
+		if (ip != null && StrUtil.indexOf(ip, ',') > 0) {
+			final List<String> ips = StrUtil.splitTrim(ip, ',');
 			for (final String subIp : ips) {
 				if (false == isUnknown(subIp)) {
 					ip = subIp;
