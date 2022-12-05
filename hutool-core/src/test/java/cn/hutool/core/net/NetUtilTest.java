@@ -112,4 +112,11 @@ public class NetUtilTest {
 		Assert.assertFalse(NetUtil.isInRange("114.114.114.114","192.168.3.4/32"));
 	}
 
+	@Test
+	public void issueI64P9JTest() {
+		// 获取结果应该去掉空格
+		final String ips = "unknown, 12.34.56.78, 23.45.67.89";
+		final String ip = NetUtil.getMultistageReverseProxyIp(ips);
+		Assert.assertEquals("12.34.56.78", ip);
+	}
 }
