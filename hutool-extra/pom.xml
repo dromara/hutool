@@ -20,7 +20,7 @@
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
 		<beetl.version>3.13.0.RELEASE</beetl.version>
-		<rythm.version>1.4.1</rythm.version>
+		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>5.0.3</enjoy.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
