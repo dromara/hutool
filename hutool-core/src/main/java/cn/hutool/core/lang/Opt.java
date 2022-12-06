@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -43,7 +44,7 @@ import java.util.stream.Stream;
  * 详细见：<a href="https://gitee.com/dromara/hutool/pulls/426"></a>
  *
  * @param <T> 包裹里元素的类型
- * @author VampireAchao
+ * @author VampireAchao Cizai
  * @see java.util.Optional
  */
 public class Opt<T> {
@@ -119,9 +120,9 @@ public class Opt<T> {
 	public static <T> Opt<T> ofTry(final SerSupplier<T> supplier) {
 		try {
 			return Opt.ofNullable(supplier.getting());
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			final Opt<T> empty = new Opt<>(null);
-			empty.exception = e;
+			empty.throwable = e;
 			return empty;
 		}
 	}
@@ -143,7 +144,7 @@ public class Opt<T> {
 	 * 包裹里实际的元素
 	 */
 	private final T value;
-	private Exception exception;
+	private Throwable throwable;
 
 	/**
 	 * {@code Opt}的构造函数
@@ -186,8 +187,8 @@ public class Opt<T> {
 	 * @return 异常
 	 * @since 5.7.17
 	 */
-	public Exception getException() {
-		return this.exception;
+	public Throwable getThrowable() {
+		return this.throwable;
 	}
 
 	/**
@@ -198,7 +199,7 @@ public class Opt<T> {
 	 * @since 5.7.17
 	 */
 	public boolean isFail() {
-		return null != this.exception;
+		return null != this.throwable;
 	}
 
 	/**

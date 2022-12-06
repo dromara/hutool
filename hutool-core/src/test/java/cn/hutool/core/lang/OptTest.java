@@ -171,6 +171,10 @@ public class OptTest {
 			// 你可以在里面写一长串调用链 list.get(0).getUser().getId()
 			return list.get(0);
 		}).exceptionOrElse("hutool");
+
+		Assert.assertTrue(Opt.ofTry(() -> {
+			throw new AssertionError("");
+		}).getThrowable() instanceof AssertionError);
 		Assert.assertEquals(npe, npeSituation);
 		Assert.assertEquals(indexOut, indexOutSituation);
 		Assert.assertEquals("hutool", npe);
@@ -186,8 +190,8 @@ public class OptTest {
 				}
 			});
 			Assert.assertTrue(
-					(i % 2 == 0 && opt.getException() instanceof IllegalStateException) ||
-							(i % 2 != 0 && opt.getException() instanceof NullPointerException)
+					(i % 2 == 0 && opt.getThrowable() instanceof IllegalStateException) ||
+							(i % 2 != 0 && opt.getThrowable() instanceof NullPointerException)
 			);
 		});
 	}
