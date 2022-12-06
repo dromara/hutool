@@ -77,8 +77,9 @@ public enum DateUnit {
 				return DateUnit.DAY;
 			case WEEKS:
 				return DateUnit.WEEK;
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	/**
@@ -102,7 +103,8 @@ public enum DateUnit {
 				return ChronoUnit.DAYS;
 			case WEEK:
 				return ChronoUnit.WEEKS;
+			default:
+				return null;
 		}
-		return null;
 	}
 }
