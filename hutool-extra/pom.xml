@@ -28,7 +28,7 @@
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.34.0</sshj.version>
 		<zxing.version>3.5.1</zxing.version>
-		<net.version>3.8.0</net.version>
+		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.7.5</spring-boot.version>
