@@ -44,7 +44,8 @@ import java.util.stream.Stream;
  * 详细见：<a href="https://gitee.com/dromara/hutool/pulls/426"></a>
  *
  * @param <T> 包裹里元素的类型
- * @author VampireAchao Cizai
+ * @author VampireAchao
+ * @author Cizai
  * @see java.util.Optional
  */
 public class Opt<T> {
