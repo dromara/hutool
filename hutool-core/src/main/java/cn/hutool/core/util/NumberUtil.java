@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -1881,10 +1882,7 @@ public class NumberUtil {
 	 */
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
 		//noinspection NumberEquality
-		if (bigNum1 == null || bigNum2 == null) {
-			return false;
-		}
-		if (bigNum1.equals(bigNum2)) {
+		if (Objects.equals(bigNum1, bigNum2)) {
 			// 如果用户传入同一对象，省略compareTo以提高性能。
 			return true;
 		}
