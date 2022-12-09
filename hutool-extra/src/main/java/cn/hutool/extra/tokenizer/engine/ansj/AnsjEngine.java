@@ -4,6 +4,7 @@ import org.ansj.splitWord.Analysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
 
@@ -16,7 +17,7 @@ import cn.hutool.extra.tokenizer.TokenizerEngine;
  */
 public class AnsjEngine implements TokenizerEngine {
 
-	private final Analysis analysis;
+	private final Class<? extends Analysis> analysis;
 	
 	/**
 	 * 构造
@@ -31,12 +32,12 @@ public class AnsjEngine implements TokenizerEngine {
 	 * @param analysis {@link Analysis}
 	 */
 	public AnsjEngine(Analysis analysis) {
-		this.analysis = analysis;
+		this.analysis = analysis.getClass();
 	}
 
 	@Override
 	public Result parse(CharSequence text) {
-		return new AnsjResult(analysis.parseStr(StrUtil.str(text)));
+		return new AnsjResult(ReflectUtil.newInstance(analysis).parseStr(StrUtil.str(text)));
 	}
 	
 }
