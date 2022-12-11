@@ -624,7 +624,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类中的Public方法名<br>
+	 * 获得指定类中的方法名<br>
 	 * 去重重载的方法
 	 *
 	 * @param clazz 类
@@ -641,7 +641,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类过滤后的Public方法列表
+	 * 获得指定类过滤后的方法列表
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器
