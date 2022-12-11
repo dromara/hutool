@@ -75,50 +75,59 @@ public class LambdaFactoryTest {
 		}
 
 		/**
-		 * <p>hardCode   运行1次耗时 4600 ns
-		 * <p>lambda     运行1次耗时 5400 ns
-		 * <p>reflect    运行1次耗时 7100 ns
-		 * <p>proxy      运行1次耗时 145400 ns
+		 * <p>lambda     运行1次耗时 7000 NANOSECONDS
+		 * <p>reflect    运行1次耗时 11300 NANOSECONDS
+		 * <p>hardCode   运行1次耗时 12800 NANOSECONDS
+		 * <p>proxy      运行1次耗时 160200 NANOSECONDS
+		 * <p>mh         运行1次耗时 197900 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行10次耗时 1200 ns
-		 * <p>lambda     运行10次耗时 1200 ns
-		 * <p>proxy      运行10次耗时 10800 ns
-		 * <p>reflect    运行10次耗时 20100 ns
+		 * <p>hardCode   运行10次耗时 1500 NANOSECONDS
+		 * <p>lambda     运行10次耗时 2200 NANOSECONDS
+		 * <p>mh         运行10次耗时 11700 NANOSECONDS
+		 * <p>proxy      运行10次耗时 14400 NANOSECONDS
+		 * <p>reflect    运行10次耗时 28600 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行100次耗时 6300 ns
-		 * <p>hardCode   运行100次耗时 6400 ns
-		 * <p>proxy      运行100次耗时 65100 ns
-		 * <p>reflect    运行100次耗时 196800 ns
+		 * <p>lambda     运行100次耗时 9300 NANOSECONDS
+		 * <p>hardCode   运行100次耗时 14400 NANOSECONDS
+		 * <p>mh         运行100次耗时 42900 NANOSECONDS
+		 * <p>proxy      运行100次耗时 107900 NANOSECONDS
+		 * <p>reflect    运行100次耗时 430800 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行1000次耗时 54100 ns
-		 * <p>lambda     运行1000次耗时 82000 ns
-		 * <p>reflect    运行1000次耗时 257300 ns
-		 * <p>proxy      运行1000次耗时 822700 ns
+		 * <p>hardCode   运行1000次耗时 86300 NANOSECONDS
+		 * <p>lambda     运行1000次耗时 101700 NANOSECONDS
+		 * <p>reflect    运行1000次耗时 754700 NANOSECONDS
+		 * <p>mh         运行1000次耗时 962200 NANOSECONDS
+		 * <p>proxy      运行1000次耗时 1200500 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行10000次耗时 84400 ns
-		 * <p>lambda     运行10000次耗时 209200 ns
-		 * <p>reflect    运行10000次耗时 1024300 ns
-		 * <p>proxy      运行10000次耗时 1467300 ns
+		 * <p>hardCode   运行10000次耗时 333000 NANOSECONDS
+		 * <p>lambda     运行10000次耗时 367800 NANOSECONDS
+		 * <p>mh         运行10000次耗时 999100 NANOSECONDS
+		 * <p>proxy      运行10000次耗时 2766100 NANOSECONDS
+		 * <p>reflect    运行10000次耗时 3157200 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行100000次耗时 618700 ns
-		 * <p>hardCode   运行100000次耗时 675200 ns
-		 * <p>reflect    运行100000次耗时 914100 ns
-		 * <p>proxy      运行100000次耗时 2745800 ns
+		 * <p>lambda     运行100000次耗时 571600 NANOSECONDS
+		 * <p>hardCode   运行100000次耗时 1061700 NANOSECONDS
+		 * <p>reflect    运行100000次耗时 1326800 NANOSECONDS
+		 * <p>proxy      运行100000次耗时 3160900 NANOSECONDS
+		 * <p>mh         运行100000次耗时 4137500 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行1000000次耗时 5342500 ns
-		 * <p>hardCode   运行1000000次耗时 5616400 ns
-		 * <p>reflect    运行1000000次耗时 9176700 ns
-		 * <p>proxy      运行1000000次耗时 15801800 ns
+		 * <p>hardCode   运行1000000次耗时 5066200 NANOSECONDS
+		 * <p>lambda     运行1000000次耗时 5868700 NANOSECONDS
+		 * <p>mh         运行1000000次耗时 8342700 NANOSECONDS
+		 * <p>reflect    运行1000000次耗时 13009400 NANOSECONDS
+		 * <p>proxy      运行1000000次耗时 21787800 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行10000000次耗时 53415200 ns
-		 * <p>hardCode   运行10000000次耗时 63714500 ns
-		 * <p>proxy      运行10000000次耗时 116420900 ns
-		 * <p>reflect    运行10000000次耗时 120817900 ns
+		 * <p>hardCode   运行10000000次耗时 51102700 NANOSECONDS
+		 * <p>lambda     运行10000000次耗时 55007900 NANOSECONDS
+		 * <p>mh         运行10000000次耗时 72751700 NANOSECONDS
+		 * <p>reflect    运行10000000次耗时 92348800 NANOSECONDS
+		 * <p>proxy      运行10000000次耗时 199705500 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行100000000次耗时 546706600 ns
-		 * <p>hardCode   运行100000000次耗时 557174500 ns
-		 * <p>reflect    运行100000000次耗时 924166200 ns
-		 * <p>proxy      运行100000000次耗时 1862735900 ns
+		 * <p>hardCode   运行100000000次耗时 456094400 NANOSECONDS
+		 * <p>lambda     运行100000000次耗时 562348600 NANOSECONDS
+		 * <p>reflect    运行100000000次耗时 630433200 NANOSECONDS
+		 * <p>mh         运行100000000次耗时 671914300 NANOSECONDS
+		 * <p>proxy      运行100000000次耗时 1117192600 NANOSECONDS
 		 * <p>--------------------------------------------
 		 */
 		@Test
@@ -141,42 +150,60 @@ public class LambdaFactoryTest {
 		}
 
 		/**
-		 * <p>hardCode   运行1次耗时 4800 ns
-		 * <p>lambda     运行1次耗时 9100 ns
-		 * <p>reflect    运行1次耗时 20600 ns
+		 * <p>hardCode   运行1次耗时 7600 NANOSECONDS
+		 * <p>lambda     运行1次耗时 12400 NANOSECONDS
+		 * <p>reflect    运行1次耗时 19900 NANOSECONDS
+		 * <p>mh         运行1次耗时 139900 NANOSECONDS
+		 * <p>proxy      运行1次耗时 261300 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行10次耗时 1800 ns
-		 * <p>lambda     运行10次耗时 2100 ns
-		 * <p>reflect    运行10次耗时 24500 ns
+		 * <p>hardCode   运行10次耗时 1700 NANOSECONDS
+		 * <p>lambda     运行10次耗时 2600 NANOSECONDS
+		 * <p>mh         运行10次耗时 3900 NANOSECONDS
+		 * <p>proxy      运行10次耗时 20400 NANOSECONDS
+		 * <p>reflect    运行10次耗时 26500 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行100次耗时 15700 ns
-		 * <p>lambda     运行100次耗时 17500 ns
-		 * <p>reflect    运行100次耗时 418200 ns
+		 * <p>hardCode   运行100次耗时 9000 NANOSECONDS
+		 * <p>lambda     运行100次耗时 16900 NANOSECONDS
+		 * <p>mh         运行100次耗时 32200 NANOSECONDS
+		 * <p>proxy      运行100次耗时 315700 NANOSECONDS
+		 * <p>reflect    运行100次耗时 604300 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行1000次耗时 101700 ns
-		 * <p>lambda     运行1000次耗时 157200 ns
-		 * <p>reflect    运行1000次耗时 504900 ns
+		 * <p>hardCode   运行1000次耗时 123500 NANOSECONDS
+		 * <p>lambda     运行1000次耗时 253100 NANOSECONDS
+		 * <p>mh         运行1000次耗时 644600 NANOSECONDS
+		 * <p>reflect    运行1000次耗时 793100 NANOSECONDS
+		 * <p>proxy      运行1000次耗时 1111100 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行10000次耗时 360800 ns
-		 * <p>lambda     运行10000次耗时 371700 ns
-		 * <p>reflect    运行10000次耗时 1887600 ns
+		 * <p>hardCode   运行10000次耗时 346800 NANOSECONDS
+		 * <p>lambda     运行10000次耗时 524900 NANOSECONDS
+		 * <p>mh         运行10000次耗时 931000 NANOSECONDS
+		 * <p>reflect    运行10000次耗时 2046500 NANOSECONDS
+		 * <p>proxy      运行10000次耗时 3108400 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行100000次耗时 581500 ns
-		 * <p>hardCode   运行100000次耗时 1629900 ns
-		 * <p>reflect    运行100000次耗时 1781700 ns
+		 * <p>lambda     运行100000次耗时 608300 NANOSECONDS
+		 * <p>hardCode   运行100000次耗时 1095600 NANOSECONDS
+		 * <p>mh         运行100000次耗时 1430100 NANOSECONDS
+		 * <p>reflect    运行100000次耗时 1558400 NANOSECONDS
+		 * <p>proxy      运行100000次耗时 5566000 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>lambda     运行1000000次耗时 175400 ns
-		 * <p>hardCode   运行1000000次耗时 2045400 ns
-		 * <p>reflect    运行1000000次耗时 14363200 ns
+		 * <p>lambda     运行1000000次耗时 6261000 NANOSECONDS
+		 * <p>hardCode   运行1000000次耗时 6570200 NANOSECONDS
+		 * <p>mh         运行1000000次耗时 8703300 NANOSECONDS
+		 * <p>reflect    运行1000000次耗时 16437800 NANOSECONDS
+		 * <p>proxy      运行1000000次耗时 22161100 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行10000000次耗时 60149000 ns
-		 * <p>lambda     运行10000000次耗时 60502600 ns
-		 * <p>reflect    运行10000000次耗时 187412800 ns
+		 * <p>lambda     运行10000000次耗时 60895800 NANOSECONDS
+		 * <p>hardCode   运行10000000次耗时 61055300 NANOSECONDS
+		 * <p>mh         运行10000000次耗时 69782400 NANOSECONDS
+		 * <p>reflect    运行10000000次耗时 78078800 NANOSECONDS
+		 * <p>proxy      运行10000000次耗时 193799800 NANOSECONDS
 		 * <p>--------------------------------------------
-		 * <p>hardCode   运行100000000次耗时 562997300 ns
-		 * <p>lambda     运行100000000次耗时 564359700 ns
-		 * <p>reflect    运行100000000次耗时 1163617600 ns
-		 * --------------------------------------------
+		 * <p>hardCode   运行100000000次耗时 499826200 NANOSECONDS
+		 * <p>lambda     运行100000000次耗时 537454100 NANOSECONDS
+		 * <p>reflect    运行100000000次耗时 673561400 NANOSECONDS
+		 * <p>mh         运行100000000次耗时 700774100 NANOSECONDS
+		 * <p>proxy      运行100000000次耗时 1169452400 NANOSECONDS
+		 * <p>--------------------------------------------
 		 */
 		@Test
 		@SneakyThrows
@@ -247,7 +274,7 @@ public class LambdaFactoryTest {
 			}
 
 			public String format() {
-				TimeUnit timeUnit = TimeUnit.MILLISECONDS;
+				TimeUnit timeUnit = TimeUnit.NANOSECONDS;
 				return String.format("%-10s 运行%d次耗时 %d %s", name, count, timeUnit.convert(cost, TimeUnit.NANOSECONDS), timeUnit.name());
 			}
 		}

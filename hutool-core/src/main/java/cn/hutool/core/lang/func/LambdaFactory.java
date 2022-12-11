@@ -2,7 +2,7 @@ package cn.hutool.core.lang.func;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
-import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.LookupFactory;
 import cn.hutool.core.reflect.MethodUtil;
@@ -30,7 +30,7 @@ public class LambdaFactory {
 		throw new IllegalAccessException();
 	}
 
-	private static final Map<Tuple, Object> CACHE = new WeakConcurrentMap<>();
+	private static final Map<MutableEntry<Class<?>, Method>, Object> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 构建Lambda
@@ -65,7 +65,7 @@ public class LambdaFactory {
 	public static <F> F buildLambda(Class<F> functionInterfaceType, Method method) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(method);
-		Tuple cacheKey = new Tuple(functionInterfaceType, method);
+		MutableEntry<Class<?>, Method> cacheKey = new MutableEntry<>(functionInterfaceType, method);
 		//noinspection unchecked
 		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
 			List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
