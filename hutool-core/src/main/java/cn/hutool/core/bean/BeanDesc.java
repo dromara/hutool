@@ -138,10 +138,9 @@ public class BeanDesc implements Serializable {
 	 * 初始化<br>
 	 * 只有与属性关联的相关Getter和Setter方法才会被读取，无关的getXXX和setXXX都被忽略
 	 *
-	 * @return this
 	 */
-	private BeanDesc init() {
-		final Method[] gettersAndSetters = MethodUtil.getMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
+	private void init() {
+		final Method[] gettersAndSetters = MethodUtil.getPublicMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
 		for (final Field field : FieldUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类
@@ -151,7 +150,6 @@ public class BeanDesc implements Serializable {
 				this.propMap.putIfAbsent(prop.getFieldName(), prop);
 			}
 		}
-		return this;
 	}
 
 	/**

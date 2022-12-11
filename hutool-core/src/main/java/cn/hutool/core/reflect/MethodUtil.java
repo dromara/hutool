@@ -299,7 +299,7 @@ public class MethodUtil {
 	}
 
 	/**
-	 * 获得指定类过滤后的Public方法列表
+	 * 获得指定类过滤后的方法列表
 	 *
 	 * @param clazz     查找方法的类
 	 * @param predicate 过滤器，{@link Predicate#test(Object)}为{@code true}保留，null表示全部保留。
