@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 /**
- *  {@link AbstractCache} 的值迭代器.
+ * {@link AbstractCache} 的值迭代器.
  * @author looly
  *
  * @param <V> 迭代对象类型

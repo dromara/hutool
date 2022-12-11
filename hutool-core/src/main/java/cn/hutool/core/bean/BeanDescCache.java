@@ -19,7 +19,7 @@ public enum BeanDescCache {
 	 *
 	 * @param beanClass Bean的类
 	 * @param supplier  对象不存在时创建对象的函数
-	 * @return 属性名和{@link BeanDesc}映射
+	 * @return 属性名和 {@link BeanDesc}映射
 	 * @since 5.4.2
 	 */
 	public BeanDesc getBeanDesc(final Class<?> beanClass, final SerSupplier<BeanDesc> supplier) {
