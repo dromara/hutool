@@ -66,52 +66,49 @@ public class LambdaFactory {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(method);
 		Tuple cacheKey = new Tuple(functionInterfaceType, method);
-		Object cacheValue = CACHE.get(cacheKey);
-		if (null != cacheValue) {
-			//noinspection unchecked
-			return (F) cacheValue;
-		}
-		List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
-				.filter(m -> Modifier.isAbstract(m.getModifiers()))
-				.collect(Collectors.toList());
-		Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
-		if (!method.isAccessible()) {
-			method.setAccessible(true);
-		}
-		Method invokeMethod = abstractMethods.get(0);
-		MethodHandles.Lookup caller = LookupFactory.lookup(method.getDeclaringClass());
-		String invokeName = invokeMethod.getName();
-		MethodType invokedType = methodType(functionInterfaceType);
-		MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
-		MethodHandle implMethod = Opt.ofTry(() -> caller.unreflect(method)).get();
-		MethodType insMethodType = methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
-		boolean isSerializable = Arrays.stream(functionInterfaceType.getInterfaces()).anyMatch(i -> i.isAssignableFrom(Serializable.class));
-		CallSite callSite = Opt.ofTry(() -> isSerializable ?
-				LambdaMetafactory.altMetafactory(
-						caller,
-						invokeName,
-						invokedType,
-						samMethodType,
-						implMethod,
-						insMethodType,
-						FLAG_SERIALIZABLE
-				) :
-				LambdaMetafactory.metafactory(
-						caller,
-						invokeName,
-						invokedType,
-						samMethodType,
-						implMethod,
-						insMethodType
-				)).get();
+		//noinspection unchecked
+		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
+			List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
+					.filter(m -> Modifier.isAbstract(m.getModifiers()))
+					.collect(Collectors.toList());
+			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
+			if (!method.isAccessible()) {
+				method.setAccessible(true);
+			}
+			Method invokeMethod = abstractMethods.get(0);
+			MethodHandles.Lookup caller = LookupFactory.lookup(method.getDeclaringClass());
+			String invokeName = invokeMethod.getName();
+			MethodType invokedType = methodType(functionInterfaceType);
+			MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
+			MethodHandle implMethod = Opt.ofTry(() -> caller.unreflect(method)).get();
+			MethodType insMethodType = methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
+			boolean isSerializable = Arrays.stream(functionInterfaceType.getInterfaces()).anyMatch(i -> i.isAssignableFrom(Serializable.class));
+			CallSite callSite = Opt.ofTry(() -> isSerializable ?
+					LambdaMetafactory.altMetafactory(
+							caller,
+							invokeName,
+							invokedType,
+							samMethodType,
+							implMethod,
+							insMethodType,
+							FLAG_SERIALIZABLE
+					) :
+					LambdaMetafactory.metafactory(
+							caller,
+							invokeName,
+							invokedType,
+							samMethodType,
+							implMethod,
+							insMethodType
+					)).get();
 
-		try {
-			//noinspection unchecked
-			F lambda = (F) callSite.getTarget().invoke();
-			CACHE.put(cacheKey, lambda);
-			return lambda;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
+			try {
+				//noinspection unchecked
+				return (F) callSite.getTarget().invoke();
+			} catch (Throwable e) {
+				throw new RuntimeException(e);
+			}
+		});
+
 	}
 }
