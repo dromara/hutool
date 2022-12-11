@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.func;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.reflect.MethodHandleUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,12 +11,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandleProxies;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -125,13 +128,15 @@ public class LambdaFactoryTest {
 			something.setId(1L);
 			something.setName("name");
 			Method getByReflect = Something.class.getMethod("getId");
+			MethodHandle getByMh = MethodHandleUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
 			Function getByProxy = MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.lookup().unreflect(getByReflect));
 			Function getByLambda = LambdaFactory.buildLambda(Function.class, getByReflect);
 			Task lambdaTask = new Task("lambda", () -> getByLambda.apply(something));
+			Task mhTask = new Task("mh", () -> getByMh.invoke(something));
 			Task proxyTask = new Task("proxy", () -> getByProxy.apply(something));
 			Task reflectTask = new Task("reflect", () -> getByReflect.invoke(something));
 			Task hardCodeTask = new Task("hardCode", () -> something.getId());
-			Task[] tasks = {hardCodeTask, lambdaTask, proxyTask, reflectTask};
+			Task[] tasks = {hardCodeTask, lambdaTask, mhTask, proxyTask, reflectTask};
 			loop(count, tasks);
 		}
 
@@ -180,10 +185,20 @@ public class LambdaFactoryTest {
 			something.setId(1L);
 			something.setName("name");
 			Method setByReflect = Something.class.getMethod("setName", String.class);
+			MethodHandle setByMh = MethodHandleUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
+			BiConsumer setByProxy = MethodHandleProxies.asInterfaceInstance(BiConsumer.class, setByMh);
 			BiConsumer setByLambda = LambdaFactory.buildLambda(BiConsumer.class, setByReflect);
 			String name = "name1";
 			Task lambdaTask = new Task("lambda", () -> {
 				setByLambda.accept(something, name);
+				return null;
+			});
+			Task proxyTask = new Task("proxy", () -> {
+				setByProxy.accept(something, name);
+				return null;
+			});
+			Task mhTask = new Task("mh", () -> {
+				setByMh.invoke(something, name);
 				return null;
 			});
 			Task reflectTask = new Task("reflect", () -> {
@@ -194,7 +209,7 @@ public class LambdaFactoryTest {
 				something.setName(name);
 				return null;
 			});
-			Task[] tasks = {hardCodeTask, lambdaTask, reflectTask};
+			Task[] tasks = {hardCodeTask, lambdaTask, proxyTask, mhTask, reflectTask};
 			loop(count, tasks);
 		}
 
@@ -232,7 +247,8 @@ public class LambdaFactoryTest {
 			}
 
 			public String format() {
-				return String.format("%-10s 运行%d次耗时 %d ns", name, count, cost);
+				TimeUnit timeUnit = TimeUnit.MILLISECONDS;
+				return String.format("%-10s 运行%d次耗时 %d %s", name, count, timeUnit.convert(cost, TimeUnit.NANOSECONDS), timeUnit.name());
 			}
 		}
 
