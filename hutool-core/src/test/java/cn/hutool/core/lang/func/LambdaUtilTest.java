@@ -1,13 +1,19 @@
 package cn.hutool.core.lang.func;
 
+import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.reflect.MethodUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class LambdaUtilTest {
@@ -82,8 +88,10 @@ public class LambdaUtilTest {
 			// 一些特殊的lambda
 			Assert.assertEquals("T", LambdaUtil.<SerFunction<Object, Stream<?>>>resolve(Stream::of).getParameterTypes()[0].getTypeName());
 			Assert.assertEquals(MyTeacher[][].class, LambdaUtil.<SerFunction<Integer, MyTeacher[][]>>resolve(MyTeacher[][]::new).getReturnType());
-			Assert.assertEquals(Integer[][][].class, LambdaUtil.<SerConsumer<Integer[][][]>>resolve(a -> {}).getParameterTypes()[0]);
-			Assert.assertEquals(Integer[][][].class, LambdaUtil.resolve((Serializable & SerConsumer3<Integer[][][], Integer[][], Integer>) (a, b, c) -> {}).getParameterTypes()[0]);
+			Assert.assertEquals(Integer[][][].class, LambdaUtil.<SerConsumer<Integer[][][]>>resolve(a -> {
+			}).getParameterTypes()[0]);
+			Assert.assertEquals(Integer[][][].class, LambdaUtil.resolve((Serializable & SerConsumer3<Integer[][][], Integer[][], Integer>) (a, b, c) -> {
+			}).getParameterTypes()[0]);
 		}).forEach(Runnable::run);
 
 	}
@@ -136,9 +144,84 @@ public class LambdaUtilTest {
 			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 数组测试
-			final SerConsumer<String[]> lambda = (String[] stringList) -> {};
+			final SerConsumer<String[]> lambda = (String[] stringList) -> {
+			};
 			Assert.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
 		}).forEach(Runnable::run);
+	}
+
+	@Test
+	public void getterTest() {
+		Bean bean = new Bean();
+		bean.setId(2L);
+
+		Function<Bean, Long> getId = cn.hutool.core.lang.func.LambdaUtil.getter(MethodUtil.getMethod(Bean.class, "getId"));
+		Function<Bean, Long> getId2 = cn.hutool.core.lang.func.LambdaUtil.getter(Bean.class, Bean.Fields.id);
+
+		Assert.assertEquals(getId, getId2);
+		Assert.assertEquals(bean.getId(), getId.apply(bean));
+	}
+
+	@Test
+	public void setterTest() {
+		Bean bean = new Bean();
+		bean.setId(2L);
+		bean.setFlag(false);
+
+		BiConsumer<Bean, Long> setId = cn.hutool.core.lang.func.LambdaUtil.setter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
+		BiConsumer<Bean, Long> setId2 = cn.hutool.core.lang.func.LambdaUtil.setter(Bean.class, Bean.Fields.id);
+		BiConsumer<Bean, Boolean> setFlag = cn.hutool.core.lang.func.LambdaUtil.setter(Bean.class, Bean.Fields.flag);
+		Assert.assertEquals(setId, setId2);
+
+		setId.accept(bean, 3L);
+		setFlag.accept(bean, true);
+		Assert.assertEquals(3L, (long) bean.getId());
+		Assert.assertTrue(bean.isFlag());
+	}
+
+	@Test
+	public void lambdaTest() {
+		Bean bean = new Bean();
+		bean.setId(1L);
+		bean.setPid(0L);
+		bean.setFlag(true);
+		BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.lambda(BiFunction.class, Bean.class, "uniqueKey", String.class);
+		Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.lambda(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
+		Assert.assertEquals(bean.uniqueKey("test"), uniqueKeyFunction.apply(bean, "test"));
+		Assert.assertEquals(bean.params("test", 1, 0.5), paramsFunction.apply(bean, "test", 1, 0.5));
+	}
+
+	@FunctionalInterface
+	interface Function4<R, P1, P2, P3, P4> {
+		R apply(P1 p1, P2 p2, P3 p3, P4 p4);
+	}
+
+	@Data
+	@FieldNameConstants
+	private static class Bean {
+		Long id;
+		Long pid;
+		boolean flag;
+
+		private Tuple uniqueKey(String name) {
+			return new Tuple(id, pid, flag, name);
+		}
+
+		public Tuple params(String name, Integer length, Double score) {
+			return new Tuple(name, length, score);
+		}
+
+		public static Function<Bean, Long> idGetter() {
+			return Bean::getId;
+		}
+
+		public Function<Bean, Long> idGet() {
+			return bean -> bean.id;
+		}
+
+		public Function<Bean, Long> idGetting() {
+			return Bean::getId;
+		}
 	}
 
 	@Data
