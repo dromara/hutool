@@ -119,10 +119,15 @@ public class ReUtilTest {
 	public void replaceAllTest3() {
 		// 修改前：ReUtil.replaceAll()方法，当replacementTemplate为null对象时，出现空指针异常
 		final String str = null;
-		// Assert.assertThrows(NullPointerException.class, () -> ReUtil.replaceAll(content, "(\\d+)", str));
+		final Pattern pattern = Pattern.compile("(\\d+)");
+		// Assert.assertThrows(NullPointerException.class, () -> ReUtil.replaceAll(content, pattern, str));
+
+		// 修改后：测试正常的方法访问是否有效
+		final String replaceAll = ReUtil.replaceAll(content, pattern, parameters -> "->" + parameters.group(1) + "<-");
+		Assert.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 
 		// 修改后：判断ReUtil.replaceAll()方法，当replacementTemplate为null对象时，提示为非法的参数异常：ReplacementTemplate must be not null !
-		Assert.assertThrows(IllegalArgumentException.class, () -> ReUtil.replaceAll(content, "(\\d+)", str));
+		Assert.assertThrows(IllegalArgumentException.class, () -> ReUtil.replaceAll(content, pattern, str));
 	}
 
 	@Test
