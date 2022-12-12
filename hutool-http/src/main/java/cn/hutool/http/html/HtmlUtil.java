@@ -93,7 +93,7 @@ public class HtmlUtil {
 	 * @return 清除标签后的文本
 	 */
 	public static String cleanHtmlTag(final String content) {
-		return ReUtil.replaceAll(content, RE_HTML_MARK, "");
+		return ReUtil.replaceAll(content, RE_HTML_MARK, StrUtil.EMPTY);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class HtmlUtil {
 	 * @return 清除标签后的文本
 	 */
 	public static String removeScriptTag(final String content) {
-		return ReUtil.replaceAll(content, RE_SCRIPT, "");
+		return ReUtil.replaceAll(content, RE_SCRIPT, StrUtil.EMPTY);
 	}
 
 	/**
