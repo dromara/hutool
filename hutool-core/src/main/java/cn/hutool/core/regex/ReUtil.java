@@ -876,6 +876,9 @@ public class ReUtil {
 			return StrUtil.str(content);
 		}
 
+		// replacementTemplate字段不能为null，否则无法抉择如何处理结果
+		Assert.notNull(replacementTemplate, "ReplacementTemplate must be not null !");
+
 		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
