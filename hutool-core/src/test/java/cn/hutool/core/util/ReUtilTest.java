@@ -116,6 +116,16 @@ public class ReUtilTest {
 	}
 
 	@Test
+	public void replaceAllTest3() {
+		// 修改前：ReUtil.replaceAll()方法，当replacementTemplate为null对象时，出现空指针异常
+		final String str = null;
+		// Assert.assertThrows(NullPointerException.class, () -> ReUtil.replaceAll(content, "(\\d+)", str));
+
+		// 修改后：判断ReUtil.replaceAll()方法，当replacementTemplate为null对象时，提示为非法的参数异常：ReplacementTemplate must be not null !
+		Assert.assertThrows(IllegalArgumentException.class, () -> ReUtil.replaceAll(content, "(\\d+)", str));
+	}
+
+	@Test
 	public void replaceTest() {
 		final String str = "AAABBCCCBBDDDBB";
 		String replace = StrUtil.replace(str, 0, "BB", "22", false);
