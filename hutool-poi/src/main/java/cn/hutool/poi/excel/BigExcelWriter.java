@@ -8,6 +8,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Collection;
 
 /**
  * 大数据量Excel写出，只支持XLSX（Excel07版本）<br>
@@ -141,6 +142,13 @@ public class BigExcelWriter extends ExcelWriter {
 
 	// -------------------------------------------------------------------------- Constructor end
 
+	/**
+	 * 设置某列为自动宽度，不考虑合并单元格<br>
+	 * 参与计算该列宽度的行为滑动窗口中的行
+	 *
+	 * @param columnIndex 第几列，从0计数
+	 * @return this
+	 */
 	@Override
 	public BigExcelWriter autoSizeColumn(int columnIndex) {
 		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
@@ -150,11 +158,164 @@ public class BigExcelWriter extends ExcelWriter {
 		return this;
 	}
 
+	/**
+	 * 设置某列为自动宽度<br>
+	 * 参与计算该列宽度的行为滑动窗口中的行
+	 *
+	 * @param columnIndex    第几列，从0计数
+	 * @param useMergedCells 是否适用于合并单元格
+	 * @return this
+	 */
+	@Override
+	public BigExcelWriter autoSizeColumn(int columnIndex, boolean useMergedCells) {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.trackColumnForAutoSizing(columnIndex);
+		super.autoSizeColumn(columnIndex);
+		sheet.untrackColumnForAutoSizing(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 设置所有列为自动宽度，不考虑合并单元格<br>
+	 * 参与计算该列宽度的行为滑动窗口中的行<br>
+	 * 列数计算是通过最后写入的行计算的
+	 *
+	 * @return this
+	 */
 	@Override
 	public BigExcelWriter autoSizeColumnAll() {
 		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
 		sheet.trackAllColumnsForAutoSizing();
 		super.autoSizeColumnAll();
+		sheet.untrackAllColumnsForAutoSizing();
+		return this;
+	}
+
+	/**
+	 * 设置某列为自动宽度，不考虑合并单元格<br>
+	 * 参与计算该列宽度的行包括该列被追踪后所有写出到临时文件的行和调用本函数时滑动窗口中的行
+	 *
+	 * @param columnIndex 第几列，从0计数
+	 * @return this
+	 * @see #trackColumnForAutoSizing(int)
+	 * @see #trackColumnsForAutoSizing(Collection)
+	 * @see #trackAllColumnsForAutoSizing()
+	 */
+	public BigExcelWriter autoSizeTrackedColumn(int columnIndex) {
+		super.autoSizeColumn(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 设置某列为自动宽度<br>
+	 * 参与计算该列宽度的行包括该列被追踪后所有写出到临时文件的行和调用本函数时滑动窗口中的行
+	 *
+	 * @param columnIndex    第几列，从0计数
+	 * @param useMergedCells 是否适用于合并单元格
+	 * @return this
+	 * @see #trackColumnForAutoSizing(int)
+	 * @see #trackColumnsForAutoSizing(Collection)
+	 * @see #trackAllColumnsForAutoSizing()
+	 */
+	public BigExcelWriter autoSizeTrackedColumn(int columnIndex, boolean useMergedCells) {
+		super.autoSizeColumn(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 设置所有列为自动宽度，不考虑合并单元格<br>
+	 * 参与计算某列宽度的行包括该列被追踪后所有写出到临时文件的行和调用本函数时滑动窗口中的行
+	 *
+	 * @return this
+	 * @see #trackColumnForAutoSizing(int)
+	 * @see #trackColumnsForAutoSizing(Collection)
+	 * @see #trackAllColumnsForAutoSizing()
+	 */
+	public BigExcelWriter autoSizeTrackedColumnAll() {
+		super.autoSizeColumnAll();
+		return this;
+	}
+
+	/**
+	 * 获取总列数，受{@link SXSSFWorkbook#getRandomAccessWindowSize()}限制，若某行不在内存中，其列数为-1，计算方法为：
+	 *
+	 * <pre>
+	 * 最后写入的行的最后一列序号 + 1
+	 * </pre>
+	 *
+	 * @return 列数
+	 */
+	@Override
+	public int getColumnCount() {
+		return getColumnCount(getCurrentRow() - 1);
+	}
+
+	/**
+	 * 追踪列，保存最大列宽
+	 *
+	 * @param columnIndex 要追踪的列
+	 * @return this
+	 */
+	public BigExcelWriter trackColumnForAutoSizing(int columnIndex) {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.trackColumnForAutoSizing(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 追踪多个列，保存最大列宽
+	 *
+	 * @param columns 要追踪的列
+	 * @return this
+	 */
+	public BigExcelWriter trackColumnsForAutoSizing(Collection<Integer> columns) {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.trackColumnsForAutoSizing(columns);
+		return this;
+	}
+
+	/**
+	 * 追踪所有列，保存最大列宽
+	 *
+	 * @return this
+	 */
+	public BigExcelWriter trackAllColumnsForAutoSizing() {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.trackAllColumnsForAutoSizing();
+		return this;
+	}
+
+	/**
+	 * 停止追踪列，清除最大列宽
+	 *
+	 * @param columnIndex 要追踪的列
+	 * @return this
+	 */
+	public BigExcelWriter untrackColumnForAutoSizing(int columnIndex) {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.untrackColumnForAutoSizing(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 停止追踪多个列，清除最大列宽
+	 *
+	 * @param columns 要追踪的列
+	 * @return this
+	 */
+	public BigExcelWriter untrackColumnsForAutoSizing(Collection<Integer> columns) {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
+		sheet.untrackColumnsForAutoSizing(columns);
+		return this;
+	}
+
+	/**
+	 * 停止追踪所有列，清除最大列宽
+	 *
+	 * @return this
+	 */
+	public BigExcelWriter untrackAllColumnsForAutoSizing() {
+		final SXSSFSheet sheet = (SXSSFSheet) this.sheet;
 		sheet.untrackAllColumnsForAutoSizing();
 		return this;
 	}

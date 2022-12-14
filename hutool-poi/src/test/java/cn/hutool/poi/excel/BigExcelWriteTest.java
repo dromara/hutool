@@ -246,4 +246,47 @@ public class BigExcelWriteTest {
 		writer.autoSizeColumnAll();
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void autoSizeTrackedColumnsTest() {
+		// 通过工具类创建writer
+		String path = "d:/test/autoSizeTrackedColumnsTest.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = ExcelUtil.getBigWriter(1);
+		writer.setDestFile(FileUtil.file(path));
+		writer.addHeaderAlias("id", "SN");
+		writer.addHeaderAlias("userName", "User Name");
+
+		List<List<Map<String, Object>>> list = new ArrayList<>();
+		List<Map<String, Object>> row0 = new ArrayList<>();
+		row0.add(new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				put("id", 1);
+				put("userName", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			}
+		});
+		List<Map<String, Object>> row1 = new ArrayList<>();
+		row1.add(new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+
+			{
+				put("id", 22);
+				put("userName", "bbbbbbbbbbbbbb");
+			}
+		});
+		list.add(row0);
+		list.add(row1);
+
+		writer.write(list.get(0), false);
+		writer.trackColumnForAutoSizing(0); //从第一行开始追踪
+		writer.write(list.get(1), false);
+		writer.trackColumnForAutoSizing(1); //从第二行开始追踪
+		writer.autoSizeTrackedColumnAll();
+		writer.untrackColumnForAutoSizing(0);
+		writer.untrackColumnForAutoSizing(1);
+		writer.close();
+	}
 }
