@@ -20,15 +20,15 @@
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
 		<beetl.version>3.13.0.RELEASE</beetl.version>
-		<rythm.version>1.4.1</rythm.version>
+		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<enjoy.version>4.9.21</enjoy.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.34.0</sshj.version>
-		<zxing.version>3.5.0</zxing.version>
-		<net.version>3.8.0</net.version>
+		<zxing.version>3.5.1</zxing.version>
+		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.7.5</spring-boot.version>
