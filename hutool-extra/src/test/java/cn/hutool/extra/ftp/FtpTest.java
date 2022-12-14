@@ -81,16 +81,23 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void downloadTest() {
-		final Ftp ftp = new Ftp("localhost");
-
-		final List<String> fileNames = ftp.ls("temp/");
-		for(final String name: fileNames) {
-			ftp.download("",
-					name,
-					FileUtil.file("d:/test/download/" + name));
+		String downloadPath = "d:/test/download/";
+		try (final Ftp ftp = new Ftp("localhost")) {
+			final List<FTPFile> ftpFiles = ftp.lsFiles("temp/", null);
+			for (final FTPFile ftpFile : ftpFiles) {
+				String name = ftpFile.getName();
+				if (ftpFile.isDirectory()) {
+					File dp = new File(downloadPath + name);
+					if (!dp.exists()) {
+						dp.mkdir();
+					}
+				} else {
+					ftp.download("", name, FileUtil.file(downloadPath + name));
+				}
+			}
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
-
-		IoUtil.close(ftp);
 	}
 
 	@Test
