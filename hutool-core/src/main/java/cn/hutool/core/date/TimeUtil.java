@@ -421,16 +421,6 @@ public class TimeUtil extends TemporalAccessorUtil {
 	}
 
 	/**
-	 * 修改为一天的结束时间，例如：2020-02-02 23:59:59,999
-	 *
-	 * @param time 日期时间
-	 * @return 一天的结束时间
-	 */
-	public static LocalDateTime endOfDay(final LocalDateTime time) {
-		return endOfDay(time, false);
-	}
-
-	/**
 	 * 修改为一天的结束时间，例如：
 	 * <ul>
 	 * 	<li>毫秒不归零：2020-02-02 23:59:59,999</li>
@@ -443,20 +433,49 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @since 5.7.18
 	 */
 	public static LocalDateTime endOfDay(final LocalDateTime time, final boolean truncateMillisecond) {
-		if (truncateMillisecond) {
-			return time.with(LocalTime.of(23, 59, 59));
-		}
-		return time.with(LocalTime.MAX);
+		return time.with(LocalTimeUtil.max(truncateMillisecond));
+	}
+
+	/**
+	 * 修改为本月的开始时间，例如：2020-02-01 00:00:00,000
+	 *
+	 * @param time 日期时间
+	 * @return 一天的开始时间
+	 */
+	public static LocalDateTime beginOfMonth(final LocalDateTime time) {
+		return beginOfDay(time).with(TemporalAdjusters.firstDayOfMonth());
 	}
 
 	/**
 	 * 获取给定日期月底的时间
 	 *
-	 * @param time 日期时间
+	 * @param time                日期时间
+	 * @param truncateMillisecond 是否毫秒归零
 	 * @return 月底
 	 */
-	public static LocalDateTime endOfMonth(final LocalDateTime time) {
-		return time.with(TemporalAdjusters.lastDayOfMonth());
+	public static LocalDateTime endOfMonth(final LocalDateTime time, final boolean truncateMillisecond) {
+		return endOfDay(time, truncateMillisecond).with(TemporalAdjusters.lastDayOfMonth());
+	}
+
+	/**
+	 * 修改为本年的开始时间，例如：2020-01-01 00:00:00,000
+	 *
+	 * @param time 日期时间
+	 * @return 一年的开始时间
+	 */
+	public static LocalDateTime beginOfYear(final LocalDateTime time) {
+		return beginOfDay(time).with(TemporalAdjusters.firstDayOfYear());
+	}
+
+	/**
+	 * 获取给定日期年底的时间
+	 *
+	 * @param time                日期时间
+	 * @param truncateMillisecond 是否毫秒归零
+	 * @return 年底
+	 */
+	public static LocalDateTime endOfYear(final LocalDateTime time, final boolean truncateMillisecond) {
+		return endOfDay(time, truncateMillisecond).with(TemporalAdjusters.lastDayOfYear());
 	}
 
 	/**
@@ -516,7 +535,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 		// x>b||a>y 无交集
 		// 则有交集的逻辑为 !(x>b||a>y)
 		// 根据德摩根公式，可化简为 x<=b && a<=y 即 realStartTime<=endTime && startTime<=realEndTime
-		return realStartTime.compareTo(endTime) <=0 && startTime.compareTo(realEndTime) <= 0;
+		return realStartTime.compareTo(endTime) <= 0 && startTime.compareTo(realEndTime) <= 0;
 	}
 
 	/**

@@ -150,11 +150,47 @@ public class TimeUtilTest {
 	public void endOfDayTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 
-		LocalDateTime endOfDay = TimeUtil.endOfDay(localDateTime);
+		LocalDateTime endOfDay = TimeUtil.endOfDay(localDateTime, false);
 		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
 
 		endOfDay = TimeUtil.endOfDay(localDateTime, true);
 		Assert.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
+	}
+
+	@Test
+	public void beginOfMonthTest() {
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
+		final LocalDateTime begin = TimeUtil.beginOfMonth(localDateTime);
+		Assert.assertEquals("2020-01-01T00:00", begin.toString());
+	}
+
+	@Test
+	public void endOfMonthTest() {
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
+
+		LocalDateTime end = TimeUtil.endOfMonth(localDateTime, false);
+		Assert.assertEquals("2020-01-31T23:59:59.999999999", end.toString());
+
+		end = TimeUtil.endOfMonth(localDateTime, true);
+		Assert.assertEquals("2020-01-31T23:59:59", end.toString());
+	}
+
+	@Test
+	public void beginOfYearTest() {
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
+		final LocalDateTime begin = TimeUtil.beginOfMonth(localDateTime);
+		Assert.assertEquals("2020-01-01T00:00", begin.toString());
+	}
+
+	@Test
+	public void endOfYearTest() {
+		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
+
+		LocalDateTime end = TimeUtil.endOfYear(localDateTime, false);
+		Assert.assertEquals("2020-12-31T23:59:59.999999999", end.toString());
+
+		end = TimeUtil.endOfYear(localDateTime, true);
+		Assert.assertEquals("2020-12-31T23:59:59", end.toString());
 	}
 
 	@Test
