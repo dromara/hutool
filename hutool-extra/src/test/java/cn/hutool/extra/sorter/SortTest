@@ -1,0 +1,57 @@
+package cn.hutool.extra.sorter;
+
+import cn.hutool.core.lang.Console;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class SortTest {
+
+	@Test
+	public void sortTest() {
+		List<Integer> list = new ArrayList<>();
+		Random ran = new Random();
+		for (int i = 0; i < 10000; i++) {
+			list.add(ran.nextInt(10000));
+		}
+		QuickSort quickSort = new QuickSort();
+		quickSort.sort(new IndexedSortable() {
+			@Override
+			public int compare(int i, int j) {
+				int before = list.get(i);
+				int after = list.get(j);
+
+				return get(before, after);
+			}
+
+			@Override
+			public void swap(int i, int j) {
+				int first = list.get(i);
+				int second = list.get(j);
+				int mid = first;
+				list.set(i, second);
+				list.set(j, mid);
+			}
+		}, 0, list.size());
+
+		boolean hasSorted = true;
+		for (int i = 0; i < list.size(); i++) {
+			if (i != list.size() - 1) {
+				int before = list.get(i);
+				int after = list.get(i + 1);
+				if (get(before, after) > 0) {
+					hasSorted = false;
+					break;
+				}
+			}
+		}
+		Console.log(hasSorted);
+		Console.log(list);
+	}
+
+	private int get(int i, int j) {
+		return i - j;
+	}
+}
