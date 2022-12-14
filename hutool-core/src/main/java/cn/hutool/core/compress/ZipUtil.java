@@ -2,13 +2,14 @@ package cn.hutool.core.compress;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.io.stream.FastByteArrayOutputStream;
+import cn.hutool.core.io.stream.LimitedInputStream;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -77,7 +78,7 @@ public class ZipUtil {
 	 */
 	public static InputStream getStream(final ZipFile zipFile, final ZipEntry zipEntry) {
 		try {
-			return zipFile.getInputStream(zipEntry);
+			return new LimitedInputStream(zipFile.getInputStream(zipEntry), zipEntry.getSize());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

@@ -1,5 +1,6 @@
 package cn.hutool.core.compress;
 
+import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -24,6 +25,9 @@ import java.util.zip.ZipInputStream;
  * @since 5.7.8
  */
 public class ZipReader implements Closeable {
+
+	// size of uncompressed zip entry shouldn't be bigger of compressed in MAX_SIZE_DIFF times
+	private static final int MAX_SIZE_DIFF = 100;
 
 	private ZipFile zipFile;
 	private ZipInputStream in;
@@ -202,7 +206,7 @@ public class ZipReader implements Closeable {
 	private void readFromZipFile(final Consumer<ZipEntry> consumer) {
 		final Enumeration<? extends ZipEntry> em = zipFile.entries();
 		while (em.hasMoreElements()) {
-			consumer.accept(em.nextElement());
+			consumer.accept(checkZipBomb(em.nextElement()));
 		}
 	}
 
@@ -215,11 +219,32 @@ public class ZipReader implements Closeable {
 	private void readFromStream(final Consumer<ZipEntry> consumer) throws IORuntimeException {
 		try {
 			ZipEntry zipEntry;
-			while (null != (zipEntry = in.getNextEntry())) {
+			while (null != (zipEntry = checkZipBomb(in.getNextEntry()))) {
 				consumer.accept(zipEntry);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 检查Zip bomb漏洞
+	 *
+	 * @param entry {@link ZipEntry}
+	 * @return 检查后的{@link ZipEntry}
+	 */
+	private static ZipEntry checkZipBomb(final ZipEntry entry) {
+		if (null == entry) {
+			return null;
+		}
+		final long compressedSize = entry.getCompressedSize();
+		final long uncompressedSize = entry.getSize();
+		if (compressedSize < 0 || uncompressedSize < 0 ||
+				// 默认压缩比例是100倍，一旦发现压缩率超过这个阈值，被认为是Zip bomb
+				compressedSize * MAX_SIZE_DIFF < uncompressedSize) {
+			throw new ValidateException("Zip bomb attack detected, invalid sizes: compressed {}, uncompressed {}, name {}",
+					compressedSize, uncompressedSize, entry.getName());
+		}
+		return entry;
 	}
 }
