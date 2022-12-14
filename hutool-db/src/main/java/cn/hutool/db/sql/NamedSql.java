@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class NamedSql {
 	 * @param paramMap 名和参数的对应Map
 	 */
 	private void parse(final String namedSql, final Map<String, Object> paramMap) {
-		if(MapUtil.isEmpty(paramMap)){
+		if (MapUtil.isEmpty(paramMap)) {
 			this.sql = namedSql;
 			return;
 		}
@@ -118,13 +119,13 @@ public class NamedSql {
 	 * 替换变量，如果无变量，原样输出到SQL中去
 	 *
 	 * @param nameStartChar 变量开始字符
-	 * @param name 变量名
-	 * @param sqlBuilder 结果SQL缓存
-	 * @param paramMap 变量map（非空）
+	 * @param name          变量名
+	 * @param sqlBuilder    结果SQL缓存
+	 * @param paramMap      变量map（非空）
 	 */
-	private void replaceVar(final Character nameStartChar, final StringBuilder name, final StringBuilder sqlBuilder, final Map<String, Object> paramMap){
-		if(name.length() == 0){
-			if(null != nameStartChar){
+	private void replaceVar(final Character nameStartChar, final StringBuilder name, final StringBuilder sqlBuilder, final Map<String, Object> paramMap) {
+		if (name.length() == 0) {
+			if (null != nameStartChar) {
 				// 类似于:的情况，需要补上:
 				sqlBuilder.append(nameStartChar);
 			}
@@ -134,20 +135,25 @@ public class NamedSql {
 
 		// 变量结束
 		final String nameStr = name.toString();
-		if(paramMap.containsKey(nameStr)) {
+		if (paramMap.containsKey(nameStr)) {
 			// 有变量对应值（值可以为null），替换占位符为?，变量值放入相应index位置
-			final Object paramValue = paramMap.get(nameStr);
-			if(ArrayUtil.isArray(paramValue) && StrUtil.containsIgnoreCase(sqlBuilder, "in")){
+			Object paramValue = paramMap.get(nameStr);
+			if ((paramValue instanceof Collection || ArrayUtil.isArray(paramValue)) && StrUtil.containsIgnoreCase(sqlBuilder, "in")) {
+				if (paramValue instanceof Collection) {
+					// 转为数组
+					paramValue = ((Collection<?>) paramValue).toArray();
+				}
+
 				// 可能为select in (xxx)语句，则拆分参数为多个参数，变成in (?,?,?)
 				final int length = ArrayUtil.length(paramValue);
 				for (int i = 0; i < length; i++) {
-					if(0 != i){
+					if (0 != i) {
 						sqlBuilder.append(',');
 					}
 					sqlBuilder.append('?');
 					this.params.add(ArrayUtil.get(paramValue, i));
 				}
-			} else{
+			} else {
 				sqlBuilder.append('?');
 				this.params.add(paramValue);
 			}
