@@ -140,8 +140,8 @@ public class LambdaUtil {
 	 * @param <R> getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> getter(Method getMethod) {
-		return LambdaFactory.buildLambda(Function.class, getMethod);
+	public static <T, R> Function<T, R> buildGetter(Method getMethod) {
+		return LambdaFactory.build(Function.class, getMethod);
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class LambdaUtil {
 	 * @param <R> getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> getter(Class<T> clazz, String fieldName) {
-		return LambdaFactory.buildLambda(Function.class, BeanUtil.getBeanDesc(clazz).getGetter(fieldName));
+	public static <T, R> Function<T, R> buildGetter(Class<T> clazz, String fieldName) {
+		return LambdaFactory.build(Function.class, BeanUtil.getBeanDesc(clazz).getGetter(fieldName));
 	}
 
 	/**
@@ -165,8 +165,8 @@ public class LambdaUtil {
 	 * @param <P> setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> setter(Method setMethod) {
-		return LambdaFactory.buildLambda(BiConsumer.class, setMethod);
+	public static <T, P> BiConsumer<T, P> buildSetter(Method setMethod) {
+		return LambdaFactory.build(BiConsumer.class, setMethod);
 	}
 
 	/**
@@ -178,8 +178,8 @@ public class LambdaUtil {
 	 * @param <P> setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> setter(Class<T> clazz, String fieldName) {
-		return LambdaFactory.buildLambda(BiConsumer.class, BeanUtil.getBeanDesc(clazz).getSetter(fieldName));
+	public static <T, P> BiConsumer<T, P> buildSetter(Class<T> clazz, String fieldName) {
+		return LambdaFactory.build(BiConsumer.class, BeanUtil.getBeanDesc(clazz).getSetter(fieldName));
 	}
 
 	/**
@@ -192,8 +192,8 @@ public class LambdaUtil {
 	 * @param <F> 函数式接口类型
 	 * @return Obj::method
 	 */
-	public static <F> F lambda(Class<F> lambdaType, Class<?> clazz, String methodName, Class... paramsTypes) {
-		return LambdaFactory.buildLambda(lambdaType, clazz, methodName, paramsTypes);
+	public static <F> F build(Class<F> lambdaType, Class<?> clazz, String methodName, Class... paramsTypes) {
+		return LambdaFactory.build(lambdaType, clazz, methodName, paramsTypes);
 	}
 
 	//region Private methods

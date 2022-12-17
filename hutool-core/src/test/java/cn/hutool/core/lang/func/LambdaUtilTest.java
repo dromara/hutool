@@ -155,8 +155,8 @@ public class LambdaUtilTest {
 		Bean bean = new Bean();
 		bean.setId(2L);
 
-		Function<Bean, Long> getId = cn.hutool.core.lang.func.LambdaUtil.getter(MethodUtil.getMethod(Bean.class, "getId"));
-		Function<Bean, Long> getId2 = cn.hutool.core.lang.func.LambdaUtil.getter(Bean.class, Bean.Fields.id);
+		Function<Bean, Long> getId = LambdaUtil.buildGetter(MethodUtil.getMethod(Bean.class, "getId"));
+		Function<Bean, Long> getId2 = LambdaUtil.buildGetter(Bean.class, Bean.Fields.id);
 
 		Assert.assertEquals(getId, getId2);
 		Assert.assertEquals(bean.getId(), getId.apply(bean));
@@ -168,9 +168,9 @@ public class LambdaUtilTest {
 		bean.setId(2L);
 		bean.setFlag(false);
 
-		BiConsumer<Bean, Long> setId = cn.hutool.core.lang.func.LambdaUtil.setter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
-		BiConsumer<Bean, Long> setId2 = cn.hutool.core.lang.func.LambdaUtil.setter(Bean.class, Bean.Fields.id);
-		BiConsumer<Bean, Boolean> setFlag = cn.hutool.core.lang.func.LambdaUtil.setter(Bean.class, Bean.Fields.flag);
+		BiConsumer<Bean, Long> setId = LambdaUtil.buildSetter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
+		BiConsumer<Bean, Long> setId2 = LambdaUtil.buildSetter(Bean.class, Bean.Fields.id);
+		BiConsumer<Bean, Boolean> setFlag = LambdaUtil.buildSetter(Bean.class, Bean.Fields.flag);
 		Assert.assertEquals(setId, setId2);
 
 		setId.accept(bean, 3L);
@@ -185,8 +185,8 @@ public class LambdaUtilTest {
 		bean.setId(1L);
 		bean.setPid(0L);
 		bean.setFlag(true);
-		BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.lambda(BiFunction.class, Bean.class, "uniqueKey", String.class);
-		Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.lambda(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
+		BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.build(BiFunction.class, Bean.class, "uniqueKey", String.class);
+		Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.build(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
 		Assert.assertEquals(bean.uniqueKey("test"), uniqueKeyFunction.apply(bean, "test"));
 		Assert.assertEquals(bean.params("test", 1, 0.5), paramsFunction.apply(bean, "test", 1, 0.5));
 	}

@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.MethodHandleUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -11,10 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandleProxies;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
+import java.lang.invoke.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,9 +26,14 @@ import java.util.function.Function;
  */
 public class LambdaFactoryTest {
 
-	@Test(expected = RuntimeException.class)
+	// @Test
+	@Test
 	public void testMethodNotMatch() {
-		LambdaFactory.buildLambda(Function.class, Something.class, "setId", Long.class);
+		try {
+			LambdaFactory.build(Function.class, Something.class, "setId", Long.class);
+		} catch (Exception e) {
+			Assert.assertTrue(e.getCause() instanceof LambdaConversionException);
+		}
 	}
 
 	@Test
@@ -39,14 +42,14 @@ public class LambdaFactoryTest {
 		something.setId(1L);
 		something.setName("name");
 
-		Function<Something, Long> get11 = LambdaFactory.buildLambda(Function.class, Something.class, "getId");
-		Function<Something, Long> get12 = LambdaFactory.buildLambda(Function.class, Something.class, "getId");
+		Function<Something, Long> get11 = LambdaFactory.build(Function.class, Something.class, "getId");
+		Function<Something, Long> get12 = LambdaFactory.build(Function.class, Something.class, "getId");
 
 		Assert.assertEquals(get11, get12);
 		Assert.assertEquals(something.getId(), get11.apply(something));
 
 		String name = "sname";
-		BiConsumer<Something, String> set = LambdaFactory.buildLambda(BiConsumer.class, Something.class, "setName", String.class);
+		BiConsumer<Something, String> set = LambdaFactory.build(BiConsumer.class, Something.class, "setName", String.class);
 		set.accept(something, name);
 
 		Assert.assertEquals(something.getName(), name);
@@ -139,7 +142,7 @@ public class LambdaFactoryTest {
 			Method getByReflect = Something.class.getMethod("getId");
 			MethodHandle getByMh = MethodHandleUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
 			Function getByProxy = MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.lookup().unreflect(getByReflect));
-			Function getByLambda = LambdaFactory.buildLambda(Function.class, getByReflect);
+			Function getByLambda = LambdaFactory.build(Function.class, getByReflect);
 			Task lambdaTask = new Task("lambda", () -> getByLambda.apply(something));
 			Task mhTask = new Task("mh", () -> getByMh.invoke(something));
 			Task proxyTask = new Task("proxy", () -> getByProxy.apply(something));
@@ -214,7 +217,7 @@ public class LambdaFactoryTest {
 			Method setByReflect = Something.class.getMethod("setName", String.class);
 			MethodHandle setByMh = MethodHandleUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
 			BiConsumer setByProxy = MethodHandleProxies.asInterfaceInstance(BiConsumer.class, setByMh);
-			BiConsumer setByLambda = LambdaFactory.buildLambda(BiConsumer.class, setByReflect);
+			BiConsumer setByLambda = LambdaFactory.build(BiConsumer.class, setByReflect);
 			String name = "name1";
 			Task lambdaTask = new Task("lambda", () -> {
 				setByLambda.accept(something, name);

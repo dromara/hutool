@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.func;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableEntry;
@@ -51,8 +52,8 @@ public class LambdaFactory {
 	 * @param paramTypes            方法参数数组
 	 * @return 接受Lambda的函数式接口对象
 	 */
-	public static <F> F buildLambda(Class<F> functionInterfaceType, Class methodClass, String methodName, Class... paramTypes) {
-		return buildLambda(functionInterfaceType, MethodUtil.getMethod(methodClass, methodName, paramTypes));
+	public static <F> F build(Class<F> functionInterfaceType, Class methodClass, String methodName, Class... paramTypes) {
+		return build(functionInterfaceType, MethodUtil.getMethod(methodClass, methodName, paramTypes));
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class LambdaFactory {
 	 * @param method                方法对象
 	 * @return 接受Lambda的函数式接口对象
 	 */
-	public static <F> F buildLambda(Class<F> functionInterfaceType, Method method) {
+	public static <F> F build(Class<F> functionInterfaceType, Method method) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(method);
 		MutableEntry<Class<?>, Method> cacheKey = new MutableEntry<>(functionInterfaceType, method);
@@ -82,31 +83,29 @@ public class LambdaFactory {
 			MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
 			MethodHandle implMethod = Opt.ofTry(() -> caller.unreflect(method)).get();
 			MethodType insMethodType = methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
-			boolean isSerializable = Arrays.stream(functionInterfaceType.getInterfaces()).anyMatch(i -> i.isAssignableFrom(Serializable.class));
-			CallSite callSite = Opt.ofTry(() -> isSerializable ?
-					LambdaMetafactory.altMetafactory(
-							caller,
-							invokeName,
-							invokedType,
-							samMethodType,
-							implMethod,
-							insMethodType,
-							FLAG_SERIALIZABLE
-					) :
-					LambdaMetafactory.metafactory(
-							caller,
-							invokeName,
-							invokedType,
-							samMethodType,
-							implMethod,
-							insMethodType
-					)).get();
-
+			boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
 			try {
-				//noinspection unchecked
+				CallSite callSite = isSerializable ?
+						LambdaMetafactory.altMetafactory(
+								caller,
+								invokeName,
+								invokedType,
+								samMethodType,
+								implMethod,
+								insMethodType,
+								FLAG_SERIALIZABLE
+						) :
+						LambdaMetafactory.metafactory(
+								caller,
+								invokeName,
+								invokedType,
+								samMethodType,
+								implMethod,
+								insMethodType
+						);
 				return (F) callSite.getTarget().invoke();
 			} catch (Throwable e) {
-				throw new RuntimeException(e);
+				throw new UtilException(e);
 			}
 		});
 
