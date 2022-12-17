@@ -9,6 +9,10 @@ import java.time.LocalTime;
  * @since 6.0.0
  */
 public class LocalTimeUtil {
+	/**
+	 * 只有时分秒的最大时间
+	 */
+	public static final LocalTime MAX_HMS = LocalTime.of(23, 59, 59);
 
 	/**
 	 * 获取最大时间，提供参数是否将毫秒归零
@@ -21,6 +25,6 @@ public class LocalTimeUtil {
 	 * @return {@link LocalTime}时间最大值
 	 */
 	public static LocalTime max(final boolean truncateMillisecond) {
-		return truncateMillisecond ? LocalTime.of(23, 59, 59) : LocalTime.MAX;
+		return truncateMillisecond ? MAX_HMS : LocalTime.MAX;
 	}
 }

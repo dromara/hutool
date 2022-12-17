@@ -1,7 +1,6 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
@@ -17,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -37,6 +35,10 @@ import java.util.TimeZone;
  * @since 6.0.0
  */
 public class TimeUtil extends TemporalAccessorUtil {
+	/**
+	 * UTC 的 ZoneID
+	 */
+	public static final ZoneId ZONE_ID_UTC = ZoneId.of("UTC");
 
 	/**
 	 * 当前时间，默认时区
@@ -63,7 +65,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime ofUTC(final Instant instant) {
-		return of(instant, ZoneId.of("UTC"));
+		return of(instant, ZONE_ID_UTC);
 	}
 
 	/**
@@ -271,16 +273,14 @@ public class TimeUtil extends TemporalAccessorUtil {
 			// fix issue#1082
 			//see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
 			// jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
-			if (StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN)) {
-				final String fraction = StrUtil.removePrefix(format, DatePattern.PURE_DATETIME_PATTERN);
-				if (ReUtil.isMatch("[S]{1,2}", fraction)) {
+			if (StrUtil.startWithIgnoreEquals(format, DatePattern.PURE_DATETIME_PATTERN) && format.endsWith("S")) {
+				// 需要填充的0的个数
+				final int paddingWidth = 3 - (format.length() - DatePattern.PURE_DATETIME_PATTERN.length());
+				if (paddingWidth > 0) {
 					//将yyyyMMddHHmmssS、yyyyMMddHHmmssSS的日期统一替换为yyyyMMddHHmmssSSS格式，用0补
-					text += StrUtil.repeat('0', 3 - fraction.length());
+					text += StrUtil.repeat('0', paddingWidth);
 				}
-				formatter = new DateTimeFormatterBuilder()
-						.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
-						.appendValue(ChronoField.MILLI_OF_SECOND, 3)
-						.toFormatter();
+				formatter = DatePattern.PURE_DATETIME_MS_FORMATTER;
 			} else {
 				formatter = DateTimeFormatter.ofPattern(format);
 			}
@@ -437,42 +437,46 @@ public class TimeUtil extends TemporalAccessorUtil {
 	}
 
 	/**
-	 * 修改为本月的开始时间，例如：2020-02-01 00:00:00,000
+	 * 修改为月初的开始时间，例如：2020-02-01 00:00:00,000
 	 *
 	 * @param time 日期时间
-	 * @return 一天的开始时间
+	 * @return 月初的开始时间
+	 * @since 6.0.0
 	 */
 	public static LocalDateTime beginOfMonth(final LocalDateTime time) {
 		return beginOfDay(time).with(TemporalAdjusters.firstDayOfMonth());
 	}
 
 	/**
-	 * 获取给定日期月底的时间
+	 * 修改为月底的结束时间
 	 *
 	 * @param time                日期时间
 	 * @param truncateMillisecond 是否毫秒归零
-	 * @return 月底
+	 * @return 月底的结束时间
+	 * @since 6.0.0
 	 */
 	public static LocalDateTime endOfMonth(final LocalDateTime time, final boolean truncateMillisecond) {
 		return endOfDay(time, truncateMillisecond).with(TemporalAdjusters.lastDayOfMonth());
 	}
 
 	/**
-	 * 修改为本年的开始时间，例如：2020-01-01 00:00:00,000
+	 * 修改为一年的开始时间，例如：2020-01-01 00:00:00,000
 	 *
 	 * @param time 日期时间
 	 * @return 一年的开始时间
+	 * @since 6.0.0
 	 */
 	public static LocalDateTime beginOfYear(final LocalDateTime time) {
 		return beginOfDay(time).with(TemporalAdjusters.firstDayOfYear());
 	}
 
 	/**
-	 * 获取给定日期年底的时间
+	 * 修改为一年的结束时间
 	 *
 	 * @param time                日期时间
 	 * @param truncateMillisecond 是否毫秒归零
-	 * @return 年底
+	 * @return 一年的结束时间
+	 * @since 6.0.0
 	 */
 	public static LocalDateTime endOfYear(final LocalDateTime time, final boolean truncateMillisecond) {
 		return endOfDay(time, truncateMillisecond).with(TemporalAdjusters.lastDayOfYear());
@@ -543,8 +547,8 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * <ul>
 	 *     <li>如果一年的第一天是星期一，则第一周从第一天开始，没有零周</li>
 	 *     <li>如果一年的第二天是星期一，则第一周从第二天开始，而第一天在零周</li>
-	 *     <li>如果一年中的第4天是星期一，则第1周从第4周开始，第1至第3周在零周开始</li>
-	 *     <li>如果一年中的第5天是星期一，则第二周从第5周开始，第1至第4周在第1周</li>
+	 *     <li>如果一年的第4天是星期一，则第一周从第4天开始，第1至第3天在零周</li>
+	 *     <li>如果一年的第5天是星期一，则第二周从第5天开始，第1至第4天在第一周</li>
 	 * </ul>
 	 *
 	 * @param date 日期（{@link LocalDate} 或者 {@link LocalDateTime}等）
@@ -564,7 +568,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @since 5.8.5
 	 */
 	public static boolean isSameDay(final ChronoLocalDateTime<?> date1, final ChronoLocalDateTime<?> date2) {
-		return date1 != null && date2 != null && isSameDay(date1.toLocalDate(), date2.toLocalDate());
+		return date1 != null && date2 != null && date1.toLocalDate().isEqual(date2.toLocalDate());
 	}
 
 	/**
