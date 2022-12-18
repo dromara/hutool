@@ -100,9 +100,9 @@ public class Matrix {
      * @param data 待转置的矩阵
      * @return 转置后的矩阵
      */
-    public static double[][] getReverseMartrix(double[][] data) {
+    public static double[][] inverseMatrix(double[][] data) {
         double[][] newdata = new double[data.length][data[0].length];
-        double A = getMartrixResult(data);
+        double A = getMatrixResult(data);
         if (A == 0) {
             try {
                 throw new Exception("矩阵不可逆");
@@ -113,9 +113,9 @@ public class Matrix {
         for(int i=0; i<data.length; i++) {
             for(int j=0; j<data[0].length; j++) {
                 if((i+j)%2 == 0) {
-                    newdata[i][j] = getMartrixResult(getConfactor(data, i+1, j+1)) / A;
+                    newdata[i][j] = getMatrixResult(getConfactor(data, i+1, j+1)) / A;
                 }else {
-                    newdata[i][j] = -getMartrixResult(getConfactor(data, i+1, j+1)) / A;
+                    newdata[i][j] = -getMatrixResult(getConfactor(data, i+1, j+1)) / A;
                 }
             }
         }
@@ -128,7 +128,7 @@ public class Matrix {
      * @param data 待计算的行列式
      * @return 行列式的值
      */
-    public static double getMartrixResult(double[][] data) {
+    public static double getMatrixResult(double[][] data) {
         //一维矩阵直接返回
         if (data.length == 1) {
             return data[0][0];
@@ -145,9 +145,9 @@ public class Matrix {
         double[] nums = new double[num];
         for(int i=0; i<data.length; i++) {
             if(i%2 == 0) {
-                nums[i] = data[0][i] * getMartrixResult(getConfactor(data, 1, i+1));
+                nums[i] = data[0][i] * getMatrixResult(getConfactor(data, 1, i+1));
             }else {
-                nums[i] = -data[0][i] * getMartrixResult(getConfactor(data, 1, i+1));
+                nums[i] = -data[0][i] * getMatrixResult(getConfactor(data, 1, i+1));
             }
         }
         for(int i=0; i<data.length; i++) {
@@ -196,7 +196,7 @@ public class Matrix {
      * @return 商矩阵
      */
     public static BigDecimal[][] rightDivMatrix(double[][] a, double[][] b) {
-        return mulMatrix(a, getReverseMartrix(b));
+        return mulMatrix(a, inverseMatrix(b));
     }
 
     /**
@@ -206,6 +206,6 @@ public class Matrix {
      * @return 商矩阵
      */
     public static BigDecimal[][] leftDivMatrix(double[][] a, double[][] b) {
-        return mulMatrix(getReverseMartrix(b), a);
+        return mulMatrix(inverseMatrix(b), a);
     }
 }

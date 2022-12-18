@@ -157,8 +157,8 @@ public class MathUtil {
 	 * @param a 待转置的矩阵
 	 * @return 转置后的矩阵
 	 */
-	public static double[][] getReverseMartrix(double[][] a) {
-		return Matrix.getReverseMartrix(a);
+	public static double[][] inverseMatrix(double[][] a) {
+		return Matrix.inverseMatrix(a);
 	}
 
 	/**
