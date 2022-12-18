@@ -1,5 +1,6 @@
 package cn.hutool.core.math;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -99,5 +100,73 @@ public class MathUtil {
 		long yuan = cent / 100;
 		int centPart = (int) (cent % 100);
 		return new Money(yuan, centPart).getAmount().doubleValue();
+	}
+
+	/**
+	 * 矩阵加法
+	 * @param a 矩阵a
+	 * @param b 矩阵b
+	 * @return 矩阵a+b
+	 */
+	public static double[][] addMatrix(double[][] a, double[][] b) {
+		return Matrix.addMatrix(a,b);
+	}
+
+	/**
+	 * 矩阵减法
+	 * @param a 矩阵a
+	 * @param b 矩阵b
+	 * @return 矩阵a-b
+	 */
+	public static double[][] subMatrix(double[][] a, double[][] b) {
+		return Matrix.subMatrix(a,b);
+	}
+
+	/**
+	 * 矩阵乘法(多线程)
+	 * @param a 矩阵a
+	 * @param b 矩阵b
+	 * @return 矩阵a*b
+	 */
+	public static BigDecimal[][] mulMatrix(double[][] a, double[][] b) {
+		return Matrix.mulMatrix(a,b);
+	}
+
+	/**
+	 * 矩阵右除
+	 * @param a 被除矩阵
+	 * @param b 除矩阵
+	 * @return 商矩阵
+	 */
+	public static BigDecimal[][] rightDivMatrix(double[][] a, double[][] b) {
+		return Matrix.rightDivMatrix(a,b);
+	}
+
+	/**
+	 * 矩阵左除
+	 * @param a 被除矩阵
+	 * @param b 除矩阵
+	 * @return 商矩阵
+	 */
+	public static BigDecimal[][] leftDivMatrix(double[][] a, double[][] b) {
+		return Matrix.leftDivMatrix(a,b);
+	}
+
+	/**
+	 * 矩阵求逆
+	 * @param a 待转置的矩阵
+	 * @return 转置后的矩阵
+	 */
+	public static double[][] getReverseMartrix(double[][] a) {
+		return Matrix.getReverseMartrix(a);
+	}
+
+	/**
+	 * 矩阵转置
+	 * @param a 矩阵a
+	 * @return 矩阵a的转置
+	 */
+	public static double[][] transposeMatrix(double[][] a) {
+		return Matrix.transposeMatrix(a);
 	}
 }

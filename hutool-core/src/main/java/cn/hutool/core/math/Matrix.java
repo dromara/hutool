@@ -9,7 +9,7 @@ public class Matrix {
      * @param b 矩阵b
      * @return 矩阵a+b
      */
-    public double[][] addMatrix(double[][] a, double[][] b) {
+    public static double[][] addMatrix(double[][] a, double[][] b) {
         double[][] c = new double[a.length][a[0].length];
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
@@ -25,7 +25,7 @@ public class Matrix {
      * @param b 矩阵b
      * @return 矩阵a-b
      */
-    public double[][] subMatrix(double[][] a, double[][] b) {
+    public static double[][] subMatrix(double[][] a, double[][] b) {
         double[][] c = new double[a.length][a[0].length];
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
@@ -41,7 +41,7 @@ public class Matrix {
      * @param b 矩阵b
      * @return 矩阵a*b
      */
-    public BigDecimal[][] mulMatrix(double[][] a, double[][] b) {
+    public static BigDecimal[][] mulMatrix(double[][] a, double[][] b) {
         if (a[0].length != b.length) {
             try {
                 throw new Exception("矩阵乘法不可行");
@@ -85,7 +85,7 @@ public class Matrix {
      * @param a 矩阵a
      * @return 矩阵a的转置
      */
-    public double[][] transposeMatrix(double[][] a) {
+    public static double[][] transposeMatrix(double[][] a) {
         double[][] b = new double[a[0].length][a.length];
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
@@ -100,7 +100,7 @@ public class Matrix {
      * @param data 待转置的矩阵
      * @return 转置后的矩阵
      */
-    public double[][] getReverseMartrix(double[][] data) {
+    public static double[][] getReverseMartrix(double[][] data) {
         double[][] newdata = new double[data.length][data[0].length];
         double A = getMartrixResult(data);
         if (A == 0) {
@@ -128,7 +128,7 @@ public class Matrix {
      * @param data 待计算的行列式
      * @return 行列式的值
      */
-    public double getMartrixResult(double[][] data) {
+    public static double getMartrixResult(double[][] data) {
         //一维矩阵直接返回
         if (data.length == 1) {
             return data[0][0];
@@ -163,7 +163,7 @@ public class Matrix {
      * @param v 列
      * @return 余子式的值
      */
-    public double[][] getConfactor(double[][] data, int h, int v) {
+    public static double[][] getConfactor(double[][] data, int h, int v) {
         int H = data.length;
         int V = data[0].length;
         double[][] newdata = new double[H-1][V-1];
@@ -195,7 +195,7 @@ public class Matrix {
      * @param b 除矩阵
      * @return 商矩阵
      */
-    public BigDecimal[][] rightDivMatrix(double[][] a, double[][] b) {
+    public static BigDecimal[][] rightDivMatrix(double[][] a, double[][] b) {
         return mulMatrix(a, getReverseMartrix(b));
     }
 
@@ -205,7 +205,7 @@ public class Matrix {
      * @param b 除矩阵
      * @return 商矩阵
      */
-    public BigDecimal[][] leftDivMatrix(double[][] a, double[][] b) {
+    public static BigDecimal[][] leftDivMatrix(double[][] a, double[][] b) {
         return mulMatrix(getReverseMartrix(b), a);
     }
 }
