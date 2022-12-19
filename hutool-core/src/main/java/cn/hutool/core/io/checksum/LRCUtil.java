@@ -26,7 +26,7 @@ public class LRCUtil {
      * @return LRC校验的16进制字符串
      * @throws IllegalArgumentException 输入的参数不是ascii字符串
      */
-    private static String asciiLRCHexStr(String asciiStr) {
+    public static String asciiLRCHexStr(String asciiStr) {
         int sum = 0;
         for (char c : asciiStr.toCharArray()) {
             if (!CharUtil.isAscii(c)) {
