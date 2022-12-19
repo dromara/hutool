@@ -793,11 +793,11 @@ public class ReUtil {
 	/**
 	 * 从字符串中获得第一个整数
 	 *
-	 * @param StringWithNumber 带数字的字符串
+	 * @param stringWithNumber 带数字的字符串
 	 * @return 整数
 	 */
-	public static Integer getFirstNumber(final CharSequence StringWithNumber) {
-		return Convert.toInt(get(PatternPool.NUMBERS, StringWithNumber, 0), null);
+	public static Integer getFirstNumber(final CharSequence stringWithNumber) {
+		return Convert.toInt(get(PatternPool.NUMBERS, stringWithNumber, 0), null);
 	}
 
 	/**
@@ -818,7 +818,6 @@ public class ReUtil {
 			return true;
 		}
 
-		// Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return isMatch(pattern, content);
 	}
