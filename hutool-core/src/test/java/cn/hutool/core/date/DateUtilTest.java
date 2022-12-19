@@ -1079,4 +1079,21 @@ public class DateUtilTest {
 		Assert.assertEquals(dayOfMonth, Objects.requireNonNull(dateTime).dayOfMonth());
 		Assert.assertTrue("not is last day of this month !!",DateUtil.isLastDayOfMonth(dateTime));
 	}
+
+	@Test
+	public void isWorkDayTest(){
+		//测试2022年10月份的工作日 10月1日至7日放假调休，共7天。10月8日（星期六）、10月9日（星期日）上班
+		List<DateConfig.DateGap> holidayList = new ArrayList<>();
+		holidayList.add(new DateConfig.DateGap(LocalDate.of(2022,10,1),
+				LocalDate.of(2022,10,7)));
+		List<DateConfig.DateGap> workDayList = new ArrayList<>();
+		workDayList.add(new DateConfig.DateGap(LocalDate.of(2022,10,8),
+				LocalDate.of(2022,10,9)));
+		DateConfig dateConfig = new DateConfig(2022,holidayList,workDayList);
+		Boolean isWorkDay = DateUtil.isWorkDay(dateConfig, LocalDate.of(2022, 10, 9));
+		Assert.assertTrue(isWorkDay);
+
+	}
 }
+
+

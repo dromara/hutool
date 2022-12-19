@@ -16,14 +16,13 @@ import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Year;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
@@ -2016,7 +2015,7 @@ public class DateUtil extends CalendarUtil {
 		// x>b||a>y 无交集
 		// 则有交集的逻辑为 !(x>b||a>y)
 		// 根据德摩根公式，可化简为 x<=b && a<=y 即 realStartTime<=endTime && startTime<=realEndTime
-		return realStartTime.compareTo(endTime) <=0 && startTime.compareTo(realEndTime) <= 0;
+		return realStartTime.compareTo(endTime) <= 0 && startTime.compareTo(realEndTime) <= 0;
 	}
 
 	/**
@@ -2041,6 +2040,61 @@ public class DateUtil extends CalendarUtil {
 		return date(date).getLastDayOfMonth();
 	}
 
+	/**
+	 * @param dateConfig 用来配置某一年的节假日 以及调休日
+	 * @param targetDate 需要判断的日期
+	 * @return 工作日返回true 节假日返回false 返回空代表异常
+	 */
+	public static Boolean isWorkDay(DateConfig dateConfig, LocalDate targetDate) {
+		Boolean result = null;
+		if (dateConfig == null || targetDate == null) {
+			return result;
+		}
+		Integer year = dateConfig.getYear();
+		List<DateConfig.DateGap> holidayList = dateConfig.getHolidayList();
+		List<DateConfig.DateGap> workDayList = dateConfig.getWorkDayList();
+		if (year == null || ArrayUtil.isEmpty(holidayList) || ArrayUtil.isEmpty(workDayList)) {
+			return result;
+		}
+		//配置必须和需要判断的日期是同一年的 否则返回空
+		if (targetDate.getYear() != year) {
+			return result;
+		}
+		//判断是否是节假日
+		for (DateConfig.DateGap dateGap : holidayList) {
+			LocalDate startDate = dateGap.getStartDate();
+			//兼容下只有开始日期的情况 意味着只有一天假期
+			LocalDate endDate = dateGap.getEndDate() == null ? startDate : dateGap.getEndDate();
+			if (startDate == null) {
+				return result;
+			}
+			//说明是放假
+			if (startDate.compareTo(targetDate) <= 0 && targetDate.compareTo(endDate) <= 0) {
+				return false;
+			}
+		}
+		//判断是否是调休日
+		for (DateConfig.DateGap dateGap : workDayList) {
+			LocalDate startDate = dateGap.getStartDate();
+			//兼容下endDate为空的情况 代表调休一天
+			LocalDate endDate = dateGap.getEndDate() == null ? startDate : dateGap.getEndDate();
+			if (startDate == null) {
+				return result;
+			}
+			if (startDate.compareTo(targetDate) <= 0 && targetDate.compareTo(endDate) <= 0) {
+				return true;
+			}
+		}
+
+		//判断是否是周末
+		DayOfWeek week = targetDate.getDayOfWeek();
+		if (week == DayOfWeek.SATURDAY || week == DayOfWeek.SUNDAY) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 	// ------------------------------------------------------------------------ Private method start
 
 	/**
