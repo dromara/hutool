@@ -220,6 +220,17 @@ public class SM2Test {
 	}
 
 	@Test
+	public void sm2WithNullPriPointTest() {
+		String x = "9EF573019D9A03B16B0BE44FC8A5B4E8E098F56034C97B312282DD0B4810AFC3";
+		String y = "CC759673ED0FC9B9DC7E6FA38F0E2B121E02654BF37EA6B63FAF2A0D6013EADF";
+		String q = "04" + x + y;
+		final SM2 sm1 = new SM2(null, x, y);
+		final SM2 sm2 = new SM2(null, q);
+        Assert.assertNotNull(sm1);
+		Assert.assertNotNull(sm2);
+	}
+
+	@Test
 	public void sm2PlainWithPointTest() {
 		// 测试地址：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
 
