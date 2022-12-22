@@ -1,6 +1,7 @@
 package cn.hutool.core.io.checksum;
 
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 
 
@@ -52,9 +53,9 @@ public class LRCUtil {
      * @throws IllegalArgumentException 输入的参数不是16进制字符串，比如输入T
      */
     public static String hexLRCHexStr(String hex) {
-        if (!HexUtil.isHexNumber("0X" + hex)) {
-            throw new IllegalArgumentException(hex + " is not hex string!");
-        }
+		if (!Validator.isMatchRegex("^[A-Fa-f0-9]+$", hex)) {
+			throw new IllegalArgumentException(hex + " is not hex string!");
+		}
         byte[] bytes = HexUtil.decodeHex(hex);
         int sum = 0;
         for (byte b : bytes) {

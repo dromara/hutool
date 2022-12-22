@@ -1,6 +1,7 @@
 package cn.hutool.core.io.checksum;
 
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 
 /**
@@ -26,9 +27,9 @@ public class BCCUtil {
      * @throws IllegalArgumentException 输入的参数不是16进制字符串，比如输入T
      */
 	public static String hexBCCHexStr(String hexStr) {
-		if (!HexUtil.isHexNumber("0X" + hexStr)) {
+		if (!Validator.isMatchRegex("^[A-Fa-f0-9]+$", hexStr)) {
 			throw new IllegalArgumentException(hexStr + " is not hex string!");
-        }
+		}
 
         int a = 0;
         for (byte b : HexUtil.decodeHex(hexStr)) {
