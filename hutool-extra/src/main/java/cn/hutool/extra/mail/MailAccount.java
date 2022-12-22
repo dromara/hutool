@@ -68,7 +68,10 @@ public class MailAccount implements Serializable {
 	 * 发送方，遵循RFC-822标准
 	 */
 	private String from;
-
+	/**
+	 * 别名
+	 */
+	private String alias;
 	/**
 	 * 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 */
@@ -278,6 +281,21 @@ public class MailAccount implements Serializable {
 	 */
 	public MailAccount setFrom(String from) {
 		this.from = from;
+		return this;
+	}
+
+	/**
+	 * 设置别名
+	 */
+	public String getAlias() {
+		return alias;
+	}
+
+	/**
+	 * 设置别名
+	 */
+	public MailAccount setAlias(String alias) {
+		this.alias = alias;
 		return this;
 	}
 
@@ -614,7 +632,7 @@ public class MailAccount implements Serializable {
 		}
 		if (null == this.auth) {
 			// 如果密码非空白，则使用认证模式
-			this.auth = (false == StrUtil.isBlank(this.pass));
+			this.auth = (!StrUtil.isBlank(this.pass));
 		}
 		if (null == this.port) {
 			// 端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25

@@ -12,21 +12,10 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.FileTypeMap;
-import javax.mail.Address;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.SendFailedException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
+import javax.mail.*;
+import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -424,11 +413,22 @@ public class Mail implements Builder<MimeMessage> {
 		final MimeMessage msg = new MimeMessage(getSession());
 		// 发件人
 		final String from = this.mailAccount.getFrom();
+		// 昵称
+		final String alias = this.mailAccount.getAlias();
 		if (StrUtil.isEmpty(from)) {
 			// 用户未提供发送方，则从Session中自动获取
 			msg.setFrom();
 		} else {
-			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
+			InternetAddress internetAddress = InternalMailUtil.parseFirstAddress(from, charset);
+			// 设置发件人昵称别名
+			if (StrUtil.isNotBlank(alias)) {
+				try {
+					internetAddress.setPersonal(alias);
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			msg.setFrom(internetAddress);
 		}
 		// 标题
 		msg.setSubject(this.title, (null == charset) ? null : charset.name());
