@@ -2,10 +2,10 @@ package cn.hutool.setting.dialect;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.NoResourceException;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Props工具类<br>
@@ -19,7 +19,7 @@ public class PropsUtil {
 	/**
 	 * 配置文件缓存
 	 */
-	private static final Map<String, Props> propsMap = new ConcurrentHashMap<>();
+	private static final Map<String, Props> propsMap = new SafeConcurrentHashMap<>();
 
 	/**
 	 * 获取当前环境下的配置文件<br>

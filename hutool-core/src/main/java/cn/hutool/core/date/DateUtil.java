@@ -18,21 +18,21 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 时间工具类
  *
  * @author xiaoleilu
+ * @see LocalDateTimeUtil java8日志工具类
+ * @see DatePattern 日期常用格式工具类
  */
 public class DateUtil extends CalendarUtil {
 
@@ -834,7 +834,7 @@ public class DateUtil extends CalendarUtil {
 		if (utcString == null) {
 			return null;
 		}
-		int length = utcString.length();
+		final int length = utcString.length();
 		if (StrUtil.contains(utcString, 'Z')) {
 			if (length == DatePattern.UTC_PATTERN.length() - 4) {
 				// 格式类似：2018-09-13T05:34:31Z，-4表示减去4个单引号的长度
@@ -867,10 +867,29 @@ public class DateUtil extends CalendarUtil {
 				// 格式类似：2018-09-13T05:34:31+08:00
 				return parse(utcString, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
 			}
+		} else if(ReUtil.contains("-\\d{2}:?00", utcString)){
+			// Issue#2612，类似 2022-09-14T23:59:00-08:00 或者 2022-09-14T23:59:00-0800
+
+			// 去除类似2019-06-01T19:45:43 -08:00加号前的空格
+			utcString = utcString.replace(" -", "-");
+			if(':' != utcString.charAt(utcString.length() - 3)){
+				utcString = utcString.substring(0, utcString.length() - 2) + ":00";
+			}
+
+			if (StrUtil.contains(utcString, CharUtil.DOT)) {
+				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
+				return new DateTime(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+			} else {
+				// 格式类似：2018-09-13T05:34:31-08:00
+				return new DateTime(utcString, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+			}
 		} else {
 			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
 				return parse(utcString, DatePattern.UTC_SIMPLE_FORMAT);
+			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 5) {
+				// 格式类似：2018-09-13T05:34
+				return parse(utcString + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
@@ -1000,7 +1019,7 @@ public class DateUtil extends CalendarUtil {
 	 * 修改日期为某个时间字段起始时间
 	 *
 	 * @param date      {@link Date}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部归0
 	 * @return {@link DateTime}
 	 * @since 4.5.7
 	 */
@@ -1024,7 +1043,7 @@ public class DateUtil extends CalendarUtil {
 	 * 修改日期为某个时间字段结束时间
 	 *
 	 * @param date      {@link Date}
-	 * @param dateField 时间字段
+	 * @param dateField 保留到的时间字段，如定义为 {@link DateField#SECOND}，表示这个字段不变，这个字段以下字段全部取最大值
 	 * @return {@link DateTime}
 	 * @since 4.5.7
 	 */
@@ -1338,7 +1357,7 @@ public class DateUtil extends CalendarUtil {
 		return offset(date, DateField.HOUR_OF_DAY, offset);
 	}
 
-	/**
+	/**w
 	 * 偏移天
 	 *
 	 * @param date   日期
@@ -1584,6 +1603,21 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * 比较两个日期是否为同一周
+	 *
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @return 是否为同一周
+	 */
+	public static boolean isSameWeek(final Date date1, final Date date2, boolean isMon) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return CalendarUtil.isSameWeek(calendar(date1), calendar(date2), isMon);
+	}
+
+	/**
 	 * 比较两个日期是否为同一月
 	 *
 	 * @param date1 日期1
@@ -1742,7 +1776,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 是否闰年
 	 */
 	public static boolean isLeapYear(int year) {
-		return new GregorianCalendar().isLeapYear(year);
+		return Year.isLeap(year);
 	}
 
 	/**
@@ -1799,7 +1833,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * HH:mm:ss 时间格式字符串转为秒数<br>
-	 * 参考：https://github.com/iceroot
+	 * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
 	 *
 	 * @param timeStr 字符串时分秒(HH:mm:ss)格式
 	 * @return 时分秒转换后的秒数
@@ -1822,7 +1856,7 @@ public class DateUtil extends CalendarUtil {
 
 	/**
 	 * 秒数转为时间格式(HH:mm:ss)<br>
-	 * 参考：https://github.com/iceroot
+	 * 参考：<a href="https://github.com/iceroot">https://github.com/iceroot</a>
 	 *
 	 * @param seconds 需要转换的秒数
 	 * @return 转换后的字符串
@@ -1868,19 +1902,87 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 创建日期范围生成器
+	 * 俩个时间区间取交集
+	 *
+	 * @param start 开始区间
+	 * @param end   结束区间
+	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
+	 */
+	public static List<DateTime> rangeContains(DateRange start, DateRange end) {
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		return startDateTimes.stream().filter(endDateTimes::contains).collect(Collectors.toList());
+	}
+
+	/**
+	 * 俩个时间区间取差集(end - start)
+	 *
+	 * @param start 开始区间
+	 * @param end   结束区间
+	 * @return true 包含
+	 * @author handy
+	 * @since 5.7.21
+	 */
+	public static List<DateTime> rangeNotContains(DateRange start, DateRange end) {
+		List<DateTime> startDateTimes = CollUtil.newArrayList((Iterable<DateTime>) start);
+		List<DateTime> endDateTimes = CollUtil.newArrayList((Iterable<DateTime>) end);
+		return endDateTimes.stream().filter(item -> !startDateTimes.contains(item)).collect(Collectors.toList());
+	}
+
+	/**
+	 * 按日期范围遍历，执行 function
+	 *
+	 * @param start 起始日期时间（包括）
+	 * @param end   结束日期时间
+	 * @param unit  步进单位
+	 * @param func  每次遍历要执行的 function
+	 * @param <T>   Date经过函数处理结果类型
+	 * @return 结果列表
+	 * @since 5.7.21
+	 */
+	public static <T> List<T> rangeFunc(Date start, Date end, final DateField unit, Function<Date, T> func) {
+		if (start == null || end == null || start.after(end)) {
+			return Collections.emptyList();
+		}
+		ArrayList<T> list = new ArrayList<>();
+		for (DateTime date : range(start, end, unit)) {
+			list.add(func.apply(date));
+		}
+		return list;
+	}
+
+	/**
+	 * 按日期范围遍历，执行 consumer
+	 *
+	 * @param start    起始日期时间（包括）
+	 * @param end      结束日期时间
+	 * @param unit     步进单位
+	 * @param consumer 每次遍历要执行的 consumer
+	 * @since 5.7.21
+	 */
+	public static void rangeConsume(Date start, Date end, final DateField unit, Consumer<Date> consumer) {
+		if (start == null || end == null || start.after(end)) {
+			return;
+		}
+		range(start, end, unit).forEach(consumer);
+	}
+
+	/**
+	 * 根据步进单位获取起始日期时间和结束日期时间的时间区间集合
 	 *
 	 * @param start 起始日期时间
 	 * @param end   结束日期时间
 	 * @param unit  步进单位
 	 * @return {@link DateRange}
 	 */
-	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
+	public static List<DateTime> rangeToList(Date start, Date end, DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 
 	/**
-	 * 创建日期范围生成器
+	 * 根据步进单位和步进获取起始日期时间和结束日期时间的时间区间集合
 	 *
 	 * @param start 起始日期时间
 	 * @param end   结束日期时间
@@ -2019,6 +2121,30 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
+	 * {@link Date} 转换时区
+	 *
+	 * @param date         {@link Date}
+	 * @param zoneId       {@link ZoneId}
+	 * @return {@link DateTime}
+	 * @since 5.8.3
+	 */
+	public static DateTime convertTimeZone(Date date, ZoneId zoneId) {
+		return new DateTime(date, ZoneUtil.toTimeZone(zoneId));
+	}
+
+	/**
+	 * {@link Date} 转换时区
+	 *
+	 * @param date           {@link Date}
+	 * @param timeZone       {@link TimeZone}
+	 * @return {@link DateTime}
+	 * @since 5.8.3
+	 */
+	public static DateTime convertTimeZone(Date date, TimeZone timeZone) {
+		return new DateTime(date, timeZone);
+	}
+
+	/**
 	 * 获得指定年份的总天数
 	 *
 	 * @param year 年份
@@ -2099,6 +2225,51 @@ public class DateUtil extends CalendarUtil {
 			default:
 				return unit.name().toLowerCase();
 		}
+	}
+
+	/**
+	 * 检查两个时间段是否有时间重叠<br>
+	 * 重叠指两个时间段是否有交集，注意此方法时间段重合时如：
+	 * <ul>
+	 *     <li>此方法未纠正开始时间小于结束时间</li>
+	 *     <li>当realStartTime和realEndTime或startTime和endTime相等时,退化为判断区间是否包含点</li>
+	 *     <li>当realStartTime和realEndTime和startTime和endTime相等时,退化为判断点与点是否相等</li>
+	 * </ul>
+	 * See <a href="https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html">准确的区间关系参考:艾伦区间代数</a>
+	 * @param realStartTime 第一个时间段的开始时间
+	 * @param realEndTime   第一个时间段的结束时间
+	 * @param startTime     第二个时间段的开始时间
+	 * @param endTime       第二个时间段的结束时间
+	 * @return true 表示时间有重合或包含或相等
+	 * @since 5.7.22
+	 */
+	public static boolean isOverlap(Date realStartTime, Date realEndTime,
+									Date startTime, Date endTime) {
+
+		// x>b||a>y 无交集
+		// 则有交集的逻辑为 !(x>b||a>y)
+		// 根据德摩根公式，可化简为 x<=b && a<=y 即 realStartTime<=endTime && startTime<=realEndTime
+		return realStartTime.compareTo(endTime) <=0 && startTime.compareTo(realEndTime) <= 0;
+	}
+
+	/**
+	 * 是否为本月最后一天
+	 * @param date {@link Date}
+	 * @return 是否为本月最后一天
+	 * @since 5.8.9
+	 */
+	public static boolean isLastDayOfMonth(Date date){
+		return date(date).isLastDayOfMonth();
+	}
+
+	/**
+	 * 获得本月的最后一天
+	 * @param date {@link Date}
+	 * @return 天
+	 * @since 5.8.9
+	 */
+	public static int getLastDayOfMonth(Date date){
+		return date(date).getLastDayOfMonth();
 	}
 
 	// ------------------------------------------------------------------------ Private method start

@@ -1,9 +1,12 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.map.WeakConcurrentMap;
+
 import java.util.regex.Pattern;
 
 /**
- * 常用正则表达式集合，更多正则见:https://any86.github.io/any-rule/
+ * 常用正则表达式集合，更多正则见:<br>
+ * <a href="https://any86.github.io/any-rule/">https://any86.github.io/any-rule/</a>
  *
  * @author Looly
  */
@@ -46,8 +49,8 @@ public class PatternPool {
 	 */
 	public final static Pattern MONEY = Pattern.compile(RegexPool.MONEY);
 	/**
-	 * 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/
-	 * What is the maximum length of a valid email address? https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754
+	 * 邮件，符合RFC 5322规范，正则来自：<a href="http://emailregex.com/">http://emailregex.com/</a><br>
+	 * <a href="https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754">https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address/44317754</a>
 	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@ hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
 	 */
 	public final static Pattern EMAIL = Pattern.compile(RegexPool.EMAIL, Pattern.CASE_INSENSITIVE);
@@ -130,14 +133,14 @@ public class PatternPool {
 	/**
 	 * 时间正则
 	 */
-	public static final Pattern TIME = Pattern.compile("\\d{1,2}:\\d{1,2}(:\\d{1,2})?");
+	public static final Pattern TIME = Pattern.compile(RegexPool.TIME);
 	/**
 	 * 中国车牌号码（兼容新能源车牌）
 	 */
 	public final static Pattern PLATE_NUMBER = Pattern.compile(RegexPool.PLATE_NUMBER);
 
 	/**
-	 * 社会统一信用代码
+	 * 统一社会信用代码
 	 * <pre>
 	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
 	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
@@ -163,12 +166,17 @@ public class PatternPool {
 	 * 仅限：中国驾驶证档案编号
 	 */
 	public static final Pattern CAR_DRIVING_LICENCE = Pattern.compile(RegexPool.CAR_DRIVING_LICENCE);
+	/**
+	 * 中文姓名
+	 * 总结中国人姓名：2-60位，只能是中文和 ·
+	 */
+	public static final Pattern CHINESE_NAME = Pattern.compile(RegexPool.CHINESE_NAME);
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Pattern池
 	 */
-	private static final SimpleCache<RegexWithFlag, Pattern> POOL = new SimpleCache<>();
+	private static final WeakConcurrentMap<RegexWithFlag, Pattern> POOL = new WeakConcurrentMap<>();
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
@@ -189,13 +197,7 @@ public class PatternPool {
 	 */
 	public static Pattern get(String regex, int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-
-		Pattern pattern = POOL.get(regexWithFlag);
-		if (null == pattern) {
-			pattern = Pattern.compile(regex, flags);
-			POOL.put(regexWithFlag, pattern);
-		}
-		return pattern;
+		return POOL.computeIfAbsent(regexWithFlag, (key)-> Pattern.compile(regex, flags));
 	}
 
 	/**

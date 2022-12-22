@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -24,12 +25,15 @@ import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -88,9 +92,8 @@ public class BeanUtil {
 	 */
 	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			final Method[] methods = clazz.getMethods();
-			for (Method method : methods) {
-				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
+			for (Method method : clazz.getMethods()) {
+				if (method.getParameterCount() == 1 && method.getName().startsWith("set")) {
 					// 检测包含标准的setXXX方法即视为标准的JavaBean
 					return true;
 				}
@@ -110,7 +113,7 @@ public class BeanUtil {
 	public static boolean hasGetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Method method : clazz.getMethods()) {
-				if (method.getParameterTypes().length == 0) {
+				if (method.getParameterCount() == 0) {
 					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
 						return true;
 					}
@@ -226,8 +229,8 @@ public class BeanUtil {
 	 */
 	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1)
-				: new HashMap<>((int) (propertyDescriptors.length), 1);
+		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1f)
+				: new HashMap<>(propertyDescriptors.length, 1);
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);
@@ -314,7 +317,7 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			CollUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
+			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
 			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
@@ -549,10 +552,24 @@ public class BeanUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz, CopyOptions options) {
-		if (null == source) {
+		return toBean(source, () -> ReflectUtil.newInstanceIfPossible(clazz), options);
+	}
+
+	/**
+	 * 对象或Map转Bean
+	 *
+	 * @param <T>            转换的Bean类型
+	 * @param source         Bean对象或Map
+	 * @param targetSupplier 目标的Bean创建器
+	 * @param options        属性拷贝选项
+	 * @return Bean对象
+	 * @since 5.8.0
+	 */
+	public static <T> T toBean(Object source, Supplier<T> targetSupplier, CopyOptions options) {
+		if (null == source || null == targetSupplier) {
 			return null;
 		}
-		final T target = ReflectUtil.newInstanceIfPossible(clazz);
+		final T target = targetSupplier.get();
 		copyProperties(source, target, options);
 		return target;
 	}
@@ -591,15 +608,26 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- beanToMap
-
 	/**
-	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
+	 * 将bean的部分属性转换成map<br>
+	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
 	 *
-	 * @param bean bean对象
+	 * @param bean       bean
+	 * @param properties 需要拷贝的属性值，{@code null}或空表示拷贝所有值
 	 * @return Map
+	 * @since 5.8.0
 	 */
-	public static Map<String, Object> beanToMap(Object bean) {
-		return beanToMap(bean, false, false);
+	public static Map<String, Object> beanToMap(Object bean, String... properties) {
+		int mapSize = 16;
+		Editor<String> keyEditor = null;
+		if(ArrayUtil.isNotEmpty(properties)){
+			mapSize = properties.length;
+			final Set<String> propertiesSet = CollUtil.set(false, properties);
+			keyEditor = property -> propertiesSet.contains(property) ? property : null;
+		}
+
+		// 指明了要复制的属性 所以不忽略null值
+		return beanToMap(bean, new LinkedHashMap<>(mapSize, 1), false, keyEditor);
 	}
 
 	/**
@@ -702,6 +730,9 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(Object source, Class<T> tClass, String... ignoreProperties) {
+		if(null == source){
+			return null;
+		}
 		T target = ReflectUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 		return target;
@@ -739,7 +770,10 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
-		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions.create())).copy();
+		if(null == source){
+			return;
+		}
+		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
 	}
 
 	/**
@@ -859,12 +893,12 @@ public class BeanUtil {
 	 * 判断Bean是否为非空对象，非空对象表示本身不为{@code null}或者含有非{@code null}属性的对象
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
 	 * @since 5.0.7
 	 */
-	public static boolean isNotEmpty(Object bean, String... ignoreFiledNames) {
-		return false == isEmpty(bean, ignoreFiledNames);
+	public static boolean isNotEmpty(Object bean, String... ignoreFieldNames) {
+		return false == isEmpty(bean, ignoreFieldNames);
 	}
 
 	/**
@@ -872,17 +906,17 @@ public class BeanUtil {
 	 * 此方法不判断static属性
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否为空，{@code true} - 空 / {@code false} - 非空
 	 * @since 4.1.10
 	 */
-	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
+	public static boolean isEmpty(Object bean, String... ignoreFieldNames) {
 		if (null != bean) {
 			for (Field field : ReflectUtil.getFields(bean.getClass())) {
 				if (ModifierUtil.isStatic(field)) {
 					continue;
 				}
-				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+				if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
 						&& null != ReflectUtil.getFieldValue(bean, field)) {
 					return false;
 				}
@@ -896,11 +930,11 @@ public class BeanUtil {
 	 * 对象本身为{@code null}也返回true
 	 *
 	 * @param bean             Bean对象
-	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @param ignoreFieldNames 忽略检查的字段名
 	 * @return 是否包含值为<code>null</code>的属性，{@code true} - 包含 / {@code false} - 不包含
 	 * @since 4.1.10
 	 */
-	public static boolean hasNullField(Object bean, String... ignoreFiledNames) {
+	public static boolean hasNullField(Object bean, String... ignoreFieldNames) {
 		if (null == bean) {
 			return true;
 		}
@@ -908,7 +942,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+			if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
 					&& null == ReflectUtil.getFieldValue(bean, field)) {
 				return true;
 			}
@@ -916,4 +950,61 @@ public class BeanUtil {
 		return false;
 	}
 
+	/**
+	 * 获取Getter或Setter方法名对应的字段名称，规则如下：
+	 * <ul>
+	 *     <li>getXxxx获取为xxxx，如getName得到name。</li>
+	 *     <li>setXxxx获取为xxxx，如setName得到name。</li>
+	 *     <li>isXxxx获取为xxxx，如isName得到name。</li>
+	 *     <li>其它不满足规则的方法名抛出{@link IllegalArgumentException}</li>
+	 * </ul>
+	 *
+	 * @param getterOrSetterName Getter或Setter方法名
+	 * @return 字段名称
+	 * @throws IllegalArgumentException 非Getter或Setter方法
+	 * @since 5.7.23
+	 */
+	public static String getFieldName(String getterOrSetterName) {
+		if (getterOrSetterName.startsWith("get") || getterOrSetterName.startsWith("set")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 3);
+		} else if (getterOrSetterName.startsWith("is")) {
+			return StrUtil.removePreAndLowerFirst(getterOrSetterName, 2);
+		} else {
+			throw new IllegalArgumentException("Invalid Getter or Setter name: " + getterOrSetterName);
+		}
+	}
+
+	/**
+	 * 判断source与target的所有公共字段的值是否相同
+	 *
+	 * @param source 待检测对象1
+	 * @param target 待检测对象2
+	 * @param ignoreProperties 不需要检测的字段
+	 * @return 判断结果，如果为true则证明所有字段的值都相同
+	 * @since 5.8.4
+	 * @author Takak11
+	 */
+	public static boolean isCommonFieldsEqual(Object source, Object target, String...ignoreProperties) {
+
+		if (null == source && null == target) {
+			return true;
+		}
+		if (null == source || null == target) {
+			return false;
+		}
+
+		Map<String, Object> sourceFieldsMap = BeanUtil.beanToMap(source);
+		Map<String, Object> targetFieldsMap = BeanUtil.beanToMap(target);
+
+		Set<String> sourceFields = sourceFieldsMap.keySet();
+		sourceFields.removeAll(Arrays.asList(ignoreProperties));
+
+		for (String field : sourceFields) {
+			if(ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))){
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

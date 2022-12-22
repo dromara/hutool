@@ -110,7 +110,7 @@ public final class DbUtil {
 	 */
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
-			if(null != obj){
+			if (null != obj) {
 				if (obj instanceof AutoCloseable) {
 					IoUtil.close((AutoCloseable) obj);
 				} else {
@@ -175,7 +175,7 @@ public final class DbUtil {
 	 * @param setting 配置项
 	 * @since 5.7.2
 	 */
-	public static void removeShowSqlParams(Setting setting){
+	public static void removeShowSqlParams(Setting setting) {
 		setting.remove(SqlLog.KEY_SHOW_SQL);
 		setting.remove(SqlLog.KEY_FORMAT_SQL);
 		setting.remove(SqlLog.KEY_SHOW_PARAMS);
@@ -209,6 +209,7 @@ public final class DbUtil {
 	 * @param isFormatSql  是否格式化显示的SQL
 	 * @param isShowParams 是否打印参数
 	 * @param level        SQL打印到的日志等级
+	 * @see GlobalDbConfig#setShowSql(boolean, boolean, boolean, Level)
 	 * @since 4.1.7
 	 */
 	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
@@ -220,6 +221,7 @@ public final class DbUtil {
 	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
 	 *
 	 * @param caseInsensitive 否在结果中忽略大小写
+	 * @see GlobalDbConfig#setCaseInsensitive(boolean)
 	 * @since 5.2.4
 	 */
 	public static void setCaseInsensitiveGlobal(boolean caseInsensitive) {
@@ -232,9 +234,21 @@ public final class DbUtil {
 	 * 主要用于某些数据库不支持返回主键的情况
 	 *
 	 * @param returnGeneratedKey 是否INSERT语句中默认返回主键
+	 * @see GlobalDbConfig#setReturnGeneratedKey(boolean)
 	 * @since 5.3.10
 	 */
 	public static void setReturnGeneratedKeyGlobal(boolean returnGeneratedKey) {
 		GlobalDbConfig.setReturnGeneratedKey(returnGeneratedKey);
+	}
+
+	/**
+	 * 自定义数据库配置文件路径（绝对路径或相对classpath路径）
+	 *
+	 * @param dbSettingPath 自定义数据库配置文件路径（绝对路径或相对classpath路径）
+	 * @see GlobalDbConfig#setDbSettingPath(String)
+	 * @since 5.8.0
+	 */
+	public static void setDbSettingPathGlobal(String dbSettingPath) {
+		GlobalDbConfig.setDbSettingPath(dbSettingPath);
 	}
 }

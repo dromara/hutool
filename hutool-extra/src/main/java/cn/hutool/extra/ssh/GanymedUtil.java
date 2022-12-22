@@ -79,7 +79,7 @@ public class GanymedUtil {
 			result = IoUtil.read(new StreamGobbler(session.getStdout()), charset);
 
 			// 错误输出
-			IoUtil.copy(new StreamGobbler(session.getStdout()), errStream);
+			IoUtil.copy(new StreamGobbler(session.getStderr()), errStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -91,7 +91,7 @@ public class GanymedUtil {
 	/**
 	 * 执行Shell命令
 	 * <p>
-	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭Session，不会产生阻塞。
+	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭Session，可能产生阻塞。
 	 * </p>
 	 *
 	 * @param session   Session会话
@@ -109,7 +109,7 @@ public class GanymedUtil {
 			result = IoUtil.read(new StreamGobbler(session.getStdout()), charset);
 			if(null != errStream){
 				// 错误输出
-				IoUtil.copy(new StreamGobbler(session.getStdout()), errStream);
+				IoUtil.copy(new StreamGobbler(session.getStderr()), errStream);
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

@@ -17,7 +17,7 @@ import java.io.IOException;
 
 /**
  * Beetl模板引擎封装
- * 
+ *
  * @author looly
  */
 public class BeetlEngine implements TemplateEngine {
@@ -32,7 +32,7 @@ public class BeetlEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 模板配置
 	 */
 	public BeetlEngine(TemplateConfig config) {
@@ -41,7 +41,7 @@ public class BeetlEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param engine {@link GroupTemplate}
 	 */
 	public BeetlEngine(GroupTemplate engine) {
@@ -73,8 +73,18 @@ public class BeetlEngine implements TemplateEngine {
 	}
 
 	/**
+	 * 获取原始引擎的钩子方法，用于自定义特殊属性，如插件等
+	 *
+	 * @return {@link GroupTemplate}
+	 * @since 5.8.7
+	 */
+	public GroupTemplate getRawEngine() {
+		return this.engine;
+	}
+
+	/**
 	 * 创建引擎
-	 * 
+	 *
 	 * @param config 模板配置
 	 * @return {@link GroupTemplate}
 	 */
@@ -103,7 +113,7 @@ public class BeetlEngine implements TemplateEngine {
 	/**
 	 * 创建自定义的模板组 {@link GroupTemplate}，配置文件使用全局默认<br>
 	 * 此时自定义的配置文件可在ClassPath中放入beetl.properties配置
-	 * 
+	 *
 	 * @param loader {@link ResourceLoader}，资源加载器
 	 * @return {@link GroupTemplate}
 	 * @since 3.2.0
@@ -118,7 +128,7 @@ public class BeetlEngine implements TemplateEngine {
 
 	/**
 	 * 创建自定义的 {@link GroupTemplate}
-	 * 
+	 *
 	 * @param loader {@link ResourceLoader}，资源加载器
 	 * @param conf {@link Configuration} 配置文件
 	 * @return {@link GroupTemplate}

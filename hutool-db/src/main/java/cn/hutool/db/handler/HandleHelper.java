@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * 数据结果集处理辅助类
- * 
+ *
  * @author loolly
  *
  */
@@ -60,7 +60,7 @@ public class HandleHelper {
 	@SuppressWarnings("unchecked")
 	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, Class<T> beanClass) throws SQLException {
 		Assert.notNull(beanClass, "Bean Class must be not null !");
-		
+
 		if(beanClass.isArray()) {
 			//返回数组
 			final Class<?> componentType = beanClass.getComponentType();
@@ -81,7 +81,7 @@ public class HandleHelper {
 			final Object[] objRow = handleRow(columnCount, meta, rs, Object[].class);
 			return (T) StrUtil.join(", ", objRow);
 		}
-		
+
 		//普通bean
 		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
 		//忽略字段大小写
@@ -108,7 +108,7 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -118,10 +118,10 @@ public class HandleHelper {
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
 		return handleRow(columnCount, meta, rs, false);
 	}
-	
+
 	/**
 	 * 处理单条数据
-	 * 
+	 *
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -136,7 +136,7 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
 	 * @param <T> Entity及其子对象
 	 * @param row Entity对象
 	 * @param columnCount 列数
@@ -149,9 +149,16 @@ public class HandleHelper {
 	 */
 	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
 		int type;
+		String columnLabel;
 		for (int i = 1; i <= columnCount; i++) {
 			type = meta.getColumnType(i);
-			row.put(meta.getColumnLabel(i), getColumnValue(rs, i, type, null));
+			columnLabel = meta.getColumnLabel(i);
+			if("rownum_".equalsIgnoreCase(columnLabel)){
+				// issue#2618@Github
+				// 分页时会查出rownum字段，此处忽略掉读取
+				continue;
+			}
+			row.put(columnLabel, getColumnValue(rs, i, type, null));
 		}
 		if (withMetaInfo) {
 			try {
@@ -199,7 +206,7 @@ public class HandleHelper {
 
 	/**
 	 * 处理多条数据
-	 * 
+	 *
 	 * @param <T> 集合类型
 	 * @param rs 数据集
 	 * @param collection 数据集
@@ -209,10 +216,10 @@ public class HandleHelper {
 	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection) throws SQLException {
 		return handleRs(rs, collection, false);
 	}
-	
+
 	/**
 	 * 处理多条数据
-	 * 
+	 *
 	 * @param <T> 集合类型
 	 * @param rs 数据集
 	 * @param collection 数据集
@@ -234,7 +241,7 @@ public class HandleHelper {
 
 	/**
 	 * 处理多条数据并返回一个Bean列表
-	 * 
+	 *
 	 * @param <E> 集合元素类型
 	 * @param <T> 集合类型
 	 * @param rs 数据集
@@ -259,8 +266,7 @@ public class HandleHelper {
 	/**
 	 * 获取字段值<br>
 	 * 针对日期时间等做单独处理判断
-	 * 
-	 * @param <T> 返回类型
+	 *
 	 * @param rs {@link ResultSet}
 	 * @param columnIndex 字段索引
 	 * @param type 字段类型，默认Object
@@ -268,7 +274,7 @@ public class HandleHelper {
 	 * @return 字段值
 	 * @throws SQLException SQL异常
 	 */
-	private static <T> Object getColumnValue(ResultSet rs, int columnIndex, int type, Type targetColumnType) throws SQLException {
+	private static Object getColumnValue(ResultSet rs, int columnIndex, int type, Type targetColumnType) throws SQLException {
 		Object rawValue = null;
 		switch (type) {
 		case Types.TIMESTAMP:

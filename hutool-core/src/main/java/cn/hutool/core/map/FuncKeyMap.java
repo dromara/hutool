@@ -19,13 +19,14 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	// ------------------------------------------------------------------------- Constructor start
 
 	/**
-	 * 构造
+	 * 构造<br>
+	 * 注意提供的Map中不能有键值对，否则可能导致自定义key失效
 	 *
-	 * @param m       Map
+	 * @param emptyMap       Map，提供的空map
 	 * @param keyFunc 自定义KEY的函数
 	 */
-	public FuncKeyMap(Map<K, V> m, Function<Object, K> keyFunc) {
-		super(m);
+	public FuncKeyMap(Map<K, V> emptyMap, Function<Object, K> keyFunc) {
+		super(emptyMap);
 		this.keyFunc = keyFunc;
 	}
 	// ------------------------------------------------------------------------- Constructor end
@@ -37,10 +38,11 @@ public class FuncKeyMap<K, V> extends CustomKeyMap<K, V> {
 	 * @return 驼峰Key
 	 */
 	@Override
-	protected Object customKey(Object key) {
+	protected K customKey(Object key) {
 		if (null != this.keyFunc) {
 			return keyFunc.apply(key);
 		}
-		return key;
+		//noinspection unchecked
+		return (K)key;
 	}
 }

@@ -1,13 +1,18 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 枚举工具类
@@ -51,7 +56,7 @@ public class EnumUtil {
 	}
 
 	/**
-	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
+	 * 获取给定位置的枚举值
 	 *
 	 * @param <E>       枚举类型泛型
 	 * @param enumClass 枚举类
@@ -208,6 +213,77 @@ public class EnumUtil {
 			}
 		}
 		return names;
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
+	 *
+	 * @param enumClass 枚举类
+	 * @param predicate 条件
+	 * @param <E>       枚举类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 * @since 5.8.0
+	 */
+	public static <E extends Enum<E>> E getBy(Class<E> enumClass, Predicate<? super E> predicate) {
+		return Arrays.stream(enumClass.getEnumConstants())
+				.filter(predicate).findFirst().orElse(null);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code null}
+	 *
+	 * @param condition 条件字段
+	 * @param value     条件字段值
+	 * @param <E>       枚举类型
+	 * @param <C>       字段类型
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 */
+	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value) {
+		Class<E> implClass = LambdaUtil.getRealClass(condition);
+		if (Enum.class.equals(implClass)) {
+			implClass = LambdaUtil.getRealClass(condition);
+		}
+		return Arrays.stream(implClass.getEnumConstants()).filter(e -> condition.callWithRuntimeException(e).equals(value)).findAny().orElse(null);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举，获取不到时为 {@code defaultEnum}
+	 *
+	 * @param <E>         枚举类型
+	 * @param <C>         字段类型
+	 * @param condition   条件字段
+	 * @param value       条件字段值
+	 * @param defaultEnum 条件找不到则返回结果使用这个
+	 * @return 对应枚举 ，获取不到时为 {@code null}
+	 * @since 5.8.8
+	 */
+	public static <E extends Enum<E>, C> E getBy(Func1<E, C> condition, C value, E defaultEnum) {
+		return ObjectUtil.defaultIfNull(getBy(condition, value), defaultEnum);
+	}
+
+	/**
+	 * 通过 某字段对应值 获取 枚举中另一字段值，获取不到时为 {@code null}
+	 *
+	 * @param field     你想要获取的字段
+	 * @param condition 条件字段
+	 * @param value     条件字段值
+	 * @param <E>       枚举类型
+	 * @param <F>       想要获取的字段类型
+	 * @param <C>       条件字段类型
+	 * @return 对应枚举中另一字段值 ，获取不到时为 {@code null}
+	 * @since 5.8.0
+	 */
+	public static <E extends Enum<E>, F, C> F getFieldBy(Func1<E, F> field,
+														 Function<E, C> condition, C value) {
+		Class<E> implClass = LambdaUtil.getRealClass(field);
+		if (Enum.class.equals(implClass)) {
+			implClass = LambdaUtil.getRealClass(field);
+		}
+		return Arrays.stream(implClass.getEnumConstants())
+				// 过滤
+				.filter(e -> condition.apply(e).equals(value))
+				// 获取第一个并转换为结果
+				.findFirst().map(field::callWithRuntimeException).orElse(null);
 	}
 
 	/**

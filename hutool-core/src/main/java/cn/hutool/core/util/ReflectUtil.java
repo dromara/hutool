@@ -3,20 +3,25 @@ package cn.hutool.core.util;
 import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.NullWrapperBean;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.InvocationTargetRuntimeException;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,15 +39,15 @@ public class ReflectUtil {
 	/**
 	 * 构造对象缓存
 	 */
-	private static final SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 字段缓存
 	 */
-	private static final SimpleCache<Class<?>, Field[]> FIELDS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Field[]> FIELDS_CACHE = new WeakConcurrentMap<>();
 	/**
 	 * 方法缓存
 	 */
-	private static final SimpleCache<Class<?>, Method[]> METHODS_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Method[]> METHODS_CACHE = new WeakConcurrentMap<>();
 
 	// --------------------------------------------------------------------------------------------------------- Constructor
 
@@ -84,7 +89,7 @@ public class ReflectUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return (Constructor<T>[]) CONSTRUCTORS_CACHE.get(beanClass, () -> getConstructorsDirectly(beanClass));
+		return (Constructor<T>[]) CONSTRUCTORS_CACHE.computeIfAbsent(beanClass, () -> getConstructorsDirectly(beanClass));
 	}
 
 	/**
@@ -173,7 +178,7 @@ public class ReflectUtil {
 	 */
 	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return FIELDS_CACHE.get(beanClass, () -> getFieldsDirectly(beanClass, true));
+		return FIELDS_CACHE.computeIfAbsent(beanClass, () -> getFieldsDirectly(beanClass, true));
 	}
 
 
@@ -295,11 +300,14 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 设置字段值
+	 * 设置字段值<br>
+	 * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换<br>
+	 * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值（见 {@link ClassUtil#getDefaultValue(Class)}）
+	 * 如果是final字段，setFieldValue，调用这可以先调用 {@link ReflectUtil#removeFinalModify(Field)}方法去除final修饰符<br>
 	 *
 	 * @param obj       对象,static字段则此处传Class
 	 * @param fieldName 字段名
-	 * @param value     值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @param value     值，当值类型与字段类型不匹配时，会尝试转换
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(Object obj, String fieldName, Object value) throws UtilException {
@@ -312,11 +320,14 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 设置字段值
+	 * 设置字段值<br>
+	 * 若值类型与字段类型不一致，则会尝试通过 {@link Convert} 进行转换<br>
+	 * 若字段类型是原始类型而传入的值是 null，则会将字段设置为对应原始类型的默认值（见 {@link ClassUtil#getDefaultValue(Class)}）<br>
+	 * 如果是final字段，setFieldValue，调用这可以先调用 {@link ReflectUtil#removeFinalModify(Field)}方法去除final修饰符
 	 *
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
-	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @param value 值，当值类型与字段类型不匹配时，会尝试转换
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
@@ -342,6 +353,18 @@ public class ReflectUtil {
 		} catch (IllegalAccessException e) {
 			throw new UtilException(e, "IllegalAccess for {}.{}", obj, field.getName());
 		}
+	}
+
+	/**
+	 * 是否为父类引用字段<br>
+	 * 当字段所在类是对象子类时（对象中定义的非static的class），会自动生成一个以"this$0"为名称的字段，指向父类对象
+	 *
+	 * @param field 字段
+	 * @return 是否为父类引用字段
+	 * @since 5.7.20
+	 */
+	public static boolean isOuterClassField(Field field) {
+		return "this$0".equals(field.getName());
 	}
 
 	// --------------------------------------------------------------------------------------------------------- method
@@ -375,7 +398,8 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类过滤后的Public方法列表
+	 * 获得指定类过滤后的Public方法列表<br>
+	 * TODO 6.x此方法更改返回Method[]
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器
@@ -515,18 +539,20 @@ public class ReflectUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
-						//排除桥接方法，pr#1965@Github
-						&& false == method.isBridge()) {
-					return method;
+					&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null
+					|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
@@ -582,21 +608,23 @@ public class ReflectUtil {
 			return null;
 		}
 
+		Method res = null;
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						// 排除桥接方法
-						&& false == method.isBridge()) {
-					return method;
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null
+					|| res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					res = method;
 				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	/**
-	 * 获得指定类中的Public方法名<br>
+	 * 获得指定类中的方法名<br>
 	 * 去重重载的方法
 	 *
 	 * @param clazz 类
@@ -613,7 +641,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类过滤后的Public方法列表
+	 * 获得指定类过滤后的方法列表
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器
@@ -636,34 +664,47 @@ public class ReflectUtil {
 	 */
 	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
-		return METHODS_CACHE.get(beanClass, () -> getMethodsDirectly(beanClass, true));
+		return METHODS_CACHE.computeIfAbsent(beanClass,
+			() -> getMethodsDirectly(beanClass, true, true));
 	}
 
 	/**
-	 * 获得一个类中所有方法列表，直接反射获取，无缓存
+	 * 获得一个类中所有方法列表，直接反射获取，无缓存<br>
+	 * 接口获取方法和默认方法，获取的方法包括：
+	 * <ul>
+	 *     <li>本类中的所有方法（包括static方法）</li>
+	 *     <li>父类中的所有方法（包括static方法）</li>
+	 *     <li>Object中（包括static方法）</li>
+	 * </ul>
 	 *
-	 * @param beanClass             类
-	 * @param withSuperClassMethods 是否包括父类的方法列表
+	 * @param beanClass            类或接口
+	 * @param withSupers           是否包括父类或接口的方法列表
+	 * @param withMethodFromObject 是否包括Object中的方法
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException {
+	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSupers, boolean withMethodFromObject) throws SecurityException {
 		Assert.notNull(beanClass);
 
-		Method[] allMethods = null;
-		Class<?> searchType = beanClass;
-		Method[] declaredMethods;
-		while (searchType != null) {
-			declaredMethods = searchType.getDeclaredMethods();
-			if (null == allMethods) {
-				allMethods = declaredMethods;
-			} else {
-				allMethods = ArrayUtil.append(allMethods, declaredMethods);
-			}
-			searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
+		if (beanClass.isInterface()) {
+			// 对于接口，直接调用Class.getMethods方法获取所有方法，因为接口都是public方法
+			return withSupers ? beanClass.getMethods() : beanClass.getDeclaredMethods();
 		}
 
-		return allMethods;
+		final UniqueKeySet<String, Method> result = new UniqueKeySet<>(true, ReflectUtil::getUniqueKey);
+		Class<?> searchType = beanClass;
+		while (searchType != null) {
+			if (false == withMethodFromObject && Object.class == searchType) {
+				break;
+			}
+			result.addAllIfAbsent(Arrays.asList(searchType.getDeclaredMethods()));
+			result.addAllIfAbsent(getDefaultMethodsFromInterface(searchType));
+
+
+			searchType = (withSupers && false == searchType.isInterface()) ? searchType.getSuperclass() : null;
+		}
+
+		return result.toArray(new Method[0]);
 	}
 
 	/**
@@ -673,11 +714,12 @@ public class ReflectUtil {
 	 * @return 是否为equals方法
 	 */
 	public static boolean isEqualsMethod(Method method) {
-		if (method == null || false == "equals".equals(method.getName())) {
+		if (method == null ||
+			1 != method.getParameterCount() ||
+			false == "equals".equals(method.getName())) {
 			return false;
 		}
-		final Class<?>[] paramTypes = method.getParameterTypes();
-		return (1 == paramTypes.length && paramTypes[0] == Object.class);
+		return (method.getParameterTypes()[0] == Object.class);
 	}
 
 	/**
@@ -688,8 +730,8 @@ public class ReflectUtil {
 	 */
 	public static boolean isHashCodeMethod(Method method) {
 		return method != null//
-				&& "hashCode".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "hashCode".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -700,8 +742,8 @@ public class ReflectUtil {
 	 */
 	public static boolean isToStringMethod(Method method) {
 		return method != null//
-				&& "toString".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "toString".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -712,9 +754,67 @@ public class ReflectUtil {
 	 * @since 5.1.1
 	 */
 	public static boolean isEmptyParam(Method method) {
-		return method.getParameterTypes().length == 0;
+		return method.getParameterCount() == 0;
 	}
 
+	/**
+	 * 检查给定方法是否为Getter或者Setter方法，规则为：<br>
+	 * <ul>
+	 *     <li>方法参数必须为0个或1个</li>
+	 *     <li>如果是无参方法，则判断是否以“get”或“is”开头</li>
+	 *     <li>如果方法参数1个，则判断是否以“set”开头</li>
+	 * </ul>
+	 *
+	 * @param method 方法
+	 * @return 是否为Getter或者Setter方法
+	 * @since 5.7.20
+	 */
+	public static boolean isGetterOrSetterIgnoreCase(Method method) {
+		return isGetterOrSetter(method, true);
+	}
+
+	/**
+	 * 检查给定方法是否为Getter或者Setter方法，规则为：<br>
+	 * <ul>
+	 *     <li>方法参数必须为0个或1个</li>
+	 *     <li>方法名称不能是getClass</li>
+	 *     <li>如果是无参方法，则判断是否以“get”或“is”开头</li>
+	 *     <li>如果方法参数1个，则判断是否以“set”开头</li>
+	 * </ul>
+	 *
+	 * @param method     方法
+	 * @param ignoreCase 是否忽略方法名的大小写
+	 * @return 是否为Getter或者Setter方法
+	 * @since 5.7.20
+	 */
+	public static boolean isGetterOrSetter(Method method, boolean ignoreCase) {
+		if (null == method) {
+			return false;
+		}
+
+		// 参数个数必须为0或1
+		final int parameterCount = method.getParameterCount();
+		if (parameterCount > 1) {
+			return false;
+		}
+
+		String name = method.getName();
+		// 跳过getClass这个特殊方法
+		if ("getClass".equals(name)) {
+			return false;
+		}
+		if (ignoreCase) {
+			name = name.toLowerCase();
+		}
+		switch (parameterCount) {
+			case 0:
+				return name.startsWith("get") || name.startsWith("is");
+			case 1:
+				return name.startsWith("set");
+			default:
+				return false;
+		}
+	}
 	// --------------------------------------------------------------------------------------------------------- newInstance
 
 	/**
@@ -746,6 +846,9 @@ public class ReflectUtil {
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			final Constructor<T> constructor = getConstructor(clazz);
+			if (null == constructor) {
+				throw new UtilException("No constructor for [{}]", clazz);
+			}
 			try {
 				return constructor.newInstance();
 			} catch (Exception e) {
@@ -776,31 +879,46 @@ public class ReflectUtil {
 	 *     Set       -》 HashSet
 	 * </pre>
 	 *
-	 * @param <T>       对象类型
-	 * @param beanClass 被构造的类
-	 * @return 构造后的对象
+	 * @param <T>  对象类型
+	 * @param type 被构造的类
+	 * @return 构造后的对象，构造失败返回{@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstanceIfPossible(Class<T> beanClass) {
-		Assert.notNull(beanClass);
+	public static <T> T newInstanceIfPossible(Class<T> type) {
+		Assert.notNull(type);
+
+		// 原始类型
+		if (type.isPrimitive()) {
+			return (T) ClassUtil.getPrimitiveDefaultValue(type);
+		}
 
 		// 某些特殊接口的实例化按照默认实现进行
-		if (beanClass.isAssignableFrom(AbstractMap.class)) {
-			beanClass = (Class<T>) HashMap.class;
-		} else if (beanClass.isAssignableFrom(List.class)) {
-			beanClass = (Class<T>) ArrayList.class;
-		} else if (beanClass.isAssignableFrom(Set.class)) {
-			beanClass = (Class<T>) HashSet.class;
+		if (type.isAssignableFrom(AbstractMap.class)) {
+			type = (Class<T>) HashMap.class;
+		} else if (type.isAssignableFrom(List.class)) {
+			type = (Class<T>) ArrayList.class;
+		} else if (type.isAssignableFrom(Set.class)) {
+			type = (Class<T>) HashSet.class;
 		}
 
 		try {
-			return newInstance(beanClass);
+			return newInstance(type);
 		} catch (Exception e) {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
 
-		final Constructor<T>[] constructors = getConstructors(beanClass);
+		// 枚举
+		if (type.isEnum()) {
+			return type.getEnumConstants()[0];
+		}
+
+		// 数组
+		if (type.isArray()) {
+			return (T) Array.newInstance(type.getComponentType(), 0);
+		}
+
+		final Constructor<T>[] constructors = getConstructors(type);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
 			parameterTypes = constructor.getParameterTypes();
@@ -882,10 +1000,42 @@ public class ReflectUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws UtilException 一些列异常的包装
+	 * @throws InvocationTargetRuntimeException 目标方法执行异常
+	 * @throws UtilException                    {@link IllegalAccessException}异常的包装
+	 */
+	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetRuntimeException, UtilException {
+		try {
+			return invokeRaw(obj, method, args);
+		} catch (InvocationTargetException e) {
+			throw new InvocationTargetRuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * 执行方法
+	 *
+	 * <p>
+	 * 对于用户传入参数会做必要检查，包括：
+	 *
+	 * <pre>
+	 *     1、忽略多余的参数
+	 *     2、参数不够补齐默认值
+	 *     3、传入参数为null，但是目标参数类型为原始类型，做转换
+	 * </pre>
+	 *
+	 * @param <T>    返回对象类型
+	 * @param obj    对象，如果执行静态方法，此值为{@code null}
+	 * @param method 方法（对象方法或static方法都可）
+	 * @param args   参数对象
+	 * @return 结果
+	 * @throws InvocationTargetException 目标方法执行异常
+	 * @throws IllegalAccessException    访问异常
+	 * @since 5.8.1
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
+	public static <T> T invokeRaw(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalAccessException {
 		setAccessible(method);
 
 		// 检查用户传入参数：
@@ -906,7 +1056,7 @@ public class ReflectUtil {
 					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
 					}
@@ -922,11 +1072,7 @@ public class ReflectUtil {
 			return MethodHandleUtil.invokeSpecial(obj, method, args);
 		}
 
-		try {
-			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
 	}
 
 	/**
@@ -938,7 +1084,7 @@ public class ReflectUtil {
 	 * @param methodName 方法名
 	 * @param args       参数列表
 	 * @return 执行结果
-	 * @throws UtilException IllegalAccessException包装
+	 * @throws UtilException IllegalAccessException等异常包装
 	 * @see NullWrapperBean
 	 * @since 3.1.2
 	 */
@@ -966,5 +1112,81 @@ public class ReflectUtil {
 			accessibleObject.setAccessible(true);
 		}
 		return accessibleObject;
+	}
+
+	/**
+	 * 设置final的field字段可以被修改
+	 * 只要不会被编译器内联优化的 final 属性就可以通过反射有效的进行修改 --  修改后代码中可使用到新的值;
+	 * <p>以下属性，编译器会内联优化，无法通过反射修改：</p>
+	 * <ul>
+	 *     <li> 基本类型 byte, char, short, int, long, float, double, boolean</li>
+	 *     <li> Literal String 类型(直接双引号字符串)</li>
+	 * </ul>
+	 * <h3>以下属性，可以通过反射修改：</h3>
+	 * <ul>
+	 *     <li>基本类型的包装类 Byte、Character、Short、Long、Float、Double、Boolean</li>
+	 *     <li>字符串，通过 new String("")实例化</li>
+	 *     <li>自定义java类</li>
+	 * </ul>
+	 * <pre class="code">
+	 * {@code
+	 *      //示例，移除final修饰符
+	 *      class JdbcDialects {private static final List<Number> dialects = new ArrayList<>();}
+	 *      Field field = ReflectUtil.getField(JdbcDialects.class, fieldName);
+	 * 		ReflectUtil.removeFinalModify(field);
+	 * 		ReflectUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
+	 *    }
+	 * </pre>
+	 *
+	 * @param field 被修改的field，不可以为空
+	 * @throws UtilException IllegalAccessException等异常包装
+	 * @author dazer
+	 * @since 5.8.8
+	 */
+	public static void removeFinalModify(Field field) {
+		ModifierUtil.removeFinalModify(field);
+	}
+
+	/**
+	 * 获取方法的唯一键，结构为:
+	 * <pre>
+	 *     返回类型#方法名:参数1类型,参数2类型...
+	 * </pre>
+	 *
+	 * @param method 方法
+	 * @return 方法唯一键
+	 */
+	private static String getUniqueKey(Method method) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(method.getReturnType().getName()).append('#');
+		sb.append(method.getName());
+		Class<?>[] parameters = method.getParameterTypes();
+		for (int i = 0; i < parameters.length; i++) {
+			if (i == 0) {
+				sb.append(':');
+			} else {
+				sb.append(',');
+			}
+			sb.append(parameters[i].getName());
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 获取类对应接口中的非抽象方法（default方法）
+	 *
+	 * @param clazz 类
+	 * @return 方法列表
+	 */
+	private static List<Method> getDefaultMethodsFromInterface(Class<?> clazz) {
+		List<Method> result = new ArrayList<>();
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			for (Method m : ifc.getMethods()) {
+				if (false == ModifierUtil.isAbstract(m)) {
+					result.add(m);
+				}
+			}
+		}
+		return result;
 	}
 }

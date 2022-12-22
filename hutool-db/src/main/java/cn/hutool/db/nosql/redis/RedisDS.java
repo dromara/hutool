@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 /**
  * Jedis数据源
- * 
+ *
  * @author looly
  * @since 3.2.3
  */
@@ -30,7 +30,7 @@ public class RedisDS implements Closeable, Serializable {
 	// --------------------------------------------------------------------------------- Static method start
 	/**
 	 * 创建RedisDS，使用默认配置文件，默认分组
-	 * 
+	 *
 	 * @return RedisDS
 	 */
 	public static RedisDS create() {
@@ -39,7 +39,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 创建RedisDS，使用默认配置文件
-	 * 
+	 *
 	 * @param group 配置文件中配置分组
 	 * @return RedisDS
 	 */
@@ -49,7 +49,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 创建RedisDS
-	 * 
+	 *
 	 * @param setting 配置文件
 	 * @param group 配置文件中配置分组
 	 * @return RedisDS
@@ -68,7 +68,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 构造，使用默认配置文件
-	 * 
+	 *
 	 * @param group 配置文件中配置分组
 	 */
 	public RedisDS(String group) {
@@ -77,7 +77,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param setting 配置文件
 	 * @param group 配置文件中配置分组
 	 */
@@ -88,7 +88,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 初始化Jedis客户端
-	 * 
+	 *
 	 * @param group Redis服务器信息分组
 	 * @return this
 	 */
@@ -103,6 +103,13 @@ public class RedisDS implements Closeable, Serializable {
 		if (StrUtil.isNotBlank(group)) {
 			// 特有配置
 			setting.toBean(group, config);
+		}
+
+		//issue#I54TZ9
+		final Long maxWaitMillis = setting.getLong("maxWaitMillis");
+		if(null != maxWaitMillis){
+			//noinspection deprecation
+			config.setMaxWaitMillis(maxWaitMillis);
 		}
 
 		this.pool = new JedisPool(config,
@@ -130,7 +137,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 从资源池中获取{@link Jedis}
-	 * 
+	 *
 	 * @return {@link Jedis}
 	 */
 	public Jedis getJedis() {
@@ -139,7 +146,7 @@ public class RedisDS implements Closeable, Serializable {
 
 	/**
 	 * 从Redis中获取值
-	 * 
+	 *
 	 * @param key 键
 	 * @return 值
 	 */
@@ -150,8 +157,8 @@ public class RedisDS implements Closeable, Serializable {
 	}
 
 	/**
-	 * 从Redis中获取值
-	 * 
+	 * 从Redis中设置值
+	 *
 	 * @param key 键
 	 * @param value 值
 	 * @return 状态码
@@ -161,10 +168,10 @@ public class RedisDS implements Closeable, Serializable {
 			return jedis.set(key, value);
 		}
 	}
-	
+
 	/**
 	 * 从Redis中删除多个值
-	 * 
+	 *
 	 * @param keys 需要删除值对应的键列表
 	 * @return 删除个数，0表示无key可删除
 	 */

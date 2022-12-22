@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.cell.setters.EscapeStrCellSetter;
@@ -22,6 +23,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -578,6 +580,61 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void writeMultiSheetTest2() {
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet2.xlsx", "正常数据");
+		writer.write(rows);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeMultiSheetWithStyleTest() {
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheetWithStyle.xlsx", "表格1");
+
+		// 表1
+		List<Map<String, Object>> rows = new LinkedList<>();
+		final HashMap<String, Object> map = MapUtil.newHashMap();
+		map.put("k1", "v1");
+		map.put("k2", "v2");
+		map.put("k3", "v3");
+		rows.add(map);
+		writer.write(rows);
+
+		Font headFont = writer.createFont();
+		headFont.setBold(true);
+		headFont.setFontHeightInPoints((short)50);
+		headFont.setFontName("Microsoft YaHei");
+		writer.getStyleSet().getHeadCellStyle().setFont(headFont);
+
+		//表2
+		writer.setSheet("表2");
+		List<Map<String, Object>> rows2 = new LinkedList<>();
+		final HashMap<String, Object> map2 = MapUtil.newHashMap();
+		map2.put("x1", "v1");
+		rows2.add(map2);
+		writer.write(rows2);
+
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeMapsTest() {
 		List<Map<String, Object>> rows = new ArrayList<>();
 
@@ -806,5 +863,26 @@ public class ExcelWriteTest {
 		BigExcelWriter writer= new BigExcelWriter(tempFile);
 		writer.merge(0,1,2,2,3.99,false);
 		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeImgTest() {
+		ExcelWriter writer = ExcelUtil.getWriter(true);
+
+		File file = new File("C:\\Users\\zsz\\Desktop\\1.jpg");
+
+		writer.writeImg(file, 0, 0, 5, 10);
+
+		writer.flush(new File("C:\\Users\\zsz\\Desktop\\2.xlsx"));
+
+		writer.close();
+	}
+
+	@Test
+	public void getDispositionTest(){
+		ExcelWriter writer = ExcelUtil.getWriter(true);
+		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
 }

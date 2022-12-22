@@ -12,7 +12,7 @@
 	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
-	<a target="_blank" href="https://license.coscl.org.cn/MulanPSL2/">
+	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
@@ -40,8 +40,8 @@
 
 <br/>
 <p align="center">
-	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=jPq9DsjXs7GUWbXRZU3wygSJyMEy4pqr&jump_from=webapi">
-	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-610134978-orange"/></a>
+	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
+	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-715292493-orange"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -107,6 +107,8 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 [📘中文文档](https://www.hutool.cn/docs/)
 
+[📘中文备用文档](https://plus.hutool.cn/docs/#/)
+
 [📙参考API](https://apidoc.gitee.com/dromara/hutool/)
 
 [🎬视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
@@ -142,20 +144,20 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.7.18</version>
+    <version>5.8.11.M1</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.7.18'
+implementation 'cn.hutool:hutool-all:5.8.11.M1'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.7.18/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.11.M1/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
@@ -215,13 +217,10 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 ## ⭐Star Hutool
 
-[![Giteye chart](https://chart.giteye.net/gitee/dromara/hutool/GMSL7VDA.png)](https://giteye.net/chart/GMSL7VDA)
-
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
-## 📌公众号
+## 📌 知识星球
 
 <div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
-	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
+	<img src="https://hutool.cn/images/dromara/zsxq.jpg" height="150">
 </div>

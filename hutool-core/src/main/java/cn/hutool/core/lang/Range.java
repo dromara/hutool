@@ -188,7 +188,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	}
 
 	/**
-	 * 重置{@link Range}
+	 * 重置Range
 	 *
 	 * @return this
 	 */

@@ -86,13 +86,26 @@ public class NetUtil {
 	/**
 	 * 将IPv6地址字符串转为大整数
 	 *
-	 * @param IPv6Str 字符串
+	 * @param ipv6Str 字符串
+	 * @return 大整数, 如发生异常返回 null
+	 * @since 5.5.7
+	 * @deprecated 拼写错误，请使用{@link #ipv6ToBigInteger(String)}
+	 */
+	@Deprecated
+	public static BigInteger ipv6ToBitInteger(String ipv6Str) {
+		return ipv6ToBigInteger(ipv6Str);
+	}
+
+	/**
+	 * 将IPv6地址字符串转为大整数
+	 *
+	 * @param ipv6Str 字符串
 	 * @return 大整数, 如发生异常返回 null
 	 * @since 5.5.7
 	 */
-	public static BigInteger ipv6ToBitInteger(String IPv6Str) {
+	public static BigInteger ipv6ToBigInteger(String ipv6Str) {
 		try {
-			InetAddress address = InetAddress.getByName(IPv6Str);
+			InetAddress address = InetAddress.getByName(ipv6Str);
 			if (address instanceof Inet6Address) {
 				return new BigInteger(1, address.getAddress());
 			}
@@ -429,6 +442,17 @@ public class NetUtil {
 	 * @since 4.5.17
 	 */
 	public static LinkedHashSet<InetAddress> localAddressList(Filter<InetAddress> addressFilter) {
+		return localAddressList(null, addressFilter);
+	}
+
+	/**
+	 * 获取所有满足过滤条件的本地IP地址对象
+	 *
+	 * @param addressFilter          过滤器，null表示不过滤，获取所有地址
+	 * @param networkInterfaceFilter 过滤器，null表示不过滤，获取所有网卡
+	 * @return 过滤后的地址对象列表
+	 */
+	public static LinkedHashSet<InetAddress> localAddressList(Filter<NetworkInterface> networkInterfaceFilter, Filter<InetAddress> addressFilter) {
 		Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -444,6 +468,9 @@ public class NetUtil {
 
 		while (networkInterfaces.hasMoreElements()) {
 			final NetworkInterface networkInterface = networkInterfaces.nextElement();
+			if (networkInterfaceFilter != null && false == networkInterfaceFilter.accept(networkInterface)) {
+				continue;
+			}
 			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
 			while (inetAddresses.hasMoreElements()) {
 				final InetAddress inetAddress = inetAddresses.nextElement();
@@ -484,7 +511,7 @@ public class NetUtil {
 	 * <p>
 	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
-	 * 见：https://github.com/looly/hutool/issues/428
+	 * 见：https://github.com/dromara/hutool/issues/428
 	 *
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.1
@@ -572,16 +599,6 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获得本机物理地址
-	 *
-	 * @return 本机物理地址
-	 * @since 5.7.3
-	 */
-	public static byte[] getLocalHardwareAddress() {
-		return getHardwareAddress(getLocalhost());
-	}
-
-	/**
 	 * 获得指定地址信息中的硬件地址
 	 *
 	 * @param inetAddress {@link InetAddress}
@@ -602,6 +619,16 @@ public class NetUtil {
 			throw new UtilException(e);
 		}
 		return null;
+	}
+
+	/**
+	 * 获得本机物理地址
+	 *
+	 * @return 本机物理地址
+	 * @since 5.7.3
+	 */
+	public static byte[] getLocalHardwareAddress() {
+		return getHardwareAddress(getLocalhost());
 	}
 
 	/**
@@ -724,9 +751,9 @@ public class NetUtil {
 	 */
 	public static String getMultistageReverseProxyIp(String ip) {
 		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
+		if (ip != null && StrUtil.indexOf(ip, ',') > 0) {
+			final List<String> ips = StrUtil.splitTrim(ip, ',');
+			for (final String subIp : ips) {
 				if (false == isUnknown(subIp)) {
 					ip = subIp;
 					break;

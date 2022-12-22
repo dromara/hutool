@@ -1,26 +1,30 @@
 package cn.hutool.db.nosql.mongo;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.setting.Setting;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * MongoDB工厂类，用于创建
- * @author looly
+ * {@link MongoDS}工厂类，用于创建
  *
+ * @author Looly, VampireAchao
  */
 public class MongoFactory {
 
-	/** 各分组做组合key的时候分隔符 */
+	/**
+	 * 各分组做组合key的时候分隔符
+	 */
 	private final static String GROUP_SEPRATER = ",";
 
-	/** 数据源池 */
-	private static final Map<String, MongoDS> DS_MAP = new ConcurrentHashMap<>();
+	/**
+	 * 数据源池
+	 */
+	private static final Map<String, MongoDS> DS_MAP = new SafeConcurrentHashMap<>();
 
 	// JVM关闭前关闭MongoDB连接
 	static {
@@ -28,6 +32,7 @@ public class MongoFactory {
 	}
 
 	// ------------------------------------------------------------------------ Get DS start
+
 	/**
 	 * 获取MongoDB数据源<br>
 	 *
@@ -37,14 +42,7 @@ public class MongoFactory {
 	 */
 	public static MongoDS getDS(String host, int port) {
 		final String key = host + ":" + port;
-		MongoDS ds = DS_MAP.get(key);
-		if (null == ds) {
-			// 没有在池中加入之
-			ds = new MongoDS(host, port);
-			DS_MAP.put(key, ds);
-		}
-
-		return ds;
+		return DS_MAP.computeIfAbsent(key, (k)->new MongoDS(host, port));
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class MongoFactory {
 	 * 获取MongoDB数据源<br>
 	 *
 	 * @param setting 设定文件
-	 * @param groups 分组列表
+	 * @param groups  分组列表
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(Setting setting, String... groups) {
@@ -99,7 +97,7 @@ public class MongoFactory {
 	 * 获取MongoDB数据源<br>
 	 *
 	 * @param setting 配置文件
-	 * @param groups 分组列表
+	 * @param groups  分组列表
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(Setting setting, Collection<String> groups) {
@@ -111,8 +109,8 @@ public class MongoFactory {
 	 * 关闭全部连接
 	 */
 	public static void closeAll() {
-		if(MapUtil.isNotEmpty(DS_MAP)){
-			for(MongoDS ds : DS_MAP.values()) {
+		if (MapUtil.isNotEmpty(DS_MAP)) {
+			for (MongoDS ds : DS_MAP.values()) {
 				ds.close();
 			}
 			DS_MAP.clear();

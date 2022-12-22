@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -165,7 +164,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File writeLines(Collection<T> list) throws IORuntimeException {
+	public <T> File writeLines(Iterable<T> list) throws IORuntimeException {
 		return writeLines(list, false);
 	}
 
@@ -177,7 +176,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File appendLines(Collection<T> list) throws IORuntimeException {
+	public <T> File appendLines(Iterable<T> list) throws IORuntimeException {
 		return writeLines(list, true);
 	}
 
@@ -190,7 +189,7 @@ public class FileWriter extends FileWrapper {
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> File writeLines(Collection<T> list, boolean isAppend) throws IORuntimeException {
+	public <T> File writeLines(Iterable<T> list, boolean isAppend) throws IORuntimeException {
 		return writeLines(list, null, isAppend);
 	}
 
@@ -205,12 +204,22 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
-	public <T> File writeLines(Collection<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
+	public <T> File writeLines(Iterable<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
 		try (PrintWriter writer = getPrintWriter(isAppend)) {
+			boolean isFirst = true;
 			for (T t : list) {
 				if (null != t) {
+					if(isFirst){
+						isFirst = false;
+						if(isAppend && FileUtil.isNotEmpty(this.file)){
+							// 追加模式下且文件非空，补充换行符
+							printNewLine(writer, lineSeparator);
+						}
+					} else{
+						printNewLine(writer, lineSeparator);
+					}
 					writer.print(t);
-					printNewLine(writer, lineSeparator);
+
 					writer.flush();
 				}
 			}

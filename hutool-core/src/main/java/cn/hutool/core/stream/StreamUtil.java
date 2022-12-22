@@ -1,6 +1,5 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
@@ -10,6 +9,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -51,9 +52,34 @@ public class StreamUtil {
 	 */
 	public static <T> Stream<T> of(Iterable<T> iterable, boolean parallel) {
 		Assert.notNull(iterable, "Iterable must be not null!");
-		return StreamSupport.stream(
-				Spliterators.spliterator(CollUtil.toCollection(iterable), 0),
-				parallel);
+
+		return iterable instanceof Collection ?
+				parallel ? ((Collection<T>) iterable).parallelStream() : ((Collection<T>) iterable).stream() :
+				StreamSupport.stream(iterable.spliterator(), parallel);
+	}
+
+	/**
+	 * {@link Iterator} 转换为 {@link Stream}
+	 * @param iterator 迭代器
+	 * @param <T> 集合元素类型
+	 * @return {@link Stream}
+	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 */
+	public static <T> Stream<T> of(Iterator<T> iterator) {
+		return of(iterator, false);
+	}
+
+	/**
+	 * {@link Iterator} 转换为 {@link Stream}
+	 * @param iterator 迭代器
+	 * @param parallel 是否并行
+	 * @param <T> 集合元素类型
+	 * @return {@link Stream}
+	 * @throws IllegalArgumentException 如果iterator为null，抛出该异常
+	 */
+	public static <T> Stream<T> of(Iterator<T> iterator, boolean parallel) {
+		Assert.notNull(iterator, "iterator must not be null!");
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
 	/**

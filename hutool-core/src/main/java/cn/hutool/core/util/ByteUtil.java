@@ -27,7 +27,11 @@ import java.util.concurrent.atomic.LongAdder;
  */
 public class ByteUtil {
 
-	public static ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
+	public static final ByteOrder DEFAULT_ORDER = ByteOrder.LITTLE_ENDIAN;
+	/**
+	 * CPU的字节序
+	 */
+	public static final ByteOrder CPU_ENDIAN = "little".equals(System.getProperty("sun.cpu.endian")) ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
 
 	/**
 	 * int转byte
@@ -70,12 +74,25 @@ public class ByteUtil {
 	 * @param byteOrder 端序
 	 * @return short值
 	 */
-	public static short bytesToShort(byte[] bytes, ByteOrder byteOrder) {
+	public static short bytesToShort(final byte[] bytes, final ByteOrder byteOrder) {
+		return bytesToShort(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte数组转short<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组，长度必须大于2
+	 * @param start     开始位置
+	 * @param byteOrder 端序
+	 * @return short值
+	 */
+	public static short bytesToShort(final byte[] bytes, final int start, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			//小端模式，数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
-			return (short) (bytes[0] & 0xff | (bytes[1] & 0xff) << Byte.SIZE);
+			return (short) (bytes[start] & 0xff | (bytes[start + 1] & 0xff) << Byte.SIZE);
 		} else {
-			return (short) (bytes[1] & 0xff | (bytes[0] & 0xff) << Byte.SIZE);
+			return (short) (bytes[start + 1] & 0xff | (bytes[start] & 0xff) << Byte.SIZE);
 		}
 	}
 
@@ -130,16 +147,30 @@ public class ByteUtil {
 	 * @return int值
 	 */
 	public static int bytesToInt(byte[] bytes, ByteOrder byteOrder) {
+		return bytesToInt(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte[]转int值<br>
+	 * 自定义端序
+	 *
+	 * @param bytes     byte数组
+	 * @param start 开始位置（包含）
+	 * @param byteOrder 端序
+	 * @return int值
+	 * @since 5.7.21
+	 */
+	public static int bytesToInt(byte[] bytes, int start, ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			return bytes[0] & 0xFF | //
-					(bytes[1] & 0xFF) << 8 | //
-					(bytes[2] & 0xFF) << 16 | //
-					(bytes[3] & 0xFF) << 24; //
+			return bytes[start] & 0xFF | //
+					(bytes[1 + start] & 0xFF) << 8 | //
+					(bytes[2 + start] & 0xFF) << 16 | //
+					(bytes[3 + start] & 0xFF) << 24; //
 		} else {
-			return bytes[3] & 0xFF | //
-					(bytes[2] & 0xFF) << 8 | //
-					(bytes[1] & 0xFF) << 16 | //
-					(bytes[0] & 0xFF) << 24; //
+			return bytes[3 + start] & 0xFF | //
+					(bytes[2 + start] & 0xFF) << 8 | //
+					(bytes[1 + start] & 0xFF) << 16 | //
+					(bytes[start] & 0xFF) << 24; //
 		}
 
 	}
@@ -243,16 +274,31 @@ public class ByteUtil {
 	 * @return long值
 	 */
 	public static long bytesToLong(byte[] bytes, ByteOrder byteOrder) {
+		return bytesToLong(bytes, 0, byteOrder);
+	}
+
+	/**
+	 * byte数组转long<br>
+	 * 自定义端序<br>
+	 * from: https://stackoverflow.com/questions/4485128/how-do-i-convert-long-to-byte-and-back-in-java
+	 *
+	 * @param bytes     byte数组
+	 * @param start     计算数组开始位置
+	 * @param byteOrder 端序
+	 * @return long值
+	 * @since 5.7.21
+	 */
+	public static long bytesToLong(byte[] bytes, int start, ByteOrder byteOrder) {
 		long values = 0;
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = (Long.BYTES - 1); i >= 0; i--) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i] & 0xff);
+				values |= (bytes[i + start] & 0xff);
 			}
 		} else {
 			for (int i = 0; i < Long.BYTES; i++) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i] & 0xff);
+				values |= (bytes[i + start] & 0xff);
 			}
 		}
 
@@ -290,7 +336,7 @@ public class ByteUtil {
 	 * @return float值
 	 * @since 5.7.18
 	 */
-	public static double bytesToFloat(byte[] bytes) {
+	public static float bytesToFloat(byte[] bytes) {
 		return bytesToFloat(bytes, DEFAULT_ORDER);
 	}
 
@@ -372,7 +418,9 @@ public class ByteUtil {
 	 * @return bytes
 	 */
 	public static byte[] numberToBytes(Number number, ByteOrder byteOrder) {
-		if (number instanceof Double) {
+		if(number instanceof Byte){
+			return new byte[]{number.byteValue()};
+		}else if (number instanceof Double) {
 			return doubleToBytes((Double) number, byteOrder);
 		} else if (number instanceof Long) {
 			return longToBytes((Long) number, byteOrder);

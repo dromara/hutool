@@ -2,20 +2,14 @@ package cn.hutool.bloomfilter.filter;
 
 import cn.hutool.core.util.HashUtil;
 
-public class PJWFilter extends AbstractFilter {
+public class PJWFilter extends FuncFilter {
 	private static final long serialVersionUID = 1L;
 
-	public PJWFilter(long maxValue, int machineNum) {
-		super(maxValue, machineNum);
-	}
-
 	public PJWFilter(long maxValue) {
-		super(maxValue);
+		this(maxValue, DEFAULT_MACHINE_NUM);
 	}
 
-	@Override
-	public long hash(String str) {
-		return HashUtil.pjwHash(str) % size;
+	public PJWFilter(long maxValue, int machineNum) {
+		super(maxValue, machineNum, HashUtil::pjwHash);
 	}
-
 }

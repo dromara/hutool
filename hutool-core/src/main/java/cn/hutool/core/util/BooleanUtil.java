@@ -15,6 +15,8 @@ public class BooleanUtil {
 
 	/** 表示为真的字符串 */
 	private static final Set<String> TRUE_SET = CollUtil.newHashSet("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
+	/** 表示为假的字符串 */
+	private static final Set<String> FALSE_SET = CollUtil.newHashSet("false", "no", "n", "f", "0", "off", "否", "错", "假", "錯", "×");
 
 	/**
 	 * 取相反值
@@ -83,6 +85,28 @@ public class BooleanUtil {
 			return TRUE_SET.contains(valueStr);
 		}
 		return false;
+	}
+
+	/**
+	 * 转换字符串为boolean值<br>
+	 * 如果为["true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√"]，返回{@code true}<br>
+	 * 如果为["false", "no", "n", "f", "0", "off", "否", "错", "假", "錯", "×"]，返回{@code false}<br>
+	 * 其他情况返回{@code null}
+	 *
+	 * @param valueStr 字符串
+	 * @return boolean值
+	 * @since 5.8.1
+	 */
+	public static Boolean toBooleanObject(String valueStr) {
+		if (StrUtil.isNotBlank(valueStr)) {
+			valueStr = valueStr.trim().toLowerCase();
+			if(TRUE_SET.contains(valueStr)){
+				return true;
+			} else if(FALSE_SET.contains(valueStr)){
+				return false;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -332,8 +356,13 @@ public class BooleanUtil {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
-		final boolean[] primitive = Convert.convert(boolean[].class, array);
-		return and(primitive);
+
+		for (final Boolean b : array) {
+			if(isFalse(b)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -383,8 +412,13 @@ public class BooleanUtil {
 		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
-		final boolean[] primitive = Convert.convert(boolean[].class, array);
-		return or(primitive);
+
+		for (final Boolean b : array) {
+			if(isTrue(b)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class BooleanUtilTest {
-	
+
 	@Test
 	public void toBooleanTest() {
 		Assert.assertTrue(BooleanUtil.toBoolean("true"));
@@ -16,7 +16,7 @@ public class BooleanUtilTest {
 		Assert.assertTrue(BooleanUtil.toBoolean("是"));
 		Assert.assertTrue(BooleanUtil.toBoolean("对"));
 		Assert.assertTrue(BooleanUtil.toBoolean("真"));
-		
+
 		Assert.assertFalse(BooleanUtil.toBoolean("false"));
 		Assert.assertFalse(BooleanUtil.toBoolean("6455434"));
 		Assert.assertFalse(BooleanUtil.toBoolean(""));
@@ -38,5 +38,38 @@ public class BooleanUtilTest {
 	public void xorTest(){
 		Assert.assertTrue(BooleanUtil.xor(true,false));
 		Assert.assertTrue(BooleanUtil.xorOfWrap(true,false));
+	}
+
+	public void orOfWrapTest() {
+		Assert.assertFalse(BooleanUtil.orOfWrap(Boolean.FALSE, null));
+		Assert.assertTrue(BooleanUtil.orOfWrap(Boolean.TRUE, null));
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	@Test
+	public void isTrueIsFalseTest() {
+		Assert.assertFalse(BooleanUtil.isTrue(null));
+		Assert.assertFalse(BooleanUtil.isFalse(null));
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public void negateTest() {
+		Assert.assertFalse(BooleanUtil.negate(Boolean.TRUE));
+		Assert.assertTrue(BooleanUtil.negate(Boolean.FALSE));
+
+		Assert.assertFalse(BooleanUtil.negate(Boolean.TRUE.booleanValue()));
+		Assert.assertTrue(BooleanUtil.negate(Boolean.FALSE.booleanValue()));
+	}
+
+	@Test
+	public void toStringTest() {
+		Assert.assertEquals("true", BooleanUtil.toStringTrueFalse(true));
+		Assert.assertEquals("false", BooleanUtil.toStringTrueFalse(false));
+
+		Assert.assertEquals("yes", BooleanUtil.toStringYesNo(true));
+		Assert.assertEquals("no", BooleanUtil.toStringYesNo(false));
+
+		Assert.assertEquals("on", BooleanUtil.toStringOnOff(true));
+		Assert.assertEquals("off", BooleanUtil.toStringOnOff(false));
 	}
 }

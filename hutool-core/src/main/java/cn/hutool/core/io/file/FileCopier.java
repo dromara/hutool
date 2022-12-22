@@ -168,7 +168,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	@Override
 	public File copy() throws IORuntimeException{
 		final File src = this.src;
-		final File dest = this.dest;
+		File dest = this.dest;
 		// check
 		Assert.notNull(src, "Source File is null !");
 		if (false == src.exists()) {
@@ -191,7 +191,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			final File subTarget = isCopyContentIfDir ? dest : FileUtil.mkdir(FileUtil.file(dest, src.getName()));
 			internalCopyDirContent(src, subTarget);
 		} else {// 复制文件
-			internalCopyFile(src, dest);
+			dest = internalCopyFile(src, dest);
 		}
 		return dest;
 	}
@@ -244,14 +244,15 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 2、如果目标是一个已存在的目录，则文件拷贝到此目录下，文件名与原文件名一致
 	 * </pre>
 	 *
-	 * @param src 源文件，必须为文件
+	 * @param src  源文件，必须为文件
 	 * @param dest 目标文件，如果非覆盖模式必须为目录
+	 * @return 目标的目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	private void internalCopyFile(File src, File dest) throws IORuntimeException {
+	private File internalCopyFile(File src, File dest) throws IORuntimeException {
 		if (null != copyFilter && false == copyFilter.accept(src)) {
 			//被过滤的文件跳过
-			return;
+			return src;
 		}
 
 		// 如果已经存在目标文件，切为不覆盖模式，跳过之
@@ -263,12 +264,11 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 
 			if(dest.exists() && false == isOverride) {
 				//非覆盖模式跳过
-				return;
+				return src;
 			}
 		}else {
 			//路径不存在则创建父目录
-			//noinspection ResultOfMethodCallIgnored
-			dest.getParentFile().mkdirs();
+			FileUtil.mkParentDirs(dest);
 		}
 
 		final ArrayList<CopyOption> optionList = new ArrayList<>(2);
@@ -284,6 +284,8 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		return dest;
 	}
 	//----------------------------------------------------------------------------------------- Private method end
 }

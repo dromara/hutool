@@ -211,7 +211,8 @@ public class Scheduler implements Serializable {
 					final String pattern = entry.getValue();
 					StaticLog.debug("Load job: {} {}", pattern, jobClass);
 					try {
-						schedule(pattern, new InvokeTask(jobClass));
+						// issue#I5E7BM@Gitee，自定义ID避免重复从配置文件加载
+						schedule("id_" + jobClass, pattern, new InvokeTask(jobClass));
 					} catch (Exception e) {
 						throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
 					}

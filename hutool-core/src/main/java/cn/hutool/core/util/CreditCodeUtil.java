@@ -1,13 +1,14 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * 统一社会信用代码工具类
+ * 统一社会信用代码（GB32100-2015）工具类<br>
+ * 标准见：https://www.cods.org.cn/c/2020-10-29/12575.html
  *
  * <pre>
  * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
@@ -24,12 +25,18 @@ public class CreditCodeUtil {
 
 	public static final Pattern CREDIT_CODE_PATTERN = PatternPool.CREDIT_CODE;
 
+	/**
+	 * 加权因子
+	 */
 	private static final int[] WEIGHT = {1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28};
+	/**
+	 * 代码字符集
+	 */
 	private static final char[] BASE_CODE_ARRAY = "0123456789ABCDEFGHJKLMNPQRTUWXY".toCharArray();
 	private static final Map<Character, Integer> CODE_INDEX_MAP;
 
 	static {
-		CODE_INDEX_MAP = new ConcurrentHashMap<>();
+		CODE_INDEX_MAP = new SafeConcurrentHashMap<>(BASE_CODE_ARRAY.length);
 		for (int i = 0; i < BASE_CODE_ARRAY.length; i++) {
 			CODE_INDEX_MAP.put(BASE_CODE_ARRAY[i], i);
 		}
@@ -110,10 +117,10 @@ public class CreditCodeUtil {
 	}
 
 	/**
-	 * 获取校验码
+	 * 获取校验位的值
 	 *
 	 * @param creditCode 统一社会信息代码
-	 * @return 获取较验位的值
+	 * @return 获取校验位的值，-1表示获取错误
 	 */
 	private static int getParityBit(CharSequence creditCode) {
 		int sum = 0;

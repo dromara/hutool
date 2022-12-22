@@ -187,6 +187,21 @@ public class OptTest {
 		Assert.assertEquals(indexOut, indexOutSituation);
 		Assert.assertEquals("hutool", npe);
 		Assert.assertEquals("hutool", indexOut);
+
+		// 多线程下情况测试
+		Stream.iterate(0, i -> ++i).limit(20000).parallel().forEach(i -> {
+			Opt<Object> opt = Opt.ofTry(() -> {
+				if (i % 2 == 0) {
+					throw new IllegalStateException(i + "");
+				} else {
+					throw new NullPointerException(i + "");
+				}
+			});
+			Assert.assertTrue(
+					(i % 2 == 0 && opt.getException() instanceof IllegalStateException) ||
+							(i % 2 != 0 && opt.getException() instanceof NullPointerException)
+			);
+		});
 	}
 
 	@Data

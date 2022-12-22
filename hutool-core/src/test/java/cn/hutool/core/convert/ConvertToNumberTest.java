@@ -36,7 +36,7 @@ public class ConvertToNumberTest {
 	@Test
 	public void toBigDecimalTest(){
 		BigDecimal bigDecimal = Convert.toBigDecimal("1.1f");
-		Assert.assertEquals(1.1f, bigDecimal.floatValue(), 1);
+		Assert.assertEquals(1.1f, bigDecimal.floatValue(), 0);
 
 		bigDecimal = Convert.toBigDecimal("1L");
 		Assert.assertEquals(1L, bigDecimal.longValue());

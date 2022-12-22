@@ -259,7 +259,13 @@ public class CharUtil implements CharPool {
 				|| Character.isSpaceChar(c)
 				|| c == '\ufeff'
 				|| c == '\u202a'
-				|| c == '\u0000';
+				|| c == '\u0000'
+				// issue#I5UGSQ，Hangul Filler
+				|| c == '\u3164'
+				// Braille Pattern Blank
+				|| c == '\u2800'
+				// MONGOLIAN VOWEL SEPARATOR
+				|| c == '\u180e';
 	}
 
 	/**

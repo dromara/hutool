@@ -47,6 +47,12 @@ public class IdcardUtilTest {
 	}
 
 	@Test
+	public void convert18To15Test() {
+		String idcard15 = IdcardUtil.convert18To15("150102198807303035");
+		Assert.assertEquals(ID_15, idcard15);
+	}
+
+	@Test
 	public void getAgeByIdCardTest() {
 		DateTime date = DateUtil.parse("2017-04-10");
 
@@ -78,7 +84,13 @@ public class IdcardUtilTest {
 	@Test
 	public void getCityCodeByIdCardTest() {
 		String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
-		Assert.assertEquals("32108", codeByIdCard);
+		Assert.assertEquals("3210", codeByIdCard);
+	}
+
+	@Test
+	public void getDistrictCodeByIdCardTest() {
+		String codeByIdCard = IdcardUtil.getDistrictCodeByIdCard(ID_18);
+		Assert.assertEquals("321083", codeByIdCard);
 	}
 
 	@Test

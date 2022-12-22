@@ -119,10 +119,10 @@ public class SimpleFtpServer {
 	 * @return this
 	 */
 	public SimpleFtpServer addAnonymous(String homePath) {
-		BaseUser user = new BaseUser();
+		final BaseUser user = new BaseUser();
 		user.setName("anonymous");
 		user.setHomeDirectory(homePath);
-		List<Authority> authorities = new ArrayList<>();
+		final List<Authority> authorities = new ArrayList<>();
 		// 添加用户读写权限
 		authorities.add(new WritePermission());
 		user.setAuthorities(authorities);
@@ -164,7 +164,7 @@ public class SimpleFtpServer {
 	 * @return this
 	 */
 	public SimpleFtpServer setSsl(File keystoreFile, String password) {
-		SslConfigurationFactory sslFactory = new SslConfigurationFactory();
+		final SslConfigurationFactory sslFactory = new SslConfigurationFactory();
 		sslFactory.setKeystoreFile(keystoreFile);
 		sslFactory.setKeystorePassword(password);
 		return setSsl(sslFactory.createSslConfiguration());

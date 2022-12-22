@@ -13,10 +13,12 @@ import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -32,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -40,7 +43,11 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,6 +57,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -86,6 +94,10 @@ public class FileUtil extends PathUtil {
 	 * 在Unix和Linux下 是{@code ':'}; 在Windows下是 {@code ';'}
 	 */
 	public static final String PATH_SEPARATOR = File.pathSeparator;
+	/**
+	 * 绝对路径判断正则
+	 */
+	private static final Pattern PATTERN_PATH_ABSOLUTE = Pattern.compile("^[a-zA-Z]:([/\\\\].*)?");
 
 
 	/**
@@ -526,28 +538,68 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 计算目录或文件的总大小<br>
 	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
-	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回<br>
+	 * 此方法不包括目录本身的占用空间大小。
 	 *
 	 * @param file 目录或文件,null或者文件不存在返回0
 	 * @return 总大小，bytes长度
 	 */
 	public static long size(File file) {
+		return size(file, false);
+	}
+
+	/**
+	 * 计算目录或文件的总大小<br>
+	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
+	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 *
+	 * @param file           目录或文件,null或者文件不存在返回0
+	 * @param includeDirSize 是否包括每层目录本身的大小
+	 * @return 总大小，bytes长度
+	 * @since 5.7.21
+	 */
+	public static long size(File file, boolean includeDirSize) {
 		if (null == file || false == file.exists() || isSymlink(file)) {
 			return 0;
 		}
 
 		if (file.isDirectory()) {
-			long size = 0L;
+			long size = includeDirSize ? file.length() : 0;
 			File[] subFiles = file.listFiles();
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return 0L;// empty directory
 			}
 			for (File subFile : subFiles) {
-				size += size(subFile);
+				size += size(subFile, includeDirSize);
 			}
 			return size;
 		} else {
 			return file.length();
+		}
+	}
+
+	/**
+	 * 计算文件的总行数<br>
+	 * 读取文件采用系统默认编码，一般乱码不会造成行数错误。
+	 *
+	 * @param file 文件
+	 * @return 该文件总行数
+	 * @since 5.7.22
+	 */
+	public static int getTotalLines(File file) {
+		if (false == isFile(file)) {
+			throw new IORuntimeException("Input must be a File");
+		}
+		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
+			// 设置起始为1
+			lineNumberReader.setLineNumber(1);
+			// 跳过文件中内容
+			//noinspection ResultOfMethodCallIgnored
+			lineNumberReader.skip(Long.MAX_VALUE);
+			// 获取当前行号
+			return lineNumberReader.getLineNumber();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -654,7 +706,7 @@ public class FileUtil extends PathUtil {
 		if (null == file) {
 			return null;
 		}
-		return mkdir(file.getParentFile());
+		return mkdir(getParent(file, 1));
 	}
 
 	/**
@@ -811,7 +863,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建文件夹，会递归自动创建其不存在的父文件夹，如果存在直接返回此文件夹<br>
-	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型<br>
 	 *
 	 * @param dir 目录
 	 * @return 创建的目录
@@ -821,10 +873,46 @@ public class FileUtil extends PathUtil {
 			return null;
 		}
 		if (false == dir.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			dir.mkdirs();
+			mkdirsSafely(dir, 5, 1);
 		}
 		return dir;
+	}
+
+	/**
+	 * 安全地级联创建目录 (确保并发环境下能创建成功)
+	 *
+	 * <pre>
+	 *     并发环境下，假设 test 目录不存在，如果线程A mkdirs "test/A" 目录，线程B mkdirs "test/B"目录，
+	 *     其中一个线程可能会失败，进而导致以下代码抛出 FileNotFoundException 异常
+	 *
+	 *     file.getParentFile().mkdirs(); // 父目录正在被另一个线程创建中，返回 false
+	 *     file.createNewFile(); // 抛出 IO 异常，因为该线程无法感知到父目录已被创建
+	 * </pre>
+	 *
+	 * @param dir         待创建的目录
+	 * @param tryCount    最大尝试次数
+	 * @param sleepMillis 线程等待的毫秒数
+	 * @return true表示创建成功，false表示创建失败
+	 * @author z8g
+	 * @since 5.7.21
+	 */
+	public static boolean mkdirsSafely(File dir, int tryCount, long sleepMillis) {
+		if (dir == null) {
+			return false;
+		}
+		if (dir.isDirectory()) {
+			return true;
+		}
+		for (int i = 1; i <= tryCount; i++) { // 高并发场景下，可以看到 i 处于 1 ~ 3 之间
+			// 如果文件已存在，也会返回 false，所以该值不能作为是否能创建的依据，因此不对其进行处理
+			//noinspection ResultOfMethodCallIgnored
+			dir.mkdirs();
+			if (dir.exists()) {
+				return true;
+			}
+			ThreadUtil.sleep(sleepMillis);
+		}
+		return dir.exists();
 	}
 
 	/**
@@ -837,6 +925,56 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File createTempFile(File dir) throws IORuntimeException {
 		return createTempFile("hutool", null, dir, true);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].tmp。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile() throws IORuntimeException {
+		return createTempFile("hutool", null, null, true);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile(String suffix, boolean isReCreat) throws IORuntimeException {
+		return createTempFile("hutool", suffix, null, isReCreat);
+	}
+
+	/**
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
+	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
+	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
+	 * 调用 Java 虚拟机时，可以为该系统属性赋予不同的值，但不保证对该属性的编程更改对该方法使用的临时目录有任何影响。
+	 *
+	 * @param prefix    前缀，至少3个字符
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 5.7.22
+	 */
+	public static File createTempFile(String prefix, String suffix, boolean isReCreat) throws IORuntimeException {
+		return createTempFile(prefix, suffix, null, isReCreat);
 	}
 
 	/**
@@ -959,7 +1097,7 @@ public class FileUtil extends PathUtil {
 	 * 情况如下：
 	 *
 	 * <pre>
-	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下
+	 * 1、src和dest都为目录，则将src下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
 	 * </pre>
@@ -979,7 +1117,7 @@ public class FileUtil extends PathUtil {
 	 * 情况如下：
 	 *
 	 * <pre>
-	 * 1、src和dest都为目录，则讲src下所有文件（包括子目录）拷贝到dest下
+	 * 1、src和dest都为目录，则将src下所有文件（包括子目录）拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
 	 * </pre>
@@ -1166,7 +1304,13 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 给定路径已经是绝对路径<br>
-	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断
+	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断<br>
+	 * 绝对路径判断条件是：
+	 * <ul>
+	 *     <li>以/开头的路径</li>
+	 *     <li>满足类似于 c:/xxxxx，其中祖母随意，不区分大小写</li>
+	 *     <li>满足类似于 d:\xxxxx，其中祖母随意，不区分大小写</li>
+	 * </ul>
 	 *
 	 * @param path 需要检查的Path
 	 * @return 是否已经是绝对路径
@@ -1177,7 +1321,7 @@ public class FileUtil extends PathUtil {
 		}
 
 		// 给定的路径已经是绝对路径了
-		return StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:([/\\\\].*)?");
+		return StrUtil.C_SLASH == path.charAt(0) || ReUtil.isMatch(PATTERN_PATH_ABSOLUTE, path);
 	}
 
 	/**
@@ -2876,7 +3020,12 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 将列表写入文件，追加模式
+	 * 将列表写入文件，追加模式，策略为：
+	 * <ul>
+	 *     <li>当文件为空，从开头追加，尾部不加空行</li>
+	 *     <li>当有内容，换行追加，尾部不加空行</li>
+	 *     <li>当有内容，并末尾有空行，依旧换行追加</li>
+	 * </ul>
 	 *
 	 * @param <T>     集合元素类型
 	 * @param list    列表
@@ -3097,7 +3246,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 可读的文件大小<br>
-	 * 参考 http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+	 * 参考 <a href="http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc">http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc</a>
 	 *
 	 * @param size Long类型大小
 	 * @return 大小
@@ -3306,10 +3455,16 @@ public class FileUtil extends PathUtil {
 		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
 		if (null == contentType) {
 			// 补充一些常用的mimeType
-			if (filePath.endsWith(".css")) {
+			if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
 				contentType = "text/css";
-			} else if (filePath.endsWith(".js")) {
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
 				contentType = "application/x-javascript";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
+				contentType = "application/x-rar-compressed";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
+				contentType = "application/x-7z-compressed";
+			} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
+				contentType = "application/widget";
 			}
 		}
 

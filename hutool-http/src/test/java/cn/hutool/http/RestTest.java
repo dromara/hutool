@@ -63,6 +63,7 @@ public class RestTest {
 				.body(JSONUtil.createObj()
 						.set("advertiser_ids", new Long[] {1690657248243790L})
 						.set("fields", new String[] {"id", "name", "status"}).toString());
+		Console.log(request);
 		Console.log(request.execute().body());
 	}
 }

@@ -74,9 +74,9 @@ public class ExcelUtil {
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
 	 *
-	 * @param file       Excel文件
-	 * @param idOrRidOrSheetName    Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
-	 * @param rowHandler 行处理器
+	 * @param file               Excel文件
+	 * @param idOrRidOrSheetName Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param rowHandler         行处理器
 	 * @since 5.4.4
 	 */
 	public static void readBySax(File file, String idOrRidOrSheetName, RowHandler rowHandler) {
@@ -101,9 +101,9 @@ public class ExcelUtil {
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
 	 *
-	 * @param in         Excel流
-	 * @param idOrRidOrSheetName    Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
-	 * @param rowHandler 行处理器
+	 * @param in                 Excel流
+	 * @param idOrRidOrSheetName Excel中的sheet id或rid编号或sheet名称，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param rowHandler         行处理器
 	 * @since 5.4.4
 	 */
 	public static void readBySax(InputStream in, String idOrRidOrSheetName, RowHandler rowHandler) {
@@ -149,6 +149,22 @@ public class ExcelUtil {
 	public static ExcelReader getReader(String bookFilePath, int sheetIndex) {
 		try {
 			return new ExcelReader(bookFilePath, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 *
+	 * @param bookFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param sheetName    sheet名，第一个默认是sheet1
+	 * @return {@link ExcelReader}
+	 * @since 5.8.0
+	 */
+	public static ExcelReader getReader(String bookFilePath, String sheetName) {
+		try {
+			return new ExcelReader(bookFilePath, sheetName);
 		} catch (NoClassDefFoundError e) {
 			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
@@ -345,7 +361,7 @@ public class ExcelUtil {
 	 * @return {@link BigExcelWriter}
 	 * @since 4.1.13
 	 */
-	public static ExcelWriter getBigWriter() {
+	public static BigExcelWriter getBigWriter() {
 		try {
 			return new BigExcelWriter();
 		} catch (NoClassDefFoundError e) {
@@ -362,7 +378,7 @@ public class ExcelUtil {
 	 * @return {@link BigExcelWriter}
 	 * @since 4.1.13
 	 */
-	public static ExcelWriter getBigWriter(int rowAccessWindowSize) {
+	public static BigExcelWriter getBigWriter(int rowAccessWindowSize) {
 		try {
 			return new BigExcelWriter(rowAccessWindowSize);
 		} catch (NoClassDefFoundError e) {

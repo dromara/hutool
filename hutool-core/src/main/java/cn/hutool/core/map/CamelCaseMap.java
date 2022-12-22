@@ -1,24 +1,26 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.hutool.core.util.StrUtil;
+import java.util.function.Function;
 
 /**
  * 驼峰Key风格的Map<br>
  * 对KEY转换为驼峰，get("int_value")和get("intValue")获得的值相同，put进入的值也会被覆盖
  *
- * @author Looly
- *
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author Looly
  * @since 4.0.7
  */
-public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
+public class CamelCaseMap<K, V> extends FuncKeyMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	// ------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 */
@@ -48,7 +50,7 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	 * 构造
 	 *
 	 * @param loadFactor 加载因子
-	 * @param m Map
+	 * @param m          初始Map，数据会被默认拷贝到一个新的HashMap中
 	 */
 	public CamelCaseMap(float loadFactor, Map<? extends K, ? extends V> m) {
 		this(m.size(), loadFactor);
@@ -59,24 +61,27 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	 * 构造
 	 *
 	 * @param initialCapacity 初始大小
-	 * @param loadFactor 加载因子
+	 * @param loadFactor      加载因子
 	 */
 	public CamelCaseMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<>(initialCapacity, loadFactor));
+		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)));
 	}
-	// ------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 将Key转为驼峰风格，如果key为字符串的话
+	 * 构造<br>
+	 * 注意此构造将传入的Map作为被包装的Map，针对任何修改，传入的Map都会被同样修改。
 	 *
-	 * @param key KEY
-	 * @return 驼峰Key
+	 * @param emptyMapBuilder Map构造器，必须构造空的Map
 	 */
-	@Override
-	protected Object customKey(Object key) {
-		if (key instanceof CharSequence) {
-			key = StrUtil.toCamelCase(key.toString());
-		}
-		return key;
+	CamelCaseMap(MapBuilder<K, V> emptyMapBuilder) {
+		// issue#I5VRHW@Gitee 使Function可以被序列化
+		super(emptyMapBuilder.build(), (Function<Object, K> & Serializable)(key) -> {
+			if (key instanceof CharSequence) {
+				key = StrUtil.toCamelCase(key.toString());
+			}
+			//noinspection unchecked
+			return (K) key;
+		});
 	}
+	// ------------------------------------------------------------------------- Constructor end
 }

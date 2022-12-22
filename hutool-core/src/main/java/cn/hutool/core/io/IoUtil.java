@@ -498,7 +498,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 读取指定长度的byte数组，不关闭流
 	 *
-	 * @param in     {@link InputStream}，为null返回null
+	 * @param in     {@link InputStream}，为{@code null}返回{@code null}
 	 * @param length 长度，小于等于0返回空byte数组
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
@@ -511,20 +511,9 @@ public class IoUtil extends NioUtil {
 			return new byte[0];
 		}
 
-		byte[] b = new byte[length];
-		int readLength;
-		try {
-			readLength = in.read(b);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (readLength > 0 && readLength < length) {
-			byte[] b2 = new byte[readLength];
-			System.arraycopy(b, 0, b2, 0, readLength);
-			return b2;
-		} else {
-			return b;
-		}
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream(length);
+		copy(in, out, DEFAULT_BUFFER_SIZE, length, null);
+		return out.toByteArray();
 	}
 
 	/**

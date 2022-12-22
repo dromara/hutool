@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -169,6 +170,16 @@ public class Ipv4Util {
 	}
 
 	/**
+	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据, 如果格式不正确返回 defaultValue
+	 * @param strIP IP V4 地址
+	 * @param defaultValue 默认值
+	 * @return long值
+	 */
+	public static long ipv4ToLong(String strIP, long defaultValue) {
+		return Validator.isIpv4(strIP) ? ipv4ToLong(strIP) : defaultValue;
+	}
+
+	/**
 	 * 根据 ip/掩码位 计算IP段的起始IP（字符串型）
 	 * 方法别名：inet_ntoa
 	 *
@@ -187,7 +198,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 起始IP的长整型表示
 	 */
-	private static Long getBeginIpLong(String ip, int maskBit) {
+	public static Long getBeginIpLong(String ip, int maskBit) {
 		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
 
@@ -348,7 +359,7 @@ public class Ipv4Util {
 	 * @param maskBit 给定的掩码位，如30
 	 * @return 终止IP的长整型表示
 	 */
-	private static Long getEndIpLong(String ip, int maskBit) {
+	public static Long getEndIpLong(String ip, int maskBit) {
 		return getBeginIpLong(ip, maskBit)
 				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
 	}

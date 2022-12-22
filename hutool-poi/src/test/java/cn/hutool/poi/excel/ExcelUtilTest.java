@@ -3,7 +3,9 @@ package cn.hutool.poi.excel;
 import cn.hutool.poi.excel.cell.CellLocation;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Ignore;
+
+import java.util.List;
+import java.util.Map;
 
 public class ExcelUtilTest {
 
@@ -38,18 +40,25 @@ public class ExcelUtilTest {
 	}
 
 	@Test
-	public void toLocationTest(){
+	public void toLocationTest() {
 		final CellLocation a11 = ExcelUtil.toLocation("A11");
 		Assert.assertEquals(0, a11.getX());
 		Assert.assertEquals(10, a11.getY());
 	}
 
 	@Test
-	@Ignore
-	public void readAndWriteTest(){
-		ExcelReader reader = ExcelUtil.getReader("d:\\test/select.xls");
+	public void readAndWriteTest() {
+		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx");
 		ExcelWriter writer = reader.getWriter();
 		writer.writeCellValue(1, 2, "设置值");
 		writer.close();
+	}
+
+	@Test
+	public void getReaderByBookFilePathAndSheetNameTest() {
+		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
+		List<Map<String, Object>> list = reader.readAll();
+		reader.close();
+		Assert.assertEquals(1L, list.get(1).get("鞋码"));
 	}
 }

@@ -13,9 +13,7 @@ import java.lang.reflect.Method;
  * 时会出现权限不够问题，抛出"no private access for invokespecial"异常，因此针对JDK8及JDK9+分别封装lookup方法。
  *
  * 参考：
- * <ul>
- *     <li>https://blog.csdn.net/u013202238/article/details/108687086</li>
- * </ul>
+ * <p><a href="https://blog.csdn.net/u013202238/article/details/108687086">https://blog.csdn.net/u013202238/article/details/108687086</a></p>
  *
  * @author looly
  * @since 5.7.7

@@ -2,9 +2,11 @@ package cn.hutool.extra.validation;
 
 import cn.hutool.extra.validation.BeanValidationResult.ErrorMessage;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 import java.util.Set;
 
 
@@ -24,7 +26,9 @@ public class ValidationUtil {
 	private static final Validator validator;
 
 	static {
-		validator = Validation.buildDefaultValidatorFactory().getValidator();
+		try(ValidatorFactory factory = Validation.buildDefaultValidatorFactory()){
+			validator = factory.getValidator();
+		}
 	}
 
 	/**

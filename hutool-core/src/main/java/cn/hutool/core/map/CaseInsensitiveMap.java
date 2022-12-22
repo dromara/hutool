@@ -1,7 +1,9 @@
 package cn.hutool.core.map;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 忽略大小写的Map<br>
@@ -13,7 +15,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 3.0.2
  */
-public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
+public class CaseInsensitiveMap<K, V> extends FuncKeyMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	//------------------------------------------------------------------------- Constructor start
@@ -34,9 +36,10 @@ public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
 	}
 
 	/**
-	 * 构造
+	 * 构造<br>
+	 * 注意此构造将传入的Map作为被包装的Map，针对任何修改，传入的Map都会被同样修改。
 	 *
-	 * @param m Map
+	 * @param m 被包装的自定义Map创建器
 	 */
 	public CaseInsensitiveMap(Map<? extends K, ? extends V> m) {
 		this(DEFAULT_LOAD_FACTOR, m);
@@ -61,21 +64,24 @@ public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CaseInsensitiveMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<>(initialCapacity, loadFactor));
+		this(MapBuilder.create(new HashMap<>(initialCapacity, loadFactor)));
 	}
-	//------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 将Key转为小写
+	 * 构造<br>
+	 * 注意此构造将传入的Map作为被包装的Map，针对任何修改，传入的Map都会被同样修改。
 	 *
-	 * @param key KEY
-	 * @return 小写KEY
+	 * @param emptyMapBuilder 被包装的自定义Map创建器
 	 */
-	@Override
-	protected Object customKey(Object key) {
-		if (key instanceof CharSequence) {
-			key = key.toString().toLowerCase();
-		}
-		return key;
+	CaseInsensitiveMap(MapBuilder<K, V> emptyMapBuilder) {
+		// issue#I5VRHW@Gitee 使Function可以被序列化
+		super(emptyMapBuilder.build(), (Function<Object, K> & Serializable)(key)->{
+			if (key instanceof CharSequence) {
+				key = key.toString().toLowerCase();
+			}
+			//noinspection unchecked
+			return (K) key;
+		});
 	}
+	//------------------------------------------------------------------------- Constructor end
 }

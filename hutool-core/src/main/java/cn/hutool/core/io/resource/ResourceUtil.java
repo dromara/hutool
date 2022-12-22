@@ -1,9 +1,10 @@
 package cn.hutool.core.io.resource;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
@@ -21,7 +22,6 @@ import java.util.List;
  * Resource资源工具类
  *
  * @author Looly
- *
  */
 public class ResourceUtil {
 
@@ -40,7 +40,7 @@ public class ResourceUtil {
 	 * 读取Classpath下的资源为字符串
 	 *
 	 * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
-	 * @param charset 编码
+	 * @param charset  编码
 	 * @return 资源内容
 	 * @since 3.1.1
 	 */
@@ -102,7 +102,7 @@ public class ResourceUtil {
 	 * 从ClassPath资源中获取{@link BufferedReader}
 	 *
 	 * @param resource ClassPath资源
-	 * @param charset 编码
+	 * @param charset  编码
 	 * @return {@link InputStream}
 	 * @since 3.1.2
 	 */
@@ -139,13 +139,24 @@ public class ResourceUtil {
 	 * @return 资源列表
 	 */
 	public static List<URL> getResources(String resource) {
-		final Enumeration<URL> resources;
-		try {
-			resources = ClassLoaderUtil.getClassLoader().getResources(resource);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return CollUtil.newArrayList(resources);
+		return getResources(resource, null);
+	}
+
+	/**
+	 * 获取指定路径下的资源列表<br>
+	 * 路径格式必须为目录格式,用/分隔，例如:
+	 *
+	 * <pre>
+	 * config/a
+	 * spring/xml
+	 * </pre>
+	 *
+	 * @param resource 资源路径
+	 * @param filter   过滤器，用于过滤不需要的资源，{@code null}表示不过滤，保留所有元素
+	 * @return 资源列表
+	 */
+	public static List<URL> getResources(String resource, Filter<URL> filter) {
+		return IterUtil.filterToList(getResourceIter(resource), filter);
 	}
 
 	/**
@@ -174,7 +185,7 @@ public class ResourceUtil {
 	/**
 	 * 获得资源相对路径对应的URL
 	 *
-	 * @param resource 资源相对路径，{@code null}和""都表示classpath根路径
+	 * @param resource  资源相对路径，{@code null}和""都表示classpath根路径
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
 	 */
@@ -192,8 +203,8 @@ public class ResourceUtil {
 	 * @since 3.2.1
 	 */
 	public static Resource getResourceObj(String path) {
-		if(StrUtil.isNotBlank(path)) {
-			if(path.startsWith(URLUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
+		if (StrUtil.isNotBlank(path)) {
+			if (path.startsWith(URLUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
 				return new FileResource(path);
 			}
 		}

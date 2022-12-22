@@ -20,9 +20,10 @@ public interface RegexPool {
 	 */
 	String WORD = "[a-zA-Z]+";
 	/**
-	 * 单个中文汉字
+	 * 单个中文汉字<br>
+	 * 参照维基百科汉字Unicode范围(https://zh.wikipedia.org/wiki/%E6%B1%89%E5%AD%97 页面右侧)
 	 */
-	String CHINESE = "[\u4E00-\u9FFF]";
+	String CHINESE = "[\u2E80-\u2EFF\u2F00-\u2FDF\u31C0-\u31EF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uD840\uDC00-\uD869\uDEDF\uD869\uDF00-\uD86D\uDF3F\uD86D\uDF40-\uD86E\uDC1F\uD86E\uDC20-\uD873\uDEAF\uD87E\uDC00-\uD87E\uDE1F]";
 	/**
 	 * 中文汉字
 	 */
@@ -53,16 +54,13 @@ public interface RegexPool {
 	String EMAIL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
 	/**
 	 * 移动电话
+	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+11位数字
+	 * 中国大陆 +86 Mainland China
 	 */
 	String MOBILE = "(?:0|86|\\+86)?1[3-9]\\d{9}";
 	/**
 	 * 中国香港移动电话
 	 * eg: 中国香港： +852 5100 4810， 三位区域码+10位数字, 中国香港手机号码8位数
-	 * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+13位数字
-	 * 中国大陆 +86 Mainland China
-	 * 中国香港 +852 Hong Kong
-	 * 中国澳门 +853 Macao
-	 * 中国台湾 +886 Taiwan
 	 */
 	String MOBILE_HK = "(?:0|852|\\+852)?\\d{8}";
 	/**
@@ -73,7 +71,7 @@ public interface RegexPool {
 	String MOBILE_TW = "(?:0|886|\\+886)?(?:|-)09\\d{8}";
 	/**
 	 * 中国澳门移动电话
-	 * eg: 中国台湾： +853 68 00000， 三位区域码 +号码以数字6开头 + 7位数字, 中国台湾手机号码8位数
+	 * eg: 中国澳门： +853 68 00000， 三位区域码 +号码以数字6开头 + 7位数字, 中国澳门手机号码8位数
 	 * 中国澳门 +853 Macao 国际域名缩写：MO
 	 */
 	String MOBILE_MO = "(?:0|853|\\+853)?(?:|-)6\\d{7}";
@@ -142,14 +140,14 @@ public interface RegexPool {
 	 * 中国车牌号码（兼容新能源车牌）
 	 */
 	String PLATE_NUMBER =
-			//https://gitee.com/loolly/hutool/issues/I1B77H?from=project-issue
+			//https://gitee.com/dromara/hutool/issues/I1B77H?from=project-issue
 			"^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[ABCDEFGHJK])|([ABCDEFGHJK]([A-HJ-NP-Z0-9])[0-9]{4})))|" +
-					//https://gitee.com/loolly/hutool/issues/I1BJHE?from=project-issue
+					//https://gitee.com/dromara/hutool/issues/I1BJHE?from=project-issue
 					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]\\d{3}\\d{1,3}[领])|" +
 					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$";
 
 	/**
-	 * 社会统一信用代码
+	 * 统一社会信用代码
 	 * <pre>
 	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
 	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
@@ -167,7 +165,7 @@ public interface RegexPool {
 	 * 十七位码、车架号
 	 * 车辆的唯一标示
 	 */
-	String CAR_VIN = "^[A-Za-z0-9]{17}$";
+	String CAR_VIN = "^[A-HJ-NPR-Z0-9]{8}[0-9X][A-HJ-NPR-Z0-9]{2}\\d{6}$";
 	/**
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号
 	 * eg:430101758218
@@ -175,4 +173,31 @@ public interface RegexPool {
 	 * 仅限：中国驾驶证档案编号
 	 */
 	String CAR_DRIVING_LICENCE = "^[0-9]{12}$";
+	/**
+	 * 中文姓名
+	 * 维吾尔族姓名里面的点是 · 输入法中文状态下，键盘左上角数字1前面的那个符号；<br>
+	 * 错误字符：{@code ．.。．.}<br>
+	 * 正确维吾尔族姓名：
+	 * <pre>
+	 * 霍加阿卜杜拉·麦提喀斯木
+	 * 玛合萨提别克·哈斯木别克
+	 * 阿布都热依木江·艾斯卡尔
+	 * 阿卜杜尼亚孜·毛力尼亚孜
+	 * </pre>
+	 * <pre>
+	 * ----------
+	 * 错误示例：孟  伟                reason: 有空格
+	 * 错误示例：连逍遥0               reason: 数字
+	 * 错误示例：依帕古丽-艾则孜        reason: 特殊符号
+	 * 错误示例：牙力空.买提萨力        reason: 新疆人的点不对
+	 * 错误示例：王建鹏2002-3-2        reason: 有数字、特殊符号
+	 * 错误示例：雷金默(雷皓添）        reason: 有括号
+	 * 错误示例：翟冬:亮               reason: 有特殊符号
+	 * 错误示例：李                   reason: 少于2位
+	 * ----------
+	 * </pre>
+	 * 总结中文姓名：2-60位，只能是中文和维吾尔族的点·
+	 * 放宽汉字范围：如生僻姓名 刘欣䶮yǎn
+	 */
+	String CHINESE_NAME = "^[\u2E80-\u9FFF·]{2,60}$";
 }

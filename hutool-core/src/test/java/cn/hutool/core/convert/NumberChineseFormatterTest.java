@@ -5,6 +5,16 @@ import org.junit.Test;
 
 public class NumberChineseFormatterTest {
 
+	@Test
+	public void formatThousandTest(){
+		String f = NumberChineseFormatter.formatThousand(10, false);
+		Assert.assertEquals("十", f);
+		f = NumberChineseFormatter.formatThousand(11, false);
+		Assert.assertEquals("十一", f);
+		f = NumberChineseFormatter.formatThousand(19, false);
+		Assert.assertEquals("十九", f);
+	}
+
 	// 测试千
 	@Test
 	public void formatThousandLongTest(){
@@ -173,6 +183,26 @@ public class NumberChineseFormatterTest {
 		Assert.assertEquals("壹拾贰", f1);
 		f1 = NumberChineseFormatter.format(0.05, true);
 		Assert.assertEquals("零点零伍", f1);
+	}
+
+	@Test
+	public void formatSimpleTest() {
+		String f1 = NumberChineseFormatter.formatSimple(1_2345);
+		Assert.assertEquals("1.23万", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555);
+		Assert.assertEquals("-5.56万", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789);
+		Assert.assertEquals("1.23亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555);
+		Assert.assertEquals("-5.56亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(1_2345_6789_1011L);
+		Assert.assertEquals("1.23万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(-5_5555_5555_5555L);
+		Assert.assertEquals("-5.56万亿", f1);
+		f1 = NumberChineseFormatter.formatSimple(123);
+		Assert.assertEquals("123", f1);
+		f1 = NumberChineseFormatter.formatSimple(-123);
+		Assert.assertEquals("-123", f1);
 	}
 
 	@Test

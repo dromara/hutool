@@ -1,6 +1,7 @@
 package cn.hutool.json.test.bean;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
  * @version 创建时间：2017年9月13日 下午5:16:32
  * 类说明
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class PerfectEvaluationProductResVo extends ProductResBase {
 	private static final long serialVersionUID = 1L;

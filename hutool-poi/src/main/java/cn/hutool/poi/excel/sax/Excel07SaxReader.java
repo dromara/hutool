@@ -3,6 +3,7 @@ package cn.hutool.poi.excel.sax;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -127,13 +128,9 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 		}
 
 		// 获取共享字符串表
-		try {
-			this.handler.sharedStringsTable = xssfReader.getSharedStringsTable();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} catch (InvalidFormatException e) {
-			throw new POIException(e);
-		}
+		// POI-5.2.0开始返回值有所变更，导致实际使用时提示方法未找到，此处使用反射调用，解决不同版本返回值变更问题
+		//this.handler.sharedStrings = xssfReader.getSharedStringsTable();
+		this.handler.sharedStrings = ReflectUtil.invoke(xssfReader, "getSharedStringsTable");
 
 		return readSheets(xssfReader, idOrRidOrSheetName);
 	}

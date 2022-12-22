@@ -1,5 +1,7 @@
 package cn.hutool.core.codec;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * 凯撒密码实现<br>
  * 算法来自：https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption
@@ -19,6 +21,7 @@ public class Caesar {
 	 * @return 加密后的内容
 	 */
 	public static String encode(String message, int offset) {
+		Assert.notNull(message, "message must be not null!");
 		final int len = message.length();
 		final char[] plain = message.toCharArray();
 		char c;
@@ -40,6 +43,7 @@ public class Caesar {
 	 * @return 解密后的内容
 	 */
 	public static String decode(String cipherText, int offset) {
+		Assert.notNull(cipherText, "cipherText must be not null!");
 		final int len = cipherText.length();
 		final char[] plain = cipherText.toCharArray();
 		char c;

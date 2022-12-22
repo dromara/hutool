@@ -38,9 +38,8 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("4749463837", "gif"); // GIF (gif)
 		FILE_TYPE_MAP.put("4749463839", "gif"); // GIF (gif)
 		FILE_TYPE_MAP.put("49492a00227105008037", "tif"); // TIFF (tif)
-		FILE_TYPE_MAP.put("424d228c010000000000", "bmp"); // 16色位图(bmp)
-		FILE_TYPE_MAP.put("424d8240090000000000", "bmp"); // 24色位图(bmp)
-		FILE_TYPE_MAP.put("424d8e1b030000000000", "bmp"); // 256色位图(bmp)
+		// https://github.com/sindresorhus/file-type/blob/main/core.js#L90
+		FILE_TYPE_MAP.put("424d", "bmp"); // 位图(bmp)
 		FILE_TYPE_MAP.put("41433130313500000000", "dwg"); // CAD (dwg)
 		FILE_TYPE_MAP.put("7b5c727466315c616e73", "rtf"); // Rich Text Format (rtf)
 		FILE_TYPE_MAP.put("38425053000100000000", "psd"); // Photoshop (psd)
@@ -83,6 +82,8 @@ public class FileTypeUtil {
 		FILE_TYPE_MAP.put("AC9EBD8F", "qdf"); // Quicken (qdf)
 		FILE_TYPE_MAP.put("E3828596", "pwl"); // Windows Password (pwl)
 		FILE_TYPE_MAP.put("2E7261FD", "ram"); // Real Audio (ram)
+		// https://stackoverflow.com/questions/45321665/magic-number-for-google-image-format
+		FILE_TYPE_MAP.put("52494646", "webp");
 	}
 
 	/**
@@ -123,7 +124,9 @@ public class FileTypeUtil {
 	}
 
 	/**
-	 * 根据文件流的头部信息获得文件类型
+	 * 根据文件流的头部信息获得文件类型<br>
+	 * 注意此方法会读取头部28个bytes，造成此流接下来读取时缺少部分bytes<br>
+	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
 	 *
 	 * @param in {@link InputStream}
 	 * @return 类型，文件的扩展名，未找到为{@code null}
@@ -136,13 +139,16 @@ public class FileTypeUtil {
 
 	/**
 	 * 根据文件流的头部信息获得文件类型
+	 * 注意此方法会读取头部28个bytes，造成此流接下来读取时缺少部分bytes<br>
+	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
 	 *
 	 * <pre>
 	 *     1、无法识别类型默认按照扩展名识别
 	 *     2、xls、doc、msi头信息无法区分，按照扩展名区分
 	 *     3、zip可能为docx、xlsx、pptx、jar、war、ofd头信息无法区分，按照扩展名区分
 	 * </pre>
-	 * @param in {@link InputStream}
+	 *
+	 * @param in       {@link InputStream}
 	 * @param filename 文件名
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException 读取流引起的异常
@@ -160,6 +166,8 @@ public class FileTypeUtil {
 				typeName = "doc";
 			} else if ("msi".equalsIgnoreCase(extName)) {
 				typeName = "msi";
+			} else if ("ppt".equalsIgnoreCase(extName)) {
+				typeName = "ppt";
 			}
 		} else if ("zip".equals(typeName)) {
 			// zip可能为docx、xlsx、pptx、jar、war、ofd等格式，扩展名辅助判断
@@ -176,6 +184,8 @@ public class FileTypeUtil {
 				typeName = "war";
 			} else if ("ofd".equalsIgnoreCase(extName)) {
 				typeName = "ofd";
+			} else if ("apk".equalsIgnoreCase(extName)) {
+				typeName = "apk";
 			}
 		} else if ("jar".equals(typeName)) {
 			// wps编辑过的.xlsx文件与.jar的开头相同,通过扩展名判断
@@ -185,6 +195,13 @@ public class FileTypeUtil {
 			} else if ("docx".equalsIgnoreCase(extName)) {
 				// issue#I47JGH
 				typeName = "docx";
+			} else if ("pptx".equalsIgnoreCase(extName)) {
+				// issue#I5A0GO
+				typeName = "pptx";
+			} else if ("zip".equalsIgnoreCase(extName)) {
+				typeName = "zip";
+			} else if ("apk".equalsIgnoreCase(extName)) {
+				typeName = "apk";
 			}
 		}
 		return typeName;

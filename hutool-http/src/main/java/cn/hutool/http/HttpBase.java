@@ -25,6 +25,11 @@ import java.util.Map.Entry;
 public abstract class HttpBase<T> {
 
 	/**
+	 * 默认的请求编码、URL的encode、decode编码
+	 */
+	protected static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+
+	/**
 	 * HTTP/1.0
 	 */
 	public static final String HTTP_1_0 = "HTTP/1.0";
@@ -40,7 +45,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * 编码
 	 */
-	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
+	protected Charset charset = DEFAULT_CHARSET;
 	/**
 	 * http版本
 	 */
@@ -290,6 +295,15 @@ public abstract class HttpBase<T> {
 	public T httpVersion(String httpVersion) {
 		this.httpVersion = httpVersion;
 		return (T) this;
+	}
+
+	/**
+	 * 获取bodyBytes存储字节码
+	 *
+	 * @return byte[]
+	 */
+	public byte[] bodyBytes() {
+		return this.bodyBytes;
 	}
 
 	/**

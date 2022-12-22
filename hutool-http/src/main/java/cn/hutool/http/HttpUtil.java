@@ -52,7 +52,7 @@ public class HttpUtil {
 	 * @return 是否https
 	 */
 	public static boolean isHttps(String url) {
-		return url.toLowerCase().startsWith("https:");
+		return StrUtil.startWithIgnoreCase(url, "https:");
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class HttpUtil {
 	 * @since 5.3.8
 	 */
 	public static boolean isHttp(String url) {
-		return url.toLowerCase().startsWith("http:");
+		return StrUtil.startWithIgnoreCase(url, "http:");
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class HttpUtil {
 	 * @since 3.0.9
 	 */
 	public static HttpRequest createRequest(Method method, String url) {
-		return new HttpRequest(url).method(method);
+		return HttpRequest.of(url).method(method);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
 	public static String get(String urlString) {
-		return get(urlString, HttpGlobalConfig.timeout);
+		return get(urlString, HttpGlobalConfig.getTimeout());
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, Map<String, Object> paramMap) {
-		return post(urlString, paramMap, HttpGlobalConfig.timeout);
+		return post(urlString, paramMap, HttpGlobalConfig.getTimeout());
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, String body) {
-		return post(urlString, body, HttpGlobalConfig.timeout);
+		return post(urlString, body, HttpGlobalConfig.getTimeout());
 	}
 
 	/**

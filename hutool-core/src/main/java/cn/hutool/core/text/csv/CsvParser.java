@@ -80,17 +80,17 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 */
 	public CsvParser(final Reader reader, CsvReadConfig config) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 
 	/**
-	 * 获取头部字段列表，如果containsHeader设置为false则抛出异常
+	 * 获取头部字段列表，如果headerLineNo &lt; 0，抛出异常
 	 *
 	 * @return 头部列表
 	 * @throws IllegalStateException 如果不解析头部或者没有调用nextRow()方法
 	 */
 	public List<String> getHeader() {
-		if (false == config.containsHeader) {
+		if (config.headerLineNo  < 0) {
 			throw new IllegalStateException("No header available - header parsing is disabled");
 		}
 		if (lineNo < config.beginLineNo) {
@@ -152,7 +152,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 			}
 
 			//初始化标题
-			if (config.containsHeader && null == header) {
+			if (lineNo == config.headerLineNo && null == header) {
 				initHeader(currentFields);
 				// 作为标题行后，此行跳过，下一行做为第一行
 				continue;
@@ -264,7 +264,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 					inQuotes = false;
 				} else {
 					// 字段内容中新行
-					if (isLineEnd(c)) {
+					if (isLineEnd(c, preChar)) {
 						inQuotesLineCount++;
 					}
 				}
@@ -350,11 +350,13 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 
 	/**
 	 * 是否行结束符
-	 * @param c 符号
+	 *
+	 * @param c       符号
+	 * @param preChar 前一个字符
 	 * @return 是否结束
 	 * @since 5.7.4
 	 */
-	private boolean isLineEnd(char c){
+	private boolean isLineEnd(char c, int preChar) {
 		return (c == CharUtil.CR || c == CharUtil.LF) && preChar != CharUtil.CR;
 	}
 
@@ -395,7 +397,8 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		}
 
 		/**
-		 * 读取到缓存
+		 * 读取到缓存<br>
+		 * 全量读取，会重置Buffer中所有数据
 		 *
 		 * @param reader {@link Reader}
 		 */

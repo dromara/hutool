@@ -1,7 +1,7 @@
 package cn.hutool.db.meta;
 
 import cn.hutool.core.util.BooleanUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.db.DbRuntimeException;
 
 import java.io.Serializable;
@@ -37,7 +37,7 @@ public class Column implements Serializable, Cloneable {
 	/**
 	 * 大小或数据长度
 	 */
-	private int size;
+	private long size;
 	private Integer digit;
 	/**
 	 * 是否为可空
@@ -93,7 +93,7 @@ public class Column implements Serializable, Cloneable {
 		try {
 			init(table, columnMetaRs);
 		} catch (SQLException e) {
-			throw new DbRuntimeException(StrUtil.format("Get table [{}] meta info error!", tableName));
+			throw new DbRuntimeException(e, "Get table [{}] meta info error!", tableName);
 		}
 	}
 	// ----------------------------------------------------- Constructor end
@@ -112,8 +112,13 @@ public class Column implements Serializable, Cloneable {
 		this.isPk = table.isPk(this.name);
 
 		this.type = columnMetaRs.getInt("DATA_TYPE");
-		this.typeName = columnMetaRs.getString("TYPE_NAME");
-		this.size = columnMetaRs.getInt("COLUMN_SIZE");
+
+		String typeName = columnMetaRs.getString("TYPE_NAME");
+		//issue#2201@Gitee
+		typeName = ReUtil.delLast("\\(\\d+\\)", typeName);
+		this.typeName = typeName;
+
+		this.size = columnMetaRs.getLong("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.comment = columnMetaRs.getString("REMARKS");
 		this.columnDef = columnMetaRs.getString("COLUMN_DEF");
@@ -233,7 +238,7 @@ public class Column implements Serializable, Cloneable {
 	 *
 	 * @return 大小或数据长度
 	 */
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
@@ -376,5 +381,10 @@ public class Column implements Serializable, Cloneable {
 	@Override
 	public String toString() {
 		return "Column [tableName=" + tableName + ", name=" + name + ", type=" + type + ", size=" + size + ", isNullable=" + isNullable + "]";
+	}
+
+	@Override
+	public Column clone() throws CloneNotSupportedException {
+		return (Column) super.clone();
 	}
 }

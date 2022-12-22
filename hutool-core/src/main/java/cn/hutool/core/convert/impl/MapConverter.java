@@ -9,7 +9,6 @@ import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 /**
@@ -55,13 +54,16 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	protected Map<?, ?> convertInternal(Object value) {
 		Map map;
 		if (value instanceof Map) {
-			final Type[] typeArguments = TypeUtil.getTypeArguments(value.getClass());
-			if (null != typeArguments //
-					&& 2 == typeArguments.length//
-					&& Objects.equals(this.keyType, typeArguments[0]) //
-					&& Objects.equals(this.valueType, typeArguments[1])) {
-				//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
-				return (Map) value;
+			final Class<?> valueClass = value.getClass();
+			if(valueClass.equals(this.mapType)){
+				final Type[] typeArguments = TypeUtil.getTypeArguments(valueClass);
+				if (null != typeArguments //
+						&& 2 == typeArguments.length//
+						&& Objects.equals(this.keyType, typeArguments[0]) //
+						&& Objects.equals(this.valueType, typeArguments[1])) {
+					//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
+					return (Map) value;
+				}
 			}
 			map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
 			convertMapToMap((Map) value, map);
@@ -83,13 +85,11 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 */
 	private void convertMapToMap(Map<?, ?> srcMap, Map<Object, Object> targetMap) {
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
-		Object key;
-		Object value;
-		for (Entry<?, ?> entry : srcMap.entrySet()) {
-			key = TypeUtil.isUnknown(this.keyType) ? entry.getKey() : convert.convert(this.keyType, entry.getKey());
-			value = TypeUtil.isUnknown(this.valueType) ? entry.getValue() : convert.convert(this.valueType, entry.getValue());
+		srcMap.forEach((key, value)->{
+			key = TypeUtil.isUnknown(this.keyType) ? key : convert.convert(this.keyType, key);
+			value = TypeUtil.isUnknown(this.valueType) ? value : convert.convert(this.valueType, value);
 			targetMap.put(key, value);
-		}
+		});
 	}
 
 	@Override

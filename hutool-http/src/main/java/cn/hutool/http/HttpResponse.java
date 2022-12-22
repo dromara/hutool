@@ -7,6 +7,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -33,6 +34,10 @@ import java.util.Map.Entry;
  */
 public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
+	/**
+	 * Http配置
+	 */
+	protected HttpConfig config;
 	/**
 	 * 持有连接对象
 	 */
@@ -62,13 +67,15 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 构造
 	 *
 	 * @param httpConnection {@link HttpConnection}
+	 * @param config         Http配置
 	 * @param charset        编码，从请求编码中获取默认编码
 	 * @param isAsync        是否异步
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 * @since 3.1.2
 	 */
-	protected HttpResponse(HttpConnection httpConnection, Charset charset, boolean isAsync, boolean isIgnoreBody) {
+	protected HttpResponse(HttpConnection httpConnection, HttpConfig config, Charset charset, boolean isAsync, boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
+		this.config = config;
 		this.charset = charset;
 		this.isAsync = isAsync;
 		this.ignoreBody = isIgnoreBody;
@@ -243,9 +250,25 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 *
 	 * @return byte[]
 	 */
+	@Override
 	public byte[] bodyBytes() {
 		sync();
 		return this.bodyBytes;
+	}
+
+	/**
+	 * 设置主体字节码<br>
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
+	 *
+	 * @param bodyBytes 主体
+	 * @return this
+	 */
+	public HttpResponse body(byte[] bodyBytes) {
+		sync();
+		if (null != bodyBytes) {
+			this.bodyBytes = bodyBytes;
+		}
+		return this;
 	}
 
 	/**
@@ -273,7 +296,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		Assert.notNull(out, "[out] must be not null!");
 		final long contentLength = contentLength();
 		try {
-			return copyBody(bodyStream(), out, contentLength, streamProgress);
+			return copyBody(bodyStream(), out, contentLength, streamProgress, this.config.ignoreEOFError);
 		} finally {
 			IoUtil.close(this);
 			if (isCloseOut) {
@@ -426,7 +449,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 
 		// 从头信息中获取文件名
-		String fileName = getFileNameFromDisposition();
+		String fileName = getFileNameFromDisposition(null);
 		if (StrUtil.isBlank(fileName)) {
 			final String path = httpConnection.getUrl().getPath();
 			// 从路径中获取文件名
@@ -440,6 +463,25 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 		return FileUtil.file(targetFileOrDir, fileName);
+	}
+
+	/**
+	 * 从Content-Disposition头中获取文件名
+	 * @param paramName 文件参数名
+	 *
+	 * @return 文件名，empty表示无
+	 */
+	public String getFileNameFromDisposition(String paramName) {
+		paramName = ObjUtil.defaultIfNull(paramName, "filename");
+		String fileName = null;
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get(paramName+"=\"(.*?)\"", disposition, 1);
+			if (StrUtil.isBlank(fileName)) {
+				fileName = StrUtil.subAfter(disposition, paramName + "=", true);
+			}
+		}
+		return fileName;
 	}
 
 	// ---------------------------------------------------------------- Private method start
@@ -563,7 +605,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 		final long contentLength = contentLength();
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream((int) contentLength);
-		copyBody(in, out, contentLength, null);
+		copyBody(in, out, contentLength, null, this.config.ignoreEOFError);
 		this.bodyBytes = out.toByteArray();
 	}
 
@@ -572,13 +614,14 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
 	 * 写出后会关闭Http流（异步模式）
 	 *
-	 * @param in             输入流
-	 * @param out            写出的流
-	 * @param contentLength  总长度，-1表示未知
-	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @param in               输入流
+	 * @param out              写出的流
+	 * @param contentLength    总长度，-1表示未知
+	 * @param streamProgress   进度显示接口，通过实现此接口显示下载进度
+	 * @param isIgnoreEOFError 是否忽略响应读取时可能的EOF异常
 	 * @return 拷贝长度
 	 */
-	private static long copyBody(InputStream in, OutputStream out, long contentLength, StreamProgress streamProgress) {
+	private static long copyBody(InputStream in, OutputStream out, long contentLength, StreamProgress streamProgress, boolean isIgnoreEOFError) {
 		if (null == out) {
 			throw new NullPointerException("[out] is null!");
 		}
@@ -588,7 +631,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			copyLength = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, contentLength, streamProgress);
 		} catch (IORuntimeException e) {
 			//noinspection StatementWithEmptyBody
-			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
+			if (isIgnoreEOFError
+					&& (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF"))) {
 				// 忽略读取HTTP流中的EOF错误
 			} else {
 				throw e;
@@ -596,23 +640,5 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		}
 		return copyLength;
 	}
-
-	/**
-	 * 从Content-Disposition头中获取文件名
-	 *
-	 * @return 文件名，empty表示无
-	 */
-	private String getFileNameFromDisposition() {
-		String fileName = null;
-		final String disposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(disposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(disposition, "filename=", true);
-			}
-		}
-		return fileName;
-	}
-
 	// ---------------------------------------------------------------- Private method end
 }

@@ -16,6 +16,14 @@ import java.lang.reflect.Type;
 public interface JSON extends Cloneable, Serializable {
 
 	/**
+	 * 获取JSON配置
+	 *
+	 * @return {@link JSONConfig}
+	 * @since 5.8.6
+	 */
+	JSONConfig getConfig();
+
+	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
 	 * <ol>
 	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
@@ -169,7 +177,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @since 3.0.8
 	 */
 	default <T> T toBean(Type type) {
-		return toBean(type, false);
+		return toBean(type, getConfig().isIgnoreError());
 	}
 
 	/**

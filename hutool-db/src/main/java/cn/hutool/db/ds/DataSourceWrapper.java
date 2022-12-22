@@ -1,5 +1,6 @@
 package cn.hutool.db.ds;
 
+import cn.hutool.core.clone.CloneRuntimeException;
 import cn.hutool.core.io.IoUtil;
 
 import javax.sql.DataSource;
@@ -30,7 +31,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 	 *
 	 * @param ds     原始的DataSource
 	 * @param driver 数据库驱动类名
-	 * @return {@link DataSourceWrapper}
+	 * @return DataSourceWrapper
 	 */
 	public static DataSourceWrapper wrap(DataSource ds, String driver) {
 		return new DataSourceWrapper(ds, driver);
@@ -117,4 +118,12 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 		}
 	}
 
+	@Override
+	public DataSourceWrapper clone() {
+		try {
+			return (DataSourceWrapper) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new CloneRuntimeException(e);
+		}
+	}
 }

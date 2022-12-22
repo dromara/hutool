@@ -137,4 +137,11 @@ public class UrlQueryTest {
 		final UrlQuery query = UrlQuery.of(queryStr, null);
 		Assert.assertEquals(queryStr, query.toString());
 	}
+
+	@Test
+	public void parsePercentTest2(){
+		String queryStr = "signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D";
+		final UrlQuery query = UrlQuery.of(queryStr, null);
+		Assert.assertEquals(queryStr, query.toString());
+	}
 }

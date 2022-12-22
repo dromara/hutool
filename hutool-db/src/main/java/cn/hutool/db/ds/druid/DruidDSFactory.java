@@ -10,13 +10,13 @@ import javax.sql.DataSource;
 
 /**
  * Druid数据源工厂类
- * 
+ *
  * @author Looly
  *
  */
 public class DruidDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 4680621702534433222L;
-	
+
 	public static final String DS_NAME = "Druid";
 
 	/**
@@ -28,7 +28,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param setting 数据库配置
 	 */
 	public DruidDSFactory(Setting setting) {
@@ -46,6 +46,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 		ds.setPassword(pass);
 
 		// remarks等特殊配置，since 5.3.8
+		// Druid中也可以通过 druid.connectProperties 属性设置
 		String connValue;
 		for (String key : KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemoveStr(key);
@@ -59,7 +60,24 @@ public class DruidDSFactory extends AbstractDSFactory {
 		poolSetting.forEach((key, value)-> druidProps.put(StrUtil.addPrefixIfNot(key, "druid."), value));
 		ds.configFromPropety(druidProps);
 
-		// 检查关联配置，在用户未设置某项配置时，
+		//issue#I4ZKCW 某些非属性设置单独设置
+		// connectionErrorRetryAttempts
+		final String connectionErrorRetryAttemptsKey = "druid.connectionErrorRetryAttempts";
+		if(druidProps.containsKey(connectionErrorRetryAttemptsKey)){
+			ds.setConnectionErrorRetryAttempts(druidProps.getInt(connectionErrorRetryAttemptsKey));
+		}
+		// timeBetweenConnectErrorMillis
+		final String timeBetweenConnectErrorMillisKey = "druid.timeBetweenConnectErrorMillis";
+		if(druidProps.containsKey(timeBetweenConnectErrorMillisKey)){
+			ds.setTimeBetweenConnectErrorMillis(druidProps.getInt(timeBetweenConnectErrorMillisKey));
+		}
+		// breakAfterAcquireFailure
+		final String breakAfterAcquireFailureKey = "druid.breakAfterAcquireFailure";
+		if(druidProps.containsKey(breakAfterAcquireFailureKey)){
+			ds.setBreakAfterAcquireFailure(druidProps.getBool(breakAfterAcquireFailureKey));
+		}
+
+		// 检查关联配置，在用户未设置某项配置时，设置默认值
 		if (null == ds.getValidationQuery()) {
 			// 在validationQuery未设置的情况下，以下三项设置都将无效
 			ds.setTestOnBorrow(false);

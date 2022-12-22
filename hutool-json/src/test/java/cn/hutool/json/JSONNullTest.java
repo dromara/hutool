@@ -26,7 +26,7 @@ public class JSONNullTest {
 				"            \"device_model\": null,\n" +
 				"            \"device_status_date\": null,\n" +
 				"            \"imsi\": null,\n" +
-				"            \"act_date\": \"2021-07-23T06:23:26.000+00:00\"}", true, true);
+				"            \"act_date\": \"2021-07-23T06:23:26.000+00:00\"}", true);
 		Assert.assertFalse(bodyjson.containsKey("device_model"));
 		Assert.assertFalse(bodyjson.containsKey("device_status_date"));
 		Assert.assertFalse(bodyjson.containsKey("imsi"));

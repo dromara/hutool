@@ -31,7 +31,7 @@ import java.util.Vector;
  *
  * <p>
  * 此类为基于jsch的SFTP实现<br>
- * 参考：https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html
+ * 参考：<a href="https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html">https://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html</a>
  * </p>
  *
  * @author looly
@@ -77,8 +77,21 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.3.3
 	 */
 	public Sftp(FtpConfig config) {
+		this(config, true);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param config FTP配置
+	 * @param init   是否立即初始化
+	 * @since 5.8.4
+	 */
+	public Sftp(FtpConfig config, boolean init) {
 		super(config);
-		init(config);
+		if (init) {
+			init(config);
+		}
 	}
 
 	/**
@@ -100,6 +113,32 @@ public class Sftp extends AbstractFtp {
 	public Sftp(Session session, Charset charset) {
 		super(FtpConfig.create().setCharset(charset));
 		init(session, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param session {@link Session}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(Session session, Charset charset, long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		init(session, charset);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param channel {@link ChannelSftp}
+	 * @param charset 编码
+	 * @param timeOut 超时时间，单位毫秒
+	 * @since 5.8.4
+	 */
+	public Sftp(ChannelSftp channel, Charset charset, long timeOut) {
+		super(FtpConfig.create().setCharset(charset).setConnectionTimeout(timeOut));
+		init(channel, charset);
 	}
 
 	/**
@@ -338,7 +377,9 @@ public class Sftp extends AbstractFtp {
 		try {
 			sftpATTRS = this.channel.stat(dir);
 		} catch (SftpException e) {
-			if (e.getMessage().contains("No such file")) {
+			final String msg = e.getMessage();
+			// issue#I4P9ED@Gitee
+			if (StrUtil.containsAnyIgnoreCase(msg, "No such file", "does not exist")) {
 				// 文件不存在直接返回false
 				// pr#378@Gitee
 				return false;
@@ -349,7 +390,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
-	 * 打开指定目录，如果指定路径非目录或不存在返回false
+	 * 打开指定目录，如果指定路径非目录或不存在抛出异常
 	 *
 	 * @param directory directory
 	 * @return 是否打开目录

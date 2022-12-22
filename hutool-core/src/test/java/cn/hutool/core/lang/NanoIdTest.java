@@ -12,10 +12,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 /**
  * Tests for NanoId.
  *
@@ -36,7 +32,7 @@ public class NanoIdTest {
 			if (ids.contains(id) == false) {
 				ids.add(id);
 			} else {
-				fail("Non-unique ID generated: " + id);
+				Assert.fail("Non-unique ID generated: " + id);
 			}
 		}
 
@@ -59,7 +55,7 @@ public class NanoIdTest {
 
 		for (final String expectedId : expectedIds) {
 			final String generatedId = NanoId.randomNanoId(random, alphabet, size);
-			assertEquals(expectedId, generatedId);
+			Assert.assertEquals(expectedId, generatedId);
 		}
 
 	}
@@ -86,7 +82,7 @@ public class NanoIdTest {
 			}
 			patternBuilder.append("]+$");
 
-			assertTrue(id.matches(patternBuilder.toString()));
+			Assert.assertTrue(id.matches(patternBuilder.toString()));
 		}
 
 	}
@@ -99,7 +95,7 @@ public class NanoIdTest {
 
 			final String id = NanoId.randomNanoId(size);
 
-			assertEquals(size, id.length());
+			Assert.assertEquals(size, id.length());
 		}
 
 	}

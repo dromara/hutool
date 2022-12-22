@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author Looly
  * @since 4.1.1
  */
-public class ArrayIter<E> implements IterableIter<E>, Serializable {
+public class ArrayIter<E> implements IterableIter<E>, ResettableIter<E>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -126,6 +126,7 @@ public class ArrayIter<E> implements IterableIter<E>, Serializable {
 	/**
 	 * 重置数组位置
 	 */
+	@Override
 	public void reset() {
 		this.index = this.startIndex;
 	}

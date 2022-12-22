@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateRange;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,8 +13,8 @@ import java.util.NoSuchElementException;
 
 /**
  * {@link Range} 单元测试
- * @author Looly
  *
+ * @author Looly
  */
 public class RangeTest {
 
@@ -34,6 +35,32 @@ public class RangeTest {
 		Assert.assertTrue(range.hasNext());
 		Assert.assertEquals(DateUtil.parse("2017-01-02"), range.next());
 		Assert.assertFalse(range.hasNext());
+	}
+
+	@Test
+	public void dateRangeFuncTest() {
+		DateTime start = DateUtil.parse("2021-01-01");
+		DateTime end = DateUtil.parse("2021-01-03");
+
+		List<Integer> dayOfMonthList = DateUtil.rangeFunc(start, end, DateField.DAY_OF_YEAR, a -> DateTime.of(a).dayOfMonth());
+		Assert.assertArrayEquals(dayOfMonthList.toArray(new Integer[]{}), new Integer[]{1, 2, 3});
+
+		List<Integer> dayOfMonthList2 = DateUtil.rangeFunc(null, null, DateField.DAY_OF_YEAR, a -> DateTime.of(a).dayOfMonth());
+		Assert.assertArrayEquals(dayOfMonthList2.toArray(new Integer[]{}), new Integer[]{});
+	}
+
+	@Test
+	public void dateRangeConsumeTest() {
+		DateTime start = DateUtil.parse("2021-01-01");
+		DateTime end = DateUtil.parse("2021-01-03");
+
+		StringBuilder sb = new StringBuilder();
+		DateUtil.rangeConsume(start, end, DateField.DAY_OF_YEAR, a -> sb.append(DateTime.of(a).dayOfMonth()).append("#"));
+		Assert.assertEquals(sb.toString(), "1#2#3#");
+
+		StringBuilder sb2 = new StringBuilder();
+		DateUtil.rangeConsume(null, null, DateField.DAY_OF_YEAR, a -> sb2.append(DateTime.of(a).dayOfMonth()).append("#"));
+		Assert.assertEquals(sb2.toString(), StrUtil.EMPTY);
 	}
 
 	@Test
@@ -84,7 +111,7 @@ public class RangeTest {
 	}
 
 	@Test
-	public void rangeDayOfYearTest(){
+	public void rangeDayOfYearTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-05");
 
@@ -109,4 +136,39 @@ public class RangeTest {
 		Assert.assertEquals(DateUtil.parse("2017-01-01"), rangeToList.get(0));
 		Assert.assertEquals(DateUtil.parse("2017-01-02"), rangeToList.get(1));
 	}
+
+
+	@Test
+	public void rangeContains() {
+		// 开始区间
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-31");
+		DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
+		// 结束区间
+		DateTime start1 = DateUtil.parse("2017-01-31");
+		DateTime end1 = DateUtil.parse("2017-02-02");
+		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
+		// 交集
+		List<DateTime> dateTimes = DateUtil.rangeContains(startRange, endRange);
+		Assert.assertEquals(1, dateTimes.size());
+		Assert.assertEquals(DateUtil.parse("2017-01-31"), dateTimes.get(0));
+	}
+
+	@Test
+	public void rangeNotContains() {
+		// 开始区间
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-30");
+		DateRange startRange = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
+		// 结束区间
+		DateTime start1 = DateUtil.parse("2017-01-01");
+		DateTime end1 = DateUtil.parse("2017-01-31");
+		DateRange endRange = DateUtil.range(start1, end1, DateField.DAY_OF_YEAR);
+		// 差集
+		List<DateTime> dateTimes1 = DateUtil.rangeNotContains(startRange, endRange);
+
+		Assert.assertEquals(1, dateTimes1.size());
+		Assert.assertEquals(DateUtil.parse("2017-01-31"), dateTimes1.get(0));
+	}
+
 }

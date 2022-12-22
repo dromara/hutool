@@ -13,7 +13,7 @@ import cn.hutool.core.util.StrUtil;
 public class TextSimilarity {
 
 	/**
-	 * 计算相似度，两个都是空串相似度为1，被认为是相同的串<br>
+	 * 利用莱文斯坦距离(Levenshtein distance)算法计算相似度，两个都是空串相似度为1，被认为是相同的串<br>
 	 * 比较方法为：
 	 * <ul>
 	 *     <li>只比较两个字符串字母、数字、汉字部分，其他符号去除</li>
@@ -46,7 +46,7 @@ public class TextSimilarity {
 	}
 
 	/**
-	 * 计算相似度百分比
+	 * 利用莱文斯坦距离(Levenshtein distance)算法计算相似度百分比
 	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2

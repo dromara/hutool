@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.mutable.MutablePair;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -20,6 +22,7 @@ import cn.hutool.json.JSONUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -152,7 +155,7 @@ public class JSONWriter extends Writer {
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
-		return writeValueDirect(value);
+		return writeValueDirect(value, null);
 	}
 
 	/**
@@ -162,13 +165,37 @@ public class JSONWriter extends Writer {
 	 * @param value 字段值
 	 * @return this
 	 * @since 5.7.6
+	 * @deprecated 请使用 {@link #writeField(MutablePair, Filter)}
 	 */
+	@Deprecated
 	public JSONWriter writeField(String key, Object value){
 		if(JSONUtil.isNull(value) && config.isIgnoreNullValue()){
 			return this;
 		}
+		return writeKey(key).writeValueDirect(value, null);
+	}
 
-		return writeKey(key).writeValueDirect(value);
+	/**
+	 * 写出字段名及字段值，如果字段值是{@code null}且忽略null值，则不写出任何内容
+	 *
+	 * @param pair 键值对
+	 * @param filter 键值对的过滤器，可以编辑键值对
+	 * @return this
+	 * @since 5.8.6
+	 */
+	public JSONWriter writeField(MutablePair<Object, Object> pair, Filter<MutablePair<Object, Object>> filter){
+		if(JSONUtil.isNull(pair.getValue()) && config.isIgnoreNullValue()){
+			return this;
+		}
+
+		if (null == filter || filter.accept(pair)) {
+			if(false == arrayMode){
+				// JSONArray只写值，JSONObject写键值对
+				writeKey(StrUtil.toString(pair.getKey()));
+			}
+			return writeValueDirect(pair.getValue(), filter);
+		}
+		return this;
 	}
 
 	@Override
@@ -195,9 +222,10 @@ public class JSONWriter extends Writer {
 	 * 写出值，自动处理分隔符和缩进，自动判断类型，并根据不同类型写出特定格式的值
 	 *
 	 * @param value 值
+	 * @param filter 键值对过滤器
 	 * @return this
 	 */
-	private JSONWriter writeValueDirect(Object value) {
+	private JSONWriter writeValueDirect(Object value, Filter<MutablePair<Object, Object>> filter) {
 		if (arrayMode) {
 			if (needSeparator) {
 				writeRaw(CharUtil.COMMA);
@@ -208,28 +236,39 @@ public class JSONWriter extends Writer {
 			writeRaw(CharUtil.COLON).writeSpace(1);
 		}
 		needSeparator = true;
-		return writeObjValue(value);
+		return writeObjValue(value, filter);
 	}
 
 	/**
 	 * 写出JSON的值，根据值类型不同，输出不同内容
 	 *
 	 * @param value 值
+	 * @param filter 过滤器
 	 * @return this
 	 */
-	private JSONWriter writeObjValue(Object value) {
+	private JSONWriter writeObjValue(Object value, Filter<MutablePair<Object, Object>> filter) {
 		final int indent = indentFactor + this.indent;
 		if (value == null || value instanceof JSONNull) {
 			writeRaw(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
-			((JSON) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Map) {
+			if(value instanceof JSONObject){
+				((JSONObject) value).write(writer, indentFactor, indent, filter);
+			}else if(value instanceof JSONArray){
+				((JSONArray) value).write(writer, indentFactor, indent, filter);
+			}
+		} else if (value instanceof Map || value instanceof Map.Entry) {
 			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || ArrayUtil.isArray(value)) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writeNumberValue((Number) value);
 		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
+			// issue#2572@Github
+			if(value instanceof MonthDay){
+				writeStrValue(value.toString());
+				return this;
+			}
+
 			final String format = (null == config) ? null : config.getDateFormat();
 			writeRaw(formatDate(value, format));
 		} else if (value instanceof Boolean) {
@@ -249,22 +288,20 @@ public class JSONWriter extends Writer {
 	 * 此方法输出的值不包装引号。
 	 *
 	 * @param number 数字
-	 * @return this
 	 */
-	private JSONWriter writeNumberValue(Number number) {
+	private void writeNumberValue(Number number) {
 		// since 5.6.2可配置是否去除末尾多余0，例如如果为true,5.0返回5
 		final boolean isStripTrailingZeros = null == config || config.isStripTrailingZeros();
-		return writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
+		writeRaw(NumberUtil.toStr(number, isStripTrailingZeros));
 	}
 
 	/**
 	 * 写出Boolean值，直接写出true或false,不适用引号包装
 	 *
 	 * @param value Boolean值
-	 * @return this
 	 */
-	private JSONWriter writeBooleanValue(Boolean value) {
-		return writeRaw(value.toString());
+	private void writeBooleanValue(Boolean value) {
+		writeRaw(value.toString());
 	}
 
 	/**
@@ -273,9 +310,8 @@ public class JSONWriter extends Writer {
 	 * 如果toJSONString()返回null，调用toString()方法并使用双引号包装。
 	 *
 	 * @param jsonString {@link JSONString}
-	 * @return this
 	 */
-	private JSONWriter writeJSONStringValue(JSONString jsonString) {
+	private void writeJSONStringValue(JSONString jsonString) {
 		String valueStr;
 		try {
 			valueStr = jsonString.toJSONString();
@@ -287,7 +323,6 @@ public class JSONWriter extends Writer {
 		} else {
 			writeStrValue(jsonString.toString());
 		}
-		return this;
 	}
 
 	/**
@@ -297,30 +332,26 @@ public class JSONWriter extends Writer {
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
 	 * @param csq 字符串
-	 * @return this
 	 */
-	private JSONWriter writeStrValue(String csq) {
+	private void writeStrValue(String csq) {
 		try {
 			JSONUtil.quote(csq, writer);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return this;
 	}
 
 	/**
 	 * 写出空格
 	 *
 	 * @param count 空格数
-	 * @return this
 	 */
-	private JSONWriter writeSpace(int count) {
+	private void writeSpace(int count) {
 		if (indentFactor > 0) {
 			for (int i = 0; i < count; i++) {
 				writeRaw(CharUtil.SPACE);
 			}
 		}
-		return this;
 	}
 
 	/**

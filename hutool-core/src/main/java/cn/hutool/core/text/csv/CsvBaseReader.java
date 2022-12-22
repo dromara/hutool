@@ -49,7 +49,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param config 配置项
 	 */
 	public CsvBaseReader(CsvReadConfig config) {
-		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig.defaultConfig());
+		this.config = ObjectUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
 	}
 	//--------------------------------------------------------------------------------------------- Constructor end
 
@@ -177,7 +177,7 @@ public class CsvBaseReader implements Serializable {
 		final CsvParser csvParser = parse(reader);
 		final List<CsvRow> rows = new ArrayList<>();
 		read(csvParser, rows::add);
-		final List<String> header = config.containsHeader ? csvParser.getHeader() : null;
+		final List<String> header = config.headerLineNo > -1 ? csvParser.getHeader() : null;
 
 		return new CsvData(header, rows);
 	}

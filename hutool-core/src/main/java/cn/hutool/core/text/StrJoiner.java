@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
@@ -12,7 +13,14 @@ import java.util.Iterator;
 import java.util.function.Function;
 
 /**
- * 字符串连接器（拼接器），通过给定的字符串和多个元素，拼接为一个字符串
+ * 字符串连接器（拼接器），通过给定的字符串和多个元素，拼接为一个字符串<br>
+ * 相较于{@link java.util.StringJoiner}提供更加灵活的配置，包括：
+ * <ul>
+ *     <li>支持任意Appendable接口实现</li>
+ *     <li>支持每个元素单独wrap</li>
+ *     <li>支持自定义null的处理逻辑</li>
+ *     <li>支持自定义默认结果</li>
+ * </ul>
  *
  * @author looly
  * @since 5.7.2
@@ -204,7 +212,7 @@ public class StrJoiner implements Appendable, Serializable {
 		} else if (obj instanceof Iterable) {
 			append(((Iterable<?>) obj).iterator());
 		} else {
-			append(String.valueOf(obj));
+			append(ObjectUtil.toString(obj));
 		}
 		return this;
 	}
@@ -254,24 +262,24 @@ public class StrJoiner implements Appendable, Serializable {
 	/**
 	 * 追加{@link Iterator}中的元素到拼接器中
 	 *
-	 * @param <T>       元素类型
+	 * @param <E>       元素类型
 	 * @param iterable  元素列表
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <T> StrJoiner append(Iterable<T> iterable, Function<T, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(Iterable<E> iterable, Function<? super E, ? extends CharSequence> toStrFunc) {
 		return append(IterUtil.getIter(iterable), toStrFunc);
 	}
 
 	/**
 	 * 追加{@link Iterator}中的元素到拼接器中
 	 *
-	 * @param <T>       元素类型
+	 * @param <E>       元素类型
 	 * @param iterator  元素列表
 	 * @param toStrFunc 元素对象转换为字符串的函数
 	 * @return this
 	 */
-	public <T> StrJoiner append(Iterator<T> iterator, Function<T, ? extends CharSequence> toStrFunc) {
+	public <E> StrJoiner append(Iterator<E> iterator, Function<? super E, ? extends CharSequence> toStrFunc) {
 		if (null != iterator) {
 			while (iterator.hasNext()) {
 				append(toStrFunc.apply(iterator.next()));
@@ -282,6 +290,11 @@ public class StrJoiner implements Appendable, Serializable {
 
 	@Override
 	public StrJoiner append(CharSequence csq) {
+		return append(csq, 0, StrUtil.length(csq));
+	}
+
+	@Override
+	public StrJoiner append(CharSequence csq, int startInclude, int endExclude) {
 		if (null == csq) {
 			switch (this.nullMode) {
 				case IGNORE:
@@ -291,6 +304,8 @@ public class StrJoiner implements Appendable, Serializable {
 					break;
 				case NULL_STRING:
 					csq = StrUtil.NULL;
+					endExclude = StrUtil.NULL.length();
+					break;
 			}
 		}
 		try {
@@ -298,7 +313,7 @@ public class StrJoiner implements Appendable, Serializable {
 			if (wrapElement && StrUtil.isNotEmpty(this.prefix)) {
 				appendable.append(prefix);
 			}
-			appendable.append(csq);
+			appendable.append(csq, startInclude, endExclude);
 			if (wrapElement && StrUtil.isNotEmpty(this.suffix)) {
 				appendable.append(suffix);
 			}
@@ -309,13 +324,41 @@ public class StrJoiner implements Appendable, Serializable {
 	}
 
 	@Override
-	public StrJoiner append(CharSequence csq, int startInclude, int endExclude) {
-		return append(StrUtil.sub(csq, startInclude, endExclude));
-	}
-
-	@Override
 	public StrJoiner append(char c) {
 		return append(String.valueOf(c));
+	}
+
+	/**
+	 * 合并一个StrJoiner 到当前的StrJoiner<br>
+	 * 合并规则为，在尾部直接追加，当存在{@link #prefix}时，如果{@link #wrapElement}为{@code false}，则去除之。
+	 *
+	 * @param strJoiner 其他的StrJoiner
+	 * @return this
+	 * @since 5.7.22
+	 */
+	public StrJoiner merge(StrJoiner strJoiner){
+		if(null != strJoiner && null != strJoiner.appendable){
+			final String otherStr = strJoiner.toString();
+			if(strJoiner.wrapElement){
+				this.append(otherStr);
+			}else{
+				this.append(otherStr, this.prefix.length(), otherStr.length());
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * 长度<br>
+	 * 长度计算方式为prefix + suffix + content<br>
+	 * 此方法结果与toString().length()一致。
+	 *
+	 * @return 长度，如果结果为{@code null}，返回-1
+	 * @since 5.7.22
+	 */
+	public int length() {
+		return (this.appendable != null ? this.appendable.toString().length() + suffix.length() :
+				null == this.emptyResult ? -1 : emptyResult.length());
 	}
 
 	@Override
@@ -323,14 +366,12 @@ public class StrJoiner implements Appendable, Serializable {
 		if (null == this.appendable) {
 			return emptyResult;
 		}
+
+		String result = this.appendable.toString();
 		if (false == wrapElement && StrUtil.isNotEmpty(this.suffix)) {
-			try {
-				this.appendable.append(this.suffix);
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			}
+			result += this.suffix;
 		}
-		return this.appendable.toString();
+		return result;
 	}
 
 	/**

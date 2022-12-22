@@ -29,7 +29,7 @@ import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 
 /**
  * 复制jdk16中的Optional，以及自己进行了一点调整和新增，比jdk8中的Optional多了几个实用的函数<br>
- * 详细见：https://gitee.com/dromara/hutool/pulls/426
+ * 详细见：<a href="https://gitee.com/dromara/hutool/pulls/426">https://gitee.com/dromara/hutool/pulls/426</a>
  *
  * @param <T> 包裹里元素的类型
  * @author VampireAchao
@@ -60,8 +60,7 @@ public class Opt<T> {
 	 * @return Opt
 	 */
 	public static <T> Opt<T> empty() {
-		@SuppressWarnings("unchecked")
-		Opt<T> t = (Opt<T>) EMPTY;
+		@SuppressWarnings("unchecked") final Opt<T> t = (Opt<T>) EMPTY;
 		return t;
 	}
 
@@ -103,17 +102,17 @@ public class Opt<T> {
 	/**
 	 * 返回一个包裹里{@code List}集合可能为空的{@code Opt}，额外判断了集合内元素为空的情况
 	 *
-	 * @param value 传入需要包裹的元素
 	 * @param <T>   包裹里元素的类型
+	 * @param <R>   集合值类型
+	 * @param value 传入需要包裹的元素
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
-	public static <T> Opt<List<T>> ofEmptyAble(List<T> value) {
+	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
 		return CollectionUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
 	/**
-	 *
 	 * @param supplier 操作
 	 * @param <T>      类型
 	 * @return 操作执行后的值
@@ -122,7 +121,7 @@ public class Opt<T> {
 		try {
 			return Opt.ofNullable(supplier.call());
 		} catch (Exception e) {
-			final Opt<T> empty = Opt.empty();
+			final Opt<T> empty = new Opt<>(null);
 			empty.exception = e;
 			return empty;
 		}
@@ -175,7 +174,7 @@ public class Opt<T> {
 	 * @return 异常
 	 * @since 5.7.17
 	 */
-	public Exception getException(){
+	public Exception getException() {
 		return this.exception;
 	}
 
@@ -186,7 +185,7 @@ public class Opt<T> {
 	 * @return 是否失败
 	 * @since 5.7.17
 	 */
-	public boolean isFail(){
+	public boolean isFail() {
 		return null != this.exception;
 	}
 
@@ -253,7 +252,7 @@ public class Opt<T> {
 	 * String hutool = Opt.ofBlankAble("hutool").mapOrElse(String::toUpperCase, () -> Console.log("yes")).mapOrElse(String::intern, () -> Console.log("Value is not present~")).get();
 	 * }</pre>
 	 *
-	 * @param <U> map后新的类型
+	 * @param <U>         map后新的类型
 	 * @param mapper      包裹里的值存在时的操作
 	 * @param emptyAction 包裹里的值不存在时的操作
 	 * @return 新的类型的Opt
@@ -322,7 +321,7 @@ public class Opt<T> {
 			return empty();
 		} else {
 			@SuppressWarnings("unchecked")
-			Opt<U> r = (Opt<U>) mapper.apply(value);
+			final Opt<U> r = (Opt<U>) mapper.apply(value);
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -400,8 +399,7 @@ public class Opt<T> {
 		if (isPresent()) {
 			return this;
 		} else {
-			@SuppressWarnings("unchecked")
-			Opt<T> r = (Opt<T>) supplier.get();
+			@SuppressWarnings("unchecked") final Opt<T> r = (Opt<T>) supplier.get();
 			return Objects.requireNonNull(r);
 		}
 	}
@@ -443,7 +441,7 @@ public class Opt<T> {
 	 * @return 如果未发生异常，则返回该值，否则返回传入的{@code other}
 	 * @since 5.7.17
 	 */
-	public T exceptionOrElse(T other){
+	public T exceptionOrElse(T other) {
 		return isFail() ? other : value;
 	}
 
@@ -544,7 +542,7 @@ public class Opt<T> {
 			return false;
 		}
 
-		Opt<?> other = (Opt<?>) obj;
+		final Opt<?> other = (Opt<?>) obj;
 		return Objects.equals(value, other.value);
 	}
 

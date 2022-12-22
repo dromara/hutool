@@ -28,6 +28,15 @@ public class ImgTest {
 
 	@Test
 	@Ignore
+	public void compressWithBackgroundColorTest() {
+		Img.from(FileUtil.file("D:/test/before_compress.png"))
+				.setBackgroundColor(Color.WHITE)
+				.setQuality(0.8)
+				.write(FileUtil.file("D:/test/after_compress.jpg"));
+	}
+
+	@Test
+	@Ignore
 	public void writeTest() {
 		final Img from = Img.from(FileUtil.file("d:/test/81898311-001d6100-95eb-11ea-83c2-a14d7b1010bd.png"));
 		ImgUtil.write(from.getImg(), FileUtil.file("d:/test/dest.jpg"));
@@ -52,6 +61,21 @@ public class ImgTest {
 				.write(FileUtil.file("d:/test/test2_result.png"));
 	}
 
+
+	@Test
+	@Ignore
+	public void pressTextFullScreenTest() {
+		Img.from(FileUtil.file("d:/test/1435859438434136064.jpg"))
+				.setTargetImageType(ImgUtil.IMAGE_TYPE_PNG)
+				.pressTextFull("版权所有     ", Color.LIGHT_GRAY,
+						new Font("黑体", Font.PLAIN, 30),
+						4,
+						30,
+						0.8f)
+				.write(FileUtil.file("d:/test/2_result.png"));
+
+	}
+
 	@Test
 	@Ignore
 	public void pressImgTest() {
@@ -74,11 +98,11 @@ public class ImgTest {
 	@Test
 	@Ignore
 	public void scaleTest() {
-		String downloadFile = "d:/test/1435859438434136064.JPG";
-		File file = FileUtil.file(downloadFile);
-		File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
+		final String downloadFile = "d:/test/1435859438434136064.JPG";
+		final File file = FileUtil.file(downloadFile);
+		final File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
 
-		Image img = ImgUtil.getImage(URLUtil.getURL(file));
+		final Image img = ImgUtil.getImage(URLUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
 	}
 }

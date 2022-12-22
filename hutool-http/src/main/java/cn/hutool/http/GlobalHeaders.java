@@ -23,7 +23,7 @@ public enum GlobalHeaders {
 	/**
 	 * 存储头信息
 	 */
-	Map<String, List<String>> headers = new HashMap<>();
+	final Map<String, List<String>> headers = new HashMap<>();
 
 	/**
 	 * 构造
@@ -42,6 +42,10 @@ public enum GlobalHeaders {
 		// 解决HttpURLConnection中无法自定义Host等头信息的问题
 		// https://stackoverflow.com/questions/9096987/how-to-overwrite-http-header-host-in-a-httpurlconnection/9098440
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
+		//解决server certificate change is restricted during renegotiation问题
+		System.setProperty("jdk.tls.allowUnsafeServerCertChange", "true");
+		System.setProperty("sun.security.ssl.allowUnsafeRenegotiation", "true");
 
 		if (isReset) {
 			this.headers.clear();
@@ -109,7 +113,7 @@ public enum GlobalHeaders {
 	 * @param isOverride 是否覆盖已有值
 	 * @return this
 	 */
-	public GlobalHeaders header(String name, String value, boolean isOverride) {
+	synchronized public GlobalHeaders header(String name, String value, boolean isOverride) {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
 			if (isOverride || CollectionUtil.isEmpty(values)) {
@@ -188,7 +192,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return this
 	 */
-	public GlobalHeaders removeHeader(String name) {
+	synchronized public GlobalHeaders removeHeader(String name) {
 		if (name != null) {
 			headers.remove(name.trim());
 		}
@@ -220,7 +224,7 @@ public enum GlobalHeaders {
 	 * @return this
 	 * @since 5.7.13
 	 */
-	public GlobalHeaders clearHeaders() {
+	synchronized public GlobalHeaders clearHeaders() {
 		this.headers.clear();
 		return this;
 	}

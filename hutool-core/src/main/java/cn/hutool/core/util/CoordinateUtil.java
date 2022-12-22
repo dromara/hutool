@@ -22,12 +22,12 @@ public class CoordinateUtil {
 	/**
 	 * 坐标转换参数：(火星坐标系与百度坐标系转换的中间量)
 	 */
-	public static final double X_PI = 3.14159265358979324 * 3000.0 / 180.0;
+	public static final double X_PI = 3.1415926535897932384626433832795 * 3000.0 / 180.0;
 
 	/**
 	 * 坐标转换参数：π
 	 */
-	public static final double PI = 3.1415926535897932384626D;
+	public static final double PI = 3.1415926535897932384626433832795D;
 
 	/**
 	 * 地球半径（Krasovsky 1940）
@@ -56,7 +56,7 @@ public class CoordinateUtil {
 	 * WGS84 转换为 火星坐标系 (GCJ-02)
 	 *
 	 * @param lng 经度值
-	 * @param lat 维度值
+	 * @param lat 纬度值
 	 * @return 火星坐标 (GCJ-02)
 	 */
 	public static Coordinate wgs84ToGcj02(double lng, double lat) {
@@ -67,7 +67,7 @@ public class CoordinateUtil {
 	 * WGS84 坐标转为 百度坐标系 (BD-09) 坐标
 	 *
 	 * @param lng 经度值
-	 * @param lat 维度值
+	 * @param lat 纬度值
 	 * @return bd09 坐标
 	 */
 	public static Coordinate wgs84ToBd09(double lng, double lat) {
@@ -80,7 +80,7 @@ public class CoordinateUtil {
 	 * 火星坐标系 (GCJ-02) 转换为 WGS84
 	 *
 	 * @param lng 经度坐标
-	 * @param lat 维度坐标
+	 * @param lat 纬度坐标
 	 * @return WGS84 坐标
 	 */
 	public static Coordinate gcj02ToWgs84(double lng, double lat) {
@@ -139,7 +139,7 @@ public class CoordinateUtil {
 	 * 转换坐标公共核心
 	 *
 	 * @param lng 经度坐标
-	 * @param lat 维度坐标
+	 * @param lat 纬度坐标
 	 * @return 返回结果
 	 */
 	private static double transCore(double lng, double lat) {
@@ -179,7 +179,7 @@ public class CoordinateUtil {
 	 * 计算经度坐标
 	 *
 	 * @param lng 经度坐标
-	 * @param lat 维度坐标
+	 * @param lat 纬度坐标
 	 * @return ret 计算完成后的
 	 */
 	private static double transLng(double lng, double lat) {
@@ -193,7 +193,7 @@ public class CoordinateUtil {
 	 * 计算纬度坐标
 	 *
 	 * @param lng 经度
-	 * @param lat 维度
+	 * @param lat 纬度
 	 * @return ret 计算完成后的
 	 */
 	private static double transLat(double lng, double lat) {
@@ -280,7 +280,7 @@ public class CoordinateUtil {
 		 */
 		public Coordinate offset(Coordinate offset){
 			this.lng += offset.lng;
-			this.lat += offset.lng;
+			this.lat += offset.lat;
 			return this;
 		}
 

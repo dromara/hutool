@@ -9,7 +9,7 @@ import cn.hutool.extra.expression.ExpressionEngine;
 import cn.hutool.extra.expression.ExpressionException;
 
 /**
- * 表达式语言引擎工厂类，，用于根据用户引入的表达式jar，自动创建对应的引擎对象
+ * 表达式语言引擎工厂类，用于根据用户引入的表达式jar，自动创建对应的引擎对象
  *
  * @since 5.5.0
  * @author looly

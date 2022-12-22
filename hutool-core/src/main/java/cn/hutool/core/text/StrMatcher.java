@@ -35,6 +35,7 @@ public class StrMatcher {
 
 	/**
 	 * 匹配并提取匹配到的内容
+	 *
 	 * @param text 被匹配的文本
 	 * @return 匹配的map，key为变量名，value为匹配到的值
 	 */
@@ -49,7 +50,7 @@ public class StrMatcher {
 				key = StrUtil.sub(part, 2, part.length() - 1);
 			} else {
 				to = text.indexOf(part, from);
-				if(to < 0){
+				if (to < 0) {
 					//普通字符串未匹配到，说明整个模式不能匹配，返回空
 					return MapUtil.empty();
 				}
@@ -73,6 +74,7 @@ public class StrMatcher {
 
 	/**
 	 * 解析表达式
+	 *
 	 * @param pattern 表达式，使用${XXXX}作为变量占位符
 	 * @return 表达式
 	 */
@@ -82,7 +84,7 @@ public class StrMatcher {
 		char c = 0;
 		char pre;
 		boolean inVar = false;
-		StrBuilder part = StrUtil.strBuilder();
+		StringBuilder part = StrUtil.builder();
 		for (int i = 0; i < length; i++) {
 			pre = c;
 			c = pattern.charAt(i);
@@ -92,16 +94,17 @@ public class StrMatcher {
 					// 变量结束
 					inVar = false;
 					patterns.add(part.toString());
-					part.clear();
+					part.setLength(0);
 				}
 			} else if ('{' == c && '$' == pre) {
 				// 变量开始
 				inVar = true;
-				final String preText = part.subString(0, part.length() - 1);
+				final String preText = part.substring(0, part.length() - 1);
 				if (StrUtil.isNotEmpty(preText)) {
 					patterns.add(preText);
 				}
-				part.reset().append(pre).append(c);
+				part.setLength(0);
+				part.append(pre).append(c);
 			} else {
 				// 普通字符
 				part.append(c);

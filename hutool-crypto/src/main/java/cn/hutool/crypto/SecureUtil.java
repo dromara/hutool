@@ -3,8 +3,9 @@ package cn.hutool.crypto;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -634,7 +635,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmac(HmacAlgorithm algorithm, String key) {
-		return new HMac(algorithm, StrUtil.utf8Bytes(key));
+		return hmac(algorithm, StrUtil.isNotEmpty(key)? StrUtil.utf8Bytes(key): null);
 	}
 
 	/**
@@ -646,6 +647,9 @@ public class SecureUtil {
 	 * @since 3.0.3
 	 */
 	public static HMac hmac(HmacAlgorithm algorithm, byte[] key) {
+		if (ArrayUtil.isEmpty(key)) {
+			key = generateKey(algorithm.getValue()).getEncoded();
+		}
 		return new HMac(algorithm, key);
 	}
 
@@ -658,6 +662,9 @@ public class SecureUtil {
 	 * @since 3.0.3
 	 */
 	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key) {
+		if (ObjectUtil.isNull(key)) {
+			key = generateKey(algorithm.getValue());
+		}
 		return new HMac(algorithm, key);
 	}
 
@@ -672,7 +679,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmacMd5(String key) {
-		return hmacMd5(StrUtil.utf8Bytes(key));
+		return hmacMd5(StrUtil.isNotEmpty(key)? StrUtil.utf8Bytes(key): null);
 	}
 
 	/**
@@ -685,6 +692,9 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacMd5(byte[] key) {
+		if (ArrayUtil.isEmpty(key)) {
+			key = generateKey(HmacAlgorithm.HmacMD5.getValue()).getEncoded();
+		}
 		return new HMac(HmacAlgorithm.HmacMD5, key);
 	}
 
@@ -711,7 +721,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmacSha1(String key) {
-		return hmacSha1(StrUtil.utf8Bytes(key));
+		return hmacSha1(StrUtil.isNotEmpty(key)? StrUtil.utf8Bytes(key): null);
 	}
 
 	/**
@@ -724,6 +734,9 @@ public class SecureUtil {
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacSha1(byte[] key) {
+		if (ArrayUtil.isEmpty(key)) {
+			key = generateKey(HmacAlgorithm.HmacMD5.getValue()).getEncoded();
+		}
 		return new HMac(HmacAlgorithm.HmacSHA1, key);
 	}
 
@@ -750,7 +763,7 @@ public class SecureUtil {
 	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256(String key) {
-		return hmacSha256(StrUtil.utf8Bytes(key));
+		return hmacSha256(StrUtil.isNotEmpty(key)? StrUtil.utf8Bytes(key): null);
 	}
 
 	/**
@@ -764,6 +777,9 @@ public class SecureUtil {
 	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256(byte[] key) {
+		if (ArrayUtil.isEmpty(key)) {
+			key = generateKey(HmacAlgorithm.HmacMD5.getValue()).getEncoded();
+		}
 		return new HMac(HmacAlgorithm.HmacSHA256, key);
 	}
 
@@ -830,7 +846,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm) {
-		return new Sign(algorithm);
+		return SignUtil.sign(algorithm);
 	}
 
 	/**
@@ -845,7 +861,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		return new Sign(algorithm, privateKeyBase64, publicKeyBase64);
+		return SignUtil.sign(algorithm, privateKeyBase64, publicKeyBase64);
 	}
 
 	/**
@@ -860,7 +876,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
-		return new Sign(algorithm, privateKey, publicKey);
+		return SignUtil.sign(algorithm, privateKey, publicKey);
 	}
 
 	/**
@@ -875,7 +891,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String... otherParams) {
-		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(crypto, params, otherParams);
 	}
 
 	/**
@@ -893,7 +909,7 @@ public class SecureUtil {
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
 									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return crypto.encryptHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+		return SignUtil.signParams(crypto, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**
@@ -907,7 +923,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsMd5(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.MD5, params, otherParams);
+		return SignUtil.signParamsMd5(params, otherParams);
 	}
 
 	/**
@@ -921,7 +937,7 @@ public class SecureUtil {
 	 * @since 4.0.8
 	 */
 	public static String signParamsSha1(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA1, params, otherParams);
+		return SignUtil.signParamsSha1(params, otherParams);
 	}
 
 	/**
@@ -935,7 +951,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParamsSha256(Map<?, ?> params, String... otherParams) {
-		return signParams(DigestAlgorithm.SHA256, params, otherParams);
+		return SignUtil.signParamsSha256(params, otherParams);
 	}
 
 	/**
@@ -950,7 +966,7 @@ public class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String... otherParams) {
-		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
+		return SignUtil.signParams(digestAlgorithm, params, otherParams);
 	}
 
 	/**
@@ -968,7 +984,7 @@ public class SecureUtil {
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
 									String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
-		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
+		return SignUtil.signParams(digestAlgorithm, params, separator, keyValueSeparator, isIgnoreNull, otherParams);
 	}
 
 	/**

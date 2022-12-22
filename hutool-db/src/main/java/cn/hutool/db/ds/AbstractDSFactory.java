@@ -1,18 +1,18 @@
 package cn.hutool.db.ds;
 
-import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
+import cn.hutool.db.GlobalDbConfig;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.setting.Setting;
 
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 抽象数据源工厂<br>
@@ -20,51 +20,41 @@ import java.util.concurrent.ConcurrentHashMap;
  * 数据源是与配置文件中的分组相关的，每个分组的数据源相互独立，也就是每个分组的数据源是单例存在的。
  *
  * @author looly
- *
  */
 public abstract class AbstractDSFactory extends DSFactory {
 	private static final long serialVersionUID = -6407302276272379881L;
 
-	/** 数据库配置文件可选路径1 */
-	private static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
-	/** 数据库配置文件可选路径2 */
-	private static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
-
-	/** 数据库连接配置文件 */
+	/**
+	 * 数据库连接配置文件
+	 */
 	private final Setting setting;
-	/** 数据源池 */
+	/**
+	 * 数据源池
+	 */
 	private final Map<String, DataSourceWrapper> dsMap;
 
 	/**
 	 * 构造
 	 *
-	 * @param dataSourceName 数据源名称
+	 * @param dataSourceName  数据源名称
 	 * @param dataSourceClass 数据库连接池实现类，用于检测所提供的DataSource类是否存在，当传入的DataSource类不存在时抛出ClassNotFoundException<br>
-	 *            此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
-	 * @param setting 数据库连接配置
+	 *                        此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
+	 * @param setting         数据库连接配置，如果为{@code null}，则读取全局自定义或默认配置
 	 */
 	public AbstractDSFactory(String dataSourceName, Class<? extends DataSource> dataSourceClass, Setting setting) {
 		super(dataSourceName);
 		//此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
 		Assert.notNull(dataSourceClass);
+
 		if (null == setting) {
-			try {
-				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-			} catch (NoResourceException e) {
-				// 尝试ClassPath下直接读取配置文件
-				try {
-					setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
-				} catch (NoResourceException e2) {
-					throw new NoResourceException("Default db setting [{}] or [{}] in classpath not found !", DEFAULT_DB_SETTING_PATH, DEFAULT_DB_SETTING_PATH2);
-				}
-			}
+			setting = GlobalDbConfig.createDbSetting();
 		}
 
 		// 读取配置，用于SQL打印
 		DbUtil.setShowSqlGlobal(setting);
 
 		this.setting = setting;
-		this.dsMap = new ConcurrentHashMap<>();
+		this.dsMap = new SafeConcurrentHashMap<>();
 	}
 
 	/**
@@ -135,10 +125,10 @@ public abstract class AbstractDSFactory extends DSFactory {
 	/**
 	 * 创建新的{@link DataSource}<br>
 	 *
-	 * @param jdbcUrl JDBC连接字符串
-	 * @param driver 数据库驱动类名
-	 * @param user 用户名
-	 * @param pass 密码
+	 * @param jdbcUrl     JDBC连接字符串
+	 * @param driver      数据库驱动类名
+	 * @param user        用户名
+	 * @param pass        密码
 	 * @param poolSetting 分组下的连接池配置文件
 	 * @return {@link DataSource}
 	 */

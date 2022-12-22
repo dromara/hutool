@@ -33,23 +33,23 @@ public class StyleSet implements Serializable {
 	/**
 	 * 标题样式
 	 */
-	protected CellStyle headCellStyle;
+	protected final CellStyle headCellStyle;
 	/**
 	 * 默认样式
 	 */
-	protected CellStyle cellStyle;
+	protected final CellStyle cellStyle;
 	/**
 	 * 默认数字样式
 	 */
-	protected CellStyle cellStyleForNumber;
+	protected final CellStyle cellStyleForNumber;
 	/**
 	 * 默认日期样式
 	 */
-	protected CellStyle cellStyleForDate;
+	protected final CellStyle cellStyleForDate;
 	/**
 	 * 默认链接样式
 	 */
-	protected CellStyle cellStyleForHyperlink;
+	protected final CellStyle cellStyleForHyperlink;
 
 	/**
 	 * 构造

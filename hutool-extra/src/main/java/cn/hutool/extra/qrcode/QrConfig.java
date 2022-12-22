@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.datamatrix.encoder.SymbolShapeHint;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.awt.Color;
@@ -24,12 +25,22 @@ public class QrConfig {
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
 
-	/** 宽 */
+
+	/**
+	 * 宽度（单位：像素或▄）
+	 * <p>当二维码类型为一般图片或者SVG时，单位是像素</p>
+	 * <p>当二维码类型Ascii Art字符画时，单位是字符▄或▀的大小</p>
+	 */
 	protected int width;
-	/** 长 */
+
+	/**
+	 * 高度（单位：像素或▄）
+	 * <p>当二维码类型为一般图片或者SVG时，单位是像素</p>
+	 * <p>当二维码类型Ascii Art字符画时，单位是字符▄或▀的大小</p>
+	 */
 	protected int height;
 	/** 前景色（二维码颜色） */
-	protected int foreColor = BLACK;
+	protected Integer foreColor = BLACK;
 	/** 背景色，默认白色，null表示透明 */
 	protected Integer backColor = WHITE;
 	/** 边距1~4 */
@@ -44,6 +55,10 @@ public class QrConfig {
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
 	protected int ratio = 6;
+	/**
+	 * DATA_MATRIX的符号形状
+	 */
+	protected SymbolShapeHint shapeHint = SymbolShapeHint.FORCE_NONE;
 
 	/**
 	 * 创建QrConfig
@@ -142,7 +157,9 @@ public class QrConfig {
 	 * @since 5.1.1
 	 */
 	public QrConfig setForeColor(Color foreColor) {
-		if(null != foreColor){
+		if(null == foreColor){
+			this.foreColor = null;
+		} else {
 			this.foreColor = foreColor.getRGB();
 		}
 		return this;
@@ -327,6 +344,17 @@ public class QrConfig {
 	}
 
 	/**
+	 * 设置DATA_MATRIX的符号形状
+	 *
+	 * @param shapeHint DATA_MATRIX的符号形状
+	 * @return this;
+	 */
+	public QrConfig setShapeHint(SymbolShapeHint shapeHint) {
+		this.shapeHint = shapeHint;
+		return this;
+	}
+
+	/**
 	 * 转换为Zxing的二维码配置
 	 *
 	 * @return 配置
@@ -357,6 +385,7 @@ public class QrConfig {
 			}
 
 			hints.put(EncodeHintType.ERROR_CORRECTION, value);
+			hints.put(EncodeHintType.DATA_MATRIX_SHAPE, shapeHint);
 		}
 		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +36,13 @@ public class Table implements Serializable, Cloneable {
 	 * 主键字段名列表
 	 */
 	private Set<String> pkNames = new LinkedHashSet<>();
+	/**
+	 * 索引信息
+	 */
+	private List<IndexInfo> indexInfoList;
+	/**
+	 * 列映射，列名-列对象
+	 */
 	private final Map<String, Column> columns = new LinkedHashMap<>();
 
 	public static Table create(String tableName) {
@@ -153,7 +161,7 @@ public class Table implements Serializable, Cloneable {
 	 * @return 是否为主键
 	 * @since 5.4.3
 	 */
-	public boolean isPk(String columnName){
+	public boolean isPk(String columnName) {
 		return getPkNames().contains(columnName);
 	}
 
@@ -208,5 +216,30 @@ public class Table implements Serializable, Cloneable {
 	public Table addPk(String pkColumnName) {
 		this.pkNames.add(pkColumnName);
 		return this;
+	}
+
+	/**
+	 * 获取索引信息
+	 *
+	 * @return 索引信息
+	 * @since 5.7.23
+	 */
+	public List<IndexInfo> getIndexInfoList() {
+		return indexInfoList;
+	}
+
+	/**
+	 * 设置索引信息
+	 *
+	 * @param indexInfoList 索引信息列表
+	 * @since 5.7.23
+	 */
+	public void setIndexInfoList(List<IndexInfo> indexInfoList) {
+		this.indexInfoList = indexInfoList;
+	}
+
+	@Override
+	public Table clone() throws CloneNotSupportedException {
+		return (Table) super.clone();
 	}
 }

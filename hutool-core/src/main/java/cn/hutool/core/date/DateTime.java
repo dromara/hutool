@@ -24,12 +24,29 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * 包装java.util.Date
+ * 包装{@link Date}<br>
+ * 此类继承了{@link Date}，并提供扩展方法，如时区等。<br>
+ * 此类重写了父类的{@code toString()}方法，返回值为"yyyy-MM-dd HH:mm:ss"格式
  *
  * @author xiaoleilu
  */
 public class DateTime extends Date {
 	private static final long serialVersionUID = -5395712593979185936L;
+
+	private static boolean useJdkToStringStyle = false;
+
+	/**
+	 * 设置全局的，是否使用{@link Date}默认的toString()格式<br>
+	 * 如果为{@code true}，则调用toString()时返回"EEE MMM dd HH:mm:ss zzz yyyy"格式，<br>
+	 * 如果为{@code false}，则返回"yyyy-MM-dd HH:mm:ss"，<br>
+	 * 默认为{@code false}
+	 *
+	 * @param customUseJdkToStringStyle 是否使用{@link Date}默认的toString()格式
+	 * @since 5.7.21
+	 */
+	public static void setUseJdkToStringStyle(boolean customUseJdkToStringStyle){
+		useJdkToStringStyle = customUseJdkToStringStyle;
+	}
 
 	/**
 	 * 是否可变对象
@@ -216,7 +233,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 	}
 
 	/**
@@ -913,7 +930,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime setTimeZone(TimeZone timeZone) {
-		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone.getDefault());
+		this.timeZone = ObjectUtil.defaultIfNull(timeZone, TimeZone::getDefault);
 		return this;
 	}
 
@@ -929,16 +946,39 @@ public class DateTime extends Date {
 		return this;
 	}
 
+	/**
+	 * 是否为本月最后一天
+	 * @return 是否为本月最后一天
+	 * @since 5.8.9
+	 */
+	public boolean isLastDayOfMonth(){
+		return dayOfMonth() == getLastDayOfMonth();
+	}
+
+	/**
+	 * 获得本月的最后一天
+	 * @return 天
+	 * @since 5.8.9
+	 */
+	public int getLastDayOfMonth(){
+		return monthEnum().getLastDay(isLeapYear());
+	}
+
 	// -------------------------------------------------------------------- toString start
 
 	/**
-	 * 转为"yyyy-MM-dd HH:mm:ss" 格式字符串<br>
-	 * 如果时区被设置，会转换为其时区对应的时间，否则转换为当前地点对应的时区
+	 * 转为字符串，如果时区被设置，会转换为其时区对应的时间，否则转换为当前地点对应的时区<br>
+	 * 可以调用{@link DateTime#setUseJdkToStringStyle(boolean)} 方法自定义默认的风格<br>
+	 * 如果{@link #useJdkToStringStyle}为{@code true}，返回"EEE MMM dd HH:mm:ss zzz yyyy"格式，<br>
+	 * 如果为{@code false}，则返回"yyyy-MM-dd HH:mm:ss"
 	 *
-	 * @return "yyyy-MM-dd HH:mm:ss" 格式字符串
+	 * @return 格式字符串
 	 */
 	@Override
 	public String toString() {
+		if(useJdkToStringStyle){
+			return super.toString();
+		}
 		return toString(this.timeZone);
 	}
 

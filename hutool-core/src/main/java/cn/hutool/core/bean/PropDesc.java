@@ -251,7 +251,7 @@ public class PropDesc {
 	 * @param value       属性值，可以为任意类型
 	 * @param ignoreNull  是否忽略{@code null}值，true表示忽略
 	 * @param ignoreError 是否忽略错误，包括转换错误和注入错误
-	 * @param override    是否覆盖目标值，如果不覆盖，会先读取bean的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 * @param override    是否覆盖目标值，如果不覆盖，会先读取bean的值，{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 * @return this
 	 * @since 5.7.17
 	 */

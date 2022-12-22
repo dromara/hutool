@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
@@ -7,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * CollectionStream测试方法
@@ -147,6 +150,13 @@ public class CollStreamUtilTest {
 		compare.put(2L, map2);
 		Assert.assertEquals(compare, map);
 
+		// 对null友好
+		Map<Long, Map<Long, Student>> termIdClassIdStudentMap = CollStreamUtil.group2Map(Arrays.asList(null, new Student(2, 2, 1, "王五")), Student::getTermId, Student::getClassId);
+		Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {{
+			put(null, MapUtil.of(null, null));
+			put(2L, MapUtil.of(2L, new Student(2, 2, 1, "王五")));
+		}};
+		Assert.assertEquals(termIdClassIdStudentCompareMap, termIdClassIdStudentMap);
 	}
 
 	@Test
@@ -166,6 +176,54 @@ public class CollStreamUtilTest {
 		compare.put(1L, Arrays.asList(1L, 2L));
 		compare.put(2L, Collections.singletonList(2L));
 		Assert.assertEquals(compare, map);
+	}
+
+	@Test
+	public void testGroupBy() {
+		// groupBy作为之前所有group函数的公共部分抽取出来，并更接近于jdk原生，灵活性更强
+
+		// 参数null测试
+		Map<Long, List<Student>> map = CollStreamUtil.groupBy(null, Student::getTermId, Collectors.toList());
+		Assert.assertEquals(map, Collections.EMPTY_MAP);
+
+		// 参数空数组测试
+		List<Student> list = new ArrayList<>();
+		map = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.toList());
+		Assert.assertEquals(map, Collections.EMPTY_MAP);
+
+		// 放入元素
+		list.add(new Student(1, 1, 1, "张三"));
+		list.add(new Student(1, 2, 1, "李四"));
+		list.add(new Student(2, 2, 1, "王五"));
+		// 先根据termId分组，再通过classId比较，找出最大值所属的那个Student,返回的Optional
+		Map<Long, Optional<Student>> longOptionalMap = CollStreamUtil.groupBy(list, Student::getTermId, Collectors.maxBy(Comparator.comparing(Student::getClassId)));
+		//noinspection OptionalGetWithoutIsPresent
+		Assert.assertEquals("李四", longOptionalMap.get(1L).get().getName());
+
+		// 先根据termId分组，再转换为Map<studentId,name>
+		Map<Long, HashMap<Long, String>> groupThen = CollStreamUtil.groupBy(list, Student::getTermId, Collector.of(HashMap::new, (m, v) -> m.put(v.getStudentId(), v.getName()), (l, r) -> l));
+		Assert.assertEquals(
+				MapUtil.builder()
+						.put(1L, MapUtil.builder().put(1L, "李四").build())
+						.put(2L, MapUtil.builder().put(1L, "王五").build())
+						.build(),
+				groupThen);
+
+		// 总之，如果你是想要group分组后还要进行别的操作，用它就对了！
+		// 并且对null值进行了友好处理，例如
+		List<Student> students = Arrays.asList(null, null, new Student(1, 1, 1, "张三"),
+				new Student(1, 2, 1, "李四"));
+		Map<Long, List<Student>> termIdStudentsMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.toList());
+		Map<Long, List<Student>> termIdStudentsCompareMap = new HashMap<>();
+		termIdStudentsCompareMap.put(null, Arrays.asList(null, null));
+		termIdStudentsCompareMap.put(1L, Arrays.asList(new Student(1L, 1, 1, "张三"), new Student(1L, 2, 1, "李四")));
+		Assert.assertEquals(termIdStudentsCompareMap, termIdStudentsMap);
+
+		Map<Long, Long> termIdCountMap = CollStreamUtil.groupBy(students, Student::getTermId, Collectors.counting());
+		Map<Long, Long> termIdCountCompareMap = new HashMap<>();
+		termIdCountCompareMap.put(null, 2L);
+		termIdCountCompareMap.put(1L, 2L);
+		Assert.assertEquals(termIdCountCompareMap, termIdCountMap);
 	}
 
 

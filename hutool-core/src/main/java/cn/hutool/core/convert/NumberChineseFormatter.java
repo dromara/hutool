@@ -2,7 +2,11 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * 数字转中文类<br>
@@ -39,7 +43,6 @@ public class NumberChineseFormatter {
 			new ChineseUnit('亿', 1_0000_0000, true),
 	};
 
-
 	/**
 	 * 阿拉伯数字转换成中文,小数点后四舍五入保留两位. 使用于整数、小数的转换.
 	 *
@@ -52,15 +55,26 @@ public class NumberChineseFormatter {
 	}
 
 	/**
-	 * 阿拉伯数字转换成中文,小数点后四舍五入保留两位. 使用于整数、小数的转换.
+	 * 阿拉伯数字转换成中文.
+	 *
+	 * <p>主要是对发票票面金额转换的扩展
+	 * <p>如：-12.32
+	 * <p>发票票面转换为：(负数)壹拾贰圆叁角贰分
+	 * <p>而非：负壹拾贰元叁角贰分
+	 * <p>共两点不同：1、(负数) 而非 负；2、圆 而非 元
+	 * 2022/3/9
 	 *
 	 * @param amount           数字
 	 * @param isUseTraditional 是否使用繁体
-	 * @param isMoneyMode      是否为金额模式
-	 * @return 中文
+	 * @param isMoneyMode      是否金额模式
+	 * @param negativeName     负号转换名称 如：负、(负数)
+	 * @param unitName         单位名称 如：元、圆
+	 * @return java.lang.String
+	 * @author machuanpeng
+	 * @since 5.7.23
 	 */
-	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
-		if(0 == amount){
+	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode, String negativeName, String unitName) {
+		if (0 == amount) {
 			return "零";
 		}
 		Assert.checkBetween(amount, -99_9999_9999_9999.99, 99_9999_9999_9999.99,
@@ -70,7 +84,7 @@ public class NumberChineseFormatter {
 
 		// 负数
 		if (amount < 0) {
-			chineseStr.append("负");
+			chineseStr.append(StrUtil.isNullOrUndefined(negativeName) ? "负" : negativeName);
 			amount = -amount;
 		}
 
@@ -81,44 +95,44 @@ public class NumberChineseFormatter {
 		yuan = yuan / 10;
 
 		// 元
-		if(false == isMoneyMode || 0 != yuan){
+		if (false == isMoneyMode || 0 != yuan) {
 			// 金额模式下，无需“零元”
 			chineseStr.append(longToChinese(yuan, isUseTraditional));
-			if(isMoneyMode){
-				chineseStr.append("元");
+			if (isMoneyMode) {
+				chineseStr.append(StrUtil.isNullOrUndefined(unitName) ? "元" : unitName);
 			}
 		}
 
-		if(0 == jiao && 0 == fen){
+		if (0 == jiao && 0 == fen) {
 			//无小数部分的金额结尾
-			if(isMoneyMode){
+			if (isMoneyMode) {
 				chineseStr.append("整");
 			}
 			return chineseStr.toString();
 		}
 
 		// 小数部分
-		if(false == isMoneyMode){
+		if (false == isMoneyMode) {
 			chineseStr.append("点");
 		}
 
 		// 角
-		if(0 == yuan && 0 == jiao){
+		if (0 == yuan && 0 == jiao) {
 			// 元和角都为0时，只有非金额模式下补“零”
-			if(false == isMoneyMode){
+			if (false == isMoneyMode) {
 				chineseStr.append("零");
 			}
-		}else{
+		} else {
 			chineseStr.append(numberToChinese(jiao, isUseTraditional));
-			if(isMoneyMode && 0 != jiao){
+			if (isMoneyMode && 0 != jiao) {
 				chineseStr.append("角");
 			}
 		}
 
 		// 分
-		if(0 != fen){
+		if (0 != fen) {
 			chineseStr.append(numberToChinese(fen, isUseTraditional));
-			if(isMoneyMode){
+			if (isMoneyMode) {
 				chineseStr.append("分");
 			}
 		}
@@ -127,15 +141,27 @@ public class NumberChineseFormatter {
 	}
 
 	/**
+	 * 阿拉伯数字转换成中文,小数点后四舍五入保留两位. 使用于整数、小数的转换.
+	 *
+	 * @param amount           数字
+	 * @param isUseTraditional 是否使用繁体
+	 * @param isMoneyMode      是否为金额模式
+	 * @return 中文
+	 */
+	public static String format(double amount, boolean isUseTraditional, boolean isMoneyMode) {
+		return format(amount, isUseTraditional, isMoneyMode, "负", "元");
+	}
+
+	/**
 	 * 阿拉伯数字（支持正负整数）转换成中文
 	 *
-	 * @param amount 数字
+	 * @param amount           数字
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 中文
 	 * @since 5.7.17
 	 */
-	public static String format(long amount, boolean isUseTraditional){
-		if(0 == amount){
+	public static String format(long amount, boolean isUseTraditional) {
+		if (0 == amount) {
 			return "零";
 		}
 		Assert.checkBetween(amount, -99_9999_9999_9999.99, 99_9999_9999_9999.99,
@@ -154,18 +180,40 @@ public class NumberChineseFormatter {
 	}
 
 	/**
+	 * 阿拉伯数字（支持正负整数）四舍五入后转换成中文节权位简洁计数单位，例如 -5_5555 =》 -5.56万
+	 *
+	 * @param amount 数字
+	 * @return 中文
+	 */
+	public static String formatSimple(long amount) {
+		if (amount < 1_0000 && amount > -1_0000) {
+			return String.valueOf(amount);
+		}
+		String res;
+		if (amount < 1_0000_0000 && amount > -1_0000_0000) {
+			res = NumberUtil.div(amount, 1_0000, 2) + "万";
+		} else if (amount < 1_0000_0000_0000L && amount > -1_0000_0000_0000L) {
+			res = NumberUtil.div(amount, 1_0000_0000, 2) + "亿";
+		} else {
+			res = NumberUtil.div(amount, 1_0000_0000_0000L, 2) + "万亿";
+		}
+		return res;
+	}
+
+	/**
 	 * 格式化-999~999之间的数字<br>
 	 * 这个方法显示10~19以下的数字时使用"十一"而非"一十一"。
 	 *
-	 * @param amount 数字
+	 * @param amount           数字
 	 * @param isUseTraditional 是否使用繁体
 	 * @return 中文
 	 * @since 5.7.17
 	 */
-	public static String formatThousand(int amount, boolean isUseTraditional){
+	public static String formatThousand(int amount, boolean isUseTraditional) {
 		Assert.checkBetween(amount, -999, 999, "Number support only: (-999 ~ 999)！");
+
 		final String chinese = thousandToChinese(amount, isUseTraditional);
-		if(amount < 20 && amount > 10){
+		if (amount < 20 && amount >= 10) {
 			// "十一"而非"一十一"
 			return chinese.substring(1);
 		}
@@ -188,6 +236,85 @@ public class NumberChineseFormatter {
 	}
 
 	/**
+	 * 中文大写数字金额转换为数字，返回结果以元为单位的BigDecimal类型数字
+	 * 如：
+	 * 	“陆万柒仟伍佰伍拾陆元叁角贰分”返回“67556.32”
+	 * 	“叁角贰分”返回“0.32”
+	 *
+	 * @param chineseMoneyAmount 中文大写数字金额
+	 * @return 返回结果以元为单位的BigDecimal类型数字
+	 */
+	@SuppressWarnings("ConstantConditions")
+	public static BigDecimal chineseMoneyToNumber(String chineseMoneyAmount){
+		if(StrUtil.isBlank(chineseMoneyAmount)){
+			return null;
+		}
+
+		int yi = chineseMoneyAmount.indexOf("元");
+		if(yi == -1){
+			yi = chineseMoneyAmount.indexOf("圆");
+		}
+		final int ji = chineseMoneyAmount.indexOf("角");
+		final int fi = chineseMoneyAmount.indexOf("分");
+
+		// 先找到单位为元的数字
+		String yStr = null;
+		if(yi > 0) {
+			yStr = chineseMoneyAmount.substring(0, yi);
+		}
+
+		// 再找到单位为角的数字
+		String jStr = null;
+		if(ji > 0){
+			if(yi >= 0){
+				//前面有元,角肯定要在元后面
+				if(ji > yi){
+					jStr = chineseMoneyAmount.substring(yi+1, ji);
+				}
+			}else{
+				//没有元，只有角
+				jStr = chineseMoneyAmount.substring(0, ji);
+			}
+		}
+
+		// 再找到单位为分的数字
+		String fStr = null;
+		if(fi > 0){
+			if(ji >= 0){
+				//有角，分肯定在角后面
+				if(fi > ji){
+					fStr = chineseMoneyAmount.substring(ji+1, fi);
+				}
+			}else if(yi > 0){
+				//没有角，有元，那就坐元后面找
+				if(fi > yi){
+					fStr = chineseMoneyAmount.substring(yi+1, fi);
+				}
+			}else {
+				//没有元、角，只有分
+				fStr = chineseMoneyAmount.substring(0, fi);
+			}
+		}
+
+		//元、角、分
+		int y = 0, j = 0, f = 0;
+		if(StrUtil.isNotBlank(yStr)) {
+			y = NumberChineseFormatter.chineseToNumber(yStr);
+		}
+		if(StrUtil.isNotBlank(jStr)){
+			j = NumberChineseFormatter.chineseToNumber(jStr);
+		}
+		if(StrUtil.isNotBlank(fStr)){
+			f = NumberChineseFormatter.chineseToNumber(fStr);
+		}
+
+		BigDecimal amount = new BigDecimal(y);
+		amount = amount.add(BigDecimal.valueOf(j).divide(BigDecimal.TEN, 2, RoundingMode.HALF_UP));
+		amount = amount.add(BigDecimal.valueOf(f).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+		return amount;
+	}
+
+	/**
 	 * 阿拉伯数字整数部分转换成中文，只支持正数
 	 *
 	 * @param amount           数字
@@ -195,7 +322,7 @@ public class NumberChineseFormatter {
 	 * @return 中文
 	 */
 	private static String longToChinese(long amount, boolean isUseTraditional) {
-		if(0 == amount){
+		if (0 == amount) {
 			return "零";
 		}
 
@@ -212,11 +339,11 @@ public class NumberChineseFormatter {
 
 		// 千
 		partValue = parts[0];
-		if(partValue > 0){
+		if (partValue > 0) {
 			partChinese = thousandToChinese(partValue, isUseTraditional);
 			chineseStr.insert(0, partChinese);
 
-			if(partValue < 1000){
+			if (partValue < 1000) {
 				// 和万位之间空0，则补零，如一万零三百
 				addPreZero(chineseStr);
 			}
@@ -224,26 +351,26 @@ public class NumberChineseFormatter {
 
 		// 万
 		partValue = parts[1];
-		if(partValue > 0){
-			if((partValue % 10 == 0 && parts[0] > 0)){
+		if (partValue > 0) {
+			if ((partValue % 10 == 0 && parts[0] > 0)) {
 				// 如果"万"的个位是0，则补零，如十万零八千
 				addPreZero(chineseStr);
 			}
 			partChinese = thousandToChinese(partValue, isUseTraditional);
 			chineseStr.insert(0, partChinese + "万");
 
-			if(partValue < 1000){
+			if (partValue < 1000) {
 				// 和亿位之间空0，则补零，如一亿零三百万
 				addPreZero(chineseStr);
 			}
-		} else{
+		} else {
 			addPreZero(chineseStr);
 		}
 
 		// 亿
 		partValue = parts[2];
-		if(partValue > 0){
-			if((partValue % 10 == 0 && parts[1] > 0)){
+		if (partValue > 0) {
+			if ((partValue % 10 == 0 && parts[1] > 0)) {
 				// 如果"万"的个位是0，则补零，如十万零八千
 				addPreZero(chineseStr);
 			}
@@ -251,25 +378,25 @@ public class NumberChineseFormatter {
 			partChinese = thousandToChinese(partValue, isUseTraditional);
 			chineseStr.insert(0, partChinese + "亿");
 
-			if(partValue < 1000){
+			if (partValue < 1000) {
 				// 和万亿位之间空0，则补零，如一万亿零三百亿
 				addPreZero(chineseStr);
 			}
-		} else{
+		} else {
 			addPreZero(chineseStr);
 		}
 
 		// 万亿
 		partValue = parts[3];
-		if(partValue > 0){
-			if(parts[2] == 0){
+		if (partValue > 0) {
+			if (parts[2] == 0) {
 				chineseStr.insert(0, "亿");
 			}
 			partChinese = thousandToChinese(partValue, isUseTraditional);
 			chineseStr.insert(0, partChinese + "万");
 		}
 
-		if(StrUtil.isNotEmpty(chineseStr) && '零' == chineseStr.charAt(0)){
+		if (StrUtil.isNotEmpty(chineseStr) && '零' == chineseStr.charAt(0)) {
 			return chineseStr.substring(1);
 		}
 
@@ -284,6 +411,11 @@ public class NumberChineseFormatter {
 	 * @return 转换后的汉字
 	 */
 	private static String thousandToChinese(int amountPart, boolean isUseTraditional) {
+		if (amountPart == 0) {
+			// issue#I4R92H@Gitee
+			return String.valueOf(DIGITS[0]);
+		}
+
 		int temp = amountPart;
 
 		StringBuilder chineseStr = new StringBuilder();
@@ -307,7 +439,6 @@ public class NumberChineseFormatter {
 
 	/**
 	 * 把中文转换为数字 如 二百二十 220<br>
-	 * 见：https://www.d5.nz/read/sfdlq/text-part0000_split_030.html
 	 * <ul>
 	 *     <li>一百一十二 -》 112</li>
 	 *     <li>一千零一十二 -》 1012</li>
@@ -358,7 +489,7 @@ public class NumberChineseFormatter {
 				} else {
 					// 非节单位，和单位前的单数字组合为值
 					int unitNumber = number;
-					if(0 == number && 0 == i){
+					if (0 == number && 0 == i) {
 						// issue#1726，对于单位开头的数组，默认赋予1
 						// 十二 -> 一十二
 						// 百二 -> 一百二
@@ -474,12 +605,12 @@ public class NumberChineseFormatter {
 		}
 	}
 
-	private static void addPreZero(StringBuilder chineseStr){
-		if(StrUtil.isEmpty(chineseStr)){
+	private static void addPreZero(StringBuilder chineseStr) {
+		if (StrUtil.isEmpty(chineseStr)) {
 			return;
 		}
 		final char c = chineseStr.charAt(0);
-		if('零' != c){
+		if ('零' != c) {
 			chineseStr.insert(0, '零');
 		}
 	}

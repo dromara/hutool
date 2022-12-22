@@ -2,6 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -170,6 +171,16 @@ public class Entity extends Dict {
 			this.fieldNames = CollectionUtil.newLinkedHashSet(fieldNames);
 		}
 		return this;
+	}
+
+	/**
+	 * 通过lambda批量设置值
+	 * @param fields lambda,不能为空
+	 * @return this
+	 */
+	@Override
+	public Entity setFields(Func0<?>... fields) {
+		return (Entity) super.setFields(fields);
 	}
 
 	/**

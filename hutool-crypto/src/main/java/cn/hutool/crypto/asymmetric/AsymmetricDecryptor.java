@@ -103,7 +103,9 @@ public interface AsymmetricDecryptor {
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
 	 * @since 4.1.0
+	 * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
 	 */
+	@Deprecated
 	default byte[] decryptFromBcd(String data, KeyType keyType, Charset charset) {
 		Assert.notNull(data, "Bcd string must be not null!");
 		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
@@ -118,7 +120,9 @@ public interface AsymmetricDecryptor {
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
 	 * @since 4.5.2
+	 * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
 	 */
+	@Deprecated
 	default String decryptStrFromBcd(String data, KeyType keyType, Charset charset) {
 		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
 	}
@@ -130,7 +134,9 @@ public interface AsymmetricDecryptor {
 	 * @param keyType 密钥类型
 	 * @return 解密后的密文
 	 * @since 4.5.2
+	 * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
 	 */
+	@Deprecated
 	default String decryptStrFromBcd(String data, KeyType keyType) {
 		return decryptStrFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}

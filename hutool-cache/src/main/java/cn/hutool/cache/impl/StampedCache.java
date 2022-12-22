@@ -36,7 +36,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 		final long stamp = lock.readLock();
 		try {
 			// 不存在或已移除
-			final CacheObj<K, V> co = cacheMap.get(key);
+			final CacheObj<K, V> co = getWithoutLock(key);
 			if (co == null) {
 				return false;
 			}
@@ -58,12 +58,12 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	public V get(K key, boolean isUpdateLastAccess) {
 		// 尝试读取缓存，使用乐观读锁
 		long stamp = lock.tryOptimisticRead();
-		CacheObj<K, V> co = cacheMap.get(key);
+		CacheObj<K, V> co = getWithoutLock(key);
 		if(false == lock.validate(stamp)){
 			// 有写线程修改了此对象，悲观读
 			stamp = lock.readLock();
 			try {
-				co = cacheMap.get(key);
+				co = getWithoutLock(key);
 			} finally {
 				lock.unlockRead(stamp);
 			}
@@ -88,7 +88,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 		CopiedIter<CacheObj<K, V>> copiedIterator;
 		final long stamp = lock.readLock();
 		try {
-			copiedIterator = CopiedIter.copyOf(this.cacheMap.values().iterator());
+			copiedIterator = CopiedIter.copyOf(cacheObjIter());
 		} finally {
 			lock.unlockRead(stamp);
 		}

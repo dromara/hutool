@@ -3,6 +3,7 @@ package cn.hutool.crypto;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -32,7 +33,7 @@ import java.security.PublicKey;
 public class PemUtil {
 
 	/**
-	 * 读取PEM格式的私钥
+	 * 读取PEM格式的私钥，支持PKCS#8和PKCS#1的ECC格式
 	 *
 	 * @param pemStream pem流
 	 * @return {@link PrivateKey}
@@ -67,7 +68,13 @@ public class PemUtil {
 		if (StrUtil.isNotBlank(type)) {
 			//private
 			if (type.endsWith("EC PRIVATE KEY")) {
-				return KeyUtil.generatePrivateKey("EC", object.getContent());
+				try {
+					// 尝试PKCS#8
+					return KeyUtil.generatePrivateKey("EC", object.getContent());
+				} catch (final Exception e) {
+					// 尝试PKCS#1
+					return KeyUtil.generatePrivateKey("EC", ECKeyUtil.createOpenSSHPrivateKeySpec(object.getContent()));
+				}
 			}
 			if (type.endsWith("PRIVATE KEY")) {
 				return KeyUtil.generateRSAPrivateKey(object.getContent());
@@ -75,7 +82,13 @@ public class PemUtil {
 
 			// public
 			if (type.endsWith("EC PUBLIC KEY")) {
-				return KeyUtil.generatePublicKey("EC", object.getContent());
+				try {
+					// 尝试DER
+					return KeyUtil.generatePublicKey("EC", object.getContent());
+				} catch (Exception e) {
+					// 尝试PKCS#1
+					return KeyUtil.generatePublicKey("EC", ECKeyUtil.createOpenSSHPublicKeySpec(object.getContent()));
+				}
 			} else if (type.endsWith("PUBLIC KEY")) {
 				return KeyUtil.generateRSAPublicKey(object.getContent());
 			} else if (type.endsWith("CERTIFICATE")) {
@@ -95,7 +108,7 @@ public class PemUtil {
 	 * @since 5.1.6
 	 */
 	public static byte[] readPem(InputStream keyStream) {
-		PemObject pemObject = readPemObject(keyStream);
+		final PemObject pemObject = readPemObject(keyStream);
 		if (null != pemObject) {
 			return pemObject.getContent();
 		}
@@ -137,18 +150,17 @@ public class PemUtil {
 	 *
 	 * @param keyStream 私钥pem流
 	 * @return {@link PrivateKey}
+	 * @deprecated 请使用 {@link #readPemPrivateKey(InputStream)}
 	 */
+	@Deprecated
 	public static PrivateKey readSm2PemPrivateKey(InputStream keyStream) {
-		try{
-			return KeyUtil.generatePrivateKey("sm2", ECKeyUtil.createOpenSSHPrivateKeySpec(readPem(keyStream)));
-		} finally {
-			IoUtil.close(keyStream);
-		}
+		return readPemPrivateKey(keyStream);
 	}
 
 	/**
 	 * 将私钥或公钥转换为PEM格式的字符串
-	 * @param type 密钥类型（私钥、公钥、证书）
+	 *
+	 * @param type    密钥类型（私钥、公钥、证书）
 	 * @param content 密钥内容
 	 * @return PEM内容
 	 * @since 5.5.9
@@ -175,7 +187,7 @@ public class PemUtil {
 	 * 写出pem密钥（私钥、公钥、证书）
 	 *
 	 * @param type    密钥类型（私钥、公钥、证书）
-	 * @param content 密钥内容，需为PKCS#1格式
+	 * @param content 密钥内容，需为PKCS#1或PKCS#8格式
 	 * @param writer  pemWriter
 	 * @since 5.5.9
 	 */

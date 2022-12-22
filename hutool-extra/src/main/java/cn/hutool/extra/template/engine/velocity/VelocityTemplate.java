@@ -56,7 +56,7 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 		if(null == charset) {
 			loadEncoding();
 		}
-		render(bindingMap, IoUtil.getWriter(out, this.charset));
+		render(bindingMap, IoUtil.getWriter(out, CharsetUtil.charset(this.charset)));
 	}
 
 	/**

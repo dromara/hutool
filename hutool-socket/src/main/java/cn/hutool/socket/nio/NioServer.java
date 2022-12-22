@@ -58,6 +58,7 @@ public class NioServer implements Closeable {
 			// 服务器套接字注册到Selector中 并指定Selector监控连接事件
 			this.serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} catch (IOException e) {
+			close();
 			throw new IORuntimeException(e);
 		}
 
@@ -140,7 +141,7 @@ public class NioServer implements Closeable {
 				handler.handle(socketChannel);
 			} catch (Exception e){
 				IoUtil.close(socketChannel);
-				StaticLog.error(e);
+				log.error(e);
 			}
 		}
 	}

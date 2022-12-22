@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
@@ -125,14 +126,23 @@ public class SevenZArchiver implements Archiver {
 		}
 		final SevenZOutputFile out = this.sevenZOutputFile;
 
-		final String entryName = StrUtil.addSuffixIfNot(StrUtil.nullToEmpty(path), StrUtil.SLASH) + file.getName();
+		final String entryName;
+		if(StrUtil.isNotEmpty(path)){
+			// 非空拼接路径，格式为：path/name
+			entryName = StrUtil.addSuffixIfNot(path, StrUtil.SLASH) + file.getName();
+		} else{
+			// 路径空直接使用文件名或目录名
+			entryName = file.getName();
+		}
 		out.putArchiveEntry(out.createArchiveEntry(file, entryName));
 
 		if (file.isDirectory()) {
 			// 目录遍历写入
 			final File[] files = file.listFiles();
-			for (File childFile : files) {
-				addInternal(childFile, entryName, filter);
+			if(ArrayUtil.isNotEmpty(files)){
+				for (File childFile : files) {
+					addInternal(childFile, entryName, filter);
+				}
 			}
 		} else {
 			if (file.isFile()) {

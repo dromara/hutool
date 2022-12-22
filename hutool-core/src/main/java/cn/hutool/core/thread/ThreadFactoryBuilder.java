@@ -15,24 +15,34 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author looly
  * @since 4.1.9
  */
-public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
+public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 	private static final long serialVersionUID = 1L;
 
-	/** 用于线程创建的线程工厂类 */
+	/**
+	 * 用于线程创建的线程工厂类
+	 */
 	private ThreadFactory backingThreadFactory;
-	/** 线程名的前缀 */
+	/**
+	 * 线程名的前缀
+	 */
 	private String namePrefix;
-	/** 是否守护线程，默认false */
+	/**
+	 * 是否守护线程，默认false
+	 */
 	private Boolean daemon;
-	/** 线程优先级 */
+	/**
+	 * 线程优先级
+	 */
 	private Integer priority;
-	/** 未捕获异常处理器 */
+	/**
+	 * 未捕获异常处理器
+	 */
 	private UncaughtExceptionHandler uncaughtExceptionHandler;
 
 	/**
-	 * 创建{@link ThreadFactoryBuilder}
+	 * 创建{@code ThreadFactoryBuilder}
 	 *
-	 * @return {@link ThreadFactoryBuilder}
+	 * @return {@code ThreadFactoryBuilder}
 	 */
 	public static ThreadFactoryBuilder create() {
 		return new ThreadFactoryBuilder();
@@ -115,7 +125,7 @@ public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
 	/**
 	 * 构建
 	 *
-	 * @param builder {@link ThreadFactoryBuilder}
+	 * @param builder {@code ThreadFactoryBuilder}
 	 * @return {@link ThreadFactory}
 	 */
 	private static ThreadFactory build(ThreadFactoryBuilder builder) {

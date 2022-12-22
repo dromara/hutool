@@ -93,12 +93,7 @@ public class SystemPropsUtil {
 			return defaultValue;
 		}
 
-		value = value.trim().toLowerCase();
-		if (value.isEmpty()) {
-			return true;
-		}
-
-		return Convert.toBool(value, defaultValue);
+		return BooleanUtil.toBoolean(value);
 	}
 
 	/**
@@ -108,7 +103,7 @@ public class SystemPropsUtil {
 	 * @param defaultValue 默认值
 	 * @return 值
 	 */
-	public static long getInt(String key, int defaultValue) {
+	public static int getInt(String key, int defaultValue) {
 		return Convert.toInt(get(key), defaultValue);
 	}
 

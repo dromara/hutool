@@ -1,7 +1,8 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
+
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 基本变量类型的枚举<br>
@@ -12,9 +13,9 @@ public enum BasicType {
 	BYTE, SHORT, INT, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, CHAR, CHARACTER, STRING;
 
 	/** 包装类型为Key，原始类型为Value，例如： Integer.class =》 int.class. */
-	public static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_MAP = new ConcurrentHashMap<>(8);
+	public static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_MAP = new SafeConcurrentHashMap<>(8);
 	/** 原始类型为Key，包装类型为Value，例如： int.class =》 Integer.class. */
-	public static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new ConcurrentHashMap<>(8);
+	public static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_MAP = new SafeConcurrentHashMap<>(8);
 
 	static {
 		WRAPPER_PRIMITIVE_MAP.put(Boolean.class, boolean.class);

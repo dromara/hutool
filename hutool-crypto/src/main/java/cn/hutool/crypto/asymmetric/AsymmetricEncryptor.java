@@ -185,7 +185,9 @@ public interface AsymmetricEncryptor {
 	 * @param keyType 密钥类型
 	 * @return 加密后的密文
 	 * @since 4.1.0
+	 * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
 	 */
+	@Deprecated
 	default String encryptBcd(String data, KeyType keyType) {
 		return encryptBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
@@ -198,7 +200,9 @@ public interface AsymmetricEncryptor {
 	 * @param charset 加密前编码
 	 * @return 加密后的密文
 	 * @since 4.1.0
+	 * @deprecated 由于对于ASCII的编码解码有缺陷，且这种BCD实现并不规范，因此会在6.0.0中移除
 	 */
+	@Deprecated
 	default String encryptBcd(String data, KeyType keyType, Charset charset) {
 		return BCD.bcdToStr(encrypt(data, charset, keyType));
 	}

@@ -40,7 +40,12 @@ public class FileNameUtil {
 	/**
 	 * Windows下文件名中的无效字符
 	 */
-	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
+	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|\r\n]");
+
+	/**
+	 * 特殊后缀
+	 */
+	private static final CharSequence[] SPECIAL_SUFFIX = {"tar.bz2", "tar.Z", "tar.gz", "tar.xz"};
 
 
 	// -------------------------------------------------------------------------------------------- name start
@@ -169,6 +174,14 @@ public class FileNameUtil {
 		if (0 == len) {
 			return fileName;
 		}
+
+		//issue#2642，多级扩展名的主文件名
+		for (final CharSequence specialSuffix : SPECIAL_SUFFIX) {
+			if(StrUtil.endWith(fileName, "." + specialSuffix)){
+				return StrUtil.subPre(fileName, len - specialSuffix.length() - 1);
+			}
+		}
+
 		if (CharUtil.isFileSeparator(fileName.charAt(len - 1))) {
 			len--;
 		}
@@ -218,11 +231,18 @@ public class FileNameUtil {
 		if (fileName == null) {
 			return null;
 		}
-		int index = fileName.lastIndexOf(StrUtil.DOT);
+		final int index = fileName.lastIndexOf(StrUtil.DOT);
 		if (index == -1) {
 			return StrUtil.EMPTY;
 		} else {
-			String ext = fileName.substring(index + 1);
+			// issue#I4W5FS@Gitee
+			final int secondToLastIndex = fileName.substring(0, index).lastIndexOf(StrUtil.DOT);
+			final String substr = fileName.substring(secondToLastIndex == -1 ? index : secondToLastIndex + 1);
+			if (StrUtil.containsAny(substr, SPECIAL_SUFFIX)) {
+				return substr;
+			}
+
+			final String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
 			return StrUtil.containsAny(ext, UNIX_SEPARATOR, WINDOWS_SEPARATOR) ? StrUtil.EMPTY : ext;
 		}

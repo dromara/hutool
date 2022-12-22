@@ -553,24 +553,27 @@ public class ServletUtil {
 	 *
 	 * @param response    响应对象{@link HttpServletResponse}
 	 * @param in          需要返回客户端的内容
-	 * @param contentType 返回的类型
-	 *                    如：
-	 *                    1、application/pdf、
-	 *                    2、application/vnd.ms-excel、
-	 *                    3、application/msword、
-	 *                    4、application/vnd.ms-powerpoint
+	 * @param contentType 返回的类型，可以使用{@link FileUtil#getMimeType(String)}获取对应扩展名的MIME信息
+	 *                    <ul>
+	 *                      <li>application/pdf</li>
+	 *                      <li>application/vnd.ms-excel</li>
+	 *                      <li>application/msword</li>
+	 *                      <li>application/vnd.ms-powerpoint</li>
+	 *                    </ul>
 	 *                    docx、xlsx 这种 office 2007 格式 设置 MIME;网页里面docx 文件是没问题，但是下载下来了之后就变成doc格式了
-	 *                    https://blog.csdn.net/cyh2260629/article/details/73824760
-	 *                    5、MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	 *                    6、MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-	 *                    7、MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	 *                    8、MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流
-	 * @param fileName    文件名
+	 *                    参考：<a href="https://my.oschina.net/shixiaobao17145/blog/32489">https://my.oschina.net/shixiaobao17145/blog/32489</a>
+	 *                    <ul>
+	 *                      <li>MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";</li>
+	 *                      <li>MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";</li>
+	 *                      <li>MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";</li>
+	 *                      <li>MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流</li>
+	 *                    </ul>
+	 * @param fileName    文件名，自动添加双引号
 	 * @since 4.1.15
 	 */
 	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
 		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
-		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}",
+		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename=\"{}\"",
 				URLUtil.encode(fileName, CharsetUtil.charset(charset))));
 		response.setContentType(contentType);
 		write(response, in);

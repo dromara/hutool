@@ -9,7 +9,7 @@ import java.util.Stack;
 
 /**
  * 数学表达式计算工具类<br>
- * 见：https://github.com/looly/hutool/issues/1090#issuecomment-693750140
+ * 见：https://github.com/dromara/hutool/issues/1090#issuecomment-693750140
  *
  * @author trainliang, looly
  * @since 5.4.3
@@ -191,7 +191,7 @@ public class Calculator {
 				}
 			}
 		}
-		if (arr[0] == '~' || (arr.length > 1 && arr[1] == '(')) {
+		if (arr[0] == '~' && (arr.length > 1 && arr[1] == '(')) {
 			arr[0] = '-';
 			return "0" + new String(arr);
 		} else {

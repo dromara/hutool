@@ -2,20 +2,14 @@ package cn.hutool.bloomfilter.filter;
 
 import cn.hutool.core.util.HashUtil;
 
-public class RSFilter extends AbstractFilter {
+public class RSFilter extends FuncFilter {
 	private static final long serialVersionUID = 1L;
 
-	public RSFilter(long maxValue, int machineNum) {
-		super(maxValue, machineNum);
-	}
-
 	public RSFilter(long maxValue) {
-		super(maxValue);
+		this(maxValue, DEFAULT_MACHINE_NUM);
 	}
 
-	@Override
-	public long hash(String str) {
-		return HashUtil.rsHash(str) % size;
+	public RSFilter(long maxValue, int machineNum) {
+		super(maxValue, machineNum, HashUtil::rsHash);
 	}
-
 }

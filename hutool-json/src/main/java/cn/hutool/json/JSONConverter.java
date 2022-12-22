@@ -1,10 +1,13 @@
 package cn.hutool.json;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.ArrayConverter;
+import cn.hutool.core.convert.impl.BeanConverter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -25,7 +28,7 @@ public class JSONConverter implements Converter<JSON> {
 
 	static {
 		// 注册到转换中心
-		ConverterRegistry registry = ConverterRegistry.getInstance();
+		final ConverterRegistry registry = ConverterRegistry.getInstance();
 		registry.putCustom(JSON.class, JSONConverter.class);
 		registry.putCustom(JSONObject.class, JSONConverter.class);
 		registry.putCustom(JSONArray.class, JSONConverter.class);
@@ -77,12 +80,15 @@ public class JSONConverter implements Converter<JSON> {
 			final Class<?> clazz = (Class<?>) targetType;
 			if (JSONBeanParser.class.isAssignableFrom(clazz)){
 				@SuppressWarnings("rawtypes")
-				JSONBeanParser target = (JSONBeanParser) ReflectUtil.newInstanceIfPossible(clazz);
+				final JSONBeanParser target = (JSONBeanParser) ReflectUtil.newInstanceIfPossible(clazz);
 				if(null == target){
 					throw new ConvertException("Can not instance [{}]", targetType);
 				}
 				target.parse(value);
 				return (T) target;
+			} else if(targetType == byte[].class && value instanceof CharSequence){
+				// issue#I59LW4
+				return (T) Base64.decode((CharSequence) value);
 			}
 		}
 
@@ -111,6 +117,16 @@ public class JSONConverter implements Converter<JSON> {
 			if(null != deserializer) {
 				//noinspection unchecked
 				return (T) deserializer.deserialize((JSON) value);
+			}
+
+			// issue#2212@Github
+			// 在JSONObject转Bean时，读取JSONObject本身的配置文件
+			if(value instanceof JSONGetter
+					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
+				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
+				final Converter<T> converter = new BeanConverter<>(targetType,
+						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));
+				return converter.convertWithCheck(value, null, ignoreError);
 			}
 		}
 

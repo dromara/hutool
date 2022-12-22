@@ -1,5 +1,6 @@
 package cn.hutool.db.dialect;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -16,17 +17,15 @@ import cn.hutool.log.StaticLog;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 方言工厂类
  *
  * @author loolly
- *
  */
-public class DialectFactory implements DriverNamePool{
+public class DialectFactory implements DriverNamePool {
 
-	private static final Map<DataSource, Dialect> DIALECT_POOL = new ConcurrentHashMap<>();
+	private static final Map<DataSource, Dialect> DIALECT_POOL = new SafeConcurrentHashMap<>();
 
 	private DialectFactory() {
 	}
@@ -80,6 +79,17 @@ public class DialectFactory implements DriverNamePool{
 	 * @return 驱动
 	 */
 	public static String identifyDriver(String nameContainsProductInfo) {
+		return identifyDriver(nameContainsProductInfo, null);
+	}
+
+	/**
+	 * 通过JDBC URL等信息识别JDBC驱动名
+	 *
+	 * @param nameContainsProductInfo 包含数据库标识的字符串
+	 * @param classLoader             类加载器，{@code null}表示默认上下文的类加载器
+	 * @return 驱动
+	 */
+	public static String identifyDriver(String nameContainsProductInfo, ClassLoader classLoader) {
 		if (StrUtil.isBlank(nameContainsProductInfo)) {
 			return null;
 		}
@@ -88,21 +98,23 @@ public class DialectFactory implements DriverNamePool{
 
 		// 首先判断是否为标准的JDBC URL，截取jdbc:xxxx:中间部分
 		final String name = ReUtil.getGroup1("jdbc:(.*?):", nameContainsProductInfo);
-		if(StrUtil.isNotBlank(name)){
+		if (StrUtil.isNotBlank(name)) {
 			nameContainsProductInfo = name;
 		}
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql") || nameContainsProductInfo.contains("cobar")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
+			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6, classLoader) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
 		} else if (nameContainsProductInfo.contains("oracle")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
+			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE, classLoader) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
 		} else if (nameContainsProductInfo.contains("postgresql")) {
 			driver = DRIVER_POSTGRESQL;
 		} else if (nameContainsProductInfo.contains("sqlite")) {
 			driver = DRIVER_SQLLITE3;
 		} else if (nameContainsProductInfo.contains("sqlserver") || nameContainsProductInfo.contains("microsoft")) {
 			driver = DRIVER_SQLSERVER;
+		} else if (nameContainsProductInfo.contains("hive2")) {
+			driver = DRIVER_HIVE2;
 		} else if (nameContainsProductInfo.contains("hive")) {
 			driver = DRIVER_HIVE;
 		} else if (nameContainsProductInfo.contains("h2")) {
@@ -149,6 +161,9 @@ public class DialectFactory implements DriverNamePool{
 		} else if (nameContainsProductInfo.contains("sybase")) {
 			// 神州数据库
 			driver = DRIVER_SYBASE;
+		} else if (nameContainsProductInfo.contains("xugu")) {
+			// 虚谷数据库
+			driver = DRIVER_XUGO;
 		}
 
 		return driver;
@@ -156,20 +171,17 @@ public class DialectFactory implements DriverNamePool{
 
 	/**
 	 * 获取共享方言
+	 *
 	 * @param ds 数据源，每一个数据源对应一个唯一方言
 	 * @return {@link Dialect}方言
 	 */
 	public static Dialect getDialect(DataSource ds) {
 		Dialect dialect = DIALECT_POOL.get(ds);
-		if(null == dialect) {
+		if (null == dialect) {
 			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
 			//noinspection SynchronizationOnLocalVariableOrMethodParameter
 			synchronized (ds) {
-				dialect = DIALECT_POOL.get(ds);
-				if(null == dialect) {
-					dialect = newDialect(ds);
-					DIALECT_POOL.put(ds, dialect);
-				}
+				dialect = DIALECT_POOL.computeIfAbsent(ds, DialectFactory::newDialect);
 			}
 		}
 		return dialect;

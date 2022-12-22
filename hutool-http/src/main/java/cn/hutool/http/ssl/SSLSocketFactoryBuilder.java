@@ -90,6 +90,6 @@ public class SSLSocketFactoryBuilder implements SSLProtocols {
 	 * @throws KeyManagementException   Key管理异常
 	 */
 	public SSLSocketFactory build() throws NoSuchAlgorithmException, KeyManagementException {
-		return this.sslContextBuilder.build().getSocketFactory();
+		return this.sslContextBuilder.buildChecked().getSocketFactory();
 	}
 }

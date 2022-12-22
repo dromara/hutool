@@ -32,4 +32,15 @@ public class ClassScanerTest {
 		final Set<Class<?>> classes = ClassScanner.scanAllPackageBySuper(null, Iterable.class);
 		Console.log(classes.size());
 	}
+
+
+	@Test
+	@Ignore
+	public void scanAllPackageIgnoreLoadErrorTest(){
+		final ClassScanner classScanner = new ClassScanner(null, null);
+		classScanner.setIgnoreLoadError(true);
+		final Set<Class<?>> classes = classScanner.scan(false);
+		Console.log(classes.size());
+		Console.log(classScanner.getClassesOfLoadError());
+	}
 }

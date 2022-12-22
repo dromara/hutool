@@ -9,12 +9,10 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONArraySerializer;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
-import cn.hutool.json.serialize.JSONSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,14 +108,7 @@ public class JSONUtil {
 	 * @since 5.3.1
 	 */
 	public static JSONObject parseObj(Object obj, JSONConfig config) {
-		// 默认配置，根据对象类型决定是否有序
-		if(null == config){
-			config = JSONConfig.create();
-			if(InternalJSONUtil.isOrder(obj)){
-				config.setOrder(true);
-			}
-		}
-		return new JSONObject(obj, config);
+		return new JSONObject(obj, ObjectUtil.defaultIfNull(config, JSONConfig::create));
 	}
 
 	/**
@@ -129,7 +120,7 @@ public class JSONUtil {
 	 * @since 3.0.9
 	 */
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
-		return parseObj(obj, ignoreNullValue, InternalJSONUtil.isOrder(obj));
+		return new JSONObject(obj, ignoreNullValue);
 	}
 
 	/**
@@ -140,9 +131,12 @@ public class JSONUtil {
 	 * @param isOrder         是否有序
 	 * @return JSONObject
 	 * @since 4.2.2
+	 * @deprecated isOrder参数不再有效
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue, boolean isOrder) {
-		return new JSONObject(obj, ignoreNullValue, isOrder);
+		return new JSONObject(obj, ignoreNullValue);
 	}
 
 	/**
@@ -229,7 +223,7 @@ public class JSONUtil {
 			json = (JSON) obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = isJsonArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
+			json = isTypeJSONArray(jsonStr) ? parseArray(jsonStr, config) : parseObj(jsonStr, config);
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
 			json = parseObj(obj, config);
@@ -252,7 +246,7 @@ public class JSONUtil {
 		return XML.toJSONObject(xmlStr);
 	}
 
-	// -------------------------------------------------------------------- Pause end
+	// -------------------------------------------------------------------- Parse end
 
 	// -------------------------------------------------------------------- Read start
 
@@ -426,6 +420,21 @@ public class JSONUtil {
 	}
 
 	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出<br>
+	 * 通过{@link JSONConfig}可选是否忽略大小写、忽略null等配置
+	 *
+	 * @param <T>        Bean类型
+	 * @param jsonString JSON字符串
+	 * @param config     JSON配置
+	 * @param beanClass  实体类对象
+	 * @return 实体类对象
+	 * @since 5.8.0
+	 */
+	public static <T> T toBean(String jsonString, JSONConfig config, Class<T> beanClass) {
+		return toBean(parseObj(jsonString, config), beanClass);
+	}
+
+	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 *
 	 * @param <T>       Bean类型
@@ -462,7 +471,7 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
-		return toBean(parse(jsonString), beanType, ignoreError);
+		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
 	}
 
 	/**
@@ -743,26 +752,13 @@ public class JSONUtil {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
-				|| JSONNull.NULL.equals(object) //
+				|| ObjectUtil.isNull(object) //
 				|| object instanceof JSONString //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //
 				|| ObjectUtil.isBasicType(object) //
 		) {
 			return object;
-		}
-
-		// 自定义序列化
-		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(object.getClass());
-		if (null != serializer) {
-			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
-			if (null != jsonType) {
-				if (serializer instanceof JSONObjectSerializer) {
-					serializer.serialize(new JSONObject(jsonConfig), object);
-				} else if (serializer instanceof JSONArraySerializer) {
-					serializer.serialize(new JSONArray(jsonConfig), object);
-				}
-			}
 		}
 
 		try {
@@ -776,7 +772,7 @@ public class JSONUtil {
 				return new JSONArray(object, jsonConfig);
 			}
 			// JSONObject
-			if (object instanceof Map) {
+			if (object instanceof Map || object instanceof Map.Entry) {
 				return new JSONObject(object, jsonConfig);
 			}
 
@@ -799,7 +795,7 @@ public class JSONUtil {
 
 			// 默认按照JSONObject对待
 			return new JSONObject(object, jsonConfig);
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			return null;
 		}
 	}
@@ -821,9 +817,22 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSON(String)}
 	 */
+	@Deprecated
 	public static boolean isJson(String str) {
-		return isJsonObj(str) || isJsonArray(str);
+		return isTypeJSON(str);
+	}
+
+	/**
+	 * 是否为JSON类型字符串，首尾都为大括号或中括号判定为JSON字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSON类型字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSON(String str) {
+		return isTypeJSONObject(str) || isTypeJSONArray(str);
 	}
 
 	/**
@@ -832,8 +841,21 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONObject(String)}
 	 */
+	@Deprecated
 	public static boolean isJsonObj(String str) {
+		return isTypeJSONObject(str);
+	}
+
+	/**
+	 * 是否为JSONObject类型字符串，首尾都为大括号判定为JSONObject字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSON字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSONObject(String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -846,8 +868,21 @@ public class JSONUtil {
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
+	 * @deprecated 方法名称有歧义，请使用 {@link #isTypeJSONArray(String)}
 	 */
+	@Deprecated
 	public static boolean isJsonArray(String str) {
+		return isTypeJSONArray(str);
+	}
+
+	/**
+	 * 是否为JSONArray类型的字符串，首尾都为中括号判定为JSONArray字符串
+	 *
+	 * @param str 字符串
+	 * @return 是否为JSONArray类型字符串
+	 * @since 5.7.22
+	 */
+	public static boolean isTypeJSONArray(String str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -922,7 +957,7 @@ public class JSONUtil {
 
 	/**
 	 * 转义不可见字符<br>
-	 * 见：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+	 * 见：<a href="https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF">https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF</a>
 	 *
 	 * @param c 字符
 	 * @return 转义后的字符串
