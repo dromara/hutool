@@ -141,9 +141,9 @@ public class CoordinateUtil {
 	* @return 墨卡托投影
 	*/
 	public static Coordinate wgs84ToMercator(double lng, double lat) {
-		double x = lng * 20037508.342789 / 180;
+		double x = lng * 20037508.342789244 / 180;
 		double y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
-		y = y * 20037508.34789 / 180;
+		y = y * 20037508.342789244 / 180;
 		return new Coordinate(x, y);
 	}
 
@@ -155,8 +155,8 @@ public class CoordinateUtil {
 	* @return WGS84 坐标
 	*/
 	public static Coordinate mercatorToWgs84(double mercatorX, double mercatorY) {
-		double x = mercatorX / 20037508.34 * 180;
-		double y = mercatorY / 20037508.34 * 180;
+		double x = mercatorX / 20037508.342789244 * 180;
+		double y = mercatorY / 20037508.342789244 * 180;
 		y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
 		return new Coordinate(x, y);
 	}
