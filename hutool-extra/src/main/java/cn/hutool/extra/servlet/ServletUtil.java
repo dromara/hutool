@@ -36,6 +36,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -299,6 +300,22 @@ public class ServletUtil {
 		return headerMap;
 	}
 
+	/**
+	 * 获取响应所有的头（header）信息
+	 *
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @return header值
+	 */
+	public static Map<String, Collection<String>> getHeaderMap(HttpServletResponse response) {
+		final Map<String, Collection<String>> headerMap = new HashMap<>();
+
+		final Collection<String> names = response.getHeaderNames();
+		for (String name : names) {
+			headerMap.put(name, response.getHeaders(name));
+		}
+
+		return headerMap;
+	}
 
 	/**
 	 * 忽略大小写获得请求header中的信息
