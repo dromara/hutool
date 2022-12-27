@@ -87,13 +87,13 @@ public class JSONXMLSerializer {
 				} else if (value instanceof JSONArray) {
 					for (final Object val : (JSONArray) value) {
 						if (val instanceof JSONArray) {
-							sb.append(wrapWithTag(toXml(val), key));
+							sb.append(wrapWithTag(toXml(val, null, contentKeys), key));
 						} else {
-							sb.append(toXml(val, key));
+							sb.append(toXml(val, key, contentKeys));
 						}
 					}
 				} else {
-					sb.append(toXml(value, key));
+					sb.append(toXml(value, key, contentKeys));
 				}
 			});
 
@@ -111,7 +111,7 @@ public class JSONXMLSerializer {
 				// XML does not have good support for arrays. If an array
 				// appears in a place where XML is lacking, synthesize an
 				// <array> element.
-				sb.append(toXml(val, tagName == null ? "array" : tagName));
+				sb.append(toXml(val, tagName == null ? "array" : tagName, contentKeys));
 			}
 			return sb.toString();
 		}
