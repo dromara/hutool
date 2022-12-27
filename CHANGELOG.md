@@ -25,6 +25,7 @@
 * 【core  】      修复JSONXMLSerializer将Json转为XML时，遇到嵌套需要递归情况时会丢失contentKeys问题（pr#903@Gitee）
 * 【db    】      修复使用mariadb通过jdbcurl创建SimpleDataSource报NullPointException（pr#900@Gitee）
 * 【core  】      修复UrlBuilder中参数中包括"://"判断错误问题（pr#898@Gitee）
+* 【core  】      修复IndexedComparator导致的数据错乱问题（ExcelWriter使用部分别名导致字段丢失）（issue#I66Z6B@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
