@@ -312,6 +312,28 @@ public class BooleanUtil {
 	}
 
 	/**
+	 * 将boolean转换为字符串
+	 *
+	 * <pre>
+	 *   BooleanUtil.toString(true, "true", "false", null) = "true"
+	 *   BooleanUtil.toString(false, "true", "false", null) = "false"
+	 *   BooleanUtil.toString(null, "true", "false", null) = null
+	 * </pre>
+	 *
+	 * @param bool Boolean值
+	 * @param trueString 当值为 {@code true}时返回此字符串, 可能为 {@code null}
+	 * @param falseString 当值为 {@code false}时返回此字符串, 可能为 {@code null}
+	 * @param nullString 当值为 {@code null}时返回此字符串, 可能为 {@code null}
+	 * @return 结果值
+	 */
+	public static String toString(Boolean bool, String trueString, String falseString, String nullString) {
+		if (bool == null) {
+			return nullString;
+		}
+		return bool ? trueString : falseString;
+	}
+
+	/**
 	 * 对Boolean数组取与
 	 *
 	 * <pre>
