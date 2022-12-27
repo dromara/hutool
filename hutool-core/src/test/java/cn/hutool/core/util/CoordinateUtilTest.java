@@ -33,6 +33,13 @@ public class CoordinateUtilTest {
 	}
 
 	@Test
+	public void wgs84toBd09Test2(){
+		final CoordinateUtil.Coordinate coordinate = CoordinateUtil.wgs84ToBd09(122.99395597, 44.99804071);
+		Assert.assertEquals(123.00636516028885D, coordinate.getLng(), 0);
+		Assert.assertEquals(45.00636909189589D, coordinate.getLat(), 0);
+	}
+
+	@Test
 	public void bd09toWgs84Test(){
 		final CoordinateUtil.Coordinate coordinate = CoordinateUtil.bd09toWgs84(116.404, 39.915);
 		Assert.assertEquals(116.39129143419822D, coordinate.getLng(), 0);
