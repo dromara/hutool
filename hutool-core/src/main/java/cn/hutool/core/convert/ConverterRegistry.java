@@ -37,7 +37,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.SafeConcurrentHashMap;
-import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -280,12 +279,6 @@ public class ConverterRegistry implements Serializable {
 
 		// 尝试转Bean
 		if (BeanUtil.isBean(rowType)) {
-			try {
-				// 由于5.x设计缺陷，JSON转bean无法实现自定义转换，因此此处临时使用反射方式获取自定义的转换器，此问题会在6.x中彻底解决。
-				final Class<?> clazz = ClassLoaderUtil.loadClass("cn.hutool.json.BeanConverterForJSON");
-				return ((Converter<T>)ReflectUtil.newInstance(clazz, type)).convert(value, defaultValue);
-			}catch (final Throwable ignore){
-			}
 			return new BeanConverter<T>(type).convert(value, defaultValue);
 		}
 
