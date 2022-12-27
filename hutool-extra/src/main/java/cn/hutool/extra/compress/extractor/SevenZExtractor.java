@@ -30,7 +30,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param file     包文件
+	 * @param file 包文件
 	 */
 	public SevenZExtractor(File file) {
 		this(file, null);
@@ -53,7 +53,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param in       包流
+	 * @param in 包流
 	 */
 	public SevenZExtractor(InputStream in) {
 		this(in, null);
@@ -72,7 +72,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	/**
 	 * 构造
 	 *
-	 * @param channel  {@link SeekableByteChannel}
+	 * @param channel {@link SeekableByteChannel}
 	 */
 	public SevenZExtractor(SeekableByteChannel channel) {
 		this(channel, null);
@@ -99,9 +99,9 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 */
 	@Override
-	public void extract(File targetDir, Filter<ArchiveEntry> filter) {
+	public void extract(File targetDir, int stripComponents, Filter<ArchiveEntry> filter) {
 		try {
-			extractInternal(targetDir, filter);
+			extractInternal(targetDir, stripComponents, filter);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -113,16 +113,16 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * 获取满足指定过滤要求的压缩包内的第一个文件流
 	 *
 	 * @param filter 用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时返回对应流。
-	 * @return 满足过滤要求的第一个文件的流,无满足条件的文件返回{@code null}
+	 * @return 满足过滤要求的第一个文件的流, 无满足条件的文件返回{@code null}
 	 * @since 5.7.14
 	 */
 	public InputStream getFirst(Filter<ArchiveEntry> filter) {
 		final SevenZFile sevenZFile = this.sevenZFile;
-		for(SevenZArchiveEntry entry : sevenZFile.getEntries()){
-			if(null != filter && false == filter.accept(entry)){
+		for (SevenZArchiveEntry entry : sevenZFile.getEntries()) {
+			if (null != filter && false == filter.accept(entry)) {
 				continue;
 			}
-			if(entry.isDirectory()){
+			if (entry.isDirectory()) {
 				continue;
 			}
 
@@ -143,32 +143,38 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @return 文件流，无文件返回{@code null}
 	 * @since 5.7.14
 	 */
-	public InputStream get(String entryName){
-		return getFirst((entry)-> StrUtil.equals(entryName, entry.getName()));
+	public InputStream get(String entryName) {
+		return getFirst((entry) -> StrUtil.equals(entryName, entry.getName()));
 	}
 
 	/**
 	 * 释放（解压）到指定目录
 	 *
-	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
+	 * @param targetDir       目标目录
+	 * @param stripComponents 清除(剥离)压缩包里面的 n 级文件夹名
+	 * @param filter          解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(File targetDir, Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(File targetDir, int stripComponents, Filter<ArchiveEntry> filter) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final SevenZFile sevenZFile = this.sevenZFile;
 		SevenZArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = this.sevenZFile.getNextEntry())) {
-			if(null != filter && false == filter.accept(entry)){
+			if (null != filter && false == filter.accept(entry)) {
 				continue;
 			}
-			outItemFile = FileUtil.file(targetDir, entry.getName());
+			String entryName = this.stripName(entry.getName(), stripComponents);
+			if (entryName == null) {
+				// 剥离文件夹层级
+				continue;
+			}
+			outItemFile = FileUtil.file(targetDir, entryName);
 			if (entry.isDirectory()) {
 				// 创建对应目录
 				//noinspection ResultOfMethodCallIgnored
 				outItemFile.mkdirs();
-			} else if(entry.hasStream()){
+			} else if (entry.hasStream()) {
 				// 读取entry对应数据流
 				FileUtil.writeFromStream(new Seven7EntryInputStream(sevenZFile, entry), outItemFile);
 			} else {
