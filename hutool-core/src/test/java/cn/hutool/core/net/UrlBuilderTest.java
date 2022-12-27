@@ -479,4 +479,19 @@ public class UrlBuilderTest {
 		UrlBuilder.of().addPath("//");
 		UrlBuilder.of().addPath("//a");
 	}
+
+	@Test
+	public void ofHttpTest() {
+		UrlBuilder ofHttp = UrlBuilder.ofHttp("http://hutool.cn");
+		Assert.assertEquals("http://hutool.cn", ofHttp.toString());
+
+		ofHttp = UrlBuilder.ofHttp("https://hutool.cn");
+		Assert.assertEquals("https://hutool.cn", ofHttp.toString());
+
+		ofHttp = UrlBuilder.ofHttp("hutool.cn");
+		Assert.assertEquals("http://hutool.cn", ofHttp.toString());
+
+		ofHttp = UrlBuilder.ofHttp("hutool.cn?old=http://aaa");
+		Assert.assertEquals("http://hutool.cn?old=http://aaa", ofHttp.toString());
+	}
 }
