@@ -991,6 +991,7 @@ public class CollUtil {
 	 *
 	 * @param <T>            集合元素类型
 	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
+	 * @param elementType 集合元素类型
 	 * @return 集合类型对应的实例
 	 * @since v5
 	 */
