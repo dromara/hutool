@@ -105,6 +105,8 @@ public class DialectFactory implements DriverNamePool {
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql") || nameContainsProductInfo.contains("cobar")) {
 			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6, classLoader) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
+		} else if (nameContainsProductInfo.contains("mariadb")) {
+			driver = DRIVER_MARIADB;
 		} else if (nameContainsProductInfo.contains("oracle")) {
 			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE, classLoader) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
 		} else if (nameContainsProductInfo.contains("postgresql")) {
