@@ -41,7 +41,7 @@
 <br/>
 <p align="center">
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
-	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-715292493-orange"/></a>
+	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A6-715292493-orange"/></a>
 </p>
 
 -------------------------------------------------------------------------------

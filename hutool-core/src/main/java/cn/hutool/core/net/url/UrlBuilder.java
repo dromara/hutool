@@ -108,8 +108,10 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public static UrlBuilder ofHttp(String httpUrl, Charset charset) {
 		Assert.notBlank(httpUrl, "Http url must be not blank!");
-		if (!httpUrl.startsWith("http://")&&!httpUrl.startsWith("https://")) {
-			httpUrl = "http://" + httpUrl.trim();
+		httpUrl = StrUtil.trimStart(httpUrl);
+		// issue#I66CIR
+		if(false == StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
+			httpUrl = "http://" + httpUrl;
 		}
 		return of(httpUrl, charset);
 	}
