@@ -8,6 +8,9 @@ import java.security.Provider;
  * @author looly
  */
 public enum GlobalBouncyCastleProvider {
+	/**
+	 * 单例对象
+	 */
 	INSTANCE;
 
 	private Provider provider;

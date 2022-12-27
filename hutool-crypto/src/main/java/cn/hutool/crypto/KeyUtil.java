@@ -127,7 +127,7 @@ public class KeyUtil {
 	 *
 	 * @param algorithm 算法，支持PBE算法
 	 * @param keySize   密钥长度，&lt;0表示不设定密钥长度，即使用默认长度
-	 * @param random 随机数生成器，null表示默认
+	 * @param random    随机数生成器，null表示默认
 	 * @return {@link SecretKey}
 	 * @since 5.5.2
 	 */
@@ -140,7 +140,7 @@ public class KeyUtil {
 			keySize = 128;
 		}
 
-		if(keySize > 0){
+		if (keySize > 0) {
 			if (null == random) {
 				keyGenerator.init(keySize);
 			} else {
@@ -365,7 +365,7 @@ public class KeyUtil {
 	 */
 	public static KeyPair generateKeyPair(final String algorithm) {
 		int keySize = DEFAULT_KEY_SIZE;
-		if("ECIES".equalsIgnoreCase(algorithm)){
+		if ("ECIES".equalsIgnoreCase(algorithm)) {
 			// ECIES算法对KEY的长度有要求，此处默认256
 			keySize = 256;
 		}
@@ -643,7 +643,7 @@ public class KeyUtil {
 	public static String getAlgorithmAfterWith(String algorithm) {
 		Assert.notNull(algorithm, "algorithm must be not null !");
 
-		if(StrUtil.startWithIgnoreCase(algorithm, "ECIESWith")){
+		if (StrUtil.startWithIgnoreCase(algorithm, "ECIESWith")) {
 			return "EC";
 		}
 
@@ -745,14 +745,28 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readKeyStore(final String type, final InputStream in, final char[] password) {
-		final KeyStore keyStore;
+		final KeyStore keyStore = getKeyStore(type);
 		try {
-			keyStore = KeyStore.getInstance(type);
 			keyStore.load(in, password);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		}
 		return keyStore;
+	}
+
+	/**
+	 * 获取{@link KeyStore}对象
+	 *
+	 * @param type 类型
+	 * @return {@link KeyStore}
+	 */
+	public static KeyStore getKeyStore(final String type) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		try {
+			return null == provider ? KeyStore.getInstance(type) : KeyStore.getInstance(type, provider);
+		} catch (final KeyStoreException e) {
+			throw new CryptoException(e);
+		}
 	}
 
 	/**
@@ -953,9 +967,9 @@ public class KeyUtil {
 	 * @return RSA公钥，null表示私钥不被支持
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(final PrivateKey privateKey){
-		if(privateKey instanceof RSAPrivateCrtKey){
-			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey)privateKey;
+	public static PublicKey getRSAPublicKey(final PrivateKey privateKey) {
+		if (privateKey instanceof RSAPrivateCrtKey) {
+			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey) privateKey;
 			return getRSAPublicKey(privk.getModulus(), privk.getPublicExponent());
 		}
 		return null;
@@ -964,12 +978,12 @@ public class KeyUtil {
 	/**
 	 * 获得RSA公钥对象
 	 *
-	 * @param modulus Modulus
+	 * @param modulus        Modulus
 	 * @param publicExponent Public Exponent
 	 * @return 公钥
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(final String modulus, final String publicExponent){
+	public static PublicKey getRSAPublicKey(final String modulus, final String publicExponent) {
 		return getRSAPublicKey(
 				new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
 	}
@@ -977,12 +991,12 @@ public class KeyUtil {
 	/**
 	 * 获得RSA公钥对象
 	 *
-	 * @param modulus Modulus
+	 * @param modulus        Modulus
 	 * @param publicExponent Public Exponent
 	 * @return 公钥
 	 * @since 5.3.6
 	 */
-	public static PublicKey getRSAPublicKey(final BigInteger modulus, final BigInteger publicExponent){
+	public static PublicKey getRSAPublicKey(final BigInteger modulus, final BigInteger publicExponent) {
 		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
 		try {
 			return getKeyFactory("RSA").generatePublic(publicKeySpec);
@@ -993,11 +1007,12 @@ public class KeyUtil {
 
 	/**
 	 * 将密钥编码为Base64格式
+	 *
 	 * @param key 密钥
 	 * @return Base64格式密钥
 	 * @since 5.7.22
 	 */
-	public static String toBase64(final Key key){
+	public static String toBase64(final Key key) {
 		return Base64.encode(key.getEncoded());
 	}
 }
