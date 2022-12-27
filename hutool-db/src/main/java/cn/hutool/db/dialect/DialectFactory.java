@@ -164,6 +164,8 @@ public class DialectFactory implements DriverNamePool {
 		} else if (nameContainsProductInfo.contains("xugu")) {
 			// 虚谷数据库
 			driver = DRIVER_XUGO;
+		}else if (nameContainsProductInfo.contains("mariadb")) {
+			driver = DRIVER_MARIADB;
 		}
 
 		return driver;
