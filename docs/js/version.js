@@ -1,1 +1,1 @@
-var version = '5.8.11'
+var version = '5.8.12.M1'
