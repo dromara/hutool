@@ -22,6 +22,7 @@
 * 【db    】      修复NamedSql中in没有判断大小写问题（issue#2792@Github）
 * 【core  】      修复ZIP bomb漏洞（issue#2797@Github）
 * 【core  】      修复JSONXMLSerializer将Json转为XML时，遇到嵌套需要递归情况时会丢失contentKeys问题（pr#903@Gitee）
+* 【core  】      修复通过jdbcurl创建SimpleDataSource报NullPointException（pr#900@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
