@@ -31,6 +31,7 @@
 * 【core  】      修复IndexedComparator导致的数据错乱问题（ExcelWriter使用部分别名导致字段丢失）（issue#I66Z6B@Gitee）
 * 【crypto】      修复sm2构造方法NullPointerException（pr#2820@Github）
 * 【core  】      修复ConverterRegistry中无效加载导致的问题（issue#2812@Github）
+* 【core  】      修复CoordinateUtil坐标转换参数错误（pr#895@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
