@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -35,11 +36,13 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -301,12 +304,32 @@ public class ServletUtil {
 	}
 
 	/**
+	 * 获取请求所有的头（header）信息
+	 *
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @return header值
+	 * @since 6.0.0
+	 */
+	public static Map<String, List<String>> getHeadersMap(final HttpServletRequest request) {
+		final Map<String, List<String>> headerMap = new LinkedHashMap<>();
+
+		final Enumeration<String> names = request.getHeaderNames();
+		String name;
+		while (names.hasMoreElements()) {
+			name = names.nextElement();
+			headerMap.put(name, ListUtil.list(false, request.getHeaders(name)));
+		}
+
+		return headerMap;
+	}
+
+	/**
 	 * 获取响应所有的头（header）信息
 	 *
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @return header值
 	 */
-	public static Map<String, Collection<String>> getHeaderMap(HttpServletResponse response) {
+	public static Map<String, Collection<String>> getHeadersMap(HttpServletResponse response) {
 		final Map<String, Collection<String>> headerMap = new HashMap<>();
 
 		final Collection<String> names = response.getHeaderNames();

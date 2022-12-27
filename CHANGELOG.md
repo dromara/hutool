@@ -13,7 +13,8 @@
 * 【core  】      修改PhoneUtil容易歧义的注释（issue#I63GWK@Gitee）
 * 【crypto】      KeyUtil中的读取KeyStore文件的方法增加全局Provider（issue#I6796G@Gitee）
 * 【extra 】      CompressUtil 新增 stripComponents 参数（pr#904@Gitee）
-* 
+* 【extra 】      ServletUtil和JakartaServletUtil新增获取所有响应头的方法（pr#2828@Github）
+
 ### 🐞Bug修复
 * 【json  】      修复普通byte数组转JSONArray时的异常（pr#875@Gitee）
 * 【core  】      修复ArrayUtil.insert()不支持原始类型数组的问题（pr#874@Gitee）
