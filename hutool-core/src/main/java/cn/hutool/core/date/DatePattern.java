@@ -5,6 +5,8 @@ import cn.hutool.core.date.format.parser.CSTDateParser;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -52,7 +54,7 @@ import java.util.regex.Pattern;
  * <p>
  * 其中：CST格式，形如："Mon Aug 15 14:23:15 CST 2022",上面未包含
  * 参见：{@link CSTDateParser#parse(String)}、{@link DateUtil#parse(String, String...)}、{@link Date#toString()}进行处理
- *</p>
+ * </p>
  *
  * <p>
  * 特殊说明：UTC时间，世界标准时间，0时区的时间，伦敦时间，可以直接加Z表示不加空格，
@@ -66,7 +68,7 @@ import java.util.regex.Pattern;
  *     <li>2022-08-23T15:20:46 +0000</li>
  *     <li>2022-08-23T15:20:46Z</li>
  * </ul>
- *
+ * <p>
  * 其他格式见：<a href="https://ijmacd.github.io/rfc3339-iso8601/">https://ijmacd.github.io/rfc3339-iso8601/</a>
  *
  * @author Looly
@@ -271,9 +273,14 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat PURE_DATETIME_MS_FORMAT = FastDateFormat.getInstance(PURE_DATETIME_MS_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmssSSS
+	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmssSSS<br>
+	 * see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
+	 * jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
 	 */
-	public static final DateTimeFormatter PURE_DATETIME_MS_FORMATTER = createFormatter(PURE_DATETIME_MS_PATTERN);
+	public static final DateTimeFormatter PURE_DATETIME_MS_FORMATTER = new DateTimeFormatterBuilder()
+			.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
+			.appendValue(ChronoField.MILLI_OF_SECOND, 3)
+			.toFormatter();
 
 	//-------------------------------------------------------------------------------------------------------------------------------- Others
 	/**
