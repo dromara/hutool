@@ -10,7 +10,6 @@ import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.HttpBody;
-
 import org.apache.http.Header;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -85,10 +84,19 @@ public class HttpClient4Engine implements ClientEngine {
 
 		RequestConfig requestConfig = null;
 		if(null != this.config){
-			requestConfig = RequestConfig.custom()
-					.setConnectTimeout(this.config.getConnectionTimeout())
-					.setConnectionRequestTimeout(this.config.getConnectionTimeout())
-					.build();
+			final RequestConfig.Builder builder = RequestConfig.custom();
+
+			final int connectionTimeout = this.config.getConnectionTimeout();
+			if(connectionTimeout > 0){
+				builder.setConnectTimeout(connectionTimeout);
+				builder.setConnectionRequestTimeout(connectionTimeout);
+			}
+			final int readTimeout = this.config.getReadTimeout();
+			if(readTimeout > 0){
+				builder.setSocketTimeout(readTimeout);
+			}
+
+			requestConfig = builder.build();
 		}
 
 		this.engine = HttpClients.custom()
