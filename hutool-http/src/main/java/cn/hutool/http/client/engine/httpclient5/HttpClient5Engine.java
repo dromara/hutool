@@ -87,11 +87,19 @@ public class HttpClient5Engine implements ClientEngine {
 
 		RequestConfig requestConfig = null;
 		if(null != this.config){
-			requestConfig = RequestConfig.custom()
-					.setConnectTimeout(this.config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
-					.setConnectionRequestTimeout(this.config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
-					.setResponseTimeout(this.config.getReadTimeout(), TimeUnit.MILLISECONDS)
-					.build();
+			final RequestConfig.Builder builder = RequestConfig.custom();
+
+			final int connectionTimeout = this.config.getConnectionTimeout();
+			if(connectionTimeout > 0){
+				builder.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
+				builder.setConnectionRequestTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
+			}
+			final int readTimeout = this.config.getReadTimeout();
+			if(readTimeout > 0){
+				builder.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
+			}
+
+			requestConfig = builder.build();
 		}
 
 		final HttpClientBuilder builder = HttpClients.custom()
