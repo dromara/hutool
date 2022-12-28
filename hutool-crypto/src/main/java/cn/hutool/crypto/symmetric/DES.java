@@ -11,7 +11,7 @@ import cn.hutool.crypto.SecureUtil;
 /**
  * DES加密算法实现<br>
  * DES全称为Data Encryption Standard，即数据加密标准，是一种使用密钥加密的块算法<br>
- * Java中默认实现为：DES/CBC/PKCS5Padding
+ * Java中默认实现为：DES/ECB/PKCS5Padding
  * 
  * @author Looly
  * @since 3.0.8
@@ -21,14 +21,14 @@ public class DES extends SymmetricCrypto {
 
 	// ------------------------------------------------------------------------- Constrctor start
 	/**
-	 * 构造，默认DES/CBC/PKCS5Padding，使用随机密钥
+	 * 构造，默认DES/ECB/PKCS5Padding，使用随机密钥
 	 */
 	public DES() {
 		super(SymmetricAlgorithm.DES);
 	}
 
 	/**
-	 * 构造，使用默认的DES/CBC/PKCS5Padding
+	 * 构造，使用默认的DES/ECB/PKCS5Padding
 	 * 
 	 * @param key 密钥
 	 */
