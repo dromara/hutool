@@ -530,25 +530,41 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Upper(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, false);
+	public static String readHex64Upper(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, false);
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * 从流中读取前8192个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Lower(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, true);
+	public static String readHex8192Upper(InputStream in) throws IORuntimeException {
+		try {
+			int i = in.available();
+			return readHex(in, Math.min(8192, in.available()), false);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用小写
+	 *
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String readHex64Lower(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, true);
 	}
 
 	/**
