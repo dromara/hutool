@@ -2,6 +2,7 @@ package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.SetUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	/**
 	 * 单词字符末尾标识，用于标识单词末尾字符
 	 */
-	private final Set<Character> endCharacterSet = new HashSet<>();
+	private Set<Character> endCharacterSet = null;
 	/**
 	 * 字符过滤规则，通过定义字符串过滤规则，过滤不需要的字符，当accept为false时，此字符不参与匹配
 	 */
@@ -45,6 +46,15 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 默认构造
 	 */
 	public WordTree() {
+	}
+
+	/**
+	 * 指定初始化容量
+	 *
+	 * @param initialCapacity 初始容量，一般是关键词的数量
+	 */
+	public WordTree(final int initialCapacity) {
+		super((int) (initialCapacity / MapUtil.DEFAULT_LOAD_FACTOR) + 1);
 	}
 	//--------------------------------------------------------------------------------------- Constructor start
 
@@ -99,6 +109,9 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return this
 	 */
 	public WordTree addWord(final String word) {
+		if (null == word) {
+			return this;
+		}
 		final Predicate<Character> charFilter = this.charFilter;
 		WordTree parent = null;
 		WordTree current = this;
@@ -107,13 +120,10 @@ public class WordTree extends HashMap<Character, WordTree> {
 		final int length = word.length();
 		for (int i = 0; i < length; i++) {
 			currentChar = word.charAt(i);
-			if (charFilter.test(currentChar)) {//只处理合法字符
-				child = current.get(currentChar);
-				if (child == null) {
-					//无子类，新建一个子节点后存放下一个字符
-					child = new WordTree();
-					current.put(currentChar, child);
-				}
+			//只处理合法字符
+			if (charFilter.test(currentChar)) {
+				//无子节点，新建一个子节点后存放下一个字符，子节点的同级节点不会有太多同级节点，默认1个
+				child = current.computeIfAbsent(currentChar, c -> new WordTree(1));
 				parent = current;
 				current = child;
 			}
@@ -132,9 +142,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return 是否包含
 	 */
 	public boolean isMatch(final String text) {
-		if (null == text) {
-			return false;
-		}
+		//被检查的文本大概率不是null，由里层方法统一校验即可
 		return null != matchWord(text);
 	}
 
@@ -191,7 +199,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 找出所有匹配的关键字
 	 *
 	 * @param text  被检查的文本
-	 * @param limit 限制匹配个数
+	 * @param limit 限制匹配个数，如果小于等于0，则返回全部匹配结果
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(final String text, final int limit) {
@@ -202,7 +210,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * 找出所有匹配的关键字
 	 *
 	 * @param text  被检查的文本
-	 * @param limit 限制匹配个数
+	 * @param limit 限制匹配个数，如果小于等于0，则返回全部匹配结果
 	 * @return 匹配的词列表
 	 * @since 5.5.3
 	 */
@@ -212,11 +220,13 @@ public class WordTree extends HashMap<Character, WordTree> {
 
 	/**
 	 * 找出所有匹配的关键字<br>
-	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * <p>假如被检查文本是{@literal "abab"}<br>
+	 * 密集匹配原则：假如关键词有 ab,b，将匹配 [ab,b,ab]<br>
 	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * </p>
 	 *
 	 * @param text           被检查的文本
-	 * @param limit          限制匹配个数
+	 * @param limit          限制匹配个数，如果小于等于0，则返回全部匹配结果
 	 * @param isDensityMatch 是否使用密集匹配原则
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 匹配的词列表
@@ -228,11 +238,13 @@ public class WordTree extends HashMap<Character, WordTree> {
 
 	/**
 	 * 找出所有匹配的关键字<br>
-	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * <p>假如被检查文本是{@literal "abab"}<br>
+	 * 密集匹配原则：假如关键词有 ab,b，将匹配 [ab,b,ab]<br>
 	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * </p>
 	 *
 	 * @param text           被检查的文本
-	 * @param limit          限制匹配个数
+	 * @param limit          限制匹配个数，如果小于等于0，则返回全部匹配结果
 	 * @param isDensityMatch 是否使用密集匹配原则
 	 * @param isGreedMatch   是否使用贪婪匹配（最长匹配）原则
 	 * @return 匹配的词列表
@@ -243,20 +255,20 @@ public class WordTree extends HashMap<Character, WordTree> {
 			return null;
 		}
 
-		final List<FoundWord> foundWords = new ArrayList<>();
-		WordTree current = this;
+		final List<FoundWord> foundWords = limit > 0 ? new ArrayList<>(limit) : new ArrayList<>();
+		WordTree current;
 		final int length = text.length();
 		final Predicate<Character> charFilter = this.charFilter;
-		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
+		//存放查找到的字符缓存。完整出现一个词时加到foundWords中，否则清空
 		final StringBuilder wordBuffer = StrUtil.builder();
 		final StringBuilder keyBuffer = StrUtil.builder();
 		char currentChar;
 		for (int i = 0; i < length; i++) {
+			current = this;
 			wordBuffer.setLength(0);
 			keyBuffer.setLength(0);
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
-//				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
 				if (false == charFilter.test(currentChar)) {
 					if (wordBuffer.length() > 0) {
 						//做为关键词中间的停顿词被当作关键词的一部分被返回
@@ -294,7 +306,6 @@ public class WordTree extends HashMap<Character, WordTree> {
 					break;
 				}
 			}
-			current = this;
 		}
 		return foundWords;
 	}
@@ -306,19 +317,21 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @param c 检查的字符
 	 * @return 是否末尾
 	 */
-	private boolean isEnd(final Character c) {
-		return this.endCharacterSet.contains(c);
+	private boolean isEnd(final char c) {
+		return null != endCharacterSet && this.endCharacterSet.contains(c);
 	}
 
 	/**
-	 * 设置是否到达末尾
+	 * 设置已到达末尾
 	 *
 	 * @param c 设置结尾的字符
 	 */
-	private void setEnd(final Character c) {
-		if (null != c) {
-			this.endCharacterSet.add(c);
+	private void setEnd(final char c) {
+		if (null == endCharacterSet) {
+			// 叶子节点一般也就1个元素
+			endCharacterSet = new HashSet<>(2);
 		}
+		this.endCharacterSet.add(c);
 	}
 
 	/**
@@ -329,7 +342,9 @@ public class WordTree extends HashMap<Character, WordTree> {
 	@Override
 	public void clear() {
 		super.clear();
-		this.endCharacterSet.clear();
+		if (null != endCharacterSet) {
+			this.endCharacterSet.clear();
+		}
 	}
 	//--------------------------------------------------------------------------------------- Private method end
 }
