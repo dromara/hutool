@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  *    <li>yyyy-MM-dd HH:mm:ss          示例：2022-08-05 12:59:59</li>
  *    <li>yyyy-MM-dd HH:mm:ss.SSS      示例：2022-08-05 12:59:59.559</li>
  *    <li>yyyy-MM-dd HH:mm:ss.SSSZ     示例：2022-08-05 12:59:59.559+0800【东八区中国时区】、2022-08-05 04:59:59.559+0000【冰岛0时区】, 年月日 时分秒 毫秒 时区</li>
- *    <li>yyyy-MM-dd HH:mm:ss.SSSz     示例：2022-08-05 12:59:59.559UTC【世界标准时间=0时区】、2022-08-05T12:59:59.599GMT【冰岛0时区】、2022-08-05T12:59:59.599CST【东八区中国时区】、2022-08-23T03:45:00EDT【美国东北纽约时间，-0400】 ,年月日 时分秒 毫秒 时区</li>
+ *    <li>yyyy-MM-dd HH:mm:ss.SSSz     示例：2022-08-05 12:59:59.559UTC【世界标准时间=0时区】、2022-08-05T12:59:59.599GMT【冰岛0时区】、2022-08-05T12:59:59.599CST【东八区中国时区】、2022-08-23T03:45:00.599EDT【美国东北纽约时间，-0400】 ,年月日 时分秒 毫秒 时区</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z' 示例：2022-08-05T12:59:59.559Z, 其中：''单引号表示转义字符，T:分隔符，Z:一般值UTC,0时区的时间含义</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ   示例：2022-08-05T11:59:59.559+0800, 其中：Z,表示时区</li>
  *    <li>yyyy-MM-dd'T'HH:mm:ss.SSSX   示例：2022-08-05T12:59:59.559+08, 其中：X:两位时区，+08表示：东8区，中国时区</li>
@@ -89,7 +89,8 @@ public class DatePattern {
 	 */
 	public static final Pattern REGEX_NORM = Pattern.compile("\\d{4}-\\d{1,2}-\\d{1,2}(\\s\\d{1,2}:\\d{1,2}(:\\d{1,2})?)?(.\\d{1,6})?");
 
-	//-------------------------------------------------------------------------------------------------------------------------------- Normal
+	// region Normal
+	//================================================== Normal ==================================================
 	/**
 	 * 年格式：yyyy
 	 */
@@ -103,7 +104,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_MONTH_FORMAT = FastDateFormat.getInstance(NORM_MONTH_PATTERN);
 	/**
-	 * 年月格式 {@link FastDateFormat}：yyyy-MM
+	 * 年月格式 {@link DateTimeFormatter}：yyyy-MM
 	 */
 	public static final DateTimeFormatter NORM_MONTH_FORMATTER = createFormatter(NORM_MONTH_PATTERN);
 
@@ -116,7 +117,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat SIMPLE_MONTH_FORMAT = FastDateFormat.getInstance(SIMPLE_MONTH_PATTERN);
 	/**
-	 * 简单年月格式 {@link FastDateFormat}：yyyyMM
+	 * 简单年月格式 {@link DateTimeFormatter}：yyyyMM
 	 */
 	public static final DateTimeFormatter SIMPLE_MONTH_FORMATTER = createFormatter(SIMPLE_MONTH_PATTERN);
 
@@ -129,7 +130,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_DATE_FORMAT = FastDateFormat.getInstance(NORM_DATE_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyy-MM-dd
 	 */
 	public static final DateTimeFormatter NORM_DATE_FORMATTER = createFormatter(NORM_DATE_PATTERN);
 
@@ -142,7 +143,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_TIME_FORMAT = FastDateFormat.getInstance(NORM_TIME_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：HH:mm:ss
+	 * 标准日期格式 {@link DateTimeFormatter}：HH:mm:ss
 	 */
 	public static final DateTimeFormatter NORM_TIME_FORMATTER = createFormatter(NORM_TIME_PATTERN);
 
@@ -155,7 +156,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_DATETIME_MINUTE_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MINUTE_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd HH:mm
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyy-MM-dd HH:mm
 	 */
 	public static final DateTimeFormatter NORM_DATETIME_MINUTE_FORMATTER = createFormatter(NORM_DATETIME_MINUTE_PATTERN);
 
@@ -168,7 +169,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_DATETIME_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_PATTERN);
 	/**
-	 * 标准日期时间格式，精确到秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss
+	 * 标准日期时间格式，精确到秒 {@link DateTimeFormatter}：yyyy-MM-dd HH:mm:ss
 	 */
 	public static final DateTimeFormatter NORM_DATETIME_FORMATTER = createFormatter(NORM_DATETIME_PATTERN);
 
@@ -181,7 +182,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat NORM_DATETIME_MS_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MS_PATTERN);
 	/**
-	 * 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSS
+	 * 标准日期时间格式，精确到毫秒 {@link DateTimeFormatter}：yyyy-MM-dd HH:mm:ss.SSS
 	 */
 	public static final DateTimeFormatter NORM_DATETIME_MS_FORMATTER = createFormatter(NORM_DATETIME_MS_PATTERN);
 
@@ -194,7 +195,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat ISO8601_FORMAT = FastDateFormat.getInstance(ISO8601_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss,SSS
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyy-MM-dd HH:mm:ss,SSS
 	 */
 	public static final DateTimeFormatter ISO8601_FORMATTER = createFormatter(ISO8601_PATTERN);
 
@@ -207,12 +208,12 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat CHINESE_DATE_FORMAT = FastDateFormat.getInstance(CHINESE_DATE_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyy年MM月dd日
 	 */
 	public static final DateTimeFormatter CHINESE_DATE_FORMATTER = createFormatter(CHINESE_DATE_PATTERN);
 
 	/**
-	 * 标准日期格式：yyyy年MM月dd日 HH时mm分ss秒
+	 * 标准日期格式：yyyy年MM月dd日HH时mm分ss秒
 	 */
 	public static final String CHINESE_DATE_TIME_PATTERN = "yyyy年MM月dd日HH时mm分ss秒";
 	/**
@@ -220,11 +221,13 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat CHINESE_DATE_TIME_FORMAT = FastDateFormat.getInstance(CHINESE_DATE_TIME_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日HH时mm分ss秒
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyy年MM月dd日HH时mm分ss秒
 	 */
 	public static final DateTimeFormatter CHINESE_DATE_TIME_FORMATTER = createFormatter(CHINESE_DATE_TIME_PATTERN);
+	// endregion
 
-	//-------------------------------------------------------------------------------------------------------------------------------- Pure
+	// region Pure
+	//================================================== Pure ==================================================
 	/**
 	 * 标准日期格式：yyyyMMdd
 	 */
@@ -234,7 +237,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat PURE_DATE_FORMAT = FastDateFormat.getInstance(PURE_DATE_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyyMMdd
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyyMMdd
 	 */
 	public static final DateTimeFormatter PURE_DATE_FORMATTER = createFormatter(PURE_DATE_PATTERN);
 
@@ -247,7 +250,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat PURE_TIME_FORMAT = FastDateFormat.getInstance(PURE_TIME_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：HHmmss
+	 * 标准日期格式 {@link DateTimeFormatter}：HHmmss
 	 */
 	public static final DateTimeFormatter PURE_TIME_FORMATTER = createFormatter(PURE_TIME_PATTERN);
 
@@ -260,7 +263,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat PURE_DATETIME_FORMAT = FastDateFormat.getInstance(PURE_DATETIME_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmss
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyyMMddHHmmss
 	 */
 	public static final DateTimeFormatter PURE_DATETIME_FORMATTER = createFormatter(PURE_DATETIME_PATTERN);
 
@@ -273,7 +276,7 @@ public class DatePattern {
 	 */
 	public static final FastDateFormat PURE_DATETIME_MS_FORMAT = FastDateFormat.getInstance(PURE_DATETIME_MS_PATTERN);
 	/**
-	 * 标准日期格式 {@link FastDateFormat}：yyyyMMddHHmmssSSS<br>
+	 * 标准日期格式 {@link DateTimeFormatter}：yyyyMMddHHmmssSSS<br>
 	 * see https://stackoverflow.com/questions/22588051/is-java-time-failing-to-parse-fraction-of-second
 	 * jdk8 bug at: https://bugs.openjdk.java.net/browse/JDK-8031085
 	 */
@@ -281,8 +284,10 @@ public class DatePattern {
 			.appendPattern(DatePattern.PURE_DATETIME_PATTERN)
 			.appendValue(ChronoField.MILLI_OF_SECOND, 3)
 			.toFormatter();
+	// endregion
 
-	//-------------------------------------------------------------------------------------------------------------------------------- Others
+	// region Others
+	//================================================== Others ==================================================
 	/**
 	 * HTTP头中日期时间格式：EEE, dd MMM yyyy HH:mm:ss z
 	 */
@@ -372,6 +377,7 @@ public class DatePattern {
 	 * UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
 	 */
 	public static final FastDateFormat UTC_MS_WITH_XXX_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_XXX_OFFSET_PATTERN);
+	// endregion
 
 	/**
 	 * 创建并为 {@link DateTimeFormatter} 赋予默认时区和位置信息，默认值为系统默认值。
