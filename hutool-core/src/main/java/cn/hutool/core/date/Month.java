@@ -124,7 +124,8 @@ public enum Month {
 	}
 
 	/**
-	 * 获取此月份最后一天的值，不支持的月份（例如UNDECIMBER）返回-1
+	 * 获取此月份最后一天的值<br>
+	 * 不支持 {@link #UNDECIMBER}<br>
 	 *
 	 * @param isLeapYear 是否闰年
 	 * @return 此月份最后一天的值
