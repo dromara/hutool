@@ -1115,9 +1115,21 @@ public class IoUtil extends NioUtil {
 	 * @param closeable 被关闭的对象
 	 */
 	public static void close(Closeable closeable) {
-		if (null != closeable) {
+		closeAll(closeable);
+	}
+
+	/**
+	 * 关闭多个{@link Closeable} 对象<br>
+	 * 关闭失败不会抛出异常
+	 *
+	 * @param closeables 被关闭的对象
+	 */
+	public static void closeAll(Closeable... closeables) {
+		if (null != closeables) {
 			try {
-				closeable.close();
+				for (Closeable closeable : closeables) {
+					closeable.close();
+				}
 			} catch (Exception e) {
 				// 静默关闭
 			}
