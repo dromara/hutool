@@ -474,21 +474,22 @@ public class PrimitiveArrayUtil {
 	public static byte[][] split(final byte[] array, final int len) {
 		int amount = array.length / len;
 		final int remainder = array.length % len;
-		if (remainder != 0) {
-			++amount;
-		}
-		final byte[][] arrays = new byte[amount][];
+		// 兼容切片长度大于原数组长度的情况
+		final boolean hasRemainder = remainder > 0;
+		final byte[][] arrays = new byte[hasRemainder ? (amount + 1) : amount][];
 		byte[] arr;
+		int start = 0;
 		for (int i = 0; i < amount; i++) {
-			if (i == amount - 1 && remainder != 0) {
-				// 有剩余，按照实际长度创建
-				arr = new byte[remainder];
-				System.arraycopy(array, i * len, arr, 0, remainder);
-			} else {
-				arr = new byte[len];
-				System.arraycopy(array, i * len, arr, 0, len);
-			}
+			arr = new byte[len];
+			System.arraycopy(array, start, arr, 0, len);
 			arrays[i] = arr;
+			start += len;
+		}
+		if (hasRemainder) {
+			// 有剩余，按照实际长度创建
+			arr = new byte[remainder];
+			System.arraycopy(array, start, arr, 0, remainder);
+			arrays[amount] = arr;
 		}
 		return arrays;
 	}
@@ -515,11 +516,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final long[] array, final long value) {
@@ -565,11 +566,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final int[] array, final int value) {
@@ -615,11 +616,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final short[] array, final short value) {
@@ -665,11 +666,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final char[] array, final char value) {
@@ -715,11 +716,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final byte[] array, final byte value) {
@@ -765,11 +766,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final double[] array, final double value) {
@@ -815,11 +816,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final float[] array, final float value) {
@@ -865,11 +866,11 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(final boolean[] array, final boolean value) {
@@ -1254,6 +1255,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1270,18 +1276,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new byte[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new byte[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new byte[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1289,6 +1292,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1305,18 +1313,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new int[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new int[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new int[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1324,6 +1329,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1340,18 +1350,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new long[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new long[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new long[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1359,6 +1366,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1375,18 +1387,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new short[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new short[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new short[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1394,6 +1403,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1410,18 +1424,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new char[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new char[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new char[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1429,6 +1440,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1445,18 +1461,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new double[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new double[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new double[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1464,6 +1477,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1480,18 +1498,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new float[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new float[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new float[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1499,6 +1514,11 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 获取子数组
+	 * <ul>
+	 *     <li>位置可以为负数，例如 -1 代表 数组最后一个元素的位置</li>
+	 *     <li>如果 开始位置 大于 结束位置，会自动交换</li>
+	 *     <li>如果 结束位置 大于 数组长度，会变为数组长度</li>
+	 * </ul>
 	 *
 	 * @param array 数组
 	 * @param start 开始位置（包括）
@@ -1515,18 +1535,15 @@ public class PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new boolean[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new boolean[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new boolean[0];
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1538,7 +1555,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1552,7 +1569,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1566,7 +1583,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1580,7 +1597,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1594,7 +1611,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1608,7 +1625,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1622,7 +1639,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1636,7 +1653,7 @@ public class PrimitiveArrayUtil {
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
 	 *
-	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array 数组对象
 	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1680,9 +1697,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1694,9 +1712,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1708,9 +1727,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1722,9 +1742,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1736,9 +1757,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1750,9 +1772,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1764,9 +1787,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1778,9 +1802,10 @@ public class PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang
 	 *
-	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
+	 * @param array   数组对象
 	 * @param element 要移除的元素
 	 * @return 去掉指定元素后的新数组或原数组
 	 * @throws IllegalArgumentException 参数对象不为数组对象
@@ -1796,7 +1821,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -1830,7 +1855,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -1864,7 +1889,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -1898,7 +1923,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -1932,7 +1957,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -1966,7 +1991,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2000,7 +2025,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2034,7 +2059,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2769,7 +2794,8 @@ public class PrimitiveArrayUtil {
 	// ---------------------------------------------------------------------- asc and desc
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2777,7 +2803,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final byte[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2791,7 +2817,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -2799,7 +2826,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final byte[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2813,7 +2840,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2821,7 +2849,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final short[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2835,7 +2863,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -2843,7 +2872,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final short[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2857,7 +2886,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2865,7 +2895,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final char[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2879,7 +2909,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -2887,7 +2918,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final char[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2901,7 +2932,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2909,7 +2941,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final int[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2923,7 +2955,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -2931,7 +2964,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final int[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2945,7 +2978,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2953,7 +2987,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final long[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2967,7 +3001,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -2975,7 +3010,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final long[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -2989,7 +3024,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -2997,7 +3033,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final double[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -3011,7 +3047,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即{@code array[i] >= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3019,7 +3056,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final double[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -3033,7 +3070,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否升序
@@ -3041,7 +3079,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedASC(final float[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
@@ -3055,7 +3093,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i] &gt;= array[i+1]，若传入空数组，则返回false
+	 * 检查数组是否降序，即array[i] &gt;= array[i+1]<br>
+	 * 若传入空数组，则返回{@code false}<br>
 	 *
 	 * @param array 数组
 	 * @return 数组是否降序
@@ -3063,7 +3102,7 @@ public class PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static boolean isSortedDESC(final float[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 

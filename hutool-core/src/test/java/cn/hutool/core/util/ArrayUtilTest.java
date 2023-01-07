@@ -453,6 +453,14 @@ public class ArrayUtilTest {
 		final byte[][] arrayAfterSplit = ArrayUtil.split(array, 500);
 		Assert.assertEquals(3, arrayAfterSplit.length);
 		Assert.assertEquals(24, arrayAfterSplit[2].length);
+
+		final byte[] arr = {1, 2, 3, 4, 5, 6, 7};
+		Assert.assertArrayEquals(new byte[][]{{1, 2, 3, 4, 5, 6, 7}}, ArrayUtil.split(arr, 8));
+		Assert.assertArrayEquals(new byte[][]{{1, 2, 3, 4, 5, 6, 7}}, ArrayUtil.split(arr, 7));
+		Assert.assertArrayEquals(new byte[][]{{1, 2, 3, 4}, {5, 6, 7}}, ArrayUtil.split(arr, 4));
+		Assert.assertArrayEquals(new byte[][]{{1, 2, 3}, {4, 5, 6}, {7}}, ArrayUtil.split(arr, 3));
+		Assert.assertArrayEquals(new byte[][]{{1, 2}, {3, 4}, {5, 6}, {7}}, ArrayUtil.split(arr, 2));
+		Assert.assertArrayEquals(new byte[][]{{1}, {2}, {3}, {4}, {5}, {6}, {7}}, ArrayUtil.split(arr, 1));
 	}
 
 	@Test
@@ -607,5 +615,25 @@ public class ArrayUtilTest {
 		Assert.assertNotNull(insert7);
 		final double[] insert8 = ArrayUtil.insert(doubles, 0, 1, 2, 3);
 		Assert.assertNotNull(insert8);
+	}
+
+	@Test
+	public void subTest() {
+		final int[] arr = {1, 2, 3, 4, 5};
+		int[] empty = new int[0];
+		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 2, 2));
+		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 5));
+		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 7));
+		Assert.assertArrayEquals(arr, ArrayUtil.sub(arr, 0, 5));
+		Assert.assertArrayEquals(arr, ArrayUtil.sub(arr, 5, 0));
+		Assert.assertArrayEquals(arr, ArrayUtil.sub(arr, 0, 7));
+		Assert.assertArrayEquals(new int[]{1}, ArrayUtil.sub(arr, 0, 1));
+		Assert.assertArrayEquals(new int[]{5}, ArrayUtil.sub(arr, 4, 5));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, 1, 4));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, 4, 1));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, 1, -1));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, -1, 1));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, -1, 1));
+		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, -4, -1));
 	}
 }
