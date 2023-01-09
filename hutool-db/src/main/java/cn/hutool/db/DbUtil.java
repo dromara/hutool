@@ -108,9 +108,9 @@ public final class DbUtil {
 	 */
 	public static void setShowSqlGlobal(final Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBool(setting.remove(SqlLog.KEY_SHOW_SQL), false);
-		final boolean isFormatSql = Convert.toBool(setting.remove(SqlLog.KEY_FORMAT_SQL), false);
-		final boolean isShowParams = Convert.toBool(setting.remove(SqlLog.KEY_SHOW_PARAMS), false);
+		final boolean isShowSql = Convert.toBoolean(setting.remove(SqlLog.KEY_SHOW_SQL), false);
+		final boolean isFormatSql = Convert.toBoolean(setting.remove(SqlLog.KEY_FORMAT_SQL), false);
+		final boolean isShowParams = Convert.toBoolean(setting.remove(SqlLog.KEY_SHOW_PARAMS), false);
 		String sqlLevelStr = setting.remove(SqlLog.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();

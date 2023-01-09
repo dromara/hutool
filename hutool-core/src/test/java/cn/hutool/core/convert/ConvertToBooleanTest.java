@@ -8,17 +8,17 @@ public class ConvertToBooleanTest {
 	@Test
 	public void intToBooleanTest() {
 		final int a = 100;
-		final Boolean aBoolean = Convert.toBool(a);
+		final Boolean aBoolean = Convert.toBoolean(a);
 		Assert.assertTrue(aBoolean);
 
 		final int b = 0;
-		final Boolean bBoolean = Convert.toBool(b);
+		final Boolean bBoolean = Convert.toBoolean(b);
 		Assert.assertFalse(bBoolean);
 	}
 
 	@Test
 	public void issueI65P8ATest() {
-		final Boolean bool = Convert.toBool("", Boolean.TRUE);
+		final Boolean bool = Convert.toBoolean("", Boolean.TRUE);
 		Assert.assertFalse(bool);
 	}
 
