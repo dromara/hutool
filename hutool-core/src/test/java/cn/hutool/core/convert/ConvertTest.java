@@ -42,6 +42,17 @@ public class ConvertTest {
 		Assert.assertEquals("aaaa", result);
 	}
 
+	/**
+	 * 调取对象的toString方法会抛异常的测试类
+	 */
+	@Data
+	private static class TestExceptionClass {
+		@Override
+		public String toString() {
+			throw new RuntimeException();
+		}
+	}
+
 	@Test
 	public void toStrTest() {
 		final int a = 1;
@@ -74,6 +85,27 @@ public class ConvertTest {
 		@SuppressWarnings("OctalInteger")
 		final String result = Convert.toStr(001200);
 		Assert.assertEquals("640", result);
+	}
+
+	@Test
+	public void toStrTest5() {
+		// 被转化的对象有值，正常转换
+		String a = "aaaa";
+		String aDefaultValue = "aDefault";
+		String aResult = Convert.toStr(a, aDefaultValue);
+		Assert.assertEquals(aResult, a);
+
+		// 被转化的对象为null，返回默认值
+		String b = null;
+		String bDefaultValue = "bDefault";
+		String bResult = Convert.toStr(b, bDefaultValue);
+		Assert.assertEquals(bResult, bDefaultValue);
+
+		// 转换失败，返回默认值
+		TestExceptionClass c = new TestExceptionClass();
+		String cDefaultValue = "cDefault";
+		String cResult = Convert.toStr(c, cDefaultValue);
+		Assert.assertEquals(cResult, cDefaultValue);
 	}
 
 	@Test
