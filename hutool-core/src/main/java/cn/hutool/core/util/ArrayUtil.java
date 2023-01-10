@@ -1,8 +1,8 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.UniqueKeySet;
+import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -108,10 +108,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 是否包含{@code null}元素
+	 * <p>如果数组为null，则返回{@code true}，如果数组为空，则返回{@code false}</p>
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 被检查的数组
-	 * @return 是否包含{@code null}元素
+	 * @return 是否包含 {@code null} 元素
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -127,11 +128,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 多个字段是否全为null
+	 * 所有字段是否全为null
+	 * <p>如果数组为{@code null}或者空，则返回 {@code true}</p>
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 被检查的数组
-	 * @return 多个字段是否全为null
+	 * @return 所有字段是否全为null
 	 * @author dahuoyzs
 	 * @since 5.4.0
 	 */
@@ -142,11 +144,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 是否包含非{@code null}元素<br>
-	 * 如果列表是{@code null}或者空，返回{@code false}，否则当列表中有非{@code null}字符时返回{@code true}
+	 * <p>如果数组是{@code null}或者空，返回{@code false}，否则当数组中有非{@code null}元素时返回{@code true}</p>
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 被检查的数组
-	 * @return 是否包含非{@code null}元素
+	 * @return 是否包含非 {@code null} 元素
 	 * @since 5.4.0
 	 */
 	@SuppressWarnings("unchecked")
@@ -159,7 +161,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 数组
-	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
+	 * @return 第一个非空元素，如果 不存在非空元素 或 数组为空，返回{@code null}
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -173,13 +175,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>     数组元素类型
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @param array   数组
-	 * @return 匹配元素，如果不存在匹配元素或数组为空，返回 {@code null}
+	 * @return 第一个匹配元素，如果 不存在匹配元素 或 数组为空，返回 {@code null}
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstMatch(final Predicate<T> matcher, final T... array) {
 		final int index = matchIndex(matcher, array);
-		if (index < 0) {
+		if (index == INDEX_NOT_FOUND) {
 			return null;
 		}
 
@@ -192,7 +194,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>     数组元素类型
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @param array   数组
-	 * @return 匹配到元素的位置，-1表示未匹配到
+	 * @return 第一个匹配元素的位置，{@link #INDEX_NOT_FOUND}表示未匹配到
 	 * @since 5.6.6
 	 */
 	@SuppressWarnings("unchecked")
@@ -205,16 +207,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param <T>               数组元素类型
 	 * @param matcher           匹配接口，实现此接口自定义匹配规则
-	 * @param beginIndexInclude 检索开始的位置
+	 * @param beginIndexInclude 检索开始的位置，不能为负数
 	 * @param array             数组
-	 * @return 匹配到元素的位置，-1表示未匹配到
+	 * @return 第一个匹配元素的位置，{@link #INDEX_NOT_FOUND}表示未匹配到
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> int matchIndex(final Predicate<T> matcher, final int beginIndexInclude, final T... array) {
 		if (isNotEmpty(array)) {
-			for (int i = beginIndexInclude; i < array.length; i++) {
-				if (null == matcher || matcher.test(array[i])) {
+			final int length = array.length;
+			if (null == matcher && beginIndexInclude < length) {
+				return beginIndexInclude;
+			}
+			for (int i = beginIndexInclude; i < length; i++) {
+				if (matcher.test(array[i])) {
 					return i;
 				}
 			}
@@ -227,7 +233,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 新建一个空数组
 	 *
 	 * @param <T>           数组元素类型
-	 * @param componentType 元素类型
+	 * @param componentType 元素类型，例如：{@code Integer.class}，但是不能使用原始类型，例如：{@code int.class}
 	 * @param newSize       大小
 	 * @return 空数组
 	 */
@@ -237,10 +243,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 新建一个空数组
+	 * 新建一个{@code Object}类型空数组
 	 *
 	 * @param newSize 大小
-	 * @return 空数组
+	 * @return {@code Object}类型的空数组
 	 * @since 3.3.0
 	 */
 	public static Object[] newArray(final int newSize) {
@@ -249,6 +255,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 获取数组对象的元素类型
+	 * <ul>方法调用参数与返回结果举例：
+	 *     <li>Object[] => Object.class</li>
+	 *     <li>String[] => String.class</li>
+	 *     <li>int[] => int.class</li>
+	 *     <li>Integer[] => Integer.class</li>
+	 *     <li>null => null</li>
+	 *     <li>String => null</li>
+	 * </ul>
 	 *
 	 * @param array 数组对象
 	 * @return 元素类型
@@ -260,8 +274,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 获取数组对象的元素类型
+	 * <ul>方法调用参数与返回结果举例：
+	 *     <li>Object[].class => Object.class</li>
+	 *     <li>String[].class => String.class</li>
+	 *     <li>int[].class => int.class</li>
+	 *     <li>Integer[].class => Integer.class</li>
+	 *     <li>null => null</li>
+	 * 	   <li>String.class => null</li>
+	 * </ul>
 	 *
-	 * @param arrayClass 数组类
+	 * @param arrayClass 数组对象的class
 	 * @return 元素类型
 	 * @since 3.2.2
 	 */
@@ -272,6 +294,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 根据数组元素类型，获取数组的类型<br>
 	 * 方法是通过创建一个空数组从而获取其类型
+	 * <p>本方法是 {@link #getComponentType(Class)}的逆方法</p>
 	 *
 	 * @param componentType 数组元素类型
 	 * @return 数组类型
@@ -349,11 +372,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+	 * 将元素值设置为数组的某个位置，当给定的index大于等于数组长度，则追加
 	 *
 	 * @param <T>    数组元素类型
 	 * @param buffer 已有数组
-	 * @param index  位置，大于长度追加，否则替换
+	 * @param index  位置，大于等于长度则追加，否则替换
 	 * @param value  新值
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
@@ -373,11 +396,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+	 * 将元素值设置为数组的某个位置，当给定的index大于等于数组长度，则追加
 	 *
 	 * @param <A>   数组类型
 	 * @param array 已有数组
-	 * @param index 位置，大于长度追加，否则替换
+	 * @param index 位置，大于等于长度则追加，否则替换
 	 * @param value 新值
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
@@ -392,13 +415,17 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将新元素插入到到已有数组中的某个位置<br>
-	 * 添加新元素会生成一个新数组或原有数组<br>
-	 * 如果插入位置为为负数，那么生成一个由插入元素顺序加已有数组顺序的新数组
+	 * 从数组中的指定位置开始，按顺序使用新元素替换旧元素<br>
+	 * <ul>
+	 *     <li>如果 指定位置 为负数，那么生成一个新数组，其中新元素按顺序放在数组头部</li>
+	 *     <li>如果 指定位置 大于等于 旧数组长度，那么生成一个新数组，其中新元素按顺序放在数组尾部</li>
+	 *     <li>如果 指定位置 加上 新元素数量 大于 旧数组长度，那么生成一个新数组，指定位置之前是旧数组元素，指定位置及之后为新元素</li>
+	 *     <li>否则，从已有数组中的指定位置开始，按顺序使用新元素替换旧元素，返回旧数组</li>
+	 * </ul>
 	 *
 	 * @param <T>    数组元素类型
 	 * @param buffer 已有数组
-	 * @param index  位置，大于长度追加，否则替换，&lt;0表示从头部追加
+	 * @param index  位置
 	 * @param values 新值
 	 * @return 新数组或原有数组
 	 * @since 5.7.23
@@ -434,9 +461,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将新元素插入到到已有数组中的某个位置<br>
+	 * 将新元素插入到已有数组中的某个位置<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组<br>
-	 * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
+	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充<br>
 	 *
 	 * @param <T>         数组元素类型
 	 * @param buffer      已有数组
@@ -451,13 +478,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将新元素插入到到已有数组中的某个位置<br>
+	 * 将新元素插入到已有数组中的某个位置<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组<br>
-	 * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
+	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用默认值填充<br>
 	 *
 	 * @param <A>         数组类型
 	 * @param <T>         数组元素类型
-	 * @param array       已有数组
+	 * @param array       已有数组，可以为原始类型数组
 	 * @param index       插入位置，此位置为对应此位置元素之前的空档
 	 * @param newElements 新元素
 	 * @return 新数组
@@ -495,7 +522,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
-	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
+	 * 调整大小后，按顺序拷贝原数组到新数组中，新长度更小则截断<br>
 	 *
 	 * @param <T>           数组元素类型
 	 * @param data          原数组
@@ -517,7 +544,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
-	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，其它位置补充0，缩小则截断
+	 * 调整大小后，按顺序拷贝原数组到新数组中，新长度更小则截断<br>
 	 *
 	 * @param array   原数组
 	 * @param newSize 新的数组大小
@@ -543,7 +570,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
-	 * 新数组的类型为原数组的类型，调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
+	 * 调整大小后，按顺序拷贝原数组到新数组中，新长度更小则截断原数组<br>
 	 *
 	 * @param <T>     数组元素类型
 	 * @param buffer  原数组
@@ -555,7 +582,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将多个数组合并在一起<br>
+	 * 合并所有数组，返回合并后的新数组<br>
 	 * 忽略null的数组
 	 *
 	 * @param <T>    数组元素类型
@@ -588,7 +615,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
-	 * 数组复制，缘数组和目标数组都是从位置0开始复制，复制长度为源数组的长度
+	 * 数组复制，源数组和目标数组都是从位置0开始复制，复制长度为源数组的长度<br>
 	 *
 	 * @param <T>  目标数组类型
 	 * @param src  源数组
@@ -601,7 +628,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
-	 * 数组复制，缘数组和目标数组都是从位置0开始复制
+	 * 数组复制，源数组和目标数组都是从位置0开始复制<br>
 	 *
 	 * @param <T>  目标数组类型
 	 * @param src    源数组
@@ -662,7 +689,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (isArray(obj)) {
 			final Object result;
 			final Class<?> componentType = obj.getClass().getComponentType();
-			if (componentType.isPrimitive()) {// 原始类型
+			// 原始类型
+			if (componentType.isPrimitive()) {
 				int length = Array.getLength(obj);
 				result = Array.newInstance(componentType, length);
 				while (length-- > 0) {
@@ -677,27 +705,25 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 编辑数组<br>
-	 * 编辑过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
-	 *
-	 * <pre>
-	 * 1、过滤出需要的对象，如果返回{@code null}表示这个元素对象抛弃
-	 * 2、修改元素对象，返回集合中为修改后的对象
-	 * </pre>
-	 * <p>
+	 * 对每个数组元素执行指定操作，返回操作后的元素<br>
+	 * 这个Editor实现可以实现以下功能：
+	 * <ol>
+	 *     <li>过滤出需要的对象，如果返回{@code null}则抛弃这个元素对象</li>
+	 *     <li>修改元素对象，返回修改后的对象</li>
+	 * </ol>
 	 *
 	 * @param <T>    数组元素类型
 	 * @param array  数组
-	 * @param editor 编辑器接口，{@code null}返回原集合
+	 * @param editor 编辑器接口，为 {@code null}则返回原数组
 	 * @return 编辑后的数组
 	 * @since 5.3.3
 	 */
 	public static <T> T[] edit(final T[] array, final UnaryOperator<T> editor) {
-		if (null == editor) {
+		if (null == array || null == editor) {
 			return array;
 		}
 
-		final ArrayList<T> list = new ArrayList<>(array.length);
+		final List<T> list = new ArrayList<>(array.length);
 		T modified;
 		for (final T t : array) {
 			modified = editor.apply(t);
@@ -710,16 +736,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
-	 *
-	 * <pre>
-	 * 1、过滤出需要的对象，{@link Predicate#test(Object)}为{@code true}对象将被加入结果集合中
-	 * </pre>
+	 * 过滤数组元素<br>
+	 * 保留 {@link Predicate#test(Object)}为{@code true}的元素
 	 *
 	 * @param <T>       数组元素类型
 	 * @param array     数组
-	 * @param predicate 过滤器接口，用于定义过滤规则，{@link Predicate#test(Object)}为{@code true}保留，{@code null}返回原集合
+	 * @param predicate 过滤器接口，用于定义过滤规则，为{@code null}则返回原数组
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */
@@ -731,7 +753,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 去除{@code null} 元素
+	 * 去除 {@code null} 元素
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 数组
@@ -739,10 +761,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T> T[] removeNull(final T[] array) {
-		return edit(array, t -> {
-			// 返回null便不加入集合
-			return t;
-		});
+		// 返回元素本身，如果为null便自动过滤
+		return edit(array, UnaryOperator.identity());
 	}
 
 	/**
@@ -773,7 +793,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 数组元素中的null转换为""
 	 *
 	 * @param array 数组
-	 * @return 新数组
+	 * @return 处理后的数组
 	 * @since 3.2.1
 	 */
 	public static String[] nullToEmpty(final String[] array) {
@@ -792,13 +812,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <V>     Value类型
 	 * @param keys    键列表
 	 * @param values  值列表
-	 * @param isOrder 是否有序
+	 * @param isOrder Map中的元素是否保留键值数组本身的顺序
 	 * @return Map
 	 * @since 3.0.4
 	 */
 	public static <K, V> Map<K, V> zip(final K[] keys, final V[] values, final boolean isOrder) {
 		if (isEmpty(keys) || isEmpty(values)) {
-			return null;
+			return MapUtil.newHashMap(0, isOrder);
 		}
 
 		final int size = Math.min(keys.length, values.length);
@@ -866,7 +886,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.1.2
 	 */
 	public static int indexOfIgnoreCase(final CharSequence[] array, final CharSequence value) {
-		if (null != array) {
+		if (isNotEmpty(array)) {
 			for (int i = 0; i < array.length; i++) {
 				if (StrUtil.equalsIgnoreCase(array[i], value)) {
 					return i;
@@ -877,12 +897,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param <T>   数组类型
 	 * @param array 数组
 	 * @param value 被检查的元素
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 3.0.7
 	 */
 	public static <T> int lastIndexOf(final T[] array, final Object value) {
@@ -893,13 +913,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 返回数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 *
 	 * @param <T>        数组类型
 	 * @param array      数组
 	 * @param value      被检查的元素
-	 * @param endInclude 查找方式为从后向前查找，查找的数组结束位置，一般为array.length-1
-	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @param endInclude 从后向前查找时的起始位置，一般为{@code array.length - 1}
+	 * @return 数组中指定元素最后的所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * @since 5.7.3
 	 */
 	public static <T> int lastIndexOf(final T[] array, final Object value, final int endInclude) {
@@ -914,7 +934,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 数组中是否包含元素
+	 * 数组中是否包含指定元素
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 数组
@@ -945,12 +965,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 数组中是否包含指定元素中的全部
+	 * 数组中是否包含所有指定元素
 	 *
 	 * @param <T>    数组元素类型
 	 * @param array  数组
 	 * @param values 被检查的多个元素
-	 * @return 是否包含指定元素中的全部
+	 * @return 是否包含所有指定元素
 	 * @since 5.4.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -990,8 +1010,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		if (isArray(obj)) {
 			try {
-				return (Object[]) obj;
-			} catch (final Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
 					case "long":
@@ -1011,8 +1029,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 					case "double":
 						return wrap((double[]) obj);
 					default:
-						throw new UtilException(e);
+						return (Object[]) obj;
 				}
+			} catch (final Exception e) {
+				throw new UtilException(e);
 			}
 		}
 		throw new UtilException(StrUtil.format("[{}] is not Array!", obj.getClass()));
@@ -1054,12 +1074,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 获取数组中指定多个下标元素值，组成新数组
+	 * 获取数组中所有指定位置的元素值，组成新数组
 	 *
 	 * @param <T>     数组元素类型
 	 * @param array   数组，如果提供为{@code null}则返回{@code null}
 	 * @param indexes 下标列表
-	 * @return 结果
+	 * @return 指定位置的元素值数组
 	 */
 	public static <T> T[] getAny(final Object array, final int... indexes) {
 		if (null == array) {
@@ -1095,18 +1115,15 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return newArray(array.getClass().getComponentType(), 0);
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return newArray(array.getClass().getComponentType(), 0);
+		}
 		if (end > length) {
-			if (start >= length) {
-				return newArray(array.getClass().getComponentType(), 0);
-			}
 			end = length;
 		}
 		return Arrays.copyOfRange(array, start, end);
@@ -1143,18 +1160,15 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (end < 0) {
 			end += length;
 		}
-		if (start == length) {
-			return new Object[0];
-		}
 		if (start > end) {
 			final int tmp = start;
 			start = end;
 			end = tmp;
 		}
+		if (start >= length) {
+			return new Object[0];
+		}
 		if (end > length) {
-			if (start >= length) {
-				return new Object[0];
-			}
 			end = length;
 		}
 
@@ -1162,7 +1176,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			step = 1;
 		}
 
-		final ArrayList<Object> list = new ArrayList<>();
+		final List<Object> list = new ArrayList<>();
 		for (int i = start; i < end; i += step) {
 			list.add(get(array, i));
 		}
@@ -1238,7 +1252,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 *
-	 * @param <T>         被处理的集合
+	 * @param <T>         数组元素类型
 	 * @param array       数组
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
@@ -1250,7 +1264,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 *
-	 * @param <T>       被处理的集合
+	 * @param <T>       数组元素类型
 	 * @param array     数组
 	 * @param delimiter 分隔符
 	 * @param prefix    每个元素添加的前缀，null表示不添加
@@ -1271,9 +1285,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 先处理数组元素，再以 conjunction 为分隔符将数组转换为字符串
 	 *
-	 * @param <T>         被处理的集合
+	 * @param <T>         数组元素类型
 	 * @param array       数组
 	 * @param conjunction 分隔符
 	 * @param editor      每个元素的编辑器，null表示不编辑
@@ -1281,7 +1295,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.3.3
 	 */
 	public static <T> String join(final T[] array, final CharSequence conjunction, final UnaryOperator<T> editor) {
-		return StrJoiner.of(conjunction).append(array, (t) -> String.valueOf(editor.apply(t))).toString();
+		return StrJoiner.of(conjunction).append(edit(array, editor)).toString();
 	}
 
 	/**
@@ -1333,7 +1347,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] toArray(final Iterator<T> iterator, final Class<T> componentType) {
-		return toArray(ListUtil.of(iterator), componentType);
+		if (null == iterator) {
+			return newArray(componentType, 0);
+		}
+		return ListUtil.of(iterator).toArray(newArray(componentType, 0));
 	}
 
 	/**
@@ -1346,7 +1363,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T> T[] toArray(final Iterable<T> iterable, final Class<T> componentType) {
-		return CollUtil.toCollection(iterable).toArray(newArray(componentType, 0));
+		return toArray(IterUtil.getIter(iterable), componentType);
 	}
 	// ---------------------------------------------------------------------- remove
 
@@ -1370,7 +1387,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素 copy from commons-lang
+	 * 只会移除匹配到的第一个元素<br>
+	 * copy from commons-lang<br>
 	 *
 	 * @param <T>     数组元素类型
 	 * @param array   数组对象，可以是对象数组，也可以原始类型数组
@@ -1574,7 +1592,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 计算{@code null}或空元素对象的个数，通过{@link ObjUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
-	 * @return 存在{@code null}的数量
+	 * @return {@code null}或空元素对象的个数
 	 * @since 4.5.18
 	 */
 	public static int emptyCount(final Object... args) {
@@ -1591,11 +1609,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 	/**
 	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
-	 * 如果提供数组本身为空，
+	 * <p>如果提供的数组本身为空，则返回{@code false}</p>
 	 *
 	 * @param <T>  元素类型
 	 * @param args 被检查对象
-	 * @return 是否存在
+	 * @return 是否存在 {@code null} 或空对象
 	 * @since 4.5.18
 	 */
 	public static <T> boolean hasEmpty(final T[] args) {
@@ -1610,7 +1628,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * 是否所有元素都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
 	 *
 	 * @param <T>  元素类型
 	 * @param args 被检查的对象,一个或者多个
@@ -1627,7 +1646,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 是否存都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * 是否所有元素都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
 	 *
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 是否都不为空
@@ -1638,11 +1658,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 多个字段是否全部不为null
+	 * 是否所有元素都不为 {@code null}
+	 * <p>如果提供的数组为null，则返回{@code false}，如果提供的数组为空，则返回{@code true}</p>
 	 *
 	 * @param <T>   数组元素类型
 	 * @param array 被检查的数组
-	 * @return 多个字段是否全部不为null
+	 * @return 是否所有元素都不为 {@code null}
 	 * @since 5.4.0
 	 */
 	@SuppressWarnings("unchecked")
@@ -1710,8 +1731,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.4.2
 	 */
 	public static <T, R> R[] map(final T[] array, final Class<R> targetComponentType, final Function<? super T, ? extends R> func) {
-		final R[] result = newArray(targetComponentType, array.length);
-		for (int i = 0; i < array.length; i++) {
+		final int length = length(array);
+		final R[] result = newArray(targetComponentType, length);
+		for (int i = 0; i < length; i++) {
 			result[i] = func.apply(array[i]);
 		}
 		return result;
@@ -1738,13 +1760,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link List}
+	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为 {@link List}
 	 *
 	 * @param array 被转换的数组
 	 * @param func  转换规则函数
 	 * @param <T>   原数组类型
 	 * @param <R>   目标数组类型
-	 * @return 转换后的数组
+	 * @return 列表
 	 * @since 5.5.7
 	 */
 	public static <T, R> List<R> map(final T[] array, final Function<? super T, ? extends R> func) {
@@ -1752,13 +1774,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link Set}
+	 * 按照指定规则，将一种类型的数组元素转换为另一种类型，并保存为 {@link Set}
 	 *
 	 * @param array 被转换的数组
 	 * @param func  转换规则函数
 	 * @param <T>   原数组类型
 	 * @param <R>   目标数组类型
-	 * @return 转换后的数组
+	 * @return 集合
 	 * @since 5.8.0
 	 */
 	public static <T, R> Set<R> mapToSet(final T[] array, final Function<? super T, ? extends R> func) {
@@ -1807,12 +1829,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 查找子数组的位置
+	 * 是否是数组的子数组
 	 *
 	 * @param array    数组
 	 * @param subArray 子数组
 	 * @param <T>      数组元素类型
-	 * @return 子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @return 是否是数组的子数组
 	 * @since 5.4.8
 	 */
 	public static <T> boolean isSub(final T[] array, final T[] subArray) {
@@ -1880,10 +1902,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 查找最后一个子数组的开始位置
 	 *
 	 * @param array      数组
-	 * @param endInclude 查找结束的位置（包含）
+	 * @param endInclude 从后往前查找时的开始位置（包含）
 	 * @param subArray   子数组
 	 * @param <T>        数组元素类型
-	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
+	 * @return 最后一个子数组的开始位置，即从后往前，子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */
 	public static <T> int lastIndexOfSub(final T[] array, final int endInclude, final T[] subArray) {
@@ -1891,7 +1913,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return INDEX_NOT_FOUND;
 		}
 
-		final int firstIndex = lastIndexOf(array, subArray[0]);
+		final int firstIndex = lastIndexOf(array, subArray[0], endInclude);
 		if (firstIndex < 0 || firstIndex + subArray.length > array.length) {
 			return INDEX_NOT_FOUND;
 		}
@@ -1908,21 +1930,22 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// O(n)时间复杂度检查数组是否有序
 
 	/**
-	 * 检查数组是否有序，即comparator.compare(array[i], array[i + 1]) &lt;= 0，若传入空数组或空比较器，则返回false
+	 * 检查数组是否按升序排列，即 {@code comparator.compare(array[i], array[i + 1]) <= 0}
+	 * <p>若传入空数组或空比较器，则返回{@code false}</p>
 	 *
 	 * @param array      数组
 	 * @param comparator 比较器
 	 * @param <T>        数组元素类型
-	 * @return 数组是否有序
-	 * @author FengBaoheng
-	 * @since 5.5.2
+	 * @return 数组是否升序
+	 * @since 6.0.0
 	 */
 	public static <T> boolean isSorted(final T[] array, final Comparator<? super T> comparator) {
 		if (array == null || comparator == null) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length - 1; i++) {
+		final int size = array.length - 1;
+		for (int i = 0; i < size; i++) {
 			if (comparator.compare(array[i], array[i + 1]) > 0) {
 				return false;
 			}
@@ -1931,7 +1954,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) &lt;= 0，若传入空数组，则返回false
+	 * 检查数组是否升序，即 {@code array[i].compareTo(array[i + 1]) <= 0}
+	 * <p>若传入空数组，则返回{@code false}</p>
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
@@ -1945,7 +1969,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 
 	/**
-	 * 检查数组是否升序，即array[i].compareTo(array[i + 1]) &lt;= 0，若传入空数组，则返回false
+	 * 检查数组是否升序，即 {@code array[i].compareTo(array[i + 1]) <= 0}
+	 * <p>若传入空数组，则返回{@code false}</p>
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
@@ -1954,11 +1979,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedASC(final T[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length - 1; i++) {
+		final int size = array.length - 1;
+		for (int i = 0; i < size; i++) {
 			if (array[i].compareTo(array[i + 1]) > 0) {
 				return false;
 			}
@@ -1968,7 +1994,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 检查数组是否降序，即array[i].compareTo(array[i + 1]) &gt;= 0，若传入空数组，则返回false
+	 * 检查数组是否降序，即 {@code array[i].compareTo(array[i + 1]) >= 0}
+	 * <p>若传入空数组，则返回{@code false}</p>
 	 *
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
@@ -1977,11 +2004,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.5.2
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedDESC(final T[] array) {
-		if (array == null) {
+		if (isEmpty(array)) {
 			return false;
 		}
 
-		for (int i = 0; i < array.length - 1; i++) {
+		final int size = array.length - 1;
+		for (int i = 0; i < size; i++) {
 			if (array[i].compareTo(array[i + 1]) < 0) {
 				return false;
 			}
