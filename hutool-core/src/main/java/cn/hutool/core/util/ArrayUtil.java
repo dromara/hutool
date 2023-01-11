@@ -254,14 +254,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 获取数组对象的元素类型
-	 * <ul>方法调用参数与返回结果举例：
-	 *     <li>Object[] => Object.class</li>
-	 *     <li>String[] => String.class</li>
-	 *     <li>int[] => int.class</li>
-	 *     <li>Integer[] => Integer.class</li>
-	 *     <li>null => null</li>
-	 *     <li>String => null</li>
+	 * 获取数组对象的元素类型，方法调用参数与返回结果举例：
+	 * <ul>
+	 *     <li>Object[] =》 Object.class</li>
+	 *     <li>String[] =》 String.class</li>
+	 *     <li>int[] =》 int.class</li>
+	 *     <li>Integer[] =》 Integer.class</li>
+	 *     <li>null =》 null</li>
+	 *     <li>String =》 null</li>
 	 * </ul>
 	 *
 	 * @param array 数组对象
@@ -273,14 +273,14 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 获取数组对象的元素类型
-	 * <ul>方法调用参数与返回结果举例：
-	 *     <li>Object[].class => Object.class</li>
-	 *     <li>String[].class => String.class</li>
-	 *     <li>int[].class => int.class</li>
-	 *     <li>Integer[].class => Integer.class</li>
-	 *     <li>null => null</li>
-	 * 	   <li>String.class => null</li>
+	 * 获取数组对象的元素类型，方法调用参数与返回结果举例：
+	 * <ul>
+	 *     <li>Object[].class =》 Object.class</li>
+	 *     <li>String[].class =》 String.class</li>
+	 *     <li>int[].class =》 int.class</li>
+	 *     <li>Integer[].class =》 Integer.class</li>
+	 *     <li>null =》 null</li>
+	 * 	   <li>String.class =》 null</li>
 	 * </ul>
 	 *
 	 * @param arrayClass 数组对象的class
