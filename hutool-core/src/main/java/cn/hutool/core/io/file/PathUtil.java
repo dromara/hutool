@@ -488,6 +488,11 @@ public class PathUtil {
 		Assert.notNull(src, "Src path must be not null !");
 		Assert.notNull(target, "Target path must be not null !");
 
+		if(equals(src, target)){
+			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
+			return target;
+		}
+
 		if (isDirectory(target)) {
 			target = target.resolve(src.getFileName());
 		}
