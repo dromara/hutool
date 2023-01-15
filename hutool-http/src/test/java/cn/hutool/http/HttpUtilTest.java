@@ -378,9 +378,4 @@ public class HttpUtilTest {
 		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
 		Console.log(request.execute().body());
 	}
-
-	@Test
-	public void allowPatchTest() {
-		HttpGlobalConfig.allowPatch();
-	}
 }
