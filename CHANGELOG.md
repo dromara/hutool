@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core  】      XmlUtil.readObjectFromXml增加注入漏洞的警告注释，并标识为废弃（issue#2857@Github）
+* 【http  】      HttpGlobalConfig.allowPatch()调用时忽略错误（issue#2832@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
