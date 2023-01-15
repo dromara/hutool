@@ -54,10 +54,11 @@ public class HttpUrlConnectionUtil {
 			throw new HttpException("None static field [methods] with Java version: [{}]", SystemUtil.get("java.version"));
 		}
 
+		// 首先去除修饰符，否则设置值失败
+		ModifierUtil.removeFinalModify(methodsField);
 		final Object staticFieldValue = FieldUtil.getStaticFieldValue(methodsField);
 		if (false == ArrayUtil.equals(METHODS, staticFieldValue)) {
 			// 去除final修饰
-			ModifierUtil.removeFinalModify(methodsField);
 			FieldUtil.setStaticFieldValue(methodsField, METHODS);
 		}
 	}
