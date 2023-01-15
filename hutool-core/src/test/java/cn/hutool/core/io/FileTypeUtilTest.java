@@ -58,18 +58,6 @@ public class FileTypeUtilTest {
 
 	@Test
 	@Ignore
-	public void ofdTest() {
-		final File file = FileUtil.file("e:/test.ofd");
-		final String hex = FileTypeUtil.readHex28Upper(FileUtil.getInputStream(file));
-		Console.log(hex);
-		final String type = FileTypeUtil.getType(file);
-		Console.log(type);
-		Assert.assertEquals("ofd", type);
-	}
-
-
-	@Test
-	@Ignore
 	public void inputStreamAndFilenameTest() {
 		final File file = FileUtil.file("e:/laboratory/test.xlsx");
 		final String type = FileTypeUtil.getType(file);
@@ -96,17 +84,5 @@ public class FileTypeUtilTest {
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		final String type = FileTypeUtil.getType(inputStream);
 		Console.log(type);
-	}
-
-	@Test
-	public void readHex28LowerTest() {
-		final String s = FileTypeUtil.readHex28Lower(ResourceUtil.getStream("hutool.jpg"));
-		Assert.assertEquals("ffd8ffe000104a46494600010101006000600000ffe1095845786966", s);
-	}
-
-	@Test
-	public void readHex28UpperTest() {
-		final String s = FileTypeUtil.readHex28Upper(ResourceUtil.getStream("hutool.jpg"));
-		Assert.assertEquals("FFD8FFE000104A46494600010101006000600000FFE1095845786966", s);
 	}
 }

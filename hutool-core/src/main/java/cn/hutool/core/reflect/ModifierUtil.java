@@ -249,6 +249,7 @@ public class ModifierUtil {
 		if (null == field || false == hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
 			return;
 		}
+
 		//将字段的访问权限设为true：即去除private修饰符的影响
 		if (false == field.isAccessible()) {
 			field.setAccessible(true);
@@ -263,7 +264,7 @@ public class ModifierUtil {
 			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 		} catch (final NoSuchFieldException | IllegalAccessException e) {
 			//内部，工具类，基本不抛出异常
-			throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+			throw new UtilException(e, "IllegalAccess for [{}.{}]", field.getDeclaringClass(), field.getName());
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method start

@@ -294,7 +294,7 @@ public class FieldUtil {
 		try {
 			field.set(obj instanceof Class ? null : obj, value);
 		} catch (final IllegalAccessException e) {
-			throw new UtilException(e, "IllegalAccess for {}.{}", obj, field.getName());
+			throw new UtilException(e, "IllegalAccess for [{}.{}]", null == obj ? field.getDeclaringClass() : obj, field.getName());
 		}
 	}
 
