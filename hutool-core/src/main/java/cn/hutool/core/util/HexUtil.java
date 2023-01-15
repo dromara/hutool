@@ -27,7 +27,11 @@ public class HexUtil {
 	 * @return 是否为16进制
 	 */
 	public static boolean isHexNumber(String value) {
-		int index = (value.startsWith("-") ? 1 : 0);
+		if(StrUtil.startWith(value, '-')){
+			// issue#2875
+			return false;
+		}
+		int index = 0;
 		if (value.startsWith("0x", index) || value.startsWith("0X", index)) {
 			index += 2;
 		} else if (value.startsWith("#", index)) {
