@@ -133,6 +133,34 @@ public class CoordinateUtil {
 		return gcj02ToWgs84(gcj02.lng, gcj02.lat);
 	}
 
+	/**
+        * WGS84 坐标转为 墨卡托投影
+        *
+	* @param lng 经度值
+	* @param lat 纬度值
+	* @return 墨卡托投影
+	*/
+	public static Coordinate wgs84ToMercator(double lng, double lat) {
+		double x = lng * 20037508.342789244 / 180;
+		double y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+		y = y * 20037508.342789244 / 180;
+		return new Coordinate(x, y);
+	}
+
+	/**
+	* 墨卡托投影 转为 WGS84 坐标
+	*
+	* @param mercatorX 墨卡托X坐标
+	* @param mercatorY 墨卡托Y坐标
+	* @return WGS84 坐标
+	*/
+	public static Coordinate mercatorToWgs84(double mercatorX, double mercatorY) {
+		double x = mercatorX / 20037508.342789244 * 180;
+		double y = mercatorY / 20037508.342789244 * 180;
+		y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+		return new Coordinate(x, y);
+	}
+	
 	//----------------------------------------------------------------------------------- Private methods begin
 
 	/**
