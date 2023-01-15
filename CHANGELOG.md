@@ -9,6 +9,7 @@
 * 【core  】      XmlUtil.readObjectFromXml增加注入漏洞的警告注释，并标识为废弃（issue#2857@Github）
 * 【http  】      HttpGlobalConfig.allowPatch()调用时忽略错误（issue#2832@Github）
 * 【core  】      重构根据file magic number判断文件类型（pr#2834@Github）
+* 【core  】      增加WGS84 坐标与墨卡托投影互转（pr#2811@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
