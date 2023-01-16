@@ -1,11 +1,21 @@
 package cn.hutool.poi.excel;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
+import cn.hutool.poi.excel.sax.handler.RowHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExcelUtilTest {
 
@@ -61,4 +71,23 @@ public class ExcelUtilTest {
 		reader.close();
 		Assert.assertEquals(1L, list.get(1).get("鞋码"));
 	}
+
+	@Test
+	public void readBySaxTest() {
+		String path = "readBySax.xls";
+		AtomicInteger assertRowNum = new AtomicInteger(0);
+		try{
+			ExcelUtil.readBySax(path, 0, new RowHandler() {
+				@Override
+				public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+					System.out.println(StrUtil.format("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells));
+					assertRowNum.addAndGet(1);
+				}
+			});
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		Assert.assertEquals(3, assertRowNum.intValue());
+	}
+
 }

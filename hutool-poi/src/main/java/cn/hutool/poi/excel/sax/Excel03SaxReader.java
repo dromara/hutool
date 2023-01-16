@@ -1,7 +1,9 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -344,8 +346,11 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * @param lastCell 行结束的标识Record
 	 */
 	private void processLastCell(LastCellOfRowDummyRecord lastCell) {
-		// 每行结束时， 调用handle() 方法
-		this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
+		if(CollUtil.isNotBlank(this.rowCellList)) {
+			//整行内容全为空时，表示该行是空白行，不执行每行结束的handle.
+			// 每行结束时， 调用handle() 方法
+			this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
+		}
 		// 清空行Cache
 		this.rowCellList = new ArrayList<>(this.rowCellList.size());
 	}
