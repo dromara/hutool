@@ -16,6 +16,7 @@ import cn.hutool.core.map.multi.Table;
 import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
@@ -82,6 +83,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 标题项对应列号缓存，每次写标题更新此缓存
 	 */
 	private Map<String, Integer> headLocationCache;
+	/**
+	 * 单元格值处理接口
+	 */
+	private CellEditor cellEditor;
 
 	// -------------------------------------------------------------------------- Constructor start
 
@@ -186,6 +191,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
+
+	/**
+	 * 设置单元格值处理逻辑<br>
+	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
+	 *
+	 * @param cellEditor 单元格值处理接口
+	 * @return this
+	 */
+	public ExcelWriter setCellEditor(final CellEditor cellEditor) {
+		this.cellEditor = cellEditor;
+		return this;
+	}
 
 	@Override
 	public ExcelWriter setSheet(final int sheetIndex) {
@@ -735,7 +752,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		// 设置内容
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
-			CellUtil.setCellValue(cell, content, cellStyle);
+			CellUtil.setCellValue(cell, content, cellStyle, this.cellEditor);
 		}
 		return this;
 	}
@@ -945,7 +962,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Cell cell;
 		for (final Object value : rowData) {
 			cell = row.createCell(i);
-			CellUtil.setCellValue(cell, value, this.styleSet, true);
+			CellUtil.setCellValue(cell, value, this.styleSet, true, this.cellEditor);
 			this.headLocationCache.put(StrUtil.toString(value), i);
 			i++;
 		}
@@ -977,7 +994,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				}
 				if (iterator.hasNext()) {
 					cell = row.createCell(i);
-					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true);
+					CellUtil.setCellValue(cell, iterator.next(), this.styleSet, true, this.cellEditor);
 				} else {
 					break;
 				}
@@ -1073,7 +1090,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
 				}
 				if (null != location) {
-					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), cell.getValue(), this.styleSet, false);
+					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), cell.getValue(), this.styleSet, false, this.cellEditor);
 				}
 			}
 		} else {
@@ -1093,7 +1110,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeRow(final Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false);
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false, this.cellEditor);
 		return this;
 	}
 
@@ -1121,7 +1138,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeCellValue(final int x, final int y, final Object value) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, this.styleSet, false);
+		CellUtil.setCellValue(cell, value, this.styleSet, false, this.cellEditor);
 		return this;
 	}
 

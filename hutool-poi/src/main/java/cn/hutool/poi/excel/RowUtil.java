@@ -88,27 +88,29 @@ public class RowUtil {
 	/**
 	 * 写一行数据，无样式，非标题
 	 *
-	 * @param row      行
-	 * @param rowData  一行的数据
+	 * @param row        行
+	 * @param rowData    一行的数据
+	 * @param cellEditor 单元格值编辑器，可修改单元格值或修改单元格，{@code null}表示不编辑
 	 */
-	public static void writeRow(final Row row, final Iterable<?> rowData) {
-		writeRow(row, rowData, null, false);
+	public static void writeRow(final Row row, final Iterable<?> rowData, final CellEditor cellEditor) {
+		writeRow(row, rowData, null, false, cellEditor);
 	}
 
 	/**
 	 * 写一行数据
 	 *
-	 * @param row      行
-	 * @param rowData  一行的数据
-	 * @param styleSet 单元格样式集，包括日期等样式，null表示无样式
-	 * @param isHeader 是否为标题行
+	 * @param row        行
+	 * @param rowData    一行的数据
+	 * @param styleSet   单元格样式集，包括日期等样式，null表示无样式
+	 * @param isHeader   是否为标题行
+	 * @param cellEditor 单元格值编辑器，可修改单元格值或修改单元格，{@code null}表示不编辑
 	 */
-	public static void writeRow(final Row row, final Iterable<?> rowData, final StyleSet styleSet, final boolean isHeader) {
+	public static void writeRow(final Row row, final Iterable<?> rowData, final StyleSet styleSet, final boolean isHeader, final CellEditor cellEditor) {
 		int i = 0;
 		Cell cell;
 		for (final Object value : rowData) {
 			cell = row.createCell(i);
-			CellUtil.setCellValue(cell, value, styleSet, isHeader);
+			CellUtil.setCellValue(cell, value, styleSet, isHeader, cellEditor);
 			i++;
 		}
 	}

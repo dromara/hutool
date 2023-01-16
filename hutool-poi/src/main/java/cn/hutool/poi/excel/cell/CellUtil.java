@@ -134,12 +134,13 @@ public class CellUtil {
 	 * 根据传入的styleSet自动匹配样式<br>
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
-	 * @param cell     单元格
-	 * @param value    值
-	 * @param styleSet 单元格样式集，包括日期等样式，null表示无样式
-	 * @param isHeader 是否为标题单元格
+	 * @param cell       单元格
+	 * @param value      值
+	 * @param styleSet   单元格样式集，包括日期等样式，null表示无样式
+	 * @param isHeader   是否为标题单元格
+	 * @param cellEditor 单元格值编辑器，可修改单元格值或修改单元格，{@code null}表示不编辑
 	 */
-	public static void setCellValue(final Cell cell, final Object value, final StyleSet styleSet, final boolean isHeader) {
+	public static void setCellValue(final Cell cell, final Object value, final StyleSet styleSet, final boolean isHeader, final CellEditor cellEditor) {
 		if (null == cell) {
 			return;
 		}
@@ -148,7 +149,7 @@ public class CellUtil {
 			cell.setCellStyle(styleSet.getStyleByValueType(value, isHeader));
 		}
 
-		setCellValue(cell, value);
+		setCellValue(cell, value, cellEditor);
 	}
 
 	/**
@@ -156,17 +157,14 @@ public class CellUtil {
 	 * 根据传入的styleSet自动匹配样式<br>
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
-	 * @param cell  单元格
-	 * @param value 值
-	 * @param style 自定义样式，null表示无样式
+	 * @param cell       单元格
+	 * @param value      值
+	 * @param style      自定义样式，null表示无样式
+	 * @param cellEditor 单元格值编辑器，可修改单元格值或修改单元格，{@code null}表示不编辑
 	 */
-	public static void setCellValue(final Cell cell, final Object value, final CellStyle style) {
-		setCellValue(cell, (CellSetter) cell1 -> {
-			setCellValue(cell, value);
-			if (null != style) {
-				cell1.setCellStyle(style);
-			}
-		});
+	public static void setCellValue(final Cell cell, final Object value, final CellStyle style, final CellEditor cellEditor) {
+		cell.setCellStyle(style);
+		setCellValue(cell, value, cellEditor);
 	}
 
 	/**
@@ -174,11 +172,12 @@ public class CellUtil {
 	 * 根据传入的styleSet自动匹配样式<br>
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
-	 * @param cell  单元格
-	 * @param value 值或{@link CellSetter}
+	 * @param cell       单元格
+	 * @param value      值或{@link CellSetter}
+	 * @param cellEditor 单元格值编辑器，可修改单元格值或修改单元格，{@code null}表示不编辑
 	 * @since 5.6.4
 	 */
-	public static void setCellValue(final Cell cell, final Object value) {
+	public static void setCellValue(final Cell cell, Object value, final CellEditor cellEditor) {
 		if (null == cell) {
 			return;
 		}
@@ -187,10 +186,13 @@ public class CellUtil {
 		// 在使用BigWriter(SXSSF)模式写出数据时，单元格值为直接值，非引用值（is标签）
 		// 而再使用ExcelWriter(XSSF)编辑时，会写出引用值，导致失效。
 		// 此处做法是先清空单元格值，再写入
-		if(CellType.BLANK != cell.getCellType()){
+		if (CellType.BLANK != cell.getCellType()) {
 			cell.setBlank();
 		}
 
+		if (null != cellEditor) {
+			value = cellEditor.edit(cell, value);
+		}
 		CellSetterFactory.createCellSetter(value).setValue(cell);
 	}
 
@@ -324,7 +326,6 @@ public class CellUtil {
 		}
 		return null;
 	}
-
 
 
 	/**
