@@ -3,6 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
@@ -377,5 +379,21 @@ public class HttpUtilTest {
 
 		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
 		Console.log(request.execute().body());
+	}
+
+	@Test
+	public void httpParameterDecodeTest () {
+		String test = "this is test测试";
+		int port = NetUtil.getUsableLocalPort();
+		HttpUtil.createServer(port)
+				.addAction("/formEncoded", (req, resp) -> resp.write(req.getParam("test")))
+				.addAction("/urlEncoded", (req, resp) -> resp.write(req.getParam("test")))
+				.start();
+		String resp = HttpUtil.createPost(String.format("http://localhost:%s/formEncoded", port))
+				.form("test", test).execute().body();
+		Assert.assertEquals("Form请求参数解码", test, resp);
+		String urlGet = UrlBuilder.of(String.format("http://localhost:%s/urlEncoded", port)).addQuery("test", test).build();
+		String resp2 = HttpUtil.createGet(urlGet).execute().body();
+		Assert.assertEquals("QueryString请求参数编码", test, resp2);
 	}
 }
