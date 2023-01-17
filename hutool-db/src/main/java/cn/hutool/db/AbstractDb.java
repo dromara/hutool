@@ -3,12 +3,7 @@ package cn.hutool.db;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.dialect.Dialect;
-import cn.hutool.db.handler.BeanListHandler;
-import cn.hutool.db.handler.EntityHandler;
-import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.db.handler.NumberHandler;
-import cn.hutool.db.handler.RsHandler;
-import cn.hutool.db.handler.StringHandler;
+import cn.hutool.db.handler.*;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.LogicalOperator;
@@ -879,6 +874,22 @@ public abstract class AbstractDb implements Serializable {
 		} finally {
 			this.closeConnection(conn);
 		}
+	}
+
+	/**
+	 * 分页查询<br>
+	 *
+	 * @param <T>             Bean类型
+	 * @param sql             SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page            分页对象
+	 * @param elementBeanType 结果集处理对象
+	 * @param params          参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.8.11
+	 */
+	public <T> PageResult<T> page(CharSequence sql, Page page, Class<T> elementBeanType, Object... params) throws SQLException {
+		return page(sql, page, (RsHandler<? extends PageResult<T>>) rs -> HandleHelper.handleRsToBeanList(rs, new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(sql, params)), elementBeanType), params);
 	}
 
 	/**
