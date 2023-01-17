@@ -18,6 +18,7 @@
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
 * 【core  】      修复FileTypeUtil判断wav后缀的录音文件类型不能匹配问题（pr#2834@Github）
 * 【core  】      修复FileUtil的rename在newName与原文件夹名称一样时，文件夹会被删除问题（issue#2845@Github）
+* 【core  】      修复IoUtil.readBytes使用SocketInputStream读取不完整问题（issue#I6AT49@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -471,27 +471,6 @@ public class IoUtil extends NioUtil {
 	 * @since 5.0.4
 	 */
 	public static byte[] readBytes(InputStream in, boolean isClose) throws IORuntimeException {
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			final byte[] result;
-			try {
-				final int available = in.available();
-				result = new byte[available];
-				final int readLength = in.read(result);
-				if (readLength != available) {
-					throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", available, readLength));
-				}
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			} finally {
-				if (isClose) {
-					close(in);
-				}
-			}
-			return result;
-		}
-
-		// 未知bytes总量的流
 		return read(in, isClose).toByteArray();
 	}
 
