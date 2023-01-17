@@ -13,6 +13,7 @@
 * 【extra 】      ServletUtil遵循rfc 3986优化（issue#I6ALAO@Gitee）
 * 【http  】      HttpUtil.decodeParams增加isFormUrlEncoded重载（pr#918@Gitee）
 * 【db    】      AbstractDb添加返回类型为PageResult的page重载方法（pr#916@Gitee）
+* 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）

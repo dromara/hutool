@@ -62,6 +62,13 @@ public class CacheTest {
 	}
 
 	@Test
+	public void lfuCacheTest2(){
+		Cache<String, String> lfuCache = CacheUtil.newLFUCache(3);
+		final String s = lfuCache.get(null);
+		Assert.assertNull(s);
+	}
+
+	@Test
 	public void lruCacheTest(){
 		Cache<String, String> lruCache = CacheUtil.newLRUCache(3);
 		//通过实例化对象创建

@@ -32,6 +32,8 @@ public class DesensitizedUtilTest {
 		Assert.assertEquals("**********", DesensitizedUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD));
 		Assert.assertEquals("1101 **** **** **** 3256", DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtil.DesensitizedType.BANK_CARD));
 		Assert.assertEquals("6227 **** **** *** 5123", DesensitizedUtil.desensitized("6227880100100105123", DesensitizedUtil.DesensitizedType.BANK_CARD));
+		Assert.assertEquals("192.*.*.*", DesensitizedUtil.desensitized("192.168.1.1", DesensitizedUtil.DesensitizedType.IPV4));
+		Assert.assertEquals("2001:*:*:*:*:*:*:*", DesensitizedUtil.desensitized("2001:0db8:86a3:08d3:1319:8a2e:0370:7344", DesensitizedUtil.DesensitizedType.IPV6));
 	}
 
 	@Test
