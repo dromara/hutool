@@ -331,7 +331,7 @@ public class HttpServerRequest extends HttpServerBase {
 			//解析URL中的参数
 			final String query = getQuery();
 			if(StrUtil.isNotBlank(query)){
-				this.paramsCache.putAll(HttpUtil.decodeParams(query, charset));
+				this.paramsCache.putAll(HttpUtil.decodeParams(query, charset, false));
 			}
 
 			// 解析multipart中的参数
@@ -341,7 +341,7 @@ public class HttpServerRequest extends HttpServerBase {
 				// 解析body中的参数
 				final String body = getBody();
 				if(StrUtil.isNotBlank(body)){
-					this.paramsCache.putAll(HttpUtil.decodeParams(body, charset));
+					this.paramsCache.putAll(HttpUtil.decodeParams(body, charset, true));
 				}
 			}
 		}
