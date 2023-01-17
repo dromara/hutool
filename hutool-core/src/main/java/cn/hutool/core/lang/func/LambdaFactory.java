@@ -51,8 +51,9 @@ public class LambdaFactory {
 	 * @param methodName            方法名称
 	 * @param paramTypes            方法参数数组
 	 * @return 接受Lambda的函数式接口对象
+	 * @param <F> Function类型
 	 */
-	public static <F> F build(Class<F> functionInterfaceType, Class methodClass, String methodName, Class... paramTypes) {
+	public static <F> F build(final Class<F> functionInterfaceType, final Class<?> methodClass, final String methodName, final Class<?>... paramTypes) {
 		return build(functionInterfaceType, MethodUtil.getMethod(methodClass, methodName, paramTypes));
 	}
 
@@ -62,30 +63,31 @@ public class LambdaFactory {
 	 * @param functionInterfaceType 接受Lambda的函数式接口类型
 	 * @param method                方法对象
 	 * @return 接受Lambda的函数式接口对象
+	 * @param <F> Function类型
 	 */
-	public static <F> F build(Class<F> functionInterfaceType, Method method) {
+	public static <F> F build(final Class<F> functionInterfaceType, final Method method) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(method);
-		MutableEntry<Class<?>, Method> cacheKey = new MutableEntry<>(functionInterfaceType, method);
+		final MutableEntry<Class<?>, Method> cacheKey = new MutableEntry<>(functionInterfaceType, method);
 		//noinspection unchecked
 		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
-			List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
+			final List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
 					.filter(m -> Modifier.isAbstract(m.getModifiers()))
 					.collect(Collectors.toList());
 			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
 			if (!method.isAccessible()) {
 				method.setAccessible(true);
 			}
-			Method invokeMethod = abstractMethods.get(0);
-			MethodHandles.Lookup caller = LookupFactory.lookup(method.getDeclaringClass());
-			String invokeName = invokeMethod.getName();
-			MethodType invokedType = methodType(functionInterfaceType);
-			MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
-			MethodHandle implMethod = Opt.ofTry(() -> caller.unreflect(method)).get();
-			MethodType insMethodType = methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
-			boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
+			final Method invokeMethod = abstractMethods.get(0);
+			final MethodHandles.Lookup caller = LookupFactory.lookup(method.getDeclaringClass());
+			final String invokeName = invokeMethod.getName();
+			final MethodType invokedType = methodType(functionInterfaceType);
+			final MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
+			final MethodHandle implMethod = Opt.ofTry(() -> caller.unreflect(method)).get();
+			final MethodType insMethodType = methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
+			final boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
 			try {
-				CallSite callSite = isSerializable ?
+				final CallSite callSite = isSerializable ?
 						LambdaMetafactory.altMetafactory(
 								caller,
 								invokeName,
@@ -103,8 +105,9 @@ public class LambdaFactory {
 								implMethod,
 								insMethodType
 						);
+				//noinspection unchecked
 				return (F) callSite.getTarget().invoke();
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				throw new UtilException(e);
 			}
 		});

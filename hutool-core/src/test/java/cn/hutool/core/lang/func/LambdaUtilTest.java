@@ -144,7 +144,7 @@ public class LambdaUtilTest {
 			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 数组测试
-			final SerConsumer<String[]> lambda = (String[] stringList) -> {
+			final SerConsumer<String[]> lambda = (final String[] stringList) -> {
 			};
 			Assert.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
 		}).forEach(Runnable::run);
@@ -152,11 +152,11 @@ public class LambdaUtilTest {
 
 	@Test
 	public void getterTest() {
-		Bean bean = new Bean();
+		final Bean bean = new Bean();
 		bean.setId(2L);
 
-		Function<Bean, Long> getId = LambdaUtil.buildGetter(MethodUtil.getMethod(Bean.class, "getId"));
-		Function<Bean, Long> getId2 = LambdaUtil.buildGetter(Bean.class, Bean.Fields.id);
+		final Function<Bean, Long> getId = LambdaUtil.buildGetter(MethodUtil.getMethod(Bean.class, "getId"));
+		final Function<Bean, Long> getId2 = LambdaUtil.buildGetter(Bean.class, Bean.Fields.id);
 
 		Assert.assertEquals(getId, getId2);
 		Assert.assertEquals(bean.getId(), getId.apply(bean));
@@ -164,13 +164,13 @@ public class LambdaUtilTest {
 
 	@Test
 	public void setterTest() {
-		Bean bean = new Bean();
+		final Bean bean = new Bean();
 		bean.setId(2L);
 		bean.setFlag(false);
 
-		BiConsumer<Bean, Long> setId = LambdaUtil.buildSetter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
-		BiConsumer<Bean, Long> setId2 = LambdaUtil.buildSetter(Bean.class, Bean.Fields.id);
-		BiConsumer<Bean, Boolean> setFlag = LambdaUtil.buildSetter(Bean.class, Bean.Fields.flag);
+		final BiConsumer<Bean, Long> setId = LambdaUtil.buildSetter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
+		final BiConsumer<Bean, Long> setId2 = LambdaUtil.buildSetter(Bean.class, Bean.Fields.id);
+		final BiConsumer<Bean, Boolean> setFlag = LambdaUtil.buildSetter(Bean.class, Bean.Fields.flag);
 		Assert.assertEquals(setId, setId2);
 
 		setId.accept(bean, 3L);
@@ -181,12 +181,12 @@ public class LambdaUtilTest {
 
 	@Test
 	public void lambdaTest() {
-		Bean bean = new Bean();
+		final Bean bean = new Bean();
 		bean.setId(1L);
 		bean.setPid(0L);
 		bean.setFlag(true);
-		BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.build(BiFunction.class, Bean.class, "uniqueKey", String.class);
-		Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.build(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
+		final BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.build(BiFunction.class, Bean.class, "uniqueKey", String.class);
+		final Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.build(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
 		Assert.assertEquals(bean.uniqueKey("test"), uniqueKeyFunction.apply(bean, "test"));
 		Assert.assertEquals(bean.params("test", 1, 0.5), paramsFunction.apply(bean, "test", 1, 0.5));
 	}
@@ -203,11 +203,11 @@ public class LambdaUtilTest {
 		Long pid;
 		boolean flag;
 
-		private Tuple uniqueKey(String name) {
+		private Tuple uniqueKey(final String name) {
 			return new Tuple(id, pid, flag, name);
 		}
 
-		public Tuple params(String name, Integer length, Double score) {
+		public Tuple params(final String name, final Integer length, final Double score) {
 			return new Tuple(name, length, score);
 		}
 

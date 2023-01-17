@@ -1,7 +1,6 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.MethodHandleUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -12,7 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.lang.invoke.*;
+import java.lang.invoke.LambdaConversionException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandleProxies;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,25 +34,25 @@ public class LambdaFactoryTest {
 	public void testMethodNotMatch() {
 		try {
 			LambdaFactory.build(Function.class, Something.class, "setId", Long.class);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Assert.assertTrue(e.getCause() instanceof LambdaConversionException);
 		}
 	}
 
 	@Test
 	public void buildLambdaTest() {
-		Something something = new Something();
+		final Something something = new Something();
 		something.setId(1L);
 		something.setName("name");
 
-		Function<Something, Long> get11 = LambdaFactory.build(Function.class, Something.class, "getId");
-		Function<Something, Long> get12 = LambdaFactory.build(Function.class, Something.class, "getId");
+		final Function<Something, Long> get11 = LambdaFactory.build(Function.class, Something.class, "getId");
+		final Function<Something, Long> get12 = LambdaFactory.build(Function.class, Something.class, "getId");
 
 		Assert.assertEquals(get11, get12);
 		Assert.assertEquals(something.getId(), get11.apply(something));
 
-		String name = "sname";
-		BiConsumer<Something, String> set = LambdaFactory.build(BiConsumer.class, Something.class, "setName", String.class);
+		final String name = "sname";
+		final BiConsumer<Something, String> set = LambdaFactory.build(BiConsumer.class, Something.class, "setName", String.class);
 		set.accept(something, name);
 
 		Assert.assertEquals(something.getName(), name);
@@ -136,19 +139,19 @@ public class LambdaFactoryTest {
 		@Test
 		@SneakyThrows
 		public void lambdaGetPerformanceTest() {
-			Something something = new Something();
+			final Something something = new Something();
 			something.setId(1L);
 			something.setName("name");
-			Method getByReflect = Something.class.getMethod("getId");
-			MethodHandle getByMh = MethodHandleUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
-			Function getByProxy = MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.lookup().unreflect(getByReflect));
-			Function getByLambda = LambdaFactory.build(Function.class, getByReflect);
-			Task lambdaTask = new Task("lambda", () -> getByLambda.apply(something));
-			Task mhTask = new Task("mh", () -> getByMh.invoke(something));
-			Task proxyTask = new Task("proxy", () -> getByProxy.apply(something));
-			Task reflectTask = new Task("reflect", () -> getByReflect.invoke(something));
-			Task hardCodeTask = new Task("hardCode", () -> something.getId());
-			Task[] tasks = {hardCodeTask, lambdaTask, mhTask, proxyTask, reflectTask};
+			final Method getByReflect = Something.class.getMethod("getId");
+			final MethodHandle getByMh = MethodHandleUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
+			final Function getByProxy = MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.lookup().unreflect(getByReflect));
+			final Function getByLambda = LambdaFactory.build(Function.class, getByReflect);
+			final Task lambdaTask = new Task("lambda", () -> getByLambda.apply(something));
+			final Task mhTask = new Task("mh", () -> getByMh.invoke(something));
+			final Task proxyTask = new Task("proxy", () -> getByProxy.apply(something));
+			final Task reflectTask = new Task("reflect", () -> getByReflect.invoke(something));
+			final Task hardCodeTask = new Task("hardCode", () -> something.getId());
+			final Task[] tasks = {hardCodeTask, lambdaTask, mhTask, proxyTask, reflectTask};
 			loop(count, tasks);
 		}
 
@@ -211,43 +214,43 @@ public class LambdaFactoryTest {
 		@Test
 		@SneakyThrows
 		public void lambdaSetPerformanceTest() {
-			Something something = new Something();
+			final Something something = new Something();
 			something.setId(1L);
 			something.setName("name");
-			Method setByReflect = Something.class.getMethod("setName", String.class);
-			MethodHandle setByMh = MethodHandleUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
-			BiConsumer setByProxy = MethodHandleProxies.asInterfaceInstance(BiConsumer.class, setByMh);
-			BiConsumer setByLambda = LambdaFactory.build(BiConsumer.class, setByReflect);
-			String name = "name1";
-			Task lambdaTask = new Task("lambda", () -> {
+			final Method setByReflect = Something.class.getMethod("setName", String.class);
+			final MethodHandle setByMh = MethodHandleUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
+			final BiConsumer setByProxy = MethodHandleProxies.asInterfaceInstance(BiConsumer.class, setByMh);
+			final BiConsumer setByLambda = LambdaFactory.build(BiConsumer.class, setByReflect);
+			final String name = "name1";
+			final Task lambdaTask = new Task("lambda", () -> {
 				setByLambda.accept(something, name);
 				return null;
 			});
-			Task proxyTask = new Task("proxy", () -> {
+			final Task proxyTask = new Task("proxy", () -> {
 				setByProxy.accept(something, name);
 				return null;
 			});
-			Task mhTask = new Task("mh", () -> {
+			final Task mhTask = new Task("mh", () -> {
 				setByMh.invoke(something, name);
 				return null;
 			});
-			Task reflectTask = new Task("reflect", () -> {
+			final Task reflectTask = new Task("reflect", () -> {
 				setByReflect.invoke(something, name);
 				return null;
 			});
-			Task hardCodeTask = new Task("hardCode", () -> {
+			final Task hardCodeTask = new Task("hardCode", () -> {
 				something.setName(name);
 				return null;
 			});
-			Task[] tasks = {hardCodeTask, lambdaTask, proxyTask, mhTask, reflectTask};
+			final Task[] tasks = {hardCodeTask, lambdaTask, proxyTask, mhTask, reflectTask};
 			loop(count, tasks);
 		}
 
 		@SneakyThrows
-		private void loop(int count, Task... tasks) {
+		private void loop(final int count, final Task... tasks) {
 			Arrays.stream(tasks)
 					.peek(task -> {
-						LambdaFactoryTest.SupplierThrowable runnable = task.getRunnable();
+						final LambdaFactoryTest.SupplierThrowable runnable = task.getRunnable();
 						long cost = System.nanoTime();
 						for (int i = 0; i < count; i++) {
 							runnable.get();
@@ -271,13 +274,13 @@ public class LambdaFactoryTest {
 			@Setter
 			private Integer count;
 
-			public Task(String name, LambdaFactoryTest.SupplierThrowable<?> runnable) {
+			public Task(final String name, final LambdaFactoryTest.SupplierThrowable<?> runnable) {
 				this.name = name;
 				this.runnable = runnable;
 			}
 
 			public String format() {
-				TimeUnit timeUnit = TimeUnit.NANOSECONDS;
+				final TimeUnit timeUnit = TimeUnit.NANOSECONDS;
 				return String.format("%-10s 运行%d次耗时 %d %s", name, count, timeUnit.convert(cost, TimeUnit.NANOSECONDS), timeUnit.name());
 			}
 		}
@@ -291,7 +294,7 @@ public class LambdaFactoryTest {
 		default T get() {
 			try {
 				return get0();
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				throw new RuntimeException(e);
 			}
 		}
