@@ -255,7 +255,7 @@ public class ClassScanner implements Serializable {
 		this.classes.clear();
 		this.classesOfLoadError.clear();
 
-		for (URL url : ResourceUtil.getResourceIter(this.packagePath)) {
+		for (URL url : ResourceUtil.getResourceIter(this.packagePath, this.classLoader)) {
 			switch (url.getProtocol()) {
 				case "file":
 					scanFile(new File(URLUtil.decode(url.getFile(), this.charset.name())), null);
