@@ -73,21 +73,18 @@ public class ExcelUtilTest {
 	}
 
 	@Test
-	public void readBySaxTest() {
+	public void doAfterAllAnalysedTest() {
 		String path = "readBySax.xls";
-		AtomicInteger assertRowNum = new AtomicInteger(0);
 		try{
-			ExcelUtil.readBySax(path, 0, new RowHandler() {
+			ExcelUtil.readBySax(path, -1, new RowHandler() {
 				@Override
 				public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
 					System.out.println(StrUtil.format("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells));
-					assertRowNum.addAndGet(1);
 				}
 			});
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
-		//Assert.assertEquals(3, assertRowNum.intValue());
 	}
 
 }

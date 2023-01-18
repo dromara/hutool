@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.StaticLog;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.hssf.eventusermodel.EventWorkbookBuilder.SheetRecordCollectingListener;
@@ -349,11 +350,8 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * @param lastCell 行结束的标识Record
 	 */
 	private void processLastCell(LastCellOfRowDummyRecord lastCell) {
-//		if(CollUtil.isNotBlank(this.rowCellList)) {
-			//整行内容全为空时，表示该行是空白行，不执行每行结束的handle.
-			// 每行结束时， 调用handle() 方法
-			this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
-//		}
+		// 每行结束时， 调用handle() 方法
+		this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
 		// 清空行Cache
 		this.rowCellList = new ArrayList<>(this.rowCellList.size());
 	}
@@ -362,7 +360,6 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * 处理sheet结束后的操作
 	 */
 	private void processLastCellSheet(){
-		System.out.println("processLastCellSheet：rid="+rid+", curId="+curRid+",sheetName="+sheetName);
 		this.rowHandler.doAfterAllAnalysed();
 	}
 
