@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,16 +76,24 @@ public class ExcelUtilTest {
 	@Test
 	public void doAfterAllAnalysedTest() {
 		String path = "readBySax.xls";
+		AtomicInteger doAfterAllAnalysedTime = new AtomicInteger(0);
 		try{
 			ExcelUtil.readBySax(path, -1, new RowHandler() {
 				@Override
 				public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
 					System.out.println(StrUtil.format("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells));
 				}
+
+				@Override
+				public void doAfterAllAnalysed() {
+					doAfterAllAnalysedTime.addAndGet(1);
+				}
 			});
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
+		//总共2个sheet页，读取所有sheet时，一共执行doAfterAllAnalysed2次。
+		Assert.assertEquals(2, doAfterAllAnalysedTime.intValue());
 	}
 
 }
