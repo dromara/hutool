@@ -218,7 +218,10 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			if(this.rid < 0 && null != this.sheetName){
 				throw new POIException("Sheet [{}] not exist!", this.sheetName);
 			}
-			processLastCellSheet();
+			if(this.curRid != -1 && isProcessCurrentSheet()) {
+				//只有在当前指定的sheet中，才触发结束事件，且curId=-1时也不处理，避免重复调用
+				processLastCellSheet();
+			}
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
 				// 空值的操作
@@ -346,11 +349,11 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * @param lastCell 行结束的标识Record
 	 */
 	private void processLastCell(LastCellOfRowDummyRecord lastCell) {
-		if(CollUtil.isNotBlank(this.rowCellList)) {
+//		if(CollUtil.isNotBlank(this.rowCellList)) {
 			//整行内容全为空时，表示该行是空白行，不执行每行结束的handle.
 			// 每行结束时， 调用handle() 方法
 			this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
-		}
+//		}
 		// 清空行Cache
 		this.rowCellList = new ArrayList<>(this.rowCellList.size());
 	}
@@ -359,6 +362,7 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 	 * 处理sheet结束后的操作
 	 */
 	private void processLastCellSheet(){
+		System.out.println("processLastCellSheet：rid="+rid+", curId="+curRid+",sheetName="+sheetName);
 		this.rowHandler.doAfterAllAnalysed();
 	}
 
