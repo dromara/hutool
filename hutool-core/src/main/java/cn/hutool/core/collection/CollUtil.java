@@ -365,11 +365,18 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
 		Collection<T> result = ObjectUtil.clone(coll1);
-		if (null == result) {
-			result = CollUtil.create(coll1.getClass());
+		try {
+			if (null == result) {
+				result = CollUtil.create(coll1.getClass());
+				result.addAll(coll1);
+			}
+			result.removeAll(coll2);
+		} catch (UnsupportedOperationException e){
+			// 针对 coll1 为只读集合的补偿
+			result = CollUtil.create(AbstractCollection.class);
 			result.addAll(coll1);
+			result.removeAll(coll2);
 		}
-		result.removeAll(coll2);
 		return result;
 	}
 
