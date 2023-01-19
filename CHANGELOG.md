@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-# 5.8.12.M1 (2023-01-17)
+# 5.8.12.M1 (2023-01-19)
 
 ### 🐣新特性
 * 【core  】      XmlUtil.readObjectFromXml增加注入漏洞的警告注释，并标识为废弃（issue#2857@Github）
@@ -14,6 +14,7 @@
 * 【http  】      HttpUtil.decodeParams增加isFormUrlEncoded重载（pr#918@Gitee）
 * 【db    】      AbstractDb添加返回类型为PageResult的page重载方法（pr#916@Gitee）
 * 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
+* 【core  】      针对CollUtil.subtract coll1 为只读集合的补偿（pr#2865@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
