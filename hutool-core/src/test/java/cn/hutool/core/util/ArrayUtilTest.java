@@ -636,4 +636,41 @@ public class ArrayUtilTest {
 		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, -1, 1));
 		Assert.assertArrayEquals(new int[]{2, 3, 4}, ArrayUtil.sub(arr, -4, -1));
 	}
+
+	@Test
+	public void isSortedTest() {
+		final Integer[] a = {1, 1, 2, 2, 2, 3, 3};
+		Assert.assertTrue(ArrayUtil.isSorted(a));
+		Assert.assertTrue(ArrayUtil.isSorted(a, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(a, null));
+
+		final Integer[] b = {1, 1, 1, 1, 1, 1};
+		Assert.assertTrue(ArrayUtil.isSorted(b));
+		Assert.assertTrue(ArrayUtil.isSorted(b, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(a, null));
+
+		final Integer[] c = {3, 3, 2, 2, 2, 1, 1};
+		Assert.assertTrue(ArrayUtil.isSorted(c));
+		Assert.assertTrue(ArrayUtil.isSorted(c, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(a, null));
+
+		Assert.assertFalse(ArrayUtil.isSorted(null));
+		Assert.assertFalse(ArrayUtil.isSorted(null, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(null, null));
+
+		final Integer[] d = {};
+		Assert.assertFalse(ArrayUtil.isSorted(d));
+		Assert.assertFalse(ArrayUtil.isSorted(d, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(d, null));
+
+		final Integer[] e = {1};
+		Assert.assertTrue(ArrayUtil.isSorted(e));
+		Assert.assertTrue(ArrayUtil.isSorted(e, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(e, null));
+
+		final Integer[] f = {1, 2};
+		Assert.assertTrue(ArrayUtil.isSorted(f));
+		Assert.assertTrue(ArrayUtil.isSorted(f, Integer::compareTo));
+		Assert.assertFalse(ArrayUtil.isSorted(f, null));
+	}
 }
