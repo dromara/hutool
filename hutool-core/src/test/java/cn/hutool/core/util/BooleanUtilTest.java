@@ -37,7 +37,16 @@ public class BooleanUtilTest {
 	@Test
 	public void xorTest() {
 		Assert.assertTrue(BooleanUtil.xor(true, false));
+		Assert.assertTrue(BooleanUtil.xor(true, true, true));
+		Assert.assertFalse(BooleanUtil.xor(true, true, false));
+		Assert.assertTrue(BooleanUtil.xor(true, false, false));
+		Assert.assertFalse(BooleanUtil.xor(false, false, false));
+
 		Assert.assertTrue(BooleanUtil.xorOfWrap(true, false));
+		Assert.assertTrue(BooleanUtil.xorOfWrap(true, true, true));
+		Assert.assertFalse(BooleanUtil.xorOfWrap(true, true, false));
+		Assert.assertTrue(BooleanUtil.xorOfWrap(true, false, false));
+		Assert.assertFalse(BooleanUtil.xorOfWrap(false, false, false));
 	}
 
 	@SuppressWarnings("ConstantConditions")
