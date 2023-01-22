@@ -314,8 +314,8 @@ public class ClassUtil {
 	 * @since 3.2.1
 	 */
 	public static String getClassPath(final boolean isEncoded) {
-		final URL classPathURL = ResourceUtil.getResourceUrl(StrUtil.EMPTY);
-		final String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
+		final URL classPathUrl = ResourceUtil.getResourceUrl(StrUtil.EMPTY);
+		final String url = isEncoded ? classPathUrl.getPath() : URLUtil.getDecodedPath(classPathUrl);
 		return FileUtil.normalize(url);
 	}
 
@@ -379,11 +379,11 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 是否简单值类型或简单值类型的数组<br>
-	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class及其数组
+	 * 是否为 简单值类型 或 简单值类型的数组<br>
 	 *
 	 * @param clazz 属性类
-	 * @return 是否简单值类型或简单值类型的数组
+	 * @return 是否为 简单值类型 或 简单值类型的数组
+	 * @see #isSimpleValueType(Class)
 	 */
 	public static boolean isSimpleTypeOrArray(final Class<?> clazz) {
 		if (null == clazz) {
@@ -397,6 +397,7 @@ public class ClassUtil {
 	 * 包括：
 	 * <pre>
 	 *     原始类型
+	 *     枚举
 	 *     String、other CharSequence
 	 *     Number
 	 *     Date
@@ -404,23 +405,24 @@ public class ClassUtil {
 	 *     URL
 	 *     Locale
 	 *     Class
+	 *     jdk8时间相关类型
 	 * </pre>
 	 *
 	 * @param clazz 类
 	 * @return 是否为简单值类型
 	 */
 	public static boolean isSimpleValueType(final Class<?> clazz) {
-		return isBasicType(clazz) //
-				|| clazz.isEnum() //
-				|| CharSequence.class.isAssignableFrom(clazz) //
-				|| Number.class.isAssignableFrom(clazz) //
-				|| Date.class.isAssignableFrom(clazz) //
-				|| clazz.equals(URI.class) //
-				|| clazz.equals(URL.class) //
-				|| clazz.equals(Locale.class) //
-				|| clazz.equals(Class.class)//
+		return isBasicType(clazz)
+				|| clazz.isEnum()
+				|| CharSequence.class.isAssignableFrom(clazz)
+				|| Number.class.isAssignableFrom(clazz)
+				|| Date.class.isAssignableFrom(clazz)
+				|| clazz.equals(URI.class)
+				|| clazz.equals(URL.class)
+				|| clazz.equals(Locale.class)
+				|| clazz.equals(Class.class)
 				// jdk8 date object
-				|| TemporalAccessor.class.isAssignableFrom(clazz); //
+				|| TemporalAccessor.class.isAssignableFrom(clazz);
 	}
 
 	/**
@@ -472,14 +474,14 @@ public class ClassUtil {
 	 * @return 是否为标准类
 	 */
 	public static boolean isNormalClass(final Class<?> clazz) {
-		return null != clazz //
-				&& false == clazz.isInterface() //
-				&& false == ModifierUtil.isAbstract(clazz) //
-				&& false == clazz.isEnum() //
-				&& false == clazz.isArray() //
-				&& false == clazz.isAnnotation() //
-				&& false == clazz.isSynthetic() //
-				&& false == clazz.isPrimitive();//
+		return null != clazz
+				&& false == clazz.isInterface()
+				&& false == ModifierUtil.isAbstract(clazz)
+				&& false == clazz.isEnum()
+				&& false == clazz.isArray()
+				&& false == clazz.isAnnotation()
+				&& false == clazz.isSynthetic()
+				&& false == clazz.isPrimitive();
 	}
 
 	/**
@@ -635,8 +637,8 @@ public class ClassUtil {
 			return false;
 		}
 		final String objectPackageName = objectPackage.getName();
-		return objectPackageName.startsWith("java.") //
-				|| objectPackageName.startsWith("javax.") //
+		return objectPackageName.startsWith("java.")
+				|| objectPackageName.startsWith("javax.")
 				|| clazz.getClassLoader() == null;
 	}
 

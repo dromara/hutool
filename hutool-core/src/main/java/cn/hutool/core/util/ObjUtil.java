@@ -88,10 +88,9 @@ public class ObjUtil {
 			return ((Map<?, ?>) obj).size();
 		}
 
-		int count;
+		int count = 0;
 		if (obj instanceof Iterator || obj instanceof Iterable) {
 			final Iterator<?> iter = (obj instanceof Iterator) ? (Iterator<?>) obj : ((Iterable<?>) obj).iterator();
-			count = 0;
 			while (iter.hasNext()) {
 				count++;
 				iter.next();
@@ -103,7 +102,6 @@ public class ObjUtil {
 		}
 		if (obj instanceof Enumeration) {
 			final Enumeration<?> enumeration = (Enumeration<?>) obj;
-			count = 0;
 			while (enumeration.hasMoreElements()) {
 				count++;
 				enumeration.nextElement();
@@ -194,7 +192,7 @@ public class ObjUtil {
 	 * 检查对象是否不为{@code null}
 	 *
 	 * @param obj 对象
-	 * @return 是否为null
+	 * @return 是否不为null
 	 */
 	public static boolean isNotNull(final Object obj) {
 		return null != obj;
@@ -249,7 +247,7 @@ public class ObjUtil {
 	 * 判断指定对象是否为非空
 	 *
 	 * @param obj 被判断的对象
-	 * @return 是否为空，如果类型不支持，返回true
+	 * @return 是否不为空，如果类型不支持，返回true
 	 * @since 4.5.7
 	 * @see #isEmpty(Object)
 	 */
@@ -270,7 +268,7 @@ public class ObjUtil {
 	 * @param <T>          对象类型
 	 * @param object       被检查对象，可能为{@code null}
 	 * @param defaultValue 被检查对象为{@code null}返回的默认值，可以为{@code null}
-	 * @return 被检查对象为{@code null}返回默认值，否则返回原值
+	 * @return 被检查对象不为 {@code null} 返回原值，否则返回默认值
 	 * @since 3.0.7
 	 */
 	public static <T> T defaultIfNull(final T object, final T defaultValue) {
@@ -278,12 +276,12 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
+	 * 如果给定对象不为{@code null} 返回原值, 否则返回 {@link Supplier#get()} 提供的默认值
 	 *
-	 * @param <T>          被检查对象类型
-	 * @param source       Object 类型对象
-	 * @param defaultSupplier 默认为空的处理逻辑
-	 * @return 处理后的返回值
+	 * @param <T>             被检查对象类型
+	 * @param source          被检查对象，可能为{@code null}
+	 * @param defaultSupplier 为空时的默认值提供者
+	 * @return 被检查对象不为 {@code null} 返回原值，否则返回 {@link Supplier#get()} 提供的默认值
 	 * @since 5.4.6
 	 */
 	public static <T> T defaultIfNull(final T source, final Supplier<? extends T> defaultSupplier) {
@@ -294,14 +292,14 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 如果给定对象为{@code null} 返回默认值, 如果不为null 返回自定义handle处理后的返回值
+	 * 如果给定对象不为{@code null} 返回自定义handler处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
 	 *
-	 * @param <R>          返回值类型
-	 * @param <T>          被检查对象类型
-	 * @param source       Object 类型对象
-	 * @param handler      非空时自定义的处理方法
-	 * @param defaultSupplier 默认为空的处理逻辑
-	 * @return 处理后的返回值
+	 * @param <R>             返回值类型
+	 * @param <T>             被检查对象类型
+	 * @param source          被检查对象，可能为{@code null}
+	 * @param handler         非空时自定义的处理方法
+	 * @param defaultSupplier 为空时的默认值提供者
+	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回 {@link Supplier#get()} 提供的默认值
 	 * @since 6.0.0
 	 */
 	public static <T, R> R defaultIfNull(final T source, final Function<? super T, ? extends R> handler, final Supplier<? extends R> defaultSupplier) {
@@ -312,14 +310,14 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 如果给定对象为{@code null}返回默认值, 如果不为null返回自定义handle处理后的返回值
+	 * 如果给定对象不为{@code null} 返回自定义handler处理后的结果，否则返回默认值
 	 *
 	 * @param <R>          返回值类型
 	 * @param <T>          被检查对象类型
-	 * @param source       Object 类型对象
+	 * @param source       被检查对象，可能为{@code null}
 	 * @param handler      非空时自定义的处理方法
-	 * @param defaultValue 默认为空的返回值
-	 * @return 处理后的返回值
+	 * @param defaultValue 为空时的默认返回值
+	 * @return 被检查对象不为 {@code null} 返回处理后的结果，否则返回默认值
 	 * @since 6.0.0
 	 */
 	public static <T, R> R defaultIfNull(
@@ -331,7 +329,7 @@ public class ObjUtil {
 	 * <p>克隆对象
 	 * <ol>
 	 *     <li>如果对象是数组，则等同于{@link ArrayUtil#clone(Object)}；</li>
-	 *     <li>如果对象实现了{@link Cloneable}接口，调用其{@code Cloneable#clone()}方法；</li>
+	 *     <li>如果对象实现了{@link Cloneable}接口，调用 {@link Object#clone()}方法；</li>
 	 *     <li>如果对象实现了{@link Serializable}接口，执行深度克隆；</li>
 	 *     <li>不符合上述任意情况则返回{@code null}；</li>
 	 * </ol>
@@ -360,7 +358,7 @@ public class ObjUtil {
 	 *
 	 * @param <T> 对象类型
 	 * @param obj 对象
-	 * @return 克隆后或原对象
+	 * @return 克隆对象或原对象
 	 * @see #clone(Object)
 	 */
 	public static <T> T cloneIfPossible(final T obj) {
@@ -375,7 +373,7 @@ public class ObjUtil {
 
 	/**
 	 * 序列化后拷贝流的方式克隆<br>
-	 * 若对象未实现{@link Serializable}接口则默认返回{@code null}
+	 * 若对象未实现{@link Serializable}接口，则返回{@code null}
 	 *
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
@@ -388,7 +386,7 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 是否为基本类型，包括包装类型和非包装类型
+	 * 是否为基本类型，包括包装类型和原始类型
 	 *
 	 * @param object 被检查对象，{@code null}返回{@code false}
 	 * @return 是否为基本类型
@@ -402,14 +400,15 @@ public class ObjUtil {
 	}
 
 	/**
-	 * 检查是否为有效的数字，若对象不为{@link Number}，则直接返回{@code true}，否则：
+	 * 是否为有效的数字，主要用于检查浮点数是否为有意义的数值<br>
+	 * 若对象不为{@link Number}类型，则直接返回{@code true}，否则：
 	 * <ul>
 	 *     <li>若对象类型为{@link Double}，则检查{@link Double#isInfinite()}或{@link Double#isNaN()}；</li>
 	 *     <li>若对象类型为{@link Float}，则检查{@link Float#isInfinite()}或{@link Float#isNaN()}；</li>
 	 * </ul>
 	 *
-	 * @param obj 被检查类型
-	 * @return 检查结果，非数字类型和Null将返回true
+	 * @param obj 被检查对象
+	 * @return 检查结果，非数字类型和{@code null}将返回{@code true}
 	 * @see NumberUtil#isValidNumber(Number)
 	 */
 	public static boolean isValidIfNumber(final Object obj) {
@@ -420,13 +419,13 @@ public class ObjUtil {
 	}
 
 	/**
-	 * {@code null}安全的对象比较，{@code null}对象排在末尾
+	 * {@code null}安全的对象比较，{@code null}对象小于其他对象
 	 *
 	 * @param <T> 被比较对象类型
 	 * @param c1  对象1，可以为{@code null}
 	 * @param c2  对象2，可以为{@code null}
-	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
-	 * @see java.util.Comparator#compare(Object, Object)
+	 * @return 比较结果，如果{@code c1 < c2}，则返回值小于0，{@code c1 == c2} 返回0，{@code c1 > c2} 则返回值大于0
+	 * @see CompareUtil#compare(Comparable, Comparable)
 	 * @since 3.0.7
 	 */
 	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2) {
@@ -439,9 +438,9 @@ public class ObjUtil {
 	 * @param <T>         被比较对象类型
 	 * @param c1          对象1，可以为{@code null}
 	 * @param c2          对象2，可以为{@code null}
-	 * @param nullGreater 当被比较对象为null时是否排在前面
-	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
-	 * @see java.util.Comparator#compare(Object, Object)
+	 * @param nullGreater {@code null}对象是否大于其他对象
+	 * @return 比较结果，如果{@code c1 < c2}，则返回值小于0，{@code c1 == c2} 返回0，{@code c1 > c2} 则返回值大于0
+	 * @see CompareUtil#compare(Comparable, Comparable, boolean)
 	 * @since 3.0.7
 	 */
 	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2, final boolean nullGreater) {
@@ -451,7 +450,7 @@ public class ObjUtil {
 	/**
 	 * 获得给定类的第一个泛型参数
 	 *
-	 * @param obj 被检查的对象
+	 * @param obj 被检查的实体对象
 	 * @return {@link Class}
 	 * @since 3.0.8
 	 */
@@ -462,10 +461,11 @@ public class ObjUtil {
 	/**
 	 * 获得给定类指定下标的泛型参数
 	 *
-	 * @param obj   被检查的对象
+	 * @param obj   被检查的实体对象
 	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Class}
 	 * @since 3.0.8
+	 * @see ClassUtil#getTypeArgument(Class, int)
 	 */
 	public static Class<?> getTypeArgument(final Object obj, final int index) {
 		return ClassUtil.getTypeArgument(obj.getClass(), index);
@@ -475,7 +475,7 @@ public class ObjUtil {
 	 * <p>将对象转为字符串
 	 * <ul>
 	 *     <li>若对象为{@code null}，则返回“null”；</li>
-	 *     <li>若对象为{@link Map}，则返回{@code Map#toString()}；</li>
+	 *     <li>若对象为{@link Map}，则返回{@code Map.toString()}；</li>
 	 *     <li>若对象为其他类型，则调用{@link Convert#toStr(Object)}进行转换；</li>
 	 * </ul>
 	 *
