@@ -32,7 +32,7 @@ public class StrTemplate {
 	/**
 	 * 私有构造方法，只能通过 getInstance 方法来获取实例
 	 **/
-	private StrTemplate() {
+	private StrTemplate(){
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class StrTemplate {
 	 * @param prefix 参数起始标志前缀
 	 * @param suffix 参数结束标志后缀
 	 */
-	private StrTemplate(String prefix, String suffix) {
+	private StrTemplate(String prefix, String suffix){
 		DEFAULT_PREFIX = prefix;
 		DEFAULT_SUFFIX = suffix;
 	}
@@ -52,7 +52,7 @@ public class StrTemplate {
 	 * @param prefix 参数起始标志前缀
 	 * @param suffix 参数结束标志后缀
 	 */
-	public synchronized static StrTemplate getInstance(String prefix, String suffix) {
+	public synchronized static StrTemplate getInstance(String prefix, String suffix){
 		if (null == template) {
 			template = new StrTemplate(prefix, suffix);
 		} else if (!DEFAULT_PREFIX.equals(prefix)) {
@@ -66,7 +66,7 @@ public class StrTemplate {
 	/**
 	 * 通过 getInstance 方法来获取实例，不带参数即默认使用 {  } 作为参数标志
 	 */
-	public synchronized static StrTemplate getInstance() {
+	public synchronized static StrTemplate getInstance(){
 		if (null == template) {
 			template = new StrTemplate();
 		}
@@ -79,12 +79,12 @@ public class StrTemplate {
 	 * template: I say {0} {1} to the {1} 或 I say {} {} to the {}<br>
 	 * args: ["hello","world"]<br>
 	 *
-	 * @param template   文本模板，被替换的部分用 {index} 表示
-	 * @param args       参数数组
+	 * @param template 文本模板，被替换的部分用 {index} 表示
+	 * @param args     参数数组
 	 * @return 格式化后的文本
 	 * @since 5.8.12
 	 */
-	public String format(CharSequence template, Object... args) {
+	public String format(CharSequence template, Object... args){
 		if (null == template || template.length() == 0) {
 			return null;
 		}
@@ -99,7 +99,7 @@ public class StrTemplate {
 			}
 			tE = templateStr.indexOf(DEFAULT_SUFFIX, tS);
 			String substring = templateStr.substring(tS + DEFAULT_PREFIX.length(), tE);
-			if(StrUtil.isNotEmpty(substring)){
+			if (StrUtil.isNotEmpty(substring)) {
 				index = Integer.parseInt(substring);
 			}
 
@@ -122,7 +122,7 @@ public class StrTemplate {
 	 * @return 格式化后的文本
 	 * @since 5.8.12
 	 */
-	public String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
+	public String format(CharSequence template, Map<?, ?> map, boolean ignoreNull){
 
 		if (null == template || template.length() == 0) {
 			return null;
@@ -139,10 +139,10 @@ public class StrTemplate {
 			String name = templateStr.substring(tS + DEFAULT_PREFIX.length(), tE);
 			String patton = templateStr.substring(tS, tE + DEFAULT_SUFFIX.length());
 			Object value = map.get(name);
-			if(ignoreNull && null == value ){
+			if (ignoreNull && null == value) {
 				value = "";
 			}
-			if(!ignoreNull && null == value){
+			if (!ignoreNull && null == value) {
 				tE = tS + templateStr.length();
 				continue;
 			}
@@ -167,7 +167,7 @@ public class StrTemplate {
 	 * @return 解析对应的参数Map
 	 * @since 5.8.12
 	 */
-	public Map<String, String> parse(String template, String formatStr) {
+	public Map<String, String> parse(String template, String formatStr){
 
 		Map<String, String> result = new HashMap<>();
 		int indexT = 0;
