@@ -114,6 +114,21 @@ public class StrTemplate {
 
 	/**
 	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue<br>
+	 * 默认忽略null值:即Map中没有的参数或值为null的不会进行替换
+	 *
+	 * @param template 文本模板，被替换的部分用 {key} 表示
+	 * @param map      参数值对
+	 * @return 格式化后的文本
+	 * @since 5.8.12
+	 */
+	public String format(CharSequence template, Map<?, ?> map){
+		return format(template, map, true);
+
+	}
+
+	/**
+	 * 格式化文本，使用 {varName} 占位<br>
 	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
 	 *
 	 * @param template   文本模板，被替换的部分用 {key} 表示
@@ -139,10 +154,10 @@ public class StrTemplate {
 			String name = templateStr.substring(tS + DEFAULT_PREFIX.length(), tE);
 			String patton = templateStr.substring(tS, tE + DEFAULT_SUFFIX.length());
 			Object value = map.get(name);
-			if (ignoreNull && null == value) {
+			if (!ignoreNull && null == value) {
 				value = "";
 			}
-			if (!ignoreNull && null == value) {
+			if (ignoreNull && null == value) {
 				tE = tS + templateStr.length();
 				continue;
 			}
@@ -151,6 +166,23 @@ public class StrTemplate {
 
 		}
 		return templateStr;
+	}
+
+	/**
+	 * 解析格式化后的参数，使用 {@link StrTemplate#DEFAULT_PREFIX} 与 {@link StrTemplate#DEFAULT_SUFFIX} 内字符串 作为参数名<br>
+	 * 将格式化后的字符串按照文本模板解析对应的参数<br>
+	 * 例：<br>
+	 * 通常使用：<br>
+	 * template: siot/sys/{productKey}/{deviceKey}/property/{get}<br>
+	 * formatStr: siot/sys/11/22/property/33<br>
+	 *
+	 * @param template  文本模板，参数名为 {@link StrTemplate#DEFAULT_PREFIX} 与 {@link StrTemplate#DEFAULT_SUFFIX} 内字符串
+	 * @param formatStr 已经完成了字符串参数替换后的文本
+	 * @return 解析对应的参数Map
+	 * @since 5.8.12
+	 */
+	public Map<String, String> parse(CharSequence template, CharSequence formatStr){
+		return parse(template.toString(), formatStr.toString());
 	}
 
 

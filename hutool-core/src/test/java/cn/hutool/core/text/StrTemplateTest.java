@@ -1,5 +1,7 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,12 +52,12 @@ public class StrTemplateTest {
 		Map<String, String> map = new HashMap<>();
 		map.put("param1", "hello");
 		map.put("param2", "world");
-		Assert.assertEquals(strTemplate.format("I/say/{param1}/{param2}/{param3}", map, true), "I/say/hello/world/");
-		Assert.assertEquals(strTemplate.format("I/say/{param1}/{param2}/{param3}", map, false), "I/say/hello/world/{param3}");
+		Assert.assertEquals(strTemplate.format("I/say/{param1}/{param2}/{param3}", map, true), "I/say/hello/world/{param3}");
+		Assert.assertEquals(strTemplate.format("I/say/{param1}/{param2}/{param3}", map, false), "I/say/hello/world/");
 
 		strTemplate = StrTemplate.getInstance("{{", "}}");
-		Assert.assertEquals(strTemplate.format("I/say/{{param1}}/{{param2}}/{{param3}}", map, true), "I/say/hello/world/");
-		Assert.assertEquals(strTemplate.format("I/say/{{param1}}/{{param2}}/{{param3}}", map, false), "I/say/hello/world/{{param3}}");
+		Assert.assertEquals(strTemplate.format("I/say/{{param1}}/{{param2}}/{{param3}}", map, true), "I/say/hello/world/{{param3}}");
+		Assert.assertEquals(strTemplate.format("I/say/{{param1}}/{{param2}}/{{param3}}", map, false), "I/say/hello/world/");
 
 	}
 }
