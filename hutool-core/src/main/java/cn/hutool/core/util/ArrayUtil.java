@@ -215,11 +215,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> int matchIndex(final Predicate<T> matcher, final int beginIndexInclude, final T... array) {
 		if (isNotEmpty(array)) {
-			final int length = array.length;
-			if (null == matcher && beginIndexInclude < length) {
+			if (null == matcher && beginIndexInclude < array.length) {
 				return beginIndexInclude;
 			}
-			for (int i = beginIndexInclude; i < length; i++) {
+			for (int i = beginIndexInclude; i < array.length; i++) {
 				if (matcher.test(array[i])) {
 					return i;
 				}
@@ -1930,23 +1929,58 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	// O(n)时间复杂度检查数组是否有序
 
 	/**
-	 * 检查数组是否按升序排列，即 {@code comparator.compare(array[i], array[i + 1]) <= 0}
-	 * <p>若传入空数组或空比较器，则返回{@code false}</p>
+	 * 检查数组是否有序，升序或者降序，使用指定比较器比较
+	 * <p>若传入空数组或空比较器，则返回{@code false}；元素全部相等，返回 {@code true}</p>
 	 *
-	 * @param array      数组
-	 * @param comparator 比较器
 	 * @param <T>        数组元素类型
-	 * @return 数组是否升序
+	 * @param array      数组
+	 * @param comparator 比较器，需要自己处理null值比较
+	 * @return 数组是否有序
 	 * @since 6.0.0
 	 */
 	public static <T> boolean isSorted(final T[] array, final Comparator<? super T> comparator) {
-		if (array == null || comparator == null) {
+		if (isEmpty(array) || null == comparator) {
 			return false;
 		}
 
 		final int size = array.length - 1;
+		final int cmp = comparator.compare(array[0], array[size]);
+		if (cmp < 0) {
+			return isSortedASC(array, comparator);
+		} else if (cmp > 0) {
+			return isSortedDESC(array, comparator);
+		}
 		for (int i = 0; i < size; i++) {
-			if (comparator.compare(array[i], array[i + 1]) > 0) {
+			if (comparator.compare(array[i], array[i + 1]) != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 检查数组是否有序，升序或者降序
+	 * <p>若传入空数组，则返回{@code false}；元素全部相等，返回 {@code true}</p>
+	 *
+	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
+	 * @param array 数组
+	 * @return 数组是否有序
+	 * @since 6.0.0
+	 * @throws NullPointerException 如果数组元素含有null值
+	 */
+	public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
+		if (isEmpty(array)) {
+			return false;
+		}
+		final int size = array.length - 1;
+		final int cmp = array[0].compareTo(array[size]);
+		if (cmp < 0) {
+			return isSortedASC(array);
+		} else if (cmp > 0) {
+			return isSortedDESC(array);
+		}
+		for (int i = 0; i < size; i++) {
+			if (array[i].compareTo(array[i + 1]) != 0) {
 				return false;
 			}
 		}
@@ -1962,21 +1996,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组是否升序
 	 * @author FengBaoheng
 	 * @since 5.5.2
-	 */
-	public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
-		return isSortedASC(array);
-	}
-
-
-	/**
-	 * 检查数组是否升序，即 {@code array[i].compareTo(array[i + 1]) <= 0}
-	 * <p>若传入空数组，则返回{@code false}</p>
-	 *
-	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
-	 * @param array 数组
-	 * @return 数组是否升序
-	 * @author FengBaoheng
-	 * @since 5.5.2
+	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedASC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2002,6 +2022,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组是否降序
 	 * @author FengBaoheng
 	 * @since 5.5.2
+	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedDESC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2011,6 +2032,56 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		final int size = array.length - 1;
 		for (int i = 0; i < size; i++) {
 			if (array[i].compareTo(array[i + 1]) < 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否升序，使用指定的比较器比较，即 {@code comparator.compare(array[i], array[i + 1]) <= 0}
+	 * <p>若传入空数组或空比较器，则返回{@code false}</p>
+	 *
+	 * @param <T>        数组元素类型
+	 * @param array      数组
+	 * @param comparator 比较器，需要自己处理null值比较
+	 * @return 数组是否升序
+	 * @since 6.0.0
+	 */
+	public static <T> boolean isSortedASC(final T[] array, final Comparator<? super T> comparator) {
+		if (isEmpty(array) || null == comparator) {
+			return false;
+		}
+
+		final int size = array.length - 1;
+		for (int i = 0; i < size; i++) {
+			if (comparator.compare(array[i], array[i + 1]) > 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查数组是否降序，使用指定的比较器比较，即 {@code comparator.compare(array[i], array[i + 1]) >= 0}
+	 * <p>若传入空数组或空比较器，则返回{@code false}</p>
+	 *
+	 * @param <T>        数组元素类型
+	 * @param array      数组
+	 * @param comparator 比较器，需要自己处理null值比较
+	 * @return 数组是否降序
+	 * @since 6.0.0
+	 */
+	public static <T> boolean isSortedDESC(final T[] array, final Comparator<? super T> comparator) {
+		if (isEmpty(array) || null == comparator) {
+			return false;
+		}
+
+		final int size = array.length - 1;
+		for (int i = 0; i < size; i++) {
+			if (comparator.compare(array[i], array[i + 1]) < 0) {
 				return false;
 			}
 		}
