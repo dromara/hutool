@@ -121,6 +121,9 @@ public class DateUtil extends CalendarUtil {
 	 * @since 5.0.0
 	 */
 	public static DateTime date(TemporalAccessor temporalAccessor) {
+		if (temporalAccessor == null) {
+			return null;
+		}
 		return new DateTime(temporalAccessor);
 	}
 
