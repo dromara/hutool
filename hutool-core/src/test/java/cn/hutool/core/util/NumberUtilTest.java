@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 /**
  * {@link NumberUtil} 单元测试类
@@ -347,6 +349,14 @@ public class NumberUtilTest {
 
 		bigDecimal = NumberUtil.toBigDecimal("1,234.56D");
 		Assert.assertEquals("1234.56", bigDecimal.toString());
+	}
+
+	@Test
+	public void issue2878Test() throws ParseException {
+		// https://github.com/dromara/hutool/issues/2878
+		// 当数字中包含一些非数字字符时，按照JDK的规则，不做修改。
+		final BigDecimal bigDecimal = NumberUtil.toBigDecimal("345.sdf");
+		Assert.assertEquals(NumberFormat.getInstance().parse("345.sdf"), bigDecimal.longValue());
 	}
 
 	@Test
