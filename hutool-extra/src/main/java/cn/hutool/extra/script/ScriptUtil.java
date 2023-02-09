@@ -14,7 +14,9 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
- * 脚本工具类
+ * 脚本工具类<br>
+ * 此脚本工具为javax.script的薄封装，脚本执行取决于脚本引擎<br>
+ * 使用此脚本工具用户需要自行检查脚本中可能存在的风险代码，以避免脚本执行漏洞。
  *
  * @author Looly
  */
