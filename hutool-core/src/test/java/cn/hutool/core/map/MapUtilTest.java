@@ -225,6 +225,16 @@ public class MapUtilTest {
 	}
 
 	@Test
+	public void getIntValueTest(){
+		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "1"), MapUtil.entry("b", null));
+		final int a = MapUtil.get(map, "a", int.class);
+		Assert.assertEquals(1, a);
+
+		final int b = MapUtil.getInt(map, "b", 0);
+		Assert.assertEquals(0, b);
+	}
+
+	@Test
 	public void valuesOfKeysTest() {
 		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", 23);
 		final Dict v2 = Dict.of().set("age", 13).set("id", 15).set("name", "李四");
