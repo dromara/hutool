@@ -18,6 +18,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Excel sax方式读取
@@ -133,13 +134,12 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
 	public void handle03CellTest() {
-		ExcelUtil.readBySax("d:/test/test.xls", -1, new RowHandler() {
+		ExcelUtil.readBySax("test.xls", -1, new RowHandler() {
 
 					@Override
 					public void handleCell(final int sheetIndex, final long rowIndex, final int cellIndex, final Object value, final CellStyle xssfCellStyle) {
-						Console.log("{} {} {}", rowIndex, cellIndex, value);
+						//Console.log("{} {} {}", rowIndex, cellIndex, value);
 					}
 
 					@Override
@@ -153,9 +153,9 @@ public class ExcelSaxReadTest {
 	public void formulaRead03Test() {
 		final List<Object> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xls", -1, (i, i1, list) -> {
-			if(list.size() > 1){
+			if (list.size() > 1) {
 				rows.add(list.get(1));
-			} else{
+			} else {
 				rows.add("");
 			}
 		});
@@ -220,8 +220,27 @@ public class ExcelSaxReadTest {
 
 	@Test
 	@Ignore
-	public void readXlsmTest(){
+	public void readXlsmTest() {
 		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1,
 				(sheetIndex, rowIndex, rowlist) -> Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist));
+	}
+
+	@Test
+	public void doAfterAllAnalysedTest() {
+		final String path = "readBySax.xls";
+		final AtomicInteger doAfterAllAnalysedTime = new AtomicInteger(0);
+		ExcelUtil.readBySax(path, -1, new RowHandler() {
+			@Override
+			public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
+				//Console.log("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells);
+			}
+
+			@Override
+			public void doAfterAllAnalysed() {
+				doAfterAllAnalysedTime.addAndGet(1);
+			}
+		});
+		//总共2个sheet页，读取所有sheet时，一共执行doAfterAllAnalysed2次。
+		Assert.assertEquals(2, doAfterAllAnalysedTime.intValue());
 	}
 }
