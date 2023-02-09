@@ -2,6 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.text.StrUtil;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
@@ -19,9 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Excel图片工具类
@@ -37,7 +36,7 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	public static Map<String, PictureData> getPicMap(final Workbook workbook, int sheetIndex) {
+	public static ListValueMap<String, PictureData> getPicMap(final Workbook workbook, int sheetIndex) {
 		Assert.notNull(workbook, "Workbook must be not null !");
 		if (sheetIndex < 0) {
 			sheetIndex = 0;
@@ -60,8 +59,8 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	private static Map<String, PictureData> getPicMapXls(final HSSFWorkbook workbook, final int sheetIndex) {
-		final Map<String, PictureData> picMap = new HashMap<>();
+	private static ListValueMap<String, PictureData> getPicMapXls(final HSSFWorkbook workbook, final int sheetIndex) {
+		final ListValueMap<String, PictureData> picMap = new ListValueMap<>();
 		final List<HSSFPictureData> pictures = workbook.getAllPictures();
 		if (CollUtil.isNotEmpty(pictures)) {
 			final HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
@@ -71,7 +70,7 @@ public class ExcelPicUtil {
 				if (shape instanceof HSSFPicture) {
 					pictureIndex = ((HSSFPicture) shape).getPictureIndex() - 1;
 					anchor = (HSSFClientAnchor) shape.getAnchor();
-					picMap.put(StrUtil.format("{}_{}", anchor.getRow1(), anchor.getCol1()), pictures.get(pictureIndex));
+					picMap.putValue(StrUtil.format("{}_{}", anchor.getRow1(), anchor.getCol1()), pictures.get(pictureIndex));
 				}
 			}
 		}
@@ -85,8 +84,8 @@ public class ExcelPicUtil {
 	 * @param sheetIndex sheet的索引
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
-	private static Map<String, PictureData> getPicMapXlsx(final XSSFWorkbook workbook, final int sheetIndex) {
-		final Map<String, PictureData> sheetIndexPicMap = new HashMap<>();
+	private static ListValueMap<String, PictureData> getPicMapXlsx(final XSSFWorkbook workbook, final int sheetIndex) {
+		final ListValueMap<String, PictureData> sheetIndexPicMap = new ListValueMap<>();
 		final XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 		XSSFDrawing drawing;
 		for (final POIXMLDocumentPart dr : sheet.getRelations()) {
@@ -99,7 +98,7 @@ public class ExcelPicUtil {
 					if(shape instanceof XSSFPicture){
 						pic = (XSSFPicture) shape;
 						ctMarker = pic.getPreferredSize().getFrom();
-						sheetIndexPicMap.put(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());
+						sheetIndexPicMap.putValue(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());
 					}
 					// 其他类似于图表等忽略，see: https://gitee.com/dromara/hutool/issues/I38857
 				}
