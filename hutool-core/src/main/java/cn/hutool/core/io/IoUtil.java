@@ -275,7 +275,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 从流中读取内容，读取完毕后关闭流
 	 *
-	 * @param in      输入流，读取完毕后并不关闭流
+	 * @param in      输入流，读取完毕后关闭流
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
