@@ -862,6 +862,7 @@ public class DateUtil extends CalendarUtil {
 
 			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
+				utcString = normalizeMillSeconds(utcString, ".", "+");
 				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31+08:00
@@ -878,6 +879,7 @@ public class DateUtil extends CalendarUtil {
 
 			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
+				utcString = normalizeMillSeconds(utcString, ".", "-");
 				return new DateTime(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31-08:00
@@ -892,6 +894,7 @@ public class DateUtil extends CalendarUtil {
 				return parse(utcString + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
+				utcString = normalizeMillSeconds(utcString, ".", null);
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
 			}
 		}
@@ -2337,4 +2340,23 @@ public class DateUtil extends CalendarUtil {
 		return builder.toString();
 	}
 	// ------------------------------------------------------------------------ Private method end
+
+	/**
+	 * 如果日期中的毫秒部分超出3位，会导致秒数增加，因此只保留前三位
+	 *
+	 * @param dateStr 日期字符串
+	 * @param before  毫秒部分的前一个字符
+	 * @param after   毫秒部分的后一个字符
+	 * @return 规范之后的毫秒部分
+	 */
+	private static String normalizeMillSeconds(String dateStr, CharSequence before, CharSequence after) {
+		if (StrUtil.isBlank(after)) {
+			String millOrNaco = StrUtil.subPre(StrUtil.subAfter(dateStr, before, true), 3);
+			return StrUtil.subBefore(dateStr, before, true) + before + millOrNaco;
+		}
+		String millOrNaco = StrUtil.subPre(StrUtil.subBetween(dateStr, before, after), 3);
+		return StrUtil.subBefore(dateStr, before, true)
+				+ before
+				+ millOrNaco + after + StrUtil.subAfter(dateStr, after, true);
+	}
 }
