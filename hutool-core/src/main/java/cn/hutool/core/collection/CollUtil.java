@@ -1660,6 +1660,35 @@ public class CollUtil {
 	}
 
 	/**
+	 * 集合是否为空。
+	 * 如果集合中所有元素为null或空串，也认为此集合为空。
+	 * @param collection
+	 * @return
+	 */
+	public static boolean isBlank(Collection<?> collection) {
+		if(isEmpty(collection)){
+			return true;
+		}
+
+		for(Object o: collection){
+			if(ObjectUtil.isNotEmpty(o)){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 集合是否为非空。
+	 * 集合长度大于0，且所有元素中至少有一个不为null或空串。
+	 * @param collection
+	 * @return
+	 */
+	public static boolean isNotBlank(Collection<?> collection) {
+		return false == isBlank(collection);
+	}
+
+	/**
 	 * 如果给定集合为空，返回默认集合
 	 *
 	 * @param <T>               集合类型

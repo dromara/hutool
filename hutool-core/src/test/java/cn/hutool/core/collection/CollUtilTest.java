@@ -1047,4 +1047,27 @@ public class CollUtilTest {
 		final Object first = CollUtil.getFirst(nullList);
 		Assert.assertNull(first);
 	}
+
+	@Test
+	public void blankTest() {
+		List<String> strs = new ArrayList<>();
+		strs.add(null);
+		strs.add("");
+		strs.add("");
+
+		boolean c = CollUtil.isBlank(strs);
+		Assert.assertEquals(true, c );
+
+
+		List<String> arrs = new ArrayList<>();
+		arrs.add(null);
+		arrs.add("");
+		arrs.add("  ");
+		arrs.add("");
+		arrs.add(" a ");
+
+		boolean d = CollUtil.isNotBlank(arrs);
+		Assert.assertEquals(true, d );
+	}
+
 }
