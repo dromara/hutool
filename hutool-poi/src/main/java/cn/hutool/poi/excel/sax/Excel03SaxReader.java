@@ -216,7 +216,10 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			if(this.rid < 0 && null != this.sheetName){
 				throw new POIException("Sheet [{}] not exist!", this.sheetName);
 			}
-			processLastCellSheet();
+			if(this.curRid != -1 && isProcessCurrentSheet()) {
+				//只有在当前指定的sheet中，才触发结束事件，且curId=-1时也不处理，避免重复调用
+				processLastCellSheet();
+			}
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
 				// 空值的操作
