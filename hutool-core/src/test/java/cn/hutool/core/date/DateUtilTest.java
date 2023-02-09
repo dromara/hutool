@@ -1079,4 +1079,25 @@ public class DateUtilTest {
 		Assert.assertEquals(dayOfMonth, Objects.requireNonNull(dateTime).dayOfMonth());
 		Assert.assertTrue("not is last day of this month !!",DateUtil.isLastDayOfMonth(dateTime));
 	}
+
+	/**
+	 * issue#2887 由于UTC时间的毫秒部分超出3位导致的秒数增加的问题
+	 */
+	@Test
+	public void parseUTCTest4() {
+		final String dateStr = "2023-02-07T00:02:16.12345+08:00";
+		final DateTime dateTime = DateUtil.parse(dateStr);
+		Assert.assertNotNull(dateTime);
+		Assert.assertEquals("2023-02-07 00:02:16", dateTime.toString());
+
+		final String dateStr2 = "2023-02-07T00:02:16.12345-08:00";
+		final DateTime dateTime2 = DateUtil.parse(dateStr2);
+		Assert.assertNotNull(dateTime2);
+		Assert.assertEquals("2023-02-07 00:02:16", dateTime2.toString());
+
+		final String dateStr3 = "2021-03-17T06:31:33.9999";
+		final DateTime dateTime3 = DateUtil.parse(dateStr3);
+		Assert.assertNotNull(dateTime3);
+		Assert.assertEquals("2021-03-17 06:31:33", dateTime3.toString());
+	}
 }

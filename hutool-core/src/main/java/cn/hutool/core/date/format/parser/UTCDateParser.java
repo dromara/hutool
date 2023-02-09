@@ -25,6 +25,9 @@ import cn.hutool.core.util.CharUtil;
 public class UTCDateParser extends DefaultDateBasic implements DateParser {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例对象
+	 */
 	public static UTCDateParser INSTANCE = new UTCDateParser();
 
 	@Override
@@ -57,6 +60,7 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 
 			if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
+				source = normalizeMillSeconds(source, ".", "+");
 				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31+08:00
@@ -73,6 +77,7 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 
 			if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
+				source = normalizeMillSeconds(source, ".", "-");
 				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31-08:00
@@ -87,10 +92,31 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 				return new DateTime(source + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
+				source = normalizeMillSeconds(source, ".", null);
 				return new DateTime(source, DatePattern.UTC_SIMPLE_MS_FORMAT);
 			}
 		}
 		// 没有更多匹配的时间格式
 		throw new DateException("No UTC format fit for date String [{}] !", source);
+	}
+
+	/**
+	 * 如果日期中的毫秒部分超出3位，会导致秒数增加，因此只保留前三位<br>
+	 * issue#2887
+	 *
+	 * @param dateStr 日期字符串
+	 * @param before  毫秒部分的前一个字符
+	 * @param after   毫秒部分的后一个字符
+	 * @return 规范之后的毫秒部分
+	 */
+	private static String normalizeMillSeconds(final String dateStr, final CharSequence before, final CharSequence after) {
+		if (StrUtil.isBlank(after)) {
+			final String millOrNaco = StrUtil.subPre(StrUtil.subAfter(dateStr, before, true), 3);
+			return StrUtil.subBefore(dateStr, before, true) + before + millOrNaco;
+		}
+		final String millOrNaco = StrUtil.subPre(StrUtil.subBetween(dateStr, before, after), 3);
+		return StrUtil.subBefore(dateStr, before, true)
+				+ before
+				+ millOrNaco + after + StrUtil.subAfter(dateStr, after, true);
 	}
 }
