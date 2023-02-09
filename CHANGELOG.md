@@ -15,6 +15,7 @@
 * 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
 * 【core  】      针对CollUtil.subtract coll1 为只读集合的补偿（pr#2865@Github）
 * 【core  】      DateUtil.date方法统一修改规则，传入null返回null（pr#2877@Github）
+* 【core  】      DateUtil.parseUTC统一规范，舍弃3位毫秒数后的数字（pr#2889@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
