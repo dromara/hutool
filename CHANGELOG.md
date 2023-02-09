@@ -22,6 +22,7 @@
 * 【core  】      修复IoUtil.readBytes使用SocketInputStream读取不完整问题（issue#I6AT49@Gitee）
 * 【core  】      修复ClassScanner自定义classload无效问题（issue#I68TV2@Gitee）
 * 【core  】      【重要】删除XmlUtil.readObjectFromXml方法，避免漏洞（issue#2857@Github）
+* 【core  】      修复Ipv4Util.list()方法的bug（pr#929@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
