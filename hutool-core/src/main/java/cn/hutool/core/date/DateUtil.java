@@ -68,11 +68,14 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date}类型时间转为{@link DateTime}<br>
 	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 *
-	 * @param date Long类型Date（Unix时间戳）
+	 * @param date Long类型Date（Unix时间戳），如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 3.0.7
 	 */
 	public static DateTime date(Date date) {
+		if (date == null) {
+			return null;
+		}
 		if (date instanceof DateTime) {
 			return (DateTime) date;
 		}
@@ -82,11 +85,14 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
 	 *
-	 * @param date Date对象
+	 * @param date Date对象，如果传入{@code null}，返回{@code null}
 	 * @return {@link DateTime}对象
 	 * @since 4.3.1
 	 */
 	public static DateTime dateNew(Date date) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date);
 	}
 
@@ -105,10 +111,13 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Calendar}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
 	 *
-	 * @param calendar {@link Calendar}
+	 * @param calendar {@link Calendar}，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 */
 	public static DateTime date(Calendar calendar) {
+		if (calendar == null) {
+			return null;
+		}
 		return new DateTime(calendar);
 	}
 
@@ -116,7 +125,7 @@ public class DateUtil extends CalendarUtil {
 	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
 	 *
-	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate
+	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 5.0.0
 	 */

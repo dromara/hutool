@@ -14,6 +14,7 @@
 * 【db    】      AbstractDb添加返回类型为PageResult的page重载方法（pr#916@Gitee）
 * 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
 * 【core  】      针对CollUtil.subtract coll1 为只读集合的补偿（pr#2865@Github）
+* 【core  】      DateUtil.date方法统一修改规则，传入null返回null（pr#2877@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
