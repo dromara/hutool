@@ -23,6 +23,7 @@
 * 【core  】      修复ClassScanner自定义classload无效问题（issue#I68TV2@Gitee）
 * 【core  】      【重要】删除XmlUtil.readObjectFromXml方法，避免漏洞（issue#2857@Github）
 * 【core  】      修复Ipv4Util.list()方法的bug（pr#929@Gitee）
+* 【poi   】      修复“sax方式读取excel2003版本，会调用两次doAfterAllAnalysed方法”问题。（pr#919@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

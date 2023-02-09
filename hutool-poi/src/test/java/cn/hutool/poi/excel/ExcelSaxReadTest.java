@@ -51,7 +51,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void excel03Test() {
-		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		final Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", 1);
 
 		// Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
@@ -60,7 +60,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void excel03ByNameTest() {
-		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		final Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", "校园入学");
 		reader.read("aaa.xls", "sheetName:校园入学");
 	}
@@ -68,7 +68,7 @@ public class ExcelSaxReadTest {
 	@Test(expected = POIException.class)
 	public void excel03ByNameErrorTest() {
 		// sheet名称不存在则报错
-		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		final Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", "校园入学1");
 	}
 
@@ -120,12 +120,12 @@ public class ExcelSaxReadTest {
 		ExcelUtil.readBySax("d:/test/test.xlsx", -1, new RowHandler() {
 
 					@Override
-					public void handleCell(int sheetIndex, long rowIndex, int cellIndex, Object value, CellStyle xssfCellStyle) {
+					public void handleCell(final int sheetIndex, final long rowIndex, final int cellIndex, final Object value, final CellStyle xssfCellStyle) {
 						Console.log("{} {} {}", rowIndex, cellIndex, value);
 					}
 
 					@Override
-					public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+					public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 
 					}
 				}
@@ -133,17 +133,16 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Ignore
 	public void handle03CellTest() {
-		ExcelUtil.readBySax("d:/test/test.xls", -1, new RowHandler() {
+		ExcelUtil.readBySax("test.xls", -1, new RowHandler() {
 
 					@Override
-					public void handleCell(int sheetIndex, long rowIndex, int cellIndex, Object value, CellStyle xssfCellStyle) {
-						Console.log("{} {} {}", rowIndex, cellIndex, value);
+					public void handleCell(final int sheetIndex, final long rowIndex, final int cellIndex, final Object value, final CellStyle xssfCellStyle) {
+						//Console.log("{} {} {}", rowIndex, cellIndex, value);
 					}
 
 					@Override
-					public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
+					public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
 					}
 				}
 		);
@@ -151,11 +150,11 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void formulaRead03Test() {
-		List<Object> rows = new ArrayList<>();
+		final List<Object> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xls", -1, (i, i1, list) -> {
-			if(list.size() > 1){
+			if (list.size() > 1) {
 				rows.add(list.get(1));
-			} else{
+			} else {
 				rows.add("");
 			}
 		});
@@ -164,7 +163,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void formulaRead07Test() {
-		List<Object> rows = new ArrayList<>();
+		final List<Object> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0, (i, i1, list) ->
 				rows.add(list.get(1)));
 
@@ -174,7 +173,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void dateReadXlsTest() {
-		List<String> rows = new ArrayList<>();
+		final List<String> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xls", 0,
 				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
 		);
@@ -188,7 +187,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void dateReadXlsxTest() {
-		List<String> rows = new ArrayList<>();
+		final List<String> rows = new ArrayList<>();
 		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0,
 				(i, i1, list) -> rows.add(StrUtil.toString(list.get(0)))
 		);
@@ -211,7 +210,7 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBlankTest() {
-		File file = new File("D:/test/b.xlsx");
+		final File file = new File("D:/test/b.xlsx");
 
 		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> rowList.forEach(Console::log));
 
@@ -220,7 +219,7 @@ public class ExcelSaxReadTest {
 
 	@Test
 	@Ignore
-	public void readXlsmTest(){
+	public void readXlsmTest() {
 		ExcelUtil.readBySax("d:/test/WhiteListTemplate.xlsm", -1,
 				(sheetIndex, rowIndex, rowlist) -> Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist));
 	}

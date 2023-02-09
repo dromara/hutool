@@ -1,19 +1,10 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,39 +50,35 @@ public class ExcelUtilTest {
 
 	@Test
 	public void readAndWriteTest() {
-		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx");
-		ExcelWriter writer = reader.getWriter();
+		final ExcelReader reader = ExcelUtil.getReader("aaa.xlsx");
+		final ExcelWriter writer = reader.getWriter();
 		writer.writeCellValue(1, 2, "设置值");
 		writer.close();
 	}
 
 	@Test
 	public void getReaderByBookFilePathAndSheetNameTest() {
-		ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
-		List<Map<String, Object>> list = reader.readAll();
+		final ExcelReader reader = ExcelUtil.getReader("aaa.xlsx", "12");
+		final List<Map<String, Object>> list = reader.readAll();
 		reader.close();
 		Assert.assertEquals(1L, list.get(1).get("鞋码"));
 	}
 
 	@Test
 	public void doAfterAllAnalysedTest() {
-		String path = "readBySax.xls";
-		AtomicInteger doAfterAllAnalysedTime = new AtomicInteger(0);
-		try{
-			ExcelUtil.readBySax(path, -1, new RowHandler() {
-				@Override
-				public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
-					System.out.println(StrUtil.format("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells));
-				}
+		final String path = "readBySax.xls";
+		final AtomicInteger doAfterAllAnalysedTime = new AtomicInteger(0);
+		ExcelUtil.readBySax(path, -1, new RowHandler() {
+			@Override
+			public void handle(final int sheetIndex, final long rowIndex, final List<Object> rowCells) {
+				//Console.log("sheetIndex={};rowIndex={},rowCells={}",sheetIndex,rowIndex,rowCells);
+			}
 
-				@Override
-				public void doAfterAllAnalysed() {
-					doAfterAllAnalysedTime.addAndGet(1);
-				}
-			});
-		}catch (Exception ex){
-			ex.printStackTrace();
-		}
+			@Override
+			public void doAfterAllAnalysed() {
+				doAfterAllAnalysedTime.addAndGet(1);
+			}
+		});
 		//总共2个sheet页，读取所有sheet时，一共执行doAfterAllAnalysed2次。
 		Assert.assertEquals(2, doAfterAllAnalysedTime.intValue());
 	}
