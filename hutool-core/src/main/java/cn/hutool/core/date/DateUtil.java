@@ -89,11 +89,14 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date}类型时间转为{@link DateTime}<br>
 	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 *
-	 * @param date {@link Date}
+	 * @param date {@link Date}，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 3.0.7
 	 */
 	public static DateTime date(final Date date) {
+		if (date == null) {
+			return null;
+		}
 		if (date instanceof DateTime) {
 			return (DateTime) date;
 		}
@@ -103,33 +106,42 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * {@link XMLGregorianCalendar}类型时间转为{@link DateTime}
 	 *
-	 * @param date {@link XMLGregorianCalendar}
+	 * @param date {@link XMLGregorianCalendar}，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 6.0.0
 	 */
 	public static DateTime date(final XMLGregorianCalendar date) {
+		if (date == null) {
+			return null;
+		}
 		return date(date.toGregorianCalendar());
 	}
 
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
 	 *
-	 * @param date Date对象
+	 * @param date Date对象，如果传入{@code null}，返回{@code null}
 	 * @return {@link DateTime}对象
 	 * @since 4.3.1
 	 */
 	public static DateTime dateNew(final Date date) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date);
 	}
 
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象，并根据指定时区转换
 	 *
-	 * @param date     Date对象
-	 * @param timeZone 时区
+	 * @param date     Date对象，如果传入{@code null}，返回{@code null}
+	 * @param timeZone 时区，传入{@code null}则使用默认时区
 	 * @return {@link DateTime}对象
 	 */
 	public static DateTime date(final Date date, final TimeZone timeZone) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date, timeZone);
 	}
 
@@ -148,10 +160,13 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Calendar}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
 	 *
-	 * @param calendar {@link Calendar}
+	 * @param calendar {@link Calendar}，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 */
 	public static DateTime date(final Calendar calendar) {
+		if (calendar == null) {
+			return null;
+		}
 		return new DateTime(calendar);
 	}
 
@@ -159,11 +174,14 @@ public class DateUtil extends CalendarUtil {
 	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
 	 *
-	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate
+	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 5.0.0
 	 */
 	public static DateTime date(final TemporalAccessor temporalAccessor) {
+		if (temporalAccessor == null) {
+			return null;
+		}
 		return new DateTime(temporalAccessor);
 	}
 
@@ -2016,7 +2034,7 @@ public class DateUtil extends CalendarUtil {
 		// x>b||a>y 无交集
 		// 则有交集的逻辑为 !(x>b||a>y)
 		// 根据德摩根公式，可化简为 x<=b && a<=y 即 realStartTime<=endTime && startTime<=realEndTime
-		return realStartTime.compareTo(endTime) <=0 && startTime.compareTo(realEndTime) <= 0;
+		return realStartTime.compareTo(endTime) <= 0 && startTime.compareTo(realEndTime) <= 0;
 	}
 
 	/**

@@ -45,7 +45,7 @@ public class DateTime extends Date {
 	 * @param customUseJdkToStringStyle 是否使用{@link Date}默认的toString()格式
 	 * @since 5.7.21
 	 */
-	public static void setUseJdkToStringStyle(final boolean customUseJdkToStringStyle){
+	public static void setUseJdkToStringStyle(final boolean customUseJdkToStringStyle) {
 		useJdkToStringStyle = customUseJdkToStringStyle;
 	}
 
@@ -134,7 +134,7 @@ public class DateTime extends Date {
 	/**
 	 * 当前时间
 	 *
-	 * @param timeZone 时区
+	 * @param timeZone 时区，{@code null}表示默认时区
 	 * @since 4.1.2
 	 */
 	public DateTime(final TimeZone timeZone) {
@@ -156,8 +156,8 @@ public class DateTime extends Date {
 	/**
 	 * 给定日期的构造
 	 *
-	 * @param date     日期
-	 * @param timeZone 时区
+	 * @param date     日期，{@code null}表示当前时间
+	 * @param timeZone 时区，{@code null}表示默认时区
 	 * @since 4.1.2
 	 */
 	public DateTime(final Date date, final TimeZone timeZone) {
@@ -167,7 +167,7 @@ public class DateTime extends Date {
 	/**
 	 * 给定日期的构造
 	 *
-	 * @param calendar {@link Calendar}
+	 * @param calendar {@link Calendar}，不能为{@code null}
 	 */
 	public DateTime(final Calendar calendar) {
 		this(calendar.getTime(), calendar.getTimeZone());
@@ -177,7 +177,7 @@ public class DateTime extends Date {
 	/**
 	 * 给定日期Instant的构造
 	 *
-	 * @param instant {@link Instant} 对象
+	 * @param instant {@link Instant} 对象，不能为{@code null}
 	 * @since 5.0.0
 	 */
 	public DateTime(final Instant instant) {
@@ -945,19 +945,21 @@ public class DateTime extends Date {
 
 	/**
 	 * 是否为本月最后一天
+	 *
 	 * @return 是否为本月最后一天
 	 * @since 5.8.8
 	 */
-	public boolean isLastDayOfMonth(){
+	public boolean isLastDayOfMonth() {
 		return dayOfMonth() == getLastDayOfMonth();
 	}
 
 	/**
 	 * 获得本月的最后一天
+	 *
 	 * @return 天
 	 * @since 5.8.8
 	 */
-	public int getLastDayOfMonth(){
+	public int getLastDayOfMonth() {
 		return monthEnum().getLastDay(isLeapYear());
 	}
 
@@ -973,7 +975,7 @@ public class DateTime extends Date {
 	 */
 	@Override
 	public String toString() {
-		if(useJdkToStringStyle){
+		if (useJdkToStringStyle) {
 			return super.toString();
 		}
 		return toString(this.timeZone);
