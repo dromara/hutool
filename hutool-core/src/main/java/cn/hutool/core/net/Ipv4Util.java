@@ -137,7 +137,7 @@ public class Ipv4Util {
 		}
 
 		if (maskBit == IP_MASK_MAX) {
-			final List<String> list = new ArrayList<>();
+			final List<String> list = new ArrayList<>(isAll ? 1 : 0);
 			if (isAll) {
 				list.add(ip);
 			}
@@ -168,10 +168,19 @@ public class Ipv4Util {
 	 * @return 区间内所有ip地址
 	 */
 	public static List<String> list(final String ipFrom, final String ipTo) {
+		return list(ipv4ToLong(ipFrom), ipv4ToLong(ipTo));
+	}
+
+	/**
+	 * 得到指定区间内的所有IP地址
+	 *
+	 * @param ipFrom 开始IP, 包含
+	 * @param ipTo   结束IP, 包含
+	 * @return 区间内所有ip地址，点分十进制表示
+	 */
+	public static List<String> list(final long ipFrom, final long ipTo) {
 		// 确定ip数量
 		final int count = countByIpRange(ipFrom, ipTo);
-		final int[] from = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, CharUtil.DOT));
-		final int[] to = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, CharUtil.DOT));
 
 		final List<String> ips = new ArrayList<>(count);
 		// 是否是循环的第一个值
@@ -179,23 +188,23 @@ public class Ipv4Util {
 		// 是否是循环的最后一个值
 		boolean aIsEnd, bIsEnd, cIsEnd;
 		// 循环的结束值
-		final int aEnd = to[0];
+		final int aEnd = getPartOfIpLong(ipTo, 1);
 		int bEnd;
 		int cEnd;
 		int dEnd;
-		for (int a = from[0]; a <= aEnd; a++) {
+		for (int a = getPartOfIpLong(ipFrom, 1); a <= aEnd; a++) {
 			aIsEnd = (a == aEnd);
 			// 本次循环的结束结束值
-			bEnd = aIsEnd ? to[1] : 255;
-			for (int b = (aIsStart ? from[1] : 0); b <= bEnd; b++) {
+			bEnd = aIsEnd ? getPartOfIpLong(ipTo, 2) : 255;
+			for (int b = (aIsStart ? getPartOfIpLong(ipFrom, 2) : 0); b <= bEnd; b++) {
 				// 在上一个循环是最后值的基础上进行判断
 				bIsEnd = aIsEnd && (b == bEnd);
-				cEnd = bIsEnd ? to[2] : 255;
-				for (int c = (bIsStart ? from[2] : 0); c <= cEnd; c++) {
+				cEnd = bIsEnd ? getPartOfIpLong(ipTo, 3) : 255;
+				for (int c = (bIsStart ? getPartOfIpLong(ipFrom, 3) : 0); c <= cEnd; c++) {
 					// 在之前循环是最后值的基础上进行判断
 					cIsEnd = bIsEnd && (c == cEnd);
-					dEnd = cIsEnd ? to[3] : 255;
-					for (int d = (cIsStart ? from[3] : 0); d <= dEnd; d++) {
+					dEnd = cIsEnd ? getPartOfIpLong(ipTo, 4) : 255;
+					for (int d = (cIsStart ? getPartOfIpLong(ipFrom, 4) : 0); d <= dEnd; d++) {
 						ips.add(a + "." + b + "." + c + "." + d);
 					}
 					cIsStart = false;
@@ -256,7 +265,7 @@ public class Ipv4Util {
 	 */
 	public static Long getBeginIpLong(final String ip, final int maskBit) {
 		assertMaskBitValid(maskBit);
-		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
+		return ipv4ToLong(ip) & MaskBit.getMaskIpLong(maskBit);
 	}
 
 	/**
@@ -278,7 +287,7 @@ public class Ipv4Util {
 	 * @return 终止IP的长整型表示
 	 */
 	public static Long getEndIpLong(final String ip, final int maskBit) {
-		return getBeginIpLong(ip, maskBit) + ~ipv4ToLong(getMaskByMaskBit(maskBit));
+		return getBeginIpLong(ip, maskBit) + ~MaskBit.getMaskIpLong(maskBit);
 	}
 
 	/**
@@ -352,13 +361,24 @@ public class Ipv4Util {
 	public static int countByIpRange(final String fromIp, final String toIp) {
 		final long toIpLong = ipv4ToLong(toIp);
 		final long fromIpLong = ipv4ToLong(fromIp);
-		Assert.isTrue(fromIpLong <= toIpLong, "Start IP must be less than or equal to end IP!");
+		return countByIpRange(fromIpLong, toIpLong);
+	}
+
+	/**
+	 * 获得 指定区间内的 ip数量
+	 *
+	 * @param fromIp 开始IP，包含
+	 * @param toIp   结束IP，包含
+	 * @return IP数量
+	 */
+	public static int countByIpRange(final long fromIp, final long toIp) {
+		Assert.isTrue(fromIp <= toIp, "Start IP must be less than or equal to end IP!");
 
 		int count = 1;
-		count += (getPartOfIpLong(toIpLong, 4) - getPartOfIpLong(fromIpLong, 4));
-		count += (getPartOfIpLong(toIpLong, 3) - getPartOfIpLong(fromIpLong, 3)) << 8;
-		count += (getPartOfIpLong(toIpLong, 2) - getPartOfIpLong(fromIpLong, 2)) << 16;
-		count += (getPartOfIpLong(toIpLong, 1) - getPartOfIpLong(fromIpLong, 1)) << 24;
+		count += (getPartOfIpLong(toIp, 4) - getPartOfIpLong(fromIp, 4));
+		count += (getPartOfIpLong(toIp, 3) - getPartOfIpLong(fromIp, 3)) << 8;
+		count += (getPartOfIpLong(toIp, 2) - getPartOfIpLong(fromIp, 2)) << 16;
+		count += (getPartOfIpLong(toIp, 1) - getPartOfIpLong(fromIp, 1)) << 24;
 		return count;
 	}
 
