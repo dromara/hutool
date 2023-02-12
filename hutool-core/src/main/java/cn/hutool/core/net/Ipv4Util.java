@@ -1,11 +1,10 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.PatternPool;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +191,7 @@ public class Ipv4Util {
 		int bEnd;
 		int cEnd;
 		int dEnd;
+		final StringBuilder sb = StrUtil.builder(15);
 		for (int a = getPartOfIpLong(ipFrom, 1); a <= aEnd; a++) {
 			aIsEnd = (a == aEnd);
 			// 本次循环的结束结束值
@@ -205,7 +205,12 @@ public class Ipv4Util {
 					cIsEnd = bIsEnd && (c == cEnd);
 					dEnd = cIsEnd ? getPartOfIpLong(ipTo, 4) : 255;
 					for (int d = (cIsStart ? getPartOfIpLong(ipFrom, 4) : 0); d <= dEnd; d++) {
-						ips.add(a + "." + b + "." + c + "." + d);
+						sb.setLength(0);
+						ips.add(sb.append(a).append(CharUtil.DOT)
+								.append(b).append(CharUtil.DOT)
+								.append(c).append(CharUtil.DOT)
+								.append(d)
+								.toString());
 					}
 					cIsStart = false;
 				}
