@@ -17,7 +17,19 @@ import java.util.regex.Matcher;
  *
  * <p>pr自：https://gitee.com/loolly/hutool/pulls/161</p>
  *
+ * <p>名词解释：
+ * <ul>
+ *     <li>ip字符串：点分十进制，形如：xxx.xxx.xxx.xxx</li>
+ *     <li>ip的Long类型：有效位32位，每8位可以转为一个十进制数，例如：0xC0A802FA， 转为点分十进制是：192.168.2.250</li>
+ *     <li>掩码地址：点分十进制，例如：255.255.255.0</li>
+ *     <li>掩码位：int类型，例如 24, 它代表的掩码地址为：255.255.255.0；掩码位和掩码地址的相互转换，请使用 {@link MaskBit}</li>
+ *     <li>CIDR：无类域间路由，形如：xxx.xxx.xxx.xxx/掩码位</li>
+ *     <li>全量地址：区间内所有ip地址，包含区间两端</li>
+ *     <li>可用地址：区间内所有ip地址，但是不包含区间两端</li>
+ * </ul>
+ *
  * @author ZhuKun
+ * @author emptypoint
  * @since 5.4.1
  */
 public class Ipv4Util {
@@ -43,22 +55,57 @@ public class Ipv4Util {
 	public static final int IP_MASK_MAX = 32;
 
 	/**
-	 * 格式化IP段
+	 * 最小掩码位
+	 */
+	public static final int IP_MASK_MIN = 1;
+
+	/**
+	 * A类私有地址的最小值
+	 */
+	public static final long A_INNER_IP_LONG_BEGIN = ipv4ToLong("10.0.0.0");
+
+	/**
+	 * A类私有地址的最大值
+	 */
+	public static final long A_INNER_IP_LONG_END = ipv4ToLong("10.255.255.255");
+
+	/**
+	 * B类私有地址的最小值
+	 */
+	public static final long B_INNER_IP_LONG_BEGIN = ipv4ToLong("172.16.0.0");
+
+	/**
+	 * B类私有地址的最大值
+	 */
+	public static final long B_INNER_IP_LONG_END = ipv4ToLong("172.31.255.255");
+
+	/**
+	 * C类私有地址的最小值
+	 */
+	public static final long C_INNER_IP_LONG_BEGIN = ipv4ToLong("192.168.0.0");
+
+	/**
+	 * C类私有地址的最大值
+	 */
+	public static final long C_INNER_IP_LONG_END = ipv4ToLong("192.168.255.255");
+
+	/**
+	 * 根据 ip地址 和 掩码地址 获得 CIDR格式字符串
 	 *
-	 * @param ip   IP地址
-	 * @param mask 掩码
-	 * @return 返回xxx.xxx.xxx.xxx/mask的格式
+	 * @param ip   IP地址，点分十进制，如：xxx.xxx.xxx.xxx
+	 * @param mask 掩码地址，点分十进制，如：255.255.255.0
+	 * @return 返回 {@literal xxx.xxx.xxx.xxx/掩码位} 的格式
 	 */
 	public static String formatIpBlock(final String ip, final String mask) {
 		return ip + IP_MASK_SPLIT_MARK + getMaskBitByMask(mask);
 	}
 
 	/**
-	 * 智能转换IP地址集合
+	 * 智能获取指定区间内的所有IP地址
 	 *
-	 * @param ipRange IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
-	 * @param isAll   true:全量地址，false:可用地址；仅在ipRange为X.X.X.X/X时才生效
-	 * @return IP集
+	 * @param ipRange IP区间，支持 {@literal X.X.X.X-X.X.X.X} 或 {@literal X.X.X.X/X}
+	 * @param isAll   true:全量地址，false:可用地址；该参数仅在ipRange为X.X.X.X/X时才生效
+	 * @return 区间内的所有IP地址，点分十进制格式
 	 */
 	public static List<String> list(final String ipRange, final boolean isAll) {
 		if (ipRange.contains(IP_SPLIT_MARK)) {
@@ -75,12 +122,12 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据IP地址、子网掩码获取IP地址区间
+	 * 根据 IP地址 和 掩码位数 获取 子网所有ip地址
 	 *
-	 * @param ip      IP地址
+	 * @param ip      IP地址，点分十进制
 	 * @param maskBit 掩码位，例如24、32
 	 * @param isAll   true:全量地址，false:可用地址
-	 * @return 区间地址
+	 * @return 子网所有ip地址
 	 */
 	public static List<String> list(final String ip, final int maskBit, final boolean isAll) {
 		if (maskBit == IP_MASK_MAX) {
@@ -107,11 +154,11 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 得到IP地址区间
+	 * 	获得 指定区间内 所有ip地址
 	 *
-	 * @param ipFrom 开始IP
-	 * @param ipTo   结束IP
-	 * @return 区间地址
+	 * @param ipFrom 开始IP，包含，点分十进制
+	 * @param ipTo   结束IP，包含，点分十进制
+	 * @return 区间内所有ip地址
 	 */
 	public static List<String> list(final String ipFrom, final String ipTo) {
 		// 确定ip数量
@@ -154,34 +201,34 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据long值获取ip v4地址：xx.xx.xx.xx
+	 * 根据 ip的long值 获取 ip字符串，即：xxx.xxx.xxx.xxx
 	 *
-	 * @param longIP IP的long表示形式
-	 * @return IP V4 地址
+	 * @param longIp IP的long表示形式
+	 * @return 点分十进制ip地址
 	 */
-	public static String longToIpv4(final long longIP) {
+	public static String longToIpv4(final long longIp) {
 		final StringBuilder sb = StrUtil.builder();
 		// 直接右移24位
-		sb.append(longIP >> 24 & 0xFF);
+		sb.append(longIp >> 24 & 0xFF);
 		sb.append(CharUtil.DOT);
 		// 将高8位置0，然后右移16位
-		sb.append(longIP >> 16 & 0xFF);
+		sb.append(longIp >> 16 & 0xFF);
 		sb.append(CharUtil.DOT);
-		sb.append(longIP >> 8 & 0xFF);
+		sb.append(longIp >> 8 & 0xFF);
 		sb.append(CharUtil.DOT);
-		sb.append(longIP & 0xFF);
+		sb.append(longIp & 0xFF);
 		return sb.toString();
 	}
 
 	/**
-	 * 根据ip地址(xxx.xxx.xxx.xxx)计算出long型的数据
-	 * 方法别名：inet_aton
+	 * 将 ip字符串 转换为 long值
+	 * <p>方法别名：inet_aton</p>
 	 *
-	 * @param strIP IP V4 地址
-	 * @return long值
+	 * @param strIp ip地址，点分十进制，xxx.xxx.xxx.xxx
+	 * @return ip的long值
 	 */
-	public static long ipv4ToLong(final String strIP) {
-		final Matcher matcher = PatternPool.IPV4.matcher(strIP);
+	public static long ipv4ToLong(final String strIp) {
+		final Matcher matcher = PatternPool.IPV4.matcher(strIp);
 		if (matcher.matches()) {
 			return matchAddress(matcher);
 		}
@@ -189,11 +236,11 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据 ip/掩码位 计算IP段的起始IP（字符串型）
-	 * 方法别名：inet_ntoa
+	 * 根据 ip 和 掩码位 获取 子网的起始IP（字符串型）
+	 * <p>方法别名：inet_ntoa</p>
 	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
+	 * @param ip      给定的IP，点分十进制，如：xxx.xxx.xxx.xxx
+	 * @param maskBit 给定的掩码位，如：30
 	 * @return 起始IP的字符串表示
 	 */
 	public static String getBeginIpStr(final String ip, final int maskBit) {
@@ -201,10 +248,10 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据 ip/掩码位 计算IP段的起始IP（Long型）
+	 * 根据 ip 和 掩码位 获取 子网的起始IP（Long型）
 	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
+	 * @param ip      给定的IP，点分十进制，如：xxx.xxx.xxx.xxx
+	 * @param maskBit 给定的掩码位，如：30
 	 * @return 起始IP的长整型表示
 	 */
 	public static Long getBeginIpLong(final String ip, final int maskBit) {
@@ -212,10 +259,10 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据 ip/掩码位 计算IP段的终止IP（字符串型）
+	 * 根据 ip 和 掩码位 获取 子网的终止IP（字符串型）
 	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
+	 * @param ip      给定的IP，点分十进制，如：xxx.xxx.xxx.xxx
+	 * @param maskBit 给定的掩码位，如：30
 	 * @return 终止IP的字符串表示
 	 */
 	public static String getEndIpStr(final String ip, final int maskBit) {
@@ -223,7 +270,18 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据子网掩码转换为掩码位
+	 * 根据 ip 和 掩码位 获取 子网的终止IP（Long型）
+	 *
+	 * @param ip      给定的IP，点分十进制，如：xxx.xxx.xxx.xxx
+	 * @param maskBit 给定的掩码位，如：30
+	 * @return 终止IP的长整型表示
+	 */
+	public static Long getEndIpLong(final String ip, final int maskBit) {
+		return getBeginIpLong(ip, maskBit) + ~ipv4ToLong(getMaskByMaskBit(maskBit));
+	}
+
+	/**
+	 * 将 子网掩码 转换为 掩码位
 	 *
 	 * @param mask 掩码的点分十进制表示，例如 255.255.255.0
 	 * @return 掩码位，例如 24
@@ -238,11 +296,11 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 计算子网大小
+	 * 获取 子网内的 地址总数
 	 *
-	 * @param maskBit 掩码位
+	 * @param maskBit 掩码位，取值范围：[2, {@link #IP_MASK_MAX}]
 	 * @param isAll   true:全量地址，false:可用地址
-	 * @return 地址总数
+	 * @return 子网内地址总数
 	 */
 	public static int countByMaskBit(final int maskBit, final boolean isAll) {
 		//如果是可用地址的情况，掩码位小于等于0或大于等于32，则可用地址为0
@@ -255,21 +313,21 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 根据掩码位获取掩码
+	 * 根据 掩码位 获取 掩码地址
 	 *
-	 * @param maskBit 掩码位
-	 * @return 掩码
+	 * @param maskBit 掩码位，如：24，取值范围：[{@link #IP_MASK_MIN}, {@link #IP_MASK_MAX}]
+	 * @return 掩码地址，点分十进制，如:255.255.255.0
 	 */
 	public static String getMaskByMaskBit(final int maskBit) {
 		return MaskBit.get(maskBit);
 	}
 
 	/**
-	 * 根据开始IP与结束IP计算掩码
+	 * 根据 开始IP 与 结束IP 获取 掩码地址
 	 *
-	 * @param fromIp 开始IP
-	 * @param toIp   结束IP
-	 * @return 掩码x.x.x.x
+	 * @param fromIp 开始IP，包含，点分十进制
+	 * @param toIp   结束IP，包含，点分十进制
+	 * @return 掩码地址，点分十进制
 	 */
 	public static String getMaskByIpRange(final String fromIp, final String toIp) {
 		final long toIpLong = ipv4ToLong(toIp);
@@ -286,10 +344,10 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 计算IP区间有多少个IP
+	 * 获得 指定区间内的 ip数量
 	 *
-	 * @param fromIp 开始IP
-	 * @param toIp   结束IP
+	 * @param fromIp 开始IP，包含，点分十进制
+	 * @param toIp   结束IP，包含，点分十进制
 	 * @return IP数量
 	 */
 	public static int countByIpRange(final String fromIp, final String toIp) {
@@ -320,7 +378,7 @@ public class Ipv4Util {
 	/**
 	 * 判断掩码位是否合法
 	 *
-	 * @param maskBit 掩码位，例如 24
+	 * @param maskBit 掩码位，有效范围：[{@link #IP_MASK_MIN}, {@link #IP_MASK_MAX}]
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
 	public static boolean isMaskBitValid(final int maskBit) {
@@ -337,47 +395,25 @@ public class Ipv4Util {
 	 * </pre>
 	 * 当然，还有127这个网段是环回地址
 	 *
-	 * @param ipAddress IP地址
+	 * @param ipAddress IP地址，点分十进制
 	 * @return 是否为内网IP
 	 * @since 5.7.18
 	 */
 	public static boolean isInnerIP(final String ipAddress) {
-		final boolean isInnerIp;
 		final long ipNum = ipv4ToLong(ipAddress);
-
-		final long aBegin = ipv4ToLong("10.0.0.0");
-		final long aEnd = ipv4ToLong("10.255.255.255");
-
-		final long bBegin = ipv4ToLong("172.16.0.0");
-		final long bEnd = ipv4ToLong("172.31.255.255");
-
-		final long cBegin = ipv4ToLong("192.168.0.0");
-		final long cEnd = ipv4ToLong("192.168.255.255");
-
-		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
-		return isInnerIp;
+		return isBetween(ipNum, A_INNER_IP_LONG_BEGIN, A_INNER_IP_LONG_END)
+				|| isBetween(ipNum, B_INNER_IP_LONG_BEGIN, B_INNER_IP_LONG_END)
+				|| isBetween(ipNum, C_INNER_IP_LONG_BEGIN, C_INNER_IP_LONG_END)
+				|| LOCAL_IP.equals(ipAddress);
 	}
 
 	//-------------------------------------------------------------------------------- Private method start
 
 	/**
-	 * 根据 ip/掩码位 计算IP段的终止IP（Long型）
-	 * 注：此接口返回负数，请使用转成字符串后再转Long型
-	 *
-	 * @param ip      给定的IP，如218.240.38.69
-	 * @param maskBit 给定的掩码位，如30
-	 * @return 终止IP的长整型表示
-	 */
-	public static Long getEndIpLong(final String ip, final int maskBit) {
-		return getBeginIpLong(ip, maskBit)
-				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
-	}
-
-	/**
-	 * 将匹配到的Ipv4地址的4个分组分别处理
+	 * 将匹配到的Ipv4地址转为Long类型
 	 *
 	 * @param matcher 匹配到的Ipv4正则
-	 * @return ipv4对应long
+	 * @return ip的long值
 	 */
 	private static long matchAddress(final Matcher matcher) {
 		long addr = 0;
@@ -388,14 +424,14 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 指定IP的long是否在指定范围内
+	 * 指定IP是否在指定范围内
 	 *
 	 * @param userIp 用户IP
-	 * @param begin  开始IP
-	 * @param end    结束IP
+	 * @param begin  开始IP，包含
+	 * @param end    结束IP，包含
 	 * @return 是否在范围内
 	 */
-	private static boolean isInner(final long userIp, final long begin, final long end) {
+	private static boolean isBetween(final long userIp, final long begin, final long end) {
 		return (userIp >= begin) && (userIp <= end);
 	}
 	//-------------------------------------------------------------------------------- Private method end
