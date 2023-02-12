@@ -130,6 +130,12 @@ public class Ipv4Util {
 	 * @return 子网所有ip地址
 	 */
 	public static List<String> list(final String ip, final int maskBit, final boolean isAll) {
+		assertMaskBitValid(maskBit);
+		// 避免后续的计算异常
+		if (countByMaskBit(maskBit, isAll) == 0) {
+			return new ArrayList<>(0);
+		}
+
 		if (maskBit == IP_MASK_MAX) {
 			final List<String> list = new ArrayList<>();
 			if (isAll) {
@@ -144,6 +150,7 @@ public class Ipv4Util {
 			return list(startIp, endIp);
 		}
 
+		// 可用地址，排除开始和结束的地址
 		int lastDotIndex = startIp.lastIndexOf(CharUtil.DOT) + 1;
 		startIp = StrUtil.subPre(startIp, lastDotIndex) +
 				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(startIp, lastDotIndex))) + 1);
@@ -207,17 +214,12 @@ public class Ipv4Util {
 	 * @return 点分十进制ip地址
 	 */
 	public static String longToIpv4(final long longIp) {
-		final StringBuilder sb = StrUtil.builder();
-		// 直接右移24位
-		sb.append(longIp >> 24 & 0xFF);
-		sb.append(CharUtil.DOT);
-		// 将高8位置0，然后右移16位
-		sb.append(longIp >> 16 & 0xFF);
-		sb.append(CharUtil.DOT);
-		sb.append(longIp >> 8 & 0xFF);
-		sb.append(CharUtil.DOT);
-		sb.append(longIp & 0xFF);
-		return sb.toString();
+		return StrUtil.builder(15)
+				.append(getPartOfIpLong(longIp, 1)).append(CharUtil.DOT)
+				.append(getPartOfIpLong(longIp, 2)).append(CharUtil.DOT)
+				.append(getPartOfIpLong(longIp, 3)).append(CharUtil.DOT)
+				.append(getPartOfIpLong(longIp, 4))
+				.toString();
 	}
 
 	/**
@@ -229,10 +231,8 @@ public class Ipv4Util {
 	 */
 	public static long ipv4ToLong(final String strIp) {
 		final Matcher matcher = PatternPool.IPV4.matcher(strIp);
-		if (matcher.matches()) {
-			return matchAddress(matcher);
-		}
-		throw new IllegalArgumentException("Invalid IPv4 address!");
+		Assert.isTrue(matcher.matches(), "Invalid IPv4 address: {}", strIp);
+		return matchAddress(matcher);
 	}
 
 	/**
@@ -255,6 +255,7 @@ public class Ipv4Util {
 	 * @return 起始IP的长整型表示
 	 */
 	public static Long getBeginIpLong(final String ip, final int maskBit) {
+		assertMaskBitValid(maskBit);
 		return ipv4ToLong(ip) & ipv4ToLong(getMaskByMaskBit(maskBit));
 	}
 
@@ -289,9 +290,7 @@ public class Ipv4Util {
 	 */
 	public static int getMaskBitByMask(final String mask) {
 		final Integer maskBit = MaskBit.getMaskBit(mask);
-		if (maskBit == null) {
-			throw new IllegalArgumentException("Invalid netmask " + mask);
-		}
+		Assert.notNull(maskBit, "Invalid netmask：{}", mask);
 		return maskBit;
 	}
 
@@ -303,12 +302,13 @@ public class Ipv4Util {
 	 * @return 子网内地址总数
 	 */
 	public static int countByMaskBit(final int maskBit, final boolean isAll) {
-		//如果是可用地址的情况，掩码位小于等于0或大于等于32，则可用地址为0
-		if ((false == isAll) && (maskBit <= 0 || maskBit >= 32)) {
+		assertMaskBitValid(maskBit);
+		//如果掩码位等于32，则可用地址为0
+		if (maskBit == 32 && false == isAll) {
 			return 0;
 		}
 
-		final int count = (int) Math.pow(2, 32 - maskBit);
+		final int count = 1 << (32 - maskBit);
 		return isAll ? count : count - 2;
 	}
 
@@ -332,15 +332,14 @@ public class Ipv4Util {
 	public static String getMaskByIpRange(final String fromIp, final String toIp) {
 		final long toIpLong = ipv4ToLong(toIp);
 		final long fromIpLong = ipv4ToLong(fromIp);
-		Assert.isTrue(fromIpLong < toIpLong, "to IP must be greater than from IP!");
+		Assert.isTrue(fromIpLong <= toIpLong, "Start IP must be less than or equal to end IP!");
 
-		final String[] fromIpSplit = StrUtil.splitToArray(fromIp, CharUtil.DOT);
-		final String[] toIpSplit = StrUtil.splitToArray(toIp, CharUtil.DOT);
-		final StringBuilder mask = new StringBuilder();
-		for (int i = 0; i < toIpSplit.length; i++) {
-			mask.append(255 - Integer.parseInt(toIpSplit[i]) + Integer.parseInt(fromIpSplit[i])).append(CharUtil.DOT);
-		}
-		return mask.substring(0, mask.length() - 1);
+		return StrUtil.builder(15)
+				.append(255 - getPartOfIpLong(toIpLong, 1) + getPartOfIpLong(fromIpLong, 1)).append(CharUtil.DOT)
+				.append(255 - getPartOfIpLong(toIpLong, 2) + getPartOfIpLong(fromIpLong, 2)).append(CharUtil.DOT)
+				.append(255 - getPartOfIpLong(toIpLong, 3) + getPartOfIpLong(fromIpLong, 3)).append(CharUtil.DOT)
+				.append(255 - getPartOfIpLong(toIpLong, 4) + getPartOfIpLong(fromIpLong, 4))
+				.toString();
 	}
 
 	/**
@@ -353,15 +352,13 @@ public class Ipv4Util {
 	public static int countByIpRange(final String fromIp, final String toIp) {
 		final long toIpLong = ipv4ToLong(toIp);
 		final long fromIpLong = ipv4ToLong(fromIp);
-		if (fromIpLong > toIpLong) {
-			throw new IllegalArgumentException("to IP must be greater than from IP!");
-		}
+		Assert.isTrue(fromIpLong <= toIpLong, "Start IP must be less than or equal to end IP!");
+
 		int count = 1;
-		final int[] fromIpSplit = StrUtil.split(fromIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
-		final int[] toIpSplit = StrUtil.split(toIp, CharUtil.DOT).stream().mapToInt(Integer::parseInt).toArray();
-		for (int i = fromIpSplit.length - 1; i >= 0; i--) {
-			count += (toIpSplit[i] - fromIpSplit[i]) * Math.pow(256, fromIpSplit.length - i - 1);
-		}
+		count += (getPartOfIpLong(toIpLong, 4) - getPartOfIpLong(fromIpLong, 4));
+		count += (getPartOfIpLong(toIpLong, 3) - getPartOfIpLong(fromIpLong, 3)) << 8;
+		count += (getPartOfIpLong(toIpLong, 2) - getPartOfIpLong(fromIpLong, 2)) << 16;
+		count += (getPartOfIpLong(toIpLong, 1) - getPartOfIpLong(fromIpLong, 1)) << 24;
 		return count;
 	}
 
@@ -382,7 +379,7 @@ public class Ipv4Util {
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
 	public static boolean isMaskBitValid(final int maskBit) {
-		return MaskBit.get(maskBit) != null;
+		return maskBit >= IP_MASK_MIN && maskBit <= IP_MASK_MAX;
 	}
 
 	/**
@@ -416,9 +413,15 @@ public class Ipv4Util {
 	 * @return ip的long值
 	 */
 	private static long matchAddress(final Matcher matcher) {
-		long addr = 0;
+		int addr = 0;
+		// 每个点分十进制数字 转为 8位二进制
 		for (int i = 1; i <= 4; ++i) {
-			addr |= Long.parseLong(matcher.group(i)) << 8 * (4 - i);
+			addr <<= 8;
+			addr |= Integer.parseInt(matcher.group(i));
+		}
+		// int的最高位无法直接使用，转为Long
+		if (addr < 0) {
+			return 0xffffffffL & addr;
 		}
 		return addr;
 	}
@@ -433,6 +436,45 @@ public class Ipv4Util {
 	 */
 	private static boolean isBetween(final long userIp, final long begin, final long end) {
 		return (userIp >= begin) && (userIp <= end);
+	}
+
+	/**
+	 * 校验 掩码位数，合法范围为：[1,32]，不合法则抛出异常
+	 *
+	 * @param maskBit 掩码位数
+	 */
+	private static void assertMaskBitValid(final int maskBit) {
+		Assert.isTrue(isMaskBitValid(maskBit), "Invalid maskBit：{}", maskBit);
+	}
+
+	/**
+	 * 获取ip(Long类型)指定部分的十进制值，即，{@literal X.X.X.X }形式中每个部分的值
+	 * <p>例如，ip为{@literal 0xC0A802FA}，第1部分的值为：
+	 * <ul>
+	 * <li>第1部分的值为：@literal 0xC0}，十进制值为：192</li>
+	 * <li>第2部分的值为：@literal 0xA8}，十进制值为：168</li>
+	 * <li>第3部分的值为：@literal 0x02}，十进制值为：2</li>
+	 * <li>第4部分的值为：@literal 0xFA}，十进制值为：250</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param ip       ip地址，Long类型
+	 * @param position 指定位置，取值范围：[1,4]
+	 * @return ip地址指定部分的十进制值
+	 */
+	private static int getPartOfIpLong(final long ip, final int position) {
+		switch (position) {
+			case 1:
+				return ((int) ip >> 24) & 0xFF;
+			case 2:
+				return ((int) ip >> 16) & 0xFF;
+			case 3:
+				return ((int) ip >> 8) & 0xFF;
+			case 4:
+				return ((int) ip) & 0xFF;
+			default:
+				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
+		}
 	}
 	//-------------------------------------------------------------------------------- Private method end
 }
