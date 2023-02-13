@@ -1,12 +1,16 @@
 package cn.hutool.core.stream;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.math.NumberUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,10 +85,10 @@ public class EasyStreamTest {
 		final List<Integer> orders = Arrays.asList(1, 2, 3, 2);
 		final List<String> list = Arrays.asList("dromara", "guava", "sweet", "hutool");
 		final Map<Integer, String> map = MapUtil.<Integer, String>builder()
-				.put(1, "dromara")
-				.put(2, "hutool")
-				.put(3, "sweet")
-				.build();
+			.put(1, "dromara")
+			.put(2, "hutool")
+			.put(3, "sweet")
+			.build();
 
 		final Map<Integer, String> toZip = EasyStream.of(orders).toZip(list);
 		Assert.assertEquals(map, toZip);
@@ -122,15 +126,15 @@ public class EasyStreamTest {
 		final List<Integer> list = Arrays.asList(1, 2, 3);
 		final Map<String, List<Integer>> group = EasyStream.of(list).group(String::valueOf);
 		Assert.assertEquals(
-				new HashMap<String, List<Integer>>() {
-					private static final long serialVersionUID = 1L;
+			new HashMap<String, List<Integer>>() {
+				private static final long serialVersionUID = 1L;
 
-					{
-						put("1", singletonList(1));
-						put("2", singletonList(2));
-						put("3", singletonList(3));
-					}
-				}, group);
+				{
+					put("1", singletonList(1));
+					put("2", singletonList(2));
+					put("3", singletonList(3));
+				}
+			}, group);
 	}
 
 	@Test
@@ -140,7 +144,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
 		// 并行流时正常
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"),
-				EasyStream.of("dromara", "hutool", "sweet").parallel().mapIdx((e, i) -> i + 1 + "." + e).toList());
+			EasyStream.of("dromara", "hutool", "sweet").parallel().mapIdx((e, i) -> i + 1 + "." + e).toList());
 	}
 
 	@Test
@@ -181,7 +185,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(ListUtil.sort(collect2), ListUtil.sort(distinctBy2));
 
 		Assert.assertEquals(
-				4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
+			4, EasyStream.of(1, 2, 2, null, 3, null).parallel(true).distinct(t -> Objects.isNull(t) ? null : t.toString()).sequential().count()
 		);
 	}
 
@@ -217,28 +221,28 @@ public class EasyStreamTest {
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"), mapIndex);
 		// 并行流时正常
 		Assert.assertEquals(Arrays.asList("1.dromara", "2.hutool", "3.sweet"),
-				EasyStream.of("dromara", "hutool", "sweet").parallel()
-						.flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList());
+			EasyStream.of("dromara", "hutool", "sweet").parallel()
+				.flatMapIdx((e, i) -> EasyStream.of(i + 1 + "." + e)).toList());
 	}
 
 	@Test
 	public void testPeek() {
 		EasyStream.of("one", "two", "three", "four")
-				.filter(e -> e.length() == 4)
-				.peek(e -> Assert.assertEquals("four", e))
-				.map(String::toUpperCase)
-				.peek(e -> Assert.assertEquals("FOUR", e))
-				.collect(Collectors.toList());
+			.filter(e -> e.length() == 4)
+			.peek(e -> Assert.assertEquals("four", e))
+			.map(String::toUpperCase)
+			.peek(e -> Assert.assertEquals("FOUR", e))
+			.collect(Collectors.toList());
 	}
 
 	@Test
 	public void testPeekIdx() {
 		EasyStream.of("one", "two", "three", "four")
-				.filter(e -> e.length() == 4)
-				.peekIdx((e, i) -> Assert.assertEquals("four:0", e + ":" + i))
-				.map(String::toUpperCase)
-				.peekIdx((e, i) -> Assert.assertEquals("FOUR:0", e + ":" + i))
-				.collect(Collectors.toList());
+			.filter(e -> e.length() == 4)
+			.peekIdx((e, i) -> Assert.assertEquals("four:0", e + ":" + i))
+			.map(String::toUpperCase)
+			.peekIdx((e, i) -> Assert.assertEquals("FOUR:0", e + ":" + i))
+			.collect(Collectors.toList());
 	}
 
 	@Test
@@ -274,7 +278,7 @@ public class EasyStreamTest {
 		Assert.assertEquals(Arrays.asList("dromara", "hutool"), filterIndex);
 		// 并行流时正常
 		Assert.assertEquals(Arrays.asList("dromara", "hutool"),
-				EasyStream.of("dromara", "hutool", "sweet").parallel().filterIdx((e, i) -> i < 2).toList());
+			EasyStream.of("dromara", "hutool", "sweet").parallel().filterIdx((e, i) -> i < 2).toList());
 	}
 
 	@Test
@@ -380,23 +384,23 @@ public class EasyStreamTest {
 		final List<Integer> list = EasyStream.iterate(1, i -> i <= 10, i -> i + 1).toList();
 
 		final List<String> res1 = EasyStream.of(list)
-				// 舍弃 5
-				.takeWhile(e -> e < 5)
-				// 过滤奇数
-				.filter(e -> (e & 1) == 0)
-				// 反序
-				.sorted(Comparator.reverseOrder())
-				.map(String::valueOf)
-				.toList();
+			// 舍弃 5
+			.takeWhile(e -> e < 5)
+			// 过滤奇数
+			.filter(e -> (e & 1) == 0)
+			// 反序
+			.sorted(Comparator.reverseOrder())
+			.map(String::valueOf)
+			.toList();
 		Assert.assertEquals(Arrays.asList("4", "2"), res1);
 
 		final List<Integer> res2 = EasyStream.iterate(1, i -> i + 1)
-				.parallel()
-				.takeWhile(e -> e < 5)
-				.map(String::valueOf)
-				.map(Integer::valueOf)
-				.sorted(Comparator.naturalOrder())
-				.toList();
+			.parallel()
+			.takeWhile(e -> e < 5)
+			.map(String::valueOf)
+			.map(Integer::valueOf)
+			.sorted(Comparator.naturalOrder())
+			.toList();
 		Assert.assertEquals(Arrays.asList(1, 2, 3, 4), res2);
 	}
 
@@ -406,25 +410,25 @@ public class EasyStreamTest {
 		final List<Integer> list = EasyStream.iterate(1, i -> i <= 10, i -> i + 1).toList();
 
 		final List<String> res1 = EasyStream.of(list)
-				// 舍弃 5之前的数字
-				.dropWhile(e -> e < 5)
-				// 过滤偶数
-				.filter(e -> (e & 1) == 1)
-				// 反序
-				.sorted(Comparator.reverseOrder())
-				.map(String::valueOf)
-				.toList();
+			// 舍弃 5之前的数字
+			.dropWhile(e -> e < 5)
+			// 过滤偶数
+			.filter(e -> (e & 1) == 1)
+			// 反序
+			.sorted(Comparator.reverseOrder())
+			.map(String::valueOf)
+			.toList();
 		Assert.assertEquals(Arrays.asList("9", "7", "5"), res1);
 
 		final List<Integer> res2 = EasyStream.of(list)
-				.parallel()
-				.dropWhile(e -> e < 5)
-				// 过滤偶数
-				.filter(e -> (e & 1) == 1)
-				.map(String::valueOf)
-				.map(Integer::valueOf)
-				.sorted(Comparator.naturalOrder())
-				.toList();
+			.parallel()
+			.dropWhile(e -> e < 5)
+			// 过滤偶数
+			.filter(e -> (e & 1) == 1)
+			.map(String::valueOf)
+			.map(Integer::valueOf)
+			.sorted(Comparator.naturalOrder())
+			.toList();
 		Assert.assertEquals(Arrays.asList(5, 7, 9), res2);
 	}
 
@@ -435,11 +439,46 @@ public class EasyStreamTest {
 
 
 	@Test
-	public void testIntSum() {
+	public void testIntSumAndAvg() {
 		int sum = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).sum(Integer::intValue);
-		Assert.assertEquals(sum,55);
-		double doubleSum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).sum(Double::doubleValue);
-		Assert.assertEquals(doubleSum,59.6);
+		Assert.assertEquals(sum, 55);
+
+		//测试为空
+		List<Integer> integerList = new ArrayList<>();
+		int emptySum = EasyStream.of(integerList).sum(Integer::intValue);
+		Assert.assertEquals(emptySum, 0);
 	}
 
+	@Test
+	public void testDoubleSumAndAvg() {
+		double doubleSum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).sum(Double::doubleValue);
+		Assert.assertEquals(doubleSum, 59.6,2);
+
+		List<Double> doubleList = new ArrayList<>();
+		double emptySum = EasyStream.of(doubleList).sum(Double::doubleValue);
+		Assert.assertEquals(emptySum, 0.0,2);
+
+	}
+
+	@Test
+	public void testLongSumAndAvg() {
+		long sum = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).sum(Long::longValue);
+		Assert.assertEquals(sum, 55);
+
+		List<Long> longList = new ArrayList<>();
+		double emptySum = EasyStream.of(longList).sum(Long::longValue);
+		Assert.assertEquals(emptySum, 0L);
+
+	}
+
+	@Test
+	public void testBigDecimalSumAndAvg() {
+		BigDecimal sum = EasyStream.of(NumberUtil.toBigDecimal(1.1), NumberUtil.toBigDecimal(2.2), NumberUtil.toBigDecimal(3.3), NumberUtil.toBigDecimal(4.4), NumberUtil.toBigDecimal(5.5), NumberUtil.toBigDecimal(6.6), NumberUtil.toBigDecimal(7.7), NumberUtil.toBigDecimal(8.8), NumberUtil.toBigDecimal(9.9), NumberUtil.toBigDecimal(10.10)).sum(Function.identity());
+		Assert.assertEquals(sum, 59.6);
+
+		List<BigDecimal> bigDecimalList = new ArrayList<>();
+		BigDecimal emptySum = EasyStream.of(bigDecimalList).sum(Function.identity());
+		Assert.assertEquals(emptySum, BigDecimal.ZERO);
+
+	}
 }

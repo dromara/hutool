@@ -1,13 +1,19 @@
 package cn.hutool.core.stream;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.Spliterator;
 import java.util.function.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -299,6 +305,34 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		return stream.mapToDouble(mapper).sum();
 	}
 
+	/**
+	 * 计算decimal的总和
+	 *
+	 * @param mapper 映射
+	 * @return {@link OptionalDouble}
+	 */
+	public BigDecimal sum(final Function<? super T, BigDecimal> mapper) {
+		return	stream.map(mapper).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	/**
+	 * 计算bigDecimal平均值
+	 * @param mapper 映射
+	 * @param scale 精度
+	 * @param roundingMode 舍入模式
+	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T,BigDecimal> mapper,int scale,RoundingMode roundingMode){
+		//元素列表
+		List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
+		if (CollUtil.isEmpty(bigDecimalList)){
+			return Opt.ofNullable(null);
+		}
+
+		return Opt.of(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add).divide(NumberUtil.toBigDecimal(bigDecimalList.size()),scale, roundingMode));
+	}
+
+
 
 
 	/**
@@ -331,6 +365,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public OptionalDouble avg(ToLongFunction<? super T> mapper) {
 		return stream.mapToLong(mapper).average();
 	}
+
 
 
 	/**
