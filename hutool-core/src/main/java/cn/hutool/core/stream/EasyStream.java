@@ -309,7 +309,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 计算decimal的总和
 	 *
 	 * @param mapper 映射
-	 * @return {@link OptionalDouble}
+	 * @return {@link BigDecimal}
 	 */
 	public BigDecimal sum(final Function<? super T, BigDecimal> mapper) {
 		return stream.map(mapper).reduce(BigDecimal.ZERO, BigDecimal::add);
