@@ -659,13 +659,18 @@ public class CalendarUtil {
 
 		cal.setTimeInMillis(birthday);
 		int age = year - cal.get(Calendar.YEAR);
+		//当前日期，则为0岁
+		if (age == 0){
+			return 0;
+		}
 
 		final int monthBirth = cal.get(Calendar.MONTH);
 		if (month == monthBirth) {
 
 			final int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
 			final boolean isLastDayOfMonthBirth = dayOfMonthBirth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-			if ((false == isLastDayOfMonth || false == isLastDayOfMonthBirth) && dayOfMonth < dayOfMonthBirth) {
+			// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
+			if ((false == isLastDayOfMonth || false == isLastDayOfMonthBirth) && dayOfMonth <= dayOfMonthBirth) {
 				// 如果生日在当月，但是未达到生日当天的日期，年龄减一
 				age--;
 			}

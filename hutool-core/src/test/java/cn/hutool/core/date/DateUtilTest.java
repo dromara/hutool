@@ -1100,4 +1100,15 @@ public class DateUtilTest {
 		Assert.assertNotNull(dateTime3);
 		Assert.assertEquals("2021-03-17 06:31:33", dateTime3.toString());
 	}
+
+	/**
+	 * issue#I6E6ZG 法定年龄/周岁/实岁计算
+	 */
+	@Test
+	public void issueI6E6ZGTest() {
+		// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
+		Assert.assertEquals(70, DateUtil.age(DateUtil.parse("1952-02-14"), DateUtil.parse("2023-02-14")));
+		Assert.assertEquals(71, DateUtil.age(DateUtil.parse("1952-02-13"), DateUtil.parse("2023-02-14")));
+		Assert.assertEquals(0, DateUtil.age(DateUtil.parse("2023-02-14"), DateUtil.parse("2023-02-14")));
+	}
 }
