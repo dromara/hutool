@@ -104,7 +104,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	/**
 	 * 返回包含单个元素的串行流
 	 *
-	 * @param t   单个元素
+	 * @param t 单个元素
 	 * @param <T> 元素类型
 	 * @return 包含单个元素的串行流
 	 */
@@ -116,9 +116,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 返回包含指定元素的串行流，若输入数组为{@code null}或空，则返回一个空的串行流
 	 *
 	 * @param values 指定元素
-	 * @param <T>    元素类型
+	 * @param <T> 元素类型
 	 * @return 包含指定元素的串行流
-	 * 从一个安全数组中创建流
+	 * 		从一个安全数组中创建流
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -130,7 +130,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 通过实现了{@link Iterable}接口的对象创建串行流，若输入对象为{@code null}，则返回一个空的串行流
 	 *
 	 * @param iterable 实现了{@link Iterable}接口的对象
-	 * @param <T>      元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Iterable<T> iterable) {
@@ -142,7 +142,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 *
 	 * @param iterable {@link Iterable}
 	 * @param parallel 是否并行
-	 * @param <T>      元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Iterable<T> iterable, final boolean parallel) {
@@ -157,7 +157,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 通过传入的{@link Stream}创建流，若输入对象为{@code null}，则返回一个空的串行流
 	 *
 	 * @param stream {@link Stream}
-	 * @param <T>    元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Stream<T> stream) {
@@ -173,9 +173,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 就可以创建从0开始，每次+1的无限流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
-	 * @param <T>  元素类型
+	 * @param <T> 元素类型
 	 * @param seed 初始值
-	 * @param f    用上一个元素作为参数执行并返回一个新的元素
+	 * @param f 用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
 	public static <T> EasyStream<T> iterate(final T seed, final UnaryOperator<T> f) {
@@ -191,13 +191,14 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 就可以创建包含元素0,1,2的流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
-	 * @param <T>     元素类型
-	 * @param seed    初始值
+	 * @param <T> 元素类型
+	 * @param seed 初始值
 	 * @param hasNext 条件值
-	 * @param next    用上一个元素作为参数执行并返回一个新的元素
+	 * @param next 用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
-	public static <T> EasyStream<T> iterate(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
+	public static <T> EasyStream<T> iterate(final T seed, final Predicate<? super T> hasNext,
+			final UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
 		return new EasyStream<>(StreamUtil.iterate(seed, hasNext, next));
@@ -209,7 +210,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 适用场景在一些生成常量流、随机元素等
 	 *
 	 * @param <T> 元素类型
-	 * @param s   用来生成元素的 {@code Supplier}
+	 * @param s 用来生成元素的 {@code Supplier}
 	 * @return 无限串行无序流
 	 */
 	public static <T> EasyStream<T> generate(final Supplier<T> s) {
@@ -224,8 +225,8 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * <p>从重复串行流进行拼接时可能会导致深度调用链甚至抛出 {@code StackOverflowException}</p>
 	 *
 	 * @param <T> 元素类型
-	 * @param a   第一个流
-	 * @param b   第二个流
+	 * @param a 第一个流
+	 * @param b 第二个流
 	 * @return 拼接两个流之后的流
 	 */
 	public static <T> EasyStream<T> concat(final Stream<? extends T> a, final Stream<? extends T> b) {
@@ -235,12 +236,13 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	/**
 	 * 拆分字符串，转换为串行流
 	 *
-	 * @param str   字符串
+	 * @param str 字符串
 	 * @param regex 正则
 	 * @return 拆分后元素组成的流
 	 */
 	public static EasyStream<String> split(final CharSequence str, final String regex) {
-		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(EasyStream::of).orElseGet(EasyStream::empty);
+		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(EasyStream::of)
+				.orElseGet(EasyStream::empty);
 	}
 
 	// --------------------------------------------------------------- Static method end
@@ -251,7 +253,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 这是一个无状态中间操作
 	 *
 	 * @param mapper 指定的函数
-	 * @param <R>    函数执行后返回的类型
+	 * @param <R> 函数执行后返回的类型
 	 * @return 返回叠加操作后的流
 	 */
 	@Override
@@ -270,8 +272,6 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public EasyStream<T> wrap(final Stream<T> stream) {
 		return new EasyStream<>(stream);
 	}
-
-
 
 
 	/**
@@ -312,27 +312,50 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @return {@link OptionalDouble}
 	 */
 	public BigDecimal sum(final Function<? super T, BigDecimal> mapper) {
-		return	stream.map(mapper).reduce(BigDecimal.ZERO, BigDecimal::add);
+		return stream.map(mapper).reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+
+	/**
+	 * 计算bigDecimal平均值 并以四舍五入的方式保留2位精度
+	 *
+	 * @param mapper 映射
+	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper) {
+		return avg(mapper, 2);
+	}
+
+
+	/**
+	 * 计算bigDecimal平均值 并以四舍五入的方式保留scale的进度
+	 *
+	 * @param mapper 映射
+	 * @param scale 精度
+	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale) {
+		return avg(mapper, scale, RoundingMode.HALF_UP);
 	}
 
 	/**
 	 * 计算bigDecimal平均值
+	 *
 	 * @param mapper 映射
 	 * @param scale 精度
 	 * @param roundingMode 舍入模式
 	 * @return 如果元素的长度为0 那么会返回为空的opt
 	 */
-	public Opt<BigDecimal> avg(final Function<? super T,BigDecimal> mapper,int scale,RoundingMode roundingMode){
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale, RoundingMode roundingMode) {
 		//元素列表
 		List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
-		if (CollUtil.isEmpty(bigDecimalList)){
+		if (CollUtil.isEmpty(bigDecimalList)) {
 			return Opt.ofNullable(null);
 		}
 
-		return Opt.of(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add).divide(NumberUtil.toBigDecimal(bigDecimalList.size()),scale, roundingMode));
+		return Opt.of(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add)
+				.divide(NumberUtil.toBigDecimal(bigDecimalList.size()), scale, roundingMode));
 	}
-
-
 
 
 	/**
@@ -367,7 +390,6 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	}
 
 
-
 	/**
 	 * 建造者
 	 *
@@ -381,12 +403,12 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		 * @param t the element to add
 		 * @return {@code this} builder
 		 * @throws IllegalStateException if the builder has already transitioned to
-		 *                               the built state
+		 * 		the built state
 		 * @implSpec The default implementation behaves as if:
-		 * <pre>{@code
-		 *     accept(t)
-		 *     return this;
-		 * }</pre>
+		 * 		<pre>{@code
+		 * 						    accept(t)
+		 * 						    return this;
+		 *                      }</pre>
 		 */
 		default Builder<T> add(final T t) {
 			accept(t);
