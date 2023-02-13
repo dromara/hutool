@@ -320,7 +320,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 计算bigDecimal平均值 并以四舍五入的方式保留2位精度
 	 *
 	 * @param mapper 映射
-	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 * @return {@link Opt}<{@link BigDecimal}> 如果元素的长度为0 那么会返回为空的opt
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper) {
 		return avg(mapper, 2);
@@ -332,7 +332,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 *
 	 * @param mapper 映射
 	 * @param scale 精度
-	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 * @return {@link Opt}<{@link BigDecimal}>
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale) {
 		return avg(mapper, scale, RoundingMode.HALF_UP);
@@ -344,7 +344,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @param mapper 映射
 	 * @param scale 精度
 	 * @param roundingMode 舍入模式
-	 * @return 如果元素的长度为0 那么会返回为空的opt
+	 * @return {@link Opt}<{@link BigDecimal}> 如果元素的长度为0 那么会返回为空的opt
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale, RoundingMode roundingMode) {
 		//元素列表
@@ -362,7 +362,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 计算int平均值
 	 *
 	 * @param mapper 映射器
-	 * @return {@link Integer}
+	 * @return {@link OptionalDouble}
 	 */
 	public OptionalDouble avg(ToIntFunction<? super T> mapper) {
 		return stream.mapToInt(mapper).average();
@@ -406,9 +406,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		 * 		the built state
 		 * @implSpec The default implementation behaves as if:
 		 * 		<pre>{@code
-		 * 						    accept(t)
-		 * 						    return this;
-		 *                      }</pre>
+		 * 								    accept(t)
+		 * 								    return this;
+		 *                             }</pre>
 		 */
 		default Builder<T> add(final T t) {
 			accept(t);
