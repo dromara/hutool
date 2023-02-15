@@ -7,7 +7,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.map.TableMap;
@@ -1023,7 +1022,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
-				Console.log(rowMap);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
 				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getCachedAliasComparator()), false, false);
