@@ -164,9 +164,6 @@ public class DialectFactory implements DriverNamePool {
 		} else if (nameContainsProductInfo.contains("sybase")) {
 			// Sybase
 			driver = DRIVER_SYBASE;
-		} else if (nameContainsProductInfo.contains("xugu")) {
-			// 虚谷数据库
-			driver = DRIVER_XUGO;
 		}
 
 		return driver;
