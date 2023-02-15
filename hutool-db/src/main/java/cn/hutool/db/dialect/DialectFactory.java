@@ -153,18 +153,16 @@ public class DialectFactory implements DriverNamePool {
 			// 华为高斯
 			driver = DRIVER_GAUSS;
 		} else if (nameContainsProductInfo.contains("gbase")) {
-			// 华为高斯
+			// 南大通用数据库
 			driver = DRIVER_GBASE;
 		} else if (nameContainsProductInfo.contains("oscar")) {
 			// 神州数据库
 			driver = DRIVER_OSCAR;
 		} else if (nameContainsProductInfo.contains("sybase")) {
-			// 神州数据库
+			// Sybase
 			driver = DRIVER_SYBASE;
-		} else if (nameContainsProductInfo.contains("xugu")) {
-			// 虚谷数据库
-			driver = DRIVER_XUGO;
 		}else if (nameContainsProductInfo.contains("mariadb")) {
+			// mariadb
 			driver = DRIVER_MARIADB;
 		}
 
