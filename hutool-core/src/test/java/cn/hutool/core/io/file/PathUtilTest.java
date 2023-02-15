@@ -78,4 +78,13 @@ public class PathUtilTest {
 		final String contentType = FileUtil.getMimeType("a001.7z");
 		Assert.assertEquals("application/x-7z-compressed", contentType);
 	}
+
+	/**
+	 * issue#2893 target不存在空导致异常
+	 */
+	@Test
+	@Ignore
+	public void moveTest2(){
+		PathUtil.move(Paths.get("D:\\project\\test1.txt"), Paths.get("D:\\project\\test2.txt"), false);
+	}
 }
