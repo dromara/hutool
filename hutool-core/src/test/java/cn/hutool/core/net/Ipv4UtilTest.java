@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
-import java.util.List;
-
 public class Ipv4UtilTest {
 
 	@Test
@@ -28,10 +26,16 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void longToIpTest() {
-		final String ip = "192.168.1.255";
-		final long ipLong = Ipv4Util.ipv4ToLong(ip);
-		final String ipv4 = Ipv4Util.longToIpv4(ipLong);
-		Assert.assertEquals(ip, ipv4);
+		testLongToIp("192.168.1.255");
+		testLongToIp("0.0.0.0");
+		testLongToIp("0.0.0.255");
+		testLongToIp("0.0.255.255");
+		testLongToIp("0.255.255.255");
+		testLongToIp("255.255.255.255");
+		testLongToIp("255.255.255.0");
+		testLongToIp("255.255.0.0");
+		testLongToIp("255.0.0.0");
+		testLongToIp("0.255.255.0");
 	}
 
 	@Test
@@ -44,9 +48,24 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void listTest(){
-		final int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
-		final List<String> list = Ipv4Util.list("192.168.100.2", maskBit, false);
-		Assert.assertEquals(254, list.size());
+		final String ip = "192.168.100.2";
+		testGenerateIpList(ip, 22, false);
+		testGenerateIpList(ip, 22, true);
+
+		testGenerateIpList(ip, 24, false);
+		testGenerateIpList(ip, 24, true);
+
+		testGenerateIpList(ip, 26, false);
+		testGenerateIpList(ip, 26, true);
+
+		testGenerateIpList(ip, 30, false);
+		testGenerateIpList(ip, 30, true);
+
+		testGenerateIpList(ip, 31, false);
+		testGenerateIpList(ip, 31, true);
+
+		testGenerateIpList(ip, 32, false);
+		testGenerateIpList(ip, 32, true);
 
 		testGenerateIpList("10.1.0.1", "10.2.1.2");
 
@@ -90,8 +109,9 @@ public class Ipv4UtilTest {
 
 	@Test
 	public void isMaskBitValidTest() {
-		final boolean maskBitValid = Ipv4Util.isMaskBitValid(32);
-		Assert.assertTrue("掩码位合法检验", maskBitValid);
+		for (int i = 1; i < 32; i++) {
+			Assert.assertTrue("掩码位非法：" + i, Ipv4Util.isMaskBitValid(i));
+		}
 	}
 
 	@Test
@@ -119,4 +139,19 @@ public class Ipv4UtilTest {
 				Ipv4Util.list(fromIp, toIp).size()
 		);
 	}
+
+	@SuppressWarnings("SameParameterValue")
+	private void testGenerateIpList(final String ip, final int maskBit, final boolean isAll) {
+		Assert.assertEquals(
+				Ipv4Util.countByMaskBit(maskBit, isAll),
+				Ipv4Util.list(ip, maskBit, isAll).size()
+		);
+	}
+
+	private static void testLongToIp(final String ip){
+		final long ipLong = Ipv4Util.ipv4ToLong(ip);
+		final String ipv4 = Ipv4Util.longToIpv4(ipLong);
+		Assert.assertEquals(ip, ipv4);
+	}
+
 }
