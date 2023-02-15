@@ -1795,7 +1795,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * 计算相对于dateToCompare的年龄，常用于计算指定生日在某年的年龄
 	 *
 	 * @param birthday      生日
 	 * @param dateToCompare 需要对比的日期

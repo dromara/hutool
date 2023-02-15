@@ -626,7 +626,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * 计算相对于dateToCompare的年龄，常用于计算指定生日在某年的年龄
 	 *
 	 * @param birthday      生日
 	 * @param dateToCompare 需要对比的日期
@@ -649,12 +649,16 @@ public class CalendarUtil {
 		int age = year - cal.get(Calendar.YEAR);
 
 		final int monthBirth = cal.get(Calendar.MONTH);
-		if (month == monthBirth) {
+
+		//当前日期，则为0岁
+		if (age == 0){
+			return 0;
+		} else if (month == monthBirth) {
 
 			final int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
 			final boolean isLastDayOfMonthBirth = dayOfMonthBirth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-			if ((false == isLastDayOfMonth || false == isLastDayOfMonthBirth) && dayOfMonth < dayOfMonthBirth) {
-				// 如果生日在当月，但是未达到生日当天的日期，年龄减一
+			if ((false == isLastDayOfMonth || false == isLastDayOfMonthBirth) && dayOfMonth <= dayOfMonthBirth) {
+				// 如果生日在当月，但是未超过生日当天的日期，年龄减一
 				age--;
 			}
 		} else if (month < monthBirth) {
