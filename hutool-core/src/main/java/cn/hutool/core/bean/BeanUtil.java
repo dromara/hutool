@@ -1,5 +1,7 @@
 package cn.hutool.core.bean;
 
+import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.bean.annotations.FieldNotNull;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
@@ -9,29 +11,12 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ModifierUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
+import java.beans.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -608,6 +593,7 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- beanToMap
+
 	/**
 	 * 将bean的部分属性转换成map<br>
 	 * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
@@ -620,7 +606,7 @@ public class BeanUtil {
 	public static Map<String, Object> beanToMap(Object bean, String... properties) {
 		int mapSize = 16;
 		Editor<String> keyEditor = null;
-		if(ArrayUtil.isNotEmpty(properties)){
+		if (ArrayUtil.isNotEmpty(properties)) {
 			mapSize = properties.length;
 			final Set<String> propertiesSet = CollUtil.set(false, properties);
 			keyEditor = property -> propertiesSet.contains(property) ? property : null;
@@ -730,7 +716,7 @@ public class BeanUtil {
 	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(Object source, Class<T> tClass, String... ignoreProperties) {
-		if(null == source){
+		if (null == source) {
 			return null;
 		}
 		T target = ReflectUtil.newInstanceIfPossible(tClass);
@@ -770,7 +756,7 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
-		if(null == source){
+		if (null == source) {
 			return;
 		}
 		BeanCopier.create(source, target, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create)).copy();
@@ -977,14 +963,14 @@ public class BeanUtil {
 	/**
 	 * 判断source与target的所有公共字段的值是否相同
 	 *
-	 * @param source 待检测对象1
-	 * @param target 待检测对象2
+	 * @param source           待检测对象1
+	 * @param target           待检测对象2
 	 * @param ignoreProperties 不需要检测的字段
 	 * @return 判断结果，如果为true则证明所有字段的值都相同
-	 * @since 5.8.4
 	 * @author Takak11
+	 * @since 5.8.4
 	 */
-	public static boolean isCommonFieldsEqual(Object source, Object target, String...ignoreProperties) {
+	public static boolean isCommonFieldsEqual(Object source, Object target, String... ignoreProperties) {
 
 		if (null == source && null == target) {
 			return true;
@@ -1000,11 +986,26 @@ public class BeanUtil {
 		sourceFields.removeAll(Arrays.asList(ignoreProperties));
 
 		for (String field : sourceFields) {
-			if(ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))){
+			if (ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))) {
 				return false;
 			}
 		}
 
 		return true;
+	}
+
+	public static void checkObjectFieldNotNull(Object source) {
+		if (source == null) {
+			throw new BeanException("检查对象为空");
+		}
+		Field[] allFields = ReflectUtil.getFields(source.getClass());
+		Arrays.stream(allFields)
+				.filter(f -> AnnotationUtil.hasAnnotation(f, FieldNotNull.class))
+				.forEach(f -> {
+					if (null != ReflectUtil.getFieldValue(source, f)) {
+						return;
+					}
+					throw new BeanException(AnnotationUtil.getAnnotationAlias(f, FieldNotNull.class).message());
+				});
 	}
 }

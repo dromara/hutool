@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.bean.annotations.FieldNotNull;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
@@ -915,5 +916,23 @@ public class BeanUtilTest {
 
 		userEntity.setSex(0);
 		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex"));
+	}
+
+	@Data
+	public static class TestBean{
+
+		@FieldNotNull("名字不可为空")
+		private String name;
+
+		@FieldNotNull("年龄不可为空")
+		private Integer age;
+		private Integer sexCode;
+	}
+
+	@Test
+	public void testCheckObjectFieldNotNull(){
+		TestBean testBean = new TestBean();
+		testBean.setName("sss");
+		BeanUtil.checkObjectFieldNotNull(testBean);
 	}
 }
