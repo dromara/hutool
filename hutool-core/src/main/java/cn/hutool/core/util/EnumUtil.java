@@ -310,9 +310,7 @@ public class EnumUtil {
 	 */
 	public static Map<String, Object> getNameFieldMap(final Class<? extends Enum<?>> clazz, final String fieldName) {
 		final Enum<?>[] enums = clazz.getEnumConstants();
-		if (null == enums) {
-			throw new IllegalArgumentException(StrUtil.format("Class [{}] is not an Enum type!", clazz.getName()));
-		}
+		Assert.notNull(enums, "Enum clazz must be not null !");
 		final Map<String, Object> map = MapUtil.newHashMap(enums.length, true);
 		for (final Enum<?> e : enums) {
 			map.put(e.name(), FieldUtil.getFieldValue(e, fieldName));
