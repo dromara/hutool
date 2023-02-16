@@ -33,6 +33,12 @@ public class NanoId {
 			"_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
 	/**
+	 * 数字字母表(不包含_-)，使用URL安全的Base64字符
+	 */
+	private static final char[] NO_SPECIAL_CHAR_ALPHABET =
+			"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
+	/**
 	 * 默认长度
 	 */
 	public static final int DEFAULT_SIZE = 21;
@@ -47,6 +53,16 @@ public class NanoId {
 	}
 
 	/**
+	 * 生成不包含_-的伪随机NanoId字符串，长度为默认的{@link #DEFAULT_SIZE}，使用密码安全的伪随机生成器
+	 *
+	 * @param noSpecialChar 没有特殊字符_-
+	 * @return 伪随机的NanoId字符串
+	 */
+	public static String randomNanoId(boolean noSpecialChar) {
+		return randomNanoId(null, noSpecialChar ? NO_SPECIAL_CHAR_ALPHABET : DEFAULT_ALPHABET, DEFAULT_SIZE);
+	}
+
+	/**
 	 * 生成伪随机的NanoId字符串
 	 *
 	 * @param size ID长度
@@ -54,6 +70,17 @@ public class NanoId {
 	 */
 	public static String randomNanoId(int size) {
 		return randomNanoId(null, null, size);
+	}
+
+	/**
+	 * 生成伪随机的NanoId字符串
+	 *
+	 * @param noSpecialChar 没有特殊字符_-
+	 * @param size          ID长度
+	 * @return 伪随机的NanoId字符串
+	 */
+	public static String randomNanoId(boolean noSpecialChar, int size) {
+		return randomNanoId(null, noSpecialChar ? NO_SPECIAL_CHAR_ALPHABET : DEFAULT_ALPHABET, size);
 	}
 
 	/**

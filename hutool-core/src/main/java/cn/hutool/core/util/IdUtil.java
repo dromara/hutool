@@ -266,12 +266,35 @@ public class IdUtil {
 	/**
 	 * 获取随机NanoId
 	 *
+	 * @param noSpecialChar 没有特殊字符_-
+	 * @return 随机NanoId
+	 * @since 5.8.13
+	 */
+	public static String nanoId(boolean noSpecialChar) {
+		return NanoId.randomNanoId(noSpecialChar);
+	}
+
+	/**
+	 * 获取随机NanoId
+	 *
 	 * @param size ID中的字符数量
 	 * @return 随机NanoId
 	 * @since 5.7.5
 	 */
 	public static String nanoId(int size) {
 		return NanoId.randomNanoId(size);
+	}
+
+	/**
+	 * 获取随机NanoId
+	 *
+	 * @param noSpecialChar 没有特殊字符_-
+	 * @param size          ID中的字符数量
+	 * @return 随机NanoId
+	 * @since 5.8.13
+	 */
+	public static String nanoId(boolean noSpecialChar, int size) {
+		return NanoId.randomNanoId(noSpecialChar, size);
 	}
 
 	/**
