@@ -3,6 +3,7 @@ package cn.hutool.core.collection;
 import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
@@ -289,6 +290,23 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(map, compare);
 	}
 
+	@Test
+	public void testDistinctByKey() {
+		Student student = new Student();
+		student.setName("张三");
+		student.setStudentId(12);
+		Student student2 = new Student();
+		student2.setName("张三");
+		student2.setStudentId(34);
+
+		List<Student> studentList = new ArrayList<>();
+		studentList.add(student);
+//		studentList.add(student2);
+		CollStreamUtil.add(studentList,student2);
+		List<Student> studentListReturn = CollStreamUtil.distinctByKey(studentList, Student::getName);
+		System.out.println(studentListReturn);
+	}
+
 	private String merge(Student student1, Student student2) {
 		if (student1 == null && student2 == null) {
 			return null;
@@ -306,6 +324,7 @@ public class CollStreamUtilTest {
 	 */
 	@Data
 	@AllArgsConstructor
+	@NoArgsConstructor
 	@ToString
 	public static class Student {
 		private long termId;//学期id

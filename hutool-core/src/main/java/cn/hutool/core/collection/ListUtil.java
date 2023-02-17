@@ -442,8 +442,7 @@ public class ListUtil {
 	 * @param end   结束位置（不包含）
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 */
-	public static <T> List<T>
-	sub(List<T> list, int start, int end) {
+	public static <T> List<T> sub(List<T> list, int start, int end) {
 		return sub(list, start, end, 1);
 	}
 
