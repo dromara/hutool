@@ -19,6 +19,7 @@ public class LengthFinder extends TextFinder {
 	 * @param length 长度
 	 */
 	public LengthFinder(int length) {
+		Assert.isTrue(length > 0, "Length must be great than 0");
 		this.length = length;
 	}
 
