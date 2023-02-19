@@ -100,6 +100,30 @@ public class ReflectUtilTest {
 	}
 
 	@Test
+	public void invokeMethodTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = ReflectUtil.getMethod(TestClass.class, "setA", int.class);
+		ReflectUtil.invoke(testClass, method, 10);
+		Assert.assertEquals(10, testClass.getA());
+	}
+
+	@Test
+	public void invokeMethodWithParamConvertTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = ReflectUtil.getMethod(TestClass.class, "setA", int.class);
+		ReflectUtil.invoke(testClass, method, "10");
+		Assert.assertEquals(10, testClass.getA());
+	}
+
+	@Test
+	public void invokeMethodWithParamConvertFailedTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = ReflectUtil.getMethod(TestClass.class, "setA", int.class);
+		Assert.assertThrows(IllegalArgumentException.class,
+				() -> ReflectUtil.invoke(testClass, method, "NaN"));
+	}
+
+	@Test
 	public void noneStaticInnerClassTest() {
 		final NoneStaticClass testAClass = ReflectUtil.newInstanceIfPossible(NoneStaticClass.class);
 		Assert.assertNotNull(testAClass);
