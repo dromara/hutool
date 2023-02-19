@@ -148,10 +148,31 @@ public class Ipv4UtilTest {
 		);
 	}
 
-	private static void testLongToIp(final String ip){
+	private static void testLongToIp(final String ip) {
 		final long ipLong = Ipv4Util.ipv4ToLong(ip);
 		final String ipv4 = Ipv4Util.longToIpv4(ipLong);
 		Assert.assertEquals(ip, ipv4);
+	}
+
+	@Test
+	public void isInnerTest() {
+		Assert.assertTrue(Ipv4Util.isInnerIP(Ipv4Util.LOCAL_IP));
+		Assert.assertTrue(Ipv4Util.isInnerIP("192.168.5.12"));
+		Assert.assertTrue(Ipv4Util.isInnerIP("172.20.10.1"));
+
+		Assert.assertFalse(Ipv4Util.isInnerIP("180.10.2.5"));
+		Assert.assertFalse(Ipv4Util.isInnerIP("192.160.10.3"));
+	}
+
+	@Test
+	public void isPublicTest() {
+		Assert.assertTrue(Ipv4Util.isPublicIP("180.10.2.5"));
+		Assert.assertTrue(Ipv4Util.isPublicIP("192.160.10.3"));
+
+		Assert.assertFalse(Ipv4Util.isPublicIP(Ipv4Util.LOCAL_IP));
+		Assert.assertFalse(Ipv4Util.isPublicIP("192.168.5.12"));
+		Assert.assertFalse(Ipv4Util.isPublicIP("127.0.0.1"));
+		Assert.assertFalse(Ipv4Util.isPublicIP("172.20.10.1"));
 	}
 
 }
