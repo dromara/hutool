@@ -309,6 +309,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 计算number的总和
 	 *
 	 * @param mapper 映射
+	 * @param <R>    映射后的类型
 	 * @return {@link BigDecimal}
 	 */
 	public <R extends Number> BigDecimal sum(final Function<? super T, R> mapper) {
@@ -320,7 +321,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 计算bigDecimal平均值 并以四舍五入的方式保留2位精度
 	 *
 	 * @param mapper 映射
-	 * @return {@link Opt}<{@link BigDecimal}> 如果元素的长度为0 那么会返回为空的opt
+	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper) {
 		return avg(mapper, 2);
@@ -332,7 +333,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 *
 	 * @param mapper 映射
 	 * @param scale 精度
-	 * @return {@link Opt}<{@link BigDecimal}>
+	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale) {
 		return avg(mapper, scale, RoundingMode.HALF_UP);
@@ -344,7 +345,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * @param mapper 映射
 	 * @param scale 精度
 	 * @param roundingMode 舍入模式
-	 * @return {@link Opt}<{@link BigDecimal}> 如果元素的长度为0 那么会返回为空的opt
+	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale, RoundingMode roundingMode) {
 		//元素列表
