@@ -121,7 +121,7 @@ public class Ipv4UtilTest {
 	}
 
 	@Test
-	public void ipv4ToLongTest(){
+	public void ipv4ToLongTest() {
 		long l = Ipv4Util.ipv4ToLong("127.0.0.1");
 		Assert.assertEquals(2130706433L, l);
 		l = Ipv4Util.ipv4ToLong("114.114.114.114");
@@ -130,6 +130,13 @@ public class Ipv4UtilTest {
 		Assert.assertEquals(0L, l);
 		l = Ipv4Util.ipv4ToLong("255.255.255.255");
 		Assert.assertEquals(4294967295L, l);
+	}
+
+	@Test
+	public void getMaskIpLongTest() {
+		for (int i = 1; i <= 32; i++) {
+			Assert.assertEquals(Ipv4Util.ipv4ToLong(MaskBit.get(i)), MaskBit.getMaskIpLong(i));
+		}
 	}
 
 	@SuppressWarnings("SameParameterValue")
