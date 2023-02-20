@@ -113,13 +113,13 @@ public class BeanUtil {
 	 * @since 4.2.2
 	 */
 	public static boolean hasGetter(final Class<?> clazz) {
-		if (ClassUtil.isNormalClass(clazz)) {
-			for (final Method method : clazz.getMethods()) {
-				if (method.getParameterCount() == 0) {
-					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
-						return true;
-					}
-				}
+		if (!ClassUtil.isNormalClass(clazz)) {
+			return false;
+		}
+		for (final Method method : clazz.getMethods()) {
+			if (method.getParameterCount() == 0 &&
+					(method.getName().startsWith("get") || method.getName().startsWith("is"))) {
+				return true;
 			}
 		}
 		return false;
