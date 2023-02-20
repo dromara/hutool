@@ -29,64 +29,10 @@ import java.util.regex.Matcher;
  *
  * @author ZhuKun
  * @author emptypoint
+ * @author aoshiguchen
  * @since 5.4.1
  */
-public class Ipv4Util {
-
-	/**
-	 * 本地IP：127.0.0.1
-	 */
-	public static final String LOCAL_IP = "127.0.0.1";
-
-	/**
-	 * IP段的分割符
-	 */
-	public static final String IP_SPLIT_MARK = "-";
-
-	/**
-	 * IP与掩码的分割符
-	 */
-	public static final String IP_MASK_SPLIT_MARK = StrUtil.SLASH;
-
-	/**
-	 * 最大掩码位
-	 */
-	public static final int IP_MASK_MAX = 32;
-
-	/**
-	 * 最小掩码位
-	 */
-	public static final int IP_MASK_MIN = 1;
-
-	/**
-	 * A类私有地址的最小值
-	 */
-	public static final long A_INNER_IP_LONG_BEGIN = ipv4ToLong("10.0.0.0");
-
-	/**
-	 * A类私有地址的最大值
-	 */
-	public static final long A_INNER_IP_LONG_END = ipv4ToLong("10.255.255.255");
-
-	/**
-	 * B类私有地址的最小值
-	 */
-	public static final long B_INNER_IP_LONG_BEGIN = ipv4ToLong("172.16.0.0");
-
-	/**
-	 * B类私有地址的最大值
-	 */
-	public static final long B_INNER_IP_LONG_END = ipv4ToLong("172.31.255.255");
-
-	/**
-	 * C类私有地址的最小值
-	 */
-	public static final long C_INNER_IP_LONG_BEGIN = ipv4ToLong("192.168.0.0");
-
-	/**
-	 * C类私有地址的最大值
-	 */
-	public static final long C_INNER_IP_LONG_END = ipv4ToLong("192.168.255.255");
+public class Ipv4Util implements Ipv4Pool {
 
 	/**
 	 * 根据 ip地址 和 掩码地址 获得 CIDR格式字符串
@@ -135,7 +81,7 @@ public class Ipv4Util {
 			return new ArrayList<>(0);
 		}
 
-		if (maskBit == IP_MASK_MAX) {
+		if (maskBit == IPV4_MASK_BIT_MAX) {
 			final List<String> list = new ArrayList<>(isAll ? 1 : 0);
 			if (isAll) {
 				list.add(ip);
@@ -311,25 +257,26 @@ public class Ipv4Util {
 	/**
 	 * 获取 子网内的 地址总数
 	 *
-	 * @param maskBit 掩码位，取值范围：[2, {@link #IP_MASK_MAX}]
+	 * @param maskBit 掩码位，取值范围：({@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
 	 * @param isAll   true:全量地址，false:可用地址
 	 * @return 子网内地址总数
 	 */
 	public static int countByMaskBit(final int maskBit, final boolean isAll) {
-		assertMaskBitValid(maskBit);
+		Assert.isTrue(maskBit > IPV4_MASK_BIT_VALID_MIN && maskBit <= IPV4_MASK_BIT_MAX,
+				"Not support mask bit: {}", maskBit);
 		//如果掩码位等于32，则可用地址为0
-		if (maskBit == 32 && false == isAll) {
+		if (maskBit == IPV4_MASK_BIT_MAX && false == isAll) {
 			return 0;
 		}
 
-		final int count = 1 << (32 - maskBit);
+		final int count = 1 << (IPV4_MASK_BIT_MAX - maskBit);
 		return isAll ? count : count - 2;
 	}
 
 	/**
 	 * 根据 掩码位 获取 掩码地址
 	 *
-	 * @param maskBit 掩码位，如：24，取值范围：[{@link #IP_MASK_MIN}, {@link #IP_MASK_MAX}]
+	 * @param maskBit 掩码位，如：24，取值范围：[{@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
 	 * @return 掩码地址，点分十进制，如:255.255.255.0
 	 */
 	public static String getMaskByMaskBit(final int maskBit) {
@@ -400,11 +347,11 @@ public class Ipv4Util {
 	/**
 	 * 判断掩码位是否合法
 	 *
-	 * @param maskBit 掩码位，有效范围：[{@link #IP_MASK_MIN}, {@link #IP_MASK_MAX}]
+	 * @param maskBit 掩码位，有效范围：[{@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
 	public static boolean isMaskBitValid(final int maskBit) {
-		return maskBit >= IP_MASK_MIN && maskBit <= IP_MASK_MAX;
+		return maskBit >= IPV4_MASK_BIT_VALID_MIN && maskBit <= IPV4_MASK_BIT_MAX;
 	}
 
 	/**
@@ -422,13 +369,88 @@ public class Ipv4Util {
 	 * @since 5.7.18
 	 */
 	public static boolean isInnerIP(final String ipAddress) {
-		final long ipNum = ipv4ToLong(ipAddress);
-		return isBetween(ipNum, A_INNER_IP_LONG_BEGIN, A_INNER_IP_LONG_END)
-				|| isBetween(ipNum, B_INNER_IP_LONG_BEGIN, B_INNER_IP_LONG_END)
-				|| isBetween(ipNum, C_INNER_IP_LONG_BEGIN, C_INNER_IP_LONG_END)
-				|| LOCAL_IP.equals(ipAddress);
+		return isInnerIP(ipv4ToLong(ipAddress));
 	}
 
+	/**
+	 * 是否为内网地址
+	 *
+	 * @param ipNum IP地址数值形式
+	 * @return 是否为内网IP
+	 * @see #isInnerIP(String)
+	 * @since 6.0.0
+	 */
+	public static boolean isInnerIP(final long ipNum) {
+		return isBetween(ipNum, IPV4_A_PRIVATE_NUM_MIN, IPV4_A_PRIVATE_NUM_MAX)
+				|| isBetween(ipNum, IPV4_B_PRIVATE_NUM_MIN, IPV4_B_PRIVATE_NUM_MAX)
+				|| isBetween(ipNum, IPV4_C_PRIVATE_NUM_MIN, IPV4_C_PRIVATE_NUM_MAX)
+				|| LOCAL_IP_NUM == ipNum;
+	}
+
+	/**
+	 * 是否为公网地址
+	 * <p>
+	 * 公网IP：
+	 * <pre>
+	 * A类 1.0.0.0-9.255.255.255，11.0.0.0-126.255.255.255
+	 * B类 128.0.0.0-172.15.255.255，172.32.0.0-191.255.255.255
+	 * C类 192.0.0.0-192.167.255.255，192.169.0.0-223.255.255.255
+	 * </pre>
+	 *
+	 * @param ipAddress IP地址，点分十进制
+	 * @return 是否为公网IP
+	 * @since 6.0.0
+	 */
+	public static boolean isPublicIP(final String ipAddress) {
+		return isPublicIP(ipv4ToLong(ipAddress));
+	}
+
+	/**
+	 * 是否为公网地址
+	 *
+	 * @param ipNum IP地址数值形式
+	 * @return 是否为公网IP
+	 * @see #isPublicIP(String)
+	 * @since 6.0.0
+	 */
+	public static boolean isPublicIP(final long ipNum) {
+		return isBetween(ipNum, IPV4_A_PUBLIC_1_NUM_MIN, IPV4_A_PUBLIC_1_NUM_MAX)
+				|| isBetween(ipNum, IPV4_A_PUBLIC_2_NUM_MIN, IPV4_A_PUBLIC_2_NUM_MAX)
+				|| isBetween(ipNum, IPV4_B_PUBLIC_1_NUM_MIN, IPV4_B_PUBLIC_1_NUM_MAX)
+				|| isBetween(ipNum, IPV4_B_PUBLIC_2_NUM_MIN, IPV4_B_PUBLIC_2_NUM_MAX)
+				|| isBetween(ipNum, IPV4_C_PUBLIC_1_NUM_MIN, IPV4_C_PUBLIC_1_NUM_MAX)
+				|| isBetween(ipNum, IPV4_C_PUBLIC_2_NUM_MIN, IPV4_C_PUBLIC_2_NUM_MAX);
+	}
+
+	/**
+	 * 获取ip(Long类型)指定部分的十进制值，即，{@literal X.X.X.X }形式中每个部分的值
+	 * <p>例如，ip为{@literal 0xC0A802FA}，第1部分的值为：
+	 * <ul>
+	 * <li>第1部分的值为：{@literal 0xC0}，十进制值为：192</li>
+	 * <li>第2部分的值为：{@literal 0xA8}，十进制值为：168</li>
+	 * <li>第3部分的值为：{@literal 0x02}，十进制值为：2</li>
+	 * <li>第4部分的值为：{@literal 0xFA}，十进制值为：250</li>
+	 * </ul>
+	 *
+	 * @param ip       ip地址，Long类型
+	 * @param position 指定位置，取值范围：[1,4]
+	 * @return ip地址指定部分的十进制值
+	 * @since 6.0.0
+	 */
+	public static int getPartOfIpLong(final long ip, final int position) {
+		switch (position) {
+			case 1:
+				return ((int) ip >> 24) & 0xFF;
+			case 2:
+				return ((int) ip >> 16) & 0xFF;
+			case 3:
+				return ((int) ip >> 8) & 0xFF;
+			case 4:
+				return ((int) ip) & 0xFF;
+			default:
+				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
+		}
+	}
 	//-------------------------------------------------------------------------------- Private method start
 
 	/**
@@ -446,7 +468,7 @@ public class Ipv4Util {
 		}
 		// int的最高位无法直接使用，转为Long
 		if (addr < 0) {
-			return 0xffffffffL & addr;
+			return IPV4_NUM_MAX & addr;
 		}
 		return addr;
 	}
@@ -464,42 +486,12 @@ public class Ipv4Util {
 	}
 
 	/**
-	 * 校验 掩码位数，合法范围为：[1,32]，不合法则抛出异常
+	 * 校验 掩码位数，合法范围为：[{@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]，不合法则抛出异常
 	 *
 	 * @param maskBit 掩码位数
 	 */
 	private static void assertMaskBitValid(final int maskBit) {
 		Assert.isTrue(isMaskBitValid(maskBit), "Invalid maskBit：{}", maskBit);
-	}
-
-	/**
-	 * 获取ip(Long类型)指定部分的十进制值，即，{@literal X.X.X.X }形式中每个部分的值
-	 * <p>例如，ip为{@literal 0xC0A802FA}，第1部分的值为：
-	 * <ul>
-	 * <li>第1部分的值为：@literal 0xC0}，十进制值为：192</li>
-	 * <li>第2部分的值为：@literal 0xA8}，十进制值为：168</li>
-	 * <li>第3部分的值为：@literal 0x02}，十进制值为：2</li>
-	 * <li>第4部分的值为：@literal 0xFA}，十进制值为：250</li>
-	 * </ul>
-	 * </p>
-	 *
-	 * @param ip       ip地址，Long类型
-	 * @param position 指定位置，取值范围：[1,4]
-	 * @return ip地址指定部分的十进制值
-	 */
-	private static int getPartOfIpLong(final long ip, final int position) {
-		switch (position) {
-			case 1:
-				return ((int) ip >> 24) & 0xFF;
-			case 2:
-				return ((int) ip >> 16) & 0xFF;
-			case 3:
-				return ((int) ip >> 8) & 0xFF;
-			case 4:
-				return ((int) ip) & 0xFF;
-			default:
-				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
-		}
 	}
 	//-------------------------------------------------------------------------------- Private method end
 }
