@@ -9,6 +9,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -21,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -37,6 +39,11 @@ import java.util.stream.Stream;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+
+	private static final String JDK_MEMBER_ATTRIBUTE = "memberValues";
+	private static final String SPRING_MEMBER_ATTRIBUTE = "valueCache";
+	private static final String HUTOOL_MEMBER_ATTRIBUTE = "valueCache";
+	private static final String SPRING_INVOCATION_HANDLER = "SynthesizedMergedAnnotationInvocationHandler";
 
 	/**
 	 * 直接声明的注解缓存
@@ -323,9 +330,20 @@ public class AnnotationUtil {
 	 * @param value           要更新的属性值
 	 * @since 5.5.2
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public static void setValue(final Annotation annotation, final String annotationField, final Object value) {
-		final Map memberValues = (Map) FieldUtil.getFieldValue(Proxy.getInvocationHandler(annotation), "memberValues");
+	@SuppressWarnings("unchecked")
+	public static void setValue(
+		final Annotation annotation, final String annotationField, final Object value) {
+		InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
+		String memberAttributeName = JDK_MEMBER_ATTRIBUTE;
+		// Spring合成注解
+		if (CharSequenceUtil.contains(invocationHandler.getClass().getName(), SPRING_INVOCATION_HANDLER)) {
+			memberAttributeName = SPRING_MEMBER_ATTRIBUTE;
+		}
+		// Hutool合成注解
+		else if (invocationHandler instanceof AnnotationMappingProxy) {
+			memberAttributeName = HUTOOL_MEMBER_ATTRIBUTE;
+		}
+		Map<String, Object> memberValues = (Map<String, Object>) FieldUtil.getFieldValue(invocationHandler, memberAttributeName);
 		memberValues.put(annotationField, value);
 	}
 
