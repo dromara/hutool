@@ -70,6 +70,9 @@ public class StrUtilTest {
 
 		final String[] strings = StrUtil.splitToArray("abc/", '/');
 		Assert.assertEquals(2, strings.length);
+
+		// issue:I6FKSI
+		Assert.assertThrows(IllegalArgumentException.class, () -> StrUtil.split("test length 0", 0));
 	}
 
 	@Test
