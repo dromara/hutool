@@ -386,6 +386,9 @@ public class ListUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverse(final List<T> list) {
+		if (CollUtil.isEmpty(list)) {
+			return list;
+		}
 		Collections.reverse(list);
 		return list;
 	}
