@@ -12,6 +12,8 @@
 * 【core  】      修复FileUtil.rename报NoSuchFileException问题（pr#2894@Github）
 * 【core  】      修复StrUtil.split切分长度为0时的bug（pr#944@Gitee）
 * 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复Tailer文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
