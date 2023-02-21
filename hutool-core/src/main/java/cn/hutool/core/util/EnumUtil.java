@@ -8,11 +8,7 @@ import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -314,9 +310,7 @@ public class EnumUtil {
 	 */
 	public static Map<String, Object> getNameFieldMap(final Class<? extends Enum<?>> clazz, final String fieldName) {
 		final Enum<?>[] enums = clazz.getEnumConstants();
-		if (null == enums) {
-			return null;
-		}
+		Assert.notNull(enums, "Class [{}] is not an Enum type!", clazz);
 		final Map<String, Object> map = MapUtil.newHashMap(enums.length, true);
 		for (final Enum<?> e : enums) {
 			map.put(e.name(), FieldUtil.getFieldValue(e, fieldName));
