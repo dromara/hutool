@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharUtil;
@@ -140,7 +141,11 @@ public class Tailer implements Serializable {
 	 * 结束，此方法需在异步模式或
 	 */
 	public void stop(){
-		this.executorService.shutdown();
+		try{
+			this.executorService.shutdown();
+		} finally {
+			IoUtil.close(this.randomAccessFile);
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
