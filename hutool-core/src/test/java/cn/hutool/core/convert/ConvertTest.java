@@ -427,6 +427,11 @@ public class ConvertTest {
 		Assert.assertEquals(67556.32, Convert.chineseMoneyToNumber("陆万柒仟伍佰伍拾陆元叁角贰分").doubleValue(), 0);
 	}
 
-
+	@Test(expected = IllegalArgumentException.class)
+	public void convertQuietlyTest(){
+		final String a = "12";
+		final Object s = Convert.convert(int.class, a, a);
+		Assert.assertEquals(12, s);
+	}
 
 }
