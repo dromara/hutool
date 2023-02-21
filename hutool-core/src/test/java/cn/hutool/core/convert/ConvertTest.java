@@ -90,21 +90,21 @@ public class ConvertTest {
 	@Test
 	public void toStrTest5() {
 		// 被转化的对象有值，正常转换
-		String a = "aaaa";
-		String aDefaultValue = "aDefault";
-		String aResult = Convert.toStr(a, aDefaultValue);
+		final String a = "aaaa";
+		final String aDefaultValue = "aDefault";
+		final String aResult = Convert.toStr(a, aDefaultValue);
 		Assert.assertEquals(aResult, a);
 
 		// 被转化的对象为null，返回默认值
-		String b = null;
-		String bDefaultValue = "bDefault";
-		String bResult = Convert.toStr(b, bDefaultValue);
+		final String b = null;
+		final String bDefaultValue = "bDefault";
+		final String bResult = Convert.toStr(b, bDefaultValue);
 		Assert.assertEquals(bResult, bDefaultValue);
 
 		// 转换失败，返回默认值
-		TestExceptionClass c = new TestExceptionClass();
-		String cDefaultValue = "cDefault";
-		String cResult = Convert.toStr(c, cDefaultValue);
+		final TestExceptionClass c = new TestExceptionClass();
+		final String cDefaultValue = "cDefault";
+		final String cResult = Convert.toStr(c, cDefaultValue);
 		Assert.assertEquals(cResult, cDefaultValue);
 	}
 
@@ -443,5 +443,12 @@ public class ConvertTest {
 	public void toDBCTest(){
 		final String s = Convert.toDBC(null);
 		Assert.assertNull(s);
+	}
+
+	@Test
+	public void convertQuietlyTest(){
+		final String a = "12";
+		final Object s = Convert.convertQuietly(int.class, a, a);
+		Assert.assertEquals(12, s);
 	}
 }
