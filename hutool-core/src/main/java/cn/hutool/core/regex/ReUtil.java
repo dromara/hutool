@@ -34,15 +34,6 @@ import java.util.regex.Pattern;
 public class ReUtil {
 
 	/**
-	 * 正则表达式匹配中文汉字
-	 */
-	public final static String RE_CHINESE = RegexPool.CHINESE;
-	/**
-	 * 正则表达式匹配中文字符串
-	 */
-	public final static String RE_CHINESES = RegexPool.CHINESES;
-
-	/**
 	 * 正则中需要被转义的关键字
 	 */
 	public final static Set<Character> RE_KEYS = SetUtil.of('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
@@ -459,7 +450,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(final String regex, final CharSequence content) {
-		if (StrUtil.hasBlank(regex, content)) {
+		if (StrUtil.hasEmpty(regex, content)) {
 			return StrUtil.str(content);
 		}
 
@@ -475,7 +466,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(final Pattern pattern, final CharSequence content) {
-		if (null == pattern || StrUtil.isBlank(content)) {
+		if (null == pattern || StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
 

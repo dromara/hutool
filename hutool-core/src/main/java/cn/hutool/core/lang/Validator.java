@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.regex.PatternPool;
+import cn.hutool.core.regex.RegexPool;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.math.NumberUtil;
@@ -915,7 +916,7 @@ public class Validator {
 	 * @since 5.2.1
 	 */
 	public static boolean hasChinese(final CharSequence value) {
-		return ReUtil.contains(ReUtil.RE_CHINESES, value);
+		return ReUtil.contains(RegexPool.CHINESES, value);
 	}
 
 	/**

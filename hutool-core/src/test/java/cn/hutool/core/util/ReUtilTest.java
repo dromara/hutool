@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ReUtilTest {
+
 	static final String content = "ZZZaaabbbccc中文1234";
 
 	@Test
@@ -56,6 +57,7 @@ public class ReUtilTest {
 		Assert.assertEquals("公斤",ReUtil.delLast("\\d+", word));
 		Assert.assertEquals("公斤",ReUtil.delLast(PatternPool.NUMBERS, word));
 		//去除汉字
+		//noinspection UnnecessaryUnicodeEscape
 		Assert.assertEquals("180",ReUtil.delLast("[\u4E00-\u9FFF]+", word));
 		Assert.assertEquals("180",ReUtil.delLast(PatternPool.CHINESES, word));
 
@@ -66,6 +68,7 @@ public class ReUtilTest {
 		Assert.assertEquals("10.商品KLS100021型号xxl适合身高180体重斤的用户", s);
 
 		//多个匹配删除最后一个 判断是否不在包含最后的数字
+		//noinspection UnnecessaryUnicodeEscape
 		Assert.assertFalse(ReUtil.delLast("[\u4E00-\u9FFF]+", sentence).contains("斤的用户"));
 		Assert.assertFalse(ReUtil.delLast(PatternPool.CHINESES, sentence).contains("斤的用户"));
 	}
@@ -96,6 +99,7 @@ public class ReUtilTest {
 	@Test
 	public void isMatchTest() {
 		// 给定字符串是否匹配给定正则
+		//noinspection UnnecessaryUnicodeEscape
 		final boolean isMatch = ReUtil.isMatch("\\w+[\u4E00-\u9FFF]+\\d+", content);
 		Assert.assertTrue(isMatch);
 	}
@@ -226,5 +230,10 @@ public class ReUtilTest {
 				+ "|[0-1]?\\d{1,2})\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})");
 		final String s = ReUtil.replaceAll("1.2.3.4", patternIp, "$1.**.**.$10");
 		Assert.assertEquals("1.**.**.4", s);
+	}
+
+	@Test
+	public void issueI6GIMTTest(){
+		Assert.assertEquals(StrUtil.EMPTY, ReUtil.delAll("[\\s]*", " "));
 	}
 }
