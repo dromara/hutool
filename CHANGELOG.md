@@ -14,6 +14,7 @@
 * 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
 * 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
 * 【core  】      修复Tailer文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
+* 【core  】      修复ReflectUtil.invokeRaw方法中参数类型转换动作未生效的问题（pr#2912@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
