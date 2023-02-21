@@ -459,7 +459,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(String regex, CharSequence content) {
-		if (StrUtil.hasBlank(regex, content)) {
+		if (StrUtil.hasEmpty(regex, content)) {
 			return StrUtil.str(content);
 		}
 
@@ -475,7 +475,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(Pattern pattern, CharSequence content) {
-		if (null == pattern || StrUtil.isBlank(content)) {
+		if (null == pattern || StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
 
