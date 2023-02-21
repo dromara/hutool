@@ -1056,9 +1056,11 @@ public class ReflectUtil {
 					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
+					final Object targetValue = Convert.convertWithCheck(parameterTypes[i], args[i], null, true);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
+					} else {
+						actualArgs[i] = args[i];
 					}
 				} else {
 					actualArgs[i] = args[i];
