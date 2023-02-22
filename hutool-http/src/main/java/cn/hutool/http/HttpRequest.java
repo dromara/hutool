@@ -511,7 +511,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 普通值
-		String strValue;
+		Object strValue;
 		if (value instanceof Iterable) {
 			// 列表对象
 			strValue = CollUtil.join((Iterable<?>) value, ",");
@@ -522,7 +522,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 			// 数组对象
 			strValue = ArrayUtil.join((Object[]) value, ",");
-		} else {
+		} else if (value instanceof Integer){
+			// 数值对象
+			strValue = Convert.toInt(value, null);
+		}else {
 			// 其他对象一律转换为字符串
 			strValue = Convert.toStr(value, null);
 		}
