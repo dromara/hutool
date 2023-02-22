@@ -261,8 +261,11 @@ public class BeanUtilTest {
 
 		final SubPersonWithAlias subPersonWithAlias = BeanUtil.toBean(map, SubPersonWithAlias.class);
 		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
-		Assert.assertTrue(subPersonWithAlias.isBooleana());
-		Assert.assertEquals(true, subPersonWithAlias.getBooleanb());
+
+		// https://gitee.com/dromara/hutool/issues/I6H0XF
+		// is_booleana并不匹配booleana字段
+		Assert.assertFalse(subPersonWithAlias.isBooleana());
+		Assert.assertNull(subPersonWithAlias.getBooleanb());
 	}
 
 	@Test
