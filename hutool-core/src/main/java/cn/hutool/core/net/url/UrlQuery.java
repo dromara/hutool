@@ -9,6 +9,7 @@ import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.FormUrlencoded;
 import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.nio.charset.Charset;
@@ -384,6 +385,8 @@ public class UrlQuery {
 			result = CollUtil.join((Iterable<?>) value, ",");
 		} else if (value instanceof Iterator) {
 			result = IterUtil.join((Iterator<?>) value, ",");
+		} else if (ArrayUtil.isArray(value)) {
+			result = ArrayUtil.join(value, ",");
 		} else {
 			result = Convert.toStr(value);
 		}
