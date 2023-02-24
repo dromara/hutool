@@ -140,7 +140,8 @@ public class LambdaUtil {
 	 * @param <R> getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> buildGetter(Method getMethod) {
+	@SuppressWarnings("unchecked")
+	public static <T, R> Function<T, R> buildGetter(final Method getMethod) {
 		return LambdaFactory.build(Function.class, getMethod);
 	}
 
@@ -153,7 +154,8 @@ public class LambdaUtil {
 	 * @param <R> getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> buildGetter(Class<T> clazz, String fieldName) {
+	@SuppressWarnings("unchecked")
+	public static <T, R> Function<T, R> buildGetter(final Class<T> clazz, final String fieldName) {
 		return LambdaFactory.build(Function.class, BeanUtil.getBeanDesc(clazz).getGetter(fieldName));
 	}
 
@@ -165,7 +167,8 @@ public class LambdaUtil {
 	 * @param <P> setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> buildSetter(Method setMethod) {
+	@SuppressWarnings("unchecked")
+	public static <T, P> BiConsumer<T, P> buildSetter(final Method setMethod) {
 		return LambdaFactory.build(BiConsumer.class, setMethod);
 	}
 
@@ -178,7 +181,8 @@ public class LambdaUtil {
 	 * @param <P> setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> buildSetter(Class<T> clazz, String fieldName) {
+	@SuppressWarnings("unchecked")
+	public static <T, P> BiConsumer<T, P> buildSetter(final Class<T> clazz, final String fieldName) {
 		return LambdaFactory.build(BiConsumer.class, BeanUtil.getBeanDesc(clazz).getSetter(fieldName));
 	}
 
@@ -192,7 +196,7 @@ public class LambdaUtil {
 	 * @param <F> 函数式接口类型
 	 * @return Obj::method
 	 */
-	public static <F> F build(Class<F> lambdaType, Class<?> clazz, String methodName, Class... paramsTypes) {
+	public static <F> F build(final Class<F> lambdaType, final Class<?> clazz, final String methodName, final Class<?>... paramsTypes) {
 		return LambdaFactory.build(lambdaType, clazz, methodName, paramsTypes);
 	}
 
