@@ -1,19 +1,95 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AssertTest {
 
 	@Test
-	public void isNullTest(){
+	public void isNullTest() {
 		final String a = null;
 		Assert.isNull(a);
 	}
+
 	@Test
-	public void notNullTest(){
+	public void notNullTest() {
 		final String a = null;
 		Assert.isNull(a);
+	}
+
+	@Test
+	public void notEmptyTest() {
+		final String a = " ";
+		final String s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test
+	public void notEmptyForArrayTest() {
+		// 虽然包含空字符串或者null，但是这大概数组由于有元素，则认定为非empty
+		String[] a = new String[]{""};
+		String[] s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+
+		a = new String[]{null};
+		s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test
+	public void notEmptyForCollectionTest() {
+		// 虽然包含空字符串或者null，但是这大概数组由于有元素，则认定为非empty
+		List<String> a = ListUtil.of("");
+		List<String> s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+
+		a = ListUtil.of((String)null);
+		s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test
+	public void notEmptyForMapTest() {
+		// 虽然包含空字符串或者null，但是这大概数组由于有元素，则认定为非empty
+		Map<String, String> a = MapUtil.of("", "");
+		Map<String, String> s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+
+		a = MapUtil.of(null, null);
+		s = Assert.notEmpty(a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test
+	public void noNullElementsTest() {
+		final String[] a = new String[]{""};
+		final String[] s = Assert.noNullElements(a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void noNullElementsTest2() {
+		final String[] a = new String[]{null};
+		Assert.noNullElements(a);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void noNullElementsTest3() {
+		final String[] a = new String[]{"a", null};
+		Assert.noNullElements(a);
+	}
+
+	@Test
+	public void notBlankTest() {
+		final String a = "a";
+		final String s = Assert.notBlank(a);
+		org.junit.Assert.assertSame(a, s);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -34,7 +110,7 @@ public class AssertTest {
 	public void isTrueTest3() {
 		final int i = -1;
 		//noinspection ConstantConditions
-		Assert.isTrue(i > 0, ()-> new IndexOutOfBoundsException("relation message to return"));
+		Assert.isTrue(i > 0, () -> new IndexOutOfBoundsException("relation message to return"));
 	}
 
 	@Test
@@ -58,5 +134,65 @@ public class AssertTest {
 		//Assert.notEquals(c,d,"{}等于{}",c,d);
 		Assert.notEquals(c, d, () -> new RuntimeException(StrUtil.format("{}和{}相等", c, d)));
 
+	}
+
+	@Test
+	public void notEqualsTest2() {
+		final Object c = null;
+		final Object d = "null";
+		Assert.notEquals(c, d);
+	}
+
+	@Test
+	public void checkBetweenTest() {
+		final int a = 12;
+		final int i = Assert.checkBetween(a, 1, 12);
+		org.junit.Assert.assertSame(a, i);
+	}
+
+	@Test
+	public void checkBetweenTest2() {
+		final double a = 12;
+		final double i = Assert.checkBetween(a, 1, 12);
+		org.junit.Assert.assertSame(a, i);
+	}
+
+	@Test
+	public void checkBetweenTest3() {
+		final Number a = 12;
+		final Number i = Assert.checkBetween(a, 1, 12);
+		org.junit.Assert.assertSame(a, i);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void notContainTest() {
+		final String sub = "a";
+		final String a = Assert.notContain("abc", sub);
+		org.junit.Assert.assertSame(sub, a);
+	}
+
+	@Test
+	public void notContainTest2() {
+		final String sub = "d";
+		final String a = Assert.notContain("abc", sub);
+		org.junit.Assert.assertSame(sub, a);
+	}
+
+	@Test
+	public void isInstanceOfTest() {
+		final String a = "a";
+		final String s = Assert.isInstanceOf(String.class, a);
+		org.junit.Assert.assertSame(a, s);
+	}
+
+	@Test
+	public void isAssignableTest() {
+		Assert.isAssignable(Map.class, HashMap.class);
+	}
+
+	@Test
+	public void checkIndexTest() {
+		final int i = Assert.checkIndex(1, 10);
+		org.junit.Assert.assertEquals(1, i);
 	}
 }
