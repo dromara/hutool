@@ -29,7 +29,6 @@ import java.util.function.Function;
  */
 public class LambdaFactoryTest {
 
-	// @Test
 	@Test
 	public void testMethodNotMatch() {
 		try {
@@ -39,6 +38,7 @@ public class LambdaFactoryTest {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void buildLambdaTest() {
 		final Something something = new Something();
@@ -49,6 +49,7 @@ public class LambdaFactoryTest {
 		final Function<Something, Long> get12 = LambdaFactory.build(Function.class, Something.class, "getId");
 
 		Assert.assertEquals(get11, get12);
+		// 通过LambdaFactory模拟创建一个getId方法的Lambda句柄函数，通过调用这个函数，实现方法调用。
 		Assert.assertEquals(something.getId(), get11.apply(something));
 
 		final String name = "sname";
@@ -136,6 +137,7 @@ public class LambdaFactoryTest {
 		 * <p>proxy      运行100000000次耗时 1117192600 NANOSECONDS
 		 * <p>--------------------------------------------
 		 */
+		@SuppressWarnings({"rawtypes", "unchecked", "Convert2MethodRef"})
 		@Test
 		@SneakyThrows
 		public void lambdaGetPerformanceTest() {
@@ -211,6 +213,7 @@ public class LambdaFactoryTest {
 		 * <p>proxy      运行100000000次耗时 1169452400 NANOSECONDS
 		 * <p>--------------------------------------------
 		 */
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Test
 		@SneakyThrows
 		public void lambdaSetPerformanceTest() {
@@ -246,6 +249,7 @@ public class LambdaFactoryTest {
 			loop(count, tasks);
 		}
 
+		@SuppressWarnings("rawtypes")
 		@SneakyThrows
 		private void loop(final int count, final Task... tasks) {
 			Arrays.stream(tasks)
@@ -265,6 +269,7 @@ public class LambdaFactoryTest {
 			System.out.println("--------------------------------------------");
 		}
 
+		@SuppressWarnings({"InnerClassMayBeStatic", "FieldMayBeFinal"})
 		@Getter
 		private class Task {
 			private String name;
