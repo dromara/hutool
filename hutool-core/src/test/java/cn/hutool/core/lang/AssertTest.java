@@ -154,7 +154,7 @@ public class AssertTest {
 	public void checkBetweenTest2() {
 		final double a = 12;
 		final double i = Assert.checkBetween(a, 1, 12);
-		org.junit.Assert.assertSame(a, i);
+		org.junit.Assert.assertEquals(a, i, 0.00);
 	}
 
 	@Test
