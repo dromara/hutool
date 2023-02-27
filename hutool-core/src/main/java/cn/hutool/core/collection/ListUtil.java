@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.comparator.ChineseComparator;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.Assert;
@@ -342,6 +343,18 @@ public class ListUtil {
 	 */
 	public static List<String> sortByPinyin(List<String> list) {
 		return sort(list, new PinyinComparator());
+	}
+
+	/**
+	 * 根据中国人的使用习惯进行排序
+	 *
+	 * @param list List
+	 * @return 排序后的List
+	 * @author ZhenhengXie
+	 * @since 5.8.13
+	 */
+	public static List<String> sortByChinese(List<String> list) {
+		return sort(list, new ChineseComparator());
 	}
 
 	/**
