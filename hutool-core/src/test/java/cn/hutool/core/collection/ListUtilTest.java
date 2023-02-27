@@ -213,6 +213,59 @@ public class ListUtilTest {
 	}
 
 	@Test
+	public void sortByChineseTest() {
+		final List<String> list = new ArrayList<String>() {{
+			add("1排序");
+			add("10排序");
+			add("1000000000排序");
+			add("2排序");
+			add("排1序");
+			add("排10序");
+			add("排2序");
+			add("排序1");
+			add("排序10");
+			add("排序2");
+			add("a排序");
+			add("c排序");
+			add("b排序");
+			add("排a序");
+			add("排c序");
+			add("排b序");
+			add("排序a");
+			add("排序c");
+			add("排序b");
+			add("比bi");
+			add("被bei");
+			add("把ba");
+		}};
+
+		final List<String> order = ListUtil.sortByChinese(list);
+
+		Assert.assertEquals("1排序", order.get(0));
+		Assert.assertEquals("2排序", order.get(1));
+		Assert.assertEquals("10排序", order.get(2));
+		Assert.assertEquals("1000000000排序", order.get(3));
+		Assert.assertEquals("a排序", order.get(4));
+		Assert.assertEquals("b排序", order.get(5));
+		Assert.assertEquals("c排序", order.get(6));
+		Assert.assertEquals("把ba", order.get(7));
+		Assert.assertEquals("被bei", order.get(8));
+		Assert.assertEquals("比bi", order.get(9));
+		Assert.assertEquals("排1序", order.get(10));
+		Assert.assertEquals("排2序", order.get(11));
+		Assert.assertEquals("排10序", order.get(12));
+		Assert.assertEquals("排a序", order.get(13));
+		Assert.assertEquals("排b序", order.get(14));
+		Assert.assertEquals("排c序", order.get(15));
+		Assert.assertEquals("排序1", order.get(16));
+		Assert.assertEquals("排序2", order.get(17));
+		Assert.assertEquals("排序10", order.get(18));
+		Assert.assertEquals("排序a", order.get(19));
+		Assert.assertEquals("排序b", order.get(20));
+		Assert.assertEquals("排序c", order.get(21));
+	}
+
+	@Test
 	public void swapIndex() {
 		final List<Integer> list = Arrays.asList(7, 2, 8, 9);
 		ListUtil.swapTo(list, 8, 1);
