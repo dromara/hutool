@@ -19,14 +19,14 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.13.0.RELEASE</beetl.version>
+		<beetl.version>3.14.1.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
-		<freemarker.version>2.3.31</freemarker.version>
+		<freemarker.version>2.3.32</freemarker.version>
 		<enjoy.version>5.0.3</enjoy.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.34.0</sshj.version>
+		<sshj.version>0.35.0</sshj.version>
 		<zxing.version>3.5.1</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
@@ -475,7 +475,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.21</version>
+			<version>1.22</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
