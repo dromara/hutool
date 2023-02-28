@@ -15,10 +15,10 @@
 	<artifactId>hutool-jwt</artifactId>
 	<name>${project.artifactId}</name>
 	<description>JWT生成、解析和验证实现</description>
-
 	<properties>
 		<!-- versions -->
 		<bouncycastle.version>1.72</bouncycastle.version>
+		<Automatic-Module-Name>cn.hutool.hutool.jwt</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

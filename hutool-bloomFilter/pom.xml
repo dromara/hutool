@@ -15,7 +15,9 @@
 	<artifactId>hutool-bloomFilter</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 布隆过滤器</description>
-
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.bloomFilter</Automatic-Module-Name>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

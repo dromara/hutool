@@ -29,6 +29,7 @@
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>4.3.1</jedis.version>
+		<Automatic-Module-Name>cn.hutool.hutool.db</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

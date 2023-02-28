@@ -18,6 +18,7 @@
 
 	<properties>
 		<slf4j.version>1.7.36</slf4j.version>
+		<Automatic-Module-Name>cn.hutool.hutool.system</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

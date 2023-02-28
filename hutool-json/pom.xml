@@ -15,7 +15,9 @@
 	<artifactId>hutool-json</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool JSON封装</description>
-
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.json</Automatic-Module-Name>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

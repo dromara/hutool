@@ -15,7 +15,9 @@
 	<artifactId>hutool-cron</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 定时任务</description>
-
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.cron</Automatic-Module-Name>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

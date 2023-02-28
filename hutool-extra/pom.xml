@@ -33,6 +33,7 @@
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.7.5</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
+		<Automatic-Module-Name>cn.hutool.hutool.extra</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

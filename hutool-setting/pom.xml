@@ -15,6 +15,9 @@
 	<artifactId>hutool-setting</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 配置文件增强</description>
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.setting</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

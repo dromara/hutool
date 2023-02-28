@@ -15,6 +15,9 @@
 	<artifactId>hutool-captcha</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 验证码工具</description>
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.captcha</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

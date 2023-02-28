@@ -15,7 +15,9 @@
 	<artifactId>hutool-cache</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 缓存</description>
-
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.cache</Automatic-Module-Name>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

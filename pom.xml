@@ -117,6 +117,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
 				<configuration>
 					<archive>
 						<index>true</index>
@@ -128,7 +129,8 @@
 							<Built-By>${user.name}</Built-By>
 							<Build-Jdk>${java.version}</Build-Jdk>
 							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
+							<!--suppress UnresolvedMavenProperty -->
+							<Automatic-Module-Name>${Automatic-Module-Name}</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
 				</configuration>

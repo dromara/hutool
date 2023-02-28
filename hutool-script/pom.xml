@@ -20,6 +20,7 @@
 		<jython.version>2.7.3</jython.version>
 		<luaj.version>3.0.1</luaj.version>
 		<groovy.version>3.0.13</groovy.version>
+		<Automatic-Module-Name>cn.hutool.hutool.script</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

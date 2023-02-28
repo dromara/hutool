@@ -19,6 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<poi.version>4.1.2</poi.version>
+		<Automatic-Module-Name>cn.hutool.hutool.poi</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>

@@ -15,7 +15,9 @@
 	<artifactId>hutool-dfa</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 基于DFA的关键词查找</description>
-
+	<properties>
+		<Automatic-Module-Name>cn.hutool.hutool.dfa</Automatic-Module-Name>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
