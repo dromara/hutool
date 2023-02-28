@@ -210,7 +210,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 适用场景在一些生成常量流、随机元素等
 	 *
 	 * @param <T> 元素类型
-	 * @param s 用来生成元素的 {@code Supplier}
+	 * @param s 用来生成元素的 {@link Supplier}
 	 * @return 无限串行无序流
 	 */
 	public static <T> EasyStream<T> generate(final Supplier<T> s) {
