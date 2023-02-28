@@ -7,6 +7,7 @@
 
 ### 🐣新特性
 * 【core  】      PhoneUtil.isTel400800支持400-XXX-XXXX格式（issue#2929@Github）
+* 【core  】      build(pom): 添加 Automatic-Module-Name属性（pr#2926@Github）
 
 ### 🐞Bug修复
 * 【db    】      修复识别JDBC驱动时重复问题（pr#940@Gitee）
