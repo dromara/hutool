@@ -13,9 +13,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -335,10 +337,10 @@ public class FileWriter extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */
-	public File writeFromStream(InputStream in, boolean isCloseIn) throws IORuntimeException {
-		FileOutputStream out = null;
+	public File writeFromStream(final InputStream in, final boolean isCloseIn) throws IORuntimeException {
+		OutputStream out = null;
 		try {
-			out = new FileOutputStream(FileUtil.touch(file));
+			out = Files.newOutputStream(FileUtil.touch(file).toPath());
 			IoUtil.copy(in, out);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
@@ -359,8 +361,8 @@ public class FileWriter extends FileWrapper {
 	 */
 	public BufferedOutputStream getOutputStream() throws IORuntimeException {
 		try {
-			return new BufferedOutputStream(new FileOutputStream(FileUtil.touch(file)));
-		} catch (IOException e) {
+			return new BufferedOutputStream(Files.newOutputStream(FileUtil.touch(file).toPath()));
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -398,7 +400,7 @@ public class FileWriter extends FileWrapper {
 	 */
 	private void checkFile() throws IORuntimeException {
 		Assert.notNull(file, "File to write content is null !");
-		if (this.file.exists() && false == file.isFile()) {
+		if (this.file.exists() && !file.isFile()) {
 			throw new IORuntimeException("File [{}] is not a file !", this.file.getAbsoluteFile());
 		}
 	}
