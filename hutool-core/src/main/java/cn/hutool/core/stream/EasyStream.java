@@ -5,14 +5,20 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.Spliterator;
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -206,11 +212,11 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 
 	/**
 	 * 返回无限串行无序流
-	 * 其中每一个元素都由给定的{@link  Supplier}生成
+	 * 其中每一个元素都由给定的{@link Supplier}生成
 	 * 适用场景在一些生成常量流、随机元素等
 	 *
 	 * @param <T> 元素类型
-	 * @param s 用来生成元素的 {@link Supplier}
+	 * @param s 用来生成元素的 {@link  Supplier}
 	 * @return 无限串行无序流
 	 */
 	public static <T> EasyStream<T> generate(final Supplier<T> s) {
@@ -275,53 +281,54 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 
 
 	/**
-	 * 计算int类型总和
+	 * 计算int类型的总和
 	 *
-	 * @param mapper 映射
-	 * @return int
+	 * @param mapper 将对象转换为int的 {@link Function}
+	 * @return int 总和
 	 */
-	public int sum(ToIntFunction<? super T> mapper) {
+	public int sum(final ToIntFunction<? super T> mapper) {
 		return stream.mapToInt(mapper).sum();
 	}
 
 	/**
-	 * 计算long类型总和
+	 * 计算long类型的总和
 	 *
-	 * @param mapper 映射
-	 * @return long
+	 * @param mapper 将对象转换为long的 {@link Function}
+	 * @return long 总和
 	 */
-	public long sum(ToLongFunction<? super T> mapper) {
+	public long sum(final ToLongFunction<? super T> mapper) {
 		return stream.mapToLong(mapper).sum();
 	}
 
 
 	/**
-	 * 计算double总和
+	 * 计算double类型的总和
 	 *
-	 * @param mapper 映射器
-	 * @return double
+	 * @param mapper 将对象转换为double的 {@link Function}
+	 * @return double 总和
 	 */
-	public double sum(ToDoubleFunction<? super T> mapper) {
+	public double sum(final ToDoubleFunction<? super T> mapper) {
 		return stream.mapToDouble(mapper).sum();
 	}
 
+
 	/**
-	 * 计算number的总和
+	 * 计算 {@link Number} 类型的总和
 	 *
-	 * @param mapper 映射
-	 * @param <R>    映射后的类型
-	 * @return {@link BigDecimal}
+	 * @param <R> 数字
+	 * @param mapper  将对象转换为{@link Number} 的 {@link Function}
+	 * @return {@link BigDecimal} , 如果流为空, 返回 {@link BigDecimal#ZERO}
 	 */
 	public <R extends Number> BigDecimal sum(final Function<? super T, R> mapper) {
-		return stream.map(mapper).reduce(BigDecimal.ZERO, NumberUtil::add,NumberUtil::add);
+		return stream.map(mapper).reduce(BigDecimal.ZERO, NumberUtil::add, NumberUtil::add);
 	}
 
 
 	/**
-	 * 计算bigDecimal平均值 并以四舍五入的方式保留2位精度
+	 * 计算 {@link BigDecimal} 类型的平均值 并以四舍五入的方式保留2位精度
 	 *
-	 * @param mapper 映射
-	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
+	 * @param mapper 将对象转换为{@link BigDecimal}的 {@link Function}
+	 * @return 计算后的平均值 如果流的长度为0, 返回 {@link Opt#empty()}
 	 */
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper) {
 		return avg(mapper, 2);
@@ -329,53 +336,53 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 
 
 	/**
-	 * 计算bigDecimal平均值 并以四舍五入的方式保留scale的进度
+	 * {@link BigDecimal} 类型的平均值 并以四舍五入的方式保留小数点后scale位
 	 *
-	 * @param mapper 映射
-	 * @param scale 精度
-	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
+	 * @param mapper 将对象转换为{@link BigDecimal} 的 {@link Function}
+	 * @param scale 保留精度
+	 * @return 计算后的平均值  如果流的长度为0, 返回 {@link Opt#empty()}
 	 */
-	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale) {
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, final int scale) {
 		return avg(mapper, scale, RoundingMode.HALF_UP);
 	}
 
 	/**
-	 * 计算bigDecimal平均值
+	 * 计算 {@link BigDecimal} 类型的平均值
 	 *
-	 * @param mapper 映射
-	 * @param scale 精度
+	 * @param mapper 将对象转换为{@link BigDecimal} 的 {@link Function}
+	 * @param scale 保留精度
 	 * @param roundingMode 舍入模式
-	 * @return 计算结果 如果元素的长度为0 那么会返回为空的opt
+	 * @return 计算后的平均值 如果元素的长度为0 那么会返回 {@link Opt#empty()}
 	 */
-	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, int scale, RoundingMode roundingMode) {
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, final int scale,
+			final RoundingMode roundingMode) {
 		//元素列表
 		List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
 		if (CollUtil.isEmpty(bigDecimalList)) {
-			return Opt.ofNullable(null);
+			return Opt.empty();
 		}
-
-		return Opt.of(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add)
+		return Opt.ofNullable(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add)
 				.divide(NumberUtil.toBigDecimal(bigDecimalList.size()), scale, roundingMode));
 	}
 
 
 	/**
-	 * 计算int平均值
+	 * 计算int类型的平均值
 	 *
-	 * @param mapper 映射器
-	 * @return {@link OptionalDouble}
+	 * @param mapper 将对象转换为int 的 {@link Function}
+	 * @return {@link OptionalDouble} 如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
 	 */
-	public OptionalDouble avg(ToIntFunction<? super T> mapper) {
+	public OptionalDouble avg(final ToIntFunction<? super T> mapper) {
 		return stream.mapToInt(mapper).average();
 	}
 
 	/**
-	 * 计算double平均值
+	 * 计算double类型的平均值
 	 *
-	 * @param mapper 映射
-	 * @return {@link OptionalDouble}
+	 * @param mapper 将对象转换为double 的 {@link Function}
+	 * @return {@link OptionalDouble} 如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
 	 */
-	public OptionalDouble avg(ToDoubleFunction<? super T> mapper) {
+	public OptionalDouble avg(final ToDoubleFunction<? super T> mapper) {
 		return stream.mapToDouble(mapper).average();
 	}
 
@@ -383,10 +390,10 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	/**
 	 * 计算double平均值
 	 *
-	 * @param mapper 映射
-	 * @return {@link OptionalDouble}
+	 * @param mapper 将对象转换为long 的 {@link Function}
+	 * @return {@link OptionalDouble}  如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
 	 */
-	public OptionalDouble avg(ToLongFunction<? super T> mapper) {
+	public OptionalDouble avg(final ToLongFunction<? super T> mapper) {
 		return stream.mapToLong(mapper).average();
 	}
 
@@ -407,9 +414,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		 * 		the built state
 		 * @implSpec The default implementation behaves as if:
 		 * 		<pre>{@code
-		 * 								    accept(t)
-		 * 								    return this;
-		 *                             }</pre>
+		 * 										    accept(t)
+		 * 										    return this;
+		 *                                    }</pre>
 		 */
 		default Builder<T> add(final T t) {
 			accept(t);
