@@ -4,8 +4,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -13,9 +13,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -336,9 +338,9 @@ public class FileWriter extends FileWrapper {
 	 * @since 5.5.2
 	 */
 	public File writeFromStream(final InputStream in, final boolean isCloseIn) throws IORuntimeException {
-		FileOutputStream out = null;
+		OutputStream out = null;
 		try {
-			out = new FileOutputStream(FileUtil.touch(file));
+			out = Files.newOutputStream(FileUtil.touch(file).toPath());
 			IoUtil.copy(in, out);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -359,7 +361,7 @@ public class FileWriter extends FileWrapper {
 	 */
 	public BufferedOutputStream getOutputStream() throws IORuntimeException {
 		try {
-			return new BufferedOutputStream(new FileOutputStream(FileUtil.touch(file)));
+			return new BufferedOutputStream(Files.newOutputStream(FileUtil.touch(file).toPath()));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

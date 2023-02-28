@@ -32,9 +32,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -1790,8 +1788,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static BOMInputStream getBOMInputStream(final File file) throws IORuntimeException {
 		try {
-			//noinspection IOStreamConstructor
-			return new BOMInputStream(new FileInputStream(file));
+			return new BOMInputStream(Files.newInputStream(file.toPath()));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -2335,8 +2332,7 @@ public class FileUtil extends PathUtil {
 	public static BufferedOutputStream getOutputStream(final File file) throws IORuntimeException {
 		final OutputStream out;
 		try {
-			//noinspection IOStreamConstructor
-			out = new FileOutputStream(touch(file));
+			out = Files.newOutputStream(touch(file).toPath());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
