@@ -179,6 +179,7 @@ public class LambdaUtilTest {
 		Assert.assertTrue(bean.isFlag());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void lambdaTest() {
 		final Bean bean = new Bean();
@@ -203,6 +204,7 @@ public class LambdaUtilTest {
 		Long pid;
 		boolean flag;
 
+		@SuppressWarnings("SameParameterValue")
 		private Tuple uniqueKey(final String name) {
 			return new Tuple(id, pid, flag, name);
 		}
@@ -211,14 +213,17 @@ public class LambdaUtilTest {
 			return new Tuple(name, length, score);
 		}
 
+		@SuppressWarnings("unused")
 		public static Function<Bean, Long> idGetter() {
 			return Bean::getId;
 		}
 
+		@SuppressWarnings("unused")
 		public Function<Bean, Long> idGet() {
 			return bean -> bean.id;
 		}
 
+		@SuppressWarnings("unused")
 		public Function<Bean, Long> idGetting() {
 			return Bean::getId;
 		}
