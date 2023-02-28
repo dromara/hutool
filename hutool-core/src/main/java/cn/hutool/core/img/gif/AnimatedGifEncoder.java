@@ -5,9 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 动态GIF动画生成器，可生成一个或多个帧的GIF。
@@ -296,7 +297,7 @@ public class AnimatedGifEncoder {
 	public boolean start(String file) {
 		boolean ok;
 		try {
-			out = new BufferedOutputStream(new FileOutputStream(file));
+			out = new BufferedOutputStream(Files.newOutputStream(Paths.get(file)));
 			ok = start(out);
 			closeStream = true;
 		} catch (IOException e) {
