@@ -1,11 +1,12 @@
 package cn.hutool.core.stream;
 
-import static java.util.Collections.singletonList;
-
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.Assert;
-import org.junit.Test;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @author VampireAchao
@@ -453,21 +454,21 @@ public class EasyStreamTest {
 	@Test
 	public void testIntSumAndAvg() {
 		//测试int类型的总和
-		int sum = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).sum(Integer::intValue);
+		final int sum = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).sum(Integer::intValue);
 		Assert.assertEquals(55, sum);
 
 		//测试为空
-		List<Integer> integerList = new ArrayList<>();
-		int emptySum = EasyStream.of(integerList).sum(Integer::intValue);
+		final List<Integer> integerList = new ArrayList<>();
+		final int emptySum = EasyStream.of(integerList).sum(Integer::intValue);
 		Assert.assertEquals(0, emptySum);
 
 		//测试平均值
-		OptionalDouble avg = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).avg(Integer::intValue);
+		final OptionalDouble avg = EasyStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).avg(Integer::intValue);
 		Assert.assertTrue(avg.isPresent());
 		Assert.assertEquals(5.5, avg.getAsDouble(), 2);
 
 		//测试元素为空
-		OptionalDouble emptyAvg = EasyStream.of(integerList).avg(Integer::intValue);
+		final OptionalDouble emptyAvg = EasyStream.of(integerList).avg(Integer::intValue);
 		Assert.assertFalse(emptyAvg.isPresent());
 
 	}
@@ -475,22 +476,22 @@ public class EasyStreamTest {
 	@Test
 	public void testDoubleSumAndAvg() {
 		//测试double类型的sum
-		double doubleSum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).sum(Double::doubleValue);
+		final double doubleSum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).sum(Double::doubleValue);
 		Assert.assertEquals(59.6, doubleSum, 2);
 
 		//测试double类型的sum 无元素double
-		List<Double> doubleList = new ArrayList<>();
-		double emptySum = EasyStream.of(doubleList).sum(Double::doubleValue);
+		final List<Double> doubleList = new ArrayList<>();
+		final double emptySum = EasyStream.of(doubleList).sum(Double::doubleValue);
 		Assert.assertEquals(0.0, emptySum, 2);
 
 		//测试double类型的avg
-		OptionalDouble doubleAvg = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+		final OptionalDouble doubleAvg = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.avg(Double::doubleValue);
 		Assert.assertTrue(doubleAvg.isPresent());
 		Assert.assertEquals(5.96, doubleAvg.getAsDouble(), 2);
 
 		//测试double类型的 空元素的avg
-		OptionalDouble emptyDoubleAvg = EasyStream.of(doubleList).avg(Double::doubleValue);
+		final OptionalDouble emptyDoubleAvg = EasyStream.of(doubleList).avg(Double::doubleValue);
 		Assert.assertFalse(emptyDoubleAvg.isPresent());
 
 	}
@@ -498,21 +499,21 @@ public class EasyStreamTest {
 	@Test
 	public void testLongSumAndAvg() {
 		//测试long类型的sum
-		long sum = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).sum(Long::longValue);
+		final long sum = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).sum(Long::longValue);
 		Assert.assertEquals(55L, sum);
 
 		//测试long类型的空元素 sum
-		List<Long> longList = new ArrayList<>();
-		long emptySum = EasyStream.of(longList).sum(Long::longValue);
+		final List<Long> longList = new ArrayList<>();
+		final long emptySum = EasyStream.of(longList).sum(Long::longValue);
 		Assert.assertEquals(0L, emptySum);
 
 		//测试long类型的avg
-		OptionalDouble doubleAvg = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).avg(Long::longValue);
+		final OptionalDouble doubleAvg = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).avg(Long::longValue);
 		Assert.assertTrue(doubleAvg.isPresent());
 		Assert.assertEquals(5.5, doubleAvg.getAsDouble(), 2);
 
 		//测试long类型的avg 空元素
-		OptionalDouble emptyDoubleAvg = EasyStream.of(longList).avg(Long::longValue);
+		final OptionalDouble emptyDoubleAvg = EasyStream.of(longList).avg(Long::longValue);
 		Assert.assertFalse(emptyDoubleAvg.isPresent());
 
 
@@ -521,35 +522,35 @@ public class EasyStreamTest {
 	@Test
 	public void testBigDecimalSumAndAvg() {
 		//测试bigDecimal的sum
-		BigDecimal sum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).map(NumberUtil::toBigDecimal)
+		final BigDecimal sum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).map(NumberUtil::toBigDecimal)
 				.sum(Function.identity());
 		Assert.assertEquals(NumberUtil.toBigDecimal(59.6), sum);
 
 		//测试bigDecimal的sum 空元素
-		List<BigDecimal> bigDecimalEmptyList = new ArrayList<>();
-		BigDecimal emptySum = EasyStream.of(bigDecimalEmptyList).sum(Function.identity());
+		final List<BigDecimal> bigDecimalEmptyList = new ArrayList<>();
+		final BigDecimal emptySum = EasyStream.of(bigDecimalEmptyList).sum(Function.identity());
 		Assert.assertEquals(BigDecimal.ZERO, emptySum);
 
 		//测试bigDecimal的avg全参
-		Opt<BigDecimal> bigDecimalAvgFullParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+		final Opt<BigDecimal> bigDecimalAvgFullParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2, RoundingMode.HALF_UP);
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgFullParam.get());
 
 		//测试bigDecimal的avg单参
-		Opt<BigDecimal> bigDecimalAvgOneParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+		final Opt<BigDecimal> bigDecimalAvgOneParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity());
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgOneParam.get());
 
 		//测试bigDecimal的avg双参
-		Opt<BigDecimal> bigDecimalAvgTwoParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+		final Opt<BigDecimal> bigDecimalAvgTwoParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
 				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2);
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgTwoParam.get());
 
 		//测试bigDecimal的avg 空元素
-		Opt<BigDecimal> emptyBigDecimalAvg = EasyStream.of(bigDecimalEmptyList)
+		final Opt<BigDecimal> emptyBigDecimalAvg = EasyStream.of(bigDecimalEmptyList)
 				.avg(Function.identity(), 2, RoundingMode.HALF_UP);
 		Assert.assertFalse(emptyBigDecimalAvg.isPresent());
 
