@@ -1,22 +1,31 @@
 package cn.hutool.core.stream;
 
-import cn.hutool.core.collection.CollUtil;
+import static java.util.Collections.singletonList;
+
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
-import java.math.RoundingMode;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.math.BigDecimal;
-import java.util.*;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.OptionalDouble;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Collections.singletonList;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author VampireAchao
@@ -490,7 +499,7 @@ public class EasyStreamTest {
 	public void testLongSumAndAvg() {
 		//测试long类型的sum
 		long sum = EasyStream.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L).sum(Long::longValue);
-		Assert.assertEquals(55, sum);
+		Assert.assertEquals(55L, sum);
 
 		//测试long类型的空元素 sum
 		List<Long> longList = new ArrayList<>();
@@ -512,10 +521,8 @@ public class EasyStreamTest {
 	@Test
 	public void testBigDecimalSumAndAvg() {
 		//测试bigDecimal的sum
-		BigDecimal sum = EasyStream.of(NumberUtil.toBigDecimal(1.1), NumberUtil.toBigDecimal(2.2),
-				NumberUtil.toBigDecimal(3.3), NumberUtil.toBigDecimal(4.4), NumberUtil.toBigDecimal(5.5),
-				NumberUtil.toBigDecimal(6.6), NumberUtil.toBigDecimal(7.7), NumberUtil.toBigDecimal(8.8),
-				NumberUtil.toBigDecimal(9.9), NumberUtil.toBigDecimal(10.10)).sum(Function.identity());
+		BigDecimal sum = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10).map(NumberUtil::toBigDecimal)
+				.sum(Function.identity());
 		Assert.assertEquals(NumberUtil.toBigDecimal(59.6), sum);
 
 		//测试bigDecimal的sum 空元素
@@ -524,26 +531,20 @@ public class EasyStreamTest {
 		Assert.assertEquals(BigDecimal.ZERO, emptySum);
 
 		//测试bigDecimal的avg全参
-		Opt<BigDecimal> bigDecimalAvgFullParam = EasyStream.of(NumberUtil.toBigDecimal(1.1),
-						NumberUtil.toBigDecimal(2.2), NumberUtil.toBigDecimal(3.3), NumberUtil.toBigDecimal(4.4),
-						NumberUtil.toBigDecimal(5.5), NumberUtil.toBigDecimal(6.6), NumberUtil.toBigDecimal(7.7),
-						NumberUtil.toBigDecimal(8.8), NumberUtil.toBigDecimal(9.9), NumberUtil.toBigDecimal(10.10))
+		Opt<BigDecimal> bigDecimalAvgFullParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2, RoundingMode.HALF_UP);
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgFullParam.get());
 
-		//测试bigDecimal的avg双参
-		Opt<BigDecimal> bigDecimalAvgOneParam = EasyStream.of(NumberUtil.toBigDecimal(1.1),
-						NumberUtil.toBigDecimal(2.2), NumberUtil.toBigDecimal(3.3), NumberUtil.toBigDecimal(4.4),
-						NumberUtil.toBigDecimal(5.5), NumberUtil.toBigDecimal(6.6), NumberUtil.toBigDecimal(7.7),
-						NumberUtil.toBigDecimal(8.8), NumberUtil.toBigDecimal(9.9), NumberUtil.toBigDecimal(10.10))
+		//测试bigDecimal的avg单参
+		Opt<BigDecimal> bigDecimalAvgOneParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity());
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgOneParam.get());
 
-		//测试bigDecimal的avg单参
-		Opt<BigDecimal> bigDecimalAvgTwoParam = EasyStream.of(NumberUtil.toBigDecimal(1.1),
-						NumberUtil.toBigDecimal(2.2), NumberUtil.toBigDecimal(3.3), NumberUtil.toBigDecimal(4.4),
-						NumberUtil.toBigDecimal(5.5), NumberUtil.toBigDecimal(6.6), NumberUtil.toBigDecimal(7.7),
-						NumberUtil.toBigDecimal(8.8), NumberUtil.toBigDecimal(9.9), NumberUtil.toBigDecimal(10.10))
+		//测试bigDecimal的avg双参
+		Opt<BigDecimal> bigDecimalAvgTwoParam = EasyStream.of(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 10.10)
+				.map(NumberUtil::toBigDecimal)
 				.avg(Function.identity(), 2);
 		Assert.assertEquals(NumberUtil.toBigDecimal(5.96), bigDecimalAvgTwoParam.get());
 
