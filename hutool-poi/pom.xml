@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<poi.version>5.2.2</poi.version>
+		<poi.version>5.2.3</poi.version>
 	</properties>
 
 	<dependencies>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.18.2</version>
+			<version>1.20.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
