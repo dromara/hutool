@@ -17,6 +17,7 @@
 	<description>Hutool POI工具类（对Office文档、OFD等操作）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.poi</Automatic-Module-Name>
 		<!-- versions -->
 		<poi.version>5.2.3</poi.version>
 	</properties>

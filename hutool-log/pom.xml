@@ -17,6 +17,7 @@
 	<description>Hutool 日志封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.log</Automatic-Module-Name>
 		<!-- versions -->
 		<slf4j.version>2.0.3</slf4j.version>
 		<!-- 固定1.3.x，支持到jdk8 -->

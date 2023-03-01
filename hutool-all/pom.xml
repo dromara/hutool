@@ -17,6 +17,10 @@
 	<description>Hutool是一个优雅而小巧的Java工具类库</description>
 	<url>https://github.com/looly/hutool</url>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool</Automatic-Module-Name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

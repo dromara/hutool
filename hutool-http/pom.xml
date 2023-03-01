@@ -16,6 +16,10 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool Http客户端</description>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool.http</Automatic-Module-Name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

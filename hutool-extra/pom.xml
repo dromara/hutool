@@ -17,6 +17,7 @@
 	<description>Hutool 扩展工具类（提供其它类库的封装）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
 		<beetl.version>3.14.1.RELEASE</beetl.version>

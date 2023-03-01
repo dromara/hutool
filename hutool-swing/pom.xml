@@ -16,6 +16,10 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool swing桌面相关封装</description>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool.swing</Automatic-Module-Name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>

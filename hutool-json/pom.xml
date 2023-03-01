@@ -17,6 +17,7 @@
 	<description>Hutool JSON封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.json</Automatic-Module-Name>
 		<!-- versions -->
 		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>

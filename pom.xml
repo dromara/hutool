@@ -108,7 +108,7 @@
 							<Built-By>${user.name}</Built-By>
 							<Build-Jdk>${java.version}</Build-Jdk>
 							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>${project.groupId}</Automatic-Module-Name>
+							<Automatic-Module-Name>${Automatic-Module-Name}</Automatic-Module-Name>
 						</manifestEntries>
 					</archive>
 				</configuration>

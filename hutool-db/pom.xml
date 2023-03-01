@@ -17,6 +17,7 @@
 	<description>Hutool 数据库JDBC的ORM封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.db</Automatic-Module-Name>
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>

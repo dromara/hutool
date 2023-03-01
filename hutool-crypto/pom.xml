@@ -17,6 +17,7 @@
 	<description>Hutool 加密解密</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.crypto</Automatic-Module-Name>
 		<!-- versions -->
 		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>
