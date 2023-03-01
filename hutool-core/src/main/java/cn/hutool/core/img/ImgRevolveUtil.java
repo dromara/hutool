@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 图片避免旋转工具类
+ * 图片纠正旋转工具类
  *
  *@Date: 2023/2/28 19:21<br/>
  * @author wdz
@@ -24,6 +24,7 @@ public class ImgRevolveUtil {
 	 * 纠正图片旋转
 	 *
 	 * @param srcFile
+	 * @return
 	 */
 	public static BufferedImage correctBufferImg(File srcFile) throws IOException, ImageProcessingException {
 		// 获取偏转角度
