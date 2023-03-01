@@ -22,5 +22,10 @@
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.drewnoakes</groupId>
+			<artifactId>metadata-extractor</artifactId>
+			<version>2.18.0</version>
+		</dependency>
 	</dependencies>
 </project>
