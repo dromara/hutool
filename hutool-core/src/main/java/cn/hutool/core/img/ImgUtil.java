@@ -10,6 +10,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.drew.imaging.ImageProcessingException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -1750,10 +1751,15 @@ public class ImgUtil {
 	public static BufferedImage read(File imageFile) {
 		BufferedImage result;
 		try {
-			result = ImageIO.read(imageFile);
+//			result = ImageIO.read(imageFile);
+			result = ImgRevolveUtil.correctBufferImg(imageFile);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+		catch (ImageProcessingException e) {
+			throw new IORuntimeException(e);
+		}
+
 
 		if (null == result) {
 			throw new IllegalArgumentException("Image type of file [" + imageFile.getName() + "] is not supported!");

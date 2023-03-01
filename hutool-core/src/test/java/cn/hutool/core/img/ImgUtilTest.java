@@ -22,15 +22,15 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void scaleTest() {
-		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
+		ImgUtil.scale(FileUtil.file("F:/fzh.jpg"), FileUtil.file("F:/temp.jpg"), 0.8f);
 	}
 
 	@Test
 	@Ignore
 	public void scaleTest2() {
 		ImgUtil.scale(
-				FileUtil.file("d:/test/2.png"),
-				FileUtil.file("d:/test/2_result.jpg"), 600, 337, null);
+				FileUtil.file("F:/zzq.jpg"),
+				FileUtil.file("F:/temp.jpg"), 600, 337, null);
 	}
 
 	@Test
