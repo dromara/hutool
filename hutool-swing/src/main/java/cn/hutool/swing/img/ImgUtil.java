@@ -1631,7 +1631,7 @@ public class ImgUtil {
 	public static BufferedImage read(final File imageFile) {
 		final BufferedImage result;
 		try {
-			result = ImageIO.read(imageFile);
+			result = ImgRevolveUtil.correctBufferImg(imageFile);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
