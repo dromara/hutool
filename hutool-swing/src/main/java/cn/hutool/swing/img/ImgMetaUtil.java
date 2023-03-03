@@ -105,6 +105,11 @@ public class ImgMetaUtil {
 		return getOrientation(metadata);
 	}
 
+	/**
+	 * 获取旋转角度
+	 * @param metadata {@link Metadata}
+	 * @return 旋转角度，可能为90,180,270
+	 */
 	private static int getOrientation(final Metadata metadata) {
 		for (final Directory directory : metadata.getDirectories()) {
 			for (final Tag tag : directory.getTags()) {
