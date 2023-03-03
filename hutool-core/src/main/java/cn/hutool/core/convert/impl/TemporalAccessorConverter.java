@@ -3,6 +3,7 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
@@ -156,7 +157,15 @@ public class TemporalAccessorConverter extends AbstractConverter {
 			return IsoEra.of(Math.toIntExact(time));
 		}
 
-		return parseFromInstant(targetClass, Instant.ofEpochMilli(time), null);
+		final Instant instant;
+		if(GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)){
+			// https://gitee.com/dromara/hutool/issues/I6IS5B
+			// Unix时间戳
+			instant = Instant.ofEpochSecond(time);
+		}else{
+			instant = Instant.ofEpochMilli(time);
+		}
+		return parseFromInstant(targetClass, instant, null);
 	}
 
 	/**

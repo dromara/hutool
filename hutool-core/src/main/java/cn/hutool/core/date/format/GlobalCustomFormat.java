@@ -18,7 +18,13 @@ import java.util.function.Function;
  */
 public class GlobalCustomFormat {
 
+	/**
+	 * 格式：秒时间戳（Unix时间戳）
+	 */
 	public static final String FORMAT_SECONDS = "#sss";
+	/**
+	 * 格式：毫秒时间戳
+	 */
 	public static final String FORMAT_MILLISECONDS = "#SSS";
 
 	private static final Map<CharSequence, Function<Date, String>> formatterMap;
