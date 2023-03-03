@@ -597,6 +597,10 @@ public class Img implements Serializable {
 	 * @since 3.2.2
 	 */
 	public Img rotate(final int degree) {
+		if(0 == degree){
+			// 不旋转
+			return this;
+		}
 		final Image image = getValidSrcImg();
 		final int width = image.getWidth(null);
 		final int height = image.getHeight(null);

@@ -2,6 +2,7 @@ package cn.hutool.swing.img;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Console;
 import cn.hutool.swing.img.color.ColorUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -169,5 +170,17 @@ public class ImgUtilTest {
 				Color.BLACK,
 				ImageIO.createImageOutputStream(new File("d:/test/createTransparentImageTest.png"))
 		);
+	}
+
+	@Test
+	@Ignore
+	public void issue2765Test() {
+		// 利用图片元数据工具读取图片旋转角度信息
+		final File file = FileUtil.file("d:/test/204691690-715c29d9-793a-4b29-ab1d-191a741438bb.jpg");
+		final int orientation = ImgMetaUtil.getOrientation(file);
+		Console.log(orientation);
+		Img.from(file)
+				.rotate(orientation)
+				.write(FileUtil.file("d:/test/aaa.jpg"));
 	}
 }
