@@ -1763,6 +1763,7 @@ public class FileUtil extends PathUtil {
 	 * @param file 文件
 	 * @return 输入流
 	 * @throws IORuntimeException 文件未找到
+	 * @see IoUtil#toStream(File) 
 	 */
 	public static BufferedInputStream getInputStream(final File file) throws IORuntimeException {
 		return IoUtil.toBuffered(IoUtil.toStream(file));

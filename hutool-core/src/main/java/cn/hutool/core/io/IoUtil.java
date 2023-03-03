@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Flushable;
 import java.io.IOException;
@@ -38,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -525,15 +525,15 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 文件转为{@link FileInputStream}
+	 * 文件转为{@link InputStream}
 	 *
 	 * @param file 文件
-	 * @return {@link FileInputStream}
+	 * @return {@link InputStream}
 	 */
-	public static FileInputStream toStream(final File file) {
+	public static InputStream toStream(final File file) {
 		try {
-			return new FileInputStream(file);
-		} catch (final FileNotFoundException e) {
+			return Files.newInputStream(file.toPath());
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

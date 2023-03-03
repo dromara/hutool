@@ -4,7 +4,6 @@ import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -194,7 +193,7 @@ public class FileTypeUtil {
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
 	public static String getType(File file,boolean isExact) throws IORuntimeException  {
-		FileInputStream in = null;
+		InputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
 			return getType(in, file.getName(),isExact);
