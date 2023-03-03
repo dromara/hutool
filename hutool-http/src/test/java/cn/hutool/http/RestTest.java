@@ -66,4 +66,12 @@ public class RestTest {
 		Console.log(request);
 		Console.log(request.execute().body());
 	}
+
+	@Test
+	@Ignore
+	public void getTest(){
+		final HttpRequest request = HttpRequest.get("http://localhost:8888/restTest");
+		final HttpResponse execute = request.execute();
+		Console.log(execute.headers());
+	}
 }
