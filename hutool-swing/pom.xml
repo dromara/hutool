@@ -14,7 +14,7 @@
 
 	<artifactId>hutool-swing</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool swing桌面相关封装</description>
+	<description>Hutool swing桌面和图片多媒体相关封装</description>
 
 	<properties>
 		<Automatic-Module-Name>cn.hutool.swing</Automatic-Module-Name>
@@ -26,6 +26,7 @@
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- 图片 -->
 		<dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
