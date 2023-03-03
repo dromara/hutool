@@ -101,6 +101,18 @@ public class ZipWriter implements Closeable {
 	}
 
 	/**
+	 * 设置压缩方式
+	 *
+	 * @param method 压缩方式，支持{@link ZipOutputStream#DEFLATED}和{@link ZipOutputStream#STORED}
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ZipWriter setMethod(final int method) {
+		this.out.setMethod(method);
+		return this;
+	}
+
+	/**
 	 * 获取原始的{@link ZipOutputStream}
 	 *
 	 * @return {@link ZipOutputStream}
@@ -233,9 +245,10 @@ public class ZipWriter implements Closeable {
 	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩），{@code null}表示不过滤
 	 * @throws IORuntimeException IO异常
 	 */
-	private ZipWriter _add(final File file, final String srcRootDir, final FileFilter filter) throws IORuntimeException {
+	@SuppressWarnings("resource")
+	private void _add(final File file, final String srcRootDir, final FileFilter filter) throws IORuntimeException {
 		if (null == file || (null != filter && false == filter.accept(file))) {
-			return this;
+			return;
 		}
 
 		// 获取文件相对于压缩文件夹根目录的子路径
@@ -256,7 +269,6 @@ public class ZipWriter implements Closeable {
 			// 如果是文件或其它符号，则直接压缩该文件
 			putEntry(subPath, FileUtil.getInputStream(file));
 		}
-		return this;
 	}
 
 	/**

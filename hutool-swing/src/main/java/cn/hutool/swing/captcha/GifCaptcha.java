@@ -1,9 +1,9 @@
 package cn.hutool.swing.captcha;
 
 
-import cn.hutool.swing.img.gif.AnimatedGifEncoder;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.madgag.gif.fmsware.AnimatedGifEncoder;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

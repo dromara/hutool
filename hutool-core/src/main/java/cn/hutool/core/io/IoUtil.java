@@ -38,6 +38,7 @@ import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -527,12 +528,24 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 文件转为{@link InputStream}
 	 *
-	 * @param file 文件
+	 * @param file 文件，非空
 	 * @return {@link InputStream}
 	 */
 	public static InputStream toStream(final File file) {
+		Assert.notNull(file);
+		return toStream(file.toPath());
+	}
+
+	/**
+	 * 文件转为{@link InputStream}
+	 *
+	 * @param path {@link Path}，非空
+	 * @return {@link InputStream}
+	 */
+	public static InputStream toStream(final Path path) {
+		Assert.notNull(path);
 		try {
-			return Files.newInputStream(file.toPath());
+			return Files.newInputStream(path);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

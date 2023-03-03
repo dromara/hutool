@@ -28,6 +28,12 @@
 		</dependency>
 		<!-- 图片 -->
 		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>animated-gif-lib</artifactId>
+			<version>1.4</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>com.drewnoakes</groupId>
 			<artifactId>metadata-extractor</artifactId>
 			<version>2.18.0</version>
