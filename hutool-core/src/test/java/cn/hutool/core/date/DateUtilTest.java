@@ -1135,11 +1135,17 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void ageOfNowTest() {
-		DateTime concurrentDate = DateUtil.date();
-		DateTime birthDay = DateUtil.offset(concurrentDate, DateField.YEAR, -71);
+		final DateTime concurrentDate = DateUtil.date();
+		final DateTime birthDay = DateUtil.offset(concurrentDate, DateField.YEAR, -71);
 		Assert.assertEquals(70, DateUtil.ageOfNow(birthDay));
 		Assert.assertEquals(71, DateUtil.ageOfNow(DateUtil.offsetDay(birthDay, -1)));
 		Assert.assertEquals(0, DateUtil.ageOfNow(concurrentDate));
 	}
 
+	@Test
+	public void calendarTest() {
+		final Date date = DateUtil.date();
+		final Calendar c = DateUtil.calendar(date);
+		Assert.assertEquals(DateUtil.date(c), date);
+	}
 }
