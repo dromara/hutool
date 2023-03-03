@@ -22,6 +22,7 @@
 * 【core  】      修复ReflectUtil.invokeRaw方法中参数类型转换动作未生效的问题（pr#2912@Github）
 * 【core  】      修复isXXX转换时的匹配问题（issue#I6H0XF@Gitee）
 * 【core  】      修复MutableObj.equals空指针问题
+* 【core  】      修复JavaSourceFileObject在编译错误时抛出IOException异常而非CompilerException问题（pr#2942@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
