@@ -28,7 +28,7 @@ public class ImgMetaUtil {
 	 * 纠正图片旋转<br>
 	 * 通过读取图片元数据信息获取旋转角度，然后根据旋转角度修正图片的角度
 	 *
-	 * @param f 图片文件
+	 * @param file 图片文件
 	 * @return {@link BufferedImage}
 	 * @throws IOException IO异常
 	 */
