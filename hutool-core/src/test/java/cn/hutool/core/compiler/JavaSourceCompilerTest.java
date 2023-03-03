@@ -40,4 +40,17 @@ public class JavaSourceCompilerTest {
 		Assert.assertTrue(String.valueOf(obj).startsWith("c.C@"));
 	}
 
+	@Test
+	public void testErrorCompile() {
+		Exception exception = null;
+		try {
+			CompilerUtil.getCompiler(null)
+					.addSource(FileUtil.file("test-compile/error/ErrorClazz.java"))
+					.compile();
+		} catch (Exception ex) {
+			exception = ex;
+		} finally {
+			Assert.assertTrue(exception instanceof CompilerException);
+		}
+	}
 }
