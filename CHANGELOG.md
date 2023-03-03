@@ -10,6 +10,7 @@
 * 【core  】      build(pom): 添加 Automatic-Module-Name属性（pr#2926@Github）
 * 【core  】      根据JDK-8080225修改了部分新建文件输入流和文件输出流的创建方式（pr#2930@Github）
 * 【http  】      HttpRequest#body增加支持Resource重载（issue#2901@Github）
+* 【core  】      JavaSourceCompiler#compile增加自定义options重载（issue#I6IVZK@Gitee）
 
 ### 🐞Bug修复
 * 【db    】      修复识别JDBC驱动时重复问题（pr#940@Gitee）
