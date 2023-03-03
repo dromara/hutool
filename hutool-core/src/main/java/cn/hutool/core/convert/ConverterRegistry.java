@@ -38,6 +38,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
@@ -253,6 +254,11 @@ public class ConverterRegistry implements Serializable {
 
 		if (type instanceof TypeReference) {
 			type = ((TypeReference<?>) type).getType();
+		}
+
+		// 自定义对象转换
+		if(value instanceof TypeConverter){
+			return ObjUtil.defaultIfNull((T) ((TypeConverter) value).convert(type, value), defaultValue);
 		}
 
 		// 标准转换器

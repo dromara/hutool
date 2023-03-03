@@ -24,6 +24,7 @@
 * 【core  】      修复isXXX转换时的匹配问题（issue#I6H0XF@Gitee）
 * 【core  】      修复MutableObj.equals空指针问题
 * 【core  】      修复JavaSourceFileObject在编译错误时抛出IOException异常而非CompilerException问题（pr#2942@Github）
+* 【jwt   】      修复JWT自定义时间格式后的时间戳转换问题（issue#I6IS5B@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
