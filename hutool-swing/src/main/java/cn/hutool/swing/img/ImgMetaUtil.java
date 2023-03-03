@@ -20,7 +20,7 @@ import java.io.InputStream;
  * 借助metadata-extractor完成图片元信息的读取，如旋转角度等问题
  *
  * @author wdz
- * @since 5.8.13
+ * @since 6.0.0
  */
 public class ImgMetaUtil {
 
