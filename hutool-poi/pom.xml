@@ -17,6 +17,8 @@
 	<description>Hutool POI工具类（对Office文档、OFD等操作）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.poi</Automatic-Module-Name>
+
 		<!-- versions -->
 		<poi.version>4.1.2</poi.version>
 	</properties>
@@ -50,28 +52,4 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.poi</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

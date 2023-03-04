@@ -17,6 +17,8 @@
 	<description>Hutool 脚本执行封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.script</Automatic-Module-Name>
+
 		<jython.version>2.7.3</jython.version>
 		<luaj.version>3.0.1</luaj.version>
 		<groovy.version>3.0.13</groovy.version>
@@ -54,28 +56,4 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.script</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

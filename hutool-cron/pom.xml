@@ -16,6 +16,10 @@
 	<name>${project.artifactId}</name>
 	<description>Hutool 定时任务</description>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool.cron</Automatic-Module-Name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -29,27 +33,4 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.cron</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

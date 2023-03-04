@@ -17,6 +17,7 @@
 	<description>Hutool 扩展工具类（提供其它类库的封装）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
 		<beetl.version>3.14.1.RELEASE</beetl.version>
@@ -480,28 +481,4 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

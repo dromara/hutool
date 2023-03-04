@@ -41,6 +41,8 @@
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
+		<Automatic-Module-Name>cn.hutool</Automatic-Module-Name>
+
 		<!-- versions -->
 		<compile.version>8</compile.version>
 		<junit.version>4.13.2</junit.version>
@@ -98,6 +100,26 @@
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
 					<compilerArgument>-Xlint:unchecked</compilerArgument>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Build-OS>${os.name}</Build-OS>
+							<Built-By>${user.name}</Built-By>
+							<Build-Jdk>${java.version}</Build-Jdk>
+							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+							<Automatic-Module-Name>cn.hutool.aop</Automatic-Module-Name>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->

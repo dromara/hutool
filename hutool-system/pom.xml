@@ -17,6 +17,8 @@
 	<description>Hutool 系统调用（Runtime）、系统监控封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.system</Automatic-Module-Name>
+
 		<slf4j.version>1.7.36</slf4j.version>
 	</properties>
 
@@ -40,28 +42,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.system</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

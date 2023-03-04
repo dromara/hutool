@@ -17,6 +17,8 @@
 	<description>Hutool 数据库JDBC的ORM封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.db</Automatic-Module-Name>
+
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
@@ -185,28 +187,4 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-OS>${os.name}</Build-OS>
-							<Built-By>${user.name}</Built-By>
-							<Build-Jdk>${java.version}</Build-Jdk>
-							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-							<Automatic-Module-Name>cn.hutool.db</Automatic-Module-Name>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
