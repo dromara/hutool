@@ -304,7 +304,7 @@ public abstract class HttpBase<T> {
 	 * @return byte[]
 	 */
 	public byte[] bodyBytes() {
-		return this.body.readBytes();
+		return this.body == null ? null : this.body.readBytes();
 	}
 
 	/**
@@ -355,7 +355,7 @@ public abstract class HttpBase<T> {
 		}
 
 		sb.append("Request Body: ").append(StrUtil.CRLF);
-		sb.append("    ").append(StrUtil.str(this.body.readBytes(), this.charset)).append(StrUtil.CRLF);
+		sb.append("    ").append(StrUtil.str(this.bodyBytes(), this.charset)).append(StrUtil.CRLF);
 
 		return sb.toString();
 	}

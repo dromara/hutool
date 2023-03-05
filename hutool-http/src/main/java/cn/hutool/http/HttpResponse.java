@@ -241,7 +241,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		if (isAsync) {
 			return this.in;
 		}
-		return this.body.getStream();
+		return null == this.body ? null : this.body.getStream();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	@Override
 	public byte[] bodyBytes() {
 		sync();
-		return this.body.readBytes();
+		return super.bodyBytes();
 	}
 
 	/**
