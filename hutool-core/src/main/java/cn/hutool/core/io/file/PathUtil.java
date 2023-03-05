@@ -149,6 +149,19 @@ public class PathUtil {
 	}
 
 	/**
+	 * 清空目录
+	 *
+	 * @param path 目录路径
+	 */
+	public static void clean(final Path path) {
+		try {
+			Files.walkFileTree(path, DelVisitor.INSTANCE);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * 复制src到target中
 	 * <ul>
 	 *     <li>src路径和target路径相同时，不执行操作</li>
