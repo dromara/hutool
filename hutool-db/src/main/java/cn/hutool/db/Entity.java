@@ -348,8 +348,9 @@ public class Entity extends Dict {
 	 * 获得字符串值<br>
 	 * 支持Clob、Blob、RowId
 	 *
-	 * @param field   字段名
-	 * @param charset 编码
+	 * @param field        字段名
+	 * @param charset      编码
+	 * @param defaultValue 默认值
 	 * @return 字段对应值
 	 */
 	public String getStr(final String field, final Charset charset, final String defaultValue) {

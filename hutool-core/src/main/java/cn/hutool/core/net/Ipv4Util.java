@@ -8,13 +8,12 @@ import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 
 /**
  * IPV4地址工具类
  *
- * <p>pr自：https://gitee.com/loolly/hutool/pulls/161</p>
+ * <p><a href="https://gitee.com/loolly/hutool/pulls/161">工具类来源pr</a></p>
  *
  * <p>名词解释：
  * <ul>
@@ -22,7 +21,7 @@ import java.util.regex.Matcher;
  *     <li>ip的Long类型：有效位32位，每8位可以转为一个十进制数，例如：0xC0A802FA， 转为点分十进制是：192.168.2.250</li>
  *     <li>掩码地址：点分十进制，例如：255.255.255.0</li>
  *     <li>掩码位：int类型，例如 24, 它代表的掩码地址为：255.255.255.0；掩码位和掩码地址的相互转换，请使用 {@link MaskBit}</li>
- *     <li>CIDR：无类域间路由，形如：xxx.xxx.xxx.xxx/掩码位</li>
+ *     <li>CIDR：无类域间路由，形如：xxx.xxx.xxx.xxx/掩码位，192.168.1.101/24</li>
  *     <li>全量地址：区间内所有ip地址，包含区间两端</li>
  *     <li>可用地址：区间内所有ip地址，但是不包含区间两端</li>
  * </ul>
@@ -39,7 +38,7 @@ public class Ipv4Util implements Ipv4Pool {
 	 *
 	 * @param ip   IP地址，点分十进制，如：xxx.xxx.xxx.xxx
 	 * @param mask 掩码地址，点分十进制，如：255.255.255.0
-	 * @return 返回 {@literal xxx.xxx.xxx.xxx/掩码位} 的格式
+	 * @return 返回 {@literal xxx.xxx.xxx.xxx/掩码位} 的格式，例如：192.168.1.101/24
 	 */
 	public static String formatIpBlock(final String ip, final String mask) {
 		return ip + IP_MASK_SPLIT_MARK + getMaskBitByMask(mask);
@@ -78,35 +77,24 @@ public class Ipv4Util implements Ipv4Pool {
 		assertMaskBitValid(maskBit);
 		// 避免后续的计算异常
 		if (countByMaskBit(maskBit, isAll) == 0) {
-			return new ArrayList<>(0);
+			return ListUtil.zero();
 		}
 
-		if (maskBit == IPV4_MASK_BIT_MAX) {
-			final List<String> list = new ArrayList<>(isAll ? 1 : 0);
-			if (isAll) {
-				list.add(ip);
-			}
-			return list;
-		}
-
-		String startIp = getBeginIpStr(ip, maskBit);
-		String endIp = getEndIpStr(ip, maskBit);
+		final long startIp = getBeginIpLong(ip, maskBit);
+		final long endIp = getEndIpLong(ip, maskBit);
 		if (isAll) {
 			return list(startIp, endIp);
 		}
 
-		// 可用地址，排除开始和结束的地址
-		int lastDotIndex = startIp.lastIndexOf(CharUtil.DOT) + 1;
-		startIp = StrUtil.subPre(startIp, lastDotIndex) +
-				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(startIp, lastDotIndex))) + 1);
-		lastDotIndex = endIp.lastIndexOf(CharUtil.DOT) + 1;
-		endIp = StrUtil.subPre(endIp, lastDotIndex) +
-				(Integer.parseInt(Objects.requireNonNull(StrUtil.subSuf(endIp, lastDotIndex))) - 1);
-		return list(startIp, endIp);
+		// 可用地址: 排除开始和结束的地址
+		if (startIp + 1 > endIp - 1) {
+			return ListUtil.zero();
+		}
+		return list(startIp + 1, endIp - 1);
 	}
 
 	/**
-	 * 	获得 指定区间内 所有ip地址
+	 * 获得 指定区间内 所有ip地址
 	 *
 	 * @param ipFrom 开始IP，包含，点分十进制
 	 * @param ipTo   结束IP，包含，点分十进制
@@ -128,41 +116,14 @@ public class Ipv4Util implements Ipv4Pool {
 		final int count = countByIpRange(ipFrom, ipTo);
 
 		final List<String> ips = new ArrayList<>(count);
-		// 是否是循环的第一个值
-		boolean aIsStart = true, bIsStart = true, cIsStart = true;
-		// 是否是循环的最后一个值
-		boolean aIsEnd, bIsEnd, cIsEnd;
-		// 循环的结束值
-		final int aEnd = getPartOfIpLong(ipTo, 1);
-		int bEnd;
-		int cEnd;
-		int dEnd;
 		final StringBuilder sb = StrUtil.builder(15);
-		for (int a = getPartOfIpLong(ipFrom, 1); a <= aEnd; a++) {
-			aIsEnd = (a == aEnd);
-			// 本次循环的结束结束值
-			bEnd = aIsEnd ? getPartOfIpLong(ipTo, 2) : 255;
-			for (int b = (aIsStart ? getPartOfIpLong(ipFrom, 2) : 0); b <= bEnd; b++) {
-				// 在上一个循环是最后值的基础上进行判断
-				bIsEnd = aIsEnd && (b == bEnd);
-				cEnd = bIsEnd ? getPartOfIpLong(ipTo, 3) : 255;
-				for (int c = (bIsStart ? getPartOfIpLong(ipFrom, 3) : 0); c <= cEnd; c++) {
-					// 在之前循环是最后值的基础上进行判断
-					cIsEnd = bIsEnd && (c == cEnd);
-					dEnd = cIsEnd ? getPartOfIpLong(ipTo, 4) : 255;
-					for (int d = (cIsStart ? getPartOfIpLong(ipFrom, 4) : 0); d <= dEnd; d++) {
-						sb.setLength(0);
-						ips.add(sb.append(a).append(CharUtil.DOT)
-								.append(b).append(CharUtil.DOT)
-								.append(c).append(CharUtil.DOT)
-								.append(d)
-								.toString());
-					}
-					cIsStart = false;
-				}
-				bIsStart = false;
-			}
-			aIsStart = false;
+		for (long ip = ipFrom, end = ipTo + 1; ip < end; ip++) {
+			sb.setLength(0);
+			ips.add(sb.append((int) (ip >> 24) & 0xFF).append(CharUtil.DOT)
+					.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
+					.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
+					.append((int) ip & 0xFF)
+					.toString());
 		}
 		return ips;
 	}
@@ -170,15 +131,15 @@ public class Ipv4Util implements Ipv4Pool {
 	/**
 	 * 根据 ip的long值 获取 ip字符串，即：xxx.xxx.xxx.xxx
 	 *
-	 * @param longIp IP的long表示形式
+	 * @param ip IP的long表示形式
 	 * @return 点分十进制ip地址
 	 */
-	public static String longToIpv4(final long longIp) {
+	public static String longToIpv4(final long ip) {
 		return StrUtil.builder(15)
-				.append(getPartOfIpLong(longIp, 1)).append(CharUtil.DOT)
-				.append(getPartOfIpLong(longIp, 2)).append(CharUtil.DOT)
-				.append(getPartOfIpLong(longIp, 3)).append(CharUtil.DOT)
-				.append(getPartOfIpLong(longIp, 4))
+				.append((int) (ip >> 24) & 0xFF).append(CharUtil.DOT)
+				.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
+				.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
+				.append((int) ip & 0xFF)
 				.toString();
 	}
 
@@ -214,7 +175,7 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @param maskBit 给定的掩码位，如：30
 	 * @return 起始IP的长整型表示
 	 */
-	public static Long getBeginIpLong(final String ip, final int maskBit) {
+	public static long getBeginIpLong(final String ip, final int maskBit) {
 		assertMaskBitValid(maskBit);
 		return ipv4ToLong(ip) & MaskBit.getMaskIpLong(maskBit);
 	}
@@ -237,8 +198,8 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @param maskBit 给定的掩码位，如：30
 	 * @return 终止IP的长整型表示
 	 */
-	public static Long getEndIpLong(final String ip, final int maskBit) {
-		return getBeginIpLong(ip, maskBit) + ~MaskBit.getMaskIpLong(maskBit);
+	public static long getEndIpLong(final String ip, final int maskBit) {
+		return getBeginIpLong(ip, maskBit) + (IPV4_NUM_MAX & ~MaskBit.getMaskIpLong(maskBit));
 	}
 
 	/**
@@ -257,7 +218,7 @@ public class Ipv4Util implements Ipv4Pool {
 	/**
 	 * 获取 子网内的 地址总数
 	 *
-	 * @param maskBit 掩码位，取值范围：({@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
+	 * @param maskBit 掩码位，取值范围：({@link #IPV4_MASK_BIT_VALID_MIN}, {@link #IPV4_MASK_BIT_MAX}]
 	 * @param isAll   true:全量地址，false:可用地址
 	 * @return 子网内地址总数
 	 */
@@ -276,10 +237,11 @@ public class Ipv4Util implements Ipv4Pool {
 	/**
 	 * 根据 掩码位 获取 掩码地址
 	 *
-	 * @param maskBit 掩码位，如：24，取值范围：[{@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
+	 * @param maskBit 掩码位，如：24，取值范围：[{@link #IPV4_MASK_BIT_VALID_MIN}, {@link #IPV4_MASK_BIT_MAX}]
 	 * @return 掩码地址，点分十进制，如:255.255.255.0
 	 */
 	public static String getMaskByMaskBit(final int maskBit) {
+		assertMaskBitValid(maskBit);
 		return MaskBit.get(maskBit);
 	}
 
@@ -296,10 +258,10 @@ public class Ipv4Util implements Ipv4Pool {
 		Assert.isTrue(fromIpLong <= toIpLong, "Start IP must be less than or equal to end IP!");
 
 		return StrUtil.builder(15)
-				.append(255 - getPartOfIpLong(toIpLong, 1) + getPartOfIpLong(fromIpLong, 1)).append(CharUtil.DOT)
-				.append(255 - getPartOfIpLong(toIpLong, 2) + getPartOfIpLong(fromIpLong, 2)).append(CharUtil.DOT)
-				.append(255 - getPartOfIpLong(toIpLong, 3) + getPartOfIpLong(fromIpLong, 3)).append(CharUtil.DOT)
-				.append(255 - getPartOfIpLong(toIpLong, 4) + getPartOfIpLong(fromIpLong, 4))
+				.append(255 - getPartOfIp(toIpLong, 1) + getPartOfIp(fromIpLong, 1)).append(CharUtil.DOT)
+				.append(255 - getPartOfIp(toIpLong, 2) + getPartOfIp(fromIpLong, 2)).append(CharUtil.DOT)
+				.append(255 - getPartOfIp(toIpLong, 3) + getPartOfIp(fromIpLong, 3)).append(CharUtil.DOT)
+				.append(255 - getPartOfIp(toIpLong, 4) + getPartOfIp(fromIpLong, 4))
 				.toString();
 	}
 
@@ -311,9 +273,7 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @return IP数量
 	 */
 	public static int countByIpRange(final String fromIp, final String toIp) {
-		final long toIpLong = ipv4ToLong(toIp);
-		final long fromIpLong = ipv4ToLong(fromIp);
-		return countByIpRange(fromIpLong, toIpLong);
+		return countByIpRange(ipv4ToLong(fromIp), ipv4ToLong(toIp));
 	}
 
 	/**
@@ -327,10 +287,10 @@ public class Ipv4Util implements Ipv4Pool {
 		Assert.isTrue(fromIp <= toIp, "Start IP must be less than or equal to end IP!");
 
 		int count = 1;
-		count += (getPartOfIpLong(toIp, 4) - getPartOfIpLong(fromIp, 4));
-		count += (getPartOfIpLong(toIp, 3) - getPartOfIpLong(fromIp, 3)) << 8;
-		count += (getPartOfIpLong(toIp, 2) - getPartOfIpLong(fromIp, 2)) << 16;
-		count += (getPartOfIpLong(toIp, 1) - getPartOfIpLong(fromIp, 1)) << 24;
+		count += (getPartOfIp(toIp, 4) - getPartOfIp(fromIp, 4))
+				+ ((getPartOfIp(toIp, 3) - getPartOfIp(fromIp, 3)) << 8)
+				+ ((getPartOfIp(toIp, 2) - getPartOfIp(fromIp, 2)) << 16)
+				+ ((getPartOfIp(toIp, 1) - getPartOfIp(fromIp, 1)) << 24);
 		return count;
 	}
 
@@ -347,7 +307,7 @@ public class Ipv4Util implements Ipv4Pool {
 	/**
 	 * 判断掩码位是否合法
 	 *
-	 * @param maskBit 掩码位，有效范围：[{@link Ipv4Pool#IPV4_MASK_BIT_VALID_MIN}, {@link Ipv4Pool#IPV4_MASK_BIT_MAX}]
+	 * @param maskBit 掩码位，有效范围：[{@link #IPV4_MASK_BIT_VALID_MIN}, {@link #IPV4_MASK_BIT_MAX}]
 	 * @return true：掩码位合法；false：掩码位不合法
 	 */
 	public static boolean isMaskBitValid(final int maskBit) {
@@ -424,7 +384,7 @@ public class Ipv4Util implements Ipv4Pool {
 
 	/**
 	 * 获取ip(Long类型)指定部分的十进制值，即，{@literal X.X.X.X }形式中每个部分的值
-	 * <p>例如，ip为{@literal 0xC0A802FA}，第1部分的值为：
+	 * <p>例如，ip为{@literal 0xC0A802FA}：
 	 * <ul>
 	 * <li>第1部分的值为：{@literal 0xC0}，十进制值为：192</li>
 	 * <li>第2部分的值为：{@literal 0xA8}，十进制值为：168</li>
@@ -437,16 +397,16 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @return ip地址指定部分的十进制值
 	 * @since 6.0.0
 	 */
-	public static int getPartOfIpLong(final long ip, final int position) {
+	public static int getPartOfIp(final long ip, final int position) {
 		switch (position) {
 			case 1:
-				return ((int) ip >> 24) & 0xFF;
+				return (int) (ip >> 24) & 0xFF;
 			case 2:
-				return ((int) ip >> 16) & 0xFF;
+				return (int) (ip >> 16) & 0xFF;
 			case 3:
-				return ((int) ip >> 8) & 0xFF;
+				return (int) (ip >> 8) & 0xFF;
 			case 4:
-				return ((int) ip) & 0xFF;
+				return (int)ip & 0xFF;
 			default:
 				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
 		}
@@ -462,10 +422,14 @@ public class Ipv4Util implements Ipv4Pool {
 	private static long matchAddress(final Matcher matcher) {
 		int addr = 0;
 		// 每个点分十进制数字 转为 8位二进制
-		for (int i = 1; i <= 4; ++i) {
-			addr <<= 8;
-			addr |= Integer.parseInt(matcher.group(i));
-		}
+		addr |= Integer.parseInt(matcher.group(1));
+		addr <<= 8;
+		addr |= Integer.parseInt(matcher.group(2));
+		addr <<= 8;
+		addr |= Integer.parseInt(matcher.group(3));
+		addr <<= 8;
+		addr |= Integer.parseInt(matcher.group(4));
+
 		// int的最高位无法直接使用，转为Long
 		if (addr < 0) {
 			return IPV4_NUM_MAX & addr;
