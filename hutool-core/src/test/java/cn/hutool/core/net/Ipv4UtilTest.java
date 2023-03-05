@@ -196,8 +196,8 @@ public class Ipv4UtilTest {
 	public void getMaskBitByIpRange() {
 		final String ip = "192.168.100.2";
 		for (int i = 1; i <= 32; i++) {
-			String beginIpStr = Ipv4Util.getBeginIpStr(ip, i);
-			String endIpStr = Ipv4Util.getEndIpStr(ip, i);
+			final String beginIpStr = Ipv4Util.getBeginIpStr(ip, i);
+			final String endIpStr = Ipv4Util.getEndIpStr(ip, i);
 			Assert.assertEquals(Ipv4Util.getMaskByMaskBit(i), Ipv4Util.getMaskByIpRange(beginIpStr, endIpStr));
 		}
 	}

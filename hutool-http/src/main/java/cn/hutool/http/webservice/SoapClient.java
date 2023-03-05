@@ -4,13 +4,17 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpGlobalConfig;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.http.client.HeaderOperation;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.engine.ClientEngineFactory;
 import cn.hutool.http.client.engine.jdk.HttpBase;
+import cn.hutool.http.meta.Header;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -25,8 +29,7 @@ import javax.xml.soap.SOAPMessage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -51,7 +54,7 @@ import java.util.Map.Entry;
  * @author looly
  * @since 4.5.4
  */
-public class SoapClient extends HttpBase<SoapClient> {
+public class SoapClient implements HeaderOperation<SoapClient> {
 
 	/**
 	 * XML消息体的Content-Type
@@ -66,15 +69,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * 请求的URL地址
 	 */
 	private String url;
-
-	/**
-	 * 默认连接超时
-	 */
-	private int connectionTimeout = HttpGlobalConfig.getTimeout();
-	/**
-	 * 默认读取超时
-	 */
-	private int readTimeout = HttpGlobalConfig.getTimeout();
+	private Charset charset = CharsetUtil.UTF_8;
 
 	/**
 	 * 消息工厂，用于创建消息
@@ -98,6 +93,10 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * soap1.2 : application/soap+xml
 	 */
 	private final SoapProtocol protocol;
+	/**
+	 * 存储头信息
+	 */
+	private final Map<String, List<String>> headers = new HashMap<>();
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -211,20 +210,16 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 *
 	 * @param charset 编码
 	 * @return this
-	 * @see #charset(Charset)
 	 */
-	public SoapClient setCharset(final Charset charset) {
-		return this.charset(charset);
-	}
-
-	@Override
 	public SoapClient charset(final Charset charset) {
-		super.charset(charset);
-		try {
-			this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, this.charset());
-			this.message.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "true");
-		} catch (final SOAPException e) {
-			// ignore
+		if (null != charset) {
+			this.charset = charset;
+			try {
+				this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, charset.name());
+				this.message.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "true");
+			} catch (final SOAPException e) {
+				// ignore
+			}
 		}
 
 		return this;
@@ -238,6 +233,51 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 */
 	public SoapClient setUrl(final String url) {
 		this.url = url;
+		return this;
+	}
+
+	/**
+	 * 设置一个header<br>
+	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
+	 *
+	 * @param name       Header名
+	 * @param value      Header值
+	 * @param isOverride 是否覆盖已有值
+	 * @return T 本身
+	 */
+	@Override
+	public SoapClient header(final String name, final String value, final boolean isOverride) {
+		if (null != name && null != value) {
+			final List<String> values = headers.get(name.trim());
+			if (isOverride || CollUtil.isEmpty(values)) {
+				final ArrayList<String> valueList = new ArrayList<>();
+				valueList.add(value);
+				headers.put(name.trim(), valueList);
+			} else {
+				values.add(value.trim());
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * 获取headers
+	 *
+	 * @return Headers Map
+	 */
+	@Override
+	public Map<String, List<String>> headers() {
+		return Collections.unmodifiableMap(headers);
+	}
+
+	/**
+	 * 清除所有头信息，包括全局头信息
+	 *
+	 * @return this
+	 * @since 5.7.13
+	 */
+	public SoapClient clearHeaders() {
+		this.headers.clear();
 		return this;
 	}
 
@@ -494,50 +534,6 @@ public class SoapClient extends HttpBase<SoapClient> {
 	}
 
 	/**
-	 * 设置超时，单位：毫秒<br>
-	 * 超时包括：
-	 *
-	 * <pre>
-	 * 1. 连接超时
-	 * 2. 读取响应超时
-	 * </pre>
-	 *
-	 * @param milliseconds 超时毫秒数
-	 * @return this
-	 * @see #setConnectionTimeout(int)
-	 * @see #setReadTimeout(int)
-	 */
-	public SoapClient timeout(final int milliseconds) {
-		setConnectionTimeout(milliseconds);
-		setReadTimeout(milliseconds);
-		return this;
-	}
-
-	/**
-	 * 设置连接超时，单位：毫秒
-	 *
-	 * @param milliseconds 超时毫秒数
-	 * @return this
-	 * @since 4.5.6
-	 */
-	public SoapClient setConnectionTimeout(final int milliseconds) {
-		this.connectionTimeout = milliseconds;
-		return this;
-	}
-
-	/**
-	 * 设置连接超时，单位：毫秒
-	 *
-	 * @param milliseconds 超时毫秒数
-	 * @return this
-	 * @since 4.5.6
-	 */
-	public SoapClient setReadTimeout(final int milliseconds) {
-		this.readTimeout = milliseconds;
-		return this;
-	}
-
-	/**
 	 * 执行Webservice请求，即发送SOAP内容
 	 *
 	 * @return 返回结果
@@ -574,6 +570,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @param pretty 是否格式化
 	 * @return 返回结果
 	 */
+	@SuppressWarnings("resource")
 	public String send(final boolean pretty) {
 		final String body = sendForResponse().bodyStr();
 		return pretty ? XmlUtil.format(body) : body;
@@ -592,7 +589,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 				.contentType(getXmlContentType())
 				.header(this.headers, false)
 				.body(getMsgStr(false));
-		return ClientEngineFactory.get().send(request);
+		return request.send();
 	}
 
 	/**
@@ -601,7 +598,7 @@ public class SoapClient extends HttpBase<SoapClient> {
 	 * @return 请求的Content-Type
 	 */
 	private String getXmlContentType() {
-		switch (this.protocol){
+		switch (this.protocol) {
 			case SOAP_1_1:
 				return CONTENT_TYPE_SOAP11_TEXT_XML.concat(this.charset.toString());
 			case SOAP_1_2:

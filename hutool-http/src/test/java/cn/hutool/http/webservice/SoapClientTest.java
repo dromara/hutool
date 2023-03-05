@@ -21,7 +21,7 @@ public class SoapClientTest {
 	public void requestTest() {
 		final SoapClient client = SoapClient.of("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 		.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
-		.setCharset(CharsetUtil.GBK)
+		.charset(CharsetUtil.GBK)
 		.setParam("theIpAddress", "218.21.240.106");
 
 		Console.log(client.getMsgStr(true));
