@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
@@ -139,10 +140,10 @@ public class FileTypeUtil {
 		String typeName = getType(in,isExact);
 		if (null == typeName) {
 			// 未成功识别类型，扩展名辅助识别
-			typeName = FileUtil.extName(filename);
+			typeName = FileNameUtil.extName(filename);
 		} else if ("zip".equals(typeName)) {
 			// zip可能为docx、xlsx、pptx、jar、war、ofd等格式，扩展名辅助判断
-			final String extName = FileUtil.extName(filename);
+			final String extName = FileNameUtil.extName(filename);
 			if ("docx".equalsIgnoreCase(extName)) {
 				typeName = "docx";
 			} else if ("xlsx".equalsIgnoreCase(extName)) {
@@ -160,7 +161,7 @@ public class FileTypeUtil {
 			}
 		} else if ("jar".equals(typeName)) {
 			// wps编辑过的.xlsx文件与.jar的开头相同,通过扩展名判断
-			final String extName = FileUtil.extName(filename);
+			final String extName = FileNameUtil.extName(filename);
 			if ("xlsx".equalsIgnoreCase(extName)) {
 				typeName = "xlsx";
 			} else if ("docx".equalsIgnoreCase(extName)) {

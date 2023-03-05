@@ -3,6 +3,7 @@ package cn.hutool.swing.img;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
@@ -724,7 +725,7 @@ public class Img implements Serializable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public boolean write(final File targetFile) throws IORuntimeException {
-		final String formatName = FileUtil.extName(targetFile);
+		final String formatName = FileNameUtil.extName(targetFile);
 		if (StrUtil.isNotBlank(formatName)) {
 			this.targetImageType = formatName;
 		}

@@ -2,6 +2,7 @@ package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -19,6 +20,9 @@ import java.util.List;
  */
 public abstract class AbstractFtp implements Closeable {
 
+	/**
+	 * 默认编码
+	 */
 	public static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 
 	protected FtpConfig ftpConfig;
@@ -113,7 +117,7 @@ public abstract class AbstractFtp implements Closeable {
 			return false;
 		}
 
-		final String fileName = FileUtil.getName(path);
+		final String fileName = FileNameUtil.getName(path);
 		if (".".equals(fileName) || "..".equals(fileName)) {
 			return false;
 		}
@@ -210,20 +214,20 @@ public abstract class AbstractFtp implements Closeable {
 	 * 来自：<a href="https://gitee.com/dromara/hutool/pulls/407">https://gitee.com/dromara/hutool/pulls/407</a><br>
 	 * 此方法原理是先在目标文件同级目录下创建临时文件，下载之，等下载完毕后重命名，避免因下载错误导致的文件不完整。
 	 *
-	 * @param path     文件路径
-	 * @param outFile  输出文件或目录
+	 * @param path           文件路径
+	 * @param outFile        输出文件或目录
 	 * @param tempFileSuffix 临时文件后缀，默认".temp"
 	 * @since 5.7.12
 	 */
 	public void download(final String path, File outFile, String tempFileSuffix) {
-		if(StrUtil.isBlank(tempFileSuffix)){
+		if (StrUtil.isBlank(tempFileSuffix)) {
 			tempFileSuffix = ".temp";
 		} else {
 			tempFileSuffix = StrUtil.addPrefixIfNot(tempFileSuffix, StrUtil.DOT);
 		}
 
 		// 目标文件真实名称
-		final String fileName = outFile.isDirectory() ? FileUtil.getName(path) : outFile.getName();
+		final String fileName = outFile.isDirectory() ? FileNameUtil.getName(path) : outFile.getName();
 		// 临时文件名称
 		final String tempFileName = fileName + tempFileSuffix;
 

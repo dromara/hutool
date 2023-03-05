@@ -1,5 +1,7 @@
 package cn.hutool.core.io.file.visitor;
 
+import cn.hutool.core.lang.Console;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;

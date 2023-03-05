@@ -4,6 +4,7 @@ import cn.hutool.core.codec.BaseN.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
@@ -119,7 +120,7 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static void scale(final Image srcImg, final File destFile, final float scale) throws IORuntimeException {
-		Img.from(srcImg).setTargetImageType(FileUtil.extName(destFile)).scale(scale).write(destFile);
+		Img.from(srcImg).setTargetImageType(FileNameUtil.extName(destFile)).scale(scale).write(destFile);
 	}
 
 	/**
@@ -189,7 +190,7 @@ public class ImgUtil {
 	 */
 	public static void scale(final File srcImageFile, final File destImageFile, final int width, final int height, final Color fixedColor) throws IORuntimeException {
 		Img.from(srcImageFile)//
-				.setTargetImageType(FileUtil.extName(destImageFile))//
+				.setTargetImageType(FileNameUtil.extName(destImageFile))//
 				.scale(width, height, fixedColor)//
 				.write(destImageFile);
 	}
@@ -507,8 +508,8 @@ public class ImgUtil {
 		Assert.notNull(destImageFile);
 		Assert.isFalse(srcImageFile.equals(destImageFile), "Src file is equals to dest file!");
 
-		final String srcExtName = FileUtil.extName(srcImageFile);
-		final String destExtName = FileUtil.extName(destImageFile);
+		final String srcExtName = FileNameUtil.extName(srcImageFile);
+		final String destExtName = FileNameUtil.extName(destImageFile);
 		if (StrUtil.equalsIgnoreCase(srcExtName, destExtName)) {
 			// 扩展名相同直接复制文件
 			FileUtil.copy(srcImageFile, destImageFile, true);
@@ -1546,7 +1547,7 @@ public class ImgUtil {
 		ImageOutputStream out = null;
 		try {
 			out = getImageOutputStream(targetFile);
-			write(image, FileUtil.extName(targetFile), out);
+			write(image, FileNameUtil.extName(targetFile), out);
 		} finally {
 			IoUtil.close(out);
 		}

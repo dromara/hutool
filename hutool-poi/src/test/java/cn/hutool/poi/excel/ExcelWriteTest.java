@@ -147,7 +147,7 @@ public class ExcelWriteTest {
 		}
 
 		final String filePath = "d:/test/writeTest.xlsx";
-		FileUtil.del(filePath);
+		FileUtil.del(FileUtil.file(filePath));
 		// 通过工具类创建writer
 		final ExcelWriter writer = ExcelUtil.getWriter(filePath);
 		// 通过构造方法创建writer
@@ -294,7 +294,7 @@ public class ExcelWriteTest {
 
 		// 通过工具类创建writer
 		final String path = "f:/test/writeMapWithStyleTest.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.setStyleSet(null);
 
@@ -328,7 +328,7 @@ public class ExcelWriteTest {
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "d:/test/writeMapAlias.xlsx";
-		FileUtil.del(file);
+		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
 		writer.addHeaderAlias("name", "姓名");
@@ -363,7 +363,7 @@ public class ExcelWriteTest {
 		final List<Map<Object, Object>> rows = ListUtil.of(row1, row2);
 		// 通过工具类创建writer
 		final String file = "f:/test/test_alias.xlsx";
-		FileUtil.del(file);
+		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		writer.setOnlyAlias(true);
 		// 自定义标题
@@ -461,7 +461,7 @@ public class ExcelWriteTest {
 		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.of(bean1, bean2);
 		// 通过工具类创建writer
 		final String file = "e:/writeBeanTest.xlsx";
-		FileUtil.del(file);
+		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
 		writer.addHeaderAlias("name", "姓名");
@@ -493,7 +493,7 @@ public class ExcelWriteTest {
 		final List<cn.hutool.poi.excel.OrderExcel> rows = ListUtil.of(order1, order2);
 		// 通过工具类创建writer
 		final String file = "f:/test/writeBeanTest2.xlsx";
-		FileUtil.del(file);
+		FileUtil.del(FileUtil.file(file));
 		final ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
 		writer.addHeaderAlias("id", "编号");
@@ -772,7 +772,7 @@ public class ExcelWriteTest {
 		list.add(map2);
 
 		//通过工具类创建writer
-		FileUtil.del("d:/test/writeTest2123.xlsx");
+		FileUtil.del(FileUtil.file("d:/test/writeTest2123.xlsx"));
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeTest2123.xlsx");
 		writer.addHeaderAlias("xmnf", "项目年份");//1
 
@@ -790,7 +790,7 @@ public class ExcelWriteTest {
 
 		//通过工具类创建writer
 		final String path = "d:/test/mergeForDate.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.merge(0, 3, 0, 2, DateUtil.now(), false);
 		writer.close();
@@ -813,7 +813,7 @@ public class ExcelWriteTest {
 	public void writeFloatTest() {
 		//issue https://gitee.com/dromara/hutool/issues/I43U9G
 		final String path = "d:/test/floatTest.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.writeRow(ListUtil.view(22.9f));
@@ -825,7 +825,7 @@ public class ExcelWriteTest {
 	public void writeDoubleTest() {
 		// https://gitee.com/dromara/hutool/issues/I5PI5C
 		final String path = "d:/test/doubleTest.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 
 		final ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.disableDefaultStyle();

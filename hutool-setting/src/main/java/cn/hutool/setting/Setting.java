@@ -591,6 +591,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @param fields lambda,不能为空
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public Setting setFields(final SerSupplier<String>... fields) {
 		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
 		return this;

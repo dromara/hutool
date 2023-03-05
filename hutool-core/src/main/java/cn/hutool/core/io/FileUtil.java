@@ -660,11 +660,10 @@ public class FileUtil extends PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * @param fullFileOrDirPath 文件或者目录的路径
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
 	 */
-	public static boolean del(final String fullFileOrDirPath) throws IORuntimeException {
-		return del(file(fullFileOrDirPath));
+	public static void del(final String fullFileOrDirPath) throws IORuntimeException {
+		del(file(fullFileOrDirPath));
 	}
 
 	/**
@@ -672,42 +671,13 @@ public class FileUtil extends PathUtil {
 	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作
 	 *
-	 * <p>
-	 * 从5.7.6开始，删除文件使用{@link Files#delete(Path)}代替 {@link File#delete()}<br>
-	 * 因为前者遇到文件被占用等原因时，抛出异常，而非返回false，异常会指明具体的失败原因。
-	 * </p>
-	 *
 	 * @param file 文件对象
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
 	 * @see Files#delete(Path)
 	 */
-	public static boolean del(final File file) throws IORuntimeException {
-		if (file == null || false == file.exists()) {
-			// 如果文件不存在或已被删除，此处返回true表示删除成功
-			return true;
-		}
-
-		if (file.isDirectory()) {
-			// 清空目录下所有文件和目录
-			final boolean isOk = clean(file);
-			if (false == isOk) {
-				return false;
-			}
-		}
-
-		// 删除文件或清空后的目录
-		final Path path = file.toPath();
-		try {
-			delFile(path);
-		} catch (final DirectoryNotEmptyException e) {
-			// 遍历清空目录没有成功，此时补充删除一次（可能存在部分软链）
-			del(path);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		return true;
+	public static void del(final File file) throws IORuntimeException {
+		Assert.notNull(file, "File must be not null!");
+		PathUtil.del(file.toPath());
 	}
 
 	/**
@@ -716,12 +686,10 @@ public class FileUtil extends PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * @param dirPath 文件夹路径
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
-	 * @since 4.0.8
 	 */
-	public static boolean clean(final String dirPath) throws IORuntimeException {
-		return clean(file(dirPath));
+	public static void clean(final String dirPath) throws IORuntimeException {
+		clean(file(dirPath));
 	}
 
 	/**
@@ -730,52 +698,11 @@ public class FileUtil extends PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * @param directory 文件夹
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
-	 * @since 3.0.6
 	 */
-	public static boolean clean(final File directory) throws IORuntimeException {
-		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
-			return true;
-		}
-
-		final File[] files = directory.listFiles();
-		if (null != files) {
-			for (final File childFile : files) {
-				if (false == del(childFile)) {
-					// 删除一个出错则本次删除任务失败
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 清理空文件夹<br>
-	 * 此方法用于递归删除空的文件夹，不删除文件<br>
-	 * 如果传入的文件夹本身就是空的，删除这个文件夹
-	 *
-	 * @param directory 文件夹
-	 * @return 成功与否
-	 * @throws IORuntimeException IO异常
-	 * @since 4.5.5
-	 */
-	public static boolean cleanEmpty(final File directory) throws IORuntimeException {
-		if (directory == null || false == directory.exists() || false == directory.isDirectory()) {
-			return true;
-		}
-
-		final File[] files = directory.listFiles();
-		if (ArrayUtil.isEmpty(files)) {
-			// 空文件夹则删除之
-			return directory.delete();
-		}
-
-		for (final File childFile : files) {
-			cleanEmpty(childFile);
-		}
-		return true;
+	public static void clean(final File directory) throws IORuntimeException {
+		Assert.notNull(directory, "File must be not null!");
+		PathUtil.clean(directory.toPath());
 	}
 
 	/**
@@ -978,7 +905,7 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param src        源文件
-	 * @param target       目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param target     目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
@@ -1013,9 +940,9 @@ public class FileUtil extends PathUtil {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
 		return PathUtil.copyContent(
-				src.toPath(),
-				target.toPath(),
-				isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+						src.toPath(),
+						target.toPath(),
+						isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
 				.toFile();
 	}
 
@@ -1086,7 +1013,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File rename(final File file, String newName, final boolean isRetainExt, final boolean isOverride) {
 		if (isRetainExt) {
-			final String extName = FileUtil.extName(file);
+			final String extName = FileNameUtil.extName(file);
 			if (StrUtil.isNotBlank(extName)) {
 				newName = newName.concat(".").concat(extName);
 			}
@@ -1517,129 +1444,6 @@ public class FileUtil extends PathUtil {
 		}
 		return filePath;
 	}
-
-	// -------------------------------------------------------------------------------------------- name start
-
-	/**
-	 * 返回文件名
-	 *
-	 * @param file 文件
-	 * @return 文件名
-	 * @see FileNameUtil#getName(File)
-	 * @since 4.1.13
-	 */
-	public static String getName(final File file) {
-		return FileNameUtil.getName(file);
-	}
-
-	/**
-	 * 返回文件名<br>
-	 * <pre>
-	 * "d:/test/aaa" 返回 "aaa"
-	 * "/test/aaa.jpg" 返回 "aaa.jpg"
-	 * </pre>
-	 *
-	 * @param filePath 文件
-	 * @return 文件名
-	 * @see FileNameUtil#getName(String)
-	 * @since 4.1.13
-	 */
-	public static String getName(final String filePath) {
-		return FileNameUtil.getName(filePath);
-	}
-
-	/**
-	 * 获取文件后缀名，扩展名不带“.”
-	 *
-	 * @param file 文件
-	 * @return 扩展名
-	 * @see FileNameUtil#getSuffix(File)
-	 * @since 5.3.8
-	 */
-	public static String getSuffix(final File file) {
-		return FileNameUtil.getSuffix(file);
-	}
-
-	/**
-	 * 获得文件后缀名，扩展名不带“.”
-	 *
-	 * @param fileName 文件名
-	 * @return 扩展名
-	 * @see FileNameUtil#getSuffix(String)
-	 * @since 5.3.8
-	 */
-	public static String getSuffix(final String fileName) {
-		return FileNameUtil.getSuffix(fileName);
-	}
-
-	/**
-	 * 返回主文件名
-	 *
-	 * @param file 文件
-	 * @return 主文件名
-	 * @see FileNameUtil#getPrefix(File)
-	 * @since 5.3.8
-	 */
-	public static String getPrefix(final File file) {
-		return FileNameUtil.getPrefix(file);
-	}
-
-	/**
-	 * 返回主文件名
-	 *
-	 * @param fileName 完整文件名
-	 * @return 主文件名
-	 * @see FileNameUtil#getPrefix(String)
-	 * @since 5.3.8
-	 */
-	public static String getPrefix(final String fileName) {
-		return FileNameUtil.getPrefix(fileName);
-	}
-
-	/**
-	 * 返回主文件名
-	 *
-	 * @param file 文件
-	 * @return 主文件名
-	 * @see FileNameUtil#mainName(File)
-	 */
-	public static String mainName(final File file) {
-		return FileNameUtil.mainName(file);
-	}
-
-	/**
-	 * 返回主文件名
-	 *
-	 * @param fileName 完整文件名
-	 * @return 主文件名
-	 * @see FileNameUtil#mainName(String)
-	 */
-	public static String mainName(final String fileName) {
-		return FileNameUtil.mainName(fileName);
-	}
-
-	/**
-	 * 获取文件扩展名（后缀名），扩展名不带“.”
-	 *
-	 * @param file 文件
-	 * @return 扩展名
-	 * @see FileNameUtil#extName(File)
-	 */
-	public static String extName(final File file) {
-		return FileNameUtil.extName(file);
-	}
-
-	/**
-	 * 获得文件的扩展名（后缀名），扩展名不带“.”
-	 *
-	 * @param fileName 文件名
-	 * @return 扩展名
-	 * @see FileNameUtil#extName(String)
-	 */
-	public static String extName(final String fileName) {
-		return FileNameUtil.extName(fileName);
-	}
-	// -------------------------------------------------------------------------------------------- name end
 
 	/**
 	 * 判断文件路径是否有指定后缀，忽略大小写<br>
@@ -2916,30 +2720,6 @@ public class FileUtil extends PathUtil {
 	public static File convertLineSeparator(final File file, final Charset charset, final LineSeparator lineSeparator) {
 		final List<String> lines = readLines(file, charset);
 		return FileWriter.of(file, charset).writeLines(lines, lineSeparator, false);
-	}
-
-	/**
-	 * 清除文件名中的在Windows下不支持的非法字符，包括： \ / : * ? " &lt; &gt; |
-	 *
-	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
-	 * @return 清理后的文件名
-	 * @see FileNameUtil#cleanInvalid(String)
-	 * @since 3.3.1
-	 */
-	public static String cleanInvalid(final String fileName) {
-		return FileNameUtil.cleanInvalid(fileName);
-	}
-
-	/**
-	 * 文件名中是否包含在Windows下不支持的非法字符，包括： \ / : * ? " &lt; &gt; |
-	 *
-	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
-	 * @return 是否包含非法字符
-	 * @see FileNameUtil#containsInvalid(String)
-	 * @since 3.3.1
-	 */
-	public static boolean containsInvalid(final String fileName) {
-		return FileNameUtil.containsInvalid(fileName);
 	}
 
 	/**

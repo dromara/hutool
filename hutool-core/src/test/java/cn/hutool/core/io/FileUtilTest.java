@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
@@ -51,22 +52,6 @@ public class FileUtilTest {
 	@Ignore
 	public void touchTest() {
 		FileUtil.touch("d:\\tea\\a.jpg");
-	}
-
-	@Test
-	@Ignore
-	public void delTest() {
-		// 删除一个不存在的文件，应返回true
-		final boolean result = FileUtil.del("e:/Hutool_test_3434543533409843.txt");
-		Assert.assertTrue(result);
-	}
-
-	@Test
-	@Ignore
-	public void delTest2() {
-		// 删除一个不存在的文件，应返回true
-		final boolean result = FileUtil.del(Paths.get("e:/Hutool_test_3434543533409843.txt"));
-		Assert.assertTrue(result);
 	}
 
 	@Test
@@ -317,61 +302,61 @@ public class FileUtilTest {
 	@Test
 	public void getNameTest() {
 		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
-		String name = FileUtil.getName(path);
+		String name = FileNameUtil.getName(path);
 		Assert.assertEquals("ddd", name);
 
 		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
-		name = FileUtil.getName(path);
+		name = FileNameUtil.getName(path);
 		Assert.assertEquals("ddd.jpg", name);
 	}
 
 	@Test
 	public void mainNameTest() {
 		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
-		String mainName = FileUtil.mainName(path);
+		String mainName = FileNameUtil.mainName(path);
 		Assert.assertEquals("ddd", mainName);
 
 		path = "d:\\aaa\\bbb\\cc\\ddd";
-		mainName = FileUtil.mainName(path);
+		mainName = FileNameUtil.mainName(path);
 		Assert.assertEquals("ddd", mainName);
 
 		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
-		mainName = FileUtil.mainName(path);
+		mainName = FileNameUtil.mainName(path);
 		Assert.assertEquals("ddd", mainName);
 	}
 
 	@Test
 	public void extNameTest() {
 		String path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
-		String mainName = FileUtil.extName(path);
+		String mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
 		path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/hutool/ddd.jpg";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("jpg", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/hutool/fff.xlsx";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("xlsx", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.gz" : "~/Desktop/hutool/fff.tar.gz";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("tar.gz", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.Z" : "~/Desktop/hutool/fff.tar.Z";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("tar.Z", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.bz2" : "~/Desktop/hutool/fff.tar.bz2";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("tar.bz2", mainName);
 
 		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.xz" : "~/Desktop/hutool/fff.tar.xz";
-		mainName = FileUtil.extName(path);
+		mainName = FileNameUtil.extName(path);
 		Assert.assertEquals("tar.xz", mainName);
 	}
 
@@ -445,10 +430,10 @@ public class FileUtilTest {
 		Assert.assertTrue(nullDirTempFile.exists());
 
 		final File suffixDirTempFile = FileUtil.createTempFile(".xlsx",true);
-		Assert.assertEquals("xlsx", FileUtil.getSuffix(suffixDirTempFile));
+		Assert.assertEquals("xlsx", FileNameUtil.getSuffix(suffixDirTempFile));
 
 		final File prefixDirTempFile = FileUtil.createTempFile("prefix",".xlsx",true);
-		Assert.assertTrue(FileUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
+		Assert.assertTrue(FileNameUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
 	}
 
 	@Test

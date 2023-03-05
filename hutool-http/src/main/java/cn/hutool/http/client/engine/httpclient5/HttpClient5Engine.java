@@ -17,6 +17,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicHeader;
 
@@ -57,9 +58,9 @@ public class HttpClient5Engine implements ClientEngine {
 		initEngine();
 
 		final ClassicHttpRequest request = buildRequest(message);
-		final CloseableHttpResponse response;
+		final ClassicHttpResponse response;
 		try {
-			response = this.engine.execute(request);
+			response = this.engine.executeOpen(null, request, null);
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
@@ -91,6 +92,7 @@ public class HttpClient5Engine implements ClientEngine {
 
 			final int connectionTimeout = this.config.getConnectionTimeout();
 			if(connectionTimeout > 0){
+				// TODO 细化替换
 				builder.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 				builder.setConnectionRequestTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 			}
@@ -103,8 +105,8 @@ public class HttpClient5Engine implements ClientEngine {
 		}
 
 		final HttpClientBuilder builder = HttpClients.custom()
-				// 设置默认头信息
 				.setDefaultRequestConfig(requestConfig)
+				// 设置默认头信息
 				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
 		// TODO 设置代理

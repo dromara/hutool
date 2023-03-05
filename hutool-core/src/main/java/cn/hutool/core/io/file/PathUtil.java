@@ -2,7 +2,6 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.file.visitor.DelVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -127,25 +126,11 @@ public class PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * @param path 文件对象
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
 	 * @since 4.4.2
 	 */
-	public static boolean del(final Path path) throws IORuntimeException {
-		if (Files.notExists(path)) {
-			return true;
-		}
-
-		try {
-			if (isDirectory(path)) {
-				Files.walkFileTree(path, DelVisitor.INSTANCE);
-			} else {
-				delFile(path);
-			}
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return true;
+	public static void del(final Path path) throws IORuntimeException {
+		PathDeleter.of(path).del();
 	}
 
 	/**
@@ -154,11 +139,7 @@ public class PathUtil {
 	 * @param path 目录路径
 	 */
 	public static void clean(final Path path) {
-		try {
-			Files.walkFileTree(path, DelVisitor.INSTANCE);
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
+		PathDeleter.of(path).clean();
 	}
 
 	/**
@@ -616,23 +597,5 @@ public class PathUtil {
 			return null;
 		}
 		return path.getFileName().toString();
-	}
-
-	/**
-	 * 删除文件或空目录，不追踪软链
-	 *
-	 * @param path 文件对象
-	 * @throws IOException IO异常
-	 * @since 5.7.7
-	 */
-	protected static void delFile(final Path path) throws IOException {
-		try {
-			Files.delete(path);
-		} catch (final AccessDeniedException e) {
-			// 可能遇到只读文件，无法删除.使用 file 方法删除
-			if (false == path.toFile().delete()) {
-				throw e;
-			}
-		}
 	}
 }

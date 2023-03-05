@@ -67,7 +67,7 @@ public class PathMover {
 	 *     <li>如果src和target为同一文件或目录，直接返回target。</li>
 	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
-	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如move("/a/b", "/c/d"), d不存在，则b变成d。</li>
 	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
 	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
 	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>

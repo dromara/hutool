@@ -2,6 +2,7 @@ package cn.hutool.core.net.multipart;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.BufferedOutputStream;
@@ -247,7 +248,7 @@ public class UploadFile {
 			return isAllow;
 		}
 
-		final String fileNameExt = FileUtil.extName(this.getFileName());
+		final String fileNameExt = FileNameUtil.extName(this.getFileName());
 		for (final String fileExtension : setting.fileExts) {
 			if (fileNameExt.equalsIgnoreCase(fileExtension)) {
 				return isAllow;
