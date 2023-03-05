@@ -1097,34 +1097,27 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 移动文件或者目录
+	 * 移动文件或目录到目标中，例如：
+	 * <ul>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 * </ul>
 	 *
-	 * @param src        源文件或者目录
-	 * @param target     目标文件或者目录
-	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
+	 * @param src        源文件或目录路径
+	 * @param target     目标路径，如果为目录，则移动到此目录下
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标文件或目录
 	 * @throws IORuntimeException IO异常
 	 * @see PathUtil#move(Path, Path, boolean)
 	 */
-	public static void move(final File src, final File target, final boolean isOverride) throws IORuntimeException {
+	public static File move(final File src, final File target, final boolean isOverride) throws IORuntimeException {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
-		move(src.toPath(), target.toPath(), isOverride);
-	}
-
-	/**
-	 * 移动文件或者目录
-	 *
-	 * @param src        源文件或者目录
-	 * @param target     目标文件或者目录
-	 * @param isOverride 是否覆盖目标，只有目标为文件才覆盖
-	 * @throws IORuntimeException IO异常
-	 * @see PathUtil#moveContent(Path, Path, boolean)
-	 * @since 5.7.9
-	 */
-	public static void moveContent(final File src, final File target, final boolean isOverride) throws IORuntimeException {
-		Assert.notNull(src, "Src file must be not null!");
-		Assert.notNull(target, "target file must be not null!");
-		moveContent(src.toPath(), target.toPath(), isOverride);
+		return move(src.toPath(), target.toPath(), isOverride).toFile();
 	}
 
 	/**
@@ -1763,7 +1756,7 @@ public class FileUtil extends PathUtil {
 	 * @param file 文件
 	 * @return 输入流
 	 * @throws IORuntimeException 文件未找到
-	 * @see IoUtil#toStream(File) 
+	 * @see IoUtil#toStream(File)
 	 */
 	public static BufferedInputStream getInputStream(final File file) throws IORuntimeException {
 		return IoUtil.toBuffered(IoUtil.toStream(file));
@@ -3048,7 +3041,7 @@ public class FileUtil extends PathUtil {
 	 * getParent(file("d:/aaa/bbb/cc/ddd")) -》 "d:/aaa/bbb/cc"
 	 * </pre>
 	 *
-	 * @param file  目录或文件
+	 * @param file 目录或文件
 	 * @return 路径File，如果不存在返回null
 	 * @since 6.0.0
 	 */

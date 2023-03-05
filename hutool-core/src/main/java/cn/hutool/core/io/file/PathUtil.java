@@ -4,31 +4,12 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.file.visitor.DelVisitor;
-import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -470,75 +451,43 @@ public class PathUtil {
 	}
 
 	/**
-	 * 移动文件或目录<br>
-	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下<br>
-	 * 例如：
+	 * 移动文件或目录到目标中，例如：
 	 * <ul>
-	 *     <li>move("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>move("/usr/aaa", "/usr/bbb")结果为："/usr/bbb/aaa"</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.5.1
 	 */
-	public static Path move(final Path src, Path target, final boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		if (isDirectory(target)) {
-			target = target.resolve(src.getFileName());
-		}
-		return moveContent(src, target, isOverride);
+	public static Path move(final Path src, final Path target, final boolean isOverride) {
+		return PathMover.of(src, target, isOverride).move();
 	}
 
 	/**
-	 * 移动文件或目录内容到目标目录中，例如：
+	 * 移动文件或目录内容到目标中，例如：
 	 * <ul>
-	 *     <li>moveContent("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>moveContent("/usr/aaa", "/usr/bbb")结果为："/usr/bbb"</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录下的内容移动到目标路径目录中。</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录下的内容移动到目标路径目录中。</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.7.9
 	 */
 	public static Path moveContent(final Path src, final Path target, final boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		// issue#2893 target 不存在导致NoSuchFileException
-		if(Files.exists(target) && equals(src, target)){
-			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
-			return target;
-		}
-
-		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
-
-		// 自动创建目标的父目录
-		mkParentDirs(target);
-		try {
-			return Files.move(src, target, options);
-		} catch (final IOException e) {
-			if(e instanceof FileAlreadyExistsException){
-				// 目标文件已存在，直接抛出异常
-				// issue#I4QV0L@Gitee
-				throw new IORuntimeException(e);
-			}
-			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
-			try {
-				Files.walkFileTree(src, new MoveVisitor(src, target, options));
-				// 移动后空目录没有删除，
-				del(src);
-			} catch (final IOException e2) {
-				throw new IORuntimeException(e2);
-			}
-			return target;
-		}
+		return PathMover.of(src, target, isOverride).moveContent();
 	}
 
 	/**
