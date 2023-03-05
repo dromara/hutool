@@ -7,7 +7,14 @@ import org.junit.function.ThrowingRunnable;
 public class Ipv4UtilTest {
 
 	@Test
-	public void getMaskBitByMaskTest(){
+	public void formatIpBlockTest() {
+		for (int i = Ipv4Util.IPV4_MASK_BIT_VALID_MIN; i < Ipv4Util.IPV4_MASK_BIT_MAX; i++) {
+			Assert.assertEquals("192.168.1.101/" + i, Ipv4Util.formatIpBlock("192.168.1.101", Ipv4Util.getMaskByMaskBit(i)));
+		}
+	}
+
+	@Test
+	public void getMaskBitByMaskTest() {
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		Assert.assertEquals(24, maskBitByMask);
 	}
@@ -19,7 +26,7 @@ public class Ipv4UtilTest {
 	}
 
 	@Test
-	public void getMaskByMaskBitTest(){
+	public void getMaskByMaskBitTest() {
 		final String mask = Ipv4Util.getMaskByMaskBit(24);
 		Assert.assertEquals("255.255.255.0", mask);
 	}
@@ -39,7 +46,7 @@ public class Ipv4UtilTest {
 	}
 
 	@Test
-	public void getEndIpStrTest(){
+	public void getEndIpStrTest() {
 		final String ip = "192.168.1.1";
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final String endIpStr = Ipv4Util.getEndIpStr(ip, maskBitByMask);
@@ -47,7 +54,7 @@ public class Ipv4UtilTest {
 	}
 
 	@Test
-	public void listTest(){
+	public void listTest() {
 		final String ip = "192.168.100.2";
 		testGenerateIpList(ip, 22, false);
 		testGenerateIpList(ip, 22, true);
@@ -66,7 +73,10 @@ public class Ipv4UtilTest {
 
 		testGenerateIpList(ip, 32, false);
 		testGenerateIpList(ip, 32, true);
+	}
 
+	@Test
+	public void listTest2() {
 		testGenerateIpList("10.1.0.1", "10.2.1.2");
 
 		testGenerateIpList("10.2.1.1", "10.2.1.2");
@@ -182,4 +192,13 @@ public class Ipv4UtilTest {
 		Assert.assertFalse(Ipv4Util.isPublicIP("172.20.10.1"));
 	}
 
+	@Test
+	public void getMaskBitByIpRange() {
+		final String ip = "192.168.100.2";
+		for (int i = 1; i <= 32; i++) {
+			String beginIpStr = Ipv4Util.getBeginIpStr(ip, i);
+			String endIpStr = Ipv4Util.getEndIpStr(ip, i);
+			Assert.assertEquals(Ipv4Util.getMaskByMaskBit(i), Ipv4Util.getMaskByIpRange(beginIpStr, endIpStr));
+		}
+	}
 }
