@@ -35,7 +35,8 @@
 		<module>hutool-captcha</module>
 		<module>hutool-socket</module>
 		<module>hutool-jwt</module>
-	</modules>
+        <module>hutool-web</module>
+    </modules>
 
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
