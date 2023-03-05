@@ -44,11 +44,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.DirectoryNotEmptyException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -985,43 +981,6 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 通过JDK7+的 Files#copy(Path, Path, CopyOption...) 方法拷贝文件
-	 *
-	 * @param src     源文件路径
-	 * @param dest    目标文件或目录路径，如果为目录使用与源文件相同的文件名
-	 * @param options {@link StandardCopyOption}
-	 * @return File
-	 * @throws IORuntimeException IO异常
-	 */
-	public static File copyFile(final String src, final String dest, final StandardCopyOption... options) throws IORuntimeException {
-		Assert.notBlank(src, "Source File path is blank !");
-		Assert.notBlank(dest, "Destination File path is blank !");
-		return copyFile(Paths.get(src), Paths.get(dest), options).toFile();
-	}
-
-	/**
-	 * 通过JDK7+的 Files#copy(Path, Path, CopyOption...) 方法拷贝文件
-	 *
-	 * @param src     源文件
-	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
-	 * @param options {@link StandardCopyOption}
-	 * @return 目标文件
-	 * @throws IORuntimeException IO异常
-	 */
-	public static File copyFile(final File src, final File dest, final StandardCopyOption... options) throws IORuntimeException {
-		// check
-		Assert.notNull(src, "Source File is null !");
-		if (false == src.exists()) {
-			throw new IORuntimeException("File not exist: " + src);
-		}
-		Assert.notNull(dest, "Destination File or directiory is null !");
-		if (equals(src, dest)) {
-			throw new IORuntimeException("Files '{}' and '{}' are equal", src, dest);
-		}
-		return copyFile(src.toPath(), dest.toPath(), options).toFile();
-	}
-
-	/**
 	 * 复制文件或目录<br>
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
 	 *
@@ -1046,13 +1005,19 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param src        源文件
-	 * @param dest       目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param target       目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copy(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.of(src, dest).setOverride(isOverride).copy();
+	public static File copy(final File src, final File target, final boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
+		return PathUtil.copy(
+						src.toPath(),
+						target.toPath(),
+						isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+				.toFile();
 	}
 
 	/**
@@ -1066,34 +1031,19 @@ public class FileUtil extends PathUtil {
 	 * </pre>
 	 *
 	 * @param src        源文件
-	 * @param dest       目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param target     目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copyContent(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.of(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
-	}
-
-	/**
-	 * 复制文件或目录<br>
-	 * 情况如下：
-	 *
-	 * <pre>
-	 * 1、src和dest都为目录，则将src下所有文件（包括子目录）拷贝到dest下
-	 * 2、src和dest都为文件，直接复制，名字为dest
-	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
-	 * </pre>
-	 *
-	 * @param src        源文件
-	 * @param dest       目标文件或目录，目标不存在会自动创建（目录、文件都创建）
-	 * @param isOverride 是否覆盖目标文件
-	 * @return 目标目录或文件
-	 * @throws IORuntimeException IO异常
-	 * @since 4.1.5
-	 */
-	public static File copyFilesFromDir(final File src, final File dest, final boolean isOverride) throws IORuntimeException {
-		return FileCopier.of(src, dest).setCopyContentIfDir(true).setOnlyCopyFile(true).setOverride(isOverride).copy();
+	public static File copyContent(final File src, final File target, final boolean isOverride) throws IORuntimeException {
+		Assert.notNull(src, "Src file must be not null!");
+		Assert.notNull(target, "target file must be not null!");
+		return PathUtil.copyContent(
+				src.toPath(),
+				target.toPath(),
+				isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+				.toFile();
 	}
 
 	/**

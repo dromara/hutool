@@ -1,6 +1,5 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
@@ -117,21 +116,21 @@ public class PathMover {
 	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
 	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
-	 *     <li>如果src为目录，target为目录，则将源目录下的内容移动到目标路径目录中。</li>
-	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录下的内容移动到目标路径目录中。</li>
+	 *     <li>如果src为目录，target为目录，则将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
 	 * </ul>
 	 *
 	 * @return 目标文件Path
 	 */
 	public Path moveContent() {
 		final Path src = this.src;
-		if (PathUtil.isNotDirectory(target, false)) {
+		if (PathUtil.isExistsAndNotDirectory(target, false)) {
 			// 文件移动调用move方法
 			return move();
 		}
 
 		final Path target = this.target;
-		if (PathUtil.isNotDirectory(target, false)) {
+		if (PathUtil.isExistsAndNotDirectory(target, false)) {
 			// 目标不能为文件
 			throw new IllegalArgumentException("Can not move dir content to a file");
 		}

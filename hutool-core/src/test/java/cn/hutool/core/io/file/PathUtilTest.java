@@ -13,7 +13,7 @@ public class PathUtilTest {
 	@Test
 	@Ignore
 	public void copyFileTest(){
-		PathUtil.copyFile(
+		PathUtil.copy(
 				Paths.get("d:/test/1595232240113.jpg"),
 				Paths.get("d:/test/1595232240113_copy.jpg"),
 				StandardCopyOption.COPY_ATTRIBUTES,

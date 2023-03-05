@@ -94,15 +94,6 @@ public class FileUtilTest {
 
 	@Test
 	@Ignore
-	public void copyFilesFromDirTest() {
-		final File srcFile = FileUtil.file("D:\\驱动");
-		final File destFile = FileUtil.file("d:\\驱动备份");
-
-		FileUtil.copyFilesFromDir(srcFile, destFile, true);
-	}
-
-	@Test
-	@Ignore
 	public void copyDirTest() {
 		final File srcFile = FileUtil.file("D:\\test");
 		final File destFile = FileUtil.file("E:\\");
