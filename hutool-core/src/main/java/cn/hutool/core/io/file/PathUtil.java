@@ -253,6 +253,22 @@ public class PathUtil {
 	}
 
 	/**
+	 * 判断是否为非目录
+	 * <ul>
+	 *     <li>如果path为{@code null}，返回{@code false}</li>
+	 *     <li>如果path不存在，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param path          {@link Path}
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @return 如果为目录true
+	 * @since 3.1.0
+	 */
+	public static boolean isNotDirectory(final Path path, final boolean isFollowLinks) {
+		return exists(path, isFollowLinks) && false == isDirectory(path, isFollowLinks);
+	}
+
+	/**
 	 * 判断是否为目录，如果file为null，则返回false
 	 *
 	 * @param path          {@link Path}
@@ -438,6 +454,7 @@ public class PathUtil {
 	 *
 	 * <pre>
 	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
+	 * FileUtil.rename(dir, "dir2", false) xx/xx/ =》xx/dir2/
 	 * </pre>
 	 *
 	 * @param path       被修改的文件
@@ -453,12 +470,13 @@ public class PathUtil {
 	/**
 	 * 移动文件或目录到目标中，例如：
 	 * <ul>
+	 *     <li>如果src和target为同一文件或目录，直接返回target。</li>
 	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
 	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
 	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
-	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
@@ -539,12 +557,15 @@ public class PathUtil {
 	/**
 	 * 判断文件或目录是否存在
 	 *
-	 * @param path          文件
+	 * @param path          文件，{@code null}返回{@code false}
 	 * @param isFollowLinks 是否跟踪软链（快捷方式）
 	 * @return 是否存在
 	 * @since 5.5.3
 	 */
 	public static boolean exists(final Path path, final boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
 		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
 		return Files.exists(path, options);
 	}

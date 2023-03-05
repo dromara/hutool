@@ -23,7 +23,7 @@ public class PathMover {
 	 * @param src        源文件或目录
 	 * @param target     目标文件或目录
 	 * @param isOverride 是否覆盖目标文件
-	 * @return {@link PathMover}
+	 * @return {@code PathMover}
 	 */
 	public static PathMover of(final Path src, final Path target, final boolean isOverride) {
 		return of(src, target, isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{});
@@ -35,7 +35,7 @@ public class PathMover {
 	 * @param src     源文件或目录
 	 * @param target  目标文件或目录
 	 * @param options 移动参数
-	 * @return {@link PathMover}
+	 * @return {@code PathMover}
 	 */
 	public static PathMover of(final Path src, final Path target, final CopyOption[] options) {
 		return new PathMover(src, target, options);
@@ -48,25 +48,30 @@ public class PathMover {
 	/**
 	 * 构造
 	 *
-	 * @param src     源文件或目录
+	 * @param src     源文件或目录，不能为{@code null}且必须存在
 	 * @param target  目标文件或目录
 	 * @param options 移动参数
 	 */
 	public PathMover(final Path src, final Path target, final CopyOption[] options) {
-		this.src = Assert.notNull(src, "Src path must be not null !");
+		Assert.notNull(target, "Src path must be not null !");
+		if(false == PathUtil.exists(src, false)){
+			throw new IllegalArgumentException("Src path is not exist!");
+		}
+		this.src = src;
 		this.target = Assert.notNull(target, "Target path must be not null !");
-		this.options = options;
+		this.options = ObjUtil.defaultIfNull(options, new CopyOption[]{});;
 	}
 
 	/**
 	 * 移动文件或目录到目标中，例如：
 	 * <ul>
+	 *     <li>如果src和target为同一文件或目录，直接返回target。</li>
 	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
 	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
 	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
 	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
-	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>
 	 * </ul>
 	 *
 	 * @return 目标文件Path
@@ -74,9 +79,9 @@ public class PathMover {
 	public Path move() {
 		final Path src = this.src;
 		Path target = this.target;
-		final CopyOption[] options = ObjUtil.defaultIfNull(this.options, new CopyOption[]{});
+		final CopyOption[] options = this.options;
 
-		if (false == PathUtil.exists(target, false) || PathUtil.isDirectory(target)) {
+		if (PathUtil.isDirectory(target)) {
 			// 创建子路径的情况，1是目标是目录，需要移动到目录下，2是目标不能存在，自动创建目录
 			target = target.resolve(src.getFileName());
 		}
@@ -98,13 +103,9 @@ public class PathMover {
 				throw new IORuntimeException(e);
 			}
 			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
-			try {
-				Files.walkFileTree(src, new MoveVisitor(src, target, options));
-				// 移动后空目录没有删除，
-				PathUtil.del(src);
-			} catch (final IOException e2) {
-				throw new IORuntimeException(e2);
-			}
+			walkMove(src, target, options);
+			// 移动后删除空目录
+			PathUtil.del(src);
 			return target;
 		}
 	}
@@ -124,25 +125,43 @@ public class PathMover {
 	 */
 	public Path moveContent() {
 		final Path src = this.src;
+		if (PathUtil.isNotDirectory(target, false)) {
+			// 文件移动调用move方法
+			return move();
+		}
+
 		final Path target = this.target;
-		final CopyOption[] options = ObjUtil.defaultIfNull(this.options, new CopyOption[]{});
+		if (PathUtil.isNotDirectory(target, false)) {
+			// 目标不能为文件
+			throw new IllegalArgumentException("Can not move dir content to a file");
+		}
+
+		// issue#2893 target 不存在导致NoSuchFileException
+		if (PathUtil.equals(src, target)) {
+			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
+			return target;
+		}
+
+		final CopyOption[] options = this.options;
 
 		// 移动失败，可能是跨分区移动导致的，采用递归移动方式
+		walkMove(src, target, options);
+		return target;
+	}
+
+	/**
+	 * 递归移动
+	 *
+	 * @param src     源目录
+	 * @param target  目标目录
+	 * @param options 移动参数
+	 */
+	private static void walkMove(final Path src, final Path target, final CopyOption... options) {
 		try {
-			if (false == PathUtil.isDirectory(src)) {
-				// 文件移动到目标目录或文件
-				return Files.move(src, target, options);
-			}
-
-			if (false == PathUtil.isDirectory(target)) {
-				throw new IllegalArgumentException("Can not move dir content to a file");
-			}
-
 			// 移动源目录下的内容而不删除目录
 			Files.walkFileTree(src, new MoveVisitor(src, target, options));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return target;
 	}
 }
