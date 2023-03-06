@@ -673,4 +673,23 @@ public class ArrayUtilTest {
 		Assert.assertTrue(ArrayUtil.isSorted(f, Integer::compareTo));
 		Assert.assertFalse(ArrayUtil.isSorted(f, null));
 	}
+
+	@Test
+	public void hasSameElementTest() {
+		final Integer[] a = {1, 1};
+		Assert.assertTrue(ArrayUtil.hasSameElement(a));
+
+		final String[] b = {"a", "b", "c"};
+		Assert.assertFalse(ArrayUtil.hasSameElement(b));
+
+		final Object[] c = new Object[]{"1", "2", 2, 4D};
+		Assert.assertFalse(ArrayUtil.hasSameElement(c));
+
+		final Object[] d = new Object[]{"1", "2", "2", 4D};
+		Assert.assertTrue(ArrayUtil.hasSameElement(d));
+
+		final Object[] e = new Object[]{"1", 2, 2, 4D};
+		Assert.assertTrue(ArrayUtil.hasSameElement(e));
+
+	}
 }
