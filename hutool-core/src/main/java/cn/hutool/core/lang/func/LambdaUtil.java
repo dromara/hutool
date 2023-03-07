@@ -18,8 +18,6 @@ import java.lang.invoke.SerializedLambda;
  */
 public class LambdaUtil {
 
-	private static final WeakConcurrentMap<String, SerializedLambda> cache = new WeakConcurrentMap<>();
-
 	/**
 	 * 通过对象的方法或类的静态方法引用，获取lambda实现类
 	 * 传入lambda无参数但含有返回值的情况能够匹配到此方法：
@@ -61,8 +59,7 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除
+	 * 解析lambda表达式
 	 *
 	 * @param <T>  Lambda类型
 	 * @param func 需要解析的 lambda 对象（无参方法）
@@ -73,8 +70,7 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除
+	 * 解析lambda表达式
 	 *
 	 * @param <R>  Lambda返回类型
 	 * @param func 需要解析的 lambda 对象（无参方法）
@@ -190,8 +186,7 @@ public class LambdaUtil {
 	}
 
 	/**
-	 * 解析lambda表达式,加了缓存。
-	 * 该缓存可能会在任意不定的时间被清除。
+	 * 解析lambda表达式
 	 *
 	 * <p>
 	 * 通过反射调用实现序列化接口函数对象的writeReplace方法，从而拿到{@link SerializedLambda}<br>
@@ -202,7 +197,7 @@ public class LambdaUtil {
 	 * @return 返回解析后的结果
 	 */
 	private static SerializedLambda _resolve(Serializable func) {
-		return cache.computeIfAbsent(func.getClass().getName(), (key) -> ReflectUtil.invoke(func, "writeReplace"));
+		return ReflectUtil.invoke(func, "writeReplace");
 	}
 	//endregion
 }

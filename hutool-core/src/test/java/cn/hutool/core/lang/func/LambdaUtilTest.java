@@ -18,6 +18,19 @@ public class LambdaUtilTest {
 	}
 
 	@Test
+	public  <P> void lambdaClassName() {
+		String lambdaClassName1 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
+		String lambdaClassName2 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
+		Assert.assertNotEquals(lambdaClassName1, lambdaClassName2);
+	}
+
+	static class LambdaUtilTestHelper {
+		public static <P> String getLambdaClassName(Func1<P, ?> func) {
+			return func.getClass().getName();
+		}
+	}
+
+	@Test
 	public void getFieldNameTest() {
 		String fieldName = LambdaUtil.getFieldName(MyTeacher::getAge);
 		Assert.assertEquals("age", fieldName);
