@@ -13,16 +13,7 @@ import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -2087,5 +2078,21 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		return true;
+	}
+
+	/**
+	 * 判断数组中是否有相同元素
+	 * <p>若传入空数组，则返回{@code false}</p>
+	 * @param <T>        数组元素类型
+	 * @param array      数组
+	 * @return 数组是否有相同元素
+	 * @since 6.0.0
+	 */
+	public static <T> Boolean hasSameElement(final T[] array) {
+		if (isEmpty(array)) {
+			return false;
+		}
+		Set<T> elementSet = new HashSet<>(Arrays.asList(array));
+		return elementSet.size() != array.length;
 	}
 }
