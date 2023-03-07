@@ -2092,10 +2092,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (isEmpty(array)) {
 			return false;
 		}
-		Set<T> elementSet = new HashSet<>();
+		Set<T> elementSet = new HashSet<>(Arrays.asList(array));
 		for (T element : array) {
 			elementSet.add(element);
 		}
-		return !(elementSet.size() == array.length);
+		return elementSet.size() != array.length;
 	}
 }
