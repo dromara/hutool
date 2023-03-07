@@ -2093,9 +2093,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return false;
 		}
 		Set<T> elementSet = new HashSet<>(Arrays.asList(array));
-		for (T element : array) {
-			elementSet.add(element);
-		}
 		return elementSet.size() != array.length;
 	}
 }
