@@ -640,4 +640,12 @@ public class StrUtilTest {
 		final String str = "A5E6005700000000000000000000000000000000000000090D0100000000000001003830";
 		Assert.assertEquals("38", StrUtil.subWithLength(str,-2,2));
 	}
+
+	@Test
+	public void issueI6KKFUTest() {
+		// https://gitee.com/dromara/hutool/issues/I6KKFU
+		final String template = "I''m {0} years old.";
+		final String result = StrUtil.indexedFormat(template, 10);
+		Assert.assertEquals("I'm 10 years old.", result);
+	}
 }
