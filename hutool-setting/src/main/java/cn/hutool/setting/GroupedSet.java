@@ -14,11 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 分组化的Set集合类<br>
@@ -279,7 +275,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	public boolean contains(final String group, final String value, final String... otherValues) {
 		if (ArrayUtil.isNotEmpty(otherValues)) {
 			// 需要测试多个值的情况
-			final List<String> valueList = ListUtil.of(otherValues);
+			final List<String> valueList = Arrays.asList(otherValues);
 			valueList.add(value);
 			return contains(group, valueList);
 		} else {

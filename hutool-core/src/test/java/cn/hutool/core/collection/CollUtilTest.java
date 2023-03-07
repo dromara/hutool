@@ -57,7 +57,7 @@ public class CollUtilTest {
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void hasNullTest() {
-		ArrayList<Object> list = null;
+		List<Object> list = null;
 		Assert.assertTrue(CollUtil.hasNull(list));
 
 		list = ListUtil.of();
@@ -72,7 +72,7 @@ public class CollUtilTest {
 
 	@Test
 	public void defaultIfEmpty() {
-		ArrayList<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), ListUtil.of("1"));
+		List<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), ListUtil.of("1"));
 		Assert.assertEquals(ListUtil.of("1"), strings);
 
 		strings = CollUtil.defaultIfEmpty(null, ListUtil.of("1"));
@@ -81,22 +81,22 @@ public class CollUtilTest {
 
 	@Test
 	public void defaultIfEmpty2() {
-		final ArrayList<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), Function.identity(), () -> ListUtil.of("1"));
+		final List<String> strings = CollUtil.defaultIfEmpty(ListUtil.of(), Function.identity(), () -> ListUtil.of("1"));
 		Assert.assertEquals(ListUtil.of("1"), strings);
 	}
 
 	@Test
 	public void testPredicateContains() {
-		final ArrayList<String> list = ListUtil.of("bbbbb", "aaaaa", "ccccc");
+		final List<String> list = ListUtil.of("bbbbb", "aaaaa", "ccccc");
 		Assert.assertTrue(CollUtil.contains(list, s -> s.startsWith("a")));
 		Assert.assertFalse(CollUtil.contains(list, s -> s.startsWith("d")));
 	}
 
 	@Test
 	public void testRemoveWithAddIf() {
-		ArrayList<Integer> list = ListUtil.of(1, 2, 3);
-		final ArrayList<Integer> exceptRemovedList = ListUtil.of(2, 3);
-		final ArrayList<Integer> exceptResultList = ListUtil.of(1);
+		List<Integer> list = ListUtil.of(1, 2, 3);
+		final List<Integer> exceptRemovedList = ListUtil.of(2, 3);
+		final List<Integer> exceptResultList = ListUtil.of(1);
 
 		List<Integer> resultList = CollUtil.removeWithAddIf(list, ele -> 1 == ele);
 		Assert.assertEquals(list, exceptRemovedList);
@@ -149,8 +149,8 @@ public class CollUtilTest {
 
 	@Test
 	public void unionTest() {
-		final ArrayList<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
+		final List<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
+		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
 
 		final Collection<String> union = CollUtil.union(list1, list2);
 
@@ -159,8 +159,8 @@ public class CollUtilTest {
 
 	@Test
 	public void intersectionTest() {
-		final ArrayList<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
+		final List<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
+		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
 
 		final Collection<String> intersection = CollUtil.intersection(list1, list2);
 		Assert.assertEquals(2, CollUtil.count(intersection, "b"::equals));
@@ -169,9 +169,9 @@ public class CollUtilTest {
 
 	@Test
 	public void intersectionDistinctTest() {
-		final ArrayList<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
-		final ArrayList<String> list3 = ListUtil.of();
+		final List<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
+		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d");
+		final List<String> list3 = ListUtil.of();
 
 		final Collection<String> intersectionDistinct = CollUtil.intersectionDistinct(list1, list2);
 		Assert.assertEquals(SetUtil.ofLinked("a", "b", "c", "d"), intersectionDistinct);
@@ -183,8 +183,8 @@ public class CollUtilTest {
 
 	@Test
 	public void disjunctionTest() {
-		final ArrayList<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d", "x2");
+		final List<String> list1 = ListUtil.of("a", "b", "b", "c", "d", "x");
+		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("b"));
@@ -200,8 +200,8 @@ public class CollUtilTest {
 	@Test
 	public void disjunctionTest2() {
 		// 任意一个集合为空，差集为另一个集合
-		final ArrayList<String> list1 = ListUtil.of();
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d", "x2");
+		final List<String> list1 = ListUtil.of();
+		final List<String> list2 = ListUtil.of("a", "b", "b", "b", "c", "d", "x2");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertEquals(list2, disjunction);
@@ -212,8 +212,8 @@ public class CollUtilTest {
 	@Test
 	public void disjunctionTest3() {
 		// 无交集下返回共同的元素
-		final ArrayList<String> list1 = ListUtil.of("1", "2", "3");
-		final ArrayList<String> list2 = ListUtil.of("a", "b", "c");
+		final List<String> list1 = ListUtil.of("1", "2", "3");
+		final List<String> list2 = ListUtil.of("a", "b", "c");
 
 		final Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("1"));
@@ -273,7 +273,7 @@ public class CollUtilTest {
 		map2.put("c", "值3");
 
 		// ----------------------------------------------------------------------------------------
-		final ArrayList<HashMap<String, String>> list = ListUtil.of(map1, map2);
+		final List<HashMap<String, String>> list = ListUtil.of(map1, map2);
 		final Map<String, List<String>> map = CollUtil.toListMap(list);
 		Assert.assertEquals("值1", map.get("a").get(0));
 		Assert.assertEquals("值2", map.get("a").get(1));
@@ -288,7 +288,7 @@ public class CollUtilTest {
 	public void getFieldValuesTest() {
 		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", 23);
 		final Dict v2 = Dict.of().set("age", 13).set("id", 15).set("name", "李四");
-		final ArrayList<Dict> list = ListUtil.of(v1, v2);
+		final List<Dict> list = ListUtil.of(v1, v2);
 
 		final List<Object> fieldValues = (List<Object>) CollUtil.getFieldValues(list, "name");
 
@@ -298,7 +298,7 @@ public class CollUtilTest {
 
 	@Test
 	public void splitTest() {
-		final ArrayList<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		final List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<List<Integer>> split = CollUtil.split(list, 3);
 		Assert.assertEquals(3, split.size());
 		Assert.assertEquals(3, split.get(0).size());
@@ -323,7 +323,7 @@ public class CollUtilTest {
 
 	@Test
 	public void editTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c");
+		final List<String> list = ListUtil.of("a", "b", "c");
 
 		final Collection<String> filtered = CollUtil.edit(list, t -> t + 1);
 
@@ -332,9 +332,9 @@ public class CollUtilTest {
 
 	@Test
 	public void removeTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c");
+		final List<String> list = ListUtil.of("a", "b", "c");
 
-		final ArrayList<String> filtered = CollUtil.remove(list, "a"::equals);
+		final List<String> filtered = CollUtil.remove(list, "a"::equals);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -351,10 +351,10 @@ public class CollUtilTest {
 
 	@Test
 	public void filterRemoveTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c");
+		final List<String> list = ListUtil.of("a", "b", "c");
 
 		final List<String> removed = new ArrayList<>();
-		final ArrayList<String> filtered = CollUtil.remove(list, t -> {
+		final List<String> filtered = CollUtil.remove(list, t -> {
 			if ("a".equals(t)) {
 				removed.add(t);
 				return true;
@@ -372,9 +372,9 @@ public class CollUtilTest {
 
 	@Test
 	public void removeNullTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
+		final List<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
 
-		final ArrayList<String> filtered = CollUtil.removeNull(list);
+		final List<String> filtered = CollUtil.removeNull(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -383,9 +383,9 @@ public class CollUtilTest {
 
 	@Test
 	public void removeEmptyTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
+		final List<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
 
-		final ArrayList<String> filtered = CollUtil.removeEmpty(list);
+		final List<String> filtered = CollUtil.removeEmpty(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -394,9 +394,9 @@ public class CollUtilTest {
 
 	@Test
 	public void removeBlankTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
+		final List<String> list = ListUtil.of("a", "b", "c", null, "", "  ");
 
-		final ArrayList<String> filtered = CollUtil.removeBlank(list);
+		final List<String> filtered = CollUtil.removeBlank(list);
 
 		// 原地过滤
 		Assert.assertSame(list, filtered);
@@ -731,20 +731,20 @@ public class CollUtilTest {
 
 	@Test
 	public void containsAnyTest() {
-		final ArrayList<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
-		final ArrayList<Integer> list2 = ListUtil.of(5, 3, 1, 9, 11);
+		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
+		final List<Integer> list2 = ListUtil.of(5, 3, 1, 9, 11);
 
 		Assert.assertTrue(CollUtil.containsAny(list1, list2));
 	}
 
 	@Test
 	public void containsAllTest() {
-		final ArrayList<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
-		final ArrayList<Integer> list2 = ListUtil.of(5, 3, 1);
+		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4, 5);
+		final List<Integer> list2 = ListUtil.of(5, 3, 1);
 		Assert.assertTrue(CollUtil.containsAll(list1, list2));
 
-		final ArrayList<Integer> list3 = ListUtil.of(1);
-		final ArrayList<Integer> list4 = ListUtil.of();
+		final List<Integer> list3 = ListUtil.of(1);
+		final List<Integer> list4 = ListUtil.of();
 		Assert.assertTrue(CollUtil.containsAll(list3, list4));
 	}
 
@@ -799,7 +799,7 @@ public class CollUtilTest {
 
 	@Test
 	public void countMapTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
+		final List<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
 		final Map<String, Integer> countMap = CollUtil.countMap(list);
 
 		Assert.assertEquals(Integer.valueOf(2), countMap.get("a"));
@@ -810,7 +810,7 @@ public class CollUtilTest {
 
 	@Test
 	public void indexOfTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
+		final List<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.indexOf(list, (str) -> str.charAt(0) == 'c');
 		Assert.assertEquals(2, i);
 	}
@@ -818,7 +818,7 @@ public class CollUtilTest {
 	@Test
 	public void lastIndexOfTest() {
 		// List有优化
-		final ArrayList<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
+		final List<String> list = ListUtil.of("a", "b", "c", "c", "a", "b", "d");
 		final int i = CollUtil.lastIndexOf(list, (str) -> str.charAt(0) == 'a');
 		Assert.assertEquals(4, i);
 
@@ -907,7 +907,7 @@ public class CollUtilTest {
 
 	@Test
 	public void distinctTest() {
-		final ArrayList<Integer> distinct = CollUtil.distinct(ListUtil.view(5, 3, 10, 9, 0, 5, 10, 9));
+		final List<Integer> distinct = CollUtil.distinct(ListUtil.view(5, 3, 10, 9, 0, 5, 10, 9));
 		Assert.assertEquals(ListUtil.view(5, 3, 10, 9, 0), distinct);
 	}
 
@@ -946,7 +946,7 @@ public class CollUtilTest {
 
 	@Test
 	public void mapTest() {
-		final ArrayList<String> list = ListUtil.of("a", "b", "c");
+		final List<String> list = ListUtil.of("a", "b", "c");
 		final List<Object> extract = CollUtil.map(list, (e) -> e + "_1");
 		Assert.assertEquals(ListUtil.of("a_1", "b_1", "c_1"), extract);
 	}

@@ -24,13 +24,13 @@ public class IterUtilTest {
 
 	@Test
 	public void getFirstNonNullTest() {
-		final ArrayList<String> strings = ListUtil.of(null, null, "123", "456", null);
+		final List<String> strings = ListUtil.of(null, null, "123", "456", null);
 		Assert.assertEquals("123", CollUtil.getFirstNoneNull(strings));
 	}
 
 	@Test
 	public void fieldValueMapTest() {
-		final ArrayList<Car> carList = ListUtil.of(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
+		final List<Car> carList = ListUtil.of(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
 		final Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");
 
 		Assert.assertEquals("大众", carNameMap.get("123").getCarName());
@@ -40,30 +40,30 @@ public class IterUtilTest {
 
 	@Test
 	public void joinTest() {
-		final ArrayList<String> list = ListUtil.of("1", "2", "3", "4");
+		final List<String> list = ListUtil.of("1", "2", "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join);
 
-		final ArrayList<Integer> list1 = ListUtil.of(1, 2, 3, 4);
+		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4);
 		final String join1 = IterUtil.join(list1.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join1);
 
 		// 包装每个节点
-		final ArrayList<String> list2 = ListUtil.of("1", "2", "3", "4");
+		final List<String> list2 = ListUtil.of("1", "2", "3", "4");
 		final String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
 		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
 	}
 
 	@Test
 	public void joinWithFuncTest() {
-		final ArrayList<String> list = ListUtil.of("1", "2", "3", "4");
+		final List<String> list = ListUtil.of("1", "2", "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
 		Assert.assertEquals("1:2:3:4", join);
 	}
 
 	@Test
 	public void joinWithNullTest() {
-		final ArrayList<String> list = ListUtil.of("1", null, "3", "4");
+		final List<String> list = ListUtil.of("1", null, "3", "4");
 		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
 		Assert.assertEquals("1:null:3:4", join);
 	}

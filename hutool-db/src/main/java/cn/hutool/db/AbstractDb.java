@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -555,7 +556,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws DbRuntimeException {
-		return find(ListUtil.of(fields), where, rsh);
+		return find(Arrays.asList(fields), where, rsh);
 	}
 
 	/**

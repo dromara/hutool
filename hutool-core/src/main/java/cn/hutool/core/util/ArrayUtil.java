@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
@@ -620,7 +621,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制，源数组和目标数组都是从位置0开始复制<br>
 	 *
-	 * @param <T>  目标数组类型
+	 * @param <T>    目标数组类型
 	 * @param src    源数组
 	 * @param dest   目标数组
 	 * @param length 拷贝数组长度
@@ -635,7 +636,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制
 	 *
-	 * @param <T>  目标数组类型
+	 * @param <T>     目标数组类型
 	 * @param src     源数组
 	 * @param srcPos  源数组开始位置
 	 * @param dest    目标数组
@@ -1956,8 +1957,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否有序
-	 * @since 6.0.0
 	 * @throws NullPointerException 如果数组元素含有null值
+	 * @since 6.0.0
 	 */
 	public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
 		if (isEmpty(array)) {
@@ -1985,9 +1986,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否升序
+	 * @throws NullPointerException 如果数组元素含有null值
 	 * @author FengBaoheng
 	 * @since 5.5.2
-	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedASC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2011,9 +2012,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否降序
+	 * @throws NullPointerException 如果数组元素含有null值
 	 * @author FengBaoheng
 	 * @since 5.5.2
-	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedDESC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2083,8 +2084,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 判断数组中是否有相同元素
 	 * <p>若传入空数组，则返回{@code false}</p>
-	 * @param <T>        数组元素类型
-	 * @param array      数组
+	 *
+	 * @param <T>   数组元素类型
+	 * @param array 数组
 	 * @return 数组是否有相同元素
 	 * @since 6.0.0
 	 */
@@ -2092,7 +2094,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (isEmpty(array)) {
 			return false;
 		}
-		Set<T> elementSet = new HashSet<>(Arrays.asList(array));
+
+		final Set<T> elementSet = SetUtil.of(Arrays.asList(array));
 		return elementSet.size() != array.length;
 	}
 }

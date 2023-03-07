@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 public class ListUtil {
 
 	/**
-	 * 新建一个List<br>
+	 * 新建一个{@link ArrayList}<br>
 	 * 如果提供的初始化数组为空，新建默认初始长度的List
 	 *
 	 * @param <T>    集合元素类型
@@ -178,7 +178,7 @@ public class ListUtil {
 	/**
 	 * 数组转为一个不可变List<br>
 	 * 类似于Java9中的List.of<br>
-	 * 不同于Arrays.asList，此方法的原数组修改时，并不会影响List。
+	 * 不同于Arrays.asList，此方法不允许修改数组
 	 *
 	 * @param ts  对象
 	 * @param <T> 对象类型

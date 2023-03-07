@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Chain;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers 观察者列表
 	 */
 	public WatcherChain(final Watcher... watchers) {
-		chain = ListUtil.of(watchers);
+		chain = Arrays.asList(watchers);
 	}
 
 	@Override

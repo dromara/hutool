@@ -5,10 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * {@link ArrayUtil} 数组工具单元测试
@@ -305,7 +302,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void toArrayTest() {
-		final ArrayList<String> list = ListUtil.of("A", "B", "C", "D");
+		final List<String> list = ListUtil.of("A", "B", "C", "D");
 		final String[] array = ArrayUtil.toArray(list, String.class);
 		Assert.assertEquals("A", array[0]);
 		Assert.assertEquals("B", array[1]);

@@ -22,6 +22,7 @@ import java.io.PushbackReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class IoUtilTest {
 
@@ -50,7 +51,7 @@ public class IoUtilTest {
 
 	@Test
 	public void readUtf8LinesTest() {
-		final ArrayList<String> strings = IoUtil.readUtf8Lines(ResourceUtil.getStream("text.txt"), ListUtil.of());
+		final List<String> strings = IoUtil.readUtf8Lines(ResourceUtil.getStream("text.txt"), ListUtil.of());
 		Assert.assertEquals(3, strings.size());
 	}
 
