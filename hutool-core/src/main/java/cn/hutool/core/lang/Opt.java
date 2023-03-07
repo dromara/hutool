@@ -273,7 +273,7 @@ public class Opt<T> {
 	 * 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
 	 *
 	 * @param predicate 给定的条件
-	 * @return 如果满足条件则返回本身, 不满足条件或者元素本身为空时返回一个返回一个空的{@code Opt}
+	 * @return 如果满足条件则返回本身, 不满足条件或者元素本身为空时返回一个空的{@code Opt}
 	 * @throws NullPointerException 如果给定的条件为 {@code null}，抛出{@code NPE}
 	 */
 	public Opt<T> filter(Predicate<? super T> predicate) {
