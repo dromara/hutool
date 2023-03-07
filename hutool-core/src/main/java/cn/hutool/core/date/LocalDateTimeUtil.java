@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.*;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 /**
  * JDK8+中的{@link LocalDateTime} 工具类封装
@@ -345,6 +346,24 @@ public class LocalDateTimeUtil {
 	 */
 	public static String format(LocalDateTime time, DateTimeFormatter formatter) {
 		return TemporalAccessorUtil.format(time, formatter);
+	}
+
+	/**
+	 * 格式化时间函数
+	 *
+	 * @return 格式化时间的函数
+	 */
+	public static Function<DateTimeFormatter, Function<LocalDateTime, String>> formatTimeFunction() {
+		return dateTimeFormatter -> time -> TemporalAccessorUtil.format(time, dateTimeFormatter);
+	}
+
+	/**
+	 * 格式化日期函数
+	 *
+	 * @return 格式化时间的函数
+	 */
+	public static Function<DateTimeFormatter, Function<LocalDate, String>> formatDateFunction() {
+		return dateTimeFormatter -> date -> TemporalAccessorUtil.format(date, dateTimeFormatter);
 	}
 
 	/**
