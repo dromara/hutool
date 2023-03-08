@@ -225,7 +225,7 @@
 		<dependency>
 			<groupId>org.lionsoul</groupId>
 			<artifactId>jcseg-core</artifactId>
-			<version>2.6.2</version>
+			<version>2.6.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

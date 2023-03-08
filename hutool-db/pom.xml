@@ -23,11 +23,11 @@
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.23</tomcat-jdbc.version>
-		<druid.version>1.2.15</druid.version>
+		<druid.version>1.2.16</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
-		<mongo4.version>4.8.1</mongo4.version>
-		<sqlite.version>3.40.0.0</sqlite.version>
+		<mongo4.version>4.9.0</mongo4.version>
+		<sqlite.version>3.41.0.0</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>4.3.1</jedis.version>
@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.9</version>
+			<version>3.4.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
