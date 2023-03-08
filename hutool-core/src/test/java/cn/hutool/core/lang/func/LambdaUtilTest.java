@@ -282,4 +282,17 @@ public class LambdaUtilTest {
 		REF_invokeSpecial,
 		REF_newInvokeSpecial,
 	}
+
+	@Test
+	public void lambdaClassNameTest() {
+		final String lambdaClassName1 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
+		final String lambdaClassName2 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
+		Assert.assertNotEquals(lambdaClassName1, lambdaClassName2);
+	}
+
+	static class LambdaUtilTestHelper {
+		public static <P> String getLambdaClassName(final Function<P, ?> func) {
+			return func.getClass().getName();
+		}
+	}
 }

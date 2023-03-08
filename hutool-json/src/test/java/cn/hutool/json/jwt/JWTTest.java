@@ -172,4 +172,20 @@ public class JWTTest {
 		final Object test2 = JWT.of(sign).getPayload().getClaim("test2");
 		Assert.assertEquals(Long.class, test2.getClass());
 	}
+
+	@Test
+	public void getLongTest(){
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+				+ ".eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJhZG1pbiIsImRldmljZSI6ImRlZmF1bHQtZGV2aWNlIiwiZWZmIjoxNjc4Mjg1NzEzOTM1LCJyblN0ciI6IkVuMTczWFhvWUNaaVZUWFNGOTNsN1pabGtOalNTd0pmIn0"
+				+ ".wRe2soTaWYPhwcjxdzesDi1BgEm9D61K-mMT3fPc4YM"
+				+ "";
+
+		final JWT jwt = JWTUtil.parseToken(rightToken);
+
+		Assert.assertEquals(
+				"{\"loginType\":\"login\",\"loginId\":\"admin\",\"device\":\"default-device\"," +
+						"\"eff\":1678285713935,\"rnStr\":\"En173XXoYCZiVTXSF93l7ZZlkNjSSwJf\"}",
+				jwt.getPayloads().toString());
+		Assert.assertEquals(Long.valueOf(1678285713935L), jwt.getPayloads().getLong("eff"));
+	}
 }
