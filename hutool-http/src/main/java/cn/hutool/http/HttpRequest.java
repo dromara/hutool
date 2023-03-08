@@ -26,11 +26,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URLStreamHandler;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
@@ -867,6 +863,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 自动重定向时是否处理cookie
+	 * @param followRedirectsCookie  自动重定向时是否处理cookie
+	 * @return this
+	 */
+	public HttpRequest setFollowRedirectsCookie(boolean followRedirectsCookie) {
+		config.setFollowRedirectsCookie(followRedirectsCookie);
+		return this;
+	}
+
+	/**
 	 * 设置最大重定向次数<br>
 	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向
 	 *
@@ -1264,7 +1270,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
-
+			//支持自动重定向时处理cookie
+			if (config.followRedirectsCookie) {
+				GlobalCookieManager.store(httpConnection);
+			}
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
 					final UrlBuilder redirectUrl;
