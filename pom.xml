@@ -46,7 +46,7 @@
 		<!-- versions -->
 		<compile.version>8</compile.version>
 		<junit.version>4.13.2</junit.version>
-		<lombok.version>1.18.24</lombok.version>
+		<lombok.version>1.18.26</lombok.version>
 	</properties>
 
 	<dependencies>
