@@ -66,7 +66,7 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 */
 	default SerConsumer<T> andThen(final SerConsumer<? super T> after) {
 		Objects.requireNonNull(after);
-		return (T t) -> {
+		return (final T t) -> {
 			accept(t);
 			after.accept(t);
 		};

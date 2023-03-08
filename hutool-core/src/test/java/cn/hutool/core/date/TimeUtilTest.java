@@ -326,9 +326,9 @@ public class TimeUtilTest {
 
 	@Test
 	public void formatDateFunctionTest() {
-		List<String> dateStrList = Stream.of("2023-03-01", "2023-03-02")
+		final List<String> dateStrList = Stream.of("2023-03-01", "2023-03-02")
 				.map(LocalDate::parse)
-				.map(TimeUtil.formatDateFunction(DatePattern.CHINESE_DATE_FORMATTER))
+				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
 		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
 		Assert.assertEquals("2023年03月02日", dateStrList.get(1));
@@ -336,9 +336,9 @@ public class TimeUtilTest {
 
 	@Test
 	public void formatTimeFunctionTest() {
-		List<String> dateStrList = Stream.of("2023-03-01T12:23:56", "2023-03-02T12:23:56")
+		final List<String> dateStrList = Stream.of("2023-03-01T12:23:56", "2023-03-02T12:23:56")
 				.map(LocalDateTime::parse)
-				.map(TimeUtil.formatTimeFunction(DatePattern.CHINESE_DATE_FORMATTER))
+				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
 		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
 		Assert.assertEquals("2023年03月02日", dateStrList.get(1));

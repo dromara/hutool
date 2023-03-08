@@ -1,6 +1,7 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
@@ -346,19 +347,11 @@ public class TimeUtil extends TemporalAccessorUtil {
 	/**
 	 * 格式化时间函数
 	 *
+	 * @param dateTimeFormatter {@link DateTimeFormatter}
 	 * @return 格式化时间的函数
 	 */
-	public static Function<LocalDateTime, String> formatTimeFunction(DateTimeFormatter dateTimeFormatter) {
-		return time -> format(time, dateTimeFormatter);
-	}
-
-	/**
-	 * 格式化日期函数
-	 *
-	 * @return 格式化时间的函数
-	 */
-	public static Function<LocalDate, String> formatDateFunction(DateTimeFormatter dateTimeFormatter) {
-		return date -> format(date, dateTimeFormatter);
+	public static Function<TemporalAccessor, String> formatFunc(final DateTimeFormatter dateTimeFormatter) {
+		return LambdaUtil.toFunction(TimeUtil::format, dateTimeFormatter);
 	}
 
 	/**

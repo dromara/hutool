@@ -34,10 +34,10 @@ public interface SerConsumer3<P1, P2, P3> extends Serializable {
 	 * @param p2 参数二
 	 * @param p3 参数三
 	 */
-	default void accept(P1 p1, P2 p2, P3 p3) {
+	default void accept(final P1 p1, final P2 p2, final P3 p3) {
 		try {
 			accepting(p1, p2, p3);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
@@ -54,9 +54,9 @@ public interface SerConsumer3<P1, P2, P3> extends Serializable {
 	 * operation followed by the {@code after} operation
 	 * @throws NullPointerException if {@code after} is null
 	 */
-	default SerConsumer3<P1, P2, P3> andThen(SerConsumer3<P1, P2, P3> after) {
+	default SerConsumer3<P1, P2, P3> andThen(final SerConsumer3<P1, P2, P3> after) {
 		Objects.requireNonNull(after);
-		return (P1 p1, P2 p2, P3 p3) -> {
+		return (final P1 p1, final P2 p2, final P3 p3) -> {
 			accept(p1, p2, p3);
 			after.accept(p1, p2, p3);
 		};
