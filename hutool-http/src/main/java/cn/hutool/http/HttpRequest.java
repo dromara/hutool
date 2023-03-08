@@ -1262,7 +1262,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		// 手动实现重定向
 		if (config.maxRedirectCount > 0) {
-			int responseCode;
+			final int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
 			} catch (IOException e) {
@@ -1270,7 +1270,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
-			//支持自动重定向时处理cookie
+			// 支持自动重定向时处理cookie
+			// https://github.com/dromara/hutool/issues/2960
 			if (config.followRedirectsCookie) {
 				GlobalCookieManager.store(httpConnection);
 			}

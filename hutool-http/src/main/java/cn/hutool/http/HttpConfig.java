@@ -305,8 +305,10 @@ public class HttpConfig {
 
 	/**
 	 * 自动重定向时是否处理cookie
-	 * @param followRedirectsCookie  自动重定向时是否处理cookie
+	 *
+	 * @param followRedirectsCookie 自动重定向时是否处理cookie
 	 * @return this
+	 * @since 5.8.15
 	 */
 	public HttpConfig setFollowRedirectsCookie(boolean followRedirectsCookie) {
 		this.followRedirectsCookie = followRedirectsCookie;
