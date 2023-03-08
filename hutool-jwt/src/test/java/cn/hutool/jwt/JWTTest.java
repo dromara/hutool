@@ -10,19 +10,19 @@ public class JWTTest {
 
 	@Test
 	public void createHs256Test(){
-		byte[] key = "1234567890".getBytes();
-		JWT jwt = JWT.create()
+		final byte[] key = "1234567890".getBytes();
+		final JWT jwt = JWT.create()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
 				.setExpiresAt(DateUtil.parse("2022-01-01"))
 				.setKey(key);
 
-		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
 				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWUsImV4cCI6MTY0MDk2NjQwMH0." +
 				"bXlSnqVeJXWqUIt7HyEhgKNVlIPjkumHlAwFY-5YCtk";
 
-		String token = jwt.sign();
+		final String token = jwt.sign();
 		Assert.assertEquals(rightToken, token);
 
 		Assert.assertTrue(JWT.of(rightToken).setKey(key).verify());
@@ -30,7 +30,7 @@ public class JWTTest {
 
 	@Test
 	public void parseTest(){
-		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
 				"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9." +
 				"U2aQkC2THYV9L0fTN-yBBI7gmo5xhmvMhATtu8v0zEA";
 
@@ -51,16 +51,16 @@ public class JWTTest {
 
 	@Test
 	public void createNoneTest(){
-		JWT jwt = JWT.create()
+		final JWT jwt = JWT.create()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true)
 				.setSigner(JWTSignerUtil.none());
 
-		String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
 				"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9.";
 
-		String token = jwt.sign();
+		final String token = jwt.sign();
 		Assert.assertEquals(token, token);
 
 		Assert.assertTrue(JWT.of(rightToken).setSigner(JWTSignerUtil.none()).verify());
@@ -71,7 +71,7 @@ public class JWTTest {
 	 */
 	@Test(expected = JWTException.class)
 	public void needSignerTest(){
-		JWT jwt = JWT.create()
+		final JWT jwt = JWT.create()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true);
@@ -81,11 +81,27 @@ public class JWTTest {
 
 	@Test
 	public void verifyTest(){
-		String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+		final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
 				"eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2MjQwMDQ4MjIsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV_op5LoibLkuozlj7ciLCJzeXNfbWVudV8xIiwiUk9MRV_op5LoibLkuIDlj7ciLCJzeXNfbWVudV8yIl0sImp0aSI6ImQ0YzVlYjgwLTA5ZTctNGU0ZC1hZTg3LTVkNGI5M2FhNmFiNiIsImNsaWVudF9pZCI6ImhhbmR5LXNob3AifQ." +
 				"aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
 
 		final boolean verify = JWT.of(token).setKey(StrUtil.utf8Bytes("123456")).verify();
 		Assert.assertTrue(verify);
+	}
+
+	@Test
+	public void getLongTest(){
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+				+ ".eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJhZG1pbiIsImRldmljZSI6ImRlZmF1bHQtZGV2aWNlIiwiZWZmIjoxNjc4Mjg1NzEzOTM1LCJyblN0ciI6IkVuMTczWFhvWUNaaVZUWFNGOTNsN1pabGtOalNTd0pmIn0"
+				+ ".wRe2soTaWYPhwcjxdzesDi1BgEm9D61K-mMT3fPc4YM"
+				+ "";
+
+		final JWT jwt = JWTUtil.parseToken(rightToken);
+
+		Assert.assertEquals(
+				"{\"loginType\":\"login\",\"loginId\":\"admin\",\"device\":\"default-device\"," +
+						"\"eff\":1678285713935,\"rnStr\":\"En173XXoYCZiVTXSF93l7ZZlkNjSSwJf\"}",
+				jwt.getPayloads().toString());
+		Assert.assertEquals(Long.valueOf(1678285713935L), jwt.getPayloads().getLong("eff"));
 	}
 }

@@ -14,6 +14,7 @@ import java.util.Date;
  * @since 5.8.13
  */
 public class NumberWithFormat extends Number implements TypeConverter{
+	private static final long serialVersionUID = 1L;
 
 	private final Number number;
 	private final String format;
@@ -31,7 +32,8 @@ public class NumberWithFormat extends Number implements TypeConverter{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object convert(Type targetType, Object value) {
-		if (targetType instanceof Class) {
+		// 自定义日期格式
+		if (null != this.format && targetType instanceof Class) {
 			final Class<?> clazz = (Class<?>) targetType;
 			// https://gitee.com/dromara/hutool/issues/I6IS5B
 			if (Date.class.isAssignableFrom(clazz)) {
@@ -41,8 +43,12 @@ public class NumberWithFormat extends Number implements TypeConverter{
 			} else if(String.class == clazz){
 				return toString();
 			}
+
+			// 其他情况按照正常数字转换
 		}
-		throw new ConvertException("Unsupported target type {}", targetType);
+
+		// 按照正常数字转换
+		return Convert.convertWithCheck(targetType, this.number, null, false);
 	}
 
 	@Override

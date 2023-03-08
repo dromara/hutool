@@ -17,13 +17,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.DoubleAdder;
@@ -141,6 +135,13 @@ public class ConvertTest {
 		Assert.assertEquals(Long.valueOf(8), dLong);
 		final long dLong2 = ConverterRegistry.getInstance().convert(long.class, d);
 		Assert.assertEquals(8, dLong2);
+	}
+
+	@Test
+	public void toLongFromNumberWithFormatTest() {
+		final NumberWithFormat value = new NumberWithFormat(1678285713935L, null);
+		final Long aLong = Convert.convertWithCheck(Long.class, value, null, false);
+		Assert.assertEquals(new Long(1678285713935L), aLong);
 	}
 
 	@Test

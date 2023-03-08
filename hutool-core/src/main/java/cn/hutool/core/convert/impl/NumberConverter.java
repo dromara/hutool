@@ -41,6 +41,9 @@ public class NumberConverter extends AbstractConverter<Number> {
 
 	private final Class<? extends Number> targetType;
 
+	/**
+	 * 构造
+	 */
 	public NumberConverter() {
 		this.targetType = Number.class;
 	}
@@ -67,7 +70,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 
 	@Override
 	protected String convertToStr(Object value) {
-		String result = StrUtil.trim(super.convertToStr(value));
+		final String result = StrUtil.trim(super.convertToStr(value));
 		if (null != result && result.length() > 1) {
 			final char c = Character.toUpperCase(result.charAt(result.length() - 1));
 			if (c == 'D' || c == 'L' || c == 'F') {
