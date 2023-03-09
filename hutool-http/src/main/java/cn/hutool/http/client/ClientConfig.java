@@ -3,7 +3,7 @@ package cn.hutool.http.client;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.ssl.DefaultSSLInfo;
+import cn.hutool.http.ssl.TrustAnySSLInfo;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -58,8 +58,8 @@ public class ClientConfig {
 	public ClientConfig() {
 		connectionTimeout = HttpGlobalConfig.getTimeout();
 		readTimeout = HttpGlobalConfig.getTimeout();
-		hostnameVerifier = DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER;
-		socketFactory = DefaultSSLInfo.DEFAULT_SSF;
+		hostnameVerifier = TrustAnySSLInfo.TRUST_ANY_HOSTNAME_VERIFIER;
+		socketFactory = TrustAnySSLInfo.DEFAULT_SSF;
 	}
 
 	/**
@@ -179,12 +179,12 @@ public class ClientConfig {
 	 *
 	 * @param protocol 协议
 	 * @return this
-	 * @see SSLUtil#createSSLContext(String)
+	 * @see SSLUtil#createTrustAnySSLContext(String)
 	 * @see #setSocketFactory(SSLSocketFactory)
 	 */
 	public ClientConfig setSSLProtocol(final String protocol) {
 		Assert.notBlank(protocol, "protocol must be not blank!");
-		setSocketFactory(SSLUtil.createSSLContext(protocol).getSocketFactory());
+		setSocketFactory(SSLUtil.createTrustAnySSLContext(protocol).getSocketFactory());
 		return this;
 	}
 

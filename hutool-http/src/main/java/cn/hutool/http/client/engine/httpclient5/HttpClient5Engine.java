@@ -2,6 +2,7 @@ package cn.hutool.http.client.engine.httpclient5;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpException;
@@ -11,11 +12,13 @@ import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.HttpBody;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
@@ -86,14 +89,22 @@ public class HttpClient5Engine implements ClientEngine {
 			return;
 		}
 
+		// 连接配置
+		final PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create()
+				.setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
+						.setSslContext(SSLUtil.createTrustAnySSLContext()).build());
+		final int connectionTimeout = this.config.getConnectionTimeout();
+		if(connectionTimeout > 0){
+			connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
+					.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
+		}
+
+		// 请求配置
 		RequestConfig requestConfig = null;
 		if(null != this.config){
 			final RequestConfig.Builder builder = RequestConfig.custom();
 
-			final int connectionTimeout = this.config.getConnectionTimeout();
 			if(connectionTimeout > 0){
-				// TODO 细化替换
-				builder.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 				builder.setConnectionRequestTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
 			}
 			final int readTimeout = this.config.getReadTimeout();
@@ -105,6 +116,7 @@ public class HttpClient5Engine implements ClientEngine {
 		}
 
 		final HttpClientBuilder builder = HttpClients.custom()
+				.setConnectionManager(connectionManagerBuilder.build())
 				.setDefaultRequestConfig(requestConfig)
 				// 设置默认头信息
 				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));

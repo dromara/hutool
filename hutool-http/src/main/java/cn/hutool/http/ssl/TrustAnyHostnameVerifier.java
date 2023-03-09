@@ -4,7 +4,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
 /**
- * https 域名校验
+ * https 域名校验，信任所有域名
  *
  * @author Looly
  */

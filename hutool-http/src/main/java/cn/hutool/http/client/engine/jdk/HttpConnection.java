@@ -7,7 +7,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.HeaderOperation;
 import cn.hutool.http.meta.Method;
-import cn.hutool.http.ssl.DefaultSSLInfo;
+import cn.hutool.http.ssl.TrustAnySSLInfo;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -211,8 +211,8 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 			// Https请求
 			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
-			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
-			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
+			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, TrustAnySSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
+			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, TrustAnySSLInfo.DEFAULT_SSF));
 		}
 
 		return this;

@@ -28,7 +28,7 @@ public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 	 */
 	public CustomProtocolsSSLFactory(final String... protocols) throws IORuntimeException {
 		this.protocols = protocols;
-		this.base = SSLUtil.createSSLContext(null).getSocketFactory();
+		this.base = SSLUtil.createTrustAnySSLContext(null).getSocketFactory();
 	}
 
 	@Override

@@ -5,12 +5,11 @@ import cn.hutool.core.text.StrUtil;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * 默认的全局SSL配置，当用户未设置相关信息时，使用默认设置，默认设置为单例模式。
+ * 新任所有SSL配置
  *
  * @author looly
- * @since 5.1.2
  */
-public class DefaultSSLInfo {
+public class TrustAnySSLInfo {
 	/**
 	 * 默认信任全部的域名校验器
 	 */
