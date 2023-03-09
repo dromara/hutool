@@ -5,7 +5,6 @@ import cn.hutool.core.annotation.PropIgnore;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.reflect.FieldUtil;
-import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 import cn.hutool.core.reflect.TypeUtil;
@@ -226,8 +225,8 @@ public class PropDesc {
 	 */
 	public PropDesc setValue(final Object bean, final Object value) {
 		if (null != this.setter) {
-			MethodUtil.invoke(bean, this.setter, value);
-			//LambdaUtil.buildSetter(this.setter).accept(bean, value);
+			//MethodUtil.invoke(bean, this.setter, value);
+			LambdaUtil.buildSetter(this.setter).accept(bean, value);
 		} else if (ModifierUtil.isPublic(this.field)) {
 			FieldUtil.setFieldValue(bean, this.field, value);
 		}

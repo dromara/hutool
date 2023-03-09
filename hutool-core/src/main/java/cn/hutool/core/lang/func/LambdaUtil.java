@@ -168,7 +168,14 @@ public class LambdaUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T, P> BiConsumer<T, P> buildSetter(final Method setMethod) {
-		return LambdaFactory.build(BiConsumer.class, setMethod);
+		final Class<?> returnType = setMethod.getReturnType();
+		if(Void.class == returnType){
+			return LambdaFactory.build(BiConsumer.class, setMethod);
+		}
+
+		// 返回this的setter
+		final BiFunction<T, P, ?> biFunction = LambdaFactory.build(BiFunction.class, setMethod);
+		return biFunction::apply;
 	}
 
 	/**
