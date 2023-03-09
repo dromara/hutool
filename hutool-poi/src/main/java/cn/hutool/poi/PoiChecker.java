@@ -5,7 +5,7 @@ import cn.hutool.core.util.ClassLoaderUtil;
 
 /**
  * POI引入检查器
- * 
+ *
  * @author looly
  * @since 4.0.10
  */
@@ -20,7 +20,7 @@ public class PoiChecker {
 	public static void checkPoiImport() {
 		try {
 			Class.forName("org.apache.poi.ss.usermodel.Workbook", false, ClassLoaderUtil.getClassLoader());
-		} catch (ClassNotFoundException | NoClassDefFoundError e) {
+		} catch (ClassNotFoundException | NoClassDefFoundError | NoSuchMethodError e) {
 			throw new DependencyException(e, NO_POI_ERROR_MSG);
 		}
 	}
