@@ -93,15 +93,16 @@ public class HttpClient5Engine implements ClientEngine {
 		final PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create()
 				.setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
 						.setSslContext(SSLUtil.createTrustAnySSLContext()).build());
-		final int connectionTimeout = this.config.getConnectionTimeout();
-		if(connectionTimeout > 0){
-			connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
-					.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
-		}
 
 		// 请求配置
 		RequestConfig requestConfig = null;
+
 		if(null != this.config){
+			final int connectionTimeout = this.config.getConnectionTimeout();
+			if(connectionTimeout > 0){
+				connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
+						.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
+			}
 			final RequestConfig.Builder builder = RequestConfig.custom();
 
 			if(connectionTimeout > 0){
