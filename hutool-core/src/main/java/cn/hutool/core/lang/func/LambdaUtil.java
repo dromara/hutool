@@ -169,7 +169,7 @@ public class LambdaUtil {
 	@SuppressWarnings("unchecked")
 	public static <T, P> BiConsumer<T, P> buildSetter(final Method setMethod) {
 		final Class<?> returnType = setMethod.getReturnType();
-		if(Void.class == returnType){
+		if(Void.TYPE == returnType){
 			return LambdaFactory.build(BiConsumer.class, setMethod);
 		}
 
