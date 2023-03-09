@@ -56,7 +56,10 @@ public class Calculator {
 				resultStack.push(tempResult.toString());
 			}
 		}
-		return Double.parseDouble(resultStack.pop());
+
+		// 当结果集中有多个数字时，可能是省略*，类似(1+2)3
+		return NumberUtil.mul(resultStack.toArray(new String[0])).doubleValue();
+		//return Double.parseDouble(resultStack.pop());
 	}
 
 	/**
