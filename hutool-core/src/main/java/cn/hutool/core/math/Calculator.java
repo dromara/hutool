@@ -1,5 +1,6 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -37,7 +38,7 @@ public class Calculator {
 	public double calculate(String expression) {
 		prepare(transform(expression));
 
-		Stack<String> resultStack = new Stack<>();
+		final Stack<String> resultStack = new Stack<>();
 		Collections.reverse(postfixStack);// 将后缀式栈反转
 		String firstValue, secondValue, currentOp;// 参与计算的第一个值，第二个值和算术运算符
 		while (false == postfixStack.isEmpty()) {
@@ -53,11 +54,14 @@ public class Calculator {
 				firstValue = firstValue.replace("~", "-");
 				secondValue = secondValue.replace("~", "-");
 
-				BigDecimal tempResult = calculate(firstValue, secondValue, currentOp.charAt(0));
+				final BigDecimal tempResult = calculate(firstValue, secondValue, currentOp.charAt(0));
 				resultStack.push(tempResult.toString());
 			}
 		}
-		return Double.parseDouble(resultStack.pop());
+
+		// 当结果集中有多个数字时，可能是省略*，类似(1+2)3
+		return NumberUtil.mul(resultStack.toArray(new String[0])).doubleValue();
+		//return Double.parseDouble(resultStack.pop());
 	}
 
 	/**
@@ -68,7 +72,7 @@ public class Calculator {
 	private void prepare(String expression) {
 		final Stack<Character> opStack = new Stack<>();
 		opStack.push(',');// 运算符放入栈底元素逗号，此符号优先级最低
-		char[] arr = expression.toCharArray();
+		final char[] arr = expression.toCharArray();
 		int currentIndex = 0;// 当前字符的位置
 		int count = 0;// 上次算术运算符到本次算术运算符的字符的长度便于或者之间的数值
 		char currentOp, peekOp;// 当前操作符和栈顶操作符
@@ -146,7 +150,7 @@ public class Calculator {
 	 * @return 结果
 	 */
 	private BigDecimal calculate(String firstValue, String secondValue, char currentOp) {
-		BigDecimal result;
+		final BigDecimal result;
 		switch (currentOp) {
 			case '+':
 				result = NumberUtil.add(firstValue, secondValue);

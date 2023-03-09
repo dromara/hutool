@@ -5,6 +5,7 @@
 # 5.8.16.M1 (2023-03-09)
 
 ### 🐣新特性
+* 【core  】      改进Calculator.conversion，兼容乘法符号省略写法（issue#2964@Github）
 
 ### 🐞Bug修复
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
