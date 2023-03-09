@@ -1072,6 +1072,79 @@ public class ImgUtil {
 		return Img.from(image).rotate(degree).getImg();
 	}
 
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 *
+	 * @param imageFile       被旋转图像文件
+	 * @param degree          旋转角度
+	 * @param backgroundColor 背景颜色
+	 * @param outFile         输出文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void rotateWithBackgroundColor(File imageFile, int degree, Color backgroundColor, File outFile) throws IORuntimeException {
+		rotateWithBackgroundColor(read(imageFile), degree, backgroundColor, outFile);
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 *
+	 * @param image           目标图像
+	 * @param degree          旋转角度
+	 * @param backgroundColor 背景颜色
+	 * @param outFile         输出文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void rotateWithBackgroundColor(Image image, int degree, Color backgroundColor, File outFile) throws IORuntimeException {
+		write(rotateWithBackgroundColor(image, degree, backgroundColor), outFile);
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 *
+	 * @param image           目标图像
+	 * @param degree          旋转角度
+	 * @param backgroundColor 背景颜色
+	 * @param out             输出流
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void rotateWithBackgroundColor(Image image, int degree, Color backgroundColor, OutputStream out) throws IORuntimeException {
+		writeJpg(rotateWithBackgroundColor(image, degree, backgroundColor), getImageOutputStream(out));
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流，输出格式为JPG
+	 *
+	 * @param image           目标图像
+	 * @param degree          旋转角度
+	 * @param backgroundColor 背景颜色
+	 * @param out             输出图像流
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void rotateWithBackgroundColor(Image image, int degree, Color backgroundColor, ImageOutputStream out) throws IORuntimeException {
+		writeJpg(rotateWithBackgroundColor(image, degree, backgroundColor), out);
+	}
+
+	/**
+	 * 旋转图片为指定角度并带上背景颜色<br>
+	 * 来自：https://blog.csdn.net/liuwenyuande/article/details/54587473
+	 *
+	 * @param degree          旋转角度
+	 * @param backgroundColor 背景颜色
+	 * @return 旋转后的图片并带上背景颜色
+	 * @since 5.8.16
+	 */
+	public static Image rotateWithBackgroundColor(Image image, int degree, Color backgroundColor) {
+		return Img.from(image).setBackgroundColor(backgroundColor).rotateWithBackgroundColor(degree).getImg();
+	}
+
 	// ---------------------------------------------------------------------------------------------------------------------- flip
 
 	/**

@@ -60,6 +60,13 @@ public class ImgUtilTest {
 
 	@Test
 	@Ignore
+	public void rotateWithBackgroundColorTest() throws IOException {
+		Image image = ImgUtil.rotateWithBackgroundColor(ImageIO.read(FileUtil.file("E:/TMP/test/test.jpg")), 30, Color.GREEN);
+		ImgUtil.write(image, FileUtil.file("E:/TMP/test/result.jpg"));
+	}
+
+	@Test
+	@Ignore
 	public void flipTest() {
 		ImgUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
 	}

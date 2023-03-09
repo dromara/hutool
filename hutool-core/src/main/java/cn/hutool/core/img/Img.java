@@ -630,6 +630,41 @@ public class Img implements Serializable {
 	}
 
 	/**
+	 * 旋转图片为指定角度并带上背景颜色<br>
+	 * 来自：https://blog.csdn.net/liuwenyuande/article/details/54587473
+	 *
+	 * @param degree 旋转角度
+	 * @return 旋转后的图片并带上背景颜色
+	 * @since 5.8.16
+	 */
+	public Img rotateWithBackgroundColor(int degree) {
+		final Image image = getValidSrcImg();
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		final Rectangle rectangle = calcRotatedSize(width, height, degree);
+		final BufferedImage targetImg = new BufferedImage(rectangle.width, rectangle.height, getTypeInt());
+		Graphics2D graphics2d = targetImg.createGraphics();
+
+		// 抗锯齿
+		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// 从中心旋转
+		graphics2d.translate((rectangle.width - width) / 2D, (rectangle.height - height) / 2D);
+		graphics2d.rotate(Math.toRadians(degree), width / 2D, height / 2D);
+
+		//用于换背景色
+		Graphics2D graphics2d4BackgroundColor = targetImg.createGraphics();
+		// 填充背景颜色
+		graphics2d4BackgroundColor.setColor(this.backgroundColor);
+		graphics2d4BackgroundColor.fill(rectangle);
+
+		graphics2d.drawImage(image, 0, 0, null);
+		graphics2d.dispose();
+		graphics2d4BackgroundColor.dispose();
+		this.targetImage = targetImg;
+		return this;
+	}
+
+	/**
 	 * 水平翻转图像
 	 *
 	 * @return this
