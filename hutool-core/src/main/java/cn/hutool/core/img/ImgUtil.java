@@ -1073,7 +1073,7 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 旋转图片为指定角度<br>
+	 * 旋转图片为指定角度并带上背景颜色<br>
 	 * 此方法不会关闭输出流
 	 *
 	 * @param imageFile       被旋转图像文件
@@ -1088,7 +1088,7 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 旋转图片为指定角度<br>
+	 * 旋转图片为指定角度并带上背景颜色<br>
 	 * 此方法不会关闭输出流
 	 *
 	 * @param image           目标图像
@@ -1103,7 +1103,7 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 旋转图片为指定角度<br>
+	 * 旋转图片为指定角度并带上背景颜色<br>
 	 * 此方法不会关闭输出流
 	 *
 	 * @param image           目标图像
