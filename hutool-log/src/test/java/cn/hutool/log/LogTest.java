@@ -1,11 +1,8 @@
-package cn.hutool.log.test;
+package cn.hutool.log;
 
+import cn.hutool.log.level.Level;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.level.Level;
 
 /**
  * 日志门面单元测试

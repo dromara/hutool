@@ -1,7 +1,5 @@
-package cn.hutool.log.test;
+package cn.hutool.log;
 
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.StaticLog;
 import cn.hutool.log.dialect.console.ConsoleColorLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import org.junit.Test;

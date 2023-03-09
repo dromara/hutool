@@ -1,7 +1,5 @@
-package cn.hutool.log.test;
+package cn.hutool.log;
 
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.log.dialect.jboss.JbossLogFactory;

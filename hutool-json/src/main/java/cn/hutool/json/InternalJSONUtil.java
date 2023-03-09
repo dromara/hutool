@@ -17,7 +17,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 import cn.hutool.json.writer.GlobalValueWriterMapping;
 import cn.hutool.json.writer.JSONValueWriter;
 
@@ -63,7 +63,7 @@ public final class InternalJSONUtil {
 		}
 
 		if (object instanceof JSON //
-				|| object instanceof JSONString //
+				|| object instanceof JSONStringer //
 				|| object instanceof CharSequence //
 				|| object instanceof Number //
 				|| ObjUtil.isBasicType(object) //
@@ -117,8 +117,8 @@ public final class InternalJSONUtil {
 	/**
 	 * 值转为String，用于JSON中。规则为：
 	 * <ul>
-	 *     <li>对象如果实现了{@link JSONString}接口，调用{@link JSONString#toJSONString()}方法</li>
-	 *     <li>对象如果实现了{@link JSONString}接口，调用{@link JSONString#toJSONString()}方法</li>
+	 *     <li>对象如果实现了{@link JSONStringer}接口，调用{@link JSONStringer#toJSONString()}方法</li>
+	 *     <li>对象如果实现了{@link JSONStringer}接口，调用{@link JSONStringer#toJSONString()}方法</li>
 	 *     <li>对象如果是数组或Collection，包装为{@link JSONArray}</li>
 	 *     <li>对象如果是Map，包装为{@link JSONObject}</li>
 	 *     <li>对象如果是数字，使用{@link NumberUtil#toStr(Number)}转换为字符串</li>
@@ -133,9 +133,9 @@ public final class InternalJSONUtil {
 		if (value == null) {
 			return StrUtil.NULL;
 		}
-		if (value instanceof JSONString) {
+		if (value instanceof JSONStringer) {
 			try {
-				return ((JSONString) value).toJSONString();
+				return ((JSONStringer) value).toJSONString();
 			} catch (final Exception e) {
 				throw new JSONException(e);
 			}

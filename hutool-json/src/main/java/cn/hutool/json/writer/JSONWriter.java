@@ -8,7 +8,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.InternalJSONUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -321,8 +321,8 @@ public class JSONWriter extends Writer {
 			DateValueWriter.INSTANCE.write(this, value);
 		} else if (value instanceof Boolean) {
 			BooleanValueWriter.INSTANCE.write(this, (Boolean) value);
-		} else if (value instanceof JSONString) {
-			JSONStringValueWriter.INSTANCE.write(this, (JSONString) value);
+		} else if (value instanceof JSONStringer) {
+			JSONStringValueWriter.INSTANCE.write(this, (JSONStringer) value);
 		} else {
 			writeQuoteStrValue(value.toString());
 		}

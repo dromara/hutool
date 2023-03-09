@@ -10,7 +10,7 @@ import cn.hutool.core.lang.func.Wrapper;
  *
  */
 @FunctionalInterface
-public interface JSONString extends Wrapper<Object> {
+public interface JSONStringer extends Wrapper<Object> {
 
 	/**
 	 * 自定义转JSON字符串的方法

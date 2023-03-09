@@ -20,7 +20,7 @@ import java.util.Date;
  * @author looly
  * @since 6.0.0
  */
-public class DateJSONString implements JSONString {
+public class DateJSONString implements JSONStringer {
 
 	final Object dateObj;
 	final JSONConfig jsonConfig;

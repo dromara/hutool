@@ -4,7 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
@@ -179,7 +179,7 @@ public class JSONUtilTest {
 	@Test
 	public void customValueTest() {
 		final JSONObject jsonObject = JSONUtil.ofObj()
-		.set("test2", (JSONString) () -> NumberUtil.format("#.0", 12.00D));
+		.set("test2", (JSONStringer) () -> NumberUtil.format("#.0", 12.00D));
 
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}

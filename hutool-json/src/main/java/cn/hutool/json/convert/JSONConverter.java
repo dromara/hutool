@@ -12,20 +12,15 @@ import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.TemporalAccessorConverter;
 import cn.hutool.core.map.MapWrapper;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.json.InternalJSONUtil;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONException;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import cn.hutool.json.*;
 import cn.hutool.json.serialize.JSONDeserializer;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
@@ -81,9 +76,9 @@ public class JSONConverter implements Converter {
 		if (null == value) {
 			return null;
 		}
-		if (value instanceof JSONString) {
+		if (value instanceof JSONStringer) {
 			// 被JSONString包装的对象，获取其原始类型
-			value = ((JSONString) value).getRaw();
+			value = ((JSONStringer) value).getRaw();
 		}
 
 		// JSON转对象
@@ -131,7 +126,20 @@ public class JSONConverter implements Converter {
 			json = (JSON) obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = JSONUtil.isTypeJSONArray(jsonStr) ? new JSONArray(jsonStr, config) : new JSONObject(jsonStr, config);
+			switch (jsonStr.charAt(0)){
+				case '"':
+				case '\'':
+					return new JSONString(jsonStr.toCharArray(), config);
+				case '[':
+					return new JSONArray(jsonStr, config);
+				case '{':
+					return new JSONObject(jsonStr, config);
+				default:
+					if(NumberUtil.isNumber(jsonStr)){
+						return new JSONNumber(NumberUtil.toBigDecimal(jsonStr), config);
+					}
+					throw new JSONException("Unsupported String to JSON: {}", jsonStr);
+			}
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
 			json = new JSONObject(obj, config);
