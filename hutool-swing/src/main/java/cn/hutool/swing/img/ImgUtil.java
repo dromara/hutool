@@ -10,7 +10,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ObjUtil;
 
 import javax.imageio.*;
 import javax.imageio.stream.ImageInputStream;
@@ -502,6 +501,7 @@ public class ImgUtil {
 		Assert.notNull(destImageFile);
 		Assert.isFalse(srcImageFile.equals(destImageFile), "Src file is equals to dest file!");
 
+		// 通过扩展名检查图片类型，相同类型直接复制
 		final String srcExtName = FileNameUtil.extName(srcImageFile);
 		final String destExtName = FileNameUtil.extName(destImageFile);
 		if (StrUtil.equalsIgnoreCase(srcExtName, destExtName)) {
@@ -1430,15 +1430,8 @@ public class ImgUtil {
 
 		// 创建图片
 		final BufferedImage image = new BufferedImage(width, height, imageType);
-		final Graphics g = image.getGraphics();
-		if (null != backgroundColor) {
-			// 先用背景色填充整张图片,也就是背景
-			g.setColor(backgroundColor);
-			g.fillRect(0, 0, width, height);
-		}
-		g.setColor(ObjUtil.defaultIfNull(fontColor, Color.BLACK));
-		g.setFont(font);// 设置画笔字体
-		g.drawString(str, 0, font.getSize());// 画出字符串
+		final Graphics g = GraphicsUtil.createGraphics(image, backgroundColor);
+		GraphicsUtil.drawString(g, str, font, fontColor, new Point(0, font.getSize()));
 		g.dispose();
 
 		return image;
@@ -1536,18 +1529,30 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 写出图像为目标文件扩展名对应的格式
+	 *
+	 * @param image      {@link Image}
+	 * @param targetFile 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.0
+	 */
+	public static void write(final Image image, final File targetFile) throws IORuntimeException {
+		final String imageType = FileNameUtil.extName(targetFile);
+		ImgWriter.of(image, imageType).write(targetFile);
+	}
+
+	/**
 	 * 写出图像为指定格式：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
 	 * @param image           {@link Image}
 	 * @param imageType       图片类型（图片扩展名）
 	 * @param destImageStream 写出到的目标流
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static boolean write(final Image image, final String imageType, final ImageOutputStream destImageStream) throws IORuntimeException {
-		return write(image, imageType, destImageStream, 1);
+	public static void write(final Image image, final String imageType, final ImageOutputStream destImageStream) throws IORuntimeException {
+		write(image, imageType, destImageStream, 1);
 	}
 
 	/**
@@ -1557,110 +1562,57 @@ public class ImgUtil {
 	 * @param imageType         图片类型（图片扩展名）
 	 * @param targetImageStream 写出到的目标流
 	 * @param quality           质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 4.3.2
 	 */
-	public static boolean write(final Image image, final String imageType, final ImageOutputStream targetImageStream,
-								final float quality) throws IORuntimeException {
-		return write(image, imageType, targetImageStream, quality, null);
+	public static void write(final Image image, final String imageType, final ImageOutputStream targetImageStream,
+							 final float quality) throws IORuntimeException {
+		write(image, imageType, targetImageStream, quality, null);
 	}
 
 	/**
 	 * 写出图像为指定格式
 	 *
 	 * @param image           {@link Image}
-	 * @param imageType       图片类型（图片扩展名）
+	 * @param imageType       图片类型（图片扩展名），{@code null}表示使用RGB模式（JPG）
 	 * @param destImageStream 写出到的目标流
 	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
 	 * @param backgroundColor 背景色{@link Color}
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 4.3.2
 	 */
-	public static boolean write(final Image image, String imageType, final ImageOutputStream destImageStream,
-								final float quality, final Color backgroundColor) throws IORuntimeException {
-		if (StrUtil.isBlank(imageType)) {
-			imageType = IMAGE_TYPE_JPG;
-		}
-
+	public static void write(final Image image, final String imageType, final ImageOutputStream destImageStream,
+							 final float quality, final Color backgroundColor) throws IORuntimeException {
 		final BufferedImage bufferedImage = toBufferedImage(image, imageType, backgroundColor);
-		final ImageWriter writer = getWriter(bufferedImage, imageType);
-		return write(bufferedImage, writer, destImageStream, quality);
-	}
-
-	/**
-	 * 写出图像为目标文件扩展名对应的格式
-	 *
-	 * @param image      {@link Image}
-	 * @param targetFile 目标文件
-	 * @throws IORuntimeException IO异常
-	 * @since 3.1.0
-	 */
-	public static void write(final Image image, final File targetFile) throws IORuntimeException {
-		FileUtil.touch(targetFile);
-		ImageOutputStream out = null;
-		try {
-			out = getImageOutputStream(targetFile);
-			write(image, FileNameUtil.extName(targetFile), out);
-		} finally {
-			IoUtil.close(out);
-		}
+		write(bufferedImage, destImageStream, quality);
 	}
 
 	/**
 	 * 通过{@link ImageWriter}写出图片到输出流
 	 *
 	 * @param image   图片
-	 * @param writer  {@link ImageWriter}
 	 * @param output  输出的Image流{@link ImageOutputStream}
 	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
-	 * @return 是否成功写出
 	 * @since 4.3.2
 	 */
-	public static boolean write(final Image image, final ImageWriter writer, final ImageOutputStream output, final float quality) {
-		if (writer == null) {
-			return false;
-		}
-
-		writer.setOutput(output);
-		final RenderedImage renderedImage = toRenderedImage(image);
-		// 设置质量
-		ImageWriteParam imgWriteParams = null;
-		if (quality > 0 && quality < 1) {
-			imgWriteParams = writer.getDefaultWriteParam();
-			if (imgWriteParams.canWriteCompressed()) {
-				imgWriteParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-				imgWriteParams.setCompressionQuality(quality);
-				final ColorModel colorModel = renderedImage.getColorModel();// ColorModel.getRGBdefault();
-				imgWriteParams.setDestinationType(new ImageTypeSpecifier(colorModel, colorModel.createCompatibleSampleModel(16, 16)));
-			}
-		}
-
-		try {
-			if (null != imgWriteParams) {
-				writer.write(null, new IIOImage(renderedImage, null, null), imgWriteParams);
-			} else {
-				writer.write(renderedImage);
-			}
-			output.flush();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			writer.dispose();
-		}
-		return true;
+	public static void write(final Image image, final ImageOutputStream output, final float quality) {
+		ImgWriter.of(image, null)
+				.setQuality(quality)
+				.write(output);
 	}
 
 	/**
 	 * 根据给定的Image对象和格式获取对应的{@link ImageWriter}，如果未找到合适的Writer，返回null
 	 *
 	 * @param img        {@link Image}
-	 * @param formatName 图片格式，例如"jpg"、"png"
+	 * @param formatName 图片格式，例如"jpg"、"png"，{@code null}则使用默认值"jpg"
 	 * @return {@link ImageWriter}
 	 * @since 4.3.2
 	 */
-	public static ImageWriter getWriter(final Image img, final String formatName) {
+	public static ImageWriter getWriter(final Image img, String formatName) {
+		if (null == formatName) {
+			formatName = IMAGE_TYPE_JPG;
+		}
 		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toBufferedImage(img, formatName));
 		final Iterator<ImageWriter> iter = ImageIO.getImageWriters(type, formatName);
 		return iter.hasNext() ? iter.next() : null;
@@ -1669,11 +1621,15 @@ public class ImgUtil {
 	/**
 	 * 根据给定的图片格式或者扩展名获取{@link ImageWriter}，如果未找到合适的Writer，返回null
 	 *
-	 * @param formatName 图片格式或扩展名，例如"jpg"、"png"
+	 * @param formatName 图片格式或扩展名，例如"jpg"、"png"，{@code null}则使用默认值"jpg"
 	 * @return {@link ImageWriter}
 	 * @since 4.3.2
 	 */
-	public static ImageWriter getWriter(final String formatName) {
+	public static ImageWriter getWriter(String formatName) {
+		if (null == formatName) {
+			formatName = IMAGE_TYPE_JPG;
+		}
+
 		ImageWriter writer = null;
 		Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName(formatName);
 		if (iter.hasNext()) {

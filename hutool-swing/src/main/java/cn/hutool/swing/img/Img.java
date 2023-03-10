@@ -706,11 +706,10 @@ public class Img implements Serializable {
 	 * 结果类型设定见{@link #setTargetImageType(String)}
 	 *
 	 * @param out 写出到的目标流
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(final OutputStream out) throws IORuntimeException {
-		return write(ImgUtil.getImageOutputStream(out));
+	public void write(final OutputStream out) throws IORuntimeException {
+		write(ImgUtil.getImageOutputStream(out));
 	}
 
 	/**
@@ -718,27 +717,25 @@ public class Img implements Serializable {
 	 * 结果类型设定见{@link #setTargetImageType(String)}
 	 *
 	 * @param targetImageStream 写出到的目标流
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(final ImageOutputStream targetImageStream) throws IORuntimeException {
+	public void write(final ImageOutputStream targetImageStream) throws IORuntimeException {
 		Assert.notBlank(this.targetImageType, "Target image type is blank !");
 		Assert.notNull(targetImageStream, "Target output stream is null !");
 
 		final Image targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
 		Assert.notNull(targetImage, "Target image is null !");
 
-		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality, this.backgroundColor);
+		ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality, this.backgroundColor);
 	}
 
 	/**
 	 * 写出图像为目标文件扩展名对应的格式
 	 *
 	 * @param targetFile 目标文件
-	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 */
-	public boolean write(final File targetFile) throws IORuntimeException {
+	public void write(final File targetFile) throws IORuntimeException {
 		final String formatName = FileNameUtil.extName(targetFile);
 		if (StrUtil.isNotBlank(formatName)) {
 			this.targetImageType = formatName;
@@ -752,7 +749,7 @@ public class Img implements Serializable {
 		ImageOutputStream out = null;
 		try {
 			out = ImgUtil.getImageOutputStream(targetFile);
-			return write(out);
+			write(out);
 		} finally {
 			IoUtil.close(out);
 		}
