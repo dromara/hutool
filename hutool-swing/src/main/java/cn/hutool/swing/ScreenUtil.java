@@ -13,6 +13,9 @@ import java.io.File;
  * @since 4.1.14
  */
 public class ScreenUtil {
+	/**
+	 * Dimension
+	 */
 	public static Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
 	/**
