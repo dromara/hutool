@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -27,7 +28,6 @@ import java.util.List;
 public class JSONUtil {
 
 	// -------------------------------------------------------------------- Pause start
-
 	/**
 	 * 创建JSONObject
 	 *
@@ -139,8 +139,8 @@ public class JSONUtil {
 	 * @param obj 对象
 	 * @return JSON
 	 */
-	public static JSON parse(final Object obj) {
-		return JSONConverter.INSTANCE.toJSON(obj);
+	public static Object parse(final Object obj) {
+		return parse(obj, null);
 	}
 
 	/**
@@ -154,10 +154,12 @@ public class JSONUtil {
 	 *
 	 * @param obj    对象
 	 * @param config JSON配置，{@code null}使用默认配置
-	 * @return JSON
-	 * @since 5.3.1
+	 * @return JSON（JSONObject or JSONArray）
 	 */
-	public static JSON parse(final Object obj, final JSONConfig config) {
+	public static Object parse(final Object obj, final JSONConfig config) {
+		if(null == config){
+			return JSONConverter.INSTANCE.toJSON(obj);
+		}
 		return JSONConverter.of(config).toJSON(obj);
 	}
 
@@ -173,6 +175,7 @@ public class JSONUtil {
 	// -------------------------------------------------------------------- Parse end
 
 	// -------------------------------------------------------------------- Read start
+
 	/**
 	 * 读取JSON
 	 *
@@ -182,11 +185,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSON readJSON(final File file, final Charset charset) throws IORuntimeException {
-		try (final Reader reader = FileUtil.getReader(file, charset)) {
-			return parse(reader);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return (JSON) FileUtil.read(file, charset, JSONUtil::parse);
 	}
 
 	/**
@@ -198,11 +197,7 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONObject readJSONObject(final File file, final Charset charset) throws IORuntimeException {
-		try (final Reader reader = FileUtil.getReader(file, charset)) {
-			return parseObj(reader);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return FileUtil.read(file, charset, JSONUtil::parseObj);
 	}
 
 	/**
@@ -214,67 +209,23 @@ public class JSONUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONArray readJSONArray(final File file, final Charset charset) throws IORuntimeException {
-		try (final Reader reader = FileUtil.getReader(file, charset)) {
-			return parseArray(reader);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return FileUtil.read(file, charset, JSONUtil::parseArray);
 	}
 	// -------------------------------------------------------------------- Read end
 
 	// -------------------------------------------------------------------- toString start
-
 	/**
-	 * 转为JSON字符串
+	 * 转换为格式化后的JSON字符串
 	 *
-	 * @param json         JSON
-	 * @param indentFactor 每一级别的缩进
+	 * @param obj Bean对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(final JSON json, final int indentFactor) {
-		if (null == json) {
-			return null;
+	public static String toJsonPrettyStr(Object obj) {
+		obj = parse(obj);
+		if (obj instanceof JSON) {
+			return ((JSON) obj).toStringPretty();
 		}
-		return json.toJSONString(indentFactor);
-	}
-
-	/**
-	 * 转为JSON字符串
-	 *
-	 * @param json JSON
-	 * @return JSON字符串
-	 */
-	public static String toJsonStr(final JSON json) {
-		if (null == json) {
-			return null;
-		}
-		return json.toJSONString(0);
-	}
-
-	/**
-	 * 转为JSON字符串，并写出到write
-	 *
-	 * @param json   JSON
-	 * @param writer Writer
-	 * @since 5.3.3
-	 */
-	public static void toJsonStr(final JSON json, final Writer writer) {
-		if (null != json) {
-			json.write(writer);
-		}
-	}
-
-	/**
-	 * 转为JSON字符串
-	 *
-	 * @param json JSON
-	 * @return JSON字符串
-	 */
-	public static String toJsonPrettyStr(final JSON json) {
-		if (null == json) {
-			return null;
-		}
-		return json.toStringPretty();
+		return StrUtil.toStringOrNull(obj);
 	}
 
 	/**
@@ -299,7 +250,7 @@ public class JSONUtil {
 	public static String toJsonStr(final Object obj, final JSONConfig jsonConfig) {
 		// 自定义规则，优先级高于全局规则
 		final JSONValueWriter valueWriter = InternalJSONUtil.getValueWriter(obj);
-		if(null != valueWriter){
+		if (null != valueWriter) {
 			final StringWriter stringWriter = new StringWriter();
 			final JSONWriter jsonWriter = JSONWriter.of(stringWriter, 0, 0, null);
 			// 用户对象自定义实现了JSONValueWriter接口，理解为需要自定义输出
@@ -307,17 +258,10 @@ public class JSONUtil {
 			return stringWriter.toString();
 		}
 
-		if (null == obj) {
+		if(null == obj){
 			return null;
 		}
-		if (obj instanceof CharSequence) {
-			return StrUtil.str((CharSequence) obj);
-		}
-
-		if (obj instanceof Number) {
-			return obj.toString();
-		}
-		return toJsonStr(parse(obj, jsonConfig));
+		return parse(obj, jsonConfig).toString();
 	}
 
 	/**
@@ -327,20 +271,20 @@ public class JSONUtil {
 	 * @param writer Writer
 	 * @since 5.3.3
 	 */
-	public static void toJsonStr(final Object obj, final Writer writer) {
+	public static void toJsonStr(Object obj, final Writer writer) {
 		if (null != obj) {
-			toJsonStr(parse(obj), writer);
-		}
-	}
+			obj = parse(obj);
+			if (obj instanceof JSON) {
+				((JSON) obj).write(writer);
+			}
 
-	/**
-	 * 转换为格式化后的JSON字符串
-	 *
-	 * @param obj Bean对象
-	 * @return JSON字符串
-	 */
-	public static String toJsonPrettyStr(final Object obj) {
-		return toJsonPrettyStr(parse(obj));
+			// 普通值
+			try {
+				writer.write(obj.toString());
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
 	}
 
 	/**
@@ -393,7 +337,7 @@ public class JSONUtil {
 	 * @since 5.8.0
 	 */
 	public static <T> T toBean(final String jsonString, final JSONConfig config, final Class<T> beanClass) {
-		return toBean(parse(jsonString, config), beanClass);
+		return toBean(jsonString, config, (Type) beanClass);
 	}
 
 	/**
@@ -405,21 +349,10 @@ public class JSONUtil {
 	 * @param config     JSON配置
 	 * @param type       Bean类型
 	 * @return 实体类对象
+	 * @throws JSONException 提供的JSON字符串不支持转Bean或字符串错误
 	 */
-	public static <T> T toBean(final String jsonString, final JSONConfig config, final Type type) {
+	public static <T> T toBean(final String jsonString, final JSONConfig config, final Type type) throws JSONException {
 		return toBean(parse(jsonString, config), type);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 *
-	 * @param <T>       Bean类型
-	 * @param json      JSONObject
-	 * @param beanClass 实体类对象
-	 * @return 实体类对象
-	 */
-	public static <T> T toBean(final JSONObject json, final Class<T> beanClass) {
-		return null == json ? null : json.toBean(beanClass);
 	}
 
 	/**
@@ -431,24 +364,27 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.6.2
 	 */
-	public static <T> T toBean(final JSON json, final TypeReference<T> typeReference) {
+	public static <T> T toBean(final Object json, final TypeReference<T> typeReference) {
 		return toBean(json, typeReference.getType());
 	}
 
 	/**
 	 * 转为实体类对象
 	 *
-	 * @param <T>      Bean类型
-	 * @param json     JSONObject
-	 * @param beanType 实体类对象类型
+	 * @param <T>  Bean类型
+	 * @param json JSONObject
+	 * @param type 实体类对象类型
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(final JSON json, final Type beanType) {
+	public static <T> T toBean(final Object json, final Type type) {
 		if (null == json) {
 			return null;
 		}
-		return json.toBean(beanType);
+		if (json instanceof JSON) {
+			return ((JSON) json).toBean(type);
+		}
+		throw new JSONException("Unsupported json string to bean : {}", json);
 	}
 	// -------------------------------------------------------------------- toBean end
 
@@ -562,13 +498,13 @@ public class JSONUtil {
 	 * @param json JSONObject或JSONArray
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final JSON json){
-		if(null == json){
+	public static boolean isEmpty(final JSON json) {
+		if (null == json) {
 			return true;
 		}
-		if(json instanceof JSONObject){
+		if (json instanceof JSONObject) {
 			return ((JSONObject) json).isEmpty();
-		} else if(json instanceof JSONArray){
+		} else if (json instanceof JSONArray) {
 			return ((JSONArray) json).isEmpty();
 		}
 		return false;

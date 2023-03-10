@@ -111,32 +111,34 @@ public class JSONConverter implements Converter {
 	/**
 	 * 实现Object对象转换为{@link JSON}，支持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象</li>
+	 *     <li>String: 转换为相应的对象，</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
 	 *     <li>Bean对象：转为JSONObject</li>
+	 *     <li>Number：返回原对象</li>
 	 * </ul>
 	 *
 	 * @param obj 被转换的对象
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	public JSON toJSON(final Object obj) throws JSONException {
+	public Object toJSON(final Object obj) throws JSONException {
 		final JSON json;
-		if (obj instanceof JSON) {
-			json = (JSON) obj;
+		if (obj instanceof JSON || obj instanceof Number) {
+			return obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
 			switch (jsonStr.charAt(0)){
 				case '"':
 				case '\'':
-					return new JSONString(jsonStr.toCharArray(), config);
+					// JSON字符串值
+					return jsonStr;
 				case '[':
 					return new JSONArray(jsonStr, config);
 				case '{':
 					return new JSONObject(jsonStr, config);
 				default:
 					if(NumberUtil.isNumber(jsonStr)){
-						return new JSONNumber(NumberUtil.toBigDecimal(jsonStr), config);
+						return NumberUtil.toBigDecimal(jsonStr);
 					}
 					throw new JSONException("Unsupported String to JSON: {}", jsonStr);
 			}

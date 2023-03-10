@@ -1,9 +1,11 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.SerConsumer;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -17,6 +19,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 文件读取器
@@ -207,14 +210,20 @@ public class FileReader extends FileWrapper {
 	 * @return 从文件中read出的数据
 	 * @throws IORuntimeException IO异常
 	 */
-	public <T> T read(final ReaderHandler<T> readerHandler) throws IORuntimeException {
+	public <T> T read(final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
 		BufferedReader reader = null;
 		T result;
 		try {
 			reader = FileUtil.getReader(this.file, charset);
-			result = readerHandler.handle(reader);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
+			result = readerHandler.applying(reader);
+		} catch (final Exception e) {
+			if(e instanceof IOException){
+				throw new IORuntimeException(e);
+			} else if(e instanceof RuntimeException){
+				throw (RuntimeException)e;
+			} else{
+				throw new UtilException(e);
+			}
 		} finally {
 			IoUtil.close(reader);
 		}
@@ -276,19 +285,6 @@ public class FileReader extends FileWrapper {
 			}
 		}
 	}
-
-	// -------------------------------------------------------------------------- Interface start
-	/**
-	 * Reader处理接口
-	 *
-	 * @author Luxiaolei
-	 *
-	 * @param <T> Reader处理返回结果类型
-	 */
-	public interface ReaderHandler<T> {
-		T handle(BufferedReader reader) throws IOException;
-	}
-	// -------------------------------------------------------------------------- Interface end
 
 	/**
 	 * 检查文件

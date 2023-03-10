@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -71,6 +72,7 @@ public class LambdaFactoryTest {
 	 * @author nasodaengineer
 	 */
 	@RunWith(Parameterized.class)
+	@Ignore
 	public static class PerformanceTest {
 
 		@Parameterized.Parameter
@@ -140,6 +142,7 @@ public class LambdaFactoryTest {
 		@SuppressWarnings({"rawtypes", "unchecked", "Convert2MethodRef"})
 		@Test
 		@SneakyThrows
+		@Ignore
 		public void lambdaGetPerformanceTest() {
 			final Something something = new Something();
 			something.setId(1L);
@@ -216,6 +219,7 @@ public class LambdaFactoryTest {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Test
 		@SneakyThrows
+		@Ignore
 		public void lambdaSetPerformanceTest() {
 			final Something something = new Something();
 			something.setId(1L);

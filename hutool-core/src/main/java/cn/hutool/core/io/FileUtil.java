@@ -4,12 +4,12 @@ import cn.hutool.core.compress.ZipUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.file.*;
 import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.core.io.file.FileReader.ReaderHandler;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.stream.BOMInputStream;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerConsumer;
+import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.regex.ReUtil;
@@ -1976,10 +1976,9 @@ public class FileUtil extends PathUtil {
 	 * @param path          文件的绝对路径
 	 * @return 从文件中load出的数据
 	 * @throws IORuntimeException IO异常
-	 * @since 3.1.1
 	 */
-	public static <T> T loadUtf8(final String path, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return load(path, CharsetUtil.UTF_8, readerHandler);
+	public static <T> T readUtf8(final String path, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
+		return read(path, CharsetUtil.UTF_8, readerHandler);
 	}
 
 	/**
@@ -1993,23 +1992,8 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
 	 */
-	public static <T> T load(final String path, final String charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return FileReader.of(file(path), CharsetUtil.charset(charset)).read(readerHandler);
-	}
-
-	/**
-	 * 按照给定的readerHandler读取文件中的数据
-	 *
-	 * @param <T>           集合类型
-	 * @param readerHandler Reader处理类
-	 * @param path          文件的绝对路径
-	 * @param charset       字符集
-	 * @return 从文件中load出的数据
-	 * @throws IORuntimeException IO异常
-	 * @since 3.1.1
-	 */
-	public static <T> T load(final String path, final Charset charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return FileReader.of(file(path), charset).read(readerHandler);
+	public static <T> T read(final String path, final Charset charset, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
+		return read(file(path), charset, readerHandler);
 	}
 
 	/**
@@ -2022,8 +2006,8 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
 	 */
-	public static <T> T loadUtf8(final File file, final ReaderHandler<T> readerHandler) throws IORuntimeException {
-		return load(file, CharsetUtil.UTF_8, readerHandler);
+	public static <T> T readUtf8(final File file, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
+		return read(file, CharsetUtil.UTF_8, readerHandler);
 	}
 
 	/**
@@ -2037,7 +2021,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
 	 */
-	public static <T> T load(final File file, final Charset charset, final ReaderHandler<T> readerHandler) throws IORuntimeException {
+	public static <T> T read(final File file, final Charset charset, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
 		return FileReader.of(file, charset).read(readerHandler);
 	}
 

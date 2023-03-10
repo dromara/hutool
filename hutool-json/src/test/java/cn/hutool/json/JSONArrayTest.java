@@ -42,8 +42,7 @@ public class JSONArrayTest {
 	@Test
 	public void addNullTest() {
 		final List<String> aaa = ListUtil.view("aaa", null);
-		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
-				JSONConfig.of().setIgnoreNullValue(false)));
+		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa, JSONConfig.of().setIgnoreNullValue(false)));
 		Assert.assertEquals("[\"aaa\",null]", jsonStr);
 	}
 

@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.json.serialize.JSONStringer;
@@ -235,9 +236,11 @@ public class JSONUtilTest {
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
 
-	@Test
+	@Test(expected = JSONException.class)
 	public void toJsonStrOfStringTest(){
 		final String a = "a";
+
+		// 普通字符串不能解析为JSON字符串，必须由双引号或者单引号包裹
 		final String s = JSONUtil.toJsonStr(a);
 		Assert.assertEquals(a, s);
 	}
