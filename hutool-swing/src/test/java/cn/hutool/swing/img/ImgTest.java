@@ -96,4 +96,13 @@ public class ImgTest {
 		final Image img = ImgUtil.getImage(URLUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
 	}
+
+	@Test
+	@Ignore
+	public void rotateWithBackgroundTest() {
+		Img.from(FileUtil.file("d:/test/aaa.jpg"))
+				.setBackgroundColor(Color.RED)
+				.rotate(45)
+				.write(FileUtil.file("d:/test/aaa45.jpg"));
+	}
 }

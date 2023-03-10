@@ -1,29 +1,18 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -61,6 +50,10 @@ public class Img implements Serializable {
 	 * 图片输出质量，用于压缩
 	 */
 	private float quality = -1;
+	/**
+	 * 图片背景色
+	 */
+	private Color backgroundColor;
 
 	/**
 	 * 从Path读取图片并开始处理
@@ -214,6 +207,17 @@ public class Img implements Serializable {
 		} else {
 			this.quality = 1;
 		}
+		return this;
+	}
+
+	/**
+	 * 设置图片的背景色
+	 *
+	 * @param backgroundColor{@link Color} 背景色
+	 * @return this
+	 */
+	public Img setBackgroundColor(final Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
 		return this;
 	}
 
@@ -598,7 +602,7 @@ public class Img implements Serializable {
 	 * @since 3.2.2
 	 */
 	public Img rotate(final int degree) {
-		if(0 == degree){
+		if (0 == degree) {
 			// 不旋转
 			return this;
 		}
@@ -606,13 +610,28 @@ public class Img implements Serializable {
 		final int width = image.getWidth(null);
 		final int height = image.getHeight(null);
 		final Rectangle rectangle = calcRotatedSize(width, height, degree);
+
+		// 目标图像
 		final BufferedImage targetImg = new BufferedImage(rectangle.width, rectangle.height, getTypeInt());
 		final Graphics2D graphics2d = targetImg.createGraphics();
-		// 抗锯齿
-		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+		// 填充背景色
+		if(null != this.backgroundColor){
+			graphics2d.setColor(this.backgroundColor);
+			graphics2d.fill(rectangle);
+		}
+
+		graphics2d.setRenderingHints(
+				RenderingHintsBuilder.of()
+						// 抗锯齿
+						.setAntialiasing(RenderingHintsBuilder.Antialias.ON)
+						// 双线性插值
+						.setInterpolation(RenderingHintsBuilder.Interpolation.BILINEAR).build());
+
 		// 从中心旋转
 		graphics2d.translate((rectangle.width - width) / 2D, (rectangle.height - height) / 2D);
 		graphics2d.rotate(Math.toRadians(degree), width / 2D, height / 2D);
+
 		graphics2d.drawImage(image, 0, 0, null);
 		graphics2d.dispose();
 		this.targetImage = targetImg;
@@ -714,7 +733,7 @@ public class Img implements Serializable {
 		final Image targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
 		Assert.notNull(targetImage, "Target image is null !");
 
-		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality);
+		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality, this.backgroundColor);
 	}
 
 	/**

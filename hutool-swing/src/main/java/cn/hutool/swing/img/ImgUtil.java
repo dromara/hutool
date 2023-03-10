@@ -12,45 +12,17 @@ import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
+import javax.imageio.*;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ColorConvertOp;
-import java.awt.image.ColorModel;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.awt.image.*;
+import java.io.*;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -63,14 +35,34 @@ import java.util.Iterator;
  */
 public class ImgUtil {
 
+	// region ----- [const] image type
+	/**
+	 * GIF
+	 */
 	public static final String IMAGE_TYPE_GIF = "gif";// 图形交换格式
+	/**
+	 * JPG
+	 */
 	public static final String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
+	/**
+	 * JPEG
+	 */
 	public static final String IMAGE_TYPE_JPEG = "jpeg";// 联合照片专家组
+	/**
+	 * BMP
+	 */
 	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
+	/**
+	 * PNG
+	 */
 	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
+	/**
+	 * PSD
+	 */
 	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- scale
+	// region ----- scale
 
 	/**
 	 * 缩放图像（按比例缩放），目标文件的扩展名决定目标文件类型
@@ -253,8 +245,9 @@ public class ImgUtil {
 	public static Image scale(final Image srcImage, final int width, final int height, final Color fixedColor) {
 		return Img.from(srcImage).scale(width, height, fixedColor).getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- cut
+	// region ----- cut and slice
 
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
@@ -494,8 +487,9 @@ public class ImgUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- convert
+	// region ----- convert
 
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
@@ -554,8 +548,9 @@ public class ImgUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- grey
+	// region ----- grey
 
 	/**
 	 * 彩色转为黑白
@@ -637,8 +632,9 @@ public class ImgUtil {
 	public static Image gray(final Image srcImage) {
 		return Img.from(srcImage).gray().getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- binary
+	// region ----- binary
 
 	/**
 	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
@@ -724,8 +720,9 @@ public class ImgUtil {
 	public static Image binary(final Image srcImage) {
 		return Img.from(srcImage).binary().getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- press
+	// region ----- press
 
 	/**
 	 * 给图片添加文字水印
@@ -975,8 +972,9 @@ public class ImgUtil {
 	public static Image pressImage(final Image srcImage, final Image pressImg, final Rectangle rectangle, final float alpha) {
 		return Img.from(srcImage).pressImage(pressImg, rectangle, alpha).getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- rotate
+	// region ----- rotate
 
 	/**
 	 * 旋转图片为指定角度<br>
@@ -1046,8 +1044,9 @@ public class ImgUtil {
 	public static Image rotate(final Image image, final int degree) {
 		return Img.from(image).rotate(degree).getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- flip
+	// region ----- flip
 
 	/**
 	 * 水平翻转图像
@@ -1107,8 +1106,9 @@ public class ImgUtil {
 	public static Image flip(final Image image) {
 		return Img.from(image).flip().getImg();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- compress
+	// region ----- compress
 
 	/**
 	 * 压缩图像，输出图像只支持jpg文件
@@ -1122,8 +1122,10 @@ public class ImgUtil {
 	public static void compress(final File imageFile, final File outFile, final float quality) throws IORuntimeException {
 		Img.from(imageFile).setQuality(quality).write(outFile);
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------------------------------------------------------- other
+
+	// region ------ toImage
 
 	/**
 	 * {@link Image} 转 {@link RenderedImage}<br>
@@ -1167,10 +1169,25 @@ public class ImgUtil {
 	 * @since 4.3.2
 	 */
 	public static BufferedImage toBufferedImage(final Image image, final String imageType) {
+		return toBufferedImage(image, imageType, null);
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制<br>
+	 * 默认的，png图片使用 {@link BufferedImage#TYPE_INT_ARGB}模式，其它使用 {@link BufferedImage#TYPE_INT_RGB} 模式
+	 *
+	 * @param image           {@link Image}
+	 * @param imageType       目标图片类型，例如jpg或png等
+	 * @param backgroundColor 背景色{@link Color}，{@code null} 表示默认背景色（黑色或者透明）
+	 * @return {@link BufferedImage}
+	 * @since 4.3.2
+	 */
+	public static BufferedImage toBufferedImage(final Image image, final String imageType, final Color backgroundColor) {
 		final int type = IMAGE_TYPE_PNG.equalsIgnoreCase(imageType)
 				? BufferedImage.TYPE_INT_ARGB
 				: BufferedImage.TYPE_INT_RGB;
-		return toBufferedImage(image, type);
+		return toBufferedImage(image, type, backgroundColor);
 	}
 
 	/**
@@ -1183,18 +1200,33 @@ public class ImgUtil {
 	 * @since 5.4.7
 	 */
 	public static BufferedImage toBufferedImage(final Image image, final int imageType) {
+		return toBufferedImage(image, imageType, null);
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
+	 *
+	 * @param image           {@link Image}
+	 * @param imageType       目标图片类型，{@link BufferedImage}中的常量，例如黑白等
+	 * @param backgroundColor 背景色{@link Color}，{@code null} 表示默认背景色（黑色或者透明）
+	 * @return {@link BufferedImage}
+	 * @since 5.4.7
+	 */
+	public static BufferedImage toBufferedImage(final Image image, final int imageType, final Color backgroundColor) {
 		BufferedImage bufferedImage;
 		if (image instanceof BufferedImage) {
 			bufferedImage = (BufferedImage) image;
 			if (imageType != bufferedImage.getType()) {
-				bufferedImage = copyImage(image, imageType);
+				bufferedImage = copyImage(image, imageType, backgroundColor);
 			}
 			return bufferedImage;
 		}
 
-		bufferedImage = copyImage(image, imageType);
+		bufferedImage = copyImage(image, imageType, backgroundColor);
 		return bufferedImage;
 	}
+	// endregion
 
 	/**
 	 * 将已有Image复制新的一份出来
@@ -1254,22 +1286,6 @@ public class ImgUtil {
 		bGr.dispose();
 
 		return bimage;
-	}
-
-	/**
-	 * 创建与当前设备颜色模式兼容的 {@link BufferedImage}
-	 *
-	 * @param width        宽度
-	 * @param height       高度
-	 * @param transparency 透明模式，见 {@link java.awt.Transparency}
-	 * @return {@link BufferedImage}
-	 * @since 5.7.13
-	 */
-	public static BufferedImage createCompatibleImage(final int width, final int height, final int transparency) throws HeadlessException {
-		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		final GraphicsDevice gs = ge.getDefaultScreenDevice();
-		final GraphicsConfiguration gc = gs.getDefaultConfiguration();
-		return gc.createCompatibleImage(width, height, transparency);
 	}
 
 	/**
@@ -1346,6 +1362,24 @@ public class ImgUtil {
 		return out.toByteArray();
 	}
 
+	// region ----- createImage
+
+	/**
+	 * 创建与当前设备颜色模式兼容的 {@link BufferedImage}
+	 *
+	 * @param width        宽度
+	 * @param height       高度
+	 * @param transparency 透明模式，见 {@link java.awt.Transparency}
+	 * @return {@link BufferedImage}
+	 * @since 5.7.13
+	 */
+	public static BufferedImage createCompatibleImage(final int width, final int height, final int transparency) {
+		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		final GraphicsDevice gs = ge.getDefaultScreenDevice();
+		final GraphicsConfiguration gc = gs.getDefaultConfiguration();
+		return gc.createCompatibleImage(width, height, transparency);
+	}
+
 	/**
 	 * 根据文字创建透明背景的PNG图片
 	 *
@@ -1355,7 +1389,7 @@ public class ImgUtil {
 	 * @param out       图片输出地
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void createTransparentImage(String str, Font font, Color fontColor, ImageOutputStream out) throws IORuntimeException {
+	public static void createTransparentImage(final String str, final Font font, final Color fontColor, final ImageOutputStream out) throws IORuntimeException {
 		writePng(createImage(str, font, null, fontColor, BufferedImage.TYPE_INT_ARGB), out);
 	}
 
@@ -1409,6 +1443,7 @@ public class ImgUtil {
 
 		return image;
 	}
+	// endregion
 
 	/**
 	 * 获取font的样式应用在str上的整个矩形
@@ -1424,6 +1459,8 @@ public class ImgUtil {
 						false,
 						false));
 	}
+
+	// region ----- write
 
 	/**
 	 * 写出图像为JPG格式
@@ -1516,20 +1553,38 @@ public class ImgUtil {
 	/**
 	 * 写出图像为指定格式
 	 *
-	 * @param image           {@link Image}
-	 * @param imageType       图片类型（图片扩展名）
-	 * @param destImageStream 写出到的目标流
-	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @param image             {@link Image}
+	 * @param imageType         图片类型（图片扩展名）
+	 * @param targetImageStream 写出到的目标流
+	 * @param quality           质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
 	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 4.3.2
 	 */
-	public static boolean write(final Image image, String imageType, final ImageOutputStream destImageStream, final float quality) throws IORuntimeException {
+	public static boolean write(final Image image, final String imageType, final ImageOutputStream targetImageStream,
+								final float quality) throws IORuntimeException {
+		return write(image, imageType, targetImageStream, quality, null);
+	}
+
+	/**
+	 * 写出图像为指定格式
+	 *
+	 * @param image           {@link Image}
+	 * @param imageType       图片类型（图片扩展名）
+	 * @param destImageStream 写出到的目标流
+	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @param backgroundColor 背景色{@link Color}
+	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
+	 * @throws IORuntimeException IO异常
+	 * @since 4.3.2
+	 */
+	public static boolean write(final Image image, String imageType, final ImageOutputStream destImageStream,
+								final float quality, final Color backgroundColor) throws IORuntimeException {
 		if (StrUtil.isBlank(imageType)) {
 			imageType = IMAGE_TYPE_JPG;
 		}
 
-		final BufferedImage bufferedImage = toBufferedImage(image, imageType);
+		final BufferedImage bufferedImage = toBufferedImage(image, imageType, backgroundColor);
 		final ImageWriter writer = getWriter(bufferedImage, imageType);
 		return write(bufferedImage, writer, destImageStream, quality);
 	}
@@ -1598,18 +1653,44 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 获得{@link ImageReader}
+	 * 根据给定的Image对象和格式获取对应的{@link ImageWriter}，如果未找到合适的Writer，返回null
 	 *
-	 * @param type 图片文件类型，例如 "jpeg" 或 "tiff"
-	 * @return {@link ImageReader}
+	 * @param img        {@link Image}
+	 * @param formatName 图片格式，例如"jpg"、"png"
+	 * @return {@link ImageWriter}
+	 * @since 4.3.2
 	 */
-	public static ImageReader getReader(final String type) {
-		final Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
-		if (iterator.hasNext()) {
-			return iterator.next();
-		}
-		return null;
+	public static ImageWriter getWriter(final Image img, final String formatName) {
+		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toBufferedImage(img, formatName));
+		final Iterator<ImageWriter> iter = ImageIO.getImageWriters(type, formatName);
+		return iter.hasNext() ? iter.next() : null;
 	}
+
+	/**
+	 * 根据给定的图片格式或者扩展名获取{@link ImageWriter}，如果未找到合适的Writer，返回null
+	 *
+	 * @param formatName 图片格式或扩展名，例如"jpg"、"png"
+	 * @return {@link ImageWriter}
+	 * @since 4.3.2
+	 */
+	public static ImageWriter getWriter(final String formatName) {
+		ImageWriter writer = null;
+		Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName(formatName);
+		if (iter.hasNext()) {
+			writer = iter.next();
+		}
+		if (null == writer) {
+			// 尝试扩展名获取
+			iter = ImageIO.getImageWritersBySuffix(formatName);
+			if (iter.hasNext()) {
+				writer = iter.next();
+			}
+		}
+		return writer;
+	}
+	// endregion
+
+	// region ----- read
 
 	/**
 	 * 从文件中读取图片，请使用绝对路径，使用相对路径会相对于ClassPath
@@ -1642,17 +1723,6 @@ public class ImgUtil {
 		}
 
 		return result;
-	}
-
-	/**
-	 * 从URL中获取或读取图片对象
-	 *
-	 * @param url URL
-	 * @return {@link Image}
-	 * @since 5.5.8
-	 */
-	public static Image getImage(final URL url) {
-		return Toolkit.getDefaultToolkit().getImage(url);
 	}
 
 	/**
@@ -1733,6 +1803,34 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 获得{@link ImageReader}
+	 *
+	 * @param type 图片文件类型，例如 "jpeg" 或 "tiff"
+	 * @return {@link ImageReader}
+	 */
+	public static ImageReader getReader(final String type) {
+		final Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
+		if (iterator.hasNext()) {
+			return iterator.next();
+		}
+		return null;
+	}
+	// endregion
+
+	// region ----- getImage and getPoint
+
+	/**
+	 * 从URL中获取或读取图片对象
+	 *
+	 * @param url URL
+	 * @return {@link Image}
+	 * @since 5.5.8
+	 */
+	public static Image getImage(final URL url) {
+		return Toolkit.getDefaultToolkit().getImage(url);
+	}
+
+	/**
 	 * 获取{@link ImageOutputStream}
 	 *
 	 * @param out {@link OutputStream}
@@ -1802,45 +1900,6 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 根据给定的Image对象和格式获取对应的{@link ImageWriter}，如果未找到合适的Writer，返回null
-	 *
-	 * @param img        {@link Image}
-	 * @param formatName 图片格式，例如"jpg"、"png"
-	 * @return {@link ImageWriter}
-	 * @since 4.3.2
-	 */
-	public static ImageWriter getWriter(final Image img, final String formatName) {
-		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toBufferedImage(img, formatName));
-		final Iterator<ImageWriter> iter = ImageIO.getImageWriters(type, formatName);
-		return iter.hasNext() ? iter.next() : null;
-	}
-
-	/**
-	 * 根据给定的图片格式或者扩展名获取{@link ImageWriter}，如果未找到合适的Writer，返回null
-	 *
-	 * @param formatName 图片格式或扩展名，例如"jpg"、"png"
-	 * @return {@link ImageWriter}
-	 * @since 4.3.2
-	 */
-	public static ImageWriter getWriter(final String formatName) {
-		ImageWriter writer = null;
-		Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName(formatName);
-		if (iter.hasNext()) {
-			writer = iter.next();
-		}
-		if (null == writer) {
-			// 尝试扩展名获取
-			iter = ImageIO.getImageWritersBySuffix(formatName);
-			if (iter.hasNext()) {
-				writer = iter.next();
-			}
-		}
-		return writer;
-	}
-
-	// -------------------------------------------------------------------------------------------------------------------- Color
-
-	/**
 	 * 获得修正后的矩形坐标位置，变为以背景中心为基准坐标（即x,y == 0,0时，处于背景正中）
 	 *
 	 * @param rectangle        矩形
@@ -1855,8 +1914,9 @@ public class ImgUtil {
 				rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
 		);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------------ 背景图换算
+	// region ----- backgroundRemoval
 
 	/**
 	 * 背景移除
@@ -1948,6 +2008,9 @@ public class ImgUtil {
 	public static BufferedImage backgroundRemoval(final ByteArrayOutputStream outputStream, final Color override, final int tolerance) {
 		return BackgroundRemoval.backgroundRemoval(outputStream, override, tolerance);
 	}
+	// endregion
+
+	// region ------ transform and filter
 
 	/**
 	 * 图片颜色转换<br>
@@ -1999,4 +2062,5 @@ public class ImgUtil {
 		return Toolkit.getDefaultToolkit().createImage(
 				new FilteredImageSource(image.getSource(), filter));
 	}
+	// endregion
 }
