@@ -351,7 +351,7 @@ public class XmlUtilTest {
 
 	@Test
 	public void xmlStrToBeanTest(){
-		final String xml = "<user><name>张三</name><age>20</age><email>zhangsan@example.com</email></user>";
+		final String xml = "<userInfo><name>张三</name><age>20</age><email>zhangsan@example.com</email></userInfo>";
 		final Document document = XmlUtil.readXML(xml);
 		final UserInfo userInfo = XmlUtil.xmlToBean(document, UserInfo.class);
 		Assert.assertEquals("张三", userInfo.getName());

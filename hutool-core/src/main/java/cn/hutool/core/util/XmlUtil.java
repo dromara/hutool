@@ -988,7 +988,11 @@ public class XmlUtil {
 	public static <T> T xmlToBean(final Node node, final Class<T> bean) {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
-			return BeanUtil.toBean(CollUtil.get(map.values(), 0), bean);
+			final String nodeName = CollUtil.getFirst(map.keySet());
+			if (bean.getSimpleName().equalsIgnoreCase(nodeName)) {
+				// 只有key和bean的名称匹配时才做单一对象转换
+				return BeanUtil.toBean(CollUtil.get(map.values(), 0), bean);
+			}
 		}
 		return BeanUtil.toBean(map, bean);
 	}
