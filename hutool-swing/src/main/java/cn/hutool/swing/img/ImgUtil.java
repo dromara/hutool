@@ -456,7 +456,7 @@ public class ImgUtil {
 		if (false == destDir.exists()) {
 			FileUtil.mkdir(destDir);
 		} else if (false == destDir.isDirectory()) {
-			throw new IllegalArgumentException("Destination Dir must be a Directory !");
+			throw new IllegalArgumentException("Destination must be a Directory !");
 		}
 
 		try {

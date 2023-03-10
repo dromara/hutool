@@ -1,5 +1,6 @@
 package cn.hutool.swing.img;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.builder.Builder;
 
 import java.awt.RenderingHints;
@@ -7,7 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 着色微调构建器
+ * 定义和管理键和关联值的集合构建器，提供配置包括：
+ * <ol>
+ *     <li>{@link RenderingHints#KEY_ANTIALIASING}        抗锯齿 </li>
+ *     <li>{@link RenderingHints#KEY_TEXT_ANTIALIASING}   文本抗锯齿</li>
+ *     <li>{@link RenderingHints#KEY_COLOR_RENDERING}     颜色着色的渲染方式</li>
+ *     <li>{@link RenderingHints#KEY_DITHERING}           抖动</li>
+ *     <li>{@link RenderingHints#KEY_FRACTIONALMETRICS}   字体规格</li>
+ *     <li>{@link RenderingHints#KEY_INTERPOLATION}       内插</li>
+ *     <li>{@link RenderingHints#KEY_ALPHA_INTERPOLATION} alpha合成微调</li>
+ *     <li>{@link RenderingHints#KEY_RENDERING}           着色</li>
+ *     <li>{@link RenderingHints#KEY_STROKE_CONTROL}      笔划规范化控制</li>
+ *     <li>{@link RenderingHints#KEY_TEXT_LCD_CONTRAST}   LCD文本对比呈现</li>
+ * </ol>
  *
  * @author looly
  * @since 6.0.0
@@ -46,6 +59,22 @@ public class RenderingHintsBuilder implements Builder<RenderingHints> {
 			this.hintsMap.remove(key);
 		} else {
 			this.hintsMap.put(key, antialias.getValue());
+		}
+		return this;
+	}
+
+	/**
+	 * 设置对文本着色时是否抗锯齿
+	 *
+	 * @param textAntialias 文本抗锯齿方式，{@code null}表示移除此选项
+	 * @return this
+	 */
+	public RenderingHintsBuilder setTextAntialias(final TextAntialias textAntialias) {
+		final RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
+		if (null == textAntialias) {
+			this.hintsMap.remove(key);
+		} else {
+			this.hintsMap.put(key, textAntialias.getValue());
 		}
 		return this;
 	}
@@ -118,38 +147,6 @@ public class RenderingHintsBuilder implements Builder<RenderingHints> {
 	}
 
 	/**
-	 * 设置着色技术，在速度和质量之间进行权衡。
-	 *
-	 * @param render 着色技术，{@code null}表示移除此选项
-	 * @return this
-	 */
-	public RenderingHintsBuilder setRendering(final Render render) {
-		final RenderingHints.Key key = RenderingHints.KEY_RENDERING;
-		if (null == render) {
-			this.hintsMap.remove(key);
-		} else {
-			this.hintsMap.put(key, render.getValue());
-		}
-		return this;
-	}
-
-	/**
-	 * 设置对文本着色时是否抗锯齿
-	 *
-	 * @param textAntialias 文本抗锯齿方式，{@code null}表示移除此选项
-	 * @return this
-	 */
-	public RenderingHintsBuilder setTextAntialias(final TextAntialias textAntialias) {
-		final RenderingHints.Key key = RenderingHints.KEY_TEXT_ANTIALIASING;
-		if (null == textAntialias) {
-			this.hintsMap.remove(key);
-		} else {
-			this.hintsMap.put(key, textAntialias.getValue());
-		}
-		return this;
-	}
-
-	/**
 	 * 设置alpha合成微调
 	 *
 	 * @param alphaInterpolation alpha合成微调，{@code null}表示移除此选项
@@ -166,18 +163,17 @@ public class RenderingHintsBuilder implements Builder<RenderingHints> {
 	}
 
 	/**
-	 * 设置LCD文本对比呈现<br>
-	 * ，100 到 250 之间的正整数。通常，有用值的范围缩小到 140-180
+	 * 设置着色技术，在速度和质量之间进行权衡。
 	 *
-	 * @param textLCDContrast LCD文本对比呈现，100 到 250 之间的正整数
+	 * @param render 着色技术，{@code null}表示移除此选项
 	 * @return this
 	 */
-	public RenderingHintsBuilder setAlphaInterpolation(final Integer textLCDContrast) {
-		final RenderingHints.Key key = RenderingHints.KEY_TEXT_LCD_CONTRAST;
-		if (null == textLCDContrast) {
+	public RenderingHintsBuilder setRendering(final Render render) {
+		final RenderingHints.Key key = RenderingHints.KEY_RENDERING;
+		if (null == render) {
 			this.hintsMap.remove(key);
 		} else {
-			this.hintsMap.put(key, textLCDContrast);
+			this.hintsMap.put(key, render.getValue());
 		}
 		return this;
 	}
@@ -188,12 +184,29 @@ public class RenderingHintsBuilder implements Builder<RenderingHints> {
 	 * @param strokeControl 笔划规范化控制，{@code null}表示移除此选项
 	 * @return this
 	 */
-	public RenderingHintsBuilder setAlphaInterpolation(final StrokeControl strokeControl) {
+	public RenderingHintsBuilder setStrokeControl(final StrokeControl strokeControl) {
 		final RenderingHints.Key key = RenderingHints.KEY_STROKE_CONTROL;
 		if (null == strokeControl) {
 			this.hintsMap.remove(key);
 		} else {
 			this.hintsMap.put(key, strokeControl.getValue());
+		}
+		return this;
+	}
+
+	/**
+	 * 设置LCD文本对比呈现<br>
+	 * ，100 到 250 之间的正整数。通常，有用值的范围缩小到 140-180
+	 *
+	 * @param textLCDContrast LCD文本对比呈现，100 到 250 之间的正整数
+	 * @return this
+	 */
+	public RenderingHintsBuilder setTextLCDContrast(final Integer textLCDContrast) {
+		final RenderingHints.Key key = RenderingHints.KEY_TEXT_LCD_CONTRAST;
+		if (null == textLCDContrast) {
+			this.hintsMap.remove(key);
+		} else {
+			this.hintsMap.put(key, Assert.checkBetween(textLCDContrast.intValue(), 100, 250));
 		}
 		return this;
 	}

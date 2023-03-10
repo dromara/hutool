@@ -613,13 +613,8 @@ public class Img implements Serializable {
 
 		// 目标图像
 		final BufferedImage targetImg = new BufferedImage(rectangle.width, rectangle.height, getTypeInt());
-		final Graphics2D graphics2d = targetImg.createGraphics();
-
-		// 填充背景色
-		if(null != this.backgroundColor){
-			graphics2d.setColor(this.backgroundColor);
-			graphics2d.fill(rectangle);
-		}
+		// 创建画笔并填充背景色
+		final Graphics2D graphics2d = GraphicsUtil.createGraphics(targetImg, this.backgroundColor);
 
 		graphics2d.setRenderingHints(
 				RenderingHintsBuilder.of()
