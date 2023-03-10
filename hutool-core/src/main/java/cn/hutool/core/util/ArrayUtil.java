@@ -588,15 +588,19 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		int length = 0;
 		for (final T[] array : arrays) {
-			if (null != array) {
+			if (isNotEmpty(array)) {
 				length += array.length;
 			}
 		}
+
 		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+		if (length == 0) {
+			return result;
+		}
 
 		length = 0;
 		for (final T[] array : arrays) {
-			if (null != array) {
+			if (isNotEmpty(array)) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
 			}
