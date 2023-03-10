@@ -553,16 +553,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		int length = 0;
-		for (T[] array : arrays) {
-			if (null != array) {
+		for (final T[] array : arrays) {
+			if (isNotEmpty(array)) {
 				length += array.length;
 			}
 		}
-		T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
 
 		length = 0;
-		for (T[] array : arrays) {
-			if (null != array) {
+		for (final T[] array : arrays) {
+			if (isNotEmpty(array)) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
 			}

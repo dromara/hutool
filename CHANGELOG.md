@@ -7,6 +7,7 @@
 ### 🐣新特性
 * 【core  】      改进Calculator.conversion，兼容乘法符号省略写法（issue#2964@Github）
 * 【core  】      改进XmlUtil.xmlToBean，支持xml转bean时父节点忽略大小写
+* 【core  】      优化ArrayUtil的空判断（pr#2969@Github）
 
 ### 🐞Bug修复
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
@@ -49,7 +50,7 @@
 * 【core  】      修复StrUtil.split切分长度为0时的bug（pr#944@Gitee）
 * 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
 * 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
-* 【core  】      修复Tailer文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
+* 【core  】      修复文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
 * 【core  】      修复ReflectUtil.invokeRaw方法中参数类型转换动作未生效的问题（pr#2912@Github）
 * 【core  】      修复isXXX转换时的匹配问题（issue#I6H0XF@Gitee）
 * 【core  】      修复MutableObj.equals空指针问题
@@ -438,7 +439,7 @@
 * 【core   】     修复SimpleCache线程安全问题
 * 【core   】     修复ClassLoaderUtil中可能的关联ClassLoader错位问题
 * 【extra  】     修复Sftp错误内容解析大小写问题（issue#I53GPI@Gitee）
-* 【core   】     修复Tailer当文件内容为空时，会报异常问题（pr#602@Gitee）
+* 【core   】     修复当文件内容为空时，会报异常问题（pr#602@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
