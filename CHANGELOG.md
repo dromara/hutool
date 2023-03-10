@@ -2,10 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.16.M1 (2023-03-09)
+# 5.8.16.M1 (2023-03-10)
 
 ### 🐣新特性
 * 【core  】      改进Calculator.conversion，兼容乘法符号省略写法（issue#2964@Github）
+* 【core  】      改进XmlUtil.xmlToBean，支持xml转bean时父节点忽略大小写
 
 ### 🐞Bug修复
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）

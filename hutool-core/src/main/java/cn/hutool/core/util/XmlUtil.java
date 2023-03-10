@@ -982,9 +982,10 @@ public class XmlUtil {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
 			final String simpleName = bean.getSimpleName();
-			if (map.containsKey(simpleName)) {
+			final String nodeName = CollUtil.getFirst(map.keySet());
+			if (simpleName.equalsIgnoreCase(nodeName)) {
 				// 只有key和bean的名称匹配时才做单一对象转换
-				return BeanUtil.toBean(map.get(simpleName), bean);
+				return BeanUtil.toBean(map.get(nodeName), bean);
 			}
 		}
 		return BeanUtil.toBean(map, bean);
