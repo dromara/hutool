@@ -7,11 +7,9 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.HeaderOperation;
 import cn.hutool.http.meta.Method;
-import cn.hutool.http.ssl.TrustAnySSLInfo;
+import cn.hutool.http.ssl.SSLInfo;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -196,23 +194,23 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	}
 
 	/**
-	 * 设置https请求参数<br>
+	 * 设置https中SSL相关请求参数<br>
 	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
 	 *
-	 * @param hostnameVerifier 域名验证器，非https传入null
-	 * @param ssf              SSLSocketFactory，非https传入null
+	 * @param sslInfo {@link SSLInfo}
 	 * @return this
 	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
+	 * @since 6.0.0
 	 */
-	public HttpConnection setHttpsInfo(final HostnameVerifier hostnameVerifier, final SSLSocketFactory ssf) throws HttpException {
+	public HttpConnection setSSLInfo(final SSLInfo sslInfo) throws HttpException {
 		final HttpURLConnection conn = this.conn;
 
 		if (conn instanceof HttpsURLConnection) {
 			// Https请求
 			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
-			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(hostnameVerifier, TrustAnySSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
-			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(ssf, TrustAnySSLInfo.DEFAULT_SSF));
+			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(sslInfo.getHostnameVerifier(), SSLInfo.TRUST_ANY.getHostnameVerifier()));
+			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(sslInfo.getSocketFactory(), SSLInfo.TRUST_ANY.getSocketFactory()));
 		}
 
 		return this;

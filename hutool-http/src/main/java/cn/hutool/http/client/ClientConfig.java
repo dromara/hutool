@@ -1,12 +1,8 @@
 package cn.hutool.http.client;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.ssl.TrustAnySSLInfo;
+import cn.hutool.http.ssl.SSLInfo;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -35,14 +31,7 @@ public class ClientConfig {
 	 */
 	private int readTimeout;
 
-	/**
-	 * HostnameVerifier，用于HTTPS安全连接
-	 */
-	private HostnameVerifier hostnameVerifier;
-	/**
-	 * SSLSocketFactory，用于HTTPS安全连接
-	 */
-	private SSLSocketFactory socketFactory;
+	private SSLInfo sslInfo;
 	/**
 	 * 是否禁用缓存
 	 */
@@ -58,8 +47,7 @@ public class ClientConfig {
 	public ClientConfig() {
 		connectionTimeout = HttpGlobalConfig.getTimeout();
 		readTimeout = HttpGlobalConfig.getTimeout();
-		hostnameVerifier = TrustAnySSLInfo.TRUST_ANY_HOSTNAME_VERIFIER;
-		socketFactory = TrustAnySSLInfo.DEFAULT_SSF;
+		sslInfo = SSLInfo.TRUST_ANY;
 	}
 
 	/**
@@ -123,34 +111,12 @@ public class ClientConfig {
 	}
 
 	/**
-	 * 获取域名验证器
+	 * 获取SSLInfo
 	 *
-	 * @return 域名验证器
+	 * @return SSLInfo
 	 */
-	public HostnameVerifier getHostnameVerifier() {
-		return hostnameVerifier;
-	}
-
-	/**
-	 * 设置域名验证器<br>
-	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
-	 *
-	 * @param hostnameVerifier HostnameVerifier
-	 * @return this
-	 */
-	public ClientConfig setHostnameVerifier(final HostnameVerifier hostnameVerifier) {
-		// 验证域
-		this.hostnameVerifier = hostnameVerifier;
-		return this;
-	}
-
-	/**
-	 * 获取SSLSocketFactory
-	 *
-	 * @return SSLSocketFactory
-	 */
-	public SSLSocketFactory getSocketFactory() {
-		return socketFactory;
+	public SSLInfo getSslInfo() {
+		return this.sslInfo;
 	}
 
 	/**
@@ -158,33 +124,11 @@ public class ClientConfig {
 	 * 只针对HTTPS请求，如果不设置，使用默认的SSLSocketFactory<br>
 	 * 默认SSLSocketFactory为：SSLSocketFactoryBuilder.create().build();
 	 *
-	 * @param ssf SSLScketFactory
+	 * @param sslInfo SSLInfo
 	 * @return this
 	 */
-	public ClientConfig setSocketFactory(final SSLSocketFactory ssf) {
-		this.socketFactory = ssf;
-		return this;
-	}
-
-	/**
-	 * 设置HTTPS安全连接协议，只针对HTTPS请求，可以使用的协议包括：<br>
-	 * 此方法调用后{@link #setSocketFactory(SSLSocketFactory)} 将被覆盖。
-	 *
-	 * <pre>
-	 * 1. TLSv1.2
-	 * 2. TLSv1.1
-	 * 3. SSLv3
-	 * ...
-	 * </pre>
-	 *
-	 * @param protocol 协议
-	 * @return this
-	 * @see SSLUtil#createTrustAnySSLContext(String)
-	 * @see #setSocketFactory(SSLSocketFactory)
-	 */
-	public ClientConfig setSSLProtocol(final String protocol) {
-		Assert.notBlank(protocol, "protocol must be not blank!");
-		setSocketFactory(SSLUtil.createTrustAnySSLContext(protocol).getSocketFactory());
+	public ClientConfig setSSLInfo(final SSLInfo sslInfo) {
+		this.sslInfo = sslInfo;
 		return this;
 	}
 

@@ -129,7 +129,7 @@ public class JdkClientEngine implements ClientEngine {
 				.setConnectTimeout(config.getConnectionTimeout())
 				.setReadTimeout(config.getReadTimeout())
 				.setMethod(message.method())//
-				.setHttpsInfo(config.getHostnameVerifier(), config.getSocketFactory())
+				.setSSLInfo(config.getSslInfo())
 				// 关闭JDK自动转发，采用手动转发方式
 				.setInstanceFollowRedirects(false)
 				.setChunkedStreamingMode(message.isChunked() ? 4096 : -1)

@@ -1,4 +1,4 @@
-package cn.hutool.http.ssl;
+package cn.hutool.core.net.ssl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -9,6 +9,11 @@ import javax.net.ssl.SSLSession;
  * @author Looly
  */
 public class TrustAnyHostnameVerifier implements HostnameVerifier {
+
+	/**
+	 * 单例对象
+	 */
+	public static TrustAnyHostnameVerifier INSTANCE = new TrustAnyHostnameVerifier();
 
 	@Override
 	public boolean verify(final String hostname, final SSLSession session) {
