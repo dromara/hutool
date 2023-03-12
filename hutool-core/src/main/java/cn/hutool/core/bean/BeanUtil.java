@@ -114,8 +114,11 @@ public class BeanUtil {
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (Method method : clazz.getMethods()) {
 				if (method.getParameterCount() == 0) {
-					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
-						return true;
+					final String name = method.getName();
+					if (name.startsWith("get") || name.startsWith("is")) {
+						if(false == "getClass".equals(name)){
+							return true;
+						}
 					}
 				}
 			}
