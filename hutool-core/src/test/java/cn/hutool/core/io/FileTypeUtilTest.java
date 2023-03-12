@@ -19,38 +19,38 @@ public class FileTypeUtilTest {
 	@Test
 	@Ignore
 	public void fileTypeUtilTest() {
-		File file = FileUtil.file("hutool.jpg");
-		String type = FileTypeUtil.getType(file);
+		final File file = FileUtil.file("hutool.jpg");
+		final String type = FileTypeUtil.getType(file);
 		Assert.assertEquals("jpg", type);
 
 		FileTypeUtil.putFileType("ffd8ffe000104a464946", "new_jpg");
-		String newType = FileTypeUtil.getType(file);
+		final String newType = FileTypeUtil.getType(file);
 		Assert.assertEquals("new_jpg", newType);
 	}
 
 	@Test
 	@Ignore
 	public void emptyTest() {
-		File file = FileUtil.file("d:/empty.txt");
-		String type = FileTypeUtil.getType(file);
+		final File file = FileUtil.file("d:/empty.txt");
+		final String type = FileTypeUtil.getType(file);
 		Console.log(type);
 	}
 
 	@Test
 	@Ignore
 	public void docTest() {
-		File file = FileUtil.file("f:/test/test.doc");
-		String type = FileTypeUtil.getType(file);
+		final File file = FileUtil.file("f:/test/test.doc");
+		final String type = FileTypeUtil.getType(file);
 		Console.log(type);
 	}
 
 	@Test
 	@Ignore
 	public void ofdTest() {
-		File file = FileUtil.file("e:/test.ofd");
-		String hex = IoUtil.readHex64Upper(FileUtil.getInputStream(file));
+		final File file = FileUtil.file("e:/test.ofd");
+		final String hex = IoUtil.readHex64Upper(FileUtil.getInputStream(file));
 		Console.log(hex);
-		String type = FileTypeUtil.getType(file);
+		final String type = FileTypeUtil.getType(file);
 		Console.log(type);
 		Assert.assertEquals("ofd", type);
 	}
@@ -59,18 +59,18 @@ public class FileTypeUtilTest {
 	@Test
 	@Ignore
 	public void inputStreamAndFilenameTest() {
-		File file = FileUtil.file("e:/laboratory/test.xlsx");
-		String type = FileTypeUtil.getType(file);
+		final File file = FileUtil.file("e:/laboratory/test.xlsx");
+		final String type = FileTypeUtil.getType(file);
 		Assert.assertEquals("xlsx", type);
 	}
 
 	@Test
 	@Ignore
 	public void getTypeFromInputStream() throws IOException {
-		File file = FileUtil.file("d:/test/pic.jpg");
+		final File file = FileUtil.file("d:/test/pic.jpg");
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		inputStream.mark(0);
-		String type = FileTypeUtil.getType(inputStream);
+		final String type = FileTypeUtil.getType(inputStream);
 
 		inputStream.reset();
 	}
@@ -83,6 +83,13 @@ public class FileTypeUtilTest {
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		final String type = FileTypeUtil.getType(inputStream);
 		Console.log(type);
+	}
+
+	@Test
+	public void issueI6MACITest() {
+		final File file = FileUtil.file("text.txt");
+		final String type = FileTypeUtil.getType(file);
+		Assert.assertEquals("txt", type);
 	}
 
 }

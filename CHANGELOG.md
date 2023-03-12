@@ -13,6 +13,7 @@
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
 * 【poi   】      修复SXSSFWorkbook调用setComment时错位的问题（issue#I6MBS5@Gitee）
 * 【core  】      修复BeanUtil.hasGetter没有跳过getClass方法的问题（issue#I6MBS5@Gitee）
+* 【core  】      修复FileMagicNumber长度判断问题导致的越界异常（issue#I6MACI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.15 (2023-03-09)
