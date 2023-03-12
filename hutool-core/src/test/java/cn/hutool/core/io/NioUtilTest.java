@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.stream.EmptyOutputStream;
 import cn.hutool.core.lang.Console;

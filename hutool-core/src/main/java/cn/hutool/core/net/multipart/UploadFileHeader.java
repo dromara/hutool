@@ -1,6 +1,6 @@
 package cn.hutool.core.net.multipart;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
 
 /**

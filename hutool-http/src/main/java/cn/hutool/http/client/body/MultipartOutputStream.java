@@ -1,7 +1,7 @@
 package cn.hutool.http.client.body;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.HttpResource;

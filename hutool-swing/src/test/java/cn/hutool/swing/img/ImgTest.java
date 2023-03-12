@@ -1,7 +1,7 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileTypeUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.net.url.URLUtil;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package cn.hutool.extra.template;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 
 import java.io.BufferedOutputStream;

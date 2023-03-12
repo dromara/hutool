@@ -1,6 +1,6 @@
 package cn.hutool.extra.mail;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

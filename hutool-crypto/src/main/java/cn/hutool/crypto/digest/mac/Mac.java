@@ -1,7 +1,7 @@
 package cn.hutool.crypto.digest.mac;
 
 import cn.hutool.core.codec.BaseN.Base64;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;

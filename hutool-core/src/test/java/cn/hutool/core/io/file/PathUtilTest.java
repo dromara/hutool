@@ -1,6 +1,5 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package cn.hutool.http.client.body;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.io.file.FileNameUtil;

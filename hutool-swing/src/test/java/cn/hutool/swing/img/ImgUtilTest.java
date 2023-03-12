@@ -1,6 +1,6 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.swing.img.color.ColorUtil;

@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.collection.iter.IterUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;

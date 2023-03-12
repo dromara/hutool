@@ -2,6 +2,7 @@ package cn.hutool.core.io;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;

@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;

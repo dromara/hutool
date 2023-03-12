@@ -1,5 +1,7 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.io.file.FileTypeUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
@@ -84,5 +86,12 @@ public class FileTypeUtilTest {
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		final String type = FileTypeUtil.getType(inputStream);
 		Console.log(type);
+	}
+
+	@Test
+	public void issueI6MACITest() {
+		final File file = FileUtil.file("text.txt");
+		final String type = FileTypeUtil.getType(file);
+		Assert.assertEquals("txt", type);
 	}
 }

@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import java.io.File;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 
 /**
  * Web root资源访问对象

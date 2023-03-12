@@ -1,7 +1,8 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.file;
 
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class FileTypeUtil {
 	 * @param extName           文件扩展名
 	 * @return 之前已经存在的文件扩展名
 	 */
-	public static String putFileType(String fileStreamHexHead, String extName) {
+	public static String putFileType(final String fileStreamHexHead, final String extName) {
 		return FILE_TYPE_MAP.put(fileStreamHexHead, extName);
 	}
 
@@ -42,7 +43,7 @@ public class FileTypeUtil {
 	 * @param fileStreamHexHead 文件流头部Hex信息
 	 * @return 移除的文件扩展名
 	 */
-	public static String removeFileType(String fileStreamHexHead) {
+	public static String removeFileType(final String fileStreamHexHead) {
 		return FILE_TYPE_MAP.remove(fileStreamHexHead);
 	}
 
@@ -52,13 +53,13 @@ public class FileTypeUtil {
 	 * @param fileStreamHexHead 文件流头部16进制字符串
 	 * @return 文件类型，未找到为{@code null}
 	 */
-	public static String getType(String fileStreamHexHead) {
-		for (Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
+	public static String getType(final String fileStreamHexHead) {
+		for (final Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
 			if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
 				return fileTypeEntry.getValue();
 			}
 		}
-		byte[] bytes = (HexUtil.decodeHex(fileStreamHexHead));
+		final byte[] bytes = (HexUtil.decodeHex(fileStreamHexHead));
 		return FileMagicNumber.getMagicNumber(bytes).getExtension();
 	}
 
@@ -68,8 +69,9 @@ public class FileTypeUtil {
 	 * @param in 文件流
 	 * @param fileHeadSize 自定义读取文件头部的大小
 	 * @return 文件类型，未找到为{@code null}
+	 * @throws IORuntimeException IO异常
 	 */
-	public static String getType(InputStream in,int fileHeadSize) throws IORuntimeException  {
+	public static String getType(final InputStream in, final int fileHeadSize) throws IORuntimeException  {
 		return getType((IoUtil.readHex(in, fileHeadSize,false)));
 	}
 
@@ -82,7 +84,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取流引起的异常
 	 */
-	public static String getType(InputStream in,boolean isExact) throws  IORuntimeException  {
+	public static String getType(final InputStream in, final boolean isExact) throws  IORuntimeException  {
 		return isExact
 				?getType(readHex8192Upper(in))
 				:getType(readHex64Upper(in));
@@ -96,7 +98,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取流引起的异常
 	 */
-	public static String getType(InputStream in) throws IORuntimeException  {
+	public static String getType(final InputStream in) throws IORuntimeException  {
 		return getType(in,false);
 	}
 
@@ -116,7 +118,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取流引起的异常
 	 */
-	public static String getType(InputStream in, String filename) throws IORuntimeException  {
+	public static String getType(final InputStream in, final String filename) throws IORuntimeException  {
 		return getType(in,filename,false);
 	}
 
@@ -136,7 +138,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取流引起的异常
 	 */
-	public static String getType(InputStream in, String filename,boolean isExact) throws IORuntimeException  {
+	public static String getType(final InputStream in, final String filename, final boolean isExact) throws IORuntimeException  {
 		String typeName = getType(in,isExact);
 		if (null == typeName) {
 			// 未成功识别类型，扩展名辅助识别
@@ -193,7 +195,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
-	public static String getType(File file,boolean isExact) throws IORuntimeException  {
+	public static String getType(final File file, final boolean isExact) throws IORuntimeException  {
 		InputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
@@ -216,7 +218,7 @@ public class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
-	public static String getType(File file) throws IORuntimeException  {
+	public static String getType(final File file) throws IORuntimeException  {
 		return getType(file,false);
 	}
 
@@ -228,7 +230,7 @@ public class FileTypeUtil {
 	 * @return 类型
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path,boolean isExact) throws IORuntimeException  {
+	public static String getTypeByPath(final String path, final boolean isExact) throws IORuntimeException  {
 		return getType(FileUtil.file(path),isExact);
 	}
 
@@ -239,7 +241,7 @@ public class FileTypeUtil {
 	 * @return 类型
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path) throws IORuntimeException  {
+	public static String getTypeByPath(final String path) throws IORuntimeException  {
 		return getTypeByPath(path,false);
 	}
 
@@ -252,7 +254,6 @@ public class FileTypeUtil {
 	 */
 	private static String readHex8192Upper(final InputStream in) throws IORuntimeException {
 		try {
-			final int i = in.available();
 			return IoUtil.readHex(in, Math.min(8192, in.available()), false);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
@@ -266,7 +267,7 @@ public class FileTypeUtil {
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	private static String readHex64Upper(InputStream in) throws IORuntimeException {
+	private static String readHex64Upper(final InputStream in) throws IORuntimeException {
 		return IoUtil.readHex(in, 64, false);
 	}
 }

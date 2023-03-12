@@ -2,7 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.map.MapUtil;

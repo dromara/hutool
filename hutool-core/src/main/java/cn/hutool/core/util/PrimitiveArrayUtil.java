@@ -18,8 +18,7 @@ public class PrimitiveArrayUtil {
 	 */
 	public static final int INDEX_NOT_FOUND = -1;
 
-	// ---------------------------------------------------------------------- isEmpty
-
+	// region ----- isEmpty
 	/**
 	 * 数组是否为空
 	 *
@@ -99,8 +98,9 @@ public class PrimitiveArrayUtil {
 	public static boolean isEmpty(final boolean[] array) {
 		return array == null || array.length == 0;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- isNotEmpty
+	// region ----- isNotEmpty
 
 	/**
 	 * 数组是否为非空
@@ -181,8 +181,9 @@ public class PrimitiveArrayUtil {
 	public static boolean isNotEmpty(final boolean[] array) {
 		return false == isEmpty(array);
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- resize
+	// region ----- resize
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
@@ -203,8 +204,9 @@ public class PrimitiveArrayUtil {
 		}
 		return newArray;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- addAll
+	// region ----- addAll
 
 	/**
 	 * 将多个数组合并在一起<br>
@@ -461,8 +463,9 @@ public class PrimitiveArrayUtil {
 		}
 		return result;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- split
+	// region ----- split
 
 	/**
 	 * 拆分byte数组为几个等份（最后一份按照剩余长度分配空间）
@@ -472,7 +475,7 @@ public class PrimitiveArrayUtil {
 	 * @return 拆分后的数组
 	 */
 	public static byte[][] split(final byte[] array, final int len) {
-		int amount = array.length / len;
+		final int amount = array.length / len;
 		final int remainder = array.length % len;
 		// 兼容切片长度大于原数组长度的情况
 		final boolean hasRemainder = remainder > 0;
@@ -493,8 +496,9 @@ public class PrimitiveArrayUtil {
 		}
 		return arrays;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- indexOf、LastIndexOf、contains
+	// region ----- indexOf、LastIndexOf、contains
 
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
@@ -895,8 +899,9 @@ public class PrimitiveArrayUtil {
 	public static boolean contains(final boolean[] array, final boolean value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------- Wrap and unwrap
+	// region ----- Wrap and unwrap
 
 	/**
 	 * 将原始类型数组包装为包装类型
@@ -1250,8 +1255,9 @@ public class PrimitiveArrayUtil {
 		}
 		return array;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------- sub
+	// region ----- sub
 
 	/**
 	 * 获取子数组
@@ -1548,8 +1554,9 @@ public class PrimitiveArrayUtil {
 		}
 		return Arrays.copyOfRange(array, start, end);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------- remove
+	// region ----- remove
 
 	/**
 	 * 移除数组中对应位置的元素<br>
@@ -1693,7 +1700,7 @@ public class PrimitiveArrayUtil {
 		return result;
 	}
 
-	// ---------------------------------------------------------------------- removeEle
+	// region ----- removeEle
 
 	/**
 	 * 移除数组中指定的元素<br>
@@ -1814,8 +1821,9 @@ public class PrimitiveArrayUtil {
 	public static boolean[] removeEle(final boolean[] array, final boolean element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- reverse
+	// region ----- reverse
 
 	/**
 	 * 反转数组，会变更原数组
@@ -2088,8 +2096,9 @@ public class PrimitiveArrayUtil {
 	public static boolean[] reverse(final boolean[] array) {
 		return reverse(array, 0, array.length);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------------------ min and max
+	// region ------------------------------------------- min and max
 
 	/**
 	 * 取最小值
@@ -2370,8 +2379,9 @@ public class PrimitiveArrayUtil {
 		}
 		return max;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- shuffle
+	// region ----- shuffle
 
 	/**
 	 * 打乱数组顺序，会变更原数组
@@ -2636,8 +2646,9 @@ public class PrimitiveArrayUtil {
 
 		return array;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- swap
+	// region ----- swap
 
 	/**
 	 * 交换数组中两个位置的值
@@ -2791,7 +2802,7 @@ public class PrimitiveArrayUtil {
 		return array;
 	}
 
-	// ---------------------------------------------------------------------- asc and desc
+	// region ----- asc and desc
 
 	/**
 	 * 检查数组是否升序，即{@code array[i] <= array[i+1]}<br>
@@ -3111,7 +3122,257 @@ public class PrimitiveArrayUtil {
 				return false;
 			}
 		}
-
 		return true;
 	}
+	// endregion
+
+	// region ----- startWith
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final boolean[] array, final boolean[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final byte[] array, final byte[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final char[] array, final char[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final double[] array, final double[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final float[] array, final float[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final int[] array, final int[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final long[] array, final long[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * array数组是否以prefix开头
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @return 是否开头
+	 */
+	public static boolean startWith(final short[] array, final short[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (array[i] != prefix[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	// endregion
 }

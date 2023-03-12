@@ -1,6 +1,6 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.io.FileTypeUtil;
+import cn.hutool.core.io.file.FileTypeUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.swing.img.color.ColorUtil;

@@ -617,7 +617,7 @@ public class ArrayUtilTest {
 	@Test
 	public void subTest() {
 		final int[] arr = {1, 2, 3, 4, 5};
-		int[] empty = new int[0];
+		final int[] empty = new int[0];
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 2, 2));
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 5));
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 7));
@@ -688,5 +688,35 @@ public class ArrayUtilTest {
 		final Object[] e = new Object[]{"1", 2, 2, 4D};
 		Assert.assertTrue(ArrayUtil.hasSameElement(e));
 
+	}
+
+	@Test
+	public void startWithTest() {
+		boolean b = ArrayUtil.startWith(new String[]{}, new String[]{});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new String[]{"1", "2", "3"}, new String[]{"1"});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new String[]{"1"}, new String[]{"1"});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith((String[])null, null);
+		Assert.assertTrue(b);
+	}
+
+	@Test
+	public void startWithTest2() {
+		boolean b = ArrayUtil.startWith(new int[]{}, new int[]{});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new int[]{1,2,3}, new int[]{1});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new int[]{1}, new int[]{1});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith((int[])null, null);
+		Assert.assertTrue(b);
 	}
 }

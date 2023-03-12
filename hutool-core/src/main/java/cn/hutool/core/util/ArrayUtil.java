@@ -2102,4 +2102,36 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		final Set<T> elementSet = SetUtil.of(Arrays.asList(array));
 		return elementSet.size() != array.length;
 	}
+
+	/**
+	 * array数组是否以prefix开头，每个元素的匹配使用{@link ObjUtil#equals(Object, Object)}匹配。
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @param <T>    数组元素类型
+	 * @return 是否开头
+	 */
+	public static <T> boolean startWith(final T[] array, final T[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (ObjUtil.notEquals(array[i], prefix[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

@@ -1,7 +1,7 @@
 package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;

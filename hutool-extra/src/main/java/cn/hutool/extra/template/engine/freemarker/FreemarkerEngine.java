@@ -1,7 +1,7 @@
 package cn.hutool.extra.template.engine.freemarker;
 
 import cn.hutool.core.classloader.ClassLoaderUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;

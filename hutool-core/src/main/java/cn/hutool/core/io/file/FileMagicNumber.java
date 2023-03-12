@@ -1,4 +1,4 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.file;
 
 import cn.hutool.core.util.ArrayUtil;
 
@@ -13,25 +13,34 @@ import java.util.Objects;
  * @since 5.8.12
  */
 public enum FileMagicNumber {
+	/**
+	 * 未知类型
+	 */
 	UNKNOWN(null, null) {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return false;
 		}
 	},
-	//image start---------------------------------------------
+	// region ----- image
+	/**
+	 * jpeg
+	 */
 	JPEG("image/jpeg", "jpg") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0xff)
 					&& Objects.equals(bytes[1], (byte) 0xd8)
 					&& Objects.equals(bytes[2], (byte) 0xff);
 		}
 	},
+	/**
+	 * jxr
+	 */
 	JXR("image/vnd.ms-photo", "jxr") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			//file magic number https://www.iana.org/assignments/media-types/image/jxr
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0x49)
@@ -39,10 +48,13 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[2], (byte) 0xbc);
 		}
 	},
+	/**
+	 * apng
+	 */
 	APNG("image/apng", "apng") {
 		@Override
-		public boolean match(byte[] bytes) {
-			boolean b = bytes.length > 8
+		public boolean match(final byte[] bytes) {
+			final boolean b = bytes.length > 8
 					&& Objects.equals(bytes[0], (byte) 0x89)
 					&& Objects.equals(bytes[1], (byte) 0x50)
 					&& Objects.equals(bytes[2], (byte) 0x4e)
@@ -56,10 +68,10 @@ public enum FileMagicNumber {
 				int i = 8;
 				while (i < bytes.length) {
 					try {
-						int dataLength = new BigInteger(1, Arrays.copyOfRange(bytes, i, i + 4)).intValue();
+						final int dataLength = new BigInteger(1, Arrays.copyOfRange(bytes, i, i + 4)).intValue();
 						i += 4;
-						byte[] bytes1 = Arrays.copyOfRange(bytes, i, i + 4);
-						String chunkType = new String(bytes1);
+						final byte[] bytes1 = Arrays.copyOfRange(bytes, i, i + 4);
+						final String chunkType = new String(bytes1);
 						i += 4;
 						if (Objects.equals(chunkType, "IDAT") || Objects.equals(chunkType, "IEND")) {
 							return false;
@@ -67,7 +79,7 @@ public enum FileMagicNumber {
 							return true;
 						}
 						i += dataLength + 4;
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						return false;
 					}
 				}
@@ -75,9 +87,12 @@ public enum FileMagicNumber {
 			return false;
 		}
 	},
+	/**
+	 * png
+	 */
 	PNG("image/png", "png") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x89)
 					&& Objects.equals(bytes[1], (byte) 0x50)
@@ -85,34 +100,43 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x47);
 		}
 	},
+	/**
+	 * gif
+	 */
 	GIF("image/gif", "gif") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0x47)
 					&& Objects.equals(bytes[1], (byte) 0x49)
 					&& Objects.equals(bytes[2], (byte) 0x46);
 		}
 	},
+	/**
+	 * bmp
+	 */
 	BMP("image/bmp", "bmp") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 1
 					&& Objects.equals(bytes[0], (byte) 0x42)
 					&& Objects.equals(bytes[1], (byte) 0x4d);
 		}
 	},
+	/**
+	 * tiff
+	 */
 	TIFF("image/tiff", "tiff") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 4) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x49)
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x49)
 					&& Objects.equals(bytes[1], (byte) 0x49)
 					&& Objects.equals(bytes[2], (byte) 0x2a)
 					&& Objects.equals(bytes[3], (byte) 0x00);
-			boolean flag2 = (Objects.equals(bytes[0], (byte) 0x4d)
+			final boolean flag2 = (Objects.equals(bytes[0], (byte) 0x4d)
 					&& Objects.equals(bytes[1], (byte) 0x4d)
 					&& Objects.equals(bytes[2], (byte) 0x00)
 					&& Objects.equals(bytes[3], (byte) 0x2a));
@@ -120,10 +144,12 @@ public enum FileMagicNumber {
 
 		}
 	},
-
+	/**
+	 * dwg
+	 */
 	DWG("image/vnd.dwg", "dwg") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 10
 					&& Objects.equals(bytes[0], (byte) 0x41)
 					&& Objects.equals(bytes[1], (byte) 0x43)
@@ -131,10 +157,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x30);
 		}
 	},
-
+	/**
+	 * webp
+	 */
 	WEBP("image/webp", "webp") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 11
 					&& Objects.equals(bytes[8], (byte) 0x57)
 					&& Objects.equals(bytes[9], (byte) 0x45)
@@ -142,9 +170,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[11], (byte) 0x50);
 		}
 	},
+	/**
+	 * psd
+	 */
 	PSD("image/vnd.adobe.photoshop", "psd") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x38)
 					&& Objects.equals(bytes[1], (byte) 0x42)
@@ -152,9 +183,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x53);
 		}
 	},
+	/**
+	 * icon
+	 */
 	ICO("image/x-icon", "ico") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x00)
 					&& Objects.equals(bytes[1], (byte) 0x00)
@@ -162,9 +196,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x00);
 		}
 	},
+	/**
+	 * xcf
+	 */
 	XCF("image/x-xcf", "xcf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 9
 					&& Objects.equals(bytes[0], (byte) 0x67)
 					&& Objects.equals(bytes[1], (byte) 0x69)
@@ -178,13 +215,15 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[9], (byte) 0x76);
 		}
 	},
-	//image end-----------------------------------------------
+	// endregion
 
-	//audio start---------------------------------------------
-
+	// region ----- audio
+	/**
+	 * wav
+	 */
 	WAV("audio/x-wav", "wav") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 11
 					&& Objects.equals(bytes[0], (byte) 0x52)
 					&& Objects.equals(bytes[1], (byte) 0x49)
@@ -196,9 +235,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[11], (byte) 0x45);
 		}
 	},
+	/**
+	 * midi
+	 */
 	MIDI("audio/midi", "midi") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x4d)
 					&& Objects.equals(bytes[1], (byte) 0x54)
@@ -206,22 +248,28 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x64);
 		}
 	},
+	/**
+	 * mpeg-mp3
+	 */
 	MP3("audio/mpeg", "mp3") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 2) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x49) && Objects.equals(bytes[1], (byte) 0x44) && Objects.equals(bytes[2], (byte) 0x33);
-			boolean flag2 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xFB);
-			boolean flag3 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF3);
-			boolean flag4 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF2);
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x49) && Objects.equals(bytes[1], (byte) 0x44) && Objects.equals(bytes[2], (byte) 0x33);
+			final boolean flag2 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xFB);
+			final boolean flag3 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF3);
+			final boolean flag4 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF2);
 			return flag1 || flag2 || flag3 || flag4;
 		}
 	},
+	/**
+	 * ogg
+	 */
 	OGG("audio/ogg", "ogg") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x4f)
 					&& Objects.equals(bytes[1], (byte) 0x67)
@@ -229,9 +277,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x53);
 		}
 	},
+	/**
+	 * flac
+	 */
 	FLAC("audio/x-flac", "flac") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x66)
 					&& Objects.equals(bytes[1], (byte) 0x4c)
@@ -239,9 +290,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x43);
 		}
 	},
+	/**
+	 * mp4
+	 */
 	M4A("audio/mp4", "m4a") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return (bytes.length > 10
 					&& Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
@@ -256,32 +310,38 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x20));
 		}
 	},
+	/**
+	 * aac
+	 */
 	AAC("audio/aac", "aac") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 1) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF1);
-			boolean flag2 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF9);
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF1);
+			final boolean flag2 = Objects.equals(bytes[0], (byte) 0xFF) && Objects.equals(bytes[1], (byte) 0xF9);
 			return flag1 || flag2;
 		}
 	},
+	/**
+	 * amr
+	 */
 	AMR("audio/amr", "amr") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			//single-channel
 			if (bytes.length < 11) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x23)
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x23)
 					&& Objects.equals(bytes[1], (byte) 0x21)
 					&& Objects.equals(bytes[2], (byte) 0x41)
 					&& Objects.equals(bytes[3], (byte) 0x4d)
 					&& Objects.equals(bytes[4], (byte) 0x52)
 					&& Objects.equals(bytes[5], (byte) 0x0A);
 			//multi-channel:
-			boolean flag2 = Objects.equals(bytes[0], (byte) 0x23)
+			final boolean flag2 = Objects.equals(bytes[0], (byte) 0x23)
 					&& Objects.equals(bytes[1], (byte) 0x21)
 					&& Objects.equals(bytes[2], (byte) 0x41)
 					&& Objects.equals(bytes[3], (byte) 0x4d)
@@ -296,17 +356,23 @@ public enum FileMagicNumber {
 			return flag1 || flag2;
 		}
 	},
+	/**
+	 * ac3
+	 */
 	AC3("audio/ac3", "ac3") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0x0b)
 					&& Objects.equals(bytes[1], (byte) 0x77);
 		}
 	},
+	/**
+	 * aiff
+	 */
 	AIFF("audio/x-aiff", "aiff") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 11
 					&& Objects.equals(bytes[0], (byte) 0x46)
 					&& Objects.equals(bytes[1], (byte) 0x4f)
@@ -318,26 +384,29 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[11], (byte) 0x46);
 		}
 	},
-	//audio end-----------------------------------------------
+	// endregion
 
-	//font start---------------------------------------------
-	// The existing registration "application/font-woff" is deprecated in favor of "font/woff".
+	// region ----- font
+	/**
+	 * woff<br>
+	 * The existing registration "application/font-woff" is deprecated in favor of "font/woff".
+	 */
 	WOFF("font/woff", "woff") {
 		@Override
-		public boolean match(byte[] bytes) {
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
+		public boolean match(final byte[] bytes) {
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
 					&& Objects.equals(bytes[1], (byte) 0x4f)
 					&& Objects.equals(bytes[2], (byte) 0x46)
 					&& Objects.equals(bytes[3], (byte) 0x46);
-			boolean flag2 = Objects.equals(bytes[4], (byte) 0x00)
+			final boolean flag2 = Objects.equals(bytes[4], (byte) 0x00)
 					&& Objects.equals(bytes[5], (byte) 0x01)
 					&& Objects.equals(bytes[6], (byte) 0x00)
 					&& Objects.equals(bytes[7], (byte) 0x00);
-			boolean flag3 = Objects.equals(bytes[4], (byte) 0x4f)
+			final boolean flag3 = Objects.equals(bytes[4], (byte) 0x4f)
 					&& Objects.equals(bytes[5], (byte) 0x54)
 					&& Objects.equals(bytes[6], (byte) 0x54)
 					&& Objects.equals(bytes[7], (byte) 0x4f);
-			boolean flag4 = Objects.equals(bytes[4], (byte) 0x74)
+			final boolean flag4 = Objects.equals(bytes[4], (byte) 0x74)
 					&& Objects.equals(bytes[5], (byte) 0x72)
 					&& Objects.equals(bytes[6], (byte) 0x75)
 					&& Objects.equals(bytes[7], (byte) 0x65);
@@ -345,22 +414,25 @@ public enum FileMagicNumber {
 					&& (flag1 && (flag2 || flag3 || flag4));
 		}
 	},
+	/**
+	 * woff2
+	 */
 	WOFF2("font/woff2", "woff2") {
 		@Override
-		public boolean match(byte[] bytes) {
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
+		public boolean match(final byte[] bytes) {
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
 					&& Objects.equals(bytes[1], (byte) 0x4f)
 					&& Objects.equals(bytes[2], (byte) 0x46)
 					&& Objects.equals(bytes[3], (byte) 0x32);
-			boolean flag2 = Objects.equals(bytes[4], (byte) 0x00)
+			final boolean flag2 = Objects.equals(bytes[4], (byte) 0x00)
 					&& Objects.equals(bytes[5], (byte) 0x01)
 					&& Objects.equals(bytes[6], (byte) 0x00)
 					&& Objects.equals(bytes[7], (byte) 0x00);
-			boolean flag3 = Objects.equals(bytes[4], (byte) 0x4f)
+			final boolean flag3 = Objects.equals(bytes[4], (byte) 0x4f)
 					&& Objects.equals(bytes[5], (byte) 0x54)
 					&& Objects.equals(bytes[6], (byte) 0x54)
 					&& Objects.equals(bytes[7], (byte) 0x4f);
-			boolean flag4 = Objects.equals(bytes[4], (byte) 0x74)
+			final boolean flag4 = Objects.equals(bytes[4], (byte) 0x74)
 					&& Objects.equals(bytes[5], (byte) 0x72)
 					&& Objects.equals(bytes[6], (byte) 0x75)
 					&& Objects.equals(bytes[7], (byte) 0x65);
@@ -368,9 +440,12 @@ public enum FileMagicNumber {
 					&& (flag1 && (flag2 || flag3 || flag4));
 		}
 	},
+	/**
+	 * ttf
+	 */
 	TTF("font/ttf", "ttf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0x00)
 					&& Objects.equals(bytes[1], (byte) 0x01)
@@ -379,9 +454,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[4], (byte) 0x00);
 		}
 	},
+	/**
+	 * otf
+	 */
 	OTF("font/otf", "otf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0x4f)
 					&& Objects.equals(bytes[1], (byte) 0x54)
@@ -390,13 +468,15 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[4], (byte) 0x00);
 		}
 	},
+	// endregion
 
-	//font end-----------------------------------------------
-
-	//archive start-----------------------------------------
+	// region ----- archive
+	/**
+	 * epub
+	 */
 	EPUB("application/epub+zip", "epub") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 58
 					&& Objects.equals(bytes[0], (byte) 0x50) && Objects.equals(bytes[1], (byte) 0x4b)
 					&& Objects.equals(bytes[2], (byte) 0x03) && Objects.equals(bytes[3], (byte) 0x04)
@@ -416,21 +496,27 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[56], (byte) 0x69) && Objects.equals(bytes[57], (byte) 0x70);
 		}
 	},
+	/**
+	 * zip
+	 */
 	ZIP("application/zip", "zip") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 4) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x50) && Objects.equals(bytes[1], (byte) 0x4b);
-			boolean flag2 = Objects.equals(bytes[2], (byte) 0x03) || Objects.equals(bytes[2], (byte) 0x05) || Objects.equals(bytes[2], (byte) 0x07);
-			boolean flag3 = Objects.equals(bytes[3], (byte) 0x04) || Objects.equals(bytes[3], (byte) 0x06) || Objects.equals(bytes[3], (byte) 0x08);
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x50) && Objects.equals(bytes[1], (byte) 0x4b);
+			final boolean flag2 = Objects.equals(bytes[2], (byte) 0x03) || Objects.equals(bytes[2], (byte) 0x05) || Objects.equals(bytes[2], (byte) 0x07);
+			final boolean flag3 = Objects.equals(bytes[3], (byte) 0x04) || Objects.equals(bytes[3], (byte) 0x06) || Objects.equals(bytes[3], (byte) 0x08);
 			return flag1 && flag2 && flag3;
 		}
 	},
+	/**
+	 * tar
+	 */
 	TAR("application/x-tar", "tar") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 261
 					&& Objects.equals(bytes[257], (byte) 0x75)
 					&& Objects.equals(bytes[258], (byte) 0x73)
@@ -439,9 +525,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[261], (byte) 0x72);
 		}
 	},
+	/**
+	 * rar
+	 */
 	RAR("application/x-rar-compressed", "rar") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 6
 					&& Objects.equals(bytes[0], (byte) 0x52)
 					&& Objects.equals(bytes[1], (byte) 0x61)
@@ -452,27 +541,36 @@ public enum FileMagicNumber {
 					&& (Objects.equals(bytes[6], (byte) 0x00) || Objects.equals(bytes[6], (byte) 0x01));
 		}
 	},
+	/**
+	 * gz
+	 */
 	GZ("application/gzip", "gz") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0x1f)
 					&& Objects.equals(bytes[1], (byte) 0x8b)
 					&& Objects.equals(bytes[2], (byte) 0x08);
 		}
 	},
+	/**
+	 * bz2
+	 */
 	BZ2("application/x-bzip2", "bz2") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& Objects.equals(bytes[0], (byte) 0x42)
 					&& Objects.equals(bytes[1], (byte) 0x5a)
 					&& Objects.equals(bytes[2], (byte) 0x68);
 		}
 	},
+	/**
+	 * 7z
+	 */
 	SevenZ("application/x-7z-compressed", "7z") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 6
 					&& Objects.equals(bytes[0], (byte) 0x37)
 					&& Objects.equals(bytes[1], (byte) 0x7a)
@@ -483,6 +581,9 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[6], (byte) 0x00);
 		}
 	},
+	/**
+	 * pdf
+	 */
 	PDF("application/pdf", "pdf") {
 		@Override
 		public boolean match(byte[] bytes) {
@@ -498,26 +599,35 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x46);
 		}
 	},
+	/**
+	 * exe
+	 */
 	EXE("application/x-msdownload", "exe") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 1
 					&& Objects.equals(bytes[0], (byte) 0x4d)
 					&& Objects.equals(bytes[1], (byte) 0x5a);
 		}
 	},
+	/**
+	 * swf
+	 */
 	SWF("application/x-shockwave-flash", "swf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 2
 					&& (Objects.equals(bytes[0], 0x43) || Objects.equals(bytes[0], (byte) 0x46))
 					&& Objects.equals(bytes[1], (byte) 0x57)
 					&& Objects.equals(bytes[2], (byte) 0x53);
 		}
 	},
+	/**
+	 * rtf
+	 */
 	RTF("application/rtf", "rtf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0x7b)
 					&& Objects.equals(bytes[1], (byte) 0x5c)
@@ -526,9 +636,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[4], (byte) 0x66);
 		}
 	},
+	/**
+	 * nes
+	 */
 	NES("application/x-nintendo-nes-rom", "nes") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x4e)
 					&& Objects.equals(bytes[1], (byte) 0x45)
@@ -536,9 +649,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x1a);
 		}
 	},
+	/**
+	 * crx
+	 */
 	CRX("application/x-google-chrome-extension", "crx") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x43)
 					&& Objects.equals(bytes[1], (byte) 0x72)
@@ -546,30 +662,39 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x34);
 		}
 	},
+	/**
+	 * cab
+	 */
 	CAB("application/vnd.ms-cab-compressed", "cab") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 4) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[0], (byte) 0x4d) && Objects.equals(bytes[1], (byte) 0x53)
+			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x4d) && Objects.equals(bytes[1], (byte) 0x53)
 					&& Objects.equals(bytes[2], (byte) 0x43) && Objects.equals(bytes[3], (byte) 0x46);
-			boolean flag2 = Objects.equals(bytes[0], (byte) 0x49) && Objects.equals(bytes[1], (byte) 0x53)
+			final boolean flag2 = Objects.equals(bytes[0], (byte) 0x49) && Objects.equals(bytes[1], (byte) 0x53)
 					&& Objects.equals(bytes[2], (byte) 0x63) && Objects.equals(bytes[3], (byte) 0x28);
 			return flag1 || flag2;
 		}
 	},
+	/**
+	 * ps
+	 */
 	PS("application/postscript", "ps") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 1
 					&& Objects.equals(bytes[0], (byte) 0x25)
 					&& Objects.equals(bytes[1], (byte) 0x21);
 		}
 	},
+	/**
+	 * xz
+	 */
 	XZ("application/x-xz", "xz") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 5
 					&& Objects.equals(bytes[0], (byte) 0xFD)
 					&& Objects.equals(bytes[1], (byte) 0x37)
@@ -579,9 +704,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[5], (byte) 0x00);
 		}
 	},
+	/**
+	 * sqlite
+	 */
 	SQLITE("application/x-sqlite3", "sqlite") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 15
 					&& Objects.equals(bytes[0], (byte) 0x53) && Objects.equals(bytes[1], (byte) 0x51)
 					&& Objects.equals(bytes[2], (byte) 0x4c) && Objects.equals(bytes[3], (byte) 0x69)
@@ -593,9 +721,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[14], (byte) 0x33) && Objects.equals(bytes[15], (byte) 0x00);
 		}
 	},
+	/**
+	 * deb
+	 */
 	DEB("application/x-deb", "deb") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 20
 					&& Objects.equals(bytes[0], (byte) 0x21) && Objects.equals(bytes[1], (byte) 0x3c)
 					&& Objects.equals(bytes[2], (byte) 0x61) && Objects.equals(bytes[3], (byte) 0x72)
@@ -610,9 +741,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[20], (byte) 0x79);
 		}
 	},
+	/**
+	 * ar
+	 */
 	AR("application/x-unix-archive", "ar") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 6
 					&& Objects.equals(bytes[0], (byte) 0x21)
 					&& Objects.equals(bytes[1], (byte) 0x3c)
@@ -623,9 +757,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[6], (byte) 0x3e);
 		}
 	},
+	/**
+	 * lzo
+	 */
 	LZOP("application/x-lzop", "lzo") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 7
 					&& Objects.equals(bytes[0], (byte) 0x89)
 					&& Objects.equals(bytes[1], (byte) 0x4c)
@@ -637,9 +774,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[7], (byte) 0x1a);
 		}
 	},
+	/**
+	 * lz
+	 */
 	LZ("application/x-lzip", "lz") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x4c)
 					&& Objects.equals(bytes[1], (byte) 0x5a)
@@ -647,9 +787,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x50);
 		}
 	},
+	/**
+	 * elf
+	 */
 	ELF("application/x-executable", "elf") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 52
 					&& Objects.equals(bytes[0], (byte) 0x7f)
 					&& Objects.equals(bytes[1], (byte) 0x45)
@@ -657,9 +800,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x46);
 		}
 	},
+	/**
+	 * lz4
+	 */
 	LZ4("application/x-lz4", "lz4") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0x04)
 					&& Objects.equals(bytes[1], (byte) 0x22)
@@ -667,10 +813,13 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x18);
 		}
 	},
-	//https://github.com/madler/brotli/blob/master/br-format-v3.txt,brotli 没有固定的file magic number,所以此处只是参考
+	/**
+	 * br<br>
+	 * https://github.com/madler/brotli/blob/master/br-format-v3.txt,brotli 没有固定的file magic number,所以此处只是参考
+	 */
 	BR("application/x-brotli", "br") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0xce)
 					&& Objects.equals(bytes[1], (byte) 0xb2)
@@ -678,9 +827,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x81);
 		}
 	},
+	/**
+	 * dcm
+	 */
 	DCM("application/x-dicom", "dcm") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 128
 					&& Objects.equals(bytes[128], (byte) 0x44)
 					&& Objects.equals(bytes[129], (byte) 0x49)
@@ -688,9 +840,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[131], (byte) 0x4d);
 		}
 	},
+	/**
+	 * rpm
+	 */
 	RPM("application/x-rpm", "rpm") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0xed)
 					&& Objects.equals(bytes[1], (byte) 0xab)
@@ -698,15 +853,18 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0xdb);
 		}
 	},
+	/**
+	 * zst
+	 */
 	ZSTD("application/x-zstd", "zst") {
 		@Override
-		public boolean match(byte[] bytes) {
-			int length = bytes.length;
+		public boolean match(final byte[] bytes) {
+			final int length = bytes.length;
 			if (length < 5) {
 				return false;
 			}
-			byte[] buf1 = new byte[]{(byte) 0x22, (byte) 0x23, (byte) 0x24, (byte) 0x25, (byte) 0x26, (byte) 0x27, (byte) 0x28};
-			boolean flag1 = ArrayUtil.contains(buf1, bytes[0])
+			final byte[] buf1 = new byte[]{(byte) 0x22, (byte) 0x23, (byte) 0x24, (byte) 0x25, (byte) 0x26, (byte) 0x27, (byte) 0x28};
+			final boolean flag1 = ArrayUtil.contains(buf1, bytes[0])
 					&& Objects.equals(bytes[1], (byte) 0xb5)
 					&& Objects.equals(bytes[2], (byte) 0x2f)
 					&& Objects.equals(bytes[3], (byte) 0xfd);
@@ -719,15 +877,19 @@ public enum FileMagicNumber {
 			return false;
 		}
 	},
-	//archive end------------------------------------------------------------
-	//video start------------------------------------------------------------
+	// endregion
+
+	// region ----- video
+	/**
+	 * mp4
+	 */
 	MP4("video/mp4", "mp4") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 13) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
 					&& Objects.equals(bytes[6], (byte) 0x79)
 					&& Objects.equals(bytes[7], (byte) 0x70)
@@ -735,7 +897,7 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[9], (byte) 0x53)
 					&& Objects.equals(bytes[10], (byte) 0x4e)
 					&& Objects.equals(bytes[11], (byte) 0x56);
-			boolean flag2 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag2 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
 					&& Objects.equals(bytes[6], (byte) 0x79)
 					&& Objects.equals(bytes[7], (byte) 0x70)
@@ -746,9 +908,12 @@ public enum FileMagicNumber {
 			return flag1 || flag2;
 		}
 	},
+	/**
+	 * avi
+	 */
 	AVI("video/x-msvideo", "avi") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 11
 					&& Objects.equals(bytes[0], (byte) 0x52)
 					&& Objects.equals(bytes[1], (byte) 0x49)
@@ -760,9 +925,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[11], (byte) 0x20);
 		}
 	},
+	/**
+	 * wmv
+	 */
 	WMV("video/x-ms-wmv", "wmv") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 9
 					&& Objects.equals(bytes[0], (byte) 0x30)
 					&& Objects.equals(bytes[1], (byte) 0x26)
@@ -776,13 +944,16 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[9], (byte) 0xd9);
 		}
 	},
+	/**
+	 * m4v
+	 */
 	M4V("video/x-m4v", "m4v") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 12) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
 					&& Objects.equals(bytes[6], (byte) 0x79)
 					&& Objects.equals(bytes[7], (byte) 0x70)
@@ -790,7 +961,7 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[9], (byte) 0x34)
 					&& Objects.equals(bytes[10], (byte) 0x56)
 					&& Objects.equals(bytes[11], (byte) 0x20);
-			boolean flag2 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag2 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
 					&& Objects.equals(bytes[6], (byte) 0x79)
 					&& Objects.equals(bytes[7], (byte) 0x70)
@@ -801,9 +972,12 @@ public enum FileMagicNumber {
 			return flag1 || flag2;
 		}
 	},
+	/**
+	 * flv
+	 */
 	FLV("video/x-flv", "flv") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x46)
 					&& Objects.equals(bytes[1], (byte) 0x4c)
@@ -811,11 +985,14 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x01);
 		}
 	},
+	/**
+	 * mkv
+	 */
 	MKV("video/x-matroska", "mkv") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			//0x42 0x82 0x88 0x6d 0x61 0x74 0x72 0x6f 0x73 0x6b 0x61
-			boolean flag1 = bytes.length > 11
+			final boolean flag1 = bytes.length > 11
 					&& Objects.equals(bytes[0], (byte) 0x1a)
 					&& Objects.equals(bytes[1], (byte) 0x45)
 					&& Objects.equals(bytes[2], (byte) 0xdf)
@@ -823,39 +1000,44 @@ public enum FileMagicNumber {
 
 			if (flag1) {
 				//此处需要判断是否是'\x42\x82\x88matroska'，算法类似kmp判断
-				byte[] bytes1 = {(byte) 0x42, (byte) 0x82, (byte) 0x88, (byte) 0x6d, (byte) 0x61, (byte) 0x74, (byte) 0x72, (byte) 0x6f, (byte) 0x73, (byte) 0x6b, (byte) 0x61};
-				int index = FileMagicNumber.indexOf(bytes, bytes1);
+				final byte[] bytes1 = {(byte) 0x42, (byte) 0x82, (byte) 0x88, (byte) 0x6d, (byte) 0x61, (byte) 0x74, (byte) 0x72, (byte) 0x6f, (byte) 0x73, (byte) 0x6b, (byte) 0x61};
+				final int index = FileMagicNumber.indexOf(bytes, bytes1);
 				return index > 0;
 			}
 			return false;
 		}
 	},
-
+	/**
+	 * webm
+	 */
 	WEBM("video/webm", "webm") {
 		@Override
-		public boolean match(byte[] bytes) {
-			boolean flag1 = bytes.length > 8
+		public boolean match(final byte[] bytes) {
+			final boolean flag1 = bytes.length > 8
 					&& Objects.equals(bytes[0], (byte) 0x1a)
 					&& Objects.equals(bytes[1], (byte) 0x45)
 					&& Objects.equals(bytes[2], (byte) 0xdf)
 					&& Objects.equals(bytes[3], (byte) 0xa3);
 			if (flag1) {
 				//此处需要判断是否是'\x42\x82\x88webm'，算法类似kmp判断
-				byte[] bytes1 = {(byte) 0x42, (byte) 0x82, (byte) 0x88, (byte) 0x77, (byte) 0x65, (byte) 0x62, (byte) 0x6d};
-				int index = FileMagicNumber.indexOf(bytes, bytes1);
+				final byte[] bytes1 = {(byte) 0x42, (byte) 0x82, (byte) 0x88, (byte) 0x77, (byte) 0x65, (byte) 0x62, (byte) 0x6d};
+				final int index = FileMagicNumber.indexOf(bytes, bytes1);
 				return index > 0;
 			}
 			return false;
 		}
 	},
-	//此文件签名非常复杂，只判断常见的几种
+	/**
+	 * mov<br>
+	 * 此文件签名非常复杂，只判断常见的几种
+	 */
 	MOV("video/quicktime", "mov") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 12) {
 				return false;
 			}
-			boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag1 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
 					&& Objects.equals(bytes[6], (byte) 0x79)
 					&& Objects.equals(bytes[7], (byte) 0x70)
@@ -863,36 +1045,39 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[9], (byte) 0x74)
 					&& Objects.equals(bytes[10], (byte) 0x20)
 					&& Objects.equals(bytes[11], (byte) 0x20);
-			boolean flag2 = Objects.equals(bytes[4], (byte) 0x6D)
+			final boolean flag2 = Objects.equals(bytes[4], (byte) 0x6D)
 					&& Objects.equals(bytes[5], (byte) 0x6F)
 					&& Objects.equals(bytes[6], (byte) 0x6F)
 					&& Objects.equals(bytes[7], (byte) 0x76);
-			boolean flag3 = Objects.equals(bytes[4], (byte) 0x66)
+			final boolean flag3 = Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x72)
 					&& Objects.equals(bytes[6], (byte) 0x65)
 					&& Objects.equals(bytes[7], (byte) 0x65);
-			boolean flag4 = Objects.equals(bytes[4], (byte) 0x6D)
+			final boolean flag4 = Objects.equals(bytes[4], (byte) 0x6D)
 					&& Objects.equals(bytes[5], (byte) 0x64)
 					&& Objects.equals(bytes[6], (byte) 0x61)
 					&& Objects.equals(bytes[7], (byte) 0x74);
-			boolean flag5 = Objects.equals(bytes[4], (byte) 0x77)
+			final boolean flag5 = Objects.equals(bytes[4], (byte) 0x77)
 					&& Objects.equals(bytes[5], (byte) 0x69)
 					&& Objects.equals(bytes[6], (byte) 0x64)
 					&& Objects.equals(bytes[7], (byte) 0x65);
-			boolean flag6 = Objects.equals(bytes[4], (byte) 0x70)
+			final boolean flag6 = Objects.equals(bytes[4], (byte) 0x70)
 					&& Objects.equals(bytes[5], (byte) 0x6E)
 					&& Objects.equals(bytes[6], (byte) 0x6F)
 					&& Objects.equals(bytes[7], (byte) 0x74);
-			boolean flag7 = Objects.equals(bytes[4], (byte) 0x73)
+			final boolean flag7 = Objects.equals(bytes[4], (byte) 0x73)
 					&& Objects.equals(bytes[5], (byte) 0x6B)
 					&& Objects.equals(bytes[6], (byte) 0x69)
 					&& Objects.equals(bytes[7], (byte) 0x70);
 			return flag1 || flag2 || flag3 || flag4 || flag5 || flag6 || flag7;
 		}
 	},
+	/**
+	 * mpg
+	 */
 	MPEG("video/mpeg", "mpg") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 3
 					&& Objects.equals(bytes[0], (byte) 0x00)
 					&& Objects.equals(bytes[1], (byte) 0x00)
@@ -900,9 +1085,12 @@ public enum FileMagicNumber {
 					&& (bytes[3] >= (byte) 0xb0 && bytes[3] <= (byte) 0xbf);
 		}
 	},
+	/**
+	 * rmvb
+	 */
 	RMVB("video/vnd.rn-realvideo", "rmvb") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 4
 					&& Objects.equals(bytes[0], (byte) 0x2E)
 					&& Objects.equals(bytes[1], (byte) 0x52)
@@ -910,9 +1098,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[3], (byte) 0x46);
 		}
 	},
+	/**
+	 * 3gp
+	 */
 	M3GP("video/3gpp", "3gp") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 10
 					&& Objects.equals(bytes[4], (byte) 0x66)
 					&& Objects.equals(bytes[5], (byte) 0x74)
@@ -923,94 +1114,115 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[10], (byte) 0x70);
 		}
 	},
-	//video end ---------------------------------------------------------------
-	//document start ----------------------------------------------------------
+	// endregion
+
+	// region ----- document
+	/**
+	 * doc
+	 */
 	DOC("application/msword", "doc") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
-			boolean flag1 = bytes.length > 515 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
+			final boolean flag1 = bytes.length > 515 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
 			if (flag1) {
-				byte[] byte2 = new byte[]{(byte) 0xec, (byte) 0xa5, (byte) 0xc1, (byte) 0x00};
-				boolean flag2 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 516), byte2);
-				byte[] byte3 = new byte[]{(byte) 0x00, (byte) 0x0a, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x4d, (byte) 0x53, (byte) 0x57, (byte) 0x6f, (byte) 0x72, (byte) 0x64
+				final byte[] byte2 = new byte[]{(byte) 0xec, (byte) 0xa5, (byte) 0xc1, (byte) 0x00};
+				final boolean flag2 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 516), byte2);
+				final byte[] byte3 = new byte[]{(byte) 0x00, (byte) 0x0a, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x4d, (byte) 0x53, (byte) 0x57, (byte) 0x6f, (byte) 0x72, (byte) 0x64
 						, (byte) 0x44, (byte) 0x6f, (byte) 0x63, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x57, (byte) 0x6f, (byte) 0x72, (byte) 0x64,
 						(byte) 0x2e, (byte) 0x44, (byte) 0x6f, (byte) 0x63, (byte) 0x75, (byte) 0x6d, (byte) 0x65, (byte) 0x6e, (byte) 0x74, (byte) 0x2e, (byte) 0x38, (byte) 0x00,
 						(byte) 0xf4, (byte) 0x39, (byte) 0xb2, (byte) 0x71};
-				byte[] range = Arrays.copyOfRange(bytes, 2075, 2142);
-				boolean flag3 = bytes.length > 2142 && FileMagicNumber.indexOf(range, byte3) > 0;
+				final byte[] range = Arrays.copyOfRange(bytes, 2075, 2142);
+				final boolean flag3 = bytes.length > 2142 && FileMagicNumber.indexOf(range, byte3) > 0;
 				return flag2 || flag3;
 			}
 			return false;
 		}
 	},
-
+	/**
+	 * xls
+	 */
 	XLS("application/vnd.ms-excel", "xls") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
-			boolean flag1 = bytes.length > 520 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
+			final boolean flag1 = bytes.length > 520 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
 			if (flag1) {
-				byte[] byte2 = new byte[]{(byte) 0xfd, (byte) 0xff, (byte) 0xff, (byte) 0xff};
-				boolean flag2 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 516), byte2) && (bytes[518] == 0x00 || bytes[518] == 0x02);
-				byte[] byte3 = new byte[]{(byte) 0x09, (byte) 0x08, (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x06, (byte) 0x05, (byte) 0x00};
-				boolean flag3 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 520), byte3);
-				byte[] byte4 = new byte[]{(byte) 0xe2, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x5c, (byte) 0x00, (byte) 0x70, (byte) 0x00, (byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x43, (byte) 0x61, (byte) 0x6c, (byte) 0x63};
-				boolean flag4 = bytes.length > 2095 && Arrays.equals(Arrays.copyOfRange(bytes, 1568, 2095), byte4);
+				final byte[] byte2 = new byte[]{(byte) 0xfd, (byte) 0xff, (byte) 0xff, (byte) 0xff};
+				final boolean flag2 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 516), byte2) && (bytes[518] == 0x00 || bytes[518] == 0x02);
+				final byte[] byte3 = new byte[]{(byte) 0x09, (byte) 0x08, (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x06, (byte) 0x05, (byte) 0x00};
+				final boolean flag3 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 520), byte3);
+				final byte[] byte4 = new byte[]{(byte) 0xe2, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x5c, (byte) 0x00, (byte) 0x70, (byte) 0x00, (byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x43, (byte) 0x61, (byte) 0x6c, (byte) 0x63};
+				final boolean flag4 = bytes.length > 2095 && Arrays.equals(Arrays.copyOfRange(bytes, 1568, 2095), byte4);
 				return flag2 || flag3 || flag4;
 			}
 			return false;
 		}
 
 	},
+	/**
+	 * ppt
+	 */
 	PPT("application/vnd.ms-powerpoint", "ppt") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
-			boolean flag1 = bytes.length > 524 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
+			final boolean flag1 = bytes.length > 524 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
 			if (flag1) {
-				byte[] byte2 = new byte[]{(byte) 0xa0, (byte) 0x46, (byte) 0x1d, (byte) 0xf0};
-				byte[] byteRange = Arrays.copyOfRange(bytes, 512, 516);
-				boolean flag2 = Arrays.equals(byteRange, byte2);
-				byte[] byte3 = new byte[]{(byte) 0x00, (byte) 0x6e, (byte) 0x1e, (byte) 0xf0};
-				boolean flag3 = Arrays.equals(byteRange, byte3);
-				byte[] byte4 = new byte[]{(byte) 0x0f, (byte) 0x00, (byte) 0xe8, (byte) 0x03};
-				boolean flag4 = Arrays.equals(byteRange, byte4);
-				byte[] byte5 = new byte[]{(byte) 0xfd, (byte) 0xff, (byte) 0xff, (byte) 0xff};
-				boolean flag5 = Arrays.equals(byteRange, byte5) && bytes[522] == 0x00 && bytes[523] == 0x00;
-				byte[] byte6 = new byte[]{(byte) 0x00, (byte) 0xb9, (byte) 0x29, (byte) 0xe8, (byte) 0x11, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				final byte[] byte2 = new byte[]{(byte) 0xa0, (byte) 0x46, (byte) 0x1d, (byte) 0xf0};
+				final byte[] byteRange = Arrays.copyOfRange(bytes, 512, 516);
+				final boolean flag2 = Arrays.equals(byteRange, byte2);
+				final byte[] byte3 = new byte[]{(byte) 0x00, (byte) 0x6e, (byte) 0x1e, (byte) 0xf0};
+				final boolean flag3 = Arrays.equals(byteRange, byte3);
+				final byte[] byte4 = new byte[]{(byte) 0x0f, (byte) 0x00, (byte) 0xe8, (byte) 0x03};
+				final boolean flag4 = Arrays.equals(byteRange, byte4);
+				final byte[] byte5 = new byte[]{(byte) 0xfd, (byte) 0xff, (byte) 0xff, (byte) 0xff};
+				final boolean flag5 = Arrays.equals(byteRange, byte5) && bytes[522] == 0x00 && bytes[523] == 0x00;
+				final byte[] byte6 = new byte[]{(byte) 0x00, (byte) 0xb9, (byte) 0x29, (byte) 0xe8, (byte) 0x11, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 						(byte) 0x4d, (byte) 0x53, (byte) 0x20, (byte) 0x50, (byte) 0x6f, (byte) 0x77, (byte) 0x65, (byte) 0x72, (byte) 0x50, (byte)
 						0x6f, (byte) 0x69, (byte) 0x6e, (byte) 0x74, (byte) 0x20, (byte) 0x39, (byte) 0x37};
-				boolean flag6 = bytes.length > 2096 && Arrays.equals(Arrays.copyOfRange(bytes, 2072, 2096), byte6);
+				final boolean flag6 = bytes.length > 2096 && Arrays.equals(Arrays.copyOfRange(bytes, 2072, 2096), byte6);
 				return flag2 || flag3 || flag4 || flag5 || flag6;
 			}
 			return false;
 		}
 	},
+	/**
+	 * docx
+	 */
 	DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return Objects.equals(FileMagicNumber.matchDocument(bytes), DOCX);
 		}
 	},
+	/**
+	 * pptx
+	 */
 	PPTX("application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return Objects.equals(FileMagicNumber.matchDocument(bytes), PPTX);
 		}
 	},
+	/**
+	 * xlsx
+	 */
 	XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return Objects.equals(FileMagicNumber.matchDocument(bytes), XLSX);
 		}
 	},
+	// endregion
 
-	//document end ------------------------------------------------------------
-	//other start -------------------------------------------------------------
+	// region ----- others
+	/**
+	 * wasm
+	 */
 	WASM("application/wasm", "wasm") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 7
 					&& Objects.equals(bytes[0], (byte) 0x00)
 					&& Objects.equals(bytes[1], (byte) 0x61)
@@ -1022,10 +1234,13 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[7], (byte) 0x00);
 		}
 	},
-	// https://source.android.com/devices/tech/dalvik/dex-format#dex-file-magic
+	/**
+	 * dex<br>
+	 * https://source.android.com/devices/tech/dalvik/dex-format#dex-file-magic
+	 */
 	DEX("application/vnd.android.dex", "dex") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 36
 					&& Objects.equals(bytes[0], (byte) 0x64)
 					&& Objects.equals(bytes[1], (byte) 0x65)
@@ -1034,9 +1249,12 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[36], (byte) 0x70);
 		}
 	},
+	/**
+	 * dey
+	 */
 	DEY("application/vnd.android.dey", "dey") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			return bytes.length > 100
 					&& Objects.equals(bytes[0], (byte) 0x64)
 					&& Objects.equals(bytes[1], (byte) 0x65)
@@ -1045,113 +1263,172 @@ public enum FileMagicNumber {
 					DEX.match(Arrays.copyOfRange(bytes, 40, 100));
 		}
 	},
+	/**
+	 * eml
+	 */
 	EML("message/rfc822", "eml") {
 		@Override
-		public boolean match(byte[] bytes) {
+		public boolean match(final byte[] bytes) {
 			if (bytes.length < 8) {
 				return false;
 			}
-			byte[] byte1 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x20, (byte) 0x20, (byte) 0x20};
-			byte[] byte2 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x20, (byte) 0x3F, (byte) 0x3F, (byte) 0x3F};
-			byte[] byte3 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x3A, (byte) 0x20};
-			byte[] byte4 = new byte[]{(byte) 0x52, (byte) 0x65, (byte) 0x74, (byte) 0x75, (byte) 0x72, (byte) 0x6E, (byte) 0x2D, (byte) 0x50, (byte) 0x61, (byte) 0x74, (byte) 0x68, (byte) 0x3A, (byte) 0x20};
+			final byte[] byte1 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x20, (byte) 0x20, (byte) 0x20};
+			final byte[] byte2 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x20, (byte) 0x3F, (byte) 0x3F, (byte) 0x3F};
+			final byte[] byte3 = new byte[]{(byte) 0x46, (byte) 0x72, (byte) 0x6F, (byte) 0x6D, (byte) 0x3A, (byte) 0x20};
+			final byte[] byte4 = new byte[]{(byte) 0x52, (byte) 0x65, (byte) 0x74, (byte) 0x75, (byte) 0x72, (byte) 0x6E, (byte) 0x2D, (byte) 0x50, (byte) 0x61, (byte) 0x74, (byte) 0x68, (byte) 0x3A, (byte) 0x20};
 			return Arrays.equals(Arrays.copyOfRange(bytes, 0, 7), byte1)
 					|| Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte2)
 					|| Arrays.equals(Arrays.copyOfRange(bytes, 0, 6), byte3)
 					|| bytes.length > 13 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 13), byte4);
 		}
 	},
+	/**
+	 * mdb
+	 */
 	MDB("application/vnd.ms-access", "mdb") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x53, (byte) 0x74, (byte) 0x61, (byte) 0x6E, (byte) 0x64,
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x53, (byte) 0x74, (byte) 0x61, (byte) 0x6E, (byte) 0x64,
 					(byte) 0x61, (byte) 0x72, (byte) 0x64, (byte) 0x20, (byte) 0x4A, (byte) 0x65, (byte) 0x74, (byte) 0x20, (byte) 0x44, (byte) 0x42};
 			return bytes.length > 18 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 18), byte1);
 		}
 	},
-	//CHM  49 54 53 46
+	/**
+	 * CHM  49 54 53 46
+	 */
 	CHM("application/vnd.ms-htmlhelp", "chm") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0x49, (byte) 0x54, (byte) 0x53, (byte) 0x46};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0x49, (byte) 0x54, (byte) 0x53, (byte) 0x46};
 			return bytes.length > 4 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 4), byte1);
 		}
 	},
-	//class CA FE BA BE
+
+	/**
+	 * class CA FE BA BE
+	 */
 	CLASS("application/java-vm", "class") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE};
 			return bytes.length > 4 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 4), byte1);
 		}
 	},
-	//torrent 64 38 3A 61 6E 6E 6F 75 6E 63 65
+	/**
+	 * torrent 64 38 3A 61 6E 6E 6F 75 6E 63 65
+	 */
 	TORRENT("application/x-bittorrent", "torrent") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0x64, (byte) 0x38, (byte) 0x3A, (byte) 0x61, (byte) 0x6E, (byte) 0x6E, (byte) 0x6F, (byte) 0x75, (byte) 0x6E, (byte) 0x63, (byte) 0x65};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0x64, (byte) 0x38, (byte) 0x3A, (byte) 0x61, (byte) 0x6E, (byte) 0x6E, (byte) 0x6F, (byte) 0x75, (byte) 0x6E, (byte) 0x63, (byte) 0x65};
 			return bytes.length > 11 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 11), byte1);
 		}
 	},
+	/**
+	 * wpd
+	 */
 	WPD("application/vnd.wordperfect", "wpd") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xFF, (byte) 0x57, (byte) 0x50, (byte) 0x43};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xFF, (byte) 0x57, (byte) 0x50, (byte) 0x43};
 			return bytes.length > 4 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 4), byte1);
 		}
 	},
+	/**
+	 * dbx
+	 */
 	DBX("", "dbx") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0xCF, (byte) 0xAD, (byte) 0x12, (byte) 0xFE};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0xCF, (byte) 0xAD, (byte) 0x12, (byte) 0xFE};
 			return bytes.length > 4 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 4), byte1);
 		}
 	},
+	/**
+	 * pst
+	 */
 	PST("application/vnd.ms-outlook-pst", "pst") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0x21, (byte) 0x42, (byte) 0x44, (byte) 0x4E};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0x21, (byte) 0x42, (byte) 0x44, (byte) 0x4E};
 			return bytes.length > 4 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 4), byte1);
 		}
 	},
+	/**
+	 * ram
+	 */
 	RAM("audio/x-pn-realaudio", "ram") {
 		@Override
-		public boolean match(byte[] bytes) {
-			byte[] byte1 = new byte[]{(byte) 0x2E, (byte) 0x72, (byte) 0x61, (byte) 0xFD, (byte) 0x00};
+		public boolean match(final byte[] bytes) {
+			final byte[] byte1 = new byte[]{(byte) 0x2E, (byte) 0x72, (byte) 0x61, (byte) 0xFD, (byte) 0x00};
 			return bytes.length > 5 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 5), byte1);
 		}
 	}
-	//other end ---------------------------------------------------------------
+	// endregion
 	;
-	private final String mimeType;
-	private final String extension;
 
-	FileMagicNumber(String mimeType, String extension) {
-		this.mimeType = mimeType;
-		this.extension = extension;
-	}
-
-	public static FileMagicNumber getMagicNumber(byte[] bytes) {
-		FileMagicNumber number = Arrays.stream(values())
+	/**
+	 * 根据给定的bytes，获取对应识别到的{@code FileMagicNumber}
+	 *
+	 * @param bytes bytes魔数
+	 * @return {@code FileMagicNumber}
+	 */
+	public static FileMagicNumber getMagicNumber(final byte[] bytes) {
+		final FileMagicNumber number = Arrays.stream(values())
 				.filter(fileMagicNumber -> fileMagicNumber.match(bytes))
 				.findFirst()
 				.orElse(UNKNOWN);
-		if (number.equals(FileMagicNumber.ZIP)) {
-			FileMagicNumber fn = FileMagicNumber.matchDocument(bytes);
+
+		// 压缩文档类型，如office或jar等
+		if (FileMagicNumber.ZIP.equals(number)) {
+			final FileMagicNumber fn = FileMagicNumber.matchDocument(bytes);
 			return fn == UNKNOWN ? ZIP : fn;
 		}
 		return number;
 	}
 
+	private final String mimeType;
+	private final String extension;
+
+	/**
+	 * 构造
+	 *
+	 * @param mimeType  媒体类型
+	 * @param extension 扩展名
+	 */
+	FileMagicNumber(final String mimeType, final String extension) {
+		this.mimeType = mimeType;
+		this.extension = extension;
+	}
+
+	/**
+	 * 获取媒体类型
+	 *
+	 * @return 媒体类型
+	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	/**
+	 * 获取扩展名
+	 *
+	 * @return 扩展名
+	 */
 	public String getExtension() {
 		return extension;
 	}
 
-	private static int indexOf(byte[] array, byte[] target) {
+	/**
+	 * 是否匹配bytes
+	 *
+	 * @param bytes bytes
+	 * @return 是否匹配
+	 */
+	public abstract boolean match(byte[] bytes);
+
+	// region ----- private static methods
+	private static int indexOf(final byte[] array, final byte[] target) {
 		if (array == null || target == null || array.length < target.length) {
 			return -1;
 		}
@@ -1172,19 +1449,26 @@ public enum FileMagicNumber {
 	}
 
 	//处理 Open XML 类型的文件
-	private static boolean compareBytes(byte[] buf, byte[] slice, int startOffset) {
-		int sl = slice.length;
+	private static boolean compareBytes(final byte[] buf, final byte[] slice, final int startOffset) {
+		final int sl = slice.length;
 		if (startOffset + sl > buf.length) {
 			return false;
 		}
-		byte[] sub = Arrays.copyOfRange(buf, startOffset, startOffset + sl);
+		final byte[] sub = Arrays.copyOfRange(buf, startOffset, startOffset + sl);
 		return Arrays.equals(sub, slice);
 	}
 
-	private static FileMagicNumber matchOpenXmlMime(byte[] bytes, int offset) {
-		byte[] word = new byte[]{'w', 'o', 'r', 'd', '/'};
-		byte[] ppt = new byte[]{'p', 'p', 't', '/'};
-		byte[] xl = new byte[]{'x', 'l', '/'};
+	/**
+	 * 判断OpenXML文档类型
+	 *
+	 * @param bytes  bytes魔数
+	 * @param offset 偏移
+	 * @return {@code FileMagicNumber}
+	 */
+	private static FileMagicNumber matchOpenXmlMime(final byte[] bytes, final int offset) {
+		final byte[] word = new byte[]{'w', 'o', 'r', 'd', '/'};
+		final byte[] ppt = new byte[]{'p', 'p', 't', '/'};
+		final byte[] xl = new byte[]{'x', 'l', '/'};
 		if (FileMagicNumber.compareBytes(bytes, word, offset)) {
 			return FileMagicNumber.DOCX;
 		}
@@ -1197,17 +1481,23 @@ public enum FileMagicNumber {
 		return FileMagicNumber.UNKNOWN;
 	}
 
-	private static FileMagicNumber matchDocument(byte[] bytes) {
-		FileMagicNumber fileMagicNumber = FileMagicNumber.matchOpenXmlMime(bytes, (byte) 0x1e);
+	/**
+	 * 匹配文档类型
+	 *
+	 * @param bytes bytes魔数
+	 * @return 匹配到的文档类型
+	 */
+	private static FileMagicNumber matchDocument(final byte[] bytes) {
+		final FileMagicNumber fileMagicNumber = FileMagicNumber.matchOpenXmlMime(bytes, (byte) 0x1e);
 		if (false == fileMagicNumber.equals(UNKNOWN)) {
 			return fileMagicNumber;
 		}
-		byte[] bytes1 = new byte[]{0x5B, 0x43, 0x6F, 0x6E, 0x74, 0x65, 0x6E, 0x74, 0x5F, 0x54, 0x79, 0x70, 0x65, 0x73, 0x5D, 0x2E, 0x78, 0x6D, 0x6C};
-		byte[] bytes2 = new byte[]{0x5F, 0x72, 0x65, 0x6C, 0x73, 0x2F, 0x2E, 0x72, 0x65, 0x6C, 0x73};
-		byte[] bytes3 = new byte[]{0x64, 0x6F, 0x63, 0x50, 0x72, 0x6F, 0x70, 0x73};
-		boolean flag1 = FileMagicNumber.compareBytes(bytes, bytes1, (byte) 0x1e);
-		boolean flag2 = FileMagicNumber.compareBytes(bytes, bytes2, (byte) 0x1e);
-		boolean flag3 = FileMagicNumber.compareBytes(bytes, bytes3, (byte) 0x1e);
+		final byte[] bytes1 = new byte[]{0x5B, 0x43, 0x6F, 0x6E, 0x74, 0x65, 0x6E, 0x74, 0x5F, 0x54, 0x79, 0x70, 0x65, 0x73, 0x5D, 0x2E, 0x78, 0x6D, 0x6C};
+		final byte[] bytes2 = new byte[]{0x5F, 0x72, 0x65, 0x6C, 0x73, 0x2F, 0x2E, 0x72, 0x65, 0x6C, 0x73};
+		final byte[] bytes3 = new byte[]{0x64, 0x6F, 0x63, 0x50, 0x72, 0x6F, 0x70, 0x73};
+		final boolean flag1 = FileMagicNumber.compareBytes(bytes, bytes1, (byte) 0x1e);
+		final boolean flag2 = FileMagicNumber.compareBytes(bytes, bytes2, (byte) 0x1e);
+		final boolean flag3 = FileMagicNumber.compareBytes(bytes, bytes3, (byte) 0x1e);
 		if (false == (flag1 || flag2 || flag3)) {
 			return UNKNOWN;
 		}
@@ -1217,7 +1507,7 @@ public enum FileMagicNumber {
 			if (index == -1) {
 				continue;
 			}
-			FileMagicNumber fn = FileMagicNumber.matchOpenXmlMime(bytes, index + 30);
+			final FileMagicNumber fn = FileMagicNumber.matchOpenXmlMime(bytes, index + 30);
 			if (false == fn.equals(UNKNOWN)) {
 				return fn;
 			}
@@ -1225,19 +1515,26 @@ public enum FileMagicNumber {
 		return UNKNOWN;
 	}
 
-	private static int searchSignature(byte[] bytes, int start, int rangeNum) {
-		byte[] signature = new byte[]{0x50, 0x4B, 0x03, 0x04};
-		int length = bytes.length;
+	/**
+	 * 查找文档签名（文档标识）
+	 *
+	 * @param bytes    bytes
+	 * @param start    开始位置
+	 * @param rangeNum 步进长度
+	 * @return 签名
+	 */
+	@SuppressWarnings("SameParameterValue")
+	private static int searchSignature(final byte[] bytes, final int start, final int rangeNum) {
+		final byte[] signature = new byte[]{0x50, 0x4B, 0x03, 0x04};
+		final int length = bytes.length;
 		int end = start + rangeNum;
 		if (end > length) {
 			end = length;
 		}
-		int index = FileMagicNumber.indexOf(Arrays.copyOfRange(bytes, start, end), signature);
+		final int index = FileMagicNumber.indexOf(Arrays.copyOfRange(bytes, start, end), signature);
 		return (index == -1)
 				? -1
 				: (start + index);
 	}
-
-	public abstract boolean match(byte[] bytes);
-
+	// endregion
 }

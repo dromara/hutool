@@ -1,6 +1,6 @@
 package cn.hutool.poi.csv;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;

@@ -2,7 +2,7 @@ package cn.hutool.extra.ssh;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.extra.ftp.AbstractFtp;
 import cn.hutool.extra.ftp.FtpConfig;

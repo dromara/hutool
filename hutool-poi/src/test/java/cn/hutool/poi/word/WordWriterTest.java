@@ -2,7 +2,7 @@ package cn.hutool.poi.word;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import lombok.AllArgsConstructor;
 import lombok.Data;

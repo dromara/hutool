@@ -1,7 +1,6 @@
 package cn.hutool.core.io.file;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.SerConsumer;
@@ -19,7 +18,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * 文件读取器

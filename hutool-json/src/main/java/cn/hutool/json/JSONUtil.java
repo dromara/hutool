@@ -1,8 +1,7 @@
 package cn.hutool.json;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;

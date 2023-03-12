@@ -1,9 +1,9 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.file;
 
 import cn.hutool.core.compress.ZipUtil;
-import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.file.*;
-import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.io.BomReader;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.stream.BOMInputStream;
 import cn.hutool.core.io.unit.DataSizeUtil;

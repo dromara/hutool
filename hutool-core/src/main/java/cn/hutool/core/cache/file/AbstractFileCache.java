@@ -1,7 +1,7 @@
 package cn.hutool.core.cache.file;
 
 import cn.hutool.core.cache.Cache;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 
 import java.io.File;

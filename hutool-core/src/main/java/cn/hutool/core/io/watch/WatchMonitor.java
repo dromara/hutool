@@ -1,6 +1,6 @@
 package cn.hutool.core.io.watch;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
 import cn.hutool.core.text.StrUtil;

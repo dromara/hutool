@@ -1,6 +1,5 @@
 package cn.hutool.setting.dialect;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.map.SafeConcurrentHashMap;

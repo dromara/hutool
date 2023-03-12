@@ -2,7 +2,7 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.compress.ZipUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.StrUtil;
