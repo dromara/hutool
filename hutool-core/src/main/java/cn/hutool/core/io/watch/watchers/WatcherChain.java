@@ -1,6 +1,5 @@
 package cn.hutool.core.io.watch.watchers;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.lang.Chain;
 
@@ -23,9 +22,9 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	final private List<Watcher> chain;
 
 	/**
-	 * 创建观察者链{@link WatcherChain}
+	 * 创建观察者链{@code WatcherChain}
 	 * @param watchers  观察者列表
-	 * @return {@link WatcherChain}
+	 * @return {@code WatcherChain}
 	 */
 	public static WatcherChain of(final Watcher... watchers) {
 		return new WatcherChain(watchers);

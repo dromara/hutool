@@ -1,6 +1,5 @@
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.reflect.ActualTypeMapperPool;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +8,7 @@ import java.util.Map;
 
 /**
  * 见：<a href="https://gitee.com/dromara/hutool/pulls/447/files">https://gitee.com/dromara/hutool/pulls/447/files</a>
- *
+ * <p>
  * TODO 同时继承泛型和实现泛型接口需要解析，此处为F
  */
 public class ActualTypeMapperPoolTest {

@@ -1,8 +1,7 @@
-package cn.hutool.crypto.symmetric.fpe;
+package cn.hutool.crypto.symmetric;
 
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Padding;
-import cn.hutool.crypto.symmetric.AES;
 import org.bouncycastle.crypto.AlphabetMapper;
 import org.bouncycastle.jcajce.spec.FPEParameterSpec;
 
@@ -24,7 +23,7 @@ import java.io.Serializable;
  *     <li>数据类型不变，加密前是数字类型，加密后仍然是数字类型</li>
  *     <li>加密过程可逆，加密后的数据可以通过密钥解密还原原始数据</li>
  * </ul>
- *
+ * <p>
  * 此类基于BouncyCastle实现。
  *
  * @author looly

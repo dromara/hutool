@@ -1,6 +1,5 @@
-package cn.hutool.core.builder;
+package cn.hutool.core.lang.builder;
 
-import cn.hutool.core.lang.builder.GenericBuilder;
 import cn.hutool.core.text.StrUtil;
 import lombok.Getter;
 import lombok.Setter;

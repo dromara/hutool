@@ -54,12 +54,13 @@ class NoneLowerBound<T extends Comparable<? super T>> implements Bound<T> {
 	 * <ul>
 	 *     <li>-1：<em>t1</em>在<em>t2</em>的左侧；</li>
 	 *     <li>0：<em>t1</em>与<em>t2</em>的重合；</li>
-	 *     <li>-1：<em>t1</em>在<em>t2</em>的右侧；</li>
+	 *     <li>-1：<em>t1</em>在<em>t2</em>的右侧；（不存在）</li>
 	 * </ul>
 	 *
 	 * @param bound 边界
 	 * @return 位置
 	 */
+	@SuppressWarnings("ComparatorMethodParameterNotUsed")
 	@Override
 	public int compareTo(final Bound<T> bound) {
 		return bound instanceof NoneLowerBound ? 0 : -1;
@@ -102,7 +103,7 @@ class NoneLowerBound<T extends Comparable<? super T>> implements Bound<T> {
 	 */
 	@Override
 	public String toString() {
-		return "{x | x > -\u221e}";
+		return "{x | x > -∞}";
 	}
 
 }

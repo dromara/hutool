@@ -573,17 +573,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mValue = value;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return mValue.length();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			buffer.append(mValue);
@@ -610,9 +604,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mValues = values;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			int max = 0;
@@ -625,9 +616,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			return max;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			buffer.append(mValues[calendar.get(mField)]);
@@ -651,25 +639,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mField = field;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 4;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			if (value < 10) {
@@ -697,25 +676,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 		UnpaddedMonthField() {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 2;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.MONTH) + 1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			if (value < 10) {
@@ -750,25 +720,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mSize = size;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return mSize;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			appendFullDigits(buffer, value, mSize);
@@ -792,25 +753,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mField = field;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 2;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(mField));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			if (value < 100) {
@@ -835,25 +787,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 		TwoDigitYearField() {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 2;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.YEAR) % 100);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			appendDigits(buffer, value);
@@ -874,25 +817,16 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 		TwoDigitMonthField() {
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 2;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			appendTo(buffer, calendar.get(Calendar.MONTH) + 1);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final void appendTo(final Appendable buffer, final int value) throws IOException {
 			appendDigits(buffer, value);
@@ -916,17 +850,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mRule = rule;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return mRule.estimateLength();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			int value = calendar.get(Calendar.HOUR);
@@ -936,9 +864,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mRule.appendTo(buffer, value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final int value) throws IOException {
 			mRule.appendTo(buffer, value);
@@ -962,17 +887,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mRule = rule;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return mRule.estimateLength();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			int value = calendar.get(Calendar.HOUR_OF_DAY);
@@ -982,9 +901,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mRule.appendTo(buffer, value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final int value) throws IOException {
 			mRule.appendTo(buffer, value);
@@ -1103,9 +1019,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mDaylight = getTimeZoneDisplay(timeZone, true, style, locale);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			// We have no access to the Calendar object that will be passed to
@@ -1114,9 +1027,6 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			return Math.max(mStandard.length(), mDaylight.length());
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			final TimeZone zone = calendar.getTimeZone();
@@ -1148,17 +1058,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mColon = colon;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return 5;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 
@@ -1227,17 +1131,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			this.length = length;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int estimateLength() {
 			return length;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
 			int offset = calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET);
@@ -1298,17 +1196,11 @@ public class FastDatePrinter extends SimpleDateBasic implements DatePrinter {
 			mLocale = locale;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public int hashCode() {
 			return (mStyle * 31 + mLocale.hashCode()) * 31 + mTimeZone.hashCode();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean equals(final Object obj) {
 			if (this == obj) {

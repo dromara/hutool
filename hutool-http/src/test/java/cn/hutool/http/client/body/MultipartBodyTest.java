@@ -1,9 +1,8 @@
-package cn.hutool.http.body;
+package cn.hutool.http.client.body;
 
+import cn.hutool.core.io.resource.HttpResource;
 import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.io.resource.HttpResource;
-import cn.hutool.http.client.body.MultipartBody;
 import org.junit.Assert;
 import org.junit.Test;
 

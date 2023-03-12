@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /**
  * 测试带毫秒的日期转换
  */
-public class IssueI3BS4S {
+public class IssueI3BS4STest {
 
 	@Test
 	public void toBeanTest(){

@@ -2,7 +2,6 @@ package cn.hutool.http.client.engine.httpclient5;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.net.ssl.SSLUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.http.GlobalHeaders;
 import cn.hutool.http.HttpException;

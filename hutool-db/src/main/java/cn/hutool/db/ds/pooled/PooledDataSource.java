@@ -29,7 +29,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * 获得一个数据源
 	 *
 	 * @param group 数据源分组
-	 * @return {@link PooledDataSource}
+	 * @return {@code PooledDataSource}
 	 */
 	synchronized public static PooledDataSource getDataSource(final String group) {
 		return new PooledDataSource(group);
@@ -38,7 +38,7 @@ public class PooledDataSource extends AbstractDataSource {
 	/**
 	 * 获得一个数据源，使用空分组
 	 *
-	 * @return {@link PooledDataSource}
+	 * @return {@code PooledDataSource}
 	 */
 	synchronized public static PooledDataSource getDataSource() {
 		return new PooledDataSource();

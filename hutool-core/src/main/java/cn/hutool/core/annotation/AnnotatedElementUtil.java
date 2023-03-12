@@ -703,7 +703,7 @@ public class AnnotatedElementUtil {
 	/**
 	 * 清空相关缓存，包括：
 	 * <ul>
-	 *     <li>{@link AnnotatedElementUtil}中的{@link AnnotatedElement}及{@link  AnnotationMapping}缓存；</li>
+	 *     <li>{@code AnnotatedElementUtil}中的{@link AnnotatedElement}及{@link  AnnotationMapping}缓存；</li>
 	 *     <li>{@link AnnotationUtil}中的{@link AnnotatedElement}上直接声明的注解缓存；</li>
 	 *     <li>{@link RepeatableAnnotationCollector}中单例的注解属性缓存；</li>
 	 * </ul>

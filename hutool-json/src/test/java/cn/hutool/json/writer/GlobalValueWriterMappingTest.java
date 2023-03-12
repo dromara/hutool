@@ -12,9 +12,8 @@ public class GlobalValueWriterMappingTest {
 
 	@Before
 	public void init(){
-		GlobalValueWriterMapping.put(CustomSubBean.class, (JSONValueWriter<CustomSubBean>) (writer, value) -> {
-			writer.writeRaw(String.valueOf(value.getId()));
-		});
+		GlobalValueWriterMapping.put(CustomSubBean.class,
+				(JSONValueWriter<CustomSubBean>) (writer, value) -> writer.writeRaw(String.valueOf(value.getId())));
 	}
 
 	@Test

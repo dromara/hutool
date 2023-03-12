@@ -19,6 +19,11 @@ public class AppendableWriter extends Writer implements Appendable {
 	private final boolean flushable;
 	private boolean closed;
 
+	/**
+	 * 构造
+	 *
+	 * @param appendable {@link Appendable}
+	 */
 	public AppendableWriter(final Appendable appendable) {
 		this.appendable = appendable;
 		this.flushable = appendable instanceof Flushable;

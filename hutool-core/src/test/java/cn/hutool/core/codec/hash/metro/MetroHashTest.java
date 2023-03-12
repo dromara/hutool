@@ -1,10 +1,11 @@
-package cn.hutool.core.codec.hash;
+package cn.hutool.core.codec.hash.metro;
 
 
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.codec.hash.CityHash;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,22 +17,32 @@ public class MetroHashTest {
 
 	@Test
 	public void testEmpty() {
-		Assert.assertEquals("31290877cceaea29", HexUtil.toHex(MetroHash.INSTANCE.hash64(StrUtil.utf8Bytes(""), 0)));
+		Assert.assertEquals("705fb008071e967d", HexUtil.toHex(MetroHash64.of(0).hash64(StrUtil.utf8Bytes(""))));
+	}
+
+	@Test
+	public void test1Low() {
+		Assert.assertEquals("AF6F242B7ED32BCB", h64("a"));
+	}
+
+	@Test
+	public void test1High() {
+		Assert.assertEquals("D51BA21D219C37B3", h64("é"));
 	}
 
 	@Test
 	public void metroHash64Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long hash64 = MetroHash.INSTANCE.hash64(str);
-		Assert.assertEquals(62920234463891865L, hash64);
+		final long hash64 = MetroHash64.of(0).hash64(str);
+		Assert.assertEquals(147395857347476456L, hash64);
 	}
 
 	@Test
 	public void metroHash128Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
-		final long[] hash128 = MetroHash.INSTANCE.hash128(str).getLongArray();
-		Assert.assertEquals(4956592424592439349L, hash128[0]);
-		Assert.assertEquals(6301214698325086246L, hash128[1]);
+		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray();
+		Assert.assertEquals(228255164667538345L, hash128[0]);
+		Assert.assertEquals(-6394585948993412256L, hash128[1]);
 	}
 
 	/**
@@ -49,7 +60,7 @@ public class MetroHashTest {
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash.INSTANCE.hash64(StrUtil.utf8Bytes(s));
+			MetroHash64.of(0).hash64(StrUtil.utf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 
@@ -73,7 +84,7 @@ public class MetroHashTest {
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash.INSTANCE.hash128(StrUtil.utf8Bytes(s));
+			MetroHash128.of(0).hash128(StrUtil.utf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 
@@ -89,5 +100,9 @@ public class MetroHashTest {
 			result[index++] = RandomUtil.randomString(RandomUtil.randomInt(64));
 		}
 		return result;
+	}
+
+	private String h64(final String value) {
+		return HexUtil.toHex(MetroHash64.of(0).hash64(StrUtil.utf8Bytes(value))).toUpperCase();
 	}
 }

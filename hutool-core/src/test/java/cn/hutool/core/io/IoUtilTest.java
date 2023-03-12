@@ -11,17 +11,7 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackReader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
+import java.io.*;
 import java.util.List;
 
 public class IoUtilTest {

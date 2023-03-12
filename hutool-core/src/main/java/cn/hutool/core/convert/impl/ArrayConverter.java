@@ -24,6 +24,9 @@ import java.util.List;
 public class ArrayConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static final ArrayConverter INSTANCE = new ArrayConverter();
 
 	/**

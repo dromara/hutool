@@ -893,7 +893,7 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 *
+	 * <p>
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"
@@ -912,7 +912,7 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 *
+	 * <p>
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"

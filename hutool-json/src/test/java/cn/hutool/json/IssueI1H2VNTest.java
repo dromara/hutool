@@ -11,7 +11,7 @@ import java.util.List;
  * 此问题原来出在BeanCopier中，判断循环引用使用了equals，并不严谨。
  * 修复后使用==判断循环引用。
  */
-public class IssueI1H2VN {
+public class IssueI1H2VNTest {
 
 	@Test
 	public void toBeanTest() {

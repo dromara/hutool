@@ -460,6 +460,7 @@ public final class InternalJSONUtil {
 	 * @param c 字符
 	 * @return 转义后的字符串
 	 */
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	private static String escape(final char c) {
 		switch (c) {
 			case '\b':

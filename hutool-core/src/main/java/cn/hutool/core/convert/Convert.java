@@ -830,6 +830,7 @@ public class Convert {
 	 * @param notConvertSet 不替换的字符集合
 	 * @return 替换后的字符
 	 */
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	public static String toDBC(final String text, final Set<Character> notConvertSet) {
 		if(StrUtil.isBlank(text)) {
 			return text;

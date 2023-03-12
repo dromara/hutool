@@ -14,12 +14,13 @@ import org.tinylog.provider.ProviderRegistry;
  * <a href="http://www.tinylog.org/">tinylog</a> log.<br>
  *
  * @author Looly
- *
  */
 public class TinyLog2 extends AbstractLog {
 	private static final long serialVersionUID = 1L;
 
-	/** 堆栈增加层数，因为封装因此多了两层，此值用于正确获取当前类名 */
+	/**
+	 * 堆栈增加层数，因为封装因此多了两层，此值用于正确获取当前类名
+	 */
 	private static final int DEPTH = 5;
 
 	private final int level;
@@ -31,10 +32,21 @@ public class TinyLog2 extends AbstractLog {
 			Configuration.getLocale(),
 			Configuration.isEscapingEnabled()
 	);
+
+	/**
+	 * 构造
+	 *
+	 * @param clazz class
+	 */
 	public TinyLog2(final Class<?> clazz) {
 		this(null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param name 名称
+	 */
 	public TinyLog2(final String name) {
 		this.name = name;
 		this.level = provider.getMinimumLevel().ordinal();
@@ -66,6 +78,7 @@ public class TinyLog2 extends AbstractLog {
 	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		logIfEnabled(fqcn, Level.DEBUG, t, format, arguments);
 	}
+
 	// ------------------------------------------------------------------------- Info
 	@Override
 	public boolean isInfoEnabled() {
@@ -112,15 +125,17 @@ public class TinyLog2 extends AbstractLog {
 
 	/**
 	 * 在对应日志级别打开情况下打印日志
-	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
-	 * @param level 日志级别
-	 * @param t 异常，null则检查最后一个参数是否为Throwable类型，是则取之，否则不打印堆栈
-	 * @param format 日志消息模板
+	 *
+	 * @param fqcn      完全限定类名(Fully Qualified Class Name)，用于定位日志位置
+	 * @param level     日志级别
+	 * @param t         异常，null则检查最后一个参数是否为Throwable类型，是则取之，否则不打印堆栈
+	 * @param format    日志消息模板
 	 * @param arguments 日志消息参数
 	 */
+	@SuppressWarnings("unused")
 	private void logIfEnabled(final String fqcn, final Level level, Throwable t, final String format, final Object... arguments) {
 		// fqcn 无效
-		if(null == t){
+		if (null == t) {
 			t = getLastArgumentIfThrowable(arguments);
 		}
 		provider.log(DEPTH, null, level, t, formatter, StrUtil.toString(format), arguments);
@@ -136,26 +151,26 @@ public class TinyLog2 extends AbstractLog {
 	private Level toTinyLevel(final cn.hutool.log.level.Level level) {
 		final Level tinyLevel;
 		switch (level) {
-		case TRACE:
-			tinyLevel = Level.TRACE;
-			break;
-		case DEBUG:
-			tinyLevel = Level.DEBUG;
-			break;
-		case INFO:
-			tinyLevel = Level.INFO;
-			break;
-		case WARN:
-			tinyLevel = Level.WARN;
-			break;
-		case ERROR:
-			tinyLevel = Level.ERROR;
-			break;
-		case OFF:
-			tinyLevel = Level.OFF;
-			break;
-		default:
-			throw new Error(StrUtil.format("Can not identify level: {}", level));
+			case TRACE:
+				tinyLevel = Level.TRACE;
+				break;
+			case DEBUG:
+				tinyLevel = Level.DEBUG;
+				break;
+			case INFO:
+				tinyLevel = Level.INFO;
+				break;
+			case WARN:
+				tinyLevel = Level.WARN;
+				break;
+			case ERROR:
+				tinyLevel = Level.ERROR;
+				break;
+			case OFF:
+				tinyLevel = Level.OFF;
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
 		return tinyLevel;
 	}

@@ -5,7 +5,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class IssueI3EGJP {
+public class IssueI3EGJPTest {
 
 	@Test
 	public void hutoolMapToBean() {

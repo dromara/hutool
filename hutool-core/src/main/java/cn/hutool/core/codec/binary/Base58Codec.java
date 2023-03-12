@@ -15,6 +15,9 @@ import java.util.Arrays;
  */
 public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]> {
 
+	/**
+	 * 单例
+	 */
 	public static Base58Codec INSTANCE = new Base58Codec();
 
 	/**
@@ -48,6 +51,9 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	public static class Base58Encoder implements Encoder<byte[], String> {
 		private static final String DEFAULT_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
+		/**
+		 * 编码器
+		 */
 		public static final Base58Encoder ENCODER = new Base58Encoder(DEFAULT_ALPHABET.toCharArray());
 
 		private final char[] alphabet;
@@ -105,6 +111,9 @@ public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	 */
 	public static class Base58Decoder implements Decoder<CharSequence, byte[]> {
 
+		/**
+		 * 解码器
+		 */
 		public static Base58Decoder DECODER = new Base58Decoder(Base58Encoder.DEFAULT_ALPHABET);
 
 		private final byte[] lookupTable;

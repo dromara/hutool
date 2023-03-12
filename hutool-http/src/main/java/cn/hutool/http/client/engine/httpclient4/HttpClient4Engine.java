@@ -23,13 +23,9 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
 import java.net.URI;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Apache HttpClient5的HTTP请求引擎

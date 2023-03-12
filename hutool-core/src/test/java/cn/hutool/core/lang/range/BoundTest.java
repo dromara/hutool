@@ -39,13 +39,13 @@ public class BoundTest {
 		// getValue
 		Assert.assertNull(bound.getValue());
 		// toString
-		Assert.assertEquals("(" + "-\u221e", bound.descBound());
+		Assert.assertEquals("(" + "-∞", bound.descBound());
 		// compareTo
 		Assert.assertEquals(0, bound.compareTo(bound));
 		Assert.assertEquals(-1, bound.compareTo(Bound.atMost(1)));
 
 		Assert.assertEquals(BoundedRange.all(), bound.toRange());
-		Assert.assertEquals("{x | x > -\u221e}", bound.toString());
+		Assert.assertEquals("{x | x > -∞}", bound.toString());
 	}
 
 	@Test
@@ -60,13 +60,13 @@ public class BoundTest {
 		// getValue
 		Assert.assertNull(bound.getValue());
 		// toString
-		Assert.assertEquals("+\u221e" + ")", bound.descBound());
+		Assert.assertEquals("+∞" + ")", bound.descBound());
 		// compareTo
 		Assert.assertEquals(0, bound.compareTo(bound));
 		Assert.assertEquals(1, bound.compareTo(Bound.atMost(1)));
 
 		Assert.assertEquals(BoundedRange.all(), bound.toRange());
-		Assert.assertEquals("{x | x < +\u221e}", bound.toString());
+		Assert.assertEquals("{x | x < +∞}", bound.toString());
 	}
 
 	@Test

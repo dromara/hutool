@@ -2,7 +2,6 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.json.serialize.JSONStringer;
@@ -14,11 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class JSONUtilTest {
 

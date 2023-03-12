@@ -513,6 +513,13 @@ public class AntPathMatcher {
 		return builder.toString();
 	}
 
+	/**
+	 * 提取参数
+	 *
+	 * @param pattern 模式
+	 * @param path 路径
+	 * @return 参数
+	 */
 	public Map<String, String> extractUriTemplateVariables(final String pattern, final String path) {
 		final Map<String, String> variables = new LinkedHashMap<>();
 		final boolean result = doMatch(pattern, path, true, variables);

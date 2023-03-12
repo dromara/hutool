@@ -3,13 +3,7 @@ package cn.hutool.core.comparator;
 import cn.hutool.core.lang.Chain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 比较器链。此链包装了多个比较器，最终比较结果按照比较器顺序综合多个比较器结果。<br>
@@ -18,6 +12,7 @@ import java.util.Objects;
  *
  * @author looly
  * @since 3.0.7
+ * @param <E> 被比较的对象
  */
 public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<E>>, Comparator<E>, Serializable {
 	private static final long serialVersionUID = -2426725788913962429L;
@@ -38,11 +33,11 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	//------------------------------------------------------------------------------------- Static method start
 
 	/**
-	 * 构建 {@link ComparatorChain}
+	 * 构建 {@code ComparatorChain}
 	 *
 	 * @param <E>        被比较对象类型
 	 * @param comparator 比较器
-	 * @return {@link ComparatorChain}
+	 * @return {@code ComparatorChain}
 	 * @since 5.4.3
 	 */
 	public static <E> ComparatorChain<E> of(final Comparator<E> comparator) {
@@ -50,12 +45,12 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	}
 
 	/**
-	 * 构建 {@link ComparatorChain}
+	 * 构建 {@code ComparatorChain}
 	 *
 	 * @param <E>        被比较对象类型
 	 * @param comparator 比较器
 	 * @param reverse    是否反向
-	 * @return {@link ComparatorChain}
+	 * @return {@code ComparatorChain}
 	 * @since 5.4.3
 	 */
 	public static <E> ComparatorChain<E> of(final Comparator<E> comparator, final boolean reverse) {
@@ -63,11 +58,11 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	}
 
 	/**
-	 * 构建 {@link ComparatorChain}
+	 * 构建 {@code ComparatorChain}
 	 *
 	 * @param <E>         被比较对象类型
 	 * @param comparators 比较器数组
-	 * @return {@link ComparatorChain}
+	 * @return {@code ComparatorChain}
 	 * @since 5.4.3
 	 */
 	@SafeVarargs
@@ -76,11 +71,11 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	}
 
 	/**
-	 * 构建 {@link ComparatorChain}
+	 * 构建 {@code ComparatorChain}
 	 *
 	 * @param <E>         被比较对象类型
 	 * @param comparators 比较器列表
-	 * @return {@link ComparatorChain}
+	 * @return {@code ComparatorChain}
 	 * @since 5.4.3
 	 */
 	public static <E> ComparatorChain<E> of(final List<Comparator<E>> comparators) {
@@ -88,12 +83,12 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	}
 
 	/**
-	 * 构建 {@link ComparatorChain}
+	 * 构建 {@code ComparatorChain}
 	 *
 	 * @param <E>         被比较对象类型
 	 * @param comparators 比较器列表
 	 * @param bits        {@link Comparator} 列表对应的排序boolean值，true表示正序，false反序
-	 * @return {@link ComparatorChain}
+	 * @return {@code ComparatorChain}
 	 * @since 5.4.3
 	 */
 	public static <E> ComparatorChain<E> of(final List<Comparator<E>> comparators, final BitSet bits) {

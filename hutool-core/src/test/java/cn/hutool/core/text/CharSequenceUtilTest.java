@@ -59,6 +59,7 @@ public class CharSequenceUtilTest {
 		Assert.assertEquals("/", result);
 	}
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	@Test
 	public void normalizeTest() {
 		// https://blog.csdn.net/oscar999/article/details/105326270
@@ -155,6 +156,7 @@ public class CharSequenceUtilTest {
 		Assert.assertNull(CharSequenceUtil.removeSuffixIgnoreCase(null, "ABCdef"));
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void trimToNullTest(){
 		String a = "  ";

@@ -116,7 +116,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 
 	/**
 	 * 构造
-	 *
+	 * <p>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *
@@ -144,7 +144,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 
 	/**
 	 * 构造
-	 *
+	 * <p>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 *

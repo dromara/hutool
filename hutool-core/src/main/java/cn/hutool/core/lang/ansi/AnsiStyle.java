@@ -39,7 +39,7 @@ public enum AnsiStyle implements AnsiElement {
 
 	private final int code;
 
-	AnsiStyle(int code) {
+	AnsiStyle(final int code) {
 		this.code = code;
 	}
 

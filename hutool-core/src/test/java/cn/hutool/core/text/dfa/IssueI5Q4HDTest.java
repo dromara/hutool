@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class issueI5Q4HDTest {
+public class IssueI5Q4HDTest {
 
 	@Test
 	public void matchAllTest(){

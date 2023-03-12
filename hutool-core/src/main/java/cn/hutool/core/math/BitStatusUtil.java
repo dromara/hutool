@@ -3,7 +3,7 @@ package cn.hutool.core.math;
 /**
  * 通过位运算表示状态的工具类<br>
  * 参数必须是 `偶数` 且 `大于等于0`！
- *
+ * <p>
  * 工具实现见博客：https://blog.starxg.com/2020/11/bit-status/
  *
  * @author huangxingguang，senssic

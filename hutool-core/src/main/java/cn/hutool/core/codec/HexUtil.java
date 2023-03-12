@@ -31,7 +31,7 @@ public class HexUtil {
 	 * @return 是否为16进制
 	 */
 	public static boolean isHexNumber(final String value) {
-		if(StrUtil.startWith(value, '-')){
+		if (StrUtil.startWith(value, '-')) {
 			// issue#2875
 			return false;
 		}
@@ -39,7 +39,7 @@ public class HexUtil {
 		if (value.startsWith("0x", index) || value.startsWith("0X", index)) {
 			index += 2;
 		} else if (value.startsWith("#", index)) {
-			index ++;
+			index++;
 		}
 		try {
 			new BigInteger(value.substring(index), 16);
@@ -253,7 +253,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '你' =》\u4f60
+	 * 你 =》 &#92;u4f60
 	 * </pre>
 	 *
 	 * @param value int值，也可以是char
@@ -278,7 +278,7 @@ public class HexUtil {
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '你' =》'\u4f60'
+	 * 你 =》 &#92;u4f60
 	 * </pre>
 	 *
 	 * @param ch char值

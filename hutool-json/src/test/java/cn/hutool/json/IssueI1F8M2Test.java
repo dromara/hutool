@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * https://gitee.com/loolly/dashboard/issues?id=I1F8M2
  */
-public class IssueI1F8M2 {
+public class IssueI1F8M2Test {
 	@Test
 	public void toBeanTest() {
 		final String jsonStr = "{\"eventType\":\"fee\",\"fwdAlertingTime\":\"2020-04-22 16:34:13\",\"fwdAnswerTime\":\"\"}";

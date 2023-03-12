@@ -42,6 +42,9 @@ import java.util.Set;
  */
 public class Hutool {
 
+	/**
+	 * 作者（贡献者）
+	 */
 	public static final String AUTHOR = "Looly";
 
 	private Hutool() {

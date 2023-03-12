@@ -1,23 +1,10 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.db.dialect.Dialect;
-import cn.hutool.db.handler.BeanListHandler;
-import cn.hutool.db.handler.EntityHandler;
-import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.db.handler.NumberHandler;
-import cn.hutool.db.handler.ResultSetUtil;
-import cn.hutool.db.handler.RsHandler;
-import cn.hutool.db.handler.StringHandler;
-import cn.hutool.db.sql.Condition;
+import cn.hutool.db.handler.*;
+import cn.hutool.db.sql.*;
 import cn.hutool.db.sql.Condition.LikeType;
-import cn.hutool.db.sql.LogicalOperator;
-import cn.hutool.db.sql.Query;
-import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.SqlExecutor;
-import cn.hutool.db.sql.SqlUtil;
-import cn.hutool.db.sql.QuoteWrapper;
 
 import javax.sql.DataSource;
 import java.io.Serializable;

@@ -6,7 +6,7 @@ import cn.hutool.socket.aio.AioSession;
 
 /**
  * 消息解码器
- * 
+ *
  * @author looly
  *
  * @param <T> 解码后的目标类型
@@ -14,7 +14,7 @@ import cn.hutool.socket.aio.AioSession;
 public interface MsgDecoder<T> {
 	/**
 	 * 对于从Socket流中获取到的数据采用当前MsgDecoder的实现类协议进行解析。
-	 *
+	 * <p>
 	 *
 	 * @param session 本次需要解码的session
 	 * @param readBuffer 待处理的读buffer

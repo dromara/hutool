@@ -20,6 +20,9 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	private static final int STANDARD_BASE = 256;
 	private static final int TARGET_BASE = 62;
 
+	/**
+	 * 单例
+	 */
 	public static Base62Codec INSTANCE = new Base62Codec();
 
 	/**
@@ -102,7 +105,13 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 				'U', 'V', 'W', 'X', 'Y', 'Z' //
 		};
 
+		/**
+		 * GMP风格编码器
+		 */
 		public static Base62Encoder GMP_ENCODER = new Base62Encoder(GMP);
+		/**
+		 * 反转风格，即将GMP风格中的大小写做转换编码器
+		 */
 		public static Base62Encoder INVERTED_ENCODER = new Base62Encoder(INVERTED);
 
 		private final byte[] alphabet;
@@ -130,7 +139,13 @@ public class Base62Codec implements Encoder<byte[], byte[]>, Decoder<byte[], byt
 	 */
 	public static class Base62Decoder implements Decoder<byte[], byte[]> {
 
+		/**
+		 * GMP风格解码器
+		 */
 		public static Base62Decoder GMP_DECODER = new Base62Decoder(Base62Encoder.GMP);
+		/**
+		 * 反转风格，即将GMP风格中的大小写做转换解码器
+		 */
 		public static Base62Decoder INVERTED_DECODER = new Base62Decoder(Base62Encoder.INVERTED);
 
 		private final byte[] lookupTable;

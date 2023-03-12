@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  * Base32 - encodes and decodes RFC4648 Base32<br>
- *  (see <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-6">https://datatracker.ietf.org/doc/html/rfc4648#section-6</a> )<br>
+ * (see <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-6">https://datatracker.ietf.org/doc/html/rfc4648#section-6</a> )<br>
  * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。<br>
  * 所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。<br>
  * 根据RFC4648 Base32规范，支持两种模式：
@@ -69,7 +69,13 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 		private static final Character DEFAULT_PAD = '=';
 		private static final int[] BASE32_FILL = {-1, 4, 1, 6, 3};
 
+		/**
+		 * 编码器
+		 */
 		public static final Base32Encoder ENCODER = new Base32Encoder(DEFAULT_ALPHABET, DEFAULT_PAD);
+		/**
+		 * 16进制编码器
+		 */
 		public static final Base32Encoder HEX_ENCODER = new Base32Encoder(HEX_ALPHABET, DEFAULT_PAD);
 
 		private final char[] alphabet;
@@ -145,7 +151,13 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 	public static class Base32Decoder implements Decoder<CharSequence, byte[]> {
 		private static final char BASE_CHAR = '0';
 
+		/**
+		 * 解码器
+		 */
 		public static final Base32Decoder DECODER = new Base32Decoder(Base32Encoder.DEFAULT_ALPHABET);
+		/**
+		 * 16进制解码器
+		 */
 		public static final Base32Decoder HEX_DECODER = new Base32Decoder(Base32Encoder.HEX_ALPHABET);
 
 		private final byte[] lookupTable;
@@ -166,7 +178,7 @@ public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequenc
 				c = alphabet.charAt(i);
 				lookupTable[c - BASE_CHAR] = (byte) i;
 				// 支持小写字母解码
-				if(c >= 'A' && c <= 'Z'){
+				if (c >= 'A' && c <= 'Z') {
 					lookupTable[Character.toLowerCase(c) - BASE_CHAR] = (byte) i;
 				}
 			}
