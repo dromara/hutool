@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.codec.Encoder;

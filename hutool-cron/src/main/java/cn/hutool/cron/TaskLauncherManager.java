@@ -17,6 +17,10 @@ public class TaskLauncherManager implements Serializable {
 	/** 启动器列表 */
 	protected final List<TaskLauncher> launchers = new ArrayList<>();
 
+	/**
+	 * 构造
+	 * @param scheduler {@link Scheduler}
+	 */
 	public TaskLauncherManager(final Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
@@ -31,9 +35,6 @@ public class TaskLauncherManager implements Serializable {
 		synchronized (this.launchers) {
 			this.launchers.add(launcher);
 		}
-		//子线程是否为deamon线程取决于父线程，因此此处无需显示调用
-		//launcher.setDaemon(this.scheduler.daemon);
-//		launcher.start();
 		this.scheduler.threadExecutor.execute(launcher);
 		return launcher;
 	}

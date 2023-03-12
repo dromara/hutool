@@ -109,6 +109,7 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 	 * @param after   毫秒部分的后一个字符
 	 * @return 规范之后的毫秒部分
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static String normalizeMillSeconds(final String dateStr, final CharSequence before, final CharSequence after) {
 		if (StrUtil.isBlank(after)) {
 			final String millOrNaco = StrUtil.subPre(StrUtil.subAfter(dateStr, before, true), 3);

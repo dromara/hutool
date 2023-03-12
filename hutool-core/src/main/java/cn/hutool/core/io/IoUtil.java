@@ -883,6 +883,19 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
+	 * 关闭<br>
+	 * 关闭失败不会抛出异常
+	 *
+	 * @param closeable 被关闭的对象
+	 * @throws IOException IO异常
+	 */
+	public static void nullSafeClose(final Closeable closeable) throws IOException {
+		if (null != closeable) {
+			closeable.close();
+		}
+	}
+
+	/**
 	 * 尝试关闭指定对象<br>
 	 * 判断对象如果实现了{@link AutoCloseable}，则调用之
 	 *

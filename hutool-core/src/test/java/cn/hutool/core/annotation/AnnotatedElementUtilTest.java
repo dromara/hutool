@@ -593,7 +593,7 @@ public class AnnotatedElementUtilTest {
 	private @interface Annotation4 {}
 
 	@Annotation4
-	private static class Super {};
+	private static class Super {}
 
 	// ================= interface =================
 
@@ -608,7 +608,7 @@ public class AnnotatedElementUtilTest {
 	private @interface Annotation6 {}
 
 	@Annotation6
-	private interface Interface {};
+	private interface Interface {}
 
 	// ================= foo =================
 

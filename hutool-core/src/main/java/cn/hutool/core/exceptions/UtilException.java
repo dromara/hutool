@@ -10,8 +10,8 @@ import cn.hutool.core.text.StrUtil;
 public class UtilException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
-	public UtilException(final Throwable e) {
-		super(ExceptionUtil.getMessage(e), e);
+	public UtilException(final Throwable cause) {
+		super(ExceptionUtil.getMessage(cause), cause);
 	}
 
 	public UtilException(final String message) {
@@ -22,15 +22,15 @@ public class UtilException extends RuntimeException {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public UtilException(final String message, final Throwable throwable) {
-		super(message, throwable);
+	public UtilException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public UtilException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, throwable, enableSuppression, writableStackTrace);
+	public UtilException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public UtilException(final Throwable throwable, final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params), throwable);
+	public UtilException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(StrUtil.format(messageTemplate, params), cause);
 	}
 }

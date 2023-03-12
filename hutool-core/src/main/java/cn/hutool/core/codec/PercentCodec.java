@@ -1,6 +1,6 @@
 package cn.hutool.core.codec;
 
-import cn.hutool.core.codec.BaseN.Base16Codec;
+import cn.hutool.core.codec.binary.Base16Codec;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.StrUtil;

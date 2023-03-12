@@ -1,7 +1,6 @@
 package cn.hutool.http.client.engine.okhttp;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
@@ -60,8 +59,8 @@ public class OkHttpEngine implements ClientEngine {
 	}
 
 	@Override
-	public void close() throws IOException {
-		// ignore
+	public void close() {
+		// do nothing
 	}
 
 	/**

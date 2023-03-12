@@ -37,12 +37,13 @@ public class MailAccount implements Serializable {
 
 	// System Properties
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
-	//private static final String ENCODE_FILE_NAME = "mail.mime.encodefilename";
-	//private static final String CHARSET = "mail.mime.charset";
 
 	// 其他
 	private static final String MAIL_DEBUG = "mail.debug";
 
+	/**
+	 * 默认mail配置查询路径
+	 */
 	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
 	/**

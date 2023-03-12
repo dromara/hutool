@@ -79,7 +79,7 @@ public class JdkClientEngine implements ClientEngine {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		if (null != conn) {
 			conn.disconnectQuietly();
 		}

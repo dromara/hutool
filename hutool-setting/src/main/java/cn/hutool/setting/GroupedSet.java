@@ -1,7 +1,6 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
@@ -183,10 +182,9 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * 加载设置文件。 此方法不会关闭流对象
 	 *
 	 * @param settingStream 文件流
-	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	public boolean load(final InputStream settingStream) throws IOException {
+	public void load(final InputStream settingStream) throws IOException {
 		super.clear();
 		BufferedReader reader = null;
 		try {
@@ -233,7 +231,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		} finally {
 			IoUtil.close(reader);
 		}
-		return true;
 	}
 
 	/**

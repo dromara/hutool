@@ -59,7 +59,6 @@ public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
 		this.src = src;
 		this.target = Assert.notNull(target, "Target path must be not null !");
 		this.options = ObjUtil.defaultIfNull(options, new CopyOption[]{});
-		;
 	}
 
 	/**

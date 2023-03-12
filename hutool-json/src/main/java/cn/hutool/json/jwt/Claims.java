@@ -1,6 +1,6 @@
 package cn.hutool.json.jwt;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;

@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.codec.Encoder;
@@ -81,7 +81,7 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
 	 *
 	 * <pre>
-	 * '你' =》'\u4f60'
+	 * '你' =》'&#92;u4f60'
 	 * </pre>
 	 *
 	 * @param ch char值

@@ -211,6 +211,6 @@ public class MetaAnnotatedElementTest {
 
 	@Annotation3(name = "foo")
 	@Annotation4("foo")
-	private static class Foo {};
+	private static class Foo {}
 
 }

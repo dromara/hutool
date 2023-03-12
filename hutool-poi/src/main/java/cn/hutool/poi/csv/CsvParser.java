@@ -12,12 +12,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * CSV行解析器，参考：FastCSV
@@ -32,7 +27,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	private final Reader reader;
 	private final CsvReadConfig config;
 
-	private final Buffer buf = new Buffer(IoUtil.DEFAULT_LARGE_BUFFER_SIZE);
+	private final Buffer buf;
 	/**
 	 * 前一个特殊分界字符
 	 */
@@ -78,8 +73,20 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	 * @param config 配置，null则为默认配置
 	 */
 	public CsvParser(final Reader reader, final CsvReadConfig config) {
+		this(reader, config, IoUtil.DEFAULT_LARGE_BUFFER_SIZE);
+	}
+
+	/**
+	 * CSV解析器
+	 *
+	 * @param reader Reader
+	 * @param config 配置，null则为默认配置
+	 * @param bufferSize 默认缓存大小
+	 */
+	public CsvParser(final Reader reader, final CsvReadConfig config, final int bufferSize) {
 		this.reader = Objects.requireNonNull(reader, "reader must not be null");
 		this.config = ObjUtil.defaultIfNull(config, CsvReadConfig::defaultConfig);
+		this.buf = new Buffer(bufferSize);
 	}
 
 	/**

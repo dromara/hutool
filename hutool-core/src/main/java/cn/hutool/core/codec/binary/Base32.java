@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;

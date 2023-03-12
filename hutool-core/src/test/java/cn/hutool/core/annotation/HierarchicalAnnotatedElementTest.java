@@ -203,6 +203,6 @@ public class HierarchicalAnnotatedElementTest {
 		public String method() { return null; }
 		@Annotation1
 		public static String method2() { return null; }
-	};
+	}
 
 }

@@ -499,6 +499,7 @@ public class Sftp extends AbstractFtp {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public boolean uploadFile(final String destPath, final File file) {
 		if(false == FileUtil.isFile(file)){
@@ -521,13 +522,11 @@ public class Sftp extends AbstractFtp {
 	 * @param destPath   服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName   文件名
 	 * @param fileStream 文件流
-	 * @return 是否上传成功
 	 * @since 5.7.16
 	 */
-	public boolean uploadFile(String destPath, final String fileName, final InputStream fileStream) {
+	public void uploadFile(String destPath, final String fileName, final InputStream fileStream) {
 		destPath = StrUtil.addSuffixIfNot(destPath, StrUtil.SLASH) + StrUtil.removePrefix(fileName, StrUtil.SLASH);
 		put(fileStream, destPath, null, Mode.OVERWRITE);
-		return true;
 	}
 
 	/**

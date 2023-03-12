@@ -151,17 +151,16 @@ public class ResultColumn {
 		return className;
 	}
 
-	public static enum ColumnNullable {
+	public enum ColumnNullable {
 		NO_NULLS(ResultSetMetaData.columnNoNulls),
 		NULLABLE(ResultSetMetaData.columnNullable),
 		UNKNOWN(ResultSetMetaData.columnNullableUnknown);
 
-		final int value;
-
-		private ColumnNullable(final int value) {
-			this.value = value;
-		}
-
+		/**
+		 * ResultSetMetaData中的int值转枚举
+		 * @param nullable nullable值
+		 * @return ColumnNullable
+		 */
 		public static ColumnNullable of(final int nullable) {
 			switch (nullable) {
 				case ResultSetMetaData.columnNoNulls:
@@ -171,6 +170,11 @@ public class ResultColumn {
 				default:
 					return UNKNOWN;
 			}
+		}
+
+		final int value;
+		ColumnNullable(final int value) {
+			this.value = value;
 		}
 	}
 }

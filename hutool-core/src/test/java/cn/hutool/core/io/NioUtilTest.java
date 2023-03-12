@@ -28,7 +28,7 @@ public class NioUtilTest {
 
 	@Test
 	@Ignore
-	public void copyByNIOTest2() throws IOException {
+	public void copyByNIOTest2() {
 		final File file = FileUtil.file("d:/test/logo.jpg");
 		final BufferedInputStream in = FileUtil.getInputStream(file);
 		final BufferedOutputStream out = FileUtil.getOutputStream("d:/test/2logo.jpg");

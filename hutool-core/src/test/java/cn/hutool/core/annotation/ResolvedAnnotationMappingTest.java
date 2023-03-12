@@ -296,6 +296,6 @@ public class ResolvedAnnotationMappingTest {
 	@Annotation3(value = "Annotation3", alias = 312)
 	@Annotation2(value = "Annotation2")
 	@Annotation1(value = "Annotation1", alias = "goo", unDefVal = "foo", unDefVal2 = "foo")
-	private static class Foo {};
+	private static class Foo {}
 
 }

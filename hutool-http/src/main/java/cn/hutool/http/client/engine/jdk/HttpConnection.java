@@ -403,10 +403,6 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request URL: ").append(this.url).append(StrUtil.CRLF);
 		sb.append("Request Method: ").append(this.getMethod()).append(StrUtil.CRLF);
-		// sb.append("Request Headers: ").append(StrUtil.CRLF);
-		// for (Entry<String, List<String>> entry : this.conn.getHeaderFields().entrySet()) {
-		// sb.append(" ").append(entry).append(StrUtil.CRLF);
-		// }
 
 		return sb.toString();
 	}

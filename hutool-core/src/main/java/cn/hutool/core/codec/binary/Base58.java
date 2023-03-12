@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.exceptions.ValidateException;

@@ -17,7 +17,11 @@ import cn.hutool.core.text.StrUtil;
  * @since 6.0.0
  */
 public class TimeParser extends DefaultDateBasic implements DateParser {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static TimeParser INSTANCE = new TimeParser();
 
 	@Override

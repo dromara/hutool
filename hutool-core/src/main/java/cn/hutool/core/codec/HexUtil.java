@@ -1,6 +1,6 @@
 package cn.hutool.core.codec;
 
-import cn.hutool.core.codec.BaseN.Base16Codec;
+import cn.hutool.core.codec.binary.Base16Codec;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;

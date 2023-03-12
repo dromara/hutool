@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.codec.Encoder;
@@ -21,6 +21,9 @@ import java.util.Arrays;
  */
 public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]> {
 
+	/**
+	 * 单例对象
+	 */
 	public static Base32Codec INSTANCE = new Base32Codec();
 
 	@Override

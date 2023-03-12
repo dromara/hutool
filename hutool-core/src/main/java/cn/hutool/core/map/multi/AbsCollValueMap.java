@@ -39,7 +39,7 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 *
 	 * @param mapFactory 生成集合的工厂方法
 	 */
-	protected AbsCollValueMap(Supplier<Map<K, Collection<V>>> mapFactory) {
+	protected AbsCollValueMap(final Supplier<Map<K, Collection<V>>> mapFactory) {
 		super(mapFactory);
 	}
 
@@ -48,7 +48,7 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 *
 	 * @param map 提供初始数据的集合
 	 */
-	protected AbsCollValueMap(Map<K, Collection<V>> map) {
+	protected AbsCollValueMap(final Map<K, Collection<V>> map) {
 		super(new HashMap<>(map));
 	}
 
@@ -72,7 +72,7 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 是否成功添加
 	 */
 	@Override
-	public boolean putAllValues(K key, Collection<V> coll) {
+	public boolean putAllValues(final K key, final Collection<V> coll) {
 		if (ObjUtil.isNull(coll)) {
 			return false;
 		}
@@ -91,7 +91,7 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 是否成功添加
 	 */
 	@Override
-	public boolean putValue(K key, V value) {
+	public boolean putValue(final K key, final V value) {
 		return super.computeIfAbsent(key, k -> createCollection())
 			.add(value);
 	}
@@ -104,7 +104,7 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 是否成功删除
 	 */
 	@Override
-	public boolean removeValue(K key, V value) {
+	public boolean removeValue(final K key, final V value) {
 		return Opt.ofNullable(super.get(key))
 			.map(t -> t.remove(value))
 			.orElse(false);
@@ -118,11 +118,11 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 是否成功删除
 	 */
 	@Override
-	public boolean removeAllValues(K key, Collection<V> values) {
+	public boolean removeAllValues(final K key, final Collection<V> values) {
 		if (CollUtil.isEmpty(values)) {
 			return false;
 		}
-		Collection<V> coll = get(key);
+		final Collection<V> coll = get(key);
 		return ObjUtil.isNotNull(coll) && coll.removeAll(values);
 	}
 
@@ -133,10 +133,10 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 当前实例
 	 */
 	@Override
-	public MultiValueMap<K, V> filterAllValues(BiPredicate<K, V> filter) {
+	public MultiValueMap<K, V> filterAllValues(final BiPredicate<K, V> filter) {
 		entrySet().forEach(e -> {
-			K k = e.getKey();
-			Collection<V> coll = e.getValue().stream()
+			final K k = e.getKey();
+			final Collection<V> coll = e.getValue().stream()
 				.filter(v -> filter.test(k, v))
 				.collect(Collectors.toCollection(this::createCollection));
 			e.setValue(coll);
@@ -151,10 +151,10 @@ public abstract class AbsCollValueMap<K, V> extends MapWrapper<K, Collection<V>>
 	 * @return 当前实例
 	 */
 	@Override
-	public MultiValueMap<K, V> replaceAllValues(BiFunction<K, V, V> operate) {
+	public MultiValueMap<K, V> replaceAllValues(final BiFunction<K, V, V> operate) {
 		entrySet().forEach(e -> {
-			K k = e.getKey();
-			Collection<V> coll = e.getValue().stream()
+			final K k = e.getKey();
+			final Collection<V> coll = e.getValue().stream()
 				.map(v -> operate.apply(k, v))
 				.collect(Collectors.toCollection(this::createCollection));
 			e.setValue(coll);

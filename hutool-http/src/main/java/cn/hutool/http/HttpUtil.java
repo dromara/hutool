@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.net.url.UrlQueryUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.client.ClientConfig;

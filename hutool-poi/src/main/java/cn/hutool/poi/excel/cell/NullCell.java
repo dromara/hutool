@@ -73,18 +73,8 @@ public class NullCell implements Cell {
 		return null;
 	}
 
-	@Deprecated
-	public CellType getCellTypeEnum() {
-		return null;
-	}
-
 	@Override
 	public CellType getCachedFormulaResultType() {
-		return null;
-	}
-
-	@Deprecated
-	public CellType getCachedFormulaResultTypeEnum() {
 		return null;
 	}
 

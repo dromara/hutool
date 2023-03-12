@@ -115,6 +115,6 @@ public class GenericAnnotationMappingTest {
 	}
 
 	@Annotation1("foo")
-	private static class Foo {};
+	private static class Foo {}
 
 }

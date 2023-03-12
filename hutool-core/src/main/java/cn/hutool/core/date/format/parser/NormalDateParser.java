@@ -21,7 +21,11 @@ import cn.hutool.core.util.CharUtil;
  * @since 6.0.0
  */
 public class NormalDateParser extends DefaultDateBasic implements DateParser {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static NormalDateParser INSTANCE = new NormalDateParser();
 
 	@Override

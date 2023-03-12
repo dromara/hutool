@@ -1,13 +1,12 @@
 package cn.hutool.poi.csv;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.func.SerConsumer;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -132,14 +131,9 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @since 5.7.14
 	 */
 	public Stream<CsvRow> stream() {
-		return StreamSupport.stream(spliterator(), false)
-				.onClose(() -> {
-					try {
-						close();
-					} catch (final IOException e) {
-						throw new IORuntimeException(e);
-					}
-				});
+		return StreamSupport
+				.stream(spliterator(), false)
+				.onClose(this::close);
 	}
 
 	@Override
@@ -148,7 +142,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		IoUtil.close(this.reader);
 	}
 }

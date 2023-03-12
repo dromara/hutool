@@ -16,6 +16,7 @@ import java.util.Locale;
  * @since 6.0.0
  */
 public class PatternsDateParser extends DefaultDateBasic implements DateParser {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 创建 PatternsDateParser

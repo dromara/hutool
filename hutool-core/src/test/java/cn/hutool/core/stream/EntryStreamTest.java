@@ -162,16 +162,25 @@ public class EntryStreamTest {
 
 	@Test
 	public void testAppend() {
-		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){
+			private static final long serialVersionUID = 2091911960221937275L;
+
+			{
 			put(1, 1);
 			put(2, 2);
 		}};
-		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){
+			private static final long serialVersionUID = 4802315578432177802L;
+
+			{
 			put(3, 3);
 			put(4, 4);
 		}};
 		Assert.assertEquals(
-			new ArrayList<Map.Entry<Integer, Integer>>(){{
+			new ArrayList<Map.Entry<Integer, Integer>>(){
+				private static final long serialVersionUID = -4045530648496761947L;
+
+				{
 				addAll(map1.entrySet());
 				addAll(map2.entrySet());
 			}},
@@ -184,16 +193,25 @@ public class EntryStreamTest {
 
 	@Test
 	public void testPrepend() {
-		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map1 = new HashMap<Integer, Integer>(){
+			private static final long serialVersionUID = -8772310525807986780L;
+
+			{
 			put(1, 1);
 			put(2, 2);
 		}};
-		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){{
+		final Map<Integer, Integer> map2 = new HashMap<Integer, Integer>(){
+			private static final long serialVersionUID = -8453400649627773936L;
+
+			{
 			put(3, 3);
 			put(4, 4);
 		}};
 		Assert.assertEquals(
-			new ArrayList<Map.Entry<Integer, Integer>>(){{
+			new ArrayList<Map.Entry<Integer, Integer>>(){
+				private static final long serialVersionUID = 7564826138581563332L;
+
+				{
 				addAll(map2.entrySet());
 				addAll(map1.entrySet());
 			}},
@@ -254,7 +272,7 @@ public class EntryStreamTest {
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
-		List<Integer> keys = EntryStream.of(map).collectKeys(Collectors.toList());
+		final List<Integer> keys = EntryStream.of(map).collectKeys(Collectors.toList());
 		Assert.assertEquals(new ArrayList<>(map.keySet()), keys);
 	}
 
@@ -264,7 +282,7 @@ public class EntryStreamTest {
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
-		List<Integer> keys = EntryStream.of(map).collectValues(Collectors.toList());
+		final List<Integer> keys = EntryStream.of(map).collectValues(Collectors.toList());
 		Assert.assertEquals(new ArrayList<>(map.keySet()), keys);
 	}
 
@@ -324,7 +342,7 @@ public class EntryStreamTest {
 		map.put(1, 1);
 		map.put(2, 2);
 		map.put(3, 3);
-		List<Integer> list = EntryStream.of(map)
+		final List<Integer> list = EntryStream.of(map)
 			.flatMap(e -> Stream.of(e.getKey(), e.getKey() + 1))
 			.collect(Collectors.toList());
 		Assert.assertEquals(Arrays.asList(1, 2, 2, 3, 3, 4), list);
@@ -567,7 +585,7 @@ public class EntryStreamTest {
 		private final K key;
 		private final V value;
 
-		public Entry(K key, V value) {
+		public Entry(final K key, final V value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -583,7 +601,7 @@ public class EntryStreamTest {
 		}
 
 		@Override
-		public V setValue(V value) {
+		public V setValue(final V value) {
 			return null;
 		}
 	}

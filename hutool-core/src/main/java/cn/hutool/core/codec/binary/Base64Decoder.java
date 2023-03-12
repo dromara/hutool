@@ -1,4 +1,4 @@
-package cn.hutool.core.codec.BaseN;
+package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.lang.mutable.MutableInt;
@@ -13,6 +13,9 @@ import cn.hutool.core.util.ArrayUtil;
  */
 public class Base64Decoder implements Decoder<byte[], byte[]> {
 
+	/**
+	 * 单例对象
+	 */
 	public static Base64Decoder INSTANCE = new Base64Decoder();
 
 	private static final byte PADDING = -2;

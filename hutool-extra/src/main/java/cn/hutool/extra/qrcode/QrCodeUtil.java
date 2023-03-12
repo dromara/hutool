@@ -1,6 +1,6 @@
 package cn.hutool.extra.qrcode;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.swing.img.ImgUtil;
 import com.google.zxing.BarcodeFormat;

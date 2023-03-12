@@ -1,6 +1,5 @@
 package cn.hutool.core.io.stream;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -47,11 +46,10 @@ public class EmptyOutputStream extends OutputStream {
 	 * 什么也不做，写出到 {@code /dev/null}.
 	 *
 	 * @param b 写出的数据
-	 * @throws IOException 不抛出
 	 */
 	@SuppressWarnings("NullableProblems")
 	@Override
-	public void write(final byte[] b) throws IOException {
+	public void write(final byte[] b) {
 		// to /dev/null
 	}
 

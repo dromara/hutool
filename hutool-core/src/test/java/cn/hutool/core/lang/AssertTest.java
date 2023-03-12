@@ -11,12 +11,14 @@ import java.util.Map;
 
 public class AssertTest {
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void isNullTest() {
 		final String a = null;
 		Assert.isNull(a);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void notNullTest() {
 		final String a = null;
@@ -113,10 +115,9 @@ public class AssertTest {
 		Assert.isTrue(i > 0, () -> new IndexOutOfBoundsException("relation message to return"));
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void equalsTest() {
-		//String a="ab";
-		//final String b = new String("abc");
 		final String a = null;
 		final String b = null;
 		Assert.equals(a, b);
@@ -124,18 +125,16 @@ public class AssertTest {
 		Assert.equals(a, b, () -> new RuntimeException(StrUtil.format("{}和{}不相等", a, b)));
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void notEqualsTest() {
-		//String c="19";
-		//final String d = new String("19");
 		final String c = null;
 		final String d = "null";
-		//Assert.notEquals(c,d);
-		//Assert.notEquals(c,d,"{}等于{}",c,d);
 		Assert.notEquals(c, d, () -> new RuntimeException(StrUtil.format("{}和{}相等", c, d)));
 
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void notEqualsTest2() {
 		final Object c = null;
