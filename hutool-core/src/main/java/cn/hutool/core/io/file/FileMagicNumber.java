@@ -394,6 +394,9 @@ public enum FileMagicNumber {
 	WOFF("font/woff", "woff") {
 		@Override
 		public boolean match(final byte[] bytes) {
+			if(bytes.length < 8){
+				return false;
+			}
 			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
 					&& Objects.equals(bytes[1], (byte) 0x4f)
 					&& Objects.equals(bytes[2], (byte) 0x46)
@@ -410,8 +413,7 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[5], (byte) 0x72)
 					&& Objects.equals(bytes[6], (byte) 0x75)
 					&& Objects.equals(bytes[7], (byte) 0x65);
-			return bytes.length > 7
-					&& (flag1 && (flag2 || flag3 || flag4));
+			return flag1 && (flag2 || flag3 || flag4);
 		}
 	},
 	/**
@@ -420,6 +422,9 @@ public enum FileMagicNumber {
 	WOFF2("font/woff2", "woff2") {
 		@Override
 		public boolean match(final byte[] bytes) {
+			if(bytes.length < 8){
+				return false;
+			}
 			final boolean flag1 = Objects.equals(bytes[0], (byte) 0x77)
 					&& Objects.equals(bytes[1], (byte) 0x4f)
 					&& Objects.equals(bytes[2], (byte) 0x46)
@@ -436,8 +441,7 @@ public enum FileMagicNumber {
 					&& Objects.equals(bytes[5], (byte) 0x72)
 					&& Objects.equals(bytes[6], (byte) 0x75)
 					&& Objects.equals(bytes[7], (byte) 0x65);
-			return bytes.length > 7
-					&& (flag1 && (flag2 || flag3 || flag4));
+			return flag1 && (flag2 || flag3 || flag4);
 		}
 	},
 	/**

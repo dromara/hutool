@@ -90,7 +90,7 @@ public class FileTypeUtilTest {
 
 	@Test
 	public void issueI6MACITest() {
-		final File file = FileUtil.file("text.txt");
+		final File file = FileUtil.file("1.txt");
 		final String type = FileTypeUtil.getType(file);
 		Assert.assertEquals("txt", type);
 	}
