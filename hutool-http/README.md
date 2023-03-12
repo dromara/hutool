@@ -8,9 +8,9 @@
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-## 📚Hutool-core 模块介绍
+## 📚Hutool-http 模块介绍
 
-`Hutool-core`提供了最常使用的基础工具类，包括集合、Map、IO、线程、Bean、图片处理、线程并发等便捷工具。
+`Hutool-http`提供了简易的Http服务器和客户端门面封装。
 
 -------------------------------------------------------------------------------
 
