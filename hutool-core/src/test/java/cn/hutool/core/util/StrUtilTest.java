@@ -648,4 +648,51 @@ public class StrUtilTest {
 		final String result = StrUtil.indexedFormat(template, 10);
 		Assert.assertEquals("I'm 10 years old.", result);
 	}
+
+
+	@Test
+	public void testStrUtilOptional() {
+		final String a = "";
+		System.out.println(StrUtil.strUtilOptional(a).orElseBlank("blank"));
+		System.out.println(StrUtil.strUtilOptional(a).orElseEmpty("empty"));
+		try {
+			System.out.println(StrUtil.strUtilOptional(a).orElseBlankThrow(() -> new RuntimeException("blank")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+		try {
+			System.out.println(StrUtil.strUtilOptional(a).orElseEmptyThrow(() -> new RuntimeException("empty")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+
+		final String b = null;
+		System.out.println(StrUtil.strUtilOptional(b).orElseBlank("blank"));
+		System.out.println(StrUtil.strUtilOptional(b).orElseEmpty("empty"));
+		try {
+			System.out.println(StrUtil.strUtilOptional(b).orElseBlankThrow(() -> new RuntimeException("blank")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+		try {
+			System.out.println(StrUtil.strUtilOptional(b).orElseBlankThrow(() -> new RuntimeException("empty")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+
+		final String c = "optional";
+		System.out.println(StrUtil.strUtilOptional(c).orElseBlank("blank"));
+		System.out.println(StrUtil.strUtilOptional(c).orElseEmpty("empty"));
+		try {
+			System.out.println(StrUtil.strUtilOptional(c).orElseBlankThrow(() -> new RuntimeException("blank")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+		try {
+			System.out.println(StrUtil.strUtilOptional(c).orElseEmptyThrow(() -> new RuntimeException("empty")));
+		} catch (Throwable e) {
+			System.out.println("Throwable : " + e.getMessage());
+		}
+	}
+
 }

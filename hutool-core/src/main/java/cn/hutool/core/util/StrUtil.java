@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * 字符串工具类
@@ -468,4 +469,75 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
 	}
+
+	/**
+	 * 针对字符串的optional的链式编程函数<br>
+	 * 获取StrUtilOptional对象
+	 *
+	 * @param str 需要处理的字符串
+	 * @return 返回StrUtilOptional对象
+	 */
+	public static StrUtilOptional strUtilOptional(String str) {
+		return new StrUtilOptional(str);
+	}
+
+	public static class StrUtilOptional {
+		private final String str;
+
+		public StrUtilOptional(String str) {
+			this.str = str;
+		}
+
+		/**
+		 * 如果strUtilOptional(String str)函数的参数通过StrUtil.isBlank()函数得到的结果是true，则返回此处的参数，如果是false，则返回strUtilOptional的参数
+		 *
+		 * @param str 原字符串通过StrUtil.isBlank()得到后结果为true时，返回的字符串
+		 * @return 返回处理的字符串
+		 */
+		public String orElseBlank(String str) {
+			return StrUtil.isBlank(this.str) ? str : this.str;
+		}
+
+		/**
+		 * 如果strUtilOptional(String str)函数的参数通过StrUtil.isEmpty()函数得到的结果是true，则返回此处的参数，如果是false，则返回strUtilOptional的参数
+		 *
+		 * @param str 原字符串通过StrUtil.isEmpty()得到后结果为true时，返回的字符串
+		 * @return 返回处理的字符串
+		 */
+		public String orElseEmpty(String str) {
+			return StrUtil.isEmpty(this.str) ? str : this.str;
+		}
+
+		/**
+		 * 如果strUtilOptional(String str)函数的参数通过StrUtil.isBlank()函数得到的结果是true，则抛出指定Throwable，如果为false，则返回原字符串
+		 *
+		 * @param exceptionSupplier Throwable供应商
+		 * @param <X>               要引发的异常类型
+		 * @return 如果strUtilOptional(String str)函数的参数通过StrUtil.isBlank()返回false，则返回原字符串
+		 * @throws X 如果strUtilOptional(String str)函数的参数通过StrUtil.isBlank()返回true，则抛出此处异常
+		 */
+		public <X extends Throwable> String orElseBlankThrow(Supplier<? extends X> exceptionSupplier) throws X {
+			if (StrUtil.isBlank(this.str)) {
+				throw exceptionSupplier.get();
+			}
+			return this.str;
+		}
+
+		/**
+		 * 如果strUtilOptional(String str)函数的参数通过StrUtil.isEmpty()函数得到的结果是true，则抛出指定Throwable，如果为false，则返回原字符串
+		 *
+		 * @param exceptionSupplier Throwable供应商
+		 * @param <X>               要引发的异常类型
+		 * @return 如果strUtilOptional(String str)函数的参数通过StrUtil.isEmpty()返回false，则返回原字符串
+		 * @throws X 如果strUtilOptional(String str)函数的参数通过StrUtil.isEmpty()返回true，则抛出此处异常
+		 */
+		public <X extends Throwable> String orElseEmptyThrow(Supplier<? extends X> exceptionSupplier) throws X {
+			if (StrUtil.isEmpty(this.str)) {
+				throw exceptionSupplier.get();
+			}
+			return this.str;
+		}
+
+	}
+
 }
