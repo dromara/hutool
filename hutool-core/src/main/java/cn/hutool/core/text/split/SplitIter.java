@@ -125,7 +125,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 	 * @return 切分后的列表
 	 */
 	public List<String> toList(final boolean trim) {
-		return toList((str) -> trim ? StrUtil.trim(str) : str);
+		return toList(trim ? StrUtil::trim : Function.identity());
 	}
 
 	/**

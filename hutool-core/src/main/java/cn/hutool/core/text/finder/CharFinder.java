@@ -1,7 +1,7 @@
 package cn.hutool.core.text.finder;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.util.CharUtil;
 
 /**
  * 字符查找器<br>
@@ -42,13 +42,13 @@ public class CharFinder extends TextFinder {
 		final int limit = getValidEndIndex();
 		if(negative){
 			for (int i = from; i > limit; i--) {
-				if (NumberUtil.equals(c, text.charAt(i), caseInsensitive)) {
+				if (CharUtil.equals(c, text.charAt(i), caseInsensitive)) {
 					return i;
 				}
 			}
 		} else{
 			for (int i = from; i < limit; i++) {
-				if (NumberUtil.equals(c, text.charAt(i), caseInsensitive)) {
+				if (CharUtil.equals(c, text.charAt(i), caseInsensitive)) {
 					return i;
 				}
 			}
