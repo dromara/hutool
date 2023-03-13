@@ -428,7 +428,7 @@ public class AntPathMatcher {
 	}
 
 	/**
-	 * Test whether or not a string matches against a pattern.
+	 * Test whether a string matches against a pattern.
 	 *
 	 * @param pattern the pattern to match against (never {@code null})
 	 * @param str     the String which must be matched against the pattern (never {@code null})

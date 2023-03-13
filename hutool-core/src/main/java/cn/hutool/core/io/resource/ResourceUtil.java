@@ -123,6 +123,7 @@ public class ResourceUtil {
 	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
+	 * @throws IORuntimeException IO异常
 	 */
 	public static URL getResourceUrl(final String resource) throws IORuntimeException {
 		return getResourceUrl(resource, null);

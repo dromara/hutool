@@ -32,10 +32,16 @@ public class JdkInterceptor implements InvocationHandler, Serializable {
 		this.aspect = aspect;
 	}
 
+	/**
+	 * 获取目标对象
+	 *
+	 * @return 目标对象
+	 */
 	public Object getTarget() {
 		return this.target;
 	}
 
+	@SuppressWarnings("SuspiciousInvocationHandlerImplementation")
 	@Override
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 		final Object target = this.target;

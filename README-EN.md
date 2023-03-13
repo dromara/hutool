@@ -176,10 +176,10 @@ cd ${hutool}
 
 Hutool's source code is divided into two branches:
 
-| branch | description                                               |
-|-----------|---------------------------------------------------------------|
+| branch    | description                                                                                                                                                         |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | v6-master | The master branch, the branch used by the release version, is the same as the jar committed to the central repository and does not receive any pr or modifications. |
-| v6-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr |
+| v6-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr                                                                        |
 
 ### 🐞Provide feedback or suggestions on bugs
 

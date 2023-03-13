@@ -320,7 +320,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		Assert.notNull(this.config.commentCharacter, "Comment is disable!");
 		try {
 			if(isFirstLine){
-				// 首行不补换行符
+				// 首行不补充换行符
 				isFirstLine = false;
 			}else {
 				writer.write(config.lineDelimiter);

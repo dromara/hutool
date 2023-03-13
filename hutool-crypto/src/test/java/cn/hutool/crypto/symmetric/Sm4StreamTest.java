@@ -3,11 +3,11 @@ package cn.hutool.crypto.symmetric;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * https://gitee.com/dromara/hutool/issues/I4EMST
@@ -29,8 +29,8 @@ public class Sm4StreamTest {
 	}
 
 	public static void encrypt(final String source, final String target) {
-		try (final InputStream input = new FileInputStream(source);
-			 final OutputStream out = new FileOutputStream(target)) {
+		try (final InputStream input = Files.newInputStream(Paths.get(source));
+			 final OutputStream out = Files.newOutputStream(Paths.get(target))) {
 			sm4.encrypt(input, out, IS_CLOSE);
 			System.out.println("============encrypt end");
 		} catch (final IOException e) {
@@ -39,8 +39,8 @@ public class Sm4StreamTest {
 	}
 
 	public static void decrypt(final String source, final String target) {
-		try (final InputStream input = new FileInputStream(source);
-			 final OutputStream out = new FileOutputStream(target)) {
+		try (final InputStream input = Files.newInputStream(Paths.get(source));
+			 final OutputStream out = Files.newOutputStream(Paths.get(target))) {
 			sm4.decrypt(input, out, IS_CLOSE);
 			System.out.println("============decrypt end");
 		} catch (final IOException e) {

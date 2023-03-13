@@ -216,7 +216,7 @@ public class ArrayUtilTest {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
 
-		// 在-1位置插入，相当于在3位置插入
+		// 在-1的位置插入，相当于在3的位置插入
 		String[] result = ArrayUtil.insert(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "a", "b", "c", "4"}, result);
 
@@ -232,7 +232,7 @@ public class ArrayUtilTest {
 		result = ArrayUtil.insert(a, 4, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
-		// 在第5个位置插入，由于数组长度为4，因此补null
+		// 在第5个位置插入，由于数组长度为4，因此补充null
 		result = ArrayUtil.insert(a, 5, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", null, "a", "b", "c"}, result);
 	}
@@ -472,7 +472,7 @@ public class ArrayUtilTest {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
 
-		// 在小于0的位置，-1位置插入，返回b+a，新数组
+		// 在小于0的位置，-1的位置插入，返回b+a，新数组
 		String[] result = ArrayUtil.replace(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
 

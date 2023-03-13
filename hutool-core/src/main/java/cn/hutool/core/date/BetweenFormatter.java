@@ -73,7 +73,7 @@ public class BetweenFormatter implements Serializable {
 			final int level = this.level.ordinal();
 			int levelCount = 0;
 
-			if (isLevelCountValid(levelCount) && 0 != day && level >= Level.DAY.ordinal()) {
+			if (isLevelCountValid(levelCount) && 0 != day) {
 				sb.append(day).append(Level.DAY.name);
 				levelCount++;
 			}

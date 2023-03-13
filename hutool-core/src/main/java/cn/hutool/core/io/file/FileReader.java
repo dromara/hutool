@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -246,7 +247,7 @@ public class FileReader extends FileWrapper {
 	 */
 	public BufferedInputStream getInputStream() throws IORuntimeException {
 		try {
-			return new BufferedInputStream(new FileInputStream(this.file));
+			return new BufferedInputStream(Files.newInputStream(this.file.toPath()));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
