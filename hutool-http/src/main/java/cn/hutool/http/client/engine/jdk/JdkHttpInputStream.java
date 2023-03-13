@@ -16,7 +16,7 @@ import java.io.InputStream;
  *
  * @author Looly
  */
-public class HttpInputStream extends InputStream {
+public class JdkHttpInputStream extends InputStream {
 
 	/**
 	 * 原始流
@@ -28,7 +28,7 @@ public class HttpInputStream extends InputStream {
 	 *
 	 * @param response 响应对象
 	 */
-	public HttpInputStream(final HttpResponse response) {
+	public JdkHttpInputStream(final JdkHttpResponse response) {
 		init(response);
 	}
 
@@ -78,7 +78,7 @@ public class HttpInputStream extends InputStream {
 	 *
 	 * @param response 响应对象
 	 */
-	private void init(final HttpResponse response) {
+	private void init(final JdkHttpResponse response) {
 		try {
 			this.in = (response.status < HttpStatus.HTTP_BAD_REQUEST) ? response.httpConnection.getInputStream() : response.httpConnection.getErrorStream();
 		} catch (final IOException e) {

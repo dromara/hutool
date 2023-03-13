@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author Looly
  */
-public class HttpConnection implements HeaderOperation<HttpConnection> {
+public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection> {
 
 	private final URL url;
 	private final Proxy proxy;
@@ -38,7 +38,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param proxy  代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection of(final String urlStr, final Proxy proxy) {
+	public static JdkHttpConnection of(final String urlStr, final Proxy proxy) {
 		return of(URLUtil.toUrlForHttp(urlStr), proxy);
 	}
 
@@ -49,8 +49,8 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param proxy 代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection of(final URL url, final Proxy proxy) {
-		return new HttpConnection(url, proxy);
+	public static JdkHttpConnection of(final URL url, final Proxy proxy) {
+		return new JdkHttpConnection(url, proxy);
 	}
 
 	// region --------------------------------------------------------------- Constructor
@@ -61,7 +61,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param url   URL
 	 * @param proxy 代理
 	 */
-	public HttpConnection(final URL url, final Proxy proxy) {
+	public JdkHttpConnection(final URL url, final Proxy proxy) {
 		this.url = url;
 		this.proxy = proxy;
 
@@ -90,7 +90,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param method 请求方法
 	 * @return 自己
 	 */
-	public HttpConnection setMethod(final Method method) {
+	public JdkHttpConnection setMethod(final Method method) {
 		if (Method.POST.equals(method) //
 				|| Method.PUT.equals(method)//
 				|| Method.PATCH.equals(method)//
@@ -147,7 +147,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @return this
 	 * @see HttpURLConnection#setUseCaches(boolean)
 	 */
-	public HttpConnection setDisableCache(final boolean isDisableCache) {
+	public JdkHttpConnection setDisableCache(final boolean isDisableCache) {
 		this.conn.setUseCaches(!isDisableCache);
 		return this;
 	}
@@ -158,7 +158,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param timeout 超时
 	 * @return this
 	 */
-	public HttpConnection setConnectTimeout(final int timeout) {
+	public JdkHttpConnection setConnectTimeout(final int timeout) {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setConnectTimeout(timeout);
 		}
@@ -172,7 +172,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param timeout 超时
 	 * @return this
 	 */
-	public HttpConnection setReadTimeout(final int timeout) {
+	public JdkHttpConnection setReadTimeout(final int timeout) {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setReadTimeout(timeout);
 		}
@@ -186,7 +186,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param timeout 超时时间
 	 * @return this
 	 */
-	public HttpConnection setConnectionAndReadTimeout(final int timeout) {
+	public JdkHttpConnection setConnectionAndReadTimeout(final int timeout) {
 		setConnectTimeout(timeout);
 		setReadTimeout(timeout);
 
@@ -202,7 +202,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
 	 * @since 6.0.0
 	 */
-	public HttpConnection setSSLInfo(final SSLInfo sslInfo) throws HttpException {
+	public JdkHttpConnection setSSLInfo(final SSLInfo sslInfo) throws HttpException {
 		final HttpURLConnection conn = this.conn;
 
 		if (conn instanceof HttpsURLConnection) {
@@ -223,7 +223,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param blockSize 块大小（bytes数），0或小于0表示不设置Chuncked模式
 	 * @return this
 	 */
-	public HttpConnection setChunkedStreamingMode(final int blockSize) {
+	public JdkHttpConnection setChunkedStreamingMode(final int blockSize) {
 		if (blockSize > 0) {
 			conn.setChunkedStreamingMode(blockSize);
 		}
@@ -236,7 +236,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @param isInstanceFollowRedirects 是否自定跳转
 	 * @return this
 	 */
-	public HttpConnection setInstanceFollowRedirects(final boolean isInstanceFollowRedirects) {
+	public JdkHttpConnection setInstanceFollowRedirects(final boolean isInstanceFollowRedirects) {
 		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
 		return this;
 	}
@@ -255,7 +255,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @return HttpConnection
 	 */
 	@Override
-	public HttpConnection header(final String header, final String value, final boolean isOverride) {
+	public JdkHttpConnection header(final String header, final String value, final boolean isOverride) {
 		if (null != this.conn) {
 			if (isOverride) {
 				this.conn.setRequestProperty(header, value);
@@ -296,7 +296,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @return this
 	 * @throws IOException IO异常
 	 */
-	public HttpConnection connect() throws IOException {
+	public JdkHttpConnection connect() throws IOException {
 		if (null != this.conn) {
 			this.conn.connect();
 		}
@@ -309,7 +309,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 * @return this
 	 * @since 4.6.0
 	 */
-	public HttpConnection disconnectQuietly() {
+	public JdkHttpConnection disconnectQuietly() {
 		try {
 			disconnect();
 		} catch (final Throwable e) {
@@ -324,7 +324,7 @@ public class HttpConnection implements HeaderOperation<HttpConnection> {
 	 *
 	 * @return this
 	 */
-	public HttpConnection disconnect() {
+	public JdkHttpConnection disconnect() {
 		if (null != this.conn) {
 			this.conn.disconnect();
 		}

@@ -27,7 +27,7 @@ import java.util.Map.Entry;
  *
  * @author Looly
  */
-public class HttpResponse implements Response, Closeable {
+public class JdkHttpResponse implements Response, Closeable {
 
 	/**
 	 * 请求时的默认编码
@@ -49,7 +49,7 @@ public class HttpResponse implements Response, Closeable {
 	/**
 	 * 持有连接对象
 	 */
-	protected HttpConnection httpConnection;
+	protected JdkHttpConnection httpConnection;
 	/**
 	 * 响应状态码
 	 */
@@ -58,13 +58,13 @@ public class HttpResponse implements Response, Closeable {
 	/**
 	 * 构造
 	 *
-	 * @param httpConnection {@link HttpConnection}
+	 * @param httpConnection {@link JdkHttpConnection}
 	 * @param ignoreEOFError 是否忽略响应读取时可能的EOF异常
 	 * @param requestCharset 编码，从请求编码中获取默认编码
 	 * @param isAsync        是否异步
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 */
-	protected HttpResponse(final HttpConnection httpConnection, final boolean ignoreEOFError, final Charset requestCharset, final boolean isAsync, final boolean isIgnoreBody) {
+	protected JdkHttpResponse(final JdkHttpConnection httpConnection, final boolean ignoreEOFError, final Charset requestCharset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.ignoreEOFError = ignoreEOFError;
 		this.requestCharset = requestCharset;
@@ -112,7 +112,7 @@ public class HttpResponse implements Response, Closeable {
 	 *
 	 * @return this
 	 */
-	public HttpResponse sync() {
+	public JdkHttpResponse sync() {
 		if (null != this.body) {
 			this.body.sync();
 		}
@@ -259,7 +259,7 @@ public class HttpResponse implements Response, Closeable {
 
 		// 获取响应内容流
 		if (false == isIgnoreBody) {
-			this.body = new ResponseBody(this, new HttpInputStream(this), isAsync, this.ignoreEOFError);
+			this.body = new ResponseBody(this, new JdkHttpInputStream(this), isAsync, this.ignoreEOFError);
 		}
 	}
 	// ---------------------------------------------------------------- Private method end
