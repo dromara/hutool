@@ -1,6 +1,7 @@
 package cn.hutool.core.codec.hash.metro;
 
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.codec.Number128;
 import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -106,7 +107,8 @@ public class MetroHash128Test {
 
 	static String h128(final String input) {
 		final MetroHash128 mh = MetroHash128.of(0).apply(ByteBuffer.wrap(StrUtil.utf8Bytes(input)));
-		return hex(mh.getHigh()) + hex(mh.getLow());
+		final Number128 hash = mh.get();
+		return hex(hash.getHighValue()) + hex(hash.getLowValue());
 	}
 
 	private static String hex(final long value){

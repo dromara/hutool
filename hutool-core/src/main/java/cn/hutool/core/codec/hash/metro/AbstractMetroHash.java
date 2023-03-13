@@ -30,13 +30,7 @@ public abstract class AbstractMetroHash<R extends AbstractMetroHash<R>> implemen
 		reset();
 	}
 
-	/**
-	 * Applies the instance's Metro hash function to the bytes in the given buffer.
-	 * This updates this instance's hashing state.
-	 *
-	 * @param input 内容
-	 * @return this
-	 */
+	@Override
 	public R apply(final ByteBuffer input) {
 		reset();
 		while (input.remaining() >= 32) {
@@ -46,18 +40,32 @@ public abstract class AbstractMetroHash<R extends AbstractMetroHash<R>> implemen
 	}
 
 	/**
-	 * Consumes a 32-byte chunk from the byte buffer and updates the hashing state.
+	 * 从byteBuffer中计算32-byte块并更新hash状态
 	 *
-	 * @param partialInput byte buffer with at least 32 bytes remaining.
+	 * @param partialInput byte buffer，至少有32byte的数据
 	 * @return this
 	 */
 	abstract R partialApply32ByteChunk(ByteBuffer partialInput);
 
 	/**
-	 * Consumes the remaining bytes from the byte buffer and updates the hashing state.
+	 * 从byteBuffer中计算剩余bytes并更新hash状态
 	 *
-	 * @param partialInput byte buffer with less than 32 bytes remaining.
+	 * @param partialInput byte buffer，少于32byte的数据
 	 * @return this
 	 */
 	abstract R partialApplyRemaining(ByteBuffer partialInput);
+
+	static long grab(final ByteBuffer bb, final int length) {
+		long result = bb.get() & 0xFFL;
+		for (int i = 1; i < length; i++) {
+			result |= (bb.get() & 0xFFL) << (i << 3);
+		}
+		return result;
+	}
+
+	static void writeLittleEndian(final long hash, final ByteBuffer output) {
+		for (int i = 0; i < 8; i++) {
+			output.put((byte) (hash >>> (i*8)));
+		}
+	}
 }

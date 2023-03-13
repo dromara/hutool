@@ -29,8 +29,8 @@ public interface MetroHash<R extends MetroHash<R>> {
 	}
 
 	/**
-	 * Applies the instance's Metro hash function to the bytes in the given buffer.
-	 * This updates this instance's hashing state.
+	 * 将给定的{@link ByteBuffer}中的数据追加计算hash值<br>
+	 * 此方法会更新hash值状态
 	 *
 	 * @param input 内容
 	 * @return this
@@ -38,8 +38,7 @@ public interface MetroHash<R extends MetroHash<R>> {
 	R apply(final ByteBuffer input);
 
 	/**
-	 * Writes the current hash to the given byte buffer in big-endian order.
-	 * 将结果hash值写出到{@link ByteBuffer}中
+	 * 将结果hash值写出到{@link ByteBuffer}中，可选端序
 	 *
 	 * @param output    输出
 	 * @param byteOrder 端序

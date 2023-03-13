@@ -53,24 +53,6 @@ public class MetroHash128 extends AbstractMetroHash<MetroHash128> implements Has
 	}
 
 	/**
-	 * 获取高64位结果hash值
-	 *
-	 * @return hash值
-	 */
-	public long getHigh() {
-		return v0;
-	}
-
-	/**
-	 * 获取低64位结果hash值
-	 *
-	 * @return hash值
-	 */
-	public long getLow() {
-		return v1;
-	}
-
-	/**
 	 * 获取结果hash值
 	 *
 	 * @return hash值
@@ -87,8 +69,8 @@ public class MetroHash128 extends AbstractMetroHash<MetroHash128> implements Has
 	@Override
 	public MetroHash128 write(final ByteBuffer output, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
-			MetroHashInternalUtil.writeLittleEndian(v0, output);
-			MetroHashInternalUtil.writeLittleEndian(v1, output);
+			writeLittleEndian(v0, output);
+			writeLittleEndian(v1, output);
 		} else {
 			output.asLongBuffer().put(v1).put(v0);
 		}
@@ -98,14 +80,14 @@ public class MetroHash128 extends AbstractMetroHash<MetroHash128> implements Has
 	@Override
 	MetroHash128 partialApply32ByteChunk(final ByteBuffer partialInput) {
 		assert partialInput.remaining() >= 32;
-		v0 += MetroHashInternalUtil.grab8(partialInput) * K0;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 29) + v2;
-		v1 += MetroHashInternalUtil.grab8(partialInput) * K1;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 29) + v3;
-		v2 += MetroHashInternalUtil.grab8(partialInput) * K2;
-		v2 = MetroHashInternalUtil.rotateRight64(v2, 29) + v0;
-		v3 += MetroHashInternalUtil.grab8(partialInput) * K3;
-		v3 = MetroHashInternalUtil.rotateRight64(v3, 29) + v1;
+		v0 += grab(partialInput, 8) * K0;
+		v0 = Long.rotateRight(v0, 29) + v2;
+		v1 += grab(partialInput, 8) * K1;
+		v1 = Long.rotateRight(v1, 29) + v3;
+		v2 += grab(partialInput, 8) * K2;
+		v2 = Long.rotateRight(v2, 29) + v0;
+		v3 += grab(partialInput, 8) * K3;
+		v3 = Long.rotateRight(v3, 29) + v1;
 		++nChunks;
 		return this;
 	}
@@ -131,52 +113,52 @@ public class MetroHash128 extends AbstractMetroHash<MetroHash128> implements Has
 		if (partialInput.remaining() >= 1) {
 			metroHash128_1(partialInput);
 		}
-		v0 += MetroHashInternalUtil.rotateRight64(v0 * K0 + v1, 13);
-		v1 += MetroHashInternalUtil.rotateRight64(v1 * K1 + v0, 37);
-		v0 += MetroHashInternalUtil.rotateRight64(v0 * K2 + v1, 13);
-		v1 += MetroHashInternalUtil.rotateRight64(v1 * K3 + v0, 37);
+		v0 += Long.rotateRight(v0 * K0 + v1, 13);
+		v1 += Long.rotateRight(v1 * K1 + v0, 37);
+		v0 += Long.rotateRight(v0 * K2 + v1, 13);
+		v1 += Long.rotateRight(v1 * K3 + v0, 37);
 		return this;
 	}
 
 	// region ----- private methods
 	private void metroHash128_32() {
-		v2 ^= MetroHashInternalUtil.rotateRight64((v0 + v3) * K0 + v1, 21) * K1;
-		v3 ^= MetroHashInternalUtil.rotateRight64((v1 + v2) * K1 + v0, 21) * K0;
-		v0 ^= MetroHashInternalUtil.rotateRight64((v0 + v2) * K0 + v3, 21) * K1;
-		v1 ^= MetroHashInternalUtil.rotateRight64((v1 + v3) * K1 + v2, 21) * K0;
+		v2 ^= Long.rotateRight((v0 + v3) * K0 + v1, 21) * K1;
+		v3 ^= Long.rotateRight((v1 + v2) * K1 + v0, 21) * K0;
+		v0 ^= Long.rotateRight((v0 + v2) * K0 + v3, 21) * K1;
+		v1 ^= Long.rotateRight((v1 + v3) * K1 + v2, 21) * K0;
 	}
 
 	private void metroHash128_16(final ByteBuffer bb) {
-		v0 += MetroHashInternalUtil.grab8(bb) * K2;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 33) * K3;
-		v1 += MetroHashInternalUtil.grab8(bb) * K2;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 33) * K3;
-		v0 ^= MetroHashInternalUtil.rotateRight64(v0 * K2 + v1, 45) * K1;
-		v1 ^= MetroHashInternalUtil.rotateRight64(v1 * K3 + v0, 45) * K0;
+		v0 += grab(bb, 8) * K2;
+		v0 = Long.rotateRight(v0, 33) * K3;
+		v1 += grab(bb, 8) * K2;
+		v1 = Long.rotateRight(v1, 33) * K3;
+		v0 ^= Long.rotateRight(v0 * K2 + v1, 45) * K1;
+		v1 ^= Long.rotateRight(v1 * K3 + v0, 45) * K0;
 	}
 
 	private void metroHash128_8(final ByteBuffer bb) {
-		v0 += MetroHashInternalUtil.grab8(bb) * K2;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 33) * K3;
-		v0 ^= MetroHashInternalUtil.rotateRight64(v0 * K2 + v1, 27) * K1;
+		v0 += grab(bb, 8) * K2;
+		v0 = Long.rotateRight(v0, 33) * K3;
+		v0 ^= Long.rotateRight(v0 * K2 + v1, 27) * K1;
 	}
 
 	private void metroHash128_4(final ByteBuffer bb) {
-		v1 += MetroHashInternalUtil.grab4(bb) * K2;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 33) * K3;
-		v1 ^= MetroHashInternalUtil.rotateRight64(v1 * K3 + v0, 46) * K0;
+		v1 += grab(bb, 4) * K2;
+		v1 = Long.rotateRight(v1, 33) * K3;
+		v1 ^= Long.rotateRight(v1 * K3 + v0, 46) * K0;
 	}
 
 	private void metroHash128_2(final ByteBuffer bb) {
-		v0 += MetroHashInternalUtil.grab2(bb) * K2;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 33) * K3;
-		v0 ^= MetroHashInternalUtil.rotateRight64(v0 * K2 + v1, 22) * K1;
+		v0 += grab(bb, 2) * K2;
+		v0 = Long.rotateRight(v0, 33) * K3;
+		v0 ^= Long.rotateRight(v0 * K2 + v1, 22) * K1;
 	}
 
 	private void metroHash128_1(final ByteBuffer bb) {
-		v1 += MetroHashInternalUtil.grab1(bb) * K2;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 33) * K3;
-		v1 ^= MetroHashInternalUtil.rotateRight64(v1 * K3 + v0, 58) * K0;
+		v1 += grab(bb, 1) * K2;
+		v1 = Long.rotateRight(v1, 33) * K3;
+		v1 ^= Long.rotateRight(v1 * K3 + v0, 58) * K0;
 	}
 	// endregion
 }

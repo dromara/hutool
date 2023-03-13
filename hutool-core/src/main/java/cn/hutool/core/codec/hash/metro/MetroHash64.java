@@ -67,7 +67,7 @@ public class MetroHash64 extends AbstractMetroHash<MetroHash64> implements Hash6
 	@Override
 	public MetroHash64 write(final ByteBuffer output, final ByteOrder byteOrder) {
 		if(ByteOrder.LITTLE_ENDIAN == byteOrder){
-			MetroHashInternalUtil.writeLittleEndian(hash, output);
+			writeLittleEndian(hash, output);
 		} else{
 			output.asLongBuffer().put(hash);
 		}
@@ -77,14 +77,14 @@ public class MetroHash64 extends AbstractMetroHash<MetroHash64> implements Hash6
 	@Override
 	MetroHash64 partialApply32ByteChunk(final ByteBuffer partialInput) {
 		assert partialInput.remaining() >= 32;
-		v0 += MetroHashInternalUtil.grab8(partialInput) * K0;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 29) + v2;
-		v1 += MetroHashInternalUtil.grab8(partialInput) * K1;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 29) + v3;
-		v2 += MetroHashInternalUtil.grab8(partialInput) * K2;
-		v2 = MetroHashInternalUtil.rotateRight64(v2, 29) + v0;
-		v3 += MetroHashInternalUtil.grab8(partialInput) * K3;
-		v3 = MetroHashInternalUtil.rotateRight64(v3, 29) + v1;
+		v0 += grab(partialInput, 8) * K0;
+		v0 = Long.rotateRight(v0, 29) + v2;
+		v1 += grab(partialInput, 8) * K1;
+		v1 = Long.rotateRight(v1, 29) + v3;
+		v2 += grab(partialInput, 8) * K2;
+		v2 = Long.rotateRight(v2, 29) + v0;
+		v3 += grab(partialInput, 8) * K3;
+		v3 = Long.rotateRight(v3, 29) + v1;
 		++nChunks;
 		return this;
 	}
@@ -110,49 +110,49 @@ public class MetroHash64 extends AbstractMetroHash<MetroHash64> implements Hash6
 		if (partialInput.remaining() >= 1) {
 			metroHash64_1(partialInput);
 		}
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 28);
+		hash ^= Long.rotateRight(hash, 28);
 		hash *= K0;
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 29);
+		hash ^= Long.rotateRight(hash, 29);
 		return this;
 	}
 
 	// region ----- private methods
 	private void metroHash64_32() {
-		v2 ^= MetroHashInternalUtil.rotateRight64(((v0 + v3) * K0) + v1, 37) * K1;
-		v3 ^= MetroHashInternalUtil.rotateRight64(((v1 + v2) * K1) + v0, 37) * K0;
-		v0 ^= MetroHashInternalUtil.rotateRight64(((v0 + v2) * K0) + v3, 37) * K1;
-		v1 ^= MetroHashInternalUtil.rotateRight64(((v1 + v3) * K1) + v2, 37) * K0;
+		v2 ^= Long.rotateRight(((v0 + v3) * K0) + v1, 37) * K1;
+		v3 ^= Long.rotateRight(((v1 + v2) * K1) + v0, 37) * K0;
+		v0 ^= Long.rotateRight(((v0 + v2) * K0) + v3, 37) * K1;
+		v1 ^= Long.rotateRight(((v1 + v3) * K1) + v2, 37) * K0;
 		hash += v0 ^ v1;
 	}
 
 	private void metroHash64_16(final ByteBuffer bb) {
-		v0 = hash + MetroHashInternalUtil.grab8(bb) * K2;
-		v0 = MetroHashInternalUtil.rotateRight64(v0, 29) * K3;
-		v1 = hash + MetroHashInternalUtil.grab8(bb) * K2;
-		v1 = MetroHashInternalUtil.rotateRight64(v1, 29) * K3;
-		v0 ^= MetroHashInternalUtil.rotateRight64(v0 * K0, 21) + v1;
-		v1 ^= MetroHashInternalUtil.rotateRight64(v1 * K3, 21) + v0;
+		v0 = hash + grab(bb, 8) * K2;
+		v0 = Long.rotateRight(v0, 29) * K3;
+		v1 = hash + grab(bb, 8) * K2;
+		v1 = Long.rotateRight(v1, 29) * K3;
+		v0 ^= Long.rotateRight(v0 * K0, 21) + v1;
+		v1 ^= Long.rotateRight(v1 * K3, 21) + v0;
 		hash += v1;
 	}
 
 	private void metroHash64_8(final ByteBuffer bb) {
-		hash += MetroHashInternalUtil.grab8(bb) * K3;
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 55) * K1;
+		hash += grab(bb, 8) * K3;
+		hash ^= Long.rotateRight(hash, 55) * K1;
 	}
 
 	private void metroHash64_4(final ByteBuffer bb) {
-		hash += MetroHashInternalUtil.grab4(bb) * K3;
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 26) * K1;
+		hash += grab(bb, 4) * K3;
+		hash ^= Long.rotateRight(hash, 26) * K1;
 	}
 
 	private void metroHash64_2(final ByteBuffer bb) {
-		hash += MetroHashInternalUtil.grab2(bb) * K3;
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 48) * K1;
+		hash += grab(bb, 2) * K3;
+		hash ^= Long.rotateRight(hash, 48) * K1;
 	}
 
 	private void metroHash64_1(final ByteBuffer bb) {
-		hash += MetroHashInternalUtil.grab1(bb) * K3;
-		hash ^= MetroHashInternalUtil.rotateRight64(hash, 37) * K1;
+		hash += grab(bb, 1) * K3;
+		hash ^= Long.rotateRight(hash, 37) * K1;
 	}
 	// endregion
 }
