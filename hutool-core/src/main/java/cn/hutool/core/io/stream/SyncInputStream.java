@@ -48,15 +48,15 @@ public class SyncInputStream extends FilterInputStream {
 
 	/**
 	 * 同步数据到内存
+	 * @return this
 	 */
-	public void sync() {
-		if (false == asyncFlag) {
-			// 已经是同步模式
-			return;
+	public SyncInputStream sync() {
+		if (asyncFlag) {
+			this.in = new ByteArrayInputStream(readBytes());
+			this.asyncFlag = false;
 		}
 
-		this.in = new ByteArrayInputStream(readBytes());
-		this.asyncFlag = false;
+		return this;
 	}
 
 	/**
