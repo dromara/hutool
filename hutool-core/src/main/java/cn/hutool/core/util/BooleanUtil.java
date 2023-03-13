@@ -17,6 +17,8 @@ public class BooleanUtil {
 	private static final Set<String> TRUE_SET = SetUtil.of("true", "yes", "y", "t", "ok", "1", "on", "是", "对", "真", "對", "√");
 	/** 表示为假的字符串 */
 	private static final Set<String> FALSE_SET = SetUtil.of("false", "no", "n", "f", "0", "off", "否", "错", "假", "錯", "×");
+	/** js中表示假值Falsy的部分值 false、0、-0、0n、""、null、undefined 和 NaN */
+	public static final Set<Object> FALSY_SET = SetUtil.of(false, 0, -0, 0L, 0.0D, -0.0D, "", null);
 
 	/**
 	 * 取相反值
@@ -521,5 +523,29 @@ public class BooleanUtil {
 	 */
 	public static boolean isBoolean(final Class<?> clazz) {
 		return (clazz == Boolean.class || clazz == boolean.class);
+	}
+
+	/**
+	 * 是否为假值(定义来源js)
+	 *
+	 * @param value 参数
+	 * @return 是否为假值
+	 * 定义{@see https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy}
+	 */
+	public static boolean isJsFalsy(Object value) {
+		return FALSY_SET.contains(value);
+	}
+
+	/**
+	 * 是否为真值(定义来源js)
+	 * 所有除 false、0、-0、0n、""、null、undefined 和 NaN 以外的皆为真值
+	 * 由于java中无法使用值来代表undefined 和 NaN，因此此处不做判断
+	 *
+	 * @param value 参数
+	 * @return 是否为真值
+	 * 定义{@see https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy}
+	 */
+	public static boolean isJsTruthy(Object value) {
+		return false == isJsFalsy(value);
 	}
 }
