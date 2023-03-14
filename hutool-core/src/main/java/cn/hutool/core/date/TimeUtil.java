@@ -24,11 +24,6 @@ import java.util.function.Function;
  */
 public class TimeUtil extends TemporalAccessorUtil {
 	/**
-	 * UTC 的 ZoneID
-	 */
-	public static final ZoneId ZONE_ID_UTC = ZoneId.of("UTC");
-
-	/**
 	 * 当前时间，默认时区
 	 *
 	 * @return {@link LocalDateTime}
@@ -53,7 +48,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime ofUTC(final Instant instant) {
-		return of(instant, ZONE_ID_UTC);
+		return of(instant, ZoneUtil.ZONE_ID_UTC);
 	}
 
 	/**

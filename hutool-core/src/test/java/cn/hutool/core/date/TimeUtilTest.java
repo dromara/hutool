@@ -27,12 +27,22 @@ public class TimeUtilTest {
 		final String dateStr = "2020-01-23T12:23:56";
 		final DateTime dt = DateUtil.parse(dateStr);
 
-		LocalDateTime of = TimeUtil.of(dt);
+		final LocalDateTime of = TimeUtil.of(dt);
 		Assert.assertNotNull(of);
 		Assert.assertEquals(dateStr, of.toString());
+	}
 
-		of = TimeUtil.ofUTC(dt.getTime());
-		Assert.assertEquals(dateStr, of.toString());
+	@SuppressWarnings("DataFlowIssue")
+	@Test
+	public void ofUTCTest() {
+		final String dateStr = "2020-01-23T12:23:56Z";
+		final DateTime dt = DateUtil.parse(dateStr);
+
+		final LocalDateTime of = TimeUtil.of(dt);
+		final LocalDateTime of2 = TimeUtil.ofUTC(dt.getTime());
+		Assert.assertNotNull(of);
+		Assert.assertNotNull(of2);
+		Assert.assertEquals(of, of2);
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package cn.hutool.core.text.split;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.finder.CharFinder;
@@ -302,7 +303,8 @@ public class SplitUtil {
 
 	/**
 	 * 切分字符串<br>
-	 * 如果为空字符串或者null 则返回空集合
+	 * 如果提供的字符串为{@code null}，则返回一个空的{@link ArrayList}<br>
+	 * 如果提供的字符串为""，则当ignoreEmpty时返回空的{@link ArrayList}，否则返回只有一个""元素的{@link ArrayList}
 	 *
 	 * @param text        被切分的字符串
 	 * @param separator   分隔符字符串
@@ -314,8 +316,10 @@ public class SplitUtil {
 	 * @since 3.2.1
 	 */
 	public static List<String> split(final CharSequence text, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
-		if (StrUtil.isEmpty(text)) {
+		if(null == text){
 			return new ArrayList<>(0);
+		} else if (0 == text.length()) {
+			return ignoreEmpty ? new ArrayList<>(0) : ListUtil.of(StrUtil.EMPTY);
 		}
 		final SplitIter splitIter = new SplitIter(text, new StrFinder(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);

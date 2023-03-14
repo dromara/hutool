@@ -1,5 +1,6 @@
 package cn.hutool.core.text.split;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -59,16 +60,25 @@ public class StrSplitterTest {
 		final String str = "";
 		final String[] split = str.split(",");
 		final String[] strings = SplitUtil.splitToArray(str, ",", -1, false, false);
+
 		Assert.assertNotNull(strings);
 		Assert.assertArrayEquals(split, strings);
+
+		final String[] strings2 = SplitUtil.splitToArray(str, ",", -1, false, true);
+		Assert.assertEquals(0, strings2.length);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void splitNullTest(){
 		final String str = null;
 		final String[] strings = SplitUtil.splitToArray(str, ",", -1, false, false);
 		Assert.assertNotNull(strings);
 		Assert.assertEquals(0, strings.length);
+
+		final String[] strings2 = SplitUtil.splitToArray(str, ",", -1, false, true);
+		Assert.assertNotNull(strings2);
+		Assert.assertEquals(0, strings2.length);
 	}
 
 	/**

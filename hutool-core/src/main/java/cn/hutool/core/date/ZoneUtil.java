@@ -12,6 +12,15 @@ import java.util.TimeZone;
 public class ZoneUtil {
 
 	/**
+	 * UTC 的 ZoneID
+	 */
+	public static final TimeZone ZONE_UTC = TimeZone.getTimeZone("UTC");
+	/**
+	 * UTC 的 TimeZone
+	 */
+	public static final ZoneId ZONE_ID_UTC = ZONE_UTC.toZoneId();
+
+	/**
 	 * {@link ZoneId}转换为{@link TimeZone}，{@code null}则返回系统默认值
 	 *
 	 * @param zoneId {@link ZoneId}，{@code null}则返回系统默认值
