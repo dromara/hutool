@@ -105,6 +105,9 @@ public class BooleanUtilTest {
 		Assert.assertTrue(BooleanUtil.isJsFalsy(0.0D));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(0.00D));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00D));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.0F));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.00F));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00F));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(""));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(null));
 	}
@@ -120,5 +123,6 @@ public class BooleanUtilTest {
 		Assert.assertTrue(BooleanUtil.isJsTruthy(1L));
 		Assert.assertTrue(BooleanUtil.isJsTruthy(0.1D));
 		Assert.assertTrue(BooleanUtil.isJsTruthy(-0.01D));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(-0.01F));
 	}
 }
