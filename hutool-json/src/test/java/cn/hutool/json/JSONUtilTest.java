@@ -35,12 +35,12 @@ public class JSONUtilTest {
 	}
 
 	/**
-	 * 数字解析为JSONObject忽略
+	 * 数字解析为JSONArray报错
 	 */
-	@Test
+	@Test(expected = JSONException.class)
 	public void parseNumberTest2() {
 		final JSONObject json = JSONUtil.parseObj(123L);
-		Assert.assertEquals(new JSONObject(), json);
+		Assert.assertNotNull(json);
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class JSONUtilTest {
 	@Test
 	public void toJsonStrTest3() {
 		// 验证某个字段为JSON字符串时转义是否规范
-		final JSONObject object = new JSONObject(true);
+		final JSONObject object = new JSONObject(JSONConfig.of().setIgnoreError(true));
 		object.set("name", "123123");
 		object.set("value", "\\");
 		object.set("value2", "</");
