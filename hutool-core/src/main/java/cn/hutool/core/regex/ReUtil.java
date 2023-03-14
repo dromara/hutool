@@ -197,7 +197,7 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
-	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0) {
+	public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0) {
 		return getAllGroups(pattern, content, withGroup0, false);
 	}
 
@@ -211,12 +211,12 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
-	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0, boolean findAll) {
+	public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0, final boolean findAll) {
 		if (null == content || null == pattern) {
 			return null;
 		}
 
-		ArrayList<String> result = new ArrayList<>();
+		final ArrayList<String> result = new ArrayList<>();
 		final Matcher matcher = pattern.matcher(content);
 		while (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
@@ -893,7 +893,6 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 * <p>
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"
@@ -912,7 +911,6 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 * <p>
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"
