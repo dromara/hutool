@@ -28,7 +28,7 @@ public class JNDIUtil {
 	/**
 	 * 创建{@link InitialDirContext}
 	 *
-	 * @param environment 环境参数，{code null}表示无参数
+	 * @param environment 环境参数，{@code null}表示无参数
 	 * @return {@link InitialDirContext}
 	 */
 	public static InitialDirContext createInitialDirContext(Map<String, String> environment) {
@@ -45,7 +45,7 @@ public class JNDIUtil {
 	/**
 	 * 创建{@link InitialContext}
 	 *
-	 * @param environment 环境参数，{code null}表示无参数
+	 * @param environment 环境参数，{@code null}表示无参数
 	 * @return {@link InitialContext}
 	 */
 	public static InitialContext createInitialContext(Map<String, String> environment) {
