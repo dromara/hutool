@@ -19,7 +19,7 @@ public interface Segment<T extends Number> {
 	 *
 	 * @return 起始位置
 	 */
-	T getStartIndex();
+	T getBeginIndex();
 
 	/**
 	 * 获取结束位置
@@ -34,7 +34,7 @@ public interface Segment<T extends Number> {
 	 * @return 片段长度
 	 */
 	default T length(){
-		final T start = Assert.notNull(getStartIndex(), "Start index must be not null!");
+		final T start = Assert.notNull(getBeginIndex(), "Start index must be not null!");
 		final T end = Assert.notNull(getEndIndex(), "End index must be not null!");
 		return Convert.convert((Type) start.getClass(), NumberUtil.sub(end, start).abs());
 	}

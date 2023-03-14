@@ -864,7 +864,7 @@ public class CollUtilTest {
 			objects.add(Dict.of().set("name", "姓名：" + i));
 		}
 
-		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());
+		Assert.assertEquals(0, ListUtil.page(objects, 3, 5).size());
 	}
 
 	@Test

@@ -1735,21 +1735,7 @@ public class CollUtil {
 			list.sort(comparator);
 		}
 
-		return page(pageNo, pageSize, list);
-	}
-
-	/**
-	 * 对指定List分页取值
-	 *
-	 * @param <T>      集合元素类型
-	 * @param pageNo   页码，从0开始计数，0表示第一页
-	 * @param pageSize 每页的条目数
-	 * @param list     列表
-	 * @return 分页后的段落内容
-	 * @since 4.1.20
-	 */
-	public static <T> List<T> page(final int pageNo, final int pageSize, final List<T> list) {
-		return ListUtil.page(pageNo, pageSize, list);
+		return ListUtil.page(list, pageNo, pageSize);
 	}
 
 	/**

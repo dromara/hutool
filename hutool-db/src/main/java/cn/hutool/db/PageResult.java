@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.util.PageUtil;
+import cn.hutool.core.math.PageInfo;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ public class PageResult<T> extends ArrayList<T> {
 	public static final int DEFAULT_PAGE_SIZE = Page.DEFAULT_PAGE_SIZE;
 
 	/**
-	 * 页码，{@link PageUtil#getFirstPageNo()}表示第一页
+	 * 页码
 	 */
 	private int page;
 	/**
@@ -65,7 +65,7 @@ public class PageResult<T> extends ArrayList<T> {
 		this(page, pageSize);
 
 		this.total = total;
-		this.totalPage = PageUtil.totalPage(total, pageSize);
+		this.totalPage = PageInfo.of(total, pageSize).getPages();
 	}
 	//---------------------------------------------------------- Constructor end
 
@@ -142,7 +142,7 @@ public class PageResult<T> extends ArrayList<T> {
 	 * @return 是否第一页
 	 */
 	public boolean isFirst() {
-		return this.page == PageUtil.getFirstPageNo();
+		return this.page == 0;
 	}
 
 	/**
