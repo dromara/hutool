@@ -224,7 +224,7 @@ public class LocalDateTimeUtil {
 
 	/**
 	 * 解析日期时间字符串为{@link LocalDateTime}，格式支持日期时间、日期、时间<br>
-	 * 如果formatter为{code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
+	 * 如果formatter为{@code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
 	 *
 	 * @param text      日期时间字符串
 	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
