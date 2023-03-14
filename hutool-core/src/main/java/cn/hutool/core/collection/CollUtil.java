@@ -2023,8 +2023,12 @@ public class CollUtil {
 	 * @return 分组列表
 	 */
 	public static <T> List<List<T>> groupByField(final Collection<T> collection, final String fieldName) {
+		return groupByFunc(collection, t -> BeanUtil.getFieldValue(t, fieldName));
+	}
+
+	public static <T,D> List<List<T>> groupByFunc(final Collection<T> collection, final Function<T,D> getter) {
 		return group(collection, new Hash32<T>() {
-			private final List<Object> fieldNameList = new ArrayList<>();
+			private final List<Object> hashValList = new ArrayList<>();
 
 			@Override
 			public int hash32(final T t) {
@@ -2032,11 +2036,11 @@ public class CollUtil {
 					// 非Bean放在同一子分组中
 					return 0;
 				}
-				final Object value = FieldUtil.getFieldValue(t, fieldName);
-				final int hash = fieldNameList.indexOf(value);
+				final D value = getter.apply(t);
+				final int hash = hashValList.indexOf(value);
 				if (hash < 0) {
-					fieldNameList.add(value);
-					return fieldNameList.size() - 1;
+					hashValList.add(value);
+					return hashValList.size() - 1;
 				} else {
 					return hash;
 				}
