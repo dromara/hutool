@@ -5,12 +5,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.date.format.parser.CSTDateParser;
-import cn.hutool.core.date.format.parser.NormalDateParser;
-import cn.hutool.core.date.format.parser.PositionDateParser;
-import cn.hutool.core.date.format.parser.PureDateParser;
-import cn.hutool.core.date.format.parser.TimeParser;
-import cn.hutool.core.date.format.parser.UTCDateParser;
+import cn.hutool.core.date.format.parser.*;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
@@ -26,14 +21,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -825,8 +813,8 @@ public class DateUtil extends CalendarUtil {
 			// Wed Aug 01 00:00:00 CST 2012
 			return CSTDateParser.INSTANCE.parse(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
-			// UTC时间
-			return UTCDateParser.INSTANCE.parse(dateStr);
+			// ISO8601标准时间
+			return ISO8601DateParser.INSTANCE.parse(dateStr);
 		}
 
 		//标准日期格式（包括单个数字的日期时间）

@@ -9,7 +9,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 
 /**
- * UTC日期字符串（JDK的Date对象toString默认格式）解析，支持格式；
+ * ISO8601日期字符串（JDK的Date对象toString默认格式）解析，支持格式；
  * <ol>
  *   <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
  *   <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
@@ -22,13 +22,13 @@ import cn.hutool.core.util.CharUtil;
  * @author looly
  * @since 6.0.0
  */
-public class UTCDateParser extends DefaultDateBasic implements DateParser {
+public class ISO8601DateParser extends DefaultDateBasic implements DateParser {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
-	public static UTCDateParser INSTANCE = new UTCDateParser();
+	public static ISO8601DateParser INSTANCE = new ISO8601DateParser();
 
 	@Override
 	public DateTime parse(String source) {
