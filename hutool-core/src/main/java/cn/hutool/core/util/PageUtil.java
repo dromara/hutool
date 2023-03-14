@@ -95,8 +95,8 @@ public class PageUtil {
 	 * <p>
 	 * 当{@link #setFirstPageNo(int)}设置为1时：
 	 * <pre>
-	 * 页码：1，每页10 =》 9
-	 * 页码：2，每页10 =》 19
+	 * 页码：1，每页10 =》 10
+	 * 页码：2，每页10 =》 20
 	 * ……
 	 * </pre>
 	 *
