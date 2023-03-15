@@ -9,13 +9,13 @@ import java.util.*;
  *
  * @author renyp
  */
-public class Automaton {
+public class NFA {
 	private final Node root;
 
 	/**
 	 * 默认构造
 	 */
-	public Automaton() {
+	public NFA() {
 		this.root = new Node();
 	}
 
@@ -24,7 +24,7 @@ public class Automaton {
 	 *
 	 * @param words 添加的新词
 	 */
-	public Automaton(String... words) {
+	public NFA(final String... words) {
 		this();
 		this.insert(words);
 	}
@@ -34,14 +34,13 @@ public class Automaton {
 	 *
 	 * @param word 添加的新词
 	 */
-	public void insert(String word) {
+	public void insert(final String word) {
 		Node p = root;
-		for (char curr : word.toCharArray()) {
-			int ind = curr;
-			if (p.next.get(ind) == null) {
-				p.next.put(ind, new Node());
+		for (final char curr : word.toCharArray()) {
+			if (p.next.get((int) curr) == null) {
+				p.next.put((int) curr, new Node());
 			}
-			p = p.next.get(ind);
+			p = p.next.get((int) curr);
 		}
 		p.flag = true;
 		p.str = word;
@@ -52,8 +51,8 @@ public class Automaton {
 	 *
 	 * @param words 添加的新词
 	 */
-	public void insert(String... words) {
-		for (String word : words) {
+	public void insert(final String... words) {
+		for (final String word : words) {
 			this.insert(word);
 		}
 	}
@@ -62,15 +61,15 @@ public class Automaton {
 	 * 构建基于NFA模型的 AC自动机
 	 */
 	public void buildAc() {
-		Queue<Node> queue = new LinkedList<>();
-		Node p = root;
-		for (Integer key : p.next.keySet()) {
+		final Queue<Node> queue = new LinkedList<>();
+		final Node p = root;
+		for (final Integer key : p.next.keySet()) {
 			p.next.get(key).fail = root;
 			queue.offer(p.next.get(key));
 		}
 		while (!queue.isEmpty()) {
-			Node curr = queue.poll();
-			for (Integer key : curr.next.keySet()) {
+			final Node curr = queue.poll();
+			for (final Integer key : curr.next.keySet()) {
 				Node fail = curr.fail;
 				// 查找当前节点匹配失败，他对应等效匹配的节点是哪个
 				while (fail != null && fail.next.get(key) == null) {
@@ -90,20 +89,22 @@ public class Automaton {
 
 	/**
 	 * @param text 查询的文本（母串）
+	 * @return 关键字列表
 	 */
-	public List<FoundWord> find(String text) {
+	public List<FoundWord> find(final String text) {
 		return this.find(text, true);
 	}
 
 	/**
 	 * @param text           查找的文本（母串）
 	 * @param isDensityMatch 是否密集匹配
+	 * @return 关键字列表
 	 */
-	public List<FoundWord> find(String text, boolean isDensityMatch) {
-		List<FoundWord> ans = new ArrayList<>();
-		Node p = root, k = null;
+	public List<FoundWord> find(final String text, final boolean isDensityMatch) {
+		final List<FoundWord> ans = new ArrayList<>();
+		Node p = root, k;
 		for (int i = 0, len = text.length(); i < len; i++) {
-			int ind = text.charAt(i);
+			final int ind = text.charAt(i);
 			// 状态转移(沿着fail指针链接的链表，此处区别于DFA模型)
 			while (p != null && p.next.get(ind) == null) {
 				p = p.fail;
