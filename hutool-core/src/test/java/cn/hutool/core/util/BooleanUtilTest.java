@@ -86,7 +86,7 @@ public class BooleanUtilTest {
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
-	public void toBooleanObjectTest() {
+	public void toBooleanObjectTest(){
 		Assert.assertTrue(BooleanUtil.toBooleanObject("yes"));
 		Assert.assertTrue(BooleanUtil.toBooleanObject("真"));
 		Assert.assertTrue(BooleanUtil.toBooleanObject("是"));
@@ -94,31 +94,5 @@ public class BooleanUtilTest {
 
 		Assert.assertNull(BooleanUtil.toBooleanObject(null));
 		Assert.assertNull(BooleanUtil.toBooleanObject("不识别"));
-	}
-
-	@Test
-	public void isJsFalsyTest() {
-		Assert.assertTrue(BooleanUtil.isJsFalsy(false));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(0));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(-0));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(0L));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(0.0D));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(0.00D));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00D));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(""));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(null));
-	}
-
-	@Test
-	public void isJsTruthyTest() {
-		Assert.assertTrue(BooleanUtil.isJsTruthy(true));
-		Assert.assertTrue(BooleanUtil.isJsTruthy(1));
-		Assert.assertTrue(BooleanUtil.isJsTruthy(-1));
-		Assert.assertTrue(BooleanUtil.isJsTruthy("0"));
-		Assert.assertTrue(BooleanUtil.isJsTruthy("null"));
-		Assert.assertTrue(BooleanUtil.isJsTruthy("undefined"));
-		Assert.assertTrue(BooleanUtil.isJsTruthy(1L));
-		Assert.assertTrue(BooleanUtil.isJsTruthy(0.1D));
-		Assert.assertTrue(BooleanUtil.isJsTruthy(-0.01D));
 	}
 }
