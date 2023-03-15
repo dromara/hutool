@@ -64,7 +64,7 @@ public class LambdaFactory {
 	 * 构建Lambda
 	 *
 	 * @param functionInterfaceType 接受Lambda的函数式接口类型
-	 * @param executable                方法对象
+	 * @param executable                方法对象，支持构造器
 	 * @param <F>                   Function类型
 	 * @return 接受Lambda的函数式接口对象
 	 */
