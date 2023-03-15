@@ -532,7 +532,7 @@ public class BooleanUtil {
 	 * @return 是否为假值
 	 * 定义{@see https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy}
 	 */
-	public static boolean isFalsy(Object value) {
+	public static boolean isJsFalsy(Object value) {
 		if (FALSY_SET.contains(value)) {
 			return true;
 		}
@@ -551,7 +551,7 @@ public class BooleanUtil {
 	 * @return 是否为真值
 	 * 定义{@see https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy}
 	 */
-	public static boolean isTruthy(Object value) {
-		return false == isFalsy(value);
+	public static boolean isJsTruthy(Object value) {
+		return false == isJsFalsy(value);
 	}
 }

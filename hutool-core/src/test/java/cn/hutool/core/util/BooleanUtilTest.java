@@ -97,33 +97,33 @@ public class BooleanUtilTest {
 	}
 
 	@Test
-	public void isFalsyTest() {
-		Assert.assertTrue(BooleanUtil.isFalsy(false));
-		Assert.assertTrue(BooleanUtil.isFalsy(0));
-		Assert.assertTrue(BooleanUtil.isFalsy(-0));
-		Assert.assertTrue(BooleanUtil.isFalsy(0L));
-		Assert.assertTrue(BooleanUtil.isFalsy(0.0D));
-		Assert.assertTrue(BooleanUtil.isFalsy(0.00D));
-		Assert.assertTrue(BooleanUtil.isFalsy(-0.00D));
-		Assert.assertTrue(BooleanUtil.isFalsy(0.0F));
-		Assert.assertTrue(BooleanUtil.isFalsy(0.00F));
-		Assert.assertTrue(BooleanUtil.isFalsy(-0.00F));
-		Assert.assertTrue(BooleanUtil.isFalsy(""));
-		Assert.assertTrue(BooleanUtil.isFalsy(null));
-		Assert.assertTrue(BooleanUtil.isFalsy(Math.sqrt(-1)));
+	public void isJsFalsyTest() {
+		Assert.assertTrue(BooleanUtil.isJsFalsy(false));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(-0));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0L));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.0D));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.00D));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00D));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.0F));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(0.00F));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00F));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(""));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(null));
+		Assert.assertTrue(BooleanUtil.isJsFalsy(Math.sqrt(-1)));
 	}
 
 	@Test
-	public void isTruthyTest() {
-		Assert.assertTrue(BooleanUtil.isTruthy(true));
-		Assert.assertTrue(BooleanUtil.isTruthy(1));
-		Assert.assertTrue(BooleanUtil.isTruthy(-1));
-		Assert.assertTrue(BooleanUtil.isTruthy("0"));
-		Assert.assertTrue(BooleanUtil.isTruthy("null"));
-		Assert.assertTrue(BooleanUtil.isTruthy("undefined"));
-		Assert.assertTrue(BooleanUtil.isTruthy(1L));
-		Assert.assertTrue(BooleanUtil.isTruthy(0.1D));
-		Assert.assertTrue(BooleanUtil.isTruthy(-0.01D));
-		Assert.assertTrue(BooleanUtil.isTruthy(-0.01F));
+	public void isJsTruthyTest() {
+		Assert.assertTrue(BooleanUtil.isJsTruthy(true));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(1));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(-1));
+		Assert.assertTrue(BooleanUtil.isJsTruthy("0"));
+		Assert.assertTrue(BooleanUtil.isJsTruthy("null"));
+		Assert.assertTrue(BooleanUtil.isJsTruthy("undefined"));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(1L));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(0.1D));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(-0.01D));
+		Assert.assertTrue(BooleanUtil.isJsTruthy(-0.01F));
 	}
 }
