@@ -44,7 +44,7 @@ public class SerializeUtil {
 			return null;
 		}
 		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
-		IoUtil.writeObjects(byteOut, false, (Serializable) obj);
+		IoUtil.writeObjects(byteOut, false, obj);
 		return byteOut.toByteArray();
 	}
 
