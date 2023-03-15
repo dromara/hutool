@@ -363,7 +363,7 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c]，此结果中只保留了一个c
 	 *
-	 * @param <T>        集合元素类型
+	 * @param <T>   集合元素类型
 	 * @param colls 集合列表
 	 * @return 交集的集合，返回 {@link LinkedHashSet}
 	 * @since 5.3.9
@@ -1735,21 +1735,7 @@ public class CollUtil {
 			list.sort(comparator);
 		}
 
-		return page(pageNo, pageSize, list);
-	}
-
-	/**
-	 * 对指定List分页取值
-	 *
-	 * @param <T>      集合元素类型
-	 * @param pageNo   页码，从0开始计数，0表示第一页
-	 * @param pageSize 每页的条目数
-	 * @param list     列表
-	 * @return 分页后的段落内容
-	 * @since 4.1.20
-	 */
-	public static <T> List<T> page(final int pageNo, final int pageSize, final List<T> list) {
-		return ListUtil.page(pageNo, pageSize, list);
+		return ListUtil.page(list, pageNo, pageSize);
 	}
 
 	/**
@@ -2015,7 +2001,7 @@ public class CollUtil {
 	}
 
 	/**
-	 * 根据元素的指定字段名分组，非Bean都放在第一个分组中
+	 * 根据元素的指定字段值分组，非Bean都放在第一个分组中
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
@@ -2023,8 +2009,24 @@ public class CollUtil {
 	 * @return 分组列表
 	 */
 	public static <T> List<List<T>> groupByField(final Collection<T> collection, final String fieldName) {
+		return groupByFunc(collection, t -> BeanUtil.getFieldValue(t, fieldName));
+	}
+
+	/**
+	 * 根据元素的指定字段值分组，非Bean都放在第一个分组中<br>
+	 * 例如：{@code
+	 * CollUtil.groupByFunc(list, TestBean::getAge)
+	 * }
+	 *
+	 * @param <T>        元素类型
+	 * @param collection 集合
+	 * @param getter     getter方法引用
+	 * @return 分组列表
+	 * @since 6.0.0
+	 */
+	public static <T> List<List<T>> groupByFunc(final Collection<T> collection, final Function<T, ?> getter) {
 		return group(collection, new Hash32<T>() {
-			private final List<Object> fieldNameList = new ArrayList<>();
+			private final List<Object> hashValList = new ArrayList<>();
 
 			@Override
 			public int hash32(final T t) {
@@ -2032,14 +2034,13 @@ public class CollUtil {
 					// 非Bean放在同一子分组中
 					return 0;
 				}
-				final Object value = FieldUtil.getFieldValue(t, fieldName);
-				final int hash = fieldNameList.indexOf(value);
+				final Object value = getter.apply(t);
+				int hash = hashValList.indexOf(value);
 				if (hash < 0) {
-					fieldNameList.add(value);
-					return fieldNameList.size() - 1;
-				} else {
-					return hash;
+					hashValList.add(value);
+					hash = hashValList.size() - 1;
 				}
+				return hash;
 			}
 		});
 	}

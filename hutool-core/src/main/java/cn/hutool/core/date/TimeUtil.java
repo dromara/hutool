@@ -24,11 +24,6 @@ import java.util.function.Function;
  */
 public class TimeUtil extends TemporalAccessorUtil {
 	/**
-	 * UTC 的 ZoneID
-	 */
-	public static final ZoneId ZONE_ID_UTC = ZoneId.of("UTC");
-
-	/**
 	 * 当前时间，默认时区
 	 *
 	 * @return {@link LocalDateTime}
@@ -53,7 +48,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime ofUTC(final Instant instant) {
-		return of(instant, ZONE_ID_UTC);
+		return of(instant, ZoneUtil.ZONE_ID_UTC);
 	}
 
 	/**
@@ -222,7 +217,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 
 	/**
 	 * 解析日期时间字符串为{@link LocalDateTime}，格式支持日期时间、日期、时间<br>
-	 * 如果formatter为{code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
+	 * 如果formatter为{@code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
 	 *
 	 * @param text      日期时间字符串
 	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}

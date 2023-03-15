@@ -2,7 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.PageUtil;
+import cn.hutool.core.math.PageInfo;
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +10,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ListUtilTest {
@@ -105,51 +101,32 @@ public class ListUtilTest {
 	}
 
 	@Test
-	public void pageTest() {
+	public void pageTest1() {
 		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
 
-		PageUtil.setFirstPageNo(1);
-		final int[] a_1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a2 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a3 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] a4 = ListUtil.page(4, 2, a).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a_1 = ListUtil.page(a, 0, 2).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a1 = ListUtil.page(a, 0, 2).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a2 = ListUtil.page(a, 1, 2).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a3 = ListUtil.page(a, 2, 2).stream().mapToInt(Integer::valueOf).toArray();
+		final int[] a4 = ListUtil.page(a, 3, 2).stream().mapToInt(Integer::valueOf).toArray();
 		Assert.assertArrayEquals(new int[]{1, 2}, a_1);
 		Assert.assertArrayEquals(new int[]{1, 2}, a1);
 		Assert.assertArrayEquals(new int[]{3, 4}, a2);
 		Assert.assertArrayEquals(new int[]{5}, a3);
 		Assert.assertArrayEquals(new int[]{}, a4);
+	}
 
-
-		PageUtil.setFirstPageNo(2);
-		final int[] b_1 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b1 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b2 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b3 = ListUtil.page(4, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] b4 = ListUtil.page(5, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1, 2}, b_1);
-		Assert.assertArrayEquals(new int[]{1, 2}, b1);
-		Assert.assertArrayEquals(new int[]{3, 4}, b2);
-		Assert.assertArrayEquals(new int[]{5}, b3);
-		Assert.assertArrayEquals(new int[]{}, b4);
-
-		PageUtil.setFirstPageNo(0);
-		final int[] c_1 = ListUtil.page(-1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c1 = ListUtil.page(0, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c2 = ListUtil.page(1, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c3 = ListUtil.page(2, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		final int[] c4 = ListUtil.page(3, 2, a).stream().mapToInt(Integer::valueOf).toArray();
-		Assert.assertArrayEquals(new int[]{1, 2}, c_1);
-		Assert.assertArrayEquals(new int[]{1, 2}, c1);
-		Assert.assertArrayEquals(new int[]{3, 4}, c2);
-		Assert.assertArrayEquals(new int[]{5}, c3);
-		Assert.assertArrayEquals(new int[]{}, c4);
-
-
-		PageUtil.setFirstPageNo(1);
-		final int[] d1 = ListUtil.page(0, 8, a).stream().mapToInt(Integer::valueOf).toArray();
+	@Test
+	public void pageTest2() {
+		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
+		final int[] d1 = ListUtil.page(a, PageInfo.of(a.size(), 8).setFirstPageNo(0).setPageNo(0))
+				.stream().mapToInt(Integer::valueOf).toArray();
 		Assert.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, d1);
+	}
 
+	@Test
+	public void pageTest3() {
+		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
 		// page with consumer
 		final List<List<Integer>> pageListData = new ArrayList<>();
 		ListUtil.page(a, 2, pageListData::add);
@@ -168,9 +145,6 @@ public class ListUtilTest {
 		Assert.assertArrayEquals(new int[]{}, pageListData.get(0).stream().mapToInt(Integer::valueOf).toArray());
 		Assert.assertArrayEquals(new int[]{3, 4}, pageListData.get(1).stream().mapToInt(Integer::valueOf).toArray());
 		Assert.assertArrayEquals(new int[]{5}, pageListData.get(2).stream().mapToInt(Integer::valueOf).toArray());
-
-		// 恢复默认值，避免影响其他测试用例
-		PageUtil.setFirstPageNo(0);
 	}
 
 	@Test

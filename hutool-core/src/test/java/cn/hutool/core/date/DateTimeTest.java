@@ -109,10 +109,10 @@ public class DateTimeTest {
 	public void toStringTest2() {
 		final DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 
-		String dateStr = dateTime.toString(DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN);
+		String dateStr = dateTime.toString(DatePattern.ISO8601_WITH_ZONE_OFFSET_PATTERN);
 		Assert.assertEquals("2017-01-05T12:34:23+0800", dateStr);
 
-		dateStr = dateTime.toString(DatePattern.UTC_WITH_XXX_OFFSET_PATTERN);
+		dateStr = dateTime.toString(DatePattern.ISO8601_WITH_XXX_OFFSET_PATTERN);
 		Assert.assertEquals("2017-01-05T12:34:23+08:00", dateStr);
 	}
 

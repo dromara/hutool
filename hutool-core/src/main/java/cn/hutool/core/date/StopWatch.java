@@ -352,7 +352,7 @@ public class StopWatch {
 			unit = TimeUnit.NANOSECONDS;
 		}
 		return StrUtil.format("StopWatch '{}': running time = {} {}",
-				this.id, getTotal(unit), DateUtil.getShotName(unit));
+				this.id, getTotal(unit), DateUtil.getShortName(unit));
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class StopWatch {
 			sb.append("No task info kept");
 		} else {
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
-			sb.append(DateUtil.getShotName(unit)).append("          %     Task name").append(FileUtil.getLineSeparator());
+			sb.append(DateUtil.getShortName(unit)).append("          %     Task name").append(FileUtil.getLineSeparator());
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
 
 			final NumberFormat nf = NumberFormat.getNumberInstance();

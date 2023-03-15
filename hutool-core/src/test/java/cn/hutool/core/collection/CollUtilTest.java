@@ -428,6 +428,26 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void groupByFuncTest() {
+		final List<TestBean> list = ListUtil.of(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
+		final List<List<TestBean>> groupByField = CollUtil.groupByFunc(list, TestBean::getAge);
+		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
+		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
+
+		Assert.assertEquals("李四", groupByField.get(1).get(0).getName());
+	}
+
+	@Test
+	public void groupByFunc2Test() {
+		final List<TestBean> list = ListUtil.of(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
+		final List<List<TestBean>> groupByField = CollUtil.groupByFunc(list, a -> a.getAge() > 12);
+		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
+		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
+
+		Assert.assertEquals("李四", groupByField.get(1).get(0).getName());
+	}
+
+	@Test
 	public void sortByPropertyTest() {
 		final List<TestBean> list = ListUtil.of(
 				new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
@@ -844,7 +864,7 @@ public class CollUtilTest {
 			objects.add(Dict.of().set("name", "姓名：" + i));
 		}
 
-		Assert.assertEquals(0, CollUtil.page(3, 5, objects).size());
+		Assert.assertEquals(0, ListUtil.page(objects, 3, 5).size());
 	}
 
 	@Test
@@ -854,7 +874,7 @@ public class CollUtilTest {
 
 		final List<Long> result = CollUtil.subtractToList(list1, list2);
 		Assert.assertEquals(1, result.size());
-		Assert.assertEquals(1L, (long)result.get(0));
+		Assert.assertEquals(1L, (long) result.get(0));
 	}
 
 	@Test

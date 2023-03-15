@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
 import cn.hutool.core.lang.Segment;
+import cn.hutool.core.math.PageInfo;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.PageUtil;
 import cn.hutool.db.sql.Order;
 
 import java.io.Serializable;
@@ -16,6 +16,9 @@ import java.util.Arrays;
 public class Page implements Segment<Integer>, Serializable {
 	private static final long serialVersionUID = 97792549823353462L;
 
+	/**
+	 * 默认
+	 */
 	public static final int DEFAULT_PAGE_SIZE = 20;
 
 	/**
@@ -140,15 +143,16 @@ public class Page implements Segment<Integer>, Serializable {
 
 	/**
 	 * @return 开始位置
-	 * @see #getStartIndex()
+	 * @see #getBeginIndex()
 	 */
 	public int getStartPosition() {
-		return getStartIndex();
+		return getBeginIndex();
 	}
 
 	@Override
-	public Integer getStartIndex() {
-		return PageUtil.getStart(this.pageNumber, this.pageSize);
+	public Integer getBeginIndex() {
+		return PageInfo.of(Integer.MAX_VALUE, this.pageSize)
+				.setFirstPageNo(0).setPageNo(this.pageNumber).getBeginIndex();
 	}
 
 	/**
@@ -161,7 +165,7 @@ public class Page implements Segment<Integer>, Serializable {
 
 	@Override
 	public Integer getEndIndex() {
-		return PageUtil.getEnd(this.pageNumber, this.pageSize);
+		return PageInfo.of(Integer.MAX_VALUE, this.pageSize).setFirstPageNo(0).getEndIndex();
 	}
 
 	/**
@@ -178,7 +182,9 @@ public class Page implements Segment<Integer>, Serializable {
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */
 	public int[] getStartEnd() {
-		return PageUtil.transToStartEnd(pageNumber, pageSize);
+		final PageInfo pageInfo = PageInfo.of(Integer.MAX_VALUE, this.pageSize)
+				.setFirstPageNo(0).setPageNo(this.pageNumber);
+		return new int[]{pageInfo.getBeginIndex(), pageInfo.getEndIndexExclude()};
 	}
 
 	@Override

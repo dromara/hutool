@@ -34,7 +34,8 @@ public class DbTest {
 	@Test
 	public void pageTest() {
 		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
-		final List<Entity> page0 = Db.of().page(Entity.of("user"), Page.of(0, 3));
+		final List<Entity> page0 = Db.of().page(Entity.of("user"),
+				Page.of(0, 3));
 		Assert.assertEquals(3, page0.size());
 
 		final List<Entity> page1 = Db.of().page(Entity.of("user"), Page.of(1, 3));

@@ -9,7 +9,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 
 /**
- * UTC日期字符串（JDK的Date对象toString默认格式）解析，支持格式；
+ * ISO8601日期字符串（JDK的Date对象toString默认格式）解析，支持格式；
  * <ol>
  *   <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
  *   <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
@@ -22,13 +22,13 @@ import cn.hutool.core.util.CharUtil;
  * @author looly
  * @since 6.0.0
  */
-public class UTCDateParser extends DefaultDateBasic implements DateParser {
+public class ISO8601DateParser extends DefaultDateBasic implements DateParser {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
-	public static UTCDateParser INSTANCE = new UTCDateParser();
+	public static ISO8601DateParser INSTANCE = new ISO8601DateParser();
 
 	@Override
 	public DateTime parse(String source) {
@@ -61,10 +61,10 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 			if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
 				source = normalizeMillSeconds(source, ".", "+");
-				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+				return new DateTime(source, DatePattern.ISO8601_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31+08:00
-				return new DateTime(source, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+				return new DateTime(source, DatePattern.ISO8601_WITH_XXX_OFFSET_FORMAT);
 			}
 		} else if(ReUtil.contains("-\\d{2}:?00", source)){
 			// Issue#2612，类似 2022-09-14T23:59:00-08:00 或者 2022-09-14T23:59:00-0800
@@ -78,22 +78,22 @@ public class UTCDateParser extends DefaultDateBasic implements DateParser {
 			if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
 				source = normalizeMillSeconds(source, ".", "-");
-				return new DateTime(source, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
+				return new DateTime(source, DatePattern.ISO8601_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31-08:00
-				return new DateTime(source, DatePattern.UTC_WITH_XXX_OFFSET_FORMAT);
+				return new DateTime(source, DatePattern.ISO8601_WITH_XXX_OFFSET_FORMAT);
 			}
 		} else {
-			if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 2) {
+			if (length == DatePattern.ISO8601_PATTERN.length() - 2) {
 				// 格式类似：2018-09-13T05:34:31
-				return new DateTime(source, DatePattern.UTC_SIMPLE_FORMAT);
-			} else if (length == DatePattern.UTC_SIMPLE_PATTERN.length() - 5) {
+				return new DateTime(source, DatePattern.ISO8601_FORMAT);
+			} else if (length == DatePattern.ISO8601_PATTERN.length() - 5) {
 				// 格式类似：2018-09-13T05:34
-				return new DateTime(source + ":00", DatePattern.UTC_SIMPLE_FORMAT);
+				return new DateTime(source + ":00", DatePattern.ISO8601_FORMAT);
 			} else if (StrUtil.contains(source, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
 				source = normalizeMillSeconds(source, ".", null);
-				return new DateTime(source, DatePattern.UTC_SIMPLE_MS_FORMAT);
+				return new DateTime(source, DatePattern.ISO8601_MS_FORMAT);
 			}
 		}
 		// 没有更多匹配的时间格式
