@@ -533,19 +533,13 @@ public class BooleanUtil {
 	 * 定义{@see https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy}
 	 */
 	public static boolean isJsFalsy(Object value) {
-		if (FALSY_SET.contains(value)) {
-			return true;
-		}
-		if (value instanceof Double) {
-			return Double.isNaN((Double) value);
-		}
-		return false;
+		return FALSY_SET.contains(value);
 	}
 
 	/**
 	 * 是否为真值(定义来源js)
 	 * 所有除 false、0、-0、0n、""、null、undefined 和 NaN 以外的皆为真值
-	 * 由于java中无法使用值来代表undefined，因此此处不做判断
+	 * 由于java中无法使用值来代表undefined 和 NaN，因此此处不做判断
 	 *
 	 * @param value 参数
 	 * @return 是否为真值

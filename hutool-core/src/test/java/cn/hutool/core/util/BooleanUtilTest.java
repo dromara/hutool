@@ -110,7 +110,6 @@ public class BooleanUtilTest {
 		Assert.assertTrue(BooleanUtil.isJsFalsy(-0.00F));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(""));
 		Assert.assertTrue(BooleanUtil.isJsFalsy(null));
-		Assert.assertTrue(BooleanUtil.isJsFalsy(Math.sqrt(-1)));
 	}
 
 	@Test
