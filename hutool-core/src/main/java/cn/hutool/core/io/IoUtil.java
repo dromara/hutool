@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Flushable;
 import java.io.IOException;
@@ -38,6 +37,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -525,15 +526,27 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 文件转为{@link FileInputStream}
+	 * 文件转为{@link InputStream}
 	 *
-	 * @param file 文件
-	 * @return {@link FileInputStream}
+	 * @param file 文件，非空
+	 * @return {@link InputStream}
 	 */
-	public static FileInputStream toStream(final File file) {
+	public static InputStream toStream(final File file) {
+		Assert.notNull(file);
+		return toStream(file.toPath());
+	}
+
+	/**
+	 * 文件转为{@link InputStream}
+	 *
+	 * @param path {@link Path}，非空
+	 * @return {@link InputStream}
+	 */
+	public static InputStream toStream(final Path path) {
+		Assert.notNull(path);
 		try {
-			return new FileInputStream(file);
-		} catch (final FileNotFoundException e) {
+			return Files.newInputStream(path);
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -866,6 +879,19 @@ public class IoUtil extends NioUtil {
 			} catch (final Exception e) {
 				// 静默关闭
 			}
+		}
+	}
+
+	/**
+	 * 关闭<br>
+	 * 关闭失败不会抛出异常
+	 *
+	 * @param closeable 被关闭的对象
+	 * @throws IOException IO异常
+	 */
+	public static void nullSafeClose(final Closeable closeable) throws IOException {
+		if (null != closeable) {
+			closeable.close();
 		}
 	}
 

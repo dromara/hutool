@@ -134,6 +134,7 @@ public class ClipboardUtil {
 		return (Image) get(content, DataFlavor.imageFlavor);
 	}
 
+	// region ----- listen
 	/**
 	 * 监听剪贴板修改事件
 	 *
@@ -161,17 +162,27 @@ public class ClipboardUtil {
 	 * 监听剪贴板修改事件
 	 *
 	 * @param tryCount 尝试获取剪贴板内容的次数
-	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取
+	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 * @param listener 监听处理接口
 	 * @param sync 是否同步阻塞
 	 * @since 4.5.6
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
 	public static void listen(final int tryCount, final long delay, final ClipboardListener listener, final boolean sync) {
-		ClipboardMonitor.INSTANCE//
-				.setTryCount(tryCount)//
-				.setDelay(delay)//
-				.addListener(listener)//
-				.listen(sync);
+		getMonitor(tryCount, delay, listener).listen(sync);
 	}
+
+	/**
+	 * 获取一个{@link ClipboardMonitor}
+	 * @param tryCount 尝试获取剪贴板内容的次数
+	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
+	 * @param listener 监听处理接口
+	 * @return {@link ClipboardMonitor}
+	 */
+	@SuppressWarnings("resource")
+	public static ClipboardMonitor getMonitor(final int tryCount, final long delay, final ClipboardListener listener){
+		return new ClipboardMonitor(tryCount, delay, null)
+				.addListener(listener);
+	}
+	// endregion
 }

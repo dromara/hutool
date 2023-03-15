@@ -348,4 +348,23 @@ public class XmlUtilTest {
 
 		Console.log(XmlUtil.format(doc));
 	}
+
+	@Test
+	public void xmlStrToBeanTest(){
+		final String xml = "<userInfo><name>张三</name><age>20</age><email>zhangsan@example.com</email></userInfo>";
+		final Document document = XmlUtil.readXML(xml);
+		final UserInfo userInfo = XmlUtil.xmlToBean(document, UserInfo.class);
+		Assert.assertEquals("张三", userInfo.getName());
+		Assert.assertEquals("20", userInfo.getAge());
+		Assert.assertEquals("zhangsan@example.com", userInfo.getEmail());
+	}
+
+	@Data
+	static class UserInfo {
+
+		private String id;
+		private String name;
+		private String age;
+		private String email;
+	}
 }

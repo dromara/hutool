@@ -9,8 +9,8 @@ import cn.hutool.log.level.Level;
 
 /**
  * Apache Commons Logging
- * @author Looly
  *
+ * @author Looly
  */
 public class ApacheCommonsLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
@@ -19,15 +19,32 @@ public class ApacheCommonsLog extends AbstractLog {
 	private final String name;
 
 	// ------------------------------------------------------------------------- Constructor
+
+	/**
+	 * 构造
+	 *
+	 * @param logger Logger
+	 * @param name   名称
+	 */
 	public ApacheCommonsLog(final Log logger, final String name) {
 		this.logger = logger;
 		this.name = name;
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param clazz 类
+	 */
 	public ApacheCommonsLog(final Class<?> clazz) {
 		this(LogFactory.getLog(clazz), null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param name 名称
+	 */
 	public ApacheCommonsLog(final String name) {
 		this(LogFactory.getLog(name), name);
 	}
@@ -46,7 +63,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void trace(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
-		if(isTraceEnabled()){
+		if (isTraceEnabled()) {
 			logger.trace(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -60,7 +77,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void debug(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
-		if(isDebugEnabled()){
+		if (isDebugEnabled()) {
 			logger.debug(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -74,7 +91,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void info(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
-		if(isInfoEnabled()){
+		if (isInfoEnabled()) {
 			logger.info(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -87,7 +104,7 @@ public class ApacheCommonsLog extends AbstractLog {
 
 	@Override
 	public void warn(final String format, final Object... arguments) {
-		if(isWarnEnabled()){
+		if (isWarnEnabled()) {
 			logger.warn(StrUtil.format(format, arguments));
 		}
 	}
@@ -99,7 +116,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void warn(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
-		if(isWarnEnabled()){
+		if (isWarnEnabled()) {
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -113,7 +130,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void error(final String fqcn, final Throwable t, final String format, final Object... arguments) {
 		// fqcn此处无效
-		if(isErrorEnabled()){
+		if (isErrorEnabled()) {
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
 
@@ -123,23 +140,23 @@ public class ApacheCommonsLog extends AbstractLog {
 	@Override
 	public void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
 		switch (level) {
-		case TRACE:
-			trace(t, format, arguments);
-			break;
-		case DEBUG:
-			debug(t, format, arguments);
-			break;
-		case INFO:
-			info(t, format, arguments);
-			break;
-		case WARN:
-			warn(t, format, arguments);
-			break;
-		case ERROR:
-			error(t, format, arguments);
-			break;
-		default:
-			throw new Error(StrUtil.format("Can not identify level: {}", level));
+			case TRACE:
+				trace(t, format, arguments);
+				break;
+			case DEBUG:
+				debug(t, format, arguments);
+				break;
+			case INFO:
+				info(t, format, arguments);
+				break;
+			case WARN:
+				warn(t, format, arguments);
+				break;
+			case ERROR:
+				error(t, format, arguments);
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
 	}
 	// ------------------------------------------------------------------------- Private method

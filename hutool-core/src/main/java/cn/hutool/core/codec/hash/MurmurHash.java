@@ -21,6 +21,9 @@ import java.nio.charset.Charset;
  * @since 4.3.3
  */
 public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>{
+	/**
+	 * 单例
+	 */
 	public static final MurmurHash INSTANCE = new MurmurHash();
 
 	// Constants for 32 bit variant

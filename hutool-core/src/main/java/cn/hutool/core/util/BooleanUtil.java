@@ -1,7 +1,6 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.SetUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrUtil;
 
 import java.util.Set;

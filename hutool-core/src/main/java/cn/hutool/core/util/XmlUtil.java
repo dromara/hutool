@@ -1,9 +1,10 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
@@ -181,7 +182,8 @@ public class XmlUtil {
 	 * @return XML文档对象
 	 * @since 3.0.9
 	 */
-	public static Document readXML(final String pathOrContent) {
+	public static Document readXML(String pathOrContent) {
+		pathOrContent = StrUtil.trim(pathOrContent);
 		if (StrUtil.startWith(pathOrContent, '<')) {
 			return parseXml(pathOrContent);
 		}
@@ -985,10 +987,10 @@ public class XmlUtil {
 	public static <T> T xmlToBean(final Node node, final Class<T> bean) {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
-			final String simpleName = bean.getSimpleName();
-			if (map.containsKey(simpleName)) {
+			final String nodeName = CollUtil.getFirst(map.keySet());
+			if (bean.getSimpleName().equalsIgnoreCase(nodeName)) {
 				// 只有key和bean的名称匹配时才做单一对象转换
-				return BeanUtil.toBean(map.get(simpleName), bean);
+				return BeanUtil.toBean(CollUtil.get(map.values(), 0), bean);
 			}
 		}
 		return BeanUtil.toBean(map, bean);

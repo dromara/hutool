@@ -1,6 +1,6 @@
 package cn.hutool.setting.dialect;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.text.StrUtil;
@@ -30,7 +30,7 @@ public class PropsUtil {
 	 */
 	public static Props get(final String name) {
 		return propsMap.computeIfAbsent(name, (filePath)->{
-			final String extName = FileUtil.extName(filePath);
+			final String extName = FileNameUtil.extName(filePath);
 			if (StrUtil.isEmpty(extName)) {
 				filePath = filePath + "." + Props.EXT_NAME;
 			}

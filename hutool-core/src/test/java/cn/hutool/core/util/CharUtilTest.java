@@ -27,6 +27,7 @@ public class CharUtilTest {
 		Assert.assertTrue(CharUtil.isChar(a));
 	}
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	@Test
 	public void isBlankCharTest(){
 		final char a = '\u00A0';
@@ -56,6 +57,7 @@ public class CharUtilTest {
 		Assert.assertEquals('⑳', CharUtil.toCloseByNumber(20));
 	}
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	@Test
 	public void issueI5UGSQTest(){
 		char c = '\u3164';

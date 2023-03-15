@@ -4,7 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
@@ -13,11 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class JSONUtilTest {
 
@@ -39,12 +35,12 @@ public class JSONUtilTest {
 	}
 
 	/**
-	 * 数字解析为JSONObject忽略
+	 * 数字解析为JSONArray报错
 	 */
-	@Test
+	@Test(expected = JSONException.class)
 	public void parseNumberTest2() {
 		final JSONObject json = JSONUtil.parseObj(123L);
-		Assert.assertEquals(new JSONObject(), json);
+		Assert.assertNotNull(json);
 	}
 
 	@Test
@@ -89,7 +85,7 @@ public class JSONUtilTest {
 	@Test
 	public void toJsonStrTest3() {
 		// 验证某个字段为JSON字符串时转义是否规范
-		final JSONObject object = new JSONObject(true);
+		final JSONObject object = new JSONObject(JSONConfig.of().setIgnoreError(true));
 		object.set("name", "123123");
 		object.set("value", "\\");
 		object.set("value2", "</");
@@ -179,7 +175,7 @@ public class JSONUtilTest {
 	@Test
 	public void customValueTest() {
 		final JSONObject jsonObject = JSONUtil.ofObj()
-		.set("test2", (JSONString) () -> NumberUtil.format("#.0", 12.00D));
+		.set("test2", (JSONStringer) () -> NumberUtil.format("#.0", 12.00D));
 
 		Assert.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 	}
@@ -235,9 +231,11 @@ public class JSONUtilTest {
 		Assert.assertEquals("<key1>v1</key1><key2>a</key2><key2>b</key2><key2>c</key2>", xmlStr);
 	}
 
-	@Test
+	@Test(expected = JSONException.class)
 	public void toJsonStrOfStringTest(){
 		final String a = "a";
+
+		// 普通字符串不能解析为JSON字符串，必须由双引号或者单引号包裹
 		final String s = JSONUtil.toJsonStr(a);
 		Assert.assertEquals(a, s);
 	}

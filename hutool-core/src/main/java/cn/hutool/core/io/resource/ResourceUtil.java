@@ -2,7 +2,7 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.collection.iter.IterUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
@@ -123,6 +123,7 @@ public class ResourceUtil {
 	 *
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
+	 * @throws IORuntimeException IO异常
 	 */
 	public static URL getResourceUrl(final String resource) throws IORuntimeException {
 		return getResourceUrl(resource, null);

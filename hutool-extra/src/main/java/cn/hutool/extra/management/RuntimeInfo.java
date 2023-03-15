@@ -1,6 +1,6 @@
 package cn.hutool.extra.management;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 
 import java.io.Serializable;
 

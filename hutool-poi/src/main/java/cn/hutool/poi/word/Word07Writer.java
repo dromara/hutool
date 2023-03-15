@@ -1,8 +1,9 @@
 package cn.hutool.poi.word;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.poi.exceptions.POIException;
@@ -158,7 +159,7 @@ public class Word07Writer implements Closeable {
 	 */
 	public Word07Writer addPicture(final File picFile, final int width, final int height) {
 		final String fileName = picFile.getName();
-		final String extName = FileUtil.extName(fileName).toUpperCase();
+		final String extName = FileNameUtil.extName(fileName).toUpperCase();
 		PicType picType;
 		try {
 			picType = PicType.valueOf(extName);

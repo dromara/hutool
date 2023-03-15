@@ -1,6 +1,6 @@
 package cn.hutool.poi.excel;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerBiConsumer;
 import cn.hutool.poi.excel.cell.CellEditor;

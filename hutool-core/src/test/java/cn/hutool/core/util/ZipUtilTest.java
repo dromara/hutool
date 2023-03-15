@@ -2,8 +2,8 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.compress.ZipReader;
 import cn.hutool.core.compress.ZipUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
@@ -11,11 +11,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipFile;
@@ -156,7 +157,7 @@ public class ZipUtilTest {
 		//https://github.com/dromara/hutool/issues/944
 		final String dir = "d:/test";
 		final String zip = "d:/test.zip";
-		try (final OutputStream out = new FileOutputStream(zip)){
+		try (final OutputStream out = Files.newOutputStream(Paths.get(zip))){
 			//实际应用中, out 为 HttpServletResponse.getOutputStream
 			ZipUtil.zip(out, Charset.defaultCharset(), false, null, new File(dir));
 		} catch (final IOException e) {

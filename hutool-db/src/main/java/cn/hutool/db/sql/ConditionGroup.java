@@ -13,6 +13,7 @@ import java.util.List;
  * @since 5.7.21
  */
 public class ConditionGroup extends Condition {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 条件列表
 	 */

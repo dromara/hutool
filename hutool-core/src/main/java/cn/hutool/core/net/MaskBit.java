@@ -1,7 +1,12 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.BiMap;
+
 import java.util.HashMap;
+
+import static cn.hutool.core.net.Ipv4Pool.IPV4_MASK_BIT_MAX;
+import static cn.hutool.core.net.Ipv4Pool.IPV4_NUM_MAX;
 
 /**
  * 掩码位和掩码之间的Map对应
@@ -73,4 +78,15 @@ public class MaskBit {
 		return MASK_BIT_MAP.getKey(mask);
 	}
 
+	/**
+	 * 根据掩码位获取掩码IP(Long型)
+	 *
+	 * @param maskBit 掩码位
+	 * @return 掩码IP(Long型)
+	 * @since 6.0.0
+	 */
+	public static long getMaskIpLong(final int maskBit) {
+		Assert.isTrue(MASK_BIT_MAP.containsKey(maskBit), "非法的掩码位数：{}", maskBit);
+		return (IPV4_NUM_MAX << (IPV4_MASK_BIT_MAX - maskBit)) & IPV4_NUM_MAX;
+	}
 }

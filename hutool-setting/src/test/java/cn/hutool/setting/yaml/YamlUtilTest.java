@@ -1,6 +1,6 @@
 package cn.hutool.setting.yaml;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;

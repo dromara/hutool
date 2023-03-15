@@ -80,7 +80,7 @@ class NoneUpperBound<T extends Comparable<? super T>> implements Bound<T> {
 	 */
 	@Override
 	public String toString() {
-		return "{x | x < +\u221e}";
+		return "{x | x < +∞}";
 	}
 
 	/**

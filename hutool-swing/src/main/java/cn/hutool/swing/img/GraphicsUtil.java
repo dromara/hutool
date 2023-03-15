@@ -3,17 +3,7 @@ package cn.hutool.swing.img;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.swing.img.color.ColorUtil;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -34,7 +24,6 @@ public class GraphicsUtil {
 	 */
 	public static Graphics2D createGraphics(final BufferedImage image, final Color color) {
 		final Graphics2D g = image.createGraphics();
-
 		if (null != color) {
 			// 填充背景
 			g.setColor(color);
@@ -99,9 +88,7 @@ public class GraphicsUtil {
 	 */
 	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final int width, final int height) {
 		// 抗锯齿
-		if (g instanceof Graphics2D) {
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		}
+		enableAntialias(g);
 		// 创建字体
 		g.setFont(font);
 
@@ -168,9 +155,7 @@ public class GraphicsUtil {
 	 */
 	public static Graphics drawString(final Graphics g, final String str, final Font font, final Color color, final Point point) {
 		// 抗锯齿
-		if (g instanceof Graphics2D) {
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		}
+		enableAntialias(g);
 
 		g.setFont(font);
 		g.setColor(ObjUtil.defaultIfNull(color, Color.BLACK));
@@ -182,8 +167,8 @@ public class GraphicsUtil {
 	/**
 	 * 绘制图片
 	 *
-	 * @param g         画笔
-	 * @param img       要绘制的图片
+	 * @param g     画笔
+	 * @param img   要绘制的图片
 	 * @param point 绘制的位置，基于左上角
 	 * @return 画笔对象
 	 */
@@ -208,12 +193,27 @@ public class GraphicsUtil {
 	/**
 	 * 设置画笔透明度
 	 *
-	 * @param g 画笔
+	 * @param g     画笔
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 * @return 画笔
 	 */
-	public static Graphics2D setAlpha(final Graphics2D g, final float alpha){
+	public static Graphics2D setAlpha(final Graphics2D g, final float alpha) {
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		return g;
+	}
+
+	/**
+	 * 打开抗锯齿和文本抗锯齿
+	 *
+	 * @param g {@link Graphics}
+	 */
+	private static void enableAntialias(final Graphics g) {
+		if (g instanceof Graphics2D) {
+			((Graphics2D) g).setRenderingHints(
+					RenderingHintsBuilder.of()
+							.setAntialiasing(RenderingHintsBuilder.Antialias.ON)
+							.setTextAntialias(RenderingHintsBuilder.TextAntialias.ON).build()
+			);
+		}
 	}
 }

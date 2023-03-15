@@ -206,7 +206,7 @@ public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 		final Collection<Map<C, V>> values = this.raw.values();
 		final List<C> result = new ArrayList<>(values.size() * 16);
 		for (final Map<C, V> map : values) {
-			map.forEach((key, value)->{result.add(key);});
+			map.forEach((key, value)-> result.add(key));
 		}
 		return result;
 	}

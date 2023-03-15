@@ -1,11 +1,11 @@
 package cn.hutool.http.client.engine.okhttp;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
+import cn.hutool.http.ssl.SSLInfo;
 import okhttp3.OkHttpClient;
 import okhttp3.internal.http.HttpMethod;
 
@@ -59,8 +59,8 @@ public class OkHttpEngine implements ClientEngine {
 	}
 
 	@Override
-	public void close() throws IOException {
-		// ignore
+	public void close() {
+		// do nothing
 	}
 
 	/**
@@ -71,15 +71,34 @@ public class OkHttpEngine implements ClientEngine {
 			return;
 		}
 
-		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
-		final OkHttpClient.Builder builder = new OkHttpClient.Builder()
-				.connectTimeout(config.getConnectionTimeout(), TimeUnit.MILLISECONDS)
-				.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+		final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-		// 设置代理
-		final Proxy proxy = config.getProxy();
-		if(null != proxy){
-			builder.proxy(proxy);
+		final ClientConfig config = this.config;
+		if (null != config) {
+			// 连接超时
+			final int connectionTimeout = config.getConnectionTimeout();
+			if (connectionTimeout > 0) {
+				builder.connectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
+			}
+			// 读写超时
+			final int readTimeout = config.getReadTimeout();
+			if (readTimeout > 0) {
+				// 读写共用读取超时
+				builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
+						.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+			}
+
+			// SSL
+			final SSLInfo sslInfo = config.getSslInfo();
+			if(null != sslInfo){
+				builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
+			}
+
+			// 设置代理
+			final Proxy proxy = config.getProxy();
+			if (null != proxy) {
+				builder.proxy(proxy);
+			}
 		}
 
 		this.client = builder.build();

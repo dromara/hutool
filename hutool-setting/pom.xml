@@ -9,12 +9,16 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0.M1</version>
+		<version>6.0.0.M2</version>
 	</parent>
 
 	<artifactId>hutool-setting</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 配置文件增强</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.setting</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

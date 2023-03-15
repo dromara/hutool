@@ -27,7 +27,7 @@ import java.net.HttpURLConnection;
 public class JdkClientEngine implements ClientEngine {
 
 	private ClientConfig config;
-	private HttpConnection conn;
+	private JdkHttpConnection conn;
 	/**
 	 * 重定向次数计数器，内部使用
 	 */
@@ -60,7 +60,7 @@ public class JdkClientEngine implements ClientEngine {
 	 * @param isAsync 是否异步，异步不会立即读取响应内容
 	 * @return {@link Response}
 	 */
-	public HttpResponse send(final Request message, final boolean isAsync) {
+	public JdkHttpResponse send(final Request message, final boolean isAsync) {
 		initConn(message);
 		try {
 			doSend(message);
@@ -79,7 +79,7 @@ public class JdkClientEngine implements ClientEngine {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		if (null != conn) {
 			conn.disconnectQuietly();
 		}
@@ -116,20 +116,20 @@ public class JdkClientEngine implements ClientEngine {
 	}
 
 	/**
-	 * 构建{@link HttpConnection}
+	 * 构建{@link JdkHttpConnection}
 	 *
 	 * @param message {@link Request}消息
-	 * @return {@link HttpConnection}
+	 * @return {@link JdkHttpConnection}
 	 */
-	private HttpConnection buildConn(final Request message) {
+	private JdkHttpConnection buildConn(final Request message) {
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 
-		final HttpConnection conn = HttpConnection
+		final JdkHttpConnection conn = JdkHttpConnection
 				.of(message.url().toURL(), config.getProxy())
 				.setConnectTimeout(config.getConnectionTimeout())
 				.setReadTimeout(config.getReadTimeout())
 				.setMethod(message.method())//
-				.setHttpsInfo(config.getHostnameVerifier(), config.getSocketFactory())
+				.setSSLInfo(config.getSslInfo())
 				// 关闭JDK自动转发，采用手动转发方式
 				.setInstanceFollowRedirects(false)
 				.setChunkedStreamingMode(message.isChunked() ? 4096 : -1)
@@ -149,10 +149,10 @@ public class JdkClientEngine implements ClientEngine {
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
 	 * @param isAsync 最终请求是否异步
-	 * @return {@link HttpResponse}，无转发返回 {@code null}
+	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
-	private HttpResponse sendRedirectIfPossible(final Request message, final boolean isAsync) {
-		final HttpConnection conn = this.conn;
+	private JdkHttpResponse sendRedirectIfPossible(final Request message, final boolean isAsync) {
+		final JdkHttpConnection conn = this.conn;
 		// 手动实现重定向
 		if (message.maxRedirectCount() > 0) {
 			final int code;
@@ -176,7 +176,7 @@ public class JdkClientEngine implements ClientEngine {
 		}
 
 		// 最终页面
-		return new HttpResponse(this.conn, true, message.charset(), isAsync,
+		return new JdkHttpResponse(this.conn, true, message.charset(), isAsync,
 				isIgnoreResponseBody(message.method()));
 	}
 

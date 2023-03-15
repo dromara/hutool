@@ -1,29 +1,17 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.db.dialect.Dialect;
-import cn.hutool.db.handler.BeanListHandler;
-import cn.hutool.db.handler.EntityHandler;
-import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.db.handler.NumberHandler;
-import cn.hutool.db.handler.ResultSetUtil;
-import cn.hutool.db.handler.RsHandler;
-import cn.hutool.db.handler.StringHandler;
-import cn.hutool.db.sql.Condition;
+import cn.hutool.db.handler.*;
+import cn.hutool.db.sql.*;
 import cn.hutool.db.sql.Condition.LikeType;
-import cn.hutool.db.sql.LogicalOperator;
-import cn.hutool.db.sql.Query;
-import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.SqlExecutor;
-import cn.hutool.db.sql.SqlUtil;
-import cn.hutool.db.sql.QuoteWrapper;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -555,7 +543,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> T find(final Entity where, final RsHandler<T> rsh, final String... fields) throws DbRuntimeException {
-		return find(ListUtil.of(fields), where, rsh);
+		return find(Arrays.asList(fields), where, rsh);
 	}
 
 	/**

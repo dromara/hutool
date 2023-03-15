@@ -16,7 +16,10 @@ import cn.hutool.core.date.format.DefaultDateBasic;
  * @since 6.0.0
  */
 public class CSTDateParser extends DefaultDateBasic implements DateParser {
-
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 单例对象
+	 */
 	public static CSTDateParser INSTANCE = new CSTDateParser();
 
 	@Override

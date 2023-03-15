@@ -6,8 +6,13 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.RegisterConverter;
-import cn.hutool.core.convert.impl.*;
+import cn.hutool.core.convert.impl.ArrayConverter;
+import cn.hutool.core.convert.impl.CollectionConverter;
+import cn.hutool.core.convert.impl.DateConverter;
+import cn.hutool.core.convert.impl.MapConverter;
+import cn.hutool.core.convert.impl.TemporalAccessorConverter;
 import cn.hutool.core.map.MapWrapper;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
@@ -15,7 +20,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.json.*;
 import cn.hutool.json.serialize.JSONDeserializer;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
@@ -71,9 +76,9 @@ public class JSONConverter implements Converter {
 		if (null == value) {
 			return null;
 		}
-		if (value instanceof JSONString) {
+		if (value instanceof JSONStringer) {
 			// 被JSONString包装的对象，获取其原始类型
-			value = ((JSONString) value).getRaw();
+			value = ((JSONStringer) value).getRaw();
 		}
 
 		// JSON转对象
@@ -106,22 +111,37 @@ public class JSONConverter implements Converter {
 	/**
 	 * 实现Object对象转换为{@link JSON}，支持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象</li>
+	 *     <li>String: 转换为相应的对象，</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
 	 *     <li>Bean对象：转为JSONObject</li>
+	 *     <li>Number：返回原对象</li>
 	 * </ul>
 	 *
 	 * @param obj 被转换的对象
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
-	public JSON toJSON(final Object obj) throws JSONException {
+	public Object toJSON(final Object obj) throws JSONException {
 		final JSON json;
-		if (obj instanceof JSON) {
-			json = (JSON) obj;
+		if (obj instanceof JSON || obj instanceof Number) {
+			return obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			json = JSONUtil.isTypeJSONArray(jsonStr) ? new JSONArray(jsonStr, config) : new JSONObject(jsonStr, config);
+			switch (jsonStr.charAt(0)){
+				case '"':
+				case '\'':
+					// JSON字符串值
+					return jsonStr;
+				case '[':
+					return new JSONArray(jsonStr, config);
+				case '{':
+					return new JSONObject(jsonStr, config);
+				default:
+					if(NumberUtil.isNumber(jsonStr)){
+						return NumberUtil.toBigDecimal(jsonStr);
+					}
+					throw new JSONException("Unsupported String to JSON: {}", jsonStr);
+			}
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正
 			json = new JSONObject(obj, config);

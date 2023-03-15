@@ -1,6 +1,6 @@
 package cn.hutool.core.convert.impl;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.Convert;
@@ -24,6 +24,9 @@ import java.util.List;
 public class ArrayConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static final ArrayConverter INSTANCE = new ArrayConverter();
 
 	/**

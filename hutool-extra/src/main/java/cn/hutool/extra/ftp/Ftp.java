@@ -1,8 +1,9 @@
 package cn.hutool.extra.ftp;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -440,7 +441,7 @@ public class Ftp extends AbstractFtp {
 	@Override
 	public boolean delFile(final String path) throws IORuntimeException {
 		final String pwd = pwd();
-		final String fileName = FileUtil.getName(path);
+		final String fileName = FileNameUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		if (false == cd(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
@@ -622,7 +623,7 @@ public class Ftp extends AbstractFtp {
 	 */
 	@Override
 	public void download(final String path, final File outFile) {
-		final String fileName = FileUtil.getName(path);
+		final String fileName = FileNameUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
 		download(dir, fileName, outFile);
 	}

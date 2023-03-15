@@ -280,6 +280,7 @@ public class StrUtilTest {
 		Assert.assertEquals("ghigh", pre);
 	}
 
+	@SuppressWarnings("SimplifiableAssertion")
 	@Test
 	public void subPreTest() {
 		Assert.assertEquals(StrUtil.subPre(null, 3), null);

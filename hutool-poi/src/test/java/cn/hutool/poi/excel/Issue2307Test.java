@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,7 +16,7 @@ public class Issue2307Test {
 	@Ignore
 	public void writeTest(){
 		final String filePath = "d:/test/issue2307.xlsx";
-		FileUtil.del(filePath);
+		FileUtil.del(FileUtil.file(filePath));
 
 		final List<Object> row1 = ListUtil.of("设备1", 11, 111, 1111.444, 1111.444, 1111.444, 1111.444, 119999999999999999999999999999999999999999911.444);
 		final List<Object> row2 = ListUtil.of("设备2", 22, 222, 2222.555, 2222.555, 2222.555, 2222.555, 2222.555);

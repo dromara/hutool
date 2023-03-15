@@ -65,11 +65,11 @@ public class LambdaFactory {
 	 * @return 接受Lambda的函数式接口对象
 	 * @param <F> Function类型
 	 */
+	@SuppressWarnings("unchecked")
 	public static <F> F build(final Class<F> functionInterfaceType, final Method method) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(method);
 		final MutableEntry<Class<?>, Method> cacheKey = new MutableEntry<>(functionInterfaceType, method);
-		//noinspection unchecked
 		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
 			final List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
 					.filter(m -> Modifier.isAbstract(m.getModifiers()))

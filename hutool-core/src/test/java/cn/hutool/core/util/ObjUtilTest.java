@@ -20,6 +20,7 @@ import java.util.function.Function;
  */
 public class ObjUtilTest {
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void equalsTest() {
 		Object a = null;
@@ -109,6 +110,7 @@ public class ObjUtilTest {
 		Assert.assertFalse(ObjUtil.isNotEmpty(Collections.emptyIterator()));
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void defaultIfNullTest() {
 		final Object val1 = new Object();
@@ -227,7 +229,7 @@ public class ObjUtilTest {
 		private final Integer id;
 		@Override
 		protected Object clone() throws CloneNotSupportedException {
-			throw new RuntimeException("can not clone this object");
+			throw new CloneNotSupportedException("can not clone this object");
 		}
 	}
 
@@ -255,6 +257,6 @@ public class ObjUtilTest {
 	}
 
 	@SuppressWarnings("unused")
-	private interface TypeArgument<A, B> {};
+	private interface TypeArgument<A, B> {}
 
 }

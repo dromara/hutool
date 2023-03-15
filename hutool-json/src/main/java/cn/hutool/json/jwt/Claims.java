@@ -1,6 +1,7 @@
 package cn.hutool.json.jwt;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONConfig;
@@ -21,7 +22,7 @@ public class Claims implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 时间使用秒级时间戳表示
-	private final JSONConfig CONFIG = JSONConfig.of().setDateFormat("#sss");
+	private final JSONConfig CONFIG = JSONConfig.of().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
 
 	private JSONObject claimJSON;
 

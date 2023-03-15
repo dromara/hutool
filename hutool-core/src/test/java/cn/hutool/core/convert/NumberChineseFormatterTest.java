@@ -152,8 +152,8 @@ public class NumberChineseFormatterTest {
 
 	@Test
 	public void formatTest3() {
-//		String f1 = NumberChineseFormatter.format(5000_8000, false, false);
-//		Assert.assertEquals("五千万零八千", f1);
+		final String f1 = NumberChineseFormatter.format(5000_8000, false, false);
+		Assert.assertEquals("五千万零八千", f1);
 
 		final String f2 = NumberChineseFormatter.format(1_0035_0089, false, false);
 		Assert.assertEquals("一亿零三十五万零八十九", f2);

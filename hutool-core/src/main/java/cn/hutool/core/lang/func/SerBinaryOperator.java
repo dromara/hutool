@@ -10,9 +10,9 @@ import java.util.function.BinaryOperator;
 /**
  * SerBinaryOperator
  *
- * @author VampireAchao
- * @since 2022/6/8
  * @param <T> 参数和返回值类型
+ * @author VampireAchao
+ * @see BinaryOperator
  */
 @FunctionalInterface
 public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
@@ -44,7 +44,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	}
 
 	/**
-	 * Returns a {@link SerBinaryOperator} which returns the lesser of two elements
+	 * Returns a {@code SerBinaryOperator} which returns the lesser of two elements
 	 * according to the specified {@code Comparator}.
 	 *
 	 * @param <T>        the type of the input arguments of the comparator
@@ -59,7 +59,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	}
 
 	/**
-	 * Returns a {@link SerBinaryOperator} which returns the greater of two elements
+	 * Returns a {@code SerBinaryOperator} which returns the greater of two elements
 	 * according to the specified {@code Comparator}.
 	 *
 	 * @param <T>        the type of the input arguments of the comparator

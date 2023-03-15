@@ -25,6 +25,7 @@ public class QrAsciiArt {
 		this.qrConfig = qrConfig;
 	}
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	@Override
 	public String toString() {
 		final int width = matrix.getWidth();

@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @since 5.8.0
  */
 public class ReferenceConcurrentMap<K, V> implements ConcurrentMap<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	final ConcurrentMap<Reference<K>, V> raw;
 	private final ReferenceQueue<K> lastQueue;

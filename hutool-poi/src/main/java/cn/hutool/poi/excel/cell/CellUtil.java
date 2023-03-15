@@ -1,23 +1,14 @@
 package cn.hutool.poi.excel.cell;
 
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
+import cn.hutool.poi.excel.cell.editors.TrimEditor;
 import cn.hutool.poi.excel.cell.setters.CellSetterFactory;
 import cn.hutool.poi.excel.cell.values.ErrorCellValue;
 import cn.hutool.poi.excel.cell.values.NumericCellValue;
-import cn.hutool.poi.excel.cell.editors.TrimEditor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.Comment;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
@@ -30,6 +21,7 @@ import org.apache.poi.ss.util.SheetUtil;
  */
 public class CellUtil {
 
+	// region ----- getCellValue
 	/**
 	 * 获取单元格值
 	 *
@@ -128,7 +120,9 @@ public class CellUtil {
 
 		return null == cellEditor ? value : cellEditor.edit(cell, value);
 	}
+	// endregion
 
+	// region ----- setCellValue
 	/**
 	 * 设置单元格值<br>
 	 * 根据传入的styleSet自动匹配样式<br>
@@ -182,6 +176,27 @@ public class CellUtil {
 			return;
 		}
 
+		if (null != cellEditor) {
+			value = cellEditor.edit(cell, value);
+		}
+
+		setCellValue(cell, value);
+	}
+
+	/**
+	 * 设置单元格值<br>
+	 * 根据传入的styleSet自动匹配样式<br>
+	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
+	 *
+	 * @param cell       单元格
+	 * @param value      值或{@link CellSetter}
+	 * @since 5.6.4
+	 */
+	public static void setCellValue(final Cell cell, final Object value) {
+		if (null == cell) {
+			return;
+		}
+
 		// issue#1659@Github
 		// 在使用BigWriter(SXSSF)模式写出数据时，单元格值为直接值，非引用值（is标签）
 		// 而再使用ExcelWriter(XSSF)编辑时，会写出引用值，导致失效。
@@ -190,12 +205,11 @@ public class CellUtil {
 			cell.setBlank();
 		}
 
-		if (null != cellEditor) {
-			value = cellEditor.edit(cell, value);
-		}
 		CellSetterFactory.createCellSetter(value).setValue(cell);
 	}
+	// endregion
 
+	// region ----- getCell
 	/**
 	 * 获取单元格，如果单元格不存在，返回{@link NullCell}
 	 *
@@ -233,52 +247,9 @@ public class CellUtil {
 		}
 		return cell;
 	}
+	// endregion
 
-	/**
-	 * 判断指定的单元格是否是合并单元格
-	 *
-	 * @param sheet       {@link Sheet}
-	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @return 是否是合并单元格
-	 * @since 5.1.5
-	 */
-	public static boolean isMergedRegion(final Sheet sheet, final String locationRef) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return isMergedRegion(sheet, cellLocation.getX(), cellLocation.getY());
-	}
-
-	/**
-	 * 判断指定的单元格是否是合并单元格
-	 *
-	 * @param cell {@link Cell}
-	 * @return 是否是合并单元格
-	 * @since 5.1.5
-	 */
-	public static boolean isMergedRegion(final Cell cell) {
-		return isMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
-	}
-
-	/**
-	 * 判断指定的单元格是否是合并单元格
-	 *
-	 * @param sheet {@link Sheet}
-	 * @param x     列号，从0开始
-	 * @param y     行号，从0开始
-	 * @return 是否是合并单元格
-	 */
-	public static boolean isMergedRegion(final Sheet sheet, final int x, final int y) {
-		final int sheetMergeCount = sheet.getNumMergedRegions();
-		CellRangeAddress ca;
-		for (int i = 0; i < sheetMergeCount; i++) {
-			ca = sheet.getMergedRegion(i);
-			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
-					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	// region ----- getCellRangeAddress
 	/**
 	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
 	 *
@@ -326,7 +297,53 @@ public class CellUtil {
 		}
 		return null;
 	}
+	// endregion
 
+	// region ----- merging 合并单元格
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 *
+	 * @param sheet       {@link Sheet}
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return 是否是合并单元格
+	 * @since 5.1.5
+	 */
+	public static boolean isMergedRegion(final Sheet sheet, final String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return isMergedRegion(sheet, cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 *
+	 * @param cell {@link Cell}
+	 * @return 是否是合并单元格
+	 * @since 5.1.5
+	 */
+	public static boolean isMergedRegion(final Cell cell) {
+		return isMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+	}
+
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始
+	 * @param y     行号，从0开始
+	 * @return 是否是合并单元格
+	 */
+	public static boolean isMergedRegion(final Sheet sheet, final int x, final int y) {
+		final int sheetMergeCount = sheet.getNumMergedRegions();
+		CellRangeAddress ca;
+		for (int i = 0; i < sheetMergeCount; i++) {
+			ca = sheet.getMergedRegion(i);
+			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 合并单元格，可以根据设置的值来合并行和列
@@ -426,6 +443,7 @@ public class CellUtil {
 				getCellIfMergedRegion(sheet, x, y),
 				() -> SheetUtil.getCell(sheet, y, x));
 	}
+	// endregion
 
 	/**
 	 * 为特定单元格添加批注
@@ -433,29 +451,46 @@ public class CellUtil {
 	 * @param cell          单元格
 	 * @param commentText   批注内容
 	 * @param commentAuthor 作者
+	 */
+	public static void setComment(final Cell cell, final String commentText, final String commentAuthor) {
+		setComment(cell, commentText, commentAuthor, null);
+	}
+
+	/**
+	 * 为特定单元格添加批注
+	 *
+	 * @param cell          单元格
+	 * @param commentText   批注内容
+	 * @param commentAuthor 作者，{@code null}表示无作者
 	 * @param anchor        批注的位置、大小等信息，null表示使用默认
 	 * @since 5.4.8
 	 */
 	public static void setComment(final Cell cell, final String commentText, final String commentAuthor, ClientAnchor anchor) {
 		final Sheet sheet = cell.getSheet();
-		final Workbook wb = sheet.getWorkbook();
-		final Drawing<?> drawing = sheet.createDrawingPatriarch();
-		final CreationHelper factory = wb.getCreationHelper();
+		final CreationHelper factory = sheet.getWorkbook().getCreationHelper();
 		if (anchor == null) {
 			anchor = factory.createClientAnchor();
+			// 默认位置，在注释的单元格的右方
 			anchor.setCol1(cell.getColumnIndex() + 1);
 			anchor.setCol2(cell.getColumnIndex() + 3);
 			anchor.setRow1(cell.getRowIndex());
 			anchor.setRow2(cell.getRowIndex() + 2);
+			// 自适应
+			anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
 		}
-		final Comment comment = drawing.createCellComment(anchor);
+
+		final Comment comment = sheet.createDrawingPatriarch().createCellComment(anchor);
+		// https://stackoverflow.com/questions/28169011/using-sxssfapache-poi-and-adding-comment-does-not-generate-proper-excel-file
+		// 修正在XSSFCell中未设置地址导致错位问题
+		comment.setAddress(cell.getAddress());
 		comment.setString(factory.createRichTextString(commentText));
-		comment.setAuthor(StrUtil.emptyIfNull(commentAuthor));
+		if(null != commentAuthor){
+			comment.setAuthor(commentAuthor);
+		}
 		cell.setCellComment(comment);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start
-
 	/**
 	 * 获取合并单元格，非合并单元格返回{@code null}<br>
 	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格

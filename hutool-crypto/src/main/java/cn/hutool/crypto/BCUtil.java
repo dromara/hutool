@@ -34,7 +34,7 @@ import java.security.spec.ECPublicKeySpec;
 public class BCUtil {
 
 	/**
-	 * 只获取私钥里的d，32字节
+	 * 只获取私钥里的d，32位字节
 	 *
 	 * @param privateKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey
 	 * @return 压缩得到的X

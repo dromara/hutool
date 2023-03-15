@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;

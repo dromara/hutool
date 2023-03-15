@@ -5,10 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * {@link ArrayUtil} 数组工具单元测试
@@ -219,7 +216,7 @@ public class ArrayUtilTest {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
 
-		// 在-1位置插入，相当于在3位置插入
+		// 在-1的位置插入，相当于在3的位置插入
 		String[] result = ArrayUtil.insert(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "a", "b", "c", "4"}, result);
 
@@ -235,7 +232,7 @@ public class ArrayUtilTest {
 		result = ArrayUtil.insert(a, 4, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 
-		// 在第5个位置插入，由于数组长度为4，因此补null
+		// 在第5个位置插入，由于数组长度为4，因此补充null
 		result = ArrayUtil.insert(a, 5, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", null, "a", "b", "c"}, result);
 	}
@@ -305,7 +302,7 @@ public class ArrayUtilTest {
 
 	@Test
 	public void toArrayTest() {
-		final ArrayList<String> list = ListUtil.of("A", "B", "C", "D");
+		final List<String> list = ListUtil.of("A", "B", "C", "D");
 		final String[] array = ArrayUtil.toArray(list, String.class);
 		Assert.assertEquals("A", array[0]);
 		Assert.assertEquals("B", array[1]);
@@ -475,7 +472,7 @@ public class ArrayUtilTest {
 		final String[] a = {"1", "2", "3", "4"};
 		final String[] b = {"a", "b", "c"};
 
-		// 在小于0的位置，-1位置插入，返回b+a，新数组
+		// 在小于0的位置，-1的位置插入，返回b+a，新数组
 		String[] result = ArrayUtil.replace(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
 
@@ -620,7 +617,7 @@ public class ArrayUtilTest {
 	@Test
 	public void subTest() {
 		final int[] arr = {1, 2, 3, 4, 5};
-		int[] empty = new int[0];
+		final int[] empty = new int[0];
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 2, 2));
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 5));
 		Assert.assertArrayEquals(empty, ArrayUtil.sub(arr, 5, 7));
@@ -672,5 +669,54 @@ public class ArrayUtilTest {
 		Assert.assertTrue(ArrayUtil.isSorted(f));
 		Assert.assertTrue(ArrayUtil.isSorted(f, Integer::compareTo));
 		Assert.assertFalse(ArrayUtil.isSorted(f, null));
+	}
+
+	@Test
+	public void hasSameElementTest() {
+		final Integer[] a = {1, 1};
+		Assert.assertTrue(ArrayUtil.hasSameElement(a));
+
+		final String[] b = {"a", "b", "c"};
+		Assert.assertFalse(ArrayUtil.hasSameElement(b));
+
+		final Object[] c = new Object[]{"1", "2", 2, 4D};
+		Assert.assertFalse(ArrayUtil.hasSameElement(c));
+
+		final Object[] d = new Object[]{"1", "2", "2", 4D};
+		Assert.assertTrue(ArrayUtil.hasSameElement(d));
+
+		final Object[] e = new Object[]{"1", 2, 2, 4D};
+		Assert.assertTrue(ArrayUtil.hasSameElement(e));
+
+	}
+
+	@Test
+	public void startWithTest() {
+		boolean b = ArrayUtil.startWith(new String[]{}, new String[]{});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new String[]{"1", "2", "3"}, new String[]{"1"});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new String[]{"1"}, new String[]{"1"});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith((String[])null, null);
+		Assert.assertTrue(b);
+	}
+
+	@Test
+	public void startWithTest2() {
+		boolean b = ArrayUtil.startWith(new int[]{}, new int[]{});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new int[]{1,2,3}, new int[]{1});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith(new int[]{1}, new int[]{1});
+		Assert.assertTrue(b);
+
+		b = ArrayUtil.startWith((int[])null, null);
+		Assert.assertTrue(b);
 	}
 }

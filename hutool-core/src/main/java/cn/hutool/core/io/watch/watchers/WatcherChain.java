@@ -1,11 +1,11 @@
 package cn.hutool.core.io.watch.watchers;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.lang.Chain;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	final private List<Watcher> chain;
 
 	/**
-	 * 创建观察者链{@link WatcherChain}
+	 * 创建观察者链{@code WatcherChain}
 	 * @param watchers  观察者列表
-	 * @return {@link WatcherChain}
+	 * @return {@code WatcherChain}
 	 */
 	public static WatcherChain of(final Watcher... watchers) {
 		return new WatcherChain(watchers);
@@ -35,7 +35,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers 观察者列表
 	 */
 	public WatcherChain(final Watcher... watchers) {
-		chain = ListUtil.of(watchers);
+		chain = Arrays.asList(watchers);
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public interface AnnotationMapping<T extends Annotation> extends Annotation {
 	T getAnnotation();
 
 	/**
-	 * 根据当前映射对象，通过动态代理生成一个类型与被包装注解对象一致的合成注解，该注解相对原生注解：
+	 * 根据当前映射对象，通过动态代理生成一个类型与被包装注解对象一致地合成注解，该注解相对原生注解：
 	 * <ul>
 	 *     <li>支持同注解内通过{@link Alias}构建的别名机制；</li>
 	 *     <li>支持子注解对元注解的同名同类型属性覆盖机制；</li>

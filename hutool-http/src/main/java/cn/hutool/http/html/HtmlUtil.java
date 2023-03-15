@@ -29,7 +29,7 @@ public class HtmlUtil {
 	/**
 	 * script标签正则
 	 */
-	public static final Pattern RE_SCRIPT = Pattern.compile("<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>", Pattern.CASE_INSENSITIVE);
+	public static final Pattern RE_SCRIPT = Pattern.compile("<\\s*?script[^>]*?>.*?<\\s*?/\\s*?script\\s*?>", Pattern.CASE_INSENSITIVE);
 	/**
 	 * 正则：匹配meta标签的编码信息
 	 */

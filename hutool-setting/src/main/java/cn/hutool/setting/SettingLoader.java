@@ -1,6 +1,6 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.LineReader;
 import cn.hutool.core.io.resource.Resource;
@@ -96,10 +96,9 @@ public class SettingLoader {
 	 * 加载设置文件。 此方法不会关闭流对象
 	 *
 	 * @param settingStream 文件流
-	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	synchronized public boolean load(final InputStream settingStream) throws IOException {
+	synchronized public void load(final InputStream settingStream) throws IOException {
 		this.groupedMap.clear();
 		LineReader reader = null;
 		try {
@@ -141,7 +140,6 @@ public class SettingLoader {
 		} finally {
 			IoUtil.close(reader);
 		}
-		return true;
 	}
 
 	/**

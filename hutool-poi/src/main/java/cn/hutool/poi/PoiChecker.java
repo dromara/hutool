@@ -20,7 +20,7 @@ public class PoiChecker {
 	public static void checkPoiImport() {
 		try {
 			Class.forName("org.apache.poi.ss.usermodel.Workbook", false, ClassLoaderUtil.getClassLoader());
-		} catch (final ClassNotFoundException | NoClassDefFoundError e) {
+		} catch (final ClassNotFoundException | NoClassDefFoundError | NoSuchMethodError  e) {
 			throw new DependencyException(e, NO_POI_ERROR_MSG);
 		}
 	}

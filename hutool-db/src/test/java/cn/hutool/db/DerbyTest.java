@@ -5,7 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ public class DerbyTest {
 	private static final String DS_GROUP_NAME = "derby";
 
 	@BeforeClass
-	public static void init() throws SQLException {
+	public static void init() {
 		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
 
@@ -31,14 +30,14 @@ public class DerbyTest {
 
 	@Test
 	@Ignore
-	public void queryTest() throws SQLException {
+	public void queryTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).query("select * from test");
 		Assert.assertEquals(4, query.size());
 	}
 
 	@Test
 	@Ignore
-	public void findTest() throws SQLException {
+	public void findTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.of("test"));
 		Assert.assertEquals(4, query.size());
 	}

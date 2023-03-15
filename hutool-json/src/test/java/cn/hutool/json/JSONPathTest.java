@@ -23,7 +23,7 @@ public class JSONPathTest {
 	@Test
 	public void getByPathTest2(){
 		final String str = "{'accountId':111}";
-		final JSON json = JSONUtil.parse(str);
+		final JSON json = (JSON) JSONUtil.parse(str);
 		final Long accountId = JSONUtil.getByPath(json, "$.accountId", 0L);
 		Assert.assertEquals(111L, accountId.longValue());
 	}

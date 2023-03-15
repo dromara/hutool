@@ -4,7 +4,6 @@ import cn.hutool.http.client.body.BytesBody;
 import cn.hutool.http.client.body.HttpBody;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -50,8 +49,8 @@ public class HttpClient5BodyEntity extends AbstractHttpEntity {
 	}
 
 	@Override
-	public void close() throws IOException {
-
+	public void close() {
+		// do nothing
 	}
 
 	@Override

@@ -13,8 +13,7 @@ import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * Lambda相关工具类
@@ -34,12 +33,12 @@ public class LambdaUtil {
 	 * 			MyTeacher myTeacher = new MyTeacher();
 	 * 			Class<MyTeacher> supplierClass = LambdaUtil.getRealClass(myTeacher::getAge);
 	 * 			Assert.assertEquals(MyTeacher.class, supplierClass);
-	 * 			}</pre>
+	 *            }</pre>
 	 * 		</li>
 	 * 		<li>引用静态无参方法：<pre>{@code
 	 * 			Class<MyTeacher> staticSupplierClass = LambdaUtil.getRealClass(MyTeacher::takeAge);
 	 * 			Assert.assertEquals(MyTeacher.class, staticSupplierClass);
-	 * 			}</pre>
+	 *            }</pre>
 	 * 		</li>
 	 * </ul>
 	 * 在以下场景无法获取到正确类型
@@ -123,7 +122,7 @@ public class LambdaUtil {
 	 * </ul>
 	 *
 	 * @param func 函数
-	 * @param <T> lambda的类型
+	 * @param <T>  lambda的类型
 	 * @return 方法名称
 	 * @throws IllegalArgumentException 非Getter或Setter方法
 	 * @since 5.7.23
@@ -136,24 +135,26 @@ public class LambdaUtil {
 	 * 等效于 Obj::getXxx
 	 *
 	 * @param getMethod getter方法
-	 * @param <T> 调用getter方法对象类型
-	 * @param <R> getter方法返回值类型
+	 * @param <T>       调用getter方法对象类型
+	 * @param <R>       getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> buildGetter(Method getMethod) {
+	@SuppressWarnings("unchecked")
+	public static <T, R> Function<T, R> buildGetter(final Method getMethod) {
 		return LambdaFactory.build(Function.class, getMethod);
 	}
 
 	/**
 	 * 等效于 Obj::getXxx
 	 *
-	 * @param clazz 调用getter方法对象类
+	 * @param clazz     调用getter方法对象类
 	 * @param fieldName 字段名称
-	 * @param <T> 调用getter方法对象类型
-	 * @param <R> getter方法返回值类型
+	 * @param <T>       调用getter方法对象类型
+	 * @param <R>       getter方法返回值类型
 	 * @return Obj::getXxx
 	 */
-	public static <T, R> Function<T, R> buildGetter(Class<T> clazz, String fieldName) {
+	@SuppressWarnings("unchecked")
+	public static <T, R> Function<T, R> buildGetter(final Class<T> clazz, final String fieldName) {
 		return LambdaFactory.build(Function.class, BeanUtil.getBeanDesc(clazz).getGetter(fieldName));
 	}
 
@@ -161,39 +162,91 @@ public class LambdaUtil {
 	 * 等效于 Obj::setXxx
 	 *
 	 * @param setMethod setter方法
-	 * @param <T> 调用setter方法对象类型
-	 * @param <P> setter方法返回的值类型
+	 * @param <T>       调用setter方法对象类型
+	 * @param <P>       setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> buildSetter(Method setMethod) {
-		return LambdaFactory.build(BiConsumer.class, setMethod);
+	@SuppressWarnings("unchecked")
+	public static <T, P> BiConsumer<T, P> buildSetter(final Method setMethod) {
+		final Class<?> returnType = setMethod.getReturnType();
+		if(Void.TYPE == returnType){
+			return LambdaFactory.build(BiConsumer.class, setMethod);
+		}
+
+		// 返回this的setter
+		final BiFunction<T, P, ?> biFunction = LambdaFactory.build(BiFunction.class, setMethod);
+		return biFunction::apply;
 	}
 
 	/**
 	 * Obj::setXxx
 	 *
-	 * @param clazz 调用setter方法对象类
+	 * @param clazz     调用setter方法对象类
 	 * @param fieldName 字段名称
-	 * @param <T> 调用setter方法对象类型
-	 * @param <P> setter方法返回的值类型
+	 * @param <T>       调用setter方法对象类型
+	 * @param <P>       setter方法返回的值类型
 	 * @return Obj::setXxx
 	 */
-	public static <T, P> BiConsumer<T, P> buildSetter(Class<T> clazz, String fieldName) {
+	@SuppressWarnings("unchecked")
+	public static <T, P> BiConsumer<T, P> buildSetter(final Class<T> clazz, final String fieldName) {
 		return LambdaFactory.build(BiConsumer.class, BeanUtil.getBeanDesc(clazz).getSetter(fieldName));
 	}
 
 	/**
 	 * 等效于 Obj::method
 	 *
-	 * @param lambdaType 接受lambda的函数式接口类型
-	 * @param clazz 调用类
-	 * @param methodName 方法名
+	 * @param lambdaType  接受lambda的函数式接口类型
+	 * @param clazz       调用类
+	 * @param methodName  方法名
 	 * @param paramsTypes 方法参数类型数组
-	 * @param <F> 函数式接口类型
+	 * @param <F>         函数式接口类型
 	 * @return Obj::method
 	 */
-	public static <F> F build(Class<F> lambdaType, Class<?> clazz, String methodName, Class... paramsTypes) {
+	public static <F> F build(final Class<F> lambdaType, final Class<?> clazz, final String methodName, final Class<?>... paramsTypes) {
 		return LambdaFactory.build(lambdaType, clazz, methodName, paramsTypes);
+	}
+
+	/**
+	 * 通过自定义固定参数，将{@link BiFunction}转换为{@link Function}
+	 *
+	 * @param biFunction {@link BiFunction}
+	 * @param param      参数
+	 * @param <T>        参数类型
+	 * @param <U>        参数2类型
+	 * @param <R>        返回值类型
+	 * @return {@link Function}
+	 * @since 6.0.0
+	 */
+	public static <T, U, R> Function<T, R> toFunction(final BiFunction<T, U, R> biFunction, final U param) {
+		return (t) -> biFunction.apply(t, param);
+	}
+
+	/**
+	 * 通过自定义固定参数，将{@link BiPredicate}转换为{@link Predicate}
+	 *
+	 * @param biPredicate {@link BiFunction}
+	 * @param param       参数
+	 * @param <T>         参数类型
+	 * @param <U>         参数2类型
+	 * @return {@link Predicate}
+	 * @since 6.0.0
+	 */
+	public static <T, U> Predicate<T> toPredicate(final BiPredicate<T, U> biPredicate, final U param) {
+		return (t) -> biPredicate.test(t, param);
+	}
+
+	/**
+	 * 通过自定义固定参数，将{@link BiConsumer}转换为{@link Consumer}
+	 *
+	 * @param biConsumer {@link BiConsumer}
+	 * @param param      参数
+	 * @param <T>        参数类型
+	 * @param <U>        参数2类型
+	 * @return {@link Consumer}
+	 * @since 6.0.0
+	 */
+	public static <T, U> Consumer<T> toPredicate(final BiConsumer<T, U> biConsumer, final U param) {
+		return (t) -> biConsumer.accept(t, param);
 	}
 
 	//region Private methods

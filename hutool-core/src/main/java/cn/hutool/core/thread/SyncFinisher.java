@@ -3,7 +3,6 @@ package cn.hutool.core.thread;
 import cn.hutool.core.exceptions.UtilException;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -70,6 +69,7 @@ public class SyncFinisher implements Closeable {
 	 * @param runnable 工作线程
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public SyncFinisher addRepeatWorker(final Runnable runnable) {
 		for (int i = 0; i < this.threadSize; i++) {
 			addWorker(new Worker() {
@@ -197,7 +197,7 @@ public class SyncFinisher implements Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		stop();
 	}
 

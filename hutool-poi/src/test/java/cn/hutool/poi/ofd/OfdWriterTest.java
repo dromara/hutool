@@ -1,6 +1,6 @@
 package cn.hutool.poi.ofd;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 

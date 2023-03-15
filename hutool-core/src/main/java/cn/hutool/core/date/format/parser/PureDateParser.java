@@ -18,7 +18,11 @@ import cn.hutool.core.date.format.DefaultDateBasic;
  * @since 6.0.0
  */
 public class PureDateParser extends DefaultDateBasic implements DateParser {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static PureDateParser INSTANCE = new PureDateParser();
 
 	@Override

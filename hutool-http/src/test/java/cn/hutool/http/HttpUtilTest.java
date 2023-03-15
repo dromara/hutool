@@ -1,6 +1,6 @@
 package cn.hutool.http;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.util.CharsetUtil;

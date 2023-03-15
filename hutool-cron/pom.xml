@@ -9,12 +9,16 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0.M1</version>
+		<version>6.0.0.M2</version>
 	</parent>
 
 	<artifactId>hutool-cron</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 定时任务</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.cron</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

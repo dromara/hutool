@@ -1,6 +1,6 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;

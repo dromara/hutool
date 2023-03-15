@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
@@ -320,7 +320,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		Assert.notNull(this.config.commentCharacter, "Comment is disable!");
 		try {
 			if(isFirstLine){
-				// 首行不补换行符
+				// 首行不补充换行符
 				isFirstLine = false;
 			}else {
 				writer.write(config.lineDelimiter);

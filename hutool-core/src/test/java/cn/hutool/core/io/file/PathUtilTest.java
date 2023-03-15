@@ -1,6 +1,5 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,7 +12,7 @@ public class PathUtilTest {
 	@Test
 	@Ignore
 	public void copyFileTest(){
-		PathUtil.copyFile(
+		PathUtil.copy(
 				Paths.get("d:/test/1595232240113.jpg"),
 				Paths.get("d:/test/1595232240113_copy.jpg"),
 				StandardCopyOption.COPY_ATTRIBUTES,
@@ -77,5 +76,14 @@ public class PathUtilTest {
 	public void getMimeOf7zTest(){
 		final String contentType = FileUtil.getMimeType("a001.7z");
 		Assert.assertEquals("application/x-7z-compressed", contentType);
+	}
+
+	/**
+	 * issue#2893 target不存在空导致异常
+	 */
+	@Test
+	@Ignore
+	public void moveTest2(){
+		PathUtil.move(Paths.get("D:\\project\\test1.txt"), Paths.get("D:\\project\\test2.txt"), false);
 	}
 }

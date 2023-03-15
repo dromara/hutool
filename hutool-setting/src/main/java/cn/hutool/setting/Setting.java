@@ -2,7 +2,7 @@ package cn.hutool.setting;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -591,6 +591,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @param fields lambda,不能为空
 	 * @return this
 	 */
+	@SuppressWarnings("unchecked")
 	public Setting setFields(final SerSupplier<String>... fields) {
 		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.get()));
 		return this;

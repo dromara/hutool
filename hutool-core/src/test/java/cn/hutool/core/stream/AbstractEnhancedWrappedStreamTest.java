@@ -591,9 +591,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	public void testMapMulti() {
 		Assert.assertEquals(
 				asList(1, 2, 3),
-				wrap(1, 2, 3).mapMulti((t, builder) -> {
-					builder.accept(t);
-				}).toList()
+				wrap(1, 2, 3).mapMulti((t, builder) -> builder.accept(t)).toList()
 		);
 	}
 

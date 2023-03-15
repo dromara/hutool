@@ -12,6 +12,7 @@ import cn.hutool.core.text.replacer.LookupReplacer;
 public class Html4Escape extends XmlEscape {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	protected static final String[][] ISO8859_1_ESCAPE = { //
 			{ "\u00A0", "&nbsp;" }, // non-breaking space
 			{ "\u00A1", "&iexcl;" }, // inverted exclamation mark
@@ -111,6 +112,7 @@ public class Html4Escape extends XmlEscape {
 			{ "\u00FF", "&yuml;" }, // � - lowercase y, umlaut
 	};
 
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	protected static final String[][] HTML40_EXTENDED_ESCAPE = {
 			// <!-- Latin Extended-B -->
 			{ "\u0192", "&fnof;" }, // latin small f with hook = function= florin, U+0192 ISOtech -->
@@ -308,6 +310,9 @@ public class Html4Escape extends XmlEscape {
 			{ "\u20AC", "&euro;" }, // -- euro sign, U+20AC NEW -->
 	};
 
+	/**
+	 * 构造
+	 */
 	public Html4Escape() {
 		super();
 		addChain(new LookupReplacer(ISO8859_1_ESCAPE));

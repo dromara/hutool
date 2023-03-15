@@ -13,12 +13,13 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+
 /**
  * {@link SSLContext}构建器，可以自定义：<br>
  * <ul>
  *     <li>协议（protocol），默认TLS</li>
  *     <li>{@link KeyManager}，默认空</li>
- *     <li>{@link TrustManager}，默认{@link DefaultTrustManager}，即信任全部</li>
+ *     <li>{@link TrustManager}，默认{@link TrustAnyTrustManager}，即信任全部</li>
  *     <li>{@link SecureRandom}</li>
  * </ul>
  * <p>
@@ -32,7 +33,7 @@ public class SSLContextBuilder implements SSLProtocols, Builder<SSLContext> {
 
 	private String protocol = TLS;
 	private KeyManager[] keyManagers;
-	private TrustManager[] trustManagers = {DefaultTrustManager.INSTANCE};
+	private TrustManager[] trustManagers = {TrustAnyTrustManager.INSTANCE};
 	private SecureRandom secureRandom = new SecureRandom();
 
 

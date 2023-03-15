@@ -15,6 +15,9 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class DelVisitor extends SimpleFileVisitor<Path> {
 
+	/**
+	 * 单例对象
+	 */
 	public static DelVisitor INSTANCE = new DelVisitor();
 
 	@Override

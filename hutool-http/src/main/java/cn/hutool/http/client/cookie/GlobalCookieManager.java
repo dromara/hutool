@@ -3,7 +3,7 @@ package cn.hutool.http.client.cookie;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.URLUtil;
-import cn.hutool.http.client.engine.jdk.HttpConnection;
+import cn.hutool.http.client.engine.jdk.JdkHttpConnection;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -63,16 +63,16 @@ public class GlobalCookieManager {
 	 * @return Cookie信息列表
 	 * @since 4.6.9
 	 */
-	public static List<HttpCookie> getCookies(final HttpConnection conn){
+	public static List<HttpCookie> getCookies(final JdkHttpConnection conn){
 		return cookieManager.getCookieStore().get(getURI(conn));
 	}
 
 	/**
 	 * 将本地存储的Cookie信息附带到Http请求中，不覆盖用户定义好的Cookie
 	 *
-	 * @param conn {@link HttpConnection}
+	 * @param conn {@link JdkHttpConnection}
 	 */
-	public static void add(final HttpConnection conn) {
+	public static void add(final JdkHttpConnection conn) {
 		if(null == cookieManager) {
 			// 全局Cookie管理器关闭
 			return;
@@ -93,9 +93,9 @@ public class GlobalCookieManager {
 	/**
 	 * 存储响应的Cookie信息到本地
 	 *
-	 * @param conn {@link HttpConnection}
+	 * @param conn {@link JdkHttpConnection}
 	 */
-	public static void store(final HttpConnection conn) {
+	public static void store(final JdkHttpConnection conn) {
 		store(conn, conn.headers());
 	}
 
@@ -103,10 +103,10 @@ public class GlobalCookieManager {
 	 * 存储响应的Cookie信息到本地<br>
 	 * 通过读取
 	 *
-	 * @param conn {@link HttpConnection}
+	 * @param conn {@link JdkHttpConnection}
 	 * @param responseHeaders 头信息Map
 	 */
-	public static void store(final HttpConnection conn, final Map<String, List<String>> responseHeaders) {
+	public static void store(final JdkHttpConnection conn, final Map<String, List<String>> responseHeaders) {
 		if(null == cookieManager || MapUtil.isEmpty(responseHeaders)) {
 			// 全局Cookie管理器关闭或头信息为空
 			return;
@@ -124,7 +124,7 @@ public class GlobalCookieManager {
 	 * @param conn HttpConnection
 	 * @return URI
 	 */
-	private static URI getURI(final HttpConnection conn){
+	private static URI getURI(final JdkHttpConnection conn){
 		return URLUtil.toURI(conn.getUrl());
 	}
 }

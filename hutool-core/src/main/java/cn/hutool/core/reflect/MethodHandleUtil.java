@@ -121,7 +121,6 @@ public class MethodHandleUtil {
 	 *             return "Quack";
 	 *         }
 	 *     }
-	 *
 	 *     Duck duck = (Duck) Proxy.newProxyInstance(
 	 *         ClassLoaderUtil.getClassLoader(),
 	 *         new Class[] { Duck.class },
@@ -167,7 +166,6 @@ public class MethodHandleUtil {
 	 *             return "Quack";
 	 *         }
 	 *     }
-	 *
 	 *     Duck duck = (Duck) Proxy.newProxyInstance(
 	 *         ClassLoaderUtil.getClassLoader(),
 	 *         new Class[] { Duck.class },
@@ -193,7 +191,6 @@ public class MethodHandleUtil {
 	 *             return "Quack";
 	 *         }
 	 *     }
-	 *
 	 *     Duck duck = (Duck) Proxy.newProxyInstance(
 	 *         ClassLoaderUtil.getClassLoader(),
 	 *         new Class[] { Duck.class },

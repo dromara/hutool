@@ -1,6 +1,6 @@
 package cn.hutool.extra.compress;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.compress.archiver.StreamArchiver;

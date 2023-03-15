@@ -254,6 +254,7 @@ public class CharUtil implements CharPool {
 	 * @see Character#isSpaceChar(int)
 	 * @since 4.0.10
 	 */
+	@SuppressWarnings("UnnecessaryUnicodeEscape")
 	public static boolean isBlankChar(final int c) {
 		return Character.isWhitespace(c)
 				|| Character.isSpaceChar(c)

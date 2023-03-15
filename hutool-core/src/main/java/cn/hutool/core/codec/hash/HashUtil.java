@@ -1,6 +1,8 @@
 package cn.hutool.core.codec.hash;
 
 import cn.hutool.core.codec.Number128;
+import cn.hutool.core.codec.hash.metro.MetroHash128;
+import cn.hutool.core.codec.hash.metro.MetroHash64;
 
 /**
  * Hash算法大全<br>
@@ -554,17 +556,7 @@ public class HashUtil {
 	 * @return hash值
 	 */
 	public static long metroHash64(final byte[] data, final long seed) {
-		return MetroHash.INSTANCE.hash64(data, seed);
-	}
-
-	/**
-	 * MetroHash 算法64-bit实现
-	 *
-	 * @param data 数据
-	 * @return hash值
-	 */
-	public static long metroHash64(final byte[] data) {
-		return MetroHash.INSTANCE.hash64(data);
+		return MetroHash64.of(seed).hash64(data);
 	}
 
 	/**
@@ -575,17 +567,7 @@ public class HashUtil {
 	 * @return hash值，long[0]：低位，long[1]：高位
 	 */
 	public static long[] metroHash128(final byte[] data, final long seed) {
-		return MetroHash.INSTANCE.hash128(data, seed).getLongArray();
-	}
-
-	/**
-	 * MetroHash 算法128-bit实现
-	 *
-	 * @param data 数据
-	 * @return hash值，long[0]：低位，long[1]：高位
-	 */
-	public static long[] metroHash128(final byte[] data) {
-		return MetroHash.INSTANCE.hash128(data).getLongArray();
+		return MetroHash128.of(seed).hash128(data).getLongArray();
 	}
 
 	/**

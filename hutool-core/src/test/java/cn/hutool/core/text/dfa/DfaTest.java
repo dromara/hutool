@@ -91,15 +91,15 @@ public class DfaTest {
 		Assert.assertEquals(3, result.size());
 
 		Assert.assertEquals("赵", result.get(0).getWord());
-		Assert.assertEquals(0, result.get(0).getStartIndex().intValue());
+		Assert.assertEquals(0, result.get(0).getBeginIndex().intValue());
 		Assert.assertEquals(0, result.get(0).getEndIndex().intValue());
 
 		Assert.assertEquals("赵阿", result.get(1).getWord());
-		Assert.assertEquals(0, result.get(1).getStartIndex().intValue());
+		Assert.assertEquals(0, result.get(1).getBeginIndex().intValue());
 		Assert.assertEquals(1, result.get(1).getEndIndex().intValue());
 
 		Assert.assertEquals("赵阿三", result.get(2).getWord());
-		Assert.assertEquals(0, result.get(2).getStartIndex().intValue());
+		Assert.assertEquals(0, result.get(2).getBeginIndex().intValue());
 		Assert.assertEquals(2, result.get(2).getEndIndex().intValue());
 	}
 

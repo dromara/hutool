@@ -2,7 +2,7 @@ package cn.hutool.poi.csv;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import lombok.AllArgsConstructor;

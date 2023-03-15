@@ -7,14 +7,9 @@ import kotlin.Pair;
 import okhttp3.Headers;
 import okhttp3.ResponseBody;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * OkHttp3的{@link okhttp3.Response} 响应包装
@@ -74,7 +69,9 @@ public class OkHttpResponse implements Response {
 	}
 
 	@Override
-	public void close() throws IOException {
-		rawRes.close();
+	public void close() {
+		if(null != this.rawRes){
+			rawRes.close();
+		}
 	}
 }

@@ -19,7 +19,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	/** 源 */
 	protected T src;
 	/** 目标 */
-	protected T dest;
+	protected T target;
 	/** 拷贝过滤器，可以过滤掉不需要拷贝的源 */
 	protected Predicate<T> copyPredicate;
 
@@ -48,18 +48,18 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	 *
 	 * @return 目标
 	 */
-	public T getDest() {
-		return dest;
+	public T getTarget() {
+		return target;
 	}
 	/**
 	 * 设置目标
 	 *
-	 * @param dest 目标
+	 * @param target 目标
 	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
-	public C setDest(final T dest) {
-		this.dest = dest;
+	public C setTarget(final T target) {
+		this.target = target;
 		return (C)this;
 	}
 

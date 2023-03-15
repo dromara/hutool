@@ -10,8 +10,15 @@ import java.util.LinkedHashMap;
  * @author Tom Xin
  */
 public class Ansi4bitMapping extends AnsiLabMapping {
+
+	/**
+	 * 单例
+	 */
 	public static final Ansi4bitMapping INSTANCE = new Ansi4bitMapping();
 
+	/**
+	 * 构造
+	 */
 	public Ansi4bitMapping() {
 		ansiLabMap = new LinkedHashMap<>(16, 1);
 		ansiLabMap.put(Ansi4BitColor.BLACK, new LabColor(0x000000));

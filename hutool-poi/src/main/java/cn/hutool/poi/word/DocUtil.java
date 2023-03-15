@@ -1,6 +1,6 @@
 package cn.hutool.poi.word;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;

@@ -33,7 +33,7 @@ public class DelayWatcher implements Watcher {
 	//---------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * @param watcher 实际处理触发事件的监视器{@link Watcher}，不可以是{@link DelayWatcher}
+	 * @param watcher 实际处理触发事件的监视器{@link Watcher}，不可以是{@code DelayWatcher}
 	 * @param delay 延迟时间，单位毫秒
 	 */
 	public DelayWatcher(final Watcher watcher, final long delay) {

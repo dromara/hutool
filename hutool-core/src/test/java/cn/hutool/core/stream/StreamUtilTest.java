@@ -5,10 +5,7 @@ import cn.hutool.core.collection.SetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,7 +37,7 @@ public class StreamUtilTest {
 
 	@Test
 	public void streamTestOrdinaryIterator() {
-		final ArrayList<Integer> arrayList = ListUtil.of(1, 2, 3);
+		final List<Integer> arrayList = ListUtil.of(1, 2, 3);
 		Assert.assertArrayEquals(new Integer[]{1, 2, 3}, StreamUtil.ofIter(arrayList.iterator()).toArray());
 
 		final HashSet<Integer> hashSet = SetUtil.of(1, 2, 3);
