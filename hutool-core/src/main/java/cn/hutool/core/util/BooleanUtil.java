@@ -18,7 +18,7 @@ public class BooleanUtil {
 	/** 表示为假的字符串 */
 	private static final Set<String> FALSE_SET = SetUtil.of("false", "no", "n", "f", "0", "off", "否", "错", "假", "錯", "×");
 	/** js中表示假值Falsy的部分值 false、0、-0、0n、""、null、undefined 和 NaN */
-	public static final Set<Object> FALSY_SET = SetUtil.of(false, 0, -0, 0L, 0.0D, -0.0D, 0.0F, -0.0F, "", null);
+	public static final Set<Object> FALSY_SET = SetUtil.of(false, 0, -0, 0L, 0.0D, -0.0D, "", null);
 
 	/**
 	 * 取相反值
