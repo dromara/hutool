@@ -17,7 +17,7 @@ public class AutomatonTest extends TestCase {
 		Automaton automaton = new Automaton();
 		WordTree wordTree = new WordTree();
 		automaton.insert("say", "her", "he", "she", "shr");
-		automaton.buildAc();
+//		automaton.buildAc();
 		wordTree.addWords("say", "her", "he", "she", "shr");
 
 		StopWatch stopWatch = new StopWatch();
@@ -51,7 +51,7 @@ public class AutomatonTest extends TestCase {
 		Automaton automaton = new Automaton();
 		WordTree wordTree = new WordTree();
 		automaton.insert("say", "her", "he", "she", "shr");
-		automaton.buildAc();
+//		automaton.buildAc();
 		wordTree.addWords("say", "her", "he", "she", "shr");
 
 		StopWatch stopWatch = new StopWatch();
@@ -84,7 +84,7 @@ public class AutomatonTest extends TestCase {
 		stopWatch.start("automaton_char_buid_find");
 		Automaton automatonLocal = new Automaton();
 		automatonLocal.insert("say", "her", "he", "she", "shr");
-		automatonLocal.buildAc();
+//		automatonLocal.buildAc();
 		List<FoundWord> ans1 = automatonLocal.find(input);
 		stopWatch.stop();
 		assertEquals("she,he,her,say", ans1.stream().map(FoundWord::getWord).collect(Collectors.joining(",")));
@@ -118,7 +118,7 @@ public class AutomatonTest extends TestCase {
 		stopWatch.start("automaton_cn_build_find");
 		Automaton automatonLocal = new Automaton();
 		automatonLocal.insert("赵", "赵啊", "赵啊三");
-		automatonLocal.buildAc();
+//		automatonLocal.buildAc();
 
 		final List<FoundWord> result = automatonLocal.find(input);
 		stopWatch.stop();
@@ -156,7 +156,7 @@ public class AutomatonTest extends TestCase {
 
 		Automaton automatonLocal = new Automaton();
 		automatonLocal.insert("赵", "赵啊", "赵啊三");
-		automatonLocal.buildAc();
+//		automatonLocal.buildAc();
 
 		stopWatch.start("automaton_cn_find");
 		final List<FoundWord> result = automatonLocal.find(input);
@@ -196,7 +196,7 @@ public class AutomatonTest extends TestCase {
 
 		Automaton automatonLocal = new Automaton();
 		automatonLocal.insert("赵", "赵啊", "赵啊三");
-		automatonLocal.buildAc();
+//		automatonLocal.buildAc();
 
 		stopWatch.start("automaton_cn_find_not_density");
 		final List<FoundWord> result = automatonLocal.find(input, false);
