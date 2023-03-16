@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -364,6 +365,7 @@ public class JSONUtil {
 	 * @since 4.6.2
 	 */
 	public static <T> T toBean(final Object json, final TypeReference<T> typeReference) {
+		Assert.notNull(typeReference);
 		return toBean(json, typeReference.getType());
 	}
 
