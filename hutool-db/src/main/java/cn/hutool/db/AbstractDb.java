@@ -498,13 +498,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public <T> T find(final Collection<String> fields, final Entity where, final RsHandler<T> rsh) throws DbRuntimeException {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			return runner.find(conn, Query.of(where).setFields(fields), rsh);
-		} finally {
-			this.closeConnection(conn);
-		}
+		return find(Query.of(where).setFields(fields), rsh);
 	}
 
 	/**
