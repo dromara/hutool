@@ -10,6 +10,9 @@ import cn.hutool.log.LogFactory;
  */
 public class ApacheCommonsLogFactory extends LogFactory{
 
+	/**
+	 * 构造
+	 */
 	public ApacheCommonsLogFactory() {
 		super("Apache Common Logging");
 		checkLogExist(org.apache.commons.logging.LogFactory.class);

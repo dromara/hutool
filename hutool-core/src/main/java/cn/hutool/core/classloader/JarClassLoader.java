@@ -1,7 +1,7 @@
 package cn.hutool.core.classloader;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.reflect.MethodUtil;
 

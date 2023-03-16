@@ -12,6 +12,13 @@ import java.util.function.Predicate;
  */
 public class PredicateUtil {
 
+	/**
+	 * 反向条件
+	 *
+	 * @param predicate 条件
+	 * @param <T> 参数类型
+	 * @return 反向条件 {@link Predicate}
+	 */
 	public static <T> Predicate<T> negate(final Predicate<T> predicate) {
 		return predicate.negate();
 	}

@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
@@ -13,16 +14,7 @@ import cn.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -97,7 +89,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 数组是否为非空<br>
 	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回false<br>
 	 * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回true<br>
-	 * 如果此对象为数组对象，数组长度大于0情况下返回true，否则返回false
+	 * 如果此对象为数组对象，数组长度大于0的情况下返回true，否则返回false
 	 *
 	 * @param array 数组
 	 * @return 是否为非空
@@ -596,15 +588,19 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		int length = 0;
 		for (final T[] array : arrays) {
-			if (null != array) {
+			if (isNotEmpty(array)) {
 				length += array.length;
 			}
 		}
+
 		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+		if (length == 0) {
+			return result;
+		}
 
 		length = 0;
 		for (final T[] array : arrays) {
-			if (null != array) {
+			if (isNotEmpty(array)) {
 				System.arraycopy(array, 0, result, length, array.length);
 				length += array.length;
 			}
@@ -629,7 +625,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制，源数组和目标数组都是从位置0开始复制<br>
 	 *
-	 * @param <T>  目标数组类型
+	 * @param <T>    目标数组类型
 	 * @param src    源数组
 	 * @param dest   目标数组
 	 * @param length 拷贝数组长度
@@ -644,7 +640,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制
 	 *
-	 * @param <T>  目标数组类型
+	 * @param <T>     目标数组类型
 	 * @param src     源数组
 	 * @param srcPos  源数组开始位置
 	 * @param dest    目标数组
@@ -1965,8 +1961,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否有序
-	 * @since 6.0.0
 	 * @throws NullPointerException 如果数组元素含有null值
+	 * @since 6.0.0
 	 */
 	public static <T extends Comparable<? super T>> boolean isSorted(final T[] array) {
 		if (isEmpty(array)) {
@@ -1994,9 +1990,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否升序
+	 * @throws NullPointerException 如果数组元素含有null值
 	 * @author FengBaoheng
 	 * @since 5.5.2
-	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedASC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2020,9 +2016,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param <T>   数组元素类型，该类型需要实现Comparable接口
 	 * @param array 数组
 	 * @return 数组是否降序
+	 * @throws NullPointerException 如果数组元素含有null值
 	 * @author FengBaoheng
 	 * @since 5.5.2
-	 * @throws NullPointerException 如果数组元素含有null值
 	 */
 	public static <T extends Comparable<? super T>> boolean isSortedDESC(final T[] array) {
 		if (isEmpty(array)) {
@@ -2086,6 +2082,56 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			}
 		}
 
+		return true;
+	}
+
+	/**
+	 * 判断数组中是否有相同元素
+	 * <p>若传入空数组，则返回{@code false}</p>
+	 *
+	 * @param <T>   数组元素类型
+	 * @param array 数组
+	 * @return 数组是否有相同元素
+	 * @since 6.0.0
+	 */
+	public static <T> Boolean hasSameElement(final T[] array) {
+		if (isEmpty(array)) {
+			return false;
+		}
+
+		final Set<T> elementSet = SetUtil.of(Arrays.asList(array));
+		return elementSet.size() != array.length;
+	}
+
+	/**
+	 * array数组是否以prefix开头，每个元素的匹配使用{@link ObjUtil#equals(Object, Object)}匹配。
+	 * <ul>
+	 *     <li>array和prefix为同一个数组（即array == prefix），返回{@code true}</li>
+	 *     <li>array或prefix为空数组（null或length为0的数组），返回{@code true}</li>
+	 *     <li>prefix长度大于array，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param array  数组
+	 * @param prefix 前缀
+	 * @param <T>    数组元素类型
+	 * @return 是否开头
+	 */
+	public static <T> boolean startWith(final T[] array, final T[] prefix) {
+		if (array == prefix) {
+			return true;
+		}
+		if(isEmpty(array)){
+			return isEmpty(prefix);
+		}
+		if (prefix.length > array.length) {
+			return false;
+		}
+
+		for (int i = 0; i < prefix.length; i++) {
+			if (ObjUtil.notEquals(array[i], prefix[i])) {
+				return false;
+			}
+		}
 		return true;
 	}
 }

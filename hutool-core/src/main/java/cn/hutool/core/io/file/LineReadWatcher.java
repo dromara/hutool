@@ -1,6 +1,5 @@
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.lang.func.SerConsumer;

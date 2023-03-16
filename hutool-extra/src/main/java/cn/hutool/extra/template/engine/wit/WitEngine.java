@@ -1,6 +1,6 @@
 package cn.hutool.extra.template.engine.wit;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;

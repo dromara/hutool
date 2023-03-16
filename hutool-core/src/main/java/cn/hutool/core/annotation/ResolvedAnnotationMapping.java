@@ -145,10 +145,10 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 * <ul>
 	 *     <li>当{@code annotation}已经被代理过时抛出；</li>
 	 *     <li>当{@code source}包装的注解对象与{@code annotation}相同时抛出；</li>
-	 *     <li>当{@code annotation}包装的注解对象类型为{@link ResolvedAnnotationMapping}时抛出；</li>
+	 *     <li>当{@code annotation}包装的注解对象类型为{@code ResolvedAnnotationMapping}时抛出；</li>
 	 * </ul>
 	 */
-	ResolvedAnnotationMapping(final ResolvedAnnotationMapping source, final Annotation annotation, boolean resolveAttribute) {
+	ResolvedAnnotationMapping(final ResolvedAnnotationMapping source, final Annotation annotation, final boolean resolveAttribute) {
 		Objects.requireNonNull(annotation);
 		Assert.isFalse(AnnotationMappingProxy.isProxied(annotation), "annotation has been proxied");
 		Assert.isFalse(annotation instanceof ResolvedAnnotationMapping, "annotation has been wrapped");
@@ -254,7 +254,6 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 *
 	 * @return 所需的注解，若{@link ResolvedAnnotationMapping#isResolved()}为{@code false}则返回的是原始的注解对象
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Annotation getResolvedAnnotation() {
 		if (!isResolved()) {
@@ -399,7 +398,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		}
 		// 获取除自己外的全部子注解
 		final Deque<ResolvedAnnotationMapping> sources = new LinkedList<>();
-		Set<Class<? extends Annotation>> accessed = new HashSet<>();
+		final Set<Class<? extends Annotation>> accessed = new HashSet<>();
 		accessed.add(this.annotationType());
 		ResolvedAnnotationMapping sourceMapping = this.source;
 		while (Objects.nonNull(sourceMapping)) {
@@ -444,7 +443,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 * 更新需要覆写的属性的相关映射关系，若该属性存在别名，则将别名的映射关系一并覆写
 	 */
 	private void overwriteAttribute(
-		final ResolvedAnnotationMapping overwriteMapping, final int overwriteIndex, final int targetIndex, boolean overwriteAliases) {
+			final ResolvedAnnotationMapping overwriteMapping, final int overwriteIndex, final int targetIndex, final boolean overwriteAliases) {
 		// 若目标属性已被覆写，则不允许再次覆写
 		if (isOverwrittenAttribute(targetIndex)) {
 			return;
@@ -463,7 +462,7 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	/**
 	 * 判断该属性是否已被覆写
 	 */
-	private boolean isOverwrittenAttribute(int index) {
+	private boolean isOverwrittenAttribute(final int index) {
 		// 若属性未发生过解析，则必然未被覆写
 		return NOT_FOUND_INDEX != resolvedAttributes[index]
 			// 若属性发生过解析，且指向其他实例，则说明已被覆写
@@ -567,14 +566,14 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 	 * @return 是否
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		ResolvedAnnotationMapping that = (ResolvedAnnotationMapping)o;
+		final ResolvedAnnotationMapping that = (ResolvedAnnotationMapping)o;
 		return resolved == that.resolved && annotation.equals(that.annotation);
 	}
 
@@ -671,8 +670,8 @@ public class ResolvedAnnotationMapping implements AnnotationMapping<Annotation> 
 		/**
 		 * 遍历下标
 		 */
-		void forEach(IntConsumer consumer) {
-			for (int index : indexes) {
+		void forEach(final IntConsumer consumer) {
+			for (final int index : indexes) {
 				consumer.accept(index);
 			}
 		}

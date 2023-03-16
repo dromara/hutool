@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
@@ -42,8 +42,7 @@ public class JSONArrayTest {
 	@Test
 	public void addNullTest() {
 		final List<String> aaa = ListUtil.view("aaa", null);
-		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa,
-				JSONConfig.of().setIgnoreNullValue(false)));
+		final String jsonStr = JSONUtil.toJsonStr(JSONUtil.parse(aaa, JSONConfig.of().setIgnoreNullValue(false)));
 		Assert.assertEquals("[\"aaa\",null]", jsonStr);
 	}
 

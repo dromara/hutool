@@ -4,14 +4,13 @@ import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PartitionTest {
 	@Test
 	public void sizeTest() {
-		final ArrayList<Integer> list = ListUtil.of(1, 2, 3, 4, 5);
+		final List<Integer> list = ListUtil.of(1, 2, 3, 4, 5);
 		final Partition<Integer> partition = new Partition<>(list, 4);
 		Assert.assertEquals(2, partition.size());
 	}

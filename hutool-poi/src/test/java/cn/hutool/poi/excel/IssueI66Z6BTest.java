@@ -1,7 +1,7 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 

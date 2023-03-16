@@ -298,12 +298,12 @@ public class ByteUtil {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			for (int i = (Long.BYTES - 1); i >= 0; i--) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i + start] & 0xff);
+				values |= (bytes[i + start] & 0xffL);
 			}
 		} else {
 			for (int i = 0; i < Long.BYTES; i++) {
 				values <<= Byte.SIZE;
-				values |= (bytes[i + start] & 0xff);
+				values |= (bytes[i + start] & 0xffL);
 			}
 		}
 

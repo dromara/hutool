@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -30,7 +31,7 @@ public class HttpClient5Response implements Response {
 	/**
 	 * HttpClient的响应对象
 	 */
-	private final CloseableHttpResponse rawRes;
+	private final ClassicHttpResponse rawRes;
 	/**
 	 * 请求时的默认编码
 	 */
@@ -43,7 +44,7 @@ public class HttpClient5Response implements Response {
 	 * @param rawRes         {@link CloseableHttpResponse}
 	 * @param requestCharset 请求时的编码
 	 */
-	public HttpClient5Response(final CloseableHttpResponse rawRes, final Charset requestCharset) {
+	public HttpClient5Response(final ClassicHttpResponse rawRes, final Charset requestCharset) {
 		this.rawRes = rawRes;
 		this.requestCharset = requestCharset;
 	}

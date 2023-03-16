@@ -152,7 +152,9 @@ public class CollStreamUtilTest {
 
 		// 对null友好
 		final Map<Long, Map<Long, Student>> termIdClassIdStudentMap = CollStreamUtil.group2Map(Arrays.asList(null, new Student(2, 2, 1, "王五")), Student::getTermId, Student::getClassId);
-		final Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {{
+		final Map<Long, Map<Long, Student>> termIdClassIdStudentCompareMap = new HashMap<Long, Map<Long, Student>>() {
+			private static final long serialVersionUID = 1L;
+			{
 			put(null, MapUtil.empty());
 			put(2L, MapUtil.of(2L, new Student(2, 2, 1, "王五")));
 		}};
@@ -269,6 +271,7 @@ public class CollStreamUtilTest {
 		Assert.assertEquals(set, compare);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void testMerge() {
 		Map<Long, Student> map1 = null;

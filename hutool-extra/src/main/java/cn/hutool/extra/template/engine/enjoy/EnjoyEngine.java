@@ -1,6 +1,6 @@
 package cn.hutool.extra.template.engine.enjoy;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.id.IdUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.extra.template.Template;

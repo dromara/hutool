@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.io.CharsetDetector;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.File;

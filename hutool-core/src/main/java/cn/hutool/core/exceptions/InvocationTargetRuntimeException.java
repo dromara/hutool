@@ -6,28 +6,66 @@ package cn.hutool.core.exceptions;
  * @author looly
  */
 public class InvocationTargetRuntimeException extends UtilException {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 构造
+	 *
+	 * @param e 异常
+	 */
 	public InvocationTargetRuntimeException(final Throwable e) {
 		super(e);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 */
 	public InvocationTargetRuntimeException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
 	public InvocationTargetRuntimeException(final String messageTemplate, final Object... params) {
 		super(messageTemplate, params);
 	}
 
-	public InvocationTargetRuntimeException(final String message, final Throwable throwable) {
-		super(message, throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 * @param cause   被包装的子异常
+	 */
+	public InvocationTargetRuntimeException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public InvocationTargetRuntimeException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, throwable, enableSuppression, writableStackTrace);
+	/**
+	 * 构造
+	 *
+	 * @param message            消息
+	 * @param cause              被包装的子异常
+	 * @param enableSuppression  是否启用抑制
+	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
+	 */
+	public InvocationTargetRuntimeException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public InvocationTargetRuntimeException(final Throwable throwable, final String messageTemplate, final Object... params) {
-		super(throwable, messageTemplate, params);
+	/**
+	 * 构造
+	 *
+	 * @param cause           被包装的子异常
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
+	public InvocationTargetRuntimeException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(cause, messageTemplate, params);
 	}
 }

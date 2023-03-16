@@ -1,6 +1,6 @@
 package cn.hutool.core.compress;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;

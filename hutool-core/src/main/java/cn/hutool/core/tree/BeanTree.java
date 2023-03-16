@@ -30,10 +30,13 @@ import java.util.function.Predicate;
  * 也可以将已有的树转换为集合，例如：
  * <pre>{@code final List<JavaBean> javaBeanList = beanTree.flat(originJavaBeanTree);}</pre>
  *
+ * <p>最后，引用一句电影经典台词： 无处安放的双手，以及无处安放的灵魂。——《Hello!树先生》</p>
+ *
+ * @param <T> Bean类型
+ * @param <R> 主键、外键类型
  * @author VampireAchao
  * @author emptypoint
  * @author CreateSequence
- * 最后，引用一句电影经典台词： 无处安放的双手，以及无处安放的灵魂。——《Hello!树先生》
  */
 public class BeanTree<T, R extends Comparable<R>> {
 
@@ -126,10 +129,10 @@ public class BeanTree<T, R extends Comparable<R>> {
 		if (CollUtil.isEmpty(list)) {
 			return ListUtil.zero();
 		}
-        	if (Objects.isNull(parentPredicate)) {
-            		final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
-                    			.peek(e -> Objects.requireNonNull(idGetter.apply(e), () -> "The id of tree node must not be null " + e))
-                    			.group(pidGetter);
+		if (Objects.isNull(parentPredicate)) {
+			final Map<R, List<T>> pIdValuesMap = EasyStream.of(list)
+					.peek(e -> Objects.requireNonNull(idGetter.apply(e), () -> "The id of tree node must not be null " + e))
+					.group(pidGetter);
 			final List<T> parents = pIdValuesMap.getOrDefault(pidValue, new ArrayList<>());
 			findChildren(list, pIdValuesMap);
 			return parents;
@@ -206,7 +209,7 @@ public class BeanTree<T, R extends Comparable<R>> {
 	 * @param pIdValuesMap 父id与子集的映射
 	 */
 	private void findChildren(final List<T> list, final Map<R, List<T>> pIdValuesMap) {
-		for (T node : list) {
+		for (final T node : list) {
 			final List<T> children = pIdValuesMap.get(idGetter.apply(node));
 			if (children != null) {
 				childrenSetter.accept(node, children);

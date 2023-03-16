@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="45%"></a>
+	<a href="https://hutool.cn/"><img src="https://plus.hutool.cn/images/hutool.svg" width="45%"></a>
 </p>
 <p align="center">
 	<strong>🍬A set of tools that keep Java sweet.</strong>
@@ -51,7 +51,7 @@
 -------------------------------------------------------------------------------
 
 ## 📚Introduction
-**Hutool** is a small but comprehensive library of Java tools, encapsulation by static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
+**Hutool** is a small but comprehensive library of Java tools, achieved by encapsulation through static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
 
 **Hutool** tools and methods from each user's crafted, it covers all aspects of the underlying code of Java development, it is a powerful tool for large project development to solve small problems, but also the efficiency of small projects;
 
@@ -138,18 +138,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>6.0.0.M1</version>
+    <version>6.0.0.M2</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:6.0.0.M1'
+implementation 'cn.hutool:hutool-all:6.0.0.M2'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0.M1/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0.M2/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -176,10 +176,10 @@ cd ${hutool}
 
 Hutool's source code is divided into two branches:
 
-| branch | description                                               |
-|-----------|---------------------------------------------------------------|
+| branch    | description                                                                                                                                                         |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | v6-master | The master branch, the branch used by the release version, is the same as the jar committed to the central repository and does not receive any pr or modifications. |
-| v6-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr |
+| v6-dev    | Development branch, which defaults to the next SNAPSHOT version, accepts modifications or pr                                                                        |
 
 ### 🐞Provide feedback or suggestions on bugs
 

@@ -1,12 +1,25 @@
 package cn.hutool.core.stream;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
+import java.util.OptionalDouble;
 import java.util.Spliterator;
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -97,7 +110,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	/**
 	 * 返回包含单个元素的串行流
 	 *
-	 * @param t   单个元素
+	 * @param t 单个元素
 	 * @param <T> 元素类型
 	 * @return 包含单个元素的串行流
 	 */
@@ -109,9 +122,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 返回包含指定元素的串行流，若输入数组为{@code null}或空，则返回一个空的串行流
 	 *
 	 * @param values 指定元素
-	 * @param <T>    元素类型
+	 * @param <T> 元素类型
 	 * @return 包含指定元素的串行流
-	 * 从一个安全数组中创建流
+	 * 		从一个安全数组中创建流
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -123,7 +136,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 通过实现了{@link Iterable}接口的对象创建串行流，若输入对象为{@code null}，则返回一个空的串行流
 	 *
 	 * @param iterable 实现了{@link Iterable}接口的对象
-	 * @param <T>      元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Iterable<T> iterable) {
@@ -135,7 +148,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 *
 	 * @param iterable {@link Iterable}
 	 * @param parallel 是否并行
-	 * @param <T>      元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Iterable<T> iterable, final boolean parallel) {
@@ -150,7 +163,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 通过传入的{@link Stream}创建流，若输入对象为{@code null}，则返回一个空的串行流
 	 *
 	 * @param stream {@link Stream}
-	 * @param <T>    元素类型
+	 * @param <T> 元素类型
 	 * @return 流
 	 */
 	public static <T> EasyStream<T> of(final Stream<T> stream) {
@@ -166,9 +179,9 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 就可以创建从0开始，每次+1的无限流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
-	 * @param <T>  元素类型
+	 * @param <T> 元素类型
 	 * @param seed 初始值
-	 * @param f    用上一个元素作为参数执行并返回一个新的元素
+	 * @param f 用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
 	public static <T> EasyStream<T> iterate(final T seed, final UnaryOperator<T> f) {
@@ -184,13 +197,14 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 就可以创建包含元素0,1,2的流，使用{@link EasyStream#limit(long)}可以限制元素个数
 	 * </p>
 	 *
-	 * @param <T>     元素类型
-	 * @param seed    初始值
+	 * @param <T> 元素类型
+	 * @param seed 初始值
 	 * @param hasNext 条件值
-	 * @param next    用上一个元素作为参数执行并返回一个新的元素
+	 * @param next 用上一个元素作为参数执行并返回一个新的元素
 	 * @return 无限有序流
 	 */
-	public static <T> EasyStream<T> iterate(final T seed, final Predicate<? super T> hasNext, final UnaryOperator<T> next) {
+	public static <T> EasyStream<T> iterate(final T seed, final Predicate<? super T> hasNext,
+			final UnaryOperator<T> next) {
 		Objects.requireNonNull(next);
 		Objects.requireNonNull(hasNext);
 		return new EasyStream<>(StreamUtil.iterate(seed, hasNext, next));
@@ -198,11 +212,11 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 
 	/**
 	 * 返回无限串行无序流
-	 * 其中每一个元素都由给定的{@code Supplier}生成
+	 * 其中每一个元素都由给定的{@link Supplier}生成
 	 * 适用场景在一些生成常量流、随机元素等
 	 *
 	 * @param <T> 元素类型
-	 * @param s   用来生成元素的 {@code Supplier}
+	 * @param s 用来生成元素的 {@link  Supplier}
 	 * @return 无限串行无序流
 	 */
 	public static <T> EasyStream<T> generate(final Supplier<T> s) {
@@ -217,8 +231,8 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * <p>从重复串行流进行拼接时可能会导致深度调用链甚至抛出 {@code StackOverflowException}</p>
 	 *
 	 * @param <T> 元素类型
-	 * @param a   第一个流
-	 * @param b   第二个流
+	 * @param a 第一个流
+	 * @param b 第二个流
 	 * @return 拼接两个流之后的流
 	 */
 	public static <T> EasyStream<T> concat(final Stream<? extends T> a, final Stream<? extends T> b) {
@@ -228,12 +242,13 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	/**
 	 * 拆分字符串，转换为串行流
 	 *
-	 * @param str   字符串
+	 * @param str 字符串
 	 * @param regex 正则
 	 * @return 拆分后元素组成的流
 	 */
 	public static EasyStream<String> split(final CharSequence str, final String regex) {
-		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(EasyStream::of).orElseGet(EasyStream::empty);
+		return Opt.ofBlankAble(str).map(CharSequence::toString).map(s -> s.split(regex)).map(EasyStream::of)
+				.orElseGet(EasyStream::empty);
 	}
 
 	// --------------------------------------------------------------- Static method end
@@ -244,7 +259,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	 * 这是一个无状态中间操作
 	 *
 	 * @param mapper 指定的函数
-	 * @param <R>    函数执行后返回的类型
+	 * @param <R> 函数执行后返回的类型
 	 * @return 返回叠加操作后的流
 	 */
 	@Override
@@ -264,6 +279,125 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		return new EasyStream<>(stream);
 	}
 
+
+	/**
+	 * 计算int类型的总和
+	 *
+	 * @param mapper 将对象转换为int的 {@link Function}
+	 * @return int 总和
+	 */
+	public int sum(final ToIntFunction<? super T> mapper) {
+		return stream.mapToInt(mapper).sum();
+	}
+
+	/**
+	 * 计算long类型的总和
+	 *
+	 * @param mapper 将对象转换为long的 {@link Function}
+	 * @return long 总和
+	 */
+	public long sum(final ToLongFunction<? super T> mapper) {
+		return stream.mapToLong(mapper).sum();
+	}
+
+
+	/**
+	 * 计算double类型的总和
+	 *
+	 * @param mapper 将对象转换为double的 {@link Function}
+	 * @return double 总和
+	 */
+	public double sum(final ToDoubleFunction<? super T> mapper) {
+		return stream.mapToDouble(mapper).sum();
+	}
+
+
+	/**
+	 * 计算 {@link Number} 类型的总和
+	 *
+	 * @param <R> 数字
+	 * @param mapper  将对象转换为{@link Number} 的 {@link Function}
+	 * @return {@link BigDecimal} , 如果流为空, 返回 {@link BigDecimal#ZERO}
+	 */
+	public <R extends Number> BigDecimal sum(final Function<? super T, R> mapper) {
+		return stream.map(mapper).reduce(BigDecimal.ZERO, NumberUtil::add, NumberUtil::add);
+	}
+
+
+	/**
+	 * 计算 {@link BigDecimal} 类型的平均值 并以四舍五入的方式保留2位精度
+	 *
+	 * @param mapper 将对象转换为{@link BigDecimal}的 {@link Function}
+	 * @return 计算后的平均值 如果流的长度为0, 返回 {@link Opt#empty()}
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper) {
+		return avg(mapper, 2);
+	}
+
+
+	/**
+	 * {@link BigDecimal} 类型的平均值 并以四舍五入的方式保留小数点后scale位
+	 *
+	 * @param mapper 将对象转换为{@link BigDecimal} 的 {@link Function}
+	 * @param scale 保留精度
+	 * @return 计算后的平均值  如果流的长度为0, 返回 {@link Opt#empty()}
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, final int scale) {
+		return avg(mapper, scale, RoundingMode.HALF_UP);
+	}
+
+	/**
+	 * 计算 {@link BigDecimal} 类型的平均值
+	 *
+	 * @param mapper 将对象转换为{@link BigDecimal} 的 {@link Function}
+	 * @param scale 保留精度
+	 * @param roundingMode 舍入模式
+	 * @return 计算后的平均值 如果元素的长度为0 那么会返回 {@link Opt#empty()}
+	 */
+	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, final int scale,
+			final RoundingMode roundingMode) {
+		//元素列表
+		List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
+		if (CollUtil.isEmpty(bigDecimalList)) {
+			return Opt.empty();
+		}
+		return Opt.ofNullable(EasyStream.of(bigDecimalList).reduce(BigDecimal.ZERO, BigDecimal::add)
+				.divide(NumberUtil.toBigDecimal(bigDecimalList.size()), scale, roundingMode));
+	}
+
+
+	/**
+	 * 计算int类型的平均值
+	 *
+	 * @param mapper 将对象转换为int 的 {@link Function}
+	 * @return {@link OptionalDouble} 如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
+	 */
+	public OptionalDouble avg(final ToIntFunction<? super T> mapper) {
+		return stream.mapToInt(mapper).average();
+	}
+
+	/**
+	 * 计算double类型的平均值
+	 *
+	 * @param mapper 将对象转换为double 的 {@link Function}
+	 * @return {@link OptionalDouble} 如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
+	 */
+	public OptionalDouble avg(final ToDoubleFunction<? super T> mapper) {
+		return stream.mapToDouble(mapper).average();
+	}
+
+
+	/**
+	 * 计算double平均值
+	 *
+	 * @param mapper 将对象转换为long 的 {@link Function}
+	 * @return {@link OptionalDouble}  如果流的长度为0 那么会返回{@link OptionalDouble#empty()}
+	 */
+	public OptionalDouble avg(final ToLongFunction<? super T> mapper) {
+		return stream.mapToLong(mapper).average();
+	}
+
+
 	/**
 	 * 建造者
 	 *
@@ -277,12 +411,12 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		 * @param t the element to add
 		 * @return {@code this} builder
 		 * @throws IllegalStateException if the builder has already transitioned to
-		 *                               the built state
+		 * 		the built state
 		 * @implSpec The default implementation behaves as if:
-		 * <pre>{@code
-		 *     accept(t)
-		 *     return this;
-		 * }</pre>
+		 * 		<pre>{@code
+		 * 										    accept(t)
+		 * 										    return this;
+		 *                                    }</pre>
 		 */
 		default Builder<T> add(final T t) {
 			accept(t);

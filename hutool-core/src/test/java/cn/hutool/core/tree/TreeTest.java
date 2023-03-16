@@ -85,7 +85,6 @@ public class TreeTest {
 		Console.log(tree);
 		tree.walk((tr)-> ids.add(tr.getId()), true);
 
-		Console.log(ids);
 		Assert .assertEquals(7, ids.size());
 	}
 

@@ -6,9 +6,9 @@ import cn.hutool.core.io.stream.EmptyOutputStream;
 import cn.hutool.core.lang.Assert;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
@@ -57,8 +57,8 @@ public class ChecksumUtil {
 			throw new IllegalArgumentException("Checksums can't be computed on directories");
 		}
 		try {
-			return checksum(new FileInputStream(file), checksum);
-		} catch (final FileNotFoundException e) {
+			return checksum(Files.newInputStream(file.toPath()), checksum);
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

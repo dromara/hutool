@@ -25,7 +25,7 @@ public interface RepeatableAnnotationCollector {
 	/**
 	 * 空实现
 	 *
-	 * @return {@link RepeatableAnnotationCollector}实例
+	 * @return {@code RepeatableAnnotationCollector}实例
 	 */
 	static RepeatableAnnotationCollector none() {
 		return None.INSTANCE;
@@ -47,7 +47,7 @@ public interface RepeatableAnnotationCollector {
 	 * </code></pre>
 	 * 解析任意{@code Annotation}注解对象，则可以获得{@code value}属性中的{@code Item}注解对象
 	 *
-	 * @return {@link RepeatableAnnotationCollector}实例
+	 * @return {@code RepeatableAnnotationCollector}实例
 	 * @see Standard
 	 */
 	static RepeatableAnnotationCollector standard() {
@@ -59,7 +59,7 @@ public interface RepeatableAnnotationCollector {
 	 * 收集器将返回所有匹配的属性中的可重复注解。
 	 *
 	 * @param predicate 是否为容纳可重复注解的属性的判断条件
-	 * @return {@link RepeatableAnnotationCollector}实例
+	 * @return {@code RepeatableAnnotationCollector}实例
 	 */
 	static RepeatableAnnotationCollector condition(final BiPredicate<Annotation, Method> predicate) {
 		return new Condition(predicate);
@@ -80,7 +80,7 @@ public interface RepeatableAnnotationCollector {
 	 * 则可以获得{@code items1}属性中的{@code Item1}注解对象，
 	 * 以及{@code items2}属性中的{@code Item2}注解对象，
 	 *
-	 * @return {@link RepeatableAnnotationCollector}实例
+	 * @return {@code RepeatableAnnotationCollector}实例
 	 */
 	static RepeatableAnnotationCollector full() {
 		return Full.INSTANCE;
@@ -189,7 +189,7 @@ public interface RepeatableAnnotationCollector {
 	}
 
 	/**
-	 * {@link RepeatableAnnotationCollector}的基本实现
+	 * {@code RepeatableAnnotationCollector}的基本实现
 	 */
 	abstract class AbstractCollector implements RepeatableAnnotationCollector {
 
@@ -218,7 +218,7 @@ public interface RepeatableAnnotationCollector {
 		 * @return 容器注解中的可重复注解，若{@code annotation}不为容器注解，则数组中仅有其本身一个对象
 		 */
 		@Override
-		public List<Annotation> getAllRepeatableAnnotations(Annotation annotation) {
+		public List<Annotation> getAllRepeatableAnnotations(final Annotation annotation) {
 			return find(annotation, null, true);
 		}
 
@@ -261,7 +261,7 @@ public interface RepeatableAnnotationCollector {
 				final boolean isTarget = hasCondition && condition.test(source);
 				if (CollUtil.isEmpty(repeatableMethods) || isTarget) {
 					// 不是累加的，则仅当正在处理的注解不为可重复注解时才记录
-					boolean shouldProcess = !accumulate && (!hasCondition || isTarget);
+					final boolean shouldProcess = !accumulate && (!hasCondition || isTarget);
 					if (shouldProcess) {
 						results.add(source);
 					}

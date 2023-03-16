@@ -1,5 +1,7 @@
 package cn.hutool.core.text.finder;
 
+import cn.hutool.core.regex.PatternPool;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,7 @@ public class PatternFinder extends TextFinder {
 	 * @param caseInsensitive 是否忽略大小写
 	 */
 	public PatternFinder(final String regex, final boolean caseInsensitive) {
-		this(Pattern.compile(regex, caseInsensitive ? Pattern.CASE_INSENSITIVE : 0));
+		this(PatternPool.get(regex, caseInsensitive ? Pattern.CASE_INSENSITIVE : 0));
 	}
 
 	/**

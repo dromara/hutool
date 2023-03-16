@@ -1,30 +1,18 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.format.GlobalCustomFormat;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalUnit;
-import java.time.temporal.WeekFields;
+import java.time.temporal.*;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 /**
  * JDK8+中的{@link java.time} 工具类封装
@@ -35,11 +23,6 @@ import java.util.TimeZone;
  * @since 6.0.0
  */
 public class TimeUtil extends TemporalAccessorUtil {
-	/**
-	 * UTC 的 ZoneID
-	 */
-	public static final ZoneId ZONE_ID_UTC = ZoneId.of("UTC");
-
 	/**
 	 * 当前时间，默认时区
 	 *
@@ -65,7 +48,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDateTime ofUTC(final Instant instant) {
-		return of(instant, ZONE_ID_UTC);
+		return of(instant, ZoneUtil.ZONE_ID_UTC);
 	}
 
 	/**
@@ -234,7 +217,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 
 	/**
 	 * 解析日期时间字符串为{@link LocalDateTime}，格式支持日期时间、日期、时间<br>
-	 * 如果formatter为{code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
+	 * 如果formatter为{@code null}，则使用{@link DateTimeFormatter#ISO_LOCAL_DATE_TIME}
 	 *
 	 * @param text      日期时间字符串
 	 * @param formatter 日期格式化器，预定义的格式见：{@link DateTimeFormatter}
@@ -353,6 +336,17 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 */
 	public static String formatNormal(final ChronoLocalDate date) {
 		return format(date, DatePattern.NORM_DATE_FORMATTER);
+	}
+
+
+	/**
+	 * 格式化时间函数
+	 *
+	 * @param dateTimeFormatter {@link DateTimeFormatter}
+	 * @return 格式化时间的函数
+	 */
+	public static Function<TemporalAccessor, String> formatFunc(final DateTimeFormatter dateTimeFormatter) {
+		return LambdaUtil.toFunction(TimeUtil::format, dateTimeFormatter);
 	}
 
 	/**

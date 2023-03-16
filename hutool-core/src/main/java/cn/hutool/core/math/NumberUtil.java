@@ -1761,5 +1761,4 @@ public class NumberUtil {
 	public static boolean isEven(final int num) {
 		return false == isOdd(num);
 	}
-
 }

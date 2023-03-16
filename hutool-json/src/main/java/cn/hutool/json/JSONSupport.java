@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.json.serialize.JSONDeserializer;
-import cn.hutool.json.serialize.JSONString;
+import cn.hutool.json.serialize.JSONStringer;
 
 /**
  * JSON支持<br>
@@ -10,7 +10,7 @@ import cn.hutool.json.serialize.JSONString;
  *
  * @author Looly
  */
-public class JSONSupport implements JSONString, JSONDeserializer<Object> {
+public class JSONSupport implements JSONStringer, JSONDeserializer<Object> {
 
 	/**
 	 * JSON String转Bean

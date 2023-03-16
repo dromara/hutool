@@ -2,9 +2,10 @@ package cn.hutool.core.compress;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
@@ -172,7 +173,7 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static File zip(final File srcFile, final Charset charset) throws UtilException {
-		final File zipFile = FileUtil.file(srcFile.getParentFile(), FileUtil.mainName(srcFile) + ".zip");
+		final File zipFile = FileUtil.file(srcFile.getParentFile(), FileNameUtil.mainName(srcFile) + ".zip");
 		zip(zipFile, charset, false, srcFile);
 		return zipFile;
 	}
@@ -468,7 +469,7 @@ public class ZipUtil {
 	 * @since 3.2.2
 	 */
 	public static File unzip(final File zipFile, final Charset charset) throws UtilException {
-		final File destDir = FileUtil.file(zipFile.getParentFile(), FileUtil.mainName(zipFile));
+		final File destDir = FileUtil.file(zipFile.getParentFile(), FileNameUtil.mainName(zipFile));
 		return unzip(zipFile, destDir, charset);
 	}
 

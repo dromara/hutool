@@ -2,7 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
@@ -52,7 +52,7 @@ public class BigExcelWriteTest {
 		}
 
 		final String filePath = "e:/bigWriteTest.xlsx";
-		FileUtil.del(filePath);
+		FileUtil.del(FileUtil.file(filePath));
 		// 通过工具类创建writer
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(filePath);
 
@@ -118,7 +118,7 @@ public class BigExcelWriteTest {
 
 		// 通过工具类创建writer
 		final String path = "e:/bigWriteMapTest.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 
 		//设置内容字体
@@ -148,7 +148,7 @@ public class BigExcelWriteTest {
 
 		// 通过工具类创建writer
 		final String path = "e:/bigWriteMapTest2.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 
 		// 一次性写出内容，使用默认样式
@@ -177,7 +177,7 @@ public class BigExcelWriteTest {
 		final List<cn.hutool.poi.excel.TestBean> rows = ListUtil.of(bean1, bean2);
 		// 通过工具类创建writer
 		final String file = "e:/bigWriteBeanTest.xlsx";
-		FileUtil.del(file);
+		FileUtil.del(FileUtil.file(file));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(file);
 		//自定义标题
 		writer.addHeaderAlias("name", "姓名");
@@ -197,7 +197,7 @@ public class BigExcelWriteTest {
 	@Ignore
 	public void writeCellValueTest() {
 		final String path = "d:/test/cellValueTest.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final BigExcelWriter writer = new BigExcelWriter(path);
 		writer.writeCellValue(3, 5, "aaa");
 		writer.close();
@@ -210,7 +210,7 @@ public class BigExcelWriteTest {
 		final Map<String, ?> map2 = MapUtil.of("id", "123457");
 		final List<?> data = Arrays.asList(map1, map2);
 		final String destFilePath = "d:/test/closeTest.xlsx";//略
-		FileUtil.del(destFilePath);
+		FileUtil.del(FileUtil.file(destFilePath));
 		try (final ExcelWriter writer = ExcelUtil.getBigWriter(destFilePath)) {
 			writer.write(data).flush();
 		}
@@ -221,7 +221,7 @@ public class BigExcelWriteTest {
 	public void issue1210() {
 		// 通过工具类创建writer
 		final String path = "d:/test/issue1210.xlsx";
-		FileUtil.del(path);
+		FileUtil.del(FileUtil.file(path));
 		final BigExcelWriter writer = ExcelUtil.getBigWriter(path);
 		writer.addHeaderAlias("id", "SN");
 		writer.addHeaderAlias("userName", "User Name");

@@ -2,33 +2,12 @@ package cn.hutool.core.io.file;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.file.visitor.CopyVisitor;
-import cn.hutool.core.io.file.visitor.DelVisitor;
-import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -147,73 +126,32 @@ public class PathUtil {
 	 * 某个文件删除失败会终止删除操作
 	 *
 	 * @param path 文件对象
-	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
 	 * @since 4.4.2
 	 */
-	public static boolean del(final Path path) throws IORuntimeException {
-		if (Files.notExists(path)) {
-			return true;
-		}
-
-		try {
-			if (isDirectory(path)) {
-				Files.walkFileTree(path, DelVisitor.INSTANCE);
-			} else {
-				delFile(path);
-			}
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return true;
+	public static void del(final Path path) throws IORuntimeException {
+		PathDeleter.of(path).del();
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
-	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
+	 * 清空目录
 	 *
-	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param dest    目标文件或目录，如果为目录使用与源文件相同的文件名
-	 * @param options {@link StandardCopyOption}
-	 * @return Path
-	 * @throws IORuntimeException IO异常
+	 * @param path 目录路径
 	 */
-	public static Path copyFile(final Path src, final Path dest, final StandardCopyOption... options) throws IORuntimeException {
-		return copyFile(src, dest, (CopyOption[]) options);
+	public static void clean(final Path path) {
+		PathDeleter.of(path).clean();
 	}
 
 	/**
-	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件<br>
-	 * 此方法不支持递归拷贝目录，如果src传入是目录，只会在目标目录中创建空目录
-	 *
-	 * @param src     源文件路径，如果为目录只在目标中创建新目录
-	 * @param target  目标文件或目录，如果为目录使用与源文件相同的文件名
-	 * @param options {@link StandardCopyOption}
-	 * @return Path
-	 * @throws IORuntimeException IO异常
-	 * @since 5.4.1
-	 */
-	public static Path copyFile(final Path src, final Path target, final CopyOption... options) throws IORuntimeException {
-		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(target, "Destination File or directory is null !");
-
-		final Path targetPath = isDirectory(target) ? target.resolve(src.getFileName()) : target;
-		// 创建级联父目录
-		mkParentDirs(targetPath);
-		try {
-			return Files.copy(src, targetPath, options);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	/**
-	 * 拷贝文件或目录，拷贝规则为：
-	 *
+	 * 复制src到target中
 	 * <ul>
-	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝整个目录到目标目录下</li>
-	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
-	 *     <li>源文件为文件，目标也为文件，则在{@link StandardCopyOption#REPLACE_EXISTING}情况下覆盖之</li>
+	 *     <li>src路径和target路径相同时，不执行操作</li>
+	 *     <li>src为文件，target为已存在目录，则拷贝到目录下，文件名不变。</li>
+	 *     <li>src为文件，target为不存在路径，则目标以文件对待（自动创建父级目录），相当于拷贝后重命名，比如：/dest/aaa，如果aaa不存在，则aaa被当作文件名</li>
+	 *     <li>src为文件，target是一个已存在的文件，则当{@link CopyOption}设为覆盖时会被覆盖，默认不覆盖，抛出{@link FileAlreadyExistsException}</li>
+	 *     <li>src为目录，target为已存在目录，整个src目录连同其目录拷贝到目标目录中</li>
+	 *     <li>src为目录，target为不存在路径，则自动创建目标为新目录，并只拷贝src内容到目标目录中，相当于重命名目录。</li>
+	 *     <li>src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
 	 * </ul>
 	 *
 	 * @param src     源文件路径，如果为目录会在目标中创建新目录
@@ -221,23 +159,21 @@ public class PathUtil {
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
-	 * @since 5.5.1
 	 */
 	public static Path copy(final Path src, final Path target, final CopyOption... options) throws IORuntimeException {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		if (isDirectory(src)) {
-			return copyContent(src, target.resolve(src.getFileName()), options);
-		}
-		return copyFile(src, target, options);
+		return PathCopier.of(src, target, options).copy();
 	}
 
 	/**
-	 * 拷贝目录下的所有文件或目录到目标目录中，此方法不支持文件对文件的拷贝。
+	 * 复制src的内容到target中
 	 * <ul>
-	 *     <li>源文件为目录，目标也为目录或不存在，则拷贝目录下所有文件和目录到目标目录下</li>
-	 *     <li>源文件为文件，目标为目录或不存在，则拷贝文件到目标目录下</li>
+	 *     <li>src路径和target路径相同时，不执行操作</li>
+	 *     <li>src为文件，target为已存在目录，则拷贝到目录下，文件名不变。</li>
+	 *     <li>src为文件，target为不存在路径，则目标以文件对待（自动创建父级目录），相当于拷贝后重命名，比如：/dest/aaa，如果aaa不存在，则aaa被当作文件名</li>
+	 *     <li>src为文件，target是一个已存在的文件，则当{@link CopyOption}设为覆盖时会被覆盖，默认不覆盖，抛出{@link FileAlreadyExistsException}</li>
+	 *     <li>src为目录，target为已存在目录，整个src目录下的内容拷贝到目标目录中</li>
+	 *     <li>src为目录，target为不存在路径，则自动创建目标为新目录，整个src目录下的内容拷贝到目标目录中，相当于重命名目录。</li>
+	 *     <li>src为目录，target为文件，抛出IO异常</li>
 	 * </ul>
 	 *
 	 * @param src     源文件路径，如果为目录只在目标中创建新目录
@@ -245,18 +181,9 @@ public class PathUtil {
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
-	 * @since 5.5.1
 	 */
 	public static Path copyContent(final Path src, final Path target, final CopyOption... options) throws IORuntimeException {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		try {
-			Files.walkFileTree(src, new CopyVisitor(src, target, options));
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return target;
+		return PathCopier.of(src, target, options).copyContent();
 	}
 
 	/**
@@ -269,6 +196,22 @@ public class PathUtil {
 	 */
 	public static boolean isDirectory(final Path path) {
 		return isDirectory(path, false);
+	}
+
+	/**
+	 * 判断是否存在且为非目录
+	 * <ul>
+	 *     <li>如果path为{@code null}，返回{@code false}</li>
+	 *     <li>如果path不存在，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param path          {@link Path}
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @return 如果为目录true
+	 * @since 3.1.0
+	 */
+	public static boolean isExistsAndNotDirectory(final Path path, final boolean isFollowLinks) {
+		return exists(path, isFollowLinks) && false == isDirectory(path, isFollowLinks);
 	}
 
 	/**
@@ -457,6 +400,7 @@ public class PathUtil {
 	 *
 	 * <pre>
 	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
+	 * FileUtil.rename(dir, "dir2", false) xx/xx/ =》xx/dir2/
 	 * </pre>
 	 *
 	 * @param path       被修改的文件
@@ -470,74 +414,44 @@ public class PathUtil {
 	}
 
 	/**
-	 * 移动文件或目录<br>
-	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下<br>
-	 * 例如：
+	 * 移动文件或目录到目标中，例如：
 	 * <ul>
-	 *     <li>move("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>move("/usr/aaa", "/usr/bbb")结果为："/usr/bbb/aaa"</li>
+	 *     <li>如果src和target为同一文件或目录，直接返回target。</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.5.1
 	 */
-	public static Path move(final Path src, Path target, final boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		if (isDirectory(target)) {
-			target = target.resolve(src.getFileName());
-		}
-		return moveContent(src, target, isOverride);
+	public static Path move(final Path src, final Path target, final boolean isOverride) {
+		return PathMover.of(src, target, isOverride).move();
 	}
 
 	/**
-	 * 移动文件或目录内容到目标目录中，例如：
+	 * 移动文件或目录内容到目标中，例如：
 	 * <ul>
-	 *     <li>moveContent("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>moveContent("/usr/aaa", "/usr/bbb")结果为："/usr/bbb"</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.7.9
 	 */
 	public static Path moveContent(final Path src, final Path target, final boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		if(equals(src, target)){
-			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
-			return target;
-		}
-
-		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
-
-		// 自动创建目标的父目录
-		mkParentDirs(target);
-		try {
-			return Files.move(src, target, options);
-		} catch (final IOException e) {
-			if(e instanceof FileAlreadyExistsException){
-				// 目标文件已存在，直接抛出异常
-				// issue#I4QV0L@Gitee
-				throw new IORuntimeException(e);
-			}
-			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
-			try {
-				Files.walkFileTree(src, new MoveVisitor(src, target, options));
-				// 移动后空目录没有删除，
-				del(src);
-			} catch (final IOException e2) {
-				throw new IORuntimeException(e2);
-			}
-			return target;
-		}
+		return PathMover.of(src, target, isOverride).moveContent();
 	}
 
 	/**
@@ -589,12 +503,15 @@ public class PathUtil {
 	/**
 	 * 判断文件或目录是否存在
 	 *
-	 * @param path          文件
+	 * @param path          文件，{@code null}返回{@code false}
 	 * @param isFollowLinks 是否跟踪软链（快捷方式）
 	 * @return 是否存在
 	 * @since 5.5.3
 	 */
 	public static boolean exists(final Path path, final boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
 		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
 		return Files.exists(path, options);
 	}
@@ -680,23 +597,5 @@ public class PathUtil {
 			return null;
 		}
 		return path.getFileName().toString();
-	}
-
-	/**
-	 * 删除文件或空目录，不追踪软链
-	 *
-	 * @param path 文件对象
-	 * @throws IOException IO异常
-	 * @since 5.7.7
-	 */
-	protected static void delFile(final Path path) throws IOException {
-		try {
-			Files.delete(path);
-		} catch (final AccessDeniedException e) {
-			// 可能遇到只读文件，无法删除.使用 file 方法删除
-			if (false == path.toFile().delete()) {
-				throw e;
-			}
-		}
 	}
 }

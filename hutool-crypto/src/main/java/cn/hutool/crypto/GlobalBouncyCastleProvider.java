@@ -19,7 +19,7 @@ public enum GlobalBouncyCastleProvider {
 	GlobalBouncyCastleProvider() {
 		try {
 			this.provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (final NoClassDefFoundError e) {
+		} catch (final NoClassDefFoundError | NoSuchMethodError  e) {
 			// ignore
 		}
 	}

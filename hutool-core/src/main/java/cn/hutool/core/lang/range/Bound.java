@@ -41,12 +41,12 @@ public interface Bound<T extends Comparable<? super T>> extends Predicate<T>, Co
 	/**
 	 * 无穷小的描述
 	 */
-	String INFINITE_MIN = "-\u221e";
+	String INFINITE_MIN = "-∞";
 
 	/**
 	 * 无穷大的藐视
 	 */
-	String INFINITE_MAX = "+\u221e";
+	String INFINITE_MAX = "+∞";
 
 	// region --------------- static methods
 	/**

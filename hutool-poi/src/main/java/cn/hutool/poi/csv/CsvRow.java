@@ -4,12 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Assert;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * CSV中一行的表示
@@ -146,7 +141,6 @@ public final class CsvRow implements List<String> {
 
 	@Override
 	public <T> T[] toArray(final T[] a) {
-		//noinspection SuspiciousToArrayCall
 		return this.fields.toArray(a);
 	}
 
@@ -162,7 +156,7 @@ public final class CsvRow implements List<String> {
 
 	@Override
 	public boolean containsAll(final Collection<?> c) {
-		return this.fields.containsAll(c);
+		return new HashSet<>(this.fields).containsAll(c);
 	}
 
 	@Override

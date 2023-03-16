@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0.M1</version>
+		<version>6.0.0.M2</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
@@ -17,8 +17,9 @@
 	<description>Hutool POI工具类（对Office文档、OFD等操作）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.poi</Automatic-Module-Name>
 		<!-- versions -->
-		<poi.version>5.2.2</poi.version>
+		<poi.version>5.2.3</poi.version>
 	</properties>
 
 	<dependencies>
@@ -39,13 +40,19 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>${poi.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j-api</artifactId>
+					<groupId>org.apache.logging.log4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<!-- OFD -->
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.18.2</version>
+			<version>1.20.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

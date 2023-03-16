@@ -17,20 +17,20 @@ import java.util.stream.Stream;
  */
 public class GenericAnnotationMapping implements AnnotationMapping<Annotation> {
 
-	private final Annotation annotation;
-	private final boolean isRoot;
-	private final Method[] attributes;
-
 	/**
 	 * 创建一个通用注解包装类
 	 *
 	 * @param annotation 注解对象
 	 * @param isRoot     是否根注解
-	 * @return {@link GenericAnnotationMapping}实例
+	 * @return {@code GenericAnnotationMapping}实例
 	 */
 	public static GenericAnnotationMapping create(final Annotation annotation, final boolean isRoot) {
 		return new GenericAnnotationMapping(annotation, isRoot);
 	}
+
+	private final Annotation annotation;
+	private final boolean isRoot;
+	private final Method[] attributes;
 
 	/**
 	 * 创建一个通用注解包装类
@@ -133,14 +133,14 @@ public class GenericAnnotationMapping implements AnnotationMapping<Annotation> {
 	 * @return 是否
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		GenericAnnotationMapping that = (GenericAnnotationMapping)o;
+		final GenericAnnotationMapping that = (GenericAnnotationMapping)o;
 		return isRoot == that.isRoot && annotation.equals(that.annotation);
 	}
 

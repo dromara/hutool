@@ -14,6 +14,7 @@ import io.github.logtube.core.IEventLogger;
  * @since 5.6.6
  */
 public class LogTubeLog extends AbstractLog {
+	private static final long serialVersionUID = 1L;
 
 	private final IEventLogger logger;
 

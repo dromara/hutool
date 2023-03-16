@@ -1,7 +1,7 @@
 package cn.hutool.swing.img;
 
-import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileTypeUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.net.url.URLUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -95,5 +95,14 @@ public class ImgTest {
 
 		final Image img = ImgUtil.getImage(URLUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
+	}
+
+	@Test
+	@Ignore
+	public void rotateWithBackgroundTest() {
+		Img.from(FileUtil.file("d:/test/aaa.jpg"))
+				.setBackgroundColor(Color.RED)
+				.rotate(45)
+				.write(FileUtil.file("d:/test/aaa45.jpg"));
 	}
 }

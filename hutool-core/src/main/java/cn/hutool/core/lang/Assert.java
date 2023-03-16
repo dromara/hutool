@@ -144,7 +144,6 @@ public class Assert {
 
 	/**
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
-	 *
 	 * <pre class="code">
 	 * Assert.isNull(value, "The value must be null");
 	 * </pre>
@@ -160,7 +159,6 @@ public class Assert {
 
 	/**
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
-	 *
 	 * <pre class="code">
 	 * Assert.isNull(value);
 	 * </pre>
@@ -201,7 +199,6 @@ public class Assert {
 
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
-	 *
 	 * <pre class="code">
 	 * Assert.notNull(clazz, "The class must not be null");
 	 * </pre>
@@ -219,7 +216,6 @@ public class Assert {
 
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
-	 *
 	 * <pre class="code">
 	 * Assert.notNull(clazz);
 	 * </pre>
@@ -358,8 +354,8 @@ public class Assert {
 	}
 
 	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
-	 * 并使用指定的函数获取错误信息返回
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），并使用指定的函数获取错误信息返回<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
 	 * <pre class="code">
 	 * Assert.notContain(name, "rod", ()-&gt;{
 	 *      // to query relation message
@@ -385,43 +381,42 @@ public class Assert {
 	}
 
 	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
-	 *
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
 	 * <pre class="code">
 	 * Assert.notContain(name, "rod", "Name must not contain 'rod'");
 	 * </pre>
 	 *
 	 * @param textToSearch     被搜索的字符串
-	 * @param substring        被检查的子串
+	 * @param subString        被检查的子串
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params           参数列表
 	 * @return 被检查的子串
 	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
-	public static String notContain(final String textToSearch, final String substring, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
-		return notContain(textToSearch, substring, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	public static String notContain(final String textToSearch, final String subString, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
+		return notContain(textToSearch, subString, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
 	}
 
 	/**
-	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串）
-	 *
+	 * 断言给定字符串是否不被另一个字符串包含（即是否为子串），即subString是否不是textToSearch的子串。<br>
+	 * 如果非子串，返回子串，如果是子串，则抛出{@link IllegalArgumentException}异常。
 	 * <pre class="code">
 	 * Assert.notContain(name, "rod");
 	 * </pre>
 	 *
 	 * @param textToSearch 被搜索的字符串
-	 * @param substring    被检查的子串
+	 * @param subString    被检查的子串
 	 * @return 被检查的子串
 	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
-	public static String notContain(final String textToSearch, final String substring) throws IllegalArgumentException {
-		return notContain(textToSearch, substring, "[Assertion failed] - this String argument must not contain the substring [{}]", substring);
+	public static String notContain(final String textToSearch, final String subString) throws IllegalArgumentException {
+		return notContain(textToSearch, subString, "[Assertion failed] - this String argument must not contain the substring [{}]", subString);
 	}
 
 	/**
 	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
 	 * 并使用指定的函数获取错误信息返回
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(array, ()-&gt;{
 	 *      // to query relation message
@@ -447,7 +442,6 @@ public class Assert {
 
 	/**
 	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(array, "The array must have elements");
 	 * </pre>
@@ -465,7 +459,6 @@ public class Assert {
 
 	/**
 	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(array, "The array must have elements");
 	 * </pre>
@@ -507,7 +500,6 @@ public class Assert {
 
 	/**
 	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
-	 *
 	 * <pre class="code">
 	 * Assert.noNullElements(array, "The array must not have null elements");
 	 * </pre>
@@ -525,7 +517,6 @@ public class Assert {
 
 	/**
 	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
-	 *
 	 * <pre class="code">
 	 * Assert.noNullElements(array);
 	 * </pre>
@@ -568,7 +559,6 @@ public class Assert {
 
 	/**
 	 * 断言给定集合非空
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(collection, "Collection must have elements");
 	 * </pre>
@@ -587,7 +577,6 @@ public class Assert {
 
 	/**
 	 * 断言给定集合非空
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(collection);
 	 * </pre>
@@ -632,7 +621,6 @@ public class Assert {
 
 	/**
 	 * 断言给定Map非空
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(map, "Map must have entries");
 	 * </pre>
@@ -652,7 +640,6 @@ public class Assert {
 
 	/**
 	 * 断言给定Map非空
-	 *
 	 * <pre class="code">
 	 * Assert.notEmpty(map, "Map must have entries");
 	 * </pre>
@@ -670,7 +657,6 @@ public class Assert {
 
 	/**
 	 * 断言给定对象是否是给定类的实例
-	 *
 	 * <pre class="code">
 	 * Assert.instanceOf(Foo.class, foo);
 	 * </pre>
@@ -688,7 +674,6 @@ public class Assert {
 
 	/**
 	 * 断言给定对象是否是给定类的实例
-	 *
 	 * <pre class="code">
 	 * Assert.instanceOf(Foo.class, foo, "foo must be an instance of class Foo");
 	 * </pre>
@@ -712,7 +697,6 @@ public class Assert {
 
 	/**
 	 * 断言 {@code superType.isAssignableFrom(subType)} 是否为 {@code true}.
-	 *
 	 * <pre class="code">
 	 * Assert.isAssignable(Number.class, myClass);
 	 * </pre>
@@ -727,7 +711,6 @@ public class Assert {
 
 	/**
 	 * 断言 {@code superType.isAssignableFrom(subType)} 是否为 {@code true}.
-	 *
 	 * <pre class="code">
 	 * Assert.isAssignable(Number.class, myClass, "myClass must can be assignable to class Number");
 	 * </pre>
@@ -767,7 +750,6 @@ public class Assert {
 
 	/**
 	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
-	 *
 	 * <pre class="code">
 	 * Assert.state(id == null, "The id property must not already be initialized");
 	 * </pre>
@@ -785,7 +767,6 @@ public class Assert {
 
 	/**
 	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
-	 *
 	 * <pre class="code">
 	 * Assert.state(id == null);
 	 * </pre>

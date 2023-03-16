@@ -15,23 +15,37 @@ import javax.net.ssl.TrustManager;
 public class SSLUtil {
 
 	/**
-	 * 创建{@link SSLContext}，默认新人全部
+	 * 创建{@link SSLContext}，信任全部，协议为TLS
 	 *
-	 * @param protocol     SSL协议，例如TLS等
+	 * @return {@link SSLContext}
+	 * @throws IORuntimeException 包装 GeneralSecurityException异常
+	 */
+	public static SSLContext createTrustAnySSLContext() throws IORuntimeException {
+		return createTrustAnySSLContext(null);
+	}
+
+	/**
+	 * 创建{@link SSLContext}，信任全部
+	 *
+	 * @param protocol SSL协议，例如TLS等，{@code null}表示默认TLS
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 * @since 5.7.8
 	 */
-	public static SSLContext createSSLContext(final String protocol) throws IORuntimeException{
-		return SSLContextBuilder.of().setProtocol(protocol).build();
+	public static SSLContext createTrustAnySSLContext(final String protocol) throws IORuntimeException {
+		return SSLContextBuilder.of()
+				.setProtocol(protocol)
+				// 信任所有服务端
+				.setTrustManagers(new TrustManager[]{TrustAnyTrustManager.INSTANCE})
+				.build();
 	}
 
 	/**
 	 * 创建{@link SSLContext}
 	 *
 	 * @param protocol     SSL协议，例如TLS等
-	 * @param keyManager   密钥管理器,{@code null}表示无
-	 * @param trustManager 信任管理器, {@code null}表示无
+	 * @param keyManager   密钥管理器,{@code null}表示默认
+	 * @param trustManager 信任管理器, {@code null}表示默认
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 */
@@ -46,8 +60,8 @@ public class SSLUtil {
 	 * 创建和初始化{@link SSLContext}
 	 *
 	 * @param protocol      SSL协议，例如TLS等
-	 * @param keyManagers   密钥管理器,{@code null}表示无
-	 * @param trustManagers 信任管理器, {@code null}表示无
+	 * @param keyManagers   密钥管理器,{@code null}表示默认
+	 * @param trustManagers 信任管理器, {@code null}表示默认
 	 * @return {@link SSLContext}
 	 * @throws IORuntimeException 包装 GeneralSecurityException异常
 	 */

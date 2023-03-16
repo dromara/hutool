@@ -8,20 +8,11 @@ import cn.hutool.core.collection.partition.RandomAccessPartition;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.math.PageInfo;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.PageUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.RandomAccess;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -34,7 +25,7 @@ import java.util.function.Predicate;
 public class ListUtil {
 
 	/**
-	 * 新建一个List<br>
+	 * 新建一个{@link ArrayList}<br>
 	 * 如果提供的初始化数组为空，新建默认初始长度的List
 	 *
 	 * @param <T>    集合元素类型
@@ -178,7 +169,7 @@ public class ListUtil {
 	/**
 	 * 数组转为一个不可变List<br>
 	 * 类似于Java9中的List.of<br>
-	 * 不同于Arrays.asList，此方法的原数组修改时，并不会影响List。
+	 * 不同于Arrays.asList，此方法不允许修改数组
 	 *
 	 * @param ts  对象
 	 * @param <T> 对象类型
@@ -254,42 +245,53 @@ public class ListUtil {
 	 * 对指定List分页取值
 	 *
 	 * @param <T>      集合元素类型
-	 * @param pageNo   页码，第一页的页码取决于{@link PageUtil#getFirstPageNo()}，默认0
+	 * @param pageNo   页码，第一页的页码，从0开始
 	 * @param pageSize 每页的条目数
 	 * @param list     列表
 	 * @return 分页后的段落内容
 	 * @since 4.1.20
 	 */
-	public static <T> List<T> page(final int pageNo, final int pageSize, final List<T> list) {
+	public static <T> List<T> page(final List<T> list, final int pageNo, final int pageSize) {
+		if (CollUtil.isEmpty(list)) {
+			return new ArrayList<>(0);
+		}
+		return page(list, PageInfo.of(list.size(), pageSize)
+				.setFirstPageNo(0).setPageNo(pageNo));
+	}
+
+	/**
+	 * 对指定List分页取值
+	 *
+	 * @param <T>      集合元素类型
+	 * @param pageInfo 分页信息
+	 * @param list     列表
+	 * @return 分页后的段落内容
+	 * @since 4.1.20
+	 */
+	public static <T> List<T> page(final List<T> list, final PageInfo pageInfo) {
 		if (CollUtil.isEmpty(list)) {
 			return new ArrayList<>(0);
 		}
 
-		final int resultSize = list.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= pageSize) {
-			if (pageNo < (PageUtil.getFirstPageNo() + 1)) {
+		final int total = list.size();
+		final int pageSize = pageInfo.getPageSize();
+		// 不满一页
+		if (total <= pageSize) {
+			if (pageInfo.isFirstPage()) {
+				// 页码为1，返回所有
 				return view(list);
 			} else {
 				// 越界直接返回空
 				return new ArrayList<>(0);
 			}
 		}
-		// 相乘可能会导致越界 临时用long
-		if (((long) (pageNo - PageUtil.getFirstPageNo()) * pageSize) > resultSize) {
+
+		if (pageInfo.getBeginIndex() > total) {
 			// 越界直接返回空
 			return new ArrayList<>(0);
 		}
 
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
-		if (startEnd[1] > resultSize) {
-			startEnd[1] = resultSize;
-			if (startEnd[0] > startEnd[1]) {
-				return new ArrayList<>(0);
-			}
-		}
-
-		return sub(list, startEnd[0], startEnd[1]);
+		return sub(list, pageInfo.getBeginIndex(), pageInfo.getEndIndexExclude());
 	}
 
 	/**
@@ -307,16 +309,11 @@ public class ListUtil {
 		}
 
 		final int total = list.size();
-		final int totalPage = PageUtil.totalPage(total, pageSize);
-		for (int pageNo = PageUtil.getFirstPageNo(); pageNo < totalPage + PageUtil.getFirstPageNo(); pageNo++) {
-			// 获取当前页在列表中对应的起止序号
-			final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
-			if (startEnd[1] > total) {
-				startEnd[1] = total;
-			}
-
+		final PageInfo pageInfo = PageInfo.of(total, pageSize);
+		while(pageInfo.isValidPage()){
 			// 返回数据
-			pageListConsumer.accept(sub(list, startEnd[0], startEnd[1]));
+			pageListConsumer.accept(sub(list, pageInfo.getBeginIndex(), pageInfo.getEndIndexExclude()));
+			pageInfo.nextPage();
 		}
 	}
 
@@ -346,7 +343,7 @@ public class ListUtil {
 		if (CollUtil.isEmpty(list)) {
 			return list;
 		}
-		if(null == c){
+		if (null == c) {
 			c = Comparator.nullsFirst((Comparator<? super T>) Comparator.naturalOrder());
 		}
 		list.sort(c);
@@ -386,6 +383,9 @@ public class ListUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverse(final List<T> list) {
+		if (CollUtil.isEmpty(list)) {
+			return list;
+		}
 		Collections.reverse(list);
 		return list;
 	}
@@ -443,10 +443,10 @@ public class ListUtil {
 	/**
 	 * 在指定位置设置元素。当index小于List的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
 	 *
-	 * @param <T>     元素类型
-	 * @param list    List列表
-	 * @param index   位置
-	 * @param element 新元素
+	 * @param <T>            元素类型
+	 * @param list           List列表
+	 * @param index          位置
+	 * @param element        新元素
 	 * @param paddingElement 填充的值
 	 * @return 原List
 	 * @since 5.8.4
@@ -468,29 +468,29 @@ public class ListUtil {
 	/**
 	 * 截取集合的部分
 	 *
-	 * @param <T>   集合元素类型
-	 * @param list  被截取的数组
-	 * @param start 开始位置（包含）
-	 * @param end   结束位置（不包含）
+	 * @param <T>           集合元素类型
+	 * @param list          被截取的数组
+	 * @param begionInclude 开始位置（包含）
+	 * @param endExclude    结束位置（不包含）
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 */
-	public static <T> List<T> sub(final List<T> list, final int start, final int end) {
-		return sub(list, start, end, 1);
+	public static <T> List<T> sub(final List<T> list, final int begionInclude, final int endExclude) {
+		return sub(list, begionInclude, endExclude, 1);
 	}
 
 	/**
 	 * 截取集合的部分<br>
 	 * 此方法与{@link List#subList(int, int)} 不同在于子列表是新的副本，操作子列表不会影响原列表。
 	 *
-	 * @param <T>   集合元素类型
-	 * @param list  被截取的数组
-	 * @param start 开始位置（包含）
-	 * @param end   结束位置（不包含）
-	 * @param step  步进
+	 * @param <T>           集合元素类型
+	 * @param list          被截取的数组
+	 * @param begionInclude 开始位置（包含）
+	 * @param endExclude    结束位置（不包含）
+	 * @param step          步进
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sub(final List<T> list, int start, int end, int step) {
+	public static <T> List<T> sub(final List<T> list, int begionInclude, int endExclude, int step) {
 		if (list == null) {
 			return null;
 		}
@@ -500,25 +500,25 @@ public class ListUtil {
 		}
 
 		final int size = list.size();
-		if (start < 0) {
-			start += size;
+		if (begionInclude < 0) {
+			begionInclude += size;
 		}
-		if (end < 0) {
-			end += size;
+		if (endExclude < 0) {
+			endExclude += size;
 		}
-		if (start == size) {
+		if (begionInclude == size) {
 			return new ArrayList<>(0);
 		}
-		if (start > end) {
-			final int tmp = start;
-			start = end;
-			end = tmp;
+		if (begionInclude > endExclude) {
+			final int tmp = begionInclude;
+			begionInclude = endExclude;
+			endExclude = tmp;
 		}
-		if (end > size) {
-			if (start >= size) {
+		if (endExclude > size) {
+			if (begionInclude >= size) {
 				return new ArrayList<>(0);
 			}
-			end = size;
+			endExclude = size;
 		}
 
 		if (step < 1) {
@@ -526,7 +526,7 @@ public class ListUtil {
 		}
 
 		final List<T> result = new ArrayList<>();
-		for (int i = start; i < end; i += step) {
+		for (int i = begionInclude; i < endExclude; i += step) {
 			result.add(list.get(i));
 		}
 		return result;
@@ -716,8 +716,8 @@ public class ListUtil {
 	 * 通过删除或替换现有元素或者原地添加新的元素来修改列表，并以列表形式返回被修改的内容。此方法不会改变原列表。
 	 * 类似js的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice">splice</a>函数
 	 *
-	 * @param <T> 元素类型
-	 * @param list 列表
+	 * @param <T>         元素类型
+	 * @param list        列表
 	 * @param start       指定修改的开始位置（从 0 计数）, 可以为负数, -1代表最后一个元素
 	 * @param deleteCount 删除个数，必须是正整数
 	 * @param items       放入的元素

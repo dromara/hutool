@@ -5,12 +5,7 @@ import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.date.format.GlobalCustomFormat;
-import cn.hutool.core.date.format.parser.CSTDateParser;
-import cn.hutool.core.date.format.parser.NormalDateParser;
-import cn.hutool.core.date.format.parser.PositionDateParser;
-import cn.hutool.core.date.format.parser.PureDateParser;
-import cn.hutool.core.date.format.parser.TimeParser;
-import cn.hutool.core.date.format.parser.UTCDateParser;
+import cn.hutool.core.date.format.parser.*;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
@@ -26,14 +21,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -513,21 +501,7 @@ public class DateUtil extends CalendarUtil {
 		return yearAndQuarter(calendar(date));
 	}
 
-	/**
-	 * 获得指定日期区间内的年份和季节<br>
-	 *
-	 * @param startDate 起始日期（包含）
-	 * @param endDate   结束日期（包含）
-	 * @return 季度列表 ，元素类似于 20132
-	 */
-	public static LinkedHashSet<String> yearAndQuarter(final Date startDate, final Date endDate) {
-		if (startDate == null || endDate == null) {
-			return new LinkedHashSet<>(0);
-		}
-		return yearAndQuarter(startDate.getTime(), endDate.getTime());
-	}
-	// ------------------------------------ Format start ----------------------------------------------
-
+	// region ----- format
 	/**
 	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
@@ -696,10 +670,9 @@ public class DateUtil extends CalendarUtil {
 
 		return CalendarUtil.formatChineseDate(CalendarUtil.calendar(date), withTime);
 	}
-	// ------------------------------------ Format end ----------------------------------------------
+	// endregion
 
-	// ------------------------------------ Parse start ----------------------------------------------
-
+	// region ----- parse
 	/**
 	 * 构建DateTime对象
 	 *
@@ -840,8 +813,8 @@ public class DateUtil extends CalendarUtil {
 			// Wed Aug 01 00:00:00 CST 2012
 			return CSTDateParser.INSTANCE.parse(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
-			// UTC时间
-			return UTCDateParser.INSTANCE.parse(dateStr);
+			// ISO8601标准时间
+			return ISO8601DateParser.INSTANCE.parse(dateStr);
 		}
 
 		//标准日期格式（包括单个数字的日期时间）
@@ -853,10 +826,9 @@ public class DateUtil extends CalendarUtil {
 		// 没有更多匹配的时间格式
 		throw new DateException("No format fit for date String [{}] !", dateStr);
 	}
-	// ------------------------------------ Parse end ----------------------------------------------
+	// endregion
 
-	// ------------------------------------ Offset start ----------------------------------------------
-
+	// region ----- offset
 	/**
 	 * 修改日期为某个时间字段起始时间
 	 *
@@ -1096,7 +1068,6 @@ public class DateUtil extends CalendarUtil {
 	public static DateTime endOfYear(final Date date) {
 		return new DateTime(endOfYear(calendar(date)));
 	}
-	// --------------------------------------------------- Offset for now
 
 	/**
 	 * 昨天
@@ -1243,9 +1214,9 @@ public class DateUtil extends CalendarUtil {
 	public static DateTime offset(final Date date, final DateField dateField, final int offset) {
 		return dateNew(date).offset(dateField, offset);
 	}
+	// endregion
 
-	// ------------------------------------ Offset end ----------------------------------------------
-
+	// region ----- between
 	/**
 	 * 判断两个日期相差的时长，只保留绝对值
 	 *
@@ -1351,7 +1322,9 @@ public class DateUtil extends CalendarUtil {
 	public static long betweenYear(final Date beginDate, final Date endDate, final boolean isReset) {
 		return new DateBetween(beginDate, endDate).betweenYear(isReset);
 	}
+	// endregion
 
+	// region ----- formatBetween
 	/**
 	 * 格式化日期间隔输出
 	 *
@@ -1397,6 +1370,7 @@ public class DateUtil extends CalendarUtil {
 	public static String formatBetween(final long betweenMs) {
 		return new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
 	}
+	// endregion
 
 	/**
 	 * 当前日期是否在日期指定范围内<br>
@@ -1992,7 +1966,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return 单位简写名称
 	 * @since 5.7.16
 	 */
-	public static String getShotName(final TimeUnit unit) {
+	public static String getShortName(final TimeUnit unit) {
 		switch (unit) {
 			case NANOSECONDS:
 				return "ns";

@@ -31,6 +31,7 @@ public enum ScaleType {
 	 */
 	AREA_AVERAGING(Image.SCALE_AREA_AVERAGING);
 
+	private final int value;
 	/**
 	 * 构造
 	 *
@@ -44,8 +45,6 @@ public enum ScaleType {
 	ScaleType(final int value) {
 		this.value = value;
 	}
-
-	private final int value;
 
 	/**
 	 * 获取值

@@ -10,7 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TimeUtilTest {
 
@@ -24,12 +27,22 @@ public class TimeUtilTest {
 		final String dateStr = "2020-01-23T12:23:56";
 		final DateTime dt = DateUtil.parse(dateStr);
 
-		LocalDateTime of = TimeUtil.of(dt);
+		final LocalDateTime of = TimeUtil.of(dt);
 		Assert.assertNotNull(of);
 		Assert.assertEquals(dateStr, of.toString());
+	}
 
-		of = TimeUtil.ofUTC(dt.getTime());
-		Assert.assertEquals(dateStr, of.toString());
+	@SuppressWarnings("DataFlowIssue")
+	@Test
+	public void ofUTCTest() {
+		final String dateStr = "2020-01-23T12:23:56Z";
+		final DateTime dt = DateUtil.parse(dateStr);
+
+		final LocalDateTime of = TimeUtil.of(dt);
+		final LocalDateTime of2 = TimeUtil.ofUTC(dt.getTime());
+		Assert.assertNotNull(of);
+		Assert.assertNotNull(of2);
+		Assert.assertEquals(of, of2);
 	}
 
 	@Test
@@ -318,5 +331,26 @@ public class TimeUtilTest {
 		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(null, begin, end, false, false));
 		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, null, end, false, false));
 		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, begin, null, false, false));
+	}
+
+
+	@Test
+	public void formatDateFunctionTest() {
+		final List<String> dateStrList = Stream.of("2023-03-01", "2023-03-02")
+				.map(LocalDate::parse)
+				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
+				.collect(Collectors.toList());
+		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
+		Assert.assertEquals("2023年03月02日", dateStrList.get(1));
+	}
+
+	@Test
+	public void formatTimeFunctionTest() {
+		final List<String> dateStrList = Stream.of("2023-03-01T12:23:56", "2023-03-02T12:23:56")
+				.map(LocalDateTime::parse)
+				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
+				.collect(Collectors.toList());
+		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
+		Assert.assertEquals("2023年03月02日", dateStrList.get(1));
 	}
 }

@@ -34,15 +34,6 @@ import java.util.regex.Pattern;
 public class ReUtil {
 
 	/**
-	 * 正则表达式匹配中文汉字
-	 */
-	public final static String RE_CHINESE = RegexPool.CHINESE;
-	/**
-	 * 正则表达式匹配中文字符串
-	 */
-	public final static String RE_CHINESES = RegexPool.CHINESES;
-
-	/**
 	 * 正则中需要被转义的关键字
 	 */
 	public final static Set<Character> RE_KEYS = SetUtil.of('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
@@ -206,7 +197,7 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
-	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0) {
+	public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0) {
 		return getAllGroups(pattern, content, withGroup0, false);
 	}
 
@@ -220,12 +211,12 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
 	 * @since 4.0.13
 	 */
-	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0, boolean findAll) {
+	public static List<String> getAllGroups(final Pattern pattern, final CharSequence content, final boolean withGroup0, final boolean findAll) {
 		if (null == content || null == pattern) {
 			return null;
 		}
 
-		ArrayList<String> result = new ArrayList<>();
+		final ArrayList<String> result = new ArrayList<>();
 		final Matcher matcher = pattern.matcher(content);
 		while (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
@@ -459,7 +450,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(final String regex, final CharSequence content) {
-		if (StrUtil.hasBlank(regex, content)) {
+		if (StrUtil.hasEmpty(regex, content)) {
 			return StrUtil.str(content);
 		}
 
@@ -475,7 +466,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(final Pattern pattern, final CharSequence content) {
-		if (null == pattern || StrUtil.isBlank(content)) {
+		if (null == pattern || StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
 
@@ -902,7 +893,6 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 *
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"
@@ -921,7 +911,6 @@ public class ReUtil {
 	/**
 	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换<br>
 	 * replaceFun可以通过{@link Matcher}提取出匹配到的内容的不同部分，然后经过重新处理、组装变成新的内容放回原位。
-	 *
 	 * <pre class="code">
 	 *     replaceAll(this.content, "(\\d+)", parameters -&gt; "-" + parameters.group(1) + "-")
 	 *     // 结果为："ZZZaaabbbccc中文-1234-"

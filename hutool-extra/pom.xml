@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0.M1</version>
+		<version>6.0.0.M2</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -17,16 +17,17 @@
 	<description>Hutool 扩展工具类（提供其它类库的封装）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.13.0.RELEASE</beetl.version>
+		<beetl.version>3.14.1.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
-		<freemarker.version>2.3.31</freemarker.version>
+		<freemarker.version>2.3.32</freemarker.version>
 		<enjoy.version>4.9.21</enjoy.version>
 		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.34.0</sshj.version>
+		<sshj.version>0.35.0</sshj.version>
 		<zxing.version>3.5.1</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
@@ -143,7 +144,7 @@
 		<dependency>
 			<groupId>jakarta.mail</groupId>
 			<artifactId>jakarta.mail-api</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -236,7 +237,7 @@
 		<dependency>
 			<groupId>org.lionsoul</groupId>
 			<artifactId>jcseg-core</artifactId>
-			<version>2.6.2</version>
+			<version>2.6.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -479,7 +480,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>QLExpress</artifactId>
-			<version>3.3.0</version>
+			<version>3.3.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -487,7 +488,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.21</version>
+			<version>1.22</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

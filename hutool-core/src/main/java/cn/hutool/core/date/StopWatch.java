@@ -1,6 +1,6 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.text.NumberFormat;
@@ -352,7 +352,7 @@ public class StopWatch {
 			unit = TimeUnit.NANOSECONDS;
 		}
 		return StrUtil.format("StopWatch '{}': running time = {} {}",
-				this.id, getTotal(unit), DateUtil.getShotName(unit));
+				this.id, getTotal(unit), DateUtil.getShortName(unit));
 	}
 
 	/**
@@ -382,20 +382,27 @@ public class StopWatch {
 			sb.append("No task info kept");
 		} else {
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
-			sb.append(DateUtil.getShotName(unit)).append("         %     Task name").append(FileUtil.getLineSeparator());
+			sb.append(DateUtil.getShortName(unit)).append("          %     Task name").append(FileUtil.getLineSeparator());
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
 
 			final NumberFormat nf = NumberFormat.getNumberInstance();
-			nf.setMinimumIntegerDigits(9);
 			nf.setGroupingUsed(false);
 
 			final NumberFormat pf = NumberFormat.getPercentInstance();
-			pf.setMinimumIntegerDigits(2);
 			pf.setGroupingUsed(false);
 
 			for (final TaskInfo task : getTaskInfo()) {
-				sb.append(nf.format(task.getTime(unit))).append("  ");
-				sb.append(pf.format((double) task.getTimeNanos() / getTotalTimeNanos())).append("   ");
+				final String taskTimeStr = nf.format(task.getTime(unit));
+				sb.append(taskTimeStr);
+				if(taskTimeStr.length() < 11){
+					sb.append(StrUtil.repeat(' ', 11 - taskTimeStr.length()));
+				}
+
+				final String percentStr = pf.format((double) task.getTimeNanos() / getTotalTimeNanos());
+				if(percentStr.length() < 4){
+					sb.append(StrUtil.repeat(' ', 4 - percentStr.length()));
+				}
+				sb.append(percentStr).append("   ");
 				sb.append(task.getTaskName()).append(FileUtil.getLineSeparator());
 			}
 		}

@@ -93,7 +93,7 @@ public class DesktopUtil {
 	}
 
 	/**
-	 * 使用平台默认浏览器打开指定URL地址
+	 * 使用平台默认邮件客户端打开邮件程序
 	 *
 	 * @param mailAddress 邮件地址
 	 */

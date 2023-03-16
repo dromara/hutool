@@ -14,6 +14,7 @@ import java.util.function.Predicate;
  * @since 6.0.0
  */
 public class Graph<T> extends SetValueMap<T, T> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 添加边

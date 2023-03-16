@@ -19,8 +19,8 @@ public class GenericAnnotationMappingTest {
 
 	@Test
 	public void testEquals() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertEquals(mapping, mapping);
 		Assert.assertNotEquals(mapping, null);
 		Assert.assertEquals(mapping, GenericAnnotationMapping.create(annotation, false));
@@ -29,8 +29,8 @@ public class GenericAnnotationMappingTest {
 
 	@Test
 	public void testHashCode() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		int hashCode = GenericAnnotationMapping.create(annotation, false).hashCode();
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final int hashCode = GenericAnnotationMapping.create(annotation, false).hashCode();
 		Assert.assertEquals(hashCode, GenericAnnotationMapping.create(annotation, false).hashCode());
 		Assert.assertNotEquals(hashCode, GenericAnnotationMapping.create(annotation, true).hashCode());
 	}
@@ -38,14 +38,14 @@ public class GenericAnnotationMappingTest {
 
 	@Test
 	public void testCreate() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertNotNull(mapping);
 	}
 
 	@Test
 	public void testIsRoot() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
 		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, true);
 		Assert.assertTrue(mapping.isRoot());
 
@@ -55,55 +55,55 @@ public class GenericAnnotationMappingTest {
 
 	@Test
 	public void testGetAnnotation() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertSame(annotation, mapping.getAnnotation());
 	}
 
 	@SneakyThrows
 	@Test
 	public void testGetAttributes() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		for (int i = 0; i < mapping.getAttributes().length; i++) {
-			Method method = mapping.getAttributes()[i];
+			final Method method = mapping.getAttributes()[i];
 			Assert.assertEquals(Annotation1.class.getDeclaredMethod(method.getName()), method);
 		}
 	}
 
 	@Test
 	public void testAnnotationType() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertEquals(annotation.annotationType(), mapping.annotationType());
 	}
 
 	@Test
 	public void testIsResolved() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertFalse(mapping.isResolved());
 	}
 
 	@Test
 	public void testGetAttributeValue() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertEquals(annotation.value(), mapping.getAttributeValue("value", String.class));
 		Assert.assertNull(mapping.getAttributeValue("value", Integer.class));
 	}
 
 	@Test
 	public void testGetResolvedAnnotation() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertSame(annotation, mapping.getResolvedAnnotation());
 	}
 
 	@Test
 	public void testGetResolvedAttributeValue() {
-		Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
-		GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
+		final Annotation1 annotation = Foo.class.getAnnotation(Annotation1.class);
+		final GenericAnnotationMapping mapping = GenericAnnotationMapping.create(annotation, false);
 		Assert.assertEquals(annotation.value(), mapping.getResolvedAttributeValue("value", String.class));
 		Assert.assertNull(mapping.getResolvedAttributeValue("value", Integer.class));
 	}
@@ -115,6 +115,6 @@ public class GenericAnnotationMappingTest {
 	}
 
 	@Annotation1("foo")
-	private static class Foo {};
+	private static class Foo {}
 
 }

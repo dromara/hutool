@@ -305,7 +305,7 @@ public class JavaInfo implements Serializable {
 	 *
 	 * <p>
 	 * 例如：
-	 *
+	 * <p>
 	 *
 	 * <ul>
 	 * <li>测试JDK 1.2：{@code isJavaVersionAtLeast(1.2f)}</li>
@@ -324,7 +324,7 @@ public class JavaInfo implements Serializable {
 	 *
 	 * <p>
 	 * 例如：
-	 *
+	 * <p>
 	 *
 	 * <ul>
 	 * <li>测试JDK 1.2：{@code isJavaVersionAtLeast(120)}</li>

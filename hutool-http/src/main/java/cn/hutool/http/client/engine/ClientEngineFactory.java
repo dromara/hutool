@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.http.HttpException;
+import cn.hutool.http.client.ClientConfig;
 import cn.hutool.http.client.ClientEngine;
 import cn.hutool.log.StaticLog;
 
@@ -22,6 +23,18 @@ public class ClientEngineFactory {
 	 */
 	public static ClientEngine get() {
 		return Singleton.get(ClientEngine.class.getName(), ClientEngineFactory::of);
+	}
+
+	/**
+	 * 根据用户引入的HTTP客户端引擎jar，自动创建对应的拼音引擎对象<br>
+	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
+	 *
+	 * @param config Http客户端配置
+	 * @return {@code ClientEngine}
+	 */
+	@SuppressWarnings("resource")
+	public static ClientEngine of(final ClientConfig config) {
+		return of().setConfig(config);
 	}
 
 	/**

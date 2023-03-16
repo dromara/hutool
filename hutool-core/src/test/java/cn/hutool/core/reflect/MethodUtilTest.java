@@ -6,6 +6,7 @@ import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.SystemUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -215,5 +216,34 @@ public class MethodUtilTest {
 				return this;
 			}
 		}
+	}
+
+	@Data
+	static class TestClass {
+		private int a;
+	}
+
+	@Test
+	public void invokeMethodTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = MethodUtil.getMethod(TestClass.class, "setA", int.class);
+		MethodUtil.invoke(testClass, method, 10);
+		Assert.assertEquals(10, testClass.getA());
+	}
+
+	@Test
+	public void invokeMethodWithParamConvertTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = MethodUtil.getMethod(TestClass.class, "setA", int.class);
+		MethodUtil.invoke(testClass, method, "10");
+		Assert.assertEquals(10, testClass.getA());
+	}
+
+	@Test
+	public void invokeMethodWithParamConvertFailedTest() {
+		final TestClass testClass = new TestClass();
+		final Method method = MethodUtil.getMethod(TestClass.class, "setA", int.class);
+		Assert.assertThrows(IllegalArgumentException.class,
+				() -> MethodUtil.invoke(testClass, method, "NaN"));
 	}
 }

@@ -201,12 +201,16 @@ public final class HTMLFilter {
 		}
 	}
 
+
 	// ---------------------------------------------------------------
 	// my versions of some PHP library functions
-	public static String chr(final int decimal) {
-		return String.valueOf((char) decimal);
-	}
 
+	/**
+	 * HTML特殊字符替换
+	 *
+	 * @param s HTML
+	 * @return 替换后的HTML
+	 */
 	public static String htmlSpecialChars(final String s) {
 		String result = s;
 		result = regexReplace(P_AMP, "&amp;", result);
@@ -250,10 +254,22 @@ public final class HTMLFilter {
 		return s;
 	}
 
+	/**
+	 * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "&lt;b text &lt;/b&gt;" becomes "&lt;b&gt; text &lt;/g&gt;").
+	 * If set to false, unbalanced angle brackets will be
+	 * html escaped.
+	 *
+	 * @return alwaysMakeTags
+	 */
 	public boolean isAlwaysMakeTags() {
 		return alwaysMakeTags;
 	}
 
+	/**
+	 * flag determining whether comments are allowed in input String.
+	 *
+	 * @return stripComment
+	 */
 	public boolean isStripComments() {
 		return stripComment;
 	}
@@ -364,7 +380,6 @@ public final class HTMLFilter {
 			final String body = m.group(2);
 			String ending = m.group(3);
 
-			// debug( "in a starting tag, name='" + name + "'; body='" + body + "'; ending='" + ending + "'" );
 			if (allowed(name)) {
 				final StringBuilder params = new StringBuilder();
 
@@ -385,10 +400,6 @@ public final class HTMLFilter {
 				for (int ii = 0; ii < paramNames.size(); ii++) {
 					paramName = paramNames.get(ii).toLowerCase();
 					paramValue = paramValues.get(ii);
-
-					// debug( "paramName='" + paramName + "'" );
-					// debug( "paramValue='" + paramValue + "'" );
-					// debug( "allowed? " + vAllowed.get( name ).contains( paramName ) );
 
 					if (allowedAttribute(name, paramName)) {
 						if (inArray(paramName, vProtocolAtts)) {
@@ -454,7 +465,7 @@ public final class HTMLFilter {
 		while (m.find()) {
 			final String match = m.group(1);
 			final int decimal = Integer.decode(match);
-			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
+			m.appendReplacement(buf, Matcher.quoteReplacement(CharUtil.toString((char) decimal)));
 		}
 		m.appendTail(buf);
 		s = buf.toString();
@@ -464,7 +475,7 @@ public final class HTMLFilter {
 		while (m.find()) {
 			final String match = m.group(1);
 			final int decimal = Integer.parseInt(match, 16);
-			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
+			m.appendReplacement(buf, Matcher.quoteReplacement(CharUtil.toString((char) decimal)));
 		}
 		m.appendTail(buf);
 		s = buf.toString();
@@ -474,7 +485,7 @@ public final class HTMLFilter {
 		while (m.find()) {
 			final String match = m.group(1);
 			final int decimal = Integer.parseInt(match, 16);
-			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
+			m.appendReplacement(buf, Matcher.quoteReplacement(CharUtil.toString((char) decimal)));
 		}
 		m.appendTail(buf);
 		s = buf.toString();

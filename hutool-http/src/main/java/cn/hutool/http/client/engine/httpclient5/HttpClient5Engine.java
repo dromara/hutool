@@ -10,13 +10,18 @@ import cn.hutool.http.client.ClientEngine;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.HttpBody;
+import cn.hutool.http.ssl.SSLInfo;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicHeader;
 
@@ -41,7 +46,8 @@ public class HttpClient5Engine implements ClientEngine {
 	/**
 	 * 构造
 	 */
-	public HttpClient5Engine() {}
+	public HttpClient5Engine() {
+	}
 
 	@Override
 	public HttpClient5Engine setConfig(final ClientConfig config) {
@@ -57,9 +63,9 @@ public class HttpClient5Engine implements ClientEngine {
 		initEngine();
 
 		final ClassicHttpRequest request = buildRequest(message);
-		final CloseableHttpResponse response;
+		final ClassicHttpResponse response;
 		try {
-			response = this.engine.execute(request);
+			response = this.engine.executeOpen(null, request, null);
 		} catch (final IOException e) {
 			throw new HttpException(e);
 		}
@@ -80,36 +86,25 @@ public class HttpClient5Engine implements ClientEngine {
 	/**
 	 * 初始化引擎
 	 */
-	private void initEngine(){
-		if(null != this.engine){
+	private void initEngine() {
+		if (null != this.engine) {
 			return;
 		}
 
-		RequestConfig requestConfig = null;
-		if(null != this.config){
-			final RequestConfig.Builder builder = RequestConfig.custom();
+		final HttpClientBuilder clientBuilder = HttpClients.custom();
 
-			final int connectionTimeout = this.config.getConnectionTimeout();
-			if(connectionTimeout > 0){
-				builder.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
-				builder.setConnectionRequestTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
-			}
-			final int readTimeout = this.config.getReadTimeout();
-			if(readTimeout > 0){
-				builder.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
-			}
-
-			requestConfig = builder.build();
+		final ClientConfig config = this.config;
+		if (null != config) {
+			clientBuilder.setConnectionManager(buildConnectionManager(config));
+			clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 		}
 
-		final HttpClientBuilder builder = HttpClients.custom()
-				// 设置默认头信息
-				.setDefaultRequestConfig(requestConfig)
-				.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
+		// 设置默认头信息
+		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
 		// TODO 设置代理
 
-		this.engine = builder.build();
+		this.engine = clientBuilder.build();
 	}
 
 	/**
@@ -151,5 +146,55 @@ public class HttpClient5Engine implements ClientEngine {
 		final List<Header> result = new ArrayList<>();
 		headersMap.forEach((k, v1) -> v1.forEach((v2) -> result.add(new BasicHeader(k, v2))));
 		return result;
+	}
+
+	/**
+	 * 构建连接管理器，包括SSL配置和连接超时配置
+	 *
+	 * @param config {@link ClientConfig}
+	 * @return {@link PoolingHttpClientConnectionManager}
+	 */
+	private static PoolingHttpClientConnectionManager buildConnectionManager(final ClientConfig config) {
+		final PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
+		// SSL配置
+		final SSLInfo sslInfo = config.getSslInfo();
+		if (null != sslInfo) {
+			connectionManagerBuilder.setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
+					.setTlsVersions(sslInfo.getProtocols())
+					.setSslContext(sslInfo.getSslContext())
+					.setHostnameVerifier(sslInfo.getHostnameVerifier())
+					.build());
+		}
+		// 连接超时配置
+		final int connectionTimeout = config.getConnectionTimeout();
+		if (connectionTimeout > 0) {
+			connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
+					.setSocketTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
+					.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
+		}
+
+		return connectionManagerBuilder.build();
+	}
+
+	/**
+	 * 构建请求配置，包括连接请求超时和响应（读取）超时
+	 *
+	 * @param config {@link ClientConfig}
+	 * @return {@link RequestConfig}
+	 */
+	private static RequestConfig buildRequestConfig(final ClientConfig config) {
+		final int connectionTimeout = config.getConnectionTimeout();
+
+		// 请求配置
+		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+		if (connectionTimeout > 0) {
+			requestConfigBuilder.setConnectionRequestTimeout(connectionTimeout, TimeUnit.MILLISECONDS);
+		}
+		final int readTimeout = config.getReadTimeout();
+		if (readTimeout > 0) {
+			requestConfigBuilder.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		return requestConfigBuilder.build();
 	}
 }

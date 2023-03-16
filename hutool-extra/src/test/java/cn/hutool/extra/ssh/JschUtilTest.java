@@ -27,18 +27,16 @@ public class JschUtilTest {
 
 	@Test
 	@Ignore
-	public void bindRemotePort() throws InterruptedException {
+	public void bindRemotePort() {
 		// 建立会话
 		final Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
 		// 绑定ssh服务端8089端口到本机的8000端口上
 		final boolean b = JschUtil.bindRemotePort(session, 8089, "localhost", 8000);
 		Assert.assertTrue(b);
 		// 保证一直运行
-//		while (true){
-//			Thread.sleep(3000);
-//		}
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	@Ignore
 	public void sftpTest() {

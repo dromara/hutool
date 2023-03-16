@@ -95,6 +95,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	 * @param line 需要验证的行
 	 * @return 是否通过验证
 	 */
+	@SuppressWarnings("unused")
 	protected boolean isValidLine(final String line) {
 		return true;
 	}

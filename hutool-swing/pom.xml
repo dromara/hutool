@@ -9,18 +9,35 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0.M1</version>
+		<version>6.0.0.M2</version>
 	</parent>
 
 	<artifactId>hutool-swing</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool swing桌面相关封装</description>
+	<description>Hutool swing桌面和图片多媒体相关封装</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.swing</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- 图片 -->
+		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>animated-gif-lib</artifactId>
+			<version>1.4</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.drewnoakes</groupId>
+			<artifactId>metadata-extractor</artifactId>
+			<version>2.18.0</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

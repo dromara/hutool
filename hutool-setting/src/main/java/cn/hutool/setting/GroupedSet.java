@@ -1,7 +1,6 @@
 package cn.hutool.setting;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
@@ -14,11 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 分组化的Set集合类<br>
@@ -187,10 +182,9 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * 加载设置文件。 此方法不会关闭流对象
 	 *
 	 * @param settingStream 文件流
-	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	public boolean load(final InputStream settingStream) throws IOException {
+	public void load(final InputStream settingStream) throws IOException {
 		super.clear();
 		BufferedReader reader = null;
 		try {
@@ -237,7 +231,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		} finally {
 			IoUtil.close(reader);
 		}
-		return true;
 	}
 
 	/**
@@ -279,7 +272,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	public boolean contains(final String group, final String value, final String... otherValues) {
 		if (ArrayUtil.isNotEmpty(otherValues)) {
 			// 需要测试多个值的情况
-			final List<String> valueList = ListUtil.of(otherValues);
+			final List<String> valueList = Arrays.asList(otherValues);
 			valueList.add(value);
 			return contains(group, valueList);
 		} else {

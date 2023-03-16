@@ -55,7 +55,9 @@ public enum GlobalHeaders {
 			this.headers.clear();
 		}
 
-		header(Header.ACCEPT, "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
+		//header(Header.ACCEPT, "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
+		// 某些请求中这个自定义头会导致请求失败，此处采用与PostMan一致的默认头
+		header(Header.ACCEPT, "*/*", true);
 		header(Header.ACCEPT_ENCODING, "gzip, deflate", true);
 		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
 		// 此Header只有在post请求中有用，因此在HttpRequest的method方法中设置此头信息，此处去掉

@@ -1,14 +1,15 @@
 package cn.hutool.http.client;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.body.ResponseBody;
-import cn.hutool.http.html.HtmlUtil;
 import cn.hutool.http.meta.ContentTypeUtil;
 import cn.hutool.http.meta.Header;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -79,17 +80,25 @@ public interface Response extends Closeable {
 	 * @throws HttpException 包装IO异常
 	 */
 	default String bodyStr() throws HttpException {
-		return HtmlUtil.getString(bodyBytes(), charset(), true);
+		try(final ResponseBody body = body()){
+			return body.getString();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
 	 * 获取响应流字节码<br>
-	 * 此方法会转为同步模式
+	 * 此方法会转为同步模式，读取响应流并关闭之
 	 *
 	 * @return byte[]
 	 */
 	default byte[] bodyBytes() {
-		return body().getBytes();
+		try(final ResponseBody body = body()){
+			return body.getBytes();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**

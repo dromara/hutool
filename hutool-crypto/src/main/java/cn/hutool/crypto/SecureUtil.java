@@ -1,6 +1,6 @@
 package cn.hutool.crypto;
 
-import cn.hutool.core.codec.BaseN.Base64;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.StrUtil;
@@ -18,7 +18,7 @@ import cn.hutool.crypto.symmetric.PBKDF2;
 import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import cn.hutool.crypto.symmetric.ZUC;
-import cn.hutool.crypto.symmetric.fpe.FPE;
+import cn.hutool.crypto.symmetric.FPE;
 import org.bouncycastle.crypto.AlphabetMapper;
 
 import javax.crypto.Cipher;

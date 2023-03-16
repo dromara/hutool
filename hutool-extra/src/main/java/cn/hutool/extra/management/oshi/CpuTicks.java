@@ -29,7 +29,7 @@ public class CpuTicks {
 	public CpuTicks(final CentralProcessor processor, final long waitingTime) {
 		// CPU信息
 		final long[] prevTicks = processor.getSystemCpuLoadTicks();
-		// 这里必须要设置延迟
+		// 这里必须设置延迟
 		Util.sleep(waitingTime);
 		final long[] ticks = processor.getSystemCpuLoadTicks();
 

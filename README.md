@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="45%"></a>
+	<a href="https://hutool.cn/"><img src="https://plus.hutool.cn/images/hutool.svg" width="45%"></a>
 </p>
 <p align="center">
 	<strong>🍬A set of tools that keep Java sweet.</strong>
@@ -141,21 +141,21 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 <dependency>
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-all</artifactId>
-	<version>6.0.0.M1</version>
+	<version>6.0.0.M2</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 
 ```
-implementation 'cn.hutool:hutool-all:6.0.0.M1'
+implementation 'cn.hutool:hutool-all:6.0.0.M2'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0.M1/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0.M2/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
@@ -180,10 +180,10 @@ implementation 'cn.hutool:hutool-all:6.0.0.M1'
 
 Hutool的源码分为两个分支，功能如下：
 
-| 分支       | 作用                                                          |
-|-----------|---------------------------------------------------------------|
+| 分支        | 作用                                         |
+|-----------|--------------------------------------------|
 | v6-master | 主分支，release版本使用的分支，与中央库提交的jar一致，不接收任何pr或修改 |
-| v6-dev    | 开发分支，默认为下个版本的SNAPSHOT版本，接受修改或pr                 |
+| v6-dev    | 开发分支，默认为下个版本的SNAPSHOT版本，接受修改或pr            |
 
 ### 🐞提供bug反馈或建议
 

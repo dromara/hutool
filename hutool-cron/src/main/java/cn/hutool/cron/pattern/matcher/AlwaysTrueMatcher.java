@@ -9,6 +9,9 @@ import cn.hutool.core.text.StrUtil;
  */
 public class AlwaysTrueMatcher implements PartMatcher {
 
+	/**
+	 * 单例
+	 */
 	public static AlwaysTrueMatcher INSTANCE = new AlwaysTrueMatcher();
 
 	@Override

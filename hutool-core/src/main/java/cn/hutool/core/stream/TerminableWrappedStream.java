@@ -254,6 +254,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 * @param predicate 断言
 	 * @return 与给定断言匹配的第一个元素的下标，如果不存在则返回-1
 	 */
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	default int findFirstIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
 		if (isParallel()) {
@@ -263,7 +264,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 			unwrap().filter(e -> {
 				index.increment();
 				return predicate.test(e);
-			}).findFirst();
+			}).findFirst();// 此处只做计数，不需要值
 			return index.get();
 		}
 	}

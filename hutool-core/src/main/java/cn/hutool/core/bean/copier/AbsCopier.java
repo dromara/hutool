@@ -20,6 +20,13 @@ public abstract class AbsCopier<S, T> implements Copier<T> {
 	 */
 	protected final CopyOptions copyOptions;
 
+	/**
+	 * 构造
+	 *
+	 * @param source 源对象
+	 * @param target 目标对象
+	 * @param copyOptions 拷贝选项
+	 */
 	public AbsCopier(final S source, final T target, final CopyOptions copyOptions) {
 		this.source = source;
 		this.target = target;

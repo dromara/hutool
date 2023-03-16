@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * 结果集处理接口<br>
  * 此接口用于实现{@link ResultSet} 转换或映射为用户指定的pojo对象
- * 
+ * <p>
  * 默认实现有：
  * @see EntityHandler
  * @see EntityListHandler
@@ -15,13 +15,13 @@ import java.sql.SQLException;
  * @see EntitySetHandler
  * @see NumberHandler
  * @see PageResultHandler
- * 
+ *
  * @author Luxiaolei
  *
  */
 @FunctionalInterface
 public interface RsHandler<T> extends Serializable{
-	
+
 	/**
 	 * 处理结果集<br>
 	 * 结果集处理后不需要关闭

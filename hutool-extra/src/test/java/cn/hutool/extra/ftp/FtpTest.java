@@ -1,6 +1,6 @@
 package cn.hutool.extra.ftp;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.extra.ssh.Sftp;
@@ -105,7 +105,7 @@ public class FtpTest {
 
 	@Test
 	@Ignore
-	public void existSftpTest() throws Exception {
+	public void existSftpTest() {
 		try (final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
 			Console.log(ftp.pwd());
 			Console.log(ftp.exist(null));

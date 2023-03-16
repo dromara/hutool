@@ -1,6 +1,6 @@
 package cn.hutool.http.client.body;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.io.file.FileNameUtil;
@@ -11,6 +11,7 @@ import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;
+import cn.hutool.http.html.HtmlUtil;
 import cn.hutool.http.meta.Header;
 
 import java.io.Closeable;
@@ -77,6 +78,15 @@ public class ResponseBody implements HttpBody, Closeable {
 	 */
 	public byte[] getBytes() {
 		return this.bodyStream.readBytes();
+	}
+
+	/**
+	 * 获取响应字符串，自动识别判断编码
+	 *
+	 * @return 响应字符串
+	 */
+	public String getString() {
+		return HtmlUtil.getString(getBytes(), response.charset(), true);
 	}
 
 	/**
@@ -187,6 +197,11 @@ public class ResponseBody implements HttpBody, Closeable {
 	@Override
 	public void close() throws IOException {
 		this.bodyStream.close();
+	}
+
+	@Override
+	public String toString() {
+		return getString();
 	}
 
 	// region ---------------------------------------------------------------------------- Private Methods

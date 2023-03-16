@@ -171,7 +171,7 @@ public final class SensitiveUtil {
 		} : sensitiveProcessor;
 
 		final Map<Integer, FoundWord> foundWordMap = new HashMap<>(foundWordList.size(), 1);
-		foundWordList.forEach(foundWord -> foundWordMap.put(foundWord.getStartIndex(), foundWord));
+		foundWordList.forEach(foundWord -> foundWordMap.put(foundWord.getBeginIndex(), foundWord));
 		final int length = text.length();
 		final StringBuilder textStringBuilder = new StringBuilder();
 		for (int i = 0; i < length; i++) {

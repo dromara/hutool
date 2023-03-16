@@ -1,11 +1,11 @@
 package cn.hutool.core.reflect;
 
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ArrayUtil;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.text.StrUtil;
 
 /**
  * {@link ParameterizedType} 接口实现，用于重新定义泛型类型
@@ -70,13 +70,14 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 	}
 
 	/**
-	 * 追加 {@code types} 到 @{code buf}，使用 {@code sep} 分隔
+	 * 追加 {@code types} 到 {@code buf}，使用 {@code sep} 分隔
 	 *
 	 * @param buf 目标
 	 * @param sep 分隔符
 	 * @param types 加入的类型
 	 * @return {@code buf}
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static StringBuilder appendAllTo(final StringBuilder buf, final String sep, final Type... types) {
 		if (ArrayUtil.isNotEmpty(types)) {
 			boolean isFirst = true;

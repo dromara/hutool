@@ -16,9 +16,10 @@ public class LengthFinder extends TextFinder {
 
 	/**
 	 * 构造
-	 * @param length 长度
+	 * @param length 长度，必须大于0
 	 */
 	public LengthFinder(final int length) {
+		Assert.isTrue(length > 0, "Length must be great than 0");
 		this.length = length;
 	}
 

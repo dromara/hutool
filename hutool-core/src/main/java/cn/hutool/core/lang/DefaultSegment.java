@@ -1,5 +1,7 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.text.StrUtil;
+
 /**
  * 片段默认实现
  *
@@ -9,26 +11,32 @@ package cn.hutool.core.lang;
  */
 public class DefaultSegment<T extends Number> implements Segment<T> {
 
-	protected T startIndex;
+	protected T beginIndex;
 	protected T endIndex;
 
 	/**
 	 * 构造
-	 * @param startIndex 起始位置
-	 * @param endIndex 结束位置
+	 *
+	 * @param beginIndex 起始位置
+	 * @param endIndex   结束位置
 	 */
-	public DefaultSegment(final T startIndex, final T endIndex) {
-		this.startIndex = startIndex;
+	public DefaultSegment(final T beginIndex, final T endIndex) {
+		this.beginIndex = beginIndex;
 		this.endIndex = endIndex;
 	}
 
 	@Override
-	public T getStartIndex() {
-		return this.startIndex;
+	public T getBeginIndex() {
+		return this.beginIndex;
 	}
 
 	@Override
 	public T getEndIndex() {
 		return this.endIndex;
+	}
+
+	@Override
+	public String toString() {
+		return StrUtil.format("[{}, {}]", beginIndex, endIndex);
 	}
 }

@@ -16,21 +16,16 @@ import java.util.Set;
  * @author looly
  * @since 4.5.6
  */
-public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
-	/**
-	 * 监听器单例
-	 */
-	INSTANCE;
-
+public class ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	/** 默认重试此时：10 */
 	public static final int DEFAULT_TRY_COUNT = 10;
 	/** 默认重试等待：100 */
 	public static final long DEFAULT_DELAY = 100;
 
 	/** 重试次数 */
-	private int tryCount;
+	private final int tryCount;
 	/** 重试等待 */
-	private long delay;
+	private final long delay;
 	/** 系统剪贴板对象 */
 	private final Clipboard clipboard;
 	/** 监听事件处理 */
@@ -42,7 +37,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	/**
 	 * 构造，尝试获取剪贴板内容的次数为10，第二次之后延迟100毫秒
 	 */
-	ClipboardMonitor() {
+	public ClipboardMonitor() {
 		this(DEFAULT_TRY_COUNT, DEFAULT_DELAY);
 	}
 
@@ -52,7 +47,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param tryCount 尝试获取剪贴板内容的次数
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 */
-	ClipboardMonitor(final int tryCount, final long delay) {
+	public ClipboardMonitor(final int tryCount, final long delay) {
 		this(tryCount, delay, ClipboardUtil.getClipboard());
 	}
 
@@ -69,29 +64,6 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 		this.clipboard = clipboard;
 	}
 	// ---------------------------------------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 设置重试次数
-	 *
-	 * @param tryCount 重试次数
-	 * @return this
-	 */
-	public ClipboardMonitor setTryCount(final int tryCount) {
-		this.tryCount = tryCount;
-		return this;
-	}
-
-	/**
-	 * 设置重试等待
-	 *
-	 * @param delay 重试等待
-	 * @return this
-	 */
-	public ClipboardMonitor setDelay(final long delay) {
-		this.delay = delay;
-		return this;
-	}
-
 	/**
 	 * 设置 监听事件处理
 	 *
@@ -192,7 +164,6 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 		for (int i = 0; i < this.tryCount; i++) {
 			if (this.delay > 0 && i > 0) {
 				// 第一次获取不等待，只有从第二次获取时才开始等待
-				//noinspection BusyWait
 				Thread.sleep(this.delay);
 			}
 

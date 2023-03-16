@@ -1,6 +1,5 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.Console;
@@ -14,15 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * 时间工具单元测试<br>
@@ -794,23 +785,6 @@ public class DateUtilTest {
 		final Date date11 = DateUtil.parse("2021-04-13 23:59:59.999");
 		final Date date22 = DateUtil.parse("2021-04-11 23:10:10");
 		Assert.assertEquals(0, DateUtil.compare(date11, date22, DatePattern.NORM_MONTH_PATTERN));
-	}
-
-	@Test
-	public void yearAndQTest() {
-		final String yearAndQuarter = DateUtil.yearAndQuarter(DateUtil.parse("2018-12-01"));
-		Assert.assertEquals("20184", yearAndQuarter);
-
-		final LinkedHashSet<String> yearAndQuarters = DateUtil.yearAndQuarter(DateUtil.parse("2018-09-10"), DateUtil.parse("2018-12-20"));
-		final List<String> list = ListUtil.of(false, yearAndQuarters);
-		Assert.assertEquals(2, list.size());
-		Assert.assertEquals("20183", list.get(0));
-		Assert.assertEquals("20184", list.get(1));
-
-		final LinkedHashSet<String> yearAndQuarters2 = DateUtil.yearAndQuarter(DateUtil.parse("2018-10-10"), DateUtil.parse("2018-12-10"));
-		final List<String> list2 = ListUtil.of(false, yearAndQuarters2);
-		Assert.assertEquals(1, list2.size());
-		Assert.assertEquals("20184", list2.get(0));
 	}
 
 	@Test
