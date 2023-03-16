@@ -51,6 +51,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	}
 	// ------------------------------------------------------- Constructor end
 
+	// region ----- query
 	/**
 	 * 查询
 	 *
@@ -189,7 +190,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
+	// region ----- execute
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除
@@ -282,9 +285,11 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
 	// ---------------------------------------------------------------------------- CRUD start
 
+	// region ----- insert
 	/**
 	 * 插入数据
 	 *
@@ -395,7 +400,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
+	// region ----- del
 	/**
 	 * 删除数据
 	 *
@@ -425,7 +432,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
+	// region ----- update
 	/**
 	 * 更新数据<br>
 	 * 更新条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
@@ -444,8 +453,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
-	// ------------------------------------------------------------- Get start
+	// region ----- get
 
 	/**
 	 * 根据某个字段（最好是唯一字段）查询单个记录<br>
@@ -473,8 +483,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 		return find(where.getFieldNames(), where, new EntityHandler(this.caseInsensitive));
 
 	}
-	// ------------------------------------------------------------- Get end
+	// endregion
 
+	// region ----- find
 	/**
 	 * 查询<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
@@ -652,7 +663,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	public List<Entity> findLike(final String tableName, final String field, final String value, final LikeType likeType) throws DbRuntimeException {
 		return findAll(Entity.of(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
+	// endregion
 
+	// region ----- count
 	/**
 	 * 结果的条目数
 	 *
@@ -705,7 +718,9 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 			this.closeConnection(conn);
 		}
 	}
+	// endregion
 
+	// region ----- page
 	/**
 	 * 分页查询，结果为Entity列表，不计算总数<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
@@ -867,7 +882,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	public PageResult<Entity> page(final Entity where, final Page page) throws DbRuntimeException {
 		return this.page(where.getFieldNames(), where, page);
 	}
-	// ---------------------------------------------------------------------------- CRUD end
+	// endregion
 
 	// ---------------------------------------------------------------------------- Getters and Setters start
 
