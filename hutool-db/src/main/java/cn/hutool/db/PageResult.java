@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.math.PageInfo;
+import cn.hutool.core.lang.page.PageInfo;
 
 import java.util.ArrayList;
 

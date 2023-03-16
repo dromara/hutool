@@ -2,7 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.math.PageInfo;
+import cn.hutool.core.lang.page.PageInfo;
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;

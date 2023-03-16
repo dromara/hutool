@@ -1,4 +1,4 @@
-package cn.hutool.core.math;
+package cn.hutool.core.lang.page;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.DefaultSegment;
@@ -227,7 +227,8 @@ public class PageInfo {
 
 	/**
 	 * 设置首页编号，即以数字几为第一页标志<br>
-	 * 如设置0，则0表示第一页，1表示第二页
+	 * 如设置0，则0表示第一页，1表示第二页<br>
+	 * 设置此参数后，须调用{@link #setPageNo(int)} 重新设置当前页的页码
 	 *
 	 * @param firstPageNo 首页编号
 	 * @return this
@@ -238,7 +239,9 @@ public class PageInfo {
 	}
 
 	/**
-	 * 设置当前页码
+	 * 设置当前页码，具体这个页码代表实际页，取决于{@link #setFirstPageNo(int)}设置的值。
+	 * 例如当{@link #setFirstPageNo(int)}设置为1时，1表示首页；设置为0时，0表示首页，依次类推。<br>
+	 * 当设置页码小于{@link #getFirstPageNo()}值时，始终为{@link #getFirstPageNo()}
 	 *
 	 * @param pageNo 当前页码
 	 * @return this
@@ -251,7 +254,8 @@ public class PageInfo {
 	}
 
 	/**
-	 * 下一页，即当前页码+1
+	 * 下一页，即当前页码+1<br>
+	 * 当超过末页时，此方法指向的页码值始终为{@link #getPages()} + 1，即最后一页后的空白页。
 	 *
 	 * @return this
 	 */
@@ -264,7 +268,7 @@ public class PageInfo {
 	 *
 	 * @return this
 	 */
-	public PageInfo PreviousPage() {
+	public PageInfo previousPage() {
 		return setPageNo(this.pageNo - 1);
 	}
 

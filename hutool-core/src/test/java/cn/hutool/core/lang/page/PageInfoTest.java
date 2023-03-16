@@ -1,4 +1,4 @@
-package cn.hutool.core.math;
+package cn.hutool.core.lang.page;
 
 import org.junit.Assert;
 import org.junit.Test;

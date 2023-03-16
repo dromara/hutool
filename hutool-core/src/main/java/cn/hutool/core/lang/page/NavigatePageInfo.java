@@ -1,12 +1,13 @@
-package cn.hutool.core.math;
+package cn.hutool.core.lang.page;
 
-public class NavigatePageInfo extends PageInfo{
+public class NavigatePageInfo extends PageInfo {
 
-	private final int navigatePages = 8; //导航页码数
+	private final int navigatePages; //导航页码数
 	private int[] navigatePageNumbers;  //所有导航页号
 
-	public NavigatePageInfo(final int total, final int pageSize) {
+	public NavigatePageInfo(final int total, final int pageSize, int navigatePages) {
 		super(total, pageSize);
+		this.navigatePages = navigatePages;
 
 		//基本参数设定之后进行导航页面的计算
 		calcNavigatePageNumbers();
@@ -22,15 +23,28 @@ public class NavigatePageInfo extends PageInfo{
 	}
 
 	public String toString() {
-		final StringBuilder str = new StringBuilder(super.toString());
-		str.append(", {navigatePageNumbers=");
-		final int len = navigatePageNumbers.length;
-		if (len > 0) str.append(navigatePageNumbers[0]);
-		for (int i = 1; i < len; i++) {
-			str.append(" ").append(navigatePageNumbers[i]);
+		final StringBuilder str = new StringBuilder();
+
+		if(false == isFirstPage()){
+			str.append("<< ");
 		}
-		str.append("}");
+		if (navigatePageNumbers.length > 0) {
+			str.append(wrap(navigatePageNumbers[0]));
+		}
+		for (int i = 1; i < navigatePageNumbers.length; i++) {
+			str.append(" ").append(wrap(navigatePageNumbers[i]));
+		}
+		if(false == isLastPage()){
+			str.append(" >>");
+		}
 		return str.toString();
+	}
+
+	private String wrap(final int pageNumber){
+		if(this.pageNo == pageNumber){
+			return "[" + pageNumber + "]";
+		}
+		return String.valueOf(pageNumber);
 	}
 
 	/**
