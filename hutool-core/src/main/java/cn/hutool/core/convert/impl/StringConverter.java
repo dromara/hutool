@@ -35,7 +35,7 @@ public class StringConverter extends AbstractConverter {
 	 * @param stringFunction 序列化函数
 	 * @return this
 	 */
-	public StringConverter putStringer(Class<?> clazz, Function<Object, String> stringFunction){
+	public StringConverter putStringer(final Class<?> clazz, final Function<Object, String> stringFunction){
 		if(null == stringer){
 			stringer = new HashMap<>();
 		}
