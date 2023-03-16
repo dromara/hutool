@@ -36,7 +36,7 @@ public class PageInfo {
 	/**
 	 * 总页数
 	 */
-	int pages;
+	int pageCount;
 	/**
 	 * 首页标识
 	 */
@@ -74,7 +74,7 @@ public class PageInfo {
 		this.pageSize = pageSize;
 		// 因为总条数除以页大小的最大余数是页大小数-1，
 		// 因此加一个最大余数，保证舍弃的余数与最大余数凑1.x，就是一旦有余数则+1页
-		this.pages = (total + pageSize - 1) / pageSize;
+		this.pageCount = (total + pageSize - 1) / pageSize;
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class PageInfo {
 	 *
 	 * @return {int}
 	 */
-	public int getPages() {
-		return pages;
+	public int getPageCount() {
+		return pageCount;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class PageInfo {
 	 * @return 是否尾页
 	 */
 	public boolean isLastPage() {
-		return getPageIndexBase1() == this.pages;
+		return getPageIndexBase1() == this.pageCount;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class PageInfo {
 	 * @return 是否有下一页
 	 */
 	public boolean hasNextPage() {
-		return getBeginIndex() < this.pages;
+		return getBeginIndex() < this.pageCount;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class PageInfo {
 	 * @return 是否可用
 	 */
 	public boolean isValidPage(){
-		return this.getPageIndexBase1() <= this.pages;
+		return this.getPageIndexBase1() <= this.pageCount;
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class PageInfo {
 
 	/**
 	 * 下一页，即当前页码+1<br>
-	 * 当超过末页时，此方法指向的页码值始终为{@link #getPages()} + 1，即最后一页后的空白页。
+	 * 当超过末页时，此方法指向的页码值始终为{@link #getPageCount()} + 1，即最后一页后的空白页。
 	 *
 	 * @return this
 	 */
@@ -275,7 +275,7 @@ public class PageInfo {
 	public String toString() {
 		return "{" +
 				"total=" + total +
-				",pages=" + pages +
+				",pages=" + pageCount +
 				",pageNumber=" + pageNo +
 				",limit=" + pageSize +
 				",isFirstPage=" + isFirstPage() +

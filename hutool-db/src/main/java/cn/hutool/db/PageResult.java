@@ -65,7 +65,7 @@ public class PageResult<T> extends ArrayList<T> {
 		this(page, pageSize);
 
 		this.total = total;
-		this.totalPage = PageInfo.of(total, pageSize).getPages();
+		this.totalPage = PageInfo.of(total, pageSize).getPageCount();
 	}
 	//---------------------------------------------------------- Constructor end
 
