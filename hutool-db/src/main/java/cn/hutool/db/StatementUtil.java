@@ -118,7 +118,7 @@ public class StatementUtil {
 	 *
 	 * @param conn   数据库连接
 	 * @param sql    SQL语句，使用"?"做为占位符
-	 * @param params "?"对应参数列表
+	 * @param params "?"对应参数列表或者Map表示命名参数
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
 	 * @since 3.2.3

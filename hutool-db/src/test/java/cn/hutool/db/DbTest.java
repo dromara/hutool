@@ -56,6 +56,19 @@ public class DbTest {
 	}
 
 	@Test
+	public void pageBySqlWithInTest() {
+		// in和其他条件混用
+		final String sql = "select * from user where age > :age and name in (:names) order by name";
+		// 测试数据库中一共4条数据，第0页有3条，第1页有1条
+		final List<Entity> page0 = Db.of().page(
+				sql, Page.of(0, 3),
+				Entity.of().set("age", 12)
+						.set("names", new String[]{"张三", "王五"})
+		);
+		Assert.assertEquals(1, page0.size());
+	}
+
+	@Test
 	public void pageWithParamsTest() {
 		final String sql = "select * from user where name = ?";
 		final PageResult<Entity> result = Db.of().page(

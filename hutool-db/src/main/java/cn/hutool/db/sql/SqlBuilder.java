@@ -115,9 +115,18 @@ public class SqlBuilder implements Builder<String> {
 	private QuoteWrapper quoteWrapper;
 
 	// --------------------------------------------------------------- Constructor start
+
+	/**
+	 * 构造
+	 */
 	public SqlBuilder() {
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param quoteWrapper 包装器
+	 */
 	public SqlBuilder(final QuoteWrapper quoteWrapper) {
 		this.quoteWrapper = quoteWrapper;
 	}

@@ -30,7 +30,9 @@ public class ClientConfig {
 	 * 默认读取超时
 	 */
 	private int readTimeout;
-
+	/**
+	 * SSL相关配置
+	 */
 	private SSLInfo sslInfo;
 	/**
 	 * 是否禁用缓存

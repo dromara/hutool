@@ -13,7 +13,12 @@ public class DefaultConnectionHolder implements ConnectionHolder {
 
 	protected final DataSource ds;
 
-	public DefaultConnectionHolder(DataSource ds) {
+	/**
+	 * 构造
+	 *
+	 * @param ds {@link DataSource}
+	 */
+	public DefaultConnectionHolder(final DataSource ds) {
 		this.ds = ds;
 	}
 

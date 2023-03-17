@@ -8,7 +8,7 @@ import cn.hutool.core.collection.partition.RandomAccessPartition;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.math.PageInfo;
+import cn.hutool.core.lang.page.PageInfo;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 

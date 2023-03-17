@@ -1,4 +1,4 @@
-package cn.hutool.core.math;
+package cn.hutool.core.lang.page;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,10 +7,10 @@ public class PageInfoTest {
 	@Test
 	public void pagesTest() {
 		PageInfo pageInfo = new PageInfo(20, 3);
-		Assert.assertEquals(7, pageInfo.getPages());
+		Assert.assertEquals(7, pageInfo.getPageCount());
 
 		pageInfo = new PageInfo(20, 4);
-		Assert.assertEquals(5, pageInfo.getPages());
+		Assert.assertEquals(5, pageInfo.getPageCount());
 	}
 
 	@Test

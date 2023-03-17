@@ -100,6 +100,13 @@ public class CRUDTest {
 	}
 
 	@Test
+	public void findInTest4() {
+		final List<Entity> results = db.findAll(Entity.of("user")
+				.set("id", new String[]{"1", "2", "3"}));
+		Assert.assertEquals(2, results.size());
+	}
+
+	@Test
 	public void findAllTest() {
 		final List<Entity> results = db.findAll("user");
 		Assert.assertEquals(4, results.size());

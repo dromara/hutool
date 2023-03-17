@@ -12,11 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.lang.invoke.LambdaConversionException;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandleProxies;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
+import java.lang.invoke.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +21,7 @@ import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author nasodaengineer
@@ -158,6 +156,15 @@ public class LambdaFactoryTest {
 			final Task hardCodeTask = new Task("hardCode", () -> something.getId());
 			final Task[] tasks = {hardCodeTask, lambdaTask, mhTask, proxyTask, reflectTask};
 			loop(count, tasks);
+		}
+
+		@Test
+		public void testConstructor() {
+			Constructor<Something> constructor = ((SerSupplier<Constructor<Something>>) Something.class::getConstructor).get();
+			Supplier<Something> constructorLambda = LambdaFactory.build(Supplier.class, constructor);
+			// constructorLambda can be cache or transfer
+			Something something = constructorLambda.get();
+			Assert.assertEquals(Something.class, something.getClass());
 		}
 
 		/**

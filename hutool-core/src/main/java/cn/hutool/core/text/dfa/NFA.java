@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @author renyp
  */
-public class Automaton {
+public class NFA {
     /**
      * AC树的根节点
      */
@@ -17,20 +17,26 @@ public class Automaton {
     /**
      * 标记是否需要构建AC自动机，做树优化
      */
-    private volatile boolean needBuildAC;
+    private volatile boolean needBuildAc;
 
     /**
      * 内置锁，防止并发场景，并行建AC树，造成不可预知结果
      */
-    private final Object lock;
+    private final Object buildAcLock;
+
+    /**
+     * 内置锁，防止并行插入，新节点建立后，被挂载到树上前 被篡改
+     */
+    private final Object insertTreeLock;
 
     /**
      * 默认构造
      */
-    public Automaton() {
+    public NFA() {
         this.root = new Node();
-        this.needBuildAC = true;
-        this.lock = new Object();
+        this.needBuildAc = true;
+        this.buildAcLock = new Object();
+        this.insertTreeLock = new Object();
     }
 
     /**
@@ -38,7 +44,7 @@ public class Automaton {
      *
      * @param words 添加的新词
      */
-    public Automaton(String... words) {
+    public NFA(String... words) {
         this();
         this.insert(words);
     }
@@ -49,17 +55,19 @@ public class Automaton {
      * @param word 添加的新词
      */
     public void insert(String word) {
-        needBuildAC = true;
-        Node p = root;
-        for (char curr : word.toCharArray()) {
-            int ind = curr;
-            if (p.next.get(ind) == null) {
-                p.next.put(ind, new Node());
+        synchronized (insertTreeLock) {
+            needBuildAc = true;
+            Node p = root;
+            for (char curr : word.toCharArray()) {
+                int ind = curr;
+                if (p.next.get(ind) == null) {
+                    p.next.put(ind, new Node());
+                }
+                p = p.next.get(ind);
             }
-            p = p.next.get(ind);
+            p.flag = true;
+            p.str = word;
         }
-        p.flag = true;
-        p.str = word;
     }
 
     /**
@@ -101,7 +109,7 @@ public class Automaton {
                 queue.offer(curr.next.get(key));
             }
         }
-        needBuildAC = false;
+        needBuildAc = false;
     }
 
     /**
@@ -117,9 +125,9 @@ public class Automaton {
      */
     public List<FoundWord> find(String text, boolean isDensityMatch) {
         // double check，防止重复无用的 buildAC
-        if (needBuildAC) {
-            synchronized (lock) {
-                if (needBuildAC) {
+        if (needBuildAc) {
+            synchronized (buildAcLock) {
+                if (needBuildAc) {
                     this.buildAc();
                 }
             }
@@ -152,6 +160,7 @@ public class Automaton {
         }
         return ans;
     }
+
 
     private static class Node {
 
