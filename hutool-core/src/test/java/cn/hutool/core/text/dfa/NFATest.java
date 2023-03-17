@@ -16,7 +16,7 @@ public class NFATest {
 	public void testFind() {
 		final NFA NFA = new NFA();
 		NFA.insert("say", "her", "he", "she", "shr");
-		NFA.buildAc();
+//		NFA.buildAc();
 
 		final WordTree wordTree = new WordTree();
 		wordTree.addWords("say", "her", "he", "she", "shr");
@@ -53,7 +53,7 @@ public class NFATest {
 	public void testFindNotDensity() {
 		final NFA NFA = new NFA();
 		NFA.insert("say", "her", "he", "she", "shr");
-		NFA.buildAc();
+//		NFA.buildAc();
 
 		final WordTree wordTree = new WordTree();
 		wordTree.addWords("say", "her", "he", "she", "shr");
@@ -89,7 +89,7 @@ public class NFATest {
 		stopWatch.start("automaton_char_buid_find");
 		final NFA NFALocal = new NFA();
 		NFALocal.insert("say", "her", "he", "she", "shr");
-		NFALocal.buildAc();
+//		NFALocal.buildAc();
 		final List<FoundWord> ans1 = NFALocal.find(input);
 		stopWatch.stop();
 
@@ -124,7 +124,7 @@ public class NFATest {
 		stopWatch.start("automaton_cn_build_find");
 		final NFA NFALocal = new NFA();
 		NFALocal.insert("赵", "赵啊", "赵啊三");
-		NFALocal.buildAc();
+//		NFALocal.buildAc();
 
 		final List<FoundWord> result = NFALocal.find(input);
 		stopWatch.stop();
@@ -161,7 +161,7 @@ public class NFATest {
 
 		final NFA NFALocal = new NFA();
 		NFALocal.insert("赵", "赵啊", "赵啊三");
-		NFALocal.buildAc();
+//		NFALocal.buildAc();
 
 		stopWatch.start("automaton_cn_find");
 		final List<FoundWord> result = NFALocal.find(input);
@@ -200,7 +200,7 @@ public class NFATest {
 
 		final NFA NFALocal = new NFA();
 		NFALocal.insert("赵", "赵啊", "赵啊三");
-		NFALocal.buildAc();
+//		NFALocal.buildAc();
 
 		stopWatch.start("automaton_cn_find_not_density");
 		final List<FoundWord> result = NFALocal.find(input, false);
