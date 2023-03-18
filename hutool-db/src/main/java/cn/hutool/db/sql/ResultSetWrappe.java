@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * 实现ResultSet
+ * 实现ResultSet方便子类重写
  * @author HeYuJie
  * @date 2023/3/17
  */
