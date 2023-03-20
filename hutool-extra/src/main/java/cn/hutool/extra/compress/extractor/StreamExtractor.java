@@ -82,7 +82,7 @@ public class StreamExtractor implements Extractor {
 				//issue#I5J33E，支持tgz格式解压
 				try {
 					this.in = new TarArchiveInputStream(new GzipCompressorInputStream(in));
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new IORuntimeException(e);
 				}
 			} else {
