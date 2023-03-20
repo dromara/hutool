@@ -690,7 +690,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 合并某行的单元格，并写入对象到单元格<br>
-	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 *
 	 * @param firstRow         起始行，0开始
