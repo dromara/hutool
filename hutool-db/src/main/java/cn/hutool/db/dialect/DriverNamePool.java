@@ -75,7 +75,7 @@ public interface DriverNamePool {
 	/**
 	 * JDBC 驱动 ClickHouse
 	 */
-	String DRIVER_CLICK_HOUSE = "ru.yandex.clickhouse.ClickHouseDriver";
+	String DRIVER_CLICK_HOUSE = "com.clickhouse.jdbc.ClickHouseDriver";
 	/**
 	 * JDBC 驱动 瀚高数据库
 	 */

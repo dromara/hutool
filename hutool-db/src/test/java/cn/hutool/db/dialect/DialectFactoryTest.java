@@ -7,29 +7,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_CLICK_HOUSE;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_DB2;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_DERBY;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_DM7;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_GAUSS;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_GBASE;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_H2;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_HIGHGO;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_HIVE;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_HIVE2;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_HSQLDB;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_IGNITE_THIN;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_KINGBASE8;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_MARIADB;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_MYSQL_V6;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_ORACLE;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_OSCAR;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_PHOENIX;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_POSTGRESQL;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_SQLLITE3;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_SQLSERVER;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_SYBASE;
-import static cn.hutool.db.dialect.DriverNamePool.DRIVER_XUGU;
+import static cn.hutool.db.dialect.DriverNamePool.*;
 
 public class DialectFactoryTest {
 

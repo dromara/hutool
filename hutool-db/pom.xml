@@ -148,16 +148,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>ru.yandex.clickhouse</groupId>
+			<groupId>com.clickhouse</groupId>
 			<artifactId>clickhouse-jdbc</artifactId>
-			<version>0.3.2</version>
+			<version>0.4.1</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>gson</artifactId>
-					<groupId>com.google.code.gson</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
