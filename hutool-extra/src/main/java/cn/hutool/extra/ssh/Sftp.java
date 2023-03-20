@@ -478,7 +478,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.7.6
 	 */
 	public void upload(final String remotePath, final File file) {
-		if (false == FileUtil.exist(file)) {
+		if (false == FileUtil.exists(file)) {
 			return;
 		}
 		if (file.isDirectory()) {
@@ -624,7 +624,7 @@ public class Sftp extends AbstractFtp {
 
 			if (false == item.getAttrs().isDir()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (false == FileUtil.exist(destFile)
+				if (false == FileUtil.exists(destFile)
 						|| (item.getAttrs().getMTime() > (destFile.lastModified() / 1000))) {
 					download(srcFile, destFile);
 				}

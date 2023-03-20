@@ -26,7 +26,7 @@ public class DocUtil {
 	 */
 	public static XWPFDocument create(final File file) {
 		try {
-			return FileUtil.exist(file) ? new XWPFDocument(OPCPackage.open(file)) : new XWPFDocument();
+			return FileUtil.exists(file) ? new XWPFDocument(OPCPackage.open(file)) : new XWPFDocument();
 		} catch (final InvalidFormatException e) {
 			throw new POIException(e);
 		} catch (final IOException e) {

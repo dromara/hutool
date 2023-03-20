@@ -646,7 +646,7 @@ public class Ftp extends AbstractFtp {
 
 			if (false == ftpFile.isDirectory()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (false == FileUtil.exist(destFile)
+				if (false == FileUtil.exists(destFile)
 						|| (ftpFile.getTimestamp().getTimeInMillis() > destFile.lastModified())) {
 					download(srcFile, destFile);
 				}

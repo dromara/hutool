@@ -1,23 +1,17 @@
 package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.file.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.net.url.URLUtil;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 
 /**
  * 路径监听器
@@ -31,27 +25,6 @@ import java.nio.file.WatchService;
  */
 public class WatchMonitor extends WatchServer {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 事件丢失
-	 */
-	public static final WatchEvent.Kind<?> OVERFLOW = WatchKind.OVERFLOW.getValue();
-	/**
-	 * 修改事件
-	 */
-	public static final WatchEvent.Kind<?> ENTRY_MODIFY = WatchKind.MODIFY.getValue();
-	/**
-	 * 创建事件
-	 */
-	public static final WatchEvent.Kind<?> ENTRY_CREATE = WatchKind.CREATE.getValue();
-	/**
-	 * 删除事件
-	 */
-	public static final WatchEvent.Kind<?> ENTRY_DELETE = WatchKind.DELETE.getValue();
-	/**
-	 * 全部事件
-	 */
-	public static final WatchEvent.Kind<?>[] EVENTS_ALL = WatchKind.ALL;
 
 	/**
 	 * 监听路径，必须为目录
@@ -245,7 +218,7 @@ public class WatchMonitor extends WatchServer {
 	 * @return WatchMonitor
 	 */
 	public static WatchMonitor ofAll(final Path path, final Watcher watcher) {
-		final WatchMonitor watchMonitor = of(path, EVENTS_ALL);
+		final WatchMonitor watchMonitor = of(path, WatchKind.ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}
@@ -317,7 +290,7 @@ public class WatchMonitor extends WatchServer {
 	@Override
 	public void init() throws WatchException {
 		//获取目录或文件路径
-		if (false == Files.exists(this.path, LinkOption.NOFOLLOW_LINKS)) {
+		if (false == PathUtil.exists(this.path, false)) {
 			// 不存在的路径
 			final Path lastPathEle = FileUtil.getLastPathEle(this.path);
 			if (null != lastPathEle) {
@@ -330,12 +303,8 @@ public class WatchMonitor extends WatchServer {
 			}
 
 			//创建不存在的目录或父目录
-			try {
-				Files.createDirectories(this.path);
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			}
-		} else if (Files.isRegularFile(this.path, LinkOption.NOFOLLOW_LINKS)) {
+			PathUtil.mkdir(this.path);
+		} else if (PathUtil.isFile(this.path, false)) {
 			// 文件路径
 			this.filePath = this.path;
 			this.path = this.filePath.getParent();

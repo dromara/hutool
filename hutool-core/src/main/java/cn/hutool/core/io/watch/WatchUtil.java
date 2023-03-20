@@ -250,7 +250,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 */
 	public static WatchMonitor ofAll(final Path path, final int maxDepth, final Watcher watcher) {
-		final WatchMonitor watchMonitor = of(path, maxDepth, WatchMonitor.EVENTS_ALL);
+		final WatchMonitor watchMonitor = of(path, maxDepth, WatchKind.ALL);
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}
@@ -378,7 +378,7 @@ public class WatchUtil {
 	 * @since 4.5.2
 	 */
 	public static WatchMonitor createModify(final Path path, final int maxDepth, final Watcher watcher) {
-		final WatchMonitor watchMonitor = of(path, maxDepth, WatchMonitor.ENTRY_MODIFY);
+		final WatchMonitor watchMonitor = of(path, maxDepth, WatchKind.MODIFY.getValue());
 		watchMonitor.setWatcher(watcher);
 		return watchMonitor;
 	}

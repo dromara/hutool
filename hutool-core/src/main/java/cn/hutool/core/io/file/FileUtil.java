@@ -252,6 +252,7 @@ public class FileUtil extends PathUtil {
 		}
 	}
 
+	// region ----- file and newFile
 	/**
 	 * 创建File对象，相当于调用new File()，不做任何处理
 	 *
@@ -375,6 +376,7 @@ public class FileUtil extends PathUtil {
 	public static File file(final URL url) {
 		return new File(URLUtil.toURI(url));
 	}
+	// endregion
 
 	/**
 	 * 获取临时文件目录
@@ -396,13 +398,14 @@ public class FileUtil extends PathUtil {
 		return file(SystemUtil.getUserHomePath());
 	}
 
+	// region ----- exists
 	/**
 	 * 判断文件是否存在，如果path为null，则返回false
 	 *
 	 * @param path 文件路径
 	 * @return 如果存在返回true
 	 */
-	public static boolean exist(final String path) {
+	public static boolean exists(final String path) {
 		return (null != path) && file(path).exists();
 	}
 
@@ -412,7 +415,7 @@ public class FileUtil extends PathUtil {
 	 * @param file 文件
 	 * @return 如果存在返回true
 	 */
-	public static boolean exist(final File file) {
+	public static boolean exists(final File file) {
 		return (null != file) && file.exists();
 	}
 
@@ -423,7 +426,7 @@ public class FileUtil extends PathUtil {
 	 * @param regexp    文件夹中所包含文件名的正则表达式
 	 * @return 如果存在匹配文件返回true
 	 */
-	public static boolean exist(final String directory, final String regexp) {
+	public static boolean exists(final String directory, final String regexp) {
 		final File file = new File(directory);
 		if (false == file.exists()) {
 			return false;
@@ -442,7 +445,9 @@ public class FileUtil extends PathUtil {
 		}
 		return false;
 	}
+	// endregion
 
+	// region ----- lastModifiedTime
 	/**
 	 * 指定文件最后修改时间
 	 *
@@ -450,7 +455,7 @@ public class FileUtil extends PathUtil {
 	 * @return 最后修改时间
 	 */
 	public static Date lastModifiedTime(final File file) {
-		if (false == exist(file)) {
+		if (false == exists(file)) {
 			return null;
 		}
 
@@ -466,6 +471,7 @@ public class FileUtil extends PathUtil {
 	public static Date lastModifiedTime(final String path) {
 		return lastModifiedTime(new File(path));
 	}
+	// endregion
 
 	/**
 	 * 计算目录或文件的总大小<br>
@@ -563,6 +569,7 @@ public class FileUtil extends PathUtil {
 		return file.lastModified() > timeMillis;
 	}
 
+	// region ----- touch
 	/**
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
@@ -627,6 +634,7 @@ public class FileUtil extends PathUtil {
 	public static File touch(final String parent, final String path) throws IORuntimeException {
 		return touch(file(parent, path));
 	}
+	// endregion
 
 	/**
 	 * 创建所给文件或目录的父目录
@@ -774,6 +782,7 @@ public class FileUtil extends PathUtil {
 		return dir.exists();
 	}
 
+	// region ----- createTempFile
 	/**
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Randon].tmp
@@ -879,6 +888,7 @@ public class FileUtil extends PathUtil {
 			}
 		}
 	}
+	// endregion
 
 	/**
 	 * 复制文件或目录<br>
@@ -1475,8 +1485,7 @@ public class FileUtil extends PathUtil {
 		return FileTypeUtil.getType(file);
 	}
 
-	// -------------------------------------------------------------------------------------------- in start
-
+	// region ----- in
 	/**
 	 * 获得输入流
 	 *
@@ -1571,9 +1580,9 @@ public class FileUtil extends PathUtil {
 	public static BufferedReader getReader(final String path, final Charset charset) throws IORuntimeException {
 		return getReader(file(path), charset);
 	}
+	// endregion
 
-	// -------------------------------------------------------------------------------------------- in end
-
+	// region ----- read
 	/**
 	 * 读取文件所有数据<br>
 	 * 文件的长度不能超过Integer.MAX_VALUE
@@ -2024,8 +2033,9 @@ public class FileUtil extends PathUtil {
 	public static <T> T read(final File file, final Charset charset, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
 		return FileReader.of(file, charset).read(readerHandler);
 	}
+	// endregion
 
-	// -------------------------------------------------------------------------------------------- out start
+	// region ----- out
 
 	/**
 	 * 获得一个输出流对象
@@ -2125,9 +2135,9 @@ public class FileUtil extends PathUtil {
 		return System.lineSeparator();
 		// return System.getProperty("line.separator");
 	}
+	// endregion
 
-	// -------------------------------------------------------------------------------------------- out end
-
+	// region ----- write and append
 	/**
 	 * 将String写入文件，覆盖模式，字符集为UTF-8
 	 *
@@ -2653,6 +2663,7 @@ public class FileUtil extends PathUtil {
 	public static long writeToStream(final String fullFilePath, final OutputStream out) throws IORuntimeException {
 		return writeToStream(touch(fullFilePath), out);
 	}
+	// endregion
 
 	/**
 	 * 可读的文件大小
