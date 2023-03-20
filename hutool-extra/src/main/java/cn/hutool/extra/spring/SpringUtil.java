@@ -71,7 +71,11 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.7.0
 	 */
 	public static ListableBeanFactory getBeanFactory() {
-		return null == beanFactory ? applicationContext : beanFactory;
+		final ListableBeanFactory factory =  null == beanFactory ? applicationContext : beanFactory;
+		if(null == factory){
+			throw new UtilException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
+		}
+		return factory;
 	}
 
 	/**
