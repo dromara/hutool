@@ -18,6 +18,7 @@ import java.sql.SQLException;
  *
  * @author Luxiaolei
  *
+ * @param <T> 处理后的对象类型
  */
 @FunctionalInterface
 public interface RsHandler<T> extends Serializable{
