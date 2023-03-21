@@ -1,10 +1,9 @@
 package cn.hutool.extra.compress.extractor;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrUtil;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
@@ -103,13 +102,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 		}
 	}
 
-	/**
-	 * 获取满足指定过滤要求的压缩包内的第一个文件流
-	 *
-	 * @param predicate 用于指定需要释放的文件，null表示不过滤。当{@link Predicate#test(Object)}为{@code true}返回对应流。
-	 * @return 满足过滤要求的第一个文件的流, 无满足条件的文件返回{@code null}
-	 * @since 5.7.14
-	 */
+	@Override
 	public InputStream getFirst(final Predicate<ArchiveEntry> predicate) {
 		final SevenZFile sevenZFile = this.sevenZFile;
 		for (final SevenZArchiveEntry entry : sevenZFile.getEntries()) {
@@ -121,6 +114,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 			}
 
 			try {
+				// 此处使用查找entry对应Stream方式，由于只调用一次，也只遍历一次
 				return sevenZFile.getInputStream(entry);
 			} catch (final IOException e) {
 				throw new IORuntimeException(e);
@@ -128,17 +122,6 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 		}
 
 		return null;
-	}
-
-	/**
-	 * 获取指定名称的文件流
-	 *
-	 * @param entryName entry名称
-	 * @return 文件流，无文件返回{@code null}
-	 * @since 5.7.14
-	 */
-	public InputStream get(final String entryName) {
-		return getFirst((entry) -> StrUtil.equals(entryName, entry.getName()));
 	}
 
 	/**
@@ -153,7 +136,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 		final SevenZFile sevenZFile = this.sevenZFile;
 		SevenZArchiveEntry entry;
 		File outItemFile;
-		while (null != (entry = this.sevenZFile.getNextEntry())) {
+		while (null != (entry = sevenZFile.getNextEntry())) {
 			if (null != predicate && false == predicate.test(entry)) {
 				continue;
 			}
@@ -164,6 +147,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 				outItemFile.mkdirs();
 			} else if (entry.hasStream()) {
 				// 读取entry对应数据流
+				// 此处直接读取而非调用sevenZFile.getInputStream(entry)，因为此方法需要遍历查找entry对应位置，性能不好。
 				FileUtil.writeFromStream(new Seven7EntryInputStream(sevenZFile, entry), outItemFile);
 			} else {
 				// 无数据流的文件创建为空文件

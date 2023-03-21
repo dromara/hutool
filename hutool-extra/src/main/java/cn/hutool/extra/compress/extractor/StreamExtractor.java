@@ -68,7 +68,7 @@ public class StreamExtractor implements Extractor {
 	 * @param in           包流
 	 */
 	public StreamExtractor(final Charset charset, final String archiverName, InputStream in) {
-		if(in instanceof ArchiveInputStream){
+		if (in instanceof ArchiveInputStream) {
 			this.in = (ArchiveInputStream) in;
 			return;
 		}
@@ -78,7 +78,7 @@ public class StreamExtractor implements Extractor {
 			in = IoUtil.toBuffered(in);
 			if (StrUtil.isBlank(archiverName)) {
 				this.in = factory.createArchiveInputStream(in);
-			} else if("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)){
+			} else if ("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)) {
 				//issue#I5J33E，支持tgz格式解压
 				try {
 					this.in = new TarArchiveInputStream(new GzipCompressorInputStream(in));
@@ -93,6 +93,29 @@ public class StreamExtractor implements Extractor {
 			IoUtil.close(in);
 			throw new CompressException(e);
 		}
+	}
+
+	@Override
+	public InputStream getFirst(final Predicate<ArchiveEntry> predicate) {
+		final ArchiveInputStream in = this.in;
+		ArchiveEntry entry;
+		try {
+			while (null != (entry = in.getNextEntry())) {
+				if (null != predicate && false == predicate.test(entry)) {
+					continue;
+				}
+				if (entry.isDirectory() || false == in.canReadEntryData(entry)) {
+					// 目录或无法读取的文件直接跳过
+					continue;
+				}
+
+				return in;
+			}
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return null;
 	}
 
 	/**

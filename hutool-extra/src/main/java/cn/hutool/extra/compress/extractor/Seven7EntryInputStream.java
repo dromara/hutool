@@ -25,8 +25,18 @@ public class Seven7EntryInputStream extends InputStream {
 	 * @param entry      {@link SevenZArchiveEntry}
 	 */
 	public Seven7EntryInputStream(final SevenZFile sevenZFile, final SevenZArchiveEntry entry) {
+		this(sevenZFile, entry.getSize());
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param sevenZFile {@link SevenZFile}
+	 * @param size       读取长度
+	 */
+	public Seven7EntryInputStream(final SevenZFile sevenZFile, final long size) {
 		this.sevenZFile = sevenZFile;
-		this.size = entry.getSize();
+		this.size = size;
 	}
 
 	@Override
