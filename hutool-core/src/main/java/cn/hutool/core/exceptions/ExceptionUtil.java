@@ -233,7 +233,7 @@ public class ExceptionUtil {
 	 * 堆栈转为完整字符串
 	 *
 	 * @param throwable           异常对象
-	 * @param limit               限制最大长度，&gt;0表示不限制长度
+	 * @param limit               限制最大长度，&lt;0表示不限制长度
 	 * @param replaceCharToStrMap 替换字符为指定字符串
 	 * @return 堆栈转为的字符串
 	 */

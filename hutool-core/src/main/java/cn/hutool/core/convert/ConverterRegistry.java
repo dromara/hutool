@@ -20,6 +20,7 @@ import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.LocaleConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
+import cn.hutool.core.convert.impl.OptConverter;
 import cn.hutool.core.convert.impl.OptionalConverter;
 import cn.hutool.core.convert.impl.PathConverter;
 import cn.hutool.core.convert.impl.PeriodConverter;
@@ -33,8 +34,11 @@ import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
@@ -50,11 +54,14 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
@@ -68,13 +75,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.DoubleAdder;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 转换器登记中心
@@ -133,7 +141,7 @@ public class ConverterRegistry implements Serializable {
 		ServiceLoaderUtil.load(Converter.class).forEach(converter -> {
 			try {
 				Type type = TypeUtil.getTypeArgument(ClassUtil.getClass(converter));
-				if(null != type){
+				if (null != type) {
 					putCustom(type, converter);
 				}
 			} catch (Exception e) {
@@ -164,7 +172,7 @@ public class ConverterRegistry implements Serializable {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
-					customConverterMap = new ConcurrentHashMap<>();
+					customConverterMap = new SafeConcurrentHashMap<>();
 				}
 			}
 		}
@@ -248,6 +256,11 @@ public class ConverterRegistry implements Serializable {
 			type = ((TypeReference<?>) type).getType();
 		}
 
+		// 自定义对象转换
+		if(value instanceof TypeConverter){
+			return ObjUtil.defaultIfNull((T) ((TypeConverter) value).convert(type, value), defaultValue);
+		}
+
 		// 标准转换器
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {
@@ -263,7 +276,6 @@ public class ConverterRegistry implements Serializable {
 				return (T) value;
 			}
 		}
-
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = convertSpecial(type, rowType, value, defaultValue);
@@ -371,7 +383,7 @@ public class ConverterRegistry implements Serializable {
 	 * @return 转换器
 	 */
 	private ConverterRegistry defaultConverter() {
-		defaultConverterMap = new ConcurrentHashMap<>();
+		defaultConverterMap = new SafeConcurrentHashMap<>();
 
 		// 原始类型转换器
 		defaultConverterMap.put(int.class, new PrimitiveConverter(int.class));
@@ -388,11 +400,13 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(Integer.class, new NumberConverter(Integer.class));
 		defaultConverterMap.put(AtomicInteger.class, new NumberConverter(AtomicInteger.class));// since 3.0.8
 		defaultConverterMap.put(Long.class, new NumberConverter(Long.class));
+		defaultConverterMap.put(LongAdder.class, new NumberConverter(LongAdder.class));
 		defaultConverterMap.put(AtomicLong.class, new NumberConverter(AtomicLong.class));// since 3.0.8
 		defaultConverterMap.put(Byte.class, new NumberConverter(Byte.class));
 		defaultConverterMap.put(Short.class, new NumberConverter(Short.class));
 		defaultConverterMap.put(Float.class, new NumberConverter(Float.class));
 		defaultConverterMap.put(Double.class, new NumberConverter(Double.class));
+		defaultConverterMap.put(DoubleAdder.class, new NumberConverter(DoubleAdder.class));
 		defaultConverterMap.put(Character.class, new CharacterConverter());
 		defaultConverterMap.put(Boolean.class, new BooleanConverter());
 		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
@@ -422,6 +436,9 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(ZonedDateTime.class, new TemporalAccessorConverter(ZonedDateTime.class));
 		defaultConverterMap.put(OffsetDateTime.class, new TemporalAccessorConverter(OffsetDateTime.class));
 		defaultConverterMap.put(OffsetTime.class, new TemporalAccessorConverter(OffsetTime.class));
+		defaultConverterMap.put(DayOfWeek.class, new TemporalAccessorConverter(DayOfWeek.class));
+		defaultConverterMap.put(Month.class, new TemporalAccessorConverter(Month.class));
+		defaultConverterMap.put(MonthDay.class, new TemporalAccessorConverter(MonthDay.class));
 		defaultConverterMap.put(Period.class, new PeriodConverter());
 		defaultConverterMap.put(Duration.class, new DurationConverter());
 
@@ -444,6 +461,7 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
+		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
 
 		return this;
 	}

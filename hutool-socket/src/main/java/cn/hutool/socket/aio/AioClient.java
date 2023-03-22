@@ -1,19 +1,14 @@
 package cn.hutool.socket.aio;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.socket.ChannelUtil;
 import cn.hutool.socket.SocketConfig;
-import cn.hutool.socket.SocketRuntimeException;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketOption;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Aio Socket客户端
@@ -120,25 +115,7 @@ public class AioClient implements Closeable{
 	 * @return this
 	 */
 	private static AsynchronousSocketChannel createChannel(InetSocketAddress address, int poolSize) {
-
-		AsynchronousSocketChannel channel;
-		try {
-			AsynchronousChannelGroup group = AsynchronousChannelGroup.withFixedThreadPool(//
-					poolSize, // 默认线程池大小
-					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
-			);
-			channel = AsynchronousSocketChannel.open(group);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		try {
-			channel.connect(address).get();
-		} catch (InterruptedException | ExecutionException e) {
-			IoUtil.close(channel);
-			throw new SocketRuntimeException(e);
-		}
-		return channel;
+		return ChannelUtil.connect(ChannelUtil.createFixedGroup(poolSize), address);
 	}
 	// ------------------------------------------------------------------------------------- Private method end
 }

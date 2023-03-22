@@ -1,14 +1,13 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.date.DateUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import cn.hutool.core.date.DateUtil;
 
 public class DateConvertTest {
 
@@ -28,7 +27,7 @@ public class DateConvertTest {
 		int dateLong = -1497600000;
 		Date value = Convert.toDate(dateLong);
 		Assert.assertNotNull(value);
-		Assert.assertEquals("Mon Dec 15 00:00:00 CST 1969", value.toString());
+		Assert.assertEquals("Mon Dec 15 00:00:00 CST 1969", value.toString().replace("GMT+08:00", "CST"));
 
 		final java.sql.Date sqlDate = Convert.convert(java.sql.Date.class, dateLong);
 		Assert.assertNotNull(sqlDate);
@@ -53,18 +52,18 @@ public class DateConvertTest {
 		java.sql.Date value2 = Convert.convert(java.sql.Date.class, timeLong);
 		Assert.assertEquals(timeLong, value2.getTime());
 	}
-	
+
 	@Test
 	public void toLocalDateTimeTest() {
 		Date src = new Date();
-		
+
 		LocalDateTime ldt = Convert.toLocalDateTime(src);
 		Assert.assertEquals(ldt, DateUtil.toLocalDateTime(src));
-		
+
 		Timestamp ts = Timestamp.from(src.toInstant());
 		ldt = Convert.toLocalDateTime(ts);
 		Assert.assertEquals(ldt, DateUtil.toLocalDateTime(src));
-		
+
 		String str = "2020-12-12 12:12:12.0";
 		ldt = Convert.toLocalDateTime(str);
 		Assert.assertEquals(ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")), str);

@@ -20,9 +20,9 @@ public class JSONSupport implements JSONString, JSONBeanParser<JSON> {
 	}
 
 	/**
-	 * JSON String转Bean
+	 * JSON转Bean
 	 *
-	 * @param json JSON String
+	 * @param json JSON
 	 */
 	@Override
 	public void parse(JSON json) {

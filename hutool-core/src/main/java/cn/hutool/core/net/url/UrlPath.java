@@ -1,11 +1,13 @@
 package cn.hutool.core.net.url;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.net.URLDecoder;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -29,7 +31,7 @@ public class UrlPath {
 	 * @param charset decode用的编码，null表示不做decode
 	 * @return UrlPath
 	 */
-	public static UrlPath of(String pathStr, Charset charset) {
+	public static UrlPath of(CharSequence pathStr, Charset charset) {
 		final UrlPath urlPath = new UrlPath();
 		urlPath.parse(pathStr, charset);
 		return urlPath;
@@ -52,7 +54,7 @@ public class UrlPath {
 	 * @return 节点列表
 	 */
 	public List<String> getSegments() {
-		return this.segments;
+		return ObjectUtil.defaultIfNull(this.segments, ListUtil.empty());
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class UrlPath {
 	 * @param charset decode编码，null表示不解码
 	 * @return this
 	 */
-	public UrlPath parse(String path, Charset charset) {
+	public UrlPath parse(CharSequence path, Charset charset) {
 		if (StrUtil.isNotEmpty(path)) {
 			// 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
 			if(StrUtil.endWith(path, CharUtil.SLASH)){
@@ -105,9 +107,11 @@ public class UrlPath {
 			}
 
 			path = fixPath(path);
-			final List<String> split = StrUtil.split(path, '/');
-			for (String seg : split) {
-				addInternal(URLDecoder.decodeForPath(seg, charset), false);
+			if(StrUtil.isNotEmpty(path)){
+				final List<String> split = StrUtil.split(path, '/');
+				for (String seg : split) {
+					addInternal(URLDecoder.decodeForPath(seg, charset), false);
+				}
 			}
 		}
 
@@ -115,23 +119,58 @@ public class UrlPath {
 	}
 
 	/**
-	 * 构建path，前面带'/'
+	 * 构建path，前面带'/'<br>
+	 * <pre>
+	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
+	 * </pre>
 	 *
 	 * @param charset encode编码，null表示不做encode
 	 * @return 如果没有任何内容，则返回空字符串""
 	 */
 	public String build(Charset charset) {
+		return build(charset, true);
+	}
+
+	/**
+	 * 构建path，前面带'/'<br>
+	 * <pre>
+	 *     path = path-abempty / path-absolute / path-noscheme / path-rootless / path-empty
+	 * </pre>
+	 *
+	 * @param charset encode编码，null表示不做encode
+	 * @param encodePercent 是否编码`%`
+	 * @return 如果没有任何内容，则返回空字符串""
+	 * @since 5.8.0
+	 */
+	public String build(Charset charset, boolean encodePercent) {
 		if (CollUtil.isEmpty(this.segments)) {
-			return StrUtil.EMPTY;
+			// 没有节点的path取决于是否末尾追加/，如果不追加返回空串，否则返回/
+			return withEngTag ? StrUtil.SLASH : StrUtil.EMPTY;
 		}
 
+		final char[] safeChars = encodePercent ? null : new char[]{'%'};
 		final StringBuilder builder = new StringBuilder();
-		for (String segment : segments) {
-			builder.append(CharUtil.SLASH).append(URLUtil.encodePathSegment(segment, charset));
+		for (final String segment : segments) {
+			if(builder.length() == 0){
+				// 根据https://www.ietf.org/rfc/rfc3986.html#section-3.3定义
+				// path的第一部分不允许有":"，其余部分允许
+				// 在此处的Path部分特指host之后的部分，即不包含第一部分
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT_NZ_NC.encode(segment, charset, safeChars));
+			} else {
+				builder.append(CharUtil.SLASH).append(RFC3986.SEGMENT.encode(segment, charset, safeChars));
+			}
 		}
-		if (withEngTag || StrUtil.isEmpty(builder)) {
-			builder.append(CharUtil.SLASH);
+
+		if(withEngTag){
+			if (StrUtil.isEmpty(builder)) {
+				// 空白追加是保证以/开头
+				builder.append(CharUtil.SLASH);
+			}else if (false == StrUtil.endWith(builder, CharUtil.SLASH)) {
+				// 尾部没有/则追加，否则不追加
+				builder.append(CharUtil.SLASH);
+			}
 		}
+
 		return builder.toString();
 	}
 

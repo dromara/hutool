@@ -1,6 +1,8 @@
 package cn.hutool.core.map;
 
-import java.io.Serializable;
+
+import cn.hutool.core.builder.Builder;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -11,7 +13,7 @@ import java.util.function.Supplier;
  * @param <V> Value类型
  * @since 3.1.1
  */
-public class MapBuilder<K, V> implements Serializable {
+public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	private static final long serialVersionUID = 1L;
 
 	private final Map<K, V> map;
@@ -119,6 +121,17 @@ public class MapBuilder<K, V> implements Serializable {
 	}
 
 	/**
+	 * 清空Map
+	 *
+	 * @return this
+	 * @since 5.7.23
+	 */
+	public MapBuilder<K, V> clear() {
+		this.map.clear();
+		return this;
+	}
+
+	/**
 	 * 创建后的map
 	 *
 	 * @return 创建后的map
@@ -133,6 +146,7 @@ public class MapBuilder<K, V> implements Serializable {
 	 * @return 创建后的map
 	 * @since 3.3.0
 	 */
+	@Override
 	public Map<K, V> build() {
 		return map();
 	}

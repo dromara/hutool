@@ -4,7 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.util.BooleanUtil;
 
 /**
- * 波尔转换器
+ * 布尔转换器
  *
  * <p>
  * 对象转为boolean，规则如下：

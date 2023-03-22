@@ -1283,7 +1283,8 @@ public class PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 包装类数组转为原始类型数组
+	 * 包装类数组转为原始类型数组<br>
+	 * {@code null} 按照 {@code false} 对待
 	 *
 	 * @param values 包装类型数组
 	 * @return 原始类型数组
@@ -1586,224 +1587,6 @@ public class PrimitiveArrayUtil {
 		return Arrays.copyOfRange(array, start, end);
 	}
 
-	// ------------------------------------------------------------------- join
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(int[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (int item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(long[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (long item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(short[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (short item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(char[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (char item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(byte[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (byte item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(boolean[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (boolean item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(float[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (float item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 *
-	 * @param array       数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 * @deprecated 请使用 {@link ArrayUtil#join(Object, CharSequence)}
-	 */
-	@Deprecated
-	public static String join(double[] array, CharSequence conjunction) {
-		if (null == array) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (double item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
-	}
-
 	// ------------------------------------------------------------------- remove
 
 	/**
@@ -2068,7 +1851,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2102,7 +1885,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2136,7 +1919,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2170,7 +1953,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2204,7 +1987,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2238,7 +2021,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2272,7 +2055,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2306,7 +2089,7 @@ public class PrimitiveArrayUtil {
 	 * 反转数组，会变更原数组
 	 *
 	 * @param array               数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 起始位置（包含）
 	 * @param endIndexExclusive   结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2884,7 +2667,7 @@ public class PrimitiveArrayUtil {
 		return array;
 	}
 
-	// ---------------------------------------------------------------------- shuffle
+	// ---------------------------------------------------------------------- swap
 
 	/**
 	 * 交换数组中两个位置的值
@@ -3037,6 +2820,8 @@ public class PrimitiveArrayUtil {
 		array[index2] = tmp;
 		return array;
 	}
+
+	// ---------------------------------------------------------------------- asc and desc
 
 	/**
 	 * 检查数组是否升序，即array[i] &lt;= array[i+1]，若传入空数组，则返回false

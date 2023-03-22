@@ -11,9 +11,9 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
 import org.apache.poi.hssf.record.CellValueRecordInterface;
-import org.apache.poi.ooxml.util.SAXHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.util.XMLHelper;
+import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -53,13 +53,13 @@ public class ExcelSaxUtil {
 	/**
 	 * 根据数据类型获取数据
 	 *
-	 * @param cellDataType       数据类型枚举
-	 * @param value              数据值
-	 * @param sharedStringsTable {@link SharedStringsTable}
-	 * @param numFmtString       数字格式名
+	 * @param cellDataType  数据类型枚举
+	 * @param value         数据值
+	 * @param sharedStrings {@link SharedStrings}
+	 * @param numFmtString  数字格式名
 	 * @return 数据值
 	 */
-	public static Object getDataValue(CellDataType cellDataType, String value, SharedStringsTable sharedStringsTable, String numFmtString) {
+	public static Object getDataValue(CellDataType cellDataType, String value, SharedStrings sharedStrings, String numFmtString) {
 		if (null == value) {
 			return null;
 		}
@@ -85,7 +85,7 @@ public class ExcelSaxUtil {
 			case SSTINDEX:
 				try {
 					final int index = Integer.parseInt(value);
-					result = sharedStringsTable.getItemAt(index).getString();
+					result = sharedStrings.getItemAt(index).getString();
 				} catch (NumberFormatException e) {
 					result = value;
 				}
@@ -168,9 +168,7 @@ public class ExcelSaxUtil {
 	public static void readFrom(InputStream xmlDocStream, ContentHandler handler) throws DependencyException, POIException, IORuntimeException {
 		XMLReader xmlReader;
 		try {
-//			xmlReader = XMLReaderFactory.createXMLReader();
-			//noinspection deprecation
-			xmlReader = SAXHelper.newXMLReader();
+			xmlReader = XMLHelper.newXMLReader();
 		} catch (SAXException | ParserConfigurationException e) {
 			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
 				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
@@ -208,8 +206,8 @@ public class ExcelSaxUtil {
 	 * @param formatIndex  格式索引，一般用于内建格式
 	 * @param formatString 格式字符串
 	 * @return 是否为日期格式
-	 * @since 5.5.3
 	 * @see ExcelDateUtil#isDateFormat(int, String)
+	 * @since 5.5.3
 	 */
 	public static boolean isDateFormat(int formatIndex, String formatString) {
 		return ExcelDateUtil.isDateFormat(formatIndex, formatString);

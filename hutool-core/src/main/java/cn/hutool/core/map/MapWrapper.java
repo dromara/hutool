@@ -1,5 +1,10 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.ObjectUtil;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,13 +14,13 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Map包装类，通过包装一个已有Map实现特定功能。例如自定义Key的规则或Value规则
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @author looly
  * @author looly
  * @since 4.3.3
  */
@@ -31,7 +36,18 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	 */
 	protected static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
-	private final Map<K, V> raw;
+	private Map<K, V> raw;
+
+	/**
+	 * 构造<br>
+	 * 通过传入一个Map从而确定Map的类型，子类需创建一个空的Map，而非传入一个已有Map，否则值可能会被修改
+	 *
+	 * @param mapFactory 空Map创建工厂
+	 * @since 5.8.0
+	 */
+	public MapWrapper(Supplier<Map<K, V>> mapFactory) {
+		this(mapFactory.get());
+	}
 
 	/**
 	 * 构造
@@ -87,7 +103,6 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public void putAll(Map<? extends K, ? extends V> m) {
 		raw.putAll(m);
 	}
@@ -98,25 +113,21 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Collection<V> values() {
 		return raw.values();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Set<K> keySet() {
 		return raw.keySet();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Set<Entry<K, V>> entrySet() {
 		return raw.entrySet();
 	}
 
 	@Override
-	@SuppressWarnings("NullableProblems")
 	public Iterator<Entry<K, V>> iterator() {
 		return this.entrySet().iterator();
 	}
@@ -179,6 +190,7 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 		return raw.computeIfAbsent(key, mappingFunction);
 	}
 
+	// 重写默认方法的意义在于，如果被包装的Map自定义了这些默认方法，包装类就可以保持这些行为的一致性
 	//---------------------------------------------------------------------------- Override default methods start
 	@Override
 	public V getOrDefault(Object key, V defaultValue) {
@@ -199,5 +211,26 @@ public class MapWrapper<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, S
 	public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		return raw.merge(key, value, remappingFunction);
 	}
+
+	@Override
+	public MapWrapper<K, V> clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked") final MapWrapper<K, V> clone = (MapWrapper<K, V>) super.clone();
+		clone.raw = ObjectUtil.clone(raw);
+		return clone;
+	}
+
 	//---------------------------------------------------------------------------- Override default methods end
+
+	// region 序列化与反序列化重写
+	private void writeObject(final ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+		out.writeObject(this.raw);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
+		raw = (Map<K, V>) in.readObject();
+	}
+	// endregion
 }

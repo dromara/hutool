@@ -3,6 +3,8 @@ package cn.hutool.http;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
@@ -16,10 +18,26 @@ import java.util.Map;
 
 public class HttpUtilTest {
 
+
+	@Test
+	public void isHttpTest(){
+		Assert.assertTrue(HttpUtil.isHttp("Http://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttp("HTTP://aaa.bbb"));
+		Assert.assertFalse(HttpUtil.isHttp("FTP://aaa.bbb"));
+	}
+
+	@Test
+	public void isHttpsTest(){
+		Assert.assertTrue(HttpUtil.isHttps("Https://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttps("HTTPS://aaa.bbb"));
+		Assert.assertTrue(HttpUtil.isHttps("https://aaa.bbb"));
+		Assert.assertFalse(HttpUtil.isHttps("ftp://aaa.bbb"));
+	}
+
 	@Test
 	@Ignore
 	public void postTest() {
-		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506")
+		final String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506")
 				.charset(CharsetUtil.UTF_8)
 				.execute().body();
 		Console.log(result);
@@ -29,7 +47,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void postTest2() {
 		// 某些接口对Accept头有特殊要求，此处自定义头
-		String result = HttpUtil
+		final String result = HttpUtil
 				.createPost("http://cmp.ishanghome.com/cmp/v1/community/queryClusterCommunity")
 				.header(Header.ACCEPT, "*/*")
 				.execute()
@@ -40,7 +58,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getTest() {
-		String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
+		final String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
 		Console.log(result1);
 	}
 
@@ -49,7 +67,7 @@ public class HttpUtilTest {
 	public void getTest2() {
 		// 此链接较为特殊，User-Agent去掉后进入一个JS跳转页面，如果设置了，需要开启302跳转
 		// 自定义的默认header无效
-		String result = HttpRequest
+		final String result = HttpRequest
 				.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
 				.removeHeader(Header.USER_AGENT).execute().body();
 		Console.log(result);
@@ -59,7 +77,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void getTest3() {
 		// 测试url中带有空格的情况
-		String result1 = HttpUtil.get("http://hutool.cn:5000/kf?abc= d");
+		final String result1 = HttpUtil.get("http://hutool.cn:5000/kf?abc= d");
 		Console.log(result1);
 	}
 
@@ -67,7 +85,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void getTest4() {
 		// 测试url中带有空格的情况
-		byte[] str = HttpRequest.get("http://img01.fs.yiban.cn/mobile/2D0Y71").execute().bodyBytes();
+		final byte[] str = HttpRequest.get("http://img01.fs.yiban.cn/mobile/2D0Y71").execute().bodyBytes();
 
 		FileUtil.writeBytes(str, "f:/test/2D.jpg");
 		Console.log(str);
@@ -77,7 +95,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void getTest5() {
 		String url2 = "http://storage.chancecloud.com.cn/20200413_%E7%B2%A4B12313_386.pdf";
-		ByteArrayOutputStream os2 = new ByteArrayOutputStream();
+		final ByteArrayOutputStream os2 = new ByteArrayOutputStream();
 		HttpUtil.download(url2, os2, false);
 
 		url2 = "http://storage.chancecloud.com.cn/20200413_粤B12313_386.pdf";
@@ -95,9 +113,9 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void downloadStringTest() {
-		String url = "https://www.baidu.com";
+		final String url = "https://www.baidu.com";
 		// 从远程直接读取字符串，需要自定义编码，直接调用JDK方法
-		String content2 = HttpUtil.downloadString(url, CharsetUtil.UTF_8);
+		final String content2 = HttpUtil.downloadString(url, CharsetUtil.UTF_8);
 		Console.log(content2);
 	}
 
@@ -107,8 +125,8 @@ public class HttpUtilTest {
 		// 请求列表页
 		String listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=2");
 		// 使用正则获取所有标题
-		List<String> titles = ReUtil.findAll("<span class=\"text-ellipsis\">(.*?)</span>", listContent, 1);
-		for (String title : titles) {
+		final List<String> titles = ReUtil.findAll("<span class=\"text-ellipsis\">(.*?)</span>", listContent, 1);
+		for (final String title : titles) {
 			// 打印标题
 			Console.log(title);
 		}
@@ -120,8 +138,8 @@ public class HttpUtilTest {
 
 	@Test
 	public void decodeParamsTest() {
-		String paramsStr = "uuuu=0&a=b&c=%3F%23%40!%24%25%5E%26%3Ddsssss555555";
-		Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
+		final String paramsStr = "uuuu=0&a=b&c=%3F%23%40!%24%25%5E%26%3Ddsssss555555";
+		final Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
 		Assert.assertEquals("0", map.get("uuuu").get(0));
 		Assert.assertEquals("b", map.get("a").get(0));
 		Assert.assertEquals("?#@!$%^&=dsssss555555", map.get("c").get(0));
@@ -130,17 +148,17 @@ public class HttpUtilTest {
 	@Test
 	public void decodeParamMapTest() {
 		// 参数值存在分界标记等号时
-		Map<String, String> paramMap = HttpUtil.decodeParamMap("https://www.xxx.com/api.action?aa=123&f_token=NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", CharsetUtil.CHARSET_UTF_8);
+		final Map<String, String> paramMap = HttpUtil.decodeParamMap("https://www.xxx.com/api.action?aa=123&f_token=NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("123",paramMap.get("aa"));
 		Assert.assertEquals("NzBkMjQxNDM1MDVlMDliZTk1OTU3ZDI1OTI0NTBiOWQ=",paramMap.get("f_token"));
 	}
 
 	@Test
 	public void toParamsTest() {
-		String paramsStr = "uuuu=0&a=b&c=3Ddsssss555555";
-		Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
+		final String paramsStr = "uuuu=0&a=b&c=3Ddsssss555555";
+		final Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
 
-		String encodedParams = HttpUtil.toParams(map);
+		final String encodedParams = HttpUtil.toParams(map);
 		Assert.assertEquals(paramsStr, encodedParams);
 	}
 
@@ -253,13 +271,13 @@ public class HttpUtilTest {
 	@Ignore
 	public void patchTest() {
 		// 验证patch请求是否可用
-		String body = HttpRequest.patch("https://www.baidu.com").execute().body();
+		final String body = HttpRequest.patch("https://www.baidu.com").execute().body();
 		Console.log(body);
 	}
 
 	@Test
 	public void urlWithFormTest() {
-		Map<String, Object> param = new LinkedHashMap<>();
+		final Map<String, Object> param = new LinkedHashMap<>();
 		param.put("AccessKeyId", "123");
 		param.put("Action", "DescribeDomainRecords");
 		param.put("Format", "date");
@@ -298,13 +316,19 @@ public class HttpUtilTest {
 
 	@Test
 	public void normalizeParamsTest() {
-		String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);
+		final String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("%E5%8F%82%E6%95%B0", encodeResult);
 	}
 
 	@Test
+	public void normalizeBlankParamsTest() {
+		final String encodeResult = HttpUtil.normalizeParams("", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("", encodeResult);
+	}
+
+	@Test
 	public void getMimeTypeTest() {
-		String mimeType = HttpUtil.getMimeType("aaa.aaa");
+		final String mimeType = HttpUtil.getMimeType("aaa.aaa");
 		Assert.assertNull(mimeType);
 	}
 
@@ -312,7 +336,7 @@ public class HttpUtilTest {
 	@Ignore
 	public void getWeixinTest(){
 		// 测试特殊URL，即URL中有&amp;情况是否请求正常
-		String url = "https://mp.weixin.qq.com/s?__biz=MzI5NjkyNTIxMg==&amp;mid=100000465&amp;idx=1&amp;sn=1044c0d19723f74f04f4c1da34eefa35&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
+		final String url = "https://mp.weixin.qq.com/s?__biz=MzI5NjkyNTIxMg==&amp;mid=100000465&amp;idx=1&amp;sn=1044c0d19723f74f04f4c1da34eefa35&amp;chksm=6cbda3a25bca2ab4516410db6ce6e125badaac2f8c5548ea6e18eab6dc3c5422cb8cbe1095f7";
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
@@ -320,7 +344,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getNocovTest(){
-		String url = "https://qiniu.nocov.cn/medical-manage%2Ftest%2FBANNER_IMG%2F444004467954556928%2F1595215173047icon.png~imgReduce?e=1597081986&token=V2lJYVgQgAv_sbypfEZ0qpKs6TzD1q5JIDVr0Tw8:89cbBkLLwEc9JsMoCLkAEOu820E=";
+		final String url = "https://qiniu.nocov.cn/medical-manage%2Ftest%2FBANNER_IMG%2F444004467954556928%2F1595215173047icon.png~imgReduce?e=1597081986&token=V2lJYVgQgAv_sbypfEZ0qpKs6TzD1q5JIDVr0Tw8:89cbBkLLwEc9JsMoCLkAEOu820E=";
 		final String s = HttpUtil.get(url);
 		Console.log(s);
 	}
@@ -335,7 +359,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void gimg2Test(){
-		byte[] bytes = HttpUtil.downloadBytes("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea");
+		final byte[] bytes = HttpUtil.downloadBytes("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea");
 		Console.log(Base64.encode(bytes));
 	}
 
@@ -345,5 +369,31 @@ public class HttpUtilTest {
 		final String body = HttpRequest.get("https://api.acplay.net/api/v2/bangumi/9541")
 				.execute().body();
 		Console.log(body);
+	}
+
+	@Test
+	@Ignore
+	public void getPicTest(){
+		HttpGlobalConfig.setDecodeUrl(false);
+		final String url = "https://p3-sign.douyinpic.com/tos-cn-i-0813/f41afb2e79a94dcf80970affb9a69415~noop.webp?x-expires=1647738000&x-signature=%2Br1ekUCGjXiu50Y%2Bk0MO4ovulK8%3D&from=4257465056&s=PackSourceEnum_DOUYIN_REFLOW&se=false&sh=&sc=&l=2022021809224601020810013524310DD3&biz_tag=aweme_images";
+
+		final HttpRequest request = HttpRequest.of(url).method(Method.GET);
+		Console.log(request.execute().body());
+	}
+
+	@Test
+	public void httpParameterDecodeTest () {
+		String test = "this is test测试";
+		int port = NetUtil.getUsableLocalPort();
+		HttpUtil.createServer(port)
+				.addAction("/formEncoded", (req, resp) -> resp.write(req.getParam("test")))
+				.addAction("/urlEncoded", (req, resp) -> resp.write(req.getParam("test")))
+				.start();
+		String resp = HttpUtil.createPost(String.format("http://localhost:%s/formEncoded", port))
+				.form("test", test).execute().body();
+		Assert.assertEquals("Form请求参数解码", test, resp);
+		String urlGet = UrlBuilder.of(String.format("http://localhost:%s/urlEncoded", port)).addQuery("test", test).build();
+		String resp2 = HttpUtil.createGet(urlGet).execute().body();
+		Assert.assertEquals("QueryString请求参数编码", test, resp2);
 	}
 }

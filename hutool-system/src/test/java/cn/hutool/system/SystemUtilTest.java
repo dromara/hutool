@@ -1,5 +1,6 @@
 package cn.hutool.system;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,31 +17,33 @@ public class SystemUtilTest {
 
 	@Test
 	public void getCurrentPidTest() {
-		long pid = SystemUtil.getCurrentPID();
+		final long pid = SystemUtil.getCurrentPID();
 		Assert.assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
-		JavaInfo javaInfo = SystemUtil.getJavaInfo();
+		final JavaInfo javaInfo = SystemUtil.getJavaInfo();
 		Assert.assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
-		JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
+		final JavaRuntimeInfo info = SystemUtil.getJavaRuntimeInfo();
 		Assert.assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
-		OsInfo osInfo = SystemUtil.getOsInfo();
+		final OsInfo osInfo = SystemUtil.getOsInfo();
 		Assert.assertNotNull(osInfo);
+
+		Console.log(osInfo.getName());
 	}
 
 	@Test
 	public void getHostInfo() {
-		HostInfo hostInfo = SystemUtil.getHostInfo();
+		final HostInfo hostInfo = SystemUtil.getHostInfo();
 		Assert.assertNotNull(hostInfo);
 	}
 

@@ -1,11 +1,12 @@
 package cn.hutool.core.net.url;
 
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.RFC3986;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,7 +26,7 @@ import java.nio.charset.Charset;
  * @see <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">Uniform Resource Identifier</a>
  * @since 5.3.1
  */
-public final class UrlBuilder implements Serializable {
+public final class UrlBuilder implements Builder<String> {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_SCHEME = "http";
 
@@ -58,6 +59,11 @@ public final class UrlBuilder implements Serializable {
 	 * 编码，用于URLEncode和URLDecode
 	 */
 	private Charset charset;
+	/**
+	 * 是否需要编码`%`<br>
+	 * 区别对待，如果是，则生成URL时需要重新全部编码，否则跳过所有`%`
+	 */
+	private boolean needEncodePercent;
 
 	/**
 	 * 使用URI构建UrlBuilder
@@ -102,10 +108,10 @@ public final class UrlBuilder implements Serializable {
 	 */
 	public static UrlBuilder ofHttp(String httpUrl, Charset charset) {
 		Assert.notBlank(httpUrl, "Http url must be not blank!");
-
-		final int sepIndex = httpUrl.indexOf("://");
-		if (sepIndex < 0) {
-			httpUrl = "http://" + httpUrl.trim();
+		httpUrl = StrUtil.trimStart(httpUrl);
+		// issue#I66CIR
+		if(false == StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
+			httpUrl = "http://" + httpUrl;
 		}
 		return of(httpUrl, charset);
 	}
@@ -113,7 +119,7 @@ public final class UrlBuilder implements Serializable {
 	/**
 	 * 使用URL字符串构建UrlBuilder，默认使用UTF-8编码
 	 *
-	 * @param url     URL字符串
+	 * @param url URL字符串
 	 * @return UrlBuilder
 	 */
 	public static UrlBuilder of(String url) {
@@ -181,8 +187,19 @@ public final class UrlBuilder implements Serializable {
 	 * 创建空的UrlBuilder
 	 *
 	 * @return UrlBuilder
+	 * @deprecated 请使用 {@link #of()}
 	 */
+	@Deprecated
 	public static UrlBuilder create() {
+		return new UrlBuilder();
+	}
+
+	/**
+	 * 创建空的UrlBuilder
+	 *
+	 * @return UrlBuilder
+	 */
+	public static UrlBuilder of() {
 		return new UrlBuilder();
 	}
 
@@ -202,7 +219,7 @@ public final class UrlBuilder implements Serializable {
 	 * @param path     路径，例如/aa/bb/cc
 	 * @param query    查询，例如a=1&amp;b=2
 	 * @param fragment 标识符例如#后边的部分
-	 * @param charset  编码，用于URLEncode和URLDecode
+	 * @param charset  编码，用于URLEncode和URLDecode，{@code null}表示不编码
 	 */
 	public UrlBuilder(String scheme, String host, int port, UrlPath path, UrlQuery query, String fragment, Charset charset) {
 		this.charset = charset;
@@ -212,6 +229,8 @@ public final class UrlBuilder implements Serializable {
 		this.path = path;
 		this.query = query;
 		this.setFragment(fragment);
+		// 编码非空情况下做解码
+		this.needEncodePercent = null != charset;
 	}
 
 	/**
@@ -273,6 +292,20 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
+	 * 获取端口，如果未自定义返回协议默认端口
+	 *
+	 * @return 端口
+	 */
+	public int getPortWithDefault() {
+		int port = getPort();
+		if (port > 0) {
+			return port;
+		}
+		URL url = this.toURL();
+		return url.getDefaultPort();
+	}
+
+	/**
 	 * 设置端口，默认-1
 	 *
 	 * @param port 端口，默认-1
@@ -307,7 +340,23 @@ public final class UrlBuilder implements Serializable {
 	 * @return 路径，例如/aa/bb/cc
 	 */
 	public String getPathStr() {
-		return null == this.path ? StrUtil.SLASH : this.path.build(charset);
+		return null == this.path ? StrUtil.SLASH : this.path.build(charset, this.needEncodePercent);
+	}
+
+	/**
+	 * 是否path的末尾加 /
+	 *
+	 * @param withEngTag 是否path的末尾加 /
+	 * @return this
+	 * @since 5.8.5
+	 */
+	public UrlBuilder setWithEndTag(boolean withEngTag) {
+		if (null == this.path) {
+			this.path = new UrlPath();
+		}
+
+		this.path.setWithEndTag(withEngTag);
+		return this;
 	}
 
 	/**
@@ -322,13 +371,25 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
-	 * 增加路径节点
+	 * 增加路径，在现有路径基础上追加路径
+	 *
+	 * @param path 路径，例如aaa/bbb/ccc
+	 * @return this
+	 */
+	public UrlBuilder addPath(CharSequence path) {
+		UrlPath.of(path, this.charset).getSegments().forEach(this::addPathSegment);
+		return this;
+	}
+
+	/**
+	 * 增加路径节点，路径节点中的"/"会被转义为"%2F"
 	 *
 	 * @param segment 路径节点
 	 * @return this
+	 * @since 5.7.16
 	 */
-	public UrlBuilder addPath(String segment) {
-		if (StrUtil.isBlank(segment)) {
+	public UrlBuilder addPathSegment(CharSequence segment) {
+		if (StrUtil.isEmpty(segment)) {
 			return this;
 		}
 		if (null == this.path) {
@@ -341,25 +402,20 @@ public final class UrlBuilder implements Serializable {
 	/**
 	 * 追加path节点
 	 *
-	 * @param segment path节点
+	 * @param path path节点
 	 * @return this
+	 * @deprecated 方法重复，请使用{@link #addPath(CharSequence)}
 	 */
-	public UrlBuilder appendPath(CharSequence segment) {
-		if (StrUtil.isEmpty(segment)) {
-			return this;
-		}
-
-		if (this.path == null) {
-			this.path = new UrlPath();
-		}
-		this.path.add(segment);
-		return this;
+	@Deprecated
+	public UrlBuilder appendPath(CharSequence path) {
+		return addPath(path);
 	}
 
 	/**
-	 * 获取查询语句，例如a=1&amp;b=2
+	 * 获取查询语句，例如a=1&amp;b=2<br>
+	 * 可能为{@code null}
 	 *
-	 * @return 查询语句，例如a=1&amp;b=2
+	 * @return 查询语句，例如a=1&amp;b=2，可能为{@code null}
 	 */
 	public UrlQuery getQuery() {
 		return query;
@@ -371,7 +427,7 @@ public final class UrlBuilder implements Serializable {
 	 * @return 查询语句，例如a=1&amp;b=2
 	 */
 	public String getQueryStr() {
-		return null == this.query ? null : this.query.build(this.charset);
+		return null == this.query ? null : this.query.build(this.charset, this.needEncodePercent);
 	}
 
 	/**
@@ -392,7 +448,7 @@ public final class UrlBuilder implements Serializable {
 	 * @param value 值
 	 * @return this
 	 */
-	public UrlBuilder addQuery(String key, String value) {
+	public UrlBuilder addQuery(String key, Object value) {
 		if (StrUtil.isEmpty(key)) {
 			return this;
 		}
@@ -419,7 +475,8 @@ public final class UrlBuilder implements Serializable {
 	 * @return 标识符，例如#后边的部分
 	 */
 	public String getFragmentEncoded() {
-		return URLUtil.encodeFragment(this.fragment, this.charset);
+		final char[] safeChars = this.needEncodePercent ? null : new char[]{'%'};
+		return RFC3986.FRAGMENT.encode(this.fragment, this.charset, safeChars);
 	}
 
 	/**
@@ -461,6 +518,7 @@ public final class UrlBuilder implements Serializable {
 	 *
 	 * @return URL字符串
 	 */
+	@Override
 	public String build() {
 		return toURL().toString();
 	}
@@ -484,7 +542,7 @@ public final class UrlBuilder implements Serializable {
 		final StringBuilder fileBuilder = new StringBuilder();
 
 		// path
-		fileBuilder.append(StrUtil.blankToDefault(getPathStr(), StrUtil.SLASH));
+		fileBuilder.append(getPathStr());
 
 		// query
 		final String query = getQueryStr();
@@ -511,12 +569,7 @@ public final class UrlBuilder implements Serializable {
 	 */
 	public URI toURI() {
 		try {
-			return new URI(
-					getSchemeWithDefault(),
-					getAuthority(),
-					getPathStr(),
-					getQueryStr(),
-					getFragmentEncoded());
+			return toURL().toURI();
 		} catch (URISyntaxException e) {
 			return null;
 		}

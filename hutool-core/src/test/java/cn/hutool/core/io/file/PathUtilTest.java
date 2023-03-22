@@ -1,9 +1,11 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -64,5 +66,26 @@ public class PathUtilTest {
 
 		mimeType = PathUtil.getMimeType(Paths.get("d:/test/test.mov"));
 		Assert.assertEquals("video/quicktime", mimeType);
+	}
+
+	@Test
+	public void getMimeOfRarTest(){
+		String contentType = FileUtil.getMimeType("a001.rar");
+		Assert.assertEquals("application/x-rar-compressed", contentType);
+	}
+
+	@Test
+	public void getMimeOf7zTest(){
+		String contentType = FileUtil.getMimeType("a001.7z");
+		Assert.assertEquals("application/x-7z-compressed", contentType);
+	}
+
+	/**
+	 * issue#2893 target不存在空导致异常
+	 */
+	@Test
+	@Ignore
+	public void moveTest2(){
+		PathUtil.move(Paths.get("D:\\project\\test1.txt"), Paths.get("D:\\project\\test2.txt"), false);
 	}
 }

@@ -114,9 +114,25 @@ public class JschUtil {
 	 * @return SSH会话
 	 */
 	public static Session openSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+		return openSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase, 0);
+	}
+
+	/**
+	 * 打开一个新的SSH会话
+	 *
+	 * @param sshHost        主机
+	 * @param sshPort        端口
+	 * @param sshUser        用户名
+	 * @param privateKeyPath 私钥的路径
+	 * @param passphrase     私钥文件的密码，可以为null
+	 * @param timeOut        超时时间，单位毫秒
+	 * @return SSH会话
+	 * @since 5.8.4
+	 */
+	public static Session openSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase, int timeOut) {
 		final Session session = createSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
 		try {
-			session.connect();
+			session.connect(timeOut);
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}

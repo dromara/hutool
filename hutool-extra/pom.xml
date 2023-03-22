@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -17,20 +17,22 @@
 	<description>Hutool 扩展工具类（提供其它类库的封装）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.7.0.RELEASE</beetl.version>
-		<rythm.version>1.4.1</rythm.version>
-		<freemarker.version>2.3.31</freemarker.version>
-		<enjoy.version>4.9.16</enjoy.version>
-		<thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
+		<beetl.version>3.14.1.RELEASE</beetl.version>
+		<rythm.version>1.4.2</rythm.version>
+		<freemarker.version>2.3.32</freemarker.version>
+		<enjoy.version>5.0.3</enjoy.version>
+		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<zxing.version>3.4.1</zxing.version>
-		<net.version>3.7.2</net.version>
+		<sshj.version>0.35.0</sshj.version>
+		<zxing.version>3.5.1</zxing.version>
+		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.5.6</spring-boot.version>
+		<spring-boot.version>2.7.5</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -49,6 +51,13 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet-api.version}</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
@@ -118,6 +127,12 @@
 			<version>2.6.0</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.github.subchen</groupId>
+			<artifactId>jetbrick-template</artifactId>
+			<version>2.1.10</version>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- 邮件 -->
 		<dependency>
@@ -133,6 +148,13 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>${jsch.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.hierynomus</groupId>
+			<artifactId>sshj</artifactId>
+			<version>${sshj.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -162,7 +184,7 @@
 		<dependency>
 			<groupId>org.apache.ftpserver</groupId>
 			<artifactId>ftpserver-core</artifactId>
-			<version>1.1.1</version>
+			<version>1.2.0</version>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
@@ -203,7 +225,7 @@
 		<dependency>
 			<groupId>org.lionsoul</groupId>
 			<artifactId>jcseg-core</artifactId>
-			<version>2.6.2</version>
+			<version>2.6.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -235,13 +257,13 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.8.2</version>
+			<version>portable-1.8.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.10.1</version>
+			<version>8.11.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -326,7 +348,7 @@
 		<dependency>
 			<groupId>com.github.houbb</groupId>
 			<artifactId>pinyin</artifactId>
-			<version>0.2.2</version>
+			<version>0.3.1</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -340,20 +362,20 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>2.0.2</version>
+			<version>3.0.2</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.1.6.Final</version>
+			<version>7.0.4.Final</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
-			<artifactId>javax.el</artifactId>
-			<version>3.0.0</version>
+			<artifactId>jakarta.el</artifactId>
+			<version>4.0.2</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- 验证工具可选依赖 end -->
@@ -384,7 +406,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.5</version>
+			<version>1.2.11</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -397,7 +419,7 @@
 		<dependency>
 			<groupId>com.googlecode.aviator</groupId>
 			<artifactId>aviator</artifactId>
-			<version>5.2.7</version>
+			<version>5.3.3</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -418,7 +440,7 @@
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
-			<version>2.4.13.Final</version>
+			<version>2.4.15.Final</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -432,14 +454,21 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.12</version>
+			<version>5.3.23</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
 			<artifactId>rhino</artifactId>
-			<version>1.7.13</version>
+			<version>1.7.14</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>QLExpress</artifactId>
+			<version>3.3.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -447,7 +476,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.21</version>
+			<version>1.22</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

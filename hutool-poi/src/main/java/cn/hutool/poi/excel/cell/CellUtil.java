@@ -15,18 +15,12 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
-
-import java.math.BigDecimal;
-import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Excel表格中单元格工具类
@@ -111,7 +105,7 @@ public class CellUtil {
 			cellType = cell.getCellType();
 		}
 
-		Object value;
+		final Object value;
 		switch (cellType) {
 			case NUMERIC:
 				value = new NumericCellValue(cell).getValue();
@@ -151,32 +145,7 @@ public class CellUtil {
 		}
 
 		if (null != styleSet) {
-			final CellStyle headCellStyle = styleSet.getHeadCellStyle();
-			final CellStyle cellStyle = styleSet.getCellStyle();
-			if (isHeader && null != headCellStyle) {
-				cell.setCellStyle(headCellStyle);
-			} else if (null != cellStyle) {
-				cell.setCellStyle(cellStyle);
-			}
-		}
-
-		if (value instanceof Date
-				|| value instanceof TemporalAccessor
-				|| value instanceof Calendar) {
-			// 日期单独定义格式
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
-		} else if (value instanceof Number) {
-			// 数字单独定义格式
-			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
-				cell.setCellStyle(styleSet.getCellStyleForNumber());
-			}
-		} else if(value instanceof Hyperlink){
-			// 自定义超链接样式
-			if (null != styleSet && null != styleSet.getCellStyleForHyperlink()) {
-				cell.setCellStyle(styleSet.getCellStyleForHyperlink());
-			}
+			cell.setCellStyle(styleSet.getStyleByValueType(value, isHeader));
 		}
 
 		setCellValue(cell, value);
@@ -193,9 +162,9 @@ public class CellUtil {
 	 */
 	public static void setCellValue(Cell cell, Object value, CellStyle style) {
 		setCellValue(cell, (CellSetter) cell1 -> {
+			setCellValue(cell, value);
 			if (null != style) {
 				cell1.setCellStyle(style);
-				setCellValue(cell, value);
 			}
 		});
 	}
@@ -206,7 +175,7 @@ public class CellUtil {
 	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 *
 	 * @param cell  单元格
-	 * @param value 值
+	 * @param value 值或{@link CellSetter}
 	 * @since 5.6.4
 	 */
 	public static void setCellValue(Cell cell, Object value) {
@@ -230,11 +199,14 @@ public class CellUtil {
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
-	 * @return {@link Row}
+	 * @return {@link Cell}
 	 * @since 5.5.0
 	 */
 	public static Cell getCell(Row row, int cellIndex) {
-		Cell cell = row.getCell(cellIndex);
+		if (null == row) {
+			return null;
+		}
+		final Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			return new NullCell(row, cellIndex);
 		}
@@ -246,10 +218,13 @@ public class CellUtil {
 	 *
 	 * @param row       Excel表的行
 	 * @param cellIndex 列号
-	 * @return {@link Row}
+	 * @return {@link Cell}
 	 * @since 4.0.2
 	 */
 	public static Cell getOrCreateCell(Row row, int cellIndex) {
+		if (null == row) {
+			return null;
+		}
 		Cell cell = row.getCell(cellIndex);
 		if (null == cell) {
 			cell = row.createCell(cellIndex);
@@ -287,19 +262,82 @@ public class CellUtil {
 	 * @param sheet {@link Sheet}
 	 * @param x     列号，从0开始
 	 * @param y     行号，从0开始
-	 * @return 是否是合并单元格
+	 * @return 是否是合并单元格，如果提供的sheet为{@code null}，返回{@code false}
 	 */
 	public static boolean isMergedRegion(Sheet sheet, int x, int y) {
-		final int sheetMergeCount = sheet.getNumMergedRegions();
-		CellRangeAddress ca;
-		for (int i = 0; i < sheetMergeCount; i++) {
-			ca = sheet.getMergedRegion(i);
-			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
-					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
-				return true;
+		if (sheet != null) {
+			final int sheetMergeCount = sheet.getNumMergedRegions();
+			CellRangeAddress ca;
+			for (int i = 0; i < sheetMergeCount; i++) {
+				ca = sheet.getMergedRegion(i);
+				if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+						&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param sheet       {@link Sheet}
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
+	 */
+	public static CellRangeAddress getCellRangeAddress(Sheet sheet, String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getCellRangeAddress(sheet, cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param cell {@link Cell}
+	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
+	 */
+	public static CellRangeAddress getCellRangeAddress(Cell cell) {
+		return getCellRangeAddress(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+	}
+
+	/**
+	 * 获取合并单元格{@link CellRangeAddress}，如果不是返回null
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始
+	 * @param y     行号，从0开始
+	 * @return {@link CellRangeAddress}
+	 * @since 5.8.0
+	 */
+	public static CellRangeAddress getCellRangeAddress(Sheet sheet, int x, int y) {
+		if (sheet != null) {
+			final int sheetMergeCount = sheet.getNumMergedRegions();
+			CellRangeAddress ca;
+			for (int i = 0; i < sheetMergeCount; i++) {
+				ca = sheet.getMergedRegion(i);
+				if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+						&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
+					return ca;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 设置合并单元格样式，如果不是则不设置
+	 *
+	 * @param cell      {@link Cell}
+	 * @param cellStyle {@link CellStyle}
+	 */
+	public static void setMergedRegionStyle(Cell cell, CellStyle cellStyle) {
+		final CellRangeAddress cellRangeAddress = getCellRangeAddress(cell);
+		if (cellRangeAddress != null) {
+			setMergeCellStyle(cellStyle, cellRangeAddress, cell.getSheet());
+		}
 	}
 
 	/**
@@ -335,16 +373,7 @@ public class CellUtil {
 				lastColumn // last column (0-based)
 		);
 
-		if (null != cellStyle) {
-			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
-			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
-			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
-			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
-			RegionUtil.setTopBorderColor(cellStyle.getTopBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setRightBorderColor(cellStyle.getRightBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setLeftBorderColor(cellStyle.getLeftBorderColor(),cellRangeAddress,sheet);
-			RegionUtil.setBottomBorderColor(cellStyle.getBottomBorderColor(),cellRangeAddress,sheet);
-		}
+		setMergeCellStyle(cellStyle, cellRangeAddress, sheet);
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
 
@@ -407,7 +436,7 @@ public class CellUtil {
 	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
 		return ObjectUtil.defaultIfNull(
 				getCellIfMergedRegion(sheet, x, y),
-				SheetUtil.getCell(sheet, y, x));
+				() -> SheetUtil.getCell(sheet, y, x));
 	}
 
 	/**
@@ -431,9 +460,9 @@ public class CellUtil {
 			anchor.setRow1(cell.getRowIndex());
 			anchor.setRow2(cell.getRowIndex() + 2);
 		}
-		Comment comment = drawing.createCellComment(anchor);
+		final Comment comment = drawing.createCellComment(anchor);
 		comment.setString(factory.createRichTextString(commentText));
-		comment.setAuthor(StrUtil.nullToEmpty(commentText));
+		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
 		cell.setCellComment(comment);
 	}
 
@@ -450,15 +479,32 @@ public class CellUtil {
 	 * @since 5.4.5
 	 */
 	private static Cell getCellIfMergedRegion(Sheet sheet, int x, int y) {
-		final int sheetMergeCount = sheet.getNumMergedRegions();
-		CellRangeAddress ca;
-		for (int i = 0; i < sheetMergeCount; i++) {
-			ca = sheet.getMergedRegion(i);
+		for (final CellRangeAddress ca : sheet.getMergedRegions()) {
 			if (ca.isInRange(y, x)) {
 				return SheetUtil.getCell(sheet, ca.getFirstRow(), ca.getFirstColumn());
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 根据{@link CellStyle}设置合并单元格边框样式
+	 *
+	 * @param cellStyle        {@link CellStyle}
+	 * @param cellRangeAddress {@link CellRangeAddress}
+	 * @param sheet            {@link Sheet}
+	 */
+	private static void setMergeCellStyle(CellStyle cellStyle, CellRangeAddress cellRangeAddress, Sheet sheet) {
+		if (null != cellStyle) {
+			RegionUtil.setBorderTop(cellStyle.getBorderTop(), cellRangeAddress, sheet);
+			RegionUtil.setBorderRight(cellStyle.getBorderRight(), cellRangeAddress, sheet);
+			RegionUtil.setBorderBottom(cellStyle.getBorderBottom(), cellRangeAddress, sheet);
+			RegionUtil.setBorderLeft(cellStyle.getBorderLeft(), cellRangeAddress, sheet);
+			RegionUtil.setTopBorderColor(cellStyle.getTopBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setRightBorderColor(cellStyle.getRightBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setLeftBorderColor(cellStyle.getLeftBorderColor(), cellRangeAddress, sheet);
+			RegionUtil.setBottomBorderColor(cellStyle.getBottomBorderColor(), cellRangeAddress, sheet);
+		}
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
 }

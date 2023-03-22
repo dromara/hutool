@@ -2,13 +2,13 @@ package cn.hutool.log;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.caller.CallerUtil;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.log.dialect.jdk.JdkLogFactory;
 
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 日志工厂类
@@ -33,7 +33,7 @@ public abstract class LogFactory {
 	 */
 	public LogFactory(String name) {
 		this.name = name;
-		logCache = new ConcurrentHashMap<>();
+		logCache = new SafeConcurrentHashMap<>();
 	}
 
 	/**

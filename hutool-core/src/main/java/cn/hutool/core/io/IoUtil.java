@@ -32,6 +32,7 @@ import java.io.PushbackInputStream;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -362,7 +363,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 从流中读取内容，读取完毕后关闭流
 	 *
-	 * @param in      输入流，读取完毕后并不关闭流
+	 * @param in      输入流，读取完毕后关闭流
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
@@ -470,34 +471,13 @@ public class IoUtil extends NioUtil {
 	 * @since 5.0.4
 	 */
 	public static byte[] readBytes(InputStream in, boolean isClose) throws IORuntimeException {
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			final byte[] result;
-			try {
-				final int available = in.available();
-				result = new byte[available];
-				final int readLength = in.read(result);
-				if (readLength != available) {
-					throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", available, readLength));
-				}
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			} finally {
-				if (isClose) {
-					close(in);
-				}
-			}
-			return result;
-		}
-
-		// 未知bytes总量的流
 		return read(in, isClose).toByteArray();
 	}
 
 	/**
 	 * 读取指定长度的byte数组，不关闭流
 	 *
-	 * @param in     {@link InputStream}，为null返回null
+	 * @param in     {@link InputStream}，为{@code null}返回{@code null}
 	 * @param length 长度，小于等于0返回空byte数组
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
@@ -510,20 +490,9 @@ public class IoUtil extends NioUtil {
 			return new byte[0];
 		}
 
-		byte[] b = new byte[length];
-		int readLength;
-		try {
-			readLength = in.read(b);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (readLength > 0 && readLength < length) {
-			byte[] b2 = new byte[readLength];
-			System.arraycopy(b, 0, b2, 0, readLength);
-			return b2;
-		} else {
-			return b;
-		}
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream(length);
+		copy(in, out, DEFAULT_BUFFER_SIZE, length, null);
+		return out.toByteArray();
 	}
 
 	/**
@@ -540,25 +509,41 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Upper(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, false);
+	public static String readHex64Upper(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, false);
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * 从流中读取前8192个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Lower(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, true);
+	public static String readHex8192Upper(InputStream in) throws IORuntimeException {
+		try {
+			int i = in.available();
+			return readHex(in, Math.min(8192, in.available()), false);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用小写
+	 *
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String readHex64Lower(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, true);
 	}
 
 	/**
@@ -621,6 +606,9 @@ public class IoUtil extends NioUtil {
 	public static <T> T readObj(ValidateObjectInputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
+		}
+		if(null != clazz){
+			in.accept(clazz);
 		}
 		try {
 			//noinspection unchecked
@@ -1330,5 +1318,20 @@ public class IoUtil extends NioUtil {
 	 */
 	public static LineIter lineIter(InputStream in, Charset charset) {
 		return new LineIter(in, charset);
+	}
+
+	/**
+	 * {@link ByteArrayOutputStream} 转换为String
+	 * @param out {@link ByteArrayOutputStream}
+	 * @param charset 编码
+	 * @return 字符串
+	 * @since 5.7.17
+	 */
+	public static String toStr(ByteArrayOutputStream out, Charset charset){
+		try {
+			return out.toString(charset.name());
+		} catch (UnsupportedEncodingException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

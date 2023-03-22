@@ -12,7 +12,7 @@ import org.tinylog.provider.ProviderRegistry;
 
 /**
  * <a href="http://www.tinylog.org/">tinylog</a> log.<br>
- * 
+ *
  * @author Looly
  *
  */
@@ -25,12 +25,12 @@ public class TinyLog2 extends AbstractLog {
 	private final int level;
 	private final String name;
 	private static final LoggingProvider provider = ProviderRegistry.getLoggingProvider();
+	// ------------------------------------------------------------------------- Constructor
+
 	private static final MessageFormatter formatter = new AdvancedMessageFormatter(
 			Configuration.getLocale(),
 			Configuration.isEscapingEnabled()
 	);
-
-	// ------------------------------------------------------------------------- Constructor
 	public TinyLog2(Class<?> clazz) {
 		this(null == clazz ? StrUtil.NULL : clazz.getName());
 	}
@@ -104,12 +104,12 @@ public class TinyLog2 extends AbstractLog {
 	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
 		logIfEnabled(fqcn, toTinyLevel(level), t, format, arguments);
 	}
-	
+
 	@Override
 	public boolean isEnabled(cn.hutool.log.level.Level level) {
 		return this.level <= toTinyLevel(level).ordinal();
 	}
-	
+
 	/**
 	 * 在对应日志级别打开情况下打印日志
 	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
@@ -125,10 +125,10 @@ public class TinyLog2 extends AbstractLog {
 		}
 		provider.log(DEPTH, null, level, t, formatter, StrUtil.toString(format), arguments);
 	}
-	
+
 	/**
 	 * 将Hutool的Level等级转换为Tinylog的Level等级
-	 * 
+	 *
 	 * @param level Hutool的Level等级
 	 * @return Tinylog的Level
 	 * @since 4.0.3
@@ -162,7 +162,7 @@ public class TinyLog2 extends AbstractLog {
 
 	/**
 	 * 如果最后一个参数为异常参数，则获取之，否则返回null
-	 * 
+	 *
 	 * @param arguments 参数
 	 * @return 最后一个异常参数
 	 * @since 4.0.3

@@ -1,12 +1,11 @@
 package cn.hutool.crypto.digest;
 
+import cn.hutool.core.util.CharsetUtil;
+
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-
-import javax.crypto.SecretKey;
-
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 摘要算法工具类
@@ -333,7 +332,7 @@ public class DigestUtil {
 	 * 计算sha256摘要值，使用UTF-8编码
 	 *
 	 * @param data 被摘要数据
-	 * @return MD5摘要
+	 * @return SHA-256摘要
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(String data) {
@@ -424,7 +423,7 @@ public class DigestUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -436,7 +435,7 @@ public class DigestUtil {
 	 * 创建HMac对象，调用digest方法可获得hmac值
 	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key       密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥{@link SecretKey}，如果为{@code null}生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -488,4 +487,110 @@ public class DigestUtil {
 	public static boolean bcryptCheck(String password, String hashed) {
 		return BCrypt.checkpw(password, hashed);
 	}
+
+	// ------------------------------------------------------------------------------------------- SHA-512
+
+	/**
+	 * 计算SHA-512摘要值
+	 *
+	 * @param data 被摘要数据
+	 * @return SHA-512摘要
+	 */
+	public static byte[] sha512(final byte[] data) {
+		return new Digester(DigestAlgorithm.SHA512).digest(data);
+	}
+
+	/**
+	 * 计算SHA-512摘要值
+	 *
+	 * @param data    被摘要数据
+	 * @param charset 编码
+	 * @return SHA-512摘要
+	 * @since 3.0.8
+	 */
+	public static byte[] sha512(final String data, final String charset) {
+		return new Digester(DigestAlgorithm.SHA512).digest(data, charset);
+	}
+
+	/**
+	 * 计算sha512摘要值，使用UTF-8编码
+	 *
+	 * @param data 被摘要数据
+	 * @return MD5摘要
+	 */
+	public static byte[] sha512(final String data) {
+		return sha512(data, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * 计算SHA-512摘要值
+	 *
+	 * @param data 被摘要数据
+	 * @return SHA-512摘要
+	 */
+	public static byte[] sha512(final InputStream data) {
+		return new Digester(DigestAlgorithm.SHA512).digest(data);
+	}
+
+	/**
+	 * 计算SHA-512摘要值
+	 *
+	 * @param file 被摘要文件
+	 * @return SHA-512摘要
+	 */
+	public static byte[] sha512(final File file) {
+		return new Digester(DigestAlgorithm.SHA512).digest(file);
+	}
+
+	/**
+	 * 计算SHA-1摘要值，并转为16进制字符串
+	 *
+	 * @param data 被摘要数据
+	 * @return SHA-512摘要的16进制表示
+	 */
+	public static String sha512Hex(final byte[] data) {
+		return new Digester(DigestAlgorithm.SHA512).digestHex(data);
+	}
+
+	/**
+	 * 计算SHA-512摘要值，并转为16进制字符串
+	 *
+	 * @param data    被摘要数据
+	 * @param charset 编码
+	 * @return SHA-512摘要的16进制表示
+	 */
+	public static String sha512Hex(final String data, final String charset) {
+		return new Digester(DigestAlgorithm.SHA512).digestHex(data, charset);
+	}
+
+	/**
+	 * 计算SHA-512摘要值，并转为16进制字符串
+	 *
+	 * @param data 被摘要数据
+	 * @return SHA-512摘要的16进制表示
+	 */
+	public static String sha512Hex(final String data) {
+		return sha512Hex(data, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * 计算SHA-512摘要值，并转为16进制字符串
+	 *
+	 * @param data 被摘要数据
+	 * @return SHA-512摘要的16进制表示
+	 */
+	public static String sha512Hex(final InputStream data) {
+		return new Digester(DigestAlgorithm.SHA512).digestHex(data);
+	}
+
+	/**
+	 * 计算SHA-512摘要值，并转为16进制字符串
+	 *
+	 * @param file 被摘要文件
+	 * @return SHA-512摘要的16进制表示
+	 */
+	public static String sha512Hex(final File file) {
+		return new Digester(DigestAlgorithm.SHA512).digestHex(file);
+	}
+
 }

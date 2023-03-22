@@ -1,7 +1,8 @@
 package cn.hutool.core.bean;
 
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.map.ReferenceConcurrentMap;
+import cn.hutool.core.map.WeakConcurrentMap;
 
 import java.beans.PropertyDescriptor;
 import java.util.Map;
@@ -15,8 +16,8 @@ import java.util.Map;
 public enum BeanInfoCache {
 	INSTANCE;
 
-	private final SimpleCache<Class<?>, Map<String, PropertyDescriptor>> pdCache = new SimpleCache<>();
-	private final SimpleCache<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new SimpleCache<>();
+	private final WeakConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> pdCache = new WeakConcurrentMap<>();
+	private final WeakConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new WeakConcurrentMap<>();
 
 	/**
 	 * 获得属性名和{@link PropertyDescriptor}Map映射
@@ -42,7 +43,7 @@ public enum BeanInfoCache {
 			Class<?> beanClass,
 			boolean ignoreCase,
 			Func0<Map<String, PropertyDescriptor>> supplier) {
-		return getCache(ignoreCase).get(beanClass, supplier);
+		return getCache(ignoreCase).computeIfAbsent(beanClass, (key)->supplier.callWithRuntimeException());
 	}
 
 	/**
@@ -57,13 +58,23 @@ public enum BeanInfoCache {
 	}
 
 	/**
+	 * 清空缓存
+	 *
+	 * @since 5.7.21
+	 */
+	public void clear() {
+		this.pdCache.clear();
+		this.ignoreCasePdCache.clear();
+	}
+
+	/**
 	 * 根据是否忽略字段名的大小写，返回不用Cache对象
 	 *
 	 * @param ignoreCase 是否忽略大小写
-	 * @return SimpleCache
+	 * @return {@link ReferenceConcurrentMap}
 	 * @since 5.4.1
 	 */
-	private SimpleCache<Class<?>, Map<String, PropertyDescriptor>> getCache(boolean ignoreCase) {
+	private ReferenceConcurrentMap<Class<?>, Map<String, PropertyDescriptor>> getCache(boolean ignoreCase) {
 		return ignoreCase ? ignoreCasePdCache : pdCache;
 	}
 }

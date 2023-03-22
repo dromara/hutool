@@ -1,10 +1,10 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 分组计时器<br>
@@ -26,7 +26,7 @@ public class GroupTimeInterval implements Serializable {
 	 */
 	public GroupTimeInterval(boolean isNano) {
 		this.isNano = isNano;
-		groupMap = new ConcurrentHashMap<>();
+		groupMap = new SafeConcurrentHashMap<>();
 	}
 
 	/**

@@ -31,6 +31,10 @@ public class DatePattern {
 
 	//-------------------------------------------------------------------------------------------------------------------------------- Normal
 	/**
+	 * 年格式：yyyy
+	 */
+	public static final String NORM_YEAR_PATTERN = "yyyy";
+	/**
 	 * 年月格式：yyyy-MM
 	 */
 	public static final String NORM_MONTH_PATTERN = "yyyy-MM";
@@ -311,7 +315,7 @@ public class DatePattern {
 	 * @return {@link DateTimeFormatter}
 	 * @since 5.7.5
 	 */
-	private static DateTimeFormatter createFormatter(String pattern) {
+	public static DateTimeFormatter createFormatter(String pattern) {
 		return DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
 				.withZone(ZoneId.systemDefault());
 	}

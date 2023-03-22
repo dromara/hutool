@@ -26,6 +26,11 @@ public abstract class IoCopier<S, T> {
 	protected StreamProgress progress;
 
 	/**
+	 * 是否每次写出一个buffer内容就执行flush
+	 */
+	protected boolean flushEveryBuffer;
+
+	/**
 	 * 构造
 	 *
 	 * @param bufferSize 缓存大小，&lt; 0 表示默认{@link IoUtil#DEFAULT_BUFFER_SIZE}
@@ -55,5 +60,17 @@ public abstract class IoCopier<S, T> {
 	 */
 	protected int bufferSize(long count) {
 		return (int) Math.min(this.bufferSize, count);
+	}
+
+	/**
+	 * 设置是否每次写出一个buffer内容就执行flush
+	 *
+	 * @param flushEveryBuffer 是否每次写出一个buffer内容就执行flush
+	 * @return this
+	 * @since 5.7.18
+	 */
+	public IoCopier<S, T> setFlushEveryBuffer(boolean flushEveryBuffer){
+		this.flushEveryBuffer = flushEveryBuffer;
+		return this;
 	}
 }

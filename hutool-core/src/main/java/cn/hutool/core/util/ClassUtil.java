@@ -999,26 +999,44 @@ public class ClassUtil {
 	 * @since 3.0.8
 	 */
 	public static Object getDefaultValue(Class<?> clazz) {
+		// 原始类型
 		if (clazz.isPrimitive()) {
-			if (long.class == clazz) {
-				return 0L;
-			} else if (int.class == clazz) {
-				return 0;
-			} else if (short.class == clazz) {
-				return (short) 0;
-			} else if (char.class == clazz) {
-				return (char) 0;
-			} else if (byte.class == clazz) {
-				return (byte) 0;
-			} else if (double.class == clazz) {
-				return 0D;
-			} else if (float.class == clazz) {
-				return 0f;
-			} else if (boolean.class == clazz) {
-				return false;
-			}
+			return getPrimitiveDefaultValue(clazz);
 		}
+		return null;
+	}
 
+	/**
+	 * 获取指定原始类型分的默认值<br>
+	 * 默认值规则为：
+	 *
+	 * <pre>
+	 * 1、如果为原始类型，返回0
+	 * 2、非原始类型返回{@code null}
+	 * </pre>
+	 *
+	 * @param clazz 类
+	 * @return 默认值
+	 * @since 5.8.0
+	 */
+	public static Object getPrimitiveDefaultValue(Class<?> clazz) {
+		if (long.class == clazz) {
+			return 0L;
+		} else if (int.class == clazz) {
+			return 0;
+		} else if (short.class == clazz) {
+			return (short) 0;
+		} else if (char.class == clazz) {
+			return (char) 0;
+		} else if (byte.class == clazz) {
+			return (byte) 0;
+		} else if (double.class == clazz) {
+			return 0D;
+		} else if (float.class == clazz) {
+			return 0f;
+		} else if (boolean.class == clazz) {
+			return false;
+		}
 		return null;
 	}
 
@@ -1091,5 +1109,27 @@ public class ClassUtil {
 			return null;
 		}
 		return location.getPath();
+	}
+
+	/**
+	 * 是否为抽象类或接口
+	 *
+	 * @param clazz 类
+	 * @return 是否为抽象类或接口
+	 * @since 5.8.2
+	 */
+	public static boolean isAbstractOrInterface(Class<?> clazz) {
+		return isAbstract(clazz) || isInterface(clazz);
+	}
+
+	/**
+	 * 是否为接口
+	 *
+	 * @param clazz 类
+	 * @return 是否为接口
+	 * @since 5.8.2
+	 */
+	public static boolean isInterface(Class<?> clazz) {
+		return clazz.isInterface();
 	}
 }

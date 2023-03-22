@@ -1,14 +1,15 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.comparator.LengthComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 
@@ -105,7 +106,7 @@ public class ReUtil {
 	}
 
 	/**
-	 * 获得匹配的字符串，，获得正则中分组0的内容
+	 * 获得匹配的字符串，获得正则中分组0的内容
 	 *
 	 * @param pattern 编译后的正则模式
 	 * @param content 被匹配的内容
@@ -206,17 +207,35 @@ public class ReUtil {
 	 * @since 4.0.13
 	 */
 	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0) {
+		return getAllGroups(pattern, content, withGroup0, false);
+	}
+
+	/**
+	 * 获得匹配的字符串匹配到的所有分组
+	 *
+	 * @param pattern    编译后的正则模式
+	 * @param content    被匹配的内容
+	 * @param withGroup0 是否包括分组0，此分组表示全匹配的信息
+	 * @param findAll 是否查找所有匹配到的内容，{@code false}表示只读取第一个匹配到的内容
+	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
+	 * @since 4.0.13
+	 */
+	public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0, boolean findAll) {
 		if (null == content || null == pattern) {
 			return null;
 		}
 
 		ArrayList<String> result = new ArrayList<>();
 		final Matcher matcher = pattern.matcher(content);
-		if (matcher.find()) {
+		while (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
 			final int groupCount = matcher.groupCount();
 			for (int i = startGroup; i <= groupCount; i++) {
 				result.add(matcher.group(i));
+			}
+
+			if(false == findAll){
+				break;
 			}
 		}
 		return result;
@@ -311,8 +330,9 @@ public class ReUtil {
 	 * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
 	 * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 新字符串
+	 * @since 5.8.0
 	 */
-	public static String extractMultiAndDelPre(Pattern pattern, Holder<CharSequence> contentHolder, String template) {
+	public static String extractMultiAndDelPre(Pattern pattern, Mutable<CharSequence> contentHolder, String template) {
 		if (null == contentHolder || null == pattern || null == template) {
 			return null;
 		}
@@ -342,7 +362,7 @@ public class ReUtil {
 	 * @param template      生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 按照template拼接后的字符串
 	 */
-	public static String extractMultiAndDelPre(String regex, Holder<CharSequence> contentHolder, String template) {
+	public static String extractMultiAndDelPre(String regex, Mutable<CharSequence> contentHolder, String template) {
 		if (null == contentHolder || null == regex || null == template) {
 			return null;
 		}
@@ -439,7 +459,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(String regex, CharSequence content) {
-		if (StrUtil.hasBlank(regex, content)) {
+		if (StrUtil.hasEmpty(regex, content)) {
 			return StrUtil.str(content);
 		}
 
@@ -455,7 +475,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delAll(Pattern pattern, CharSequence content) {
-		if (null == pattern || StrUtil.isBlank(content)) {
+		if (null == pattern || StrUtil.isEmpty(content)) {
 			return StrUtil.str(content);
 		}
 
@@ -859,12 +879,12 @@ public class ReUtil {
 		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
-			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new HashSet<>());
+			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new TreeSet<>(LengthComparator.INSTANCE.reversed()));
 			final StringBuffer sb = new StringBuffer();
 			do {
 				String replacement = replacementTemplate;
-				for (String var : varNums) {
-					int group = Integer.parseInt(var);
+				for (final String var : varNums) {
+					final int group = Integer.parseInt(var);
 					replacement = replacement.replace("$" + var, matcher.group(group));
 				}
 				matcher.appendReplacement(sb, escape(replacement));

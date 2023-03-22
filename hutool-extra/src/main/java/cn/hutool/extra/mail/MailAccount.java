@@ -23,8 +23,9 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_HOST = "mail.smtp.host";
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
-	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
 	private static final String SMTP_TIMEOUT = "mail.smtp.timeout";
+	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
+	private static final String SMTP_WRITE_TIMEOUT = "mail.smtp.writetimeout";
 
 	// SSL
 	private static final String STARTTLS_ENABLE = "mail.smtp.starttls.enable";
@@ -34,8 +35,13 @@ public class MailAccount implements Serializable {
 	private static final String SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKET_FACTORY_PORT = "smtp.socketFactory.port";
 
-	private static final String MAIL_DEBUG = "mail.debug";
+	// System Properties
 	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
+	//private static final String ENCODE_FILE_NAME = "mail.mime.encodefilename";
+	//private static final String CHARSET = "mail.mime.charset";
+
+	// 其他
+	private static final String MAIL_DEBUG = "mail.debug";
 
 	public static final String[] MAIL_SETTING_PATHS = new String[]{"config/mail.setting", "config/mailAccount.setting", "mail.setting"};
 
@@ -75,7 +81,11 @@ public class MailAccount implements Serializable {
 	/**
 	 * 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
 	 */
-	private boolean splitlongparameters;
+	private boolean splitlongparameters = false;
+	/**
+	 * 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 */
+	private boolean encodefilename = true;
 
 	/**
 	 * 使用 STARTTLS安全连接，STARTTLS是对纯文本通信协议的扩展。它将纯文本连接升级为加密连接（TLS或SSL）， 而不是使用一个单独的加密通信端口。
@@ -112,6 +122,10 @@ public class MailAccount implements Serializable {
 	 * Socket连接超时值，单位毫秒，缺省值不超时
 	 */
 	private long connectionTimeout;
+	/**
+	 * Socket写出超时值，单位毫秒，缺省值不超时
+	 */
+	private long writeTimeout;
 
 	/**
 	 * 自定义的其他属性，此自定义属性会覆盖默认属性
@@ -297,16 +311,19 @@ public class MailAccount implements Serializable {
 	/**
 	 * 获取字符集编码
 	 *
-	 * @return 编码
+	 * @return 编码，可能为{@code null}
 	 */
 	public Charset getCharset() {
 		return charset;
 	}
 
 	/**
-	 * 设置字符集编码
+	 * 设置字符集编码，此选项不会修改全局配置，若修改全局配置，请设置此项为{@code null}并设置：
+	 * <pre>
+	 * 	System.setProperty("mail.mime.charset", charset);
+	 * </pre>
 	 *
-	 * @param charset 字符集编码
+	 * @param charset 字符集编码，{@code null} 则表示使用全局设置的默认编码，全局编码为mail.mime.charset系统属性
 	 * @return this
 	 */
 	public MailAccount setCharset(Charset charset) {
@@ -324,12 +341,42 @@ public class MailAccount implements Serializable {
 	}
 
 	/**
-	 * 设置对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+	 * 设置对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）<br>
+	 * 注意此项为全局设置，此项会调用
+	 * <pre>
+	 * System.setProperty("mail.mime.splitlongparameters", true)
+	 * </pre>
 	 *
 	 * @param splitlongparameters 对于超长参数是否切分为多份
 	 */
 	public void setSplitlongparameters(boolean splitlongparameters) {
 		this.splitlongparameters = splitlongparameters;
+	}
+
+	/**
+	 * 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 *
+	 * @return 对于文件名是否使用{@link #charset}编码，默认为 {@code true}
+	 * @since 5.7.16
+	 */
+	public boolean isEncodefilename() {
+
+		return encodefilename;
+	}
+
+	/**
+	 * 设置对于文件名是否使用{@link #charset}编码，此选项不会修改全局配置<br>
+	 * 如果此选项设置为{@code false}，则是否编码取决于两个系统属性：
+	 * <ul>
+	 *     <li>mail.mime.encodefilename  是否编码附件文件名</li>
+	 *     <li>mail.mime.charset         编码文件名的编码</li>
+	 * </ul>
+	 *
+	 * @param encodefilename 对于文件名是否使用{@link #charset}编码
+	 * @since 5.7.16
+	 */
+	public void setEncodefilename(boolean encodefilename) {
+		this.encodefilename = encodefilename;
 	}
 
 	/**
@@ -374,6 +421,7 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取SSL协议，多个协议用空格分隔
+	 *
 	 * @return SSL协议，多个协议用空格分隔
 	 * @since 5.5.7
 	 */
@@ -476,6 +524,18 @@ public class MailAccount implements Serializable {
 	}
 
 	/**
+	 * 设置Socket写出超时值，单位毫秒，缺省值不超时
+	 *
+	 * @param writeTimeout Socket写出超时值，单位毫秒，缺省值不超时
+	 * @return this
+	 * @since 5.8.3
+	 */
+	public MailAccount setWriteTimeout(long writeTimeout) {
+		this.writeTimeout = writeTimeout;
+		return this;
+	}
+
+	/**
 	 * 获取自定义属性列表
 	 *
 	 * @return 自定义参数列表
@@ -519,6 +579,10 @@ public class MailAccount implements Serializable {
 		}
 		if (this.connectionTimeout > 0) {
 			p.put(SMTP_CONNECTION_TIMEOUT, String.valueOf(this.connectionTimeout));
+		}
+		// issue#2355
+		if (this.writeTimeout > 0) {
+			p.put(SMTP_WRITE_TIMEOUT, String.valueOf(this.writeTimeout));
 		}
 
 		p.put(MAIL_DEBUG, String.valueOf(this.debug));
@@ -565,8 +629,9 @@ public class MailAccount implements Serializable {
 			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(fromAddress, fromAddress.indexOf('@') + 1));
 		}
 		if (StrUtil.isBlank(user)) {
-			// 如果用户名为空，默认为发件人邮箱前缀
-			this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
+			// 如果用户名为空，默认为发件人（issue#I4FYVY@Gitee）
+			//this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
+			this.user = fromAddress;
 		}
 		if (null == this.auth) {
 			// 如果密码非空白，则使用认证模式

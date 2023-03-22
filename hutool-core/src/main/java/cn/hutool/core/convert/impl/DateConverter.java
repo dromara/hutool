@@ -4,6 +4,7 @@ import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
@@ -120,6 +121,11 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 	 * @return 目标类型对象
 	 */
 	private java.util.Date wrap(long mills) {
+		if(GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)){
+			// Unix时间戳
+			return DateUtil.date(mills * 1000);
+		}
+
 		// 返回指定类型
 		if (java.util.Date.class == targetType) {
 			return new java.util.Date(mills);

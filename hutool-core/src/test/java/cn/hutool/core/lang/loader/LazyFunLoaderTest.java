@@ -42,4 +42,32 @@ public class LazyFunLoaderTest {
 
 		Assert.assertFalse(loader.isInitialize());
 	}
+
+	@Test
+	public void testOnLoadStaticFactoryMethod1() {
+
+		LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
+
+		Assert.assertNotNull(loader.get());
+		Assert.assertTrue(loader.isInitialize());
+
+		// 对于某些对象，在程序关闭时，需要进行销毁操作
+		loader.ifInitialized(BigObject::destroy);
+
+		Assert.assertTrue(loader.get().isDestroy);
+	}
+
+	@Test
+	public void testOnLoadStaticFactoryMethod2() {
+
+		LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
+
+		// 若从未使用，则可以避免不必要的初始化
+		loader.ifInitialized(it -> {
+
+			Assert.fail();
+			it.destroy();
+		});
+
+	}
 }

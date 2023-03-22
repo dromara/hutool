@@ -21,6 +21,9 @@ public class ProviderFactory {
 	 * @return {@link Provider}
 	 */
 	public static Provider createBouncyCastleProvider() {
-		return new org.bouncycastle.jce.provider.BouncyCastleProvider();
+		final org.bouncycastle.jce.provider.BouncyCastleProvider provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
+		// issue#2631@Github
+		SecureUtil.addProvider(provider);
+		return provider;
 	}
 }

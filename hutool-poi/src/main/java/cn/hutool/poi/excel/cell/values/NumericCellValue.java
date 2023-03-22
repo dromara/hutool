@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.NumberToTextConverter;
 
+import java.time.LocalDateTime;
+
 /**
  * 数字类型单元格值<br>
  * 单元格值可能为Long、Double、Date
@@ -24,7 +26,7 @@ public class NumericCellValue implements CellValue<Object> {
 	 *
 	 * @param cell {@link Cell}
 	 */
-	public NumericCellValue(Cell cell){
+	public NumericCellValue(Cell cell) {
 		this.cell = cell;
 	}
 
@@ -36,8 +38,13 @@ public class NumericCellValue implements CellValue<Object> {
 		if (null != style) {
 			// 判断是否为日期
 			if (ExcelDateUtil.isDateFormat(cell)) {
+				final LocalDateTime dateCellValue = cell.getLocalDateTimeCellValue();
+				if(1899 == dateCellValue.getYear()){
+					// 1899年写入会导致数据错乱，读取到1899年证明这个单元格的信息不关注年月日
+					return dateCellValue.toLocalTime();
+				}
 				// 使用Hutool的DateTime包装
-				return DateUtil.date(cell.getDateCellValue());
+				return DateUtil.date(dateCellValue);
 			}
 
 			final String format = style.getDataFormatString();

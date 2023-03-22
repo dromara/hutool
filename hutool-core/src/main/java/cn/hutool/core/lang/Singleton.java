@@ -1,12 +1,14 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.HashMap;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 单例类<br>
@@ -16,7 +18,7 @@ import java.util.HashMap;
  */
 public final class Singleton {
 
-	private static final SimpleCache<String, Object> POOL = new SimpleCache<>(new HashMap<>());
+	private static final SafeConcurrentHashMap<String, Object> POOL = new SafeConcurrentHashMap<>();
 
 	private Singleton() {
 	}
@@ -40,7 +42,6 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
-	 * 注意：单例针对的是类和参数，也就是说只有类、参数一致才会返回同一个对象
 	 *
 	 * @param <T>      单例对象类型
 	 * @param key      自定义键
@@ -50,7 +51,7 @@ public final class Singleton {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(String key, Func0<T> supplier) {
-		return (T) POOL.get(key, supplier::call);
+		return (T) POOL.computeIfAbsent(key, (k)-> supplier.callWithRuntimeException());
 	}
 
 	/**
@@ -88,6 +89,30 @@ public final class Singleton {
 	 */
 	public static void put(String key, Object obj) {
 		POOL.put(key, obj);
+	}
+
+	/**
+	 * 判断某个类的对象是否存在
+	 *
+	 * @param clazz 类
+	 * @param params 构造参数
+	 * @return 是否存在
+	 */
+	public static boolean exists(Class<?> clazz, Object... params){
+		if (null != clazz){
+			final String key = buildKey(clazz.getName(), params);
+			return POOL.containsKey(key);
+		}
+		return false;
+	}
+
+	/**
+	 * 获取单例池中存在的所有类
+	 *
+	 * @return 非重复的类集合
+	 */
+	public static Set<Class<?>> getExistClass(){
+		return POOL.values().stream().map(Object::getClass).collect(Collectors.toSet());
 	}
 
 	/**

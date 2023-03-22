@@ -39,11 +39,11 @@ public abstract class MapRowHandler extends AbstractRowHandler<Map<String, Objec
 	}
 
 	@Override
-	public void handle(int sheetIndex, long rowIndex, List<Object> rowList) {
+	public void handle(int sheetIndex, long rowIndex, List<Object> rowCells) {
 		if (rowIndex == this.headerRowIndex) {
-			this.headerList = ListUtil.unmodifiable(Convert.toList(String.class, rowList));
+			this.headerList = ListUtil.unmodifiable(Convert.toList(String.class, rowCells));
 			return;
 		}
-		super.handle(sheetIndex, rowIndex, rowList);
+		super.handle(sheetIndex, rowIndex, rowCells);
 	}
 }

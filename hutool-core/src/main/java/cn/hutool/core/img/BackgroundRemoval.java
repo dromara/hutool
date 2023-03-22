@@ -299,7 +299,7 @@ public class BackgroundRemoval {
 			}
 		}
 
-		Map<String, Integer> map = new HashMap<>(list.size());
+		final Map<String, Integer> map = new HashMap<>(list.size(), 1);
 		for (String string : list) {
 			Integer integer = map.get(string);
 			if (integer == null) {
@@ -309,7 +309,7 @@ public class BackgroundRemoval {
 			}
 			map.put(string, integer);
 		}
-		String max = "";
+		String max = StrUtil.EMPTY;
 		long num = 0;
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			String key = entry.getKey();
@@ -326,7 +326,7 @@ public class BackgroundRemoval {
 			return ImgUtil.toHex(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]),
 					Integer.parseInt(strings[2]));
 		}
-		return "";
+		return StrUtil.EMPTY;
 	}
 
 	// -------------------------------------------------------------------------- private

@@ -1,0 +1,32 @@
+{
+  "store": {
+    "bicycle": {
+      "color": "red",
+      "price": 19.95
+    },
+    "book": [
+      {
+        "category": "fiction",
+        "author": "Evelyn Waugh",
+        "title": "Sword of Honour",
+        "price": 12.99,
+        "items": [
+          {
+            "name": "wujing001",
+            "age": 18
+          },
+          {
+            "name": "wujing002",
+            "age": 18
+          }
+        ]
+      },
+      {
+        "category": "fiction02",
+        "author": "Evelyn Waugh02",
+        "title": "Sword of Honour02",
+        "price": 12.99
+      }
+    ]
+  }
+}

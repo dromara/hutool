@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-crypto</artifactId>
@@ -17,8 +17,9 @@
 	<description>Hutool 加密解密</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.crypto</Automatic-Module-Name>
 		<!-- versions -->
-		<bouncycastle.version>1.69</bouncycastle.version>
+		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>
 
 	<dependencies>
@@ -29,7 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15to18</artifactId>
+			<artifactId>bcpkix-jdk15to18</artifactId>
 			<version>${bouncycastle.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>

@@ -9,12 +9,16 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-json</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool JSON封装</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.json</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

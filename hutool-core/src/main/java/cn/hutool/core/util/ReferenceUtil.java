@@ -44,9 +44,9 @@ public class ReferenceUtil {
 	public static <T> Reference<T> create(ReferenceType type, T referent, ReferenceQueue<T> queue) {
 		switch (type) {
 		case SOFT:
-			return new SoftReference<>(referent);
+			return new SoftReference<>(referent, queue);
 		case WEAK:
-			return new WeakReference<>(referent);
+			return new WeakReference<>(referent, queue);
 		case PHANTOM:
 			return new PhantomReference<>(referent, queue);
 		default:

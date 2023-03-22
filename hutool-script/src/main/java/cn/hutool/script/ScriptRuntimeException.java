@@ -42,11 +42,11 @@ public class ScriptRuntimeException extends RuntimeException {
 	}
 
 	/**
-	 * Creates a <code>ScriptException</code> with message, filename and linenumber to be used in error messages.
+	 * Creates a {@code ScriptException} with message, filename and linenumber to be used in error messages.
 	 *
 	 * @param message    The string to use in the message
-	 * @param fileName   The file or resource name describing the location of a script error causing the <code>ScriptException</code> to be thrown.
-	 * @param lineNumber A line number describing the location of a script error causing the <code>ScriptException</code> to be thrown.
+	 * @param fileName   The file or resource name describing the location of a script error causing the {@code ScriptException} to be thrown.
+	 * @param lineNumber A line number describing the location of a script error causing the {@code ScriptException} to be thrown.
 	 */
 	public ScriptRuntimeException(String message, String fileName, int lineNumber) {
 		super(message);
@@ -55,7 +55,7 @@ public class ScriptRuntimeException extends RuntimeException {
 	}
 
 	/**
-	 * <code>ScriptException</code> constructor specifying message, filename, line number and column number.
+	 * {@code ScriptException} constructor specifying message, filename, line number and column number.
 	 *
 	 * @param message      The message.
 	 * @param fileName     The filename

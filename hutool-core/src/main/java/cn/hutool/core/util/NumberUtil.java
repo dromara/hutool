@@ -12,7 +12,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -717,7 +716,10 @@ public class NumberUtil {
 	 * @since 3.1.0
 	 */
 	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
-		return div(v1.toString(), v2.toString(), scale, roundingMode);
+		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
+			return div((BigDecimal) v1, (BigDecimal) v2, scale, roundingMode);
+		}
+		return div(StrUtil.toStringOrNull(v1), StrUtil.toStringOrNull(v2), scale, roundingMode);
 	}
 
 	/**
@@ -791,7 +793,7 @@ public class NumberUtil {
 	 * @return 新值
 	 */
 	public static String roundStr(double v, int scale) {
-		return round(v, scale).toString();
+		return round(v, scale).toPlainString();
 	}
 
 	/**
@@ -832,7 +834,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(String numberStr, int scale) {
-		return round(numberStr, scale).toString();
+		return round(numberStr, scale).toPlainString();
 	}
 
 	/**
@@ -859,7 +861,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(double v, int scale, RoundingMode roundingMode) {
-		return round(v, scale, roundingMode).toString();
+		return round(v, scale, roundingMode).toPlainString();
 	}
 
 	/**
@@ -913,7 +915,7 @@ public class NumberUtil {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(String numberStr, int scale, RoundingMode roundingMode) {
-		return round(numberStr, scale, roundingMode).toString();
+		return round(numberStr, scale, roundingMode).toPlainString();
 	}
 
 	/**
@@ -1236,6 +1238,9 @@ public class NumberUtil {
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(String s) {
+		if (StrUtil.isBlank(s)) {
+			return false;
+		}
 		try {
 			Integer.parseInt(s);
 		} catch (NumberFormatException e) {
@@ -1253,6 +1258,9 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(String s) {
+		if (StrUtil.isBlank(s)) {
+			return false;
+		}
 		try {
 			Long.parseLong(s);
 		} catch (NumberFormatException e) {
@@ -1268,13 +1276,15 @@ public class NumberUtil {
 	 * @return 是否为{@link Double}类型
 	 */
 	public static boolean isDouble(String s) {
+		if (StrUtil.isBlank(s)) {
+			return false;
+		}
 		try {
 			Double.parseDouble(s);
-			return s.contains(".");
 		} catch (NumberFormatException ignore) {
-			// ignore
+			return false;
 		}
-		return false;
+		return s.contains(".");
 	}
 
 	/**
@@ -1362,13 +1372,12 @@ public class NumberUtil {
 			throw new UtilException("Size is larger than range between begin and end!");
 		}
 
-		Random ran = new Random();
-		Set<Integer> set = new HashSet<>();
+		Set<Integer> set = new HashSet<>(size, 1);
 		while (set.size() < size) {
-			set.add(begin + ran.nextInt(end - begin));
+			set.add(begin + RandomUtil.randomInt(end - begin));
 		}
 
-		return set.toArray(new Integer[size]);
+		return set.toArray(new Integer[0]);
 	}
 
 	// ------------------------------------------------------------------------------------------- range
@@ -1675,12 +1684,12 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Character#compare(char, char)
 	 * @since 3.0.1
 	 */
 	public static int compare(char x, char y) {
-		return x - y;
+		return Character.compare(x, y);
 	}
 
 	/**
@@ -1688,7 +1697,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Double#compare(double, double)
 	 * @since 3.0.1
 	 */
@@ -1701,7 +1710,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Integer#compare(int, int)
 	 * @since 3.0.1
 	 */
@@ -1714,7 +1723,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Long#compare(long, long)
 	 * @since 3.0.1
 	 */
@@ -1727,7 +1736,7 @@ public class NumberUtil {
 	 *
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
+	 * @return x==y返回0，x&lt;y返回小于0的数，x&gt;y返回大于0的数
 	 * @see Short#compare(short, short)
 	 * @since 3.0.1
 	 */
@@ -1754,7 +1763,7 @@ public class NumberUtil {
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
 	 * @return 是否大于
-	 * @since 3, 0.9
+	 * @since 3.0.9
 	 */
 	public static boolean isGreater(BigDecimal bigNum1, BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
@@ -1805,6 +1814,22 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 检查值是否在指定范围内
+	 *
+	 * @param value      值
+	 * @param minInclude 最小值（包含）
+	 * @param maxInclude 最大值（包含）
+	 * @return 经过检查后的值
+	 * @since 5.8.5
+	 */
+	public static boolean isIn(final BigDecimal value, final BigDecimal minInclude, final BigDecimal maxInclude) {
+		Assert.notNull(value);
+		Assert.notNull(minInclude);
+		Assert.notNull(maxInclude);
+		return isGreaterOrEqual(value, minInclude) && isLessOrEqual(value, maxInclude);
+	}
+
+	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
@@ -1830,6 +1855,19 @@ public class NumberUtil {
 	 */
 	public static boolean equals(float num1, float num2) {
 		return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
+	}
+
+	/**
+	 * 比较大小，值相等 返回true<br>
+	 * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失
+	 *
+	 * @param num1 数字1
+	 * @param num2 数字2
+	 * @return 是否相等
+	 * @since 5.7.19
+	 */
+	public static boolean equals(long num1, long num2) {
+		return num1 == num2;
 	}
 
 	/**
@@ -2159,14 +2197,14 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(String numberStr) {
-		if(StrUtil.isBlank(numberStr)){
+		if (StrUtil.isBlank(numberStr)) {
 			return BigDecimal.ZERO;
 		}
 
 		try {
 			// 支持类似于 1,234.55 格式的数字
 			final Number number = parseNumber(numberStr);
-			if(number instanceof BigDecimal){
+			if (number instanceof BigDecimal) {
 				return (BigDecimal) number;
 			} else {
 				return new BigDecimal(number.toString());
@@ -2403,6 +2441,11 @@ public class NumberUtil {
 			return 0;
 		}
 
+		if(StrUtil.containsIgnoreCase(number, "E")){
+			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
+			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
+		}
+
 		if (StrUtil.startWithIgnoreCase(number, "0x")) {
 			// 0x04表示16进制数
 			return Integer.parseInt(number.substring(2), 16);
@@ -2510,9 +2553,14 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(String numberStr) throws NumberFormatException {
+		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
+			// 0x04表示16进制数
+			return Long.parseLong(numberStr.substring(2), 16);
+		}
+
 		try {
 			final NumberFormat format = NumberFormat.getInstance();
-			if(format instanceof DecimalFormat){
+			if (format instanceof DecimalFormat) {
 				// issue#1818@Github
 				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
 				((DecimalFormat) format).setParseBigDecimal(true);
@@ -2527,7 +2575,7 @@ public class NumberUtil {
 
 	/**
 	 * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
 	 *
 	 * @param value 值
 	 * @return byte数组
@@ -2546,7 +2594,7 @@ public class NumberUtil {
 
 	/**
 	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
 	 *
 	 * @param bytes byte数组
 	 * @return int
@@ -2643,6 +2691,9 @@ public class NumberUtil {
 	 * @since 4.6.7
 	 */
 	public static boolean isValidNumber(Number number) {
+		if (null == number) {
+			return false;
+		}
 		if (number instanceof Double) {
 			return (false == ((Double) number).isInfinite()) && (false == ((Double) number).isNaN());
 		} else if (number instanceof Float) {
@@ -2699,11 +2750,35 @@ public class NumberUtil {
 	 * @since 5.7.8
 	 */
 	public static double toDouble(Number value) {
-		if(value instanceof Float){
+		if (value instanceof Float) {
 			return Double.parseDouble(value.toString());
-		}else{
+		} else {
 			return value.doubleValue();
 		}
+	}
+
+	/**
+	 * 检查是否为奇数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是奇数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isOdd(int num) {
+		return (num & 1) == 1;
+	}
+
+	/**
+	 * 检查是否为偶数<br>
+	 *
+	 * @param num 被判断的数值
+	 * @return 是否是偶数
+	 * @author GuoZG
+	 * @since 5.7.17
+	 */
+	public static boolean isEven(int num) {
+		return false == isOdd(num);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

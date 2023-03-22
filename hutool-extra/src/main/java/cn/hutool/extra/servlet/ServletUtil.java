@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -35,10 +36,13 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -299,6 +303,42 @@ public class ServletUtil {
 		return headerMap;
 	}
 
+	/**
+	 * 获取请求所有的头（header）信息
+	 *
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @return header值
+	 * @since 6.0.0
+	 */
+	public static Map<String, List<String>> getHeadersMap(final HttpServletRequest request) {
+		final Map<String, List<String>> headerMap = new LinkedHashMap<>();
+
+		final Enumeration<String> names = request.getHeaderNames();
+		String name;
+		while (names.hasMoreElements()) {
+			name = names.nextElement();
+			headerMap.put(name, ListUtil.list(false, request.getHeaders(name)));
+		}
+
+		return headerMap;
+	}
+
+	/**
+	 * 获取响应所有的头（header）信息
+	 *
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @return header值
+	 */
+	public static Map<String, Collection<String>> getHeadersMap(HttpServletResponse response) {
+		final Map<String, Collection<String>> headerMap = new HashMap<>();
+
+		final Collection<String> names = response.getHeaderNames();
+		for (String name : names) {
+			headerMap.put(name, response.getHeaders(name));
+		}
+
+		return headerMap;
+	}
 
 	/**
 	 * 忽略大小写获得请求header中的信息
@@ -553,25 +593,29 @@ public class ServletUtil {
 	 *
 	 * @param response    响应对象{@link HttpServletResponse}
 	 * @param in          需要返回客户端的内容
-	 * @param contentType 返回的类型
-	 *                    如：
-	 *                    1、application/pdf、
-	 *                    2、application/vnd.ms-excel、
-	 *                    3、application/msword、
-	 *                    4、application/vnd.ms-powerpoint
+	 * @param contentType 返回的类型，可以使用{@link FileUtil#getMimeType(String)}获取对应扩展名的MIME信息
+	 *                    <ul>
+	 *                      <li>application/pdf</li>
+	 *                      <li>application/vnd.ms-excel</li>
+	 *                      <li>application/msword</li>
+	 *                      <li>application/vnd.ms-powerpoint</li>
+	 *                    </ul>
 	 *                    docx、xlsx 这种 office 2007 格式 设置 MIME;网页里面docx 文件是没问题，但是下载下来了之后就变成doc格式了
-	 *                    https://blog.csdn.net/cyh2260629/article/details/73824760
-	 *                    5、MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	 *                    6、MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-	 *                    7、MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	 *                    8、MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流
-	 * @param fileName    文件名
+	 *                    参考：<a href="https://my.oschina.net/shixiaobao17145/blog/32489">https://my.oschina.net/shixiaobao17145/blog/32489</a>
+	 *                    <ul>
+	 *                      <li>MIME_EXCELX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";</li>
+	 *                      <li>MIME_PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";</li>
+	 *                      <li>MIME_WORDX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";</li>
+	 *                      <li>MIME_STREAM_TYPE = "application/octet-stream;charset=utf-8"; #原始字节流</li>
+	 *                    </ul>
+	 * @param fileName    文件名，自动添加双引号
 	 * @since 4.1.15
 	 */
 	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
 		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
-		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}",
-				URLUtil.encode(fileName, CharsetUtil.charset(charset))));
+		final String encodeText = URLUtil.encodeAll(fileName, CharsetUtil.charset(charset));
+		response.setHeader("Content-Disposition",
+				StrUtil.format("attachment;filename=\"{}\";filename*={}''{}", encodeText, charset, encodeText));
 		response.setContentType(contentType);
 		write(response, in);
 	}

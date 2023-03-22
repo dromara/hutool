@@ -7,6 +7,7 @@ import cn.hutool.core.util.URLUtil;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -18,9 +19,19 @@ public class UrlResource implements Resource, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	protected URL url;
+	private long lastModified = 0;
 	protected String name;
 
 	//-------------------------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 * @param uri URI
+	 * @since 5.7.21
+	 */
+	public UrlResource(URI uri) {
+		this(URLUtil.url(uri), null);
+	}
+
 	/**
 	 * 构造
 	 * @param url URL
@@ -36,7 +47,10 @@ public class UrlResource implements Resource, Serializable{
 	 */
 	public UrlResource(URL url, String name) {
 		this.url = url;
-		this.name = ObjectUtil.defaultIfNull(name, (null != url) ? FileUtil.getName(url.getPath()) : null);
+		if(null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())){
+			this.lastModified = FileUtil.file(url).lastModified();
+		}
+		this.name = ObjectUtil.defaultIfNull(name, () -> (null != url ? FileUtil.getName(url.getPath()) : null));
 	}
 
 	/**
@@ -66,6 +80,12 @@ public class UrlResource implements Resource, Serializable{
 			throw new NoResourceException("Resource URL is null!");
 		}
 		return URLUtil.getStream(url);
+	}
+
+	@Override
+	public boolean isModified() {
+		// lastModified == 0表示此资源非文件资源
+		return (0 != this.lastModified) && this.lastModified != getFile().lastModified();
 	}
 
 	/**

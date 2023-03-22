@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  *     <li>isXXX：通过返回boolean值判断是否满足给定格式。</li>
  *     <li>validateXXX：通过抛出异常{@link ValidateException}检查是否满足给定格式。</li>
  * </ul>
- *
+ * <p>
  * 主要验证字段非空、是否为满足指定格式等（如是否为Email、电话等）
  *
  * @author Looly
@@ -943,7 +943,7 @@ public class Validator {
 	 * @return 是否为URL
 	 */
 	public static boolean isUrl(CharSequence value) {
-		if(StrUtil.isBlank(value)){
+		if (StrUtil.isBlank(value)) {
 			return false;
 		}
 		try {
@@ -1143,10 +1143,9 @@ public class Validator {
 	/**
 	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
 	 *
-	 * @author dazer and ourslook
-	 *
 	 * @param value 值，17位车架号；形如：LSJA24U62JG269225、LDC613P23A1305189
 	 * @return 是否为车架号
+	 * @author dazer and ourslook
 	 * @since 5.6.3
 	 */
 	public static boolean isCarVin(CharSequence value) {
@@ -1156,13 +1155,12 @@ public class Validator {
 	/**
 	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
 	 *
-	 * @author dazer and ourslook
-	 *
 	 * @param <T>      字符串类型
 	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
+	 * @author dazer and ourslook
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarVin(T value, String errorMsg) throws ValidateException {
@@ -1176,26 +1174,60 @@ public class Validator {
 	 * 验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
 	 * 仅限：中国驾驶证档案编号
 	 *
-	 * @author dazer and ourslook
-	 *
 	 * @param value 值，12位数字字符串,eg:430101758218
 	 * @return 是否为档案编号
+	 * @author dazer and ourslook
 	 * @since 5.6.3
 	 */
 	public static boolean isCarDrivingLicence(CharSequence value) {
 		return isMatchRegex(CAR_DRIVING_LICENCE, value);
 	}
 
+
 	/**
-	 *  验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
+	 * 是否是中文姓名
+	 * 维吾尔族姓名里面的点是 · 输入法中文状态下，键盘左上角数字1前面的那个符号；<br>
+	 * 错误字符：{@code ．.。．.}<br>
+	 * 正确维吾尔族姓名：
+	 * <pre>
+	 * 霍加阿卜杜拉·麦提喀斯木
+	 * 玛合萨提别克·哈斯木别克
+	 * 阿布都热依木江·艾斯卡尔
+	 * 阿卜杜尼亚孜·毛力尼亚孜
+	 * </pre>
+	 * <pre>
+	 * ----------
+	 * 错误示例：孟  伟                reason: 有空格
+	 * 错误示例：连逍遥0               reason: 数字
+	 * 错误示例：依帕古丽-艾则孜        reason: 特殊符号
+	 * 错误示例：牙力空.买提萨力        reason: 新疆人的点不对
+	 * 错误示例：王建鹏2002-3-2        reason: 有数字、特殊符号
+	 * 错误示例：雷金默(雷皓添）        reason: 有括号
+	 * 错误示例：翟冬:亮               reason: 有特殊符号
+	 * 错误示例：李                   reason: 少于2位
+	 * ----------
+	 * </pre>
+	 * 总结中文姓名：2-60位，只能是中文和 ·
 	 *
-	 *  @author dazer and ourslook
+	 * @param value 中文姓名
+	 * @return 是否是正确的中文姓名
+	 * @author dazer
+	 * @since 5.8.0.M3
+	 */
+	public static boolean isChineseName(CharSequence value) {
+		return isMatchRegex(PatternPool.CHINESE_NAME, value);
+	}
+
+
+	/**
+	 * 验证是否为驾驶证  别名：驾驶证档案编号、行驶证编号
 	 *
 	 * @param <T>      字符串类型
 	 * @param value    值
 	 * @param errorMsg 验证错误的信息
 	 * @return 验证后的值
 	 * @throws ValidateException 验证异常
+	 * @author dazer and ourslook
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarDrivingLicence(T value, String errorMsg) throws ValidateException {

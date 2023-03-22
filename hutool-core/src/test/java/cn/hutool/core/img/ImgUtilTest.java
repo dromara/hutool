@@ -1,6 +1,7 @@
 package cn.hutool.core.img;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -67,9 +68,9 @@ public class ImgUtilTest {
 	@Ignore
 	public void pressImgTest() {
 		ImgUtil.pressImage(
-				FileUtil.file("d:/test/617180969474805871.jpg"),
-				FileUtil.file("d:/test/dest.png"),
-				ImgUtil.read(FileUtil.file("d:/test/vbbb.png")), 0, 0, 0.9f);
+				FileUtil.file("d:/test/1435859438434136064.jpg"),
+				FileUtil.file("d:/test/dest.jpg"),
+				ImgUtil.read(FileUtil.file("d:/test/qrcodeCustom.png")), 0, 0, 0.9f);
 	}
 
 	@Test
@@ -88,7 +89,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void sliceByRowsAndColsTest() {
-		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), 1, 5);
+		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/temp/2.png"), FileUtil.file("d:/temp/slice/png"),ImgUtil.IMAGE_TYPE_PNG, 1, 5);
 	}
 
 	@Test
@@ -144,6 +145,29 @@ public class ImgUtilTest {
 		BufferedImage read = ImgUtil.read(new URL("https://pic2.zhimg.com/v2-94f5552f2b142ff575306850c5bab65d_b.png"));
 		String mainColor = ImgUtil.getMainColor(read, new int[]{64,84,116});
 		System.out.println(mainColor);
+	}
+
+	@Test
+	@Ignore
+	public void createImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.WHITE,
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createImageTest.png"))
+		);
+	}
+
+	@Test
+	@Ignore
+	public void createTransparentImageTest() throws IORuntimeException, IOException {
+		ImgUtil.createTransparentImage(
+				"版权所有",
+				new Font("黑体", Font.BOLD, 50),
+				Color.BLACK,
+				ImageIO.createImageOutputStream(new File("d:/test/createTransparentImageTest.png"))
+		);
 	}
 
 }

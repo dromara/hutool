@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * 可复用的字符串生成器，非线程安全
+ * 可复用的字符串生成器，非线程安全<br>
+ *  TODO 6.x移除此类，java8的StringBuilder非常完善了，无需重写。
  *
  * @author Looly
  * @since 4.0.0
@@ -470,7 +471,6 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 生成字符串
 	 */
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public String toString() {
 		return toString(false);
@@ -579,7 +579,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	private static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
 		for (CharSequence str : strs) {
-			totalLength += (null == str ? 4 : str.length());
+			totalLength += (null == str ? 0 : str.length());
 		}
 		return totalLength;
 	}

@@ -7,33 +7,49 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 样式集合，此样式集合汇集了整个工作簿的样式，用于减少样式的创建和冗余
  *
  * @author looly
- *
  */
-public class StyleSet implements Serializable{
+public class StyleSet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/** 工作簿引用 */
+	/**
+	 * 工作簿引用
+	 */
 	private final Workbook workbook;
-	/** 标题样式 */
-	protected CellStyle headCellStyle;
-	/** 默认样式 */
-	protected CellStyle cellStyle;
-	/** 默认数字样式 */
-	protected CellStyle cellStyleForNumber;
-	/** 默认日期样式 */
-	protected CellStyle cellStyleForDate;
-	/** 默认链接样式 */
-	protected CellStyle cellStyleForHyperlink;
+	/**
+	 * 标题样式
+	 */
+	protected final CellStyle headCellStyle;
+	/**
+	 * 默认样式
+	 */
+	protected final CellStyle cellStyle;
+	/**
+	 * 默认数字样式
+	 */
+	protected final CellStyle cellStyleForNumber;
+	/**
+	 * 默认日期样式
+	 */
+	protected final CellStyle cellStyleForDate;
+	/**
+	 * 默认链接样式
+	 */
+	protected final CellStyle cellStyleForHyperlink;
 
 	/**
 	 * 构造
@@ -148,7 +164,7 @@ public class StyleSet implements Serializable{
 	 * 设置单元格背景样式
 	 *
 	 * @param backgroundColor 背景色
-	 * @param withHeadCell 是否也定义头部样式
+	 * @param withHeadCell    是否也定义头部样式
 	 * @return this
 	 * @since 4.0.0
 	 */
@@ -166,9 +182,9 @@ public class StyleSet implements Serializable{
 	/**
 	 * 设置全局字体
 	 *
-	 * @param color 字体颜色
-	 * @param fontSize 字体大小，-1表示默认大小
-	 * @param fontName 字体名，null表示默认字体
+	 * @param color      字体颜色
+	 * @param fontSize   字体大小，-1表示默认大小
+	 * @param fontName   字体名，null表示默认字体
 	 * @param ignoreHead 是否跳过头部样式
 	 * @return this
 	 */
@@ -180,7 +196,7 @@ public class StyleSet implements Serializable{
 	/**
 	 * 设置全局字体
 	 *
-	 * @param font 字体，可以通过{@link StyleUtil#createFont(Workbook, short, short, String)}创建
+	 * @param font       字体，可以通过{@link StyleUtil#createFont(Workbook, short, short, String)}创建
 	 * @param ignoreHead 是否跳过头部样式
 	 * @return this
 	 * @since 4.1.0
@@ -208,6 +224,46 @@ public class StyleSet implements Serializable{
 		this.cellStyleForDate.setWrapText(true);
 		this.cellStyleForHyperlink.setWrapText(true);
 		return this;
+	}
+
+	/**
+	 * 获取值对应的公共单元格样式
+	 *
+	 * @param value    值
+	 * @param isHeader 是否为标题单元格
+	 * @return 值对应单元格样式
+	 * @since 5.7.16
+	 */
+	public CellStyle getStyleByValueType(Object value, boolean isHeader) {
+		CellStyle style = null;
+
+		if (isHeader && null != this.headCellStyle) {
+			style = headCellStyle;
+		} else if (null != cellStyle) {
+			style = cellStyle;
+		}
+
+		if (value instanceof Date
+				|| value instanceof TemporalAccessor
+				|| value instanceof Calendar) {
+			// 日期单独定义格式
+			if (null != this.cellStyleForDate) {
+				style = this.cellStyleForDate;
+			}
+		} else if (value instanceof Number) {
+			// 数字单独定义格式
+			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) &&
+					null != this.cellStyleForNumber) {
+				style = this.cellStyleForNumber;
+			}
+		} else if (value instanceof Hyperlink) {
+			// 自定义超链接样式
+			if (null != this.cellStyleForHyperlink) {
+				style = this.cellStyleForHyperlink;
+			}
+		}
+
+		return style;
 	}
 
 }

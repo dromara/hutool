@@ -27,41 +27,74 @@ public class DesensitizedUtil {
 	 * @author dazer and neusoft and qiaomu
 	 */
 	public enum DesensitizedType {
-		//用户id
+		/**
+		 * 用户id
+		 */
 		USER_ID,
-		//中文名
+		/**
+		 * 中文名
+		 */
 		CHINESE_NAME,
-		//身份证号
+		/**
+		 * 身份证号
+		 */
 		ID_CARD,
-		//座机号
+		/**
+		 * 座机号
+		 */
 		FIXED_PHONE,
-		//手机号
+		/**
+		 * 手机号
+		 */
 		MOBILE_PHONE,
-		//地址
+		/**
+		 * 地址
+		 */
 		ADDRESS,
-		//电子邮件
+		/**
+		 * 电子邮件
+		 */
 		EMAIL,
-		//密码
+		/**
+		 * 密码
+		 */
 		PASSWORD,
-		//中国大陆车牌，包含普通车辆、新能源车辆
+		/**
+		 * 中国大陆车牌，包含普通车辆、新能源车辆
+		 */
 		CAR_LICENSE,
-		//银行卡
-		BANK_CARD
+		/**
+		 * 银行卡
+		 */
+		BANK_CARD,
+		/**
+		 * IPv4地址
+		 */
+		IPV4,
+		/**
+		 * IPv6地址
+		 */
+		IPV6,
+		/**
+		 * 定义了一个first_mask的规则，只显示第一个字符。
+		 */
+		FIRST_MASK
 	}
 
 	/**
 	 * 脱敏，使用默认的脱敏策略
 	 * <pre>
-	 * DesensitizedUtil.desensitized("100", DesensitizedUtils.DesensitizedType.USER_ID)) =  "0"
-	 * DesensitizedUtil.desensitized("段正淳", DesensitizedUtils.DesensitizedType.CHINESE_NAME)) = "段**"
-	 * DesensitizedUtil.desensitized("51343620000320711X", DesensitizedUtils.DesensitizedType.ID_CARD)) = "5***************1X"
-	 * DesensitizedUtil.desensitized("09157518479", DesensitizedUtils.DesensitizedType.FIXED_PHONE)) = "0915*****79"
-	 * DesensitizedUtil.desensitized("18049531999", DesensitizedUtils.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-	 * DesensitizedUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtils.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
-	 * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtils.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
-	 * DesensitizedUtil.desensitized("1234567890", DesensitizedUtils.DesensitizedType.PASSWORD)) = "**********"
-	 * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtils.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
-	 * DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtils.DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
+	 * DesensitizedUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
+	 * DesensitizedUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
+	 * DesensitizedUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
+	 * DesensitizedUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
+	 * DesensitizedUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
+	 * DesensitizedUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
+	 * DesensitizedUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
+	 * DesensitizedUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
+	 * DesensitizedUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
+	 * DesensitizedUtil.desensitized("11011111222233333256", DesensitizedUtil.DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
+	 * DesensitizedUtil.desensitized("192.168.1.1", DesensitizedUtil.DesensitizedType.IPV4)) = "192.*.*.*"
 	 * </pre>
 	 *
 	 * @param str              字符串
@@ -77,34 +110,43 @@ public class DesensitizedUtil {
 		String newStr = String.valueOf(str);
 		switch (desensitizedType) {
 			case USER_ID:
-				newStr = String.valueOf(DesensitizedUtil.userId());
+				newStr = String.valueOf(userId());
 				break;
 			case CHINESE_NAME:
-				newStr = DesensitizedUtil.chineseName(String.valueOf(str));
+				newStr = chineseName(String.valueOf(str));
 				break;
 			case ID_CARD:
-				newStr = DesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
+				newStr = idCardNum(String.valueOf(str), 1, 2);
 				break;
 			case FIXED_PHONE:
-				newStr = DesensitizedUtil.fixedPhone(String.valueOf(str));
+				newStr = fixedPhone(String.valueOf(str));
 				break;
 			case MOBILE_PHONE:
-				newStr = DesensitizedUtil.mobilePhone(String.valueOf(str));
+				newStr = mobilePhone(String.valueOf(str));
 				break;
 			case ADDRESS:
-				newStr = DesensitizedUtil.address(String.valueOf(str), 8);
+				newStr = address(String.valueOf(str), 8);
 				break;
 			case EMAIL:
-				newStr = DesensitizedUtil.email(String.valueOf(str));
+				newStr = email(String.valueOf(str));
 				break;
 			case PASSWORD:
-				newStr = DesensitizedUtil.password(String.valueOf(str));
+				newStr = password(String.valueOf(str));
 				break;
 			case CAR_LICENSE:
-				newStr = DesensitizedUtil.carLicense(String.valueOf(str));
+				newStr = carLicense(String.valueOf(str));
 				break;
 			case BANK_CARD:
-				newStr = DesensitizedUtil.bankCard(String.valueOf(str));
+				newStr = bankCard(String.valueOf(str));
+				break;
+			case IPV4:
+				newStr = ipv4(String.valueOf(str));
+				break;
+			case IPV6:
+				newStr = ipv6(String.valueOf(str));
+				break;
+			case FIRST_MASK:
+				newStr = firstMask(String.valueOf(str));
 				break;
 			default:
 		}
@@ -121,16 +163,27 @@ public class DesensitizedUtil {
 	}
 
 	/**
+	 * 定义了一个first_mask的规则，只显示第一个字符。<br>
+	 * 脱敏前：123456789；脱敏后：1********。
+	 *
+	 * @param str 字符串
+	 * @return 脱敏后的字符串
+	 */
+	public static String firstMask(String str) {
+		if (StrUtil.isBlank(str)) {
+			return StrUtil.EMPTY;
+		}
+		return StrUtil.hide(str, 1, str.length());
+	}
+
+	/**
 	 * 【中文姓名】只显示第一个汉字，其他隐藏为2个星号，比如：李**
 	 *
 	 * @param fullName 姓名
 	 * @return 脱敏后的姓名
 	 */
 	public static String chineseName(String fullName) {
-		if (StrUtil.isBlank(fullName)) {
-			return StrUtil.EMPTY;
-		}
-		return StrUtil.hide(fullName, 1, fullName.length());
+		return firstMask(fullName);
 	}
 
 	/**
@@ -283,5 +336,25 @@ public class DesensitizedUtil {
 		}
 		buf.append(CharUtil.SPACE).append(bankCardNo, length - 4, length);
 		return buf.toString();
+	}
+
+	/**
+	 * IPv4脱敏，如：脱敏前：192.0.2.1；脱敏后：192.*.*.*。
+	 *
+	 * @param ipv4 IPv4地址
+	 * @return 脱敏后的地址
+	 */
+	public static String ipv4(String ipv4) {
+		return StrUtil.subBefore(ipv4, '.', false) + ".*.*.*";
+	}
+
+	/**
+	 * IPv4脱敏，如：脱敏前：2001:0db8:86a3:08d3:1319:8a2e:0370:7344；脱敏后：2001:*:*:*:*:*:*:*
+	 *
+	 * @param ipv6 IPv4地址
+	 * @return 脱敏后的地址
+	 */
+	public static String ipv6(String ipv6) {
+		return StrUtil.subBefore(ipv6, ':', false) + ":*:*:*:*:*:*:*";
 	}
 }

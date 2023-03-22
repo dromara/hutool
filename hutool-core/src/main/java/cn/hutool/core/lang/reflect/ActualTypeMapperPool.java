@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.reflect;
 
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public class ActualTypeMapperPool {
 
-	private static final SimpleCache<Type, Map<Type, Type>> CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Type, Map<Type, Type>> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 获取泛型变量和泛型实际类型的对应关系Map
@@ -26,7 +27,18 @@ public class ActualTypeMapperPool {
 	 * @return 泛型对应关系Map
 	 */
 	public static Map<Type, Type> get(Type type) {
-		return CACHE.get(type, () -> createTypeMap(type));
+		return CACHE.computeIfAbsent(type, (key) -> createTypeMap(type));
+	}
+
+	/**
+	 * 获取泛型变量名（字符串）和泛型实际类型的对应关系Map
+	 *
+	 * @param type 被解析的包含泛型参数的类
+	 * @return 泛型对应关系Map
+	 * @since 5.7.16
+	 */
+	public static Map<String, Type> getStrKeyMap(Type type){
+		return Convert.toMap(String.class, Type.class, get(type));
 	}
 
 	/**
@@ -89,8 +101,13 @@ public class ActualTypeMapperPool {
 			final Class<?> rawType = (Class<?>) parameterizedType.getRawType();
 			final Type[] typeParameters = rawType.getTypeParameters();
 
+			Type value;
 			for (int i = 0; i < typeParameters.length; i++) {
-				typeMap.put(typeParameters[i], typeArguments[i]);
+				value = typeArguments[i];
+				// 跳过泛型变量对应泛型变量的情况
+				if(false == value instanceof TypeVariable){
+					typeMap.put(typeParameters[i], value);
+				}
 			}
 
 			type = rawType;

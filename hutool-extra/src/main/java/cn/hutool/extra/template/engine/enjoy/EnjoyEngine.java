@@ -78,6 +78,16 @@ public class EnjoyEngine implements TemplateEngine {
 	}
 
 	/**
+	 * 获取原始引擎的钩子方法，用于自定义特殊属性，如插件等
+	 *
+	 * @return {@link com.jfinal.template.Engine}
+	 * @since 5.8.7
+	 */
+	public com.jfinal.template.Engine getRawEngine() {
+		return this.engine;
+	}
+
+	/**
 	 * 创建引擎
 	 *
 	 * @param config 模板配置

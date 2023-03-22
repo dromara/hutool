@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-jwt</artifactId>
@@ -17,8 +17,10 @@
 	<description>JWT生成、解析和验证实现</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.jwt</Automatic-Module-Name>
+
 		<!-- versions -->
-		<bouncycastle.version>1.69</bouncycastle.version>
+		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>
 
 	<dependencies>

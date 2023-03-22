@@ -46,6 +46,16 @@ public class IndexedComparator<T> implements Comparator<T> {
 		final int index1 = getOrder(o1);
 		final int index2 = getOrder(o2);
 
+		if (index1 == index2) {
+			if (index1 < 0 || index1 == this.array.length) {
+				// 任意一个元素不在列表中, 返回原顺序
+				return 1;
+			}
+
+			// 位置一样，认为是同一个元素
+			return 0;
+		}
+
 		return Integer.compare(index1, index2);
 	}
 

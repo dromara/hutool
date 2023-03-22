@@ -87,6 +87,55 @@ public class DialectRunner implements Serializable {
 	}
 
 	/**
+	 * 更新或插入数据<br>
+	 * 此方法不会关闭Connection
+	 * 如果方言未实现此方法则内部自动使用insertOrUpdate来替代功能
+	 *
+	 * @param conn   数据库连接
+	 * @param record 记录
+	 * @param keys   需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 * @since 5.7.20
+	 */
+	public int upsert(Connection conn, Entity record, String... keys) throws SQLException {
+		PreparedStatement ps = null;
+		try{
+			ps = getDialect().psForUpsert(conn, record, keys);
+		}catch (SQLException ignore){
+			// 方言不支持，使用默认
+		}
+		if (null != ps) {
+			try {
+				return ps.executeUpdate();
+			} finally {
+				DbUtil.close(ps);
+			}
+		} else {
+			return insertOrUpdate(conn, record, keys);
+		}
+	}
+
+	/**
+	 * 插入或更新数据<br>
+	 * 此方法不会关闭Connection
+	 *
+	 * @param conn   数据库连接
+	 * @param record 记录
+	 * @param keys   需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public int insertOrUpdate(Connection conn, Entity record, String... keys) throws SQLException {
+		final Entity where = record.filter(keys);
+		if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
+			return update(conn, record, where);
+		} else {
+			return insert(conn, record)[0];
+		}
+	}
+
+	/**
 	 * 插入数据<br>
 	 * 此方法不会关闭Connection
 	 *
@@ -212,7 +261,7 @@ public class DialectRunner implements Serializable {
 	 * 获取查询结果总数，生成类似于 SELECT count(1) from (sql) hutool_alias_count_<br>
 	 * 此方法会重新构建{@link SqlBuilder}，并去除末尾的order by子句
 	 *
-	 * @param conn  数据库连接对象
+	 * @param conn       数据库连接对象
 	 * @param sqlBuilder 查询语句
 	 * @return 复合条件的结果数
 	 * @throws SQLException SQL执行异常
@@ -223,7 +272,7 @@ public class DialectRunner implements Serializable {
 
 		String selectSql = sqlBuilder.build();
 		// 去除order by 子句
-		final int orderByIndex = StrUtil.indexOfIgnoreCase(selectSql, " order by");
+		final int orderByIndex = StrUtil.lastIndexOfIgnoreCase(selectSql, " order by");
 		if (orderByIndex > 0) {
 			selectSql = StrUtil.subPre(selectSql, orderByIndex);
 		}

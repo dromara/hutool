@@ -39,7 +39,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -67,7 +66,7 @@ import java.util.Map;
 public class XmlUtil {
 
 	/**
-	 * 字符串常量：XML 空格转义 {@code "&nbsp;" -> " "}
+	 * 字符串常量：XML 不间断空格转义 {@code "&nbsp;" -> " "}
 	 */
 	public static final String NBSP = "&nbsp;";
 
@@ -330,50 +329,6 @@ public class XmlUtil {
 		return readXML(StrUtil.getReader(xmlStr));
 	}
 
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param source XML文件
-	 * @return 对象
-	 */
-	public static <T> T readObjectFromXml(File source) {
-		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
-	}
-
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param xmlStr XML内容
-	 * @return 对象
-	 * @since 3.2.0
-	 */
-	public static <T> T readObjectFromXml(String xmlStr) {
-		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
-	}
-
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param source {@link InputSource}
-	 * @return 对象
-	 * @since 3.2.0
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T readObjectFromXml(InputSource source) {
-		Object result;
-		XMLDecoder xmldec = null;
-		try {
-			xmldec = new XMLDecoder(source);
-			result = xmldec.readObject();
-		} finally {
-			IoUtil.close(xmldec);
-		}
-		return (T) result;
-	}
-
 	// -------------------------------------------------------------------------------------- Write
 
 	/**
@@ -462,7 +417,7 @@ public class XmlUtil {
 	 * @param doc                XML文档
 	 * @param charset            编码
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */
@@ -514,20 +469,20 @@ public class XmlUtil {
 	 *
 	 * @param doc     XML文档
 	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
-	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param charsetName 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 */
-	public static void toFile(Document doc, String path, String charset) {
-		if (StrUtil.isBlank(charset)) {
-			charset = doc.getXmlEncoding();
+	public static void toFile(Document doc, String path, String charsetName) {
+		if (StrUtil.isBlank(charsetName)) {
+			charsetName = doc.getXmlEncoding();
 		}
-		if (StrUtil.isBlank(charset)) {
-			charset = CharsetUtil.UTF_8;
+		if (StrUtil.isBlank(charsetName)) {
+			charsetName = CharsetUtil.UTF_8;
 		}
 
 		BufferedWriter writer = null;
 		try {
-			writer = FileUtil.getWriter(path, charset, false);
-			write(doc, writer, charset, INDENT_DEFAULT);
+			writer = FileUtil.getWriter(path, CharsetUtil.charset(charsetName), false);
+			write(doc, writer, charsetName, INDENT_DEFAULT);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -783,10 +738,10 @@ public class XmlUtil {
 	 */
 	public static Element getElement(Element element, String tagName) {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
-		if (nodeList == null || nodeList.getLength() < 1) {
+		final int length = nodeList.getLength();
+		if (length < 1) {
 			return null;
 		}
-		int length = nodeList.getLength();
 		for (int i = 0; i < length; i++) {
 			Element childEle = (Element) nodeList.item(i);
 			if (childEle == null || childEle.getParentNode() == element) {
@@ -1278,7 +1233,7 @@ public class XmlUtil {
 	 *
 	 * @param bean       Bean对象
 	 * @param namespace  命名空间，可以为null
-	 * @param ignoreNull 时候忽略值为{@code null}的属性
+	 * @param ignoreNull 忽略值为{@code null}的属性
 	 * @return XML
 	 * @see JAXBUtil#beanToXml(Object)
 	 * @since 5.7.10
@@ -1499,8 +1454,10 @@ public class XmlUtil {
 		 */
 		private void examineNode(Node node, boolean attributesOnly) {
 			final NamedNodeMap attributes = node.getAttributes();
+			//noinspection ConstantConditions
 			if (null != attributes) {
-				for (int i = 0; i < attributes.getLength(); i++) {
+				final int length = attributes.getLength();
+				for (int i = 0; i < length; i++) {
 					Node attribute = attributes.item(i);
 					storeAttribute(attribute);
 				}
@@ -1508,9 +1465,11 @@ public class XmlUtil {
 
 			if (false == attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
-				if (null != childNodes) {
+				//noinspection ConstantConditions
+				if(null != childNodes){
 					Node item;
-					for (int i = 0; i < childNodes.getLength(); i++) {
+					final int childLength = childNodes.getLength();
+					for (int i = 0; i < childLength; i++) {
 						item = childNodes.item(i);
 						if (item.getNodeType() == Node.ELEMENT_NODE)
 							examineNode(item, false);

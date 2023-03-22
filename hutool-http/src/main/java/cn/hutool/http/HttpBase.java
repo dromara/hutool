@@ -2,6 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -25,6 +26,11 @@ import java.util.Map.Entry;
 public abstract class HttpBase<T> {
 
 	/**
+	 * 默认的请求编码、URL的encode、decode编码
+	 */
+	protected static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+
+	/**
 	 * HTTP/1.0
 	 */
 	public static final String HTTP_1_0 = "HTTP/1.0";
@@ -40,7 +46,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * 编码
 	 */
-	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
+	protected Charset charset = DEFAULT_CHARSET;
 	/**
 	 * http版本
 	 */
@@ -48,7 +54,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * 存储主体
 	 */
-	protected byte[] bodyBytes;
+	protected Resource body;
 
 	// ---------------------------------------------------------------- Headers start
 
@@ -293,6 +299,15 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * 获取bodyBytes存储字节码
+	 *
+	 * @return byte[]
+	 */
+	public byte[] bodyBytes() {
+		return this.body == null ? null : this.body.readBytes();
+	}
+
+	/**
 	 * 返回字符集
 	 *
 	 * @return 字符集
@@ -331,7 +346,7 @@ public abstract class HttpBase<T> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request Headers: ").append(StrUtil.CRLF);
 		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(
@@ -340,7 +355,7 @@ public abstract class HttpBase<T> {
 		}
 
 		sb.append("Request Body: ").append(StrUtil.CRLF);
-		sb.append("    ").append(StrUtil.str(this.bodyBytes, this.charset)).append(StrUtil.CRLF);
+		sb.append("    ").append(StrUtil.str(this.bodyBytes(), this.charset)).append(StrUtil.CRLF);
 
 		return sb.toString();
 	}

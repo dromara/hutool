@@ -13,7 +13,7 @@ public class YamlUtilTest {
 
 	@Test
 	public void loadByPathTest() {
-		final Dict result = YamlUtil.loadByPath("test.yaml", Dict.class);
+		final Dict result = YamlUtil.loadByPath("test.yaml");
 
 		Assert.assertEquals("John", result.getStr("firstName"));
 

@@ -72,7 +72,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 * @return 转换后的集合对象
 	 */
 	protected Collection<?> convertInternal(Object value) {
-		final Collection<Object> collection = CollUtil.create(TypeUtil.getClass(this.collectionType));
+		final Collection<?> collection = CollUtil.create(TypeUtil.getClass(this.collectionType), TypeUtil.getClass(this.elementType));
 		return CollUtil.addAll(collection, value, this.elementType);
 	}
 }

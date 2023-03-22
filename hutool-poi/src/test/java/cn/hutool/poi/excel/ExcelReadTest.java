@@ -233,4 +233,22 @@ public class ExcelReadTest {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/1.-.xls");
 		reader.read((CellHandler) Console::log);
 	}
+
+	@Test
+	public void readColumnTest(){
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		final List<Object> objects = reader.readColumn(0, 1);
+
+		Assert.assertEquals(3, objects.size());
+		Assert.assertEquals("张三", objects.get(0));
+		Assert.assertEquals("李四", objects.get(1));
+		Assert.assertEquals("", objects.get(2));
+	}
+
+	@Test
+	public void readColumnNPETest() {
+		// https://github.com/dromara/hutool/pull/2234
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("read_row_npe.xlsx"));
+		reader.readColumn(0, 1);
+	}
 }

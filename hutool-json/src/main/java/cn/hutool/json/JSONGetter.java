@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
@@ -9,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -65,7 +67,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * 如果值为其它类型对象，尝试转换为{@link JSONArray}返回，否则抛出异常
 	 *
 	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
+	 * @return JSONArray对象，如果值为{@code null}，返回{@code null}，非JSONArray类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONArray getJSONArray(K key) {
 		final Object object = this.getObj(key);
@@ -84,7 +86,7 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	 * 如果值为其它类型对象，尝试转换为{@link JSONObject}返回，否则抛出异常
 	 *
 	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
+	 * @return JSONObject对象，如果值为{@code null}，返回{@code null}，非JSONObject类型，尝试转换，转换失败抛出异常
 	 */
 	default JSONObject getJSONObject(K key) {
 		final Object object = this.getObj(key);
@@ -113,6 +115,21 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 		return (null == obj) ? null : obj.toBean(beanType);
 	}
 
+	/**
+	 * 从JSON中直接获取Bean的List列表<br>
+	 * 先获取JSONArray对象，然后转为Bean的List
+	 *
+	 * @param <T>      Bean类型
+	 * @param key      KEY
+	 * @param beanType Bean类型
+	 * @return Bean的List，如果值为null或者非JSONObject类型，返回null
+	 * @since 5.7.20
+	 */
+	default <T> List<T> getBeanList(K key, Class<T> beanType) {
+		final JSONArray jsonArray = getJSONArray(key);
+		return (null == jsonArray) ? null : jsonArray.toList(beanType);
+	}
+
 	@Override
 	default Date getDate(K key, Date defaultValue) {
 		// 默认转换
@@ -122,6 +139,8 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 		}
 		if (obj instanceof Date) {
 			return (Date) obj;
+		} else if(obj instanceof NumberWithFormat){
+			return (Date) ((NumberWithFormat) obj).convert(Date.class, obj);
 		}
 
 		final Optional<String> formatOps = Optional.ofNullable(getConfig()).map(JSONConfig::getDateFormat);
@@ -175,6 +194,17 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 	}
 
 	/**
+	 * 获取byte[]数据
+	 *
+	 * @param key 键
+	 * @return 值
+	 * @since 5.8.2
+	 */
+	default byte[] getBytes(K key) {
+		return get(key, byte[].class);
+	}
+
+	/**
 	 * 获取指定类型的对象<br>
 	 * 转换失败或抛出异常
 	 *
@@ -205,6 +235,6 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
-		return JSONConverter.jsonConvert(type, value, ignoreError);
+		return JSONConverter.jsonConvert(type, value, JSONConfig.create().setIgnoreError(ignoreError));
 	}
 }

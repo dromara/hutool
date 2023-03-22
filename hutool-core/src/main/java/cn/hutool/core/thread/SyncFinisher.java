@@ -2,6 +2,8 @@ package cn.hutool.core.thread;
 
 import cn.hutool.core.exceptions.UtilException;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -21,20 +23,23 @@ import java.util.concurrent.ExecutorService;
  * sf.start()
  * </pre>
  *
- *
  * @author Looly
  * @since 4.1.15
  */
-public class SyncFinisher {
+public class SyncFinisher implements Closeable {
 
 	private final Set<Worker> workers;
 	private final int threadSize;
 	private ExecutorService executorService;
 
 	private boolean isBeginAtSameTime;
-	/** 启动同步器，用于保证所有worker线程同时开始 */
+	/**
+	 * 启动同步器，用于保证所有worker线程同时开始
+	 */
 	private final CountDownLatch beginLatch;
-	/** 结束同步器，用于等待所有worker线程同时结束 */
+	/**
+	 * 结束同步器，用于等待所有worker线程同时结束
+	 */
 	private CountDownLatch endLatch;
 
 	/**
@@ -121,7 +126,7 @@ public class SyncFinisher {
 	public void start(boolean sync) {
 		endLatch = new CountDownLatch(workers.size());
 
-		if(null == this.executorService || this.executorService.isShutdown()){
+		if (null == this.executorService || this.executorService.isShutdown()) {
 			this.executorService = ThreadUtil.newExecutor(threadSize);
 		}
 		for (Worker worker : workers) {
@@ -148,11 +153,29 @@ public class SyncFinisher {
 	 *
 	 * @since 5.6.6
 	 */
-	public void stop(){
-		if(null != this.executorService){
+	public void stop() {
+		if (null != this.executorService) {
 			this.executorService.shutdown();
+			this.executorService = null;
 		}
-		this.executorService = null;
+
+		clearWorker();
+	}
+
+	/**
+	 * 立即结束线程池所有线程。此方法执行两种情况：
+	 * <ol>
+	 *     <li>执行start(true)后，调用此方法结束线程池回收资源</li>
+	 *     <li>执行start(false)后，用户自行判断结束点执行此方法</li>
+	 * </ol>
+	 *
+	 * @since 5.8.11
+	 */
+	public void stopNow() {
+		if (null != this.executorService) {
+			this.executorService.shutdownNow();
+			this.executorService = null;
+		}
 
 		clearWorker();
 	}
@@ -173,11 +196,15 @@ public class SyncFinisher {
 		return endLatch.getCount();
 	}
 
+	@Override
+	public void close() throws IOException {
+		stop();
+	}
+
 	/**
 	 * 工作者，为一个线程
 	 *
 	 * @author xiaoleilu
-	 *
 	 */
 	public abstract class Worker implements Runnable {
 

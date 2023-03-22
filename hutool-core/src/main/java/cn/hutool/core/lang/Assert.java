@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Map;
@@ -840,6 +841,7 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
+	 * @param <X>           异常类型
 	 * @param value         值
 	 * @param min           最小值（包含）
 	 * @param max           最大值（包含）
@@ -859,9 +861,11 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
 	 * @return 经过检查后的值
 	 * @since 5.7.15
 	 */
@@ -885,6 +889,7 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
+	 * @param <X>           异常类型
 	 * @param value         值
 	 * @param min           最小值（包含）
 	 * @param max           最大值（包含）
@@ -904,9 +909,11 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
 	 * @return 经过检查后的值
 	 * @since 5.7.15
 	 */
@@ -930,6 +937,7 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
+	 * @param <X>           异常类型
 	 * @param value         值
 	 * @param min           最小值（包含）
 	 * @param max           最大值（包含）
@@ -949,9 +957,11 @@ public class Assert {
 	/**
 	 * 检查值是否在指定范围内
 	 *
-	 * @param value 值
-	 * @param min   最小值（包含）
-	 * @param max   最大值（包含）
+	 * @param value            值
+	 * @param min              最小值（包含）
+	 * @param max              最大值（包含）
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
 	 * @return 经过检查后的值
 	 * @since 5.7.15
 	 */
@@ -993,6 +1003,99 @@ public class Assert {
 		}
 		return value;
 	}
+
+	/**
+	 * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常
+	 * <pre class="code">
+	 *   Assert.notEquals(obj1,obj2);
+	 * </pre>
+	 *
+	 * @param obj1 对象1
+	 * @param obj2 对象2
+	 * @throws IllegalArgumentException obj1 must be not equals obj2
+	 */
+	public static void notEquals(Object obj1, Object obj2) {
+		notEquals(obj1, obj2, "({}) must be not equals ({})", obj1, obj2);
+	}
+
+	/**
+	 * 断言两个对象是否不相等,如果两个对象相等 抛出IllegalArgumentException 异常
+	 * <pre class="code">
+	 *   Assert.notEquals(obj1,obj2,"obj1 must be not equals obj2");
+	 * </pre>
+	 *
+	 * @param obj1             对象1
+	 * @param obj2             对象2
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
+	 * @throws IllegalArgumentException obj1 must be not equals obj2
+	 */
+	public static void notEquals(Object obj1, Object obj2, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		notEquals(obj1, obj2, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 断言两个对象是否不相等,如果两个对象相等,抛出指定类型异常,并使用指定的函数获取错误信息返回
+	 *
+	 * @param obj1          对象1
+	 * @param obj2          对象2
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @param <X>           异常类型
+	 * @throws X obj1 must be not equals obj2
+	 */
+	public static <X extends Throwable> void notEquals(Object obj1, Object obj2, Supplier<X> errorSupplier) throws X {
+		if (ObjectUtil.equals(obj1, obj2)) {
+			throw errorSupplier.get();
+		}
+	}
+	// ----------------------------------------------------------------------------------------------------------- Check not equals
+
+	/**
+	 * 断言两个对象是否相等,如果两个对象不相等 抛出IllegalArgumentException 异常
+	 * <pre class="code">
+	 *   Assert.isEquals(obj1,obj2);
+	 * </pre>
+	 *
+	 * @param obj1 对象1
+	 * @param obj2 对象2
+	 * @throws IllegalArgumentException obj1 must be equals obj2
+	 */
+	public static void equals(Object obj1, Object obj2) {
+		equals(obj1, obj2, "({}) must be equals ({})", obj1, obj2);
+	}
+
+	/**
+	 * 断言两个对象是否相等,如果两个对象不相等 抛出IllegalArgumentException 异常
+	 * <pre class="code">
+	 *   Assert.isEquals(obj1,obj2,"obj1 must be equals obj2");
+	 * </pre>
+	 *
+	 * @param obj1             对象1
+	 * @param obj2             对象2
+	 * @param errorMsgTemplate 异常信息模板，类似于"aa{}bb{}cc"
+	 * @param params           异常信息参数，用于替换"{}"占位符
+	 * @throws IllegalArgumentException obj1 must be equals obj2
+	 */
+	public static void equals(Object obj1, Object obj2, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		equals(obj1, obj2, () -> new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params)));
+	}
+
+	/**
+	 * 断言两个对象是否相等,如果两个对象不相等,抛出指定类型异常,并使用指定的函数获取错误信息返回
+	 *
+	 * @param obj1          对象1
+	 * @param obj2          对象2
+	 * @param errorSupplier 错误抛出异常附带的消息生产接口
+	 * @param <X>           异常类型
+	 * @throws X obj1 must be equals obj2
+	 */
+	public static <X extends Throwable> void equals(Object obj1, Object obj2, Supplier<X> errorSupplier) throws X {
+		if (ObjectUtil.notEqual(obj1, obj2)) {
+			throw errorSupplier.get();
+		}
+	}
+
+	// ----------------------------------------------------------------------------------------------------------- Check is equals
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method start
 

@@ -50,7 +50,7 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 		CacheObj<K, V> first = null;
 
 		// 清理过期对象并找出链表头部元素（先入元素）
-		Iterator<CacheObj<K, V>> values = cacheMap.values().iterator();
+		final Iterator<CacheObj<K, V>> values = cacheObjIter();
 		if (isPruneExpiredActive()) {
 			// 清理过期对象并找出链表头部元素（先入元素）
 			while (values.hasNext()) {
@@ -71,7 +71,7 @@ public class FIFOCache<K, V> extends StampedCache<K, V> {
 
 		// 清理结束后依旧是满的，则删除第一个被缓存的对象
 		if (isFull() && null != first) {
-			cacheMap.remove(first.key);
+			removeWithoutLock(first.key, false);
 			onRemove(first.key, first.obj);
 			count++;
 		}

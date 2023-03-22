@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
@@ -48,10 +49,13 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 			// 在目标的Zip文件中的相对位置创建目录
 			try {
 				Files.copy(dir, targetDir, copyOptions);
+			} catch (final DirectoryNotEmptyException ignore) {
+				// 目录已经存在，则跳过
 			} catch (FileAlreadyExistsException e) {
 				if (false == Files.isDirectory(targetDir)) {
 					throw e;
 				}
+				// 目录非空情况下，跳过创建目录
 			}
 		}
 

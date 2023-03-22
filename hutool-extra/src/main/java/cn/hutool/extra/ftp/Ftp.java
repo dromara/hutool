@@ -30,7 +30,7 @@ import java.util.List;
  * 1、filezila server ;根目录一般都是空
  * 2、linux vsftpd ; 使用的 系统用户的目录，这里往往都是不是根目录，如：/home/ftpuser/ftp
  *
- * @author looly
+ * @author looly, xhzou
  * @since 4.1.8
  */
 public class Ftp extends AbstractFtp {
@@ -132,6 +132,17 @@ public class Ftp extends AbstractFtp {
 		super(config);
 		this.mode = mode;
 		this.init();
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param client 自定义实例化好的{@link FTPClient}
+	 * @since 5.7.22
+	 */
+	public Ftp(FTPClient client) {
+		super(FtpConfig.create());
+		this.client = client;
 	}
 
 	/**
@@ -256,6 +267,15 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 是否执行完操作返回当前目录
+	 * @return 执行完操作是否返回当前目录
+	 * @since 5.7.17
+	 */
+	public boolean isBackToPwd(){
+		return this.backToPwd;
+	}
+
+	/**
 	 * 如果连接超时的话，重新进行连接 经测试，当连接超时时，client.isConnected()仍然返回ture，无法判断是否连接超时 因此，通过发送pwd命令的方式，检查连接是否超时
 	 *
 	 * @return this
@@ -355,7 +375,7 @@ public class Ftp extends AbstractFtp {
 		String pwd = null;
 		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
-			if (false == isDir(path)) {
+			if (false == cd(path)) {
 				throw new FtpException("Change dir to [{}] error, maybe path not exist!", path);
 			}
 		}
@@ -398,7 +418,7 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 判断ftp服务器文件是否存在
+	 * 判断ftp服务器目录内是否还有子元素（目录或文件）
 	 *
 	 * @param path 文件路径
 	 * @return 是否存在
@@ -419,7 +439,7 @@ public class Ftp extends AbstractFtp {
 		final String pwd = pwd();
 		final String fileName = FileUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		if (false == isDir(dir)) {
+		if (false == cd(dir)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 
@@ -489,9 +509,9 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param file     文件
@@ -501,9 +521,9 @@ public class Ftp extends AbstractFtp {
 	 * @throws IORuntimeException IO异常
 	 */
 	public boolean upload(String destPath, String fileName, File file) throws IORuntimeException {
-		try (InputStream in = FileUtil.getInputStream(file)) {
+		try (final InputStream in = FileUtil.getInputStream(file)) {
 			return upload(destPath, fileName, in);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -512,9 +532,9 @@ public class Ftp extends AbstractFtp {
 	 * 上传文件到指定目录，可选：
 	 *
 	 * <pre>
-	 * 1. path为null或""上传到当前路径
-	 * 2. path为相对路径则相对于当前路径的子路径
-	 * 3. path为绝对路径则上传到此路径
+	 * 1. destPath为null或""上传到当前路径
+	 * 2. destPath为相对路径则相对于当前路径的子路径
+	 * 3. destPath为绝对路径则上传到此路径
 	 * </pre>
 	 *
 	 * @param destPath       服务端路径，可以为{@code null} 或者相对路径或绝对路径
@@ -526,7 +546,7 @@ public class Ftp extends AbstractFtp {
 	public boolean upload(String destPath, String fileName, InputStream fileStream) throws IORuntimeException {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
@@ -537,7 +557,7 @@ public class Ftp extends AbstractFtp {
 
 		if (StrUtil.isNotBlank(destPath)) {
 			mkDirs(destPath);
-			if (false == isDir(destPath)) {
+			if (false == cd(destPath)) {
 				throw new FtpException("Change dir to [{}] error, maybe dir not exist!", destPath);
 			}
 		}
@@ -550,6 +570,42 @@ public class Ftp extends AbstractFtp {
 			if (this.backToPwd) {
 				cd(pwd);
 			}
+		}
+	}
+
+	/**
+	 * 递归上传文件（支持目录）<br>
+	 * 上传时，如果uploadFile为目录，只复制目录下所有目录和文件到目标路径下，并不会复制目录本身<br>
+	 * 上传时，自动创建父级目录
+	 *
+	 * @param remotePath 目录路径
+	 * @param uploadFile 上传文件或目录
+	 */
+	public void uploadFileOrDirectory(final String remotePath, final File uploadFile) {
+		if (false == FileUtil.isDirectory(uploadFile)) {
+			// 上传文件
+			this.upload(remotePath, uploadFile);
+			return;
+		}
+
+		final File[] files = uploadFile.listFiles();
+		if (ArrayUtil.isEmpty(files)) {
+			return;
+		}
+
+		final List<File> dirs = new ArrayList<>(files.length);
+		//第一次只处理文件，防止目录在前面导致先处理子目录，而引发文件所在目录不正确
+		for (final File f : files) {
+			if (f.isDirectory()) {
+				dirs.add(f);
+			} else {
+				this.upload(remotePath, f);
+			}
+		}
+		//第二次只处理目录
+		for (final File f : dirs) {
+			final String dir = FileUtil.normalize(remotePath + "/" + f.getName());
+			this.uploadFileOrDirectory(dir, f);
 		}
 	}
 
@@ -645,7 +701,7 @@ public class Ftp extends AbstractFtp {
 			pwd = pwd();
 		}
 
-		if (false == isDir(path)) {
+		if (false == cd(path)) {
 			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
 		}
 

@@ -211,7 +211,8 @@ public class Scheduler implements Serializable {
 					final String pattern = entry.getValue();
 					StaticLog.debug("Load job: {} {}", pattern, jobClass);
 					try {
-						schedule(pattern, new InvokeTask(jobClass));
+						// issue#I5E7BM@Gitee，自定义ID避免重复从配置文件加载
+						schedule("id_" + jobClass, pattern, new InvokeTask(jobClass));
 					} catch (Exception e) {
 						throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
 					}
@@ -289,8 +290,19 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler deschedule(String id) {
-		this.taskTable.remove(id);
+		descheduleWithStatus(id);
 		return this;
+	}
+
+	/**
+	 * 移除Task，并返回是否移除成功
+	 *
+	 * @param id Task的ID
+	 * @return 是否移除成功，{@code false}表示未找到对应ID的任务
+	 * @since 5.7.17
+	 */
+	public boolean descheduleWithStatus(String id) {
+		return this.taskTable.remove(id);
 	}
 
 	/**

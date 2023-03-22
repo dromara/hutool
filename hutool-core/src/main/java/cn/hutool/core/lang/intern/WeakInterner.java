@@ -1,6 +1,8 @@
 package cn.hutool.core.lang.intern;
 
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.map.WeakConcurrentMap;
+
+import java.lang.ref.WeakReference;
 
 /**
  * 使用WeakHashMap(线程安全)存储对象的规范化对象，注意此对象需单例使用！<br>
@@ -10,13 +12,16 @@ import cn.hutool.core.lang.SimpleCache;
  */
 public class WeakInterner<T> implements Interner<T>{
 
-	private final SimpleCache<T, T> cache = new SimpleCache<>();
+	private final WeakConcurrentMap<T, WeakReference<T>> cache = new WeakConcurrentMap<>();
 
-	@Override
 	public T intern(T sample) {
-		if(null == sample){
+		if (sample == null) {
 			return null;
 		}
-		return cache.get(sample, ()->sample);
+		T val;
+		do {
+			val = this.cache.computeIfAbsent(sample, WeakReference::new).get();
+		} while (val == null);
+		return val;
 	}
 }

@@ -2,7 +2,10 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.List;
 
 /**
  * Punycode是一个根据RFC 3492标准而制定的编码系统，主要用于把域名从地方语言所采用的Unicode编码转换成为可用于DNS系统的编码
@@ -25,13 +28,34 @@ public class PunyCode {
 	public static final String PUNY_CODE_PREFIX = "xn--";
 
 	/**
+	 * punycode转码域名
+	 *
+	 * @param domain 域名
+	 * @return 编码后的域名
+	 * @throws UtilException 计算异常
+	 */
+	public static String encodeDomain(String domain) throws UtilException {
+		Assert.notNull(domain, "domain must not be null!");
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() * 4);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
+			}
+			result.append(encode(str, true));
+		}
+
+		return result.toString();
+	}
+
+	/**
 	 * 将内容编码为PunyCode
 	 *
-	 * @param input      字符串
+	 * @param input 字符串
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(String input) throws UtilException {
+	public static String encode(CharSequence input) throws UtilException {
 		return encode(input, false);
 	}
 
@@ -43,7 +67,8 @@ public class PunyCode {
 	 * @return PunyCode字符串
 	 * @throws UtilException 计算异常
 	 */
-	public static String encode(String input, boolean withPrefix) throws UtilException {
+	public static String encode(CharSequence input, boolean withPrefix) throws UtilException {
+		Assert.notNull(input, "input must not be null!");
 		int n = INITIAL_N;
 		int delta = 0;
 		int bias = INITIAL_BIAS;
@@ -60,6 +85,10 @@ public class PunyCode {
 		}
 		// Append delimiter
 		if (b > 0) {
+			if(b == length){
+				// 无需要编码的字符
+				return output.toString();
+			}
 			output.append(DELIMITER);
 		}
 		int h = b;
@@ -112,10 +141,31 @@ public class PunyCode {
 			n++;
 		}
 
-		if(withPrefix){
+		if (withPrefix) {
 			output.insert(0, PUNY_CODE_PREFIX);
 		}
 		return output.toString();
+	}
+
+	/**
+	 * 解码punycode域名
+	 *
+	 * @param domain PunyCode域名
+	 * @return 解码后的域名
+	 * @throws UtilException 计算异常
+	 */
+	public static String decodeDomain(String domain) throws UtilException {
+		Assert.notNull(domain, "domain must not be null!");
+		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
+		for (final String str : split) {
+			if (result.length() != 0) {
+				result.append(CharUtil.DOT);
+			}
+			result.append(StrUtil.startWithIgnoreEquals(str, PUNY_CODE_PREFIX) ? decode(str) : str);
+		}
+
+		return result.toString();
 	}
 
 	/**
@@ -126,6 +176,7 @@ public class PunyCode {
 	 * @throws UtilException 计算异常
 	 */
 	public static String decode(String input) throws UtilException {
+		Assert.notNull(input, "input must not be null!");
 		input = StrUtil.removePrefixIgnoreCase(input, PUNY_CODE_PREFIX);
 
 		int n = INITIAL_N;
@@ -214,6 +265,7 @@ public class PunyCode {
 	 *     ...
 	 *     35 -&gt; '9'
 	 * </pre>
+	 *
 	 * @param d 输入字符
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符
@@ -242,6 +294,7 @@ public class PunyCode {
 	 *     ...
 	 *     '9' -&gt; 35
 	 * </pre>
+	 *
 	 * @param c 输入字符
 	 * @return 转换后的字符
 	 * @throws UtilException 无效字符

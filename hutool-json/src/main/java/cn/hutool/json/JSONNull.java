@@ -7,10 +7,10 @@ import java.io.Serializable;
 /**
  * 用于定义{@code null}，与Javascript中null相对应<br>
  * Java中的{@code null}值在js中表示为undefined。
- * @author Looly
  *
+ * @author Looly
  */
-public class JSONNull implements Serializable{
+public class JSONNull implements Serializable {
 	private static final long serialVersionUID = 2633815155870764938L;
 
 	/**
@@ -35,7 +35,7 @@ public class JSONNull implements Serializable{
 
 	/**
 	 * Get the "null" string value.
-	 *获得“null”字符串
+	 * 获得“null”字符串
 	 *
 	 * @return The string "null".
 	 */

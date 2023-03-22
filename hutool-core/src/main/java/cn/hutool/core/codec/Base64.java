@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
  */
 public class Base64 {
 
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	// -------------------------------------------------------------------- encode
 
 	/**
@@ -29,7 +30,9 @@ public class Base64 {
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean lineSep) {
-		return Base64Encoder.encode(arr, lineSep);
+		return lineSep ?
+				java.util.Base64.getMimeEncoder().encode(arr) :
+				java.util.Base64.getEncoder().encode(arr);
 	}
 
 	/**
@@ -39,7 +42,9 @@ public class Base64 {
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
 	 * @since 3.0.6
+	 * @deprecated 按照RFC2045规范，URL安全的Base64无需换行
 	 */
+	@Deprecated
 	public static byte[] encodeUrlSafe(byte[] arr, boolean lineSep) {
 		return Base64Encoder.encodeUrlSafe(arr, lineSep);
 	}
@@ -51,7 +56,7 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(CharSequence source) {
-		return Base64Encoder.encode(source);
+		return encode(source, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -62,7 +67,7 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(CharSequence source) {
-		return Base64Encoder.encodeUrlSafe(source);
+		return encodeUrlSafe(source, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -95,7 +100,9 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
+	 * @deprecated 请使用 {@link #encodeUrlSafe(CharSequence, Charset)}
 	 */
+	@Deprecated
 	public static String encodeUrlSafe(CharSequence source, String charset) {
 		return encodeUrlSafe(source, CharsetUtil.charset(charset));
 	}
@@ -105,10 +112,10 @@ public class Base64 {
 	 *
 	 * @param source  被编码的base64字符串
 	 * @param charset 字符集
-	 * @return 被加密后的字符串
+	 * @return 被编码后的字符串
 	 */
 	public static String encode(CharSequence source, Charset charset) {
-		return Base64Encoder.encode(source, charset);
+		return encode(StrUtil.bytes(source, charset));
 	}
 
 	/**
@@ -120,7 +127,7 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(CharSequence source, Charset charset) {
-		return Base64Encoder.encodeUrlSafe(source, charset);
+		return encodeUrlSafe(StrUtil.bytes(source, charset));
 	}
 
 	/**
@@ -130,7 +137,7 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(byte[] source) {
-		return Base64Encoder.encode(source);
+		return java.util.Base64.getEncoder().encodeToString(source);
 	}
 
 	/**
@@ -152,7 +159,7 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(byte[] source) {
-		return Base64Encoder.encodeUrlSafe(source);
+		return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(source);
 	}
 
 	/**
@@ -163,7 +170,7 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encode(InputStream in) {
-		return Base64Encoder.encode(IoUtil.readBytes(in));
+		return encode(IoUtil.readBytes(in));
 	}
 
 	/**
@@ -174,7 +181,7 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encodeUrlSafe(InputStream in) {
-		return Base64Encoder.encodeUrlSafe(IoUtil.readBytes(in));
+		return encodeUrlSafe(IoUtil.readBytes(in));
 	}
 
 	/**
@@ -185,7 +192,7 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encode(File file) {
-		return Base64Encoder.encode(FileUtil.readBytes(file));
+		return encode(FileUtil.readBytes(file));
 	}
 
 	/**
@@ -196,7 +203,7 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encodeUrlSafe(File file) {
-		return Base64Encoder.encodeUrlSafe(FileUtil.readBytes(file));
+		return encodeUrlSafe(FileUtil.readBytes(file));
 	}
 
 	/**
@@ -210,7 +217,7 @@ public class Base64 {
 	 * @since 5.7.2
 	 */
 	public static String encodeStr(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
-		return Base64Encoder.encodeStr(arr, isMultiLine, isUrlSafe);
+		return StrUtil.str(encode(arr, isMultiLine, isUrlSafe), DEFAULT_CHARSET);
 	}
 
 	/**
@@ -345,6 +352,9 @@ public class Base64 {
 	 * @since 5.7.5
 	 */
 	public static boolean isBase64(byte[] base64Bytes) {
+		if (base64Bytes == null || base64Bytes.length < 3) {
+			return false;
+		}
 		boolean hasPadding = false;
 		for (byte base64Byte : base64Bytes) {
 			if (hasPadding) {

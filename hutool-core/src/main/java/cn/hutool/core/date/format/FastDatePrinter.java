@@ -1,6 +1,7 @@
 package cn.hutool.core.date.format;
 
 import cn.hutool.core.date.DateException;
+import cn.hutool.core.map.SafeConcurrentHashMap;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -1049,7 +1049,7 @@ public class FastDatePrinter extends AbstractDateBasic implements DatePrinter {
 
 	// -----------------------------------------------------------------------
 
-	private static final ConcurrentMap<TimeZoneDisplayKey, String> C_TIME_ZONE_DISPLAY_CACHE = new ConcurrentHashMap<>(7);
+	private static final ConcurrentMap<TimeZoneDisplayKey, String> C_TIME_ZONE_DISPLAY_CACHE = new SafeConcurrentHashMap<>(7);
 
 	/**
 	 * <p>

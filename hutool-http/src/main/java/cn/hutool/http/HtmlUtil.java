@@ -6,13 +6,13 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * HTML工具类
- * 
+ *
  * <p>
  * 比如我们在使用爬虫爬取HTML页面后，需要对返回页面的HTML内容做一定处理，<br>
  * 比如去掉指定标签（例如广告栏等）、去除JS、去掉样式等等，这些操作都可以使用此工具类完成。
- * 
+ *
  * @author xiaoleilu
- * 
+ *
  */
 public class HtmlUtil {
 
@@ -26,19 +26,21 @@ public class HtmlUtil {
 	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 	public static final String RE_SCRIPT = "<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
 
-	private static final char[][] TEXT = new char[64][];
+	private static final char[][] TEXT = new char[256][];
 
 	static {
-		for (int i = 0; i < 64; i++) {
+		// ascii码值最大的是【0x7f=127】，扩展ascii码值最大的是【0xFF=255】，因为ASCII码使用指定的7位或8位二进制数组合来表示128或256种可能的字符，标准ASCII码也叫基础ASCII码。
+		for (int i = 0; i < 256; i++) {
 			TEXT[i] = new char[] { (char) i };
 		}
 
 		// special HTML characters
 		TEXT['\''] = "&#039;".toCharArray(); // 单引号 ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"'] = QUOTE.toCharArray(); // 单引号
+		TEXT['"'] = QUOTE.toCharArray(); // 双引号
 		TEXT['&'] = AMP.toCharArray(); // &符
 		TEXT['<'] = LT.toCharArray(); // 小于号
 		TEXT['>'] = GT.toCharArray(); // 大于号
+		TEXT[' '] = NBSP.toCharArray(); // 不断开空格（non-breaking space，缩写nbsp。ASCII值是32：是用键盘输入的空格；ASCII值是160：不间断空格，即 &nbsp，所产生的空格，作用是在页面换行时不被打断）
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class HtmlUtil {
 	 * <li>&lt; 替换为 &amp;lt;</li>
 	 * <li>&gt; 替换为 &amp;gt;</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param text 被转义的文本
 	 * @return 转义后的文本
 	 */
@@ -60,7 +62,7 @@ public class HtmlUtil {
 
 	/**
 	 * 还原被转义的HTML特殊字符
-	 * 
+	 *
 	 * @param htmlStr 包含转义符的HTML内容
 	 * @return 转换后的字符串
 	 */
@@ -76,7 +78,7 @@ public class HtmlUtil {
 
 	/**
 	 * 清除所有HTML标签，但是不删除标签内的内容
-	 * 
+	 *
 	 * @param content 文本
 	 * @return 清除标签后的文本
 	 */
@@ -87,7 +89,7 @@ public class HtmlUtil {
 	/**
 	 * 清除指定HTML标签和被标签包围的内容<br>
 	 * 不区分大小写
-	 * 
+	 *
 	 * @param content 文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
@@ -99,7 +101,7 @@ public class HtmlUtil {
 	/**
 	 * 清除指定HTML标签，不包括内容<br>
 	 * 不区分大小写
-	 * 
+	 *
 	 * @param content 文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
@@ -111,7 +113,7 @@ public class HtmlUtil {
 	/**
 	 * 清除指定HTML标签<br>
 	 * 不区分大小写
-	 * 
+	 *
 	 * @param content 文本
 	 * @param withTagContent 是否去掉被包含在标签中的内容
 	 * @param tagNames 要清除的标签
@@ -127,10 +129,10 @@ public class HtmlUtil {
 			// (?i)表示其后面的表达式忽略大小写
 			if (withTagContent) {
 				// 标签及其包含内容
-				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?/?>(.*?</{}>)?", tagName, tagName);
+				regex = StrUtil.format("(?i)<{}(\\s+[^>]*?)?/?>(.*?</{}>)?", tagName, tagName);
 			} else {
 				// 标签不包含内容
-				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
+				regex = StrUtil.format("(?i)<{}(\\s+[^>]*?)?/?>|</?{}>", tagName, tagName);
 			}
 
 			content = ReUtil.delAll(regex, content); // 非自闭标签小写
@@ -140,7 +142,7 @@ public class HtmlUtil {
 
 	/**
 	 * 去除HTML标签中的属性，如果多个标签有相同属性，都去除
-	 * 
+	 *
 	 * @param content 文本
 	 * @param attrs 属性名（不区分大小写）
 	 * @return 处理后的文本
@@ -161,7 +163,7 @@ public class HtmlUtil {
 
 	/**
 	 * 去除指定标签的所有属性
-	 * 
+	 *
 	 * @param content 内容
 	 * @param tagNames 指定标签
 	 * @return 处理后的文本
@@ -177,7 +179,7 @@ public class HtmlUtil {
 
 	/**
 	 * Encoder
-	 * 
+	 *
 	 * @param text 被编码的文本
 	 * @return 编码后的字符
 	 */
@@ -190,7 +192,7 @@ public class HtmlUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = text.charAt(i);
-			if (c < 64) {
+			if (c < 256) {
 				buffer.append(TEXT[c]);
 			} else {
 				buffer.append(c);
@@ -201,7 +203,7 @@ public class HtmlUtil {
 
 	/**
 	 * 过滤HTML文本，防止XSS攻击
-	 * 
+	 *
 	 * @param htmlContent HTML内容
 	 * @return 过滤后的内容
 	 */

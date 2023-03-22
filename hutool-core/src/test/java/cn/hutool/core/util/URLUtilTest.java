@@ -83,7 +83,14 @@ public class URLUtilTest {
 		Assert.assertEquals(body, URLUtil.decode(encode));
 
 		String encode2 = URLUtil.encodeQuery(body);
-		Assert.assertEquals("366466+-+%E5%89%AF%E6%9C%AC.jpg", encode2);
+		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode2);
+	}
+
+	@Test
+	public void encodeQueryPlusTest() {
+		String body = "+";
+		String encode2 = URLUtil.encodeQuery(body);
+		Assert.assertEquals("+", encode2);
 	}
 
 	@Test

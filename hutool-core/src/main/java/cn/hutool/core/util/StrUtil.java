@@ -177,7 +177,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串
 	 */
 	public static String str(byte[] bytes, String charset) {
-		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+		return str(bytes, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @return 字符串
 	 */
 	public static String str(Byte[] bytes, String charset) {
-		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+		return str(bytes, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 			return null;
 		}
 
-		return str(data, Charset.forName(charset));
+		return str(data, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -270,6 +270,17 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String toString(Object obj) {
 		return String.valueOf(obj);
+	}
+
+	/**
+	 * 调用对象的toString方法，null会返回{@code null}
+	 *
+	 * @param obj 对象
+	 * @return 字符串 or {@code null}
+	 * @since 5.7.17
+	 */
+	public static String toStringOrNull(Object obj) {
+		return null == obj ? null : obj.toString();
 	}
 
 	/**

@@ -9,19 +9,18 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-dfa</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 基于DFA的关键词查找</description>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool.dfa</Automatic-Module-Name>
+	</properties>
+
 	<dependencies>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-json</artifactId>

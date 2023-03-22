@@ -60,7 +60,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 */
 	public SM4(Mode mode, Padding padding, byte[] key) {
 		this(mode, padding, key, null);
@@ -71,7 +71,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
 	public SM4(Mode mode, Padding padding, byte[] key, byte[] iv) {
@@ -83,7 +83,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 */
 	public SM4(Mode mode, Padding padding, SecretKey key) {
 		this(mode, padding, key, (IvParameterSpec) null);
@@ -94,7 +94,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
 	public SM4(Mode mode, Padding padding, SecretKey key, byte[] iv) {
@@ -106,7 +106,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      偏移向量，加盐
 	 */
 	public SM4(Mode mode, Padding padding, SecretKey key, IvParameterSpec iv) {
@@ -128,7 +128,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式
 	 * @param padding 补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 */
 	public SM4(String mode, String padding, byte[] key) {
 		this(mode, padding, key, null);
@@ -139,7 +139,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式
 	 * @param padding 补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      加盐
 	 */
 	public SM4(String mode, String padding, byte[] key, byte[] iv) {
@@ -153,7 +153,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式
 	 * @param padding 补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 */
 	public SM4(String mode, String padding, SecretKey key) {
 		this(mode, padding, key, null);
@@ -164,7 +164,7 @@ public class SM4 extends SymmetricCrypto{
 	 *
 	 * @param mode    模式
 	 * @param padding 补码方式
-	 * @param key     密钥，支持三种密钥长度：128、192、256位
+	 * @param key     密钥，支持密钥长度：128位
 	 * @param iv      加盐
 	 */
 	public SM4(String mode, String padding, SecretKey key, IvParameterSpec iv) {

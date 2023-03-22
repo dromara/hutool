@@ -5,17 +5,22 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.BasicTypeGetter;
+import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.lang.func.LambdaUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -523,7 +528,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * person.friends[5].name
 	 * </pre>
 	 *
-	 * @param <T> 目标类型
+	 * @param <T>        目标类型
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see BeanPath#get(Object)
@@ -565,6 +570,11 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	// -------------------------------------------------------------------- Get end
 
 	@Override
+	public boolean containsKey(Object key) {
+		return super.containsKey(customKey((String) key));
+	}
+
+	@Override
 	public Object get(Object key) {
 		return super.get(customKey((String) key));
 	}
@@ -584,6 +594,59 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		return (Dict) super.clone();
 	}
 
+	@Override
+	public Object remove(Object key) {
+		return super.remove(customKey((String) key));
+	}
+
+	@Override
+	public boolean remove(Object key, Object value) {
+		return super.remove(customKey((String) key), value);
+	}
+
+	@Override
+	public boolean replace(String key, Object oldValue, Object newValue) {
+		return super.replace(customKey(key), oldValue, newValue);
+	}
+
+	@Override
+	public Object replace(String key, Object value) {
+		return super.replace(customKey(key), value);
+	}
+
+	//---------------------------------------------------------------------------- Override default methods start
+	@Override
+	public Object getOrDefault(Object key, Object defaultValue) {
+		return super.getOrDefault(customKey((String) key), defaultValue);
+	}
+
+	@Override
+	public Object computeIfPresent(final String key, final BiFunction<? super String, ? super Object, ?> remappingFunction) {
+		return super.computeIfPresent(customKey(key), remappingFunction);
+	}
+
+	@Override
+	public Object compute(final String key, final BiFunction<? super String, ? super Object, ?> remappingFunction) {
+		return super.compute(customKey(key), remappingFunction);
+	}
+
+	@Override
+	public Object merge(final String key, final Object value, final BiFunction<? super Object, ? super Object, ?> remappingFunction) {
+		return super.merge(customKey(key), value, remappingFunction);
+	}
+
+	@Override
+	public Object putIfAbsent(String key, Object value) {
+		return super.putIfAbsent(customKey(key), value);
+	}
+
+	@Override
+	public Object computeIfAbsent(String key, Function<? super String, ?> mappingFunction) {
+		return super.computeIfAbsent(customKey(key), mappingFunction);
+	}
+
+	//---------------------------------------------------------------------------- Override default methods end
+
 	/**
 	 * 将Key转为小写
 	 *
@@ -596,4 +659,22 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		}
 		return key;
 	}
+
+	/**
+	 * 通过lambda批量设置值<br>
+	 * 实际使用时，可以使用getXXX的方法引用来完成键值对的赋值：
+	 * <pre>
+	 *     User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
+	 *     Dict.create().setFields(user::getNickname, user::getUsername);
+	 * </pre>
+	 *
+	 * @param fields lambda,不能为空
+	 * @return this
+	 * @since 5.7.23
+	 */
+	public Dict setFields(Func0<?>... fields) {
+		Arrays.stream(fields).forEach(f -> set(LambdaUtil.getFieldName(f), f.callWithRuntimeException()));
+		return this;
+	}
+
 }

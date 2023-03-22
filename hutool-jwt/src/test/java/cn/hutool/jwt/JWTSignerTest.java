@@ -116,6 +116,98 @@ public class JWTSignerTest {
 		signAndVerify(signer);
 	}
 
+	@Test
+	public void hmd5Test(){
+		String id = "hmd5";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKey(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void hsha1Test(){
+		String id = "hsha1";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKey(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void sm4cmacTest(){
+		String id = "sm4cmac";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKey(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void rmd2Test(){
+		String id = "rmd2";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void rmd5Test(){
+		String id = "rmd5";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void rsha1Test(){
+		String id = "rsha1";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void dnoneTest(){
+		String id = "dnone";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void dsha1Test(){
+		String id = "dsha1";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void enoneTest(){
+		String id = "enone";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+	@Test
+	public void esha1Test(){
+		String id = "esha1";
+		final JWTSigner signer = JWTSignerUtil.createSigner(id, KeyUtil.generateKeyPair(AlgorithmUtil.getAlgorithm(id)));
+		Assert.assertEquals(AlgorithmUtil.getAlgorithm(id), signer.getAlgorithm());
+
+		signAndVerify(signer);
+	}
+
+
+
 	private static void signAndVerify(JWTSigner signer){
 		JWT jwt = JWT.create()
 				.setPayload("sub", "1234567890")

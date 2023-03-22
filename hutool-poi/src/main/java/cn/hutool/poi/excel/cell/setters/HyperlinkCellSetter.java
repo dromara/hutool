@@ -1,6 +1,5 @@
 package cn.hutool.poi.excel.cell.setters;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.poi.excel.cell.CellSetter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Hyperlink;

@@ -118,7 +118,11 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable {
 	 * @since 5.4.2
 	 */
 	public boolean containsProp(String fieldName) {
-		return null != BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
+		if (Map.class.isAssignableFrom(beanClass)) {
+			return ((Map<?, ?>) bean).containsKey(fieldName);
+		} else{
+			return null != BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
+		}
 	}
 
 	/**

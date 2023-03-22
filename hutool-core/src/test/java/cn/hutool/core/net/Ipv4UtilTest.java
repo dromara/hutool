@@ -1,11 +1,10 @@
 package cn.hutool.core.net;
 
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 
 import java.util.List;
-import org.junit.function.ThrowingRunnable;
 
 public class Ipv4UtilTest {
 
@@ -40,7 +39,7 @@ public class Ipv4UtilTest {
 		String ip = "192.168.1.1";
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final String endIpStr = Ipv4Util.getEndIpStr(ip, maskBitByMask);
-		Console.log(endIpStr);
+		Assert.assertEquals("192.168.1.255", endIpStr);
 	}
 
 	@Test
@@ -48,6 +47,38 @@ public class Ipv4UtilTest {
 		int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final List<String> list = Ipv4Util.list("192.168.100.2", maskBit, false);
 		Assert.assertEquals(254, list.size());
+
+		testGenerateIpList("10.1.0.1", "10.2.1.2");
+
+		testGenerateIpList("10.2.1.1", "10.2.1.2");
+		testGenerateIpList("10.2.0.1", "10.2.1.2");
+		testGenerateIpList("10.1.0.1", "10.2.1.2");
+		testGenerateIpList("10.1.2.1", "10.2.1.2");
+
+		testGenerateIpList("10.2.1.2", "10.2.1.2");
+		testGenerateIpList("10.2.0.2", "10.2.1.2");
+		testGenerateIpList("10.1.1.2", "10.2.1.2");
+		testGenerateIpList("10.1.2.2", "10.2.1.2");
+
+		testGenerateIpList("10.2.0.3", "10.2.1.2");
+		testGenerateIpList("10.1.0.3", "10.2.1.2");
+		testGenerateIpList("10.1.1.3", "10.2.1.2");
+		testGenerateIpList("10.1.2.3", "10.2.1.2");
+
+		testGenerateIpList("9.255.2.1", "10.2.1.2");
+		testGenerateIpList("9.255.2.2", "10.2.1.2");
+		testGenerateIpList("9.255.2.3", "10.2.1.2");
+
+		testGenerateIpList("9.255.1.2", "10.2.1.2");
+		testGenerateIpList("9.255.0.2", "10.2.1.2");
+		testGenerateIpList("9.255.3.2", "10.2.1.2");
+	}
+
+	private void testGenerateIpList(final String fromIp, final String toIp) {
+		Assert.assertEquals(
+				Ipv4Util.countByIpRange(fromIp, toIp),
+				Ipv4Util.list(fromIp, toIp).size()
+		);
 	}
 
 	@Test
@@ -74,5 +105,30 @@ public class Ipv4UtilTest {
 	public void isMaskBitInvalidTest() {
 		boolean maskBitValid = Ipv4Util.isMaskBitValid(33);
 		Assert.assertFalse("掩码位非法检验", maskBitValid);
+	}
+
+	@Test
+	public void ipv4ToLongTest(){
+		long l = Ipv4Util.ipv4ToLong("127.0.0.1");
+		Assert.assertEquals(2130706433L, l);
+		l = Ipv4Util.ipv4ToLong("114.114.114.114");
+		Assert.assertEquals(1920103026L, l);
+		l = Ipv4Util.ipv4ToLong("0.0.0.0");
+		Assert.assertEquals(0L, l);
+		l = Ipv4Util.ipv4ToLong("255.255.255.255");
+		Assert.assertEquals(4294967295L, l);
+	}
+
+	@Test
+	public void ipv4ToLongWithDefaultTest() {
+		String strIP = "不正确的 IP 地址";
+		long defaultValue = 0L;
+		long ipOfLong = Ipv4Util.ipv4ToLong(strIP, defaultValue);
+		Assert.assertEquals(ipOfLong, defaultValue);
+
+		String strIP2 = "255.255.255.255";
+		long defaultValue2 = 0L;
+		long ipOfLong2 = Ipv4Util.ipv4ToLong(strIP2, defaultValue2);
+		Assert.assertEquals(ipOfLong2, 4294967295L);
 	}
 }

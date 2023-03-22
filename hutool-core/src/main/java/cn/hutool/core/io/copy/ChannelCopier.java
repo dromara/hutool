@@ -107,7 +107,7 @@ public class ChannelCopier extends IoCopier<ReadableByteChannel, WritableByteCha
 			numToRead -= read;
 			total += read;
 			if (null != progress) {
-				progress.progress(total);
+				progress.progress(this.count, total);
 			}
 		}
 

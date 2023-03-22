@@ -176,7 +176,7 @@ public interface StrPool {
 
 
 	/**
-	 * 字符串常量：HTML 空格转义 {@code "&nbsp;" -> " "}
+	 * 字符串常量：HTML 不间断空格转义 {@code "&nbsp;" -> " "}
 	 */
 	String HTML_NBSP = XmlUtil.NBSP;
 

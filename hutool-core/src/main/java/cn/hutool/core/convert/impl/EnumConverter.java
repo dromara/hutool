@@ -3,8 +3,8 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.lang.EnumItem;
-import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ModifierUtil;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class EnumConverter extends AbstractConverter<Object> {
 	private static final long serialVersionUID = 1L;
 
-	private static final SimpleCache<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new SimpleCache<>();
+	private static final WeakConcurrentMap<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new WeakConcurrentMap<>();
 
 	private final Class enumClass;
 
@@ -132,7 +132,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 	 * @return 转换方法map，key为方法参数类型，value为方法
 	 */
 	private static Map<Class<?>, Method> getMethodMap(Class<?> enumClass) {
-		return VALUE_OF_METHOD_CACHE.get(enumClass, () -> Arrays.stream(enumClass.getMethods())
+		return VALUE_OF_METHOD_CACHE.computeIfAbsent(enumClass, (key) -> Arrays.stream(enumClass.getMethods())
 				.filter(ModifierUtil::isStatic)
 				.filter(m -> m.getReturnType() == enumClass)
 				.filter(m -> m.getParameterCount() == 1)

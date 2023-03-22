@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,5 +66,58 @@ public class TreeTest {
 				});
 
 		Assert.assertEquals(treeNodes.size(), 2);
+	}
+
+	@Test
+	public void walkTest(){
+		List<String> ids = new ArrayList<>();
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		tree.walk((tr)-> ids.add(tr.getId()));
+
+		Assert .assertEquals(7, ids.size());
+	}
+
+	@Test
+	public void cloneTreeTest(){
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		final Tree<String> cloneTree = tree.cloneTree();
+
+		List<String> ids = new ArrayList<>();
+		cloneTree.walk((tr)-> ids.add(tr.getId()));
+
+		Assert .assertEquals(7, ids.size());
+	}
+
+	@Test
+	public void filterTest(){
+		// 经过过滤，丢掉"用户添加"节点
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+		tree.filter((t)->{
+			final CharSequence name = t.getName();
+			return null != name && name.toString().contains("店铺");
+		});
+
+		List<String> ids = new ArrayList<>();
+		tree.walk((tr)-> ids.add(tr.getId()));
+		Assert .assertEquals(4, ids.size());
+	}
+
+	@Test
+	public void filterNewTest(){
+		final Tree<String> tree = TreeUtil.buildSingle(nodeList, "0");
+
+		// 经过过滤，生成新的树
+		Tree<String> newTree = tree.filterNew((t)->{
+			final CharSequence name = t.getName();
+			return null != name && name.toString().contains("店铺");
+		});
+
+		List<String> ids = new ArrayList<>();
+		newTree.walk((tr)-> ids.add(tr.getId()));
+		Assert .assertEquals(4, ids.size());
+
+		List<String> ids2 = new ArrayList<>();
+		tree.walk((tr)-> ids2.add(tr.getId()));
+		Assert .assertEquals(7, ids2.size());
 	}
 }

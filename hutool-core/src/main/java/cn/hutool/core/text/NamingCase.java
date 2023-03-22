@@ -58,7 +58,7 @@ public class NamingCase {
 	}
 
 	/**
-	 * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+	 * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。
 	 *
 	 * @param str    转换前的驼峰式命名的字符串，也可以为符号连接形式
 	 * @param symbol 连接符
@@ -90,14 +90,14 @@ public class NamingCase {
 					} else if (Character.isLowerCase(preChar)) {
 						// 前一个为小写
 						sb.append(symbol);
-						if (null == nextChar || Character.isLowerCase(nextChar)) {
+						if (null == nextChar || Character.isLowerCase(nextChar) || CharUtil.isNumber(nextChar)) {
 							//普通首字母大写，如aBcc -> a_bcc
 							c = Character.toLowerCase(c);
 						}
 						// 后一个为大写，按照专有名词对待，如aBC -> a_BC
 					} else {
 						//前一个为大写
-						if (null == nextChar || Character.isLowerCase(nextChar)) {
+						if (null != nextChar && Character.isLowerCase(nextChar)) {
 							// 普通首字母大写，如ABcc -> A_bcc
 							sb.append(symbol);
 							c = Character.toLowerCase(c);
@@ -150,19 +150,31 @@ public class NamingCase {
 	 * @return 转换后的驼峰式命名的字符串
 	 */
 	public static String toCamelCase(CharSequence name) {
+		return toCamelCase(name, CharUtil.UNDERLINE);
+	}
+
+	/**
+	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。
+	 *
+	 * @param name   转换前的自定义方式命名的字符串
+	 * @param symbol 原字符串中的连接符连接符
+	 * @return 转换后的驼峰式命名的字符串
+	 * @since 5.7.17
+	 */
+	public static String toCamelCase(CharSequence name, char symbol) {
 		if (null == name) {
 			return null;
 		}
 
 		final String name2 = name.toString();
-		if (StrUtil.contains(name2, CharUtil.UNDERLINE)) {
+		if (StrUtil.contains(name2, symbol)) {
 			final int length = name2.length();
 			final StringBuilder sb = new StringBuilder(length);
 			boolean upperCase = false;
 			for (int i = 0; i < length; i++) {
 				char c = name2.charAt(i);
 
-				if (c == CharUtil.UNDERLINE) {
+				if (c == symbol) {
 					upperCase = true;
 				} else if (upperCase) {
 					sb.append(Character.toUpperCase(c));
@@ -176,4 +188,5 @@ public class NamingCase {
 			return name2;
 		}
 	}
+
 }

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.7.15</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -17,17 +17,20 @@
 	<description>Hutool 数据库JDBC的ORM封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.db</Automatic-Module-Name>
+
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
-		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
-		<druid.version>1.2.8</druid.version>
-		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.12.10</mongo.version>
-		<sqlite.version>3.36.0.3</sqlite.version>
+		<tomcat-jdbc.version>10.0.23</tomcat-jdbc.version>
+		<druid.version>1.2.16</druid.version>
+		<!-- 此处固定4.x，支持到JDK8 -->
+		<hikariCP.version>4.0.3</hikariCP.version>
+		<mongo4.version>4.9.0</mongo4.version>
+		<sqlite.version>3.41.0.0</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>3.7.0</jedis.version>
+		<jedis.version>4.3.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -62,7 +65,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP-java7</artifactId>
+			<artifactId>HikariCP</artifactId>
 			<version>${hikariCP.version}</version>
 			<exclusions>
 				<exclusion>
@@ -81,7 +84,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.2.7</version>
+			<version>3.4.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -94,13 +97,18 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
-		<!-- MongoDB Java客户端 -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>${mongo.version}</version>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<version>${mongo4.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<!-- Redis Java客户端 -->
@@ -109,10 +117,6 @@
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
 			<exclusions>
-				<exclusion>
-					<artifactId>commons-pool2</artifactId>
-					<groupId>org.apache.commons</groupId>
-				</exclusion>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
@@ -143,38 +147,44 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.27</version>
+			<version>8.0.30</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.3.0</version>
+			<version>42.5.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>7.4.1.jre8</version>
+			<version>11.2.2.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.32</version>
+			<version>1.7.36</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
+			<version>2.1.214</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.yandex.clickhouse</groupId>
 			<artifactId>clickhouse-jdbc</artifactId>
-			<version>0.3.1</version>
+			<version>0.3.2</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>gson</artifactId>
+					<groupId>com.google.code.gson</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

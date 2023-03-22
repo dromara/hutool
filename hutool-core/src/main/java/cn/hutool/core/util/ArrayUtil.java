@@ -2,7 +2,9 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.UniqueKeySet;
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
@@ -22,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -118,12 +119,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> boolean hasNull(T... array) {
 		if (isNotEmpty(array)) {
 			for (T element : array) {
-				if (null == element) {
+				if (ObjectUtil.isNull(element)) {
 					return true;
 				}
 			}
 		}
-		return false;
+		return array == null;
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(T... array) {
-		return firstMatch(Objects::nonNull, array);
+		return firstMatch(ObjectUtil::isNotNull, array);
 	}
 
 	/**
@@ -347,6 +348,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			Array.set(buffer, index, value);
 			return buffer;
 		} else {
+			if(ArrayUtil.isEmpty(buffer)){
+				// issue#I5APJE
+				// 可变长类型在buffer为空的情况下，类型会被擦除，导致报错，此处修正
+				final T[] values = newArray(value.getClass(), 1);
+				values[0] = value;
+				return append(buffer, values);
+			}
 			return append(buffer, value);
 		}
 	}
@@ -367,6 +375,48 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		} else {
 			return append(array, value);
 		}
+	}
+
+	/**
+	 * 将新元素插入到到已有数组中的某个位置<br>
+	 * 添加新元素会生成一个新数组或原有数组<br>
+	 * 如果插入位置为为负数，那么生成一个由插入元素顺序加已有数组顺序的新数组
+	 *
+	 * @param <T>    数组元素类型
+	 * @param buffer 已有数组
+	 * @param index  位置，大于长度追加，否则替换，&lt;0表示从头部追加
+	 * @param values 新值
+	 * @return 新数组或原有数组
+	 * @since 5.7.23
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] replace(T[] buffer, int index, T... values) {
+		if (isEmpty(values)) {
+			return buffer;
+		}
+		if (isEmpty(buffer)) {
+			return values;
+		}
+		if (index < 0) {
+			// 从头部追加
+			return insert(buffer, 0, values);
+		}
+		if (index >= buffer.length) {
+			// 超出长度，尾部追加
+			return append(buffer, values);
+		}
+
+		if (buffer.length >= values.length + index) {
+			System.arraycopy(values, 0, buffer, index, values.length);
+			return buffer;
+		}
+
+		// 替换长度大于原数组长度，新建数组
+		int newArrayLength = index + values.length;
+		final T[] result = newArray(buffer.getClass().getComponentType(), newArrayLength);
+		System.arraycopy(buffer, 0, result, 0, index);
+		System.arraycopy(values, 0, result, index, values.length);
+		return result;
 	}
 
 	/**
@@ -412,9 +462,16 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			index = (index % len) + len;
 		}
 
-		final T[] result = newArray(array.getClass().getComponentType(), Math.max(len, index) + newElements.length);
+		// 已有数组的元素类型
+		final Class<?> originComponentType = array.getClass().getComponentType();
+		Object newEleArr = newElements;
+		// 如果 已有数组的元素类型是 原始类型，则需要转换 新元素数组 为该类型，避免ArrayStoreException
+		if (originComponentType.isPrimitive()) {
+			newEleArr = Convert.convert(array.getClass(), newElements);
+		}
+		final Object result = Array.newInstance(originComponentType, Math.max(len, index) + newElements.length);
 		System.arraycopy(array, 0, result, 0, Math.min(len, index));
-		System.arraycopy(newElements, 0, result, index, newElements.length);
+		System.arraycopy(newEleArr, 0, result, index, newElements.length);
 		if (index < len) {
 			System.arraycopy(array, index, result, index + newElements.length, len - index);
 		}
@@ -972,7 +1029,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 获取数组中指定多个下标元素值，组成新数组
 	 *
 	 * @param <T>     数组元素类型
-	 * @param array   数组
+	 * @param array   数组，如果提供为{@code null}则返回{@code null}
 	 * @param indexes 下标列表
 	 * @return 结果
 	 */
@@ -980,10 +1037,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
+		if(null == indexes){
+			return newArray(array.getClass().getComponentType(), 0);
+		}
 
 		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
-		for (int i : indexes) {
-			result[i] = get(array, i);
+		for (int i = 0; i < indexes.length; i++) {
+			result[i] = ArrayUtil.get(array, indexes[i]);
 		}
 		return result;
 	}
@@ -1541,7 +1601,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.5.18
 	 */
 	public static boolean isAllEmpty(Object... args) {
-		return emptyCount(args) == args.length;
+		for (Object obj : args) {
+			if (false == ObjectUtil.isEmpty(obj)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1588,6 +1653,35 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
+	 * 此方法通过{@link LinkedHashSet} 去重
+	 *
+	 * @param <T>      数组元素类型
+	 * @param <K>      唯一键类型
+	 * @param array    数组
+	 * @param uniqueGenerator 唯一键生成器
+	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @return 去重后的数组
+	 * @since 5.8.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T, K> T[] distinct(T[] array, Function<T, K> uniqueGenerator, boolean override) {
+		if (isEmpty(array)) {
+			return array;
+		}
+
+		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
+		if(override){
+			Collections.addAll(set, array);
+		} else{
+			for (T t : array) {
+				set.addIfAbsent(t);
+			}
+		}
+		return toArray(set, (Class<T>) getComponentType(array));
+	}
+
+	/**
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
 	 *
 	 * @param array               被转换的数组
@@ -1627,7 +1721,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 按照指定规则，将一种类型的数组元素提取后转换为List
+	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link List}
 	 *
 	 * @param array 被转换的数组
 	 * @param func  转换规则函数
@@ -1638,6 +1732,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	public static <T, R> List<R> map(T[] array, Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toList());
+	}
+
+	/**
+	 * 按照指定规则，将一种类型的数组元素提取后转换为{@link Set}
+	 *
+	 * @param array 被转换的数组
+	 * @param func  转换规则函数
+	 * @param <T>   原数组类型
+	 * @param <R>   目标数组类型
+	 * @return 转换后的数组
+	 * @since 5.8.0
+	 */
+	public static <T, R> Set<R> mapToSet(T[] array, Function<? super T, ? extends R> func) {
+		return Arrays.stream(array).map(func).collect(Collectors.toSet());
 	}
 
 	/**
@@ -1754,10 +1862,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 查找最后一个子数组的开始位置
 	 *
-	 * @param array    数组
+	 * @param array      数组
 	 * @param endInclude 查找结束的位置（包含）
-	 * @param subArray 子数组
-	 * @param <T>      数组元素类型
+	 * @param subArray   子数组
+	 * @param <T>        数组元素类型
 	 * @return 最后一个子数组的开始位置，即子数字第一个元素在数组中的位置
 	 * @since 5.4.8
 	 */

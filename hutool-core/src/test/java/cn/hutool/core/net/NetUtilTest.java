@@ -101,4 +101,22 @@ public class NetUtilTest {
 		Console.log(txt);
 	}
 
+	@Test
+	public void isInRangeTest(){
+		Assert.assertTrue(NetUtil.isInRange("114.114.114.114","0.0.0.0/0"));
+		Assert.assertTrue(NetUtil.isInRange("192.168.3.4","192.0.0.0/8"));
+		Assert.assertTrue(NetUtil.isInRange("192.168.3.4","192.168.0.0/16"));
+		Assert.assertTrue(NetUtil.isInRange("192.168.3.4","192.168.3.0/24"));
+		Assert.assertTrue(NetUtil.isInRange("192.168.3.4","192.168.3.4/32"));
+		Assert.assertFalse(NetUtil.isInRange("8.8.8.8","192.0.0.0/8"));
+		Assert.assertFalse(NetUtil.isInRange("114.114.114.114","192.168.3.4/32"));
+	}
+
+	@Test
+	public void issueI64P9JTest() {
+		// 获取结果应该去掉空格
+		final String ips = "unknown, 12.34.56.78, 23.45.67.89";
+		final String ip = NetUtil.getMultistageReverseProxyIp(ips);
+		Assert.assertEquals("12.34.56.78", ip);
+	}
 }

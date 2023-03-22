@@ -47,6 +47,12 @@ public class IdcardUtilTest {
 	}
 
 	@Test
+	public void convert18To15Test() {
+		String idcard15 = IdcardUtil.convert18To15("150102198807303035");
+		Assert.assertEquals(ID_15, idcard15);
+	}
+
+	@Test
 	public void getAgeByIdCardTest() {
 		DateTime date = DateUtil.parse("2017-04-10");
 
@@ -78,7 +84,13 @@ public class IdcardUtilTest {
 	@Test
 	public void getCityCodeByIdCardTest() {
 		String codeByIdCard = IdcardUtil.getCityCodeByIdCard(ID_18);
-		Assert.assertEquals("32108", codeByIdCard);
+		Assert.assertEquals("3210", codeByIdCard);
+	}
+
+	@Test
+	public void getDistrictCodeByIdCardTest() {
+		String codeByIdCard = IdcardUtil.getDistrictCodeByIdCard(ID_18);
+		Assert.assertEquals("321083", codeByIdCard);
 	}
 
 	@Test
@@ -102,6 +114,18 @@ public class IdcardUtilTest {
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064x");
 		Assert.assertTrue(isValidCard18);
 		isValidCard18 = IdcardUtil.isValidCard18("33010219200403064X");
+		Assert.assertTrue(isValidCard18);
+
+		// 香港人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("81000019980902013X");
+		Assert.assertTrue(isValidCard18);
+
+		// 澳门人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("820000200009100032");
+		Assert.assertTrue(isValidCard18);
+
+		// 台湾人在大陆身份证
+		isValidCard18 = IdcardUtil.isValidCard18("830000200209060065");
 		Assert.assertTrue(isValidCard18);
 	}
 

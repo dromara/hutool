@@ -1,5 +1,7 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.util.RuntimeUtil;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -8,6 +10,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -27,7 +30,6 @@ public class ThreadUtil {
 	 *    1. 初始线程数为corePoolSize指定的大小
 	 *    2. 没有最大线程数限制
 	 *    3. 默认使用LinkedBlockingQueue，默认队列大小为1024
-	 *    4. 当运行线程大于corePoolSize放入队列，队列满后抛出异常
 	 * </pre>
 	 *
 	 * @param corePoolSize 同时执行的线程数大小
@@ -114,7 +116,7 @@ public class ThreadUtil {
 	 * Blocking Coefficient(阻塞系数) = 阻塞时间／（阻塞时间+使用CPU的时间）<br>
 	 * 计算密集型任务的阻塞系数为0，而IO密集型任务的阻塞系数则接近于1。
 	 * <p>
-	 * see: http://blog.csdn.net/partner4java/article/details/9417663
+	 * see: <a href="http://blog.csdn.net/partner4java/article/details/9417663">http://blog.csdn.net/partner4java/article/details/9417663</a>
 	 *
 	 * @param blockingCoefficient 阻塞系数，阻塞因子介于0~1之间的数，阻塞因子越大，线程池中的线程数越多。
 	 * @return {@link ThreadPoolExecutor}
@@ -126,8 +128,75 @@ public class ThreadUtil {
 		}
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
-		int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
+		int poolSize = (int) (RuntimeUtil.getProcessorCount() / (1 - blockingCoefficient));
 		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
+	}
+
+	/**
+	 * 获取一个新的线程池，默认的策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue，默认队列大小为1024
+	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param isBlocked        是否使用{@link BlockPolicy}策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads, String threadNamePrefix, boolean isBlocked) {
+		return newFixedExecutor(nThreads, 1024, threadNamePrefix, isBlocked);
+	}
+
+	/**
+	 * 获取一个新的线程池，默认的策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue
+	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param maximumQueueSize 队列大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param isBlocked        是否使用{@link BlockPolicy}策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads, int maximumQueueSize, String threadNamePrefix, boolean isBlocked) {
+		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
+				(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
+	}
+
+	/**
+	 * 获得一个新的线程池，默认策略如下<br>
+	 * <pre>
+	 *     1. 核心线程数与最大线程数为nThreads指定的大小
+	 *     2. 默认使用LinkedBlockingQueue
+	 * </pre>
+	 *
+	 * @param nThreads         线程池大小
+	 * @param maximumQueueSize 队列大小
+	 * @param threadNamePrefix 线程名称前缀
+	 * @param handler          拒绝策略
+	 * @return ExecutorService
+	 * @author luozongle
+	 * @since 5.8.0
+	 */
+	public static ExecutorService newFixedExecutor(int nThreads,
+												   int maximumQueueSize,
+												   String threadNamePrefix,
+												   RejectedExecutionHandler handler) {
+		return ExecutorBuilder.create()
+				.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
+				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
+				.setThreadFactory(createThreadFactory(threadNamePrefix))
+				.setHandler(handler)
+				.build();
 	}
 
 	/**
@@ -392,6 +461,18 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 创建自定义线程名称前缀的{@link ThreadFactory}
+	 *
+	 * @param threadNamePrefix 线程名称前缀
+	 * @return {@link ThreadFactory}
+	 * @see ThreadFactoryBuilder#build()
+	 * @since 5.8.0
+	 */
+	public static ThreadFactory createThreadFactory(String threadNamePrefix) {
+		return ThreadFactoryBuilder.create().setNamePrefix(threadNamePrefix).build();
+	}
+
+	/**
 	 * 结束线程，调用此方法后，线程将抛出 {@link InterruptedException}异常
 	 *
 	 * @param thread 线程
@@ -552,6 +633,7 @@ public class ThreadUtil {
 	 * @return {@link ConcurrencyTester}
 	 * @since 4.5.8
 	 */
+	@SuppressWarnings("resource")
 	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
 		return (new ConcurrencyTester(threadSize)).test(runnable);
 	}
@@ -572,8 +654,8 @@ public class ThreadUtil {
 	 * 注意：此方法的延迟和周期的单位均为毫秒。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池
@@ -596,8 +678,8 @@ public class ThreadUtil {
 	 * 开始执行一个定时任务，执行方式分fixedRate模式和fixedDelay模式。
 	 *
 	 * <ul>
-	 *     <li>fixedRate 模式：下一次任务等待上一次任务执行完毕后再启动。</li>
-	 *     <li>fixedDelay模式：下一次任务不等待上一次任务，到周期自动执行。</li>
+	 *     <li>fixedRate 模式：以固定的频率执行。每period的时刻检查，如果上个任务完成，启动下个任务，否则等待上个任务结束后立即启动。</li>
+	 *     <li>fixedDelay模式：以固定的延时执行。上次任务结束后等待period再执行下个任务。</li>
 	 * </ul>
 	 *
 	 * @param executor              定时任务线程池，{@code null}新建一个默认线程池

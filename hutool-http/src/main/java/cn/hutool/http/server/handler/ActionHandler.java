@@ -33,5 +33,6 @@ public class ActionHandler implements HttpHandler {
 				new HttpServerRequest(httpExchange),
 				new HttpServerResponse(httpExchange)
 		);
+		httpExchange.close();
 	}
 }

@@ -16,17 +16,17 @@ import java.util.Objects;
 public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final K key;
-	private final V value;
+	protected K key;
+	protected V value;
 
 	/**
-	 * 构建{@link Pair}对象
+	 * 构建{@code Pair}对象
 	 *
 	 * @param <K>   键类型
 	 * @param <V>   值类型
 	 * @param key   键
 	 * @param value 值
-	 * @return {@link Pair}
+	 * @return {@code Pair}
 	 * @since 5.4.3
 	 */
 	public static <K, V> Pair<K, V> of(K key, V value) {

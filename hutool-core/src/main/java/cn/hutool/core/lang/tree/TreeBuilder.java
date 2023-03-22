@@ -7,7 +7,6 @@ import cn.hutool.core.lang.tree.parser.NodeParser;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	public TreeBuilder(E rootId, TreeNodeConfig config) {
 		root = new Tree<>(config);
 		root.setId(rootId);
-		this.idTreeMap = new HashMap<>();
+		this.idTreeMap = new LinkedHashMap<>();
 	}
 
 	/**
@@ -158,6 +157,20 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 	 * @return this
 	 */
 	public <T> TreeBuilder<E> append(List<T> list, NodeParser<T, E> nodeParser) {
+		return append(list, null, nodeParser);
+	}
+
+	/**
+	 * 增加节点列表，增加的节点是不带子节点的
+	 *
+	 * @param <T>        Bean类型
+	 * @param list       Bean列表
+	 * @param rootId     根ID
+	 * @param nodeParser 节点转换器，用于定义一个Bean如何转换为Tree节点
+	 * @return this
+	 * @since 5.8.6
+	 */
+	public <T> TreeBuilder<E> append(List<T> list, E rootId, NodeParser<T, E> nodeParser) {
 		checkBuilt();
 
 		final TreeNodeConfig config = this.root.getConfig();
@@ -166,11 +179,13 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		for (T t : list) {
 			node = new Tree<>(config);
 			nodeParser.parse(t, node);
+			if (null != rootId && false == rootId.getClass().equals(node.getId().getClass())) {
+				throw new IllegalArgumentException("rootId type is node.getId().getClass()!");
+			}
 			map.put(node.getId(), node);
 		}
 		return append(map);
 	}
-
 
 	/**
 	 * 重置Builder，实现复用
@@ -228,7 +243,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 		}
 
 		final Map<E, Tree<E>> eTreeMap = MapUtil.sortByValue(this.idTreeMap, false);
-		List<Tree<E>> rootTreeList = CollUtil.newArrayList();
 		E parentId;
 		for (Tree<E> node : eTreeMap.values()) {
 			if (null == node) {
@@ -237,7 +251,6 @@ public class TreeBuilder<E> implements Builder<Tree<E>> {
 			parentId = node.getParentId();
 			if (ObjectUtil.equals(this.root.getId(), parentId)) {
 				this.root.addChildren(node);
-				rootTreeList.add(node);
 				continue;
 			}
 

@@ -7,19 +7,14 @@ import cn.hutool.core.util.HashUtil;
  *
  * @author loolly
  */
-public class DefaultFilter extends AbstractFilter {
+public class DefaultFilter extends FuncFilter {
 	private static final long serialVersionUID = 1L;
 
-	public DefaultFilter(long maxValue, int machineNumber) {
-		super(maxValue, machineNumber);
-	}
-
 	public DefaultFilter(long maxValue) {
-		super(maxValue);
+		this(maxValue, DEFAULT_MACHINE_NUM);
 	}
 
-	@Override
-	public long hash(String str) {
-		return HashUtil.javaDefaultHash(str) % size;
+	public DefaultFilter(long maxValue, int machineNumber) {
+		super(maxValue, machineNumber, HashUtil::javaDefaultHash);
 	}
 }

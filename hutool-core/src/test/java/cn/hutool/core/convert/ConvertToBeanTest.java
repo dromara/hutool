@@ -2,6 +2,7 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.bean.BeanUtilTest.SubPerson;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.map.CaseInsensitiveMap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,7 +68,31 @@ public class ConvertToBeanTest {
 		Assert.assertEquals("3", map2.get("key3"));
 		Assert.assertEquals("4", map2.get("key4"));
 	}
+	@Test
+	public void mapToMapWithSelfTypeTest() {
+		CaseInsensitiveMap<String, Integer> caseInsensitiveMap = new CaseInsensitiveMap<>();
+		caseInsensitiveMap.put("jerry", 1);
+		caseInsensitiveMap.put("Jerry", 2);
+		caseInsensitiveMap.put("tom", 3);
 
+		Map<String, String> map = Convert.toMap(String.class, String.class, caseInsensitiveMap);
+		Assert.assertEquals("2", map.get("jerry"));
+		Assert.assertEquals("2", map.get("Jerry"));
+		Assert.assertEquals("3", map.get("tom"));
+	}
+	@Test
+	public void beanToSpecifyMapTest() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		Map<String, String> map = Convert.toMap(LinkedHashMap.class, String.class, String.class, person);
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals("14", map.get("age"));
+		Assert.assertEquals("11213232", map.get("openid"));
+	}
 	@Test
 	public void mapToBeanTest() {
 		HashMap<String, Object> map = new HashMap<>();

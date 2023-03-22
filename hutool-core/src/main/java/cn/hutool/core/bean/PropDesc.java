@@ -121,18 +121,19 @@ public class PropDesc {
 
 	/**
 	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object)}获取到值）
+	 *
 	 * @param checkTransient 是否检查Transient关键字或注解
 	 * @return 是否可读
 	 * @since 5.4.2
 	 */
-	public boolean isReadable(boolean checkTransient){
+	public boolean isReadable(boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
-		if(null == this.getter && false == ModifierUtil.isPublic(this.field)){
+		if (null == this.getter && false == ModifierUtil.isPublic(this.field)) {
 			return false;
 		}
 
 		// 检查transient关键字和@Transient注解
-		if(checkTransient && isTransientForGet()){
+		if (checkTransient && isTransientForGet()) {
 			return false;
 		}
 
@@ -164,7 +165,7 @@ public class PropDesc {
 	 * 首先调用字段对应的Getter方法获取值，如果Getter方法不存在，则判断字段如果为public，则直接获取字段值
 	 *
 	 * @param bean        Bean对象
-	 * @param targetType   返回属性值需要转换的类型，null表示不转换
+	 * @param targetType  返回属性值需要转换的类型，null表示不转换
 	 * @param ignoreError 是否忽略错误，包括转换错误和注入错误
 	 * @return this
 	 * @since 5.4.2
@@ -190,18 +191,19 @@ public class PropDesc {
 
 	/**
 	 * 检查属性是否可读（即是否可以通过{@link #getValue(Object)}获取到值）
+	 *
 	 * @param checkTransient 是否检查Transient关键字或注解
 	 * @return 是否可读
 	 * @since 5.4.2
 	 */
-	public boolean isWritable(boolean checkTransient){
+	public boolean isWritable(boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
-		if(null == this.setter && false == ModifierUtil.isPublic(this.field)){
+		if (null == this.setter && false == ModifierUtil.isPublic(this.field)) {
 			return false;
 		}
 
 		// 检查transient关键字和@Transient注解
-		if(checkTransient && isTransientForSet()){
+		if (checkTransient && isTransientForSet()) {
 			return false;
 		}
 
@@ -239,7 +241,28 @@ public class PropDesc {
 	 * @since 5.4.2
 	 */
 	public PropDesc setValue(Object bean, Object value, boolean ignoreNull, boolean ignoreError) {
-		if (ignoreNull && null == value) {
+		return setValue(bean, value, ignoreNull, ignoreError, true);
+	}
+
+	/**
+	 * 设置属性值，可以自动转换字段类型为目标类型
+	 *
+	 * @param bean        Bean对象
+	 * @param value       属性值，可以为任意类型
+	 * @param ignoreNull  是否忽略{@code null}值，true表示忽略
+	 * @param ignoreError 是否忽略错误，包括转换错误和注入错误
+	 * @param override    是否覆盖目标值，如果不覆盖，会先读取bean的值，{@code null}则写，否则忽略。如果覆盖，则不判断直接写
+	 * @return this
+	 * @since 5.7.17
+	 */
+	public PropDesc setValue(Object bean, Object value, boolean ignoreNull, boolean ignoreError, boolean override) {
+		if (null == value && ignoreNull) {
+			return this;
+		}
+
+		// issue#I4JQ1N@Gitee
+		// 非覆盖模式下，如果目标值存在，则跳过
+		if (false == override && null != getValue(bean)) {
 			return this;
 		}
 

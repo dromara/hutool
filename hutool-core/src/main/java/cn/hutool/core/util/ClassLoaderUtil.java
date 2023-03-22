@@ -4,7 +4,8 @@ import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.JarClassLoader;
-import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.map.SafeConcurrentHashMap;
+import cn.hutool.core.text.CharPool;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -13,7 +14,6 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link ClassLoader}工具类
@@ -47,11 +47,10 @@ public class ClassLoaderUtil {
 	/**
 	 * 原始类型名和其class对应表，例如：int =》 int.class
 	 */
-	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new ConcurrentHashMap<>(32);
-	private static final SimpleCache<String, Class<?>> CLASS_CACHE = new SimpleCache<>();
+	private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP = new SafeConcurrentHashMap<>(32);
 
 	static {
-		List<Class<?>> primitiveTypes = new ArrayList<>(32);
+		final List<Class<?>> primitiveTypes = new ArrayList<>(32);
 		// 加入原始类型
 		primitiveTypes.addAll(BasicType.PRIMITIVE_WRAPPER_MAP.keySet());
 		// 加入原始类型数组类型
@@ -64,7 +63,7 @@ public class ClassLoaderUtil {
 		primitiveTypes.add(long[].class);
 		primitiveTypes.add(short[].class);
 		primitiveTypes.add(void.class);
-		for (Class<?> primitiveType : primitiveTypes) {
+		for (final Class<?> primitiveType : primitiveTypes) {
 			PRIMITIVE_TYPE_NAME_MAP.put(primitiveType.getName(), primitiveType);
 		}
 	}
@@ -178,7 +177,7 @@ public class ClassLoaderUtil {
 	 * </pre>
 	 *
 	 * @param name          类名
-	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
+	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用{@link #getClassLoader()}获取
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
@@ -186,48 +185,18 @@ public class ClassLoaderUtil {
 	public static Class<?> loadClass(String name, ClassLoader classLoader, boolean isInitialized) throws UtilException {
 		Assert.notNull(name, "Name must not be null");
 
+		// 自动将包名中的"/"替换为"."
+		name = name.replace(CharPool.SLASH, CharPool.DOT);
+		if(null == classLoader){
+			classLoader = getClassLoader();
+		}
+
 		// 加载原始类型和缓存中的类
 		Class<?> clazz = loadPrimitiveClass(name);
 		if (clazz == null) {
-			clazz = CLASS_CACHE.get(name);
+			clazz = doLoadClass(name, classLoader, isInitialized);
 		}
-		if (clazz != null) {
-			return clazz;
-		}
-
-		if (name.endsWith(ARRAY_SUFFIX)) {
-			// 对象数组"java.lang.String[]"风格
-			final String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
-			final Class<?> elementClass = loadClass(elementClassName, classLoader, isInitialized);
-			clazz = Array.newInstance(elementClass, 0).getClass();
-		} else if (name.startsWith(NON_PRIMITIVE_ARRAY_PREFIX) && name.endsWith(";")) {
-			// "[Ljava.lang.String;" 风格
-			final String elementName = name.substring(NON_PRIMITIVE_ARRAY_PREFIX.length(), name.length() - 1);
-			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
-			clazz = Array.newInstance(elementClass, 0).getClass();
-		} else if (name.startsWith(INTERNAL_ARRAY_PREFIX)) {
-			// "[[I" 或 "[[Ljava.lang.String;" 风格
-			final String elementName = name.substring(INTERNAL_ARRAY_PREFIX.length());
-			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
-			clazz = Array.newInstance(elementClass, 0).getClass();
-		} else {
-			// 加载普通类
-			if (null == classLoader) {
-				classLoader = getClassLoader();
-			}
-			try {
-				clazz = Class.forName(name, isInitialized, classLoader);
-			} catch (ClassNotFoundException ex) {
-				// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
-				clazz = tryLoadInnerClass(name, classLoader, isInitialized);
-				if (null == clazz) {
-					throw new UtilException(ex);
-				}
-			}
-		}
-
-		// 加入缓存并返回
-		return CLASS_CACHE.put(name, clazz);
+		return clazz;
 	}
 
 	/**
@@ -307,6 +276,47 @@ public class ClassLoaderUtil {
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start
+	/**
+	 * 加载非原始类类，无缓存
+	 * @param name 类名
+	 * @param classLoader {@link ClassLoader}
+	 * @param isInitialized 是否初始化
+	 * @return 类
+	 */
+	private static Class<?> doLoadClass(String name, ClassLoader classLoader, boolean isInitialized){
+		Class<?> clazz;
+		if (name.endsWith(ARRAY_SUFFIX)) {
+			// 对象数组"java.lang.String[]"风格
+			final String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
+			final Class<?> elementClass = loadClass(elementClassName, classLoader, isInitialized);
+			clazz = Array.newInstance(elementClass, 0).getClass();
+		} else if (name.startsWith(NON_PRIMITIVE_ARRAY_PREFIX) && name.endsWith(";")) {
+			// "[Ljava.lang.String;" 风格
+			final String elementName = name.substring(NON_PRIMITIVE_ARRAY_PREFIX.length(), name.length() - 1);
+			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+			clazz = Array.newInstance(elementClass, 0).getClass();
+		} else if (name.startsWith(INTERNAL_ARRAY_PREFIX)) {
+			// "[[I" 或 "[[Ljava.lang.String;" 风格
+			final String elementName = name.substring(INTERNAL_ARRAY_PREFIX.length());
+			final Class<?> elementClass = loadClass(elementName, classLoader, isInitialized);
+			clazz = Array.newInstance(elementClass, 0).getClass();
+		} else {
+			// 加载普通类
+			if (null == classLoader) {
+				classLoader = getClassLoader();
+			}
+			try {
+				clazz = Class.forName(name, isInitialized, classLoader);
+			} catch (ClassNotFoundException ex) {
+				// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+				clazz = tryLoadInnerClass(name, classLoader, isInitialized);
+				if (null == clazz) {
+					throw new UtilException(ex);
+				}
+			}
+		}
+		return clazz;
+	}
 
 	/**
 	 * 尝试转换并加载内部类，例如java.lang.Thread.State =》java.lang.Thread$State

@@ -24,7 +24,7 @@ public class TransIter<F, T> implements Iterator<T> {
 	 * @param backingIterator 源{@link Iterator}
 	 * @param func            转换函数
 	 */
-	public TransIter(Iterator<? extends F> backingIterator, Function<? super F, ? extends T> func) {
+	public TransIter(final Iterator<? extends F> backingIterator, final Function<? super F, ? extends T> func) {
 		this.backingIterator = Assert.notNull(backingIterator);
 		this.func = Assert.notNull(func);
 	}

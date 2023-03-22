@@ -19,4 +19,25 @@ public interface Converter<T> {
 	 */
 	T convert(Object value, T defaultValue) throws IllegalArgumentException;
 
+	/**
+	 * 转换值为指定类型，可选是否不抛异常转换<br>
+	 * 当转换失败时返回默认值
+	 *
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @param quietly 是否静默转换，true不抛异常
+	 * @return 转换后的值
+	 * @since 5.8.0
+	 * @see #convert(Object, Object)
+	 */
+	default T convertWithCheck(Object value, T defaultValue, boolean quietly) {
+		try {
+			return convert(value, defaultValue);
+		} catch (Exception e) {
+			if(quietly){
+				return defaultValue;
+			}
+			throw e;
+		}
+	}
 }

@@ -194,10 +194,20 @@ public final class SensitiveUtil {
 	 * @return 敏感词过滤处理后的bean对象
 	 */
 	public static <T> T sensitiveFilter(T bean, boolean isGreedMatch, SensitiveProcessor sensitiveProcessor) {
-		String jsonText = JSONUtil.toJsonStr(bean);
-		@SuppressWarnings("unchecked")
-		final Class<T> c = (Class<T>) bean.getClass();
+		final String jsonText = JSONUtil.toJsonStr(bean);
+		@SuppressWarnings("unchecked") final Class<T> c = (Class<T>) bean.getClass();
 		return JSONUtil.toBean(sensitiveFilter(jsonText, isGreedMatch, sensitiveProcessor), c);
+	}
+
+	/**
+	 * 处理过滤文本中的敏感词，默认替换成*
+	 *
+	 * @param text 文本
+	 * @return 敏感词过滤处理后的文本
+	 * @since 5.7.21
+	 */
+	public static String sensitiveFilter(String text) {
+		return sensitiveFilter(text, true, null);
 	}
 
 	/**
@@ -214,18 +224,19 @@ public final class SensitiveUtil {
 		}
 
 		//敏感词过滤场景下，不需要密集匹配
-		List<FoundWord> foundWordList = getFoundAllSensitive(text, false, isGreedMatch);
+		final List<FoundWord> foundWordList = getFoundAllSensitive(text, true, isGreedMatch);
 		if (CollUtil.isEmpty(foundWordList)) {
 			return text;
 		}
 		sensitiveProcessor = sensitiveProcessor == null ? new SensitiveProcessor() {
 		} : sensitiveProcessor;
-		Map<Integer, FoundWord> foundWordMap = new HashMap<>(foundWordList.size());
+
+		final Map<Integer, FoundWord> foundWordMap = new HashMap<>(foundWordList.size(), 1);
 		foundWordList.forEach(foundWord -> foundWordMap.put(foundWord.getStartIndex(), foundWord));
-		int length = text.length();
-		StringBuilder textStringBuilder = new StringBuilder();
+		final int length = text.length();
+		final StringBuilder textStringBuilder = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			FoundWord fw = foundWordMap.get(i);
+			final FoundWord fw = foundWordMap.get(i);
 			if (fw != null) {
 				textStringBuilder.append(sensitiveProcessor.process(fw));
 				i = fw.getEndIndex();
