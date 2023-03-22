@@ -302,7 +302,7 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 创建File对象，相当于调用new File()，不做任何处理
 	 *
-	 * @param path 文件路径
+	 * @param path 文件路径，相对路径表示相对项目路径
 	 * @return File
 	 * @since 4.1.4
 	 */
