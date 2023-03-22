@@ -13,6 +13,7 @@ import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.unit.DataSizeUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -2225,6 +2227,19 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 从文件中读取每一行数据
 	 *
+	 * @param file   文件
+	 * @param filter 过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readUtf8Lines(File file, Predicate<String> filter) throws IORuntimeException {
+		return readLines(file, CharsetUtil.CHARSET_UTF_8, filter);
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
 	 * @param file    文件
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
@@ -2244,6 +2259,25 @@ public class FileUtil extends PathUtil {
 	 */
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<>());
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
+	 * @param file    文件
+	 * @param charset 字符集
+	 * @param filter  过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(File file, Charset charset, Predicate<String> filter) throws IORuntimeException {
+		final List<String> result = new ArrayList<>();
+		readLines(file, charset, (LineHandler) line -> {
+			if (Boolean.TRUE.equals(filter.test(line))) {
+				result.add(line);
+			}
+		});
+		return result;
 	}
 
 	/**
