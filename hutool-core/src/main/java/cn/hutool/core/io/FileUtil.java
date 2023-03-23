@@ -2418,7 +2418,7 @@ public class FileUtil extends PathUtil {
 	public static List<String> readLines(File file, Charset charset, Predicate<String> filter) throws IORuntimeException {
 		final List<String> result = new ArrayList<>();
 		readLines(file, charset, (LineHandler) line -> {
-			if (Boolean.TRUE.equals(filter.test(line))) {
+			if (filter.test(line)) {
 				result.add(line);
 			}
 		});
