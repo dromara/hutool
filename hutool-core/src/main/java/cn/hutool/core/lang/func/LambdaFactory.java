@@ -2,7 +2,6 @@ package cn.hutool.core.lang.func;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.LookupFactory;

@@ -122,7 +122,8 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * 将对象转为字符串
 	 * <pre>
 	 * 	 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
-	 * 	 2、对象数组会调用Arrays.toString方法
+	 * 	 2、char[]会直接构造String
+	 * 	 3、对象数组会调用Arrays.toString方法
 	 * </pre>
 	 *
 	 * @param obj     对象
@@ -136,7 +137,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 
 		if (obj instanceof String) {
 			return (String) obj;
-		} else if (obj instanceof byte[]) {
+		}else if(obj instanceof char[]){
+			return new String((char[]) obj);
+		}else if (obj instanceof byte[]) {
 			return str((byte[]) obj, charset);
 		} else if (obj instanceof Byte[]) {
 			return str((Byte[]) obj, charset);
@@ -179,17 +182,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 将Byte数组转为字符串
-	 *
-	 * @param bytes   byte数组
-	 * @param charset 字符集
-	 * @return 字符串
-	 */
-	public static String str(final Byte[] bytes, final String charset) {
-		return str(bytes, CharsetUtil.charset(charset));
-	}
-
-	/**
 	 * 解码字节码
 	 *
 	 * @param data    字符串
@@ -209,21 +201,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		}
 
 		return str(bytes, charset);
-	}
-
-	/**
-	 * 将编码的byteBuffer数据转换为字符串
-	 *
-	 * @param data    数据
-	 * @param charset 字符集，如果为空使用当前系统字符集
-	 * @return 字符串
-	 */
-	public static String str(final ByteBuffer data, final String charset) {
-		if (data == null) {
-			return null;
-		}
-
-		return str(data, CharsetUtil.charset(charset));
 	}
 
 	/**
