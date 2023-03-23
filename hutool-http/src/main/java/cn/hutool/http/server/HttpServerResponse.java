@@ -1,10 +1,11 @@
 package cn.hutool.http.server;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.meta.Header;
@@ -12,14 +13,7 @@ import cn.hutool.http.meta.HttpStatus;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +21,7 @@ import java.util.Map;
 /**
  * Http响应对象，用于写出数据到客户端
  */
+@SuppressWarnings("resource")
 public class HttpServerResponse extends HttpServerBase {
 
 	private Charset charset;
@@ -278,7 +273,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 */
 	public HttpServerResponse write(final String data) {
 		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
-		return write(StrUtil.bytes(data, charset));
+		return write(ByteUtil.toBytes(data, charset));
 	}
 
 	/**

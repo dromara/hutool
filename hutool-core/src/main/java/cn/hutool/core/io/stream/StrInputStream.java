@@ -1,6 +1,6 @@
 package cn.hutool.core.io.stream;
 
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +42,6 @@ public class StrInputStream extends ByteArrayInputStream {
 	 * @param charset 编码
 	 */
 	public StrInputStream(final CharSequence str, final Charset charset) {
-		super(StrUtil.bytes(str, charset));
+		super(ByteUtil.toBytes(str, charset));
 	}
 }

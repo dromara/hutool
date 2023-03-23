@@ -1,11 +1,11 @@
 package cn.hutool.crypto.symmetric;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -70,7 +70,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的bytes
 	 */
 	default byte[] encrypt(final String data, final Charset charset) {
-		return encrypt(StrUtil.bytes(data, charset));
+		return encrypt(ByteUtil.toBytes(data, charset));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public interface SymmetricEncryptor {
 	 * @return 加密后的bytes
 	 */
 	default byte[] encrypt(final String data) {
-		return encrypt(StrUtil.bytes(data, CharsetUtil.UTF_8));
+		return encrypt(ByteUtil.toBytes(data, CharsetUtil.UTF_8));
 	}
 
 	/**

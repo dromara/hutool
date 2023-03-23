@@ -1,7 +1,8 @@
 package cn.hutool.json.jwt.signers;
 
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.digest.HMac;
 
 import java.nio.charset.Charset;
@@ -58,8 +59,8 @@ public class HMacJWTSigner implements JWTSigner {
 	public boolean verify(final String headerBase64, final String payloadBase64, final String signBase64) {
 		final String sign = sign(headerBase64, payloadBase64);
 		return hMac.verify(
-				StrUtil.bytes(sign, charset),
-				StrUtil.bytes(signBase64, charset));
+				ByteUtil.toBytes(sign, charset),
+				ByteUtil.toBytes(signBase64, charset));
 	}
 
 	@Override

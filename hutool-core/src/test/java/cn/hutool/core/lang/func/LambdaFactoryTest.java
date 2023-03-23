@@ -158,12 +158,13 @@ public class LambdaFactoryTest {
 			loop(count, tasks);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Test
 		public void testConstructor() {
-			Constructor<Something> constructor = ((SerSupplier<Constructor<Something>>) Something.class::getConstructor).get();
-			Supplier<Something> constructorLambda = LambdaFactory.build(Supplier.class, constructor);
+			final Constructor<Something> constructor = ((SerSupplier<Constructor<Something>>) Something.class::getConstructor).get();
+			final Supplier<Something> constructorLambda = LambdaFactory.build(Supplier.class, constructor);
 			// constructorLambda can be cache or transfer
-			Something something = constructorLambda.get();
+			final Something something = constructorLambda.get();
 			Assert.assertEquals(Something.class, something.getClass());
 		}
 

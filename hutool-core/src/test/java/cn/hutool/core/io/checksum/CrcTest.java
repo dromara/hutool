@@ -1,8 +1,8 @@
 package cn.hutool.core.io.checksum;
 
-import cn.hutool.core.io.checksum.crc16.CRC16XModem;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.io.checksum.crc16.CRC16XModem;
+import cn.hutool.core.util.ByteUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class CrcTest {
 		// I3B3RV@Gitee
 		final String text = "000123FFFFFF";
 		final CRC16XModem crc16 = new CRC16XModem();
-		crc16.update(StrUtil.bytes(text));
+		crc16.update(ByteUtil.toUtf8Bytes(text));
 		final String hexValue = crc16.getHexValue(true);
 		Assert.assertEquals("0e04", hexValue);
 	}

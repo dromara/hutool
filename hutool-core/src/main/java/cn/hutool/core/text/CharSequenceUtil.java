@@ -12,12 +12,8 @@ import cn.hutool.core.text.finder.CharMatcherFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.*;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.Normalizer;
@@ -39,6 +35,7 @@ public class CharSequenceUtil extends StrChecker {
 
 	/**
 	 * 未找到的的位置表示，用-1表示
+	 *
 	 * @see Finder#INDEX_NOT_FOUND
 	 */
 	public static final int INDEX_NOT_FOUND = Finder.INDEX_NOT_FOUND;
@@ -1610,7 +1607,7 @@ public class CharSequenceUtil extends StrChecker {
 		return array;
 	}
 
-	// ------------------------------------------------------------------------ sub
+	// region ----- sub
 
 	/**
 	 * 改进JDK subString<br>
@@ -1719,7 +1716,7 @@ public class CharSequenceUtil extends StrChecker {
 		}
 
 		int counterOfDoubleByte = 0;
-		final byte[] b = bytes(str, CharsetUtil.GBK);
+		final byte[] b = ByteUtil.toBytes(str, CharsetUtil.GBK);
 		if (b.length <= len) {
 			return str.toString();
 		}
@@ -1819,9 +1816,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 
 		final int toIndex;
-		if(fromIndex < 0){
+		if (fromIndex < 0) {
 			toIndex = fromIndex - length;
-		}else{
+		} else {
 			toIndex = fromIndex + length;
 		}
 		return sub(input, fromIndex, toIndex);
@@ -2122,8 +2119,9 @@ public class CharSequenceUtil extends StrChecker {
 	public static String[] subBetweenAll(final CharSequence str, final CharSequence prefixAndSuffix) {
 		return subBetweenAll(str, prefixAndSuffix, prefixAndSuffix);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ repeat
+	// region ----- repeat
 
 	/**
 	 * 重复某个字符
@@ -2248,8 +2246,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return builder.toString();
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ equals
+	// region ----- equals
 
 	/**
 	 * 比较两个字符串（大小写敏感）。
@@ -2423,8 +2422,9 @@ public class CharSequenceUtil extends StrChecker {
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ format
+	// region ----- format
 
 	/**
 	 * 格式化文本, {} 表示占位符<br>
@@ -2460,68 +2460,7 @@ public class CharSequenceUtil extends StrChecker {
 	public static String indexedFormat(final CharSequence pattern, final Object... arguments) {
 		return MessageFormat.format(pattern.toString(), arguments);
 	}
-	// ------------------------------------------------------------------------ bytes
-
-	/**
-	 * 编码字符串，编码为UTF-8
-	 *
-	 * @param str 字符串
-	 * @return 编码后的字节码
-	 */
-	public static byte[] utf8Bytes(final CharSequence str) {
-		return bytes(str, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 编码字符串<br>
-	 * 使用系统默认编码
-	 *
-	 * @param str 字符串
-	 * @return 编码后的字节码
-	 */
-	public static byte[] bytes(final CharSequence str) {
-		return bytes(str, Charset.defaultCharset());
-	}
-
-	/**
-	 * 编码字符串
-	 *
-	 * @param str     字符串
-	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
-	 * @return 编码后的字节码
-	 */
-	public static byte[] bytes(final CharSequence str, final String charset) {
-		return bytes(str, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
-	}
-
-	/**
-	 * 编码字符串
-	 *
-	 * @param str     字符串
-	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
-	 * @return 编码后的字节码
-	 */
-	public static byte[] bytes(final CharSequence str, final Charset charset) {
-		if (str == null) {
-			return null;
-		}
-
-		if (null == charset) {
-			return str.toString().getBytes();
-		}
-		return str.toString().getBytes(charset);
-	}
-
-	/**
-	 * 字符串转换为byteBuffer
-	 *
-	 * @param str     字符串
-	 * @param charset 编码
-	 * @return byteBuffer
-	 */
-	public static ByteBuffer byteBuffer(final CharSequence str, final Charset charset) {
-		return ByteBuffer.wrap(bytes(str, charset));
-	}
+	// endregion
 
 	// ------------------------------------------------------------------------ wrap
 
@@ -3219,7 +3158,7 @@ public class CharSequenceUtil extends StrChecker {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
 			return str(str);
 		}
-		if (prefixes != null && prefixes.length > 0) {
+		if (ArrayUtil.isNotEmpty(prefixes)) {
 			for (final CharSequence s : prefixes) {
 				if (startWith(str, s, ignoreCase)) {
 					return str.toString();
@@ -4189,5 +4128,55 @@ public class CharSequenceUtil extends StrChecker {
 			return str.toString();
 		}
 		return str + repeat(fixedChar, fixedLength);
+	}
+
+	/**
+	 * 获取两个字符串的公共前缀<br>
+	 * <pre>{@code
+	 *     commonPrefix("abb", "acc") // "a"
+	 * }</pre>
+	 *
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 字符串1和字符串2的公共前缀
+	 */
+	public static CharSequence commonPrefix(final CharSequence str1, final CharSequence str2) {
+		if (isBlank(str1) || isBlank(str2)) {
+			return EMPTY;
+		}
+		final int minLength = Math.min(str1.length(), str2.length());
+		int index = 0;
+		for (; index < minLength; index++) {
+			if (str1.charAt(index) != str2.charAt(index)) {
+				break;
+			}
+		}
+		return str1.subSequence(0, index);
+	}
+
+	/**
+	 * 获取两个字符串的公共后缀<br>
+	 * <pre>{@code
+	 *     commonSuffix("aba", "cba") // "ba"
+	 * }</pre>
+	 *
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 字符串1和字符串2的公共后缀
+	 */
+	public static CharSequence commonSuffix(final CharSequence str1, final CharSequence str2) {
+		if (isBlank(str1) || isBlank(str2)) {
+			return EMPTY;
+		}
+		int str1Index = str1.length() - 1;
+		int str2Index = str2.length() - 1;
+		for (; str1Index >= 0 && str2Index >= 0; str1Index--, str2Index--) {
+
+			if (str1.charAt(str1Index) != str2.charAt(str2Index)) {
+				break;
+			}
+
+		}
+		return str1.subSequence(str1Index + 1, str1.length());
 	}
 }

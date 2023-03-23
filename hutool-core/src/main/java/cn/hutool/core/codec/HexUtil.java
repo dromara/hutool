@@ -2,9 +2,10 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.codec.binary.Base16Codec;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.awt.Color;
 import java.math.BigInteger;
@@ -69,7 +70,7 @@ public class HexUtil {
 	 * @return 十六进制char[]
 	 */
 	public static char[] encodeHex(final String str, final Charset charset) {
-		return encodeHex(StrUtil.bytes(str, charset), true);
+		return encodeHex(ByteUtil.toBytes(str, charset), true);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class HexUtil {
 	 * @return 十六进制String
 	 */
 	public static String encodeHexStr(final String data, final Charset charset) {
-		return encodeHexStr(StrUtil.bytes(data, charset), true);
+		return encodeHexStr(ByteUtil.toBytes(data, charset), true);
 	}
 
 	/**

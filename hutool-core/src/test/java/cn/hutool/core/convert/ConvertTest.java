@@ -290,7 +290,7 @@ public class ConvertTest {
 	public void numberToByteArrayTest(){
 		// 测试Serializable转换为bytes，调用序列化转换
 		final byte[] bytes = Convert.toPrimitiveByteArray(12L);
-		Assert.assertArrayEquals(ByteUtil.longToBytes(12L), bytes);
+		Assert.assertArrayEquals(ByteUtil.toBytes(12L), bytes);
 	}
 
 	@Test

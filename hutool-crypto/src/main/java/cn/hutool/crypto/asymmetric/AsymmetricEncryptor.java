@@ -1,10 +1,10 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -63,7 +63,7 @@ public interface AsymmetricEncryptor {
 	 * @return 加密后的bytes
 	 */
 	default byte[] encrypt(final String data, final Charset charset, final KeyType keyType) {
-		return encrypt(StrUtil.bytes(data, charset), keyType);
+		return encrypt(ByteUtil.toBytes(data, charset), keyType);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public interface AsymmetricEncryptor {
 	 * @return 加密后的bytes
 	 */
 	default byte[] encrypt(final String data, final KeyType keyType) {
-		return encrypt(StrUtil.utf8Bytes(data), keyType);
+		return encrypt(ByteUtil.toUtf8Bytes(data), keyType);
 	}
 
 	/**

@@ -102,6 +102,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		}
 	}
 
+	// region ----- str
 	/**
 	 * 将对象转为字符串<br>
 	 *
@@ -238,6 +239,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		}
 		return charset.decode(data).toString();
 	}
+	// endregion
 
 	/**
 	 * 调用对象的toString方法，null会返回“null”

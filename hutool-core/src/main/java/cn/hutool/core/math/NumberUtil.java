@@ -1400,6 +1400,34 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 解析转换数字字符串为 {@link java.lang.Integer } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Integer
+	 */
+	public static Integer parseInt(final String numberStr, final Integer defaultValue) {
+		if (StrUtil.isNotBlank(numberStr)) {
+			try {
+				return parseInt(numberStr);
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
+		}
+		return defaultValue;
+	}
+
+	/**
 	 * 解析转换数字字符串为int型数字，规则如下：
 	 *
 	 * <pre>
@@ -1422,7 +1450,7 @@ public class NumberUtil {
 			return 0;
 		}
 
-		if(StrUtil.containsIgnoreCase(number, "E")){
+		if (StrUtil.containsIgnoreCase(number, "E")) {
 			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
 			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
 		}
@@ -1437,6 +1465,35 @@ public class NumberUtil {
 		} catch (final NumberFormatException e) {
 			return parseNumber(number).intValue();
 		}
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Long } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Long
+	 */
+	public static Long parseLong(final String numberStr, final Long defaultValue) {
+		if (StrUtil.isNotBlank(numberStr)) {
+			try {
+				return parseLong(numberStr);
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
+		}
+
+		return defaultValue;
 	}
 
 	/**
@@ -1473,6 +1530,32 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 解析转换数字字符串为 {@link java.lang.Float } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Float
+	 */
+	public static Float parseFloat(final String numberStr, final Float defaultValue) {
+		if (StrUtil.isNotBlank(numberStr)) {
+			try {
+				return parseFloat(numberStr);
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
+		}
+
+		return defaultValue;
+	}
+
+	/**
 	 * 解析转换数字字符串为long型数字，规则如下：
 	 *
 	 * <pre>
@@ -1499,6 +1582,31 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 解析转换数字字符串为 {@link java.lang.Double } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Double
+	 */
+	public static Double parseDouble(final String numberStr, final Double defaultValue) {
+		if (StrUtil.isNotBlank(numberStr)) {
+			try {
+				return parseDouble(numberStr);
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
+		}
+		return defaultValue;
+	}
+
+	/**
 	 * 解析转换数字字符串为long型数字，规则如下：
 	 *
 	 * <pre>
@@ -1522,6 +1630,25 @@ public class NumberUtil {
 		} catch (final NumberFormatException e) {
 			return parseNumber(number).doubleValue();
 		}
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number }
+	 * 此方法不支持科学计数法
+	 *
+	 * @param numberStr    Number字符串
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Number对象
+	 */
+	public static Number parseNumber(final String numberStr, final Number defaultValue) {
+		if (StrUtil.isNotBlank(numberStr)) {
+			try {
+				return parseNumber(numberStr);
+			} catch (final NumberFormatException ignore) {
+				// ignore
+			}
+		}
+		return defaultValue;
 	}
 
 	/**
@@ -1555,114 +1682,6 @@ public class NumberUtil {
 	}
 
 	/**
-	 * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
-	 *
-	 * @param value 值
-	 * @return byte数组
-	 * @since 4.4.5
-	 */
-	public static byte[] toBytes(final int value) {
-		final byte[] result = new byte[4];
-
-		result[0] = (byte) (value >> 24);
-		result[1] = (byte) (value >> 16);
-		result[2] = (byte) (value >> 8);
-		result[3] = (byte) (value /* >> 0 */);
-
-		return result;
-	}
-
-	/**
-	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
-	 * 见：<a href="http://www.ruanyifeng.com/blog/2016/11/byte-order.html">http://www.ruanyifeng.com/blog/2016/11/byte-order.html</a>
-	 *
-	 * @param bytes byte数组
-	 * @return int
-	 * @since 4.4.5
-	 */
-	public static int toInt(final byte[] bytes) {
-		return (bytes[0] & 0xff) << 24//
-				| (bytes[1] & 0xff) << 16//
-				| (bytes[2] & 0xff) << 8//
-				| (bytes[3] & 0xff);
-	}
-
-	/**
-	 * 以无符号字节数组的形式返回传入值。
-	 *
-	 * @param value 需要转换的值
-	 * @return 无符号bytes
-	 * @since 4.5.0
-	 */
-	public static byte[] toUnsignedByteArray(final BigInteger value) {
-		final byte[] bytes = value.toByteArray();
-
-		if (bytes[0] == 0) {
-			final byte[] tmp = new byte[bytes.length - 1];
-			System.arraycopy(bytes, 1, tmp, 0, tmp.length);
-
-			return tmp;
-		}
-
-		return bytes;
-	}
-
-	/**
-	 * 以无符号字节数组的形式返回传入值。
-	 *
-	 * @param length bytes长度
-	 * @param value  需要转换的值
-	 * @return 无符号bytes
-	 * @since 4.5.0
-	 */
-	public static byte[] toUnsignedByteArray(final int length, final BigInteger value) {
-		final byte[] bytes = value.toByteArray();
-		if (bytes.length == length) {
-			return bytes;
-		}
-
-		final int start = bytes[0] == 0 ? 1 : 0;
-		final int count = bytes.length - start;
-
-		if (count > length) {
-			throw new IllegalArgumentException("standard length exceeded for value");
-		}
-
-		final byte[] tmp = new byte[length];
-		System.arraycopy(bytes, start, tmp, tmp.length - count, count);
-		return tmp;
-	}
-
-	/**
-	 * 无符号bytes转{@link BigInteger}
-	 *
-	 * @param buf buf 无符号bytes
-	 * @return {@link BigInteger}
-	 * @since 4.5.0
-	 */
-	public static BigInteger fromUnsignedByteArray(final byte[] buf) {
-		return new BigInteger(1, buf);
-	}
-
-	/**
-	 * 无符号bytes转{@link BigInteger}
-	 *
-	 * @param buf    无符号bytes
-	 * @param off    起始位置
-	 * @param length 长度
-	 * @return {@link BigInteger}
-	 */
-	public static BigInteger fromUnsignedByteArray(final byte[] buf, final int off, final int length) {
-		byte[] mag = buf;
-		if (off != 0 || length != buf.length) {
-			mag = new byte[length];
-			System.arraycopy(buf, off, mag, 0, length);
-		}
-		return new BigInteger(1, mag);
-	}
-
-	/**
 	 * 检查是否为有效的数字<br>
 	 * 检查Double和Float是否为无限大，或者Not a Number<br>
 	 * 非数字类型和Null将返回true
@@ -1672,7 +1691,7 @@ public class NumberUtil {
 	 * @since 4.6.7
 	 */
 	public static boolean isValidNumber(final Number number) {
-		if(null == number){
+		if (null == number) {
 			return false;
 		}
 		if (number instanceof Double) {

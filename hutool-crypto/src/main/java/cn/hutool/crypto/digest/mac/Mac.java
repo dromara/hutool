@@ -1,11 +1,11 @@
 package cn.hutool.crypto.digest.mac;
 
-import cn.hutool.core.codec.binary.Base64;
-import cn.hutool.core.io.file.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.codec.binary.Base64;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.CryptoException;
 
 import java.io.ByteArrayInputStream;
@@ -59,7 +59,7 @@ public class Mac implements Serializable {
 	 * @return 摘要
 	 */
 	public byte[] digest(final String data, final Charset charset) {
-		return digest(StrUtil.bytes(data, charset));
+		return digest(ByteUtil.toBytes(data, charset));
 	}
 
 	/**

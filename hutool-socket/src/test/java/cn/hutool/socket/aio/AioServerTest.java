@@ -18,7 +18,7 @@ public class AioServerTest {
 			@Override
 			public void accept(final AioSession session) {
 				StaticLog.debug("【客户端】：{} 连接。", session.getRemoteAddress());
-				session.write(BufferUtil.createUtf8("=== Welcome to Hutool socket server. ==="));
+				session.write(BufferUtil.ofUtf8("=== Welcome to Hutool socket server. ==="));
 			}
 
 			@Override
@@ -32,7 +32,7 @@ public class AioServerTest {
 							.append("Content-Type: text/html; charset=UTF-8\r\n")//
 							.append("\r\n")
 							.append("Hello Hutool socket");//
-					session.writeAndClose(BufferUtil.createUtf8(response));
+					session.writeAndClose(BufferUtil.ofUtf8(response));
 				}else {
 					session.read();
 				}

@@ -1,7 +1,7 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.SignUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -61,7 +61,7 @@ public class SignTest {
 	 * @param signAlgorithm 算法
 	 */
 	private void signAndVerify(final SignAlgorithm signAlgorithm) {
-		final byte[] data = StrUtil.utf8Bytes("我是一段测试ab");
+		final byte[] data = ByteUtil.toUtf8Bytes("我是一段测试ab");
 		final Sign sign = SignUtil.sign(signAlgorithm);
 
 		// 签名
@@ -78,7 +78,7 @@ public class SignTest {
 	@Test
 	public void signAndVerifyTest2() {
 		final String str = "wx2421b1c4370ec43b 支付测试 JSAPI支付测试 10000100 1add1a30ac87aa2db72f57a2375d8fec http://wxpay.wxutil.com/pub_v2/pay/notify.v2.php oUpF8uMuAJO_M2pxb1Q9zNjWeS6o 1415659990 14.23.150.211 1 JSAPI 0CB01533B8C1EF103065174F50BCA001";
-		final byte[] data = StrUtil.utf8Bytes(str);
+		final byte[] data = ByteUtil.toUtf8Bytes(str);
 		final Sign sign = SignUtil.sign(SignAlgorithm.MD5withRSA);
 
 		// 签名
@@ -109,7 +109,7 @@ public class SignTest {
 	@Test
 	public void signAndVerifyPSSTest() {
 		final String str = "wx2421b1c4370ec43b 支付测试 JSAPI支付测试 10000100 1add1a30ac87aa2db72f57a2375d8fec http://wxpay.wxutil.com/pub_v2/pay/notify.v2.php oUpF8uMuAJO_M2pxb1Q9zNjWeS6o 1415659990 14.23.150.211 1 JSAPI 0CB01533B8C1EF103065174F50BCA001";
-		final byte[] data = StrUtil.utf8Bytes(str);
+		final byte[] data = ByteUtil.toUtf8Bytes(str);
 		final Sign sign = SignUtil.sign(SignAlgorithm.SHA256withRSA_PSS);
 
 		// 签名

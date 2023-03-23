@@ -1,9 +1,10 @@
 package cn.hutool.crypto.symmetric;
 
-import cn.hutool.core.codec.binary.Base64;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -51,7 +52,7 @@ public class RC4 implements Serializable {
 	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
 	public byte[] encrypt(final String message, final Charset charset) throws CryptoException {
-		return crypt(StrUtil.bytes(message, charset));
+		return crypt(ByteUtil.toBytes(message, charset));
 	}
 
 	/**
@@ -224,7 +225,7 @@ public class RC4 implements Serializable {
 		final WriteLock writeLock = this.lock.writeLock();
 		writeLock.lock();
 		try {
-			this.sbox = initSBox(StrUtil.utf8Bytes(key));
+			this.sbox = initSBox(ByteUtil.toUtf8Bytes(key));
 		} finally {
 			writeLock.unlock();
 		}

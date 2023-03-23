@@ -2,7 +2,7 @@ package cn.hutool.http.client.body;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.url.UrlQuery;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.http.meta.ContentType;
 
 import java.io.OutputStream;
@@ -40,7 +40,7 @@ public class UrlEncodedFormBody extends FormBody<UrlEncodedFormBody> {
 
 	@Override
 	public void write(final OutputStream out) {
-		final byte[] bytes = StrUtil.bytes(UrlQuery.of(form, true).build(charset), charset);
+		final byte[] bytes = ByteUtil.toBytes(UrlQuery.of(form, true).build(charset), charset);
 		IoUtil.write(out, false, bytes);
 	}
 

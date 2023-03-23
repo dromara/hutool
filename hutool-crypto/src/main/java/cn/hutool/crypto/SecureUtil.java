@@ -4,6 +4,7 @@ import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.digest.DigestAlgorithm;
@@ -298,7 +299,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmac(final HmacAlgorithm algorithm, final String key) {
-		return new HMac(algorithm, StrUtil.utf8Bytes(key));
+		return new HMac(algorithm, ByteUtil.toUtf8Bytes(key));
 	}
 
 	/**
@@ -336,7 +337,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmacMd5(final String key) {
-		return hmacMd5(StrUtil.utf8Bytes(key));
+		return hmacMd5(ByteUtil.toUtf8Bytes(key));
 	}
 
 	/**
@@ -375,7 +376,7 @@ public class SecureUtil {
 	 * @since 3.3.0
 	 */
 	public static HMac hmacSha1(final String key) {
-		return hmacSha1(StrUtil.utf8Bytes(key));
+		return hmacSha1(ByteUtil.toUtf8Bytes(key));
 	}
 
 	/**
@@ -414,7 +415,7 @@ public class SecureUtil {
 	 * @since 5.6.0
 	 */
 	public static HMac hmacSha256(final String key) {
-		return hmacSha256(StrUtil.utf8Bytes(key));
+		return hmacSha256(ByteUtil.toUtf8Bytes(key));
 	}
 
 	/**

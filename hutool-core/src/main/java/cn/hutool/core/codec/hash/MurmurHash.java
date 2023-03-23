@@ -1,7 +1,6 @@
 package cn.hutool.core.codec.hash;
 
 import cn.hutool.core.codec.Number128;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -60,7 +59,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 	 * @return Hash值
 	 */
 	public int hash32(final CharSequence data) {
-		return hash32(StrUtil.bytes(data, DEFAULT_CHARSET));
+		return hash32(ByteUtil.toBytes(data, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 		// body
 		for (int i = 0; i < nblocks; i++) {
 			final int i4 = offset  + (i << 2);
-			final int k = ByteUtil.bytesToInt(data, i4, DEFAULT_ORDER);
+			final int k = ByteUtil.toInt(data, i4, DEFAULT_ORDER);
 			// mix functions
 			hash = mix32(k, hash);
 		}
@@ -137,7 +136,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 	 * @return Hash值
 	 */
 	public long hash64(final CharSequence data) {
-		return hash64(StrUtil.bytes(data, DEFAULT_CHARSET));
+		return hash64(ByteUtil.toBytes(data, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -168,7 +167,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 		// body
 		for (int i = 0; i < nblocks; i++) {
 			final int i8 = i << 3;
-			long k = ByteUtil.bytesToLong(data, i8, DEFAULT_ORDER);
+			long k = ByteUtil.toLong(data, i8, DEFAULT_ORDER);
 
 			// mix functions
 			k *= C1;
@@ -216,7 +215,7 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 	 * @return Hash值 (2 longs)
 	 */
 	public Number128 hash128(final CharSequence data) {
-		return hash128(StrUtil.bytes(data, DEFAULT_CHARSET));
+		return hash128(ByteUtil.toBytes(data, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -262,8 +261,8 @@ public class MurmurHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[
 		// body
 		for (int i = 0; i < nblocks; i++) {
 			final int i16 = offset + (i << 4);
-			long k1 = ByteUtil.bytesToLong(data, i16, DEFAULT_ORDER);
-			long k2 = ByteUtil.bytesToLong(data, i16 + 8, DEFAULT_ORDER);
+			long k1 = ByteUtil.toLong(data, i16, DEFAULT_ORDER);
+			long k2 = ByteUtil.toLong(data, i16 + 8, DEFAULT_ORDER);
 
 			// mix functions for k1
 			k1 *= C1;

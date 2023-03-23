@@ -1095,7 +1095,7 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static short bytesToShort(final byte[] bytes) {
-		return ByteUtil.bytesToShort(bytes);
+		return ByteUtil.toShort(bytes);
 	}
 
 	/**
@@ -1107,7 +1107,7 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static byte[] shortToBytes(final short shortValue) {
-		return ByteUtil.shortToBytes(shortValue);
+		return ByteUtil.toBytes(shortValue);
 	}
 
 	/**
@@ -1119,7 +1119,7 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static int bytesToInt(final byte[] bytes) {
-		return ByteUtil.bytesToInt(bytes);
+		return ByteUtil.toInt(bytes);
 	}
 
 	/**
@@ -1131,7 +1131,7 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static byte[] intToBytes(final int intValue) {
-		return ByteUtil.intToBytes(intValue);
+		return ByteUtil.toBytes(intValue);
 	}
 
 	/**
@@ -1144,7 +1144,7 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static byte[] longToBytes(final long longValue) {
-		return ByteUtil.longToBytes(longValue);
+		return ByteUtil.toBytes(longValue);
 	}
 
 	/**
@@ -1157,6 +1157,6 @@ public class Convert {
 	 * @since 5.6.3
 	 */
 	public static long bytesToLong(final byte[] bytes) {
-		return ByteUtil.bytesToLong(bytes);
+		return ByteUtil.toLong(bytes);
 	}
 }

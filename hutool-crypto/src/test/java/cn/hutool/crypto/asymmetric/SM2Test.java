@@ -1,9 +1,10 @@
 package cn.hutool.crypto.asymmetric;
 
-import cn.hutool.core.codec.binary.Base64;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.codec.HexUtil;
+import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.ECKeyUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -54,7 +55,7 @@ public class SM2Test {
 		sm2.setMode(SM2Engine.Mode.C1C2C3);
 
 		// 公钥加密，私钥解密
-		final byte[] encrypt = sm2.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.UTF_8), KeyType.PublicKey);
+		final byte[] encrypt = sm2.encrypt(ByteUtil.toBytes("我是一段测试aaaa", CharsetUtil.UTF_8), KeyType.PublicKey);
 		final byte[] decrypt = sm2.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.UTF_8));
 	}
@@ -70,7 +71,7 @@ public class SM2Test {
 		Assert.assertNotNull(sm2.getPrivateKeyBase64());
 
 		// 公钥加密，私钥解密
-		final byte[] encrypt = sm2.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.UTF_8), KeyType.PublicKey);
+		final byte[] encrypt = sm2.encrypt(ByteUtil.toBytes("我是一段测试aaaa", CharsetUtil.UTF_8), KeyType.PublicKey);
 		final byte[] decrypt = sm2.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.UTF_8));
 	}
@@ -137,8 +138,8 @@ public class SM2Test {
 
 		final SM2 sm2 = SmUtil.sm2();
 
-		final byte[] sign = sm2.sign(StrUtil.utf8Bytes(content));
-		final boolean verify = sm2.verify(StrUtil.utf8Bytes(content), sign);
+		final byte[] sign = sm2.sign(ByteUtil.toUtf8Bytes(content));
+		final boolean verify = sm2.verify(ByteUtil.toUtf8Bytes(content), sign);
 		Assert.assertTrue(verify);
 	}
 

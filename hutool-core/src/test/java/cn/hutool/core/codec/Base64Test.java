@@ -1,9 +1,9 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.codec.binary.Base64;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class Base64Test {
 	@Test
 	public void encodeAndDecodeWithoutPaddingTest() {
 		final String a = "伦家是一个非常长的字符串66";
-		final String encode = Base64.encodeWithoutPadding(StrUtil.utf8Bytes(a));
+		final String encode = Base64.encodeWithoutPadding(ByteUtil.toUtf8Bytes(a));
 		Assert.assertEquals("5Lym5a625piv5LiA5Liq6Z2e5bi46ZW/55qE5a2X56ym5LiyNjY", encode);
 
 		final String decodeStr = Base64.decodeStr(encode);

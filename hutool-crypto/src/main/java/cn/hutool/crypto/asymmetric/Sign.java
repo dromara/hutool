@@ -1,11 +1,11 @@
 package cn.hutool.crypto.asymmetric;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -14,11 +14,7 @@ import cn.hutool.crypto.SignUtil;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.spec.AlgorithmParameterSpec;
@@ -198,7 +194,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @since 5.7.0
 	 */
 	public byte[] sign(final String data, final Charset charset) {
-		return sign(StrUtil.bytes(data, charset));
+		return sign(ByteUtil.toBytes(data, charset));
 	}
 
 	/**

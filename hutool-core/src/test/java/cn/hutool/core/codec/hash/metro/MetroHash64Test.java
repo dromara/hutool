@@ -1,7 +1,7 @@
 package cn.hutool.core.codec.hash.metro;
 
 import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -92,7 +92,7 @@ public class MetroHash64Test {
 	}
 
 	static final byte[] ENDIAN =
-			StrUtil.utf8Bytes("012345678901234567890123456789012345678901234567890123456789012");
+			ByteUtil.toUtf8Bytes("012345678901234567890123456789012345678901234567890123456789012");
 
 	@Test
 	public void testLittleEndian() {
@@ -109,7 +109,7 @@ public class MetroHash64Test {
 	}
 
 	private String h64(final String value) {
-		return HexUtil.toHex(MetroHash64.of(0).hash64(StrUtil.utf8Bytes(value))).toUpperCase();
+		return HexUtil.toHex(MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(value))).toUpperCase();
 	}
 
 	private static String hex(final byte[] bytes){

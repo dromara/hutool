@@ -34,8 +34,8 @@ public class NioClientTest {
 		});
 
 		client.listen();
-		client.write(BufferUtil.createUtf8("你好。\n"));
-		client.write(BufferUtil.createUtf8("你好2。"));
+		client.write(BufferUtil.ofUtf8("你好。\n"));
+		client.write(BufferUtil.ofUtf8("你好2。"));
 
 		// 在控制台向服务器端发送数据
 		Console.log("请输入发送的消息：");
@@ -43,7 +43,7 @@ public class NioClientTest {
 		while (scanner.hasNextLine()) {
 			final String request = scanner.nextLine();
 			if (request != null && request.trim().length() > 0) {
-				client.write(BufferUtil.createUtf8(request));
+				client.write(BufferUtil.ofUtf8(request));
 			}
 		}
 	}

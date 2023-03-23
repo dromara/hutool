@@ -2,34 +2,25 @@ package cn.hutool.core.compress;
 
 import cn.hutool.core.collection.iter.EnumerationIter;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.file.FileSystemUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.io.stream.LimitedInputStream;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.CopyOption;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -546,7 +537,7 @@ public class ZipUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.8.5
 	 */
-	public static File unzip(ZipFile zipFile, File outFile, long limit) throws IORuntimeException {
+	public static File unzip(final ZipFile zipFile, final File outFile, final long limit) throws IORuntimeException {
 		if (outFile.exists() && outFile.isFile()) {
 			throw new IllegalArgumentException(
 					StrUtil.format("Target path [{}] exist!", outFile.getAbsolutePath()));
@@ -725,7 +716,7 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static byte[] gzip(final String content, final Charset charset) throws UtilException {
-		return gzip(StrUtil.bytes(content, charset));
+		return gzip(ByteUtil.toBytes(content, charset));
 	}
 
 	/**
@@ -844,7 +835,7 @@ public class ZipUtil {
 	 * @since 4.1.4
 	 */
 	public static byte[] zlib(final String content, final Charset charset, final int level) {
-		return zlib(StrUtil.bytes(content, charset), level);
+		return zlib(ByteUtil.toBytes(content, charset), level);
 	}
 
 	/**

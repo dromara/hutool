@@ -1,6 +1,7 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
@@ -83,8 +84,8 @@ public class DesTest {
 		final DES des = new DES(
 				Mode.CTS,
 				Padding.PKCS5Padding,
-				StrUtil.bytes("12345678"),
-				StrUtil.bytes("11223344")
+				ByteUtil.toUtf8Bytes("12345678"),
+				ByteUtil.toUtf8Bytes("11223344")
 		);
 
 		final String encryptHex = des.encryptHex(content);

@@ -2,14 +2,11 @@ package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.io.StringReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -85,7 +82,7 @@ public class CharSequenceResource implements Resource, Serializable {
 
 	@Override
 	public byte[] readBytes() throws IORuntimeException {
-		return StrUtil.bytes(this.data, this.charset);
+		return ByteUtil.toBytes(this.data, this.charset);
 	}
 
 }

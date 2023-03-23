@@ -1,7 +1,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.asymmetric.SM2;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,8 +47,8 @@ public class OpensslKeyUtilTest {
 				genSm2.usePlainEncoding();
 
 				final String content = "我是Hanley.";
-				final byte[] sign = genSm2.sign(StrUtil.utf8Bytes(content));
-				final boolean verify = genSm2.verify(StrUtil.utf8Bytes(content), sign);
+				final byte[] sign = genSm2.sign(ByteUtil.toUtf8Bytes(content));
+				final boolean verify = genSm2.verify(ByteUtil.toUtf8Bytes(content), sign);
 				Assert.assertTrue(verify);
 			}
 		}

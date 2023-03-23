@@ -1,5 +1,6 @@
 package cn.hutool.core.net.url;
 
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
@@ -108,7 +109,7 @@ public class URLDecoder implements Serializable {
 		if (null == charset) {
 			return str;
 		}
-		return StrUtil.str(decode(StrUtil.bytes(str, charset), isPlusToSpace), charset);
+		return StrUtil.str(decode(ByteUtil.toBytes(str, charset), isPlusToSpace), charset);
 	}
 
 	/**

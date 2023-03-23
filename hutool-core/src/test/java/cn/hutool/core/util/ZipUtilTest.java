@@ -120,7 +120,7 @@ public class ZipUtilTest {
 	@Test
 	public void gzipTest() {
 		final String data = "我是一个需要压缩的很长很长的字符串";
-		final byte[] bytes = StrUtil.utf8Bytes(data);
+		final byte[] bytes = ByteUtil.toUtf8Bytes(data);
 		final byte[] gzip = ZipUtil.gzip(bytes);
 
 		//保证gzip长度正常
@@ -134,7 +134,7 @@ public class ZipUtilTest {
 	@Test
 	public void zlibTest() {
 		final String data = "我是一个需要压缩的很长很长的字符串";
-		final byte[] bytes = StrUtil.utf8Bytes(data);
+		final byte[] bytes = ByteUtil.toUtf8Bytes(data);
 		byte[] gzip = ZipUtil.zlib(bytes, 0);
 
 		//保证zlib长度正常
@@ -203,12 +203,12 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void sizeUnzip() throws IOException {
-		String zipPath = "F:\\BaiduNetdiskDownload\\demo.zip";
-		String outPath = "F:\\BaiduNetdiskDownload\\test";
-		ZipFile zipFile = new ZipFile(zipPath, Charset.forName("GBK"));
-		File file = new File(outPath);
+		final String zipPath = "F:\\BaiduNetdiskDownload\\demo.zip";
+		final String outPath = "F:\\BaiduNetdiskDownload\\test";
+		final ZipFile zipFile = new ZipFile(zipPath, Charset.forName("GBK"));
+		final File file = new File(outPath);
 		// 限制解压文件大小为637KB
-		long size = 637*1024L;
+		final long size = 637*1024L;
 
 		// 限制解压文件大小为636KB
 		// long size = 636*1024L;

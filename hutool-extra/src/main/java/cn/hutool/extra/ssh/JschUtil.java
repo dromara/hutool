@@ -4,8 +4,9 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.LocalPortGenerator;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import com.jcraft.jsch.*;
 
 import java.io.IOException;
@@ -463,7 +464,7 @@ public class JschUtil {
 			charset = CharsetUtil.UTF_8;
 		}
 		final ChannelExec channel = (ChannelExec) createChannel(session, ChannelType.EXEC);
-		channel.setCommand(StrUtil.bytes(cmd, charset));
+		channel.setCommand(ByteUtil.toBytes(cmd, charset));
 		channel.setInputStream(null);
 		channel.setErrStream(errStream);
 		InputStream in = null;
@@ -503,7 +504,7 @@ public class JschUtil {
 			out = shell.getOutputStream();
 			in = shell.getInputStream();
 
-			out.write(StrUtil.bytes(cmd, charset));
+			out.write(ByteUtil.toBytes(cmd, charset));
 			out.flush();
 
 			return IoUtil.read(in, charset);

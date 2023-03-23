@@ -3,7 +3,7 @@ package cn.hutool.core.codec.hash.metro;
 
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.codec.hash.CityHash;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
@@ -17,7 +17,7 @@ public class MetroHashTest {
 
 	@Test
 	public void testEmpty() {
-		Assert.assertEquals("705fb008071e967d", HexUtil.toHex(MetroHash64.of(0).hash64(StrUtil.utf8Bytes(""))));
+		Assert.assertEquals("705fb008071e967d", HexUtil.toHex(MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(""))));
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class MetroHashTest {
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash64.of(0).hash64(StrUtil.utf8Bytes(s));
+			MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 
@@ -84,7 +84,7 @@ public class MetroHashTest {
 
 		final long startMetro = System.currentTimeMillis();
 		for (final String s : strArray) {
-			MetroHash128.of(0).hash128(StrUtil.utf8Bytes(s));
+			MetroHash128.of(0).hash128(ByteUtil.toUtf8Bytes(s));
 		}
 		final long endMetro = System.currentTimeMillis();
 
@@ -103,6 +103,6 @@ public class MetroHashTest {
 	}
 
 	private String h64(final String value) {
-		return HexUtil.toHex(MetroHash64.of(0).hash64(StrUtil.utf8Bytes(value))).toUpperCase();
+		return HexUtil.toHex(MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(value))).toUpperCase();
 	}
 }

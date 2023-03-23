@@ -1,9 +1,10 @@
 package cn.hutool.core.codec.binary;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -64,7 +65,7 @@ public class Base64 {
 	 * @return 被编码后的字符串
 	 */
 	public static String encode(final CharSequence source, final Charset charset) {
-		return encode(StrUtil.bytes(source, charset));
+		return encode(ByteUtil.toBytes(source, charset));
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(final CharSequence source, final Charset charset) {
-		return encodeUrlSafe(StrUtil.bytes(source, charset));
+		return encodeUrlSafe(ByteUtil.toBytes(source, charset));
 	}
 
 	/**
@@ -220,7 +221,7 @@ public class Base64 {
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(final CharSequence base64) {
-		return decode(StrUtil.bytes(base64, DEFAULT_CHARSET));
+		return decode(ByteUtil.toBytes(base64, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -245,7 +246,7 @@ public class Base64 {
 			return false;
 		}
 
-		final byte[] bytes = StrUtil.utf8Bytes(base64);
+		final byte[] bytes = ByteUtil.toUtf8Bytes(base64);
 
 		if (bytes.length != base64.length()) {
 			// 如果长度不相等，说明存在双字节字符，肯定不是Base64，直接返回false

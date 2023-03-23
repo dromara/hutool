@@ -1,7 +1,8 @@
 package cn.hutool.core.codec.binary;
 
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.nio.charset.Charset;
 
@@ -49,7 +50,7 @@ public class Base32 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(final String source, final Charset charset) {
-		return encode(StrUtil.bytes(source, charset));
+		return encode(ByteUtil.toBytes(source, charset));
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class Base32 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encodeHex(final String source, final Charset charset) {
-		return encodeHex(StrUtil.bytes(source, charset));
+		return encodeHex(ByteUtil.toBytes(source, charset));
 	}
 
 	//----------------------------------------------------------------------------------------- decode

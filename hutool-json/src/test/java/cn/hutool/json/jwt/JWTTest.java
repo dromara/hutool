@@ -2,7 +2,7 @@ package cn.hutool.json.jwt;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.json.jwt.signers.AlgorithmUtil;
 import cn.hutool.json.jwt.signers.JWTSigner;
 import cn.hutool.json.jwt.signers.JWTSignerUtil;
@@ -10,12 +10,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JWTTest {
 
@@ -96,7 +91,7 @@ public class JWTTest {
 				"eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2MjQwMDQ4MjIsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV_op5LoibLkuozlj7ciLCJzeXNfbWVudV8xIiwiUk9MRV_op5LoibLkuIDlj7ciLCJzeXNfbWVudV8yIl0sImp0aSI6ImQ0YzVlYjgwLTA5ZTctNGU0ZC1hZTg3LTVkNGI5M2FhNmFiNiIsImNsaWVudF9pZCI6ImhhbmR5LXNob3AifQ." +
 				"aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
 
-		final boolean verify = JWT.of(token).setKey(StrUtil.utf8Bytes("123456")).verify();
+		final boolean verify = JWT.of(token).setKey(ByteUtil.toUtf8Bytes("123456")).verify();
 		Assert.assertTrue(verify);
 	}
 

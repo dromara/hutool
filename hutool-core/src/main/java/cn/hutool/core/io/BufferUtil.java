@@ -1,8 +1,9 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.text.StrUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -236,7 +237,7 @@ public class BufferUtil {
 	 * @since 4.5.0
 	 */
 	public static ByteBuffer of(final CharSequence data, final Charset charset) {
-		return of(StrUtil.bytes(data, charset));
+		return of(ByteUtil.toBytes(data, charset));
 	}
 
 	/**
@@ -246,8 +247,8 @@ public class BufferUtil {
 	 * @return {@link ByteBuffer}
 	 * @since 4.5.0
 	 */
-	public static ByteBuffer createUtf8(final CharSequence data) {
-		return of(StrUtil.utf8Bytes(data));
+	public static ByteBuffer ofUtf8(final CharSequence data) {
+		return of(ByteUtil.toUtf8Bytes(data));
 	}
 
 	/**
@@ -257,7 +258,7 @@ public class BufferUtil {
 	 * @return {@link CharBuffer}
 	 * @since 5.5.7
 	 */
-	public static CharBuffer createCharBuffer(final int capacity) {
+	public static CharBuffer ofCharBuffer(final int capacity) {
 		return CharBuffer.allocate(capacity);
 	}
 }

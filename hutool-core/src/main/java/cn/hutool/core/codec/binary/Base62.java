@@ -1,9 +1,10 @@
 package cn.hutool.core.codec.binary;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(final CharSequence source, final Charset charset) {
-		return encode(StrUtil.bytes(source, charset));
+		return encode(ByteUtil.toBytes(source, charset));
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encodeInverted(final CharSequence source, final Charset charset) {
-		return encodeInverted(StrUtil.bytes(source, charset));
+		return encodeInverted(ByteUtil.toBytes(source, charset));
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static byte[] decode(final CharSequence base62Str) {
-		return decode(StrUtil.bytes(base62Str, DEFAULT_CHARSET));
+		return decode(ByteUtil.toBytes(base62Str, DEFAULT_CHARSET));
 	}
 
 	/**
@@ -247,7 +248,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static byte[] decodeInverted(final CharSequence base62Str) {
-		return decodeInverted(StrUtil.bytes(base62Str, DEFAULT_CHARSET));
+		return decodeInverted(ByteUtil.toBytes(base62Str, DEFAULT_CHARSET));
 	}
 
 	/**

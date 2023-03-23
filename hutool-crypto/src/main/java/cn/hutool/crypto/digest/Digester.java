@@ -1,12 +1,12 @@
 package cn.hutool.crypto.digest;
 
-import cn.hutool.core.io.file.FileUtil;
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.codec.HexUtil;
-import cn.hutool.core.text.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -169,7 +169,7 @@ public class Digester implements Serializable {
 	 * @since 4.6.0
 	 */
 	public byte[] digest(final String data, final Charset charset) {
-		return digest(StrUtil.bytes(data, charset));
+		return digest(ByteUtil.toBytes(data, charset));
 	}
 
 	/**

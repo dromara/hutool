@@ -160,7 +160,7 @@ public class ArrayConverter extends AbstractConverter {
 			}
 		}else if (value instanceof Number && byte.class == targetComponentType) {
 			// 用户可能想序列化指定对象
-			result = ByteUtil.numberToBytes((Number)value);
+			result = ByteUtil.toBytes((Number)value);
 		} else if (value instanceof Serializable && byte.class == targetComponentType) {
 			// 用户可能想序列化指定对象
 			result = SerializeUtil.serialize(value);

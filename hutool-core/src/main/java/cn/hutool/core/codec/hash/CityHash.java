@@ -391,11 +391,11 @@ public class CityHash implements Hash32<byte[]>, Hash64<byte[]>, Hash128<byte[]>
 	}
 
 	private static long fetch64(final byte[] byteArray, final int start) {
-		return ByteUtil.bytesToLong(byteArray, start, ByteUtil.CPU_ENDIAN);
+		return ByteUtil.toLong(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
 	private static int fetch32(final byte[] byteArray, final int start) {
-		return ByteUtil.bytesToInt(byteArray, start, ByteUtil.CPU_ENDIAN);
+		return ByteUtil.toInt(byteArray, start, ByteUtil.CPU_ENDIAN);
 	}
 
 	private static long hashLen16(final long u, final long v, final long mul) {

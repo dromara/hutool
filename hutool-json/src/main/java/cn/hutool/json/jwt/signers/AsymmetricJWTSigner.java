@@ -1,8 +1,9 @@
 package cn.hutool.json.jwt.signers;
 
 import cn.hutool.core.codec.binary.Base64;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 
 import java.nio.charset.Charset;
@@ -63,7 +64,7 @@ public class AsymmetricJWTSigner implements JWTSigner {
 	@Override
 	public boolean verify(final String headerBase64, final String payloadBase64, final String signBase64) {
 		return sign.verify(
-				StrUtil.bytes(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset),
+				ByteUtil.toBytes(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset),
 				Base64.decode(signBase64));
 	}
 

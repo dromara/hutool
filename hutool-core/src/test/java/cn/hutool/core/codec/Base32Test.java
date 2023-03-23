@@ -1,8 +1,8 @@
 package cn.hutool.core.codec;
 
 import cn.hutool.core.codec.binary.Base32;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.text.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class Base32Test {
 	@Test
 	public void hexEncodeAndDecodeTest(){
 		final String a = "伦家是一个非常长的字符串";
-		final String encode = Base32.encodeHex(StrUtil.utf8Bytes(a));
+		final String encode = Base32.encodeHex(ByteUtil.toUtf8Bytes(a));
 		Assert.assertEquals("SIUADPDEMRJ9HBV4N20E9E5AT6EPTPDON3KPBFV7JA2EBBCNSUMADP5OM8======", encode);
 
 		String decodeStr = Base32.decodeStrHex(encode);

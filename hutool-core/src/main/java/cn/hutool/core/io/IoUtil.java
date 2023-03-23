@@ -12,6 +12,7 @@ import cn.hutool.core.io.stream.StreamWriter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.io.BufferedInputStream;
@@ -522,7 +523,7 @@ public class IoUtil extends NioUtil {
 		if (content == null) {
 			return null;
 		}
-		return toStream(StrUtil.bytes(content, charset));
+		return toStream(ByteUtil.toBytes(content, charset));
 	}
 
 	/**

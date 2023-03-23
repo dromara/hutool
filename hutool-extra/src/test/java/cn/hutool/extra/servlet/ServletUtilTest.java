@@ -1,6 +1,6 @@
 package cn.hutool.extra.servlet;
 
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ByteUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class ServletUtilTest {
 	@Ignore
 	public void writeTest() {
 		final HttpServletResponse response = null;
-		final byte[] bytes = StrUtil.utf8Bytes("地球是我们共同的家园，需要大家珍惜.");
+		final byte[] bytes = ByteUtil.toUtf8Bytes("地球是我们共同的家园，需要大家珍惜.");
 
 		//下载文件
 		// 这里没法直接测试，直接写到这里，方便调用；
@@ -38,7 +38,7 @@ public class ServletUtilTest {
 	@Ignore
 	public void jakartaWriteTest() {
 		final jakarta.servlet.http.HttpServletResponse response = null;
-		final byte[] bytes = StrUtil.utf8Bytes("地球是我们共同的家园，需要大家珍惜.");
+		final byte[] bytes = ByteUtil.toUtf8Bytes("地球是我们共同的家园，需要大家珍惜.");
 
 		//下载文件
 		// 这里没法直接测试，直接写到这里，方便调用；

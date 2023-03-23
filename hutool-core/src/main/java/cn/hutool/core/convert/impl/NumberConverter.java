@@ -90,7 +90,7 @@ public class NumberConverter extends AbstractConverter {
 
 		// since 5.7.18
 		if(value instanceof byte[]){
-			return ByteUtil.bytesToNumber((byte[])value, targetType, ByteUtil.DEFAULT_ORDER);
+			return ByteUtil.toNumber((byte[])value, targetType, ByteUtil.DEFAULT_ORDER);
 		}
 
 		if (Byte.class == targetType) {
