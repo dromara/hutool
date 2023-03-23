@@ -160,4 +160,53 @@ public class CharSequenceUtilTest {
 		a = null;
 		Assert.assertNull(CharSequenceUtil.trimToNull(a));
 	}
+
+	@Test
+	public void commonPrefixTest() throws Exception{
+
+		// -------------------------- None match -----------------------
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("", "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix(null, "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", null));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", ""));
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("azzzj", "bzzzj"));
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("english中文", "french中文"));
+
+		// -------------------------- Matched -----------------------
+
+		Assert.assertEquals("name_", CharSequenceUtil.commonPrefix("name_abc", "name_efg"));
+
+		Assert.assertEquals("zzzj", CharSequenceUtil.commonPrefix("zzzja", "zzzjb"));
+
+		Assert.assertEquals("中文", CharSequenceUtil.commonPrefix("中文english", "中文french"));
+
+	}
+
+	@Test
+	public void commonSuffixTest() throws Exception{
+
+		// -------------------------- None match -----------------------
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("", "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix(null, "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", null));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", ""));
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("zzzja", "zzzjb"));
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("中文english", "中文Korean"));
+
+		// -------------------------- Matched -----------------------
+
+		Assert.assertEquals("_name", CharSequenceUtil.commonSuffix("abc_name", "efg_name"));
+
+		Assert.assertEquals("zzzj", CharSequenceUtil.commonSuffix("abczzzj", "efgzzzj"));
+
+		Assert.assertEquals("中文", CharSequenceUtil.commonSuffix("english中文", "Korean中文"));
+
+	}
+
 }
