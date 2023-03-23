@@ -8,17 +8,13 @@ import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharsetUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * 文件读取器
@@ -45,7 +41,7 @@ public class FileReader extends FileWrapper {
 	 * @return FileReader
 	 */
 	public static FileReader of(final File file){
-		return new FileReader(file);
+		return new FileReader(FileUtil.file(file), DEFAULT_CHARSET);
 	}
 
 	// ------------------------------------------------------- Constructor start
@@ -58,51 +54,6 @@ public class FileReader extends FileWrapper {
 		super(file, charset);
 		checkFile();
 	}
-
-	/**
-	 * 构造
-	 * @param file 文件
-	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
-	 */
-	public FileReader(final File file, final String charset) {
-		this(file, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 构造
-	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
-	 * @param charset 编码，使用 {@link CharsetUtil}
-	 */
-	public FileReader(final String filePath, final Charset charset) {
-		this(FileUtil.file(filePath), charset);
-	}
-
-	/**
-	 * 构造
-	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
-	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
-	 */
-	public FileReader(final String filePath, final String charset) {
-		this(FileUtil.file(filePath), CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 构造<br>
-	 * 编码使用 {@link FileWrapper#DEFAULT_CHARSET}
-	 * @param file 文件
-	 */
-	public FileReader(final File file) {
-		this(file, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * 构造<br>
-	 * 编码使用 {@link FileWrapper#DEFAULT_CHARSET}
-	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
-	 */
-	public FileReader(final String filePath) {
-		this(filePath, DEFAULT_CHARSET);
-	}
 	// ------------------------------------------------------- Constructor end
 
 	/**
@@ -113,16 +64,16 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] readBytes() throws IORuntimeException {
-		final long len = file.length();
+		final long len = this.file.length();
 		if (len >= Integer.MAX_VALUE) {
 			throw new IORuntimeException("File is larger then max array size");
 		}
 
 		final byte[] bytes = new byte[(int) len];
-		FileInputStream in = null;
+		InputStream in = null;
 		final int readLength;
 		try {
-			in = new FileInputStream(file);
+			in = FileUtil.getInputStream(this.file);
 			readLength = in.read(bytes);
 			if(readLength < len){
 				throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", len, readLength));
@@ -155,23 +106,25 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public <T extends Collection<String>> T readLines(final T collection) throws IORuntimeException {
-		BufferedReader reader = null;
-		try {
-			reader = FileUtil.getReader(file, charset);
-			String line;
-			while (true) {
-				line = reader.readLine();
-				if (line == null) {
-					break;
-				}
-				collection.add(line);
+		return readLines(collection, null);
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
+	 * @param <T> 集合类型
+	 * @param collection 集合
+	 * @param predicate 断言，断言为真的加入到提供的集合中
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public <T extends Collection<String>> T readLines(final T collection, final Predicate<String> predicate) throws IORuntimeException {
+		readLines((SerConsumer<String>) s -> {
+			if(null == predicate || predicate.test(s)){
+				collection.add(s);
 			}
-			return collection;
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(reader);
-		}
+		});
+		return collection;
 	}
 
 	/**

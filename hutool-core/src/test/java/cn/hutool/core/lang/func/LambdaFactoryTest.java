@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.MethodHandleUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -315,5 +317,16 @@ public class LambdaFactoryTest {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void buildStringTest() {
+		final char[] a = "1234".toCharArray();
+
+		final Constructor<String> constructor = ConstructorUtil.getConstructor(String.class, char[].class, boolean.class);
+		final BiFunction<char[], Boolean, String> function = LambdaFactory.build(BiFunction.class, constructor);
+		final String apply = function.apply(a, true);
+		Assert.assertEquals(apply, new String(a));
 	}
 }
