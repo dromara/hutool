@@ -395,7 +395,8 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 比较两个日期是否为同一月
+	 * 比较两个日期是否为同一月<br>
+	 * 同一个月的意思是：ERA（公元）、year（年）、month（月）都一致。
 	 *
 	 * @param cal1 日期1
 	 * @param cal2 日期2
@@ -407,7 +408,9 @@ public class CalendarUtil {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+				// issue#3011@Github
+				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
 	}
 
 	/**
