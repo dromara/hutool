@@ -4586,4 +4586,58 @@ public class CharSequenceUtil {
 		return false;
 	}
 
+	/**
+	 *
+	 * @param str1	字符串1
+	 * @param str2	字符串2
+	 * @return	字符串1和字符串2的公共前缀
+	 */
+	public static CharSequence commonPrefix(CharSequence str1, CharSequence str2) {
+
+		if (isBlank(str1) || isBlank(str2)) {
+			return EMPTY;
+		}
+
+		int minLength = Math.min(str1.length(), str2.length());
+
+		int index = 0;
+
+		for (; index < minLength; index++) {
+
+			if (str1.charAt(index) != str2.charAt(index)) {
+				break;
+			}
+
+		}
+
+		return str1.subSequence(0, index);
+	}
+
+	/**
+	 *
+	 * @param str1	字符串1
+	 * @param str2	字符串2
+	 * @return	字符串1和字符串2的公共后缀
+	 */
+	public static CharSequence commonSuffix(CharSequence str1, CharSequence str2) {
+
+		if (isBlank(str1) || isBlank(str2)) {
+			return EMPTY;
+		}
+
+		int str1Index = str1.length() - 1;
+
+		int str2Index = str2.length() - 1;
+
+		for (; str1Index >= 0 && str2Index >= 0; str1Index--, str2Index--) {
+
+			if (str1.charAt(str1Index) != str2.charAt(str2Index)) {
+				break;
+			}
+
+		}
+
+		return str1.subSequence(str1Index + 1, str1.length());
+	}
+
 }
