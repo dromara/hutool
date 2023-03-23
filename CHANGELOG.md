@@ -20,6 +20,7 @@
 * 【core  】      修复DateUtil针对ISO8601时间格式部分场景下的解析存在问题（issue#2981@Github）
 * 【core  】      修复JSONUtil.toBean可能的空指针问题（issue#2987@Github）
 * 【core  】      修复CalendarUtil.isSameMonth没有判断公元前导致不一致的问题（issue#3011@Github）
+* 【core  】      修复WatchUtil createModify maxDepth传递后没有使用问题（issue#3005@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.15 (2023-03-09)
