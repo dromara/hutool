@@ -413,18 +413,18 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		Long v1 = NumberUtil.parseLong(null, null);
+		final Long v1 = NumberUtil.parseLong(null, null);
 		assertThat(v1, nullValue());
 
-		Long v2 = NumberUtil.parseLong(StrUtil.EMPTY, null);
+		final Long v2 = NumberUtil.parseLong(StrUtil.EMPTY, null);
 		assertThat(v2, nullValue());
 
-		Long v3 = NumberUtil.parseLong("L3221", 1233L);
+		final Long v3 = NumberUtil.parseLong("L3221", 1233L);
 		assertThat(v3, equalTo(1233L));
 
 		// -------------------------- Parse success -----------------------
 
-		Long v4 = NumberUtil.parseLong("1233L", null);
+		final Long v4 = NumberUtil.parseLong("1233L", null);
 		assertThat(v4, equalTo(1233L));
 
 	}

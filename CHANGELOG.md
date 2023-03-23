@@ -9,6 +9,8 @@
 * 【core  】      改进XmlUtil.xmlToBean，支持xml转bean时父节点忽略大小写
 * 【core  】      优化ArrayUtil的空判断（pr#2969@Github）
 * 【extra 】      优化SpringUtil在非Spring环境下的异常（issue#2835@Github）
+* 【core  】      StrUtil增加commonPrefix和commonSuffix方法（pr#3007@Github）
+* 【core  】      NumberUtil增加重载parseXXX方法, 解析失败返回默认值（pr#3007@Github）
 
 ### 🐞Bug修复
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
