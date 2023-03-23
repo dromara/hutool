@@ -419,7 +419,7 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 比较两个日期是否为同一年r>
+	 * 比较两个日期是否为同一年<br>
 	 * 同一个年的意思是：ERA（公元）、year（年）都一致。
 	 *
 	 * @param cal1 日期1
