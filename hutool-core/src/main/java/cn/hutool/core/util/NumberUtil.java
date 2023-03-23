@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.Calculator;
+import cn.hutool.core.text.CharSequenceUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -2571,6 +2572,146 @@ public class NumberUtil {
 			nfe.initCause(e);
 			throw nfe;
 		}
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Integer } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Integer
+	 */
+	public static Integer parseInt(String numberStr, Integer defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseInt(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Long } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Long
+	 */
+	public static Long parseLong(String numberStr, Long defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseLong(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Float } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Float
+	 */
+	public static Float parseFloat(String numberStr, Float defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseFloat(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Double } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Double
+	 */
+	public static Double parseDouble(String numberStr, Double defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseDouble(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number }
+	 * 此方法不支持科学计数法
+	 *
+	 * @param numberStr    Number字符串
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Number对象
+	 */
+	public static Number parseNumber(String numberStr, Number defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseNumber(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
 	}
 
 	/**
