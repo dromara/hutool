@@ -358,6 +358,7 @@ public class CalendarUtil {
 	}
 	// endregion
 
+	// region ----- isSame
 	/**
 	 * 比较两个日期是否为同一天
 	 *
@@ -366,12 +367,7 @@ public class CalendarUtil {
 	 * @return 是否为同一天
 	 */
 	public static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
-		if (cal1 == null || cal2 == null) {
-			throw new IllegalArgumentException("The date must not be null");
-		}
-		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
-				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+		return isSameYear(cal1, cal2) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 	}
 
 	/**
@@ -409,7 +405,8 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 比较两个日期是否为同一月
+	 * 比较两个日期是否为同一月<br>
+	 * 同一个月的意思是：ERA（公元）、year（年）、month（月）都一致。
 	 *
 	 * @param cal1 日期1
 	 * @param cal2 日期2
@@ -417,11 +414,24 @@ public class CalendarUtil {
 	 * @since 5.4.1
 	 */
 	public static boolean isSameMonth(final Calendar cal1, final Calendar cal2) {
+		return isSameYear(cal1, cal2) && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+	}
+
+	/**
+	 * 比较两个日期是否为同一年r>
+	 * 同一个月的意思是：ERA（公元）、year（年）都一致。
+	 *
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @return 是否为同一年
+	 */
+	public static boolean isSameYear(final Calendar cal1, final Calendar cal2) {
 		if (cal1 == null || cal2 == null) {
 			throw new IllegalArgumentException("The date must not be null");
 		}
 		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
-				cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+				// issue#3011@Github
+				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
 	}
 
 	/**
@@ -444,6 +454,7 @@ public class CalendarUtil {
 
 		return date1.getTimeInMillis() == date2.getTimeInMillis();
 	}
+	// endregion
 
 	/**
 	 * 获得指定日期年份和季度<br>
