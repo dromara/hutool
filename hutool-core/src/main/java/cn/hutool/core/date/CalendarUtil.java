@@ -371,11 +371,12 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 比较两个日期是否为同一周
+	 * 比较两个日期是否为同一周<br>
+	 * 同一个周的意思是：ERA（公元）、year（年）、month（月）、week（周）都一致。
 	 *
 	 * @param cal1  日期1
 	 * @param cal2  日期2
-	 * @param isMon 是否为周一。国内第一天为星期一，国外第一天为星期日
+	 * @param isMon 一周的第一天是否为周一。国内第一天为星期一，国外第一天为星期日
 	 * @return 是否为同一周
 	 * @since 5.7.21
 	 */
@@ -419,7 +420,7 @@ public class CalendarUtil {
 
 	/**
 	 * 比较两个日期是否为同一年r>
-	 * 同一个月的意思是：ERA（公元）、year（年）都一致。
+	 * 同一个年的意思是：ERA（公元）、year（年）都一致。
 	 *
 	 * @param cal1 日期1
 	 * @param cal2 日期2
