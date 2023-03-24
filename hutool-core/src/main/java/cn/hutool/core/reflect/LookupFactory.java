@@ -1,6 +1,7 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.JdkUtil;
 
 import java.lang.invoke.MethodHandles;
@@ -40,6 +41,16 @@ public class LookupFactory {
 			// jdk9+ 开始提供的java.lang.invoke.MethodHandles.privateLookupIn方法
 			privateLookupInMethod = createJdk9PrivateLookupInMethod();
 		}
+	}
+
+	/**
+	 * jdk8中如果直接调用{@link MethodHandles#lookup()}获取到的{@link MethodHandles.Lookup}在调用findSpecial和unreflectSpecial
+	 * 时会出现权限不够问题，抛出"no private access for invokespecial"异常，因此针对JDK8及JDK9+分别封装lookup方法。
+	 *
+	 * @return {@link MethodHandles.Lookup}
+	 */
+	public static MethodHandles.Lookup lookup() {
+		return lookup(CallerUtil.getCaller());
 	}
 
 	/**

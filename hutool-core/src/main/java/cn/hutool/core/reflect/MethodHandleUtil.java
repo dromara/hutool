@@ -1,12 +1,14 @@
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 /**
@@ -27,6 +29,24 @@ import java.lang.reflect.Method;
  * @since 5.7.7
  */
 public class MethodHandleUtil {
+
+	/**
+	 * 将{@link Method}或者{@link Constructor} 包装为方法句柄{@link MethodHandle}
+	 *
+	 * @param methodOrConstructor {@link Method}或者{@link Constructor}
+	 * @return 方法句柄{@link MethodHandle}
+	 */
+	public static MethodHandle unreflect(final Member methodOrConstructor) {
+		try {
+			if (methodOrConstructor instanceof Method) {
+				return LookupFactory.lookup().unreflect((Method) methodOrConstructor);
+			} else {
+				return LookupFactory.lookup().unreflectConstructor((Constructor<?>) methodOrConstructor);
+			}
+		} catch (final IllegalAccessException e) {
+			throw new UtilException(e);
+		}
+	}
 
 	/**
 	 * 查找指定方法的方法句柄<br>

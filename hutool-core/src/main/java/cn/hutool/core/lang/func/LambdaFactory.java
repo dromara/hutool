@@ -4,10 +4,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.WeakConcurrentMap;
-import cn.hutool.core.reflect.LookupFactory;
-import cn.hutool.core.reflect.MethodUtil;
-import cn.hutool.core.reflect.ModifierUtil;
-import cn.hutool.core.reflect.ReflectUtil;
+import cn.hutool.core.reflect.*;
 
 import java.io.Serializable;
 import java.lang.invoke.*;
@@ -80,23 +77,23 @@ public class LambdaFactory {
 					.collect(Collectors.toList());
 			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
 			ReflectUtil.setAccessible(executable);
+
+			final MethodHandle methodHandle = MethodHandleUtil.unreflect(executable);
+			final MethodType instantiatedMethodType;
+			if (executable instanceof Method) {
+				final Method method = (Method) executable;
+				instantiatedMethodType = MethodType.methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
+			} else {
+				final Constructor<?> constructor = (Constructor<?>) executable;
+				instantiatedMethodType = MethodType.methodType(constructor.getDeclaringClass(), constructor.getParameterTypes());
+			}
+			final boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
+
 			final Method invokeMethod = abstractMethods.get(0);
 			final MethodHandles.Lookup caller = LookupFactory.lookup(executable.getDeclaringClass());
 			final String invokeName = invokeMethod.getName();
 			final MethodType invokedType = methodType(functionInterfaceType);
 			final MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
-			final MethodHandle implMethod;
-			final MethodType instantiatedMethodType;
-			if (executable instanceof Method) {
-				final Method method = (Method) executable;
-				implMethod = ((SerSupplier<MethodHandle>) () -> MethodHandles.lookup().unreflect(method)).get();
-				instantiatedMethodType = MethodType.methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
-			} else {
-				final Constructor<?> constructor = (Constructor<?>) executable;
-				implMethod = ((SerSupplier<MethodHandle>) () -> MethodHandles.lookup().unreflectConstructor(constructor)).get();
-				instantiatedMethodType = MethodType.methodType(constructor.getDeclaringClass(), constructor.getParameterTypes());
-			}
-			final boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
 			try {
 				final CallSite callSite = isSerializable ?
 						LambdaMetafactory.altMetafactory(
@@ -104,7 +101,7 @@ public class LambdaFactory {
 								invokeName,
 								invokedType,
 								samMethodType,
-								implMethod,
+								methodHandle,
 								instantiatedMethodType,
 								FLAG_SERIALIZABLE
 						) :
@@ -113,7 +110,7 @@ public class LambdaFactory {
 								invokeName,
 								invokedType,
 								samMethodType,
-								implMethod,
+								methodHandle,
 								instantiatedMethodType
 						);
 				//noinspection unchecked
