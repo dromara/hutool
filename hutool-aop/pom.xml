@@ -20,7 +20,7 @@
 		<Automatic-Module-Name>cn.hutool.aop</Automatic-Module-Name>
 		<!-- versions -->
 		<cglib.version>3.3.0</cglib.version>
-		<spring.version>5.3.23</spring.version>
+		<spring.version>5.3.26</spring.version>
 	</properties>
 
 	<dependencies>

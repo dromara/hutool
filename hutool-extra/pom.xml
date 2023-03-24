@@ -454,7 +454,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.23</version>
+			<version>5.3.26</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
