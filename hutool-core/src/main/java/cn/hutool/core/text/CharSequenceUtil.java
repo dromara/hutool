@@ -4141,7 +4141,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 字符串1和字符串2的公共前缀
 	 */
 	public static CharSequence commonPrefix(final CharSequence str1, final CharSequence str2) {
-		if (isBlank(str1) || isBlank(str2)) {
+		if (isEmpty(str1) || isEmpty(str2)) {
 			return EMPTY;
 		}
 		final int minLength = Math.min(str1.length(), str2.length());
@@ -4165,7 +4165,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 字符串1和字符串2的公共后缀
 	 */
 	public static CharSequence commonSuffix(final CharSequence str1, final CharSequence str2) {
-		if (isBlank(str1) || isBlank(str2)) {
+		if (isEmpty(str1) || isEmpty(str2)) {
 			return EMPTY;
 		}
 		int str1Index = str1.length() - 1;
