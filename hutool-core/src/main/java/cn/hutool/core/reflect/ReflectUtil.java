@@ -1,14 +1,16 @@
 package cn.hutool.core.reflect;
 
 import java.lang.reflect.*;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * 反射工具类
  *
  * <p>
- *     本工具类，v6.x进行了重构，原来{@link ReflectUtil}中的方法大部分被移动到了
- *     {@link FieldUtil}、{@link MethodUtil}、{@link ModifierUtil}、{@link ConstructorUtil}等中，
- *     其他相关方法请参考<strong>cn.hutool.core.reflect</strong>包下的类,相关类
+ * 本工具类，v6.x进行了重构，原来{@link ReflectUtil}中的方法大部分被移动到了
+ * {@link FieldUtil}、{@link MethodUtil}、{@link ModifierUtil}、{@link ConstructorUtil}等中，
+ * 其他相关方法请参考<strong>cn.hutool.core.reflect</strong>包下的类,相关类
  * </p>
  * <p>常用方法变更</p>
  * <ul>
@@ -20,23 +22,28 @@ import java.lang.reflect.*;
  *     <li>{@code ReflectUtil.removeFinalModify(Field)} --p {@link  ModifierUtil#removeFinalModify(Field)}</li>
  * </ul>
  *
- *
  * @author Looly
  * @since 3.0.9
  */
 public class ReflectUtil {
 
 	/**
-	 * 设置方法为可访问（私有方法可以被外部调用）
+	 * 设置方法为可访问（私有方法可以被外部调用）<br>
+	 * 注意此方法在jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
 	 *
 	 * @param <T>              AccessibleObject的子类，比如Class、Method、Field等
 	 * @param accessibleObject 可设置访问权限的对象，比如Class、Method、Field等
 	 * @return 被设置可访问的对象
+	 * @throws SecurityException 访问被禁止抛出此异常
 	 * @since 4.6.8
 	 */
-	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) {
+	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) throws SecurityException {
 		if (null != accessibleObject && false == accessibleObject.isAccessible()) {
-			accessibleObject.setAccessible(true);
+			return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+				// 特权访问
+				accessibleObject.setAccessible(true);
+				return accessibleObject;
+			});
 		}
 		return accessibleObject;
 	}

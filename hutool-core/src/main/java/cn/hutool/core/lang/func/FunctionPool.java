@@ -1,6 +1,7 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.reflect.ConstructorUtil;
+import cn.hutool.core.util.JdkUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.function.BiFunction;
@@ -23,7 +24,7 @@ public class FunctionPool {
 
 	static {
 		final Constructor<String> constructor = ConstructorUtil.getConstructor(String.class, char[].class, boolean.class);
-		STRING_CREATOR_JDK8 = LambdaFactory.build(BiFunction.class, constructor);
+		STRING_CREATOR_JDK8 = JdkUtil.IS_JDK8 ? LambdaFactory.build(BiFunction.class, constructor) : null;
 	}
 
 	/**
@@ -34,6 +35,11 @@ public class FunctionPool {
 	 * @return String
 	 */
 	public static String createString(final char[] value) {
-		return STRING_CREATOR_JDK8.apply(value, true);
+		if(JdkUtil.IS_JDK8){
+			return STRING_CREATOR_JDK8.apply(value, true);
+		} else {
+			// TODO JDK9+优化
+			return new String(value);
+		}
 	}
 }

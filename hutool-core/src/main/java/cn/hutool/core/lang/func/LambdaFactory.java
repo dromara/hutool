@@ -24,6 +24,7 @@ import static java.lang.invoke.MethodType.methodType;
 
 /**
  * 以类似反射的方式动态创建Lambda，在性能上有一定优势，同时避免每次调用Lambda时创建匿名内部类
+ * TODO JDK9+存在兼容问题
  *
  * @author nasodaengineer
  */
@@ -60,7 +61,8 @@ public class LambdaFactory {
 	}
 
 	/**
-	 * 构建Lambda
+	 * 根据提供的方法或构造对象，构建对应的Lambda函数<br>
+	 * 调用函数相当于执行对应的方法或构造
 	 *
 	 * @param functionInterfaceType 接受Lambda的函数式接口类型
 	 * @param executable                方法对象，支持构造器

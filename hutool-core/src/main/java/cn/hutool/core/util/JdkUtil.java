@@ -24,10 +24,6 @@ public class JdkUtil {
 	public static final boolean IS_AT_LEAST_JDK17;
 
 	/**
-	 * 是否GraalVM环境
-	 */
-	public static final boolean IS_GRAAL;
-	/**
 	 * 是否Android环境
 	 */
 	public static final boolean IS_ANDROID;
@@ -40,7 +36,6 @@ public class JdkUtil {
 
 		// JVM名称
 		final String jvmName = _getJvmName();
-		IS_GRAAL = jvmName.equals("Substrate VM");
 		IS_ANDROID = jvmName.equals("Dalvik");
 	}
 
