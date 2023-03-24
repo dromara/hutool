@@ -1,6 +1,7 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.util.JdkUtil;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -24,30 +25,16 @@ public class LookupFactory {
 	private static final int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
 			| MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
 
-	private static Constructor<MethodHandles.Lookup> java8LookupConstructor;
 	private static Method privateLookupInMethod;
+	private static Constructor<MethodHandles.Lookup> jdk8LookupConstructor;
 
 	static {
-		//先查询jdk9 开始提供的java.lang.invoke.MethodHandles.privateLookupIn方法,
-		//如果没有说明是jdk8的版本.(不考虑jdk8以下版本)
-		try {
-			//noinspection JavaReflectionMemberAccess
-			privateLookupInMethod = MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
-		} catch (final NoSuchMethodException ignore) {
-			//ignore
-		}
-
-		//jdk8
-		//这种方式其实也适用于jdk9及以上的版本,但是上面优先,可以避免 jdk9 反射警告
-		if (privateLookupInMethod == null) {
-			try {
-				java8LookupConstructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
-				java8LookupConstructor.setAccessible(true);
-			} catch (final NoSuchMethodException e) {
-				//可能是jdk8 以下版本
-				throw new IllegalStateException(
-						"There is neither 'privateLookupIn(Class, Lookup)' nor 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.", e);
-			}
+		if(JdkUtil.isJdk8()){
+			// jdk8 这种方式其实也适用于jdk9及以上的版本,但是上面优先,可以避免 jdk9 反射警告
+			jdk8LookupConstructor = createJdk8LookupConstructor();
+		} else {
+			// jdk9+ 开始提供的java.lang.invoke.MethodHandles.privateLookupIn方法
+			privateLookupInMethod = createJdk9PrivateLookupInMethod();
 		}
 	}
 
@@ -69,9 +56,33 @@ public class LookupFactory {
 		}
 		//jdk 8
 		try {
-			return java8LookupConstructor.newInstance(callerClass, ALLOWED_MODES);
+			return jdk8LookupConstructor.newInstance(callerClass, ALLOWED_MODES);
 		} catch (final Exception e) {
 			throw new IllegalStateException("no 'Lookup(Class, int)' method in java.lang.invoke.MethodHandles.", e);
 		}
+	}
+
+	@SuppressWarnings("JavaReflectionMemberAccess")
+	private static Method createJdk9PrivateLookupInMethod(){
+		try {
+			return MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);
+		} catch (final NoSuchMethodException e) {
+			//可能是jdk9 以下版本
+			throw new IllegalStateException(
+					"There is no 'privateLookupIn(Class, Lookup)' method in java.lang.invoke.MethodHandles.", e);
+		}
+	}
+
+	private static Constructor<MethodHandles.Lookup> createJdk8LookupConstructor(){
+		final Constructor<MethodHandles.Lookup> constructor;
+		try {
+			constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
+		} catch (final NoSuchMethodException e) {
+			//可能是jdk8 以下版本
+			throw new IllegalStateException(
+					"There is no 'Lookup(Class, int)' constructor in java.lang.invoke.MethodHandles.", e);
+		}
+		constructor.setAccessible(true);
+		return constructor;
 	}
 }

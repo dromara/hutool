@@ -16,13 +16,14 @@ public class FunctionPool {
 
 	/**
 	 * 通过{@code String(char[] value, boolean share)}这个内部构造生成一个Lambda函数<br>
-	 * 此函数通过传入char[]，实现zero-copy的String创建，效率很高。但是要求传入的char[]不可以在其他地方修改。
+	 * 此函数通过传入char[]，实现zero-copy的String创建，效率很高。但是要求传入的char[]不可以在其他地方修改。<br>
+	 * 此函数只支持JKDK8
 	 */
-	public static final BiFunction<char[], Boolean, String> STRING_CREATOR;
+	public static final BiFunction<char[], Boolean, String> STRING_CREATOR_JDK8;
 
 	static {
 		final Constructor<String> constructor = ConstructorUtil.getConstructor(String.class, char[].class, boolean.class);
-		STRING_CREATOR = LambdaFactory.build(BiFunction.class, constructor);
+		STRING_CREATOR_JDK8 = LambdaFactory.build(BiFunction.class, constructor);
 	}
 
 	/**
@@ -33,6 +34,6 @@ public class FunctionPool {
 	 * @return String
 	 */
 	public static String createString(final char[] value) {
-		return STRING_CREATOR.apply(value, true);
+		return STRING_CREATOR_JDK8.apply(value, true);
 	}
 }

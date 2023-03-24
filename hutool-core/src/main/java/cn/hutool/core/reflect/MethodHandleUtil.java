@@ -23,17 +23,6 @@ import java.lang.reflect.Method;
 public class MethodHandleUtil {
 
 	/**
-	 * jdk8中如果直接调用{@link MethodHandles#lookup()}获取到的{@link MethodHandles.Lookup}在调用findSpecial和unreflectSpecial
-	 * 时会出现权限不够问题，抛出"no private access for invokespecial"异常，因此针对JDK8及JDK9+分别封装lookup方法。
-	 *
-	 * @param callerClass 被调用的类或接口
-	 * @return {@link MethodHandles.Lookup}
-	 */
-	public static MethodHandles.Lookup lookup(final Class<?> callerClass) {
-		return LookupFactory.lookup(callerClass);
-	}
-
-	/**
 	 * 查找指定方法的方法句柄<br>
 	 * 此方法只会查找：
 	 * <ul>
@@ -53,7 +42,7 @@ public class MethodHandleUtil {
 		}
 
 		MethodHandle handle = null;
-		final MethodHandles.Lookup lookup = lookup(callerClass);
+		final MethodHandles.Lookup lookup = LookupFactory.lookup(callerClass);
 		try {
 			handle = lookup.findVirtual(callerClass, name, type);
 		} catch (final IllegalAccessException | NoSuchMethodException ignore) {
@@ -102,7 +91,7 @@ public class MethodHandleUtil {
 	 * @return 构造方法句柄
 	 */
 	public static MethodHandle findConstructor(final Class<?> callerClass, final MethodType type) {
-		final MethodHandles.Lookup lookup = lookup(callerClass);
+		final MethodHandles.Lookup lookup = LookupFactory.lookup(callerClass);
 		try {
 			return lookup.findConstructor(callerClass, type);
 		} catch (final NoSuchMethodException e) {
@@ -208,7 +197,7 @@ public class MethodHandleUtil {
 	public static <T> T invoke(final boolean isSpecial, final Object obj, final Method method, final Object... args) {
 		Assert.notNull(method, "Method must be not null!");
 		final Class<?> declaringClass = method.getDeclaringClass();
-		final MethodHandles.Lookup lookup = lookup(declaringClass);
+		final MethodHandles.Lookup lookup = LookupFactory.lookup(declaringClass);
 		try {
 			MethodHandle handle = isSpecial ? lookup.unreflectSpecial(method, declaringClass)
 					: lookup.unreflect(method);
