@@ -2,6 +2,78 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.15 (2023-03-09)
+
+### 🐣新特性
+* 【http  】      新增followRedirectsCookie配置，支持开启自动重定向携带cookie（pr#2961@Github）
+
+### 🐞Bug修复
+* 【all   】      修复Automatic-Module-Name错误问题（issue#2952@Github）
+* 【core  】      修复NumberWithFormat导致转换Long异常问题（issue#I6L2LO@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.14 (2023-03-05)
+
+### 🐣新特性
+* 【core  】      增加PathMover（issue#I666HB@Github）
+
+### 🐞Bug修复
+* 【core  】      修复FileUtil.moveContent会删除源目录的问题（issue#I666HB@Github）
+* 【http  】      修复HttpBase.body导致的空指针问题
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.13 (2023-03-03)
+
+### 🐣新特性
+* 【core  】      PhoneUtil.isTel400800支持400-XXX-XXXX格式（issue#2929@Github）
+* 【core  】      build(pom): 添加 Automatic-Module-Name属性（pr#2926@Github）
+* 【core  】      根据JDK-8080225修改了部分新建文件输入流和文件输出流的创建方式（pr#2930@Github）
+* 【http  】      HttpRequest#body增加支持Resource重载（issue#2901@Github）
+* 【core  】      JavaSourceCompiler#compile增加自定义options重载（issue#I6IVZK@Gitee）
+
+### 🐞Bug修复
+* 【db    】      修复识别JDBC驱动时重复问题（pr#940@Gitee）
+* 【core  】      修复法定年龄计算的BUG（pr#935@Gitee）
+* 【core  】      修复FileUtil.rename报NoSuchFileException问题（pr#2894@Github）
+* 【core  】      修复StrUtil.split切分长度为0时的bug（pr#944@Gitee）
+* 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复Tailer文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
+* 【core  】      修复ReflectUtil.invokeRaw方法中参数类型转换动作未生效的问题（pr#2912@Github）
+* 【core  】      修复isXXX转换时的匹配问题（issue#I6H0XF@Gitee）
+* 【core  】      修复MutableObj.equals空指针问题
+* 【core  】      修复JavaSourceFileObject在编译错误时抛出IOException异常而非CompilerException问题（pr#2942@Github）
+* 【jwt   】      修复JWT自定义时间格式后的时间戳转换问题（issue#I6IS5B@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.12 (2023-02-09)
+
+### 🐣新特性
+* 【http  】      HttpGlobalConfig.allowPatch()调用时忽略错误（issue#2832@Github）
+* 【core  】      重构根据file magic number判断文件类型（pr#2834@Github）
+* 【core  】      增加WGS84 坐标与墨卡托投影互转（pr#2811@Github）
+* 【extra 】      ServletUtil遵循rfc 3986优化（issue#I6ALAO@Gitee）
+* 【http  】      HttpUtil.decodeParams增加isFormUrlEncoded重载（pr#918@Gitee）
+* 【db    】      AbstractDb添加返回类型为PageResult的page重载方法（pr#916@Gitee）
+* 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
+* 【core  】      针对CollUtil.subtract coll1 为只读集合的补偿（pr#2865@Github）
+* 【core  】      DateUtil.date方法统一修改规则，传入null返回null（pr#2877@Github）
+* 【core  】      DateUtil.parseUTC统一规范，舍弃3位毫秒数后的数字（pr#2889@Github）
+
+### 🐞Bug修复
+* 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
+* 【core  】      修复FileTypeUtil判断wav后缀的录音文件类型不能匹配问题（pr#2834@Github）
+* 【core  】      修复FileUtil的rename在newName与原文件夹名称一样时，文件夹会被删除问题（issue#2845@Github）
+* 【core  】      修复IoUtil.readBytes使用SocketInputStream读取不完整问题（issue#I6AT49@Gitee）
+* 【core  】      修复ClassScanner自定义classload无效问题（issue#I68TV2@Gitee）
+* 【core  】      【重要】删除XmlUtil.readObjectFromXml方法，避免漏洞（issue#2855@Github）
+* 【core  】      修复Ipv4Util.list()方法的bug（pr#929@Gitee）
+* 【poi   】      修复“sax方式读取excel2003版本，会调用两次doAfterAllAnalysed方法”问题。（pr#919@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
 
 # 5.8.11 (2022-12-27)
 

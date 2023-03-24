@@ -317,7 +317,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	@Override

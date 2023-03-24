@@ -9,11 +9,14 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.11</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-core</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool核心，包括集合、字符串、Bean等工具</description>
 
+	<properties>
+		<Automatic-Module-Name>cn.hutool.core</Automatic-Module-Name>
+	</properties>
 </project>

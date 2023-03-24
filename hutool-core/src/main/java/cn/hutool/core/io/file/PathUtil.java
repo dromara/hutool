@@ -470,68 +470,44 @@ public class PathUtil {
 	}
 
 	/**
-	 * 移动文件或目录<br>
-	 * 当目标是目录时，会将源文件或文件夹整体移动至目标目录下<br>
-	 * 例如：
+	 * 移动文件或目录到目标中，例如：
 	 * <ul>
-	 *     <li>move("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>move("/usr/aaa", "/usr/bbb")结果为："/usr/bbb/aaa"</li>
+	 *     <li>如果src和target为同一文件或目录，直接返回target。</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.5.1
 	 */
 	public static Path move(Path src, Path target, boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-
-		if (isDirectory(target)) {
-			target = target.resolve(src.getFileName());
-		}
-		return moveContent(src, target, isOverride);
+		return PathMover.of(src, target, isOverride).move();
 	}
 
 	/**
-	 * 移动文件或目录内容到目标目录中，例如：
+	 * 移动文件或目录内容到目标中，例如：
 	 * <ul>
-	 *     <li>moveContent("/usr/aaa/abc.txt", "/usr/bbb")结果为："/usr/bbb/abc.txt"</li>
-	 *     <li>moveContent("/usr/aaa", "/usr/bbb")结果为："/usr/bbb"</li>
+	 *     <li>如果src为文件，target为目录，则移动到目标目录下，存在同名文件则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为文件，则按照是否覆盖参数执行。</li>
+	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如moveContent("/a/b", "/c/d"), d不存在，则b变成d。</li>
+	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
+	 *     <li>如果src为目录，target为目录，则将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
+	 *     <li>如果src为目录，target为不存在的路径，则创建目标路径为目录，将源目录下的内容移动到目标路径目录中，源目录不删除。</li>
 	 * </ul>
 	 *
 	 * @param src        源文件或目录路径
 	 * @param target     目标路径，如果为目录，则移动到此目录下
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标文件Path
-	 * @since 5.7.9
 	 */
 	public static Path moveContent(Path src, Path target, boolean isOverride) {
-		Assert.notNull(src, "Src path must be not null !");
-		Assert.notNull(target, "Target path must be not null !");
-		final CopyOption[] options = isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
-
-		// 自动创建目标的父目录
-		mkParentDirs(target);
-		try {
-			return Files.move(src, target, options);
-		} catch (IOException e) {
-			if(e instanceof FileAlreadyExistsException){
-				// 目标文件已存在，直接抛出异常
-				// issue#I4QV0L@Gitee
-				throw new IORuntimeException(e);
-			}
-			// 移动失败，可能是跨分区移动导致的，采用递归移动方式
-			try {
-				Files.walkFileTree(src, new MoveVisitor(src, target, options));
-				// 移动后空目录没有删除，
-				del(src);
-			} catch (IOException e2) {
-				throw new IORuntimeException(e2);
-			}
-			return target;
-		}
+		return PathMover.of(src, target, isOverride).moveContent();
 	}
 
 	/**
@@ -591,6 +567,22 @@ public class PathUtil {
 	public static boolean exists(Path path, boolean isFollowLinks) {
 		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
 		return Files.exists(path, options);
+	}
+
+	/**
+	 * 判断是否存在且为非目录
+	 * <ul>
+	 *     <li>如果path为{@code null}，返回{@code false}</li>
+	 *     <li>如果path不存在，返回{@code false}</li>
+	 * </ul>
+	 *
+	 * @param path          {@link Path}
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @return 如果为目录true
+	 * @since 5.8.14
+	 */
+	public static boolean isExistsAndNotDirectory(final Path path, final boolean isFollowLinks) {
+		return exists(path, isFollowLinks) && false == isDirectory(path, isFollowLinks);
 	}
 
 	/**

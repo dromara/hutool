@@ -615,7 +615,7 @@ public class HttpUtil {
 	 * @return 参数Map
 	 */
 	public static Map<String, List<String>> decodeParams(String paramsStr, String charset) {
-		return decodeParams(paramsStr, CharsetUtil.charset(charset));
+		return decodeParams(paramsStr, charset, false);
 	}
 
 	/**
@@ -623,11 +623,37 @@ public class HttpUtil {
 	 *
 	 * @param paramsStr 参数字符串（或者带参数的Path）
 	 * @param charset   字符集
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @return 参数Map
+	 * @since 5.8.12
+	 */
+	public static Map<String, List<String>> decodeParams(String paramsStr, String charset, boolean isFormUrlEncoded) {
+		return decodeParams(paramsStr, CharsetUtil.charset(charset), isFormUrlEncoded);
+	}
+
+	/**
+	 * 将URL QueryString参数解析为Map
+	 *
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset   字符集
 	 * @return 参数Map
 	 * @since 5.2.6
 	 */
 	public static Map<String, List<String>> decodeParams(String paramsStr, Charset charset) {
-		final Map<CharSequence, CharSequence> queryMap = UrlQuery.of(paramsStr, charset).getQueryMap();
+		return decodeParams(paramsStr, charset, false);
+	}
+
+	/**
+	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
+	 *
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset   字符集
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @return 参数Map
+	 */
+	public static Map<String, List<String>> decodeParams(String paramsStr, Charset charset, boolean isFormUrlEncoded) {
+		final Map<CharSequence, CharSequence> queryMap =
+				UrlQuery.of(paramsStr, charset, true, isFormUrlEncoded).getQueryMap();
 		if (MapUtil.isEmpty(queryMap)) {
 			return MapUtil.empty();
 		}

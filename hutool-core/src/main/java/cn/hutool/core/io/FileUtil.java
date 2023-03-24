@@ -29,9 +29,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -1917,7 +1915,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static BOMInputStream getBOMInputStream(File file) throws IORuntimeException {
 		try {
-			return new BOMInputStream(new FileInputStream(file));
+			return new BOMInputStream(Files.newInputStream(file.toPath()));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -2561,8 +2559,8 @@ public class FileUtil extends PathUtil {
 	public static BufferedOutputStream getOutputStream(File file) throws IORuntimeException {
 		final OutputStream out;
 		try {
-			out = new FileOutputStream(touch(file));
-		} catch (IOException e) {
+			out = Files.newOutputStream(touch(file).toPath());
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return IoUtil.toBuffered(out);
@@ -3337,8 +3335,8 @@ public class FileUtil extends PathUtil {
 			throw new IllegalArgumentException("Checksums can't be computed on directories");
 		}
 		try {
-			return IoUtil.checksum(new FileInputStream(file), checksum);
-		} catch (FileNotFoundException e) {
+			return IoUtil.checksum(Files.newInputStream(file.toPath()), checksum);
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

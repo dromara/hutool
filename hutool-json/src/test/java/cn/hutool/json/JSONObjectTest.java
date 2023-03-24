@@ -219,14 +219,14 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanNullStrTest() {
-		final JSONObject json = JSONUtil.createObj()//
+		final JSONObject json = JSONUtil.createObj(JSONConfig.create().setIgnoreError(true))//
 				.set("strValue", "null")//
 				.set("intValue", 123)//
 				// 子对象对应"null"字符串，如果忽略错误，跳过，否则抛出转换异常
 				.set("beanValue", "null")//
 				.set("list", JSONUtil.createArray().set("a").set("b"));
 
-		final TestBean bean = json.toBean(TestBean.class, true);
+		final TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入

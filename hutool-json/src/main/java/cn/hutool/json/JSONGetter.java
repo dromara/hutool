@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
@@ -138,6 +139,8 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 		}
 		if (obj instanceof Date) {
 			return (Date) obj;
+		} else if(obj instanceof NumberWithFormat){
+			return (Date) ((NumberWithFormat) obj).convert(Date.class, obj);
 		}
 
 		final Optional<String> formatOps = Optional.ofNullable(getConfig()).map(JSONConfig::getDateFormat);
@@ -232,6 +235,6 @@ public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K> {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
-		return JSONConverter.jsonConvert(type, value, ignoreError);
+		return JSONConverter.jsonConvert(type, value, JSONConfig.create().setIgnoreError(ignoreError));
 	}
 }

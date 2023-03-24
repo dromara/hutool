@@ -9,12 +9,16 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.11</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-captcha</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 验证码工具</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.captcha</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -23,4 +27,5 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
+
 </project>

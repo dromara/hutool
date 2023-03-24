@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.11</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-script</artifactId>
@@ -17,6 +17,8 @@
 	<description>Hutool 脚本执行封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.script</Automatic-Module-Name>
+
 		<jython.version>2.7.3</jython.version>
 		<luaj.version>3.0.1</luaj.version>
 		<groovy.version>3.0.13</groovy.version>

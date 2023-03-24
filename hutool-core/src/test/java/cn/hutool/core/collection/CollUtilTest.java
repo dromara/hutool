@@ -306,7 +306,7 @@ public class CollUtilTest {
 
 		final List<String> removed = new ArrayList<>();
 		final ArrayList<String> filtered = CollUtil.filter(list, t -> {
-			if("a".equals(t)){
+			if ("a".equals(t)) {
 				removed.add(t);
 				return false;
 			}
@@ -767,7 +767,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void mapToMapTest(){
+	public void mapToMapTest() {
 		final HashMap<String, String> oldMap = new HashMap<>();
 		oldMap.put("a", "1");
 		oldMap.put("b", "12");
@@ -778,9 +778,9 @@ public class CollUtilTest {
 				Map.Entry::getKey,
 				entry -> Long.parseLong(entry.getValue()));
 
-		Assert.assertEquals(1L, (long)map.get("a"));
-		Assert.assertEquals(12L, (long)map.get("b"));
-		Assert.assertEquals(134L, (long)map.get("c"));
+		Assert.assertEquals(1L, (long) map.get("a"));
+		Assert.assertEquals(12L, (long) map.get("b"));
+		Assert.assertEquals(134L, (long) map.get("c"));
 	}
 
 	@Test
@@ -834,7 +834,7 @@ public class CollUtilTest {
 
 		final List<Long> result = CollUtil.subtractToList(list1, list2);
 		Assert.assertEquals(1, result.size());
-		Assert.assertEquals(1L, (long)result.get(0));
+		Assert.assertEquals(1L, (long) result.get(0));
 	}
 
 	@Test
@@ -845,7 +845,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void setValueByMapTest(){
+	public void setValueByMapTest() {
 		// https://gitee.com/dromara/hutool/pulls/482
 		final List<Person> people = Arrays.asList(
 				new Person("aa", 12, "man", 1),
@@ -886,13 +886,13 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void distinctTest(){
+	public void distinctTest() {
 		final ArrayList<Integer> distinct = CollUtil.distinct(ListUtil.of(5, 3, 10, 9, 0, 5, 10, 9));
 		Assert.assertEquals(ListUtil.of(5, 3, 10, 9, 0), distinct);
 	}
 
 	@Test
-	public void distinctByFunctionTest(){
+	public void distinctByFunctionTest() {
 		final List<Person> people = Arrays.asList(
 				new Person("aa", 12, "man", 1),
 				new Person("bb", 13, "woman", 2),
@@ -941,8 +941,7 @@ public class CollUtilTest {
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
 		Assert.assertNotNull(list);
 
-		@SuppressWarnings("ConfusingArgumentToVarargsMethod")
-		final List<String> resList2 = CollUtil.unionAll(null, null, null);
+		@SuppressWarnings("ConfusingArgumentToVarargsMethod") final List<String> resList2 = CollUtil.unionAll(null, null, null);
 		Assert.assertNotNull(resList2);
 	}
 
@@ -973,8 +972,7 @@ public class CollUtilTest {
 	public void unionAllOtherIsNullTest() {
 		final List<Integer> list1 = CollectionUtil.newArrayList(1, 2, 2, 3, 3);
 		final List<Integer> list2 = CollectionUtil.newArrayList(1, 2, 3);
-		@SuppressWarnings("ConfusingArgumentToVarargsMethod")
-		final List<Integer> list = CollUtil.unionAll(list1, list2, null);
+		@SuppressWarnings("ConfusingArgumentToVarargsMethod") final List<Integer> list = CollUtil.unionAll(list1, list2, null);
 		Assert.assertNotNull(list);
 		Assert.assertArrayEquals(
 				CollectionUtil.newArrayList(1, 2, 2, 3, 3, 1, 2, 3).toArray(),
@@ -1042,7 +1040,7 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void getFirstTest(){
+	public void getFirstTest() {
 		final List<?> nullList = null;
 		final Object first = CollUtil.getFirst(nullList);
 		Assert.assertNull(first);

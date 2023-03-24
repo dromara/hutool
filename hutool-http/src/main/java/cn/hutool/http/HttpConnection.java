@@ -120,7 +120,12 @@ public class HttpConnection {
 
 			// 增加PATCH方法支持
 			if (Method.PATCH.equals(method)) {
-				HttpGlobalConfig.allowPatch();
+				try {
+					HttpGlobalConfig.allowPatch();
+				} catch (Exception ignore){
+					// ignore
+					// https://github.com/dromara/hutool/issues/2832
+				}
 			}
 		}
 

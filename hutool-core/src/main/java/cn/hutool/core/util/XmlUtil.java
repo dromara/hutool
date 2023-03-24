@@ -39,7 +39,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -330,50 +329,6 @@ public class XmlUtil {
 		return readXML(StrUtil.getReader(xmlStr));
 	}
 
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param source XML文件
-	 * @return 对象
-	 */
-	public static <T> T readObjectFromXml(File source) {
-		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
-	}
-
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param xmlStr XML内容
-	 * @return 对象
-	 * @since 3.2.0
-	 */
-	public static <T> T readObjectFromXml(String xmlStr) {
-		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
-	}
-
-	/**
-	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 *
-	 * @param <T>    对象类型
-	 * @param source {@link InputSource}
-	 * @return 对象
-	 * @since 3.2.0
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T readObjectFromXml(InputSource source) {
-		Object result;
-		XMLDecoder xmldec = null;
-		try {
-			xmldec = new XMLDecoder(source);
-			result = xmldec.readObject();
-		} finally {
-			IoUtil.close(xmldec);
-		}
-		return (T) result;
-	}
-
 	// -------------------------------------------------------------------------------------- Write
 
 	/**
@@ -462,7 +417,7 @@ public class XmlUtil {
 	 * @param doc                XML文档
 	 * @param charset            编码
 	 * @param isPretty           是否格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @param omitXmlDeclaration 是否忽略 xml Declaration
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */

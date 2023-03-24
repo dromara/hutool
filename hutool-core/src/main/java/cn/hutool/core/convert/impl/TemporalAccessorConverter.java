@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -100,10 +101,8 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 
 	@Override
 	protected TemporalAccessor convertInternal(Object value) {
-		if (value instanceof Long) {
-			return parseFromLong((Long) value);
-		} else if (value instanceof Integer) {
-			return parseFromLong((long) (Integer) value);
+		if (value instanceof Number) {
+			return parseFromLong(((Number) value).longValue());
 		} else if (value instanceof TemporalAccessor) {
 			return parseFromTemporalAccessor((TemporalAccessor) value);
 		} else if (value instanceof Date) {
@@ -177,7 +176,16 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else if(Era.class.equals(this.targetType)){
 			return IsoEra.of(Math.toIntExact(time));
 		}
-		return parseFromInstant(Instant.ofEpochMilli(time), null);
+
+		final Instant instant;
+		if(GlobalCustomFormat.FORMAT_SECONDS.equals(this.format)){
+			// https://gitee.com/dromara/hutool/issues/I6IS5B
+			// Unix时间戳
+			instant = Instant.ofEpochSecond(time);
+		}else{
+			instant = Instant.ofEpochMilli(time);
+		}
+		return parseFromInstant(instant, null);
 	}
 
 	/**

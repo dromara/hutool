@@ -65,12 +65,12 @@ public class JSONConverter implements Converter<JSON> {
 	 * @param <T> 转换后的对象类型
 	 * @param targetType 目标类型
 	 * @param value 值
-	 * @param ignoreError 是否忽略转换错误
+	 * @param jsonConfig JSON配置
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+	protected static <T> T jsonConvert(Type targetType, Object value, JSONConfig jsonConfig) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
@@ -92,7 +92,7 @@ public class JSONConverter implements Converter<JSON> {
 			}
 		}
 
-		return jsonToBean(targetType, value, ignoreError);
+		return jsonToBean(targetType, value, jsonConfig.isIgnoreError());
 	}
 
 	/**

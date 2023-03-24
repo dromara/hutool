@@ -47,6 +47,38 @@ public class Ipv4UtilTest {
 		int maskBit = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final List<String> list = Ipv4Util.list("192.168.100.2", maskBit, false);
 		Assert.assertEquals(254, list.size());
+
+		testGenerateIpList("10.1.0.1", "10.2.1.2");
+
+		testGenerateIpList("10.2.1.1", "10.2.1.2");
+		testGenerateIpList("10.2.0.1", "10.2.1.2");
+		testGenerateIpList("10.1.0.1", "10.2.1.2");
+		testGenerateIpList("10.1.2.1", "10.2.1.2");
+
+		testGenerateIpList("10.2.1.2", "10.2.1.2");
+		testGenerateIpList("10.2.0.2", "10.2.1.2");
+		testGenerateIpList("10.1.1.2", "10.2.1.2");
+		testGenerateIpList("10.1.2.2", "10.2.1.2");
+
+		testGenerateIpList("10.2.0.3", "10.2.1.2");
+		testGenerateIpList("10.1.0.3", "10.2.1.2");
+		testGenerateIpList("10.1.1.3", "10.2.1.2");
+		testGenerateIpList("10.1.2.3", "10.2.1.2");
+
+		testGenerateIpList("9.255.2.1", "10.2.1.2");
+		testGenerateIpList("9.255.2.2", "10.2.1.2");
+		testGenerateIpList("9.255.2.3", "10.2.1.2");
+
+		testGenerateIpList("9.255.1.2", "10.2.1.2");
+		testGenerateIpList("9.255.0.2", "10.2.1.2");
+		testGenerateIpList("9.255.3.2", "10.2.1.2");
+	}
+
+	private void testGenerateIpList(final String fromIp, final String toIp) {
+		Assert.assertEquals(
+				Ipv4Util.countByIpRange(fromIp, toIp),
+				Ipv4Util.list(fromIp, toIp).size()
+		);
 	}
 
 	@Test

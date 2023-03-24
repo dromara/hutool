@@ -96,4 +96,13 @@ public class PhoneUtilTest {
 		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("0755-7654321"));
 		Assert.assertEquals("7654321", PhoneUtil.subTelAfter("07557654321"));
 	}
+
+	@Test
+	public void isTel400800Test() {
+		boolean tel400800 = PhoneUtil.isTel400800("400-860-8608");//800-830-3811
+		Assert.assertTrue(tel400800);
+
+		tel400800 = PhoneUtil.isTel400800("400-8608608");//800-830-3811
+		Assert.assertTrue(tel400800);
+	}
 }

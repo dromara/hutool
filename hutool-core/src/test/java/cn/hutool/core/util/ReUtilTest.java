@@ -210,4 +210,9 @@ public class ReUtilTest {
 		final String s = ReUtil.replaceAll("1.2.3.4", patternIp, "$1.**.**.$10");
 		Assert.assertEquals("1.**.**.4", s);
 	}
+
+	@Test
+	public void issueI6GIMTTest(){
+		Assert.assertEquals(StrUtil.EMPTY, ReUtil.delAll("[\\s]*", " "));
+	}
 }

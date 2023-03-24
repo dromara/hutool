@@ -68,11 +68,14 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Date}类型时间转为{@link DateTime}<br>
 	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 *
-	 * @param date Long类型Date（Unix时间戳）
+	 * @param date Long类型Date（Unix时间戳），如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 3.0.7
 	 */
 	public static DateTime date(Date date) {
+		if (date == null) {
+			return null;
+		}
 		if (date instanceof DateTime) {
 			return (DateTime) date;
 		}
@@ -82,11 +85,14 @@ public class DateUtil extends CalendarUtil {
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
 	 *
-	 * @param date Date对象
+	 * @param date Date对象，如果传入{@code null}，返回{@code null}
 	 * @return {@link DateTime}对象
 	 * @since 4.3.1
 	 */
 	public static DateTime dateNew(Date date) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date);
 	}
 
@@ -105,10 +111,13 @@ public class DateUtil extends CalendarUtil {
 	 * {@link Calendar}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
 	 *
-	 * @param calendar {@link Calendar}
+	 * @param calendar {@link Calendar}，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 */
 	public static DateTime date(Calendar calendar) {
+		if (calendar == null) {
+			return null;
+		}
 		return new DateTime(calendar);
 	}
 
@@ -116,11 +125,14 @@ public class DateUtil extends CalendarUtil {
 	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
 	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
 	 *
-	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate
+	 * @param temporalAccessor {@link TemporalAccessor},常用子类： {@link LocalDateTime}、 LocalDate，如果传入{@code null}，返回{@code null}
 	 * @return 时间对象
 	 * @since 5.0.0
 	 */
 	public static DateTime date(TemporalAccessor temporalAccessor) {
+		if (temporalAccessor == null) {
+			return null;
+		}
 		return new DateTime(temporalAccessor);
 	}
 
@@ -862,6 +874,7 @@ public class DateUtil extends CalendarUtil {
 
 			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999+08:00
+				utcString = normalizeMillSeconds(utcString, ".", "+");
 				return parse(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31+08:00
@@ -878,6 +891,7 @@ public class DateUtil extends CalendarUtil {
 
 			if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 带毫秒，格式类似：2018-09-13T05:34:31.999-08:00
+				utcString = normalizeMillSeconds(utcString, ".", "-");
 				return new DateTime(utcString, DatePattern.UTC_MS_WITH_XXX_OFFSET_FORMAT);
 			} else {
 				// 格式类似：2018-09-13T05:34:31-08:00
@@ -892,6 +906,7 @@ public class DateUtil extends CalendarUtil {
 				return parse(utcString + ":00", DatePattern.UTC_SIMPLE_FORMAT);
 			} else if (StrUtil.contains(utcString, CharUtil.DOT)) {
 				// 可能为：  2021-03-17T06:31:33.99
+				utcString = normalizeMillSeconds(utcString, ".", null);
 				return parse(utcString, DatePattern.UTC_SIMPLE_MS_FORMAT);
 			}
 		}
@@ -1780,7 +1795,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * 计算相对于dateToCompare的年龄，常用于计算指定生日在某年的年龄
 	 *
 	 * @param birthday      生日
 	 * @param dateToCompare 需要对比的日期
@@ -2337,4 +2352,23 @@ public class DateUtil extends CalendarUtil {
 		return builder.toString();
 	}
 	// ------------------------------------------------------------------------ Private method end
+
+	/**
+	 * 如果日期中的毫秒部分超出3位，会导致秒数增加，因此只保留前三位
+	 *
+	 * @param dateStr 日期字符串
+	 * @param before  毫秒部分的前一个字符
+	 * @param after   毫秒部分的后一个字符
+	 * @return 规范之后的毫秒部分
+	 */
+	private static String normalizeMillSeconds(String dateStr, CharSequence before, CharSequence after) {
+		if (StrUtil.isBlank(after)) {
+			String millOrNaco = StrUtil.subPre(StrUtil.subAfter(dateStr, before, true), 3);
+			return StrUtil.subBefore(dateStr, before, true) + before + millOrNaco;
+		}
+		String millOrNaco = StrUtil.subPre(StrUtil.subBetween(dateStr, before, after), 3);
+		return StrUtil.subBefore(dateStr, before, true)
+				+ before
+				+ millOrNaco + after + StrUtil.subAfter(dateStr, after, true);
+	}
 }

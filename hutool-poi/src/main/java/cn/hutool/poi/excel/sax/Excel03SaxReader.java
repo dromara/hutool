@@ -1,9 +1,12 @@
 package cn.hutool.poi.excel.sax;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.StaticLog;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.hssf.eventusermodel.EventWorkbookBuilder.SheetRecordCollectingListener;
@@ -216,7 +219,10 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 			if(this.rid < 0 && null != this.sheetName){
 				throw new POIException("Sheet [{}] not exist!", this.sheetName);
 			}
-			processLastCellSheet();
+			if(this.curRid != -1 && isProcessCurrentSheet()) {
+				//只有在当前指定的sheet中，才触发结束事件，且curId=-1时也不处理，避免重复调用
+				processLastCellSheet();
+			}
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
 				// 空值的操作

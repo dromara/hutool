@@ -51,7 +51,7 @@
 -------------------------------------------------------------------------------
 
 ## 📚Introduction
-**Hutool** is a small but comprehensive library of Java tools, encapsulation by static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
+**Hutool** is a small but comprehensive library of Java tools, achieved by encapsulation through static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
 
 **Hutool** tools and methods from each user's crafted, it covers all aspects of the underlying code of Java development, it is a powerful tool for large project development to solve small problems, but also the efficiency of small projects;
 
@@ -144,18 +144,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.11</version>
+    <version>5.8.15</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.11'
+implementation 'cn.hutool:hutool-all:5.8.15'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.11/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.15/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.

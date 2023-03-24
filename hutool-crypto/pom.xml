@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.11</version>
+		<version>5.8.15</version>
 	</parent>
 
 	<artifactId>hutool-crypto</artifactId>
@@ -17,6 +17,7 @@
 	<description>Hutool 加密解密</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.crypto</Automatic-Module-Name>
 		<!-- versions -->
 		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>

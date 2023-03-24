@@ -48,7 +48,7 @@ public class FileTypeUtilTest {
 	@Ignore
 	public void ofdTest() {
 		File file = FileUtil.file("e:/test.ofd");
-		String hex = IoUtil.readHex28Upper(FileUtil.getInputStream(file));
+		String hex = IoUtil.readHex64Upper(FileUtil.getInputStream(file));
 		Console.log(hex);
 		String type = FileTypeUtil.getType(file);
 		Console.log(type);
