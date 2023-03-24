@@ -13,18 +13,44 @@ public class JdkUtil {
 	 * JDK版本
 	 */
 	public static final int JVM_VERSION;
+	/**
+	 * 是否JDK8<br>
+	 * 由于Hutool基于JDK8编译，当使用JDK版本低于8时，不支持。
+	 */
+	public static final boolean IS_JDK8;
+	/**
+	 * 是否大于等于JDK17
+	 */
+	public static final boolean IS_AT_LEAST_JDK17;
+
+	/**
+	 * 是否GraalVM环境
+	 */
+	public static final boolean IS_GRAAL;
+	/**
+	 * 是否Android环境
+	 */
+	public static final boolean IS_ANDROID;
 
 	static {
+		// JVM版本
 		JVM_VERSION = _getJvmVersion();
+		IS_JDK8 = 8 == JVM_VERSION;
+		IS_AT_LEAST_JDK17 = JVM_VERSION >= 17;
+
+		// JVM名称
+		final String jvmName = _getJvmName();
+		IS_GRAAL = jvmName.equals("Substrate VM");
+		IS_ANDROID = jvmName.equals("Dalvik");
 	}
 
 	/**
-	 * 是否JDK8
+	 * 获取JVM名称
 	 *
-	 * @return 是否JDK8
+	 * @return JVM名称
 	 */
-	public static boolean isJdk8() {
-		return 8 == JVM_VERSION;
+	private static String _getJvmName() {
+		return System.getProperty("java.vm.name");
 	}
 
 	/**

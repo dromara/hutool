@@ -29,7 +29,7 @@ public class LookupFactory {
 	private static Constructor<MethodHandles.Lookup> jdk8LookupConstructor;
 
 	static {
-		if(JdkUtil.isJdk8()){
+		if(JdkUtil.IS_JDK8){
 			// jdk8 这种方式其实也适用于jdk9及以上的版本,但是上面优先,可以避免 jdk9 反射警告
 			jdk8LookupConstructor = createJdk8LookupConstructor();
 		} else {
