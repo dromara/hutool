@@ -6,6 +6,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.LookupFactory;
 import cn.hutool.core.reflect.MethodUtil;
+import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class LambdaFactory {
 		final MutableEntry<Class<?>, Executable> cacheKey = new MutableEntry<>(functionInterfaceType, executable);
 		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
 			final List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
-					.filter(m -> Modifier.isAbstract(m.getModifiers()))
+					.filter(ModifierUtil::isAbstract)
 					.collect(Collectors.toList());
 			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
 			ReflectUtil.setAccessible(executable);

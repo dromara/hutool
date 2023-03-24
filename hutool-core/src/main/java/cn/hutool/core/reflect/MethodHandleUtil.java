@@ -12,9 +12,15 @@ import java.lang.reflect.Method;
 /**
  * 方法句柄{@link MethodHandle}封装工具类<br>
  * 方法句柄是一个有类型的，可以直接执行的指向底层方法、构造器、field等的引用，可以简单理解为函数指针，它是一种更加底层的查找、调整和调用方法的机制。
+ *
+ * <p>
+ * {@link MethodHandle}类似于C/C++的函数指针，用于模拟在字节码层次的方法调用，且可以采用字节码优化，优于反射。
+ * </p>
+ * <p>
  * 参考：
  * <ul>
- *     <li><a href="https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively">https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively</a></li>
+ *     <li><a href="https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively">
+ *         https://stackoverflow.com/questions/22614746/how-do-i-invoke-java-8-default-methods-reflectively</a></li>
  * </ul>
  *
  * @author looly
@@ -33,7 +39,7 @@ public class MethodHandleUtil {
 	 *
 	 * @param callerClass 方法所在类或接口
 	 * @param name        方法名称，{@code null}或者空则查找构造方法
-	 * @param type        返回类型和参数类型
+	 * @param type        返回类型和参数类型，可以使用{@code MethodType#methodType}构建
 	 * @return 方法句柄 {@link MethodHandle}，{@code null}表示未找到方法
 	 */
 	public static MethodHandle findMethod(final Class<?> callerClass, final String name, final MethodType type) {
@@ -102,6 +108,36 @@ public class MethodHandleUtil {
 	}
 
 	/**
+	 * 执行方法句柄，{@link MethodHandle#invoke(Object...)}包装<br>
+	 *
+	 * @param methodHandle {@link MethodHandle}
+	 * @param args         方法参数值，支持子类转换和自动拆装箱
+	 * @param <T>          返回值类型
+	 * @return 方法返回值
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T invokeHandle(final MethodHandle methodHandle, final Object... args) {
+		try {
+			return (T) methodHandle.invoke(args);
+		} catch (final Throwable e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 执行接口或对象中的方法
+	 *
+	 * @param <T>    返回结果类型
+	 * @param obj    接口的子对象或代理对象
+	 * @param method 方法
+	 * @param args   参数
+	 * @return 结果
+	 */
+	public static <T> T invoke(final Object obj, final Method method, final Object... args) {
+		return invoke(false, obj, method, args);
+	}
+
+	/**
 	 * 执行接口或对象中的特殊方法（private、static等）<br>
 	 *
 	 * <pre class="code">
@@ -131,19 +167,6 @@ public class MethodHandleUtil {
 			throw new UtilException("No such method: [{}] from [{}]", methodName, obj.getClass());
 		}
 		return invokeSpecial(obj, method, args);
-	}
-
-	/**
-	 * 执行接口或对象中的方法
-	 *
-	 * @param <T>    返回结果类型
-	 * @param obj    接口的子对象或代理对象
-	 * @param method 方法
-	 * @param args   参数
-	 * @return 结果
-	 */
-	public static <T> T invoke(final Object obj, final Method method, final Object... args) {
-		return invoke(false, obj, method, args);
 	}
 
 	/**

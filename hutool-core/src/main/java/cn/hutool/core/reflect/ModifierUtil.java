@@ -127,7 +127,7 @@ public class ModifierUtil {
 	 * @return 是否是Public
 	 */
 	public static boolean isPublic(final Member member) {
-		return hasModifier(member, ModifierType.PUBLIC);
+		return Modifier.isPublic(member.getModifiers());
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class ModifierUtil {
 	 * @return 是否是Public
 	 */
 	public static boolean isPublic(final Class<?> clazz) {
-		return hasModifier(clazz, ModifierType.PUBLIC);
+		return Modifier.isPublic(clazz.getModifiers());
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class ModifierUtil {
 	 * @since 4.0.8
 	 */
 	public static boolean isStatic(final Member member) {
-		return hasModifier(member, ModifierType.STATIC);
+		return Modifier.isStatic(member.getModifiers());
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class ModifierUtil {
 	 * @since 4.0.8
 	 */
 	public static boolean isStatic(final Class<?> clazz) {
-		return hasModifier(clazz, ModifierType.STATIC);
+		return Modifier.isStatic(clazz.getModifiers());
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class ModifierUtil {
 	 * @since 5.7.23
 	 */
 	public static boolean isAbstract(final Member member) {
-		return hasModifier(member, ModifierType.ABSTRACT);
+		return Modifier.isAbstract(member.getModifiers());
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class ModifierUtil {
 	 * @since 5.7.23
 	 */
 	public static boolean isAbstract(final Class<?> clazz) {
-		return hasModifier(clazz, ModifierType.ABSTRACT);
+		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
 	/**
@@ -251,9 +251,7 @@ public class ModifierUtil {
 		}
 
 		//将字段的访问权限设为true：即去除private修饰符的影响
-		if (false == field.isAccessible()) {
-			field.setAccessible(true);
-		}
+		ReflectUtil.setAccessible(field);
 		try {
 			//去除final修饰符的影响，将字段设为可修改的
 			final Field modifiersField = Field.class.getDeclaredField("modifiers");

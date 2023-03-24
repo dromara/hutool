@@ -10,8 +10,12 @@ import java.lang.reflect.Method;
 
 /**
  * {@link MethodHandles.Lookup}工厂，用于创建{@link MethodHandles.Lookup}对象<br>
+ * {@link MethodHandles.Lookup}是一个方法句柄查找对象，用于在指定类中查找符合给定方法名称、方法类型的方法句柄。
+ *
+ * <p>
  * jdk8中如果直接调用{@link MethodHandles#lookup()}获取到的{@link MethodHandles.Lookup}在调用findSpecial和unreflectSpecial
  * 时会出现权限不够问题，抛出"no private access for invokespecial"异常，因此针对JDK8及JDK9+分别封装lookup方法。
+ * </p>
  *
  * <p>
  * 参考：
