@@ -74,7 +74,7 @@ public class SplitIterTest {
 		final String str1 = "a, ,,efedsfs,   ddf,";
 
 		final SplitIter splitIter = new SplitIter(str1,
-				new StrFinder("e", false),
+				StrFinder.of("e", false),
 				Integer.MAX_VALUE,
 				true
 		);
@@ -141,7 +141,7 @@ public class SplitIterTest {
 	public void splitByEmptyTest(){
 		final String text = "aa,bb,cc";
 		final SplitIter splitIter = new SplitIter(text,
-				new StrFinder("", false),
+				StrFinder.of("", false),
 				3,
 				false
 		);

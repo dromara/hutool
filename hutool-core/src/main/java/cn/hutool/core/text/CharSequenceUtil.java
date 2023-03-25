@@ -46,6 +46,16 @@ public class CharSequenceUtil extends StrChecker {
 	public static final String SPACE = " ";
 
 	/**
+	 * {@link CharSequence} 转为字符串，null安全
+	 *
+	 * @param cs {@link CharSequence}
+	 * @return 字符串
+	 */
+	public static String str(final CharSequence cs) {
+		return null == cs ? null : cs.toString();
+	}
+
+	/**
 	 * 当给定字符串为null时，转换为Empty
 	 *
 	 * @param str 被转换的字符串
@@ -144,7 +154,7 @@ public class CharSequenceUtil extends StrChecker {
 		return handler.apply(str);
 	}
 
-	// ------------------------------------------------------------------------ Trim
+	// region ----- trim
 
 	/**
 	 * 除去字符串头尾部的空白，如果字符串是{@code null}，依然返回{@code null}。
@@ -297,8 +307,9 @@ public class CharSequenceUtil extends StrChecker {
 
 		return result;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ startWith
+	// region ----- startWith
 
 	/**
 	 * 字符串是否以给定字符开始
@@ -437,8 +448,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return false;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ endWith
+	// region ----- endWith
 
 	/**
 	 * 字符串是否以给定字符结尾
@@ -561,8 +573,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return false;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ contains
+	// region ----- contains
 
 	/**
 	 * 指定字符是否在字符串中出现过
@@ -761,8 +774,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return true;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ indexOf
+	// region ----- indexOf
 
 	/**
 	 * 指定范围内查找指定字符
@@ -895,7 +909,7 @@ public class CharSequenceUtil extends StrChecker {
 				return INDEX_NOT_FOUND;
 			}
 		}
-		return new StrFinder(searchStr, ignoreCase).setText(text).start(from);
+		return StrFinder.of(searchStr, ignoreCase).setText(text).start(from);
 	}
 
 	/**
@@ -943,7 +957,7 @@ public class CharSequenceUtil extends StrChecker {
 				return INDEX_NOT_FOUND;
 			}
 		}
-		return new StrFinder(searchStr, ignoreCase)
+		return StrFinder.of(searchStr, ignoreCase)
 				.setText(text).setNegative(true).start(from);
 	}
 
@@ -994,8 +1008,9 @@ public class CharSequenceUtil extends StrChecker {
 		} while (found < ordinal);
 		return index;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ remove
+	// region ----- remove
 
 	/**
 	 * 移除字符串中所有给定字符串<br>
@@ -1206,8 +1221,9 @@ public class CharSequenceUtil extends StrChecker {
 	public static String cleanBlank(final CharSequence str) {
 		return filter(str, c -> false == CharUtil.isBlankChar(c));
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ strip
+	// region ----- strip
 
 	/**
 	 * 去除两边的指定字符串
@@ -1290,8 +1306,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return str2.substring(from, to);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ add
+	// region ----- add
 
 	/**
 	 * 如果给定字符串不是以prefix开头的，在开头补充 prefix
@@ -1316,8 +1333,9 @@ public class CharSequenceUtil extends StrChecker {
 	public static String addSuffixIfNot(final CharSequence str, final CharSequence suffix) {
 		return appendIfMissing(str, suffix, suffix);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ split
+	// region ----- split
 
 	/**
 	 * 切分字符串为long数组
@@ -1606,6 +1624,7 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return array;
 	}
+	// endregion
 
 	// region ----- sub
 
@@ -2462,7 +2481,7 @@ public class CharSequenceUtil extends StrChecker {
 	}
 	// endregion
 
-	// ------------------------------------------------------------------------ wrap
+	// region ----- wrap
 
 	/**
 	 * 包装指定字符串<br>
@@ -2679,8 +2698,9 @@ public class CharSequenceUtil extends StrChecker {
 
 		return str.charAt(0) == prefixChar && str.charAt(str.length() - 1) == suffixChar;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ pad
+	// region ----- pad
 
 	/**
 	 * 补充字符串以满足指定长度，如果提供的字符串大于指定长度，截断之
@@ -2802,8 +2822,9 @@ public class CharSequenceUtil extends StrChecker {
 
 		return str.toString().concat(repeatByLength(padStr, length - strLen));
 	}
+	// region
 
-	// ------------------------------------------------------------------------ center
+	// region ----- center
 
 	/**
 	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
@@ -2896,18 +2917,7 @@ public class CharSequenceUtil extends StrChecker {
 		str = padAfter(str, size, padStr);
 		return str.toString();
 	}
-
-	// ------------------------------------------------------------------------ str
-
-	/**
-	 * {@link CharSequence} 转为字符串，null安全
-	 *
-	 * @param cs {@link CharSequence}
-	 * @return 字符串
-	 */
-	public static String str(final CharSequence cs) {
-		return null == cs ? null : cs.toString();
-	}
+	// endregion
 
 	// ------------------------------------------------------------------------ count
 
@@ -2966,7 +2976,7 @@ public class CharSequenceUtil extends StrChecker {
 		return count;
 	}
 
-	// ------------------------------------------------------------------------ compare
+	// region ----- compare
 
 	/**
 	 * 比较两个字符串，用于排序
@@ -3061,8 +3071,9 @@ public class CharSequenceUtil extends StrChecker {
 	public static int compareVersion(final CharSequence version1, final CharSequence version2) {
 		return VersionComparator.INSTANCE.compare(str(version1), str(version2));
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ append and prepend
+	// region ----- append and prepend
 
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
@@ -3167,8 +3178,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return prefix.toString().concat(str.toString());
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ replace
+	// region ----- replace
 
 	/**
 	 * 替换字符串中第一个指定字符串
@@ -3511,8 +3523,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return builder.toString();
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ length
+	// region ----- length
 
 	/**
 	 * 获取字符串的长度，如果为null返回0
@@ -3571,8 +3584,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return sub(string, 0, length) + "...";
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ firstXXX
+	// region ----- firstXXX
 
 	/**
 	 * 返回第一个非{@code null} 元素
@@ -3614,8 +3628,9 @@ public class CharSequenceUtil extends StrChecker {
 	public static <T extends CharSequence> T firstNonBlank(final T... strs) {
 		return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ lower and upper
+	// region ----- lower and upper
 
 	/**
 	 * 原字符串首字母大写并在其首部添加指定字符串 例如：str=name, preString=get =》 return getName
@@ -3670,8 +3685,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return str.toString();
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ filter
+	// region ----- filter
 
 	/**
 	 * 过滤字符串
@@ -3697,8 +3713,9 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return sb.toString();
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------ case
+	// region ----- case
 
 	/**
 	 * 给定字符串中的字母是否全部为大写，判断依据如下：
@@ -3713,16 +3730,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 4.2.2
 	 */
 	public static boolean isUpperCase(final CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isLowerCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
+		return NamingCase.isUpperCase(str);
 	}
 
 	/**
@@ -3738,16 +3746,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 4.2.2
 	 */
 	public static boolean isLowerCase(final CharSequence str) {
-		if (null == str) {
-			return false;
-		}
-		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isUpperCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
+		return NamingCase.isLowerCase(str);
 	}
 
 	/**
@@ -3764,23 +3763,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 4.3.2
 	 */
 	public static String swapCase(final String str) {
-		if (isEmpty(str)) {
-			return str;
-		}
-
-		final char[] buffer = str.toCharArray();
-
-		for (int i = 0; i < buffer.length; i++) {
-			final char ch = buffer[i];
-			if (Character.isUpperCase(ch)) {
-				buffer[i] = Character.toLowerCase(ch);
-			} else if (Character.isTitleCase(ch)) {
-				buffer[i] = Character.toLowerCase(ch);
-			} else if (Character.isLowerCase(ch)) {
-				buffer[i] = Character.toUpperCase(ch);
-			}
-		}
-		return new String(buffer);
+		return NamingCase.swapCase(str);
 	}
 
 	/**
@@ -3838,6 +3821,7 @@ public class CharSequenceUtil extends StrChecker {
 	public static String toCamelCase(final CharSequence name, final char symbol) {
 		return NamingCase.toCamelCase(name, symbol);
 	}
+	// endregion
 
 	// ------------------------------------------------------------------------ isSurround
 

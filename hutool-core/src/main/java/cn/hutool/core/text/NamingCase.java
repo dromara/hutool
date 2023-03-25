@@ -188,4 +188,84 @@ public class NamingCase {
 		}
 	}
 
+	/**
+	 * 给定字符串中的字母是否全部为大写，判断依据如下：
+	 *
+	 * <pre>
+	 * 1. 大写字母包括A-Z
+	 * 2. 其它非字母的Unicode符都算作大写
+	 * </pre>
+	 *
+	 * @param str 被检查的字符串
+	 * @return 是否全部为大写
+	 * @since 4.2.2
+	 */
+	public static boolean isUpperCase(final CharSequence str) {
+		if (null == str) {
+			return false;
+		}
+		final int len = str.length();
+		for (int i = 0; i < len; i++) {
+			if (Character.isLowerCase(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 给定字符串中的字母是否全部为小写，判断依据如下：
+	 *
+	 * <pre>
+	 * 1. 小写字母包括a-z
+	 * 2. 其它非字母的Unicode符都算作小写
+	 * </pre>
+	 *
+	 * @param str 被检查的字符串
+	 * @return 是否全部为小写
+	 * @since 4.2.2
+	 */
+	public static boolean isLowerCase(final CharSequence str) {
+		if (null == str) {
+			return false;
+		}
+		final int len = str.length();
+		for (int i = 0; i < len; i++) {
+			if (Character.isUpperCase(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 切换给定字符串中的大小写。大写转小写，小写转大写。
+	 *
+	 * <pre>
+	 * StrUtil.swapCase(null)                 = null
+	 * StrUtil.swapCase("")                   = ""
+	 * StrUtil.swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @return 交换后的字符串
+	 * @since 4.3.2
+	 */
+	public static String swapCase(final String str) {
+		if (StrUtil.isEmpty(str)) {
+			return str;
+		}
+
+		final char[] buffer = str.toCharArray();
+
+		for (int i = 0; i < buffer.length; i++) {
+			final char ch = buffer[i];
+			if (Character.isUpperCase(ch) || Character.isTitleCase(ch)) {
+				buffer[i] = Character.toLowerCase(ch);
+			} else if (Character.isLowerCase(ch)) {
+				buffer[i] = Character.toUpperCase(ch);
+			}
+		}
+		return new String(buffer);
+	}
 }

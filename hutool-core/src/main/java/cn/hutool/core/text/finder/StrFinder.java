@@ -12,13 +12,24 @@ import cn.hutool.core.text.CharSequenceUtil;
 public class StrFinder extends TextFinder {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 创建查找器，构造后须调用{@link #setText(CharSequence)} 设置被查找的文本
+	 *
+	 * @param strToFind       查找的字符串
+	 * @param caseInsensitive 是否忽略大小写
+	 * @return {@code StrFinder}
+	 */
+	public static StrFinder of(final CharSequence strToFind, final boolean caseInsensitive) {
+		return new StrFinder(strToFind, caseInsensitive);
+	}
+
 	private final CharSequence strToFind;
 	private final boolean caseInsensitive;
 
 	/**
 	 * 构造
 	 *
-	 * @param strToFind       被查找的字符串
+	 * @param strToFind       查找的字符串
 	 * @param caseInsensitive 是否忽略大小写
 	 */
 	public StrFinder(final CharSequence strToFind, final boolean caseInsensitive) {

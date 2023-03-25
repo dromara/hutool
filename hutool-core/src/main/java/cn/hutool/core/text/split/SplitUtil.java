@@ -321,7 +321,7 @@ public class SplitUtil {
 		} else if (0 == text.length()) {
 			return ignoreEmpty ? new ArrayList<>(0) : ListUtil.of(StrUtil.EMPTY);
 		}
-		final SplitIter splitIter = new SplitIter(text, new StrFinder(separator, ignoreCase), limit, ignoreEmpty);
+		final SplitIter splitIter = new SplitIter(text, StrFinder.of(separator, ignoreCase), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);
 	}
 

@@ -15,18 +15,18 @@ public class LookupReplacer extends StrReplacer {
 	private static final long serialVersionUID = 1L;
 
 	private final Map<String, String> lookupMap;
-	private final Set<Character> prefixSet;
+	private final Set<Character> keyPrefixSkeyet;
 	private final int minLength;
 	private final int maxLength;
 
 	/**
 	 * 构造
 	 *
-	 * @param lookup 被查找的键值对
+	 * @param lookup 被查找的键值对，每个String[]表示一个键值对
 	 */
 	public LookupReplacer(final String[]... lookup) {
-		this.lookupMap = new HashMap<>();
-		this.prefixSet = new HashSet<>();
+		this.lookupMap = new HashMap<>(lookup.length, 1);
+		this.keyPrefixSkeyet = new HashSet<>(lookup.length, 1);
 
 		int minLength = Integer.MAX_VALUE;
 		int maxLength = 0;
@@ -35,7 +35,7 @@ public class LookupReplacer extends StrReplacer {
 		for (final String[] pair : lookup) {
 			key = pair[0];
 			lookupMap.put(key, pair[1]);
-			this.prefixSet.add(key.charAt(0));
+			this.keyPrefixSkeyet.add(key.charAt(0));
 			keySize = key.length();
 			if (keySize > maxLength) {
 				maxLength = keySize;
@@ -50,7 +50,7 @@ public class LookupReplacer extends StrReplacer {
 
 	@Override
 	protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
-		if (prefixSet.contains(str.charAt(pos))) {
+		if (keyPrefixSkeyet.contains(str.charAt(pos))) {
 			int max = this.maxLength;
 			if (pos + this.maxLength > str.length()) {
 				max = str.length() - pos;
