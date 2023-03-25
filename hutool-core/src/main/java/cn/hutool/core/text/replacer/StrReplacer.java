@@ -23,17 +23,22 @@ public abstract class StrReplacer implements UnaryOperator<CharSequence>, Serial
 	 */
 	protected abstract int replace(CharSequence str, int pos, StringBuilder out);
 
+	/**
+	 * 执行替换，按照{@link #replace(CharSequence, int, StringBuilder)}逻辑替换对应部分，其它部分保持原样
+	 * @param str 被处理的字符串
+	 * @return 替换后的字符串
+	 */
 	@Override
-	public CharSequence apply(final CharSequence t) {
-		final int len = t.length();
+	public CharSequence apply(final CharSequence str) {
+		final int len = str.length();
 		final StringBuilder builder = new StringBuilder(len);
 		int pos = 0;//当前位置
 		int consumed;//处理过的字符数
 		while (pos < len) {
-			consumed = replace(t, pos, builder);
+			consumed = replace(str, pos, builder);
 			if (0 == consumed) {
 				//0表示未处理或替换任何字符，原样输出本字符并从下一个字符继续
-				builder.append(t.charAt(pos));
+				builder.append(str.charAt(pos));
 				pos++;
 			}
 			pos += consumed;

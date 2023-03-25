@@ -221,7 +221,7 @@ public class StrUtilTest {
 		string = StrUtil.replace("aabbccdd", 2, 12, '*');
 		Assert.assertEquals("aa******", string);
 
-		String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, '*');
+		final String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, '*');
 		Assert.assertEquals("\uD83D\uDE00a****ccdd", emoji);
 	}
 
@@ -229,12 +229,6 @@ public class StrUtilTest {
 	public void replaceTest2() {
 		final String result = StrUtil.replace("123", "2", "3");
 		Assert.assertEquals("133", result);
-	}
-
-	@Test
-	public void replaceTest3() {
-		final String result = StrUtil.replace(",abcdef,", ",", "|");
-		Assert.assertEquals("|abcdef|", result);
 	}
 
 	@Test
@@ -642,7 +636,7 @@ public class StrUtilTest {
 		final String result = StrUtil.replace(replace, 5, 12, "***");
 		Assert.assertEquals("SSM15***01BeryAllen", result);
 
-		String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
+		final String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
 		Assert.assertEquals("\uD83D\uDE00a***ccdd", emoji);
 	}
 

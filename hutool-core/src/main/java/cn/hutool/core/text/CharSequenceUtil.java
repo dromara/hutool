@@ -11,6 +11,9 @@ import cn.hutool.core.text.finder.CharFinder;
 import cn.hutool.core.text.finder.CharMatcherFinder;
 import cn.hutool.core.text.finder.Finder;
 import cn.hutool.core.text.finder.StrFinder;
+import cn.hutool.core.text.replacer.RangeReplacerByChar;
+import cn.hutool.core.text.replacer.RangeReplacerByStr;
+import cn.hutool.core.text.replacer.SearchReplacer;
 import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.*;
 
@@ -3263,7 +3266,8 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 替换字符串中的指定字符串
+	 * 替换字符串中的指定字符串<br>
+	 * 如果指定字符串出现多次，则全部替换
 	 *
 	 * @param str         字符串
 	 * @param fromIndex   开始位置（包括）
@@ -3273,85 +3277,27 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 替换后的字符串
 	 * @since 4.0.3
 	 */
-	public static String replace(final CharSequence str, int fromIndex, final CharSequence searchStr, CharSequence replacement, final boolean ignoreCase) {
+	public static String replace(final CharSequence str, final int fromIndex, final CharSequence searchStr, final CharSequence replacement, final boolean ignoreCase) {
 		if (isEmpty(str) || isEmpty(searchStr)) {
 			return str(str);
 		}
-		if (null == replacement) {
-			replacement = EMPTY;
-		}
-
-		final int strLength = str.length();
-		final int searchStrLength = searchStr.length();
-		if (strLength < searchStrLength) {
-			// issue#I4M16G@Gitee
-			return str(str);
-		}
-
-		if (fromIndex > strLength) {
-			return str(str);
-		} else if (fromIndex < 0) {
-			fromIndex = 0;
-		}
-
-		final StringBuilder result = new StringBuilder(strLength - searchStrLength + replacement.length());
-		if (0 != fromIndex) {
-			result.append(str.subSequence(0, fromIndex));
-		}
-
-		int preIndex = fromIndex;
-		int index;
-		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
-			result.append(str.subSequence(preIndex, index));
-			result.append(replacement);
-			preIndex = index + searchStrLength;
-		}
-
-		if (preIndex < strLength) {
-			// 结尾部分
-			result.append(str.subSequence(preIndex, strLength));
-		}
-		return result.toString();
+		return new SearchReplacer(fromIndex, searchStr, replacement, ignoreCase).apply(str);
 	}
 
 	/**
-	 * 替换指定字符串的指定区间内字符为固定字符<br>
+	 * 替换指定字符串的指定区间内字符为固定字符，替换后字符串长度不变<br>
+	 * 如替换的区间长度为10，则替换后的字符重复10次<br>
 	 * 此方法使用{@link String#codePoints()}完成拆分替换
 	 *
 	 * @param str          字符串
-	 * @param startInclude 开始位置（包含）
+	 * @param beginInclude 开始位置（包含）
 	 * @param endExclude   结束位置（不包含）
 	 * @param replacedChar 被替换的字符
 	 * @return 替换后的字符串
 	 * @since 3.2.1
 	 */
-	public static String replace(final CharSequence str, final int startInclude, int endExclude, final char replacedChar) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		final String originalStr = str(str);
-		final int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
-		if (startInclude > strLength) {
-			return originalStr;
-		}
-		if (endExclude > strLength) {
-			endExclude = strLength;
-		}
-		if (startInclude > endExclude) {
-			// 如果起始位置大于结束位置，不替换
-			return originalStr;
-		}
-
-		final StringBuilder stringBuilder = new StringBuilder(originalStr.length());
-		for (int i = 0; i < strLength; i++) {
-			if (i >= startInclude && i < endExclude) {
-				stringBuilder.append(replacedChar);
-			} else {
-				stringBuilder.appendCodePoint(strCodePoints[i]);
-			}
-		}
-		return stringBuilder.toString();
+	public static String replace(final CharSequence str, final int beginInclude, final int endExclude, final char replacedChar) {
+		return new RangeReplacerByChar(beginInclude, endExclude, replacedChar).apply(str);
 	}
 
 	/**
@@ -3359,40 +3305,14 @@ public class CharSequenceUtil extends StrChecker {
 	 * 此方法使用{@link String#codePoints()}完成拆分替换
 	 *
 	 * @param str          字符串
-	 * @param startInclude 开始位置（包含）
+	 * @param beginInclude 开始位置（包含）
 	 * @param endExclude   结束位置（不包含）
 	 * @param replacedStr  被替换的字符串
 	 * @return 替换后的字符串
 	 * @since 3.2.1
 	 */
-	public static String replace(final CharSequence str, final int startInclude, int endExclude, final CharSequence replacedStr) {
-		if (isEmpty(str)) {
-			return str(str);
-		}
-		final String originalStr = str(str);
-		final int[] strCodePoints = originalStr.codePoints().toArray();
-		final int strLength = strCodePoints.length;
-		if (startInclude > strLength) {
-			return originalStr;
-		}
-		if (endExclude > strLength) {
-			endExclude = strLength;
-		}
-		if (startInclude > endExclude) {
-			// 如果起始位置大于结束位置，不替换
-			return originalStr;
-		}
-
-		// 新字符串长度 <= 旧长度 - (被替换区间codePoints数量) + 替换字符串长度
-		final StringBuilder stringBuilder = new StringBuilder(originalStr.length() - (endExclude - startInclude) + replacedStr.length());
-		for (int i = 0; i < startInclude; i++) {
-			stringBuilder.appendCodePoint(strCodePoints[i]);
-		}
-		stringBuilder.append(replacedStr);
-		for (int i = endExclude; i < strLength; i++) {
-			stringBuilder.appendCodePoint(strCodePoints[i]);
-		}
-		return stringBuilder.toString();
+	public static String replace(final CharSequence str, final int beginInclude, final int endExclude, final CharSequence replacedStr) {
+		return new RangeReplacerByStr(beginInclude, endExclude, replacedStr).apply(str);
 	}
 
 	/**

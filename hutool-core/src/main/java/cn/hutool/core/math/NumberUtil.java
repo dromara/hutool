@@ -43,6 +43,7 @@ public class NumberUtil {
 	 */
 	private static final int DEFAULT_DIV_SCALE = 10;
 
+	// region ----- add
 	/**
 	 * 提供精确的加法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -90,7 +91,9 @@ public class NumberUtil {
 		}
 		return result;
 	}
+	// endregion
 
+	// region ----- sub
 	/**
 	 * 提供精确的减法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -138,7 +141,9 @@ public class NumberUtil {
 		}
 		return result;
 	}
+	// endregion
 
+	// region ----- mul
 	/**
 	 * 提供精确的乘法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -181,7 +186,9 @@ public class NumberUtil {
 
 		return result;
 	}
+	// endregion
 
+	// region ----- div
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 *
@@ -278,8 +285,9 @@ public class NumberUtil {
 	public static int ceilDiv(final int v1, final int v2) {
 		return (int) Math.ceil((double) v1 / v2);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------- round
+	// region ----- round
 
 	/**
 	 * 保留固定位数小数<br>
@@ -500,8 +508,9 @@ public class NumberUtil {
 	public static BigDecimal roundDown(final BigDecimal value, final int scale) {
 		return round(value, scale, RoundingMode.DOWN);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------- decimalFormat
+	// region ----- decimalFormat
 
 	/**
 	 * 格式化double<br>
@@ -627,8 +636,9 @@ public class NumberUtil {
 		format.setMaximumFractionDigits(scale);
 		return format.format(number);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------- isXXX
+	// region ----- isXXX
 
 	/**
 	 * 是否为数字，支持包括：
@@ -853,8 +863,9 @@ public class NumberUtil {
 		}
 		return true;
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------- range
+	// region ----- range
 
 	/**
 	 * 生成一个从0开始的数字列表<br>
@@ -947,6 +958,7 @@ public class NumberUtil {
 		}
 		return values;
 	}
+	// endregion
 
 	// ------------------------------------------------------------------------------------------- others
 
@@ -986,6 +998,7 @@ public class NumberUtil {
 		return Long.parseLong(binaryStr, 2);
 	}
 
+	// region ----- equals
 	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
@@ -1054,7 +1067,9 @@ public class NumberUtil {
 	public static boolean equals(final char c1, final char c2, final boolean ignoreCase) {
 		return CharUtil.equals(c1, c2, ignoreCase);
 	}
+	// endregion
 
+	// region ----- toStr
 	/**
 	 * 数字转字符串<br>
 	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
@@ -1139,6 +1154,7 @@ public class NumberUtil {
 		}
 		return bigDecimal.toPlainString();
 	}
+	// endregion
 
 	/**
 	 * 数字转{@link BigDecimal}<br>
@@ -1399,6 +1415,7 @@ public class NumberUtil {
 		return (n > 0) && ((n & (n - 1)) == 0);
 	}
 
+	// region ----- parse
 	/**
 	 * 解析转换数字字符串为 {@link java.lang.Integer } 规则如下：
 	 *
@@ -1680,6 +1697,7 @@ public class NumberUtil {
 			throw nfe;
 		}
 	}
+	// endregion
 
 	/**
 	 * 检查是否为有效的数字<br>
