@@ -304,53 +304,6 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 是否以指定字符串开头<br>
-	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
-	 *
-	 * @param str        被监测字符串
-	 * @param prefix     开头字符串
-	 * @param ignoreCase 是否忽略大小写
-	 * @return 是否以指定字符串开头
-	 * @since 5.4.3
-	 */
-	public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase) {
-		return startWith(str, prefix, ignoreCase, false);
-	}
-
-	/**
-	 * 是否以指定字符串开头<br>
-	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false<br>
-	 * <pre>
-	 *     CharSequenceUtil.startWith("123", "123", false, true);   -- false
-	 *     CharSequenceUtil.startWith("ABCDEF", "abc", true, true); -- true
-	 *     CharSequenceUtil.startWith("abc", "abc", true, true);    -- false
-	 * </pre>
-	 *
-	 * @param str          被监测字符串
-	 * @param prefix       开头字符串
-	 * @param ignoreCase   是否忽略大小写
-	 * @param ignoreEquals 是否忽略字符串相等的情况
-	 * @return 是否以指定字符串开头
-	 * @since 5.4.3
-	 */
-	public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final boolean ignoreEquals) {
-		if (null == str || null == prefix) {
-			if (ignoreEquals) {
-				return false;
-			}
-			return null == str && null == prefix;
-		}
-
-		final boolean isStartWith = str.toString()
-				.regionMatches(ignoreCase, 0, prefix.toString(), 0, prefix.length());
-
-		if (isStartWith) {
-			return (false == ignoreEquals) || (false == equals(str, prefix, ignoreCase));
-		}
-		return false;
-	}
-
-	/**
 	 * 是否以指定字符串开头
 	 *
 	 * @param str    被监测字符串
@@ -426,6 +379,41 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return false;
 	}
+
+	/**
+	 * 是否以指定字符串开头<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 *
+	 * @param str        被监测字符串
+	 * @param prefix     开头字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 是否以指定字符串开头
+	 * @since 5.4.3
+	 */
+	public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase) {
+		return startWith(str, prefix, ignoreCase, false);
+	}
+
+	/**
+	 * 是否以指定字符串开头<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false<br>
+	 * <pre>
+	 *     CharSequenceUtil.startWith("123", "123", false, true);   -- false
+	 *     CharSequenceUtil.startWith("ABCDEF", "abc", true, true); -- true
+	 *     CharSequenceUtil.startWith("abc", "abc", true, true);    -- false
+	 * </pre>
+	 *
+	 * @param str          被监测字符串
+	 * @param prefix       开头字符串
+	 * @param ignoreCase   是否忽略大小写
+	 * @param ignoreEquals 是否忽略字符串相等的情况
+	 * @return 是否以指定字符串开头
+	 * @since 5.4.3
+	 */
+	public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final boolean ignoreEquals) {
+		return new StrRegionMatcher(ignoreCase, ignoreEquals, true)
+				.test(str, prefix);
+	}
 	// endregion
 
 	// region ----- endWith
@@ -442,48 +430,6 @@ public class CharSequenceUtil extends StrChecker {
 			return false;
 		}
 		return c == str.charAt(str.length() - 1);
-	}
-
-	/**
-	 * 是否以指定字符串结尾<br>
-	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
-	 *
-	 * @param str        被监测字符串
-	 * @param suffix     结尾字符串
-	 * @param ignoreCase 是否忽略大小写
-	 * @return 是否以指定字符串结尾
-	 */
-	public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase) {
-		return endWith(str, suffix, ignoreCase, false);
-	}
-
-	/**
-	 * 是否以指定字符串结尾<br>
-	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
-	 *
-	 * @param str          被监测字符串
-	 * @param suffix       结尾字符串
-	 * @param ignoreCase   是否忽略大小写
-	 * @param ignoreEquals 是否忽略字符串相等的情况
-	 * @return 是否以指定字符串结尾
-	 * @since 5.8.0
-	 */
-	public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final boolean ignoreEquals) {
-		if (null == str || null == suffix) {
-			if (ignoreEquals) {
-				return false;
-			}
-			return null == str && null == suffix;
-		}
-
-		final int strOffset = str.length() - suffix.length();
-		final boolean isEndWith = str.toString()
-				.regionMatches(ignoreCase, strOffset, suffix.toString(), 0, suffix.length());
-
-		if (isEndWith) {
-			return (false == ignoreEquals) || (false == equals(str, suffix, ignoreCase));
-		}
-		return false;
 	}
 
 	/**
@@ -550,6 +496,35 @@ public class CharSequenceUtil extends StrChecker {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 是否以指定字符串结尾<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 *
+	 * @param str        被监测字符串
+	 * @param suffix     结尾字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 是否以指定字符串结尾
+	 */
+	public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase) {
+		return endWith(str, suffix, ignoreCase, false);
+	}
+
+	/**
+	 * 是否以指定字符串结尾<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
+	 *
+	 * @param str          被监测字符串
+	 * @param suffix       结尾字符串
+	 * @param ignoreCase   是否忽略大小写
+	 * @param ignoreEquals 是否忽略字符串相等的情况
+	 * @return 是否以指定字符串结尾
+	 * @since 5.8.0
+	 */
+	public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final boolean ignoreEquals) {
+		return new StrRegionMatcher(ignoreCase, ignoreEquals, false)
+				.test(str, suffix);
 	}
 	// endregion
 
