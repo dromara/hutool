@@ -10,11 +10,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
@@ -136,20 +132,26 @@ public class BeanPath implements Serializable {
 	 * 2. 如果为数组，如果下标不大于数组长度，则替换原有值，否则追加值
 	 * </pre>
 	 *
-	 * @param bean         Bean、Map或List
-	 * @param patternParts 表达式块列表
-	 * @param value        值
-	 * @return 值
+	 * @param bean           Bean、Map或List
+	 * @param patternParts   表达式块列表
+	 * @param nextNumberPart 下一个值是否
+	 * @param value          值
 	 */
 	private void set(Object bean, List<String> patternParts, boolean nextNumberPart, Object value) {
 		Object subBean = this.get(patternParts, bean, true);
 		if (null == subBean) {
+			// 当前节点是空，则先创建父节点
 			final List<String> parentParts = getParentParts(patternParts);
 			this.set(bean, parentParts, lastIsNumber(parentParts), nextNumberPart ? new ArrayList<>() : new HashMap<>());
 			//set中有可能做过转换，因此此处重新获取bean
 			subBean = this.get(patternParts, bean, true);
 		}
-		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
+
+		final Object newSubBean = BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
+		if(newSubBean != subBean){
+			// 对象变更，重新加入
+			this.set(bean, getParentParts(patternParts), nextNumberPart, newSubBean);
+		}
 	}
 
 	/**

@@ -23,6 +23,7 @@
 * 【core  】      修复CalendarUtil.isSameMonth没有判断公元前导致不一致的问题（issue#3011@Github）
 * 【core  】      修复WatchUtil createModify maxDepth传递后没有使用问题（issue#3005@Github）
 * 【core  】      修复NullComparator反转无效问题（pr#964@Gitee）
+* 【setting】     修复props.toBean 数组字段未赋值问题（issue#3008@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.15 (2023-03-09)

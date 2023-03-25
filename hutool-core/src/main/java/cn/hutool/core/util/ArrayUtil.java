@@ -348,7 +348,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			Array.set(buffer, index, value);
 			return buffer;
 		} else {
-			if(ArrayUtil.isEmpty(buffer)){
+			if (ArrayUtil.isEmpty(buffer)) {
 				// issue#I5APJE
 				// 可变长类型在buffer为空的情况下，类型会被擦除，导致报错，此处修正
 				final T[] values = newArray(value.getClass(), 1);
@@ -360,7 +360,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+	 * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加<br>
+	 * 替换时返回原数组，追加时返回新数组
 	 *
 	 * @param array 已有数组
 	 * @param index 位置，大于长度追加，否则替换
@@ -1037,7 +1038,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (null == array) {
 			return null;
 		}
-		if(null == indexes){
+		if (null == indexes) {
 			return newArray(array.getClass().getComponentType(), 0);
 		}
 
@@ -1656,11 +1657,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
 	 * 此方法通过{@link LinkedHashSet} 去重
 	 *
-	 * @param <T>      数组元素类型
-	 * @param <K>      唯一键类型
-	 * @param array    数组
+	 * @param <T>             数组元素类型
+	 * @param <K>             唯一键类型
+	 * @param array           数组
 	 * @param uniqueGenerator 唯一键生成器
-	 * @param override 是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
+	 * @param override        是否覆盖模式，如果为{@code true}，加入的新值会覆盖相同key的旧值，否则会忽略新加值
 	 * @return 去重后的数组
 	 * @since 5.8.0
 	 */
@@ -1671,9 +1672,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		final UniqueKeySet<K, T> set = new UniqueKeySet<>(true, uniqueGenerator);
-		if(override){
+		if (override) {
 			Collections.addAll(set, array);
-		} else{
+		} else {
 			for (T t : array) {
 				set.addIfAbsent(t);
 			}

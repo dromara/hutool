@@ -31,11 +31,11 @@ public class PropsTest {
 	@Test
 	public void propTest() {
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		Props props = new Props("test.properties");
-		String user = props.getProperty("user");
+		final Props props = new Props("test.properties");
+		final String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
 
-		String driver = props.getStr("driver");
+		final String driver = props.getStr("driver");
 		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
 	}
 
@@ -43,19 +43,19 @@ public class PropsTest {
 	@Ignore
 	public void propTestForAbsPAth() {
 		//noinspection MismatchedQueryAndUpdateOfCollection
-		Props props = new Props("d:/test.properties");
-		String user = props.getProperty("user");
+		final Props props = new Props("d:/test.properties");
+		final String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
 
-		String driver = props.getStr("driver");
+		final String driver = props.getStr("driver");
 		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
 	}
 
 	@Test
 	public void toBeanTest() {
-		Props props = Props.getProp("to_bean_test.properties");
+		final Props props = Props.getProp("to_bean_test.properties");
 
-		ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
+		final ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
 		Assert.assertEquals("mailer@mail.com", cfg.getHost());
 		Assert.assertEquals(9000, cfg.getPort());
 		Assert.assertEquals("mailer@mail.com", cfg.getFrom());
@@ -73,14 +73,14 @@ public class PropsTest {
 
 	@Test
 	public void toBeanWithNullPrefixTest(){
-		Props configProp = new Props();
+		final Props configProp = new Props();
 
 		configProp.setProperty("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
 		configProp.setProperty("isInit", true);
 		configProp.setProperty("stairPlan", 1);
 		configProp.setProperty("stageNum", 2);
 		configProp.setProperty("version", 3);
-		SystemConfig systemConfig = configProp.toBean(SystemConfig.class);
+		final SystemConfig systemConfig = configProp.toBean(SystemConfig.class);
 
 		Assert.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());
 		Assert.assertEquals(true, systemConfig.getIsInit());
