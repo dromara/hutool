@@ -53,7 +53,7 @@ public class FuncComparator<T> extends NullComparator<T> {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private int compare(T o1, T o2, Comparable v1, Comparable v2) {
-		int result = ObjectUtil.compare(v1, v2);
+		int result = ObjectUtil.compare(v1, v2, this.nullGreater);
 		if (0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况
 			result = CompareUtil.compare(o1, o2, this.nullGreater);
