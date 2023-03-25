@@ -4,6 +4,7 @@ import cn.hutool.core.collection.iter.ComputeIter;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.StrTrimer;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -347,7 +348,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		final char textDelimiter = this.config.textDelimiter;
 
 		// 忽略多余引号后的换行符
-		field = StrUtil.trim(field, 1, (c-> c == CharUtil.LF || c == CharUtil.CR));
+		field = StrUtil.trim(field, StrTrimer.TrimMode.SUFFIX, (c-> c == CharUtil.LF || c == CharUtil.CR));
 
 		field = StrUtil.unWrap(field, textDelimiter);
 		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");

@@ -10,17 +10,51 @@ package cn.hutool.core.text;
 public class PasswdStrength {
 
 	/**
-	 * 密码等级枚举
+	 * 密码强度等级枚举
 	 */
 	public enum PASSWD_LEVEL {
-		EASY, MIDIUM, STRONG, VERY_STRONG, EXTREMELY_STRONG
+		/**
+		 * 简单
+		 */
+		EASY,
+		/**
+		 * 中
+		 */
+		MEDIUM,
+		/**
+		 * 强
+		 */
+		STRONG,
+		/**
+		 * 很强
+		 */
+		VERY_STRONG,
+		/**
+		 * 非常强
+		 */
+		EXTREMELY_STRONG
 	}
 
 	/**
 	 * 字符类型枚举
 	 */
 	public enum CHAR_TYPE {
-		NUM, SMALL_LETTER, CAPITAL_LETTER, OTHER_CHAR
+		/**
+		 * 数字
+		 */
+		NUM,
+		/**
+		 * 小写字母
+		 */
+		SMALL_LETTER,
+		/**
+		 * 大写字母
+		 */
+		CAPITAL_LETTER,
+		/**
+		 * 特殊字符
+		 */
+		OTHER_CHAR
 	}
 
 	/**
@@ -215,7 +249,7 @@ public class PasswdStrength {
 			case 4:
 			case 5:
 			case 6:
-				return PASSWD_LEVEL.MIDIUM;
+				return PASSWD_LEVEL.MEDIUM;
 			case 7:
 			case 8:
 			case 9:

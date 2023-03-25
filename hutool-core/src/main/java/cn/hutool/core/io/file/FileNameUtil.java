@@ -360,7 +360,7 @@ public class FileNameUtil {
 		// 统一使用斜杠
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
 		// 去除开头空白符，末尾空白符合法，不去除
-		pathToUse = StrUtil.trimStart(pathToUse);
+		pathToUse = StrUtil.trimPrefix(pathToUse);
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
 		if (path.startsWith("\\\\")) {
 			pathToUse = "\\" + pathToUse;

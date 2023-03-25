@@ -5,6 +5,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.text.CharPool;
+import cn.hutool.core.text.StrTrimer;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.CharUtil;
 
@@ -292,7 +293,7 @@ public class ClassLoaderUtil {
 	 */
 	private static Class<?> doLoadClass(String name, final boolean isInitialized, final ClassLoader classLoader) {
 		// 去除尾部多余的"."
-		name = StrUtil.trim(name, 1, (c) -> CharUtil.DOT == c);
+		name = StrUtil.trim(name, StrTrimer.TrimMode.SUFFIX, (c) -> CharUtil.DOT == c);
 		Class<?> clazz;
 		if (name.endsWith(ARRAY_SUFFIX)) {
 			// 对象数组"java.lang.String[]"风格
