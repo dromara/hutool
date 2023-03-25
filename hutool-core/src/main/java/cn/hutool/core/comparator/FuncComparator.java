@@ -1,7 +1,5 @@
 package cn.hutool.core.comparator;
 
-import cn.hutool.core.util.ObjUtil;
-
 import java.util.function.Function;
 
 /**
@@ -53,7 +51,7 @@ public class FuncComparator<T> extends NullComparator<T> {
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private int compare(final T o1, final T o2, final Comparable v1, final Comparable v2) {
-		int result = ObjUtil.compare(v1, v2);
+		int result = CompareUtil.compare(v1, v2, this.nullGreater);
 		if (0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况
 			result = CompareUtil.compare(o1, o2, this.nullGreater);

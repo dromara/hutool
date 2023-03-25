@@ -2,7 +2,6 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.iter.IterUtil;
-import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.SerializeUtil;
@@ -416,35 +415,6 @@ public class ObjUtil {
 			return NumberUtil.isValidNumber((Number) obj);
 		}
 		return true;
-	}
-
-	/**
-	 * {@code null}安全的对象比较，{@code null}对象小于其他对象
-	 *
-	 * @param <T> 被比较对象类型
-	 * @param c1  对象1，可以为{@code null}
-	 * @param c2  对象2，可以为{@code null}
-	 * @return 比较结果，如果{@code c1 < c2}，则返回值小于0，{@code c1 == c2} 返回0，{@code c1 > c2} 则返回值大于0
-	 * @see CompareUtil#compare(Comparable, Comparable)
-	 * @since 3.0.7
-	 */
-	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2) {
-		return CompareUtil.compare(c1, c2);
-	}
-
-	/**
-	 * {@code null}安全的对象比较
-	 *
-	 * @param <T>         被比较对象类型
-	 * @param c1          对象1，可以为{@code null}
-	 * @param c2          对象2，可以为{@code null}
-	 * @param nullGreater {@code null}对象是否大于其他对象
-	 * @return 比较结果，如果{@code c1 < c2}，则返回值小于0，{@code c1 == c2} 返回0，{@code c1 > c2} 则返回值大于0
-	 * @see CompareUtil#compare(Comparable, Comparable, boolean)
-	 * @since 3.0.7
-	 */
-	public static <T extends Comparable<? super T>> int compare(final T c1, final T c2, final boolean nullGreater) {
-		return CompareUtil.compare(c1, c2, nullGreater);
 	}
 
 	/**

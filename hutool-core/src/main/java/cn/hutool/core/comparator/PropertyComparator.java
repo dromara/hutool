@@ -14,7 +14,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	private static final long serialVersionUID = 9157326766723846313L;
 
 	/**
-	 * 构造
+	 * 构造，默认{@code null}排在后（从小到大排序）
 	 *
 	 * @param property 属性名
 	 */
@@ -26,7 +26,7 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	 * 构造
 	 *
 	 * @param property 属性名
-	 * @param isNullGreater null值是否排在后（从小到大排序）
+	 * @param isNullGreater {@code null}值是否排在后（从小到大排序）
 	 */
 	public PropertyComparator(final String property, final boolean isNullGreater) {
 		super(isNullGreater, (bean)-> BeanUtil.getProperty(bean, property));

@@ -200,16 +200,6 @@ public class ObjUtilTest {
 	}
 
 	@Test
-	public void compareTest() {
-		Assert.assertEquals(0, ObjUtil.compare(1, 1));
-		Assert.assertEquals(1, ObjUtil.compare(1, null));
-		Assert.assertEquals(-1, ObjUtil.compare(null, 1));
-
-		Assert.assertEquals(-1, ObjUtil.compare(1, null, true));
-		Assert.assertEquals(1, ObjUtil.compare(null, 1, true));
-	}
-
-	@Test
 	public void getTypeArgumentTest() {
 		final Bean bean = new Bean(1);
 		Assert.assertEquals(Integer.class, ObjUtil.getTypeArgument(bean));

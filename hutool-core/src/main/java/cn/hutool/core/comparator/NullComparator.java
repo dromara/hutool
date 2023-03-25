@@ -51,11 +51,6 @@ public class NullComparator<T> implements Comparator<T>, Serializable {
 		return new NullComparator<>(nullGreater, comparator == null ? other : comparator.thenComparing(other));
 	}
 
-	@Override
-	public Comparator<T> reversed() {
-		return new NullComparator<>((false == nullGreater), comparator == null ? null : comparator.reversed());
-	}
-
 	/**
 	 * 不检查{@code null}的比较方法<br>
 	 * 用户可自行重写此方法自定义比较方式

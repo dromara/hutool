@@ -35,8 +35,8 @@ public class CompareUtilTest {
 
 	@Test
 	public void comparingIndexedTest() {
-		List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-		List<String> index = ListUtil.view("2", "1", "3", "4");
+		final List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+		final List<String> index = ListUtil.view("2", "1", "3", "4");
 
 		data.sort(CompareUtil.comparingIndexed(e -> e, index));
 		//[1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -45,8 +45,8 @@ public class CompareUtilTest {
 
 	@Test
 	public void comparingIndexedTest2() {
-		List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-		List<String> index = ListUtil.view("2", "1", "3", "4");
+		final List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+		final List<String> index = ListUtil.view("2", "1", "3", "4");
 
 		//正确排序，index.toArray()
 		data.sort(CompareUtil.comparingIndexed(e -> e, index.toArray()));
@@ -55,12 +55,22 @@ public class CompareUtilTest {
 	}
 	@Test
 	public void comparingIndexedTest3() {
-		List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-		String[] indexArray = new String[] {"2", "1", "3", "4"};
+		final List<String> data = ListUtil.of("1", "2", "3", "4", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+		final String[] indexArray = new String[] {"2", "1", "3", "4"};
 
 		//正确排序，array
 		data.sort(CompareUtil.comparingIndexed(e -> e, indexArray));
 		//[5, 6, 7, 8, 9, 10, 2, 2, 1, 1, 3, 3, 4, 4]
 		Assert.assertEquals(data, ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"));
+	}
+
+	@Test
+	public void compareNullTest() {
+		Assert.assertEquals(0, CompareUtil.compare(1, 1));
+		Assert.assertEquals(1, CompareUtil.compare(1, null));
+		Assert.assertEquals(-1, CompareUtil.compare(null, 1));
+
+		Assert.assertEquals(-1, CompareUtil.compare(1, null, true));
+		Assert.assertEquals(1, CompareUtil.compare(null, 1, true));
 	}
 }
