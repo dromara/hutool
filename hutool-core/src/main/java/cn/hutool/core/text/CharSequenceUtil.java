@@ -3373,33 +3373,6 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 脱敏，使用默认的脱敏策略
-	 *
-	 * <pre>
-	 * StrUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID)) =  "0"
-	 * StrUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME)) = "段**"
-	 * StrUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD)) = "5***************1X"
-	 * StrUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE)) = "0915*****79"
-	 * StrUtil.desensitized("18049531999", DesensitizedUtil.DesensitizedType.MOBILE_PHONE)) = "180****1999"
-	 * StrUtil.desensitized("北京市海淀区马连洼街道289号", DesensitizedUtil.DesensitizedType.ADDRESS)) = "北京市海淀区马********"
-	 * StrUtil.desensitized("duandazhi-jack@gmail.com.cn", DesensitizedUtil.DesensitizedType.EMAIL)) = "d*************@gmail.com.cn"
-	 * StrUtil.desensitized("1234567890", DesensitizedUtil.DesensitizedType.PASSWORD)) = "**********"
-	 * StrUtil.desensitized("苏D40000", DesensitizedUtil.DesensitizedType.CAR_LICENSE)) = "苏D4***0"
-	 * StrUtil.desensitized("11011111222233333256", DesensitizedType.BANK_CARD)) = "1101 **** **** **** 3256"
-	 * </pre>
-	 *
-	 * @param str              字符串
-	 * @param desensitizedType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
-	 * @return 脱敏之后的字符串
-	 * @author dazer and neusoft and qiaomu
-	 * @see DesensitizedUtil 如果需要自定义，脱敏规则，请使用该工具类；
-	 * @since 5.6.2
-	 */
-	public static String desensitized(final CharSequence str, final DesensitizedUtil.DesensitizedType desensitizedType) {
-		return DesensitizedUtil.desensitized(str, desensitizedType);
-	}
-
-	/**
 	 * 替换字符字符数组中所有的字符为replacedStr<br>
 	 * 提供的chars为所有需要被替换的字符，例如："\r\n"，则"\r"和"\n"都会被替换，哪怕他们单独存在
 	 *
