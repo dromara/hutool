@@ -45,7 +45,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberTest2() {
-		final JSONObject json = JSONUtil.parseObj(123L);
+		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.create().setIgnoreError(true));
 		Assert.assertEquals(new JSONObject(), json);
 	}
 

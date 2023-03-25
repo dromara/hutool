@@ -12,6 +12,7 @@
 * 【core  】      StrUtil增加commonPrefix和commonSuffix方法（pr#3007@Github）
 * 【core  】      NumberUtil增加重载parseXXX方法, 解析失败返回默认值（pr#3007@Github）
 * 【core  】      FileUtil增加readLines重载，支持filter（pr#3006@Github）
+* 【json  】      当用户选择ignoreError时，错误对象转JSON也忽略
 
 ### 🐞Bug修复
 * 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
