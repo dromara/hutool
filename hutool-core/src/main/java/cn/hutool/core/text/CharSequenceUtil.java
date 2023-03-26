@@ -2552,7 +2552,8 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * 去掉字符包装，如果未被包装则返回原字符串<br>
+	 * 此方法要求prefix和suffix都存在，如果只有一个，不做去除。
 	 *
 	 * @param str    字符串
 	 * @param prefix 前置字符串
