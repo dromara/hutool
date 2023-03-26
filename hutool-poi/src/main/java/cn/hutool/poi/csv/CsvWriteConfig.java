@@ -57,7 +57,8 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	}
 
 	/**
-	 * 设置是否动态数据交换安全，使用文本包装符包裹可能存在DDE攻击的内容
+	 * 设置是否动态数据交换安全，使用文本包装符包裹可能存在DDE攻击的内容<br>
+	 * 见：https://blog.csdn.net/weixin_41924764/article/details/108665746
 	 *
 	 * @param ddeSafe dde安全
 	 * @return this

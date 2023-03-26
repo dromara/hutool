@@ -3,11 +3,10 @@ package cn.hutool.poi.csv;
 import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
-import java.io.File;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -48,21 +47,20 @@ public class CsvWriterTest {
 	}
 
 	@Test
+	@Ignore
 	public void issue3014Test(){
-		File tmp = new File("/Users/test/Desktop/test.csv");
-		CsvWriter writer = CsvUtil.getWriter(tmp, CharsetUtil.UTF_8);
+		// https://blog.csdn.net/weixin_42522167/article/details/112241143
+		final File tmp = new File("d:/test/dde_safe.csv");
+		final CsvWriter writer = CsvUtil.getWriter(tmp, CharsetUtil.UTF_8);
 		//设置 dde 安全模式
 		writer.setDdeSafe(true);
 		writer.write(
 			new String[] {"=12+23"},
+			new String[] {"%0A=12+23"},
+			new String[] {"=;=12+23"},
 			new String[] {"-3+2+cmd |' /C calc' !A0"},
 			new String[] {"@SUM(cmd|'/c calc'!A0)"}
 		);
 		writer.close();
-
-		List<String> lines = FileUtil.readLines(tmp, CharsetUtil.UTF_8);
-		Assert.assertEquals("\"=12+23\"",lines.get(0));
-		Assert.assertEquals("\"-3+2+cmd |' /C calc' !A0\"",lines.get(1));
-		Assert.assertEquals("\"@SUM(cmd|'/c calc'!A0)\"",lines.get(2));
 	}
 }

@@ -95,9 +95,4 @@ public interface CharPool {
 	 * 字符常量：等于 {@code '='}
 	 */
 	char EQUAL = '=';
-	/**
-	 * 字符常量：减号 {@code '-'}
-	 */
-	char MINUS = '-';
-
 }

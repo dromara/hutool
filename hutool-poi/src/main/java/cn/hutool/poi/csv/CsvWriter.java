@@ -1,12 +1,12 @@
 package cn.hutool.poi.csv;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -14,13 +14,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.File;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -181,8 +175,9 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	}
 
 	/**
-	 * 设置是否启用dde安全模式，默认false，按需修改
-	 * 防止使用Excel打开csv文件时存在dde攻击风险
+	 * 设置是否启用dde安全模式，默认false，按需修改<br>
+	 * 防止使用Excel打开csv文件时存在dde攻击风险<br>
+	 * 注意此方法会在字段第一个字符包含{@code = + - @}时添加{@code '}作为前缀，防止公式执行
 	 *
 	 * @param ddeSafe 是否启用 dde 安全模式
 	 * @return this
@@ -247,6 +242,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param beans Bean集合
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public CsvWriter writeBeans(final Iterable<?> beans) {
 		if (CollUtil.isNotEmpty(beans)) {
 			boolean isFirst = true;
@@ -331,10 +327,10 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	public CsvWriter writeComment(final String comment) {
 		Assert.notNull(this.config.commentCharacter, "Comment is disable!");
 		try {
-			if(isFirstLine){
+			if (isFirstLine) {
 				// 首行不补充换行符
 				isFirstLine = false;
-			}else {
+			} else {
 				writer.write(config.lineDelimiter);
 			}
 			writer.write(this.config.commentCharacter);
@@ -384,10 +380,10 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private void doAppendLine(final String... fields) throws IOException {
 		if (null != fields) {
-			if(isFirstLine){
+			if (isFirstLine) {
 				// 首行不补换行符
 				isFirstLine = false;
-			}else {
+			} else {
 				writer.write(config.lineDelimiter);
 			}
 			for (final String field : fields) {
@@ -425,11 +421,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		boolean needsTextDelimiter = alwaysDelimitText;
 		boolean containsTextDelimiter = false;
 
-		for (int i = 0; i < valueChars.length; i++) {
-			char c = valueChars[i];
-			if(i==0 && (c == CharUtil.AT || c == CharUtil.PLUS || c == CharUtil.MINUS || c == CharUtil.EQUAL)){
-				needsTextDelimiter = true;
-			}
+		for (final char c : valueChars) {
 			if (c == textDelimiter) {
 				// 字段值中存在包装符
 				containsTextDelimiter = needsTextDelimiter = true;
@@ -445,10 +437,15 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 			writer.write(textDelimiter);
 		}
 
+		// DDE防护，打开不执行公式
+		if (config.ddeSafe && isDDEUnsafeChar(valueChars[0])) {
+			writer.write('\'');
+		}
+
 		// 正文
 		if (containsTextDelimiter) {
 			for (final char c : valueChars) {
-				// 转义文本包装符
+				// 转义文本包装符，如"转义为""
 				if (c == textDelimiter) {
 					writer.write(textDelimiter);
 				}
@@ -462,6 +459,25 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		if (needsTextDelimiter) {
 			writer.write(textDelimiter);
 		}
+	}
+
+	/**
+	 * 给定字符是否为DDE攻击不安全的字符，包括：
+	 * <ul>
+	 *     <li>{@code @ }</li>
+	 *     <li>{@code + }</li>
+	 *     <li>{@code - }</li>
+	 *     <li>{@code = }</li>
+	 * </ul>
+	 *
+	 * @param c 被检查的字符
+	 * @return 是否不安全的字符
+	 */
+	private static boolean isDDEUnsafeChar(final char c) {
+		return c == CharUtil.AT ||
+				c == CharUtil.PLUS ||
+				c == CharUtil.DASHED ||
+				c == CharUtil.EQUAL;
 	}
 	// --------------------------------------------------------------------------------------------------- Private method end
 }
