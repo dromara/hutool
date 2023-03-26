@@ -64,9 +64,5 @@ public class CsvWriterTest {
 		Assert.assertEquals("\"=12+23\"",lines.get(0));
 		Assert.assertEquals("\"-3+2+cmd |' /C calc' !A0\"",lines.get(1));
 		Assert.assertEquals("\"@SUM(cmd|'/c calc'!A0)\"",lines.get(2));
-
 	}
-
-
-
 }
