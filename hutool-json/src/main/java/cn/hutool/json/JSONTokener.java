@@ -1,9 +1,9 @@
 package cn.hutool.json;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.ReaderWrapper;
 import cn.hutool.core.text.StrUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,7 +14,7 @@ import java.io.StringReader;
  *
  * @author from JSON.org
  */
-public class JSONTokener {
+public class JSONTokener extends ReaderWrapper {
 
 	private long character;
 	/**
@@ -37,10 +37,6 @@ public class JSONTokener {
 	 * 是否使用前一个字符
 	 */
 	private boolean usePrevious;
-	/**
-	 * 源
-	 */
-	private final Reader reader;
 
 	/**
 	 * JSON配置
@@ -48,24 +44,6 @@ public class JSONTokener {
 	private final JSONConfig config;
 
 	// ------------------------------------------------------------------------------------ Constructor start
-
-	/**
-	 * 从Reader中构建
-	 *
-	 * @param reader Reader
-	 * @param config JSON配置
-	 */
-	public JSONTokener(final Reader reader, final JSONConfig config) {
-		this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
-		this.eof = false;
-		this.usePrevious = false;
-		this.previous = 0;
-		this.index = 0;
-		this.character = 1;
-		this.line = 1;
-		this.config = config;
-	}
-
 	/**
 	 * 从InputStream中构建，使用UTF-8编码
 	 *
@@ -85,6 +63,23 @@ public class JSONTokener {
 	 */
 	public JSONTokener(final CharSequence s, final JSONConfig config) {
 		this(new StringReader(StrUtil.str(s)), config);
+	}
+
+	/**
+	 * 从Reader中构建
+	 *
+	 * @param reader Reader
+	 * @param config JSON配置
+	 */
+	public JSONTokener(final Reader reader, final JSONConfig config) {
+		super(IoUtil.toMarkSupport(reader));
+		this.eof = false;
+		this.usePrevious = false;
+		this.previous = 0;
+		this.index = 0;
+		this.character = 1;
+		this.line = 1;
+		this.config = config;
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
 
@@ -138,7 +133,7 @@ public class JSONTokener {
 			c = this.previous;
 		} else {
 			try {
-				c = this.reader.read();
+				c = read();
 			} catch (final IOException exception) {
 				throw new JSONException(exception);
 			}
@@ -390,11 +385,11 @@ public class JSONTokener {
 			final long startIndex = this.index;
 			final long startCharacter = this.character;
 			final long startLine = this.line;
-			this.reader.mark(1000000);
+			mark(1000000);
 			do {
 				c = this.next();
 				if (c == 0) {
-					this.reader.reset();
+					reset();
 					this.index = startIndex;
 					this.character = startCharacter;
 					this.line = startLine;

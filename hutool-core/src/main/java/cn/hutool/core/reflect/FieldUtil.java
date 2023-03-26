@@ -266,16 +266,17 @@ public class FieldUtil {
 	}
 
 	/**
-	 * 设置字段值
+	 * 设置字段值，如果值类型必须与字段类型匹配，会自动转换对象类型
 	 *
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
-	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @param value 值，类型不匹配会自动转换对象类型
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(final Object obj, final Field field, Object value) throws UtilException {
 		Assert.notNull(field, "Field in [{}] not exist !", obj);
 
+		// 值类型检查和转换
 		final Class<?> fieldType = field.getType();
 		if (null != value) {
 			if (false == fieldType.isAssignableFrom(value.getClass())) {
@@ -290,6 +291,18 @@ public class FieldUtil {
 			value = ClassUtil.getDefaultValue(fieldType);
 		}
 
+		setFieldValueExact(obj, field, value);
+	}
+
+	/**
+	 * 设置字段值，传入的字段值必须和字段类型一致，否则抛出异常
+	 *
+	 * @param obj   对象，如果是static字段，此参数为null
+	 * @param field 字段
+	 * @param value 值，值类型必须与字段类型匹配
+	 * @throws UtilException UtilException 包装IllegalAccessException异常
+	 */
+	public static void setFieldValueExact(final Object obj, final Field field, final Object value) throws UtilException {
 		ReflectUtil.setAccessible(field);
 		try {
 			field.set(obj instanceof Class ? null : obj, value);

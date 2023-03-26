@@ -143,7 +143,7 @@ public class WorkbookUtil {
 	 */
 	public static Workbook createBook(final InputStream in, final String password) {
 		try {
-			return WorkbookFactory.create(IoUtil.toMarkSupportStream(in), password);
+			return WorkbookFactory.create(IoUtil.toMarkSupport(in), password);
 		} catch (final Exception e) {
 			throw new POIException(e);
 		} finally {

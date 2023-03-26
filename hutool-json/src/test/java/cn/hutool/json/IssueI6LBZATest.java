@@ -3,8 +3,6 @@ package cn.hutool.json;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-
 public class IssueI6LBZATest {
 	@Test
 	public void parseJSONStringTest() {
@@ -31,6 +29,6 @@ public class IssueI6LBZATest {
 	public void parseJSONNumberTest() {
 		final String a = "123";
 		final Object parse = JSONUtil.parse(a);
-		Assert.assertEquals(BigDecimal.class, parse.getClass());
+		Assert.assertEquals(Integer.class, parse.getClass());
 	}
 }

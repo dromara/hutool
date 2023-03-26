@@ -8,7 +8,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.mapper.ArrayMapper;
+import cn.hutool.json.mapper.JSONArrayMapper;
 import cn.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
@@ -148,7 +148,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	public JSONArray(final Object object, final JSONConfig jsonConfig, final Predicate<Mutable<Object>> predicate) throws JSONException {
 		this(DEFAULT_CAPACITY, jsonConfig);
-		ArrayMapper.of(object, predicate).mapTo(this);
+		JSONArrayMapper.of(object, predicate).mapTo(this);
 	}
 	// endregion
 

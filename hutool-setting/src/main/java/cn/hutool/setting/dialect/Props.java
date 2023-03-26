@@ -348,7 +348,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 				BeanUtil.setProperty(bean, StrUtil.subSuf(key, prefix.length()), entry.getValue());
 			} catch (final Exception e) {
 				// 忽略注入失败的字段（这些字段可能用于其它配置）
-				StaticLog.debug("Ignore property: [{}]", key);
+				StaticLog.debug("Ignore property: [{}],because of: {}", key, e);
 			}
 		}
 

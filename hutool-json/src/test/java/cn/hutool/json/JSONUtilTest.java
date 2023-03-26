@@ -17,6 +17,42 @@ import java.util.*;
 
 public class JSONUtilTest {
 
+	@Test(expected = JSONException.class)
+	public void parseInvalid() {
+		JSONUtil.parse("abc");
+	}
+
+	@Test(expected = JSONException.class)
+	public void parseInvalid2() {
+		JSONUtil.parse("'abc");
+	}
+
+	@Test(expected = JSONException.class)
+	public void parseInvalid3() {
+		JSONUtil.parse("\"abc");
+	}
+
+	@Test
+	public void parseValueTest() {
+		Object parse = JSONUtil.parse(123);
+		Assert.assertEquals(123, parse);
+
+		parse = JSONUtil.parse("\"abc\"");
+		Assert.assertEquals("abc", parse);
+
+		parse = JSONUtil.parse("true");
+		Assert.assertEquals(true, parse);
+
+		parse = JSONUtil.parse("False");
+		Assert.assertEquals(false, parse);
+
+		parse = JSONUtil.parse("null");
+		Assert.assertNull(parse);
+
+		parse = JSONUtil.parse("");
+		Assert.assertNull(parse);
+	}
+
 	/**
 	 * 出现语法错误时报错，检查解析\x字符时是否会导致死循环异常
 	 */
@@ -29,7 +65,7 @@ public class JSONUtilTest {
 	 * 数字解析为JSONArray报错
 	 */
 	@Test(expected = JSONException.class)
-	public void parseNumberTest() {
+	public void parseNumberToJSONArrayTest() {
 		final JSONArray json = JSONUtil.parseArray(123L);
 		Assert.assertNotNull(json);
 	}
@@ -37,10 +73,29 @@ public class JSONUtilTest {
 	/**
 	 * 数字解析为JSONArray报错
 	 */
+	@Test
+	public void parseNumberToJSONArrayTest2() {
+		final JSONArray json = JSONUtil.parseArray(123L,
+				JSONConfig.of().setIgnoreError(true));
+		Assert.assertNotNull(json);
+	}
+
+	/**
+	 * 数字解析为JSONArray报错
+	 */
 	@Test(expected = JSONException.class)
-	public void parseNumberTest2() {
+	public void parseNumberToJSONObjectTest() {
 		final JSONObject json = JSONUtil.parseObj(123L);
 		Assert.assertNotNull(json);
+	}
+
+	/**
+	 * 数字解析为JSONObject，忽略错误
+	 */
+	@Test
+	public void parseNumberToJSONObjectTest2() {
+		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.of().setIgnoreError(true));
+		Assert.assertEquals(new JSONObject(), json);
 	}
 
 	@Test

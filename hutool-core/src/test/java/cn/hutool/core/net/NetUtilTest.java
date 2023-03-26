@@ -78,8 +78,15 @@ public class NetUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void getLocalHostNameTest() {
+		// 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
 		Assert.assertNotNull(NetUtil.getLocalHostName());
+	}
+
+	@Test
+	public void getLocalHostTest() {
+		Assert.assertNotNull(NetUtil.getLocalhost());
 	}
 
 	@Test

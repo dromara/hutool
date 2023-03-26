@@ -10,12 +10,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
@@ -119,11 +114,14 @@ public class BeanPath implements Serializable {
 	public void set(final Object bean, final Object value) {
 		Objects.requireNonNull(bean);
 
-		Object subBean = bean, previousBean;
+		Object subBean = bean;
+		Object previousBean = null;
 		boolean isFirst = true;
 		String patternPart;
 		// 尝试找到倒数第二个子对象, 最终需要设置它的字段值
 		final int length = patternParts.size() - 1;
+
+		// 填充父字段缺失的对象
 		for (int i = 0; i < length; i++) {
 			patternPart = patternParts.get(i);
 			// 保存当前操作的bean, 以便subBean不存在时, 可以用来填充缺失的子对象
@@ -145,8 +143,13 @@ public class BeanPath implements Serializable {
 				}
 			}
 		}
-		// 设置最终的字段值
-		BeanUtil.setFieldValue(subBean, patternParts.get(length), value);
+
+		// 设置最终的（当前）字段值
+		final Object newSubBean = BeanUtil.setFieldValue(subBean, patternParts.get(length), value);
+		if(newSubBean != subBean && null != previousBean){
+			// 对象变更，重新加入
+			BeanUtil.setFieldValue(previousBean, patternParts.get(length - 1), newSubBean);
+		}
 	}
 
 	@Override
@@ -166,7 +169,7 @@ public class BeanPath implements Serializable {
 	private Object get(final List<String> patternParts, final Object bean) {
 		Object subBean = bean;
 		boolean isFirst = true;
-		for (String patternPart : patternParts) {
+		for (final String patternPart : patternParts) {
 			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）

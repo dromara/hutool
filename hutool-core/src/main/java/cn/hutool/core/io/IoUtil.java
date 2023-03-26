@@ -701,7 +701,7 @@ public class IoUtil extends NioUtil {
 	 * @return {@link InputStream}
 	 * @since 4.0.9
 	 */
-	public static InputStream toMarkSupportStream(final InputStream in) {
+	public static InputStream toMarkSupport(final InputStream in) {
 		if (null == in) {
 			return null;
 		}
@@ -709,6 +709,23 @@ public class IoUtil extends NioUtil {
 			return new BufferedInputStream(in);
 		}
 		return in;
+	}
+
+	/**
+	 * 将{@link Reader}转换为支持mark标记的Reader<br>
+	 * 若原Reader支持mark标记，则返回原Reader，否则使用{@link BufferedReader} 包装之
+	 *
+	 * @param reader {@link Reader}
+	 * @return {@link Reader}
+	 */
+	public static Reader toMarkSupport(final Reader reader) {
+		if (null == reader) {
+			return null;
+		}
+		if (false == reader.markSupported()) {
+			return new BufferedReader(reader);
+		}
+		return reader;
 	}
 
 	/**

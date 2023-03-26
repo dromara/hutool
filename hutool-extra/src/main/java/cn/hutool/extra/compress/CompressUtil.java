@@ -74,7 +74,7 @@ public class CompressUtil {
 	 * @return {@link CompressorOutputStream}
 	 */
 	public static CompressorInputStream getIn(String compressorName, InputStream in) {
-		in = IoUtil.toMarkSupportStream(in);
+		in = IoUtil.toMarkSupport(in);
 		try {
 			if(StrUtil.isBlank(compressorName)){
 				compressorName = CompressorStreamFactory.detect(in);

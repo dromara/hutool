@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 6.0.0
  */
-public class ArrayMapper {
+public class JSONArrayMapper {
 	/**
 	 * 创建ArrayMapper
 	 *
@@ -40,8 +40,8 @@ public class ArrayMapper {
 	 * @param predicate 值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ObjectMapper
 	 */
-	public static ArrayMapper of(final Object source, final Predicate<Mutable<Object>> predicate) {
-		return new ArrayMapper(source, predicate);
+	public static JSONArrayMapper of(final Object source, final Predicate<Mutable<Object>> predicate) {
+		return new JSONArrayMapper(source, predicate);
 	}
 
 	private final Object source;
@@ -53,7 +53,7 @@ public class ArrayMapper {
 	 * @param source    来源对象
 	 * @param predicate 值过滤编辑器，可以通过实现此接口，完成解析前对值的过滤和修改操作，{@code null}表示不过滤，，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public ArrayMapper(final Object source, final Predicate<Mutable<Object>> predicate) {
+	public JSONArrayMapper(final Object source, final Predicate<Mutable<Object>> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
@@ -78,7 +78,9 @@ public class ArrayMapper {
 			return;
 		}
 
-		if (source instanceof CharSequence) {
+		if (source instanceof JSONTokener) {
+			mapFromTokener((JSONTokener) source, jsonArray);
+		}else if (source instanceof CharSequence) {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray);
 		} else if (source instanceof Reader) {
@@ -96,8 +98,6 @@ public class ArrayMapper {
 					jsonArray.add(b);
 				}
 			}
-		} else if (source instanceof JSONTokener) {
-			mapFromTokener((JSONTokener) source, jsonArray);
 		} else {
 			final Iterator<?> iter;
 			if (ArrayUtil.isArray(source)) {// 数组
@@ -107,7 +107,11 @@ public class ArrayMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				if(false == jsonArray.getConfig().isIgnoreError()){
+					throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				}
+				// 如果用户选择跳过异常，则跳过此值转换
+				return;
 			}
 
 			Object next;

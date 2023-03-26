@@ -39,7 +39,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 5.8.0
  */
-public class ObjectMapper {
+public class JSONObjectMapper {
 
 	/**
 	 * 创建ObjectMapper
@@ -48,8 +48,8 @@ public class ObjectMapper {
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 * @return ObjectMapper
 	 */
-	public static ObjectMapper of(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
-		return new ObjectMapper(source, predicate);
+	public static JSONObjectMapper of(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
+		return new JSONObjectMapper(source, predicate);
 	}
 
 	private final Object source;
@@ -61,7 +61,7 @@ public class ObjectMapper {
 	 * @param source    来源对象
 	 * @param predicate 键值对过滤编辑器，可以通过实现此接口，完成解析前对键值对的过滤和修改操作，{@link Predicate#test(Object)}为{@code true}保留
 	 */
-	public ObjectMapper(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
+	public JSONObjectMapper(final Object source, final Predicate<MutableEntry<String, Object>> predicate) {
 		this.source = source;
 		this.predicate = predicate;
 	}
@@ -90,7 +90,10 @@ public class ObjectMapper {
 			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
 
-		if (source instanceof Map) {
+		if (source instanceof JSONTokener) {
+			// JSONTokener
+			mapFromTokener((JSONTokener) source, jsonObject);
+		}else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 				jsonObject.set(Convert.toStr(e.getKey()), e.getValue(), predicate, false);
@@ -107,18 +110,18 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonObject.getConfig()), jsonObject);
 		} else if (source instanceof byte[]) {
 			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonObject.getConfig()), jsonObject);
-		} else if (source instanceof JSONTokener) {
-			// JSONTokener
-			mapFromTokener((JSONTokener) source, jsonObject);
 		} else if (source instanceof ResourceBundle) {
-			// JSONTokener
+			// ResourceBundle
 			mapFromResourceBundle((ResourceBundle) source, jsonObject);
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
 			mapFromBean(source, jsonObject);
 		} else {
-			// 不支持对象类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
+			if(false == jsonObject.getConfig().isIgnoreError()){
+				// 不支持对象类型转换为JSONObject
+				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
+			}
+			// 如果用户选择跳过异常，则跳过此值转换
 		}
 	}
 

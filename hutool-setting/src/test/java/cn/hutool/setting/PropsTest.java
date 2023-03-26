@@ -112,4 +112,6 @@ public class PropsTest {
 		private Date theStageTime;//当前阶段开始日期
 		private Date nextStageTime;//当前阶段结束日期/下一阶段开始日期
 	}
+
+
 }

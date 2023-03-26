@@ -9,7 +9,7 @@ import cn.hutool.core.lang.mutable.MutableEntry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.MapWrapper;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.mapper.ObjectMapper;
+import cn.hutool.json.mapper.JSONObjectMapper;
 import cn.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
@@ -132,7 +132,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	public JSONObject(final Object source, final JSONConfig config, final Predicate<MutableEntry<String, Object>> predicate) {
 		this(DEFAULT_CAPACITY, config);
-		ObjectMapper.of(source, predicate).mapTo(this);
+		JSONObjectMapper.of(source, predicate).mapTo(this);
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 

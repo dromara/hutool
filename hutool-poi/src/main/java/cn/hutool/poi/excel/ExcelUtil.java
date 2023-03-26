@@ -93,7 +93,7 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(InputStream in, final int rid, final RowHandler rowHandler) {
-		in = IoUtil.toMarkSupportStream(in);
+		in = IoUtil.toMarkSupport(in);
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
 		reader.read(in, rid);
 	}
@@ -107,7 +107,7 @@ public class ExcelUtil {
 	 * @since 5.4.4
 	 */
 	public static void readBySax(InputStream in, final String idOrRidOrSheetName, final RowHandler rowHandler) {
-		in = IoUtil.toMarkSupportStream(in);
+		in = IoUtil.toMarkSupport(in);
 		final ExcelSaxReader<?> reader = ExcelSaxUtil.createSaxReader(ExcelFileUtil.isXlsx(in), rowHandler);
 		reader.read(in, idOrRidOrSheetName);
 	}

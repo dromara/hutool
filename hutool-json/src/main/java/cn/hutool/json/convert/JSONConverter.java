@@ -6,18 +6,14 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
 import cn.hutool.core.convert.RegisterConverter;
-import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.convert.impl.DateConverter;
-import cn.hutool.core.convert.impl.MapConverter;
-import cn.hutool.core.convert.impl.TemporalAccessorConverter;
+import cn.hutool.core.convert.impl.*;
 import cn.hutool.core.map.MapWrapper;
-import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.*;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONStringer;
@@ -111,36 +107,45 @@ public class JSONConverter implements Converter {
 	/**
 	 * 实现Object对象转换为{@link JSON}，支持的对象：
 	 * <ul>
-	 *     <li>String: 转换为相应的对象，</li>
+	 *     <li>String: 转换为相应的对象，"和'包围的字符串返回原字符串，""返回{@code null}</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
 	 *     <li>Bean对象：转为JSONObject</li>
 	 *     <li>Number：返回原对象</li>
+	 *     <li>null：返回{@code null}</li>
 	 * </ul>
 	 *
 	 * @param obj 被转换的对象
 	 * @return 转换后的对象
 	 * @throws JSONException 转换异常
 	 */
+	@SuppressWarnings("resource")
 	public Object toJSON(final Object obj) throws JSONException {
+		if(null == obj){
+			return null;
+		}
 		final JSON json;
 		if (obj instanceof JSON || obj instanceof Number) {
 			return obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
-			switch (jsonStr.charAt(0)){
-				case '"':
-				case '\'':
-					// JSON字符串值
-					return jsonStr;
+			if(jsonStr.isEmpty()){
+				// 空按照null值处理
+				return null;
+			}
+			final char firstC = jsonStr.charAt(0);
+			switch (firstC){
 				case '[':
 					return new JSONArray(jsonStr, config);
 				case '{':
 					return new JSONObject(jsonStr, config);
 				default:
-					if(NumberUtil.isNumber(jsonStr)){
-						return NumberUtil.toBigDecimal(jsonStr);
+					// RFC8259，JSON字符串值、number, boolean, or null
+					final Object value = new JSONTokener(jsonStr, config).nextValue();
+					if(ObjUtil.equals(value, jsonStr)){
+						// 原值返回，意味着非正常数字、Boolean或null
+						throw new JSONException("Unsupported JSON String: {}", jsonStr);
 					}
-					throw new JSONException("Unsupported String to JSON: {}", jsonStr);
+					return value;
 			}
 		} else if (obj instanceof MapWrapper) {
 			// MapWrapper实现了Iterable会被当作JSONArray，此处做修正

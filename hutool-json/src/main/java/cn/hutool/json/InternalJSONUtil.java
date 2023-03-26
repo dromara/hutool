@@ -21,9 +21,7 @@ import cn.hutool.json.serialize.JSONStringer;
 import cn.hutool.json.writer.GlobalValueWriterMapping;
 import cn.hutool.json.writer.JSONValueWriter;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -316,7 +314,7 @@ public final class InternalJSONUtil {
 	 */
 	public static Writer quote(final String str, final Writer writer, final boolean isWrap) throws IORuntimeException {
 		try {
-			return doQuote(str, writer, isWrap);
+			return _quote(str, writer, isWrap);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -422,7 +420,7 @@ public final class InternalJSONUtil {
 	 * @throws IOException IO异常
 	 * @since 3.3.1
 	 */
-	private static Writer doQuote(final String str, final Writer writer, final boolean isWrap) throws IOException {
+	private static Writer _quote(final String str, final Writer writer, final boolean isWrap) throws IOException {
 		if (StrUtil.isEmpty(str)) {
 			if (isWrap) {
 				writer.write("\"\"");

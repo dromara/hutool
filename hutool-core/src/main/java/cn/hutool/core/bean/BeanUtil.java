@@ -118,7 +118,7 @@ public class BeanUtil {
 				if (method.getParameterCount() == 0) {
 					final String name = method.getName();
 					if (name.startsWith("get") || name.startsWith("is")) {
-						if(false == "getClass".equals(name)){
+						if (false == "getClass".equals(name)) {
 							return true;
 						}
 					}
@@ -311,24 +311,32 @@ public class BeanUtil {
 
 	/**
 	 * 设置字段值，通过反射设置字段值，并不调用setXXX方法<br>
-	 * 对象同样支持Map类型，fieldNameOrIndex即为key
+	 * 对象同样支持Map类型，fieldNameOrIndex即为key，支持：
+	 * <ul>
+	 *     <li>Map</li>
+	 *     <li>List</li>
+	 *     <li>Bean</li>
+	 * </ul>
 	 *
 	 * @param bean             Bean
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @param value            值
+	 * @return bean，当为数组时，返回一个新的数组
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static void setFieldValue(final Object bean, final String fieldNameOrIndex, final Object value) {
+	public static Object setFieldValue(final Object bean, final String fieldNameOrIndex, final Object value) {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
 			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
-			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
+			// issue#3008，追加产生新数组，此处返回新数组
+			return ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
 			FieldUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
+		return bean;
 	}
 
 	/**

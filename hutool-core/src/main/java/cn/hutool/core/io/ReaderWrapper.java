@@ -54,6 +54,31 @@ public class ReaderWrapper extends Reader implements Wrapper<Reader> {
 	}
 
 	@Override
+	public boolean markSupported() {
+		return this.raw.markSupported();
+	}
+
+	@Override
+	public void mark(final int readAheadLimit) throws IOException {
+		this.raw.mark(readAheadLimit);
+	}
+
+	@Override
+	public long skip(final long n) throws IOException {
+		return this.raw.skip(n);
+	}
+
+	@Override
+	public boolean ready() throws IOException {
+		return this.raw.ready();
+	}
+
+	@Override
+	public void reset() throws IOException {
+		this.raw.reset();
+	}
+
+	@Override
 	public void close() throws IOException {
 		raw.close();
 	}

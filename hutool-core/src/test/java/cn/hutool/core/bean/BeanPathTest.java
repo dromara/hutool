@@ -3,6 +3,8 @@ package cn.hutool.core.bean;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 import cn.hutool.core.map.Dict;
+import cn.hutool.core.util.ArrayUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,5 +153,37 @@ public class BeanPathTest {
 		final Dict dict = new Dict();
 		BeanPath.of("aa.bb").set(dict, "BB");
 		Assert.assertEquals("{aa={bb=BB}}", dict.toString());
+	}
+
+	@Test
+	public void appendArrayTest(){
+		// issue#3008@Github
+		final MyUser myUser = new MyUser();
+		BeanPath.of("hobby[0]").set(myUser, "LOL");
+		BeanPath.of("hobby[1]").set(myUser, "KFC");
+		BeanPath.of("hobby[2]").set(myUser, "COFFE");
+
+		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
+	}
+
+	@Test
+	public void appendArrayTest2(){
+		// issue#3008@Github
+		final MyUser2 myUser = new MyUser2();
+		BeanPath.of("myUser.hobby[0]").set(myUser, "LOL");
+		BeanPath.of("myUser.hobby[1]").set(myUser, "KFC");
+		BeanPath.of("myUser.hobby[2]").set(myUser, "COFFE");
+
+		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getMyUser().getHobby()));
+	}
+
+	@Data
+	static class MyUser {
+		private String[] hobby;
+	}
+
+	@Data
+	static class MyUser2 {
+		private MyUser myUser;
 	}
 }
