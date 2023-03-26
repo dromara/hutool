@@ -20,6 +20,10 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	 * 换行符
 	 */
 	protected char[] lineDelimiter = {CharUtil.CR, CharUtil.LF};
+	/**
+	 * 是否使用安全模式，对可能存在DDE攻击的内容进行替换
+	 */
+	protected boolean  ddeSafe;
 
 	/**
 	 * 默认配置
@@ -51,4 +55,16 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 		this.lineDelimiter = lineDelimiter;
 		return this;
 	}
+
+	/**
+	 * 设置是否动态数据交换安全，使用文本包装符包裹可能存在DDE攻击的内容
+	 *
+	 * @param ddeSafe dde安全
+	 * @return this
+	 */
+	public CsvWriteConfig setDdeSafe(final boolean ddeSafe){
+		this.ddeSafe = ddeSafe;
+		return this;
+	}
+
 }

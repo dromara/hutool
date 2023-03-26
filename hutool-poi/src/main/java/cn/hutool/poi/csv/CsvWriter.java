@@ -181,6 +181,18 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	}
 
 	/**
+	 * 设置是否启用dde安全模式，默认false，按需修改
+	 * 防止使用Excel打开csv文件时存在dde攻击风险
+	 *
+	 * @param ddeSafe 是否启用 dde 安全模式
+	 * @return this
+	 */
+	public CsvWriter setDdeSafe(final boolean ddeSafe) {
+		this.config.setDdeSafe(ddeSafe);
+		return this;
+	}
+
+	/**
 	 * 将多行写出到Writer
 	 *
 	 * @param lines 多行数据
@@ -413,7 +425,11 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		boolean needsTextDelimiter = alwaysDelimitText;
 		boolean containsTextDelimiter = false;
 
-		for (final char c : valueChars) {
+		for (int i = 0; i < valueChars.length; i++) {
+			char c = valueChars[i];
+			if(i==0 && (c == CharUtil.AT || c == CharUtil.PLUS || c == CharUtil.MINUS || c == CharUtil.EQUAL)){
+				needsTextDelimiter = true;
+			}
 			if (c == textDelimiter) {
 				// 字段值中存在包装符
 				containsTextDelimiter = needsTextDelimiter = true;
