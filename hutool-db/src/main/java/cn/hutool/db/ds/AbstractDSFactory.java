@@ -21,9 +21,13 @@ import java.util.Map;
  *
  * @author looly
  */
-public abstract class AbstractDSFactory extends DSFactory {
+public abstract class AbstractDSFactory implements DSFactory {
 	private static final long serialVersionUID = -6407302276272379881L;
 
+	/**
+	 * 数据源名
+	 */
+	protected final String dataSourceName;
 	/**
 	 * 数据库连接配置文件
 	 */
@@ -31,7 +35,7 @@ public abstract class AbstractDSFactory extends DSFactory {
 	/**
 	 * 数据源池
 	 */
-	private final Map<String, DataSourceWrapper> dsMap;
+	private final Map<String, DSWrapper> dsMap;
 
 	/**
 	 * 构造
@@ -42,18 +46,18 @@ public abstract class AbstractDSFactory extends DSFactory {
 	 * @param setting         数据库连接配置，如果为{@code null}，则读取全局自定义或默认配置
 	 */
 	public AbstractDSFactory(final String dataSourceName, final Class<? extends DataSource> dataSourceClass, Setting setting) {
-		super(dataSourceName);
 		//此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
 		Assert.notNull(dataSourceClass);
+
+		this.dataSourceName = dataSourceName;
 
 		if (null == setting) {
 			setting = GlobalDbConfig.createDbSetting();
 		}
-
 		// 读取配置，用于SQL打印
 		DbUtil.setShowSqlGlobal(setting);
-
 		this.setting = setting;
+
 		this.dsMap = new SafeConcurrentHashMap<>();
 	}
 
@@ -68,91 +72,38 @@ public abstract class AbstractDSFactory extends DSFactory {
 	}
 
 	@Override
-	synchronized public DataSource getDataSource(String group) {
+	public String getDataSourceName() {
+		return this.dataSourceName;
+	}
+
+	@Override
+	public DataSource getDataSource(String group) {
 		if (group == null) {
 			group = StrUtil.EMPTY;
 		}
 
 		// 如果已经存在已有数据源（连接池）直接返回
-		final DataSourceWrapper existedDataSource = dsMap.get(group);
-		if (existedDataSource != null) {
-			return existedDataSource;
-		}
-
-		final DataSourceWrapper ds = createDataSource(group);
-		// 添加到数据源池中，以备下次使用
-		dsMap.put(group, ds);
-		return ds;
+		return dsMap.computeIfAbsent(group, this::_createDataSource);
 	}
-
-	/**
-	 * 创建数据源
-	 *
-	 * @param group 分组
-	 * @return {@link DataSourceWrapper} 数据源包装
-	 */
-	private DataSourceWrapper createDataSource(String group) {
-		if (group == null) {
-			group = StrUtil.EMPTY;
-		}
-
-		final Setting config = setting.getSetting(group);
-		if (MapUtil.isEmpty(config)) {
-			throw new DbRuntimeException("No config for group: [{}]", group);
-		}
-
-		// 基本信息
-		final String url = config.getAndRemove(KEY_ALIAS_URL);
-		if (StrUtil.isBlank(url)) {
-			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
-		}
-
-		// 移除用户可能误加入的show sql配置项
-		// issue#I3VW0R@Gitee
-		DbUtil.removeShowSqlParams(config);
-
-		// 自动识别Driver
-		String driver = config.getAndRemove(KEY_ALIAS_DRIVER);
-		if (StrUtil.isBlank(driver)) {
-			driver = DriverUtil.identifyDriver(url);
-		}
-		final String user = config.getAndRemove(KEY_ALIAS_USER);
-		final String pass = config.getAndRemove(KEY_ALIAS_PASSWORD);
-
-		return DataSourceWrapper.wrap(createDataSource(url, driver, user, pass, config), driver);
-	}
-
-	/**
-	 * 创建新的{@link DataSource}<br>
-	 *
-	 * @param jdbcUrl     JDBC连接字符串
-	 * @param driver      数据库驱动类名
-	 * @param user        用户名
-	 * @param pass        密码
-	 * @param poolSetting 分组下的连接池配置文件
-	 * @return {@link DataSource}
-	 */
-	protected abstract DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting);
 
 	@Override
-	public void close(String group) {
+	synchronized public void closeDataSource(String group) {
 		if (group == null) {
 			group = StrUtil.EMPTY;
 		}
 
-		final DataSourceWrapper ds = dsMap.get(group);
+		final DSWrapper ds = dsMap.get(group);
 		if (ds != null) {
 			ds.close();
-			//noinspection resource
 			dsMap.remove(group);
 		}
 	}
 
 	@Override
-	public void destroy() {
+	public void close() {
 		if (MapUtil.isNotEmpty(dsMap)) {
-			final Collection<DataSourceWrapper> values = dsMap.values();
-			for (final DataSourceWrapper ds : values) {
+			final Collection<DSWrapper> values = dsMap.values();
+			for (final DSWrapper ds : values) {
 				ds.close();
 			}
 			dsMap.clear();
@@ -192,5 +143,55 @@ public abstract class AbstractDSFactory extends DSFactory {
 		} else {
 			return setting.equals(other.setting);
 		}
+	}
+
+	/**
+	 * 创建新的{@link DataSource}<br>
+	 * 子类通过实现此方法，创建一个对接连接池的数据源
+	 *
+	 * @param jdbcUrl     JDBC连接字符串
+	 * @param driver      数据库驱动类名
+	 * @param user        用户名
+	 * @param pass        密码
+	 * @param poolSetting 分组下的连接池配置文件
+	 * @return {@link DataSource}
+	 */
+	protected abstract DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting);
+
+	/**
+	 * 创建数据源，对于不同连接池名称的的差异做兼容，如用户配置user和username都表示用户名
+	 *
+	 * @param group 分组
+	 * @return {@link DSWrapper} 数据源包装
+	 */
+	private DSWrapper _createDataSource(String group) {
+		if (group == null) {
+			group = StrUtil.EMPTY;
+		}
+
+		final Setting config = setting.getSetting(group);
+		if (MapUtil.isEmpty(config)) {
+			throw new DbRuntimeException("No config for group: [{}]", group);
+		}
+
+		// 基本信息
+		final String url = config.getAndRemove(DSKeys.KEY_ALIAS_URL);
+		if (StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
+		}
+
+		// 移除用户可能误加入的show sql配置项
+		// issue#I3VW0R@Gitee
+		DbUtil.removeShowSqlParams(config);
+
+		// 自动识别Driver
+		String driver = config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
+		if (StrUtil.isBlank(driver)) {
+			driver = DriverUtil.identifyDriver(url);
+		}
+		final String user = config.getAndRemove(DSKeys.KEY_ALIAS_USER);
+		final String pass = config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD);
+
+		return DSWrapper.wrap(createDataSource(url, driver, user, pass, config), driver);
 	}
 }

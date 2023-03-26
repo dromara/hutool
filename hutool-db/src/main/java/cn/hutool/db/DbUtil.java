@@ -2,15 +2,10 @@ package cn.hutool.db;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 /**
  * 数据库操作工具类
@@ -35,54 +30,6 @@ public final class DbUtil {
 					log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
 				}
 			}
-		}
-	}
-
-	/**
-	 * 获得默认数据源
-	 *
-	 * @return 默认数据源
-	 */
-	public static DataSource getDs() {
-		return DSFactory.get();
-	}
-
-	/**
-	 * 获取指定分组的数据源
-	 *
-	 * @param group 分组
-	 * @return 数据源
-	 */
-	public static DataSource getDs(final String group) {
-		return DSFactory.get(group);
-	}
-
-	/**
-	 * 获得JNDI数据源
-	 *
-	 * @param jndiName JNDI名称
-	 * @return 数据源
-	 */
-	public static DataSource getJndiDsWithLog(final String jndiName) {
-		try {
-			return getJndiDs(jndiName);
-		} catch (final DbRuntimeException e) {
-			log.error(e.getCause(), "Find JNDI datasource error!");
-		}
-		return null;
-	}
-
-	/**
-	 * 获得JNDI数据源
-	 *
-	 * @param jndiName JNDI名称
-	 * @return 数据源
-	 */
-	public static DataSource getJndiDs(final String jndiName) {
-		try {
-			return (DataSource) new InitialContext().lookup(jndiName);
-		} catch (final NamingException e) {
-			throw new DbRuntimeException(e);
 		}
 	}
 

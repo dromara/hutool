@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
-import cn.hutool.db.ds.DataSourceWrapper;
+import cn.hutool.db.ds.DSWrapper;
 
 /**
  * 驱动相关工具类，包括自动获取驱动类名
@@ -36,8 +36,8 @@ public class DriverUtil {
 	 * @return 驱动
 	 */
 	public static String identifyDriver(final DataSource ds) {
-		if(ds instanceof DataSourceWrapper) {
-			final String driver = ((DataSourceWrapper)ds).getDriver();
+		if(ds instanceof DSWrapper) {
+			final String driver = ((DSWrapper)ds).getDriver();
 			if(StrUtil.isNotBlank(driver)) {
 				return driver;
 			}

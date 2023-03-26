@@ -2,6 +2,7 @@ package cn.hutool.db.ds.pooled;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.setting.Setting;
 
 import javax.sql.DataSource;
@@ -15,12 +16,23 @@ import javax.sql.DataSource;
 public class PooledDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 8093886210895248277L;
 
+	/**
+	 * 数据源名称：Hutool-Pooled-DataSource
+	 */
 	public static final String DS_NAME = "Hutool-Pooled-DataSource";
 
+	/**
+	 * 构造，使用默认配置文件
+	 */
 	public PooledDSFactory() {
 		this(null);
 	}
 
+	/**
+	 * 构造，使用自定义配置文件
+	 *
+	 * @param setting 配置
+	 */
 	public PooledDSFactory(final Setting setting) {
 		super(DS_NAME, PooledDataSource.class, setting);
 	}
@@ -41,7 +53,7 @@ public class PooledDSFactory extends AbstractDSFactory {
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (final String key : KEY_CONN_PROPS) {
+		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = poolSetting.get(key);
 			if(StrUtil.isNotBlank(connValue)){
 				dbConfig.addConnProps(key, connValue);

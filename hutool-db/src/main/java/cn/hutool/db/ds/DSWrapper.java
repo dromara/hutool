@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * @author looly
  * @since 4.3.2
  */
-public class DataSourceWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cloneable {
+public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cloneable {
 
 	private final DataSource ds;
 	private final String driver;
@@ -34,8 +34,8 @@ public class DataSourceWrapper implements Wrapper<DataSource>, DataSource, Close
 	 * @param driver 数据库驱动类名
 	 * @return DataSourceWrapper
 	 */
-	public static DataSourceWrapper wrap(final DataSource ds, final String driver) {
-		return new DataSourceWrapper(ds, driver);
+	public static DSWrapper wrap(final DataSource ds, final String driver) {
+		return new DSWrapper(ds, driver);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class DataSourceWrapper implements Wrapper<DataSource>, DataSource, Close
 	 * @param ds     原始的DataSource
 	 * @param driver 数据库驱动类名
 	 */
-	public DataSourceWrapper(final DataSource ds, final String driver) {
+	public DSWrapper(final DataSource ds, final String driver) {
 		this.ds = ds;
 		this.driver = driver;
 	}
@@ -121,9 +121,9 @@ public class DataSourceWrapper implements Wrapper<DataSource>, DataSource, Close
 	}
 
 	@Override
-	public DataSourceWrapper clone() {
+	public DSWrapper clone() {
 		try {
-			return (DataSourceWrapper) super.clone();
+			return (DSWrapper) super.clone();
 		} catch (final CloneNotSupportedException e) {
 			throw new CloneRuntimeException(e);
 		}

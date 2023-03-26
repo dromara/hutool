@@ -4,7 +4,7 @@ import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -34,7 +34,7 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	 * @since 3.2.3
 	 */
 	public static Session of() {
-		return new Session(DSFactory.get());
+		return new Session(DSUtil.getDS());
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class Session extends AbstractDb<Session> implements Closeable {
 	 * @since 4.0.11
 	 */
 	public static Session of(final String group) {
-		return new Session(DSFactory.get(group));
+		return new Session(DSUtil.getDS(group));
 	}
 
 	/**

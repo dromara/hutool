@@ -4,7 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 
@@ -33,25 +33,6 @@ public class SimpleDataSource extends AbstractDataSource {
 	// 连接配置
 	private Properties connProps;
 	// -------------------------------------------------------------------- Fields end
-
-	/**
-	 * 获得一个数据源
-	 *
-	 * @param group 数据源分组
-	 * @return SimpleDataSource
-	 */
-	synchronized public static SimpleDataSource getDataSource(final String group) {
-		return new SimpleDataSource(group);
-	}
-
-	/**
-	 * 获得一个数据源，无分组
-	 *
-	 * @return SimpleDataSource
-	 */
-	synchronized public static SimpleDataSource getDataSource() {
-		return new SimpleDataSource();
-	}
 
 	// -------------------------------------------------------------------- Constructor start
 	/**
@@ -86,10 +67,10 @@ public class SimpleDataSource extends AbstractDataSource {
 		}
 
 		init(//
-				config.getAndRemove(DSFactory.KEY_ALIAS_URL), //
-				config.getAndRemove(DSFactory.KEY_ALIAS_USER), //
-				config.getAndRemove(DSFactory.KEY_ALIAS_PASSWORD), //
-				config.getAndRemove(DSFactory.KEY_ALIAS_DRIVER)//
+				config.getAndRemove(DSKeys.KEY_ALIAS_URL), //
+				config.getAndRemove(DSKeys.KEY_ALIAS_USER), //
+				config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD), //
+				config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER)//
 		);
 
 		// 其它连接参数

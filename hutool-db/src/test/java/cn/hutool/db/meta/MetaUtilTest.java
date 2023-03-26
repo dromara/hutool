@@ -3,7 +3,7 @@ package cn.hutool.db.meta;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import java.util.List;
  *
  */
 public class MetaUtilTest {
-	final DataSource ds = DSFactory.get("test");
+	final DataSource ds = DSUtil.getDS("test");
 
 	@Test
 	public void getTablesTest() {

@@ -4,7 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.setting.Setting;
 
 /**
@@ -54,16 +54,16 @@ public class DbSetting {
 		final DbConfig dbConfig = new DbConfig();
 
 		// 基本信息
-		final String url = config.getAndRemove(DSFactory.KEY_ALIAS_URL);
+		final String url = config.getAndRemove(DSKeys.KEY_ALIAS_URL);
 		if (StrUtil.isBlank(url)) {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		dbConfig.setUrl(url);
 		// 自动识别Driver
-		final String driver = config.getAndRemove(DSFactory.KEY_ALIAS_DRIVER);
+		final String driver = config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
 		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
-		dbConfig.setUser(config.getAndRemove(DSFactory.KEY_ALIAS_USER));
-		dbConfig.setPass(config.getAndRemove(DSFactory.KEY_ALIAS_PASSWORD));
+		dbConfig.setUser(config.getAndRemove(DSKeys.KEY_ALIAS_USER));
+		dbConfig.setPass(config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
 
 		// 连接池相关信息
 		dbConfig.setInitialSize(setting.getIntByGroup("initialSize", group, 0));
@@ -73,7 +73,7 @@ public class DbSetting {
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
-		for (final String key : DSFactory.KEY_CONN_PROPS) {
+		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = config.get(key);
 			if(StrUtil.isNotBlank(connValue)){
 				dbConfig.addConnProps(key, connValue);

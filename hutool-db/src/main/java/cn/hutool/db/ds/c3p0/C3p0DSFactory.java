@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.ds.AbstractDSFactory;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -12,7 +13,7 @@ import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 
 /**
- * Druid数据源工厂类
+ * C3P0数据源工厂类
  *
  * @author Looly
  *
@@ -20,6 +21,9 @@ import java.beans.PropertyVetoException;
 public class C3p0DSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = -6090788225842047281L;
 
+	/**
+	 * 数据源名称：C3P0
+	 */
 	public static final String DS_NAME = "C3P0";
 
 	/**
@@ -30,7 +34,7 @@ public class C3p0DSFactory extends AbstractDSFactory {
 	}
 
 	/**
-	 * 构造
+	 * 构造，使用自定义配置文件
 	 *
 	 * @param setting 配置
 	 */
@@ -45,7 +49,7 @@ public class C3p0DSFactory extends AbstractDSFactory {
 		// remarks等特殊配置，since 5.3.8
 		final Props connProps = new Props();
 		String connValue;
-		for (final String key : KEY_CONN_PROPS) {
+		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemove(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);

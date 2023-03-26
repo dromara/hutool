@@ -890,7 +890,7 @@ public class IoUtil extends NioUtil {
 	 *
 	 * @param closeable 被关闭的对象
 	 */
-	public static void close(final Closeable closeable) {
+	public static void close(final AutoCloseable closeable) {
 		if (null != closeable) {
 			try {
 				closeable.close();

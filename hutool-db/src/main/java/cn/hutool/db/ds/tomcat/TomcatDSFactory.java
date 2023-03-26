@@ -2,6 +2,7 @@ package cn.hutool.db.ds.tomcat;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.ds.AbstractDSFactory;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.dialect.Props;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -16,6 +17,9 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 public class TomcatDSFactory extends AbstractDSFactory {
 	private static final long serialVersionUID = 4925514193275150156L;
 
+	/**
+	 * 数据源名称：Tomcat-Jdbc-Pool
+	 */
 	public static final String DS_NAME = "Tomcat-Jdbc-Pool";
 
 	/**
@@ -26,7 +30,7 @@ public class TomcatDSFactory extends AbstractDSFactory {
 	}
 
 	/**
-	 * 构造
+	 * 构造，自定义配置
 	 *
 	 * @param setting Setting数据库配置
 	 */
@@ -45,7 +49,7 @@ public class TomcatDSFactory extends AbstractDSFactory {
 		// remarks等特殊配置，since 5.3.8
 		final Props connProps = new Props();
 		String connValue;
-		for (final String key : KEY_CONN_PROPS) {
+		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = poolSetting.getAndRemove(key);
 			if(StrUtil.isNotBlank(connValue)){
 				connProps.setProperty(key, connValue);

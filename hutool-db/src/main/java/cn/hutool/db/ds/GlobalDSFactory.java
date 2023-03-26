@@ -1,9 +1,11 @@
 package cn.hutool.db.ds;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.log.StaticLog;
 
 /**
- * 全局的数据源工厂<br>
+ * 全局单例数据源工厂<br>
  * 一般情况下，一个应用默认只使用一种数据库连接池，因此维护一个全局的数据源工厂类减少判断连接池类型造成的性能浪费
  *
  * @author looly
@@ -19,14 +21,11 @@ public class GlobalDSFactory {
 	 */
 	static {
 		// JVM关闭时关闭所有连接池
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				if (null != factory) {
-					factory.destroy();
-					StaticLog.debug("DataSource: [{}] destroyed.", factory.dataSourceName);
-					factory = null;
-				}
+		RuntimeUtil.addShutdownHook(()->{
+			if (null != factory) {
+				IoUtil.close(factory);
+				StaticLog.debug("DataSource: [{}] closed.", factory.getDataSourceName());
+				factory = null;
 			}
 		});
 	}
@@ -42,7 +41,7 @@ public class GlobalDSFactory {
 		if (null == factory) {
 			synchronized (lock) {
 				if (null == factory) {
-					factory = DSFactory.of(null);
+					factory = DSUtil.createFactory(null);
 				}
 			}
 		}
@@ -69,10 +68,10 @@ public class GlobalDSFactory {
 					return factory;// 数据源工厂不变时返回原数据源工厂
 				}
 				// 自定义数据源工厂前关闭之前的数据源
-				factory.destroy();
+				IoUtil.close(factory);
 			}
 
-			StaticLog.debug("Custom use [{}] DataSource.", customDSFactory.dataSourceName);
+			StaticLog.debug("Custom use [{}] DataSource.", customDSFactory.getDataSourceName());
 			factory = customDSFactory;
 		}
 		return factory;

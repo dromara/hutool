@@ -3,7 +3,7 @@ package cn.hutool.db;
 import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSUtil;
 import cn.hutool.db.transaction.TransactionLevel;
 import cn.hutool.log.StaticLog;
 
@@ -28,7 +28,7 @@ public class Db extends AbstractDb<Db> {
 	 * @return Db
 	 */
 	public static Db of() {
-		return of(DSFactory.get());
+		return of(DSUtil.getDS());
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class Db extends AbstractDb<Db> {
 	 * @return Db
 	 */
 	public static Db of(final String group) {
-		return of(DSFactory.get(group));
+		return of(DSUtil.getDS(group));
 	}
 
 	/**

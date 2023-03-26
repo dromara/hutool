@@ -2,7 +2,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.ds.DSUtil;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class DaoTemplate {
 	 */
 	protected Db db;
 
-	//--------------------------------------------------------------- Constructor start
+	// region ----- Constructor
 
 	/**
 	 * 构造，此构造需要自定义SqlRunner，主键默认为id
@@ -49,7 +49,7 @@ public class DaoTemplate {
 	 * @param primaryKeyField 主键字段名
 	 */
 	public DaoTemplate(final String tableName, final String primaryKeyField) {
-		this(tableName, primaryKeyField, DSFactory.get());
+		this(tableName, primaryKeyField, DSUtil.getDS());
 	}
 
 	/**
@@ -87,9 +87,9 @@ public class DaoTemplate {
 		}
 		this.db = db;
 	}
-	//--------------------------------------------------------------- Constructor end
+	// endregion
 
-	//------------------------------------------------------------- Add start
+	// region ----- Add
 
 	/**
 	 * 添加
@@ -123,9 +123,9 @@ public class DaoTemplate {
 	public Long addForGeneratedKey(final Entity entity) throws DbRuntimeException {
 		return db.insertForGeneratedKey(fixEntity(entity));
 	}
-	//------------------------------------------------------------- Add end
+	// endregion
 
-	//------------------------------------------------------------- Delete start
+	// region ----- Delete
 
 	/**
 	 * 删除
@@ -172,9 +172,9 @@ public class DaoTemplate {
 		}
 		return db.del(fixEntity(where));
 	}
-	//------------------------------------------------------------- Delete end
+	// endregion
 
-	//------------------------------------------------------------- Update start
+	// region ----- Update
 
 	/**
 	 * 按照条件更新
@@ -225,10 +225,9 @@ public class DaoTemplate {
 	public int addOrUpdate(final Entity entity) throws DbRuntimeException {
 		return null == entity.get(primaryKeyField) ? add(entity) : update(entity);
 	}
-	//------------------------------------------------------------- Update end
+	// endregion
 
-	//------------------------------------------------------------- Get start
-
+	//region ----- Get
 	/**
 	 * 根据主键获取单个记录
 	 *
@@ -265,9 +264,9 @@ public class DaoTemplate {
 	public Entity get(final Entity where) throws DbRuntimeException {
 		return db.get(fixEntity(where));
 	}
-	//------------------------------------------------------------- Get end
+	// endregion
 
-	//------------------------------------------------------------- Find start
+	// region ----- Find and page
 
 	/**
 	 * 根据某个字段值查询结果
@@ -367,7 +366,7 @@ public class DaoTemplate {
 	public boolean exist(final Entity where) throws DbRuntimeException {
 		return this.count(where) > 0;
 	}
-	//------------------------------------------------------------- Find end
+	// endregion
 
 	/**
 	 * 修正Entity对象，避免null和填充表名

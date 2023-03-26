@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.ds.DataSourceWrapper;
+import cn.hutool.db.ds.DSUtil;
+import cn.hutool.db.ds.DSWrapper;
 import cn.hutool.db.ds.bee.BeeDSFactory;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
@@ -27,7 +27,7 @@ public class DsTest {
 
 	@Test
 	public void defaultDsTest() {
-		final DataSource ds = DSFactory.get("test");
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -35,8 +35,8 @@ public class DsTest {
 
 	@Test
 	public void hikariDsTest() {
-		DSFactory.setCurrentDSFactory(new HikariDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new HikariDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -44,8 +44,8 @@ public class DsTest {
 
 	@Test
 	public void druidDsTest() {
-		DSFactory.setCurrentDSFactory(new DruidDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new DruidDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
@@ -54,8 +54,8 @@ public class DsTest {
 
 	@Test
 	public void tomcatDsTest() {
-		DSFactory.setCurrentDSFactory(new TomcatDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new TomcatDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -63,8 +63,8 @@ public class DsTest {
 
 	@Test
 	public void beeCPDsTest() {
-		DSFactory.setCurrentDSFactory(new BeeDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new BeeDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -72,8 +72,8 @@ public class DsTest {
 
 	@Test
 	public void dbcpDsTest() {
-		DSFactory.setCurrentDSFactory(new DbcpDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new DbcpDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -81,8 +81,8 @@ public class DsTest {
 
 	@Test
 	public void c3p0DsTest() {
-		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new C3p0DSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
@@ -91,16 +91,16 @@ public class DsTest {
 	@Test
 	public void c3p0DsuserAndPassTest() {
 		// https://gitee.com/dromara/hutool/issues/I4T7XZ
-		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
-		final ComboPooledDataSource ds = (ComboPooledDataSource) ((DataSourceWrapper) DSFactory.get("mysql")).getRaw();
+		DSUtil.setGlobalDSFactory(new C3p0DSFactory());
+		final ComboPooledDataSource ds = (ComboPooledDataSource) ((DSWrapper) DSUtil.getDS("mysql")).getRaw();
 		Assert.assertEquals("root", ds.getUser());
 		Assert.assertEquals("123456", ds.getPassword());
 	}
 
 	@Test
 	public void hutoolPoolTest() {
-		DSFactory.setCurrentDSFactory(new PooledDSFactory());
-		final DataSource ds = DSFactory.get("test");
+		DSUtil.setGlobalDSFactory(new PooledDSFactory());
+		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
