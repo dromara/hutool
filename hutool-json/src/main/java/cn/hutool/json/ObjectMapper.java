@@ -161,7 +161,7 @@ public class ObjectMapper {
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {
-			Iterator<?> iter;
+			final Iterator<?> iter;
 			if (ArrayUtil.isArray(source)) {// 数组
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
@@ -169,7 +169,11 @@ public class ObjectMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				if(false == jsonArray.getConfig().isIgnoreError()){
+					throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				}
+				// 如果用户选择跳过异常，则跳过此值转换
+				return;
 			}
 
 			final JSONConfig config = jsonArray.getConfig();
