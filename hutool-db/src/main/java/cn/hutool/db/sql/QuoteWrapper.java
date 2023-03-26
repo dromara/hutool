@@ -104,7 +104,7 @@ public class QuoteWrapper implements Serializable {
 		}
 
 		//如果已经包含包装的引号，返回原字符
-		if (StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)) {
+		if (StrUtil.isWrap(field, preWrapQuote, sufWrapQuote)) {
 			return field;
 		}
 

@@ -119,7 +119,7 @@ public class SettingLoader {
 				}
 
 				// 记录分组名
-				if (StrUtil.isSurround(line, CharUtil.BRACKET_START, CharUtil.BRACKET_END)) {
+				if (StrUtil.isWrap(line, CharUtil.BRACKET_START, CharUtil.BRACKET_END)) {
 					group = line.substring(1, line.length() - 1).trim();
 					continue;
 				}

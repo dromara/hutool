@@ -97,7 +97,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 5.0.4
 	 */
 	public static <T extends CharSequence> T defaultIfEmpty(final T str, final T defaultValue) {
-		return StrUtil.isEmpty(str) ? defaultValue : str;
+		return isEmpty(str) ? defaultValue : str;
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 5.0.4
 	 */
 	public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultValue) {
-		return StrUtil.isBlank(str) ? defaultValue : str;
+		return isBlank(str) ? defaultValue : str;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @since 5.7.20
 	 */
 	public static <T extends CharSequence, V> V defaultIfBlank(final T str, final Function<T, V> handler, final Supplier<? extends V> defaultSupplier) {
-		if (StrUtil.isBlank(str)) {
+		if (isBlank(str)) {
 			return defaultSupplier.get();
 		}
 		return handler.apply(str);
@@ -184,11 +184,11 @@ public class CharSequenceUtil extends StrChecker {
 	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回{@code ""}。
 	 *
 	 * <pre>
-	 * StrUtil.trimToEmpty(null)          = ""
-	 * StrUtil.trimToEmpty("")            = ""
-	 * StrUtil.trimToEmpty("     ")       = ""
-	 * StrUtil.trimToEmpty("abc")         = "abc"
-	 * StrUtil.trimToEmpty("    abc    ") = "abc"
+	 * trimToEmpty(null)          = ""
+	 * trimToEmpty("")            = ""
+	 * trimToEmpty("     ")       = ""
+	 * trimToEmpty("abc")         = "abc"
+	 * trimToEmpty("    abc    ") = "abc"
 	 * </pre>
 	 *
 	 * @param str 字符串
@@ -203,11 +203,11 @@ public class CharSequenceUtil extends StrChecker {
 	 * 除去字符串头尾部的空白，如果字符串是{@code null}或者""，返回{@code null}。
 	 *
 	 * <pre>
-	 * StrUtil.trimToNull(null)          = null
-	 * StrUtil.trimToNull("")            = null
-	 * StrUtil.trimToNull("     ")       = null
-	 * StrUtil.trimToNull("abc")         = "abc"
-	 * StrUtil.trimToEmpty("    abc    ") = "abc"
+	 * trimToNull(null)          = null
+	 * trimToNull("")            = null
+	 * trimToNull("     ")       = null
+	 * trimToNull("abc")         = "abc"
+	 * trimToEmpty("    abc    ") = "abc"
 	 * </pre>
 	 *
 	 * @param str 字符串
@@ -795,17 +795,17 @@ public class CharSequenceUtil extends StrChecker {
 	 * 指定范围内查找字符串，忽略大小写<br>
 	 *
 	 * <pre>
-	 * StrUtil.indexOfIgnoreCase(null, *, *)          = -1
-	 * StrUtil.indexOfIgnoreCase(*, null, *)          = -1
-	 * StrUtil.indexOfIgnoreCase("", "", 0)           = 0
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1) = 2
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "", 2)   = 2
-	 * StrUtil.indexOfIgnoreCase("abc", "", 9)        = -1
+	 * indexOfIgnoreCase(null, *, *)          = -1
+	 * indexOfIgnoreCase(*, null, *)          = -1
+	 * indexOfIgnoreCase("", "", 0)           = 0
+	 * indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
+	 * indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
+	 * indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
+	 * indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
+	 * indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
+	 * indexOfIgnoreCase("aabaabaa", "B", -1) = 2
+	 * indexOfIgnoreCase("aabaabaa", "", 2)   = 2
+	 * indexOfIgnoreCase("abc", "", 9)        = -1
 	 * </pre>
 	 *
 	 * @param str       字符串
@@ -821,17 +821,17 @@ public class CharSequenceUtil extends StrChecker {
 	 * 指定范围内查找字符串
 	 *
 	 * <pre>
-	 * StrUtil.indexOfIgnoreCase(null, *, *)          = -1
-	 * StrUtil.indexOfIgnoreCase(*, null, *)          = -1
-	 * StrUtil.indexOfIgnoreCase("", "", 0)           = 0
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "B", -1) = 2
-	 * StrUtil.indexOfIgnoreCase("aabaabaa", "", 2)   = 2
-	 * StrUtil.indexOfIgnoreCase("abc", "", 9)        = -1
+	 * indexOfIgnoreCase(null, *, *)          = -1
+	 * indexOfIgnoreCase(*, null, *)          = -1
+	 * indexOfIgnoreCase("", "", 0)           = 0
+	 * indexOfIgnoreCase("aabaabaa", "A", 0)  = 0
+	 * indexOfIgnoreCase("aabaabaa", "B", 0)  = 2
+	 * indexOfIgnoreCase("aabaabaa", "AB", 0) = 1
+	 * indexOfIgnoreCase("aabaabaa", "B", 3)  = 5
+	 * indexOfIgnoreCase("aabaabaa", "B", 9)  = -1
+	 * indexOfIgnoreCase("aabaabaa", "B", -1) = 2
+	 * indexOfIgnoreCase("aabaabaa", "", 2)   = 2
+	 * indexOfIgnoreCase("abc", "", 9)        = -1
 	 * </pre>
 	 *
 	 * @param str       字符串
@@ -856,7 +856,7 @@ public class CharSequenceUtil extends StrChecker {
 	 */
 	public static int indexOf(final CharSequence text, final CharSequence searchStr, final int from, final boolean ignoreCase) {
 		if (isEmpty(text) || isEmpty(searchStr)) {
-			if (StrUtil.equals(text, searchStr)) {
+			if (equals(text, searchStr)) {
 				return 0;
 			} else {
 				return INDEX_NOT_FOUND;
@@ -904,7 +904,7 @@ public class CharSequenceUtil extends StrChecker {
 	 */
 	public static int lastIndexOf(final CharSequence text, final CharSequence searchStr, final int from, final boolean ignoreCase) {
 		if (isEmpty(text) || isEmpty(searchStr)) {
-			if (StrUtil.equals(text, searchStr)) {
+			if (equals(text, searchStr)) {
 				return 0;
 			} else {
 				return INDEX_NOT_FOUND;
@@ -924,17 +924,17 @@ public class CharSequenceUtil extends StrChecker {
 	 * 例子（*代表任意字符）：
 	 *
 	 * <pre>
-	 * StrUtil.ordinalIndexOf(null, *, *)          = -1
-	 * StrUtil.ordinalIndexOf(*, null, *)          = -1
-	 * StrUtil.ordinalIndexOf("", "", *)           = 0
-	 * StrUtil.ordinalIndexOf("aabaabaa", "a", 1)  = 0
-	 * StrUtil.ordinalIndexOf("aabaabaa", "a", 2)  = 1
-	 * StrUtil.ordinalIndexOf("aabaabaa", "b", 1)  = 2
-	 * StrUtil.ordinalIndexOf("aabaabaa", "b", 2)  = 5
-	 * StrUtil.ordinalIndexOf("aabaabaa", "ab", 1) = 1
-	 * StrUtil.ordinalIndexOf("aabaabaa", "ab", 2) = 4
-	 * StrUtil.ordinalIndexOf("aabaabaa", "", 1)   = 0
-	 * StrUtil.ordinalIndexOf("aabaabaa", "", 2)   = 0
+	 * ordinalIndexOf(null, *, *)          = -1
+	 * ordinalIndexOf(*, null, *)          = -1
+	 * ordinalIndexOf("", "", *)           = 0
+	 * ordinalIndexOf("aabaabaa", "a", 1)  = 0
+	 * ordinalIndexOf("aabaabaa", "a", 2)  = 1
+	 * ordinalIndexOf("aabaabaa", "b", 1)  = 2
+	 * ordinalIndexOf("aabaabaa", "b", 2)  = 5
+	 * ordinalIndexOf("aabaabaa", "ab", 1) = 1
+	 * ordinalIndexOf("aabaabaa", "ab", 2) = 4
+	 * ordinalIndexOf("aabaabaa", "", 1)   = 0
+	 * ordinalIndexOf("aabaabaa", "", 2)   = 0
 	 * </pre>
 	 *
 	 * @param str       被检查的字符串，可以为null
@@ -1712,12 +1712,12 @@ public class CharSequenceUtil extends StrChecker {
 	 * 切割指定位置之前部分的字符串
 	 * <p>安全的subString,允许：string为null，允许string长度小于toIndexExclude长度</p>
 	 * <pre>{@code
-	 *      Assert.assertEquals(StrUtil.subPre(null, 3), null);
-	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
-	 * 		Assert.assertEquals(StrUtil.subPre("abc", 3), "abc");
-	 * 		Assert.assertEquals(StrUtil.subPre("abcd", 3), "abc");
-	 * 		Assert.assertEquals(StrUtil.subPre("abcd", -3), "a");
-	 * 		Assert.assertEquals(StrUtil.subPre("ab", 3), "ab");
+	 *      Assert.assertEquals(subPre(null, 3), null);
+	 * 		Assert.assertEquals(subPre("ab", 3), "ab");
+	 * 		Assert.assertEquals(subPre("abc", 3), "abc");
+	 * 		Assert.assertEquals(subPre("abcd", 3), "abc");
+	 * 		Assert.assertEquals(subPre("abcd", -3), "a");
+	 * 		Assert.assertEquals(subPre("ab", 3), "ab");
 	 * }</pre>
 	 *
 	 * @param string         字符串
@@ -1746,13 +1746,13 @@ public class CharSequenceUtil extends StrChecker {
 	 * 切割指定长度的后部分的字符串
 	 *
 	 * <pre>
-	 * StrUtil.subSufByLength("abcde", 3)      =    "cde"
-	 * StrUtil.subSufByLength("abcde", 0)      =    ""
-	 * StrUtil.subSufByLength("abcde", -5)     =    ""
-	 * StrUtil.subSufByLength("abcde", -1)     =    ""
-	 * StrUtil.subSufByLength("abcde", 5)       =    "abcde"
-	 * StrUtil.subSufByLength("abcde", 10)     =    "abcde"
-	 * StrUtil.subSufByLength(null, 3)               =    null
+	 * subSufByLength("abcde", 3)      =    "cde"
+	 * subSufByLength("abcde", 0)      =    ""
+	 * subSufByLength("abcde", -5)     =    ""
+	 * subSufByLength("abcde", -1)     =    ""
+	 * subSufByLength("abcde", 5)       =    "abcde"
+	 * subSufByLength("abcde", 10)     =    "abcde"
+	 * subSufByLength(null, 3)               =    null
 	 * </pre>
 	 *
 	 * @param string 字符串
@@ -1802,14 +1802,14 @@ public class CharSequenceUtil extends StrChecker {
 	 * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subBefore(null, *, false)      = null
-	 * StrUtil.subBefore("", *, false)        = ""
-	 * StrUtil.subBefore("abc", "a", false)   = ""
-	 * StrUtil.subBefore("abcba", "b", false) = "a"
-	 * StrUtil.subBefore("abc", "c", false)   = "ab"
-	 * StrUtil.subBefore("abc", "d", false)   = "abc"
-	 * StrUtil.subBefore("abc", "", false)    = ""
-	 * StrUtil.subBefore("abc", null, false)  = "abc"
+	 * subBefore(null, *, false)      = null
+	 * subBefore("", *, false)        = ""
+	 * subBefore("abc", "a", false)   = ""
+	 * subBefore("abcba", "b", false) = "a"
+	 * subBefore("abc", "c", false)   = "ab"
+	 * subBefore("abc", "d", false)   = "abc"
+	 * subBefore("abc", "", false)    = ""
+	 * subBefore("abc", null, false)  = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1844,12 +1844,12 @@ public class CharSequenceUtil extends StrChecker {
 	 * 如果分隔字符串未找到，返回原字符串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subBefore(null, *, false)      = null
-	 * StrUtil.subBefore("", *, false)        = ""
-	 * StrUtil.subBefore("abc", 'a', false)   = ""
-	 * StrUtil.subBefore("abcba", 'b', false) = "a"
-	 * StrUtil.subBefore("abc", 'c', false)   = "ab"
-	 * StrUtil.subBefore("abc", 'd', false)   = "abc"
+	 * subBefore(null, *, false)      = null
+	 * subBefore("", *, false)        = ""
+	 * subBefore("abc", 'a', false)   = ""
+	 * subBefore("abcba", 'b', false) = "a"
+	 * subBefore("abc", 'c', false)   = "ab"
+	 * subBefore("abc", 'd', false)   = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1880,14 +1880,14 @@ public class CharSequenceUtil extends StrChecker {
 	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subAfter(null, *, false)      = null
-	 * StrUtil.subAfter("", *, false)        = ""
-	 * StrUtil.subAfter(*, null, false)      = ""
-	 * StrUtil.subAfter("abc", "a", false)   = "bc"
-	 * StrUtil.subAfter("abcba", "b", false) = "cba"
-	 * StrUtil.subAfter("abc", "c", false)   = ""
-	 * StrUtil.subAfter("abc", "d", false)   = ""
-	 * StrUtil.subAfter("abc", "", false)    = "abc"
+	 * subAfter(null, *, false)      = null
+	 * subAfter("", *, false)        = ""
+	 * subAfter(*, null, false)      = ""
+	 * subAfter("abc", "a", false)   = "bc"
+	 * subAfter("abcba", "b", false) = "cba"
+	 * subAfter("abc", "c", false)   = ""
+	 * subAfter("abc", "d", false)   = ""
+	 * subAfter("abc", "", false)    = "abc"
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1918,12 +1918,12 @@ public class CharSequenceUtil extends StrChecker {
 	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
 	 *
 	 * <pre>
-	 * StrUtil.subAfter(null, *, false)      = null
-	 * StrUtil.subAfter("", *, false)        = ""
-	 * StrUtil.subAfter("abc", 'a', false)   = "bc"
-	 * StrUtil.subAfter("abcba", 'b', false) = "cba"
-	 * StrUtil.subAfter("abc", 'c', false)   = ""
-	 * StrUtil.subAfter("abc", 'd', false)   = ""
+	 * subAfter(null, *, false)      = null
+	 * subAfter("", *, false)        = ""
+	 * subAfter("abc", 'a', false)   = "bc"
+	 * subAfter("abcba", 'b', false) = "cba"
+	 * subAfter("abc", 'c', false)   = ""
+	 * subAfter("abc", 'd', false)   = ""
 	 * </pre>
 	 *
 	 * @param string          被查找的字符串
@@ -1950,16 +1950,16 @@ public class CharSequenceUtil extends StrChecker {
 	 * 栗子：
 	 *
 	 * <pre>
-	 * StrUtil.subBetween("wx[b]yz", "[", "]") = "b"
-	 * StrUtil.subBetween(null, *, *)          = null
-	 * StrUtil.subBetween(*, null, *)          = null
-	 * StrUtil.subBetween(*, *, null)          = null
-	 * StrUtil.subBetween("", "", "")          = ""
-	 * StrUtil.subBetween("", "", "]")         = null
-	 * StrUtil.subBetween("", "[", "]")        = null
-	 * StrUtil.subBetween("yabcz", "", "")     = ""
-	 * StrUtil.subBetween("yabcz", "y", "z")   = "abc"
-	 * StrUtil.subBetween("yabczyabcz", "y", "z")   = "abc"
+	 * subBetween("wx[b]yz", "[", "]") = "b"
+	 * subBetween(null, *, *)          = null
+	 * subBetween(*, null, *)          = null
+	 * subBetween(*, *, null)          = null
+	 * subBetween("", "", "")          = ""
+	 * subBetween("", "", "]")         = null
+	 * subBetween("", "[", "]")        = null
+	 * subBetween("yabcz", "", "")     = ""
+	 * subBetween("yabcz", "y", "z")   = "abc"
+	 * subBetween("yabczyabcz", "y", "z")   = "abc"
 	 * </pre>
 	 *
 	 * @param str    被切割的字符串
@@ -1993,12 +1993,12 @@ public class CharSequenceUtil extends StrChecker {
 	 * 栗子：
 	 *
 	 * <pre>
-	 * StrUtil.subBetween(null, *)            = null
-	 * StrUtil.subBetween("", "")             = ""
-	 * StrUtil.subBetween("", "tag")          = null
-	 * StrUtil.subBetween("tagabctag", null)  = null
-	 * StrUtil.subBetween("tagabctag", "")    = ""
-	 * StrUtil.subBetween("tagabctag", "tag") = "abc"
+	 * subBetween(null, *)            = null
+	 * subBetween("", "")             = ""
+	 * subBetween("", "tag")          = null
+	 * subBetween("tagabctag", null)  = null
+	 * subBetween("tagabctag", "")    = ""
+	 * subBetween("tagabctag", "tag") = "abc"
 	 * </pre>
 	 *
 	 * @param str            被切割的字符串
@@ -2016,17 +2016,17 @@ public class CharSequenceUtil extends StrChecker {
 	 * 栗子：
 	 *
 	 * <pre>
-	 * StrUtil.subBetweenAll("wx[b]y[z]", "[", "]") 		= ["b","z"]
-	 * StrUtil.subBetweenAll(null, *, *)          			= []
-	 * StrUtil.subBetweenAll(*, null, *)          			= []
-	 * StrUtil.subBetweenAll(*, *, null)          			= []
-	 * StrUtil.subBetweenAll("", "", "")          			= []
-	 * StrUtil.subBetweenAll("", "", "]")         			= []
-	 * StrUtil.subBetweenAll("", "[", "]")        			= []
-	 * StrUtil.subBetweenAll("yabcz", "", "")     			= []
-	 * StrUtil.subBetweenAll("yabcz", "y", "z")   			= ["abc"]
-	 * StrUtil.subBetweenAll("yabczyabcz", "y", "z")   		= ["abc","abc"]
-	 * StrUtil.subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           重叠时只截取内部，
+	 * subBetweenAll("wx[b]y[z]", "[", "]") 		= ["b","z"]
+	 * subBetweenAll(null, *, *)          			= []
+	 * subBetweenAll(*, null, *)          			= []
+	 * subBetweenAll(*, *, null)          			= []
+	 * subBetweenAll("", "", "")          			= []
+	 * subBetweenAll("", "", "]")         			= []
+	 * subBetweenAll("", "[", "]")        			= []
+	 * subBetweenAll("yabcz", "", "")     			= []
+	 * subBetweenAll("yabcz", "y", "z")   			= ["abc"]
+	 * subBetweenAll("yabczyabcz", "y", "z")   		= ["abc","abc"]
+	 * subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           重叠时只截取内部，
 	 * </pre>
 	 *
 	 * @param str    被切割的字符串
@@ -2071,15 +2071,15 @@ public class CharSequenceUtil extends StrChecker {
 	 * 栗子：
 	 *
 	 * <pre>
-	 * StrUtil.subBetweenAll(null, *)          			= []
-	 * StrUtil.subBetweenAll(*, null)          			= []
-	 * StrUtil.subBetweenAll(*, *)          			= []
-	 * StrUtil.subBetweenAll("", "")          			= []
-	 * StrUtil.subBetweenAll("", "#")         			= []
-	 * StrUtil.subBetweenAll("gotanks", "")     		= []
-	 * StrUtil.subBetweenAll("#gotanks#", "#")   		= ["gotanks"]
-	 * StrUtil.subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
-	 * StrUtil.subBetweenAll("#hello# world#!", "#");   = ["hello"]
+	 * subBetweenAll(null, *)          			= []
+	 * subBetweenAll(*, null)          			= []
+	 * subBetweenAll(*, *)          			= []
+	 * subBetweenAll("", "")          			= []
+	 * subBetweenAll("", "#")         			= []
+	 * subBetweenAll("gotanks", "")     		= []
+	 * subBetweenAll("#gotanks#", "#")   		= ["gotanks"]
+	 * subBetweenAll("#hello# #world#!", "#")   = ["hello", "world"]
+	 * subBetweenAll("#hello# world#!", "#");   = ["hello"]
 	 * </pre>
 	 *
 	 * @param str             被切割的字符串
@@ -2099,9 +2099,9 @@ public class CharSequenceUtil extends StrChecker {
 	 * 重复某个字符
 	 *
 	 * <pre>
-	 * StrUtil.repeat('e', 0)  = ""
-	 * StrUtil.repeat('e', 3)  = "eee"
-	 * StrUtil.repeat('e', -2) = ""
+	 * repeat('e', 0)  = ""
+	 * repeat('e', 3)  = "eee"
+	 * repeat('e', -2) = ""
 	 * </pre>
 	 *
 	 * @param c     被重复的字符
@@ -2169,7 +2169,7 @@ public class CharSequenceUtil extends StrChecker {
 			return null;
 		}
 		if (padLen <= 0) {
-			return StrUtil.EMPTY;
+			return EMPTY;
 		}
 		final int strLen = str.length();
 		if (strLen == padLen) {
@@ -2190,9 +2190,9 @@ public class CharSequenceUtil extends StrChecker {
 	 * 重复某个字符串并通过分界符连接
 	 *
 	 * <pre>
-	 * StrUtil.repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
-	 * StrUtil.repeatAndJoin("?", 0, ",")   = ""
-	 * StrUtil.repeatAndJoin("?", 5, null) = "?????"
+	 * repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
+	 * repeatAndJoin("?", 0, ",")   = ""
+	 * repeatAndJoin("?", 5, null) = "?????"
 	 * </pre>
 	 *
 	 * @param str       被重复的字符串
@@ -2369,8 +2369,10 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 子串是否相同
 	 * @since 3.2.1
+	 * @see String#regionMatches(boolean, int, String, int, int)
 	 */
-	public static boolean isSubEquals(final CharSequence str1, final int start1, final CharSequence str2, final boolean ignoreCase) {
+	public static boolean isSubEquals(final CharSequence str1, final int start1,
+									  final CharSequence str2, final boolean ignoreCase) {
 		return isSubEquals(str1, start1, str2, 0, str2.length(), ignoreCase);
 	}
 
@@ -2386,8 +2388,11 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 子串是否相同
 	 * @since 3.2.1
+	 * @see String#regionMatches(boolean, int, String, int, int)
 	 */
-	public static boolean isSubEquals(final CharSequence str1, final int start1, final CharSequence str2, final int start2, final int length, final boolean ignoreCase) {
+	public static boolean isSubEquals(final CharSequence str1, final int start1,
+									  final CharSequence str2, final int start2, final int length,
+									  final boolean ignoreCase) {
 		if (null == str1 || null == str2) {
 			return false;
 		}
@@ -2607,12 +2612,16 @@ public class CharSequenceUtil extends StrChecker {
 	 * @param suffix 后缀
 	 * @return 是否被包装
 	 */
-	public static boolean isWrap(final CharSequence str, final String prefix, final String suffix) {
+	public static boolean isWrap(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
 		if (ArrayUtil.hasNull(str, prefix, suffix)) {
 			return false;
 		}
+		if (str.length() < (prefix.length() + suffix.length())) {
+			return false;
+		}
+
 		final String str2 = str.toString();
-		return str2.startsWith(prefix) && str2.endsWith(suffix);
+		return str2.startsWith(prefix.toString()) && str2.endsWith(suffix.toString());
 	}
 
 	/**
@@ -2646,7 +2655,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(final CharSequence str, final char prefixChar, final char suffixChar) {
-		if (null == str) {
+		if (null == str || str.length() < 2) {
 			return false;
 		}
 
@@ -2661,10 +2670,10 @@ public class CharSequenceUtil extends StrChecker {
 	 * 同：leftPad (org.apache.commons.lang3.leftPad)
 	 *
 	 * <pre>
-	 * StrUtil.padPre(null, *, *);//null
-	 * StrUtil.padPre("1", 3, "ABC");//"AB1"
-	 * StrUtil.padPre("123", 2, "ABC");//"12"
-	 * StrUtil.padPre("1039", -1, "0");//"103"
+	 * padPre(null, *, *);//null
+	 * padPre("1", 3, "ABC");//"AB1"
+	 * padPre("123", 2, "ABC");//"12"
+	 * padPre("1039", -1, "0");//"103"
 	 * </pre>
 	 *
 	 * @param str    字符串
@@ -2692,9 +2701,9 @@ public class CharSequenceUtil extends StrChecker {
 	 * 同：leftPad (org.apache.commons.lang3.leftPad)
 	 *
 	 * <pre>
-	 * StrUtil.padPre(null, *, *);//null
-	 * StrUtil.padPre("1", 3, '0');//"001"
-	 * StrUtil.padPre("123", 2, '0');//"12"
+	 * padPre(null, *, *);//null
+	 * padPre("1", 3, '0');//"001"
+	 * padPre("123", 2, '0');//"12"
 	 * </pre>
 	 *
 	 * @param str     字符串
@@ -2721,10 +2730,10 @@ public class CharSequenceUtil extends StrChecker {
 	 * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之
 	 *
 	 * <pre>
-	 * StrUtil.padAfter(null, *, *);//null
-	 * StrUtil.padAfter("1", 3, '0');//"100"
-	 * StrUtil.padAfter("123", 2, '0');//"23"
-	 * StrUtil.padAfter("123", -1, '0')//"" 空串
+	 * padAfter(null, *, *);//null
+	 * padAfter("1", 3, '0');//"100"
+	 * padAfter("123", 2, '0');//"23"
+	 * padAfter("123", -1, '0')//"" 空串
 	 * </pre>
 	 *
 	 * @param str     字符串，如果为{@code null}，直接返回null
@@ -2751,9 +2760,9 @@ public class CharSequenceUtil extends StrChecker {
 	 * 补充字符串以满足最小长度
 	 *
 	 * <pre>
-	 * StrUtil.padAfter(null, *, *);//null
-	 * StrUtil.padAfter("1", 3, "ABC");//"1AB"
-	 * StrUtil.padAfter("123", 2, "ABC");//"23"
+	 * padAfter(null, *, *);//null
+	 * padAfter("1", 3, "ABC");//"1AB"
+	 * padAfter("123", 2, "ABC");//"23"
 	 * </pre>
 	 *
 	 * @param str    字符串，如果为{@code null}，直接返回null
@@ -2784,12 +2793,12 @@ public class CharSequenceUtil extends StrChecker {
 	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
 	 *
 	 * <pre>
-	 * StrUtil.center(null, *)   = null
-	 * StrUtil.center("", 4)     = "    "
-	 * StrUtil.center("ab", -1)  = "ab"
-	 * StrUtil.center("ab", 4)   = " ab "
-	 * StrUtil.center("abcd", 2) = "abcd"
-	 * StrUtil.center("a", 4)    = " a  "
+	 * center(null, *)   = null
+	 * center("", 4)     = "    "
+	 * center("ab", -1)  = "ab"
+	 * center("ab", 4)   = " ab "
+	 * center("abcd", 2) = "abcd"
+	 * center("a", 4)    = " a  "
 	 * </pre>
 	 *
 	 * @param str  字符串
@@ -2805,14 +2814,14 @@ public class CharSequenceUtil extends StrChecker {
 	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
 	 *
 	 * <pre>
-	 * StrUtil.center(null, *, *)     = null
-	 * StrUtil.center("", 4, ' ')     = "    "
-	 * StrUtil.center("ab", -1, ' ')  = "ab"
-	 * StrUtil.center("ab", 4, ' ')   = " ab "
-	 * StrUtil.center("abcd", 2, ' ') = "abcd"
-	 * StrUtil.center("a", 4, ' ')    = " a  "
-	 * StrUtil.center("a", 4, 'y')   = "yayy"
-	 * StrUtil.center("abc", 7, ' ')   = "  abc  "
+	 * center(null, *, *)     = null
+	 * center("", 4, ' ')     = "    "
+	 * center("ab", -1, ' ')  = "ab"
+	 * center("ab", 4, ' ')   = " ab "
+	 * center("abcd", 2, ' ') = "abcd"
+	 * center("a", 4, ' ')    = " a  "
+	 * center("a", 4, 'y')   = "yayy"
+	 * center("abc", 7, ' ')   = "  abc  "
 	 * </pre>
 	 *
 	 * @param str     字符串
@@ -2839,15 +2848,15 @@ public class CharSequenceUtil extends StrChecker {
 	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
 	 *
 	 * <pre>
-	 * StrUtil.center(null, *, *)     = null
-	 * StrUtil.center("", 4, " ")     = "    "
-	 * StrUtil.center("ab", -1, " ")  = "ab"
-	 * StrUtil.center("ab", 4, " ")   = " ab "
-	 * StrUtil.center("abcd", 2, " ") = "abcd"
-	 * StrUtil.center("a", 4, " ")    = " a  "
-	 * StrUtil.center("a", 4, "yz")   = "yayz"
-	 * StrUtil.center("abc", 7, null) = "  abc  "
-	 * StrUtil.center("abc", 7, "")   = "  abc  "
+	 * center(null, *, *)     = null
+	 * center("", 4, " ")     = "    "
+	 * center("ab", -1, " ")  = "ab"
+	 * center("ab", 4, " ")   = " ab "
+	 * center("abcd", 2, " ") = "abcd"
+	 * center("a", 4, " ")    = " a  "
+	 * center("a", 4, "yz")   = "yayz"
+	 * center("abc", 7, null) = "  abc  "
+	 * center("abc", 7, "")   = "  abc  "
 	 * </pre>
 	 *
 	 * @param str    字符串
@@ -2880,13 +2889,13 @@ public class CharSequenceUtil extends StrChecker {
 	 * 参数为 {@code null} 或者 "" 返回 {@code 0}.
 	 *
 	 * <pre>
-	 * StrUtil.count(null, *)       = 0
-	 * StrUtil.count("", *)         = 0
-	 * StrUtil.count("abba", null)  = 0
-	 * StrUtil.count("abba", "")    = 0
-	 * StrUtil.count("abba", "a")   = 2
-	 * StrUtil.count("abba", "ab")  = 1
-	 * StrUtil.count("abba", "xxx") = 0
+	 * count(null, *)       = 0
+	 * count("", *)         = 0
+	 * count("abba", null)  = 0
+	 * count("abba", "")    = 0
+	 * count("abba", "a")   = 2
+	 * count("abba", "ab")  = 1
+	 * count("abba", "xxx") = 0
 	 * </pre>
 	 *
 	 * @param content      被查找的字符串
@@ -2936,16 +2945,16 @@ public class CharSequenceUtil extends StrChecker {
 	 * 比较两个字符串，用于排序
 	 *
 	 * <pre>
-	 * StrUtil.compare(null, null, *)     = 0
-	 * StrUtil.compare(null , "a", true)  &lt; 0
-	 * StrUtil.compare(null , "a", false) &gt; 0
-	 * StrUtil.compare("a", null, true)   &gt; 0
-	 * StrUtil.compare("a", null, false)  &lt; 0
-	 * StrUtil.compare("abc", "abc", *)   = 0
-	 * StrUtil.compare("a", "b", *)       &lt; 0
-	 * StrUtil.compare("b", "a", *)       &gt; 0
-	 * StrUtil.compare("a", "B", *)       &gt; 0
-	 * StrUtil.compare("ab", "abc", *)    &lt; 0
+	 * compare(null, null, *)     = 0
+	 * compare(null , "a", true)  &lt; 0
+	 * compare(null , "a", false) &gt; 0
+	 * compare("a", null, true)   &gt; 0
+	 * compare("a", null, false)  &lt; 0
+	 * compare("abc", "abc", *)   = 0
+	 * compare("a", "b", *)       &lt; 0
+	 * compare("b", "a", *)       &gt; 0
+	 * compare("a", "B", *)       &gt; 0
+	 * compare("ab", "abc", *)    &lt; 0
 	 * </pre>
 	 *
 	 * @param str1       字符串1
@@ -2970,18 +2979,18 @@ public class CharSequenceUtil extends StrChecker {
 	 * 比较两个字符串，用于排序，大小写不敏感
 	 *
 	 * <pre>
-	 * StrUtil.compareIgnoreCase(null, null, *)     = 0
-	 * StrUtil.compareIgnoreCase(null , "a", true)  &lt; 0
-	 * StrUtil.compareIgnoreCase(null , "a", false) &gt; 0
-	 * StrUtil.compareIgnoreCase("a", null, true)   &gt; 0
-	 * StrUtil.compareIgnoreCase("a", null, false)  &lt; 0
-	 * StrUtil.compareIgnoreCase("abc", "abc", *)   = 0
-	 * StrUtil.compareIgnoreCase("abc", "ABC", *)   = 0
-	 * StrUtil.compareIgnoreCase("a", "b", *)       &lt; 0
-	 * StrUtil.compareIgnoreCase("b", "a", *)       &gt; 0
-	 * StrUtil.compareIgnoreCase("a", "B", *)       &lt; 0
-	 * StrUtil.compareIgnoreCase("A", "b", *)       &lt; 0
-	 * StrUtil.compareIgnoreCase("ab", "abc", *)    &lt; 0
+	 * compareIgnoreCase(null, null, *)     = 0
+	 * compareIgnoreCase(null , "a", true)  &lt; 0
+	 * compareIgnoreCase(null , "a", false) &gt; 0
+	 * compareIgnoreCase("a", null, true)   &gt; 0
+	 * compareIgnoreCase("a", null, false)  &lt; 0
+	 * compareIgnoreCase("abc", "abc", *)   = 0
+	 * compareIgnoreCase("abc", "ABC", *)   = 0
+	 * compareIgnoreCase("a", "b", *)       &lt; 0
+	 * compareIgnoreCase("b", "a", *)       &gt; 0
+	 * compareIgnoreCase("a", "B", *)       &lt; 0
+	 * compareIgnoreCase("A", "b", *)       &lt; 0
+	 * compareIgnoreCase("ab", "abc", *)    &lt; 0
 	 * </pre>
 	 *
 	 * @param str1       字符串1
@@ -3007,14 +3016,14 @@ public class CharSequenceUtil extends StrChecker {
 	 * null版本排在最小：即：
 	 *
 	 * <pre>
-	 * StrUtil.compareVersion(null, "v1") &lt; 0
-	 * StrUtil.compareVersion("v1", "v1")  = 0
-	 * StrUtil.compareVersion(null, null)   = 0
-	 * StrUtil.compareVersion("v1", null) &gt; 0
-	 * StrUtil.compareVersion("1.0.0", "1.0.2") &lt; 0
-	 * StrUtil.compareVersion("1.0.2", "1.0.2a") &lt; 0
-	 * StrUtil.compareVersion("1.13.0", "1.12.1c") &gt; 0
-	 * StrUtil.compareVersion("V0.0.20170102", "V0.0.20170101") &gt; 0
+	 * compareVersion(null, "v1") &lt; 0
+	 * compareVersion("v1", "v1")  = 0
+	 * compareVersion(null, null)   = 0
+	 * compareVersion("v1", null) &gt; 0
+	 * compareVersion("1.0.0", "1.0.2") &lt; 0
+	 * compareVersion("1.0.2", "1.0.2a") &lt; 0
+	 * compareVersion("1.13.0", "1.12.1c") &gt; 0
+	 * compareVersion("V0.0.20170102", "V0.0.20170101") &gt; 0
 	 * </pre>
 	 *
 	 * @param version1 版本1
@@ -3304,13 +3313,13 @@ public class CharSequenceUtil extends StrChecker {
 	 * 俗称：脱敏功能，后面其他功能，可以见：DesensitizedUtil(脱敏工具类)
 	 *
 	 * <pre>
-	 * StrUtil.hide(null,*,*)=null
-	 * StrUtil.hide("",0,*)=""
-	 * StrUtil.hide("jackduan@163.com",-1,4)   ****duan@163.com
-	 * StrUtil.hide("jackduan@163.com",2,3)    ja*kduan@163.com
-	 * StrUtil.hide("jackduan@163.com",3,2)    jackduan@163.com
-	 * StrUtil.hide("jackduan@163.com",16,16)  jackduan@163.com
-	 * StrUtil.hide("jackduan@163.com",16,17)  jackduan@163.com
+	 * hide(null,*,*)=null
+	 * hide("",0,*)=""
+	 * hide("jackduan@163.com",-1,4)   ****duan@163.com
+	 * hide("jackduan@163.com",2,3)    ja*kduan@163.com
+	 * hide("jackduan@163.com",3,2)    jackduan@163.com
+	 * hide("jackduan@163.com",16,16)  jackduan@163.com
+	 * hide("jackduan@163.com",16,17)  jackduan@163.com
 	 * </pre>
 	 *
 	 * @param str          字符串
@@ -3597,9 +3606,9 @@ public class CharSequenceUtil extends StrChecker {
 	 * 切换给定字符串中的大小写。大写转小写，小写转大写。
 	 *
 	 * <pre>
-	 * StrUtil.swapCase(null)                 = null
-	 * StrUtil.swapCase("")                   = ""
-	 * StrUtil.swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
+	 * swapCase(null)                 = null
+	 * swapCase("")                   = ""
+	 * swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
 	 * </pre>
 	 *
 	 * @param str 字符串
@@ -3666,49 +3675,6 @@ public class CharSequenceUtil extends StrChecker {
 		return NamingCase.toCamelCase(name, symbol);
 	}
 	// endregion
-
-	// ------------------------------------------------------------------------ isSurround
-
-	/**
-	 * 给定字符串是否被字符包围
-	 *
-	 * @param str    字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
-	 * @return 是否包围，空串不包围
-	 */
-	public static boolean isSurround(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
-		if (StrUtil.isBlank(str)) {
-			return false;
-		}
-		if (str.length() < (prefix.length() + suffix.length())) {
-			return false;
-		}
-
-		final String str2 = str.toString();
-		return str2.startsWith(prefix.toString()) && str2.endsWith(suffix.toString());
-	}
-
-	/**
-	 * 给定字符串是否被字符包围
-	 *
-	 * @param str    字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
-	 * @return 是否包围，空串不包围
-	 */
-	public static boolean isSurround(final CharSequence str, final char prefix, final char suffix) {
-		if (StrUtil.isBlank(str)) {
-			return false;
-		}
-		if (str.length() < 2) {
-			return false;
-		}
-
-		return str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix;
-	}
-
-	// ------------------------------------------------------------------------ builder
 
 	/**
 	 * 创建StringBuilder对象
