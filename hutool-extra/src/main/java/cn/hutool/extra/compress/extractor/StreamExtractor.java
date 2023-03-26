@@ -90,7 +90,7 @@ public class StreamExtractor implements Extractor {
 			}
 		} catch (final ArchiveException e) {
 			// issue#2384，如果报错可能持有文件句柄，导致无法删除文件
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 			throw new CompressException(e);
 		}
 	}
@@ -168,6 +168,6 @@ public class StreamExtractor implements Extractor {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.in);
+		IoUtil.closeQuietly(this.in);
 	}
 }

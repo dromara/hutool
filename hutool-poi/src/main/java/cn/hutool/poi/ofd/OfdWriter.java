@@ -142,6 +142,6 @@ public class OfdWriter implements Serializable, Closeable {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.doc);
+		IoUtil.closeQuietly(this.doc);
 	}
 }

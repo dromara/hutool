@@ -219,7 +219,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 			});
 			this.watchMonitor.start();
 		} else {
-			IoUtil.close(this.watchMonitor);
+			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = null;
 		}
 	}
@@ -399,7 +399,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 		} catch (final IOException e) {
 			throw new IORuntimeException(e, "Store properties to [{}] error!", absolutePath);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 	}
 

@@ -199,7 +199,7 @@ public class AioSession implements Closeable{
 	 */
 	@Override
 	public void close() {
-		IoUtil.close(this.channel);
+		IoUtil.closeQuietly(this.channel);
 		this.readBuffer = null;
 		this.writeBuffer = null;
 	}

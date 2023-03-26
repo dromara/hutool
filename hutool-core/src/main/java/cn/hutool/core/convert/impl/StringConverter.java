@@ -85,7 +85,7 @@ public class StringConverter extends AbstractConverter {
 		} catch (final SQLException e) {
 			throw new ConvertException(e);
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class StringConverter extends AbstractConverter {
 		} catch (final SQLException e) {
 			throw new ConvertException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 }

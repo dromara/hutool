@@ -92,7 +92,7 @@ public class CharsetDetector {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 		return null;
 	}

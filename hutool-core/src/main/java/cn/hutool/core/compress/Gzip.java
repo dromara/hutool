@@ -88,7 +88,7 @@ public class Gzip implements Closeable {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.target);
-		IoUtil.close(this.source);
+		IoUtil.closeQuietly(this.target);
+		IoUtil.closeQuietly(this.source);
 	}
 }

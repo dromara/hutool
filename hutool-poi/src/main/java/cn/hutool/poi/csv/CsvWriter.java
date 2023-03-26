@@ -344,7 +344,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.writer);
+		IoUtil.closeQuietly(this.writer);
 	}
 
 	@Override

@@ -263,7 +263,7 @@ public class CsvBaseReader implements Serializable {
 				rowHandler.accept(csvParser.next());
 			}
 		} finally {
-			IoUtil.close(csvParser);
+			IoUtil.closeQuietly(csvParser);
 		}
 	}
 

@@ -143,7 +143,7 @@ public class Tailer implements Serializable {
 		try{
 			this.executorService.shutdown();
 		} finally {
-			IoUtil.close(this.randomAccessFile);
+			IoUtil.closeQuietly(this.randomAccessFile);
 		}
 	}
 

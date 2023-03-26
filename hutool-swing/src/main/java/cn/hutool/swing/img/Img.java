@@ -751,7 +751,7 @@ public class Img implements Serializable {
 			out = ImgUtil.getImageOutputStream(targetFile);
 			write(out);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 		}
 	}
 

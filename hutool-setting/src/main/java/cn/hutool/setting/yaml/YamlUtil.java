@@ -96,7 +96,7 @@ public class YamlUtil {
 			return yaml.loadAs(reader, type);
 		} finally {
 			if (isCloseReader) {
-				IoUtil.close(reader);
+				IoUtil.closeQuietly(reader);
 			}
 		}
 	}

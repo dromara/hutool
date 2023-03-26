@@ -86,7 +86,7 @@ public class LineIter extends ComputeIter<String> implements IterableIter<String
 	@Override
 	public void close() {
 		super.finish();
-		IoUtil.close(bufferedReader);
+		IoUtil.closeQuietly(bufferedReader);
 	}
 
 	/**

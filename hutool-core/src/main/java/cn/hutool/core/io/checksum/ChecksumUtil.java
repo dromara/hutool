@@ -81,7 +81,7 @@ public class ChecksumUtil {
 			in = new CheckedInputStream(in, checksum);
 			IoUtil.copy(in, EmptyOutputStream.INSTANCE);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 		return checksum;
 	}

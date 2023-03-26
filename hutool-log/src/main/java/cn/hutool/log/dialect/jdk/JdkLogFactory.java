@@ -53,7 +53,7 @@ public class JdkLogFactory extends LogFactory{
 				Console.error(e, "Read [logging.properties] from [%JRE_HOME%/lib/logging.properties] error!");
 			}
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package cn.hutool.db.ds.pooled;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.db.DbUtil;
 import cn.hutool.setting.dialect.Props;
 
 import java.sql.Connection;
@@ -11,10 +11,10 @@ import java.util.Properties;
 
 /**
  * 池化
- * @author Looly
  *
+ * @author Looly
  */
-public class PooledConnection extends ConnectionWraper{
+public class PooledConnection extends ConnectionWraper {
 
 	private final PooledDataSource ds;
 	private boolean isClosed;
@@ -41,13 +41,19 @@ public class PooledConnection extends ConnectionWraper{
 
 		// 其它参数
 		final Properties connProps = config.getConnProps();
-		if(MapUtil.isNotEmpty(connProps)){
+		if (MapUtil.isNotEmpty(connProps)) {
 			info.putAll(connProps);
 		}
 
 		this.raw = DriverManager.getConnection(config.getUrl(), info);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param ds   {@link PooledDataSource}
+	 * @param conn {@link Connection}
+	 */
 	public PooledConnection(final PooledDataSource ds, final Connection conn) {
 		this.ds = ds;
 		this.raw = conn;
@@ -74,6 +80,7 @@ public class PooledConnection extends ConnectionWraper{
 
 	/**
 	 * 打开连接
+	 *
 	 * @return this
 	 */
 	protected PooledConnection open() {
@@ -83,10 +90,11 @@ public class PooledConnection extends ConnectionWraper{
 
 	/**
 	 * 释放连接
+	 *
 	 * @return this
 	 */
 	protected PooledConnection release() {
-		DbUtil.close(this.raw);
+		IoUtil.closeQuietly(this.raw);
 		return this;
 	}
 }

@@ -174,7 +174,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 		} catch (final Exception e) {
 			throw new POIException(e);
 		} finally {
-			IoUtil.close(sheetInputStream);
+			IoUtil.closeQuietly(sheetInputStream);
 		}
 		return this;
 	}

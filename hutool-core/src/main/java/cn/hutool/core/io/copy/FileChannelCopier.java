@@ -73,8 +73,8 @@ public class FileChannelCopier extends IoCopier<FileChannel, FileChannel> {
 			outChannel = out.getChannel();
 			return copy(inChannel, outChannel);
 		} finally {
-			IoUtil.close(outChannel);
-			IoUtil.close(inChannel);
+			IoUtil.closeQuietly(outChannel);
+			IoUtil.closeQuietly(inChannel);
 		}
 	}
 

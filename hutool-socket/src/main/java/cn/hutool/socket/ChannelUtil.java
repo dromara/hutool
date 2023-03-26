@@ -54,7 +54,7 @@ public class ChannelUtil {
 		try {
 			channel.connect(address).get();
 		} catch (final InterruptedException | ExecutionException e) {
-			IoUtil.close(channel);
+			IoUtil.closeQuietly(channel);
 			throw new SocketRuntimeException(e);
 		}
 		return channel;

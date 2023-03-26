@@ -566,7 +566,7 @@ public class JakartaServletUtil {
 		} catch (final IOException e) {
 			throw new UtilException(e);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 	}
 
@@ -585,7 +585,7 @@ public class JakartaServletUtil {
 			in = FileUtil.getInputStream(file);
 			write(response, in, contentType, fileName);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -658,8 +658,8 @@ public class JakartaServletUtil {
 		} catch (final IOException e) {
 			throw new UtilException(e);
 		} finally {
-			IoUtil.close(out);
-			IoUtil.close(in);
+			IoUtil.closeQuietly(out);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

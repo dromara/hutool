@@ -192,9 +192,9 @@ public class ZipReader implements Closeable {
 	@Override
 	public void close() throws IORuntimeException {
 		if (null != this.zipFile) {
-			IoUtil.close(this.zipFile);
+			IoUtil.closeQuietly(this.zipFile);
 		} else {
-			IoUtil.close(this.in);
+			IoUtil.closeQuietly(this.in);
 		}
 	}
 

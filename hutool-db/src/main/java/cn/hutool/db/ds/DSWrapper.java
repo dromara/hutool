@@ -116,7 +116,7 @@ public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cl
 	@Override
 	public void close() {
 		if (this.ds instanceof AutoCloseable) {
-			IoUtil.close((AutoCloseable) this.ds);
+			IoUtil.closeQuietly((AutoCloseable) this.ds);
 		}
 	}
 

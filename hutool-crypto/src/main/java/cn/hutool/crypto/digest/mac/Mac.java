@@ -131,7 +131,7 @@ public class Mac implements Serializable {
 			in = FileUtil.getInputStream(file);
 			return digest(in);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

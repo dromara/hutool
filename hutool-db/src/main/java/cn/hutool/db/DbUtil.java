@@ -1,8 +1,7 @@
 package cn.hutool.db;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.db.sql.SqlLog;
+import cn.hutool.db.ds.DSKeys;
 import cn.hutool.log.Log;
 import cn.hutool.log.level.Level;
 import cn.hutool.setting.Setting;
@@ -16,38 +15,6 @@ public final class DbUtil {
 	private final static Log log = Log.get();
 
 	/**
-	 * 连续关闭一系列的SQL相关对象<br>
-	 * 这些对象必须按照顺序关闭，否则会出错。
-	 *
-	 * @param objsToClose 需要关闭的对象
-	 */
-	public static void close(final Object... objsToClose) {
-		for (final Object obj : objsToClose) {
-			if (null != obj) {
-				if (obj instanceof AutoCloseable) {
-					IoUtil.close((AutoCloseable) obj);
-				} else {
-					log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
-				}
-			}
-		}
-	}
-
-	/**
-	 * 移除配置文件中的Show SQL相关配置项<br>
-	 * 此方法用于移除用户配置在分组下的配置项目
-	 *
-	 * @param setting 配置项
-	 * @since 5.7.2
-	 */
-	public static void removeShowSqlParams(final Setting setting) {
-		setting.remove(SqlLog.KEY_SHOW_SQL);
-		setting.remove(SqlLog.KEY_FORMAT_SQL);
-		setting.remove(SqlLog.KEY_SHOW_PARAMS);
-		setting.remove(SqlLog.KEY_SQL_LEVEL);
-	}
-
-	/**
 	 * 从配置文件中读取SQL打印选项，读取后会去除相应属性
 	 *
 	 * @param setting 配置文件
@@ -55,10 +22,10 @@ public final class DbUtil {
 	 */
 	public static void setShowSqlGlobal(final Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBoolean(setting.remove(SqlLog.KEY_SHOW_SQL), false);
-		final boolean isFormatSql = Convert.toBoolean(setting.remove(SqlLog.KEY_FORMAT_SQL), false);
-		final boolean isShowParams = Convert.toBoolean(setting.remove(SqlLog.KEY_SHOW_PARAMS), false);
-		String sqlLevelStr = setting.remove(SqlLog.KEY_SQL_LEVEL);
+		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
+		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
+		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
+		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();
 		}

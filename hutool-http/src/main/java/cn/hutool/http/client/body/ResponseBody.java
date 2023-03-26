@@ -106,7 +106,7 @@ public class ResponseBody implements HttpBody, Closeable {
 			return this.bodyStream.copyTo(out, streamProgress);
 		} finally {
 			if (isCloseOut) {
-				IoUtil.close(out);
+				IoUtil.closeQuietly(out);
 			}
 		}
 	}

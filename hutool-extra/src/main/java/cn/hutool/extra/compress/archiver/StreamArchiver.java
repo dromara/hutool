@@ -145,7 +145,7 @@ public class StreamArchiver implements Archiver {
 		} catch (final Exception ignore) {
 			//ignore
 		}
-		IoUtil.close(this.out);
+		IoUtil.closeQuietly(this.out);
 	}
 
 	/**

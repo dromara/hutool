@@ -115,7 +115,7 @@ public class JAXBUtil {
 		} catch (final Exception e) {
 			throw new RuntimeException("convertToJava2 错误：" + e.getMessage(), e);
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 }

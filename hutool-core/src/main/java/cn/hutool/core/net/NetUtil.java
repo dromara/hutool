@@ -701,7 +701,7 @@ public class NetUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 		}
 	}
 

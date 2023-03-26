@@ -351,8 +351,8 @@ public class HttpServerResponse extends HttpServerBase {
 			out = this.httpExchange.getResponseBody();
 			IoUtil.copy(in, out);
 		} finally {
-			IoUtil.close(out);
-			IoUtil.close(in);
+			IoUtil.closeQuietly(out);
+			IoUtil.closeQuietly(in);
 		}
 		return this;
 	}
@@ -391,7 +391,7 @@ public class HttpServerResponse extends HttpServerBase {
 			in = FileUtil.getInputStream(file);
 			write(in, (int)fileSize, contentType, fileName);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 		return this;
 	}

@@ -1321,7 +1321,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			throw new IORuntimeException(e);
 		} finally {
 			if (isCloseOut) {
-				IoUtil.close(out);
+				IoUtil.closeQuietly(out);
 			}
 		}
 		return this;

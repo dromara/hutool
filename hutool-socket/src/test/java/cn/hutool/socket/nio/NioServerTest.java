@@ -33,7 +33,7 @@ public class NioServerTest {
 
 					doWrite(sc, body);
 				} else if (readBytes < 0) {
-					IoUtil.close(sc);
+					IoUtil.closeQuietly(sc);
 				}
 			} catch (final IOException e){
 				throw new IORuntimeException(e);

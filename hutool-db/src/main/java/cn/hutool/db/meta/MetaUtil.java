@@ -2,17 +2,13 @@ package cn.hutool.db.meta;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -102,7 +98,7 @@ public class MetaUtil {
 		} catch (final Exception e) {
 			throw new DbRuntimeException("Get tables error!", e);
 		} finally {
-			DbUtil.close(conn);
+			IoUtil.closeQuietly(conn);
 		}
 		return tables;
 	}
@@ -158,7 +154,7 @@ public class MetaUtil {
 		} catch (final Exception e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
-			DbUtil.close(conn);
+			IoUtil.closeQuietly(conn);
 		}
 	}
 
@@ -277,7 +273,7 @@ public class MetaUtil {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
-			DbUtil.close(conn);
+			IoUtil.closeQuietly(conn);
 		}
 
 		return table;

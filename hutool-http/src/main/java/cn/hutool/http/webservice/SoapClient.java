@@ -540,7 +540,7 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 		} catch (final IOException | SOAPException e) {
 			throw new SoapRuntimeException(e);
 		} finally {
-			IoUtil.close(res);
+			IoUtil.closeQuietly(res);
 		}
 	}
 

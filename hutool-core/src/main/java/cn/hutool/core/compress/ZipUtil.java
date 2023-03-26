@@ -743,7 +743,7 @@ public class ZipUtil {
 			in = FileUtil.getInputStream(file);
 			return gzip(in, (int) file.length());
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -852,7 +852,7 @@ public class ZipUtil {
 			in = FileUtil.getInputStream(file);
 			return zlib(in, level, (int) file.length());
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

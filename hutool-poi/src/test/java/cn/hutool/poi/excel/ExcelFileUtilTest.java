@@ -16,7 +16,7 @@ public class ExcelFileUtilTest {
 			Assert.assertTrue(ExcelFileUtil.isXls(in));
 			Assert.assertFalse(ExcelFileUtil.isXlsx(in));
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -27,7 +27,7 @@ public class ExcelFileUtilTest {
 			Assert.assertFalse(ExcelFileUtil.isXls(in));
 			Assert.assertTrue(ExcelFileUtil.isXlsx(in));
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 }

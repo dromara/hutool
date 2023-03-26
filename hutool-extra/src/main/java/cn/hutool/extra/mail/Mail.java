@@ -294,7 +294,7 @@ public class Mail implements Builder<MimeMessage> {
 			in = FileUtil.getInputStream(imageFile);
 			return addImage(cid, in, FileTypeMap.getDefaultFileTypeMap().getContentType(imageFile));
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

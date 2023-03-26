@@ -308,9 +308,9 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			lock.unlock();
 			// issue#I4EMST@Gitee
 			// CipherOutputStream必须关闭，才能完全写出
-			IoUtil.close(cipherOutputStream);
+			IoUtil.closeQuietly(cipherOutputStream);
 			if (isClose) {
-				IoUtil.close(data);
+				IoUtil.closeQuietly(data);
 			}
 		}
 	}
@@ -361,9 +361,9 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 			lock.unlock();
 			// issue#I4EMST@Gitee
 			// CipherOutputStream必须关闭，才能完全写出
-			IoUtil.close(cipherInputStream);
+			IoUtil.closeQuietly(cipherInputStream);
 			if (isClose) {
-				IoUtil.close(data);
+				IoUtil.closeQuietly(data);
 			}
 		}
 	}

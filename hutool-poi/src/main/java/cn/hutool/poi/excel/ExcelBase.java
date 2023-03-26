@@ -505,7 +505,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	@Override
 	public void close() {
-		IoUtil.close(this.workbook);
+		IoUtil.closeQuietly(this.workbook);
 		this.sheet = null;
 		this.workbook = null;
 		this.isClosed = true;

@@ -57,7 +57,7 @@ public class StreamWriter {
 			throw new IORuntimeException(e);
 		} finally {
 			if (closeAfterWrite) {
-				IoUtil.close(out);
+				IoUtil.closeQuietly(out);
 			}
 		}
 	}
@@ -82,7 +82,7 @@ public class StreamWriter {
 			throw new IORuntimeException(e);
 		} finally {
 			if (closeAfterWrite) {
-				IoUtil.close(osw);
+				IoUtil.closeQuietly(osw);
 			}
 		}
 	}
@@ -108,7 +108,7 @@ public class StreamWriter {
 			throw new IORuntimeException(e);
 		} finally {
 			if (closeAfterWrite) {
-				IoUtil.close(osw);
+				IoUtil.closeQuietly(osw);
 			}
 		}
 	}

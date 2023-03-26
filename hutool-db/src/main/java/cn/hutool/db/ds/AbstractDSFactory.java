@@ -182,7 +182,7 @@ public abstract class AbstractDSFactory implements DSFactory {
 
 		// 移除用户可能误加入的show sql配置项
 		// issue#I3VW0R@Gitee
-		DbUtil.removeShowSqlParams(config);
+		removeShowSqlParams(config);
 
 		// 自动识别Driver
 		String driver = config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
@@ -193,5 +193,19 @@ public abstract class AbstractDSFactory implements DSFactory {
 		final String pass = config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD);
 
 		return DSWrapper.wrap(createDataSource(url, driver, user, pass, config), driver);
+	}
+
+	/**
+	 * 移除配置文件中的Show SQL相关配置项<br>
+	 * 此方法用于移除用户配置在分组下的配置项目
+	 *
+	 * @param setting 配置项
+	 * @since 5.7.2
+	 */
+	private static void removeShowSqlParams(final Setting setting) {
+		setting.remove(DSKeys.KEY_SHOW_SQL);
+		setting.remove(DSKeys.KEY_FORMAT_SQL);
+		setting.remove(DSKeys.KEY_SHOW_PARAMS);
+		setting.remove(DSKeys.KEY_SQL_LEVEL);
 	}
 }

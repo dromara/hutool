@@ -730,7 +730,7 @@ public class KeyUtil {
 			in = FileUtil.getInputStream(keyFile);
 			return readKeyStore(type, in, password);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

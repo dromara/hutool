@@ -249,7 +249,7 @@ public class FileUtil extends PathUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
 		} finally {
-			IoUtil.close(jarFile);
+			IoUtil.closeQuietly(jarFile);
 		}
 	}
 
@@ -1247,8 +1247,8 @@ public class FileUtil extends PathUtil {
 			return IoUtil.contentEquals(input1, input2);
 
 		} finally {
-			IoUtil.close(input1);
-			IoUtil.close(input2);
+			IoUtil.closeQuietly(input1);
+			IoUtil.closeQuietly(input2);
 		}
 	}
 
@@ -1294,8 +1294,8 @@ public class FileUtil extends PathUtil {
 			input2 = getReader(file2, charset);
 			return IoUtil.contentEqualsIgnoreEOL(input1, input2);
 		} finally {
-			IoUtil.close(input1);
-			IoUtil.close(input2);
+			IoUtil.closeQuietly(input1);
+			IoUtil.closeQuietly(input2);
 		}
 	}
 
@@ -1676,7 +1676,7 @@ public class FileUtil extends PathUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -1796,7 +1796,7 @@ public class FileUtil extends PathUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

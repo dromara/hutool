@@ -19,7 +19,7 @@ public class FtpTest {
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class FtpTest {
 		final boolean upload = ftp.uploadFile("/temp", FileUtil.file("d:/test/test.zip"));
 		Console.log(upload);
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class FtpTest {
 
 		Console.log("打印pwd: " + ftp.pwd());
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class FtpTest {
 		final Ftp ftp = new Ftp("looly.centos");
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class FtpTest {
 		Console.log(ftp.pwd());
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class FtpTest {
 					FileUtil.file("d:/test/download/" + name));
 		}
 
-		IoUtil.close(ftp);
+		IoUtil.closeQuietly(ftp);
 	}
 
 	@Test

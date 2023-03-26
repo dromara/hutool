@@ -48,7 +48,7 @@ public class HttpClient4Engine implements ClientEngine {
 	public HttpClient4Engine setConfig(final ClientConfig config) {
 		this.config = config;
 		// 重置客户端
-		IoUtil.close(this.engine);
+		IoUtil.closeQuietly(this.engine);
 		this.engine = null;
 		return this;
 	}

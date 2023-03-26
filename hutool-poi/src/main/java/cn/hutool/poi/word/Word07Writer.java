@@ -208,7 +208,7 @@ public class Word07Writer implements Closeable {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 
 		return this;
@@ -267,7 +267,7 @@ public class Word07Writer implements Closeable {
 			throw new IORuntimeException(e);
 		} finally {
 			if (isCloseOut) {
-				IoUtil.close(out);
+				IoUtil.closeQuietly(out);
 			}
 		}
 		return this;
@@ -289,7 +289,7 @@ public class Word07Writer implements Closeable {
 	 * 关闭Word文档但是不写出
 	 */
 	protected void closeWithoutFlush() {
-		IoUtil.close(this.doc);
+		IoUtil.closeQuietly(this.doc);
 		this.isClosed = true;
 	}
 }

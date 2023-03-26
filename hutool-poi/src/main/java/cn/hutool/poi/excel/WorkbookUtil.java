@@ -147,7 +147,7 @@ public class WorkbookUtil {
 		} catch (final Exception e) {
 			throw new POIException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

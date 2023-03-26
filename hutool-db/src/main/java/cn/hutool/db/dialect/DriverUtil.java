@@ -1,15 +1,14 @@
 package cn.hutool.db.dialect;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrUtil;
+import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.ds.DSWrapper;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
-import cn.hutool.core.text.StrUtil;
-import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
-import cn.hutool.db.ds.DSWrapper;
 
 /**
  * 驱动相关工具类，包括自动获取驱动类名
@@ -55,7 +54,7 @@ public class DriverUtil {
 			}
 			driver = identifyDriver(conn);
 		} finally {
-			DbUtil.close(conn);
+			IoUtil.closeQuietly(conn);
 		}
 
 		return driver;

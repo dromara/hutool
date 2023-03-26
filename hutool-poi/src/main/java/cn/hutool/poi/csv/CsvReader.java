@@ -143,6 +143,6 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 
 	@Override
 	public void close() {
-		IoUtil.close(this.reader);
+		IoUtil.closeQuietly(this.reader);
 	}
 }

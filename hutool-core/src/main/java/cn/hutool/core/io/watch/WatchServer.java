@@ -185,6 +185,6 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	@Override
 	public void close() {
 		isClosed = true;
-		IoUtil.close(watchService);
+		IoUtil.closeQuietly(watchService);
 	}
 }

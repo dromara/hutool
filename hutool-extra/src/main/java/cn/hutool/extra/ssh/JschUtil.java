@@ -477,7 +477,7 @@ public class JschUtil {
 		} catch (final JSchException e) {
 			throw new JschRuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 			close(channel);
 		}
 	}
@@ -511,8 +511,8 @@ public class JschUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(out);
-			IoUtil.close(in);
+			IoUtil.closeQuietly(out);
+			IoUtil.closeQuietly(in);
 			close(shell);
 		}
 	}

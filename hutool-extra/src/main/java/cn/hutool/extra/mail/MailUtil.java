@@ -411,7 +411,7 @@ public class MailUtil {
 			for (final Entry<String, InputStream> entry : imageMap.entrySet()) {
 				mail.addImage(entry.getKey(), entry.getValue());
 				// 关闭流
-				IoUtil.close(entry.getValue());
+				IoUtil.closeQuietly(entry.getValue());
 			}
 		}
 

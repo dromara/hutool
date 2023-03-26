@@ -140,7 +140,7 @@ public class NioServer implements Closeable {
 			try{
 				handler.handle(socketChannel);
 			} catch (final Exception e){
-				IoUtil.close(socketChannel);
+				IoUtil.closeQuietly(socketChannel);
 				log.error(e);
 			}
 		}
@@ -148,7 +148,7 @@ public class NioServer implements Closeable {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.selector);
-		IoUtil.close(this.serverSocketChannel);
+		IoUtil.closeQuietly(this.selector);
+		IoUtil.closeQuietly(this.serverSocketChannel);
 	}
 }

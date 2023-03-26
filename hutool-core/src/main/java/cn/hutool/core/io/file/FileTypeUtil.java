@@ -201,7 +201,7 @@ public class FileTypeUtil {
 			in = IoUtil.toStream(file);
 			return getType(in, file.getName(),isExact);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 

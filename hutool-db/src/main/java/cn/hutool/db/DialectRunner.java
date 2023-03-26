@@ -1,5 +1,6 @@
 package cn.hutool.db;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
@@ -85,7 +86,7 @@ public class DialectRunner implements Serializable {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -114,7 +115,7 @@ public class DialectRunner implements Serializable {
 			} catch (final SQLException e) {
 				throw new DbRuntimeException(e);
 			} finally {
-				DbUtil.close(ps);
+				IoUtil.closeQuietly(ps);
 			}
 		} else {
 			return insertOrUpdate(conn, record, keys);
@@ -168,7 +169,7 @@ public class DialectRunner implements Serializable {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -195,7 +196,7 @@ public class DialectRunner implements Serializable {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -234,7 +235,7 @@ public class DialectRunner implements Serializable {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 

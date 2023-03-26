@@ -155,7 +155,7 @@ public class PooledDataSource extends AbstractDataSource {
 
 	@Override
 	protected void finalize() {
-		IoUtil.close(this);
+		IoUtil.closeQuietly(this);
 	}
 
 	/**

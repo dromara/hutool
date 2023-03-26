@@ -127,7 +127,7 @@ public class MultipartOutputStream extends OutputStream {
 	@Override
 	public void close() {
 		finish();
-		IoUtil.close(this.out);
+		IoUtil.closeQuietly(this.out);
 	}
 
 	/**

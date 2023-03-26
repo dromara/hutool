@@ -140,7 +140,7 @@ public class PemUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(pemReader);
+			IoUtil.closeQuietly(pemReader);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class PemUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(pemWriter);
+			IoUtil.closeQuietly(pemWriter);
 		}
 	}
 }

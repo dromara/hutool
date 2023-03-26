@@ -81,7 +81,7 @@ public class FileReader extends FileWrapper {
 		} catch (final Exception e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 
 		return bytes;
@@ -140,7 +140,7 @@ public class FileReader extends FileWrapper {
 			reader = FileUtil.getReader(file, charset);
 			IoUtil.readLines(reader, lineHandler);
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 
@@ -177,7 +177,7 @@ public class FileReader extends FileWrapper {
 				throw new UtilException(e);
 			}
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 		return result;
 	}
@@ -233,7 +233,7 @@ public class FileReader extends FileWrapper {
 			throw new IORuntimeException(e);
 		} finally{
 			if(isCloseOut){
-				IoUtil.close(out);
+				IoUtil.closeQuietly(out);
 			}
 		}
 	}

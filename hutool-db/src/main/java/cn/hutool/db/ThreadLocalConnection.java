@@ -1,5 +1,7 @@
 package cn.hutool.db;
 
+import cn.hutool.core.io.IoUtil;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,6 +17,9 @@ import java.util.Map;
  *
  */
 public enum ThreadLocalConnection {
+	/**
+	 * 单例
+	 */
 	INSTANCE;
 
 	private final ThreadLocal<GroupedConnection> threadLocal = new ThreadLocal<>();
@@ -97,7 +102,7 @@ public enum ThreadLocalConnection {
 					// ignore
 				}
 				connMap.remove(ds);
-				DbUtil.close(conn);
+				IoUtil.closeQuietly(conn);
 			}
 			return this;
 		}

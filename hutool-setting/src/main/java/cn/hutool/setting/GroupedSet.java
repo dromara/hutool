@@ -166,7 +166,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 			// log.error(e, "Load GroupSet error!");
 			return false;
 		} finally {
-			IoUtil.close(settingStream);
+			IoUtil.closeQuietly(settingStream);
 		}
 		return true;
 	}
@@ -229,7 +229,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 				valueSet.add(line);
 			}
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 

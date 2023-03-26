@@ -161,7 +161,7 @@ public class NioClient implements Closeable {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.selector);
-		IoUtil.close(this.channel);
+		IoUtil.closeQuietly(this.selector);
+		IoUtil.closeQuietly(this.channel);
 	}
 }

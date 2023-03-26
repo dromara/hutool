@@ -161,7 +161,7 @@ public class SqlUtil {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class SqlUtil {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -204,9 +204,9 @@ public class SqlUtil {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 			if (closeAfterUse) {
-				IoUtil.close(dataStream);
+				IoUtil.closeQuietly(dataStream);
 			}
 		}
 		return blob;

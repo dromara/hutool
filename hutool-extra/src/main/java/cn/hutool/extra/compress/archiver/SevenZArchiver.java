@@ -110,7 +110,7 @@ public class SevenZArchiver implements Archiver {
 				throw new IORuntimeException(e);
 			}
 		}
-		IoUtil.close(this.sevenZOutputFile);
+		IoUtil.closeQuietly(this.sevenZOutputFile);
 	}
 
 	/**

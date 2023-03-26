@@ -50,7 +50,7 @@ public interface HttpBody {
 		try {
 			write(out);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 		}
 	}
 

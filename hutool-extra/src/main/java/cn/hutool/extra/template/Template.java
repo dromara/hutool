@@ -45,7 +45,7 @@ public interface Template {
 			out = FileUtil.getOutputStream(file);
 			this.render(bindingMap, out);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 		}
 	}
 

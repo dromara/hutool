@@ -23,7 +23,7 @@ public class GlobalDSFactory {
 		// JVM关闭时关闭所有连接池
 		RuntimeUtil.addShutdownHook(()->{
 			if (null != factory) {
-				IoUtil.close(factory);
+				IoUtil.closeQuietly(factory);
 				StaticLog.debug("DataSource: [{}] closed.", factory.getDataSourceName());
 				factory = null;
 			}
@@ -68,7 +68,7 @@ public class GlobalDSFactory {
 					return factory;// 数据源工厂不变时返回原数据源工厂
 				}
 				// 自定义数据源工厂前关闭之前的数据源
-				IoUtil.close(factory);
+				IoUtil.closeQuietly(factory);
 			}
 
 			StaticLog.debug("Custom use [{}] DataSource.", customDSFactory.getDataSourceName());

@@ -221,20 +221,4 @@ public class NioUtil {
 		}
 		return StrUtil.str(buffer, charset);
 	}
-
-	/**
-	 * 关闭<br>
-	 * 关闭失败不会抛出异常
-	 *
-	 * @param closeable 被关闭的对象
-	 */
-	public static void close(final AutoCloseable closeable) {
-		if (null != closeable) {
-			try {
-				closeable.close();
-			} catch (final Exception e) {
-				// 静默关闭
-			}
-		}
-	}
 }

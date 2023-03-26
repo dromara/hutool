@@ -66,7 +66,7 @@ public class JdkClientEngine implements ClientEngine {
 			doSend(message);
 		} catch (final IOException e) {
 			// 出错后关闭连接
-			IoUtil.close(this);
+			IoUtil.closeQuietly(this);
 			throw new RuntimeException(e);
 		}
 
@@ -110,7 +110,7 @@ public class JdkClientEngine implements ClientEngine {
 	 */
 	private void initConn(final Request message) {
 		// 执行下次请求时自动关闭上次请求（常用于转发）
-		IoUtil.close(this);
+		IoUtil.closeQuietly(this);
 
 		this.conn = buildConn(message);
 	}

@@ -340,7 +340,7 @@ public class IoUtil extends NioUtil {
 			throw new IORuntimeException(e);
 		} finally {
 			if (isClose) {
-				IoUtil.close(reader);
+				IoUtil.closeQuietly(reader);
 			}
 		}
 		return builder.toString();
@@ -885,35 +885,6 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 关闭<br>
-	 * 关闭失败不会抛出异常
-	 *
-	 * @param closeable 被关闭的对象
-	 */
-	public static void close(final AutoCloseable closeable) {
-		if (null != closeable) {
-			try {
-				closeable.close();
-			} catch (final Exception e) {
-				// 静默关闭
-			}
-		}
-	}
-
-	/**
-	 * 关闭<br>
-	 * 关闭失败不会抛出异常
-	 *
-	 * @param closeable 被关闭的对象
-	 * @throws IOException IO异常
-	 */
-	public static void nullSafeClose(final Closeable closeable) throws IOException {
-		if (null != closeable) {
-			closeable.close();
-		}
-	}
-
-	/**
 	 * 尝试关闭指定对象<br>
 	 * 判断对象如果实现了{@link AutoCloseable}，则调用之
 	 *
@@ -922,7 +893,38 @@ public class IoUtil extends NioUtil {
 	 */
 	public static void closeIfPossible(final Object obj) {
 		if (obj instanceof AutoCloseable) {
-			close((AutoCloseable) obj);
+			closeQuietly((AutoCloseable) obj);
+		}
+	}
+
+	/**
+	 * 按照给定顺序连续关闭一系列对象<br>
+	 * 这些对象必须按照顺序关闭，否则会出错。
+	 *
+	 * @param closeables 需要关闭的对象
+	 */
+	public static void closeQuietly(final AutoCloseable... closeables) {
+		for (final AutoCloseable closeable : closeables) {
+			if (null != closeable) {
+				try {
+					closeable.close();
+				} catch (final Exception e) {
+					// 静默关闭
+				}
+			}
+		}
+	}
+
+	/**
+	 * 关闭<br>
+	 * 关闭失败抛出{@link IOException}异常
+	 *
+	 * @param closeable 被关闭的对象
+	 * @throws IOException IO异常
+	 */
+	public static void nullSafeClose(final Closeable closeable) throws IOException {
+		if (null != closeable) {
+			closeable.close();
 		}
 	}
 

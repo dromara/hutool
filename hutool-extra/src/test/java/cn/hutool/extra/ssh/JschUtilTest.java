@@ -71,7 +71,7 @@ public class JschUtilTest {
 
 		Console.log("打印pwd: " + sftp.pwd());
 
-		IoUtil.close(sftp);
+		IoUtil.closeQuietly(sftp);
 	}
 
 	@Test

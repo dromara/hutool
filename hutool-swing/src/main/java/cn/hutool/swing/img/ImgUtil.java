@@ -514,7 +514,7 @@ public class ImgUtil {
 			imageOutputStream = getImageOutputStream(destImageFile);
 			convert(read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
 		} finally {
-			IoUtil.close(imageOutputStream);
+			IoUtil.closeQuietly(imageOutputStream);
 		}
 	}
 

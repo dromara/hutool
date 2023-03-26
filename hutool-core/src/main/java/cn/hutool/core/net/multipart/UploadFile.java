@@ -230,7 +230,7 @@ public class UploadFile {
 				return false;
 			}
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 		}
 		return true;
 	}

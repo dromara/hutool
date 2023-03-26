@@ -1,18 +1,13 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.iter.ArrayIter;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.handler.RsHandler;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Map;
 
 /**
@@ -59,7 +54,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -81,7 +76,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(call);
+			IoUtil.closeQuietly(call);
 		}
 	}
 
@@ -150,8 +145,8 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
-			DbUtil.close(rs);
+			IoUtil.closeQuietly(ps);
+			IoUtil.closeQuietly(rs);
 		}
 	}
 
@@ -174,7 +169,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -215,7 +210,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(statement);
+			IoUtil.closeQuietly(statement);
 		}
 	}
 
@@ -273,7 +268,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -295,7 +290,7 @@ public class SqlExecutor {
 			ps = statementFunc.apply(conn);
 			return executeQuery(ps, rsh);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -375,7 +370,7 @@ public class SqlExecutor {
 		try {
 			return query(ps, rsh, params);
 		} finally {
-			DbUtil.close(ps);
+			IoUtil.closeQuietly(ps);
 		}
 	}
 
@@ -398,7 +393,7 @@ public class SqlExecutor {
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		} finally {
-			DbUtil.close(rs);
+			IoUtil.closeQuietly(rs);
 		}
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------- Private method end

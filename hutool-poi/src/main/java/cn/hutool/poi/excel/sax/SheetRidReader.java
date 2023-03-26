@@ -69,7 +69,7 @@ public class SheetRidReader extends DefaultHandler {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(workbookData);
+			IoUtil.closeQuietly(workbookData);
 		}
 		return this;
 	}

@@ -88,7 +88,7 @@ public class SettingLoader {
 			log.error(e, "Load setting error!");
 			return false;
 		} finally {
-			IoUtil.close(settingStream);
+			IoUtil.closeQuietly(settingStream);
 		}
 		return true;
 	}
@@ -140,7 +140,7 @@ public class SettingLoader {
 				this.groupedMap.put(group, keyValue[0].trim(), value);
 			}
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 
@@ -189,7 +189,7 @@ public class SettingLoader {
 			writer = FileUtil.getPrintWriter(file, charset, false);
 			store(writer);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 	}
 

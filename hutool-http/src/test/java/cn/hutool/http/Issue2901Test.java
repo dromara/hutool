@@ -25,6 +25,6 @@ public class Issue2901Test {
 				.send();
 
 		Console.log(res.bodyStr());
-		IoUtil.close(res);
+		IoUtil.closeQuietly(res);
 	}
 }

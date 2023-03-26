@@ -158,6 +158,6 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 
 	@Override
 	public void close() {
-		IoUtil.close(this.sevenZFile);
+		IoUtil.closeQuietly(this.sevenZFile);
 	}
 }

@@ -222,7 +222,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			this.watchMonitor.start();
 			StaticLog.debug("Auto load for [{}] listenning...", this.resource.getUrl());
 		} else {
-			IoUtil.close(this.watchMonitor);
+			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = null;
 		}
 	}

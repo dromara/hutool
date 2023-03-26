@@ -169,7 +169,7 @@ public class XmlUtil {
 			in = FileUtil.getInputStream(file);
 			return readXML(in);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -246,7 +246,7 @@ public class XmlUtil {
 			in = FileUtil.getInputStream(file);
 			readBySax(new InputSource(in), contentHandler);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 	}
 
@@ -262,7 +262,7 @@ public class XmlUtil {
 		try {
 			readBySax(new InputSource(reader), contentHandler);
 		} finally {
-			IoUtil.close(reader);
+			IoUtil.closeQuietly(reader);
 		}
 	}
 
@@ -278,7 +278,7 @@ public class XmlUtil {
 		try {
 			readBySax(new InputSource(source), contentHandler);
 		} finally {
-			IoUtil.close(source);
+			IoUtil.closeQuietly(source);
 		}
 	}
 
@@ -489,7 +489,7 @@ public class XmlUtil {
 			writer = FileUtil.getWriter(path, CharsetUtil.charset(charsetName), false);
 			write(doc, writer, charsetName, INDENT_DEFAULT);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 	}
 
@@ -833,7 +833,7 @@ public class XmlUtil {
 			xmlenc.writeObject(bean);
 		} finally {
 			// 关闭XMLEncoder会相应关闭OutputStream
-			IoUtil.close(xmlenc);
+			IoUtil.closeQuietly(xmlenc);
 		}
 	}
 

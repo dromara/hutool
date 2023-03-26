@@ -87,7 +87,7 @@ public class SyncInputStream extends FilterInputStream {
 			// 忽略读取流中的EOF错误
 		}finally {
 			// 读取结束
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 		return copyLength;
 	}

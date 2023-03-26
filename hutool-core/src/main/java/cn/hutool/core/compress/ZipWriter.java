@@ -220,7 +220,7 @@ public class ZipWriter implements Closeable {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(this.out);
+			IoUtil.closeQuietly(this.out);
 		}
 	}
 
@@ -289,7 +289,7 @@ public class ZipWriter implements Closeable {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 		}
 
 		IoUtil.flush(this.out);

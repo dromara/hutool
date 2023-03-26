@@ -105,7 +105,7 @@ public class StreamReader {
 			IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, limit, null);
 		} finally {
 			if (closeAfterRead) {
-				IoUtil.close(in);
+				IoUtil.closeQuietly(in);
 			}
 		}
 		return out;

@@ -255,7 +255,7 @@ public class SshjSftp extends AbstractFtp {
 		} catch (final Exception e) {
 			throw new FtpException(e);
 		} finally {
-			IoUtil.close(session);
+			IoUtil.closeQuietly(session);
 		}
 	}
 }

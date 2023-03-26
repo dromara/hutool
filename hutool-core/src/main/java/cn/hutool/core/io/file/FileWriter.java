@@ -130,7 +130,7 @@ public class FileWriter extends FileWrapper {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(writer);
+			IoUtil.closeQuietly(writer);
 		}
 		return file;
 	}
@@ -344,9 +344,9 @@ public class FileWriter extends FileWrapper {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
-			IoUtil.close(out);
+			IoUtil.closeQuietly(out);
 			if (isCloseIn) {
-				IoUtil.close(in);
+				IoUtil.closeQuietly(in);
 			}
 		}
 		return file;

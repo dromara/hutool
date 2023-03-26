@@ -16,7 +16,7 @@ public class CsvParserTest {
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assert.assertEquals("b\"bba\"", row.getRawList().get(1));
-		IoUtil.close(parser);
+		IoUtil.closeQuietly(parser);
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class CsvParserTest {
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assert.assertEquals("\"bba\"bbb", row.getRawList().get(1));
-		IoUtil.close(parser);
+		IoUtil.closeQuietly(parser);
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class CsvParserTest {
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assert.assertEquals("bba", row.getRawList().get(1));
-		IoUtil.close(parser);
+		IoUtil.closeQuietly(parser);
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class CsvParserTest {
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
 		Assert.assertEquals("", row.getRawList().get(1));
-		IoUtil.close(parser);
+		IoUtil.closeQuietly(parser);
 	}
 
 	@Test

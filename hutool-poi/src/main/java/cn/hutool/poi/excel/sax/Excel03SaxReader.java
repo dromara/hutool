@@ -148,7 +148,7 @@ public class Excel03SaxReader implements HSSFListener, ExcelSaxReader<Excel03Sax
 		} catch (final IOException e) {
 			throw new POIException(e);
 		} finally {
-			IoUtil.close(fs);
+			IoUtil.closeQuietly(fs);
 		}
 		return this;
 	}

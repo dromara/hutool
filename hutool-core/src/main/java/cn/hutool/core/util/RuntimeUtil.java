@@ -145,7 +145,7 @@ public class RuntimeUtil {
 			in = process.getInputStream();
 			return IoUtil.readLines(in, charset, new ArrayList<>());
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 			destroy(process);
 		}
 	}
@@ -175,7 +175,7 @@ public class RuntimeUtil {
 			in = process.getInputStream();
 			return IoUtil.read(in, charset);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 			destroy(process);
 		}
 	}
@@ -205,7 +205,7 @@ public class RuntimeUtil {
 			in = process.getErrorStream();
 			return IoUtil.read(in, charset);
 		} finally {
-			IoUtil.close(in);
+			IoUtil.closeQuietly(in);
 			destroy(process);
 		}
 	}
