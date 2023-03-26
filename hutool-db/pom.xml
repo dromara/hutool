@@ -23,7 +23,7 @@
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<!-- 固定10.0.x -->
 		<tomcat-jdbc.version>10.0.27</tomcat-jdbc.version>
-		<druid.version>1.2.15</druid.version>
+		<druid.version>1.2.16</druid.version>
 		<!-- 固定4.x -->
 		<hikariCP.version>4.0.3</hikariCP.version>
 		<sqlite.version>3.39.4.1</sqlite.version>
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.9</version>
+			<version>3.4.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
