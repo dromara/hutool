@@ -1,13 +1,11 @@
 package cn.hutool.core.text.split;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.text.finder.CharFinder;
-import cn.hutool.core.text.finder.CharMatcherFinder;
-import cn.hutool.core.text.finder.LengthFinder;
-import cn.hutool.core.text.finder.PatternFinder;
-import cn.hutool.core.text.finder.StrFinder;
+import cn.hutool.core.text.finder.*;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
@@ -17,204 +15,73 @@ import java.util.regex.Pattern;
 
 /**
  * 字符串切分器，封装统一的字符串分割静态方法
+ *
  * @author Looly
  * @since 5.7.0
  */
 public class SplitUtil {
 
-	//---------------------------------------------------------------------------------------------- Split by char
+	/**
+	 * 无限制切分个数
+	 */
+	public static int UNLIMITED = -1;
+
+	// region ----- split to
 
 	/**
-	 * 切分字符串路径，仅支持Unix分界符：/
-	 * <p>去除每个元素两边空格，大小写敏感，忽略空串</p>
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项，并转为结果类型
 	 *
-	 * @param str 被切分的字符串
+	 * @param <T>        结果类型
+	 * @param str        被切分的字符串
+	 * @param separator  分隔符字符
+	 * @param resultType 结果类型的类，可以是数组或集合
+	 * @return long数组
+	 */
+	public static <T> T splitTo(final CharSequence str, final CharSequence separator, final Class<T> resultType) {
+		return Convert.convert(resultType, splitTrim(str, separator));
+	}
+	// endregion
+
+	// region ----- Split by String or char
+
+	/**
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
+	 *
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符字符
 	 * @return 切分后的集合
-	 * @since 3.0.8
+	 * @since 3.2.0
 	 */
-	public static List<String> splitPath(final CharSequence str) {
-		return splitPath(str, 0);
+	public static List<String> splitTrim(final CharSequence str, final CharSequence separator) {
+		return split(str, separator, true, true);
 	}
 
 	/**
-	 * 切分字符串路径，仅支持Unix分界符：/
-	 * <p>去除每个元素两边空格，大小写敏感，忽略空串</p>
+	 * 切分字符串，如果分隔符不存在则返回原字符串<br>
+	 * 此方法不会去除切分字符串后每个元素两边的空格，不忽略空串
 	 *
-	 * @param str 被切分的字符串
-	 * @return 切分后的集合
-	 * @since 3.0.8
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符
+	 * @return 字符串
 	 */
-	public static String[] splitPathToArray(final CharSequence str) {
-		return toArray(splitPath(str));
-	}
-
-	/**
-	 * 切分字符串路径，仅支持Unix分界符：/
-	 * <p>去除每个元素两边空格，大小写敏感，忽略空串</p>
-	 *
-	 * @param str   被切分的字符串
-	 * @param limit 限制分片数，小于等于0表示无限制
-	 * @return 切分后的集合
-	 * @since 3.0.8
-	 */
-	public static List<String> splitPath(final CharSequence str, final int limit) {
-		return split(str, CharUtil.SLASH, limit, true, true);
-	}
-
-	/**
-	 * 切分字符串路径，仅支持Unix分界符：/
-	 * <p>去除每个元素两边空格，大小写敏感，忽略空串</p>
-	 *
-	 * @param str   被切分的字符串
-	 * @param limit 限制分片数，小于等于0表示无限制
-	 * @return 切分后的集合
-	 * @since 3.0.8
-	 */
-	public static String[] splitPathToArray(final CharSequence str, final int limit) {
-		return toArray(splitPath(str, limit));
-	}
-
-	/**
-	 * 切分字符串，大小写敏感，去除每个元素两边空白符
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitTrim(final CharSequence str, final char separator, final boolean ignoreEmpty) {
-		return split(str, separator, 0, true, ignoreEmpty);
-	}
-
-	/**
-	 * 切分字符串
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.0.8
-	 */
-	public static List<String> split(final CharSequence str, final char separator, final boolean isTrim, final boolean ignoreEmpty) {
-		return split(str, separator, 0, isTrim, ignoreEmpty);
-	}
-
-	/**
-	 * 切分字符串，大小写敏感，去除每个元素两边空白符
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.0.8
-	 */
-	public static List<String> splitTrim(final CharSequence str, final char separator, final int limit, final boolean ignoreEmpty) {
-		return split(str, separator, limit, true, ignoreEmpty, false);
-	}
-
-	/**
-	 * 切分字符串，大小写敏感
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.0.8
-	 */
-	public static List<String> split(final CharSequence str, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return split(str, separator, limit, isTrim, ignoreEmpty, false);
-	}
-
-	/**
-	 * 切分字符串，大小写敏感
-	 *
-	 * @param <R>         切分后的元素类型
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param ignoreEmpty 是否忽略空串
-	 * @param mapping     切分后的字符串元素的转换方法
-	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
-	 * @since 5.7.14
-	 */
-	public static <R> List<R> split(final CharSequence str, final char separator, final int limit, final boolean ignoreEmpty, final Function<String, R> mapping) {
-		return split(str, separator, limit, ignoreEmpty, false, mapping);
-	}
-
-	/**
-	 * 切分字符串，忽略大小写
-	 *
-	 * @param text        被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitIgnoreCase(final CharSequence text, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return split(text, separator, limit, isTrim, ignoreEmpty, true);
-	}
-
-	/**
-	 * 切分字符串
-	 *
-	 * @param text        被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @param ignoreCase  是否忽略大小写
-	 * @return 切分后的集合
-	 */
-	public static List<String> split(final CharSequence text, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
-		return split(text, separator, limit, ignoreEmpty, ignoreCase, trimFunc(isTrim));
-	}
-
-	/**
-	 * 切分字符串<br>
-	 * 如果为空字符串或者null 则返回空集合
-	 *
-	 * @param <R>         切分后的元素类型
-	 * @param text        被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param ignoreEmpty 是否忽略空串
-	 * @param ignoreCase  是否忽略大小写
-	 * @param mapping     切分后的字符串元素的转换方法
-	 * @return 切分后的集合，元素类型是经过 mapping 转换后的
-	 * @since 5.7.14
-	 */
-	public static <R> List<R> split(final CharSequence text, final char separator, final int limit, final boolean ignoreEmpty,
-									final boolean ignoreCase, final Function<String, R> mapping) {
-		if (StrUtil.isEmpty(text)) {
-			return new ArrayList<>(0);
+	public static String[] splitToArray(final CharSequence str, final CharSequence separator) {
+		if (str == null) {
+			return new String[]{};
 		}
-		final SplitIter splitIter = new SplitIter(text, new CharFinder(separator, ignoreCase), limit, ignoreEmpty);
-		return splitIter.toList(mapping);
+		return toArray(split(str, separator));
 	}
 
 	/**
-	 * 切分字符串为字符串数组
+	 * 切分字符串，如果分隔符不存在则返回原字符串<br>
+	 * 此方法不会去除切分字符串后每个元素两边的空格，不忽略空串
 	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.0.8
+	 * @param str       被切分的字符串
+	 * @param separator 分隔符
+	 * @return 字符串
 	 */
-	public static String[] splitToArray(final CharSequence str, final char separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
+	public static List<String> split(final CharSequence str, final CharSequence separator) {
+		return split(str, separator, false, false);
 	}
-
-	//---------------------------------------------------------------------------------------------- Split by String
 
 	/**
 	 * 切分字符串，不忽略大小写
@@ -226,21 +93,9 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(final CharSequence str, final String separator, final boolean isTrim, final boolean ignoreEmpty) {
-		return split(str, separator, -1, isTrim, ignoreEmpty, false);
-	}
-
-	/**
-	 * 切分字符串，去除每个元素两边空格，不忽略大小写
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符串
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitTrim(final CharSequence str, final String separator, final boolean ignoreEmpty) {
-		return split(str, separator, true, ignoreEmpty);
+	public static List<String> split(final CharSequence str, final CharSequence separator,
+									 final boolean isTrim, final boolean ignoreEmpty) {
+		return split(str, separator, UNLIMITED, isTrim, ignoreEmpty, false);
 	}
 
 	/**
@@ -254,51 +109,9 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
+	public static List<String> split(final CharSequence str, final CharSequence separator,
+									 final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
-	}
-
-	/**
-	 * 切分字符串，去除每个元素两边空格，不忽略大小写
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符串
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitTrim(final CharSequence str, final String separator, final int limit, final boolean ignoreEmpty) {
-		return split(str, separator, limit, true, ignoreEmpty);
-	}
-
-	/**
-	 * 切分字符串，忽略大小写
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符串
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitIgnoreCase(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return split(str, separator, limit, isTrim, ignoreEmpty, true);
-	}
-
-	/**
-	 * 切分字符串，去除每个元素两边空格，忽略大小写
-	 *
-	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符串
-	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param ignoreEmpty 是否忽略空串
-	 * @return 切分后的集合
-	 * @since 3.2.1
-	 */
-	public static List<String> splitTrimIgnoreCase(final CharSequence str, final String separator, final int limit, final boolean ignoreEmpty) {
-		return split(str, separator, limit, true, ignoreEmpty, true);
 	}
 
 	/**
@@ -306,57 +119,117 @@ public class SplitUtil {
 	 * 如果提供的字符串为{@code null}，则返回一个空的{@link ArrayList}<br>
 	 * 如果提供的字符串为""，则当ignoreEmpty时返回空的{@link ArrayList}，否则返回只有一个""元素的{@link ArrayList}
 	 *
-	 * @param text        被切分的字符串
+	 * @param str         被切分的字符串
 	 * @param separator   分隔符字符串
 	 * @param limit       限制分片数，小于等于0表示无限制
 	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
 	 * @param ignoreCase  是否忽略大小写
 	 * @return 切分后的集合
-	 * @since 3.2.1
 	 */
-	public static List<String> split(final CharSequence text, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
-		if(null == text){
-			return new ArrayList<>(0);
-		} else if (0 == text.length()) {
-			return ignoreEmpty ? new ArrayList<>(0) : ListUtil.of(StrUtil.EMPTY);
-		}
-		final SplitIter splitIter = new SplitIter(text, StrFinder.of(separator, ignoreCase), limit, ignoreEmpty);
-		return splitIter.toList(isTrim);
+	public static List<String> split(final CharSequence str, final CharSequence separator,
+									 final int limit, final boolean isTrim, final boolean ignoreEmpty, final boolean ignoreCase) {
+		return split(str, separator, limit, ignoreEmpty, ignoreCase, trimFunc(isTrim));
 	}
 
 	/**
-	 * 切分字符串为字符串数组
+	 * 切分字符串<br>
+	 * 如果提供的字符串为{@code null}，则返回一个空的{@link ArrayList}<br>
+	 * 如果提供的字符串为""，则当ignoreEmpty时返回空的{@link ArrayList}，否则返回只有一个""元素的{@link ArrayList}
 	 *
+	 * @param <R>         元素类型
 	 * @param str         被切分的字符串
-	 * @param separator   分隔符字符
+	 * @param separator   分隔符字符串
 	 * @param limit       限制分片数，小于等于0表示无限制
-	 * @param isTrim      是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
+	 * @param ignoreCase  是否忽略大小写
+	 * @param mapping     切分后字段映射函数
+	 * @return 切分后的集合
+	 */
+	public static <R> List<R> split(final CharSequence str, final CharSequence separator,
+									final int limit, final boolean ignoreEmpty, final boolean ignoreCase,
+									final Function<String, R> mapping) {
+		if (null == str) {
+			return ListUtil.zero();
+		} else if (0 == str.length() && ignoreEmpty) {
+			return ListUtil.zero();
+		}
+		Assert.notEmpty(separator, "Separator must be not empty!");
+
+		// 查找分隔符的方式
+		final TextFinder finder = separator.length() == 1 ?
+				new CharFinder(separator.charAt(0), ignoreCase) :
+				StrFinder.of(separator, ignoreCase);
+
+		final SplitIter splitIter = new SplitIter(str, finder, limit, ignoreEmpty);
+		return splitIter.toList(mapping);
+	}
+	// endregion
+
+	// region ----- Split by XXX
+
+	/**
+	 * 切分路径字符串<br>
+	 * 如果为空字符串或者null 则返回空集合<br><br>
+	 * 空路径会被忽略
+	 *
+	 * @param str 被切分的字符串
+	 * @return 切分后的集合
+	 */
+	public static List<String> splitPath(final CharSequence str) {
+		return splitPath(str, UNLIMITED);
+	}
+
+	/**
+	 * 切分路径字符串<br>
+	 * 如果为空字符串或者null 则返回空集合<br>
+	 * 空路径会被忽略
+	 *
+	 * @param str   被切分的字符串
+	 * @param limit 限制分片数，小于等于0表示无限制
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(final CharSequence str, final String separator, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
-	}
+	public static List<String> splitPath(final CharSequence str, final int limit) {
+		if (StrUtil.isBlank(str)) {
+			return ListUtil.zero();
+		}
 
-	//---------------------------------------------------------------------------------------------- Split by Whitespace
+		final SplitIter splitIter = new SplitIter(str,
+				new CharMatcherFinder(
+						(c) -> c == CharUtil.SLASH || c == CharUtil.BACKSLASH),
+				// 路径中允许空格
+				limit, true);
+		return splitIter.toList(false);
+	}
 
 	/**
 	 * 使用空白符切分字符串<br>
 	 * 切分后的字符串两边不包含空白符，空串或空白符串并不做为元素之一<br>
 	 * 如果为空字符串或者null 则返回空集合
 	 *
-	 * @param text  被切分的字符串
+	 * @param str 被切分的字符串
+	 * @return 切分后的集合
+	 */
+	public static List<String> splitByBlank(final CharSequence str) {
+		return splitByBlank(str, UNLIMITED);
+	}
+
+	/**
+	 * 使用空白符切分字符串<br>
+	 * 切分后的字符串两边不包含空白符，空串或空白符串并不做为元素之一<br>
+	 * 如果为空字符串或者null 则返回空集合
+	 *
+	 * @param str   被切分的字符串
 	 * @param limit 限制分片数，小于等于0表示无限制
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(final CharSequence text, final int limit) {
-		if (StrUtil.isBlank(text)) {
-			return new ArrayList<>(0);
+	public static List<String> splitByBlank(final CharSequence str, final int limit) {
+		if (StrUtil.isBlank(str)) {
+			return ListUtil.zero();
 		}
-		final SplitIter splitIter = new SplitIter(text, new CharMatcherFinder(CharUtil::isBlankChar), limit, true);
+		final SplitIter splitIter = new SplitIter(str, new CharMatcherFinder(CharUtil::isBlankChar), limit, true);
 		return splitIter.toList(false);
 	}
 
@@ -368,15 +241,14 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(final CharSequence str, final int limit) {
-		return toArray(split(str, limit));
+	public static String[] splitByBlankToArray(final CharSequence str, final int limit) {
+		return toArray(splitByBlank(str, limit));
 	}
-	//---------------------------------------------------------------------------------------------- Split by regex
 
 	/**
 	 * 通过正则切分字符串
 	 *
-	 * @param text           字符串
+	 * @param str            字符串
 	 * @param separatorRegex 分隔符正则
 	 * @param limit          限制分片数，小于等于0表示无限制
 	 * @param isTrim         是否去除切分字符串后每个元素两边的空格
@@ -384,16 +256,16 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> splitByRegex(final CharSequence text, final String separatorRegex, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
+	public static List<String> splitByRegex(final CharSequence str, final String separatorRegex, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		final Pattern pattern = PatternPool.get(separatorRegex);
-		return split(text, pattern, limit, isTrim, ignoreEmpty);
+		return splitByRegex(str, pattern, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
 	 * 通过正则切分字符串<br>
 	 * 如果为空字符串或者null 则返回空集合
 	 *
-	 * @param text             字符串
+	 * @param str              字符串
 	 * @param separatorPattern 分隔符正则{@link Pattern}
 	 * @param limit            限制分片数，小于等于0表示无限制
 	 * @param isTrim           是否去除切分字符串后每个元素两边的空格
@@ -401,11 +273,11 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static List<String> split(final CharSequence text, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		if (StrUtil.isEmpty(text)) {
-			return new ArrayList<>(0);
+	public static List<String> splitByRegex(final CharSequence str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
+		if (StrUtil.isEmpty(str)) {
+			return ListUtil.zero();
 		}
-		final SplitIter splitIter = new SplitIter(text, new PatternFinder(separatorPattern), limit, ignoreEmpty);
+		final SplitIter splitIter = new SplitIter(str, new PatternFinder(separatorPattern), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);
 	}
 
@@ -420,26 +292,25 @@ public class SplitUtil {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
-	public static String[] splitToArray(final CharSequence str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		return toArray(split(str, separatorPattern, limit, isTrim, ignoreEmpty));
+	public static String[] splitByRegexToArray(final CharSequence str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
+		return toArray(splitByRegex(str, separatorPattern, limit, isTrim, ignoreEmpty));
 	}
-	//---------------------------------------------------------------------------------------------- Split by length
 
 	/**
 	 * 根据给定长度，将给定字符串截取为多个部分
 	 *
-	 * @param text 字符串
-	 * @param len  每一个小节的长度，必须大于0
+	 * @param str 字符串
+	 * @param len 每一个小节的长度，必须大于0
 	 * @return 截取后的字符串数组
 	 */
-	public static String[] splitByLength(final CharSequence text, final int len) {
-		if (StrUtil.isEmpty(text)) {
+	public static String[] splitByLength(final CharSequence str, final int len) {
+		if (StrUtil.isEmpty(str)) {
 			return new String[0];
 		}
-		final SplitIter splitIter = new SplitIter(text, new LengthFinder(len), -1, false);
+		final SplitIter splitIter = new SplitIter(str, new LengthFinder(len), -1, false);
 		return splitIter.toArray(false);
 	}
-	//---------------------------------------------------------------------------------------------------------- Private method start
+	// endregion
 
 	/**
 	 * List转Array

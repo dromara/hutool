@@ -1,8 +1,8 @@
 package cn.hutool.core.comparator;
 
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
+import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -61,8 +61,8 @@ public class VersionComparator implements Comparator<String>, Serializable {
 			return 1;
 		}
 
-		final List<String> v1s = StrUtil.split(version1, CharUtil.DOT);
-		final List<String> v2s = StrUtil.split(version2, CharUtil.DOT);
+		final List<String> v1s = SplitUtil.splitTrim(version1, StrUtil.DOT);
+		final List<String> v2s = SplitUtil.splitTrim(version2, StrUtil.DOT);
 
 		int diff = 0;
 		final int minLength = Math.min(v1s.size(), v2s.size());// 取最小长度值

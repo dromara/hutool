@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.SystemUtil;
 
@@ -387,7 +388,7 @@ public class FileNameUtil {
 			pathToUse = pathToUse.substring(1);
 		}
 
-		final List<String> pathList = StrUtil.split(pathToUse, CharUtil.SLASH);
+		final List<String> pathList = SplitUtil.split(pathToUse, StrUtil.SLASH);
 
 		final List<String> pathElements = new LinkedList<>();
 		int tops = 0;

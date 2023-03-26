@@ -2,6 +2,7 @@ package cn.hutool.db.meta;
 
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.db.ds.DSFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class MetaUtilTest {
 	@Test
 	public void getColumnNamesTest() {
 		final String[] names = MetaUtil.getColumnNames(ds, "user");
-		Assert.assertArrayEquals(StrUtil.splitToArray("id,name,age,birthday,gender", ','), names);
+		Assert.assertArrayEquals(SplitUtil.splitToArray("id,name,age,birthday,gender", StrUtil.COMMA), names);
 	}
 
 	@Test

@@ -3,6 +3,7 @@ package cn.hutool.core.net.url;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -114,7 +115,7 @@ public class UrlPath {
 
 			path = fixPath(path);
 			if (StrUtil.isNotEmpty(path)) {
-				final List<String> split = StrUtil.split(path, '/');
+				final List<String> split = SplitUtil.split(path, StrUtil.SLASH);
 				for (final String seg : split) {
 					addInternal(URLDecoder.decodeForPath(seg, charset), false);
 				}

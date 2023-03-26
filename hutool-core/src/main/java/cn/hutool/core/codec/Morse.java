@@ -2,6 +2,7 @@ package cn.hutool.core.codec;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.HashMap;
@@ -153,7 +154,7 @@ public class Morse {
 		if (false == StrUtil.containsOnly(morse, dit, dah, split)) {
 			throw new IllegalArgumentException("Incorrect morse.");
 		}
-		final List<String> words = StrUtil.split(morse, split);
+		final List<String> words = SplitUtil.split(morse, String.valueOf(split));
 		final StringBuilder textBuilder = new StringBuilder();
 		Integer codePoint;
 		for (String word : words) {

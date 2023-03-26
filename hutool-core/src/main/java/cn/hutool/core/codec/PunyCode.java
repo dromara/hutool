@@ -3,6 +3,7 @@ package cn.hutool.core.codec;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.List;
@@ -24,8 +25,7 @@ public class PunyCode {
 	private static final int DAMP = 700;
 	private static final int SKEW = 38;
 	private static final char DELIMITER = '-';
-
-	public static final String PUNY_CODE_PREFIX = "xn--";
+	private static final String PUNY_CODE_PREFIX = "xn--";
 
 	/**
 	 * 将域名编码为PunyCode，会忽略"."的编码
@@ -36,7 +36,7 @@ public class PunyCode {
 	 */
 	public static String encodeDomain(final String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final List<String> split = SplitUtil.split(domain, StrUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() * 4);
 		for (final String str : split) {
 			if (result.length() != 0) {
@@ -156,7 +156,7 @@ public class PunyCode {
 	 */
 	public static String decodeDomain(final String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
+		final List<String> split = SplitUtil.split(domain, StrUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
 		for (final String str : split) {
 			if (result.length() != 0) {

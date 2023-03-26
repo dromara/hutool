@@ -6,7 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.jwt.signers.AlgorithmUtil;
@@ -423,7 +423,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @return 三部分内容
 	 */
 	private static List<String> splitToken(final String token) {
-		final List<String> tokens = StrUtil.split(token, CharUtil.DOT);
+		final List<String> tokens = SplitUtil.split(token, StrUtil.DOT);
 		if (3 != tokens.size()) {
 			throw new JWTException("The token was expected 3 parts, but got {}.", tokens.size());
 		}

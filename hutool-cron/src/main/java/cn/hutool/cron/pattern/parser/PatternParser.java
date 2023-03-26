@@ -1,7 +1,7 @@
 package cn.hutool.cron.pattern.parser;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;
@@ -47,7 +47,7 @@ public class PatternParser {
 	 * @return {@link List}
 	 */
 	private static List<PatternMatcher> parseGroupPattern(final String groupPattern) {
-		final List<String> patternList = StrUtil.splitTrim(groupPattern, '|');
+		final List<String> patternList = SplitUtil.splitTrim(groupPattern, "|");
 		final List<PatternMatcher> patternMatchers = new ArrayList<>(patternList.size());
 		for (final String pattern : patternList) {
 			patternMatchers.add(parseSingle(pattern));

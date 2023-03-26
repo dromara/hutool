@@ -1,6 +1,6 @@
 package cn.hutool.extra.management;
 
-import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.SystemUtil;
 
 import java.io.Serializable;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * 代表当前运行的JRE的信息。
  */
-public class JavaRuntimeInfo implements Serializable{
+public class JavaRuntimeInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String JAVA_RUNTIME_NAME = SystemUtil.get("java.runtime.name", false);
@@ -24,6 +24,11 @@ public class JavaRuntimeInfo implements Serializable{
 
 	private final String SUN_ARCH_DATA_MODEL = SystemUtil.get("sun.arch.data.model", false);
 
+	/**
+	 * 获取JRE的classpath
+	 *
+	 * @return JRE的classpath
+	 */
 	public final String getSunBoothClassPath() {
 		return SUN_BOOT_CLASS_PATH;
 	}
@@ -45,7 +50,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.3
 	 */
 	public final String getName() {
@@ -60,7 +64,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.3
 	 */
 	public final String getVersion() {
@@ -75,7 +78,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.1
 	 */
 	public final String getHomeDir() {
@@ -90,7 +92,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.3
 	 */
 	public final String getExtDirs() {
@@ -105,7 +106,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.4
 	 */
 	public final String getEndorsedDirs() {
@@ -120,7 +120,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.1
 	 */
 	public final String getClassPath() {
@@ -135,11 +134,10 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.1
 	 */
 	public final String[] getClassPathArray() {
-		return StrUtil.splitToArray(getClassPath(), SystemUtil.get("path.separator", false));
+		return SplitUtil.splitToArray(getClassPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
@@ -150,7 +148,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 * @since Java 1.1
 	 */
 	public final String getClassVersion() {
@@ -165,7 +162,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
 	 */
 	public final String getLibraryPath() {
 		return JAVA_LIBRARY_PATH;
@@ -179,11 +175,9 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
-	 *
 	 */
 	public final String[] getLibraryPathArray() {
-		return StrUtil.splitToArray(getLibraryPath(), SystemUtil.get("path.separator", false));
+		return SplitUtil.splitToArray(getLibraryPath(), SystemUtil.get("path.separator", false));
 	}
 
 	/**
@@ -194,8 +188,6 @@ public class JavaRuntimeInfo implements Serializable{
 	 * </p>
 	 *
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回{@code null}。
-	 *
-	 *
 	 */
 	public final String getProtocolPackages() {
 		return SystemUtil.get("java.protocol.handler.pkgs", true);

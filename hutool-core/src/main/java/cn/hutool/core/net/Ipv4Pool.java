@@ -1,5 +1,7 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.text.StrUtil;
+
 /**
  * Ip相关常量
  * <pre>
@@ -23,7 +25,7 @@ public interface Ipv4Pool {
     /**
      * IP与掩码的分割符
      */
-    String IP_MASK_SPLIT_MARK = "/";
+    String IP_MASK_SPLIT_MARK = StrUtil.SLASH;
 
     /**
      * localhost默认解析的ip地址

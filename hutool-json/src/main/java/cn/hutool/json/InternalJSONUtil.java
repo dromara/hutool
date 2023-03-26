@@ -12,6 +12,7 @@ import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -210,7 +211,7 @@ public final class InternalJSONUtil {
 	 * @param predicate  属性过滤器，{@link Predicate#test(Object)}为{@code true}保留
 	 */
 	public static void propertyPut(final JSONObject jsonObject, final Object key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) {
-		final String[] path = StrUtil.splitToArray(Convert.toStr(key), CharUtil.DOT);
+		final String[] path = SplitUtil.splitToArray(Convert.toStr(key), StrUtil.DOT);
 		final int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {

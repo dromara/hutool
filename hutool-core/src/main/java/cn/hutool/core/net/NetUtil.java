@@ -6,6 +6,8 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.JNDIUtil;
 import cn.hutool.core.util.RandomUtil;
 
@@ -744,8 +746,8 @@ public class NetUtil {
 	 */
 	public static String getMultistageReverseProxyIp(String ip) {
 		// 多级反向代理检测
-		if (ip != null && StrUtil.indexOf(ip, ',') > 0) {
-			final List<String> ips = StrUtil.splitTrim(ip, ',');
+		if (ip != null && StrUtil.indexOf(ip, CharUtil.COMMA) > 0) {
+			final List<String> ips = SplitUtil.splitTrim(ip, StrUtil.COMMA);
 			for (final String subIp : ips) {
 				if (false == isUnknown(subIp)) {
 					ip = subIp;

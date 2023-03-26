@@ -2,8 +2,8 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.db.Entity;
 
 import java.io.Serializable;
@@ -115,7 +115,11 @@ public class QuoteWrapper implements Serializable {
 
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
 		if (field.contains(StrUtil.DOT)) {
-			final Collection<String> target = CollUtil.edit(StrUtil.split(field, CharUtil.DOT, 2), t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
+			final Collection<String> target = CollUtil.edit(
+					// 用户名和表名不能包含空格
+					SplitUtil.split(field, StrUtil.DOT, 2, true, false),
+					// 用户名和表名都加引号
+					t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
 			return CollUtil.join(target, StrUtil.DOT);
 		}
 

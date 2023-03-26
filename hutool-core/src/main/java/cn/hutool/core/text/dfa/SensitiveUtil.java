@@ -1,9 +1,9 @@
 package cn.hutool.core.text.dfa;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.text.split.SplitUtil;
+import cn.hutool.core.thread.ThreadUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +18,10 @@ import java.util.function.Predicate;
  */
 public final class SensitiveUtil {
 
-	public static final char DEFAULT_SEPARATOR = CharUtil.COMMA;
+	/**
+	 * 默认关键词分隔符
+	 */
+	public static final String DEFAULT_SEPARATOR = StrUtil.COMMA;
 	private static final WordTree sensitiveTree = new WordTree();
 
 	/**
@@ -63,9 +66,9 @@ public final class SensitiveUtil {
 	 * @param isAsync        是否异步初始化
 	 * @param separator      分隔符
 	 */
-	public static void init(final String sensitiveWords, final char separator, final boolean isAsync) {
+	public static void init(final String sensitiveWords, final String separator, final boolean isAsync) {
 		if (StrUtil.isNotBlank(sensitiveWords)) {
-			init(StrUtil.split(sensitiveWords, separator), isAsync);
+			init(SplitUtil.split(sensitiveWords, separator), isAsync);
 		}
 	}
 

@@ -14,6 +14,7 @@ import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 
@@ -2973,13 +2974,13 @@ public class FileUtil extends PathUtil {
 	 */
 	private static File buildFile(File outFile, String fileName) {
 		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
-		fileName = fileName.replace('\\', '/');
+		fileName = fileName.replace(CharUtil.BACKSLASH, CharUtil.SLASH);
 		if (false == isWindows()
 				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
 				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
 			// 使用/拆分路径（zip中无\），级联创建父目录
-			final List<String> pathParts = StrUtil.split(fileName, '/', false, true);
+			final List<String> pathParts = SplitUtil.split(fileName, StrUtil.SLASH, false, true);
 			final int lastPartIndex = pathParts.size() - 1;//目录个数
 			for (int i = 0; i < lastPartIndex; i++) {
 				//由于路径拆分，slip不检查，在最后一步检查

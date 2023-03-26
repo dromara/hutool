@@ -11,7 +11,7 @@ import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.text.split.SplitUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
@@ -502,6 +502,7 @@ public class DateUtil extends CalendarUtil {
 	}
 
 	// region ----- format
+
 	/**
 	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
@@ -673,6 +674,7 @@ public class DateUtil extends CalendarUtil {
 	// endregion
 
 	// region ----- parse
+
 	/**
 	 * 构建DateTime对象
 	 *
@@ -829,6 +831,7 @@ public class DateUtil extends CalendarUtil {
 	// endregion
 
 	// region ----- offset
+
 	/**
 	 * 修改日期为某个时间字段起始时间
 	 *
@@ -1217,6 +1220,7 @@ public class DateUtil extends CalendarUtil {
 	// endregion
 
 	// region ----- between
+
 	/**
 	 * 判断两个日期相差的时长，只保留绝对值
 	 *
@@ -1325,6 +1329,7 @@ public class DateUtil extends CalendarUtil {
 	// endregion
 
 	// region ----- formatBetween
+
 	/**
 	 * 格式化日期间隔输出
 	 *
@@ -1626,7 +1631,7 @@ public class DateUtil extends CalendarUtil {
 			return 0;
 		}
 
-		final List<String> hms = StrUtil.splitTrim(timeStr, CharUtil.COLON, 3);
+		final List<String> hms = SplitUtil.split(timeStr, StrUtil.COLON, 3, true, true);
 		final int lastIndex = hms.size() - 1;
 
 		int result = 0;
@@ -2071,7 +2076,7 @@ public class DateUtil extends CalendarUtil {
 		}
 
 		// 日期时间分开处理
-		final List<String> dateAndTime = StrUtil.splitTrim(dateStr, ' ');
+		final List<String> dateAndTime = SplitUtil.splitTrim(dateStr, StrUtil.SPACE);
 		final int size = dateAndTime.size();
 		if (size < 1 || size > 2) {
 			// 非可被标准处理的格式

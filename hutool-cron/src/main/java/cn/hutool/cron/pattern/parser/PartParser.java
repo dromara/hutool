@@ -5,14 +5,10 @@ import cn.hutool.core.date.Month;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.Part;
-import cn.hutool.cron.pattern.matcher.AlwaysTrueMatcher;
-import cn.hutool.cron.pattern.matcher.BoolArrayMatcher;
-import cn.hutool.cron.pattern.matcher.DayOfMonthMatcher;
-import cn.hutool.cron.pattern.matcher.PartMatcher;
-import cn.hutool.cron.pattern.matcher.YearValueMatcher;
+import cn.hutool.cron.pattern.matcher.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +99,7 @@ public class PartParser {
 	private List<Integer> parseArray(final String value) {
 		final List<Integer> values = new ArrayList<>();
 
-		final List<String> parts = StrUtil.split(value, CharUtil.COMMA);
+		final List<String> parts = SplitUtil.split(value, StrUtil.COMMA);
 		for (final String part : parts) {
 			ListUtil.addAllIfNotContains(values, parseStep(part));
 		}
@@ -123,7 +119,7 @@ public class PartParser {
 	 * @return List
 	 */
 	private List<Integer> parseStep(final String value) {
-		final List<String> parts = StrUtil.split(value, CharUtil.SLASH);
+		final List<String> parts = SplitUtil.split(value, StrUtil.SLASH);
 		final int size = parts.size();
 
 		final List<Integer> results;
@@ -187,7 +183,7 @@ public class PartParser {
 		}
 
 		//Range模式
-		final List<String> parts = StrUtil.split(value, '-');
+		final List<String> parts = SplitUtil.split(value, StrUtil.DASHED);
 		final int size = parts.size();
 		if (size == 1) {// 普通值
 			final int v1 = parseNumber(value);

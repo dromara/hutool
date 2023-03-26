@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
 
@@ -430,9 +431,9 @@ public class MailUtil {
 
 		final List<String> result;
 		if (StrUtil.contains(addresses, CharUtil.COMMA)) {
-			result = StrUtil.splitTrim(addresses, CharUtil.COMMA);
+			result = SplitUtil.splitTrim(addresses, StrUtil.COMMA);
 		} else if (StrUtil.contains(addresses, ';')) {
-			result = StrUtil.splitTrim(addresses, ';');
+			result = SplitUtil.splitTrim(addresses, ";");
 		} else {
 			result = ListUtil.of(addresses);
 		}

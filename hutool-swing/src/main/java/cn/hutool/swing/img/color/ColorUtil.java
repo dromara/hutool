@@ -6,6 +6,8 @@ import cn.hutool.core.lang.ansi.Ansi8BitColor;
 import cn.hutool.core.lang.ansi.AnsiElement;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.Color;
@@ -23,6 +25,7 @@ import java.util.Random;
 public class ColorUtil {
 
 	private static final Map<String, Color> COLOR_MAPPING;
+
 	static {
 		final Map<String, Color> colorMap = MapUtil
 				.builder("BLACK", Color.BLACK)
@@ -57,10 +60,11 @@ public class ColorUtil {
 
 	/**
 	 * 将颜色转换为CSS的rgba表示形式，输出结果格式为：rgba(red, green, blue)
+	 *
 	 * @param color AWT颜色
 	 * @return rgb(red, green, blue)
 	 */
-	public static String toCssRgb(final Color color){
+	public static String toCssRgb(final Color color) {
 		return StrUtil.builder()
 				.append("rgb(")
 				.append(color.getRed()).append(",")
@@ -71,10 +75,11 @@ public class ColorUtil {
 
 	/**
 	 * 将颜色转换为CSS的rgba表示形式，输出结果格式为：rgba(red, green, blue, alpha)
+	 *
 	 * @param color AWT颜色
 	 * @return rgba(red, green, blue, alpha)
 	 */
-	public static String toCssRgba(final Color color){
+	public static String toCssRgba(final Color color) {
 		return StrUtil.builder()
 				.append("rgba(")
 				.append(color.getRed()).append(",")
@@ -135,7 +140,7 @@ public class ColorUtil {
 
 		// 预定义颜色别名
 		final Color color = COLOR_MAPPING.get(colorName);
-		if(null != color){
+		if (null != color) {
 			return color;
 		}
 
@@ -148,19 +153,19 @@ public class ColorUtil {
 		}
 
 		// RGB值和RGBA
-		final List<String> rgb = StrUtil.split(colorName, ',');
+		final List<String> rgb = SplitUtil.split(colorName, StrUtil.COMMA);
 		final int size = rgb.size();
 
-		if(3 == size){
+		if (3 == size) {
 			// RGB
 			final Integer[] rgbIntegers = Convert.toIntArray(rgb);
 			return new Color(rgbIntegers[0], rgbIntegers[1], rgbIntegers[2]);
 		}
-		if(4 == size){
+		if (4 == size) {
 			// RGBA
 			final Float[] rgbFloats = Convert.toFloatArray(rgb);
 			Float a = rgbFloats[3];
-			if(a < 1){
+			if (a < 1) {
 				// 识别CSS形式
 				a *= 255;
 			}
@@ -243,7 +248,7 @@ public class ColorUtil {
 	/**
 	 * AWT的{@link Color}颜色转换为ANSI颜色，由于取最接近颜色，故可能有色差
 	 *
-	 * @param rgb        RGB颜色
+	 * @param rgb          RGB颜色
 	 * @param is8Bit       是否8bit的ANSI颜色
 	 * @param isBackground 是否背景色
 	 * @return ANSI颜色
@@ -313,7 +318,7 @@ public class ColorUtil {
 				maxCount = count;
 			}
 		}
-		final String[] splitRgbStr = StrUtil.splitToArray(maxColor, '-');
+		final String[] splitRgbStr = SplitUtil.splitToArray(maxColor, StrUtil.DASHED);
 		String rHex = Integer.toHexString(Integer.parseInt(splitRgbStr[0]));
 		String gHex = Integer.toHexString(Integer.parseInt(splitRgbStr[1]));
 		String bHex = Integer.toHexString(Integer.parseInt(splitRgbStr[2]));
@@ -333,7 +338,7 @@ public class ColorUtil {
 	 * @return 是否匹配
 	 */
 	private static boolean matchFilters(final int r, final int g, final int b, final int[]... rgbFilters) {
-		if (rgbFilters != null && rgbFilters.length > 0) {
+		if (ArrayUtil.isNotEmpty(rgbFilters)) {
 			for (final int[] rgbFilter : rgbFilters) {
 				if (r == rgbFilter[0] && g == rgbFilter[1] && b == rgbFilter[2]) {
 					return true;

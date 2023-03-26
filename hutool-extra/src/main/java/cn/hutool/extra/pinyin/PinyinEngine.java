@@ -2,6 +2,7 @@ package cn.hutool.extra.pinyin;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public interface PinyinEngine {
 	 */
 	default String getFirstLetter(final String str, final String separator) {
 		final String splitSeparator = StrUtil.isEmpty(separator) ? "#" : separator;
-		final List<String> split = StrUtil.split(getPinyin(str, splitSeparator), splitSeparator);
+		final List<String> split = SplitUtil.split(getPinyin(str, splitSeparator), splitSeparator);
 		return CollUtil.join(split, separator, (s)->String.valueOf(s.length() > 0 ? s.charAt(0) : StrUtil.EMPTY));
 	}
 }

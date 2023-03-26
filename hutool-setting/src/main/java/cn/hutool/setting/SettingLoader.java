@@ -7,6 +7,7 @@ import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.ReUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.SystemUtil;
@@ -124,13 +125,14 @@ public class SettingLoader {
 					continue;
 				}
 
-				final String[] keyValue = StrUtil.splitToArray(line, this.assignFlag, 2);
+				final String[] keyValue = SplitUtil.split(line, String.valueOf(this.assignFlag), 2, true, false)
+						.toArray(new String[0]);
 				// 跳过不符合键值规范的行
 				if (keyValue.length < 2) {
 					continue;
 				}
 
-				String value = keyValue[1].trim();
+				String value = keyValue[1];
 				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
 				if (this.isUseVariable) {
 					value = replaceVar(group, value);
@@ -224,7 +226,7 @@ public class SettingLoader {
 				String varValue = this.groupedMap.get(group, key);
 				// 跨分组查找
 				if (null == varValue) {
-					final List<String> groupAndKey = StrUtil.split(key, CharUtil.DOT, 2);
+					final List<String> groupAndKey = SplitUtil.split(key, StrUtil.DOT, 2, true, false);
 					if (groupAndKey.size() > 1) {
 						varValue = this.groupedMap.get(groupAndKey.get(0), groupAndKey.get(1));
 					}

@@ -426,11 +426,11 @@ public class Condition implements Cloneable, Serializable {
 				// pr#2046@Github
 				valuesForIn = (Collection<?>) value;
 			} else if (value instanceof CharSequence) {
-				valuesForIn = StrUtil.split((CharSequence) value, ',');
+				valuesForIn = SplitUtil.split((CharSequence) value, StrUtil.COMMA);
 			} else {
 				valuesForIn = Arrays.asList(Convert.convert(Object[].class, value));
 			}
-			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), ","));
+			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), StrUtil.COMMA));
 			if (null != paramValues) {
 				paramValues.addAll(valuesForIn);
 			}
@@ -490,13 +490,13 @@ public class Condition implements Cloneable, Serializable {
 			}
 		}
 
-		final List<String> strs = StrUtil.split(valueStr, CharUtil.SPACE, 2);
+		final List<String> strs = SplitUtil.split(valueStr, StrUtil.SPACE, 2, true, false);
 		if (strs.size() < 2) {
 			return;
 		}
 
 		// 处理常用符号和IN
-		final String firstPart = strs.get(0).trim().toUpperCase();
+		final String firstPart = strs.get(0).toUpperCase();
 		if (OPERATORS.contains(firstPart)) {
 			this.operator = firstPart;
 			// 比较符号后跟大部分为数字，此处做转换（IN不做转换）
@@ -514,7 +514,8 @@ public class Condition implements Cloneable, Serializable {
 
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
-			final List<String> betweenValueStrs = SplitUtil.splitTrimIgnoreCase(strs.get(1), LogicalOperator.AND.toString(), 2, true);
+			final List<String> betweenValueStrs = SplitUtil.split(strs.get(1), LogicalOperator.AND.toString(),
+					2, true, true, true);
 			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;
@@ -532,11 +533,10 @@ public class Condition implements Cloneable, Serializable {
 	 * @param value 值
 	 * @return 去掉引号后的值
 	 */
-	private static String unwrapQuote(String value) {
+	private static String unwrapQuote(final String value) {
 		if (null == value) {
 			return null;
 		}
-		value = value.trim();
 
 		int from = 0;
 		int to = value.length();
@@ -562,8 +562,7 @@ public class Condition implements Cloneable, Serializable {
 	 * @param value 被转换的字符串值
 	 * @return 转换后的值
 	 */
-	private static Object tryToNumber(String value) {
-		value = StrUtil.trim(value);
+	private static Object tryToNumber(final String value) {
 		if (false == NumberUtil.isNumber(value)) {
 			return value;
 		}

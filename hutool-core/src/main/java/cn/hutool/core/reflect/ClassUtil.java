@@ -9,6 +9,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.net.url.URLDecoder;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -121,7 +122,7 @@ public class ClassUtil {
 	 * @since 4.1.9
 	 */
 	public static String getShortClassName(final String className) {
-		final List<String> packages = StrUtil.split(className, CharUtil.DOT);
+		final List<String> packages = SplitUtil.split(className, StrUtil.DOT);
 		if (null == packages || packages.size() < 2) {
 			return className;
 		}

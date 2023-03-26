@@ -1,6 +1,7 @@
 package cn.hutool.core.text;
 
 import cn.hutool.core.map.Dict;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
@@ -62,30 +63,9 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void splitTest() {
-		final String str = "a,b ,c,d,,e";
-		final List<String> split = StrUtil.split(str, ',', -1, true, true);
-		// 测试空是否被去掉
-		Assert.assertEquals(5, split.size());
-		// 测试去掉两边空白符是否生效
-		Assert.assertEquals("b", split.get(1));
-
-		final String[] strings = StrUtil.splitToArray("abc/", '/');
-		Assert.assertEquals(2, strings.length);
-	}
-
-	@Test
-	public void splitEmptyTest() {
-		final String str = "";
-		final List<String> split = StrUtil.split(str, ',', -1, true, true);
-		// 测试空是否被去掉
-		Assert.assertEquals(0, split.size());
-	}
-
-	@Test
 	public void splitTest2() {
 		final String str = "a.b.";
-		final List<String> split = StrUtil.split(str, '.');
+		final List<String> split = SplitUtil.split(str, ".");
 		Assert.assertEquals(3, split.size());
 		Assert.assertEquals("b", split.get(1));
 		Assert.assertEquals("", split.get(2));
@@ -93,32 +73,7 @@ public class StrUtilTest {
 
 	@Test
 	public void splitNullTest() {
-		Assert.assertEquals(0, StrUtil.split(null, '.').size());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void splitToArrayNullTest() {
-		StrUtil.splitToArray(null, '.');
-	}
-
-	@Test
-	public void splitToLongTest() {
-		final String str = "1,2,3,4, 5";
-		long[] longArray = StrUtil.splitToLong(str, ',');
-		Assert.assertArrayEquals(new long[]{1, 2, 3, 4, 5}, longArray);
-
-		longArray = StrUtil.splitToLong(str, ",");
-		Assert.assertArrayEquals(new long[]{1, 2, 3, 4, 5}, longArray);
-	}
-
-	@Test
-	public void splitToIntTest() {
-		final String str = "1,2,3,4, 5";
-		int[] intArray = StrUtil.splitToInt(str, ',');
-		Assert.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, intArray);
-
-		intArray = StrUtil.splitToInt(str, ",");
-		Assert.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, intArray);
+		Assert.assertEquals(0, SplitUtil.split(null, ".").size());
 	}
 
 	@Test
@@ -576,10 +531,10 @@ public class StrUtilTest {
 
 	@Test
 	public void wrapAllTest() {
-		String[] strings = StrUtil.wrapAll("`", "`", StrUtil.splitToArray("1,2,3,4", ','));
+		String[] strings = StrUtil.wrapAll("`", "`", SplitUtil.splitToArray("1,2,3,4", ","));
 		Assert.assertEquals("[`1`, `2`, `3`, `4`]", StrUtil.utf8Str(strings));
 
-		strings = StrUtil.wrapAllWithPair("`", StrUtil.splitToArray("1,2,3,4", ','));
+		strings = StrUtil.wrapAllWithPair("`", SplitUtil.splitToArray("1,2,3,4", ","));
 		Assert.assertEquals("[`1`, `2`, `3`, `4`]", StrUtil.utf8Str(strings));
 	}
 

@@ -1,6 +1,5 @@
 package cn.hutool.core.text.split;
 
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ public class StrSplitterTest {
 	@Test
 	public void splitByCharTest(){
 		final String str1 = "a, ,efedsfs,   ddf";
-		final List<String> split = SplitUtil.split(str1, ',', 0, true, true);
+		final List<String> split = SplitUtil.split(str1, ",", 0, true, true);
 
 		Assert.assertEquals("ddf", split.get(2));
 		Assert.assertEquals(3, split.size());
@@ -33,15 +32,15 @@ public class StrSplitterTest {
 	@Test
 	public void splitByBlankTest(){
 		final String str1 = "aa bbccaa     ddaaee";
-		final List<String> split = SplitUtil.split(str1, 0);
+		final List<String> split = SplitUtil.splitByBlank(str1);
 		Assert.assertEquals("ddaaee", split.get(2));
 		Assert.assertEquals(3, split.size());
 	}
 
 	@Test
 	public void splitPathTest(){
-		final String str1 = "/use/local/bin";
-		final List<String> split = SplitUtil.splitPath(str1, 0);
+		final String str1 = "/use/local\\bin";
+		final List<String> split = SplitUtil.splitPath(str1);
 		Assert.assertEquals("bin", split.get(2));
 		Assert.assertEquals(3, split.size());
 	}
@@ -49,22 +48,25 @@ public class StrSplitterTest {
 	@Test
 	public void splitMappingTest() {
 		final String str = "1.2.";
-		final List<Long> split = SplitUtil.split(str, '.', 0, true, true, Long::parseLong);
+		final List<Long> split = SplitUtil.split(str, ".", 0, true, true, Long::parseLong);
 		Assert.assertEquals(2, split.size());
 		Assert.assertEquals(Long.valueOf(1L), split.get(0));
 		Assert.assertEquals(Long.valueOf(2L), split.get(1));
 	}
 
+	@SuppressWarnings("MismatchedReadAndWriteOfArray")
 	@Test
 	public void splitEmptyTest(){
 		final String str = "";
 		final String[] split = str.split(",");
-		final String[] strings = SplitUtil.splitToArray(str, ",", -1, false, false);
+		final String[] strings = SplitUtil.split(str, ",", -1, false, false)
+				.toArray(new String[0]);
 
 		Assert.assertNotNull(strings);
 		Assert.assertArrayEquals(split, strings);
 
-		final String[] strings2 = SplitUtil.splitToArray(str, ",", -1, false, true);
+		final String[] strings2 = SplitUtil.split(str, ",", -1, false, true)
+				.toArray(new String[0]);
 		Assert.assertEquals(0, strings2.length);
 	}
 
@@ -72,11 +74,13 @@ public class StrSplitterTest {
 	@Test
 	public void splitNullTest(){
 		final String str = null;
-		final String[] strings = SplitUtil.splitToArray(str, ",", -1, false, false);
+		final String[] strings = SplitUtil.split(str, ",", -1, false, false)
+				.toArray(new String[0]);
 		Assert.assertNotNull(strings);
 		Assert.assertEquals(0, strings.length);
 
-		final String[] strings2 = SplitUtil.splitToArray(str, ",", -1, false, true);
+		final String[] strings2 = SplitUtil.split(str, ",", -1, false, true)
+				.toArray(new String[0]);
 		Assert.assertNotNull(strings2);
 		Assert.assertEquals(0, strings2.length);
 	}

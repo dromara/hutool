@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
@@ -190,9 +191,9 @@ public class BeanPath implements Serializable {
 			return null;
 		}
 
-		if (StrUtil.contains(expression, ':')) {
+		if (StrUtil.contains(expression, CharUtil.COLON)) {
 			// [start:end:step] 模式
-			final List<String> parts = StrUtil.splitTrim(expression, ':');
+			final List<String> parts = SplitUtil.splitTrim(expression, StrUtil.COLON);
 			final int start = Integer.parseInt(parts.get(0));
 			final int end = Integer.parseInt(parts.get(1));
 			int step = 1;
@@ -206,7 +207,7 @@ public class BeanPath implements Serializable {
 			}
 		} else if (StrUtil.contains(expression, ',')) {
 			// [num0,num1,num2...]模式或者['key0','key1']模式
-			final List<String> keys = StrUtil.splitTrim(expression, ',');
+			final List<String> keys = SplitUtil.splitTrim(expression, StrUtil.COMMA);
 			if (bean instanceof Collection) {
 				return CollUtil.getAny((Collection<?>) bean, Convert.convert(int[].class, keys));
 			} else if (ArrayUtil.isArray(bean)) {
@@ -214,7 +215,7 @@ public class BeanPath implements Serializable {
 			} else {
 				final String[] unWrappedKeys = new String[keys.size()];
 				for (int i = 0; i < unWrappedKeys.length; i++) {
-					unWrappedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
+					unWrappedKeys[i] = StrUtil.unWrap(keys.get(i), CharUtil.SINGLE_QUOTE);
 				}
 				if (bean instanceof Map) {
 					// 只支持String为key的Map

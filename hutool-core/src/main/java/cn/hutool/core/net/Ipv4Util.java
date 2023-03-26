@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.regex.PatternPool;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.ArrayList;
@@ -54,11 +55,11 @@ public class Ipv4Util implements Ipv4Pool {
 	public static List<String> list(final String ipRange, final boolean isAll) {
 		if (ipRange.contains(IP_SPLIT_MARK)) {
 			// X.X.X.X-X.X.X.X
-			final String[] range = StrUtil.splitToArray(ipRange, IP_SPLIT_MARK);
+			final String[] range = SplitUtil.splitToArray(ipRange, IP_SPLIT_MARK);
 			return list(range[0], range[1]);
 		} else if (ipRange.contains(IP_MASK_SPLIT_MARK)) {
 			// X.X.X.X/X
-			final String[] param = StrUtil.splitToArray(ipRange, IP_MASK_SPLIT_MARK);
+			final String[] param = SplitUtil.splitToArray(ipRange, IP_MASK_SPLIT_MARK);
 			return list(param[0], Integer.parseInt(param[1]), isAll);
 		} else {
 			return ListUtil.of(ipRange);

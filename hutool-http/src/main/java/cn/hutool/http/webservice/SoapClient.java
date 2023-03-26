@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.XmlUtil;
@@ -398,7 +399,7 @@ public class SoapClient implements HeaderOperation<SoapClient> {
 	 * @return this
 	 */
 	public SoapClient setMethod(final String methodName, final String namespaceURI) {
-		final List<String> methodNameList = StrUtil.split(methodName, ':');
+		final List<String> methodNameList = SplitUtil.split(methodName, StrUtil.COLON);
 		final QName qName;
 		if (2 == methodNameList.size()) {
 			qName = new QName(namespaceURI, methodNameList.get(1), methodNameList.get(0));

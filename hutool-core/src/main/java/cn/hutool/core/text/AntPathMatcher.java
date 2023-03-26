@@ -424,7 +424,8 @@ public class AntPathMatcher {
 	 * @return the tokenized path parts
 	 */
 	protected String[] tokenizePath(final String path) {
-		return SplitUtil.splitToArray(path, this.pathSeparator, 0, this.trimTokens, true);
+		return SplitUtil.split(path, this.pathSeparator, this.trimTokens, true)
+				.toArray(new String[0]);
 	}
 
 	/**

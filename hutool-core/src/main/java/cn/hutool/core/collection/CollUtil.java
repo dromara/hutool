@@ -19,43 +19,17 @@ import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.stream.StreamUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
@@ -1350,7 +1324,7 @@ public class CollUtil {
 	 * @since 3.0.4
 	 */
 	public static Map<String, String> zip(final String keys, final String values, final String delimiter, final boolean isOrder) {
-		return ArrayUtil.zip(StrUtil.splitToArray(keys, delimiter), StrUtil.splitToArray(values, delimiter), isOrder);
+		return ArrayUtil.zip(SplitUtil.splitToArray(keys, delimiter), SplitUtil.splitToArray(values, delimiter), isOrder);
 	}
 
 	/**
@@ -1550,7 +1524,7 @@ public class CollUtil {
 		if (value instanceof CharSequence) {
 			// String按照逗号分隔的列表对待
 			final String arrayStr = StrUtil.unWrap((CharSequence) value, '[', ']');
-			iter = StrUtil.splitTrim(arrayStr, CharUtil.COMMA).iterator();
+			iter = SplitUtil.splitTrim(arrayStr, StrUtil.COMMA).iterator();
 		} else {
 			iter = IterUtil.getIter(value);
 		}

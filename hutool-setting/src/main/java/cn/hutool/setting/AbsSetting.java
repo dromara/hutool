@@ -10,6 +10,7 @@ import cn.hutool.core.lang.getter.GroupedTypeGetter;
 import cn.hutool.core.lang.getter.TypeGetter;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.text.split.SplitUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
@@ -125,7 +126,7 @@ public abstract class AbsSetting implements TypeGetter<CharSequence>,
 		if (StrUtil.isBlank(value)) {
 			return null;
 		}
-		return StrUtil.splitToArray(value, delimiter);
+		return SplitUtil.splitToArray(value, delimiter);
 	}
 
 	/**
