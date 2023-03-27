@@ -43,10 +43,11 @@
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- YAML支持 -->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.32</version>
+			<version>2.0</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

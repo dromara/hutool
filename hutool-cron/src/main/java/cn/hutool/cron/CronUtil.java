@@ -18,7 +18,7 @@ import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.Task;
 import cn.hutool.setting.Setting;
-import cn.hutool.setting.SettingRuntimeException;
+import cn.hutool.setting.SettingException;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -58,7 +58,7 @@ public class CronUtil {
 	public static void setCronSetting(final String cronSettingPath) {
 		try {
 			crontabSetting = new Setting(cronSettingPath, Setting.DEFAULT_CHARSET, false);
-		} catch (final SettingRuntimeException | NoResourceException e) {
+		} catch (final SettingException | NoResourceException e) {
 			// ignore setting file parse error and no config error
 		}
 	}
