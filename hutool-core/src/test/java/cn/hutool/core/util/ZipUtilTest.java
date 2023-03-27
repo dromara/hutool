@@ -214,4 +214,11 @@ public class ZipUtilTest {
 		// long size = 636*1024L;
 		ZipUtil.unzip(zipFile, file, size);
 	}
+
+	@Test
+	@Ignore
+	public void unzipTest3() {
+		// https://github.com/dromara/hutool/issues/3018
+		ZipUtil.unzip("d:/test/default.zip", "d:/test/");
+	}
 }
