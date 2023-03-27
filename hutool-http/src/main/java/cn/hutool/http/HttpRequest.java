@@ -1147,6 +1147,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		StringBuilder sb = StrUtil.builder();
 		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
 		sb.append(super.toString());
+
+		Map<String, Object> form = this.form;
+		if (MapUtil.isNotEmpty(form)) {
+			sb.append("Request Form: ").append(StrUtil.CRLF);
+			for (Map.Entry<String, Object> entry : form.entrySet()) {
+				sb.append("    ")
+						.append(entry.getKey())
+						.append(": ")
+						.append(entry.getValue())
+						.append(StrUtil.CRLF);
+			}
+		}
+
 		return sb.toString();
 	}
 

@@ -5,7 +5,9 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.SSLProtocols;
 import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link HttpRequest}单元测试
@@ -56,6 +61,30 @@ public class HttpRequestTest {
 
 		final HttpRequest request = HttpRequest.get(url).body("a=乌海");
 		Console.log(request.toString());
+	}
+
+	@Test
+	public void toStringTest1() throws Exception {
+		HttpRequest request = HttpRequest.of("test");
+		request.form("key1", "value1");
+		request.form("key2", 22);
+		request.form("key3", new String[]{"aaa", "bbb", "ccc"});
+
+		String stringify = request.toString();
+
+		assertTrue(stringify.contains("key1"));
+		assertTrue(stringify.contains("value1"));
+
+		assertTrue(stringify.contains("key2"));
+		assertTrue(stringify.contains("22"));
+
+		assertTrue(stringify.contains("key3"));
+		assertTrue(stringify.contains(ArrayUtil.join(new String[]{"aaa", "bbb", "ccc"}, StrUtil.COMMA)));
+
+		assertFalse(stringify.contains("key4"));
+		assertFalse(stringify.contains("key5"));
+
+		Console.log(stringify);
 	}
 
 	@Test
