@@ -588,10 +588,11 @@ public class ObjectUtil {
 	 *
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
+	 * @param acceptClasses 白名单的类
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(byte[] bytes) {
-		return SerializeUtil.deserialize(bytes);
+	public static <T> T deserialize(byte[] bytes, Class<?>... acceptClasses) {
+		return SerializeUtil.deserialize(bytes, acceptClasses);
 	}
 
 	/**
