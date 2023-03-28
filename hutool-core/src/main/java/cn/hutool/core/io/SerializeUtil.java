@@ -68,11 +68,12 @@ public class SerializeUtil {
 	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
 	 * </p>
 	 *
-	 * @param <T>   对象类型
-	 * @param bytes 反序列化的字节码
+	 * @param <T>           对象类型
+	 * @param bytes         反序列化的字节码
+	 * @param acceptClasses 读取对象类型
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(final byte[] bytes) {
-		return IoUtil.readObj(new ByteArrayInputStream(bytes));
+	public static <T> T deserialize(final byte[] bytes, final Class<?>... acceptClasses) {
+		return IoUtil.readObj(new ByteArrayInputStream(bytes), acceptClasses);
 	}
 }
