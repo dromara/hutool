@@ -25,7 +25,7 @@ public final class FastStringWriter extends Writer {
 
 	private static final int DEFAULT_CAPACITY = 16;
 
-	private final StringBuilder builder;
+	private final StringBuilder stringBuilder;
 
 	/**
 	 * 构造
@@ -43,31 +43,51 @@ public final class FastStringWriter extends Writer {
 		if (initialSize < 0) {
 			initialSize = DEFAULT_CAPACITY;
 		}
-		this.builder = new StringBuilder(initialSize);
+		this.stringBuilder = new StringBuilder(initialSize);
 	}
 
+	// region ----- append
+	@Override
+	public FastStringWriter append(final char c) {
+		this.stringBuilder.append(c);
+		return this;
+	}
 
 	@Override
+	public FastStringWriter append(final CharSequence csq, final int start, final int end) {
+		this.stringBuilder.append(csq, start, end);
+		return this;
+	}
+
+	@Override
+	public FastStringWriter append(final CharSequence csq) {
+		this.stringBuilder.append(csq);
+		return this;
+	}
+	// endregion
+
+	// region ----- write
+	@Override
 	public void write(final int c) {
-		this.builder.append((char) c);
+		this.stringBuilder.append((char) c);
 	}
 
 
 	@Override
 	public void write(final String str) {
-		this.builder.append(str);
+		this.stringBuilder.append(str);
 	}
 
 
 	@Override
 	public void write(final String str, final int off, final int len) {
-		this.builder.append(str, off, off + len);
+		this.stringBuilder.append(str, off, off + len);
 	}
 
 
 	@Override
 	public void write(final char[] cbuf) {
-		this.builder.append(cbuf, 0, cbuf.length);
+		this.stringBuilder.append(cbuf, 0, cbuf.length);
 	}
 
 
@@ -79,8 +99,9 @@ public final class FastStringWriter extends Writer {
 		} else if (len == 0) {
 			return;
 		}
-		this.builder.append(cbuf, off, len);
+		this.stringBuilder.append(cbuf, off, len);
 	}
+	// endregion
 
 
 	@Override
@@ -97,7 +118,7 @@ public final class FastStringWriter extends Writer {
 
 	@Override
 	public String toString() {
-		return this.builder.toString();
+		return this.stringBuilder.toString();
 	}
 
 }
