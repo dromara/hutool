@@ -13,7 +13,7 @@
 package cn.hutool.core.text;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.util.function.Predicate;

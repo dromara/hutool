@@ -14,7 +14,7 @@ package cn.hutool.core.net.ssl;
 
 import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 
 import javax.net.ssl.KeyManager;

@@ -16,7 +16,7 @@ import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.getter.TypeGetter;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 
 import java.io.Serializable;

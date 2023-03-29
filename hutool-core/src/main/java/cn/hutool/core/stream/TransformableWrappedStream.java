@@ -19,7 +19,7 @@ import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.SafeConcurrentHashMap;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

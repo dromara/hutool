@@ -15,7 +15,7 @@ package cn.hutool.core.stream;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.math.NumberUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -4,7 +4,7 @@ import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.SystemUtil;
 import lombok.Data;
 import org.junit.Assert;

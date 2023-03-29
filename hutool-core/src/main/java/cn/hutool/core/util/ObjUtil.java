@@ -12,6 +12,7 @@
 
 package cn.hutool.core.util;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.convert.Convert;

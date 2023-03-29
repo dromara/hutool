@@ -12,6 +12,7 @@
 
 package cn.hutool.core.text;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.lang.Assert;

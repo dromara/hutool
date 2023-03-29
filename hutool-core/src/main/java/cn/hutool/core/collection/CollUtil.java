@@ -32,7 +32,7 @@ import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.stream.StreamUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;

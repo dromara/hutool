@@ -29,7 +29,7 @@ import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 

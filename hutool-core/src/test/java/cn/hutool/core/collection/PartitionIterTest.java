@@ -3,7 +3,7 @@ package cn.hutool.core.collection;
 import cn.hutool.core.collection.iter.LineIter;
 import cn.hutool.core.collection.iter.PartitionIter;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

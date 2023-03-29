@@ -12,7 +12,7 @@
 
 package cn.hutool.extra.mail;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;

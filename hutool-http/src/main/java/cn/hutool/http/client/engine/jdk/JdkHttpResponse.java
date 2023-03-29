@@ -15,7 +15,7 @@ package cn.hutool.http.client.engine.jdk;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.stream.EmptyInputStream;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;

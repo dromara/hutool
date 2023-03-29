@@ -15,7 +15,7 @@ package cn.hutool.core.lang;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.exceptions.CloneRuntimeException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;

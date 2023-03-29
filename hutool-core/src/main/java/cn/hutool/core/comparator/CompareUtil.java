@@ -12,7 +12,7 @@
 
 package cn.hutool.core.comparator;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.Comparator;
 import java.util.Objects;

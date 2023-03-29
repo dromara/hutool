@@ -22,7 +22,7 @@ import cn.hutool.core.net.url.URLDecoder;
 import cn.hutool.core.net.url.URLUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 

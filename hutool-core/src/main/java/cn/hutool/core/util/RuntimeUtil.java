@@ -12,6 +12,7 @@
 
 package cn.hutool.core.util;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;

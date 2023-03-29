@@ -24,7 +24,7 @@ import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.*;
 import cn.hutool.json.serialize.JSONDeserializer;

@@ -14,7 +14,7 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.Iterator;
 import java.util.Map;

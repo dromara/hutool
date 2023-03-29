@@ -18,7 +18,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;

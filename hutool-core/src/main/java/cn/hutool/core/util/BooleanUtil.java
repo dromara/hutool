@@ -12,6 +12,7 @@
 
 package cn.hutool.core.util;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.SetUtil;
 import cn.hutool.core.text.StrUtil;
 

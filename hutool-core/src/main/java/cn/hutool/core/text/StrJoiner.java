@@ -15,7 +15,7 @@ package cn.hutool.core.text;
 import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;

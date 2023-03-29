@@ -12,7 +12,7 @@
 
 package cn.hutool.core.io.file;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.math.BigInteger;

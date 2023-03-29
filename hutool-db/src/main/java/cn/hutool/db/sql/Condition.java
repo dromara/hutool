@@ -17,7 +17,7 @@ import cn.hutool.core.exceptions.CloneRuntimeException;
 import cn.hutool.core.math.NumberUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.Serializable;

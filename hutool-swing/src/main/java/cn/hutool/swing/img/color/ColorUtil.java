@@ -19,7 +19,7 @@ import cn.hutool.core.lang.ansi.AnsiElement;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.awt.Color;

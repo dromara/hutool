@@ -15,7 +15,7 @@ package cn.hutool.db.sql;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.db.Entity;
 
 import java.io.Serializable;

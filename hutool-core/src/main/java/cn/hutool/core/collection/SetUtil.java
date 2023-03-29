@@ -12,7 +12,7 @@
 
 package cn.hutool.core.collection;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.Collection;
 import java.util.Collections;

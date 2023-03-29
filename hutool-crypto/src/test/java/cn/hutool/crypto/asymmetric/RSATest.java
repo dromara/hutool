@@ -3,7 +3,7 @@ package cn.hutool.crypto.asymmetric;
 import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;

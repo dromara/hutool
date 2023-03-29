@@ -12,7 +12,7 @@
 
 package cn.hutool.db.sql;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.util.List;

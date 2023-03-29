@@ -13,7 +13,7 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;

@@ -19,7 +19,7 @@ import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.AbstractMap;

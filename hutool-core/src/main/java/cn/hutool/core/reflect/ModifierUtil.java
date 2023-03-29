@@ -13,7 +13,7 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;

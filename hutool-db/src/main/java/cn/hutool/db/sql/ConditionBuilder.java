@@ -14,7 +14,7 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.StrUtil;
 

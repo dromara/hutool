@@ -13,7 +13,7 @@
 package cn.hutool.core.map.multi;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.function.*;

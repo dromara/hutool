@@ -16,7 +16,7 @@ import org.pmw.tinylog.Level;
 import org.pmw.tinylog.LogEntryForwarder;
 import org.pmw.tinylog.Logger;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.log.AbstractLog;
 

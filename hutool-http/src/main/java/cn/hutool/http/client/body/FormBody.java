@@ -19,7 +19,7 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.File;

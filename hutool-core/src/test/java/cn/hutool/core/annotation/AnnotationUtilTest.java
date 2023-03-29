@@ -1,6 +1,6 @@
 package cn.hutool.core.annotation;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import lombok.SneakyThrows;
 import org.junit.Assert;

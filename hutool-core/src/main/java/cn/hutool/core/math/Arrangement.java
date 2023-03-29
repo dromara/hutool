@@ -12,7 +12,7 @@
 
 package cn.hutool.core.math;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

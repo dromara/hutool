@@ -13,7 +13,7 @@
 package cn.hutool.crypto;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;

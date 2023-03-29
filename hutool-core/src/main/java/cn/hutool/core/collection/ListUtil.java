@@ -21,7 +21,7 @@ import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.page.PageInfo;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.*;

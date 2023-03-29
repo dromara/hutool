@@ -19,7 +19,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.SerializeUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ByteUtil;
 
 import java.io.Serializable;

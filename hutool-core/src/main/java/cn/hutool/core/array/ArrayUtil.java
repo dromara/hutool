@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package cn.hutool.core.util;
+package cn.hutool.core.array;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.SetUtil;
@@ -23,6 +23,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrJoiner;
 import cn.hutool.core.text.StrUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.RandomUtil;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;

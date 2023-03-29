@@ -14,7 +14,7 @@ package cn.hutool.core.lang.caller;
 
 import java.io.Serializable;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 /**
  * {@link SecurityManager} 方式获取调用者

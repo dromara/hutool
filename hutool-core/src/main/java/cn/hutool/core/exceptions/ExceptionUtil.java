@@ -16,7 +16,7 @@ import cn.hutool.core.io.stream.FastByteArrayOutputStream;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.PrintStream;

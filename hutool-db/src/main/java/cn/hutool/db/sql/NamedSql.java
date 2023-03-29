@@ -14,7 +14,7 @@ package cn.hutool.db.sql;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.Collection;
 import java.util.LinkedList;

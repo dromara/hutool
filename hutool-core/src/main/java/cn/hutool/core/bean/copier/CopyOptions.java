@@ -17,7 +17,7 @@ import cn.hutool.core.convert.Converter;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.func.SerFunction;
 import cn.hutool.core.lang.mutable.MutableEntry;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

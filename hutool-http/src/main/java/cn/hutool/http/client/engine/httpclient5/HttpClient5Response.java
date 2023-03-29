@@ -13,7 +13,7 @@
 package cn.hutool.http.client.engine.httpclient5;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.client.Response;

@@ -1,6 +1,6 @@
 package cn.hutool.setting;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.setting.dialect.Props;
 import cn.hutool.setting.dialect.PropsUtil;
 import lombok.Data;

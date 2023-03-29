@@ -14,7 +14,7 @@ package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.lang.mutable.MutableInt;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 /**
  * Base64解码实现<br>

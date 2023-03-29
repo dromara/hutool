@@ -14,7 +14,7 @@ package cn.hutool.core.annotation;
 
 import cn.hutool.core.stream.EasyStream;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.lang.annotation.Annotation;

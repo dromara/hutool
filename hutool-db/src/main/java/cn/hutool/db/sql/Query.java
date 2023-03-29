@@ -13,7 +13,7 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Page;

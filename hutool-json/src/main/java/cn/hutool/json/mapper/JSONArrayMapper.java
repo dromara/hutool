@@ -16,7 +16,7 @@ import cn.hutool.core.collection.iter.ArrayIter;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONParser;

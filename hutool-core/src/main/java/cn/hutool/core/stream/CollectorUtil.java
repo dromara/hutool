@@ -14,7 +14,7 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.function.*;

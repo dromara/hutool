@@ -14,7 +14,7 @@ package cn.hutool.core.io;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.file.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.File;
 import java.io.IOException;

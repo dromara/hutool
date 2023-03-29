@@ -27,7 +27,7 @@ import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.ModifierUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.beans.BeanInfo;

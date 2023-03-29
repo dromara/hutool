@@ -12,7 +12,7 @@
 
 package cn.hutool.setting.toml;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.setting.SettingException;
 

@@ -15,7 +15,7 @@ package cn.hutool.cron.pattern;
 import cn.hutool.core.lang.builder.Builder;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.text.StrUtil;
 
 /**

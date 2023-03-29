@@ -18,7 +18,7 @@ import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.db.sql.SqlUtil;

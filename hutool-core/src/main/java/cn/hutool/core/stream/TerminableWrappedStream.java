@@ -15,7 +15,7 @@ package cn.hutool.core.stream;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.mutable.MutableInt;
 import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.function.*;

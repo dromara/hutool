@@ -21,7 +21,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;

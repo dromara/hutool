@@ -15,7 +15,7 @@ package cn.hutool.core.math;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.math.BigDecimal;

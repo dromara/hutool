@@ -15,7 +15,7 @@ package cn.hutool.http.client;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.http.meta.Header;
 
 import java.net.HttpCookie;

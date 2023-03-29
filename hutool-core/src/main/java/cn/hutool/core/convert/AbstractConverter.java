@@ -14,7 +14,7 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.reflect.TypeUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.io.Serializable;

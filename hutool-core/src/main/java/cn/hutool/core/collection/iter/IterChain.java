@@ -13,7 +13,7 @@
 package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.lang.Chain;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 

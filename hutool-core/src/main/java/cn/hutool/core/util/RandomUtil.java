@@ -12,6 +12,7 @@
 
 package cn.hutool.core.util;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateField;

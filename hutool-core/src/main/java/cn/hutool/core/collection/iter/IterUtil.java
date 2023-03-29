@@ -18,7 +18,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.StrJoiner;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -14,7 +14,7 @@ package cn.hutool.core.codec.binary;
 
 import cn.hutool.core.codec.Decoder;
 import cn.hutool.core.codec.Encoder;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;

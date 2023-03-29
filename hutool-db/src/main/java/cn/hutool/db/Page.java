@@ -14,7 +14,7 @@ package cn.hutool.db;
 
 import cn.hutool.core.lang.Segment;
 import cn.hutool.core.lang.page.PageInfo;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.db.sql.Order;
 
 import java.io.Serializable;

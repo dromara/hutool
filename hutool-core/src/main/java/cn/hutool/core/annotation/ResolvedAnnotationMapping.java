@@ -18,7 +18,7 @@ import cn.hutool.core.map.multi.Graph;
 import cn.hutool.core.reflect.ClassUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

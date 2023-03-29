@@ -12,7 +12,7 @@
 
 package cn.hutool.core.text;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.io.StringReader;

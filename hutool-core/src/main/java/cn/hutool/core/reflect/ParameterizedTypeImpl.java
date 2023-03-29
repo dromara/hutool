@@ -13,7 +13,7 @@
 package cn.hutool.core.reflect;
 
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

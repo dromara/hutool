@@ -12,7 +12,7 @@
 
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Field;

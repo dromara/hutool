@@ -12,6 +12,7 @@
 
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.compress.ZipUtil;
 import cn.hutool.core.io.BomReader;
 import cn.hutool.core.io.IORuntimeException;

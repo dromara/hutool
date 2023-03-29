@@ -20,7 +20,7 @@ import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.reflect.TypeUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 

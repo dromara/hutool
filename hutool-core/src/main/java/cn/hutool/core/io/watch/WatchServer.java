@@ -14,7 +14,7 @@ package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.SerBiConsumer;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.io.Closeable;
 import java.io.IOException;

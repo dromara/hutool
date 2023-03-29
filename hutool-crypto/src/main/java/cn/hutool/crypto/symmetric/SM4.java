@@ -13,7 +13,7 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;

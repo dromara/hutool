@@ -9,7 +9,7 @@ import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import lombok.Data;
 import lombok.Getter;

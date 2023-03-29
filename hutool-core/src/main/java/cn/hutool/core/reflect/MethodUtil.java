@@ -23,7 +23,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

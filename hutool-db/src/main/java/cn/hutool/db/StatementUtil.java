@@ -17,7 +17,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.db.handler.ResultSetUtil;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.sql.NamedSql;

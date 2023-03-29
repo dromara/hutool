@@ -15,7 +15,7 @@ package cn.hutool.http.client.engine.jdk;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.ModifierUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.SystemUtil;
 import cn.hutool.http.HttpException;
 

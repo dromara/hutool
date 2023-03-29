@@ -1,7 +1,7 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.io.Serializable;

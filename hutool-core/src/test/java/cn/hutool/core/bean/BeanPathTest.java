@@ -3,7 +3,7 @@ package cn.hutool.core.bean;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Before;

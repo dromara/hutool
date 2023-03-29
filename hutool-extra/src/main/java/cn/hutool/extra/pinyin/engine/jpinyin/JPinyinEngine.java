@@ -12,7 +12,7 @@
 
 package cn.hutool.extra.pinyin.engine.jpinyin;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.extra.pinyin.PinyinEngine;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;

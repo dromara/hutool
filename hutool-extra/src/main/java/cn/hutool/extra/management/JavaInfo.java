@@ -13,7 +13,7 @@
 package cn.hutool.extra.management;
 
 import cn.hutool.core.regex.ReUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.SystemUtil;
 
 import java.io.Serializable;

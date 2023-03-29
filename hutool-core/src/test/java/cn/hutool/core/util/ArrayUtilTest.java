@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.ListUtil;
 import org.junit.Assert;
 import org.junit.Test;

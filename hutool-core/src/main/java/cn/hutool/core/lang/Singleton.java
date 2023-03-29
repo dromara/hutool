@@ -17,7 +17,7 @@ import cn.hutool.core.lang.func.SerSupplier;
 import cn.hutool.core.map.SafeConcurrentHashMap;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 
 import java.util.Set;
 import java.util.stream.Collectors;

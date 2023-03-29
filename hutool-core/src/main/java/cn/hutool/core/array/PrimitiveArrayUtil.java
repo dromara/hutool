@@ -10,9 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package cn.hutool.core.util;
+package cn.hutool.core.array;
 
 import cn.hutool.core.math.NumberUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.RandomUtil;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -3195,12 +3197,7 @@ public class PrimitiveArrayUtil {
 			return false;
 		}
 
-		for (int i = 0; i < prefix.length; i++) {
-			if (array[i] != prefix[i]) {
-				return false;
-			}
-		}
-		return true;
+		return isSubEquals(array, 0, prefix);
 	}
 
 	/**
@@ -3395,46 +3392,52 @@ public class PrimitiveArrayUtil {
 	/**
 	 * 是否局部匹配，相当于对比以下子串是否相等
 	 * <pre>
-	 *     byte1[offset1, byte2.length]
+	 *     array1[offset1, subArray.length]
 	 *                  ||
-	 *                byte2
+	 *               subArray
 	 * </pre>
 	 *
-	 * @param bytes1 第一个数组
-	 * @param offset 开始位置
-	 * @param bytes2 第二个数组
+	 * @param array    数组
+	 * @param offset   开始位置
+	 * @param subArray 子数组
 	 * @return 是否局部匹配
 	 */
-	public static boolean isSubEquals(final byte[] bytes1, final int offset, final byte[] bytes2) {
-		return regionMatches(bytes1, offset, bytes2, 0, bytes2.length);
+	public static boolean isSubEquals(final byte[] array, final int offset, final byte[] subArray) {
+		if (array == subArray) {
+			return true;
+		}
+		if (array.length < subArray.length) {
+			return false;
+		}
+		return regionMatches(array, offset, subArray, 0, subArray.length);
 	}
 
 	/**
 	 * 是否局部匹配，相当于对比以下子串是否相等
 	 * <pre>
-	 *     byte1[offset1, offset1 + length]
+	 *     array1[offset1 : offset1 + length]
 	 *                  ||
-	 *     byte2[offset2, offset2 + length]
+	 *     array2[offset2 : offset2 + length]
 	 * </pre>
 	 *
-	 * @param bytes1  第一个数组
+	 * @param array1  第一个数组
 	 * @param offset1 第一个数组开始位置
-	 * @param bytes2  第二个数组
+	 * @param array2  第二个数组
 	 * @param offset2 第二个数组开始位置
 	 * @param length  检查长度
 	 * @return 是否局部匹配
 	 */
-	public static boolean regionMatches(final byte[] bytes1, final int offset1,
-										final byte[] bytes2, final int offset2, final int length) {
-		if(bytes1.length < offset1 + length){
+	public static boolean regionMatches(final byte[] array1, final int offset1,
+										final byte[] array2, final int offset2, final int length) {
+		if (array1.length < offset1 + length) {
 			throw new IndexOutOfBoundsException("[byte1] length must be >= [offset1 + length]");
 		}
-		if(bytes2.length < offset2 + length){
+		if (array2.length < offset2 + length) {
 			throw new IndexOutOfBoundsException("[byte2] length must be >= [offset2 + length]");
 		}
 
 		for (int i = 0; i < length; i++) {
-			if (bytes1[i + offset1] != bytes2[i + offset2]) {
+			if (array1[i + offset1] != array2[i + offset2]) {
 				return false;
 			}
 		}

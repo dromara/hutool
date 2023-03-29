@@ -12,7 +12,7 @@
 
 package cn.hutool.json.xml;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.text.escape.EscapeUtil;
 import cn.hutool.core.text.StrUtil;
