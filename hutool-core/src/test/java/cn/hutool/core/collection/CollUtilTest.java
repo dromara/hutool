@@ -259,8 +259,8 @@ public class CollUtilTest {
 	public void splitTest2() {
 		final ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 		final List<List<Integer>> split = CollUtil.split(list, Integer.MAX_VALUE);
-		Assert.assertEquals(3, split.size());
-		Assert.assertEquals(3, split.get(0).size());
+		Assert.assertEquals(1, split.size());
+		Assert.assertEquals(9, split.get(0).size());
 	}
 
 	@Test

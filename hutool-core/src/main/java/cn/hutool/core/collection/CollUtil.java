@@ -1189,7 +1189,7 @@ public class CollUtil {
 			return result;
 		}
 
-		int initSize = Math.min(collection.size(), size);
+		final int initSize = Math.min(collection.size(), size);
 		List<T> subList = new ArrayList<>(initSize);
 		for (T t : collection) {
 			if (subList.size() >= size) {
