@@ -844,11 +844,12 @@ public class CollUtil {
 			return result;
 		}
 
-		ArrayList<T> subList = new ArrayList<>(size);
+		final int initSize = Math.min(collection.size(), size);
+		ArrayList<T> subList = new ArrayList<>(initSize);
 		for (final T t : collection) {
 			if (subList.size() >= size) {
 				result.add(subList);
-				subList = new ArrayList<>(size);
+				subList = new ArrayList<>(initSize);
 			}
 			subList.add(t);
 		}
