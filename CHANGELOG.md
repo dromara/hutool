@@ -6,6 +6,7 @@
 
 ### 🐣新特性
 * 【core  】      SerializeUtil.deserialize增加白名单类，避免RCE vulnerability（issue#3021@Github）
+* 【poi   】      ExcelWriter在关闭后不清空currentRow，以便复用（issue#3025@Github）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）

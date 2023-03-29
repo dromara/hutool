@@ -64,7 +64,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 当前行
 	 */
-	private AtomicInteger currentRow = new AtomicInteger(0);
+	private final AtomicInteger currentRow;
 	/**
 	 * 是否只保留别名对应的字段
 	 */
@@ -182,6 +182,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter(Sheet sheet) {
 		super(sheet);
 		this.styleSet = new StyleSet(workbook);
+		this.currentRow = new AtomicInteger(0);
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
@@ -1328,7 +1329,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		super.close();
 
 		// 清空对象
-		this.currentRow = null;
+		this.currentRow.set(0);
 		this.styleSet = null;
 	}
 
