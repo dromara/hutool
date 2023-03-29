@@ -923,6 +923,7 @@ public class CollUtilTest {
 		Assert.assertEquals("bb", distinct.get(1).getName());
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void unionNullTest() {
 		final List<String> list1 = new ArrayList<>();
@@ -932,6 +933,7 @@ public class CollUtilTest {
 		Assert.assertNotNull(union);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void unionDistinctNullTest() {
 		final List<String> list1 = new ArrayList<>();
@@ -941,6 +943,7 @@ public class CollUtilTest {
 		Assert.assertNotNull(set);
 	}
 
+	@SuppressWarnings({"ConfusingArgumentToVarargsMethod", "ConstantValue"})
 	@Test
 	public void unionAllNullTest() {
 		final List<String> list1 = new ArrayList<>();
@@ -949,7 +952,7 @@ public class CollUtilTest {
 		final List<String> list = CollUtil.unionAll(list1, list2, list3);
 		Assert.assertNotNull(list);
 
-		@SuppressWarnings("ConfusingArgumentToVarargsMethod") final List<String> resList2 = CollUtil.unionAll(null, null, null);
+		final List<String> resList2 = CollUtil.unionAll(null, null, null);
 		Assert.assertNotNull(resList2);
 	}
 
@@ -998,6 +1001,7 @@ public class CollUtilTest {
 			list.toArray());
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void intersectionNullTest() {
 		final List<String> list1 = new ArrayList<>();
