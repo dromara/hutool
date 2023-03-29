@@ -41,6 +41,38 @@ import java.util.stream.Collectors;
  */
 public class ArrayUtil extends PrimitiveArrayUtil {
 
+	/**
+	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
+	 *
+	 * @param <A>         数组类型
+	 * @param values      元素值
+	 * @return 数组
+	 */
+	public static <A> A ofArray(final Object values) {
+		return ofArray(values, null);
+	}
+
+	/**
+	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
+	 *
+	 * @param <A>         数组类型
+	 * @param values      元素值
+	 * @param elementType 数组元素类型，{@code null}表示使用values的类型
+	 * @return 数组
+	 */
+	@SuppressWarnings("unchecked")
+	public static <A> A ofArray(final Object values, final Class<?> elementType) {
+		if (isArray(values)) {
+			return (A) values;
+		}
+
+		// 插入单个元素
+		final Object newInstance = Array.newInstance(
+			null == elementType ? values.getClass() : elementType, 1);
+		Array.set(newInstance, 0, values);
+		return (A) newInstance;
+	}
+
 	// ---------------------------------------------------------------------- isEmpty
 
 	/**
@@ -172,6 +204,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(final T... array) {
+		if (isEmpty(array)) {
+			return null;
+		}
 		return firstMatch(ObjUtil::isNotNull, array);
 	}
 
@@ -205,7 +240,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> int matchIndex(final Predicate<T> matcher, final T... array) {
-		return matchIndex(matcher, 0, array);
+		return matchIndex(0, matcher, array);
 	}
 
 	/**
@@ -219,19 +254,11 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(final Predicate<T> matcher, final int beginIndexInclude, final T... array) {
-		if (isNotEmpty(array)) {
-			if (null == matcher && beginIndexInclude < array.length) {
-				return beginIndexInclude;
-			}
-			for (int i = beginIndexInclude; i < array.length; i++) {
-				if (matcher.test(array[i])) {
-					return i;
-				}
-			}
+	public static <T> int matchIndex(final int beginIndexInclude, final Predicate<T> matcher, final T... array) {
+		if (isEmpty(array)) {
+			return INDEX_NOT_FOUND;
 		}
-
-		return INDEX_NOT_FOUND;
+		return ArrayWrapper.of(array).matchIndex(beginIndexInclude, matcher);
 	}
 
 	/**
@@ -274,7 +301,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static Class<?> getComponentType(final Object array) {
-		return null == array ? null : array.getClass().getComponentType();
+		return null == array ? null : getComponentType(array.getClass());
 	}
 
 	/**
@@ -370,6 +397,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	@SafeVarargs
 	public static <A, T> A append(final A array, final T... newElements) {
 		if (isEmpty(array)) {
+			if (null == array) {
+				return (A) newElements;
+			}
 			// 可变长参数可能为包装类型，如果array是原始类型，则此处强转不合适，采用万能转换器完成转换
 			return (A) Convert.convert(array.getClass(), newElements);
 		}
@@ -379,25 +409,18 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 将元素值设置为数组的某个位置，当给定的index大于等于数组长度，则追加
 	 *
-	 * @param <T>    数组元素类型
-	 * @param buffer 已有数组
-	 * @param index  位置，大于等于长度则追加，否则替换
-	 * @param value  新值
+	 * @param <T>   数组元素类型
+	 * @param array 已有数组
+	 * @param index 位置，大于等于长度则追加，否则替换
+	 * @param value 新值
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
-	public static <T> T[] setOrAppend(final T[] buffer, final int index, final T value) {
-		if (index < buffer.length) {
-			Array.set(buffer, index, value);
-			return buffer;
-		} else {
-			if (ArrayUtil.isEmpty(buffer)) {
-				final T[] values = newArray(value.getClass(), 1);
-				values[0] = value;
-				return append(buffer, values);
-			}
-			return append(buffer, value);
+	public static <T> T[] setOrAppend(final T[] array, final int index, final T value) {
+		if (isEmpty(array)) {
+			return ofArray(value, null == array ? null : array.getClass().getComponentType());
 		}
+		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
 
 	/**
@@ -411,12 +434,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.1.2
 	 */
 	public static <A> A setOrAppend(final A array, final int index, final Object value) {
-		if (index < length(array)) {
-			Array.set(array, index, value);
-			return array;
-		} else {
-			return append(array, value);
+		if (isEmpty(array)) {
+			return ofArray(value, null == array ? null : array.getClass().getComponentType());
 		}
+		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
 	}
 
 	/**
@@ -437,32 +458,33 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] replace(final T[] buffer, final int index, final T... values) {
-		if (isEmpty(values)) {
-			return buffer;
-		}
 		if (isEmpty(buffer)) {
 			return values;
 		}
-		if (index < 0) {
-			// 从头部追加
-			return insert(buffer, 0, values);
-		}
-		if (index >= buffer.length) {
-			// 超出长度，尾部追加
-			return append(buffer, values);
-		}
+		return ArrayWrapper.of(buffer).replace(index, values).getRaw();
+	}
 
-		if (buffer.length >= values.length + index) {
-			System.arraycopy(values, 0, buffer, index, values.length);
-			return buffer;
+	/**
+	 * 从数组中的指定位置开始，按顺序使用新元素替换旧元素<br>
+	 * <ul>
+	 *     <li>如果 指定位置 为负数，那么生成一个新数组，其中新元素按顺序放在数组头部</li>
+	 *     <li>如果 指定位置 大于等于 旧数组长度，那么生成一个新数组，其中新元素按顺序放在数组尾部</li>
+	 *     <li>如果 指定位置 加上 新元素数量 大于 旧数组长度，那么生成一个新数组，指定位置之前是旧数组元素，指定位置及之后为新元素</li>
+	 *     <li>否则，从已有数组中的指定位置开始，按顺序使用新元素替换旧元素，返回旧数组</li>
+	 * </ul>
+	 *
+	 * @param <A>    数组类型
+	 * @param array 已有数组
+	 * @param index  位置
+	 * @param values 新值
+	 * @return 新数组或原有数组
+	 * @since 5.7.23
+	 */
+	public static <A> A replace(final A array, final int index, final Object values) {
+		if (isEmpty(array)) {
+			return ofArray(values, null == array ? null : array.getClass().getComponentType());
 		}
-
-		// 替换长度大于原数组长度，新建数组
-		final int newArrayLength = index + values.length;
-		final T[] result = newArray(buffer.getClass().getComponentType(), newArrayLength);
-		System.arraycopy(buffer, 0, result, 0, index);
-		System.arraycopy(values, 0, result, index, values.length);
-		return result;
+		return ArrayWrapper.of(array).replace(index, values).getRaw();
 	}
 
 	/**
@@ -495,35 +517,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组
 	 * @since 4.0.8
 	 */
-	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
-	public static <A, T> A insert(final A array, int index, final T... newElements) {
-		if (isEmpty(newElements)) {
-			return array;
-		}
-		if (isEmpty(array)) {
-			return (A) Convert.convert(array.getClass(), newElements);
-		}
-
-		final int len = length(array);
-		if (index < 0) {
-			index = (index % len) + len;
-		}
-
-		// 已有数组的元素类型
-		final Class<?> originComponentType = array.getClass().getComponentType();
-		Object newEleArr = newElements;
-		// 如果 已有数组的元素类型是 原始类型，则需要转换 新元素数组 为该类型，避免ArrayStoreException
-		if (originComponentType.isPrimitive()) {
-			newEleArr = Convert.convert(array.getClass(), newElements);
-		}
-		final Object result = Array.newInstance(originComponentType, Math.max(len, index) + newElements.length);
-		System.arraycopy(array, 0, result, 0, Math.min(len, index));
-		System.arraycopy(newEleArr, 0, result, index, newElements.length);
-		if (index < len) {
-			System.arraycopy(array, index, result, index + newElements.length, len - index);
-		}
-		return (A) result;
+	@SafeVarargs
+	public static <A, T> A insert(final A array, final int index, final T... newElements) {
+		return ArrayWrapper.of(array).insert(index, newElements).getRaw();
 	}
+
+	// region ----- resize
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
@@ -585,6 +584,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> T[] resize(final T[] buffer, final int newSize) {
 		return resize(buffer, newSize, buffer.getClass().getComponentType());
 	}
+	// endregion
 
 	/**
 	 * 合并所有数组，返回合并后的新数组<br>
@@ -621,6 +621,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return result;
 	}
+
+	// region ----- copy and clone
 
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
@@ -712,6 +714,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return null;
 	}
+	// endregion
 
 	/**
 	 * 对每个数组元素执行指定操作，返回操作后的元素<br>
@@ -870,7 +873,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(final T[] array, final Object value, final int beginIndexInclude) {
-		return matchIndex((obj) -> ObjUtil.equals(value, obj), beginIndexInclude, array);
+		return ArrayWrapper.of(array).indexOf(value, beginIndexInclude);
 	}
 
 	/**
@@ -883,7 +886,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(final T[] array, final Object value) {
-		return matchIndex((obj) -> ObjUtil.equals(value, obj), array);
+		return ArrayWrapper.of(array).indexOf(value);
 	}
 
 	/**
@@ -1067,19 +1070,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T get(final Object array, int index) {
-		if (null == array) {
-			return null;
-		}
-		final int length = Array.getLength(array);
-		if (index < 0) {
-			index += length;
-		}
-		if (index < 0 || index >= length) {
-			return null;
-		}
-		return (T) Array.get(array, index);
+	public static <T> T get(final Object array, final int index) {
+		return ArrayWrapper.of(array).get(index);
 	}
 
 	/**
@@ -1287,10 +1279,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 
 		return StrJoiner.of(delimiter, prefix, suffix)
-				// 每个元素都添加前后缀
-				.setWrapElement(true)
-				.append(array)
-				.toString();
+			// 每个元素都添加前后缀
+			.setWrapElement(true)
+			.append(array)
+			.toString();
 	}
 
 	/**
@@ -2134,7 +2126,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {

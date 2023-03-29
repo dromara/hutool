@@ -24,7 +24,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	private int length;
 
 	/**
-	 * 创建ArrayWrapper
+	 * 创建ArrayWrapper，创建一个指定长度的空数组
 	 *
 	 * @param componentType 元素类型
 	 * @param length        长度
@@ -39,7 +39,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	/**
 	 * 包装数组为ArrayWrapper
 	 *
-	 * @param array 数组
+	 * @param array 数组（非空）
 	 * @param <A>   数组类型
 	 * @return ArrayWrapper
 	 */
@@ -50,11 +50,11 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	/**
 	 * 构造
 	 *
-	 * @param array 数组对象
+	 * @param array 数组对象（非空）
 	 */
 	public ArrayWrapper(final A array) {
-		Assert.notNull(array);
-		if (ArrayUtil.isArray(array)) {
+		Assert.notNull(array, "Array must be not null!");
+		if (false == ArrayUtil.isArray(array)) {
 			throw new IllegalArgumentException("Object is not a array!");
 		}
 		this.componentType = array.getClass().getComponentType();
@@ -302,9 +302,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	public ArrayWrapper<A> insert(int index, Object arrayToAppend) {
 		if (false == ArrayUtil.isArray(arrayToAppend)) {
 			// 用户传入单个元素则创建单元素数组
-			if (arrayToAppend.getClass() == this.componentType) {
-				arrayToAppend = createSingleElementArray(arrayToAppend);
-			}
+			arrayToAppend = createSingleElementArray(arrayToAppend);
 		}
 
 		final int appendLength = ArrayUtil.length(arrayToAppend);
@@ -313,6 +311,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 		}
 		if (isEmpty()) {
 			setNewArray((A) Convert.convert(array.getClass(), arrayToAppend));
+			return this;
 		}
 
 		final int len = this.length;
@@ -357,9 +356,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	public ArrayWrapper<A> replace(final int index, Object values) {
 		if (false == ArrayUtil.isArray(values)) {
 			// 用户传入单个元素则创建单元素数组
-			if (values.getClass() == this.componentType) {
-				values = createSingleElementArray(values);
-			}
+			values = createSingleElementArray(values);
 		}
 
 		final int valuesLength = ArrayUtil.length(values);
@@ -481,6 +478,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	}
 
 	// region ----- private methods
+
 	/**
 	 * 设置新数组，并更新长度
 	 *
@@ -500,7 +498,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	private Object createSingleElementArray(final Object value) {
 		// 插入单个元素
 		final Object newInstance = Array.newInstance(this.componentType, 1);
-		Array.set(newInstance, 1, value);
+		Array.set(newInstance, 0, value);
 		return newInstance;
 	}
 	// endregion

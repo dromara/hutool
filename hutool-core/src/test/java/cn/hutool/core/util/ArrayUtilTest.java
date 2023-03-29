@@ -518,6 +518,13 @@ public class ArrayUtilTest {
 	}
 
 	@Test
+	public void replaceTest2(){
+		int[] a = new int[0];
+		a = ArrayUtil.replace(a, 0, 1);
+		Assert.assertEquals(1, a.length);
+	}
+
+	@Test
 	public void setOrAppendTest() {
 		final String[] arr = new String[0];
 		final String[] newArr = ArrayUtil.setOrAppend(arr, 0, "Good");// ClassCastException

@@ -87,6 +87,7 @@ public class CacheConcurrentTest {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	public void effectiveTest() {
 		// 模拟耗时操作消耗时间
