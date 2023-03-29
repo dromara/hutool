@@ -5,9 +5,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * 文件类型判断单元测试
@@ -92,4 +90,10 @@ public class FileTypeUtilTest {
 		Assert.assertEquals("txt", type);
 	}
 
+	@Test
+	@Ignore
+	public void issue3024Test() {
+		String x = FileTypeUtil.getType(FileUtil.getInputStream("d:/test/TEST_WPS_DOC.doc"),true);
+		System.out.println(x);
+	}
 }
