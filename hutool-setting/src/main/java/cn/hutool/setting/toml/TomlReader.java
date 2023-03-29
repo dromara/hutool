@@ -20,29 +20,19 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * TOML文件读取
- * <h1>DateTimes support</h1>
+ * TOML文件读取<br>
+ * 来自：https://github.com/TheElectronWill/TOML-javalib
  * <p>
- * The datetime support is more extended than in the TOML specification. This reader supports three kind of datetimes:
- * <ol>
- * <li>Full RFC 3339. Examples: 1979-05-27T07:32:00Z, 1979-05-27T00:32:00-07:00, 1979-05-27T00:32:00.999999-07:00</li>
- * <li>Without local offset. Examples: 1979-05-27T07:32:00, 1979-05-27T00:32:00.999999</li>
- * <li>Without time (just the date). Example: 2015-03-20</li>
- * </ol>
- * Moreover, parsing datetimes gives different objects according to the informations provided. For example, 2015-03-20
- * is parsed as a {@link LocalDate}, 2015-03-20T19:04:35 as a {@link LocalDateTime}, and 2015-03-20T19:04:35+01:00 as a
- * {@link ZonedDateTime}.
- * </p>
- * <h1>Lenient bare keys</h1>
+ * 日期格式支持：
+ * <ul>
+ *     <li>2015-03-20                转为：{@link LocalDate}</li>
+ *     <li>2015-03-20T19:04:35       转为：{@link LocalDateTime}</li>
+ *     <li>2015-03-20T19:04:35+01:00 转为：{@link ZonedDateTime}</li>
+ * </ul>
  * <p>
- * This library allows "lenient" bare keys by default, as opposite to the "strict" bare keys required by the TOML
- * specification. Strict bare keys may only contain letters, numbers, underscores, and dashes (A-Za-z0-9_-). Lenient
- * bare keys may contain any character except those below the space character ' ' in the unicode table, '.', '[', ']'
- * and '='. The behaviour of TomlReader regarding bare keys is set in its constructor.
- * </p>
+ * 此类支持更加宽松的key，除了{@code A-Za-z0-9_- }，还支持' ','.', '[', ']' 和 '='
  *
  * @author TheElectronWill
- *
  */
 public class TomlReader {
 
@@ -54,8 +44,8 @@ public class TomlReader {
 	/**
 	 * Creates a new TomlReader.
 	 *
-	 * @param data the TOML data to read
-	 * @param strictAsciiBareKeys <code>true</false> to allow only strict bare keys, {@code false} to allow lenient ones.
+	 * @param data                the TOML data to read
+	 * @param strictAsciiBareKeys {@code true} to allow only strict bare keys, {@code false} to allow lenient ones.
 	 */
 	public TomlReader(final String data, final boolean strictAsciiBareKeys) {
 		this.data = data;
@@ -155,6 +145,7 @@ public class TomlReader {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> read() {
 		final Map<String, Object> map = nextTableContent();
 
@@ -249,16 +240,16 @@ public class TomlReader {
 					childMap = new HashMap<>(4);
 					valueMap.put(part, childMap);
 				} else if (child instanceof Map) {// table
-					childMap = (Map) child;
+					childMap = (Map<String, Object>) child;
 				} else {// array
-					final List<Map> list = (List) child;
+					final List<Map<String, Object>> list = (List<Map<String, Object>>) child;
 					childMap = list.get(list.size() - 1);
 				}
 				valueMap = childMap;
 			}
 			if (twoBrackets) {// element of a table array
 				final String name = keyParts.get(keyParts.size() - 1);
-				Collection<Map> tableArray = (Collection) valueMap.get(name);
+				Collection<Map<String, Object>> tableArray = (Collection<Map<String, Object>>) valueMap.get(name);
 				if (tableArray == null) {
 					tableArray = new ArrayList<>(2);
 					valueMap.put(name, tableArray);
@@ -272,7 +263,7 @@ public class TomlReader {
 		return map;
 	}
 
-	private List nextArray() {
+	private List<Object> nextArray() {
 		final ArrayList<Object> list = new ArrayList<>();
 		while (true) {
 			final char c = nextUseful(true);
@@ -430,7 +421,8 @@ public class TomlReader {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(first);
 		char c;
-		whileLoop: while (hasNext()) {
+		whileLoop:
+		while (hasNext()) {
 			c = next();
 			switch (c) {
 				case ':':
@@ -504,7 +496,7 @@ public class TomlReader {
 			} // else continue reading
 		}
 		throw new SettingException(
-				"Invalid key/value pair at line " + line + " end of data reached before the value attached to the key was found");
+			"Invalid key/value pair at line " + line + " end of data reached before the value attached to the key was found");
 	}
 
 	private String nextLiteralString() {
