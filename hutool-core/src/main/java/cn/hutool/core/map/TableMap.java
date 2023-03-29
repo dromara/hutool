@@ -130,8 +130,8 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	 */
 	public List<V> getValues(final K key) {
 		return CollUtil.getAny(
-				this.values,
-				ListUtil.indexOfAll(this.keys, (ele) -> ObjUtil.equals(ele, key))
+			this.values,
+			CollUtil.indexOfAll(this.keys, (ele) -> ObjUtil.equals(ele, key))
 		);
 	}
 
@@ -144,8 +144,8 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	 */
 	public List<K> getKeys(final V value) {
 		return CollUtil.getAny(
-				this.keys,
-				ListUtil.indexOfAll(this.values, (ele) -> ObjUtil.equals(ele, value))
+			this.keys,
+			CollUtil.indexOfAll(this.values, (ele) -> ObjUtil.equals(ele, value))
 		);
 	}
 
@@ -253,9 +253,9 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	@Override
 	public String toString() {
 		return "TableMap{" +
-				"keys=" + keys +
-				", values=" + values +
-				'}';
+			"keys=" + keys +
+			", values=" + values +
+			'}';
 	}
 
 	@Override
@@ -317,11 +317,10 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 	}
 
 
-
 	@SuppressWarnings("NullableProblems")
 	@Override
 	public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-		if(null == remappingFunction){
+		if (null == remappingFunction) {
 			return null;
 		}
 
@@ -329,9 +328,9 @@ public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Ser
 		for (int i = 0; i < size(); i++) {
 			if (ObjUtil.equals(key, keys.get(i))) {
 				final V newValue = remappingFunction.apply(key, values.get(i));
-				if(null != newValue){
+				if (null != newValue) {
 					lastValue = values.set(i, newValue);
-				} else{
+				} else {
 					removeByIndex(i);
 					// 移除当前元素，下个元素前移
 					i--;

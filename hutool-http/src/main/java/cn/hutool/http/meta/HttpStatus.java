@@ -15,11 +15,33 @@ package cn.hutool.http.meta;
 /**
  * HTTP状态码
  *
- * @author Looly
+ * @author Looly, Ningqingsheng
  * @see java.net.HttpURLConnection
  *
  */
 public interface HttpStatus {
+
+	/* 1XX: Informational */
+
+	/**
+	 * HTTP Status-Code 100: Continue.
+	 */
+	int HTTP_CONTINUE = 100;
+
+	/**
+	 * HTTP Status-Code 101: Switching Protocols.
+	 */
+	int HTTP_SWITCHING_PROTOCOLS = 101;
+
+	/**
+	 * HTTP Status-Code 102: Processing.
+	 */
+	int HTTP_PROCESSING = 102;
+
+	/**
+	 * HTTP Status-Code 103: Checkpoint.
+	 */
+	int HTTP_CHECKPOINT = 103;
 
 	/* 2XX: generally "OK" */
 
@@ -57,6 +79,21 @@ public interface HttpStatus {
 	 * HTTP Status-Code 206: Partial Content.
 	 */
 	int HTTP_PARTIAL = 206;
+
+	/**
+	 * HTTP Status-Code 207: Multi-Status.
+	 */
+	int HTTP_MULTI_STATUS = 207;
+
+	/**
+	 * HTTP Status-Code 208: Already Reported.
+	 */
+	int HTTP_ALREADY_REPORTED = 208;
+
+	/**
+	 * HTTP Status-Code 226: IM Used.
+	 */
+	int HTTP_IM_USED = 226;
 
 	/* 3XX: relocation/redirect */
 
@@ -184,6 +221,66 @@ public interface HttpStatus {
 	 */
 	int HTTP_UNSUPPORTED_TYPE = 415;
 
+	/**
+	 * HTTP Status-Code 416: Requested Range Not Satisfiable.
+	 */
+	int HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+
+	/**
+	 * HTTP Status-Code 417: Expectation Failed.
+	 */
+	int HTTP_EXPECTATION_FAILED = 417;
+
+	/**
+	 * HTTP Status-Code 418: I'm a teapot.
+	 */
+	int HTTP_I_AM_A_TEAPOT = 418;
+
+	/**
+	 * HTTP Status-Code 422: Unprocessable Entity.
+	 */
+	int HTTP_UNPROCESSABLE_ENTITY = 422;
+
+	/**
+	 * HTTP Status-Code 423: Locked.
+	 */
+	int HTTP_LOCKED = 423;
+
+	/**
+	 * HTTP Status-Code 424: Failed Dependency.
+	 */
+	int HTTP_FAILED_DEPENDENCY = 424;
+
+	/**
+	 * HTTP Status-Code 425: Too Early.
+	 */
+	int HTTP_TOO_EARLY = 425;
+
+	/**
+	 * HTTP Status-Code 426: Upgrade Required.
+	 */
+	int HTTP_UPGRADE_REQUIRED = 426;
+
+	/**
+	 * HTTP Status-Code 428: Precondition Required.
+	 */
+	int HTTP_PRECONDITION_REQUIRED = 428;
+
+	/**
+	 * HTTP Status-Code 429: Too Many Requests.
+	 */
+	int HTTP_TOO_MANY_REQUESTS = 429;
+
+	/**
+	 * HTTP Status-Code 431: Request Header Fields Too Large.
+	 */
+	int HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
+
+	/**
+	 * HTTP Status-Code 451: Unavailable For Legal Reasons.
+	 */
+	int HTTP_UNAVAILABLE_FOR_LEGAL_REASONS = 451;
+
 	/* 5XX: server error */
 
 	/**
@@ -215,6 +312,36 @@ public interface HttpStatus {
 	 * HTTP Status-Code 505: HTTP Version Not Supported.
 	 */
 	int HTTP_VERSION = 505;
+
+	/**
+	 * HTTP Status-Code 506: Variant Also Negotiates.
+	 */
+	int HTTP_VARIANT_ALSO_NEGOTIATES = 506;
+
+	/**
+	 * HTTP Status-Code 507: Insufficient Storage.
+	 */
+	int HTTP_INSUFFICIENT_STORAGE = 507;
+
+	/**
+	 * HTTP Status-Code 508: Loop Detected.
+	 */
+	int HTTP_LOOP_DETECTED = 508;
+
+	/**
+	 * HTTP Status-Code 509: Bandwidth Limit Exceeded.
+	 */
+	int HTTP_BANDWIDTH_LIMIT_EXCEEDED = 509;
+
+	/**
+	 * HTTP Status-Code 510: Not Extended.
+	 */
+	int HTTP_NOT_EXTENDED = 510;
+
+	/**
+	 * HTTP Status-Code 511: Network Authentication Required.
+	 */
+	int HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
 	/**
 	 * 是否为重定向状态码

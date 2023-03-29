@@ -76,10 +76,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
-	 * 当前行
-	 */
-	private AtomicInteger currentRow = new AtomicInteger(0);
-	/**
 	 * 是否只保留别名对应的字段
 	 */
 	private boolean onlyAlias;
@@ -99,6 +95,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 单元格值处理接口
 	 */
 	private CellEditor cellEditor;
+	/**
+	 * 当前行
+	 */
+	private final AtomicInteger currentRow;
 
 	// -------------------------------------------------------------------------- Constructor start
 
@@ -200,6 +200,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter(final Sheet sheet) {
 		super(sheet);
 		this.styleSet = new StyleSet(workbook);
+		this.currentRow = new AtomicInteger(0);
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
@@ -1356,9 +1357,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	protected void closeWithoutFlush() {
 		super.close();
+		this.currentRow.set(0);
 
 		// 清空对象
-		this.currentRow = null;
 		this.styleSet = null;
 	}
 

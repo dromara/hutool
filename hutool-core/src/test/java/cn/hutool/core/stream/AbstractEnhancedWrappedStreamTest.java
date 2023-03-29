@@ -650,7 +650,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	public void testListSplit() {
 		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = wrap(list).split(2).map(TerminableWrappedStream::toList).toList();
-		Assert.assertEquals(ListUtil.split(list, 2), lists);
+		Assert.assertEquals(ListUtil.partition(list, 2), lists);
 
 		// 指定长度 大于等于 列表长度
 		lists = wrap(list).split(list.size()).map(TerminableWrappedStream::toList).toList();
@@ -661,7 +661,7 @@ public class AbstractEnhancedWrappedStreamTest {
 	public void testSplitList() {
 		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
 		List<List<Integer>> lists = wrap(list).splitList(2).toList();
-		Assert.assertEquals(ListUtil.split(list, 2), lists);
+		Assert.assertEquals(ListUtil.partition(list, 2), lists);
 
 		// 指定长度 大于等于 列表长度
 		lists = wrap(list).splitList(list.size()).toList();

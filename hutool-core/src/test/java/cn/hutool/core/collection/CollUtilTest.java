@@ -297,17 +297,17 @@ public class CollUtilTest {
 	}
 
 	@Test
-	public void splitTest() {
+	public void partitionTest() {
 		final List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
-		final List<List<Integer>> split = CollUtil.split(list, 3);
+		final List<List<Integer>> split = CollUtil.partition(list, 3);
 		Assert.assertEquals(3, split.size());
 		Assert.assertEquals(3, split.get(0).size());
 	}
 
 	@Test
-	public void splitTest2() {
+	public void partitionTest2() {
 		final ArrayList<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
-		final List<List<Integer>> split = CollUtil.split(list, Integer.MAX_VALUE);
+		final List<List<Integer>> split = CollUtil.partition(list, Integer.MAX_VALUE);
 		Assert.assertEquals(1, split.size());
 		Assert.assertEquals(9, split.get(0).size());
 	}

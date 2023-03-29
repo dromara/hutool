@@ -16,25 +16,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ListUtilTest {
 
 	@Test
-	public void splitTest() {
-		List<List<Object>> lists = ListUtil.split(null, 3);
+	public void partitionTest() {
+		List<List<Object>> lists = ListUtil.partition(null, 3);
 		Assert.assertEquals(ListUtil.empty(), lists);
 
-		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 1);
+		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 1);
 		Assert.assertEquals("[[1], [2], [3], [4]]", lists.toString());
-		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 2);
+		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 2);
 		Assert.assertEquals("[[1, 2], [3, 4]]", lists.toString());
-		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 3);
+		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 3);
 		Assert.assertEquals("[[1, 2, 3], [4]]", lists.toString());
-		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 4);
+		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 4);
 		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
-		lists = ListUtil.split(Arrays.asList(1, 2, 3, 4), 5);
+		lists = ListUtil.partition(Arrays.asList(1, 2, 3, 4), 5);
 		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
 	}
 
 	@Test
 	@Ignore
-	public void splitBenchTest() {
+	public void partitionBenchTest() {
 		final List<String> list = new ArrayList<>();
 		CollUtil.padRight(list, RandomUtil.randomInt(1000_0000, 1_0000_0000), "test");
 
@@ -44,11 +44,11 @@ public class ListUtilTest {
 		final StopWatch stopWatch = new StopWatch();
 
 		stopWatch.start("CollUtil#split");
-		final List<List<String>> CollSplitResult = CollUtil.split(list, size);
+		final List<List<String>> CollSplitResult = CollUtil.partition(list, size);
 		stopWatch.stop();
 
 		stopWatch.start("ListUtil#split");
-		final List<List<String>> ListSplitResult = ListUtil.split(list, size);
+		final List<List<String>> ListSplitResult = ListUtil.partition(list, size);
 		stopWatch.stop();
 
 		Assert.assertEquals(CollSplitResult, ListSplitResult);
@@ -58,28 +58,28 @@ public class ListUtilTest {
 
 	@Test
 	public void splitAvgTest() {
-		List<List<Object>> lists = ListUtil.splitAvg(null, 3);
+		List<List<Object>> lists = ListUtil.avgPartition(null, 3);
 		Assert.assertEquals(ListUtil.empty(), lists);
 
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 1);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 1);
 		Assert.assertEquals("[[1, 2, 3, 4]]", lists.toString());
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 2);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 2);
 		Assert.assertEquals("[[1, 2], [3, 4]]", lists.toString());
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 3);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 3);
 		Assert.assertEquals("[[1, 2], [3], [4]]", lists.toString());
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 4);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 4);
 		Assert.assertEquals("[[1], [2], [3], [4]]", lists.toString());
 
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3), 5);
 		Assert.assertEquals("[[1], [2], [3], [], []]", lists.toString());
-		lists = ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);
+		lists = ListUtil.avgPartition(Arrays.asList(1, 2, 3), 2);
 		Assert.assertEquals("[[1, 2], [3]]", lists.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void splitAvgNotZero() {
 		// limit不能小于等于0
-		ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 0);
+		ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 0);
 	}
 
 	@Test

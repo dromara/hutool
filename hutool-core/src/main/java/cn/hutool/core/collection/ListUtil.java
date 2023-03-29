@@ -569,19 +569,6 @@ public class ListUtil {
 	}
 
 	/**
-	 * 获取匹配规则定义中匹配到元素的所有位置
-	 *
-	 * @param <T>     元素类型
-	 * @param list    列表
-	 * @param matcher 匹配器，为空则全部匹配
-	 * @return 位置数组
-	 * @since 5.2.5
-	 */
-	public static <T> int[] indexOfAll(final List<T> list, final Predicate<T> matcher) {
-		return CollUtil.indexOfAll(list, matcher);
-	}
-
-	/**
 	 * 通过传入分区长度，将指定列表分区为不同的块，每块区域的长度相同（最后一块可能小于长度）<br>
 	 * 分区是在原List的基础上进行的，返回的分区是不可变的抽象列表，原列表元素变更，分区中元素也会变更。
 	 *
@@ -607,32 +594,13 @@ public class ListUtil {
 	}
 
 	/**
-	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
-	 *
-	 * <p>
-	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
-	 * 此方法返回的是原List的视图，也就是说原List有变更，切分后的结果也会变更。
-	 * </p>
-	 *
-	 * @param <T>  集合元素类型
-	 * @param list 列表，为空时返回{@link #empty()}
-	 * @param size 每个段的长度，当长度超过list长度时，size按照list长度计算，即只返回一个节点
-	 * @return 分段列表
-	 * @see #partition(List, int)
-	 * @since 5.4.5
-	 */
-	public static <T> List<List<T>> split(final List<T> list, final int size) {
-		return partition(list, size);
-	}
-
-	/**
 	 * 将集合平均分成多个list，返回这个集合的列表
 	 * <p>例：</p>
 	 * <pre>
-	 *     ListUtil.splitAvg(null, 3);	// []
-	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3, 4), 2);	// [[1, 2], [3, 4]]
-	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 5);	// [[1], [2], [3], [], []]
-	 *     ListUtil.splitAvg(Arrays.asList(1, 2, 3), 2);	// [[1, 2], [3]]
+	 *     ListUtil.avgPartition(null, 3);	// []
+	 *     ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 2);	// [[1, 2], [3, 4]]
+	 *     ListUtil.avgPartition(Arrays.asList(1, 2, 3), 5);	// [[1], [2], [3], [], []]
+	 *     ListUtil.avgPartition(Arrays.asList(1, 2, 3), 2);	// [[1, 2], [3]]
 	 * </pre>
 	 *
 	 * @param <T>   集合元素类型
@@ -642,7 +610,7 @@ public class ListUtil {
 	 * @author lileming
 	 * @since 5.7.10
 	 */
-	public static <T> List<List<T>> splitAvg(final List<T> list, final int limit) {
+	public static <T> List<List<T>> avgPartition(final List<T> list, final int limit) {
 		if (CollUtil.isEmpty(list)) {
 			return empty();
 		}

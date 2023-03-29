@@ -838,7 +838,7 @@ public class CollUtil {
 	 * @param size       每个段的长度
 	 * @return 分段列表
 	 */
-	public static <T> List<List<T>> split(final Collection<T> collection, final int size) {
+	public static <T> List<List<T>> partition(final Collection<T> collection, final int size) {
 		final List<List<T>> result = new ArrayList<>();
 		if (CollUtil.isEmpty(collection)) {
 			return result;
@@ -1305,6 +1305,19 @@ public class CollUtil {
 	 * @since 5.2.5
 	 */
 	public static <T> int[] indexOfAll(final Collection<T> collection, final Predicate<T> predicate) {
+		return Convert.convert(int[].class, indexListOfAll(collection, predicate));
+	}
+
+	/**
+	 * 获取匹配规则定义中匹配到元素的所有位置<br>
+	 * 此方法对于某些无序集合的位置信息，以转换为数组后的位置为准。
+	 *
+	 * @param <T>        元素类型
+	 * @param collection 集合
+	 * @param predicate    匹配器，为空则全部匹配
+	 * @return 位置数组
+	 */
+	public static <T> List<Integer> indexListOfAll(final Collection<T> collection, final Predicate<T> predicate) {
 		final List<Integer> indexList = new ArrayList<>();
 		if (null != collection) {
 			int index = 0;
@@ -1316,7 +1329,7 @@ public class CollUtil {
 			}
 		}
 
-		return Convert.convert(int[].class, indexList);
+		return indexList;
 	}
 
 	// ---------------------------------------------------------------------- zip
