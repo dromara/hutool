@@ -12,8 +12,11 @@
 
 package cn.hutool.core.io.stream;
 
+import cn.hutool.core.codec.HexUtil;
 import cn.hutool.core.io.ByteOrderMark;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;

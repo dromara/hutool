@@ -6,7 +6,6 @@ import cn.hutool.core.util.CharsetUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.function.Predicate;
 
 /**
@@ -31,27 +30,32 @@ public class ByteOrderMark implements Predicate<byte[]>, Comparable<ByteOrderMar
 	/**
 	 * UTF-8 BOM.
 	 */
-	public static final ByteOrderMark UTF_8 = new ByteOrderMark(CharsetUtil.NAME_UTF_8, 0xEF, 0xBB, 0xBF);
+	public static final ByteOrderMark UTF_8 = new ByteOrderMark(CharsetUtil.NAME_UTF_8,
+			(byte) 0xEF, (byte) 0xBB, (byte) 0xBF);
 
 	/**
 	 * UTF-16BE BOM (Big-Endian).
 	 */
-	public static final ByteOrderMark UTF_16BE = new ByteOrderMark("UTF-16BE", 0xFE, 0xFF);
+	public static final ByteOrderMark UTF_16BE = new ByteOrderMark("UTF-16BE",
+			(byte) 0xFE, (byte) 0xFF);
 
 	/**
 	 * UTF-16LE BOM (Little-Endian).
 	 */
-	public static final ByteOrderMark UTF_16LE = new ByteOrderMark("UTF-16LE", 0xFF, 0xFE);
+	public static final ByteOrderMark UTF_16LE = new ByteOrderMark("UTF-16LE",
+			(byte) 0xFF, (byte) 0xFE);
 
 	/**
 	 * UTF-32BE BOM (Big-Endian).
 	 */
-	public static final ByteOrderMark UTF_32BE = new ByteOrderMark("UTF-32BE", 0x00, 0x00, 0xFE, 0xFF);
+	public static final ByteOrderMark UTF_32BE = new ByteOrderMark("UTF-32BE",
+			(byte) 0x00, (byte) 0x00, (byte) 0xFE, (byte) 0xFF);
 
 	/**
 	 * UTF-32LE BOM (Little-Endian).
 	 */
-	public static final ByteOrderMark UTF_32LE = new ByteOrderMark("UTF-32LE", 0xFF, 0xFE, 0x00, 0x00);
+	public static final ByteOrderMark UTF_32LE = new ByteOrderMark("UTF-32LE",
+			(byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x00);
 
 	/**
 	 * 预定义的所有BOM信息
@@ -66,7 +70,7 @@ public class ByteOrderMark implements Predicate<byte[]>, Comparable<ByteOrderMar
 	// endregion
 
 	private final String charsetName;
-	private final int[] bytes;
+	private final byte[] bytes;
 
 	/**
 	 * 构造
@@ -75,12 +79,12 @@ public class ByteOrderMark implements Predicate<byte[]>, Comparable<ByteOrderMar
 	 * @param bytes       BOM bytes
 	 * @throws IllegalArgumentException 编码名称为空或者bytes为空
 	 */
-	public ByteOrderMark(final String charsetName, final int... bytes) {
+	public ByteOrderMark(final String charsetName, final byte... bytes) {
 		if (ArrayUtil.isEmpty(bytes)) {
 			throw new IllegalArgumentException("No bytes specified");
 		}
 		this.charsetName = Assert.notEmpty(charsetName, "No charsetName specified");
-		this.bytes = new int[bytes.length];
+		this.bytes = new byte[bytes.length];
 		System.arraycopy(bytes, 0, this.bytes, 0, bytes.length);
 	}
 
@@ -118,11 +122,7 @@ public class ByteOrderMark implements Predicate<byte[]>, Comparable<ByteOrderMar
 	 * @return a copy of the BOM's bytes
 	 */
 	public byte[] getBytes() {
-		final byte[] copy = new byte[bytes.length];
-		for (int i = 0; i < bytes.length; i++) {
-			copy[i] = (byte) bytes[i];
-		}
-		return copy;
+		return Arrays.copyOfRange(bytes, 0, bytes.length);
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class ByteOrderMark implements Predicate<byte[]>, Comparable<ByteOrderMar
 				builder.append(",");
 			}
 			builder.append("0x");
-			builder.append(Integer.toHexString(0xFF & bytes[i]).toUpperCase(Locale.ROOT));
+			builder.append(Integer.toHexString(0xFF & bytes[i]).toUpperCase());
 		}
 		builder.append(']');
 		return builder.toString();
