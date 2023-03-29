@@ -13,6 +13,7 @@
 package cn.hutool.setting.toml;
 
 import cn.hutool.core.array.ArrayUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.setting.SettingException;
 
@@ -28,18 +29,16 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Class for writing TOML v0.4.0.
- * <h1>DateTimes support</h1>
+ * TOML生成器
  * <p>
- * Any {@link TemporalAccessor} may be added in a Map passed to this writer, this writer can only write three
- * kind of datetimes: {@link LocalDate}, {@link LocalDateTime} and {@link ZonedDateTime}.
- * </p>
- * <h1>Lenient bare keys</h1>
+ * 日期格式支持：
+ * <ul>
+ *     <li>2015-03-20                转为：{@link LocalDate}</li>
+ *     <li>2015-03-20T19:04:35       转为：{@link LocalDateTime}</li>
+ *     <li>2015-03-20T19:04:35+01:00 转为：{@link ZonedDateTime}</li>
+ * </ul>
  * <p>
- * The {@link TomlWriter} always outputs data that strictly follows the TOML specification. Any key that
- * contains one
- * or more non-strictly valid character is surrounded by quotes.
- * </p>
+ * 此类支持更加宽松的key，除了{@code A-Za-z0-9_- }，其他key使用"包装。
  *
  * @author TheElectronWill
  */
@@ -113,13 +112,13 @@ public class TomlWriter {
 	 * Writes the specified data in the TOML format.
 	 *
 	 * @param data the data to write
-	 * @throws IOException if an error occurs
+	 * @throws IORuntimeException if an error occurs
 	 */
-	public void write(final Map<String, Object> data) throws IOException {
+	public void write(final Map<String, Object> data) throws IORuntimeException {
 		writeTableContent(data);
 	}
 
-	private void writeTableName() throws IOException {
+	private void writeTableName() throws IORuntimeException {
 		final Iterator<String> it = tablesNames.iterator();
 		while (it.hasNext()) {
 			final String namePart = it.next();
@@ -130,7 +129,7 @@ public class TomlWriter {
 		}
 	}
 
-	private void writeTableContent(final Map<String, Object> table) throws IOException {
+	private void writeTableContent(final Map<String, Object> table) throws IORuntimeException {
 		writeTableContent(table, true);
 		writeTableContent(table, false);
 	}
@@ -144,7 +143,7 @@ public class TomlWriter {
 	 *                     (and the arrays of tables).
 	 */
 	@SuppressWarnings("unchecked")
-	private void writeTableContent(final Map<String, Object> table, final boolean simpleValues) throws IOException {
+	private void writeTableContent(final Map<String, Object> table, final boolean simpleValues) throws IORuntimeException {
 		for (final Map.Entry<String, Object> entry : table.entrySet()) {
 			final String name = entry.getKey();
 			final Object value = entry.getValue();
@@ -232,7 +231,7 @@ public class TomlWriter {
 		newLine();
 	}
 
-	private void writeKey(final String key) throws IOException {
+	private void writeKey(final String key) throws IORuntimeException {
 		for (int i = 0; i < key.length(); i++) {
 			final char c = key.charAt(i);
 			if (false == isValidCharOfKey(c)) {
@@ -246,13 +245,13 @@ public class TomlWriter {
 
 	private static boolean isValidCharOfKey(final char c) {
 		return (c >= 'a' && c <= 'z') ||
-				(c >= 'A' && c <= 'Z') ||
-				(c >= '0' && c <= '9') ||
-				c == '-' ||
-				c == '_';
+			(c >= 'A' && c <= 'Z') ||
+			(c >= '0' && c <= '9') ||
+			c == '-' ||
+			c == '_';
 	}
 
-	private void writeString(final String str) throws IOException {
+	private void writeString(final String str) throws IORuntimeException {
 		final StringBuilder sb = new StringBuilder();
 		sb.append('"');
 		for (int i = 0; i < str.length(); i++) {
@@ -263,7 +262,7 @@ public class TomlWriter {
 		write(sb.toString());
 	}
 
-	private void writeArray(final Collection<?> c) throws IOException {
+	private void writeArray(final Collection<?> c) throws IORuntimeException {
 		write('[');
 		for (final Object element : c) {
 			writeValue(element);
@@ -272,7 +271,7 @@ public class TomlWriter {
 		write(']');
 	}
 
-	private void writeValue(final Object value) throws IOException {
+	private void writeValue(final Object value) throws IORuntimeException {
 		if (value instanceof String) {
 			writeString((String) value);
 		} else if (value instanceof Number || value instanceof Boolean) {
@@ -290,30 +289,42 @@ public class TomlWriter {
 			write(ArrayUtil.toString(value));
 		} else if (value instanceof Map) {// should not happen because an array of tables is detected by
 			// writeTableContent()
-			throw new IOException("Unexpected value " + value);
+			throw new IORuntimeException("Unexpected value " + value);
 		} else {
 			throw new SettingException("Unsupported value of type " + value.getClass().getCanonicalName());
 		}
 	}
 
-	private void newLine() throws IOException {
+	private void newLine() throws IORuntimeException {
 		if (lineBreaks <= 1) {
-			writer.write(lineSeparator);
+			try {
+				writer.write(lineSeparator);
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
 			lineBreaks++;
 		}
 	}
 
-	private void write(final char c) throws IOException {
-		writer.write(c);
+	private void write(final char c) throws IORuntimeException {
+		try {
+			writer.write(c);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 		lineBreaks = 0;
 	}
 
-	private void write(final String str) throws IOException {
-		writer.write(str);
+	private void write(final String str) throws IORuntimeException {
+		try {
+			writer.write(str);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 		lineBreaks = 0;
 	}
 
-	private void indent() throws IOException {
+	private void indent() throws IORuntimeException {
 		for (int i = 0; i < indentationLevel; i++) {
 			for (int j = 0; j < indentSize; j++) {
 				write(indentCharacter);

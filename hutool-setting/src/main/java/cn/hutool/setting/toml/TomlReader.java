@@ -145,6 +145,11 @@ public class TomlReader {
 		}
 	}
 
+	/**
+	 * 读取TOML
+	 *
+	 * @return TOML
+	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> read() {
 		final Map<String, Object> map = nextTableContent();
@@ -237,7 +242,7 @@ public class TomlReader {
 				final Object child = valueMap.get(part);
 				final Map<String, Object> childMap;
 				if (child == null) {// implicit table
-					childMap = new HashMap<>(4);
+					childMap = new LinkedHashMap<>(4);
 					valueMap.put(part, childMap);
 				} else if (child instanceof Map) {// table
 					childMap = (Map<String, Object>) child;
@@ -291,7 +296,7 @@ public class TomlReader {
 	}
 
 	private Map<String, Object> nextInlineTable() {
-		final Map<String, Object> map = new HashMap<>();
+		final Map<String, Object> map = new LinkedHashMap<>();
 		while (true) {
 			final char nameFirstChar = nextUsefulOrLinebreak();
 			String name = null;
@@ -350,7 +355,7 @@ public class TomlReader {
 	}
 
 	private Map<String, Object> nextTableContent() {
-		final Map<String, Object> map = new HashMap<>();
+		final Map<String, Object> map = new LinkedHashMap<>();
 		while (true) {
 			final char nameFirstChar = nextUseful(true);
 			if (!hasNext() || nameFirstChar == '[') {
