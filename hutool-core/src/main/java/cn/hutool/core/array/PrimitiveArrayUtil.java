@@ -3155,7 +3155,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final boolean[] array, final boolean[] prefix) {
+	public static boolean startWith(final boolean[] array, final boolean... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3186,7 +3186,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final byte[] array, final byte[] prefix) {
+	public static boolean startWith(final byte[] array, final byte... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3212,7 +3212,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final char[] array, final char[] prefix) {
+	public static boolean startWith(final char[] array, final char... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3243,7 +3243,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final double[] array, final double[] prefix) {
+	public static boolean startWith(final double[] array, final double... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3274,7 +3274,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final float[] array, final float[] prefix) {
+	public static boolean startWith(final float[] array, final float... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3305,7 +3305,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final int[] array, final int[] prefix) {
+	public static boolean startWith(final int[] array, final int... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3336,7 +3336,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final long[] array, final long[] prefix) {
+	public static boolean startWith(final long[] array, final long... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3367,7 +3367,7 @@ public class PrimitiveArrayUtil {
 	 * @param prefix 前缀
 	 * @return 是否开头
 	 */
-	public static boolean startWith(final short[] array, final short[] prefix) {
+	public static boolean startWith(final short[] array, final short... prefix) {
 		if (array == prefix) {
 			return true;
 		}
@@ -3402,7 +3402,7 @@ public class PrimitiveArrayUtil {
 	 * @param subArray 子数组
 	 * @return 是否局部匹配
 	 */
-	public static boolean isSubEquals(final byte[] array, final int offset, final byte[] subArray) {
+	public static boolean isSubEquals(final byte[] array, final int offset, final byte... subArray) {
 		if (array == subArray) {
 			return true;
 		}
