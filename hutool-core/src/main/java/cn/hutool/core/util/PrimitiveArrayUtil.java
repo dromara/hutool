@@ -3387,4 +3387,9 @@ public class PrimitiveArrayUtil {
 		return true;
 	}
 	// endregion
+
+	// region rangeMatches
+	public static boolean rangeMatches(final byte[] bytes1){
+		return false;
+	}
 }

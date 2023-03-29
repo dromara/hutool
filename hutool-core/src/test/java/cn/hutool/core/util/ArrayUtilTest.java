@@ -719,4 +719,19 @@ public class ArrayUtilTest {
 		b = ArrayUtil.startWith((int[])null, null);
 		Assert.assertTrue(b);
 	}
+
+	@Test
+	public void equalsTest() {
+		final boolean b = ObjUtil.equals(new int[]{1, 2, 3}, new int[]{1, 2, 3});
+		Assert.assertTrue(b);
+	}
+
+	@Test
+	public void copyOfRangeTest() {
+		String a = "aIDAT";
+		final byte[] bytes1 = Arrays.copyOfRange(a.getBytes(CharsetUtil.UTF_8), 1, 1 + 4);
+
+		Assert.assertEquals(new String(bytes1),
+				new String(a.getBytes(CharsetUtil.UTF_8), 1, 4));
+	}
 }

@@ -13,6 +13,7 @@
 package cn.hutool.core.io.file;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -82,8 +83,7 @@ public enum FileMagicNumber {
 					try {
 						final int dataLength = new BigInteger(1, Arrays.copyOfRange(bytes, i, i + 4)).intValue();
 						i += 4;
-						final byte[] bytes1 = Arrays.copyOfRange(bytes, i, i + 4);
-						final String chunkType = new String(bytes1);
+						final String chunkType = new String(bytes, i, 4, CharsetUtil.ISO_8859_1);
 						i += 4;
 						if (Objects.equals(chunkType, "IDAT") || Objects.equals(chunkType, "IEND")) {
 							return false;
@@ -606,6 +606,7 @@ public enum FileMagicNumber {
 			//去除bom头并且跳过三个字节
 			if (bytes.length > 3 && Objects.equals(bytes[0], (byte) 0xEF)
 					&& Objects.equals(bytes[1], (byte) 0xBB) && Objects.equals(bytes[2], (byte) 0xBF)) {
+				// UTF8 Bom
 				bytes = Arrays.copyOfRange(bytes, 3, bytes.length);
 			}
 			return bytes.length > 3

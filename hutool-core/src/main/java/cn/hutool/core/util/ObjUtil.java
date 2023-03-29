@@ -42,6 +42,7 @@ public class ObjUtil {
 	 * <p>比较两个对象是否相等，满足下述任意条件即返回{@code true}：
 	 * <ul>
 	 *     <li>若两对象皆为{@link BigDecimal}，且满足{@code 0 == obj1.compareTo(obj2)}</li>
+	 *     <li>若两对象都为数组，调用Arrays.equals完成判断</li>
 	 *     <li>{@code obj1 == null && obj2 == null}</li>
 	 *     <li>{@code obj1.equals(obj2)}</li>
 	 * </ul>
@@ -54,6 +55,8 @@ public class ObjUtil {
 	public static boolean equals(final Object obj1, final Object obj2) {
 		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
 			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
+		} else if(ArrayUtil.isArray(obj1) && ArrayUtil.isArray(obj2)){
+			return ArrayUtil.equals(obj1, obj2);
 		}
 		return Objects.equals(obj1, obj2);
 	}

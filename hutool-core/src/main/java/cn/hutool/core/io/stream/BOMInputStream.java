@@ -12,6 +12,7 @@
 
 package cn.hutool.core.io.stream;
 
+import cn.hutool.core.io.ByteOrderMark;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -121,25 +122,17 @@ public class BOMInputStream extends InputStream {
 
 		final byte[] bom = new byte[BOM_SIZE];
 		final int n;
-		final int unread;
+		int unread = 0;
 		n = in.read(bom, 0, bom.length);
 
-		if ((bom[0] == (byte) 0x00) && (bom[1] == (byte) 0x00) && (bom[2] == (byte) 0xFE) && (bom[3] == (byte) 0xFF)) {
-			charset = "UTF-32BE";
-			unread = n - 4;
-		} else if ((bom[0] == (byte) 0xFF) && (bom[1] == (byte) 0xFE) && (bom[2] == (byte) 0x00) && (bom[3] == (byte) 0x00)) {
-			charset = "UTF-32LE";
-			unread = n - 4;
-		} else if ((bom[0] == (byte) 0xEF) && (bom[1] == (byte) 0xBB) && (bom[2] == (byte) 0xBF)) {
-			charset = "UTF-8";
-			unread = n - 3;
-		} else if ((bom[0] == (byte) 0xFE) && (bom[1] == (byte) 0xFF)) {
-			charset = "UTF-16BE";
-			unread = n - 2;
-		} else if ((bom[0] == (byte) 0xFF) && (bom[1] == (byte) 0xFE)) {
-			charset = "UTF-16LE";
-			unread = n - 2;
-		} else {
+		for (final ByteOrderMark byteOrderMark : ByteOrderMark.ALL) {
+			if(byteOrderMark.test(bom)){
+				charset = byteOrderMark.getCharsetName();
+				unread = n - byteOrderMark.length();
+				break;
+			}
+		}
+		 if(0 == unread) {
 			// Unicode BOM mark not found, unread all bytes
 			charset = defaultCharset;
 			unread = n;
