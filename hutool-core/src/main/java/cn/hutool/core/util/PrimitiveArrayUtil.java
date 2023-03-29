@@ -31,6 +31,7 @@ public class PrimitiveArrayUtil {
 	public static final int INDEX_NOT_FOUND = -1;
 
 	// region ----- isEmpty
+
 	/**
 	 * 数组是否为空
 	 *
@@ -3139,6 +3140,7 @@ public class PrimitiveArrayUtil {
 	// endregion
 
 	// region ----- startWith
+
 	/**
 	 * array数组是否以prefix开头
 	 * <ul>
@@ -3155,7 +3157,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3186,7 +3188,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3217,7 +3219,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3248,7 +3250,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3279,7 +3281,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3310,7 +3312,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3341,7 +3343,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3372,7 +3374,7 @@ public class PrimitiveArrayUtil {
 		if (array == prefix) {
 			return true;
 		}
-		if(isEmpty(array)){
+		if (isEmpty(array)) {
 			return isEmpty(prefix);
 		}
 		if (prefix.length > array.length) {
@@ -3389,7 +3391,53 @@ public class PrimitiveArrayUtil {
 	// endregion
 
 	// region rangeMatches
-	public static boolean rangeMatches(final byte[] bytes1){
-		return false;
+
+	/**
+	 * 是否局部匹配，相当于对比以下子串是否相等
+	 * <pre>
+	 *     byte1[offset1, byte2.length]
+	 *                  ||
+	 *                byte2
+	 * </pre>
+	 *
+	 * @param bytes1 第一个数组
+	 * @param offset 开始位置
+	 * @param bytes2 第二个数组
+	 * @return 是否局部匹配
+	 */
+	public static boolean isSubEquals(final byte[] bytes1, final int offset, final byte[] bytes2) {
+		return regionMatches(bytes1, offset, bytes2, 0, bytes2.length);
+	}
+
+	/**
+	 * 是否局部匹配，相当于对比以下子串是否相等
+	 * <pre>
+	 *     byte1[offset1, offset1 + length]
+	 *                  ||
+	 *     byte2[offset2, offset2 + length]
+	 * </pre>
+	 *
+	 * @param bytes1  第一个数组
+	 * @param offset1 第一个数组开始位置
+	 * @param bytes2  第二个数组
+	 * @param offset2 第二个数组开始位置
+	 * @param length  检查长度
+	 * @return 是否局部匹配
+	 */
+	public static boolean regionMatches(final byte[] bytes1, final int offset1,
+										final byte[] bytes2, final int offset2, final int length) {
+		if(bytes1.length < offset1 + length){
+			throw new IndexOutOfBoundsException("[byte1] length must be >= [offset1 + length]");
+		}
+		if(bytes2.length < offset2 + length){
+			throw new IndexOutOfBoundsException("[byte2] length must be >= [offset2 + length]");
+		}
+
+		for (int i = 0; i < length; i++) {
+			if (bytes1[i + offset1] != bytes2[i + offset2]) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -1141,17 +1141,18 @@ public enum FileMagicNumber {
 		@Override
 		public boolean match(final byte[] bytes) {
 			final byte[] byte1 = new byte[]{(byte) 0xd0, (byte) 0xcf, (byte) 0x11, (byte) 0xe0, (byte) 0xa1, (byte) 0xb1, (byte) 0x1a, (byte) 0xe1};
-			final boolean flag1 = bytes.length > 515 && Arrays.equals(Arrays.copyOfRange(bytes, 0, 8), byte1);
-			if (flag1) {
+			if (bytes.length > 515 && ArrayUtil.isSubEquals(bytes, 0, byte1)) {
 				final byte[] byte2 = new byte[]{(byte) 0xec, (byte) 0xa5, (byte) 0xc1, (byte) 0x00};
-				final boolean flag2 = Arrays.equals(Arrays.copyOfRange(bytes, 512, 516), byte2);
+				// check 512:516
+				if(ArrayUtil.isSubEquals(bytes, 512, byte2)){
+					return true;
+				}
 				final byte[] byte3 = new byte[]{(byte) 0x00, (byte) 0x0a, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x4d, (byte) 0x53, (byte) 0x57, (byte) 0x6f, (byte) 0x72, (byte) 0x64
 						, (byte) 0x44, (byte) 0x6f, (byte) 0x63, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x57, (byte) 0x6f, (byte) 0x72, (byte) 0x64,
 						(byte) 0x2e, (byte) 0x44, (byte) 0x6f, (byte) 0x63, (byte) 0x75, (byte) 0x6d, (byte) 0x65, (byte) 0x6e, (byte) 0x74, (byte) 0x2e, (byte) 0x38, (byte) 0x00,
 						(byte) 0xf4, (byte) 0x39, (byte) 0xb2, (byte) 0x71};
 				final byte[] range = Arrays.copyOfRange(bytes, 2075, 2142);
-				final boolean flag3 = bytes.length > 2142 && FileMagicNumber.indexOf(range, byte3) > 0;
-				return flag2 || flag3;
+				return bytes.length > 2142 && FileMagicNumber.indexOf(range, byte3) > 0;
 			}
 			return false;
 		}

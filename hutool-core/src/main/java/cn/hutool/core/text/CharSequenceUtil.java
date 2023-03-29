@@ -1023,7 +1023,7 @@ public class CharSequenceUtil extends StrChecker {
 		if (null == str || ArrayUtil.isEmpty(chars)) {
 			return str(str);
 		}
-		return filter(str, (c)-> false == ArrayUtil.contains(chars, c));
+		return filter(str, (c) -> false == ArrayUtil.contains(chars, c));
 	}
 
 	/**
@@ -2052,16 +2052,16 @@ public class CharSequenceUtil extends StrChecker {
 	 * 任意一个字符串为null返回false
 	 *
 	 * @param str1       第一个字符串
-	 * @param start1     第一个字符串开始的位置
+	 * @param offset1    第一个字符串开始的位置
 	 * @param str2       第二个字符串
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 子串是否相同
 	 * @see String#regionMatches(boolean, int, String, int, int)
 	 * @since 3.2.1
 	 */
-	public static boolean isSubEquals(final CharSequence str1, final int start1,
+	public static boolean isSubEquals(final CharSequence str1, final int offset1,
 									  final CharSequence str2, final boolean ignoreCase) {
-		return isSubEquals(str1, start1, str2, 0, str2.length(), ignoreCase);
+		return isSubEquals(str1, offset1, str2, 0, str2.length(), ignoreCase);
 	}
 
 	/**
@@ -2069,23 +2069,23 @@ public class CharSequenceUtil extends StrChecker {
 	 * 任意一个字符串为null返回false
 	 *
 	 * @param str1       第一个字符串
-	 * @param start1     第一个字符串开始的位置
+	 * @param offset1    第一个字符串开始的位置
 	 * @param str2       第二个字符串
-	 * @param start2     第二个字符串开始的位置
+	 * @param offset2    第二个字符串开始的位置
 	 * @param length     截取长度
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 子串是否相同
 	 * @see String#regionMatches(boolean, int, String, int, int)
 	 * @since 3.2.1
 	 */
-	public static boolean isSubEquals(final CharSequence str1, final int start1,
-									  final CharSequence str2, final int start2, final int length,
+	public static boolean isSubEquals(final CharSequence str1, final int offset1,
+									  final CharSequence str2, final int offset2, final int length,
 									  final boolean ignoreCase) {
 		if (null == str1 || null == str2) {
 			return false;
 		}
 
-		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
+		return str1.toString().regionMatches(ignoreCase, offset1, str2.toString(), offset2, length);
 	}
 	// endregion
 

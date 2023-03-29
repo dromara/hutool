@@ -12,6 +12,7 @@ import java.util.*;
  *
  * @author Looly
  */
+@SuppressWarnings("ConstantValue")
 public class ArrayUtilTest {
 
 	@Test
@@ -728,10 +729,24 @@ public class ArrayUtilTest {
 
 	@Test
 	public void copyOfRangeTest() {
-		String a = "aIDAT";
+		final String a = "aIDAT";
 		final byte[] bytes1 = Arrays.copyOfRange(a.getBytes(CharsetUtil.UTF_8), 1, 1 + 4);
 
 		Assert.assertEquals(new String(bytes1),
 				new String(a.getBytes(CharsetUtil.UTF_8), 1, 4));
+	}
+
+	@Test
+	public void regionMatchesTest() {
+		final byte[] a = new byte[]{1, 2, 3, 4, 5};
+		final byte[] b = new byte[]{2, 3, 4};
+
+		Assert.assertTrue(ArrayUtil.regionMatches(a, 1, b, 0, 1));
+		Assert.assertTrue(ArrayUtil.regionMatches(a, 1, b, 0, 2));
+		Assert.assertTrue(ArrayUtil.regionMatches(a, 1, b, 0, 3));
+		Assert.assertTrue(ArrayUtil.isSubEquals(a, 1, b));
+
+		Assert.assertFalse(ArrayUtil.regionMatches(a, 2, b, 0, 2));
+		Assert.assertFalse(ArrayUtil.regionMatches(a, 3, b, 0, 2));
 	}
 }
