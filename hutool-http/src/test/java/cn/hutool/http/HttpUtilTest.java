@@ -105,7 +105,7 @@ public class HttpUtilTest {
 	}
 
 	@Test
-	//@Disabled
+	@Disabled
 	public void patchTest() {
 		// 验证patch请求是否可用
 		final String body = HttpUtil.send(Request.of("https://hutool.cn").method(Method.PATCH)).bodyStr();

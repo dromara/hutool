@@ -313,15 +313,10 @@ public class JavaInfo implements Serializable {
 	}
 
 	/**
-	 * 判定当前Java的版本是否大于等于指定的版本号。
-	 *
-	 * <p>
-	 * 例如：
-	 * <p>
-	 *
+	 * 判定当前Java的版本是否大于等于指定的版本号，例如：
 	 * <ul>
-	 * <li>测试JDK 1.2：{@code isJavaVersionAtLeast(1.2f)}</li>
-	 * <li>测试JDK 1.2.1：{@code isJavaVersionAtLeast(1.31f)}</li>
+	 * 	<li>测试JDK 1.2：{@code isJavaVersionAtLeast(1.2f)}</li>
+	 * 	<li>测试JDK 1.2.1：{@code isJavaVersionAtLeast(1.31f)}</li>
 	 * </ul>
 	 *
 	 * @param requiredVersion 需要的版本
@@ -332,15 +327,10 @@ public class JavaInfo implements Serializable {
 	}
 
 	/**
-	 * 判定当前Java的版本是否大于等于指定的版本号。
-	 *
-	 * <p>
-	 * 例如：
-	 * <p>
-	 *
+	 * 判定当前Java的版本是否大于等于指定的版本号，例如：
 	 * <ul>
-	 * <li>测试JDK 1.2：{@code isJavaVersionAtLeast(120)}</li>
-	 * <li>测试JDK 1.2.1：{@code isJavaVersionAtLeast(131)}</li>
+	 * 	<li>测试JDK 1.2：{@code isJavaVersionAtLeast(120)}</li>
+	 * 	<li>测试JDK 1.2.1：{@code isJavaVersionAtLeast(131)}</li>
 	 * </ul>
 	 *
 	 * @param requiredVersion 需要的版本
