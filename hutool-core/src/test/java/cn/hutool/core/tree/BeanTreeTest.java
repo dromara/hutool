@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
@@ -41,7 +40,10 @@ public class BeanTreeTest {
 	List<JavaBean> originJavaBeanTree;
 	BeanTree<JavaBean, Long> beanTree;
 
-	@BeforeEach
+	BeanTreeTest(){
+		setUp();
+	}
+
 	public void setUp() {
 		originJavaBeanList = EasyStream
 				.of(
