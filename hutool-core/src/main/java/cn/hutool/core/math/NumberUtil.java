@@ -12,10 +12,10 @@
 
 package cn.hutool.core.math;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 
 import java.math.BigDecimal;
@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 数字工具类<br>
@@ -56,6 +57,7 @@ public class NumberUtil {
 	private static final int DEFAULT_DIV_SCALE = 10;
 
 	// region ----- add
+
 	/**
 	 * 提供精确的加法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -106,6 +108,7 @@ public class NumberUtil {
 	// endregion
 
 	// region ----- sub
+
 	/**
 	 * 提供精确的减法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -156,6 +159,7 @@ public class NumberUtil {
 	// endregion
 
 	// region ----- mul
+
 	/**
 	 * 提供精确的乘法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -201,6 +205,7 @@ public class NumberUtil {
 	// endregion
 
 	// region ----- div
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 *
@@ -1011,6 +1016,7 @@ public class NumberUtil {
 	}
 
 	// region ----- equals
+
 	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
@@ -1053,17 +1059,28 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，值相等 返回true<br>
-	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
+	 * 比较数字值是否相等，相等返回{@code true}<br>
+	 * 需要注意的是{@link BigDecimal}需要特殊处理<br>
+	 * BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等，<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
 	 *
-	 * @param bigNum1 数字1
-	 * @param bigNum2 数字2
+	 * <ul>
+	 *     <li>如果用户提供两个Number都是{@link BigDecimal}，则通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等</li>
+	 *     <li>其他情况调用{@link Number#equals(Object)}比较</li>
+	 * </ul>
+	 *
+	 * @param number1 数字1
+	 * @param number2 数字2
 	 * @return 是否相等
 	 * @see CompareUtil#equals(Comparable, Comparable)
+	 * @see Objects#equals(Object, Object)
 	 */
-	public static boolean equals(final BigDecimal bigNum1, final BigDecimal bigNum2) {
-		return CompareUtil.equals(bigNum1, bigNum2);
+	public static boolean equals(final Number number1, final Number number2) {
+		if (number1 instanceof BigDecimal && number2 instanceof BigDecimal) {
+			// BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等
+			return CompareUtil.equals((BigDecimal) number1, (BigDecimal) number2);
+		}
+		return Objects.equals(number1, number2);
 	}
 
 	/**
@@ -1082,6 +1099,7 @@ public class NumberUtil {
 	// endregion
 
 	// region ----- toStr
+
 	/**
 	 * 数字转字符串<br>
 	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
@@ -1428,6 +1446,7 @@ public class NumberUtil {
 	}
 
 	// region ----- parse
+
 	/**
 	 * 解析转换数字字符串为 {@link java.lang.Integer } 规则如下：
 	 *

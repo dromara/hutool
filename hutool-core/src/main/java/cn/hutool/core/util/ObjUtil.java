@@ -54,8 +54,8 @@ public class ObjUtil {
 	 * @since 5.4.3
 	 */
 	public static boolean equals(final Object obj1, final Object obj2) {
-		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
-			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
+		if (obj1 instanceof Number && obj2 instanceof Number) {
+			return NumberUtil.equals((Number) obj1, (Number) obj2);
 		} else if(ArrayUtil.isArray(obj1) && ArrayUtil.isArray(obj2)){
 			return ArrayUtil.equals(obj1, obj2);
 		}
