@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>cn.hutool</groupId>
+		<artifactId>hutool-parent</artifactId>
+		<version>5.8.17.M1</version>
+	</parent>
+
+	<artifactId>hutool-git</artifactId>
+	<name>${project.artifactId}</name>
+	<description>Hutool JSON封装</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.git</Automatic-Module-Name>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<!--jgit-->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>6.5.0.202303070854-r</version>
+			<optional>true</optional>
+		</dependency>
+		<!--jgit testing-->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit.junit</artifactId>
+			<version>6.5.0.202303070854-r</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>
