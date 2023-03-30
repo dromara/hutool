@@ -21,8 +21,8 @@ import cn.hutool.json.test.bean.report.CaseReport;
 import cn.hutool.json.test.bean.report.StepReport;
 import cn.hutool.json.test.bean.report.SuiteReport;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
@@ -48,9 +48,9 @@ public class JSONObjectTest {
 		final String str = "{\"code\": 500, \"data\":null}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(str);
-		Assert.assertEquals("{\"code\":500,\"data\":null}", jsonObject.toString());
+		Assertions.assertEquals("{\"code\":500,\"data\":null}", jsonObject.toString());
 		jsonObject.getConfig().setIgnoreNullValue(true);
-		Assert.assertEquals("{\"code\":500}", jsonObject.toString());
+		Assertions.assertEquals("{\"code\":500}", jsonObject.toString());
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class JSONObjectTest {
 		final String str = "{\"test\":\"关于开展2018年度“文明集体”、“文明职工”评选表彰活动的通知\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(str);
-		Assert.assertEquals(str, json.toString());
+		Assertions.assertEquals(str, json.toString());
 	}
 
 	/**
@@ -69,17 +69,17 @@ public class JSONObjectTest {
 		final JSONObject json = Objects.requireNonNull(JSONUtil.ofObj()//
 						.set("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
+		Assertions.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
 
 	@Test
 	public void toStringWithDateTest() {
 		JSONObject json = JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"));
 		assert json != null;
-		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
+		Assertions.assertEquals("{\"date\":1557314301000}", json.toString());
 
 		json = Objects.requireNonNull(JSONUtil.ofObj().set("date", DateUtil.parse("2019-05-08 19:18:21"))).setDateFormat(DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
+		Assertions.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
 	}
 
 
@@ -98,22 +98,22 @@ public class JSONObjectTest {
 		// putAll操作会覆盖相同key的值，因此a,b两个key的值改变，c的值不变
 		json1.putAll(json2);
 
-		Assert.assertEquals(json1.get("a"), "value21");
-		Assert.assertEquals(json1.get("b"), "value22");
-		Assert.assertEquals(json1.get("c"), "value3");
+		Assertions.assertEquals(json1.get("a"), "value21");
+		Assertions.assertEquals(json1.get("b"), "value22");
+		Assertions.assertEquals(json1.get("c"), "value3");
 	}
 
 	@Test
 	public void parseStringTest() {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
 		final JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
-		Assert.assertEquals(jsonObject.get("a"), "value1");
-		Assert.assertEquals(jsonObject.get("b"), "value2");
-		Assert.assertEquals(jsonObject.get("c"), "value3");
-		Assert.assertEquals(jsonObject.get("d"), true);
+		Assertions.assertEquals(jsonObject.get("a"), "value1");
+		Assertions.assertEquals(jsonObject.get("b"), "value2");
+		Assertions.assertEquals(jsonObject.get("c"), "value3");
+		Assertions.assertEquals(jsonObject.get("d"), true);
 
-		Assert.assertTrue(jsonObject.containsKey("e"));
-		Assert.assertNull(jsonObject.get("e"));
+		Assertions.assertTrue(jsonObject.containsKey("e"));
+		Assertions.assertNull(jsonObject.get("e"));
 	}
 
 	@Test
@@ -121,8 +121,8 @@ public class JSONObjectTest {
 		final String jsonStr = "{\"file_name\":\"RMM20180127009_731.000\",\"error_data\":\"201121151350701001252500000032 18973908335 18973908335 13601893517 201711211700152017112115135420171121 6594000000010100000000000000000000000043190101701001910072 100001100 \",\"error_code\":\"F140\",\"error_info\":\"最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”\",\"app_name\":\"inter-pre-check\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr);
-		Assert.assertEquals("F140", json.getStr("error_code"));
-		Assert.assertEquals("最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”", json.getStr("error_info"));
+		Assertions.assertEquals("F140", json.getStr("error_code"));
+		Assertions.assertEquals("最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”", json.getStr("error_info"));
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class JSONObjectTest {
 		final String jsonStr = "{\"test\":\"体”、“文\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr);
-		Assert.assertEquals("体”、“文", json.getStr("test"));
+		Assertions.assertEquals("体”、“文", json.getStr("test"));
 	}
 
 	@Test
@@ -138,8 +138,8 @@ public class JSONObjectTest {
 		final String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr);
-		Assert.assertEquals(new Integer(0), json.getInt("ok"));
-		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
+		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
 
 	@Test
@@ -147,8 +147,8 @@ public class JSONObjectTest {
 		final String jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr.getBytes(StandardCharsets.UTF_8));
-		Assert.assertEquals(new Integer(0), json.getInt("ok"));
-		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
+		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
 
 	@Test
@@ -158,8 +158,8 @@ public class JSONObjectTest {
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(stringReader);
-		Assert.assertEquals(new Integer(0), json.getInt("ok"));
-		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
+		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
 
 	@Test
@@ -169,8 +169,8 @@ public class JSONObjectTest {
 
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(in);
-		Assert.assertEquals(new Integer(0), json.getInt("ok"));
-		Assert.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
+		Assertions.assertEquals(new Integer(0), json.getInt("ok"));
+		Assertions.assertEquals(new JSONArray(), json.getJSONObject("data").getJSONArray("cards"));
 	}
 
 	@Test
@@ -179,8 +179,8 @@ public class JSONObjectTest {
 		final String jsonStr = "{\"a\":\"<div>aaa</div>\"}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject json = new JSONObject(jsonStr);
-		Assert.assertEquals("<div>aaa</div>", json.get("a"));
-		Assert.assertEquals(jsonStr, json.toString());
+		Assertions.assertEquals("<div>aaa</div>", json.get("a"));
+		Assertions.assertEquals(jsonStr, json.toString());
 	}
 
 	@Test
@@ -193,14 +193,14 @@ public class JSONObjectTest {
 				.set("list", JSONUtil.ofArray().set("a").set("b")).set("testEnum", "TYPE_A");
 
 		final TestBean bean = json.toBean(TestBean.class);
-		Assert.assertEquals("a", bean.getList().get(0));
-		Assert.assertEquals("b", bean.getList().get(1));
+		Assertions.assertEquals("a", bean.getList().get(0));
+		Assertions.assertEquals("b", bean.getList().get(1));
 
-		Assert.assertEquals("strValue1", bean.getBeanValue().getValue1());
+		Assertions.assertEquals("strValue1", bean.getBeanValue().getValue1());
 		// BigDecimal转换检查
-		Assert.assertEquals(new BigDecimal("234"), bean.getBeanValue().getValue2());
+		Assertions.assertEquals(new BigDecimal("234"), bean.getBeanValue().getValue2());
 		// 枚举转换检查
-		Assert.assertEquals(TestEnum.TYPE_A, bean.getTestEnum());
+		Assertions.assertEquals(TestEnum.TYPE_A, bean.getTestEnum());
 	}
 
 	@Test
@@ -214,9 +214,9 @@ public class JSONObjectTest {
 
 		final TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
-		Assert.assertEquals("null", bean.getStrValue());
+		Assertions.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
-		Assert.assertNull(bean.getBeanValue());
+		Assertions.assertNull(bean.getBeanValue());
 	}
 
 	@Test
@@ -230,16 +230,16 @@ public class JSONObjectTest {
 		final JSONObject json = JSONUtil.parseObj(userA);
 		final UserA userA2 = json.toBean(UserA.class);
 		// 测试数组
-		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		Assertions.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
 		// 测试带换行符等特殊字符转换是否成功
-		Assert.assertTrue(StrUtil.isNotBlank(userA2.getName()));
+		Assertions.assertTrue(StrUtil.isNotBlank(userA2.getName()));
 	}
 
 	@Test
 	public void toBeanWithNullTest() {
 		final String jsonStr = "{'data':{'userName':'ak','password': null}}";
 		final UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
-		Assert.assertTrue(user.getData().containsKey("password"));
+		Assertions.assertTrue(user.getData().containsKey("password"));
 	}
 
 	@Test
@@ -247,7 +247,7 @@ public class JSONObjectTest {
 		final String json = "{\"data\":{\"b\": \"c\"}}";
 
 		final UserWithMap map = JSONUtil.toBean(json, UserWithMap.class);
-		Assert.assertEquals("c", map.getData().get("b"));
+		Assertions.assertEquals("c", map.getData().get("b"));
 	}
 
 	@Test
@@ -259,12 +259,12 @@ public class JSONObjectTest {
 		// 第一层
 		final List<CaseReport> caseReports = bean.getCaseReports();
 		final CaseReport caseReport = caseReports.get(0);
-		Assert.assertNotNull(caseReport);
+		Assertions.assertNotNull(caseReport);
 
 		// 第二层
 		final List<StepReport> stepReports = caseReports.get(0).getStepReports();
 		final StepReport stepReport = stepReports.get(0);
-		Assert.assertNotNull(stepReport);
+		Assertions.assertNotNull(stepReport);
 	}
 
 	/**
@@ -280,13 +280,13 @@ public class JSONObjectTest {
 						.set("userId", "测试用户1"));
 
 		final TokenAuthWarp2 bean = json.toBean(TokenAuthWarp2.class);
-		Assert.assertEquals("http://test.com", bean.getTargetUrl());
-		Assert.assertEquals("true", bean.getSuccess());
+		Assertions.assertEquals("http://test.com", bean.getTargetUrl());
+		Assertions.assertEquals("true", bean.getSuccess());
 
 		final TokenAuthResponse result = bean.getResult();
-		Assert.assertNotNull(result);
-		Assert.assertEquals("tokenTest", result.getToken());
-		Assert.assertEquals("测试用户1", result.getUserId());
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals("tokenTest", result.getToken());
+		Assertions.assertEquals("测试用户1", result.getUserId());
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class JSONObjectTest {
 				"\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"" +
 				"message\":\"validate message\"}";
 		final ResultDto<?> dto = JSONUtil.toBean(jsonStr, ResultDto.class);
-		Assert.assertEquals("validate message", dto.getMessage());
+		Assertions.assertEquals("validate message", dto.getMessage());
 	}
 
 	@Test
@@ -311,8 +311,8 @@ public class JSONObjectTest {
 
 		final JSONObject json = JSONUtil.parseObj(userA, false);
 
-		Assert.assertTrue(json.containsKey("a"));
-		Assert.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
+		Assertions.assertTrue(json.containsKey("a"));
+		Assertions.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
 	}
 
 	@Test
@@ -326,10 +326,10 @@ public class JSONObjectTest {
 
 		final JSONObject json = JSONUtil.parseObj(bean, false);
 		// 枚举转换检查
-		Assert.assertEquals("TYPE_B", json.get("testEnum"));
+		Assertions.assertEquals("TYPE_B", json.get("testEnum"));
 
 		final TestBean bean2 = json.toBean(TestBean.class);
-		Assert.assertEquals(bean.toString(), bean2.toString());
+		Assertions.assertEquals(bean.toString(), bean2.toString());
 	}
 
 	@Test
@@ -339,9 +339,9 @@ public class JSONObjectTest {
 				.set("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
 
 		final JSONBean bean = json.toBean(JSONBean.class);
-		Assert.assertEquals(22, bean.getCode());
-		Assert.assertEquals("abc", bean.getData().getObj("jobId"));
-		Assert.assertEquals("http://a.com/a.mp4", bean.getData().getObj("videoUrl"));
+		Assertions.assertEquals(22, bean.getCode());
+		Assertions.assertEquals("abc", bean.getData().getObj("jobId"));
+		Assertions.assertEquals("http://a.com/a.mp4", bean.getData().getObj("videoUrl"));
 	}
 
 	@Test
@@ -354,8 +354,8 @@ public class JSONObjectTest {
 		final JSONObject userAJson = JSONUtil.parseObj(userA);
 		final UserB userB = JSONUtil.toBean(userAJson, UserB.class);
 
-		Assert.assertEquals(userA.getName(), userB.getName());
-		Assert.assertEquals(userA.getDate(), userB.getDate());
+		Assertions.assertEquals(userA.getName(), userB.getName());
+		Assertions.assertEquals(userA.getDate(), userB.getDate());
 	}
 
 	@Test
@@ -370,7 +370,7 @@ public class JSONObjectTest {
 		userAJson.setDateFormat("yyyy-MM-dd");
 
 		final UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
-		Assert.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
+		Assertions.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
 	}
 
 	@Test
@@ -380,7 +380,7 @@ public class JSONObjectTest {
 				.set("name", "nameValue")
 				.set("date", "08:00:00");
 		final UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
-		Assert.assertEquals(DateUtil.formatToday() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
+		Assertions.assertEquals(DateUtil.formatToday() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
 	}
 
 	@Test
@@ -391,19 +391,19 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 
 		final JSONObject userAJson = JSONUtil.parseObj(userA);
-		Assert.assertFalse(userAJson.containsKey("a"));
+		Assertions.assertFalse(userAJson.containsKey("a"));
 
 		final JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
-		Assert.assertTrue(userAJsonWithNullValue.containsKey("a"));
-		Assert.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
+		Assertions.assertTrue(userAJsonWithNullValue.containsKey("a"));
+		Assertions.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
 	}
 
 	@Test
 	public void specialCharTest() {
 		final String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
 		final JSONObject obj = JSONUtil.parseObj(json);
-		Assert.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
-		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
+		Assertions.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
+		Assertions.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
 	}
 
 	@Test
@@ -412,12 +412,12 @@ public class JSONObjectTest {
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 
 		// 没有转义按照默认规则显示
-		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
+		Assertions.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
 		// 转义按照字符串显示
-		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
+		Assertions.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
 
 		final String bbb = jsonObject.getStr("bbb", "defaultBBB");
-		Assert.assertEquals("defaultBBB", bbb);
+		Assertions.assertEquals("defaultBBB", bbb);
 	}
 
 	@Test
@@ -427,15 +427,15 @@ public class JSONObjectTest {
 		beanWithAlias.setValue2(35);
 
 		final JSONObject jsonObject = JSONUtil.parseObj(beanWithAlias);
-		Assert.assertEquals("张三", jsonObject.getStr("name"));
-		Assert.assertEquals(new Integer(35), jsonObject.getInt("age"));
+		Assertions.assertEquals("张三", jsonObject.getStr("name"));
+		Assertions.assertEquals(new Integer(35), jsonObject.getInt("age"));
 
 		final JSONObject json = JSONUtil.ofObj()
 				.set("name", "张三")
 				.set("age", 35);
 		final BeanWithAlias bean = JSONUtil.toBean(Objects.requireNonNull(json).toString(), BeanWithAlias.class);
-		Assert.assertEquals("张三", bean.getValue1());
-		Assert.assertEquals(new Integer(35), bean.getValue2());
+		Assertions.assertEquals("张三", bean.getValue1());
+		Assertions.assertEquals(new Integer(35), bean.getValue2());
 	}
 
 	@Test
@@ -447,7 +447,7 @@ public class JSONObjectTest {
 		json.append("date", DateUtil.parse("2020-06-05 11:16:11"));
 		json.append("bbb", "222");
 		json.append("aaa", "123");
-		Assert.assertEquals("{\"date\":\"2020-06-05 11:16:11\",\"bbb\":\"222\",\"aaa\":\"123\"}", json.toString());
+		Assertions.assertEquals("{\"date\":\"2020-06-05 11:16:11\",\"bbb\":\"222\",\"aaa\":\"123\"}", json.toString());
 	}
 
 	@Test
@@ -463,11 +463,11 @@ public class JSONObjectTest {
 
 		final String jsonStr = "{\"date\":\"2020#06#05\",\"bbb\":\"222\",\"aaa\":\"123\"}";
 
-		Assert.assertEquals(jsonStr, json.toString());
+		Assertions.assertEquals(jsonStr, json.toString());
 
 		// 解析测试
 		final JSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
-		Assert.assertEquals(DateUtil.beginOfDay(date), parse.getDate("date"));
+		Assertions.assertEquals(DateUtil.beginOfDay(date), parse.getDate("date"));
 	}
 
 	@Test
@@ -479,11 +479,11 @@ public class JSONObjectTest {
 		final JSONObject json = new JSONObject(jsonConfig);
 		json.set("date", date);
 
-		Assert.assertEquals("{\"date\":1591326971}", json.toString());
+		Assertions.assertEquals("{\"date\":1591326971}", json.toString());
 
 		// 解析测试
 		final JSONObject parse = JSONUtil.parseObj(json.toString(), jsonConfig);
-		Assert.assertEquals(date, DateUtil.date(parse.getDate("date")));
+		Assertions.assertEquals(date, DateUtil.date(parse.getDate("date")));
 	}
 
 	@Test
@@ -499,11 +499,11 @@ public class JSONObjectTest {
 
 		final String jsonStr = "{\"date\":1591326971,\"bbb\":\"222\",\"aaa\":\"123\"}";
 
-		Assert.assertEquals(jsonStr, json.toString());
+		Assertions.assertEquals(jsonStr, json.toString());
 
 		// 解析测试
 		final JSONObject parse = JSONUtil.parseObj(jsonStr, jsonConfig);
-		Assert.assertEquals(date, parse.getDate("date"));
+		Assertions.assertEquals(date, parse.getDate("date"));
 	}
 
 	@Test
@@ -511,7 +511,7 @@ public class JSONObjectTest {
 		final String timeStr = "1970-01-01 00:00:00";
 		final JSONObject jsonObject = JSONUtil.ofObj().set("time", timeStr);
 		final Timestamp time = jsonObject.get("time", Timestamp.class);
-		Assert.assertEquals("1970-01-01 00:00:00.0", time.toString());
+		Assertions.assertEquals("1970-01-01 00:00:00.0", time.toString());
 	}
 
 	public enum TestEnum {
@@ -556,11 +556,11 @@ public class JSONObjectTest {
 	public void parseBeanSameNameTest() {
 		final SameNameBean sameNameBean = new SameNameBean();
 		final JSONObject parse = JSONUtil.parseObj(sameNameBean);
-		Assert.assertEquals("123", parse.getStr("username"));
-		Assert.assertEquals("abc", parse.getStr("userName"));
+		Assertions.assertEquals("123", parse.getStr("username"));
+		Assertions.assertEquals("abc", parse.getStr("userName"));
 
 		// 测试ignore注解是否有效
-		Assert.assertNull(parse.getStr("fieldToIgnore"));
+		Assertions.assertNull(parse.getStr("fieldToIgnore"));
 	}
 
 	/**
@@ -596,13 +596,15 @@ public class JSONObjectTest {
 		final Map.Entry<String, String> next = entries.iterator().next();
 
 		final JSONObject jsonObject = JSONUtil.parseObj(next);
-		Assert.assertEquals("{\"test\":\"testValue\"}", jsonObject.toString());
+		Assertions.assertEquals("{\"test\":\"testValue\"}", jsonObject.toString());
 	}
 
-	@Test(expected = JSONException.class)
+	@Test
 	public void createJSONObjectTest() {
-		// 集合类不支持转为JSONObject
-		new JSONObject(new JSONArray(), JSONConfig.of());
+		Assertions.assertThrows(JSONException.class, ()->{
+			// 集合类不支持转为JSONObject
+			new JSONObject(new JSONArray(), JSONConfig.of());
+		});
 	}
 
 	@Test
@@ -611,26 +613,26 @@ public class JSONObjectTest {
 		map.put("c", 2.0F);
 
 		final String s = JSONUtil.toJsonStr(map);
-		Assert.assertEquals("{\"c\":2}", s);
+		Assertions.assertEquals("{\"c\":2}", s);
 	}
 
 	@Test
 	public void appendTest() {
 		final JSONObject jsonObject = JSONUtil.ofObj().append("key1", "value1");
-		Assert.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
+		Assertions.assertEquals("{\"key1\":\"value1\"}", jsonObject.toString());
 
 		jsonObject.append("key1", "value2");
-		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
+		Assertions.assertEquals("{\"key1\":[\"value1\",\"value2\"]}", jsonObject.toString());
 
 		jsonObject.append("key1", "value3");
-		Assert.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
+		Assertions.assertEquals("{\"key1\":[\"value1\",\"value2\",\"value3\"]}", jsonObject.toString());
 	}
 
 	@Test
 	public void putByPathTest() {
 		final JSONObject json = new JSONObject();
 		json.putByPath("aa.bb", "BB");
-		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
+		Assertions.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
 	}
 
 
@@ -638,7 +640,7 @@ public class JSONObjectTest {
 	public void bigDecimalTest() {
 		final String jsonStr = "{\"orderId\":\"1704747698891333662002277\"}";
 		final BigDecimalBean bigDecimalBean = JSONUtil.toBean(jsonStr, BigDecimalBean.class);
-		Assert.assertEquals("{\"orderId\":1704747698891333662002277}", JSONUtil.toJsonStr(bigDecimalBean));
+		Assertions.assertEquals("{\"orderId\":1704747698891333662002277}", JSONUtil.toJsonStr(bigDecimalBean));
 	}
 
 	@Data
@@ -656,7 +658,7 @@ public class JSONObjectTest {
 				.set("d", true);
 
 		final String s = json1.toJSONString(0, (pair) -> pair.getKey().equals("b"));
-		Assert.assertEquals("{\"b\":\"value2\"}", s);
+		Assertions.assertEquals("{\"b\":\"value2\"}", s);
 	}
 
 	@Test
@@ -668,7 +670,7 @@ public class JSONObjectTest {
 				.set("d", true);
 
 		final String s = json1.toJSONString(0, (pair) -> false == pair.getKey().equals("b"));
-		Assert.assertEquals("{\"a\":\"value1\",\"c\":\"value3\",\"d\":true}", s);
+		Assertions.assertEquals("{\"a\":\"value1\",\"c\":\"value3\",\"d\":true}", s);
 	}
 
 	@Test
@@ -688,7 +690,7 @@ public class JSONObjectTest {
 			// 除了"b"，其他都去掉
 			return false;
 		});
-		Assert.assertEquals("{\"b\":\"value2_edit\"}", s);
+		Assertions.assertEquals("{\"b\":\"value2_edit\"}", s);
 	}
 
 	@Test
@@ -703,7 +705,7 @@ public class JSONObjectTest {
 			pair.setKey(StrUtil.toUnderlineCase((String)pair.getKey()));
 			return true;
 		});
-		Assert.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);
+		Assertions.assertEquals("{\"a_key\":\"value1\",\"b_job\":\"value2\",\"c_good\":\"value3\",\"d\":true}", s);
 	}
 
 	@Test
@@ -716,7 +718,7 @@ public class JSONObjectTest {
 			pair.setValue(ObjUtil.defaultIfNull(pair.getValue(), StrUtil.EMPTY));
 			return true;
 		});
-		Assert.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);
+		Assertions.assertEquals("{\"a\":\"\",\"b\":\"value2\"}", s);
 	}
 
 	@Test
@@ -724,8 +726,8 @@ public class JSONObjectTest {
 		final String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(jsonStr, null, (pair)-> "b".equals(pair.getKey()));
-		Assert.assertEquals(1, jsonObject.size());
-		Assert.assertEquals("value2", jsonObject.get("b"));
+		Assertions.assertEquals(1, jsonObject.size());
+		Assertions.assertEquals("value2", jsonObject.get("b"));
 	}
 
 	@Test
@@ -738,6 +740,6 @@ public class JSONObjectTest {
 			}
 			return true;
 		});
-		Assert.assertEquals("value2_edit", jsonObject.get("b"));
+		Assertions.assertEquals("value2_edit", jsonObject.get("b"));
 	}
 }

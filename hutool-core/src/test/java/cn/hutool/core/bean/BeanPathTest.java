@@ -1,13 +1,13 @@
 package cn.hutool.core.bean;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 import cn.hutool.core.map.Dict;
-import cn.hutool.core.array.ArrayUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class BeanPathTest {
 
 	Map<String, Object> tempMap;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		// ------------------------------------------------- 考试信息列表
 		final ExamInfoDict examInfoDict = new ExamInfoDict();
@@ -62,36 +62,36 @@ public class BeanPathTest {
 	@Test
 	public void beanPathTest1() {
 		final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 
 	}
 
 	@Test
 	public void beanPathTest2() {
 		final BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void beanPathTest3() {
 		final BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals("0", pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
+		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assertions.assertEquals("0", pattern.patternParts.get(2));
+		Assertions.assertEquals("id", pattern.patternParts.get(3));
 	}
 
 	@Test
 	public void getTest() {
 		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
 		final Object result = pattern.get(tempMap);
-		Assert.assertEquals(1, result);
+		Assertions.assertEquals(1, result);
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class BeanPathTest {
 		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		final Object result = pattern.get(tempMap);
-		Assert.assertEquals(2, result);
+		Assertions.assertEquals(2, result);
 	}
 
 	@Test
@@ -107,8 +107,8 @@ public class BeanPathTest {
 		final BeanPath pattern = BeanPath.of("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
-		Assert.assertEquals(1, result.get("id"));
-		Assert.assertEquals("yx.mm.com", result.get("photoPath"));
+		Assertions.assertEquals(1, result.get("id"));
+		Assertions.assertEquals("yx.mm.com", result.get("photoPath"));
 	}
 
 	@Test
@@ -118,15 +118,15 @@ public class BeanPathTest {
 		dataMap.put("aa.bb.cc", "value111111");//     key   是类名 格式 带 ' . '
 
 		final BeanPath pattern = BeanPath.of("'aa.bb.cc'");
-		Assert.assertEquals("value111111", pattern.get(dataMap));
+		Assertions.assertEquals("value111111", pattern.get(dataMap));
 	}
 
 	@Test
 	public void compileTest(){
 		final BeanPath of = BeanPath.of("'abc.dd'.ee.ff'.'");
-		Assert.assertEquals("abc.dd", of.getPatternParts().get(0));
-		Assert.assertEquals("ee", of.getPatternParts().get(1));
-		Assert.assertEquals("ff.", of.getPatternParts().get(2));
+		Assertions.assertEquals("abc.dd", of.getPatternParts().get(0));
+		Assertions.assertEquals("ee", of.getPatternParts().get(1));
+		Assertions.assertEquals("ff.", of.getPatternParts().get(2));
 	}
 
 	@Test
@@ -135,24 +135,24 @@ public class BeanPathTest {
 
 		BeanPath beanPath = BeanPath.of("list[0].name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[{name=张三}]}", map.toString());
+		Assertions.assertEquals("{list=[{name=张三}]}", map.toString());
 
 		map.clear();
 		beanPath = BeanPath.of("list[1].name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[null, {name=张三}]}", map.toString());
+		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
 
 		map.clear();
 		beanPath = BeanPath.of("list[0].1.name");
 		beanPath.set(map, "张三");
-		Assert.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
+		Assertions.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
 	}
 
 	@Test
 	public void putByPathTest() {
 		final Dict dict = new Dict();
 		BeanPath.of("aa.bb").set(dict, "BB");
-		Assert.assertEquals("{aa={bb=BB}}", dict.toString());
+		Assertions.assertEquals("{aa={bb=BB}}", dict.toString());
 	}
 
 	@Test
@@ -163,7 +163,7 @@ public class BeanPathTest {
 		BeanPath.of("hobby[1]").set(myUser, "KFC");
 		BeanPath.of("hobby[2]").set(myUser, "COFFE");
 
-		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
+		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class BeanPathTest {
 		BeanPath.of("myUser.hobby[1]").set(myUser, "KFC");
 		BeanPath.of("myUser.hobby[2]").set(myUser, "COFFE");
 
-		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getMyUser().getHobby()));
+		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getMyUser().getHobby()));
 	}
 
 	@Data

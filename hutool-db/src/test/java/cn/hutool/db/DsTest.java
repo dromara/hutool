@@ -11,8 +11,8 @@ import cn.hutool.db.ds.hikari.HikariDSFactory;
 import cn.hutool.db.ds.pooled.PooledDSFactory;
 import cn.hutool.db.ds.tomcat.TomcatDSFactory;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -30,7 +30,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class DsTest {
 
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 
 	@Test
@@ -93,8 +93,8 @@ public class DsTest {
 		// https://gitee.com/dromara/hutool/issues/I4T7XZ
 		DSUtil.setGlobalDSFactory(new C3p0DSFactory());
 		final ComboPooledDataSource ds = (ComboPooledDataSource) ((DSWrapper) DSUtil.getDS("mysql")).getRaw();
-		Assert.assertEquals("root", ds.getUser());
-		Assert.assertEquals("123456", ds.getPassword());
+		Assertions.assertEquals("root", ds.getUser());
+		Assertions.assertEquals("123456", ds.getPassword());
 	}
 
 	@Test
@@ -103,6 +103,6 @@ public class DsTest {
 		final DataSource ds = DSUtil.getDS("test");
 		final Db db = Db.of(ds);
 		final List<Entity> all = db.findAll("user");
-		Assert.assertTrue(CollUtil.isNotEmpty(all));
+		Assertions.assertTrue(CollUtil.isNotEmpty(all));
 	}
 }

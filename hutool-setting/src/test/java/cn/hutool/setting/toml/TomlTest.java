@@ -13,8 +13,8 @@
 package cn.hutool.setting.toml;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -22,6 +22,6 @@ public class TomlTest {
 	@Test
 	public void readTest() {
 		final Map<String, Object> read = Toml.read(ResourceUtil.getResource("test.toml"));
-		Assert.assertEquals(5, read.size());
+		Assertions.assertEquals(5, read.size());
 	}
 }

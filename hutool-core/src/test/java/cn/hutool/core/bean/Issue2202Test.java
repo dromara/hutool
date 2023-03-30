@@ -3,8 +3,8 @@ package cn.hutool.core.bean;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.text.NamingCase;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +27,10 @@ public class Issue2202Test {
 					return entry;
 				}));
 
-		Assert.assertEquals("serial", case1.getWechatpaySerial());
-		Assert.assertEquals("nonce", case1.getWechatpayNonce());
-		Assert.assertEquals("timestamp", case1.getWechatpayTimestamp());
-		Assert.assertEquals("signature", case1.getWechatpaySignature());
+		Assertions.assertEquals("serial", case1.getWechatpaySerial());
+		Assertions.assertEquals("nonce", case1.getWechatpayNonce());
+		Assertions.assertEquals("timestamp", case1.getWechatpayTimestamp());
+		Assertions.assertEquals("signature", case1.getWechatpaySignature());
 	}
 
 	@Data

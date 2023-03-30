@@ -1,8 +1,8 @@
 package cn.hutool.extra.servlet;
 
 import cn.hutool.core.util.ByteUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class ServletUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		final HttpServletResponse response = null;
 		final byte[] bytes = ByteUtil.toUtf8Bytes("地球是我们共同的家园，需要大家珍惜.");
@@ -35,7 +35,7 @@ public class ServletUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void jakartaWriteTest() {
 		final jakarta.servlet.http.HttpServletResponse response = null;
 		final byte[] bytes = ByteUtil.toUtf8Bytes("地球是我们共同的家园，需要大家珍惜.");

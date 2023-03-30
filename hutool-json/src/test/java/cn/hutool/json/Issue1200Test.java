@@ -3,8 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.json.test.bean.ResultBean;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * 测试在bean转换时使用BeanConverter，默认忽略转换失败的字段。
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class Issue1200Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toBeanTest(){
 		final JSONObject jsonObject = JSONUtil.parseObj(ResourceUtil.readUtf8Str("issue1200.json"));
 		Console.log(jsonObject);

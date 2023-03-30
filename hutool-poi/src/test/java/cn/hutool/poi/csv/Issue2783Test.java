@@ -3,13 +3,13 @@ package cn.hutool.poi.csv;
 import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.func.SerConsumer;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Issue2783Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readTest() {
 		// 测试数据
 		final CsvWriter writer = CsvUtil.getWriter("d:/test/big.csv", CharsetUtil.UTF_8);

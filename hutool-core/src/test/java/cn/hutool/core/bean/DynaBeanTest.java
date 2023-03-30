@@ -1,8 +1,8 @@
 package cn.hutool.core.bean;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link DynaBean}单元测试
@@ -19,18 +19,18 @@ public class DynaBeanTest {
 		bean.set("age", 12);
 
 		final String name = bean.get("name");
-		Assert.assertEquals(user.getName(), name);
+		Assertions.assertEquals(user.getName(), name);
 		final int age = bean.get("age");
-		Assert.assertEquals(user.getAge(), age);
+		Assertions.assertEquals(user.getAge(), age);
 
 		//重复包装测试
 		final DynaBean bean2 = new DynaBean(bean);
 		final User user2 = bean2.getBean();
-		Assert.assertEquals(user, user2);
+		Assertions.assertEquals(user, user2);
 
 		//执行指定方法
 		final Object invoke = bean2.invoke("testMethod");
-		Assert.assertEquals("test for 李华", invoke);
+		Assertions.assertEquals("test for 李华", invoke);
 	}
 
 
@@ -43,19 +43,19 @@ public class DynaBeanTest {
 		bean.set("age", age_before);
 
 		final String name_after = bean.get("name");
-		Assert.assertEquals(name_before, name_after);
+		Assertions.assertEquals(name_before, name_after);
 		final int age_after = bean.get("age");
-		Assert.assertEquals(age_before, age_after);
+		Assertions.assertEquals(age_before, age_after);
 
 		//重复包装测试
 		final DynaBean bean2 = new DynaBean(bean);
 		final User user2 = bean2.getBean();
 		final User user1 = bean.getBean();
-		Assert.assertEquals(user1, user2);
+		Assertions.assertEquals(user1, user2);
 
 		//执行指定方法
 		final Object invoke = bean2.invoke("testMethod");
-		Assert.assertEquals("test for 李华", invoke);
+		Assertions.assertEquals("test for 李华", invoke);
 	}
 
 
@@ -68,19 +68,19 @@ public class DynaBeanTest {
 		bean.set("age", age_before);
 
 		final String name_after = bean.get("name");
-		Assert.assertEquals(name_before, name_after);
+		Assertions.assertEquals(name_before, name_after);
 		final int age_after = bean.get("age");
-		Assert.assertEquals(age_before, age_after);
+		Assertions.assertEquals(age_before, age_after);
 
 		//重复包装测试
 		final DynaBean bean2 = new DynaBean(bean);
 		final User user2 = bean2.getBean();
 		final User user1 = bean.getBean();
-		Assert.assertEquals(user1, user2);
+		Assertions.assertEquals(user1, user2);
 
 		//执行指定方法
 		final Object invoke = bean2.invoke("testMethod");
-		Assert.assertEquals("test for 李华", invoke);
+		Assertions.assertEquals("test for 李华", invoke);
 	}
 
 	@Data

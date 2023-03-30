@@ -1,7 +1,7 @@
 package cn.hutool.core.collection.iter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.URL;
@@ -16,45 +16,45 @@ public class LineIterTest {
 	@Test
 	public void testHasNext() {
 		LineIter iter = getItrFromClasspathFile();
-		Assert.assertTrue(iter.hasNext());
+		Assertions.assertTrue(iter.hasNext());
 	}
 
 	@Test
 	public void testNext() {
 		LineIter iter = getItrFromClasspathFile();
-		Assert.assertEquals("is first line", iter.next());
-		Assert.assertEquals("is second line", iter.next());
-		Assert.assertEquals("is third line", iter.next());
+		Assertions.assertEquals("is first line", iter.next());
+		Assertions.assertEquals("is second line", iter.next());
+		Assertions.assertEquals("is third line", iter.next());
 	}
 
 	@Test
 	public void testRemove() {
 		LineIter iter = getItrFromClasspathFile();
 		iter.next();
-		Assert.assertThrows(UnsupportedOperationException.class, iter::remove);
+		Assertions.assertThrows(UnsupportedOperationException.class, iter::remove);
 	}
 
 	@Test
 	public void testFinish() {
 		LineIter iter = getItrFromClasspathFile();
 		iter.finish();
-		Assert.assertThrows(NoSuchElementException.class, iter::next);
+		Assertions.assertThrows(NoSuchElementException.class, iter::next);
 	}
 
 	@Test
 	public void testClose() throws IOException {
 		URL url = LineIterTest.class.getClassLoader().getResource("text.txt");
-		Assert.assertNotNull(url);
+		Assertions.assertNotNull(url);
 		FileInputStream inputStream = new FileInputStream(url.getFile());
 		LineIter iter = new LineIter(inputStream, StandardCharsets.UTF_8);
 		iter.close();
-		Assert.assertThrows(NoSuchElementException.class, iter::next);
-		Assert.assertThrows(IOException.class, inputStream::read);
+		Assertions.assertThrows(NoSuchElementException.class, iter::next);
+		Assertions.assertThrows(IOException.class, inputStream::read);
 	}
 
 	private static LineIter getItrFromClasspathFile() {
 		URL url = LineIterTest.class.getClassLoader().getResource("text.txt");
-		Assert.assertNotNull(url);
+		Assertions.assertNotNull(url);
 		FileInputStream inputStream = null;
 		try {
 			inputStream = new FileInputStream(url.getFile());

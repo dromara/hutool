@@ -2,9 +2,9 @@ package cn.hutool.core.thread;
 
 import cn.hutool.core.date.TimeUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,14 +20,14 @@ public class ThreadUtilTest {
 	public void executeTest() {
 		final boolean isValid = true;
 
-		ThreadUtil.execute(() -> Assert.assertTrue(isValid));
+		ThreadUtil.execute(() -> Assertions.assertTrue(isValid));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void phaserTest(){
 		LocalDateTime now = TimeUtil.parse("2022-08-04T22:59:59+08:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-		Assert.assertNotNull(now);
+		Assertions.assertNotNull(now);
 
 		int repeat = 30; // 执行的轮数配置
 		Phaser phaser = new Phaser() {  // 进行一些处理方法的覆写

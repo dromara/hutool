@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * 事务性数据库操作单元测试
@@ -11,7 +11,7 @@ import org.junit.Test;
 public class SessionTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void transTest() {
 		final Session session = Session.of("test");
 		session.beginTransaction();
@@ -20,7 +20,7 @@ public class SessionTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void txTest() {
 		Session.of("test").tx(session -> session.update(Entity.of().set("age", 78), Entity.of("user").set("name", "unitTestUser")));
 	}

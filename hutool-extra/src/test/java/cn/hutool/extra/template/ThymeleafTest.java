@@ -3,20 +3,15 @@ package cn.hutool.extra.template;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.Dict;
 import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.standard.StandardDialect;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Thymeleaf单元测试
@@ -31,7 +26,7 @@ public class ThymeleafTest {
 	 * 自定义操作原始引擎
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void addDialectTest(){
 		final TemplateEngine engine = TemplateUtil.createEngine();
 		if(engine instanceof ThymeleafEngine){
@@ -61,7 +56,7 @@ public class ThymeleafTest {
 		final TemplateEngine engine = new ThymeleafEngine(new TemplateConfig());
 		final Template template = engine.getTemplate("<h3 th:each=\"item : ${list}\" th:text=\"${item.name}\"></h3>");
 		final String render = template.render(Dict.of().set("list", list));
-		Assert.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", render);
+		Assertions.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", render);
 	}
 
 	@Test
@@ -98,7 +93,7 @@ public class ThymeleafTest {
 		final Context context = new Context(Locale.getDefault(), map);
 		templateEngine.process("<h3 th:each=\"item : ${list}\" th:text=\"${item.name}\"></h3>", context, writer);
 
-		Assert.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", writer.toString());
+		Assertions.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", writer.toString());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -109,6 +104,6 @@ public class ThymeleafTest {
 		final Template template = engine.getTemplate("<h3 th:each=\"item : ${list}\" th:text=\"${item.name}\"></h3>");
 		// "<h3 th:text=\"${nestMap.nestKey}\"></h3>"
 		final String render = template.render(map);
-		Assert.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", render);
+		Assertions.assertEquals("<h3>a</h3><h3>b</h3><h3>2019-01-01 00:00:00</h3>", render);
 	}
 }

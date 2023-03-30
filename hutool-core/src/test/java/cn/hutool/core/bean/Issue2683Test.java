@@ -2,8 +2,8 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -29,14 +29,14 @@ public class Issue2683Test {
 		final Vto v1 = new Vto();
 		v1.setVersions(EnumSet.allOf(Version.class));
 		final Vto v2 = BeanUtil.copyProperties(v1, Vto.class);
-		Assert.assertNotNull(v2);
-		Assert.assertNotNull(v2.getVersions());
+		Assertions.assertNotNull(v2);
+		Assertions.assertNotNull(v2.getVersions());
 	}
 
 	@Test
 	public void enumSetTest() {
 		final Collection<Version> objects = CollUtil.create(EnumSet.class, Version.class);
-		Assert.assertNotNull(objects);
-		Assert.assertTrue(EnumSet.class.isAssignableFrom(objects.getClass()));
+		Assertions.assertNotNull(objects);
+		Assertions.assertTrue(EnumSet.class.isAssignableFrom(objects.getClass()));
 	}
 }

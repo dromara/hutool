@@ -2,8 +2,8 @@ package cn.hutool.extra.script;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.resource.ResourceUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.script.CompiledScript;
 import javax.script.ScriptException;
@@ -34,6 +34,6 @@ public class ScriptUtilTest {
 	@Test
 	public void invokeTest() {
 		final Object result = ScriptUtil.invoke(ResourceUtil.readUtf8Str("filter1.js"), "filter1", 2, 1);
-		Assert.assertTrue((Boolean) result);
+		Assertions.assertTrue((Boolean) result);
 	}
 }

@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ public class SerFunctionMapTest {
 		map.put("aaa", "b");
 		map.put("BBB", "c");
 
-		Assert.assertEquals("B", map.get("aaa"));
-		Assert.assertEquals("C", map.get("bbb"));
+		Assertions.assertEquals("B", map.get("aaa"));
+		Assertions.assertEquals("C", map.get("bbb"));
 	}
 }

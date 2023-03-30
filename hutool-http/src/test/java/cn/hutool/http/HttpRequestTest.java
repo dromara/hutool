@@ -2,7 +2,6 @@ package cn.hutool.http;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.StopWatch;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
@@ -11,8 +10,9 @@ import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class HttpRequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getHttpsThenTest() {
 		Request.of("https://hutool.cn")
 				.send()
@@ -37,7 +37,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getCookiesTest() {
 		// 检查在Connection关闭情况下Cookie是否可以正常获取
 		final Response res = Request.of("https://www.oschina.net/").send();
@@ -47,7 +47,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toStringTest() {
 		final String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
 
@@ -56,7 +56,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void asyncHeadTest() {
 		final Response response = Request.of(url).method(Method.HEAD).send();
 		final Map<String, List<String>> headers = response.headers();
@@ -65,7 +65,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void asyncGetTest() {
 		final StopWatch timer = DateUtil.createStopWatch();
 		timer.start();
@@ -80,7 +80,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void syncGetTest() {
 		final StopWatch timer = DateUtil.createStopWatch();
 		timer.start();
@@ -96,7 +96,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getDeflateTest() {
 		final Response res = Request.of("https://comment.bilibili.com/67573272.xml")
 				.header(Header.ACCEPT_ENCODING, "deflate")
@@ -106,7 +106,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bodyTest() {
 		final String ddddd1 = Request.of("https://baijiahao.baidu.com/s").body("id=1625528941695652600").send().bodyStr();
 		Console.log(ddddd1);
@@ -116,7 +116,7 @@ public class HttpRequestTest {
 	 * 测试GET请求附带body体是否会变更为POST
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void getLocalTest() {
 		final List<String> list = new ArrayList<>();
 		list.add("hhhhh");
@@ -135,7 +135,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getWithoutEncodeTest() {
 		final String url = "https://img-cloud.voc.com.cn/140/2020/09/03/c3d41b93e0d32138574af8e8b50928b376ca5ba61599127028157.png?imageMogr2/auto-orient/thumbnail/500&pid=259848";
 		final Request get = Request.of(url);
@@ -145,7 +145,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void followRedirectsTest() {
 		// 从5.7.19开始关闭JDK的自动重定向功能，改为手动重定向
 		// 当有多层重定向时，JDK的重定向会失效，或者说只有最后一个重定向有效，因此改为手动更易控制次数
@@ -164,7 +164,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getWithFormTest(){
 		final String url = "https://postman-echo.com/get";
 		final Map<String, Object> map = new HashMap<>();
@@ -174,7 +174,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void urlWithParamIfGetTest(){
 		final UrlBuilder urlBuilder = new UrlBuilder();
 		urlBuilder.setScheme("https").setHost("hutool.cn");
@@ -184,7 +184,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getCookieTest(){
 		final Response execute = Request.of("http://localhost:8888/getCookier").send();
 		Console.log(execute.getCookieStr());
@@ -193,25 +193,25 @@ public class HttpRequestTest {
 	@Test
 	public void optionsTest() {
 		final Request options = Request.of("https://hutool.cn").method(Method.OPTIONS);
-		Assert.notNull(options.toString());
+		Assertions.assertNotNull(options.toString());
 	}
 
 	@Test
 	public void deleteTest() {
 		final Request options = Request.of("https://hutool.cn").method(Method.DELETE);
-		Assert.notNull(options.toString());
+		Assertions.assertNotNull(options.toString());
 	}
 
 	@Test
 	public void traceTest() {
 		final Request options = Request.of("https://hutool.cn").method(Method.TRACE);
-		Assert.notNull(options.toString());
+		Assertions.assertNotNull(options.toString());
 	}
 
 	@Test
 	public void getToStringTest() {
 		final Request a = Request.of("https://hutool.cn/").form(MapUtil.of("a", 1));
-		Assert.notNull(a.toString());
+		Assertions.assertNotNull(a.toString());
 	}
 
 	@Test
@@ -221,7 +221,7 @@ public class HttpRequestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void issueI5Y68WTest() {
 		final Response httpResponse = Request.of("http://82.157.17.173:8100/app/getAddress").send();
 		Console.log(httpResponse.body());

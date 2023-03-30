@@ -3,9 +3,9 @@ package cn.hutool.extra.ssh;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import com.jcraft.jsch.Session;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Jsch工具类单元测试
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class JschUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bindPortTest() {
 		//新建会话，此会话用于ssh连接到跳板机（堡垒机），此处为10.1.1.1:22
 		final Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
@@ -26,19 +26,19 @@ public class JschUtilTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bindRemotePort() {
 		// 建立会话
 		final Session session = JschUtil.getSession("looly.centos", 22, "test", "123456");
 		// 绑定ssh服务端8089端口到本机的8000端口上
 		final boolean b = JschUtil.bindRemotePort(session, 8089, "localhost", 8000);
-		Assert.assertTrue(b);
+		Assertions.assertTrue(b);
 		// 保证一直运行
 	}
 
 	@SuppressWarnings("resource")
 	@Test
-	@Ignore
+	@Disabled
 	public void sftpTest() {
 		final Session session = JschUtil.getSession("looly.centos", 22, "root", "123456");
 		final Sftp sftp = JschUtil.createSftp(session);
@@ -47,7 +47,7 @@ public class JschUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void reconnectIfTimeoutTest() throws InterruptedException {
 		final Session session = JschUtil.getSession("sunnyserver", 22,"mysftp","liuyang1234");
 		final Sftp sftp = JschUtil.createSftp(session);
@@ -75,7 +75,7 @@ public class JschUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getSessionTest(){
 		JschUtil.getSession("192.168.1.134", 22, "root", "aaa", null);
 	}

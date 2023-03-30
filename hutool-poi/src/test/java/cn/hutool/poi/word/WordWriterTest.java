@@ -6,8 +6,8 @@ import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Font;
 import java.io.File;
@@ -17,10 +17,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("resource")
 public class WordWriterTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest() {
 		final Word07Writer writer = new Word07Writer();
 		writer.addText(new Font("方正小标宋简体", Font.PLAIN, 22), "我是第一部分", "我是第二部分");
@@ -31,7 +32,7 @@ public class WordWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writePicTest() {
 		final Word07Writer writer = new Word07Writer();
 		writer.addPicture(new File("d:\\test\\qrcodeCustom.jpg"), 100, 200);
@@ -42,7 +43,7 @@ public class WordWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTableTest(){
 		final Word07Writer writer = new Word07Writer();
 		final Map<String, Object> map = new LinkedHashMap<>();
@@ -56,7 +57,7 @@ public class WordWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeMapAsTableTest() {
 		final Word07Writer writer = new Word07Writer();
 
@@ -99,7 +100,7 @@ public class WordWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeBeanAsTableTest(){
 		final List<Vo> of = ListUtil.of(
 				new Vo("测试1", new BigDecimal(12), new BigDecimal(2)),

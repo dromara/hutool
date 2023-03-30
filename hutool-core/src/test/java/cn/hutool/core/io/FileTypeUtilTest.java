@@ -4,9 +4,9 @@ import cn.hutool.core.io.file.FileTypeUtil;
 import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,28 +22,28 @@ public class FileTypeUtilTest {
 	@Test
 	public void getTypeTest() {
 		final String type = FileTypeUtil.getType(ResourceUtil.getStream("hutool.jpg"));
-		Assert.assertEquals("jpg", type);
+		Assertions.assertEquals("jpg", type);
 	}
 
 	@Test
 	public void customTypeTest() {
 		final File file = FileUtil.file("hutool.jpg");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("jpg", type);
+		Assertions.assertEquals("jpg", type);
 
 		final String oldType = FileTypeUtil.putFileType("ffd8ffe000104a464946", "new_jpg");
-		Assert.assertNull(oldType);
+		Assertions.assertNull(oldType);
 
 		final String newType = FileTypeUtil.getType(file);
-		Assert.assertEquals("new_jpg", newType);
+		Assertions.assertEquals("new_jpg", newType);
 
 		FileTypeUtil.removeFileType("ffd8ffe000104a464946");
 		final String type2 = FileTypeUtil.getType(file);
-		Assert.assertEquals("jpg", type2);
+		Assertions.assertEquals("jpg", type2);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void emptyTest() {
 		final File file = FileUtil.file("d:/empty.txt");
 		final String type = FileTypeUtil.getType(file);
@@ -51,7 +51,7 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void docTest() {
 		final File file = FileUtil.file("f:/test/test.doc");
 		final String type = FileTypeUtil.getType(file);
@@ -59,27 +59,27 @@ public class FileTypeUtilTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void inputStreamAndFilenameTest() {
 		final File file = FileUtil.file("e:/laboratory/test.xlsx");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("xlsx", type);
+		Assertions.assertEquals("xlsx", type);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTypeFromInputStream() throws IOException {
 		final File file = FileUtil.file("d:/test/pic.jpg");
 		final BufferedInputStream inputStream = FileUtil.getInputStream(file);
 		inputStream.mark(0);
 		final String type = FileTypeUtil.getType(inputStream);
-		Assert.assertEquals("jpg", type);
+		Assertions.assertEquals("jpg", type);
 
 		inputStream.reset();
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void webpTest() {
 		// https://gitee.com/dromara/hutool/issues/I5BGTF
 		final File file = FileUtil.file("d:/test/a.webp");
@@ -92,6 +92,6 @@ public class FileTypeUtilTest {
 	public void issueI6MACITest() {
 		final File file = FileUtil.file("1.txt");
 		final String type = FileTypeUtil.getType(file);
-		Assert.assertEquals("txt", type);
+		Assertions.assertEquals("txt", type);
 	}
 }

@@ -6,8 +6,8 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * DES加密解密单元测试
@@ -24,12 +24,12 @@ public class DesTest {
 		final byte[] encrypt = des.encrypt(content);
 		final byte[] decrypt = des.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		final String encryptHex = des.encryptHex(content);
 		final String decryptStr = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -42,12 +42,12 @@ public class DesTest {
 		final byte[] encrypt = des.encrypt(content);
 		final byte[] decrypt = des.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		final String encryptHex = des.encryptHex(content);
 		final String decryptStr = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -59,12 +59,12 @@ public class DesTest {
 		final byte[] encrypt = des.encrypt(content);
 		final byte[] decrypt = des.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		final String encryptHex = des.encryptHex(content);
 		final String decryptStr = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class DesTest {
 		final String encryptHex = des.encryptHex(content);
 		final String result = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, result);
+		Assertions.assertEquals(content, result);
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class DesTest {
 		final String encryptHex = des.encryptHex(content);
 		final String result = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, result);
+		Assertions.assertEquals(content, result);
 	}
 
 	@Test

@@ -2,8 +2,8 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.ModifierUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,8 +15,8 @@ public class ModifierUtilTest {
 	@Test
 	public void hasModifierTest() throws NoSuchMethodException {
 		final Method method = ModifierUtilTest.class.getDeclaredMethod("ddd");
-		Assert.assertTrue(ModifierUtil.hasModifier(method, ModifierUtil.ModifierType.PRIVATE));
-		Assert.assertTrue(ModifierUtil.hasModifier(method,
+		Assertions.assertTrue(ModifierUtil.hasModifier(method, ModifierUtil.ModifierType.PRIVATE));
+		Assertions.assertTrue(ModifierUtil.hasModifier(method,
 				ModifierUtil.ModifierType.PRIVATE,
 				ModifierUtil.ModifierType.STATIC)
 		);
@@ -39,7 +39,7 @@ public class ModifierUtilTest {
 		ModifierUtil.removeFinalModify(field);
 		FieldUtil.setFieldValue(JdbcDialects.class, fieldName, dialects);
 
-		Assert.assertEquals(dialects, FieldUtil.getFieldValue(JdbcDialects.class, fieldName));
+		Assertions.assertEquals(dialects, FieldUtil.getFieldValue(JdbcDialects.class, fieldName));
 	}
 
 	@SuppressWarnings("unused")

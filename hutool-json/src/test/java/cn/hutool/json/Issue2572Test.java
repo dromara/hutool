@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import cn.hutool.core.reflect.TypeReference;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 import java.time.Month;
@@ -18,11 +18,11 @@ public class Issue2572Test {
 		weeks.add(DayOfWeek.MONDAY);
 		final JSONObject obj = new JSONObject();
 		obj.set("weeks", weeks);
-		Assert.assertEquals("{\"weeks\":[1]}", obj.toString());
+		Assertions.assertEquals("{\"weeks\":[1]}", obj.toString());
 
 		final Map<String, Set<DayOfWeek>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<DayOfWeek>>>() {
 		});
-		Assert.assertEquals("{weeks=[MONDAY]}", monthDays1.toString());
+		Assertions.assertEquals("{weeks=[MONDAY]}", monthDays1.toString());
 	}
 
 	@Test
@@ -31,11 +31,11 @@ public class Issue2572Test {
 		months.add(Month.DECEMBER);
 		final JSONObject obj = new JSONObject();
 		obj.set("months", months);
-		Assert.assertEquals("{\"months\":[12]}", obj.toString());
+		Assertions.assertEquals("{\"months\":[12]}", obj.toString());
 
 		final Map<String, Set<Month>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<Month>>>() {
 		});
-		Assert.assertEquals("{months=[DECEMBER]}", monthDays1.toString());
+		Assertions.assertEquals("{months=[DECEMBER]}", monthDays1.toString());
 	}
 
 	@Test
@@ -44,10 +44,10 @@ public class Issue2572Test {
 		monthDays.add(MonthDay.of(Month.DECEMBER, 1));
 		final JSONObject obj = new JSONObject();
 		obj.set("monthDays", monthDays);
-		Assert.assertEquals("{\"monthDays\":[\"--12-01\"]}", obj.toString());
+		Assertions.assertEquals("{\"monthDays\":[\"--12-01\"]}", obj.toString());
 
 		final Map<String, Set<MonthDay>> monthDays1 = obj.toBean(new TypeReference<Map<String, Set<MonthDay>>>() {
 		});
-		Assert.assertEquals("{monthDays=[--12-01]}", monthDays1.toString());
+		Assertions.assertEquals("{monthDays=[--12-01]}", monthDays1.toString());
 	}
 }

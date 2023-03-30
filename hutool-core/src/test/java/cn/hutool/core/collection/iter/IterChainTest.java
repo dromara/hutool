@@ -1,7 +1,7 @@
 package cn.hutool.core.collection.iter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,20 +17,20 @@ public class IterChainTest {
 		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
 		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
 		IterChain<Integer> iterChain = new IterChain<>();
-		Assert.assertSame(iterChain, iterChain.addChain(iter1));
-		Assert.assertSame(iterChain, iterChain.addChain(iter2));
-		Assert.assertEquals(2, iterChain.allIterators.size());
+		Assertions.assertSame(iterChain, iterChain.addChain(iter1));
+		Assertions.assertSame(iterChain, iterChain.addChain(iter2));
+		Assertions.assertEquals(2, iterChain.allIterators.size());
 
 		iterChain = new IterChain<>(iter1, iter2);
-		Assert.assertEquals(2, iterChain.allIterators.size());
+		Assertions.assertEquals(2, iterChain.allIterators.size());
 	}
 
 	@Test
 	public void testHasNext() {
 		final IterChain<Integer> iterChain = new IterChain<>();
-		Assert.assertFalse(iterChain.hasNext());
-		Assert.assertFalse(iterChain.addChain(Collections.emptyIterator()).hasNext());
-		Assert.assertTrue(iterChain.addChain(Arrays.asList(3, 4).iterator()).hasNext());
+		Assertions.assertFalse(iterChain.hasNext());
+		Assertions.assertFalse(iterChain.addChain(Collections.emptyIterator()).hasNext());
+		Assertions.assertTrue(iterChain.addChain(Arrays.asList(3, 4).iterator()).hasNext());
 	}
 
 	@Test
@@ -38,19 +38,19 @@ public class IterChainTest {
 		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
 		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
 		final IterChain<Integer> iterChain = new IterChain<>();
-		Assert.assertSame(iterChain, iterChain.addChain(iter1));
-		Assert.assertSame(iterChain, iterChain.addChain(iter2));
-		Assert.assertEquals((Integer)1, iterChain.next());
-		Assert.assertEquals((Integer)2, iterChain.next());
-		Assert.assertEquals((Integer)3, iterChain.next());
-		Assert.assertEquals((Integer)4, iterChain.next());
+		Assertions.assertSame(iterChain, iterChain.addChain(iter1));
+		Assertions.assertSame(iterChain, iterChain.addChain(iter2));
+		Assertions.assertEquals((Integer)1, iterChain.next());
+		Assertions.assertEquals((Integer)2, iterChain.next());
+		Assertions.assertEquals((Integer)3, iterChain.next());
+		Assertions.assertEquals((Integer)4, iterChain.next());
 	}
 
 	@Test
 	public void testRemove() {
 		final IterChain<Integer> iterChain = new IterChain<>();
 		iterChain.addChain(Arrays.asList(1, 2).iterator());
-		Assert.assertThrows(IllegalStateException.class, iterChain::remove);
+		Assertions.assertThrows(IllegalStateException.class, iterChain::remove);
 	}
 
 	@Test
@@ -58,12 +58,12 @@ public class IterChainTest {
 		final Iterator<Integer> iter1 = Arrays.asList(1, 2).iterator();
 		final Iterator<Integer> iter2 = Arrays.asList(3, 4).iterator();
 		final IterChain<Integer> iterChain = new IterChain<>();
-		Assert.assertSame(iterChain, iterChain.addChain(iter1));
-		Assert.assertSame(iterChain, iterChain.addChain(iter2));
+		Assertions.assertSame(iterChain, iterChain.addChain(iter1));
+		Assertions.assertSame(iterChain, iterChain.addChain(iter2));
 
 		final Iterator<Iterator<Integer>> iterators = iterChain.iterator();
-		Assert.assertSame(iter1, iterators.next());
-		Assert.assertSame(iter2, iterators.next());
+		Assertions.assertSame(iter1, iterators.next());
+		Assertions.assertSame(iter2, iterators.next());
 	}
 
 }

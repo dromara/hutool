@@ -1,17 +1,17 @@
 package cn.hutool.http;
 
 import cn.hutool.core.codec.binary.Base64;
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.client.HttpDownloader;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.engine.ClientEngineFactory;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class DownloadTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadPicTest() {
 		final String url = "http://wx.qlogo.cn/mmopen/vKhlFcibVUtNBVDjcIowlg0X8aJfHXrTNCEFBukWVH9ta99pfEN88lU39MKspCUCOP3yrFBH3y2NbV7sYtIIlon8XxLwAEqv2/0";
 		HttpDownloader.downloadFile(url, new File("e:/pic/t3.jpg"));
@@ -36,7 +36,7 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadSizeTest() {
 		final String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
 		ClientEngineFactory.get().send(Request.of(url)).body().write("e:/pic/366466.jpg");
@@ -44,14 +44,14 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadTest1() {
 		final File size = HttpDownloader.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", new File("e:/temp/"));
 		System.out.println("Download size: " + size);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadTest() {
 		// 带进度显示的文件下载
 		HttpDownloader.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso", FileUtil.file("d:/"), -1, new StreamProgress() {
@@ -77,16 +77,16 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadFileFromUrlTest1() {
 		final File file = HttpDownloader.downloadFile("http://groovy-lang.org/changelogs/changelog-3.0.5.html", new File("d:/download/temp"));
-		Assert.assertNotNull(file);
-		Assert.assertTrue(file.isFile());
-		Assert.assertTrue(file.length() > 0);
+		Assertions.assertNotNull(file);
+		Assertions.assertTrue(file.isFile());
+		Assertions.assertTrue(file.length() > 0);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadFileFromUrlTest2() {
 		File file = null;
 		try {
@@ -107,20 +107,20 @@ public class DownloadTest {
 				}
 			});
 
-			Assert.assertNotNull(file);
-			Assert.assertTrue(file.exists());
-			Assert.assertTrue(file.isFile());
-			Assert.assertTrue(file.length() > 0);
-			Assert.assertTrue(file.getName().length() > 0);
+			Assertions.assertNotNull(file);
+			Assertions.assertTrue(file.exists());
+			Assertions.assertTrue(file.isFile());
+			Assertions.assertTrue(file.length() > 0);
+			Assertions.assertTrue(file.getName().length() > 0);
 		} catch (final Exception e) {
-			Assert.assertTrue(e instanceof IORuntimeException);
+			Assertions.assertTrue(e instanceof IORuntimeException);
 		} finally {
 			FileUtil.del(file);
 		}
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadFileFromUrlTest3() {
 		File file = null;
 		try {
@@ -141,30 +141,30 @@ public class DownloadTest {
 				}
 			});
 
-			Assert.assertNotNull(file);
-			Assert.assertTrue(file.exists());
-			Assert.assertTrue(file.isFile());
-			Assert.assertTrue(file.length() > 0);
-			Assert.assertTrue(file.getName().length() > 0);
+			Assertions.assertNotNull(file);
+			Assertions.assertTrue(file.exists());
+			Assertions.assertTrue(file.isFile());
+			Assertions.assertTrue(file.length() > 0);
+			Assertions.assertTrue(file.getName().length() > 0);
 		} finally {
 			FileUtil.del(file);
 		}
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadFileFromUrlTest4() {
 		File file = null;
 		try {
 			file = HttpDownloader.downloadFile("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"), 1);
 
-			Assert.assertNotNull(file);
-			Assert.assertTrue(file.exists());
-			Assert.assertTrue(file.isFile());
-			Assert.assertTrue(file.length() > 0);
-			Assert.assertTrue(file.getName().length() > 0);
+			Assertions.assertNotNull(file);
+			Assertions.assertTrue(file.exists());
+			Assertions.assertTrue(file.isFile());
+			Assertions.assertTrue(file.length() > 0);
+			Assertions.assertTrue(file.getName().length() > 0);
 		} catch (final Exception e) {
-			Assert.assertTrue(e instanceof IORuntimeException);
+			Assertions.assertTrue(e instanceof IORuntimeException);
 		} finally {
 			FileUtil.del(file);
 		}
@@ -172,16 +172,16 @@ public class DownloadTest {
 
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadFileFromUrlTest5() {
 		File file = null;
 		try {
 			file = HttpDownloader.downloadFile("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp", UUID.randomUUID().toString()));
 
-			Assert.assertNotNull(file);
-			Assert.assertTrue(file.exists());
-			Assert.assertTrue(file.isFile());
-			Assert.assertTrue(file.length() > 0);
+			Assertions.assertNotNull(file);
+			Assertions.assertTrue(file.exists());
+			Assertions.assertTrue(file.isFile());
+			Assertions.assertTrue(file.length() > 0);
 		} finally {
 			FileUtil.del(file);
 		}
@@ -190,17 +190,17 @@ public class DownloadTest {
 		try {
 			file1 = HttpDownloader.downloadFile("http://groovy-lang.org/changelogs/changelog-3.0.5.html", FileUtil.file("d:/download/temp"));
 
-			Assert.assertNotNull(file1);
-			Assert.assertTrue(file1.exists());
-			Assert.assertTrue(file1.isFile());
-			Assert.assertTrue(file1.length() > 0);
+			Assertions.assertNotNull(file1);
+			Assertions.assertTrue(file1.exists());
+			Assertions.assertTrue(file1.isFile());
+			Assertions.assertTrue(file1.length() > 0);
 		} finally {
 			FileUtil.del(file1);
 		}
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadTeamViewerTest() throws IOException {
 		// 此URL有3次重定向, 需要请求4次
 		final String url = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe";
@@ -211,7 +211,7 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadToStreamTest() {
 		String url2 = "http://storage.chancecloud.com.cn/20200413_%E7%B2%A4B12313_386.pdf";
 		final ByteArrayOutputStream os2 = new ByteArrayOutputStream();
@@ -222,7 +222,7 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadStringTest() {
 		final String url = "https://www.baidu.com";
 		// 从远程直接读取字符串，需要自定义编码，直接调用JDK方法
@@ -231,7 +231,7 @@ public class DownloadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void gimg2Test(){
 		final byte[] bytes = HttpDownloader.downloadBytes("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1114%2F0H320120Z3%2F200H3120Z3-6-1200.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621996490&t=8c384c2823ea453da15a1b9cd5183eea");
 		Console.log(Base64.encode(bytes));

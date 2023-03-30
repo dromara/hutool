@@ -2,8 +2,8 @@ package cn.hutool.http;
 
 import cn.hutool.http.client.Request;
 import cn.hutool.json.JSONUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class IssueI5WAV4Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest(){
 		//测试代码
 		final Map<String, Object> map = new HashMap<>();

@@ -1,43 +1,43 @@
 package cn.hutool.core.text;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StrCheckerTest {
 
 	@Test
 	public void isEmptyTest() {
-		Assert.assertTrue(StrUtil.isEmpty(null));
-		Assert.assertTrue(StrUtil.isEmpty(""));
+		Assertions.assertTrue(StrUtil.isEmpty(null));
+		Assertions.assertTrue(StrUtil.isEmpty(""));
 
-		Assert.assertFalse(StrUtil.isEmpty(" \t\n"));
-		Assert.assertFalse(StrUtil.isEmpty("abc"));
+		Assertions.assertFalse(StrUtil.isEmpty(" \t\n"));
+		Assertions.assertFalse(StrUtil.isEmpty("abc"));
 	}
 
 	@Test
 	public void isNotEmptyTest() {
-		Assert.assertFalse(StrUtil.isNotEmpty(null));
-		Assert.assertFalse(StrUtil.isNotEmpty(""));
+		Assertions.assertFalse(StrUtil.isNotEmpty(null));
+		Assertions.assertFalse(StrUtil.isNotEmpty(""));
 
-		Assert.assertTrue(StrUtil.isNotEmpty(" \t\n"));
-		Assert.assertTrue(StrUtil.isNotEmpty("abc"));
+		Assertions.assertTrue(StrUtil.isNotEmpty(" \t\n"));
+		Assertions.assertTrue(StrUtil.isNotEmpty("abc"));
 	}
 
 	@Test
 	public void isBlankTest() {
-		Assert.assertTrue(StrUtil.isBlank(null));
-		Assert.assertTrue(StrUtil.isBlank(""));
-		Assert.assertTrue(StrUtil.isBlank(" \t\n"));
+		Assertions.assertTrue(StrUtil.isBlank(null));
+		Assertions.assertTrue(StrUtil.isBlank(""));
+		Assertions.assertTrue(StrUtil.isBlank(" \t\n"));
 
-		Assert.assertFalse(StrUtil.isBlank("abc"));
+		Assertions.assertFalse(StrUtil.isBlank("abc"));
 	}
 
 	@Test
 	public void isNotBlankTest() {
-		Assert.assertFalse(StrUtil.isNotBlank(null));
-		Assert.assertFalse(StrUtil.isNotBlank(""));
-		Assert.assertFalse(StrUtil.isNotBlank(" \t\n"));
+		Assertions.assertFalse(StrUtil.isNotBlank(null));
+		Assertions.assertFalse(StrUtil.isNotBlank(""));
+		Assertions.assertFalse(StrUtil.isNotBlank(" \t\n"));
 
-		Assert.assertTrue(StrUtil.isNotBlank("abc"));
+		Assertions.assertTrue(StrUtil.isNotBlank("abc"));
 	}
 }

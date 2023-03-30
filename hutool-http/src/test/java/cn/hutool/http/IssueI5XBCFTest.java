@@ -5,13 +5,13 @@ import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
 import org.brotli.dec.BrotliInputStream;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI5XBCFTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest() {
 		GlobalCompressStreamRegister.INSTANCE.register("br", BrotliInputStream.class);
 

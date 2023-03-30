@@ -1,7 +1,7 @@
 package cn.hutool.extra.management;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see JavaInfo
@@ -11,8 +11,8 @@ public class JavaInfoTest {
 	@Test
 	public void isJavaVersionAtLeastTest() {
 		final int versionInt = ManagementUtil.getJavaInfo().getVersionIntSimple();
-		Assert.assertTrue(versionInt >= 8);
+		Assertions.assertTrue(versionInt >= 8);
 		final boolean javaVersionAtLeast1 = ManagementUtil.getJavaInfo().isJavaVersionAtLeast(1.8f);
-		Assert.assertTrue(javaVersionAtLeast1);
+		Assertions.assertTrue(javaVersionAtLeast1);
 	}
 }

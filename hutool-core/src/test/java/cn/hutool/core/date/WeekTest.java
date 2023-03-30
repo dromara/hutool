@@ -1,7 +1,7 @@
 package cn.hutool.core.date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -11,68 +11,68 @@ public class WeekTest {
 	@Test
 	public void ofTest(){
 		//测试别名及大小写
-		Assert.assertEquals(Week.SUNDAY, Week.of("sun"));
-		Assert.assertEquals(Week.SUNDAY, Week.of("SUN"));
-		Assert.assertEquals(Week.SUNDAY, Week.of("Sun"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("sun"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("SUN"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("Sun"));
 		//测试全名及大小写
-		Assert.assertEquals(Week.SUNDAY, Week.of("sunday"));
-		Assert.assertEquals(Week.SUNDAY, Week.of("Sunday"));
-		Assert.assertEquals(Week.SUNDAY, Week.of("SUNDAY"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("sunday"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("Sunday"));
+		Assertions.assertEquals(Week.SUNDAY, Week.of("SUNDAY"));
 
-		Assert.assertEquals(Week.MONDAY, Week.of("Mon"));
-		Assert.assertEquals(Week.MONDAY, Week.of("Monday"));
+		Assertions.assertEquals(Week.MONDAY, Week.of("Mon"));
+		Assertions.assertEquals(Week.MONDAY, Week.of("Monday"));
 
-		Assert.assertEquals(Week.TUESDAY, Week.of("tue"));
-		Assert.assertEquals(Week.TUESDAY, Week.of("tuesday"));
+		Assertions.assertEquals(Week.TUESDAY, Week.of("tue"));
+		Assertions.assertEquals(Week.TUESDAY, Week.of("tuesday"));
 
-		Assert.assertEquals(Week.WEDNESDAY, Week.of("wed"));
-		Assert.assertEquals(Week.WEDNESDAY, Week.of("WEDNESDAY"));
+		Assertions.assertEquals(Week.WEDNESDAY, Week.of("wed"));
+		Assertions.assertEquals(Week.WEDNESDAY, Week.of("WEDNESDAY"));
 
-		Assert.assertEquals(Week.THURSDAY, Week.of("thu"));
-		Assert.assertEquals(Week.THURSDAY, Week.of("THURSDAY"));
+		Assertions.assertEquals(Week.THURSDAY, Week.of("thu"));
+		Assertions.assertEquals(Week.THURSDAY, Week.of("THURSDAY"));
 
-		Assert.assertEquals(Week.FRIDAY, Week.of("fri"));
-		Assert.assertEquals(Week.FRIDAY, Week.of("FRIDAY"));
+		Assertions.assertEquals(Week.FRIDAY, Week.of("fri"));
+		Assertions.assertEquals(Week.FRIDAY, Week.of("FRIDAY"));
 
-		Assert.assertEquals(Week.SATURDAY, Week.of("sat"));
-		Assert.assertEquals(Week.SATURDAY, Week.of("SATURDAY"));
+		Assertions.assertEquals(Week.SATURDAY, Week.of("sat"));
+		Assertions.assertEquals(Week.SATURDAY, Week.of("SATURDAY"));
 	}
 
 	@Test
 	public void ofTest2(){
-		Assert.assertEquals(Week.SUNDAY, Week.of(DayOfWeek.SUNDAY));
-		Assert.assertEquals(Week.MONDAY, Week.of(DayOfWeek.MONDAY));
-		Assert.assertEquals(Week.TUESDAY, Week.of(DayOfWeek.TUESDAY));
-		Assert.assertEquals(Week.WEDNESDAY, Week.of(DayOfWeek.WEDNESDAY));
-		Assert.assertEquals(Week.THURSDAY, Week.of(DayOfWeek.THURSDAY));
-		Assert.assertEquals(Week.FRIDAY, Week.of(DayOfWeek.FRIDAY));
-		Assert.assertEquals(Week.SATURDAY, Week.of(DayOfWeek.SATURDAY));
-		Assert.assertEquals(Week.SATURDAY, Week.of(Calendar.SATURDAY));
-		Assert.assertNull(Week.of(10));
-		Assert.assertNull(Week.of(-1));
+		Assertions.assertEquals(Week.SUNDAY, Week.of(DayOfWeek.SUNDAY));
+		Assertions.assertEquals(Week.MONDAY, Week.of(DayOfWeek.MONDAY));
+		Assertions.assertEquals(Week.TUESDAY, Week.of(DayOfWeek.TUESDAY));
+		Assertions.assertEquals(Week.WEDNESDAY, Week.of(DayOfWeek.WEDNESDAY));
+		Assertions.assertEquals(Week.THURSDAY, Week.of(DayOfWeek.THURSDAY));
+		Assertions.assertEquals(Week.FRIDAY, Week.of(DayOfWeek.FRIDAY));
+		Assertions.assertEquals(Week.SATURDAY, Week.of(DayOfWeek.SATURDAY));
+		Assertions.assertEquals(Week.SATURDAY, Week.of(Calendar.SATURDAY));
+		Assertions.assertNull(Week.of(10));
+		Assertions.assertNull(Week.of(-1));
 	}
 
 	@Test
 	public void toJdkDayOfWeekTest(){
-		Assert.assertEquals(DayOfWeek.MONDAY, Week.MONDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.TUESDAY, Week.TUESDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.WEDNESDAY, Week.WEDNESDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.THURSDAY, Week.THURSDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.FRIDAY, Week.FRIDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.SATURDAY, Week.SATURDAY.toJdkDayOfWeek());
-		Assert.assertEquals(DayOfWeek.SUNDAY, Week.SUNDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.MONDAY, Week.MONDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.TUESDAY, Week.TUESDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.WEDNESDAY, Week.WEDNESDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.THURSDAY, Week.THURSDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.FRIDAY, Week.FRIDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.SATURDAY, Week.SATURDAY.toJdkDayOfWeek());
+		Assertions.assertEquals(DayOfWeek.SUNDAY, Week.SUNDAY.toJdkDayOfWeek());
 	}
 
 	@Test
 	public void toChineseTest(){
-		Assert.assertEquals("周一",Week.MONDAY.toChinese("周"));
-		Assert.assertEquals("星期一",Week.MONDAY.toChinese("星期"));
-		Assert.assertEquals("星期二",Week.TUESDAY.toChinese("星期"));
-		Assert.assertEquals("星期三",Week.WEDNESDAY.toChinese("星期"));
-		Assert.assertEquals("星期四",Week.THURSDAY.toChinese("星期"));
-		Assert.assertEquals("星期五",Week.FRIDAY.toChinese("星期"));
-		Assert.assertEquals("星期六",Week.SATURDAY.toChinese("星期"));
-		Assert.assertEquals("星期日",Week.SUNDAY.toChinese("星期"));
-		Assert.assertEquals("星期一",Week.MONDAY.toChinese());
+		Assertions.assertEquals("周一",Week.MONDAY.toChinese("周"));
+		Assertions.assertEquals("星期一",Week.MONDAY.toChinese("星期"));
+		Assertions.assertEquals("星期二",Week.TUESDAY.toChinese("星期"));
+		Assertions.assertEquals("星期三",Week.WEDNESDAY.toChinese("星期"));
+		Assertions.assertEquals("星期四",Week.THURSDAY.toChinese("星期"));
+		Assertions.assertEquals("星期五",Week.FRIDAY.toChinese("星期"));
+		Assertions.assertEquals("星期六",Week.SATURDAY.toChinese("星期"));
+		Assertions.assertEquals("星期日",Week.SUNDAY.toChinese("星期"));
+		Assertions.assertEquals("星期一",Week.MONDAY.toChinese());
 	}
 }

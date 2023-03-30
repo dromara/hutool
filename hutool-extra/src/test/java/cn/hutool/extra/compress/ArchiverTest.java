@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.compress.archiver.StreamArchiver;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ import java.io.File;
 public class ArchiverTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void zipTest() {
 		final File file = FileUtil.file("d:/test/compress/test.zip");
 		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.ZIP, file)
@@ -26,7 +26,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tarTest() {
 		final File file = FileUtil.file("d:/test/compress/test.tar");
 		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.TAR, file)
@@ -38,7 +38,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cpioTest() {
 		final File file = FileUtil.file("d:/test/compress/test.cpio");
 		StreamArchiver.of(CharsetUtil.UTF_8, ArchiveStreamFactory.CPIO, file)
@@ -50,7 +50,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void sevenZTest() {
 		final File file = FileUtil.file("d:/test/compress/test.7z");
 		CompressUtil.createArchiver(CharsetUtil.UTF_8, ArchiveStreamFactory.SEVEN_Z, file)
@@ -62,7 +62,7 @@ public class ArchiverTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tgzTest() {
 		final File file = FileUtil.file("d:/test/compress/test.tgz");
 		CompressUtil.createArchiver(CharsetUtil.UTF_8, "tgz", file)

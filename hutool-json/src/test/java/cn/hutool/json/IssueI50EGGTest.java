@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IssueI50EGGTest {
 
@@ -11,7 +11,7 @@ public class IssueI50EGGTest {
 	public void toBeanTest(){
 		final String data = "{\"return_code\": 1, \"return_msg\": \"成功\", \"return_data\" : null}";
 		final ApiResult<?> apiResult = JSONUtil.toBean(data, JSONConfig.of().setIgnoreCase(true), ApiResult.class);
-		Assert.assertEquals(1, apiResult.getReturn_code());
+		Assertions.assertEquals(1, apiResult.getReturn_code());
 	}
 
 	@Data

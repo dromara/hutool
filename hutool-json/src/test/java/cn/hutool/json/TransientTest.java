@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TransientTest {
 
@@ -21,7 +21,7 @@ public class TransientTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
 				JSONConfig.of().setTransientSupport(false));
-		Assert.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
+		Assertions.assertEquals("{\"id\":\"3243\",\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class TransientTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(detailBill,
 				JSONConfig.of().setTransientSupport(true));
-		Assert.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
+		Assertions.assertEquals("{\"bizNo\":\"bizNo\"}", jsonObject.toString());
 	}
 
 	@Test
@@ -46,8 +46,8 @@ public class TransientTest {
 				JSONConfig.of().setTransientSupport(false));
 
 		final Bill bill = jsonObject.toBean(Bill.class);
-		Assert.assertEquals("3243", bill.getId());
-		Assert.assertEquals("bizNo", bill.getBizNo());
+		Assertions.assertEquals("3243", bill.getId());
+		Assertions.assertEquals("bizNo", bill.getBizNo());
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class TransientTest {
 				JSONConfig.of().setTransientSupport(true));
 
 		final Bill bill = jsonObject.toBean(Bill.class);
-		Assert.assertNull(bill.getId());
-		Assert.assertEquals("bizNo", bill.getBizNo());
+		Assertions.assertNull(bill.getId());
+		Assertions.assertEquals("bizNo", bill.getBizNo());
 	}
 }

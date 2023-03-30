@@ -1,8 +1,8 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.reflect.ClassUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
@@ -17,35 +17,35 @@ public class ClassUtilTest {
 	@Test
 	public void getClassNameTest() {
 		final String className = ClassUtil.getClassName(ClassUtil.class, false);
-		Assert.assertEquals("cn.hutool.core.reflect.ClassUtil", className);
+		Assertions.assertEquals("cn.hutool.core.reflect.ClassUtil", className);
 
 		final String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
-		Assert.assertEquals("ClassUtil", simpleClassName);
+		Assertions.assertEquals("ClassUtil", simpleClassName);
 	}
 
 	@Test
 	public void getClassPathTest() {
 		final String classPath = ClassUtil.getClassPath();
-		Assert.assertNotNull(classPath);
+		Assertions.assertNotNull(classPath);
 	}
 
 	@Test
 	public void getShortClassNameTest() {
 		final String className = "cn.hutool.core.text.StrUtil";
 		final String result = ClassUtil.getShortClassName(className);
-		Assert.assertEquals("c.h.c.t.StrUtil", result);
+		Assertions.assertEquals("c.h.c.t.StrUtil", result);
 	}
 
 	@Test
 	public void getLocationPathTest(){
 		final String classDir = ClassUtil.getLocationPath(ClassUtilTest.class);
-		Assert.assertTrue(Objects.requireNonNull(classDir).endsWith("/hutool-core/target/test-classes/"));
+		Assertions.assertTrue(Objects.requireNonNull(classDir).endsWith("/hutool-core/target/test-classes/"));
 	}
 
 	@Test
 	public void isAssignableTest(){
-		Assert.assertTrue(ClassUtil.isAssignable(int.class, int.class));
-		Assert.assertTrue(ClassUtil.isAssignable(int.class, Integer.class));
-		Assert.assertFalse(ClassUtil.isAssignable(int.class, String.class));
+		Assertions.assertTrue(ClassUtil.isAssignable(int.class, int.class));
+		Assertions.assertTrue(ClassUtil.isAssignable(int.class, Integer.class));
+		Assertions.assertFalse(ClassUtil.isAssignable(int.class, String.class));
 	}
 }

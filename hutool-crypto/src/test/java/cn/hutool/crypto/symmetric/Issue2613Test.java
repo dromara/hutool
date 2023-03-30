@@ -1,8 +1,8 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.crypto.Padding;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Issue2613Test {
 
@@ -14,6 +14,6 @@ public class Issue2613Test {
 		final String encryptHex = aes.encryptHex("123456");
 
 		final String s = aes.decryptStr(encryptHex);
-		Assert.assertEquals("123456", s);
+		Assertions.assertEquals("123456", s);
 	}
 }

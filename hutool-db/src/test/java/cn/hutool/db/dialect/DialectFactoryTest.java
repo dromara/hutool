@@ -1,8 +1,8 @@
 package cn.hutool.db.dialect;
 
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class DialectFactoryTest {
 		map.put("mariadb",DRIVER_MARIADB);
 
 
-		map.forEach((k,v) -> Assert.assertEquals(v,
+		map.forEach((k,v) -> Assertions.assertEquals(v,
 				DialectFactory.identifyDriver(k+ RandomUtil.randomString(2),null) ));
 
 	}

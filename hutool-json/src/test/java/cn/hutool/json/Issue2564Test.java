@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Issue2564Test {
 
@@ -14,7 +14,7 @@ public class Issue2564Test {
 	public void emptyToBeanTest(){
 		final String x = "{}";
 		final A a = JSONUtil.toBean(x, JSONConfig.of().setIgnoreError(true), A.class);
-		Assert.assertNull(a);
+		Assertions.assertNull(a);
 	}
 
 	@Getter

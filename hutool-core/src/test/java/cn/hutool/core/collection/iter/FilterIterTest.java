@@ -1,8 +1,8 @@
 package cn.hutool.core.collection.iter;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,42 +21,42 @@ public class FilterIterTest {
 				count++;
 			}
 		}
-		Assert.assertEquals(2, count);
+		Assertions.assertEquals(2, count);
 	}
 
     @Test
     public void hasNext() {
 		Iterator<Integer> iter = new FilterIter<>(Arrays.asList(1, 2, 3).iterator(), i -> true);
-		Assert.assertTrue(iter.hasNext());
+		Assertions.assertTrue(iter.hasNext());
 		iter = new FilterIter<>(Collections.emptyIterator(), i -> true);
-		Assert.assertFalse(iter.hasNext());
+		Assertions.assertFalse(iter.hasNext());
     }
 
     @Test
     public void next() {
 		// 只保留奇数
 		Iterator<Integer> iter = new FilterIter<>(Arrays.asList(1, 2, 3).iterator(), i -> (i & 1) == 1);
-		Assert.assertEquals((Integer)1, iter.next());
-		Assert.assertEquals((Integer)3, iter.next());
+		Assertions.assertEquals((Integer)1, iter.next());
+		Assertions.assertEquals((Integer)3, iter.next());
     }
 
     @Test
     public void remove() {
 		Iterator<Integer> iter = new FilterIter<>(Collections.emptyIterator(), i -> true);
-		Assert.assertThrows(IllegalStateException.class, iter::remove);
+		Assertions.assertThrows(IllegalStateException.class, iter::remove);
     }
 
     @Test
     public void getIterator() {
 		FilterIter<Integer> iter = new FilterIter<>(Collections.emptyIterator(), i -> true);
-		Assert.assertSame(Collections.emptyIterator(), iter.getIterator());
+		Assertions.assertSame(Collections.emptyIterator(), iter.getIterator());
     }
 
     @Test
     public void getFilter() {
 		Predicate<Integer> predicate = i -> true;
 		FilterIter<Integer> iter = new FilterIter<>(Collections.emptyIterator(), predicate);
-		Assert.assertSame(predicate, iter.getFilter());
+		Assertions.assertSame(predicate, iter.getFilter());
     }
 
 }

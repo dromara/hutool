@@ -1,7 +1,7 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.lang.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,6 @@ public class IssueI6NR2ZTest {
 
 		final List<MapTree<Integer>> build = TreeUtil.build(list);
 		final MapTree<Integer> node = TreeUtil.getNode(build.get(0), 31);
-		Assert.notNull(node);
+		Assertions.assertNotNull(node);
 	}
 }

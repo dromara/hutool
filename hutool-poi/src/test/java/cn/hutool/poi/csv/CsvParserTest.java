@@ -2,8 +2,8 @@ package cn.hutool.poi.csv;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 
@@ -15,7 +15,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("b\"bba\"", row.getRawList().get(1));
+		Assertions.assertEquals("b\"bba\"", row.getRawList().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -25,7 +25,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("\"bba\"bbb", row.getRawList().get(1));
+		Assertions.assertEquals("\"bba\"bbb", row.getRawList().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -35,7 +35,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("bba", row.getRawList().get(1));
+		Assertions.assertEquals("bba", row.getRawList().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -45,7 +45,7 @@ public class CsvParserTest {
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
 		//noinspection ConstantConditions
-		Assert.assertEquals("", row.getRawList().get(1));
+		Assertions.assertEquals("", row.getRawList().get(1));
 		IoUtil.closeQuietly(parser);
 	}
 
@@ -56,8 +56,8 @@ public class CsvParserTest {
 		final StringReader reader = StrUtil.getReader("\"b\"\"bb\"");
 		final CsvParser parser = new CsvParser(reader, null);
 		final CsvRow row = parser.nextRow();
-		Assert.assertNotNull(row);
-		Assert.assertEquals(1, row.size());
-		Assert.assertEquals("b\"bb", row.get(0));
+		Assertions.assertNotNull(row);
+		Assertions.assertEquals(1, row.size());
+		Assertions.assertEquals("b\"bb", row.get(0));
 	}
 }

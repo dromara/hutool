@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.Console;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,14 +23,14 @@ public class Issue2090Test {
 		final JSONObject json = JSONUtil.parseObj(test);
 		Console.log(json);
 		final TestBean test1 = json.toBean(TestBean.class);
-		Assert.assertEquals(test, test1);
+		Assertions.assertEquals(test, test1);
 	}
 
 	@Test
 	public void parseLocalDateTest(){
 		final LocalDate localDate = LocalDate.now();
 		final JSONObject jsonObject = JSONUtil.parseObj(localDate);
-		Assert.assertNotNull(jsonObject.toString());
+		Assertions.assertNotNull(jsonObject.toString());
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class Issue2090Test {
 		final LocalDate d = LocalDate.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
 		final LocalDate d2 = obj.toBean(LocalDate.class);
-		Assert.assertEquals(d, d2);
+		Assertions.assertEquals(d, d2);
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class Issue2090Test {
 		final LocalDateTime d = LocalDateTime.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
 		final LocalDateTime d2 = obj.toBean(LocalDateTime.class);
-		Assert.assertEquals(d, d2);
+		Assertions.assertEquals(d, d2);
 	}
 
 	@Test
@@ -54,14 +54,14 @@ public class Issue2090Test {
 		final LocalTime d = LocalTime.now();
 		final JSONObject obj = JSONUtil.parseObj(d);
 		final LocalTime d2 = obj.toBean(LocalTime.class);
-		Assert.assertEquals(d, d2);
+		Assertions.assertEquals(d, d2);
 	}
 
 	@Test
 	public void monthTest(){
 		final JSONObject jsonObject = new JSONObject();
 		jsonObject.set("month", Month.JANUARY);
-		Assert.assertEquals("{\"month\":1}", jsonObject.toString());
+		Assertions.assertEquals("{\"month\":1}", jsonObject.toString());
 	}
 
 	@Data

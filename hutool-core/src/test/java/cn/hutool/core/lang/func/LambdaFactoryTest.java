@@ -7,11 +7,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
@@ -35,7 +33,7 @@ public class LambdaFactoryTest {
 		try {
 			LambdaFactory.build(Function.class, Something.class, "setId", Long.class);
 		} catch (final Exception e) {
-			Assert.assertTrue(e.getCause() instanceof LambdaConversionException);
+			Assertions.assertTrue(e.getCause() instanceof LambdaConversionException);
 		}
 	}
 
@@ -49,15 +47,15 @@ public class LambdaFactoryTest {
 		final Function<Something, Long> get11 = LambdaFactory.build(Function.class, Something.class, "getId");
 		final Function<Something, Long> get12 = LambdaFactory.build(Function.class, Something.class, "getId");
 
-		Assert.assertEquals(get11, get12);
+		Assertions.assertEquals(get11, get12);
 		// 通过LambdaFactory模拟创建一个getId方法的Lambda句柄函数，通过调用这个函数，实现方法调用。
-		Assert.assertEquals(something.getId(), get11.apply(something));
+		Assertions.assertEquals(something.getId(), get11.apply(something));
 
 		final String name = "sname";
 		final BiConsumer<Something, String> set = LambdaFactory.build(BiConsumer.class, Something.class, "setName", String.class);
 		set.accept(something, name);
 
-		Assert.assertEquals(something.getName(), name);
+		Assertions.assertEquals(something.getName(), name);
 	}
 
 	@Data
@@ -71,14 +69,11 @@ public class LambdaFactoryTest {
 	 *
 	 * @author nasodaengineer
 	 */
-	@RunWith(Parameterized.class)
-	@Ignore
+	@Disabled
 	public static class PerformanceTest {
 
-		@Parameterized.Parameter
 		public int count;
 
-		@Parameterized.Parameters
 		public static Collection<Integer> parameters() {
 			return ListUtil.of(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000);
 		}
@@ -142,7 +137,7 @@ public class LambdaFactoryTest {
 		@SuppressWarnings({"rawtypes", "unchecked", "Convert2MethodRef"})
 		@Test
 		@SneakyThrows
-		@Ignore
+		@Disabled
 		public void lambdaGetPerformanceTest() {
 			final Something something = new Something();
 			something.setId(1L);
@@ -167,7 +162,7 @@ public class LambdaFactoryTest {
 			final Supplier<Something> constructorLambda = LambdaFactory.build(Supplier.class, constructor);
 			// constructorLambda can be cache or transfer
 			final Something something = constructorLambda.get();
-			Assert.assertEquals(Something.class, something.getClass());
+			Assertions.assertEquals(Something.class, something.getClass());
 		}
 
 		/**
@@ -229,7 +224,7 @@ public class LambdaFactoryTest {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Test
 		@SneakyThrows
-		@Ignore
+		@Disabled
 		public void lambdaSetPerformanceTest() {
 			final Something something = new Something();
 			something.setId(1L);
@@ -327,6 +322,6 @@ public class LambdaFactoryTest {
 		final Constructor<String> constructor = ConstructorUtil.getConstructor(String.class, char[].class, boolean.class);
 		final BiFunction<char[], Boolean, String> function = LambdaFactory.build(BiFunction.class, constructor);
 		final String apply = function.apply(a, true);
-		Assert.assertEquals(apply, new String(a));
+		Assertions.assertEquals(apply, new String(a));
 	}
 }

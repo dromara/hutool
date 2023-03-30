@@ -1,8 +1,8 @@
 package cn.hutool.crypto.symmetric;
 
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RC4Test {
 
@@ -13,12 +13,12 @@ public class RC4Test {
 		final String message = "Hello, World!";
 		final byte[] crypt = rc4.encrypt(message);
 		final String msg = rc4.decrypt(crypt);
-		Assert.assertEquals(message, msg);
+		Assertions.assertEquals(message, msg);
 
 		final String message2 = "Hello, World， this is megssage 2";
 		final byte[] crypt2 = rc4.encrypt(message2);
 		final String msg2 = rc4.decrypt(crypt2);
-		Assert.assertEquals(message2, msg2);
+		Assertions.assertEquals(message2, msg2);
 	}
 
 	@Test
@@ -28,12 +28,12 @@ public class RC4Test {
 		final RC4 rc4 = new RC4(key);
 		final byte[] crypt = rc4.encrypt(message);
 		final String msg = rc4.decrypt(crypt);
-		Assert.assertEquals(message, msg);
+		Assertions.assertEquals(message, msg);
 
 		final String message2 = "这是第二个中文消息！";
 		final byte[] crypt2 = rc4.encrypt(message2);
 		final String msg2 = rc4.decrypt(crypt2);
-		Assert.assertEquals(message2, msg2);
+		Assertions.assertEquals(message2, msg2);
 	}
 
 	@Test
@@ -43,12 +43,12 @@ public class RC4Test {
 		final RC4 rc4 = new RC4(key);
 		final String encryptHex = rc4.encryptHex(message, CharsetUtil.UTF_8);
 		final String msg = rc4.decrypt(encryptHex);
-		Assert.assertEquals(message, msg);
+		Assertions.assertEquals(message, msg);
 
 		final String message2 = "这是第二个用来测试密文为十六进制字符串的消息！";
 		final String encryptHex2 = rc4.encryptHex(message2);
 		final String msg2 = rc4.decrypt(encryptHex2);
-		Assert.assertEquals(message2, msg2);
+		Assertions.assertEquals(message2, msg2);
 	}
 
 
@@ -59,11 +59,11 @@ public class RC4Test {
 		final RC4 rc4 = new RC4(key);
 		final String encryptHex = rc4.encryptBase64(message, CharsetUtil.UTF_8);
 		final String msg = rc4.decrypt(encryptHex);
-		Assert.assertEquals(message, msg);
+		Assertions.assertEquals(message, msg);
 
 		final String message2 = "这是第一个用来测试密文为Base64编码的消息！";
 		final String encryptHex2 = rc4.encryptBase64(message2);
 		final String msg2 = rc4.decrypt(encryptHex2);
-		Assert.assertEquals(message2, msg2);
+		Assertions.assertEquals(message2, msg2);
 	}
 }

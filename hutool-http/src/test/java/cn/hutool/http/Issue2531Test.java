@@ -5,9 +5,9 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class Issue2531Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest(){
 		final Map<String,String> map = new HashMap<>();
 		map.put("str","+123");
@@ -34,14 +34,14 @@ public class Issue2531Test {
 	public void encodePlusTest(){
 		// 根据RFC3986规范，在URL中，"+"是安全字符，所以不会解码也不会编码
 		UrlBuilder builder = UrlBuilder.ofHttp("https://hutool.cn/a=+");
-		Assert.assertEquals("https://hutool.cn/a=+", builder.toString());
+		Assertions.assertEquals("https://hutool.cn/a=+", builder.toString());
 
 		// 由于+为安全字符无需编码，ofHttp方法会把%2B解码为+，但是编码的时候不会编码
 		builder = UrlBuilder.ofHttp("https://hutool.cn/a=%2B");
-		Assert.assertEquals("https://hutool.cn/a=+", builder.toString());
+		Assertions.assertEquals("https://hutool.cn/a=+", builder.toString());
 
 		// 如果你不想解码%2B，则charset传null表示不做解码，编码时候也被忽略
 		builder = UrlBuilder.ofHttp("https://hutool.cn/a=%2B", null);
-		Assert.assertEquals("https://hutool.cn/a=%2B", builder.toString());
+		Assertions.assertEquals("https://hutool.cn/a=%2B", builder.toString());
 	}
 }

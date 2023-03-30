@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -18,18 +18,18 @@ public class ByteUtilTest {
 		final byte[] bytesIntFromBuffer = buffer.array();
 
 		final byte[] bytesInt = ByteUtil.toBytes(int1, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertArrayEquals(bytesIntFromBuffer, bytesInt);
+		Assertions.assertArrayEquals(bytesIntFromBuffer, bytesInt);
 
 		final int int2 = ByteUtil.toInt(bytesInt, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(int1, int2);
+		Assertions.assertEquals(int1, int2);
 
 		final byte[] bytesInt2 = ByteUtil.toBytes(int1, ByteOrder.LITTLE_ENDIAN);
 		final int int3 = ByteUtil.toInt(bytesInt2, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(int1, int3);
+		Assertions.assertEquals(int1, int3);
 
 		final byte[] bytesInt3 = ByteUtil.toBytes(int1, ByteOrder.LITTLE_ENDIAN);
 		final int int4 = ByteUtil.toInt(bytesInt3, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(int1, int4);
+		Assertions.assertEquals(int1, int4);
 	}
 
 	@Test
@@ -42,11 +42,11 @@ public class ByteUtilTest {
 		final byte[] bytesIntFromBuffer = buffer.array();
 
 		final byte[] bytesInt = ByteUtil.toBytes(int2, ByteOrder.BIG_ENDIAN);
-		Assert.assertArrayEquals(bytesIntFromBuffer, bytesInt);
+		Assertions.assertArrayEquals(bytesIntFromBuffer, bytesInt);
 
 		// 测试大端序 byte 数组转 int
 		final int int3 = ByteUtil.toInt(bytesInt, ByteOrder.BIG_ENDIAN);
-		Assert.assertEquals(int2, int3);
+		Assertions.assertEquals(int2, int3);
 	}
 
 	@Test
@@ -60,18 +60,18 @@ public class ByteUtilTest {
 		final byte[] bytesLongFromBuffer = buffer.array();
 
 		final byte[] bytesLong = ByteUtil.toBytes(long1, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertArrayEquals(bytesLongFromBuffer, bytesLong);
+		Assertions.assertArrayEquals(bytesLongFromBuffer, bytesLong);
 
 		final long long2 = ByteUtil.toLong(bytesLong, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(long1, long2);
+		Assertions.assertEquals(long1, long2);
 
 		final byte[] bytesLong2 = ByteUtil.toBytes(long1);
 		final long long3 = ByteUtil.toLong(bytesLong2, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(long1, long3);
+		Assertions.assertEquals(long1, long3);
 
 		final byte[] bytesLong3 = ByteUtil.toBytes(long1, ByteOrder.LITTLE_ENDIAN);
 		final long long4 = ByteUtil.toLong(bytesLong3);
-		Assert.assertEquals(long1, long4);
+		Assertions.assertEquals(long1, long4);
 	}
 
 	@Test
@@ -84,10 +84,10 @@ public class ByteUtilTest {
 		final byte[] bytesLongFromBuffer = buffer.array();
 
 		final byte[] bytesLong = ByteUtil.toBytes(long1, ByteOrder.BIG_ENDIAN);
-		Assert.assertArrayEquals(bytesLongFromBuffer, bytesLong);
+		Assertions.assertArrayEquals(bytesLongFromBuffer, bytesLong);
 
 		final long long2 = ByteUtil.toLong(bytesLong, ByteOrder.BIG_ENDIAN);
-		Assert.assertEquals(long1, long2);
+		Assertions.assertEquals(long1, long2);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class ByteUtilTest {
 
 		final byte[] bytesLong = ByteUtil.toBytes(f1, ByteOrder.LITTLE_ENDIAN);
 		final float f2 = ByteUtil.toFloat(bytesLong, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(f1, f2, 0);
+		Assertions.assertEquals(f1, f2, 0);
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class ByteUtilTest {
 		final byte[] bytesLong = ByteUtil.toBytes(f1, ByteOrder.BIG_ENDIAN);
 		final float f2 = ByteUtil.toFloat(bytesLong, ByteOrder.BIG_ENDIAN);
 
-		Assert.assertEquals(f1, f2, 0);
+		Assertions.assertEquals(f1, f2, 0);
 	}
 
 	@Test
@@ -117,15 +117,15 @@ public class ByteUtilTest {
 
 		final byte[] bytes = ByteUtil.toBytes(short1, ByteOrder.LITTLE_ENDIAN);
 		final short short2 = ByteUtil.toShort(bytes, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(short2, short1);
+		Assertions.assertEquals(short2, short1);
 
 		final byte[] bytes2 = ByteUtil.toBytes(short1);
 		final short short3 = ByteUtil.toShort(bytes2, ByteOrder.LITTLE_ENDIAN);
-		Assert.assertEquals(short3, short1);
+		Assertions.assertEquals(short3, short1);
 
 		final byte[] bytes3 = ByteUtil.toBytes(short1, ByteOrder.LITTLE_ENDIAN);
 		final short short4 = ByteUtil.toShort(bytes3);
-		Assert.assertEquals(short4, short1);
+		Assertions.assertEquals(short4, short1);
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class ByteUtilTest {
 		final byte[] bytes = ByteUtil.toBytes(short1, ByteOrder.BIG_ENDIAN);
 		final short short2 = ByteUtil.toShort(bytes, ByteOrder.BIG_ENDIAN);
 
-		Assert.assertEquals(short2, short1);
+		Assertions.assertEquals(short2, short1);
 	}
 
 	@Test
@@ -143,12 +143,12 @@ public class ByteUtilTest {
 		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.toBytes(a));
 		wrap.order(ByteOrder.LITTLE_ENDIAN);
 		long aLong = wrap.getLong();
-		Assert.assertEquals(a, aLong);
+		Assertions.assertEquals(a, aLong);
 
 		wrap = ByteBuffer.wrap(ByteUtil.toBytes(a, ByteOrder.BIG_ENDIAN));
 		wrap.order(ByteOrder.BIG_ENDIAN);
 		aLong = wrap.getLong();
-		Assert.assertEquals(a, aLong);
+		Assertions.assertEquals(a, aLong);
 	}
 
 	@Test
@@ -157,12 +157,12 @@ public class ByteUtilTest {
 		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.toBytes(a));
 		wrap.order(ByteOrder.LITTLE_ENDIAN);
 		int aInt = wrap.getInt();
-		Assert.assertEquals(a, aInt);
+		Assertions.assertEquals(a, aInt);
 
 		wrap = ByteBuffer.wrap(ByteUtil.toBytes(a, ByteOrder.BIG_ENDIAN));
 		wrap.order(ByteOrder.BIG_ENDIAN);
 		aInt = wrap.getInt();
-		Assert.assertEquals(a, aInt);
+		Assertions.assertEquals(a, aInt);
 	}
 
 	@Test
@@ -172,11 +172,11 @@ public class ByteUtilTest {
 		ByteBuffer wrap = ByteBuffer.wrap(ByteUtil.toBytes(a));
 		wrap.order(ByteOrder.LITTLE_ENDIAN);
 		short aShort = wrap.getShort();
-		Assert.assertEquals(a, aShort);
+		Assertions.assertEquals(a, aShort);
 
 		wrap = ByteBuffer.wrap(ByteUtil.toBytes(a, ByteOrder.BIG_ENDIAN));
 		wrap.order(ByteOrder.BIG_ENDIAN);
 		aShort = wrap.getShort();
-		Assert.assertEquals(a, aShort);
+		Assertions.assertEquals(a, aShort);
 	}
 }

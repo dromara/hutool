@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,15 +20,15 @@ public class OptTest {
 
 	@Test
 	public void ofTest() {
-		Assert.assertTrue(Opt.of(Optional.empty()).isEmpty());
-		Assert.assertTrue(Opt.of(Optional.of(1)).isPresent());
+		Assertions.assertTrue(Opt.of(Optional.empty()).isEmpty());
+		Assertions.assertTrue(Opt.of(Optional.of(1)).isPresent());
 	}
 
 	@Test
 	public void ofBlankAbleTest() {
 		// ofBlankAble相对于ofNullable考虑了字符串为空串的情况
 		final String hutool = Opt.ofBlankAble("").orElse("hutool");
-		Assert.assertEquals("hutool", hutool);
+		Assertions.assertEquals("hutool", hutool);
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class OptTest {
 		// 和原版Optional有区别的是，get不会抛出NoSuchElementException
 		// 如果想使用原版Optional中的get这样，获取一个一定不为空的值，则应该使用orElseThrow
 		final Object opt = Opt.ofNullable(null).get();
-		Assert.assertNull(opt);
+		Assertions.assertNull(opt);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class OptTest {
 		// 这是jdk11 Optional中的新函数，直接照搬了过来
 		// 判断包裹内元素是否为空，注意并没有判断空字符串的情况
 		final boolean isEmpty = Opt.empty().isEmpty();
-		Assert.assertTrue(isEmpty);
+		Assertions.assertTrue(isEmpty);
 	}
 
 	@Test
@@ -52,12 +52,12 @@ public class OptTest {
 		final User user = new User();
 		// 相当于ifPresent的链式调用
 		Opt.ofNullable("hutool").peek(user::setUsername).peek(user::setNickname);
-		Assert.assertEquals("hutool", user.getNickname());
-		Assert.assertEquals("hutool", user.getUsername());
+		Assertions.assertEquals("hutool", user.getNickname());
+		Assertions.assertEquals("hutool", user.getUsername());
 
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素
 		final String name = Opt.ofNullable("hutool").peek(username -> username = "123").peek(username -> username = "456").get();
-		Assert.assertEquals("hutool", name);
+		Assertions.assertEquals("hutool", name);
 	}
 
 	@Test
@@ -68,18 +68,18 @@ public class OptTest {
 		Opt.ofNullable("hutool").peeks(user::setUsername, user::setNickname);
 		// 也可以在适当的地方换行使得代码的可读性提高
 		Opt.of(user).peeks(
-				u -> Assert.assertEquals("hutool", u.getNickname()),
-				u -> Assert.assertEquals("hutool", u.getUsername())
+				u -> Assertions.assertEquals("hutool", u.getNickname()),
+				u -> Assertions.assertEquals("hutool", u.getUsername())
 		);
-		Assert.assertEquals("hutool", user.getNickname());
-		Assert.assertEquals("hutool", user.getUsername());
+		Assertions.assertEquals("hutool", user.getNickname());
+		Assertions.assertEquals("hutool", user.getUsername());
 
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素,这是java语言的特性。。。
 		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
 		final String name = Opt.ofNullable("hutool").peeks(
 				username -> username = "123", username -> username = "456",
-				n -> Assert.assertEquals("hutool", n)).get();
-		Assert.assertEquals("hutool", name);
+				n -> Assertions.assertEquals("hutool", n)).get();
+		Assertions.assertEquals("hutool", name);
 
 		// 当然，以下情况不会抛出NPE，但也没什么意义
 		Opt.ofNullable("hutool").peeks().peeks().peeks();
@@ -93,27 +93,31 @@ public class OptTest {
 		// 这是jdk9 Optional中的新函数，直接照搬了过来
 		// 给一个替代的Opt
 		final String str = Opt.<String>ofNullable(null).or(() -> Opt.ofNullable("Hello hutool!")).map(String::toUpperCase).orElseThrow();
-		Assert.assertEquals("HELLO HUTOOL!", str);
+		Assertions.assertEquals("HELLO HUTOOL!", str);
 
 		final User user = User.builder().username("hutool").build();
 		final Opt<User> userOpt = Opt.of(user);
 		// 获取昵称，获取不到则获取用户名
 		final String name = userOpt.map(User::getNickname).or(() -> userOpt.map(User::getUsername)).get();
-		Assert.assertEquals("hutool", name);
+		Assertions.assertEquals("hutool", name);
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test
 	public void orElseThrowTest() {
-		// 获取一个不可能为空的值，否则抛出NoSuchElementException异常
-		final Object obj = Opt.ofNullable(null).orElseThrow();
-		Assert.assertNull(obj);
+		Assertions.assertThrows(NoSuchElementException.class, ()->{
+			// 获取一个不可能为空的值，否则抛出NoSuchElementException异常
+			final Object obj = Opt.ofNullable(null).orElseThrow();
+			Assertions.assertNull(obj);
+		});
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void orElseThrowTest2() {
-		// 获取一个不可能为空的值，否则抛出自定义异常
-		final Object assignException = Opt.ofNullable(null).orElseThrow(IllegalStateException::new);
-		Assert.assertNull(assignException);
+		Assertions.assertThrows(IllegalStateException.class, ()->{
+			// 获取一个不可能为空的值，否则抛出自定义异常
+			final Object assignException = Opt.ofNullable(null).orElseThrow(IllegalStateException::new);
+			Assertions.assertNull(assignException);
+		});
 	}
 
 	@Test
@@ -125,7 +129,7 @@ public class OptTest {
 		Opt.ofNullable(map.get(key))
 				.ifPresent(v -> map.put(key, v + 1))
 				.orElseRun(() -> map.remove(key));
-		Assert.assertEquals((Object) 2, map.get(key));
+		Assertions.assertEquals((Object) 2, map.get(key));
 	}
 
 	@Test
@@ -137,8 +141,8 @@ public class OptTest {
 		// 现在，兼容
 		final User user = Opt.ofNullable(userList).map(List::stream)
 				.flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
-		Assert.assertNull(user.getUsername());
-		Assert.assertNull(user.getNickname());
+		Assertions.assertNull(user.getUsername());
+		Assertions.assertNull(user.getNickname());
 	}
 
 	@Test
@@ -148,9 +152,9 @@ public class OptTest {
 		final List<String> past = Opt.ofNullable(Collections.<String>emptyList()).filter(CollUtil::isNotEmpty).orElseGet(() -> Collections.singletonList("hutool"));
 		// 现在，一个ofEmptyAble搞定
 		final List<String> hutool = Opt.ofEmptyAble(Collections.<String>emptyList()).orElseGet(() -> Collections.singletonList("hutool"));
-		Assert.assertEquals(past, hutool);
-		Assert.assertEquals(Collections.singletonList("hutool"), hutool);
-		Assert.assertTrue(Opt.ofEmptyAble(Arrays.asList(null, null, null)).isEmpty());
+		Assertions.assertEquals(past, hutool);
+		Assertions.assertEquals(Collections.singletonList("hutool"), hutool);
+		Assertions.assertTrue(Opt.ofEmptyAble(Arrays.asList(null, null, null)).isEmpty());
 	}
 
 	@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "ConstantConditions"})
@@ -172,24 +176,24 @@ public class OptTest {
 			return list.get(0);
 		}).exceptionOrElse("hutool");
 
-		Assert.assertTrue(Opt.ofTry(() -> {
+		Assertions.assertTrue(Opt.ofTry(() -> {
 			throw new AssertionError("");
 		}).getThrowable() instanceof AssertionError);
-		Assert.assertEquals(npe, npeSituation);
-		Assert.assertEquals(indexOut, indexOutSituation);
-		Assert.assertEquals("hutool", npe);
-		Assert.assertEquals("hutool", indexOut);
+		Assertions.assertEquals(npe, npeSituation);
+		Assertions.assertEquals(indexOut, indexOutSituation);
+		Assertions.assertEquals("hutool", npe);
+		Assertions.assertEquals("hutool", indexOut);
 
 		// 多线程下情况测试
 		Stream.iterate(0, i -> ++i).limit(20000).parallel().forEach(i -> {
 			final Opt<Object> opt = Opt.ofTry(() -> {
 				if (i % 2 == 0) {
-					throw new IllegalStateException(i + "");
+					throw new IllegalStateException(String.valueOf(i));
 				} else {
-					throw new NullPointerException(i + "");
+					throw new NullPointerException(String.valueOf(i));
 				}
 			});
-			Assert.assertTrue(
+			Assertions.assertTrue(
 					(i % 2 == 0 && opt.getThrowable() instanceof IllegalStateException) ||
 							(i % 2 != 0 && opt.getThrowable() instanceof NullPointerException)
 			);

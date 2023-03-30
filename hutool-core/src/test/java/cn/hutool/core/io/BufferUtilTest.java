@@ -2,8 +2,8 @@ package cn.hutool.core.io;
 
 import java.nio.ByteBuffer;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.text.StrUtil;
@@ -22,7 +22,7 @@ public class BufferUtilTest {
 		final ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
 		final ByteBuffer buffer2 = BufferUtil.copy(buffer, ByteBuffer.allocate(5));
-		Assert.assertEquals("AAABB", StrUtil.utf8Str(buffer2));
+		Assertions.assertEquals("AAABB", StrUtil.utf8Str(buffer2));
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class BufferUtilTest {
 		final ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
 		final byte[] bs = BufferUtil.readBytes(buffer, 5);
-		Assert.assertEquals("AAABB", StrUtil.utf8Str(bs));
+		Assertions.assertEquals("AAABB", StrUtil.utf8Str(bs));
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class BufferUtilTest {
 		final ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
 		final byte[] bs = BufferUtil.readBytes(buffer, 5);
-		Assert.assertEquals("AAABB", StrUtil.utf8Str(bs));
+		Assertions.assertEquals("AAABB", StrUtil.utf8Str(bs));
 	}
 
 	@Test
@@ -50,17 +50,17 @@ public class BufferUtilTest {
 
 		// 第一行
 		String line = BufferUtil.readLine(buffer, CharsetUtil.UTF_8);
-		Assert.assertEquals("aa", line);
+		Assertions.assertEquals("aa", line);
 
 		// 第二行
 		line = BufferUtil.readLine(buffer, CharsetUtil.UTF_8);
-		Assert.assertEquals("bbb", line);
+		Assertions.assertEquals("bbb", line);
 
 		// 第三行因为没有行结束标志，因此返回null
 		line = BufferUtil.readLine(buffer, CharsetUtil.UTF_8);
-		Assert.assertNull(line);
+		Assertions.assertNull(line);
 
 		// 读取剩余部分
-		Assert.assertEquals("cc", StrUtil.utf8Str(BufferUtil.readBytes(buffer)));
+		Assertions.assertEquals("cc", StrUtil.utf8Str(BufferUtil.readBytes(buffer)));
 	}
 }

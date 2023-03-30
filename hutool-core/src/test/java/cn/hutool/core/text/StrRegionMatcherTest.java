@@ -1,7 +1,7 @@
 package cn.hutool.core.text;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StrRegionMatcherTest {
 	@Test
@@ -9,7 +9,7 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, true);
 		final boolean test = matcher.test("abcdef", "ab");
-		Assert.assertTrue(test);
+		Assertions.assertTrue(test);
 	}
 
 	@Test
@@ -17,7 +17,7 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, false);
 		final boolean test = matcher.test("abcdef", "ef");
-		Assert.assertTrue(test);
+		Assertions.assertTrue(test);
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, 1);
 		final boolean test = matcher.test("abcdef", "bc");
-		Assert.assertTrue(test);
+		Assertions.assertTrue(test);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, -2);
 		final boolean test = matcher.test("abcdef", "de");
-		Assert.assertTrue(test);
+		Assertions.assertTrue(test);
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, 5);
 		final boolean test = matcher.test("abcdef", "de");
-		Assert.assertFalse(test);
+		Assertions.assertFalse(test);
 	}
 
 	@Test
@@ -51,6 +51,6 @@ public class StrRegionMatcherTest {
 		final StrRegionMatcher matcher = new StrRegionMatcher(
 				false, false, 6);
 		final boolean test = matcher.test("abcdef", "de");
-		Assert.assertFalse(test);
+		Assertions.assertFalse(test);
 	}
 }

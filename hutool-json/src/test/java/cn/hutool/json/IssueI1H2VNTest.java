@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ public class IssueI1H2VNTest {
 		final String jsonStr = "{'conditionsVo':[{'column':'StockNo','value':'abc','type':'='},{'column':'CheckIncoming','value':'1','type':'='}]," +
 				"'queryVo':{'conditionsVo':[{'column':'StockNo','value':'abc','type':'='},{'column':'CheckIncoming','value':'1','type':'='}],'queryVo':null}}";
 		final QueryVo vo = JSONUtil.toBean(jsonStr, QueryVo.class);
-		Assert.assertEquals(2, vo.getConditionsVo().size());
+		Assertions.assertEquals(2, vo.getConditionsVo().size());
 		final QueryVo subVo = vo.getQueryVo();
-		Assert.assertNotNull(subVo);
-		Assert.assertEquals(2, subVo.getConditionsVo().size());
-		Assert.assertNull(subVo.getQueryVo());
+		Assertions.assertNotNull(subVo);
+		Assertions.assertEquals(2, subVo.getConditionsVo().size());
+		Assertions.assertNull(subVo.getQueryVo());
 	}
 
 	@Data

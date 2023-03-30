@@ -6,9 +6,9 @@ import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.asymmetric.SM2;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
@@ -19,19 +19,19 @@ public class PemUtilTest {
 	@Test
 	public void readPrivateKeyTest() {
 		final PrivateKey privateKey = PemUtil.readPemPrivateKey(ResourceUtil.getStream("test_private_key.pem"));
-		Assert.assertNotNull(privateKey);
+		Assertions.assertNotNull(privateKey);
 	}
 
 	@Test
 	public void readPublicKeyTest() {
 		final PublicKey publicKey = PemUtil.readPemPublicKey(ResourceUtil.getStream("test_public_key.csr"));
-		Assert.assertNotNull(publicKey);
+		Assertions.assertNotNull(publicKey);
 	}
 
 	@Test
 	public void readPemKeyTest() {
 		final PublicKey publicKey = (PublicKey) PemUtil.readPemKey(ResourceUtil.getStream("test_public_key.csr"));
-		Assert.assertNotNull(publicKey);
+		Assertions.assertNotNull(publicKey);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class PemUtilTest {
 
 		final String encryptStr = rsa.encryptBase64(str, KeyType.PublicKey);
 		final String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
-		Assert.assertEquals(str, decryptStr);
+		Assertions.assertEquals(str, decryptStr);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class PemUtilTest {
 
 		final byte[] sign = sm2.sign(dataBytes, null);
 		// 64位签名
-		Assert.assertEquals(64, sign.length);
+		Assertions.assertEquals(64, sign.length);
 	}
 
 	@Test
@@ -72,11 +72,11 @@ public class PemUtilTest {
 
 		final byte[] sign = sm2.sign(dataBytes, null);
 		// 64位签名
-		Assert.assertEquals(64, sign.length);
+		Assertions.assertEquals(64, sign.length);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readECPrivateKeyTest2() {
 		// https://gitee.com/dromara/hutool/issues/I37Z75
 		final byte[] d = PemUtil.readPem(FileUtil.getInputStream("d:/test/keys/priv.key"));
@@ -88,6 +88,6 @@ public class PemUtilTest {
 		final String content = "我是Hanley.";
 		final byte[] sign = sm2.sign(ByteUtil.toUtf8Bytes(content));
 		final boolean verify = sm2.verify(ByteUtil.toUtf8Bytes(content), sign);
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 }

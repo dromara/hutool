@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class ParseBeanTest {
 
 		final JSONObject json = JSONUtil.parseObj(a);
 		final A a1 = JSONUtil.toBean(json, A.class);
-		Assert.assertEquals(json.toString(), JSONUtil.toJsonStr(a1));
+		Assertions.assertEquals(json.toString(), JSONUtil.toJsonStr(a1));
 	}
 
 }

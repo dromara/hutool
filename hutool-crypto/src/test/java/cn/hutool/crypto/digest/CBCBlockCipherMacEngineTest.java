@@ -6,8 +6,8 @@ import cn.hutool.crypto.digest.mac.SM4MacEngine;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CBCBlockCipherMacEngineTest {
 
@@ -22,7 +22,7 @@ public class CBCBlockCipherMacEngineTest {
 		final String testStr = "test中文";
 
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
+		Assertions.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
 	}
 
 	@Test
@@ -38,6 +38,6 @@ public class CBCBlockCipherMacEngineTest {
 		final String testStr = "test中文";
 
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
+		Assertions.assertEquals("3212e848db7f816a4bd591ad9948debf", macHex1);
 	}
 }

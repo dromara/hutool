@@ -1,7 +1,7 @@
 package cn.hutool.core.text;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ public class AntPathMatcherTest {
 	public void matchesTest() {
 		final AntPathMatcher antPathMatcher = new AntPathMatcher();
 		final boolean matched = antPathMatcher.match("/api/org/organization/{orgId}", "/api/org/organization/999");
-		Assert.assertTrue(matched);
+		Assertions.assertTrue(matched);
 	}
 
 	@Test
@@ -21,17 +21,17 @@ public class AntPathMatcherTest {
 		String pattern = "/**/*.xml*";
 		String path = "/WEB-INF/web.xml";
 		boolean isMatched = antPathMatcher.match(pattern, path);
-		Assert.assertTrue(isMatched);
+		Assertions.assertTrue(isMatched);
 
 		pattern = "org/codelabor/*/**/*Service";
 		path = "org/codelabor/example/HelloWorldService";
 		isMatched = antPathMatcher.match(pattern, path);
-		Assert.assertTrue(isMatched);
+		Assertions.assertTrue(isMatched);
 
 		pattern = "org/codelabor/*/**/*Service?";
 		path = "org/codelabor/example/HelloWorldServices";
 		isMatched = antPathMatcher.match(pattern, path);
-		Assert.assertTrue(isMatched);
+		Assertions.assertTrue(isMatched);
 	}
 
 	@Test
@@ -42,13 +42,13 @@ public class AntPathMatcherTest {
 		pathMatcher.setPathSeparator("/");
 		pathMatcher.setTrimTokens(true);
 
-		Assert.assertTrue(pathMatcher.match("a", "a"));
-		Assert.assertTrue(pathMatcher.match("a*", "ab"));
-		Assert.assertTrue(pathMatcher.match("a*/**/a", "ab/asdsa/a"));
-		Assert.assertTrue(pathMatcher.match("a*/**/a", "ab/asdsa/asdasd/a"));
+		Assertions.assertTrue(pathMatcher.match("a", "a"));
+		Assertions.assertTrue(pathMatcher.match("a*", "ab"));
+		Assertions.assertTrue(pathMatcher.match("a*/**/a", "ab/asdsa/a"));
+		Assertions.assertTrue(pathMatcher.match("a*/**/a", "ab/asdsa/asdasd/a"));
 
-		Assert.assertTrue(pathMatcher.match("*", "a"));
-		Assert.assertTrue(pathMatcher.match("*/*", "a/a"));
+		Assertions.assertTrue(pathMatcher.match("*", "a"));
+		Assertions.assertTrue(pathMatcher.match("*/*", "a/a"));
 	}
 
 	/**
@@ -61,43 +61,43 @@ public class AntPathMatcherTest {
 		final AntPathMatcher pathMatcher = new AntPathMatcher();
 
 		// 精确匹配
-		Assert.assertTrue(pathMatcher.match("/test", "/test"));
-		Assert.assertFalse(pathMatcher.match("test", "/test"));
+		Assertions.assertTrue(pathMatcher.match("/test", "/test"));
+		Assertions.assertFalse(pathMatcher.match("test", "/test"));
 
 		//测试通配符?
-		Assert.assertTrue(pathMatcher.match("t?st", "test"));
-		Assert.assertTrue(pathMatcher.match("te??", "test"));
-		Assert.assertFalse(pathMatcher.match("tes?", "tes"));
-		Assert.assertFalse(pathMatcher.match("tes?", "testt"));
+		Assertions.assertTrue(pathMatcher.match("t?st", "test"));
+		Assertions.assertTrue(pathMatcher.match("te??", "test"));
+		Assertions.assertFalse(pathMatcher.match("tes?", "tes"));
+		Assertions.assertFalse(pathMatcher.match("tes?", "testt"));
 
 		//测试通配符*
-		Assert.assertTrue(pathMatcher.match("*", "test"));
-		Assert.assertTrue(pathMatcher.match("test*", "test"));
-		Assert.assertTrue(pathMatcher.match("test/*", "test/Test"));
-		Assert.assertTrue(pathMatcher.match("*.*", "test."));
-		Assert.assertTrue(pathMatcher.match("*.*", "test.test.test"));
-		Assert.assertFalse(pathMatcher.match("test*", "test/")); //注意这里是false 因为路径不能用*匹配
-		Assert.assertFalse(pathMatcher.match("test*", "test/t")); //这同理
-		Assert.assertFalse(pathMatcher.match("test*aaa", "testblaaab")); //这个是false 因为最后一个b无法匹配了 前面都是能匹配成功的
+		Assertions.assertTrue(pathMatcher.match("*", "test"));
+		Assertions.assertTrue(pathMatcher.match("test*", "test"));
+		Assertions.assertTrue(pathMatcher.match("test/*", "test/Test"));
+		Assertions.assertTrue(pathMatcher.match("*.*", "test."));
+		Assertions.assertTrue(pathMatcher.match("*.*", "test.test.test"));
+		Assertions.assertFalse(pathMatcher.match("test*", "test/")); //注意这里是false 因为路径不能用*匹配
+		Assertions.assertFalse(pathMatcher.match("test*", "test/t")); //这同理
+		Assertions.assertFalse(pathMatcher.match("test*aaa", "testblaaab")); //这个是false 因为最后一个b无法匹配了 前面都是能匹配成功的
 
 		//测试通配符** 匹配多级URL
-		Assert.assertTrue(pathMatcher.match("/*/**", "/testing/testing"));
-		Assert.assertTrue(pathMatcher.match("/**/*", "/testing/testing"));
-		Assert.assertTrue(pathMatcher.match("/bla/**/bla", "/bla/testing/testing/bla/bla")); //这里也是true哦
-		Assert.assertFalse(pathMatcher.match("/bla*bla/test", "/blaXXXbl/test"));
+		Assertions.assertTrue(pathMatcher.match("/*/**", "/testing/testing"));
+		Assertions.assertTrue(pathMatcher.match("/**/*", "/testing/testing"));
+		Assertions.assertTrue(pathMatcher.match("/bla/**/bla", "/bla/testing/testing/bla/bla")); //这里也是true哦
+		Assertions.assertFalse(pathMatcher.match("/bla*bla/test", "/blaXXXbl/test"));
 
-		Assert.assertFalse(pathMatcher.match("/????", "/bala/bla"));
-		Assert.assertFalse(pathMatcher.match("/**/*bla", "/bla/bla/bla/bbb"));
+		Assertions.assertFalse(pathMatcher.match("/????", "/bala/bla"));
+		Assertions.assertFalse(pathMatcher.match("/**/*bla", "/bla/bla/bla/bbb"));
 
-		Assert.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing/"));
-		Assert.assertTrue(pathMatcher.match("/*bla*/**/bla/*", "/XXXblaXXXX/testing/testing/bla/testing"));
-		Assert.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing"));
-		Assert.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing.jpg"));
-		Assert.assertTrue(pathMatcher.match("/foo/bar/**", "/foo/bar"));
+		Assertions.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing/"));
+		Assertions.assertTrue(pathMatcher.match("/*bla*/**/bla/*", "/XXXblaXXXX/testing/testing/bla/testing"));
+		Assertions.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing"));
+		Assertions.assertTrue(pathMatcher.match("/*bla*/**/bla/**", "/XXXblaXXXX/testing/testing/bla/testing/testing.jpg"));
+		Assertions.assertTrue(pathMatcher.match("/foo/bar/**", "/foo/bar"));
 
 		//这个需要特别注意：{}里面的相当于Spring MVC里接受一个参数一样，所以任何东西都会匹配的
-		Assert.assertTrue(pathMatcher.match("/{bla}.*", "/testing.html"));
-		Assert.assertFalse(pathMatcher.match("/{bla}.htm", "/testing.html")); //这样就是false了
+		Assertions.assertTrue(pathMatcher.match("/{bla}.*", "/testing.html"));
+		Assertions.assertFalse(pathMatcher.match("/{bla}.htm", "/testing.html")); //这样就是false了
 	}
 
 	/**
@@ -110,6 +110,6 @@ public class AntPathMatcherTest {
 				"/api/org" +
 						"/organization" +
 						"/999");
-		Assert.assertEquals(1, map.size());
+		Assertions.assertEquals(1, map.size());
 	}
 }

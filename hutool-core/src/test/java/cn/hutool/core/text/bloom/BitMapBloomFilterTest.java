@@ -1,8 +1,8 @@
 package cn.hutool.core.text.bloom;
 
 import cn.hutool.core.codec.hash.HashUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BitMapBloomFilterTest {
 
@@ -15,8 +15,8 @@ public class BitMapBloomFilterTest {
 		filter.add("abc");
 		filter.add("ddd");
 
-		Assert.assertTrue(filter.contains("abc"));
-		Assert.assertTrue(filter.contains("ddd"));
-		Assert.assertTrue(filter.contains("123"));
+		Assertions.assertTrue(filter.contains("abc"));
+		Assertions.assertTrue(filter.contains("ddd"));
+		Assertions.assertTrue(filter.contains("123"));
 	}
 }

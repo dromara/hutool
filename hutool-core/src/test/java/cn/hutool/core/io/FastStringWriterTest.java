@@ -1,8 +1,8 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FastStringWriterTest {
 
@@ -12,6 +12,6 @@ public class FastStringWriterTest {
 		final FastStringWriter fastStringWriter = new FastStringWriter(IoUtil.DEFAULT_BUFFER_SIZE);
 		fastStringWriter.write(StrUtil.repeat("hutool", 2));
 
-		Assert.assertEquals("hutoolhutool", fastStringWriter.toString());
+		Assertions.assertEquals("hutoolhutool", fastStringWriter.toString());
 	}
 }

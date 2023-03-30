@@ -3,8 +3,8 @@ package cn.hutool.core.comparator;
 import cn.hutool.core.collection.ListUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +21,15 @@ public class PropertyComparatorTest {
 
 		// 默认null在末尾
 		final List<User> sortedList1 = ListUtil.sort(users, new PropertyComparator<>("b"));
-		Assert.assertEquals("a", sortedList1.get(0).getB());
-		Assert.assertEquals("d", sortedList1.get(1).getB());
-		Assert.assertNull(sortedList1.get(2).getB());
+		Assertions.assertEquals("a", sortedList1.get(0).getB());
+		Assertions.assertEquals("d", sortedList1.get(1).getB());
+		Assertions.assertNull(sortedList1.get(2).getB());
 
 		// null在首
 		final List<User> sortedList2 = ListUtil.sort(users, new PropertyComparator<>("b", false));
-		Assert.assertNull(sortedList2.get(0).getB());
-		Assert.assertEquals("a", sortedList2.get(1).getB());
-		Assert.assertEquals("d", sortedList2.get(2).getB());
+		Assertions.assertNull(sortedList2.get(0).getB());
+		Assertions.assertEquals("a", sortedList2.get(1).getB());
+		Assertions.assertEquals("d", sortedList2.get(2).getB());
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class PropertyComparatorTest {
 
 		// 反序
 		final List<User> sortedList = ListUtil.sort(users, new PropertyComparator<>("b").reversed());
-		Assert.assertNull(sortedList.get(0).getB());
-		Assert.assertEquals("d", sortedList.get(1).getB());
-		Assert.assertEquals("a", sortedList.get(2).getB());
+		Assertions.assertNull(sortedList.get(0).getB());
+		Assertions.assertEquals("d", sortedList.get(1).getB());
+		Assertions.assertEquals("a", sortedList.get(2).getB());
 	}
 
 	@Data

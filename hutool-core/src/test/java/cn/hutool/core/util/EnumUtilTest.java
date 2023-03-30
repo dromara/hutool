@@ -1,8 +1,8 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -18,56 +18,56 @@ public class EnumUtilTest {
 	@Test
 	public void getNamesTest() {
 		final List<String> names = EnumUtil.getNames(TestEnum.class);
-		Assert.assertEquals(ListUtil.of("TEST1", "TEST2", "TEST3"), names);
+		Assertions.assertEquals(ListUtil.of("TEST1", "TEST2", "TEST3"), names);
 	}
 
 	@Test
 	public void getFieldValuesTest() {
 		final List<Object> types = EnumUtil.getFieldValues(TestEnum.class, "type");
-		Assert.assertEquals(ListUtil.of("type1", "type2", "type3"), types);
+		Assertions.assertEquals(ListUtil.of("type1", "type2", "type3"), types);
 	}
 
 	@Test
 	public void getFieldNamesTest() {
 		final List<String> names = EnumUtil.getFieldNames(TestEnum.class);
-		Assert.assertTrue(names.contains("type"));
-		Assert.assertTrue(names.contains("name"));
+		Assertions.assertTrue(names.contains("type"));
+		Assertions.assertTrue(names.contains("name"));
 	}
 
 	@Test
 	public void getByTest() {
 		// 枚举中字段互相映射使用
 		final TestEnum testEnum = EnumUtil.getBy(TestEnum::ordinal, 1);
-		Assert.assertEquals("TEST2", testEnum.name());
+		Assertions.assertEquals("TEST2", testEnum.name());
 	}
 
 	@Test
 	public void getFieldByTest() {
 		// 枚举中字段互相映射使用
 		final String type = EnumUtil.getFieldBy(TestEnum::getType, Enum::ordinal, 1);
-		Assert.assertEquals("type2", type);
+		Assertions.assertEquals("type2", type);
 
 		final int ordinal = EnumUtil.getFieldBy(TestEnum::ordinal, Enum::ordinal, 1);
-		Assert.assertEquals(1, ordinal);
+		Assertions.assertEquals(1, ordinal);
 	}
 
 	@Test
 	public void likeValueOfTest() {
 		final TestEnum value = EnumUtil.likeValueOf(TestEnum.class, "type2");
-		Assert.assertEquals(TestEnum.TEST2, value);
+		Assertions.assertEquals(TestEnum.TEST2, value);
 	}
 
 	@Test
 	public void getEnumMapTest() {
 		final Map<String,TestEnum> enumMap = EnumUtil.getEnumMap(TestEnum.class);
-		Assert.assertEquals(TestEnum.TEST1, enumMap.get("TEST1"));
+		Assertions.assertEquals(TestEnum.TEST1, enumMap.get("TEST1"));
 	}
 
 	@Test
 	public void getNameFieldMapTest() {
 		final Map<String, Object> enumMap = EnumUtil.getNameFieldMap(TestEnum.class, "type");
 		assert enumMap != null;
-		Assert.assertEquals("type1", enumMap.get("TEST1"));
+		Assertions.assertEquals("type1", enumMap.get("TEST1"));
 	}
 
 	public enum TestEnum{

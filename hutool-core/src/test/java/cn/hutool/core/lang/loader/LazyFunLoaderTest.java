@@ -1,7 +1,7 @@
 package cn.hutool.core.lang.loader;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LazyFunLoaderTest {
 
@@ -19,13 +19,13 @@ public class LazyFunLoaderTest {
 
 		final LazyFunLoader<BigObject> loader = new LazyFunLoader<>(BigObject::new);
 
-		Assert.assertNotNull(loader.get());
-		Assert.assertTrue(loader.isInitialize());
+		Assertions.assertNotNull(loader.get());
+		Assertions.assertTrue(loader.isInitialize());
 
 		// 对于某些对象，在程序关闭时，需要进行销毁操作
 		loader.ifInitialized(BigObject::destroy);
 
-		Assert.assertTrue(loader.get().isDestroy);
+		Assertions.assertTrue(loader.get().isDestroy);
 	}
 
 	@Test
@@ -36,11 +36,11 @@ public class LazyFunLoaderTest {
 		// 若从未使用，则可以避免不必要的初始化
 		loader.ifInitialized(it -> {
 
-			Assert.fail();
+			Assertions.fail();
 			it.destroy();
 		});
 
-		Assert.assertFalse(loader.isInitialize());
+		Assertions.assertFalse(loader.isInitialize());
 	}
 
 	@Test
@@ -48,13 +48,13 @@ public class LazyFunLoaderTest {
 
 		final LazyFunLoader<BigObject> loader = LazyFunLoader.on(BigObject::new);
 
-		Assert.assertNotNull(loader.get());
-		Assert.assertTrue(loader.isInitialize());
+		Assertions.assertNotNull(loader.get());
+		Assertions.assertTrue(loader.isInitialize());
 
 		// 对于某些对象，在程序关闭时，需要进行销毁操作
 		loader.ifInitialized(BigObject::destroy);
 
-		Assert.assertTrue(loader.get().isDestroy);
+		Assertions.assertTrue(loader.get().isDestroy);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class LazyFunLoaderTest {
 		// 若从未使用，则可以避免不必要的初始化
 		loader.ifInitialized(it -> {
 
-			Assert.fail();
+			Assertions.fail();
 			it.destroy();
 		});
 

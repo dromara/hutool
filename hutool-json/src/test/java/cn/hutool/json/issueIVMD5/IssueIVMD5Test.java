@@ -4,8 +4,8 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class IssueIVMD5Test {
 		final BaseResult<StudentInfo> bean = JSONUtil.toBean(jsonStr, JSONConfig.of(), typeReference.getType());
 
 		final StudentInfo data2 = bean.getData2();
-		Assert.assertEquals("B4DDF491FDF34074AE7A819E1341CB6C", data2.getAccountId());
+		Assertions.assertEquals("B4DDF491FDF34074AE7A819E1341CB6C", data2.getAccountId());
 	}
 
 	/**
@@ -37,6 +37,6 @@ public class IssueIVMD5Test {
 
 		final List<StudentInfo> data = bean.getData();
 		final StudentInfo studentInfo = data.get(0);
-		Assert.assertEquals("B4DDF491FDF34074AE7A819E1341CB6C", studentInfo.getAccountId());
+		Assertions.assertEquals("B4DDF491FDF34074AE7A819E1341CB6C", studentInfo.getAccountId());
 	}
 }

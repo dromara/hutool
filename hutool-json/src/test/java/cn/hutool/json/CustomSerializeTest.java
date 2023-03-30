@@ -2,15 +2,15 @@ package cn.hutool.json;
 
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import lombok.ToString;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 public class CustomSerializeTest {
 
-	@Before
+	@BeforeEach
 	public void init(){
 		JSONUtil.putSerializer(CustomBean.class, (JSONObjectSerializer<CustomBean>) (json, bean) -> json.set("customName", bean.name));
 	}
@@ -21,7 +21,7 @@ public class CustomSerializeTest {
 		customBean.name = "testName";
 
 		final JSONObject obj = JSONUtil.parseObj(customBean);
-		Assert.assertEquals("testName", obj.getStr("customName"));
+		Assertions.assertEquals("testName", obj.getStr("customName"));
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class CustomSerializeTest {
 		customBean.name = "testName";
 
 		final JSONObject obj = JSONUtil.ofObj().set("customBean", customBean);
-		Assert.assertEquals("testName", obj.getJSONObject("customBean").getStr("customName"));
+		Assertions.assertEquals("testName", obj.getJSONObject("customBean").getStr("customName"));
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class CustomSerializeTest {
 
 		final String jsonStr = "{\"customName\":\"testName\"}";
 		final CustomBean bean = JSONUtil.parseObj(jsonStr).toBean(CustomBean.class);
-		Assert.assertEquals("testName", bean.name);
+		Assertions.assertEquals("testName", bean.name);
 	}
 
 	@ToString

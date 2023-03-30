@@ -1,8 +1,8 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -14,18 +14,18 @@ public class DateBetweenTest {
 		final Date start = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end = DateUtil.parse("2018-02-01 12:23:46");
 		final long betweenYear = new DateBetween(start, end).betweenYear(false);
-		Assert.assertEquals(1, betweenYear);
+		Assertions.assertEquals(1, betweenYear);
 
 		final Date start1 = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end1 = DateUtil.parse("2018-03-01 12:23:46");
 		final long betweenYear1 = new DateBetween(start1, end1).betweenYear(false);
-		Assert.assertEquals(1, betweenYear1);
+		Assertions.assertEquals(1, betweenYear1);
 
 		// 不足1年
 		final Date start2 = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end2 = DateUtil.parse("2018-02-01 11:23:46");
 		final long betweenYear2 = new DateBetween(start2, end2).betweenYear(false);
-		Assert.assertEquals(0, betweenYear2);
+		Assertions.assertEquals(0, betweenYear2);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class DateBetweenTest {
 		final Date start = DateUtil.parse("2000-02-29");
 		final Date end = DateUtil.parse("2018-02-28");
 		final long betweenYear = new DateBetween(start, end).betweenYear(false);
-		Assert.assertEquals(18, betweenYear);
+		Assertions.assertEquals(18, betweenYear);
 	}
 
 	@Test
@@ -41,18 +41,18 @@ public class DateBetweenTest {
 		final Date start = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end = DateUtil.parse("2018-02-01 12:23:46");
 		final long betweenMonth = new DateBetween(start, end).betweenMonth(false);
-		Assert.assertEquals(12, betweenMonth);
+		Assertions.assertEquals(12, betweenMonth);
 
 		final Date start1 = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end1 = DateUtil.parse("2018-03-01 12:23:46");
 		final long betweenMonth1 = new DateBetween(start1, end1).betweenMonth(false);
-		Assert.assertEquals(13, betweenMonth1);
+		Assertions.assertEquals(13, betweenMonth1);
 
 		// 不足
 		final Date start2 = DateUtil.parse("2017-02-01 12:23:46");
 		final Date end2 = DateUtil.parse("2018-02-01 11:23:46");
 		final long betweenMonth2 = new DateBetween(start2, end2).betweenMonth(false);
-		Assert.assertEquals(11, betweenMonth2);
+		Assertions.assertEquals(11, betweenMonth2);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class DateBetweenTest {
 		final Date date1 = DateUtil.parse("2017-03-01 20:33:23");
 		final Date date2 = DateUtil.parse("2017-03-01 23:33:23");
 		final String formatBetween = DateUtil.formatBetween(date1, date2, Level.SECOND);
-		Assert.assertEquals("3小时", formatBetween);
+		Assertions.assertEquals("3小时", formatBetween);
 	}
 
 	@Test
@@ -73,6 +73,6 @@ public class DateBetweenTest {
 				TimeUtil.parse("2020-11-21", "yyy-MM-dd"),
 				TimeUtil.parse("2020-11-23", "yyy-MM-dd"),
 				ChronoUnit.WEEKS);
-		Assert.assertEquals(betweenWeek, betweenWeek2);
+		Assertions.assertEquals(betweenWeek, betweenWeek2);
 	}
 }

@@ -4,8 +4,8 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.test.bean.ExamInfoDict;
 import cn.hutool.json.test.bean.PerfectEvaluationProductResVo;
 import cn.hutool.json.test.bean.UserInfoDict;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,14 +55,14 @@ public class JSONConvertTest {
 		tempMap.put("toSendManIdCard", 1);
 
 		final JSONObject obj = JSONUtil.parseObj(tempMap);
-		Assert.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
+		Assertions.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
 
 		final JSONObject examInfoDictsJson = obj.getJSONObject("userInfoDict");
-		Assert.assertEquals(new Integer(1), examInfoDictsJson.getInt("id"));
-		Assert.assertEquals("质量过关", examInfoDictsJson.getStr("realName"));
+		Assertions.assertEquals(new Integer(1), examInfoDictsJson.getInt("id"));
+		Assertions.assertEquals("质量过关", examInfoDictsJson.getStr("realName"));
 
 		final Object id = JSONUtil.getByPath(obj, "userInfoDict.examInfoDict[0].id");
-		Assert.assertEquals(1, id);
+		Assertions.assertEquals(1, id);
 	}
 
 	@Test
@@ -77,15 +77,15 @@ public class JSONConvertTest {
 		final JSONObject jsonObject = JSONUtil.parseObj(examJson).getJSONObject("examInfoDicts");
 		final UserInfoDict userInfoDict = jsonObject.toBean(UserInfoDict.class);
 
-		Assert.assertEquals(userInfoDict.getId(), new Integer(1));
-		Assert.assertEquals(userInfoDict.getRealName(), "质量过关");
+		Assertions.assertEquals(userInfoDict.getId(), new Integer(1));
+		Assertions.assertEquals(userInfoDict.getRealName(), "质量过关");
 
 		//============
 
 		final String jsonStr = "{\"id\":null,\"examInfoDict\":[{\"answerIs\":1, \"id\":null}]}";//JSONUtil.toJsonStr(userInfoDict1);
 		final JSONObject jsonObject2 = JSONUtil.parseObj(jsonStr);//.getJSONObject("examInfoDicts");
 		final UserInfoDict userInfoDict2 = jsonObject2.toBean(UserInfoDict.class);
-		Assert.assertNull(userInfoDict2.getId());
+		Assertions.assertNull(userInfoDict2.getId());
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class JSONConvertTest {
 		final JSONObject obj = JSONUtil.parseObj(jsonStr);
 		final PerfectEvaluationProductResVo vo = obj.toBean(PerfectEvaluationProductResVo.class);
 
-		Assert.assertEquals(obj.getStr("HA001"), vo.getHA001());
-		Assert.assertEquals(obj.getInt("costTotal"), vo.getCostTotal());
+		Assertions.assertEquals(obj.getStr("HA001"), vo.getHA001());
+		Assertions.assertEquals(obj.getInt("costTotal"), vo.getCostTotal());
 	}
 }

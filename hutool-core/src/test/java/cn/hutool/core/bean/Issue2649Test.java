@@ -3,8 +3,8 @@ package cn.hutool.core.bean;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.lang.Console;
 import lombok.Data;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class Issue2649Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void toListTest() {
 		final List<View1> view1List = new ArrayList<>();
 		for (int i = 0; i < 200; i++) {

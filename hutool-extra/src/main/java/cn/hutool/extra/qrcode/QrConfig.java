@@ -319,6 +319,16 @@ public class QrConfig {
 	/**
 	 * 设置二维码中的Logo文件
 	 *
+	 * @param imageBytes 二维码中的Logo图片bytes表示形式
+	 * @return this;
+	 */
+	public QrConfig setImg(final byte[] imageBytes) {
+		return setImg(ImgUtil.toImage(imageBytes));
+	}
+
+	/**
+	 * 设置二维码中的Logo文件
+	 *
 	 * @param imgFile 二维码中的Logo
 	 * @return this;
 	 */

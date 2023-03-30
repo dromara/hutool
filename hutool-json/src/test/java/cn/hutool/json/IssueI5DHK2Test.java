@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IssueI5DHK2Test {
 
@@ -25,11 +25,11 @@ public class IssueI5DHK2Test {
 				.getJSONObject("properties")
 				.getJSONArray("employment_informations")
 				.getJSONObject(0).getStr("employer_name");
-		Assert.assertEquals("张三皮包公司", exployerName);
+		Assertions.assertEquals("张三皮包公司", exployerName);
 
 
 		final Punished punished = JSONUtil.toBean(json, Punished.class);
-		Assert.assertEquals("张三皮包公司", punished.getPunished_parties()[0].getProperties().getEmployment_informations()[0].getEmployer_name());
+		Assertions.assertEquals("张三皮包公司", punished.getPunished_parties()[0].getProperties().getEmployment_informations()[0].getEmployer_name());
 	}
 
 	@Data

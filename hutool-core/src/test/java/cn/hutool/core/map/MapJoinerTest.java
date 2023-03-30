@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MapJoinerTest {
 
@@ -11,7 +11,7 @@ public class MapJoinerTest {
 		final MapJoiner joiner = MapJoiner.of("+", "-");
 		joiner.append(v1, null);
 
-		Assert.assertEquals("id-12+name-张三+age-23", joiner.toString());
+		Assertions.assertEquals("id-12+name-张三+age-23", joiner.toString());
 	}
 
 	@Test
@@ -20,6 +20,6 @@ public class MapJoinerTest {
 		final MapJoiner joiner = MapJoiner.of("+", "-");
 		joiner.append(v1, (entry)->"age".equals(entry.getKey()));
 
-		Assert.assertEquals("age-23", joiner.toString());
+		Assertions.assertEquals("age-23", joiner.toString());
 	}
 }

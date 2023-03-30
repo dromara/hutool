@@ -3,9 +3,9 @@ package cn.hutool.setting;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.setting.dialect.Props;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.List;
@@ -25,22 +25,22 @@ public class PropsTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final Props props = new Props("test.properties");
 		final String user = props.getProperty("user");
-		Assert.assertEquals(user, "root");
+		Assertions.assertEquals(user, "root");
 
 		final String driver = props.getStr("driver");
-		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
+		Assertions.assertEquals(driver, "com.mysql.jdbc.Driver");
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void propTestForAbsPAth() {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final Props props = new Props("d:/test.properties");
 		final String user = props.getProperty("user");
-		Assert.assertEquals(user, "root");
+		Assertions.assertEquals(user, "root");
 
 		final String driver = props.getStr("driver");
-		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
+		Assertions.assertEquals(driver, "com.mysql.jdbc.Driver");
 	}
 
 	@Test
@@ -48,19 +48,19 @@ public class PropsTest {
 		final Props props = Props.of("to_bean_test.properties");
 
 		final ConfigProperties cfg = props.toBean(ConfigProperties.class, "mail");
-		Assert.assertEquals("mailer@mail.com", cfg.getHost());
-		Assert.assertEquals(9000, cfg.getPort());
-		Assert.assertEquals("mailer@mail.com", cfg.getFrom());
+		Assertions.assertEquals("mailer@mail.com", cfg.getHost());
+		Assertions.assertEquals(9000, cfg.getPort());
+		Assertions.assertEquals("mailer@mail.com", cfg.getFrom());
 
-		Assert.assertEquals("john", cfg.getCredentials().getUsername());
-		Assert.assertEquals("password", cfg.getCredentials().getPassword());
-		Assert.assertEquals("SHA1", cfg.getCredentials().getAuthMethod());
+		Assertions.assertEquals("john", cfg.getCredentials().getUsername());
+		Assertions.assertEquals("password", cfg.getCredentials().getPassword());
+		Assertions.assertEquals("SHA1", cfg.getCredentials().getAuthMethod());
 
-		Assert.assertEquals("true", cfg.getAdditionalHeaders().get("redelivery"));
-		Assert.assertEquals("true", cfg.getAdditionalHeaders().get("secure"));
+		Assertions.assertEquals("true", cfg.getAdditionalHeaders().get("redelivery"));
+		Assertions.assertEquals("true", cfg.getAdditionalHeaders().get("secure"));
 
-		Assert.assertEquals("admin@mail.com", cfg.getDefaultRecipients().get(0));
-		Assert.assertEquals("owner@mail.com", cfg.getDefaultRecipients().get(1));
+		Assertions.assertEquals("admin@mail.com", cfg.getDefaultRecipients().get(0));
+		Assertions.assertEquals("owner@mail.com", cfg.getDefaultRecipients().get(1));
 	}
 
 	@Test
@@ -74,11 +74,11 @@ public class PropsTest {
 		configProp.set("version", 3);
 		final SystemConfig systemConfig = configProp.toBean(SystemConfig.class);
 
-		Assert.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());
-		Assert.assertEquals(true, systemConfig.getIsInit());
-		Assert.assertEquals("1", systemConfig.getStairPlan());
-		Assert.assertEquals(new Integer(2), systemConfig.getStageNum());
-		Assert.assertEquals("3", systemConfig.getVersion());
+		Assertions.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());
+		Assertions.assertEquals(true, systemConfig.getIsInit());
+		Assertions.assertEquals("1", systemConfig.getStairPlan());
+		Assertions.assertEquals(new Integer(2), systemConfig.getStageNum());
+		Assertions.assertEquals("3", systemConfig.getVersion());
 	}
 
 	@Data

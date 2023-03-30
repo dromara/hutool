@@ -6,8 +6,8 @@ import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.TaskExecutor;
 import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.task.Task;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * 定时任务样例
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class CronTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void customCronTest() {
 		CronUtil.schedule("*/2 * * * * *", (Task) () -> Console.log("Task excuted."));
 
@@ -28,7 +28,7 @@ public class CronTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cronTest() {
 		// 支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
@@ -40,7 +40,7 @@ public class CronTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cronWithListenerTest() {
 		CronUtil.getScheduler().addListener(new TaskListener() {
 			@Override
@@ -68,7 +68,7 @@ public class CronTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void addAndRemoveTest() {
 		final String id = CronUtil.schedule("*/2 * * * * *", (Runnable) () -> Console.log("task running : 2s"));
 

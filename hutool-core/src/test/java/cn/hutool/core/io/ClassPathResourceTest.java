@@ -2,8 +2,8 @@ package cn.hutool.core.io;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -19,7 +19,7 @@ public class ClassPathResourceTest {
 	public void readStringTest() {
 		final ClassPathResource resource = new ClassPathResource("test.properties");
 		final String content = resource.readUtf8Str();
-		Assert.assertTrue(StrUtil.isNotEmpty(content));
+		Assertions.assertTrue(StrUtil.isNotEmpty(content));
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class ClassPathResourceTest {
 		// 读取classpath根目录测试
 		final ClassPathResource resource = new ClassPathResource("/");
 		final String content = resource.readUtf8Str();
-		Assert.assertTrue(StrUtil.isNotEmpty(content));
+		Assertions.assertTrue(StrUtil.isNotEmpty(content));
 	}
 
 	@Test
@@ -36,27 +36,27 @@ public class ClassPathResourceTest {
 		final Properties properties = new Properties();
 		properties.load(resource.getStream());
 
-		Assert.assertEquals("1", properties.get("a"));
-		Assert.assertEquals("2", properties.get("b"));
+		Assertions.assertEquals("1", properties.get("a"));
+		Assertions.assertEquals("2", properties.get("b"));
 	}
 
 	@Test
 	public void readFromJarTest() {
 		//测试读取junit的jar包下的LICENSE-junit.txt文件
-		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
+		final ClassPathResource resource = new ClassPathResource("META-INF/LICENSE.md");
 
 		String result = resource.readUtf8Str();
-		Assert.assertNotNull(result);
+		Assertions.assertNotNull(result);
 
 		//二次读取测试，用于测试关闭流对再次读取的影响
 		result = resource.readUtf8Str();
-		Assert.assertNotNull(result);
+		Assertions.assertNotNull(result);
 	}
 
 	@Test
 	public void getAbsTest() {
-		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
+		final ClassPathResource resource = new ClassPathResource("META-INF/LICENSE.md");
 		final String absPath = resource.getAbsolutePath();
-		Assert.assertTrue(absPath.contains("LICENSE-junit.txt"));
+		Assertions.assertTrue(absPath.contains("LICENSE"));
 	}
 }

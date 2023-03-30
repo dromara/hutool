@@ -6,9 +6,9 @@ import cn.hutool.core.cache.impl.WeakCache;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CacheConcurrentTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void fifoCacheTest() {
 		final int threadCount = 4000;
 		final Cache<String, String> cache = new FIFOCache<>(3);
@@ -52,7 +52,7 @@ public class CacheConcurrentTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void lruCacheTest() {
 		final int threadCount = 40000;
 		final Cache<String, String> cache = new LRUCache<>(1000);
@@ -103,6 +103,6 @@ public class CacheConcurrentTest {
 		});
 		final long interval = concurrencyTester.getInterval();
 		// 总耗时应与单次操作耗时在同一个数量级
-		Assert.assertTrue(interval < delay * 2);
+		Assertions.assertTrue(interval < delay * 2);
 	}
 }

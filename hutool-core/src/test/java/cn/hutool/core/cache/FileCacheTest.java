@@ -1,7 +1,7 @@
 package cn.hutool.core.cache;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.cache.file.LFUFileCache;
 
@@ -14,6 +14,6 @@ public class FileCacheTest {
 	@Test
 	public void lfuFileCacheTest() {
 		final LFUFileCache cache = new LFUFileCache(1000, 500, 2000);
-		Assert.assertNotNull(cache);
+		Assertions.assertNotNull(cache);
 	}
 }

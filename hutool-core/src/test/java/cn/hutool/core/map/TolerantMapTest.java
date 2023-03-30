@@ -3,8 +3,8 @@ package cn.hutool.core.map;
 import cn.hutool.core.io.SerializeUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ public class TolerantMapTest {
 
 	private final TolerantMap<String, String> map = TolerantMap.of(new HashMap<>(), "default");
 
-	@Before
+	@BeforeEach
 	public void before() {
 		map.put("monday", "星期一");
 		map.put("tuesday", "星期二");

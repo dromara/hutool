@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.date.DateUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -19,7 +19,7 @@ public class Issue677Test {
 
 		final String jsonStr = JSONUtil.toJsonStr(dto);
 		final AuditResultDto auditResultDto = JSONUtil.toBean(jsonStr, AuditResultDto.class);
-		Assert.assertEquals("Mon Dec 15 00:00:00 CST 1969", auditResultDto.getDate().toString().replace("GMT+08:00", "CST"));
+		Assertions.assertEquals("Mon Dec 15 00:00:00 CST 1969", auditResultDto.getDate().toString().replace("GMT+08:00", "CST"));
 	}
 
 	@Data

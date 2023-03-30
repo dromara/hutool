@@ -5,8 +5,8 @@ import cn.hutool.json.serialize.JSONDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * 测试自定义反序列化
@@ -23,7 +23,7 @@ public class IssuesI44E4HTest {
 
 		final String jsonStr = "{\"md\":\"value1\"}";
 		final TestDto testDto = JSONUtil.toBean(jsonStr, TestDto.class);
-		Assert.assertEquals("value1", testDto.getMd().getValue());
+		Assertions.assertEquals("value1", testDto.getMd().getValue());
 	}
 
 	@Getter

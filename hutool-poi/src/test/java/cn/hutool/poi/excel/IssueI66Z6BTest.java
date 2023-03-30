@@ -2,8 +2,8 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.file.FileUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class IssueI66Z6BTest {
 	 * 部分字段定义别名后，由于IndexedComparator比较器的问题，会造成字段丢失，已修复
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void test() {
 		final File destFile = new File("D:/test/0001test.xlsx");
 		FileUtil.del(destFile);

@@ -1,8 +1,8 @@
 package cn.hutool.core.date;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -19,7 +19,7 @@ public class TimeUtilTest {
 
 	@Test
 	public void nowTest() {
-		Assert.assertNotNull(TimeUtil.now());
+		Assertions.assertNotNull(TimeUtil.now());
 	}
 
 	@Test
@@ -28,8 +28,8 @@ public class TimeUtilTest {
 		final DateTime dt = DateUtil.parse(dateStr);
 
 		final LocalDateTime of = TimeUtil.of(dt);
-		Assert.assertNotNull(of);
-		Assert.assertEquals(dateStr, of.toString());
+		Assertions.assertNotNull(of);
+		Assertions.assertEquals(dateStr, of.toString());
 	}
 
 	@SuppressWarnings("DataFlowIssue")
@@ -40,95 +40,95 @@ public class TimeUtilTest {
 
 		final LocalDateTime of = TimeUtil.of(dt);
 		final LocalDateTime of2 = TimeUtil.ofUTC(dt.getTime());
-		Assert.assertNotNull(of);
-		Assert.assertNotNull(of2);
-		Assert.assertEquals(of, of2);
+		Assertions.assertNotNull(of);
+		Assertions.assertNotNull(of2);
+		Assertions.assertEquals(of, of2);
 	}
 
 	@Test
 	public void parseOffsetTest() {
 		final LocalDateTime localDateTime = TimeUtil.parse("2021-07-30T16:27:27+08:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-		Assert.assertEquals("2021-07-30T16:27:27", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("2021-07-30T16:27:27", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest() {
 		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
-		Assert.assertEquals("2020-01-23T12:23:56", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("2020-01-23T12:23:56", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest2() {
 		final LocalDateTime localDateTime = TimeUtil.parse("2020-01-23", DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("2020-01-23T00:00", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("2020-01-23T00:00", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest3() {
 		final LocalDateTime localDateTime = TimeUtil.parse("12:23:56", DatePattern.NORM_TIME_PATTERN);
-		Assert.assertEquals("12:23:56", Objects.requireNonNull(localDateTime).toLocalTime().toString());
+		Assertions.assertEquals("12:23:56", Objects.requireNonNull(localDateTime).toLocalTime().toString());
 	}
 
 	@Test
 	public void parseTest4() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
-		Assert.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
+		Assertions.assertEquals("2020-01-23T12:23:56", localDateTime.toString());
 	}
 
 	@Test
 	public void parseTest5() {
 		final LocalDateTime localDateTime = TimeUtil.parse("19940121183604", "yyyyMMddHHmmss");
-		Assert.assertEquals("1994-01-21T18:36:04", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("1994-01-21T18:36:04", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseTest6() {
 		LocalDateTime localDateTime = TimeUtil.parse("19940121183604682", "yyyyMMddHHmmssSSS");
-		Assert.assertEquals("1994-01-21T18:36:04.682", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("1994-01-21T18:36:04.682", Objects.requireNonNull(localDateTime).toString());
 
 		localDateTime = TimeUtil.parse("1994012118360468", "yyyyMMddHHmmssSS");
-		Assert.assertEquals("1994-01-21T18:36:04.680", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("1994-01-21T18:36:04.680", Objects.requireNonNull(localDateTime).toString());
 
 		localDateTime = TimeUtil.parse("199401211836046", "yyyyMMddHHmmssS");
-		Assert.assertEquals("1994-01-21T18:36:04.600", Objects.requireNonNull(localDateTime).toString());
+		Assertions.assertEquals("1994-01-21T18:36:04.600", Objects.requireNonNull(localDateTime).toString());
 	}
 
 	@Test
 	public void parseDateTest() {
 		LocalDate localDate = TimeUtil.parseDateByISO("2020-01-23");
-		Assert.assertEquals("2020-01-23", localDate.toString());
+		Assertions.assertEquals("2020-01-23", localDate.toString());
 
 		localDate = TimeUtil.parseDate("2020-01-23T12:23:56", DateTimeFormatter.ISO_DATE_TIME);
-		Assert.assertEquals("2020-01-23", localDate.toString());
+		Assertions.assertEquals("2020-01-23", localDate.toString());
 	}
 
 	@Test
 	public void parseSingleMonthAndDayTest() {
 		final LocalDate localDate = TimeUtil.parseDate("2020-1-1", "yyyy-M-d");
-		Assert.assertEquals("2020-01-01", localDate.toString());
+		Assertions.assertEquals("2020-01-01", localDate.toString());
 	}
 
 	@Test
 	public void formatTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		String format = TimeUtil.format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
-		Assert.assertEquals("2020-01-23 12:23:56", format);
+		Assertions.assertEquals("2020-01-23 12:23:56", format);
 
 		format = TimeUtil.formatNormal(localDateTime);
-		Assert.assertEquals("2020-01-23 12:23:56", format);
+		Assertions.assertEquals("2020-01-23 12:23:56", format);
 
 		format = TimeUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("2020-01-23", format);
+		Assertions.assertEquals("2020-01-23", format);
 	}
 
 	@Test
 	public void formatLocalDateTest() {
 		final LocalDate date = LocalDate.parse("2020-01-23");
 		String format = TimeUtil.format(date, DatePattern.NORM_DATE_PATTERN);
-		Assert.assertEquals("2020-01-23", format);
+		Assertions.assertEquals("2020-01-23", format);
 
 		format = TimeUtil.formatNormal(date);
-		Assert.assertEquals("2020-01-23", format);
+		Assertions.assertEquals("2020-01-23", format);
 	}
 
 	@Test
@@ -136,12 +136,12 @@ public class TimeUtilTest {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		LocalDateTime offset = TimeUtil.offset(localDateTime, 1, ChronoUnit.DAYS);
 		// 非同一对象
-		Assert.assertNotSame(localDateTime, offset);
+		Assertions.assertNotSame(localDateTime, offset);
 
-		Assert.assertEquals("2020-01-24T12:23:56", offset.toString());
+		Assertions.assertEquals("2020-01-24T12:23:56", offset.toString());
 
 		offset = TimeUtil.offset(localDateTime, -1, ChronoUnit.DAYS);
-		Assert.assertEquals("2020-01-22T12:23:56", offset.toString());
+		Assertions.assertEquals("2020-01-22T12:23:56", offset.toString());
 	}
 
 	@Test
@@ -149,14 +149,14 @@ public class TimeUtilTest {
 		final Duration between = TimeUtil.between(
 				TimeUtil.parseByISO("2019-02-02T00:00:00"),
 				TimeUtil.parseByISO("2020-02-02T00:00:00"));
-		Assert.assertEquals(365, between.toDays());
+		Assertions.assertEquals(365, between.toDays());
 	}
 
 	@Test
 	public void beginOfDayTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		final LocalDateTime beginOfDay = TimeUtil.beginOfDay(localDateTime);
-		Assert.assertEquals("2020-01-23T00:00", beginOfDay.toString());
+		Assertions.assertEquals("2020-01-23T00:00", beginOfDay.toString());
 	}
 
 	@Test
@@ -164,17 +164,17 @@ public class TimeUtilTest {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 
 		LocalDateTime endOfDay = TimeUtil.endOfDay(localDateTime, false);
-		Assert.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
+		Assertions.assertEquals("2020-01-23T23:59:59.999999999", endOfDay.toString());
 
 		endOfDay = TimeUtil.endOfDay(localDateTime, true);
-		Assert.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
+		Assertions.assertEquals("2020-01-23T23:59:59", endOfDay.toString());
 	}
 
 	@Test
 	public void beginOfMonthTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		final LocalDateTime begin = TimeUtil.beginOfMonth(localDateTime);
-		Assert.assertEquals("2020-01-01T00:00", begin.toString());
+		Assertions.assertEquals("2020-01-01T00:00", begin.toString());
 	}
 
 	@Test
@@ -182,17 +182,17 @@ public class TimeUtilTest {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 
 		LocalDateTime end = TimeUtil.endOfMonth(localDateTime, false);
-		Assert.assertEquals("2020-01-31T23:59:59.999999999", end.toString());
+		Assertions.assertEquals("2020-01-31T23:59:59.999999999", end.toString());
 
 		end = TimeUtil.endOfMonth(localDateTime, true);
-		Assert.assertEquals("2020-01-31T23:59:59", end.toString());
+		Assertions.assertEquals("2020-01-31T23:59:59", end.toString());
 	}
 
 	@Test
 	public void beginOfYearTest() {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 		final LocalDateTime begin = TimeUtil.beginOfMonth(localDateTime);
-		Assert.assertEquals("2020-01-01T00:00", begin.toString());
+		Assertions.assertEquals("2020-01-01T00:00", begin.toString());
 	}
 
 	@Test
@@ -200,34 +200,34 @@ public class TimeUtilTest {
 		final LocalDateTime localDateTime = TimeUtil.parseByISO("2020-01-23T12:23:56");
 
 		LocalDateTime end = TimeUtil.endOfYear(localDateTime, false);
-		Assert.assertEquals("2020-12-31T23:59:59.999999999", end.toString());
+		Assertions.assertEquals("2020-12-31T23:59:59.999999999", end.toString());
 
 		end = TimeUtil.endOfYear(localDateTime, true);
-		Assert.assertEquals("2020-12-31T23:59:59", end.toString());
+		Assertions.assertEquals("2020-12-31T23:59:59", end.toString());
 	}
 
 	@Test
 	public void dayOfWeekTest() {
 		final Week one = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 20));
-		Assert.assertEquals(Week.MONDAY, one);
+		Assertions.assertEquals(Week.MONDAY, one);
 
 		final Week two = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 21));
-		Assert.assertEquals(Week.TUESDAY, two);
+		Assertions.assertEquals(Week.TUESDAY, two);
 
 		final Week three = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 22));
-		Assert.assertEquals(Week.WEDNESDAY, three);
+		Assertions.assertEquals(Week.WEDNESDAY, three);
 
 		final Week four = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 23));
-		Assert.assertEquals(Week.THURSDAY, four);
+		Assertions.assertEquals(Week.THURSDAY, four);
 
 		final Week five = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 24));
-		Assert.assertEquals(Week.FRIDAY, five);
+		Assertions.assertEquals(Week.FRIDAY, five);
 
 		final Week six = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 25));
-		Assert.assertEquals(Week.SATURDAY, six);
+		Assertions.assertEquals(Week.SATURDAY, six);
 
 		final Week seven = TimeUtil.dayOfWeek(LocalDate.of(2021, 9, 26));
-		Assert.assertEquals(Week.SUNDAY, seven);
+		Assertions.assertEquals(Week.SUNDAY, seven);
 	}
 
 	@Test
@@ -251,37 +251,37 @@ public class TimeUtilTest {
 		final LocalDateTime startTime  = TimeUtil.parseByISO("2022-03-23 05:00:00");
 		final LocalDateTime endTime    = TimeUtil.parseByISO("2022-03-23 13:00:00");
 
-		Assert.assertFalse(TimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
-		Assert.assertFalse(TimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
-		Assert.assertTrue(TimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
+		Assertions.assertFalse(TimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
+		Assertions.assertFalse(TimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
+		Assertions.assertTrue(TimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
 
-		Assert.assertFalse(TimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
-		Assert.assertFalse(TimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+		Assertions.assertFalse(TimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
+		Assertions.assertFalse(TimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
 
-		Assert.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,startTime));
-		Assert.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,endTime));
-		Assert.assertFalse(TimeUtil.isOverlap(startTime,startTime,endTime,endTime));
-		Assert.assertTrue(TimeUtil.isOverlap(startTime,endTime,endTime,endTime));
+		Assertions.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,startTime));
+		Assertions.assertTrue(TimeUtil.isOverlap(startTime,startTime,startTime,endTime));
+		Assertions.assertFalse(TimeUtil.isOverlap(startTime,startTime,endTime,endTime));
+		Assertions.assertTrue(TimeUtil.isOverlap(startTime,endTime,endTime,endTime));
 	}
 
 	@Test
 	public void weekOfYearTest(){
 		final LocalDate date1 = LocalDate.of(2021, 12, 31);
 		final int weekOfYear1 = TimeUtil.weekOfYear(date1);
-		Assert.assertEquals(52, weekOfYear1);
+		Assertions.assertEquals(52, weekOfYear1);
 
 		final int weekOfYear2 = TimeUtil.weekOfYear(date1.atStartOfDay());
-		Assert.assertEquals(52, weekOfYear2);
+		Assertions.assertEquals(52, weekOfYear2);
 	}
 
 	@Test
 	public void weekOfYearTest2(){
 		final LocalDate date1 = LocalDate.of(2022, 1, 31);
 		final int weekOfYear1 = TimeUtil.weekOfYear(date1);
-		Assert.assertEquals(5, weekOfYear1);
+		Assertions.assertEquals(5, weekOfYear1);
 
 		final int weekOfYear2 = TimeUtil.weekOfYear(date1.atStartOfDay());
-		Assert.assertEquals(5, weekOfYear2);
+		Assertions.assertEquals(5, weekOfYear2);
 	}
 
 	@Test
@@ -299,38 +299,38 @@ public class TimeUtilTest {
 		final LocalDateTime end = LocalDateTime.parse("2019-02-02T09:00:00");
 
 		// 不在时间范围内 用例
-		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T06:00:00"), begin, end));
-		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T13:00:00"), begin, end));
-		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-01T08:00:00"), begin, end));
-		Assert.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-03T09:00:00"), begin, end));
+		Assertions.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T06:00:00"), begin, end));
+		Assertions.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T13:00:00"), begin, end));
+		Assertions.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-01T08:00:00"), begin, end));
+		Assertions.assertFalse(TimeUtil.isIn(LocalDateTime.parse("2019-02-03T09:00:00"), begin, end));
 
 		// 在时间范围内 用例
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:00"), begin, end));
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:01"), begin, end));
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:11:00"), begin, end));
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:22:00"), begin, end));
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:59:59"), begin, end));
-		Assert.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T09:00:00"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:00"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:00:01"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:11:00"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:22:00"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T08:59:59"), begin, end));
+		Assertions.assertTrue(TimeUtil.isIn(LocalDateTime.parse("2019-02-02T09:00:00"), begin, end));
 
 		// 测试边界条件
-		Assert.assertTrue(TimeUtil.isIn(begin, begin, end, true, false));
-		Assert.assertFalse(TimeUtil.isIn(begin, begin, end, false, false));
-		Assert.assertTrue(TimeUtil.isIn(end, begin, end, false, true));
-		Assert.assertFalse(TimeUtil.isIn(end, begin, end, false, false));
+		Assertions.assertTrue(TimeUtil.isIn(begin, begin, end, true, false));
+		Assertions.assertFalse(TimeUtil.isIn(begin, begin, end, false, false));
+		Assertions.assertTrue(TimeUtil.isIn(end, begin, end, false, true));
+		Assertions.assertFalse(TimeUtil.isIn(end, begin, end, false, false));
 
 		// begin、end互换
-		Assert.assertTrue(TimeUtil.isIn(begin, end, begin, true, true));
+		Assertions.assertTrue(TimeUtil.isIn(begin, end, begin, true, true));
 
 		// 比较当前时间范围
 		final LocalDateTime now = LocalDateTime.now();
-		Assert.assertTrue(TimeUtil.isIn(now, now.minusHours(1L), now.plusHours(1L)));
-		Assert.assertFalse(TimeUtil.isIn(now, now.minusHours(1L), now.minusHours(2L)));
-		Assert.assertFalse(TimeUtil.isIn(now, now.plusHours(1L), now.plusHours(2L)));
+		Assertions.assertTrue(TimeUtil.isIn(now, now.minusHours(1L), now.plusHours(1L)));
+		Assertions.assertFalse(TimeUtil.isIn(now, now.minusHours(1L), now.minusHours(2L)));
+		Assertions.assertFalse(TimeUtil.isIn(now, now.plusHours(1L), now.plusHours(2L)));
 
 		// 异常入参
-		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(null, begin, end, false, false));
-		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, null, end, false, false));
-		Assert.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, begin, null, false, false));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(null, begin, end, false, false));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, null, end, false, false));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> TimeUtil.isIn(begin, begin, null, false, false));
 	}
 
 
@@ -340,8 +340,8 @@ public class TimeUtilTest {
 				.map(LocalDate::parse)
 				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
-		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
-		Assert.assertEquals("2023年03月02日", dateStrList.get(1));
+		Assertions.assertEquals("2023年03月01日", dateStrList.get(0));
+		Assertions.assertEquals("2023年03月02日", dateStrList.get(1));
 	}
 
 	@Test
@@ -350,7 +350,7 @@ public class TimeUtilTest {
 				.map(LocalDateTime::parse)
 				.map(TimeUtil.formatFunc(DatePattern.CHINESE_DATE_FORMATTER))
 				.collect(Collectors.toList());
-		Assert.assertEquals("2023年03月01日", dateStrList.get(0));
-		Assert.assertEquals("2023年03月02日", dateStrList.get(1));
+		Assertions.assertEquals("2023年03月01日", dateStrList.get(0));
+		Assertions.assertEquals("2023年03月02日", dateStrList.get(1));
 	}
 }

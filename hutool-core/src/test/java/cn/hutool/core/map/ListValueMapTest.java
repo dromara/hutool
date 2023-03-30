@@ -3,8 +3,8 @@ package cn.hutool.core.map;
 import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.map.multi.MultiValueMap;
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -13,9 +13,9 @@ public class ListValueMapTest {
 	@Test
 	public void putTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertNull(map.put(1, Arrays.asList("a", "b")));
+		Assertions.assertNull(map.put(1, Arrays.asList("a", "b")));
 		Collection<String> collection = map.put(1, Arrays.asList("c", "d"));
-		Assert.assertEquals(Arrays.asList("a", "b"), collection);
+		Assertions.assertEquals(Arrays.asList("a", "b"), collection);
 	}
 
 	@Test
@@ -24,112 +24,112 @@ public class ListValueMapTest {
 		Map<Integer, Collection<String>> source = new HashMap<>();
 		source.put(1, Arrays.asList("a", "b", "c"));
 		map.putAll(source);
-		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
+		Assertions.assertEquals(1, map.size());
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
 	}
 
 	@Test
 	public void putValueTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertTrue(map.putValue(1, "a"));
-		Assert.assertTrue(map.putValue(1, "b"));
-		Assert.assertTrue(map.putValue(1, "c"));
-		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
+		Assertions.assertTrue(map.putValue(1, "a"));
+		Assertions.assertTrue(map.putValue(1, "b"));
+		Assertions.assertTrue(map.putValue(1, "c"));
+		Assertions.assertEquals(1, map.size());
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
 	}
 
 	@Test
 	public void putAllValueTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertTrue(map.putAllValues(1, Arrays.asList("a", "b", "c")));
-		Assert.assertEquals(1, map.size());
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
+		Assertions.assertTrue(map.putAllValues(1, Arrays.asList("a", "b", "c")));
+		Assertions.assertEquals(1, map.size());
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
 
 		Map<Integer, Collection<String>> source = new HashMap<>();
-		Assert.assertTrue(map.putValue(1, "e"));
-		Assert.assertTrue(map.putValue(1, "f"));
+		Assertions.assertTrue(map.putValue(1, "e"));
+		Assertions.assertTrue(map.putValue(1, "f"));
 		map.putAllValues(source);
-		Assert.assertEquals(Arrays.asList("a", "b", "c", "e", "f"), map.get(1));
+		Assertions.assertEquals(Arrays.asList("a", "b", "c", "e", "f"), map.get(1));
 	}
 
 	@Test
 	public void putValuesTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertTrue(map.putValues(1, "a", "b", "c"));
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
+		Assertions.assertTrue(map.putValues(1, "a", "b", "c"));
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), map.get(1));
 	}
 
 	@Test
 	public void removeValueTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putValues(1, "a", "b", "c");
-		Assert.assertFalse(map.removeValue(1, "d"));
-		Assert.assertTrue(map.removeValue(1, "c"));
-		Assert.assertEquals(Arrays.asList("a", "b"), map.get(1));
+		Assertions.assertFalse(map.removeValue(1, "d"));
+		Assertions.assertTrue(map.removeValue(1, "c"));
+		Assertions.assertEquals(Arrays.asList("a", "b"), map.get(1));
 	}
 
 	@Test
 	public void removeAllValuesTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putValues(1, "a", "b", "c");
-		Assert.assertFalse(map.removeAllValues(1, Arrays.asList("e", "f")));
-		Assert.assertTrue(map.removeAllValues(1, Arrays.asList("b", "c")));
-		Assert.assertEquals(Collections.singletonList("a"), map.get(1));
+		Assertions.assertFalse(map.removeAllValues(1, Arrays.asList("e", "f")));
+		Assertions.assertTrue(map.removeAllValues(1, Arrays.asList("b", "c")));
+		Assertions.assertEquals(Collections.singletonList("a"), map.get(1));
 	}
 
 	@Test
 	public void removeValuesTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putValues(1, "a", "b", "c");
-		Assert.assertFalse(map.removeValues(1, "e", "f"));
-		Assert.assertTrue(map.removeValues(1, "b", "c"));
-		Assert.assertEquals(Collections.singletonList("a"), map.get(1));
+		Assertions.assertFalse(map.removeValues(1, "e", "f"));
+		Assertions.assertTrue(map.removeValues(1, "b", "c"));
+		Assertions.assertEquals(Collections.singletonList("a"), map.get(1));
 	}
 
 	@Test
 	public void testFilterAllValues() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertTrue(map.putValues(1, "a", "b", "c"));
-		Assert.assertTrue(map.putValues(2, "a", "b", "c"));
+		Assertions.assertTrue(map.putValues(1, "a", "b", "c"));
+		Assertions.assertTrue(map.putValues(2, "a", "b", "c"));
 
-		Assert.assertEquals(map, map.filterAllValues((k, v) -> StrUtil.equals(v, "a")));
-		Assert.assertEquals(Collections.singletonList("a"), map.getValues(1));
-		Assert.assertEquals(Collections.singletonList("a"), map.getValues(2));
+		Assertions.assertEquals(map, map.filterAllValues((k, v) -> StrUtil.equals(v, "a")));
+		Assertions.assertEquals(Collections.singletonList("a"), map.getValues(1));
+		Assertions.assertEquals(Collections.singletonList("a"), map.getValues(2));
 
-		Assert.assertEquals(map, map.filterAllValues(v -> !StrUtil.equals(v, "a")));
-		Assert.assertEquals(Collections.emptyList(), map.getValues(1));
-		Assert.assertEquals(Collections.emptyList(), map.getValues(2));
+		Assertions.assertEquals(map, map.filterAllValues(v -> !StrUtil.equals(v, "a")));
+		Assertions.assertEquals(Collections.emptyList(), map.getValues(1));
+		Assertions.assertEquals(Collections.emptyList(), map.getValues(2));
 	}
 
 	@Test
 	public void testReplaceAllValues() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
-		Assert.assertTrue(map.putValues(1, "a", "b", "c"));
-		Assert.assertTrue(map.putValues(2, "a", "b", "c"));
+		Assertions.assertTrue(map.putValues(1, "a", "b", "c"));
+		Assertions.assertTrue(map.putValues(2, "a", "b", "c"));
 
-		Assert.assertEquals(map, map.replaceAllValues((k, v) -> v + "2"));
-		Assert.assertEquals(Arrays.asList("a2", "b2", "c2"), map.getValues(1));
-		Assert.assertEquals(Arrays.asList("a2", "b2", "c2"), map.getValues(2));
+		Assertions.assertEquals(map, map.replaceAllValues((k, v) -> v + "2"));
+		Assertions.assertEquals(Arrays.asList("a2", "b2", "c2"), map.getValues(1));
+		Assertions.assertEquals(Arrays.asList("a2", "b2", "c2"), map.getValues(2));
 
-		Assert.assertEquals(map, map.replaceAllValues(v -> v + "3"));
-		Assert.assertEquals(Arrays.asList("a23", "b23", "c23"), map.getValues(1));
-		Assert.assertEquals(Arrays.asList("a23", "b23", "c23"), map.getValues(2));
+		Assertions.assertEquals(map, map.replaceAllValues(v -> v + "3"));
+		Assertions.assertEquals(Arrays.asList("a23", "b23", "c23"), map.getValues(1));
+		Assertions.assertEquals(Arrays.asList("a23", "b23", "c23"), map.getValues(2));
 	}
 
 	@Test
 	public void getValuesTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putValues(1, "a", "b", "c");
-		Assert.assertEquals(Collections.emptyList(), map.getValues(2));
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), map.getValues(1));
+		Assertions.assertEquals(Collections.emptyList(), map.getValues(2));
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), map.getValues(1));
 	}
 
 	@Test
 	public void sizeTest() {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putValues(1, "a", "b", "c");
-		Assert.assertEquals(0, map.size(2));
-		Assert.assertEquals(3, map.size(1));
+		Assertions.assertEquals(0, map.size(2));
+		Assertions.assertEquals(3, map.size(1));
 	}
 
 	@Test
@@ -142,8 +142,8 @@ public class ListValueMapTest {
 			keys.add(k);
 			values.add(v);
 		});
-		Assert.assertEquals(Arrays.asList(1, 1, 1), keys);
-		Assert.assertEquals(Arrays.asList("a", "b", "c"), values);
+		Assertions.assertEquals(Arrays.asList(1, 1, 1), keys);
+		Assertions.assertEquals(Arrays.asList("a", "b", "c"), values);
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class ListValueMapTest {
 		MultiValueMap<Integer, String> map = new ListValueMap<>();
 		map.putAllValues(1, Arrays.asList("a", "b", "c"));
 		map.putAllValues(2, Arrays.asList("d", "e"));
-		Assert.assertEquals(
+		Assertions.assertEquals(
 			Arrays.asList("a", "b", "c", "d", "e"),
 			map.allValues()
 		);

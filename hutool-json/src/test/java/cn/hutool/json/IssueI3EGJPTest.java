@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.core.bean.BeanUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IssueI3EGJPTest {
 
@@ -14,8 +14,8 @@ public class IssueI3EGJPTest {
 		paramJson.set("is_booleanb", true);
 		final ConvertDO convertDO = BeanUtil.toBean(paramJson, ConvertDO.class);
 
-		Assert.assertTrue(convertDO.isBooleana());
-		Assert.assertTrue(convertDO.getIsBooleanb());
+		Assertions.assertTrue(convertDO.isBooleana());
+		Assertions.assertTrue(convertDO.getIsBooleanb());
 	}
 
 	@Data

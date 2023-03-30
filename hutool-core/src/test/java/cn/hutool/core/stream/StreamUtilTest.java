@@ -2,8 +2,8 @@ package cn.hutool.core.stream;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.SetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,13 +15,13 @@ public class StreamUtilTest {
 	public void ofTest(){
 		final Stream<Integer> stream = StreamUtil.of(2, x -> x * 2, 4);
 		final String result = stream.collect(CollectorUtil.joining(","));
-		Assert.assertEquals("2,4,8,16", result);
+		Assertions.assertEquals("2,4,8,16", result);
 	}
 
 	// === iterator ===
 	@Test
 	public void streamTestNullIterator() {
-		Assert.assertThrows(IllegalArgumentException.class, () -> StreamUtil.ofIter((Iterator<Object>) null));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> StreamUtil.ofIter((Iterator<Object>) null));
 	}
 
 	@SuppressWarnings({"RedundantOperationOnEmptyContainer", "RedundantCollectionOperation"})
@@ -38,15 +38,15 @@ public class StreamUtilTest {
 	@Test
 	public void streamTestOrdinaryIterator() {
 		final List<Integer> arrayList = ListUtil.of(1, 2, 3);
-		Assert.assertArrayEquals(new Integer[]{1, 2, 3}, StreamUtil.ofIter(arrayList.iterator()).toArray());
+		Assertions.assertArrayEquals(new Integer[]{1, 2, 3}, StreamUtil.ofIter(arrayList.iterator()).toArray());
 
 		final HashSet<Integer> hashSet = SetUtil.of(1, 2, 3);
-		Assert.assertEquals(hashSet, StreamUtil.ofIter(hashSet.iterator()).collect(Collectors.toSet()));
+		Assertions.assertEquals(hashSet, StreamUtil.ofIter(hashSet.iterator()).collect(Collectors.toSet()));
 	}
 
 	void assertStreamIsEmpty(final Stream<?> stream) {
-		Assert.assertNotNull(stream);
-		Assert.assertEquals(0, stream.toArray().length);
+		Assertions.assertNotNull(stream);
+		Assertions.assertEquals(0, stream.toArray().length);
 	}
 	// ================ stream test end ================
 }

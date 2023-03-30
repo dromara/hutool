@@ -1,7 +1,7 @@
 package cn.hutool.crypto.symmetric;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * TEA（Tiny Encryption Algorithm）和 XTEA算法单元测试
@@ -19,7 +19,7 @@ public class TEATest {
 		// 解密
 		final String decryptStr = tea.decryptStr(encrypt);
 
-		Assert.assertEquals(data, decryptStr);
+		Assertions.assertEquals(data, decryptStr);
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class TEATest {
 		// 解密
 		final String decryptStr = tea.decryptStr(encrypt);
 
-		Assert.assertEquals(data, decryptStr);
+		Assertions.assertEquals(data, decryptStr);
 	}
 
 	@Test
@@ -47,6 +47,6 @@ public class TEATest {
 		// 解密
 		final String decryptStr = tea.decryptStr(encrypt);
 
-		Assert.assertEquals(data, decryptStr);
+		Assertions.assertEquals(data, decryptStr);
 	}
 }

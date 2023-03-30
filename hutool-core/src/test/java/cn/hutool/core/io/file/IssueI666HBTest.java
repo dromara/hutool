@@ -1,7 +1,7 @@
 package cn.hutool.core.io.file;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * 移动情况测试，环境：
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class IssueI666HBTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveDirToDirTest() {
 		// 目录移动到目录，将整个目录移动
 		// 会将dir1及其内容移动到dir2下，变成dir2/dir1
@@ -21,7 +21,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveContentDirToDirTest() {
 		// 目录内容移动到目录
 		// 移动内容，不移除目录本身
@@ -31,7 +31,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveFileToDirTest() {
 		// 文件移动到目录
 		// 会将test1.txt移动到dir2下，变成dir2/test1.txt
@@ -39,7 +39,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveContentFileToDirTest() {
 		// 文件移动到目录
 		// 会将test1.txt移动到dir2下，变成dir2/test1.txt
@@ -49,7 +49,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveDirToDirNotExistTest() {
 		// 目录移动到目标，dir3不存在，将整个目录移动
 		// 会将目录dir1变成目录dir3
@@ -57,7 +57,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveContentDirToDirNotExistTest() {
 		// 目录移动到目标，dir3不存在
 		// 会将目录dir1内容移动到dir3，但是dir1目录不删除
@@ -67,7 +67,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveFileToTargetNotExistTest() {
 		// 文件移动到不存在的路径
 		// 会将test1.txt重命名为test2
@@ -75,7 +75,7 @@ public class IssueI666HBTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void moveContentFileToTargetNotExistTest() {
 		// 目录移动到目录，将整个目录移动
 		// 会将test1.txt重命名为test2

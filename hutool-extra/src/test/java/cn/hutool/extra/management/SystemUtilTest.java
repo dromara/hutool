@@ -1,16 +1,16 @@
 package cn.hutool.extra.management;
 
 import cn.hutool.core.util.SystemUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 public class SystemUtilTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void dumpTest() {
 		ManagementUtil.dumpSystemInfo();
 	}
@@ -18,45 +18,45 @@ public class SystemUtilTest {
 	@Test
 	public void getCurrentPidTest() {
 		final long pid = ManagementUtil.getCurrentPID();
-		Assert.assertTrue(pid > 0);
+		Assertions.assertTrue(pid > 0);
 	}
 
 	@Test
 	public void getJavaInfoTest() {
 		final JavaInfo javaInfo = ManagementUtil.getJavaInfo();
-		Assert.assertNotNull(javaInfo);
+		Assertions.assertNotNull(javaInfo);
 	}
 
 	@Test
 	public void getJavaRuntimeInfoTest() {
 		final JavaRuntimeInfo info = ManagementUtil.getJavaRuntimeInfo();
-		Assert.assertNotNull(info);
+		Assertions.assertNotNull(info);
 	}
 
 	@Test
 	public void getOsInfoTest() {
 		final OsInfo osInfo = ManagementUtil.getOsInfo();
-		Assert.assertNotNull(osInfo);
+		Assertions.assertNotNull(osInfo);
 	}
 
 	@Test
 	public void getHostInfo() {
 		final HostInfo hostInfo = ManagementUtil.getHostInfo();
-		Assert.assertNotNull(hostInfo);
+		Assertions.assertNotNull(hostInfo);
 	}
 
 	@Test
 	public void getUserInfoTest(){
 		// https://gitee.com/dromara/hutool/issues/I3NM39
 		final UserInfo userInfo = ManagementUtil.getUserInfo();
-		Assert.assertTrue(userInfo.getTempDir().endsWith(File.separator));
+		Assertions.assertTrue(userInfo.getTempDir().endsWith(File.separator));
 	}
 
 	@Test
 	public void getOsVersionTest(){
 		String s = SystemUtil.get("os.name");
-		Assert.assertNotNull(s);
+		Assertions.assertNotNull(s);
 		s = SystemUtil.get("os.version");
-		Assert.assertNotNull(s);
+		Assertions.assertNotNull(s);
 	}
 }

@@ -5,8 +5,8 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.ZUC;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.spec.IvParameterSpec;
 
@@ -25,10 +25,10 @@ public class HmacTest {
 		final HMac mac = new HMac(HmacAlgorithm.HmacMD5, key);
 
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
+		Assertions.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
 
 		final String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
-		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
+		Assertions.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
 	}
 
 	@Test
@@ -38,10 +38,10 @@ public class HmacTest {
 		final HMac mac = SecureUtil.hmacMd5("password");
 
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
+		Assertions.assertEquals("b977f4b13f93f549e06140971bded384", macHex1);
 
 		final String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
-		Assert.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
+		Assertions.assertEquals("b977f4b13f93f549e06140971bded384", macHex2);
 	}
 
 	@Test
@@ -50,10 +50,10 @@ public class HmacTest {
 
 		final String testStr = "test中文";
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex1);
+		Assertions.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex1);
 
 		final String macHex2 = mac.digestHex(IoUtil.toStream(testStr, CharsetUtil.UTF_8));
-		Assert.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex2);
+		Assertions.assertEquals("1dd68d2f119d5640f0d416e99d3f42408b88d511", macHex2);
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class HmacTest {
 
 		final String testStr = "test中文";
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("1e0b9455", macHex1);
+		Assertions.assertEquals("1e0b9455", macHex1);
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class HmacTest {
 
 		final String testStr = "test中文";
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("d9ad618357c1bfb1d9d1200a763d5eaa", macHex1);
+		Assertions.assertEquals("d9ad618357c1bfb1d9d1200a763d5eaa", macHex1);
 	}
 
 	@Test
@@ -93,6 +93,6 @@ public class HmacTest {
 		final String testStr = "test中文";
 
 		final String macHex1 = mac.digestHex(testStr);
-		Assert.assertEquals("58a0d231315664af51b858a174eabc21", macHex1);
+		Assertions.assertEquals("58a0d231315664af51b858a174eabc21", macHex1);
 	}
 }

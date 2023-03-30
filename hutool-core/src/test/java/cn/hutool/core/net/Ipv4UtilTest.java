@@ -1,34 +1,32 @@
 package cn.hutool.core.net;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Ipv4UtilTest {
 
 	@Test
 	public void formatIpBlockTest() {
 		for (int i = Ipv4Util.IPV4_MASK_BIT_VALID_MIN; i < Ipv4Util.IPV4_MASK_BIT_MAX; i++) {
-			Assert.assertEquals("192.168.1.101/" + i, Ipv4Util.formatIpBlock("192.168.1.101", Ipv4Util.getMaskByMaskBit(i)));
+			Assertions.assertEquals("192.168.1.101/" + i, Ipv4Util.formatIpBlock("192.168.1.101", Ipv4Util.getMaskByMaskBit(i)));
 		}
 	}
 
 	@Test
 	public void getMaskBitByMaskTest() {
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
-		Assert.assertEquals(24, maskBitByMask);
+		Assertions.assertEquals(24, maskBitByMask);
 	}
 
 	@Test
 	public void getMaskBitByIllegalMaskTest() {
-		final ThrowingRunnable getMaskBitByMaskRunnable = () -> Ipv4Util.getMaskBitByMask("255.255.0.255");
-		Assert.assertThrows("非法掩码测试", IllegalArgumentException.class, getMaskBitByMaskRunnable);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> Ipv4Util.getMaskBitByMask("255.255.0.255"), "非法掩码测试");
 	}
 
 	@Test
 	public void getMaskByMaskBitTest() {
 		final String mask = Ipv4Util.getMaskByMaskBit(24);
-		Assert.assertEquals("255.255.255.0", mask);
+		Assertions.assertEquals("255.255.255.0", mask);
 	}
 
 	@Test
@@ -50,7 +48,7 @@ public class Ipv4UtilTest {
 		final String ip = "192.168.1.1";
 		final int maskBitByMask = Ipv4Util.getMaskBitByMask("255.255.255.0");
 		final String endIpStr = Ipv4Util.getEndIpStr(ip, maskBitByMask);
-		Assert.assertEquals("192.168.1.255", endIpStr);
+		Assertions.assertEquals("192.168.1.255", endIpStr);
 	}
 
 	@Test
@@ -106,52 +104,52 @@ public class Ipv4UtilTest {
 	@Test
 	public void isMaskValidTest() {
 		final boolean maskValid = Ipv4Util.isMaskValid("255.255.255.0");
-		Assert.assertTrue("掩码合法检验", maskValid);
+		Assertions.assertTrue(maskValid, "掩码合法检验");
 	}
 
 	@Test
 	public void isMaskInvalidTest() {
-		Assert.assertFalse("掩码非法检验 - 255.255.0.255", Ipv4Util.isMaskValid("255.255.0.255"));
-		Assert.assertFalse("掩码非法检验 - null值", Ipv4Util.isMaskValid(null));
-		Assert.assertFalse("掩码非法检验 - 空字符串", Ipv4Util.isMaskValid(""));
-		Assert.assertFalse("掩码非法检验 - 空白字符串", Ipv4Util.isMaskValid(" "));
+		Assertions.assertFalse(Ipv4Util.isMaskValid("255.255.0.255"), "掩码非法检验 - 255.255.0.255");
+		Assertions.assertFalse(Ipv4Util.isMaskValid(null), "掩码非法检验 - null值");
+		Assertions.assertFalse(Ipv4Util.isMaskValid(""), "掩码非法检验 - 空字符串");
+		Assertions.assertFalse(Ipv4Util.isMaskValid(" "), "掩码非法检验 - 空白字符串");
 	}
 
 	@Test
 	public void isMaskBitValidTest() {
 		for (int i = 1; i < 32; i++) {
-			Assert.assertTrue("掩码位非法：" + i, Ipv4Util.isMaskBitValid(i));
+			Assertions.assertTrue(Ipv4Util.isMaskBitValid(i), "掩码位非法：" + i);
 		}
 	}
 
 	@Test
 	public void isMaskBitInvalidTest() {
 		final boolean maskBitValid = Ipv4Util.isMaskBitValid(33);
-		Assert.assertFalse("掩码位非法检验", maskBitValid);
+		Assertions.assertFalse(maskBitValid, "掩码位非法检验");
 	}
 
 	@Test
 	public void ipv4ToLongTest() {
 		long l = Ipv4Util.ipv4ToLong("127.0.0.1");
-		Assert.assertEquals(2130706433L, l);
+		Assertions.assertEquals(2130706433L, l);
 		l = Ipv4Util.ipv4ToLong("114.114.114.114");
-		Assert.assertEquals(1920103026L, l);
+		Assertions.assertEquals(1920103026L, l);
 		l = Ipv4Util.ipv4ToLong("0.0.0.0");
-		Assert.assertEquals(0L, l);
+		Assertions.assertEquals(0L, l);
 		l = Ipv4Util.ipv4ToLong("255.255.255.255");
-		Assert.assertEquals(4294967295L, l);
+		Assertions.assertEquals(4294967295L, l);
 	}
 
 	@Test
 	public void getMaskIpLongTest() {
 		for (int i = 1; i <= 32; i++) {
-			Assert.assertEquals(Ipv4Util.ipv4ToLong(MaskBit.get(i)), MaskBit.getMaskIpLong(i));
+			Assertions.assertEquals(Ipv4Util.ipv4ToLong(MaskBit.get(i)), MaskBit.getMaskIpLong(i));
 		}
 	}
 
 	@SuppressWarnings("SameParameterValue")
 	private void testGenerateIpList(final String fromIp, final String toIp) {
-		Assert.assertEquals(
+		Assertions.assertEquals(
 				Ipv4Util.countByIpRange(fromIp, toIp),
 				Ipv4Util.list(fromIp, toIp).size()
 		);
@@ -159,7 +157,7 @@ public class Ipv4UtilTest {
 
 	@SuppressWarnings("SameParameterValue")
 	private void testGenerateIpList(final String ip, final int maskBit, final boolean isAll) {
-		Assert.assertEquals(
+		Assertions.assertEquals(
 				Ipv4Util.countByMaskBit(maskBit, isAll),
 				Ipv4Util.list(ip, maskBit, isAll).size()
 		);
@@ -168,28 +166,28 @@ public class Ipv4UtilTest {
 	private static void testLongToIp(final String ip) {
 		final long ipLong = Ipv4Util.ipv4ToLong(ip);
 		final String ipv4 = Ipv4Util.longToIpv4(ipLong);
-		Assert.assertEquals(ip, ipv4);
+		Assertions.assertEquals(ip, ipv4);
 	}
 
 	@Test
 	public void isInnerTest() {
-		Assert.assertTrue(Ipv4Util.isInnerIP(Ipv4Util.LOCAL_IP));
-		Assert.assertTrue(Ipv4Util.isInnerIP("192.168.5.12"));
-		Assert.assertTrue(Ipv4Util.isInnerIP("172.20.10.1"));
+		Assertions.assertTrue(Ipv4Util.isInnerIP(Ipv4Util.LOCAL_IP));
+		Assertions.assertTrue(Ipv4Util.isInnerIP("192.168.5.12"));
+		Assertions.assertTrue(Ipv4Util.isInnerIP("172.20.10.1"));
 
-		Assert.assertFalse(Ipv4Util.isInnerIP("180.10.2.5"));
-		Assert.assertFalse(Ipv4Util.isInnerIP("192.160.10.3"));
+		Assertions.assertFalse(Ipv4Util.isInnerIP("180.10.2.5"));
+		Assertions.assertFalse(Ipv4Util.isInnerIP("192.160.10.3"));
 	}
 
 	@Test
 	public void isPublicTest() {
-		Assert.assertTrue(Ipv4Util.isPublicIP("180.10.2.5"));
-		Assert.assertTrue(Ipv4Util.isPublicIP("192.160.10.3"));
+		Assertions.assertTrue(Ipv4Util.isPublicIP("180.10.2.5"));
+		Assertions.assertTrue(Ipv4Util.isPublicIP("192.160.10.3"));
 
-		Assert.assertFalse(Ipv4Util.isPublicIP(Ipv4Util.LOCAL_IP));
-		Assert.assertFalse(Ipv4Util.isPublicIP("192.168.5.12"));
-		Assert.assertFalse(Ipv4Util.isPublicIP("127.0.0.1"));
-		Assert.assertFalse(Ipv4Util.isPublicIP("172.20.10.1"));
+		Assertions.assertFalse(Ipv4Util.isPublicIP(Ipv4Util.LOCAL_IP));
+		Assertions.assertFalse(Ipv4Util.isPublicIP("192.168.5.12"));
+		Assertions.assertFalse(Ipv4Util.isPublicIP("127.0.0.1"));
+		Assertions.assertFalse(Ipv4Util.isPublicIP("172.20.10.1"));
 	}
 
 	@Test
@@ -198,7 +196,7 @@ public class Ipv4UtilTest {
 		for (int i = 1; i <= 32; i++) {
 			final String beginIpStr = Ipv4Util.getBeginIpStr(ip, i);
 			final String endIpStr = Ipv4Util.getEndIpStr(ip, i);
-			Assert.assertEquals(Ipv4Util.getMaskByMaskBit(i), Ipv4Util.getMaskByIpRange(beginIpStr, endIpStr));
+			Assertions.assertEquals(Ipv4Util.getMaskByMaskBit(i), Ipv4Util.getMaskByIpRange(beginIpStr, endIpStr));
 		}
 	}
 }

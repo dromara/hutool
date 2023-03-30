@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class Issue2746Test {
 
@@ -12,13 +12,15 @@ public class Issue2746Test {
 		try{
 			JSONUtil.parseObj(str);
 		} catch (final JSONException e){
-			Assert.assertTrue(e.getMessage().startsWith("A JSONObject can not directly nest another JSONObject or JSONArray"));
+			Assertions.assertTrue(e.getMessage().startsWith("A JSONObject can not directly nest another JSONObject or JSONArray"));
 		}
 	}
 
-	@Test(expected = JSONException.class)
+	@Test
 	public void parseTest() {
-		final String str = StrUtil.repeat("[", 1500) + StrUtil.repeat("]", 1500);
-		JSONUtil.parseArray(str);
+		Assertions.assertThrows(JSONException.class, ()->{
+			final String str = StrUtil.repeat("[", 1500) + StrUtil.repeat("]", 1500);
+			JSONUtil.parseArray(str);
+		});
 	}
 }

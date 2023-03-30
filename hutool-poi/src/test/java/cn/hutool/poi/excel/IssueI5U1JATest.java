@@ -1,11 +1,11 @@
 package cn.hutool.poi.excel;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class IssueI5U1JATest {
 	@Test
-	@Ignore
+	@Disabled
 	public void readAllTest() {
 		final ExcelReader reader = ExcelUtil.getReader("d:/test/issueI5U1JA.xlsx");
 		reader.readAll();

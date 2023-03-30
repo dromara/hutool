@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * SQL Server操作单元测试
@@ -13,13 +13,13 @@ import org.junit.Test;
 public class SqlServerTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void createTableTest() {
 		Db.of("sqlserver").execute("create table T_USER(ID bigint, name varchar(255))");
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void insertTest() {
 		for (int id = 100; id < 200; id++) {
 			Db.of("sqlserver").insert(Entity.of("T_USER")//
@@ -30,7 +30,7 @@ public class SqlServerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void pageTest() {
 		final PageResult<Entity> result = Db.of("sqlserver").page(Entity.of("T_USER"), new Page(2, 10));
 		for (final Entity entity : result) {

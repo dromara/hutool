@@ -2,8 +2,8 @@ package cn.hutool.cron.pattern;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.cron.CronException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * 定时任务单元测试类
@@ -103,11 +103,11 @@ public class CronPatternTest {
 	@Test
 	public void CronPatternTest2() {
 		CronPattern pattern = CronPattern.of("0/30 * * * *");
-		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:00:00").getTime(), false));
-		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:30:00").getTime(), false));
+		Assertions.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:00:00").getTime(), false));
+		Assertions.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:30:00").getTime(), false));
 
 		pattern = CronPattern.of("32 * * * *");
-		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:32:00").getTime(), false));
+		Assertions.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:32:00").getTime(), false));
 	}
 
 	@Test
@@ -159,10 +159,12 @@ public class CronPatternTest {
 		assertMatch(pattern, "2017-12-02 23:59:59");
 	}
 
-	@Test(expected = CronException.class)
+	@Test
 	public void rangeYearTest() {
-		// year的范围是1970~2099年，超出报错
-		CronPattern.of("0/1 * * * 1/1 ? 2020-2120");
+		Assertions.assertThrows(CronException.class, ()->{
+			// year的范围是1970~2099年，超出报错
+			CronPattern.of("0/1 * * * 1/1 ? 2020-2120");
+		});
 	}
 
 	/**
@@ -173,7 +175,7 @@ public class CronPatternTest {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	private void assertMatch(final CronPattern pattern, final String date) {
-		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), false));
-		Assert.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), true));
+		Assertions.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), false));
+		Assertions.assertTrue(pattern.match(DateUtil.parse(date).toCalendar(), true));
 	}
 }

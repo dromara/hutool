@@ -3,8 +3,8 @@ package cn.hutool.core.util;
 import cn.hutool.core.collection.ListUtil;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,89 +25,89 @@ public class ObjUtilTest {
 	public void equalsTest() {
 		Object a = null;
 		Object b = null;
-		Assert.assertTrue(ObjUtil.equals(a, b));
+		Assertions.assertTrue(ObjUtil.equals(a, b));
 
 		a = new BigDecimal("1.1");
 		b = new BigDecimal("1.10");
-		Assert.assertTrue(ObjUtil.equals(a, b));
+		Assertions.assertTrue(ObjUtil.equals(a, b));
 
 		a = 127;
 		b = 127;
-		Assert.assertTrue(ObjUtil.equals(a, b));
+		Assertions.assertTrue(ObjUtil.equals(a, b));
 
 		a = 128;
 		b = 128;
-		Assert.assertTrue(ObjUtil.equals(a, b));
+		Assertions.assertTrue(ObjUtil.equals(a, b));
 
 		a = LocalDateTime.of(2022, 5, 29, 22, 11);
 		b = LocalDateTime.of(2022, 5, 29, 22, 11);
-		Assert.assertTrue(ObjUtil.equals(a, b));
+		Assertions.assertTrue(ObjUtil.equals(a, b));
 
 		a = 1;
 		b = 1.0;
-		Assert.assertFalse(ObjUtil.equals(a, b));
+		Assertions.assertFalse(ObjUtil.equals(a, b));
 	}
 
 	@Test
 	public void lengthTest(){
 		final int[] array = new int[]{1,2,3,4,5};
 		int length = ObjUtil.length(array);
-		Assert.assertEquals(5, length);
+		Assertions.assertEquals(5, length);
 
 		final Map<String, String> map = new HashMap<>();
 		map.put("a", "a1");
 		map.put("b", "b1");
 		map.put("c", "c1");
 		length = ObjUtil.length(map);
-		Assert.assertEquals(3, length);
+		Assertions.assertEquals(3, length);
 
 		final Iterable<Integer> list = ListUtil.of(1, 2, 3);
-		Assert.assertEquals(3, ObjUtil.length(list));
-		Assert.assertEquals(3, ObjUtil.length(Arrays.asList(1, 2, 3).iterator()));
+		Assertions.assertEquals(3, ObjUtil.length(list));
+		Assertions.assertEquals(3, ObjUtil.length(Arrays.asList(1, 2, 3).iterator()));
 	}
 
 	@Test
 	public void containsTest(){
-		Assert.assertTrue(ObjUtil.contains(new int[]{1,2,3,4,5}, 1));
-		Assert.assertFalse(ObjUtil.contains(null, 1));
-		Assert.assertTrue(ObjUtil.contains("123", "3"));
+		Assertions.assertTrue(ObjUtil.contains(new int[]{1,2,3,4,5}, 1));
+		Assertions.assertFalse(ObjUtil.contains(null, 1));
+		Assertions.assertTrue(ObjUtil.contains("123", "3"));
 		final Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 1);
 		map.put(2, 2);
-		Assert.assertTrue(ObjUtil.contains(map, 1));
-		Assert.assertTrue(ObjUtil.contains(Arrays.asList(1, 2, 3).iterator(), 2));
+		Assertions.assertTrue(ObjUtil.contains(map, 1));
+		Assertions.assertTrue(ObjUtil.contains(Arrays.asList(1, 2, 3).iterator(), 2));
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isNullTest() {
-		Assert.assertTrue(ObjUtil.isNull(null));
+		Assertions.assertTrue(ObjUtil.isNull(null));
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void isNotNullTest() {
-		Assert.assertFalse(ObjUtil.isNotNull(null));
+		Assertions.assertFalse(ObjUtil.isNotNull(null));
 	}
 
 	@Test
 	public void isEmptyTest() {
-		Assert.assertTrue(ObjUtil.isEmpty(null));
-		Assert.assertTrue(ObjUtil.isEmpty(new int[0]));
-		Assert.assertTrue(ObjUtil.isEmpty(""));
-		Assert.assertTrue(ObjUtil.isEmpty(Collections.emptyList()));
-		Assert.assertTrue(ObjUtil.isEmpty(Collections.emptyMap()));
-		Assert.assertTrue(ObjUtil.isEmpty(Collections.emptyIterator()));
+		Assertions.assertTrue(ObjUtil.isEmpty(null));
+		Assertions.assertTrue(ObjUtil.isEmpty(new int[0]));
+		Assertions.assertTrue(ObjUtil.isEmpty(""));
+		Assertions.assertTrue(ObjUtil.isEmpty(Collections.emptyList()));
+		Assertions.assertTrue(ObjUtil.isEmpty(Collections.emptyMap()));
+		Assertions.assertTrue(ObjUtil.isEmpty(Collections.emptyIterator()));
 	}
 
 	@Test
 	public void isNotEmptyTest() {
-		Assert.assertFalse(ObjUtil.isNotEmpty(null));
-		Assert.assertFalse(ObjUtil.isNotEmpty(new int[0]));
-		Assert.assertFalse(ObjUtil.isNotEmpty(""));
-		Assert.assertFalse(ObjUtil.isNotEmpty(Collections.emptyList()));
-		Assert.assertFalse(ObjUtil.isNotEmpty(Collections.emptyMap()));
-		Assert.assertFalse(ObjUtil.isNotEmpty(Collections.emptyIterator()));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(null));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(new int[0]));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(""));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(Collections.emptyList()));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(Collections.emptyMap()));
+		Assertions.assertFalse(ObjUtil.isNotEmpty(Collections.emptyIterator()));
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -116,101 +116,101 @@ public class ObjUtilTest {
 		final Object val1 = new Object();
 		final Object val2 = new Object();
 
-		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, () -> val2));
-		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, () -> val2));
+		Assertions.assertSame(val1, ObjUtil.defaultIfNull(val1, () -> val2));
+		Assertions.assertSame(val2, ObjUtil.defaultIfNull(null, () -> val2));
 
-		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, val2));
-		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, val2));
+		Assertions.assertSame(val1, ObjUtil.defaultIfNull(val1, val2));
+		Assertions.assertSame(val2, ObjUtil.defaultIfNull(null, val2));
 
-		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), () -> val2));
-		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), () -> val2));
+		Assertions.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), () -> val2));
+		Assertions.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), () -> val2));
 
-		Assert.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), val2));
-		Assert.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), val2));
+		Assertions.assertSame(val1, ObjUtil.defaultIfNull(val1, Function.identity(), val2));
+		Assertions.assertSame(val2, ObjUtil.defaultIfNull(null, Function.identity(), val2));
 
 		final SerializableBean obj = new SerializableBean(null);
 		final SerializableBean objNull = null;
 		final String result3 = ObjUtil.defaultIfNull(obj, Object::toString, "fail");
-		Assert.assertNotNull(result3);
+		Assertions.assertNotNull(result3);
 
 		final String result4 = ObjUtil.defaultIfNull(objNull, Object::toString, () -> "fail");
-		Assert.assertNotNull(result4);
+		Assertions.assertNotNull(result4);
 	}
 
 
 
 	@Test
 	public void cloneTest() {
-		Assert.assertNull(ObjUtil.clone(null));
+		Assertions.assertNull(ObjUtil.clone(null));
 
 		final CloneableBean cloneableBean1 = new CloneableBean(1);
 		final CloneableBean cloneableBean2 = ObjUtil.clone(cloneableBean1);
-		Assert.assertEquals(cloneableBean1, cloneableBean2);
+		Assertions.assertEquals(cloneableBean1, cloneableBean2);
 
 		final SerializableBean serializableBean1 = new SerializableBean(2);
 		final SerializableBean serializableBean2 = ObjUtil.clone(serializableBean1);
-		Assert.assertEquals(serializableBean1, serializableBean2);
+		Assertions.assertEquals(serializableBean1, serializableBean2);
 
 		final Bean bean1 = new Bean(3);
-		Assert.assertNull(ObjUtil.clone(bean1));
+		Assertions.assertNull(ObjUtil.clone(bean1));
 	}
 
 	@Test
 	public void cloneIfPossibleTest() {
-		Assert.assertNull(ObjUtil.clone(null));
+		Assertions.assertNull(ObjUtil.clone(null));
 
 		final CloneableBean cloneableBean1 = new CloneableBean(1);
-		Assert.assertEquals(cloneableBean1, ObjUtil.cloneIfPossible(cloneableBean1));
+		Assertions.assertEquals(cloneableBean1, ObjUtil.cloneIfPossible(cloneableBean1));
 
 		final SerializableBean serializableBean1 = new SerializableBean(2);
-		Assert.assertEquals(serializableBean1, ObjUtil.cloneIfPossible(serializableBean1));
+		Assertions.assertEquals(serializableBean1, ObjUtil.cloneIfPossible(serializableBean1));
 
 		final Bean bean1 = new Bean(3);
-		Assert.assertSame(bean1, ObjUtil.cloneIfPossible(bean1));
+		Assertions.assertSame(bean1, ObjUtil.cloneIfPossible(bean1));
 
 		final ExceptionCloneableBean exceptionBean1 = new ExceptionCloneableBean(3);
-		Assert.assertSame(exceptionBean1, ObjUtil.cloneIfPossible(exceptionBean1));
+		Assertions.assertSame(exceptionBean1, ObjUtil.cloneIfPossible(exceptionBean1));
 	}
 
 	@Test
 	public void cloneByStreamTest() {
-		Assert.assertNull(ObjUtil.cloneByStream(null));
-		Assert.assertNull(ObjUtil.cloneByStream(new CloneableBean(1)));
+		Assertions.assertNull(ObjUtil.cloneByStream(null));
+		Assertions.assertNull(ObjUtil.cloneByStream(new CloneableBean(1)));
 		final SerializableBean serializableBean1 = new SerializableBean(2);
-		Assert.assertEquals(serializableBean1, ObjUtil.cloneByStream(serializableBean1));
-		Assert.assertNull(ObjUtil.cloneByStream(new Bean(1)));
+		Assertions.assertEquals(serializableBean1, ObjUtil.cloneByStream(serializableBean1));
+		Assertions.assertNull(ObjUtil.cloneByStream(new Bean(1)));
 	}
 
 	@Test
 	public void isBasicTypeTest(){
 		final int a = 1;
 		final boolean basicType = ObjUtil.isBasicType(a);
-		Assert.assertTrue(basicType);
+		Assertions.assertTrue(basicType);
 	}
 
 	@Test
 	public void isValidIfNumberTest() {
-		Assert.assertTrue(ObjUtil.isValidIfNumber(null));
-		Assert.assertFalse(ObjUtil.isValidIfNumber(Double.NEGATIVE_INFINITY));
-		Assert.assertFalse(ObjUtil.isValidIfNumber(Double.NaN));
-		Assert.assertTrue(ObjUtil.isValidIfNumber(Double.MIN_VALUE));
-		Assert.assertFalse(ObjUtil.isValidIfNumber(Float.NEGATIVE_INFINITY));
-		Assert.assertFalse(ObjUtil.isValidIfNumber(Float.NaN));
-		Assert.assertTrue(ObjUtil.isValidIfNumber(Float.MIN_VALUE));
+		Assertions.assertTrue(ObjUtil.isValidIfNumber(null));
+		Assertions.assertFalse(ObjUtil.isValidIfNumber(Double.NEGATIVE_INFINITY));
+		Assertions.assertFalse(ObjUtil.isValidIfNumber(Double.NaN));
+		Assertions.assertTrue(ObjUtil.isValidIfNumber(Double.MIN_VALUE));
+		Assertions.assertFalse(ObjUtil.isValidIfNumber(Float.NEGATIVE_INFINITY));
+		Assertions.assertFalse(ObjUtil.isValidIfNumber(Float.NaN));
+		Assertions.assertTrue(ObjUtil.isValidIfNumber(Float.MIN_VALUE));
 	}
 
 	@Test
 	public void getTypeArgumentTest() {
 		final Bean bean = new Bean(1);
-		Assert.assertEquals(Integer.class, ObjUtil.getTypeArgument(bean));
-		Assert.assertEquals(String.class, ObjUtil.getTypeArgument(bean, 1));
+		Assertions.assertEquals(Integer.class, ObjUtil.getTypeArgument(bean));
+		Assertions.assertEquals(String.class, ObjUtil.getTypeArgument(bean, 1));
 	}
 
 	@Test
 	public void toStringTest() {
-		Assert.assertEquals("null", ObjUtil.toString(null));
-		Assert.assertEquals(Collections.emptyMap().toString(), ObjUtil.toString(Collections.emptyMap()));
-		Assert.assertEquals("[1, 2]", Arrays.asList("1", "2").toString());
+		Assertions.assertEquals("null", ObjUtil.toString(null));
+		Assertions.assertEquals(Collections.emptyMap().toString(), ObjUtil.toString(Collections.emptyMap()));
+		Assertions.assertEquals("[1, 2]", Arrays.asList("1", "2").toString());
 	}
 
 	@RequiredArgsConstructor

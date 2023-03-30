@@ -1,8 +1,8 @@
 package cn.hutool.poi.excel;
 
 import cn.hutool.core.lang.Console;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class IssueI53OSTTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void readTest(){
 		final Map<String, Object> result = new HashMap<>();
 		final List<Object> header = new ArrayList<>();

@@ -1,8 +1,8 @@
 package cn.hutool.json;
 
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,17 +17,17 @@ public class Issue2223Test {
 			m1.put("2022/" + i, i);
 		}
 
-		Assert.assertEquals("{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}", JSONUtil.toJsonStr(m1));
+		Assertions.assertEquals("{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}", JSONUtil.toJsonStr(m1));
 
 		final Map<String, Map<String, Long>> map1 = new HashMap<>();
 		map1.put("m1", m1);
 
-		Assert.assertEquals("{\"m1\":{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}}",
+		Assertions.assertEquals("{\"m1\":{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}}",
 				JSONUtil.toJsonStr(map1, JSONConfig.of()));
 
 		final BeanDemo beanDemo = new BeanDemo();
 		beanDemo.setMap1(map1);
-		Assert.assertEquals("{\"map1\":{\"m1\":{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}}}",
+		Assertions.assertEquals("{\"map1\":{\"m1\":{\"2022/0\":0,\"2022/1\":1,\"2022/2\":2,\"2022/3\":3,\"2022/4\":4}}}",
 				JSONUtil.toJsonStr(beanDemo, JSONConfig.of()));
 	}
 

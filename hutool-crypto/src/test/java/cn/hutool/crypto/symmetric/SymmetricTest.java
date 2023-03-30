@@ -9,8 +9,8 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -37,14 +37,14 @@ public class SymmetricTest {
 		// 解密
 		final byte[] decrypt = aes.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.UTF_8));
+		Assertions.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.UTF_8));
 
 		// 加密为16进制表示
 		final String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
 		final String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -62,14 +62,14 @@ public class SymmetricTest {
 		// 解密
 		final byte[] decrypt = aes.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		// 加密为16进制表示
 		final String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
 		final String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -83,14 +83,14 @@ public class SymmetricTest {
 		// 解密
 		final byte[] decrypt = aes.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		// 加密为16进制表示
 		final String encryptHex = aes.encryptHex(content);
 		// 解密为字符串
 		final String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.UTF_8);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class SymmetricTest {
 		// 加密为16进制表示
 		final String encryptHex = aes.encryptHex(content);
 
-		Assert.assertEquals("cd0e3a249eaf0ed80c330338508898c4bddcfd665a1b414622164a273ca5daf7b4ebd2c00aaa66b84dd0a237708dac8e", encryptHex);
+		Assertions.assertEquals("cd0e3a249eaf0ed80c330338508898c4bddcfd665a1b414622164a273ca5daf7b4ebd2c00aaa66b84dd0a237708dac8e", encryptHex);
 	}
 
 	@Test
@@ -114,7 +114,7 @@ public class SymmetricTest {
 		final String encryptHex = crypto.encryptHex(content);
 		final String data = crypto.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, data);
+		Assertions.assertEquals(content, data);
 	}
 
 	@Test
@@ -127,8 +127,8 @@ public class SymmetricTest {
 		final String randomData = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
 		aes.setMode(CipherMode.encrypt);
 		final String randomData2 = aes.updateHex(content.getBytes(StandardCharsets.UTF_8));
-		Assert.assertEquals(randomData2, randomData);
-		Assert.assertEquals(randomData, "cd0e3a249eaf0ed80c330338508898c4");
+		Assertions.assertEquals(randomData2, randomData);
+		Assertions.assertEquals(randomData, "cd0e3a249eaf0ed80c330338508898c4");
 	}
 
 
@@ -141,7 +141,7 @@ public class SymmetricTest {
 		final String encryptHex = aes.encryptHex(content);
 		// 解密
 		final String decryptStr = aes.decryptStr(encryptHex);
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -155,7 +155,7 @@ public class SymmetricTest {
 		final ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
 		aes.decrypt(IoUtil.toStream(encryptStream), contentStream, true);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(contentStream.toByteArray()));
+		Assertions.assertEquals(content, StrUtil.utf8Str(contentStream.toByteArray()));
 	}
 
 	@Test
@@ -169,7 +169,7 @@ public class SymmetricTest {
 		final String encryptHex = aes.encryptHex(content);
 		// 解密
 		final String decryptStr = aes.decryptStr(encryptHex);
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -183,12 +183,12 @@ public class SymmetricTest {
 		final byte[] encrypt = des.encrypt(content);
 		final byte[] decrypt = des.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		final String encryptHex = des.encryptHex(content);
 		final String decryptStr = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -202,12 +202,12 @@ public class SymmetricTest {
 		final byte[] encrypt = des.encrypt(content);
 		final byte[] decrypt = des.decrypt(encrypt);
 
-		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		Assertions.assertEquals(content, StrUtil.utf8Str(decrypt));
 
 		final String encryptHex = des.encryptHex(content);
 		final String decryptStr = des.decryptStr(encryptHex);
 
-		Assert.assertEquals(content, decryptStr);
+		Assertions.assertEquals(content, decryptStr);
 	}
 
 	@Test
@@ -216,8 +216,8 @@ public class SymmetricTest {
 		final String key = "CompleteVictory";
 
 		final String encrypt = Vigenere.encrypt(content, key);
-		Assert.assertEquals("zXScRZ]KIOMhQjc0\\bYRXZOJK[Vi", encrypt);
+		Assertions.assertEquals("zXScRZ]KIOMhQjc0\\bYRXZOJK[Vi", encrypt);
 		final String decrypt = Vigenere.decrypt(encrypt, key);
-		Assert.assertEquals(content, decrypt);
+		Assertions.assertEquals(content, decrypt);
 	}
 }

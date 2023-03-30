@@ -3,8 +3,8 @@ package cn.hutool.extra.template;
 import cn.hutool.core.map.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class VelocityTest {
 
@@ -16,6 +16,6 @@ public class VelocityTest {
 		final TemplateEngine engine = TemplateUtil.createEngine(config);
 		final Template template = engine.getTemplate("velocity_test_gbk.vtl");
 		final String result = template.render(Dict.of().set("name", "hutool"));
-		Assert.assertEquals("你好,hutool", result);
+		Assertions.assertEquals("你好,hutool", result);
 	}
 }

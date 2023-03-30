@@ -6,9 +6,9 @@ import cn.hutool.core.codec.hash.CityHash;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://gitee.com/dromara/hutool/pulls/532
@@ -17,39 +17,39 @@ public class MetroHashTest {
 
 	@Test
 	public void testEmpty() {
-		Assert.assertEquals("705fb008071e967d", HexUtil.toHex(MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(""))));
+		Assertions.assertEquals("705fb008071e967d", HexUtil.toHex(MetroHash64.of(0).hash64(ByteUtil.toUtf8Bytes(""))));
 	}
 
 	@Test
 	public void test1Low() {
-		Assert.assertEquals("AF6F242B7ED32BCB", h64("a"));
+		Assertions.assertEquals("AF6F242B7ED32BCB", h64("a"));
 	}
 
 	@Test
 	public void test1High() {
-		Assert.assertEquals("D51BA21D219C37B3", h64("é"));
+		Assertions.assertEquals("D51BA21D219C37B3", h64("é"));
 	}
 
 	@Test
 	public void metroHash64Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
 		final long hash64 = MetroHash64.of(0).hash64(str);
-		Assert.assertEquals(147395857347476456L, hash64);
+		Assertions.assertEquals(147395857347476456L, hash64);
 	}
 
 	@Test
 	public void metroHash128Test() {
 		final byte[] str = "我是一段测试123".getBytes(CharsetUtil.UTF_8);
 		final long[] hash128 = MetroHash128.of(0).hash128(str).getLongArray();
-		Assert.assertEquals(228255164667538345L, hash128[0]);
-		Assert.assertEquals(-6394585948993412256L, hash128[1]);
+		Assertions.assertEquals(228255164667538345L, hash128[0]);
+		Assertions.assertEquals(-6394585948993412256L, hash128[1]);
 	}
 
 	/**
 	 * 数据量越大 MetroHash 优势越明显，
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void bulkHashing64Test() {
 		final String[] strArray = getRandomStringArray();
 		final long startCity = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class MetroHashTest {
 	 * 数据量越大 MetroHash 优势越明显，
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void bulkHashing128Test() {
 		final String[] strArray = getRandomStringArray();
 		final long startCity = System.currentTimeMillis();

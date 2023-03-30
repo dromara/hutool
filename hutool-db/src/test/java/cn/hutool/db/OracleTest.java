@@ -4,9 +4,9 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Oracle操作单元测试
@@ -34,11 +34,11 @@ public class OracleTest {
 		final String ok = "SELECT * FROM "//
 				+ "( SELECT row_.*, rownum rownum_ from ( SELECT * FROM PMCPERFORMANCEINFO WHERE yearPI = ? ) row_ "//
 				+ "where rownum <= 10) table_alias where table_alias.rownum_ >= 0";//
-		Assert.assertEquals(ok, builder.toString());
+		Assertions.assertEquals(ok, builder.toString());
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void insertTest() {
 		for (int id = 100; id < 200; id++) {
 			Db.of("orcl").insert(Entity.of("T_USER")//
@@ -51,7 +51,7 @@ public class OracleTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void pageTest() {
 		final PageResult<Entity> result = Db.of("orcl").page(Entity.of("T_USER"), new Page(2, 10));
 		for (final Entity entity : result) {

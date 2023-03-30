@@ -1,7 +1,7 @@
 package cn.hutool.json.jwt;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,11 +31,11 @@ public class IssueI5QRUOTest {
 		};
 
 		final String token = JWTUtil.createToken(header, payload, "123456".getBytes());
-		Assert.assertEquals("eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9." +
+		Assertions.assertEquals("eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9." +
 				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ." +
 				"3Ywq9NlR3cBST4nfcdbR-fcZ8374RHzU50X6flKvG-tnWFMalMaHRm3cMpXs1NrZ", token);
 
 		final boolean verify = JWT.of(token).setKey("123456".getBytes()).verify();
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 }

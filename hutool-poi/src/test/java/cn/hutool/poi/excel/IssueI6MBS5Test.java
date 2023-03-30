@@ -5,8 +5,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.nio.file.Files;
 public class IssueI6MBS5Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void setCommentTest() {
 		final ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/setCommentTest.xlsx");
 		final Cell cell = writer.getOrCreateCell(0, 0);
@@ -31,7 +31,7 @@ public class IssueI6MBS5Test {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void setCommentTest2() {
 		final File file = new File("D:\\test\\CellUtilTest.xlsx");
 		try (final Workbook workbook = WorkbookUtil.createBook(true)) {

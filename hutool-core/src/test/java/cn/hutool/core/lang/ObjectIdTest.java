@@ -1,11 +1,11 @@
 package cn.hutool.core.lang;
 
-import java.util.HashSet;
-
 import cn.hutool.core.lang.id.ObjectId;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
 
 /**
  * ObjectId单元测试
@@ -23,11 +23,11 @@ public class ObjectIdTest {
 			set.add(ObjectId.next());
 		}
 
-		Assert.assertEquals(10000, set.size());
+		Assertions.assertEquals(10000, set.size());
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void nextTest() {
 		Console.log(ObjectId.next());
 	}

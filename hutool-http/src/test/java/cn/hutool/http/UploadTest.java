@@ -8,8 +8,8 @@ import cn.hutool.http.client.Request;
 import cn.hutool.http.client.Response;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class UploadTest {
 	 * 多文件上传测试
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadFilesTest() {
 		final File file = FileUtil.file("d:\\图片1.JPG");
 		final File file2 = FileUtil.file("d:\\图片3.png");
@@ -47,7 +47,7 @@ public class UploadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadFileTest() {
 		final File file = FileUtil.file("D:\\face.jpg");
 
@@ -60,7 +60,7 @@ public class UploadTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void smmsTest(){
 		// https://github.com/dromara/hutool/issues/2079
 		// hutool的user agent 被封了

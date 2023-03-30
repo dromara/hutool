@@ -1,8 +1,8 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.lang.id.NanoId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class NanoIdTest {
 			if (ids.contains(id) == false) {
 				ids.add(id);
 			} else {
-				Assert.fail("Non-unique ID generated: " + id);
+				Assertions.fail("Non-unique ID generated: " + id);
 			}
 		}
 
@@ -55,7 +55,7 @@ public class NanoIdTest {
 
 		for (final String expectedId : expectedIds) {
 			final String generatedId = NanoId.randomNanoId(random, alphabet, size);
-			Assert.assertEquals(expectedId, generatedId);
+			Assertions.assertEquals(expectedId, generatedId);
 		}
 
 	}
@@ -82,7 +82,7 @@ public class NanoIdTest {
 			}
 			patternBuilder.append("]+$");
 
-			Assert.assertTrue(id.matches(patternBuilder.toString()));
+			Assertions.assertTrue(id.matches(patternBuilder.toString()));
 		}
 
 	}
@@ -95,7 +95,7 @@ public class NanoIdTest {
 
 			final String id = NanoId.randomNanoId(size);
 
-			Assert.assertEquals(size, id.length());
+			Assertions.assertEquals(size, id.length());
 		}
 
 	}
@@ -131,36 +131,43 @@ public class NanoIdTest {
 		//Verify the distribution of characters is pretty even
 		for (final Long charCount : charCounts.values()) {
 			final double distribution = (charCount * alphabet.length / (double) (idCount * idSize));
-			Assert.assertTrue(distribution >= 0.95 && distribution <= 1.05);
+			Assertions.assertTrue(distribution >= 0.95 && distribution <= 1.05);
 		}
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void randomNanoIdEmptyAlphabetExceptionThrownTest() {
-		NanoId.randomNanoId(new SecureRandom(), new char[]{}, 10);
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			NanoId.randomNanoId(new SecureRandom(), new char[]{}, 10);
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void randomNanoId256AlphabetExceptionThrownTest() {
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			//The alphabet is composed of 256 unique characters
+			final char[] largeAlphabet = new char[256];
+			for (int i = 0; i < 256; i++) {
+				largeAlphabet[i] = (char) i;
+			}
+			NanoId.randomNanoId(new SecureRandom(), largeAlphabet, 20);
+		});
 
-		//The alphabet is composed of 256 unique characters
-		final char[] largeAlphabet = new char[256];
-		for (int i = 0; i < 256; i++) {
-			largeAlphabet[i] = (char) i;
-		}
-
-		NanoId.randomNanoId(new SecureRandom(), largeAlphabet, 20);
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void randomNanoIdNegativeSizeExceptionThrown() {
-		NanoId.randomNanoId(new SecureRandom(), new char[]{'a', 'b', 'c'}, -10);
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			NanoId.randomNanoId(new SecureRandom(), new char[]{'a', 'b', 'c'}, -10);
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void randomNanoIdZeroSizeExceptionThrown() {
-		NanoId.randomNanoId(new SecureRandom(), new char[]{'a', 'b', 'c'}, 0);
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			NanoId.randomNanoId(new SecureRandom(), new char[]{'a', 'b', 'c'}, 0);
+		});
 	}
 }

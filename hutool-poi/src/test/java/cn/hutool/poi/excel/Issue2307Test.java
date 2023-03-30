@@ -5,15 +5,15 @@ import cn.hutool.core.io.file.FileUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class Issue2307Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeTest(){
 		final String filePath = "d:/test/issue2307.xlsx";
 		FileUtil.del(FileUtil.file(filePath));

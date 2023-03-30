@@ -12,7 +12,6 @@
 
 package cn.hutool.extra.qrcode;
 
-import cn.hutool.core.codec.binary.Base64;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.swing.img.ImgUtil;
 import com.google.zxing.BarcodeFormat;
@@ -49,32 +48,6 @@ public class QrCodeUtil {
 	 * Ascii Art字符画文本
 	 */
 	public static final String QR_TYPE_TXT = "txt";
-
-	/**
-	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
-	 *
-	 * @param content    内容
-	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
-	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
-	 * @param logoBase64 logo 图片的 base64 编码
-	 * @return 图片 Base64 编码字符串
-	 */
-	public static String generateAsBase64(final String content, final QrConfig qrConfig, final String targetType, final String logoBase64) {
-		return generateAsBase64DataUri(content, qrConfig, targetType, Base64.decode(logoBase64));
-	}
-
-	/**
-	 * 生成代 logo 图片的 Base64 编码格式的二维码，以 String 形式表示
-	 *
-	 * @param content    内容
-	 * @param qrConfig   二维码配置，包括宽度、高度、边距、颜色等
-	 * @param targetType 类型（图片扩展名），见{@link #QR_TYPE_SVG}、 {@link #QR_TYPE_TXT}、{@link ImgUtil}
-	 * @param logo       logo 图片的byte[]
-	 * @return 图片 Base64 编码字符串
-	 */
-	public static String generateAsBase64DataUri(final String content, final QrConfig qrConfig, final String targetType, final byte[] logo) {
-		return generateAsBase64DataUri(content, qrConfig.setImg(ImgUtil.toImage(logo)), targetType);
-	}
 
 	/**
 	 * 生成 Base64 编码格式的二维码，以 String 形式表示

@@ -3,8 +3,8 @@ package cn.hutool.crypto.digest;
 import cn.hutool.core.codec.binary.Base32;
 import cn.hutool.crypto.digest.otp.HOTP;
 import cn.hutool.crypto.digest.otp.TOTP;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -18,49 +18,49 @@ public class OTPTest {
 	@Test
 	public void genKeyTest() {
 		final String key = TOTP.generateSecretKey(8);
-		Assert.assertEquals(8, Base32.decode(key).length);
+		Assertions.assertEquals(8, Base32.decode(key).length);
 	}
 
 	@Test
 	public void validTest() {
 		final String key = "VYCFSW2QZ3WZO";
 		// 2021/7/1下午6:29:54 显示code为 106659
-		//Assert.assertEquals(new TOTP(Base32.decode(key)).generate(Instant.ofEpochSecond(1625135394L)),106659);
+		//Assertions.assertEquals(new TOTP(Base32.decode(key)).generate(Instant.ofEpochSecond(1625135394L)),106659);
 		final TOTP totp = new TOTP(Base32.decode(key));
 		final Instant instant = Instant.ofEpochSecond(1625135394L);
-		Assert.assertTrue(totp.validate(instant, 0, 106659));
-		Assert.assertTrue(totp.validate(instant.plusSeconds(30), 1, 106659));
-		Assert.assertTrue(totp.validate(instant.plusSeconds(60), 2, 106659));
+		Assertions.assertTrue(totp.validate(instant, 0, 106659));
+		Assertions.assertTrue(totp.validate(instant.plusSeconds(30), 1, 106659));
+		Assertions.assertTrue(totp.validate(instant.plusSeconds(60), 2, 106659));
 
-		Assert.assertFalse(totp.validate(instant.plusSeconds(60), 1, 106659));
-		Assert.assertFalse(totp.validate(instant.plusSeconds(90), 2, 106659));
+		Assertions.assertFalse(totp.validate(instant.plusSeconds(60), 1, 106659));
+		Assertions.assertFalse(totp.validate(instant.plusSeconds(90), 2, 106659));
 	}
 
 	@Test
 	public void googleAuthTest() {
 		final String str = TOTP.generateGoogleSecretKey("xl7@qq.com", 10);
-		Assert.assertTrue(str.startsWith("otpauth://totp/xl7@qq.com?secret="));
+		Assertions.assertTrue(str.startsWith("otpauth://totp/xl7@qq.com?secret="));
 	}
 
 	@Test
 	public void longPasswordLengthTest() {
-		Assert.assertThrows(IllegalArgumentException.class, () -> new HOTP(9, "123".getBytes()));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new HOTP(9, "123".getBytes()));
 	}
 
 	@Test
 	public void generateHOPTTest(){
 		final byte[] key = "12345678901234567890".getBytes();
 		final HOTP hotp = new HOTP(key);
-		Assert.assertEquals(755224, hotp.generate(0));
-		Assert.assertEquals(287082, hotp.generate(1));
-		Assert.assertEquals(359152, hotp.generate(2));
-		Assert.assertEquals(969429, hotp.generate(3));
-		Assert.assertEquals(338314, hotp.generate(4));
-		Assert.assertEquals(254676, hotp.generate(5));
-		Assert.assertEquals(287922, hotp.generate(6));
-		Assert.assertEquals(162583, hotp.generate(7));
-		Assert.assertEquals(399871, hotp.generate(8));
-		Assert.assertEquals(520489, hotp.generate(9));
+		Assertions.assertEquals(755224, hotp.generate(0));
+		Assertions.assertEquals(287082, hotp.generate(1));
+		Assertions.assertEquals(359152, hotp.generate(2));
+		Assertions.assertEquals(969429, hotp.generate(3));
+		Assertions.assertEquals(338314, hotp.generate(4));
+		Assertions.assertEquals(254676, hotp.generate(5));
+		Assertions.assertEquals(287922, hotp.generate(6));
+		Assertions.assertEquals(162583, hotp.generate(7));
+		Assertions.assertEquals(399871, hotp.generate(8));
+		Assertions.assertEquals(520489, hotp.generate(9));
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class OTPTest {
 
 		final TOTP totp = new TOTP(timeStep, "123".getBytes());
 
-		Assert.assertEquals(timeStep, totp.getTimeStep());
+		Assertions.assertEquals(timeStep, totp.getTimeStep());
 	}
 
 	@Test
@@ -79,17 +79,17 @@ public class OTPTest {
 		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
-		Assert.assertEquals(94287082, generate);
+		Assertions.assertEquals(94287082, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111109L));
-		Assert.assertEquals(7081804, generate);
+		Assertions.assertEquals(7081804, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111111L));
-		Assert.assertEquals(14050471, generate);
+		Assertions.assertEquals(14050471, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1234567890L));
-		Assert.assertEquals(89005924, generate);
+		Assertions.assertEquals(89005924, generate);
 		generate = totp.generate(Instant.ofEpochSecond(2000000000L));
-		Assert.assertEquals(69279037, generate);
+		Assertions.assertEquals(69279037, generate);
 		generate = totp.generate(Instant.ofEpochSecond(20000000000L));
-		Assert.assertEquals(65353130, generate);
+		Assertions.assertEquals(65353130, generate);
 	}
 
 	@Test
@@ -99,17 +99,17 @@ public class OTPTest {
 		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
-		Assert.assertEquals(46119246, generate);
+		Assertions.assertEquals(46119246, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111109L));
-		Assert.assertEquals(68084774, generate);
+		Assertions.assertEquals(68084774, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111111L));
-		Assert.assertEquals(67062674, generate);
+		Assertions.assertEquals(67062674, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1234567890L));
-		Assert.assertEquals(91819424, generate);
+		Assertions.assertEquals(91819424, generate);
 		generate = totp.generate(Instant.ofEpochSecond(2000000000L));
-		Assert.assertEquals(90698825, generate);
+		Assertions.assertEquals(90698825, generate);
 		generate = totp.generate(Instant.ofEpochSecond(20000000000L));
-		Assert.assertEquals(77737706, generate);
+		Assertions.assertEquals(77737706, generate);
 	}
 
 	@Test
@@ -119,16 +119,16 @@ public class OTPTest {
 		final TOTP totp = new TOTP(Duration.ofSeconds(30), 8, algorithm, key);
 
 		int generate = totp.generate(Instant.ofEpochSecond(59L));
-		Assert.assertEquals(90693936, generate);
+		Assertions.assertEquals(90693936, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111109L));
-		Assert.assertEquals(25091201, generate);
+		Assertions.assertEquals(25091201, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1111111111L));
-		Assert.assertEquals(99943326, generate);
+		Assertions.assertEquals(99943326, generate);
 		generate = totp.generate(Instant.ofEpochSecond(1234567890L));
-		Assert.assertEquals(93441116, generate);
+		Assertions.assertEquals(93441116, generate);
 		generate = totp.generate(Instant.ofEpochSecond(2000000000L));
-		Assert.assertEquals(38618901, generate);
+		Assertions.assertEquals(38618901, generate);
 		generate = totp.generate(Instant.ofEpochSecond(20000000000L));
-		Assert.assertEquals(47863826, generate);
+		Assertions.assertEquals(47863826, generate);
 	}
 }

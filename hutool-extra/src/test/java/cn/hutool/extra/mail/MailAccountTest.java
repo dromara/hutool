@@ -1,9 +1,9 @@
 package cn.hutool.extra.mail;
 
 import com.sun.mail.util.MailSSLSocketFactory;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.security.GeneralSecurityException;
 
@@ -19,8 +19,8 @@ public class MailAccountTest {
 		final MailAccount account = GlobalMailAccount.INSTANCE.getAccount();
 		account.getSmtpProps();
 
-		Assert.assertNotNull(account.getCharset());
-		Assert.assertTrue(account.isSslEnable());
+		Assertions.assertNotNull(account.getCharset());
+		Assertions.assertTrue(account.isSslEnable());
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class MailAccountTest {
 	 * 已经测试通过
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void customPropertyTest() throws GeneralSecurityException {
 		final MailAccount mailAccount = new MailAccount();
 		mailAccount.setFrom("xxx@xxx.com");

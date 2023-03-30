@@ -1,7 +1,7 @@
 package cn.hutool.core.collection.iter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,31 +17,31 @@ public class CopiedIterTest {
 	public void copyOf() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		Iterator<Integer> iter = list.iterator();
-		Assert.assertEquals((Integer)1, iter.next());
+		Assertions.assertEquals((Integer)1, iter.next());
 
-		Assert.assertEquals((Integer)2, CopiedIter.copyOf(iter).next());
+		Assertions.assertEquals((Integer)2, CopiedIter.copyOf(iter).next());
 	}
 
 	@Test
 	public void hasNext() {
-		Assert.assertTrue(CopiedIter.copyOf(Arrays.asList(1, 2, 3).iterator()).hasNext());
-		Assert.assertFalse(CopiedIter.copyOf(Collections.emptyIterator()).hasNext());
+		Assertions.assertTrue(CopiedIter.copyOf(Arrays.asList(1, 2, 3).iterator()).hasNext());
+		Assertions.assertFalse(CopiedIter.copyOf(Collections.emptyIterator()).hasNext());
 	}
 
 	@Test
 	public void next() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		Iterator<Integer> iter = CopiedIter.copyOf(list.iterator());
-		Assert.assertEquals((Integer)1, iter.next());
-		Assert.assertEquals((Integer)2, iter.next());
-		Assert.assertEquals((Integer)3, iter.next());
+		Assertions.assertEquals((Integer)1, iter.next());
+		Assertions.assertEquals((Integer)2, iter.next());
+		Assertions.assertEquals((Integer)3, iter.next());
 	}
 
 	@Test
 	public void remove() {
 		List<Integer> list = Arrays.asList(1, 2, 3);
 		Iterator<Integer> iter = CopiedIter.copyOf(list.iterator());
-		Assert.assertThrows(UnsupportedOperationException.class, iter::remove);
+		Assertions.assertThrows(UnsupportedOperationException.class, iter::remove);
 	}
 
 }

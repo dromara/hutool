@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import cn.hutool.json.serialize.JSONDeserializer;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JSONDeserializerTest {
 
@@ -11,9 +11,9 @@ public class JSONDeserializerTest {
 	public void parseTest(){
 		final String jsonStr = "{\"customName\": \"customValue\", \"customAddress\": \"customAddressValue\"}";
 		final TestBean testBean = JSONUtil.toBean(jsonStr, TestBean.class);
-		Assert.assertNotNull(testBean);
-		Assert.assertEquals("customValue", testBean.getName());
-		Assert.assertEquals("customAddressValue", testBean.getAddress());
+		Assertions.assertNotNull(testBean);
+		Assertions.assertEquals("customValue", testBean.getName());
+		Assertions.assertEquals("customAddressValue", testBean.getAddress());
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ public class CompareUtilTest {
 	@Test
 	public void compareTest(){
 		int compare = CompareUtil.compare(null, "a", true);
-		Assert.assertTrue(compare > 0);
+		Assertions.assertTrue(compare > 0);
 
 		compare = CompareUtil.compare(null, "a", false);
-		Assert.assertTrue(compare < 0);
+		Assertions.assertTrue(compare < 0);
 	}
 
 	@Test
@@ -26,11 +26,11 @@ public class CompareUtilTest {
 
 		// 正序
 		list.sort(CompareUtil.comparingPinyin(e -> e));
-		Assert.assertEquals(list, ascendingOrderResult);
+		Assertions.assertEquals(list, ascendingOrderResult);
 
 		// 反序
 		list.sort(CompareUtil.comparingPinyin(e -> e, true));
-		Assert.assertEquals(list, descendingOrderResult);
+		Assertions.assertEquals(list, descendingOrderResult);
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class CompareUtilTest {
 
 		data.sort(CompareUtil.comparingIndexed(e -> e, index));
 		//[1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-		Assert.assertEquals(ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"), data);
+		Assertions.assertEquals(ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"), data);
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class CompareUtilTest {
 		//正确排序，index.toArray()
 		data.sort(CompareUtil.comparingIndexed(e -> e, index.toArray()));
 		//[5, 6, 7, 8, 9, 10, 2, 2, 1, 1, 3, 3, 4, 4]
-		Assert.assertEquals(ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"), data);
+		Assertions.assertEquals(ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"), data);
 	}
 	@Test
 	public void comparingIndexedTest3() {
@@ -61,16 +61,16 @@ public class CompareUtilTest {
 		//正确排序，array
 		data.sort(CompareUtil.comparingIndexed(e -> e, indexArray));
 		//[5, 6, 7, 8, 9, 10, 2, 2, 1, 1, 3, 3, 4, 4]
-		Assert.assertEquals(data, ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"));
+		Assertions.assertEquals(data, ListUtil.view("5", "6", "7", "8", "9", "10", "2", "2", "1", "1", "3", "3", "4", "4"));
 	}
 
 	@Test
 	public void compareNullTest() {
-		Assert.assertEquals(0, CompareUtil.compare(1, 1));
-		Assert.assertEquals(1, CompareUtil.compare(1, null));
-		Assert.assertEquals(-1, CompareUtil.compare(null, 1));
+		Assertions.assertEquals(0, CompareUtil.compare(1, 1));
+		Assertions.assertEquals(1, CompareUtil.compare(1, null));
+		Assertions.assertEquals(-1, CompareUtil.compare(null, 1));
 
-		Assert.assertEquals(-1, CompareUtil.compare(1, null, true));
-		Assert.assertEquals(1, CompareUtil.compare(null, 1, true));
+		Assertions.assertEquals(-1, CompareUtil.compare(1, null, true));
+		Assertions.assertEquals(1, CompareUtil.compare(null, 1, true));
 	}
 }

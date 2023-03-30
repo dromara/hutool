@@ -1,16 +1,18 @@
 package cn.hutool.core.tree;
 
-import cn.hutool.core.tree.TreeBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 public class TreeBuilderTest {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void checkIsBuiltTest(){
-		final TreeBuilder<Integer> of = TreeBuilder.of(0);
-		of.build();
-		of.append(new ArrayList<>());
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			final TreeBuilder<Integer> of = TreeBuilder.of(0);
+			of.build();
+			of.append(new ArrayList<>());
+		});
 	}
 }

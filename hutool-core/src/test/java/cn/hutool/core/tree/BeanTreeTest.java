@@ -4,9 +4,9 @@ import cn.hutool.core.stream.EasyStream;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BeanTreeTest {
 	List<JavaBean> originJavaBeanTree;
 	BeanTree<JavaBean, Long> beanTree;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		originJavaBeanList = EasyStream
 				.of(
@@ -79,22 +79,22 @@ public class BeanTreeTest {
 	@Test
 	public void testToTree() {
 		final List<JavaBean> javaBeanTree = beanTree.toTree(originJavaBeanList);
-		Assert.assertEquals(originJavaBeanTree, javaBeanTree);
+		Assertions.assertEquals(originJavaBeanTree, javaBeanTree);
 		final BeanTree<JavaBean, Long> conditionBeanTree = BeanTree.ofMatch(JavaBean::getId, JavaBean::getParentId, s -> Boolean.TRUE.equals(s.getMatchParent()), JavaBean::getChildren, JavaBean::setChildren);
-		Assert.assertEquals(originJavaBeanTree, conditionBeanTree.toTree(originJavaBeanList));
+		Assertions.assertEquals(originJavaBeanTree, conditionBeanTree.toTree(originJavaBeanList));
 	}
 
 	@Test
 	public void testFlat() {
 		final List<JavaBean> javaBeanList = beanTree.flat(originJavaBeanTree);
 		javaBeanList.sort(Comparator.comparing(JavaBean::getId));
-		Assert.assertEquals(originJavaBeanList, javaBeanList);
+		Assertions.assertEquals(originJavaBeanList, javaBeanList);
 	}
 
 	@Test
 	public void testFilter() {
 		final List<JavaBean> javaBeanTree = beanTree.filter(originJavaBeanTree, s -> "looly".equals(s.getName()));
-		Assert.assertEquals(singletonList(
+		Assertions.assertEquals(singletonList(
 						JavaBean.builder().id(1L).name("dromara").matchParent(true)
 								.children(singletonList(JavaBean.builder().id(3L).name("hutool").parentId(1L)
 										.children(singletonList(JavaBean.builder().id(6L).name("looly").parentId(3L).build()))
@@ -106,7 +106,7 @@ public class BeanTreeTest {
 	@Test
 	public void testForeach() {
 		final List<JavaBean> javaBeanList = beanTree.forEach(originJavaBeanTree, s -> s.setName("【open source】" + s.getName()));
-		Assert.assertEquals(asList(
+		Assertions.assertEquals(asList(
 				JavaBean.builder().id(1L).name("【open source】dromara").matchParent(true)
 						.children(asList(JavaBean.builder().id(3L).name("【open source】hutool").parentId(1L)
 										.children(singletonList(JavaBean.builder().id(6L).name("【open source】looly").parentId(3L).build()))

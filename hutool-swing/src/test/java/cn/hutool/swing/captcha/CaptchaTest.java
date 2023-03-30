@@ -1,12 +1,12 @@
 package cn.hutool.swing.captcha;
 
-import cn.hutool.swing.captcha.generator.MathGenerator;
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import cn.hutool.swing.captcha.generator.MathGenerator;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * 直线干扰验证码单元测试
@@ -19,12 +19,12 @@ public class CaptchaTest {
 	public void lineCaptchaTest1() {
 		// 定义图形验证码的长和宽
 		final LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
-		Assert.assertNotNull(lineCaptcha.getCode());
-		Assert.assertTrue(lineCaptcha.verify(lineCaptcha.getCode()));
+		Assertions.assertNotNull(lineCaptcha.getCode());
+		Assertions.assertTrue(lineCaptcha.verify(lineCaptcha.getCode()));
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void lineCaptchaTest3() {
 		// 定义图形验证码的长和宽
 		final LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 70, 4, 15);
@@ -33,7 +33,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void lineCaptchaWithMathTest() {
 		// 定义图形验证码的长和宽
 		final LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 80);
@@ -43,7 +43,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void lineCaptchaTest2() {
 
 		// 定义图形验证码的长和宽
@@ -63,7 +63,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void circleCaptchaTest() {
 
 		// 定义图形验证码的长和宽
@@ -76,7 +76,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void shearCaptchaTest() {
 
 		// 定义图形验证码的长和宽
@@ -89,7 +89,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void shearCaptchaTest2() {
 
 		// 定义图形验证码的长和宽
@@ -101,7 +101,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void ShearCaptchaWithMathTest() {
 		// 定义图形验证码的长和宽
 		final ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
@@ -114,7 +114,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void GifCaptchaTest() {
 		final GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 100, 4);
 		captcha.write("d:/test/gif_captcha.gif");
@@ -122,7 +122,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bgTest(){
 		final LineCaptcha captcha = CaptchaUtil.createLineCaptcha(200, 100, 4, 1);
 		captcha.setBackground(Color.WHITE);

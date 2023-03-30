@@ -2,8 +2,8 @@ package cn.hutool.extra.cglib;
 
 import cn.hutool.core.convert.Convert;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CglibUtilTest {
 
@@ -15,20 +15,20 @@ public class CglibUtilTest {
 		bean.setValue2("123");
 
 		CglibUtil.copy(bean, otherBean);
-		Assert.assertEquals("Hello world", otherBean.getValue());
+		Assertions.assertEquals("Hello world", otherBean.getValue());
 		// 无定义转换器，转换失败
-		Assert.assertEquals(0, otherBean.getValue2());
+		Assertions.assertEquals(0, otherBean.getValue2());
 
 		final OtherSampleBean otherBean2 = CglibUtil.copy(bean, OtherSampleBean.class);
-		Assert.assertEquals("Hello world", otherBean2.getValue());
+		Assertions.assertEquals("Hello world", otherBean2.getValue());
 		// 无定义转换器，转换失败
-		Assert.assertEquals(0, otherBean.getValue2());
+		Assertions.assertEquals(0, otherBean.getValue2());
 
 		otherBean = new OtherSampleBean();
 		//自定义转换器
 		CglibUtil.copy(bean, otherBean, (value, target, context) -> Convert.convertQuietly(target, value));
-		Assert.assertEquals("Hello world", otherBean.getValue());
-		Assert.assertEquals(123, otherBean.getValue2());
+		Assertions.assertEquals("Hello world", otherBean.getValue());
+		Assertions.assertEquals(123, otherBean.getValue2());
 	}
 
 	@Data

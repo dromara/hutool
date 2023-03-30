@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.reflect.TypeReference;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -21,7 +21,7 @@ public class Issue1101Test {
 		final JSONArray objects = JSONUtil.parseArray(json);
 		final TreeSet<TreeNodeDto> convert = Convert.convert(new TypeReference<TreeSet<TreeNodeDto>>() {
 		}, objects);
-		Assert.assertEquals(2, convert.size());
+		Assertions.assertEquals(2, convert.size());
 	}
 
 	@Test
@@ -58,11 +58,11 @@ public class Issue1101Test {
 		final JSONObject jsonObject = JSONUtil.parseObj(json);
 
 		final TreeNode treeNode = JSONUtil.toBean(jsonObject, TreeNode.class);
-		Assert.assertEquals(2, treeNode.getChildren().size());
+		Assertions.assertEquals(2, treeNode.getChildren().size());
 
 		final TreeNodeDto dto = new TreeNodeDto();
 		BeanUtil.copyProperties(treeNode, dto, true);
-		Assert.assertEquals(2, dto.getChildren().size());
+		Assertions.assertEquals(2, dto.getChildren().size());
 	}
 
 	@Data

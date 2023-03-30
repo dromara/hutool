@@ -1,12 +1,12 @@
 package cn.hutool.core.lang;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ConsoleTableTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printSBCTest() {
 		ConsoleTable t = ConsoleTable.of();
 		t.addHeader("姓名", "年龄");
@@ -34,7 +34,7 @@ public class ConsoleTableTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void printDBCTest() {
 		ConsoleTable t = ConsoleTable.of().setSBCMode(false);
 		t.addHeader("姓名", "年龄");

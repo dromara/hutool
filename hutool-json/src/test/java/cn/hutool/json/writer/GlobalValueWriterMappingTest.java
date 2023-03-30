@@ -4,13 +4,13 @@ import cn.hutool.core.convert.Converter;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GlobalValueWriterMappingTest {
 
-	@Before
+	@BeforeEach
 	public void init(){
 		GlobalValueWriterMapping.put(CustomSubBean.class,
 				(JSONValueWriter<CustomSubBean>) (writer, value) -> writer.writeRaw(String.valueOf(value.getId())));
@@ -22,7 +22,7 @@ public class GlobalValueWriterMappingTest {
 		customBean.setId(12);
 		customBean.setName("aaa");
 		final String s = JSONUtil.toJsonStr(customBean);
-		Assert.assertEquals("12", s);
+		Assertions.assertEquals("12", s);
 	}
 
 	@Test
@@ -35,7 +35,7 @@ public class GlobalValueWriterMappingTest {
 		customBean.setSub(customSubBean);
 
 		final String s = JSONUtil.toJsonStr(customBean);
-		Assert.assertEquals("{\"id\":1,\"sub\":12}", s);
+		Assertions.assertEquals("{\"id\":1,\"sub\":12}", s);
 
 		// 自定义转换
 		final JSONConfig jsonConfig = JSONConfig.of();
@@ -49,7 +49,7 @@ public class GlobalValueWriterMappingTest {
 			return converter.convert(targetType, value);
 		});
 		final CustomBean customBean1 = JSONUtil.parseObj(s, jsonConfig).toBean(CustomBean.class);
-		Assert.assertEquals(12, customBean1.getSub().getId());
+		Assertions.assertEquals(12, customBean1.getSub().getId());
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.collection.iter.IterUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
@@ -29,19 +29,18 @@ public class RepeatableMetaAnnotatedElementTest {
 	@Test
 	public void testEquals() {
 		final AnnotatedElement element = RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY);
-		Assert.assertEquals(element, element);
-		Assert.assertNotEquals(element, null);
-		Assert.assertEquals(element, RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY));
-		Assert.assertNotEquals(element, RepeatableMetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY));
-		Assert.assertNotEquals(element, RepeatableMetaAnnotatedElement.create(Annotation1.class, MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, null);
+		Assertions.assertEquals(element, RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, RepeatableMetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, RepeatableMetaAnnotatedElement.create(Annotation1.class, MAPPING_FACTORY));
 	}
 
 	@Test
 	public void testHashCode() {
 		final int hashCode = RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode();
-		Assert.assertEquals(hashCode, RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode());
-		Assert.assertNotEquals(hashCode, RepeatableMetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY).hashCode());
-		Assert.assertNotEquals(hashCode, RepeatableMetaAnnotatedElement.create(Annotation1.class, MAPPING_FACTORY).hashCode());
+		Assertions.assertEquals(hashCode, RepeatableMetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, RepeatableMetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, RepeatableMetaAnnotatedElement.create(Annotation1.class, MAPPING_FACTORY).hashCode());
 	}
 
 	@Test
@@ -49,10 +48,10 @@ public class RepeatableMetaAnnotatedElementTest {
 		final AnnotatedElement element = RepeatableMetaAnnotatedElement.create(
 			RepeatableAnnotationCollector.standard(), Foo.class, (s, a) -> new GenericAnnotationMapping(a, Objects.isNull(s))
 		);
-		Assert.assertTrue(element.isAnnotationPresent(Annotation1.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation2.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation3.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation4.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation1.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation2.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation3.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation4.class));
 	}
 
 	@Test
@@ -65,10 +64,10 @@ public class RepeatableMetaAnnotatedElementTest {
 			.collect(Collectors.toList());
 		final Map<Class<? extends Annotation>, Integer> countMap = IterUtil.countMap(annotationTypes.iterator());
 
-		Assert.assertEquals((Integer)1, countMap.get(Annotation1.class));
-		Assert.assertEquals((Integer)2, countMap.get(Annotation2.class));
-		Assert.assertEquals((Integer)4, countMap.get(Annotation3.class));
-		Assert.assertEquals((Integer)7, countMap.get(Annotation4.class));
+		Assertions.assertEquals((Integer)1, countMap.get(Annotation1.class));
+		Assertions.assertEquals((Integer)2, countMap.get(Annotation2.class));
+		Assertions.assertEquals((Integer)4, countMap.get(Annotation3.class));
+		Assertions.assertEquals((Integer)7, countMap.get(Annotation4.class));
 	}
 
 	@Test
@@ -78,16 +77,16 @@ public class RepeatableMetaAnnotatedElementTest {
 		);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
-		Assert.assertEquals(annotation1, element.getAnnotation(Annotation1.class));
+		Assertions.assertEquals(annotation1, element.getAnnotation(Annotation1.class));
 
 		final Annotation4 annotation4 = Annotation1.class.getAnnotation(Annotation4.class);
-		Assert.assertEquals(annotation4, element.getAnnotation(Annotation4.class));
+		Assertions.assertEquals(annotation4, element.getAnnotation(Annotation4.class));
 
 		final Annotation2 annotation2 = annotation1.value()[0];
-		Assert.assertEquals(annotation2, element.getAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation2, element.getAnnotation(Annotation2.class));
 
 		final Annotation3 annotation3 = annotation2.value()[0];
-		Assert.assertEquals(annotation3, element.getAnnotation(Annotation3.class));
+		Assertions.assertEquals(annotation3, element.getAnnotation(Annotation3.class));
 	}
 
 	@Test
@@ -97,16 +96,16 @@ public class RepeatableMetaAnnotatedElementTest {
 		);
 
 		Annotation[] annotations = element.getAnnotationsByType(Annotation1.class);
-		Assert.assertEquals(1, annotations.length);
+		Assertions.assertEquals(1, annotations.length);
 
 		annotations = element.getAnnotationsByType(Annotation2.class);
-		Assert.assertEquals(2, annotations.length);
+		Assertions.assertEquals(2, annotations.length);
 
 		annotations = element.getAnnotationsByType(Annotation3.class);
-		Assert.assertEquals(4, annotations.length);
+		Assertions.assertEquals(4, annotations.length);
 
 		annotations = element.getAnnotationsByType(Annotation4.class);
-		Assert.assertEquals(7, annotations.length);
+		Assertions.assertEquals(7, annotations.length);
 	}
 
 	@Test
@@ -119,10 +118,10 @@ public class RepeatableMetaAnnotatedElementTest {
 			.collect(Collectors.toList());
 		final Map<Class<? extends Annotation>, Integer> countMap = IterUtil.countMap(annotationTypes.iterator());
 
-		Assert.assertEquals((Integer)1, countMap.get(Annotation1.class));
-		Assert.assertFalse(countMap.containsKey(Annotation2.class));
-		Assert.assertFalse(countMap.containsKey(Annotation3.class));
-		Assert.assertFalse(countMap.containsKey(Annotation4.class));
+		Assertions.assertEquals((Integer)1, countMap.get(Annotation1.class));
+		Assertions.assertFalse(countMap.containsKey(Annotation2.class));
+		Assertions.assertFalse(countMap.containsKey(Annotation3.class));
+		Assertions.assertFalse(countMap.containsKey(Annotation4.class));
 	}
 
 	@Test
@@ -132,10 +131,10 @@ public class RepeatableMetaAnnotatedElementTest {
 		);
 
 		final Annotation1 annotation1 = Foo.class.getDeclaredAnnotation(Annotation1.class);
-		Assert.assertEquals(annotation1, element.getDeclaredAnnotation(Annotation1.class));
-		Assert.assertNull(element.getDeclaredAnnotation(Annotation3.class));
-		Assert.assertNull(element.getDeclaredAnnotation(Annotation4.class));
-		Assert.assertNull(element.getDeclaredAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation1, element.getDeclaredAnnotation(Annotation1.class));
+		Assertions.assertNull(element.getDeclaredAnnotation(Annotation3.class));
+		Assertions.assertNull(element.getDeclaredAnnotation(Annotation4.class));
+		Assertions.assertNull(element.getDeclaredAnnotation(Annotation2.class));
 	}
 
 	@Test
@@ -145,16 +144,16 @@ public class RepeatableMetaAnnotatedElementTest {
 		);
 
 		Annotation[] annotations = element.getDeclaredAnnotationsByType(Annotation1.class);
-		Assert.assertEquals(1, annotations.length);
+		Assertions.assertEquals(1, annotations.length);
 
 		annotations = element.getDeclaredAnnotationsByType(Annotation2.class);
-		Assert.assertEquals(0, annotations.length);
+		Assertions.assertEquals(0, annotations.length);
 
 		annotations = element.getDeclaredAnnotationsByType(Annotation3.class);
-		Assert.assertEquals(0, annotations.length);
+		Assertions.assertEquals(0, annotations.length);
 
 		annotations = element.getDeclaredAnnotationsByType(Annotation4.class);
-		Assert.assertEquals(0, annotations.length);
+		Assertions.assertEquals(0, annotations.length);
 	}
 
 	@Test
@@ -163,7 +162,7 @@ public class RepeatableMetaAnnotatedElementTest {
 		final RepeatableMetaAnnotatedElement<GenericAnnotationMapping> repeatableMetaAnnotatedElement = RepeatableMetaAnnotatedElement.create(
 			RepeatableAnnotationCollector.standard(), element, (s, a) -> new GenericAnnotationMapping(a, Objects.isNull(s))
 		);
-		Assert.assertSame(element, repeatableMetaAnnotatedElement.getElement());
+		Assertions.assertSame(element, repeatableMetaAnnotatedElement.getElement());
 	}
 
 	@Test
@@ -173,9 +172,10 @@ public class RepeatableMetaAnnotatedElementTest {
 		);
 		int count = 0;
 		for (final GenericAnnotationMapping mapping : element) {
+			Assertions.assertNotNull(mapping);
 			count++;
 		}
-		Assert.assertEquals(14, count);
+		Assertions.assertEquals(14, count);
 	}
 
 	@Annotation4

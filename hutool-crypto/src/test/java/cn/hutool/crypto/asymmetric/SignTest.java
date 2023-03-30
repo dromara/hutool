@@ -3,8 +3,8 @@ package cn.hutool.crypto.asymmetric;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.crypto.SignUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class SignTest {
 
 		final String privateKey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJ4fG8vJ0tzu7tjXMSJhyNjlE5B7GkTKMKEQlR6LY3IhIhMFVjuA6W+DqH1VMxl9h3GIM4yCKG2VRZEYEPazgVxa5/ifO8W0pfmrzWCPrddUq4t0Slz5u2lLKymLpPjCzboHoDb8VlF+1HOxjKQckAXq9q7U7dV5VxOzJDuZXlz3AgMBAAECgYABo2LfVqT3owYYewpIR+kTzjPIsG3SPqIIWSqiWWFbYlp/BfQhw7EndZ6+Ra602ecYVwfpscOHdx90ZGJwm+WAMkKT4HiWYwyb0ZqQzRBGYDHFjPpfCBxrzSIJ3QL+B8c8YHq4HaLKRKmq7VUF1gtyWaek87rETWAmQoGjt8DyAQJBAOG4OxsT901zjfxrgKwCv6fV8wGXrNfDSViP1t9r3u6tRPsE6Gli0dfMyzxwENDTI75sOEAfyu6xBlemQGmNsfcCQQCzVWQkl9YUoVDWEitvI5MpkvVKYsFLRXKvLfyxLcY3LxpLKBcEeJ/n5wLxjH0GorhJMmM2Rw3hkjUTJCoqqe0BAkATt8FKC0N2O5ryqv1xiUfuxGzW/cX2jzOwDdiqacTuuqok93fKBPzpyhUS8YM2iss7jj6Xs29JzKMOMxK7ZcpfAkAf21lwzrAu9gEgJhYlJhKsXfjJAAYKUwnuaKLs7o65mtp242ZDWxI85eK1+hjzptBJ4HOTXsfufESFY/VBovIBAkAltO886qQRoNSc0OsVlCi4X1DGo6x2RqQ9EsWPrxWEZGYuyEdODrc54b8L+zaUJLfMJdsCIHEUbM7WXxvFVXNv";
 		Sign sign = SignUtil.sign(SignAlgorithm.SHA1withRSA, privateKey, null);
-		Assert.assertNull(sign.getPublicKeyBase64());
+		Assertions.assertNull(sign.getPublicKeyBase64());
 		// 签名
 		final byte[] signed = sign.sign(content.getBytes());
 
@@ -30,7 +30,7 @@ public class SignTest {
 		sign = SignUtil.sign(SignAlgorithm.SHA1withRSA, null, publicKey);
 		// 验证签名
 		final boolean verify = sign.verify(content.getBytes(), signed);
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class SignTest {
 
 		// 验证签名
 		final boolean verify = sign.verify(data, signed);
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class SignTest {
 
 		// 验证签名
 		final boolean verify = sign.verify(data, signed);
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 
 	@Test
@@ -96,11 +96,11 @@ public class SignTest {
 				.put("key2", "value2").build();
 
 		final String sign1 = SignUtil.signParamsSha1(build);
-		Assert.assertEquals("9ed30bfe2efbc7038a824b6c55c24a11bfc0dce5", sign1);
+		Assertions.assertEquals("9ed30bfe2efbc7038a824b6c55c24a11bfc0dce5", sign1);
 		final String sign2 = SignUtil.signParamsSha1(build, "12345678");
-		Assert.assertEquals("944b68d94c952ec178c4caf16b9416b6661f7720", sign2);
+		Assertions.assertEquals("944b68d94c952ec178c4caf16b9416b6661f7720", sign2);
 		final String sign3 = SignUtil.signParamsSha1(build, "12345678", "abc");
-		Assert.assertEquals("edee1b477af1b96ebd20fdf08d818f352928d25d", sign3);
+		Assertions.assertEquals("edee1b477af1b96ebd20fdf08d818f352928d25d", sign3);
 	}
 
 	/**
@@ -117,6 +117,6 @@ public class SignTest {
 
 		// 验证签名
 		final boolean verify = sign.verify(data, signed);
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 }

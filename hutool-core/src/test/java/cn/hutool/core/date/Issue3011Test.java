@@ -1,7 +1,7 @@
 package cn.hutool.core.date;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 
@@ -18,6 +18,6 @@ public class Issue3011Test {
 		calendar2.set(2021, Calendar.FEBRUARY, 12);
 
 
-		Assert.assertFalse(DateUtil.isSameMonth(calendar1, calendar2));
+		Assertions.assertFalse(DateUtil.isSameMonth(calendar1, calendar2));
 	}
 }

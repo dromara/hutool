@@ -2,8 +2,8 @@ package cn.hutool.crypto;
 
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BCUtilTest {
 
@@ -16,7 +16,7 @@ public class BCUtilTest {
 		final String y = "F7E938B02EED7280277493B8556E5B01CB436E018A562DFDC53342BF41FDF728";
 
 		final ECPublicKeyParameters keyParameters = BCUtil.toSm2Params(x, y);
-		Assert.assertNotNull(keyParameters);
+		Assertions.assertNotNull(keyParameters);
 	}
 
 	@Test
@@ -24,6 +24,6 @@ public class BCUtilTest {
 		final String privateKeyHex = "5F6CA5BB044C40ED2355F0372BF72A5B3AE6943712F9FDB7C1FFBAECC06F3829";
 
 		final ECPrivateKeyParameters keyParameters = BCUtil.toSm2Params(privateKeyHex);
-		Assert.assertNotNull(keyParameters);
+		Assertions.assertNotNull(keyParameters);
 	}
 }

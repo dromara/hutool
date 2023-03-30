@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,8 +15,8 @@ public class Issue2349Test {
 		final ConcurrentHashMap<String,Integer> map=new SafeConcurrentHashMap<>(16);
 		map.computeIfAbsent("AaAa", key->map.computeIfAbsent("BBBB",key2->42));
 
-		Assert.assertEquals(2, map.size());
-		Assert.assertEquals(Integer.valueOf(42), map.get("AaAa"));
-		Assert.assertEquals(Integer.valueOf(42), map.get("BBBB"));
+		Assertions.assertEquals(2, map.size());
+		Assertions.assertEquals(Integer.valueOf(42), map.get("AaAa"));
+		Assertions.assertEquals(Integer.valueOf(42), map.get("BBBB"));
 	}
 }

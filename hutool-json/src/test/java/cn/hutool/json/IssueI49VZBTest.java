@@ -3,8 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.convert.Convert;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
@@ -65,12 +65,12 @@ public class IssueI49VZBTest {
 	public void toBeanTest(){
 		final String str = "{type: \"password\"}";
 		final UPOpendoor upOpendoor = JSONUtil.toBean(str, UPOpendoor.class);
-		Assert.assertEquals(NBCloudKeyType.password, upOpendoor.getType());
+		Assertions.assertEquals(NBCloudKeyType.password, upOpendoor.getType());
 	}
 
 	@Test
 	public void enumConvertTest(){
 		final NBCloudKeyType type = Convert.toEnum(NBCloudKeyType.class, "snapKey");
-		Assert.assertEquals(NBCloudKeyType.snapKey, type);
+		Assertions.assertEquals(NBCloudKeyType.snapKey, type);
 	}
 }

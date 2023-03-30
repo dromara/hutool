@@ -1,8 +1,8 @@
 package cn.hutool.core.lang.func;
 
 import cn.hutool.core.collection.SetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,9 +21,9 @@ public class PredicateUtilTest {
 				.filter(negate(sets::contains))
 				.collect(Collectors.toList());
 
-		Assert.assertEquals(2, collect.size());
-		Assert.assertEquals("4", collect.get(0));
-		Assert.assertEquals("5", collect.get(1));
+		Assertions.assertEquals(2, collect.size());
+		Assertions.assertEquals("4", collect.get(0));
+		Assertions.assertEquals("5", collect.get(1));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class PredicateUtilTest {
 								i -> i % 2 == 1
 						)
 				);
-		Assert.assertTrue(condition);
+		Assertions.assertTrue(condition);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class PredicateUtilTest {
 								i -> i % 2 == 0
 						)
 				);
-		Assert.assertFalse(condition);
+		Assertions.assertFalse(condition);
 	}
 
 

@@ -2,8 +2,8 @@ package cn.hutool.db;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.db.sql.NamedSql;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +23,9 @@ public class NamedSqlTest {
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		//未指定参数原样输出
-		Assert.assertEquals("select * from table where id=@id and name = ? and nickName = ?", namedSql.getSql());
-		Assert.assertEquals("张三", namedSql.getParams()[0]);
-		Assert.assertEquals("小豆豆", namedSql.getParams()[1]);
+		Assertions.assertEquals("select * from table where id=@id and name = ? and nickName = ?", namedSql.getSql());
+		Assertions.assertEquals("张三", namedSql.getParams()[0]);
+		Assertions.assertEquals("小豆豆", namedSql.getParams()[1]);
 	}
 
 	@Test
@@ -40,11 +40,11 @@ public class NamedSqlTest {
 				.build();
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		Assert.assertEquals("select * from table where id=? and name = ? and nickName = ?", namedSql.getSql());
+		Assertions.assertEquals("select * from table where id=? and name = ? and nickName = ?", namedSql.getSql());
 		//指定了null参数的依旧替换，参数值为null
-		Assert.assertNull(namedSql.getParams()[0]);
-		Assert.assertEquals("张三", namedSql.getParams()[1]);
-		Assert.assertEquals("小豆豆", namedSql.getParams()[2]);
+		Assertions.assertNull(namedSql.getParams()[0]);
+		Assertions.assertEquals("张三", namedSql.getParams()[1]);
+		Assertions.assertEquals("小豆豆", namedSql.getParams()[2]);
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class NamedSqlTest {
 				.build();
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		Assert.assertEquals(sql, namedSql.getSql());
+		Assertions.assertEquals(sql, namedSql.getSql());
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class NamedSqlTest {
 				.build();
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		Assert.assertEquals(sql, namedSql.getSql());
+		Assertions.assertEquals(sql, namedSql.getSql());
 	}
 
 	@Test
@@ -79,10 +79,10 @@ public class NamedSqlTest {
 		final HashMap<String, Object> paramMap = MapUtil.of("ids", new int[]{1, 2, 3});
 
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
-		Assert.assertEquals("select * from user where id in (?,?,?)", namedSql.getSql());
-		Assert.assertEquals(1, namedSql.getParams()[0]);
-		Assert.assertEquals(2, namedSql.getParams()[1]);
-		Assert.assertEquals(3, namedSql.getParams()[2]);
+		Assertions.assertEquals("select * from user where id in (?,?,?)", namedSql.getSql());
+		Assertions.assertEquals(1, namedSql.getParams()[0]);
+		Assertions.assertEquals(2, namedSql.getParams()[1]);
+		Assertions.assertEquals(3, namedSql.getParams()[2]);
 	}
 
 	@Test
@@ -93,10 +93,10 @@ public class NamedSqlTest {
 		final String sql = "select * from user where name = @name1 and age = @age1";
 
 		List<Entity> query = Db.of().query(sql, paramMap);
-		Assert.assertEquals(1, query.size());
+		Assertions.assertEquals(1, query.size());
 
 		// 采用传统方式查询是否能识别Map类型参数
 		query = Db.of().query(sql, new Object[]{paramMap});
-		Assert.assertEquals(1, query.size());
+		Assertions.assertEquals(1, query.size());
 	}
 }

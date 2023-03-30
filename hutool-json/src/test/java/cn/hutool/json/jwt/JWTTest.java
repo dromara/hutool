@@ -7,8 +7,8 @@ import cn.hutool.json.jwt.signers.AlgorithmUtil;
 import cn.hutool.json.jwt.signers.JWTSigner;
 import cn.hutool.json.jwt.signers.JWTSignerUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -29,9 +29,9 @@ public class JWTTest {
 				"bXlSnqVeJXWqUIt7HyEhgKNVlIPjkumHlAwFY-5YCtk";
 
 		final String token = jwt.sign();
-		Assert.assertEquals(rightToken, token);
+		Assertions.assertEquals(rightToken, token);
 
-		Assert.assertTrue(JWT.of(rightToken).setKey(key).verify());
+		Assertions.assertTrue(JWT.of(rightToken).setKey(key).verify());
 	}
 
 	@Test
@@ -42,17 +42,17 @@ public class JWTTest {
 
 		final JWT jwt = JWT.of(rightToken);
 
-		Assert.assertTrue(jwt.setKey("1234567890".getBytes()).verify());
+		Assertions.assertTrue(jwt.setKey("1234567890".getBytes()).verify());
 
 		//header
-		Assert.assertEquals("JWT", jwt.getHeader(JWTHeader.TYPE));
-		Assert.assertEquals("HS256", jwt.getHeader(JWTHeader.ALGORITHM));
-		Assert.assertNull(jwt.getHeader(JWTHeader.CONTENT_TYPE));
+		Assertions.assertEquals("JWT", jwt.getHeader(JWTHeader.TYPE));
+		Assertions.assertEquals("HS256", jwt.getHeader(JWTHeader.ALGORITHM));
+		Assertions.assertNull(jwt.getHeader(JWTHeader.CONTENT_TYPE));
 
 		//payload
-		Assert.assertEquals("1234567890", jwt.getPayload("sub"));
-		Assert.assertEquals("looly", jwt.getPayload("name"));
-		Assert.assertEquals(true, jwt.getPayload("admin"));
+		Assertions.assertEquals("1234567890", jwt.getPayload("sub"));
+		Assertions.assertEquals("looly", jwt.getPayload("name"));
+		Assertions.assertEquals(true, jwt.getPayload("admin"));
 	}
 
 	@Test
@@ -63,26 +63,28 @@ public class JWTTest {
 				.setPayload("admin", true)
 				.setSigner(JWTSignerUtil.none());
 
-		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-				"eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9.";
+		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0." +
+				"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Imxvb2x5IiwiYWRtaW4iOnRydWV9.";
 
 		final String token = jwt.sign();
-		Assert.assertEquals(token, token);
+		Assertions.assertEquals(rightToken, token);
 
-		Assert.assertTrue(JWT.of(rightToken).setSigner(JWTSignerUtil.none()).verify());
+		Assertions.assertTrue(JWT.of(rightToken).setSigner(JWTSignerUtil.none()).verify());
 	}
 
 	/**
 	 * 必须定义签名器
 	 */
-	@Test(expected = JWTException.class)
+	@Test
 	public void needSignerTest(){
-		final JWT jwt = JWT.of()
+		Assertions.assertThrows(JWTException.class, ()->{
+			final JWT jwt = JWT.of()
 				.setPayload("sub", "1234567890")
 				.setPayload("name", "looly")
 				.setPayload("admin", true);
 
-		jwt.sign();
+			jwt.sign();
+		});
 	}
 
 	@Test
@@ -92,7 +94,7 @@ public class JWTTest {
 				"aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
 
 		final boolean verify = JWT.of(token).setKey(ByteUtil.toUtf8Bytes("123456")).verify();
-		Assert.assertTrue(verify);
+		Assertions.assertTrue(verify);
 	}
 
 	@Data
@@ -135,15 +137,15 @@ public class JWTTest {
 		final Integer numRes = jwt.getPayload("number", Integer.class);
 		final HashMap<?, ?> mapRes = jwt.getPayload("map", HashMap.class);
 
-		Assert.assertEquals(bean, beanRes);
-		Assert.assertEquals(numRes, num);
-		Assert.assertEquals(username, strRes);
-		Assert.assertEquals(list, listRes);
+		Assertions.assertEquals(bean, beanRes);
+		Assertions.assertEquals(numRes, num);
+		Assertions.assertEquals(username, strRes);
+		Assertions.assertEquals(list, listRes);
 
 		final String formattedDate = DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
 		final String formattedRes = DateUtil.format(dateRes, "yyyy-MM-dd HH:mm:ss");
-		Assert.assertEquals(formattedDate, formattedRes);
-		Assert.assertEquals(map, mapRes);
+		Assertions.assertEquals(formattedDate, formattedRes);
+		Assertions.assertEquals(map, mapRes);
 	}
 
 	@Test()
@@ -155,7 +157,7 @@ public class JWTTest {
 
 		// 签发时间早于被检查的时间
 		final Date date = JWT.of(token).getPayload().getClaimsJson().getDate(JWTPayload.ISSUED_AT);
-		Assert.assertEquals("2022-02-02", DateUtil.format(date, DatePattern.NORM_DATE_PATTERN));
+		Assertions.assertEquals("2022-02-02", DateUtil.format(date, DatePattern.NORM_DATE_PATTERN));
 	}
 
 	@Test
@@ -165,22 +167,21 @@ public class JWTTest {
 		final JWTSigner jwtSigner = JWTSignerUtil.createSigner(AlgorithmUtil.getAlgorithm("HS256"), Base64.getDecoder().decode("abcdefghijklmn"));
 		final String sign = JWT.of().addPayloads(map).sign(jwtSigner);
 		final Object test2 = JWT.of(sign).getPayload().getClaim("test2");
-		Assert.assertEquals(Long.class, test2.getClass());
+		Assertions.assertEquals(Long.class, test2.getClass());
 	}
 
 	@Test
 	public void getLongTest(){
 		final String rightToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
 				+ ".eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiJhZG1pbiIsImRldmljZSI6ImRlZmF1bHQtZGV2aWNlIiwiZWZmIjoxNjc4Mjg1NzEzOTM1LCJyblN0ciI6IkVuMTczWFhvWUNaaVZUWFNGOTNsN1pabGtOalNTd0pmIn0"
-				+ ".wRe2soTaWYPhwcjxdzesDi1BgEm9D61K-mMT3fPc4YM"
-				+ "";
+				+ ".wRe2soTaWYPhwcjxdzesDi1BgEm9D61K-mMT3fPc4YM";
 
 		final JWT jwt = JWTUtil.parseToken(rightToken);
 
-		Assert.assertEquals(
+		Assertions.assertEquals(
 				"{\"loginType\":\"login\",\"loginId\":\"admin\",\"device\":\"default-device\"," +
 						"\"eff\":1678285713935,\"rnStr\":\"En173XXoYCZiVTXSF93l7ZZlkNjSSwJf\"}",
 				jwt.getPayloads().toString());
-		Assert.assertEquals(Long.valueOf(1678285713935L), jwt.getPayloads().getLong("eff"));
+		Assertions.assertEquals(Long.valueOf(1678285713935L), jwt.getPayloads().getLong("eff"));
 	}
 }

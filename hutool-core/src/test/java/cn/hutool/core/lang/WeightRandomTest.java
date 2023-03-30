@@ -1,8 +1,8 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.ListUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WeightRandomTest {
 
@@ -14,6 +14,6 @@ public class WeightRandomTest {
 		random.add("C", 100);
 
 		final String result = random.next();
-		Assert.assertTrue(ListUtil.of("A", "B", "C").contains(result));
+		Assertions.assertTrue(ListUtil.of("A", "B", "C").contains(result));
 	}
 }

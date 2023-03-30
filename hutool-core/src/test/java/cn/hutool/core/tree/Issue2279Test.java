@@ -2,8 +2,8 @@ package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.ListUtil;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Issue2279Test {
 		);
 
 		final MapTree<String> result = stringTree.get(0);
-		Assert.assertEquals(2, result.getChildren().size());
+		Assertions.assertEquals(2, result.getChildren().size());
 	}
 
 	@Data

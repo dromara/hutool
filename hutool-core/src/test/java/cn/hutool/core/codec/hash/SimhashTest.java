@@ -2,8 +2,8 @@ package cn.hutool.core.codec.hash;
 
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.text.split.SplitUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SimhashTest {
 
@@ -14,10 +14,10 @@ public class SimhashTest {
 
 		final Simhash simhash = new Simhash();
 		final long hash = simhash.hash64(SplitUtil.split(text1, StrUtil.SPACE));
-		Assert.assertTrue(hash != 0);
+		Assertions.assertTrue(hash != 0);
 
 		simhash.store(hash);
 		final boolean duplicate = simhash.equals(SplitUtil.split(text2, StrUtil.SPACE));
-		Assert.assertTrue(duplicate);
+		Assertions.assertTrue(duplicate);
 	}
 }

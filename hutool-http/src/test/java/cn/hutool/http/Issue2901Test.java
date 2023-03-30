@@ -9,13 +9,13 @@ import cn.hutool.http.client.Response;
 import cn.hutool.http.client.body.ResourceBody;
 import cn.hutool.http.meta.ContentType;
 import cn.hutool.http.meta.Method;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Issue2901Test {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void bodyTest() {
 		// 自定义请求体，请求体作为资源读取，解决一次性读取到内存的问题
 		final Response res = Request.of("http://localhost:8888/restTest")

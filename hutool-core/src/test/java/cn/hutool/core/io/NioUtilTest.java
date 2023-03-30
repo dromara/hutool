@@ -5,9 +5,9 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.stream.EmptyOutputStream;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.text.StrUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,12 +22,12 @@ public class NioUtilTest {
 		final long size = NioUtil.copyByNIO(ResourceUtil.getStream("hutool.jpg"), EmptyOutputStream.INSTANCE, NioUtil.DEFAULT_MIDDLE_BUFFER_SIZE, null);
 
 		// 确认写出
-		Assert.assertEquals(file.length(), size);
-		Assert.assertEquals(22807, size);
+		Assertions.assertEquals(file.length(), size);
+		Assertions.assertEquals(22807, size);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void copyByNIOTest2() {
 		final File file = FileUtil.file("d:/test/logo.jpg");
 		final BufferedInputStream in = FileUtil.getInputStream(file);
@@ -49,12 +49,12 @@ public class NioUtilTest {
 				Console.log("finish");
 			}
 		});
-		Assert.assertEquals(file.length(), copySize);
+		Assertions.assertEquals(file.length(), copySize);
 	}
 
 	@Test
 	public void readUtf8Test() throws IOException {
 		final String s = NioUtil.readUtf8(FileChannel.open(FileUtil.file("text.txt").toPath()));
-		Assert.assertTrue(StrUtil.isNotBlank(s));
+		Assertions.assertTrue(StrUtil.isNotBlank(s));
 	}
 }

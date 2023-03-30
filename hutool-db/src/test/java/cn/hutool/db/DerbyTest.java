@@ -1,9 +1,8 @@
 package cn.hutool.db;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class DerbyTest {
 
 	private static final String DS_GROUP_NAME = "derby";
 
-	@BeforeClass
+	//@BeforeAll
 	public static void init() {
 		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
@@ -29,16 +28,16 @@ public class DerbyTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void queryTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).query("select * from test");
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void findTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.of("test"));
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 }

@@ -1,20 +1,19 @@
 package cn.hutool.core.io.file;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.util.CharsetUtil;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TailerTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tailTest() {
 		FileUtil.tail(FileUtil.file("d:/test/tail.txt"), CharsetUtil.GBK);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void tailWithLinesTest() {
 		final Tailer tailer = new Tailer(FileUtil.file("f:/test/test.log"), Tailer.CONSOLE_HANDLER, 2);
 		tailer.start();

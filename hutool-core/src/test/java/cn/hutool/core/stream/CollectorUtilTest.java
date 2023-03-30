@@ -1,8 +1,8 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.map.MapUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.function.Function;
@@ -29,7 +29,7 @@ public class CollectorUtilTest {
 		// 执行聚合
 		final Map<String, List<Integer>> nameScoresMap = nameScoreMapList.stream().collect(CollectorUtil.reduceListMap());
 
-		Assert.assertEquals(MapUtil.builder("苏格拉底", Arrays.asList(1, 2))
+		Assertions.assertEquals(MapUtil.builder("苏格拉底", Arrays.asList(1, 2))
 						.put("特拉叙马霍斯", Arrays.asList(3, 1, 2)).build(),
 				nameScoresMap);
 	}
@@ -38,18 +38,18 @@ public class CollectorUtilTest {
 	public void testTransform() {
 		Stream<Integer> stream = Stream.of(1, 2, 3, 4)
 				.collect(CollectorUtil.transform(EasyStream::of));
-		Assert.assertEquals(EasyStream.class, stream.getClass());
+		Assertions.assertEquals(EasyStream.class, stream.getClass());
 
 		stream = Stream.of(1, 2, 3, 4)
 				.collect(CollectorUtil.transform(HashSet::new, EasyStream::of));
-		Assert.assertEquals(EasyStream.class, stream.getClass());
+		Assertions.assertEquals(EasyStream.class, stream.getClass());
 	}
 
 	@Test
 	public void testToEasyStream() {
 		final Stream<Integer> stream = Stream.of(1, 2, 3, 4)
 				.collect(CollectorUtil.toEasyStream());
-		Assert.assertEquals(EasyStream.class, stream.getClass());
+		Assertions.assertEquals(EasyStream.class, stream.getClass());
 	}
 
 	@Test
@@ -61,9 +61,9 @@ public class CollectorUtilTest {
 				.filterByKey(k -> (k & 1) == 1)
 				.inverse()
 				.toMap();
-		Assert.assertEquals((Integer) 1, map.get("1"));
-		Assert.assertEquals((Integer) 3, map.get("3"));
-		Assert.assertEquals((Integer) 5, map.get("5"));
+		Assertions.assertEquals((Integer) 1, map.get("1"));
+		Assertions.assertEquals((Integer) 3, map.get("3"));
+		Assertions.assertEquals((Integer) 5, map.get("5"));
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class CollectorUtilTest {
 				.collect(Collectors.groupingBy(Function.identity(),
 						CollectorUtil.filtering(i -> i > 1, Collectors.counting())
 				));
-		Assert.assertEquals(MapUtil.builder()
+		Assertions.assertEquals(MapUtil.builder()
 				.put(1, 0L)
 				.put(2, 1L)
 				.put(3, 1L)
@@ -85,20 +85,20 @@ public class CollectorUtilTest {
 		Map<Boolean, Set<String>> map = list.stream()
 			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf, LinkedHashSet::new, LinkedHashMap::new));
 
-		Assert.assertEquals(LinkedHashMap.class, map.getClass());
-		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
-		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
+		Assertions.assertEquals(LinkedHashMap.class, map.getClass());
+		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
+		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
 
 		map = list.stream()
 			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf, LinkedHashSet::new));
-		Assert.assertEquals(HashMap.class, map.getClass());
-		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
-		Assert.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
+		Assertions.assertEquals(HashMap.class, map.getClass());
+		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
+		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
 
 		Map<Boolean, List<String>> map2 = list.stream()
 			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf));
-		Assert.assertEquals(Arrays.asList("2", "2", "4"), map2.get(Boolean.TRUE));
-		Assert.assertEquals(Arrays.asList("1", "1", "3"), map2.get(Boolean.FALSE));
+		Assertions.assertEquals(Arrays.asList("2", "2", "4"), map2.get(Boolean.TRUE));
+		Assertions.assertEquals(Arrays.asList("1", "1", "3"), map2.get(Boolean.FALSE));
 
 	}
 

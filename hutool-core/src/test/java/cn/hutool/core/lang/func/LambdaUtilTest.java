@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,14 +22,14 @@ public class LambdaUtilTest {
 	public void getMethodNameTest() {
 		final SerFunction<MyTeacher, String> lambda = MyTeacher::getAge;
 		final String methodName = LambdaUtil.getMethodName(lambda);
-		Assert.assertEquals("getAge", methodName);
+		Assertions.assertEquals("getAge", methodName);
 	}
 
 	@Test
 	public void getFieldNameTest() {
 		final SerFunction<MyTeacher, String> lambda = MyTeacher::getAge;
 		final String fieldName = LambdaUtil.getFieldName(lambda);
-		Assert.assertEquals("age", fieldName);
+		Assertions.assertEquals("age", fieldName);
 	}
 
 	@Test
@@ -38,32 +38,32 @@ public class LambdaUtilTest {
 			// 引用构造函数
 			final SerSupplier<MyTeacher> lambda = MyTeacher::new;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
-			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
-			Assert.assertEquals(MyTeacher.class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assertions.assertEquals(MyTeacher.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 数组构造函数引用(此处数组构造参数)
 			final SerFunction<Integer, MyTeacher[]> lambda = MyTeacher[]::new;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
-			Assert.assertEquals(int.class, lambdaInfo.getParameterTypes()[0]);
-			Assert.assertEquals(MyTeacher[].class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(int.class, lambdaInfo.getParameterTypes()[0]);
+			Assertions.assertEquals(MyTeacher[].class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用静态方法
 			final SerSupplier<String> lambda = MyTeacher::takeAge;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
-			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
-			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assertions.assertEquals(String.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用特定对象的实例方法
 			final SerSupplier<String> lambda = new MyTeacher()::getAge;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
-			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
-			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assertions.assertEquals(String.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 引用特定类型的任意对象的实例方法
 			final SerFunction<MyTeacher, String> lambda = MyTeacher::getAge;
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
-			Assert.assertEquals(0, lambdaInfo.getParameterTypes().length);
-			Assert.assertEquals(String.class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(0, lambdaInfo.getParameterTypes().length);
+			Assertions.assertEquals(String.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 最最重要的！！！
 			final Character character = '0';
@@ -76,21 +76,21 @@ public class LambdaUtilTest {
 			};
 			final LambdaInfo lambdaInfo = LambdaUtil.resolve(lambda);
 			// 获取闭包使用的参数类型
-			Assert.assertEquals(Character.class, lambdaInfo.getParameterTypes()[0]);
-			Assert.assertEquals(Integer.class, lambdaInfo.getParameterTypes()[1]);
+			Assertions.assertEquals(Character.class, lambdaInfo.getParameterTypes()[0]);
+			Assertions.assertEquals(Integer.class, lambdaInfo.getParameterTypes()[1]);
 			// 最后几个是原有lambda的参数类型
-			Assert.assertEquals(Object.class, lambdaInfo.getParameterTypes()[2]);
-			Assert.assertEquals(Boolean.class, lambdaInfo.getParameterTypes()[3]);
-			Assert.assertEquals(String.class, lambdaInfo.getParameterTypes()[4]);
+			Assertions.assertEquals(Object.class, lambdaInfo.getParameterTypes()[2]);
+			Assertions.assertEquals(Boolean.class, lambdaInfo.getParameterTypes()[3]);
+			Assertions.assertEquals(String.class, lambdaInfo.getParameterTypes()[4]);
 
-			Assert.assertEquals(void.class, lambdaInfo.getReturnType());
+			Assertions.assertEquals(void.class, lambdaInfo.getReturnType());
 		}, () -> {
 			// 一些特殊的lambda
-			Assert.assertEquals("T", LambdaUtil.<SerFunction<Object, Stream<?>>>resolve(Stream::of).getParameterTypes()[0].getTypeName());
-			Assert.assertEquals(MyTeacher[][].class, LambdaUtil.<SerFunction<Integer, MyTeacher[][]>>resolve(MyTeacher[][]::new).getReturnType());
-			Assert.assertEquals(Integer[][][].class, LambdaUtil.<SerConsumer<Integer[][][]>>resolve(a -> {
+			Assertions.assertEquals("T", LambdaUtil.<SerFunction<Object, Stream<?>>>resolve(Stream::of).getParameterTypes()[0].getTypeName());
+			Assertions.assertEquals(MyTeacher[][].class, LambdaUtil.<SerFunction<Integer, MyTeacher[][]>>resolve(MyTeacher[][]::new).getReturnType());
+			Assertions.assertEquals(Integer[][][].class, LambdaUtil.<SerConsumer<Integer[][][]>>resolve(a -> {
 			}).getParameterTypes()[0]);
-			Assert.assertEquals(Integer[][][].class, LambdaUtil.resolve((Serializable & SerConsumer3<Integer[][][], Integer[][], Integer>) (a, b, c) -> {
+			Assertions.assertEquals(Integer[][][].class, LambdaUtil.resolve((Serializable & SerConsumer3<Integer[][][], Integer[][], Integer>) (a, b, c) -> {
 			}).getParameterTypes()[0]);
 		}).forEach(Runnable::run);
 
@@ -105,48 +105,48 @@ public class LambdaUtilTest {
 		Stream.<Runnable>of(() -> {
 			// 引用特定类型的任意对象的实例方法
 			final SerFunction<MyTeacher, String> lambda = MyTeacher::getAge;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 枚举测试，不会导致类型擦除
 			final SerFunction<LambdaKindEnum, Integer> lambda = LambdaKindEnum::ordinal;
-			Assert.assertEquals(LambdaKindEnum.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(LambdaKindEnum.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 调用父类方法，能获取到正确的子类类型
 			final SerFunction<MyTeacher, ?> lambda = MyTeacher::getId;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 引用特定对象的实例方法
 			final SerSupplier<String> lambda = myTeacher::getAge;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 枚举测试，只能获取到枚举类型
 			final SerSupplier<Integer> lambda = LambdaKindEnum.REF_NONE::ordinal;
-			Assert.assertEquals(Enum.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(Enum.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 调用父类方法，只能获取到父类类型
 			final SerSupplier<?> lambda = myTeacher::getId;
-			Assert.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 引用静态带参方法，能够获取到正确的参数类型
 			final SerFunction<MyTeacher, String> lambda = MyTeacher::takeAgeBy;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 引用父类静态带参方法，只能获取到父类类型
 			final SerSupplier<?> lambda = MyTeacher::takeId;
-			Assert.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(Entity.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 引用静态无参方法，能够获取到正确的类型
 			final SerSupplier<String> lambda = MyTeacher::takeAge;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 引用父类静态无参方法，能够获取到正确的参数类型
 			final SerFunction<MyTeacher, ?> lambda = MyTeacher::takeIdBy;
-			Assert.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(MyTeacher.class, LambdaUtil.getRealClass(lambda));
 		}, () -> {
 			// 数组测试
 			final SerConsumer<String[]> lambda = (final String[] stringList) -> {
 			};
-			Assert.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
+			Assertions.assertEquals(String[].class, LambdaUtil.getRealClass(lambda));
 		}).forEach(Runnable::run);
 	}
 
@@ -158,8 +158,8 @@ public class LambdaUtilTest {
 		final Function<Bean, Long> getId = LambdaUtil.buildGetter(MethodUtil.getMethod(Bean.class, "getId"));
 		final Function<Bean, Long> getId2 = LambdaUtil.buildGetter(Bean.class, Bean.Fields.id);
 
-		Assert.assertEquals(getId, getId2);
-		Assert.assertEquals(bean.getId(), getId.apply(bean));
+		Assertions.assertEquals(getId, getId2);
+		Assertions.assertEquals(bean.getId(), getId.apply(bean));
 	}
 
 	@Test
@@ -171,12 +171,12 @@ public class LambdaUtilTest {
 		final BiConsumer<Bean, Long> setId = LambdaUtil.buildSetter(MethodUtil.getMethod(Bean.class, "setId", Long.class));
 		final BiConsumer<Bean, Long> setId2 = LambdaUtil.buildSetter(Bean.class, Bean.Fields.id);
 		final BiConsumer<Bean, Boolean> setFlag = LambdaUtil.buildSetter(Bean.class, Bean.Fields.flag);
-		Assert.assertEquals(setId, setId2);
+		Assertions.assertEquals(setId, setId2);
 
 		setId.accept(bean, 3L);
 		setFlag.accept(bean, true);
-		Assert.assertEquals(3L, (long) bean.getId());
-		Assert.assertTrue(bean.isFlag());
+		Assertions.assertEquals(3L, (long) bean.getId());
+		Assertions.assertTrue(bean.isFlag());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -188,8 +188,8 @@ public class LambdaUtilTest {
 		bean.setFlag(true);
 		final BiFunction<Bean, String, Tuple> uniqueKeyFunction = LambdaUtil.build(BiFunction.class, Bean.class, "uniqueKey", String.class);
 		final Function4<Tuple, Bean, String, Integer, Double> paramsFunction = LambdaUtil.build(Function4.class, Bean.class, "params", String.class, Integer.class, Double.class);
-		Assert.assertEquals(bean.uniqueKey("test"), uniqueKeyFunction.apply(bean, "test"));
-		Assert.assertEquals(bean.params("test", 1, 0.5), paramsFunction.apply(bean, "test", 1, 0.5));
+		Assertions.assertEquals(bean.uniqueKey("test"), uniqueKeyFunction.apply(bean, "test"));
+		Assertions.assertEquals(bean.params("test", 1, 0.5), paramsFunction.apply(bean, "test", 1, 0.5));
 	}
 
 	@FunctionalInterface
@@ -287,7 +287,7 @@ public class LambdaUtilTest {
 	public void lambdaClassNameTest() {
 		final String lambdaClassName1 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
 		final String lambdaClassName2 = LambdaUtilTestHelper.getLambdaClassName(MyTeacher::getAge);
-		Assert.assertNotEquals(lambdaClassName1, lambdaClassName2);
+		Assertions.assertNotEquals(lambdaClassName1, lambdaClassName2);
 	}
 
 	static class LambdaUtilTestHelper {

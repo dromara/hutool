@@ -1,8 +1,8 @@
 package cn.hutool.db;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class HsqldbTest {
 
 	private static final String DS_GROUP_NAME = "hsqldb";
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() {
 		final Db db = Db.of(DS_GROUP_NAME);
 		db.execute("CREATE TABLE test(a INTEGER, b BIGINT)");
@@ -29,12 +29,12 @@ public class HsqldbTest {
 	@Test
 	public void connTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).query("select * from test");
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 
 	@Test
 	public void findTest() {
 		final List<Entity> query = Db.of(DS_GROUP_NAME).find(Entity.of("test"));
-		Assert.assertEquals(4, query.size());
+		Assertions.assertEquals(4, query.size());
 	}
 }

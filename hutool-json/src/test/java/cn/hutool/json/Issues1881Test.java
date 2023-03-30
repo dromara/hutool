@@ -2,8 +2,8 @@ package cn.hutool.json;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,6 @@ public class Issues1881Test {
 		holderContactVOList.add(new ThingsHolderContactVO().setId(1L).setName("1"));
 		holderContactVOList.add(new ThingsHolderContactVO().setId(2L).setName("2"));
 
-		Assert.assertEquals("[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}]", JSONUtil.parseArray(holderContactVOList).toString());
+		Assertions.assertEquals("[{\"id\":1,\"name\":\"1\"},{\"id\":2,\"name\":\"2\"}]", JSONUtil.parseArray(holderContactVOList).toString());
 	}
 }

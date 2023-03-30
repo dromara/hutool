@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +29,11 @@ public class GenericBuilderTest {
 				.with(Box::setHeight, 7)
 				.build();
 
-		Assert.assertEquals(1024L, box.getId().longValue());
-		Assert.assertEquals("Hello World!", box.getTitle());
-		Assert.assertEquals(9, box.getLength().intValue());
-		Assert.assertEquals(8, box.getWidth().intValue());
-		Assert.assertEquals(7, box.getHeight().intValue());
+		Assertions.assertEquals(1024L, box.getId().longValue());
+		Assertions.assertEquals("Hello World!", box.getTitle());
+		Assertions.assertEquals(9, box.getLength().intValue());
+		Assertions.assertEquals(8, box.getWidth().intValue());
+		Assertions.assertEquals(7, box.getHeight().intValue());
 
 		// 对象修改
 		final Box boxModified = GenericBuilder
@@ -44,11 +44,11 @@ public class GenericBuilderTest {
 				.with(Box::setHeight, 5)
 				.build();
 
-		Assert.assertEquals(1024L, boxModified.getId().longValue());
-		Assert.assertEquals("Hello Friend!", box.getTitle());
-		Assert.assertEquals(3, boxModified.getLength().intValue());
-		Assert.assertEquals(4, boxModified.getWidth().intValue());
-		Assert.assertEquals(5, boxModified.getHeight().intValue());
+		Assertions.assertEquals(1024L, boxModified.getId().longValue());
+		Assertions.assertEquals("Hello Friend!", box.getTitle());
+		Assertions.assertEquals(3, boxModified.getLength().intValue());
+		Assertions.assertEquals(4, boxModified.getWidth().intValue());
+		Assertions.assertEquals(5, boxModified.getHeight().intValue());
 
 		// 多参数构造
 		final Box box1 = GenericBuilder
@@ -56,12 +56,12 @@ public class GenericBuilderTest {
 				.with(Box::alis)
 				.build();
 
-		Assert.assertEquals(2048L, box1.getId().longValue());
-		Assert.assertEquals("Hello Partner!", box1.getTitle());
-		Assert.assertEquals(222, box1.getLength().intValue());
-		Assert.assertEquals(333, box1.getWidth().intValue());
-		Assert.assertEquals(444, box1.getHeight().intValue());
-		Assert.assertEquals("TomXin:\"Hello Partner!\"", box1.getTitleAlias());
+		Assertions.assertEquals(2048L, box1.getId().longValue());
+		Assertions.assertEquals("Hello Partner!", box1.getTitle());
+		Assertions.assertEquals(222, box1.getLength().intValue());
+		Assertions.assertEquals(333, box1.getWidth().intValue());
+		Assertions.assertEquals(444, box1.getHeight().intValue());
+		Assertions.assertEquals("TomXin:\"Hello Partner!\"", box1.getTitleAlias());
 	}
 
 	@Test
@@ -73,9 +73,9 @@ public class GenericBuilderTest {
 				.with(Map::put, "yellow", "#FFFF00")
 				.with(Map::put, "blue", "#0000FF")
 				.build();
-		Assert.assertEquals("#FF0000", colorMap.get("red"));
-		Assert.assertEquals("#FFFF00", colorMap.get("yellow"));
-		Assert.assertEquals("#0000FF", colorMap.get("blue"));
+		Assertions.assertEquals("#FF0000", colorMap.get("red"));
+		Assertions.assertEquals("#FFFF00", colorMap.get("yellow"));
+		Assertions.assertEquals("#0000FF", colorMap.get("blue"));
 	}
 
 	@Getter

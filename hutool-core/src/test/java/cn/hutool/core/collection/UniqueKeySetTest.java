@@ -2,8 +2,8 @@ package cn.hutool.core.collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
@@ -18,7 +18,7 @@ public class UniqueKeySetTest {
 		set.add(new UniqueTestBean("id2", "王五", "木星"));
 
 		// 后两个ID重复
-		Assert.assertEquals(2, set.size());
+		Assertions.assertEquals(2, set.size());
 	}
 
 	@Data

@@ -1,8 +1,8 @@
 package cn.hutool.core.annotation;
 
 import lombok.SneakyThrows;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
@@ -24,57 +24,56 @@ public class HierarchicalAnnotatedElementTest {
 	public void testCreateFromMethod() {
 		final Method method1 = Foo.class.getDeclaredMethod("method");
 		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(method1);
-		Assert.assertEquals(3, elements.getElementMappings().size());
+		Assertions.assertEquals(3, elements.getElementMappings().size());
 
 		final Method method2 = Foo.class.getDeclaredMethod("method2");
 		elements = HierarchicalAnnotatedElements.create(method2);
-		Assert.assertEquals(1, elements.getElementMappings().size());
+		Assertions.assertEquals(1, elements.getElementMappings().size());
 	}
 
 	@Test
 	public void testCreate() {
 		HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
-		Assert.assertNotNull(elements);
-		Assert.assertEquals(3, elements.getElementMappings().size());
+		Assertions.assertNotNull(elements);
+		Assertions.assertEquals(3, elements.getElementMappings().size());
 
 		elements = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY);
-		Assert.assertNotNull(elements);
-		Assert.assertEquals(3, elements.getElementMappings().size());
+		Assertions.assertNotNull(elements);
+		Assertions.assertEquals(3, elements.getElementMappings().size());
 
-		Assert.assertEquals(elements, HierarchicalAnnotatedElements.create(elements, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.create(elements, ELEMENT_MAPPING_FACTORY));
 	}
 
 	@Test
 	public void testEquals() {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY);
-		Assert.assertEquals(elements, elements);
-		Assert.assertEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY));
-		Assert.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY));
-		Assert.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e));
-		Assert.assertNotEquals(elements, null);
+		Assertions.assertEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY));
+		Assertions.assertNotEquals(elements, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e));
+		Assertions.assertNotEquals(elements, null);
 	}
 
 	@Test
 	public void testHashCode() {
 		final int hashCode = HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode();
-		Assert.assertEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode());
-		Assert.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY).hashCode());
-		Assert.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e).hashCode());
+		Assertions.assertEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, ELEMENT_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Super.class, ELEMENT_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, HierarchicalAnnotatedElements.create(Foo.class, (es, e) -> e).hashCode());
 	}
 
 	@Test
 	public void testGetElement() {
 		final AnnotatedElement element = Foo.class;
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(element, ELEMENT_MAPPING_FACTORY);
-		Assert.assertSame(element, elements.getElement());
+		Assertions.assertSame(element, elements.getElement());
 	}
 
 	@Test
 	public void testIsAnnotationPresent() {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
-		Assert.assertTrue(elements.isAnnotationPresent(Annotation1.class));
-		Assert.assertTrue(elements.isAnnotationPresent(Annotation2.class));
-		Assert.assertTrue(elements.isAnnotationPresent(Annotation3.class));
+		Assertions.assertTrue(elements.isAnnotationPresent(Annotation1.class));
+		Assertions.assertTrue(elements.isAnnotationPresent(Annotation2.class));
+		Assertions.assertTrue(elements.isAnnotationPresent(Annotation3.class));
 	}
 
 	@Test
@@ -86,7 +85,7 @@ public class HierarchicalAnnotatedElementTest {
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
 		final Annotation[] annotations = new Annotation[]{ annotation1, annotation2, annotation3 };
 
-		Assert.assertArrayEquals(annotations, elements.getAnnotations());
+		Assertions.assertArrayEquals(annotations, elements.getAnnotations());
 	}
 
 	@Test
@@ -94,13 +93,13 @@ public class HierarchicalAnnotatedElementTest {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
-		Assert.assertEquals(annotation1, elements.getAnnotation(Annotation1.class));
+		Assertions.assertEquals(annotation1, elements.getAnnotation(Annotation1.class));
 
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
-		Assert.assertEquals(annotation2, elements.getAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation2, elements.getAnnotation(Annotation2.class));
 
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
-		Assert.assertEquals(annotation3, elements.getAnnotation(Annotation3.class));
+		Assertions.assertEquals(annotation3, elements.getAnnotation(Annotation3.class));
 	}
 
 	@Test
@@ -108,13 +107,13 @@ public class HierarchicalAnnotatedElementTest {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getAnnotationsByType(Annotation1.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getAnnotationsByType(Annotation1.class));
 
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation2 }, elements.getAnnotationsByType(Annotation2.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation2 }, elements.getAnnotationsByType(Annotation2.class));
 
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation3 }, elements.getAnnotationsByType(Annotation3.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation3 }, elements.getAnnotationsByType(Annotation3.class));
 	}
 
 	@Test
@@ -122,13 +121,13 @@ public class HierarchicalAnnotatedElementTest {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getDeclaredAnnotationsByType(Annotation1.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation1 }, elements.getDeclaredAnnotationsByType(Annotation1.class));
 
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation2 }, elements.getDeclaredAnnotationsByType(Annotation2.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation2 }, elements.getDeclaredAnnotationsByType(Annotation2.class));
 
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
-		Assert.assertArrayEquals(new Annotation[]{ annotation3 }, elements.getDeclaredAnnotationsByType(Annotation3.class));
+		Assertions.assertArrayEquals(new Annotation[]{ annotation3 }, elements.getDeclaredAnnotationsByType(Annotation3.class));
 	}
 
 	@Test
@@ -136,13 +135,13 @@ public class HierarchicalAnnotatedElementTest {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
 
 		final Annotation1 annotation1 = Foo.class.getAnnotation(Annotation1.class);
-		Assert.assertEquals(annotation1, elements.getDeclaredAnnotation(Annotation1.class));
+		Assertions.assertEquals(annotation1, elements.getDeclaredAnnotation(Annotation1.class));
 
 		final Annotation2 annotation2 = Super.class.getAnnotation(Annotation2.class);
-		Assert.assertEquals(annotation2, elements.getDeclaredAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation2, elements.getDeclaredAnnotation(Annotation2.class));
 
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
-		Assert.assertEquals(annotation3, elements.getDeclaredAnnotation(Annotation3.class));
+		Assertions.assertEquals(annotation3, elements.getDeclaredAnnotation(Annotation3.class));
 	}
 
 	@Test
@@ -154,18 +153,18 @@ public class HierarchicalAnnotatedElementTest {
 		final Annotation3 annotation3 = Interface.class.getAnnotation(Annotation3.class);
 		final Annotation[] annotations = new Annotation[]{ annotation1, annotation2, annotation3 };
 
-		Assert.assertArrayEquals(annotations, elements.getDeclaredAnnotations());
+		Assertions.assertArrayEquals(annotations, elements.getDeclaredAnnotations());
 	}
 
 	@Test
 	public void testIterator() {
 		final HierarchicalAnnotatedElements elements = HierarchicalAnnotatedElements.create(Foo.class);
 		final Iterator<AnnotatedElement> iterator = elements.iterator();
-		Assert.assertNotNull(iterator);
+		Assertions.assertNotNull(iterator);
 
 		final List<AnnotatedElement> elementList = new ArrayList<>();
 		iterator.forEachRemaining(elementList::add);
-		Assert.assertEquals(Arrays.asList(Foo.class, Super.class, Interface.class), elementList);
+		Assertions.assertEquals(Arrays.asList(Foo.class, Super.class, Interface.class), elementList);
 	}
 
 	@Target({ElementType.TYPE_USE, ElementType.METHOD})
@@ -180,6 +179,7 @@ public class HierarchicalAnnotatedElementTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Annotation1 { }
 
+	@SuppressWarnings("unused")
 	@Annotation3
 	private interface Interface {
 		@Annotation3

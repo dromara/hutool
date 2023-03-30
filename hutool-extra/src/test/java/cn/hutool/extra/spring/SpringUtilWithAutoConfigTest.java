@@ -1,20 +1,20 @@
 package cn.hutool.extra.spring;
 
-import cn.hutool.core.reflect.TypeReference;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.reflect.TypeReference;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SpringUtilWithAutoConfigTest.Demo2.class})
 //@Import(cn.hutool.extra.spring.SpringUtil.class)
 @EnableAutoConfiguration
@@ -31,23 +31,23 @@ public class SpringUtilWithAutoConfigTest {
 		SpringUtil.registerBean("registerBean", registerBean);
 
 		final Demo2 registerBean2 = SpringUtil.getBean("registerBean");
-		Assert.assertEquals(123, registerBean2.getId());
-		Assert.assertEquals("222", registerBean2.getName());
+		Assertions.assertEquals(123, registerBean2.getId());
+		Assertions.assertEquals("222", registerBean2.getName());
 	}
 
 	@Test
 	public void getBeanTest(){
 		final Demo2 testDemo = SpringUtil.getBean("testDemo");
-		Assert.assertEquals(12345, testDemo.getId());
-		Assert.assertEquals("test", testDemo.getName());
+		Assertions.assertEquals(12345, testDemo.getId());
+		Assertions.assertEquals("test", testDemo.getName());
 	}
 
 	@Test
 	public void getBeanWithTypeReferenceTest() {
 		final Map<String, Object> mapBean = SpringUtil.getBean(new TypeReference<Map<String, Object>>() {});
-		Assert.assertNotNull(mapBean);
-		Assert.assertEquals("value1", mapBean.get("key1"));
-		Assert.assertEquals("value2", mapBean.get("key2"));
+		Assertions.assertNotNull(mapBean);
+		Assertions.assertEquals("value1", mapBean.get("key1"));
+		Assertions.assertEquals("value2", mapBean.get("key2"));
 	}
 
 	@Data

@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TableMapTest {
 
@@ -11,11 +11,11 @@ public class TableMapTest {
 		tableMap.put("aaa", 111);
 		tableMap.put("bbb", 222);
 
-		Assert.assertEquals(new Integer(111), tableMap.get("aaa"));
-		Assert.assertEquals(new Integer(222), tableMap.get("bbb"));
+		Assertions.assertEquals(new Integer(111), tableMap.get("aaa"));
+		Assertions.assertEquals(new Integer(222), tableMap.get("bbb"));
 
-		Assert.assertEquals("aaa", tableMap.getKey(111));
-		Assert.assertEquals("bbb", tableMap.getKey(222));
+		Assertions.assertEquals("aaa", tableMap.getKey(111));
+		Assertions.assertEquals("bbb", tableMap.getKey(222));
 	}
 
 	@SuppressWarnings("OverwrittenKey")
@@ -28,7 +28,7 @@ public class TableMapTest {
 
 		tableMap.remove("a");
 
-		Assert.assertEquals(0, tableMap.size());
+		Assertions.assertEquals(0, tableMap.size());
 	}
 
 	@SuppressWarnings("OverwrittenKey")
@@ -41,6 +41,6 @@ public class TableMapTest {
 
 		tableMap.remove("a", 222);
 
-		Assert.assertEquals(1, tableMap.size());
+		Assertions.assertEquals(1, tableMap.size());
 	}
 }

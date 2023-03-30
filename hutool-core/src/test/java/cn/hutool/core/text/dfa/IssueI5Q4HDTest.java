@@ -1,7 +1,7 @@
 package cn.hutool.core.text.dfa;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,6 +20,6 @@ public class IssueI5Q4HDTest {
 		wordTree.addWords(keyWordSet);
 		//DateUtil.beginOfHour()
 		final List<String> strings = wordTree.matchAll(content, -1, true, true);
-		Assert.assertEquals("[站房, 站房建设, 面积较小, 不符合规范要求, 辅助设施, 站房]", strings.toString());
+		Assertions.assertEquals("[站房, 站房建设, 面积较小, 不符合规范要求, 辅助设施, 站房]", strings.toString());
 	}
 }

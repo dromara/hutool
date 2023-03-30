@@ -1,17 +1,17 @@
 package cn.hutool.poi.excel;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WorkbookUtilTest {
 
 	@Test
 	public void createBookTest(){
 		Workbook book = WorkbookUtil.createBook(true);
-		Assert.assertNotNull(book);
+		Assertions.assertNotNull(book);
 
 		book = WorkbookUtil.createBook(false);
-		Assert.assertNotNull(book);
+		Assertions.assertNotNull(book);
 	}
 }

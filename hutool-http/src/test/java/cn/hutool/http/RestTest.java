@@ -5,9 +5,9 @@ import cn.hutool.http.client.Request;
 import cn.hutool.http.meta.Header;
 import cn.hutool.http.meta.Method;
 import cn.hutool.json.JSONUtil;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Rest类型请求单元测试
@@ -24,12 +24,12 @@ public class RestTest {
 				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
-		Assert.assertEquals("application/json;charset=UTF-8", request.header(Header.CONTENT_TYPE));
+		Assertions.assertEquals("application/json;charset=UTF-8", request.header(Header.CONTENT_TYPE));
 	}
 
 	@SuppressWarnings("resource")
 	@Test
-	@Ignore
+	@Disabled
 	public void postTest() {
 		final Request request = Request.of("http://localhost:8090/rest/restTest/")
 				.method(Method.POST)
@@ -40,7 +40,7 @@ public class RestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void postTest2() {
 		final String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.ofObj()//
 				.set("aaa", "aaaValue")
@@ -49,7 +49,7 @@ public class RestTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getWithBodyTest() {
 		final Request request = Request.of("http://localhost:8888/restTest")//
 				.header(Header.CONTENT_TYPE, "application/json")

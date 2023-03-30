@@ -1,7 +1,7 @@
 package cn.hutool.core.bean;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class BeanWithReturnThisTest {
 
@@ -12,7 +12,7 @@ public class BeanWithReturnThisTest {
 		final PropDesc prop = beanDesc.getProp("a");
 		prop.setValue(bean, "123");
 
-		Assert.assertEquals("123", bean.getA());
+		Assertions.assertEquals("123", bean.getA());
 	}
 
 	static class BeanWithRetuenThis{

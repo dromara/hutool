@@ -4,8 +4,8 @@ import cn.hutool.core.thread.ConcurrencyTester;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WeakConcurrentMapTest {
 
@@ -26,10 +26,10 @@ public class WeakConcurrentMapTest {
 		map.put(key3, value3);
 		map.put(key4, value4);
 
-		Assert.assertEquals(value1, map.get(key1));
-		Assert.assertEquals(value2, map.get(key2));
-		Assert.assertEquals(value3, map.get(key3));
-		Assert.assertEquals(value4, map.get(key4));
+		Assertions.assertEquals(value1, map.get(key1));
+		Assertions.assertEquals(value2, map.get(key2));
+		Assertions.assertEquals(value3, map.get(key3));
+		Assertions.assertEquals(value4, map.get(key4));
 
 		// 清空引用
 		//noinspection UnusedAssignment
@@ -40,7 +40,7 @@ public class WeakConcurrentMapTest {
 		System.gc();
 		ThreadUtil.sleep(200L);
 
-		Assert.assertEquals(2, map.size());
+		Assertions.assertEquals(2, map.size());
 	}
 
 	@Test
@@ -49,8 +49,8 @@ public class WeakConcurrentMapTest {
 		final ConcurrencyTester tester = new ConcurrencyTester(2000);
 		tester.test(()-> cache.computeIfAbsent("aaa" + RandomUtil.randomInt(2), (key)-> "aaaValue"));
 
-		Assert.assertTrue(tester.getInterval() > 0);
+		Assertions.assertTrue(tester.getInterval() > 0);
 		final String value = ObjUtil.defaultIfNull(cache.get("aaa0"), cache.get("aaa1"));
-		Assert.assertEquals("aaaValue", value);
+		Assertions.assertEquals("aaaValue", value);
 	}
 }

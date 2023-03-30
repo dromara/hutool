@@ -3,13 +3,13 @@ package cn.hutool.http.client;
 import cn.hutool.core.lang.Console;
 import cn.hutool.http.client.engine.jdk.JdkClientEngine;
 import cn.hutool.http.meta.Method;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class JdkEngineTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void getTest(){
 		final ClientEngine engine = new JdkClientEngine();
 

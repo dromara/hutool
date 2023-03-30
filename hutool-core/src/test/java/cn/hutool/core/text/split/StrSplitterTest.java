@@ -1,7 +1,7 @@
 package cn.hutool.core.text.split;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -17,41 +17,41 @@ public class StrSplitterTest {
 		final String str1 = "a, ,efedsfs,   ddf";
 		final List<String> split = SplitUtil.split(str1, ",", 0, true, true);
 
-		Assert.assertEquals("ddf", split.get(2));
-		Assert.assertEquals(3, split.size());
+		Assertions.assertEquals("ddf", split.get(2));
+		Assertions.assertEquals(3, split.size());
 	}
 
 	@Test
 	public void splitByStrTest(){
 		final String str1 = "aabbccaaddaaee";
 		final List<String> split = SplitUtil.split(str1, "aa", 0, true, true);
-		Assert.assertEquals("ee", split.get(2));
-		Assert.assertEquals(3, split.size());
+		Assertions.assertEquals("ee", split.get(2));
+		Assertions.assertEquals(3, split.size());
 	}
 
 	@Test
 	public void splitByBlankTest(){
 		final String str1 = "aa bbccaa     ddaaee";
 		final List<String> split = SplitUtil.splitByBlank(str1);
-		Assert.assertEquals("ddaaee", split.get(2));
-		Assert.assertEquals(3, split.size());
+		Assertions.assertEquals("ddaaee", split.get(2));
+		Assertions.assertEquals(3, split.size());
 	}
 
 	@Test
 	public void splitPathTest(){
 		final String str1 = "/use/local\\bin";
 		final List<String> split = SplitUtil.splitPath(str1);
-		Assert.assertEquals("bin", split.get(2));
-		Assert.assertEquals(3, split.size());
+		Assertions.assertEquals("bin", split.get(2));
+		Assertions.assertEquals(3, split.size());
 	}
 
 	@Test
 	public void splitMappingTest() {
 		final String str = "1.2.";
 		final List<Long> split = SplitUtil.split(str, ".", 0, true, true, Long::parseLong);
-		Assert.assertEquals(2, split.size());
-		Assert.assertEquals(Long.valueOf(1L), split.get(0));
-		Assert.assertEquals(Long.valueOf(2L), split.get(1));
+		Assertions.assertEquals(2, split.size());
+		Assertions.assertEquals(Long.valueOf(1L), split.get(0));
+		Assertions.assertEquals(Long.valueOf(2L), split.get(1));
 	}
 
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
@@ -62,12 +62,12 @@ public class StrSplitterTest {
 		final String[] strings = SplitUtil.split(str, ",", -1, false, false)
 				.toArray(new String[0]);
 
-		Assert.assertNotNull(strings);
-		Assert.assertArrayEquals(split, strings);
+		Assertions.assertNotNull(strings);
+		Assertions.assertArrayEquals(split, strings);
 
 		final String[] strings2 = SplitUtil.split(str, ",", -1, false, true)
 				.toArray(new String[0]);
-		Assert.assertEquals(0, strings2.length);
+		Assertions.assertEquals(0, strings2.length);
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -76,13 +76,13 @@ public class StrSplitterTest {
 		final String str = null;
 		final String[] strings = SplitUtil.split(str, ",", -1, false, false)
 				.toArray(new String[0]);
-		Assert.assertNotNull(strings);
-		Assert.assertEquals(0, strings.length);
+		Assertions.assertNotNull(strings);
+		Assertions.assertEquals(0, strings.length);
 
 		final String[] strings2 = SplitUtil.split(str, ",", -1, false, true)
 				.toArray(new String[0]);
-		Assert.assertNotNull(strings2);
-		Assert.assertEquals(0, strings2.length);
+		Assertions.assertNotNull(strings2);
+		Assertions.assertEquals(0, strings2.length);
 	}
 
 	/**
@@ -92,14 +92,14 @@ public class StrSplitterTest {
 	public void splitByRegexTest(){
 		final String text = "01  821   34567890182345617821";
 		List<String> strings = SplitUtil.splitByRegex(text, "21", 0, false, true);
-		Assert.assertEquals(2, strings.size());
-		Assert.assertEquals("01  8", strings.get(0));
-		Assert.assertEquals("   345678901823456178", strings.get(1));
+		Assertions.assertEquals(2, strings.size());
+		Assertions.assertEquals("01  8", strings.get(0));
+		Assertions.assertEquals("   345678901823456178", strings.get(1));
 
 		strings = SplitUtil.splitByRegex(text, "21", 0, false, false);
-		Assert.assertEquals(3, strings.size());
-		Assert.assertEquals("01  8", strings.get(0));
-		Assert.assertEquals("   345678901823456178", strings.get(1));
-		Assert.assertEquals("", strings.get(2));
+		Assertions.assertEquals(3, strings.size());
+		Assertions.assertEquals("01  8", strings.get(0));
+		Assertions.assertEquals("   345678901823456178", strings.get(1));
+		Assertions.assertEquals("", strings.get(2));
 	}
 }

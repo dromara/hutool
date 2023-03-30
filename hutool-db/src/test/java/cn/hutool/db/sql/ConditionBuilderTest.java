@@ -1,7 +1,7 @@
 package cn.hutool.db.sql;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ConditionBuilderTest {
 
@@ -14,8 +14,8 @@ public class ConditionBuilderTest {
 
 		final ConditionBuilder builder = ConditionBuilder.of(c1, c2, c3);
 		final String sql = builder.build();
-		Assert.assertEquals("user IS NULL OR name IS NOT NULL AND group LIKE ?", sql);
-		Assert.assertEquals(1, builder.getParamValues().size());
-		Assert.assertEquals("%aaa", builder.getParamValues().get(0));
+		Assertions.assertEquals("user IS NULL OR name IS NOT NULL AND group LIKE ?", sql);
+		Assertions.assertEquals(1, builder.getParamValues().size());
+		Assertions.assertEquals("%aaa", builder.getParamValues().get(0));
 	}
 }

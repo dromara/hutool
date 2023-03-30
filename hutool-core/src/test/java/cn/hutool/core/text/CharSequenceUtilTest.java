@@ -3,8 +3,8 @@ package cn.hutool.core.text;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.regex.Pattern;
@@ -14,7 +14,7 @@ public class CharSequenceUtilTest {
 	@Test
 	public void replaceTest() {
 		final String actual = CharSequenceUtil.replace("SSM15930297701BeryAllen", Pattern.compile("[0-9]"), matcher -> "");
-		Assert.assertEquals("SSMBeryAllen", actual);
+		Assertions.assertEquals("SSMBeryAllen", actual);
 	}
 
 	@Test
@@ -22,41 +22,41 @@ public class CharSequenceUtilTest {
 		// https://gitee.com/dromara/hutool/issues/I4M16G
 		final String replace = "#{A}";
 		final String result = CharSequenceUtil.replace(replace, "#{AAAAAAA}", "1");
-		Assert.assertEquals(replace, result);
+		Assertions.assertEquals(replace, result);
 	}
 
 	@Test
 	public void replaceByStrTest() {
 		final String replace = "SSM15930297701BeryAllen";
 		final String result = CharSequenceUtil.replace(replace, 5, 12, "***");
-		Assert.assertEquals("SSM15***01BeryAllen", result);
+		Assertions.assertEquals("SSM15***01BeryAllen", result);
 
 		final String emoji = StrUtil.replace("\uD83D\uDE00aabb\uD83D\uDE00ccdd", 2, 6, "***");
-		Assert.assertEquals("\uD83D\uDE00a***ccdd", emoji);
+		Assertions.assertEquals("\uD83D\uDE00a***ccdd", emoji);
 	}
 
 	@Test
 	public void addPrefixIfNotTest() {
 		final String str = "hutool";
 		String result = CharSequenceUtil.addPrefixIfNot(str, "hu");
-		Assert.assertEquals(str, result);
+		Assertions.assertEquals(str, result);
 
 		result = CharSequenceUtil.addPrefixIfNot(str, "Good");
-		Assert.assertEquals("Good" + str, result);
+		Assertions.assertEquals("Good" + str, result);
 	}
 
 	@Test
 	public void addSuffixIfNotTest() {
 		final String str = "hutool";
 		String result = CharSequenceUtil.addSuffixIfNot(str, "tool");
-		Assert.assertEquals(str, result);
+		Assertions.assertEquals(str, result);
 
 		result = CharSequenceUtil.addSuffixIfNot(str, " is Good");
-		Assert.assertEquals(str + " is Good", result);
+		Assertions.assertEquals(str + " is Good", result);
 
 		// https://gitee.com/dromara/hutool/issues/I4NS0F
 		result = CharSequenceUtil.addSuffixIfNot("", "/");
-		Assert.assertEquals("/", result);
+		Assertions.assertEquals("/", result);
 	}
 
 	@SuppressWarnings("UnnecessaryUnicodeEscape")
@@ -67,30 +67,30 @@ public class CharSequenceUtilTest {
 		String str1 = "\u00C1";
 		String str2 = "\u0041\u0301";
 
-		Assert.assertNotEquals(str1, str2);
+		Assertions.assertNotEquals(str1, str2);
 
 		str1 = CharSequenceUtil.normalize(str1);
 		str2 = CharSequenceUtil.normalize(str2);
-		Assert.assertEquals(str1, str2);
+		Assertions.assertEquals(str1, str2);
 	}
 
 	@Test
 	public void indexOfTest() {
 		int index = CharSequenceUtil.indexOf("abc123", '1');
-		Assert.assertEquals(3, index);
+		Assertions.assertEquals(3, index);
 		index = CharSequenceUtil.indexOf("abc123", '3');
-		Assert.assertEquals(5, index);
+		Assertions.assertEquals(5, index);
 		index = CharSequenceUtil.indexOf("abc123", 'a');
-		Assert.assertEquals(0, index);
+		Assertions.assertEquals(0, index);
 	}
 
 	@Test
 	public void indexOfTest2() {
 		int index = CharSequenceUtil.indexOf("abc123", '1', 0, 3);
-		Assert.assertEquals(-1, index);
+		Assertions.assertEquals(-1, index);
 
 		index = CharSequenceUtil.indexOf("abc123", 'b', 0, 3);
-		Assert.assertEquals(1, index);
+		Assertions.assertEquals(1, index);
 	}
 
 	@Test
@@ -99,80 +99,80 @@ public class CharSequenceUtilTest {
 		final String s = "华硕K42Intel酷睿i31代2G以下独立显卡不含机械硬盘固态硬盘120GB-192GB4GB-6GB";
 
 		String v = CharSequenceUtil.subPreGbk(s, 40, false);
-		Assert.assertEquals(39, v.getBytes(CharsetUtil.GBK).length);
+		Assertions.assertEquals(39, v.getBytes(CharsetUtil.GBK).length);
 
 		v = CharSequenceUtil.subPreGbk(s, 40, true);
-		Assert.assertEquals(41, v.getBytes(CharsetUtil.GBK).length);
+		Assertions.assertEquals(41, v.getBytes(CharsetUtil.GBK).length);
 	}
 
 	@Test
 	public void startWithTest() {
 		// https://gitee.com/dromara/hutool/issues/I4MV7Q
-		Assert.assertFalse(CharSequenceUtil.startWith("123", "123", false, true));
-		Assert.assertFalse(CharSequenceUtil.startWith(null, null, false, true));
-		Assert.assertFalse(CharSequenceUtil.startWith("abc", "abc", true, true));
+		Assertions.assertFalse(CharSequenceUtil.startWith("123", "123", false, true));
+		Assertions.assertFalse(CharSequenceUtil.startWith(null, null, false, true));
+		Assertions.assertFalse(CharSequenceUtil.startWith("abc", "abc", true, true));
 
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase(null, null));
-		Assert.assertFalse(CharSequenceUtil.startWithIgnoreCase(null, "abc"));
-		Assert.assertFalse(CharSequenceUtil.startWithIgnoreCase("abcdef", null));
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase("abcdef", "abc"));
-		Assert.assertTrue(CharSequenceUtil.startWithIgnoreCase("ABCDEF", "abc"));
+		Assertions.assertTrue(CharSequenceUtil.startWithIgnoreCase(null, null));
+		Assertions.assertFalse(CharSequenceUtil.startWithIgnoreCase(null, "abc"));
+		Assertions.assertFalse(CharSequenceUtil.startWithIgnoreCase("abcdef", null));
+		Assertions.assertTrue(CharSequenceUtil.startWithIgnoreCase("abcdef", "abc"));
+		Assertions.assertTrue(CharSequenceUtil.startWithIgnoreCase("ABCDEF", "abc"));
 	}
 
 	@Test
 	public void endWithTest() {
-		Assert.assertFalse(CharSequenceUtil.endWith("123", "123", false, true));
-		Assert.assertFalse(CharSequenceUtil.endWith(null, null, false, true));
-		Assert.assertFalse(CharSequenceUtil.endWith("abc", "abc", true, true));
+		Assertions.assertFalse(CharSequenceUtil.endWith("123", "123", false, true));
+		Assertions.assertFalse(CharSequenceUtil.endWith(null, null, false, true));
+		Assertions.assertFalse(CharSequenceUtil.endWith("abc", "abc", true, true));
 
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase(null, null));
-		Assert.assertFalse(CharSequenceUtil.endWithIgnoreCase(null, "abc"));
-		Assert.assertFalse(CharSequenceUtil.endWithIgnoreCase("abcdef", null));
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase("abcdef", "def"));
-		Assert.assertTrue(CharSequenceUtil.endWithIgnoreCase("ABCDEF", "def"));
+		Assertions.assertTrue(CharSequenceUtil.endWithIgnoreCase(null, null));
+		Assertions.assertFalse(CharSequenceUtil.endWithIgnoreCase(null, "abc"));
+		Assertions.assertFalse(CharSequenceUtil.endWithIgnoreCase("abcdef", null));
+		Assertions.assertTrue(CharSequenceUtil.endWithIgnoreCase("abcdef", "def"));
+		Assertions.assertTrue(CharSequenceUtil.endWithIgnoreCase("ABCDEF", "def"));
 	}
 
 	@Test
 	public void removePrefixIgnoreCaseTest(){
-		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "abc"));
-		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABC"));
-		Assert.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "Abc"));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", ""));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", null));
-		Assert.assertEquals("", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABCde"));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABCdef"));
-		Assert.assertNull(CharSequenceUtil.removePrefixIgnoreCase(null, "ABCdef"));
+		Assertions.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "abc"));
+		Assertions.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABC"));
+		Assertions.assertEquals("de", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "Abc"));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", ""));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", null));
+		Assertions.assertEquals("", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABCde"));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removePrefixIgnoreCase("ABCde", "ABCdef"));
+		Assertions.assertNull(CharSequenceUtil.removePrefixIgnoreCase(null, "ABCdef"));
 	}
 
 	@Test
 	public void removeSuffixIgnoreCaseTest(){
-		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "cde"));
-		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "CDE"));
-		Assert.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "Cde"));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", ""));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", null));
-		Assert.assertEquals("", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "ABCde"));
-		Assert.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "ABCdef"));
-		Assert.assertNull(CharSequenceUtil.removeSuffixIgnoreCase(null, "ABCdef"));
+		Assertions.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "cde"));
+		Assertions.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "CDE"));
+		Assertions.assertEquals("AB", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "Cde"));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", ""));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", null));
+		Assertions.assertEquals("", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "ABCde"));
+		Assertions.assertEquals("ABCde", CharSequenceUtil.removeSuffixIgnoreCase("ABCde", "ABCdef"));
+		Assertions.assertNull(CharSequenceUtil.removeSuffixIgnoreCase(null, "ABCdef"));
 	}
 
 	@SuppressWarnings("ConstantValue")
 	@Test
 	public void trimToNullTest(){
 		String a = "  ";
-		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+		Assertions.assertNull(CharSequenceUtil.trimToNull(a));
 
 		a = "";
-		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+		Assertions.assertNull(CharSequenceUtil.trimToNull(a));
 
 		a = null;
-		Assert.assertNull(CharSequenceUtil.trimToNull(a));
+		Assertions.assertNull(CharSequenceUtil.trimToNull(a));
 	}
 
 	@Test
 	public void containsAllTest() {
 		final String a = "2142342422423423";
-		Assert.assertTrue(StrUtil.containsAll(a, "214", "234"));
+		Assertions.assertTrue(StrUtil.containsAll(a, "214", "234"));
 	}
 
 	@Test
@@ -180,12 +180,12 @@ public class CharSequenceUtilTest {
 		final String emptyValue = "";
 		final Instant result1 = CharSequenceUtil.defaultIfEmpty(emptyValue,
 				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result1);
+		Assertions.assertNotNull(result1);
 
 		final String dateStr = "2020-10-23 15:12:30";
 		final Instant result2 = CharSequenceUtil.defaultIfEmpty(dateStr,
 				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result2);
+		Assertions.assertNotNull(result2);
 	}
 
 	@Test
@@ -193,32 +193,32 @@ public class CharSequenceUtilTest {
 		final String emptyValue = " ";
 		final Instant result1 = CharSequenceUtil.defaultIfBlank(emptyValue,
 				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result1);
+		Assertions.assertNotNull(result1);
 
 		final String dateStr = "2020-10-23 15:12:30";
 		final Instant result2 = CharSequenceUtil.defaultIfBlank(dateStr,
 				(v) -> DateUtil.parse(v, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant::now);
-		Assert.assertNotNull(result2);
+		Assertions.assertNotNull(result2);
 	}
 
 	@Test
 	public void replaceLastTest() {
 		final String str = "i am jack and jack";
 		final String result = StrUtil.replaceLast(str, "JACK", null, true);
-		Assert.assertEquals(result, "i am jack and ");
+		Assertions.assertEquals(result, "i am jack and ");
 	}
 
 	@Test
 	public void replaceFirstTest() {
 		final String str = "yes and yes i do";
 		final String result = StrUtil.replaceFirst(str, "YES", "", true);
-		Assert.assertEquals(result, " and yes i do");
+		Assertions.assertEquals(result, " and yes i do");
 	}
 
 	@Test
 	public void issueI5YN49Test() {
 		final String str = "A5E6005700000000000000000000000000000000000000090D0100000000000001003830";
-		Assert.assertEquals("38", StrUtil.subByLength(str,-2,2));
+		Assertions.assertEquals("38", StrUtil.subByLength(str,-2,2));
 	}
 
 	@Test
@@ -226,22 +226,22 @@ public class CharSequenceUtilTest {
 
 		// -------------------------- None match -----------------------
 
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix("", "abc"));
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix(null, "abc"));
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", null));
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", ""));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix("", "abc"));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix(null, "abc"));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix("abc", null));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix("abc", ""));
 
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix("azzzj", "bzzzj"));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix("azzzj", "bzzzj"));
 
-		Assert.assertEquals("", CharSequenceUtil.commonPrefix("english中文", "french中文"));
+		Assertions.assertEquals("", CharSequenceUtil.commonPrefix("english中文", "french中文"));
 
 		// -------------------------- Matched -----------------------
 
-		Assert.assertEquals("name_", CharSequenceUtil.commonPrefix("name_abc", "name_efg"));
+		Assertions.assertEquals("name_", CharSequenceUtil.commonPrefix("name_abc", "name_efg"));
 
-		Assert.assertEquals("zzzj", CharSequenceUtil.commonPrefix("zzzja", "zzzjb"));
+		Assertions.assertEquals("zzzj", CharSequenceUtil.commonPrefix("zzzja", "zzzjb"));
 
-		Assert.assertEquals("中文", CharSequenceUtil.commonPrefix("中文english", "中文french"));
+		Assertions.assertEquals("中文", CharSequenceUtil.commonPrefix("中文english", "中文french"));
 
 		// { space * 10 } + "abc"
 		final String str1 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10) + "abc";
@@ -250,7 +250,7 @@ public class CharSequenceUtilTest {
 		final String str2 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5) + "efg";
 
 		// Expect common prefix: { space * 5 }
-		Assert.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5), CharSequenceUtil.commonPrefix(str1, str2));
+		Assertions.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5), CharSequenceUtil.commonPrefix(str1, str2));
 	}
 
 	@Test
@@ -258,22 +258,22 @@ public class CharSequenceUtilTest {
 
 		// -------------------------- None match -----------------------
 
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix("", "abc"));
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix(null, "abc"));
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", null));
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", ""));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix("", "abc"));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix(null, "abc"));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix("abc", null));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix("abc", ""));
 
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix("zzzja", "zzzjb"));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix("zzzja", "zzzjb"));
 
-		Assert.assertEquals("", CharSequenceUtil.commonSuffix("中文english", "中文Korean"));
+		Assertions.assertEquals("", CharSequenceUtil.commonSuffix("中文english", "中文Korean"));
 
 		// -------------------------- Matched -----------------------
 
-		Assert.assertEquals("_name", CharSequenceUtil.commonSuffix("abc_name", "efg_name"));
+		Assertions.assertEquals("_name", CharSequenceUtil.commonSuffix("abc_name", "efg_name"));
 
-		Assert.assertEquals("zzzj", CharSequenceUtil.commonSuffix("abczzzj", "efgzzzj"));
+		Assertions.assertEquals("zzzj", CharSequenceUtil.commonSuffix("abczzzj", "efgzzzj"));
 
-		Assert.assertEquals("中文", CharSequenceUtil.commonSuffix("english中文", "Korean中文"));
+		Assertions.assertEquals("中文", CharSequenceUtil.commonSuffix("english中文", "Korean中文"));
 
 		// "abc" + { space * 10 }
 		final String str1 = "abc" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10);
@@ -282,6 +282,6 @@ public class CharSequenceUtilTest {
 		final String str2 = "efg" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 15);
 
 		// Expect common suffix: { space * 10 }
-		Assert.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
+		Assertions.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
 	}
 }

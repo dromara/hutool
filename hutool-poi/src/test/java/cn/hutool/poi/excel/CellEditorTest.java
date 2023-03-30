@@ -4,25 +4,25 @@ import cn.hutool.poi.excel.cell.CellEditor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Cell;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class CellEditorTest {
 
-	@org.junit.Test
+	@org.junit.jupiter.api.Test
 	public void readTest(){
 		final ExcelReader excelReader= ExcelUtil.getReader("cell_editor_test.xlsx");
 		excelReader.setCellEditor(new ExcelHandler());
 		final List<Test> excelReaderObjects=excelReader.readAll(Test.class);
 
-		Assert.assertEquals("0", excelReaderObjects.get(0).getTest1());
-		Assert.assertEquals("b", excelReaderObjects.get(0).getTest2());
-		Assert.assertEquals("0", excelReaderObjects.get(1).getTest1());
-		Assert.assertEquals("b1", excelReaderObjects.get(1).getTest2());
-		Assert.assertEquals("0", excelReaderObjects.get(2).getTest1());
-		Assert.assertEquals("c2", excelReaderObjects.get(2).getTest2());
+		Assertions.assertEquals("0", excelReaderObjects.get(0).getTest1());
+		Assertions.assertEquals("b", excelReaderObjects.get(0).getTest2());
+		Assertions.assertEquals("0", excelReaderObjects.get(1).getTest1());
+		Assertions.assertEquals("b1", excelReaderObjects.get(1).getTest2());
+		Assertions.assertEquals("0", excelReaderObjects.get(2).getTest1());
+		Assertions.assertEquals("c2", excelReaderObjects.get(2).getTest2());
 	}
 
 	@AllArgsConstructor

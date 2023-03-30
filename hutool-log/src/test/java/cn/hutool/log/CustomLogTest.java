@@ -9,7 +9,7 @@ import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
 import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
 import cn.hutool.log.dialect.tinylog.TinyLog2Factory;
 import cn.hutool.log.dialect.tinylog.TinyLogFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 日志门面单元测试

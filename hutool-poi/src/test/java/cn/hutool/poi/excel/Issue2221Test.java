@@ -6,8 +6,8 @@ import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class Issue2221Test {
 	 * 设置重复别名的时候，通过原key获取写出位置
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void writeDuplicateHeaderAliasTest() {
 		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/duplicateAlias.xlsx");
 		// 设置别名
@@ -37,7 +37,7 @@ public class Issue2221Test {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeDuplicateHeaderAliasTest2(){
 		// 获取写Excel的流
 		final ExcelWriter writer = ExcelUtil.getBigWriter("d:/test/duplicateAlias2.xlsx");

@@ -6,8 +6,8 @@ import cn.hutool.core.map.Dict;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class DictTest {
 				.set("key3", DateTime.now());//Date
 
 		final Long v2 = dict.getLong("key2");
-		Assert.assertEquals(Long.valueOf(1000L), v2);
+		Assertions.assertEquals(Long.valueOf(1000L), v2);
 	}
 
 	@Test
@@ -32,8 +32,8 @@ public class DictTest {
 
 		dict.putAll(map);
 
-		Assert.assertEquals(1, dict.get("A"));
-		Assert.assertEquals(1, dict.get("a"));
+		Assertions.assertEquals(1, dict.get("A"));
+		Assertions.assertEquals(1, dict.get("a"));
 	}
 
 	@Test
@@ -44,9 +44,9 @@ public class DictTest {
 				"BLUE", "#0000FF"
 		);
 
-		Assert.assertEquals("#FF0000", dict.get("RED"));
-		Assert.assertEquals("#00FF00", dict.get("GREEN"));
-		Assert.assertEquals("#0000FF", dict.get("BLUE"));
+		Assertions.assertEquals("#FF0000", dict.get("RED"));
+		Assertions.assertEquals("#00FF00", dict.get("GREEN"));
+		Assertions.assertEquals("#0000FF", dict.get("BLUE"));
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class DictTest {
 
 		dict.removeEqual(dict2);
 
-		Assert.assertTrue(dict.isEmpty());
+		Assertions.assertTrue(dict.isEmpty());
 	}
 
 	@Test
@@ -69,11 +69,11 @@ public class DictTest {
 		final User user = GenericBuilder.of(User::new).with(User::setUsername, "hutool").build();
 		final Dict dict = Dict.of();
 		dict.setFields(user::getNickname, user::getUsername);
-		Assert.assertEquals("hutool", dict.get("username"));
-		Assert.assertNull(dict.get("nickname"));
+		Assertions.assertEquals("hutool", dict.get("username"));
+		Assertions.assertNull(dict.get("nickname"));
 
 		// get by lambda
-		Assert.assertEquals("hutool", dict.get(User::getUsername));
+		Assertions.assertEquals("hutool", dict.get(User::getUsername));
 	}
 
 	@Data

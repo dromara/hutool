@@ -1,7 +1,7 @@
 package cn.hutool.core.convert;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * 类型转换工具单元测试
@@ -16,13 +16,13 @@ public class ConvertToSBCAndDBCTest {
 	public void toSBCTest() {
 		final String a = "123456789";
 		final String sbc = Convert.toSBC(a);
-		Assert.assertEquals("１２３４５６７８９", sbc);
+		Assertions.assertEquals("１２３４５６７８９", sbc);
 	}
 
 	@Test
 	public void toDBCTest() {
 		final String a = "１２３４５６７８９";
 		final String dbc = Convert.toDBC(a);
-		Assert.assertEquals("123456789", dbc);
+		Assertions.assertEquals("123456789", dbc);
 	}
 }

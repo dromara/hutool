@@ -2,8 +2,8 @@ package cn.hutool.core.tree;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +33,15 @@ public class TreeTest {
 	public void sampleTreeTest() {
 		final List<MapTree<String>> treeList = TreeUtil.build(nodeList, "0");
 		for (final MapTree<String> tree : treeList) {
-			Assert.assertNotNull(tree);
-			Assert.assertEquals("0", tree.getParentId());
+			Assertions.assertNotNull(tree);
+			Assertions.assertEquals("0", tree.getParentId());
 //			Console.log(tree);
 		}
 
 		// 测试通过子节点查找父节点
 		final MapTree<String> rootNode0 = treeList.get(0);
 		final MapTree<String> parent = rootNode0.getChildren().get(0).getParent();
-		Assert.assertEquals(rootNode0, parent);
+		Assertions.assertEquals(rootNode0, parent);
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class TreeTest {
 					tree.putExtra("other", new Object());
 				});
 
-		Assert.assertEquals(treeNodes.size(), 2);
+		Assertions.assertEquals(treeNodes.size(), 2);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class TreeTest {
 		final MapTree<String> tree = TreeUtil.buildSingle(nodeList, "0");
 		tree.walk((tr)-> ids.add(tr.getId()));
 
-		Assert .assertEquals(7, ids.size());
+		Assertions.assertEquals(7, ids.size());
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class TreeTest {
 		Console.log(tree);
 		tree.walk((tr)-> ids.add(tr.getId()), true);
 
-		Assert .assertEquals(7, ids.size());
+		Assertions.assertEquals(7, ids.size());
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class TreeTest {
 		final List<String> ids = new ArrayList<>();
 		cloneTree.walk((tr)-> ids.add(tr.getId()));
 
-		Assert .assertEquals(7, ids.size());
+		Assertions.assertEquals(7, ids.size());
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class TreeTest {
 
 		final List<String> ids = new ArrayList<>();
 		tree.walk((tr)-> ids.add(tr.getId()));
-		Assert .assertEquals(4, ids.size());
+		Assertions.assertEquals(4, ids.size());
 	}
 
 	@Test
@@ -125,10 +125,10 @@ public class TreeTest {
 
 		final List<String> ids = new ArrayList<>();
 		newTree.walk((tr)-> ids.add(tr.getId()));
-		Assert .assertEquals(4, ids.size());
+		Assertions.assertEquals(4, ids.size());
 
 		final List<String> ids2 = new ArrayList<>();
 		tree.walk((tr)-> ids2.add(tr.getId()));
-		Assert .assertEquals(7, ids2.size());
+		Assertions.assertEquals(7, ids2.size());
 	}
 }

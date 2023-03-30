@@ -2,13 +2,13 @@ package cn.hutool.swing;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.swing.clipboard.ClipboardUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ClipboardMonitorTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void monitorTest() {
 		// 第一个监听
 		ClipboardUtil.listen((clipboard, contents) -> {

@@ -1,7 +1,7 @@
 package cn.hutool.core.annotation;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.*;
 import java.lang.reflect.AnnotatedElement;
@@ -27,54 +27,53 @@ public class MetaAnnotatedElementTest {
 	@Test
 	public void testEquals() {
 		final AnnotatedElement element = new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY);
-		Assert.assertEquals(element, element);
-		Assert.assertNotEquals(element, null);
-		Assert.assertEquals(element, new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY));
-		Assert.assertNotEquals(element, new MetaAnnotatedElement<>(Foo.class, MAPPING_FACTORY));
-		Assert.assertNotEquals(element, new MetaAnnotatedElement<>(Annotation1.class, MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, null);
+		Assertions.assertEquals(element, new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, new MetaAnnotatedElement<>(Foo.class, MAPPING_FACTORY));
+		Assertions.assertNotEquals(element, new MetaAnnotatedElement<>(Annotation1.class, MAPPING_FACTORY));
 	}
 
 	@Test
 	public void testHashCode() {
 		final int hashCode = new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode();
-		Assert.assertEquals(hashCode, new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode());
-		Assert.assertNotEquals(hashCode, new MetaAnnotatedElement<>(Foo.class, MAPPING_FACTORY).hashCode());
+		Assertions.assertEquals(hashCode, new MetaAnnotatedElement<>(Foo.class, RESOLVED_MAPPING_FACTORY).hashCode());
+		Assertions.assertNotEquals(hashCode, new MetaAnnotatedElement<>(Foo.class, MAPPING_FACTORY).hashCode());
 	}
 
 	@Test
 	public void testCreate() {
 		// 第二次创建时优先从缓存中获取
 		final AnnotatedElement resolvedElement = MetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY);
-		Assert.assertEquals(resolvedElement, MetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY));
+		Assertions.assertEquals(resolvedElement, MetaAnnotatedElement.create(Foo.class, RESOLVED_MAPPING_FACTORY));
 		final AnnotatedElement element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
-		Assert.assertEquals(element, MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY));
+		Assertions.assertEquals(element, MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY));
 	}
 
 	@Test
 	public void testGetMapping() {
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
-		Assert.assertTrue(element.getMapping(Annotation1.class).isPresent());
-		Assert.assertTrue(element.getMapping(Annotation2.class).isPresent());
-		Assert.assertTrue(element.getMapping(Annotation3.class).isPresent());
-		Assert.assertTrue(element.getMapping(Annotation4.class).isPresent());
+		Assertions.assertTrue(element.getMapping(Annotation1.class).isPresent());
+		Assertions.assertTrue(element.getMapping(Annotation2.class).isPresent());
+		Assertions.assertTrue(element.getMapping(Annotation3.class).isPresent());
+		Assertions.assertTrue(element.getMapping(Annotation4.class).isPresent());
 	}
 
 	@Test
 	public void testGetDeclaredMapping() {
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
-		Assert.assertFalse(element.getDeclaredMapping(Annotation1.class).isPresent());
-		Assert.assertFalse(element.getDeclaredMapping(Annotation2.class).isPresent());
-		Assert.assertTrue(element.getDeclaredMapping(Annotation3.class).isPresent());
-		Assert.assertTrue(element.getDeclaredMapping(Annotation4.class).isPresent());
+		Assertions.assertFalse(element.getDeclaredMapping(Annotation1.class).isPresent());
+		Assertions.assertFalse(element.getDeclaredMapping(Annotation2.class).isPresent());
+		Assertions.assertTrue(element.getDeclaredMapping(Annotation3.class).isPresent());
+		Assertions.assertTrue(element.getDeclaredMapping(Annotation4.class).isPresent());
 	}
 
 	@Test
 	public void testIsAnnotationPresent() {
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
-		Assert.assertTrue(element.isAnnotationPresent(Annotation1.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation2.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation3.class));
-		Assert.assertTrue(element.isAnnotationPresent(Annotation4.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation1.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation2.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation3.class));
+		Assertions.assertTrue(element.isAnnotationPresent(Annotation4.class));
 	}
 
 	@Test
@@ -85,10 +84,10 @@ public class MetaAnnotatedElementTest {
 		final Annotation2 annotation2 = Annotation3.class.getAnnotation(Annotation2.class);
 		final Annotation1 annotation1 = Annotation2.class.getAnnotation(Annotation1.class);
 
-		Assert.assertEquals(annotation1, element.getAnnotation(Annotation1.class));
-		Assert.assertEquals(annotation2, element.getAnnotation(Annotation2.class));
-		Assert.assertEquals(annotation3, element.getAnnotation(Annotation3.class));
-		Assert.assertEquals(annotation4, element.getAnnotation(Annotation4.class));
+		Assertions.assertEquals(annotation1, element.getAnnotation(Annotation1.class));
+		Assertions.assertEquals(annotation2, element.getAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation3, element.getAnnotation(Annotation3.class));
+		Assertions.assertEquals(annotation4, element.getAnnotation(Annotation4.class));
 	}
 
 	@Test
@@ -97,32 +96,32 @@ public class MetaAnnotatedElementTest {
 		final Annotation4 annotation4 = Foo.class.getAnnotation(Annotation4.class);
 		final Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
 
-		Assert.assertNull(element.getDeclaredAnnotation(Annotation1.class));
-		Assert.assertNull(element.getDeclaredAnnotation(Annotation2.class));
-		Assert.assertEquals(annotation3, element.getDeclaredAnnotation(Annotation3.class));
-		Assert.assertEquals(annotation4, element.getDeclaredAnnotation(Annotation4.class));
+		Assertions.assertNull(element.getDeclaredAnnotation(Annotation1.class));
+		Assertions.assertNull(element.getDeclaredAnnotation(Annotation2.class));
+		Assertions.assertEquals(annotation3, element.getDeclaredAnnotation(Annotation3.class));
+		Assertions.assertEquals(annotation4, element.getDeclaredAnnotation(Annotation4.class));
 	}
 
 	@Test
 	public void testGetAnnotationByType() {
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
 		final Annotation4 annotation4 = Foo.class.getAnnotation(Annotation4.class);
-		Assert.assertArrayEquals(
+		Assertions.assertArrayEquals(
 			new Annotation[]{ annotation4 },
 			element.getAnnotationsByType(Annotation4.class)
 		);
-		Assert.assertEquals(0, element.getAnnotationsByType(None.class).length);
+		Assertions.assertEquals(0, element.getAnnotationsByType(None.class).length);
 	}
 
 	@Test
 	public void testGetDeclaredAnnotationByType() {
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(Foo.class, MAPPING_FACTORY);
 		final Annotation4 annotation4 = Foo.class.getAnnotation(Annotation4.class);
-		Assert.assertArrayEquals(
+		Assertions.assertArrayEquals(
 			new Annotation[]{ annotation4 },
 			element.getDeclaredAnnotationsByType(Annotation4.class)
 		);
-		Assert.assertEquals(0, element.getDeclaredAnnotationsByType(None.class).length);
+		Assertions.assertEquals(0, element.getDeclaredAnnotationsByType(None.class).length);
 	}
 
 	@Test
@@ -134,7 +133,7 @@ public class MetaAnnotatedElementTest {
 		final Annotation1 annotation1 = Annotation2.class.getAnnotation(Annotation1.class);
 		final Annotation[] annotations = new Annotation[]{ annotation3, annotation4, annotation2, annotation1 };
 
-		Assert.assertArrayEquals(annotations, element.getAnnotations());
+		Assertions.assertArrayEquals(annotations, element.getAnnotations());
 	}
 
 	@Test
@@ -144,7 +143,7 @@ public class MetaAnnotatedElementTest {
 		final Annotation3 annotation3 = Foo.class.getAnnotation(Annotation3.class);
 		final Annotation[] annotations = new Annotation[]{ annotation3, annotation4 };
 
-		Assert.assertArrayEquals(annotations, element.getDeclaredAnnotations());
+		Assertions.assertArrayEquals(annotations, element.getDeclaredAnnotations());
 	}
 
 	@Test
@@ -160,14 +159,14 @@ public class MetaAnnotatedElementTest {
 		final List<Annotation> mappingList = new ArrayList<>();
 		iterator.forEachRemaining(mapping -> mappingList.add(mapping.getAnnotation()));
 
-		Assert.assertEquals(Arrays.asList(annotations), mappingList);
+		Assertions.assertEquals(Arrays.asList(annotations), mappingList);
 	}
 
 	@Test
 	public void testGetElement() {
 		final AnnotatedElement source = Foo.class;
 		final MetaAnnotatedElement<ResolvedAnnotationMapping> element = MetaAnnotatedElement.create(source, MAPPING_FACTORY);
-		Assert.assertSame(source, element.getElement());
+		Assertions.assertSame(source, element.getElement());
 	}
 
 	@Annotation4 // 循环引用
@@ -175,6 +174,7 @@ public class MetaAnnotatedElementTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface None { }
 
+	@SuppressWarnings("unused")
 	@Annotation4 // 循环引用
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -185,6 +185,7 @@ public class MetaAnnotatedElementTest {
 		String name() default "";
 	}
 
+	@SuppressWarnings("unused")
 	@Annotation1("Annotation2")
 	@Target(ElementType.TYPE_USE)
 	@Retention(RetentionPolicy.RUNTIME)

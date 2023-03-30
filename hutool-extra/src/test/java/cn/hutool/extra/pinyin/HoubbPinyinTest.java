@@ -1,8 +1,8 @@
 package cn.hutool.extra.pinyin;
 
 import cn.hutool.extra.pinyin.engine.houbbpinyin.HoubbPinyinEngine;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class HoubbPinyinTest {
 
@@ -11,12 +11,12 @@ public class HoubbPinyinTest {
 	@Test
 	public void getFirstLetterTest(){
 		final String result = engine.getFirstLetter("林海", "");
-		Assert.assertEquals("lh", result);
+		Assertions.assertEquals("lh", result);
 	}
 
 	@Test
 	public void getPinyinTest() {
 		final String pinyin = engine.getPinyin("你好h", " ");
-		Assert.assertEquals("ni hao h", pinyin);
+		Assertions.assertEquals("ni hao h", pinyin);
 	}
 }

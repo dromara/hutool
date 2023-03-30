@@ -1,18 +1,18 @@
 package cn.hutool.extra.ftp;
 
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.extra.ssh.Sftp;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class FtpTest {
 
 	@Test
-	@Ignore
+	@Disabled
 	public void cdTest() {
 		final Ftp ftp = new Ftp("looly.centos");
 
@@ -23,7 +23,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void uploadTest() {
 		final Ftp ftp = new Ftp("localhost");
 
@@ -34,7 +34,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void reconnectIfTimeoutTest() throws InterruptedException {
 		final Ftp ftp = new Ftp("looly.centos");
 
@@ -58,7 +58,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void recursiveDownloadFolder() {
 		final Ftp ftp = new Ftp("looly.centos");
 		ftp.recursiveDownloadFolder("/",FileUtil.file("d:/test/download"));
@@ -67,7 +67,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void recursiveDownloadFolderSftp() {
 		final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
 
@@ -79,7 +79,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void downloadTest() {
 		final Ftp ftp = new Ftp("localhost");
 
@@ -94,7 +94,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void isDirTest() throws Exception {
 		try (final Ftp ftp = new Ftp("127.0.0.1", 21)) {
 			Console.log(ftp.pwd());
@@ -104,7 +104,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void existSftpTest() {
 		try (final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
 			Console.log(ftp.pwd());
@@ -127,7 +127,7 @@ public class FtpTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void existFtpTest() throws Exception {
 		try (final Ftp ftp = new Ftp("127.0.0.1", 21)) {
 			Console.log(ftp.pwd());

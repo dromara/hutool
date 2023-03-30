@@ -1,7 +1,7 @@
 package cn.hutool.core.map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -11,16 +11,16 @@ public class CaseInsensitiveMapTest {
 	public void caseInsensitiveMapTest() {
 		final CaseInsensitiveMap<String, String> map = new CaseInsensitiveMap<>();
 		map.put("aAA", "OK");
-		Assert.assertEquals("OK", map.get("aaa"));
-		Assert.assertEquals("OK", map.get("AAA"));
+		Assertions.assertEquals("OK", map.get("aaa"));
+		Assertions.assertEquals("OK", map.get("AAA"));
 	}
 
 	@Test
 	public void caseInsensitiveLinkedMapTest() {
 		final CaseInsensitiveLinkedMap<String, String> map = new CaseInsensitiveLinkedMap<>();
 		map.put("aAA", "OK");
-		Assert.assertEquals("OK", map.get("aaa"));
-		Assert.assertEquals("OK", map.get("AAA"));
+		Assertions.assertEquals("OK", map.get("aaa"));
+		Assertions.assertEquals("OK", map.get("AAA"));
 	}
 
 	@Test
@@ -32,6 +32,6 @@ public class CaseInsensitiveMapTest {
 		map.merge(b.getKey(), b.getValue(), (A, B) -> A);
 		map.merge(a.getKey(), a.getValue(), (A, B) -> A);
 
-		Assert.assertEquals(1, map.size());
+		Assertions.assertEquals(1, map.size());
 	}
 }

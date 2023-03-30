@@ -1,9 +1,9 @@
 package cn.hutool.core.reflect;
 
-import cn.hutool.core.lang.Assert;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -80,6 +80,7 @@ public class ReflectUtilTest {
 		}
 	}
 
+	@SuppressWarnings("RedundantMethodOverride")
 	class C2 extends C1 {
 		@Override
 		public void getA() {
@@ -115,20 +116,20 @@ public class ReflectUtilTest {
 	@SneakyThrows
 	public void testGetDescriptor() {
 		// methods
-		Assert.equals("()I", ReflectUtil.getDescriptor(Object.class.getMethod("hashCode")));
-		Assert.equals("()Ljava/lang/String;", ReflectUtil.getDescriptor(Object.class.getMethod("toString")));
-		Assert.equals("(Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class)));
-		Assert.equals("(II)I", ReflectUtil.getDescriptor(Integer.class.getDeclaredMethod("compare", int.class, int.class)));
-		Assert.equals("([Ljava/lang/Object;)Ljava/util/List;", ReflectUtil.getDescriptor(Arrays.class.getMethod("asList", Object[].class)));
-		Assert.equals("()V", ReflectUtil.getDescriptor(Object.class.getConstructor()));
+		Assertions.assertEquals("()I", ReflectUtil.getDescriptor(Object.class.getMethod("hashCode")));
+		Assertions.assertEquals("()Ljava/lang/String;", ReflectUtil.getDescriptor(Object.class.getMethod("toString")));
+		Assertions.assertEquals("(Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class)));
+		Assertions.assertEquals("(II)I", ReflectUtil.getDescriptor(Integer.class.getDeclaredMethod("compare", int.class, int.class)));
+		Assertions.assertEquals("([Ljava/lang/Object;)Ljava/util/List;", ReflectUtil.getDescriptor(Arrays.class.getMethod("asList", Object[].class)));
+		Assertions.assertEquals("()V", ReflectUtil.getDescriptor(Object.class.getConstructor()));
 		// clazz
-		Assert.equals("Z", ReflectUtil.getDescriptor(boolean.class));
-		Assert.equals("Ljava/lang/Boolean;", ReflectUtil.getDescriptor(Boolean.class));
-		Assert.equals("[[[D", ReflectUtil.getDescriptor(double[][][].class));
-		Assert.equals("I", ReflectUtil.getDescriptor(int.class));
-		Assert.equals("Ljava/lang/Integer;", ReflectUtil.getDescriptor(Integer.class));
-		Assert.equals("V", ReflectUtil.getDescriptor(void.class));
-		Assert.equals("Ljava/lang/Void;", ReflectUtil.getDescriptor(Void.class));
-		Assert.equals("Ljava/lang/Object;", ReflectUtil.getDescriptor(Object.class));
+		Assertions.assertEquals("Z", ReflectUtil.getDescriptor(boolean.class));
+		Assertions.assertEquals("Ljava/lang/Boolean;", ReflectUtil.getDescriptor(Boolean.class));
+		Assertions.assertEquals("[[[D", ReflectUtil.getDescriptor(double[][][].class));
+		Assertions.assertEquals("I", ReflectUtil.getDescriptor(int.class));
+		Assertions.assertEquals("Ljava/lang/Integer;", ReflectUtil.getDescriptor(Integer.class));
+		Assertions.assertEquals("V", ReflectUtil.getDescriptor(void.class));
+		Assertions.assertEquals("Ljava/lang/Void;", ReflectUtil.getDescriptor(Void.class));
+		Assertions.assertEquals("Ljava/lang/Object;", ReflectUtil.getDescriptor(Object.class));
 	}
 }

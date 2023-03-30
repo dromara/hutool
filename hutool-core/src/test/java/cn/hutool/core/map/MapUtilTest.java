@@ -5,8 +5,8 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrUtil;
 import lombok.Builder;
 import lombok.Data;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -55,10 +55,10 @@ public class MapUtilTest {
 
 		final Map<String, String> map2 = MapUtil.filter(map, t -> Convert.toInt(t.getValue()) % 2 == 0);
 
-		Assert.assertEquals(2, map2.size());
+		Assertions.assertEquals(2, map2.size());
 
-		Assert.assertEquals("2", map2.get("b"));
-		Assert.assertEquals("4", map2.get("d"));
+		Assertions.assertEquals("2", map2.get("b"));
+		Assertions.assertEquals("4", map2.get("d"));
 	}
 
 	@Test
@@ -72,9 +72,9 @@ public class MapUtilTest {
 
 		final Map<Integer, String> resultMap = MapUtil.map(adjectivesMap, (k, v) -> v + " " + PeopleEnum.values()[k].name().toLowerCase());
 
-		Assert.assertEquals("lovely girl", resultMap.get(0));
-		Assert.assertEquals("friendly boy", resultMap.get(1));
-		Assert.assertEquals("happily child", resultMap.get(2));
+		Assertions.assertEquals("lovely girl", resultMap.get(0));
+		Assertions.assertEquals("friendly boy", resultMap.get(1));
+		Assertions.assertEquals("happily child", resultMap.get(2));
 
 		// 下单用户，Queue表示正在 .排队. 抢我抢不到的二次元周边！
 		final Queue<String> customers = new ArrayDeque<>(Arrays.asList("刑部尚书手工耿", "木瓜大盗大漠叔", "竹鼠发烧找华农", "朴实无华朱一旦"));
@@ -94,10 +94,10 @@ public class MapUtilTest {
 		// 下面是测试报告
 		groups.forEach(group -> {
 			final List<User> users = group.getUsers();
-			Assert.assertEquals("刑部尚书手工耿", users.get(0).getName());
-			Assert.assertEquals("木瓜大盗大漠叔", users.get(1).getName());
-			Assert.assertEquals("竹鼠发烧找华农", users.get(2).getName());
-			Assert.assertEquals("朴实无华朱一旦", users.get(3).getName());
+			Assertions.assertEquals("刑部尚书手工耿", users.get(0).getName());
+			Assertions.assertEquals("木瓜大盗大漠叔", users.get(1).getName());
+			Assertions.assertEquals("竹鼠发烧找华农", users.get(2).getName());
+			Assertions.assertEquals("朴实无华朱一旦", users.get(3).getName());
 		});
 		// 能写代码真开心
 	}
@@ -114,10 +114,10 @@ public class MapUtilTest {
 
 		final Map<String, String> map2 = MapUtil.filter(camelCaseMap, t -> Convert.toInt(t.getValue()) % 2 == 0);
 
-		Assert.assertEquals(2, map2.size());
+		Assertions.assertEquals(2, map2.size());
 
-		Assert.assertEquals("2", map2.get("b"));
-		Assert.assertEquals("4", map2.get("d"));
+		Assertions.assertEquals("2", map2.get("b"));
+		Assertions.assertEquals("4", map2.get("d"));
 	}
 
 	@Test
@@ -129,9 +129,9 @@ public class MapUtilTest {
 		map.put("fgh", "4");
 
 		final Map<String, String> map2 = MapUtil.filter(map, t -> StrUtil.contains(t.getKey(), "bc"));
-		Assert.assertEquals(2, map2.size());
-		Assert.assertEquals("1", map2.get("abc"));
-		Assert.assertEquals("2", map2.get("bcd"));
+		Assertions.assertEquals(2, map2.size());
+		Assertions.assertEquals("1", map2.get("abc"));
+		Assertions.assertEquals("2", map2.get("bcd"));
 	}
 
 	@Test
@@ -148,12 +148,12 @@ public class MapUtilTest {
 			return t;
 		});
 
-		Assert.assertEquals(4, map2.size());
+		Assertions.assertEquals(4, map2.size());
 
-		Assert.assertEquals("10", map2.get("a"));
-		Assert.assertEquals("20", map2.get("b"));
-		Assert.assertEquals("30", map2.get("c"));
-		Assert.assertEquals("40", map2.get("d"));
+		Assertions.assertEquals("10", map2.get("a"));
+		Assertions.assertEquals("20", map2.get("b"));
+		Assertions.assertEquals("30", map2.get("c"));
+		Assertions.assertEquals("40", map2.get("d"));
 	}
 
 	@Test
@@ -166,10 +166,10 @@ public class MapUtilTest {
 
 		final Map<String, String> map2 = MapUtil.reverse(map);
 
-		Assert.assertEquals("a", map2.get("1"));
-		Assert.assertEquals("b", map2.get("2"));
-		Assert.assertEquals("c", map2.get("3"));
-		Assert.assertEquals("d", map2.get("4"));
+		Assertions.assertEquals("a", map2.get("1"));
+		Assertions.assertEquals("b", map2.get("2"));
+		Assertions.assertEquals("c", map2.get("3"));
+		Assertions.assertEquals("d", map2.get("4"));
 	}
 
 	@Test
@@ -181,14 +181,14 @@ public class MapUtilTest {
 		map.put("d", "4");
 
 		final Object[][] objectArray = MapUtil.toObjectArray(map);
-		Assert.assertEquals("a", objectArray[0][0]);
-		Assert.assertEquals("1", objectArray[0][1]);
-		Assert.assertEquals("b", objectArray[1][0]);
-		Assert.assertEquals("2", objectArray[1][1]);
-		Assert.assertEquals("c", objectArray[2][0]);
-		Assert.assertEquals("3", objectArray[2][1]);
-		Assert.assertEquals("d", objectArray[3][0]);
-		Assert.assertEquals("4", objectArray[3][1]);
+		Assertions.assertEquals("a", objectArray[0][0]);
+		Assertions.assertEquals("1", objectArray[0][1]);
+		Assertions.assertEquals("b", objectArray[1][0]);
+		Assertions.assertEquals("2", objectArray[1][1]);
+		Assertions.assertEquals("c", objectArray[2][0]);
+		Assertions.assertEquals("3", objectArray[2][1]);
+		Assertions.assertEquals("d", objectArray[3][0]);
+		Assertions.assertEquals("4", objectArray[3][1]);
 	}
 
 	@Test
@@ -199,39 +199,41 @@ public class MapUtilTest {
 				.put("key2", "value2").build();
 
 		final String join1 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false);
-		Assert.assertEquals("key1value1key2value2key3value3", join1);
+		Assertions.assertEquals("key1value1key2value2key3value3", join1);
 
 		final String join2 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123");
-		Assert.assertEquals("key1value1key2value2key3value3123", join2);
+		Assertions.assertEquals("key1value1key2value2key3value3123", join2);
 
 		final String join3 = MapUtil.sortJoin(build, StrUtil.EMPTY, StrUtil.EMPTY, false, "123", "abc");
-		Assert.assertEquals("key1value1key2value2key3value3123abc", join3);
+		Assertions.assertEquals("key1value1key2value2key3value3123abc", join3);
 	}
 
 	@Test
 	public void ofEntriesTest(){
 		final Map<String, Integer> map = MapUtil.ofEntries(MapUtil.entry("a", 1), MapUtil.entry("b", 2));
-		Assert.assertEquals(2, map.size());
+		Assertions.assertEquals(2, map.size());
 
-		Assert.assertEquals(Integer.valueOf(1), map.get("a"));
-		Assert.assertEquals(Integer.valueOf(2), map.get("b"));
+		Assertions.assertEquals(Integer.valueOf(1), map.get("a"));
+		Assertions.assertEquals(Integer.valueOf(2), map.get("b"));
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test
 	public void getIntTest(){
-		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "d"));
-		final Integer a = MapUtil.getInt(map, "a");
-		Assert.assertNotNull(a);
+		Assertions.assertThrows(NumberFormatException.class, ()->{
+			final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "d"));
+			final Integer a = MapUtil.getInt(map, "a");
+			Assertions.assertNotNull(a);
+		});
 	}
 
 	@Test
 	public void getIntValueTest(){
 		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "1"), MapUtil.entry("b", null));
 		final int a = MapUtil.get(map, "a", int.class);
-		Assert.assertEquals(1, a);
+		Assertions.assertEquals(1, a);
 
 		final int b = MapUtil.getInt(map, "b", 0);
-		Assert.assertEquals(0, b);
+		Assertions.assertEquals(0, b);
 	}
 
 	@Test
@@ -241,20 +243,20 @@ public class MapUtilTest {
 
 		final String[] keys = v1.keySet().toArray(new String[0]);
 		final ArrayList<Object> v1s = MapUtil.valuesOfKeys(v1, keys);
-		Assert.assertTrue(v1s.contains(12));
-		Assert.assertTrue(v1s.contains(23));
-		Assert.assertTrue(v1s.contains("张三"));
+		Assertions.assertTrue(v1s.contains(12));
+		Assertions.assertTrue(v1s.contains(23));
+		Assertions.assertTrue(v1s.contains("张三"));
 
 		final ArrayList<Object> v2s = MapUtil.valuesOfKeys(v2, keys);
-		Assert.assertTrue(v2s.contains(15));
-		Assert.assertTrue(v2s.contains(13));
-		Assert.assertTrue(v2s.contains("李四"));
+		Assertions.assertTrue(v2s.contains(15));
+		Assertions.assertTrue(v2s.contains(13));
+		Assertions.assertTrue(v2s.contains("李四"));
 	}
 
 	@Test
 	public void joinIgnoreNullTest() {
 		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
 		final String s = MapUtil.joinIgnoreNull(v1, ",", "=");
-		Assert.assertEquals("id=12,name=张三", s);
+		Assertions.assertEquals("id=12,name=张三", s);
 	}
 }
