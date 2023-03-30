@@ -12,6 +12,8 @@
 
 package cn.hutool.core.codec;
 
+import java.util.Objects;
+
 /**
  * 128位数字表示，分高位和低位
  *
@@ -98,5 +100,22 @@ public class Number128 extends Number {
 	@Override
 	public double doubleValue() {
 		return longValue();
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o instanceof Number128) {
+			final Number128 number128 = (Number128) o;
+			return lowValue == number128.lowValue && highValue == number128.highValue;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(lowValue, highValue);
 	}
 }
