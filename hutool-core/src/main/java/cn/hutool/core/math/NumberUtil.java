@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * 数字工具类<br>
@@ -82,7 +83,13 @@ public class NumberUtil {
 
 	/**
 	 * 提供精确的加法运算<br>
-	 * 如果传入多个值为null或者空，则返回0
+	 * 如果传入多个值为null或者空，则返回
+	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
 	 *
 	 * @param values 多个被加值
 	 * @return 和
@@ -1684,19 +1691,44 @@ public class NumberUtil {
 	 * 将指定字符串转换为{@link Number} 对象<br>
 	 * 此方法不支持科学计数法
 	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
+	 *
 	 * @param numberStr Number字符串
 	 * @return Number对象
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(final String numberStr) throws NumberFormatException {
+		return parseNumber(numberStr, Locale.getDefault(Locale.Category.FORMAT));
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number} 对象<br>
+	 * 此方法不支持科学计数法
+	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
+	 *
+	 * @param numberStr Number字符串
+	 * @param locale 地区，不同地区数字表示方式不同
+	 * @return Number对象
+	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
+	 */
+	public static Number parseNumber(final String numberStr, final Locale locale) throws NumberFormatException {
 		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
 			// 0x04表示16进制数
 			return Long.parseLong(numberStr.substring(2), 16);
 		}
 
 		try {
-			final NumberFormat format = NumberFormat.getInstance();
+			final NumberFormat format = NumberFormat.getInstance(locale);
 			if (format instanceof DecimalFormat) {
 				// issue#1818@Github
 				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收

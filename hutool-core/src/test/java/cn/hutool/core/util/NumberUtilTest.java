@@ -459,11 +459,11 @@ public class NumberUtilTest {
 
 		// -------------------------- Parse failed -----------------------
 
-		assertThat(NumberUtil.parseNumber("abc", null), nullValue());
+		assertThat(NumberUtil.parseNumber("abc", (Number) null), nullValue());
 
-		assertThat(NumberUtil.parseNumber(StrUtil.EMPTY, null), nullValue());
+		assertThat(NumberUtil.parseNumber(StrUtil.EMPTY, (Number) null), nullValue());
 
-		assertThat(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), null), nullValue());
+		assertThat(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), (Number) null), nullValue());
 
 		assertThat(NumberUtil.parseNumber("abc", 456).intValue(), equalTo(456));
 
@@ -471,9 +471,9 @@ public class NumberUtilTest {
 
 		assertThat(NumberUtil.parseNumber("123.abc", 789).intValue(), equalTo(123));
 
-		assertThat(NumberUtil.parseNumber("123.3", null).doubleValue(), equalTo(123.3D));
+		assertThat(NumberUtil.parseNumber("123.3", (Number) null).doubleValue(), equalTo(123.3D));
 
-		assertThat(NumberUtil.parseNumber("0.123.3", null).doubleValue(), equalTo(0.123D));
+		assertThat(NumberUtil.parseNumber("0.123.3", (Number) null).doubleValue(), equalTo(0.123D));
 
 	}
 
