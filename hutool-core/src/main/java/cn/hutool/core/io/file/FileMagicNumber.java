@@ -303,6 +303,9 @@ public enum FileMagicNumber {
 	},
 	/**
 	 * flac
+	 * <pre>
+	 *    prefix: 664C6143
+	 * </pre>
 	 */
 	FLAC("audio/x-flac", "flac") {
 		@Override
@@ -405,25 +408,25 @@ public enum FileMagicNumber {
 				return false;
 			}
 			final boolean flag1 =
-				   Objects.equals(bytes[0], (byte) 0x77)
-				&& Objects.equals(bytes[1], (byte) 0x4f)
-				&& Objects.equals(bytes[2], (byte) 0x46)
-				&& Objects.equals(bytes[3], (byte) 0x46);
+				Objects.equals(bytes[0], (byte) 0x77)
+					&& Objects.equals(bytes[1], (byte) 0x4f)
+					&& Objects.equals(bytes[2], (byte) 0x46)
+					&& Objects.equals(bytes[3], (byte) 0x46);
 			final boolean flag2 =
-				   Objects.equals(bytes[4], (byte) 0x00)
-				&& Objects.equals(bytes[5], (byte) 0x01)
-				&& Objects.equals(bytes[6], (byte) 0x00)
-				&& Objects.equals(bytes[7], (byte) 0x00);
+				Objects.equals(bytes[4], (byte) 0x00)
+					&& Objects.equals(bytes[5], (byte) 0x01)
+					&& Objects.equals(bytes[6], (byte) 0x00)
+					&& Objects.equals(bytes[7], (byte) 0x00);
 			final boolean flag3 =
-				   Objects.equals(bytes[4], (byte) 0x4f)
-				&& Objects.equals(bytes[5], (byte) 0x54)
-				&& Objects.equals(bytes[6], (byte) 0x54)
-				&& Objects.equals(bytes[7], (byte) 0x4f);
+				Objects.equals(bytes[4], (byte) 0x4f)
+					&& Objects.equals(bytes[5], (byte) 0x54)
+					&& Objects.equals(bytes[6], (byte) 0x54)
+					&& Objects.equals(bytes[7], (byte) 0x4f);
 			final boolean flag4 =
-				   Objects.equals(bytes[4], (byte) 0x74)
-				&& Objects.equals(bytes[5], (byte) 0x72)
-				&& Objects.equals(bytes[6], (byte) 0x75)
-				&& Objects.equals(bytes[7], (byte) 0x65);
+				Objects.equals(bytes[4], (byte) 0x74)
+					&& Objects.equals(bytes[5], (byte) 0x72)
+					&& Objects.equals(bytes[6], (byte) 0x75)
+					&& Objects.equals(bytes[7], (byte) 0x65);
 			return flag1 && (flag2 || flag3 || flag4);
 		}
 	},
@@ -437,25 +440,25 @@ public enum FileMagicNumber {
 				return false;
 			}
 			final boolean flag1 =
-				   Objects.equals(bytes[0], (byte) 0x77)
-				&& Objects.equals(bytes[1], (byte) 0x4f)
-				&& Objects.equals(bytes[2], (byte) 0x46)
-				&& Objects.equals(bytes[3], (byte) 0x32);
+				Objects.equals(bytes[0], (byte) 0x77)
+					&& Objects.equals(bytes[1], (byte) 0x4f)
+					&& Objects.equals(bytes[2], (byte) 0x46)
+					&& Objects.equals(bytes[3], (byte) 0x32);
 			final boolean flag2 =
-				   Objects.equals(bytes[4], (byte) 0x00)
-				&& Objects.equals(bytes[5], (byte) 0x01)
-				&& Objects.equals(bytes[6], (byte) 0x00)
-				&& Objects.equals(bytes[7], (byte) 0x00);
+				Objects.equals(bytes[4], (byte) 0x00)
+					&& Objects.equals(bytes[5], (byte) 0x01)
+					&& Objects.equals(bytes[6], (byte) 0x00)
+					&& Objects.equals(bytes[7], (byte) 0x00);
 			final boolean flag3 =
-				   Objects.equals(bytes[4], (byte) 0x4f)
-				&& Objects.equals(bytes[5], (byte) 0x54)
-				&& Objects.equals(bytes[6], (byte) 0x54)
-				&& Objects.equals(bytes[7], (byte) 0x4f);
+				Objects.equals(bytes[4], (byte) 0x4f)
+					&& Objects.equals(bytes[5], (byte) 0x54)
+					&& Objects.equals(bytes[6], (byte) 0x54)
+					&& Objects.equals(bytes[7], (byte) 0x4f);
 			final boolean flag4 =
-				   Objects.equals(bytes[4], (byte) 0x74)
-				&& Objects.equals(bytes[5], (byte) 0x72)
-				&& Objects.equals(bytes[6], (byte) 0x75)
-				&& Objects.equals(bytes[7], (byte) 0x65);
+				Objects.equals(bytes[4], (byte) 0x74)
+					&& Objects.equals(bytes[5], (byte) 0x72)
+					&& Objects.equals(bytes[6], (byte) 0x75)
+					&& Objects.equals(bytes[7], (byte) 0x65);
 			return flag1 && (flag2 || flag3 || flag4);
 		}
 	},
