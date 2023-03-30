@@ -7,7 +7,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,8 +52,8 @@ public class ObjectUtil {
 	 * @see Objects#equals(Object, Object)
 	 */
 	public static boolean equal(Object obj1, Object obj2) {
-		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
-			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
+		if (obj1 instanceof Number && obj2 instanceof Number) {
+			return NumberUtil.equals((Number) obj1, (Number) obj2);
 		}
 		return Objects.equals(obj1, obj2);
 	}
