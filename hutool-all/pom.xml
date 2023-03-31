@@ -27,7 +27,7 @@
 	<artifactId>hutool-all</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool是一个优雅而小巧的Java工具类库</description>
-	<url>https://github.com/looly/hutool</url>
+	<url>https://github.com/dromara/hutool</url>
 
 	<dependencies>
 		<dependency>
