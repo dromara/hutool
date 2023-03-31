@@ -4,6 +4,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -80,15 +81,19 @@ public class PathMover {
 		Path target = this.target;
 		final CopyOption[] options = this.options;
 
+		if (PathUtil.isSub(src, target)) {
+			if(Files.exists(target) && PathUtil.equals(src, target)){
+				// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
+				return target;
+			}
+
+			// 当用户将文件夹拷贝到其子文件夹时，报错
+			throw new IllegalArgumentException(StrUtil.format("Target [{}] is sub path of src [{}]!", target, src));
+		}
+
 		if (PathUtil.isDirectory(target)) {
 			// 创建子路径的情况，1是目标是目录，需要移动到目录下，2是目标不能存在，自动创建目录
 			target = target.resolve(src.getFileName());
-		}
-
-		// issue#2893 target 不存在导致NoSuchFileException
-		if (Files.exists(target) && PathUtil.equals(src, target)) {
-			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
-			return target;
 		}
 
 		// 自动创建目标的父目录
