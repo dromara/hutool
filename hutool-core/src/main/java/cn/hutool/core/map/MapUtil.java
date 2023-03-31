@@ -1487,7 +1487,6 @@ public class MapUtil {
 				value = map.get(key);
 
 				// 判空后调用依旧无法解决死循环问题
-				// 见：Issue2349Test
 				//value = map.computeIfAbsent(key, mappingFunction);
 			}
 			return value;

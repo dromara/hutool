@@ -78,7 +78,6 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 				value = get(key);
 
 				// 判空后调用依旧无法解决死循环问题
-				// 见：Issue2349Test
 				//value = map.computeIfAbsent(key, mappingFunction);
 			}
 			return value;
