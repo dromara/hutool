@@ -794,7 +794,7 @@ public class ZipUtil {
 	 * @return 解压后的字符串
 	 * @throws UtilException IO异常
 	 */
-	public static String unGzip(final byte[] buf, final String charset) throws UtilException {
+	public static String unGzip(final byte[] buf, final Charset charset) throws UtilException {
 		return StrUtil.str(unGzip(buf), charset);
 	}
 
@@ -915,7 +915,7 @@ public class ZipUtil {
 	 * @return 解压后的字符串
 	 * @since 4.1.4
 	 */
-	public static String unZlib(final byte[] buf, final String charset) {
+	public static String unZlib(final byte[] buf, final Charset charset) {
 		return StrUtil.str(unZlib(buf), charset);
 	}
 

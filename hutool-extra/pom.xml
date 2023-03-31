@@ -43,7 +43,6 @@
 		<zxing.version>3.5.1</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
-		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.7.5</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
@@ -63,21 +62,6 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-setting</artifactId>
 			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${servlet-api.version}</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<!-- 版本固定5.0.0，可以支持jdk8 -->
-			<version>5.0.0</version>
-			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<!-- 模板引擎 -->

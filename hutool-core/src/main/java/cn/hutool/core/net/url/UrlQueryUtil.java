@@ -197,17 +197,6 @@ public class UrlQueryUtil {
 	 * @param paramsStr 参数字符串（或者带参数的Path）
 	 * @param charset   字符集
 	 * @return 参数Map
-	 */
-	public static Map<String, List<String>> decodeQuery(final String paramsStr, final String charset) {
-		return decodeQueryList(paramsStr, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
-	 *
-	 * @param paramsStr 参数字符串（或者带参数的Path）
-	 * @param charset   字符集
-	 * @return 参数Map
 	 * @since 5.2.6
 	 */
 	public static Map<String, List<String>> decodeQueryList(final String paramsStr, final Charset charset) {

@@ -205,18 +205,6 @@ public class NioUtil {
 	}
 
 	/**
-	 * 从FileChannel中读取内容，读取完毕后并不关闭Channel
-	 *
-	 * @param fileChannel 文件管道
-	 * @param charsetName 字符集
-	 * @return 内容
-	 * @throws IORuntimeException IO异常
-	 */
-	public static String read(final FileChannel fileChannel, final String charsetName) throws IORuntimeException {
-		return read(fileChannel, CharsetUtil.charset(charsetName));
-	}
-
-	/**
 	 * 从FileChannel中读取内容
 	 *
 	 * @param fileChannel 文件管道

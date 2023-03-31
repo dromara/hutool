@@ -292,8 +292,9 @@ public class ZipWriter implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 */
 	private ZipWriter putEntry(final String path, final InputStream in) throws IORuntimeException {
+		final ZipEntry entry = new ZipEntry(path);
 		try {
-			out.putNextEntry(new ZipEntry(path));
+			out.putNextEntry(entry);
 			if (null != in) {
 				IoUtil.copy(in, out);
 			}

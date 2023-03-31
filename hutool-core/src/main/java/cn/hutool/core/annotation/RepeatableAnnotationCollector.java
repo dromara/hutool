@@ -12,12 +12,11 @@
 
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.array.ArrayUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
@@ -354,9 +353,7 @@ public interface RepeatableAnnotationCollector {
 		 */
 		@Override
 		protected List<Method> resolveRepeatableMethod(final Annotation annotation) {
-			final Object cache = MapUtil.computeIfAbsent(
-				repeatableMethodCache, annotation.annotationType(), this::resolveRepeatableMethodFromType
-			);
+			final Object cache = repeatableMethodCache.computeIfAbsent(annotation.annotationType(), this::resolveRepeatableMethodFromType);
 			return (cache == NONE) ? null : Collections.singletonList((Method)cache);
 		}
 
@@ -467,9 +464,7 @@ public interface RepeatableAnnotationCollector {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected List<Method> resolveRepeatableMethod(final Annotation annotation) {
-			final Object cache = MapUtil.computeIfAbsent(
-				repeatableMethodCache, annotation.annotationType(), this::resolveRepeatableMethodFromType
-			);
+			final Object cache = repeatableMethodCache.computeIfAbsent(annotation.annotationType(), this::resolveRepeatableMethodFromType);
 			return (cache == NONE) ? null : (List<Method>)cache;
 		}
 

@@ -12,18 +12,15 @@
 
 package cn.hutool.core.compress;
 
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.FileUtil;
 import cn.hutool.core.text.StrUtil;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
@@ -39,10 +36,7 @@ import java.util.zip.ZipInputStream;
 public class ZipReader implements Closeable {
 
 	// size of uncompressed zip entry shouldn't be bigger of compressed in MAX_SIZE_DIFF times
-	private static final int MAX_SIZE_DIFF = 100;
-
-	private ZipFile zipFile;
-	private ZipInputStream in;
+	private static final int DEFAULT_MAX_SIZE_DIFF = 100;
 
 	/**
 	 * 创建ZipReader
@@ -52,7 +46,7 @@ public class ZipReader implements Closeable {
 	 * @return ZipReader
 	 */
 	public static ZipReader of(final File zipFile, final Charset charset) {
-		return new ZipReader(zipFile, charset);
+		return new ZipReader(ZipUtil.toZipFile(zipFile, charset));
 	}
 
 	/**
@@ -63,18 +57,14 @@ public class ZipReader implements Closeable {
 	 * @return ZipReader
 	 */
 	public static ZipReader of(final InputStream in, final Charset charset) {
-		return new ZipReader(in, charset);
+		return new ZipReader(new ZipInputStream(in, charset));
 	}
 
+	private final ZipResource resource;
 	/**
-	 * 构造
-	 *
-	 * @param zipFile 读取的的Zip文件
-	 * @param charset 编码
+	 * 检查ZipBomb文件差异倍数，-1表示不检查ZipBomb
 	 */
-	public ZipReader(final File zipFile, final Charset charset) {
-		this.zipFile = ZipUtil.toZipFile(zipFile, charset);
-	}
+	private int maxSizeDiff = DEFAULT_MAX_SIZE_DIFF;
 
 	/**
 	 * 构造
@@ -82,17 +72,7 @@ public class ZipReader implements Closeable {
 	 * @param zipFile 读取的的Zip文件
 	 */
 	public ZipReader(final ZipFile zipFile) {
-		this.zipFile = zipFile;
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param in      读取的的Zip文件流
-	 * @param charset 编码
-	 */
-	public ZipReader(final InputStream in, final Charset charset) {
-		this.in = new ZipInputStream(in, charset);
+		this(new ZipFileResource(zipFile));
 	}
 
 	/**
@@ -101,7 +81,28 @@ public class ZipReader implements Closeable {
 	 * @param zin 读取的的Zip文件流
 	 */
 	public ZipReader(final ZipInputStream zin) {
-		this.in = zin;
+		this(new ZipStreamResource(zin));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param resource 读取的的Zip文件流
+	 */
+	public ZipReader(final ZipResource resource) {
+		this.resource = resource;
+	}
+
+	/**
+	 * 设置检查ZipBomb文件差异倍数，-1表示不检查ZipBomb
+	 *
+	 * @param maxSizeDiff 检查ZipBomb文件差异倍数，-1表示不检查ZipBomb
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ZipReader setMaxSizeDiff(final int maxSizeDiff) {
+		this.maxSizeDiff = maxSizeDiff;
+		return this;
 	}
 
 	/**
@@ -112,27 +113,7 @@ public class ZipReader implements Closeable {
 	 * @return 文件流
 	 */
 	public InputStream get(final String path) {
-		if (null != this.zipFile) {
-			final ZipFile zipFile = this.zipFile;
-			final ZipEntry entry = zipFile.getEntry(path);
-			if (null != entry) {
-				return ZipUtil.getStream(zipFile, entry);
-			}
-		} else {
-			try {
-				this.in.reset();
-				ZipEntry zipEntry;
-				while (null != (zipEntry = in.getNextEntry())) {
-					if (zipEntry.getName().equals(path)) {
-						return this.in;
-					}
-				}
-			} catch (final IOException e) {
-				throw new IORuntimeException(e);
-			}
-		}
-
-		return null;
+		return this.resource.get(path);
 	}
 
 	/**
@@ -155,31 +136,11 @@ public class ZipReader implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.7.12
 	 */
+	@SuppressWarnings("resource")
 	public File readTo(final File outFile, final Predicate<ZipEntry> entryFilter) throws IORuntimeException {
 		read((zipEntry) -> {
 			if (null == entryFilter || entryFilter.test(zipEntry)) {
-				//gitee issue #I4ZDQI
-				String path = zipEntry.getName();
-				if (FileUtil.isWindows()) {
-					// Win系统下
-					path = StrUtil.replace(path, "*", "_");
-				}
-				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				final File outItemFile = FileUtil.file(outFile, path);
-				if (zipEntry.isDirectory()) {
-					// 目录
-					//noinspection ResultOfMethodCallIgnored
-					outItemFile.mkdirs();
-				} else {
-					final InputStream in;
-					if (null != this.zipFile) {
-						in = ZipUtil.getStream(this.zipFile, zipEntry);
-					} else {
-						in = this.in;
-					}
-					// 文件
-					FileUtil.writeFromStream(in, outItemFile, false);
-				}
+				readEntry(zipEntry, outFile);
 			}
 		});
 		return outFile;
@@ -193,70 +154,37 @@ public class ZipReader implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ZipReader read(final Consumer<ZipEntry> consumer) throws IORuntimeException {
-		if (null != this.zipFile) {
-			readFromZipFile(consumer);
-		} else {
-			readFromStream(consumer);
-		}
+		resource.read(consumer, this.maxSizeDiff);
 		return this;
 	}
 
 	@Override
 	public void close() throws IORuntimeException {
-		if (null != this.zipFile) {
-			IoUtil.closeQuietly(this.zipFile);
+		IoUtil.closeQuietly(this.resource);
+	}
+
+	/**
+	 * 读取一个ZipEntry的数据到目标目录下，如果entry是个目录，则创建对应目录，否则解压并写出到文件
+	 *
+	 * @param zipEntry entry
+	 * @param outFile  写出到的目录
+	 */
+	private void readEntry(final ZipEntry zipEntry, final File outFile) {
+		//gitee issue #I4ZDQI
+		String path = zipEntry.getName();
+		if (FileUtil.isWindows()) {
+			// Win系统下
+			path = StrUtil.replace(path, "*", "_");
+		}
+		// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
+		final File outItemFile = FileUtil.file(outFile, path);
+		if (zipEntry.isDirectory()) {
+			// 目录
+			//noinspection ResultOfMethodCallIgnored
+			outItemFile.mkdirs();
 		} else {
-			IoUtil.closeQuietly(this.in);
+			// 文件
+			FileUtil.writeFromStream(this.resource.get(zipEntry), outItemFile, false);
 		}
-	}
-
-	/**
-	 * 读取并处理Zip文件中的每一个{@link ZipEntry}
-	 *
-	 * @param consumer {@link ZipEntry}处理器
-	 */
-	private void readFromZipFile(final Consumer<ZipEntry> consumer) {
-		final Enumeration<? extends ZipEntry> em = zipFile.entries();
-		while (em.hasMoreElements()) {
-			consumer.accept(checkZipBomb(em.nextElement()));
-		}
-	}
-
-	/**
-	 * 读取并处理Zip流中的每一个{@link ZipEntry}
-	 *
-	 * @param consumer {@link ZipEntry}处理器
-	 * @throws IORuntimeException IO异常
-	 */
-	private void readFromStream(final Consumer<ZipEntry> consumer) throws IORuntimeException {
-		try {
-			ZipEntry zipEntry;
-			while (null != (zipEntry = checkZipBomb(in.getNextEntry()))) {
-				consumer.accept(zipEntry);
-			}
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	/**
-	 * 检查Zip bomb漏洞
-	 *
-	 * @param entry {@link ZipEntry}
-	 * @return 检查后的{@link ZipEntry}
-	 */
-	private static ZipEntry checkZipBomb(final ZipEntry entry) {
-		if (null == entry) {
-			return null;
-		}
-		final long compressedSize = entry.getCompressedSize();
-		final long uncompressedSize = entry.getSize();
-		if (compressedSize < 0 || uncompressedSize < 0 ||
-				// 默认压缩比例是100倍，一旦发现压缩率超过这个阈值，被认为是Zip bomb
-				compressedSize * MAX_SIZE_DIFF < uncompressedSize) {
-			throw new ValidateException("Zip bomb attack detected, invalid sizes: compressed {}, uncompressed {}, name {}",
-					compressedSize, uncompressedSize, entry.getName());
-		}
-		return entry;
 	}
 }

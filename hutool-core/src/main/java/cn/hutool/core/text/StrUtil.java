@@ -165,17 +165,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 将byte数组转为字符串
-	 *
-	 * @param bytes   byte数组
-	 * @param charset 字符集
-	 * @return 字符串
-	 */
-	public static String str(final byte[] bytes, final String charset) {
-		return str(bytes, CharsetUtil.charset(charset));
-	}
-
-	/**
 	 * 解码字节码
 	 *
 	 * @param data    字符串

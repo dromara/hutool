@@ -11,7 +11,7 @@ public class UrlQueryUtilTest {
 	@Test
 	public void decodeQueryTest() {
 		final String paramsStr = "uuuu=0&a=b&c=%3F%23%40!%24%25%5E%26%3Ddsssss555555";
-		final Map<String, List<String>> map = UrlQueryUtil.decodeQuery(paramsStr, CharsetUtil.NAME_UTF_8);
+		final Map<String, List<String>> map = UrlQueryUtil.decodeQueryList(paramsStr, CharsetUtil.UTF_8);
 		Assertions.assertEquals("0", map.get("uuuu").get(0));
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("?#@!$%^&=dsssss555555", map.get("c").get(0));
@@ -28,7 +28,7 @@ public class UrlQueryUtilTest {
 	@Test
 	public void toQueryTest() {
 		final String paramsStr = "uuuu=0&a=b&c=3Ddsssss555555";
-		final Map<String, List<String>> map = UrlQueryUtil.decodeQuery(paramsStr, CharsetUtil.NAME_UTF_8);
+		final Map<String, List<String>> map = UrlQueryUtil.decodeQueryList(paramsStr, CharsetUtil.UTF_8);
 
 		final String encodedParams = UrlQueryUtil.toQuery(map);
 		Assertions.assertEquals(paramsStr, encodedParams);
@@ -91,41 +91,41 @@ public class UrlQueryUtilTest {
 	public void decodeParamTest() {
 		// 开头的？被去除
 		String a = "?a=b&c=d&";
-		Map<String, List<String>> map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		Map<String, List<String>> map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 
 		// =e被当作空为key，e为value
 		a = "?a=b&c=d&=e";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 		Assertions.assertEquals("e", map.get("").get(0));
 
 		// 多余的&去除
 		a = "?a=b&c=d&=e&&&&";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 		Assertions.assertEquals("e", map.get("").get(0));
 
 		// 值为空
 		a = "?a=b&c=d&e=";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 		Assertions.assertEquals("", map.get("e").get(0));
 
 		// &=被作为键和值都为空
 		a = "a=b&c=d&=";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 		Assertions.assertEquals("", map.get("").get(0));
 
 		// &e&这类单独的字符串被当作key
 		a = "a=b&c=d&e&";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("b", map.get("a").get(0));
 		Assertions.assertEquals("d", map.get("c").get(0));
 		Assertions.assertNull(map.get("e").get(0));
@@ -133,7 +133,7 @@ public class UrlQueryUtilTest {
 
 		// 被编码的键和值被还原
 		a = "a=bbb&c=%E4%BD%A0%E5%A5%BD&%E5%93%88%E5%96%BD=";
-		map = UrlQueryUtil.decodeQuery(a, CharsetUtil.NAME_UTF_8);
+		map = UrlQueryUtil.decodeQueryList(a, CharsetUtil.UTF_8);
 		Assertions.assertEquals("bbb", map.get("a").get(0));
 		Assertions.assertEquals("你好", map.get("c").get(0));
 		Assertions.assertEquals("", map.get("哈喽").get(0));

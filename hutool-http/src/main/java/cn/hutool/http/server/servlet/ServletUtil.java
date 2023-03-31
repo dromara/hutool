@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package cn.hutool.extra.servlet;
+package cn.hutool.http.server.servlet;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -24,21 +24,21 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadSetting;
+import cn.hutool.core.net.url.URLEncoder;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.http.meta.Method;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -64,15 +64,7 @@ import java.util.Map;
  * @author looly
  * @since 3.2.0
  */
-public class JakartaServletUtil {
-
-	public static final String METHOD_DELETE = "DELETE";
-	public static final String METHOD_HEAD = "HEAD";
-	public static final String METHOD_GET = "GET";
-	public static final String METHOD_OPTIONS = "OPTIONS";
-	public static final String METHOD_POST = "POST";
-	public static final String METHOD_PUT = "PUT";
-	public static final String METHOD_TRACE = "TRACE";
+public class ServletUtil {
 
 	// --------------------------------------------------------- getParam start
 
@@ -304,7 +296,7 @@ public class JakartaServletUtil {
 	 * @since 4.6.2
 	 */
 	public static Map<String, String> getHeaderMap(final HttpServletRequest request) {
-		final Map<String, String> headerMap = new HashMap<>();
+		final Map<String, String> headerMap = new LinkedHashMap<>();
 
 		final Enumeration<String> names = request.getHeaderNames();
 		String name;
@@ -425,7 +417,7 @@ public class JakartaServletUtil {
 	 * @return 是否为GET请求
 	 */
 	public static boolean isGetMethod(final HttpServletRequest request) {
-		return METHOD_GET.equalsIgnoreCase(request.getMethod());
+		return Method.GET.name().equalsIgnoreCase(request.getMethod());
 	}
 
 	/**
@@ -435,7 +427,7 @@ public class JakartaServletUtil {
 	 * @return 是否为POST请求
 	 */
 	public static boolean isPostMethod(final HttpServletRequest request) {
-		return METHOD_POST.equalsIgnoreCase(request.getMethod());
+		return Method.POST.name().equalsIgnoreCase(request.getMethod());
 	}
 
 	/**

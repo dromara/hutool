@@ -77,16 +77,6 @@ public class FileWriter extends FileWrapper {
 	/**
 	 * 构造
 	 *
-	 * @param file    文件
-	 * @param charset 编码，使用 {@link CharsetUtil#charset(String)}
-	 */
-	public FileWriter(final File file, final String charset) {
-		this(file, CharsetUtil.charset(charset));
-	}
-
-	/**
-	 * 构造
-	 *
 	 * @param filePath 文件路径，相对路径会被转换为相对于ClassPath的路径
 	 * @param charset  编码，使用 {@link CharsetUtil}
 	 */

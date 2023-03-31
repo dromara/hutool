@@ -12,32 +12,21 @@
 
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.classloader.ClassLoaderUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.func.LambdaInfo;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.lang.func.SerFunction;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.WeakConcurrentMap;
 import cn.hutool.core.reflect.FieldUtil;
 import cn.hutool.core.reflect.MethodUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -70,7 +59,7 @@ public class AnnotationUtil {
 	 * @since 6.0.0
 	 */
 	public static Annotation[] getDeclaredAnnotations(final AnnotatedElement element) {
-		return MapUtil.computeIfAbsent(DECLARED_ANNOTATIONS_CACHE, element, AnnotatedElement::getDeclaredAnnotations);
+		return DECLARED_ANNOTATIONS_CACHE.computeIfAbsent(element, AnnotatedElement::getDeclaredAnnotations);
 	}
 
 	/**

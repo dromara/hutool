@@ -1285,8 +1285,12 @@ public class MapUtil extends MapGetUtil {
 		if (JdkUtil.IS_JDK8) {
 			V value = map.get(key);
 			if (null == value) {
-				//map.putIfAbsent(key, mappingFunction.apply(key));
-				value = map.computeIfAbsent(key, mappingFunction);
+				map.putIfAbsent(key, mappingFunction.apply(key));
+				value = map.get(key);
+
+				// 判空后调用依旧无法解决死循环问题
+				// 见：Issue2349Test
+				//value = map.computeIfAbsent(key, mappingFunction);
 			}
 			return value;
 		} else {

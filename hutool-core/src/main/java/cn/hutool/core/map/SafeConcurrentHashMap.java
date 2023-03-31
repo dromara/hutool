@@ -12,6 +12,8 @@
 
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.JdkUtil;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -43,7 +45,7 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 	 *
 	 * @param initialCapacity 预估初始大小
 	 */
-	public SafeConcurrentHashMap(int initialCapacity) {
+	public SafeConcurrentHashMap(final int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -52,7 +54,7 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 	 *
 	 * @param m 初始键值对
 	 */
-	public SafeConcurrentHashMap(Map<? extends K, ? extends V> m) {
+	public SafeConcurrentHashMap(final Map<? extends K, ? extends V> m) {
 		super(m);
 	}
 
@@ -62,7 +64,7 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 	 * @param initialCapacity 初始容量
 	 * @param loadFactor      增长系数
 	 */
-	public SafeConcurrentHashMap(int initialCapacity, float loadFactor) {
+	public SafeConcurrentHashMap(final int initialCapacity, final float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -73,14 +75,27 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 	 * @param loadFactor       增长系数
 	 * @param concurrencyLevel 并发级别，即Segment的个数
 	 */
-	public SafeConcurrentHashMap(int initialCapacity,
-								 float loadFactor, int concurrencyLevel) {
+	public SafeConcurrentHashMap(final int initialCapacity,
+								 final float loadFactor, final int concurrencyLevel) {
 		super(initialCapacity, loadFactor, concurrencyLevel);
 	}
 	// endregion == 构造 ==
 
 	@Override
-	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-		return MapUtil.computeIfAbsent(this, key, mappingFunction);
+	public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
+		if (JdkUtil.IS_JDK8) {
+			V value = get(key);
+			if (null == value) {
+				putIfAbsent(key, mappingFunction.apply(key));
+				value = get(key);
+
+				// 判空后调用依旧无法解决死循环问题
+				// 见：Issue2349Test
+				//value = map.computeIfAbsent(key, mappingFunction);
+			}
+			return value;
+		} else {
+			return super.computeIfAbsent(key, mappingFunction);
+		}
 	}
 }
