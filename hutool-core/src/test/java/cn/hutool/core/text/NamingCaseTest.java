@@ -45,7 +45,10 @@ public class NamingCaseTest {
 
 	@Test
 	public void issue3031Test() {
-		final String camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY");
+		String camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY");
 		Assert.assertEquals("userName,birthday", camelCase);
+
+		camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY", '_', false);
+		Assert.assertEquals("userName,BIRTHDAY", camelCase);
 	}
 }

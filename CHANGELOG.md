@@ -10,6 +10,7 @@
 * 【core  】      完善HttpStatus，参考相关规范，补全缺失的状态码（pr#968@Gitee）
 * 【core  】      NumberUtil增加（pr#968@Gitee）
 * 【core  】      Number128增加hash和equals方法（pr#968@Gitee）
+* 【core  】      NamingCase.toCamelCase新增重载，可选是否转换其他字符为小写（issue#3031@ithub）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
