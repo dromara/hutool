@@ -2,6 +2,7 @@ package cn.hutool.core.io;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.file.LineSeparator;
+import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
@@ -78,6 +79,16 @@ public class FileUtilTest {
 	@Ignore
 	public void renameTest2() {
 		FileUtil.move(FileUtil.file("d:/test/a"), FileUtil.file("d:/test/b"), false);
+	}
+
+	@Test
+	@Ignore
+	public void renameTest3() {
+		Path path1 = Paths.get("D:\\test");
+		FileUtil.mkdir(path1);
+		PathUtil.rename(path1, "test", false);
+
+		PathUtil.rename(path1, "test1", false);
 	}
 
 	@Test
