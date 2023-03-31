@@ -15,6 +15,7 @@ package cn.hutool.core.io.file;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.io.IOException;
@@ -82,25 +83,31 @@ public class PathMover {
 	 *     <li>如果src为文件，target为不存在的路径，则重命名源文件到目标指定的文件，如move("/a/b", "/c/d"), d不存在，则b变成d。</li>
 	 *     <li>如果src为目录，target为文件，抛出{@link IllegalArgumentException}</li>
 	 *     <li>如果src为目录，target为目录，则将源目录及其内容移动到目标路径目录中，如move("/a/b", "/c/d")，结果为"/c/d/b"</li>
+	 *     <li>如果src为目录，target为其子目录，抛出{@link IllegalArgumentException}</li>
 	 *     <li>如果src为目录，target为不存在的路径，则重命名src到target，如move("/a/b", "/c/d")，结果为"/c/d/"，相当于b重命名为d</li>
 	 * </ul>
 	 *
 	 * @return 目标文件Path
+	 * @throws IllegalArgumentException src为目录，target为其子目录抛出此异常
 	 */
-	public Path move() {
+	public Path move() throws IllegalArgumentException{
 		final Path src = this.src;
 		Path target = this.target;
 		final CopyOption[] options = this.options;
 
+		if (PathUtil.isSub(src, target)) {
+			if(Files.exists(target) && PathUtil.equals(src, target)){
+				// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
+				return target;
+			}
+
+			// 当用户将文件夹拷贝到其子文件夹时，报错
+			throw new IllegalArgumentException(StrUtil.format("Target [{}] is sub path of src [{}]!", target, src));
+		}
+
 		if (PathUtil.isDirectory(target)) {
 			// 创建子路径的情况，1是目标是目录，需要移动到目录下，2是目标不能存在，自动创建目录
 			target = target.resolve(src.getFileName());
-		}
-
-		// issue#2893 target 不存在导致NoSuchFileException
-		if (Files.exists(target) && PathUtil.equals(src, target)) {
-			// issue#2845，当用户传入目标路径与源路径一致时，直接返回，否则会导致删除风险。
-			return target;
 		}
 
 		// 自动创建目标的父目录

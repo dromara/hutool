@@ -70,6 +70,22 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@Disabled
+	public void renameToSubTest() {
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			// 移动到子目录，报错
+			FileUtil.move(FileUtil.file("d:/test/a"), FileUtil.file("d:/test/a/c"), false);
+		});
+	}
+
+	@Test
+	@Disabled
+	public void renameSameTest() {
+		// 目标和源相同，不处理
+		FileUtil.move(FileUtil.file("d:/test/a"), FileUtil.file("d:/test/a"), false);
+	}
+
+	@Test
 	public void copyTest() {
 		final File srcFile = FileUtil.file("hutool.jpg");
 		final File destFile = FileUtil.file("hutool.copy.jpg");
@@ -78,6 +94,16 @@ public class FileUtilTest {
 
 		Assertions.assertTrue(destFile.exists());
 		Assertions.assertEquals(srcFile.length(), destFile.length());
+	}
+
+	@Test
+	@Disabled
+	public void copySameTest() {
+		final File srcFile = FileUtil.file("d:/test/a");
+		final File destFile = FileUtil.file("d:/test/");
+
+		// 拷贝到当前目录，不做处理
+		FileUtil.copy(srcFile, destFile, true);
 	}
 
 	@Test
