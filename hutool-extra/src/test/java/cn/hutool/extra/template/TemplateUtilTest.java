@@ -6,6 +6,7 @@ import cn.hutool.extra.template.TemplateConfig.ResourceMode;
 import cn.hutool.extra.template.engine.beetl.BeetlEngine;
 import cn.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
+import cn.hutool.extra.template.engine.pebble.PebbleTemplateEngine;
 import cn.hutool.extra.template.engine.rythm.RythmEngine;
 import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
@@ -141,6 +142,24 @@ public class TemplateUtilTest {
 		template = engine.getTemplate("thymeleaf_test.ttl");
 		result = template.render(Dict.of().set("message", "Hutool"));
 		Assert.assertEquals("<h3>Hutool</h3>", result);
+	}
+
+	/**
+	 * pebble template engine test
+	 */
+	@Test
+	public void pebbleEngineTest() {
+		// 字符串模板
+		TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates").setCustomEngine(PebbleTemplateEngine.class));
+		Template template = engine.getTemplate("<h3>{{ message }}</h3>");
+		String result = template.render(Dict.of().set("message", "Hutool"));
+		Assert.assertEquals("<h3>Hutool</h3>", result);
+
+		//ClassPath模板
+		engine = TemplateUtil.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(PebbleTemplateEngine.class));
+		template = engine.getTemplate("pebble_test.peb");
+		result = template.render(Dict.of().set("name", "Hutool"));
+		Assert.assertEquals("hello, Hutool", result);
 	}
 
 	@Test

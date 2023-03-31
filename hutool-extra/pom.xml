@@ -151,6 +151,12 @@
 			<version>2.1.10</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>io.pebbletemplates</groupId>
+			<artifactId>pebble</artifactId>
+			<version>3.2.0</version>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- 邮件 -->
 		<dependency>
