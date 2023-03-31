@@ -345,7 +345,7 @@ public class AnnotationUtil {
 	@SuppressWarnings("unchecked")
 	public static void setValue(
 		final Annotation annotation, final String annotationField, final Object value) {
-		InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
+		final InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
 		String memberAttributeName = JDK_MEMBER_ATTRIBUTE;
 		// Spring合成注解
 		if (CharSequenceUtil.contains(invocationHandler.getClass().getName(), SPRING_INVOCATION_HANDLER)) {
@@ -355,7 +355,7 @@ public class AnnotationUtil {
 		else if (invocationHandler instanceof AnnotationMappingProxy) {
 			memberAttributeName = HUTOOL_MEMBER_ATTRIBUTE;
 		}
-		Map<String, Object> memberValues = (Map<String, Object>) FieldUtil.getFieldValue(invocationHandler, memberAttributeName);
+		final Map<String, Object> memberValues = (Map<String, Object>) FieldUtil.getFieldValue(invocationHandler, memberAttributeName);
 		memberValues.put(annotationField, value);
 	}
 
