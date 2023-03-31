@@ -31,62 +31,62 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-crypto</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-db</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-extra</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-http</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-setting</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-cron</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-poi</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-socket</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>hutool-swing</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
