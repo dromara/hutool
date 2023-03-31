@@ -12,6 +12,7 @@
 * 【core  】      Number128增加hash和equals方法（pr#968@Gitee）
 * 【core  】      NamingCase.toCamelCase新增重载，可选是否转换其他字符为小写（issue#3031@ithub）
 * 【core  】      新增JdkUtil
+* 【core  】      DateUtil.getZodiac增加越界检查（issue#3036@Github）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
