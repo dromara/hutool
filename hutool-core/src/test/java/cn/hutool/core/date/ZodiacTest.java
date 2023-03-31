@@ -31,4 +31,12 @@ public class ZodiacTest {
 		Assertions.assertNull(Zodiac.getChineseZodiac(1899));
 		Assertions.assertNull(Zodiac.getChineseZodiac((Calendar) null));
 	}
+
+	@Test
+	public void getZodiacOutOfRangeTest() {
+		// https://github.com/dromara/hutool/issues/3036
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			DateUtil.getZodiac(Month.UNDECIMBER.getValue(), 10);
+		});
+	}
 }
