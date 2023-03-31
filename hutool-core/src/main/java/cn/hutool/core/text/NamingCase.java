@@ -173,6 +173,18 @@ public class NamingCase {
 	 * @since 5.7.17
 	 */
 	public static String toCamelCase(final CharSequence name, final char symbol) {
+		return toCamelCase(name, symbol, true);
+	}
+
+	/**
+	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。
+	 *
+	 * @param name             转换前的自定义方式命名的字符串
+	 * @param symbol           原字符串中的连接符连接符
+	 * @param otherCharToLower 其他非连接符后的字符是否需要转为小写
+	 * @return 转换后的驼峰式命名的字符串
+	 */
+	public static String toCamelCase(final CharSequence name, final char symbol, final boolean otherCharToLower) {
 		if (null == name) {
 			return null;
 		}
@@ -191,7 +203,7 @@ public class NamingCase {
 					sb.append(Character.toUpperCase(c));
 					upperCase = false;
 				} else {
-					sb.append(Character.toLowerCase(c));
+					sb.append(otherCharToLower ? Character.toLowerCase(c) : c);
 				}
 			}
 			return sb.toString();

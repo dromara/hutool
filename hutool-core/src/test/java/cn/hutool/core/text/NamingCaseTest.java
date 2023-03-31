@@ -47,4 +47,13 @@ public class NamingCaseTest {
 		// https://gitee.com/dromara/hutool/issues/I5TVMU
 		Assertions.assertEquals("t1C1", NamingCase.toUnderlineCase("t1C1"));
 	}
+
+	@Test
+	public void issue3031Test() {
+		String camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY");
+		Assertions.assertEquals("userName,birthday", camelCase);
+
+		camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY", '_', false);
+		Assertions.assertEquals("userName,BIRTHDAY", camelCase);
+	}
 }
