@@ -28,8 +28,6 @@ import java.util.Map;
 public class EnjoyTemplate implements Template, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final com.jfinal.template.Template rawTemplate;
-
 	/**
 	 * 包装Enjoy模板
 	 *
@@ -39,6 +37,8 @@ public class EnjoyTemplate implements Template, Serializable {
 	public static EnjoyTemplate wrap(final com.jfinal.template.Template EnjoyTemplate) {
 		return (null == EnjoyTemplate) ? null : new EnjoyTemplate(EnjoyTemplate);
 	}
+
+	private final com.jfinal.template.Template rawTemplate;
 
 	/**
 	 * 构造

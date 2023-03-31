@@ -153,13 +153,13 @@ public class TemplateUtilTest {
 		TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates").setCustomEngine(PebbleTemplateEngine.class));
 		Template template = engine.getTemplate("<h3>{{ message }}</h3>");
 		String result = template.render(Dict.of().set("message", "Hutool"));
-		Assert.assertEquals("<h3>Hutool</h3>", result);
+		Assertions.assertEquals("<h3>Hutool</h3>", result);
 
 		//ClassPath模板
 		engine = TemplateUtil.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(PebbleTemplateEngine.class));
 		template = engine.getTemplate("pebble_test.peb");
 		result = template.render(Dict.of().set("name", "Hutool"));
-		Assert.assertEquals("hello, Hutool", result);
+		Assertions.assertEquals("hello, Hutool", result);
 	}
 
 	@Test
