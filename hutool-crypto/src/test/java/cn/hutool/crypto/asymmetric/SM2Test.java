@@ -330,4 +330,10 @@ public class SM2Test {
 		// 04占位一个字节
 		Assert.assertEquals(65, sm2.getQ(false).length);
 	}
+
+	@Test
+	public void issueI6ROLTTest(){
+		String publicKey = "04bf347dfa32b9bc4c378232898ea43a210887a9b9ed6cc188f91b653706b44fa8434518d54412606788f34be8097cc233608f780edaf695c7e2b1d1c1b7b0d7c3";
+		new SM2(null, publicKey);
+	}
 }

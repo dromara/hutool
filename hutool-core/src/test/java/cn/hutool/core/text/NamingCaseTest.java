@@ -1,5 +1,6 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharUtil;
 import org.junit.Assert;
@@ -40,5 +41,11 @@ public class NamingCaseTest {
 				// https://gitee.com/dromara/hutool/issues/I4X9TT
 				.set("DEPT_NAME","DEPT_NAME")
 				.forEach((key, value) -> Assert.assertEquals(value, NamingCase.toUnderlineCase(key)));
+	}
+
+	@Test
+	public void issue3031Test() {
+		final String camelCase = NamingCase.toCamelCase("user_name,BIRTHDAY");
+		Assert.assertEquals("userName,birthday", camelCase);
 	}
 }

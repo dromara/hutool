@@ -8,6 +8,8 @@
 * 【core  】      SerializeUtil.deserialize增加白名单类，避免RCE vulnerability（issue#3021@Github）
 * 【poi   】      ExcelWriter在关闭后不清空currentRow，以便复用（issue#3025@Github）
 * 【core  】      完善HttpStatus，参考相关规范，补全缺失的状态码（pr#968@Gitee）
+* 【core  】      NumberUtil增加（pr#968@Gitee）
+* 【core  】      Number128增加hash和equals方法（pr#968@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
