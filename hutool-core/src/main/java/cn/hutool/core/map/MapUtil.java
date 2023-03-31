@@ -12,6 +12,7 @@
 
 package cn.hutool.core.map;
 
+import cn.hutool.core.array.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.collection.iter.ArrayIter;
@@ -19,23 +20,11 @@ import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.array.ArrayUtil;
+import cn.hutool.core.util.JdkUtil;
 import cn.hutool.core.util.ObjUtil;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -1282,6 +1271,7 @@ public class MapUtil extends MapGetUtil {
 	 * 方法来自Dubbo，解决使用ConcurrentHashMap.computeIfAbsent导致的死循环问题。（issues#2349）<br>
 	 * A temporary workaround for Java 8 specific performance issue JDK-8161372 .<br>
 	 * This class should be removed once we drop Java 8 support.
+	 * 参考：https://github.com/apache/dubbo/blob/3.2/dubbo-common/src/main/java/org/apache/dubbo/common/utils/ConcurrentHashMapUtils.java
 	 *
 	 * @param <K>             键类型
 	 * @param <V>             值类型
@@ -1292,11 +1282,15 @@ public class MapUtil extends MapGetUtil {
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
 	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {
-		V value = map.get(key);
-		if (null == value) {
-			map.putIfAbsent(key, mappingFunction.apply(key));
-			value = map.get(key);
+		if (JdkUtil.IS_JDK8) {
+			V value = map.get(key);
+			if (null == value) {
+				//map.putIfAbsent(key, mappingFunction.apply(key));
+				value = map.computeIfAbsent(key, mappingFunction);
+			}
+			return value;
+		} else {
+			return map.computeIfAbsent(key, mappingFunction);
 		}
-		return value;
 	}
 }

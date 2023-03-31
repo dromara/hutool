@@ -57,18 +57,19 @@ public class JdkUtil {
 	 * @return JVM名称
 	 */
 	private static String _getJvmName() {
-		return System.getProperty("java.vm.name");
+		return SystemUtil.getQuietly("java.vm.name");
 	}
 
 	/**
-	 * 根据{@code java.specification.version}属性值，获取版本号
+	 * 根据{@code java.specification.version}属性值，获取版本号<br>
+	 * 默认8
 	 *
 	 * @return 版本号
 	 */
 	private static int _getJvmVersion() {
-		int jvmVersion = -1;
+		int jvmVersion = 8;
 
-		String javaSpecVer = System.getProperty("java.specification.version");
+		String javaSpecVer = SystemUtil.getQuietly("java.specification.version");
 		if (StrUtil.isNotBlank(javaSpecVer)) {
 			if (javaSpecVer.startsWith("1.")) {
 				javaSpecVer = javaSpecVer.substring(2);

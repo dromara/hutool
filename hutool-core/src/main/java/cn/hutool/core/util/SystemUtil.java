@@ -30,7 +30,9 @@ import java.util.Properties;
  */
 public class SystemUtil {
 
-	/** Hutool自定义系统属性：是否解析日期字符串采用严格模式 */
+	/**
+	 * Hutool自定义系统属性：是否解析日期字符串采用严格模式
+	 */
 	public static String HUTOOL_DATE_LENIENT = "hutool.date.lenient";
 
 	/**
@@ -43,7 +45,31 @@ public class SystemUtil {
 	 * @see System#getenv(String)
 	 */
 	public static String get(final String name, final String defaultValue) {
-		return ObjUtil.defaultIfNull(get(name, false), defaultValue);
+		return ObjUtil.defaultIfNull(get(name), defaultValue);
+	}
+
+	/**
+	 * 获得System属性
+	 *
+	 * @param key 键
+	 * @return 属性值
+	 * @see System#getProperty(String)
+	 * @see System#getenv(String)
+	 */
+	public static String get(final String key) {
+		return get(key, false);
+	}
+
+	/**
+	 * 获得System属性，忽略无权限问题
+	 *
+	 * @param key 键
+	 * @return 属性值
+	 * @see System#getProperty(String)
+	 * @see System#getenv(String)
+	 */
+	public static String getQuietly(final String key) {
+		return get(key, true);
 	}
 
 	/**
@@ -62,7 +88,7 @@ public class SystemUtil {
 		} catch (final SecurityException e) {
 			if (false == quiet) {
 				Console.error("Caught a SecurityException reading the system property '{}'; " +
-						"the SystemUtil property value will default to null.", name);
+					"the SystemUtil property value will default to null.", name);
 			}
 		}
 
@@ -72,24 +98,12 @@ public class SystemUtil {
 			} catch (final SecurityException e) {
 				if (false == quiet) {
 					Console.error("Caught a SecurityException reading the system env '{}'; " +
-							"the SystemUtil env value will default to null.", name);
+						"the SystemUtil env value will default to null.", name);
 				}
 			}
 		}
 
 		return value;
-	}
-
-	/**
-	 * 获得System属性
-	 *
-	 * @param key 键
-	 * @return 属性值
-	 * @see System#getProperty(String)
-	 * @see System#getenv(String)
-	 */
-	public static String get(final String key) {
-		return get(key, null);
 	}
 
 	/**
