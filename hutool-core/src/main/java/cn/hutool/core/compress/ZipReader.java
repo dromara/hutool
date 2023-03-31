@@ -221,7 +221,9 @@ public class ZipReader implements Closeable {
 		try {
 			ZipEntry zipEntry;
 			while (null != (zipEntry = in.getNextEntry())) {
-				consumer.accept(checkZipBomb(zipEntry));
+				consumer.accept(zipEntry);
+				// 检查ZipBomb放在读取内容之后，以便entry中的信息正常读取
+				checkZipBomb(zipEntry);
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
