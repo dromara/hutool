@@ -20,7 +20,6 @@ import cn.hutool.core.collection.iter.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.reflect.ConstructorUtil;
 import cn.hutool.core.text.StrUtil;
-import cn.hutool.core.util.JdkUtil;
 import cn.hutool.core.util.ObjUtil;
 
 import java.util.*;
@@ -1281,20 +1280,22 @@ public class MapUtil extends MapGetUtil {
 	 * @return 值
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8161372">https://bugs.openjdk.java.net/browse/JDK-8161372</a>
 	 */
-	public static <K, V> V computeIfAbsent(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {
-		if (JdkUtil.IS_JDK8) {
-			V value = map.get(key);
-			if (null == value) {
-				map.putIfAbsent(key, mappingFunction.apply(key));
-				value = map.get(key);
-
-				// 判空后调用依旧无法解决死循环问题
-				// 见：Issue2349Test
-				//value = map.computeIfAbsent(key, mappingFunction);
+	public static <K, V> V computeIfAbsentForJdk8(final Map<K, V> map, final K key, final Function<? super K, ? extends V> mappingFunction) {
+		V value = map.get(key);
+		if (null == value) {
+			value = mappingFunction.apply(key);
+			final V res = map.putIfAbsent(key, mappingFunction.apply(key));
+			if(null != res){
+				// issues#I6RVMY
+				// 如果旧值存在，说明其他线程已经赋值成功，putIfAbsent没有执行，返回旧值
+				return res;
 			}
-			return value;
-		} else {
-			return map.computeIfAbsent(key, mappingFunction);
+			// 如果旧值不存在，说明赋值成功，返回当前值
+
+			// Dubbo的解决方式，判空后调用依旧无法解决死循环问题
+			// 见：Issue2349Test
+			//value = map.computeIfAbsent(key, mappingFunction);
 		}
+		return value;
 	}
 }
