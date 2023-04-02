@@ -1284,7 +1284,7 @@ public class MapUtil extends MapGetUtil {
 		V value = map.get(key);
 		if (null == value) {
 			value = mappingFunction.apply(key);
-			final V res = map.putIfAbsent(key, mappingFunction.apply(key));
+			final V res = map.putIfAbsent(key, value);
 			if(null != res){
 				// issues#I6RVMY
 				// 如果旧值存在，说明其他线程已经赋值成功，putIfAbsent没有执行，返回旧值
