@@ -72,15 +72,7 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 	@Override
 	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
 		if (JdkUtil.IS_JDK8) {
-			V value = get(key);
-			if (null == value) {
-				putIfAbsent(key, mappingFunction.apply(key));
-				value = get(key);
-
-				// 判空后调用依旧无法解决死循环问题
-				//value = map.computeIfAbsent(key, mappingFunction);
-			}
-			return value;
+			return MapUtil.computeIfAbsentForJdk8(this, key, mappingFunction);
 		} else {
 			return super.computeIfAbsent(key, mappingFunction);
 		}
