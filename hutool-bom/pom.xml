@@ -19,7 +19,7 @@
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>cn.hutool</groupId>
+		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
 		<version>6.0.0.M3</version>
 	</parent>

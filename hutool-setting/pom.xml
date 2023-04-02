@@ -19,7 +19,7 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>cn.hutool</groupId>
+		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
 		<version>6.0.0.M3</version>
 	</parent>
@@ -29,17 +29,17 @@
 	<description>Hutool 配置文件增强</description>
 
 	<properties>
-		<Automatic-Module-Name>cn.hutool.setting</Automatic-Module-Name>
+		<Automatic-Module-Name>org.dromara.hutool.setting</Automatic-Module-Name>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
