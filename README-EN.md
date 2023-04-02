@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
-		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
+	<a target="_blank" href="https://search.maven.org/artifact/org.dromara.hutool/hutool-all">
+		<img src="https://img.shields.io/maven-central/v/org.dromara.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
 	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
@@ -136,7 +136,7 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 ### 🍊Maven
 ```xml
 <dependency>
-    <groupId>cn.hutool</groupId>
+    <groupId>org.dromara.hutool</groupId>
     <artifactId>hutool-all</artifactId>
     <version>6.0.0.M3</version>
 </dependency>
@@ -144,7 +144,7 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:6.0.0.M3'
+implementation 'org.dromara.hutool:hutool-all:6.0.0.M3'
 ```
 
 ## 📥Download

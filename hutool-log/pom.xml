@@ -19,7 +19,7 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>cn.hutool</groupId>
+		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
 		<version>6.0.0.M3</version>
 	</parent>
@@ -29,7 +29,7 @@
 	<description>Hutool 日志封装</description>
 
 	<properties>
-		<Automatic-Module-Name>cn.hutool.log</Automatic-Module-Name>
+		<Automatic-Module-Name>org.dromara.hutool.log</Automatic-Module-Name>
 		<!-- versions -->
 		<slf4j.version>2.0.5</slf4j.version>
 		<!-- 固定1.3.x，支持到jdk8 -->
@@ -46,7 +46,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>

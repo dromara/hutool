@@ -1,0 +1,21 @@
+#
+# Copyright (c) 2023 looly(loolly@aliyun.com)
+# Hutool is licensed under Mulan PSL v2.
+# You can use this software according to the terms and conditions of the Mulan PSL v2.
+# You may obtain a copy of Mulan PSL v2 at:
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+#
+
+org.dromara.hutool.tokenizer.engine.ansj.AnsjEngine
+org.dromara.hutool.tokenizer.engine.hanlp.HanLPEngine
+org.dromara.hutool.tokenizer.engine.ikanalyzer.IKAnalyzerEngine
+org.dromara.hutool.tokenizer.engine.jcseg.JcsegEngine
+org.dromara.hutool.tokenizer.engine.jieba.JiebaEngine
+org.dromara.hutool.tokenizer.engine.mmseg.MmsegEngine
+org.dromara.hutool.tokenizer.engine.word.WordEngine
+org.dromara.hutool.tokenizer.engine.analysis.SmartcnEngine
+org.dromara.hutool.tokenizer.engine.mynlp.MynlpEngine

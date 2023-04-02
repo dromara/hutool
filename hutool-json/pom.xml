@@ -19,7 +19,7 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>cn.hutool</groupId>
+		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
 		<version>6.0.0.M3</version>
 	</parent>
@@ -29,19 +29,19 @@
 	<description>Hutool JSON封装</description>
 
 	<properties>
-		<Automatic-Module-Name>cn.hutool.json</Automatic-Module-Name>
+		<Automatic-Module-Name>org.dromara.hutool.json</Automatic-Module-Name>
 		<!-- versions -->
 		<bouncycastle.version>1.72</bouncycastle.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>cn.hutool</groupId>
+			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-crypto</artifactId>
 			<version>${project.parent.version}</version>
 			<optional>true</optional>
