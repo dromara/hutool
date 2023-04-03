@@ -15,9 +15,12 @@
  */
 package org.dromara.hutool.core.map.concurrent;
 
+import org.dromara.hutool.core.collection.queue.DiscardingQueue;
 import org.dromara.hutool.core.collection.queue.Linked;
 import org.dromara.hutool.core.collection.queue.LinkedDeque;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.util.RuntimeUtil;
 
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -128,7 +131,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	/**
 	 * The number of CPUs
 	 */
-	static final int NCPU = Runtime.getRuntime().availableProcessors();
+	static final int NCPU = RuntimeUtil.getProcessorCount();
 
 	/**
 	 * The maximum weighted capacity of the map.
@@ -169,11 +172,6 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	 * The maximum number of write operations to perform per amortized drain.
 	 */
 	static final int WRITE_BUFFER_DRAIN_THRESHOLD = 16;
-
-	/**
-	 * A queue that discards all entries.
-	 */
-	static final Queue<?> DISCARDING_QUEUE = new DiscardingQueue();
 
 	@SuppressWarnings("SameParameterValue")
 	static int ceilingNextPowerOfTwo(final int x) {
@@ -243,35 +241,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		// The notification queue and listener
 		listener = builder.listener;
 		pendingNotifications = (listener == DiscardingListener.INSTANCE)
-			? (Queue<Node<K, V>>) DISCARDING_QUEUE
-			: new ConcurrentLinkedQueue<>();
-	}
-
-	/**
-	 * Ensures that the object is not null.
-	 */
-	static void checkNotNull(final Object o) {
-		if (o == null) {
-			throw new NullPointerException();
-		}
-	}
-
-	/**
-	 * Ensures that the argument expression is true.
-	 */
-	static void checkArgument(final boolean expression) {
-		if (!expression) {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	/**
-	 * Ensures that the state expression is true.
-	 */
-	static void checkState(final boolean expression) {
-		if (!expression) {
-			throw new IllegalStateException();
-		}
+			? DiscardingQueue.getInstance() : new ConcurrentLinkedQueue<>();
 	}
 
 	/* ---------------- Eviction Support -------------- */
@@ -293,7 +263,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	 * @throws IllegalArgumentException if the capacity is negative
 	 */
 	public void setCapacity(final long capacity) {
-		checkArgument(capacity >= 0);
+		Assert.isTrue(capacity >= 0);
 		evictionLock.lock();
 		try {
 			this.capacity.lazySet(Math.min(capacity, MAXIMUM_CAPACITY));
@@ -679,7 +649,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 	@Override
 	public boolean containsValue(final Object value) {
-		checkNotNull(value);
+		Assert.notNull(value);
 
 		for (final Node<K, V> node : data.values()) {
 			if (node.getValue().equals(value)) {
@@ -736,8 +706,8 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	 * @return the prior value in the data store or null if no mapping was found
 	 */
 	V put(final K key, final V value, final boolean onlyIfAbsent) {
-		checkNotNull(key);
-		checkNotNull(value);
+		Assert.notNull(key);
+		Assert.notNull(value);
 
 		final int weight = weigher.weightOf(key, value);
 		final WeightedValue<V> weightedValue = new WeightedValue<>(value, weight);
@@ -814,8 +784,8 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 	@Override
 	public V replace(final K key, final V value) {
-		checkNotNull(key);
-		checkNotNull(value);
+		Assert.notNull(key);
+		Assert.notNull(value);
 
 		final int weight = weigher.weightOf(key, value);
 		final WeightedValue<V> weightedValue = new WeightedValue<>(value, weight);
@@ -843,9 +813,9 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 	@Override
 	public boolean replace(final K key, final V oldValue, final V newValue) {
-		checkNotNull(key);
-		checkNotNull(oldValue);
-		checkNotNull(newValue);
+		Assert.notNull(key);
+		Assert.notNull(oldValue);
+		Assert.notNull(newValue);
 
 		final int weight = weigher.weightOf(key, newValue);
 		final WeightedValue<V> newWeightedValue = new WeightedValue<>(newValue, weight);
@@ -950,7 +920,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	Set<K> orderedKeySet(final boolean ascending, final int limit) {
-		checkArgument(limit >= 0);
+		Assert.isTrue(limit >= 0);
 		evictionLock.lock();
 		try {
 			drainBuffers();
@@ -1060,7 +1030,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 	}
 
 	Map<K, V> orderedMap(final boolean ascending, final int limit) {
-		checkArgument(limit >= 0);
+		Assert.isTrue(limit >= 0);
 		evictionLock.lock();
 		try {
 			drainBuffers();
@@ -1277,7 +1247,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 		@Override
 		public void remove() {
-			checkState(current != null);
+			Assert.state(current != null);
 			ConcurrentLinkedHashMap.this.remove(current);
 			current = null;
 		}
@@ -1329,7 +1299,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 		@Override
 		public void remove() {
-			checkState(current != null);
+			Assert.state(current != null);
 			ConcurrentLinkedHashMap.this.remove(current.key);
 			current = null;
 		}
@@ -1403,7 +1373,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 
 		@Override
 		public void remove() {
-			checkState(current != null);
+			Assert.state(current != null);
 			ConcurrentLinkedHashMap.this.remove(current.key);
 			current = null;
 		}
@@ -1438,54 +1408,19 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		final EntryWeigher<? super K, ? super V> weigher;
 
 		BoundedEntryWeigher(final EntryWeigher<? super K, ? super V> weigher) {
-			checkNotNull(weigher);
+			Assert.notNull(weigher);
 			this.weigher = weigher;
 		}
 
 		@Override
 		public int weightOf(final K key, final V value) {
 			final int weight = weigher.weightOf(key, value);
-			checkArgument(weight >= 1);
+			Assert.isTrue(weight >= 1);
 			return weight;
 		}
 
 		Object writeReplace() {
 			return weigher;
-		}
-	}
-
-	/**
-	 * A queue that discards all additions and is always empty.
-	 */
-	static final class DiscardingQueue extends AbstractQueue<Object> {
-		@Override
-		public boolean add(final Object e) {
-			return true;
-		}
-
-		@Override
-		public boolean offer(final Object e) {
-			return true;
-		}
-
-		@Override
-		public Object poll() {
-			return null;
-		}
-
-		@Override
-		public Object peek() {
-			return null;
-		}
-
-		@Override
-		public int size() {
-			return 0;
-		}
-
-		@Override
-		public Iterator<Object> iterator() {
-			return Collections.emptyIterator();
 		}
 	}
 
@@ -1595,7 +1530,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 * @throws IllegalArgumentException if the initialCapacity is negative
 		 */
 		public Builder<K, V> initialCapacity(final int initialCapacity) {
-			checkArgument(initialCapacity >= 0);
+			Assert.isTrue(initialCapacity >= 0);
 			this.initialCapacity = initialCapacity;
 			return this;
 		}
@@ -1610,7 +1545,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 *                                  negative
 		 */
 		public Builder<K, V> maximumWeightedCapacity(final long capacity) {
-			checkArgument(capacity >= 0);
+			Assert.isTrue(capacity >= 0);
 			this.capacity = capacity;
 			return this;
 		}
@@ -1627,7 +1562,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 *                                  equal to zero
 		 */
 		public Builder<K, V> concurrencyLevel(final int concurrencyLevel) {
-			checkArgument(concurrencyLevel > 0);
+			Assert.isTrue(concurrencyLevel > 0);
 			this.concurrencyLevel = concurrencyLevel;
 			return this;
 		}
@@ -1641,7 +1576,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 * @throws NullPointerException if the listener is null
 		 */
 		public Builder<K, V> listener(final BiConsumer<K, V> listener) {
-			checkNotNull(listener);
+			Assert.notNull(listener);
 			this.listener = listener;
 			return this;
 		}
@@ -1686,7 +1621,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		 *                               not set
 		 */
 		public ConcurrentLinkedHashMap<K, V> build() {
-			checkState(capacity >= 0);
+			Assert.state(capacity >= 0);
 			return new ConcurrentLinkedHashMap<>(this);
 		}
 	}
