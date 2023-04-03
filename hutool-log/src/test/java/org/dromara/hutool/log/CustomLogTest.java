@@ -1,14 +1,14 @@
 package org.dromara.hutool.log;
 
-import org.dromara.hutool.log.dialect.commons.ApacheCommonsLogFactory;
-import org.dromara.hutool.log.dialect.console.ConsoleLogFactory;
-import org.dromara.hutool.log.dialect.jboss.JbossLogFactory;
-import org.dromara.hutool.log.dialect.jdk.JdkLogFactory;
-import org.dromara.hutool.log.dialect.log4j.Log4jLogFactory;
-import org.dromara.hutool.log.dialect.log4j2.Log4j2LogFactory;
-import org.dromara.hutool.log.dialect.slf4j.Slf4jLogFactory;
-import org.dromara.hutool.log.dialect.tinylog.TinyLog2Factory;
-import org.dromara.hutool.log.dialect.tinylog.TinyLogFactory;
+import org.dromara.hutool.log.engine.commons.ApacheCommonsLogFactory;
+import org.dromara.hutool.log.engine.console.ConsoleLogFactory;
+import org.dromara.hutool.log.engine.jboss.JbossLogFactory;
+import org.dromara.hutool.log.engine.jdk.JdkLogFactory;
+import org.dromara.hutool.log.engine.log4j.Log4jLogFactory;
+import org.dromara.hutool.log.engine.log4j2.Log4j2LogFactory;
+import org.dromara.hutool.log.engine.slf4j.Slf4jLogFactory;
+import org.dromara.hutool.log.engine.tinylog.TinyLog2Factory;
+import org.dromara.hutool.log.engine.tinylog.TinyLogFactory;
 import org.junit.jupiter.api.Test;
 
 /**

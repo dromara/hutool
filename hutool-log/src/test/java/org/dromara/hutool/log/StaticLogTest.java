@@ -1,7 +1,7 @@
 package org.dromara.hutool.log;
 
-import org.dromara.hutool.log.dialect.console.ConsoleColorLogFactory;
-import org.dromara.hutool.log.dialect.console.ConsoleLogFactory;
+import org.dromara.hutool.log.engine.console.ConsoleColorLogFactory;
+import org.dromara.hutool.log.engine.console.ConsoleLogFactory;
 import org.junit.jupiter.api.Test;
 
 public class StaticLogTest {

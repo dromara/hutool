@@ -10,11 +10,11 @@
 # See the Mulan PSL v2 for more details.
 #
 
-org.dromara.hutool.log.dialect.logtube.LogTubeLogFactory
-org.dromara.hutool.log.dialect.slf4j.Slf4jLogFactory
-org.dromara.hutool.log.dialect.log4j2.Log4j2LogFactory
-org.dromara.hutool.log.dialect.log4j.Log4jLogFactory
-org.dromara.hutool.log.dialect.commons.ApacheCommonsLogFactory
-org.dromara.hutool.log.dialect.tinylog.TinyLog2Factory
-org.dromara.hutool.log.dialect.tinylog.TinyLogFactory
-org.dromara.hutool.log.dialect.jboss.JbossLogFactory
+org.dromara.hutool.log.engine.logtube.LogTubeLogFactory
+org.dromara.hutool.log.engine.slf4j.Slf4jLogFactory
+org.dromara.hutool.log.engine.log4j2.Log4j2LogFactory
+org.dromara.hutool.log.engine.log4j.Log4jLogFactory
+org.dromara.hutool.log.engine.commons.ApacheCommonsLogFactory
+org.dromara.hutool.log.engine.tinylog.TinyLog2Factory
+org.dromara.hutool.log.engine.tinylog.TinyLogFactory
+org.dromara.hutool.log.engine.jboss.JbossLogFactory

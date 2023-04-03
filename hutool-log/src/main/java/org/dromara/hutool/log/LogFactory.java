@@ -16,8 +16,8 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.caller.CallerUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.util.ServiceLoaderUtil;
-import org.dromara.hutool.log.dialect.console.ConsoleLogFactory;
-import org.dromara.hutool.log.dialect.jdk.JdkLogFactory;
+import org.dromara.hutool.log.engine.console.ConsoleLogFactory;
+import org.dromara.hutool.log.engine.jdk.JdkLogFactory;
 
 import java.net.URL;
 import java.util.Map;

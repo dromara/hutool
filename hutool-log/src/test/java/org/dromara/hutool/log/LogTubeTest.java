@@ -1,6 +1,6 @@
 package org.dromara.hutool.log;
 
-import org.dromara.hutool.log.dialect.logtube.LogTubeLogFactory;
+import org.dromara.hutool.log.engine.logtube.LogTubeLogFactory;
 import org.junit.jupiter.api.Test;
 
 public class LogTubeTest {
