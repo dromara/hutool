@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,28 +26,28 @@ public class MapUtilTest {
 
 	@Data
 	@Builder
-	public static class User {
+	static class User {
 		private Long id;
 		private String name;
 	}
 
 	@Data
 	@Builder
-	public static class Group {
+	static class Group {
 		private Long id;
 		private List<User> users;
 	}
 
 	@Data
 	@Builder
-	public static class UserGroup {
+	static class UserGroup {
 		private Long userId;
 		private Long groupId;
 	}
 
 
 	@Test
-	public void filterTest() {
+	void filterTest() {
 		final Map<String, String> map = MapUtil.newHashMap();
 		map.put("a", "1");
 		map.put("b", "2");
@@ -62,7 +63,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void mapTest() {
+	void mapTest() {
 		// Add test like a foreigner
 		final Map<Integer, String> adjectivesMap = MapUtil.<Integer, String>builder()
 				.put(0, "lovely")
@@ -103,7 +104,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void filterMapWrapperTest() {
+	void filterMapWrapperTest() {
 		final Map<String, String> map = MapUtil.newHashMap();
 		map.put("a", "1");
 		map.put("b", "2");
@@ -121,7 +122,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void filterContainsTest() {
+	void filterContainsTest() {
 		final Map<String, String> map = MapUtil.newHashMap();
 		map.put("abc", "1");
 		map.put("bcd", "2");
@@ -135,7 +136,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void editTest() {
+	void editTest() {
 		final Map<String, String> map = MapUtil.newHashMap();
 		map.put("a", "1");
 		map.put("b", "2");
@@ -157,7 +158,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void reverseTest() {
+	void reverseTest() {
 		final Map<String, String> map = MapUtil.newHashMap();
 		map.put("a", "1");
 		map.put("b", "2");
@@ -173,7 +174,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void toObjectArrayTest() {
+	void toObjectArrayTest() {
 		final Map<String, String> map = MapUtil.newHashMap(true);
 		map.put("a", "1");
 		map.put("b", "2");
@@ -192,7 +193,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void sortJoinTest(){
+	void sortJoinTest(){
 		final Map<String, String> build = MapUtil.builder(new HashMap<String, String>())
 				.put("key1", "value1")
 				.put("key3", "value3")
@@ -209,7 +210,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void ofEntriesTest(){
+	void ofEntriesTest(){
 		final Map<String, Integer> map = MapUtil.ofEntries(MapUtil.entry("a", 1), MapUtil.entry("b", 2));
 		Assertions.assertEquals(2, map.size());
 
@@ -218,7 +219,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void getIntTest(){
+	void getIntTest(){
 		Assertions.assertThrows(NumberFormatException.class, ()->{
 			final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "d"));
 			final Integer a = MapUtil.getInt(map, "a");
@@ -227,7 +228,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void getIntValueTest(){
+	void getIntValueTest(){
 		final Map<String, String> map = MapUtil.ofEntries(MapUtil.entry("a", "1"), MapUtil.entry("b", null));
 		final int a = MapUtil.get(map, "a", int.class);
 		Assertions.assertEquals(1, a);
@@ -237,7 +238,7 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void valuesOfKeysTest() {
+	void valuesOfKeysTest() {
 		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", 23);
 		final Dict v2 = Dict.of().set("age", 13).set("id", 15).set("name", "李四");
 
@@ -254,9 +255,21 @@ public class MapUtilTest {
 	}
 
 	@Test
-	public void joinIgnoreNullTest() {
+	void joinIgnoreNullTest() {
 		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
 		final String s = MapUtil.joinIgnoreNull(v1, ",", "=");
 		Assertions.assertEquals("id=12,name=张三", s);
+	}
+
+	@Test
+	void computeIfAbsentForJdk8Test() {
+		// https://github.com/apache/dubbo/issues/11986
+		final ConcurrentHashMap<String,Integer> map=new ConcurrentHashMap<>();
+		// // map.computeIfAbsent("AaAa", key->map.computeIfAbsent("BBBB",key2->42));
+		MapUtil.computeIfAbsentForJdk8(map, "AaAa", key->map.computeIfAbsent("BBBB",key2->42));
+
+		Assertions.assertEquals(2, map.size());
+		Assertions.assertEquals(Integer.valueOf(42), map.get("AaAa"));
+		Assertions.assertEquals(Integer.valueOf(42), map.get("BBBB"));
 	}
 }
