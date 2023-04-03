@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;

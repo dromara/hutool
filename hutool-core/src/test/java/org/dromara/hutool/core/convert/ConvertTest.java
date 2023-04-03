@@ -1,7 +1,7 @@
 package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.codec.HexUtil;
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.MapUtil;

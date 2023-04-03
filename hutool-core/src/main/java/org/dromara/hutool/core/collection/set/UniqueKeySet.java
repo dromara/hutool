@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.collection;
+package org.dromara.hutool.core.collection.set;
 
 import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.core.util.ObjUtil;

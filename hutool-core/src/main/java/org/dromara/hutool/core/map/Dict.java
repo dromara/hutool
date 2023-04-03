@@ -15,7 +15,7 @@ package org.dromara.hutool.core.map;
 import org.dromara.hutool.core.bean.BeanPath;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exceptions.CloneRuntimeException;
 import org.dromara.hutool.core.lang.Assert;

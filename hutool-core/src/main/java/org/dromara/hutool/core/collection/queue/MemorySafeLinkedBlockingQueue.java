@@ -9,7 +9,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  */
-package org.dromara.hutool.core.collection;
+package org.dromara.hutool.core.collection.queue;
 
 import org.dromara.hutool.core.collection.queue.CheckedLinkedBlockingQueue;
 import org.dromara.hutool.core.thread.SimpleScheduler;

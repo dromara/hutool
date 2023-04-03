@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.collection;
 
+import org.dromara.hutool.core.collection.queue.MemorySafeLinkedBlockingQueue;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

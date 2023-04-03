@@ -1,6 +1,6 @@
 package org.dromara.hutool.db.meta;
 
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.db.ds.DSUtil;

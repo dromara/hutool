@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.regex;
 
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.StrLengthComparator;
 import org.dromara.hutool.core.convert.Convert;

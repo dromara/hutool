@@ -14,8 +14,8 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.collection.SetUtil;
-import org.dromara.hutool.core.collection.UniqueKeySet;
+import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exceptions.InvocationTargetRuntimeException;
 import org.dromara.hutool.core.exceptions.UtilException;

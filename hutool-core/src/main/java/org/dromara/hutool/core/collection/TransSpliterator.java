@@ -28,6 +28,12 @@ public class TransSpliterator<F, T> implements Spliterator<T> {
 	private final Spliterator<F> fromSpliterator;
 	private final Function<? super F, ? extends T> function;
 
+	/**
+	 * 构造
+	 *
+	 * @param fromSpliterator 源iterator
+	 * @param function 函数
+	 */
 	public TransSpliterator(final Spliterator<F> fromSpliterator, final Function<? super F, ? extends T> function) {
 		this.fromSpliterator = fromSpliterator;
 		this.function = function;

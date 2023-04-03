@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.collection;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

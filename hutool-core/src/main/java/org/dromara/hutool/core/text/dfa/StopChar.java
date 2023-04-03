@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.text.dfa;
 
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 
 import java.util.Set;
 

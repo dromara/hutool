@@ -2,7 +2,7 @@ package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapBuilder;

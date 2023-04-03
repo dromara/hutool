@@ -1,7 +1,7 @@
 package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -13,8 +13,8 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.SetUtil;
-import org.dromara.hutool.core.collection.UniqueKeySet;
+import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.convert.Convert;

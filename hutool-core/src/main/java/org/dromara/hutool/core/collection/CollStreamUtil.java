@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.collection;
 
 
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.stream.CollectorUtil;

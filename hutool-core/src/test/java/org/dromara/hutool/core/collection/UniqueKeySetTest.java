@@ -2,6 +2,7 @@ package org.dromara.hutool.core.collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

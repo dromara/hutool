@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
-import org.dromara.hutool.core.collection.SetUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.map.TableMap;
 
 import java.io.Serializable;

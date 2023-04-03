@@ -1,6 +1,7 @@
 package org.dromara.hutool.core.collection;
 
 import org.dromara.hutool.core.collection.iter.IterUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
