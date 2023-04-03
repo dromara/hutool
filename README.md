@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
-		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
+	<a target="_blank" href="https://search.maven.org/artifact/org.dromara.hutool/hutool-all">
+		<img src="https://img.shields.io/maven-central/v/org.dromara.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
 	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
@@ -139,7 +139,7 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 ```xml
 
 <dependency>
-	<groupId>cn.hutool</groupId>
+	<groupId>org.dromara.hutool</groupId>
 	<artifactId>hutool-all</artifactId>
 	<version>6.0.0.M3</version>
 </dependency>
@@ -148,7 +148,7 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 ### 🍐Gradle
 
 ```
-implementation 'cn.hutool:hutool-all:6.0.0.M3'
+implementation 'org.dromara.hutool:hutool-all:6.0.0.M3'
 ```
 
 ### 📥下载jar
