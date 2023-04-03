@@ -305,7 +305,7 @@ public class ArrayUtilTest {
 	@Test
 	public void toArrayTest() {
 		final List<String> list = ListUtil.of("A", "B", "C", "D");
-		final String[] array = ArrayUtil.toArray(list, String.class);
+		final String[] array = ArrayUtil.ofArray(list, String.class);
 		Assertions.assertEquals("A", array[0]);
 		Assertions.assertEquals("B", array[1]);
 		Assertions.assertEquals("C", array[2]);

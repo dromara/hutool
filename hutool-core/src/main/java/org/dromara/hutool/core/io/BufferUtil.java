@@ -20,6 +20,7 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * {@link ByteBuffer} 工具类<br>
@@ -30,6 +31,26 @@ import java.nio.charset.Charset;
  * @since 4.0.0
  */
 public class BufferUtil {
+
+	/**
+	 * {@link ByteBuffer} 转byte数组
+	 *
+	 * @param bytebuffer {@link ByteBuffer}
+	 * @return byte数组
+	 */
+	public static byte[] toBytes(final ByteBuffer bytebuffer) {
+		if (bytebuffer.hasArray()) {
+			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
+		} else {
+			final int oldPosition = bytebuffer.position();
+			bytebuffer.position(0);
+			final int size = bytebuffer.limit();
+			final byte[] buffers = new byte[size];
+			bytebuffer.get(buffers);
+			bytebuffer.position(oldPosition);
+			return buffers;
+		}
+	}
 
 	/**
 	 * 拷贝到一个新的ByteBuffer

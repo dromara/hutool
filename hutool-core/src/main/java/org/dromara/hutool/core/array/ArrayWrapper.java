@@ -7,6 +7,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
@@ -410,36 +411,139 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	/**
 	 * 获取子数组
 	 *
-	 * @param begin 开始位置（包括）
-	 * @param end   结束位置（不包括）
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
 	 * @return 新的数组
 	 * @see Arrays#copyOfRange(Object[], int, int)
 	 * @since 4.2.2
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
-	public A getSub(int begin, int end) {
+	public A getSub(int beginInclude, int endExclude) {
 		final int length = this.length;
-		if (begin < 0) {
-			begin += length;
+		if (beginInclude < 0) {
+			beginInclude += length;
 		}
-		if (end < 0) {
-			end += length;
+		if (endExclude < 0) {
+			endExclude += length;
 		}
-		if (begin > end) {
-			final int tmp = begin;
-			begin = end;
-			end = tmp;
+		if (beginInclude > endExclude) {
+			final int tmp = beginInclude;
+			beginInclude = endExclude;
+			endExclude = tmp;
 		}
-		if (begin >= length) {
+		if (beginInclude >= length) {
 			return (A) Array.newInstance(this.componentType, 0);
 		}
-		if (end > length) {
-			end = length;
+		if (endExclude > length) {
+			endExclude = length;
 		}
 
-		final A result = (A) Array.newInstance(this.componentType, end - begin);
-		System.arraycopy(this.array, begin, result, 0, end - begin);
+		final A result = (A) Array.newInstance(this.componentType, endExclude - beginInclude);
+		System.arraycopy(this.array, beginInclude, result, 0, endExclude - beginInclude);
 		return result;
+	}
+
+	/**
+	 * 获取子数组
+	 *
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
+	 * @param step         步进
+	 * @return 新的数组
+	 */
+	@SuppressWarnings("unchecked")
+	public A getSub(int beginInclude, int endExclude, int step) {
+		final int length = this.length;
+		if (beginInclude < 0) {
+			beginInclude += length;
+		}
+		if (endExclude < 0) {
+			endExclude += length;
+		}
+		if (beginInclude > endExclude) {
+			final int tmp = beginInclude;
+			beginInclude = endExclude;
+			endExclude = tmp;
+		}
+		if (beginInclude >= length) {
+			return (A) Array.newInstance(this.componentType, 0);
+		}
+		if (endExclude > length) {
+			endExclude = length;
+		}
+
+		if (step <= 1) {
+			step = 1;
+		}
+
+		final int size = (endExclude - beginInclude + step - 1) / step;
+		final A result = (A) Array.newInstance(this.componentType, size);
+		int j = 0;
+		for (int i = beginInclude; i < endExclude; i += step) {
+			Array.set(result, j, get(i));
+			j++;
+		}
+		return result;
+	}
+
+	/**
+	 * 检查数组是否有序，升序或者降序
+	 * <p>若传入空数组，则返回{@code false}；元素全部相等，返回 {@code true}</p>
+	 *
+	 * @param comparator 比较器
+	 * @return 数组是否有序
+	 * @throws NullPointerException 如果数组元素含有null值
+	 * @since 6.0.0
+	 */
+	public boolean isSorted(final Comparator<? super A> comparator) {
+		if (isEmpty()) {
+			return false;
+		}
+		final int lastIndex = this.length - 1;
+		// 对比第一个和最后一个元素，大致预估这个数组是升序还是降序
+		final int cmp = comparator.compare(get(0), get(lastIndex));
+		if (cmp < 0) {
+			return isSorted(comparator, false);
+		} else if (cmp > 0) {
+			return isSorted(comparator, true);
+		}
+
+		// 可能全等数组
+		for (int i = 0; i < lastIndex; i++) {
+			if (comparator.compare(get(i), get(i + 1)) != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 数组是否有有序
+	 * <ul>
+	 *     <li>反序，前一个小于后一个则返回错</li>
+	 *     <li>正序，前一个大于后一个则返回错</li>
+	 * </ul>
+	 *
+	 * @param comparator {@link Comparator}
+	 * @param isDESC     是否反序
+	 * @return 是否有序
+	 */
+	public boolean isSorted(final Comparator<? super A> comparator, final boolean isDESC) {
+		if (null == comparator) {
+			return false;
+		}
+
+		int compare;
+		for (int i = 0; i < this.length; i++) {
+			compare = comparator.compare(get(i), get(i + 1));
+			if ((isDESC && compare < 0) ||
+				(false == isDESC && compare > 0)) {
+				// 反序，前一个小于后一个则返回错
+				// 正序，前一个大于后一个则返回错
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override

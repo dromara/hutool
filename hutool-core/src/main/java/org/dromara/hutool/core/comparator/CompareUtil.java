@@ -317,7 +317,7 @@ public class CompareUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T, U> Comparator<T> comparingIndexed(final Function<? super T, ? extends U> keyExtractor, final Iterable<U> objs) {
-		return comparingIndexed(keyExtractor, false, ArrayUtil.toArray(objs, (Class<U>) objs.iterator().next().getClass()));
+		return comparingIndexed(keyExtractor, false, ArrayUtil.ofArray(objs, (Class<U>) objs.iterator().next().getClass()));
 	}
 
 	/**

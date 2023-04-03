@@ -13,9 +13,9 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
-import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exceptions.UtilException;
@@ -27,7 +27,6 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 
 import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -44,8 +43,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
 	 *
-	 * @param <A>         数组类型
-	 * @param values      元素值
+	 * @param <A>    数组类型
+	 * @param values 元素值
 	 * @return 数组
 	 */
 	public static <A> A ofArray(final Object values) {
@@ -73,6 +72,34 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return (A) newInstance;
 	}
 
+	/**
+	 * 将集合转为数组
+	 *
+	 * @param <T>           数组元素类型
+	 * @param iterator      {@link Iterator}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] ofArray(final Iterator<T> iterator, final Class<T> componentType) {
+		if (null == iterator) {
+			return newArray(componentType, 0);
+		}
+		return ListUtil.of(iterator).toArray(newArray(componentType, 0));
+	}
+
+	/**
+	 * 将集合转为数组
+	 *
+	 * @param <T>           数组元素类型
+	 * @param iterable      {@link Iterable}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] ofArray(final Iterable<T> iterable, final Class<T> componentType) {
+		return ofArray(IterUtil.getIter(iterable), componentType);
+	}
 	// ---------------------------------------------------------------------- isEmpty
 
 	/**
@@ -474,7 +501,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * </ul>
 	 *
 	 * @param <A>    数组类型
-	 * @param array 已有数组
+	 * @param array  已有数组
 	 * @param index  位置
 	 * @param values 新值
 	 * @return 新数组或原有数组
@@ -1133,56 +1160,32 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 获取子数组
 	 *
-	 * @param array 数组
-	 * @param start 开始位置（包括）
-	 * @param end   结束位置（不包括）
+	 * @param array        数组
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
 	 * @return 新的数组
 	 * @since 4.0.6
+	 * @param <A> 数组类型
 	 */
-	public static Object[] sub(final Object array, final int start, final int end) {
-		return sub(array, start, end, 1);
+	public static <A> A sub(final A array,
+							   final int beginInclude, final int endExclude) {
+		return ArrayWrapper.of(array).getSub(beginInclude, endExclude);
 	}
 
 	/**
 	 * 获取子数组
 	 *
-	 * @param array 数组
-	 * @param start 开始位置（包括）
-	 * @param end   结束位置（不包括）
-	 * @param step  步进
+	 * @param array        数组
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
+	 * @param step         步进
 	 * @return 新的数组
 	 * @since 4.0.6
+	 * @param <A> 数组类型
 	 */
-	public static Object[] sub(final Object array, int start, int end, int step) {
-		final int length = length(array);
-		if (start < 0) {
-			start += length;
-		}
-		if (end < 0) {
-			end += length;
-		}
-		if (start > end) {
-			final int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		if (start >= length) {
-			return new Object[0];
-		}
-		if (end > length) {
-			end = length;
-		}
-
-		if (step <= 1) {
-			step = 1;
-		}
-
-		final List<Object> list = new ArrayList<>();
-		for (int i = start; i < end; i += step) {
-			list.add(get(array, i));
-		}
-
-		return list.toArray();
+	public static <A> A sub(final A array,
+							   final int beginInclude, final int endExclude, final int step) {
+		return ArrayWrapper.of(array).getSub(beginInclude, endExclude, step);
 	}
 
 	/**
@@ -1317,55 +1320,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return StrJoiner.of(conjunction).append(array).toString();
 	}
 
-	/**
-	 * {@link ByteBuffer} 转byte数组
-	 *
-	 * @param bytebuffer {@link ByteBuffer}
-	 * @return byte数组
-	 * @since 3.0.1
-	 */
-	public static byte[] toArray(final ByteBuffer bytebuffer) {
-		if (bytebuffer.hasArray()) {
-			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
-		} else {
-			final int oldPosition = bytebuffer.position();
-			bytebuffer.position(0);
-			final int size = bytebuffer.limit();
-			final byte[] buffers = new byte[size];
-			bytebuffer.get(buffers);
-			bytebuffer.position(oldPosition);
-			return buffers;
-		}
-	}
-
-	/**
-	 * 将集合转为数组
-	 *
-	 * @param <T>           数组元素类型
-	 * @param iterator      {@link Iterator}
-	 * @param componentType 集合元素类型
-	 * @return 数组
-	 * @since 3.0.9
-	 */
-	public static <T> T[] toArray(final Iterator<T> iterator, final Class<T> componentType) {
-		if (null == iterator) {
-			return newArray(componentType, 0);
-		}
-		return ListUtil.of(iterator).toArray(newArray(componentType, 0));
-	}
-
-	/**
-	 * 将集合转为数组
-	 *
-	 * @param <T>           数组元素类型
-	 * @param iterable      {@link Iterable}
-	 * @param componentType 集合元素类型
-	 * @return 数组
-	 * @since 3.0.9
-	 */
-	public static <T> T[] toArray(final Iterable<T> iterable, final Class<T> componentType) {
-		return toArray(IterUtil.getIter(iterable), componentType);
-	}
 	// ---------------------------------------------------------------------- remove
 
 	/**
@@ -1688,7 +1642,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		final Set<T> set = new LinkedHashSet<>(array.length, 1);
 		Collections.addAll(set, array);
-		return toArray(set, (Class<T>) getComponentType(array));
+		return ofArray(set, (Class<T>) getComponentType(array));
 	}
 
 	/**
@@ -1717,7 +1671,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 				set.addIfAbsent(t);
 			}
 		}
-		return toArray(set, (Class<T>) getComponentType(array));
+		return ofArray(set, (Class<T>) getComponentType(array));
 	}
 
 	/**
