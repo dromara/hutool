@@ -16,6 +16,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.codec.hash.Hash32;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.iter.IteratorEnumeration;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;

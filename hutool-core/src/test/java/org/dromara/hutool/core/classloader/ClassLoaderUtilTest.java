@@ -8,7 +8,7 @@ public class ClassLoaderUtilTest {
 
 	@Test
 	public void isPresentTest() {
-		final boolean present = ClassLoaderUtil.isPresent("classloader.org.dromara.hutool.core.ClassLoaderUtil");
+		final boolean present = ClassLoaderUtil.isPresent("org.dromara.hutool.core.classloader.ClassLoaderUtil");
 		Assertions.assertTrue(present);
 	}
 

@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.collection;
+package org.dromara.hutool.core.collection.queue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

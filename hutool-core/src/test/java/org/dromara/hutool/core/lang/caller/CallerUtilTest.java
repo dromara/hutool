@@ -11,6 +11,6 @@ public class CallerUtilTest {
 		Assertions.assertEquals("getCallerMethodNameTest", callerMethodName);
 
 		final String fullCallerMethodName = CallerUtil.getCallerMethodName(true);
-		Assertions.assertEquals("caller.lang.org.dromara.hutool.core.CallerUtilTest.getCallerMethodNameTest", fullCallerMethodName);
+		Assertions.assertEquals("org.dromara.hutool.core.lang.caller.CallerUtilTest.getCallerMethodNameTest", fullCallerMethodName);
 	}
 }

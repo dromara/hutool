@@ -149,11 +149,11 @@ public class MethodUtilTest {
 		Assertions.assertEquals(3, methods.length);
 
 		// getA属于本类
-		Assertions.assertEquals("public void reflect.org.dromara.hutool.core.ReflectUtilTest$C2.getA()", methods[0].toString());
+		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectUtilTest$C2.getA()", methods[0].toString());
 		// getB属于父类
-		Assertions.assertEquals("public void reflect.org.dromara.hutool.core.ReflectUtilTest$C1.getB()", methods[1].toString());
+		Assertions.assertEquals("public void org.dromara.hutool.core.reflect.ReflectUtilTest$C1.getB()", methods[1].toString());
 		// getC属于接口中的默认方法
-		Assertions.assertEquals("public default void reflect.org.dromara.hutool.core.ReflectUtilTest$TestInterface1.getC()", methods[2].toString());
+		Assertions.assertEquals("public default void org.dromara.hutool.core.reflect.ReflectUtilTest$TestInterface1.getC()", methods[2].toString());
 	}
 
 	@Test

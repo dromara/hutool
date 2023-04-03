@@ -119,7 +119,7 @@ public class JetbrickEngine implements TemplateEngine {
 				props.setProperty("$loader.root", config.getPath());
 				break;
 			case STRING:
-				props.setProperty("$loader", "loader.jetbrick.engine.template.org.dromara.hutool.extra.StringResourceLoader");
+				props.setProperty("$loader", "org.dromara.hutool.extra.template.engine.jetbrick.loader.StringResourceLoader");
 				props.setProperty("$loader.charset", config.getCharsetStr());
 				break;
 			default:

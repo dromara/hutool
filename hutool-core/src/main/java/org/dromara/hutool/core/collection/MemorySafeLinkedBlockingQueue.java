@@ -11,6 +11,7 @@
  */
 package org.dromara.hutool.core.collection;
 
+import org.dromara.hutool.core.collection.queue.CheckedLinkedBlockingQueue;
 import org.dromara.hutool.core.thread.SimpleScheduler;
 import org.dromara.hutool.core.util.RuntimeUtil;
 

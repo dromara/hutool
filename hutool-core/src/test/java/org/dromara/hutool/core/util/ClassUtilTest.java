@@ -17,7 +17,7 @@ public class ClassUtilTest {
 	@Test
 	public void getClassNameTest() {
 		final String className = ClassUtil.getClassName(ClassUtil.class, false);
-		Assertions.assertEquals("reflect.org.dromara.hutool.core.ClassUtil", className);
+		Assertions.assertEquals("org.dromara.hutool.core.reflect.ClassUtil", className);
 
 		final String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
 		Assertions.assertEquals("ClassUtil", simpleClassName);
@@ -31,9 +31,9 @@ public class ClassUtilTest {
 
 	@Test
 	public void getShortClassNameTest() {
-		final String className = "text.org.dromara.hutool.core.StrUtil";
+		final String className = "org.dromara.hutool.core.text.StrUtil";
 		final String result = ClassUtil.getShortClassName(className);
-		Assertions.assertEquals("c.h.c.t.StrUtil", result);
+		Assertions.assertEquals("o.d.h.c.t.StrUtil", result);
 	}
 
 	@Test
