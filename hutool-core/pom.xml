@@ -19,7 +19,7 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>cn.hutool</groupId>
+		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
 		<version>6.0.0.M3</version>
 	</parent>
@@ -29,7 +29,7 @@
 	<description>Hutool核心，包括集合、字符串、Bean等工具</description>
 
 	<properties>
-		<Automatic-Module-Name>cn.hutool.core</Automatic-Module-Name>
+		<Automatic-Module-Name>org.dromara.hutool.core</Automatic-Module-Name>
 	</properties>
 
 </project>
