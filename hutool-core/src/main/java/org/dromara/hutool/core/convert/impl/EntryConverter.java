@@ -102,7 +102,7 @@ public class EntryConverter implements Converter {
 			0, str.length());
 
 		if (index > -1) {
-			return MapUtil.of(str.subSequence(0, index + 1), str.subSequence(index, str.length()));
+			return MapUtil.of(str.subSequence(0, index), str.subSequence(index + 1, str.length()));
 		}
 		return null;
 	}
