@@ -72,8 +72,7 @@ public class EntryConverter implements Converter {
 		if (value instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) value;
 			map = MapUtil.of(entry.getKey(), entry.getValue());
-		}
-		if (value instanceof Map) {
+		}else if (value instanceof Map) {
 			map = (Map) value;
 		} else if (value instanceof CharSequence) {
 			final CharSequence str = (CharSequence) value;
