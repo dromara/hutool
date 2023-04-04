@@ -46,8 +46,14 @@ public class RuntimeUtilTest {
 
 	@Test
 	public void getProcessorCountTest(){
-		int cpu = RuntimeUtil.getProcessorCount();
-		Console.log("cpu个数：{}", cpu);
+		final int cpu = RuntimeUtil.getProcessorCount();
 		Assertions.assertTrue(cpu > 0);
+	}
+
+	@Test
+	@Disabled
+	void pingTest() {
+		final String s = RuntimeUtil.execForStr("cmd /c ping " + "hutool.cn");
+		Console.log(s);
 	}
 }
