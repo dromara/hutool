@@ -17,6 +17,7 @@ import cn.hutool.json.serialize.JSONDeserializer;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JSON转换器
@@ -122,7 +123,11 @@ public class JSONConverter implements Converter<JSON> {
 			// issue#2212@Github
 			// 在JSONObject转Bean时，读取JSONObject本身的配置文件
 			if(value instanceof JSONGetter
-					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
+					&& targetType instanceof Class
+				// Map.Entry特殊处理
+				&& (false == Map.Entry.class.isAssignableFrom((Class<?>)targetType)
+				&& BeanUtil.hasSetter((Class<?>) targetType))){
+
 				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
 				final Converter<T> converter = new BeanConverter<>(targetType,
 						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));

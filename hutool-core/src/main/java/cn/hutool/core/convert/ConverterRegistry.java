@@ -1,48 +1,13 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.convert.impl.ArrayConverter;
-import cn.hutool.core.convert.impl.AtomicBooleanConverter;
-import cn.hutool.core.convert.impl.AtomicIntegerArrayConverter;
-import cn.hutool.core.convert.impl.AtomicLongArrayConverter;
-import cn.hutool.core.convert.impl.AtomicReferenceConverter;
-import cn.hutool.core.convert.impl.BeanConverter;
-import cn.hutool.core.convert.impl.BooleanConverter;
-import cn.hutool.core.convert.impl.CalendarConverter;
-import cn.hutool.core.convert.impl.CharacterConverter;
-import cn.hutool.core.convert.impl.CharsetConverter;
-import cn.hutool.core.convert.impl.ClassConverter;
-import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.convert.impl.CurrencyConverter;
-import cn.hutool.core.convert.impl.DateConverter;
-import cn.hutool.core.convert.impl.DurationConverter;
-import cn.hutool.core.convert.impl.EnumConverter;
-import cn.hutool.core.convert.impl.LocaleConverter;
-import cn.hutool.core.convert.impl.MapConverter;
-import cn.hutool.core.convert.impl.NumberConverter;
-import cn.hutool.core.convert.impl.OptConverter;
-import cn.hutool.core.convert.impl.OptionalConverter;
-import cn.hutool.core.convert.impl.PathConverter;
-import cn.hutool.core.convert.impl.PeriodConverter;
-import cn.hutool.core.convert.impl.PrimitiveConverter;
-import cn.hutool.core.convert.impl.ReferenceConverter;
-import cn.hutool.core.convert.impl.StackTraceElementConverter;
-import cn.hutool.core.convert.impl.StringConverter;
-import cn.hutool.core.convert.impl.TemporalAccessorConverter;
-import cn.hutool.core.convert.impl.TimeZoneConverter;
-import cn.hutool.core.convert.impl.URIConverter;
-import cn.hutool.core.convert.impl.URLConverter;
-import cn.hutool.core.convert.impl.UUIDConverter;
+import cn.hutool.core.convert.impl.*;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.SafeConcurrentHashMap;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.ServiceLoaderUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
@@ -54,35 +19,10 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Period;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Currency;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicLongArray;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.DoubleAdder;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * 转换器登记中心
@@ -357,6 +297,12 @@ public class ConverterRegistry implements Serializable {
 			return (T) mapConverter.convert(value, (Map<?, ?>) defaultValue);
 		}
 
+		// Map类型（不可以默认强转）
+		if (Map.Entry.class.isAssignableFrom(rowType)) {
+			final EntryConverter mapConverter = new EntryConverter(type);
+			return (T) mapConverter.convert(value, (Map.Entry<?, ?>) defaultValue);
+		}
+
 		// 默认强转
 		if (rowType.isInstance(value)) {
 			return (T) value;
@@ -462,6 +408,7 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
+		defaultConverterMap.put(Pair.class, new PairConverter(Pair.class));// since 5.8.17
 
 		return this;
 	}
