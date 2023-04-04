@@ -40,6 +40,7 @@ import java.util.List;
 public class JSONUtil {
 
 	// -------------------------------------------------------------------- Pause start
+
 	/**
 	 * 创建JSONObject
 	 *
@@ -169,7 +170,7 @@ public class JSONUtil {
 	 * @return JSON（JSONObject or JSONArray）
 	 */
 	public static Object parse(final Object obj, final JSONConfig config) {
-		if(null == config){
+		if (null == config) {
 			return JSONConverter.INSTANCE.toJSON(obj);
 		}
 		return JSONConverter.of(config).toJSON(obj);
@@ -226,6 +227,7 @@ public class JSONUtil {
 	// -------------------------------------------------------------------- Read end
 
 	// -------------------------------------------------------------------- toString start
+
 	/**
 	 * 转换为格式化后的JSON字符串
 	 *
@@ -270,7 +272,7 @@ public class JSONUtil {
 			return stringWriter.toString();
 		}
 
-		if(null == obj){
+		if (null == obj) {
 			return null;
 		}
 		return parse(obj, jsonConfig).toString();
@@ -323,48 +325,18 @@ public class JSONUtil {
 	// -------------------------------------------------------------------- toString end
 
 	// -------------------------------------------------------------------- toBean start
-
 	/**
-	 * JSON字符串转为实体类对象，转换异常将被抛出
+	 * 转为实体类对象
 	 *
-	 * @param <T>        Bean类型
-	 * @param jsonString JSON字符串
-	 * @param beanClass  实体类对象
+	 * @param <T>   Bean类型
+	 * @param json  JSONObject
+	 * @param clazz 实体类
 	 * @return 实体类对象
-	 * @since 3.1.2
+	 * @since 4.6.2
 	 */
-	public static <T> T toBean(final String jsonString, final Class<T> beanClass) {
-		return toBean(parse(jsonString), beanClass);
-	}
-
-	/**
-	 * JSON字符串转为实体类对象，转换异常将被抛出<br>
-	 * 通过{@link JSONConfig}可选是否忽略大小写、忽略null等配置
-	 *
-	 * @param <T>        Bean类型
-	 * @param jsonString JSON字符串
-	 * @param config     JSON配置
-	 * @param beanClass  实体类对象
-	 * @return 实体类对象
-	 * @since 5.8.0
-	 */
-	public static <T> T toBean(final String jsonString, final JSONConfig config, final Class<T> beanClass) {
-		return toBean(jsonString, config, (Type) beanClass);
-	}
-
-	/**
-	 * JSON字符串转为实体类对象，转换异常将被抛出<br>
-	 * 通过{@link JSONConfig}可选是否忽略大小写、忽略null等配置
-	 *
-	 * @param <T>        Bean类型
-	 * @param jsonString JSON字符串
-	 * @param config     JSON配置
-	 * @param type       Bean类型
-	 * @return 实体类对象
-	 * @throws JSONException 提供的JSON字符串不支持转Bean或字符串错误
-	 */
-	public static <T> T toBean(final String jsonString, final JSONConfig config, final Type type) throws JSONException {
-		return toBean(parse(jsonString, config), type);
+	public static <T> T toBean(final Object json, final Class<T> clazz) {
+		Assert.notNull(clazz);
+		return toBean(json, (Type)clazz);
 	}
 
 	/**
@@ -391,12 +363,31 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(final Object json, final Type type) {
+		return toBean(json, null, type);
+	}
+
+	/**
+	 * 转为实体类对象
+	 *
+	 * @param <T>    Bean类型
+	 * @param json   JSONObject
+	 * @param config JSON配置
+	 * @param type   实体类对象类型
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public static <T> T toBean(Object json, final JSONConfig config, Type type) {
 		if (null == json) {
 			return null;
 		}
+		json = parse(json, config);
 		if (json instanceof JSON) {
+			if (type instanceof TypeReference) {
+				type = ((TypeReference<?>) type).getType();
+			}
 			return ((JSON) json).toBean(type);
 		}
+
 		throw new JSONException("Unsupported json string to bean : {}", json);
 	}
 	// -------------------------------------------------------------------- toBean end

@@ -13,13 +13,7 @@
 package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.impl.ArrayConverter;
-import org.dromara.hutool.core.convert.impl.BeanConverter;
-import org.dromara.hutool.core.convert.impl.CollectionConverter;
-import org.dromara.hutool.core.convert.impl.EnumConverter;
-import org.dromara.hutool.core.convert.impl.MapConverter;
-import org.dromara.hutool.core.convert.impl.NumberConverter;
-import org.dromara.hutool.core.convert.impl.PrimitiveConverter;
+import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -193,6 +187,11 @@ public class CompositeConverter extends RegisterConverter {
 		// Map类型（含有泛型参数，不可以默认强转）
 		if (Map.class.isAssignableFrom(rowType)) {
 			return (T) MapConverter.INSTANCE.convert(type, value, (Map<?, ?>) defaultValue);
+		}
+
+		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
+		if(Map.Entry.class.isAssignableFrom(rowType)){
+			return (T) EntryConverter.INSTANCE.convert(type, value);
 		}
 
 		// 默认强转

@@ -13,13 +13,12 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.CompositeConverter;
+import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -27,7 +26,11 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * {@link Map} 转换器
+ * {@link Map} 转换器，通过预定义key和value的类型，实现：
+ * <ul>
+ *     <li>Map 转 Map，key和value类型自动转换</li>
+ *     <li>Bean 转 Map，字段和字段值类型自动转换</li>
+ * </ul>
  *
  * @author Looly
  * @since 3.0.8
@@ -35,6 +38,9 @@ import java.util.Objects;
 public class MapConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
 	public static MapConverter INSTANCE = new MapConverter();
 
 	@Override
@@ -56,9 +62,11 @@ public class MapConverter implements Converter, Serializable {
 	 * @param valueType  值类型
 	 * @param value      被转换的值
 	 * @return 转换后的Map
+	 * @throws ConvertException 转换异常或不支持的类型
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value) {
+	public Map<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value)
+		throws ConvertException{
 		Map map;
 		if (value instanceof Map) {
 			final Class<?> valueClass = value.getClass();
@@ -79,7 +87,7 @@ public class MapConverter implements Converter, Serializable {
 			// 二次转换，转换键值类型
 			map = convert(targetType, keyType, valueType, map);
 		} else {
-			throw new UnsupportedOperationException(StrUtil.format("Unsupported toMap value type: {}", value.getClass().getName()));
+			throw new ConvertException("Unsupported to map from [{}] of type: {}", value, value.getClass().getName());
 		}
 		return map;
 	}
@@ -93,10 +101,9 @@ public class MapConverter implements Converter, Serializable {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void convertMapToMap(final Type keyType, final Type valueType, final Map<?, ?> srcMap, final Map targetMap) {
 		final CompositeConverter convert = CompositeConverter.getInstance();
-		srcMap.forEach((key, value) -> {
-			key = TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key, null);
-			value = TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value, null);
-			targetMap.put(key, value);
-		});
+		srcMap.forEach((key, value) -> targetMap.put(
+			TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key),
+			TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value)
+		));
 	}
 }

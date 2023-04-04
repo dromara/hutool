@@ -12,18 +12,23 @@
 
 package org.dromara.hutool.core.convert;
 
-import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.util.CharUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * 抽象转换器，提供通用的转换逻辑，同时通过convertInternal实现对应类型的专属逻辑<br>
- * 转换器不会抛出转换异常，转换失败时会返回{@code null}
+ * 转换器不会抛出转换异常，转换失败时会返回{@code null}<br>
+ * 抽象转换器的默认逻辑不适用于有泛型参数的对象，如Map、Collection、Entry等。通用逻辑包括：
+ * <ul>
+ *     <li>value为{@code null}时返回{@code null}</li>
+ *     <li>目标类型是{@code null}或者{@link java.lang.reflect.TypeVariable}时，抛出{@link ConvertException}异常</li>
+ *     <li>目标类型非class时，抛出{@link IllegalArgumentException}</li>
+ *     <li>目标类型为值的父类或同类，直接强转返回</li>
+ * </ul>
  *
  * @author Looly
  */
@@ -31,19 +36,21 @@ public abstract class AbstractConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Object convert(final Type targetType, final Object value) {
+	public Object convert(final Type targetType, final Object value) throws ConvertException{
 		if (null == value) {
 			return null;
 		}
 		if (TypeUtil.isUnknown(targetType)) {
-			throw new ConvertException("Unsupported convert to unKnow type: {}", targetType);
+			throw new ConvertException("Unsupported convert to unKnown type: {}", targetType);
 		}
 
 		final Class<?> targetClass = TypeUtil.getClass(targetType);
-		Assert.notNull(targetClass, "Target type is not a class!");
+		if(null == targetClass){
+			throw new ConvertException("Target type [{}] is not a class!", targetType);
+		}
 
 		// 尝试强转
-		if (targetClass.isInstance(value) && false == Map.class.isAssignableFrom(targetClass)) {
+		if (targetClass.isInstance(value)) {
 			// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
 			return CastUtil.castTo(targetClass, value);
 		}

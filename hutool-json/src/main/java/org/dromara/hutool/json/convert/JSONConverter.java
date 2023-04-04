@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.json.convert;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.convert.Convert;
@@ -24,9 +25,7 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
@@ -233,6 +232,7 @@ public class JSONConverter implements Converter {
 	 * <pre>
 	 * Collection
 	 * Map
+	 * Map.Entry
 	 * 强转（无需转换）
 	 * 数组
 	 * </pre>
@@ -256,6 +256,11 @@ public class JSONConverter implements Converter {
 		// Map类型（含有泛型参数，不可以默认强转）
 		if (Map.class.isAssignableFrom(rowType)) {
 			return (T) MapConverter.INSTANCE.convert(type, value);
+		}
+
+		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
+		if(Map.Entry.class.isAssignableFrom(rowType)){
+			return (T) EntryConverter.INSTANCE.convert(type, value);
 		}
 
 		// 默认强转

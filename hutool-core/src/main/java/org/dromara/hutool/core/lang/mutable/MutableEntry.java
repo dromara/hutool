@@ -27,6 +27,19 @@ import java.util.Map;
 public class MutableEntry<K, V> extends AbsEntry<K, V> implements Mutable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 创建{@code MutableEntry}
+	 *
+	 * @param key   键
+	 * @param value 值
+	 * @param <K>   键类型
+	 * @param <V>   值类型
+	 * @return
+	 */
+	public static <K, V> MutableEntry<K, V> of(final K key, final V value) {
+		return new MutableEntry<>(key, value);
+	}
+
 	protected K key;
 	protected V value;
 
