@@ -16,8 +16,11 @@ import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
-import org.dromara.hutool.core.reflect.*;
-import org.dromara.hutool.core.reflect.*;
+import org.dromara.hutool.core.reflect.MethodHandleUtil;
+import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.ReflectUtil;
+import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.*;
@@ -103,7 +106,7 @@ public class LambdaFactory {
 			final boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
 
 			final Method invokeMethod = abstractMethods.get(0);
-			final MethodHandles.Lookup caller = LookupFactory.lookup(executable.getDeclaringClass());
+			final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
 			final String invokeName = invokeMethod.getName();
 			final MethodType invokedType = methodType(functionInterfaceType);
 			final MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());

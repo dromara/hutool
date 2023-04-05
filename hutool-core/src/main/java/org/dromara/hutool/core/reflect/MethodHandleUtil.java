@@ -14,6 +14,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.invoke.MethodHandle;
@@ -51,9 +52,9 @@ public class MethodHandleUtil {
 	public static MethodHandle unreflect(final Member methodOrConstructor) {
 		try {
 			if (methodOrConstructor instanceof Method) {
-				return LookupFactory.lookup().unreflect((Method) methodOrConstructor);
+				return LookupUtil.lookup().unreflect((Method) methodOrConstructor);
 			} else {
-				return LookupFactory.lookup().unreflectConstructor((Constructor<?>) methodOrConstructor);
+				return LookupUtil.lookup().unreflectConstructor((Constructor<?>) methodOrConstructor);
 			}
 		} catch (final IllegalAccessException e) {
 			throw new UtilException(e);
@@ -80,7 +81,7 @@ public class MethodHandleUtil {
 		}
 
 		MethodHandle handle = null;
-		final MethodHandles.Lookup lookup = LookupFactory.lookup(callerClass);
+		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
 		try {
 			handle = lookup.findVirtual(callerClass, name, type);
 		} catch (final IllegalAccessException | NoSuchMethodException ignore) {
@@ -129,7 +130,7 @@ public class MethodHandleUtil {
 	 * @return 构造方法句柄
 	 */
 	public static MethodHandle findConstructor(final Class<?> callerClass, final MethodType type) {
-		final MethodHandles.Lookup lookup = LookupFactory.lookup(callerClass);
+		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
 		try {
 			return lookup.findConstructor(callerClass, type);
 		} catch (final NoSuchMethodException e) {
@@ -252,7 +253,7 @@ public class MethodHandleUtil {
 	public static <T> T invoke(final boolean isSpecial, final Object obj, final Method method, final Object... args) {
 		Assert.notNull(method, "Method must be not null!");
 		final Class<?> declaringClass = method.getDeclaringClass();
-		final MethodHandles.Lookup lookup = LookupFactory.lookup(declaringClass);
+		final MethodHandles.Lookup lookup = LookupUtil.lookup(declaringClass);
 		try {
 			MethodHandle handle = isSpecial ? lookup.unreflectSpecial(method, declaringClass)
 					: lookup.unreflect(method);
