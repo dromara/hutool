@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.lang.func.SerConsumer;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.io.watch;
 
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.func.SerBiConsumer;
+import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.io.Closeable;

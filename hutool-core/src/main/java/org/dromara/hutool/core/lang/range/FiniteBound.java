@@ -38,7 +38,7 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 	 * 构造
 	 *
 	 * @param value 边界值
-	 * @param type 边界类型
+	 * @param type  边界类型
 	 */
 	FiniteBound(final T value, final BoundType type) {
 		this.value = value;
@@ -142,7 +142,8 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 	@Override
 	public BoundedRange<T> toRange() {
 		return getType().isLowerBound() ?
-				new BoundedRange<>(this, Bound.noneUpperBound()) : new BoundedRange<>(Bound.noneLowerBound(), this);
+			new BoundedRange<>(this, Bound.noneUpperBound())
+			: new BoundedRange<>(Bound.noneLowerBound(), this);
 	}
 
 	/**
@@ -159,7 +160,7 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		final FiniteBound<?> that = (FiniteBound<?>)o;
+		final FiniteBound<?> that = (FiniteBound<?>) o;
 		return value.equals(that.value) && type == that.type;
 	}
 
@@ -181,7 +182,7 @@ class FiniteBound<T extends Comparable<? super T>> implements Bound<T> {
 	@Override
 	public String toString() {
 		return CharSequenceUtil.format(
-				"{x | x {} {}}", type.getOperator(), value
+			"{x | x {} {}}", type.getOperator(), value
 		);
 	}
 

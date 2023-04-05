@@ -10,23 +10,23 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.func;
+package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 
 import java.io.Serializable;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 /**
- * 可序列化的UnaryOperator
+ * 可序列化的Function
  *
  * @param <T> 参数类型
+ * @param <R> 返回值类型
  * @author VampireAchao
- * @see UnaryOperator
+ * @see Function
  */
 @FunctionalInterface
-public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
+public interface SerFunction<T, R> extends Function<T, R>, Serializable {
 
 	/**
 	 * Applies this function to the given argument.
@@ -35,7 +35,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 * @return the function result
 	 * @throws Exception wrapped checked exceptions
 	 */
-	T applying(T t) throws Exception;
+	R applying(T t) throws Exception;
 
 	/**
 	 * Applies this function to the given argument.
@@ -44,7 +44,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 * @return the function result
 	 */
 	@Override
-	default T apply(final T t) {
+	default R apply(final T t) {
 		try {
 			return applying(t);
 		} catch (final Exception e) {
@@ -53,28 +53,24 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	}
 
 	/**
-	 * Returns a unary operator that always returns its input argument.
+	 * Returns a function that always returns its input argument.
 	 *
-	 * @param <T> the type of the input and output of the operator
-	 * @return a unary operator that always returns its input argument
+	 * @param <T> the type of the input and output objects to the function
+	 * @return a function that always returns its input argument
 	 */
-	static <T> SerUnaryOperator<T> identity() {
+	static <T> SerFunction<T, T> identity() {
 		return t -> t;
 	}
-
 
 	/**
 	 * casting identity
 	 *
-	 * @param function source function
-	 * @param <T>      param type
-	 * @param <R>      result type
-	 * @param <F>      lambda type
+	 * @param <T> param type
+	 * @param <R> result type
 	 * @return identity after casting
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, R, F extends Function<T, R>> SerUnaryOperator<T> casting(final F function) {
-		return t -> (T) function.apply(t);
+	static <T, R> Function<T, R> castingIdentity() {
+		return t -> (R) t;
 	}
-
 }

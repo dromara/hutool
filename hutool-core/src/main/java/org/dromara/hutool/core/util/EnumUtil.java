@@ -13,8 +13,8 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
-import org.dromara.hutool.core.lang.func.SerFunction;
+import org.dromara.hutool.core.func.LambdaUtil;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;

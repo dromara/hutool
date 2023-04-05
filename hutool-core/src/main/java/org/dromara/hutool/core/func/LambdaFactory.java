@@ -10,13 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.func;
+package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
-import org.dromara.hutool.core.reflect.MethodHandleUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;
@@ -94,7 +93,7 @@ public class LambdaFactory {
 			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
 			ReflectUtil.setAccessible(executable);
 
-			final MethodHandle methodHandle = MethodHandleUtil.unreflect(executable);
+			final MethodHandle methodHandle = LookupUtil.unreflect(executable);
 			final MethodType instantiatedMethodType;
 			if (executable instanceof Method) {
 				final Method method = (Method) executable;

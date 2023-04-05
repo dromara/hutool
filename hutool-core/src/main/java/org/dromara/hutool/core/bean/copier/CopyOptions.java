@@ -14,8 +14,8 @@ package org.dromara.hutool.core.bean.copier;
 
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.Converter;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
-import org.dromara.hutool.core.lang.func.SerFunction;
+import org.dromara.hutool.core.func.LambdaUtil;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.array.ArrayUtil;
 

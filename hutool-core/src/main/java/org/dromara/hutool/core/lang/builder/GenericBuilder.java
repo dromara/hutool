@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.builder;
 
-import org.dromara.hutool.core.lang.func.SerConsumer3;
+import org.dromara.hutool.core.func.SerConsumer3;
 
 import java.util.ArrayList;
 import java.util.List;

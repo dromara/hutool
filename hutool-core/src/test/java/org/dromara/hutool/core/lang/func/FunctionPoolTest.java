@@ -3,6 +3,7 @@ package org.dromara.hutool.core.lang.func;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
+import org.dromara.hutool.core.func.FunctionPool;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Test;
 

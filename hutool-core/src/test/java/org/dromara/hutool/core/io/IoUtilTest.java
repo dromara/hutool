@@ -5,7 +5,7 @@ import org.dromara.hutool.core.collection.iter.LineIter;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.EmptyOutputStream;
 import org.dromara.hutool.core.io.stream.StrInputStream;
-import org.dromara.hutool.core.lang.func.SerConsumer;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;

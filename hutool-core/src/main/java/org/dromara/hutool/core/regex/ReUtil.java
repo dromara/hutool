@@ -18,7 +18,7 @@ import org.dromara.hutool.core.comparator.StrLengthComparator;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Validator;
-import org.dromara.hutool.core.lang.func.SerFunction;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;

@@ -12,7 +12,7 @@
 package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Collection;

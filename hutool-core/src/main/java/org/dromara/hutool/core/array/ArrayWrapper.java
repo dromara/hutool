@@ -2,7 +2,7 @@ package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.func.Wrapper;
+import org.dromara.hutool.core.func.Wrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Array;

@@ -13,10 +13,10 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.lang.func.LambdaInfo;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
-import org.dromara.hutool.core.lang.func.SerFunction;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.LambdaInfo;
+import org.dromara.hutool.core.func.LambdaUtil;
+import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.MapWrapper;

@@ -14,7 +14,7 @@ package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;

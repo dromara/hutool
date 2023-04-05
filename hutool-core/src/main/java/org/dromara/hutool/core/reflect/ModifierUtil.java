@@ -133,23 +133,43 @@ public class ModifierUtil {
 	}
 
 	/**
-	 * 是否是Public成员，可检测包括构造、字段和方法
+	 * 是否是public成员，可检测包括构造、字段和方法
 	 *
 	 * @param member 构造、字段或方法
-	 * @return 是否是Public
+	 * @return 是否是public
 	 */
 	public static boolean isPublic(final Member member) {
 		return Modifier.isPublic(member.getModifiers());
 	}
 
 	/**
-	 * 是否是Public类
+	 * 是否是public类
 	 *
 	 * @param clazz 类
-	 * @return 是否是Public
+	 * @return 是否是public
 	 */
 	public static boolean isPublic(final Class<?> clazz) {
 		return Modifier.isPublic(clazz.getModifiers());
+	}
+
+	/**
+	 * 是否是private成员，可检测包括构造、字段和方法
+	 *
+	 * @param member 构造、字段或方法
+	 * @return 是否是private
+	 */
+	public static boolean isPrivate(final Member member) {
+		return Modifier.isPrivate(member.getModifiers());
+	}
+
+	/**
+	 * 是否是private类
+	 *
+	 * @param clazz 类
+	 * @return 是否是private类
+	 */
+	public static boolean isPrivate(final Class<?> clazz) {
+		return Modifier.isPrivate(clazz.getModifiers());
 	}
 
 	/**

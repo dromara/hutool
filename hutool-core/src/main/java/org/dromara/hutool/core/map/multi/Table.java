@@ -14,7 +14,7 @@ package org.dromara.hutool.core.map.multi;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.lang.func.SerConsumer3;
+import org.dromara.hutool.core.func.SerConsumer3;
 import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.ArrayList;

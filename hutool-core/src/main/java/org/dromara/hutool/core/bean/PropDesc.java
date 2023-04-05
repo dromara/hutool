@@ -15,7 +15,7 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
+import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;

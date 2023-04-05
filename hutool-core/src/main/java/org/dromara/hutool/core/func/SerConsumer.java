@@ -10,67 +10,88 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.func;
+package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
- * 3参数Consumer
+ * 可序列化的Consumer
  *
- * @param <P1> 参数一类型
- * @param <P2> 参数二类型
- * @param <P3> 参数三类型
- * @author TomXin, VampireAchao
- * @since 5.7.22
+ * @param <T> 参数类型
+ * @author VampireAchao
+ * @see Consumer
  */
 @FunctionalInterface
-public interface SerConsumer3<P1, P2, P3> extends Serializable {
+public interface SerConsumer<T> extends Consumer<T>, Serializable {
 
 	/**
-	 * 接收参数方法
+	 * Performs this operation on the given argument.
 	 *
-	 * @param p1 参数一
-	 * @param p2 参数二
-	 * @param p3 参数三
+	 * @param t the input argument
 	 * @throws Exception wrapped checked exceptions
 	 */
-	void accepting(P1 p1, P2 p2, P3 p3) throws Exception;
+	void accepting(T t) throws Exception;
 
 	/**
-	 * 接收参数方法
+	 * Performs this operation on the given argument.
 	 *
-	 * @param p1 参数一
-	 * @param p2 参数二
-	 * @param p3 参数三
+	 * @param t the input argument
 	 */
-	default void accept(final P1 p1, final P2 p2, final P3 p3) {
+	@Override
+	default void accept(final T t) {
 		try {
-			accepting(p1, p2, p3);
+			accepting(t);
 		} catch (final Exception e) {
 			throw new UtilException(e);
 		}
 	}
 
 	/**
-	 * Returns a composed {@code SerConsumer3} that performs, in sequence, this
+	 * multi
+	 *
+	 * @param consumers lambda
+	 * @param <T>       type
+	 * @return lambda
+	 */
+	@SafeVarargs
+	static <T> SerConsumer<T> multi(final SerConsumer<T>... consumers) {
+		return Stream.of(consumers).reduce(SerConsumer::andThen).orElseGet(() -> o -> {
+		});
+	}
+
+	/**
+	 * Returns a composed {@code Consumer} that performs, in sequence, this
 	 * operation followed by the {@code after} operation. If performing either
 	 * operation throws an exception, it is relayed to the caller of the
 	 * composed operation.  If performing this operation throws an exception,
 	 * the {@code after} operation will not be performed.
 	 *
 	 * @param after the operation to perform after this operation
-	 * @return a composed {@code SerConsumer3} that performs in sequence this
+	 * @return a composed {@code Consumer} that performs in sequence this
 	 * operation followed by the {@code after} operation
 	 * @throws NullPointerException if {@code after} is null
 	 */
-	default SerConsumer3<P1, P2, P3> andThen(final SerConsumer3<P1, P2, P3> after) {
+	default SerConsumer<T> andThen(final SerConsumer<? super T> after) {
 		Objects.requireNonNull(after);
-		return (final P1 p1, final P2 p2, final P3 p3) -> {
-			accept(p1, p2, p3);
-			after.accept(p1, p2, p3);
+		return (final T t) -> {
+			accept(t);
+			after.accept(t);
+		};
+	}
+
+	/**
+	 * nothing
+	 *
+	 * @param <T> type
+	 * @return nothing
+	 */
+	static <T> SerConsumer<T> nothing() {
+		return t -> {
 		};
 	}
 }

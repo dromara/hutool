@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.sql;
 
-import org.dromara.hutool.core.lang.func.Wrapper;
+import org.dromara.hutool.core.func.Wrapper;
 
 import java.io.InputStream;
 import java.io.Reader;

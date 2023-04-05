@@ -1,12 +1,14 @@
 package org.dromara.hutool.core.lang.func;
 
-import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodHandleUtil;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.func.LambdaFactory;
+import org.dromara.hutool.core.func.SerSupplier;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -143,7 +145,7 @@ public class LambdaFactoryTest {
 			something.setId(1L);
 			something.setName("name");
 			final Method getByReflect = Something.class.getMethod("getId");
-			final MethodHandle getByMh = MethodHandleUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
+			final MethodHandle getByMh = LookupUtil.findMethod(Something.class, "getId", MethodType.methodType(Long.class));
 			final Function getByProxy = MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.lookup().unreflect(getByReflect));
 			final Function getByLambda = LambdaFactory.build(Function.class, getByReflect);
 			final Task lambdaTask = new Task("lambda", () -> getByLambda.apply(something));
@@ -230,7 +232,7 @@ public class LambdaFactoryTest {
 			something.setId(1L);
 			something.setName("name");
 			final Method setByReflect = Something.class.getMethod("setName", String.class);
-			final MethodHandle setByMh = MethodHandleUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
+			final MethodHandle setByMh = LookupUtil.findMethod(Something.class, "setName", MethodType.methodType(Void.TYPE, String.class));
 			final BiConsumer setByProxy = MethodHandleProxies.asInterfaceInstance(BiConsumer.class, setByMh);
 			final BiConsumer setByLambda = LambdaFactory.build(BiConsumer.class, setByReflect);
 			final String name = "name1";

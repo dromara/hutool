@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.func;
+package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.util.JdkUtil;

@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.func.SerBiConsumer;
+import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.reader.BeanSheetReader;

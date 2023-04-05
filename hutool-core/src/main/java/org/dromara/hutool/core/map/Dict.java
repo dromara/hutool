@@ -19,10 +19,10 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exceptions.CloneRuntimeException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.func.LambdaInfo;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
-import org.dromara.hutool.core.lang.func.SerFunction;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.LambdaInfo;
+import org.dromara.hutool.core.func.LambdaUtil;
+import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 
 import java.lang.reflect.Type;

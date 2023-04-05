@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.date;
 
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
-import org.dromara.hutool.core.lang.func.LambdaUtil;
+import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 

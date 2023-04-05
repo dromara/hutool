@@ -15,8 +15,8 @@ package org.dromara.hutool.core.io.file;
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.func.SerConsumer;
-import org.dromara.hutool.core.lang.func.SerFunction;
+import org.dromara.hutool.core.func.SerConsumer;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 

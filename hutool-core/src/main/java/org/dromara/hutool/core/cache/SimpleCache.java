@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.cache;
 
 import org.dromara.hutool.core.collection.iter.TransIter;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;

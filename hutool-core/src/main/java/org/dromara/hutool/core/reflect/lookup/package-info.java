@@ -11,14 +11,18 @@
  */
 
 /**
- * {@link java.lang.invoke.MethodHandles.Lookup} 创建封装<br>
+ * {@link java.lang.invoke.MethodHandles.Lookup} 创建封装，以根据不同的条件查找{@link java.lang.invoke.MethodHandles}<br>
+ *
+ *
  * <p>
  * jdk8中如果直接调用{@link java.lang.invoke.MethodHandles#lookup()}获取到的{@link java.lang.invoke.MethodHandles.Lookup}在调用findSpecial和unreflectSpecial
  * 时会出现权限不够问题，抛出"no private access for invokespecial"异常，因此针对JDK8及JDK9+分别封装lookup方法。
  * </p>
  *
  * <p>
- * 参考：
- * <p><a href="https://blog.csdn.net/u013202238/article/details/108687086">https://blog.csdn.net/u013202238/article/details/108687086</a></p>
+ * 参考：https://blog.csdn.net/u013202238/article/details/108687086
+ *
+ * @author looly
+ * @since 6.0.0
  */
 package org.dromara.hutool.core.reflect.lookup;

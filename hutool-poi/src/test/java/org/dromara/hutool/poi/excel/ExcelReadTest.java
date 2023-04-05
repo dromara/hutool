@@ -2,7 +2,7 @@ package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.lang.func.SerBiConsumer;
+import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import lombok.Data;

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db;
 
-import org.dromara.hutool.core.lang.func.SerConsumer;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectFactory;

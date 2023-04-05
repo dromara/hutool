@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.map.multi;
 
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 
 import java.util.ArrayList;
 import java.util.Collection;

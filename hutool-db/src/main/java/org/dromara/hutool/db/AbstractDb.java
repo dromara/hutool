@@ -12,10 +12,8 @@
 
 package org.dromara.hutool.db;
 
-import org.dromara.hutool.core.lang.func.SerFunction;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.db.dialect.Dialect;
-import org.dromara.hutool.db.handler.*;
-import org.dromara.hutool.db.sql.*;
 import org.dromara.hutool.db.handler.*;
 import org.dromara.hutool.db.sql.*;
 import org.dromara.hutool.db.sql.Condition.LikeType;

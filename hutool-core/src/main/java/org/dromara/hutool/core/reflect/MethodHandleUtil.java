@@ -15,13 +15,9 @@ package org.dromara.hutool.core.reflect;
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
-import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 /**
@@ -42,103 +38,6 @@ import java.lang.reflect.Method;
  * @since 5.7.7
  */
 public class MethodHandleUtil {
-
-	/**
-	 * 将{@link Method}或者{@link Constructor} 包装为方法句柄{@link MethodHandle}
-	 *
-	 * @param methodOrConstructor {@link Method}或者{@link Constructor}
-	 * @return 方法句柄{@link MethodHandle}
-	 */
-	public static MethodHandle unreflect(final Member methodOrConstructor) {
-		try {
-			if (methodOrConstructor instanceof Method) {
-				return LookupUtil.lookup().unreflect((Method) methodOrConstructor);
-			} else {
-				return LookupUtil.lookup().unreflectConstructor((Constructor<?>) methodOrConstructor);
-			}
-		} catch (final IllegalAccessException e) {
-			throw new UtilException(e);
-		}
-	}
-
-	/**
-	 * 查找指定方法的方法句柄<br>
-	 * 此方法只会查找：
-	 * <ul>
-	 *     <li>当前类的方法（包括构造方法和private方法）</li>
-	 *     <li>父类的方法（包括构造方法和private方法）</li>
-	 *     <li>当前类的static方法</li>
-	 * </ul>
-	 *
-	 * @param callerClass 方法所在类或接口
-	 * @param name        方法名称，{@code null}或者空则查找构造方法
-	 * @param type        返回类型和参数类型，可以使用{@code MethodType#methodType}构建
-	 * @return 方法句柄 {@link MethodHandle}，{@code null}表示未找到方法
-	 */
-	public static MethodHandle findMethod(final Class<?> callerClass, final String name, final MethodType type) {
-		if (StrUtil.isBlank(name)) {
-			return findConstructor(callerClass, type);
-		}
-
-		MethodHandle handle = null;
-		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
-		try {
-			handle = lookup.findVirtual(callerClass, name, type);
-		} catch (final IllegalAccessException | NoSuchMethodException ignore) {
-			//ignore
-		}
-
-		// static方法
-		if (null == handle) {
-			try {
-				handle = lookup.findStatic(callerClass, name, type);
-			} catch (final IllegalAccessException | NoSuchMethodException ignore) {
-				//ignore
-			}
-		}
-
-		// 特殊方法，包括构造方法、私有方法等
-		if (null == handle) {
-			try {
-				handle = lookup.findSpecial(callerClass, name, type, callerClass);
-			} catch (final NoSuchMethodException ignore) {
-				//ignore
-			} catch (final IllegalAccessException e) {
-				throw new UtilException(e);
-			}
-		}
-
-		return handle;
-	}
-
-	/**
-	 * 查找指定的构造方法
-	 *
-	 * @param callerClass 类
-	 * @param args        参数
-	 * @return 构造方法句柄
-	 */
-	public static MethodHandle findConstructor(final Class<?> callerClass, final Class<?>... args) {
-		return findConstructor(callerClass, MethodType.methodType(void.class, args));
-	}
-
-	/**
-	 * 查找指定的构造方法
-	 *
-	 * @param callerClass 类
-	 * @param type        参数类型，此处返回类型应为void.class
-	 * @return 构造方法句柄
-	 */
-	public static MethodHandle findConstructor(final Class<?> callerClass, final MethodType type) {
-		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
-		try {
-			return lookup.findConstructor(callerClass, type);
-		} catch (final NoSuchMethodException e) {
-			return null;
-		} catch (final IllegalAccessException e) {
-			throw new UtilException(e);
-		}
-	}
 
 	/**
 	 * 执行方法句柄，{@link MethodHandle#invoke(Object...)}包装<br>

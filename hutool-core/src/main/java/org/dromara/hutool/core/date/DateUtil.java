@@ -24,7 +24,6 @@ import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.date.format.parser.*;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;

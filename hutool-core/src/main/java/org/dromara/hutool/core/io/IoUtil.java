@@ -22,7 +22,7 @@ import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.io.stream.StreamReader;
 import org.dromara.hutool.core.io.stream.StreamWriter;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.func.SerConsumer;
+import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;

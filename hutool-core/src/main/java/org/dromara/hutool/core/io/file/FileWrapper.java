@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
-import org.dromara.hutool.core.lang.func.Wrapper;
+import org.dromara.hutool.core.func.Wrapper;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.File;

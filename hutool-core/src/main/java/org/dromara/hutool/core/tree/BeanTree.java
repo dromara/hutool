@@ -14,12 +14,11 @@ package org.dromara.hutool.core.tree;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.func.SerBiConsumer;
+import org.dromara.hutool.core.func.SerConsumer;
+import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.func.SerPredicate;
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.lang.func.*;
-import org.dromara.hutool.core.lang.func.SerBiConsumer;
-import org.dromara.hutool.core.lang.func.SerConsumer;
-import org.dromara.hutool.core.lang.func.SerFunction;
-import org.dromara.hutool.core.lang.func.SerPredicate;
 import org.dromara.hutool.core.stream.EasyStream;
 
 import java.util.ArrayList;

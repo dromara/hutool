@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db;
 
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.Collection;

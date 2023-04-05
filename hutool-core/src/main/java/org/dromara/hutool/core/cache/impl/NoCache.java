@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.cache.impl;
 
 import org.dromara.hutool.core.cache.Cache;
-import org.dromara.hutool.core.lang.func.SerSupplier;
+import org.dromara.hutool.core.func.SerSupplier;
 
 import java.util.Iterator;
 
