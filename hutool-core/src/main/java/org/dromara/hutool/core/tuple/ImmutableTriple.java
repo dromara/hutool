@@ -29,7 +29,7 @@ public class ImmutableTriple<L, M, R> implements Serializable {
 	 * @param middle 中值
 	 * @param right  右值
 	 * @return ImmutableTriple
-	 * @since 6.0.3
+	 * @since 6.0.0
 	 */
 	public static <L, M, R> ImmutableTriple<L, M, R> of(L left, M middle, R right) {
 		return new ImmutableTriple<>(left, middle, right);
