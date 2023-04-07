@@ -10,7 +10,7 @@ import java.util.Objects;
  * @param <M> 中值类型
  * @param <R> 右值类型
  * @author kirno7
- * @since 6.0.3
+ * @since 6.0.0
  */
 public class ImmutableTriple<L, M, R> implements Serializable {
 	private static final long serialVersionUID = 1L;
