@@ -15,9 +15,9 @@ import java.util.Objects;
 public class ImmutableTriple<L, M, R> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	protected L left;
-	protected M middle;
-	protected R right;
+	protected final L left;
+	protected final M middle;
+	protected final R right;
 
 	/**
 	 * 构建ImmutableTriple对象
@@ -87,9 +87,9 @@ public class ImmutableTriple<L, M, R> implements Serializable {
 		}
 		if (o instanceof ImmutableTriple) {
 			ImmutableTriple<?, ?, ?> triple = (ImmutableTriple<?, ?, ?>) o;
-			return Objects.equals(getLeft(), triple.getLeft()) &&
-					Objects.equals(getMiddle(), triple.getMiddle()) &&
-					Objects.equals(getRight(), triple.getRight());
+			return Objects.equals(left, triple.getLeft()) &&
+					Objects.equals(middle, triple.getMiddle()) &&
+					Objects.equals(right, triple.getRight());
 		}
 		return false;
 	}
