@@ -308,6 +308,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 设置 是否数字类型单元格精度根据单元格实际数值自动适配
+	 * @param autoPrecision
+	 * @return this
+	 */
+	public ExcelWriter setNumberAutoPrecision(boolean autoPrecision) {
+		this.styleSet.setNumberAutoPrecision(autoPrecision);
+		return this;
+	}
+
+	/**
 	 * 获取样式集，样式集可以自定义包括：<br>
 	 *
 	 * <pre>
