@@ -1,8 +1,5 @@
 package org.dromara.hutool.core.tuple;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 /**
  * 不可变三元组对象
  *
@@ -12,7 +9,7 @@ import java.util.Objects;
  * @author kirno7
  * @since 6.0.0
  */
-public class ImmutableTriple<L, M, R> implements Serializable {
+public class ImmutableTriple<L, M, R> extends Triple<L, M, R> {
 	private static final long serialVersionUID = 1L;
 
 	protected final L left;
@@ -53,6 +50,7 @@ public class ImmutableTriple<L, M, R> implements Serializable {
 	 *
 	 * @return 左值
 	 */
+	@Override
 	public L getLeft() {
 		return this.left;
 	}
@@ -62,6 +60,7 @@ public class ImmutableTriple<L, M, R> implements Serializable {
 	 *
 	 * @return 中值
 	 */
+	@Override
 	public M getMiddle() {
 		return this.middle;
 	}
@@ -71,31 +70,8 @@ public class ImmutableTriple<L, M, R> implements Serializable {
 	 *
 	 * @return 右值
 	 */
+	@Override
 	public R getRight() {
 		return this.right;
-	}
-
-	@Override
-	public String toString() {
-		return "ImmutableTriple {" + "left=" + left + ", middle=" + middle + ", right=" + right + '}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o instanceof ImmutableTriple) {
-			ImmutableTriple<?, ?, ?> triple = (ImmutableTriple<?, ?, ?>) o;
-			return Objects.equals(left, triple.getLeft()) &&
-					Objects.equals(middle, triple.getMiddle()) &&
-					Objects.equals(right, triple.getRight());
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(left) ^ Objects.hashCode(middle) ^ Objects.hashCode(right);
 	}
 }
