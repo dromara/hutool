@@ -126,7 +126,7 @@ public class CharSequenceUtil {
 	 * @see #isBlank(CharSequence)
 	 */
 	public static boolean isNotBlank(CharSequence str) {
-		return false == isBlank(str);
+		return !isBlank(str);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class CharSequenceUtil {
 	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isNotEmpty(CharSequence str) {
-		return false == isEmpty(str);
+		return !isEmpty(str);
 	}
 
 	/**

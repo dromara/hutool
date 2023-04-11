@@ -104,7 +104,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Object array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**

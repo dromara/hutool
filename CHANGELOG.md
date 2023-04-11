@@ -14,6 +14,7 @@
 * 【core  】      新增JdkUtil
 * 【core  】      DateUtil.getZodiac增加越界检查（issue#3036@Github）
 * 【core  】      CsvReader修改策略，添加可选是否关闭Reader重载，默认不关闭Reader（issue#I6UAX1@Gitee）
+* 【core  】      isNotEmpty修改规则，避开IDEA错误提示（issue#I6UBMA@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
