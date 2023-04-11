@@ -56,6 +56,14 @@ public class AnnotationUtilTest {
 		Assert.assertTrue(AnnotationUtil.isSynthesizedAnnotation(annotation));
 	}
 
+	@Test
+	public void getAnnotationSyncAliasWhenNotAnnotation() {
+		getAnnotationSyncAlias();
+		// 使用AnnotationUtil.getAnnotationAlias获取对象上并不存在的注解
+		final Alias alias = AnnotationUtil.getAnnotationAlias(ClassWithAnnotation.class, Alias.class);
+		Assert.assertNull(alias);
+	}
+
 	@AnnotationForTest(value = "测试", names = {"测试1", "测试2"})
 	@RepeatAnnotationForTest
 	static class ClassWithAnnotation{
