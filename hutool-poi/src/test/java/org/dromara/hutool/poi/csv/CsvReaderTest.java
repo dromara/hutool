@@ -20,7 +20,8 @@ public class CsvReaderTest {
 	@Test
 	public void readTest() {
 		final CsvReader reader = new CsvReader();
-		final CsvData data = reader.read(ResourceUtil.getReader("test.csv", CharsetUtil.UTF_8));
+		final CsvData data = reader.read(
+			ResourceUtil.getReader("test.csv", CharsetUtil.UTF_8), true);
 		Assertions.assertEquals("sss,sss", data.getRow(0).get(0));
 		Assertions.assertEquals(1, data.getRow(0).getOriginalLineNumber());
 		Assertions.assertEquals("性别", data.getRow(0).get(2));
@@ -31,7 +32,7 @@ public class CsvReaderTest {
 	public void readMapListTest() {
 		final CsvReader reader = CsvUtil.getReader();
 		final List<Map<String, String>> result = reader.readMapList(
-				ResourceUtil.getUtf8Reader("test_bean.csv"));
+				ResourceUtil.getUtf8Reader("test_bean.csv"), true);
 
 		Assertions.assertEquals("张三", result.get(0).get("姓名"));
 		Assertions.assertEquals("男", result.get(0).get("gender"));
@@ -56,7 +57,7 @@ public class CsvReaderTest {
 
 		final CsvReader reader = CsvUtil.getReader(csvReadConfig);
 		final List<Map<String, String>> result = reader.readMapList(
-				ResourceUtil.getUtf8Reader("test_bean.csv"));
+				ResourceUtil.getUtf8Reader("test_bean.csv"), true);
 
 		Assertions.assertEquals("张三", result.get(0).get("name"));
 		Assertions.assertEquals("男", result.get(0).get("gender"));
@@ -78,7 +79,7 @@ public class CsvReaderTest {
 	public void readBeanListTest() {
 		final CsvReader reader = CsvUtil.getReader();
 		final List<TestBean> result = reader.read(
-				ResourceUtil.getUtf8Reader("test_bean.csv"), TestBean.class);
+				ResourceUtil.getUtf8Reader("test_bean.csv"), true, TestBean.class);
 
 		Assertions.assertEquals("张三", result.get(0).getName());
 		Assertions.assertEquals("男", result.get(0).getGender());
@@ -130,7 +131,8 @@ public class CsvReaderTest {
 	@Test
 	public void lineNoTest() {
 		final CsvReader reader = new CsvReader();
-		final CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
+		final CsvData data = reader.read(
+			ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8), true);
 		Assertions.assertEquals(1, data.getRow(0).getOriginalLineNumber());
 		Assertions.assertEquals("a,b,c,d", CollUtil.join(data.getRow(0), ","));
 
@@ -147,7 +149,8 @@ public class CsvReaderTest {
 	public void lineLimitTest() {
 		// 从原始第2行开始读取
 		final CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2));
-		final CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
+		final CsvData data = reader.read(
+			ResourceUtil.getUtf8Reader("test_lines.csv"), true);
 
 		Assertions.assertEquals(2, data.getRow(0).getOriginalLineNumber());
 		Assertions.assertEquals("1,2,3,4", CollUtil.join(data.getRow(0), ","));
@@ -165,7 +168,8 @@ public class CsvReaderTest {
 	public void lineLimitWithHeaderTest() {
 		// 从原始第2行开始读取
 		final CsvReader reader = new CsvReader(CsvReadConfig.defaultConfig().setBeginLineNo(2).setContainsHeader(true));
-		final CsvData data = reader.read(ResourceUtil.getReader("test_lines.csv", CharsetUtil.UTF_8));
+		final CsvData data = reader.read(
+			ResourceUtil.getUtf8Reader("test_lines.csv"), true);
 
 		Assertions.assertEquals(4, data.getRow(0).getOriginalLineNumber());
 		Assertions.assertEquals("q,w,e,r,我是一段\n带换行的内容",
@@ -192,7 +196,8 @@ public class CsvReaderTest {
 	@Test
 	public void readDisableCommentTest() {
 		final CsvReader reader = CsvUtil.getReader(CsvReadConfig.defaultConfig().disableComment());
-		final CsvData read = reader.read(ResourceUtil.getUtf8Reader("test.csv"));
+		final CsvData read = reader.read(
+			ResourceUtil.getUtf8Reader("test.csv"), true);
 		final CsvRow row = read.getRow(0);
 		Assertions.assertEquals("# 这是一行注释，读取时应忽略", row.get(0));
 	}
@@ -209,7 +214,7 @@ public class CsvReaderTest {
 	public void issue2306Test(){
 		final CsvReader reader = CsvUtil.getReader(ResourceUtil.getUtf8Reader("d:/test/issue2306.csv"));
 		final CsvData csvData = reader.read();
-		for (CsvRow csvRow : csvData) {
+		for (final CsvRow csvRow : csvData) {
 			Console.log(csvRow);
 		}
 	}

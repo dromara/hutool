@@ -38,7 +38,7 @@ public class CsvUtilTest {
 	@Test
 	public void readTest2() {
 		final CsvReader reader = CsvUtil.getReader();
-		reader.read(FileUtil.getUtf8Reader("test.csv"), (csvRow)-> {
+		reader.read(FileUtil.getUtf8Reader("test.csv"), true, (csvRow)-> {
 			// 只有一行，所以直接判断
 			Assertions.assertEquals("sss,sss", csvRow.get(0));
 			Assertions.assertEquals("姓名", csvRow.get(1));
@@ -55,7 +55,7 @@ public class CsvUtilTest {
 	public void readTest3() {
 		final CsvReader reader = CsvUtil.getReader();
 		final String path = FileUtil.isWindows() ? "d:/test/test.csv" : "~/test/test.csv";
-		reader.read(FileUtil.getUtf8Reader(path), Console::log);
+		reader.read(FileUtil.getUtf8Reader(path), true, Console::log);
 	}
 
 	@Test

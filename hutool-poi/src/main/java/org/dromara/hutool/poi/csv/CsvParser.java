@@ -363,7 +363,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		field = StrUtil.trim(field, StrTrimer.TrimMode.SUFFIX, (c-> c == CharUtil.LF || c == CharUtil.CR));
 
 		field = StrUtil.unWrap(field, textDelimiter);
-		field = StrUtil.replace(field, "" + textDelimiter + textDelimiter, textDelimiter + "");
+		field = StrUtil.replace(field, String.valueOf(textDelimiter) + textDelimiter, String.valueOf(textDelimiter));
 		if(this.config.trimField){
 			// issue#I49M0C@Gitee
 			field = StrUtil.trim(field);
