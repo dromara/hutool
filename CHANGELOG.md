@@ -22,6 +22,7 @@
 * 【core  】      修复SafeConcurrentHashMap.computeIfAbsent可能存在的结果为null的情况（issue#I6RVMY@Gitee）
 * 【json  】      修复Pair反序列化报错问题（issue#I6SZYB@Gitee）
 * 【core  】      修复使用AnnotationUtil.getAnnotationAlias获取注解时可能会出现空指针的问题（pr#975@Gitee）
+* 【json  】      修复没有属性的对象转json字符串抛异常问题（issue#3051@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.16 (2023-03-26)

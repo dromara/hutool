@@ -112,13 +112,9 @@ public class ObjectMapper {
 			// 普通Bean
 			// TODO 过滤器对Bean无效，需补充。
 			mapFromBean(source, jsonObject);
-		} else {
-			if(false == jsonObject.getConfig().isIgnoreError()){
-				// 不支持对象类型转换为JSONObject
-				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
-			}
-			// 如果用户选择跳过异常，则跳过此值转换
 		}
+
+		// 跳过空对象
 	}
 
 	/**
