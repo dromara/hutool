@@ -133,8 +133,8 @@ public class JSONObjectMapper {
 				// 不支持对象类型转换为JSONObject
 				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 			}
-			// 如果用户选择跳过异常，则跳过此值转换
 		}
+		// 如果用户选择跳过异常，则跳过此值转换
 	}
 
 	/**
