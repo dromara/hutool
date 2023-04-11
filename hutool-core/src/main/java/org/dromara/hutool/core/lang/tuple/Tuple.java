@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang;
+package org.dromara.hutool.core.lang.tuple;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
@@ -193,7 +193,7 @@ public class Tuple implements Iterable<Object>, Serializable, Cloneable {
 	public Tuple clone() {
 		try {
 			return (Tuple) super.clone();
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			throw new CloneRuntimeException(e);
 		}
 	}

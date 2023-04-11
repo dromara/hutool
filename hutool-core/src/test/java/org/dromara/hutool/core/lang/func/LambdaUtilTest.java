@@ -1,7 +1,7 @@
 package org.dromara.hutool.core.lang.func;
 
 import org.dromara.hutool.core.func.*;
-import org.dromara.hutool.core.lang.Tuple;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;

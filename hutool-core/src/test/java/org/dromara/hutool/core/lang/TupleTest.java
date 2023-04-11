@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.lang;
 
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

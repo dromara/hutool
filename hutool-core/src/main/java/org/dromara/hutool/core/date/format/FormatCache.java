@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.date.format;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Tuple;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 
 import java.text.DateFormat;
