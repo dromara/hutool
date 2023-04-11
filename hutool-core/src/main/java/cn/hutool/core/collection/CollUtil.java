@@ -1741,7 +1741,7 @@ public class CollUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Collection<?> collection) {
-		return false == isEmpty(collection);
+		return !isEmpty(collection);
 	}
 
 	/**
