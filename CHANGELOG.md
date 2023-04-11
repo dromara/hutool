@@ -14,13 +14,14 @@
 * 【core  】      新增JdkUtil
 * 【core  】      DateUtil.getZodiac增加越界检查（issue#3036@Github）
 * 【core  】      CsvReader修改策略，添加可选是否关闭Reader重载，默认不关闭Reader（issue#I6UAX1@Gitee）
-* 【core  】      isNotEmpty修改规则，避开IDEA错误提示（issue#I6UBMA@Gitee）
+* 【core  】      isNotEmpty修改规则，避开IDEA错误提示（pr#974@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
 * 【core  】      修复FileUtil.move传入相同目录或子目录丢失源目录的问题（pr#3032@Github）
 * 【core  】      修复SafeConcurrentHashMap.computeIfAbsent可能存在的结果为null的情况（issue#I6RVMY@Gitee）
 * 【json  】      修复Pair反序列化报错问题（issue#I6SZYB@Gitee）
+* 【core  】      修复使用AnnotationUtil.getAnnotationAlias获取注解时可能会出现空指针的问题（pr#975@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.16 (2023-03-26)
