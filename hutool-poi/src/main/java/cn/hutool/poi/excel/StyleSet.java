@@ -52,6 +52,10 @@ public class StyleSet implements Serializable {
 	protected final CellStyle cellStyleForHyperlink;
 
 	/**
+	 * 数字类型单元格精度根据单元格实际数值自动适配
+	 */
+	protected Boolean numberAutoPrecision;
+	/**
 	 * 构造
 	 *
 	 * @param workbook 工作簿
@@ -78,6 +82,9 @@ public class StyleSet implements Serializable {
 		font.setUnderline((byte) 1);
 		font.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 		this.cellStyleForHyperlink.setFont(font);
+
+		// 数字类型单元格精度根据单元格实际数值自动适配
+		this.setNumberAutoPrecision(false);
 	}
 
 	/**
@@ -124,6 +131,14 @@ public class StyleSet implements Serializable {
 	 */
 	public CellStyle getCellStyleForHyperlink() {
 		return this.cellStyleForHyperlink;
+	}
+
+	public Boolean getNumberAutoPrecision() {
+		return numberAutoPrecision;
+	}
+
+	public void setNumberAutoPrecision(Boolean numberAutoPrecision) {
+		this.numberAutoPrecision = numberAutoPrecision;
 	}
 
 	/**
@@ -254,7 +269,12 @@ public class StyleSet implements Serializable {
 			// 数字单独定义格式
 			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) &&
 					null != this.cellStyleForNumber) {
-				style = this.cellStyleForNumber;
+				BigDecimal bigDecimalValue = new BigDecimal(value.toString());
+				if(numberAutoPrecision){
+					this.cellStyleForNumber.setDataFormat((short)bigDecimalValue.precision());
+				}else{
+					style = this.cellStyleForNumber;
+				}
 			}
 		} else if (value instanceof Hyperlink) {
 			// 自定义超链接样式
