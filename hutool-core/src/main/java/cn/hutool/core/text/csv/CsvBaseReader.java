@@ -126,7 +126,7 @@ public class CsvBaseReader implements Serializable {
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 */
 	public void readFromStr(String csvStr, CsvRowHandler rowHandler) {
-		read(parse(new StringReader(csvStr)), rowHandler);
+		read(parse(new StringReader(csvStr)), true, rowHandler);
 	}
 
 
@@ -174,9 +174,21 @@ public class CsvBaseReader implements Serializable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public CsvData read(Reader reader) throws IORuntimeException {
+		return read(reader, true);
+	}
+
+	/**
+	 * 从Reader中读取CSV数据
+	 *
+	 * @param reader Reader
+	 * @param close 读取结束是否关闭Reader
+	 * @return {@link CsvData}，包含数据列表和行信息
+	 * @throws IORuntimeException IO异常
+	 */
+	public CsvData read(Reader reader, boolean close) throws IORuntimeException {
 		final CsvParser csvParser = parse(reader);
 		final List<CsvRow> rows = new ArrayList<>();
-		read(csvParser, rows::add);
+		read(csvParser, close, rows::add);
 		final List<String> header = config.headerLineNo > -1 ? csvParser.getHeader() : null;
 
 		return new CsvData(header, rows);
@@ -243,7 +255,19 @@ public class CsvBaseReader implements Serializable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public void read(Reader reader, CsvRowHandler rowHandler) throws IORuntimeException {
-		read(parse(reader), rowHandler);
+		read(reader, true, rowHandler);
+	}
+
+	/**
+	 * 从Reader中读取CSV数据，读取后关闭Reader
+	 *
+	 * @param reader     Reader
+	 * @param close     读取结束是否关闭Reader
+	 * @param rowHandler 行处理器，用于一行一行的处理数据
+	 * @throws IORuntimeException IO异常
+	 */
+	public void read(Reader reader, boolean close, CsvRowHandler rowHandler) throws IORuntimeException {
+		read(parse(reader), close, rowHandler);
 	}
 
 	//--------------------------------------------------------------------------------------------- Private method start
@@ -252,17 +276,20 @@ public class CsvBaseReader implements Serializable {
 	 * 读取CSV数据，读取后关闭Parser
 	 *
 	 * @param csvParser  CSV解析器
+	 * @param close      读取结束是否关闭{@link CsvParser}
 	 * @param rowHandler 行处理器，用于一行一行的处理数据
 	 * @throws IORuntimeException IO异常
 	 * @since 5.0.4
 	 */
-	private void read(CsvParser csvParser, CsvRowHandler rowHandler) throws IORuntimeException {
+	private void read(CsvParser csvParser, boolean close, CsvRowHandler rowHandler) throws IORuntimeException {
 		try {
-			while (csvParser.hasNext()){
+			while (csvParser.hasNext()) {
 				rowHandler.handle(csvParser.next());
 			}
 		} finally {
-			IoUtil.close(csvParser);
+			if(close){
+				IoUtil.close(csvParser);
+			}
 		}
 	}
 

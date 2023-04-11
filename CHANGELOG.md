@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.17.M1 (2023-04-05)
+# 5.8.17.M1 (2023-04-11)
 
 ### 🐣新特性
 * 【core  】      SerializeUtil.deserialize增加白名单类，避免RCE vulnerability（issue#3021@Github）
@@ -13,6 +13,7 @@
 * 【core  】      NamingCase.toCamelCase新增重载，可选是否转换其他字符为小写（issue#3031@ithub）
 * 【core  】      新增JdkUtil
 * 【core  】      DateUtil.getZodiac增加越界检查（issue#3036@Github）
+* 【core  】      CsvReader修改策略，添加可选是否关闭Reader重载，默认不关闭Reader（issue#I6UAX1@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
