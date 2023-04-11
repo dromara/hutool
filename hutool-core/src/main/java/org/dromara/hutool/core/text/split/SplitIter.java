@@ -89,7 +89,7 @@ public class SplitIter extends ComputeIter<String> implements Serializable {
 			// 如果不再有分隔符，但是遗留了字符，则单独作为一个段
 			if (offset <= text.length()) {
 				final String result = text.substring(offset);
-				if (false == ignoreEmpty || false == result.isEmpty()) {
+				if (! ignoreEmpty || ! result.isEmpty()) {
 					// 返回非空串
 					offset = Integer.MAX_VALUE;
 					return result;

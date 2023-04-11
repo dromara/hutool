@@ -61,14 +61,14 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 
 		final Map<String, PropDesc> sourcePropDescMap = BeanUtil.getBeanDesc(source.getClass()).getPropMap(copyOptions.ignoreCase);
 		sourcePropDescMap.forEach((sFieldName, sDesc) -> {
-			if (null == sFieldName || false == sDesc.isReadable(copyOptions.transientSupport)) {
+			if (null == sFieldName || ! sDesc.isReadable(copyOptions.transientSupport)) {
 				// 字段空或不可读，跳过
 				return;
 			}
 
 			// 检查源对象属性是否过滤属性
 			Object sValue = sDesc.getValue(this.source);
-			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
+			if (! copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
 				return;
 			}
 
@@ -87,7 +87,7 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 			// 检查目标字段可写性
 			// 目标字段检查放在键值对编辑之后，因为键可能被编辑修改
 			final PropDesc tDesc = targetPropDescMap.get(sFieldName);
-			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
+			if (null == tDesc || ! tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;
 			}

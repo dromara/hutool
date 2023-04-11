@@ -143,7 +143,7 @@ public class BeanPath implements Serializable {
 			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
-				if (isFirst && false == this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
+				if (isFirst && ! this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
 					subBean = bean;
 					isFirst = false;
 				} else {
@@ -186,7 +186,7 @@ public class BeanPath implements Serializable {
 			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
-				if (isFirst && false == this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
+				if (isFirst && ! this.isStartWith && BeanUtil.isMatchName(bean, patternPart, true)) {
 					subBean = bean;
 					isFirst = false;
 				} else {
@@ -268,15 +268,15 @@ public class BeanPath implements Serializable {
 
 			if ('\'' == c) {
 				// 结束
-				isInWrap = (false == isInWrap);
+				isInWrap = (! isInWrap);
 				continue;
 			}
 
-			if (false == isInWrap && ArrayUtil.contains(EXP_CHARS, c)) {
+			if (! isInWrap && ArrayUtil.contains(EXP_CHARS, c)) {
 				// 处理边界符号
 				if (CharUtil.BRACKET_END == c) {
 					// 中括号（数字下标）结束
-					if (false == isNumStart) {
+					if (! isNumStart) {
 						throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find ']' but no '[' !", expression, i));
 					}
 					isNumStart = false;

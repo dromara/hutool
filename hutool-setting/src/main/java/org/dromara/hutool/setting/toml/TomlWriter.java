@@ -149,7 +149,7 @@ public class TomlWriter {
 			final Object value = entry.getValue();
 			if (value instanceof Collection) {// array
 				final Collection<?> c = (Collection<?>) value;
-				if (false == c.isEmpty() && c.iterator().next() instanceof Map) {// array of tables
+				if (! c.isEmpty() && c.iterator().next() instanceof Map) {// array of tables
 					if (simpleValues) {
 						continue;
 					}
@@ -166,7 +166,7 @@ public class TomlWriter {
 					indentationLevel--;
 					tablesNames.removeLast();
 				} else {// normal array
-					if (false == simpleValues) {
+					if (! simpleValues) {
 						continue;
 					}
 					indent();
@@ -193,7 +193,7 @@ public class TomlWriter {
 					indentationLevel--;
 					tablesNames.removeLast();
 				} else {// normal array
-					if (false == simpleValues) {
+					if (! simpleValues) {
 						continue;
 					}
 					indent();
@@ -234,7 +234,7 @@ public class TomlWriter {
 	private void writeKey(final String key) throws IORuntimeException {
 		for (int i = 0; i < key.length(); i++) {
 			final char c = key.charAt(i);
-			if (false == isValidCharOfKey(c)) {
+			if (! isValidCharOfKey(c)) {
 				// 含有非法字符，包装之
 				writeString(key);
 				return;

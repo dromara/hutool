@@ -99,7 +99,7 @@ public class UrlQueryUtil {
 				// 无参数，返回url
 				return urlPart;
 			}
-		} else if (false == StrUtil.contains(urlWithParams, '=')) {
+		} else if (! StrUtil.contains(urlWithParams, '=')) {
 			// 无参数的URL
 			return urlWithParams;
 		} else {

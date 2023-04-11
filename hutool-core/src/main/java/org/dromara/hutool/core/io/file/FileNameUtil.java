@@ -307,7 +307,7 @@ public class FileNameUtil {
 	 * @since 3.3.1
 	 */
 	public static boolean containsInvalid(final String fileName) {
-		return (false == StrUtil.isBlank(fileName)) && ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
+		return (! StrUtil.isBlank(fileName)) && ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public class FileNameUtil {
 				// 去除类似于/C:这类路径开头的斜杠
 				prefix = prefix.substring(1);
 			}
-			if (false == prefix.contains(StrUtil.SLASH)) {
+			if (! prefix.contains(StrUtil.SLASH)) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			} else {
 				// 如果前缀中包含/,说明非Windows风格path
@@ -408,7 +408,7 @@ public class FileNameUtil {
 		for (int i = pathList.size() - 1; i >= 0; i--) {
 			element = pathList.get(i);
 			// 只处理非.的目录，即只处理非当前目录
-			if (false == StrUtil.DOT.equals(element)) {
+			if (! StrUtil.DOT.equals(element)) {
 				if (StrUtil.DOUBLE_DOT.equals(element)) {
 					tops++;
 				} else {

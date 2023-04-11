@@ -86,7 +86,7 @@ public class SystemUtil {
 		try {
 			value = System.getProperty(name);
 		} catch (final SecurityException e) {
-			if (false == quiet) {
+			if (! quiet) {
 				Console.error("Caught a SecurityException reading the system property '{}'; " +
 					"the SystemUtil property value will default to null.", name);
 			}
@@ -96,7 +96,7 @@ public class SystemUtil {
 			try {
 				value = System.getenv(name);
 			} catch (final SecurityException e) {
-				if (false == quiet) {
+				if (! quiet) {
 					Console.error("Caught a SecurityException reading the system env '{}'; " +
 						"the SystemUtil env value will default to null.", name);
 				}

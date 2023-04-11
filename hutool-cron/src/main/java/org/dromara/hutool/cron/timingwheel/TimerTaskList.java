@@ -105,7 +105,7 @@ public class TimerTaskList implements Delayed {
 	 */
 	public synchronized void flush(final Consumer<TimerTask> flush) {
 		TimerTask timerTask = root.next;
-		while (false == timerTask.equals(root)) {
+		while (! timerTask.equals(root)) {
 			this.removeTask(timerTask);
 			flush.accept(timerTask);
 			timerTask = root.next;

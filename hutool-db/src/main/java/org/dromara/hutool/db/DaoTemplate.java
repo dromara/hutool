@@ -326,7 +326,7 @@ public class DaoTemplate {
 	 */
 	public List<Entity> findBySql(String sql, final Object... params) throws DbRuntimeException {
 		final String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
-		if (false == "select".equals(selectKeyword)) {
+		if (! "select".equals(selectKeyword)) {
 			sql = "SELECT * FROM " + this.tableName + " " + sql;
 		}
 		return db.query(sql, params);

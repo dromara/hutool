@@ -290,7 +290,7 @@ public class CharUtil implements CharPool {
 	 */
 	public static boolean isEmoji(final char c) {
 		//noinspection ConstantConditions
-		return false == ((c == 0x0) || //
+		return ! ((c == 0x0) || //
 				(c == 0x9) || //
 				(c == 0xA) || //
 				(c == 0xD) || //

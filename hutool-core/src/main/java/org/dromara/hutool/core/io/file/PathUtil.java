@@ -41,7 +41,7 @@ public class PathUtil {
 	 */
 	public static boolean isDirEmpty(final Path dirPath) {
 		try (final DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath)) {
-			return false == dirStream.iterator().hasNext();
+			return ! dirStream.iterator().hasNext();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -73,9 +73,9 @@ public class PathUtil {
 	public static List<File> loopFiles(final Path path, final int maxDepth, final FileFilter fileFilter) {
 		final List<File> fileList = new ArrayList<>();
 
-		if (null == path || false == Files.exists(path)) {
+		if (null == path || ! Files.exists(path)) {
 			return fileList;
-		} else if (false == isDirectory(path)) {
+		} else if (! isDirectory(path)) {
 			final File file = path.toFile();
 			if (null == fileFilter || fileFilter.accept(file)) {
 				fileList.add(file);
@@ -223,7 +223,7 @@ public class PathUtil {
 	 * @since 3.1.0
 	 */
 	public static boolean isExistsAndNotDirectory(final Path path, final boolean isFollowLinks) {
-		return exists(path, isFollowLinks) && false == isDirectory(path, isFollowLinks);
+		return exists(path, isFollowLinks) && ! isDirectory(path, isFollowLinks);
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class PathUtil {
 	 * @since 5.5.7
 	 */
 	public static Path mkdir(final Path dir) {
-		if (null != dir && false == exists(dir, false)) {
+		if (null != dir && ! exists(dir, false)) {
 			try {
 				Files.createDirectories(dir);
 			} catch (final IOException e) {

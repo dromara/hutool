@@ -256,10 +256,10 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	private void checkFile() throws IORuntimeException {
-		if (false == file.exists()) {
+		if (! file.exists()) {
 			throw new IORuntimeException("File not exist: " + file);
 		}
-		if (false == file.isFile()) {
+		if (! file.isFile()) {
 			throw new IORuntimeException("Not a file:" + file);
 		}
 	}

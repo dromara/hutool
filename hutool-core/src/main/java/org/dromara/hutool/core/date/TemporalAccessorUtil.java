@@ -226,11 +226,11 @@ public class TemporalAccessorUtil extends TemporalUtil{
 		boolean isIn = rangeMin < thisMills && thisMills < rangeMax;
 
 		// 若不满足，则再判断是否在时间范围的边界上
-		if (false == isIn && includeBegin) {
+		if (! isIn && includeBegin) {
 			isIn = thisMills == rangeMin;
 		}
 
-		if (false == isIn && includeEnd) {
+		if (! isIn && includeEnd) {
 			isIn = thisMills == rangeMax;
 		}
 

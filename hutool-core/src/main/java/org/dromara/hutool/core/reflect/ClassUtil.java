@@ -361,7 +361,7 @@ public class ClassUtil {
 				if (BasicType.unWrap(type1) != BasicType.unWrap(type2)) {
 					return false;
 				}
-			} else if (false == type1.isAssignableFrom(type2)) {
+			} else if (! type1.isAssignableFrom(type2)) {
 				return false;
 			}
 		}
@@ -488,13 +488,13 @@ public class ClassUtil {
 	 */
 	public static boolean isNormalClass(final Class<?> clazz) {
 		return null != clazz
-				&& false == clazz.isInterface()
-				&& false == ModifierUtil.isAbstract(clazz)
-				&& false == clazz.isEnum()
-				&& false == clazz.isArray()
-				&& false == clazz.isAnnotation()
-				&& false == clazz.isSynthetic()
-				&& false == clazz.isPrimitive();
+				&& ! clazz.isInterface()
+				&& ! ModifierUtil.isAbstract(clazz)
+				&& ! clazz.isEnum()
+				&& ! clazz.isArray()
+				&& ! clazz.isAnnotation()
+				&& ! clazz.isSynthetic()
+				&& ! clazz.isPrimitive();
 	}
 
 	/**

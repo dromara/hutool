@@ -738,7 +738,7 @@ public class NumberUtil {
 					// two E's
 					return false;
 				}
-				if (false == foundDigit) {
+				if (! foundDigit) {
 					return false;
 				}
 				hasExp = true;
@@ -783,7 +783,7 @@ public class NumberUtil {
 		}
 		// allowSigns is true iff the val ends in 'E'
 		// found digit it to make sure weird stuff like '.' and '1E-' doesn't pass
-		return false == allowSigns && foundDigit;
+		return ! allowSigns && foundDigit;
 	}
 
 	/**
@@ -802,7 +802,7 @@ public class NumberUtil {
 	 * @see Integer#decode(String)
 	 */
 	public static boolean isInteger(final String s) {
-		if (false == isNumber(s)) {
+		if (! isNumber(s)) {
 			return false;
 		}
 		try {
@@ -830,7 +830,7 @@ public class NumberUtil {
 	 * @since 4.0.0
 	 */
 	public static boolean isLong(final String s) {
-		if (false == isNumber(s)) {
+		if (! isNumber(s)) {
 			return false;
 		}
 		final char lastChar = s.charAt(s.length() - 1);
@@ -1776,9 +1776,9 @@ public class NumberUtil {
 			return false;
 		}
 		if (number instanceof Double) {
-			return (false == ((Double) number).isInfinite()) && (false == ((Double) number).isNaN());
+			return (! ((Double) number).isInfinite()) && (! ((Double) number).isNaN());
 		} else if (number instanceof Float) {
-			return (false == ((Float) number).isInfinite()) && (false == ((Float) number).isNaN());
+			return (! ((Float) number).isInfinite()) && (! ((Float) number).isNaN());
 		}
 		return true;
 	}
@@ -1792,7 +1792,7 @@ public class NumberUtil {
 	 * @since 5.7.0
 	 */
 	public static boolean isValid(final double number) {
-		return false == (Double.isNaN(number) || Double.isInfinite(number));
+		return ! (Double.isNaN(number) || Double.isInfinite(number));
 	}
 
 	/**
@@ -1804,7 +1804,7 @@ public class NumberUtil {
 	 * @since 5.7.0
 	 */
 	public static boolean isValid(final float number) {
-		return false == (Float.isNaN(number) || Float.isInfinite(number));
+		return ! (Float.isNaN(number) || Float.isInfinite(number));
 	}
 
 	/**
@@ -1859,6 +1859,6 @@ public class NumberUtil {
 	 * @since 5.7.17
 	 */
 	public static boolean isEven(final int num) {
-		return false == isOdd(num);
+		return ! isOdd(num);
 	}
 }

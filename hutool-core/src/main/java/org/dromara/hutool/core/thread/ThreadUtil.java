@@ -505,7 +505,7 @@ public class ThreadUtil {
 		long spendTime;
 		while (done >= 0 && done < millis) {
 			before = System.currentTimeMillis();
-			if (false == sleep(millis - done)) {
+			if (! sleep(millis - done)) {
 				return false;
 			}
 			spendTime = System.currentTimeMillis() - before;
@@ -597,7 +597,7 @@ public class ThreadUtil {
 	 * @param isJoin 是否等待结束
 	 */
 	public static void interrupt(final Thread thread, final boolean isJoin) {
-		if (null != thread && false == thread.isInterrupted()) {
+		if (null != thread && ! thread.isInterrupted()) {
 			thread.interrupt();
 			if (isJoin) {
 				waitForDie(thread);
@@ -630,7 +630,7 @@ public class ThreadUtil {
 			} catch (final InterruptedException e) {
 				// ignore
 			}
-		} while (false == dead);
+		} while (! dead);
 	}
 
 	/**

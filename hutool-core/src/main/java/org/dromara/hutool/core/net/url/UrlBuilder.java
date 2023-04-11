@@ -121,7 +121,7 @@ public final class UrlBuilder implements Builder<String> {
 
 		httpUrl = StrUtil.trimPrefix(httpUrl);
 		// issue#I66CIR
-		if(false == StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
+		if(! StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
 			httpUrl = "http://" + httpUrl;
 		}
 

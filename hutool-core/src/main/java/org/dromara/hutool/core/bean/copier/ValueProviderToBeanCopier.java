@@ -64,7 +64,7 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 			}
 
 			// 检查目标字段可写性
-			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
+			if (null == tDesc || ! tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;
 			}
@@ -82,13 +82,13 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 				return;
 			}
 			// 无字段内容跳过
-			if(false == source.containsKey(tFieldName)){
+			if(! source.containsKey(tFieldName)){
 				return;
 			}
 			final Object sValue = source.value(tFieldName, fieldType);
 
 			// 检查目标对象属性是否过滤属性
-			if (false == copyOptions.testPropertyFilter(tDesc.getField(), sValue)) {
+			if (! copyOptions.testPropertyFilter(tDesc.getField(), sValue)) {
 				return;
 			}
 

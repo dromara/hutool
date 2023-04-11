@@ -141,7 +141,7 @@ public class PropDesc {
 	 */
 	public boolean isReadable(final boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
-		if (null == this.getter && false == ModifierUtil.isPublic(this.field)) {
+		if (null == this.getter && ! ModifierUtil.isPublic(this.field)) {
 			return false;
 		}
 
@@ -151,7 +151,7 @@ public class PropDesc {
 		}
 
 		// 检查@PropIgnore注解
-		return false == isIgnoreGet();
+		return ! isIgnoreGet();
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class PropDesc {
 		try {
 			result = getValue(bean);
 		} catch (final Exception e) {
-			if (false == ignoreError) {
+			if (! ignoreError) {
 				throw new BeanException(e, "Get value of [{}] error!", getFieldName());
 			}
 		}
@@ -212,7 +212,7 @@ public class PropDesc {
 	 */
 	public boolean isWritable(final boolean checkTransient) {
 		// 检查是否有getter方法或是否为public修饰
-		if (null == this.setter && false == ModifierUtil.isPublic(this.field)) {
+		if (null == this.setter && ! ModifierUtil.isPublic(this.field)) {
 			return false;
 		}
 
@@ -222,7 +222,7 @@ public class PropDesc {
 		}
 
 		// 检查@PropIgnore注解
-		return false == isIgnoreSet();
+		return ! isIgnoreSet();
 	}
 
 	/**
@@ -277,24 +277,24 @@ public class PropDesc {
 
 		// issue#I4JQ1N@Gitee
 		// 非覆盖模式下，如果目标值存在，则跳过
-		if (false == override && null != getValue(bean)) {
+		if (! override && null != getValue(bean)) {
 			return this;
 		}
 
 		// 当类型不匹配的时候，执行默认转换
 		if (null != value) {
 			final Class<?> propClass = getFieldClass();
-			if (false == propClass.isInstance(value)) {
+			if (! propClass.isInstance(value)) {
 				value = Convert.convertWithCheck(propClass, value, null, ignoreError);
 			}
 		}
 
 		// 属性赋值
-		if (null != value || false == ignoreNull) {
+		if (null != value || ! ignoreNull) {
 			try {
 				this.setValue(bean, value);
 			} catch (final Exception e) {
-				if (false == ignoreError) {
+				if (! ignoreError) {
 					throw new BeanException(e, "Set value of [{}] error!", getFieldName());
 				}
 				// 忽略注入失败
@@ -382,11 +382,11 @@ public class PropDesc {
 		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
 
 		// 检查Getter方法
-		if (false == isTransient && null != this.getter) {
+		if (! isTransient && null != this.getter) {
 			isTransient = ModifierUtil.hasModifier(this.getter, ModifierUtil.ModifierType.TRANSIENT);
 
 			// 检查注解
-			if (false == isTransient) {
+			if (! isTransient) {
 				isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
 			}
 		}
@@ -404,11 +404,11 @@ public class PropDesc {
 		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
 
 		// 检查Getter方法
-		if (false == isTransient && null != this.setter) {
+		if (! isTransient && null != this.setter) {
 			isTransient = ModifierUtil.hasModifier(this.setter, ModifierUtil.ModifierType.TRANSIENT);
 
 			// 检查注解
-			if (false == isTransient) {
+			if (! isTransient) {
 				isTransient = AnnotationUtil.hasAnnotation(this.setter, Transient.class);
 			}
 		}

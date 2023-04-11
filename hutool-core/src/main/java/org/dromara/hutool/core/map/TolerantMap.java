@@ -95,7 +95,7 @@ public class TolerantMap<K, V> extends MapWrapper<K, V> {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		if (false == super.equals(o)) {
+		if (! super.equals(o)) {
 			return false;
 		}
 		final TolerantMap<?, ?> that = (TolerantMap<?, ?>) o;

@@ -123,7 +123,7 @@ public class Arrangement implements Serializable {
 	 */
 	private void select(final String[] datas, final String[] resultList, final int resultIndex, final List<String[]> result) {
 		if (resultIndex >= resultList.length) { // 全部选择完时，输出排列结果
-			if (false == result.contains(resultList)) {
+			if (! result.contains(resultList)) {
 				result.add(Arrays.copyOf(resultList, resultList.length));
 			}
 			return;

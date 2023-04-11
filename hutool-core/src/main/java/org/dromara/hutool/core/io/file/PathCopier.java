@@ -65,7 +65,7 @@ public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
 	 */
 	public PathCopier(final Path src, final Path target, final CopyOption[] options) {
 		Assert.notNull(target, "Src path must be not null !");
-		if (false == PathUtil.exists(src, false)) {
+		if (! PathUtil.exists(src, false)) {
 			throw new IllegalArgumentException("Src path is not exist!");
 		}
 		this.src = src;

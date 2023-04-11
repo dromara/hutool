@@ -45,7 +45,7 @@ public class Assert {
 	 * @throws X if expression is {@code false}
 	 */
 	public static <X extends Throwable> void isTrue(final boolean expression, final Supplier<? extends X> supplier) throws X {
-		if (false == expression) {
+		if (! expression) {
 			throw supplier.get();
 		}
 	}
@@ -701,7 +701,7 @@ public class Assert {
 	 */
 	public static <T> T isInstanceOf(final Class<?> type, final T obj, final String errorMsgTemplate, final Object... params) throws IllegalArgumentException {
 		notNull(type, "Type to check against must not be null");
-		if (false == type.isInstance(obj)) {
+		if (! type.isInstance(obj)) {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 		return obj;
@@ -755,7 +755,7 @@ public class Assert {
 	 * @throws IllegalStateException 表达式为 {@code false} 抛出此异常
 	 */
 	public static void state(final boolean expression, final Supplier<String> errorMsgSupplier) throws IllegalStateException {
-		if (false == expression) {
+		if (! expression) {
 			throw new IllegalStateException(errorMsgSupplier.get());
 		}
 	}
@@ -772,7 +772,7 @@ public class Assert {
 	 * @throws IllegalStateException 表达式为 {@code false} 抛出此异常
 	 */
 	public static void state(final boolean expression, final String errorMsgTemplate, final Object... params) throws IllegalStateException {
-		if (false == expression) {
+		if (! expression) {
 			throw new IllegalStateException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}

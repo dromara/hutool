@@ -193,7 +193,7 @@ public class KeyUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateDESKey(final String algorithm, final byte[] key) {
-		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
+		if (StrUtil.isBlank(algorithm) || ! algorithm.startsWith("DES")) {
 			throw new CryptoException("Algorithm [{}] is not a DES algorithm!", algorithm);
 		}
 
@@ -225,7 +225,7 @@ public class KeyUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generatePBEKey(final String algorithm, char[] key) {
-		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("PBE")) {
+		if (StrUtil.isBlank(algorithm) || ! algorithm.startsWith("PBE")) {
 			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!", algorithm);
 		}
 

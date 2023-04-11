@@ -227,7 +227,7 @@ public class ResponseBody implements HttpBody, Closeable {
 	 * @since 5.4.1
 	 */
 	private File getTargetFile(final File targetFileOrDir, final String customParamName) {
-		if (false == targetFileOrDir.isDirectory()) {
+		if (! targetFileOrDir.isDirectory()) {
 			// 非目录直接返回
 			return targetFileOrDir;
 		}

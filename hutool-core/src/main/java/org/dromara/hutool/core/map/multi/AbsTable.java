@@ -168,7 +168,7 @@ public abstract class AbsTable<R, C, V> implements Table<R, C, V> {
 
 		@Override
 		public Cell<R, C, V> next() {
-			if (false == columnIterator.hasNext()) {
+			if (! columnIterator.hasNext()) {
 				rowEntry = rowIterator.next();
 				columnIterator = rowEntry.getValue().entrySet().iterator();
 			}

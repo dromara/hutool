@@ -92,7 +92,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 	 * @return this
 	 */
 	public WordTree addWords(Collection<String> words) {
-		if (false == (words instanceof Set)) {
+		if (! (words instanceof Set)) {
 			words = new HashSet<>(words);
 		}
 		for (final String word : words) {
@@ -281,7 +281,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 			keyBuffer.setLength(0);
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
-				if (false == charFilter.test(currentChar)) {
+				if (! charFilter.test(currentChar)) {
 					if (wordBuffer.length() > 0) {
 						//做为关键词中间的停顿词被当作关键词的一部分被返回
 						wordBuffer.append(currentChar);
@@ -290,7 +290,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 						i++;
 					}
 					continue;
-				} else if (false == current.containsKey(currentChar)) {
+				} else if (! current.containsKey(currentChar)) {
 					//非关键字符被整体略过，重新以下个字符开始检查
 					break;
 				}
@@ -303,12 +303,12 @@ public class WordTree extends HashMap<Character, WordTree> {
 						//超过匹配限制个数，直接返回
 						return foundWords;
 					}
-					if (false == isDensityMatch) {
+					if (! isDensityMatch) {
 						//如果非密度匹配，跳过匹配到的词
 						i = j;
 						break;
 					}
-					if (false == isGreedMatch) {
+					if (! isGreedMatch) {
 						//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配
 						break;
 					}

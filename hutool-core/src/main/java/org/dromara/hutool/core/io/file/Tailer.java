@@ -137,7 +137,7 @@ public class Tailer implements Serializable {
 				this.period, TimeUnit.MILLISECONDS//
 		);
 
-		if (false == async) {
+		if (! async) {
 			try {
 				scheduledFuture.get();
 			} catch (final ExecutionException e) {
@@ -206,7 +206,7 @@ public class Tailer implements Serializable {
 			}
 
 			// 输出缓存栈中的内容
-			while (false == stack.isEmpty()) {
+			while (! stack.isEmpty()) {
 				this.lineHandler.accept(stack.pop());
 			}
 		}
@@ -225,10 +225,10 @@ public class Tailer implements Serializable {
 	 * @param file 文件
 	 */
 	private static void checkFile(final File file) {
-		if (false == file.exists()) {
+		if (! file.exists()) {
 			throw new UtilException("File [{}] not exist !", file.getAbsolutePath());
 		}
-		if (false == file.isFile()) {
+		if (! file.isFile()) {
 			throw new UtilException("Path [{}] is not a file !", file.getAbsolutePath());
 		}
 	}

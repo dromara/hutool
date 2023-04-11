@@ -47,7 +47,7 @@ public class LocalPortGenerator implements Serializable{
 	public int generate() {
 		int validPort = alternativePort.get();
 		// 获取可用端口
-		while (false == NetUtil.isUsableLocalPort(validPort)) {
+		while (! NetUtil.isUsableLocalPort(validPort)) {
 			validPort = alternativePort.incrementAndGet();
 		}
 		return validPort;

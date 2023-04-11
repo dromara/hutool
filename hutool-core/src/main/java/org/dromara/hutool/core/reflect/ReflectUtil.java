@@ -50,7 +50,7 @@ public class ReflectUtil {
 	 * @since 4.6.8
 	 */
 	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) throws SecurityException {
-		if (null != accessibleObject && false == accessibleObject.isAccessible()) {
+		if (null != accessibleObject && ! accessibleObject.isAccessible()) {
 			return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
 				// 特权访问
 				accessibleObject.setAccessible(true);

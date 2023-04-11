@@ -190,7 +190,7 @@ public class HttpUtil {
 		if (qmIndex > 0) {
 			// 原URL带参数，则对这部分参数单独编码（如果选项为进行编码）
 			urlBuilder.append(isEncode ? UrlQueryUtil.encodeQuery(url, charset) : url);
-			if (false == StrUtil.endWith(url, '&')) {
+			if (! StrUtil.endWith(url, '&')) {
 				// 已经带参数的情况下追加参数
 				urlBuilder.append('&');
 			}

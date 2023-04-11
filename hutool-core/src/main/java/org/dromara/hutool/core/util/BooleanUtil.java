@@ -366,7 +366,7 @@ public class BooleanUtil {
 			throw new IllegalArgumentException("The Array must not be empty !");
 		}
 		for (final boolean element : array) {
-			if (false == element) {
+			if (! element) {
 				return false;
 			}
 		}

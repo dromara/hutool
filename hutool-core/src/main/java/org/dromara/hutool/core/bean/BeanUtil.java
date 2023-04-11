@@ -130,7 +130,7 @@ public class BeanUtil {
 				if (method.getParameterCount() == 0) {
 					final String name = method.getName();
 					if (name.startsWith("get") || name.startsWith("is")) {
-						if (false == "getClass".equals(name)) {
+						if (! "getClass".equals(name)) {
 							return true;
 						}
 					}
@@ -150,7 +150,7 @@ public class BeanUtil {
 	public static boolean hasPublicField(final Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			for (final Field field : clazz.getFields()) {
-				if (ModifierUtil.isPublic(field) && false == ModifierUtil.isStatic(field)) {
+				if (ModifierUtil.isPublic(field) && ! ModifierUtil.isStatic(field)) {
 					//非static的public字段
 					return true;
 				}
@@ -220,7 +220,7 @@ public class BeanUtil {
 		}
 		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), t -> {
 			// 过滤掉getClass方法
-			return false == "class".equals(t.getName());
+			return ! "class".equals(t.getName());
 		});
 	}
 
@@ -821,7 +821,7 @@ public class BeanUtil {
 				final String val = (String) FieldUtil.getFieldValue(bean, field);
 				if (null != val) {
 					final String trimVal = StrUtil.trim(val);
-					if (false == val.equals(trimVal)) {
+					if (! val.equals(trimVal)) {
 						// Field Value不为null，且首尾有空格才处理
 						FieldUtil.setFieldValue(bean, field, trimVal);
 					}
@@ -840,7 +840,7 @@ public class BeanUtil {
 	 * @since 5.0.7
 	 */
 	public static boolean isNotEmpty(final Object bean, final String... ignoreFieldNames) {
-		return false == isEmpty(bean, ignoreFieldNames);
+		return !isEmpty(bean, ignoreFieldNames);
 	}
 
 	/**
@@ -858,7 +858,7 @@ public class BeanUtil {
 				if (ModifierUtil.isStatic(field)) {
 					continue;
 				}
-				if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
+				if ((! ArrayUtil.contains(ignoreFieldNames, field.getName()))
 						&& null != FieldUtil.getFieldValue(bean, field)) {
 					return false;
 				}
@@ -884,7 +884,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			if ((false == ArrayUtil.contains(ignoreFieldNames, field.getName()))
+			if ((! ArrayUtil.contains(ignoreFieldNames, field.getName()))
 					&& null == FieldUtil.getFieldValue(bean, field)) {
 				return true;
 			}

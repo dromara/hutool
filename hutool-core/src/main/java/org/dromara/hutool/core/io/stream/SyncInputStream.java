@@ -53,7 +53,7 @@ public class SyncInputStream extends FilterInputStream {
 		super(in);
 		this.length = length;
 		this.isIgnoreEOFError = isIgnoreEOFError;
-		if (false == isAsync) {
+		if (! isAsync) {
 			sync();
 		}
 	}
@@ -93,7 +93,7 @@ public class SyncInputStream extends FilterInputStream {
 		try {
 			copyLength = IoUtil.copy(this.in, out, IoUtil.DEFAULT_BUFFER_SIZE, this.length, streamProgress);
 		} catch (final IORuntimeException e) {
-			if (false == (isIgnoreEOFError && isEOFException(e.getCause()))) {
+			if (! (isIgnoreEOFError && isEOFException(e.getCause()))) {
 				throw e;
 			}
 			// 忽略读取流中的EOF错误

@@ -239,7 +239,7 @@ public class Ipv4Util implements Ipv4Pool {
 		Assert.isTrue(maskBit > IPV4_MASK_BIT_VALID_MIN && maskBit <= IPV4_MASK_BIT_MAX,
 				"Not support mask bit: {}", maskBit);
 		//如果掩码位等于32，则可用地址为0
-		if (maskBit == IPV4_MASK_BIT_MAX && false == isAll) {
+		if (maskBit == IPV4_MASK_BIT_MAX && ! isAll) {
 			return 0;
 		}
 

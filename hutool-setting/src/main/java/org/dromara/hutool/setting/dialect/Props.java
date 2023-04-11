@@ -352,7 +352,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 		String key;
 		for (final java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
 			key = (String) entry.getKey();
-			if (false == StrUtil.startWith(key, prefix)) {
+			if (! StrUtil.startWith(key, prefix)) {
 				// 非指定开头的属性忽略掉
 				continue;
 			}

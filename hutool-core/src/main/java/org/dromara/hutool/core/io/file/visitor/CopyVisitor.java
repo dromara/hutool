@@ -52,7 +52,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 * @param copyOptions 拷贝选项，如跳过已存在等
 	 */
 	public CopyVisitor(final Path source, final Path target, final CopyOption... copyOptions) {
-		if (PathUtil.exists(target, false) && false == PathUtil.isDirectory(target)) {
+		if (PathUtil.exists(target, false) && ! PathUtil.isDirectory(target)) {
 			throw new IllegalArgumentException("Target must be a directory");
 		}
 		this.source = source;
@@ -70,7 +70,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 		try {
 			Files.copy(dir, targetDir, copyOptions);
 		} catch (final FileAlreadyExistsException e) {
-			if (false == Files.isDirectory(targetDir)) {
+			if (! Files.isDirectory(targetDir)) {
 				// 目标文件存在抛出异常，目录忽略
 				throw e;
 			}
@@ -107,7 +107,7 @@ public class CopyVisitor extends SimpleFileVisitor<Path> {
 	 * 初始化目标文件或目录
 	 */
 	private void initTargetDir() {
-		if (false == this.isTargetCreated) {
+		if (! this.isTargetCreated) {
 			PathUtil.mkdir(this.target);
 			this.isTargetCreated = true;
 		}

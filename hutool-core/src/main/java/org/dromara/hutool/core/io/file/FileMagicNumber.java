@@ -1507,7 +1507,7 @@ public enum FileMagicNumber {
 	 */
 	private static FileMagicNumber matchDocument(final byte[] bytes) {
 		final FileMagicNumber fileMagicNumber = FileMagicNumber.matchOpenXmlMime(bytes, (byte) 0x1e);
-		if (false == fileMagicNumber.equals(UNKNOWN)) {
+		if (! fileMagicNumber.equals(UNKNOWN)) {
 			return fileMagicNumber;
 		}
 		final byte[] bytes1 = new byte[]{0x5B, 0x43, 0x6F, 0x6E, 0x74, 0x65, 0x6E, 0x74, 0x5F, 0x54, 0x79, 0x70, 0x65, 0x73, 0x5D, 0x2E, 0x78, 0x6D, 0x6C};
@@ -1516,7 +1516,7 @@ public enum FileMagicNumber {
 		final boolean flag1 = FileMagicNumber.compareBytes(bytes, bytes1, (byte) 0x1e);
 		final boolean flag2 = FileMagicNumber.compareBytes(bytes, bytes2, (byte) 0x1e);
 		final boolean flag3 = FileMagicNumber.compareBytes(bytes, bytes3, (byte) 0x1e);
-		if (false == (flag1 || flag2 || flag3)) {
+		if (! (flag1 || flag2 || flag3)) {
 			return UNKNOWN;
 		}
 		int index = 0;
@@ -1526,7 +1526,7 @@ public enum FileMagicNumber {
 				continue;
 			}
 			final FileMagicNumber fn = FileMagicNumber.matchOpenXmlMime(bytes, index + 30);
-			if (false == fn.equals(UNKNOWN)) {
+			if (! fn.equals(UNKNOWN)) {
 				return fn;
 			}
 		}

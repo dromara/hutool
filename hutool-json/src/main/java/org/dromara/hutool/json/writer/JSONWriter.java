@@ -158,13 +158,13 @@ public class JSONWriter extends Writer {
 		}
 
 		if (null != predicate) {
-			if (false == predicate.test(pair)) {
+			if (! predicate.test(pair)) {
 				// 使用修改后的键值对
 				return this;
 			}
 		}
 
-		if (false == arrayMode) {
+		if (! arrayMode) {
 			// JSONObject模式，写出键，否则只输出值
 			writeKey(StrUtil.toString(pair.getKey()));
 		}

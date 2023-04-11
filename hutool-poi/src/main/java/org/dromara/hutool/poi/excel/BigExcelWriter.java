@@ -173,7 +173,7 @@ public class BigExcelWriter extends ExcelWriter {
 
 	@Override
 	public ExcelWriter flush(final OutputStream out, final boolean isCloseOut) throws IORuntimeException {
-		if (false == isFlushed) {
+		if (! isFlushed) {
 			isFlushed = true;
 			return super.flush(out, isCloseOut);
 		}
@@ -182,7 +182,7 @@ public class BigExcelWriter extends ExcelWriter {
 
 	@Override
 	public void close() {
-		if (null != this.destFile && false == isFlushed) {
+		if (null != this.destFile && ! isFlushed) {
 			flush();
 		}
 

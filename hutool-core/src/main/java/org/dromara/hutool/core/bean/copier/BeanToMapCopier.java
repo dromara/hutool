@@ -60,14 +60,14 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 
 		final Map<String, PropDesc> sourcePropDescMap = BeanUtil.getBeanDesc(actualEditable).getPropMap(copyOptions.ignoreCase);
 		sourcePropDescMap.forEach((sFieldName, sDesc) -> {
-			if (null == sFieldName || false == sDesc.isReadable(copyOptions.transientSupport)) {
+			if (null == sFieldName || ! sDesc.isReadable(copyOptions.transientSupport)) {
 				// 字段空或不可读，跳过
 				return;
 			}
 
 			// 检查源对象属性是否过滤属性
 			Object sValue = sDesc.getValue(this.source);
-			if (false == copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
+			if (! copyOptions.testPropertyFilter(sDesc.getField(), sValue)) {
 				return;
 			}
 
@@ -91,7 +91,7 @@ public class BeanToMapCopier extends AbsCopier<Object, Map> {
 			}
 
 			// 目标赋值
-			if(null != sValue || false == copyOptions.ignoreNullValue){
+			if(null != sValue || ! copyOptions.ignoreNullValue){
 				target.put(sFieldName, sValue);
 			}
 		});

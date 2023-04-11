@@ -291,7 +291,7 @@ public class FieldUtil {
 		// 值类型检查和转换
 		final Class<?> fieldType = field.getType();
 		if (null != value) {
-			if (false == fieldType.isAssignableFrom(value.getClass())) {
+			if (! fieldType.isAssignableFrom(value.getClass())) {
 				//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
 				final Object targetValue = Convert.convert(fieldType, value);
 				if (null != targetValue) {

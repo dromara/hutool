@@ -133,7 +133,7 @@ public class SevenZArchiver implements Archiver {
 	 * @param filter 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}保留，null表示保留全部
 	 */
 	private void addInternal(final File file, final String path, final Predicate<File> filter) throws IOException {
-		if (null != filter && false == filter.test(file)) {
+		if (null != filter && ! filter.test(file)) {
 			return;
 		}
 		final SevenZOutputFile out = this.sevenZOutputFile;

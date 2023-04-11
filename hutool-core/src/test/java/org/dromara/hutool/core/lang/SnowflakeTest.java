@@ -61,7 +61,7 @@ public class SnowflakeTest {
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
-				if(false == ids.add(snowflake.nextId())){
+				if(! ids.add(snowflake.nextId())){
 					throw new UtilException("重复ID！");
 				}
 			}
@@ -98,7 +98,7 @@ public class SnowflakeTest {
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
-				if(false == ids.add(snowflake.nextId())){
+				if(! ids.add(snowflake.nextId())){
 					throw new UtilException("重复ID！");
 				}
 			}

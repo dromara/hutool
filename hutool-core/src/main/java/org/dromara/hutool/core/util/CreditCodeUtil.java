@@ -94,7 +94,7 @@ public class CreditCodeUtil {
 	 * @return 校验结果
 	 */
 	public static boolean isCreditCode(final CharSequence creditCode) {
-		if (false == isCreditCodeSimple(creditCode)) {
+		if (! isCreditCodeSimple(creditCode)) {
 			return false;
 		}
 

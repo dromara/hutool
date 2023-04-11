@@ -88,7 +88,7 @@ public class BOMInputStream extends InputStream {
 	 * @return 编码
 	 */
 	public String getCharset() {
-		if (false == isInited) {
+		if (! isInited) {
 			try {
 				init();
 			} catch (final IOException ex) {

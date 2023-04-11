@@ -135,7 +135,7 @@ public class ObjectId {
 	 * @return objectId
 	 */
 	public static String next(final boolean withHyphen) {
-		if (false == withHyphen) {
+		if (! withHyphen) {
 			return next();
 		}
 		final char[] ids = new char[26];

@@ -80,7 +80,7 @@ public class CallerUtil {
 	public static String getCallerMethodName(final boolean isFullName){
 		final StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
 		final String methodName = stackTraceElement.getMethodName();
-		if(false == isFullName){
+		if(! isFullName){
 			return methodName;
 		}
 

@@ -53,7 +53,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 				return false;
 			}
 
-			if (false == co.isExpired()) {
+			if (! co.isExpired()) {
 				// 命中
 				return true;
 			}
@@ -80,7 +80,7 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 		if (null == co) {
 			missCount.increment();
 			return null;
-		} else if (false == co.isExpired()) {
+		} else if (! co.isExpired()) {
 			hitCount.increment();
 			return co.get(isUpdateLastAccess);
 		}

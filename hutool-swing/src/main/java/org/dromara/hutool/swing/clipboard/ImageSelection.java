@@ -68,7 +68,7 @@ public class ImageSelection implements Transferable, Serializable {
 	 */
 	@Override
 	public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
-		if (false == DataFlavor.imageFlavor.equals(flavor)) {
+		if (! DataFlavor.imageFlavor.equals(flavor)) {
 			throw new UnsupportedFlavorException(flavor);
 		}
 		return image;

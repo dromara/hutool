@@ -976,7 +976,7 @@ public class ZipUtil {
 			name = entry.getName();
 			if (StrUtil.isEmpty(dir) || name.startsWith(dir)) {
 				final String nameSuffix = StrUtil.removePrefix(name, dir);
-				if (StrUtil.isNotEmpty(nameSuffix) && false == StrUtil.contains(nameSuffix, CharUtil.SLASH)) {
+				if (StrUtil.isNotEmpty(nameSuffix) && ! StrUtil.contains(nameSuffix, CharUtil.SLASH)) {
 					fileNames.add(nameSuffix);
 				}
 			}
@@ -1002,7 +1002,7 @@ public class ZipUtil {
 			if (null == srcFile) {
 				continue;
 			}
-			if (false == srcFile.exists()) {
+			if (! srcFile.exists()) {
 				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 

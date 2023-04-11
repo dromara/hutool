@@ -152,7 +152,7 @@ public class MapProxy implements Map<Object, Object>, TypeGetter<Object>, Invoca
 				}
 
 				if (StrUtil.isNotBlank(fieldName)) {
-					if (false == this.containsKey(fieldName)) {
+					if (! this.containsKey(fieldName)) {
 						// 驼峰不存在转下划线尝试
 						fieldName = StrUtil.toUnderlineCase(fieldName);
 					}

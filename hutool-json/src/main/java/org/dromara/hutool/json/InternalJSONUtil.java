@@ -79,7 +79,7 @@ public final class InternalJSONUtil {
 				|| object instanceof Number //
 				|| ObjUtil.isBasicType(object) //
 		) {
-			if (false == ObjUtil.isValidIfNumber(object)) {
+			if (! ObjUtil.isValidIfNumber(object)) {
 				throw new JSONException("JSON does not allow non-finite numbers.");
 			}
 			return object;
@@ -252,9 +252,9 @@ public final class InternalJSONUtil {
 	 * @since 4.3.1
 	 */
 	static boolean defaultIgnoreNullValue(final Object obj) {
-		return (false == (obj instanceof CharSequence))//
-				&& (false == (obj instanceof JSONTokener))//
-				&& (false == (obj instanceof Map));
+		return (! (obj instanceof CharSequence))//
+				&& (! (obj instanceof JSONTokener))//
+				&& (! (obj instanceof Map));
 	}
 
 	/**

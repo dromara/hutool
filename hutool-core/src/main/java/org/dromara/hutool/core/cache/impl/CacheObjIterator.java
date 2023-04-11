@@ -54,7 +54,7 @@ public class CacheObjIterator<K, V> implements Iterator<CacheObj<K, V>>, Seriali
 	 */
 	@Override
 	public CacheObj<K, V> next() {
-		if (false == hasNext()) {
+		if (! hasNext()) {
 			throw new NoSuchElementException();
 		}
 		final CacheObj<K, V> cachedObject = nextValue;

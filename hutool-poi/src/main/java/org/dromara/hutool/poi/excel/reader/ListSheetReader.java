@@ -51,7 +51,7 @@ public class ListSheetReader extends AbstractSheetReader<List<List<Object>>> {
 		List<Object> rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = readRow(sheet, i);
-			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
+			if (CollUtil.isNotEmpty(rowList) || ! ignoreEmptyRow) {
 				if (aliasFirstLine && i == startRowIndex) {
 					// 第一行作为标题行，替换别名
 					rowList = Convert.toList(Object.class, aliasHeader(rowList));

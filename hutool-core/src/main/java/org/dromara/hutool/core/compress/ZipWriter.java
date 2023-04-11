@@ -149,7 +149,7 @@ public class ZipWriter implements Closeable {
 			String srcRootDir;
 			try {
 				srcRootDir = file.getCanonicalPath();
-				if ((false == file.isDirectory()) || withSrcDir) {
+				if ((! file.isDirectory()) || withSrcDir) {
 					// 若是文件，则将父目录完整路径都截取掉；若设置包含目录，则将上级目录全部截取掉，保留本目录名
 					srcRootDir = file.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
@@ -259,7 +259,7 @@ public class ZipWriter implements Closeable {
 	 */
 	@SuppressWarnings("resource")
 	private void _add(final File file, final String srcRootDir, final FileFilter filter) throws IORuntimeException {
-		if (null == file || (null != filter && false == filter.accept(file))) {
+		if (null == file || (null != filter && ! filter.accept(file))) {
 			return;
 		}
 

@@ -65,7 +65,7 @@ public class MapUtil extends MapGetUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final Map<?, ?> map) {
-		return null != map && false == map.isEmpty();
+		return !isEmpty(map);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class MapUtil extends MapGetUtil {
 	 */
 	public static <K, V> TreeMap<K, V> newTreeMap(final Map<K, V> map, final Comparator<? super K> comparator) {
 		final TreeMap<K, V> treeMap = new TreeMap<>(comparator);
-		if (false == isEmpty(map)) {
+		if (isNotEmpty(map)) {
 			treeMap.putAll(map);
 		}
 		return treeMap;
@@ -606,7 +606,7 @@ public class MapUtil extends MapGetUtil {
 	 */
 	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator,
 									 final boolean isIgnoreNull, final String... otherParams) {
-		return join(map, separator, keyValueSeparator, (entry) -> false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null, otherParams);
+		return join(map, separator, keyValueSeparator, (entry) -> ! isIgnoreNull || entry.getKey() != null && entry.getValue() != null, otherParams);
 	}
 
 	/**

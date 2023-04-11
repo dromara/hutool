@@ -278,7 +278,7 @@ public class ModifierUtil {
 	 * @since 5.8.8
 	 */
 	public static void removeFinalModify(final Field field) {
-		if (null == field || false == hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+		if (null == field || ! hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
 			return;
 		}
 

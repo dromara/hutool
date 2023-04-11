@@ -119,7 +119,7 @@ public class JSONArrayMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				if(false == jsonArray.config().isIgnoreError()){
+				if(! jsonArray.config().isIgnoreError()){
 					throw new JSONException("JSONArray initial value should be a string or collection or array.");
 				}
 				// 如果用户选择跳过异常，则跳过此值转换

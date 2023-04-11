@@ -46,7 +46,7 @@ public class EscapeStrCellSetter extends CharSequenceCellSetter {
 	 * @return 转义后的字符串
 	 */
 	private static String escape(final String value) {
-		if (value == null || false == value.contains("_x")) {
+		if (value == null || ! value.contains("_x")) {
 			return value;
 		}
 

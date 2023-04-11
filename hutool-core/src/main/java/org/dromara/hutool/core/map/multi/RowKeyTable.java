@@ -198,7 +198,7 @@ public class RowKeyTable<R, C, V> extends AbsTable<R, C, V> {
 			while (true) {
 				if (entryIterator.hasNext()) {
 					final Map.Entry<C, V> entry = entryIterator.next();
-					if (false == seen.containsKey(entry.getKey())) {
+					if (! seen.containsKey(entry.getKey())) {
 						seen.put(entry.getKey(), entry.getValue());
 						return entry.getKey();
 					}

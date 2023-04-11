@@ -435,7 +435,7 @@ public class JschUtil {
 	public static Channel createChannel(final Session session, final ChannelType channelType) {
 		final Channel channel;
 		try {
-			if (false == session.isConnected()) {
+			if (! session.isConnected()) {
 				session.connect();
 			}
 			channel = session.openChannel(channelType.getValue());

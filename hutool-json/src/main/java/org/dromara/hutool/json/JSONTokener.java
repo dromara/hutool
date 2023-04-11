@@ -114,7 +114,7 @@ public class JSONTokener extends ReaderWrapper {
 	 * @return 是否进入结尾
 	 */
 	public boolean end() {
-		return this.eof && false == this.usePrevious;
+		return this.eof && ! this.usePrevious;
 	}
 
 	/**

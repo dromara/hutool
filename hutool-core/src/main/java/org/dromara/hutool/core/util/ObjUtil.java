@@ -72,7 +72,7 @@ public class ObjUtil {
 	 * @see #equals(Object, Object)
 	 */
 	public static boolean notEquals(final Object obj1, final Object obj2) {
-		return false == equals(obj1, obj2);
+		return ! equals(obj1, obj2);
 	}
 
 	/**
@@ -234,6 +234,7 @@ public class ObjUtil {
 	 * @see MapUtil#isEmpty(Map)
 	 * @see IterUtil#isEmpty(Iterable)
 	 * @see IterUtil#isEmpty(Iterator)
+	 * @see ArrayUtil#isEmpty(Object)
 	 */
 	@SuppressWarnings("rawtypes")
 	public static boolean isEmpty(final Object obj) {
@@ -267,7 +268,7 @@ public class ObjUtil {
 	 * @see #isEmpty(Object)
 	 */
 	public static boolean isNotEmpty(final Object obj) {
-		return false == isEmpty(obj);
+		return !isEmpty(obj);
 	}
 
 	/**

@@ -124,7 +124,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final long[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final int[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final short[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final char[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final byte[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final double[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final float[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class PrimitiveArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final boolean[] array) {
-		return false == isEmpty(array);
+		return !isEmpty(array);
 	}
 	// endregion
 

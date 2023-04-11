@@ -62,7 +62,7 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 		if(null != alias){
 			final String name = alias.value();
 			if(StrUtil.isNotBlank(name)){
-				if(false == attributes.containsKey(name)){
+				if(! attributes.containsKey(name)){
 					throw new IllegalArgumentException(StrUtil.format("No method for alias: [{}]", name));
 				}
 				return attributes.get(name);

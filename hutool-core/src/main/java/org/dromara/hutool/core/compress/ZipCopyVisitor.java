@@ -64,7 +64,7 @@ public class ZipCopyVisitor extends SimpleFileVisitor<Path> {
 			} catch (final DirectoryNotEmptyException ignore) {
 				// 目录已经存在，则跳过
 			} catch (final FileAlreadyExistsException e) {
-				if (false == Files.isDirectory(targetDir)) {
+				if (! Files.isDirectory(targetDir)) {
 					throw e;
 				}
 				// 目录非空情况下，跳过创建目录

@@ -463,7 +463,7 @@ public class Scheduler implements Serializable {
 	public Scheduler stop(final boolean clearTasks) {
 		lock.lock();
 		try {
-			if (false == started) {
+			if (! started) {
 				throw new IllegalStateException("Scheduler not started !");
 			}
 

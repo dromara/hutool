@@ -129,7 +129,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 			}
 			if (null == this.next) {
 				return false;
-			} else if (false == includeEnd && this.next.equals(this.end)) {
+			} else if (! includeEnd && this.next.equals(this.end)) {
 				return false;
 			}
 		} finally {
@@ -142,7 +142,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	public T next() {
 		lock.lock();
 		try {
-			if (false == this.hasNext()) {
+			if (! this.hasNext()) {
 				throw new NoSuchElementException("Has no next range!");
 			}
 			return nextUncheck();
@@ -158,7 +158,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 		final T current;
 		if(0 == this.index){
 			current = start;
-			if(false == this.includeStart){
+			if(! this.includeStart){
 				// 获取下一组元素
 				index ++;
 				return nextUncheck();

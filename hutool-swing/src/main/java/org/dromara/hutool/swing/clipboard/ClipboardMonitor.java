@@ -135,7 +135,7 @@ public class ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 
 	@Override
 	public synchronized void run() {
-		if(false == isRunning) {
+		if(! isRunning) {
 			final Clipboard clipboard = this.clipboard;
 			clipboard.setContents(clipboard.getContents(null), this);
 			isRunning = true;

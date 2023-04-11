@@ -106,7 +106,7 @@ public class FileUtil extends PathUtil {
 	 * @return 是否为空，当提供非目录时，返回false
 	 */
 	public static boolean isEmpty(final File file) {
-		if (null == file || false == file.exists()) {
+		if (null == file || ! file.exists()) {
 			return true;
 		}
 
@@ -121,13 +121,14 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 目录是否为空
+	 * 文件是不为空<br>
+	 * 目录：里面有文件或目录 文件：文件大小大于0时
 	 *
 	 * @param file 目录
 	 * @return 是否为空，当提供非目录时，返回false
 	 */
 	public static boolean isNotEmpty(final File file) {
-		return false == isEmpty(file);
+		return !isEmpty(file);
 	}
 
 	/**
@@ -447,7 +448,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static boolean exists(final String directory, final String regexp) {
 		final File file = new File(directory);
-		if (false == file.exists()) {
+		if (! file.exists()) {
 			return false;
 		}
 
@@ -474,7 +475,7 @@ public class FileUtil extends PathUtil {
 	 * @return 最后修改时间
 	 */
 	public static Date lastModifiedTime(final File file) {
-		if (false == exists(file)) {
+		if (! exists(file)) {
 			return null;
 		}
 
@@ -516,7 +517,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.7.21
 	 */
 	public static long size(final File file, final boolean includeDirSize) {
-		if (null == file || false == file.exists() || isSymlink(file)) {
+		if (null == file || ! file.exists() || isSymlink(file)) {
 			return 0;
 		}
 
@@ -544,7 +545,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.7.22
 	 */
 	public static int getTotalLines(final File file) {
-		if (false == isFile(file)) {
+		if (! isFile(file)) {
 			throw new IORuntimeException("Input must be a File");
 		}
 		try (final LineNumberReader lineNumberReader = new LineNumberReader(new java.io.FileReader(file))) {
@@ -568,7 +569,7 @@ public class FileUtil extends PathUtil {
 	 * @return 是否晚于给定时间
 	 */
 	public static boolean newerThan(final File file, final File reference) {
-		if (null == reference || false == reference.exists()) {
+		if (null == reference || ! reference.exists()) {
 			return true;// 文件一定比一个不存在的文件新
 		}
 		return newerThan(file, reference.lastModified());
@@ -582,7 +583,7 @@ public class FileUtil extends PathUtil {
 	 * @return 是否晚于给定时间
 	 */
 	public static boolean newerThan(final File file, final long timeMillis) {
-		if (null == file || false == file.exists()) {
+		if (null == file || ! file.exists()) {
 			return false;// 不存在的文件一定比任何时间旧
 		}
 		return file.lastModified() > timeMillis;
@@ -616,7 +617,7 @@ public class FileUtil extends PathUtil {
 		if (null == file) {
 			return null;
 		}
-		if (false == file.exists()) {
+		if (! file.exists()) {
 			mkParentDirs(file);
 			try {
 				//noinspection ResultOfMethodCallIgnored
@@ -758,7 +759,7 @@ public class FileUtil extends PathUtil {
 		if (dir == null) {
 			return null;
 		}
-		if (false == dir.exists()) {
+		if (! dir.exists()) {
 			mkdirsSafely(dir, 5, 1);
 		}
 		return dir;
@@ -1211,10 +1212,10 @@ public class FileUtil extends PathUtil {
 	public static boolean equals(final File file1, final File file2) throws IORuntimeException {
 		Assert.notNull(file1);
 		Assert.notNull(file2);
-		if (false == file1.exists() || false == file2.exists()) {
+		if (! file1.exists() || ! file2.exists()) {
 			// 两个文件都不存在判断其路径是否相同， 对于一个存在一个不存在的情况，一定不相同
-			return false == file1.exists()//
-					&& false == file2.exists()//
+			return ! file1.exists()//
+					&& ! file2.exists()//
 					&& pathEquals(file1, file2);
 		}
 		return equals(file1.toPath(), file2.toPath());
@@ -1237,7 +1238,7 @@ public class FileUtil extends PathUtil {
 			return false;
 		}
 
-		if (false == file1Exists) {
+		if (! file1Exists) {
 			// 两个文件都不存在，返回true
 			return true;
 		}
@@ -1382,7 +1383,7 @@ public class FileUtil extends PathUtil {
 	 * @return 是否被改动
 	 */
 	public static boolean isModified(final File file, final long lastModifyTime) {
-		if (null == file || false == file.exists()) {
+		if (null == file || ! file.exists()) {
 			return true;
 		}
 		return file.lastModified() != lastModifyTime;
@@ -2653,7 +2654,7 @@ public class FileUtil extends PathUtil {
 				parentCanonicalPath = parentFile.getAbsolutePath();
 				canonicalPath = file.getAbsolutePath();
 			}
-			if (false == canonicalPath.startsWith(parentCanonicalPath)) {
+			if (! canonicalPath.startsWith(parentCanonicalPath)) {
 				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 			}
 		}
@@ -2801,7 +2802,7 @@ public class FileUtil extends PathUtil {
 	private static File buildFile(File outFile, String fileName) {
 		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
 		fileName = fileName.replace(CharUtil.BACKSLASH, CharUtil.SLASH);
-		if (false == isWindows()
+		if (! isWindows()
 				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
 				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理

@@ -649,7 +649,7 @@ public class MailAccount implements Serializable {
 		}
 		if (null == this.auth) {
 			// 如果密码非空白，则使用认证模式
-			this.auth = (false == StrUtil.isBlank(this.pass));
+			this.auth = (! StrUtil.isBlank(this.pass));
 		}
 		if (null == this.port) {
 			// 端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25

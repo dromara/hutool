@@ -253,9 +253,9 @@ public class AnnotationUtil {
 				// 只读取无参方法
 				final String name = t.getName();
 				// 跳过自有的几个方法
-				return (false == "hashCode".equals(name)) //
-						&& (false == "toString".equals(name)) //
-						&& (false == "annotationType".equals(name));
+				return (! "hashCode".equals(name)) //
+						&& (! "toString".equals(name)) //
+						&& (! "annotationType".equals(name));
 			}
 			return false;
 		});
@@ -360,6 +360,9 @@ public class AnnotationUtil {
 	@SuppressWarnings("unchecked")
 	public static <T extends Annotation> T getAnnotationAlias(final AnnotatedElement annotationEle, final Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
+		if (null == annotation) {
+			return null;
+		}
 		return (T) Proxy.newProxyInstance(annotationType.getClassLoader(), new Class[]{annotationType}, new AnnotationProxy<>(annotation));
 	}
 

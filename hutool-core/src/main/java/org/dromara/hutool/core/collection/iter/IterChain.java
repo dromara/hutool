@@ -89,7 +89,7 @@ public class IterChain<T> implements Iterator<T>, Chain<Iterator<T>, IterChain<T
 
 	@Override
 	public T next() {
-		if (false == hasNext()) {
+		if (! hasNext()) {
 			throw new NoSuchElementException();
 		}
 

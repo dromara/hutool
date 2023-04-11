@@ -374,7 +374,7 @@ public class ClassScanner implements Serializable {
 		for (final JarEntry entry : new EnumerationIter<>(jar.entries())) {
 			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
 			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
-				if (name.endsWith(FileNameUtil.EXT_CLASS) && false == entry.isDirectory()) {
+				if (name.endsWith(FileNameUtil.EXT_CLASS) && ! entry.isDirectory()) {
 					final String className = name//
 							.substring(0, name.length() - 6)//
 							.replace(CharUtil.SLASH, CharUtil.DOT);//
@@ -407,7 +407,7 @@ public class ClassScanner implements Serializable {
 		} catch (final Exception e) {
 			classesOfLoadError.add(className);
 		} catch (final Throwable e){
-			if(false == this.ignoreLoadError) {
+			if(! this.ignoreLoadError) {
 				throw new RuntimeException(e);
 			}else{
 				classesOfLoadError.add(className);

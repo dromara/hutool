@@ -265,7 +265,7 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		while (lt.hasNext()) {
 			final StrategyAndWidth strategyAndWidth = lt.next();
 			final int maxWidth = strategyAndWidth.getMaxWidth(lt);
-			if (false == strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
+			if (! strategyAndWidth.strategy.parse(this, calendar, source, pos, maxWidth)) {
 				return false;
 			}
 		}

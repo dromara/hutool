@@ -90,7 +90,7 @@ public class ConsoleColorLog extends ConsoleLog {
 
 	@Override
 	public synchronized void log(final String fqcn, final Level level, final Throwable t, final String format, final Object... arguments) {
-		if (false == isEnabled(level)) {
+		if (! isEnabled(level)) {
 			return;
 		}
 

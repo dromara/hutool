@@ -70,7 +70,7 @@ public class NavigatePageInfo extends PageInfo {
 	public String toString() {
 		final StringBuilder str = new StringBuilder();
 
-		if (false == isFirstPage()) {
+		if (! isFirstPage()) {
 			str.append("<< ");
 		}
 		if (navigatePageNumbers.length > 0) {
@@ -79,7 +79,7 @@ public class NavigatePageInfo extends PageInfo {
 		for (int i = 1; i < navigatePageNumbers.length; i++) {
 			str.append(" ").append(wrapForDisplay(navigatePageNumbers[i]));
 		}
-		if (false == isLastPage()) {
+		if (! isLastPage()) {
 			str.append(" >>");
 		}
 		return str.toString();
