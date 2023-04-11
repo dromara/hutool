@@ -308,16 +308,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 设置 是否数字类型单元格精度根据单元格实际数值自动适配
-	 * @param autoPrecision
-	 * @return this
-	 */
-	public ExcelWriter setNumberAutoPrecision(boolean autoPrecision) {
-		this.styleSet.setNumberAutoPrecision(autoPrecision);
-		return this;
-	}
-
-	/**
 	 * 获取样式集，样式集可以自定义包括：<br>
 	 *
 	 * <pre>
@@ -899,7 +889,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeImg(File imgFile, int imgType, int dx1, int dy1, int dx2,
 								int dy2, int col1, int row1, int col2, int row2) {
 		return writeImg(FileUtil.readBytes(imgFile), imgType, dx1,
-				dy1, dx2, dy2, col1, row1, col2, row2);
+			dy1, dx2, dy2, col1, row1, col2, row2);
 	}
 
 	/**
@@ -907,15 +897,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 添加图片到当前sheet中
 	 *
 	 * @param pictureData 数据bytes
-	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param dx1     起始单元格中的x坐标
-	 * @param dy1     起始单元格中的y坐标
-	 * @param dx2     结束单元格中的x坐标
-	 * @param dy2     结束单元格中的y坐标
-	 * @param col1    指定起始的列，下标从0开始
-	 * @param row1    指定起始的行，下标从0开始
-	 * @param col2    指定结束的列，下标从0开始
-	 * @param row2    指定结束的行，下标从0开始
+	 * @param imgType     图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param dx1         起始单元格中的x坐标
+	 * @param dy1         起始单元格中的y坐标
+	 * @param dx2         结束单元格中的x坐标
+	 * @param dy2         结束单元格中的y坐标
+	 * @param col1        指定起始的列，下标从0开始
+	 * @param row1        指定起始的行，下标从0开始
+	 * @param col2        指定结束的列，下标从0开始
+	 * @param row2        指定结束的行，下标从0开始
 	 * @return this
 	 * @author vhukze
 	 * @since 5.8.0
@@ -1022,7 +1012,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			} else {
 				rowMap = (Map) rowBean;
 			}
-		}else if(rowBean instanceof Iterable){
+		} else if (rowBean instanceof Iterable) {
 			// issue#2398@Github
 			// MapWrapper由于实现了Iterable接口，应该优先按照Map处理
 			return writeRow((Iterable<?>) rowBean);
@@ -1077,7 +1067,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			for (Table.Cell<?, ?, ?> cell : aliasTable) {
 				// 首先查找原名对应的列号
 				location = this.headLocationCache.get(StrUtil.toString(cell.getRowKey()));
-				if(null == location){
+				if (null == location) {
 					// 未找到，则查找别名对应的列号
 					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
 				}
@@ -1355,9 +1345,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private Table<?, ?, ?> aliasTable(Map<?, ?> rowMap) {
 		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			rowMap.forEach((key, value)-> filteredTable.put(key, key, value));
-		}else{
-			rowMap.forEach((key, value)->{
+			rowMap.forEach((key, value) -> filteredTable.put(key, key, value));
+		} else {
+			rowMap.forEach((key, value) -> {
 				final String aliasName = this.headerAlias.get(StrUtil.toString(key));
 				if (null != aliasName) {
 					// 别名键值对加入
