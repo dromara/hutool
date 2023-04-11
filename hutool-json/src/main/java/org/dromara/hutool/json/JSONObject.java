@@ -149,7 +149,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public JSONConfig getConfig() {
+	public JSONConfig config() {
 		return this.config;
 	}
 
@@ -215,7 +215,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 */
 	@Override
 	public Object put(final String key, final Object value) throws JSONException {
-		return put(key, value, null, getConfig().isCheckDuplicate());
+		return put(key, value, null, config().isCheckDuplicate());
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	 * @since 5.8.0
 	 */
 	public JSONObject set(final String key, final Object value, final Predicate<MutableEntry<String, Object>> predicate) throws JSONException {
-		put(key, value, predicate, getConfig().isCheckDuplicate());
+		put(key, value, predicate, config().isCheckDuplicate());
 		return this;
 	}
 

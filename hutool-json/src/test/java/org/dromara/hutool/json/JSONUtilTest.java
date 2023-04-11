@@ -260,7 +260,7 @@ public class JSONUtilTest {
 		Assertions.assertEquals("{\"test2\":12.0}", jsonObject.toString());
 
 		// 去除多余的0
-		jsonObject.getConfig().setStripTrailingZeros(true);
+		jsonObject.config().setStripTrailingZeros(true);
 		Assertions.assertEquals("{\"test2\":12}", jsonObject.toString());
 	}
 

@@ -117,11 +117,11 @@ public class JSONObjectMapper {
 			// 可能为JSON字符串
 			mapFromStr((CharSequence) source, jsonObject);
 		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source, jsonObject.getConfig()), jsonObject);
+			mapFromTokener(new JSONTokener((Reader) source, jsonObject.config()), jsonObject);
 		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source, jsonObject.getConfig()), jsonObject);
+			mapFromTokener(new JSONTokener((InputStream) source, jsonObject.config()), jsonObject);
 		} else if (source instanceof byte[]) {
-			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonObject.getConfig()), jsonObject);
+			mapFromTokener(new JSONTokener(IoUtil.toStream((byte[]) source), jsonObject.config()), jsonObject);
 		} else if (source instanceof ResourceBundle) {
 			// ResourceBundle
 			mapFromResourceBundle((ResourceBundle) source, jsonObject);
@@ -129,7 +129,7 @@ public class JSONObjectMapper {
 			// 普通Bean
 			mapFromBean(source, jsonObject);
 		} else {
-			if(false == jsonObject.getConfig().isIgnoreError()){
+			if(false == jsonObject.config().isIgnoreError()){
 				// 不支持对象类型转换为JSONObject
 				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 			}
@@ -167,7 +167,7 @@ public class JSONObjectMapper {
 			JSONXMLUtil.toJSONObject(jsonObject, jsonStr, false);
 			return;
 		}
-		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.getConfig()), jsonObject);
+		mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonObject.config()), jsonObject);
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class JSONObjectMapper {
 	 * @param jsonObject {@link JSONObject}
 	 */
 	private void mapFromBean(final Object bean, final JSONObject jsonObject) {
-		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.getConfig());
+		final CopyOptions copyOptions = InternalJSONUtil.toCopyOptions(jsonObject.config());
 		if (null != this.predicate) {
 			copyOptions.setFieldEditor((entry -> this.predicate.test(entry) ? entry : null));
 		}

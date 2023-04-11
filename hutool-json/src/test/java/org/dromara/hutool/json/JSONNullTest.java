@@ -16,7 +16,7 @@ public class JSONNullTest {
 		Assertions.assertNull(bodyjson.get("device_status_date"));
 		Assertions.assertNull(bodyjson.get("imsi"));
 
-		bodyjson.getConfig().setIgnoreNullValue(true);
+		bodyjson.config().setIgnoreNullValue(true);
 		Assertions.assertEquals("{\"act_date\":\"2021-07-23T06:23:26.000+00:00\"}", bodyjson.toString());
 	}
 

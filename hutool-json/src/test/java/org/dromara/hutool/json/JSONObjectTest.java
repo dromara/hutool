@@ -49,7 +49,7 @@ public class JSONObjectTest {
 		//noinspection MismatchedQueryAndUpdateOfCollection
 		final JSONObject jsonObject = new JSONObject(str);
 		Assertions.assertEquals("{\"code\":500,\"data\":null}", jsonObject.toString());
-		jsonObject.getConfig().setIgnoreNullValue(true);
+		jsonObject.config().setIgnoreNullValue(true);
 		Assertions.assertEquals("{\"code\":500}", jsonObject.toString());
 	}
 

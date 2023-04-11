@@ -37,7 +37,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @return {@link JSONConfig}
 	 * @since 5.3.0
 	 */
-	JSONConfig getConfig();
+	JSONConfig config();
 
 	/**
 	 * JSON大小，对于JSONObject，是键值对的多少，JSONArray则是元素的个数
@@ -123,7 +123,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> T getByPath(final String expression, final Class<T> resultType){
-		return (T) getConfig().getConverter().convert(resultType, getByPath(expression));
+		return (T) config().getConverter().convert(resultType, getByPath(expression));
 	}
 
 	/**
@@ -191,6 +191,6 @@ public interface JSON extends Converter, Cloneable, Serializable {
 
 	@Override
 	default Object convert(final Type targetType, final Object value) throws ConvertException {
-		return JSONConverter.of(getConfig()).convert(targetType, value);
+		return JSONConverter.of(config()).convert(targetType, value);
 	}
 }

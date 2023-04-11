@@ -42,7 +42,7 @@ public class JSONSupport implements JSONStringer, JSONDeserializer<Object> {
 	public Object deserialize(final JSON json) {
 		BeanCopier.of(json,
 				this, this.getClass(),
-				InternalJSONUtil.toCopyOptions(json.getConfig())).copy();
+				InternalJSONUtil.toCopyOptions(json.config())).copy();
 		return this;
 	}
 

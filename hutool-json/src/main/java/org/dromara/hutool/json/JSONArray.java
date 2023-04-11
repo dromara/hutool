@@ -165,7 +165,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	// endregion
 
 	@Override
-	public JSONConfig getConfig() {
+	public JSONConfig config() {
 		return this.config;
 	}
 

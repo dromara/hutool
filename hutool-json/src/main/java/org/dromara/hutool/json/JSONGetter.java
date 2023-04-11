@@ -32,7 +32,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 	 * @return {@link JSONConfig}
 	 * @since 5.3.0
 	 */
-	JSONConfig getConfig();
+	JSONConfig config();
 
 	/**
 	 * key对应值是否为{@code null}或无此key
@@ -83,7 +83,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		if (object instanceof JSON) {
 			return (JSONArray) object;
 		}
-		return new JSONArray(object, getConfig());
+		return new JSONArray(object, config());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 		if (object instanceof JSON) {
 			return (JSONObject) object;
 		}
-		return new JSONObject(object, getConfig());
+		return new JSONObject(object, config());
 	}
 
 	/**
@@ -142,6 +142,6 @@ public interface JSONGetter<K> extends TypeGetter<K> {
 			return defaultValue;
 		}
 
-		return get(key, type, getConfig().getConverter(), defaultValue);
+		return get(key, type, config().getConverter(), defaultValue);
 	}
 }

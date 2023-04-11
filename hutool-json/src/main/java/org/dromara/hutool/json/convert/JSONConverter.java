@@ -212,11 +212,11 @@ public class JSONConverter implements Converter {
 		if (BeanUtil.isBean(rawType)) {
 			return BeanCopier.of(json,
 					ConstructorUtil.newInstanceIfPossible(rawType), targetType,
-					InternalJSONUtil.toCopyOptions(json.getConfig())).copy();
+					InternalJSONUtil.toCopyOptions(json.config())).copy();
 		}
 
 		// 跳过异常时返回null
-		if (json.getConfig().isIgnoreError()) {
+		if (json.config().isIgnoreError()) {
 			return null;
 		}
 

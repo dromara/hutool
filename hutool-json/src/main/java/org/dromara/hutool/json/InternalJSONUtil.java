@@ -230,7 +230,7 @@ public final class InternalJSONUtil {
 			final String segment = path[i];
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
-				nextTarget = new JSONObject(target.getConfig());
+				nextTarget = new JSONObject(target.config());
 				target.set(segment, nextTarget, predicate);
 			}
 			target = nextTarget;

@@ -96,13 +96,13 @@ public class JSONArrayMapper {
 			// JSON字符串
 			mapFromStr((CharSequence) source, jsonArray);
 		} else if (source instanceof Reader) {
-			mapFromTokener(new JSONTokener((Reader) source, jsonArray.getConfig()), jsonArray);
+			mapFromTokener(new JSONTokener((Reader) source, jsonArray.config()), jsonArray);
 		} else if (source instanceof InputStream) {
-			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray);
+			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.config()), jsonArray);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
 			if ('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
-				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray);
+				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.config()), jsonArray);
 			} else {
 				// https://github.com/dromara/hutool/issues/2369
 				// 非标准的二进制流，则按照普通数组对待
@@ -119,7 +119,7 @@ public class JSONArrayMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				if(false == jsonArray.getConfig().isIgnoreError()){
+				if(false == jsonArray.config().isIgnoreError()){
 					throw new JSONException("JSONArray initial value should be a string or collection or array.");
 				}
 				// 如果用户选择跳过异常，则跳过此值转换
@@ -145,7 +145,7 @@ public class JSONArrayMapper {
 	 */
 	private void mapFromStr(final CharSequence source, final JSONArray jsonArray) {
 		if (null != source) {
-			mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonArray.getConfig()), jsonArray);
+			mapFromTokener(new JSONTokener(StrUtil.trim(source), jsonArray.config()), jsonArray);
 		}
 	}
 
