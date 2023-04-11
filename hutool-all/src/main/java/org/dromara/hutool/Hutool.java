@@ -61,7 +61,7 @@ public class Hutool {
 	 */
 	public static Set<Class<?>> getAllUtils() {
 		return ClassUtil.scanPackage("org.dromara.hutool",
-				(clazz) -> (! clazz.isInterface()) && StrUtil.endWith(clazz.getSimpleName(), "Util"));
+				(clazz) -> (!clazz.isInterface()) && StrUtil.endWith(clazz.getSimpleName(), "Util"));
 	}
 
 	/**

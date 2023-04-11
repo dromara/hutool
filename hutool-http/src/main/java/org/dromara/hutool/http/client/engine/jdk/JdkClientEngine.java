@@ -201,10 +201,10 @@ public class JdkClientEngine implements ClientEngine {
 	 */
 	private static UrlBuilder getLocationUrl(final UrlBuilder parentUrl, String location) {
 		final UrlBuilder redirectUrl;
-		if (! HttpUtil.isHttp(location) && ! HttpUtil.isHttps(location)) {
+		if (!HttpUtil.isHttp(location) && !HttpUtil.isHttps(location)) {
 			// issue#I5TPSY
 			// location可能为相对路径
-			if (! location.startsWith("/")) {
+			if (!location.startsWith("/")) {
 				location = StrUtil.addSuffixIfNot(parentUrl.getPathStr(), "/") + location;
 			}
 			redirectUrl = UrlBuilder.of(parentUrl.getScheme(), parentUrl.getHost(), parentUrl.getPort(),

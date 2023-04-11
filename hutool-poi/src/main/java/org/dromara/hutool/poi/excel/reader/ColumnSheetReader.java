@@ -50,7 +50,7 @@ public class ColumnSheetReader extends AbstractSheetReader<List<Object>> {
 		Object value;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			value = CellUtil.getCellValue(CellUtil.getCell(sheet.getRow(i), columnIndex), cellEditor);
-			if(null != value || ! ignoreEmptyRow){
+			if(null != value || !ignoreEmptyRow){
 				resultList.add(value);
 			}
 		}

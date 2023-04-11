@@ -464,9 +464,9 @@ public class ImgUtil {
 	 * @param cols       目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
 	public static void sliceByRowsAndCols(final Image srcImage, final File destDir, final String formatName, int rows, int cols) {
-		if (! destDir.exists()) {
+		if (!destDir.exists()) {
 			FileUtil.mkdir(destDir);
-		} else if (! destDir.isDirectory()) {
+		} else if (!destDir.isDirectory()) {
 			throw new IllegalArgumentException("Destination must be a Directory !");
 		}
 

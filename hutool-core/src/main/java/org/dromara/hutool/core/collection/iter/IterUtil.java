@@ -66,7 +66,7 @@ public class IterUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Iterator<?> iterator) {
-		return null == iterator || ! iterator.hasNext();
+		return null == iterator || !iterator.hasNext();
 	}
 
 	/**
@@ -737,12 +737,12 @@ public class IterUtil {
 		while (iter1.hasNext() && iter2.hasNext()) {
 			obj1 = iter1.next();
 			obj2 = iter2.next();
-			if (! Objects.equals(obj1, obj2)) {
+			if (!Objects.equals(obj1, obj2)) {
 				return false;
 			}
 		}
 		// 当两个Iterable长度不一致时返回false
-		return ! (iter1.hasNext() || iter2.hasNext());
+		return !(iter1.hasNext() || iter2.hasNext());
 	}
 
 	/**

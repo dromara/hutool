@@ -132,7 +132,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 	public CsvRow nextRow() throws IORuntimeException {
 		List<String> currentFields;
 		int fieldCount;
-		while (! finished) {
+		while (!finished) {
 			currentFields = readLine();
 			fieldCount = currentFields.size();
 			if (fieldCount < 1) {
@@ -196,7 +196,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 				// 自定义别名
 				field = ObjUtil.defaultIfNull(this.config.headerAlias.get(field), field);
 			}
-			if (StrUtil.isNotEmpty(field) && ! localHeaderMap.containsKey(field)) {
+			if (StrUtil.isNotEmpty(field) && !localHeaderMap.containsKey(field)) {
 				localHeaderMap.put(field, i);
 			}
 		}
@@ -232,7 +232,7 @@ public final class CsvParser extends ComputeIter<CsvRow> implements Closeable, S
 		boolean inComment = false;
 
 		while (true) {
-			if (! buf.hasRemaining()) {
+			if (!buf.hasRemaining()) {
 				// 此Buffer读取结束，开始读取下一段
 				if (copyLen > 0) {
 					buf.appendTo(currentField, copyLen);

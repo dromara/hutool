@@ -351,7 +351,7 @@ public class ClassLoaderUtil {
 		int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
 		Class<?> clazz = null;
 		while (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
-			if (! Character.isUpperCase(name.charAt(lastDotIndex + 1))) {
+			if (!Character.isUpperCase(name.charAt(lastDotIndex + 1))) {
 				// 类名必须大写，非大写的类名跳过
 				break;
 			}

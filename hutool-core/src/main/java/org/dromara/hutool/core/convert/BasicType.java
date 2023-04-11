@@ -59,7 +59,7 @@ public enum BasicType {
 	 * @return 包装类
 	 */
 	public static Class<?> wrap(final Class<?> clazz, boolean errorReturnNull) {
-		if (null == clazz || ! clazz.isPrimitive()) {
+		if (null == clazz || !clazz.isPrimitive()) {
 			return clazz;
 		}
 		final Class<?> result = WRAPPER_PRIMITIVE_MAP.getInverse().get(clazz);

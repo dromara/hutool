@@ -606,7 +606,7 @@ public class MapUtil extends MapGetUtil {
 	 */
 	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator,
 									 final boolean isIgnoreNull, final String... otherParams) {
-		return join(map, separator, keyValueSeparator, (entry) -> ! isIgnoreNull || entry.getKey() != null && entry.getValue() != null, otherParams);
+		return join(map, separator, keyValueSeparator, (entry) -> !isIgnoreNull || entry.getKey() != null && entry.getValue() != null, otherParams);
 	}
 
 	/**

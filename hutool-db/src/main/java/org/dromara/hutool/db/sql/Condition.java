@@ -359,7 +359,7 @@ public class Condition implements Cloneable, Serializable {
 			// 类似：" (?,?,?)" 或者 " (1,2,3,4)"
 			buildValuePartForIN(conditionStrBuilder, paramValues);
 		} else {
-			if (isPlaceHolder() && ! isOperatorIs()) {
+			if (isPlaceHolder() && !isOperatorIs()) {
 				// 使用条件表达式占位符，条件表达式并不适用于 IS NULL
 				conditionStrBuilder.append(" ?");
 				if (null != paramValues) {
@@ -473,7 +473,7 @@ public class Condition implements Cloneable, Serializable {
 		}
 
 		// 其他类型值，跳过
-		if (! (this.value instanceof String)) {
+		if (!(this.value instanceof String)) {
 			return;
 		}
 
@@ -575,7 +575,7 @@ public class Condition implements Cloneable, Serializable {
 	 * @return 转换后的值
 	 */
 	private static Object tryToNumber(final String value) {
-		if (! NumberUtil.isNumber(value)) {
+		if (!NumberUtil.isNumber(value)) {
 			return value;
 		}
 		try {

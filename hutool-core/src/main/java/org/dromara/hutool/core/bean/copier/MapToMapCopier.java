@@ -69,7 +69,7 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 
 			final Object targetValue = target.get(sKey);
 			// 非覆盖模式下，如果目标值存在，则跳过
-			if (! copyOptions.override && null != targetValue) {
+			if (!copyOptions.override && null != targetValue) {
 				return;
 			}
 

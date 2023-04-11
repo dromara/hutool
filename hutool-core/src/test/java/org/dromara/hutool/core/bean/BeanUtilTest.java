@@ -721,7 +721,7 @@ public class BeanUtilTest {
 				new LinkedHashMap<>(),
 				false,
 				entry -> {
-					if(! Arrays.asList("id", "name", "code", "sortOrder").contains(entry.getKey())){
+					if(!Arrays.asList("id", "name", "code", "sortOrder").contains(entry.getKey())){
 						entry.setKey(null);
 					}
 					return entry;

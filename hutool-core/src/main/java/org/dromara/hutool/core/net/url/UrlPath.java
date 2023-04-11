@@ -184,7 +184,7 @@ public class UrlPath {
 			if (StrUtil.isEmpty(builder)) {
 				// 空白追加是保证以/开头
 				builder.append(CharUtil.SLASH);
-			} else if (! StrUtil.endWith(builder, CharUtil.SLASH)) {
+			} else if (!StrUtil.endWith(builder, CharUtil.SLASH)) {
 				// 尾部没有/则追加，否则不追加
 				builder.append(CharUtil.SLASH);
 			}

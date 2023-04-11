@@ -107,7 +107,7 @@ public class NumberChineseFormatter {
 		yuan = yuan / 10;
 
 		// 元
-		if (! isMoneyMode || 0 != yuan) {
+		if (!isMoneyMode || 0 != yuan) {
 			// 金额模式下，无需“零元”
 			chineseStr.append(longToChinese(yuan, isUseTraditional));
 			if (isMoneyMode) {
@@ -124,14 +124,14 @@ public class NumberChineseFormatter {
 		}
 
 		// 小数部分
-		if (! isMoneyMode) {
+		if (!isMoneyMode) {
 			chineseStr.append("点");
 		}
 
 		// 角
 		if (0 == yuan && 0 == jiao) {
 			// 元和角都为0时，只有非金额模式下补“零”
-			if (! isMoneyMode) {
+			if (!isMoneyMode) {
 				chineseStr.append("零");
 			}
 		} else {
@@ -356,7 +356,7 @@ public class NumberChineseFormatter {
 		for (int i = 0; temp > 0; i++) {
 			final int digit = temp % 10;
 			if (digit == 0) { // 取到的数字为 0
-				if (! lastIsZero) {
+				if (!lastIsZero) {
 					// 前一个数字不是 0，则在当前汉字串前加“零”字;
 					chineseStr.insert(0, "零");
 				}

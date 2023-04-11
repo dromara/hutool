@@ -46,7 +46,7 @@ public class DefaultConnectionHolder implements ConnectionHolder {
 	@Override
 	public void closeConnection(final Connection conn) {
 		try {
-			if (conn != null && ! conn.getAutoCommit()) {
+			if (conn != null && !conn.getAutoCommit()) {
 				// 事务中的Session忽略关闭事件
 				return;
 			}

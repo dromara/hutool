@@ -42,7 +42,7 @@ public class Combination implements Serializable {
 	}
 
 	/**
-	 * 计算组合数，即C(n, m) = n!/((n-m)! * m!)
+	 * 计算组合数，即C(n, m) = n!/((n-m)!* m!)
 	 *
 	 * @param n 总数
 	 * @param m 选择的个数

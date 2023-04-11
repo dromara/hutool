@@ -214,7 +214,7 @@ public class StyleSet implements Serializable {
 	 * @since 4.1.0
 	 */
 	public StyleSet setFont(final Font font, final boolean ignoreHead) {
-		if (! ignoreHead) {
+		if (!ignoreHead) {
 			this.headCellStyle.setFont(font);
 		}
 		this.cellStyle.setFont(font);

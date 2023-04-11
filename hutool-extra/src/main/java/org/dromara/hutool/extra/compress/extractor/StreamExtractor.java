@@ -113,10 +113,10 @@ public class StreamExtractor implements Extractor {
 		ArchiveEntry entry;
 		try {
 			while (null != (entry = in.getNextEntry())) {
-				if (null != predicate && ! predicate.test(entry)) {
+				if (null != predicate && !predicate.test(entry)) {
 					continue;
 				}
-				if (entry.isDirectory() || ! in.canReadEntryData(entry)) {
+				if (entry.isDirectory() || !in.canReadEntryData(entry)) {
 					// 目录或无法读取的文件直接跳过
 					continue;
 				}
@@ -155,15 +155,15 @@ public class StreamExtractor implements Extractor {
 	 * @throws IOException IO异常
 	 */
 	private void extractInternal(final File targetDir, final Predicate<ArchiveEntry> predicate) throws IOException {
-		Assert.isTrue(null != targetDir && ((! targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
+		Assert.isTrue(null != targetDir && ((!targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final ArchiveInputStream in = this.in;
 		ArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = in.getNextEntry())) {
-			if (null != predicate && ! predicate.test(entry)) {
+			if (null != predicate && !predicate.test(entry)) {
 				continue;
 			}
-			if (! in.canReadEntryData(entry)) {
+			if (!in.canReadEntryData(entry)) {
 				// 无法读取的文件直接跳过
 				continue;
 			}

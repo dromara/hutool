@@ -762,10 +762,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			if (other.charset != null) {
 				return false;
 			}
-		} else if (! charset.equals(other.charset)) {
+		} else if (!charset.equals(other.charset)) {
 			return false;
 		}
-		if (! groupedMap.equals(other.groupedMap)) {
+		if (!groupedMap.equals(other.groupedMap)) {
 			return false;
 		}
 		if (isUseVariable != other.isUseVariable) {

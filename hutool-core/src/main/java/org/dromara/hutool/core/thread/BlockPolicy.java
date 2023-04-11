@@ -54,7 +54,7 @@ public class BlockPolicy implements RejectedExecutionHandler {
 	@Override
 	public void rejectedExecution(final Runnable r, final ThreadPoolExecutor e) {
 		// 线程池未关闭时，阻塞等待
-		if (! e.isShutdown()) {
+		if (!e.isShutdown()) {
 			try {
 				e.getQueue().put(r);
 			} catch (InterruptedException ex) {

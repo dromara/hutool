@@ -390,7 +390,7 @@ public class StrJoiner implements Appendable, Serializable {
 		}
 
 		String result = this.appendable.toString();
-		if (! wrapElement && StrUtil.isNotEmpty(this.suffix)) {
+		if (!wrapElement && StrUtil.isNotEmpty(this.suffix)) {
 			result += this.suffix;
 		}
 		return result;
@@ -427,7 +427,7 @@ public class StrJoiner implements Appendable, Serializable {
 			if (null == this.appendable) {
 				this.appendable = new StringBuilder();
 			}
-			if (! wrapElement && StrUtil.isNotEmpty(this.prefix)) {
+			if (!wrapElement && StrUtil.isNotEmpty(this.prefix)) {
 				this.appendable.append(this.prefix);
 			}
 			this.hasContent = true;
@@ -448,7 +448,7 @@ public class StrJoiner implements Appendable, Serializable {
 			}
 		} else {
 			final String initStr = appendable.toString();
-			if (StrUtil.isNotEmpty(initStr) && ! StrUtil.endWith(initStr, delimiter)) {
+			if (StrUtil.isNotEmpty(initStr) && !StrUtil.endWith(initStr, delimiter)) {
 				this.hasContent = true;
 			}
 		}

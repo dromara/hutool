@@ -416,7 +416,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		final char textDelimiter = config.textDelimiter;
 		final char fieldSeparator = config.fieldSeparator;
 
-		if (! newline) {
+		if (!newline) {
 			writer.write(fieldSeparator);
 		} else {
 			newline = false;

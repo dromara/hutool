@@ -456,7 +456,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			}
 			this.rawList.add(index, InternalJSONUtil.wrap(element, this.config));
 		} else {
-			if (! config.isIgnoreNullValue()) {
+			if (!config.isIgnoreNullValue()) {
 				while (index != this.size()) {
 					// 非末尾，则填充null
 					this.add(null);

@@ -44,7 +44,7 @@ public class EnumConverter extends AbstractConverter {
 	@Override
 	protected Object convertInternal(final Class<?> targetClass, final Object value) {
 		Enum enumValue = tryConvertEnum(value, targetClass);
-		if (null == enumValue && ! value instanceof String) {
+		if (null == enumValue && !(value instanceof String)) {
 			// 最后尝试先将value转String，再valueOf转换
 			enumValue = Enum.valueOf((Class) targetClass, convertToStr(value));
 		}
@@ -134,7 +134,7 @@ public class EnumConverter extends AbstractConverter {
 				.filter(ModifierUtil::isStatic)
 				.filter(m -> m.getReturnType() == enumClass)
 				.filter(m -> m.getParameterCount() == 1)
-				.filter(m -> ! "valueOf".equals(m.getName()))
+				.filter(m -> !"valueOf".equals(m.getName()))
 				.collect(Collectors.toMap(m -> m.getParameterTypes()[0], m -> m, (k1, k2) -> k1)));
 	}
 }

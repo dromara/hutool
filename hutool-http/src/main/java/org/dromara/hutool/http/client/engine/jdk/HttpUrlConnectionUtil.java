@@ -69,7 +69,7 @@ public class HttpUrlConnectionUtil {
 		// 首先去除修饰符，否则设置值失败
 		ModifierUtil.removeFinalModify(methodsField);
 		final Object staticFieldValue = FieldUtil.getStaticFieldValue(methodsField);
-		if (! ArrayUtil.equals(METHODS, staticFieldValue)) {
+		if (!ArrayUtil.equals(METHODS, staticFieldValue)) {
 			// 去除final修饰
 			FieldUtil.setStaticFieldValue(methodsField, METHODS);
 		}
@@ -86,7 +86,7 @@ public class HttpUrlConnectionUtil {
 	 */
 	public static HttpURLConnection openHttp(final URL url, final Proxy proxy) throws IORuntimeException {
 		final URLConnection conn = openConnection(url, proxy);
-		if (! conn instanceof HttpURLConnection) {
+		if (!(conn instanceof HttpURLConnection)) {
 			// 防止其它协议造成的转换异常
 			throw new HttpException("'{}' of URL [{}] is not a http connection, make sure URL is format for http.",
 					conn.getClass().getName(), url);

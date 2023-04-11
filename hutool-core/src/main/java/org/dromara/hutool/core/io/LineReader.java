@@ -79,7 +79,7 @@ public class LineReader extends ReaderWrapper implements Iterable<String> {
 			}
 			if (CharUtil.BACKSLASH == c) {
 				// 转义符转义，行尾需要使用'\'时，使用转义符转义，即`\\`
-				if (! precedingBackslash) {
+				if (!precedingBackslash) {
 					// 转义符，添加标识，但是不加入字符
 					precedingBackslash = true;
 					continue;

@@ -70,7 +70,7 @@ public class SystemTimer {
 		bossThreadPool = ThreadUtil.newSingleExecutor();
 		bossThreadPool.submit(() -> {
 			while (true) {
-				if(! advanceClock()){
+				if(!advanceClock()){
 					break;
 				}
 			}
@@ -92,7 +92,7 @@ public class SystemTimer {
 	 */
 	public void addTask(final TimerTask timerTask) {
 		//添加失败任务直接执行
-		if (! timeWheel.addTask(timerTask)) {
+		if (!timeWheel.addTask(timerTask)) {
 			ThreadUtil.execAsync(timerTask.getTask());
 		}
 	}

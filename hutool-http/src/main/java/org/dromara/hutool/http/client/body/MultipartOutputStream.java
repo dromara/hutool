@@ -130,7 +130,7 @@ public class MultipartOutputStream extends OutputStream {
 	 * @throws IORuntimeException IO异常
 	 */
 	public void finish() throws IORuntimeException {
-		if (! isFinish) {
+		if (!isFinish) {
 			write(StrUtil.format("--{}--\r\n", boundary));
 			this.isFinish = true;
 		}

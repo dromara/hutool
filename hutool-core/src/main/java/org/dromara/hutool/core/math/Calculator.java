@@ -51,9 +51,9 @@ public class Calculator {
 		final Stack<String> resultStack = new Stack<>();
 		Collections.reverse(postfixStack);// 将后缀式栈反转
 		String firstValue, secondValue, currentOp;// 参与计算的第一个值，第二个值和算术运算符
-		while (! postfixStack.isEmpty()) {
+		while (!postfixStack.isEmpty()) {
 			currentOp = postfixStack.pop();
-			if (! isOperator(currentOp.charAt(0))) {// 如果不是运算符则存入操作数栈中
+			if (!isOperator(currentOp.charAt(0))) {// 如果不是运算符则存入操作数栈中
 				currentOp = currentOp.replace("~", "-");
 				resultStack.push(currentOp);
 			} else {// 如果是运算符则从操作数栈中取两个值和该数值一起参与运算

@@ -168,7 +168,7 @@ public class StreamArchiver implements Archiver {
 	 * @param predicate 文件过滤器，指定哪些文件或目录可以加入，当{@link Predicate#test(Object)}为{@code true}加入。
 	 */
 	private void addInternal(final File file, final String path, final Predicate<File> predicate) throws IOException {
-		if (null != predicate && ! predicate.test(file)) {
+		if (null != predicate && !predicate.test(file)) {
 			return;
 		}
 		final ArchiveOutputStream out = this.out;

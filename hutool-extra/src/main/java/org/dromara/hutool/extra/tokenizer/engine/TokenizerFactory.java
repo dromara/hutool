@@ -60,6 +60,6 @@ public class TokenizerFactory {
 			return engine;
 		}
 
-		throw new TokenizerException("No tokenizer found ! Please add some tokenizer jar to your project !");
+		throw new TokenizerException("No tokenizer found !Please add some tokenizer jar to your project !");
 	}
 }

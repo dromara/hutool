@@ -44,7 +44,7 @@ public abstract class AtomicLoader<T> implements Loader<T>, Serializable {
 
 		if (result == null) {
 			result = init();
-			if (! reference.compareAndSet(null, result)) {
+			if (!reference.compareAndSet(null, result)) {
 				// 其它线程已经创建好此对象
 				result = reference.get();
 			}

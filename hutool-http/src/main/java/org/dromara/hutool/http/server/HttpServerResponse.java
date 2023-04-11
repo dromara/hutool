@@ -202,7 +202,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 */
 	public HttpServerResponse setContentType(String contentType) {
 		if (null != contentType && null != this.charset) {
-			if (! contentType.contains(";charset=")) {
+			if (!contentType.contains(";charset=")) {
 				contentType = ContentType.build(contentType, this.charset);
 			}
 		}
@@ -249,7 +249,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return 响应数据流
 	 */
 	public OutputStream getOut() {
-		if (! this.isSendCode) {
+		if (!this.isSendCode) {
 			sendOk();
 		}
 		return this.httpExchange.getResponseBody();
@@ -355,7 +355,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(final InputStream in, final int length) {
-		if (! isSendCode) {
+		if (!isSendCode) {
 			sendOk(Math.max(0, length));
 		}
 		OutputStream out = null;
@@ -433,7 +433,7 @@ public class HttpServerResponse extends HttpServerBase {
 	public HttpServerResponse write(final InputStream in, final int length, final String contentType, final String fileName) {
 		final Charset charset = ObjUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 
-		if (! contentType.startsWith("text/")) {
+		if (!contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
 			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLEncoder.encodeAll(fileName, charset)));
 		}

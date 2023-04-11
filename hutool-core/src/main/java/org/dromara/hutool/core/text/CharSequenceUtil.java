@@ -621,7 +621,7 @@ public class CharSequenceUtil extends StrChecker {
 		if (isNotEmpty(str)) {
 			final int len = str.length();
 			for (int i = 0; i < len; i++) {
-				if (! ArrayUtil.contains(testChars, str.charAt(i))) {
+				if (!ArrayUtil.contains(testChars, str.charAt(i))) {
 					return false;
 				}
 			}
@@ -736,7 +736,7 @@ public class CharSequenceUtil extends StrChecker {
 			return false;
 		}
 		for (final CharSequence testChar : testChars) {
-			if (! contains(str, testChar)) {
+			if (!contains(str, testChar)) {
 				return false;
 			}
 		}
@@ -1027,7 +1027,7 @@ public class CharSequenceUtil extends StrChecker {
 		if (null == str || ArrayUtil.isEmpty(chars)) {
 			return str(str);
 		}
-		return filter(str, (c) -> ! ArrayUtil.contains(chars, c));
+		return filter(str, (c) -> !ArrayUtil.contains(chars, c));
 	}
 
 	/**
@@ -1175,7 +1175,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 清理后的字符串
 	 */
 	public static String cleanBlank(final CharSequence str) {
-		return filter(str, c -> ! CharUtil.isBlankChar(c));
+		return filter(str, c -> !CharUtil.isBlankChar(c));
 	}
 	// endregion
 
@@ -1777,7 +1777,7 @@ public class CharSequenceUtil extends StrChecker {
 	public static String[] subBetweenAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
 		if (hasEmpty(str, prefix, suffix) ||
 				// 不包含起始字符串，则肯定没有子串
-				! contains(str, prefix)) {
+				!contains(str, prefix)) {
 			return new String[0];
 		}
 
@@ -2207,13 +2207,13 @@ public class CharSequenceUtil extends StrChecker {
 			len += suffix.length();
 		}
 		final StringBuilder sb = new StringBuilder(len);
-		if (isNotEmpty(prefix) && ! startWith(str, prefix)) {
+		if (isNotEmpty(prefix) && !startWith(str, prefix)) {
 			sb.append(prefix);
 		}
 		if (isNotEmpty(str)) {
 			sb.append(str);
 		}
-		if (isNotEmpty(suffix) && ! endWith(str, suffix)) {
+		if (isNotEmpty(suffix) && !endWith(str, suffix)) {
 			sb.append(suffix);
 		}
 		return sb.toString();

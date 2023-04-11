@@ -777,7 +777,7 @@ public class CalendarUtil {
 			final int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
 			final boolean isLastDayOfMonthBirth = dayOfMonthBirth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
-			if ((! isLastDayOfMonth || ! isLastDayOfMonthBirth) && dayOfMonth <= dayOfMonthBirth) {
+			if ((!isLastDayOfMonth || !isLastDayOfMonthBirth) && dayOfMonth <= dayOfMonthBirth) {
 				// 如果生日在当月，但是未达到生日当天的日期，年龄减一
 				age--;
 			}

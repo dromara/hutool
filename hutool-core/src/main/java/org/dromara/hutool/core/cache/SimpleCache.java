@@ -108,7 +108,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	public V get(final K key, final Predicate<V> validPredicate, final SerSupplier<V> supplier) {
 		V v = get(key);
-		if ((null != validPredicate && null != v && ! validPredicate.test(v))) {
+		if ((null != validPredicate && null != v && !validPredicate.test(v))) {
 			v = null;
 		}
 		if (null == v && null != supplier) {
@@ -118,7 +118,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 			try {
 				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
 				v = get(key);
-				if (null == v || (null != validPredicate && ! validPredicate.test(v))) {
+				if (null == v || (null != validPredicate && !validPredicate.test(v))) {
 					v = supplier.get();
 					put(key, v);
 				}

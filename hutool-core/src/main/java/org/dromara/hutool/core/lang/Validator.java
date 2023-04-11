@@ -63,7 +63,7 @@ public class Validator {
 	 * @since 4.4.5
 	 */
 	public static boolean isFalse(final boolean value) {
-		return ! value;
+		return !value;
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static Object validateEqual(final Object t1, final Object t2, final String errorMsg) throws ValidateException {
-		if (! equal(t1, t2)) {
+		if (!equal(t1, t2)) {
 			throw new ValidateException(errorMsg);
 		}
 		return t1;
@@ -297,7 +297,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateMatchRegex(final String regex, final T value, final String errorMsg) throws ValidateException {
-		if (! isMatchRegex(regex, value)) {
+		if (!isMatchRegex(regex, value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -345,7 +345,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateGeneral(final T value, final String errorMsg) throws ValidateException {
-		if (! isGeneral(value)) {
+		if (!isGeneral(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -382,7 +382,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateGeneral(final T value, final int min, final int max, final String errorMsg) throws ValidateException {
-		if (! isGeneral(value, min, max)) {
+		if (!isGeneral(value, min, max)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -435,7 +435,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static <T extends CharSequence> T validateLetter(final T value, final String errorMsg) throws ValidateException {
-		if (! isLetter(value)) {
+		if (!isLetter(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -463,7 +463,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static <T extends CharSequence> T validateUpperCase(final T value, final String errorMsg) throws ValidateException {
-		if (! isUpperCase(value)) {
+		if (!isUpperCase(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -491,7 +491,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static <T extends CharSequence> T validateLowerCase(final T value, final String errorMsg) throws ValidateException {
-		if (! isLowerCase(value)) {
+		if (!isLowerCase(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -527,7 +527,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static String validateNumber(final String value, final String errorMsg) throws ValidateException {
-		if (! isNumber(value)) {
+		if (!isNumber(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -555,7 +555,7 @@ public class Validator {
 	 * @since 4.1.8
 	 */
 	public static <T extends CharSequence> T validateWord(final T value, final String errorMsg) throws ValidateException {
-		if (! isWord(value)) {
+		if (!isWord(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -581,7 +581,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateMoney(final T value, final String errorMsg) throws ValidateException {
-		if (! isMoney(value)) {
+		if (!isMoney(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -608,7 +608,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateZipCode(final T value, final String errorMsg) throws ValidateException {
-		if (! isZipCode(value)) {
+		if (!isZipCode(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -634,7 +634,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateEmail(final T value, final String errorMsg) throws ValidateException {
-		if (! isEmail(value)) {
+		if (!isEmail(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -660,7 +660,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateMobile(final T value, final String errorMsg) throws ValidateException {
-		if (! isMobile(value)) {
+		if (!isMobile(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -686,7 +686,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateCitizenIdNumber(final T value, final String errorMsg) throws ValidateException {
-		if (! isCitizenId(value)) {
+		if (!isCitizenId(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -762,7 +762,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateBirthday(final T value, final String errorMsg) throws ValidateException {
-		if (! isBirthday(value)) {
+		if (!isBirthday(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -788,7 +788,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateIpv4(final T value, final String errorMsg) throws ValidateException {
-		if (! isIpv4(value)) {
+		if (!isIpv4(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -814,7 +814,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateIpv6(final T value, final String errorMsg) throws ValidateException {
-		if (! isIpv6(value)) {
+		if (!isIpv6(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -842,7 +842,7 @@ public class Validator {
 	 * @since 4.1.3
 	 */
 	public static <T extends CharSequence> T validateMac(final T value, final String errorMsg) throws ValidateException {
-		if (! isMac(value)) {
+		if (!isMac(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -870,7 +870,7 @@ public class Validator {
 	 * @since 3.0.6
 	 */
 	public static <T extends CharSequence> T validatePlateNumber(final T value, final String errorMsg) throws ValidateException {
-		if (! isPlateNumber(value)) {
+		if (!isPlateNumber(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -904,7 +904,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateUrl(final T value, final String errorMsg) throws ValidateException {
-		if (! isUrl(value)) {
+		if (!isUrl(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -941,7 +941,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateChinese(final T value, final String errorMsg) throws ValidateException {
-		if (! isChinese(value)) {
+		if (!isChinese(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -967,7 +967,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateGeneralWithChinese(final T value, final String errorMsg) throws ValidateException {
-		if (! isGeneralWithChinese(value)) {
+		if (!isGeneralWithChinese(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -995,7 +995,7 @@ public class Validator {
 	 * @throws ValidateException 验证异常
 	 */
 	public static <T extends CharSequence> T validateUUID(final T value, final String errorMsg) throws ValidateException {
-		if (! isUUID(value)) {
+		if (!isUUID(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -1023,7 +1023,7 @@ public class Validator {
 	 * @since 4.3.3
 	 */
 	public static <T extends CharSequence> T validateHex(final T value, final String errorMsg) throws ValidateException {
-		if (! isHex(value)) {
+		if (!isHex(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -1057,7 +1057,7 @@ public class Validator {
 	 * @since 4.1.10
 	 */
 	public static void validateBetween(final Number value, final Number min, final Number max, final String errorMsg) throws ValidateException {
-		if (! isBetween(value, min, max)) {
+		if (!isBetween(value, min, max)) {
 			throw new ValidateException(errorMsg);
 		}
 	}
@@ -1077,7 +1077,7 @@ public class Validator {
 		Assert.notNull(start);
 		Assert.notNull(end);
 
-		if (! DateUtil.isIn(value, start, end)) {
+		if (!DateUtil.isIn(value, start, end)) {
 			throw new ValidateException(errorMsg);
 		}
 	}
@@ -1124,7 +1124,7 @@ public class Validator {
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarVin(final T value, final String errorMsg) throws ValidateException {
-		if (! isCarVin(value)) {
+		if (!isCarVin(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;
@@ -1191,7 +1191,7 @@ public class Validator {
 	 * @since 5.6.3
 	 */
 	public static <T extends CharSequence> T validateCarDrivingLicence(final T value, final String errorMsg) throws ValidateException {
-		if (! isCarDrivingLicence(value)) {
+		if (!isCarDrivingLicence(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;

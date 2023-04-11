@@ -980,7 +980,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 				throw new DbRuntimeException(e);
 			}
 		}
-		if (! isSupportTransaction) {
+		if (!isSupportTransaction) {
 			throw new DbRuntimeException("Transaction not supported for current database!");
 		}
 	}

@@ -116,7 +116,7 @@ public class ChineseDate {
 		}
 
 		this.isLeapMonth = leapMonth > 0 && (month == (leapMonth + 1));
-		if (hasLeapMonth && ! this.isLeapMonth) {
+		if (hasLeapMonth && !this.isLeapMonth) {
 			// 当前月份前有闰月，则月份显示要-1，除非当前月份就是润月
 			month--;
 		}
@@ -453,7 +453,7 @@ public class ChineseDate {
 		boolean isAdd = false;
 		for (int i = 1; i < chineseMonth; i++) {
 			leap = LunarInfo.leapMonth(chineseYear);
-			if (! isAdd) {//处理闰月
+			if (!isAdd) {//处理闰月
 				if (leap <= i && leap > 0) {
 					offset += LunarInfo.leapDays(chineseYear);
 					isAdd = true;

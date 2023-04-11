@@ -129,7 +129,7 @@ public class JSONObjectMapper {
 			// 普通Bean
 			mapFromBean(source, jsonObject);
 		} else {
-			if(! jsonObject.config().isIgnoreError()){
+			if(!jsonObject.config().isIgnoreError()){
 				// 不支持对象类型转换为JSONObject
 				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 			}

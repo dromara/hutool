@@ -106,7 +106,7 @@ public enum ThreadLocalConnection {
 			final Connection conn = connMap.get(ds);
 			if (null != conn) {
 				try {
-					if (! conn.getAutoCommit()) {
+					if (!conn.getAutoCommit()) {
 						// 非自动提交事务的连接，不做关闭（可能处于事务中）
 						return this;
 					}

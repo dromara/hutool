@@ -37,7 +37,7 @@ public class SerializeUtil {
 	 * @throws UtilException IO异常和ClassNotFoundException封装
 	 */
 	public static <T> T clone(final T obj) {
-		if (! (obj instanceof Serializable)) {
+		if (!(obj instanceof Serializable)) {
 			return null;
 		}
 		return deserialize(serialize(obj));
@@ -52,7 +52,7 @@ public class SerializeUtil {
 	 * @return 序列化后的字节码
 	 */
 	public static <T> byte[] serialize(final T obj) {
-		if (! (obj instanceof Serializable)) {
+		if (!(obj instanceof Serializable)) {
 			return null;
 		}
 		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();

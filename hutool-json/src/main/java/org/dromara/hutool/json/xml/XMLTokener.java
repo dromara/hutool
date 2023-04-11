@@ -162,7 +162,7 @@ public class XMLTokener extends JSONTokener {
 	/**
 	 * Returns the next XML meta token. This is used for skipping over &lt;!...&gt; and &lt;?...?&gt; structures.
 	 *
-	 * @return Syntax characters ({@code < > / = ! ?}) are returned as Character, and strings and names are returned as Boolean. We don't care what the values actually are.
+	 * @return Syntax characters ({@code < > / = !?}) are returned as Character, and strings and names are returned as Boolean. We don't care what the values actually are.
 	 * @throws JSONException 字符串中属性未关闭或XML结构错误抛出此异常。If a string is not properly closed or if the XML is badly structured.
 	 */
 	public Object nextMeta() throws JSONException {
@@ -223,7 +223,7 @@ public class XMLTokener extends JSONTokener {
 
 	/**
 	 * Get the next XML Token. These tokens are found inside of angle brackets. <br>
-	 * It may be one of these characters: {@code / > = ! ?} or it may be a string wrapped in single quotes or double
+	 * It may be one of these characters: {@code / > = !?} or it may be a string wrapped in single quotes or double
 	 * quotes, or it may be a name.
 	 *
 	 * @return a String or a Character.

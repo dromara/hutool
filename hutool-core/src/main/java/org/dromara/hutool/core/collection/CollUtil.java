@@ -100,7 +100,7 @@ public class CollUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Enumeration<?> enumeration) {
-		return null == enumeration || ! enumeration.hasMoreElements();
+		return null == enumeration || !enumeration.hasMoreElements();
 	}
 
 	/**
@@ -2033,7 +2033,7 @@ public class CollUtil {
 
 			@Override
 			public int hash32(final T t) {
-				if (null == t || ! BeanUtil.isBean(t.getClass())) {
+				if (null == t || !BeanUtil.isBean(t.getClass())) {
 					// 非Bean放在同一子分组中
 					return 0;
 				}

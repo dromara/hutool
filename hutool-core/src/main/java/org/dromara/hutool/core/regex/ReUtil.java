@@ -231,7 +231,7 @@ public class ReUtil {
 				result.add(matcher.group(i));
 			}
 
-			if (! findAll) {
+			if (!findAll) {
 				break;
 			}
 		}

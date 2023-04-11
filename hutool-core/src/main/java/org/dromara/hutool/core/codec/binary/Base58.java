@@ -108,7 +108,7 @@ public class Base58 {
 		final byte[] payload = Arrays.copyOfRange(data, withVersion ? 1 : 0, data.length - CHECKSUM_SIZE);
 		final byte[] checksum = Arrays.copyOfRange(data, data.length - CHECKSUM_SIZE, data.length);
 		final byte[] expectedChecksum = checksum(payload);
-		if (! Arrays.equals(checksum, expectedChecksum)) {
+		if (!Arrays.equals(checksum, expectedChecksum)) {
 			throw new ValidateException("Base58 checksum is invalid");
 		}
 		return payload;

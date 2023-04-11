@@ -58,7 +58,7 @@ public class FilterIter<E> implements Iterator<E> {
 
 	@Override
 	public E next() {
-		if (! nextObjectSet && ! setNextObject()) {
+		if (!nextObjectSet && !setNextObject()) {
 			throw new NoSuchElementException();
 		}
 		nextObjectSet = false;

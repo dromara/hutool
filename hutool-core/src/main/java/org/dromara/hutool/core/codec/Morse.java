@@ -163,7 +163,7 @@ public class Morse {
 		final char dit = this.dit;
 		final char dah = this.dah;
 		final char split = this.split;
-		if (! StrUtil.containsOnly(morse, dit, dah, split)) {
+		if (!StrUtil.containsOnly(morse, dit, dah, split)) {
 			throw new IllegalArgumentException("Incorrect morse.");
 		}
 		final List<String> words = SplitUtil.split(morse, String.valueOf(split));

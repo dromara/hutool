@@ -29,7 +29,7 @@ public class EscapeUtil {
 	 * 不转义的符号编码
 	 */
 	private static final String NOT_ESCAPE_CHARS = "*@-_+./";
-	private static final Predicate<Character> JS_ESCAPE_FILTER = c -> ! (
+	private static final Predicate<Character> JS_ESCAPE_FILTER = c -> !(
 			Character.isDigit(c)
 					|| Character.isLowerCase(c)
 					|| Character.isUpperCase(c)
@@ -131,7 +131,7 @@ public class EscapeUtil {
 		char c;
 		for (int i = 0; i < content.length(); i++) {
 			c = content.charAt(i);
-			if (! filter.test(c)) {
+			if (!filter.test(c)) {
 				tmp.append(c);
 			} else if (c < 256) {
 				tmp.append("%");

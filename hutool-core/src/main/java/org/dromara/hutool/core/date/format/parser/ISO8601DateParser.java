@@ -64,7 +64,7 @@ public class ISO8601DateParser extends DefaultDateBasic implements DateParser {
 			if (StrUtil.isBlank(zoneOffset)) {
 				throw new DateException("Invalid format: [{}]", source);
 			}
-			if (! StrUtil.contains(zoneOffset, ':')) {
+			if (!StrUtil.contains(zoneOffset, ':')) {
 				// +0800转换为+08:00
 				final String pre = StrUtil.subBefore(source, '+', true);
 				source = pre + "+" + zoneOffset.substring(0, 2) + ":" + "00";

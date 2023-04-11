@@ -290,7 +290,7 @@ public class ExcelSaxUtil {
 	 */
 	private static Number getNumberValue(final double numValue, final String numFmtString) {
 		// 普通数字
-		if (null != numFmtString && ! StrUtil.contains(numFmtString, CharUtil.DOT)) {
+		if (null != numFmtString && !StrUtil.contains(numFmtString, CharUtil.DOT)) {
 			final long longPart = (long) numValue;
 			//noinspection RedundantIfStatement
 			if (longPart == numValue) {

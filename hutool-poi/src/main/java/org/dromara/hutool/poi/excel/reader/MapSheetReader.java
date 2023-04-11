@@ -73,7 +73,7 @@ public class MapSheetReader extends AbstractSheetReader<List<Map<String, Object>
 			// 跳过标题行
 			if (i != headerRowIndex) {
 				rowList = readRow(sheet, i);
-				if (CollUtil.isNotEmpty(rowList) || ! ignoreEmptyRow) {
+				if (CollUtil.isNotEmpty(rowList) || !ignoreEmptyRow) {
 					result.add(IterUtil.toMap(headerList, rowList, true));
 				}
 			}

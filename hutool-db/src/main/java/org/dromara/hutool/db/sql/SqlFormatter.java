@@ -155,7 +155,7 @@ public class SqlFormatter {
 					misc();
 				}
 
-				if (! isWhitespace(this.token)) {
+				if (!isWhitespace(this.token)) {
 					this.lastToken = this.lcToken;
 				}
 			}

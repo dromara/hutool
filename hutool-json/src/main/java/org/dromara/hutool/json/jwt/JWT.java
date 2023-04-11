@@ -394,7 +394,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 * @since 5.7.4
 	 */
 	public boolean validate(final long leeway) {
-		if (! verify()) {
+		if (!verify()) {
 			return false;
 		}
 

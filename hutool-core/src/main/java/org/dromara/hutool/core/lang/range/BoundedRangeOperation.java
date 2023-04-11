@@ -172,7 +172,7 @@ public class BoundedRangeOperation {
 	 * @return 是否相交
 	 */
 	public static <T extends Comparable<? super T>> boolean isIntersected(final BoundedRange<T> boundedRange, final BoundedRange<T> other) {
-		return ! isDisjoint(boundedRange, other);
+		return !isDisjoint(boundedRange, other);
 	}
 
 	/**

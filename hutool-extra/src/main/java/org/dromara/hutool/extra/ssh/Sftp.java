@@ -307,7 +307,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.0.5
 	 */
 	public List<String> lsFiles(final String path) {
-		return ls(path, t -> ! t.getAttrs().isDir());
+		return ls(path, t -> !t.getAttrs().isDir());
 	}
 
 	/**
@@ -353,7 +353,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			channel.ls(path, entry -> {
 				final String fileName = entry.getFilename();
-				if (! StrUtil.equals(".", fileName) && ! StrUtil.equals("..", fileName)) {
+				if (!StrUtil.equals(".", fileName) && !StrUtil.equals("..", fileName)) {
 					if (null == predicate || predicate.test(entry)) {
 						entryList.add(entry);
 					}
@@ -361,7 +361,7 @@ public class Sftp extends AbstractFtp {
 				return LsEntrySelector.CONTINUE;
 			});
 		} catch (final SftpException e) {
-			if (! StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")) {
+			if (!StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")) {
 				throw new JschRuntimeException(e);
 			}
 			// 文件不存在忽略
@@ -446,7 +446,7 @@ public class Sftp extends AbstractFtp {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean delDir(final String dirPath) {
-		if (! cd(dirPath)) {
+		if (!cd(dirPath)) {
 			return false;
 		}
 
@@ -460,7 +460,7 @@ public class Sftp extends AbstractFtp {
 		String fileName;
 		for (final LsEntry entry : list) {
 			fileName = entry.getFilename();
-			if (! ".".equals(fileName) && ! "..".equals(fileName)) {
+			if (!".".equals(fileName) && !"..".equals(fileName)) {
 				if (entry.getAttrs().isDir()) {
 					delDir(fileName);
 				} else {
@@ -469,7 +469,7 @@ public class Sftp extends AbstractFtp {
 			}
 		}
 
-		if (! cd("..")) {
+		if (!cd("..")) {
 			return false;
 		}
 
@@ -490,7 +490,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 5.7.6
 	 */
 	public void upload(final String remotePath, final File file) {
-		if (! FileUtil.exists(file)) {
+		if (!FileUtil.exists(file)) {
 			return;
 		}
 		if (file.isDirectory()) {
@@ -514,7 +514,7 @@ public class Sftp extends AbstractFtp {
 	@SuppressWarnings("resource")
 	@Override
 	public boolean uploadFile(final String destPath, final File file) {
-		if(! FileUtil.isFile(file)){
+		if(!FileUtil.isFile(file)){
 			throw new FtpException("[{}] is not a file!", file);
 		}
 		this.mkDirs(destPath);
@@ -634,9 +634,9 @@ public class Sftp extends AbstractFtp {
 			srcFile = StrUtil.format("{}/{}", sourcePath, fileName);
 			destFile = FileUtil.file(destDir, fileName);
 
-			if (! item.getAttrs().isDir()) {
+			if (!item.getAttrs().isDir()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
-				if (! FileUtil.exists(destFile)
+				if (!FileUtil.exists(destFile)
 						|| (item.getAttrs().getMTime() > (destFile.lastModified() / 1000))) {
 					download(srcFile, destFile);
 				}

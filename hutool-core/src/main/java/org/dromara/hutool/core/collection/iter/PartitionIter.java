@@ -66,7 +66,7 @@ public class PartitionIter<T> implements IterableIter<List<T>>, Serializable {
 	public List<T> next() {
 		final List<T> list = new ArrayList<>(this.partitionSize);
 		for (int i = 0; i < this.partitionSize; i++) {
-			if (! iterator.hasNext()) {
+			if (!iterator.hasNext()) {
 				break;
 			}
 			list.add(iterator.next());

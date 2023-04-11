@@ -86,7 +86,7 @@ public class StrRegionMatcher implements BiPredicate<CharSequence, CharSequence>
 				.regionMatches(ignoreCase, toffset, strToCheck.toString(), 0, strToCheckLength);
 
 		if (matches) {
-			return (! ignoreEquals) || (! StrUtil.equals(str, strToCheck, ignoreCase));
+			return (!ignoreEquals) || (!StrUtil.equals(str, strToCheck, ignoreCase));
 		}
 		return false;
 	}

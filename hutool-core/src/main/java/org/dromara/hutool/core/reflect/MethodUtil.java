@@ -105,7 +105,7 @@ public class MethodUtil {
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final Method... excludeMethods) {
 		final HashSet<Method> excludeMethodSet = SetUtil.of(excludeMethods);
-		return getPublicMethods(clazz, method -> ! excludeMethodSet.contains(method));
+		return getPublicMethods(clazz, method -> !excludeMethodSet.contains(method));
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class MethodUtil {
 	 */
 	public static Method[] getPublicMethods(final Class<?> clazz, final String... excludeMethodNames) {
 		final HashSet<String> excludeMethodNameSet = SetUtil.of(excludeMethodNames);
-		return getPublicMethods(clazz, method -> ! excludeMethodNameSet.contains(method.getName()));
+		return getPublicMethods(clazz, method -> !excludeMethodNameSet.contains(method.getName()));
 	}
 
 	/**
@@ -377,14 +377,14 @@ public class MethodUtil {
 		final UniqueKeySet<String, Method> result = new UniqueKeySet<>(true, MethodUtil::getUniqueKey);
 		Class<?> searchType = beanClass;
 		while (searchType != null) {
-			if (! withMethodFromObject && Object.class == searchType) {
+			if (!withMethodFromObject && Object.class == searchType) {
 				break;
 			}
 			result.addAllIfAbsent(Arrays.asList(searchType.getDeclaredMethods()));
 			result.addAllIfAbsent(getDefaultMethodsFromInterface(searchType));
 
 
-			searchType = (withSupers && ! searchType.isInterface()) ? searchType.getSuperclass() : null;
+			searchType = (withSupers && !searchType.isInterface()) ? searchType.getSuperclass() : null;
 		}
 
 		return result.toArray(new Method[0]);
@@ -399,7 +399,7 @@ public class MethodUtil {
 	public static boolean isEqualsMethod(final Method method) {
 		if (method == null ||
 				1 != method.getParameterCount() ||
-				! "equals".equals(method.getName())) {
+				!"equals".equals(method.getName())) {
 			return false;
 		}
 		return (method.getParameterTypes()[0] == Object.class);
@@ -758,7 +758,7 @@ public class MethodUtil {
 		final List<Method> result = new ArrayList<>();
 		for (final Class<?> ifc : clazz.getInterfaces()) {
 			for (final Method m : ifc.getMethods()) {
-				if (! ModifierUtil.isAbstract(m)) {
+				if (!ModifierUtil.isAbstract(m)) {
 					result.add(m);
 				}
 			}
@@ -791,7 +791,7 @@ public class MethodUtil {
 				} else if (args[i] instanceof NullWrapperBean) {
 					//如果是通过NullWrapperBean传递的null参数,直接赋值null
 					actualArgs[i] = null;
-				} else if (! parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
 					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
 					if (null != targetValue) {

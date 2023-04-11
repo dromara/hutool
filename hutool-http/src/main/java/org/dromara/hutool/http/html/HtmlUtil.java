@@ -289,7 +289,7 @@ public class HtmlUtil {
 					}
 					// ignore
 				}
-				if (null != charsetInContent && ! charset.equals(charsetInContent)) {
+				if (null != charsetInContent && !charset.equals(charsetInContent)) {
 					content = new String(contentBytes, charsetInContent);
 				}
 			}

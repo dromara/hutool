@@ -86,12 +86,12 @@ public class NamedThreadFactory implements ThreadFactory {
 		final Thread t = new Thread(this.group, r, StrUtil.format("{}{}", prefix, threadNumber.getAndIncrement()));
 
 		//守护线程
-		if (! t.isDaemon()) {
+		if (!t.isDaemon()) {
 			if (isDaemon) {
 				// 原线程为非守护则设置为守护
 				t.setDaemon(true);
 			}
-		} else if (! isDaemon) {
+		} else if (!isDaemon) {
 			// 原线程为守护则还原为非守护
 			t.setDaemon(false);
 		}

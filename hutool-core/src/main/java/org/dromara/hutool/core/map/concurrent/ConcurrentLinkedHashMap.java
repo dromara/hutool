@@ -1329,7 +1329,7 @@ public final class ConcurrentLinkedHashMap<K, V> extends AbstractMap<K, V>
 		@SuppressWarnings("unchecked")
 		@Override
 		public boolean contains(final Object obj) {
-			if (! (obj instanceof Entry)) {
+			if (!(obj instanceof Entry)) {
 				return false;
 			}
 			final Entry<K, Node<K, V>> entry = (Entry<K, Node<K, V>>) obj;

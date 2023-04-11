@@ -55,7 +55,7 @@ public class TinyPinyinEngine implements PinyinEngine {
 
 	@Override
 	public String getPinyin(final char c) {
-		if(! Pinyin.isChinese(c)){
+		if(!Pinyin.isChinese(c)){
 			return String.valueOf(c);
 		}
 		return Pinyin.toPinyin(c).toLowerCase();

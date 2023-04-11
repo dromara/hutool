@@ -226,7 +226,7 @@ public class MapTree<T> extends LinkedHashMap<String, Object> implements Node<T>
 			// 加入FIFO队列
 			final Queue<MapTree<T>> queue = new LinkedList<>();
 			queue.offer(this);
-			while (! queue.isEmpty()) {
+			while (!queue.isEmpty()) {
 				final MapTree<T> node = queue.poll();
 				consumer.accept(node);
 				final List<MapTree<T>> children = node.getChildren();
@@ -238,7 +238,7 @@ public class MapTree<T> extends LinkedHashMap<String, Object> implements Node<T>
 			// 入栈,FILO
 			final Stack<MapTree<T>> stack = new Stack<>();
 			stack.add(this);
-			while (! stack.isEmpty()) {
+			while (!stack.isEmpty()) {
 				final MapTree<T> node = stack.pop();
 				consumer.accept(node);
 				final List<MapTree<T>> children = node.getChildren();

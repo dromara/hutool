@@ -404,7 +404,7 @@ public class ExceptionUtil {
 	 */
 	public static List<Throwable> getThrowableList(Throwable throwable) {
 		final List<Throwable> list = new ArrayList<>();
-		while (throwable != null && ! list.contains(throwable)) {
+		while (throwable != null && !list.contains(throwable)) {
 			list.add(throwable);
 			throwable = throwable.getCause();
 		}

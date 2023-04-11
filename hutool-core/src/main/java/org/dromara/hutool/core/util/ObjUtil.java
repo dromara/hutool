@@ -72,7 +72,7 @@ public class ObjUtil {
 	 * @see #equals(Object, Object)
 	 */
 	public static boolean notEquals(final Object obj1, final Object obj2) {
-		return ! equals(obj1, obj2);
+		return !equals(obj1, obj2);
 	}
 
 	/**

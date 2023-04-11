@@ -252,7 +252,7 @@ public class JdkHttpResponse implements Response, Closeable {
 		try {
 			this.status = httpConnection.getCode();
 		} catch (final IOException e) {
-			if (! (e instanceof FileNotFoundException)) {
+			if (!(e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
 			// 服务器无返回内容，忽略之
@@ -270,7 +270,7 @@ public class JdkHttpResponse implements Response, Closeable {
 		GlobalCookieManager.store(httpConnection, this.headers);
 
 		// 获取响应内容流
-		if (! isIgnoreBody) {
+		if (!isIgnoreBody) {
 			this.body = new ResponseBody(this, new JdkHttpInputStream(this), isAsync, this.ignoreEOFError);
 		}
 	}

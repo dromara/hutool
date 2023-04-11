@@ -177,7 +177,7 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setIgnoreProperties(final String... ignoreProperties) {
-		return setPropertiesFilter((field, o) -> ! ArrayUtil.contains(ignoreProperties, field.getName()));
+		return setPropertiesFilter((field, o) -> !ArrayUtil.contains(ignoreProperties, field.getName()));
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class CopyOptions implements Serializable {
 	@SuppressWarnings("unchecked")
 	public <P, R> CopyOptions setIgnoreProperties(final SerFunction<P, R>... funcs) {
 		final Set<String> ignoreProperties = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
-		return setPropertiesFilter((field, o) -> ! ignoreProperties.contains(field.getName()));
+		return setPropertiesFilter((field, o) -> !ignoreProperties.contains(field.getName()));
 	}
 
 	/**

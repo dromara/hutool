@@ -223,7 +223,7 @@ public class AntPathMatcher {
 		}
 
 		final String[] pattDirs = tokenizePattern(pattern);
-		if (fullMatch && this.caseSensitive && ! isPotentialMatch(path, pattDirs)) {
+		if (fullMatch && this.caseSensitive && !isPotentialMatch(path, pattDirs)) {
 			return false;
 		}
 
@@ -251,14 +251,14 @@ public class AntPathMatcher {
 			if (pattIdxStart > pattIdxEnd) {
 				return (pattern.endsWith(this.pathSeparator) == path.endsWith(this.pathSeparator));
 			}
-			if (! fullMatch) {
+			if (!fullMatch) {
 				return true;
 			}
 			if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*") && path.endsWith(this.pathSeparator)) {
 				return true;
 			}
 			for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-				if (! pattDirs[i].equals("**")) {
+				if (!pattDirs[i].equals("**")) {
 					return false;
 				}
 			}
@@ -266,7 +266,7 @@ public class AntPathMatcher {
 		} else if (pattIdxStart > pattIdxEnd) {
 			// String not exhausted, but pattern is. Failure.
 			return false;
-		} else if (! fullMatch && "**".equals(pattDirs[pattIdxStart])) {
+		} else if (!fullMatch && "**".equals(pattDirs[pattIdxStart])) {
 			// Path start definitely matches due to "**" part in pattern.
 			return true;
 		}
@@ -286,7 +286,7 @@ public class AntPathMatcher {
 		if (pathIdxStart > pathIdxEnd) {
 			// String is exhausted
 			for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-				if (! pattDirs[i].equals("**")) {
+				if (!pattDirs[i].equals("**")) {
 					return false;
 				}
 			}
@@ -334,7 +334,7 @@ public class AntPathMatcher {
 		}
 
 		for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
-			if (! pattDirs[i].equals("**")) {
+			if (!pattDirs[i].equals("**")) {
 				return false;
 			}
 		}
@@ -448,7 +448,7 @@ public class AntPathMatcher {
 	 * @return {@code true} if the string matches against the pattern, or {@code false} otherwise
 	 */
 	private boolean notMatchStrings(final String pattern, final String str, final Map<String, String> uriTemplateVariables) {
-		return ! getStringMatcher(pattern).matchStrings(str, uriTemplateVariables);
+		return !getStringMatcher(pattern).matchStrings(str, uriTemplateVariables);
 	}
 
 	/**

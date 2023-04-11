@@ -111,7 +111,7 @@ public class ConsistentHash<T> implements Serializable {
 			return null;
 		}
 		int hash = hashFunc.hash32(key);
-		if (! circle.containsKey(hash)) {
+		if (!circle.containsKey(hash)) {
 			final SortedMap<Integer, T> tailMap = circle.tailMap(hash);    //返回此映射的部分视图，其键大于等于 hash
 			hash = tailMap.isEmpty() ? circle.firstKey() : tailMap.firstKey();
 		}

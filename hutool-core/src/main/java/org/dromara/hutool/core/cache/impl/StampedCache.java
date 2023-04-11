@@ -53,7 +53,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 				return false;
 			}
 
-			if (! co.isExpired()) {
+			if (!co.isExpired()) {
 				// 命中
 				return true;
 			}
@@ -71,7 +71,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 		// 尝试读取缓存，使用乐观读锁
 		long stamp = lock.tryOptimisticRead();
 		CacheObj<K, V> co = getWithoutLock(key);
-		if(! lock.validate(stamp)){
+		if(!lock.validate(stamp)){
 			// 有写线程修改了此对象，悲观读
 			stamp = lock.readLock();
 			try {
@@ -85,7 +85,7 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 		if (null == co) {
 			missCount.increment();
 			return null;
-		} else if (! co.isExpired()) {
+		} else if (!co.isExpired()) {
 			hitCount.increment();
 			return co.get(isUpdateLastAccess);
 		}

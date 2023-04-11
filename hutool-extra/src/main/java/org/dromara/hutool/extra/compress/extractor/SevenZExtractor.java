@@ -118,7 +118,7 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	public InputStream getFirst(final Predicate<ArchiveEntry> predicate) {
 		final SevenZFile sevenZFile = this.sevenZFile;
 		for (final SevenZArchiveEntry entry : sevenZFile.getEntries()) {
-			if (null != predicate && ! predicate.test(entry)) {
+			if (null != predicate && !predicate.test(entry)) {
 				continue;
 			}
 			if (entry.isDirectory()) {
@@ -144,12 +144,12 @@ public class SevenZExtractor implements Extractor, RandomAccess {
 	 * @throws IOException IO异常
 	 */
 	private void extractInternal(final File targetDir, final Predicate<ArchiveEntry> predicate) throws IOException {
-		Assert.isTrue(null != targetDir && ((! targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
+		Assert.isTrue(null != targetDir && ((!targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final SevenZFile sevenZFile = this.sevenZFile;
 		SevenZArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = sevenZFile.getNextEntry())) {
-			if (null != predicate && ! predicate.test(entry)) {
+			if (null != predicate && !predicate.test(entry)) {
 				continue;
 			}
 			outItemFile = FileUtil.file(targetDir, entry.getName());

@@ -73,6 +73,6 @@ public class ClientEngineFactory {
 			return engine;
 		}
 
-		throw new HttpException("No http jar found ! Please add one of it to your project !");
+		throw new HttpException("No http jar found !Please add one of it to your project !");
 	}
 }

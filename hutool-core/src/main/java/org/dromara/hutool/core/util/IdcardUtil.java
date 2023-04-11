@@ -297,7 +297,7 @@ public class IdcardUtil {
 		}
 
 		//校验生日
-		if (! Validator.isBirthday(idcard.substring(6, 14))) {
+		if (!Validator.isBirthday(idcard.substring(6, 14))) {
 			return false;
 		}
 

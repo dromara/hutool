@@ -94,7 +94,7 @@ public class JdkHttpInputStream extends InputStream {
 		try {
 			this.in = (response.status < HttpStatus.HTTP_BAD_REQUEST) ? response.httpConnection.getInputStream() : response.httpConnection.getErrorStream();
 		} catch (final IOException e) {
-			if (! (e instanceof FileNotFoundException)) {
+			if (!(e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
 			// 服务器无返回内容，忽略之

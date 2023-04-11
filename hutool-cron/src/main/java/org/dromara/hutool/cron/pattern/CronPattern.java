@@ -162,7 +162,7 @@ public class CronPattern {
 	 */
 	public Calendar nextMatchAfter(final Calendar calendar) {
 		Calendar next = nextMatchAfter(PatternUtil.getFields(calendar, true), calendar.getTimeZone());
-		if (! match(next, true)) {
+		if (!match(next, true)) {
 			next.set(Calendar.DAY_OF_MONTH, next.get(Calendar.DAY_OF_MONTH) + 1);
 			next = CalendarUtil.beginOfDay(next);
 			return nextMatchAfter(next);

@@ -74,7 +74,7 @@ public class NumberWordFormatter {
 		}
 		int index = -1;
 		double res = value;
-		while (res > 10 && (! isTwo || index < 1)) {
+		while (res > 10 && (!isTwo || index < 1)) {
 			if (res >= 1000) {
 				res = res / 1000;
 				index++;
@@ -119,7 +119,7 @@ public class NumberWordFormatter {
 		StringBuilder lm = new StringBuilder(); // 用来存放转换后的整数部分
 		for (int i = 0; i < lstrrev.length() / 3; i++) {
 			a[i] = StrUtil.reverse(lstrrev.substring(3 * i, 3 * i + 3)); // 截取第一个三位
-			if (! "000".equals(a[i])) { // 用来避免这种情况：1000000 = one million
+			if (!"000".equals(a[i])) { // 用来避免这种情况：1000000 = one million
 				// thousand only
 				if (i != 0) {
 					lm.insert(0, transThree(a[i]) + " " + parseMore(i) + " "); // 加:

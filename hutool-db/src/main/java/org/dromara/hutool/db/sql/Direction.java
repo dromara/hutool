@@ -54,7 +54,7 @@ public enum Direction {
 			return Direction.valueOf(value.toUpperCase());
 		} catch (final Exception e) {
 			throw new IllegalArgumentException(StrUtil.format(
-					"Invalid value [{}] for orders given! Has to be either 'desc' or 'asc' (case insensitive).", value), e);
+					"Invalid value [{}] for orders given!Has to be either 'desc' or 'asc' (case insensitive).", value), e);
 		}
 	}
 }

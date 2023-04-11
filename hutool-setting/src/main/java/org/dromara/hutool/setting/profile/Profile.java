@@ -150,7 +150,7 @@ public class Profile implements Serializable {
 	private String fixNameForProfile(final String name) {
 		Assert.notBlank(name, "Setting name must be not blank !");
 		final String actralProfile = StrUtil.emptyIfNull(this.profile);
-		if (! name.contains(StrUtil.DOT)) {
+		if (!name.contains(StrUtil.DOT)) {
 			return StrUtil.format("{}/{}.setting", actralProfile, name);
 		}
 		return StrUtil.format("{}/{}", actralProfile, name);

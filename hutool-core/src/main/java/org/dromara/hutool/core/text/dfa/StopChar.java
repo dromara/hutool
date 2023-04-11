@@ -58,6 +58,6 @@ public class StopChar {
 	 * @return 是否为合法字符（待处理字符）
 	 */
 	public static boolean isNotStopChar(final char ch) {
-		return ! isStopChar(ch);
+		return !isStopChar(ch);
 	}
 }

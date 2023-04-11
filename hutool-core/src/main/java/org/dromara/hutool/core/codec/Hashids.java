@@ -362,7 +362,7 @@ public class Hashids implements Encoder<long[], String>, Decoder<String, long[]>
 			final char[] currentAlphabet = Arrays.copyOf(alphabet, alphabet.length);
 
 			for (int i = startIdx + 1; i < endIdx; i++) {
-				if (! separatorsSet.contains(hash.charAt(i))) {
+				if (!separatorsSet.contains(hash.charAt(i))) {
 					block.append(hash.charAt(i));
 					// continue if we have not reached the end, yet
 					if (i < endIdx - 1) {

@@ -161,7 +161,7 @@ public class AioServer implements Closeable {
 	public void close() {
 		IoUtil.closeQuietly(this.channel);
 
-		if (null != this.group && ! this.group.isShutdown()) {
+		if (null != this.group && !this.group.isShutdown()) {
 			try {
 				this.group.shutdownNow();
 			} catch (final IOException e) {

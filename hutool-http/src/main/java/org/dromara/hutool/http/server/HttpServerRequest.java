@@ -256,7 +256,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
 	public boolean isMultipart() {
-		if (! isPostMethod()) {
+		if (!isPostMethod()) {
 			return false;
 		}
 
@@ -406,7 +406,7 @@ public class HttpServerRequest extends HttpServerBase {
 		String ip;
 		for (final String header : headerNames) {
 			ip = getHeader(header);
-			if (! NetUtil.isUnknown(ip)) {
+			if (!NetUtil.isUnknown(ip)) {
 				return NetUtil.getMultistageReverseProxyIp(ip);
 			}
 		}

@@ -401,7 +401,7 @@ public class FileWriter extends FileWrapper {
 	 */
 	private void checkFile() throws IORuntimeException {
 		Assert.notNull(file, "File to write content is null !");
-		if (this.file.exists() && ! file.isFile()) {
+		if (this.file.exists() && !file.isFile()) {
 			throw new IORuntimeException("File [{}] is not a file !", this.file.getAbsoluteFile());
 		}
 	}

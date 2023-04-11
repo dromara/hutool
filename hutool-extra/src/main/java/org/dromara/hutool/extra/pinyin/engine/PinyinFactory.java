@@ -60,6 +60,6 @@ public class PinyinFactory {
 			return engine;
 		}
 
-		throw new PinyinException("No pinyin jar found ! Please add one of it to your project !");
+		throw new PinyinException("No pinyin jar found !Please add one of it to your project !");
 	}
 }

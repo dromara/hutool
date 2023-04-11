@@ -40,7 +40,7 @@ public final class SensitiveUtil {
 	 * @return 是否已经被初始化
 	 */
 	public static boolean isInited() {
-		return ! sensitiveTree.isEmpty();
+		return !sensitiveTree.isEmpty();
 	}
 
 	/**

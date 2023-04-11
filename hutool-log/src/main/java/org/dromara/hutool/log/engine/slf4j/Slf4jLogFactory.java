@@ -43,7 +43,7 @@ public class Slf4jLogFactory extends LogFactory {
 	public Slf4jLogFactory(final boolean failIfNOP) {
 		super("Slf4j");
 		checkLogExist(LoggerFactory.class);
-		if(! failIfNOP){
+		if(!failIfNOP){
 			return;
 		}
 

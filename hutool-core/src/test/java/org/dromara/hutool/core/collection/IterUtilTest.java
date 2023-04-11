@@ -107,7 +107,7 @@ public class IterUtilTest {
 		final List<String> obj2 = ListUtil.of("3");
 		final List<String> obj = ListUtil.of("1", "3");
 
-		IterUtil.remove(obj.iterator(), (e)-> ! obj2.contains(e));
+		IterUtil.remove(obj.iterator(), (e)-> !obj2.contains(e));
 
 		Assertions.assertEquals(1, obj.size());
 		Assertions.assertEquals("3", obj.get(0));

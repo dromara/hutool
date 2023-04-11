@@ -89,14 +89,14 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 			// 检查目标字段可写性
 			// 目标字段检查放在键值对编辑之后，因为键可能被编辑修改
 			final PropDesc tDesc = findPropDesc(targetPropDescMap, sFieldName);
-			if (null == tDesc || ! tDesc.isWritable(this.copyOptions.transientSupport)) {
+			if (null == tDesc || !tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之
 				return;
 			}
 
 			Object newValue = entry.getValue();
 			// 检查目标是否过滤属性
-			if (! copyOptions.testPropertyFilter(tDesc.getField(), newValue)) {
+			if (!copyOptions.testPropertyFilter(tDesc.getField(), newValue)) {
 				return;
 			}
 

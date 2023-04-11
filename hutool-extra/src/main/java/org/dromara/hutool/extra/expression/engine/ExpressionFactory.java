@@ -61,6 +61,6 @@ public class ExpressionFactory {
 			return engine;
 		}
 
-		throw new ExpressionException("No expression jar found ! Please add one of it to your project !");
+		throw new ExpressionException("No expression jar found !Please add one of it to your project !");
 	}
 }

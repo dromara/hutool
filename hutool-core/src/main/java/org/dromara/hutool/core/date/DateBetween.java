@@ -124,7 +124,7 @@ public class DateBetween implements Serializable {
 		final int betweenMonthOfYear = endCal.get(Calendar.MONTH) - beginCal.get(Calendar.MONTH);
 
 		final int result = betweenYear * 12 + betweenMonthOfYear;
-		if (! isReset) {
+		if (!isReset) {
 			endCal.set(Calendar.YEAR, beginCal.get(Calendar.YEAR));
 			endCal.set(Calendar.MONTH, beginCal.get(Calendar.MONTH));
 			final long between = endCal.getTimeInMillis() - beginCal.getTimeInMillis();
@@ -148,7 +148,7 @@ public class DateBetween implements Serializable {
 		final Calendar endCal = DateUtil.calendar(end);
 
 		final int result = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
-		if (! isReset) {
+		if (!isReset) {
 			// 考虑闰年的2月情况
 			if (Calendar.FEBRUARY == beginCal.get(Calendar.MONTH) && Calendar.FEBRUARY == endCal.get(Calendar.MONTH)) {
 				if (beginCal.get(Calendar.DAY_OF_MONTH) == beginCal.getActualMaximum(Calendar.DAY_OF_MONTH)

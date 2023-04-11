@@ -685,7 +685,7 @@ public class ListUtil {
 	@SuppressWarnings("UnusedReturnValue")
 	public static <T> List<T> addAllIfNotContains(final List<T> list, final List<T> otherList) {
 		for (final T t : otherList) {
-			if (! list.contains(t)) {
+			if (!list.contains(t)) {
 				list.add(t);
 			}
 		}

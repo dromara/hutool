@@ -80,7 +80,7 @@ public class NioClient implements Closeable {
 
 			// 等待建立连接
 			//noinspection StatementWithEmptyBody
-			while (! channel.finishConnect()){}
+			while (!channel.finishConnect()){}
 		} catch (final IOException e) {
 			close();
 			throw new IORuntimeException(e);

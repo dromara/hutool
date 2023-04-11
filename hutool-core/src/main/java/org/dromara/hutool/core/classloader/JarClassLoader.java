@@ -173,7 +173,7 @@ public class JarClassLoader extends URLClassLoader {
 	 * @since 4.4.2
 	 */
 	private static boolean isJarFile(final File file) {
-		if (! FileUtil.isFile(file)) {
+		if (!FileUtil.isFile(file)) {
 			return false;
 		}
 		return file.getPath().toLowerCase().endsWith(".jar");

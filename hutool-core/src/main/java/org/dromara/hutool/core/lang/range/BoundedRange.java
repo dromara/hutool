@@ -311,7 +311,7 @@ public class BoundedRange<T extends Comparable<? super T>> implements Predicate<
 		// 上界小于下界时为空
 		return compareValue > 0
 				// 上下界的边界值相等，且不为退化区间是为空
-				|| ! (low.getType().isClose() && up.getType().isClose());
+				|| !(low.getType().isClose() && up.getType().isClose());
 	}
 
 	/**

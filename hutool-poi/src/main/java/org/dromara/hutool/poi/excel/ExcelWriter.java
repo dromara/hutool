@@ -1382,7 +1382,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				if (null != aliasName) {
 					// 别名键值对加入
 					filteredTable.put(key, aliasName, value);
-				} else if (! this.onlyAlias) {
+				} else if (!this.onlyAlias) {
 					// 保留无别名设置的键值对
 					filteredTable.put(key, key, value);
 				}

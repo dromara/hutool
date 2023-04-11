@@ -65,7 +65,7 @@ public abstract class ComputeIter<T> implements Iterator<T> {
 
 	@Override
 	public T next() {
-		if (! hasNext()) {
+		if (!hasNext()) {
 			throw new NoSuchElementException("No more lines");
 		}
 

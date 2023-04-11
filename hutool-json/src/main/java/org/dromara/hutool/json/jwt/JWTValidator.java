@@ -172,13 +172,13 @@ public class JWTValidator {
 		}
 
 		final String algorithmIdInSigner = signer.getAlgorithmId();
-		if (! StrUtil.equals(algorithmId, algorithmIdInSigner)) {
+		if (!StrUtil.equals(algorithmId, algorithmIdInSigner)) {
 			throw new ValidateException("Algorithm [{}] defined in header doesn't match to [{}]!"
 					, algorithmId, algorithmIdInSigner);
 		}
 
 		// 通过算法验证签名是否正确
-		if (! jwt.verify(signer)) {
+		if (!jwt.verify(signer)) {
 			throw new ValidateException("Signature verification failed!");
 		}
 	}

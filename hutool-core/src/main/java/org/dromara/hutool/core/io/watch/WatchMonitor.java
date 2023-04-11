@@ -302,13 +302,13 @@ public class WatchMonitor extends WatchServer {
 	@Override
 	public void init() throws WatchException {
 		//获取目录或文件路径
-		if (! PathUtil.exists(this.path, false)) {
+		if (!PathUtil.exists(this.path, false)) {
 			// 不存在的路径
 			final Path lastPathEle = FileUtil.getLastPathEle(this.path);
 			if (null != lastPathEle) {
 				final String lastPathEleStr = lastPathEle.toString();
 				//带有点表示有扩展名，按照未创建的文件对待。Linux下.d的为目录，排除之
-				if (StrUtil.contains(lastPathEleStr, CharUtil.DOT) && ! StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
+				if (StrUtil.contains(lastPathEleStr, CharUtil.DOT) && !StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
 					this.filePath = this.path;
 					this.path = this.filePath.getParent();
 				}
@@ -364,7 +364,7 @@ public class WatchMonitor extends WatchServer {
 		registerPath();
 //		log.debug("Start watching path: [{}]", this.path);
 
-		while (! isClosed) {
+		while (!isClosed) {
 			doTakeAndWatch(watcher);
 		}
 	}

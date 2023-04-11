@@ -108,7 +108,7 @@ public class UploadFile {
 			if(null == this.tempFile){
 				throw new NullPointerException("Temp file is null !");
 			}
-			if(! this.tempFile.exists()){
+			if(!this.tempFile.exists()){
 				throw new NoSuchFileException("Temp file: [" + this.tempFile.getAbsolutePath() + "] not exist!");
 			}
 
@@ -277,7 +277,7 @@ public class UploadFile {
 	 * @throws IOException IO异常
 	 */
 	private void assertValid() throws IOException {
-		if (! isUploaded()) {
+		if (!isUploaded()) {
 			throw new IOException(StrUtil.format("File [{}] upload fail", getFileName()));
 		}
 	}

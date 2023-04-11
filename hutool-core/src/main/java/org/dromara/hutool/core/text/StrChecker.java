@@ -77,7 +77,7 @@ public class StrChecker {
 
 		for (int i = 0; i < length; i++) {
 			// 只要有一个非空字符即为非空字符串
-			if (! CharUtil.isBlankChar(str.charAt(i))) {
+			if (!CharUtil.isBlankChar(str.charAt(i))) {
 				return false;
 			}
 		}
@@ -119,7 +119,7 @@ public class StrChecker {
 
 		for (int i = 0; i < length; i++) {
 			// 只要有一个非空字符即为非空字符串
-			if (! CharUtil.isBlankChar(str.charAt(i))) {
+			if (!CharUtil.isBlankChar(str.charAt(i))) {
 				return true;
 			}
 		}
@@ -426,7 +426,7 @@ public class StrChecker {
 	 * @since 5.3.6
 	 */
 	public static boolean isAllNotEmpty(final CharSequence... args) {
-		return ! hasEmpty(args);
+		return !hasEmpty(args);
 	}
 
 	/**
@@ -437,7 +437,7 @@ public class StrChecker {
 	 * @since 5.3.6
 	 */
 	public static boolean isAllNotBlank(final CharSequence... args) {
-		return ! hasBlank(args);
+		return !hasBlank(args);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class StrChecker {
 			return false;
 		}
 		for (int i = value.length(); --i >= 0; ) {
-			if (! matcher.test(value.charAt(i))) {
+			if (!matcher.test(value.charAt(i))) {
 				return false;
 			}
 		}

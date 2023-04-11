@@ -81,6 +81,6 @@ public class TemplateFactory {
 			return engine.init(config);
 		}
 
-		throw new TemplateException("No template found ! Please add one of template jar to your project !");
+		throw new TemplateException("No template found !Please add one of template jar to your project !");
 	}
 }

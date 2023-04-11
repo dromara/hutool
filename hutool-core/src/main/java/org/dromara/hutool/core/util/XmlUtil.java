@@ -163,10 +163,10 @@ public class XmlUtil {
 	 */
 	public static Document readXML(File file) {
 		Assert.notNull(file, "Xml file is null !");
-		if (! file.exists()) {
+		if (!file.exists()) {
 			throw new UtilException("File [{}] not a exist!", file.getAbsolutePath());
 		}
-		if (! file.isFile()) {
+		if (!file.isFile()) {
 			throw new UtilException("[{}] not a file!", file.getAbsolutePath());
 		}
 
@@ -1055,7 +1055,7 @@ public class XmlUtil {
 		Element childEle;
 		for (int i = 0; i < length; ++i) {
 			childNode = nodeList.item(i);
-			if (! isElement(childNode)) {
+			if (!isElement(childNode)) {
 				continue;
 			}
 
@@ -1468,7 +1468,7 @@ public class XmlUtil {
 				}
 			}
 
-			if (! attributesOnly) {
+			if (!attributesOnly) {
 				final NodeList childNodes = node.getChildNodes();
 				//noinspection ConstantConditions
 				if(null != childNodes){

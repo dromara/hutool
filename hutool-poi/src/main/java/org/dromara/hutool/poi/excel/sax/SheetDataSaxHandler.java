@@ -107,7 +107,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 			return;
 		}
 
-		if (! this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -140,7 +140,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 			return;
 		}
 
-		if (! this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -156,7 +156,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 
 	@Override
 	public void characters(final char[] ch, final int start, final int length) {
-		if (! this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -281,7 +281,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	 * @param isEnd         是否为最后一个单元格
 	 */
 	private void fillBlankCell(final String preCoordinate, final String curCoordinate, final boolean isEnd) {
-		if (! curCoordinate.equals(preCoordinate)) {
+		if (!curCoordinate.equals(preCoordinate)) {
 			int len = ExcelSaxUtil.countNullCell(preCoordinate, curCoordinate);
 			if (isEnd) {
 				len++;

@@ -431,7 +431,7 @@ public class DateTime extends Date {
 		calendar.set(field, value);
 
 		DateTime dt = this;
-		if (! mutable) {
+		if (!mutable) {
 			dt = ObjUtil.clone(this);
 		}
 		return dt.setTimeInternal(calendar.getTimeInMillis());

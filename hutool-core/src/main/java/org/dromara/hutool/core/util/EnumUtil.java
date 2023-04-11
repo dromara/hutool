@@ -218,7 +218,7 @@ public class EnumUtil {
 			if (field.getType().isEnum() || name.contains("$VALUES") || "ordinal".equals(name)) {
 				continue;
 			}
-			if (! names.contains(name)) {
+			if (!names.contains(name)) {
 				names.add(name);
 			}
 		}
@@ -351,7 +351,7 @@ public class EnumUtil {
 	 * @return 是否不存在
 	 */
 	public static <E extends Enum<E>> boolean notContains(final Class<E> enumClass, final String val) {
-		return ! contains(enumClass, val);
+		return !contains(enumClass, val);
 	}
 
 	/**

@@ -55,7 +55,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 */
 	public ArrayWrapper(final A array) {
 		Assert.notNull(array, "Array must be not null!");
-		if (! ArrayUtil.isArray(array)) {
+		if (!ArrayUtil.isArray(array)) {
 			throw new IllegalArgumentException("Object is not a array!");
 		}
 		this.componentType = array.getClass().getComponentType();
@@ -301,7 +301,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
 	public ArrayWrapper<A> insert(int index, Object arrayToAppend) {
-		if (! ArrayUtil.isArray(arrayToAppend)) {
+		if (!ArrayUtil.isArray(arrayToAppend)) {
 			// 用户传入单个元素则创建单元素数组
 			arrayToAppend = createSingleElementArray(arrayToAppend);
 		}
@@ -355,7 +355,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
 	public ArrayWrapper<A> replace(final int index, Object values) {
-		if (! ArrayUtil.isArray(values)) {
+		if (!ArrayUtil.isArray(values)) {
 			// 用户传入单个元素则创建单元素数组
 			values = createSingleElementArray(values);
 		}
@@ -537,7 +537,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 		for (int i = 0; i < this.length; i++) {
 			compare = comparator.compare(get(i), get(i + 1));
 			if ((isDESC && compare < 0) ||
-				(! isDESC && compare > 0)) {
+				(!isDESC && compare > 0)) {
 				// 反序，前一个小于后一个则返回错
 				// 正序，前一个大于后一个则返回错
 				return false;

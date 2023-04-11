@@ -244,7 +244,7 @@ public class JakartaServletUtil {
 		String ip;
 		for (final String header : headerNames) {
 			ip = request.getHeader(header);
-			if (! NetUtil.isUnknown(ip)) {
+			if (!NetUtil.isUnknown(ip)) {
 				return NetUtil.getMultistageReverseProxyIp(ip);
 			}
 		}
@@ -426,7 +426,7 @@ public class JakartaServletUtil {
 	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
 	public static boolean isMultipart(final HttpServletRequest request) {
-		if (! isPostMethod(request)) {
+		if (!isPostMethod(request)) {
 			return false;
 		}
 
