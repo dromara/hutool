@@ -26,8 +26,8 @@
 		<druid.version>1.2.16</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
-		<mongo4.version>4.9.0</mongo4.version>
-		<sqlite.version>3.41.0.0</sqlite.version>
+		<mongo4.version>4.9.1</mongo4.version>
+		<sqlite.version>3.41.2.1</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
 		<jedis.version>4.3.1</jedis.version>
@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.4.0</version>
+			<version>3.4.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -147,19 +147,19 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.30</version>
+			<version>8.0.32</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.5.1</version>
+			<version>42.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>11.2.2.jre8</version>
+			<version>12.2.0.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
