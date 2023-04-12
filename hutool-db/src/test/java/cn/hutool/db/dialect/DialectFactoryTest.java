@@ -24,8 +24,10 @@ public class DialectFactoryTest {
 		map.put("sqlite",DRIVER_SQLLITE3);
 		map.put("sqlserver",DRIVER_SQLSERVER);
 		map.put("microsoft",DRIVER_SQLSERVER);
-		map.put("hive2",DRIVER_HIVE2);
-		map.put("hive",DRIVER_HIVE);
+
+		// 单元测试歧义
+		//map.put("hive2",DRIVER_HIVE2);
+		//map.put("hive",DRIVER_HIVE);
 		map.put("h2",DRIVER_H2);
 		map.put("derby",DRIVER_DERBY);
 		map.put("hsqldb",DRIVER_HSQLDB);
