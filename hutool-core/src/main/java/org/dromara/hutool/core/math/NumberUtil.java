@@ -88,9 +88,9 @@ public class NumberUtil {
 	 * 如果传入多个值为null或者空，则返回
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param values 多个被加值
@@ -181,10 +181,17 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(value.toString());
+		if (isZero(value)) {
+			return BigDecimal.ZERO;
+		}
+
+		BigDecimal result = toBigDecimal(value);
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			result = result.multiply(new BigDecimal(value.toString()));
+			if (isZero(value)) {
+				return BigDecimal.ZERO;
+			}
+			result = result.multiply(toBigDecimal(value));
 		}
 		return result;
 	}
@@ -202,9 +209,18 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal result = new BigDecimal(values[0]);
+		BigDecimal result = toBigDecimal(values[0]);
+		if (isZero(result)) {
+			return BigDecimal.ZERO;
+		}
+
+		BigDecimal ele;
 		for (int i = 1; i < values.length; i++) {
-			result = result.multiply(new BigDecimal(values[i]));
+			ele = toBigDecimal(values[i]);
+			if (isZero(ele)) {
+				return BigDecimal.ZERO;
+			}
+			result = result.multiply(ele);
 		}
 
 		return result;
@@ -284,18 +300,17 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 * @since 3.1.0
 	 */
-	public static BigDecimal div(Number v1, final Number v2, int scale, final RoundingMode roundingMode) {
+	public static BigDecimal div(final Number v1, final Number v2, int scale, final RoundingMode roundingMode) {
 		Assert.notNull(v2, "Divisor must be not null !");
-		if (null == v1) {
-			v1 = BigDecimal.ZERO;
+		if (null == v1 || isZero(v1)) {
+			// https://gitee.com/dromara/hutool/issues/I6UZYU
+			return BigDecimal.ZERO;
 		}
-		if (v1 instanceof BigDecimal && v2 instanceof BigDecimal) {
-			if (scale < 0) {
-				scale = -scale;
-			}
-			return ((BigDecimal) v1).divide((BigDecimal) v2, scale, roundingMode);
+
+		if (scale < 0) {
+			scale = -scale;
 		}
-		return div(StrUtil.toStringOrNull(v1), StrUtil.toStringOrNull(v2), scale, roundingMode);
+		return toBigDecimal(v1).divide(toBigDecimal(v2), scale, roundingMode);
 	}
 
 	/**
@@ -482,31 +497,7 @@ public class NumberUtil {
 	 * @since 4.1.0
 	 */
 	public static BigDecimal roundHalfEven(final Number number, final int scale) {
-		return roundHalfEven(toBigDecimal(number), scale);
-	}
-
-	/**
-	 * 四舍六入五成双计算法
-	 * <p>
-	 * 四舍六入五成双是一种比较精确比较科学的计数保留法，是一种数字修约规则。
-	 * </p>
-	 *
-	 * <pre>
-	 * 算法规则:
-	 * 四舍六入五考虑，
-	 * 五后非零就进一，
-	 * 五后皆零看奇偶，
-	 * 五前为偶应舍去，
-	 * 五前为奇要进一。
-	 * </pre>
-	 *
-	 * @param value 需要科学计算的数据
-	 * @param scale 保留的小数位
-	 * @return 结果
-	 * @since 4.1.0
-	 */
-	public static BigDecimal roundHalfEven(final BigDecimal value, final int scale) {
-		return round(value, scale, RoundingMode.HALF_EVEN);
+		return round(toBigDecimal(number), scale, RoundingMode.HALF_EVEN);
 	}
 
 	/**
@@ -518,19 +509,7 @@ public class NumberUtil {
 	 * @since 4.1.0
 	 */
 	public static BigDecimal roundDown(final Number number, final int scale) {
-		return roundDown(toBigDecimal(number), scale);
-	}
-
-	/**
-	 * 保留固定小数位数，舍去多余位数
-	 *
-	 * @param value 需要科学计算的数据
-	 * @param scale 保留的小数位
-	 * @return 结果
-	 * @since 4.1.0
-	 */
-	public static BigDecimal roundDown(final BigDecimal value, final int scale) {
-		return round(value, scale, RoundingMode.DOWN);
+		return round(toBigDecimal(number), scale, RoundingMode.DOWN);
 	}
 	// endregion
 
@@ -1285,14 +1264,21 @@ public class NumberUtil {
 
 	/**
 	 * 计算等份个数
+	 * <pre>
+	 *     (每份2)12   34  57
+	 *     (每份3)123  456 7
+	 *     (每份4)1234 567
+	 * </pre>
 	 *
-	 * @param total 总数
-	 * @param part  每份的个数
+	 * @param total    总数
+	 * @param pageSize 每份的个数
 	 * @return 分成了几份
 	 * @since 3.0.6
 	 */
-	public static int count(final int total, final int part) {
-		return (total % part == 0) ? (total / part) : (total / part + 1);
+	public static int count(final int total, final int pageSize) {
+		// 因为总条数除以页大小的最大余数是页大小数-1，
+		// 因此加一个最大余数，保证舍弃的余数与最大余数凑1.x，就是一旦有余数则+1页
+		return (total + pageSize - 1) / pageSize;
 	}
 
 	/**
@@ -1303,7 +1289,6 @@ public class NumberUtil {
 	 * @since 3.0.9
 	 */
 	public static BigDecimal null2Zero(final BigDecimal decimal) {
-
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
 
@@ -1711,9 +1696,9 @@ public class NumberUtil {
 	 * 此方法不支持科学计数法
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param numberStr Number字符串
@@ -1730,13 +1715,13 @@ public class NumberUtil {
 	 * 此方法不支持科学计数法
 	 *
 	 * <p>
-	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
-	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
-	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * 需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 * 德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 * 也就是说，在这些国家地区，1.20表示120，而非1.2。
 	 * </p>
 	 *
 	 * @param numberStr Number字符串
-	 * @param locale 地区，不同地区数字表示方式不同
+	 * @param locale    地区，不同地区数字表示方式不同
 	 * @return Number对象
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
 	 */
@@ -1860,5 +1845,37 @@ public class NumberUtil {
 	 */
 	public static boolean isEven(final int num) {
 		return !isOdd(num);
+	}
+
+	/**
+	 * 判断给定数字是否为0
+	 * <ul>
+	 *     <li>如果是{@link Byte}、{@link Short}、{@link Integer}、{@link Long}，直接转为long和0L比较</li>
+	 *     <li>如果是{@link BigInteger}，使用{@link BigInteger#equals(Object)}</li>
+	 *     <li>如果是{@link Float}，转为float与0f比较</li>
+	 *     <li>如果是{@link Double}，转为double与0d比较</li>
+	 *     <li>其它情况转为{@link BigDecimal}与{@link BigDecimal#ZERO}比较大小（使用compare）</li>
+	 * </ul>
+	 *
+	 * @param n 数字
+	 * @return 是否为0
+	 * @since 6.0.0
+	 */
+	public static boolean isZero(final Number n) {
+		Assert.notNull(n);
+
+		if (n instanceof Byte ||
+			n instanceof Short ||
+			n instanceof Integer ||
+			n instanceof Long) {
+			return 0L == n.longValue();
+		} else if (n instanceof BigInteger) {
+			return equals(BigInteger.ZERO, n);
+		} else if (n instanceof Float) {
+			return 0f == n.floatValue();
+		} else if (n instanceof Double) {
+			return 0d == n.doubleValue();
+		}
+		return equals(toBigDecimal(n), BigDecimal.ZERO);
 	}
 }

@@ -15,6 +15,7 @@ package org.dromara.hutool.core.lang.page;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.DefaultSegment;
 import org.dromara.hutool.core.lang.Segment;
+import org.dromara.hutool.core.math.NumberUtil;
 
 /**
  * 分页信息，通过提供的总数、页码、每页记录数等信息，计算总页数等信息<br>
@@ -84,9 +85,7 @@ public class PageInfo {
 			pageSize = DEFAULT_PAGE_SIZE;
 		}
 		this.pageSize = pageSize;
-		// 因为总条数除以页大小的最大余数是页大小数-1，
-		// 因此加一个最大余数，保证舍弃的余数与最大余数凑1.x，就是一旦有余数则+1页
-		this.pageCount = (total + pageSize - 1) / pageSize;
+		this.pageCount = NumberUtil.count(total, pageSize);
 	}
 
 	/**
