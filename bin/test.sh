@@ -12,4 +12,4 @@
 # See the Mulan PSL v2 for more details.
 #
 
-exec mvn test
+exec mvn -e test
