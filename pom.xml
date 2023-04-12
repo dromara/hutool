@@ -45,17 +45,16 @@
 
 		<!-- versions -->
 		<compile.version>8</compile.version>
-		<junit.version>4.13.2</junit.version>
+		<junit.version>5.9.2</junit.version>
 		<lombok.version>1.18.26</lombok.version>
 	</properties>
 
 	<dependencies>
 		<!-- 全局单元测试 -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 			<version>${junit.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

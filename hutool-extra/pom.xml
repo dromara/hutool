@@ -386,19 +386,7 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<artifactId>asm</artifactId>
-					<groupId>org.ow2.asm</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit-jupiter-api</artifactId>
+					<artifactId>junit-jupiter</artifactId>
 					<groupId>org.junit.jupiter</groupId>
 				</exclusion>
 			</exclusions>
