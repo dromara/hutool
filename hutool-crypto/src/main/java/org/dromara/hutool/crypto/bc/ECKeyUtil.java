@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.crypto.bc;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -28,6 +28,9 @@ import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.util.BigIntegers;
+import org.dromara.hutool.crypto.CryptoException;
+import org.dromara.hutool.crypto.KeyUtil;
+import org.dromara.hutool.crypto.SecureUtil;
 
 import java.io.IOException;
 import java.math.BigInteger;

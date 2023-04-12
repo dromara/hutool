@@ -24,31 +24,7 @@ import java.io.Serializable;
  *
  * @author looly
  */
-public abstract class ProxyFactory implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 创建代理
-	 *
-	 * @param <T>         代理对象类型
-	 * @param target      被代理对象
-	 * @param aspectClass 切面实现类，自动实例化
-	 * @return 代理对象
-	 * @since 5.3.1
-	 */
-	public <T> T proxy(final T target, final Class<? extends Aspect> aspectClass) {
-		return proxy(target, ConstructorUtil.newInstanceIfPossible(aspectClass));
-	}
-
-	/**
-	 * 创建代理
-	 *
-	 * @param <T>    代理对象类型
-	 * @param target 被代理对象
-	 * @param aspect 切面实现
-	 * @return 代理对象
-	 */
-	public abstract <T> T proxy(T target, Aspect aspect);
+public interface ProxyFactory extends Serializable {
 
 	/**
 	 * 根据用户引入Cglib与否自动创建代理对象
@@ -58,7 +34,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @param aspectClass 切面对象类
 	 * @return 代理对象
 	 */
-	public static <T> T createProxy(final T target, final Class<? extends Aspect> aspectClass) {
+	static <T> T createProxy(final T target, final Class<? extends Aspect> aspectClass) {
 		return createProxy(target, ConstructorUtil.newInstance(aspectClass));
 	}
 
@@ -70,7 +46,7 @@ public abstract class ProxyFactory implements Serializable {
 	 * @param aspect 切面实现
 	 * @return 代理对象
 	 */
-	public static <T> T createProxy(final T target, final Aspect aspect) {
+	static <T> T createProxy(final T target, final Aspect aspect) {
 		return of().proxy(target, aspect);
 	}
 
@@ -79,7 +55,30 @@ public abstract class ProxyFactory implements Serializable {
 	 *
 	 * @return 代理工厂
 	 */
-	public static ProxyFactory of() {
+	static ProxyFactory of() {
 		return ServiceLoaderUtil.loadFirstAvailable(ProxyFactory.class);
 	}
+
+	/**
+	 * 创建代理
+	 *
+	 * @param <T>         代理对象类型
+	 * @param target      被代理对象
+	 * @param aspectClass 切面实现类，自动实例化
+	 * @return 代理对象
+	 * @since 5.3.1
+	 */
+	default  <T> T proxy(final T target, final Class<? extends Aspect> aspectClass) {
+		return proxy(target, ConstructorUtil.newInstanceIfPossible(aspectClass));
+	}
+
+	/**
+	 * 创建代理
+	 *
+	 * @param <T>    代理对象类型
+	 * @param target 被代理对象
+	 * @param aspect 切面实现
+	 * @return 代理对象
+	 */
+	<T> T proxy(T target, Aspect aspect);
 }

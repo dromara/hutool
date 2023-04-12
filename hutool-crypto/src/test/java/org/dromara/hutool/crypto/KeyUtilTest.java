@@ -1,5 +1,6 @@
 package org.dromara.hutool.crypto;
 
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class KeyUtilTest {
 	@Disabled
 	public void generateKeyPairTest() {
 		Assertions.assertThrows(CryptoException.class, ()->{
-			GlobalBouncyCastleProvider.setUseBouncyCastle(false);
+			GlobalProviderFactory.setUseCustomProvider(false);
 			final KeyPair pair = KeyUtil.generateKeyPair("SM2");
 			Assertions.assertNotNull(pair);
 		});

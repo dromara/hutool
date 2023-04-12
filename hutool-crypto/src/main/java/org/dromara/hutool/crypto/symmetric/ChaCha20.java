@@ -27,6 +27,9 @@ import javax.crypto.spec.IvParameterSpec;
 public class ChaCha20 extends SymmetricCrypto {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 算法名称：ChaCha20
+	 */
 	public static final String ALGORITHM_NAME = "ChaCha20";
 
 	/**

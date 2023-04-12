@@ -10,22 +10,18 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.crypto.bc;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.crypto.KeyUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -96,7 +92,7 @@ public class PemUtil {
 				try {
 					// 尝试DER
 					return KeyUtil.generatePublicKey("EC", object.getContent());
-				} catch (Exception e) {
+				} catch (final Exception ignore) {
 					// 尝试PKCS#1
 					return KeyUtil.generatePublicKey("EC", ECKeyUtil.createOpenSSHPublicKeySpec(object.getContent()));
 				}

@@ -31,7 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
 public class DES extends SymmetricCrypto {
 	private static final long serialVersionUID = 1L;
 
-	// ------------------------------------------------------------------------- Constrctor start
+	// region ----- Constructor
 	/**
 	 * 构造，默认DES/ECB/PKCS5Padding，使用随机密钥
 	 */
@@ -162,5 +162,5 @@ public class DES extends SymmetricCrypto {
 	public DES(final String mode, final String padding, final SecretKey key, final IvParameterSpec iv) {
 		super(StrUtil.format("DES/{}/{}", mode, padding), key, iv);
 	}
-	// ------------------------------------------------------------------------- Constrctor end
+	// endregion
 }

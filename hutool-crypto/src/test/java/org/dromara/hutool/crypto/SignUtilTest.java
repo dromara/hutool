@@ -5,6 +5,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.crypto.asymmetric.Sign;
 import org.dromara.hutool.crypto.asymmetric.SignAlgorithm;
+import org.dromara.hutool.crypto.bc.PemUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

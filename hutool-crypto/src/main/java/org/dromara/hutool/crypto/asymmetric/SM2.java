@@ -14,9 +14,9 @@ package org.dromara.hutool.crypto.asymmetric;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.codec.HexUtil;
-import org.dromara.hutool.crypto.BCUtil;
+import org.dromara.hutool.crypto.bc.BCUtil;
 import org.dromara.hutool.crypto.CryptoException;
-import org.dromara.hutool.crypto.ECKeyUtil;
+import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
@@ -33,7 +33,7 @@ import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Hex;
-import org.dromara.hutool.crypto.SmUtil;
+import org.dromara.hutool.crypto.bc.SmUtil;
 
 import java.math.BigInteger;
 import java.security.PrivateKey;

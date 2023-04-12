@@ -21,6 +21,9 @@ import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
+import org.dromara.hutool.crypto.bc.BCUtil;
+import org.dromara.hutool.crypto.bc.SmUtil;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 import javax.crypto.KeyGenerator;
@@ -553,7 +556,7 @@ public class KeyUtil {
 	 * @since 4.4.3
 	 */
 	public static KeyPairGenerator getKeyPairGenerator(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final KeyPairGenerator keyPairGen;
 		try {
@@ -574,7 +577,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static KeyFactory getKeyFactory(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final KeyFactory keyFactory;
 		try {
@@ -595,7 +598,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static SecretKeyFactory getSecretKeyFactory(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final SecretKeyFactory keyFactory;
 		try {
@@ -616,7 +619,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static KeyGenerator getKeyGenerator(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final KeyGenerator generator;
 		try {
@@ -773,7 +776,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore getKeyStore(final String type) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 		try {
 			return null == provider ? KeyStore.getInstance(type) : KeyStore.getInstance(type, provider);
 		} catch (final KeyStoreException e) {
@@ -923,7 +926,7 @@ public class KeyUtil {
 	 * @since 4.5.0
 	 */
 	public static CertificateFactory getCertificateFactory(final String type) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final CertificateFactory factory;
 		try {

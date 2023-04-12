@@ -13,7 +13,7 @@
 package org.dromara.hutool.crypto.asymmetric;
 
 import org.dromara.hutool.crypto.CryptoException;
-import org.dromara.hutool.crypto.GlobalBouncyCastleProvider;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.KeyUtil;
 
 import java.math.BigInteger;
@@ -169,7 +169,7 @@ public class RSA extends AsymmetricCrypto {
 	@Override
 	public byte[] encrypt(final byte[] data, final KeyType keyType) {
 		// 在非使用BC库情况下，blockSize使用默认的算法
-		if (this.encryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
+		if (this.encryptBlockSize < 0 && null == GlobalProviderFactory.getProvider()) {
 			// 加密数据长度 <= 模长-11
 			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8 - 11;
 		}
@@ -179,7 +179,7 @@ public class RSA extends AsymmetricCrypto {
 	@Override
 	public byte[] decrypt(final byte[] bytes, final KeyType keyType) {
 		// 在非使用BC库情况下，blockSize使用默认的算法
-		if (this.decryptBlockSize < 0 && null == GlobalBouncyCastleProvider.INSTANCE.getProvider()) {
+		if (this.decryptBlockSize < 0 && null == GlobalProviderFactory.getProvider()) {
 			// 加密数据长度 <= 模长-11
 			this.decryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8;
 		}

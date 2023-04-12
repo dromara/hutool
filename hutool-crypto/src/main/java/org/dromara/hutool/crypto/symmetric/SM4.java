@@ -35,12 +35,16 @@ import javax.crypto.spec.IvParameterSpec;
  * @author Looly
  * @since 4.6.8
  */
-public class SM4 extends SymmetricCrypto{
+public class SM4 extends SymmetricCrypto {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 算法名称：SM4
+	 */
 	public static final String ALGORITHM_NAME = "SM4";
 
-	//------------------------------------------------------------------------- Constrctor start
+	// region ----- Constructor
+
 	/**
 	 * 构造，使用随机密钥
 	 */
@@ -156,8 +160,8 @@ public class SM4 extends SymmetricCrypto{
 	 */
 	public SM4(final String mode, final String padding, final byte[] key, final byte[] iv) {
 		this(mode, padding,//
-				KeyUtil.generateKey(ALGORITHM_NAME, key),//
-				ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
+			KeyUtil.generateKey(ALGORITHM_NAME, key),//
+			ArrayUtil.isEmpty(iv) ? null : new IvParameterSpec(iv));
 	}
 
 	/**
@@ -182,5 +186,5 @@ public class SM4 extends SymmetricCrypto{
 	public SM4(final String mode, final String padding, final SecretKey key, final IvParameterSpec iv) {
 		super(StrUtil.format("SM4/{}/{}", mode, padding), key, iv);
 	}
-	//------------------------------------------------------------------------- Constrctor end
+	// endregion
 }

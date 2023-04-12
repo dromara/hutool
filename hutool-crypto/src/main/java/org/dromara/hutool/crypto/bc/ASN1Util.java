@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.crypto.bc;
 
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -23,6 +23,7 @@ import org.bouncycastle.asn1.BERSequence;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DLSequence;
 import org.bouncycastle.asn1.util.ASN1Dump;
+import org.dromara.hutool.crypto.CryptoException;
 
 import java.io.IOException;
 import java.io.InputStream;

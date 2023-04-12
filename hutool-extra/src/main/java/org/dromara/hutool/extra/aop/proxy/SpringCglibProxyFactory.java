@@ -22,7 +22,7 @@ import org.springframework.cglib.proxy.Enhancer;
  * @author looly
  *
  */
-public class SpringCglibProxyFactory extends ProxyFactory{
+public class SpringCglibProxyFactory implements ProxyFactory{
 	private static final long serialVersionUID = 1L;
 
 	@Override

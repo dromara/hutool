@@ -57,7 +57,13 @@ public class ZUC extends SymmetricCrypto {
 	 * @author looly
 	 */
 	public enum ZUCAlgorithm {
+		/**
+		 * ZUC-128
+		 */
 		ZUC_128("ZUC-128"),
+		/**
+		 * ZUC-256
+		 */
 		ZUC_256("ZUC-256");
 
 		private final String value;

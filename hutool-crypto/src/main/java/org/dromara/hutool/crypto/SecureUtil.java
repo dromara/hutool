@@ -24,6 +24,7 @@ import org.dromara.hutool.crypto.digest.Digester;
 import org.dromara.hutool.crypto.digest.HMac;
 import org.dromara.hutool.crypto.digest.HmacAlgorithm;
 import org.dromara.hutool.crypto.digest.MD5;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.AES;
 import org.dromara.hutool.crypto.symmetric.DES;
 import org.dromara.hutool.crypto.symmetric.DESede;
@@ -536,7 +537,7 @@ public class SecureUtil {
 	 * @since 4.5.2
 	 */
 	public static Cipher createCipher(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final Cipher cipher;
 		try {
@@ -556,7 +557,7 @@ public class SecureUtil {
 	 * @since 4.5.2
 	 */
 	public static MessageDigest createMessageDigest(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final MessageDigest messageDigest;
 		try {
@@ -576,7 +577,7 @@ public class SecureUtil {
 	 * @since 4.5.13
 	 */
 	public static Mac createMac(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final Mac mac;
 		try {
@@ -604,7 +605,7 @@ public class SecureUtil {
 	 * @since 4.5.2
 	 */
 	public static void disableBouncyCastle() {
-		GlobalBouncyCastleProvider.setUseBouncyCastle(false);
+		GlobalProviderFactory.setUseCustomProvider(false);
 	}
 
 	/**

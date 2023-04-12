@@ -19,6 +19,7 @@ import org.dromara.hutool.crypto.asymmetric.Sign;
 import org.dromara.hutool.crypto.asymmetric.SignAlgorithm;
 import org.dromara.hutool.crypto.digest.DigestAlgorithm;
 import org.dromara.hutool.crypto.digest.Digester;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.SymmetricCrypto;
 
 import java.security.NoSuchAlgorithmException;
@@ -59,7 +60,7 @@ public class SignUtil {
 	 * @since 5.7.0
 	 */
 	public static Signature createSignature(final String algorithm) {
-		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		final Provider provider = GlobalProviderFactory.getProvider();
 
 		final Signature signature;
 		try {

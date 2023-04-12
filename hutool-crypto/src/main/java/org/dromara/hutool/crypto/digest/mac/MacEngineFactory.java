@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.digest.mac;
 
-import org.dromara.hutool.crypto.SmUtil;
+import org.dromara.hutool.crypto.bc.SmUtil;
 import org.dromara.hutool.crypto.digest.HmacAlgorithm;
 
 import java.security.Key;

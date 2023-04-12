@@ -10,25 +10,21 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.aop.proxy;
+package org.dromara.hutool.crypto.provider;
 
-import org.dromara.hutool.extra.aop.ProxyUtil;
-import org.dromara.hutool.extra.aop.aspects.Aspect;
-import org.dromara.hutool.extra.aop.interceptor.JdkInterceptor;
+import java.security.Provider;
 
 /**
- * JDK实现的切面代理
+ * {@link org.bouncycastle.jce.provider.BouncyCastleProvider} 工厂类
  *
  * @author looly
+ * @since 6.0.0
  */
-public class JdkProxyFactory implements ProxyFactory {
-	private static final long serialVersionUID = 1L;
+public class BouncyCastleProviderFactory implements ProviderFactory {
 
 	@Override
-	public <T> T proxy(final T target, final Aspect aspect) {
-		return ProxyUtil.newProxyInstance(//
-				target.getClass().getClassLoader(), //
-				new JdkInterceptor(target, aspect), //
-				target.getClass().getInterfaces());
+	public Provider create() {
+		return new org.bouncycastle.jce.provider.BouncyCastleProvider();
 	}
+
 }

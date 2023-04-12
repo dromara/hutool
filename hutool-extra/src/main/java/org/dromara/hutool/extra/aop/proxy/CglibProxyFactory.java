@@ -21,7 +21,7 @@ import net.sf.cglib.proxy.Enhancer;
  *
  * @author looly
  */
-public class CglibProxyFactory extends ProxyFactory {
+public class CglibProxyFactory implements ProxyFactory {
 	private static final long serialVersionUID = 1L;
 
 	@Override

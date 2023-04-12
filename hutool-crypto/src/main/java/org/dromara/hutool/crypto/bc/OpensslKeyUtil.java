@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto;
+package org.dromara.hutool.crypto.bc;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -30,6 +30,8 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.PKCSException;
+import org.dromara.hutool.crypto.CryptoException;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +50,8 @@ import java.security.PublicKey;
  */
 public class OpensslKeyUtil {
 
-	private static final JcaPEMKeyConverter pemKeyConverter = new JcaPEMKeyConverter().setProvider(GlobalBouncyCastleProvider.INSTANCE.getProvider());
+	private static final JcaPEMKeyConverter pemKeyConverter =
+		new JcaPEMKeyConverter().setProvider(GlobalProviderFactory.getProvider());
 
 	/**
 	 * 转换{@link PrivateKeyInfo}为{@link PrivateKey}
@@ -106,7 +109,8 @@ public class OpensslKeyUtil {
 	public static PrivateKeyInfo decrypt(final PKCS8EncryptedPrivateKeyInfo pkcs8Info, final char[] password) throws CryptoException {
 		final InputDecryptorProvider decryptProvider;
 		try {
-			decryptProvider = new JceOpenSSLPKCS8DecryptorProviderBuilder().setProvider(GlobalBouncyCastleProvider.INSTANCE.getProvider()).build(password);
+			decryptProvider = new JceOpenSSLPKCS8DecryptorProviderBuilder()
+				.setProvider(GlobalProviderFactory.getProvider()).build(password);
 			return pkcs8Info.decryptPrivateKeyInfo(decryptProvider);
 		} catch (final OperatorCreationException | PKCSException e) {
 			throw new CryptoException(e);
@@ -124,7 +128,8 @@ public class OpensslKeyUtil {
 	public static PEMKeyPair decrypt(final PEMEncryptedKeyPair pemEncryptedKeyPair, final char[] password) throws IORuntimeException {
 		final PEMDecryptorProvider decryptProvider;
 		try {
-			decryptProvider = new JcePEMDecryptorProviderBuilder().setProvider(GlobalBouncyCastleProvider.INSTANCE.getProvider()).build(password);
+			decryptProvider = new JcePEMDecryptorProviderBuilder()
+				.setProvider(GlobalProviderFactory.getProvider()).build(password);
 			return pemEncryptedKeyPair.decryptKeyPair(decryptProvider);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);

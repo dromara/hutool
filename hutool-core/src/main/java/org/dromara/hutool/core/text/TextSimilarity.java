@@ -140,15 +140,35 @@ public class TextSimilarity {
 
 	/**
 	 * 求公共子串，采用动态规划算法。 其不要求所求得的字符在所给的字符串中是连续的。
+	 * 2023-04-06 优化堆内存占用，此处不需要matrix[m][n]的完整矩阵，仅需右下角值
 	 *
 	 * @param strA 字符串1
 	 * @param strB 字符串2
 	 * @return 公共子串
 	 */
-	private static int longestCommonSubstringLength(final String strA, final String strB) {
+	public static int longestCommonSubstringLength(final String strA, final String strB) {
 		final int m = strA.length();
 		final int n = strB.length();
-		return generateMatrix(strA, strB)[m][n];
+
+		// 初始化矩阵数据,matrix[0][0]的值为0， 如果字符数组chars_strA和chars_strB的对应位相同，则matrix[i][j]的值为左上角的值加1，
+		// 否则，matrix[i][j]的值等于左上方最近两个位置的较大值， 矩阵中其余各点的值为0.
+		int[] lastLine = new int[n + 1];
+		int[] currLine = new int[n + 1];
+		int[] temp;
+		for (int i = 1; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (strA.charAt(i - 1) == strB.charAt(j - 1)) {
+					currLine[j] = lastLine[j-1] + 1;
+				} else {
+					currLine[j] = Math.max(currLine[j-1], lastLine[j]);
+				}
+			}
+			temp = lastLine;
+			lastLine = currLine;
+			currLine = temp;
+		}
+
+		return lastLine[n];
 	}
 
 	/**
