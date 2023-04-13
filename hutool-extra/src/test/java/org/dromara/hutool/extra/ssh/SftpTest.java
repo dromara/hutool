@@ -1,7 +1,7 @@
 package org.dromara.hutool.extra.ssh;
 
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public class SftpTest {
 
 	private SshjSftp sshjSftp;
 
-	@Before
+	@BeforeEach
 	@Disabled
 	public void init() {
 		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.UTF_8);

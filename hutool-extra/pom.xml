@@ -43,7 +43,7 @@
 		<zxing.version>3.5.1</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
-		<spring-boot.version>2.7.5</spring-boot.version>
+		<spring-boot.version>2.7.10</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -93,6 +93,18 @@
 					<artifactId>mvel2</artifactId>
 					<groupId>org.mvel</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>mockito-core</artifactId>
+					<groupId>org.mockito</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
 			</exclusions>
 			<optional>true</optional>
 		</dependency>
@@ -133,12 +145,28 @@
 			<groupId>com.github.subchen</groupId>
 			<artifactId>jetbrick-template</artifactId>
 			<version>2.1.10</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>antlr4-runtime</artifactId>
+					<groupId>org.antlr</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.pebbletemplates</groupId>
 			<artifactId>pebble</artifactId>
 			<version>3.2.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -170,6 +198,12 @@
 			<artifactId>sshj</artifactId>
 			<version>${sshj.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -214,6 +248,12 @@
 			<artifactId>emoji-java</artifactId>
 			<version>${emoji-java.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>json</artifactId>
+					<groupId>org.json</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 
@@ -332,6 +372,10 @@
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>snakeyaml</artifactId>
+					<groupId>org.yaml</groupId>
+				</exclusion>
 			</exclusions>
 			<optional>true</optional>
 		</dependency>
@@ -363,6 +407,12 @@
 			<groupId>com.github.houbb</groupId>
 			<artifactId>pinyin</artifactId>
 			<version>0.3.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>apiguardian-api</artifactId>
+					<groupId>org.apiguardian</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -385,6 +435,12 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>7.0.4.Final</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>jakarta.validation-api</artifactId>
+					<groupId>jakarta.validation</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
@@ -400,19 +456,11 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<artifactId>asm</artifactId>
-					<groupId>org.ow2.asm</groupId>
+					<artifactId>jakarta.activation-api</artifactId>
+					<groupId>jakarta.activation</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit-jupiter-api</artifactId>
+					<artifactId>junit-jupiter</artifactId>
 					<groupId>org.junit.jupiter</groupId>
 				</exclusion>
 			</exclusions>
@@ -438,12 +486,6 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- 手动引入aviator的关联依赖，解决版本问题 -->
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-jexl3</artifactId>
@@ -484,6 +526,16 @@
 			<artifactId>QLExpress</artifactId>
 			<version>3.3.1</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<!-- 表达式引擎可选依赖 end -->
@@ -500,12 +552,24 @@
 			<artifactId>oshi-core</artifactId>
 			<version>6.3.2</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.3.7</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>jakarta.activation</artifactId>
+					<groupId>com.sun.activation</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.activation</groupId>
