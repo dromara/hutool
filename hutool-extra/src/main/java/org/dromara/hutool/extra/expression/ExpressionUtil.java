@@ -17,7 +17,8 @@ import org.dromara.hutool.extra.expression.engine.ExpressionFactory;
 import java.util.Map;
 
 /**
- * 表达式引擎工具类
+ * 表达式引擎工具类<br>
+ * 需要注意的是，考虑到表达式引擎执行安全性，请自行检查表达式是否可靠。
  *
  * @author looly
  * @since 5.5.0
