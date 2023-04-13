@@ -10,23 +10,30 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.expression.engine.jfireel;
-
-import org.dromara.hutool.extra.expression.Expression;
-import org.dromara.hutool.extra.expression.ExpressionEngine;
+package org.dromara.hutool.core.func;
 
 /**
- * JfireEL引擎封装<br>
- * 见：https://gitee.com/eric_ds/jfireEL
+ * 简单包装对象
  *
- * @since 5.5.0
+ * @param <T> 被包装对象类型
  * @author looly
+ * @since 6.0.0
  */
-public class JfireELEngine implements ExpressionEngine {
+public class SimpleWrapper<T> implements Wrapper<T> {
+
+	protected final T raw;
+
+	/**
+	 * 构造
+	 *
+	 * @param raw 原始对象
+	 */
+	public SimpleWrapper(final T raw) {
+		this.raw = raw;
+	}
 
 	@Override
-	public Expression compile(final String expression) {
-		return new JfireELExpression(
-			com.jfirer.jfireel.expression.Expression.parse(expression));
+	public T getRaw() {
+		return this.raw;
 	}
 }

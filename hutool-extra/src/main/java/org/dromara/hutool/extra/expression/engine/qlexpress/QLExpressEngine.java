@@ -12,12 +12,9 @@
 
 package org.dromara.hutool.extra.expression.engine.qlexpress;
 
-import org.dromara.hutool.extra.expression.ExpressionEngine;
-import org.dromara.hutool.extra.expression.ExpressionException;
-import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
-
-import java.util.Map;
+import org.dromara.hutool.extra.expression.Expression;
+import org.dromara.hutool.extra.expression.ExpressionEngine;
 
 /**
  * QLExpress引擎封装<br>
@@ -37,14 +34,9 @@ public class QLExpressEngine implements ExpressionEngine {
 		engine = new ExpressRunner();
 	}
 
+
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
-		final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-		defaultContext.putAll(context);
-		try {
-			return engine.execute(expression, defaultContext, null, true, false);
-		} catch (final Exception e) {
-			throw new ExpressionException(e);
-		}
+	public Expression compile(final String expression) {
+		return new QLExpressExpression(this.engine, expression);
 	}
 }

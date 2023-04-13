@@ -12,21 +12,29 @@
 
 package org.dromara.hutool.extra.expression.engine.jfireel;
 
-import org.dromara.hutool.extra.expression.Expression;
-import org.dromara.hutool.extra.expression.ExpressionEngine;
+import org.dromara.hutool.core.func.SimpleWrapper;
+
+import java.util.Map;
 
 /**
- * JfireEL引擎封装<br>
- * 见：https://gitee.com/eric_ds/jfireEL
+ * JfireEL引擎表达式{@link com.jfirer.jfireel.expression.Expression} 封装
  *
- * @since 5.5.0
  * @author looly
  */
-public class JfireELEngine implements ExpressionEngine {
+public class JfireELExpression extends SimpleWrapper<com.jfirer.jfireel.expression.Expression>
+	implements org.dromara.hutool.extra.expression.Expression {
+
+	/**
+	 * 构造
+	 *
+	 * @param expression {@link com.jfirer.jfireel.expression.Expression}
+	 */
+	public JfireELExpression(final com.jfirer.jfireel.expression.Expression expression) {
+		super(expression);
+	}
 
 	@Override
-	public Expression compile(final String expression) {
-		return new JfireELExpression(
-			com.jfirer.jfireel.expression.Expression.parse(expression));
+	public Object eval(final Map<String, Object> context) {
+		return this.raw.calculate(context);
 	}
 }

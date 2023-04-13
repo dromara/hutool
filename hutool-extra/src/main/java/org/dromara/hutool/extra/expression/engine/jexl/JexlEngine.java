@@ -12,11 +12,10 @@
 
 package org.dromara.hutool.extra.expression.engine.jexl;
 
-import org.dromara.hutool.extra.expression.ExpressionEngine;
 import org.apache.commons.jexl3.JexlBuilder;
-import org.apache.commons.jexl3.MapContext;
-
-import java.util.Map;
+import org.dromara.hutool.core.func.SimpleWrapper;
+import org.dromara.hutool.extra.expression.Expression;
+import org.dromara.hutool.extra.expression.ExpressionEngine;
 
 /**
  * Jexl3引擎封装<br>
@@ -25,36 +24,30 @@ import java.util.Map;
  * @since 5.5.0
  * @author looly
  */
-public class JexlEngine implements ExpressionEngine {
-
-	private final org.apache.commons.jexl3.JexlEngine engine;
+public class JexlEngine extends SimpleWrapper<org.apache.commons.jexl3.JexlEngine>
+	implements ExpressionEngine {
 
 	/**
 	 * 构造
 	 */
 	public JexlEngine(){
-		engine = (new JexlBuilder()).cache(512).strict(true).silent(false).create();
+		super(
+			(new JexlBuilder())
+			.cache(512)
+			.strict(true)
+			.silent(false)
+			.create()
+		);
 	}
 
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
-		final MapContext mapContext = new MapContext(context);
-
+	public Expression compile(final String expression) {
 		try{
-			return engine.createExpression(expression).evaluate(mapContext);
+			return new JexlExpression(this.raw.createExpression(expression));
 		} catch (final Exception ignore){
 			// https://gitee.com/dromara/hutool/issues/I4B70D
 			// 支持脚本
-			return engine.createScript(expression).execute(mapContext);
+			return new JexlScript(this.raw.createScript(expression));
 		}
-	}
-
-	/**
-	 * 获取{@link org.apache.commons.jexl3.JexlEngine}
-	 *
-	 * @return {@link org.apache.commons.jexl3.JexlEngine}
-	 */
-	public org.apache.commons.jexl3.JexlEngine getEngine() {
-		return this.engine;
 	}
 }

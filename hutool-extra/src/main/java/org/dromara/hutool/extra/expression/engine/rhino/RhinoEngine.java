@@ -12,13 +12,8 @@
 
 package org.dromara.hutool.extra.expression.engine.rhino;
 
-import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.extra.expression.Expression;
 import org.dromara.hutool.extra.expression.ExpressionEngine;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-
-import java.util.Map;
 
 /**
  * rhino引擎封装<br>
@@ -30,16 +25,7 @@ import java.util.Map;
 public class RhinoEngine implements ExpressionEngine {
 
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
-		try(final Context ctx = Context.enter()){
-			final Scriptable scope = ctx.initStandardObjects();
-			if (MapUtil.isNotEmpty(context)) {
-				context.forEach((key, value)->{
-					// 将java对象转为js对象后放置于JS的作用域中
-					ScriptableObject.putProperty(scope, key, Context.javaToJS(value, scope));
-				});
-			}
-			return ctx.evaluateString(scope, expression, "rhino.js", 1, null);
-		} // auto close
+	public Expression compile(final String expression) {
+		return new RhinoExpression(expression);
 	}
 }

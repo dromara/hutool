@@ -12,10 +12,8 @@
 
 package org.dromara.hutool.extra.expression.engine.mvel;
 
+import org.dromara.hutool.extra.expression.Expression;
 import org.dromara.hutool.extra.expression.ExpressionEngine;
-import org.mvel2.MVEL;
-
-import java.util.Map;
 
 /**
  * MVEL (MVFLEX Expression Language)引擎封装<br>
@@ -33,7 +31,7 @@ public class MvelEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
-		return MVEL.eval(expression, context);
+	public Expression compile(final String expression) {
+		return new MvelExpression(expression);
 	}
 }

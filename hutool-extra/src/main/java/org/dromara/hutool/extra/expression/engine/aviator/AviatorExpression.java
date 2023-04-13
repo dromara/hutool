@@ -12,30 +12,30 @@
 
 package org.dromara.hutool.extra.expression.engine.aviator;
 
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import org.dromara.hutool.core.func.SimpleWrapper;
 import org.dromara.hutool.extra.expression.Expression;
-import org.dromara.hutool.extra.expression.ExpressionEngine;
+
+import java.util.Map;
 
 /**
- * Aviator引擎封装<br>
- * 见：<a href="https://github.com/killme2008/aviatorscript">https://github.com/killme2008/aviatorscript</a>
+ * {@link com.googlecode.aviator.Expression} 包装
  *
  * @author looly
+ * @since 6.0.0
  */
-public class AviatorEngine extends SimpleWrapper<AviatorEvaluatorInstance>
-	implements ExpressionEngine {
+public class AviatorExpression extends SimpleWrapper<com.googlecode.aviator.Expression> implements Expression {
 
 	/**
 	 * 构造
+	 *
+	 * @param expression {@link com.googlecode.aviator.Expression}
 	 */
-	public AviatorEngine() {
-		super(AviatorEvaluator.getInstance());
+	public AviatorExpression(final com.googlecode.aviator.Expression expression) {
+		super(expression);
 	}
 
 	@Override
-	public Expression compile(final String expression) {
-		return new AviatorExpression(this.raw.compile(expression));
+	public Object eval(final Map<String, Object> context) {
+		return this.raw.execute(context);
 	}
 }

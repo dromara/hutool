@@ -10,32 +10,34 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.expression.engine.aviator;
+package org.dromara.hutool.extra.expression.engine.mvel;
 
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import org.dromara.hutool.core.func.SimpleWrapper;
 import org.dromara.hutool.extra.expression.Expression;
-import org.dromara.hutool.extra.expression.ExpressionEngine;
+import org.mvel2.MVEL;
+import org.mvel2.templates.TemplateCompiler;
+
+import java.util.Map;
 
 /**
- * Aviator引擎封装<br>
- * 见：<a href="https://github.com/killme2008/aviatorscript">https://github.com/killme2008/aviatorscript</a>
+ * MVEL2的{@link TemplateCompiler}包装
  *
  * @author looly
  */
-public class AviatorEngine extends SimpleWrapper<AviatorEvaluatorInstance>
-	implements ExpressionEngine {
+public class MvelExpression extends SimpleWrapper<String>
+	implements Expression {
 
 	/**
 	 * 构造
+	 *
+	 * @param expression 表达式字符串
 	 */
-	public AviatorEngine() {
-		super(AviatorEvaluator.getInstance());
+	public MvelExpression(final String expression) {
+		super(expression);
 	}
 
 	@Override
-	public Expression compile(final String expression) {
-		return new AviatorExpression(this.raw.compile(expression));
+	public Object eval(final Map<String, Object> context) {
+		return MVEL.eval(this.raw, context);
 	}
 }

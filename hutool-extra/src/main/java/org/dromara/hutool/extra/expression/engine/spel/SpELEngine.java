@@ -12,13 +12,11 @@
 
 package org.dromara.hutool.extra.expression.engine.spel;
 
+import org.dromara.hutool.core.func.SimpleWrapper;
+import org.dromara.hutool.extra.expression.Expression;
 import org.dromara.hutool.extra.expression.ExpressionEngine;
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
-
-import java.util.Map;
 
 /**
  * Spring-Expression引擎封装<br>
@@ -27,21 +25,17 @@ import java.util.Map;
  * @since 5.5.0
  * @author looly
  */
-public class SpELEngine implements ExpressionEngine {
-
-	private final ExpressionParser parser;
+public class SpELEngine extends SimpleWrapper<ExpressionParser> implements ExpressionEngine {
 
 	/**
 	 * 构造
 	 */
 	public SpELEngine(){
-		parser = new SpelExpressionParser();
+		super(new SpelExpressionParser());
 	}
 
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
-		final EvaluationContext evaluationContext = new StandardEvaluationContext();
-		context.forEach(evaluationContext::setVariable);
-		return parser.parseExpression(expression).getValue(evaluationContext);
+	public Expression compile(final String expression) {
+		return new SpELExpression(this.raw.parseExpression(expression));
 	}
 }

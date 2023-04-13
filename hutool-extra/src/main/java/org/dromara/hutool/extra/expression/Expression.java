@@ -15,29 +15,18 @@ package org.dromara.hutool.extra.expression;
 import java.util.Map;
 
 /**
- * 表达式引擎API接口，通过实现此接口，完成表达式的解析和执行
+ * 表达式定义，用于表示编译后的表达式。
  *
- * @author looll, independenter
- * @since 5.5.0
+ * @author looly
+ * @since 6.0.0
  */
-public interface ExpressionEngine {
-
-	/**
-	 * 编译表达式
-	 *
-	 * @param expression 表达式
-	 * @return {@link Expression}
-	 */
-	Expression compile(String expression);
+public interface Expression {
 
 	/**
 	 * 执行表达式
 	 *
-	 * @param expression 表达式
-	 * @param context    表达式上下文，用于存储表达式中所需的变量值等
+	 * @param context 表达式上下文，用于存储表达式中所需的变量值等
 	 * @return 执行结果
 	 */
-	default Object eval(final String expression, final Map<String, Object> context){
-		return compile(expression).eval(context);
-	}
+	Object eval(final Map<String, Object> context);
 }

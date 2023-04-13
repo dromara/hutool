@@ -10,32 +10,34 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.expression.engine.aviator;
+package org.dromara.hutool.extra.expression.engine.jexl;
 
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
+import org.apache.commons.jexl3.MapContext;
 import org.dromara.hutool.core.func.SimpleWrapper;
 import org.dromara.hutool.extra.expression.Expression;
-import org.dromara.hutool.extra.expression.ExpressionEngine;
+
+import java.util.Map;
 
 /**
- * Aviator引擎封装<br>
- * 见：<a href="https://github.com/killme2008/aviatorscript">https://github.com/killme2008/aviatorscript</a>
+ * Jexl3引擎的{@link org.apache.commons.jexl3.JexlExpression}包装
  *
  * @author looly
  */
-public class AviatorEngine extends SimpleWrapper<AviatorEvaluatorInstance>
-	implements ExpressionEngine {
+public class JexlExpression extends SimpleWrapper<org.apache.commons.jexl3.JexlExpression>
+	implements Expression {
 
 	/**
 	 * 构造
+	 *
+	 * @param raw {@link org.apache.commons.jexl3.JexlExpression}
 	 */
-	public AviatorEngine() {
-		super(AviatorEvaluator.getInstance());
+	public JexlExpression(final org.apache.commons.jexl3.JexlExpression raw) {
+		super(raw);
 	}
 
 	@Override
-	public Expression compile(final String expression) {
-		return new AviatorExpression(this.raw.compile(expression));
+	public Object eval(final Map<String, Object> context) {
+		final MapContext mapContext = new MapContext(context);
+		return raw.evaluate(mapContext);
 	}
 }
