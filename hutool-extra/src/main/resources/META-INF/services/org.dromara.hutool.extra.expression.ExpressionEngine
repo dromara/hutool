@@ -17,3 +17,4 @@ org.dromara.hutool.extra.expression.engine.jfireel.JfireELEngine
 org.dromara.hutool.extra.expression.engine.spel.SpELEngine
 org.dromara.hutool.extra.expression.engine.rhino.RhinoEngine
 org.dromara.hutool.extra.expression.engine.qlexpress.QLExpressEngine
+org.dromara.hutool.extra.expression.engine.ognl.OgnlEngine
