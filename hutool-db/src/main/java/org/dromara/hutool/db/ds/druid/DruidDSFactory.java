@@ -74,7 +74,7 @@ public class DruidDSFactory extends AbstractDSFactory {
 		// Druid连接池配置信息，规范化属性名
 		final Props druidProps = new Props();
 		poolSetting.forEach((key, value)-> druidProps.put(StrUtil.addPrefixIfNot(key, "druid."), value));
-		ds.configFromPropety(druidProps);
+		ds.configFromPropeties(druidProps);
 
 		//issue#I4ZKCW 某些非属性设置单独设置
 		// connectionErrorRetryAttempts
