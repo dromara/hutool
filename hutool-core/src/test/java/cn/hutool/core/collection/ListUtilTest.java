@@ -254,4 +254,11 @@ public class ListUtilTest {
 		ListUtil.setOrPadding(list, 3, "a");
 		Assert.assertEquals(4, list.size());
 	}
+
+	@Test
+	public void reverseNewTest() {
+		final List<Integer> view = ListUtil.of(1, 2, 3);
+		final List<Integer> reverse = ListUtil.reverseNew(view);
+		Assert.assertEquals("[3, 2, 1]", reverse.toString());
+	}
 }
