@@ -255,4 +255,11 @@ public class ListUtilTest {
 		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite("a", "b");
 		Assertions.assertEquals(2, strings.size());
 	}
+
+	@Test
+	void reverseNewTest() {
+		final List<Integer> view = ListUtil.view(1, 2, 3);
+		final List<Integer> reverse = ListUtil.reverseNew(view);
+		Assertions.assertEquals("[3, 2, 1]", reverse.toString());
+	}
 }

@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.collection;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.collection.partition.AvgPartition;
 import org.dromara.hutool.core.collection.partition.Partition;
@@ -21,7 +22,6 @@ import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.page.PageInfo;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.util.*;
@@ -268,7 +268,7 @@ public class ListUtil {
 			return new ArrayList<>(0);
 		}
 		return page(list, PageInfo.of(list.size(), pageSize)
-				.setFirstPageNo(0).setPageNo(pageNo));
+			.setFirstPageNo(0).setPageNo(pageNo));
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class ListUtil {
 
 		final int total = list.size();
 		final PageInfo pageInfo = PageInfo.of(total, pageSize);
-		while(pageInfo.isValidPage()){
+		while (pageInfo.isValidPage()) {
 			// 返回数据
 			pageListConsumer.accept(sub(list, pageInfo.getBeginIndex(), pageInfo.getEndIndexExclude()));
 			pageInfo.nextPage();
@@ -387,11 +387,13 @@ public class ListUtil {
 	}
 
 	/**
-	 * 反序给定List，会在原List基础上直接修改
+	 * 反序给定List，会在原List基础上直接修改<br>
+	 * 注意此方法不支持不可编辑的列表
 	 *
 	 * @param <T>  元素类型
 	 * @param list 被反转的List
 	 * @return 反转后的List
+	 * @see Collections#reverse(List)
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverse(final List<T> list) {
@@ -416,7 +418,12 @@ public class ListUtil {
 			// 不支持clone
 			list2 = new ArrayList<>(list);
 		}
-		return reverse(list2);
+		try {
+			return reverse(list2);
+		} catch (final UnsupportedOperationException e) {
+			// 提供的列表不可编辑,新建列表
+			return reverse(of(list));
+		}
 	}
 
 	/**
@@ -589,8 +596,8 @@ public class ListUtil {
 		}
 
 		return (list instanceof RandomAccess)
-				? new RandomAccessPartition<>(list, size)
-				: new Partition<>(list, size);
+			? new RandomAccessPartition<>(list, size)
+			: new Partition<>(list, size);
 	}
 
 	/**
@@ -616,8 +623,8 @@ public class ListUtil {
 		}
 
 		return (list instanceof RandomAccess)
-				? new RandomAccessAvgPartition<>(list, limit)
-				: new AvgPartition<>(list, limit);
+			? new RandomAccessAvgPartition<>(list, limit)
+			: new AvgPartition<>(list, limit);
 	}
 
 	/**
