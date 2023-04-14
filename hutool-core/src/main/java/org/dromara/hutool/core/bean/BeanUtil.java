@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -832,18 +833,6 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean是否为非空对象，非空对象表示本身不为{@code null}或者含有非{@code null}属性的对象
-	 *
-	 * @param bean             Bean对象
-	 * @param ignoreFieldNames 忽略检查的字段名
-	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
-	 * @since 5.0.7
-	 */
-	public static boolean isNotEmpty(final Object bean, final String... ignoreFieldNames) {
-		return !isEmpty(bean, ignoreFieldNames);
-	}
-
-	/**
 	 * 判断Bean是否为空对象，空对象表示本身为{@code null}或者所有属性都为{@code null}<br>
 	 * 此方法不判断static属性
 	 *
@@ -853,18 +842,28 @@ public class BeanUtil {
 	 * @since 4.1.10
 	 */
 	public static boolean isEmpty(final Object bean, final String... ignoreFieldNames) {
-		if (null != bean) {
-			for (final Field field : FieldUtil.getFields(bean.getClass())) {
-				if (ModifierUtil.isStatic(field)) {
-					continue;
-				}
-				if ((!ArrayUtil.contains(ignoreFieldNames, field.getName()))
-						&& null != FieldUtil.getFieldValue(bean, field)) {
-					return false;
-				}
-			}
+		// 不含有非空字段
+		return !isNotEmpty(bean, ignoreFieldNames);
+	}
+
+	/**
+	 * 判断Bean是否为非空对象，非空对象表示本身不为{@code null}或者含有非{@code null}属性的对象
+	 *
+	 * @param bean             Bean对象
+	 * @param ignoreFieldNames 忽略检查的字段名
+	 * @return 是否为非空，{@code true} - 非空 / {@code false} - 空
+	 * @since 5.0.7
+	 */
+	public static boolean isNotEmpty(final Object bean, final String... ignoreFieldNames) {
+		if(null == bean){
+			return false;
 		}
-		return true;
+
+		// 相当于 hasNoneNullField
+		return checkBean(bean, field ->
+			(!ArrayUtil.contains(ignoreFieldNames, field.getName()))
+				&& null != FieldUtil.getFieldValue(bean, field)
+		);
 	}
 
 	/**
@@ -873,10 +872,43 @@ public class BeanUtil {
 	 *
 	 * @param bean             Bean对象
 	 * @param ignoreFieldNames 忽略检查的字段名
-	 * @return 是否包含值为<code>null</code>的属性，{@code true} - 包含 / {@code false} - 不包含
+	 * @return 是否包含值为{@code null}的属性，{@code true} - 包含 / {@code false} - 不包含
 	 * @since 4.1.10
 	 */
 	public static boolean hasNullField(final Object bean, final String... ignoreFieldNames) {
+		return checkBean(bean, field ->
+			(!ArrayUtil.contains(ignoreFieldNames, field.getName()))
+			&& null == FieldUtil.getFieldValue(bean, field)
+		);
+	}
+
+	/**
+	 * 判断Bean是否包含值为{@code null}的属性，或当字段为{@link CharSequence}时，是否为isEmpty（null或""）<br>
+	 * 对象本身为{@code null}也返回true
+	 *
+	 * @param bean             Bean对象
+	 * @param ignoreFieldNames 忽略检查的字段名
+	 * @return 是否包含值为{@code null}的属性，{@code true} - 包含 / {@code false} - 不包含
+	 * @since 4.1.10
+	 */
+	public static boolean hasEmptyField(final Object bean, final String... ignoreFieldNames) {
+		return checkBean(bean, field ->
+			(!ArrayUtil.contains(ignoreFieldNames, field.getName()))
+				&& StrUtil.isEmptyIfStr(FieldUtil.getFieldValue(bean, field))
+		);
+	}
+
+	/**
+	 * 检查Bean<br>
+	 * 遍历Bean的字段并断言检查字段，当某个字段：
+	 * 断言为{@code true} 时，返回{@code true}并不再检查后续字段；<br>
+	 * 断言为{@code false}时，继续检查后续字段
+	 *
+	 * @param bean Bean
+	 * @param predicate 断言
+	 * @return 是否触发断言为真
+	 */
+	public static boolean checkBean(final Object bean, final Predicate<Field> predicate){
 		if (null == bean) {
 			return true;
 		}
@@ -884,8 +916,7 @@ public class BeanUtil {
 			if (ModifierUtil.isStatic(field)) {
 				continue;
 			}
-			if ((!ArrayUtil.contains(ignoreFieldNames, field.getName()))
-					&& null == FieldUtil.getFieldValue(bean, field)) {
+			if (predicate.test(field)) {
 				return true;
 			}
 		}

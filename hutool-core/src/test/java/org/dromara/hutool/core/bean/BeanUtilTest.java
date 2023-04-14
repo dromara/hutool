@@ -761,6 +761,63 @@ public class BeanUtilTest {
 		Assertions.assertEquals(Integer.valueOf(3), ArrayUtil.get(o, 1));
 	}
 
+	@Test
+	void hasNullFieldTest() {
+		Assertions.assertTrue(BeanUtil.hasNullField(null));
+
+
+		final TestPojo testPojo = new TestPojo();
+		Assertions.assertTrue(BeanUtil.hasNullField(testPojo));
+
+		testPojo.setName("test");
+		Assertions.assertTrue(BeanUtil.hasNullField(testPojo));
+		// 忽略testPojo2List，则只剩下name属性，非空，返回false
+		Assertions.assertFalse(BeanUtil.hasNullField(testPojo, "testPojo2List"));
+
+		testPojo.setTestPojo2List(new TestPojo2[0]);
+		// 所有字段都有值
+		Assertions.assertFalse(BeanUtil.hasNullField(testPojo));
+	}
+
+	@Test
+	void hasEmptyFieldTest() {
+		Assertions.assertTrue(BeanUtil.hasEmptyField(null));
+
+
+		final TestPojo testPojo = new TestPojo();
+		Assertions.assertTrue(BeanUtil.hasEmptyField(testPojo));
+
+		testPojo.setName("test");
+		Assertions.assertTrue(BeanUtil.hasEmptyField(testPojo));
+		// 忽略testPojo2List，则只剩下name属性，非空，返回false
+		Assertions.assertFalse(BeanUtil.hasEmptyField(testPojo, "testPojo2List"));
+
+		testPojo.setTestPojo2List(new TestPojo2[0]);
+		// 所有字段都有值
+		Assertions.assertFalse(BeanUtil.hasEmptyField(testPojo));
+
+		// 给空字段值
+		testPojo.setName("");
+		Assertions.assertTrue(BeanUtil.hasEmptyField(testPojo));
+	}
+
+	@Test
+	void isEmptyTest() {
+		Assertions.assertTrue(BeanUtil.isEmpty(null));
+
+		final TestPojo testPojo = new TestPojo();
+		Assertions.assertTrue(BeanUtil.isEmpty(testPojo));
+
+		testPojo.setName("test");
+		Assertions.assertFalse(BeanUtil.isEmpty(testPojo));
+		// 忽略name属性判断
+		Assertions.assertTrue(BeanUtil.isEmpty(testPojo, "name"));
+
+		testPojo.setTestPojo2List(new TestPojo2[0]);
+		// 所有字段都有值
+		Assertions.assertFalse(BeanUtil.isEmpty(testPojo));
+	}
+
 	@Data
 	public static class TestPojo {
 		private String name;
