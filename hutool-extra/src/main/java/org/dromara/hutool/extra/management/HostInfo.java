@@ -27,7 +27,7 @@ public class HostInfo implements Serializable {
 	private final String HOST_ADDRESS;
 
 	public HostInfo() {
-		final InetAddress localhost = NetUtil.getLocalhost();
+		final InetAddress localhost = NetUtil.getLocalhostV4();
 		if(null != localhost){
 			HOST_NAME = localhost.getHostName();
 			HOST_ADDRESS = localhost.getHostAddress();

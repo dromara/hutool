@@ -28,31 +28,10 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigInteger;
-import java.net.Authenticator;
-import java.net.DatagramSocket;
-import java.net.HttpCookie;
-import java.net.IDN;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -66,8 +45,6 @@ public class NetUtil {
 	 * 本地IP
 	 */
 	public final static String LOCAL_IP = Ipv4Util.LOCAL_IP;
-
-	private static String localhostName;
 
 	/**
 	 * 默认最小端口，1024
@@ -98,39 +75,6 @@ public class NetUtil {
 	 */
 	public static long ipv4ToLong(final String strIP) {
 		return Ipv4Util.ipv4ToLong(strIP);
-	}
-
-	/**
-	 * 将IPv6地址字符串转为大整数
-	 *
-	 * @param ipv6Str 字符串
-	 * @return 大整数, 如发生异常返回 null
-	 * @since 5.5.7
-	 */
-	public static BigInteger ipv6ToBigInteger(final String ipv6Str) {
-		try {
-			final InetAddress address = InetAddress.getByName(ipv6Str);
-			if (address instanceof Inet6Address) {
-				return new BigInteger(1, address.getAddress());
-			}
-		} catch (final UnknownHostException ignore) {
-		}
-		return null;
-	}
-
-	/**
-	 * 将大整数转换成ipv6字符串
-	 *
-	 * @param bigInteger 大整数
-	 * @return IPv6字符串, 如发生异常返回 null
-	 * @since 5.5.7
-	 */
-	public static String bigIntegerToIPv6(final BigInteger bigInteger) {
-		try {
-			return InetAddress.getByAddress(bigInteger.toByteArray()).toString().substring(1);
-		} catch (final UnknownHostException ignore) {
-			return null;
-		}
 	}
 
 	/**
@@ -301,35 +245,6 @@ public class NetUtil {
 	}
 
 	/**
-	 * 构建InetSocketAddress<br>
-	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口<br>
-	 * 给定host为空时使用本地host（127.0.0.1）
-	 *
-	 * @param host        Host
-	 * @param defaultPort 默认端口
-	 * @return InetSocketAddress
-	 */
-	public static InetSocketAddress buildInetSocketAddress(String host, final int defaultPort) {
-		if (StrUtil.isBlank(host)) {
-			host = LOCAL_IP;
-		}
-
-		final String destHost;
-		final int port;
-		final int index = host.indexOf(":");
-		if (index != -1) {
-			// host:port形式
-			destHost = host.substring(0, index);
-			port = Integer.parseInt(host.substring(index + 1));
-		} else {
-			destHost = host;
-			port = defaultPort;
-		}
-
-		return new InetSocketAddress(destHost, port);
-	}
-
-	/**
 	 * 通过域名得到IP
 	 *
 	 * @param hostName HOST
@@ -394,19 +309,6 @@ public class NetUtil {
 	 */
 	public static LinkedHashSet<String> localIpv4s() {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(t -> t instanceof Inet4Address);
-
-		return toIpList(localAddressList);
-	}
-
-	/**
-	 * 获得本机的IPv6地址列表<br>
-	 * 返回的IP列表有序，按照系统设备顺序
-	 *
-	 * @return IP地址列表 {@link LinkedHashSet}
-	 * @since 4.5.17
-	 */
-	public static LinkedHashSet<String> localIpv6s() {
-		final LinkedHashSet<InetAddress> localAddressList = localAddressList(t -> t instanceof Inet6Address);
 
 		return toIpList(localAddressList);
 	}
@@ -499,8 +401,8 @@ public class NetUtil {
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 * @since 3.0.7
 	 */
-	public static String getLocalhostStr() {
-		final InetAddress localhost = getLocalhost();
+	public static String getLocalhostStrV4() {
+		final InetAddress localhost = Ipv4Util.getLocalhost();
 		if (null != localhost) {
 			return localhost.getHostAddress();
 		}
@@ -508,157 +410,32 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获取本机网卡IP地址，规则如下：
+	 * 获取本机网卡IPv4地址，规则如下：
 	 *
-	 * <pre>
-	 * 1. 查找所有网卡地址，必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址
-	 * 2. 如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址
-	 * </pre>
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
 	 * <p>
 	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
 	 * <p>
-	 * 见：<a href="https://github.com/dromara/hutool/issues/428">https://github.com/dromara/hutool/issues/428</a>
+	 * 见：https://github.com/dromara/hutool/issues/428
 	 *
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
-	 * @since 3.0.1
 	 */
-	public static InetAddress getLocalhost() {
-		final LinkedHashSet<InetAddress> localAddressList = localAddressList(address -> {
-			// 非loopback地址，指127.*.*.*的地址
-			return !address.isLoopbackAddress()
-					// 需为IPV4地址
-					&& address instanceof Inet4Address;
-		});
-
-		if (CollUtil.isNotEmpty(localAddressList)) {
-			InetAddress address2 = null;
-			for (final InetAddress inetAddress : localAddressList) {
-				if (!inetAddress.isSiteLocalAddress()) {
-					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
-					return inetAddress;
-				} else if (null == address2) {
-					address2 = inetAddress;
-				}
-			}
-
-			if (null != address2) {
-				return address2;
-			}
-		}
-
-		try {
-			return InetAddress.getLocalHost();
-		} catch (final UnknownHostException e) {
-			// ignore
-		}
-
-		return null;
+	public static InetAddress getLocalhostV4() {
+		return Ipv4Util.getLocalhost();
 	}
 
 	/**
-	 * 获得本机MAC地址
+	 * 获得本机MAC地址，默认使用获取到的IPv4本地地址对应网卡
 	 *
 	 * @return 本机MAC地址
 	 */
-	public static String getLocalMacAddress() {
-		return getMacAddress(getLocalhost());
-	}
-
-	/**
-	 * 获得指定地址信息中的MAC地址，使用分隔符“-”
-	 *
-	 * @param inetAddress {@link InetAddress}
-	 * @return MAC地址，用-分隔
-	 */
-	public static String getMacAddress(final InetAddress inetAddress) {
-		return getMacAddress(inetAddress, "-");
-	}
-
-	/**
-	 * 获得指定地址信息中的MAC地址
-	 *
-	 * @param inetAddress {@link InetAddress}
-	 * @param separator   分隔符，推荐使用“-”或者“:”
-	 * @return MAC地址，用-分隔
-	 */
-	public static String getMacAddress(final InetAddress inetAddress, final String separator) {
-		if (null == inetAddress) {
-			return null;
-		}
-
-		final byte[] mac = getHardwareAddress(inetAddress);
-		if (null != mac) {
-			final StringBuilder sb = new StringBuilder();
-			String s;
-			for (int i = 0; i < mac.length; i++) {
-				if (i != 0) {
-					sb.append(separator);
-				}
-				// 字节转换为整数
-				s = Integer.toHexString(mac[i] & 0xFF);
-				sb.append(s.length() == 1 ? 0 + s : s);
-			}
-			return sb.toString();
-		}
-
-		return null;
-	}
-
-	/**
-	 * 获得指定地址信息中的硬件地址
-	 *
-	 * @param inetAddress {@link InetAddress}
-	 * @return 硬件地址
-	 * @since 5.7.3
-	 */
-	public static byte[] getHardwareAddress(final InetAddress inetAddress) {
-		if (null == inetAddress) {
-			return null;
-		}
-
-		try {
-			final NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-			if (null != networkInterface) {
-				return networkInterface.getHardwareAddress();
-			}
-		} catch (final SocketException e) {
-			throw new UtilException(e);
-		}
-		return null;
-	}
-
-	/**
-	 * 获得本机物理地址
-	 *
-	 * @return 本机物理地址
-	 * @since 5.7.3
-	 */
-	public static byte[] getLocalHardwareAddress() {
-		return getHardwareAddress(getLocalhost());
-	}
-
-	/**
-	 * 获取主机名称，一次获取会缓存名称<br>
-	 * 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
-	 *
-	 * @return 主机名称
-	 * @since 5.4.4
-	 */
-	public static String getLocalHostName() {
-		if (StrUtil.isNotBlank(localhostName)) {
-			return localhostName;
-		}
-
-		final InetAddress localhost = getLocalhost();
-		if (null != localhost) {
-			String name = localhost.getHostName();
-			if (StrUtil.isEmpty(name)) {
-				name = localhost.getHostAddress();
-			}
-			localhostName = name;
-		}
-
-		return localhostName;
+	public static String getLocalMacAddressV4() {
+		return Ipv4Util.getLocalMacAddress();
 	}
 
 	/**
@@ -882,6 +659,24 @@ public class NetUtil {
 			}
 		}
 		return infos;
+	}
+
+	/**
+	 * 获取地址名称，如果无名称返回地址<br>
+	 * 如果提供的地址为{@code null}返回{@code null}
+	 *
+	 * @param address {@link InetAddress}，提供{@code null}返回{@code null}
+	 * @return 地址名称或地址
+	 */
+	public static String getAddressName(final InetAddress address) {
+		if (null == address) {
+			return null;
+		}
+		String name = address.getHostName();
+		if (StrUtil.isEmpty(name)) {
+			name = address.getHostAddress();
+		}
+		return name;
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start

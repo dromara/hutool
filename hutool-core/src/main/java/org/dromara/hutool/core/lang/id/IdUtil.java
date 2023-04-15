@@ -15,7 +15,7 @@ package org.dromara.hutool.core.lang.id;
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
-import org.dromara.hutool.core.net.NetUtil;
+import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.RuntimeUtil;
 
 /**
@@ -189,7 +189,7 @@ public class IdUtil {
 		long id = 1L;
 		byte[] mac = null;
 		try{
-			mac = NetUtil.getLocalHardwareAddress();
+			mac = Ipv4Util.getLocalHardwareAddress();
 		}catch (final UtilException ignore){
 			// ignore
 		}

@@ -1,14 +1,11 @@
 package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.regex.PatternPool;
-import org.dromara.hutool.core.regex.ReUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.HttpCookie;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.List;
 
@@ -23,26 +20,8 @@ public class NetUtilTest {
 	@Test
 	@Disabled
 	public void getLocalhostStrTest() {
-		final String localhost = NetUtil.getLocalhostStr();
+		final String localhost = NetUtil.getLocalhostStrV4();
 		Assertions.assertNotNull(localhost);
-	}
-
-	@Test
-	@Disabled
-	public void getLocalhostTest() {
-		final InetAddress localhost = NetUtil.getLocalhost();
-		Assertions.assertNotNull(localhost);
-	}
-
-	@Test
-	@Disabled
-	public void getLocalMacAddressTest() {
-		final String macAddress = NetUtil.getLocalMacAddress();
-		Assertions.assertNotNull(macAddress);
-
-		// 验证MAC地址正确
-		final boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
-		Assertions.assertTrue(match);
 	}
 
 	@Test
@@ -78,15 +57,8 @@ public class NetUtilTest {
 	}
 
 	@Test
-	@Disabled
-	public void getLocalHostNameTest() {
-		// 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
-		Assertions.assertNotNull(NetUtil.getLocalHostName());
-	}
-
-	@Test
 	public void getLocalHostTest() {
-		Assertions.assertNotNull(NetUtil.getLocalhost());
+		Assertions.assertNotNull(NetUtil.getLocalhostV4());
 	}
 
 	@Test

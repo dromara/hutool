@@ -12,14 +12,21 @@
 
 package org.dromara.hutool.core.net;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharUtil;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -45,6 +52,140 @@ import java.util.regex.Matcher;
  * @since 5.4.1
  */
 public class Ipv4Util implements Ipv4Pool {
+
+	private static volatile String localhostName;
+
+	/**
+	 * 获取主机名称，一次获取会缓存名称<br>
+	 * 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
+	 *
+	 * @return 主机名称
+	 * @since 5.4.4
+	 */
+	public static String getLocalHostName() {
+		if(null == localhostName){
+			synchronized (Ipv4Util.class){
+				if(null == localhostName){
+					localhostName = NetUtil.getAddressName(getLocalhostDirectly());
+				}
+			}
+		}
+		return localhostName;
+	}
+
+	/**
+	 * 获得本机MAC地址，默认使用获取到的IPv4本地地址对应网卡
+	 *
+	 * @return 本机MAC地址
+	 */
+	public static String getLocalMacAddress() {
+		return MacAddressUtil.getMacAddress(getLocalhost());
+	}
+
+	/**
+	 * 获得本机物理地址
+	 *
+	 * @return 本机物理地址
+	 * @since 5.7.3
+	 */
+	public static byte[] getLocalHardwareAddress() {
+		return MacAddressUtil.getHardwareAddress(getLocalhost());
+	}
+
+	/**
+	 * 获取本机网卡IPv4地址，规则如下：
+	 *
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
+	 * <p>
+	 * 见：https://github.com/dromara/hutool/issues/428
+	 *
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
+	 */
+	public static InetAddress getLocalhost() {
+		return Singleton.get(Ipv4Util.class.getName(), Ipv4Util::getLocalhostDirectly);
+	}
+
+	/**
+	 * 获取本机网卡IPv4地址，不使用缓存，规则如下：
+	 *
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
+	 * <p>
+	 * 见：https://github.com/dromara/hutool/issues/428
+	 *
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
+	 */
+	public static InetAddress getLocalhostDirectly() {
+		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address -> {
+			// 非loopback地址，指127.*.*.*的地址
+			return !address.isLoopbackAddress()
+				// 非地区本地地址，指：
+				// 10.0.0.0 ~ 10.255.255.255
+				// 172.16.0.0 ~ 172.31.255.255
+				// 192.168.0.0 ~ 192.168.255.255
+				&& !address.isSiteLocalAddress()
+				// 需为IPV4地址
+				&& address instanceof Inet4Address;
+		});
+
+		if (CollUtil.isNotEmpty(localAddressList)) {
+			// 如果存在多网卡，返回首个地址
+			return CollUtil.getFirst(localAddressList);
+		}
+
+		try {
+			final InetAddress localHost = InetAddress.getLocalHost();
+			if(localHost instanceof Inet4Address){
+				return localHost;
+			}
+		} catch (final UnknownHostException e) {
+			// ignore
+		}
+
+		return null;
+	}
+
+	/**
+	 * 构建InetSocketAddress<br>
+	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口<br>
+	 * 给定host为空时使用本地host（127.0.0.1）
+	 *
+	 * @param host        Host
+	 * @param defaultPort 默认端口
+	 * @return InetSocketAddress
+	 */
+	public static InetSocketAddress buildInetSocketAddress(String host, final int defaultPort) {
+		if (StrUtil.isBlank(host)) {
+			host = LOCAL_IP;
+		}
+
+		final String targetHost;
+		final int port;
+		final int index = host.indexOf(":");
+		if (index != -1) {
+			// host:port形式
+			targetHost = host.substring(0, index);
+			port = Integer.parseInt(host.substring(index + 1));
+		} else {
+			targetHost = host;
+			port = defaultPort;
+		}
+
+		return new InetSocketAddress(targetHost, port);
+	}
 
 	/**
 	 * 根据 ip地址 和 掩码地址 获得 CIDR格式字符串

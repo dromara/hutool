@@ -1,9 +1,21 @@
 package org.dromara.hutool.core.net;
 
+import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.net.InetAddress;
+
 public class Ipv4UtilTest {
+
+	@Test
+	@Disabled
+	public void getLocalHostNameTest() {
+		// 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
+		Assertions.assertNotNull(Ipv4Util.getLocalHostName());
+	}
 
 	@Test
 	public void formatIpBlockTest() {
@@ -198,5 +210,23 @@ public class Ipv4UtilTest {
 			final String endIpStr = Ipv4Util.getEndIpStr(ip, i);
 			Assertions.assertEquals(Ipv4Util.getMaskByMaskBit(i), Ipv4Util.getMaskByIpRange(beginIpStr, endIpStr));
 		}
+	}
+
+	@Test
+	@Disabled
+	public void getLocalhostTest() {
+		final InetAddress localhost = Ipv4Util.getLocalhost();
+		Assertions.assertNotNull(localhost);
+	}
+
+	@Test
+	@Disabled
+	public void getLocalMacAddressTest() {
+		final String macAddress = Ipv4Util.getLocalMacAddress();
+		Assertions.assertNotNull(macAddress);
+
+		// 验证MAC地址正确
+		final boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
+		Assertions.assertTrue(match);
 	}
 }

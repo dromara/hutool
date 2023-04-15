@@ -59,7 +59,7 @@ public class BCMacEngine implements MacEngine {
 	 *
 	 * @return {@link Mac}
 	 */
-	public Mac getMac() {
+	public Mac ipgetMac() {
 		return mac;
 	}
 
