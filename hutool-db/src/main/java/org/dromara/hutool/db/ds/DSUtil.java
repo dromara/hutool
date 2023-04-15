@@ -12,14 +12,10 @@
 
 package org.dromara.hutool.db.ds;
 
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.spi.ListServiceLoader;
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.ds.bee.BeeDSFactory;
-import org.dromara.hutool.db.ds.c3p0.C3p0DSFactory;
-import org.dromara.hutool.db.ds.dbcp.DbcpDSFactory;
-import org.dromara.hutool.db.ds.druid.DruidDSFactory;
-import org.dromara.hutool.db.ds.hikari.HikariDSFactory;
-import org.dromara.hutool.db.ds.pooled.PooledDSFactory;
-import org.dromara.hutool.db.ds.tomcat.TomcatDSFactory;
+import org.dromara.hutool.db.GlobalDbConfig;
 import org.dromara.hutool.log.StaticLog;
 import org.dromara.hutool.setting.Setting;
 
@@ -112,52 +108,34 @@ public class DSUtil {
 	 */
 	public static DSFactory createFactory(final Setting setting) {
 		final DSFactory dsFactory = _createFactory(setting);
-		StaticLog.debug("Use [{}] DataSource As Default", dsFactory.getDataSourceName());
+		StaticLog.debug("Use [{}] DataSource As Default.", dsFactory.getDataSourceName());
 		return dsFactory;
 	}
 
 	/**
 	 * 创建数据源实现工厂<br>
 	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
-	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; BeeCP &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
+	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; BeeCP &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled<br>
+	 * 见：META-INF/services/org.dromara.hutool.db.ds.DSFactory
 	 *
 	 * @param setting 数据库配置项
 	 * @return 日志实现类
 	 * @since 4.1.3
 	 */
-	private static DSFactory _createFactory(final Setting setting) {
-		try {
-			return new HikariDSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			// ignore
+	private static DSFactory _createFactory(Setting setting) {
+		if (null == setting) {
+			setting = GlobalDbConfig.createDbSetting();
 		}
-		try {
-			return new DruidDSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			// ignore
+		final ListServiceLoader<DSFactory> loader = ListServiceLoader.of(DSFactory.class);
+		final int size = loader.size();
+		for (int i = 0; i < size; i++) {
+			try {
+				return ConstructorUtil.newInstance(loader.getServiceClass(i), setting);
+			} catch (final NoClassDefFoundError | NoSuchMethodError e) {
+				// ignore
+			}
 		}
-		try {
-			return new TomcatDSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			//如果未引入包，此处会报org.apache.tomcat.jdbc.pool.PoolConfiguration未找到错误
-			//因为org.apache.tomcat.jdbc.pool.DataSource实现了此接口，会首先检查接口的存在与否
-			// ignore
-		}
-		try {
-			return new BeeDSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			// ignore
-		}
-		try {
-			return new DbcpDSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			// ignore
-		}
-		try {
-			return new C3p0DSFactory(setting);
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			// ignore
-		}
-		return new PooledDSFactory(setting);
+
+		throw new DbRuntimeException("No DSFactory implement available!");
 	}
 }

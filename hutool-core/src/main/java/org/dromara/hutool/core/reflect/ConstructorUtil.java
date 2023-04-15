@@ -12,20 +12,15 @@
 
 package org.dromara.hutool.core.reflect;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 反射中{@link Constructor}构造工具类，包括获取构造类和通过构造实例化对象相关工具
@@ -135,7 +130,7 @@ public class ConstructorUtil {
 		final Class<?>[] paramTypes = ClassUtil.getClasses(params);
 		final Constructor<T> constructor = getConstructor(clazz, paramTypes);
 		if (null == constructor) {
-			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[]{paramTypes});
+			throw new UtilException("No Constructor matched for parameter types: {}", new Object[]{paramTypes});
 		}
 		try {
 			return constructor.newInstance(params);
