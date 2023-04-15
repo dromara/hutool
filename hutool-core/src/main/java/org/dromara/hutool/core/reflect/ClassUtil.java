@@ -745,7 +745,7 @@ public class ClassUtil {
 	 * @param name       类名
 	 * @param isInitialized 是否初始化
 	 * @param loader     {@link ClassLoader}，{@code null}表示默认
-	 * @return 指定名称对应的类，如果不存在类，返回{@code null
+	 * @return 指定名称对应的类，如果不存在类，返回{@code null}
 	 * @link Class#forName(String, boolean, ClassLoader)}
 	 */
 	public static Class<?> forName(String name, final boolean isInitialized, ClassLoader loader) {

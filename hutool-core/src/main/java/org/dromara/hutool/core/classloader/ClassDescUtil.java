@@ -157,9 +157,11 @@ public class ClassDescUtil {
 	}
 
 	/**
-	 * get class desc.
+	 * 获取类描述
+	 * <pre>{@code
 	 * boolean[].class => "[Z"
 	 * Object.class => "Ljava/lang/Object;"
+	 * }</pre>
 	 *
 	 * @param c class.
 	 * @return desc.
@@ -284,9 +286,12 @@ public class ClassDescUtil {
 	}
 
 	/**
-	 * name to class.
+	 * 类名称转类
+	 *
+	 * <pre>{@code
 	 * "boolean" => boolean.class
 	 * "java.util.Map[][]" => java.util.Map[][].class
+	 * }</pre>
 	 *
 	 * @param name          name.
 	 * @param isInitialized 是否初始化类
