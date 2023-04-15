@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.core.net;
 
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.lang.Singleton;
+
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -25,6 +28,9 @@ import java.util.LinkedHashSet;
  * @since 6.0.0
  */
 public class Ipv6Util {
+
+	private static volatile String localhostName;
+
 	/**
 	 * 将IPv6地址字符串转为大整数
 	 *
@@ -64,10 +70,107 @@ public class Ipv6Util {
 	 * @return IP地址列表 {@link LinkedHashSet}
 	 * @since 4.5.17
 	 */
-	public static LinkedHashSet<String> localIpv6s() {
+	public static LinkedHashSet<String> localIps() {
 		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(
 			t -> t instanceof Inet6Address);
 
 		return NetUtil.toIpList(localAddressList);
+	}
+
+	/**
+	 * 获取主机名称，一次获取会缓存名称<br>
+	 * 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
+	 *
+	 * @return 主机名称
+	 * @since 5.4.4
+	 */
+	public static String getLocalHostName() {
+		if(null == localhostName){
+			synchronized (Ipv4Util.class){
+				if(null == localhostName){
+					localhostName = NetUtil.getAddressName(getLocalhostDirectly());
+				}
+			}
+		}
+		return localhostName;
+	}
+
+	/**
+	 * 获得本机MAC地址，默认使用获取到的IPv6本地地址对应网卡
+	 *
+	 * @return 本机MAC地址
+	 */
+	public static String getLocalMacAddress() {
+		return MacAddressUtil.getMacAddress(getLocalhost());
+	}
+
+	/**
+	 * 获得本机物理地址（IPv6网卡）
+	 *
+	 * @return 本机物理地址
+	 */
+	public static byte[] getLocalHardwareAddress() {
+		return MacAddressUtil.getHardwareAddress(getLocalhost());
+	}
+
+	/**
+	 * 获取本机网卡IPv6地址，规则如下：
+	 *
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv6地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
+	 *
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
+	 */
+	public static InetAddress getLocalhost() {
+		return Singleton.get(Ipv6Util.class.getName(), Ipv6Util::getLocalhostDirectly);
+	}
+
+	/**
+	 * 获取本机网卡IPv6地址，不使用缓存，规则如下：
+	 *
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv6地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
+	 * <p>
+	 * 见：https://github.com/dromara/hutool/issues/428
+	 *
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
+	 */
+	public static InetAddress getLocalhostDirectly() {
+		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address -> {
+			// 非loopback地址
+			return !address.isLoopbackAddress()
+				// 非地区本地地址
+				&& !address.isSiteLocalAddress()
+				// 需为IPV6地址
+				&& address instanceof Inet6Address;
+		});
+
+		if (CollUtil.isNotEmpty(localAddressList)) {
+			// 如果存在多网卡，返回首个地址
+			return CollUtil.getFirst(localAddressList);
+		}
+
+		try {
+			final InetAddress localHost = InetAddress.getLocalHost();
+			if (localHost instanceof Inet6Address) {
+				return localHost;
+			}
+		} catch (final UnknownHostException e) {
+			// ignore
+		}
+
+		return null;
 	}
 }
