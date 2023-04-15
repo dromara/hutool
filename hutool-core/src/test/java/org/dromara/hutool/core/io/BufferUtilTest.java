@@ -2,6 +2,7 @@ package org.dromara.hutool.core.io;
 
 import java.nio.ByteBuffer;
 
+import org.dromara.hutool.core.io.buffer.BufferUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;

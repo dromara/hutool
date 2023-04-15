@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.io;
+package org.dromara.hutool.core.io.buffer;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
- * {@link ByteBuffer} 工具类<br>
+ * {@link ByteBuffer} 、{@link CharBuffer}工具类<br>
  * 此工具来自于 t-io 项目以及其它项目的相关部分收集<br>
  * ByteBuffer的相关介绍见：https://www.cnblogs.com/ruber/p/6857159.html
  *

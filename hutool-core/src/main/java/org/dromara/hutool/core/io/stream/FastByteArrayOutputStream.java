@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.stream;
 
-import org.dromara.hutool.core.io.FastByteBuffer;
+import org.dromara.hutool.core.io.buffer.FastByteBuffer;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -62,6 +62,11 @@ public class FastByteArrayOutputStream extends OutputStream {
 		buffer.append((byte) b);
 	}
 
+	/**
+	 * 长度
+	 *
+	 * @return 长度
+	 */
 	public int size() {
 		return buffer.size();
 	}
@@ -74,18 +79,22 @@ public class FastByteArrayOutputStream extends OutputStream {
 		// nop
 	}
 
+	/**
+	 * 复位
+	 */
 	public void reset() {
 		buffer.reset();
 	}
 
 	/**
 	 * 写出
+	 *
 	 * @param out 输出流
 	 * @throws IORuntimeException IO异常
 	 */
 	public void writeTo(final OutputStream out) throws IORuntimeException {
 		final int index = buffer.index();
-		if(index < 0){
+		if (index < 0) {
 			// 无数据写出
 			return;
 		}
@@ -104,6 +113,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 
 	/**
 	 * 转为Byte数组
+	 *
 	 * @return Byte数组
 	 */
 	public byte[] toByteArray() {
@@ -117,12 +127,13 @@ public class FastByteArrayOutputStream extends OutputStream {
 
 	/**
 	 * 转为字符串
+	 *
 	 * @param charset 编码,null表示默认编码
 	 * @return 字符串
 	 */
 	public String toString(final Charset charset) {
 		return new String(toByteArray(),
-				ObjUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
+			ObjUtil.defaultIfNull(charset, CharsetUtil::defaultCharset));
 	}
 
 }

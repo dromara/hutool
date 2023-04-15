@@ -1,6 +1,6 @@
 package org.dromara.hutool.socket.nio;
 
-import org.dromara.hutool.core.io.BufferUtil;
+import org.dromara.hutool.core.io.buffer.BufferUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Console;

@@ -24,6 +24,7 @@ import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.util.BooleanUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -215,10 +216,10 @@ public class MethodUtil {
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
-						//排除桥接方法，pr#1965@Github
-						//排除协变桥接方法，pr#1965@Github
-						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					&& ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)
+					//排除桥接方法，pr#1965@Github
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
 					res = method;
 				}
 			}
@@ -284,8 +285,8 @@ public class MethodUtil {
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (final Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)
-						//排除协变桥接方法，pr#1965@Github
-						&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
+					//排除协变桥接方法，pr#1965@Github
+					&& (res == null || res.getReturnType().isAssignableFrom(method.getReturnType()))) {
 					res = method;
 				}
 			}
@@ -335,7 +336,7 @@ public class MethodUtil {
 	public static Method[] getMethods(final Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return METHODS_CACHE.computeIfAbsent(beanClass,
-				(key) -> getMethodsDirectly(beanClass, true, true));
+			(key) -> getMethodsDirectly(beanClass, true, true));
 	}
 
 	/**
@@ -348,7 +349,7 @@ public class MethodUtil {
 	public static Method[] getDeclaredMethods(final Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return DECLARED_METHODS_CACHE.computeIfAbsent(beanClass,
-				key -> getMethodsDirectly(beanClass, false, Objects.equals(Object.class, beanClass)));
+			key -> getMethodsDirectly(beanClass, false, Objects.equals(Object.class, beanClass)));
 	}
 
 	/**
@@ -398,8 +399,8 @@ public class MethodUtil {
 	 */
 	public static boolean isEqualsMethod(final Method method) {
 		if (method == null ||
-				1 != method.getParameterCount() ||
-				!"equals".equals(method.getName())) {
+			1 != method.getParameterCount() ||
+			!"equals".equals(method.getName())) {
 			return false;
 		}
 		return (method.getParameterTypes()[0] == Object.class);
@@ -413,8 +414,8 @@ public class MethodUtil {
 	 */
 	public static boolean isHashCodeMethod(final Method method) {
 		return method != null//
-				&& "hashCode".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "hashCode".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -425,8 +426,8 @@ public class MethodUtil {
 	 */
 	public static boolean isToStringMethod(final Method method) {
 		return method != null//
-				&& "toString".equals(method.getName())//
-				&& isEmptyParam(method);
+			&& "toString".equals(method.getName())//
+			&& isEmptyParam(method);
 	}
 
 	/**
@@ -471,32 +472,91 @@ public class MethodUtil {
 	 * @since 5.7.20
 	 */
 	public static boolean isGetterOrSetter(final Method method, final boolean ignoreCase) {
+		// 参数个数必须为1
+		final int parameterCount = method.getParameterCount();
+		switch (parameterCount){
+			case 0:
+				return isGetter(method, ignoreCase);
+			case 1:
+				return isSetter(method, ignoreCase);
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * 检查给定方法是否为Setter方法，规则为：<br>
+	 * <ul>
+	 *     <li>方法参数必须为1个</li>
+	 *     <li>判断是否以“set”开头</li>
+	 * </ul>
+	 *
+	 * @param method     方法
+	 * @param ignoreCase 是否忽略方法名的大小写
+	 * @return 是否为Setter方法
+	 */
+	public static boolean isSetter(final Method method, final boolean ignoreCase) {
+		if (null == method) {
+			return false;
+		}
+
+		// 参数个数必须为1
+		final int parameterCount = method.getParameterCount();
+		if (1 != parameterCount) {
+			return false;
+		}
+
+		String name = method.getName();
+		// 跳过set这类特殊方法
+		if ("set".equals(name)) {
+			return false;
+		}
+
+		if (ignoreCase) {
+			name = name.toLowerCase();
+		}
+		return name.startsWith("set");
+	}
+
+	/**
+	 * 检查给定方法是否为Getter方法，规则为：<br>
+	 * <ul>
+	 *     <li>方法参数必须为0个</li>
+	 *     <li>方法名称不能是getClass</li>
+	 *     <li>"is"开头返回必须为boolean或Boolean</li>
+	 *     <li>是否以“get”</li>
+	 * </ul>
+	 *
+	 * @param method     方法
+	 * @param ignoreCase 是否忽略方法名的大小写
+	 * @return 是否为Getter方法
+	 */
+	public static boolean isGetter(final Method method, final boolean ignoreCase) {
 		if (null == method) {
 			return false;
 		}
 
 		// 参数个数必须为0或1
 		final int parameterCount = method.getParameterCount();
-		if (parameterCount > 1) {
+		if (0 != parameterCount) {
 			return false;
 		}
 
 		String name = method.getName();
-		// 跳过getClass这个特殊方法
-		if ("getClass".equals(name)) {
+		// 跳过getClass、get、is这类特殊方法
+		if ("getClass".equals(name) || "get".equals(name) || "is".equals(name)) {
 			return false;
 		}
+
 		if (ignoreCase) {
 			name = name.toLowerCase();
 		}
-		switch (parameterCount) {
-			case 0:
-				return name.startsWith("get") || name.startsWith("is");
-			case 1:
-				return name.startsWith("set");
-			default:
-				return false;
+
+		if (name.startsWith("is")) {
+			// 判断返回值是否为Boolean
+			return BooleanUtil.isBoolean(method.getReturnType());
 		}
+		return name.startsWith("get");
 	}
 
 	// --------------------------------------------------------------------------------------------------------- invoke

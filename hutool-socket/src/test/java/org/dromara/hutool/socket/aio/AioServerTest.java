@@ -1,7 +1,7 @@
 package org.dromara.hutool.socket.aio;
 
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.io.BufferUtil;
+import org.dromara.hutool.core.io.buffer.BufferUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.log.StaticLog;

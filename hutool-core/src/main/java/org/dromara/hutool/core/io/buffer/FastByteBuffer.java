@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.io;
+package org.dromara.hutool.core.io.buffer;
 
 /**
  * 代码移植自<a href="https://github.com/biezhi/blade">blade</a><br>
@@ -51,12 +51,20 @@ public class FastByteBuffer {
 	 */
 	private final int minChunkLen;
 
+	/**
+	 * 构造
+	 */
 	public FastByteBuffer() {
 		this(1024);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param size 一个缓冲区的最小字节数
+	 */
 	public FastByteBuffer(int size) {
-		if(size <= 0){
+		if (size <= 0) {
 			size = 1024;
 		}
 		this.minChunkLen = Math.abs(size);
@@ -90,8 +98,8 @@ public class FastByteBuffer {
 	 * 向快速缓冲加入数据
 	 *
 	 * @param array 数据
-	 * @param off 偏移量
-	 * @param len 字节数
+	 * @param off   偏移量
+	 * @param len   字节数
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
 	public FastByteBuffer append(final byte[] array, final int off, final int len) {
@@ -134,7 +142,6 @@ public class FastByteBuffer {
 	 * 向快速缓冲加入数据
 	 *
 	 * @param array 数据
-	 *
 	 * @return 快速缓冲自身 @see FastByteBuffer
 	 */
 	public FastByteBuffer append(final byte[] array) {
@@ -176,10 +183,20 @@ public class FastByteBuffer {
 		return this;
 	}
 
+	/**
+	 * 长度
+	 *
+	 * @return 长度
+	 */
 	public int size() {
 		return size;
 	}
 
+	/**
+	 * 是否为空
+	 *
+	 * @return 是否为空
+	 */
 	public boolean isEmpty() {
 		return size == 0;
 	}
@@ -193,6 +210,11 @@ public class FastByteBuffer {
 		return currentBufferIndex;
 	}
 
+	/**
+	 * 获取当前缓冲偏移量
+	 *
+	 * @return 当前缓冲偏移量
+	 */
 	public int offset() {
 		return offset;
 	}
@@ -207,6 +229,9 @@ public class FastByteBuffer {
 		return buffers[index];
 	}
 
+	/**
+	 * 复位缓冲
+	 */
 	public void reset() {
 		size = 0;
 		offset = 0;
@@ -243,7 +268,7 @@ public class FastByteBuffer {
 	 * 返回快速缓冲中的数据
 	 *
 	 * @param start 逻辑起始位置
-	 * @param len 逻辑字节长
+	 * @param len   逻辑字节长
 	 * @return 快速缓冲中的数据
 	 */
 	public byte[] toArray(int start, final int len) {
