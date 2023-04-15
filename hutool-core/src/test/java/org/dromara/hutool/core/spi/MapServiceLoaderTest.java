@@ -16,7 +16,7 @@ import org.dromara.hutool.core.exceptions.UtilException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SpiUtilTest {
+public class MapServiceLoaderTest {
 
 	@Test
 	void loadFirstAvailableTest() {

@@ -1,6 +1,0 @@
-# 无服务
-serviceEmpty =
-# 正常服务
-service1 = org.dromara.hutool.core.spi.SpiUtilTest$TestService1
-# 此服务类未定义
-service2 = org.dromara.hutool.core.spi.SpiUtilTest$TestService2
