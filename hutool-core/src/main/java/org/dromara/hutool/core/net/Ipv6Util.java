@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Singleton;
 
 import java.math.BigInteger;
@@ -85,9 +86,9 @@ public class Ipv6Util {
 	 * @since 5.4.4
 	 */
 	public static String getLocalHostName() {
-		if(null == localhostName){
-			synchronized (Ipv4Util.class){
-				if(null == localhostName){
+		if (null == localhostName) {
+			synchronized (Ipv4Util.class) {
+				if (null == localhostName) {
 					localhostName = NetUtil.getAddressName(getLocalhostDirectly());
 				}
 			}
@@ -148,14 +149,16 @@ public class Ipv6Util {
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 */
 	public static InetAddress getLocalhostDirectly() {
-		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address -> {
-			// 非loopback地址
-			return !address.isLoopbackAddress()
-				// 非地区本地地址
+		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address ->
+			// 需为IPV6地址
+			address instanceof Inet6Address
+				// 非loopback地址，::1
+				&& !address.isLoopbackAddress()
+				// 非地区本地地址，fec0::/10
 				&& !address.isSiteLocalAddress()
-				// 需为IPV6地址
-				&& address instanceof Inet6Address;
-		});
+				// 非链路本地地址，fe80::/10
+				&& !address.isLinkLocalAddress()
+		);
 
 		if (CollUtil.isNotEmpty(localAddressList)) {
 			// 如果存在多网卡，返回首个地址
@@ -172,5 +175,33 @@ public class Ipv6Util {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 规范IPv6地址，转换scope名称为scope id，如：
+	 * <pre>
+	 *     fe80:0:0:0:894:aeec:f37d:23e1%en0
+	 *                   |
+	 *     fe80:0:0:0:894:aeec:f37d:23e1%5
+	 * </pre>
+	 * <p>
+	 * 地址后的“%5” 叫做 scope id.
+	 * <p>
+	 * 方法来自于Dubbo
+	 *
+	 * @param address IPv6地址
+	 * @return 规范之后的IPv6地址，使用scope id
+	 */
+	public static InetAddress normalizeV6Address(final Inet6Address address) {
+		final String addr = address.getHostAddress();
+		final int index = addr.lastIndexOf('%');
+		if (index > 0) {
+			try {
+				return InetAddress.getByName(addr.substring(0, index) + '%' + address.getScopeId());
+			} catch (final UnknownHostException e) {
+				throw new UtilException(e);
+			}
+		}
+		return address;
 	}
 }

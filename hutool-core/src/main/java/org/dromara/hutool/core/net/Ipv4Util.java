@@ -63,9 +63,9 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @since 5.4.4
 	 */
 	public static String getLocalHostName() {
-		if(null == localhostName){
-			synchronized (Ipv4Util.class){
-				if(null == localhostName){
+		if (null == localhostName) {
+			synchronized (Ipv4Util.class) {
+				if (null == localhostName) {
 					localhostName = NetUtil.getAddressName(getLocalhostDirectly());
 				}
 			}
@@ -129,17 +129,19 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 */
 	public static InetAddress getLocalhostDirectly() {
-		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address -> {
-			// 非loopback地址，指127.*.*.*的地址
-			return !address.isLoopbackAddress()
+		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address ->
+			// 需为IPV4地址
+			address instanceof Inet4Address
+				// 非loopback地址，指127.*.*.*的地址
+				&& !address.isLoopbackAddress()
 				// 非地区本地地址，指：
 				// 10.0.0.0 ~ 10.255.255.255
 				// 172.16.0.0 ~ 172.31.255.255
 				// 192.168.0.0 ~ 192.168.255.255
 				&& !address.isSiteLocalAddress()
-				// 需为IPV4地址
-				&& address instanceof Inet4Address;
-		});
+				// 非链路本地地址：169.254.0.0/16
+				&& !address.isLinkLocalAddress()
+		);
 
 		if (CollUtil.isNotEmpty(localAddressList)) {
 			// 如果存在多网卡，返回首个地址
@@ -148,7 +150,7 @@ public class Ipv4Util implements Ipv4Pool {
 
 		try {
 			final InetAddress localHost = InetAddress.getLocalHost();
-			if(localHost instanceof Inet4Address){
+			if (localHost instanceof Inet4Address) {
 				return localHost;
 			}
 		} catch (final UnknownHostException e) {
@@ -274,10 +276,10 @@ public class Ipv4Util implements Ipv4Pool {
 		for (long ip = ipFrom, end = ipTo + 1; ip < end; ip++) {
 			sb.setLength(0);
 			ips.add(sb.append((int) (ip >> 24) & 0xFF).append(CharUtil.DOT)
-					.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
-					.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
-					.append((int) ip & 0xFF)
-					.toString());
+				.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
+				.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
+				.append((int) ip & 0xFF)
+				.toString());
 		}
 		return ips;
 	}
@@ -290,11 +292,11 @@ public class Ipv4Util implements Ipv4Pool {
 	 */
 	public static String longToIpv4(final long ip) {
 		return StrUtil.builder(15)
-				.append((int) (ip >> 24) & 0xFF).append(CharUtil.DOT)
-				.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
-				.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
-				.append((int) ip & 0xFF)
-				.toString();
+			.append((int) (ip >> 24) & 0xFF).append(CharUtil.DOT)
+			.append((int) (ip >> 16) & 0xFF).append(CharUtil.DOT)
+			.append((int) (ip >> 8) & 0xFF).append(CharUtil.DOT)
+			.append((int) ip & 0xFF)
+			.toString();
 	}
 
 	/**
@@ -378,7 +380,7 @@ public class Ipv4Util implements Ipv4Pool {
 	 */
 	public static int countByMaskBit(final int maskBit, final boolean isAll) {
 		Assert.isTrue(maskBit > IPV4_MASK_BIT_VALID_MIN && maskBit <= IPV4_MASK_BIT_MAX,
-				"Not support mask bit: {}", maskBit);
+			"Not support mask bit: {}", maskBit);
 		//如果掩码位等于32，则可用地址为0
 		if (maskBit == IPV4_MASK_BIT_MAX && !isAll) {
 			return 0;
@@ -412,11 +414,11 @@ public class Ipv4Util implements Ipv4Pool {
 		Assert.isTrue(fromIpLong <= toIpLong, "Start IP must be less than or equal to end IP!");
 
 		return StrUtil.builder(15)
-				.append(255 - getPartOfIp(toIpLong, 1) + getPartOfIp(fromIpLong, 1)).append(CharUtil.DOT)
-				.append(255 - getPartOfIp(toIpLong, 2) + getPartOfIp(fromIpLong, 2)).append(CharUtil.DOT)
-				.append(255 - getPartOfIp(toIpLong, 3) + getPartOfIp(fromIpLong, 3)).append(CharUtil.DOT)
-				.append(255 - getPartOfIp(toIpLong, 4) + getPartOfIp(fromIpLong, 4))
-				.toString();
+			.append(255 - getPartOfIp(toIpLong, 1) + getPartOfIp(fromIpLong, 1)).append(CharUtil.DOT)
+			.append(255 - getPartOfIp(toIpLong, 2) + getPartOfIp(fromIpLong, 2)).append(CharUtil.DOT)
+			.append(255 - getPartOfIp(toIpLong, 3) + getPartOfIp(fromIpLong, 3)).append(CharUtil.DOT)
+			.append(255 - getPartOfIp(toIpLong, 4) + getPartOfIp(fromIpLong, 4))
+			.toString();
 	}
 
 	/**
@@ -442,9 +444,9 @@ public class Ipv4Util implements Ipv4Pool {
 
 		int count = 1;
 		count += (getPartOfIp(toIp, 4) - getPartOfIp(fromIp, 4))
-				+ ((getPartOfIp(toIp, 3) - getPartOfIp(fromIp, 3)) << 8)
-				+ ((getPartOfIp(toIp, 2) - getPartOfIp(fromIp, 2)) << 16)
-				+ ((getPartOfIp(toIp, 1) - getPartOfIp(fromIp, 1)) << 24);
+			+ ((getPartOfIp(toIp, 3) - getPartOfIp(fromIp, 3)) << 8)
+			+ ((getPartOfIp(toIp, 2) - getPartOfIp(fromIp, 2)) << 16)
+			+ ((getPartOfIp(toIp, 1) - getPartOfIp(fromIp, 1)) << 24);
 		return count;
 	}
 
@@ -496,9 +498,9 @@ public class Ipv4Util implements Ipv4Pool {
 	 */
 	public static boolean isInnerIP(final long ipNum) {
 		return isBetween(ipNum, IPV4_A_PRIVATE_NUM_MIN, IPV4_A_PRIVATE_NUM_MAX)
-				|| isBetween(ipNum, IPV4_B_PRIVATE_NUM_MIN, IPV4_B_PRIVATE_NUM_MAX)
-				|| isBetween(ipNum, IPV4_C_PRIVATE_NUM_MIN, IPV4_C_PRIVATE_NUM_MAX)
-				|| LOCAL_IP_NUM == ipNum;
+			|| isBetween(ipNum, IPV4_B_PRIVATE_NUM_MIN, IPV4_B_PRIVATE_NUM_MAX)
+			|| isBetween(ipNum, IPV4_C_PRIVATE_NUM_MIN, IPV4_C_PRIVATE_NUM_MAX)
+			|| LOCAL_IP_NUM == ipNum;
 	}
 
 	/**
@@ -529,11 +531,11 @@ public class Ipv4Util implements Ipv4Pool {
 	 */
 	public static boolean isPublicIP(final long ipNum) {
 		return isBetween(ipNum, IPV4_A_PUBLIC_1_NUM_MIN, IPV4_A_PUBLIC_1_NUM_MAX)
-				|| isBetween(ipNum, IPV4_A_PUBLIC_2_NUM_MIN, IPV4_A_PUBLIC_2_NUM_MAX)
-				|| isBetween(ipNum, IPV4_B_PUBLIC_1_NUM_MIN, IPV4_B_PUBLIC_1_NUM_MAX)
-				|| isBetween(ipNum, IPV4_B_PUBLIC_2_NUM_MIN, IPV4_B_PUBLIC_2_NUM_MAX)
-				|| isBetween(ipNum, IPV4_C_PUBLIC_1_NUM_MIN, IPV4_C_PUBLIC_1_NUM_MAX)
-				|| isBetween(ipNum, IPV4_C_PUBLIC_2_NUM_MIN, IPV4_C_PUBLIC_2_NUM_MAX);
+			|| isBetween(ipNum, IPV4_A_PUBLIC_2_NUM_MIN, IPV4_A_PUBLIC_2_NUM_MAX)
+			|| isBetween(ipNum, IPV4_B_PUBLIC_1_NUM_MIN, IPV4_B_PUBLIC_1_NUM_MAX)
+			|| isBetween(ipNum, IPV4_B_PUBLIC_2_NUM_MIN, IPV4_B_PUBLIC_2_NUM_MAX)
+			|| isBetween(ipNum, IPV4_C_PUBLIC_1_NUM_MIN, IPV4_C_PUBLIC_1_NUM_MAX)
+			|| isBetween(ipNum, IPV4_C_PUBLIC_2_NUM_MIN, IPV4_C_PUBLIC_2_NUM_MAX);
 	}
 
 	/**
@@ -560,7 +562,7 @@ public class Ipv4Util implements Ipv4Pool {
 			case 3:
 				return (int) (ip >> 8) & 0xFF;
 			case 4:
-				return (int)ip & 0xFF;
+				return (int) ip & 0xFF;
 			default:
 				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
 		}
