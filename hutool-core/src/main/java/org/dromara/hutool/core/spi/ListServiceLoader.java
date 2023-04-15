@@ -100,6 +100,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	@Override
 	public void load() {
 		// 解析同名的所有service资源
+		// 按照资源加载优先级，先加载和解析的资源优先使用，后加载的同名资源丢弃
 		final MultiResource resources = ResourceUtil.getResources(
 			pathPrefix + serviceClass.getName(),
 			this.classLoader);

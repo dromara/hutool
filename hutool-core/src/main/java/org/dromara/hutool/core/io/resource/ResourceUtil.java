@@ -278,7 +278,12 @@ public class ResourceUtil {
 	}
 
 	/**
-	 * 获取同名的所有资源
+	 * 获取同名的所有资源<br>
+	 * 资源的加载顺序是：
+	 * <ul>
+	 *     <li>1. 首先在本项目下查找资源文件</li>
+	 *     <li>2. 按照classpath定义的顺序，去对应路径或jar包下寻找资源文件</li>
+	 * </ul>
 	 *
 	 * @param resource    资源名
 	 * @param classLoader {@link ClassLoader}，{@code null}表示使用默认的当前上下文ClassLoader
@@ -330,11 +335,26 @@ public class ResourceUtil {
 	 * @param resourceName 资源名，可以是相对classpath的路径，也可以是绝对路径
 	 * @param classLoader  {@link ClassLoader}，{@code null}表示使用默认的当前上下文ClassLoader
 	 * @param charset      编码，对XML无效，默认UTF-8
+	 * @param isOverride   是否覆盖模式
 	 */
 	public static void loadAllTo(final Properties properties, final String resourceName,
-								 final ClassLoader classLoader, final Charset charset) {
+								 final ClassLoader classLoader, final Charset charset, final boolean isOverride) {
+		if(isOverride){
+			for (final Resource resource : getResources(resourceName, classLoader)) {
+				loadTo(properties, resource, charset);
+			}
+			return;
+		}
+
+		// 非覆盖模式下，读取配置文件后逐个检查key
+		final Properties tmpProps = new Properties();
 		for (final Resource resource : getResources(resourceName, classLoader)) {
-			loadTo(properties, resource, charset);
+			loadTo(tmpProps, resource, charset);
+			tmpProps.forEach((name, value)->{
+				if(!properties.containsKey(name)){
+					properties.put(name, value);
+				}
+			});
 		}
 	}
 }
