@@ -16,10 +16,10 @@ package org.dromara.hutool.core.spi;
  * SPI服务加载接口<br>
  * 用户实现此接口用于制定不同的服务加载方式
  *
- * @param <T> 服务对象类型
+ * @param <S> 服务对象类型
  * @author looly
  */
-public interface ServiceLoader<T> {
+public interface ServiceLoader<S> extends Iterable<S>{
 
 	/**
 	 * 加载服务

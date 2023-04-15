@@ -13,21 +13,33 @@
 package org.dromara.hutool.core.spi;
 
 import org.dromara.hutool.core.cache.SimpleCache;
+import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.resource.MultiResource;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.AccessUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- * 列表类型的服务加载器，用于替换JDK提供的{@link java.util.ServiceLoader}
+ * 列表类型的服务加载器，用于替换JDK提供的{@link java.util.ServiceLoader}<br>
+ * 相比JDK，增加了：
+ * <ul>
+ *     <li>可选服务存储位置（默认位于META-INF/services/）。</li>
+ *     <li>可自定义编码。</li>
+ *     <li>可自定义加载指定的服务实例。</li>
+ *     <li>可自定义加载指定的服务类，由用户决定如何实例化（如传入自定义构造参数等）。</li>
+ *     <li>提供更加灵活的服务加载机制，当选择加载指定服务时，其它服务无需加载。</li>
+ * </ul>
  *
  * @param <S> 服务类型
  * @author looly
@@ -78,6 +90,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	// endregion
 
 	private final List<String> serviceNames;
+	// key: className, value: service instance
 	private final SimpleCache<String, S> serviceCache;
 
 	/**
@@ -113,6 +126,48 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	public int size() {
 		return this.serviceNames.size();
 	}
+
+	/**
+	 * 获取指定服务的实现类
+	 *
+	 * @param index 服务名称
+	 * @return 服务名称对应的实现类
+	 */
+	public Class<S> getServiceClass(final int index) {
+		return AccessUtil.doPrivileged(() -> getServiceClassUnsafe(index), this.acc);
+	}
+
+	/**
+	 * 获取指定序号对应的服务，使用缓存，多次调用只返回相同的服务对象
+	 *
+	 * @param index 服务名称
+	 * @return 服务对象
+	 */
+	public S getService(final int index) {
+		final String serviceClassName = this.serviceNames.get(index);
+		if(null == serviceClassName){
+			return null;
+		}
+		return getServiceByName(serviceClassName);
+	}
+
+	@Override
+	public Iterator<S> iterator() {
+		return new Iterator<S>() {
+			private final Iterator<String> nameIter = serviceNames.iterator();
+			@Override
+			public boolean hasNext() {
+				return nameIter.hasNext();
+			}
+
+			@Override
+			public S next() {
+				return getServiceByName(nameIter.next());
+			}
+		};
+	}
+
+	// region ----- private methods
 
 	/**
 	 * 解析一个资源，一个资源对应一个service文件
@@ -165,12 +220,21 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 		return lineNo + 1;
 	}
 
+	/**
+	 * 检查行
+	 *
+	 * @param resource 资源
+	 * @param lineNo   行号
+	 * @param line     行内容
+	 */
 	private void checkLine(final Resource resource, final int lineNo, final String line) {
 		if (StrUtil.containsBlank(line)) {
+			// 类中不允许空白符
 			fail(resource, lineNo, "Illegal configuration-file syntax");
 		}
 		int cp = line.codePointAt(0);
 		if (!Character.isJavaIdentifierStart(cp)) {
+			// 非Java合法标识符
 			fail(resource, lineNo, "Illegal provider-class name: " + line);
 		}
 		final int n = line.length();
@@ -182,8 +246,52 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 		}
 	}
 
-	private void fail(final Resource resource, final int line, final String msg) {
-		throw new SPIException(this.serviceClass + ":" + resource.getUrl() + ":" + line + ": " + msg);
+	/**
+	 * 抛出异常
+	 *
+	 * @param resource 资源
+	 * @param lineNo   行号
+	 * @param msg      消息
+	 */
+	private void fail(final Resource resource, final int lineNo, final String msg) {
+		throw new SPIException(this.serviceClass + ":" + resource.getUrl() + ":" + lineNo + ": " + msg);
 	}
 
+	/**
+	 * 获取指定class名对应的服务，使用缓存，多次调用只返回相同的服务对象
+	 *
+	 * @param serviceClassName 服务名称
+	 * @return 服务对象
+	 */
+	private S getServiceByName(final String serviceClassName) {
+		return this.serviceCache.get(serviceClassName, () -> createService(serviceClassName));
+	}
+
+	/**
+	 * 创建服务，无缓存
+	 *
+	 * @param serviceClassName 服务类名称
+	 * @return 服务对象
+	 */
+	private S createService(final String serviceClassName) {
+		return AccessUtil.doPrivileged(() ->
+			ConstructorUtil.newInstance(ClassLoaderUtil.loadClass(serviceClassName)),
+			this.acc);
+	}
+
+	/**
+	 * 获取指定服务的实现类
+	 *
+	 * @param index 服务索引号
+	 * @return 服务名称对应的实现类
+	 */
+	private Class<S> getServiceClassUnsafe(final int index) {
+		final String serviceClassName = this.serviceNames.get(index);
+		if (StrUtil.isBlank(serviceClassName)) {
+			return null;
+		}
+
+		return ClassLoaderUtil.loadClass(serviceClassName);
+	}
+	// endregion
 }

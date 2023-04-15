@@ -34,7 +34,7 @@ import java.util.ServiceLoader;
  * @author looly
  * @since 5.1.6
  */
-public class ServiceLoaderUtil {
+public class JdkServiceLoaderUtil {
 
 	/**
 	 * 。加载第一个可用服务，如果用户定义了多个接口实现类，只获取第一个不报错的服务

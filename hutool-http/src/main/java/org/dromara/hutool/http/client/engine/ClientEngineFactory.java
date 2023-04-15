@@ -13,8 +13,8 @@
 package org.dromara.hutool.http.client.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.ClientEngine;
@@ -68,7 +68,7 @@ public class ClientEngineFactory {
 	 * @return {@code EngineFactory}
 	 */
 	private static ClientEngine doCreate() {
-		final ClientEngine engine = ServiceLoaderUtil.loadFirstAvailable(ClientEngine.class);
+		final ClientEngine engine = SpiUtil.loadFirstAvailable(ClientEngine.class);
 		if (null != engine) {
 			return engine;
 		}

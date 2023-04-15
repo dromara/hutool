@@ -14,8 +14,8 @@ package org.dromara.hutool.extra.template.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateEngine;
 import org.dromara.hutool.extra.template.TemplateException;
@@ -75,7 +75,7 @@ public class TemplateFactory {
 		if(null != customEngineClass){
 			engine = ConstructorUtil.newInstance(customEngineClass);
 		}else{
-			engine = ServiceLoaderUtil.loadFirstAvailable(TemplateEngine.class);
+			engine = SpiUtil.loadFirstAvailable(TemplateEngine.class);
 		}
 		if(null != engine){
 			return engine.init(config);

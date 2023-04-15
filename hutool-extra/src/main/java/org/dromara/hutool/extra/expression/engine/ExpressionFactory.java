@@ -13,12 +13,11 @@
 package org.dromara.hutool.extra.expression.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.log.StaticLog;
-
 import org.dromara.hutool.extra.expression.ExpressionEngine;
 import org.dromara.hutool.extra.expression.ExpressionException;
+import org.dromara.hutool.log.StaticLog;
 
 /**
  * 表达式语言引擎工厂类，用于根据用户引入的表达式jar，自动创建对应的引擎对象
@@ -56,7 +55,7 @@ public class ExpressionFactory {
 	 * @return {@link ExpressionEngine}
 	 */
 	private static ExpressionEngine doCreate() {
-		final ExpressionEngine engine = ServiceLoaderUtil.loadFirstAvailable(ExpressionEngine.class);
+		final ExpressionEngine engine = SpiUtil.loadFirstAvailable(ExpressionEngine.class);
 		if(null != engine){
 			return engine;
 		}

@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.aop.proxy;
 
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.extra.aop.aspects.Aspect;
 
 import java.io.Serializable;
@@ -56,7 +56,7 @@ public interface ProxyFactory extends Serializable {
 	 * @return 代理工厂
 	 */
 	static ProxyFactory of() {
-		return ServiceLoaderUtil.loadFirstAvailable(ProxyFactory.class);
+		return SpiUtil.loadFirstAvailable(ProxyFactory.class);
 	}
 
 	/**

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.provider;
 
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.crypto.SecureUtil;
 
 import java.security.Provider;
@@ -54,7 +54,7 @@ public class GlobalProviderFactory {
 	 * @return {@link Provider} or {@code null}
 	 */
 	private static Provider _createProvider() {
-		final ProviderFactory factory = ServiceLoaderUtil.loadFirstAvailable(ProviderFactory.class);
+		final ProviderFactory factory = SpiUtil.loadFirstAvailable(ProviderFactory.class);
 		if (null == factory) {
 			return null;
 		}

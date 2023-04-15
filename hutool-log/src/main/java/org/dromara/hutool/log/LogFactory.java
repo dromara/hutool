@@ -15,7 +15,7 @@ package org.dromara.hutool.log;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.caller.CallerUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.log.engine.console.ConsoleLogFactory;
 import org.dromara.hutool.log.engine.jdk.JdkLogFactory;
 
@@ -182,7 +182,7 @@ public abstract class LogFactory {
 	 * @return 日志实现类
 	 */
 	private static LogFactory doCreate() {
-		final LogFactory factory = ServiceLoaderUtil.loadFirstAvailable(LogFactory.class);
+		final LogFactory factory = SpiUtil.loadFirstAvailable(LogFactory.class);
 		if (null != factory) {
 			return factory;
 		}

@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.tokenizer.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
-import org.dromara.hutool.core.spi.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.TokenizerException;
@@ -55,7 +55,7 @@ public class TokenizerFactory {
 	 * @return {@link TokenizerEngine}
 	 */
 	private static TokenizerEngine doCreate() {
-		final TokenizerEngine engine = ServiceLoaderUtil.loadFirstAvailable(TokenizerEngine.class);
+		final TokenizerEngine engine = SpiUtil.loadFirstAvailable(TokenizerEngine.class);
 		if(null != engine){
 			return engine;
 		}

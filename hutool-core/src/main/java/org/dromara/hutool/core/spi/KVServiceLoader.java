@@ -20,8 +20,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.AccessUtil;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * 键值对服务加载器，使用{@link Properties}加载并存储服务
@@ -75,6 +74,7 @@ public class KVServiceLoader<S> extends AbsServiceLoader<S> {
 	// endregion
 
 	private Properties serviceProperties;
+	// key: serviceName, value: service instance
 	private final SimpleCache<String, S> serviceCache;
 
 	/**
@@ -136,6 +136,24 @@ public class KVServiceLoader<S> extends AbsServiceLoader<S> {
 		return this.serviceCache.get(serviceName, () -> createService(serviceName));
 	}
 
+	@Override
+	public Iterator<S> iterator() {
+		return new Iterator<S>() {
+			private final Iterator<String> nameIter =
+				serviceProperties.stringPropertyNames().iterator();
+			@Override
+			public boolean hasNext() {
+				return nameIter.hasNext();
+			}
+
+			@Override
+			public S next() {
+				return getService(nameIter.next());
+			}
+		};
+	}
+
+	// region ----- private methods
 	/**
 	 * 创建服务，无缓存
 	 *
@@ -161,4 +179,5 @@ public class KVServiceLoader<S> extends AbsServiceLoader<S> {
 
 		return ClassLoaderUtil.loadClass(serviceClassName);
 	}
+	// endregion
 }
