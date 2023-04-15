@@ -15,7 +15,7 @@ package org.dromara.hutool.extra.template.engine;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateEngine;
 import org.dromara.hutool.extra.template.TemplateException;

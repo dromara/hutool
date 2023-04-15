@@ -10,10 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.spi;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.util.Iterator;
 import java.util.List;

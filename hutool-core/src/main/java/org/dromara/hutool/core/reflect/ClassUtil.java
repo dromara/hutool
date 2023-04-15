@@ -50,6 +50,15 @@ import java.util.function.Predicate;
 public class ClassUtil {
 
 	/**
+	 * 包名分界符: '.'
+	 */
+	private static final char PACKAGE_SEPARATOR = CharUtil.DOT;
+	/**
+	 * 内部类分界符: '$'
+	 */
+	private static final char INNER_CLASS_SEPARATOR = '$';
+
+	/**
 	 * {@code null}安全的获取对象类型
 	 *
 	 * @param <T> 对象类型
@@ -724,6 +733,64 @@ public class ClassUtil {
 		getInterfaces(cls, interfacesFound);
 
 		return new ArrayList<>(interfacesFound);
+	}
+
+	/**
+	 * 加载指定名称的类
+	 *
+	 * @param name       类名
+	 * @param isInitialized 是否初始化
+	 * @param loader     {@link ClassLoader}，{@code null}表示默认
+	 * @return 指定名称对应的类，如果不存在类，返回{@code null
+	 * @link Class#forName(String, boolean, ClassLoader)}
+	 */
+	public static Class<?> forName(final String name, final boolean isInitialized, ClassLoader loader) {
+		if(null == loader){
+			loader = ClassLoaderUtil.getClassLoader();
+		}
+
+		// 加载普通类
+		try {
+			return Class.forName(name, isInitialized, loader);
+		} catch (final ClassNotFoundException ex) {
+			// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+			final Class<?> clazz = forNameInnerClass(name, isInitialized, loader);
+			if (null == clazz) {
+				throw new UtilException(ex);
+			}
+			return clazz;
+		}
+	}
+
+	/**
+	 * 尝试转换并加载内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+	 *
+	 * @param name          类名
+	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
+	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
+	 * @return 类名对应的类，未找到返回{@code null}
+	 */
+	private static Class<?> forNameInnerClass(String name, final boolean isInitialized, final ClassLoader classLoader) {
+		// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+		int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
+		Class<?> clazz = null;
+		while (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
+			if (!Character.isUpperCase(name.charAt(lastDotIndex + 1))) {
+				// 类名必须大写，非大写的类名跳过
+				break;
+			}
+			name = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
+			try {
+				clazz = Class.forName(name, isInitialized, classLoader);
+				break;
+			} catch (final ClassNotFoundException ignore) {
+				//ignore
+			}
+
+			// 继续向前替换.为$
+			lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
+		}
+		return clazz;
 	}
 
 	/**

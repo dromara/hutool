@@ -201,7 +201,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	public void load(final Resource resource) {
 		Assert.notNull(resource, "Props resource must be not null!");
 		this.resource = resource;
-		PropsLoaderUtil.loadTo(this, resource, this.charset);
+		ResourceUtil.loadTo(this, resource, this.charset);
 	}
 
 	/**

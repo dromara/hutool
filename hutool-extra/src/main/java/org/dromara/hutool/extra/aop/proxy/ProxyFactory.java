@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.aop.proxy;
 
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.util.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.extra.aop.aspects.Aspect;
 
 import java.io.Serializable;

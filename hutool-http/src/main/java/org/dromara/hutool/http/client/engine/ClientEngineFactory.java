@@ -14,7 +14,7 @@ package org.dromara.hutool.http.client.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.ClientEngine;

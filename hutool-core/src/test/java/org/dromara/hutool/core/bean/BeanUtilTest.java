@@ -608,7 +608,8 @@ public class BeanUtilTest {
 		o.setAge(123);
 		o.setOpenid("asd");
 
-		@SuppressWarnings("unchecked") final CopyOptions copyOptions = CopyOptions.of().setIgnoreProperties(Person::getAge,Person::getOpenid);
+		@SuppressWarnings("unchecked")
+		final CopyOptions copyOptions = CopyOptions.of().setIgnoreProperties(Person::getAge,Person::getOpenid);
 		final Person n = new Person();
 		BeanUtil.copyProperties(o, n, copyOptions);
 

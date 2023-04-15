@@ -16,6 +16,7 @@ import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Predicate;
 
 /**
@@ -289,5 +291,50 @@ public class ResourceUtil {
 			resources.add(getResource(url));
 		}
 		return resources;
+	}
+
+	/**
+	 * 加载配置文件内容到{@link Properties}中<br>
+	 * 需要注意的是，如果资源文件的扩展名是.xml，会调用{@link Properties#loadFromXML(InputStream)} 读取。
+	 *
+	 * @param properties {@link Properties}文件
+	 * @param resource   资源
+	 * @param charset    编码，对XML无效
+	 */
+	public static void loadTo(final Properties properties, final Resource resource, final Charset charset) {
+		Assert.notNull(properties);
+		Assert.notNull(resource);
+		final String filename = resource.getName();
+		if (filename != null && StrUtil.endWithIgnoreCase(filename, ".xml")) {
+			// XML
+			try (final InputStream in = resource.getStream()) {
+				properties.loadFromXML(in);
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		} else {
+			// .properties
+			try (final BufferedReader reader = resource.getReader(
+				ObjUtil.defaultIfNull(charset, CharsetUtil.UTF_8))) {
+				properties.load(reader);
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+	}
+
+	/**
+	 * 加载指定名称的所有配置文件内容到{@link Properties}中
+	 *
+	 * @param properties   {@link Properties}文件
+	 * @param resourceName 资源名，可以是相对classpath的路径，也可以是绝对路径
+	 * @param classLoader  {@link ClassLoader}，{@code null}表示使用默认的当前上下文ClassLoader
+	 * @param charset      编码，对XML无效
+	 */
+	public static void loadAllTo(final Properties properties, final String resourceName,
+								 final ClassLoader classLoader, final Charset charset) {
+		for (final Resource resource : getResources(resourceName, classLoader)) {
+			loadTo(properties, resource, charset);
+		}
 	}
 }

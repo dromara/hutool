@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto.provider;
 
-import org.dromara.hutool.core.util.ServiceLoaderUtil;
+import org.dromara.hutool.core.spi.ServiceLoaderUtil;
 import org.dromara.hutool.crypto.SecureUtil;
 
 import java.security.Provider;
