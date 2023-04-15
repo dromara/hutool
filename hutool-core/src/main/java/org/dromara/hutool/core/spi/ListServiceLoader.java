@@ -41,6 +41,16 @@ import java.util.List;
  *     <li>提供更加灵活的服务加载机制，当选择加载指定服务时，其它服务无需加载。</li>
  * </ul>
  *
+ * <p>
+ * 服务文件默认位于"META-INF/services/"下，文件名为服务接口类全名。内容类似于：
+ * <pre>
+ *     # 我是注释
+ *     hutool.service.Service1
+ *     hutool.service.Service2
+ * </pre>
+ * <p>
+ * 通过调用{@link #getService(int)}方法，传入序号，即可获取对应服务。
+ *
  * @param <S> 服务类型
  * @author looly
  * @since 6.0.0
@@ -145,7 +155,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 */
 	public S getService(final int index) {
 		final String serviceClassName = this.serviceNames.get(index);
-		if(null == serviceClassName){
+		if (null == serviceClassName) {
 			return null;
 		}
 		return getServiceByName(serviceClassName);
@@ -155,6 +165,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	public Iterator<S> iterator() {
 		return new Iterator<S>() {
 			private final Iterator<String> nameIter = serviceNames.iterator();
+
 			@Override
 			public boolean hasNext() {
 				return nameIter.hasNext();
@@ -275,7 +286,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 */
 	private S createService(final String serviceClassName) {
 		return AccessUtil.doPrivileged(() ->
-			ConstructorUtil.newInstance(ClassLoaderUtil.loadClass(serviceClassName)),
+				ConstructorUtil.newInstance(ClassLoaderUtil.loadClass(serviceClassName)),
 			this.acc);
 	}
 
