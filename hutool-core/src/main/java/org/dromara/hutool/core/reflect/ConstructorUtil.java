@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.reflect;
 
+import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
@@ -103,7 +104,7 @@ public class ConstructorUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(final String clazz) throws UtilException {
 		try {
-			return (T) Class.forName(clazz).newInstance();
+			return (T) ClassLoaderUtil.loadClass(clazz).newInstance();
 		} catch (final Exception e) {
 			throw new UtilException(e, "Instance class [{}] error!", clazz);
 		}

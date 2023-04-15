@@ -299,7 +299,7 @@ public class ResourceUtil {
 	 *
 	 * @param properties {@link Properties}文件
 	 * @param resource   资源
-	 * @param charset    编码，对XML无效
+	 * @param charset    编码，对XML无效，默认UTF-8
 	 */
 	public static void loadTo(final Properties properties, final Resource resource, final Charset charset) {
 		Assert.notNull(properties);
@@ -329,7 +329,7 @@ public class ResourceUtil {
 	 * @param properties   {@link Properties}文件
 	 * @param resourceName 资源名，可以是相对classpath的路径，也可以是绝对路径
 	 * @param classLoader  {@link ClassLoader}，{@code null}表示使用默认的当前上下文ClassLoader
-	 * @param charset      编码，对XML无效
+	 * @param charset      编码，对XML无效，默认UTF-8
 	 */
 	public static void loadAllTo(final Properties properties, final String resourceName,
 								 final ClassLoader classLoader, final Charset charset) {

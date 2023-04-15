@@ -20,4 +20,16 @@ package org.dromara.hutool.core.spi;
  * @author looly
  */
 public interface ServiceLoader<T> {
+
+	/**
+	 * 加载服务
+	 */
+	void load();
+
+	/**
+	 * 服务总数
+	 *
+	 * @return 总数
+	 */
+	int size();
 }

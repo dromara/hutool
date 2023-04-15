@@ -72,6 +72,21 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	}
 
 	/**
+	 * 是否包含键
+	 *
+	 * @param key 键
+	 * @return 是否包含
+	 */
+	public boolean containsKey(final K key) {
+		lock.readLock().lock();
+		try {
+			return rawMap.containsKey(MutableObj.of(key));
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	/**
 	 * 从缓存池中查找值
 	 *
 	 * @param key 键
