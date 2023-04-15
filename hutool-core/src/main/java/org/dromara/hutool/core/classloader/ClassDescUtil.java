@@ -136,22 +136,21 @@ public class ClassDescUtil {
 	 * @throws UtilException 类没有找到
 	 */
 	public static Class<?> descToClass(String desc, final boolean isInitialized, final ClassLoader cl) throws UtilException {
+		Assert.notNull(desc, "Name must not be null");
 		final char firstChar = desc.charAt(0);
 		final Class<?> clazz = PRIMITIVE_CLASS_DESC_MAP.getKey(firstChar);
 		if (null != clazz) {
 			return clazz;
 		}
-		switch (firstChar) {
-			case 'L':
-				// "Ljava/lang/Object;" ==> "java.lang.Object"
-				desc = desc.substring(1, desc.length() - 1).replace('/', '.');
-				break;
-			case '[':
-				// "[[Ljava/lang/Object;" ==> "[[Ljava.lang.Object;"
-				desc = desc.replace(CharUtil.SLASH, CharUtil.DOT);
-				break;
-			default:
-				throw new UtilException("Class not found for : " + desc);
+
+		// 去除尾部多余的"."和"/"
+		desc = StrUtil.trim(desc, StrTrimer.TrimMode.SUFFIX, (c) ->
+			CharUtil.SLASH == c || CharUtil.DOT == c);
+
+		if ('L' == firstChar) {
+			// 正常类的描述中需要去掉L;包装的修饰
+			// "Ljava/lang/Object;" ==> "java.lang.Object"
+			desc = desc.substring(1, desc.length() - 1);
 		}
 
 		return ClassUtil.forName(desc, isInitialized, cl);
@@ -226,28 +225,62 @@ public class ClassDescUtil {
 	}
 
 	/**
-	 * 获取code base
+	 * 获得类名称<br>
+	 * 数组输出xxx[]形式，其它类调用{@link Class#getName()}
 	 *
-	 * @param clazz 类
-	 * @return code base
+	 * <pre>{@code
+	 * java.lang.Object[][].class => "java.lang.Object[][]"
+	 * }</pre>
+	 *
+	 * @param c 类
+	 * @return 类名称
 	 */
-	public static String getCodeBase(final Class<?> clazz) {
-		if (clazz == null) {
-			return null;
+	public static String getName(Class<?> c) {
+		if (c.isArray()) {
+			final StringBuilder sb = new StringBuilder();
+			do {
+				sb.append("[]");
+				c = c.getComponentType();
+			}
+			while (c.isArray());
+			return c.getName() + sb;
 		}
-		final ProtectionDomain domain = clazz.getProtectionDomain();
-		if (domain == null) {
-			return null;
+		return c.getName();
+	}
+
+	/**
+	 * 获取构造或方法的名称表示<br>
+	 * 构造：
+	 * <pre>
+	 * "()", "(java.lang.String,int)"
+	 * </pre>
+	 *
+	 * 方法：
+	 * <pre>
+	 *     "void do(int)", "void do()", "int do(java.lang.String,boolean)"
+	 * </pre>
+	 *
+	 * @param executable 方法或构造
+	 * @return 名称
+	 */
+	public static String getName(final Executable executable) {
+		final StringBuilder ret = new StringBuilder("(");
+
+		if(executable instanceof Method){
+			ret.append(getName(((Method) executable).getReturnType())).append(CharUtil.SPACE);
 		}
-		final CodeSource source = domain.getCodeSource();
-		if (source == null) {
-			return null;
+
+		// 参数
+		final Class<?>[] parameterTypes = executable.getParameterTypes();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			if (i > 0) {
+				ret.append(',');
+			}
+			ret.append(getName(parameterTypes[i]));
 		}
-		final URL location = source.getLocation();
-		if (location == null) {
-			return null;
-		}
-		return location.getFile();
+
+		ret.append(')');
+		return ret.toString();
 	}
 
 	/**
@@ -269,6 +302,7 @@ public class ClassDescUtil {
 		int c = 0;
 		final int index = name.indexOf('[');
 		if (index > 0) {
+			// c是[]对个数，如String[][]，则表示二维数组，c的值是2，获得desc结果就是[[LString;
 			c = (name.length() - index) / 2;
 			name = name.substring(0, index);
 		}
@@ -284,7 +318,7 @@ public class ClassDescUtil {
 				// 原始类型数组，根据name获取其描述
 				sb.append(PRIMITIVE_CLASS_DESC_MAP.get(clazz).charValue());
 			} else {
-				// 对象数组
+				// 对象数组必须转换为desc形式
 				// "java.lang.Object" ==> "Ljava.lang.Object;"
 				sb.append('L').append(name).append(';');
 			}
@@ -296,7 +330,7 @@ public class ClassDescUtil {
 			}
 		}
 
-		return ClassUtil.forName(name.replace(CharUtil.SLASH, CharUtil.DOT), isInitialized, cl);
+		return ClassUtil.forName(name, isInitialized, cl);
 	}
 
 	/**
@@ -326,7 +360,6 @@ public class ClassDescUtil {
 			// 原始类型数组，根据name获取其描述
 			sb.append(PRIMITIVE_CLASS_DESC_MAP.get(clazz).charValue());
 		} else {
-			// 对象数组
 			// "java.lang.Object" ==> "Ljava.lang.Object;"
 			sb.append('L').append(name.replace(CharUtil.DOT, CharUtil.SLASH)).append(';');
 		}
@@ -362,5 +395,30 @@ public class ClassDescUtil {
 			sb.append("[]");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 获取code base
+	 *
+	 * @param clazz 类
+	 * @return code base
+	 */
+	public static String getCodeBase(final Class<?> clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		final ProtectionDomain domain = clazz.getProtectionDomain();
+		if (domain == null) {
+			return null;
+		}
+		final CodeSource source = domain.getCodeSource();
+		if (source == null) {
+			return null;
+		}
+		final URL location = source.getLocation();
+		if (location == null) {
+			return null;
+		}
+		return location.getFile();
 	}
 }

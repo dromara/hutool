@@ -17,12 +17,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 来自：org.apache.dubbo.common.utils.ReflectUtilsTest
+ * 来自：org.apache.dubbo.common.utils.ClassDescUtilTest
  */
 public class ClassDescTest {
 
 	@Test
-	void testDesc2Class() {
+	void descToClassTest() {
 		assertEquals(void.class, ClassDescUtil.descToClass("V"));
 		assertEquals(boolean.class, ClassDescUtil.descToClass("Z"));
 		assertEquals(boolean[].class, ClassDescUtil.descToClass("[Z"));
@@ -48,7 +48,34 @@ public class ClassDescTest {
 
 	@Test
 	void nameToClassTest() {
-		final Class<?> aClass = ClassDescUtil.nameToClass("java.lang.Object[]", true, null);
+		Class<?> aClass = ClassDescUtil.nameToClass("java.lang.Object[]", true, null);
 		assertEquals(Object[].class, aClass);
+
+		aClass = ClassDescUtil.nameToClass("java.lang.Object", true, null);
+		assertEquals(Object.class, aClass);
+	}
+
+	@Test
+	void descToNameTest() {
+		assertEquals("short[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(short[].class)));
+		assertEquals("boolean[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(boolean[].class)));
+		assertEquals("byte[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(byte[].class)));
+		assertEquals("char[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(char[].class)));
+		assertEquals("double[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(double[].class)));
+		assertEquals("float[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(float[].class)));
+		assertEquals("int[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(int[].class)));
+		assertEquals("long[]", ClassDescUtil.descToName(ClassDescUtil.getDesc(long[].class)));
+		assertEquals("int", ClassDescUtil.descToName(ClassDescUtil.getDesc(int.class)));
+		assertEquals("void", ClassDescUtil.descToName(ClassDescUtil.getDesc(void.class)));
+		assertEquals("java.lang.Object[][]", ClassDescUtil.descToName(ClassDescUtil.getDesc(Object[][].class)));
+	}
+
+	@Test
+	void nameToDescTest() {
+		// name2desc
+		assertEquals("Z", ClassDescUtil.nameToDesc(ClassDescUtil.getName(boolean.class)));
+		assertEquals("[[[I", ClassDescUtil.nameToDesc(ClassDescUtil.getName(int[][][].class)));
+		assertEquals("[[Ljava/lang/Object;",
+			ClassDescUtil.nameToDesc(ClassDescUtil.getName(Object[][].class)));
 	}
 }

@@ -736,7 +736,11 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 加载指定名称的类
+	 * 加载指定名称的类，支持：
+	 * <ul>
+	 *     <li>替换"/"为"."</li>
+	 *     <li>自动查找内部类，如java.lang.Thread.State =》java.lang.Thread$State</li>
+	 * </ul>
 	 *
 	 * @param name       类名
 	 * @param isInitialized 是否初始化
@@ -744,10 +748,11 @@ public class ClassUtil {
 	 * @return 指定名称对应的类，如果不存在类，返回{@code null
 	 * @link Class#forName(String, boolean, ClassLoader)}
 	 */
-	public static Class<?> forName(final String name, final boolean isInitialized, ClassLoader loader) {
+	public static Class<?> forName(String name, final boolean isInitialized, ClassLoader loader) {
 		if(null == loader){
 			loader = ClassLoaderUtil.getClassLoader();
 		}
+		name = name.replace(CharUtil.SLASH, CharUtil.DOT);
 
 		// 加载普通类
 		try {
