@@ -108,7 +108,7 @@ public class AnsiSqlDialect implements Dialect {
 	@Override
 	public PreparedStatement psForPage(final Connection conn, final Query query) throws SQLException {
 		Assert.notNull(query, "query must be not null !");
-		if (StrUtil.hasBlank(query.getTableNames())) {
+		if (ArrayUtil.hasBlank(query.getTableNames())) {
 			throw new DbRuntimeException("Table name must be not empty !");
 		}
 

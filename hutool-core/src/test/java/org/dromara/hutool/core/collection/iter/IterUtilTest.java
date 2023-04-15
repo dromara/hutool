@@ -1,6 +1,11 @@
 package org.dromara.hutool.core.collection.iter;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.NodeList;
@@ -64,27 +69,27 @@ public class IterUtilTest {
 
 	@Test
 	public void testCountMap() {
-		Object o1 = new Object();
-		Object o2 = new Object();
-		Map<Object, Integer> countMap = IterUtil.countMap(Arrays.asList(o1, o2, o1, o1).iterator());
+		final Object o1 = new Object();
+		final Object o2 = new Object();
+		final Map<Object, Integer> countMap = IterUtil.countMap(Arrays.asList(o1, o2, o1, o1).iterator());
 		Assertions.assertEquals((Integer)3, countMap.get(o1));
 		Assertions.assertEquals((Integer)1, countMap.get(o2));
 	}
 
 	@Test
 	public void testFieldValueMap() {
-		Bean bean1 = new Bean(1, "A");
-		Bean bean2 = new Bean(2, "B");
-		Map<Integer, Bean> map = IterUtil.fieldValueMap(Arrays.asList(bean1, bean2).iterator(), "id");
+		final Bean bean1 = new Bean(1, "A");
+		final Bean bean2 = new Bean(2, "B");
+		final Map<Integer, Bean> map = IterUtil.fieldValueMap(Arrays.asList(bean1, bean2).iterator(), "id");
 		Assertions.assertEquals(bean1, map.get(1));
 		Assertions.assertEquals(bean2, map.get(2));
 	}
 
 	@Test
 	public void testFieldValueAsMap() {
-		Bean bean1 = new Bean(1, "A");
-		Bean bean2 = new Bean(2, "B");
-		Map<Integer, String> map = IterUtil.fieldValueAsMap(
+		final Bean bean1 = new Bean(1, "A");
+		final Bean bean2 = new Bean(2, "B");
+		final Map<Integer, String> map = IterUtil.fieldValueAsMap(
 			Arrays.asList(bean1, bean2).iterator(), "id", "name"
 		);
 		Assertions.assertEquals("A", map.get(1));
@@ -93,8 +98,8 @@ public class IterUtilTest {
 
 	@Test
 	public void testFieldValueList() {
-		Bean bean1 = new Bean(1, "A");
-		Bean bean2 = new Bean(2, "B");
+		final Bean bean1 = new Bean(1, "A");
+		final Bean bean2 = new Bean(2, "B");
 		Assertions.assertEquals(Arrays.asList(1, 2), IterUtil.fieldValueList(Arrays.asList(bean1, bean2), "id"));
 		Assertions.assertEquals(
 			Arrays.asList(1, 2),
@@ -104,7 +109,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testJoin() {
-		List<String> stringList = Arrays.asList("1", "2", "3");
+		final List<String> stringList = Arrays.asList("1", "2", "3");
 		Assertions.assertEquals("123", IterUtil.join(stringList.iterator(), ""));
 		Assertions.assertEquals("-1--2--3-", IterUtil.join(stringList.iterator(), "", "-", "-"));
 		Assertions.assertEquals("123", IterUtil.join(stringList.iterator(), "", Function.identity()));
@@ -112,7 +117,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testToMap() {
-		List<Integer> keys = Arrays.asList(1, 2, 3);
+		final List<Integer> keys = Arrays.asList(1, 2, 3);
 
 		Map<Integer, Integer> map = IterUtil.toMap(keys, keys);
 		Assertions.assertEquals(keys, new ArrayList<>(map.keySet()));
@@ -141,7 +146,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testToListMap() {
-		List<Integer> keys = Arrays.asList(1, 2, 3, 4);
+		final List<Integer> keys = Arrays.asList(1, 2, 3, 4);
 
 		Map<Boolean, List<Integer>> map = IterUtil.toListMap(keys, i -> (i & 1) == 0, Function.identity());
 		Assertions.assertEquals(Arrays.asList(2, 4), map.get(true));
@@ -152,20 +157,32 @@ public class IterUtilTest {
 		Assertions.assertEquals(Arrays.asList(1, 3), map.get(false));
 
 		map = new LinkedHashMap<>();
-		Map<Boolean, List<Integer>> rawMap = IterUtil.toListMap(map, keys, i -> (i & 1) == 0, Function.identity());
+		final Map<Boolean, List<Integer>> rawMap = IterUtil.toListMap(map, keys, i -> (i & 1) == 0, Function.identity());
 		Assertions.assertSame(rawMap, map);
 		Assertions.assertEquals(Arrays.asList(2, 4), rawMap.get(true));
 		Assertions.assertEquals(Arrays.asList(1, 3), rawMap.get(false));
 	}
 
 	@Test
+	public void testToListMap2() {
+		final Map<String, List<String>> expectedMap = new HashMap<>();
+		expectedMap.put("a", Collections.singletonList("and"));
+		expectedMap.put("b", Arrays.asList("brave", "back"));
+
+		final Map<String, List<String>> testMap = IterUtil.toListMap(Arrays.asList("and", "brave", "back"),
+			v -> v.substring(0, 1));
+		Assertions.assertEquals(testMap, expectedMap);
+	}
+
+	@SuppressWarnings("DataFlowIssue")
+	@Test
 	public void testAsIterable() {
-		Iterator<Integer> iter = Arrays.asList(1, 2, 3).iterator();
+		final Iterator<Integer> iter = Arrays.asList(1, 2, 3).iterator();
 		Assertions.assertEquals(iter, IterUtil.asIterable(iter).iterator());
 		Assertions.assertNull(IterUtil.asIterable(null).iterator());
 
-		Enumeration<Integer> enumeration = new IteratorEnumeration<>(iter);
-		Iterator<Integer> iter2 = IterUtil.asIterator(enumeration);
+		final Enumeration<Integer> enumeration = new IteratorEnumeration<>(iter);
+		final Iterator<Integer> iter2 = IterUtil.asIterator(enumeration);
 		Assertions.assertEquals((Integer)1, iter2.next());
 		Assertions.assertEquals((Integer)2, iter2.next());
 		Assertions.assertEquals((Integer)3, iter2.next());
@@ -173,14 +190,14 @@ public class IterUtilTest {
 
 	@Test
 	public void testGet() {
-		Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
+		final Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
 		Assertions.assertEquals((Integer)3, IterUtil.get(iter, 2));
 		Assertions.assertThrows(IllegalArgumentException.class, () -> IterUtil.get(iter, -1));
 	}
 
 	@Test
 	public void testGetFirst() {
-		Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
+		final Iterator<Integer> iter = Arrays.asList(1, 2, 3, 4).iterator();
 		Assertions.assertEquals((Integer)1, IterUtil.getFirst(iter));
 		Assertions.assertNull(IterUtil.getFirst(null));
 		Assertions.assertNull(IterUtil.getFirst(Collections.emptyIterator()));
@@ -192,7 +209,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testGetFirstNoneNull() {
-		Iterator<Integer> iter = Arrays.asList(null, 2, null, 4).iterator();
+		final Iterator<Integer> iter = Arrays.asList(null, 2, null, 4).iterator();
 		Assertions.assertEquals((Integer)2, IterUtil.getFirstNoneNull(iter));
 		Assertions.assertNull(IterUtil.getFirstNoneNull(null));
 		Assertions.assertNull(IterUtil.getFirstNoneNull(Collections.emptyIterator()));
@@ -200,7 +217,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testGetElementType() {
-		List<Object> list = Arrays.asList(null, "str", null);
+		final List<Object> list = Arrays.asList(null, "str", null);
 		Assertions.assertEquals(String.class, IterUtil.getElementType(list));
 		Assertions.assertNull(IterUtil.getElementType((Iterable<?>)null));
 		Assertions.assertNull(IterUtil.getElementType(Collections.emptyList()));
@@ -225,16 +242,15 @@ public class IterUtilTest {
 
 	@Test
 	public void testRemove() {
-		List<Integer> list = new ArrayList<>(Arrays.asList(1, null, null, 3));
+		final List<Integer> list = new ArrayList<>(Arrays.asList(1, null, null, 3));
 		IterUtil.remove(list.iterator(), Objects::isNull);
 		Assertions.assertEquals(Arrays.asList(1, 3), list);
 	}
 
 	@Test
 	public void testFilterToList() {
-		List<Integer> list1 = new ArrayList<>(Arrays.asList(1, null, null, 3));
-		List<Integer> list2 = IterUtil.filterToList(list1.iterator(), Objects::nonNull);
-		Assertions.assertSame(list1, list1);
+		final List<Integer> list1 = new ArrayList<>(Arrays.asList(1, null, null, 3));
+		final List<Integer> list2 = IterUtil.filterToList(list1.iterator(), Objects::nonNull);
 		Assertions.assertEquals(Arrays.asList(1, 3), list2);
 	}
 
@@ -276,7 +292,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testClear() {
-		List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3));
+		final List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3));
 		IterUtil.clear(list.iterator());
 		Assertions.assertTrue(list.isEmpty());
 		Assertions.assertThrows(UnsupportedOperationException.class, () -> IterUtil.clear(Arrays.asList(1, 2).iterator()));
@@ -284,7 +300,7 @@ public class IterUtilTest {
 
 	@Test
 	public void testToStr() {
-		List<Integer> list = Arrays.asList(1, 2, 3);
+		final List<Integer> list = Arrays.asList(1, 2, 3);
 		Assertions.assertEquals("[1, 2, 3]", IterUtil.toStr(list.iterator()));
 		Assertions.assertEquals("[1, 2, 3]", IterUtil.toStr(list.iterator(), Objects::toString));
 		Assertions.assertEquals("{1:2:3}", IterUtil.toStr(list.iterator(), Objects::toString, ":", "{", "}"));
@@ -292,15 +308,133 @@ public class IterUtilTest {
 
 	@Test
 	public void testForEach() {
-		List<Integer> list = new ArrayList<>();
+		final List<Integer> list = new ArrayList<>();
 		IterUtil.forEach(Arrays.asList(1, 2, 3, 4).iterator(), list::add);
 		Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), list);
 	}
 
+	@SuppressWarnings("unused")
 	@RequiredArgsConstructor
 	private static class Bean {
 		private final Integer id;
 		private final String name;
+	}
+
+	@Test
+	public void getFirstNonNullTest() {
+		final List<String> strings = ListUtil.of(null, null, "123", "456", null);
+		Assertions.assertEquals("123", CollUtil.getFirstNoneNull(strings));
+	}
+
+	@Test
+	public void fieldValueMapTest() {
+		final List<Car> carList = ListUtil.of(
+			new Car("123", "大众"),
+			new Car("345", "奔驰"),
+			new Car("567", "路虎"));
+		final Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");
+
+		Assertions.assertEquals("大众", carNameMap.get("123").getCarName());
+		Assertions.assertEquals("奔驰", carNameMap.get("345").getCarName());
+		Assertions.assertEquals("路虎", carNameMap.get("567").getCarName());
+	}
+
+	@Test
+	public void joinTest() {
+		final List<String> list = ListUtil.of("1", "2", "3", "4");
+		final String join = IterUtil.join(list.iterator(), ":");
+		Assertions.assertEquals("1:2:3:4", join);
+
+		final List<Integer> list1 = ListUtil.of(1, 2, 3, 4);
+		final String join1 = IterUtil.join(list1.iterator(), ":");
+		Assertions.assertEquals("1:2:3:4", join1);
+
+		// 包装每个节点
+		final List<String> list2 = ListUtil.of("1", "2", "3", "4");
+		final String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
+		Assertions.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
+	}
+
+	@Test
+	public void joinWithFuncTest() {
+		final List<String> list = ListUtil.of("1", "2", "3", "4");
+		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
+		Assertions.assertEquals("1:2:3:4", join);
+	}
+
+	@Test
+	public void joinWithNullTest() {
+		final List<String> list = ListUtil.of("1", null, "3", "4");
+		final String join = IterUtil.join(list.iterator(), ":", String::valueOf);
+		Assertions.assertEquals("1:null:3:4", join);
+	}
+
+	@Test
+	public void testToMap2() {
+		final Map<String, Car> expectedMap = new HashMap<>();
+
+		final Car bmw = new Car("123", "bmw");
+		expectedMap.put("123", bmw);
+
+		final Car benz = new Car("456", "benz");
+		expectedMap.put("456", benz);
+
+		final Map<String, Car> testMap = IterUtil.toMap(Arrays.asList(bmw, benz), Car::getCarNumber);
+		Assertions.assertEquals(expectedMap, testMap);
+	}
+
+	@Test
+	public void getElementTypeTest() {
+		final List<Integer> integers = Arrays.asList(null, 1);
+		final Class<?> elementType = IterUtil.getElementType(integers);
+		Assertions.assertEquals(Integer.class, elementType);
+	}
+
+	@Data
+	@AllArgsConstructor
+	public static class Car {
+		private String carNumber;
+		private String carName;
+	}
+
+	@Test
+	public void removeTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
+
+		IterUtil.remove(obj.iterator(), (e)-> !obj2.contains(e));
+
+		Assertions.assertEquals(1, obj.size());
+		Assertions.assertEquals("3", obj.get(0));
+	}
+
+	@Test
+	public void filteredTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
+
+		final FilterIter<String> filtered = IterUtil.filtered(obj.iterator(), obj2::contains);
+
+		Assertions.assertEquals("3", filtered.next());
+		Assertions.assertFalse(filtered.hasNext());
+	}
+
+	@Test
+	public void filterToListTest() {
+		final List<String> obj2 = ListUtil.of("3");
+		final List<String> obj = ListUtil.of("1", "3");
+
+		final List<String> filtered = IterUtil.filterToList(obj.iterator(), obj2::contains);
+
+		Assertions.assertEquals(1, filtered.size());
+		Assertions.assertEquals("3", filtered.get(0));
+	}
+
+	@Test
+	public void getTest() {
+		final HashSet<String> set = SetUtil.ofLinked("A", "B", "C", "D");
+		final String str = IterUtil.get(set.iterator(), 2);
+		Assertions.assertEquals("C", str);
 	}
 
 }

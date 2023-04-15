@@ -100,6 +100,89 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> T[] ofArray(final Iterable<T> iterable, final Class<T> componentType) {
 		return ofArray(IterUtil.getIter(iterable), componentType);
 	}
+
+
+	// ---------------------------------------------------------------------- isBlank
+	/**
+	 * <p>指定字符串数组中，是否包含空字符串。</p>
+	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
+	 * <br>
+	 *
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code hasBlank()                  // true}</li>
+	 *     <li>{@code hasBlank("", null, " ")     // true}</li>
+	 *     <li>{@code hasBlank("123", " ")        // true}</li>
+	 *     <li>{@code hasBlank("123", "abc")      // false}</li>
+	 * </ul>
+	 *
+	 * <p>注意：该方法与 {@link #isAllBlank(CharSequence...)} 的区别在于：</p>
+	 * <ul>
+	 *     <li>hasBlank(CharSequence...)            等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+	 *     <li>{@link #isAllBlank(CharSequence...)} 等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
+	 * </ul>
+	 *
+	 * @param strs 字符串列表
+	 * @return 是否包含空字符串
+	 */
+	public static boolean hasBlank(final CharSequence... strs) {
+		if (ArrayUtil.isEmpty(strs)) {
+			return true;
+		}
+
+		for (final CharSequence str : strs) {
+			if (StrUtil.isBlank(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 是否存都不为{@code null}或空对象或空白符的对象，通过{@link #hasBlank(CharSequence...)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都不为空
+	 */
+	public static boolean isAllNotBlank(final CharSequence... args) {
+		return !hasBlank(args);
+	}
+
+	/**
+	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
+	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
+	 * <br>
+	 *
+	 * <p>例：</p>
+	 * <ul>
+	 *     <li>{@code isAllBlank()                  // true}</li>
+	 *     <li>{@code isAllBlank("", null, " ")     // true}</li>
+	 *     <li>{@code isAllBlank("123", " ")        // false}</li>
+	 *     <li>{@code isAllBlank("123", "abc")      // false}</li>
+	 * </ul>
+	 *
+	 * <p>注意：该方法与 {@link #hasBlank(CharSequence...)} 的区别在于：</p>
+	 * <ul>
+	 *     <li>{@link #hasBlank(CharSequence...)}   等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
+	 *     <li>isAllBlank(CharSequence...)          等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
+	 * </ul>
+	 *
+	 * @param strs 字符串列表
+	 * @return 所有字符串是否为空白
+	 */
+	public static boolean isAllBlank(final CharSequence... strs) {
+		if (ArrayUtil.isEmpty(strs)) {
+			return true;
+		}
+
+		for (final CharSequence str : strs) {
+			if (StrUtil.isNotBlank(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// ---------------------------------------------------------------------- isEmpty
 
 	/**

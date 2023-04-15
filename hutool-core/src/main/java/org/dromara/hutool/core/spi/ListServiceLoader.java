@@ -17,7 +17,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.resource.MultiResource;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -99,6 +99,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 
 	@Override
 	public void load() {
+		// 解析同名的所有service资源
 		final MultiResource resources = ResourceUtil.getResources(
 			pathPrefix + serviceClass.getName(),
 			this.classLoader);
@@ -112,43 +113,72 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 		return this.serviceNames.size();
 	}
 
-	private void parse(final Resource resource){
-		try(final BufferedReader reader = resource.getReader(this.charset)){
+	/**
+	 * 解析一个资源，一个资源对应一个service文件
+	 *
+	 * @param resource 资源
+	 */
+	private void parse(final Resource resource) {
+		try (final BufferedReader reader = resource.getReader(this.charset)) {
 			int lc = 1;
-			while(lc >= 0){
-				lc = parseLine(resource, reader, lc, this.serviceNames);
+			while (lc >= 0) {
+				lc = parseLine(resource, reader, lc);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
-	private int parseLine(final Resource resource, final BufferedReader r, final int lc,
-						  final List<String> names)
+	/**
+	 * 解析一行
+	 *
+	 * @param resource 资源
+	 * @param reader   {@link BufferedReader}
+	 * @param lineNo   行号
+	 * @return 下一个行号，-1表示读取完毕
+	 * @throws IOException IO异常
+	 */
+	private int parseLine(final Resource resource, final BufferedReader reader, final int lineNo)
 		throws IOException {
-		String ln = r.readLine();
-		if (ln == null) {
+		String line = reader.readLine();
+		if (line == null) {
+			// 结束
 			return -1;
 		}
-		final int ci = ln.indexOf('#');
-		if (ci >= 0) ln = ln.substring(0, ci);
-		ln = ln.trim();
-		final int n = ln.length();
-		if (n != 0) {
-			if ((ln.indexOf(CharUtil.SPACE) >= 0) || (ln.indexOf(CharUtil.TAB) >= 0))
-				fail(resource, lc, "Illegal configuration-file syntax");
-			int cp = ln.codePointAt(0);
-			if (!Character.isJavaIdentifierStart(cp))
-				fail(resource, lc, "Illegal provider-class name: " + ln);
-			for (int i = Character.charCount(cp); i < n; i += Character.charCount(cp)) {
-				cp = ln.codePointAt(i);
-				if (!Character.isJavaIdentifierPart(cp) && (cp != '.'))
-					fail(resource, lc, "Illegal provider-class name: " + ln);
-			}
-			if (!serviceCache.containsKey(ln) && !names.contains(ln))
-				names.add(ln);
+		final int ci = line.indexOf('#');
+		if (ci >= 0) {
+			// 截取去除注释部分
+			// 当注释单独成行，则此行长度为0，跳过，读取下一行
+			line = line.substring(0, ci);
 		}
-		return lc + 1;
+		line = StrUtil.trim(line);
+		if (line.length() > 0) {
+			// 检查行
+			checkLine(resource, lineNo, line);
+			// 不覆盖模式
+			final List<String> names = this.serviceNames;
+			if (!serviceCache.containsKey(line) && !names.contains(line)) {
+				names.add(line);
+			}
+		}
+		return lineNo + 1;
+	}
+
+	private void checkLine(final Resource resource, final int lineNo, final String line) {
+		if (StrUtil.containsBlank(line)) {
+			fail(resource, lineNo, "Illegal configuration-file syntax");
+		}
+		int cp = line.codePointAt(0);
+		if (!Character.isJavaIdentifierStart(cp)) {
+			fail(resource, lineNo, "Illegal provider-class name: " + line);
+		}
+		final int n = line.length();
+		for (int i = Character.charCount(cp); i < n; i += Character.charCount(cp)) {
+			cp = line.codePointAt(i);
+			if (!Character.isJavaIdentifierPart(cp) && (cp != '.')) {
+				fail(resource, lineNo, "Illegal provider-class name: " + line);
+			}
+		}
 	}
 
 	private void fail(final Resource resource, final int line, final String msg) {

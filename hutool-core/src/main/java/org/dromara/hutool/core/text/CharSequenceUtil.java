@@ -44,7 +44,31 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * {@link CharSequence} 相关工具类封装
+ * {@link CharSequence} 相关工具类封装，包括但不限于：
+ * <ul>
+ *     <li>字符串补充前缀或后缀：addXXX</li>
+ *     <li>字符串补充长度：padXXX</li>
+ *     <li>字符串包含关系：containsXXX</li>
+ *     <li>字符串默认值：defaultIfXXX</li>
+ *     <li>字符串查找：indexOf</li>
+ *     <li>字符串判断以什么结尾：endWith</li>
+ *     <li>字符串判断以什么开始：startWith</li>
+ *     <li>字符串匹配：equals</li>
+ *     <li>字符串格式化：format</li>
+ *     <li>字符串去除：removeXXX</li>
+ *     <li>字符串重复：repeat</li>
+ *     <li>获取子串：sub</li>
+ *     <li>去除两边的指定字符串（只去除一次）：strip</li>
+ *     <li>去除两边的指定所有字符：trim</li>
+ *     <li>去除两边的指定所有字符包装和去除包装：wrap</li>
+ * </ul>
+ *
+ * 需要注意的是，strip、trim、wrap（unWrap）的策略不同：
+ * <ul>
+ *     <li>strip： 强调去除两边或某一边的指定字符串，这个字符串不会重复去除，如果一边不存在，另一边不影响去除</li>
+ *     <li>trim：  强调去除两边指定字符，如果这个字符有多个，全部去除，例如去除两边所有的空白符。</li>
+ *     <li>unWrap：强调去包装，要求包装的前后字符都要存在，只有一个则不做处理，如去掉双引号包装。</li>
+ * </ul>
  *
  * @author looly
  * @since 5.5.3
@@ -72,6 +96,8 @@ public class CharSequenceUtil extends StrChecker {
 	public static String str(final CharSequence cs) {
 		return null == cs ? null : cs.toString();
 	}
+
+	// region ----- defaultIf
 
 	/**
 	 * 当给定字符串为null时，转换为Empty
@@ -171,6 +197,7 @@ public class CharSequenceUtil extends StrChecker {
 		}
 		return handler.apply(str);
 	}
+	// endregion
 
 	// region ----- trim
 
@@ -427,7 +454,7 @@ public class CharSequenceUtil extends StrChecker {
 	 */
 	public static boolean startWith(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final boolean ignoreEquals) {
 		return new StrRegionMatcher(ignoreCase, ignoreEquals, true)
-				.test(str, prefix);
+			.test(str, prefix);
 	}
 	// endregion
 
@@ -539,7 +566,7 @@ public class CharSequenceUtil extends StrChecker {
 	 */
 	public static boolean endWith(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final boolean ignoreEquals) {
 		return new StrRegionMatcher(ignoreCase, ignoreEquals, false)
-				.test(str, suffix);
+			.test(str, suffix);
 	}
 	// endregion
 
@@ -926,7 +953,7 @@ public class CharSequenceUtil extends StrChecker {
 			}
 		}
 		return StrFinder.of(searchStr, ignoreCase)
-				.setText(text).setNegative(true).start(from);
+			.setText(text).setNegative(true).start(from);
 	}
 
 	/**
@@ -1198,7 +1225,8 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
-	 * 去除两边的指定字符串
+	 * 去除两边的指定字符串<br>
+	 * 两边字符如果存在，则去除，不存在不做处理
 	 *
 	 * @param str    被处理的字符串
 	 * @param prefix 前缀
@@ -1776,8 +1804,8 @@ public class CharSequenceUtil extends StrChecker {
 	 */
 	public static String[] subBetweenAll(final CharSequence str, final CharSequence prefix, final CharSequence suffix) {
 		if (hasEmpty(str, prefix, suffix) ||
-				// 不包含起始字符串，则肯定没有子串
-				!contains(str, prefix)) {
+			// 不包含起始字符串，则肯定没有子串
+			!contains(str, prefix)) {
 			return new String[0];
 		}
 
@@ -3492,8 +3520,8 @@ public class CharSequenceUtil extends StrChecker {
 		final int preLength = suffixLength + (maxLength - 3) % 2; // suffixLength 或 suffixLength + 1
 		final String str2 = str.toString();
 		return format("{}...{}",
-				str2.substring(0, preLength),
-				str2.substring(strLength - suffixLength));
+			str2.substring(0, preLength),
+			str2.substring(strLength - suffixLength));
 	}
 
 	/**
@@ -3558,15 +3586,15 @@ public class CharSequenceUtil extends StrChecker {
 		if (moveLength > 0) {
 			final int endAfterMove = Math.min(endExclude + moveLength, str.length());
 			strBuilder.append(str.subSequence(0, startInclude))//
-					.append(str.subSequence(endExclude, endAfterMove))//
-					.append(str.subSequence(startInclude, endExclude))//
-					.append(str.subSequence(endAfterMove, str.length()));
+				.append(str.subSequence(endExclude, endAfterMove))//
+				.append(str.subSequence(startInclude, endExclude))//
+				.append(str.subSequence(endAfterMove, str.length()));
 		} else if (moveLength < 0) {
 			final int startAfterMove = Math.max(startInclude + moveLength, 0);
 			strBuilder.append(str.subSequence(0, startAfterMove))//
-					.append(str.subSequence(startInclude, endExclude))//
-					.append(str.subSequence(startAfterMove, startInclude))//
-					.append(str.subSequence(endExclude, str.length()));
+				.append(str.subSequence(startInclude, endExclude))//
+				.append(str.subSequence(startAfterMove, startInclude))//
+				.append(str.subSequence(endExclude, str.length()));
 		} else {
 			return str(str);
 		}

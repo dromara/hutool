@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.regex;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.StrLengthComparator;
@@ -376,7 +377,7 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delFirst(final String regex, final CharSequence content) {
-		if (StrUtil.hasBlank(regex, content)) {
+		if (ArrayUtil.hasBlank(regex, content)) {
 			return StrUtil.str(content);
 		}
 
@@ -421,7 +422,7 @@ public class ReUtil {
 	 * @since 5.6.5
 	 */
 	public static String delLast(final String regex, final CharSequence str) {
-		if (StrUtil.hasBlank(regex, str)) {
+		if (ArrayUtil.hasBlank(regex, str)) {
 			return StrUtil.str(str);
 		}
 

@@ -338,7 +338,7 @@ public class SqlBuilder implements Builder<String> {
 	 * @return 自己
 	 */
 	public SqlBuilder from(String... tableNames) {
-		if (ArrayUtil.isEmpty(tableNames) || StrUtil.hasBlank(tableNames)) {
+		if (ArrayUtil.isEmpty(tableNames) || ArrayUtil.hasBlank(tableNames)) {
 			throw new DbRuntimeException("Table name is blank in table names !");
 		}
 

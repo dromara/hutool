@@ -12,13 +12,15 @@
 
 package org.dromara.hutool.core.collection.iter;
 
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.text.StrJoiner;
-import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -136,6 +138,41 @@ public class IterUtil {
 	}
 
 	/**
+	 * 指定字符串集合中，是否包含空字符串。
+	 *
+	 * @param strs 字符串列表
+	 * @return 批量判断字符串是否全部为空白
+	 * @since 6.0.0
+	 */
+	public static boolean hasBlank(final Iterable<? extends CharSequence> strs) {
+		if (CollUtil.isEmpty(strs)) {
+			return true;
+		}
+		for (final CharSequence str : strs) {
+			if (StrUtil.isBlank(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param strs 字符串列表
+	 * @return 批量判断字符串是否全部为空白
+	 * @since 6.0.1
+	 */
+	public static boolean isAllBlank(final Iterable<? extends CharSequence> strs) {
+		if (CollUtil.isNotEmpty(strs)) {
+			for (final CharSequence str : strs) {
+				if (StrUtil.isNotBlank(str)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * 根据集合返回一个元素计数的 {@link Map}<br>
 	 * 所谓元素计数就是假如这个集合中某个元素出现了n次，那将这个元素做为key，n做为value<br>
 	 * 例如：[a,b,c,c,c] 得到：<br>
@@ -187,8 +224,8 @@ public class IterUtil {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> fieldValueAsMap(final Iterator<?> iter, final String fieldNameForKey, final String fieldNameForValue) {
 		return MapUtil.putAll(new HashMap<>(), iter,
-				(value) -> (K) FieldUtil.getFieldValue(value, fieldNameForKey),
-				(value) -> (V) FieldUtil.getFieldValue(value, fieldNameForValue)
+			(value) -> (K) FieldUtil.getFieldValue(value, fieldNameForKey),
+			(value) -> (V) FieldUtil.getFieldValue(value, fieldNameForValue)
 		);
 	}
 
@@ -256,10 +293,10 @@ public class IterUtil {
 	 */
 	public static <T> String join(final Iterator<T> iterator, final CharSequence conjunction, final String prefix, final String suffix) {
 		return StrJoiner.of(conjunction, prefix, suffix)
-				// 每个元素都添加前后缀
-				.setWrapElement(true)
-				.append(iterator)
-				.toString();
+			// 每个元素都添加前后缀
+			.setWrapElement(true)
+			.append(iterator)
+			.toString();
 	}
 
 	/**

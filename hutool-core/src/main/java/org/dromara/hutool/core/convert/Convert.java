@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.convert;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.convert.impl.CollectionConverter;
@@ -946,7 +947,7 @@ public class Convert {
 	 * @see CharsetUtil#convert(String, String, String)
 	 */
 	public static String convertCharset(final String str, final String sourceCharset, final String destCharset) {
-		if (StrUtil.hasBlank(str, sourceCharset, destCharset)) {
+		if (ArrayUtil.hasBlank(str, sourceCharset, destCharset)) {
 			return str;
 		}
 

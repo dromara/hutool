@@ -61,7 +61,7 @@ public class StrChecker {
 	 * <p>建议：</p>
 	 * <ul>
 	 *     <li>该方法建议仅对于客户端（或第三方接口）传入的参数使用该方法。</li>
-	 *     <li>需要同时校验多个字符串时，建议采用 {@link #hasBlank(CharSequence...)} 或 {@link #isAllBlank(CharSequence...)}</li>
+	 *     <li>需要同时校验多个字符串时，建议采用 {@link ArrayUtil#hasBlank(CharSequence...)} 或 {@link ArrayUtil#isAllBlank(CharSequence...)}</li>
 	 * </ul>
 	 *
 	 * @param str 被检测的字符串
@@ -125,113 +125,6 @@ public class StrChecker {
 		}
 
 		return false;
-	}
-
-	/**
-	 * <p>指定字符串数组中，是否包含空字符串。</p>
-	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
-	 * <br>
-	 *
-	 * <p>例：</p>
-	 * <ul>
-	 *     <li>{@code StrUtil.hasBlank()                  // true}</li>
-	 *     <li>{@code StrUtil.hasBlank("", null, " ")     // true}</li>
-	 *     <li>{@code StrUtil.hasBlank("123", " ")        // true}</li>
-	 *     <li>{@code StrUtil.hasBlank("123", "abc")      // false}</li>
-	 * </ul>
-	 *
-	 * <p>注意：该方法与 {@link #isAllBlank(CharSequence...)} 的区别在于：</p>
-	 * <ul>
-	 *     <li>hasBlank(CharSequence...)            等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
-	 *     <li>{@link #isAllBlank(CharSequence...)} 等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 字符串列表
-	 * @return 是否包含空字符串
-	 */
-	public static boolean hasBlank(final CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (final CharSequence str : strs) {
-			if (isBlank(str)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 指定字符串集合中，是否包含空字符串。
-	 *
-	 * @param strs 字符串列表
-	 * @return 批量判断字符串是否全部为空白
-	 * @see CharSequenceUtil#hasBlank(CharSequence...)
-	 * @since 6.0.0
-	 */
-	public static boolean hasBlank(final Iterable<? extends CharSequence> strs) {
-		if (CollUtil.isEmpty(strs)) {
-			return true;
-		}
-		for (final CharSequence str : strs) {
-			if (isBlank(str)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * <p>指定字符串数组中的元素，是否全部为空字符串。</p>
-	 * <p>如果指定的字符串数组的长度为 0，或者所有元素都是空字符串，则返回 true。</p>
-	 * <br>
-	 *
-	 * <p>例：</p>
-	 * <ul>
-	 *     <li>{@code StrUtil.isAllBlank()                  // true}</li>
-	 *     <li>{@code StrUtil.isAllBlank("", null, " ")     // true}</li>
-	 *     <li>{@code StrUtil.isAllBlank("123", " ")        // false}</li>
-	 *     <li>{@code StrUtil.isAllBlank("123", "abc")      // false}</li>
-	 * </ul>
-	 *
-	 * <p>注意：该方法与 {@link #hasBlank(CharSequence...)} 的区别在于：</p>
-	 * <ul>
-	 *     <li>{@link #hasBlank(CharSequence...)}   等价于 {@code isBlank(...) || isBlank(...) || ...}</li>
-	 *     <li>isAllBlank(CharSequence...)          等价于 {@code isBlank(...) && isBlank(...) && ...}</li>
-	 * </ul>
-	 *
-	 * @param strs 字符串列表
-	 * @return 所有字符串是否为空白
-	 */
-	public static boolean isAllBlank(final CharSequence... strs) {
-		if (ArrayUtil.isEmpty(strs)) {
-			return true;
-		}
-
-		for (final CharSequence str : strs) {
-			if (isNotBlank(str)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * @param strs 字符串列表
-	 * @return 批量判断字符串是否全部为空白
-	 * @see CharSequenceUtil#isAllBlank(CharSequence...)
-	 * @since 6.0.1
-	 */
-	public static boolean isAllBlank(final Iterable<? extends CharSequence> strs) {
-		if (CollUtil.isNotEmpty(strs)) {
-			for (final CharSequence str : strs) {
-				if (isNotBlank(str)) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 	/**
@@ -427,17 +320,6 @@ public class StrChecker {
 	 */
 	public static boolean isAllNotEmpty(final CharSequence... args) {
 		return !hasEmpty(args);
-	}
-
-	/**
-	 * 是否存都不为{@code null}或空对象或空白符的对象，通过{@link #hasBlank(CharSequence...)} 判断元素
-	 *
-	 * @param args 被检查的对象,一个或者多个
-	 * @return 是否都不为空
-	 * @since 5.3.6
-	 */
-	public static boolean isAllNotBlank(final CharSequence... args) {
-		return !hasBlank(args);
 	}
 
 	/**

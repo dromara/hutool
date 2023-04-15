@@ -7,7 +7,6 @@ import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -616,50 +615,6 @@ public class StrUtilTest {
 
 		result = StrUtil.addSuffixIfNot("", "/");
 		Assertions.assertEquals("/", result);
-	}
-
-	@Test
-	public void testIsAllBlank() {
-		final List<String> queue = new LinkedList<>();
-		queue.add("apple");
-		queue.add("banana");
-		queue.add("cherry");
-		queue.add("orange");
-		queue.add("strawberry");
-		queue.add("watermelon");
-		Assertions.assertFalse(StrUtil.isAllBlank(queue));
-
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank(""));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank(" "));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\t"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\n"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\r"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\f"));
-		Assertions.assertFalse(CharSequenceUtil.isAllBlank("\b"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u00A0"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\uFEFF"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2000"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2001"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2002"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2003"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2004"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2005"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2006"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2007"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2008"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2009"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u200A"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u3000"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\uFEFF"));
-
-		// 其他空白字符
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u000B"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u000C"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u00A0"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u1680"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u180E"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2000"));
-		Assertions.assertTrue(CharSequenceUtil.isAllBlank("\u2001"));
 	}
 
 	@Test
