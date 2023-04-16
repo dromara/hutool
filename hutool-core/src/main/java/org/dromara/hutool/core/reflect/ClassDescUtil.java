@@ -14,7 +14,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.BiMap;
+import org.dromara.hutool.core.map.TripleTable;
 import org.dromara.hutool.core.text.StrTrimer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharUtil;
@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.HashMap;
 
 /**
  * 类描述工具类<br>
@@ -48,6 +47,8 @@ import java.util.HashMap;
  * @since 6.0.0
  */
 public class ClassDescUtil {
+
+	// region ----- const
 	/**
 	 * void(V).
 	 */
@@ -92,32 +93,28 @@ public class ClassDescUtil {
 	 * short(S).
 	 */
 	public static final char JVM_SHORT = 'S';
+	// endregion
 
 	/**
-	 * 原始类型名和其class对应表，例如：int.class 《=》 int
+	 * 9种原始类型对应表<br>
+	 * <pre>
+	 *     左：原始类型
+	 *     中：原始类型描述符
+	 *     右：原始类型名称
+	 * </pre>
 	 */
-	private static final BiMap<Class<?>, Character> PRIMITIVE_CLASS_DESC_MAP = new BiMap<>(new HashMap<>(9, 1));
-	private static final BiMap<Class<?>, String> PRIMITIVE_CLASS_NAME_MAP = new BiMap<>(new HashMap<>(9, 1));
+	private static final TripleTable<Class<?>, Character, String> PRIMITIVE_TABLE = new TripleTable<>(9);
 
 	static {
-		PRIMITIVE_CLASS_DESC_MAP.put(void.class, JVM_VOID);
-		PRIMITIVE_CLASS_NAME_MAP.put(void.class, "void");
-		PRIMITIVE_CLASS_DESC_MAP.put(boolean.class, JVM_BOOLEAN);
-		PRIMITIVE_CLASS_NAME_MAP.put(boolean.class, "boolean");
-		PRIMITIVE_CLASS_DESC_MAP.put(byte.class, JVM_BYTE);
-		PRIMITIVE_CLASS_NAME_MAP.put(byte.class, "byte");
-		PRIMITIVE_CLASS_DESC_MAP.put(char.class, JVM_CHAR);
-		PRIMITIVE_CLASS_NAME_MAP.put(char.class, "char");
-		PRIMITIVE_CLASS_DESC_MAP.put(double.class, JVM_DOUBLE);
-		PRIMITIVE_CLASS_NAME_MAP.put(double.class, "double");
-		PRIMITIVE_CLASS_DESC_MAP.put(float.class, JVM_FLOAT);
-		PRIMITIVE_CLASS_NAME_MAP.put(float.class, "float");
-		PRIMITIVE_CLASS_DESC_MAP.put(int.class, JVM_INT);
-		PRIMITIVE_CLASS_NAME_MAP.put(int.class, "int");
-		PRIMITIVE_CLASS_DESC_MAP.put(long.class, JVM_LONG);
-		PRIMITIVE_CLASS_NAME_MAP.put(long.class, "long");
-		PRIMITIVE_CLASS_DESC_MAP.put(short.class, JVM_SHORT);
-		PRIMITIVE_CLASS_NAME_MAP.put(short.class, "short");
+		PRIMITIVE_TABLE.put(void.class, JVM_VOID, "void");
+		PRIMITIVE_TABLE.put(boolean.class, JVM_BOOLEAN, "boolean");
+		PRIMITIVE_TABLE.put(byte.class, JVM_BYTE, "byte");
+		PRIMITIVE_TABLE.put(char.class, JVM_CHAR, "char");
+		PRIMITIVE_TABLE.put(double.class, JVM_DOUBLE, "double");
+		PRIMITIVE_TABLE.put(float.class, JVM_FLOAT, "float");
+		PRIMITIVE_TABLE.put(int.class, JVM_INT, "int");
+		PRIMITIVE_TABLE.put(long.class, JVM_LONG, "long");
+		PRIMITIVE_TABLE.put(short.class, JVM_SHORT, "short");
 	}
 
 	/**
@@ -151,7 +148,7 @@ public class ClassDescUtil {
 	public static Class<?> descToClass(String desc, final boolean isInitialized, final ClassLoader cl) throws UtilException {
 		Assert.notNull(desc, "Name must not be null");
 		final char firstChar = desc.charAt(0);
-		final Class<?> clazz = PRIMITIVE_CLASS_DESC_MAP.getKey(firstChar);
+		final Class<?> clazz = PRIMITIVE_TABLE.getLeftByMiddle(firstChar);
 		if (null != clazz) {
 			return clazz;
 		}
@@ -188,7 +185,7 @@ public class ClassDescUtil {
 		}
 
 		if (c.isPrimitive()) {
-			final Character desc = PRIMITIVE_CLASS_DESC_MAP.get(c);
+			final Character desc = PRIMITIVE_TABLE.getMiddleByLeft(c);
 			if (null != desc) {
 				ret.append(desc.charValue());
 			}
@@ -331,10 +328,10 @@ public class ClassDescUtil {
 				sb.append('[');
 			}
 
-			final Class<?> clazz = PRIMITIVE_CLASS_NAME_MAP.getKey(name);
+			final Class<?> clazz = PRIMITIVE_TABLE.getLeftByRight(name);
 			if (null != clazz) {
 				// 原始类型数组，根据name获取其描述
-				sb.append(PRIMITIVE_CLASS_DESC_MAP.get(clazz).charValue());
+				sb.append(PRIMITIVE_TABLE.getMiddleByLeft(clazz).charValue());
 			} else {
 				// 对象数组必须转换为desc形式
 				// "java.lang.Object" ==> "Ljava.lang.Object;"
@@ -342,7 +339,7 @@ public class ClassDescUtil {
 			}
 			name = sb.toString();
 		} else {
-			final Class<?> clazz = PRIMITIVE_CLASS_NAME_MAP.getKey(name);
+			final Class<?> clazz = PRIMITIVE_TABLE.getLeftByRight(name);
 			if (null != clazz) {
 				return clazz;
 			}
@@ -373,10 +370,10 @@ public class ClassDescUtil {
 			sb.append('[');
 		}
 
-		final Class<?> clazz = PRIMITIVE_CLASS_NAME_MAP.getKey(name);
+		final Class<?> clazz = PRIMITIVE_TABLE.getLeftByRight(name);
 		if (null != clazz) {
 			// 原始类型数组，根据name获取其描述
-			sb.append(PRIMITIVE_CLASS_DESC_MAP.get(clazz).charValue());
+			sb.append(PRIMITIVE_TABLE.getMiddleByLeft(clazz).charValue());
 		} else {
 			// "java.lang.Object" ==> "Ljava.lang.Object;"
 			sb.append('L').append(name.replace(CharUtil.DOT, CharUtil.SLASH)).append(';');
@@ -400,9 +397,9 @@ public class ClassDescUtil {
 		int c = desc.lastIndexOf('[') + 1;
 		if (desc.length() == c + 1) {
 			final char descChar = desc.charAt(c);
-			final Class<?> clazz = PRIMITIVE_CLASS_DESC_MAP.getKey(descChar);
+			final Class<?> clazz = PRIMITIVE_TABLE.getLeftByMiddle(descChar);
 			if (null != clazz) {
-				sb.append(PRIMITIVE_CLASS_NAME_MAP.get(clazz));
+				sb.append(PRIMITIVE_TABLE.getRightByLeft(clazz));
 			} else {
 				throw new UtilException("Unsupported primitive desc: {}", desc);
 			}
