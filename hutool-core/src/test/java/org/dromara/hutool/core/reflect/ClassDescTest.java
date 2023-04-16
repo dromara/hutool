@@ -10,9 +10,8 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.classloader;
+package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.reflect.ClassDescUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
