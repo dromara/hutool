@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.classloader;
 
+import org.dromara.hutool.core.reflect.ClassDescUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

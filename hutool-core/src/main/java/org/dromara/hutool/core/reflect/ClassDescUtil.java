@@ -10,12 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.classloader;
+package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.BiMap;
-import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.text.StrTrimer;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharUtil;
@@ -29,7 +28,21 @@ import java.util.HashMap;
 
 /**
  * 类描述工具类<br>
- * 来自：org.apache.dubbo.common.utils.ReflectUtils
+ * 来自：org.apache.dubbo.common.utils.ReflectUtils<br>
+ * 在字节码中，类型表示如下：
+ * <ul>
+ *     <li>byte    =》 B</li>
+ *     <li>char   =》  C</li>
+ *     <li>double =》  D</li>
+ *     <li>long   =》  J</li>
+ *     <li>short  =》  S</li>
+ *     <li>boolean =》 Z</li>
+ *     <li>void    =》 V</li>
+ *     <li>对象类型以“L”开头，“;”结尾，如Ljava/lang/Object;</li>
+ *     <li>数组类型，每一位使用一个前置的[字符来描述，如：java.lang.String[][] =》 [[Ljava/lang/String;</li>
+ * </ul>
+ *
+ * <p>此类旨在通过类描述信息和类名查找对应的类，如动态加载类等。</p>
  *
  * @author Dubbo
  * @since 6.0.0
@@ -256,7 +269,7 @@ public class ClassDescUtil {
 	 * <pre>
 	 * "()", "(java.lang.String,int)"
 	 * </pre>
-	 *
+	 * <p>
 	 * 方法：
 	 * <pre>
 	 *     "void do(int)", "void do()", "int do(java.lang.String,boolean)"
@@ -268,7 +281,7 @@ public class ClassDescUtil {
 	public static String getName(final Executable executable) {
 		final StringBuilder ret = new StringBuilder("(");
 
-		if(executable instanceof Method){
+		if (executable instanceof Method) {
 			ret.append(getName(((Method) executable).getReturnType())).append(CharUtil.SPACE);
 		}
 

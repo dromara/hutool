@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.classloader;
 
 import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.reflect.ClassDescUtil;
 
 import java.io.File;
 import java.security.AccessController;
