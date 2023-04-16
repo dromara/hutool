@@ -34,7 +34,7 @@ public class MutableEntry<K, V> extends AbsEntry<K, V> implements Mutable<Map.En
 	 * @param value 值
 	 * @param <K>   键类型
 	 * @param <V>   值类型
-	 * @return
+	 * @return {@code MutableEntry}
 	 */
 	public static <K, V> MutableEntry<K, V> of(final K key, final V value) {
 		return new MutableEntry<>(key, value);

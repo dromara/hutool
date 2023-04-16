@@ -129,7 +129,7 @@ public class PlaceholderParser implements UnaryOperator<String> {
 				continue;
 			}
 
-			// 记录当前位符的开始符号与上一占位符的结束符号间的字符串
+			// 记录当前占位符的开始符号与上一占位符的结束符号间的字符串
 			result.append(src, closeCursor, openCursor - closeCursor);
 
 			// 重置结束游标至当前占位符的开始处
@@ -160,7 +160,7 @@ public class PlaceholderParser implements UnaryOperator<String> {
 				result.append(processor.apply(expression.toString()));
 				expression.setLength(0);
 				// 完成当前占位符的处理匹配，寻找下一个
-				closeCursor = end + close.length();
+				closeCursor = end + closeLength;
 			}
 
 			// 寻找下一个开始符号
