@@ -8,9 +8,9 @@
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-## 📚Hutool-http 模块介绍
+## 📚Hutool-log 模块介绍
 
-`Hutool-http`提供了简易的Http服务器和客户端门面封装。
+`Hutool-log`提供对日志门面的封装。
 
 -------------------------------------------------------------------------------
 

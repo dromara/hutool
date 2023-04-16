@@ -8,10 +8,12 @@
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-## 📚Hutool-http 模块介绍
+## 📚Hutool-cron 模块介绍
 
-`Hutool-http`提供了简易的Http服务器和客户端门面封装。
+`Hutool-cron`提供简单定时任务的功能。
 
 -------------------------------------------------------------------------------
 
 ## 🛠️包含内容
+
+Hutool的定时任务模块与Linux的Crontab使用上非常类似，通过一个`cron.setting`配置文件，简单调用start()方法即可简单使用。

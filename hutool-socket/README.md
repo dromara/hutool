@@ -8,10 +8,16 @@
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-## 📚Hutool-http 模块介绍
+## 📚Hutool-socket 模块介绍
 
-`Hutool-http`提供了简易的Http服务器和客户端门面封装。
+`Hutool-socket`NIO和AIO做了简单的封装，用于简化Socket异步开发。
 
 -------------------------------------------------------------------------------
 
 ## 🛠️包含内容
+
+JDK中提供了Socket功能，包括：
+
+- BIO
+- NIO
+- AIO
