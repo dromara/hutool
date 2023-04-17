@@ -39,6 +39,13 @@ public class PlaceholderParserTest {
 			"i [a][m] a jvav programmer",
 			parser.apply(text)
 		);
+
+		text = "select * from #[tableName] where id = #[id]";
+		parser = new PlaceholderParser(str -> "?", "#[", "]");
+		Assertions.assertEquals(
+				"select * from ? where id = ?",
+				parser.apply(text)
+		);
 	}
 
 }
