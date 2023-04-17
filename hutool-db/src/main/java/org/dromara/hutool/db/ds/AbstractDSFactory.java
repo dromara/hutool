@@ -168,7 +168,8 @@ public abstract class AbstractDSFactory implements DSFactory {
 	 * @param poolSetting 分组下的连接池配置文件
 	 * @return {@link DataSource}
 	 */
-	protected abstract DataSource createDataSource(String jdbcUrl, String driver, String user, String pass, Setting poolSetting);
+	protected abstract DataSource createDataSource(
+		String jdbcUrl, String driver, String user, String pass, Setting poolSetting);
 
 	/**
 	 * 创建数据源，对于不同连接池名称的的差异做兼容，如用户配置user和username都表示用户名
