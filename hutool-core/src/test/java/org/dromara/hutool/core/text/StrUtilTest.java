@@ -345,13 +345,13 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void maxLengthTest() {
+	public void limitLengthTest() {
 		final String text = "我是一段正文，很长的正文，需要截取的正文";
-		String str = StrUtil.maxLength(text, 5);
+		String str = StrUtil.limitLength(text, 5);
 		Assertions.assertEquals("我是一段正...", str);
-		str = StrUtil.maxLength(text, 21);
+		str = StrUtil.limitLength(text, 21);
 		Assertions.assertEquals(text, str);
-		str = StrUtil.maxLength(text, 50);
+		str = StrUtil.limitLength(text, 50);
 		Assertions.assertEquals(text, str);
 	}
 

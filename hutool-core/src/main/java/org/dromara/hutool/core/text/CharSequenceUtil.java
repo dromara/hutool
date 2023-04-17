@@ -3146,7 +3146,7 @@ public class CharSequenceUtil extends StrChecker {
 	public static int totalLength(final CharSequence... strs) {
 		int totalLength = 0;
 		for (final CharSequence str : strs) {
-			totalLength += (null == str ? 0 : str.length());
+			totalLength += length(str);
 		}
 		return totalLength;
 	}
@@ -3159,7 +3159,7 @@ public class CharSequenceUtil extends StrChecker {
 	 * @return 切割后的剩余的前半部分字符串+"..."
 	 * @since 4.0.10
 	 */
-	public static String maxLength(final CharSequence string, final int length) {
+	public static String limitLength(final CharSequence string, final int length) {
 		Assert.isTrue(length > 0);
 		if (null == string) {
 			return null;
