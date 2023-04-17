@@ -1,6 +1,7 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -71,10 +72,41 @@ public class URLDecoder implements Serializable {
 	 * @return 解码后的字符串
 	 */
 	public static String decode(String str, Charset charset, boolean isPlusToSpace) {
-		if(null == charset){
-			return str;
+		if (null == str) {
+			return null;
 		}
-		return StrUtil.str(decode(StrUtil.bytes(str, charset), isPlusToSpace), charset);
+		final int length = str.length();
+		if(0 == length){
+			return StrUtil.EMPTY;
+		}
+
+		final StringBuilder result = new StringBuilder(length / 3);
+
+		int begin = 0;
+		char c;
+		for (int i = 0; i < length; i++) {
+			c = str.charAt(i);
+			if(ESCAPE_CHAR == c || CharUtil.isHexChar(c)){
+				continue;
+			}
+
+			// 遇到非需要处理的字符跳过
+			// 处理之前的hex字符
+			if(i > begin){
+				result.append(decodeSub(str, begin, i, charset, isPlusToSpace));
+			}
+
+			// 非Hex字符，忽略本字符
+			result.append(c);
+			begin = i + 1;
+		}
+
+		// 处理剩余字符
+		if(begin < length){
+			result.append(decodeSub(str, begin, length, charset, isPlusToSpace));
+		}
+
+		return result.toString();
 	}
 
 	/**
@@ -134,5 +166,23 @@ public class URLDecoder implements Serializable {
 			}
 		}
 		return buffer.toByteArray();
+	}
+
+	/**
+	 * 解码子串
+	 *
+	 * @param str 字符串
+	 * @param begin 开始位置（包含）
+	 * @param end 结束位置（不包含）
+	 * @param charset 编码
+	 * @param isPlusToSpace 是否+转换为空格
+	 * @return 解码后的字符串
+	 */
+	private static String decodeSub(final String str, final int begin, final int end,
+									final Charset charset, final boolean isPlusToSpace){
+		return new String(decode(
+			// 截取需要decode的部分
+			str.substring(begin, end).getBytes(CharsetUtil.CHARSET_ISO_8859_1), isPlusToSpace
+		), charset);
 	}
 }
