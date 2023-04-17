@@ -17,6 +17,7 @@ import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -1004,47 +1005,6 @@ public class NumberUtil {
 	// region ----- equals
 
 	/**
-	 * 比较大小，值相等 返回true<br>
-	 * 此方法通过调用{@link Double#doubleToLongBits(double)}方法来判断是否相等<br>
-	 * 此方法判断值相等时忽略精度的，即0.00 == 0
-	 *
-	 * @param num1 数字1
-	 * @param num2 数字2
-	 * @return 是否相等
-	 * @since 5.4.2
-	 */
-	public static boolean equals(final double num1, final double num2) {
-		return Double.doubleToLongBits(num1) == Double.doubleToLongBits(num2);
-	}
-
-	/**
-	 * 比较大小，值相等 返回true<br>
-	 * 此方法通过调用{@link Float#floatToIntBits(float)}方法来判断是否相等<br>
-	 * 此方法判断值相等时忽略精度的，即0.00 == 0
-	 *
-	 * @param num1 数字1
-	 * @param num2 数字2
-	 * @return 是否相等
-	 * @since 5.4.5
-	 */
-	public static boolean equals(final float num1, final float num2) {
-		return Float.floatToIntBits(num1) == Float.floatToIntBits(num2);
-	}
-
-	/**
-	 * 比较大小，值相等 返回true<br>
-	 * 此方法修复传入long型数据由于没有本类型重载方法,导致数据精度丢失
-	 *
-	 * @param num1 数字1
-	 * @param num2 数字2
-	 * @return 是否相等
-	 * @since 5.7.19
-	 */
-	public static boolean equals(final long num1, final long num2) {
-		return num1 == num2;
-	}
-
-	/**
 	 * 比较数字值是否相等，相等返回{@code true}<br>
 	 * 需要注意的是{@link BigDecimal}需要特殊处理<br>
 	 * BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等，<br>
@@ -1067,20 +1027,6 @@ public class NumberUtil {
 			return CompareUtil.equals((BigDecimal) number1, (BigDecimal) number2);
 		}
 		return Objects.equals(number1, number2);
-	}
-
-	/**
-	 * 比较两个字符是否相同
-	 *
-	 * @param c1         字符1
-	 * @param c2         字符2
-	 * @param ignoreCase 是否忽略大小写
-	 * @return 是否相同
-	 * @see CharUtil#equals(char, char, boolean)
-	 * @since 3.2.1
-	 */
-	public static boolean equals(final char c1, final char c2, final boolean ignoreCase) {
-		return CharUtil.equals(c1, c2, ignoreCase);
 	}
 	// endregion
 
@@ -1289,7 +1235,7 @@ public class NumberUtil {
 	 * @since 3.0.9
 	 */
 	public static BigDecimal null2Zero(final BigDecimal decimal) {
-		return decimal == null ? BigDecimal.ZERO : decimal;
+		return ObjUtil.defaultIfNull(decimal, BigDecimal.ZERO);
 	}
 
 	/**
