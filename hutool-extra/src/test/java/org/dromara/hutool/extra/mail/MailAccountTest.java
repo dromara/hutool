@@ -19,6 +19,7 @@ public class MailAccountTest {
 		final MailAccount account = GlobalMailAccount.INSTANCE.getAccount();
 		account.getSmtpProps();
 
+		Assertions.assertNotNull(account.getPass());
 		Assertions.assertNotNull(account.getCharset());
 		Assertions.assertTrue(account.isSslEnable());
 	}
@@ -35,7 +36,7 @@ public class MailAccountTest {
 	public void customPropertyTest() throws GeneralSecurityException {
 		final MailAccount mailAccount = new MailAccount();
 		mailAccount.setFrom("xxx@xxx.com");
-		mailAccount.setPass("xxxxxx");
+		mailAccount.setPass("xxxxxx".toCharArray());
 
 		mailAccount.setHost("smtp.aol.com");
 

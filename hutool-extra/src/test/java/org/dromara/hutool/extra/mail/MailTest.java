@@ -53,7 +53,7 @@ public class MailTest {
 		account.setSslEnable(true);
 		account.setFrom("hutool@yeah.net");
 		account.setUser("hutool");
-		account.setPass("q1w2e3");
+		account.setPass("q1w2e3".toCharArray());
 		MailUtil.send(account, "hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1>", true);
 	}
 

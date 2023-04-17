@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.mail;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -75,9 +76,11 @@ public class MailAccount implements Serializable {
 	 */
 	private String user;
 	/**
-	 * 密码
+	 * 密码<br>
+	 * 使用char[]保存密码有利于及时擦除<br>
+	 * 见：https://www.cnblogs.com/okokabcd/p/16456966.html
 	 */
-	private String pass;
+	private char[] pass;
 	/**
 	 * 发送方，遵循RFC-822标准
 	 */
@@ -260,7 +263,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * @return 密码
 	 */
-	public String getPass() {
+	public char[] getPass() {
 		return pass;
 	}
 
@@ -270,7 +273,7 @@ public class MailAccount implements Serializable {
 	 * @param pass 密码
 	 * @return this
 	 */
-	public MailAccount setPass(final String pass) {
+	public MailAccount setPass(final char[] pass) {
 		this.pass = pass;
 		return this;
 	}
@@ -649,7 +652,7 @@ public class MailAccount implements Serializable {
 		}
 		if (null == this.auth) {
 			// 如果密码非空白，则使用认证模式
-			this.auth = (!StrUtil.isBlank(this.pass));
+			this.auth = ArrayUtil.isNotEmpty(this.pass);
 		}
 		if (null == this.port) {
 			// 端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25
@@ -665,7 +668,7 @@ public class MailAccount implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (StrUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable="
+		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (ArrayUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable="
 				+ starttlsEnable + ", socketFactoryClass=" + socketFactoryClass + ", socketFactoryFallback=" + socketFactoryFallback + ", socketFactoryPort=" + socketFactoryPort + "]";
 	}
 }

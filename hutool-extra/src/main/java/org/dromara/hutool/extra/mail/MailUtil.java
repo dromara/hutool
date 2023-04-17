@@ -12,16 +12,17 @@
 
 package org.dromara.hutool.extra.mail;
 
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharUtil;
-import org.dromara.hutool.core.text.StrUtil;
 
-import jakarta.mail.Authenticator;
-import jakarta.mail.Session;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
@@ -374,7 +375,15 @@ public class MailUtil {
 	public static Session getSession(final MailAccount mailAccount, final boolean isSingleton) {
 		Authenticator authenticator = null;
 		if (mailAccount.isAuth()) {
-			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
+			authenticator = new Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(
+						mailAccount.getUser(),
+						String.valueOf(mailAccount.getPass())
+					);
+				}
+			};
 		}
 
 		return isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
