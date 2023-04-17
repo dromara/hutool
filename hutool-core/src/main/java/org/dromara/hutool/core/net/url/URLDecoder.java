@@ -117,6 +117,9 @@ public class URLDecoder implements Serializable {
 	 * @return 解码后的字符串
 	 */
 	public static String decode(final String str, final Charset charset, final boolean isPlusToSpace) {
+		if(null == charset){
+			return str;
+		}
 		if (null == str) {
 			return null;
 		}
