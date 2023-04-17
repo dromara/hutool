@@ -72,9 +72,10 @@ public class URLDecoder implements Serializable {
 	 * @return 解码后的字符串
 	 */
 	public static String decode(String str, Charset charset, boolean isPlusToSpace) {
-		if (null == str) {
-			return null;
+		if(null == str || null == charset){
+			return str;
 		}
+
 		final int length = str.length();
 		if(0 == length){
 			return StrUtil.EMPTY;
