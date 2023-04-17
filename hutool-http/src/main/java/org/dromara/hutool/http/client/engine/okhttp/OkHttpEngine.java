@@ -12,17 +12,18 @@
 
 package org.dromara.hutool.http.client.engine.okhttp;
 
+import okhttp3.OkHttpClient;
+import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
-import okhttp3.OkHttpClient;
-import okhttp3.internal.http.HttpMethod;
 
 import java.io.IOException;
-import java.net.Proxy;
+import java.net.PasswordAuthentication;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -97,20 +98,17 @@ public class OkHttpEngine implements ClientEngine {
 			if (readTimeout > 0) {
 				// 读写共用读取超时
 				builder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS)
-						.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
+					.writeTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
 			}
 
 			// SSL
 			final SSLInfo sslInfo = config.getSslInfo();
-			if(null != sslInfo){
+			if (null != sslInfo) {
 				builder.sslSocketFactory(sslInfo.getSocketFactory(), sslInfo.getTrustManager());
 			}
 
 			// 设置代理
-			final Proxy proxy = config.getProxy();
-			if (null != proxy) {
-				builder.proxy(proxy);
-			}
+			setProxy(builder, config);
 		}
 
 		this.client = builder.build();
@@ -124,7 +122,7 @@ public class OkHttpEngine implements ClientEngine {
 	 */
 	private static okhttp3.Request buildRequest(final Request message) {
 		final okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-				.url(message.url().toURL());
+			.url(message.url().toURL());
 
 		final String method = message.method().name();
 		if (HttpMethod.permitsRequestBody(method)) {
@@ -134,5 +132,22 @@ public class OkHttpEngine implements ClientEngine {
 		}
 
 		return builder.build();
+	}
+
+	/**
+	 * 设置代理信息
+	 *
+	 * @param builder 客户端构建器
+	 * @param config  配置
+	 */
+	private static void setProxy(final OkHttpClient.Builder builder, final ClientConfig config) {
+		final HttpProxy proxy = config.getProxy();
+		if (null != proxy) {
+			builder.proxy(proxy);
+			final PasswordAuthentication auth = proxy.getAuth();
+			if (null != auth) {
+				builder.proxyAuthenticator(new BasicProxyAuthenticator(auth));
+			}
+		}
 	}
 }

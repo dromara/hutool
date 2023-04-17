@@ -13,10 +13,8 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.http.HttpGlobalConfig;
+import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
-
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 
 /**
  * Http客户端配置
@@ -53,7 +51,7 @@ public class ClientConfig {
 	/**
 	 * 代理
 	 */
-	private Proxy proxy;
+	private HttpProxy proxy;
 
 	/**
 	 * 构造
@@ -169,7 +167,7 @@ public class ClientConfig {
 	 *
 	 * @return 代理
 	 */
-	public Proxy getProxy() {
+	public HttpProxy getProxy() {
 		return proxy;
 	}
 
@@ -181,18 +179,16 @@ public class ClientConfig {
 	 * @return this
 	 */
 	public ClientConfig setHttpProxy(final String host, final int port) {
-		final Proxy proxy = new Proxy(Proxy.Type.HTTP,
-				new InetSocketAddress(host, port));
-		return setProxy(proxy);
+		return setProxy(new HttpProxy(host, port));
 	}
 
 	/**
 	 * 设置代理
 	 *
-	 * @param proxy 代理 {@link Proxy}
+	 * @param proxy 代理 {@link HttpProxy}
 	 * @return this
 	 */
-	public ClientConfig setProxy(final Proxy proxy) {
+	public ClientConfig setProxy(final HttpProxy proxy) {
 		this.proxy = proxy;
 		return this;
 	}

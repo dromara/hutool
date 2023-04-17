@@ -12,6 +12,19 @@
 
 package org.dromara.hutool.http.client.engine.httpclient4;
 
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.net.url.UrlBuilder;
@@ -23,18 +36,11 @@ import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.meta.HeaderName;
+import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
-import org.apache.http.Header;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
+import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,6 +121,9 @@ public class HttpClient4Engine implements ClientEngine {
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
+		// 设置代理
+		setProxy(clientBuilder, config);
+
 		this.engine = clientBuilder.build();
 	}
 
@@ -143,12 +152,12 @@ public class HttpClient4Engine implements ClientEngine {
 		// 填充自定义消息体
 		final HttpBody body = message.body();
 		request.setEntity(new HttpClient4BodyEntity(
-				// 用户自定义的内容类型
-				message.header(HeaderName.CONTENT_TYPE),
-				// 用户自定义编码
-				message.charset(),
-				message.isChunked(),
-				body));
+			// 用户自定义的内容类型
+			message.header(HeaderName.CONTENT_TYPE),
+			// 用户自定义编码
+			message.charset(),
+			message.isChunked(),
+			body));
 
 		return request;
 	}
@@ -171,10 +180,10 @@ public class HttpClient4Engine implements ClientEngine {
 	 */
 	private static SSLConnectionSocketFactory buildSocketFactory(final SSLInfo sslInfo) {
 		return new SSLConnectionSocketFactory(
-				sslInfo.getSslContext(),
-				sslInfo.getProtocols(),
-				null,
-				sslInfo.getHostnameVerifier());
+			sslInfo.getSslContext(),
+			sslInfo.getProtocols(),
+			null,
+			sslInfo.getHostnameVerifier());
 	}
 
 	/**
@@ -199,5 +208,32 @@ public class HttpClient4Engine implements ClientEngine {
 		}
 
 		return requestConfigBuilder.build();
+	}
+
+	/**
+	 * 设置代理信息
+	 *
+	 * @param clientBuilder {@link org.apache.hc.client5.http.impl.classic.HttpClientBuilder}
+	 * @param config        配置
+	 */
+	private static void setProxy(final HttpClientBuilder clientBuilder, final ClientConfig config) {
+		if (null == config) {
+			return;
+		}
+
+		final HttpProxy proxy = config.getProxy();
+		if (null != proxy) {
+			final HttpHost httpHost = new HttpHost(proxy.getHost(), proxy.getPort());
+			clientBuilder.setProxy(httpHost);
+			final PasswordAuthentication auth = proxy.getAuth();
+			if (null != auth) {
+				// 代理验证
+				final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+				credsProvider.setCredentials(
+					new AuthScope(httpHost),
+					new UsernamePasswordCredentials(auth.getUserName(), String.valueOf(auth.getPassword())));
+				clientBuilder.setDefaultCredentialsProvider(credsProvider);
+			}
+		}
 	}
 }

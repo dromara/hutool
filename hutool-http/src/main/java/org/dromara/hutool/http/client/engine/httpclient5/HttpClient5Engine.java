@@ -12,6 +12,23 @@
 
 package org.dromara.hutool.http.client.engine.httpclient5;
 
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.net.url.UrlBuilder;
@@ -23,22 +40,11 @@ import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.meta.HeaderName;
+import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.message.BasicHeader;
 
 import java.io.IOException;
+import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -116,7 +122,8 @@ public class HttpClient5Engine implements ClientEngine {
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
 
-		// TODO 设置代理
+		// 设置代理
+		setProxy(clientBuilder, config);
 
 		this.engine = clientBuilder.build();
 	}
@@ -141,12 +148,12 @@ public class HttpClient5Engine implements ClientEngine {
 		// 填充自定义消息体
 		final HttpBody body = message.body();
 		request.setEntity(new HttpClient5BodyEntity(
-				// 用户自定义的内容类型
-				message.header(HeaderName.CONTENT_TYPE),
-				// 用户自定义编码
-				message.charset(),
-				message.isChunked(),
-				body));
+			// 用户自定义的内容类型
+			message.header(HeaderName.CONTENT_TYPE),
+			// 用户自定义编码
+			message.charset(),
+			message.isChunked(),
+			body));
 
 		return request;
 	}
@@ -174,17 +181,17 @@ public class HttpClient5Engine implements ClientEngine {
 		final SSLInfo sslInfo = config.getSslInfo();
 		if (null != sslInfo) {
 			connectionManagerBuilder.setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
-					.setTlsVersions(sslInfo.getProtocols())
-					.setSslContext(sslInfo.getSslContext())
-					.setHostnameVerifier(sslInfo.getHostnameVerifier())
-					.build());
+				.setTlsVersions(sslInfo.getProtocols())
+				.setSslContext(sslInfo.getSslContext())
+				.setHostnameVerifier(sslInfo.getHostnameVerifier())
+				.build());
 		}
 		// 连接超时配置
 		final int connectionTimeout = config.getConnectionTimeout();
 		if (connectionTimeout > 0) {
 			connectionManagerBuilder.setDefaultConnectionConfig(ConnectionConfig.custom()
-					.setSocketTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
-					.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
+				.setSocketTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
+				.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS).build());
 		}
 
 		return connectionManagerBuilder.build();
@@ -210,5 +217,32 @@ public class HttpClient5Engine implements ClientEngine {
 		}
 
 		return requestConfigBuilder.build();
+	}
+
+	/**
+	 * 设置代理信息
+	 *
+	 * @param clientBuilder {@link HttpClientBuilder}
+	 * @param config        配置
+	 */
+	private static void setProxy(final HttpClientBuilder clientBuilder, final ClientConfig config) {
+		if (null == config) {
+			return;
+		}
+
+		final HttpProxy proxy = config.getProxy();
+		if (null != proxy) {
+			final HttpHost httpHost = new HttpHost(proxy.getHost(), proxy.getPort());
+			clientBuilder.setProxy(httpHost);
+			final PasswordAuthentication auth = proxy.getAuth();
+			if (null != auth) {
+				// 代理验证
+				final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+				credsProvider.setCredentials(
+					new AuthScope(httpHost),
+					new UsernamePasswordCredentials(auth.getUserName(), auth.getPassword()));
+				clientBuilder.setDefaultCredentialsProvider(credsProvider);
+			}
+		}
 	}
 }

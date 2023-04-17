@@ -13,6 +13,7 @@
 package org.dromara.hutool.http.proxy;
 
 import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
 import java.net.Proxy;
 
 /**
@@ -25,6 +26,7 @@ public class HttpProxy extends Proxy {
 
 	private final String host;
 	private final int port;
+	private PasswordAuthentication auth;
 
 	/**
 	 * 构造
@@ -56,4 +58,34 @@ public class HttpProxy extends Proxy {
 		return port;
 	}
 
+	/**
+	 * 设置代理验证信息
+	 *
+	 * @param user 用户名
+	 * @param pass 密码
+	 * @return this
+	 */
+	public HttpProxy setAuth(final String user, final char[] pass) {
+		return setAuth(new PasswordAuthentication(user, pass));
+	}
+
+	/**
+	 * 设置代理验证信息
+	 *
+	 * @param auth {@link PasswordAuthentication}
+	 * @return this
+	 */
+	public HttpProxy setAuth(final PasswordAuthentication auth) {
+		this.auth = auth;
+		return this;
+	}
+
+	/**
+	 * 获取代理验证信息
+	 *
+	 * @return {@link PasswordAuthentication}
+	 */
+	public PasswordAuthentication getAuth() {
+		return this.auth;
+	}
 }

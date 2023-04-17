@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.http;
 
-import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.net.url.UrlQueryUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.client.ClientConfig;
@@ -215,22 +214,5 @@ public class HttpUtil {
 	 */
 	public static SimpleServer createServer(final int port) {
 		return new SimpleServer(port);
-	}
-
-	/**
-	 * 构建简单的账号秘密验证信息，构建后类似于：
-	 * <pre>
-	 *     Basic YWxhZGRpbjpvcGVuc2VzYW1l
-	 * </pre>
-	 *
-	 * @param username 账号
-	 * @param password 密码
-	 * @param charset  编码（如果账号或密码中有非ASCII字符适用）
-	 * @return 密码验证信息
-	 * @since 5.4.6
-	 */
-	public static String buildBasicAuth(final String username, final String password, final Charset charset) {
-		final String data = username.concat(":").concat(password);
-		return "Basic " + Base64.encode(data, charset);
 	}
 }
