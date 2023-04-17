@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.text.placeholder.StrFormatter;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.StringReader;

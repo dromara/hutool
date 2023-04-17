@@ -10,10 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.text;
+package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.text.StrChecker;
 import org.dromara.hutool.core.util.CharUtil;
 
 import java.util.Objects;

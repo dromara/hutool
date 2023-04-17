@@ -10,7 +10,9 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.text;
+package org.dromara.hutool.core.data;
+
+import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * 检测密码强度<br>

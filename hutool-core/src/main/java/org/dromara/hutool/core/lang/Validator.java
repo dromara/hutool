@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exceptions.ValidateException;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.RegexPool;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.CreditCodeUtil;
+import org.dromara.hutool.core.data.CreditCodeUtil;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.regex.ReUtil;

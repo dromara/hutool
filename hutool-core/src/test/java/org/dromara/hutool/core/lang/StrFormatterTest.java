@@ -1,6 +1,6 @@
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.text.StrFormatter;
+import org.dromara.hutool.core.text.placeholder.StrFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

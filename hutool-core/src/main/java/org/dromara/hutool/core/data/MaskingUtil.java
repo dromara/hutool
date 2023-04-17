@@ -10,8 +10,9 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.text;
+package org.dromara.hutool.core.data;
 
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharUtil;
 
 /**

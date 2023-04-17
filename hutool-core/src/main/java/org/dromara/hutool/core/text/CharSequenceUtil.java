@@ -23,6 +23,7 @@ import org.dromara.hutool.core.text.finder.CharFinder;
 import org.dromara.hutool.core.text.finder.CharMatcherFinder;
 import org.dromara.hutool.core.text.finder.Finder;
 import org.dromara.hutool.core.text.finder.StrFinder;
+import org.dromara.hutool.core.text.placeholder.StrFormatter;
 import org.dromara.hutool.core.text.replacer.RangeReplacerByChar;
 import org.dromara.hutool.core.text.replacer.RangeReplacerByStr;
 import org.dromara.hutool.core.text.replacer.SearchReplacer;

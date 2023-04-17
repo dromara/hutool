@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.data;
 
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.lang.Validator;

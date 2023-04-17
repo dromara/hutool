@@ -10,10 +10,10 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.text;
+package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.text.placeholder.StrTemplate;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
 
 import java.util.Map;

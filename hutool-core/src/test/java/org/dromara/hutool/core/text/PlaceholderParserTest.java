@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.text;
 
+import org.dromara.hutool.core.text.placeholder.PlaceholderParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
