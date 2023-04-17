@@ -445,7 +445,9 @@ public class FileUtilTest {
 		Assert.assertEquals("text/css", mimeType);
 
 		mimeType = FileUtil.getMimeType("test.js");
-		Assert.assertEquals("application/x-javascript", mimeType);
+		// 在 jdk 11+ 会获取到 text/javascript,而非 自定义的 application/x-javascript
+		List<String> list = ListUtil.of("text/javascript", "application/x-javascript");
+		Assert.assertTrue(list.contains(mimeType));
 
 		// office03
 		mimeType = FileUtil.getMimeType("test.doc");
