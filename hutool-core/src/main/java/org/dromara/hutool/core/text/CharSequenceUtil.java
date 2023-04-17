@@ -3112,6 +3112,18 @@ public class CharSequenceUtil extends StrChecker {
 	}
 
 	/**
+	 * 获取字符串的Unicode字符长度，如果为{@code null}返回0<br>
+	 * Unicode字符长度指实际Unicode字符个数，如emoji算一个字符
+	 *
+	 * @param cs a 字符串
+	 * @return 字符串的长度，如果为{@code null}返回0
+	 * @since 6.0.0
+	 */
+	public static int codeLength(final CharSequence cs) {
+		return cs == null ? 0 : cs.toString().codePointCount(0, cs.length());
+	}
+
+	/**
 	 * 给定字符串转为bytes后的byte数（byte长度）
 	 *
 	 * @param cs      字符串

@@ -284,4 +284,12 @@ public class CharSequenceUtilTest {
 		// Expect common suffix: { space * 10 }
 		Assertions.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
 	}
+
+	@Test
+	void codeLengthTest() {
+		String a = "🍒🐽";
+		final int i = StrUtil.codeLength(a);
+		Assertions.assertEquals(4, a.length());
+		Assertions.assertEquals(2, i);
+	}
 }
