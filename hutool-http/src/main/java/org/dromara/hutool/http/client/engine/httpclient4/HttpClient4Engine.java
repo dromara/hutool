@@ -22,6 +22,7 @@ import org.dromara.hutool.http.client.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.ssl.SSLInfo;
 import org.apache.http.Header;
 import org.apache.http.client.config.RequestConfig;
@@ -36,6 +37,7 @@ import org.apache.http.message.BasicHeader;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -142,7 +144,7 @@ public class HttpClient4Engine implements ClientEngine {
 		final HttpBody body = message.body();
 		request.setEntity(new HttpClient4BodyEntity(
 				// 用户自定义的内容类型
-				message.header(org.dromara.hutool.http.meta.Header.CONTENT_TYPE),
+				message.header(HeaderName.CONTENT_TYPE),
 				// 用户自定义编码
 				message.charset(),
 				message.isChunked(),
@@ -156,7 +158,7 @@ public class HttpClient4Engine implements ClientEngine {
 	 *
 	 * @return 默认头列表
 	 */
-	private static List<Header> toHeaderList(final Map<String, List<String>> headersMap) {
+	private static List<Header> toHeaderList(final Map<String, ? extends Collection<String>> headersMap) {
 		final List<Header> result = new ArrayList<>();
 		headersMap.forEach((k, v1) -> v1.forEach((v2) -> result.add(new BasicHeader(k, v2))));
 		return result;

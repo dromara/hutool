@@ -20,7 +20,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.meta.ContentType;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -150,12 +150,12 @@ public class HttpServerResponse extends HttpServerBase {
 	/**
 	 * 设置响应头，如果已经存在，则覆盖
 	 *
-	 * @param header 头key
+	 * @param headerName 头key
 	 * @param value  值
 	 * @return this
 	 */
-	public HttpServerResponse setHeader(final Header header, final String value) {
-		return setHeader(header.getValue(), value);
+	public HttpServerResponse setHeader(final HeaderName headerName, final String value) {
+		return setHeader(headerName.getValue(), value);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class HttpServerResponse extends HttpServerBase {
 			}
 		}
 
-		return setHeader(Header.CONTENT_TYPE, contentType);
+		return setHeader(HeaderName.CONTENT_TYPE, contentType);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse setContentLength(final long contentLength) {
-		return setHeader(Header.CONTENT_LENGTH, String.valueOf(contentLength));
+		return setHeader(HeaderName.CONTENT_LENGTH, String.valueOf(contentLength));
 	}
 
 	/**
@@ -435,7 +435,7 @@ public class HttpServerResponse extends HttpServerBase {
 
 		if (!contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
-			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLEncoder.encodeAll(fileName, charset)));
+			setHeader(HeaderName.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLEncoder.encodeAll(fileName, charset)));
 		}
 		return write(in, length, contentType);
 	}

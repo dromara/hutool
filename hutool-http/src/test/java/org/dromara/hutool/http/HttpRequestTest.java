@@ -8,7 +8,7 @@ import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -99,9 +99,9 @@ public class HttpRequestTest {
 	@Disabled
 	public void getDeflateTest() {
 		final Response res = Request.of("https://comment.bilibili.com/67573272.xml")
-				.header(Header.ACCEPT_ENCODING, "deflate")
+				.header(HeaderName.ACCEPT_ENCODING, "deflate")
 				.send();
-		Console.log(res.header(Header.CONTENT_ENCODING));
+		Console.log(res.header(HeaderName.CONTENT_ENCODING));
 		Console.log(res.body());
 	}
 
@@ -156,11 +156,11 @@ public class HttpRequestTest {
 		// 方式1：全局设置
 		HttpGlobalConfig.setMaxRedirectCount(1);
 		Response execute = Request.of(url).send();
-		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
+		Console.log(execute.getStatus(), execute.header(HeaderName.LOCATION));
 
 		// 方式2，单独设置
 		execute = Request.of(url).setMaxRedirectCount(1).send();
-		Console.log(execute.getStatus(), execute.header(Header.LOCATION));
+		Console.log(execute.getStatus(), execute.header(HeaderName.LOCATION));
 	}
 
 	@Test

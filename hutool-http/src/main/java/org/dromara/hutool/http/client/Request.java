@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.http.client;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -26,12 +26,12 @@ import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.body.StringBody;
 import org.dromara.hutool.http.client.body.UrlEncodedFormBody;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -95,7 +95,7 @@ public class Request implements HeaderOperation<Request> {
 	/**
 	 * 存储头信息
 	 */
-	private final Map<String, List<String>> headers;
+	private final ListValueMap<String, String> headers;
 	/**
 	 * 请求体
 	 */
@@ -110,7 +110,7 @@ public class Request implements HeaderOperation<Request> {
 	 */
 	public Request() {
 		method = Method.GET;
-		headers = new HashMap<>();
+		headers = new ListValueMap<>(new LinkedHashMap<>());
 		maxRedirectCount = HttpGlobalConfig.getMaxRedirectCount();
 
 		// 全局默认请求头
@@ -181,7 +181,7 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	@Override
-	public Map<String, List<String>> headers() {
+	public Map<String, ? extends Collection<String>> headers() {
 		return MapUtil.view(this.headers);
 	}
 
@@ -191,7 +191,7 @@ public class Request implements HeaderOperation<Request> {
 	 * @return 是否为Transfer-Encoding:Chunked的内容
 	 */
 	public boolean isChunked() {
-		final String transferEncoding = header(Header.TRANSFER_ENCODING);
+		final String transferEncoding = header(HeaderName.TRANSFER_ENCODING);
 		return "Chunked".equalsIgnoreCase(transferEncoding);
 	}
 
@@ -215,11 +215,10 @@ public class Request implements HeaderOperation<Request> {
 			return this;
 		}
 
-		final List<String> values = headers.get(name.trim());
-		if (isOverride || CollUtil.isEmpty(values)) {
-			headers.put(name.trim(), ListUtil.of(value));
+		if (isOverride) {
+			this.headers.put(name.trim(), ListUtil.of(value));
 		} else {
-			values.add(value.trim());
+			this.headers.putValue(name.trim(), value);
 		}
 		return this;
 	}
@@ -263,8 +262,8 @@ public class Request implements HeaderOperation<Request> {
 		this.body = body;
 
 		// 根据内容赋值默认Content-Type
-		if (StrUtil.isBlank(header(Header.CONTENT_TYPE))) {
-			header(Header.CONTENT_TYPE, body.getContentType(charset()), true);
+		if (StrUtil.isBlank(header(HeaderName.CONTENT_TYPE))) {
+			header(HeaderName.CONTENT_TYPE, body.getContentType(charset()), true);
 		}
 
 		return this;

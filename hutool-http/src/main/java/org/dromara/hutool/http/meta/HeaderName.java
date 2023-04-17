@@ -13,11 +13,11 @@
 package org.dromara.hutool.http.meta;
 
 /**
- * Http 头域
+ * Http头名称枚举
  *
  * @author Looly
  */
-public enum Header {
+public enum HeaderName {
 
 	//------------------------------------------------------------- 通用头域
 	/**
@@ -145,7 +145,7 @@ public enum Header {
 
 	private final String value;
 
-	Header(final String value) {
+	HeaderName(final String value) {
 		this.value = value;
 	}
 
@@ -154,7 +154,7 @@ public enum Header {
 	 *
 	 * @return 值
 	 */
-	public String getValue(){
+	public String getValue() {
 		return this.value;
 	}
 

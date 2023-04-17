@@ -15,7 +15,7 @@ package org.dromara.hutool.http;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,12 +69,12 @@ public enum GlobalHeaders {
 
 		//header(Header.ACCEPT, "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
 		// 某些请求中这个自定义头会导致请求失败，此处采用与PostMan一致的默认头
-		header(Header.ACCEPT, "*/*", true);
-		header(Header.ACCEPT_ENCODING, "gzip, deflate", true);
-		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
+		header(HeaderName.ACCEPT, "*/*", true);
+		header(HeaderName.ACCEPT_ENCODING, "gzip, deflate", true);
+		header(HeaderName.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
 		// 此Header只有在post请求中有用，因此在HttpRequest的method方法中设置此头信息，此处去掉
 		// header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(CharsetUtil.CHARSET_UTF_8), true);
-		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 Hutool", true);
+		header(HeaderName.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 Hutool", true);
 		return this;
 	}
 
@@ -115,7 +115,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	public String header(final Header name) {
+	public String header(final HeaderName name) {
 		if (null == name) {
 			return null;
 		}
@@ -154,7 +154,7 @@ public enum GlobalHeaders {
 	 * @param isOverride 是否覆盖已有值
 	 * @return this
 	 */
-	public GlobalHeaders header(final Header name, final String value, final boolean isOverride) {
+	public GlobalHeaders header(final HeaderName name, final String value, final boolean isOverride) {
 		return header(name.toString(), value, isOverride);
 	}
 
@@ -166,7 +166,7 @@ public enum GlobalHeaders {
 	 * @param value Header值
 	 * @return this
 	 */
-	public GlobalHeaders header(final Header name, final String value) {
+	public GlobalHeaders header(final HeaderName name, final String value) {
 		return header(name.toString(), value, true);
 	}
 
@@ -223,7 +223,7 @@ public enum GlobalHeaders {
 	 * @param name Header名
 	 * @return this
 	 */
-	public GlobalHeaders removeHeader(final Header name) {
+	public GlobalHeaders removeHeader(final HeaderName name) {
 		return removeHeader(name.toString());
 	}
 

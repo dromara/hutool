@@ -5,7 +5,7 @@ import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.http.client.Request;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -39,7 +39,7 @@ public class HttpUtilTest {
 		// 某些接口对Accept头有特殊要求，此处自定义头
 		final String result = HttpUtil.send(Request
 						.of("http://cmp.ishanghome.com/cmp/v1/community/queryClusterCommunity")
-						.header(Header.ACCEPT, "*/*"))
+						.header(HeaderName.ACCEPT, "*/*"))
 				.bodyStr();
 		Console.log(result);
 	}
@@ -58,7 +58,7 @@ public class HttpUtilTest {
 		// 自定义的默认header无效
 		final String result = Request
 				.of("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
-				.header(Header.USER_AGENT, null).send().bodyStr();
+				.header(HeaderName.USER_AGENT, null).send().bodyStr();
 		Console.log(result);
 	}
 

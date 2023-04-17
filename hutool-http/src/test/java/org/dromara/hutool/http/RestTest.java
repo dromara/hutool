@@ -2,7 +2,7 @@ package org.dromara.hutool.http;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.http.client.Request;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +24,7 @@ public class RestTest {
 				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());
-		Assertions.assertEquals("application/json;charset=UTF-8", request.header(Header.CONTENT_TYPE));
+		Assertions.assertEquals("application/json;charset=UTF-8", request.header(HeaderName.CONTENT_TYPE));
 	}
 
 	@SuppressWarnings("resource")
@@ -52,7 +52,7 @@ public class RestTest {
 	@Disabled
 	public void getWithBodyTest() {
 		final Request request = Request.of("http://localhost:8888/restTest")//
-				.header(Header.CONTENT_TYPE, "application/json")
+				.header(HeaderName.CONTENT_TYPE, "application/json")
 				.body(JSONUtil.ofObj()
 						.set("aaa", "aaaValue")
 						.set("键2", "值2").toString());

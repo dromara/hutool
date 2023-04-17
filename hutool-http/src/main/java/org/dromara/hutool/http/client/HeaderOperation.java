@@ -12,15 +12,14 @@
 
 package org.dromara.hutool.http.client;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.net.HttpCookie;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +37,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 *
 	 * @return Headers Map
 	 */
-	Map<String, List<String>> headers();
+	Map<String, ? extends Collection<String>> headers();
 
 	/**
 	 * 设置一个header<br>
@@ -55,11 +54,11 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	/**
 	 * 获取指定的Header值，如果不存在返回{@code null}
 	 *
-	 * @param header header名
+	 * @param headerName header名
 	 * @return header值
 	 */
-	default String header(final Header header) {
-		return header(header.getValue());
+	default String header(final HeaderName headerName) {
+		return header(headerName.getValue());
 	}
 
 	/**
@@ -69,9 +68,9 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return header值
 	 */
 	default String header(final String name) {
-		final List<String> values = headers().get(name);
+		final Collection<String> values = headers().get(name);
 		if (ArrayUtil.isNotEmpty(values)) {
-			return values.get(0);
+			return CollUtil.getFirst(values);
 		}
 
 		return null;
@@ -86,7 +85,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @param isOverride 是否覆盖已有值
 	 * @return T 本身
 	 */
-	default T header(final Header name, final String value, final boolean isOverride) {
+	default T header(final HeaderName name, final String value, final boolean isOverride) {
 		return header(name.toString(), value, isOverride);
 	}
 
@@ -98,7 +97,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @param value Header值
 	 * @return T 本身
 	 */
-	default T header(final Header name, final String value) {
+	default T header(final HeaderName name, final String value) {
 		return header(name.toString(), value, true);
 	}
 
@@ -121,10 +120,10 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @param isOverride 是否覆盖
 	 * @return this
 	 */
-	default T header(final Map<String, List<String>> headerMap, final boolean isOverride) {
+	default T header(final Map<String, ? extends Collection<String>> headerMap, final boolean isOverride) {
 		if (MapUtil.isNotEmpty(headerMap)) {
 			String name;
-			for (final Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
+			for (final Map.Entry<String, ? extends Collection<String>> entry : headerMap.entrySet()) {
 				name = entry.getKey();
 				for (final String value : entry.getValue()) {
 					this.header(name, StrUtil.emptyIfNull(value), isOverride);
@@ -141,7 +140,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return T
 	 */
 	default T contentType(final String contentType) {
-		header(Header.CONTENT_TYPE, contentType);
+		header(HeaderName.CONTENT_TYPE, contentType);
 		return (T) this;
 	}
 
@@ -152,7 +151,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return T
 	 */
 	default T keepAlive(final boolean isKeepAlive) {
-		header(Header.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
+		header(HeaderName.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
 		return (T) this;
 	}
 
@@ -177,7 +176,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return T this
 	 */
 	default T auth(final String content) {
-		header(Header.AUTHORIZATION, content, true);
+		header(HeaderName.AUTHORIZATION, content, true);
 		return (T) this;
 	}
 
@@ -188,7 +187,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @return T this
 	 */
 	default T proxyAuth(final String content) {
-		header(Header.PROXY_AUTHORIZATION, content, true);
+		header(HeaderName.PROXY_AUTHORIZATION, content, true);
 		return (T) this;
 	}
 
@@ -233,7 +232,7 @@ public interface HeaderOperation<T extends HeaderOperation<T>> {
 	 * @since 3.0.7
 	 */
 	default T cookie(final String cookie) {
-		return header(Header.COOKIE, cookie, true);
+		return header(HeaderName.COOKIE, cookie, true);
 	}
 
 	/**

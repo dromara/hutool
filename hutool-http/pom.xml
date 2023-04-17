@@ -109,6 +109,12 @@
 			<artifactId>mockwebserver</artifactId>
 			<version>4.10.0</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>kotlin-stdlib-jdk8</artifactId>
+					<groupId>org.jetbrains.kotlin</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

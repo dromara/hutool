@@ -26,7 +26,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.meta.ContentTypeUtil;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.useragent.UserAgent;
 import org.dromara.hutool.http.useragent.UserAgentUtil;
@@ -130,11 +130,11 @@ public class HttpServerRequest extends HttpServerBase {
 	/**
 	 * 获得请求header中的信息
 	 *
-	 * @param headerKey 头信息的KEY
+	 * @param headerNameKey 头信息的KEY
 	 * @return header值
 	 */
-	public String getHeader(final Header headerKey) {
-		return getHeader(headerKey.toString());
+	public String getHeader(final HeaderName headerNameKey) {
+		return getHeader(headerNameKey.toString());
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return Content-Type头信息
 	 */
 	public String getContentType() {
-		return getHeader(Header.CONTENT_TYPE);
+		return getHeader(HeaderName.CONTENT_TYPE);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return User-Agent字符串
 	 */
 	public String getUserAgentStr() {
-		return getHeader(Header.USER_AGENT);
+		return getHeader(HeaderName.USER_AGENT);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return cookie字符串
 	 */
 	public String getCookiesStr() {
-		return getHeader(Header.COOKIE);
+		return getHeader(HeaderName.COOKIE);
 	}
 
 	/**

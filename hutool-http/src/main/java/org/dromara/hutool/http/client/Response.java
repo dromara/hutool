@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.body.ResponseBody;
 import org.dromara.hutool.http.meta.ContentTypeUtil;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -65,7 +65,7 @@ public interface Response extends Closeable {
 	 * @return 字符集
 	 */
 	default Charset charset() {
-		return ContentTypeUtil.getCharset(header(Header.CONTENT_TYPE));
+		return ContentTypeUtil.getCharset(header(HeaderName.CONTENT_TYPE));
 	}
 
 	/**
@@ -129,7 +129,7 @@ public interface Response extends Closeable {
 	 * @param name Header名
 	 * @return Header值
 	 */
-	default String header(final Header name) {
+	default String header(final HeaderName name) {
 		if (null == name) {
 			return null;
 		}
@@ -142,7 +142,7 @@ public interface Response extends Closeable {
 	 * @return String
 	 */
 	default String contentEncoding() {
-		return header(Header.CONTENT_ENCODING);
+		return header(HeaderName.CONTENT_ENCODING);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public interface Response extends Closeable {
 	 * @since 5.7.9
 	 */
 	default long contentLength() {
-		long contentLength = Convert.toLong(header(Header.CONTENT_LENGTH), -1L);
+		long contentLength = Convert.toLong(header(HeaderName.CONTENT_LENGTH), -1L);
 		if (contentLength > 0 && (isChunked() || StrUtil.isNotBlank(contentEncoding()))) {
 			//按照HTTP协议规范，在 Transfer-Encoding和Content-Encoding设置后 Content-Length 无效。
 			contentLength = -1;
@@ -172,7 +172,7 @@ public interface Response extends Closeable {
 	 * @since 4.6.2
 	 */
 	default boolean isChunked() {
-		final String transferEncoding = header(Header.TRANSFER_ENCODING);
+		final String transferEncoding = header(HeaderName.TRANSFER_ENCODING);
 		return "Chunked".equalsIgnoreCase(transferEncoding);
 	}
 
@@ -183,7 +183,7 @@ public interface Response extends Closeable {
 	 * @since 3.1.1
 	 */
 	default String getCookieStr() {
-		return header(Header.SET_COOKIE);
+		return header(HeaderName.SET_COOKIE);
 	}
 
 	/**

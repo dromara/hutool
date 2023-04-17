@@ -6,7 +6,7 @@ import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -69,7 +69,7 @@ public class UploadTest {
 		//noinspection resource
 		final String result = Request.of(url)
 				.method(Method.POST)
-				.header(Header.USER_AGENT, "PostmanRuntime/7.28.4")
+				.header(HeaderName.USER_AGENT, "PostmanRuntime/7.28.4")
 				.auth(token)
 				.form(MapUtil.of("smfile", FileUtil.file("d:/test/qrcodeCustom.png")))
 				.send().bodyStr();

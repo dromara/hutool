@@ -66,7 +66,7 @@ public class CollectionValueMap<K, V> extends AbsCollValueMap<K, V> {
 	}
 
 	/**
-	 * 创建一个多值映射集合，默认基于{@link HashMap}与{@link ArrayList}实现
+	 * 创建一个多值映射集合，默认基于指定Map与指定List类型实现
 	 *
 	 * @param map 提供数据的原始集合
 	 */

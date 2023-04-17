@@ -16,7 +16,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
 /**
- * https 域名校验，信任所有域名
+ * https 域名校验，信任所有域名<br>
+ * 注意此类慎用，信任全部可能会有中间人攻击风险
  *
  * @author Looly
  */

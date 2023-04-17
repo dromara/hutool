@@ -24,7 +24,7 @@ import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.HttpStatus;
 import org.dromara.hutool.http.meta.Method;
 
@@ -149,7 +149,7 @@ public class JdkClientEngine implements ClientEngine {
 				// 覆盖默认Header
 				.header(message.headers(), true);
 
-		if (null == message.header(Header.COOKIE)) {
+		if (null == message.header(HeaderName.COOKIE)) {
 			// 用户没有自定义Cookie，则读取全局Cookie信息并附带到请求中
 			GlobalCookieManager.add(conn);
 		}
@@ -178,7 +178,7 @@ public class JdkClientEngine implements ClientEngine {
 
 			if (code != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(code)) {
-					message.url(getLocationUrl(message.url(), conn.header(Header.LOCATION)));
+					message.url(getLocationUrl(message.url(), conn.header(HeaderName.LOCATION)));
 					if (redirectCount < message.maxRedirectCount()) {
 						redirectCount++;
 						return send(message, isAsync);

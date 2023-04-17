@@ -22,6 +22,8 @@ import java.security.cert.X509Certificate;
  * 继承{@link X509ExtendedTrustManager}的原因见：<br>
  * https://blog.csdn.net/ghaohao/article/details/79454913
  *
+ * <p>注意此类慎用，信任全部可能会有中间人攻击风险。</p>
+ *
  * @author Looly
  * @since 5.5.7
  */

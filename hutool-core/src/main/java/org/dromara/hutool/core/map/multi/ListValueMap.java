@@ -39,7 +39,7 @@ public class ListValueMap<K, V> extends AbsCollValueMap<K, V> {
 	}
 
 	/**
-	 *  基于{@link HashMap}创建一个值为{@link List}的多值映射集合
+	 *  基于指定Map创建一个值为{@link List}的多值映射集合
 	 *
 	 * @param map 提供数据的原始集合
 	 */

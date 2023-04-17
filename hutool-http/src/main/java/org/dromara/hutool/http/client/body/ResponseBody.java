@@ -24,7 +24,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.html.HtmlUtil;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.io.Closeable;
 import java.io.File;
@@ -60,7 +60,7 @@ public class ResponseBody implements HttpBody, Closeable {
 
 	@Override
 	public String getContentType() {
-		return response.header(Header.CONTENT_TYPE);
+		return response.header(HeaderName.CONTENT_TYPE);
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public class ResponseBody implements HttpBody, Closeable {
 	 */
 	private String getFileNameFromDisposition(final String paramName) {
 		String fileName = null;
-		final String disposition = response.header(Header.CONTENT_DISPOSITION);
+		final String disposition = response.header(HeaderName.CONTENT_DISPOSITION);
 		if (StrUtil.isNotBlank(disposition)) {
 			fileName = ReUtil.get(paramName + "=\"(.*?)\"", disposition, 1);
 			if (StrUtil.isBlank(fileName)) {

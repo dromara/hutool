@@ -5,7 +5,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.multipart.UploadFile;
 import org.dromara.hutool.http.meta.ContentType;
-import org.dromara.hutool.http.meta.Header;
+import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONUtil;
 
@@ -59,7 +59,7 @@ public class SimpleServerTest {
 					res.write("0");
 					Console.log("Write 0 OK");
 				}).addAction("/getCookie", ((request, response) -> {
-					response.setHeader(Header.SET_COOKIE.toString(),
+					response.setHeader(HeaderName.SET_COOKIE.toString(),
 							ListUtil.of(
 									new HttpCookie("cc", "123").toString(),
 									new HttpCookie("cc", "abc").toString()));
