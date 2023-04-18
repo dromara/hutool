@@ -1612,7 +1612,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(final File file) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileReader.of(file).readBytes();
+		return readBytes(file.toPath());
 	}
 
 	/**

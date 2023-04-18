@@ -483,4 +483,10 @@ public class FileUtilTest {
 		path = "test\\aaa.txt";
 		Assertions.assertFalse(FileUtil.isAbsolutePath(path));
 	}
+
+	@Test
+	void readBytesTest() {
+		final byte[] bytes = FileUtil.readBytes("test.properties");
+		Assertions.assertEquals(125, bytes.length);
+	}
 }

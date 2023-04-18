@@ -13,11 +13,10 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.exceptions.UtilException;
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
-import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.*;
@@ -53,7 +52,7 @@ public class FileReader extends FileWrapper {
 	 * @return FileReader
 	 */
 	public static FileReader of(final File file){
-		return new FileReader(FileUtil.file(file), DEFAULT_CHARSET);
+		return new FileReader(file, DEFAULT_CHARSET);
 	}
 
 	// ------------------------------------------------------- Constructor start
@@ -76,27 +75,11 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] readBytes() throws IORuntimeException {
-		final long len = this.file.length();
-		if (len >= Integer.MAX_VALUE) {
-			throw new IORuntimeException("File is larger then max array size");
-		}
-
-		final byte[] bytes = new byte[(int) len];
-		InputStream in = null;
-		final int readLength;
 		try {
-			in = FileUtil.getInputStream(this.file);
-			readLength = in.read(bytes);
-			if(readLength < len){
-				throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", len, readLength));
-			}
-		} catch (final Exception e) {
+			return Files.readAllBytes(this.file.toPath());
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.closeQuietly(in);
 		}
-
-		return bytes;
 	}
 
 	/**
@@ -106,6 +89,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public String readString() throws IORuntimeException{
+		// TODO JDK11+不再推荐使用这种方式，推荐使用Files.readString
 		return new String(readBytes(), this.charset);
 	}
 
