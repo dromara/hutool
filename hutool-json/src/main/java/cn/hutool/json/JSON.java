@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * JSON接口
@@ -95,6 +96,28 @@ public interface JSON extends Cloneable, Serializable {
 	 * @since 4.0.6
 	 */
 	<T> T getByPath(String expression, Class<T> resultType);
+
+	/**
+	 * 通过表达式获取JSON中嵌套的数组
+	 *
+	 * <pre>
+	 * 例如，这个json中的childArray是一个User数组：
+	 * //这句是伪代码，thisJson可以是JsonObject也可以是JsonArray
+	 * thisJson = {"childArray":{"username":"a","password":"a-password"}}
+	 *
+	 * 如果想拿到List&lt;User&gt;则可以这么写：
+	 * List&lt;User&gt; userList = thisJson.getListByPath("childArray", User.class)。
+	 * </pre>
+	 * <p>
+	 * 更多表达式细节请参考 {@link  JSON#getByPath(String)}
+	 *
+	 * @param <T>        返回数组范型
+	 * @param expression 表达式
+	 * @param resultType 返回数组范型
+	 * @return 数组
+	 * @see JSON#getByPath(String)
+	 */
+	<T> List<T> getListByPath(String expression, Class<T> resultType);
 
 	/**
 	 * 格式化打印JSON，缩进为4个空格

@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -318,6 +319,11 @@ public class JSONObject extends MapWrapper<String, Object> implements JSON, JSON
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
 		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
+	}
+
+	@Override
+	public <T> List<T> getListByPath(String expression, Class<T> resultType) {
+		return JSONConverter.toList(getByPath(expression, JSONArray.class), resultType);
 	}
 
 	@Override

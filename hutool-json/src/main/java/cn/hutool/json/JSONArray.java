@@ -218,6 +218,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 
 	@Override
+	public <T> List<T> getListByPath(String expression, Class<T> resultType) {
+		return JSONConverter.toList(getByPath(expression, JSONArray.class), resultType);
+	}
+
+	@Override
 	public void putByPath(String expression, Object value) {
 		BeanPath.create(expression).set(this, value);
 	}
