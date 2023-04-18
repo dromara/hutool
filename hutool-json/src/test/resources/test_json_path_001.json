@@ -1,0 +1,19 @@
+{
+  "testUserList": [
+    {
+      "testAbc": "123"
+    },
+    {
+      "testArray": [
+        {
+          "username": "a",
+          "password": "a-password"
+        },
+        {
+          "username": "b",
+          "password": "b-password"
+        }
+      ]
+    }
+  ]
+}

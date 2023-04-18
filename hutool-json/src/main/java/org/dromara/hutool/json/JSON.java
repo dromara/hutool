@@ -122,7 +122,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")
-	default <T> T getByPath(final String expression, final Class<T> resultType){
+	default <T> T getByPath(final String expression, final Type resultType){
 		return (T) config().getConverter().convert(resultType, getByPath(expression));
 	}
 
