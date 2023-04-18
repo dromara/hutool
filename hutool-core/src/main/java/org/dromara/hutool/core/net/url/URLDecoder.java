@@ -134,6 +134,11 @@ public class URLDecoder implements Serializable {
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);
+			if(CharUtil.PLUS == c){
+				result.append(isPlusToSpace ? CharUtil.SPACE : c);
+				begin++;
+				continue;
+			}
 			if(ESCAPE_CHAR == c || CharUtil.isHexChar(c)){
 				continue;
 			}
