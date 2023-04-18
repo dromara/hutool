@@ -129,7 +129,9 @@ public class DialectRunner implements Serializable {
 	public int insertOrUpdate(Connection conn, Entity record, String... keys) throws SQLException {
 		final Entity where = record.filter(keys);
 		if (MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
-			return update(conn, record, where);
+			// issue#I6W91Z
+			// 更新时，给定的字段无需更新
+			return update(conn, record.removeNew(keys), where);
 		} else {
 			return insert(conn, record)[0];
 		}

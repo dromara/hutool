@@ -3,6 +3,7 @@ package cn.hutool.db;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.func.Func0;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -10,11 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.sql.SqlUtil;
 
 import java.nio.charset.Charset;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.RowId;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -255,6 +252,17 @@ public class Entity extends Dict {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 过滤Map去除指定键值对，如果键不存在跳过
+	 *
+	 * @param keys 键列表
+	 * @return Dict 结果
+	 * @since 5.8.19
+	 */
+	public Entity removeNew(final String... keys) {
+		return (Entity) MapUtil.removeAny(this.clone(), keys);
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
