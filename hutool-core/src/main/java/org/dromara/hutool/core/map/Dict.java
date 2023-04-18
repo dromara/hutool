@@ -321,7 +321,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @return Dict 结果
 	 * @since 4.0.10
 	 */
-	public Dict filter(final String... keys) {
+	public Dict filterNew(final String... keys) {
 		final Dict result = new Dict(keys.length, 1);
 
 		for (final String key : keys) {
@@ -330,6 +330,17 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 过滤Map去除指定键值对，如果键不存在跳过
+	 *
+	 * @param keys 键列表
+	 * @return Dict 结果
+	 * @since 4.0.10
+	 */
+	public Dict removeNew(final String... keys) {
+		return MapUtil.removeAny(this.clone(), keys);
 	}
 
 	// -------------------------------------------------------------------- Set start

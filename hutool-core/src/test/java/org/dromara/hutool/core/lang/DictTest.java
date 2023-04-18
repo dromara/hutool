@@ -83,4 +83,16 @@ public class DictTest {
 		private String username;
 		private String nickname;
 	}
+
+	@Test
+	public void removeNewTest(){
+		final Dict dict = Dict.of()
+			.set("key1", 1)//int
+			.set("key2", 1000L)//long
+			.set("key3", DateTime.now());//Date
+
+		final Dict dict2 = dict.removeNew("key1");
+		Assertions.assertEquals(3, dict.size());
+		Assertions.assertEquals(2, dict2.size());
+	}
 }

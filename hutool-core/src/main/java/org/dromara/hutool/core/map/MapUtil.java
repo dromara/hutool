@@ -437,7 +437,7 @@ public class MapUtil extends MapGetUtil {
 		for (final Map<K, V> map : mapList) {
 			for (final Entry<K, V> entry : map.entrySet()) {
 				resultMap.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
-						.add(entry.getValue());
+					.add(entry.getValue());
 			}
 		}
 
@@ -625,9 +625,9 @@ public class MapUtil extends MapGetUtil {
 	public static <K, V> String join(final Map<K, V> map, final String separator, final String keyValueSeparator,
 									 final Predicate<Entry<K, V>> predicate, final String... otherParams) {
 		return MapJoiner.of(separator, keyValueSeparator)
-				.append(map, predicate)
-				.append(otherParams)
-				.toString();
+			.append(map, predicate)
+			.append(otherParams)
+			.toString();
 	}
 
 	// ----------------------------------------------------------------------------------------------- filter
@@ -951,13 +951,13 @@ public class MapUtil extends MapGetUtil {
 	 *
 	 * @param <K>  Key类型
 	 * @param <V>  Value类型
+	 * @param <T>  Map类型
 	 * @param map  Map
 	 * @param keys 键列表
 	 * @return 修改后的key
-	 * @since 5.0.5
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> removeAny(final Map<K, V> map, final K... keys) {
+	public static <K, V, T extends Map<K, V>> T removeAny(final T map, final K... keys) {
 		for (final K key : keys) {
 			map.remove(key);
 		}
@@ -1163,8 +1163,8 @@ public class MapUtil extends MapGetUtil {
 	 */
 	public static <K, V> Map.Entry<K, V> entry(final K key, final V value, final boolean isImmutable) {
 		return isImmutable ?
-				new AbstractMap.SimpleImmutableEntry<>(key, value) :
-				new AbstractMap.SimpleEntry<>(key, value);
+			new AbstractMap.SimpleImmutableEntry<>(key, value) :
+			new AbstractMap.SimpleEntry<>(key, value);
 	}
 
 	/**
@@ -1272,7 +1272,7 @@ public class MapUtil extends MapGetUtil {
 	 * This class should be removed once we drop Java 8 support.
 	 *
 	 * <p>
-	 *     注意此方法只能用于JDK8
+	 * 注意此方法只能用于JDK8
 	 * </p>
 	 *
 	 * @param <K>             键类型
@@ -1288,7 +1288,7 @@ public class MapUtil extends MapGetUtil {
 		if (null == value) {
 			value = mappingFunction.apply(key);
 			final V res = map.putIfAbsent(key, value);
-			if(null != res){
+			if (null != res) {
 				// issues#I6RVMY
 				// 如果旧值存在，说明其他线程已经赋值成功，putIfAbsent没有执行，返回旧值
 				return res;

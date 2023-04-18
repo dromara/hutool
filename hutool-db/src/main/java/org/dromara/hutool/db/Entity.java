@@ -107,7 +107,10 @@ public class Entity extends Dict {
 	/* 字段名列表，用于限制加入的字段的值 */
 	private Set<String> fieldNames;
 
-	// --------------------------------------------------------------- Constructor start
+	// region ----- Constructor
+	/**
+	 * 构造
+	 */
 	public Entity() {
 	}
 
@@ -132,7 +135,7 @@ public class Entity extends Dict {
 		super(caseInsensitive);
 		this.tableName = tableName;
 	}
-	// --------------------------------------------------------------- Constructor end
+	// endregion
 
 	// --------------------------------------------------------------- Getters and Setters start
 
@@ -259,7 +262,7 @@ public class Entity extends Dict {
 	 * @since 4.0.10
 	 */
 	@Override
-	public Entity filter(final String... keys) {
+	public Entity filterNew(final String... keys) {
 		final Entity result = new Entity(this.tableName);
 		result.setFieldNames(this.fieldNames);
 
@@ -269,6 +272,11 @@ public class Entity extends Dict {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public Entity removeNew(final String... keys) {
+		return (Entity) super.removeNew(keys);
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
