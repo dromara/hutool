@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public class UrlDecoderTest {
+class UrlDecoderTest {
 
 	@Test
-	void decodeForPathTest(){
+	void decodeForPathTest() {
 		Assertions.assertEquals("+", URLDecoder.decodeForPath("+", CharsetUtil.UTF_8));
 	}
 
@@ -46,5 +46,50 @@ public class UrlDecoderTest {
 			java.net.URLDecoder.decode(mixDecoded, "UTF-16"),
 			URLDecoder.decode(mixDecoded, StandardCharsets.UTF_16)
 		);
+	}
+
+	@Test
+	void decodeCharSetIsNullToStrTest() {
+		final String hello = "你好";
+		String decode = URLDecoder.decode(hello, null, true);
+		Assertions.assertEquals(hello, decode);
+	}
+
+	@Test
+	void decodeStrIsEmptyToStrTest() {
+		final String strEmpty = "";
+		String decode = URLDecoder.decode(strEmpty, StandardCharsets.UTF_8, true);
+		Assertions.assertEquals(strEmpty, decode);
+	}
+
+	@Test
+	void decodeStrWithUTF8ToStrTest() {
+		final String exceptedDecode = "你好";
+		final String encode = "%E4%BD%A0%E5%A5%BD";
+		String s1 = URLDecoder.decode(encode);
+		Assertions.assertEquals(exceptedDecode, s1);
+
+		String s2 = URLDecoder.decode(encode, StandardCharsets.UTF_8);
+		Assertions.assertEquals(exceptedDecode, s2);
+
+		String s3 = URLDecoder.decode(encode, true);
+		Assertions.assertEquals(exceptedDecode, s3);
+
+		String s4 = URLDecoder.decode(encode + "+", false);
+		Assertions.assertEquals(exceptedDecode + "+", s4);
+
+		String s5 = URLDecoder.decode(encode, StandardCharsets.UTF_8, false);
+		Assertions.assertEquals(exceptedDecode, s5);
+	}
+
+	@Test
+	void decodeStrWithUTF8ToByteTest(){
+		final String exceptedDecode = "你好";
+		final String encode = "%E4%BD%A0%E5%A5%BD";
+		byte[] decode = URLDecoder.decode(encode.getBytes(StandardCharsets.UTF_8));
+		Assertions.assertEquals(exceptedDecode, new String(decode,StandardCharsets.UTF_8));
+
+		byte[] decode1 = URLDecoder.decode((encode + "+").getBytes(StandardCharsets.UTF_8));
+		Assertions.assertEquals(exceptedDecode+" ",new String(decode1,StandardCharsets.UTF_8));
 	}
 }
