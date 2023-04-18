@@ -76,7 +76,7 @@ public class StreamReader {
 		}
 
 		//noinspection resource
-		return read(length).toByteArray();
+		return read(length).toByteArrayZeroCopyIfPossible();
 	}
 
 	/**

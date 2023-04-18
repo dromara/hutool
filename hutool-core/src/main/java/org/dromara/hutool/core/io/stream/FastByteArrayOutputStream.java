@@ -120,6 +120,16 @@ public class FastByteArrayOutputStream extends OutputStream {
 		return buffer.toArray();
 	}
 
+	/**
+	 * 转为Byte数组，如果缓冲区中的数据长度固定，则直接返回原始数组<br>
+	 * 注意此方法共享数组，不能修改数组内容！
+	 *
+	 * @return Byte数组
+	 */
+	public byte[] toByteArrayZeroCopyIfPossible() {
+		return buffer.toArrayZeroCopyIfPossible();
+	}
+
 	@Override
 	public String toString() {
 		return toString(CharsetUtil.defaultCharset());

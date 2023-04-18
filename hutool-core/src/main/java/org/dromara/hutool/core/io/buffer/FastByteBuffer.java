@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.io.buffer;
 
+import org.dromara.hutool.core.io.IORuntimeException;
+
 /**
  * 代码移植自<a href="https://github.com/biezhi/blade">blade</a><br>
  * 快速缓冲，将数据存放在缓冲集中，取代以往的单一数组
@@ -262,6 +264,23 @@ public class FastByteBuffer {
 		System.arraycopy(buffers[currentBufferIndex], 0, array, pos, offset);
 
 		return array;
+	}
+
+	/**
+	 * 返回快速缓冲中的数据，如果缓冲区中的数据长度固定，则直接返回原始数组<br>
+	 * 注意此方法共享数组，不能修改数组内容！
+	 *
+	 * @return 快速缓冲中的数据
+	 */
+	public byte[] toArrayZeroCopyIfPossible() {
+		if(1 == currentBufferIndex){
+			final int len = buffers[0].length;
+			if(len == size){
+				return buffers[0];
+			}
+		}
+
+		return toArray();
 	}
 
 	/**
