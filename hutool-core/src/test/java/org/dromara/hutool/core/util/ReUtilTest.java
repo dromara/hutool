@@ -7,6 +7,7 @@ import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +194,7 @@ public class ReUtilTest {
 	}
 
 	@Test
+	@EnabledForJreRange(max = org.junit.jupiter.api.condition.JRE.JAVA_8)
 	public void getAllGroupNamesTest() {
 		final String content = "2021-10-11";
 		final String regex = "(?<year>\\d+)-(?<month>\\d+)-(?<day>\\d+)";

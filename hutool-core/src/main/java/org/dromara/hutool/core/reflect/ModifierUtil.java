@@ -12,8 +12,8 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.exceptions.UtilException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -272,27 +272,36 @@ public class ModifierUtil {
 	 *    }
 	 * </pre>
 	 *
+	 * <p>JDK9+此方法抛出NoSuchFieldException异常，原因是除非开放，否则模块外无法访问属性</p>
+	 *
 	 * @param field 被修改的field，不可以为空
 	 * @throws UtilException IllegalAccessException等异常包装
 	 * @author dazer
 	 * @since 5.8.8
 	 */
 	public static void removeFinalModify(final Field field) {
-		if (null == field || !hasModifier(field, ModifierUtil.ModifierType.FINAL)) {
+		if (!hasModifier(field, ModifierType.FINAL)) {
 			return;
 		}
 
 		//将字段的访问权限设为true：即去除private修饰符的影响
 		ReflectUtil.setAccessible(field);
+
+		//去除final修饰符的影响，将字段设为可修改的
+		final Field modifiersField;
+		try{
+			modifiersField = Field.class.getDeclaredField("modifiers");
+		} catch (final NoSuchFieldException e){
+			throw new UtilException(e, "Field [modifiers] not exist!");
+		}
+
 		try {
-			//去除final修饰符的影响，将字段设为可修改的
-			final Field modifiersField = Field.class.getDeclaredField("modifiers");
 			//Field 的 modifiers 是私有的
 			modifiersField.setAccessible(true);
 			//& ：位与运算符，按位与；  运算规则：两个数都转为二进制，然后从高位开始比较，如果两个数都为1则为1，否则为0。
 			//~ ：位非运算符，按位取反；运算规则：转成二进制，如果位为0，结果是1，如果位为1，结果是0.
 			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			//内部，工具类，基本不抛出异常
 			throw new UtilException(e, "IllegalAccess for [{}.{}]", field.getDeclaringClass(), field.getName());
 		}

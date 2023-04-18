@@ -185,7 +185,7 @@ public class LookupUtil {
 	 * @return 构造方法句柄
 	 */
 	public static MethodHandle findConstructor(final Class<?> callerClass, final MethodType type) {
-		final MethodHandles.Lookup lookup = LookupUtil.lookup(callerClass);
+		final MethodHandles.Lookup lookup = lookup(callerClass);
 		try {
 			return lookup.findConstructor(callerClass, type);
 		} catch (final NoSuchMethodException e) {

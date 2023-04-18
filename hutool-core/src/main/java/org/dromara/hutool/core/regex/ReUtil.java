@@ -17,9 +17,9 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.comparator.StrLengthComparator;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Validator;
-import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
@@ -247,6 +247,8 @@ public class ReUtil {
 	 * result : year: 2021, month: 10, day: 11
 	 * </pre>
 	 *
+	 * <p>jdk9+之后，因为此方法无效</p>
+	 *
 	 * @param pattern 匹配的正则
 	 * @param content 被匹配的内容
 	 * @return 命名捕获组，key为分组名，value为对应值
@@ -260,7 +262,9 @@ public class ReUtil {
 		final Map<String, String> result = MapUtil.newHashMap(m.groupCount());
 		if (m.find()) {
 			// 通过反射获取 namedGroups 方法
-			final Map<String, Integer> map = MethodUtil.invoke(pattern, "namedGroups");
+			final Map<String, Integer> map =
+				//MethodHandleUtil.invokeSpecial(pattern, "namedGroups");
+				MethodUtil.invoke(pattern, "namedGroups");
 			map.forEach((key, value) -> result.put(key, m.group(value)));
 		}
 		return result;
