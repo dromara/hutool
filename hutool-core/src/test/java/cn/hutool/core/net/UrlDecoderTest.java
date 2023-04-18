@@ -15,6 +15,12 @@ public class UrlDecoderTest {
 	}
 
 	@Test
+	public void decodePlusTest() {
+		final String decode = URLDecoder.decode("+", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(" ", decode);
+	}
+
+	@Test
 	public void issue3063Test() throws UnsupportedEncodingException {
 		// https://github.com/dromara/hutool/issues/3063
 
