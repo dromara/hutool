@@ -370,7 +370,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 	public Opt<BigDecimal> avg(final Function<? super T, BigDecimal> mapper, final int scale,
 			final RoundingMode roundingMode) {
 		//元素列表
-		List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
+		final List<BigDecimal> bigDecimalList = stream.map(mapper).collect(Collectors.toList());
 		if (CollUtil.isEmpty(bigDecimalList)) {
 			return Opt.empty();
 		}

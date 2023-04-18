@@ -20,7 +20,6 @@ import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.AccessUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -144,7 +143,12 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 * @return 服务名称对应的实现类
 	 */
 	public Class<S> getServiceClass(final int index) {
-		return AccessUtil.doPrivileged(() -> getServiceClassUnsafe(index), this.acc);
+		final String serviceClassName = this.serviceNames.get(index);
+		if (StrUtil.isBlank(serviceClassName)) {
+			return null;
+		}
+
+		return ClassLoaderUtil.loadClass(serviceClassName);
 	}
 
 	/**
@@ -285,24 +289,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 * @return 服务对象
 	 */
 	private S createService(final String serviceClassName) {
-		return AccessUtil.doPrivileged(() ->
-				ConstructorUtil.newInstance(ClassLoaderUtil.loadClass(serviceClassName)),
-			this.acc);
-	}
-
-	/**
-	 * 获取指定服务的实现类
-	 *
-	 * @param index 服务索引号
-	 * @return 服务名称对应的实现类
-	 */
-	private Class<S> getServiceClassUnsafe(final int index) {
-		final String serviceClassName = this.serviceNames.get(index);
-		if (StrUtil.isBlank(serviceClassName)) {
-			return null;
-		}
-
-		return ClassLoaderUtil.loadClass(serviceClassName);
+		return ConstructorUtil.newInstance(ClassLoaderUtil.loadClass(serviceClassName));
 	}
 	// endregion
 }

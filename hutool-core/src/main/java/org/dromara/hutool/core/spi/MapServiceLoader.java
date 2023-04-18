@@ -17,7 +17,6 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.AccessUtil;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -136,7 +135,12 @@ public class MapServiceLoader<S> extends AbsServiceLoader<S> {
 	 * @return 服务名称对应的实现类
 	 */
 	public Class<S> getServiceClass(final String serviceName) {
-		return AccessUtil.doPrivileged(() -> getServiceClassUnsafe(serviceName), this.acc);
+		final String serviceClassName = this.serviceProperties.getProperty(serviceName);
+		if (StrUtil.isBlank(serviceClassName)) {
+			return null;
+		}
+
+		return ClassLoaderUtil.loadClass(serviceClassName);
 	}
 
 	/**
@@ -176,23 +180,7 @@ public class MapServiceLoader<S> extends AbsServiceLoader<S> {
 	 * @return 服务对象
 	 */
 	private S createService(final String serviceName) {
-		return AccessUtil.doPrivileged(() ->
-			ConstructorUtil.newInstance(getServiceClassUnsafe(serviceName)), this.acc);
-	}
-
-	/**
-	 * 获取指定服务的实现类
-	 *
-	 * @param serviceName 服务名称
-	 * @return 服务名称对应的实现类
-	 */
-	private Class<S> getServiceClassUnsafe(final String serviceName) {
-		final String serviceClassName = this.serviceProperties.getProperty(serviceName);
-		if (StrUtil.isBlank(serviceClassName)) {
-			return null;
-		}
-
-		return ClassLoaderUtil.loadClass(serviceClassName);
+		return ConstructorUtil.newInstance(getServiceClass(serviceName));
 	}
 	// endregion
 }

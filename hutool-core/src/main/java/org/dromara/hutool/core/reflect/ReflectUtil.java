@@ -13,8 +13,6 @@
 package org.dromara.hutool.core.reflect;
 
 import java.lang.reflect.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * 反射工具类
@@ -51,11 +49,8 @@ public class ReflectUtil {
 	 */
 	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) throws SecurityException {
 		if (null != accessibleObject && !accessibleObject.isAccessible()) {
-			return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
-				// 特权访问
-				accessibleObject.setAccessible(true);
-				return accessibleObject;
-			});
+			accessibleObject.setAccessible(true);
+			return accessibleObject;
 		}
 		return accessibleObject;
 	}

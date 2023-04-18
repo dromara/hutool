@@ -15,8 +15,6 @@ package org.dromara.hutool.core.spi;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.nio.charset.Charset;
-import java.security.AccessControlContext;
-import java.security.AccessController;
 
 /**
  * 抽象服务加载器，提供包括路径前缀、服务类、类加载器、编码、安全相关持有
@@ -31,7 +29,6 @@ public abstract class AbsServiceLoader<S> implements ServiceLoader<S> {
 	protected final Class<S> serviceClass;
 	protected final ClassLoader classLoader;
 	protected final Charset charset;
-	protected final AccessControlContext acc;
 
 	/**
 	 * 构造
@@ -47,6 +44,5 @@ public abstract class AbsServiceLoader<S> implements ServiceLoader<S> {
 		this.serviceClass = serviceClass;
 		this.classLoader = classLoader;
 		this.charset = charset;
-		this.acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
 	}
 }
