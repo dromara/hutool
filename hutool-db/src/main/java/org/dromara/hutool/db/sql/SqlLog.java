@@ -22,11 +22,12 @@ import org.dromara.hutool.log.level.Level;
  * @author looly
  * @since 4.1.0
  */
-public enum SqlLog {
+public class SqlLog {
+
 	/**
 	 * 单例
 	 */
-	INSTANCE;
+	public static SqlLog INSTANCE = new SqlLog();
 
 	private final static Log log = LogFactory.get();
 

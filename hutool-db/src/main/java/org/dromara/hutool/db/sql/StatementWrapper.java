@@ -12,30 +12,19 @@
 
 package org.dromara.hutool.db.sql;
 
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.iter.ArrayIter;
+import org.dromara.hutool.core.func.SimpleWrapper;
+import org.dromara.hutool.core.lang.Assert;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.ParameterMetaData;
-import java.sql.PreparedStatement;
-import java.sql.Ref;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * {@link PreparedStatement} 包装类，用于添加拦截方法功能<br>
@@ -49,517 +38,665 @@ import java.util.Calendar;
  * @author looly
  * @since 4.1.0
  */
-public class StatementWrapper implements PreparedStatement, Wrapper<PreparedStatement> {
+public class StatementWrapper extends SimpleWrapper<PreparedStatement> implements PreparedStatement {
 
-	private final PreparedStatement rawStatement;
+	/**
+	 * 构建StatementWrapper
+	 *
+	 * @param raw {@link PreparedStatement}
+	 * @return StatementWrapper
+	 */
+	public static StatementWrapper of(final PreparedStatement raw) {
+		return raw instanceof StatementWrapper ? (StatementWrapper) raw :
+			new StatementWrapper(raw);
+	}
 
 	/**
 	 * 构造
 	 *
-	 * @param rawStatement {@link PreparedStatement}
+	 * @param raw {@link PreparedStatement}
 	 */
-	public StatementWrapper(final PreparedStatement rawStatement) {
-		this.rawStatement = rawStatement;
+	public StatementWrapper(final PreparedStatement raw) {
+		super(raw);
 	}
 
+	// region ----- override methods
 	@Override
 	public ResultSet executeQuery(final String sql) throws SQLException {
-		return rawStatement.executeQuery(sql);
+		return this.raw.executeQuery(sql);
 	}
 
 	@Override
 	public int executeUpdate(final String sql) throws SQLException {
-		return rawStatement.executeUpdate(sql);
+		return this.raw.executeUpdate(sql);
 	}
 
 	@Override
 	public void close() throws SQLException {
-		rawStatement.close();
+		this.raw.close();
 	}
 
 	@Override
 	public int getMaxFieldSize() throws SQLException {
-		return rawStatement.getMaxFieldSize();
+		return this.raw.getMaxFieldSize();
 	}
 
 	@Override
 	public void setMaxFieldSize(final int max) throws SQLException {
-		rawStatement.setMaxFieldSize(max);
+		this.raw.setMaxFieldSize(max);
 	}
 
 	@Override
 	public int getMaxRows() throws SQLException {
-		return rawStatement.getMaxRows();
+		return this.raw.getMaxRows();
 	}
 
 	@Override
 	public void setMaxRows(final int max) throws SQLException {
-		rawStatement.setMaxRows(max);
+		this.raw.setMaxRows(max);
 	}
 
 	@Override
 	public void setEscapeProcessing(final boolean enable) throws SQLException {
-		rawStatement.setEscapeProcessing(enable);
+		this.raw.setEscapeProcessing(enable);
 	}
 
 	@Override
 	public int getQueryTimeout() throws SQLException {
-		return rawStatement.getQueryTimeout();
+		return this.raw.getQueryTimeout();
 	}
 
 	@Override
 	public void setQueryTimeout(final int seconds) throws SQLException {
-		rawStatement.setQueryTimeout(seconds);
+		this.raw.setQueryTimeout(seconds);
 	}
 
 	@Override
 	public void cancel() throws SQLException {
-		rawStatement.cancel();
+		this.raw.cancel();
 	}
 
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
-		return rawStatement.getWarnings();
+		return this.raw.getWarnings();
 	}
 
 	@Override
 	public void clearWarnings() throws SQLException {
-		rawStatement.clearWarnings();
+		this.raw.clearWarnings();
 	}
 
 	@Override
 	public void setCursorName(final String name) throws SQLException {
-		rawStatement.setCursorName(name);
+		this.raw.setCursorName(name);
 	}
 
 	@Override
 	public boolean execute(final String sql) throws SQLException {
-		return rawStatement.execute(sql);
+		return this.raw.execute(sql);
 	}
 
 	@Override
 	public ResultSet getResultSet() throws SQLException {
-		return rawStatement.getResultSet();
+		return this.raw.getResultSet();
 	}
 
 	@Override
 	public int getUpdateCount() throws SQLException {
-		return rawStatement.getUpdateCount();
+		return this.raw.getUpdateCount();
 	}
 
 	@Override
 	public boolean getMoreResults() throws SQLException {
-		return rawStatement.getMoreResults();
+		return this.raw.getMoreResults();
 	}
 
 	@Override
 	public void setFetchDirection(final int direction) throws SQLException {
-		rawStatement.setFetchDirection(direction);
+		this.raw.setFetchDirection(direction);
 	}
 
 	@Override
 	public int getFetchDirection() throws SQLException {
-		return rawStatement.getFetchDirection();
+		return this.raw.getFetchDirection();
 	}
 
 	@Override
 	public void setFetchSize(final int rows) throws SQLException {
-		rawStatement.setFetchSize(rows);
+		this.raw.setFetchSize(rows);
 	}
 
 	@Override
 	public int getFetchSize() throws SQLException {
-		return rawStatement.getFetchSize();
+		return this.raw.getFetchSize();
 	}
 
 	@Override
 	public int getResultSetConcurrency() throws SQLException {
-		return rawStatement.getResultSetConcurrency();
+		return this.raw.getResultSetConcurrency();
 	}
 
 	@Override
 	public int getResultSetType() throws SQLException {
-		return rawStatement.getResultSetType();
+		return this.raw.getResultSetType();
 	}
 
 	@Override
 	public void addBatch(final String sql) throws SQLException {
-		rawStatement.addBatch(sql);
+		this.raw.addBatch(sql);
 	}
 
 	@Override
 	public void clearBatch() throws SQLException {
-		rawStatement.clearBatch();
+		this.raw.clearBatch();
 	}
 
 	@Override
 	public int[] executeBatch() throws SQLException {
-		return rawStatement.executeBatch();
+		return this.raw.executeBatch();
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return rawStatement.getConnection();
+		return this.raw.getConnection();
 	}
 
 	@Override
 	public boolean getMoreResults(final int current) throws SQLException {
-		return rawStatement.getMoreResults(current);
+		return this.raw.getMoreResults(current);
 	}
 
 	@Override
 	public ResultSet getGeneratedKeys() throws SQLException {
-		return rawStatement.getGeneratedKeys();
+		return this.raw.getGeneratedKeys();
 	}
 
 	@Override
 	public int executeUpdate(final String sql, final int autoGeneratedKeys) throws SQLException {
-		return rawStatement.executeUpdate(sql, autoGeneratedKeys);
+		return this.raw.executeUpdate(sql, autoGeneratedKeys);
 	}
 
 	@Override
 	public int executeUpdate(final String sql, final int[] columnIndexes) throws SQLException {
-		return rawStatement.executeUpdate(sql, columnIndexes);
+		return this.raw.executeUpdate(sql, columnIndexes);
 	}
 
 	@Override
 	public int executeUpdate(final String sql, final String[] columnNames) throws SQLException {
-		return rawStatement.executeUpdate(sql, columnNames);
+		return this.raw.executeUpdate(sql, columnNames);
 	}
 
 	@Override
 	public boolean execute(final String sql, final int autoGeneratedKeys) throws SQLException {
-		return rawStatement.execute(sql, autoGeneratedKeys);
+		return this.raw.execute(sql, autoGeneratedKeys);
 	}
 
 	@Override
 	public boolean execute(final String sql, final int[] columnIndexes) throws SQLException {
-		return rawStatement.execute(sql, columnIndexes);
+		return this.raw.execute(sql, columnIndexes);
 	}
 
 	@Override
 	public boolean execute(final String sql, final String[] columnNames) throws SQLException {
-		return rawStatement.execute(sql, columnNames);
+		return this.raw.execute(sql, columnNames);
 	}
 
 	@Override
 	public int getResultSetHoldability() throws SQLException {
-		return rawStatement.getResultSetHoldability();
+		return this.raw.getResultSetHoldability();
 	}
 
 	@Override
 	public boolean isClosed() throws SQLException {
-		return rawStatement.isClosed();
+		return this.raw.isClosed();
 	}
 
 	@Override
 	public void setPoolable(final boolean poolable) throws SQLException {
-		rawStatement.setPoolable(poolable);
+		this.raw.setPoolable(poolable);
 	}
 
 	@Override
 	public boolean isPoolable() throws SQLException {
-		return rawStatement.isPoolable();
+		return this.raw.isPoolable();
 	}
 
 	@Override
 	public void closeOnCompletion() throws SQLException {
-		rawStatement.closeOnCompletion();
+		this.raw.closeOnCompletion();
 	}
 
 	@Override
 	public boolean isCloseOnCompletion() throws SQLException {
-		return rawStatement.isCloseOnCompletion();
+		return this.raw.isCloseOnCompletion();
 	}
 
 	@Override
 	public <T> T unwrap(final Class<T> iface) throws SQLException {
-		return rawStatement.unwrap(iface);
+		return this.raw.unwrap(iface);
 	}
 
 	@Override
 	public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-		return rawStatement.isWrapperFor(iface);
+		return this.raw.isWrapperFor(iface);
 	}
 
 	@Override
 	public ResultSet executeQuery() throws SQLException {
-		return rawStatement.executeQuery();
+		return this.raw.executeQuery();
 	}
 
 	@Override
 	public int executeUpdate() throws SQLException {
-		return rawStatement.executeUpdate();
+		return this.raw.executeUpdate();
 	}
 
 	@Override
 	public void setNull(final int parameterIndex, final int sqlType) throws SQLException {
-		rawStatement.setNull(parameterIndex, sqlType);
+		this.raw.setNull(parameterIndex, sqlType);
 	}
 
 	@Override
 	public void setBoolean(final int parameterIndex, final boolean x) throws SQLException {
-		rawStatement.setBoolean(parameterIndex, x);
+		this.raw.setBoolean(parameterIndex, x);
 	}
 
 	@Override
 	public void setByte(final int parameterIndex, final byte x) throws SQLException {
-		rawStatement.setByte(parameterIndex, x);
+		this.raw.setByte(parameterIndex, x);
 	}
 
 	@Override
 	public void setShort(final int parameterIndex, final short x) throws SQLException {
-		rawStatement.setShort(parameterIndex, x);
+		this.raw.setShort(parameterIndex, x);
 	}
 
 	@Override
 	public void setInt(final int parameterIndex, final int x) throws SQLException {
-		rawStatement.setInt(parameterIndex, x);
+		this.raw.setInt(parameterIndex, x);
 	}
 
 	@Override
 	public void setLong(final int parameterIndex, final long x) throws SQLException {
-		rawStatement.setLong(parameterIndex, x);
+		this.raw.setLong(parameterIndex, x);
 	}
 
 	@Override
 	public void setFloat(final int parameterIndex, final float x) throws SQLException {
-		rawStatement.setFloat(parameterIndex, x);
+		this.raw.setFloat(parameterIndex, x);
 	}
 
 	@Override
 	public void setDouble(final int parameterIndex, final double x) throws SQLException {
-		rawStatement.setDouble(parameterIndex, x);
+		this.raw.setDouble(parameterIndex, x);
 	}
 
 	@Override
 	public void setBigDecimal(final int parameterIndex, final BigDecimal x) throws SQLException {
-		rawStatement.setBigDecimal(parameterIndex, x);
+		this.raw.setBigDecimal(parameterIndex, x);
 	}
 
 	@Override
 	public void setString(final int parameterIndex, final String x) throws SQLException {
-		rawStatement.setString(parameterIndex, x);
+		this.raw.setString(parameterIndex, x);
 	}
 
 	@Override
 	public void setBytes(final int parameterIndex, final byte[] x) throws SQLException {
-		rawStatement.setBytes(parameterIndex, x);
+		this.raw.setBytes(parameterIndex, x);
 	}
 
 	@Override
 	public void setDate(final int parameterIndex, final Date x) throws SQLException {
-		rawStatement.setDate(parameterIndex, x);
+		this.raw.setDate(parameterIndex, x);
 	}
 
 	@Override
 	public void setTime(final int parameterIndex, final Time x) throws SQLException {
-		rawStatement.setTime(parameterIndex, x);
+		this.raw.setTime(parameterIndex, x);
 	}
 
 	@Override
 	public void setTimestamp(final int parameterIndex, final Timestamp x) throws SQLException {
-		rawStatement.setTimestamp(parameterIndex, x);
+		this.raw.setTimestamp(parameterIndex, x);
 	}
 
 	@Override
 	public void setAsciiStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
-		rawStatement.setAsciiStream(parameterIndex, x, length);
+		this.raw.setAsciiStream(parameterIndex, x, length);
 	}
 
 	@Override
 	@Deprecated
 	public void setUnicodeStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
-		rawStatement.setUnicodeStream(parameterIndex, x, length);
+		this.raw.setUnicodeStream(parameterIndex, x, length);
 	}
 
 	@Override
 	public void setBinaryStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {
-		rawStatement.setBinaryStream(parameterIndex, x, length);
+		this.raw.setBinaryStream(parameterIndex, x, length);
 	}
 
 	@Override
 	public void clearParameters() throws SQLException {
-		rawStatement.clearParameters();
+		this.raw.clearParameters();
 	}
 
 	@Override
 	public void setObject(final int parameterIndex, final Object x, final int targetSqlType) throws SQLException {
-		rawStatement.setObject(parameterIndex, x, targetSqlType, targetSqlType);
+		this.raw.setObject(parameterIndex, x, targetSqlType, targetSqlType);
 	}
 
 	@Override
 	public void setObject(final int parameterIndex, final Object x) throws SQLException {
-		rawStatement.setObject(parameterIndex, x);
+		this.raw.setObject(parameterIndex, x);
 	}
 
 	@Override
 	public boolean execute() throws SQLException {
-		return rawStatement.execute();
+		return this.raw.execute();
 	}
 
 	@Override
 	public void addBatch() throws SQLException {
-		rawStatement.addBatch();
+		this.raw.addBatch();
 	}
 
 	@Override
 	public void setCharacterStream(final int parameterIndex, final Reader reader, final int length) throws SQLException {
-		rawStatement.setCharacterStream(parameterIndex, reader, length);
+		this.raw.setCharacterStream(parameterIndex, reader, length);
 	}
 
 	@Override
 	public void setRef(final int parameterIndex, final Ref x) throws SQLException {
-		rawStatement.setRef(parameterIndex, x);
+		this.raw.setRef(parameterIndex, x);
 	}
 
 	@Override
 	public void setBlob(final int parameterIndex, final Blob x) throws SQLException {
-		rawStatement.setBlob(parameterIndex, x);
+		this.raw.setBlob(parameterIndex, x);
 	}
 
 	@Override
 	public void setClob(final int parameterIndex, final Clob x) throws SQLException {
-		rawStatement.setClob(parameterIndex, x);
+		this.raw.setClob(parameterIndex, x);
 	}
 
 	@Override
 	public void setArray(final int parameterIndex, final Array x) throws SQLException {
-		rawStatement.setArray(parameterIndex, x);
+		this.raw.setArray(parameterIndex, x);
 	}
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		return rawStatement.getMetaData();
+		return this.raw.getMetaData();
 	}
 
 	@Override
 	public void setDate(final int parameterIndex, final Date x, final Calendar cal) throws SQLException {
-		rawStatement.setDate(parameterIndex, x, cal);
+		this.raw.setDate(parameterIndex, x, cal);
 	}
 
 	@Override
 	public void setTime(final int parameterIndex, final Time x, final Calendar cal) throws SQLException {
-		rawStatement.setTime(parameterIndex, x, cal);
+		this.raw.setTime(parameterIndex, x, cal);
 	}
 
 	@Override
 	public void setTimestamp(final int parameterIndex, final Timestamp x, final Calendar cal) throws SQLException {
-		rawStatement.setTimestamp(parameterIndex, x, cal);
+		this.raw.setTimestamp(parameterIndex, x, cal);
 	}
 
 	@Override
 	public void setNull(final int parameterIndex, final int sqlType, final String typeName) throws SQLException {
-		rawStatement.setNull(parameterIndex, sqlType, typeName);
+		this.raw.setNull(parameterIndex, sqlType, typeName);
 	}
 
 	@Override
 	public void setURL(final int parameterIndex, final URL x) throws SQLException {
-		rawStatement.setURL(parameterIndex, x);
+		this.raw.setURL(parameterIndex, x);
 	}
 
 	@Override
 	public ParameterMetaData getParameterMetaData() throws SQLException {
-		return rawStatement.getParameterMetaData();
+		return this.raw.getParameterMetaData();
 	}
 
 	@Override
 	public void setRowId(final int parameterIndex, final RowId x) throws SQLException {
-		rawStatement.setRowId(parameterIndex, x);
+		this.raw.setRowId(parameterIndex, x);
 	}
 
 	@Override
 	public void setNString(final int parameterIndex, final String value) throws SQLException {
-		rawStatement.setNString(parameterIndex, value);
+		this.raw.setNString(parameterIndex, value);
 	}
 
 	@Override
 	public void setNCharacterStream(final int parameterIndex, final Reader value, final long length) throws SQLException {
-		rawStatement.setCharacterStream(parameterIndex, value, length);
+		this.raw.setCharacterStream(parameterIndex, value, length);
 	}
 
 	@Override
 	public void setNClob(final int parameterIndex, final NClob value) throws SQLException {
-		rawStatement.setNClob(parameterIndex, value);
+		this.raw.setNClob(parameterIndex, value);
 	}
 
 	@Override
 	public void setClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
-		rawStatement.setClob(parameterIndex, reader, length);
+		this.raw.setClob(parameterIndex, reader, length);
 	}
 
 	@Override
 	public void setBlob(final int parameterIndex, final InputStream inputStream, final long length) throws SQLException {
-		rawStatement.setBlob(parameterIndex, inputStream, length);
+		this.raw.setBlob(parameterIndex, inputStream, length);
 	}
 
 	@Override
 	public void setNClob(final int parameterIndex, final Reader reader, final long length) throws SQLException {
-		rawStatement.setNClob(parameterIndex, reader, length);
+		this.raw.setNClob(parameterIndex, reader, length);
 	}
 
 	@Override
 	public void setSQLXML(final int parameterIndex, final SQLXML xmlObject) throws SQLException {
-		rawStatement.setSQLXML(parameterIndex, xmlObject);
+		this.raw.setSQLXML(parameterIndex, xmlObject);
 	}
 
 	@Override
 	public void setObject(final int parameterIndex, final Object x, final int targetSqlType, final int scaleOrLength) throws SQLException {
-		rawStatement.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
+		this.raw.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
 	}
 
 	@Override
 	public void setAsciiStream(final int parameterIndex, final InputStream x, final long length) throws SQLException {
-		rawStatement.setAsciiStream(parameterIndex, x, length);
+		this.raw.setAsciiStream(parameterIndex, x, length);
 	}
 
 	@Override
 	public void setBinaryStream(final int parameterIndex, final InputStream x, final long length) throws SQLException {
-		rawStatement.setBinaryStream(parameterIndex, x, length);
+		this.raw.setBinaryStream(parameterIndex, x, length);
 	}
 
 	@Override
 	public void setCharacterStream(final int parameterIndex, final Reader reader, final long length) throws SQLException {
-		rawStatement.setCharacterStream(parameterIndex, reader, length);
+		this.raw.setCharacterStream(parameterIndex, reader, length);
 	}
 
 	@Override
 	public void setAsciiStream(final int parameterIndex, final InputStream x) throws SQLException {
-		rawStatement.setAsciiStream(parameterIndex, x);
+		this.raw.setAsciiStream(parameterIndex, x);
 	}
 
 	@Override
 	public void setBinaryStream(final int parameterIndex, final InputStream x) throws SQLException {
-		rawStatement.setBinaryStream(parameterIndex, x);
+		this.raw.setBinaryStream(parameterIndex, x);
 	}
 
 	@Override
 	public void setCharacterStream(final int parameterIndex, final Reader reader) throws SQLException {
-		rawStatement.setCharacterStream(parameterIndex, reader);
+		this.raw.setCharacterStream(parameterIndex, reader);
 	}
 
 	@Override
 	public void setNCharacterStream(final int parameterIndex, final Reader value) throws SQLException {
-		rawStatement.setNCharacterStream(parameterIndex, value);
+		this.raw.setNCharacterStream(parameterIndex, value);
 	}
 
 	@Override
 	public void setClob(final int parameterIndex, final Reader reader) throws SQLException {
-		rawStatement.setClob(parameterIndex, reader);
+		this.raw.setClob(parameterIndex, reader);
 	}
 
 	@Override
 	public void setBlob(final int parameterIndex, final InputStream inputStream) throws SQLException {
-		rawStatement.setBlob(parameterIndex, inputStream);
+		this.raw.setBlob(parameterIndex, inputStream);
 	}
 
 	@Override
 	public void setNClob(final int parameterIndex, final Reader reader) throws SQLException {
-		rawStatement.setNClob(parameterIndex, reader);
+		this.raw.setNClob(parameterIndex, reader);
 	}
 
-	@Override
-	public PreparedStatement getRaw() {
-		return rawStatement;
+	// endregion
+
+	// region ----- setParam
+
+	/**
+	 * 填充数组类型的SQL的参数。
+	 *
+	 * @param params SQL参数
+	 * @return this
+	 * @throws SQLException SQL执行异常
+	 */
+	public StatementWrapper fillArrayParam(final Object... params) throws SQLException {
+		if (ArrayUtil.isEmpty(params)) {
+			return this;
+		}
+		return fillParams(new ArrayIter<>(params));
+	}
+
+	/**
+	 * 填充SQL的参数。<br>
+	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
+	 *
+	 * @param params SQL参数
+	 * @return this
+	 * @throws SQLException SQL执行异常
+	 */
+	public StatementWrapper fillParams(final Iterable<?> params) throws SQLException {
+		return fillParams(params, null);
+	}
+
+	/**
+	 * 填充SQL的参数。<br>
+	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
+	 *
+	 * @param params        SQL参数
+	 * @param nullTypeCache null参数的类型缓存，避免循环中重复获取类型
+	 * @return this
+	 * @throws SQLException SQL执行异常
+	 * @since 4.6.7
+	 */
+	public StatementWrapper fillParams(final Iterable<?> params, final Map<Integer, Integer> nullTypeCache) throws SQLException {
+		if (null == params) {
+			return this;// 无参数
+		}
+
+		int paramIndex = 1;//第一个参数从1计数
+		for (final Object param : params) {
+			setParam(paramIndex++, param, nullTypeCache);
+		}
+		return this;
+	}
+
+	/**
+	 * 为{@link PreparedStatement} 设置单个参数
+	 *
+	 * @param paramIndex 参数位置，从1开始
+	 * @param param      参数
+	 * @throws SQLException SQL异常
+	 * @since 4.6.7
+	 */
+	public void setParam(final int paramIndex, final Object param) throws SQLException {
+		setParam(paramIndex, param, null);
+	}
+
+	// endregion
+
+	/**
+	 * 获取null字段对应位置的数据类型<br>
+	 * 有些数据库对于null字段必须指定类型，否则会插入报错，此方法用于获取其类型，如果获取失败，使用默认的{@link Types#VARCHAR}
+	 *
+	 * @param paramIndex 参数位置，第一位从1开始
+	 * @return 数据类型，默认{@link Types#VARCHAR}
+	 * @since 4.6.7
+	 */
+	public int getTypeOfNull(final int paramIndex) {
+		Assert.notNull(this.raw, "ps PreparedStatement must be not null in (getTypeOfNull)!");
+
+		int sqlType = Types.VARCHAR;
+
+		final ParameterMetaData pmd;
+		try {
+			pmd = this.raw.getParameterMetaData();
+			sqlType = pmd.getParameterType(paramIndex);
+		} catch (final SQLException ignore) {
+			// ignore
+			// log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
+		}
+
+		return sqlType;
+	}
+
+	/**
+	 * 为{@link PreparedStatement} 设置单个参数
+	 *
+	 * @param paramIndex    参数位置，从1开始
+	 * @param param         参数，不能为{@code null}
+	 * @param nullTypeCache 用于缓存参数为null位置的类型，避免重复获取
+	 * @throws SQLException SQL异常
+	 * @since 4.6.7
+	 */
+	private void setParam(final int paramIndex, final Object param, final Map<Integer, Integer> nullTypeCache) throws SQLException {
+		if (null == param) {
+			Integer type = (null == nullTypeCache) ? null : nullTypeCache.get(paramIndex);
+			if (null == type) {
+				type = getTypeOfNull(paramIndex);
+				if (null != nullTypeCache) {
+					nullTypeCache.put(paramIndex, type);
+				}
+			}
+			this.raw.setNull(paramIndex, type);
+		}
+
+		// 日期特殊处理，默认按照时间戳传入，避免毫秒丢失
+		if (param instanceof java.util.Date) {
+			if (param instanceof java.sql.Date) {
+				this.raw.setDate(paramIndex, (java.sql.Date) param);
+			} else if (param instanceof java.sql.Time) {
+				this.raw.setTime(paramIndex, (java.sql.Time) param);
+			} else {
+				this.raw.setTimestamp(paramIndex, SqlUtil.toSqlTimestamp((java.util.Date) param));
+			}
+			return;
+		}
+
+		// 针对大数字类型的特殊处理
+		if (param instanceof Number) {
+			if (param instanceof BigDecimal) {
+				// BigDecimal的转换交给JDBC驱动处理
+				this.raw.setBigDecimal(paramIndex, (BigDecimal) param);
+				return;
+			}
+			if (param instanceof BigInteger) {
+				// BigInteger转为BigDecimal
+				this.raw.setBigDecimal(paramIndex, new BigDecimal((BigInteger) param));
+				return;
+			}
+			// 忽略其它数字类型，按照默认类型传入
+		}
+
+		// 其它参数类型
+		this.raw.setObject(paramIndex, param);
 	}
 }

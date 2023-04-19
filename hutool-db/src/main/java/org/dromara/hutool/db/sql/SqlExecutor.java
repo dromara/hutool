@@ -322,7 +322,7 @@ public class SqlExecutor {
 	 */
 	public static int executeUpdate(final PreparedStatement ps, final Object... params) throws DbRuntimeException {
 		try {
-			StatementUtil.fillParams(ps, params);
+			StatementUtil.fillArrayParam(ps, params);
 			return ps.executeUpdate();
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
@@ -341,7 +341,7 @@ public class SqlExecutor {
 	 */
 	public static boolean execute(final PreparedStatement ps, final Object... params) throws DbRuntimeException {
 		try {
-			StatementUtil.fillParams(ps, params);
+			StatementUtil.fillArrayParam(ps, params);
 			return ps.execute();
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
@@ -361,7 +361,7 @@ public class SqlExecutor {
 	 */
 	public static <T> T query(final PreparedStatement ps, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
 		try {
-			StatementUtil.fillParams(ps, params);
+			StatementUtil.fillArrayParam(ps, params);
 			return executeQuery(ps, rsh);
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);

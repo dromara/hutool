@@ -13,30 +13,16 @@
 package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.db.handler.ResultSetUtil;
 import org.dromara.hutool.db.handler.RsHandler;
-import org.dromara.hutool.db.sql.NamedSql;
 import org.dromara.hutool.db.sql.SqlBuilder;
 import org.dromara.hutool.db.sql.SqlLog;
-import org.dromara.hutool.db.sql.SqlUtil;
+import org.dromara.hutool.db.sql.StatementBuilder;
+import org.dromara.hutool.db.sql.StatementWrapper;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ParameterMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,56 +33,6 @@ import java.util.Map;
  * @since 4.0.10
  */
 public class StatementUtil {
-	/**
-	 * 填充SQL的参数。
-	 *
-	 * @param ps     PreparedStatement
-	 * @param params SQL参数
-	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL执行异常
-	 */
-	public static PreparedStatement fillParams(final PreparedStatement ps, final Object... params) throws SQLException {
-		if (ArrayUtil.isEmpty(params)) {
-			return ps;
-		}
-		return fillParams(ps, new ArrayIter<>(params));
-	}
-
-	/**
-	 * 填充SQL的参数。<br>
-	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
-	 *
-	 * @param ps     PreparedStatement
-	 * @param params SQL参数
-	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL执行异常
-	 */
-	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params) throws SQLException {
-		return fillParams(ps, params, null);
-	}
-
-	/**
-	 * 填充SQL的参数。<br>
-	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
-	 *
-	 * @param ps            PreparedStatement
-	 * @param params        SQL参数
-	 * @param nullTypeCache null参数的类型缓存，避免循环中重复获取类型
-	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL执行异常
-	 * @since 4.6.7
-	 */
-	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params, final Map<Integer, Integer> nullTypeCache) throws SQLException {
-		if (null == params) {
-			return ps;// 无参数
-		}
-
-		int paramIndex = 1;//第一个参数从1计数
-		for (final Object param : params) {
-			setParam(ps, paramIndex++, param, nullTypeCache);
-		}
-		return ps;
-	}
 
 	/**
 	 * 创建{@link PreparedStatement}
@@ -135,26 +71,14 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public static PreparedStatement prepareStatement(final Connection conn, String sql, Object... params) throws SQLException {
-		Assert.notBlank(sql, "Sql String must be not blank!");
-		sql = sql.trim();
-
-		if(ArrayUtil.isNotEmpty(params) && 1 == params.length && params[0] instanceof Map){
-			// 检查参数是否为命名方式的参数
-			final NamedSql namedSql = new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
-			sql = namedSql.getSql();
-			params = namedSql.getParams();
-		}
-
-		SqlLog.INSTANCE.log(sql, ArrayUtil.isEmpty(params) ? null : params);
-		final PreparedStatement ps;
-		if (GlobalDbConfig.returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
-			// 插入默认返回主键
-			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		} else {
-			ps = conn.prepareStatement(sql);
-		}
-		return fillParams(ps, params);
+	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Object... params) throws SQLException {
+		return StatementBuilder.of()
+			.setConnection(conn)
+			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setSqlLog(SqlLog.INSTANCE)
+			.setSql(sql)
+			.setParams(params)
+			.build();
 	}
 
 	/**
@@ -181,18 +105,13 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
-		Assert.notBlank(sql, "Sql String must be not blank!");
-
-		sql = sql.trim();
-		SqlLog.INSTANCE.log(sql, paramsBatch);
-		final PreparedStatement ps = conn.prepareStatement(sql);
-		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-		for (final Object[] params : paramsBatch) {
-			fillParams(ps, new ArrayIter<>(params), nullTypeMap);
-			ps.addBatch();
-		}
-		return ps;
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
+		return StatementBuilder.of()
+			.setConnection(conn)
+			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setSqlLog(SqlLog.INSTANCE)
+			.setSql(sql)
+			.buildForBatch(paramsBatch);
 	}
 
 	/**
@@ -206,19 +125,13 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, String sql, final Iterable<String> fields, final Entity... entities) throws SQLException {
-		Assert.notBlank(sql, "Sql String must be not blank!");
-
-		sql = sql.trim();
-		SqlLog.INSTANCE.logForBatch(sql);
-		final PreparedStatement ps = conn.prepareStatement(sql);
-		//null参数的类型缓存，避免循环中重复获取类型
-		final Map<Integer, Integer> nullTypeMap = new HashMap<>();
-		for (final Entity entity : entities) {
-			fillParams(ps, MapUtil.valuesOfKeys(entity, fields), nullTypeMap);
-			ps.addBatch();
-		}
-		return ps;
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Iterable<String> fields, final Entity... entities) throws SQLException {
+		return StatementBuilder.of()
+			.setConnection(conn)
+			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setSqlLog(SqlLog.INSTANCE)
+			.setSql(sql)
+			.buildForBatch(fields, entities);
 	}
 
 	/**
@@ -237,9 +150,11 @@ public class StatementUtil {
 		sql = sql.trim();
 		SqlLog.INSTANCE.log(sql, params);
 		final CallableStatement call = conn.prepareCall(sql);
-		fillParams(call, params);
+		fillArrayParam(call, params);
 		return call;
 	}
+
+	// region ----- getGeneratedKey
 
 	/**
 	 * 获得自增键的值<br>
@@ -250,7 +165,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Long getGeneratedKeyOfLong(final Statement ps) throws SQLException {
-		return getGeneratedKeys(ps, (rs)->{
+		return getGeneratedKeys(ps, (rs) -> {
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
@@ -276,9 +191,10 @@ public class StatementUtil {
 
 	/**
 	 * 获取主键，并使用{@link RsHandler} 处理后返回
+	 *
 	 * @param statement {@link Statement}
 	 * @param rsHandler 主键结果集处理器
-	 * @param <T> 自定义主键类型
+	 * @param <T>       自定义主键类型
 	 * @return 主键
 	 * @throws SQLException SQL执行异常
 	 * @since 5.5.3
@@ -288,6 +204,7 @@ public class StatementUtil {
 			return rsHandler.handle(rs);
 		}
 	}
+	// endregion
 
 	/**
 	 * 获取null字段对应位置的数据类型<br>
@@ -300,19 +217,47 @@ public class StatementUtil {
 	 */
 	public static int getTypeOfNull(final PreparedStatement ps, final int paramIndex) {
 		Assert.notNull(ps, "ps PreparedStatement must be not null in (getTypeOfNull)!");
+		return StatementWrapper.of(ps).getTypeOfNull(paramIndex);
+	}
 
-		int sqlType = Types.VARCHAR;
+	/**
+	 * 填充SQL的参数。
+	 *
+	 * @param ps     PreparedStatement
+	 * @param params SQL参数
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL执行异常
+	 */
+	public static PreparedStatement fillArrayParam(final PreparedStatement ps, final Object... params) throws SQLException {
+		return StatementWrapper.of(ps).fillArrayParam(params);
+	}
 
-		final ParameterMetaData pmd;
-		try {
-			pmd = ps.getParameterMetaData();
-			sqlType = pmd.getParameterType(paramIndex);
-		} catch (final SQLException ignore) {
-			// ignore
-			// log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
-		}
+	/**
+	 * 填充SQL的参数。<br>
+	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
+	 *
+	 * @param ps     PreparedStatement
+	 * @param params SQL参数
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL执行异常
+	 */
+	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params) throws SQLException {
+		return fillParams(ps, params, null);
+	}
 
-		return sqlType;
+	/**
+	 * 填充SQL的参数。<br>
+	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
+	 *
+	 * @param ps            PreparedStatement
+	 * @param params        SQL参数
+	 * @param nullTypeCache null参数的类型缓存，避免循环中重复获取类型
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL执行异常
+	 * @since 4.6.7
+	 */
+	public static PreparedStatement fillParams(final PreparedStatement ps, final Iterable<?> params, final Map<Integer, Integer> nullTypeCache) throws SQLException {
+		return StatementWrapper.of(ps).fillParams(params, nullTypeCache);
 	}
 
 	/**
@@ -325,62 +270,6 @@ public class StatementUtil {
 	 * @since 4.6.7
 	 */
 	public static void setParam(final PreparedStatement ps, final int paramIndex, final Object param) throws SQLException {
-		setParam(ps, paramIndex, param, null);
+		StatementWrapper.of(ps).setParam(paramIndex, param);
 	}
-
-	//--------------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 为{@link PreparedStatement} 设置单个参数
-	 *
-	 * @param ps            {@link PreparedStatement}
-	 * @param paramIndex    参数位置，从1开始
-	 * @param param         参数，不能为{@code null}
-	 * @param nullTypeCache 用于缓存参数为null位置的类型，避免重复获取
-	 * @throws SQLException SQL异常
-	 * @since 4.6.7
-	 */
-	private static void setParam(final PreparedStatement ps, final int paramIndex, final Object param, final Map<Integer, Integer> nullTypeCache) throws SQLException {
-		if (null == param) {
-			Integer type = (null == nullTypeCache) ? null : nullTypeCache.get(paramIndex);
-			if (null == type) {
-				type = getTypeOfNull(ps, paramIndex);
-				if (null != nullTypeCache) {
-					nullTypeCache.put(paramIndex, type);
-				}
-			}
-			ps.setNull(paramIndex, type);
-		}
-
-		// 日期特殊处理，默认按照时间戳传入，避免毫秒丢失
-		if (param instanceof java.util.Date) {
-			if (param instanceof java.sql.Date) {
-				ps.setDate(paramIndex, (java.sql.Date) param);
-			} else if (param instanceof java.sql.Time) {
-				ps.setTime(paramIndex, (java.sql.Time) param);
-			} else {
-				ps.setTimestamp(paramIndex, SqlUtil.toSqlTimestamp((java.util.Date) param));
-			}
-			return;
-		}
-
-		// 针对大数字类型的特殊处理
-		if (param instanceof Number) {
-			if (param instanceof BigDecimal) {
-				// BigDecimal的转换交给JDBC驱动处理
-				ps.setBigDecimal(paramIndex, (BigDecimal) param);
-				return;
-			}
-			if (param instanceof BigInteger) {
-				// BigInteger转为BigDecimal
-				ps.setBigDecimal(paramIndex, new BigDecimal((BigInteger) param));
-				return;
-			}
-			// 忽略其它数字类型，按照默认类型传入
-		}
-
-		// 其它参数类型
-		ps.setObject(paramIndex, param);
-	}
-	//--------------------------------------------------------------------------------------------- Private method end
 }
