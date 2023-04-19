@@ -40,6 +40,9 @@ public class HexUtilTest {
 
 	@Test
 	public void isHexNumberTest() {
+		Assertions.assertTrue(HexUtil.isHexNumber("0"));
+		Assertions.assertTrue(HexUtil.isHexNumber("002c"));
+
 		String a = "0x3544534F444";
 		Assertions.assertTrue(HexUtil.isHexNumber(a));
 
