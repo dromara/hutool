@@ -8,6 +8,7 @@ import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.SSLUtil;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -1144,9 +1146,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = StrUtil.builder();
+		final StringBuilder sb = StrUtil.builder();
 		sb.append("Request Url: ").append(this.url.setCharset(this.charset)).append(StrUtil.CRLF);
-		sb.append(super.toString());
+
+		// header
+		sb.append("Request Headers: ").append(StrUtil.CRLF);
+		for (Map.Entry<String, List<String>> entry : this.headers.entrySet()) {
+			sb.append("    ").append(
+					entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
+				.append(StrUtil.CRLF);
+		}
+
+		// body
+		sb.append("Request Body: ").append(StrUtil.CRLF);
+		sb.append("    ").append(createBody()).append(StrUtil.CRLF);
 		return sb.toString();
 	}
 
@@ -1342,13 +1355,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		RequestBody body;
+		createBody().writeClose(this.httpConnection.getOutputStream());
+	}
+
+	/**
+	 * 创建body
+	 *
+	 * @return body
+	 */
+	private RequestBody createBody(){
+		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		if (null != this.body) {
-			body = ResourceBody.create(this.body);
+			return ResourceBody.create(this.body);
 		} else {
-			body = FormUrlEncodedBody.create(this.form, this.charset);
+			return FormUrlEncodedBody.create(this.form, this.charset);
 		}
-		body.writeClose(this.httpConnection.getOutputStream());
 	}
 
 	/**

@@ -347,14 +347,14 @@ public abstract class HttpBase<T> {
 	@Override
 	public String toString() {
 		final StringBuilder sb = StrUtil.builder();
-		sb.append("Request Headers: ").append(StrUtil.CRLF);
+		sb.append("Headers: ").append(StrUtil.CRLF);
 		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
 			sb.append("    ").append(
 							entry.getKey()).append(": ").append(CollUtil.join(entry.getValue(), ","))
 					.append(StrUtil.CRLF);
 		}
 
-		sb.append("Request Body: ").append(StrUtil.CRLF);
+		sb.append("Body: ").append(StrUtil.CRLF);
 		sb.append("    ").append(StrUtil.str(this.bodyBytes(), this.charset)).append(StrUtil.CRLF);
 
 		return sb.toString();

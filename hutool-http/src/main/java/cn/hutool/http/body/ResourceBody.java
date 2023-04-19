@@ -39,4 +39,9 @@ public class ResourceBody implements RequestBody {
 			this.resource.writeTo(out);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return this.resource.readUtf8Str();
+	}
 }
