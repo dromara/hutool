@@ -12,14 +12,13 @@
 
 package org.dromara.hutool.cron;
 
+import org.dromara.hutool.core.map.TripleTable;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.cron.pattern.CronPattern;
 import org.dromara.hutool.cron.task.CronTask;
 import org.dromara.hutool.cron.task.Task;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -35,14 +34,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class TaskTable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 默认任务表大小：10
+	 */
 	public static final int DEFAULT_CAPACITY = 10;
 
 	private final ReadWriteLock lock;
 
-	private final List<String> ids;
-	private final List<CronPattern> patterns;
-	private final List<Task> tasks;
-	private int size;
+	private final TripleTable<String, CronPattern, Task> table;
 
 	/**
 	 * 构造
@@ -59,9 +58,7 @@ public class TaskTable implements Serializable {
 	public TaskTable(final int initialCapacity) {
 		lock = new ReentrantReadWriteLock();
 
-		ids = new ArrayList<>(initialCapacity);
-		patterns = new ArrayList<>(initialCapacity);
-		tasks = new ArrayList<>(initialCapacity);
+		this.table = new TripleTable<>(initialCapacity);
 	}
 
 	/**
@@ -76,13 +73,10 @@ public class TaskTable implements Serializable {
 		final Lock writeLock = lock.writeLock();
 		writeLock.lock();
 		try {
-			if (ids.contains(id)) {
+			if (this.table.containLeft(id)) {
 				throw new CronException("Id [{}] has been existed!", id);
 			}
-			ids.add(id);
-			patterns.add(pattern);
-			tasks.add(task);
-			size++;
+			this.table.put(id, pattern, task);
 		} finally {
 			writeLock.unlock();
 		}
@@ -99,7 +93,7 @@ public class TaskTable implements Serializable {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			return Collections.unmodifiableList(this.ids);
+			return this.table.getLefts();
 		} finally {
 			readLock.unlock();
 		}
@@ -115,7 +109,7 @@ public class TaskTable implements Serializable {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			return Collections.unmodifiableList(this.patterns);
+			return this.table.getMiddles();
 		} finally {
 			readLock.unlock();
 		}
@@ -131,7 +125,7 @@ public class TaskTable implements Serializable {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			return Collections.unmodifiableList(this.tasks);
+			return this.table.getRights();
 		} finally {
 			readLock.unlock();
 		}
@@ -147,18 +141,15 @@ public class TaskTable implements Serializable {
 		final Lock writeLock = lock.writeLock();
 		writeLock.lock();
 		try {
-			final int index = ids.indexOf(id);
-			if (index < 0) {
-				return false;
+			final int index = this.table.indexOfLeft(id);
+			if (index > -1) {
+				this.table.remove(index);
+				return true;
 			}
-			tasks.remove(index);
-			patterns.remove(index);
-			ids.remove(index);
-			size--;
 		} finally {
 			writeLock.unlock();
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -173,9 +164,9 @@ public class TaskTable implements Serializable {
 		final Lock writeLock = lock.writeLock();
 		writeLock.lock();
 		try {
-			final int index = ids.indexOf(id);
+			final int index = this.table.indexOfLeft(id);
 			if (index > -1) {
-				patterns.set(index, pattern);
+				this.table.setMiddle(index, pattern);
 				return true;
 			}
 		} finally {
@@ -195,7 +186,7 @@ public class TaskTable implements Serializable {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			return tasks.get(index);
+			return this.table.getRight(index);
 		} finally {
 			readLock.unlock();
 		}
@@ -209,11 +200,30 @@ public class TaskTable implements Serializable {
 	 * @since 3.1.1
 	 */
 	public Task getTask(final String id) {
-		final int index = ids.indexOf(id);
-		if (index > -1) {
-			return getTask(index);
+		final Lock readLock = lock.readLock();
+		readLock.lock();
+		try {
+			return table.getRightByLeft(id);
+		} finally {
+			readLock.unlock();
 		}
-		return null;
+	}
+
+	/**
+	 * 获得指定id的{@link CronPattern}
+	 *
+	 * @param id ID
+	 * @return {@link CronPattern}
+	 * @since 3.1.1
+	 */
+	public CronPattern getPattern(final String id) {
+		final Lock readLock = lock.readLock();
+		readLock.lock();
+		try {
+			return table.getMiddleByLeft(id);
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	/**
@@ -227,7 +237,7 @@ public class TaskTable implements Serializable {
 		final Lock readLock = lock.readLock();
 		readLock.lock();
 		try {
-			return patterns.get(index);
+			return table.getMiddle(index);
 		} finally {
 			readLock.unlock();
 		}
@@ -240,7 +250,7 @@ public class TaskTable implements Serializable {
 	 * @since 4.0.2
 	 */
 	public int size() {
-		return this.size;
+		return this.table.size();
 	}
 
 	/**
@@ -250,22 +260,7 @@ public class TaskTable implements Serializable {
 	 * @since 4.0.2
 	 */
 	public boolean isEmpty() {
-		return this.size < 1;
-	}
-
-	/**
-	 * 获得指定id的{@link CronPattern}
-	 *
-	 * @param id ID
-	 * @return {@link CronPattern}
-	 * @since 3.1.1
-	 */
-	public CronPattern getPattern(final String id) {
-		final int index = ids.indexOf(id);
-		if (index > -1) {
-			return getPattern(index);
-		}
-		return null;
+		return size() < 1;
 	}
 
 	/**
@@ -286,10 +281,11 @@ public class TaskTable implements Serializable {
 
 	@Override
 	public String toString() {
+		final int size = this.size();
 		final StringBuilder builder = StrUtil.builder();
 		for (int i = 0; i < size; i++) {
 			builder.append(StrUtil.format("[{}] [{}] [{}]\n",
-					ids.get(i), patterns.get(i), tasks.get(i)));
+					this.table.getLeft(i), this.table.getMiddle(i), this.table.getRight(i)));
 		}
 		return builder.toString();
 	}
@@ -302,9 +298,11 @@ public class TaskTable implements Serializable {
 	 * @since 3.1.1
 	 */
 	protected void executeTaskIfMatchInternal(final Scheduler scheduler, final long millis) {
+		final int size = size();
 		for (int i = 0; i < size; i++) {
-			if (patterns.get(i).match(scheduler.config.timezone, millis, scheduler.config.matchSecond)) {
-				scheduler.taskExecutorManager.spawnExecutor(new CronTask(ids.get(i), patterns.get(i), tasks.get(i)));
+			if (this.table.getMiddle(i).match(scheduler.config.timezone, millis, scheduler.config.matchSecond)) {
+				scheduler.taskExecutorManager.spawnExecutor(
+					new CronTask(this.table.getLeft(i), this.table.getMiddle(i), this.table.getRight(i)));
 			}
 		}
 	}

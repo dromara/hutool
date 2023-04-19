@@ -18,11 +18,7 @@ import org.dromara.hutool.cron.pattern.matcher.PatternMatcher;
 import org.dromara.hutool.cron.pattern.parser.PatternParser;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * 定时任务表达式<br>
@@ -168,6 +164,23 @@ public class CronPattern {
 			return nextMatchAfter(next);
 		}
 		return next;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final CronPattern that = (CronPattern) o;
+		return Objects.equals(pattern, that.pattern);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pattern);
 	}
 
 	@Override

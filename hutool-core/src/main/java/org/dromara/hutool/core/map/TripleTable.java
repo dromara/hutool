@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.map;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.tuple.Triple;
 
@@ -33,9 +34,9 @@ import java.util.List;
 public class TripleTable<L, M, R> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final List<L> lList;
-	private final List<M> mList;
-	private final List<R> rList;
+	private final List<L> lefts;
+	private final List<M> middles;
+	private final List<R> rights;
 
 	/**
 	 * 构造
@@ -59,22 +60,22 @@ public class TripleTable<L, M, R> implements Serializable {
 	}
 
 	/**
-	 * @param lList 左列表
-	 * @param mList 中列表
-	 * @param rList 右列表
+	 * @param lefts   左列表
+	 * @param middles 中列表
+	 * @param rights  右列表
 	 */
-	public TripleTable(final List<L> lList, final List<M> mList, final List<R> rList) {
-		Assert.notNull(lList);
-		Assert.notNull(mList);
-		Assert.notNull(rList);
-		final int size = lList.size();
-		if (size != mList.size() || size != rList.size()) {
+	public TripleTable(final List<L> lefts, final List<M> middles, final List<R> rights) {
+		Assert.notNull(lefts);
+		Assert.notNull(middles);
+		Assert.notNull(rights);
+		final int size = lefts.size();
+		if (size != middles.size() || size != rights.size()) {
 			throw new IllegalArgumentException("List size must be equals!");
 		}
 
-		this.lList = lList;
-		this.mList = mList;
-		this.rList = rList;
+		this.lefts = lefts;
+		this.middles = middles;
+		this.rights = rights;
 	}
 
 	// region ----- getLeft
@@ -87,9 +88,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 左边值，未找到返回{@code null}
 	 */
 	public L getLeftByMiddle(final M mValue) {
-		final int index = this.mList.indexOf(mValue);
+		final int index = this.middles.indexOf(mValue);
 		if (index > -1) {
-			return this.lList.get(index);
+			return this.lefts.get(index);
 		}
 		return null;
 	}
@@ -102,9 +103,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 左边值，未找到返回{@code null}
 	 */
 	public L getLeftByRight(final R rValue) {
-		final int index = this.rList.indexOf(rValue);
+		final int index = this.rights.indexOf(rValue);
 		if (index > -1) {
-			return this.lList.get(index);
+			return this.lefts.get(index);
 		}
 		return null;
 	}
@@ -120,9 +121,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 中值，未找到返回{@code null}
 	 */
 	public M getMiddleByLeft(final L lValue) {
-		final int index = this.lList.indexOf(lValue);
+		final int index = this.lefts.indexOf(lValue);
 		if (index > -1) {
-			return this.mList.get(index);
+			return this.middles.get(index);
 		}
 		return null;
 	}
@@ -135,12 +136,46 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 中值，未找到返回{@code null}
 	 */
 	public M getMiddleByRight(final R rValue) {
-		final int index = this.rList.indexOf(rValue);
+		final int index = this.rights.indexOf(rValue);
 		if (index > -1) {
-			return this.mList.get(index);
+			return this.middles.get(index);
 		}
 		return null;
 	}
+	// endregion
+
+	// region ----- get
+
+	/**
+	 * 获取指定index对应的左值
+	 *
+	 * @param index 索引
+	 * @return 左值
+	 */
+	public L getLeft(final int index){
+		return this.lefts.get(index);
+	}
+
+	/**
+	 * 获取指定index对应的中值
+	 *
+	 * @param index 索引
+	 * @return 中值
+	 */
+	public M getMiddle(final int index){
+		return this.middles.get(index);
+	}
+
+	/**
+	 * 获取指定index对应的右值
+	 *
+	 * @param index 索引
+	 * @return 右值
+	 */
+	public R getRight(final int index){
+		return this.rights.get(index);
+	}
+
 	// endregion
 
 	// region ----- getRight
@@ -153,9 +188,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 右值，未找到返回{@code null}
 	 */
 	public R getRightByLeft(final L lValue) {
-		final int index = this.lList.indexOf(lValue);
+		final int index = this.lefts.indexOf(lValue);
 		if (index > -1) {
-			return this.rList.get(index);
+			return this.rights.get(index);
 		}
 		return null;
 	}
@@ -168,11 +203,77 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 右值，未找到返回{@code null}
 	 */
 	public R getRightByMiddle(final M mValue) {
-		final int index = this.mList.indexOf(mValue);
+		final int index = this.middles.indexOf(mValue);
 		if (index > -1) {
-			return this.rList.get(index);
+			return this.rights.get(index);
 		}
 		return null;
+	}
+	// endregion
+
+	// region ----- contains
+
+	/**
+	 * 是否含有指定左元素
+	 *
+	 * @param left 左元素
+	 * @return 是否含有
+	 */
+	public boolean containLeft(final L left) {
+		return this.lefts.contains(left);
+	}
+
+	/**
+	 * 是否含有指定中元素
+	 *
+	 * @param middle 中元素
+	 * @return 是否含有
+	 */
+	public boolean containMiddle(final M middle) {
+		return this.middles.contains(middle);
+	}
+
+	/**
+	 * 是否含有指定右元素
+	 *
+	 * @param right 右元素
+	 * @return 是否含有
+	 */
+	public boolean containRight(final R right) {
+		return this.rights.contains(right);
+	}
+	// endregion
+
+	// region ----- indexOf
+
+	/**
+	 * 获取指定左元素的索引
+	 *
+	 * @param left 左元素
+	 * @return 索引，未找到返回-1
+	 */
+	public int indexOfLeft(final L left) {
+		return this.lefts.indexOf(left);
+	}
+
+	/**
+	 * 获取指定中元素的索引
+	 *
+	 * @param middle 中元素
+	 * @return 索引，未找到返回-1
+	 */
+	public int indexOfMiddle(final M middle) {
+		return this.middles.indexOf(middle);
+	}
+
+	/**
+	 * 获取指定右元素的索引
+	 *
+	 * @param right 右元素
+	 * @return 索引，未找到返回-1
+	 */
+	public int indexOfRight(final R right) {
+		return this.rights.indexOf(right);
 	}
 	// endregion
 
@@ -185,12 +286,12 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 三元组（所有值）
 	 */
 	public Triple<L, M, R> getByLeft(final L lValue) {
-		final int index = this.lList.indexOf(lValue);
+		final int index = this.lefts.indexOf(lValue);
 		if (index > -1) {
 			return new Triple<>(
-				lList.get(index),
-				mList.get(index),
-				rList.get(index)
+				lefts.get(index),
+				middles.get(index),
+				rights.get(index)
 			);
 		}
 		return null;
@@ -203,12 +304,12 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 三元组（所有值）
 	 */
 	public Triple<L, M, R> getByMiddle(final M mValue) {
-		final int index = this.mList.indexOf(mValue);
+		final int index = this.middles.indexOf(mValue);
 		if (index > -1) {
 			return new Triple<>(
-				lList.get(index),
-				mList.get(index),
-				rList.get(index)
+				lefts.get(index),
+				middles.get(index),
+				rights.get(index)
 			);
 		}
 		return null;
@@ -221,16 +322,47 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return 三元组（所有值）
 	 */
 	public Triple<L, M, R> getByRight(final R rValue) {
-		final int index = this.rList.indexOf(rValue);
+		final int index = this.rights.indexOf(rValue);
 		if (index > -1) {
 			return new Triple<>(
-				lList.get(index),
-				mList.get(index),
-				rList.get(index)
+				lefts.get(index),
+				middles.get(index),
+				rights.get(index)
 			);
 		}
 		return null;
 	}
+	// endregion
+
+	// region ----- getList
+
+	/**
+	 * 获取左列表，不可修改
+	 *
+	 * @return 左列表
+	 */
+	public List<L> getLefts() {
+		return ListUtil.view(this.lefts);
+	}
+
+	/**
+	 * 获取中列表，不可修改
+	 *
+	 * @return 中列表
+	 */
+	public List<M> getMiddles() {
+		return ListUtil.view(this.middles);
+	}
+
+	/**
+	 * 获取右列表，不可修改
+	 *
+	 * @return 右列表
+	 */
+	public List<R> getRights() {
+		return ListUtil.view(this.rights);
+	}
+
 	// endregion
 
 	/**
@@ -239,7 +371,7 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return this
 	 */
 	public int size() {
-		return this.lList.size();
+		return this.lefts.size();
 	}
 
 	/**
@@ -251,11 +383,50 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return this
 	 */
 	public TripleTable<L, M, R> put(final L lValue, final M mValue, final R rValue) {
-		this.lList.add(lValue);
-		this.mList.add(mValue);
-		this.rList.add(rValue);
+		this.lefts.add(lValue);
+		this.middles.add(mValue);
+		this.rights.add(rValue);
 		return this;
 	}
+
+	// region ----- set
+
+	/**
+	 * 修改指定index对应的左值
+	 *
+	 * @param index  索引
+	 * @param lValue 左值
+	 * @return this
+	 */
+	public TripleTable<L, M, R> setLeft(final int index, final L lValue) {
+		this.lefts.set(index, lValue);
+		return this;
+	}
+
+	/**
+	 * 修改指定index对应的中值
+	 *
+	 * @param index  索引
+	 * @param mValue 中值
+	 * @return this
+	 */
+	public TripleTable<L, M, R> setMiddle(final int index, final M mValue) {
+		this.middles.set(index, mValue);
+		return this;
+	}
+
+	/**
+	 * 修改指定index对应的右值
+	 *
+	 * @param index  索引
+	 * @param rValue 左值
+	 * @return this
+	 */
+	public TripleTable<L, M, R> setRight(final int index, final R rValue) {
+		this.rights.set(index, rValue);
+		return this;
+	}
+	// endregion
 
 	/**
 	 * 清空
@@ -263,9 +434,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return this
 	 */
 	public TripleTable<L, M, R> clear() {
-		this.lList.clear();
-		this.mList.clear();
-		this.rList.clear();
+		this.lefts.clear();
+		this.middles.clear();
+		this.rights.clear();
 		return this;
 	}
 
@@ -276,9 +447,9 @@ public class TripleTable<L, M, R> implements Serializable {
 	 * @return this
 	 */
 	public TripleTable<L, M, R> remove(final int index) {
-		this.lList.remove(index);
-		this.mList.remove(index);
-		this.rList.remove(index);
+		this.lefts.remove(index);
+		this.middles.remove(index);
+		this.rights.remove(index);
 		return this;
 	}
 }
