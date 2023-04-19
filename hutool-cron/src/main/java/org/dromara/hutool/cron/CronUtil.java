@@ -35,6 +35,9 @@ public class CronUtil {
 
 	/** Crontab配置文件 */
 	public static final String CRONTAB_CONFIG_PATH = "config/cron.setting";
+	/**
+	 * Crontab配置文件2
+	 */
 	public static final String CRONTAB_CONFIG_PATH2 = "cron.setting";
 
 	private static final Lock lock = new ReentrantLock();
