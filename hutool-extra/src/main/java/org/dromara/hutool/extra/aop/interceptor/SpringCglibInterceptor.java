@@ -16,20 +16,17 @@ import org.dromara.hutool.extra.aop.aspects.Aspect;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Spring-cglib实现的动态代理切面
+ * Spring-cglib实现的动态代理切面<br>
+ * 只用于JDK8
  *
  * @author looly
  */
-public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
+public class SpringCglibInterceptor extends SimpleInterceptor implements MethodInterceptor {
 	private static final long serialVersionUID = 1L;
-
-	private final Object target;
-	private final Aspect aspect;
 
 	/**
 	 * 构造
@@ -38,17 +35,7 @@ public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 	 * @param aspect 切面实现
 	 */
 	public SpringCglibInterceptor(final Object target, final Aspect aspect) {
-		this.target = target;
-		this.aspect = aspect;
-	}
-
-	/**
-	 * 获得目标对象
-	 *
-	 * @return 目标对象
-	 */
-	public Object getTarget() {
-		return this.target;
+		super(target, aspect);
 	}
 
 	@Override
@@ -58,7 +45,6 @@ public class SpringCglibInterceptor implements MethodInterceptor, Serializable {
 		// 开始前回调
 		if (aspect.before(target, method, args)) {
 			try {
-//				result = proxy.invokeSuper(obj, args);
 				result = proxy.invoke(target, args);
 			} catch (final InvocationTargetException e) {
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）

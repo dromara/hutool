@@ -89,20 +89,16 @@ public class ConstructorUtil {
 	// --------------------------------------------------------------------------------------------------------- newInstance
 
 	/**
-	 * 实例化对象
+	 * 实例化对象<br>
+	 * 类必须有空构造函数
 	 *
 	 * @param <T>   对象类型
 	 * @param clazz 类名
 	 * @return 对象
 	 * @throws UtilException 包装各类异常
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(final String clazz) throws UtilException {
-		try {
-			return (T) ClassLoaderUtil.loadClass(clazz).newInstance();
-		} catch (final Exception e) {
-			throw new UtilException(e, "Instance class [{}] error!", clazz);
-		}
+		return newInstance(ClassLoaderUtil.loadClass(clazz));
 	}
 
 	/**
@@ -117,7 +113,7 @@ public class ConstructorUtil {
 	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			final Constructor<T> constructor = getConstructor(clazz);
-			if(null == constructor){
+			if (null == constructor) {
 				throw new UtilException("No constructor for [{}]", clazz);
 			}
 			try {

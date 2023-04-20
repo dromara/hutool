@@ -13,17 +13,21 @@
 package org.dromara.hutool.swing.img;
 
 import org.dromara.hutool.core.codec.binary.Base64;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.Resource;
+import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
@@ -1369,9 +1373,9 @@ public class ImgUtil {
 	 * @since 5.2.4
 	 */
 	public static byte[] toBytes(final Image image, final String imageType) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		write(image, imageType, out);
-		return out.toByteArray();
+		return out.toByteArrayZeroCopyIfPossible();
 	}
 
 	// region ----- createImage

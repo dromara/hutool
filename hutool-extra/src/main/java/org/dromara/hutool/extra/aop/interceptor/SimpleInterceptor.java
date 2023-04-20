@@ -10,27 +10,42 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.aop.proxy;
+package org.dromara.hutool.extra.aop.interceptor;
 
 import org.dromara.hutool.extra.aop.aspects.Aspect;
-import org.dromara.hutool.extra.aop.interceptor.CglibInterceptor;
-import net.sf.cglib.proxy.Enhancer;
+
+import java.io.Serializable;
 
 /**
- * 基于Cglib的切面代理工厂
+ * 简单拦截器，保存了被拦截的对象和Aspect实现
  *
  * @author looly
+ * @since 6.0.0
  */
-public class CglibProxyFactory implements ProxyFactory {
+public class SimpleInterceptor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T proxy(final T target, final Aspect aspect) {
-		final Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(target.getClass());
-		enhancer.setCallback(new CglibInterceptor(target, aspect));
-		return (T) enhancer.create();
+	protected final Object target;
+	protected final Aspect aspect;
+
+	/**
+	 * 构造
+	 *
+	 * @param target 被代理对象
+	 * @param aspect 切面实现
+	 */
+	public SimpleInterceptor(final Object target, final Aspect aspect) {
+		this.target = target;
+		this.aspect = aspect;
+	}
+
+	/**
+	 * 获取目标对象
+	 *
+	 * @return 目标对象
+	 */
+	public Object getTarget() {
+		return this.target;
 	}
 
 }

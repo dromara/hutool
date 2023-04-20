@@ -31,9 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.lang.invoke.LambdaMetafactory.FLAG_SERIALIZABLE;
-import static java.lang.invoke.MethodType.methodType;
-
 /**
  * 以类似反射的方式动态创建Lambda，在性能上有一定优势，同时避免每次调用Lambda时创建匿名内部类
  * TODO JDK9+存在兼容问题
@@ -65,8 +62,8 @@ public class LambdaFactory {
 	 * @param methodClass           声明方法的类的类型
 	 * @param methodName            方法名称
 	 * @param paramTypes            方法参数数组
+	 * @param <F>                   Function类型
 	 * @return 接受Lambda的函数式接口对象
-	 * @param <F> Function类型
 	 */
 	public static <F> F build(final Class<F> functionInterfaceType, final Class<?> methodClass, final String methodName, final Class<?>... paramTypes) {
 		return build(functionInterfaceType, MethodUtil.getMethod(methodClass, methodName, paramTypes));
@@ -77,7 +74,7 @@ public class LambdaFactory {
 	 * 调用函数相当于执行对应的方法或构造
 	 *
 	 * @param functionInterfaceType 接受Lambda的函数式接口类型
-	 * @param executable                方法对象，支持构造器
+	 * @param executable            方法对象，支持构造器
 	 * @param <F>                   Function类型
 	 * @return 接受Lambda的函数式接口对象
 	 */
@@ -88,8 +85,8 @@ public class LambdaFactory {
 		final MutableEntry<Class<?>, Executable> cacheKey = new MutableEntry<>(functionInterfaceType, executable);
 		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
 			final List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
-					.filter(ModifierUtil::isAbstract)
-					.collect(Collectors.toList());
+				.filter(ModifierUtil::isAbstract)
+				.collect(Collectors.toList());
 			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
 			ReflectUtil.setAccessible(executable);
 
@@ -107,27 +104,27 @@ public class LambdaFactory {
 			final Method invokeMethod = abstractMethods.get(0);
 			final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
 			final String invokeName = invokeMethod.getName();
-			final MethodType invokedType = methodType(functionInterfaceType);
-			final MethodType samMethodType = methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
+			final MethodType invokedType = MethodType.methodType(functionInterfaceType);
+			final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
 			try {
 				final CallSite callSite = isSerializable ?
-						LambdaMetafactory.altMetafactory(
-								caller,
-								invokeName,
-								invokedType,
-								samMethodType,
-								methodHandle,
-								instantiatedMethodType,
-								FLAG_SERIALIZABLE
-						) :
-						LambdaMetafactory.metafactory(
-								caller,
-								invokeName,
-								invokedType,
-								samMethodType,
-								methodHandle,
-								instantiatedMethodType
-						);
+					LambdaMetafactory.altMetafactory(
+						caller,
+						invokeName,
+						invokedType,
+						samMethodType,
+						methodHandle,
+						instantiatedMethodType,
+						LambdaMetafactory.FLAG_SERIALIZABLE
+					) :
+					LambdaMetafactory.metafactory(
+						caller,
+						invokeName,
+						invokedType,
+						samMethodType,
+						methodHandle,
+						instantiatedMethodType
+					);
 				//noinspection unchecked
 				return (F) callSite.getTarget().invoke();
 			} catch (final Throwable e) {

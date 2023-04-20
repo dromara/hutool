@@ -10,6 +10,5 @@
 # See the Mulan PSL v2 for more details.
 #
 
-org.dromara.hutool.extra.aop.proxy.CglibProxyFactory
 org.dromara.hutool.extra.aop.proxy.SpringCglibProxyFactory
 org.dromara.hutool.extra.aop.proxy.JdkProxyFactory

@@ -354,8 +354,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.mayabot.mynlp</groupId>
-			<artifactId>mynlp-segment</artifactId>
-			<version>3.0.2</version>
+			<artifactId>mynlp-all</artifactId>
+			<version>4.0.0</version>
 			<optional>true</optional>
 		</dependency>
 		<!-- Spring Boot -->
@@ -422,6 +422,13 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.14.4</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- 验证工具可选依赖 begin -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
@@ -462,6 +469,10 @@
 				<exclusion>
 					<artifactId>junit-jupiter</artifactId>
 					<groupId>org.junit.jupiter</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>json-path</artifactId>
+					<groupId>com.jayway.jsonpath</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

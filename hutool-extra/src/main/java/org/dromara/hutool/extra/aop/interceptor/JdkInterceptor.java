@@ -16,7 +16,6 @@ import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;
 import org.dromara.hutool.extra.aop.aspects.Aspect;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,11 +26,8 @@ import java.lang.reflect.Method;
  * @author Looly
  * @author ted.L
  */
-public class JdkInterceptor implements InvocationHandler, Serializable {
+public class JdkInterceptor extends SimpleInterceptor implements InvocationHandler {
 	private static final long serialVersionUID = 1L;
-
-	private final Object target;
-	private final Aspect aspect;
 
 	/**
 	 * 构造
@@ -40,17 +36,7 @@ public class JdkInterceptor implements InvocationHandler, Serializable {
 	 * @param aspect 切面实现
 	 */
 	public JdkInterceptor(final Object target, final Aspect aspect) {
-		this.target = target;
-		this.aspect = aspect;
-	}
-
-	/**
-	 * 获取目标对象
-	 *
-	 * @return 目标对象
-	 */
-	public Object getTarget() {
-		return this.target;
+		super(target, aspect);
 	}
 
 	@SuppressWarnings("SuspiciousInvocationHandlerImplementation")

@@ -12,10 +12,9 @@
 
 package org.dromara.hutool.extra.tokenizer.engine.mynlp;
 
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.Lexers;
 import com.mayabot.nlp.segment.Sentence;
-
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
 import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
@@ -35,7 +34,10 @@ public class MynlpEngine implements TokenizerEngine {
 	 * 构造
 	 */
 	public MynlpEngine() {
-		this.lexer = Lexers.core();
+		// CORE分词器构建器
+		// 开启词性标注功能
+		// 开启人名识别功能
+		this.lexer = Mynlp.instance().bigramLexer();
 	}
 
 	/**
