@@ -10,25 +10,19 @@
  * See the Mulan PSL v2 for more details.
  */
 
-import cn.hutool.http.HttpGlobalConfig;
-import cn.hutool.http.HttpUtil;
+package cn.hutool.http;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class IssueI6RE7JTest {
+public class Issue3074Test {
 
 	@Test
 	@Ignore
-	public void getTest() {
-		HttpGlobalConfig.setDecodeUrl(true);
-		final String baseUrl = "http://192.168.98.73/PIAPI/ArcValue";
-
-		final Map<String,Object> map = new HashMap<>();
-		map.put("tag","TXSM_SC2202-苯乙烯%");
-		map.put("time","2023/03/28 08:00:00");
-		HttpUtil.get(baseUrl, map);
+	public void bodyTest() {
+		HttpUtil.createPost("http://localhost:8888/body")
+			.contentType(ContentType.JSON.getValue())
+			.body("aaa")
+			.execute();
 	}
 }
