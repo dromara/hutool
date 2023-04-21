@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.net.ssl;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -66,12 +66,12 @@ public class SSLUtil {
 				tmf = TrustManagerFactory.getInstance(algorithm, provider);
 			}
 		} catch (final NoSuchAlgorithmException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 		try {
 			tmf.init(keyStore);
 		} catch (final KeyStoreException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 
 		final TrustManager[] tms = tmf.getTrustManagers();

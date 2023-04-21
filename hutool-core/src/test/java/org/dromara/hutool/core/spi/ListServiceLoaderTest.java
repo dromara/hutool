@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.spi;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ public class ListServiceLoaderTest {
 	@Test
 	void getServiceClassNotExistTest() {
 		final ListServiceLoader<TestSPI1> serviceLoader = ListServiceLoader.of(TestSPI1.class);
-		Assertions.assertThrows(UtilException.class, ()->{
+		Assertions.assertThrows(HutoolException.class, ()->{
 			serviceLoader.getServiceClass(0);
 		});
 	}

@@ -15,7 +15,7 @@ package org.dromara.hutool.core.reflect;
 import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.convert.BasicType;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.net.url.URLDecoder;
@@ -27,6 +27,7 @@ import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -307,7 +308,7 @@ public class ClassUtil {
 		try {
 			resources = ClassLoaderUtil.getClassLoader().getResources(packagePath);
 		} catch (final IOException e) {
-			throw new UtilException(e, "Loading classPath [{}] error!", packagePath);
+			throw new HutoolException(e, "Loading classPath [{}] error!", packagePath);
 		}
 		final Set<String> paths = new HashSet<>();
 		String path;
@@ -435,16 +436,16 @@ public class ClassUtil {
 	 */
 	public static boolean isSimpleValueType(final Class<?> clazz) {
 		return isBasicType(clazz)
-				|| clazz.isEnum()
-				|| CharSequence.class.isAssignableFrom(clazz)
-				|| Number.class.isAssignableFrom(clazz)
-				|| Date.class.isAssignableFrom(clazz)
-				|| clazz.equals(URI.class)
-				|| clazz.equals(URL.class)
-				|| clazz.equals(Locale.class)
-				|| clazz.equals(Class.class)
-				// jdk8 date object
-				|| TemporalAccessor.class.isAssignableFrom(clazz);
+			|| clazz.isEnum()
+			|| CharSequence.class.isAssignableFrom(clazz)
+			|| Number.class.isAssignableFrom(clazz)
+			|| Date.class.isAssignableFrom(clazz)
+			|| clazz.equals(URI.class)
+			|| clazz.equals(URL.class)
+			|| clazz.equals(Locale.class)
+			|| clazz.equals(Class.class)
+			// jdk8 date object
+			|| TemporalAccessor.class.isAssignableFrom(clazz);
 	}
 
 	/**
@@ -480,6 +481,17 @@ public class ClassUtil {
 	}
 
 	/**
+	 * 给定类是否实现了序列化接口{@link Serializable}
+	 *
+	 * @param clazz 类
+	 * @return 是否实现序列化接口{@link Serializable}
+	 * @since 6.0.0
+	 */
+	public static boolean isSerializable(final Class<?> clazz) {
+		return Serializable.class.isAssignableFrom(clazz);
+	}
+
+	/**
 	 * 是否为标准的类<br>
 	 * 这个类必须：
 	 *
@@ -497,13 +509,13 @@ public class ClassUtil {
 	 */
 	public static boolean isNormalClass(final Class<?> clazz) {
 		return null != clazz
-				&& !clazz.isInterface()
-				&& !ModifierUtil.isAbstract(clazz)
-				&& !clazz.isEnum()
-				&& !clazz.isArray()
-				&& !clazz.isAnnotation()
-				&& !clazz.isSynthetic()
-				&& !clazz.isPrimitive();
+			&& !clazz.isInterface()
+			&& !ModifierUtil.isAbstract(clazz)
+			&& !clazz.isEnum()
+			&& !clazz.isArray()
+			&& !clazz.isAnnotation()
+			&& !clazz.isSynthetic()
+			&& !clazz.isPrimitive();
 	}
 
 	/**
@@ -660,8 +672,8 @@ public class ClassUtil {
 		}
 		final String objectPackageName = objectPackage.getName();
 		return objectPackageName.startsWith("java.")
-				|| objectPackageName.startsWith("javax.")
-				|| clazz.getClassLoader() == null;
+			|| objectPackageName.startsWith("javax.")
+			|| clazz.getClassLoader() == null;
 	}
 
 	/**
@@ -742,14 +754,14 @@ public class ClassUtil {
 	 *     <li>自动查找内部类，如java.lang.Thread.State =》java.lang.Thread$State</li>
 	 * </ul>
 	 *
-	 * @param name       类名
+	 * @param name          类名
 	 * @param isInitialized 是否初始化
-	 * @param loader     {@link ClassLoader}，{@code null}表示默认
+	 * @param loader        {@link ClassLoader}，{@code null}表示默认
 	 * @return 指定名称对应的类，如果不存在类，返回{@code null}
 	 * @see Class#forName(String, boolean, ClassLoader)
 	 */
 	public static Class<?> forName(String name, final boolean isInitialized, ClassLoader loader) {
-		if(null == loader){
+		if (null == loader) {
 			loader = ClassLoaderUtil.getClassLoader();
 		}
 		name = name.replace(CharUtil.SLASH, CharUtil.DOT);
@@ -761,7 +773,7 @@ public class ClassUtil {
 			// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
 			final Class<?> clazz = forNameInnerClass(name, isInitialized, loader);
 			if (null == clazz) {
-				throw new UtilException(ex);
+				throw new HutoolException(ex);
 			}
 			return clazz;
 		}

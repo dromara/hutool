@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.thread;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -78,7 +78,7 @@ public class GlobalThreadPool {
 		try {
 			executor.execute(runnable);
 		} catch (final Exception e) {
-			throw new UtilException(e, "Exception when running task!");
+			throw new HutoolException(e, "Exception when running task!");
 		}
 	}
 

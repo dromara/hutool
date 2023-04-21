@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Singleton;
 
 import java.math.BigInteger;
@@ -199,7 +199,7 @@ public class Ipv6Util {
 			try {
 				return InetAddress.getByName(addr.substring(0, index) + '%' + address.getScopeId());
 			} catch (final UnknownHostException e) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		}
 		return address;

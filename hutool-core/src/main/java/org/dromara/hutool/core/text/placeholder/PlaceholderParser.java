@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.text.placeholder;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrChecker;
 import org.dromara.hutool.core.util.CharUtil;
@@ -154,7 +154,7 @@ public class PlaceholderParser implements UnaryOperator<String> {
 
 			// 未能找到结束符号，说明匹配异常
 			if (end == -1) {
-				throw new UtilException("\"{}\" 中字符下标 {} 处的开始符没有找到对应的结束符", text, openCursor);
+				throw new HutoolException("\"{}\" 中字符下标 {} 处的开始符没有找到对应的结束符", text, openCursor);
 			}
 			// 找到结束符号，将开始到结束符号之间的字符串替换为指定表达式
 			else {

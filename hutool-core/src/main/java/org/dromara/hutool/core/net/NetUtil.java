@@ -14,7 +14,7 @@ package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -163,7 +163,7 @@ public class NetUtil {
 			}
 		}
 
-		throw new UtilException("Could not find an available port in the range [{}, {}] after {} attempts", minPort, maxPort, maxPort - minPort);
+		throw new HutoolException("Could not find an available port in the range [{}, {}] after {} attempts", minPort, maxPort, maxPort - minPort);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class NetUtil {
 		}
 
 		if (availablePorts.size() != numRequested) {
-			throw new UtilException("Could not find {} available  ports in the range [{}, {}]", numRequested, minPort, maxPort);
+			throw new HutoolException("Could not find {} available  ports in the range [{}, {}]", numRequested, minPort, maxPort);
 		}
 
 		return availablePorts;
@@ -220,7 +220,7 @@ public class NetUtil {
 			final URL absoluteUrl = new URL(absoluteBasePath);
 			return new URL(absoluteUrl, relativePath).toString();
 		} catch (final Exception e) {
-			throw new UtilException(e, "To absolute url [{}] base [{}] error!", relativePath, absoluteBasePath);
+			throw new HutoolException(e, "To absolute url [{}] base [{}] error!", relativePath, absoluteBasePath);
 		}
 	}
 
@@ -364,11 +364,11 @@ public class NetUtil {
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 		} catch (final SocketException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 
 		if (networkInterfaces == null) {
-			throw new UtilException("Get network interface error!");
+			throw new HutoolException("Get network interface error!");
 		}
 
 		final LinkedHashSet<InetAddress> ipSet = new LinkedHashSet<>();

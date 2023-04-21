@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.net;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -70,7 +70,7 @@ public class MacAddressUtil {
 				return networkInterface.getHardwareAddress();
 			}
 		} catch (final SocketException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 		return null;
 	}

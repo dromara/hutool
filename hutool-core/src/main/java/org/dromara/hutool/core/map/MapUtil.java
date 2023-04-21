@@ -17,7 +17,6 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -248,7 +247,7 @@ public class MapUtil extends MapGetUtil {
 		} else {
 			try {
 				return (Map<K, V>) ConstructorUtil.newInstance(mapType);
-			} catch (final UtilException e) {
+			} catch (final Exception e) {
 				// 不支持的map类型，返回默认的HashMap
 				return new HashMap<>();
 			}

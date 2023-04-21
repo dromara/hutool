@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.codec.hash;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,7 +55,7 @@ public class KetamaHash implements Hash64<byte[]>, Hash32<byte[]> {
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (final NoSuchAlgorithmException e) {
-			throw new UtilException("MD5 algorithm not suooport!", e);
+			throw new HutoolException("MD5 algorithm not suooport!", e);
 		}
 		return md5.digest(key);
 	}

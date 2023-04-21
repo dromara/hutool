@@ -6,7 +6,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -149,7 +149,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 
             // 未能找到结束符号，说明匹配异常
             if (end == -1) {
-                throw new UtilException("\"{}\" 中字符下标 {} 处的开始符没有找到对应的结束符", template, openCursor);
+                throw new HutoolException("\"{}\" 中字符下标 {} 处的开始符没有找到对应的结束符", template, openCursor);
             }
             // 找到结束符号，开始到结束符号 之间的字符串 就是占位变量
             else {

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.ds.simple;
 
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -72,7 +72,7 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 		try {
 			return (AbstractDataSource) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 }

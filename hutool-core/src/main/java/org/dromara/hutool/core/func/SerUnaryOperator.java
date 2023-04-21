@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -48,7 +48,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 		try {
 			return applying(t);
 		} catch (final Exception e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

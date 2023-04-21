@@ -14,7 +14,7 @@ package org.dromara.hutool.core.codec.binary;
 
 import org.dromara.hutool.core.codec.Decoder;
 import org.dromara.hutool.core.codec.Encoder;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**
@@ -137,12 +137,12 @@ public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequenc
 	 * @param ch    十六进制char
 	 * @param index 十六进制字符在字符数组中的位置
 	 * @return 一个整数
-	 * @throws UtilException 当ch不是一个合法的十六进制字符时，抛出运行时异常
+	 * @throws HutoolException 当ch不是一个合法的十六进制字符时，抛出运行时异常
 	 */
 	private static int toDigit(final char ch, final int index) {
 		final int digit = Character.digit(ch, 16);
 		if (digit < 0) {
-			throw new UtilException("Illegal hexadecimal character {} at index {}", ch, index);
+			throw new HutoolException("Illegal hexadecimal character {} at index {}", ch, index);
 		}
 		return digit;
 	}

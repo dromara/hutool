@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.xml;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -80,7 +80,7 @@ public class JAXBUtil {
 			writer = new StringWriter();
 			marshaller.marshal(bean, writer);
 		} catch (final Exception e) {
-			throw new UtilException("convertToXml 错误：" + e.getMessage(), e);
+			throw new HutoolException("convertToXml 错误：" + e.getMessage(), e);
 		}
 		return writer.toString();
 	}

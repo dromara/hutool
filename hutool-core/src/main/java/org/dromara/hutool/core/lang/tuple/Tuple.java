@@ -14,7 +14,7 @@ package org.dromara.hutool.core.lang.tuple;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;
@@ -194,7 +194,7 @@ public class Tuple implements Iterable<Object>, Serializable, Cloneable {
 		try {
 			return (Tuple) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 }

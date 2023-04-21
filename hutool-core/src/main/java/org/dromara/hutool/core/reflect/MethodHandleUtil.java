@@ -12,12 +12,13 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.bean.NullWrapperBean;
+import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
 /**
@@ -50,80 +51,10 @@ public class MethodHandleUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T invokeHandle(final MethodHandle methodHandle, final Object... args) {
 		try {
-			return (T) methodHandle.invoke(args);
+			return (T) methodHandle.invokeWithArguments(args);
 		} catch (final Throwable e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * 执行接口或对象中的方法
-	 *
-	 * @param <T>    返回结果类型
-	 * @param obj    接口的子对象或代理对象
-	 * @param method 方法
-	 * @param args   参数
-	 * @return 结果
-	 */
-	public static <T> T invoke(final Object obj, final Method method, final Object... args) {
-		return invoke(false, obj, method, args);
-	}
-
-	/**
-	 * 执行接口或对象中的特殊方法（private、static等）<br>
-	 *
-	 * <pre class="code">
-	 *     interface Duck {
-	 *         default String quack() {
-	 *             return "Quack";
-	 *         }
-	 *     }
-	 *     Duck duck = (Duck) Proxy.newProxyInstance(
-	 *         ClassLoaderUtil.getClassLoader(),
-	 *         new Class[] { Duck.class },
-	 *         MethodHandleUtil::invokeDefault);
-	 * </pre>
-	 *
-	 * @param <T>        返回结果类型
-	 * @param obj        接口的子对象或代理对象
-	 * @param methodName 方法名称
-	 * @param args       参数
-	 * @return 结果
-	 */
-	public static <T> T invokeSpecial(final Object obj, final String methodName, final Object... args) {
-		Assert.notNull(obj, "Object to get method must be not null!");
-		Assert.notBlank(methodName, "Method name must be not blank!");
-
-		final Method method = MethodUtil.getMethodOfObj(obj, methodName, args);
-		if (null == method) {
-			throw new UtilException("No such method: [{}] from [{}]", methodName, obj.getClass());
-		}
-		return invokeSpecial(obj, method, args);
-	}
-
-	/**
-	 * 执行接口或对象中的特殊方法（private、static等）<br>
-	 *
-	 * <pre class="code">
-	 *     interface Duck {
-	 *         default String quack() {
-	 *             return "Quack";
-	 *         }
-	 *     }
-	 *     Duck duck = (Duck) Proxy.newProxyInstance(
-	 *         ClassLoaderUtil.getClassLoader(),
-	 *         new Class[] { Duck.class },
-	 *         MethodHandleUtil::invoke);
-	 * </pre>
-	 *
-	 * @param <T>    返回结果类型
-	 * @param obj    接口的子对象或代理对象
-	 * @param method 方法
-	 * @param args   参数
-	 * @return 结果
-	 */
-	public static <T> T invokeSpecial(final Object obj, final Method method, final Object... args) {
-		return invoke(true, obj, method, args);
 	}
 
 	/**
@@ -142,26 +73,93 @@ public class MethodHandleUtil {
 	 * </pre>
 	 *
 	 * @param <T>       返回结果类型
-	 * @param isSpecial 是否为特殊方法（private、static等）
+	 * @param obj       接口的子对象或代理对象
+	 * @param method    方法
+	 * @param args      参数，自动根据{@link Method}定义类型转换
+	 * @return 结果
+	 * @throws HutoolException 执行异常包装
+	 */
+	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException{
+		Assert.notNull(method, "Method must be not null!");
+		return invokeExact(obj, method, actualArgs(method, args));
+	}
+
+	/**
+	 * 执行接口或对象中的方法，参数类型不做转换，必须与方法参数类型完全匹配<br>
+	 *
+	 * <pre class="code">
+	 *     interface Duck {
+	 *         default String quack() {
+	 *             return "Quack";
+	 *         }
+	 *     }
+	 *     Duck duck = (Duck) Proxy.newProxyInstance(
+	 *         ClassLoaderUtil.getClassLoader(),
+	 *         new Class[] { Duck.class },
+	 *         MethodHandleUtil::invoke);
+	 * </pre>
+	 *
+	 * @param <T>       返回结果类型
 	 * @param obj       接口的子对象或代理对象
 	 * @param method    方法
 	 * @param args      参数
 	 * @return 结果
+	 * @throws HutoolException 执行异常包装
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(final boolean isSpecial, final Object obj, final Method method, final Object... args) {
+	public static <T> T invokeExact(final Object obj, final Method method, final Object... args) throws HutoolException{
 		Assert.notNull(method, "Method must be not null!");
-		final Class<?> declaringClass = method.getDeclaringClass();
-		final MethodHandles.Lookup lookup = LookupUtil.lookup(declaringClass);
 		try {
-			MethodHandle handle = isSpecial ? lookup.unreflectSpecial(method, declaringClass)
-					: lookup.unreflect(method);
+			MethodHandle handle = LookupUtil.unreflectMethod(method);
 			if (null != obj) {
 				handle = handle.bindTo(obj);
 			}
 			return (T) handle.invokeWithArguments(args);
 		} catch (final Throwable e) {
-			throw new UtilException(e);
+			if(e instanceof RuntimeException){
+				throw (RuntimeException)e;
+			}
+			throw new HutoolException(e);
 		}
+	}
+
+	/**
+	 * 检查用户传入参数：
+	 * <ul>
+	 *     <li>1、忽略多余的参数</li>
+	 *     <li>2、参数不够补齐默认值</li>
+	 *     <li>3、通过NullWrapperBean传递的参数,会直接赋值null</li>
+	 *     <li>4、传入参数为null，但是目标参数类型为原始类型，做转换</li>
+	 *     <li>5、传入参数类型不对应，尝试转换类型</li>
+	 * </ul>
+	 *
+	 * @param method 方法
+	 * @param args   参数
+	 * @return 实际的参数数组
+	 */
+	private static Object[] actualArgs(final Method method, final Object[] args) {
+		final Class<?>[] parameterTypes = method.getParameterTypes();
+		final Object[] actualArgs = new Object[parameterTypes.length];
+		if (null != args) {
+			for (int i = 0; i < actualArgs.length; i++) {
+				if (i >= args.length || null == args[i]) {
+					// 越界或者空值
+					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+				} else if (args[i] instanceof NullWrapperBean) {
+					//如果是通过NullWrapperBean传递的null参数,直接赋值null
+					actualArgs[i] = null;
+				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+					final Object targetValue = Convert.convert(parameterTypes[i], args[i], args[i]);
+					if (null != targetValue) {
+						actualArgs[i] = targetValue;
+					}
+				} else {
+					actualArgs[i] = args[i];
+				}
+			}
+		}
+
+		return actualArgs;
 	}
 }

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.net.url;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
@@ -113,17 +113,17 @@ public class URLUtil {
 	 * @param uri {@link URI}
 	 * @return URL对象
 	 * @see URI#toURL()
-	 * @throws UtilException {@link MalformedURLException}包装，URI格式有问题时抛出
+	 * @throws HutoolException {@link MalformedURLException}包装，URI格式有问题时抛出
 	 * @since 5.7.21
 	 */
-	public static URL url(final URI uri) throws UtilException{
+	public static URL url(final URI uri) throws HutoolException {
 		if(null == uri){
 			return null;
 		}
 		try {
 			return uri.toURL();
 		} catch (final MalformedURLException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class URLUtil {
 			try {
 				return new File(url).toURI().toURL();
 			} catch (final MalformedURLException ex2) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		}
 	}
@@ -209,7 +209,7 @@ public class URLUtil {
 		try {
 			return new URL(null, urlStr, handler);
 		} catch (final MalformedURLException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 
@@ -241,14 +241,14 @@ public class URLUtil {
 	 *
 	 * @param file URL对应的文件对象
 	 * @return URL
-	 * @throws UtilException MalformedURLException
+	 * @throws HutoolException MalformedURLException
 	 */
 	public static URL getURL(final File file) {
 		Assert.notNull(file, "File is null !");
 		try {
 			return file.toURI().toURL();
 		} catch (final MalformedURLException e) {
-			throw new UtilException(e, "Error occured when get URL!");
+			throw new HutoolException(e, "Error occured when get URL!");
 		}
 	}
 
@@ -257,7 +257,7 @@ public class URLUtil {
 	 *
 	 * @param files URL对应的文件对象
 	 * @return URL
-	 * @throws UtilException MalformedURLException
+	 * @throws HutoolException MalformedURLException
 	 */
 	public static URL[] getURLs(final File... files) {
 		final URL[] urls = new URL[files.length];
@@ -266,7 +266,7 @@ public class URLUtil {
 				urls[i] = files[i].toURI().toURL();
 			}
 		} catch (final MalformedURLException e) {
-			throw new UtilException(e, "Error occured when get URL!");
+			throw new HutoolException(e, "Error occured when get URL!");
 		}
 
 		return urls;
@@ -287,7 +287,7 @@ public class URLUtil {
 		try {
 			return new URI(url.getProtocol(), url.getHost(), null, null);
 		} catch (final URISyntaxException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 
@@ -297,7 +297,7 @@ public class URLUtil {
 	 * @param baseUrl      基准URL
 	 * @param relativePath 相对URL
 	 * @return 相对路径
-	 * @throws UtilException MalformedURLException
+	 * @throws HutoolException MalformedURLException
 	 */
 	public static String completeUrl(String baseUrl, final String relativePath) {
 		baseUrl = normalize(baseUrl, false);
@@ -310,7 +310,7 @@ public class URLUtil {
 			final URL parseUrl = new URL(absoluteUrl, relativePath);
 			return parseUrl.toString();
 		} catch (final MalformedURLException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 
@@ -319,7 +319,7 @@ public class URLUtil {
 	 *
 	 * @param uriStr URI路径
 	 * @return path
-	 * @throws UtilException 包装URISyntaxException
+	 * @throws HutoolException 包装URISyntaxException
 	 */
 	public static String getPath(final String uriStr) {
 		return toURI(uriStr).getPath();
@@ -343,7 +343,7 @@ public class URLUtil {
 		try {
 			// URL对象的getPath方法对于包含中文或空格的问题
 			path = toURI(url).getPath();
-		} catch (final UtilException e) {
+		} catch (final HutoolException e) {
 			// ignore
 		}
 		return (null != path) ? path : url.getPath();
@@ -354,9 +354,9 @@ public class URLUtil {
 	 *
 	 * @param url URL
 	 * @return URI
-	 * @throws UtilException 包装URISyntaxException
+	 * @throws HutoolException 包装URISyntaxException
 	 */
-	public static URI toURI(final URL url) throws UtilException {
+	public static URI toURI(final URL url) throws HutoolException {
 		return toURI(url, false);
 	}
 
@@ -366,10 +366,10 @@ public class URLUtil {
 	 * @param url      URL
 	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
-	 * @throws UtilException 包装URISyntaxException
+	 * @throws HutoolException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
-	public static URI toURI(final URL url, final boolean isEncode) throws UtilException {
+	public static URI toURI(final URL url, final boolean isEncode) throws HutoolException {
 		if (null == url) {
 			return null;
 		}
@@ -382,9 +382,9 @@ public class URLUtil {
 	 *
 	 * @param location 字符串路径
 	 * @return URI
-	 * @throws UtilException 包装URISyntaxException
+	 * @throws HutoolException 包装URISyntaxException
 	 */
-	public static URI toURI(final String location) throws UtilException {
+	public static URI toURI(final String location) throws HutoolException {
 		return toURI(location, false);
 	}
 
@@ -394,17 +394,17 @@ public class URLUtil {
 	 * @param location 字符串路径
 	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
-	 * @throws UtilException 包装URISyntaxException
+	 * @throws HutoolException 包装URISyntaxException
 	 * @since 4.6.9
 	 */
-	public static URI toURI(String location, final boolean isEncode) throws UtilException {
+	public static URI toURI(String location, final boolean isEncode) throws HutoolException {
 		if (isEncode) {
 			location = RFC3986.PATH.encode(location, CharsetUtil.UTF_8);
 		}
 		try {
 			return new URI(StrUtil.trim(location));
 		} catch (final URISyntaxException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

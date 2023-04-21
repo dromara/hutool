@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -137,7 +134,12 @@ public class ObjUtilTest {
 		Assertions.assertNotNull(result4);
 	}
 
-
+	@Test
+	void cloneListTest() {
+		final ArrayList<Integer> list = ListUtil.of(1, 2);
+		final ArrayList<Integer> clone = ObjUtil.clone(list);
+		Assertions.assertEquals(list, clone);
+	}
 
 	@Test
 	public void cloneTest() {

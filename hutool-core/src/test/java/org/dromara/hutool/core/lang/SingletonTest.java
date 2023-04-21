@@ -1,6 +1,6 @@
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +23,7 @@ public class SingletonTest {
 
 		public TestBean(){
 			if(null != testSingleton){
-				throw new UtilException("单例测试中，对象被创建了两次！");
+				throw new HutoolException("单例测试中，对象被创建了两次！");
 			}
 			testSingleton = this;
 		}

@@ -12,6 +12,7 @@ import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
@@ -264,19 +265,19 @@ public class LambdaFactoryTest {
 		@SneakyThrows
 		private void loop(final int count, final Task... tasks) {
 			Arrays.stream(tasks)
-					.peek(task -> {
-						final LambdaFactoryTest.SupplierThrowable runnable = task.getRunnable();
-						long cost = System.nanoTime();
-						for (int i = 0; i < count; i++) {
-							runnable.get();
-						}
-						cost = System.nanoTime() - cost;
-						task.setCost(cost);
-						task.setCount(count);
-					})
-					.sorted(Comparator.comparing(Task::getCost))
-					.map(Task::format)
-					.forEach(System.out::println);
+				.peek(task -> {
+					final LambdaFactoryTest.SupplierThrowable runnable = task.getRunnable();
+					long cost = System.nanoTime();
+					for (int i = 0; i < count; i++) {
+						runnable.get();
+					}
+					cost = System.nanoTime() - cost;
+					task.setCost(cost);
+					task.setCount(count);
+				})
+				.sorted(Comparator.comparing(Task::getCost))
+				.map(Task::format)
+				.forEach(System.out::println);
 			System.out.println("--------------------------------------------");
 		}
 
@@ -318,9 +319,11 @@ public class LambdaFactoryTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
+	@EnabledForJreRange(max = org.junit.jupiter.api.condition.JRE.JAVA_8)
 	public void buildStringTest() {
 		final char[] a = "1234".toCharArray();
 
+		// JDK8下无此构造方法
 		final Constructor<String> constructor = ConstructorUtil.getConstructor(String.class, char[].class, boolean.class);
 		final BiFunction<char[], Boolean, String> function = LambdaFactory.build(BiFunction.class, constructor);
 		final String apply = function.apply(a, true);

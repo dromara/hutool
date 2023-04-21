@@ -24,12 +24,56 @@ import java.util.Set;
  * @author xiaoleilu
  */
 public enum BasicType {
-	BYTE, SHORT, INT, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, CHAR, CHARACTER, STRING;
+	/**
+	 * byte
+	 */
+	BYTE,
+	/**
+	 * short
+	 */
+	SHORT,
+	/**
+	 * int
+	 */
+	INT,
+	/**
+	 * {@link Integer}
+	 */
+	INTEGER,
+	/**
+	 * long
+	 */
+	LONG,
+	/**
+	 * double
+	 */
+	DOUBLE,
+	/**
+	 * float
+	 */
+	FLOAT,
+	/**
+	 * boolean
+	 */
+	BOOLEAN,
+	/**
+	 * char
+	 */
+	CHAR,
+	/**
+	 * {@link Character}
+	 */
+	CHARACTER,
+	/**
+	 * {@link String}
+	 */
+	STRING;
 
 	/**
 	 * 包装类型为Key，原始类型为Value，例如： Integer.class =》 int.class.
 	 */
 	private static final BiMap<Class<?>, Class<?>> WRAPPER_PRIMITIVE_MAP = new BiMap<>(new HashMap<>(8, 1));
+
 	static {
 		WRAPPER_PRIMITIVE_MAP.put(Boolean.class, boolean.class);
 		WRAPPER_PRIMITIVE_MAP.put(Byte.class, byte.class);
@@ -54,11 +98,11 @@ public enum BasicType {
 	/**
 	 * 原始类转为包装类，非原始类返回原类
 	 *
-	 * @param clazz 原始类
+	 * @param clazz           原始类
 	 * @param errorReturnNull 如果没有对应类的原始类型，是否返回{@code null}，{@code true}返回{@code null}，否则返回原class
 	 * @return 包装类
 	 */
-	public static Class<?> wrap(final Class<?> clazz, boolean errorReturnNull) {
+	public static Class<?> wrap(final Class<?> clazz, final boolean errorReturnNull) {
 		if (null == clazz || !clazz.isPrimitive()) {
 			return clazz;
 		}

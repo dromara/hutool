@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.thread;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.io.Closeable;
 import java.util.LinkedHashSet;
@@ -151,7 +151,7 @@ public class SyncFinisher implements Closeable {
 			try {
 				this.endLatch.await();
 			} catch (final InterruptedException e) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		}
 	}
@@ -226,7 +226,7 @@ public class SyncFinisher implements Closeable {
 				try {
 					beginLatch.await();
 				} catch (final InterruptedException e) {
-					throw new UtilException(e);
+					throw new HutoolException(e);
 				}
 			}
 			try {

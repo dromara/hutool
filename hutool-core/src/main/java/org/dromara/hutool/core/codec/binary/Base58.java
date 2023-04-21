@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.codec.binary;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.exceptions.ValidateException;
 
 import java.security.MessageDigest;
@@ -158,7 +158,7 @@ public class Base58 {
 		try {
 			return MessageDigest.getInstance("SHA-256").digest(data);
 		} catch (final NoSuchAlgorithmException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 }

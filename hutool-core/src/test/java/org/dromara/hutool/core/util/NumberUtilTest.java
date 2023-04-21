@@ -439,6 +439,13 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void parseIntOfNaNTest() {
+		// https://stackoverflow.com/questions/5876369/why-does-casting-double-nan-to-int-not-throw-an-exception-in-java
+		final int v1 = NumberUtil.parseInt("NaN");
+		Assertions.assertEquals(0, v1);
+	}
+
+	@Test
 	public void parseNumberTest() {
 		// from 5.4.8 issue#I23ORQ@Gitee
 		// 千位分隔符去掉
@@ -486,6 +493,13 @@ public class NumberUtilTest {
 		// 千位分隔符去掉
 		final int v1 = NumberUtil.parseNumber("0xff").intValue();
 		Assertions.assertEquals(255, v1);
+	}
+
+	@Test
+	public void parseNumberOfNaNTest() {
+		// https://stackoverflow.com/questions/5876369/why-does-casting-double-nan-to-int-not-throw-an-exception-in-java
+		final Number v1 = NumberUtil.parseNumber("NaN");
+		Assertions.assertEquals(0, v1.intValue());
 	}
 
 	@Test

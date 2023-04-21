@@ -16,10 +16,7 @@ import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.annotation.PropIgnore;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.func.LambdaUtil;
-import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.ModifierUtil;
-import org.dromara.hutool.core.reflect.ReflectUtil;
-import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.*;
 
 import java.beans.Transient;
 import java.lang.reflect.Field;
@@ -237,8 +234,7 @@ public class PropDesc {
 	 */
 	public PropDesc setValue(final Object bean, final Object value) {
 		if (null != this.setter) {
-			//MethodUtil.invoke(bean, this.setter, value);
-			LambdaUtil.buildSetter(this.setter).accept(bean, value);
+			MethodUtil.invoke(bean, this.setter, value);
 		} else if (ModifierUtil.isPublic(this.field)) {
 			FieldUtil.setFieldValue(bean, this.field, value);
 		}

@@ -14,7 +14,7 @@ package org.dromara.hutool.core.annotation;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
@@ -181,9 +181,9 @@ public class AnnotationUtil {
 	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
-	 * @throws UtilException 调用注解中的方法时执行异常
+	 * @throws HutoolException 调用注解中的方法时执行异常
 	 */
-	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
+	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws HutoolException {
 		return getAnnotationValue(annotationEle, annotationType, "value");
 	}
 
@@ -196,7 +196,7 @@ public class AnnotationUtil {
 	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
-	 * @throws UtilException 调用注解中的方法时执行异常
+	 * @throws HutoolException 调用注解中的方法时执行异常
 	 */
 	public static <A extends Annotation, R> R getAnnotationValue(final AnnotatedElement annotationEle, final SerFunction<A, R> propertyName)  {
 		if(propertyName == null) {
@@ -218,9 +218,9 @@ public class AnnotationUtil {
 	 * @param annotationType 注解类型
 	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
-	 * @throws UtilException 调用注解中的方法时执行异常
+	 * @throws HutoolException 调用注解中的方法时执行异常
 	 */
-	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType, final String propertyName) throws UtilException {
+	public static <T> T getAnnotationValue(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType, final String propertyName) throws HutoolException {
 		final Annotation annotation = getAnnotation(annotationEle, annotationType);
 		if (null == annotation) {
 			return null;
@@ -240,9 +240,9 @@ public class AnnotationUtil {
 	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
-	 * @throws UtilException 调用注解中的方法时执行异常
+	 * @throws HutoolException 调用注解中的方法时执行异常
 	 */
-	public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws UtilException {
+	public static Map<String, Object> getAnnotationValueMap(final AnnotatedElement annotationEle, final Class<? extends Annotation> annotationType) throws HutoolException {
 		final Annotation annotation = getAnnotation(annotationEle, annotationType);
 		if (null == annotation) {
 			return null;

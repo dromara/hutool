@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.id;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.net.Ipv4Util;
@@ -190,7 +190,7 @@ public class IdUtil {
 		byte[] mac = null;
 		try{
 			mac = Ipv4Util.getLocalHardwareAddress();
-		}catch (final UtilException ignore){
+		}catch (final HutoolException ignore){
 			// ignore
 		}
 		if (null != mac) {
@@ -220,7 +220,7 @@ public class IdUtil {
 		mpid.append(datacenterId);
 		try {
 			mpid.append(RuntimeUtil.getPid());
-		} catch (final UtilException igonre) {
+		} catch (final HutoolException igonre) {
 			//ignore
 		}
 		/*

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.swing.img;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -45,7 +45,7 @@ public class ImgMetaUtil {
 		try {
 			metadata = ImageMetadataReader.readMetadata(file);
 		} catch (final ImageProcessingException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -64,7 +64,7 @@ public class ImgMetaUtil {
 		try {
 			metadata = ImageMetadataReader.readMetadata(in);
 		} catch (final ImageProcessingException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}

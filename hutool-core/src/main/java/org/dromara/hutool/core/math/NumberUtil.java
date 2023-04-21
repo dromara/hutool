@@ -26,8 +26,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * 数字工具类<br>
@@ -47,7 +47,6 @@ import java.util.Locale;
  * <ul>
  * <li><a href="https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking">one-jdk7-bug-thinking</a></li>
  * </ul>
- * <p>
  *
  * @author Looly
  */

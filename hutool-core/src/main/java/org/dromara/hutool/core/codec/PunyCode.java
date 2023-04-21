@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.codec;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -44,9 +44,9 @@ public class PunyCode {
 	 *
 	 * @param domain 域名
 	 * @return 编码后的域名
-	 * @throws UtilException 计算异常
+	 * @throws HutoolException 计算异常
 	 */
-	public static String encodeDomain(final String domain) throws UtilException {
+	public static String encodeDomain(final String domain) throws HutoolException {
 		Assert.notNull(domain, "domain must not be null!");
 		final List<String> split = SplitUtil.split(domain, StrUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() * 4);
@@ -65,9 +65,9 @@ public class PunyCode {
 	 *
 	 * @param input 字符串
 	 * @return PunyCode字符串
-	 * @throws UtilException 计算异常
+	 * @throws HutoolException 计算异常
 	 */
-	public static String encode(final CharSequence input) throws UtilException {
+	public static String encode(final CharSequence input) throws HutoolException {
 		return encode(input, false);
 	}
 
@@ -77,9 +77,9 @@ public class PunyCode {
 	 * @param input      字符串
 	 * @param withPrefix 是否包含 "xn--"前缀
 	 * @return PunyCode字符串
-	 * @throws UtilException 计算异常
+	 * @throws HutoolException 计算异常
 	 */
-	public static String encode(final CharSequence input, final boolean withPrefix) throws UtilException {
+	public static String encode(final CharSequence input, final boolean withPrefix) throws HutoolException {
 		Assert.notNull(input, "input must not be null!");
 		int n = INITIAL_N;
 		int delta = 0;
@@ -114,7 +114,7 @@ public class PunyCode {
 				}
 			}
 			if (m - n > (Integer.MAX_VALUE - delta) / (h + 1)) {
-				throw new UtilException("OVERFLOW");
+				throw new HutoolException("OVERFLOW");
 			}
 			delta = delta + (m - n) * (h + 1);
 			n = m;
@@ -123,7 +123,7 @@ public class PunyCode {
 				if (c < n) {
 					delta++;
 					if (0 == delta) {
-						throw new UtilException("OVERFLOW");
+						throw new HutoolException("OVERFLOW");
 					}
 				}
 				if (c == n) {
@@ -164,9 +164,9 @@ public class PunyCode {
 	 *
 	 * @param domain 域名
 	 * @return 解码后的域名
-	 * @throws UtilException 计算异常
+	 * @throws HutoolException 计算异常
 	 */
-	public static String decodeDomain(final String domain) throws UtilException {
+	public static String decodeDomain(final String domain) throws HutoolException {
 		Assert.notNull(domain, "domain must not be null!");
 		final List<String> split = SplitUtil.split(domain, StrUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
@@ -185,9 +185,9 @@ public class PunyCode {
 	 *
 	 * @param input PunyCode
 	 * @return 字符串
-	 * @throws UtilException 计算异常
+	 * @throws HutoolException 计算异常
 	 */
-	public static String decode(String input) throws UtilException {
+	public static String decode(String input) throws HutoolException {
 		Assert.notNull(input, "input must not be null!");
 		input = StrUtil.removePrefixIgnoreCase(input, PUNY_CODE_PREFIX);
 
@@ -213,12 +213,12 @@ public class PunyCode {
 			int w = 1;
 			for (int k = BASE; ; k += BASE) {
 				if (d == length) {
-					throw new UtilException("BAD_INPUT");
+					throw new HutoolException("BAD_INPUT");
 				}
 				final int c = input.charAt(d++);
 				final int digit = codepoint2digit(c);
 				if (digit > (Integer.MAX_VALUE - i) / w) {
-					throw new UtilException("OVERFLOW");
+					throw new HutoolException("OVERFLOW");
 				}
 				i = i + digit * w;
 				final int t;
@@ -236,7 +236,7 @@ public class PunyCode {
 			}
 			bias = adapt(i - oldi, output.length() + 1, oldi == 0);
 			if (i / (output.length() + 1) > Integer.MAX_VALUE - n) {
-				throw new UtilException("OVERFLOW");
+				throw new HutoolException("OVERFLOW");
 			}
 			n = n + i / (output.length() + 1);
 			i = i % (output.length() + 1);
@@ -280,9 +280,9 @@ public class PunyCode {
 	 *
 	 * @param d 输入字符
 	 * @return 转换后的字符
-	 * @throws UtilException 无效字符
+	 * @throws HutoolException 无效字符
 	 */
-	private static int digit2codepoint(final int d) throws UtilException {
+	private static int digit2codepoint(final int d) throws HutoolException {
 		Assert.checkBetween(d, 0, 35);
 		if (d < 26) {
 			// 0..25 : 'a'..'z'
@@ -291,7 +291,7 @@ public class PunyCode {
 			// 26..35 : '0'..'9';
 			return d - 26 + '0';
 		} else {
-			throw new UtilException("BAD_INPUT");
+			throw new HutoolException("BAD_INPUT");
 		}
 	}
 
@@ -309,9 +309,9 @@ public class PunyCode {
 	 *
 	 * @param c 输入字符
 	 * @return 转换后的字符
-	 * @throws UtilException 无效字符
+	 * @throws HutoolException 无效字符
 	 */
-	private static int codepoint2digit(final int c) throws UtilException {
+	private static int codepoint2digit(final int c) throws HutoolException {
 		if (c - '0' < 10) {
 			// '0'..'9' : 26..35
 			return c - '0' + 26;
@@ -319,7 +319,7 @@ public class PunyCode {
 			// 'a'..'z' : 0..25
 			return c - 'a';
 		} else {
-			throw new UtilException("BAD_INPUT");
+			throw new HutoolException("BAD_INPUT");
 		}
 	}
 }

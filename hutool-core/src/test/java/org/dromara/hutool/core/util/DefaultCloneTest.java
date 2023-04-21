@@ -1,7 +1,7 @@
 package org.dromara.hutool.core.util;
 
 
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +41,7 @@ public class DefaultCloneTest {
 			try {
 				return (Car) super.clone();
 			} catch (final CloneNotSupportedException e) {
-				throw new CloneRuntimeException(e);
+				throw new CloneException(e);
 			}
 		}
 	}

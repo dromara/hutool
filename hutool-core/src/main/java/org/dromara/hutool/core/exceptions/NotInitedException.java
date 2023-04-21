@@ -12,37 +12,72 @@
 
 package org.dromara.hutool.core.exceptions;
 
-import org.dromara.hutool.core.text.StrUtil;
-
 /**
  * 未初始化异常
  *
  * @author xiaoleilu
  */
-public class NotInitedException extends RuntimeException {
+public class NotInitedException extends HutoolException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
+	/**
+	 * 构造
+	 *
+	 * @param e 异常
+	 */
 	public NotInitedException(final Throwable e) {
 		super(e);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 */
 	public NotInitedException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
 	public NotInitedException(final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params));
+		super(messageTemplate, params);
 	}
 
-	public NotInitedException(final String message, final Throwable throwable) {
-		super(message, throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 * @param cause   被包装的子异常
+	 */
+	public NotInitedException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public NotInitedException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, throwable, enableSuppression, writableStackTrace);
+	/**
+	 * 构造
+	 *
+	 * @param message            消息
+	 * @param cause              被包装的子异常
+	 * @param enableSuppression  是否启用抑制
+	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
+	 */
+	public NotInitedException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public NotInitedException(final Throwable throwable, final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params), throwable);
+	/**
+	 * 构造
+	 *
+	 * @param cause           被包装的子异常
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
+	public NotInitedException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(cause, messageTemplate, params);
 	}
 }

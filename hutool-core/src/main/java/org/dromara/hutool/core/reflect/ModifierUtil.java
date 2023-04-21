@@ -13,10 +13,11 @@
 package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -130,6 +131,17 @@ public class ModifierUtil {
 			return false;
 		}
 		return 0 != (member.getModifiers() & modifiersToInt(modifierTypes));
+	}
+
+	/**
+	 * 提供的方法是否为default方法
+	 *
+	 * @param method 方法
+	 * @return 是否为default方法
+	 * @since 6.0.0
+	 */
+	public static boolean isDefault(final Method method) {
+		return method.isDefault();
 	}
 
 	/**
@@ -275,7 +287,7 @@ public class ModifierUtil {
 	 * <p>JDK9+此方法抛出NoSuchFieldException异常，原因是除非开放，否则模块外无法访问属性</p>
 	 *
 	 * @param field 被修改的field，不可以为空
-	 * @throws UtilException IllegalAccessException等异常包装
+	 * @throws HutoolException IllegalAccessException等异常包装
 	 * @author dazer
 	 * @since 5.8.8
 	 */
@@ -289,10 +301,10 @@ public class ModifierUtil {
 
 		//去除final修饰符的影响，将字段设为可修改的
 		final Field modifiersField;
-		try{
+		try {
 			modifiersField = Field.class.getDeclaredField("modifiers");
-		} catch (final NoSuchFieldException e){
-			throw new UtilException(e, "Field [modifiers] not exist!");
+		} catch (final NoSuchFieldException e) {
+			throw new HutoolException(e, "Field [modifiers] not exist!");
 		}
 
 		try {
@@ -303,7 +315,7 @@ public class ModifierUtil {
 			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 		} catch (final IllegalAccessException e) {
 			//内部，工具类，基本不抛出异常
-			throw new UtilException(e, "IllegalAccess for [{}.{}]", field.getDeclaringClass(), field.getName());
+			throw new HutoolException(e, "IllegalAccess for [{}.{}]", field.getDeclaringClass(), field.getName());
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method start

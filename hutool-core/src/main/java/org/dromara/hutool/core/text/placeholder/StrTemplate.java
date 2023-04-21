@@ -3,7 +3,7 @@ package org.dromara.hutool.core.text.placeholder;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharPool;
 import org.dromara.hutool.core.text.StrUtil;
@@ -200,7 +200,7 @@ public abstract class StrTemplate {
 			} else {
 				// 有两个紧密相连的占位符，无法正确地拆分变量值
 				if (hasPlaceholder) {
-					throw new UtilException("There are two closely related placeholders that cannot be split properly!");
+					throw new HutoolException("There are two closely related placeholders that cannot be split properly!");
 				}
 				hasPlaceholder = true;
 			}
@@ -350,9 +350,9 @@ public abstract class StrTemplate {
 		} else if (FORMAT_MISSING_KEY_PRINT_VARIABLE_NAME.contains(features)) {
 			return segment.getPlaceholder();
 		} else if (FORMAT_MISSING_KEY_THROWS.contains(features)) {
-			throw new UtilException("There is no value associated with key: '" + segment.getPlaceholder() + "'");
+			throw new HutoolException("There is no value associated with key: '" + segment.getPlaceholder() + "'");
 		}
-		throw new UtilException("There is no value associated with key: '" + segment.getPlaceholder() +
+		throw new HutoolException("There is no value associated with key: '" + segment.getPlaceholder() +
 			"'. You should define some Feature for missing key when building.");
 	}
 
@@ -373,7 +373,7 @@ public abstract class StrTemplate {
 		} else if (FORMAT_NULL_VALUE_TO_DEFAULT_VALUE.contains(features)) {
 			return getDefaultValue(segment);
 		}
-		throw new UtilException("There is a NULL value cannot resolve. You should define a Feature for null value when building or filter null value.");
+		throw new HutoolException("There is a NULL value cannot resolve. You should define a Feature for null value when building or filter null value.");
 	}
 	// endregion
 
@@ -434,7 +434,7 @@ public abstract class StrTemplate {
 			} else {
 				// 有两个紧密相连的占位符，无法正确地拆分变量值
 				if (placeholderSegment != null) {
-					throw new UtilException("There are two closely related placeholders that cannot be split properly!");
+					throw new HutoolException("There are two closely related placeholders that cannot be split properly!");
 				}
 				placeholderSegment = (AbstractPlaceholderSegment) segment;
 			}
@@ -587,7 +587,7 @@ public abstract class StrTemplate {
 		} else if (globalDefaultValueHandler != null) {
 			return StrUtil.utf8Str(globalDefaultValueHandler.apply(segment.getPlaceholder()));
 		}
-		throw new UtilException("There is no default value for key: '" + segment.getPlaceholder() +
+		throw new HutoolException("There is no default value for key: '" + segment.getPlaceholder() +
 			"'. You should define a 'defaultValue' or 'defaultValueHandler' or 'globalDefaultValueHandler' when building.");
 	}
 

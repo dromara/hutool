@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.ds;
 
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.func.Wrapper;
 
@@ -137,7 +137,7 @@ public class DSWrapper implements Wrapper<DataSource>, DataSource, Closeable, Cl
 		try {
 			return (DSWrapper) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 }

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +34,7 @@ public class SerializeUtil {
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
-	 * @throws UtilException IO异常和ClassNotFoundException封装
+	 * @throws HutoolException IO异常和ClassNotFoundException封装
 	 */
 	public static <T> T clone(final T obj) {
 		if (!(obj instanceof Serializable)) {

@@ -14,7 +14,7 @@ package org.dromara.hutool.core.lang.caller;
 
 import java.io.Serializable;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 /**
  * 通过StackTrace方式获取调用者。此方式效率最低，不推荐使用
@@ -35,7 +35,7 @@ public class StackTraceCaller implements Caller, Serializable {
 		try {
 			return Class.forName(className);
 		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e, "[{}] not found!", className);
+			throw new HutoolException(e, "[{}] not found!", className);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class StackTraceCaller implements Caller, Serializable {
 		try {
 			return Class.forName(className);
 		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e, "[{}] not found!", className);
+			throw new HutoolException(e, "[{}] not found!", className);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class StackTraceCaller implements Caller, Serializable {
 		try {
 			return Class.forName(className);
 		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e, "[{}] not found!", className);
+			throw new HutoolException(e, "[{}] not found!", className);
 		}
 	}
 

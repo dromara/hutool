@@ -14,13 +14,13 @@ public class MethodHandleUtilTest {
 		final Duck duck = (Duck) Proxy.newProxyInstance(
 				ClassLoaderUtil.getClassLoader(),
 				new Class[] { Duck.class },
-				MethodHandleUtil::invokeSpecial);
+				MethodHandleUtil::invoke);
 
 		Assertions.assertEquals("Quack", duck.quack());
 
 		// 测试子类执行default方法
 		final Method quackMethod = MethodUtil.getMethod(Duck.class, "quack");
-		String quack = MethodHandleUtil.invokeSpecial(new BigDuck(), quackMethod);
+		String quack = MethodHandleUtil.invoke(new BigDuck(), quackMethod);
 		Assertions.assertEquals("Quack", quack);
 
 		// 测试反射执行默认方法
@@ -51,7 +51,7 @@ public class MethodHandleUtilTest {
 	@Test
 	public void invokeTest(){
 		// 测试执行普通方法
-		final int size = MethodHandleUtil.invokeSpecial(new BigDuck(),
+		final int size = MethodHandleUtil.invoke(new BigDuck(),
 				MethodUtil.getMethod(BigDuck.class, "getSize"));
 		Assertions.assertEquals(36, size);
 	}

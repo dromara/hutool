@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.spring;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.springframework.beans.BeansException;
@@ -85,7 +85,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	public static ListableBeanFactory getBeanFactory() {
 		final ListableBeanFactory factory =  null == beanFactory ? applicationContext : beanFactory;
 		if(null == factory){
-			throw new UtilException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
+			throw new HutoolException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
 		}
 		return factory;
 	}
@@ -94,17 +94,17 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * 获取{@link ConfigurableListableBeanFactory}
 	 *
 	 * @return {@link ConfigurableListableBeanFactory}
-	 * @throws UtilException 当上下文非ConfigurableListableBeanFactory抛出异常
+	 * @throws HutoolException 当上下文非ConfigurableListableBeanFactory抛出异常
 	 * @since 5.7.7
 	 */
-	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws UtilException {
+	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws HutoolException {
 		final ConfigurableListableBeanFactory factory;
 		if (null != beanFactory) {
 			factory = beanFactory;
 		} else if (applicationContext instanceof ConfigurableApplicationContext) {
 			factory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
 		} else {
-			throw new UtilException("No ConfigurableListableBeanFactory from context!");
+			throw new HutoolException("No ConfigurableListableBeanFactory from context!");
 		}
 		return factory;
 	}
@@ -268,7 +268,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 			final DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
 			registry.destroySingleton(beanName);
 		} else {
-			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
+			throw new HutoolException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
 		}
 	}
 

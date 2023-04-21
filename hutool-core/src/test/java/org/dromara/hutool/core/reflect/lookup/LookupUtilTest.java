@@ -12,15 +12,24 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
+import org.dromara.hutool.core.reflect.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
-public class LookupUtilTest {
+class LookupUtilTest {
+
 	@Test
-	public void findMethodTest() throws Throwable {
+	void lookupTest() {
+		final MethodHandles.Lookup lookup = LookupUtil.lookup();
+		Assertions.assertNotNull(lookup);
+	}
+
+	@Test
+	void findMethodTest() throws Throwable {
 		MethodHandle handle = LookupUtil.findMethod(Duck.class, "quack",
 			MethodType.methodType(String.class));
 		Assertions.assertNotNull(handle);
@@ -37,7 +46,7 @@ public class LookupUtilTest {
 	}
 
 	@Test
-	public void findStaticMethodTest() throws Throwable {
+	void findStaticMethodTest() throws Throwable {
 		final MethodHandle handle = LookupUtil.findMethod(Duck.class, "getDuck",
 			MethodType.methodType(String.class, int.class));
 		Assertions.assertNotNull(handle);
@@ -48,7 +57,7 @@ public class LookupUtilTest {
 	}
 
 	@Test
-	public void findPrivateMethodTest() throws Throwable {
+	void findPrivateMethodTest() throws Throwable {
 		final MethodHandle handle = LookupUtil.findMethod(BigDuck.class, "getPrivateValue",
 			MethodType.methodType(String.class));
 		Assertions.assertNotNull(handle);
@@ -58,7 +67,7 @@ public class LookupUtilTest {
 	}
 
 	@Test
-	public void findSuperMethodTest() throws Throwable {
+	void findSuperMethodTest() throws Throwable {
 		// 查找父类的方法
 		final MethodHandle handle = LookupUtil.findMethod(BigDuck.class, "quack",
 			MethodType.methodType(String.class));
@@ -69,13 +78,58 @@ public class LookupUtilTest {
 	}
 
 	@Test
-	public void findPrivateStaticMethodTest() throws Throwable {
+	void findPrivateStaticMethodTest() throws Throwable {
 		final MethodHandle handle = LookupUtil.findMethod(BigDuck.class, "getPrivateStaticValue",
 			MethodType.methodType(String.class));
 		Assertions.assertNotNull(handle);
 
 		final String invoke = (String) handle.invoke();
 		Assertions.assertEquals("private static value", invoke);
+	}
+
+	@Test
+	void unreflectTest() throws Throwable {
+		final MethodHandle handle = LookupUtil.unreflect(
+			MethodUtil.getMethodByName(BigDuck.class, "getSize"));
+
+		final int invoke = (int) handle.invoke(new BigDuck());
+		Assertions.assertEquals(36, invoke);
+	}
+
+	@Test
+	void unreflectPrivateTest() throws Throwable {
+		final MethodHandle handle = LookupUtil.unreflect(
+			MethodUtil.getMethodByName(BigDuck.class, "getPrivateValue"));
+
+		final String invoke = (String) handle.invoke(new BigDuck());
+		Assertions.assertEquals("private value", invoke);
+	}
+
+	@Test
+	void unreflectPrivateStaticTest() throws Throwable {
+		final MethodHandle handle = LookupUtil.unreflect(
+			MethodUtil.getMethodByName(BigDuck.class, "getPrivateStaticValue"));
+
+		final String invoke = (String) handle.invoke();
+		Assertions.assertEquals("private static value", invoke);
+	}
+
+	@Test
+	void unreflectDefaultTest() throws Throwable {
+		final MethodHandle handle = LookupUtil.unreflect(
+			MethodUtil.getMethodByName(BigDuck.class, "quack"));
+
+		final String invoke = (String) handle.invoke(new BigDuck());
+		Assertions.assertEquals("Quack", invoke);
+	}
+
+	@Test
+	void unreflectStaticInInterfaceTest() throws Throwable {
+		final MethodHandle handle = LookupUtil.unreflect(
+			MethodUtil.getMethodByName(BigDuck.class, "getDuck"));
+
+		final String invoke = (String) handle.invoke(1);
+		Assertions.assertEquals("Duck 1", invoke);
 	}
 
 	interface Duck {

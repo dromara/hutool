@@ -13,7 +13,7 @@
 package org.dromara.hutool.cron.task;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -44,7 +44,7 @@ public class InvokeTask implements Task{
 			splitIndex = classNameWithMethodName.lastIndexOf('.');
 		}
 		if (splitIndex <= 0) {
-			throw new UtilException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
+			throw new HutoolException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
 		}
 
 		//类
@@ -73,7 +73,7 @@ public class InvokeTask implements Task{
 	public void execute() {
 		try {
 			MethodUtil.invoke(this.obj, this.method);
-		} catch (final UtilException e) {
+		} catch (final HutoolException e) {
 			throw new CronException(e.getCause());
 		}
 	}

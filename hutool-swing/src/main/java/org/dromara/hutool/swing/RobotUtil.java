@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.swing;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.swing.clipboard.ClipboardUtil;
 import org.dromara.hutool.swing.img.ImgUtil;
 
@@ -39,7 +39,7 @@ public class RobotUtil {
 		try {
 			ROBOT = new Robot();
 		} catch (final AWTException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

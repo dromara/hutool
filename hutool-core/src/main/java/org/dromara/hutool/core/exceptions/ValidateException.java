@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.core.exceptions;
 
-import org.dromara.hutool.core.text.StrUtil;
-
 /**
  * 验证异常
  *
@@ -22,37 +20,99 @@ import org.dromara.hutool.core.text.StrUtil;
 public class ValidateException extends StatefulException {
 	private static final long serialVersionUID = 6057602589533840889L;
 
+	/**
+	 * 构造
+	 */
 	public ValidateException() {
+		super();
 	}
 
-	public ValidateException(final String msg) {
-		super(msg);
+	/**
+	 * 构造
+	 *
+	 * @param e 异常
+	 */
+	public ValidateException(final Throwable e) {
+		super(e);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 */
+	public ValidateException(final String message) {
+		super(message);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
 	public ValidateException(final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params));
+		super(messageTemplate, params);
 	}
 
-	public ValidateException(final Throwable throwable) {
-		super(throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 * @param cause   被包装的子异常
+	 */
+	public ValidateException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public ValidateException(final String msg, final Throwable throwable) {
-		super(msg, throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message            消息
+	 * @param cause              被包装的子异常
+	 * @param enableSuppression  是否启用抑制
+	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
+	 */
+	public ValidateException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param cause           被包装的子异常
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
+	public ValidateException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(cause, messageTemplate, params);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param status 状态码
+	 * @param msg    消息
+	 */
 	public ValidateException(final int status, final String msg) {
 		super(status, msg);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param status    状态码
+	 * @param throwable 异常
+	 */
 	public ValidateException(final int status, final Throwable throwable) {
 		super(status, throwable);
 	}
 
-	public ValidateException(final String message, final Throwable throwable, final boolean enableSuppression, final boolean writableStackTrace) {
-		super(message, throwable, enableSuppression, writableStackTrace);
-	}
-
+	/**
+	 * @param status    状态码
+	 * @param msg       消息
+	 * @param throwable 异常
+	 */
 	public ValidateException(final int status, final String msg, final Throwable throwable) {
 		super(status, msg, throwable);
 	}

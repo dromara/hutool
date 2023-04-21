@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.classloader;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;
@@ -61,9 +61,9 @@ public class JarClassLoader extends URLClassLoader {
 	 *
 	 * @param loader  {@link URLClassLoader}
 	 * @param jarFile 被加载的jar
-	 * @throws UtilException IO异常包装和执行异常
+	 * @throws HutoolException IO异常包装和执行异常
 	 */
-	public static void loadJar(final URLClassLoader loader, final File jarFile) throws UtilException {
+	public static void loadJar(final URLClassLoader loader, final File jarFile) throws HutoolException {
 		try {
 			final Method method = MethodUtil.getMethod(URLClassLoader.class, "addURL", URL.class);
 			if (null != method) {
@@ -73,7 +73,7 @@ public class JarClassLoader extends URLClassLoader {
 				}
 			}
 		} catch (final IOException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.bean;
 
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -242,7 +242,7 @@ public class DynaBean implements Cloneable, Serializable {
 		try {
 			return (DynaBean) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 }

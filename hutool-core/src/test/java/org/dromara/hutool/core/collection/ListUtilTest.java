@@ -1,11 +1,11 @@
 package org.dromara.hutool.core.collection;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.page.PageInfo;
 import org.dromara.hutool.core.util.RandomUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -261,5 +261,12 @@ public class ListUtilTest {
 		final List<Integer> view = ListUtil.view(1, 2, 3);
 		final List<Integer> reverse = ListUtil.reverseNew(view);
 		Assertions.assertEquals("[3, 2, 1]", reverse.toString());
+	}
+
+	@Test
+	void reverseNewTest2() {
+		final List<Integer> list = ListUtil.of(1, 2, 3);
+
+		ListUtil.reverseNew(list);
 	}
 }

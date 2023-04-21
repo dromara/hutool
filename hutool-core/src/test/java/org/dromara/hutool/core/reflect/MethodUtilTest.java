@@ -1,12 +1,12 @@
 package org.dromara.hutool.core.reflect;
 
+import lombok.Data;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.test.bean.ExamInfoDict;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.SystemUtil;
-import lombok.Data;
+import org.dromara.hutool.core.util.JdkUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 public class MethodUtilTest {
-	private static final String JAVA_VERSION = SystemUtil.get("java.version", false);
+
 	private static final boolean isGteJdk15 = getJavaVersion() >= 15;
 	/**
 	 * jdk版本：是否>= jdk15
@@ -23,10 +23,7 @@ public class MethodUtilTest {
 	 * @author dazer
 	 */
 	private static int getJavaVersion() {
-		if (JAVA_VERSION.startsWith("1.")) {
-			return Integer.parseInt(JAVA_VERSION.split("\\.")[1]);
-		}
-		return Integer.parseInt(JAVA_VERSION.split("\\.")[0]);
+		return JdkUtil.JVM_VERSION;
 	}
 
 	@Test
@@ -244,6 +241,6 @@ public class MethodUtilTest {
 		final TestClass testClass = new TestClass();
 		final Method method = MethodUtil.getMethod(TestClass.class, "setA", int.class);
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> MethodUtil.invoke(testClass, method, "NaN"));
+				() -> MethodUtil.invoke(testClass, method, "aaa"));
 	}
 }

@@ -15,7 +15,7 @@ package org.dromara.hutool.core.util;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
@@ -164,10 +164,10 @@ public class XmlUtil {
 	public static Document readXML(File file) {
 		Assert.notNull(file, "Xml file is null !");
 		if (!file.exists()) {
-			throw new UtilException("File [{}] not a exist!", file.getAbsolutePath());
+			throw new HutoolException("File [{}] not a exist!", file.getAbsolutePath());
 		}
 		if (!file.isFile()) {
-			throw new UtilException("[{}] not a file!", file.getAbsolutePath());
+			throw new HutoolException("[{}] not a file!", file.getAbsolutePath());
 		}
 
 		try {
@@ -208,10 +208,10 @@ public class XmlUtil {
 	 *
 	 * @param inputStream XML流
 	 * @return XML文档对象
-	 * @throws UtilException IO异常或转换异常
+	 * @throws HutoolException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(final InputStream inputStream) throws UtilException {
+	public static Document readXML(final InputStream inputStream) throws HutoolException {
 		return readXML(new InputSource(inputStream));
 	}
 
@@ -220,10 +220,10 @@ public class XmlUtil {
 	 *
 	 * @param reader XML流
 	 * @return XML文档对象
-	 * @throws UtilException IO异常或转换异常
+	 * @throws HutoolException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(final Reader reader) throws UtilException {
+	public static Document readXML(final Reader reader) throws HutoolException {
 		return readXML(new InputSource(reader));
 	}
 
@@ -240,7 +240,7 @@ public class XmlUtil {
 		try {
 			return builder.parse(source);
 		} catch (final Exception e) {
-			throw new UtilException(e, "Parse XML from stream error!");
+			throw new HutoolException(e, "Parse XML from stream error!");
 		}
 	}
 
@@ -327,7 +327,7 @@ public class XmlUtil {
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (final ParserConfigurationException | SAXException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -443,7 +443,7 @@ public class XmlUtil {
 		try {
 			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);
 		} catch (final Exception e) {
-			throw new UtilException(e, "Trans xml document to string error!");
+			throw new HutoolException(e, "Trans xml document to string error!");
 		}
 		return writer.toString();
 	}
@@ -604,7 +604,7 @@ public class XmlUtil {
 			}
 			xformer.transform(source, result);
 		} catch (final Exception e) {
-			throw new UtilException(e, "Trans xml document to string error!");
+			throw new HutoolException(e, "Trans xml document to string error!");
 		}
 	}
 
@@ -632,7 +632,7 @@ public class XmlUtil {
 		try {
 			builder = createDocumentBuilderFactory().newDocumentBuilder();
 		} catch (final Exception e) {
-			throw new UtilException(e, "Create xml document error!");
+			throw new HutoolException(e, "Create xml document error!");
 		}
 		return builder;
 	}
@@ -942,7 +942,7 @@ public class XmlUtil {
 				return xPath.evaluate(expression, source, returnType);
 			}
 		} catch (final XPathExpressionException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

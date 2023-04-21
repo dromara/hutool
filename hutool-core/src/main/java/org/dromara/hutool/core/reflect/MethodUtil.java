@@ -12,21 +12,18 @@
 
 package org.dromara.hutool.core.reflect;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
-import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.InvocationTargetRuntimeException;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
@@ -568,9 +565,9 @@ public class MethodUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws UtilException 多种异常包装
+	 * @throws HutoolException 多种异常包装
 	 */
-	public static <T> T invokeStatic(final Method method, final Object... args) throws UtilException {
+	public static <T> T invokeStatic(final Method method, final Object... args) throws HutoolException {
 		return invoke(null, method, args);
 	}
 
@@ -588,9 +585,9 @@ public class MethodUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws UtilException 一些列异常的包装
+	 * @throws HutoolException 一些列异常的包装
 	 */
-	public static <T> T invokeWithCheck(final Object obj, final Method method, final Object... args) throws UtilException {
+	public static <T> T invokeWithCheck(final Object obj, final Method method, final Object... args) throws HutoolException {
 		final Class<?>[] types = method.getParameterTypes();
 		if (null != args) {
 			Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
@@ -624,49 +621,11 @@ public class MethodUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args   参数对象
 	 * @return 结果
-	 * @throws UtilException 一些列异常的包装
+	 * @throws HutoolException 一些列异常的包装
+	 * @see MethodHandleUtil#invoke(Object, Method, Object...)
 	 */
-	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws UtilException {
-		try {
-			return invokeRaw(obj, method, args);
-		} catch (final InvocationTargetException e) {
-			throw new InvocationTargetRuntimeException(e);
-		} catch (final IllegalAccessException e) {
-			throw new UtilException(e);
-		}
-	}
-
-	/**
-	 * 执行方法
-	 *
-	 * <p>
-	 * 对于用户传入参数会做必要检查，包括：
-	 *
-	 * <pre>
-	 *     1、忽略多余的参数
-	 *     2、参数不够补齐默认值
-	 *     3、传入参数为null，但是目标参数类型为原始类型，做转换
-	 * </pre>
-	 *
-	 * @param <T>    返回对象类型
-	 * @param obj    对象，如果执行静态方法，此值为{@code null}
-	 * @param method 方法（对象方法或static方法都可）
-	 * @param args   参数对象
-	 * @return 结果
-	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalAccessException    访问权限异常
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T invokeRaw(final Object obj, final Method method, final Object... args) throws InvocationTargetException, IllegalAccessException {
-		ReflectUtil.setAccessible(method);
-
-		if (method.isDefault()) {
-			// 当方法是default方法时，尤其对象是代理对象，需使用句柄方式执行
-			// 代理对象情况下调用method.invoke会导致循环引用执行，最终栈溢出
-			return MethodHandleUtil.invokeSpecial(obj, method, args);
-		}
-
-		return (T) method.invoke(ModifierUtil.isStatic(method) ? null : obj, actualArgs(method, args));
+	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException {
+		return MethodHandleUtil.invoke(obj, method, args);
 	}
 
 	/**
@@ -678,17 +637,17 @@ public class MethodUtil {
 	 * @param methodName 方法名
 	 * @param args       参数列表
 	 * @return 执行结果
-	 * @throws UtilException IllegalAccessException包装
+	 * @throws HutoolException IllegalAccessException包装
 	 * @see NullWrapperBean
 	 * @since 3.1.2
 	 */
-	public static <T> T invoke(final Object obj, final String methodName, final Object... args) throws UtilException {
+	public static <T> T invoke(final Object obj, final String methodName, final Object... args) throws HutoolException {
 		Assert.notNull(obj, "Object to get method must be not null!");
 		Assert.notBlank(methodName, "Method name must be not blank!");
 
 		final Method method = getMethodOfObj(obj, methodName, args);
 		if (null == method) {
-			throw new UtilException("No such method: [{}] from [{}]", methodName, obj.getClass());
+			throw new HutoolException("No such method: [{}] from [{}]", methodName, obj.getClass());
 		}
 		return invoke(obj, method, args);
 	}
@@ -721,7 +680,7 @@ public class MethodUtil {
 	 */
 	public static <T> T invoke(final String classNameWithMethodName, final boolean isSingleton, final Object... args) {
 		if (StrUtil.isBlank(classNameWithMethodName)) {
-			throw new UtilException("Blank classNameDotMethodName!");
+			throw new HutoolException("Blank classNameDotMethodName!");
 		}
 
 		int splitIndex = classNameWithMethodName.lastIndexOf('#');
@@ -729,7 +688,7 @@ public class MethodUtil {
 			splitIndex = classNameWithMethodName.lastIndexOf('.');
 		}
 		if (splitIndex <= 0) {
-			throw new UtilException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
+			throw new HutoolException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
 		}
 
 		final String className = classNameWithMethodName.substring(0, splitIndex);
@@ -769,17 +728,17 @@ public class MethodUtil {
 	public static <T> T invoke(final String className, final String methodName, final boolean isSingleton, final Object... args) {
 		final Class<?> clazz = ClassLoaderUtil.loadClass(className);
 		try {
-			final Method method = MethodUtil.getMethod(clazz, methodName, ClassUtil.getClasses(args));
+			final Method method = getMethod(clazz, methodName, ClassUtil.getClasses(args));
 			if (null == method) {
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
 			if (ModifierUtil.isStatic(method)) {
-				return MethodUtil.invoke(null, method, args);
+				return invoke(null, method, args);
 			} else {
-				return MethodUtil.invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), method, args);
+				return invoke(isSingleton ? Singleton.get(clazz) : ConstructorUtil.newInstance(clazz), method, args);
 			}
 		} catch (final Exception e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 
@@ -824,45 +783,5 @@ public class MethodUtil {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * 检查用户传入参数：
-	 * <ul>
-	 *     <li>1、忽略多余的参数</li>
-	 *     <li>2、参数不够补齐默认值</li>
-	 *     <li>3、通过NullWrapperBean传递的参数,会直接赋值null</li>
-	 *     <li>4、传入参数为null，但是目标参数类型为原始类型，做转换</li>
-	 *     <li>5、传入参数类型不对应，尝试转换类型</li>
-	 * </ul>
-	 *
-	 * @param method 方法
-	 * @param args   参数
-	 * @return 实际的参数数组
-	 */
-	private static Object[] actualArgs(final Method method, final Object[] args) {
-		final Class<?>[] parameterTypes = method.getParameterTypes();
-		final Object[] actualArgs = new Object[parameterTypes.length];
-		if (null != args) {
-			for (int i = 0; i < actualArgs.length; i++) {
-				if (i >= args.length || null == args[i]) {
-					// 越界或者空值
-					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
-				} else if (args[i] instanceof NullWrapperBean) {
-					//如果是通过NullWrapperBean传递的null参数,直接赋值null
-					actualArgs[i] = null;
-				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
-					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
-					if (null != targetValue) {
-						actualArgs[i] = targetValue;
-					}
-				} else {
-					actualArgs[i] = args[i];
-				}
-			}
-		}
-
-		return actualArgs;
 	}
 }

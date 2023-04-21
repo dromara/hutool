@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.compress;
 
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
@@ -138,9 +138,9 @@ public class ZipUtil {
 	 *
 	 * @param srcPath 源文件路径
 	 * @return 打包好的压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final String srcPath) throws UtilException {
+	public static File zip(final String srcPath) throws HutoolException {
 		return zip(srcPath, DEFAULT_CHARSET);
 	}
 
@@ -150,9 +150,9 @@ public class ZipUtil {
 	 * @param srcPath 源文件路径
 	 * @param charset 编码
 	 * @return 打包好的压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final String srcPath, final Charset charset) throws UtilException {
+	public static File zip(final String srcPath, final Charset charset) throws HutoolException {
 		return zip(FileUtil.file(srcPath), charset);
 	}
 
@@ -161,9 +161,9 @@ public class ZipUtil {
 	 *
 	 * @param srcFile 源文件或目录
 	 * @return 打包好的压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final File srcFile) throws UtilException {
+	public static File zip(final File srcFile) throws HutoolException {
 		return zip(srcFile, DEFAULT_CHARSET);
 	}
 
@@ -173,9 +173,9 @@ public class ZipUtil {
 	 * @param srcFile 源文件或目录
 	 * @param charset 编码
 	 * @return 打包好的压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final File srcFile, final Charset charset) throws UtilException {
+	public static File zip(final File srcFile, final Charset charset) throws HutoolException {
 		final File zipFile = FileUtil.file(srcFile.getParentFile(), FileNameUtil.mainName(srcFile) + ".zip");
 		zip(zipFile, charset, false, srcFile);
 		return zipFile;
@@ -188,9 +188,9 @@ public class ZipUtil {
 	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @return 压缩好的Zip文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final String srcPath, final String zipPath) throws UtilException {
+	public static File zip(final String srcPath, final String zipPath) throws HutoolException {
 		return zip(srcPath, zipPath, false);
 	}
 
@@ -201,9 +201,9 @@ public class ZipUtil {
 	 * @param zipPath    压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final String srcPath, final String zipPath, final boolean withSrcDir) throws UtilException {
+	public static File zip(final String srcPath, final String zipPath, final boolean withSrcDir) throws HutoolException {
 		return zip(srcPath, zipPath, DEFAULT_CHARSET, withSrcDir);
 	}
 
@@ -215,9 +215,9 @@ public class ZipUtil {
 	 * @param charset    编码
 	 * @param withSrcDir 是否包含被打包目录
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final String srcPath, final String zipPath, final Charset charset, final boolean withSrcDir) throws UtilException {
+	public static File zip(final String srcPath, final String zipPath, final Charset charset, final boolean withSrcDir) throws HutoolException {
 		final File srcFile = FileUtil.file(srcPath);
 		final File zipFile = FileUtil.file(zipPath);
 		zip(zipFile, charset, withSrcDir, srcFile);
@@ -232,9 +232,9 @@ public class ZipUtil {
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
 	 * @param srcFiles   要压缩的源文件或目录。
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final File zipFile, final boolean withSrcDir, final File... srcFiles) throws UtilException {
+	public static File zip(final File zipFile, final boolean withSrcDir, final File... srcFiles) throws HutoolException {
 		return zip(zipFile, DEFAULT_CHARSET, withSrcDir, srcFiles);
 	}
 
@@ -246,9 +246,9 @@ public class ZipUtil {
 	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
 	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File zip(final File zipFile, final Charset charset, final boolean withSrcDir, final File... srcFiles) throws UtilException {
+	public static File zip(final File zipFile, final Charset charset, final boolean withSrcDir, final File... srcFiles) throws HutoolException {
 		return zip(zipFile, charset, withSrcDir, null, srcFiles);
 	}
 
@@ -293,10 +293,10 @@ public class ZipUtil {
 	 * @param path    流数据在压缩文件中的路径或文件名
 	 * @param data    要压缩的数据
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.0.6
 	 */
-	public static File zip(final File zipFile, final String path, final String data) throws UtilException {
+	public static File zip(final File zipFile, final String path, final String data) throws HutoolException {
 		return zip(zipFile, path, data, DEFAULT_CHARSET);
 	}
 
@@ -308,10 +308,10 @@ public class ZipUtil {
 	 * @param data    要压缩的数据
 	 * @param charset 编码
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.2.2
 	 */
-	public static File zip(final File zipFile, final String path, final String data, final Charset charset) throws UtilException {
+	public static File zip(final File zipFile, final String path, final String data, final Charset charset) throws HutoolException {
 		return zip(zipFile, path, IoUtil.toStream(data, charset), charset);
 	}
 
@@ -323,10 +323,10 @@ public class ZipUtil {
 	 * @param path    流数据在压缩文件中的路径或文件名
 	 * @param in      要压缩的源
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.0.6
 	 */
-	public static File zip(final File zipFile, final String path, final InputStream in) throws UtilException {
+	public static File zip(final File zipFile, final String path, final InputStream in) throws HutoolException {
 		return zip(zipFile, path, in, DEFAULT_CHARSET);
 	}
 
@@ -338,10 +338,10 @@ public class ZipUtil {
 	 * @param in      要压缩的源，默认关闭
 	 * @param charset 编码
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.2.2
 	 */
-	public static File zip(final File zipFile, final String path, final InputStream in, final Charset charset) throws UtilException {
+	public static File zip(final File zipFile, final String path, final InputStream in, final Charset charset) throws HutoolException {
 		return zip(zipFile, new String[]{path}, new InputStream[]{in}, charset);
 	}
 
@@ -353,10 +353,10 @@ public class ZipUtil {
 	 * @param paths   流数据在压缩文件中的路径或文件名
 	 * @param ins     要压缩的源，添加完成后自动关闭流
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.0.9
 	 */
-	public static File zip(final File zipFile, final String[] paths, final InputStream[] ins) throws UtilException {
+	public static File zip(final File zipFile, final String[] paths, final InputStream[] ins) throws HutoolException {
 		return zip(zipFile, paths, ins, DEFAULT_CHARSET);
 	}
 
@@ -369,10 +369,10 @@ public class ZipUtil {
 	 * @param ins     要压缩的源，添加完成后自动关闭流
 	 * @param charset 编码
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.0.9
 	 */
-	public static File zip(final File zipFile, final String[] paths, final InputStream[] ins, final Charset charset) throws UtilException {
+	public static File zip(final File zipFile, final String[] paths, final InputStream[] ins, final Charset charset) throws HutoolException {
 		try (final ZipWriter zipWriter = ZipWriter.of(zipFile, charset)) {
 			zipWriter.add(paths, ins);
 		}
@@ -415,10 +415,10 @@ public class ZipUtil {
 	 * @param charset   编码
 	 * @param resources 需要压缩的资源，资源的路径为{@link Resource#getName()}
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 5.5.2
 	 */
-	public static File zip(final File zipFile, final Charset charset, final Resource... resources) throws UtilException {
+	public static File zip(final File zipFile, final Charset charset, final Resource... resources) throws HutoolException {
 		//noinspection resource
 		ZipWriter.of(zipFile, charset).add(resources).close();
 		return zipFile;
@@ -431,9 +431,9 @@ public class ZipUtil {
 	 *
 	 * @param zipFilePath 压缩文件路径
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File unzip(final String zipFilePath) throws UtilException {
+	public static File unzip(final String zipFilePath) throws HutoolException {
 		return unzip(zipFilePath, DEFAULT_CHARSET);
 	}
 
@@ -443,10 +443,10 @@ public class ZipUtil {
 	 * @param zipFilePath 压缩文件路径
 	 * @param charset     编码
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.2.2
 	 */
-	public static File unzip(final String zipFilePath, final Charset charset) throws UtilException {
+	public static File unzip(final String zipFilePath, final Charset charset) throws HutoolException {
 		return unzip(FileUtil.file(zipFilePath), charset);
 	}
 
@@ -455,10 +455,10 @@ public class ZipUtil {
 	 *
 	 * @param zipFile 压缩文件
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.2.2
 	 */
-	public static File unzip(final File zipFile) throws UtilException {
+	public static File unzip(final File zipFile) throws HutoolException {
 		return unzip(zipFile, DEFAULT_CHARSET);
 	}
 
@@ -468,10 +468,10 @@ public class ZipUtil {
 	 * @param zipFile 压缩文件
 	 * @param charset 编码
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 3.2.2
 	 */
-	public static File unzip(final File zipFile, final Charset charset) throws UtilException {
+	public static File unzip(final File zipFile, final Charset charset) throws HutoolException {
 		final File destDir = FileUtil.file(zipFile.getParentFile(), FileNameUtil.mainName(zipFile));
 		return unzip(zipFile, destDir, charset);
 	}
@@ -482,9 +482,9 @@ public class ZipUtil {
 	 * @param zipFilePath 压缩文件的路径
 	 * @param outFileDir  解压到的目录
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File unzip(final String zipFilePath, final String outFileDir) throws UtilException {
+	public static File unzip(final String zipFilePath, final String outFileDir) throws HutoolException {
 		return unzip(zipFilePath, outFileDir, DEFAULT_CHARSET);
 	}
 
@@ -495,9 +495,9 @@ public class ZipUtil {
 	 * @param outFileDir  解压到的目录
 	 * @param charset     编码
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File unzip(final String zipFilePath, final String outFileDir, final Charset charset) throws UtilException {
+	public static File unzip(final String zipFilePath, final String outFileDir, final Charset charset) throws HutoolException {
 		return unzip(FileUtil.file(zipFilePath), FileUtil.mkdir(outFileDir), charset);
 	}
 
@@ -507,9 +507,9 @@ public class ZipUtil {
 	 * @param zipFile zip文件
 	 * @param outFile 解压到的目录
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static File unzip(final File zipFile, final File outFile) throws UtilException {
+	public static File unzip(final File zipFile, final File outFile) throws HutoolException {
 		return unzip(zipFile, outFile, DEFAULT_CHARSET);
 	}
 
@@ -625,10 +625,10 @@ public class ZipUtil {
 	 * @param outFile 解压到的目录
 	 * @param charset 编码
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 4.5.8
 	 */
-	public static File unzip(final InputStream in, final File outFile, Charset charset) throws UtilException {
+	public static File unzip(final InputStream in, final File outFile, Charset charset) throws HutoolException {
 		if (null == charset) {
 			charset = DEFAULT_CHARSET;
 		}
@@ -642,10 +642,10 @@ public class ZipUtil {
 	 * @param zipStream zip文件流，包含编码信息
 	 * @param outFile   解压到的目录
 	 * @return 解压的目录
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 4.5.8
 	 */
-	public static File unzip(final ZipInputStream zipStream, final File outFile) throws UtilException {
+	public static File unzip(final ZipInputStream zipStream, final File outFile) throws HutoolException {
 		try (final ZipReader reader = new ZipReader(zipStream)) {
 			reader.readTo(outFile);
 		}
@@ -725,9 +725,9 @@ public class ZipUtil {
 	 * @param content 被压缩的字符串
 	 * @param charset 编码
 	 * @return 压缩后的字节流
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static byte[] gzip(final String content, final Charset charset) throws UtilException {
+	public static byte[] gzip(final String content, final Charset charset) throws HutoolException {
 		return gzip(ByteUtil.toBytes(content, charset));
 	}
 
@@ -736,9 +736,9 @@ public class ZipUtil {
 	 *
 	 * @param buf 被压缩的字节流
 	 * @return 压缩后的字节流
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static byte[] gzip(final byte[] buf) throws UtilException {
+	public static byte[] gzip(final byte[] buf) throws HutoolException {
 		return gzip(new ByteArrayInputStream(buf), buf.length);
 	}
 
@@ -747,9 +747,9 @@ public class ZipUtil {
 	 *
 	 * @param file 被压缩的文件
 	 * @return 压缩后的字节流
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static byte[] gzip(final File file) throws UtilException {
+	public static byte[] gzip(final File file) throws HutoolException {
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
@@ -764,10 +764,10 @@ public class ZipUtil {
 	 *
 	 * @param in 被压缩的流
 	 * @return 压缩后的字节流
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 4.1.18
 	 */
-	public static byte[] gzip(final InputStream in) throws UtilException {
+	public static byte[] gzip(final InputStream in) throws HutoolException {
 		return gzip(in, DEFAULT_BYTE_ARRAY_LENGTH);
 	}
 
@@ -777,10 +777,10 @@ public class ZipUtil {
 	 * @param in     被压缩的流
 	 * @param length 预估长度
 	 * @return 压缩后的字节流
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 4.1.18
 	 */
-	public static byte[] gzip(final InputStream in, final int length) throws UtilException {
+	public static byte[] gzip(final InputStream in, final int length) throws HutoolException {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 		Gzip.of(in, bos).gzip().close();
 		return bos.toByteArray();
@@ -792,9 +792,9 @@ public class ZipUtil {
 	 * @param buf     压缩过的字节流
 	 * @param charset 编码
 	 * @return 解压后的字符串
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static String unGzip(final byte[] buf, final Charset charset) throws UtilException {
+	public static String unGzip(final byte[] buf, final Charset charset) throws HutoolException {
 		return StrUtil.str(unGzip(buf), charset);
 	}
 
@@ -803,9 +803,9 @@ public class ZipUtil {
 	 *
 	 * @param buf buf
 	 * @return bytes
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static byte[] unGzip(final byte[] buf) throws UtilException {
+	public static byte[] unGzip(final byte[] buf) throws HutoolException {
 		return unGzip(new ByteArrayInputStream(buf), buf.length);
 	}
 
@@ -814,9 +814,9 @@ public class ZipUtil {
 	 *
 	 * @param in Gzip数据
 	 * @return 解压后的数据
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 */
-	public static byte[] unGzip(final InputStream in) throws UtilException {
+	public static byte[] unGzip(final InputStream in) throws HutoolException {
 		return unGzip(in, DEFAULT_BYTE_ARRAY_LENGTH);
 	}
 
@@ -826,10 +826,10 @@ public class ZipUtil {
 	 * @param in     Gzip数据
 	 * @param length 估算长度，如果无法确定请传入{@link #DEFAULT_BYTE_ARRAY_LENGTH}
 	 * @return 解压后的数据
-	 * @throws UtilException IO异常
+	 * @throws HutoolException IO异常
 	 * @since 4.1.18
 	 */
-	public static byte[] unGzip(final InputStream in, final int length) throws UtilException {
+	public static byte[] unGzip(final InputStream in, final int length) throws HutoolException {
 		final FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length);
 		Gzip.of(in, bos).unGzip().close();
 		return bos.toByteArray();
@@ -993,9 +993,9 @@ public class ZipUtil {
 	 * @param zipFile  压缩后的产生的文件路径
 	 * @param srcFiles 被压缩的文件或目录
 	 */
-	private static void validateFiles(final File zipFile, final File... srcFiles) throws UtilException {
+	private static void validateFiles(final File zipFile, final File... srcFiles) throws HutoolException {
 		if (zipFile.isDirectory()) {
-			throw new UtilException("Zip file [{}] must not be a directory !", zipFile.getAbsoluteFile());
+			throw new HutoolException("Zip file [{}] must not be a directory !", zipFile.getAbsoluteFile());
 		}
 
 		for (final File srcFile : srcFiles) {
@@ -1003,7 +1003,7 @@ public class ZipUtil {
 				continue;
 			}
 			if (!srcFile.exists()) {
-				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
+				throw new HutoolException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 
 			// issue#1961@Github
@@ -1017,7 +1017,7 @@ public class ZipUtil {
 
 			// 压缩文件不能位于被压缩的目录内
 			if (srcFile.isDirectory() && FileUtil.isSub(srcFile, parentFile)) {
-				throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getPath(), srcFile.getPath());
+				throw new HutoolException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getPath(), srcFile.getPath());
 			}
 		}
 	}

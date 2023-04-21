@@ -14,7 +14,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
@@ -180,9 +180,9 @@ public class FieldUtil {
 	 * @param obj       对象，如果static字段，此处为类
 	 * @param fieldName 字段名
 	 * @return 字段值
-	 * @throws UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(final Object obj, final String fieldName) throws UtilException {
+	public static Object getFieldValue(final Object obj, final String fieldName) throws HutoolException {
 		if (null == obj || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
@@ -194,10 +194,10 @@ public class FieldUtil {
 	 *
 	 * @param field 字段
 	 * @return 字段值
-	 * @throws UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException 包装IllegalAccessException异常
 	 * @since 5.1.0
 	 */
-	public static Object getStaticFieldValue(final Field field) throws UtilException {
+	public static Object getStaticFieldValue(final Field field) throws HutoolException {
 		return getFieldValue(null, field);
 	}
 
@@ -207,9 +207,9 @@ public class FieldUtil {
 	 * @param obj   对象，static字段则此字段为null
 	 * @param field 字段
 	 * @return 字段值
-	 * @throws UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(Object obj, final Field field) throws UtilException {
+	public static Object getFieldValue(Object obj, final Field field) throws HutoolException {
 		if (null == field) {
 			return null;
 		}
@@ -223,7 +223,7 @@ public class FieldUtil {
 		try {
 			result = field.get(obj);
 		} catch (final IllegalAccessException e) {
-			throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
+			throw new HutoolException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
 		}
 		return result;
 	}
@@ -255,9 +255,9 @@ public class FieldUtil {
 	 * @param obj       对象,static字段则此处传Class
 	 * @param fieldName 字段名
 	 * @param value     值，值类型必须与字段类型匹配，不会自动转换对象类型
-	 * @throws UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws UtilException {
+	public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws HutoolException {
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
 
@@ -271,9 +271,9 @@ public class FieldUtil {
 	 *
 	 * @param field 字段
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
-	 * @throws UtilException UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException UtilException 包装IllegalAccessException异常
 	 */
-	public static void setStaticFieldValue(final Field field, final Object value) throws UtilException {
+	public static void setStaticFieldValue(final Field field, final Object value) throws HutoolException {
 		setFieldValue(null, field, value);
 	}
 
@@ -283,9 +283,9 @@ public class FieldUtil {
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
 	 * @param value 值，类型不匹配会自动转换对象类型
-	 * @throws UtilException UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(final Object obj, final Field field, Object value) throws UtilException {
+	public static void setFieldValue(final Object obj, final Field field, Object value) throws HutoolException {
 		Assert.notNull(field, "Field in [{}] not exist !", obj);
 
 		// 值类型检查和转换
@@ -312,14 +312,14 @@ public class FieldUtil {
 	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
 	 * @param value 值，值类型必须与字段类型匹配
-	 * @throws UtilException UtilException 包装IllegalAccessException异常
+	 * @throws HutoolException UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValueExact(final Object obj, final Field field, final Object value) throws UtilException {
+	public static void setFieldValueExact(final Object obj, final Field field, final Object value) throws HutoolException {
 		ReflectUtil.setAccessible(field);
 		try {
 			field.set(obj instanceof Class ? null : obj, value);
 		} catch (final IllegalAccessException e) {
-			throw new UtilException(e, "IllegalAccess for [{}.{}]", null == obj ? field.getDeclaringClass() : obj, field.getName());
+			throw new HutoolException(e, "IllegalAccess for [{}.{}]", null == obj ? field.getDeclaringClass() : obj, field.getName());
 		}
 	}
 

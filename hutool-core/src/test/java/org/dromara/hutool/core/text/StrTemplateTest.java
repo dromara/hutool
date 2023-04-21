@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.placeholder.StrTemplate;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
@@ -592,7 +592,7 @@ public class StrTemplateTest {
                 .removeFeatures(StrTemplate.Feature.FORMAT_MISSING_KEY_PRINT_WHOLE_PLACEHOLDER)
                 .build();
         Assertions.assertEquals("this is aaa for 666", template2.format(MapUtil.builder("tableName", "aaa").put("id", "666").build()));
-        Assertions.assertThrows(UtilException.class, () -> template2.format(MapUtil.builder("tableName", "aaa").build()));
+        Assertions.assertThrows(HutoolException.class, () -> template2.format(MapUtil.builder("tableName", "aaa").build()));
 
         // ##### 空字符串策略 #####
         template = StrTemplate.ofNamed(commonTemplate)

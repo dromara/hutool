@@ -12,12 +12,13 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -95,9 +96,9 @@ public class ConstructorUtil {
 	 * @param <T>   对象类型
 	 * @param clazz 类名
 	 * @return 对象
-	 * @throws UtilException 包装各类异常
+	 * @throws HutoolException 包装各类异常
 	 */
-	public static <T> T newInstance(final String clazz) throws UtilException {
+	public static <T> T newInstance(final String clazz) throws HutoolException {
 		return newInstance(ClassLoaderUtil.loadClass(clazz));
 	}
 
@@ -108,31 +109,12 @@ public class ConstructorUtil {
 	 * @param clazz  类
 	 * @param params 构造函数参数
 	 * @return 对象
-	 * @throws UtilException 包装各类异常
+	 * @throws HutoolException 包装各类异常
 	 */
-	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws UtilException {
-		if (ArrayUtil.isEmpty(params)) {
-			final Constructor<T> constructor = getConstructor(clazz);
-			if (null == constructor) {
-				throw new UtilException("No constructor for [{}]", clazz);
-			}
-			try {
-				return constructor.newInstance();
-			} catch (final Exception e) {
-				throw new UtilException(e, "Instance class [{}] error!", clazz);
-			}
-		}
-
+	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws HutoolException {
 		final Class<?>[] paramTypes = ClassUtil.getClasses(params);
-		final Constructor<T> constructor = getConstructor(clazz, paramTypes);
-		if (null == constructor) {
-			throw new UtilException("No Constructor matched for parameter types: {}", new Object[]{paramTypes});
-		}
-		try {
-			return constructor.newInstance(params);
-		} catch (final Exception e) {
-			throw new UtilException(e, "Instance class [{}] error!", clazz);
-		}
+		final MethodHandle constructor = LookupUtil.findConstructor(clazz, paramTypes);
+		return MethodHandleUtil.invokeHandle(constructor, params);
 	}
 
 	/**

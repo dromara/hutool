@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.func;
 
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.io.Serializable;
 import java.util.stream.Stream;
@@ -57,7 +57,7 @@ public interface SerRunnable extends Runnable, Serializable {
 		try {
 			running();
 		} catch (final Exception e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

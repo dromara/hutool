@@ -13,20 +13,19 @@
 package org.dromara.hutool.core.exceptions;
 
 /**
- * 依赖异常
+ * 克隆异常
  *
  * @author xiaoleilu
- * @since 4.0.10
  */
-public class DependencyException extends HutoolException {
-	private static final long serialVersionUID = 1L;
+public class CloneException extends HutoolException {
+	private static final long serialVersionUID = 6774837422188798989L;
 
 	/**
 	 * 构造
 	 *
 	 * @param e 异常
 	 */
-	public DependencyException(final Throwable e) {
+	public CloneException(final Throwable e) {
 		super(e);
 	}
 
@@ -35,7 +34,7 @@ public class DependencyException extends HutoolException {
 	 *
 	 * @param message 消息
 	 */
-	public DependencyException(final String message) {
+	public CloneException(final String message) {
 		super(message);
 	}
 
@@ -45,7 +44,7 @@ public class DependencyException extends HutoolException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public DependencyException(final String messageTemplate, final Object... params) {
+	public CloneException(final String messageTemplate, final Object... params) {
 		super(messageTemplate, params);
 	}
 
@@ -55,7 +54,7 @@ public class DependencyException extends HutoolException {
 	 * @param message 消息
 	 * @param cause   被包装的子异常
 	 */
-	public DependencyException(final String message, final Throwable cause) {
+	public CloneException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -67,7 +66,7 @@ public class DependencyException extends HutoolException {
 	 * @param enableSuppression  是否启用抑制
 	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
 	 */
-	public DependencyException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+	public CloneException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
@@ -78,7 +77,7 @@ public class DependencyException extends HutoolException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public DependencyException(final Throwable cause, final String messageTemplate, final Object... params) {
+	public CloneException(final Throwable cause, final String messageTemplate, final Object... params) {
 		super(cause, messageTemplate, params);
 	}
 }

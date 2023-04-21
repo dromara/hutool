@@ -14,7 +14,7 @@ package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.MethodUtil;
@@ -290,7 +290,7 @@ public class LambdaUtil {
 		if (serLambda instanceof SerializedLambda) {
 			return (SerializedLambda) serLambda;
 		}
-		throw new UtilException("writeReplace result value is not java.lang.invoke.SerializedLambda");
+		throw new HutoolException("writeReplace result value is not java.lang.invoke.SerializedLambda");
 	}
 	//endregion
 }

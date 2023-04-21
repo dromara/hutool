@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.tuple;
 
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -123,7 +123,7 @@ public class Triple<L, M, R> implements Serializable, Cloneable {
 		try {
 			return (Triple<L, M, R>) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 }

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.id;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.management.ManagementFactory;
@@ -46,12 +46,12 @@ public enum Pid {
 	 * 获取当前进程ID，首先获取进程名称，读取@前的ID值，如果不存在，则读取进程名的hash值
 	 *
 	 * @return 进程ID
-	 * @throws UtilException 进程名称为空
+	 * @throws HutoolException 进程名称为空
 	 */
-	private static int getPid() throws UtilException {
+	private static int getPid() throws HutoolException {
 		final String processName = ManagementFactory.getRuntimeMXBean().getName();
 		if (StrUtil.isBlank(processName)) {
-			throw new UtilException("Process name is blank!");
+			throw new HutoolException("Process name is blank!");
 		}
 		final int atIndex = processName.indexOf('@');
 		if (atIndex > 0) {

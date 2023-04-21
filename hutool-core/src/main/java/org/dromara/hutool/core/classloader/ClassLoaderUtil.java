@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.classloader;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
 
 import java.io.File;
@@ -108,9 +108,9 @@ public class ClassLoaderUtil {
 	 * @param <T>  目标类的类型
 	 * @param name 类名
 	 * @return 类名对应的类
-	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
+	 * @throws HutoolException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static <T> Class<T> loadClass(final String name) throws UtilException {
+	public static <T> Class<T> loadClass(final String name) throws HutoolException {
 		return loadClass(name, true);
 	}
 
@@ -128,9 +128,9 @@ public class ClassLoaderUtil {
 	 * @param name          类名
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
-	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
+	 * @throws HutoolException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
-	public static <T> Class<T> loadClass(final String name, final boolean isInitialized) throws UtilException {
+	public static <T> Class<T> loadClass(final String name, final boolean isInitialized) throws HutoolException {
 		return loadClass(name, isInitialized, null);
 	}
 
@@ -151,10 +151,10 @@ public class ClassLoaderUtil {
 	 * @param classLoader   {@link ClassLoader}，{@code null} 则使用{@link #getClassLoader()}获取
 	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
-	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
+	 * @throws HutoolException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> loadClass(final String name, final boolean isInitialized, final ClassLoader classLoader) throws UtilException {
+	public static <T> Class<T> loadClass(final String name, final boolean isInitialized, final ClassLoader classLoader) throws HutoolException {
 		return (Class<T>) ClassDescUtil.nameToClass(name, isInitialized, classLoader);
 	}
 
@@ -170,7 +170,7 @@ public class ClassLoaderUtil {
 		try {
 			return getJarClassLoader(jarOrDir).loadClass(name);
 		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

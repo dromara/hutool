@@ -12,20 +12,30 @@
 
 package org.dromara.hutool.core.exceptions;
 
+import org.dromara.hutool.core.text.StrUtil;
+
 /**
- * InvocationTargetException的运行时异常
+ * Hutool工具类异常
  *
  * @author looly
+ * @since 6.0.0
  */
-public class InvocationTargetRuntimeException extends UtilException {
+public class HutoolException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 构造
+	 */
+	public HutoolException() {
+		super();
+	}
 
 	/**
 	 * 构造
 	 *
 	 * @param e 异常
 	 */
-	public InvocationTargetRuntimeException(final Throwable e) {
+	public HutoolException(final Throwable e) {
 		super(e);
 	}
 
@@ -34,7 +44,7 @@ public class InvocationTargetRuntimeException extends UtilException {
 	 *
 	 * @param message 消息
 	 */
-	public InvocationTargetRuntimeException(final String message) {
+	public HutoolException(final String message) {
 		super(message);
 	}
 
@@ -44,8 +54,8 @@ public class InvocationTargetRuntimeException extends UtilException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public InvocationTargetRuntimeException(final String messageTemplate, final Object... params) {
-		super(messageTemplate, params);
+	public HutoolException(final String messageTemplate, final Object... params) {
+		super(StrUtil.format(messageTemplate, params));
 	}
 
 	/**
@@ -54,7 +64,7 @@ public class InvocationTargetRuntimeException extends UtilException {
 	 * @param message 消息
 	 * @param cause   被包装的子异常
 	 */
-	public InvocationTargetRuntimeException(final String message, final Throwable cause) {
+	public HutoolException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -66,7 +76,7 @@ public class InvocationTargetRuntimeException extends UtilException {
 	 * @param enableSuppression  是否启用抑制
 	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
 	 */
-	public InvocationTargetRuntimeException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+	public HutoolException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
@@ -77,7 +87,7 @@ public class InvocationTargetRuntimeException extends UtilException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public InvocationTargetRuntimeException(final Throwable cause, final String messageTemplate, final Object... params) {
-		super(cause, messageTemplate, params);
+	public HutoolException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(StrUtil.format(messageTemplate, params), cause);
 	}
 }

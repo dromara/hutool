@@ -13,7 +13,7 @@
 
 package org.dromara.hutool.cron;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.resource.NoResourceException;
 import org.dromara.hutool.cron.pattern.CronPattern;
 import org.dromara.hutool.cron.task.Task;
@@ -165,7 +165,7 @@ public class CronUtil {
 	 */
 	synchronized public static void start(final boolean isDaemon) {
 		if (scheduler.isStarted()) {
-			throw new UtilException("Scheduler has been started, please stop it first!");
+			throw new HutoolException("Scheduler has been started, please stop it first!");
 		}
 
 		lock.lock();

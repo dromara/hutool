@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.date.DateUnit;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -141,7 +141,7 @@ public class Tailer implements Serializable {
 			try {
 				scheduledFuture.get();
 			} catch (final ExecutionException e) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			} catch (final InterruptedException e) {
 				// ignore and exist
 			}
@@ -226,10 +226,10 @@ public class Tailer implements Serializable {
 	 */
 	private static void checkFile(final File file) {
 		if (!file.exists()) {
-			throw new UtilException("File [{}] not exist !", file.getAbsolutePath());
+			throw new HutoolException("File [{}] not exist !", file.getAbsolutePath());
 		}
 		if (!file.isFile()) {
-			throw new UtilException("Path [{}] is not a file !", file.getAbsolutePath());
+			throw new HutoolException("Path [{}] is not a file !", file.getAbsolutePath());
 		}
 	}
 	// ---------------------------------------------------------------------------------------- Private method end

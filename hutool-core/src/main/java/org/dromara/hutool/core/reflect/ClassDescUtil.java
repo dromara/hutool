@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.TripleTable;
 import org.dromara.hutool.core.text.StrTrimer;
@@ -126,9 +126,9 @@ public class ClassDescUtil {
 	 *
 	 * @param desc 类描述
 	 * @return Class
-	 * @throws UtilException 类没有找到
+	 * @throws HutoolException 类没有找到
 	 */
-	public static Class<?> descToClass(final String desc) throws UtilException {
+	public static Class<?> descToClass(final String desc) throws HutoolException {
 		return descToClass(desc, true, null);
 	}
 
@@ -143,9 +143,9 @@ public class ClassDescUtil {
 	 * @param isInitialized 是否初始化类
 	 * @param cl            {@link ClassLoader}
 	 * @return Class
-	 * @throws UtilException 类没有找到
+	 * @throws HutoolException 类没有找到
 	 */
-	public static Class<?> descToClass(String desc, final boolean isInitialized, final ClassLoader cl) throws UtilException {
+	public static Class<?> descToClass(String desc, final boolean isInitialized, final ClassLoader cl) throws HutoolException {
 		Assert.notNull(desc, "Name must not be null");
 		final char firstChar = desc.charAt(0);
 		final Class<?> clazz = PRIMITIVE_TABLE.getLeftByMiddle(firstChar);
@@ -401,7 +401,7 @@ public class ClassDescUtil {
 			if (null != clazz) {
 				sb.append(PRIMITIVE_TABLE.getRightByLeft(clazz));
 			} else {
-				throw new UtilException("Unsupported primitive desc: {}", desc);
+				throw new HutoolException("Unsupported primitive desc: {}", desc);
 			}
 		} else {
 			sb.append(desc.substring(c + 1, desc.length() - 1).replace(CharUtil.SLASH, CharUtil.DOT));

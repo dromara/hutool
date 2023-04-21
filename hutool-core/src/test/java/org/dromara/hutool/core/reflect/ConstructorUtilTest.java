@@ -1,10 +1,14 @@
 package org.dromara.hutool.core.reflect;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dromara.hutool.core.date.Week;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class ConstructorUtilTest {
@@ -22,7 +26,7 @@ public class ConstructorUtilTest {
 		Assertions.assertEquals(0, intValue);
 
 		final Integer integer = ConstructorUtil.newInstanceIfPossible(Integer.class);
-		Assertions.assertEquals(new Integer(0), integer);
+		Assertions.assertEquals(Integer.valueOf(0), integer);
 
 		final Map<?, ?> map = ConstructorUtil.newInstanceIfPossible(Map.class);
 		Assertions.assertNotNull(map);
@@ -35,5 +39,33 @@ public class ConstructorUtilTest {
 
 		final int[] intArray = ConstructorUtil.newInstanceIfPossible(int[].class);
 		Assertions.assertArrayEquals(new int[0], intArray);
+	}
+
+	@Test
+	void newInstanceTest() {
+		final TestBean testBean = ConstructorUtil.newInstance(TestBean.class);
+		Assertions.assertNull(testBean.getA());
+		Assertions.assertEquals(0, testBean.getB());
+	}
+
+	@Test
+	void newInstanceAllArgsTest() {
+		final TestBean testBean = ConstructorUtil.newInstance(TestBean.class, "aValue", 1);
+		Assertions.assertEquals("aValue", testBean.getA());
+		Assertions.assertEquals(1, testBean.getB());
+	}
+
+	@Test
+	void newInstanceHashtableTest() {
+		final Hashtable<?, ?> testBean = ConstructorUtil.newInstance(Hashtable.class);
+		Assertions.assertNotNull(testBean);
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	private static class TestBean{
+		private String a;
+		private int b;
 	}
 }

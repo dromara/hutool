@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.id.Pid;
@@ -309,10 +309,10 @@ public class RuntimeUtil {
 	 * 获取当前进程ID，首先获取进程名称，读取@前的ID值，如果不存在，则读取进程名的hash值
 	 *
 	 * @return 进程ID
-	 * @throws UtilException 进程名称为空
+	 * @throws HutoolException 进程名称为空
 	 * @since 5.7.3
 	 */
-	public static int getPid() throws UtilException {
+	public static int getPid() throws HutoolException {
 		return Pid.INSTANCE.get();
 	}
 

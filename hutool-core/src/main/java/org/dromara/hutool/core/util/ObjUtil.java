@@ -16,7 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
@@ -394,7 +394,7 @@ public class ObjUtil {
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
-	 * @throws UtilException IO异常和ClassNotFoundException封装
+	 * @throws HutoolException IO异常和ClassNotFoundException封装
 	 * @see SerializeUtil#clone(Object)
 	 */
 	public static <T> T cloneByStream(final T obj) {

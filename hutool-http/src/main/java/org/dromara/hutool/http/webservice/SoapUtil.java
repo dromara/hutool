@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.XmlUtil;
 
@@ -97,7 +97,7 @@ public class SoapUtil {
 		try {
 			messageToString = out.toString(charset.toString());
 		} catch (final UnsupportedEncodingException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 		return pretty ? XmlUtil.format(messageToString) : messageToString;
 	}

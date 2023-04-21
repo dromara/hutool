@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
@@ -42,12 +42,13 @@ public class MethodLookupFactory implements LookupFactory {
 	public MethodHandles.Lookup lookup(final Class<?> callerClass) {
 		try {
 			return (MethodHandles.Lookup) privateLookupInMethod.invoke(MethodHandles.class, callerClass, MethodHandles.lookup());
-		} catch (final IllegalAccessException | InvocationTargetException e) {
-			throw new UtilException(e);
+		} catch (final IllegalAccessException e) {
+			throw new HutoolException(e);
+		} catch (final InvocationTargetException e) {
+			throw new HutoolException(e.getTargetException());
 		}
 	}
 
-	@SuppressWarnings("JavaReflectionMemberAccess")
 	private static Method createJdk9PrivateLookupInMethod() {
 		try {
 			return MethodHandles.class.getMethod("privateLookupIn", Class.class, MethodHandles.Lookup.class);

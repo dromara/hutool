@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
@@ -568,7 +568,7 @@ public class ServletUtil {
 			writer.write(text);
 			writer.flush();
 		} catch (final IOException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} finally {
 			IoUtil.closeQuietly(writer);
 		}
@@ -660,7 +660,7 @@ public class ServletUtil {
 			out = response.getOutputStream();
 			IoUtil.copy(in, out, bufferSize);
 		} catch (final IOException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		} finally {
 			IoUtil.closeQuietly(out);
 			IoUtil.closeQuietly(in);

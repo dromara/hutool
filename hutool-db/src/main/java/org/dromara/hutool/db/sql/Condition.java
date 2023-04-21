@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.CloneRuntimeException;
+import org.dromara.hutool.core.exceptions.CloneException;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -381,7 +381,7 @@ public class Condition implements Cloneable, Serializable {
 		try {
 			return (Condition) super.clone();
 		} catch (final CloneNotSupportedException e) {
-			throw new CloneRuntimeException(e);
+			throw new CloneException(e);
 		}
 	}
 

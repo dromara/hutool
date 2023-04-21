@@ -649,7 +649,7 @@ public class BeanUtilTest {
 		final Station station2 = new Station();
 
 		BeanUtil.copyProperties(station, station2);
-		Assertions.assertEquals(new Long(123456L), station2.getId());
+		Assertions.assertEquals(Long.valueOf(123456L), station2.getId());
 	}
 
 	static class Station extends Tree<Long> {}

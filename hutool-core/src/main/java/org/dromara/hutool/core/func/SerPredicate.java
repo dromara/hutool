@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 		try {
 			return testing(t);
 		} catch (final Exception e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 

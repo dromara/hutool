@@ -272,4 +272,10 @@ public class MapUtilTest {
 		Assertions.assertEquals(Integer.valueOf(42), map.get("AaAa"));
 		Assertions.assertEquals(Integer.valueOf(42), map.get("BBBB"));
 	}
+
+	@Test
+	void createMapTest() {
+		final Map<Object, Object> map = MapUtil.createMap(MapUtil.view(new HashMap<>()).getClass());
+		Assertions.assertEquals(HashMap.class, map.getClass());
+	}
 }

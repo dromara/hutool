@@ -18,7 +18,7 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrJoiner;
@@ -1124,7 +1124,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 *
 	 * @param obj 对象，可以是对象数组或者基本类型数组
 	 * @return 包装类型数组或对象数组
-	 * @throws UtilException 对象为非数组
+	 * @throws HutoolException 对象为非数组
 	 */
 	public static Object[] wrap(final Object obj) {
 		if (null == obj) {
@@ -1154,10 +1154,10 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 						return (Object[]) obj;
 				}
 			} catch (final Exception e) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		}
-		throw new UtilException(StrUtil.format("[{}] is not Array!", obj.getClass()));
+		throw new HutoolException(StrUtil.format("[{}] is not Array!", obj.getClass()));
 	}
 
 	/**

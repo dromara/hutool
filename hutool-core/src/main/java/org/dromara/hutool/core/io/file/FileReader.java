@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -170,7 +170,7 @@ public class FileReader extends FileWrapper {
 			} else if(e instanceof RuntimeException){
 				throw (RuntimeException)e;
 			} else{
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		} finally {
 			IoUtil.closeQuietly(reader);

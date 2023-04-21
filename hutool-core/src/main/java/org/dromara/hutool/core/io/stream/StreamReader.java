@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.stream;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 
@@ -138,10 +138,10 @@ public class StreamReader {
 	 * @param acceptClasses 读取对象类型
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
-	 * @throws UtilException      ClassNotFoundException包装
+	 * @throws HutoolException      ClassNotFoundException包装
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T readObj(final Class<?>... acceptClasses) throws IORuntimeException, UtilException {
+	public <T> T readObj(final Class<?>... acceptClasses) throws IORuntimeException, HutoolException {
 		final InputStream in = this.in;
 		if (null == in) {
 			return null;
@@ -166,7 +166,7 @@ public class StreamReader {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} catch (final ClassNotFoundException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 }

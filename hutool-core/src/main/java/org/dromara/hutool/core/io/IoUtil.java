@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io;
 
 import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.collection.iter.LineIter;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.io.copy.FileChannelCopier;
 import org.dromara.hutool.core.io.copy.ReaderWriterCopier;
 import org.dromara.hutool.core.io.copy.StreamCopier;
@@ -419,9 +419,9 @@ public class IoUtil extends NioUtil {
 	 * @param acceptClasses 读取对象类型
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
-	 * @throws UtilException      ClassNotFoundException包装
+	 * @throws HutoolException      ClassNotFoundException包装
 	 */
-	public static <T> T readObj(final InputStream in, final Class<?>... acceptClasses) throws IORuntimeException, UtilException {
+	public static <T> T readObj(final InputStream in, final Class<?>... acceptClasses) throws IORuntimeException, HutoolException {
 		return StreamReader.of(in, false).readObj(acceptClasses);
 	}
 

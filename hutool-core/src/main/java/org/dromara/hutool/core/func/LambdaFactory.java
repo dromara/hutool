@@ -12,24 +12,17 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
-import org.dromara.hutool.core.reflect.MethodUtil;
-import org.dromara.hutool.core.reflect.ModifierUtil;
-import org.dromara.hutool.core.reflect.ReflectUtil;
+import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
-import java.io.Serializable;
 import java.lang.invoke.*;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 以类似反射的方式动态创建Lambda，在性能上有一定优势，同时避免每次调用Lambda时创建匿名内部类
@@ -82,55 +75,71 @@ public class LambdaFactory {
 	public static <F> F build(final Class<F> functionInterfaceType, final Executable executable) {
 		Assert.notNull(functionInterfaceType);
 		Assert.notNull(executable);
+
 		final MutableEntry<Class<?>, Executable> cacheKey = new MutableEntry<>(functionInterfaceType, executable);
-		return (F) CACHE.computeIfAbsent(cacheKey, key -> {
-			final List<Method> abstractMethods = Arrays.stream(functionInterfaceType.getMethods())
-				.filter(ModifierUtil::isAbstract)
-				.collect(Collectors.toList());
-			Assert.equals(abstractMethods.size(), 1, "不支持非函数式接口");
-			ReflectUtil.setAccessible(executable);
+		return (F) CACHE.computeIfAbsent(cacheKey,
+			key -> doBuildWithoutCache(functionInterfaceType, executable));
+	}
 
-			final MethodHandle methodHandle = LookupUtil.unreflect(executable);
-			final MethodType instantiatedMethodType;
-			if (executable instanceof Method) {
-				final Method method = (Method) executable;
-				instantiatedMethodType = MethodType.methodType(method.getReturnType(), method.getDeclaringClass(), method.getParameterTypes());
-			} else {
-				final Constructor<?> constructor = (Constructor<?>) executable;
-				instantiatedMethodType = MethodType.methodType(constructor.getDeclaringClass(), constructor.getParameterTypes());
-			}
-			final boolean isSerializable = Serializable.class.isAssignableFrom(functionInterfaceType);
+	/**
+	 * 根据提供的方法或构造对象，构建对应的Lambda函数<br>
+	 * 调用函数相当于执行对应的方法或构造
+	 *
+	 * @param funcType 接受Lambda的函数式接口类型
+	 * @param executable            方法对象，支持构造器
+	 * @param <F>                   Function类型
+	 * @return 接受Lambda的函数式接口对象
+	 */
+	@SuppressWarnings("unchecked")
+	private static <F> F doBuildWithoutCache(final Class<F> funcType, final Executable executable) {
+		ReflectUtil.setAccessible(executable);
 
-			final Method invokeMethod = abstractMethods.get(0);
-			final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
-			final String invokeName = invokeMethod.getName();
-			final MethodType invokedType = MethodType.methodType(functionInterfaceType);
-			final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
-			try {
-				final CallSite callSite = isSerializable ?
-					LambdaMetafactory.altMetafactory(
-						caller,
-						invokeName,
-						invokedType,
-						samMethodType,
-						methodHandle,
-						instantiatedMethodType,
-						LambdaMetafactory.FLAG_SERIALIZABLE
-					) :
-					LambdaMetafactory.metafactory(
-						caller,
-						invokeName,
-						invokedType,
-						samMethodType,
-						methodHandle,
-						instantiatedMethodType
-					);
-				//noinspection unchecked
-				return (F) callSite.getTarget().invoke();
-			} catch (final Throwable e) {
-				throw new UtilException(e);
-			}
-		});
+		try {
+			return (F) metaFactory(funcType, executable).getTarget().invoke();
+		} catch (final Throwable e) {
+			throw new HutoolException(e);
+		}
+	}
 
+	/**
+	 * 使用给定的函数接口，代理指定方法或构造
+	 *
+	 * @param functionInterfaceType 函数接口
+	 * @param executable 方法或构造
+	 * @return 函数锚点
+	 * @throws LambdaConversionException 权限等异常
+	 */
+	private static CallSite metaFactory(final Class<?> functionInterfaceType, final Executable executable) throws LambdaConversionException {
+		// 被代理的方法
+		final Method[] abstractMethods = MethodUtil.getPublicMethods(functionInterfaceType, ModifierUtil::isAbstract);
+		Assert.equals(abstractMethods.length, 1, "Class is not a functional interface.");
+
+		final Method invokeMethod = abstractMethods[0];
+		final MethodHandle methodHandle = LookupUtil.unreflect(executable);
+		final MethodHandles.Lookup caller = LookupUtil.lookup();
+		final String invokeName = invokeMethod.getName();
+		final MethodType invokedType = MethodType.methodType(functionInterfaceType);
+		final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
+
+		if(ClassUtil.isSerializable(functionInterfaceType)){
+			return LambdaMetafactory.altMetafactory(
+				caller,
+				invokeName,
+				invokedType,
+				samMethodType,
+				methodHandle,
+				MethodTypeUtil.methodType(executable),
+				LambdaMetafactory.FLAG_SERIALIZABLE
+			);
+		}
+
+		return LambdaMetafactory.metafactory(
+			caller,
+			invokeName,
+			invokedType,
+			samMethodType,
+			methodHandle,
+			MethodTypeUtil.methodType(executable)
+		);
 	}
 }

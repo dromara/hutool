@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.net.url;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
@@ -37,7 +37,7 @@ public class URLEncoder {
 	 *
 	 * @param url URL
 	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
+	 * @throws HutoolException UnsupportedEncodingException
 	 */
 	public static String encodeAll(final String url) {
 		return encodeAll(url, DEFAULT_CHARSET);
@@ -53,9 +53,9 @@ public class URLEncoder {
 	 * @param url     URL
 	 * @param charset 编码，为null表示不编码
 	 * @return 编码后的URL
-	 * @throws UtilException UnsupportedEncodingException
+	 * @throws HutoolException UnsupportedEncodingException
 	 */
-	public static String encodeAll(final String url, final Charset charset) throws UtilException {
+	public static String encodeAll(final String url, final Charset charset) throws HutoolException {
 		return RFC3986.UNRESERVED.encode(url, charset);
 	}
 

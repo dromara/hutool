@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.codec;
 
 import org.dromara.hutool.core.codec.binary.Base16Codec;
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharUtil;
@@ -201,7 +201,7 @@ public class HexUtil {
 	 *
 	 * @param hexData 十六进制字符串
 	 * @return byte[]
-	 * @throws UtilException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
+	 * @throws HutoolException 如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
 	 * @since 5.6.6
 	 */
 	public static byte[] decodeHex(final CharSequence hexData) {

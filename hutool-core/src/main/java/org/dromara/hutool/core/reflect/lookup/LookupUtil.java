@@ -12,8 +12,10 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
-import org.dromara.hutool.core.exceptions.UtilException;
+import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.caller.CallerUtil;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.JdkUtil;
 
@@ -80,20 +82,46 @@ public class LookupUtil {
 	 *
 	 * @param methodOrConstructor {@link Method}或者{@link Constructor}
 	 * @return 方法句柄{@link MethodHandle}
+	 * @throws HutoolException {@link IllegalAccessException} 包装
 	 */
-	public static MethodHandle unreflect(final Member methodOrConstructor) {
+	public static MethodHandle unreflect(final Member methodOrConstructor) throws HutoolException {
 		try {
 			if (methodOrConstructor instanceof Method) {
-				return lookup().unreflect((Method) methodOrConstructor);
+				return unreflectMethod((Method) methodOrConstructor);
 			} else {
 				return lookup().unreflectConstructor((Constructor<?>) methodOrConstructor);
 			}
 		} catch (final IllegalAccessException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
+		}
+	}
+
+	/**
+	 * 将{@link Method} 转换为方法句柄{@link MethodHandle}
+	 *
+	 * @param method {@link Method}
+	 * @return {@link MethodHandles}
+	 * @throws IllegalAccessException 无权访问
+	 */
+	public static MethodHandle unreflectMethod(final Method method) throws IllegalAccessException {
+		final Class<?> caller = method.getDeclaringClass();
+		final MethodHandles.Lookup lookup = lookup(caller);
+		if (ModifierUtil.isDefault(method)) {
+			// 当方法是default方法时，尤其对象是代理对象，需使用句柄方式执行
+			// 代理对象情况下调用method.invoke会导致循环引用执行，最终栈溢出
+			return lookup.unreflectSpecial(method, caller);
+		}
+
+		try {
+			return lookup.unreflect(method);
+		} catch (final Exception ignore) {
+			// 某些情况下，无权限执行方法则尝试执行特殊方法
+			return lookup.unreflectSpecial(method, caller);
 		}
 	}
 
 	// region ----- findMethod
+
 	/**
 	 * 查找指定方法的方法句柄<br>
 	 * 此方法只会查找：
@@ -157,7 +185,7 @@ public class LookupUtil {
 			} catch (final NoSuchMethodException ignore) {
 				//ignore
 			} catch (final IllegalAccessException e) {
-				throw new UtilException(e);
+				throw new HutoolException(e);
 			}
 		}
 
@@ -166,6 +194,7 @@ public class LookupUtil {
 	// endregion
 
 	// region ----- findConstructor
+
 	/**
 	 * 查找指定的构造方法
 	 *
@@ -174,6 +203,21 @@ public class LookupUtil {
 	 * @return 构造方法句柄
 	 */
 	public static MethodHandle findConstructor(final Class<?> callerClass, final Class<?>... argTypes) {
+		final Constructor<?> constructor = ConstructorUtil.getConstructor(callerClass, argTypes);
+		if(null != constructor){
+			return LookupUtil.unreflect(constructor);
+		}
+		return null;
+	}
+
+	/**
+	 * 查找指定的构造方法，给定的参数类型必须完全匹配，不能有拆装箱或继承关系等/
+	 *
+	 * @param callerClass 类
+	 * @param argTypes    参数类型列表，完全匹配
+	 * @return 构造方法句柄
+	 */
+	public static MethodHandle findConstructorExact(final Class<?> callerClass, final Class<?>... argTypes) {
 		return findConstructor(callerClass, MethodType.methodType(void.class, argTypes));
 	}
 
@@ -191,7 +235,7 @@ public class LookupUtil {
 		} catch (final NoSuchMethodException e) {
 			return null;
 		} catch (final IllegalAccessException e) {
-			throw new UtilException(e);
+			throw new HutoolException(e);
 		}
 	}
 	// endregion
