@@ -187,7 +187,7 @@ public class LambdaUtilTest {
 		bean.setFlag(false);
 
 		final BiConsumer<Bean, Object> setter = LambdaUtil.buildSetter(Bean.class, "flag");
-		setter.accept(bean, true);
+		setter.accept(bean, Boolean.TRUE);
 		Assertions.assertTrue(bean.isFlag());
 	}
 
