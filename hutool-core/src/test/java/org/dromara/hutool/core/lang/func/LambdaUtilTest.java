@@ -180,6 +180,17 @@ public class LambdaUtilTest {
 		Assertions.assertTrue(bean.isFlag());
 	}
 
+	@Test
+	void buildSetterTest() {
+		final Bean bean = new Bean();
+		bean.setId(2L);
+		bean.setFlag(false);
+
+		final BiConsumer<Bean, Object> setter = LambdaUtil.buildSetter(Bean.class, "flag");
+		setter.accept(bean, true);
+		Assertions.assertTrue(bean.isFlag());
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void lambdaTest() {

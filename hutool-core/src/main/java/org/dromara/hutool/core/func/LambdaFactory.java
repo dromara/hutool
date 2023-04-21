@@ -82,52 +82,57 @@ public class LambdaFactory {
 	}
 
 	/**
-	 * 根据提供的方法或构造对象，构建对应的Lambda函数<br>
+	 * 根据提供的方法或构造对象，构建对应的Lambda函数，即通过Lambda函数代理方法或构造<br>
 	 * 调用函数相当于执行对应的方法或构造
 	 *
-	 * @param funcType 接受Lambda的函数式接口类型
-	 * @param executable            方法对象，支持构造器
-	 * @param <F>                   Function类型
+	 * @param funcType   接受Lambda的函数式接口类型
+	 * @param executable 方法对象，支持构造器
+	 * @param <F>        Function类型
 	 * @return 接受Lambda的函数式接口对象
 	 */
 	@SuppressWarnings("unchecked")
 	private static <F> F doBuildWithoutCache(final Class<F> funcType, final Executable executable) {
 		ReflectUtil.setAccessible(executable);
 
+		// 获取Lambda函数
+		final Method[] abstractMethods = MethodUtil.getPublicMethods(funcType, ModifierUtil::isAbstract);
+		Assert.equals(abstractMethods.length, 1, "不支持非函数式接口");
+
+		final Method invokeMethod = abstractMethods[0];
 		try {
-			return (F) metaFactory(funcType, executable).getTarget().invoke();
+			return (F) metaFactory(funcType, invokeMethod, executable)
+				.getTarget().invoke();
 		} catch (final Throwable e) {
 			throw new HutoolException(e);
 		}
 	}
 
 	/**
-	 * 使用给定的函数接口，代理指定方法或构造
+	 * 通过Lambda函数代理方法或构造
 	 *
-	 * @param functionInterfaceType 函数接口
-	 * @param executable 方法或构造
-	 * @return 函数锚点
+	 * @param funcType     函数类型
+	 * @param invokeMethod 函数执行的方法
+	 * @param executable   被代理的方法或构造
+	 * @return {@link CallSite}
 	 * @throws LambdaConversionException 权限等异常
 	 */
-	private static CallSite metaFactory(final Class<?> functionInterfaceType, final Executable executable) throws LambdaConversionException {
-		// 被代理的方法
-		final Method[] abstractMethods = MethodUtil.getPublicMethods(functionInterfaceType, ModifierUtil::isAbstract);
-		Assert.equals(abstractMethods.length, 1, "Class is not a functional interface.");
-
-		final Method invokeMethod = abstractMethods[0];
-		final MethodHandle methodHandle = LookupUtil.unreflect(executable);
-		final MethodHandles.Lookup caller = LookupUtil.lookup();
+	private static CallSite metaFactory(final Class<?> funcType, final Method invokeMethod,
+										final Executable executable) throws LambdaConversionException {
+		final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
 		final String invokeName = invokeMethod.getName();
-		final MethodType invokedType = MethodType.methodType(functionInterfaceType);
-		final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), invokeMethod.getParameterTypes());
+		final MethodType invokedType = MethodType.methodType(funcType);
 
-		if(ClassUtil.isSerializable(functionInterfaceType)){
+		// 对入参做检查，原始类型转换为包装类型
+		final Class<?>[] paramTypes = invokeMethod.getParameterTypes();
+		final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), paramTypes);
+
+		if (ClassUtil.isSerializable(funcType)) {
 			return LambdaMetafactory.altMetafactory(
 				caller,
 				invokeName,
 				invokedType,
 				samMethodType,
-				methodHandle,
+				LookupUtil.unreflect(executable),
 				MethodTypeUtil.methodType(executable),
 				LambdaMetafactory.FLAG_SERIALIZABLE
 			);
@@ -138,7 +143,7 @@ public class LambdaFactory {
 			invokeName,
 			invokedType,
 			samMethodType,
-			methodHandle,
+			LookupUtil.unreflect(executable),
 			MethodTypeUtil.methodType(executable)
 		);
 	}

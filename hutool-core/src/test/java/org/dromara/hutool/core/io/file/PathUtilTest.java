@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.io.file;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,13 @@ public class PathUtilTest {
 	@Test
 	public void getMimeOfRarTest(){
 		final String contentType = FileUtil.getMimeType("a001.rar");
-		Assertions.assertEquals("application/x-rar-compressed", contentType);
+		Assertions.assertTrue(
+			ArrayUtil.contains(
+				new String[]{
+					"application/x-rar-compressed",
+					// JDK9+修改为此
+					"application/vnd.rar"},
+				contentType));
 	}
 
 	@Test
