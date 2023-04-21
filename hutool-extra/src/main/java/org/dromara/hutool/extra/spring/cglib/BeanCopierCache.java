@@ -10,12 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.cglib;
+package org.dromara.hutool.extra.spring.cglib;
 
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
-import net.sf.cglib.beans.BeanCopier;
-import net.sf.cglib.core.Converter;
+import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.cglib.core.Converter;
 
 /**
  * BeanCopier属性缓存<br>

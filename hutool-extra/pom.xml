@@ -44,7 +44,6 @@
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<spring-boot.version>2.7.10</spring-boot.version>
-		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
 	<dependencies>
@@ -409,13 +408,6 @@
 					<groupId>org.apiguardian</groupId>
 				</exclusion>
 			</exclusions>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>${cglib.version}</version>
-			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

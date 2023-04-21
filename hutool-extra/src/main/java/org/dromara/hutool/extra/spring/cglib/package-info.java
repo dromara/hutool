@@ -11,9 +11,9 @@
  */
 
 /**
- * Cglib库方法封装
+ * Spring cglib相关工具封装
  *
  * @author looly
  *
  */
-package org.dromara.hutool.extra.cglib;
+package org.dromara.hutool.extra.spring.cglib;
