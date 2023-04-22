@@ -1,20 +1,30 @@
-package org.dromara.hutool.core.lang.func;
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 
-import org.dromara.hutool.core.func.*;
-import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.core.reflect.MethodUtil;
+package org.dromara.hutool.core.func;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
+import org.dromara.hutool.core.lang.tuple.Tuple;
+import org.dromara.hutool.core.reflect.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 public class LambdaUtilTest {
@@ -306,5 +316,31 @@ public class LambdaUtilTest {
 		public static <P> String getLambdaClassName(final Function<P, ?> func) {
 			return func.getClass().getName();
 		}
+	}
+
+	@Test
+	void getInvokeMethodTest() {
+		Method invokeMethod = LambdaUtil.getInvokeMethod(Predicate.class);
+		Assertions.assertEquals("test", invokeMethod.getName());
+
+		invokeMethod = LambdaUtil.getInvokeMethod(Consumer.class);
+		Assertions.assertEquals("accept", invokeMethod.getName());
+
+		invokeMethod = LambdaUtil.getInvokeMethod(Runnable.class);
+		Assertions.assertEquals("run", invokeMethod.getName());
+
+		invokeMethod = LambdaUtil.getInvokeMethod(SerFunction.class);
+		Assertions.assertEquals("applying", invokeMethod.getName());
+
+		invokeMethod = LambdaUtil.getInvokeMethod(Function.class);
+		Assertions.assertEquals("apply", invokeMethod.getName());
+	}
+
+	@Test
+	void getInvokeMethodErrorTest() {
+		// 非函数接口返回异常
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			LambdaUtil.getInvokeMethod(LambdaUtilTest.class);
+		});
 	}
 }

@@ -95,10 +95,7 @@ public class LambdaFactory {
 		ReflectUtil.setAccessible(executable);
 
 		// 获取Lambda函数
-		final Method[] abstractMethods = MethodUtil.getPublicMethods(funcType, ModifierUtil::isAbstract);
-		Assert.equals(abstractMethods.length, 1, "不支持非函数式接口");
-
-		final Method invokeMethod = abstractMethods[0];
+		final Method invokeMethod = LambdaUtil.getInvokeMethod(funcType);
 		try {
 			return (F) metaFactory(funcType, invokeMethod, executable)
 				.getTarget().invoke();
@@ -110,20 +107,24 @@ public class LambdaFactory {
 	/**
 	 * 通过Lambda函数代理方法或构造
 	 *
-	 * @param funcType     函数类型
-	 * @param invokeMethod 函数执行的方法
-	 * @param executable   被代理的方法或构造
+	 * @param funcType   函数类型
+	 * @param funcMethod 函数执行的方法
+	 * @param executable 被代理的方法或构造
 	 * @return {@link CallSite}
 	 * @throws LambdaConversionException 权限等异常
 	 */
-	private static CallSite metaFactory(final Class<?> funcType, final Method invokeMethod,
+	private static CallSite metaFactory(final Class<?> funcType, final Method funcMethod,
 										final Executable executable) throws LambdaConversionException {
+		// 查找上下文与调用者的访问权限
 		final MethodHandles.Lookup caller = LookupUtil.lookup(executable.getDeclaringClass());
-		final String invokeName = invokeMethod.getName();
+		// 要实现的方法的名字
+		final String invokeName = funcMethod.getName();
+		// 调用点期望的方法参数的类型和返回值的类型(方法signature)
 		final MethodType invokedType = MethodType.methodType(funcType);
 
-		final Class<?>[] paramTypes = invokeMethod.getParameterTypes();
-		final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), paramTypes);
+		final Class<?>[] paramTypes = funcMethod.getParameterTypes();
+		// 函数对象将要实现的接口方法类型
+		final MethodType samMethodType = MethodType.methodType(funcMethod.getReturnType(), paramTypes);
 
 		if (ClassUtil.isSerializable(funcType)) {
 			return LambdaMetafactory.altMetafactory(

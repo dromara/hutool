@@ -74,7 +74,7 @@ import java.util.function.Supplier;
  * @author looly
  * @since 5.5.3
  */
-public class CharSequenceUtil extends StrChecker {
+public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 未找到的的位置表示，用-1表示

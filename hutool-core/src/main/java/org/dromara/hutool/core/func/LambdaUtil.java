@@ -15,9 +15,11 @@ package org.dromara.hutool.core.func;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
@@ -76,9 +78,9 @@ public class LambdaUtil {
 	public static <R, T extends Serializable> Class<R> getRealClass(final T func) {
 		final LambdaInfo lambdaInfo = resolve(func);
 		return (Class<R>) Opt.of(lambdaInfo)
-				.map(LambdaInfo::getInstantiatedMethodParameterTypes)
-				.filter(types -> types.length != 0).map(types -> types[types.length - 1])
-				.orElseGet(lambdaInfo::getClazz);
+			.map(LambdaInfo::getInstantiatedMethodParameterTypes)
+			.filter(types -> types.length != 0).map(types -> types[types.length - 1])
+			.orElseGet(lambdaInfo::getClazz);
 	}
 
 	/**
@@ -104,7 +106,7 @@ public class LambdaUtil {
 				final Method[] methods = MethodUtil.getMethods(implClass);
 				for (final Method method : methods) {
 					if (method.getName().equals(methodName)
-							&& ReflectUtil.getDescriptor(method).equals(serializedLambda.getImplMethodSignature())) {
+						&& ReflectUtil.getDescriptor(method).equals(serializedLambda.getImplMethodSignature())) {
 						return new LambdaInfo(method, serializedLambda);
 					}
 				}
@@ -181,7 +183,7 @@ public class LambdaUtil {
 	@SuppressWarnings("unchecked")
 	public static <T, P> BiConsumer<T, P> buildSetter(final Method setMethod) {
 		final Class<?> returnType = setMethod.getReturnType();
-		if(Void.TYPE == returnType){
+		if (Void.TYPE == returnType) {
 			return LambdaFactory.build(BiConsumer.class, setMethod);
 		}
 
@@ -261,7 +263,22 @@ public class LambdaUtil {
 		return (t) -> biConsumer.accept(t, param);
 	}
 
-	//region Private methods
+	/**
+	 * 获取函数的执行方法
+	 *
+	 * @param funcType 函数接口类
+	 * @return {@link Method}
+	 * @since 6.0.0
+	 */
+	public static Method getInvokeMethod(final Class<?> funcType) {
+		// 获取Lambda函数
+		final Method[] abstractMethods = MethodUtil.getPublicMethods(funcType, ModifierUtil::isAbstract);
+		Assert.equals(abstractMethods.length, 1, "Not a function class: " + funcType.getName());
+
+		return abstractMethods[0];
+	}
+
+	//region ----- Private methods
 
 	/**
 	 * 解析lambda表达式,没加缓存

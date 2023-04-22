@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  *     <li>blank定义：{@code null} or 空字符串：{@code ""} or 空格、全角空格、制表符、换行符，等不可见字符</li>
  * </ul>
  */
-public class StrChecker {
+public class StrValidator {
 
 	/**
 	 * 字符串常量：{@code "null"} <br>

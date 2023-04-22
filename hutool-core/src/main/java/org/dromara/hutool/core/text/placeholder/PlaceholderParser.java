@@ -14,7 +14,7 @@ package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.exceptions.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.text.StrChecker;
+import org.dromara.hutool.core.text.StrValidator;
 import org.dromara.hutool.core.util.CharUtil;
 
 import java.util.Objects;
@@ -87,8 +87,8 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	 */
 	public PlaceholderParser(
 			final UnaryOperator<String> processor, final String prefix, final String suffix, final char escape) {
-		Assert.isFalse(StrChecker.isEmpty(prefix), "开始符号不能为空");
-		Assert.isFalse(StrChecker.isEmpty(suffix), "结束符号不能为空");
+		Assert.isFalse(StrValidator.isEmpty(prefix), "开始符号不能为空");
+		Assert.isFalse(StrValidator.isEmpty(suffix), "结束符号不能为空");
 		this.processor = Objects.requireNonNull(processor);
 		this.open = prefix;
 		this.openLength = prefix.length();
@@ -105,8 +105,8 @@ public class PlaceholderParser implements UnaryOperator<String> {
 	 */
 	@Override
 	public String apply(final String text) {
-		if (StrChecker.isEmpty(text)) {
-			return StrChecker.EMPTY;
+		if (StrValidator.isEmpty(text)) {
+			return StrValidator.EMPTY;
 		}
 
 		// 寻找第一个开始符号
