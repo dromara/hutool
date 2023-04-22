@@ -114,12 +114,18 @@ public class HttpClient4Engine implements ClientEngine {
 			if (null != sslInfo) {
 				clientBuilder.setSSLSocketFactory(buildSocketFactory(sslInfo));
 			}
+			if(config.isDisableCache()){
+				clientBuilder.disableAuthCaching();
+			}
 
 			clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
 		}
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
+
+		// 默认关闭自动重定向
+		clientBuilder.disableRedirectHandling();
 
 		// 设置代理
 		setProxy(clientBuilder, config);

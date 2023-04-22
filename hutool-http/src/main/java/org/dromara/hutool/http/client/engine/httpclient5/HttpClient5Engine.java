@@ -117,10 +117,16 @@ public class HttpClient5Engine implements ClientEngine {
 		if (null != config) {
 			clientBuilder.setConnectionManager(buildConnectionManager(config));
 			clientBuilder.setDefaultRequestConfig(buildRequestConfig(config));
+			if(config.isDisableCache()){
+				clientBuilder.disableAuthCaching();
+			}
 		}
 
 		// 设置默认头信息
 		clientBuilder.setDefaultHeaders(toHeaderList(GlobalHeaders.INSTANCE.headers()));
+
+		// 默认关闭自动重定向
+		clientBuilder.disableRedirectHandling();
 
 		// 设置代理
 		setProxy(clientBuilder, config);

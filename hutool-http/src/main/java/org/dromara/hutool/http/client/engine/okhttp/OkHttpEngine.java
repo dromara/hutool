@@ -111,6 +111,9 @@ public class OkHttpEngine implements ClientEngine {
 			setProxy(builder, config);
 		}
 
+		// 默认关闭自动跳转
+		builder.followRedirects(false);
+
 		this.client = builder.build();
 	}
 
