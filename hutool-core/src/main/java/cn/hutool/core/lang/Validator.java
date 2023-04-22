@@ -98,9 +98,9 @@ public class Validator {
 	 */
 	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
 	/**
-	 * 车架号;别名：车辆识别代号 车辆识别码；十七位码
+	 * 车架号  别名：车辆识别代号、车辆识别码、车架号、十七位码
 	 */
-	public final static Pattern CAR_VIN = PatternPool.CAR_VIN;
+	public final static Pattern[] CAR_VIN = PatternPool.CAR_VIN;
 	/**
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号；12位数字字符串；仅限：中国驾驶证档案编号
 	 */
@@ -1141,19 +1141,25 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 * 验证是否为车架号；别名：车辆识别代号、车辆识别码、车架号、十七位码
 	 *
-	 * @param value 值，17位车架号；形如：LSJA24U62JG269225、LDC613P23A1305189
+	 * @param value 值，17位车架号；形如：LSJA24U62JG269225、LDC613P23A1305189、LBV5S3102ESJ25655
 	 * @return 是否为车架号
 	 * @author dazer and ourslook
+	 * @
 	 * @since 5.6.3
 	 */
 	public static boolean isCarVin(CharSequence value) {
-		return isMatchRegex(CAR_VIN, value);
+		for (Pattern p: CAR_VIN) {
+			if(isMatchRegex(p, value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
-	 * 验证是否为车架号；别名：行驶证编号 车辆识别代号 车辆识别码
+	 * 验证是否为车架号；别名：车辆识别代号、车辆识别码、车架号、十七位码
 	 *
 	 * @param <T>      字符串类型
 	 * @param value    值
