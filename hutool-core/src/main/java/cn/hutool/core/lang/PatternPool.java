@@ -151,12 +151,29 @@ public class PatternPool {
 	 */
 	public static final Pattern CREDIT_CODE = Pattern.compile(RegexPool.CREDIT_CODE);
 	/**
-	 * 车架号
-	 * 别名：车辆识别代号 车辆识别码
-	 * eg:LDC613P23A1305189
-	 * eg:LSJA24U62JG269225
-	 * 十七位码、车架号
-	 * 车辆的唯一标示
+	 * 车架号（车辆识别代号由世界制造厂识别代号(WMI、车辆说明部分(VDS)车辆指示部分(VIS)三部分组成，共 17 位字码。）<br>
+	 * 别名：车辆识别代号、车辆识别码、车架号、十七位码<br>
+	 * 标准号：GB 16735-2019<br>
+	 * 标准官方地址：https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=E2EBF667F8C032B1EDFD6DF9C1114E02
+	 * 对年产量大于或等于1 000 辆的完整车辆和/或非完整车辆制造厂：
+	 * <pre>
+	 *   第一部分为世界制造厂识别代号(WMI)，3位
+	 *   第二部分为车辆说明部分(VDS)，     6位
+	 *   第三部分为车辆指示部分(VIS)，     8位
+	 * </pre>
+	 *
+	 * 对年产量小于 1 000 辆的完整车辆和/或非完整车辆制造厂：
+	 * <pre>
+	 *   第一部分为世界制造广识别代号(WMI),3位;
+	 *   第二部分为车辆说明部分(VDS)，6位;
+	 *   第三部分的三、四、五位与第一部分的三位字码起构成世界制造厂识别代号(WMI),其余五位为车辆指示部分(VIS)，8位。
+	 * </pre>
+	 *
+	 * <pre>
+	 *   eg:LDC613P23A1305189
+	 *   eg:LSJA24U62JG269225
+	 *   eg:LBV5S3102ESJ25655
+	 * </pre>
 	 */
 	public static final Pattern CAR_VIN = Pattern.compile(RegexPool.CAR_VIN);
 	/**
