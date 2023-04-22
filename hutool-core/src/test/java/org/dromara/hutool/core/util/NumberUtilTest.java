@@ -5,6 +5,8 @@ import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -698,18 +700,26 @@ public class NumberUtilTest {
 		// -------------------------- Parse failed -----------------------
 
 		Assertions.assertNull(NumberUtil.parseDouble("abc", null));
-
 		Assertions.assertNull(NumberUtil.parseDouble("a123.33", null));
-
 		Assertions.assertNull(NumberUtil.parseDouble("..123", null));
-
 		Assertions.assertEquals(1233D, NumberUtil.parseDouble(StrUtil.EMPTY, 1233D));
 
 		// -------------------------- Parse success -----------------------
 
 		Assertions.assertEquals(123.33D, NumberUtil.parseDouble("123.33a", null));
-
 		Assertions.assertEquals(0.123D, NumberUtil.parseDouble(".123", null));
+	}
 
+	@Test
+	void naNToIntTest() {
+		Assertions.assertEquals(0, Double.valueOf(Double.NaN).intValue());
+	}
+
+	@Test
+	@EnabledForJreRange(max = JRE.JAVA_8)
+	void numberFormatTest() {
+		Assertions.assertThrows(ParseException.class, ()->{
+			NumberFormat.getInstance().parse("NaN");
+		});
 	}
 }

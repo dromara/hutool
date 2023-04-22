@@ -1425,31 +1425,13 @@ public class NumberUtil {
 	 * 7、科学计数法抛出NumberFormatException异常
 	 * </pre>
 	 *
-	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @param numberStr 数字，支持0x开头、0开头和普通十进制
 	 * @return int
 	 * @throws NumberFormatException 数字格式异常
 	 * @since 4.1.4
 	 */
-	public static int parseInt(final String number) throws NumberFormatException {
-		if (StrUtil.isBlank(number)) {
-			return 0;
-		}
-
-		if (StrUtil.containsIgnoreCase(number, "E")) {
-			// 科学计数法忽略支持，科学计数法一般用于表示非常小和非常大的数字，这类数字转换为int后精度丢失，没有意义。
-			throw new NumberFormatException(StrUtil.format("Unsupported int format: [{}]", number));
-		}
-
-		if (StrUtil.startWithIgnoreCase(number, "0x")) {
-			// 0x04表示16进制数
-			return Integer.parseInt(number.substring(2), 16);
-		}
-
-		try {
-			return Integer.parseInt(number);
-		} catch (final NumberFormatException e) {
-			return parseNumber(number).intValue();
-		}
+	public static int parseInt(final String numberStr) throws NumberFormatException {
+		return NumberParser.INSTANCE.parseInt(numberStr);
 	}
 
 	/**
@@ -1493,25 +1475,12 @@ public class NumberUtil {
 	 * 6、123.56截取小数点之前的数字，忽略小数部分
 	 * </pre>
 	 *
-	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @param numberStr 数字，支持0x开头、0开头和普通十进制
 	 * @return long
 	 * @since 4.1.4
 	 */
-	public static long parseLong(final String number) {
-		if (StrUtil.isBlank(number)) {
-			return 0L;
-		}
-
-		if (StrUtil.startWithIgnoreCase(number, "0x")) {
-			// 0x04表示16进制数
-			return Long.parseLong(number.substring(2), 16);
-		}
-
-		try {
-			return Long.parseLong(number);
-		} catch (final NumberFormatException e) {
-			return parseNumber(number).longValue();
-		}
+	public static long parseLong(final String numberStr) {
+		return NumberParser.INSTANCE.parseLong(numberStr);
 	}
 
 	/**
@@ -1550,20 +1519,12 @@ public class NumberUtil {
 	 * 4、.123形式返回0.123（按照小于0的小数对待）
 	 * </pre>
 	 *
-	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @param numberStr 数字，支持0x开头、0开头和普通十进制
 	 * @return long
 	 * @since 5.5.5
 	 */
-	public static float parseFloat(final String number) {
-		if (StrUtil.isBlank(number)) {
-			return 0f;
-		}
-
-		try {
-			return Float.parseFloat(number);
-		} catch (final NumberFormatException e) {
-			return parseNumber(number).floatValue();
-		}
+	public static float parseFloat(final String numberStr) {
+		return NumberParser.INSTANCE.parseFloat(numberStr);
 	}
 
 	/**
@@ -1599,22 +1560,15 @@ public class NumberUtil {
 	 * 2、空串返回0
 	 * 3、其它情况按照10进制转换
 	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * 5、NaN返回0
 	 * </pre>
 	 *
-	 * @param number 数字，支持0x开头、0开头和普通十进制
-	 * @return long
+	 * @param numberStr 数字，支持0x开头、0开头和普通十进制
+	 * @return double
 	 * @since 5.5.5
 	 */
-	public static double parseDouble(final String number) {
-		if (StrUtil.isBlank(number)) {
-			return 0D;
-		}
-
-		try {
-			return Double.parseDouble(number);
-		} catch (final NumberFormatException e) {
-			return parseNumber(number).doubleValue();
-		}
+	public static double parseDouble(final String numberStr) {
+		return NumberParser.INSTANCE.parseDouble(numberStr);
 	}
 
 	/**
@@ -1652,7 +1606,7 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(final String numberStr) throws NumberFormatException {
-		return parseNumber(numberStr, Locale.getDefault(Locale.Category.FORMAT));
+		return NumberParser.INSTANCE.parseNumber(numberStr);
 	}
 
 	/**
@@ -1671,24 +1625,7 @@ public class NumberUtil {
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
 	 */
 	public static Number parseNumber(final String numberStr, final Locale locale) throws NumberFormatException {
-		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
-			// 0x04表示16进制数
-			return Long.parseLong(numberStr.substring(2), 16);
-		}
-
-		try {
-			final NumberFormat format = NumberFormat.getInstance(locale);
-			if (format instanceof DecimalFormat) {
-				// issue#1818@Github
-				// 当字符串数字超出double的长度时，会导致截断，此处使用BigDecimal接收
-				((DecimalFormat) format).setParseBigDecimal(true);
-			}
-			return format.parse(numberStr);
-		} catch (final ParseException e) {
-			final NumberFormatException nfe = new NumberFormatException(e.getMessage());
-			nfe.initCause(e);
-			throw nfe;
-		}
+		return NumberParser.of(locale).parseNumber(numberStr);
 	}
 	// endregion
 

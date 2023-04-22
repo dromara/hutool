@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * 以类似反射的方式动态创建Lambda，在性能上有一定优势，同时避免每次调用Lambda时创建匿名内部类
- * TODO JDK9+存在兼容问题
+ * TODO JDK9+存在兼容问题，当参数为原始类型时报错
  *
  * @author nasodaengineer
  */
@@ -122,7 +122,6 @@ public class LambdaFactory {
 		final String invokeName = invokeMethod.getName();
 		final MethodType invokedType = MethodType.methodType(funcType);
 
-		// 对入参做检查，原始类型转换为包装类型
 		final Class<?>[] paramTypes = invokeMethod.getParameterTypes();
 		final MethodType samMethodType = MethodType.methodType(invokeMethod.getReturnType(), paramTypes);
 

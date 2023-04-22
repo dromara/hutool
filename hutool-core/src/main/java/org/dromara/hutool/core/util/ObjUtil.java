@@ -56,7 +56,7 @@ public class ObjUtil {
 	public static boolean equals(final Object obj1, final Object obj2) {
 		if (obj1 instanceof Number && obj2 instanceof Number) {
 			return NumberUtil.equals((Number) obj1, (Number) obj2);
-		} else if(ArrayUtil.isArray(obj1) && ArrayUtil.isArray(obj2)){
+		} else if (ArrayUtil.isArray(obj1) && ArrayUtil.isArray(obj2)) {
 			return ArrayUtil.equals(obj1, obj2);
 		}
 		return Objects.equals(obj1, obj2);
@@ -68,8 +68,8 @@ public class ObjUtil {
 	 * @param obj1 对象1
 	 * @param obj2 对象2
 	 * @return 是否不等
-	 * @since 3.0.7
 	 * @see #equals(Object, Object)
+	 * @since 3.0.7
 	 */
 	public static boolean notEquals(final Object obj1, final Object obj2) {
 		return !equals(obj1, obj2);
@@ -229,12 +229,12 @@ public class ObjUtil {
 	 *
 	 * @param obj 被判断的对象
 	 * @return 是否为空，如果类型不支持，返回false
-	 * @since 4.5.7
 	 * @see StrUtil#isEmpty(CharSequence)
 	 * @see MapUtil#isEmpty(Map)
 	 * @see IterUtil#isEmpty(Iterable)
 	 * @see IterUtil#isEmpty(Iterator)
 	 * @see ArrayUtil#isEmpty(Object)
+	 * @since 4.5.7
 	 */
 	@SuppressWarnings("rawtypes")
 	public static boolean isEmpty(final Object obj) {
@@ -244,9 +244,9 @@ public class ObjUtil {
 
 		if (obj instanceof CharSequence) {
 			return StrUtil.isEmpty((CharSequence) obj);
-		} else if(obj instanceof Collection){
-			return CollUtil.isEmpty((Collection)obj);
-		}else if (obj instanceof Map) {
+		} else if (obj instanceof Collection) {
+			return CollUtil.isEmpty((Collection) obj);
+		} else if (obj instanceof Map) {
 			return MapUtil.isEmpty((Map) obj);
 		} else if (obj instanceof Iterable) {
 			return IterUtil.isEmpty((Iterable) obj);
@@ -264,12 +264,14 @@ public class ObjUtil {
 	 *
 	 * @param obj 被判断的对象
 	 * @return 是否不为空，如果类型不支持，返回true
-	 * @since 4.5.7
 	 * @see #isEmpty(Object)
+	 * @since 4.5.7
 	 */
 	public static boolean isNotEmpty(final Object obj) {
 		return !isEmpty(obj);
 	}
+
+	// region ----- defaultIf
 
 	/**
 	 * <p>如果给定对象为{@code null}返回默认值
@@ -340,6 +342,7 @@ public class ObjUtil {
 		final T source, final Function<? super T, ? extends R> handler, final R defaultValue) {
 		return isNull(source) ? defaultValue : handler.apply(source);
 	}
+	// endregion
 
 	/**
 	 * <p>克隆对象
@@ -451,8 +454,8 @@ public class ObjUtil {
 	 * @param obj   被检查的实体对象
 	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Class}
-	 * @since 3.0.8
 	 * @see ClassUtil#getTypeArgument(Class, int)
+	 * @since 3.0.8
 	 */
 	public static Class<?> getTypeArgument(final Object obj, final int index) {
 		return ClassUtil.getTypeArgument(obj.getClass(), index);
@@ -468,8 +471,8 @@ public class ObjUtil {
 	 *
 	 * @param obj Bean对象
 	 * @return 转换后的字符串
-	 * @since 3.2.0
 	 * @see Convert#toStr(Object)
+	 * @since 3.2.0
 	 */
 	public static String toString(final Object obj) {
 		if (null == obj) {
