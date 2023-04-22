@@ -83,7 +83,8 @@ public class AnnotationProxy<T extends Annotation> implements Annotation, Invoca
 	 * @return 属性（方法结果）映射
 	 */
 	private Map<String, Object> initAttributes() {
-		final Method[] methods = MethodUtil.getMethods(this.type);
+		// 只缓存注解定义的方法
+		final Method[] methods = MethodUtil.getDeclaredMethods(this.type);
 		final Map<String, Object> attributes = new HashMap<>(methods.length, 1);
 
 		for (final Method method : methods) {

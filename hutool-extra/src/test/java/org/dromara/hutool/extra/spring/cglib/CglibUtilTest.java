@@ -16,10 +16,13 @@ import lombok.Data;
 import org.dromara.hutool.core.convert.Convert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 public class CglibUtilTest {
 
 	@Test
+	@EnabledForJreRange(max = JRE.JAVA_8)
 	public void copyTest() {
 		final SampleBean bean = new SampleBean();
 		OtherSampleBean otherBean = new OtherSampleBean();

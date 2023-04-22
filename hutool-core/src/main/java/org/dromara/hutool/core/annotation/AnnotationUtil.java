@@ -324,7 +324,8 @@ public class AnnotationUtil {
 	}
 
 	/**
-	 * 设置新的注解的属性（字段）值
+	 * 设置新的注解的属性（字段）值<br>
+	 * 注意此方法在jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
 	 *
 	 * @param annotation      注解对象
 	 * @param annotationField 注解属性（字段）名称

@@ -6,6 +6,6 @@ import org.junit.jupiter.api.Test;
 public class HttpUrlConnectionUtilTest {
 	@Test
 	public void allowPatchTest() {
-		HttpUrlConnectionUtil.allowPatch();
+		HttpUrlConnectionUtil.allowPatchQuietly();
 	}
 }

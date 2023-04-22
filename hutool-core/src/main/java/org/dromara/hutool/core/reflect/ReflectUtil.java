@@ -38,6 +38,24 @@ import java.lang.reflect.*;
 public class ReflectUtil {
 
 	/**
+	 * 设置方法为可访问（私有方法可以被外部调用），静默调用，抛出异常则跳过<br>
+	 * 注意此方法在jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
+	 *
+	 * @param <T>              AccessibleObject的子类，比如Class、Method、Field等
+	 * @param accessibleObject 可设置访问权限的对象，比如Class、Method、Field等
+	 * @return 被设置可访问的对象
+	 * @throws SecurityException 访问被禁止抛出此异常
+	 */
+	public static <T extends AccessibleObject> T setAccessibleQuietly(final T accessibleObject) {
+		try{
+			setAccessible(accessibleObject);
+		} catch (final RuntimeException ignore){
+			// ignore
+		}
+		return accessibleObject;
+	}
+
+	/**
 	 * 设置方法为可访问（私有方法可以被外部调用）<br>
 	 * 注意此方法在jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
 	 *
@@ -50,7 +68,6 @@ public class ReflectUtil {
 	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) throws SecurityException {
 		if (null != accessibleObject && !accessibleObject.isAccessible()) {
 			accessibleObject.setAccessible(true);
-			return accessibleObject;
 		}
 		return accessibleObject;
 	}

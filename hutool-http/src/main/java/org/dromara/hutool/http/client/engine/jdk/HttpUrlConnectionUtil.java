@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 import org.dromara.hutool.http.HttpException;
 
@@ -26,8 +26,6 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * 针对{@link HttpURLConnection}相关工具
@@ -44,23 +42,34 @@ public class HttpUrlConnectionUtil {
 	/**
 	 * 增加支持的METHOD方法<br>
 	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
-	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
+	 * see: https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch
 	 */
-	public static void allowPatch() {
-		AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-			doAllowPatch();
-			return null;
-		});
+	public static void allowPatchQuietly() {
+		try{
+			allowPatch();
+		} catch (final Exception ignore){
+			// ignore
+		}
 	}
 
 	/**
 	 * 增加支持的METHOD方法<br>
 	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
-	 * see: <a href="https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch">https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch</a>
+	 * see: https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch
+	 */
+	public static void allowPatch() {
+		doAllowPatch();
+	}
+
+	/**
+	 * 增加支持的METHOD方法<br>
+	 * 此方法通过注入方式修改{@link HttpURLConnection}中的methods静态属性，增加PATCH方法<br>
+	 * see: https://stackoverflow.com/questions/25163131/httpurlconnection-invalid-http-method-patch
 	 *
 	 * @since 5.7.4
 	 */
 	synchronized private static void doAllowPatch() {
+		// 注意此方法在jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
 		final Field methodsField = FieldUtil.getField(HttpURLConnection.class, "methods");
 		if (null == methodsField) {
 			throw new HttpException("None static field [methods] with Java version: [{}]", SystemUtil.get("java.version"));

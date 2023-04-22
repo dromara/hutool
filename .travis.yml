@@ -6,6 +6,7 @@ install: true
 
 jdk:
   - openjdk8
+  - openjdk17
 
 notifications:
   email: false
@@ -14,7 +15,7 @@ cache:
   directories:
     - '$HOME/.m2'
 
-script: 
+script:
   - export TZ=Asia/Shanghai
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - mvn cobertura:cobertura -Dcobertura.report.format=xml -Dmaven.javadoc.skip.true

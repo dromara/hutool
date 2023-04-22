@@ -361,15 +361,26 @@ public class ObjUtil {
 	 * @see #cloneByStream(Object)
 	 */
 	public static <T> T clone(final T obj) {
-		T result = ArrayUtil.clone(obj);
-		if (null == result) {
-			if (obj instanceof Cloneable) {
-				result = MethodUtil.invoke(obj, "clone");
-			} else {
-				result = cloneByStream(obj);
+		final T result = ArrayUtil.clone(obj);
+		if(null != result){
+			// 数组
+			return result;
+		}
+
+		if (obj instanceof Cloneable) {
+			try{
+				return MethodUtil.invoke(obj, "clone");
+			} catch (final HutoolException e){
+				if(e.getCause() instanceof IllegalAccessException){
+					// JDK9+下可能无权限
+					return cloneByStream(obj);
+				}else {
+					throw e;
+				}
 			}
 		}
-		return result;
+
+		return cloneByStream(obj);
 	}
 
 	/**

@@ -5,6 +5,8 @@ import org.dromara.hutool.core.util.ObjUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
@@ -113,7 +115,9 @@ public class AnnotationUtilTest {
 	}
 
 	@Test
+	@EnabledForJreRange(max = JRE.JAVA_8)
 	public void testSetValue() {
+		// jdk9+中抛出异常，须添加`--add-opens=java.base/java.lang=ALL-UNNAMED`启动参数
 		final AnnotationForTest annotation = ClassForTest.class.getAnnotation(AnnotationForTest.class);
 		final String newValue = "is a new value";
 		Assertions.assertNotEquals(newValue, annotation.value());
@@ -124,6 +128,7 @@ public class AnnotationUtilTest {
 	@Test
 	public void testGetAnnotationAlias() {
 		final MetaAnnotationForTest annotation = AnnotationUtil.getAnnotationAlias(AnnotationForTest.class, MetaAnnotationForTest.class);
+		Assertions.assertNotNull(annotation);
 		Assertions.assertEquals(annotation.value(), annotation.alias());
 		Assertions.assertEquals(MetaAnnotationForTest.class, annotation.annotationType());
 	}

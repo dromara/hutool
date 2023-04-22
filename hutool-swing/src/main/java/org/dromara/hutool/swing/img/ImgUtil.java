@@ -197,9 +197,9 @@ public class ImgUtil {
 	 */
 	public static void scale(final File srcImageFile, final File destImageFile, final int width, final int height, final Color fixedColor) throws IORuntimeException {
 		Img.from(srcImageFile)//
-				.setTargetImageType(FileNameUtil.extName(destImageFile))//
-				.scale(width, height, fixedColor)//
-				.write(destImageFile);
+			.setTargetImageType(FileNameUtil.extName(destImageFile))//
+			.scale(width, height, fixedColor)//
+			.write(destImageFile);
 	}
 
 	/**
@@ -1201,8 +1201,8 @@ public class ImgUtil {
 	 */
 	public static BufferedImage toBufferedImage(final Image image, final String imageType, final Color backgroundColor) {
 		final int type = IMAGE_TYPE_PNG.equalsIgnoreCase(imageType)
-				? BufferedImage.TYPE_INT_ARGB
-				: BufferedImage.TYPE_INT_RGB;
+			? BufferedImage.TYPE_INT_ARGB
+			: BufferedImage.TYPE_INT_RGB;
 		return toBufferedImage(image, type, backgroundColor);
 	}
 
@@ -1295,13 +1295,15 @@ public class ImgUtil {
 		// issue#1821@Github
 		img = new ImageIcon(img).getImage();
 
-		final BufferedImage bimage = new BufferedImage(
-				img.getWidth(null), img.getHeight(null), imageType);
-		final Graphics2D bGr = GraphicsUtil.createGraphics(bimage, backgroundColor);
+		final BufferedImage bImage = new BufferedImage(
+			img.getWidth(null),
+			img.getHeight(null),
+			imageType);
+		final Graphics2D bGr = GraphicsUtil.createGraphics(bImage, backgroundColor);
 		bGr.drawImage(img, 0, 0, null);
 		bGr.dispose();
 
-		return bimage;
+		return bImage;
 	}
 
 	/**
@@ -1348,8 +1350,8 @@ public class ImgUtil {
 	 */
 	public static String toBase64DataUri(final Image image, final String imageType) {
 		return URLUtil.getDataUri(
-				"image/" + imageType, "base64",
-				toBase64(image, imageType));
+			"image/" + imageType, "base64",
+			toBase64(image, imageType));
 	}
 
 	/**
@@ -1464,9 +1466,9 @@ public class ImgUtil {
 	 */
 	public static Rectangle2D getRectangle(final String str, final Font font) {
 		return font.getStringBounds(str,
-				new FontRenderContext(AffineTransform.getScaleInstance(1, 1),
-						false,
-						false));
+			new FontRenderContext(AffineTransform.getScaleInstance(1, 1),
+				false,
+				false));
 	}
 
 	// region ----- write
@@ -1574,47 +1576,33 @@ public class ImgUtil {
 	/**
 	 * 写出图像为指定格式
 	 *
-	 * @param image             {@link Image}
-	 * @param imageType         图片类型（图片扩展名）
-	 * @param targetImageStream 写出到的目标流
-	 * @param quality           质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
-	 * @throws IORuntimeException IO异常
-	 * @since 4.3.2
-	 */
-	public static void write(final Image image, final String imageType, final ImageOutputStream targetImageStream,
-							 final float quality) throws IORuntimeException {
-		write(image, imageType, targetImageStream, quality, null);
-	}
-
-	/**
-	 * 写出图像为指定格式
-	 *
 	 * @param image           {@link Image}
 	 * @param imageType       图片类型（图片扩展名），{@code null}表示使用RGB模式（JPG）
-	 * @param destImageStream 写出到的目标流
+	 * @param out 写出到的目标流
 	 * @param quality         质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
 	 * @param backgroundColor 背景色{@link Color}
 	 * @throws IORuntimeException IO异常
 	 * @since 4.3.2
 	 */
-	public static void write(final Image image, final String imageType, final ImageOutputStream destImageStream,
+	public static void write(final Image image, final String imageType, final ImageOutputStream out,
 							 final float quality, final Color backgroundColor) throws IORuntimeException {
 		final BufferedImage bufferedImage = toBufferedImage(image, imageType, backgroundColor);
-		write(bufferedImage, destImageStream, quality);
+		write(bufferedImage, imageType, out, quality);
 	}
 
 	/**
 	 * 通过{@link ImageWriter}写出图片到输出流
 	 *
 	 * @param image   图片
+	 * @param imageType 图片类型
 	 * @param output  输出的Image流{@link ImageOutputStream}
 	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
 	 * @since 4.3.2
 	 */
-	public static void write(final Image image, final ImageOutputStream output, final float quality) {
-		ImgWriter.of(image, null)
-				.setQuality(quality)
-				.write(output);
+	public static void write(final Image image, final String imageType, final ImageOutputStream output, final float quality) {
+		ImgWriter.of(image, imageType)
+			.setQuality(quality)
+			.write(output);
 	}
 
 	/**
@@ -1882,8 +1870,8 @@ public class ImgUtil {
 	 */
 	public static Point getPointBaseCentre(final Rectangle rectangle, final int backgroundWidth, final int backgroundHeight) {
 		return new Point(
-				rectangle.x + (Math.abs(backgroundWidth - rectangle.width) / 2), //
-				rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
+			rectangle.x + (Math.abs(backgroundWidth - rectangle.width) / 2), //
+			rectangle.y + (Math.abs(backgroundHeight - rectangle.height) / 2)//
 		);
 	}
 	// endregion
@@ -2032,7 +2020,7 @@ public class ImgUtil {
 	 */
 	public static Image filter(final ImageFilter filter, final Image image) {
 		return Toolkit.getDefaultToolkit().createImage(
-				new FilteredImageSource(image.getSource(), filter));
+			new FilteredImageSource(image.getSource(), filter));
 	}
 	// endregion
 }
