@@ -11,7 +11,17 @@
  */
 
 /**
- * HTTP请求客户端封装
+ * HTTP请求客户端封装，请求过程如下：
+ * <pre>
+ *               Server
+ *        ^                 |
+ *        |                 v
+ *      Request          Response
+ *        ^                 |
+ *        |                 v
+ *           ClientEngine
+ * </pre>
+ *
  * @author looly
  */
 package org.dromara.hutool.http.client;
