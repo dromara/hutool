@@ -125,6 +125,8 @@ public class LambdaFactory {
 		final Class<?>[] paramTypes = funcMethod.getParameterTypes();
 		// 函数对象将要实现的接口方法类型
 		final MethodType samMethodType = MethodType.methodType(funcMethod.getReturnType(), paramTypes);
+		// 一个直接方法句柄(DirectMethodHandle), 描述调用时将被执行的具体实现方法
+		final MethodHandle implMethodHandle = LookupUtil.unreflect(executable);
 
 		if (ClassUtil.isSerializable(funcType)) {
 			return LambdaMetafactory.altMetafactory(
@@ -132,7 +134,7 @@ public class LambdaFactory {
 				invokeName,
 				invokedType,
 				samMethodType,
-				LookupUtil.unreflect(executable),
+				implMethodHandle,
 				MethodTypeUtil.methodType(executable),
 				LambdaMetafactory.FLAG_SERIALIZABLE
 			);
@@ -143,7 +145,7 @@ public class LambdaFactory {
 			invokeName,
 			invokedType,
 			samMethodType,
-			LookupUtil.unreflect(executable),
+			implMethodHandle,
 			MethodTypeUtil.methodType(executable)
 		);
 	}
