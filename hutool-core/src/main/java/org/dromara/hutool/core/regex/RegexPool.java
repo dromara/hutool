@@ -149,11 +149,11 @@ public interface RegexPool {
 	 * 中国车牌号码（兼容新能源车牌）
 	 */
 	String PLATE_NUMBER =
-			//https://gitee.com/dromara/hutool/issues/I1B77H?from=project-issue
-			"^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[ABCDEFGHJK])|([ABCDEFGHJK]([A-HJ-NP-Z0-9])[0-9]{4})))|" +
-					//https://gitee.com/dromara/hutool/issues/I1BJHE?from=project-issue
-					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]\\d{3}\\d{1,3}[领])|" +
-					"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$";
+		//https://gitee.com/dromara/hutool/issues/I1B77H?from=project-issue
+		"^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[ABCDEFGHJK])|([ABCDEFGHJK]([A-HJ-NP-Z0-9])[0-9]{4})))|" +
+			//https://gitee.com/dromara/hutool/issues/I1BJHE?from=project-issue
+			"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]\\d{3}\\d{1,3}[领])|" +
+			"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$";
 
 	/**
 	 * 统一社会信用代码
@@ -166,15 +166,34 @@ public interface RegexPool {
 	 * </pre>
 	 */
 	String CREDIT_CODE = "^[0-9A-HJ-NPQRTUWXY]{2}\\d{6}[0-9A-HJ-NPQRTUWXY]{10}$";
+
 	/**
-	 * 车架号
-	 * 别名：车辆识别代号 车辆识别码
-	 * eg:LDC613P23A1305189
-	 * eg:LSJA24U62JG269225
-	 * 十七位码、车架号
-	 * 车辆的唯一标示
+	 * 车架号（车辆识别代号由世界制造厂识别代号(WMI、车辆说明部分(VDS)车辆指示部分(VIS)三部分组成，共 17 位字码。）<br>
+	 * 别名：车辆识别代号、车辆识别码、车架号、十七位码<br>
+	 * 标准号：GB 16735-2019<br>
+	 * 标准官方地址：https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=E2EBF667F8C032B1EDFD6DF9C1114E02
+	 * 对年产量大于或等于1 000 辆的完整车辆和/或非完整车辆制造厂：
+	 * <pre>
+	 *   第一部分为世界制造厂识别代号(WMI)，3位
+	 *   第二部分为车辆说明部分(VDS)，     6位
+	 *   第三部分为车辆指示部分(VIS)，     8位
+	 * </pre>
+	 *
+	 * 对年产量小于 1 000 辆的完整车辆和/或非完整车辆制造厂：
+	 * <pre>
+	 *   第一部分为世界制造广识别代号(WMI),3位;
+	 *   第二部分为车辆说明部分(VDS)，6位;
+	 *   第三部分的三、四、五位与第一部分的三位字码起构成世界制造厂识别代号(WMI),其余五位为车辆指示部分(VIS)，8位。
+	 * </pre>
+	 *
+	 * <pre>
+	 *   eg:LDC613P23A1305189
+	 *   eg:LSJA24U62JG269225
+	 *   eg:LBV5S3102ESJ25655
+	 * </pre>
 	 */
-	String CAR_VIN = "^[A-HJ-NPR-Z0-9]{8}[0-9X][A-HJ-NPR-Z0-9]{2}\\d{6}$";
+	String CAR_VIN = "^[A-HJ-NPR-Z0-9]{8}[X0-9]([A-HJ-NPR-Z0-9]{3}\\d{5}|[A-HJ-NPR-Z0-9]{5}\\d{3})$";
+
 	/**
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号
 	 * eg:430101758218

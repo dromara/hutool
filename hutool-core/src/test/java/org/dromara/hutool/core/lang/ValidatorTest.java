@@ -230,6 +230,12 @@ public class ValidatorTest {
 		Assertions.assertTrue(Validator.isCarVin("LSJA24U62JG269225"));
 		Assertions.assertTrue(Validator.isCarVin("LDC613P23A1305189"));
 		Assertions.assertFalse(Validator.isCarVin("LOC613P23A1305189"));
+
+		Assertions.assertTrue(Validator.isCarVin("LSJA24U62JG269225"));	//标准分类1
+		Assertions.assertTrue(Validator.isCarVin("LDC613P23A1305189"));	//标准分类1
+		Assertions.assertTrue(Validator.isCarVin("LBV5S3102ESJ25655"));	//标准分类1
+		Assertions.assertTrue(Validator.isCarVin("LBV5S3102ESJPE655"));	//标准分类2
+		Assertions.assertFalse(Validator.isCarVin("LOC613P23A1305189"));	//错误示例
 	}
 
 	@Test
