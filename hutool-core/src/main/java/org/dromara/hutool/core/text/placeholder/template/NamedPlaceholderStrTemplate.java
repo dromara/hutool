@@ -93,6 +93,8 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
         String variableName;
         // 完整的占位符
         String wholePlaceholder;
+        // 上一个解析的segment是否是固定文本，如果是，则需要和当前新的文本部分合并
+        boolean isLastLiteralSegment = false;
         while (openCursor > -1) {
             // 开始符号是否被转义，若是则跳过，并寻找下一个开始符号
             if (openCursor > 0 && src[openCursor - 1] == escape) {
@@ -101,9 +103,8 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
                     hasDoubleEscape = true;
                 } else {
                     // 开始符号被转义，跳过，寻找下一个开始符号
-                    segments.add(new LiteralSegment(
-                            template.substring(closeCursor, openCursor - 1) + prefix
-                    ));
+                    addLiteralSegment(isLastLiteralSegment, segments, template.substring(closeCursor, openCursor - 1) + prefix);
+                    isLastLiteralSegment = true;
                     closeCursor = openCursor + openLength;
                     openCursor = template.indexOf(prefix, closeCursor);
                     continue;
@@ -114,12 +115,12 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
             if (!hasDoubleEscape) {
                 if (closeCursor < openCursor) {
                     // 完整记录当前占位符的开始符号与上一占位符的结束符号间的字符串
-                    segments.add(new LiteralSegment(template.substring(closeCursor, openCursor)));
+                    addLiteralSegment(isLastLiteralSegment, segments, template.substring(closeCursor, openCursor));
                 }
             } else {
                 // 存在双转义符，只能保留一个转义符
                 hasDoubleEscape = false;
-                segments.add(new LiteralSegment(template.substring(closeCursor, openCursor - 1)));
+                addLiteralSegment(isLastLiteralSegment, segments, template.substring(closeCursor, openCursor - 1));
             }
 
             // 重置结束游标至当前占位符的开始处
@@ -166,6 +167,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
                     // 当作变量名称处理
                     segments.add(new NamedPlaceholderSegment(variableName, wholePlaceholder));
                 }
+                isLastLiteralSegment = false;
                 // 完成当前占位符的处理匹配，寻找下一个
                 closeCursor = end + closeLength;
             }
@@ -176,7 +178,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 
         // 若匹配结束后仍有未处理的字符串，则直接将其拼接到表达式上
         if (closeCursor < src.length) {
-            segments.add(new LiteralSegment(template.substring(closeCursor, src.length)));
+            addLiteralSegment(isLastLiteralSegment, segments, template.substring(closeCursor));
         }
         return segments;
     }

@@ -13,10 +13,7 @@ import org.dromara.hutool.core.text.placeholder.segment.StrTemplateSegment;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
 import org.dromara.hutool.core.text.placeholder.template.SinglePlaceholderStrTemplate;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -276,10 +273,16 @@ public abstract class StrTemplate {
 		}
 
 		final StringBuilder sb = new StringBuilder(totalTextLength);
-		final Iterator<String> valueIterator = values.iterator();
+		int index = 0;
 		// 构造格式化结果字符串
 		for (StrTemplateSegment segment : segments) {
-			segment.format(sb, valueIterator);
+			if (segment instanceof LiteralSegment) {
+				sb.append(segment.getText());
+			}
+			// 当前是 占位符，直接 替换为 参数值
+			else {
+				sb.append(values.get(index++));
+			}
 		}
 		return sb.toString();
 	}
@@ -596,8 +599,8 @@ public abstract class StrTemplate {
 	 * <p>由于此时子类还没构造完成，所以只能由子类构造方法调用</p>
 	 */
 	protected void afterInit() {
-		// 解析 并 优化 segment 列表
-		this.segments = optimizeSegments(parseSegments(template));
+		// 释放空闲的列表元素
+		this.segments = new ArrayList<>(parseSegments(template));
 
 		// 计算 固定文本segment 的 数量 和 文本总长度
 		int literalSegmentSize = 0, fixedTextTotalLength = 0;
@@ -612,9 +615,9 @@ public abstract class StrTemplate {
 		// 获取 占位符segment 列表
 		final int placeholderSegmentsSize = segments.size() - literalSegmentSize;
 		if (placeholderSegmentsSize == 0) {
-			this.placeholderSegments = ListUtil.zero();
+			this.placeholderSegments = Collections.emptyList();
 		} else {
-			List<AbstractPlaceholderSegment> placeholderSegments = new ArrayList<>(placeholderSegmentsSize);
+			final List<AbstractPlaceholderSegment> placeholderSegments = new ArrayList<>(placeholderSegmentsSize);
 			for (StrTemplateSegment segment : segments) {
 				if (segment instanceof AbstractPlaceholderSegment) {
 					placeholderSegments.add((AbstractPlaceholderSegment) segment);
@@ -624,6 +627,26 @@ public abstract class StrTemplate {
 		}
 	}
 
+	/**
+	 * 添加 固定文本segment，过滤 空字符串 并 合并相邻的固定文本
+	 *
+	 * @param isLastLiteralSegment 上一个新增的segment是否是固定文本
+	 * @param list                 已保存的segment列表
+	 * @param newText              新的固定文本
+	 */
+	protected void addLiteralSegment(boolean isLastLiteralSegment, List<StrTemplateSegment> list, String newText) {
+		if (newText.isEmpty()) {
+			return;
+		}
+		if (isLastLiteralSegment) {
+			// 最后的固定文本segment 和 新固定文本 合并为一个
+			int lastIdx = list.size() - 1;
+			StrTemplateSegment lastLiteralSegment = list.get(lastIdx);
+			list.set(lastIdx, new LiteralSegment(lastLiteralSegment.getText() + newText));
+		} else {
+			list.add(new LiteralSegment(newText));
+		}
+	}
 
 	/**
 	 * 将 模板 解析为 Segment 列表
@@ -649,45 +672,6 @@ public abstract class StrTemplate {
 	 */
 	protected List<AbstractPlaceholderSegment> getPlaceholderSegments() {
 		return placeholderSegments;
-	}
-
-	/**
-	 * 优化节点列表
-	 * <p>移除空文本节点，合并连续的文本节点</p>
-	 *
-	 * @param segments 节点列表
-	 * @return 不占用多余空间的节点列表
-	 */
-	private List<StrTemplateSegment> optimizeSegments(final List<StrTemplateSegment> segments) {
-		if (CollUtil.isEmpty(segments)) {
-			return segments;
-		}
-
-		final List<StrTemplateSegment> list = new ArrayList<>(segments.size());
-		StrTemplateSegment last;
-		for (StrTemplateSegment segment : segments) {
-			if (segment instanceof LiteralSegment) {
-				// 空的文本节点，没有任何意义
-				if (segment.getText().isEmpty()) {
-					continue;
-				}
-				if (list.isEmpty()) {
-					list.add(segment);
-					continue;
-				}
-				last = list.get(list.size() - 1);
-				// 如果是两个连续的文本节点，需要合并
-				if (last instanceof LiteralSegment) {
-					list.set(list.size() - 1, new LiteralSegment(last.getText() + segment.getText()));
-				} else {
-					list.add(segment);
-				}
-			} else {
-				list.add(segment);
-			}
-		}
-		// 释放空闲的列表元素
-		return list.size() == segments.size() ? list : new ArrayList<>(list);
 	}
 
 	/**

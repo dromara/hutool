@@ -1,7 +1,5 @@
 package org.dromara.hutool.core.text.placeholder.segment;
 
-import java.util.Iterator;
-
 /**
  * 字符串模板-固定文本 Segment
  *
@@ -21,12 +19,6 @@ public class LiteralSegment implements StrTemplateSegment {
     @Override
     public String getText() {
         return text;
-    }
-
-    @Override
-    public void format(final StringBuilder sb, final Iterator<String> valueIterator) {
-        // 在格式化中 拼接 固定文本
-        sb.append(text);
     }
 
 }

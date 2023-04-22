@@ -51,6 +51,8 @@ public class SinglePlaceholderStrTemplate extends StrTemplate {
         int handledPosition = 0;
         // 占位符所在位置
         int delimIndex;
+        // 上一个解析的segment是否是固定文本，如果是，则需要和当前新的文本部分合并
+        boolean lastIsLiteralSegment = false;
         // 复用的占位符变量
         final SinglePlaceholderSegment singlePlaceholderSegment = SinglePlaceholderSegment.newInstance(placeholder);
         List<StrTemplateSegment> segments = null;
@@ -63,7 +65,7 @@ public class SinglePlaceholderStrTemplate extends StrTemplate {
                 }
                 // 字符串模板剩余部分不再包含占位符
                 if (handledPosition < strPatternLength) {
-                    segments.add(new LiteralSegment(template.substring(handledPosition, strPatternLength)));
+                    addLiteralSegment(lastIsLiteralSegment, segments, template.substring(handledPosition));
                 }
                 return segments;
             } else if (segments == null) {
@@ -75,25 +77,25 @@ public class SinglePlaceholderStrTemplate extends StrTemplate {
                 // 存在 双转义符
                 if (delimIndex > 1 && template.charAt(delimIndex - 2) == escape) {
                     // 转义符之前还有一个转义符，形如："//{"，占位符依旧有效
-                    segments.add(new LiteralSegment(template.substring(handledPosition, delimIndex - 1)));
+                    addLiteralSegment(lastIsLiteralSegment, segments, template.substring(handledPosition, delimIndex - 1));
                     segments.add(singlePlaceholderSegment);
+                    lastIsLiteralSegment = false;
                     handledPosition = delimIndex + placeholderLength;
                 } else {
                     // 占位符被转义，形如："/{"，当前字符并不是一个真正的占位符，而是普通字符串的一部分
-                    segments.add(new LiteralSegment(
-                            template.substring(handledPosition, delimIndex - 1) + placeholder.charAt(0)
-                    ));
+                    addLiteralSegment(lastIsLiteralSegment, segments, template.substring(handledPosition, delimIndex - 1) + placeholder.charAt(0));
+                    lastIsLiteralSegment = true;
                     handledPosition = delimIndex + 1;
                 }
             } else {
                 // 正常占位符
-                segments.add(new LiteralSegment(template.substring(handledPosition, delimIndex)));
+                addLiteralSegment(lastIsLiteralSegment, segments, template.substring(handledPosition, delimIndex));
                 segments.add(singlePlaceholderSegment);
+                lastIsLiteralSegment = false;
                 handledPosition = delimIndex + placeholderLength;
             }
         }
     }
-
     // region 格式化方法
     // ################################################## 格式化方法 ##################################################
 
