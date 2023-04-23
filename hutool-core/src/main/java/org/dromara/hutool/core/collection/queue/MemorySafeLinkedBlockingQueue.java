@@ -11,7 +11,6 @@
  */
 package org.dromara.hutool.core.collection.queue;
 
-import org.dromara.hutool.core.collection.queue.CheckedLinkedBlockingQueue;
 import org.dromara.hutool.core.thread.SimpleScheduler;
 import org.dromara.hutool.core.util.RuntimeUtil;
 
@@ -28,6 +27,7 @@ import java.util.function.Predicate;
  * Apache incubator-shenyu</a>
  * </p>
  *
+ * @param <E> 元素类型
  * @author incubator-shenyu
  * @since 6.0.0
  */

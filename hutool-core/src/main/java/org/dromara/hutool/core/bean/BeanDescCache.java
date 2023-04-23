@@ -22,6 +22,9 @@ import org.dromara.hutool.core.map.WeakConcurrentMap;
  * @author Looly
  */
 public enum BeanDescCache {
+	/**
+	 * 单例
+	 */
 	INSTANCE;
 
 	private final WeakConcurrentMap<Class<?>, BeanDesc> bdCache = new WeakConcurrentMap<>();

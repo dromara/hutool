@@ -33,6 +33,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	 * @param componentType 元素类型
 	 * @param length        长度
 	 * @param <A>           数组类型
+	 * @param <E>           数组元素类型
 	 * @return ArrayWrapper
 	 */
 	@SuppressWarnings("unchecked")
@@ -313,7 +314,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	 * @return 新数组
 	 */
 	public ArrayWrapper<A, E> insert(final int index, final E element) {
-		return insertArray(index, createSingleElementArray(element));
+		return insertArray(index, ArrayUtil.ofArray(element));
 	}
 
 	/**
@@ -611,20 +612,6 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	private void setNewArray(final A newArray) {
 		this.array = newArray;
 		this.length = Array.getLength(newArray);
-	}
-
-	/**
-	 * 创建单一元素数组
-	 *
-	 * @param value 元素值
-	 * @return 数组
-	 */
-	@SuppressWarnings("unchecked")
-	private A createSingleElementArray(final E value) {
-		// 插入单个元素
-		final A newInstance = (A) Array.newInstance(this.componentType, 1);
-		Array.set(newInstance, 0, value);
-		return newInstance;
 	}
 	// endregion
 }
