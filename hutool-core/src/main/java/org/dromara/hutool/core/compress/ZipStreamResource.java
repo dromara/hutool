@@ -46,7 +46,7 @@ public class ZipStreamResource implements ZipResource {
 			ZipEntry zipEntry;
 			while (null != (zipEntry = in.getNextEntry())) {
 				consumer.accept(zipEntry);
-				// 检查ZipBomb放在读取内容之后，以便entry中的信息正常读取
+				// issue#3018 检查ZipBomb放在读取内容之后，以便entry中的信息正常读取
 				ZipSecurityUtil.checkZipBomb(zipEntry, maxSizeDiff);
 			}
 		} catch (final IOException e) {
