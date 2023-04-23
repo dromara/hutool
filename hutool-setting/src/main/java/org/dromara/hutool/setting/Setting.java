@@ -28,7 +28,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.log.StaticLog;
-import org.dromara.hutool.setting.dialect.Props;
+import org.dromara.hutool.setting.props.Props;
 
 import java.io.File;
 import java.net.URL;

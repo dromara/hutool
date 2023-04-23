@@ -1,6 +1,6 @@
 package org.dromara.hutool.setting;
 
-import org.dromara.hutool.setting.dialect.PropsUtil;
+import org.dromara.hutool.setting.props.PropsUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

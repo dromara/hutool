@@ -1,8 +1,8 @@
 package org.dromara.hutool.setting;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.setting.dialect.Props;
-import org.dromara.hutool.setting.dialect.PropsUtil;
+import org.dromara.hutool.setting.props.Props;
+import org.dromara.hutool.setting.props.PropsUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
