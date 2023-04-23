@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.tuple;
 
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 
 import java.io.Serializable;
 import java.util.Objects;

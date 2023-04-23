@@ -16,7 +16,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.db.ds.DSKeys;
 import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.dialect.Props;
+import org.dromara.hutool.setting.props.Props;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 

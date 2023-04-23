@@ -1,7 +1,7 @@
 package org.dromara.hutool.core.util;
 
 
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;

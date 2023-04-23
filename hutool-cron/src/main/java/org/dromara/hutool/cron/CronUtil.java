@@ -13,7 +13,7 @@
 
 package org.dromara.hutool.cron;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.resource.NoResourceException;
 import org.dromara.hutool.cron.pattern.CronPattern;
 import org.dromara.hutool.cron.task.Task;

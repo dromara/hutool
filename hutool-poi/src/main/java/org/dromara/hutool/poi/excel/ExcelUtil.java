@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.poi.excel;
 
-import org.dromara.hutool.core.exceptions.DependencyException;
+import org.dromara.hutool.core.exception.DependencyException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.ObjUtil;

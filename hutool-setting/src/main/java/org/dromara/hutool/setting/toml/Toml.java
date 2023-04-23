@@ -42,7 +42,7 @@ public class Toml {
 	 * @param data TOML数据
 	 * @param writer {@link Writer}
 	 */
-	public static void write(Map<String, Object> data, Writer writer){
+	public static void write(final Map<String, Object> data, final Writer writer){
 		new TomlWriter(writer).write(data);
 	}
 

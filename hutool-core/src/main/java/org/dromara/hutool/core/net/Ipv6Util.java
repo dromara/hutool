@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Singleton;
 
 import java.math.BigInteger;

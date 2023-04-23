@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;

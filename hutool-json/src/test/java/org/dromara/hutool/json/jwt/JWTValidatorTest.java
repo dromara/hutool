@@ -1,7 +1,7 @@
 package org.dromara.hutool.json.jwt;
 
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.exceptions.ValidateException;
+import org.dromara.hutool.core.exception.ValidateException;
 import org.dromara.hutool.json.jwt.signers.JWTSignerUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

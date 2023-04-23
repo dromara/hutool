@@ -18,7 +18,7 @@ import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.dialect.DriverUtil;
 import org.dromara.hutool.db.ds.DSKeys;
 import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.dialect.Props;
+import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

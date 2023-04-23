@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.io.IORuntimeException;

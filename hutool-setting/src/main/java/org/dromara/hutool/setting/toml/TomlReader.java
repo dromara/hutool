@@ -42,107 +42,18 @@ public class TomlReader {
 	private int line = 1;// current line
 
 	/**
-	 * Creates a new TomlReader.
+	 * 构造
+	 * <pre>
+	 *     严格模式：[A-Za-z0-9_-]
+	 *     宽松模式：所有字符但是不包括. [ ] # =
+	 * </pre>
 	 *
-	 * @param data                the TOML data to read
-	 * @param strictAsciiBareKeys {@code true} to allow only strict bare keys, {@code false} to allow lenient ones.
+	 * @param data                TOML数据
+	 * @param strictAsciiBareKeys {@code true} 只允许严格的key格式, {@code false} 支持宽松格式.
 	 */
 	public TomlReader(final String data, final boolean strictAsciiBareKeys) {
 		this.data = data;
 		this.strictAsciiBareKeys = strictAsciiBareKeys;
-	}
-
-	private boolean hasNext() {
-		return pos < data.length();
-	}
-
-	private char next() {
-		return data.charAt(pos++);
-	}
-
-	private char nextUseful(final boolean skipComments) {
-		char c = ' ';
-		while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments))) {
-			c = next();
-			if (skipComments && c == '#') {
-				final int nextLinebreak = data.indexOf('\n', pos);
-				if (nextLinebreak == -1) {
-					pos = data.length();
-				} else {
-					pos = nextLinebreak + 1;
-					line++;
-				}
-			} else if (c == '\n') {
-				line++;
-			}
-		}
-		return c;
-	}
-
-	private char nextUsefulOrLinebreak() {
-		char c = ' ';
-		while (c == ' ' || c == '\t' || c == '\r') {
-			if (!hasNext())// fixes error when no '\n' at the end of the file
-				return '\n';
-			c = next();
-		}
-		if (c == '\n')
-			line++;
-		return c;
-	}
-
-	private Object nextValue(final char firstChar) {
-		switch (firstChar) {
-			case '+':
-			case '-':
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-				return nextNumberOrDate(firstChar);
-			case '"':
-				if (pos + 1 < data.length()) {
-					final char c2 = data.charAt(pos);
-					final char c3 = data.charAt(pos + 1);
-					if (c2 == '"' && c3 == '"') {
-						pos += 2;
-						return nextBasicMultilineString();
-					}
-				}
-				return nextBasicString();
-			case '\'':
-				if (pos + 1 < data.length()) {
-					final char c2 = data.charAt(pos);
-					final char c3 = data.charAt(pos + 1);
-					if (c2 == '\'' && c3 == '\'') {
-						pos += 2;
-						return nextLiteralMultilineString();
-					}
-				}
-				return nextLiteralString();
-			case '[':
-				return nextArray();
-			case '{':
-				return nextInlineTable();
-			case 't':// Must be "true"
-				if (pos + 3 > data.length() || next() != 'r' || next() != 'u' || next() != 'e') {
-					throw new SettingException("Invalid value at line " + line);
-				}
-				return true;
-			case 'f':// Must be "false"
-				if (pos + 4 > data.length() || next() != 'a' || next() != 'l' || next() != 's' || next() != 'e') {
-					throw new SettingException("Invalid value at line " + line);
-				}
-				return false;
-			default:
-				throw new SettingException("Invalid character '" + toString(firstChar) + "' at line " + line);
-		}
 	}
 
 	/**
@@ -266,6 +177,99 @@ public class TomlReader {
 
 		}
 		return map;
+	}
+
+	private boolean hasNext() {
+		return pos < data.length();
+	}
+
+	private char next() {
+		return data.charAt(pos++);
+	}
+
+	private char nextUseful(final boolean skipComments) {
+		char c = ' ';
+		while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments))) {
+			c = next();
+			if (skipComments && c == '#') {
+				final int nextLinebreak = data.indexOf('\n', pos);
+				if (nextLinebreak == -1) {
+					pos = data.length();
+				} else {
+					pos = nextLinebreak + 1;
+					line++;
+				}
+			} else if (c == '\n') {
+				line++;
+			}
+		}
+		return c;
+	}
+
+	private char nextUsefulOrLinebreak() {
+		char c = ' ';
+		while (c == ' ' || c == '\t' || c == '\r') {
+			if (!hasNext())// fixes error when no '\n' at the end of the file
+				return '\n';
+			c = next();
+		}
+		if (c == '\n')
+			line++;
+		return c;
+	}
+
+	private Object nextValue(final char firstChar) {
+		switch (firstChar) {
+			case '+':
+			case '-':
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+				return nextNumberOrDate(firstChar);
+			case '"':
+				if (pos + 1 < data.length()) {
+					final char c2 = data.charAt(pos);
+					final char c3 = data.charAt(pos + 1);
+					if (c2 == '"' && c3 == '"') {
+						pos += 2;
+						return nextBasicMultilineString();
+					}
+				}
+				return nextBasicString();
+			case '\'':
+				if (pos + 1 < data.length()) {
+					final char c2 = data.charAt(pos);
+					final char c3 = data.charAt(pos + 1);
+					if (c2 == '\'' && c3 == '\'') {
+						pos += 2;
+						return nextLiteralMultilineString();
+					}
+				}
+				return nextLiteralString();
+			case '[':
+				return nextArray();
+			case '{':
+				return nextInlineTable();
+			case 't':// Must be "true"
+				if (pos + 3 > data.length() || next() != 'r' || next() != 'u' || next() != 'e') {
+					throw new SettingException("Invalid value at line " + line);
+				}
+				return true;
+			case 'f':// Must be "false"
+				if (pos + 4 > data.length() || next() != 'a' || next() != 'l' || next() != 's' || next() != 'e') {
+					throw new SettingException("Invalid value at line " + line);
+				}
+				return false;
+			default:
+				throw new SettingException("Invalid character '" + toString(firstChar) + "' at line " + line);
+		}
 	}
 
 	private List<Object> nextArray() {

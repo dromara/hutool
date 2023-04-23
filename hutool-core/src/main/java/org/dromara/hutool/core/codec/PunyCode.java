@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.codec;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;

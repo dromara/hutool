@@ -1,6 +1,6 @@
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;

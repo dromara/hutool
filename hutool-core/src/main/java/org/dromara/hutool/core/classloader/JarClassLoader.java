@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.classloader;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;

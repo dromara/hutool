@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.bean;
 
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;

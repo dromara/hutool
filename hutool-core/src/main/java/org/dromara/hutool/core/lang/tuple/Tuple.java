@@ -14,7 +14,7 @@ package org.dromara.hutool.core.lang.tuple;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.io.Serializable;

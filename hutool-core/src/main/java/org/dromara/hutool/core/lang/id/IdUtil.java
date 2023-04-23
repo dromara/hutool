@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.id;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.net.Ipv4Util;

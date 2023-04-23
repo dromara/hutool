@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -33,7 +33,7 @@ public interface SerFunction<T, R> extends Function<T, R>, Serializable {
 	 *
 	 * @param t the function argument
 	 * @return the function result
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 */
 	R applying(T t) throws Exception;
 

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.ds;
 
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.func.Wrapper;
 

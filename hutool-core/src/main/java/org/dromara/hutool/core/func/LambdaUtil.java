@@ -14,7 +14,7 @@ package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.WeakConcurrentMap;

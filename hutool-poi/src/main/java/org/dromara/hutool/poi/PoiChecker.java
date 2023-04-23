@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.poi;
 
-import org.dromara.hutool.core.exceptions.DependencyException;
+import org.dromara.hutool.core.exception.DependencyException;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 
 /**

@@ -16,4 +16,4 @@
  * @author looly
  *
  */
-package org.dromara.hutool.setting.dialect;
+package org.dromara.hutool.setting.props;

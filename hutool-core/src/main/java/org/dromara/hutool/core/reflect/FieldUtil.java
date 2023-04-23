@@ -14,7 +14,7 @@ package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.WeakConcurrentMap;

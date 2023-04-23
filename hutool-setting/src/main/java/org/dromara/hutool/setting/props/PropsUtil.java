@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.setting.dialect;
+package org.dromara.hutool.setting.props;
 
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.resource.NoResourceException;

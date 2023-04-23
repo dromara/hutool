@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.id;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.management.ManagementFactory;

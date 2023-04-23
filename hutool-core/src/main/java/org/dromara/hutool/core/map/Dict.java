@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;

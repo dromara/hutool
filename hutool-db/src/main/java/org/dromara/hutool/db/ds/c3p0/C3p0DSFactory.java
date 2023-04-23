@@ -18,7 +18,7 @@ import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.ds.AbstractDSFactory;
 import org.dromara.hutool.db.ds.DSKeys;
 import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.dialect.Props;
+import org.dromara.hutool.setting.props.Props;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.sql.DataSource;

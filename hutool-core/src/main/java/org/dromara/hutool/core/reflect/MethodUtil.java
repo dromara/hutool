@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.WeakConcurrentMap;

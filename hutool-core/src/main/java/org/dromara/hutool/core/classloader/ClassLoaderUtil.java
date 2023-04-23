@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.classloader;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
 
 import java.io.File;

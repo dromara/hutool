@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds.pooled;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.setting.dialect.Props;
+import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

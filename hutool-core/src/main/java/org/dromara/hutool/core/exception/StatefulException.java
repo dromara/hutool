@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.exceptions;
+package org.dromara.hutool.core.exception;
 
 /**
  * 带有状态码的异常

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.swing;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.swing.clipboard.ClipboardUtil;
 import org.dromara.hutool.swing.img.ImgUtil;
 

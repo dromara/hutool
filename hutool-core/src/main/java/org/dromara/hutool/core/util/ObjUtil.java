@@ -16,7 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;

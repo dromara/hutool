@@ -3,7 +3,7 @@ package org.dromara.hutool.core.util;
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.id.IdUtil;
 import org.dromara.hutool.core.lang.id.Snowflake;

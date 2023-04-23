@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 
 import java.io.ByteArrayInputStream;
