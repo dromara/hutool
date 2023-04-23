@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.bean;
 
-import org.dromara.hutool.core.exceptions.ExceptionUtil;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**

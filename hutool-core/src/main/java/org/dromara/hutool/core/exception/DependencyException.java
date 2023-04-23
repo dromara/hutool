@@ -10,22 +10,23 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.exceptions;
+package org.dromara.hutool.core.exception;
 
 /**
- * 未初始化异常
+ * 依赖异常
  *
  * @author xiaoleilu
+ * @since 4.0.10
  */
-public class NotInitedException extends HutoolException {
-	private static final long serialVersionUID = 8247610319171014183L;
+public class DependencyException extends HutoolException {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造
 	 *
 	 * @param e 异常
 	 */
-	public NotInitedException(final Throwable e) {
+	public DependencyException(final Throwable e) {
 		super(e);
 	}
 
@@ -34,7 +35,7 @@ public class NotInitedException extends HutoolException {
 	 *
 	 * @param message 消息
 	 */
-	public NotInitedException(final String message) {
+	public DependencyException(final String message) {
 		super(message);
 	}
 
@@ -44,7 +45,7 @@ public class NotInitedException extends HutoolException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public NotInitedException(final String messageTemplate, final Object... params) {
+	public DependencyException(final String messageTemplate, final Object... params) {
 		super(messageTemplate, params);
 	}
 
@@ -54,7 +55,7 @@ public class NotInitedException extends HutoolException {
 	 * @param message 消息
 	 * @param cause   被包装的子异常
 	 */
-	public NotInitedException(final String message, final Throwable cause) {
+	public DependencyException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -66,7 +67,7 @@ public class NotInitedException extends HutoolException {
 	 * @param enableSuppression  是否启用抑制
 	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
 	 */
-	public NotInitedException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+	public DependencyException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
@@ -77,7 +78,7 @@ public class NotInitedException extends HutoolException {
 	 * @param messageTemplate 消息模板
 	 * @param params          参数
 	 */
-	public NotInitedException(final Throwable cause, final String messageTemplate, final Object... params) {
+	public DependencyException(final Throwable cause, final String messageTemplate, final Object... params) {
 		super(cause, messageTemplate, params);
 	}
 }

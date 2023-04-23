@@ -15,7 +15,7 @@ package org.dromara.hutool.json.jwt;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.exceptions.ValidateException;
+import org.dromara.hutool.core.exception.ValidateException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;

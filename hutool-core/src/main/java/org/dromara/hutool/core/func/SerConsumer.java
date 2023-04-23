@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -33,7 +33,7 @@ public interface SerConsumer<T> extends Consumer<T>, Serializable {
 	 * Performs this operation on the given argument.
 	 *
 	 * @param t the input argument
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 */
 	void accepting(T t) throws Exception;
 

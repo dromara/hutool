@@ -24,7 +24,7 @@ import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;

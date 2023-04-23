@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io;
 
 import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.collection.iter.LineIter;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.copy.FileChannelCopier;
 import org.dromara.hutool.core.io.copy.ReaderWriterCopier;
 import org.dromara.hutool.core.io.copy.StreamCopier;

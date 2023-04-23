@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.setting;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 /**
  * 设置异常

@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.exceptions;
+package org.dromara.hutool.core.exception;
 
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.map.MapUtil;

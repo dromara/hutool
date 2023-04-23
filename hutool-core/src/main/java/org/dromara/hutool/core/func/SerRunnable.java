@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.func;
 
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.stream.Stream;
@@ -36,7 +36,7 @@ public interface SerRunnable extends Runnable, Serializable {
 	 * The general contract of the method {@code run} is that it may
 	 * take any action whatsoever.
 	 *
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 * @see Thread#run()
 	 */
 	void running() throws Exception;

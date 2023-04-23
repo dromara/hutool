@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;

@@ -12,8 +12,8 @@
 
 package org.dromara.hutool.core.codec.binary;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
-import org.dromara.hutool.core.exceptions.ValidateException;
+import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.exception.ValidateException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

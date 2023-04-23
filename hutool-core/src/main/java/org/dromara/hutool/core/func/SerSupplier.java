@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.function.Supplier;
@@ -32,7 +32,7 @@ public interface SerSupplier<R> extends Supplier<R>, Serializable {
 	 * Gets a result.
 	 *
 	 * @return a result
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 */
 	R getting() throws Exception;
 

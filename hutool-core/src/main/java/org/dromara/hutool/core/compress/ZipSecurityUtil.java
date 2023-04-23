@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.compress;
 
-import org.dromara.hutool.core.exceptions.ValidateException;
+import org.dromara.hutool.core.exception.ValidateException;
 
 import java.util.zip.ZipEntry;
 

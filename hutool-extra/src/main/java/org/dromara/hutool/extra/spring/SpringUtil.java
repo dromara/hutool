@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.spring;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.springframework.beans.BeansException;

@@ -14,7 +14,7 @@ package org.dromara.hutool.core.annotation;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;

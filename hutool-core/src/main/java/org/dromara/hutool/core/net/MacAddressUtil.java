@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.net;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

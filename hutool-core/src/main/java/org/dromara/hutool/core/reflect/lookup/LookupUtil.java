@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.caller.CallerUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;

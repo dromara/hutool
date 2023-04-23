@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * @param t the input argument
 	 * @return {@code true} if the input argument matches the predicate,
 	 * otherwise {@code false}
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 */
 	boolean testing(T t) throws Exception;
 
@@ -101,7 +101,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * predicate, if this predicate is {@code false}, then the {@code other}
 	 * predicate is not evaluated.
 	 *
-	 * <p>Any exceptions thrown during evaluation of either predicate are relayed
+	 * <p>Any exception thrown during evaluation of either predicate are relayed
 	 * to the caller; if evaluation of this predicate throws an exception, the
 	 * {@code other} predicate will not be evaluated.
 	 *
@@ -134,7 +134,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * predicate, if this predicate is {@code true}, then the {@code other}
 	 * predicate is not evaluated.
 	 *
-	 * <p>Any exceptions thrown during evaluation of either predicate are relayed
+	 * <p>Any exception thrown during evaluation of either predicate are relayed
 	 * to the caller; if evaluation of this predicate throws an exception, the
 	 * {@code other} predicate will not be evaluated.
 	 *

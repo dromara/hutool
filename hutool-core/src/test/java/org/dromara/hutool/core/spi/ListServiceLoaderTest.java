@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.spi;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

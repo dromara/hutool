@@ -14,7 +14,7 @@ package org.dromara.hutool.core.codec.binary;
 
 import org.dromara.hutool.core.codec.Decoder;
 import org.dromara.hutool.core.codec.Encoder;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**

@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.id.Pid;

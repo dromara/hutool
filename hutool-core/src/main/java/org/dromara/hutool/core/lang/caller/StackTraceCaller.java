@@ -14,7 +14,7 @@ package org.dromara.hutool.core.lang.caller;
 
 import java.io.Serializable;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 /**
  * 通过StackTrace方式获取调用者。此方式效率最低，不推荐使用

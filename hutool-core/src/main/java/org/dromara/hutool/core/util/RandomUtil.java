@@ -18,7 +18,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateField;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.WeightRandom;
 import org.dromara.hutool.core.lang.WeightRandom.WeightObj;

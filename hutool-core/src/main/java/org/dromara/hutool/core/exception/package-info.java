@@ -16,4 +16,4 @@
  * @author looly
  *
  */
-package org.dromara.hutool.core.exceptions;
+package org.dromara.hutool.core.exception;

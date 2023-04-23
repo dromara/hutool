@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;

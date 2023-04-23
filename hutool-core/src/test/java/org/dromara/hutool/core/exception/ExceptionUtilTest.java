@@ -1,4 +1,4 @@
-package org.dromara.hutool.core.exceptions;
+package org.dromara.hutool.core.exception;
 
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IORuntimeException;

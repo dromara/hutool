@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db.ds.simple;
 
-import org.dromara.hutool.core.exceptions.CloneException;
+import org.dromara.hutool.core.exception.CloneException;
 
 import javax.sql.DataSource;
 import java.io.Closeable;

@@ -3,7 +3,7 @@ package org.dromara.hutool.core.text.placeholder;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharPool;
 import org.dromara.hutool.core.text.StrUtil;

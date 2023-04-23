@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.map.MapUtil;
 
 import javax.naming.InitialContext;

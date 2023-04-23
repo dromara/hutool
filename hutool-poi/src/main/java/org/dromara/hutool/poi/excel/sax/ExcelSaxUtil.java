@@ -14,7 +14,7 @@ package org.dromara.hutool.poi.excel.sax;
 
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.exceptions.DependencyException;
+import org.dromara.hutool.core.exception.DependencyException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;

@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -36,7 +36,7 @@ public interface SerBiFunction<T, U, R> extends BiFunction<T, U, R>, Serializabl
 	 * @param t the first function argument
 	 * @param u the second function argument
 	 * @return the function result
-	 * @throws Exception wrapped checked exceptions
+	 * @throws Exception wrapped checked exception
 	 */
 	R applying(T t, U u) throws Exception;
 

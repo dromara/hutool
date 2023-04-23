@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.net.url;
 
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 

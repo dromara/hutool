@@ -14,7 +14,7 @@ package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
-import org.dromara.hutool.core.exceptions.HutoolException;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
