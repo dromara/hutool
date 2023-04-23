@@ -1,6 +1,6 @@
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.lang.id.ObjectId;
+import org.dromara.hutool.core.data.id.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

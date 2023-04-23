@@ -2,7 +2,7 @@ package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.exception.ValidateException;
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;

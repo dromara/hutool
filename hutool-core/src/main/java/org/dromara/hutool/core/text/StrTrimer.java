@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.core.text;
 
-import org.dromara.hutool.core.util.CharUtil;
-
 import java.io.Serializable;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;

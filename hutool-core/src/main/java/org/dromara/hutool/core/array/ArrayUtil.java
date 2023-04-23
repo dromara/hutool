@@ -356,7 +356,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	/**
 	 * 返回数组中第一个匹配规则的值的位置
 	 *
-	 * @param <T>               数组元素类型
+	 * @param <E>               数组元素类型
 	 * @param matcher           匹配接口，实现此接口自定义匹配规则
 	 * @param beginIndexInclude 检索开始的位置，不能为负数
 	 * @param array             数组
@@ -364,11 +364,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 5.7.3
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> int matchIndex(final int beginIndexInclude, final Predicate<T> matcher, final T... array) {
+	public static <E> int matchIndex(final int beginIndexInclude, final Predicate<E> matcher, final E... array) {
 		if (isEmpty(array)) {
 			return INDEX_NOT_FOUND;
 		}
-		return ArrayWrapper.of(array).matchIndex(beginIndexInclude, matcher);
+		final ArrayWrapper<E[], E> arrayWrapper = ArrayWrapper.of(array);
+		return arrayWrapper.matchIndex(beginIndexInclude, matcher);
 	}
 
 	/**
@@ -590,7 +591,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 新数组或原有数组
 	 * @since 5.7.23
 	 */
-	public static <A> A replace(final A array, final int index, final Object values) {
+	public static <A> A replace(final A array, final int index, final A values) {
 		if (isEmpty(array)) {
 			return ofArray(values, null == array ? null : array.getClass().getComponentType());
 		}
@@ -1174,14 +1175,15 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
 	 * 如果数组下标越界，返回null
 	 *
-	 * @param <T>   数组元素类型
+	 * @param <E>   数组元素类型
 	 * @param array 数组对象
 	 * @param index 下标，支持负数
 	 * @return 值
 	 * @since 4.0.6
 	 */
-	public static <T> T get(final Object array, final int index) {
-		return ArrayWrapper.of(array).get(index);
+	@SuppressWarnings("unchecked")
+	public static <E> E get(final Object array, final int index) {
+		return (E) ArrayWrapper.of(array).get(index);
 	}
 
 	/**

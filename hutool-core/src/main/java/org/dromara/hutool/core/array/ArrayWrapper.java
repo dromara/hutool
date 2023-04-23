@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.array;
 
+import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.Wrapper;
@@ -8,6 +9,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
@@ -15,12 +17,13 @@ import java.util.function.UnaryOperator;
  * 数组包装，提供一系列数组方法
  *
  * @param <A> 数组类型
+ * @param <E> 数组元素类型
  * @author looly
  * @since 6.0.0
  */
-public class ArrayWrapper<A> implements Wrapper<A> {
+public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 
-	private final Class<?> componentType;
+	private final Class<E> componentType;
 	private A array;
 	private int length;
 
@@ -33,8 +36,8 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @return ArrayWrapper
 	 */
 	@SuppressWarnings("unchecked")
-	public static <A> ArrayWrapper<A> of(final Class<?> componentType, final int length) {
-		return (ArrayWrapper<A>) of(Array.newInstance(componentType, length));
+	public static <A, E> ArrayWrapper<A, E> of(final Class<E> componentType, final int length) {
+		return (ArrayWrapper<A, E>) of(Array.newInstance(componentType, length));
 	}
 
 	/**
@@ -42,9 +45,10 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 *
 	 * @param array 数组（非空）
 	 * @param <A>   数组类型
+	 * @param <E>   元素类型
 	 * @return ArrayWrapper
 	 */
-	public static <A> ArrayWrapper<A> of(final A array) {
+	public static <A, E> ArrayWrapper<A, E> of(final A array) {
 		return new ArrayWrapper<>(array);
 	}
 
@@ -53,12 +57,13 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 *
 	 * @param array 数组对象（非空）
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayWrapper(final A array) {
 		Assert.notNull(array, "Array must be not null!");
 		if (!ArrayUtil.isArray(array)) {
 			throw new IllegalArgumentException("Object is not a array!");
 		}
-		this.componentType = array.getClass().getComponentType();
+		this.componentType = (Class<E>) array.getClass().getComponentType();
 		setNewArray(array);
 	}
 
@@ -124,12 +129,11 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
 	 * 如果数组下标越界，返回null
 	 *
-	 * @param <E>   数组元素类型
 	 * @param index 下标，支持负数，-1表示最后一个元素
 	 * @return 值
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> E get(int index) {
+	public E get(int index) {
 		final int length = this.length;
 		if (index < 0) {
 			index += length;
@@ -145,21 +149,19 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	/**
 	 * 返回数组中第一个非空元素
 	 *
-	 * @param <E> 数组元素类型
 	 * @return 第一个非空元素，如果 不存在非空元素 或 数组为空，返回{@code null}
 	 */
-	public <E> E firstNonNull() {
+	public E firstNonNull() {
 		return firstMatch(ObjUtil::isNotNull);
 	}
 
 	/**
 	 * 返回数组中第一个匹配规则的值
 	 *
-	 * @param <E>     元素类型
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @return 第一个匹配元素，如果 不存在匹配元素 或 数组为空，返回 {@code null}
 	 */
-	public <E> E firstMatch(final Predicate<?> matcher) {
+	public E firstMatch(final Predicate<E> matcher) {
 		final int index = matchIndex(matcher);
 		if (index == ArrayUtil.INDEX_NOT_FOUND) {
 			return null;
@@ -184,7 +186,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @return 第一个匹配元素的位置，{@link ArrayUtil#INDEX_NOT_FOUND}表示未匹配到
 	 */
-	public int matchIndex(final Predicate<?> matcher) {
+	public int matchIndex(final Predicate<E> matcher) {
 		return matchIndex(0, matcher);
 	}
 
@@ -206,7 +208,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param offset  检索开始的位置，不能为负数
 	 * @return 第一个匹配元素的位置，{@link ArrayUtil#INDEX_NOT_FOUND}表示未匹配到
 	 */
-	public int matchIndex(final int offset, final Predicate<?> matcher) {
+	public int matchIndex(final int offset, final Predicate<E> matcher) {
 		if (null == matcher && offset < this.length) {
 			return offset;
 		}
@@ -238,7 +240,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param matcher 匹配接口，实现此接口自定义匹配规则
 	 * @return 最后一个匹配元素的位置，{@link ArrayUtil#INDEX_NOT_FOUND}表示未匹配到
 	 */
-	public int matchLastIndex(final Predicate<?> matcher) {
+	public int matchLastIndex(final Predicate<E> matcher) {
 		return matchLastIndex(length - 1, matcher);
 	}
 
@@ -249,7 +251,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param offset  从后向前查找时的起始位置，一般为{@code array.length - 1}
 	 * @return 最后一个匹配元素的位置，{@link ArrayUtil#INDEX_NOT_FOUND}表示未匹配到
 	 */
-	public int matchLastIndex(final int offset, final Predicate<?> matcher) {
+	public int matchLastIndex(final int offset, final Predicate<E> matcher) {
 		if (null == matcher && offset >= 0) {
 			return offset;
 		}
@@ -270,7 +272,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param value 新元素或新数组
 	 * @return this
 	 */
-	public ArrayWrapper<A> setOrAppend(final int index, final Object value) {
+	public ArrayWrapper<A, E> setOrAppend(final int index, final E value) {
 		if (index < this.length) {
 			Array.set(array, index, value);
 		} else {
@@ -284,11 +286,34 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * 将新元素添加到已有数组中<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组
 	 *
-	 * @param newElements 新元素或新数组
+	 * @param element 新元素或新数组
 	 * @return 新数组
 	 */
-	public ArrayWrapper<A> append(final Object newElements) {
-		return insert(this.length, newElements);
+	public ArrayWrapper<A, E> append(final E element) {
+		return insert(this.length, element);
+	}
+
+	/**
+	 * 将新数组追加到已有数组中<br>
+	 * 追加新数组会生成一个新的数组，不影响原数组
+	 *
+	 * @param array 需要追加的数组数组
+	 * @return 新数组
+	 */
+	public ArrayWrapper<A, E> appendArray(final A array) {
+		return insertArray(this.length, array);
+	}
+
+	/**
+	 * 将新元素插入到已有数组中的某个位置
+	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用默认值填充<br>
+	 *
+	 * @param index   插入位置，支持负数。此位置为对应此位置元素之前的空档
+	 * @param element 元素
+	 * @return 新数组
+	 */
+	public ArrayWrapper<A, E> insert(final int index, final E element) {
+		return insertArray(index, createSingleElementArray(element));
 	}
 
 	/**
@@ -296,22 +321,17 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * 如果插入位置为负数，从原数组从后向前计数，若大于原数组长度，则空白处用默认值填充<br>
 	 *
 	 * @param index         插入位置，支持负数。此位置为对应此位置元素之前的空档
-	 * @param arrayToAppend 新元素
+	 * @param arrayToInsert 新元素数组
 	 * @return 新数组
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
-	public ArrayWrapper<A> insert(int index, Object arrayToAppend) {
-		if (!ArrayUtil.isArray(arrayToAppend)) {
-			// 用户传入单个元素则创建单元素数组
-			arrayToAppend = createSingleElementArray(arrayToAppend);
-		}
-
-		final int appendLength = ArrayUtil.length(arrayToAppend);
+	public ArrayWrapper<A, E> insertArray(int index, A arrayToInsert) {
+		final int appendLength = ArrayUtil.length(arrayToInsert);
 		if (0 == appendLength) {
 			return this;
 		}
 		if (isEmpty()) {
-			setNewArray((A) Convert.convert(array.getClass(), arrayToAppend));
+			setNewArray((A) Convert.convert(array.getClass(), arrayToInsert));
 			return this;
 		}
 
@@ -323,14 +343,14 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 		// 已有数组的元素类型
 		// 如果 已有数组的元素类型是 原始类型，则需要转换 新元素数组 为该类型，避免ArrayStoreException
 		if (this.componentType.isPrimitive()) {
-			arrayToAppend = Convert.convert(array.getClass(), arrayToAppend);
+			arrayToInsert = (A) Convert.convert(array.getClass(), arrayToInsert);
 		}
 
 		final A result = (A) Array.newInstance(this.componentType, Math.max(len, index) + appendLength);
 		// 原数组到index位置
 		System.arraycopy(array, 0, result, 0, Math.min(len, index));
 		// 新增的数组追加
-		System.arraycopy(arrayToAppend, 0, result, index, appendLength);
+		System.arraycopy(arrayToInsert, 0, result, index, appendLength);
 		if (index < len) {
 			// 原数组剩余部分
 			System.arraycopy(array, index, result, index + appendLength, len - index);
@@ -350,16 +370,11 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * </ul>
 	 *
 	 * @param index  位置
-	 * @param values 新值
+	 * @param values 新值或新数组
 	 * @return this
 	 */
 	@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
-	public ArrayWrapper<A> replace(final int index, Object values) {
-		if (!ArrayUtil.isArray(values)) {
-			// 用户传入单个元素则创建单元素数组
-			values = createSingleElementArray(values);
-		}
-
+	public ArrayWrapper<A, E> replace(final int index, final A values) {
 		final int valuesLength = ArrayUtil.length(values);
 		if (0 == valuesLength) {
 			return this;
@@ -369,11 +384,11 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 		}
 		if (index < 0) {
 			// 从头部追加
-			return insert(0, values);
+			return insertArray(0, values);
 		}
 		if (index >= length) {
 			// 超出长度，尾部追加
-			return append(values);
+			return appendArray(values);
 		}
 
 		// 在原数组范围内
@@ -397,7 +412,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param editor 编辑器接口，为 {@code null}则返回原数组
 	 * @return this
 	 */
-	public ArrayWrapper<A> edit(final UnaryOperator<?> editor) {
+	public ArrayWrapper<A, E> edit(final UnaryOperator<E> editor) {
 		if (null == array || null == editor) {
 			return this;
 		}
@@ -495,7 +510,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @throws NullPointerException 如果数组元素含有null值
 	 * @since 6.0.0
 	 */
-	public boolean isSorted(final Comparator<? super A> comparator) {
+	public boolean isSorted(final Comparator<E> comparator) {
 		if (isEmpty()) {
 			return false;
 		}
@@ -528,7 +543,7 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param isDESC     是否反序
 	 * @return 是否有序
 	 */
-	public boolean isSorted(final Comparator<? super A> comparator, final boolean isDESC) {
+	public boolean isSorted(final Comparator<E> comparator, final boolean isDESC) {
 		if (null == comparator) {
 			return false;
 		}
@@ -544,6 +559,11 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return new ArrayIter<>(this.array);
 	}
 
 	@Override
@@ -599,9 +619,10 @@ public class ArrayWrapper<A> implements Wrapper<A> {
 	 * @param value 元素值
 	 * @return 数组
 	 */
-	private Object createSingleElementArray(final Object value) {
+	@SuppressWarnings("unchecked")
+	private A createSingleElementArray(final E value) {
 		// 插入单个元素
-		final Object newInstance = Array.newInstance(this.componentType, 1);
+		final A newInstance = (A) Array.newInstance(this.componentType, 1);
 		Array.set(newInstance, 0, value);
 		return newInstance;
 	}

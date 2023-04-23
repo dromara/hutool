@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang.id;
+package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.date.SystemClock;
 import org.dromara.hutool.core.lang.Assert;

@@ -12,8 +12,6 @@
 
 package org.dromara.hutool.core.text;
 
-import org.dromara.hutool.core.util.CharUtil;
-
 /**
  * 命名规则封装，主要是针对驼峰风格命名、连接符命名等的封装
  *

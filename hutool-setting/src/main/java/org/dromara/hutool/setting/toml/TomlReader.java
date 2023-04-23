@@ -65,8 +65,9 @@ public class TomlReader {
 	public Map<String, Object> read() {
 		final Map<String, Object> map = nextTableContent();
 
-		if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '[')
+		if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '['){
 			throw new SettingException("Invalid table declaration at line " + line + ": it never ends");
+		}
 
 		while (hasNext()) {
 			char c = nextUseful(true);

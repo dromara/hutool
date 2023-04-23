@@ -16,7 +16,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.util.List;
 

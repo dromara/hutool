@@ -17,7 +17,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.CharPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

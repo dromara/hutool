@@ -18,7 +18,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.finder.*;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.util.ArrayList;
 import java.util.List;

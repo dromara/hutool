@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io;
 
 import org.dromara.hutool.core.collection.iter.ComputeIter;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

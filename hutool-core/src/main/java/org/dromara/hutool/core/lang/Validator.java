@@ -22,7 +22,7 @@ import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.IdcardUtil;
+import org.dromara.hutool.core.data.IdcardUtil;
 
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;

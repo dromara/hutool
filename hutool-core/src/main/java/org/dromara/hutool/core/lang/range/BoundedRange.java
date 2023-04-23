@@ -22,7 +22,8 @@ import java.util.function.Predicate;
  * 作为{@link Predicate}使用时，可检验指定值是否在区间中，即指定值是否同时满足上下界的{@link Bound#test}方法。
  *
  * <p>区间的类型，支持通过工厂方法创建下述几种类型的区间：</p>
- * <table summary="">
+ * <table>
+ * <caption>区间</caption>
  * <tr><th>区间            <th>数学定义                  <th>工厂方法
  * <tr><td>{@code (a, b)}  <td>{@code {x | a < x < b}}  <td>{@link #open}
  * <tr><td>{@code [a, b]}  <td>{@code {x | a <= x <= b}}<td>{@link #close}

@@ -25,7 +25,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.log.StaticLog;
 import org.dromara.hutool.setting.props.Props;

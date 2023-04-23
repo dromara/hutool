@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io.buffer;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.nio.ByteBuffer;

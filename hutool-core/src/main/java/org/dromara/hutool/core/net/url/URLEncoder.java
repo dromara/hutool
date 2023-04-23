@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.net.url;
 
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.nio.charset.Charset;

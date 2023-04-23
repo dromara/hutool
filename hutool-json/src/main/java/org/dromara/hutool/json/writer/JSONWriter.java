@@ -15,7 +15,7 @@ package org.dromara.hutool.json.writer;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSON;

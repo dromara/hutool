@@ -13,7 +13,7 @@
 package org.dromara.hutool.json.xml;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONArray;

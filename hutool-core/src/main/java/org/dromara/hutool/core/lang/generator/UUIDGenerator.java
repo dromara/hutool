@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.generator;
 
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 
 /**
  * UUID生成器

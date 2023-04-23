@@ -24,6 +24,11 @@ import java.io.Serializable;
  */
 public interface EnumItem<E extends EnumItem<E>> extends Serializable {
 
+	/**
+	 * 枚举名称
+	 *
+	 * @return 名称
+	 */
 	String name();
 
 	/**
@@ -35,6 +40,11 @@ public interface EnumItem<E extends EnumItem<E>> extends Serializable {
 		return name();
 	}
 
+	/**
+	 * int值
+	 *
+	 * @return int值
+	 */
 	int intVal();
 
 	/**

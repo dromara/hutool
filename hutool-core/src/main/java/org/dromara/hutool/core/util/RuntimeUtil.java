@@ -16,7 +16,8 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.id.Pid;
+import org.dromara.hutool.core.data.id.Pid;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.File;

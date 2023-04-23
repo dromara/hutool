@@ -23,7 +23,7 @@ import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.UnicodeUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.lang.reflect.Type;

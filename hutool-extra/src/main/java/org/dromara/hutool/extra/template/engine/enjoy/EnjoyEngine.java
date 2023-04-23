@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.template.engine.enjoy;
 
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;

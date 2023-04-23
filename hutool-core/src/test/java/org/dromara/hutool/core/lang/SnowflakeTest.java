@@ -2,8 +2,8 @@ package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.lang.id.IdUtil;
-import org.dromara.hutool.core.lang.id.Snowflake;
+import org.dromara.hutool.core.data.id.IdUtil;
+import org.dromara.hutool.core.data.id.Snowflake;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.junit.jupiter.api.Assertions;

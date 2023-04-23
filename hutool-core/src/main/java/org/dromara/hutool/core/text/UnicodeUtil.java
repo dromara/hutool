@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.text;
 
-import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.codec.HexUtil;
 
 /**

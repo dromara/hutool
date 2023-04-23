@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**

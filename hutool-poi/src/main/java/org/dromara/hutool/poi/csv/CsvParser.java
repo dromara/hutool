@@ -18,7 +18,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrTrimer;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.Closeable;

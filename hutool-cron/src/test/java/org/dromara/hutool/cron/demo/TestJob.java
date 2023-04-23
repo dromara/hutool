@@ -3,7 +3,7 @@ package org.dromara.hutool.cron.demo;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.thread.ThreadUtil;
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 
 /**
  * 测试定时任务，当触发到定时的时间点时，执行doTest方法

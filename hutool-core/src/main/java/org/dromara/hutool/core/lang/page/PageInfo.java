@@ -13,8 +13,8 @@
 package org.dromara.hutool.core.lang.page;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.DefaultSegment;
-import org.dromara.hutool.core.lang.Segment;
+import org.dromara.hutool.core.lang.range.DefaultSegment;
+import org.dromara.hutool.core.lang.range.Segment;
 import org.dromara.hutool.core.math.NumberUtil;
 
 /**

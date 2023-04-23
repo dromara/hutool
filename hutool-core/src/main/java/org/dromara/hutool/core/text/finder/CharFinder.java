@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.text.finder;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 /**
  * 字符查找器<br>

@@ -16,7 +16,7 @@ import org.dromara.hutool.core.codec.binary.Base16Codec;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.awt.Color;

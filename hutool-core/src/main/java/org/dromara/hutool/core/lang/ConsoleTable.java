@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;

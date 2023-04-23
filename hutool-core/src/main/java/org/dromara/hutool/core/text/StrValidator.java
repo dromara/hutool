@@ -14,7 +14,6 @@ package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.util.CharUtil;
 
 import java.util.function.Predicate;
 

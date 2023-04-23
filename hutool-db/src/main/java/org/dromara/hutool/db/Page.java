@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.db;
 
-import org.dromara.hutool.core.lang.Segment;
+import org.dromara.hutool.core.lang.range.Segment;
 import org.dromara.hutool.core.lang.page.PageInfo;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.db.sql.Order;

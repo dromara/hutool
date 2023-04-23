@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json.xml;
 
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
 

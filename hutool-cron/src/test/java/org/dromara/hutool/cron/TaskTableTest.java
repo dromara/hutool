@@ -1,7 +1,7 @@
 package org.dromara.hutool.cron;
 
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.cron.pattern.CronPattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

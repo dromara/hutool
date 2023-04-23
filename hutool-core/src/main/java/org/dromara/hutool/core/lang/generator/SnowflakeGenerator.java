@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.generator;
 
-import org.dromara.hutool.core.lang.id.Snowflake;
+import org.dromara.hutool.core.data.id.Snowflake;
 
 /**
  * Snowflake生成器<br>

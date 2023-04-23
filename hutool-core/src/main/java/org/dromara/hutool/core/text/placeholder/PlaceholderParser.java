@@ -15,7 +15,7 @@ package org.dromara.hutool.core.text.placeholder;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrValidator;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.util.Objects;
 import java.util.function.UnaryOperator;

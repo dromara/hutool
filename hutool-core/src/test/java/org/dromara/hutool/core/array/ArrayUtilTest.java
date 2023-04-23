@@ -1,7 +1,20 @@
-package org.dromara.hutool.core.util;
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
 
-import org.dromara.hutool.core.array.ArrayUtil;
+package org.dromara.hutool.core.array;
+
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,16 +29,15 @@ import java.util.*;
 @SuppressWarnings("ConstantValue")
 public class ArrayUtilTest {
 
+	@SuppressWarnings("DataFlowIssue")
 	@Test
 	public void isEmptyTest() {
 		final int[] a = {};
 		Assertions.assertTrue(ArrayUtil.isEmpty(a));
 		Assertions.assertTrue(ArrayUtil.isEmpty((Object) a));
 		final int[] b = null;
-		//noinspection ConstantConditions
 		Assertions.assertTrue(ArrayUtil.isEmpty(b));
 		final Object c = null;
-		//noinspection ConstantConditions
 		Assertions.assertTrue(ArrayUtil.isEmpty(c));
 
 		Object d = new Object[]{"1", "2", 3, 4D};
@@ -35,9 +47,7 @@ public class ArrayUtilTest {
 		isEmpty = ArrayUtil.isEmpty(d);
 		Assertions.assertTrue(isEmpty);
 		d = null;
-		//noinspection ConstantConditions
 		isEmpty = ArrayUtil.isEmpty(d);
-		//noinspection ConstantConditions
 		Assertions.assertTrue(isEmpty);
 
 		// Object数组
@@ -518,9 +528,9 @@ public class ArrayUtilTest {
 	}
 
 	@Test
-	public void replaceTest2(){
+	public void replaceTest2() {
 		int[] a = new int[0];
-		a = ArrayUtil.replace(a, 0, 1);
+		a = ArrayUtil.replace(a, 0, new int[]{1});
 		Assertions.assertEquals(1, a.length);
 	}
 
@@ -710,22 +720,23 @@ public class ArrayUtilTest {
 		b = ArrayUtil.startWith(new String[]{"1"}, new String[]{"1"});
 		Assertions.assertTrue(b);
 
-		b = ArrayUtil.startWith((String[])null, null);
+		b = ArrayUtil.startWith((String[]) null, null);
 		Assertions.assertTrue(b);
 	}
 
+	@SuppressWarnings({"RedundantArrayCreation", "ConfusingArgumentToVarargsMethod"})
 	@Test
 	public void startWithTest2() {
 		boolean b = ArrayUtil.startWith(new int[]{}, new int[]{});
 		Assertions.assertTrue(b);
 
-		b = ArrayUtil.startWith(new int[]{1,2,3}, new int[]{1});
+		b = ArrayUtil.startWith(new int[]{1, 2, 3}, new int[]{1});
 		Assertions.assertTrue(b);
 
 		b = ArrayUtil.startWith(new int[]{1}, new int[]{1});
 		Assertions.assertTrue(b);
 
-		b = ArrayUtil.startWith((int[])null, null);
+		b = ArrayUtil.startWith((int[]) null, null);
 		Assertions.assertTrue(b);
 	}
 
@@ -741,7 +752,7 @@ public class ArrayUtilTest {
 		final byte[] bytes1 = Arrays.copyOfRange(a.getBytes(CharsetUtil.UTF_8), 1, 1 + 4);
 
 		Assertions.assertEquals(new String(bytes1),
-				new String(a.getBytes(CharsetUtil.UTF_8), 1, 4));
+			new String(a.getBytes(CharsetUtil.UTF_8), 1, 4));
 	}
 
 	@Test

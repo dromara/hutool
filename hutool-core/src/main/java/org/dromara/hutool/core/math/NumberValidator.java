@@ -14,7 +14,7 @@ package org.dromara.hutool.core.math;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 /**
  * 数字检查器

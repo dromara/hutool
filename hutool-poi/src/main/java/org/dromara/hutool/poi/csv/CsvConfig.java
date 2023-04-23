@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.poi.csv;
 
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

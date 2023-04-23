@@ -14,7 +14,7 @@ package org.dromara.hutool.http.html;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

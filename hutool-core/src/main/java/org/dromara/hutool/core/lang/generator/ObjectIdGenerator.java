@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.lang.generator;
 
-import org.dromara.hutool.core.lang.id.ObjectId;
+import org.dromara.hutool.core.data.id.ObjectId;
 
 /**
  * ObjectId生成器

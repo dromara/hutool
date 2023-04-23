@@ -14,7 +14,7 @@ package org.dromara.hutool.setting.toml;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.setting.SettingException;
 
 import java.io.IOException;

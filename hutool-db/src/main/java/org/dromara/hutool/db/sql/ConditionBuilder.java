@@ -15,7 +15,7 @@ package org.dromara.hutool.db.sql;
 import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.ArrayList;

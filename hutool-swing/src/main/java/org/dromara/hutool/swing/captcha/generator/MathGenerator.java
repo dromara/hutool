@@ -13,7 +13,7 @@
 package org.dromara.hutool.swing.captcha.generator;
 
 import org.dromara.hutool.core.math.Calculator;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
 

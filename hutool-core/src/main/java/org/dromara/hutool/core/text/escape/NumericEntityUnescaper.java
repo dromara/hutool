@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.text.escape;
 
 import org.dromara.hutool.core.text.replacer.StrReplacer;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 /**
  * 形如&#39;的反转义器

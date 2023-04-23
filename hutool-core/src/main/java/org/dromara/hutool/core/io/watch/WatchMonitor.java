@@ -17,7 +17,7 @@ import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.io.watch.watchers.WatcherChain;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.io.File;
 import java.net.URI;

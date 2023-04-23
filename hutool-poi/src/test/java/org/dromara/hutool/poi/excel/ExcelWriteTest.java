@@ -4,7 +4,7 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.lang.id.IdUtil;
+import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;

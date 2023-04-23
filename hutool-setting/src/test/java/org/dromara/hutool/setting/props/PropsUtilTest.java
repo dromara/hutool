@@ -10,24 +10,25 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.setting.props;
 
-import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.util.JdkUtil;
+import org.dromara.hutool.setting.props.PropsUtil;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class JdkUtilTest {
+import java.util.Objects;
+
+public class PropsUtilTest {
+
 	@Test
-	public void jvmVersionTest() {
-		final int jvmVersion = JdkUtil.JVM_VERSION;
-		Assertions.assertTrue(jvmVersion >= 8);
+	public void getTest() {
+		final String driver = PropsUtil.get("test").getStr("driver");
+		Assertions.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 
 	@Test
-	@Disabled
-	public void getJvmNameTest() {
-		Console.log(JdkUtil.IS_AT_LEAST_JDK17);
+	public void getFirstFoundTest() {
+		final String driver = Objects.requireNonNull(PropsUtil.getFirstFound("test2", "test")).getStr("driver");
+		Assertions.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 }

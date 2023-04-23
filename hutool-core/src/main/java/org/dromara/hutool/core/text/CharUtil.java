@@ -10,10 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
-
-import org.dromara.hutool.core.text.ASCIIStrCache;
-import org.dromara.hutool.core.text.CharPool;
+package org.dromara.hutool.core.text;
 
 /**
  * 字符工具类<br>

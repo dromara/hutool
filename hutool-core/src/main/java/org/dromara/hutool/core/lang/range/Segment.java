@@ -10,9 +10,10 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang;
+package org.dromara.hutool.core.lang.range;
 
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 
 import java.lang.reflect.Type;

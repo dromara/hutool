@@ -29,7 +29,6 @@ import org.dromara.hutool.core.text.replacer.RangeReplacerByStr;
 import org.dromara.hutool.core.text.replacer.SearchReplacer;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 

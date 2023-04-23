@@ -17,7 +17,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.TripleTable;
 import org.dromara.hutool.core.text.StrTrimer;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;

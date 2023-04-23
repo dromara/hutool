@@ -7,7 +7,7 @@ public class ArrayWrapperTest {
 
 	@Test
 	void getSubTest() {
-		ArrayWrapper<int[]> array = ArrayWrapper.of(new int[]{1, 2, 3, 4, 5});
+		ArrayWrapper<int[], Object> array = ArrayWrapper.of(new int[]{1, 2, 3, 4, 5});
 		int[] sub = array.getSub(1, 4);
 		Assertions.assertArrayEquals(new int[]{2, 3, 4}, sub);
 
@@ -18,7 +18,7 @@ public class ArrayWrapperTest {
 
 	@Test
 	void getSubStepTest() {
-		ArrayWrapper<int[]> array = ArrayWrapper.of(new int[]{1, 2, 3, 4, 5});
+		ArrayWrapper<int[], Object> array = ArrayWrapper.of(new int[]{1, 2, 3, 4, 5});
 		int[] sub = array.getSub(1, 4, 2);
 		Assertions.assertArrayEquals(new int[]{2, 4}, sub);
 

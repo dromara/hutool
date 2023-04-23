@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.poi.excel.cell.values;
 
-import org.dromara.hutool.core.util.CharUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.poi.excel.ExcelDateUtil;
 import org.dromara.hutool.poi.excel.cell.CellValue;
 import org.apache.poi.ss.usermodel.Cell;

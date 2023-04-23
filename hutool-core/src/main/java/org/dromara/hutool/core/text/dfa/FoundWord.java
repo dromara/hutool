@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.text.dfa;
 
-import org.dromara.hutool.core.lang.DefaultSegment;
+import org.dromara.hutool.core.lang.range.DefaultSegment;
 
 /**
  * <p>

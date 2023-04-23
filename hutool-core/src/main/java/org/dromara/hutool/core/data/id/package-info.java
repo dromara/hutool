@@ -16,4 +16,4 @@
  * @author looly
  * @since 5.7.5
  */
-package org.dromara.hutool.core.lang.id;
+package org.dromara.hutool.core.data.id;

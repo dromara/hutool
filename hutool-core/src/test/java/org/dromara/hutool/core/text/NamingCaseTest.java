@@ -1,7 +1,6 @@
 package org.dromara.hutool.core.text;
 
 import org.dromara.hutool.core.map.Dict;
-import org.dromara.hutool.core.util.CharUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.data;
 
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
@@ -19,6 +19,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
