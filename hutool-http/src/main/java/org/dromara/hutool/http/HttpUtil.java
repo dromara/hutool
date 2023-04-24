@@ -84,7 +84,7 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
-		return ClientEngineFactory.get()
+		return ClientEngineFactory.getEngine()
 				.setConfig(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
 				.send(Request.of(urlString)).bodyStr();
 	}
@@ -141,7 +141,7 @@ public class HttpUtil {
 	 * @return HTTP响应
 	 */
 	public static Response send(final Request request){
-		return ClientEngineFactory.get().send(request);
+		return ClientEngineFactory.getEngine().send(request);
 	}
 
 	/**

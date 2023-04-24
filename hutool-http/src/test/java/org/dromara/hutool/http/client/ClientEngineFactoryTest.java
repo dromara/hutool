@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class ClientEngineFactoryTest {
 	@Test
 	public void getTest() {
-		final ClientEngine clientEngineFactory = ClientEngineFactory.get();
+		final ClientEngine clientEngineFactory = ClientEngineFactory.getEngine();
 		Assertions.assertNotNull(clientEngineFactory);
 	}
 }

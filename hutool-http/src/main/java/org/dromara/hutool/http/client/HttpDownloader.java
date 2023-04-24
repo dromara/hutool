@@ -134,7 +134,7 @@ public class HttpDownloader {
 	private static Response requestDownload(final String url, final int timeout) {
 		Assert.notBlank(url, "[url] is blank !");
 
-		final Response response = ClientEngineFactory.get()
+		final Response response = ClientEngineFactory.getEngine()
 				.setConfig(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
 				.send(Request.of(url));
 

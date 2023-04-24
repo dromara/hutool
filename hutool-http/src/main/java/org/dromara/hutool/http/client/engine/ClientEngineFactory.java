@@ -33,8 +33,8 @@ public class ClientEngineFactory {
 	 *
 	 * @return 单例的ClientEngine
 	 */
-	public static ClientEngine get() {
-		return Singleton.get(ClientEngine.class.getName(), ClientEngineFactory::of);
+	public static ClientEngine getEngine() {
+		return Singleton.get(ClientEngine.class.getName(), ClientEngineFactory::getEngine);
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class ClientEngineFactory {
 	 * @return {@code ClientEngine}
 	 */
 	@SuppressWarnings("resource")
-	public static ClientEngine of(final ClientConfig config) {
-		return of().setConfig(config);
+	public static ClientEngine createEngine(final ClientConfig config) {
+		return createEngine().setConfig(config);
 	}
 
 	/**
@@ -55,8 +55,8 @@ public class ClientEngineFactory {
 	 *
 	 * @return {@code ClientEngine}
 	 */
-	public static ClientEngine of() {
-		final ClientEngine engine = doCreate();
+	public static ClientEngine createEngine() {
+		final ClientEngine engine = doCreateEngine();
 		StaticLog.debug("Use [{}] Http Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
@@ -67,7 +67,7 @@ public class ClientEngineFactory {
 	 *
 	 * @return {@code EngineFactory}
 	 */
-	private static ClientEngine doCreate() {
+	private static ClientEngine doCreateEngine() {
 		final ClientEngine engine = SpiUtil.loadFirstAvailable(ClientEngine.class);
 		if (null != engine) {
 			return engine;
