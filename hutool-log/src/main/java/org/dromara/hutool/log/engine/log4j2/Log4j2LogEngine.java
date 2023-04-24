@@ -10,30 +10,34 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.console;
+package org.dromara.hutool.log.engine.log4j2;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
- * 利用System.out.println()打印彩色日志
+ * <a href="http://logging.apache.org/log4j/2.x/index.html">Apache Log4J 2</a> log.<br>
+ * @author Looly
  *
- * @author hongda.li
- * @since 5.8.0
  */
-public class ConsoleColorLogFactory extends LogFactory {
+public class Log4j2LogEngine extends AbsLogEngine {
 
-	public ConsoleColorLogFactory() {
-		super("Hutool Console Color Logging");
+	/**
+	 * 构造
+	 */
+	public Log4j2LogEngine() {
+		super("Log4j2");
+		checkLogExist(org.apache.logging.log4j.LogManager.class);
 	}
 
 	@Override
 	public Log createLog(final String name) {
-		return new ConsoleColorLog(name);
+		return new Log4j2Log(name);
 	}
 
 	@Override
 	public Log createLog(final Class<?> clazz) {
-		return new ConsoleColorLog(clazz);
+		return new Log4j2Log(clazz);
 	}
+
 }

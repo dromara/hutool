@@ -1,14 +1,16 @@
 package org.dromara.hutool.log;
 
-import org.dromara.hutool.log.engine.commons.ApacheCommonsLogFactory;
-import org.dromara.hutool.log.engine.console.ConsoleLogFactory;
-import org.dromara.hutool.log.engine.jboss.JbossLogFactory;
-import org.dromara.hutool.log.engine.jdk.JdkLogFactory;
-import org.dromara.hutool.log.engine.log4j.Log4jLogFactory;
-import org.dromara.hutool.log.engine.log4j2.Log4j2LogFactory;
-import org.dromara.hutool.log.engine.slf4j.Slf4jLogFactory;
-import org.dromara.hutool.log.engine.tinylog.TinyLog2Factory;
-import org.dromara.hutool.log.engine.tinylog.TinyLogFactory;
+import org.dromara.hutool.log.engine.LogEngine;
+import org.dromara.hutool.log.engine.LogEngineFactory;
+import org.dromara.hutool.log.engine.commons.ApacheCommonsLogEngine;
+import org.dromara.hutool.log.engine.console.ConsoleLogEngine;
+import org.dromara.hutool.log.engine.jboss.JbossLogEngine;
+import org.dromara.hutool.log.engine.jdk.JdkLogEngine;
+import org.dromara.hutool.log.engine.log4j.Log4jLogEngine;
+import org.dromara.hutool.log.engine.log4j2.Log4j2LogEngine;
+import org.dromara.hutool.log.engine.slf4j.Slf4jLogEngine;
+import org.dromara.hutool.log.engine.tinylog.TinyLog2Engine;
+import org.dromara.hutool.log.engine.tinylog.TinyLogEngine;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,18 +24,18 @@ public class CustomLogTest {
 
 	@Test
 	public void consoleLogTest(){
-		final LogFactory factory = new ConsoleLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new ConsoleLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void consoleLogNullTest(){
-		final LogFactory factory = new ConsoleLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new ConsoleLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
@@ -41,92 +43,92 @@ public class CustomLogTest {
 
 	@Test
 	public void commonsLogTest(){
-		final LogFactory factory = new ApacheCommonsLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new ApacheCommonsLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void tinyLogTest(){
-		final LogFactory factory = new TinyLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new TinyLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void tinyLog2Test(){
-		final LogFactory factory = new TinyLog2Factory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new TinyLog2Engine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void log4j2LogTest(){
-		final LogFactory factory = new Log4j2LogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new Log4j2LogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.debug(null);
-		log.debug("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.debug("This is custom '{}' log\n{}", engine.getName(), LINE);
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void log4jLogTest(){
-		final LogFactory factory = new Log4jLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new Log4jLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 
 	}
 
 	@Test
 	public void jbossLogTest(){
-		final LogFactory factory = new JbossLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new JbossLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void jdkLogTest(){
-		final LogFactory factory = new JdkLogFactory();
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new JdkLogEngine();
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 
 	@Test
 	public void slf4jTest(){
-		final LogFactory factory = new Slf4jLogFactory(false);
-		LogFactory.setCurrentLogFactory(factory);
-		final Log log = LogFactory.get();
+		final LogEngine engine = new Slf4jLogEngine(false);
+		LogEngineFactory.setDefaultEngine(engine);
+		final Log log = Log.get();
 
 		log.info(null);
 		log.info((String)null);
-		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		log.info("This is custom '{}' log\n{}", engine.getName(), LINE);
 	}
 }

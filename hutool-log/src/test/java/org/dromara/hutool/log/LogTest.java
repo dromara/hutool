@@ -13,7 +13,7 @@ public class LogTest {
 
 	@Test
 	public void logTest(){
-		final Log log = LogFactory.get();
+		final Log log = Log.get();
 
 		// 自动选择日志实现
 		log.debug("This is {} log", Level.DEBUG);
@@ -27,7 +27,7 @@ public class LogTest {
 	@Test
 	@Disabled
 	public void logWithExceptionTest() {
-		final Log log = LogFactory.get();
+		final Log log = Log.get();
 		final Exception e = new Exception("test Exception");
 		log.error("我是错误消息", e);
 	}

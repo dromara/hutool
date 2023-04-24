@@ -28,7 +28,7 @@ import org.dromara.hutool.log.level.WarnLog;
  */
 public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 
-	//------------------------------------------------------------------------ Static method start
+	// region Static method
 	/**
 	 * 获得Log
 	 *
@@ -36,7 +36,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @return Log
 	 */
 	static Log get(final Class<?> clazz) {
-		return LogFactory.get(clazz);
+		return LogFactory.getLog(clazz);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @since 5.0.0
 	 */
 	static Log get(final String name) {
-		return LogFactory.get(name);
+		return LogFactory.getLog(name);
 	}
 
 	/**
@@ -55,9 +55,9 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @since 5.0.0
 	 */
 	static Log get() {
-		return LogFactory.get(CallerUtil.getCallerCaller());
+		return LogFactory.getLog(CallerUtil.getCallerCaller());
 	}
-	//------------------------------------------------------------------------ Static method end
+	// endregion
 
 	/**
 	 * @return 日志对象的Name

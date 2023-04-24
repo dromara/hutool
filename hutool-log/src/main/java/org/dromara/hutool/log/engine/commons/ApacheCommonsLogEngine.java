@@ -12,20 +12,20 @@
 
 package org.dromara.hutool.log.engine.commons;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
  *  Apache Commons Logging
  * @author Looly
  *
  */
-public class ApacheCommonsLogFactory extends LogFactory{
+public class ApacheCommonsLogEngine extends AbsLogEngine {
 
 	/**
 	 * 构造
 	 */
-	public ApacheCommonsLogFactory() {
+	public ApacheCommonsLogEngine() {
 		super("Apache Common Logging");
 		checkLogExist(org.apache.commons.logging.LogFactory.class);
 	}
@@ -52,6 +52,6 @@ public class ApacheCommonsLogFactory extends LogFactory{
 	protected void checkLogExist(final Class<?> logClassName) {
 		super.checkLogExist(logClassName);
 		//Commons Logging在调用getLog时才检查是否有日志实现，在此提前检查，如果没有实现则跳过之
-		getLog(ApacheCommonsLogFactory.class);
+		createLog(ApacheCommonsLogEngine.class);
 	}
 }

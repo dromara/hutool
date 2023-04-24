@@ -10,35 +10,35 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.tinylog;
+package org.dromara.hutool.log.engine.log4j;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
 import org.dromara.hutool.log.LogFactory;
 
 /**
- * <a href="http://www.tinylog.org/">TinyLog</a> log.<br>
+ * <a href="http://logging.apache.org/log4j/1.2/index.html">Apache Log4J</a> log.<br>
  *
  * @author Looly
- *
  */
-public class TinyLogFactory extends LogFactory {
+public class Log4jLogEngine extends AbsLogEngine {
 
 	/**
 	 * 构造
 	 */
-	public TinyLogFactory() {
-		super("TinyLog");
-		checkLogExist(org.pmw.tinylog.Logger.class);
+	public Log4jLogEngine() {
+		super("Log4j");
+		checkLogExist(org.apache.log4j.Logger.class);
 	}
 
 	@Override
 	public Log createLog(final String name) {
-		return new TinyLog(name);
+		return new Log4jLog(name);
 	}
 
 	@Override
 	public Log createLog(final Class<?> clazz) {
-		return new TinyLog(clazz);
+		return new Log4jLog(clazz);
 	}
 
 }

@@ -16,22 +16,24 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
 
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
  * <a href="http://www.slf4j.org/">SLF4J</a> log.<br>
  * 同样无缝支持 <a href="http://logback.qos.ch/">LogBack</a>
  *
  * @author Looly
- *
  */
-public class Slf4jLogFactory extends LogFactory {
+public class Slf4jLogEngine extends AbsLogEngine {
 
-	public Slf4jLogFactory() {
+	/**
+	 * 构造
+	 */
+	public Slf4jLogEngine() {
 		this(true);
 	}
 
@@ -40,10 +42,10 @@ public class Slf4jLogFactory extends LogFactory {
 	 *
 	 * @param failIfNOP 如果未找到桥接包是否报错
 	 */
-	public Slf4jLogFactory(final boolean failIfNOP) {
+	public Slf4jLogEngine(final boolean failIfNOP) {
 		super("Slf4j");
 		checkLogExist(LoggerFactory.class);
-		if(!failIfNOP){
+		if (!failIfNOP) {
 			return;
 		}
 
@@ -52,7 +54,7 @@ public class Slf4jLogFactory extends LogFactory {
 		final StringBuilder buf = new StringBuilder();
 		final PrintStream err = System.err;
 		try {
-			System.setErr(new PrintStream(new OutputStream(){
+			System.setErr(new PrintStream(new OutputStream() {
 				@Override
 				public void write(final int b) {
 					buf.append((char) b);

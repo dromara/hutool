@@ -10,35 +10,34 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.tinylog;
+package org.dromara.hutool.log.engine.logtube;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
- * <a href="http://www.tinylog.org/">TinyLog2</a> log.<br>
+ * <a href="https://github.com/logtube/logtube-java">LogTube</a> log. 封装<br>
  *
  * @author Looly
- *
  */
-public class TinyLog2Factory extends LogFactory {
+public class LogTubeLogEngine extends AbsLogEngine {
 
 	/**
 	 * 构造
 	 */
-	public TinyLog2Factory() {
-		super("TinyLog");
-		checkLogExist(org.tinylog.Logger.class);
+	public LogTubeLogEngine() {
+		super("LogTube");
+		checkLogExist(io.github.logtube.Logtube.class);
 	}
 
 	@Override
 	public Log createLog(final String name) {
-		return new TinyLog2(name);
+		return new LogTubeLog(name);
 	}
 
 	@Override
 	public Log createLog(final Class<?> clazz) {
-		return new TinyLog2(clazz);
+		return new LogTubeLog(clazz);
 	}
 
 }

@@ -10,35 +10,38 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.jboss;
+package org.dromara.hutool.log.engine;
 
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
- * <a href="https://github.com/jboss-logging">Jboss-Logging</a> log.
+ * 日期引擎接口
  *
- * @author Looly
- * @since 4.1.21
+ * @author looly
+ * @since 6.0.0
  */
-public class JbossLogFactory extends LogFactory {
+public interface LogEngine {
 
 	/**
-	 * 构造
+	 * 获取日志框架名，用于打印当前所用日志框架
+	 *
+	 * @return 日志框架名
 	 */
-	public JbossLogFactory() {
-		super("JBoss Logging");
-		checkLogExist(org.jboss.logging.Logger.class);
-	}
+	String getName();
 
-	@Override
-	public Log createLog(final String name) {
-		return new JbossLog(name);
-	}
+	/**
+	 * 创建日志对象
+	 *
+	 * @param name 日志对象名
+	 * @return 日志对象
+	 */
+	Log createLog(String name);
 
-	@Override
-	public Log createLog(final Class<?> clazz) {
-		return new JbossLog(clazz);
-	}
-
+	/**
+	 * 创建日志对象
+	 *
+	 * @param clazz 日志对应类
+	 * @return 日志对象
+	 */
+	Log createLog(Class<?> clazz);
 }

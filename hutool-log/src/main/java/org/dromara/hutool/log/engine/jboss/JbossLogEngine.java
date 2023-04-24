@@ -10,30 +10,35 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.console;
+package org.dromara.hutool.log.engine.jboss;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
- * 利用System.out.println()打印日志
- * @author Looly
+ * <a href="https://github.com/jboss-logging">Jboss-Logging</a> log.
  *
+ * @author Looly
+ * @since 4.1.21
  */
-public class ConsoleLogFactory extends LogFactory {
+public class JbossLogEngine extends AbsLogEngine {
 
-	public ConsoleLogFactory() {
-		super("Hutool Console Logging");
+	/**
+	 * 构造
+	 */
+	public JbossLogEngine() {
+		super("JBoss Logging");
+		checkLogExist(org.jboss.logging.Logger.class);
 	}
 
 	@Override
 	public Log createLog(final String name) {
-		return new ConsoleLog(name);
+		return new JbossLog(name);
 	}
 
 	@Override
 	public Log createLog(final Class<?> clazz) {
-		return new ConsoleLog(clazz);
+		return new JbossLog(clazz);
 	}
 
 }

@@ -18,18 +18,21 @@ import java.util.logging.LogManager;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
  * JDK日志工厂类
- *  <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.
- * @author Looly
+ * <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.
  *
+ * @author Looly
  */
-public class JdkLogFactory extends LogFactory{
+public class JdkLogEngine extends AbsLogEngine {
 
-	public JdkLogFactory() {
+	/**
+	 * 构造
+	 */
+	public JdkLogEngine() {
 		super("JDK Logging");
 		readConfig();
 	}
@@ -50,7 +53,7 @@ public class JdkLogFactory extends LogFactory{
 	private void readConfig() {
 		//避免循环引用，Log初始化的时候不使用相关工具类
 		final InputStream in = ResourceUtil.getStreamSafe("logging.properties");
-		if(null == in){
+		if (null == in) {
 			System.err.println("[WARN] Can not find [logging.properties], use [%JRE_HOME%/lib/logging.properties] as default!");
 			return;
 		}

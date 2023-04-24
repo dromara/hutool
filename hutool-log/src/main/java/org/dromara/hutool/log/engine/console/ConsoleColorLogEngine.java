@@ -10,32 +10,33 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.log.engine.logtube;
+package org.dromara.hutool.log.engine.console;
 
+import org.dromara.hutool.log.AbsLogEngine;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 
 /**
- * <a href="https://github.com/logtube/logtube-java">LogTube</a> log. 封装<br>
+ * 利用System.out.println()打印彩色日志
  *
- * @author Looly
- * @since 5.6.6
+ * @author hongda.li
+ * @since 5.8.0
  */
-public class LogTubeLogFactory extends LogFactory {
+public class ConsoleColorLogEngine extends AbsLogEngine {
 
-	public LogTubeLogFactory() {
-		super("LogTube");
-		checkLogExist(io.github.logtube.Logtube.class);
+	/**
+	 * 构造
+	 */
+	public ConsoleColorLogEngine() {
+		super("Hutool Console Color Logging");
 	}
 
 	@Override
 	public Log createLog(final String name) {
-		return new LogTubeLog(name);
+		return new ConsoleColorLog(name);
 	}
 
 	@Override
 	public Log createLog(final Class<?> clazz) {
-		return new LogTubeLog(clazz);
+		return new ConsoleColorLog(clazz);
 	}
-
 }
