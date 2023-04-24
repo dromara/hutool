@@ -18,7 +18,7 @@ import org.apdplat.word.segmentation.SegmentationFactory;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 
 /**
  * Word分词引擎实现<br>

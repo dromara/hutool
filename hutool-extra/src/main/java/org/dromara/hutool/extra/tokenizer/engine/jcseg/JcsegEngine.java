@@ -14,7 +14,7 @@ package org.dromara.hutool.extra.tokenizer.engine.jcseg;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.TokenizerException;
 import org.lionsoul.jcseg.ISegment;
 import org.lionsoul.jcseg.dic.ADictionary;

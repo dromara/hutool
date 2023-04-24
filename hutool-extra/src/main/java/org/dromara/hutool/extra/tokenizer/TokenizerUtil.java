@@ -12,7 +12,8 @@
 
 package org.dromara.hutool.extra.tokenizer;
 
-import org.dromara.hutool.extra.tokenizer.engine.TokenizerFactory;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngineFactory;
 
 /**
  * 分词工具类
@@ -23,11 +24,21 @@ import org.dromara.hutool.extra.tokenizer.engine.TokenizerFactory;
 public class TokenizerUtil {
 
 	/**
+	 * 分词处理
+	 *
+	 * @param text 文本
+	 * @return 分词结果
+	 */
+	public static Result parse(final String text) {
+		return getEngine().parse(text);
+	}
+
+	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
 	 *
 	 * @return {@link TokenizerEngine}
 	 */
-	public static TokenizerEngine createEngine() {
-		return TokenizerFactory.of();
+	public static TokenizerEngine getEngine() {
+		return TokenizerEngineFactory.getEngine();
 	}
 }

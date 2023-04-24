@@ -17,7 +17,7 @@ import org.ansj.splitWord.analysis.ToAnalysis;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 
 /**
  * Ansj分词引擎实现<br>

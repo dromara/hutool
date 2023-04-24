@@ -15,7 +15,7 @@ package org.dromara.hutool.extra.tokenizer.engine.ikanalyzer;
 import org.wltea.analyzer.core.IKSegmenter;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.Result;
 
 /**

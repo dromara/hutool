@@ -1,6 +1,7 @@
 package org.dromara.hutool.extra.tokenizer;
 
 import org.dromara.hutool.core.collection.iter.IterUtil;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.engine.analysis.SmartcnEngine;
 import org.dromara.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
 import org.dromara.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;
@@ -23,9 +24,15 @@ public class TokenizerUtilTest {
 	String text = "这两个方法的区别在于返回值";
 
 	@Test
+	void parseTest() {
+		final Result result = TokenizerUtil.parse(text);
+		checkResult(result);
+	}
+
+	@Test
 	public void createEngineTest() {
 		// 默认分词引擎，此处为Ansj
-		final TokenizerEngine engine = TokenizerUtil.createEngine();
+		final TokenizerEngine engine = TokenizerUtil.getEngine();
 		final Result result = engine.parse(text);
 		checkResult(result);
 	}

@@ -17,7 +17,7 @@ import com.mayabot.nlp.segment.Lexer;
 import com.mayabot.nlp.segment.Sentence;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 
 /**
  * MYNLP 中文NLP工具包分词实现<br>

@@ -16,7 +16,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
+import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.Result;
 
 /**

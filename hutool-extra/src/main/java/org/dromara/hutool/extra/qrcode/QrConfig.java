@@ -373,7 +373,7 @@ public class QrConfig {
 	 * @param shapeHint DATA_MATRIX的符号形状
 	 * @return this
 	 */
-	public QrConfig setShapeHint(SymbolShapeHint shapeHint) {
+	public QrConfig setShapeHint(final SymbolShapeHint shapeHint) {
 		this.shapeHint = shapeHint;
 		return this;
 	}
@@ -393,7 +393,7 @@ public class QrConfig {
 	 * @param format 码格式
 	 * @return this
 	 */
-	public QrConfig setFormat(BarcodeFormat format) {
+	public QrConfig setFormat(final BarcodeFormat format) {
 		this.format = format;
 		return this;
 	}

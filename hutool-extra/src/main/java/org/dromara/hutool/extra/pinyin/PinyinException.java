@@ -12,9 +12,7 @@
 
 package org.dromara.hutool.extra.pinyin;
 
-import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * 模板异常

@@ -15,7 +15,6 @@ package org.dromara.hutool.extra.tokenizer.engine;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.tokenizer.TokenizerEngine;
 import org.dromara.hutool.extra.tokenizer.TokenizerException;
 import org.dromara.hutool.log.StaticLog;
 
@@ -23,19 +22,17 @@ import org.dromara.hutool.log.StaticLog;
  * 简单分词引擎工厂，用于根据用户引入的分词引擎jar，自动创建对应的引擎
  *
  * @author looly
- *
  */
-public class TokenizerFactory {
+public class TokenizerEngineFactory {
 
 	/**
 	 * 根据用户引入的模板引擎jar，自动创建对应的分词引擎对象<br>
 	 * 获得的是单例的TokenizerEngine
 	 *
 	 * @return 单例的TokenizerEngine
-	 * @since 5.3.3
 	 */
-	public static TokenizerEngine get(){
-		return Singleton.get(TokenizerEngine.class.getName(), TokenizerFactory::of);
+	public static TokenizerEngine getEngine(){
+		return Singleton.get(TokenizerEngine.class.getName(), TokenizerEngineFactory::createEngine);
 	}
 
 	/**
@@ -43,8 +40,8 @@ public class TokenizerFactory {
 	 *
 	 * @return {@link TokenizerEngine}
 	 */
-	public static TokenizerEngine of() {
-		final TokenizerEngine engine = doCreate();
+	public static TokenizerEngine createEngine() {
+		final TokenizerEngine engine = doCreateEngine();
 		StaticLog.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
@@ -54,7 +51,7 @@ public class TokenizerFactory {
 	 *
 	 * @return {@link TokenizerEngine}
 	 */
-	private static TokenizerEngine doCreate() {
+	private static TokenizerEngine doCreateEngine() {
 		final TokenizerEngine engine = SpiUtil.loadFirstAvailable(TokenizerEngine.class);
 		if(null != engine){
 			return engine;
