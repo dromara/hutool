@@ -10,6 +10,8 @@
 # See the Mulan PSL v2 for more details.
 #
 
+# 实现：org.dromara.hutool.extra.template.engine.TemplateEngine
+
 org.dromara.hutool.extra.template.engine.beetl.BeetlEngine
 org.dromara.hutool.extra.template.engine.freemarker.FreemarkerEngine
 org.dromara.hutool.extra.template.engine.velocity.VelocityEngine

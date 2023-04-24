@@ -16,7 +16,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
-import org.dromara.hutool.extra.template.TemplateEngine;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.dromara.hutool.extra.template.TemplateException;
 import org.febit.wit.Engine;
 import org.febit.wit.exceptions.ResourceNotFoundException;

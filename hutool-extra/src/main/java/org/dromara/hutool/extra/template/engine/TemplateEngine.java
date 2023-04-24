@@ -10,7 +10,10 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.template;
+package org.dromara.hutool.extra.template.engine;
+
+import org.dromara.hutool.extra.template.Template;
+import org.dromara.hutool.extra.template.TemplateConfig;
 
 /**
  * 引擎接口，通过实现此接口从而使用对应的模板引擎

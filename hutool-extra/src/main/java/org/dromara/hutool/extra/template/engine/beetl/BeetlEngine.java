@@ -15,7 +15,7 @@ package org.dromara.hutool.extra.template.engine.beetl;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
-import org.dromara.hutool.extra.template.TemplateEngine;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;

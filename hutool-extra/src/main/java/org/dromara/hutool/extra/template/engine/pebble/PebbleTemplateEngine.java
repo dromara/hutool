@@ -17,7 +17,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
-import org.dromara.hutool.extra.template.TemplateEngine;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.loader.*;
 import org.beetl.core.GroupTemplate;

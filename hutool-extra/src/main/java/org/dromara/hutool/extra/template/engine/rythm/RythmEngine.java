@@ -14,7 +14,7 @@ package org.dromara.hutool.extra.template.engine.rythm;
 
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
-import org.dromara.hutool.extra.template.TemplateEngine;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 
 import java.util.Properties;
 

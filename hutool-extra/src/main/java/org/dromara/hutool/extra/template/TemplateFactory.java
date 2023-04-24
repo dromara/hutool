@@ -10,19 +10,17 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.template.engine;
+package org.dromara.hutool.extra.template;
 
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.template.TemplateConfig;
-import org.dromara.hutool.extra.template.TemplateEngine;
-import org.dromara.hutool.extra.template.TemplateException;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.dromara.hutool.log.StaticLog;
 
 /**
- * 简单模板工厂，用于根据用户引入的模板引擎jar，自动创建对应的模板引擎对象
+ * 简单模板殷勤工厂，用于根据用户引入的模板引擎jar，自动创建对应的模板引擎对象
  *
  * @author looly
  */
@@ -34,8 +32,8 @@ public class TemplateFactory {
 	 *
 	 * @return 单例的TemplateEngine
 	 */
-	public static TemplateEngine get(){
-		return Singleton.get(TemplateEngine.class.getName(), TemplateFactory::of);
+	public static TemplateEngine getEngine() {
+		return Singleton.get(TemplateEngine.class.getName(), TemplateFactory::createEngine);
 	}
 
 	/**
@@ -45,8 +43,8 @@ public class TemplateFactory {
 	 * @return {@link TemplateEngine}
 	 * @since 5.3.3
 	 */
-	public static TemplateEngine of() {
-		return of(new TemplateConfig());
+	public static TemplateEngine createEngine() {
+		return createEngine(new TemplateConfig());
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class TemplateFactory {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link TemplateEngine}
 	 */
-	public static TemplateEngine of(final TemplateConfig config) {
+	public static TemplateEngine createEngine(final TemplateConfig config) {
 		final TemplateEngine engine = doCreate(config);
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
@@ -72,15 +70,17 @@ public class TemplateFactory {
 	private static TemplateEngine doCreate(final TemplateConfig config) {
 		final Class<? extends TemplateEngine> customEngineClass = config.getCustomEngine();
 		final TemplateEngine engine;
-		if(null != customEngineClass){
+		if (null != customEngineClass) {
+			// 自定义模板引擎
 			engine = ConstructorUtil.newInstance(customEngineClass);
-		}else{
+		} else {
+			// SPI引擎查找
 			engine = SpiUtil.loadFirstAvailable(TemplateEngine.class);
 		}
-		if(null != engine){
+		if (null != engine) {
 			return engine.init(config);
 		}
 
-		throw new TemplateException("No template found !Please add one of template jar to your project !");
+		throw new TemplateException("No template found! Please add one of template jar to your project !");
 	}
 }

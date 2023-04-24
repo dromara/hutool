@@ -3,6 +3,7 @@ package org.dromara.hutool.extra.template;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.template.TemplateConfig.ResourceMode;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.dromara.hutool.extra.template.engine.beetl.BeetlEngine;
 import org.dromara.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import org.dromara.hutool.extra.template.engine.freemarker.FreemarkerEngine;
@@ -25,18 +26,18 @@ import java.util.Map;
  * @author looly
  *
  */
-public class TemplateUtilTest {
+public class TemplateFactoryTest {
 
 	@Test
 	public void createEngineTest() {
 		// 字符串模板, 默认模板引擎，此处为Beetl
-		TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig());
+		TemplateEngine engine = TemplateFactory.createEngine(new TemplateConfig());
 		final Template template = engine.getTemplate("hello,${name}");
 		final String result = template.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("hello,hutool", result);
 
 		// classpath中获取模板
-		engine = TemplateUtil.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		engine = TemplateFactory.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
 		final Template template2 = engine.getTemplate("beetl_test.btl");
 		final String result2 = template2.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("hello,hutool", result2);
@@ -60,7 +61,7 @@ public class TemplateUtilTest {
 	@Test
 	public void rythmEngineTest() {
 		// 字符串模板
-		final TemplateEngine engine = TemplateUtil.createEngine(
+		final TemplateEngine engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates").setCustomEngine(RythmEngine.class));
 		final Template template = engine.getTemplate("hello,@name");
 		final String result = template.render(Dict.of().set("name", "hutool"));
@@ -75,14 +76,14 @@ public class TemplateUtilTest {
 	@Test
 	public void freemarkerEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(
+		TemplateEngine engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates", ResourceMode.STRING).setCustomEngine(FreemarkerEngine.class));
 		Template template = engine.getTemplate("hello,${name}");
 		String result = template.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("hello,hutool", result);
 
 		//ClassPath模板
-		engine = TemplateUtil.createEngine(
+		engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(FreemarkerEngine.class));
 		template = engine.getTemplate("freemarker_test.ftl");
 		result = template.render(Dict.of().set("name", "hutool"));
@@ -92,14 +93,14 @@ public class TemplateUtilTest {
 	@Test
 	public void velocityEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(
+		TemplateEngine engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates", ResourceMode.STRING).setCustomEngine(VelocityEngine.class));
 		Template template = engine.getTemplate("你好,$name");
 		String result = template.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("你好,hutool", result);
 
 		//ClassPath模板
-		engine = TemplateUtil.createEngine(
+		engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(VelocityEngine.class));
 		template = engine.getTemplate("velocity_test.vtl");
 		result = template.render(Dict.of().set("name", "hutool"));
@@ -113,7 +114,7 @@ public class TemplateUtilTest {
 	@Test
 	public void enjoyEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(
+		TemplateEngine engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates").setCustomEngine(EnjoyEngine.class));
 		Template template = engine.getTemplate("#(x + 123)");
 		String result = template.render(Dict.of().set("x", 1));
@@ -130,14 +131,14 @@ public class TemplateUtilTest {
 	@Test
 	public void thymeleafEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(
+		TemplateEngine engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates").setCustomEngine(ThymeleafEngine.class));
 		Template template = engine.getTemplate("<h3 th:text=\"${message}\"></h3>");
 		String result = template.render(Dict.of().set("message", "Hutool"));
 		Assertions.assertEquals("<h3>Hutool</h3>", result);
 
 		//ClassPath模板
-		engine = TemplateUtil.createEngine(
+		engine = TemplateFactory.createEngine(
 				new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(ThymeleafEngine.class));
 		template = engine.getTemplate("thymeleaf_test.ttl");
 		result = template.render(Dict.of().set("message", "Hutool"));
@@ -150,13 +151,13 @@ public class TemplateUtilTest {
 	@Test
 	public void pebbleEngineTest() {
 		// 字符串模板
-		TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates").setCustomEngine(PebbleTemplateEngine.class));
+		TemplateEngine engine = TemplateFactory.createEngine(new TemplateConfig("templates").setCustomEngine(PebbleTemplateEngine.class));
 		Template template = engine.getTemplate("<h3>{{ message }}</h3>");
 		String result = template.render(Dict.of().set("message", "Hutool"));
 		Assertions.assertEquals("<h3>Hutool</h3>", result);
 
 		//ClassPath模板
-		engine = TemplateUtil.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(PebbleTemplateEngine.class));
+		engine = TemplateFactory.createEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH).setCustomEngine(PebbleTemplateEngine.class));
 		template = engine.getTemplate("pebble_test.peb");
 		result = template.render(Dict.of().set("name", "Hutool"));
 		Assertions.assertEquals("hello, Hutool", result);
@@ -179,7 +180,7 @@ public class TemplateUtilTest {
 		//classpath模板
 		TemplateConfig config = new TemplateConfig("templates", ResourceMode.CLASSPATH)
 				.setCustomEngine(WitEngine.class);
-		TemplateEngine engine = TemplateUtil.createEngine(config);
+		TemplateEngine engine = TemplateFactory.createEngine(config);
 		Template template = engine.getTemplate("/wit_test.wit");
 		String result = template.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("hello,hutool", StrUtil.trim(result));
@@ -187,7 +188,7 @@ public class TemplateUtilTest {
 		// 字符串模板
 		config = new TemplateConfig("templates", ResourceMode.STRING)
 				.setCustomEngine(WitEngine.class);
-		engine = TemplateUtil.createEngine(config);
+		engine = TemplateFactory.createEngine(config);
 		template = engine.getTemplate("<%var name;%>hello,${name}");
 		result = template.render(Dict.of().set("name", "hutool"));
 		Assertions.assertEquals("hello,hutool", StrUtil.trim(result));

@@ -18,7 +18,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateConfig.ResourceMode;
-import org.dromara.hutool.extra.template.TemplateEngine;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import com.jfinal.template.source.FileSourceFactory;
 
 import java.io.File;

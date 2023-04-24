@@ -2,6 +2,7 @@ package org.dromara.hutool.extra.template;
 
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.map.Dict;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.dromara.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -28,7 +29,7 @@ public class ThymeleafTest {
 	@Test
 	@Disabled
 	public void addDialectTest(){
-		final TemplateEngine engine = TemplateUtil.createEngine();
+		final TemplateEngine engine = TemplateFactory.createEngine();
 		if(engine instanceof ThymeleafEngine){
 			final org.thymeleaf.TemplateEngine rawEngine = ((ThymeleafEngine) engine).getRawEngine();
 			rawEngine.addDialect(new StandardDialect());

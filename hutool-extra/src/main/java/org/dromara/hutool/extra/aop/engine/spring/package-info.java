@@ -11,13 +11,9 @@
  */
 
 /**
- * 第三方模板引擎封装，提供统一的接口用于适配第三方模板引擎
- * <pre>
- *
- *     TemplateFactory   =》   TemplateEngine   =》   Template   =》   内容
- * </pre>
+ * Spring-cglib切面实现
  *
  * @author looly
  *
  */
-package org.dromara.hutool.extra.template;
+package org.dromara.hutool.extra.aop.engine.spring;
