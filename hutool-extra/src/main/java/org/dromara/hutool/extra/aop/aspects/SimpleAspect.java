@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.extra.aop.aspects;
 
+import org.dromara.hutool.extra.aop.Aspect;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 

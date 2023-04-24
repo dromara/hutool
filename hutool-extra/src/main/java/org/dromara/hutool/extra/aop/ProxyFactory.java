@@ -10,11 +10,10 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.aop.proxy;
+package org.dromara.hutool.extra.aop;
 
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.spi.SpiUtil;
-import org.dromara.hutool.extra.aop.aspects.Aspect;
 
 import java.io.Serializable;
 

@@ -10,9 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.aop.interceptor;
-
-import org.dromara.hutool.extra.aop.aspects.Aspect;
+package org.dromara.hutool.extra.aop;
 
 import java.io.Serializable;
 

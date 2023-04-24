@@ -11,7 +11,12 @@
  */
 
 /**
- * JDK动态代理封装，提供非IOC下的切面支持
+ * JDK动态代理封装，提供非IOC下的切面支持，封装包括：
+ * <ul>
+ *     <li>基于{@link java.lang.reflect.Proxy}代理</li>
+ *     <li>基于Spring-cglib代理</li>
+ * </ul>
+ * 考虑到cglib库不再更新且对JDK9+兼容性问题，不再封装
  *
  * @author looly
  *

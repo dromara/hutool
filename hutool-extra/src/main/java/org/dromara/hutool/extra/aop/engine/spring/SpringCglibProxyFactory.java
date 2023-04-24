@@ -10,25 +10,28 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.aop.proxy;
+package org.dromara.hutool.extra.aop.engine.spring;
 
-import org.dromara.hutool.extra.aop.ProxyUtil;
-import org.dromara.hutool.extra.aop.aspects.Aspect;
-import org.dromara.hutool.extra.aop.interceptor.JdkInterceptor;
+import org.dromara.hutool.extra.aop.ProxyFactory;
+import org.dromara.hutool.extra.aop.Aspect;
+import org.springframework.cglib.proxy.Enhancer;
 
 /**
- * JDK实现的切面代理
+ * 基于Spring-cglib的切面代理工厂
  *
  * @author looly
+ *
  */
-public class JdkProxyFactory implements ProxyFactory {
+public class SpringCglibProxyFactory implements ProxyFactory {
 	private static final long serialVersionUID = 1L;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T proxy(final T target, final Aspect aspect) {
-		return ProxyUtil.newProxyInstance(//
-				target.getClass().getClassLoader(), //
-				new JdkInterceptor(target, aspect), //
-				target.getClass().getInterfaces());
+		final Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(target.getClass());
+		enhancer.setCallback(new SpringCglibInterceptor(target, aspect));
+		return (T) enhancer.create();
 	}
+
 }
