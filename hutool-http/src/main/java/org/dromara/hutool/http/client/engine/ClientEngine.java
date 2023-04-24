@@ -32,7 +32,7 @@ public interface ClientEngine extends Closeable {
 	 * @param config 客户端设置
 	 * @return this
 	 */
-	ClientEngine setConfig(ClientConfig config);
+	ClientEngine init(ClientConfig config);
 
 	/**
 	 * 发送HTTP请求

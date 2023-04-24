@@ -45,7 +45,7 @@ public class OkHttpEngine implements ClientEngine {
 	}
 
 	@Override
-	public OkHttpEngine setConfig(final ClientConfig config) {
+	public OkHttpEngine init(final ClientConfig config) {
 		this.config = config;
 		// 重置客户端
 		this.client = null;

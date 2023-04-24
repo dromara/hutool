@@ -70,7 +70,7 @@ public class HttpClient5Engine implements ClientEngine {
 	}
 
 	@Override
-	public HttpClient5Engine setConfig(final ClientConfig config) {
+	public HttpClient5Engine init(final ClientConfig config) {
 		this.config = config;
 		// 重置客户端
 		IoUtil.closeQuietly(this.engine);

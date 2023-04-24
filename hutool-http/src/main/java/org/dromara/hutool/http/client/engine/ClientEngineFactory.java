@@ -45,7 +45,7 @@ public class ClientEngineFactory {
 	 */
 	@SuppressWarnings("resource")
 	public static ClientEngine createEngine(final ClientConfig config) {
-		return createEngine().setConfig(config);
+		return createEngine().init(config);
 	}
 
 	/**

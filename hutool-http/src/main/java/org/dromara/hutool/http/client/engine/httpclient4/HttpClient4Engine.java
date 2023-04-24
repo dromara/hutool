@@ -65,7 +65,7 @@ public class HttpClient4Engine implements ClientEngine {
 	}
 
 	@Override
-	public HttpClient4Engine setConfig(final ClientConfig config) {
+	public HttpClient4Engine init(final ClientConfig config) {
 		this.config = config;
 		// 重置客户端
 		IoUtil.closeQuietly(this.engine);

@@ -51,7 +51,7 @@ public class JdkClientEngine implements ClientEngine {
 	public JdkClientEngine() {}
 
 	@Override
-	public JdkClientEngine setConfig(final ClientConfig config) {
+	public JdkClientEngine init(final ClientConfig config) {
 		this.config = config;
 		if(null != this.conn){
 			this.conn.disconnectQuietly();

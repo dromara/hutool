@@ -85,7 +85,7 @@ public class HttpUtil {
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
 		return ClientEngineFactory.getEngine()
-				.setConfig(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
+				.init(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
 				.send(Request.of(urlString)).bodyStr();
 	}
 
