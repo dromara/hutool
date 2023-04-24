@@ -122,7 +122,7 @@ public class PebbleTemplateEngine implements TemplateEngine {
 	}
 
 	@Override
-	public Object getRawEngine() {
+	public PebbleEngine getRaw() {
 		return this.engine;
 	}
 

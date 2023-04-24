@@ -85,7 +85,7 @@ public class JetbrickEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public JetEngine getRawEngine() {
+	public JetEngine getRaw() {
 		return this.engine;
 	}
 

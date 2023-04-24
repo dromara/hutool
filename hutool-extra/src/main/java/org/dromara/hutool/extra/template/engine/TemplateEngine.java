@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.template.engine;
 
+import org.dromara.hutool.core.func.Wrapper;
 import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 
@@ -20,7 +21,7 @@ import org.dromara.hutool.extra.template.TemplateConfig;
  *
  * @author looly
  */
-public interface TemplateEngine {
+public interface TemplateEngine extends Wrapper<Object> {
 
 	/**
 	 * 使用指定配置文件初始化模板引擎
@@ -37,12 +38,4 @@ public interface TemplateEngine {
 	 * @return 模板实现
 	 */
 	Template getTemplate(String resource);
-
-	/**
-	 * 获取原始引擎的钩子方法，用于自定义特殊属性，如插件等
-	 *
-	 * @return 对应模板实现的引擎对象
-	 * @since 6.0.0
-	 */
-	Object getRawEngine();
 }

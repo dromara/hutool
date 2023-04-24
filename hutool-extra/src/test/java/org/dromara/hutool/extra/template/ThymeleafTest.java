@@ -32,7 +32,7 @@ public class ThymeleafTest {
 	public void addDialectTest(){
 		final TemplateEngine engine = TemplateEngineFactory.createEngine();
 		if(engine instanceof ThymeleafEngine){
-			final org.thymeleaf.TemplateEngine rawEngine = ((ThymeleafEngine) engine).getRawEngine();
+			final org.thymeleaf.TemplateEngine rawEngine = ((ThymeleafEngine) engine).getRaw();
 			rawEngine.addDialect(new StandardDialect());
 		}
 	}

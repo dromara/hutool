@@ -83,7 +83,7 @@ public class VelocityEngine implements TemplateEngine {
 	 * @since 5.5.8
 	 */
 	@Override
-	public org.apache.velocity.app.VelocityEngine getRawEngine() {
+	public org.apache.velocity.app.VelocityEngine getRaw() {
 		return this.engine;
 	}
 

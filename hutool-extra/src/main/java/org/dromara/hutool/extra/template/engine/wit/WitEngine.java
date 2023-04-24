@@ -92,7 +92,7 @@ public class WitEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public Engine getRawEngine() {
+	public Engine getRaw() {
 		return this.engine;
 	}
 

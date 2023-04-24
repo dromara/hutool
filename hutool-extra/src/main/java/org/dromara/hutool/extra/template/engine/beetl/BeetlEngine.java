@@ -91,7 +91,7 @@ public class BeetlEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public GroupTemplate getRawEngine() {
+	public GroupTemplate getRaw() {
 		return this.engine;
 	}
 

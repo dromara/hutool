@@ -86,7 +86,7 @@ public class RythmEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public org.rythmengine.RythmEngine getRawEngine() {
+	public org.rythmengine.RythmEngine getRaw() {
 		return this.engine;
 	}
 

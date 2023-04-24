@@ -46,7 +46,7 @@ public class TemplateEngineFactory {
 	 * @since 5.3.3
 	 */
 	public static TemplateEngine createEngine() {
-		return createEngine(new TemplateConfig());
+		return createEngine(TemplateConfig.DEFAULT);
 	}
 
 	/**

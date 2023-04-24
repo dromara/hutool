@@ -101,7 +101,7 @@ public class FreemarkerEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public Configuration getRawEngine() {
+	public Configuration getRaw() {
 		return this.cfg;
 	}
 

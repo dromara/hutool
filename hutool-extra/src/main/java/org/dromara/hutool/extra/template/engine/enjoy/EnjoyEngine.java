@@ -96,7 +96,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public com.jfinal.template.Engine getRawEngine() {
+	public com.jfinal.template.Engine getRaw() {
 		return this.engine;
 	}
 

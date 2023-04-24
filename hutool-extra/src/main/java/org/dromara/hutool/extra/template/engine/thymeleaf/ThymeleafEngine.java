@@ -97,7 +97,7 @@ public class ThymeleafEngine implements TemplateEngine {
 	 * @since 5.8.7
 	 */
 	@Override
-	public org.thymeleaf.TemplateEngine getRawEngine() {
+	public org.thymeleaf.TemplateEngine getRaw() {
 		return this.engine;
 	}
 
