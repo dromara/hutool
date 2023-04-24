@@ -19,7 +19,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.ClientEngine;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;

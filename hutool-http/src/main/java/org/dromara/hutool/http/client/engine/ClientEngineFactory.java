@@ -17,7 +17,6 @@ import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.ClientEngine;
 import org.dromara.hutool.log.StaticLog;
 
 /**

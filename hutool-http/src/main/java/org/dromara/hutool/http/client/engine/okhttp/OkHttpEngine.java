@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.ClientEngine;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.proxy.HttpProxy;

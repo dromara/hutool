@@ -1,6 +1,7 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.httpclient4.HttpClient4Engine;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Disabled;

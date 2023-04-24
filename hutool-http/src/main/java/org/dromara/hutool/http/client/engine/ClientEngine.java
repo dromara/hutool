@@ -10,7 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.http.client;
+package org.dromara.hutool.http.client.engine;
+
+import org.dromara.hutool.http.client.ClientConfig;
+import org.dromara.hutool.http.client.Request;
+import org.dromara.hutool.http.client.Response;
 
 import java.io.Closeable;
 

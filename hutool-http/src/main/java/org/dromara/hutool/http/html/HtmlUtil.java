@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
  * HTML工具类
  *
  * <p>
- * 比如我们在使用爬虫爬取HTML页面后，需要对返回页面的HTML内容做一定处理，<br>
  * 比如去掉指定标签（例如广告栏等）、去除JS、去掉样式等等，这些操作都可以使用此工具类完成。
  *
  * @author xiaoleilu
