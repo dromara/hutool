@@ -17,6 +17,10 @@
  *     <li>基于Spring-cglib代理</li>
  * </ul>
  * 考虑到cglib库不再更新且对JDK9+兼容性问题，不再封装
+ * <pre>
+ *                            createEngine               proxy
+ *        ProxyEngineFactory       =》      ProxyEngine    =》  Proxy
+ * </pre>
  *
  * @author looly
  *

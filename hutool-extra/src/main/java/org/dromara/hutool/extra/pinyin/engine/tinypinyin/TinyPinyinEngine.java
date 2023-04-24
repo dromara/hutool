@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.pinyin.engine.tinypinyin;
 
-import org.dromara.hutool.extra.pinyin.PinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.github.promeg.pinyinhelper.Pinyin;
 
 /**

@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.pinyin;
+package org.dromara.hutool.extra.pinyin.engine;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;

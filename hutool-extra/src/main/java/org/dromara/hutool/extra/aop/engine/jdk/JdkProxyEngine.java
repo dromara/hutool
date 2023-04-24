@@ -12,17 +12,16 @@
 
 package org.dromara.hutool.extra.aop.engine.jdk;
 
-import org.dromara.hutool.extra.aop.ProxyFactory;
-import org.dromara.hutool.extra.aop.ProxyUtil;
 import org.dromara.hutool.extra.aop.Aspect;
+import org.dromara.hutool.extra.aop.ProxyUtil;
+import org.dromara.hutool.extra.aop.engine.ProxyEngine;
 
 /**
  * JDK实现的切面代理
  *
  * @author looly
  */
-public class JdkProxyFactory implements ProxyFactory {
-	private static final long serialVersionUID = 1L;
+public class JdkProxyEngine implements ProxyEngine {
 
 	@Override
 	public <T> T proxy(final T target, final Aspect aspect) {

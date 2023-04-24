@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.pinyin.engine.houbbpinyin;
 
-import org.dromara.hutool.extra.pinyin.PinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.github.houbb.pinyin.constant.enums.PinyinStyleEnum;
 import com.github.houbb.pinyin.util.PinyinHelper;
 

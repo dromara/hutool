@@ -11,7 +11,11 @@
  */
 
 /**
- * 拼音工具封装，入口为PinyinUtil
+ * 拼音相关封装
+ * <pre>
+ *                            createEngine                getPinyin
+ *       PinyinEngineFactory       =》      PinyinEngine      =》     拼音
+ * </pre>
  *
  * @author looly
  *

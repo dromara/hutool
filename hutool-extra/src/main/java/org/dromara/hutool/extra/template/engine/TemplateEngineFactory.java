@@ -10,21 +10,23 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.template;
+package org.dromara.hutool.extra.template.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.template.engine.TemplateEngine;
+import org.dromara.hutool.extra.template.TemplateConfig;
+import org.dromara.hutool.extra.template.TemplateException;
 import org.dromara.hutool.log.StaticLog;
 
 /**
- * 简单模板殷勤工厂，用于根据用户引入的模板引擎jar，自动创建对应的模板引擎对象
+ * 简单模板引擎工厂，用于根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
+ * 使用简单工厂（Simple Factory）模式
  *
  * @author looly
  */
-public class TemplateFactory {
+public class TemplateEngineFactory {
 
 	/**
 	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
@@ -33,7 +35,7 @@ public class TemplateFactory {
 	 * @return 单例的TemplateEngine
 	 */
 	public static TemplateEngine getEngine() {
-		return Singleton.get(TemplateEngine.class.getName(), TemplateFactory::createEngine);
+		return Singleton.get(TemplateEngine.class.getName(), TemplateEngineFactory::createEngine);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class TemplateFactory {
 	 * @return {@link TemplateEngine}
 	 */
 	public static TemplateEngine createEngine(final TemplateConfig config) {
-		final TemplateEngine engine = doCreate(config);
+		final TemplateEngine engine = doCreateEngine(config);
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
@@ -67,7 +69,7 @@ public class TemplateFactory {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link TemplateEngine}
 	 */
-	private static TemplateEngine doCreate(final TemplateConfig config) {
+	private static TemplateEngine doCreateEngine(final TemplateConfig config) {
 		final Class<? extends TemplateEngine> customEngineClass = config.getCustomEngine();
 		final TemplateEngine engine;
 		if (null != customEngineClass) {

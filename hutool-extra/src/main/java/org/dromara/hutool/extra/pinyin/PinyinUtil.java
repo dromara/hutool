@@ -12,25 +12,26 @@
 
 package org.dromara.hutool.extra.pinyin;
 
+import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.pinyin.engine.PinyinFactory;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngineFactory;
 
 /**
- * 拼音工具类，封装了TinyPinyin、JPinyin、Pinyin4j，通过SPI自动识别。
+ * 拼音工具类，用于快速获取拼音
  *
  * @author looly
  */
 public class PinyinUtil {
-
-	private static final String CHINESE_REGEX = "[\\u4e00-\\u9fa5]";
 
 	/**
 	 * 获得全局单例的拼音引擎
 	 *
 	 * @return 全局单例的拼音引擎
 	 */
-	public static PinyinEngine getEngine(){
-		return PinyinFactory.get();
+	public static PinyinEngine getEngine() {
+		return PinyinEngineFactory.getEngine();
 	}
 
 	/**
@@ -92,6 +93,6 @@ public class PinyinUtil {
 	 * @return 是否为中文字符
 	 */
 	public static boolean isChinese(final char c) {
-		return '〇' == c || String.valueOf(c).matches(CHINESE_REGEX);
+		return '〇' == c || ReUtil.isMatch(PatternPool.CHINESE, String.valueOf(c));
 	}
 }

@@ -12,8 +12,8 @@
 
 package org.dromara.hutool.extra.aop.engine.spring;
 
-import org.dromara.hutool.extra.aop.ProxyFactory;
 import org.dromara.hutool.extra.aop.Aspect;
+import org.dromara.hutool.extra.aop.engine.ProxyEngine;
 import org.springframework.cglib.proxy.Enhancer;
 
 /**
@@ -22,8 +22,7 @@ import org.springframework.cglib.proxy.Enhancer;
  * @author looly
  *
  */
-public class SpringCglibProxyFactory implements ProxyFactory {
-	private static final long serialVersionUID = 1L;
+public class SpringCglibProxyEngine implements ProxyEngine {
 
 	@Override
 	@SuppressWarnings("unchecked")

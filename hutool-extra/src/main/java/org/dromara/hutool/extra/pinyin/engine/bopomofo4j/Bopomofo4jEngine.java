@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.pinyin.engine.bopomofo4j;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.pinyin.PinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.rnkrsoft.bopomofo4j.Bopomofo4j;
 import com.rnkrsoft.bopomofo4j.ToneType;
 
@@ -39,6 +39,9 @@ import com.rnkrsoft.bopomofo4j.ToneType;
  */
 public class Bopomofo4jEngine implements PinyinEngine {
 
+	/**
+	 * 构造
+	 */
 	public Bopomofo4jEngine(){
 		Bopomofo4j.local();
 	}

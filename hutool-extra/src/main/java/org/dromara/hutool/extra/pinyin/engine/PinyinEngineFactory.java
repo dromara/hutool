@@ -15,24 +15,24 @@ package org.dromara.hutool.extra.pinyin.engine;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.pinyin.PinyinEngine;
 import org.dromara.hutool.extra.pinyin.PinyinException;
 import org.dromara.hutool.log.StaticLog;
 
 /**
- * 简单拼音引擎工厂，用于根据用户引入的拼音库jar，自动创建对应的拼音引擎对象
+ * 简单拼音引擎工厂，用于根据用户引入的拼音库jar，自动创建对应的拼音引擎对象<br>
+ * 使用简单工厂（Simple Factory）模式
  *
  * @author looly
  */
-public class PinyinFactory {
+public class PinyinEngineFactory {
 
 	/**
 	 * 获得单例的PinyinEngine
 	 *
 	 * @return 单例的PinyinEngine
 	 */
-	public static PinyinEngine get(){
-		return Singleton.get(PinyinEngine.class.getName(), PinyinFactory::of);
+	public static PinyinEngine getEngine(){
+		return Singleton.get(PinyinEngine.class.getName(), PinyinEngineFactory::createEngine);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class PinyinFactory {
 	 *
 	 * @return {@link PinyinEngine}
 	 */
-	public static PinyinEngine of() {
-		final PinyinEngine engine = doCreate();
+	public static PinyinEngine createEngine() {
+		final PinyinEngine engine = doCreateEngine();
 		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
@@ -53,7 +53,7 @@ public class PinyinFactory {
 	 *
 	 * @return {@link PinyinEngine}
 	 */
-	private static PinyinEngine doCreate() {
+	private static PinyinEngine doCreateEngine() {
 		final PinyinEngine engine = SpiUtil.loadFirstAvailable(PinyinEngine.class);
 		if(null != engine){
 			return engine;

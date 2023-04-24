@@ -13,40 +13,53 @@
 package org.dromara.hutool.extra.aop;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
+import org.dromara.hutool.extra.aop.engine.ProxyEngine;
+import org.dromara.hutool.extra.aop.engine.ProxyEngineFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 /**
  * 代理工具类
- * @author Looly
  *
+ * @author Looly
  */
 public final class ProxyUtil {
 
 	/**
-	 * 使用切面代理对象
+	 * 获取动态代理引擎
 	 *
-	 * @param <T> 切面对象类型
-	 * @param target 目标对象
-	 * @param aspectClass 切面对象类
-	 * @return 代理对象
+	 * @return {@link ProxyEngine}
 	 */
-	public static <T> T proxy(final T target, final Class<? extends Aspect> aspectClass){
-		return ProxyFactory.createProxy(target, aspectClass);
+	public static ProxyEngine getEngine() {
+		return ProxyEngineFactory.getEngine();
 	}
 
 	/**
 	 * 使用切面代理对象
 	 *
-	 * @param <T> 被代理对象类型
+	 * @param <T>         切面对象类型
+	 * @param target      目标对象
+	 * @param aspectClass 切面对象类
+	 * @return 代理对象
+	 */
+	public static <T> T proxy(final T target, final Class<? extends Aspect> aspectClass) {
+		return getEngine().proxy(target, aspectClass);
+	}
+
+	/**
+	 * 使用切面代理对象
+	 *
+	 * @param <T>    被代理对象类型
 	 * @param target 被代理对象
 	 * @param aspect 切面对象
 	 * @return 代理对象
 	 */
-	public static <T> T proxy(final T target, final Aspect aspect){
-		return ProxyFactory.createProxy(target, aspect);
+	public static <T> T proxy(final T target, final Aspect aspect) {
+		return getEngine().proxy(target, aspect);
 	}
+
+	// region ----- JDK Proxy utils
 
 	/**
 	 * 创建动态代理对象<br>
@@ -58,10 +71,10 @@ public final class ProxyUtil {
 	 * 4、将$Proxy0的实例返回给客户端。 <br>
 	 * 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])} 方法
 	 *
-	 * @param <T> 被代理对象类型
-	 * @param classloader 被代理类对应的ClassLoader
+	 * @param <T>               被代理对象类型
+	 * @param classloader       被代理类对应的ClassLoader
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能
-	 * @param interfaces 代理类中需要实现的被代理类的接口方法
+	 * @param interfaces        代理类中需要实现的被代理类的接口方法
 	 * @return 代理类
 	 */
 	@SuppressWarnings("unchecked")
@@ -72,12 +85,13 @@ public final class ProxyUtil {
 	/**
 	 * 创建动态代理对象
 	 *
-	 * @param <T> 被代理对象类型
+	 * @param <T>               被代理对象类型
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能
-	 * @param interfaces 代理类中需要实现的被代理类的接口方法
+	 * @param interfaces        代理类中需要实现的被代理类的接口方法
 	 * @return 代理类
 	 */
 	public static <T> T newProxyInstance(final InvocationHandler invocationHandler, final Class<?>... interfaces) {
 		return newProxyInstance(ClassLoaderUtil.getClassLoader(), invocationHandler, interfaces);
 	}
+	// endregion
 }

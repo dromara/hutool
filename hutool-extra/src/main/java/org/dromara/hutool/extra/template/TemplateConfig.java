@@ -28,6 +28,9 @@ import org.dromara.hutool.extra.template.engine.TemplateEngine;
 public class TemplateConfig implements Serializable {
 	private static final long serialVersionUID = 2933113779920339523L;
 
+	/**
+	 * 默认配置
+	 */
 	public static final TemplateConfig DEFAULT = new TemplateConfig();
 
 	/**
@@ -206,17 +209,17 @@ public class TemplateConfig implements Serializable {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (this == o){
+		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()){
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final TemplateConfig that = (TemplateConfig) o;
 		return Objects.equals(charset, that.charset) &&
-				Objects.equals(path, that.path) &&
-				resourceMode == that.resourceMode &&
-				Objects.equals(customEngine, that.customEngine);
+			Objects.equals(path, that.path) &&
+			resourceMode == that.resourceMode &&
+			Objects.equals(customEngine, that.customEngine);
 	}
 
 	@Override

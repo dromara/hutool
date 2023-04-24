@@ -13,7 +13,7 @@
 package org.dromara.hutool.extra.pinyin.engine.jpinyin;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.extra.pinyin.PinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
