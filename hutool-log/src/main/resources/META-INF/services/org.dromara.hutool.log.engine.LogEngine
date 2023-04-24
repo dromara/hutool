@@ -10,7 +10,6 @@
 # See the Mulan PSL v2 for more details.
 #
 
-org.dromara.hutool.log.engine.logtube.LogTubeLogEngine
 org.dromara.hutool.log.engine.slf4j.Slf4jLogEngine
 org.dromara.hutool.log.engine.log4j2.Log4j2LogEngine
 org.dromara.hutool.log.engine.log4j.Log4jLogEngine
