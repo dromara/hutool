@@ -65,12 +65,12 @@ public class QrDecoder implements Decoder<Image, String> {
 	 *
 	 * @param hints 自定义扫码配置，包括算法、编码、复杂模式等
 	 */
-	public QrDecoder(Map<DecodeHintType, Object> hints) {
+	public QrDecoder(final Map<DecodeHintType, Object> hints) {
 		this.hints = hints;
 	}
 
 	@Override
-	public String decode(Image image) {
+	public String decode(final Image image) {
 		final MultiFormatReader formatReader = new MultiFormatReader();
 		formatReader.setHints(hints);
 
