@@ -28,7 +28,7 @@ import java.io.Serializable;
 public class CronTimer extends Thread implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final Log log = LogFactory.get();
+	private static final Log log = Log.get();
 
 	/** 定时单元：秒 */
 	private final long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();

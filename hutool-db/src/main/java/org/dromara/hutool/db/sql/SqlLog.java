@@ -29,7 +29,7 @@ public class SqlLog {
 	 */
 	public static SqlLog INSTANCE = new SqlLog();
 
-	private final static Log log = LogFactory.get();
+	private final static Log log = Log.get();
 
 	/**
 	 * 是否debugSQL

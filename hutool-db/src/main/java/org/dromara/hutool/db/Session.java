@@ -37,7 +37,7 @@ import java.sql.Savepoint;
  */
 public class Session extends AbstractDb<Session> implements Closeable {
 	private static final long serialVersionUID = 3421251905539056945L;
-	private final static Log log = LogFactory.get();
+	private final static Log log = Log.get();
 
 	/**
 	 * 创建默认数据源会话
