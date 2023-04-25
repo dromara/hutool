@@ -22,6 +22,7 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -80,7 +81,8 @@ public class MapConverter implements Converter, Serializable {
 					return (Map) value;
 				}
 			}
-			map = MapUtil.createMap(TypeUtil.getClass(targetType));
+
+			map = MapUtil.createMap(TypeUtil.getClass(targetType), LinkedHashMap::new);
 			convertMapToMap(keyType, valueType, (Map) value, map);
 		} else if (BeanUtil.isBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);

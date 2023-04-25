@@ -199,4 +199,15 @@ public class HtmlUtilTest {
 		charsetName = ReUtil.get(HtmlUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
 		Assertions.assertEquals("utf-8", charsetName);
 	}
+
+	@Test
+	void issueI6YNTFTest() {
+		String html = "<html><body><div class=\"a1 a2\">hello world</div></body></html>";
+		String cleanText = HtmlUtil.removeHtmlAttr(html,"class");
+		Assertions.assertEquals("<html><body><div>hello world</div></body></html>", cleanText);
+
+		html = "<html><body><div class=a1>hello world</div></body></html>";
+		cleanText = HtmlUtil.removeHtmlAttr(html,"class");
+		Assertions.assertEquals("<html><body><div>hello world</div></body></html>", cleanText);
+	}
 }

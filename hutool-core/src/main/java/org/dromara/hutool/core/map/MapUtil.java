@@ -24,10 +24,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
@@ -240,16 +237,30 @@ public class MapUtil extends MapGetUtil {
 	 * @param mapType map类型
 	 * @return {@link Map}实例
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> createMap(final Class<?> mapType) {
+		return createMap(mapType, HashMap::new);
+	}
+
+	/**
+	 * 创建Map<br>
+	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
+	 *
+	 * @param <K>        map键类型
+	 * @param <V>        map值类型
+	 * @param mapType    map类型
+	 * @param defaultMap 如果通过反射创建失败或提供的是抽象Map，则创建的默认Map
+	 * @return {@link Map}实例
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> createMap(final Class<?> mapType, final Supplier<Map<K, V>> defaultMap) {
 		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
-			return new HashMap<>();
+			return defaultMap.get();
 		} else {
 			try {
 				return (Map<K, V>) ConstructorUtil.newInstance(mapType);
 			} catch (final Exception e) {
 				// 不支持的map类型，返回默认的HashMap
-				return new HashMap<>();
+				return defaultMap.get();
 			}
 		}
 	}

@@ -33,7 +33,7 @@ public class ClientEngineFactory {
 	 * @return 单例的ClientEngine
 	 */
 	public static ClientEngine getEngine() {
-		return Singleton.get(ClientEngine.class.getName(), ClientEngineFactory::getEngine);
+		return Singleton.get(ClientEngine.class.getName(), ClientEngineFactory::createEngine);
 	}
 
 	/**
