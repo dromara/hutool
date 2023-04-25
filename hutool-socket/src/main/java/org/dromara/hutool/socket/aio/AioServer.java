@@ -17,7 +17,6 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.thread.ThreadFactoryBuilder;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 import org.dromara.hutool.socket.SocketConfig;
 
 import java.io.Closeable;
@@ -34,7 +33,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
  * @author looly
  */
 public class AioServer implements Closeable {
-	private static final Log log = LogFactory.get();
+	private static final Log log = Log.get();
 	private static final AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
 
 	private AsynchronousChannelGroup group;
@@ -58,6 +57,7 @@ public class AioServer implements Closeable {
 	 * @param address 地址
 	 * @param config  {@link SocketConfig} 配置项
 	 */
+	@SuppressWarnings("resource")
 	public AioServer(final InetSocketAddress address, final SocketConfig config) {
 		this.config = config;
 		init(address);
@@ -182,6 +182,7 @@ public class AioServer implements Closeable {
 	 *
 	 * @param sync 是否阻塞
 	 */
+	@SuppressWarnings("resource")
 	private void doStart(final boolean sync) {
 		log.debug("Aio Server started, waiting for accept.");
 
