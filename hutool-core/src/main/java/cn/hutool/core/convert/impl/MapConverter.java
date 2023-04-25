@@ -8,8 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * {@link Map} 转换器
@@ -65,14 +64,21 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 					return (Map) value;
 				}
 			}
-			map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
+
+			final Class<?> mapClass = TypeUtil.getClass(this.mapType);
+			if (null == mapClass || mapClass.isAssignableFrom(AbstractMap.class)) {
+				// issue#I6YN2A，默认有序
+				map =  new LinkedHashMap<>();
+			} else{
+				map = MapUtil.createMap(mapClass);
+			}
 			convertMapToMap((Map) value, map);
 		} else if (BeanUtil.isBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 			// 二次转换，转换键值类型
 			map = convertInternal(map);
 		} else {
-			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", value.getClass().getName()));
+			throw new UnsupportedOperationException(StrUtil.format("Unsupported toMap value type: {}", value.getClass().getName()));
 		}
 		return map;
 	}

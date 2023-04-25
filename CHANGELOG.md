@@ -12,6 +12,7 @@
 * 【db    】      修复insertOrUpdate更新中条件字段没有移除问题（issue#I6W91Z@Gitee）
 * 【core  】      修复VIN（车架号）正则问题（pr#3078@Github）
 * 【core  】      修复HtmlUtil的removeHtmlAttr方法匹配问题（issue#I6YNTF@Gitee）
+* 【core  】      修复JSONUtil.toBean目标存在Map字段无序问题（issue#I6YN2A@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.18 (2023-04-16)

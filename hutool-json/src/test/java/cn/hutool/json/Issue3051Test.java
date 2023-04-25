@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-import cn.hutool.json.JSONConfig;
+package cn.hutool.json;import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
