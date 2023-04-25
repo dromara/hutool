@@ -155,7 +155,15 @@ public class HtmlUtil {
 			// [^>]+?   属性值，至少有一个非>的字符，>表示标签结束
 			// \s+(?=>) 表示属性值后跟空格加>，即末尾的属性，此时去掉空格
 			// (?=\s|>) 表示属性值后跟空格（属性后还有别的属性）或者跟>（最后一个属性）
-			regex = StrUtil.format("(?i)(\\s*{}\\s*=[^>]+?\\s+(?=>))|(\\s*{}\\s*=[^>]+?(?=\\s|>))", attr, attr);
+			regex = StrUtil.format("(?i)(\\s*{}\\s*=\\s*)" +
+				"(" +
+				// name="xxxx"
+				"([\"][^\"]+?[\"]\\s*)|" +
+				// name=xxx >
+				"([^>]+?\\s+(?=>))|" +
+				// name=xxx> 或者 name=xxx name2=xxx
+				"([^>]+?(?=\\s|>))" +
+				")", attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}
 		return content;
