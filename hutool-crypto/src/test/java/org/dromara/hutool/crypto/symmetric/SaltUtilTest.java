@@ -12,12 +12,18 @@
 
 package org.dromara.hutool.crypto.symmetric;
 
+import org.dromara.hutool.core.codec.binary.Base64;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.openssl.OpenSSLPBEInputStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class SaltUtilTest {
 
@@ -69,5 +75,27 @@ public class SaltUtilTest {
 		final SymmetricCrypto des = new SymmetricCrypto("AES/CBC/PKCS5Padding", "1234567890123456".getBytes());
 		final String decrypt = des.decryptStr(encrypted);
 		Assertions.assertEquals("hutool", decrypt);
+	}
+
+	/**
+	 * 测试：
+	 * https://www.bejson.com/enc/aesdes/<br>
+	 * https://stackoverflow.com/questions/11783062/how-to-decrypt-file-in-java-encrypted-with-openssl-command-using-aes
+	 */
+	@Test
+	void aesTest2() throws IOException {
+		final String encrypted = "U2FsdGVkX1+lqsuKAR+OdOeNduvx5wgXf6yEUdDIh3g=";
+		final String pass = "1234567890123456";
+		final String algorithm = "PBEWITHMD5AND256BITAES-CBC-OPENSSL";
+		final String result = "hutool";
+
+		final OpenSSLPBEInputStream stream = new OpenSSLPBEInputStream(
+			new ByteArrayInputStream(Base64.decode(encrypted)),
+			algorithm,
+			1,
+			pass.toCharArray());
+
+		final String s = IoUtil.readUtf8(stream);
+		Assertions.assertEquals(result, s);
 	}
 }
