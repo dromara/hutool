@@ -1,6 +1,7 @@
 package org.dromara.hutool.crypto.digest;
 
 import org.dromara.hutool.core.codec.binary.Base32;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 import org.dromara.hutool.crypto.digest.otp.HOTP;
 import org.dromara.hutool.crypto.digest.otp.TOTP;
 import org.junit.jupiter.api.Assertions;

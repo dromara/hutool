@@ -10,11 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto.digest;
-
-import org.dromara.hutool.crypto.digest.mac.Mac;
-import org.dromara.hutool.crypto.digest.mac.MacEngine;
-import org.dromara.hutool.crypto.digest.mac.MacEngineFactory;
+package org.dromara.hutool.crypto.digest.mac;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;

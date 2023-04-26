@@ -4,6 +4,8 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.digest.mac.HMac;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 import org.dromara.hutool.crypto.symmetric.ZUC;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

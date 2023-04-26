@@ -15,7 +15,7 @@ package org.dromara.hutool.json.jwt.signers;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.crypto.digest.HMac;
+import org.dromara.hutool.crypto.digest.mac.HMac;
 
 import java.nio.charset.Charset;
 import java.security.Key;

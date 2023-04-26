@@ -14,8 +14,8 @@ package org.dromara.hutool.crypto.digest.otp;
 
 import org.dromara.hutool.core.codec.binary.Base32;
 import org.dromara.hutool.core.util.RandomUtil;
-import org.dromara.hutool.crypto.digest.HMac;
-import org.dromara.hutool.crypto.digest.HmacAlgorithm;
+import org.dromara.hutool.crypto.digest.mac.HMac;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 
 /**
  * <p>HMAC-based one-time passwords (HOTP) 基于HMAC算法一次性密码生成器，

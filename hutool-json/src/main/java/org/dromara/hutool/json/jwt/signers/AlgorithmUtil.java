@@ -15,7 +15,7 @@ package org.dromara.hutool.json.jwt.signers;
 import org.dromara.hutool.core.map.BiMap;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.crypto.asymmetric.SignAlgorithm;
-import org.dromara.hutool.crypto.digest.HmacAlgorithm;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 
 import java.util.HashMap;
 

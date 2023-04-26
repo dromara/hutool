@@ -33,7 +33,7 @@ public class DefaultHMacEngine implements MacEngine {
 
 	private Mac mac;
 
-	// ------------------------------------------------------------------------------------------- Constructor start
+	// region ----- Constructor
 
 	/**
 	 * 构造
@@ -62,13 +62,15 @@ public class DefaultHMacEngine implements MacEngine {
 	 *
 	 * @param algorithm 算法
 	 * @param key       密钥
-	 * @param spec {@link AlgorithmParameterSpec}
+	 * @param spec      {@link AlgorithmParameterSpec}
 	 * @since 5.7.12
 	 */
 	public DefaultHMacEngine(final String algorithm, final Key key, final AlgorithmParameterSpec spec) {
 		init(algorithm, key, spec);
 	}
-	// ------------------------------------------------------------------------------------------- Constructor end
+	// endregion
+
+	// region ----- init
 
 	/**
 	 * 初始化
@@ -119,6 +121,7 @@ public class DefaultHMacEngine implements MacEngine {
 		}
 		return this;
 	}
+	// endregion
 
 	/**
 	 * 获得 {@link Mac}

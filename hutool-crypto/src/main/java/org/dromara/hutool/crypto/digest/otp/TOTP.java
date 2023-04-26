@@ -13,7 +13,7 @@
 package org.dromara.hutool.crypto.digest.otp;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.crypto.digest.HmacAlgorithm;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 
 import java.time.Duration;
 import java.time.Instant;

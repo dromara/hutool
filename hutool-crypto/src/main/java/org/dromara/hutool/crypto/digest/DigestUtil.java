@@ -13,6 +13,8 @@
 package org.dromara.hutool.crypto.digest;
 
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.crypto.digest.mac.HMac;
+import org.dromara.hutool.crypto.digest.mac.HmacAlgorithm;
 
 import javax.crypto.SecretKey;
 import java.io.File;
@@ -26,7 +28,7 @@ import java.nio.charset.Charset;
  */
 public class DigestUtil {
 
-	// ------------------------------------------------------------------------------------------- MD5
+	// region ----- MD5
 
 	/**
 	 * 计算32位MD5摘要值
@@ -131,7 +133,9 @@ public class DigestUtil {
 		return new MD5().digestHex(file);
 	}
 
-	// ------------------------------------------------------------------------------------------- MD5 16
+	// endregion
+
+	// region ----- MD5 16
 
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
@@ -200,7 +204,9 @@ public class DigestUtil {
 		return md5Hex.substring(8, 24);
 	}
 
-	// ------------------------------------------------------------------------------------------- SHA-1
+	// endregion
+
+	// region ----- SHA-1
 
 	/**
 	 * 计算SHA-1摘要值
@@ -209,7 +215,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要
 	 */
 	public static byte[] sha1(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA1).digest(data);
+		return digester(DigestAlgorithm.SHA1).digest(data);
 	}
 
 	/**
@@ -220,7 +226,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要
 	 */
 	public static byte[] sha1(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA1).digest(data, charset);
+		return digester(DigestAlgorithm.SHA1).digest(data, charset);
 	}
 
 	/**
@@ -240,7 +246,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要
 	 */
 	public static byte[] sha1(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA1).digest(data);
+		return digester(DigestAlgorithm.SHA1).digest(data);
 	}
 
 	/**
@@ -250,7 +256,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要
 	 */
 	public static byte[] sha1(final File file) {
-		return new Digester(DigestAlgorithm.SHA1).digest(file);
+		return digester(DigestAlgorithm.SHA1).digest(file);
 	}
 
 	/**
@@ -260,7 +266,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
+		return digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
 	/**
@@ -271,7 +277,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA1).digestHex(data, charset);
+		return digester(DigestAlgorithm.SHA1).digestHex(data, charset);
 	}
 
 	/**
@@ -291,7 +297,7 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
+		return digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
 
 	/**
@@ -301,10 +307,12 @@ public class DigestUtil {
 	 * @return SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(final File file) {
-		return new Digester(DigestAlgorithm.SHA1).digestHex(file);
+		return digester(DigestAlgorithm.SHA1).digestHex(file);
 	}
 
-	// ------------------------------------------------------------------------------------------- SHA-256
+	// endregion
+
+	// region ----- SHA-256
 
 	/**
 	 * 计算SHA-256摘要值
@@ -314,7 +322,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA256).digest(data);
+		return digester(DigestAlgorithm.SHA256).digest(data);
 	}
 
 	/**
@@ -336,7 +344,7 @@ public class DigestUtil {
 	 * @return SHA-256摘要
 	 */
 	public static byte[] sha256(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA256).digest(data, charset);
+		return digester(DigestAlgorithm.SHA256).digest(data, charset);
 	}
 
 	/**
@@ -347,7 +355,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA256).digest(data);
+		return digester(DigestAlgorithm.SHA256).digest(data);
 	}
 
 	/**
@@ -358,7 +366,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha256(final File file) {
-		return new Digester(DigestAlgorithm.SHA256).digest(file);
+		return digester(DigestAlgorithm.SHA256).digest(file);
 	}
 
 	/**
@@ -369,7 +377,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
+		return digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
 	/**
@@ -381,7 +389,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA256).digestHex(data, charset);
+		return digester(DigestAlgorithm.SHA256).digestHex(data, charset);
 	}
 
 	/**
@@ -403,7 +411,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
+		return digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
 
 	/**
@@ -414,10 +422,12 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static String sha256Hex(final File file) {
-		return new Digester(DigestAlgorithm.SHA256).digestHex(file);
+		return digester(DigestAlgorithm.SHA256).digestHex(file);
 	}
 
-	// ------------------------------------------------------------------------------------------- SHA-512
+	// endregion
+
+	// region ----- SHA-512
 
 	/**
 	 * 计算SHA-512摘要值
@@ -426,7 +436,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要
 	 */
 	public static byte[] sha512(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA512).digest(data);
+		return digester(DigestAlgorithm.SHA512).digest(data);
 	}
 
 	/**
@@ -438,7 +448,7 @@ public class DigestUtil {
 	 * @since 3.0.8
 	 */
 	public static byte[] sha512(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA512).digest(data, charset);
+		return digester(DigestAlgorithm.SHA512).digest(data, charset);
 	}
 
 	/**
@@ -458,7 +468,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要
 	 */
 	public static byte[] sha512(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA512).digest(data);
+		return digester(DigestAlgorithm.SHA512).digest(data);
 	}
 
 	/**
@@ -468,7 +478,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要
 	 */
 	public static byte[] sha512(final File file) {
-		return new Digester(DigestAlgorithm.SHA512).digest(file);
+		return digester(DigestAlgorithm.SHA512).digest(file);
 	}
 
 	/**
@@ -478,7 +488,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要的16进制表示
 	 */
 	public static String sha512Hex(final byte[] data) {
-		return new Digester(DigestAlgorithm.SHA512).digestHex(data);
+		return digester(DigestAlgorithm.SHA512).digestHex(data);
 	}
 
 	/**
@@ -489,7 +499,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要的16进制表示
 	 */
 	public static String sha512Hex(final String data, final Charset charset) {
-		return new Digester(DigestAlgorithm.SHA512).digestHex(data, charset);
+		return digester(DigestAlgorithm.SHA512).digestHex(data, charset);
 	}
 
 	/**
@@ -509,7 +519,7 @@ public class DigestUtil {
 	 * @return SHA-512摘要的16进制表示
 	 */
 	public static String sha512Hex(final InputStream data) {
-		return new Digester(DigestAlgorithm.SHA512).digestHex(data);
+		return digester(DigestAlgorithm.SHA512).digestHex(data);
 	}
 
 	/**
@@ -519,10 +529,12 @@ public class DigestUtil {
 	 * @return SHA-512摘要的16进制表示
 	 */
 	public static String sha512Hex(final File file) {
-		return new Digester(DigestAlgorithm.SHA512).digestHex(file);
+		return digester(DigestAlgorithm.SHA512).digestHex(file);
 	}
 
-	// ------------------------------------------------------------------------------------------- Hmac
+	// endregion
+
+	// region ----- Hmac
 
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
@@ -547,6 +559,8 @@ public class DigestUtil {
 	public static HMac hmac(final HmacAlgorithm algorithm, final SecretKey key) {
 		return new HMac(algorithm, key);
 	}
+
+	// endregion
 
 	/**
 	 * 新建摘要器

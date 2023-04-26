@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto.digest;
+package org.dromara.hutool.crypto.digest.mac;
 
 /**
  * HMAC算法类型<br>
@@ -19,14 +19,33 @@ package org.dromara.hutool.crypto.digest;
  * @author Looly
  */
 public enum HmacAlgorithm {
+	/**
+	 * HmacMD5
+	 */
 	HmacMD5("HmacMD5"),
+	/**
+	 * HmacSHA1
+	 */
 	HmacSHA1("HmacSHA1"),
+	/**
+	 * HmacSHA256
+	 */
 	HmacSHA256("HmacSHA256"),
+	/**
+	 * HmacSHA384
+	 */
 	HmacSHA384("HmacSHA384"),
+	/**
+	 * HmacSHA512
+	 */
 	HmacSHA512("HmacSHA512"),
-	/** HmacSM3算法实现，需要BouncyCastle库支持 */
+	/**
+	 * HmacSM3算法实现，需要BouncyCastle库支持
+	 */
 	HmacSM3("HmacSM3"),
-	/** SM4 CMAC模式实现，需要BouncyCastle库支持 */
+	/**
+	 * SM4 CMAC模式实现，需要BouncyCastle库支持
+	 */
 	SM4CMAC("SM4CMAC");
 
 	private final String value;
@@ -35,6 +54,11 @@ public enum HmacAlgorithm {
 		this.value = value;
 	}
 
+	/**
+	 * 获取算法名称值
+	 *
+	 * @return 算法名称值
+	 */
 	public String getValue() {
 		return this.value;
 	}

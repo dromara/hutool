@@ -29,6 +29,9 @@ package org.dromara.hutool.crypto.digest;
 public class SM3 extends Digester {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 算法名称：SM3
+	 */
 	public static final String ALGORITHM_NAME = "SM3";
 
 	/**
