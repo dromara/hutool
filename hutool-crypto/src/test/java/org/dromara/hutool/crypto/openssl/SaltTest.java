@@ -10,22 +10,20 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.crypto.symmetric;
+package org.dromara.hutool.crypto.openssl;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.SecureUtil;
-import org.dromara.hutool.crypto.openssl.OpenSSLPBEInputStream;
+import org.dromara.hutool.crypto.symmetric.SymmetricCrypto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
-public class SaltUtilTest {
+public class SaltTest {
 
 	/**
 	 * 测试：
@@ -35,7 +33,7 @@ public class SaltUtilTest {
 	void rc4Test() {
 		final String encrypted = "U2FsdGVkX19DSROPe0+Ejkw84osqWw==";
 
-		final byte[] salt = OpenSSLSaltParser.getSalt(SecureUtil.decode(encrypted));
+		final byte[] salt = SaltMagic.getSalt(SecureUtil.decode(encrypted));
 		Assertions.assertNotNull(salt);
 
 		final byte[][] keyAndIV = OpenSSLSaltParser.ofMd5(32, "RC4")
@@ -46,7 +44,7 @@ public class SaltUtilTest {
 		final SecretKey rc4Key = KeyUtil.generateKey("RC4", keyAndIV[0]);
 		Assertions.assertNotNull(rc4Key);
 
-		final byte[] data = OpenSSLSaltParser.getData(SecureUtil.decode(encrypted));
+		final byte[] data = SaltMagic.getData(SecureUtil.decode(encrypted));
 
 		final SymmetricCrypto rc4 = new SymmetricCrypto("RC4", rc4Key);
 		final String decrypt = rc4.decryptStr(data);
@@ -83,7 +81,7 @@ public class SaltUtilTest {
 	 * https://stackoverflow.com/questions/11783062/how-to-decrypt-file-in-java-encrypted-with-openssl-command-using-aes
 	 */
 	@Test
-	void aesTest2() throws IOException {
+	void aesUseStreamTest() {
 		final String encrypted = "U2FsdGVkX1+lqsuKAR+OdOeNduvx5wgXf6yEUdDIh3g=";
 		final String pass = "1234567890123456";
 		final String algorithm = "PBEWITHMD5AND256BITAES-CBC-OPENSSL";

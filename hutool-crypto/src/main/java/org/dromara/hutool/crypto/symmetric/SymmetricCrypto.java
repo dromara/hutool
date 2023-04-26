@@ -21,6 +21,8 @@ import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.*;
+import org.dromara.hutool.crypto.openssl.OpenSSLSaltParser;
+import org.dromara.hutool.crypto.openssl.SaltMagic;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -311,7 +313,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		} finally {
 			lock.unlock();
 		}
-		return OpenSSLSaltParser.addMagic(result, salt);
+		return SaltMagic.addMagic(result, salt);
 	}
 
 	@Override
@@ -358,11 +360,11 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		final byte[] decryptData;
 
 		lock.lock();
-		final byte[] salt = OpenSSLSaltParser.getSalt(bytes);
+		final byte[] salt = SaltMagic.getSalt(bytes);
 		try {
 			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, salt);
 			blockSize = cipher.getBlockSize();
-			decryptData = cipher.doFinal(OpenSSLSaltParser.getData(bytes));
+			decryptData = cipher.doFinal(SaltMagic.getData(bytes));
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
