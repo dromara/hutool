@@ -190,8 +190,8 @@ public class SM2Test {
 		final byte[] data = KeyUtil.encodeECPublicKey(publicKey);
 		final String encodeHex = HexUtil.encodeHexStr(data);
 		final String encodeB64 = Base64.encode(data);
-		final PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, KeyUtil.SM2_DEFAULT_CURVE);
-		final PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, KeyUtil.SM2_DEFAULT_CURVE);
+		final PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, SmUtil.SM2_CURVE_NAME);
+		final PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, SmUtil.SM2_CURVE_NAME);
 		Assertions.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(Hexdecode.getEncoded()));
 		Assertions.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(B64decode.getEncoded()));
 	}

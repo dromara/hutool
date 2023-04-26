@@ -12,15 +12,13 @@
 
 package org.dromara.hutool.crypto;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.CharUtil;
-import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import org.dromara.hutool.crypto.bc.BCUtil;
 import org.dromara.hutool.crypto.bc.SmUtil;
@@ -30,37 +28,14 @@ import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.interfaces.RSAPrivateCrtKey;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.ECGenParameterSpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.*;
 
 /**
  * 密钥工具类
@@ -78,23 +53,6 @@ import java.security.spec.X509EncodedKeySpec;
 public class KeyUtil {
 
 	/**
-	 * Java密钥库(Java Key Store，JKS)KEY_STORE
-	 */
-	public static final String KEY_TYPE_JKS = "JKS";
-	/**
-	 * jceks
-	 */
-	public static final String KEY_TYPE_JCEKS = "jceks";
-	/**
-	 * PKCS12是公钥加密标准，它规定了可包含所有私钥、公钥和证书。其以二进制格式存储，也称为 PFX 文件
-	 */
-	public static final String KEY_TYPE_PKCS12 = "pkcs12";
-	/**
-	 * Certification类型：X.509
-	 */
-	public static final String CERT_TYPE_X509 = "X.509";
-
-	/**
 	 * 默认密钥字节数
 	 *
 	 * <pre>
@@ -105,15 +63,7 @@ public class KeyUtil {
 	 */
 	public static final int DEFAULT_KEY_SIZE = 1024;
 
-	/**
-	 * SM2默认曲线
-	 *
-	 * <pre>
-	 * Default SM2 curve
-	 * </pre>
-	 */
-	public static final String SM2_DEFAULT_CURVE = SmUtil.SM2_CURVE_NAME;
-
+	// region ----- generateKey
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 *
@@ -205,18 +155,8 @@ public class KeyUtil {
 		if (null == key) {
 			secretKey = generateKey(algorithm);
 		} else {
-			final KeySpec keySpec;
-			try {
-				if (algorithm.startsWith("DESede")) {
-					// DESede兼容
-					keySpec = new DESedeKeySpec(key);
-				} else {
-					keySpec = new DESKeySpec(key);
-				}
-			} catch (final InvalidKeyException e) {
-				throw new CryptoException(e);
-			}
-			secretKey = generateKey(algorithm, keySpec);
+			secretKey = generateKey(algorithm,
+				SpecUtil.createKeySpec(algorithm, key));
 		}
 		return secretKey;
 	}
@@ -225,19 +165,18 @@ public class KeyUtil {
 	 * 生成PBE {@link SecretKey}
 	 *
 	 * @param algorithm PBE算法，包括：PBEWithMD5AndDES、PBEWithSHA1AndDESede、PBEWithSHA1AndRC2_40等
-	 * @param key       密钥
+	 * @param password  口令
 	 * @return {@link SecretKey}
 	 */
-	public static SecretKey generatePBEKey(final String algorithm, char[] key) {
+	public static SecretKey generatePBEKey(final String algorithm, char[] password) {
 		if (StrUtil.isBlank(algorithm) || !algorithm.startsWith("PBE")) {
 			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!", algorithm);
 		}
 
-		if (null == key) {
-			key = RandomUtil.randomString(32).toCharArray();
+		if (null == password) {
+			password = RandomUtil.randomString(32).toCharArray();
 		}
-		final PBEKeySpec keySpec = new PBEKeySpec(key);
-		return generateKey(algorithm, keySpec);
+		return generateKey(algorithm, SpecUtil.createPBEKeySpec(password));
 	}
 
 	/**
@@ -255,7 +194,9 @@ public class KeyUtil {
 			throw new CryptoException(e);
 		}
 	}
+	// endregion
 
+	// region ----- keyPair
 	/**
 	 * 生成RSA私钥，仅用于非对称加密<br>
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
@@ -373,6 +314,51 @@ public class KeyUtil {
 	}
 
 	/**
+	 * 通过RSA私钥生成RSA公钥
+	 *
+	 * @param privateKey RSA私钥
+	 * @return RSA公钥，null表示私钥不被支持
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(final PrivateKey privateKey) {
+		if (privateKey instanceof RSAPrivateCrtKey) {
+			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey) privateKey;
+			return getRSAPublicKey(privk.getModulus(), privk.getPublicExponent());
+		}
+		return null;
+	}
+
+	/**
+	 * 获得RSA公钥对象
+	 *
+	 * @param modulus        Modulus
+	 * @param publicExponent Public Exponent
+	 * @return 公钥
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(final String modulus, final String publicExponent) {
+		return getRSAPublicKey(
+			new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
+	}
+
+	/**
+	 * 获得RSA公钥对象
+	 *
+	 * @param modulus        Modulus
+	 * @param publicExponent Public Exponent
+	 * @return 公钥
+	 * @since 5.3.6
+	 */
+	public static PublicKey getRSAPublicKey(final BigInteger modulus, final BigInteger publicExponent) {
+		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+		try {
+			return getKeyFactory(AsymmetricAlgorithm.RSA.getValue()).generatePublic(publicKeySpec);
+		} catch (final InvalidKeySpecException e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	/**
 	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密<br>
 	 * 密钥对生成算法见：<a href="https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator">...</a>
 	 *
@@ -413,7 +399,7 @@ public class KeyUtil {
 	public static KeyPair generateKeyPair(final String algorithm, final int keySize, final byte[] seed) {
 		// SM2算法需要单独定义其曲线生成
 		if ("SM2".equalsIgnoreCase(algorithm)) {
-			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
+			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SmUtil.SM2_CURVE_NAME);
 			return generateKeyPair(algorithm, keySize, seed, sm2p256v1);
 		}
 
@@ -550,6 +536,42 @@ public class KeyUtil {
 	}
 
 	/**
+	 * 从KeyStore中获取私钥公钥
+	 *
+	 * @param type     类型
+	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param password 密码
+	 * @param alias    别名
+	 * @return {@link KeyPair}
+	 * @since 4.4.1
+	 */
+	public static KeyPair getKeyPair(final String type, final InputStream in, final char[] password, final String alias) {
+		final KeyStore keyStore = KeyStoreUtil.readKeyStore(type, in, password);
+		return getKeyPair(keyStore, password, alias);
+	}
+
+	/**
+	 * 从KeyStore中获取私钥公钥
+	 *
+	 * @param keyStore {@link KeyStore}
+	 * @param password 密码
+	 * @param alias    别名
+	 * @return {@link KeyPair}
+	 * @since 4.4.1
+	 */
+	public static KeyPair getKeyPair(final KeyStore keyStore, final char[] password, final String alias) {
+		final PublicKey publicKey;
+		final PrivateKey privateKey;
+		try {
+			publicKey = keyStore.getCertificate(alias).getPublicKey();
+			privateKey = (PrivateKey) keyStore.getKey(alias, password);
+		} catch (final Exception e) {
+			throw new CryptoException(e);
+		}
+		return new KeyPair(publicKey, privateKey);
+	}
+
+	/**
 	 * 获取{@link KeyPairGenerator}
 	 *
 	 * @param algorithm 非对称加密算法
@@ -562,13 +584,14 @@ public class KeyUtil {
 		final KeyPairGenerator keyPairGen;
 		try {
 			keyPairGen = (null == provider) //
-					? KeyPairGenerator.getInstance(getMainAlgorithm(algorithm)) //
-					: KeyPairGenerator.getInstance(getMainAlgorithm(algorithm), provider);//
+				? KeyPairGenerator.getInstance(getMainAlgorithm(algorithm)) //
+				: KeyPairGenerator.getInstance(getMainAlgorithm(algorithm), provider);//
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyPairGen;
 	}
+	// endregion
 
 	/**
 	 * 获取{@link KeyFactory}
@@ -583,8 +606,8 @@ public class KeyUtil {
 		final KeyFactory keyFactory;
 		try {
 			keyFactory = (null == provider) //
-					? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
-					: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
+				? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+				: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -604,8 +627,8 @@ public class KeyUtil {
 		final SecretKeyFactory keyFactory;
 		try {
 			keyFactory = (null == provider) //
-					? SecretKeyFactory.getInstance(getMainAlgorithm(algorithm)) //
-					: SecretKeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
+				? SecretKeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+				: SecretKeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -624,8 +647,8 @@ public class KeyUtil {
 		final KeyGenerator generator;
 		try {
 			generator = (null == provider) //
-					? KeyGenerator.getInstance(getMainAlgorithm(algorithm)) //
-					: KeyGenerator.getInstance(getMainAlgorithm(algorithm), provider);
+				? KeyGenerator.getInstance(getMainAlgorithm(algorithm)) //
+				: KeyGenerator.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -667,172 +690,12 @@ public class KeyUtil {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
 		if ("ECDSA".equalsIgnoreCase(algorithm)
-				|| "SM2".equalsIgnoreCase(algorithm)
-				|| "ECIES".equalsIgnoreCase(algorithm)
+			|| "SM2".equalsIgnoreCase(algorithm)
+			|| "ECIES".equalsIgnoreCase(algorithm)
 		) {
 			algorithm = "EC";
 		}
 		return algorithm;
-	}
-
-	/**
-	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param keyFile  证书文件
-	 * @param password 密码
-	 * @return {@link KeyStore}
-	 * @since 5.0.0
-	 */
-	public static KeyStore readJKSKeyStore(final File keyFile, final char[] password) {
-		return readKeyStore(KEY_TYPE_JKS, keyFile, password);
-	}
-
-	/**
-	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @param password 密码
-	 * @return {@link KeyStore}
-	 */
-	public static KeyStore readJKSKeyStore(final InputStream in, final char[] password) {
-		return readKeyStore(KEY_TYPE_JKS, in, password);
-	}
-
-	/**
-	 * 读取PKCS12 KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存
-	 *
-	 * @param keyFile  证书文件
-	 * @param password 密码
-	 * @return {@link KeyStore}
-	 * @since 5.0.0
-	 */
-	public static KeyStore readPKCS12KeyStore(final File keyFile, final char[] password) {
-		return readKeyStore(KEY_TYPE_PKCS12, keyFile, password);
-	}
-
-	/**
-	 * 读取PKCS12 KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存
-	 *
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
-	 * @param password 密码
-	 * @return {@link KeyStore}
-	 * @since 5.0.0
-	 */
-	public static KeyStore readPKCS12KeyStore(final InputStream in, final char[] password) {
-		return readKeyStore(KEY_TYPE_PKCS12, in, password);
-	}
-
-	/**
-	 * 读取KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param type     类型
-	 * @param keyFile  证书文件
-	 * @param password 密码，null表示无密码
-	 * @return {@link KeyStore}
-	 * @since 5.0.0
-	 */
-	public static KeyStore readKeyStore(final String type, final File keyFile, final char[] password) {
-		InputStream in = null;
-		try {
-			in = FileUtil.getInputStream(keyFile);
-			return readKeyStore(type, in, password);
-		} finally {
-			IoUtil.closeQuietly(in);
-		}
-	}
-
-	/**
-	 * 读取KeyStore文件<br>
-	 * KeyStore文件用于数字证书的密钥对保存<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param type     类型
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @param password 密码，null表示无密码
-	 * @return {@link KeyStore}
-	 */
-	public static KeyStore readKeyStore(final String type, final InputStream in, final char[] password) {
-		final KeyStore keyStore = getKeyStore(type);
-		try {
-			keyStore.load(in, password);
-		} catch (final Exception e) {
-			throw new CryptoException(e);
-		}
-		return keyStore;
-	}
-
-	/**
-	 * 获取{@link KeyStore}对象
-	 *
-	 * @param type 类型
-	 * @return {@link KeyStore}
-	 */
-	public static KeyStore getKeyStore(final String type) {
-		final Provider provider = GlobalProviderFactory.getProvider();
-		try {
-			return null == provider ? KeyStore.getInstance(type) : KeyStore.getInstance(type, provider);
-		} catch (final KeyStoreException e) {
-			throw new CryptoException(e);
-		}
-	}
-
-	/**
-	 * 从KeyStore中获取私钥公钥
-	 *
-	 * @param type     类型
-	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
-	 * @param password 密码
-	 * @param alias    别名
-	 * @return {@link KeyPair}
-	 * @since 4.4.1
-	 */
-	public static KeyPair getKeyPair(final String type, final InputStream in, final char[] password, final String alias) {
-		final KeyStore keyStore = readKeyStore(type, in, password);
-		return getKeyPair(keyStore, password, alias);
-	}
-
-	/**
-	 * 从KeyStore中获取私钥公钥
-	 *
-	 * @param keyStore {@link KeyStore}
-	 * @param password 密码
-	 * @param alias    别名
-	 * @return {@link KeyPair}
-	 * @since 4.4.1
-	 */
-	public static KeyPair getKeyPair(final KeyStore keyStore, final char[] password, final String alias) {
-		final PublicKey publicKey;
-		final PrivateKey privateKey;
-		try {
-			publicKey = keyStore.getCertificate(alias).getPublicKey();
-			privateKey = (PrivateKey) keyStore.getKey(alias, password);
-		} catch (final Exception e) {
-			throw new CryptoException(e);
-		}
-		return new KeyPair(publicKey, privateKey);
-	}
-
-	/**
-	 * 读取X.509 Certification文件<br>
-	 * Certification为证书文件<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @param password 密码
-	 * @param alias    别名
-	 * @return {@link KeyStore}
-	 * @since 4.4.1
-	 */
-	public static Certificate readX509Certificate(final InputStream in, final char[] password, final String alias) {
-		return readCertificate(CERT_TYPE_X509, in, password, alias);
 	}
 
 	/**
@@ -845,96 +708,11 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static PublicKey readPublicKeyFromCert(final InputStream in) {
-		final Certificate certificate = readX509Certificate(in);
+		final Certificate certificate = CertUtil.readX509Certificate(in);
 		if (null != certificate) {
 			return certificate.getPublicKey();
 		}
 		return null;
-	}
-
-	/**
-	 * 读取X.509 Certification文件<br>
-	 * Certification为证书文件<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @return {@link KeyStore}
-	 * @since 4.4.1
-	 */
-	public static Certificate readX509Certificate(final InputStream in) {
-		return readCertificate(CERT_TYPE_X509, in);
-	}
-
-	/**
-	 * 读取Certification文件<br>
-	 * Certification为证书文件<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param type     类型，例如X.509
-	 * @param in       {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @param password 密码
-	 * @param alias    别名
-	 * @return {@link KeyStore}
-	 * @since 4.4.1
-	 */
-	public static Certificate readCertificate(final String type, final InputStream in, final char[] password, final String alias) {
-		final KeyStore keyStore = readKeyStore(type, in, password);
-		try {
-			return keyStore.getCertificate(alias);
-		} catch (final KeyStoreException e) {
-			throw new CryptoException(e);
-		}
-	}
-
-	/**
-	 * 读取Certification文件<br>
-	 * Certification为证书文件<br>
-	 * see: <a href="http://snowolf.iteye.com/blog/391931">...</a>
-	 *
-	 * @param type 类型，例如X.509
-	 * @param in   {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(File)} 读取
-	 * @return {@link Certificate}
-	 */
-	public static Certificate readCertificate(final String type, final InputStream in) {
-		try {
-			return getCertificateFactory(type).generateCertificate(in);
-		} catch (final CertificateException e) {
-			throw new CryptoException(e);
-		}
-	}
-
-	/**
-	 * 获得 Certification
-	 *
-	 * @param keyStore {@link KeyStore}
-	 * @param alias    别名
-	 * @return {@link Certificate}
-	 */
-	public static Certificate getCertificate(final KeyStore keyStore, final String alias) {
-		try {
-			return keyStore.getCertificate(alias);
-		} catch (final Exception e) {
-			throw new CryptoException(e);
-		}
-	}
-
-	/**
-	 * 获取{@link CertificateFactory}
-	 *
-	 * @param type 类型，例如X.509
-	 * @return {@link KeyPairGenerator}
-	 * @since 4.5.0
-	 */
-	public static CertificateFactory getCertificateFactory(final String type) {
-		final Provider provider = GlobalProviderFactory.getProvider();
-
-		final CertificateFactory factory;
-		try {
-			factory = (null == provider) ? CertificateFactory.getInstance(type) : CertificateFactory.getInstance(type, provider);
-		} catch (final CertificateException e) {
-			throw new CryptoException(e);
-		}
-		return factory;
 	}
 
 	/**
@@ -973,51 +751,6 @@ public class KeyUtil {
 	 */
 	public static PublicKey decodeECPoint(final byte[] encodeByte, final String curveName) {
 		return BCUtil.decodeECPoint(encodeByte, curveName);
-	}
-
-	/**
-	 * 通过RSA私钥生成RSA公钥
-	 *
-	 * @param privateKey RSA私钥
-	 * @return RSA公钥，null表示私钥不被支持
-	 * @since 5.3.6
-	 */
-	public static PublicKey getRSAPublicKey(final PrivateKey privateKey) {
-		if (privateKey instanceof RSAPrivateCrtKey) {
-			final RSAPrivateCrtKey privk = (RSAPrivateCrtKey) privateKey;
-			return getRSAPublicKey(privk.getModulus(), privk.getPublicExponent());
-		}
-		return null;
-	}
-
-	/**
-	 * 获得RSA公钥对象
-	 *
-	 * @param modulus        Modulus
-	 * @param publicExponent Public Exponent
-	 * @return 公钥
-	 * @since 5.3.6
-	 */
-	public static PublicKey getRSAPublicKey(final String modulus, final String publicExponent) {
-		return getRSAPublicKey(
-				new BigInteger(modulus, 16), new BigInteger(publicExponent, 16));
-	}
-
-	/**
-	 * 获得RSA公钥对象
-	 *
-	 * @param modulus        Modulus
-	 * @param publicExponent Public Exponent
-	 * @return 公钥
-	 * @since 5.3.6
-	 */
-	public static PublicKey getRSAPublicKey(final BigInteger modulus, final BigInteger publicExponent) {
-		final RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
-		try {
-			return getKeyFactory("RSA").generatePublic(publicKeySpec);
-		} catch (final InvalidKeySpecException e) {
-			throw new CryptoException(e);
-		}
 	}
 
 	/**

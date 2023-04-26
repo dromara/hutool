@@ -33,9 +33,9 @@ public class OpenSSLPBECommon {
 											 final String algorithm, int iterationCount)
 		throws Exception {
 
-		final SecretKey key = KeyUtil.generateKey(algorithm, new PBEKeySpec(password));
-
 		final Cipher cipher = SecureUtil.createCipher(algorithm);
+
+		final SecretKey key = KeyUtil.generateKey(algorithm, new PBEKeySpec(password));
 		cipher.init(cipherMode, key, new PBEParameterSpec(salt, iterationCount));
 
 		return cipher;
