@@ -15,6 +15,7 @@ package org.dromara.hutool.core.lang.mutable;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 可变{@code Object}
@@ -82,7 +83,7 @@ public class MutableObj<T> implements Mutable<T>, Serializable{
 
 	@Override
 	public int hashCode() {
-		return value == null ? 0 : value.hashCode();
+		return Objects.hashCode(value);
 	}
 
 	// -----------------------------------------------------------------------
