@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.util;
 
+import org.dromara.hutool.core.io.buffer.FastByteBuffer;
 import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
@@ -607,5 +608,25 @@ public class ByteUtil {
 			System.arraycopy(buf, off, mag, 0, length);
 		}
 		return new BigInteger(1, mag);
+	}
+
+	/**
+	 * 连接多个byte[]
+	 *
+	 * @param byteArrays 多个byte[]
+	 * @return 连接后的byte[]
+	 * @since 6.0.0
+	 */
+	public static byte[] concat(final byte[]... byteArrays){
+		int totalLength = 0;
+		for (final byte[] byteArray : byteArrays) {
+			totalLength += byteArray.length;
+		}
+
+		final FastByteBuffer buffer = new FastByteBuffer(totalLength);
+		for (final byte[] byteArray : byteArrays) {
+			buffer.append(byteArray);
+		}
+		return buffer.toArrayZeroCopyIfPossible();
 	}
 }

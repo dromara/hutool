@@ -15,6 +15,7 @@ package org.dromara.hutool.crypto.symmetric;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.HexUtil;
@@ -32,10 +33,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEParameterSpec;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.SecureRandom;
@@ -65,7 +63,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	private boolean isZeroPadding;
 	private final Lock lock = new ReentrantLock();
 
-	// ------------------------------------------------------------------ Constructor start
+	// region ----- Constructor
 
 	/**
 	 * 构造，使用随机密钥
@@ -140,7 +138,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		initParams(algorithm, paramsSpec);
 	}
 
-	// ------------------------------------------------------------------ Constructor end
+	// endregion
 
 	/**
 	 * 初始化
@@ -234,9 +232,20 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 5.7.12
 	 */
 	public SymmetricCrypto setMode(final CipherMode mode) {
+		return setMode(mode, null);
+	}
+
+	/**
+	 * 初始化模式并清空数据
+	 *
+	 * @param mode 模式枚举
+	 * @param salt 加盐值，用于
+	 * @return this
+	 */
+	public SymmetricCrypto setMode(final CipherMode mode, final byte[] salt) {
 		lock.lock();
 		try {
-			initMode(mode.getValue());
+			initMode(mode.getValue(), salt);
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -281,23 +290,39 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 
 	@Override
 	public byte[] encrypt(final byte[] data) {
+		return encrypt(data, null);
+	}
+
+	/**
+	 * 加密
+	 *
+	 * @param data 被加密的bytes
+	 * @param salt 加盐值，如果为{@code null}不设置，否则生成带Salted__头的密文数据
+	 * @return 加密后的bytes
+	 * @since 6.0.0
+	 */
+	public byte[] encrypt(final byte[] data, final byte[] salt) {
 		lock.lock();
+
+		byte[] result;
 		try {
-			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
-			return cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
+			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, salt);
+			result = cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
 		}
+		return OpenSSLSaltParser.addMagic(result, salt);
 	}
 
 	@Override
 	public void encrypt(final InputStream data, final OutputStream out, final boolean isClose) throws IORuntimeException {
 		lock.lock();
+
 		CipherOutputStream cipherOutputStream = null;
 		try {
-			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, null);
 			cipherOutputStream = new CipherOutputStream(out, cipher);
 			final long length = IoUtil.copy(data, cipherOutputStream);
 			if (this.isZeroPadding) {
@@ -335,11 +360,11 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		final byte[] decryptData;
 
 		lock.lock();
-
+		final byte[] salt = OpenSSLSaltParser.getSalt(bytes);
 		try {
-			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, salt);
 			blockSize = cipher.getBlockSize();
-			decryptData = cipher.doFinal(bytes);
+			decryptData = cipher.doFinal(OpenSSLSaltParser.getData(bytes));
 		} catch (final Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -354,7 +379,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		lock.lock();
 		CipherInputStream cipherInputStream = null;
 		try {
-			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
+			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, null);
 			cipherInputStream = new CipherInputStream(data, cipher);
 			if (this.isZeroPadding) {
 				final int blockSize = cipher.getBlockSize();
@@ -424,8 +449,19 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @throws InvalidKeyException                无效key
 	 * @throws InvalidAlgorithmParameterException 无效算法
 	 */
-	private Cipher initMode(final int mode) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		return this.cipherWrapper.initMode(mode, this.secretKey).getRaw();
+	private Cipher initMode(final int mode, final byte[] salt) throws InvalidKeyException, InvalidAlgorithmParameterException {
+		SecretKey secretKey = this.secretKey;
+		if (null != salt) {
+			// /issues#I6YWWD，提供OpenSSL格式兼容支持
+			final String algorithm = getCipher().getAlgorithm();
+			final byte[][] keyAndIV = OpenSSLSaltParser.ofMd5(32, algorithm)
+				.getKeyAndIV(secretKey.getEncoded(), salt);
+			secretKey = KeyUtil.generateKey(algorithm, keyAndIV[0]);
+			if(ArrayUtil.isNotEmpty(keyAndIV[1])){
+				this.cipherWrapper.setParams(new IvParameterSpec(keyAndIV[1]));
+			}
+		}
+		return this.cipherWrapper.initMode(mode, secretKey).getRaw();
 	}
 
 	/**

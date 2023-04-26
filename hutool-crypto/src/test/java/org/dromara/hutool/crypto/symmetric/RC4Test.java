@@ -69,11 +69,4 @@ public class RC4Test {
 		final String msg2 = SymmetricCrypto.decryptStr(encryptHex2);
 		Assertions.assertEquals(message2, msg2);
 	}
-
-	@Test
-	void decryptTest() {
-		GlobalProviderFactory.setUseCustomProvider(false);
-		final String key16 = "1234567890123456";
-		final SymmetricCrypto aes = new SymmetricCrypto("SymmetricCrypto", key16.getBytes());
-	}
 }
