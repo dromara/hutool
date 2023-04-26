@@ -2,6 +2,7 @@ package org.dromara.hutool.crypto.symmetric;
 
 import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.KeyUtil;
 import org.dromara.hutool.crypto.Mode;

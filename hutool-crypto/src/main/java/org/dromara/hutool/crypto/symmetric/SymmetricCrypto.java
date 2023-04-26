@@ -219,7 +219,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.17
 	 */
-	public SymmetricCrypto setRandom(final SecureRandom random){
+	public SymmetricCrypto setRandom(final SecureRandom random) {
 		this.cipherWrapper.setRandom(random);
 		return this;
 	}
@@ -233,7 +233,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @return this
 	 * @since 5.7.12
 	 */
-	public SymmetricCrypto setMode(final CipherMode mode){
+	public SymmetricCrypto setMode(final CipherMode mode) {
 		lock.lock();
 		try {
 			initMode(mode.getValue());
@@ -335,6 +335,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 		final byte[] decryptData;
 
 		lock.lock();
+
 		try {
 			final Cipher cipher = initMode(Cipher.DECRYPT_MODE);
 			blockSize = cipher.getBlockSize();
@@ -395,7 +396,7 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	private SymmetricCrypto initParams(final String algorithm, AlgorithmParameterSpec paramsSpec) {
 		if (null == paramsSpec) {
 			byte[] iv = Opt.ofNullable(cipherWrapper)
-					.map(CipherWrapper::getRaw).map(Cipher::getIV).get();
+				.map(CipherWrapper::getRaw).map(Cipher::getIV).get();
 
 			// 随机IV
 			if (StrUtil.startWithIgnoreCase(algorithm, "PBE")) {

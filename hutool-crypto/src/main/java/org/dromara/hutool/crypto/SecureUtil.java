@@ -25,14 +25,7 @@ import org.dromara.hutool.crypto.digest.HMac;
 import org.dromara.hutool.crypto.digest.HmacAlgorithm;
 import org.dromara.hutool.crypto.digest.MD5;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
-import org.dromara.hutool.crypto.symmetric.AES;
-import org.dromara.hutool.crypto.symmetric.DES;
-import org.dromara.hutool.crypto.symmetric.DESede;
-import org.dromara.hutool.crypto.symmetric.PBKDF2;
-import org.dromara.hutool.crypto.symmetric.RC4;
-import org.dromara.hutool.crypto.symmetric.SymmetricCrypto;
-import org.dromara.hutool.crypto.symmetric.ZUC;
-import org.dromara.hutool.crypto.symmetric.FPE;
+import org.dromara.hutool.crypto.symmetric.*;
 import org.bouncycastle.crypto.AlphabetMapper;
 
 import javax.crypto.Cipher;
@@ -593,10 +586,10 @@ public class SecureUtil {
 	 * RC4算法
 	 *
 	 * @param key 密钥
-	 * @return {@link RC4}
+	 * @return {@link SymmetricCrypto}
 	 */
-	public static RC4 rc4(final String key) {
-		return new RC4(key);
+	public static SymmetricCrypto rc4(final byte[] key) {
+		return new SymmetricCrypto(SymmetricAlgorithm.RC4, key);
 	}
 
 	/**

@@ -17,6 +17,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -620,7 +621,6 @@ public class KeyUtil {
 	 */
 	public static KeyGenerator getKeyGenerator(final String algorithm) {
 		final Provider provider = GlobalProviderFactory.getProvider();
-
 		final KeyGenerator generator;
 		try {
 			generator = (null == provider) //

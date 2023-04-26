@@ -44,6 +44,10 @@ public enum SymmetricAlgorithm {
 	 */
 	RC2("RC2"),
 	/**
+	 * RC4
+	 */
+	RC4("RC4"),
+	/**
 	 *PBEWithMD5AndDES
 	 */
 	PBEWithMD5AndDES("PBEWithMD5AndDES"),

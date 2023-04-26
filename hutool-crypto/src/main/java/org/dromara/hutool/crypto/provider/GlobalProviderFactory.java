@@ -30,9 +30,9 @@ public class GlobalProviderFactory {
 	private static final Provider provider = _createProvider();
 
 	/**
-	 * 获取{@link Provider}
+	 * 获取{@link Provider}，无提供方，返回{@code null}表示使用JDK默认
 	 *
-	 * @return {@link Provider}
+	 * @return {@link Provider} or {@code null}
 	 */
 	public static Provider getProvider() {
 		return useCustomProvider ? provider : null;
@@ -56,6 +56,7 @@ public class GlobalProviderFactory {
 	private static Provider _createProvider() {
 		final ProviderFactory factory = SpiUtil.loadFirstAvailable(ProviderFactory.class);
 		if (null == factory) {
+			// 默认JCE
 			return null;
 		}
 
