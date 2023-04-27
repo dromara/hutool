@@ -730,8 +730,13 @@ public class NumberUtilTest {
 	@Test
 	@EnabledForJreRange(max = JRE.JAVA_8)
 	void numberFormatTest() {
+		// JDK8下，NaN解析报错，JDK9+中返回0
 		Assertions.assertThrows(ParseException.class, ()->{
 			NumberFormat.getInstance().parse("NaN");
 		});
+	}
+
+	@Test
+	void name() {
 	}
 }
