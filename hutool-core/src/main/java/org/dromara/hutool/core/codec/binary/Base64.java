@@ -44,8 +44,8 @@ public class Base64 {
 	 */
 	public static byte[] encode(final byte[] arr, final boolean lineSep) {
 		return lineSep ?
-				java.util.Base64.getMimeEncoder().encode(arr) :
-				java.util.Base64.getEncoder().encode(arr);
+			java.util.Base64.getMimeEncoder().encode(arr) :
+			java.util.Base64.getEncoder().encode(arr);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class Base64 {
 	 * @return 是否为Base64
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64(final CharSequence base64) {
+	public static boolean isTypeBase64(final CharSequence base64) {
 		if (base64 == null || base64.length() < 2) {
 			return false;
 		}
@@ -265,17 +265,17 @@ public class Base64 {
 			return false;
 		}
 
-		return isBase64(bytes);
+		return isTypeBase64(bytes);
 	}
 
 	/**
-	 * 检查是否为Base64
+	 * 检查是否为Base64格式
 	 *
 	 * @param base64Bytes Base64的bytes
 	 * @return 是否为Base64
 	 * @since 5.7.5
 	 */
-	public static boolean isBase64(final byte[] base64Bytes) {
+	public static boolean isTypeBase64(final byte[] base64Bytes) {
 		if (base64Bytes == null || base64Bytes.length < 3) {
 			return false;
 		}

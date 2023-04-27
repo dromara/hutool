@@ -16,20 +16,20 @@ import org.junit.jupiter.api.Test;
 public class Base64Test {
 
 	@Test
-	public void isBase64Test(){
-		Assertions.assertTrue(Base64.isBase64(Base64.encode(RandomUtil.randomString(1000))));
+	public void isTypeBase64Test(){
+		Assertions.assertTrue(Base64.isTypeBase64(Base64.encode(RandomUtil.randomString(1000))));
 	}
 
 	@Test
-	public void isBase64Test2(){
+	public void isTypeBase64Test2(){
 		String base64 = "dW1kb3MzejR3bmljM2J6djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
 				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ==";
-		Assertions.assertTrue(Base64.isBase64(base64));
+		Assertions.assertTrue(Base64.isTypeBase64(base64));
 
 		// '=' 不位于末尾
 		base64 = "dW1kb3MzejR3bmljM2J6=djAyZzcwbWk5M213Nnk3cWQ3eDJwOHFuNXJsYmMwaXhxbmg0dmxrcmN0anRkbmd3\n" +
 				"ZzcyZWFwanI2NWNneTg2dnp6cmJoMHQ4MHpxY2R6c3pjazZtaQ=";
-		Assertions.assertFalse(Base64.isBase64(base64));
+		Assertions.assertFalse(Base64.isTypeBase64(base64));
 	}
 
 	@Test
