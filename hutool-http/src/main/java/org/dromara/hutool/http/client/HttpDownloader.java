@@ -104,7 +104,7 @@ public class HttpDownloader {
 	 * @return 文件
 	 * @since 5.7.12
 	 */
-	public File downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
+	public static File downloadFile(final String url, final File targetFileOrDir, final String tempFileSuffix, final int timeout, final StreamProgress streamProgress) {
 		return requestDownload(url, timeout).body().write(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
