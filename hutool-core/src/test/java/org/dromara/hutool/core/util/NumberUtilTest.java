@@ -737,6 +737,7 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	void name() {
+	void issueI6ZD1RTest() {
+		Assertions.assertFalse(NumberUtil.isInteger("999999999999999"));
 	}
 }
