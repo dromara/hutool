@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 /**
- * <p>提供可变值类型接口 <br />
+ * <p>提供可变值类型接口 <br>
  *
  * 相较于{@link Opt}或{@link java.util.Optional}，该所有实现类中的方法都<b>不区分值是否为{@code null}</b>，
  * 因此在使用前需要自行判断值是否为{@code null}，
@@ -32,7 +32,7 @@ import java.util.function.UnaryOperator;
  */
 public interface Mutable<T> {
 
-	// ==================== factory methods ====================
+	// region ----- factory methods
 
 	/**
 	 * 创建一个{@link MutableBool}对象
@@ -107,6 +107,7 @@ public interface Mutable<T> {
 	/**
 	 * 创建一个{@link MutableObj}对象
 	 *
+	 * @param <T> 值类型
 	 * @param value 值
 	 * @return {@link MutableObj}
 	 */
@@ -114,7 +115,9 @@ public interface Mutable<T> {
 		return new MutableObj<>(value);
 	}
 
-	// ==================== base methods ====================
+	// endregion
+
+	// region ----- base methods
 
 	/**
 	 * 获得原始值
@@ -127,6 +130,8 @@ public interface Mutable<T> {
 	 * @param value 值
 	 */
 	void set(T value);
+
+	// endregion
 
 	/**
 	 * 根据操作修改值
