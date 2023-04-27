@@ -1,47 +1,47 @@
-<p align="center">
-	<a href="https://hutool.cn/"><img src="https://plus.hutool.cn/images/hutool.svg" width="45%"></a>
+<p style="text-align:center">
+	<a href="https://hutool.cn/"><img alt="" src="https://plus.hutool.cn/images/hutool.svg" width="45%"></a>
 </p>
-<p align="center">
+<p style="text-align:center">
 	<strong>🍬Make Java Sweet Again.</strong>
 </p>
-<p align="center">
+<p style="text-align:center">
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-<p align="center">
+<p style="text-align:center">
 	<a target="_blank" href="https://search.maven.org/artifact/org.dromara.hutool/hutool-all">
-		<img src="https://img.shields.io/maven-central/v/org.dromara.hutool/hutool-all.svg?label=Maven%20Central" />
+		<img alt="" src="https://img.shields.io/maven-central/v/org.dromara.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
 	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
-		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
+		<img alt="" src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
-		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
+		<img alt="" src="https://img.shields.io/badge/JDK-8+-green.svg" />
 	</a>
 	<a target="_blank" href="https://travis-ci.com/dromara/hutool">
-		<img src="https://travis-ci.com/dromara/hutool.svg?branch=v5-master" />
+		<img alt="" src="https://travis-ci.com/dromara/hutool.svg?branch=v5-master" />
 	</a>
 	<a href="https://www.codacy.com/gh/dromara/hutool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dromara/hutool&amp;utm_campaign=Badge_Grade">
-		<img src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
+		<img alt="" src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
 	</a>
 	<a href="https://codecov.io/gh/dromara/hutool">
-		<img src="https://codecov.io/gh/dromara/hutool/branch/v6-master/graph/badge.svg" />
+		<img alt="" src="https://codecov.io/gh/dromara/hutool/branch/v6-master/graph/badge.svg" />
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
-		<img src="https://badges.gitter.im/hutool/Lobby.svg" />
+		<img alt="" src="https://badges.gitter.im/hutool/Lobby.svg" />
 	</a>
 	<a target="_blank" href='https://gitee.com/dromara/hutool/stargazers'>
-		<img src='https://gitee.com/dromara/hutool/badge/star.svg?theme=gvp' alt='star'/>
+		<img alt="star" src='https://gitee.com/dromara/hutool/badge/star.svg?theme=gvp'/>
 	</a>
 	<a target="_blank" href='https://github.com/dromara/hutool'>
-		<img src="https://img.shields.io/github/stars/dromara/hutool.svg?style=social" alt="github star"/>
+		<img alt="github star" src="https://img.shields.io/github/stars/dromara/hutool.svg?style=social"/>
 	</a>
 </p>
 
 <br/>
-<p align="center">
+<p style="text-align:center">
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
-	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-715292493-orange"/></a>
+	<img alt="" src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A6-715292493-orange"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -52,47 +52,43 @@
 
 ## 📚简介
 
-Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。
+`Hutool`是一个功能丰富且易用的**Java工具库**，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
+这些封装的工具涵盖了字符串、数字、集合、编码、日期、文件、IO、加密、数据库JDBC、JSON、HTTP客户端等一系列操作，
+可以满足各种不同的开发需求。
 
-Hutool中的工具方法来自每个用户的精雕细琢，它涵盖了Java开发底层代码中的方方面面，它既是大型项目开发中解决小问题的利器，也是小型项目中的效率担当；
+### 🎁Hutool往事
 
-Hutool是项目中“util”包友好的替代，它节省了开发人员对项目中公用类和公用工具方法的封装时间，使开发专注于业务，同时可以最大限度的避免封装不完善带来的bug。
+- 2012年，一个刚刚步入职场的少年剥离了业务系统中的公共部分，取名叫做`Common-Tools`。
+- 2014年，他离开热爱的互联网和IT行业，将这份热爱倾注于开源，并将项目更名为`Hutool`，
+`Hu`是怀念曾经公司中一起并肩作战的小伙伴们和那段美好回忆，人生难得糊涂，我们都在成长，但不变的是对Coding的热爱。
+- 现在，“他”变成“他们”——一群热心的Committer。而`Hutool`,数十年如一日，已成为众多Java开发者互助的桥梁。
+- 将来，Make Java Sweet Again!
 
-### 🎁Hutool名称的由来
+### 🍺Hutool理念
 
-Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu”是公司名称的表示，tool表示工具。Hutool谐音“糊涂”，一方面简洁易懂，一方面寓意“难得糊涂”。
+`Hutool`既是一个工具集，也是一个知识库，我们从不自诩代码原创，大多数工具类都是**搬运**而来，因此：
 
-### 🍺Hutool如何改变我们的coding方式
-
-Hutool的目标是使用一个工具方法代替一段复杂代码，从而最大限度的避免“复制粘贴”代码的问题，彻底改变我们写代码的方式。
-
-以计算MD5为例：
-
-- 👴【以前】打开搜索引擎 -> 搜“Java MD5加密” -> 打开某篇博客-> 复制粘贴 -> 改改好用
-- 👦【现在】引入Hutool -> SecureUtil.md5()
-
-Hutool的存在就是为了减少代码搜索成本，避免网络上参差不齐的代码出现导致的bug。
+- 你可以引入使用，也可以**拷贝**和修改使用，而**不必标注任何信息**，只是希望能把bug及时反馈回来。
+- 我们努力健全**中文**注释，为源码学习者提供良好地学习环境，争取做到人人都能看得懂。
 
 -------------------------------------------------------------------------------
 
 ## 🛠️包含组件
 
-一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
-
-| 模块             | 介绍                                             |
-|----------------|------------------------------------------------|
-| hutool-core    | 核心，包括Bean操作、日期、各种Util等                         |
-| hutool-cron    | 定时任务模块，提供类Crontab表达式的定时任务                      |
-| hutool-crypto  | 加密解密模块，提供对称、非对称和摘要算法封装                         |
-| hutool-db      | JDBC封装后的数据操作，基于ActiveRecord思想                  |
-| hutool-extra   | 扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码、Emoji、FTP、分词等） |
-| hutool-http    | 基于HttpUrlConnection的Http客户端封装                  |
-| hutool-log     | 自动识别日志实现的日志门面                                  |
-| hutool-setting | 功能更强大的Setting配置文件和Properties封装                 |
-| hutool-json    | JSON实现                                         |
-| hutool-poi     | 针对POI中Excel和Word的封装                            |
-| hutool-socket  | 基于Java的NIO和AIO的Socket封装                        |
-| hutool-swing   | Swing和JWT相关封装                                  |
+| 模块             | 介绍                                              |
+|----------------|-------------------------------------------------|
+| hutool-core    | 核心，包括Bean操作、日期、各种Util等                          |
+| hutool-cron    | 定时任务模块，提供类Crontab表达式的定时任务                       |
+| hutool-crypto  | 加密解密模块，提供对称、非对称和摘要算法封装                          |
+| hutool-db      | JDBC封装后的数据操作，基于ActiveRecord思想                   |
+| hutool-extra   | 扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码、Emoji、FTP、分词等）  |
+| hutool-http    | 基于HttpUrlConnection、HttpClient、OkHttp的Http客户端封装 |
+| hutool-log     | 功能强大的日志门面                                       |
+| hutool-setting | 功能更强大的配置文件封装和工具                                 |
+| hutool-json    | JSON实现                                          |
+| hutool-poi     | POI中Excel和Word的封装以及OFD封装                        |
+| hutool-socket  | 基于Java的NIO和AIO的Socket封装                         |
+| hutool-swing   | Swing和JWT相关封装                                   |
 
 可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
 
@@ -106,8 +102,6 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 
 [📙参考API](https://apidoc.gitee.com/dromara/hutool/)
 
-[🎬视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
-
 -------------------------------------------------------------------------------
 
 ## 🪙支持Hutool
@@ -117,8 +111,6 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 如果你觉得Hutool不错，可以捐赠请维护者吃包辣条~，在此表示感谢^_^。
 
 [Gitee上捐赠](https://gitee.com/dromara/hutool)
-
-[捐赠给Dromara组织](https://dromara.gitee.io/donate.html)
 
 ### 👕周边商店
 
@@ -155,11 +147,10 @@ implementation 'org.dromara.hutool:hutool-all:6.0.0.M3'
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0.M3/)
+- [Maven中央库](https://repo1.maven.org/maven2/org/dromara/hutool/hutool-all/6.0.0.M3/)
 
 > 🔔️注意
-> Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
-> 如果你的项目使用JDK7，请使用Hutool 4.x版本（不再更新）
+> Hutool 6.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
 
 ### 🚽编译安装
 
@@ -208,8 +199,13 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 1. 注释完备，尤其每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，必要时请添加单元测试，如果愿意，也可以加上你的大名。
 2. Hutool的缩进按照Eclipse（~~不要跟我说IDEA多好用，维护者非常懒，学不会~~，IDEA真香，改了Eclipse快捷键后舒服多了）默认（tab）缩进，所以请遵守（不要和我争执空格与tab的问题，这是一个病人的习惯）。
 3. 新加的方法不要使用第三方库的方法，Hutool遵循无依赖原则（除非在extra模块中加方法工具）。
-4. 请pull request到`v6-dev`分支。Hutool在5.x版本后使用了新的分支：`v6-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。
-5. 我们如果关闭了你的issue或pr，请不要诧异，这是我们保持问题处理整洁的一种方式，你依旧可以继续讨论，当有讨论结果时我们会重新打开。
+4. 请pull request到`v6-dev`分支。Hutool在6.x版本后使用了新的分支：`v6-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。
+
+### 💞沟通说明
+
+1. 提交地issue或PR未回复并开启状态表示还未处理，请耐心等待。
+2. 为了保证新issue及时被发现和处理，我们会关闭一些描述不足的issue，此时你补充说明重新打开即可。
+3. PR被关闭，表示被拒绝或需要修改地地方较多，重新提交即可。
 
 -------------------------------------------------------------------------------
 
@@ -217,8 +213,5 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
 
-## 📌公众号
-
-<div align="center">
-	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
-</div>
+### GitHub Contributor Over Time
+[![Contributor Over Time](https://contributor-overtime-api.git-contributor.com/contributors-svg?chart=contributorOverTime&repo=dromara/hutool)](https://git-contributor.com?chart=contributorOverTime&repo=dromara/hutool)
