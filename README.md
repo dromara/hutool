@@ -1,14 +1,14 @@
-<p style="text-align:center">
+<p align="center">
 	<a href="https://hutool.cn/"><img alt="" src="https://plus.hutool.cn/images/hutool.svg" width="45%"></a>
 </p>
-<p style="text-align:center">
+<p align="center">
 	<strong>🍬Make Java Sweet Again.</strong>
 </p>
-<p style="text-align:center">
+<p align="center">
 	👉 <a href="https://hutool.cn">https://hutool.cn/</a> 👈
 </p>
 
-<p style="text-align:center">
+<p align="center">
 	<a target="_blank" href="https://search.maven.org/artifact/org.dromara.hutool/hutool-all">
 		<img alt="" src="https://img.shields.io/maven-central/v/org.dromara.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
@@ -39,7 +39,7 @@
 </p>
 
 <br/>
-<p style="text-align:center">
+<p align="center">
 	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
 	<img alt="" src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A6-715292493-orange"/></a>
 </p>
