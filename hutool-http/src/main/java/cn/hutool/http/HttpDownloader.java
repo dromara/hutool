@@ -66,7 +66,7 @@ public class HttpDownloader {
 	 * @return 下载大小
 	 * @since 5.7.12
 	 */
-	public long downloadFile(String url, File targetFileOrDir, String tempFileSuffix, int timeout, StreamProgress streamProgress) {
+	public static long downloadFile(String url, File targetFileOrDir, String tempFileSuffix, int timeout, StreamProgress streamProgress) {
 		return requestDownload(url, timeout).writeBody(targetFileOrDir, tempFileSuffix, streamProgress);
 	}
 
