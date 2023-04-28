@@ -416,16 +416,17 @@ public class ExceptionUtil {
 	 * 此方法通过调用{@link Throwable#getCause()} 直到没有cause为止，如果异常本身没有cause，返回异常本身<br>
 	 * 传入null返回也为null
 	 *
-	 * <p>
-	 * 此方法来自Apache-Commons-Lang3
-	 * </p>
 	 *
 	 * @param throwable 异常对象，可能为null
 	 * @return 最尾端异常，传入null参数返回也为null
 	 */
 	public static Throwable getRootCause(final Throwable throwable) {
-		final List<Throwable> list = getThrowableList(throwable);
-		return list.size() < 1 ? null : list.get(list.size() - 1);
+		Throwable cause = throwable.getCause();
+		if (cause != null) {
+			return getRootCause(cause);
+		}else{
+			return throwable;
+		}
 	}
 
 	/**
