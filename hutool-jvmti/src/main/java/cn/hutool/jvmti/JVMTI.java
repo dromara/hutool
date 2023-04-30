@@ -16,19 +16,19 @@ public class JVMTI {
 	private static final String LIB_NAME = "JniLibrary";
 
 	static {
-//		try {
-//			final JniExtractor extractor = NativeLoader.getJniExtractor();
-//			final String path = extractor.extractJni("", LIB_NAME).getAbsolutePath();
-//			System.load(path);
-//		} catch (Throwable ignored) {
-//			try {
-//				File path = new File(JVMTI.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-//				String libPath = new File(path, JVMTIUtils.detectLibName()).getAbsolutePath();
-//				System.load(libPath);
-//			} catch (Throwable t) {
-//				StaticLog.error("JVMTI init failed !", t);
-//			}
-//		}
+		try {
+			final JniExtractor extractor = NativeLoader.getJniExtractor();
+			final String path = extractor.extractJni("", LIB_NAME).getAbsolutePath();
+			System.load(path);
+		} catch (Throwable ignored) {
+			try {
+				File path = new File(JVMTI.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+				String libPath = new File(path, JVMTIUtils.detectLibName()).getAbsolutePath();
+				System.load(libPath);
+			} catch (Throwable t) {
+				StaticLog.error("JVMTI init failed !", t);
+			}
+		}
 	}
 
 	/**

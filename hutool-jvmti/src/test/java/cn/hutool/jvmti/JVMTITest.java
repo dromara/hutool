@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class JVMTITest {
 
-//    @Test
+    @Test
     public void testGetInstances() {
         TestClass[] instances = JVMTI.getInstances(TestClass.class);
         Assert.assertNotNull(instances);
