@@ -35,6 +35,7 @@
 		<module>hutool-captcha</module>
 		<module>hutool-socket</module>
 		<module>hutool-jwt</module>
+		<module>hutool-jvmti</module>
 	</modules>
 
 	<properties>
