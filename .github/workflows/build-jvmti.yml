@@ -13,11 +13,14 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn package
+        run: |
+          cd ${{ github.workspace }}/hutool-jvmti
+          mvn package
       - uses: actions/upload-artifact@v2
         with:
           name: lib
           path: hutool-jvmti/target/classes/lib*
+          if-no-files-found: error
 
   mac:
     runs-on: macos-latest
@@ -29,11 +32,14 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn package
+        run: |
+          cd ${{ github.workspace }}/hutool-jvmti
+          mvn package
       - uses: actions/upload-artifact@v2
         with:
           name: lib
           path: hutool-jvmti/target/classes/lib*
+          if-no-files-found: error
 
   windows:
     runs-on: windows-2019
@@ -45,8 +51,11 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn package
+        run: |
+          cd ${{ github.workspace }}/hutool-jvmti
+          mvn package
       - uses: actions/upload-artifact@v2
         with:
           name: lib
           path: hutool-jvmti/target/classes/*.dll
+          if-no-files-found: error
