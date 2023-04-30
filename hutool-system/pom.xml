@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.10.M1</version>
+		<version>5.8.18</version>
 	</parent>
 
 	<artifactId>hutool-system</artifactId>
@@ -17,6 +17,8 @@
 	<description>Hutool 系统调用（Runtime）、系统监控封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.system</Automatic-Module-Name>
+
 		<slf4j.version>1.7.36</slf4j.version>
 	</properties>
 
@@ -30,7 +32,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.2.2</version>
+			<version>6.4.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

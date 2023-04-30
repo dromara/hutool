@@ -9,12 +9,16 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.10.M1</version>
+		<version>5.8.18</version>
 	</parent>
 
 	<artifactId>hutool-cache</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 缓存</description>
+
+	<properties>
+		<Automatic-Module-Name>cn.hutool.cache</Automatic-Module-Name>
+	</properties>
 
 	<dependencies>
 		<dependency>

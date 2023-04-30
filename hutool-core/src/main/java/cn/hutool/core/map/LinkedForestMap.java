@@ -528,7 +528,7 @@ public class LinkedForestMap<K, V> implements ForestMap<K, V> {
 		 * 从当前节点开始，按广度优先向下遍历当前节点的所有子节点
 		 *
 		 * @param includeCurrent 是否包含当前节点
-		 * @param consumer       对节点与节点和当前节点的距离的操作，当{code includeCurrent}为false时下标从1开始，否则从0开始
+		 * @param consumer       对节点与节点和当前节点的距离的操作，当{@code includeCurrent}为false时下标从1开始，否则从0开始
 		 * @param breakTraverse  是否终止遍历，为null时默认总是返回{@code true}
 		 * @return 遍历到的最后一个节点
 		 */

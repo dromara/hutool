@@ -1,5 +1,6 @@
 package cn.hutool.http;
 
+import cn.hutool.core.io.resource.StringResource;
 import cn.hutool.core.lang.Console;
 import cn.hutool.json.JSONUtil;
 import org.junit.Assert;
@@ -10,7 +11,6 @@ import org.junit.Test;
  * Rest类型请求单元测试
  *
  * @author looly
- *
  */
 public class RestTest {
 
@@ -26,10 +26,10 @@ public class RestTest {
 	@Test
 	@Ignore
 	public void postTest() {
-		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj()
+		HttpRequest request = HttpRequest.post("http://localhost:8888/restTest/")//
+				.body(new StringResource(JSONUtil.createObj()
 						.set("aaa", "aaaValue")
-						.set("键2", "值2").toString());
+						.set("键2", "值2").toString()));
 		Console.log(request.execute().body());
 	}
 
@@ -59,11 +59,19 @@ public class RestTest {
 		HttpRequest request = HttpRequest.get("https://ad.oceanengine.com/open_api/2/advertiser/info/")//
 				// Charles代理
 				.setHttpProxy("localhost", 8888)
-				.header("Access-Token","")
+				.header("Access-Token", "")
 				.body(JSONUtil.createObj()
-						.set("advertiser_ids", new Long[] {1690657248243790L})
-						.set("fields", new String[] {"id", "name", "status"}).toString());
+						.set("advertiser_ids", new Long[]{1690657248243790L})
+						.set("fields", new String[]{"id", "name", "status"}).toString());
 		Console.log(request);
 		Console.log(request.execute().body());
+	}
+
+	@Test
+	@Ignore
+	public void getTest() {
+		final HttpRequest request = HttpRequest.get("http://localhost:8888/restTest");
+		final HttpResponse execute = request.execute();
+		Console.log(execute.headers());
 	}
 }

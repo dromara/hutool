@@ -109,7 +109,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @throws IORuntimeException IO异常
 	 */
 	public CsvData read() throws IORuntimeException {
-		return read(this.reader);
+		return read(this.reader, false);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class CsvReader extends CsvBaseReader implements Iterable<CsvRow>, Closea
 	 * @since 5.0.4
 	 */
 	public void read(CsvRowHandler rowHandler) throws IORuntimeException {
-		read(this.reader, rowHandler);
+		read(this.reader, false, rowHandler);
 	}
 
 	/**

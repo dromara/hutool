@@ -29,6 +29,11 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	private InputStream inputStream;
 
 	/**
+	 * Source code.
+	 */
+	private String sourceCode;
+
+	/**
 	 * 构造，支持File等路径类型的源码
 	 *
 	 * @param uri  需要编译的文件uri
@@ -82,9 +87,12 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
 	 */
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-		try(final InputStream in = openInputStream()){
-			return IoUtil.readUtf8(in);
+		if (sourceCode == null) {
+			try(final InputStream in = openInputStream()){
+				sourceCode = IoUtil.readUtf8(in);
+			}
 		}
+		return sourceCode;
 	}
 
 }

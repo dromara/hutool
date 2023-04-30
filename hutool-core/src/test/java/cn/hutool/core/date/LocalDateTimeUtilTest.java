@@ -29,8 +29,9 @@ public class LocalDateTimeUtilTest {
 		Assert.assertNotNull(of);
 		Assert.assertEquals(dateStr, of.toString());
 
+		// 不加Z是标准当地时间，与UTC时间不同
 		of = LocalDateTimeUtil.ofUTC(dt.getTime());
-		Assert.assertEquals(dateStr, of.toString());
+		Assert.assertNotEquals(dateStr, of.toString());
 	}
 
 	@Test
@@ -245,12 +246,19 @@ public class LocalDateTimeUtilTest {
 		final LocalDateTime startTime  = DateUtil.parseLocalDateTime("2022-03-23 05:00:00");
 		final LocalDateTime endTime    = DateUtil.parseLocalDateTime("2022-03-23 13:00:00");
 
+
+
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime,oneEndTime,realStartTime,realEndTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(oneStartTime2,oneEndTime2,realStartTime,realEndTime));
 		Assert.assertTrue(LocalDateTimeUtil.isOverlap(oneStartTime3,oneEndTime3,realStartTime,realEndTime));
 
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(realStartTime1,realEndTime1,startTime,endTime));
 		Assert.assertFalse(LocalDateTimeUtil.isOverlap(startTime,endTime,realStartTime1,realEndTime1));
+
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(startTime,startTime,startTime,startTime));
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(startTime,startTime,startTime,endTime));
+		Assert.assertFalse(LocalDateTimeUtil.isOverlap(startTime,startTime,endTime,endTime));
+		Assert.assertTrue(LocalDateTimeUtil.isOverlap(startTime,endTime,endTime,endTime));
 	}
 
 	@Test

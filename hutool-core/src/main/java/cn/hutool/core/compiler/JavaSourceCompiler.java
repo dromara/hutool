@@ -168,6 +168,16 @@ public class JavaSourceCompiler {
 	 * @return 类加载器
 	 */
 	public ClassLoader compile() {
+		return compile(null);
+	}
+
+	/**
+	 * 编译所有文件并返回类加载器
+	 *
+	 * @param options 编译参数
+	 * @return 类加载器
+	 */
+	public ClassLoader compile(List<String> options) {
 		// 获得classPath
 		final List<File> classPath = getClassPath();
 		final URL[] urLs = URLUtil.getURLs(classPath.toArray(new File[0]));
@@ -181,7 +191,9 @@ public class JavaSourceCompiler {
 		final JavaClassFileManager javaFileManager = new JavaClassFileManager(ucl, CompilerUtil.getFileManager());
 
 		// classpath
-		final List<String> options = new ArrayList<>();
+		if (null == options) {
+			options = new ArrayList<>();
+		}
 		if (false == classPath.isEmpty()) {
 			final List<String> cp = CollUtil.map(classPath, File::getAbsolutePath, true);
 			options.add("-cp");

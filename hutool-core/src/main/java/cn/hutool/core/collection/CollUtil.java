@@ -7,47 +7,19 @@ import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -393,11 +365,18 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
 		Collection<T> result = ObjectUtil.clone(coll1);
-		if (null == result) {
-			result = CollUtil.create(coll1.getClass());
+		try {
+			if (null == result) {
+				result = CollUtil.create(coll1.getClass());
+				result.addAll(coll1);
+			}
+			result.removeAll(coll2);
+		} catch (UnsupportedOperationException e) {
+			// 针对 coll1 为只读集合的补偿
+			result = CollUtil.create(AbstractCollection.class);
 			result.addAll(coll1);
+			result.removeAll(coll2);
 		}
-		result.removeAll(coll2);
 		return result;
 	}
 
@@ -993,7 +972,7 @@ public class CollUtil {
 	 * @since 3.3.0
 	 */
 	public static <T> BlockingQueue<T> newBlockingQueue(int capacity, boolean isLinked) {
-		BlockingQueue<T> queue;
+		final BlockingQueue<T> queue;
 		if (isLinked) {
 			queue = new LinkedBlockingDeque<>(capacity);
 		} else {
@@ -1010,9 +989,22 @@ public class CollUtil {
 	 * @return 集合类型对应的实例
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> Collection<T> create(Class<?> collectionType) {
-		Collection<T> list;
+		return create(collectionType, null);
+	}
+
+	/**
+	 * 创建新的集合对象，返回具体的泛型集合
+	 *
+	 * @param <T>            集合元素类型
+	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
+	 * @param elementType    集合元素类型
+	 * @return 集合类型对应的实例
+	 * @since v5
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <T> Collection<T> create(Class<?> collectionType, Class<T> elementType) {
+		final Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
 			list = new ArrayList<>();
@@ -1032,7 +1024,7 @@ public class CollUtil {
 				return CompareUtil.compare(o1.toString(), o2.toString());
 			});
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
-			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
+			list = (Collection<T>) EnumSet.noneOf(Assert.notNull((Class<Enum>) elementType));
 		}
 
 		// List
@@ -1046,7 +1038,7 @@ public class CollUtil {
 		else {
 			try {
 				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				// 无法创建当前类型的对象，尝试创建父类型对象
 				final Class<?> superclass = collectionType.getSuperclass();
 				if (null != superclass && collectionType != superclass) {
@@ -1197,11 +1189,12 @@ public class CollUtil {
 			return result;
 		}
 
-		ArrayList<T> subList = new ArrayList<>(size);
+		final int initSize = Math.min(collection.size(), size);
+		List<T> subList = new ArrayList<>(initSize);
 		for (T t : collection) {
 			if (subList.size() >= size) {
 				result.add(subList);
-				subList = new ArrayList<>(size);
+				subList = new ArrayList<>(initSize);
 			}
 			subList.add(t);
 		}
@@ -1748,7 +1741,7 @@ public class CollUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Collection<?> collection) {
-		return false == isEmpty(collection);
+		return !isEmpty(collection);
 	}
 
 	/**
@@ -2098,10 +2091,11 @@ public class CollUtil {
 	 *     ["456"], "123" -&gt; true
 	 *     [Animal{"name": "jack"}], Dog{"name": "jack"} -&gt; true
 	 * </pre>
+	 *
 	 * @param collection 被加入的集合
-	 * @param object 要添加到集合的对象
-	 * @param <T> 集合元素类型
-	 * @param <S> 要添加的元素类型【为集合元素类型的类型或子类型】
+	 * @param object     要添加到集合的对象
+	 * @param <T>        集合元素类型
+	 * @param <S>        要添加的元素类型【为集合元素类型的类型或子类型】
 	 * @return 是否添加成功
 	 * @author Cloud-Style
 	 */

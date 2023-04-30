@@ -583,6 +583,7 @@ public class Ftp extends AbstractFtp {
 	 */
 	public void uploadFileOrDirectory(final String remotePath, final File uploadFile) {
 		if (false == FileUtil.isDirectory(uploadFile)) {
+			// 上传文件
 			this.upload(remotePath, uploadFile);
 			return;
 		}
@@ -604,7 +605,7 @@ public class Ftp extends AbstractFtp {
 		//第二次只处理目录
 		for (final File f : dirs) {
 			final String dir = FileUtil.normalize(remotePath + "/" + f.getName());
-			upload(dir, f);
+			this.uploadFileOrDirectory(dir, f);
 		}
 	}
 

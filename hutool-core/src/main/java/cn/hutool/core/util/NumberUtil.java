@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.math.Calculator;
+import cn.hutool.core.text.CharSequenceUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,6 +13,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -112,6 +114,12 @@ public class NumberUtil {
 	 * 提供精确的加法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
 	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
+	 *
 	 * @param v1 被加数
 	 * @param v2 加数
 	 * @return 和
@@ -123,6 +131,12 @@ public class NumberUtil {
 	/**
 	 * 提供精确的加法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
+	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
 	 *
 	 * @param values 多个被加值
 	 * @return 和
@@ -1871,6 +1885,31 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 比较数字值是否相等，相等返回{@code true}<br>
+	 * 需要注意的是{@link BigDecimal}需要特殊处理<br>
+	 * BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等，<br>
+	 * 此方法判断值相等时忽略精度的，即0.00 == 0
+	 *
+	 * <ul>
+	 *     <li>如果用户提供两个Number都是{@link BigDecimal}，则通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等</li>
+	 *     <li>其他情况调用{@link Number#equals(Object)}比较</li>
+	 * </ul>
+	 *
+	 * @param number1 数字1
+	 * @param number2 数字2
+	 * @return 是否相等
+	 * @see Objects#equals(Object, Object)
+	 * @since 5.8.17
+	 */
+	public static boolean equals(final Number number1, final Number number2) {
+		if (number1 instanceof BigDecimal && number2 instanceof BigDecimal) {
+			// BigDecimal使用compareTo方式判断，因为使用equals方法也判断小数位数，如2.0和2.00就不相等
+			return equals((BigDecimal) number1, (BigDecimal) number2);
+		}
+		return Objects.equals(number1, number2);
+	}
+
+	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
 	 * 此方法判断值相等时忽略精度的，即0.00 == 0
@@ -2547,6 +2586,12 @@ public class NumberUtil {
 	 * 将指定字符串转换为{@link Number} 对象<br>
 	 * 此方法不支持科学计数法
 	 *
+	 * <p>
+	 *     需要注意的是，在不同Locale下，数字的表示形式也是不同的，例如：<br>
+	 *     德国、荷兰、比利时、丹麦、意大利、罗马尼亚和欧洲大多地区使用`,`区分小数<br>
+	 *     也就是说，在这些国家地区，1.20表示120，而非1.2。
+	 * </p>
+	 *
 	 * @param numberStr Number字符串
 	 * @return Number对象
 	 * @throws NumberFormatException 包装了{@link ParseException}，当给定的数字字符串无法解析时抛出
@@ -2571,6 +2616,146 @@ public class NumberUtil {
 			nfe.initCause(e);
 			throw nfe;
 		}
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Integer } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Integer
+	 */
+	public static Integer parseInt(String numberStr, Integer defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseInt(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Long } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的忽略开头的0
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * 7、解析失败返回默认值
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Long
+	 */
+	public static Long parseLong(String numberStr, Long defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseLong(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Float } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Float
+	 */
+	public static Float parseFloat(String numberStr, Float defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseFloat(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 解析转换数字字符串为 {@link java.lang.Double } 规则如下：
+	 *
+	 * <pre>
+	 * 1、0开头的忽略开头的0
+	 * 2、空串返回0
+	 * 3、其它情况按照10进制转换
+	 * 4、.123形式返回0.123（按照小于0的小数对待）
+	 * </pre>
+	 *
+	 * @param numberStr    数字字符串，支持0x开头、0开头和普通十进制
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Double
+	 */
+	public static Double parseDouble(String numberStr, Double defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseDouble(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number }
+	 * 此方法不支持科学计数法
+	 *
+	 * @param numberStr    Number字符串
+	 * @param defaultValue 如果解析失败, 将返回defaultValue, 允许null
+	 * @return Number对象
+	 */
+	public static Number parseNumber(String numberStr, Number defaultValue) {
+		if (CharSequenceUtil.isBlank(numberStr)) {
+			return defaultValue;
+		}
+
+		try {
+			return parseNumber(numberStr);
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		return defaultValue;
 	}
 
 	/**

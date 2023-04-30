@@ -22,14 +22,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -255,8 +248,10 @@ public class BeanUtilTest {
 
 		final SubPersonWithAlias subPersonWithAlias = BeanUtil.toBean(map, SubPersonWithAlias.class);
 		Assert.assertEquals("sub名字", subPersonWithAlias.getSubName());
-		Assert.assertTrue(subPersonWithAlias.isBooleana());
-		Assert.assertEquals(true, subPersonWithAlias.getBooleanb());
+
+		//https://gitee.com/dromara/hutool/issues/I6H0XF
+		Assert.assertFalse(subPersonWithAlias.isBooleana());
+		Assert.assertNull(subPersonWithAlias.getBooleanb());
 	}
 
 	@Test
@@ -647,6 +642,33 @@ public class BeanUtilTest {
 		Assert.assertEquals(new Long(123456L), station2.getId());
 	}
 
+	enum Version {
+		dev,
+		prod
+	}
+
+	@Data
+	public static class Vto {
+		EnumSet<Version> versions;
+	}
+
+
+	@Test
+	public void beanWithEnumSetTest() {
+		final Vto v1 = new Vto();
+		v1.setVersions(EnumSet.allOf(Version.class));
+		final Vto v2 = BeanUtil.copyProperties(v1, Vto.class);
+		Assert.assertNotNull(v2);
+		Assert.assertNotNull(v2.getVersions());
+	}
+
+	@Test
+	public void enumSetTest() {
+		final Collection<Version> objects = CollUtil.create(EnumSet.class, Version.class);
+		Assert.assertNotNull(objects);
+		Assert.assertTrue(EnumSet.class.isAssignableFrom(objects.getClass()));
+	}
+
 	static class Station extends Tree<Long> {}
 	static class Tree<T> extends Entity<T> {}
 
@@ -895,5 +917,12 @@ public class BeanUtilTest {
 
 		userEntity.setSex(0);
 		Assert.assertTrue(BeanUtil.isCommonFieldsEqual(userDTO, userEntity, "age", "sex"));
+	}
+
+	@Test
+	public void hasGetterTest() {
+		// https://gitee.com/dromara/hutool/issues/I6M7Z7
+		final boolean b = BeanUtil.hasGetter(Object.class);
+		Assert.assertFalse(b);
 	}
 }

@@ -4,9 +4,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.extra.ssh.Sftp;
+import org.apache.commons.net.ftp.FTPFile;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -91,12 +93,19 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void downloadTest() {
-		try(final Ftp ftp = new Ftp("localhost")){
-			final List<String> fileNames = ftp.ls("temp/");
-			for(final String name: fileNames) {
-				ftp.download("",
-						name,
-						FileUtil.file("d:/test/download/" + name));
+		String downloadPath = "d:/test/download/";
+		try (final Ftp ftp = new Ftp("localhost")) {
+			final List<FTPFile> ftpFiles = ftp.lsFiles("temp/", null);
+			for (final FTPFile ftpFile : ftpFiles) {
+				String name = ftpFile.getName();
+				if (ftpFile.isDirectory()) {
+					File dp = new File(downloadPath + name);
+					if (!dp.exists()) {
+						dp.mkdir();
+					}
+				} else {
+					ftp.download("", name, FileUtil.file(downloadPath + name));
+				}
 			}
 		} catch (final IOException e) {
 			throw new RuntimeException(e);

@@ -19,7 +19,7 @@
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
 	</a>
 	<a target="_blank" href="https://travis-ci.com/dromara/hutool">
-		<img src="https://travis-ci.com/dromara/hutool.svg?branch=v4-master" />
+		<img src="https://travis-ci.com/dromara/hutool.svg?branch=v5-master" />
 	</a>
 	<a href="https://www.codacy.com/gh/dromara/hutool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dromara/hutool&amp;utm_campaign=Badge_Grade">
 		<img src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
@@ -40,8 +40,8 @@
 
 <br/>
 <p align="center">
-	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=jPq9DsjXs7GUWbXRZU3wygSJyMEy4pqr&jump_from=webapi">
-	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-610134978-orange"/></a>
+	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
+	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A6-715292493-orange"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -144,20 +144,20 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.10.M1</version>
+    <version>5.8.18</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.10.M1'
+implementation 'cn.hutool:hutool-all:5.8.18'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.10.M1/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.18/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。

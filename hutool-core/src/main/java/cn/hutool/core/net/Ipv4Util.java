@@ -112,21 +112,38 @@ public class Ipv4Util {
 	 * @return 区间地址
 	 */
 	public static List<String> list(String ipFrom, String ipTo) {
-		final int[] ipf = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, CharUtil.DOT));
-		final int[] ipt = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, CharUtil.DOT));
+		// 确定ip数量
+		final int count = countByIpRange(ipFrom, ipTo);
+		final int[] from = Convert.convert(int[].class, StrUtil.splitToArray(ipFrom, CharUtil.DOT));
+		final int[] to = Convert.convert(int[].class, StrUtil.splitToArray(ipTo, CharUtil.DOT));
 
-		final List<String> ips = new ArrayList<>();
-		for (int a = ipf[0]; a <= ipt[0]; a++) {
-			for (int b = (a == ipf[0] ? ipf[1] : 0); b <= (a == ipt[0] ? ipt[1]
-					: 255); b++) {
-				for (int c = (b == ipf[1] ? ipf[2] : 0); c <= (b == ipt[1] ? ipt[2]
-						: 255); c++) {
-					for (int d = (c == ipf[2] ? ipf[3] : 0); d <= (c == ipt[2] ? ipt[3]
-							: 255); d++) {
+		final List<String> ips = new ArrayList<>(count);
+		// 是否是循环的第一个值
+		boolean aIsStart = true, bIsStart = true, cIsStart = true;
+		// 是否是循环的最后一个值
+		boolean aIsEnd, bIsEnd, cIsEnd;
+		// 循环的结束值
+		int aEnd = to[0], bEnd, cEnd, dEnd;
+		for (int a = from[0]; a <= aEnd; a++) {
+			aIsEnd = (a == aEnd);
+			// 本次循环的结束结束值
+			bEnd = aIsEnd ? to[1] : 255;
+			for (int b = (aIsStart ? from[1] : 0); b <= bEnd; b++) {
+				// 在上一个循环是最后值的基础上进行判断
+				bIsEnd = aIsEnd && (b == bEnd);
+				cEnd = bIsEnd ? to[2] : 255;
+				for (int c = (bIsStart ? from[2] : 0); c <= cEnd; c++) {
+					// 在之前循环是最后值的基础上进行判断
+					cIsEnd = bIsEnd && (c == cEnd);
+					dEnd = cIsEnd ? to[3] : 255;
+					for (int d = (cIsStart ? from[3] : 0); d <= dEnd; d++) {
 						ips.add(a + "." + b + "." + c + "." + d);
 					}
+					cIsStart = false;
 				}
+				bIsStart = false;
 			}
+			aIsStart = false;
 		}
 		return ips;
 	}

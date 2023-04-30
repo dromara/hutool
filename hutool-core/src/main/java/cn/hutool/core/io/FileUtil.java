@@ -29,9 +29,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -56,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -1917,7 +1916,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static BOMInputStream getBOMInputStream(File file) throws IORuntimeException {
 		try {
-			return new BOMInputStream(new FileInputStream(file));
+			return new BOMInputStream(Files.newInputStream(file.toPath()));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -2373,6 +2372,19 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 从文件中读取每一行数据
 	 *
+	 * @param file   文件
+	 * @param filter 过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readUtf8Lines(File file, Predicate<String> filter) throws IORuntimeException {
+		return readLines(file, CharsetUtil.CHARSET_UTF_8, filter);
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
 	 * @param file    文件
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
@@ -2392,6 +2404,25 @@ public class FileUtil extends PathUtil {
 	 */
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<>());
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
+	 * @param file    文件
+	 * @param charset 字符集
+	 * @param filter  过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(File file, Charset charset, Predicate<String> filter) throws IORuntimeException {
+		final List<String> result = new ArrayList<>();
+		readLines(file, charset, (LineHandler) line -> {
+			if (filter.test(line)) {
+				result.add(line);
+			}
+		});
+		return result;
 	}
 
 	/**
@@ -2561,8 +2592,8 @@ public class FileUtil extends PathUtil {
 	public static BufferedOutputStream getOutputStream(File file) throws IORuntimeException {
 		final OutputStream out;
 		try {
-			out = new FileOutputStream(touch(file));
-		} catch (IOException e) {
+			out = Files.newOutputStream(touch(file).toPath());
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return IoUtil.toBuffered(out);
@@ -3337,8 +3368,8 @@ public class FileUtil extends PathUtil {
 			throw new IllegalArgumentException("Checksums can't be computed on directories");
 		}
 		try {
-			return IoUtil.checksum(new FileInputStream(file), checksum);
-		} catch (FileNotFoundException e) {
+			return IoUtil.checksum(Files.newInputStream(file.toPath()), checksum);
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}

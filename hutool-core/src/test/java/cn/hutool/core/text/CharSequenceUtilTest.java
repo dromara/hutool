@@ -160,4 +160,69 @@ public class CharSequenceUtilTest {
 		a = null;
 		Assert.assertNull(CharSequenceUtil.trimToNull(a));
 	}
+
+	@Test
+	public void commonPrefixTest() throws Exception{
+
+		// -------------------------- None match -----------------------
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("", "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix(null, "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", null));
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("abc", ""));
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("azzzj", "bzzzj"));
+
+		Assert.assertEquals("", CharSequenceUtil.commonPrefix("english中文", "french中文"));
+
+		// -------------------------- Matched -----------------------
+
+		Assert.assertEquals("name_", CharSequenceUtil.commonPrefix("name_abc", "name_efg"));
+
+		Assert.assertEquals("zzzj", CharSequenceUtil.commonPrefix("zzzja", "zzzjb"));
+
+		Assert.assertEquals("中文", CharSequenceUtil.commonPrefix("中文english", "中文french"));
+
+		// { space * 10 } + "abc"
+		final String str1 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10) + "abc";
+
+		// { space * 5 } + "efg"
+		final String str2 = CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5) + "efg";
+
+		// Expect common prefix: { space * 5 }
+		Assert.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 5), CharSequenceUtil.commonPrefix(str1, str2));
+	}
+
+	@Test
+	public void commonSuffixTest() throws Exception{
+
+		// -------------------------- None match -----------------------
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("", "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix(null, "abc"));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", null));
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("abc", ""));
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("zzzja", "zzzjb"));
+
+		Assert.assertEquals("", CharSequenceUtil.commonSuffix("中文english", "中文Korean"));
+
+		// -------------------------- Matched -----------------------
+
+		Assert.assertEquals("_name", CharSequenceUtil.commonSuffix("abc_name", "efg_name"));
+
+		Assert.assertEquals("zzzj", CharSequenceUtil.commonSuffix("abczzzj", "efgzzzj"));
+
+		Assert.assertEquals("中文", CharSequenceUtil.commonSuffix("english中文", "Korean中文"));
+
+		// "abc" + { space * 10 }
+		final String str1 = "abc" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10);
+
+		// "efg" + { space * 15 }
+		final String str2 = "efg" + CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 15);
+
+		// Expect common suffix: { space * 10 }
+		Assert.assertEquals(CharSequenceUtil.repeat(CharSequenceUtil.SPACE, 10), CharSequenceUtil.commonSuffix(str1, str2));
+	}
+
 }

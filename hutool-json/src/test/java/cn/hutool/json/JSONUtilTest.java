@@ -9,6 +9,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +34,16 @@ public class JSONUtilTest {
 	/**
 	 * 数字解析为JSONArray报错
 	 */
+	@Test
+	public void parseNumberToJSONArrayTest2() {
+		final JSONArray json = JSONUtil.parseArray(123L,
+				JSONConfig.create().setIgnoreError(true));
+		Assert.assertNotNull(json);
+	}
+
+	/**
+	 * 数字解析为JSONArray报错
+	 */
 	@Test(expected = JSONException.class)
 	public void parseNumberTest() {
 		final JSONArray json = JSONUtil.parseArray(123L);
@@ -44,7 +55,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberTest2() {
-		final JSONObject json = JSONUtil.parseObj(123L);
+		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.create().setIgnoreError(true));
 		Assert.assertEquals(new JSONObject(), json);
 	}
 
@@ -244,10 +255,29 @@ public class JSONUtilTest {
 	}
 
 	@Test(expected = JSONException.class)
-	public void duplicateKeyTrueTest(){
+	public void duplicateKeyTrueTest() {
 		final String str = "{id:123, name:\"张三\", name:\"李四\"}";
 
 		final JSONObject jsonObject = JSONUtil.parseObj(str, JSONConfig.create().setCheckDuplicate(true));
 		Assert.assertEquals("{\"id\":123,\"name\":\"李四\"}", jsonObject.toString());
 	}
+
+	/**
+	 * 测试普通数组转JSONArray时是否异常, 尤其是byte[]数组, 可能是普通的byte[]数组, 也可能是二进制流
+	 */
+	@Test
+	public void testArrayEntity() {
+		final String jsonStr = JSONUtil.toJsonStr(new ArrayEntity());
+		Assert.assertEquals("{\"a\":[],\"b\":[0],\"c\":[],\"d\":[],\"e\":[]}", jsonStr);
+	}
+
+	@Data
+	static class ArrayEntity {
+		private byte[] a = new byte[0];
+		private byte[] b = new byte[1];
+		private int[] c = new int[0];
+		private Byte[] d = new Byte[0];
+		private Byte[] e = new Byte[1];
+	}
+
 }

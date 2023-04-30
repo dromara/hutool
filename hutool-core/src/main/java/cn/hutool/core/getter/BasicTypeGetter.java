@@ -9,6 +9,7 @@ import java.util.Date;
  * 提供一个统一的接口定义返回不同类型的值（基本类型）<br>
  *
  * @author Looly
+ * @param <K> key类型
  */
 public interface BasicTypeGetter<K> {
 	/*-------------------------- 基本类型 start -------------------------------*/

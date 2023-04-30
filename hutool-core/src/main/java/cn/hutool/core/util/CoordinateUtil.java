@@ -133,20 +133,35 @@ public class CoordinateUtil {
 		return gcj02ToWgs84(gcj02.lng, gcj02.lat);
 	}
 
-	//----------------------------------------------------------------------------------- Private methods begin
+	/**
+        * WGS84 坐标转为 墨卡托投影
+        *
+	* @param lng 经度值
+	* @param lat 纬度值
+	* @return 墨卡托投影
+	*/
+	public static Coordinate wgs84ToMercator(double lng, double lat) {
+		double x = lng * 20037508.342789244 / 180;
+		double y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+		y = y * 20037508.342789244 / 180;
+		return new Coordinate(x, y);
+	}
 
 	/**
-	 * 转换坐标公共核心
-	 *
-	 * @param lng 经度坐标
-	 * @param lat 纬度坐标
-	 * @return 返回结果
-	 */
-	private static double transCore(double lng, double lat) {
-		double ret = (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
-		ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
-		return ret;
+	* 墨卡托投影 转为 WGS84 坐标
+	*
+	* @param mercatorX 墨卡托X坐标
+	* @param mercatorY 墨卡托Y坐标
+	* @return WGS84 坐标
+	*/
+	public static Coordinate mercatorToWgs84(double mercatorX, double mercatorY) {
+		double x = mercatorX / 20037508.342789244 * 180;
+		double y = mercatorY / 20037508.342789244 * 180;
+		y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+		return new Coordinate(x, y);
 	}
+	
+	//----------------------------------------------------------------------------------- Private methods begin
 
 	/**
 	 * WGS84 与 火星坐标系 (GCJ-02)转换的偏移算法（非精确）
@@ -162,7 +177,7 @@ public class CoordinateUtil {
 
 		double magic = Math.sin(lat / 180.0 * PI);
 		magic = 1 - CORRECTION_PARAM * magic * magic;
-		double sqrtMagic = Math.sqrt(magic);
+		final double sqrtMagic = Math.sqrt(magic);
 
 		dlng = (dlng * 180.0) / (RADIUS / sqrtMagic * Math.cos(lat / 180.0 * PI) * PI);
 		dlat = (dlat * 180.0) / ((RADIUS * (1 - CORRECTION_PARAM)) / (magic * sqrtMagic) * PI);
@@ -184,7 +199,8 @@ public class CoordinateUtil {
 	 */
 	private static double transLng(double lng, double lat) {
 		double ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
-		ret += transCore(lng, lat);
+		ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
+		ret += (20.0 * Math.sin(lng * PI) + 40.0 * Math.sin(lng / 3.0 * PI)) * 2.0 / 3.0;
 		ret += (150.0 * Math.sin(lng / 12.0 * PI) + 300.0 * Math.sin(lng / 30.0 * PI)) * 2.0 / 3.0;
 		return ret;
 	}
@@ -197,8 +213,10 @@ public class CoordinateUtil {
 	 * @return ret 计算完成后的
 	 */
 	private static double transLat(double lng, double lat) {
-		double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
-		ret += transCore(lng, lat);
+		double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat
+				+ 0.2 * Math.sqrt(Math.abs(lng));
+		ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
+		ret += (20.0 * Math.sin(lat * PI) + 40.0 * Math.sin(lat / 3.0 * PI)) * 2.0 / 3.0;
 		ret += (160.0 * Math.sin(lat / 12.0 * PI) + 320 * Math.sin(lat * PI / 30.0)) * 2.0 / 3.0;
 		return ret;
 	}

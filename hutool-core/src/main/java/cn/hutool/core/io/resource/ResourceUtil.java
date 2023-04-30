@@ -7,6 +7,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
@@ -173,10 +174,28 @@ public class ResourceUtil {
 	 * @since 4.1.5
 	 */
 	public static EnumerationIter<URL> getResourceIter(String resource) {
+		return getResourceIter(resource, null);
+	}
+
+	/**
+	 * 获取指定路径下的资源Iterator<br>
+	 * 路径格式必须为目录格式,用/分隔，例如:
+	 *
+	 * <pre>
+	 * config/a
+	 * spring/xml
+	 * </pre>
+	 *
+	 * @param resource 资源路径
+	 * @param classLoader {@link ClassLoader}
+	 * @return 资源列表
+	 * @since 4.1.5
+	 */
+	public static EnumerationIter<URL> getResourceIter(String resource, ClassLoader classLoader) {
 		final Enumeration<URL> resources;
 		try {
-			resources = ClassLoaderUtil.getClassLoader().getResources(resource);
-		} catch (IOException e) {
+			resources = ObjUtil.defaultIfNull(classLoader, ClassLoaderUtil::getClassLoader).getResources(resource);
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 		return new EnumerationIter<>(resources);

@@ -19,7 +19,7 @@
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
 	</a>
 	<a target="_blank" href="https://travis-ci.com/dromara/hutool">
-		<img src="https://travis-ci.com/dromara/hutool.svg?branch=v4-master" />
+		<img src="https://travis-ci.com/dromara/hutool.svg?branch=v5-master" />
 	</a>
 	<a href="https://www.codacy.com/gh/dromara/hutool/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dromara/hutool&amp;utm_campaign=Badge_Grade">
 		<img src="https://app.codacy.com/project/badge/Grade/8a6897d9de7440dd9de8804c28d2871d"/>
@@ -40,8 +40,8 @@
 
 <br/>
 <p align="center">
-	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=jPq9DsjXs7GUWbXRZU3wygSJyMEy4pqr&jump_from=webapi">
-	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A5-610134978-orange"/></a>
+	<a href="https://qm.qq.com/cgi-bin/qm/qr?k=QtsqXLkHpLjE99tkre19j6pjPMhSay1a&jump_from=webapi">
+	<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E2%91%A6-715292493-orange"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -51,7 +51,7 @@
 -------------------------------------------------------------------------------
 
 ## 📚Introduction
-**Hutool** is a small but comprehensive library of Java tools, encapsulation by static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
+**Hutool** is a small but comprehensive library of Java tools, achieved by encapsulation through static methods, reduce the cost of learning related APIs, increase productivity, and make Java as elegant as a functional programming language,let the Java be "sweet" too.
 
 **Hutool** tools and methods from each user's crafted, it covers all aspects of the underlying code of Java development, it is a powerful tool for large project development to solve small problems, but also the efficiency of small projects;
 
@@ -144,18 +144,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.10.M1</version>
+    <version>5.8.18</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.10.M1'
+implementation 'cn.hutool:hutool-all:5.8.18'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.10.M1/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.18/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.

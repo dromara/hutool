@@ -16,21 +16,17 @@ import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.body.BytesBody;
 import cn.hutool.http.body.FormUrlEncodedBody;
 import cn.hutool.http.body.MultipartBody;
 import cn.hutool.http.body.RequestBody;
+import cn.hutool.http.body.ResourceBody;
 import cn.hutool.http.cookie.GlobalCookieManager;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URLStreamHandler;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
@@ -499,7 +495,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 停用body
-		this.bodyBytes = null;
+		this.body = null;
 
 		if (value instanceof File) {
 			// 文件上传
@@ -752,8 +748,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(byte[] bodyBytes) {
-		if (null != bodyBytes) {
-			this.bodyBytes = bodyBytes;
+		if (ArrayUtil.isNotEmpty(bodyBytes)) {
+			return body(new BytesResource(bodyBytes));
+		}
+		return this;
+	}
+
+	/**
+	 * 设置主体字节码<br>
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
+	 *
+	 * @param resource 主体
+	 * @return this
+	 */
+	public HttpRequest body(Resource resource) {
+		if (null != resource) {
+			this.body = resource;
 		}
 		return this;
 	}
@@ -849,6 +859,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				return setMaxRedirectCount(0);
 			}
 		}
+		return this;
+	}
+
+	/**
+	 * 自动重定向时是否处理cookie
+	 * @param followRedirectsCookie  自动重定向时是否处理cookie
+	 * @return this
+	 */
+	public HttpRequest setFollowRedirectsCookie(boolean followRedirectsCookie) {
+		config.setFollowRedirectsCookie(followRedirectsCookie);
 		return this;
 	}
 
@@ -1225,8 +1245,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 
 			// 优先使用body形式的参数，不存在使用form
-			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-				query.parse(StrUtil.str(this.bodyBytes, this.charset), this.charset);
+			if (null != this.body) {
+				query.parse(StrUtil.str(this.body.readBytes(), this.charset), this.charset);
 			} else {
 				query.addAll(this.form);
 			}
@@ -1242,7 +1262,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpResponse sendRedirectIfPossible(boolean isAsync) {
 		// 手动实现重定向
 		if (config.maxRedirectCount > 0) {
-			int responseCode;
+			final int responseCode;
 			try {
 				responseCode = httpConnection.responseCode();
 			} catch (IOException e) {
@@ -1250,7 +1270,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
-
+			// 支持自动重定向时处理cookie
+			// https://github.com/dromara/hutool/issues/2960
+			if (config.followRedirectsCookie) {
+				GlobalCookieManager.store(httpConnection);
+			}
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(responseCode)) {
 					final UrlBuilder redirectUrl;
@@ -1319,8 +1343,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		RequestBody body;
-		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-			body = BytesBody.create(this.bodyBytes);
+		if (null != this.body) {
+			body = ResourceBody.create(this.body);
 		} else {
 			body = FormUrlEncodedBody.create(this.form, this.charset);
 		}

@@ -67,6 +67,11 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sKeyStr)) {
+				return;
+			}
+
 			// 检查目标字段可写性
 			final PropDesc tDesc = findPropDesc(targetPropDescMap, sKeyStr);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
@@ -109,17 +114,6 @@ public class MapToBeanCopier<T> extends AbsCopier<Map<?, ?>, T> {
 		// 转驼峰尝试查找
 		sKeyStr = StrUtil.toCamelCase(sKeyStr);
 		propDesc = targetPropDescMap.get(sKeyStr);
-		if(null != propDesc){
-			return propDesc;
-		}
-
-		// boolean类型参数名转换尝试查找
-		if(sKeyStr.startsWith("is")){
-			sKeyStr = StrUtil.removePreAndLowerFirst(sKeyStr, 2);
-			propDesc = targetPropDescMap.get(sKeyStr);
-			return propDesc;
-		}
-
-		return null;
+		return propDesc;
 	}
 }

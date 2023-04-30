@@ -29,11 +29,11 @@ public class ZipUtilTest {
 
 	@Test
 	public void appendTest() throws IOException {
-		File appendFile = FileUtil.file("test-zip/addFile.txt");
-		File zipFile = FileUtil.file("test-zip/test.zip");
+		final File appendFile = FileUtil.file("test-zip/addFile.txt");
+		final File zipFile = FileUtil.file("test-zip/test.zip");
 
 		// 用于测试完成后将被测试文件恢复
-		File tempZipFile = FileUtil.createTempFile(FileUtil.file("test-zip"));
+		final File tempZipFile = FileUtil.createTempFile(FileUtil.file("test-zip"));
 		tempZipFile.deleteOnExit();
 		FileUtil.copy(zipFile, tempZipFile, true);
 
@@ -49,7 +49,7 @@ public class ZipUtilTest {
 
 		// test dir add
 		beforeNames = zipEntryNames(tempZipFile);
-		File addDirFile = FileUtil.file("test-zip/test-add");
+		final File addDirFile = FileUtil.file("test-zip/test-add");
 		ZipUtil.append(tempZipFile.toPath(), addDirFile.toPath());
 		afterNames = zipEntryNames(tempZipFile);
 
@@ -68,9 +68,9 @@ public class ZipUtilTest {
 	 * @param zipFile 待测试的zip文件
 	 * @return zip文件中一级目录下的所有文件/文件夹名
 	 */
-	private List<String> zipEntryNames(File zipFile) {
-		List<String> fileNames = new ArrayList<>();
-		ZipReader reader = ZipReader.of(zipFile, CharsetUtil.CHARSET_UTF_8);
+	private List<String> zipEntryNames(final File zipFile) {
+		final List<String> fileNames = new ArrayList<>();
+		final ZipReader reader = ZipReader.of(zipFile, CharsetUtil.CHARSET_UTF_8);
 		reader.read(zipEntry -> fileNames.add(zipEntry.getName()));
 		reader.close();
 		return fileNames;
@@ -85,21 +85,21 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void unzipTest() {
-		File unzip = ZipUtil.unzip("f:/test/apache-maven-3.6.2.zip", "f:\\test");
+		final File unzip = ZipUtil.unzip("d:/test/hutool.zip", "d:\\test", CharsetUtil.CHARSET_GBK);
 		Console.log(unzip);
 	}
 
 	@Test
 	@Ignore
 	public void unzipTest2() {
-		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
+		final File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
 		Console.log(unzip);
 	}
 
 	@Test
 	@Ignore
 	public void unzipFromStreamTest() {
-		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/hutool-core-5.1.0.jar"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
+		final File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/hutool-core-5.1.0.jar"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
 		Console.log(unzip);
 	}
 
@@ -112,40 +112,40 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void unzipFileBytesTest() {
-		byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.CHARSET_GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
+		final byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.CHARSET_GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
 		Assert.assertNotNull(fileBytes);
 	}
 
 	@Test
 	public void gzipTest() {
-		String data = "我是一个需要压缩的很长很长的字符串";
-		byte[] bytes = StrUtil.utf8Bytes(data);
-		byte[] gzip = ZipUtil.gzip(bytes);
+		final String data = "我是一个需要压缩的很长很长的字符串";
+		final byte[] bytes = StrUtil.utf8Bytes(data);
+		final byte[] gzip = ZipUtil.gzip(bytes);
 
 		//保证gzip长度正常
 		Assert.assertEquals(68, gzip.length);
 
-		byte[] unGzip = ZipUtil.unGzip(gzip);
+		final byte[] unGzip = ZipUtil.unGzip(gzip);
 		//保证正常还原
 		Assert.assertEquals(data, StrUtil.utf8Str(unGzip));
 	}
 
 	@Test
 	public void zlibTest() {
-		String data = "我是一个需要压缩的很长很长的字符串";
-		byte[] bytes = StrUtil.utf8Bytes(data);
+		final String data = "我是一个需要压缩的很长很长的字符串";
+		final byte[] bytes = StrUtil.utf8Bytes(data);
 		byte[] gzip = ZipUtil.zlib(bytes, 0);
 
 		//保证zlib长度正常
 		Assert.assertEquals(62, gzip.length);
-		byte[] unGzip = ZipUtil.unZlib(gzip);
+		final byte[] unGzip = ZipUtil.unZlib(gzip);
 		//保证正常还原
 		Assert.assertEquals(data, StrUtil.utf8Str(unGzip));
 
 		gzip = ZipUtil.zlib(bytes, 9);
 		//保证zlib长度正常
 		Assert.assertEquals(56, gzip.length);
-		byte[] unGzip2 = ZipUtil.unZlib(gzip);
+		final byte[] unGzip2 = ZipUtil.unZlib(gzip);
 		//保证正常还原
 		Assert.assertEquals(data, StrUtil.utf8Str(unGzip2));
 	}
@@ -154,13 +154,13 @@ public class ZipUtilTest {
 	@Ignore
 	public void zipStreamTest(){
 		//https://github.com/dromara/hutool/issues/944
-		String dir = "d:/test";
-		String zip = "d:/test.zip";
+		final String dir = "d:/test";
+		final String zip = "d:/test.zip";
 		//noinspection IOStreamConstructor
-		try (OutputStream out = new FileOutputStream(zip)){
+		try (final OutputStream out = new FileOutputStream(zip)){
 			//实际应用中, out 为 HttpServletResponse.getOutputStream
 			ZipUtil.zip(out, Charset.defaultCharset(), false, null, new File(dir));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -169,11 +169,11 @@ public class ZipUtilTest {
 	@Ignore
 	public void zipStreamTest2(){
 		// https://github.com/dromara/hutool/issues/944
-		String file1 = "d:/test/a.txt";
-		String file2 = "d:/test/a.txt";
-		String file3 = "d:/test/asn1.key";
+		final String file1 = "d:/test/a.txt";
+		final String file2 = "d:/test/a.txt";
+		final String file3 = "d:/test/asn1.key";
 
-		String zip = "d:/test/test2.zip";
+		final String zip = "d:/test/test2.zip";
 		//实际应用中, out 为 HttpServletResponse.getOutputStream
 		ZipUtil.zip(FileUtil.getOutputStream(zip), Charset.defaultCharset(), false, null,
 				new File(file1),
@@ -185,8 +185,8 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipToStreamTest(){
-		String zip = "d:/test/testToStream.zip";
-		OutputStream out = FileUtil.getOutputStream(zip);
+		final String zip = "d:/test/testToStream.zip";
+		final OutputStream out = FileUtil.getOutputStream(zip);
 		ZipUtil.zip(out, new String[]{"sm1_alias.txt"},
 				new InputStream[]{FileUtil.getInputStream("d:/test/sm4_1.txt")});
 	}
@@ -194,7 +194,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipMultiFileTest(){
-		File[] dd={FileUtil.file("d:\\test\\qr_a.jpg")
+		final File[] dd={FileUtil.file("d:\\test\\qr_a.jpg")
 				,FileUtil.file("d:\\test\\qr_b.jpg")};
 
 		ZipUtil.zip(FileUtil.file("d:\\test\\qr.zip"),false,dd);
@@ -203,15 +203,23 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void sizeUnzipTest() throws IOException {
-		String zipPath = "e:\\hutool\\demo.zip";
-		String outPath = "e:\\hutool\\test";
-		ZipFile zipFile = new ZipFile(zipPath, Charset.forName("GBK"));
-		File file = new File(outPath);
+		final String zipPath = "e:\\hutool\\demo.zip";
+		final String outPath = "e:\\hutool\\test";
+		final ZipFile zipFile = new ZipFile(zipPath, Charset.forName("GBK"));
+		final File file = new File(outPath);
 		// 限制解压文件大小为637KB
-		long size = 637*1024L;
+		final long size = 637*1024L;
 
 		// 限制解压文件大小为636KB
 		// long size = 636*1024L;
 		unzip(zipFile, file, size);
+	}
+
+	@Test
+	@Ignore
+	public void issue3018Test() {
+		ZipUtil.unzip(
+				FileUtil.getInputStream("d:/test/default.zip")
+		, FileUtil.file("d:/test/"), CharsetUtil.CHARSET_UTF_8);
 	}
 }

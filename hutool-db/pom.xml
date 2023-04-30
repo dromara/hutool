@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.10.M1</version>
+		<version>5.8.18</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -17,18 +17,20 @@
 	<description>Hutool 数据库JDBC的ORM封装</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.db</Automatic-Module-Name>
+
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.9.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.23</tomcat-jdbc.version>
-		<druid.version>1.2.12</druid.version>
+		<druid.version>1.2.16</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
-		<mongo4.version>4.7.1</mongo4.version>
-		<sqlite.version>3.39.3.0</sqlite.version>
+		<mongo4.version>4.9.1</mongo4.version>
+		<sqlite.version>3.41.2.1</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>4.2.3</jedis.version>
+		<jedis.version>4.3.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -82,7 +84,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.3.8</version>
+			<version>3.4.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -145,19 +147,19 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.30</version>
+			<version>8.0.32</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.5.0</version>
+			<version>42.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>10.2.1.jre8</version>
+			<version>12.2.0.jre8</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

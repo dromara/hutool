@@ -72,6 +72,7 @@ public class TimingWheel {
 		this.wheelSize = wheelSize;
 		this.interval = tickMs * wheelSize;
 		this.timerTaskLists = new TimerTaskList[wheelSize];
+		initTimerTaskList();
 		//currentTime为tickMs的整数倍 这里做取整操作
 		this.currentTime = currentTime - (currentTime % tickMs);
 		this.consumer = consumer;
@@ -93,12 +94,7 @@ public class TimingWheel {
 			long virtualId = expiration / tickMs;
 			int index = (int) (virtualId % wheelSize);
 			StaticLog.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
-
 			TimerTaskList timerTaskList = timerTaskLists[index];
-			if (null == timerTaskList) {
-				timerTaskList = new TimerTaskList();
-				timerTaskLists[index] = timerTaskList;
-			}
 			timerTaskList.addTask(timerTask);
 			if (timerTaskList.setExpiration(virtualId * tickMs)) {
 				//添加到delayQueue中
@@ -139,5 +135,14 @@ public class TimingWheel {
 			}
 		}
 		return overflowWheel;
+	}
+
+	/**
+	 * 初始 timerTaskLists
+	 */
+	private void initTimerTaskList() {
+		for (int i = 0; i < this.timerTaskLists.length; i++) {
+			this.timerTaskLists[i] = new TimerTaskList();
+		}
 	}
 }

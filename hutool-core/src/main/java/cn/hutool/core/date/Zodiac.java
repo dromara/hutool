@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Assert;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -60,6 +62,9 @@ public class Zodiac {
 	 * @return 星座名
 	 */
 	public static String getZodiac(int month, int day) {
+		Assert.checkBetween(month,
+			Month.JANUARY.getValue(),
+			Month.DECEMBER.getValue(), "Unsupported month value, must be [0,12]");
 		// 在分隔日前为前一个星座，否则为后一个星座
 		return day < DAY_ARR[month] ? ZODIACS[month] : ZODIACS[month + 1];
 	}

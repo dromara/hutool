@@ -2,6 +2,8 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
+import cn.hutool.core.util.ArrayUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -123,5 +125,21 @@ public class BeanPathTest {
 		beanPath = BeanPath.create("list[0].1.name");
 		beanPath.set(map, "张三");
 		Assert.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
+	}
+
+	@Test
+	public void appendArrayTest(){
+		// issue#3008@Github
+		final MyUser myUser = new MyUser();
+		BeanPath.create("hobby[0]").set(myUser, "LOL");
+		BeanPath.create("hobby[1]").set(myUser, "KFC");
+		BeanPath.create("hobby[2]").set(myUser, "COFFE");
+
+		Assert.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
+	}
+
+	@Data
+	static class MyUser {
+		private String[] hobby;
 	}
 }

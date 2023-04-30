@@ -17,6 +17,7 @@ import cn.hutool.json.serialize.JSONDeserializer;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JSON转换器
@@ -65,12 +66,12 @@ public class JSONConverter implements Converter<JSON> {
 	 * @param <T> 转换后的对象类型
 	 * @param targetType 目标类型
 	 * @param value 值
-	 * @param ignoreError 是否忽略转换错误
+	 * @param jsonConfig JSON配置
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
 	@SuppressWarnings("unchecked")
-	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+	protected static <T> T jsonConvert(Type targetType, Object value, JSONConfig jsonConfig) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
 		}
@@ -92,7 +93,7 @@ public class JSONConverter implements Converter<JSON> {
 			}
 		}
 
-		return jsonToBean(targetType, value, ignoreError);
+		return jsonToBean(targetType, value, jsonConfig.isIgnoreError());
 	}
 
 	/**
@@ -122,7 +123,11 @@ public class JSONConverter implements Converter<JSON> {
 			// issue#2212@Github
 			// 在JSONObject转Bean时，读取JSONObject本身的配置文件
 			if(value instanceof JSONGetter
-					&& targetType instanceof Class && BeanUtil.hasSetter((Class<?>) targetType)){
+					&& targetType instanceof Class
+				// Map.Entry特殊处理
+				&& (false == Map.Entry.class.isAssignableFrom((Class<?>)targetType)
+				&& BeanUtil.hasSetter((Class<?>) targetType))){
+
 				final JSONConfig config = ((JSONGetter<?>) value).getConfig();
 				final Converter<T> converter = new BeanConverter<>(targetType,
 						InternalJSONUtil.toCopyOptions(config).setIgnoreError(ignoreError));

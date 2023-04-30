@@ -1,6 +1,7 @@
 package cn.hutool.jwt;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.date.format.GlobalCustomFormat;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.JSONConfig;
@@ -21,7 +22,7 @@ public class Claims implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// 时间使用秒级时间戳表示
-	private final JSONConfig CONFIG = JSONConfig.create().setDateFormat("#sss");
+	private final JSONConfig CONFIG = JSONConfig.create().setDateFormat(GlobalCustomFormat.FORMAT_SECONDS);
 
 	private JSONObject claimJSON;
 
@@ -43,9 +44,10 @@ public class Claims implements Serializable {
 
 	/**
 	 * 加入多个Claims属性
+	 *
 	 * @param headerClaims 多个Claims属性
 	 */
-	protected void putAll(Map<String, ?> headerClaims){
+	protected void putAll(Map<String, ?> headerClaims) {
 		if (MapUtil.isNotEmpty(headerClaims)) {
 			for (Map.Entry<String, ?> entry : headerClaims.entrySet()) {
 				setClaim(entry.getKey(), entry.getValue());
@@ -90,8 +92,8 @@ public class Claims implements Serializable {
 		return this.claimJSON.toString();
 	}
 
-	private void init(){
-		if(null == this.claimJSON){
+	private void init() {
+		if (null == this.claimJSON) {
 			this.claimJSON = new JSONObject(CONFIG);
 		}
 	}

@@ -11,6 +11,7 @@ import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.LimitedInputStream;
 import cn.hutool.core.io.file.FileSystemUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.io.resource.Resource;
@@ -69,7 +70,8 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 获取指定{@link ZipEntry}的流，用于读取这个entry的内容
+	 * 获取指定{@link ZipEntry}的流，用于读取这个entry的内容<br>
+	 * 此处使用{@link LimitedInputStream} 限制最大写出大小，避免ZIP bomb漏洞
 	 *
 	 * @param zipFile  {@link ZipFile}
 	 * @param zipEntry {@link ZipEntry}
@@ -78,7 +80,7 @@ public class ZipUtil {
 	 */
 	public static InputStream getStream(ZipFile zipFile, ZipEntry zipEntry) {
 		try {
-			return zipFile.getInputStream(zipEntry);
+			return new LimitedInputStream(zipFile.getInputStream(zipEntry), zipEntry.getSize());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -574,7 +576,7 @@ public class ZipUtil {
 			final Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 			long zipFileSize = 0L;
 			while (zipEntries.hasMoreElements()) {
-				ZipEntry zipEntry = zipEntries.nextElement();
+				final ZipEntry zipEntry = zipEntries.nextElement();
 				zipFileSize += zipEntry.getSize();
 				if (zipFileSize > limit) {
 					throw new IllegalArgumentException("The file size exceeds the limit");

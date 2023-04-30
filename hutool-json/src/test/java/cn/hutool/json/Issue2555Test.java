@@ -1,3 +1,5 @@
+package cn.hutool.json;
+
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;

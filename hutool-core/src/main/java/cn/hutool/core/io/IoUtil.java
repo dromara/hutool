@@ -363,7 +363,7 @@ public class IoUtil extends NioUtil {
 	/**
 	 * 从流中读取内容，读取完毕后关闭流
 	 *
-	 * @param in      输入流，读取完毕后并不关闭流
+	 * @param in      输入流，读取完毕后关闭流
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
@@ -471,27 +471,6 @@ public class IoUtil extends NioUtil {
 	 * @since 5.0.4
 	 */
 	public static byte[] readBytes(InputStream in, boolean isClose) throws IORuntimeException {
-		if (in instanceof FileInputStream) {
-			// 文件流的长度是可预见的，此时直接读取效率更高
-			final byte[] result;
-			try {
-				final int available = in.available();
-				result = new byte[available];
-				final int readLength = in.read(result);
-				if (readLength != available) {
-					throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", available, readLength));
-				}
-			} catch (IOException e) {
-				throw new IORuntimeException(e);
-			} finally {
-				if (isClose) {
-					close(in);
-				}
-			}
-			return result;
-		}
-
-		// 未知bytes总量的流
 		return read(in, isClose).toByteArray();
 	}
 
@@ -530,25 +509,41 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Upper(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, false);
+	public static String readHex64Upper(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, false);
 	}
 
 	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * 从流中读取前8192个byte并转换为16进制，字母部分使用大写
 	 *
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String readHex28Lower(InputStream in) throws IORuntimeException {
-		return readHex(in, 28, true);
+	public static String readHex8192Upper(InputStream in) throws IORuntimeException {
+		try {
+			int i = in.available();
+			return readHex(in, Math.min(8192, in.available()), false);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从流中读取前64个byte并转换为16进制，字母部分使用小写
+	 *
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IORuntimeException IO异常
+	 */
+	public static String readHex64Lower(InputStream in) throws IORuntimeException {
+		return readHex(in, 64, true);
 	}
 
 	/**

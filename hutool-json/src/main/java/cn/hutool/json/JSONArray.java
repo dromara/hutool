@@ -214,7 +214,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 
 	@Override
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), getConfig());
 	}
 
 	@Override

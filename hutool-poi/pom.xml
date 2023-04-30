@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.10.M1</version>
+		<version>5.8.18</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
@@ -17,6 +17,8 @@
 	<description>Hutool POI工具类（对Office文档、OFD等操作）</description>
 
 	<properties>
+		<Automatic-Module-Name>cn.hutool.poi</Automatic-Module-Name>
+
 		<!-- versions -->
 		<poi.version>4.1.2</poi.version>
 	</properties>
@@ -45,7 +47,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>1.19.1</version>
+			<version>2.0.5</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

@@ -112,10 +112,9 @@ public class ObjectMapper {
 			// 普通Bean
 			// TODO 过滤器对Bean无效，需补充。
 			mapFromBean(source, jsonObject);
-		} else {
-			// 不支持对象类型转换为JSONObject
-			throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 		}
+
+		// 跳过空对象
 	}
 
 	/**
@@ -145,7 +144,8 @@ public class ObjectMapper {
 			mapFromTokener(new JSONTokener((InputStream) source, jsonArray.getConfig()), jsonArray, filter);
 		} else if (source instanceof byte[]) {
 			final byte[] bytesSource = (byte[]) source;
-			if('[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]){
+			// 如果是普通的的byte[], 要避免下标越界
+			if (bytesSource.length > 1 && '[' == bytesSource[0] && ']' == bytesSource[bytesSource.length - 1]) {
 				mapFromTokener(new JSONTokener(IoUtil.toStream(bytesSource), jsonArray.getConfig()), jsonArray, filter);
 			}else{
 				// https://github.com/dromara/hutool/issues/2369
@@ -157,7 +157,7 @@ public class ObjectMapper {
 		} else if (source instanceof JSONTokener) {
 			mapFromTokener((JSONTokener) source, jsonArray, filter);
 		} else {
-			Iterator<?> iter;
+			final Iterator<?> iter;
 			if (ArrayUtil.isArray(source)) {// 数组
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
@@ -165,7 +165,11 @@ public class ObjectMapper {
 			} else if (source instanceof Iterable<?>) {// Iterable
 				iter = ((Iterable<?>) source).iterator();
 			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				if(false == jsonArray.getConfig().isIgnoreError()){
+					throw new JSONException("JSONArray initial value should be a string or collection or array.");
+				}
+				// 如果用户选择跳过异常，则跳过此值转换
+				return;
 			}
 
 			final JSONConfig config = jsonArray.getConfig();

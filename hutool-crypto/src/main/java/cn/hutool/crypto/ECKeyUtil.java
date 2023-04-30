@@ -244,6 +244,9 @@ public class ECKeyUtil {
 	 * @return ECPrivateKeyParameters
 	 */
 	public static ECPrivateKeyParameters toPrivateParams(String d, ECDomainParameters domainParameters) {
+		if (null == d) {
+			return null;
+		}
 		return toPrivateParams(BigIntegers.fromUnsignedByteArray(SecureUtil.decode(d)), domainParameters);
 	}
 

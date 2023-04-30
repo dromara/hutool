@@ -624,7 +624,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类中的Public方法名<br>
+	 * 获得指定类中的方法名<br>
 	 * 去重重载的方法
 	 *
 	 * @param clazz 类
@@ -641,7 +641,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得指定类过滤后的Public方法列表
+	 * 获得指定类过滤后的方法列表
 	 *
 	 * @param clazz  查找方法的类
 	 * @param filter 过滤器
@@ -1056,9 +1056,11 @@ public class ReflectUtil {
 					actualArgs[i] = null;
 				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
 					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convertQuietly(parameterTypes[i], args[i], args[i]);
+					final Object targetValue = Convert.convertWithCheck(parameterTypes[i], args[i], null, true);
 					if (null != targetValue) {
 						actualArgs[i] = targetValue;
+					} else {
+						actualArgs[i] = args[i];
 					}
 				} else {
 					actualArgs[i] = args[i];

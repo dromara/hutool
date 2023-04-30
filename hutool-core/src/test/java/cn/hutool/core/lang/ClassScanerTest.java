@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.util.ClassUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,5 +32,25 @@ public class ClassScanerTest {
 		// 扫描包，如果在classpath下找到，就不扫描JDK的jar了
 		final Set<Class<?>> classes = ClassScanner.scanAllPackageBySuper(null, Iterable.class);
 		Console.log(classes.size());
+	}
+
+
+	@Test
+	@Ignore
+	public void scanAllPackageIgnoreLoadErrorTest(){
+		final ClassScanner classScanner = new ClassScanner(null, null);
+		classScanner.setIgnoreLoadError(true);
+		final Set<Class<?>> classes = classScanner.scan(false);
+		Console.log(classes.size());
+		Console.log(classScanner.getClassesOfLoadError());
+	}
+
+	@Test
+	@Ignore
+	public void scanJavaLang() {
+		final Set<Class<?>> classes = ClassUtil.scanPackage("java.lang");
+		for (final Class<?> aClass : classes) {
+			Console.log(aClass.getName());
+		}
 	}
 }

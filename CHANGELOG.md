@@ -2,13 +2,179 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.18 (2023-04-16)
 
-# 5.8.10.M1 (2022-11-03)
+### 🐣新特性
+* 【extra 】      JschUtil新增一个重载方法以支持私钥以byte数组形式载入（pr#3057@Github）
+
+### 🐞Bug修复
+* 【core  】      修复CollUtil.reverseNew针对非可变列表异常（issue#3056@Github）
+* 【all   】      修复junit被关联引入的bug（issue#3062@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.17 (2023-04-12)
+
+### 🐣新特性
+* 【core  】      SerializeUtil.deserialize增加白名单类，避免RCE vulnerability（issue#3021@Github）
+* 【poi   】      ExcelWriter在关闭后不清空currentRow，以便复用（issue#3025@Github）
+* 【core  】      完善HttpStatus，参考相关规范，补全缺失的状态码（pr#968@Gitee）
+* 【core  】      NumberUtil增加（pr#968@Gitee）
+* 【core  】      Number128增加hash和equals方法（pr#968@Gitee）
+* 【core  】      NamingCase.toCamelCase新增重载，可选是否转换其他字符为小写（issue#3031@ithub）
+* 【core  】      新增JdkUtil
+* 【core  】      DateUtil.getZodiac增加越界检查（issue#3036@Github）
+* 【core  】      CsvReader修改策略，添加可选是否关闭Reader重载，默认不关闭Reader（issue#I6UAX1@Gitee）
+* 【core  】      isNotEmpty修改规则，避开IDEA错误提示（pr#974@Gitee）
+
+### 🐞Bug修复
+* 【core  】      CollUtil.split优化切割列表参数判断，避免OOM（pr#3026@Github）
+* 【core  】      修复FileUtil.move传入相同目录或子目录丢失源目录的问题（pr#3032@Github）
+* 【core  】      修复SafeConcurrentHashMap.computeIfAbsent可能存在的结果为null的情况（issue#I6RVMY@Gitee）
+* 【json  】      修复Pair反序列化报错问题（issue#I6SZYB@Gitee）
+* 【core  】      修复使用AnnotationUtil.getAnnotationAlias获取注解时可能会出现空指针的问题（pr#975@Gitee）
+* 【json  】      修复没有属性的对象转json字符串抛异常问题（issue#3051@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.16 (2023-03-26)
+
+### 🐣新特性
+* 【core  】      改进Calculator.conversion，兼容乘法符号省略写法（issue#2964@Github）
+* 【core  】      改进XmlUtil.xmlToBean，支持xml转bean时父节点忽略大小写
+* 【core  】      优化ArrayUtil的空判断（pr#2969@Github）
+* 【extra 】      优化SpringUtil在非Spring环境下的异常（issue#2835@Github）
+* 【core  】      StrUtil增加commonPrefix和commonSuffix方法（pr#3007@Github）
+* 【core  】      NumberUtil增加重载parseXXX方法, 解析失败返回默认值（pr#3007@Github）
+* 【core  】      FileUtil增加readLines重载，支持filter（pr#3006@Github）
+* 【json  】      当用户选择ignoreError时，错误对象转JSON也忽略
+
+### 🐞Bug修复
+* 【crypto】      修复NoSuchMethodError未捕获问题（issue#2966@Github）
+* 【poi   】      修复SXSSFWorkbook调用setComment时错位的问题（issue#I6MBS5@Gitee）
+* 【core  】      修复BeanUtil.hasGetter没有跳过getClass方法的问题（issue#I6MBS5@Gitee）
+* 【core  】      修复FileMagicNumber长度判断问题导致的越界异常（issue#I6MACI@Gitee）
+* 【core  】      修复DateUtil针对ISO8601时间格式部分场景下的解析存在问题（issue#2981@Github）
+* 【core  】      修复JSONUtil.toBean可能的空指针问题（issue#2987@Github）
+* 【core  】      修复CalendarUtil.isSameMonth没有判断公元前导致不一致的问题（issue#3011@Github）
+* 【core  】      修复WatchUtil createModify maxDepth传递后没有使用问题（issue#3005@Github）
+* 【core  】      修复NullComparator反转无效问题（pr#964@Gitee）
+* 【setting】     修复props.toBean 数组字段未赋值问题（issue#3008@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.15 (2023-03-09)
+
+### 🐣新特性
+* 【http  】      新增followRedirectsCookie配置，支持开启自动重定向携带cookie（pr#2961@Github）
+
+### 🐞Bug修复
+* 【all   】      修复Automatic-Module-Name错误问题（issue#2952@Github）
+* 【core  】      修复NumberWithFormat导致转换Long异常问题（issue#I6L2LO@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.14 (2023-03-05)
+
+### 🐣新特性
+* 【core  】      增加PathMover（issue#I666HB@Github）
+
+### 🐞Bug修复
+* 【core  】      修复FileUtil.moveContent会删除源目录的问题（issue#I666HB@Github）
+* 【http  】      修复HttpBase.body导致的空指针问题
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.13 (2023-03-03)
+
+### 🐣新特性
+* 【core  】      PhoneUtil.isTel400800支持400-XXX-XXXX格式（issue#2929@Github）
+* 【core  】      build(pom): 添加 Automatic-Module-Name属性（pr#2926@Github）
+* 【core  】      根据JDK-8080225修改了部分新建文件输入流和文件输出流的创建方式（pr#2930@Github）
+* 【http  】      HttpRequest#body增加支持Resource重载（issue#2901@Github）
+* 【core  】      JavaSourceCompiler#compile增加自定义options重载（issue#I6IVZK@Gitee）
+
+### 🐞Bug修复
+* 【db    】      修复识别JDBC驱动时重复问题（pr#940@Gitee）
+* 【core  】      修复法定年龄计算的BUG（pr#935@Gitee）
+* 【core  】      修复FileUtil.rename报NoSuchFileException问题（pr#2894@Github）
+* 【core  】      修复StrUtil.split切分长度为0时的bug（pr#944@Gitee）
+* 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复ReUtil.delAll方法当 content 仅为空格时的问题（issue#I6GIMT@Gitee）
+* 【core  】      修复文件内容跟随在调用stop后，文件依旧被占用问题（issue#I6GFD2@Gitee）
+* 【core  】      修复ReflectUtil.invokeRaw方法中参数类型转换动作未生效的问题（pr#2912@Github）
+* 【core  】      修复isXXX转换时的匹配问题（issue#I6H0XF@Gitee）
+* 【core  】      修复MutableObj.equals空指针问题
+* 【core  】      修复JavaSourceFileObject在编译错误时抛出IOException异常而非CompilerException问题（pr#2942@Github）
+* 【jwt   】      修复JWT自定义时间格式后的时间戳转换问题（issue#I6IS5B@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.12 (2023-02-09)
+
+### 🐣新特性
+* 【http  】      HttpGlobalConfig.allowPatch()调用时忽略错误（issue#2832@Github）
+* 【core  】      重构根据file magic number判断文件类型（pr#2834@Github）
+* 【core  】      增加WGS84 坐标与墨卡托投影互转（pr#2811@Github）
+* 【extra 】      ServletUtil遵循rfc 3986优化（issue#I6ALAO@Gitee）
+* 【http  】      HttpUtil.decodeParams增加isFormUrlEncoded重载（pr#918@Gitee）
+* 【db    】      AbstractDb添加返回类型为PageResult的page重载方法（pr#916@Gitee）
+* 【core  】      DesensitizedUtil增加对IPv4和IPv6支持（issue#I6ABCS@Gitee）
+* 【core  】      针对CollUtil.subtract coll1 为只读集合的补偿（pr#2865@Github）
+* 【core  】      DateUtil.date方法统一修改规则，传入null返回null（pr#2877@Github）
+* 【core  】      DateUtil.parseUTC统一规范，舍弃3位毫秒数后的数字（pr#2889@Github）
+
+### 🐞Bug修复
+* 【core  】      修复HexUtil.isHexNumber()对"-"的判断问题（issue#2857@Github）
+* 【core  】      修复FileTypeUtil判断wav后缀的录音文件类型不能匹配问题（pr#2834@Github）
+* 【core  】      修复FileUtil的rename在newName与原文件夹名称一样时，文件夹会被删除问题（issue#2845@Github）
+* 【core  】      修复IoUtil.readBytes使用SocketInputStream读取不完整问题（issue#I6AT49@Gitee）
+* 【core  】      修复ClassScanner自定义classload无效问题（issue#I68TV2@Gitee）
+* 【core  】      【重要】删除XmlUtil.readObjectFromXml方法，避免漏洞（issue#2855@Github）
+* 【core  】      修复Ipv4Util.list()方法的bug（pr#929@Gitee）
+* 【poi   】      修复“sax方式读取excel2003版本，会调用两次doAfterAllAnalysed方法”问题。（pr#919@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.11 (2022-12-27)
+
+### 🐣新特性
+* 【core  】      CharUtil.isBlankChar增加\u180e（pr#2738@Github）
+* 【core  】      SyncFinisher线程同步结束器添加立即结束方法（pr#879@Gitee）
+* 【core  】      HtmlUtil中escape方法，增加不断开空格（nbsp）转译，防止xss攻击（pr#2755@Github）
+* 【extra 】      修正sftp.cd方法 方法注释和实际效果不符（issue#2758@Github）
+* 【core  】      修改PhoneUtil容易歧义的注释（issue#I63GWK@Gitee）
+* 【crypto】      KeyUtil中的读取KeyStore文件的方法增加全局Provider（issue#I6796G@Gitee）
+* 【extra 】      CompressUtil 新增 stripComponents 参数（pr#904@Gitee）
+* 【extra 】      ServletUtil和JakartaServletUtil新增获取所有响应头的方法（pr#2828@Github）
+* 【core  】      BooleanUtil增加toString重载（pr#2816@Github）
+
+### 🐞Bug修复
+* 【json  】      修复普通byte数组转JSONArray时的异常（pr#875@Gitee）
+* 【core  】      修复ArrayUtil.insert()不支持原始类型数组的问题（pr#874@Gitee）
+* 【core  】      修复HexUtil.isHexNumber()判断逻辑超出long的精度问题（issue#I62H7K@Gitee）
+* 【core  】      修复BiMap中未重写computeIfAbsent和putIfAbsent导致双向查找出问题（issue#I62X8O@Gitee）
+* 【json  】      修复JSON解析栈溢出部分问题（issue#2746@Github）
+* 【json  】      修复getMultistageReverseProxyIp未去除空格问题（issue#I64P9J@Gitee）
+* 【db    】      修复NamedSql中in没有判断大小写问题（issue#2792@Github）
+* 【core  】      修复ZIP bomb漏洞（issue#2797@Github）
+* 【core  】      修复JSONXMLSerializer将Json转为XML时，遇到嵌套需要递归情况时会丢失contentKeys问题（pr#903@Gitee）
+* 【db    】      修复使用mariadb通过jdbcurl创建SimpleDataSource报NullPointException（pr#900@Gitee）
+* 【core  】      修复UrlBuilder中参数中包括"://"判断错误问题（pr#898@Gitee）
+* 【core  】      修复IndexedComparator导致的数据错乱问题（ExcelWriter使用部分别名导致字段丢失）（issue#I66Z6B@Gitee）
+* 【crypto】      修复sm2构造方法NullPointerException（pr#2820@Github）
+* 【core  】      修复ConverterRegistry中无效加载导致的问题（issue#2812@Github）
+* 【core  】      修复CoordinateUtil坐标转换参数错误（pr#895@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+# 5.8.10 (2022-11-17)
 
 ### 🐣新特性
 * 【http  】      HttpResponse增加getFileNameFromDisposition方法（pr#2676@Github）
 * 【core  】      FileUtil.copy，当来源为文件时，返回文件而非目录（issue#I5YCVL@Gitee）
 * 【db    】      DialectFactory增加identifyDriver重载（issue#I5YWI6@Gitee）
+* 【core  】      去除ClassloaderUtil的Cache（issue#I5YWI6@Gitee）
+* 【core  】      ClassScanner 增加忽略加载错误类的扫描方法（pr#855@Gitee）
+* 【core  】      DateUtil和LocalDateTimeUtil添加区间退化为点，点与区间，点与点之间关系判断。（pr#2725@Github）
+* 【http  】      UserAgentUtil增加对钉钉PC端的支持（issue#I60UOP@Gitee）
+* 【extra 】      兼容ZipArchiveInputStream多参数情况（issue#2736@Github）
 
 ### 🐞Bug修复
 * 【db    】      修复分页时order by截断问题（issue#I5X6FM@Gitee）
@@ -17,8 +183,17 @@
 * 【core  】      修复IoUtil.copyByNIO方法写出时没有flush的问题
 * 【core  】      修复TreeBuilder中使用HashMap导致默认乱序问题（issue#I5Z8C5@Gitee）
 * 【core  】      修复StrUtil.subWithLength负数问题（issue#I5YN49@Gitee）
+* 【core  】      修复DefaultTrustManager空指针问题（issue#2716@Github）
+* 【core  】      修复时间轮添加任务线程安全问题（pr#2712@Github）
+* 【core  】      修复 BeanUtil#copyProperties 源对象与目标对象都是 Map 时设置忽略属性无效问题（pr#2698@Github）
+* 【core  】      修复ChineseDate传入农历日期非闰月时获取公历错误问题（issue#I5YB1A@Gitee）
+* 【core  】      修复key为弱引用 value为强引用 会导致key无法被回收 弱引用失效问题（pr#2723@Github）
+* 【core  】      修复BeanUtil.copyProperties 包含EnumSet ，类型转换异常问题（pr#2684@Github）
+* 【extra 】      修复Ftp.uploadFileOrDirectory上传目录错误调用错误问题（issue#I5R2DE@Gitee）
+* 【extra 】      修复字节数组转float 返回类型却是double的bug（pr#867@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
+
 # 5.8.9 (2022-10-22)
 
 ### 🐣新特性
@@ -311,7 +486,7 @@
 * 【core   】     修复SimpleCache线程安全问题
 * 【core   】     修复ClassLoaderUtil中可能的关联ClassLoader错位问题
 * 【extra  】     修复Sftp错误内容解析大小写问题（issue#I53GPI@Gitee）
-* 【core   】     修复Tailer当文件内容为空时，会报异常问题（pr#602@Gitee）
+* 【core   】     修复当文件内容为空时，会报异常问题（pr#602@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

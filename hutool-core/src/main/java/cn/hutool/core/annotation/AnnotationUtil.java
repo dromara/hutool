@@ -457,6 +457,9 @@ public class AnnotationUtil {
 	 */
 	public static <T extends Annotation> T getAnnotationAlias(AnnotatedElement annotationEle, Class<T> annotationType) {
 		final T annotation = getAnnotation(annotationEle, annotationType);
+		if (null == annotation) {
+			return null;
+		}
 		return aggregatingFromAnnotation(annotation).synthesize(annotationType);
 	}
 

@@ -91,6 +91,11 @@ public class HttpConfig {
 	boolean interceptorOnRedirect;
 
 	/**
+	 * 自动重定向时是否处理cookie
+	 */
+	boolean followRedirectsCookie;
+
+	/**
 	 * 设置超时，单位：毫秒<br>
 	 * 超时包括：
 	 *
@@ -295,6 +300,18 @@ public class HttpConfig {
 	 */
 	public HttpConfig setInterceptorOnRedirect(boolean interceptorOnRedirect) {
 		this.interceptorOnRedirect = interceptorOnRedirect;
+		return this;
+	}
+
+	/**
+	 * 自动重定向时是否处理cookie
+	 *
+	 * @param followRedirectsCookie 自动重定向时是否处理cookie
+	 * @return this
+	 * @since 5.8.15
+	 */
+	public HttpConfig setFollowRedirectsCookie(boolean followRedirectsCookie) {
+		this.followRedirectsCookie = followRedirectsCookie;
 		return this;
 	}
 }

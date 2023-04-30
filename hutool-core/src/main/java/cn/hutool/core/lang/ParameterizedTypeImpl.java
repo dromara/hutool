@@ -70,7 +70,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 	}
 
 	/**
-	 * 追加 {@code types} 到 @{code buf}，使用 {@code sep} 分隔
+	 * 追加 {@code types} 到 {@code buf}，使用 {@code sep} 分隔
 	 *
 	 * @param buf 目标
 	 * @param sep 分隔符

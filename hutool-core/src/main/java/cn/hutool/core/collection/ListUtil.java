@@ -371,7 +371,13 @@ public class ListUtil {
 			// 不支持clone
 			list2 = new ArrayList<>(list);
 		}
-		return reverse(list2);
+
+		try {
+			return reverse(list2);
+		} catch (final UnsupportedOperationException e) {
+			// 提供的列表不可编辑,新建列表
+			return reverse(list(false, list));
+		}
 	}
 
 	/**

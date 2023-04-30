@@ -25,15 +25,15 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 5.5.0
  */
-public class StreamExtractor implements Extractor{
+public class StreamExtractor implements Extractor {
 
 	private final ArchiveInputStream in;
 
 	/**
 	 * 构造
 	 *
-	 * @param charset      编码
-	 * @param file         包文件
+	 * @param charset 编码
+	 * @param file    包文件
 	 */
 	public StreamExtractor(Charset charset, File file) {
 		this(charset, null, file);
@@ -69,12 +69,18 @@ public class StreamExtractor implements Extractor{
 	 * @param in           包流
 	 */
 	public StreamExtractor(Charset charset, String archiverName, InputStream in) {
+		// issue#2736 自定义ArchiveInputStream
+		if (in instanceof ArchiveInputStream) {
+			this.in = (ArchiveInputStream) in;
+			return;
+		}
+
 		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
 		try {
 			in = IoUtil.toBuffered(in);
 			if (StrUtil.isBlank(archiverName)) {
 				this.in = factory.createArchiveInputStream(in);
-			} else if("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)){
+			} else if ("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)) {
 				//issue#I5J33E，支持tgz格式解压
 				try {
 					this.in = new TarArchiveInputStream(new GzipCompressorInputStream(in));
@@ -98,9 +104,9 @@ public class StreamExtractor implements Extractor{
 	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 */
 	@Override
-	public void extract(File targetDir, Filter<ArchiveEntry> filter) {
+	public void extract(File targetDir, int stripComponents, Filter<ArchiveEntry> filter) {
 		try {
-			extractInternal(targetDir, filter);
+			extractInternal(targetDir, stripComponents, filter);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -111,24 +117,30 @@ public class StreamExtractor implements Extractor{
 	/**
 	 * 释放（解压）到指定目录
 	 *
-	 * @param targetDir 目标目录
-	 * @param filter    解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
+	 * @param targetDir       目标目录
+	 * @param stripComponents 清除(剥离)压缩包里面的 n 级文件夹名
+	 * @param filter          解压文件过滤器，用于指定需要释放的文件，null表示不过滤。当{@link Filter#accept(Object)}为true时释放。
 	 * @throws IOException IO异常
 	 */
-	private void extractInternal(File targetDir, Filter<ArchiveEntry> filter) throws IOException {
+	private void extractInternal(File targetDir, int stripComponents, Filter<ArchiveEntry> filter) throws IOException {
 		Assert.isTrue(null != targetDir && ((false == targetDir.exists()) || targetDir.isDirectory()), "target must be dir.");
 		final ArchiveInputStream in = this.in;
 		ArchiveEntry entry;
 		File outItemFile;
 		while (null != (entry = in.getNextEntry())) {
-			if(null != filter && false == filter.accept(entry)){
+			if (null != filter && false == filter.accept(entry)) {
 				continue;
 			}
 			if (false == in.canReadEntryData(entry)) {
 				// 无法读取的文件直接跳过
 				continue;
 			}
-			outItemFile = FileUtil.file(targetDir, entry.getName());
+			String entryName = this.stripName(entry.getName(), stripComponents);
+			if (entryName == null) {
+				// 剥离文件夹层级
+				continue;
+			}
+			outItemFile = FileUtil.file(targetDir, entryName);
 			if (entry.isDirectory()) {
 				// 创建对应目录
 				//noinspection ResultOfMethodCallIgnored

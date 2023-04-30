@@ -177,7 +177,7 @@ public interface JSON extends Cloneable, Serializable {
 	 * @since 3.0.8
 	 */
 	default <T> T toBean(Type type) {
-		return toBean(type, getConfig().isIgnoreError());
+		return JSONConverter.jsonConvert(type, this, getConfig());
 	}
 
 	/**
@@ -188,8 +188,10 @@ public interface JSON extends Cloneable, Serializable {
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 4.3.2
+	 * @deprecated 请使用 {@link #toBean(Type)}, ignoreError在JSONConfig中生效
 	 */
+	@Deprecated
 	default <T> T toBean(Type type, boolean ignoreError) {
-		return JSONConverter.jsonConvert(type, this, ignoreError);
+		return JSONConverter.jsonConvert(type, this, JSONConfig.create().setIgnoreError(ignoreError));
 	}
 }

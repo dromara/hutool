@@ -60,6 +60,11 @@ public class ValueProviderToBeanCopier<T> extends AbsCopier<ValueProvider<String
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(tFieldName)) {
+				return;
+			}
+
 			// 检查目标字段可写性
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {
 				// 字段不可写，跳过之

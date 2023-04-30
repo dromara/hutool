@@ -7,7 +7,6 @@ import cn.hutool.http.cookie.GlobalCookieManager;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 
@@ -198,7 +197,7 @@ public class HttpGlobalConfig implements Serializable {
 		}
 
 		// 去除final修饰
-		ReflectUtil.setFieldValue(methodsField, "modifiers", methodsField.getModifiers() & ~Modifier.FINAL);
+		ReflectUtil.removeFinalModify(methodsField);
 		final String[] methods = {
 				"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE", "PATCH"
 		};

@@ -263,7 +263,9 @@ public class CharUtil implements CharPool {
 				// issue#I5UGSQ，Hangul Filler
 				|| c == '\u3164'
 				// Braille Pattern Blank
-				|| c == '\u2800';
+				|| c == '\u2800'
+				// MONGOLIAN VOWEL SEPARATOR
+				|| c == '\u180e';
 	}
 
 	/**

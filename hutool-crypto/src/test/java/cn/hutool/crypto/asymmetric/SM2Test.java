@@ -220,6 +220,17 @@ public class SM2Test {
 	}
 
 	@Test
+	public void sm2WithNullPriPointTest() {
+		String x = "9EF573019D9A03B16B0BE44FC8A5B4E8E098F56034C97B312282DD0B4810AFC3";
+		String y = "CC759673ED0FC9B9DC7E6FA38F0E2B121E02654BF37EA6B63FAF2A0D6013EADF";
+		String q = "04" + x + y;
+		final SM2 sm1 = new SM2(null, x, y);
+		final SM2 sm2 = new SM2(null, q);
+        Assert.assertNotNull(sm1);
+		Assert.assertNotNull(sm2);
+	}
+
+	@Test
 	public void sm2PlainWithPointTest() {
 		// 测试地址：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
 
@@ -318,5 +329,11 @@ public class SM2Test {
 
 		// 04占位一个字节
 		Assert.assertEquals(65, sm2.getQ(false).length);
+	}
+
+	@Test
+	public void issueI6ROLTTest(){
+		String publicKey = "04bf347dfa32b9bc4c378232898ea43a210887a9b9ed6cc188f91b653706b44fa8434518d54412606788f34be8097cc233608f780edaf695c7e2b1d1c1b7b0d7c3";
+		new SM2(null, publicKey);
 	}
 }

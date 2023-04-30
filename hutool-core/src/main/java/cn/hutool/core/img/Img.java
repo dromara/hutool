@@ -285,8 +285,8 @@ public class Img implements Serializable {
 	public Img scale(int width, int height, int scaleType) {
 		final Image srcImg = getValidSrcImg();
 
-		int srcHeight = srcImg.getHeight(null);
-		int srcWidth = srcImg.getWidth(null);
+		final int srcHeight = srcImg.getHeight(null);
+		final int srcWidth = srcImg.getWidth(null);
 		if (srcHeight == height && srcWidth == width) {
 			// 源与目标长宽一致返回原图
 			this.targetImage = srcImg;

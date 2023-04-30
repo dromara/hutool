@@ -1,5 +1,6 @@
 package cn.hutool.json;
 
+import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.lang.TypeReference;
@@ -471,7 +472,11 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
-		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
+		final JSON json = parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError));
+		if(null == json){
+			return null;
+		}
+		return json.toBean(beanType);
 	}
 
 	/**
@@ -498,6 +503,7 @@ public class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
+	@SuppressWarnings("deprecation")
 	public static <T> T toBean(JSON json, Type beanType, boolean ignoreError) {
 		if (null == json) {
 			return null;
@@ -746,7 +752,6 @@ public class JSONUtil {
 	 * @param jsonConfig JSON选项
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static Object wrap(Object object, JSONConfig jsonConfig) {
 		if (object == null) {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
@@ -758,6 +763,9 @@ public class JSONUtil {
 				|| object instanceof Number //
 				|| ObjectUtil.isBasicType(object) //
 		) {
+			if(object instanceof Number && null != jsonConfig.getDateFormat()){
+				return new NumberWithFormat((Number) object, jsonConfig.getDateFormat());
+			}
 			return object;
 		}
 

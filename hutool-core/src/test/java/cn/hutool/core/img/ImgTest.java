@@ -98,11 +98,11 @@ public class ImgTest {
 	@Test
 	@Ignore
 	public void scaleTest() {
-		String downloadFile = "d:/test/1435859438434136064.JPG";
-		File file = FileUtil.file(downloadFile);
-		File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
+		final String downloadFile = "d:/test/1435859438434136064.JPG";
+		final File file = FileUtil.file(downloadFile);
+		final File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
 
-		Image img = ImgUtil.getImage(URLUtil.getURL(file));
+		final Image img = ImgUtil.getImage(URLUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
 	}
 }

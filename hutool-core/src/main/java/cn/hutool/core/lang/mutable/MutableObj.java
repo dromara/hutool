@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.mutable;
 
+import cn.hutool.core.util.ObjUtil;
+
 import java.io.Serializable;
 
 /**
@@ -61,7 +63,7 @@ public class MutableObj<T> implements Mutable<T>, Serializable {
 		}
 		if (this.getClass() == obj.getClass()) {
 			final MutableObj<?> that = (MutableObj<?>) obj;
-			return this.value.equals(that.value);
+			return ObjUtil.equals(this.value, that.value);
 		}
 		return false;
 	}

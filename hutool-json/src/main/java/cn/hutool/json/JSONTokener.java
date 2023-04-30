@@ -159,6 +159,15 @@ public class JSONTokener {
 	}
 
 	/**
+	 * Get the last character read from the input or '\0' if nothing has been read yet.
+	 *
+	 * @return the last character read from the input.
+	 */
+	protected char getPrevious() {
+		return this.previous;
+	}
+
+	/**
 	 * 读取下一个字符，并比对是否和指定字符匹配
 	 *
 	 * @param c 被匹配的字符
@@ -329,10 +338,18 @@ public class JSONTokener {
 				return this.nextString(c);
 			case '{':
 				this.back();
-				return new JSONObject(this, this.config);
+				try {
+					return new JSONObject(this, this.config);
+				} catch (final StackOverflowError e) {
+					throw new JSONException("JSONObject depth too large to process.", e);
+				}
 			case '[':
 				this.back();
-				return new JSONArray(this, this.config);
+				try {
+					return new JSONArray(this, this.config);
+				} catch (final StackOverflowError e) {
+					throw new JSONException("JSONArray depth too large to process.", e);
+				}
 		}
 
 		/*
@@ -341,7 +358,7 @@ public class JSONTokener {
 		 * characters until we reach the end of the text or a formatting character.
 		 */
 
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
 			sb.append(c);
 			c = this.next();

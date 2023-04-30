@@ -48,6 +48,11 @@ public class MapToMapCopier extends AbsCopier<Map, Map> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sKeyStr)) {
+				return;
+			}
+
 			final Object targetValue = target.get(sKeyStr);
 			// 非覆盖模式下，如果目标值存在，则跳过
 			if (false == copyOptions.override && null != targetValue) {

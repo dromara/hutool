@@ -10,6 +10,12 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Set;
 
+import static cn.hutool.core.util.NumberUtil.parseDouble;
+import static cn.hutool.core.util.NumberUtil.parseFloat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 /**
  * {@link NumberUtil} 单元测试类
  *
@@ -296,6 +302,23 @@ public class NumberUtilTest {
 		Assert.assertEquals(0, v1);
 	}
 
+	@Test
+	public void parseIntTest4() {
+
+		// -------------------------- Parse failed -----------------------
+
+		assertThat(NumberUtil.parseInt("abc", null), nullValue());
+
+		assertThat(NumberUtil.parseInt("abc", 456), equalTo(456));
+
+		// -------------------------- Parse success -----------------------
+
+		assertThat(NumberUtil.parseInt("123.abc", 789), equalTo(123));
+
+		assertThat(NumberUtil.parseInt("123.3", null), equalTo(123));
+
+	}
+
 	@Test(expected = NumberFormatException.class)
 	public void parseNumberTest4(){
 		// issue#I5M55F
@@ -322,6 +345,29 @@ public class NumberUtilTest {
 		final Number number = NumberUtil.parseNumber(numberStr);
 		Assert.assertNotNull(number);
 		Assert.assertTrue(number instanceof BigDecimal);
+	}
+
+	@Test
+	public void parseNumberTest3(){
+
+		// -------------------------- Parse failed -----------------------
+
+		assertThat(NumberUtil.parseNumber("abc", null), nullValue());
+
+		assertThat(NumberUtil.parseNumber(StrUtil.EMPTY, null), nullValue());
+
+		assertThat(NumberUtil.parseNumber(StrUtil.repeat(StrUtil.SPACE, 10), null), nullValue());
+
+		assertThat(NumberUtil.parseNumber("abc", 456).intValue(), equalTo(456));
+
+		// -------------------------- Parse success -----------------------
+
+		assertThat(NumberUtil.parseNumber("123.abc", 789).intValue(), equalTo(123));
+
+		assertThat(NumberUtil.parseNumber("123.3", null).doubleValue(), equalTo(123.3D));
+
+		assertThat(NumberUtil.parseNumber("0.123.3", null).doubleValue(), equalTo(0.123D));
+
 	}
 
 	@Test
@@ -360,6 +406,69 @@ public class NumberUtilTest {
 
 		number = NumberUtil.parseLong(".123");
 		Assert.assertEquals(0, number);
+	}
+
+	@Test
+	public void parseLongTest2() {
+
+		// -------------------------- Parse failed -----------------------
+
+		final Long v1 = NumberUtil.parseLong(null, null);
+		assertThat(v1, nullValue());
+
+		final Long v2 = NumberUtil.parseLong(StrUtil.EMPTY, null);
+		assertThat(v2, nullValue());
+
+		final Long v3 = NumberUtil.parseLong("L3221", 1233L);
+		assertThat(v3, equalTo(1233L));
+
+		// -------------------------- Parse success -----------------------
+
+		final Long v4 = NumberUtil.parseLong("1233L", null);
+		assertThat(v4, equalTo(1233L));
+
+	}
+
+	@Test
+	public void parseFloatTest() throws Exception {
+
+		// -------------------------- Parse failed -----------------------
+
+		assertThat(parseFloat("abc", null), nullValue());
+
+		assertThat(parseFloat("a123.33", null), nullValue());
+
+		assertThat(parseFloat("..123", null), nullValue());
+
+		assertThat(parseFloat(StrUtil.EMPTY, 1233F), equalTo(1233F));
+
+		// -------------------------- Parse success -----------------------
+
+		assertThat(parseFloat("123.33a", null), equalTo(123.33F));
+
+		assertThat(parseFloat(".123", null), equalTo(0.123F));
+
+	}
+
+	@Test
+	public void parseDoubleTest() throws Exception {
+
+		// -------------------------- Parse failed -----------------------
+
+		assertThat(parseDouble("abc", null), nullValue());
+
+		assertThat(parseDouble("a123.33", null), nullValue());
+
+		assertThat(parseDouble("..123", null), nullValue());
+
+		assertThat(parseDouble(StrUtil.EMPTY, 1233D), equalTo(1233D));
+
+		// -------------------------- Parse success -----------------------
+
+		assertThat(parseDouble("123.33a", null), equalTo(123.33D));
+
+		assertThat(parseDouble(".123", null), equalTo(0.123D));
+
 	}
 
 	@Test

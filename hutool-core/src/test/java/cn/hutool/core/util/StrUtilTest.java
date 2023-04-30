@@ -70,6 +70,9 @@ public class StrUtilTest {
 
 		final String[] strings = StrUtil.splitToArray("abc/", '/');
 		Assert.assertEquals(2, strings.length);
+
+		// issue:I6FKSI
+		Assert.assertThrows(IllegalArgumentException.class, () -> StrUtil.split("test length 0", 0));
 	}
 
 	@Test
@@ -636,5 +639,13 @@ public class StrUtilTest {
 	public void issueI5YN49Test() {
 		final String str = "A5E6005700000000000000000000000000000000000000090D0100000000000001003830";
 		Assert.assertEquals("38", StrUtil.subWithLength(str,-2,2));
+	}
+
+	@Test
+	public void issueI6KKFUTest() {
+		// https://gitee.com/dromara/hutool/issues/I6KKFU
+		final String template = "I''m {0} years old.";
+		final String result = StrUtil.indexedFormat(template, 10);
+		Assert.assertEquals("I'm 10 years old.", result);
 	}
 }

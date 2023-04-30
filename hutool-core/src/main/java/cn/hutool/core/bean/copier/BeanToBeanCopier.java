@@ -59,6 +59,11 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 				return;
 			}
 
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sFieldName)) {
+				return;
+			}
+
 			// 检查目标字段可写性
 			final PropDesc tDesc = targetPropDescMap.get(sFieldName);
 			if (null == tDesc || false == tDesc.isWritable(this.copyOptions.transientSupport)) {

@@ -40,6 +40,9 @@ public class CharUtilTest {
 
 		final char a4 = '\u0000';
 		Assert.assertTrue(CharUtil.isBlankChar(a4));
+
+		final char a5 = ' ';
+		Assert.assertTrue(CharUtil.isBlankChar(a5));
 	}
 
 	@Test

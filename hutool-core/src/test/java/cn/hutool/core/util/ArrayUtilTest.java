@@ -543,4 +543,33 @@ public class ArrayUtilTest {
 		final String[] c = {"d", "e"};
 		Assert.assertTrue(ArrayUtil.containsAll(c, resultO[0], resultO[1]));
 	}
+
+	@Test
+	public void testInsertPrimitive() {
+		final boolean[] booleans = new boolean[10];
+		final byte[] bytes = new byte[10];
+		final char[] chars = new char[10];
+		final short[] shorts = new short[10];
+		final int[] ints = new int[10];
+		final long[] longs = new long[10];
+		final float[] floats = new float[10];
+		final double[] doubles = new double[10];
+
+		final boolean[] insert1 = (boolean[]) ArrayUtil.insert(booleans, 0, 0, 1, 2);
+		Assert.assertNotNull(insert1);
+		final byte[] insert2 = (byte[]) ArrayUtil.insert(bytes, 0, 1, 2, 3);
+		Assert.assertNotNull(insert2);
+		final char[] insert3 = (char[]) ArrayUtil.insert(chars, 0, 1, 2, 3);
+		Assert.assertNotNull(insert3);
+		final short[] insert4 = (short[]) ArrayUtil.insert(shorts, 0, 1, 2, 3);
+		Assert.assertNotNull(insert4);
+		final int[] insert5 = (int[]) ArrayUtil.insert(ints, 0, 1, 2, 3);
+		Assert.assertNotNull(insert5);
+		final long[] insert6 = (long[]) ArrayUtil.insert(longs, 0, 1, 2, 3);
+		Assert.assertNotNull(insert6);
+		final float[] insert7 = (float[]) ArrayUtil.insert(floats, 0, 1, 2, 3);
+		Assert.assertNotNull(insert7);
+		final double[] insert8 = (double[]) ArrayUtil.insert(doubles, 0, 1, 2, 3);
+		Assert.assertNotNull(insert8);
+	}
 }

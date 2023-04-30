@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.TypeConverter;
 import cn.hutool.core.lang.Editor;
@@ -68,6 +69,11 @@ public class CopyOptions implements Serializable {
 	 * 是否覆盖目标值，如果不覆盖，会先读取目标对象的值，非{@code null}则写，否则忽略。如果覆盖，则不判断直接写
 	 */
 	protected boolean override = true;
+
+	/**
+	 * 源对象和目标对象都是 {@code Map} 时, 需要忽略的源对象 {@code Map} key
+	 */
+	private Set<String> ignoreKeySet;
 
 	/**
 	 * 自定义类型转换器，默认使用全局万能转换器转换
@@ -181,7 +187,8 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setIgnoreProperties(String... ignoreProperties) {
-		return setPropertiesFilter((field, o) -> false == ArrayUtil.contains(ignoreProperties, field.getName()));
+		this.ignoreKeySet = CollUtil.newHashSet(ignoreProperties);
+		return this;
 	}
 
 	/**
@@ -195,8 +202,8 @@ public class CopyOptions implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <P, R> CopyOptions setIgnoreProperties(Func1<P, R>... funcs) {
-		final Set<String> ignoreProperties = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
-		return setPropertiesFilter((field, o) -> false == ignoreProperties.contains(field.getName()));
+		this.ignoreKeySet = ArrayUtil.mapToSet(funcs, LambdaUtil::getFieldName);
+		return this;
 	}
 
 	/**
@@ -362,5 +369,15 @@ public class CopyOptions implements Serializable {
 	 */
 	protected boolean testPropertyFilter(Field field, Object value) {
 		return null == this.propertiesFilter || this.propertiesFilter.test(field, value);
+	}
+
+	/**
+	 * 测试是否保留key, {@code true} 不保留， {@code false} 保留
+	 *
+	 * @param key {@link Map} key
+	 * @return 是否保留
+	 */
+	protected boolean testKeyFilter(Object key) {
+		return CollUtil.isEmpty(this.ignoreKeySet) || false == this.ignoreKeySet.contains(key);
 	}
 }
