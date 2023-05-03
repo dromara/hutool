@@ -421,12 +421,11 @@ public class ExceptionUtil {
 	 * @return 最尾端异常，传入null参数返回也为null
 	 */
 	public static Throwable getRootCause(final Throwable throwable) {
-		Throwable cause = throwable.getCause();
-		if (cause != null) {
-			return getRootCause(cause);
-		}else{
+		final Throwable cause = throwable.getCause();
+		if (null == cause) {
 			return throwable;
 		}
+		return getRootCause(cause);
 	}
 
 	/**
