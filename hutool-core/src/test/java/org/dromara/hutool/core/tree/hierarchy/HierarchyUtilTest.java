@@ -1,18 +1,22 @@
-package org.dromara.hutool.core.lang.hierarchy;
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
+package org.dromara.hutool.core.tree.hierarchy;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,8 +58,8 @@ class HierarchyUtilTest {
 	@Test
 	void testTraverseByBreadthFirst() {
 		// 按广度优先遍历所有节点
-		Set<String> nodes = new LinkedHashSet<>();
-		HierarchyUtil.traverseByBreadthFirst("0", HierarchyIterator.scan(t -> {
+		final Set<String> nodes = new LinkedHashSet<>();
+		HierarchyUtil.traverseByBreadthFirst("0", HierarchyIteratorUtil.scan(t -> {
 			nodes.add(t);
 			return tree.entrySet().stream()
 				.filter(e -> Objects.equals(t, e.getValue()))
@@ -69,14 +73,14 @@ class HierarchyUtilTest {
 		);
 
 		// 按广度优先寻找 0-2-3
-		String target = HierarchyUtil.traverseByBreadthFirst("0", HierarchyIterator.find(parentFinder(),
+		final String target = HierarchyUtil.traverseByBreadthFirst("0", HierarchyIteratorUtil.find(parentFinder(),
 			t -> Objects.equals(t, "0-2-3") ? t : null
 		));
 		Assertions.assertEquals("0-2-3", target);
 
 		// 按广度优先获取 0-2 的所有子节点
-		List<String> children = HierarchyUtil.traverseByBreadthFirst(
-			"0", HierarchyIterator.collect(parentFinder(),
+		final List<String> children = HierarchyUtil.traverseByBreadthFirst(
+			"0", HierarchyIteratorUtil.collect(parentFinder(),
 				t -> Objects.equals(tree.get(t), "0-2") ? t : null
 			)
 		);
@@ -87,8 +91,8 @@ class HierarchyUtilTest {
 	@Test
 	void testTraverseByDepthFirst() {
 		// 按深度优先遍历所有节点
-		Set<String> nodes = new LinkedHashSet<>();
-		HierarchyUtil.traverseByDepthFirst("0", HierarchyIterator.scan(t -> {
+		final Set<String> nodes = new LinkedHashSet<>();
+		HierarchyUtil.traverseByDepthFirst("0", HierarchyIteratorUtil.scan(t -> {
 			nodes.add(t);
 			return tree.entrySet().stream()
 				.filter(e -> Objects.equals(t, e.getValue()))
@@ -102,14 +106,14 @@ class HierarchyUtilTest {
 		);
 
 		// 按深度优先寻找 0-2-3
-		String target = HierarchyUtil.traverseByDepthFirst("0", HierarchyIterator.find(parentFinder(),
+		final String target = HierarchyUtil.traverseByDepthFirst("0", HierarchyIteratorUtil.find(parentFinder(),
 			t -> Objects.equals(t, "0-2-3") ? t : null
 		));
 		Assertions.assertEquals("0-2-3", target);
 
 		// 按深度优先获取 0-2 的所有子节点
-		List<String> children = HierarchyUtil.traverseByDepthFirst(
-			"0", HierarchyIterator.collect(parentFinder(),
+		final List<String> children = HierarchyUtil.traverseByDepthFirst(
+			"0", HierarchyIteratorUtil.collect(parentFinder(),
 				t -> Objects.equals(tree.get(t), "0-2") ? t : null
 			)
 		);
