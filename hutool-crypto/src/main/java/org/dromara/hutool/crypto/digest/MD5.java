@@ -25,6 +25,8 @@ import java.nio.charset.Charset;
 public class MD5 extends Digester {
 	private static final long serialVersionUID = 1L;
 
+	private static final DigesterFactory FACTORY = DigesterFactory.of(DigestAlgorithm.MD5.getValue());
+
 	/**
 	 * 创建MD5实例
 	 *
@@ -39,7 +41,7 @@ public class MD5 extends Digester {
 	 * 构造
 	 */
 	public MD5() {
-		super(DigestAlgorithm.MD5);
+		super(FACTORY.createMessageDigester());
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class MD5 extends Digester {
 	/**
 	 * 构造
 	 *
-	 * @param salt 盐值
+	 * @param salt        盐值
 	 * @param digestCount 摘要次数，当此值小于等于1,默认为1。
 	 */
 	public MD5(final byte[] salt, final int digestCount) {
@@ -64,9 +66,9 @@ public class MD5 extends Digester {
 	/**
 	 * 构造
 	 *
-	 * @param salt 盐值
+	 * @param salt         盐值
 	 * @param saltPosition 加盐位置，即将盐值字符串放置在数据的index数，默认0
-	 * @param digestCount 摘要次数，当此值小于等于1,默认为1。
+	 * @param digestCount  摘要次数，当此值小于等于1,默认为1。
 	 */
 	public MD5(final byte[] salt, final int saltPosition, final int digestCount) {
 		this();
@@ -78,7 +80,7 @@ public class MD5 extends Digester {
 	/**
 	 * 生成16位MD5摘要
 	 *
-	 * @param data 数据
+	 * @param data    数据
 	 * @param charset 编码
 	 * @return 16位MD5摘要
 	 * @since 4.6.0

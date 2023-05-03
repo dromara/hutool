@@ -37,7 +37,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(final byte[] data) {
-		return new MD5().digest(data);
+		return MD5.of().digest(data);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(final String data, final Charset charset) {
-		return new MD5().digest(data, charset);
+		return MD5.of().digest(data, charset);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(final InputStream data) {
-		return new MD5().digest(data);
+		return MD5.of().digest(data);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(final File file) {
-		return new MD5().digest(file);
+		return MD5.of().digest(file);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(final byte[] data) {
-		return new MD5().digestHex(data);
+		return MD5.of().digestHex(data);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex(final String data, final Charset charset) {
-		return new MD5().digestHex(data, charset);
+		return MD5.of().digestHex(data, charset);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(final InputStream data) {
-		return new MD5().digestHex(data);
+		return MD5.of().digestHex(data);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(final File file) {
-		return new MD5().digestHex(file);
+		return MD5.of().digestHex(file);
 	}
 
 	// endregion
@@ -145,7 +145,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex16(final byte[] data) {
-		return new MD5().digestHex16(data);
+		return MD5.of().digestHex16(data);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex16(final String data, final Charset charset) {
-		return new MD5().digestHex16(data, charset);
+		return MD5.of().digestHex16(data, charset);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex16(final InputStream data) {
-		return new MD5().digestHex16(data);
+		return MD5.of().digestHex16(data);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class DigestUtil {
 	 * @since 4.6.0
 	 */
 	public static String md5Hex16(final File file) {
-		return new MD5().digestHex16(file);
+		return MD5.of().digestHex16(file);
 	}
 
 	/**

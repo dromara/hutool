@@ -12,15 +12,17 @@
 
 package org.dromara.hutool.crypto.digest;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.func.SimpleWrapper;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.crypto.CryptoException;
 import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +30,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 
 /**
@@ -36,20 +37,25 @@ import java.security.Provider;
  * 注意：此对象实例化后为非线程安全！
  *
  * @author Looly
- *
  */
-public class Digester implements Serializable {
+public class Digester extends SimpleWrapper<MessageDigest> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private MessageDigest digest;
-	/** 盐值 */
+	/**
+	 * 盐值
+	 */
 	protected byte[] salt;
-	/** 加盐位置，即将盐值字符串放置在数据的index数，默认0 */
+	/**
+	 * 加盐位置，即将盐值字符串放置在数据的index数，默认0
+	 */
 	protected int saltPosition;
-	/** 散列次数 */
+	/**
+	 * 散列次数
+	 */
 	protected int digestCount;
 
 	// ------------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 *
@@ -72,45 +78,33 @@ public class Digester implements Serializable {
 	 * 构造
 	 *
 	 * @param algorithm 算法
-	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
+	 * @param provider  算法提供者，{@code null}表示使用{@link GlobalProviderFactory}找到的提供方。
 	 * @since 4.5.1
 	 */
 	public Digester(final DigestAlgorithm algorithm, final Provider provider) {
-		init(algorithm.getValue(), provider);
+		this(algorithm.getValue(), provider);
 	}
 
 	/**
 	 * 构造
 	 *
 	 * @param algorithm 算法
-	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
+	 * @param provider  算法提供者，{@code null}表示使用{@link GlobalProviderFactory}找到的提供方。
 	 * @since 4.5.1
 	 */
 	public Digester(final String algorithm, final Provider provider) {
-		init(algorithm, provider);
+		this(SecureUtil.createMessageDigest(algorithm, provider));
 	}
-	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 初始化
+	 * 构造
 	 *
-	 * @param algorithm 算法
-	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
-	 * @return Digester
-	 * @throws CryptoException Cause by IOException
+	 * @param messageDigest {@link MessageDigest}
 	 */
-	public Digester init(final String algorithm, final Provider provider) {
-		if(null == provider) {
-			this.digest = SecureUtil.createMessageDigest(algorithm);
-		}else {
-			try {
-				this.digest = MessageDigest.getInstance(algorithm, provider);
-			} catch (final NoSuchAlgorithmException e) {
-				throw new CryptoException(e);
-			}
-		}
-		return this;
+	public Digester(final MessageDigest messageDigest) {
+		super(messageDigest);
 	}
+	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
 	 * 设置加盐内容
@@ -131,13 +125,12 @@ public class Digester implements Serializable {
 	 * <pre>
 	 * data: 0123456
 	 * </pre>
-	 *
+	 * <p>
 	 * 则当saltPosition = 2时，盐位于data的1和2中间，即第二个空隙，即：
 	 *
 	 * <pre>
 	 * data: 01[salt]23456
 	 * </pre>
-	 *
 	 *
 	 * @param saltPosition 盐的位置
 	 * @return this
@@ -166,7 +159,7 @@ public class Digester implements Serializable {
 	 * @since 4.5.1
 	 */
 	public Digester reset() {
-		this.digest.reset();
+		this.raw.reset();
 		return this;
 	}
 
@@ -175,7 +168,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成文件摘要
 	 *
-	 * @param data 被摘要数据
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
 	 * @since 4.6.0
@@ -197,7 +190,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成文件摘要，并转为16进制字符串
 	 *
-	 * @param data 被摘要数据
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
 	 * @since 4.6.0
@@ -260,11 +253,12 @@ public class Digester implements Serializable {
 			// 加盐在末尾，自动忽略空盐值
 			result = doDigest(data, this.salt);
 		} else if (ArrayUtil.isNotEmpty(this.salt)) {
+			final MessageDigest digest = getRaw();
 			// 加盐在中间
-			this.digest.update(data, 0, this.saltPosition);
-			this.digest.update(this.salt);
-			this.digest.update(data, this.saltPosition, data.length - this.saltPosition);
-			result = this.digest.digest();
+			digest.update(data, 0, this.saltPosition);
+			digest.update(this.salt);
+			digest.update(data, this.saltPosition, data.length - this.saltPosition);
+			result = digest.digest();
 		} else {
 			// 无加盐
 			result = doDigest(data);
@@ -307,7 +301,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成摘要
 	 *
-	 * @param data {@link InputStream} 数据流
+	 * @param data         {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
 	 * @throws IORuntimeException IO异常
@@ -335,21 +329,12 @@ public class Digester implements Serializable {
 	 * 生成摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
 	 *
-	 * @param data 被摘要数据
+	 * @param data         被摘要数据
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要
 	 */
 	public String digestHex(final InputStream data, final int bufferLength) {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
-	}
-
-	/**
-	 * 获得 {@link MessageDigest}
-	 *
-	 * @return {@link MessageDigest}
-	 */
-	public MessageDigest getDigest() {
-		return digest;
 	}
 
 	/**
@@ -359,39 +344,42 @@ public class Digester implements Serializable {
 	 * @since 4.5.0
 	 */
 	public int getDigestLength() {
-		return this.digest.getDigestLength();
+		return this.raw.getDigestLength();
 	}
 
 	// -------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 生成摘要
 	 *
-	 * @param data {@link InputStream} 数据流
+	 * @param data         {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
 	 * @throws IOException 从流中读取数据引发的IO异常
 	 */
 	private byte[] digestWithoutSalt(final InputStream data, final int bufferLength) throws IOException {
+		final MessageDigest digest = this.raw;
 		final byte[] buffer = new byte[bufferLength];
 		int read;
 		while ((read = data.read(buffer, 0, bufferLength)) > -1) {
-			this.digest.update(buffer, 0, read);
+			digest.update(buffer, 0, read);
 		}
-		return this.digest.digest();
+		return digest.digest();
 	}
 
 	/**
 	 * 生成摘要
 	 *
-	 * @param data {@link InputStream} 数据流
+	 * @param data         {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
 	 * @throws IOException 从流中读取数据引发的IO异常
 	 */
 	private byte[] digestWithSalt(final InputStream data, final int bufferLength) throws IOException {
+		final MessageDigest digest = this.raw;
 		if (this.saltPosition <= 0) {
 			// 加盐在开头
-			this.digest.update(this.salt);
+			digest.update(this.salt);
 		}
 
 		final byte[] buffer = new byte[bufferLength];
@@ -404,19 +392,19 @@ public class Digester implements Serializable {
 					digest.update(buffer, 0, total - this.saltPosition);
 				}
 				// 加盐在中间
-				this.digest.update(this.salt);
-				this.digest.update(buffer, total - this.saltPosition, read);
+				digest.update(this.salt);
+				digest.update(buffer, total - this.saltPosition, read);
 			} else {
-				this.digest.update(buffer, 0, read);
+				digest.update(buffer, 0, read);
 			}
 		}
 
 		if (total < this.saltPosition) {
 			// 加盐在末尾
-			this.digest.update(this.salt);
+			digest.update(this.salt);
 		}
 
-		return this.digest.digest();
+		return digest.digest();
 	}
 
 	/**
@@ -427,12 +415,13 @@ public class Digester implements Serializable {
 	 * @since 4.4.3
 	 */
 	private byte[] doDigest(final byte[]... datas) {
+		final MessageDigest digest = this.raw;
 		for (final byte[] data : datas) {
 			if (null != data) {
-				this.digest.update(data);
+				digest.update(data);
 			}
 		}
-		return this.digest.digest();
+		return digest.digest();
 	}
 
 	/**

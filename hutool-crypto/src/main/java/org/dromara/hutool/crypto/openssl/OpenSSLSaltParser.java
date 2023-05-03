@@ -41,7 +41,7 @@ public class OpenSSLSaltParser {
 	 * @return OpenSSLSaltParser
 	 */
 	public static OpenSSLSaltParser ofMd5(final int keyLength, final String algorithm) {
-		return of(new MD5().getDigest(), keyLength, algorithm);
+		return of(MD5.of().getRaw(), keyLength, algorithm);
 	}
 
 	/**

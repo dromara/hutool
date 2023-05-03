@@ -175,7 +175,7 @@ public class SecureUtil {
 	 * @return {@link Digester}
 	 */
 	public static MD5 md5() {
-		return new MD5();
+		return MD5.of();
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(final String data) {
-		return new MD5().digestHex(data);
+		return MD5.of().digestHex(data);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(final InputStream data) {
-		return new MD5().digestHex(data);
+		return MD5.of().digestHex(data);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(final File dataFile) {
-		return new MD5().digestHex(dataFile);
+		return MD5.of().digestHex(dataFile);
 	}
 
 	/**
@@ -523,7 +523,8 @@ public class SecureUtil {
 	}
 
 	/**
-	 * 创建{@link Cipher}
+	 * 创建{@link Cipher}<br>
+	 * 当provider为{@code null}时，使用{@link GlobalProviderFactory}查找提供方，找不到使用JDK默认提供方。
 	 *
 	 * @param algorithm 算法
 	 * @return {@link Cipher}
@@ -543,23 +544,41 @@ public class SecureUtil {
 	}
 
 	/**
-	 * 创建{@link MessageDigest}
+	 * 创建{@link MessageDigest}<br>
+	 * 当provider为{@code null}时，使用{@link GlobalProviderFactory}查找提供方，找不到使用JDK默认提供方。
 	 *
 	 * @param algorithm 算法
+	 * @param provider  算法提供方，{@code null}表示使用{@link GlobalProviderFactory}找到的提供方。
 	 * @return {@link MessageDigest}
-	 * @since 4.5.2
 	 */
-	public static MessageDigest createMessageDigest(final String algorithm) {
-		final Provider provider = GlobalProviderFactory.getProvider();
+	public static MessageDigest createMessageDigest(final String algorithm, Provider provider) {
+		if (null == provider) {
+			provider = GlobalProviderFactory.getProvider();
+		}
 
 		final MessageDigest messageDigest;
 		try {
-			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
+			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) :
+				MessageDigest.getInstance(algorithm, provider);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
 		return messageDigest;
+	}
+
+	/**
+	 * 创建{@link MessageDigest}，使用JDK默认的Provider<br>
+	 *
+	 * @param algorithm 算法
+	 * @return {@link MessageDigest}
+	 */
+	public static MessageDigest createJdkMessageDigest(final String algorithm) {
+		try {
+			return MessageDigest.getInstance(algorithm);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
 	}
 
 	/**
