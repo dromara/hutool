@@ -570,7 +570,7 @@ public class DigestUtil {
 	 * @since 4.0.1
 	 */
 	public static Digester digester(final DigestAlgorithm algorithm) {
-		return new Digester(algorithm);
+		return digester(algorithm.getValue());
 	}
 
 	/**

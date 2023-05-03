@@ -13,18 +13,18 @@
 package org.dromara.hutool.crypto.digest;
 
 import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 
 import java.security.MessageDigest;
+import java.security.Provider;
 
 /**
- * {@link Digester}创建简单工厂，用于生产{@link Digester}对象
+ * {@link Digester}创建简单工厂，用于生产{@link Digester}对象<br>
+ * 参考Guava方式，工厂负责持有一个原始的{@link MessageDigest}对象，使用时优先通过clone方式创建对象，提高初始化性能。
  *
  * @author looly
  */
 public class DigesterFactory {
-
-	private final MessageDigest prototype;
-	private final boolean cloneSupport;
 
 	/**
 	 * 创建工厂
@@ -32,19 +32,32 @@ public class DigesterFactory {
 	 * @param algorithm 算法
 	 * @return DigesterFactory
 	 */
-	public static DigesterFactory of(final String algorithm) {
+	public static DigesterFactory ofJdk(final String algorithm) {
 		return of(SecureUtil.createJdkMessageDigest(algorithm));
+	}
+
+	/**
+	 * 创建工厂，使用{@link GlobalProviderFactory}找到的提供方。
+	 *
+	 * @param algorithm 算法
+	 * @return DigesterFactory
+	 */
+	public static DigesterFactory of(final String algorithm) {
+		return of(SecureUtil.createMessageDigest(algorithm, null));
 	}
 
 	/**
 	 * 创建工厂
 	 *
-	 * @param messageDigest {@link MessageDigest}
+	 * @param messageDigest {@link MessageDigest}，可以通过{@link SecureUtil#createMessageDigest(String, Provider)} 创建
 	 * @return DigesterFactory
 	 */
 	public static DigesterFactory of(final MessageDigest messageDigest) {
 		return new DigesterFactory(messageDigest);
 	}
+
+	private final MessageDigest prototype;
+	private final boolean cloneSupport;
 
 	/**
 	 * 构造

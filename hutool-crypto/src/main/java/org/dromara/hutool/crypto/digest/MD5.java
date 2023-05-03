@@ -25,7 +25,9 @@ import java.nio.charset.Charset;
 public class MD5 extends Digester {
 	private static final long serialVersionUID = 1L;
 
-	private static final DigesterFactory FACTORY = DigesterFactory.of(DigestAlgorithm.MD5.getValue());
+	// issue#I6ZIQH
+	// MD5算法不使用BC库，使用JDK默认以提高初始性能
+	private static final DigesterFactory FACTORY = DigesterFactory.ofJdk(DigestAlgorithm.MD5.getValue());
 
 	/**
 	 * 创建MD5实例
