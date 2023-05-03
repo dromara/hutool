@@ -72,7 +72,7 @@ public class Opt<T> {
 	 */
 	public static <T> Opt<T> ofNullable(final T value) {
 		return value == null ? empty()
-				: new Opt<>(value);
+			: new Opt<>(value);
 	}
 
 	/**

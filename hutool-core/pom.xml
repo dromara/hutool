@@ -30,6 +30,22 @@
 
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.core</Automatic-Module-Name>
+		<kotlin-version>1.8.21</kotlin-version>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<version>${kotlin-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
