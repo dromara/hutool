@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class JsonToBeanTest {
+
 	@Test
 	void toBeanTest() {
 		final String jsonStr = "{\"code\": \"201\", \"status\": \"ok\"}";

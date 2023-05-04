@@ -12,4 +12,4 @@
 # See the Mulan PSL v2 for more details.
 #
 
-exec mvn clean source:jar javadoc:javadoc install -Dmaven.test.skip=false -Dmaven.javadoc.skip=false
+exec mvn clean source:jar javadoc:javadoc install -Dmaven.test.skip=false -Dmaven.javadoc.skip=false -Dmaven.compile.fork=true
