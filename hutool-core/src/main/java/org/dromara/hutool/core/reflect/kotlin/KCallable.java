@@ -25,11 +25,14 @@ import java.util.List;
  * @author VampireAchao, Looly
  */
 public class KCallable {
+
 	private static final Method METHOD_GET_PARAMETERS;
+	private static final Method METHOD_CALL;
 
 	static {
 		final Class<?> kFunctionClass = ClassLoaderUtil.loadClass("kotlin.reflect.KCallable");
 		METHOD_GET_PARAMETERS = MethodUtil.getMethod(kFunctionClass, "getParameters");
+		METHOD_CALL = MethodUtil.getMethodByName(kFunctionClass, "call");
 	}
 
 	/**
@@ -45,5 +48,16 @@ public class KCallable {
 			result.add(new KParameter(parameter));
 		}
 		return result;
+	}
+
+	/**
+	 * 实例化对象，本质上调用KCallable.call方法
+	 *
+	 * @param kCallable kotlin的类、方法或构造
+	 * @param args      参数列表
+	 * @return 参数列表
+	 */
+	public static Object call(final Object kCallable, final Object... args) {
+		return MethodUtil.invoke(kCallable, METHOD_CALL, new Object[]{args});
 	}
 }

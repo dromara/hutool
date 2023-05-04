@@ -13,15 +13,12 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.bean.copier.BeanCopier;
-import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
+import org.dromara.hutool.core.bean.copier.provider.BeanValueProvider;
+import org.dromara.hutool.core.bean.copier.provider.MapValueProvider;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
-import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.MapProxy;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 
@@ -30,7 +27,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * Bean转换器，支持：
+ * Kotlin Bean转换器，支持：
  * <pre>
  * Map =》 Bean
  * Bean =》 Bean
@@ -38,33 +35,14 @@ import java.util.Map;
  * </pre>
  *
  * @author Looly
- * @since 4.0.2
  */
-public class BeanConverter implements Converter, Serializable {
+public class KBeanConverter implements Converter, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
-	public static BeanConverter INSTANCE = new BeanConverter();
-
-	private final CopyOptions copyOptions;
-
-	/**
-	 * 构造
-	 */
-	public BeanConverter() {
-		this(CopyOptions.of().setIgnoreError(true));
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param copyOptions Bean转换选项参数
-	 */
-	public BeanConverter(final CopyOptions copyOptions) {
-		this.copyOptions = copyOptions;
-	}
+	public static KBeanConverter INSTANCE = new KBeanConverter();
 
 	@Override
 	public Object convert(final Type targetType, final Object value) throws ConvertException {
@@ -84,20 +62,19 @@ public class BeanConverter implements Converter, Serializable {
 		return convertInternal(targetType, targetClass, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	private Object convertInternal(final Type targetType, final Class<?> targetClass, final Object value) {
-		if (value instanceof Map ||
-				value instanceof ValueProvider ||
-				BeanUtil.isBean(value.getClass())) {
-			if (value instanceof Map && targetClass.isInterface()) {
-				// 将Map动态代理为Bean
-				return MapProxy.of((Map<?, ?>) value).toProxyBean(targetClass);
-			}
+		ValueProvider<String> valueProvider = null;
+		if(value instanceof ValueProvider){
+			valueProvider = (ValueProvider<String>) value;
+		} else if(value instanceof Map){
+			valueProvider = new MapValueProvider((Map<String, ?>) value);
+		} else if(BeanUtil.isBean(value.getClass())){
+			valueProvider = new BeanValueProvider(value);
+		}
 
-			//限定被转换对象类型
-			return BeanCopier.of(value, ConstructorUtil.newInstanceIfPossible(targetClass), targetType, this.copyOptions).copy();
-		} else if (value instanceof byte[]) {
-			// 尝试反序列化
-			return SerializeUtil.deserialize((byte[]) value);
+		if(null != valueProvider){
+			return KClassUtil.newInstance(targetClass, valueProvider);
 		}
 
 		throw new ConvertException("Unsupported source type: [{}] to [{}]", value.getClass(), targetType);

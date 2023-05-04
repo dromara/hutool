@@ -16,6 +16,7 @@ import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
@@ -143,6 +144,11 @@ public class CompositeConverter extends RegisterConverter {
 		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if (null != result) {
 			return result;
+		}
+
+		// Kotlin Bean
+		if(KClassUtil.isKotlinClass(rowType)){
+			return (T) KBeanConverter.INSTANCE.convert(type, value);
 		}
 
 		// 尝试转Bean

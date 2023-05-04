@@ -20,10 +20,12 @@ import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.RegisterConverter;
 import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.json.*;
@@ -210,6 +212,11 @@ public class JSONConverter implements Converter {
 
 		// 尝试转Bean
 		if (BeanUtil.isBean(rawType)) {
+			// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
+			if(KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter){
+				return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>)json));
+			}
+
 			return BeanCopier.of(json,
 					ConstructorUtil.newInstanceIfPossible(rawType), targetType,
 					InternalJSONUtil.toCopyOptions(json.config())).copy();

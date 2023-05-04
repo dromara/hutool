@@ -16,6 +16,7 @@ import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.lang.invoke.MethodHandle;
@@ -139,6 +140,10 @@ public class MethodHandleUtil {
 	 */
 	private static Object[] actualArgs(final Method method, final Object[] args) {
 		final Class<?>[] parameterTypes = method.getParameterTypes();
+		if(1 == parameterTypes.length && parameterTypes[0].isArray()){
+			// 可变长参数，不做转换
+			return args;
+		}
 		final Object[] actualArgs = new Object[parameterTypes.length];
 		if (null != args) {
 			for (int i = 0; i < actualArgs.length; i++) {

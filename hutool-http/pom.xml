@@ -85,6 +85,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- 仅用于测试 -->
 		<dependency>
 			<groupId>org.dromara.hutool</groupId>
 			<artifactId>hutool-json</artifactId>
@@ -97,7 +98,6 @@
 			<version>0.1.2</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- 仅用于测试 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>mockwebserver</artifactId>
-			<version>4.10.0</version>
+			<version>4.11.0</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>

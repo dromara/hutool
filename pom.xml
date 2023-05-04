@@ -51,6 +51,7 @@
 		<compile.version>8</compile.version>
 		<junit.version>5.9.2</junit.version>
 		<lombok.version>1.18.26</lombok.version>
+		<kotlin-version>1.8.21</kotlin-version>
 	</properties>
 
 	<dependencies>
@@ -65,6 +66,19 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Kotlin适配 -->
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib</artifactId>
+			<version>${kotlin-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin-version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
