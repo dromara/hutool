@@ -11,6 +11,7 @@
  */
 package org.dromara.hutool.core.collection.queue;
 
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.thread.SimpleScheduler;
 import org.dromara.hutool.core.util.RuntimeUtil;
 
@@ -87,6 +88,7 @@ public class MemorySafeLinkedBlockingQueue<E> extends CheckedLinkedBlockingQueue
 
 		@Override
 		public boolean test(final E e) {
+			Console.log(FreeMemoryCalculator.INSTANCE.getResult());
 			return FreeMemoryCalculator.INSTANCE.getResult() > maxFreeMemory;
 		}
 	}
@@ -99,7 +101,7 @@ public class MemorySafeLinkedBlockingQueue<E> extends CheckedLinkedBlockingQueue
 
 		FreeMemoryCalculator() {
 			super(new SimpleScheduler.Job<Long>() {
-				private volatile long maxAvailable;
+				private volatile long maxAvailable = RuntimeUtil.getFreeMemory();
 
 				@Override
 				public Long getResult() {
