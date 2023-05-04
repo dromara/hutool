@@ -12,4 +12,4 @@
 # See the Mulan PSL v2 for more details.
 #
 
-exec mvn -T 1 cobertura:cobertura
+exec mvn cobertura:cobertura
