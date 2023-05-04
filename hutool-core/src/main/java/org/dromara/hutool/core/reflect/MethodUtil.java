@@ -17,6 +17,7 @@ import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
@@ -24,6 +25,7 @@ import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
@@ -624,8 +626,18 @@ public class MethodUtil {
 	 * @throws HutoolException 一些列异常的包装
 	 * @see MethodHandleUtil#invoke(Object, Method, Object...)
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException {
-		return MethodHandleUtil.invoke(obj, method, args);
+		try{
+			return MethodHandleUtil.invoke(obj, method, args);
+		} catch (final Exception e){
+			// 传统反射方式执行方法
+			try {
+				return (T) method.invoke(ModifierUtil.isStatic(method) ? null : obj, actualArgs(method, args));
+			} catch (final IllegalAccessException | InvocationTargetException ex) {
+				throw new HutoolException(ex);
+			}
+		}
 	}
 
 	/**
@@ -740,6 +752,50 @@ public class MethodUtil {
 		} catch (final Exception e) {
 			throw new HutoolException(e);
 		}
+	}
+
+	/**
+	 * 检查用户传入参数：
+	 * <ul>
+	 *     <li>1、忽略多余的参数</li>
+	 *     <li>2、参数不够补齐默认值</li>
+	 *     <li>3、通过NullWrapperBean传递的参数,会直接赋值null</li>
+	 *     <li>4、传入参数为null，但是目标参数类型为原始类型，做转换</li>
+	 *     <li>5、传入参数类型不对应，尝试转换类型</li>
+	 * </ul>
+	 *
+	 * @param method 方法
+	 * @param args   参数
+	 * @return 实际的参数数组
+	 */
+	public static Object[] actualArgs(final Method method, final Object[] args) {
+		final Class<?>[] parameterTypes = method.getParameterTypes();
+		if(1 == parameterTypes.length && parameterTypes[0].isArray()){
+			// 可变长参数，不做转换
+			return args;
+		}
+		final Object[] actualArgs = new Object[parameterTypes.length];
+		if (null != args) {
+			for (int i = 0; i < actualArgs.length; i++) {
+				if (i >= args.length || null == args[i]) {
+					// 越界或者空值
+					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+				} else if (args[i] instanceof NullWrapperBean) {
+					//如果是通过NullWrapperBean传递的null参数,直接赋值null
+					actualArgs[i] = null;
+				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+					final Object targetValue = Convert.convert(parameterTypes[i], args[i], args[i]);
+					if (null != targetValue) {
+						actualArgs[i] = targetValue;
+					}
+				} else {
+					actualArgs[i] = args[i];
+				}
+			}
+		}
+
+		return actualArgs;
 	}
 
 	/**

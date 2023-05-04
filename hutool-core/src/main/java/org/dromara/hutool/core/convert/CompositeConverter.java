@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.convert;
 
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
@@ -146,11 +147,6 @@ public class CompositeConverter extends RegisterConverter {
 			return result;
 		}
 
-		// Kotlin Bean
-		if(KClassUtil.isKotlinClass(rowType)){
-			return (T) KBeanConverter.INSTANCE.convert(type, value);
-		}
-
 		// 尝试转Bean
 		if (BeanUtil.isBean(rowType)) {
 			return (T) BeanConverter.INSTANCE.convert(type, value);
@@ -223,6 +219,16 @@ public class CompositeConverter extends RegisterConverter {
 		// 数组转换
 		if (rowType.isArray()) {
 			return ArrayConverter.INSTANCE.convert(type, value, defaultValue);
+		}
+
+		// Record
+		if(RecordUtil.isRecord(rowType)){
+			return (T) RecordConverter.INSTANCE.convert(type, value);
+		}
+
+		// Kotlin Bean
+		if(KClassUtil.isKotlinClass(rowType)){
+			return (T) KBeanConverter.INSTANCE.convert(type, value);
 		}
 
 		// 表示非需要特殊转换的对象

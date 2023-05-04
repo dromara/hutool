@@ -12,11 +12,8 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.bean.NullWrapperBean;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 
 import java.lang.invoke.MethodHandle;
@@ -82,7 +79,7 @@ public class MethodHandleUtil {
 	 */
 	public static <T> T invoke(final Object obj, final Method method, final Object... args) throws HutoolException{
 		Assert.notNull(method, "Method must be not null!");
-		return invokeExact(obj, method, actualArgs(method, args));
+		return invokeExact(obj, method, MethodUtil.actualArgs(method, args));
 	}
 
 	/**
@@ -122,49 +119,5 @@ public class MethodHandleUtil {
 			}
 			throw new HutoolException(e);
 		}
-	}
-
-	/**
-	 * 检查用户传入参数：
-	 * <ul>
-	 *     <li>1、忽略多余的参数</li>
-	 *     <li>2、参数不够补齐默认值</li>
-	 *     <li>3、通过NullWrapperBean传递的参数,会直接赋值null</li>
-	 *     <li>4、传入参数为null，但是目标参数类型为原始类型，做转换</li>
-	 *     <li>5、传入参数类型不对应，尝试转换类型</li>
-	 * </ul>
-	 *
-	 * @param method 方法
-	 * @param args   参数
-	 * @return 实际的参数数组
-	 */
-	private static Object[] actualArgs(final Method method, final Object[] args) {
-		final Class<?>[] parameterTypes = method.getParameterTypes();
-		if(1 == parameterTypes.length && parameterTypes[0].isArray()){
-			// 可变长参数，不做转换
-			return args;
-		}
-		final Object[] actualArgs = new Object[parameterTypes.length];
-		if (null != args) {
-			for (int i = 0; i < actualArgs.length; i++) {
-				if (i >= args.length || null == args[i]) {
-					// 越界或者空值
-					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
-				} else if (args[i] instanceof NullWrapperBean) {
-					//如果是通过NullWrapperBean传递的null参数,直接赋值null
-					actualArgs[i] = null;
-				} else if (!parameterTypes[i].isAssignableFrom(args[i].getClass())) {
-					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
-					final Object targetValue = Convert.convert(parameterTypes[i], args[i], args[i]);
-					if (null != targetValue) {
-						actualArgs[i] = targetValue;
-					}
-				} else {
-					actualArgs[i] = args[i];
-				}
-			}
-		}
-
-		return actualArgs;
 	}
 }

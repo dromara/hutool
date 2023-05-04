@@ -14,13 +14,13 @@ package org.dromara.hutool.json.convert;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.convert.RegisterConverter;
 import org.dromara.hutool.core.convert.impl.*;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapWrapper;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
@@ -228,7 +228,7 @@ public class JSONConverter implements Converter {
 		}
 
 		// 无法转换
-		throw new JSONException("Can not convert from {}: [{}] to [{}]",
+		throw new JSONException("Can not convert from '{}': {} to '{}'",
 				json.getClass().getName(), json, targetType.getTypeName());
 	}
 
@@ -278,6 +278,11 @@ public class JSONConverter implements Converter {
 		// 数组转换
 		if (rowType.isArray()) {
 			return (T) ArrayConverter.INSTANCE.convert(type, value);
+		}
+
+		// Record
+		if(RecordUtil.isRecord(rowType)){
+			return (T) RecordConverter.INSTANCE.convert(type, value);
 		}
 
 		// 表示非需要特殊转换的对象

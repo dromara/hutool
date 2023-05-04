@@ -13,10 +13,12 @@
 package org.dromara.hutool.json.mapper;
 
 import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONArray;
@@ -30,6 +32,7 @@ import org.dromara.hutool.json.serialize.JSONSerializer;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -105,7 +108,7 @@ public class JSONObjectMapper {
 		if (source instanceof JSONTokener) {
 			// JSONTokener
 			mapFromTokener((JSONTokener) source, jsonObject);
-		}else if (source instanceof Map) {
+		} else if (source instanceof Map) {
 			// Map
 			for (final Map.Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 				jsonObject.set(Convert.toStr(e.getKey()), e.getValue(), predicate, false);
@@ -125,11 +128,14 @@ public class JSONObjectMapper {
 		} else if (source instanceof ResourceBundle) {
 			// ResourceBundle
 			mapFromResourceBundle((ResourceBundle) source, jsonObject);
+		} else if (RecordUtil.isRecord(source.getClass())) {
+			// since 6.0.0
+			mapFromRecord(source, jsonObject);
 		} else if (BeanUtil.isReadableBean(source.getClass())) {
 			// 普通Bean
 			mapFromBean(source, jsonObject);
 		} else {
-			if(!jsonObject.config().isIgnoreError()){
+			if (!jsonObject.config().isIgnoreError()) {
 				// 不支持对象类型转换为JSONObject
 				throw new JSONException("Unsupported type [{}] to JSONObject!", source.getClass());
 			}
@@ -178,6 +184,22 @@ public class JSONObjectMapper {
 	 */
 	private void mapFromTokener(final JSONTokener x, final JSONObject jsonObject) {
 		JSONParser.of(x).parseTo(jsonObject, this.predicate);
+	}
+
+	/**
+	 * 从Record转换
+	 *
+	 * @param record     Record对象
+	 * @param jsonObject {@link JSONObject}
+	 */
+	private void mapFromRecord(final Object record, final JSONObject jsonObject) {
+		final Map.Entry<String, Type>[] components = RecordUtil.getRecordComponents(record.getClass());
+
+		String key;
+		for (final Map.Entry<String, Type> entry : components) {
+			key = entry.getKey();
+			jsonObject.set(key, MethodUtil.invoke(record, key));
+		}
 	}
 
 	/**
