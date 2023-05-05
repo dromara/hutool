@@ -429,10 +429,10 @@ public class NumberUtil {
 		}
 
 		Number value = values[0];
-		BigDecimal result = new BigDecimal(value.toString());
+		BigDecimal result = toBigDecimal(value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			result = result.multiply(new BigDecimal(value.toString()));
+			result = result.multiply(toBigDecimal(value.toString()));
 		}
 		return result;
 	}
@@ -446,7 +446,7 @@ public class NumberUtil {
 	 * @since 3.0.8
 	 */
 	public static BigDecimal mul(String v1, String v2) {
-		return mul(new BigDecimal(v1), new BigDecimal(v2));
+		return mul(toBigDecimal(v1), toBigDecimal(v2));
 	}
 
 	/**
@@ -462,9 +462,9 @@ public class NumberUtil {
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal result = new BigDecimal(values[0]);
+		BigDecimal result = toBigDecimal(values[0]);
 		for (int i = 1; i < values.length; i++) {
-			result = result.multiply(new BigDecimal(values[i]));
+			result = result.multiply(toBigDecimal(values[i]));
 		}
 
 		return result;
