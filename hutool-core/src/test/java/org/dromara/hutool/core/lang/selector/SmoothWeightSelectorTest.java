@@ -14,40 +14,40 @@ package org.dromara.hutool.core.lang.selector;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class WeightRandomSelectorTest {
-
+public class SmoothWeightSelectorTest {
 	@Test
 	public void selectTest() {
-		final WeightRandomSelector<String> random = WeightRandomSelector.of();
-		random.add("A", 10);
-		random.add("B", 50);
-		random.add("C", 100);
+		final SmoothWeightSelector<String> selector = SmoothWeightSelector.of();
+		selector.add("A", 10);
+		selector.add("B", 50);
+		selector.add("C", 100);
 
-		final String result = random.select();
+		final String result = selector.select();
 		Assertions.assertTrue(ListUtil.of("A", "B", "C").contains(result));
 	}
 
 	@Test
-	@Disabled
 	public void selectCountTest() {
-		final WeightRandomSelector<String> random = WeightRandomSelector.of();
-		random.add("A", 10);
-		random.add("B", 50);
-		random.add("C", 100);
+		final SmoothWeightSelector<String> selector = SmoothWeightSelector.of();
+		selector.add("A", 10);
+		selector.add("B", 50);
+		selector.add("C", 100);
 
 		final List<String> resultList = new ArrayList<>();
 		for (int i = 0; i < 1000; i++) {
-			resultList.add(random.select());
+			resultList.add(selector.select());
 		}
 
-		Console.log(CollUtil.countMap(resultList));
+		final Map<String, Integer> countMap = CollUtil.countMap(resultList);
+		Assertions.assertEquals(63, countMap.get("A"));
+		Assertions.assertEquals(312, countMap.get("B"));
+		Assertions.assertEquals(625, countMap.get("C"));
 	}
 }

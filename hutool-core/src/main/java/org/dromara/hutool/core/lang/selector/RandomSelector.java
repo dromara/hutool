@@ -12,19 +12,44 @@
 
 package org.dromara.hutool.core.lang.selector;
 
+import org.dromara.hutool.core.util.RandomUtil;
+
+import java.util.ArrayList;
+
 /**
- * 选择器接口
+ * 随机选择器
  *
- * @param <T> 选择对象类型
- * @author looly
+ * @param <T> 元素类型
+ * @author Looly
  * @since 6.0.0
  */
-public interface Selector<T> {
+public class RandomSelector<T> extends ArrayList<T> implements Selector<T> {
+	private static final long serialVersionUID = 1L;
+
+	// region ----- Constructors
 
 	/**
-	 * 选择下一个对象
-	 *
-	 * @return 下一个对象
+	 * 构造
 	 */
-	T select();
+	public RandomSelector() {
+		super();
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param objList 对象列表
+	 */
+	public RandomSelector(final Iterable<T> objList) {
+		this();
+		for (final T obj : objList) {
+			add(obj);
+		}
+	}
+	// endregion
+
+	@Override
+	public T select() {
+		return get(RandomUtil.randomInt(0, size()));
+	}
 }

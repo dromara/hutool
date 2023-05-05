@@ -121,7 +121,7 @@ public class SmoothWeightSelector<T> implements Selector<T> {
 	 * @return 选中的对象
 	 */
 	@Override
-	public T next() {
+	public T select() {
 		if (CollUtil.isEmpty(this.objList)) {
 			return null;
 		}

@@ -145,7 +145,7 @@ public class WeightRandomSelector<T> implements Selector<T>, Serializable {
 	 * @return 随机对象
 	 */
 	@Override
-	public T next() {
+	public T select() {
 		final int randomWeight = (int) (this.weightMap.lastKey() * Math.random());
 		final SortedMap<Integer, T> tailMap = this.weightMap.tailMap(randomWeight, false);
 		return this.weightMap.get(tailMap.firstKey());
