@@ -20,8 +20,8 @@ import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.WeightRandom;
-import org.dromara.hutool.core.lang.WeightRandom.WeightObj;
+import org.dromara.hutool.core.lang.selector.WeightObj;
+import org.dromara.hutool.core.lang.selector.WeightRandomSelector;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -29,13 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -637,11 +631,11 @@ public class RandomUtil {
 	 *
 	 * @param <T>        随机对象类型
 	 * @param weightObjs 带有权重的对象列表
-	 * @return {@link WeightRandom}
+	 * @return {@link WeightRandomSelector}
 	 * @since 4.0.3
 	 */
-	public static <T> WeightRandom<T> weightRandom(final WeightObj<T>[] weightObjs) {
-		return new WeightRandom<>(weightObjs);
+	public static <T> WeightRandomSelector<T> weightRandom(final WeightObj<T>[] weightObjs) {
+		return new WeightRandomSelector<>(weightObjs);
 	}
 
 	/**
@@ -649,11 +643,11 @@ public class RandomUtil {
 	 *
 	 * @param <T>        随机对象类型
 	 * @param weightObjs 带有权重的对象列表
-	 * @return {@link WeightRandom}
+	 * @return {@link WeightRandomSelector}
 	 * @since 4.0.3
 	 */
-	public static <T> WeightRandom<T> weightRandom(final Iterable<WeightObj<T>> weightObjs) {
-		return new WeightRandom<>(weightObjs);
+	public static <T> WeightRandomSelector<T> weightRandom(final Iterable<WeightObj<T>> weightObjs) {
+		return new WeightRandomSelector<>(weightObjs);
 	}
 
 	/**

@@ -16,7 +16,7 @@
 package org.dromara.hutool.core.map.concurrent;
 
 /**
- * A class that can determine the weight of a value. The total weight threshold
+ * A class that can determine the selector of a value. The total selector threshold
  * is used to determine when an eviction is required.
  *
  * @param <V> 值类型
@@ -27,11 +27,11 @@ package org.dromara.hutool.core.map.concurrent;
 public interface Weigher<V> {
 
 	/**
-	 * Measures an object's weight to determine how many units of capacity that
+	 * Measures an object's selector to determine how many units of capacity that
 	 * the value consumes. A value must consume a minimum of one unit.
 	 *
 	 * @param value the object to weigh
-	 * @return the object's weight
+	 * @return the object's selector
 	 */
 	int weightOf(V value);
 }

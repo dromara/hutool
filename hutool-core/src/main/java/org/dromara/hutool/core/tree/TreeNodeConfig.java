@@ -30,7 +30,7 @@ public class TreeNodeConfig implements Serializable {
 	// 属性名配置字段
 	private String idKey = "id";
 	private String parentIdKey = "parentId";
-	private String weightKey = "weight";
+	private String weightKey = "selector";
 	private String nameKey = "name";
 	private String childrenKey = "children";
 	// 可以配置递归深度 从0开始计算 默认此配置为空,即不限制
