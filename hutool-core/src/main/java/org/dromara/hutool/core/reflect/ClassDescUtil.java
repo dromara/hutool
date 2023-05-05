@@ -167,14 +167,21 @@ public class ClassDescUtil {
 	}
 
 	/**
-	 * 获取类描述
+	 * 获取类描述，这是编译成class文件后的二进制名称
 	 * <pre>{@code
-	 * boolean[].class => "[Z"
-	 * Object.class => "Ljava/lang/Object;"
+	 *    getDesc(boolean.class)       // Z
+	 *    getDesc(Boolean.class)       // Ljava/lang/Boolean;
+	 *    getDesc(double[][][].class)  // [[[D
+	 *    getDesc(int.class)           // I
+	 *    getDesc(Integer.class)       // Ljava/lang/Integer;
 	 * }</pre>
 	 *
 	 * @param c class.
 	 * @return desc.
+	 *
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
 	public static String getDesc(Class<?> c) {
 		final StringBuilder ret = new StringBuilder();
@@ -199,22 +206,35 @@ public class ClassDescUtil {
 
 	/**
 	 * 获取方法或构造描述<br>
-	 * 方法：
+	 * 方法（appendName为{@code true}）：
 	 * <pre>{@code
-	 * int do(int arg1) => "do(I)I"
-	 * void do(String arg1,boolean arg2) => "do(Ljava/lang/String;Z)V"
+	 *    int do(int arg1) => "do(I)I"
+	 *    void do(String arg1,boolean arg2) => "do(Ljava/lang/String;Z)V"
 	 * }</pre>
 	 * 构造：
-	 * <pre>
-	 * "()V", "(Ljava/lang/String;I)V"
-	 * </pre>
+	 * <pre>{@code
+	 *    "()V", "(Ljava/lang/String;I)V"
+	 * }</pre>
+	 *
+	 * <p>当appendName为{@code false}时：</p>
+	 * <pre>{@code
+	 *    getDesc(Object.class.getMethod("hashCode"))                    // ()I
+	 *    getDesc(Object.class.getMethod("toString"))                    // ()Ljava/lang/String;
+	 *    getDesc(Object.class.getMethod("equals", Object.class))        // (Ljava/lang/Object;)Z
+	 *    getDesc(ArrayUtil.class.getMethod("isEmpty", Object[].class))  // "([Ljava/lang/Object;)Z"
+	 * }</pre>
 	 *
 	 * @param methodOrConstructor 方法或构造
+	 * @param appendName 是否包含方法名称
 	 * @return 描述
+	 *
+	 * @author VampireAchao
+	 * @see <a href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html">jvm定义的Field Descriptors（字段描述）</a>
+	 * @see <a href="https://vampireAchao.gitee.io/2022/06/07/%E7%B1%BB%E5%9E%8B%E6%8F%8F%E8%BF%B0%E7%AC%A6/">关于类型描述符的博客</a>
 	 */
-	public static String getDesc(final Executable methodOrConstructor) {
+	public static String getDesc(final Executable methodOrConstructor, final boolean appendName) {
 		final StringBuilder ret = new StringBuilder();
-		if (methodOrConstructor instanceof Method) {
+		if (appendName && methodOrConstructor instanceof Method) {
 			ret.append(methodOrConstructor.getName());
 		}
 		ret.append('(');

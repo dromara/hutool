@@ -12,7 +12,11 @@
 
 package org.dromara.hutool.core.reflect;
 
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -77,5 +81,33 @@ public class ClassDescTest {
 		assertEquals("[[[I", ClassDescUtil.nameToDesc(ClassDescUtil.getName(int[][][].class)));
 		assertEquals("[[Ljava/lang/Object;",
 			ClassDescUtil.nameToDesc(ClassDescUtil.getName(Object[][].class)));
+	}
+
+	@Test
+	@SneakyThrows
+	public void testGetDescriptor() {
+		// methods
+		Assertions.assertEquals("()I", ClassDescUtil.getDesc(
+			Object.class.getMethod("hashCode"), false));
+		Assertions.assertEquals("()Ljava/lang/String;", ClassDescUtil.getDesc(
+			Object.class.getMethod("toString"), false));
+		Assertions.assertEquals("(Ljava/lang/Object;)Z", ClassDescUtil.getDesc(
+			Object.class.getMethod("equals", Object.class), false));
+		Assertions.assertEquals("(II)I", ClassDescUtil.getDesc(
+			Integer.class.getDeclaredMethod("compare", int.class, int.class), false));
+		Assertions.assertEquals("([Ljava/lang/Object;)Ljava/util/List;", ClassDescUtil.getDesc(
+			Arrays.class.getMethod("asList", Object[].class), false));
+		Assertions.assertEquals("()V", ClassDescUtil.getDesc(
+			Object.class.getConstructor(), false));
+
+		// clazz
+		Assertions.assertEquals("Z", ClassDescUtil.getDesc(boolean.class));
+		Assertions.assertEquals("Ljava/lang/Boolean;", ClassDescUtil.getDesc(Boolean.class));
+		Assertions.assertEquals("[[[D", ClassDescUtil.getDesc(double[][][].class));
+		Assertions.assertEquals("I", ClassDescUtil.getDesc(int.class));
+		Assertions.assertEquals("Ljava/lang/Integer;", ClassDescUtil.getDesc(Integer.class));
+		Assertions.assertEquals("V", ClassDescUtil.getDesc(void.class));
+		Assertions.assertEquals("Ljava/lang/Void;", ClassDescUtil.getDesc(Void.class));
+		Assertions.assertEquals("Ljava/lang/Object;", ClassDescUtil.getDesc(Object.class));
 	}
 }

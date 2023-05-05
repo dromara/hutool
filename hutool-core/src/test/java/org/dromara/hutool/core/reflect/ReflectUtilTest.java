@@ -111,25 +111,4 @@ public class ReflectUtilTest {
 		}
 
 	}
-
-	@Test
-	@SneakyThrows
-	public void testGetDescriptor() {
-		// methods
-		Assertions.assertEquals("()I", ReflectUtil.getDescriptor(Object.class.getMethod("hashCode")));
-		Assertions.assertEquals("()Ljava/lang/String;", ReflectUtil.getDescriptor(Object.class.getMethod("toString")));
-		Assertions.assertEquals("(Ljava/lang/Object;)Z", ReflectUtil.getDescriptor(Object.class.getMethod("equals", Object.class)));
-		Assertions.assertEquals("(II)I", ReflectUtil.getDescriptor(Integer.class.getDeclaredMethod("compare", int.class, int.class)));
-		Assertions.assertEquals("([Ljava/lang/Object;)Ljava/util/List;", ReflectUtil.getDescriptor(Arrays.class.getMethod("asList", Object[].class)));
-		Assertions.assertEquals("()V", ReflectUtil.getDescriptor(Object.class.getConstructor()));
-		// clazz
-		Assertions.assertEquals("Z", ReflectUtil.getDescriptor(boolean.class));
-		Assertions.assertEquals("Ljava/lang/Boolean;", ReflectUtil.getDescriptor(Boolean.class));
-		Assertions.assertEquals("[[[D", ReflectUtil.getDescriptor(double[][][].class));
-		Assertions.assertEquals("I", ReflectUtil.getDescriptor(int.class));
-		Assertions.assertEquals("Ljava/lang/Integer;", ReflectUtil.getDescriptor(Integer.class));
-		Assertions.assertEquals("V", ReflectUtil.getDescriptor(void.class));
-		Assertions.assertEquals("Ljava/lang/Void;", ReflectUtil.getDescriptor(Void.class));
-		Assertions.assertEquals("Ljava/lang/Object;", ReflectUtil.getDescriptor(Object.class));
-	}
 }

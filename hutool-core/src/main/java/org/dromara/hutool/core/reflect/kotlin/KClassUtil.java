@@ -113,7 +113,7 @@ public class KClassUtil {
 			final Object[] parameterValues = getParameterValues(constructor, valueProvider);
 			try {
 				return (T) KCallable.call(constructor, parameterValues);
-			} catch (RuntimeException e) {
+			} catch (final RuntimeException e) {
 				exception = e;
 			}
 		}

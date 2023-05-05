@@ -18,9 +18,9 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.reflect.ClassDescUtil;
 import org.dromara.hutool.core.reflect.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
-import org.dromara.hutool.core.reflect.ReflectUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -98,7 +98,7 @@ public class LambdaUtil {
 			final Class<?> implClass = ClassLoaderUtil.loadClass(serializedLambda.getImplClass(), true);
 			if ("<init>".equals(methodName)) {
 				for (final Constructor<?> constructor : implClass.getDeclaredConstructors()) {
-					if (ReflectUtil.getDescriptor(constructor).equals(serializedLambda.getImplMethodSignature())) {
+					if (ClassDescUtil.getDesc(constructor, false).equals(serializedLambda.getImplMethodSignature())) {
 						return new LambdaInfo(constructor, serializedLambda);
 					}
 				}
@@ -106,7 +106,7 @@ public class LambdaUtil {
 				final Method[] methods = MethodUtil.getMethods(implClass);
 				for (final Method method : methods) {
 					if (method.getName().equals(methodName)
-						&& ReflectUtil.getDescriptor(method).equals(serializedLambda.getImplMethodSignature())) {
+						&& ClassDescUtil.getDesc(method, false).equals(serializedLambda.getImplMethodSignature())) {
 						return new LambdaInfo(method, serializedLambda);
 					}
 				}
