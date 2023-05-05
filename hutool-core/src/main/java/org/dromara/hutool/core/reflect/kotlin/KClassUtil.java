@@ -108,9 +108,17 @@ public class KClassUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(final Class<T> targetType, final ValueProvider<String> valueProvider) {
 		final List<?> constructors = getConstructors(targetType);
+		RuntimeException exception = null;
 		for (final Object constructor : constructors) {
 			final Object[] parameterValues = getParameterValues(constructor, valueProvider);
-			return (T) KCallable.call(constructor, parameterValues);
+			try {
+				return (T) KCallable.call(constructor, parameterValues);
+			} catch (RuntimeException e) {
+				exception = e;
+			}
+		}
+		if (exception != null) {
+			throw exception;
 		}
 		return null;
 	}
