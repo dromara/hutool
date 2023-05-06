@@ -805,7 +805,7 @@ public class FileUtil extends PathUtil {
 	// region ----- createTempFile
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].tmp
+	 * 创建后的文件名为 prefix[Random].tmp
 	 *
 	 * @param dir 临时文件创建的所在目录
 	 * @return 临时文件
@@ -816,7 +816,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].tmp。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].tmp。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -831,7 +831,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].suffix。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -848,7 +848,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].suffix。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -867,7 +867,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].tmp
+	 * 创建后的文件名为 prefix[Random].tmp
 	 *
 	 * @param dir       临时文件创建的所在目录
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
@@ -880,7 +880,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].suffix From com.jodd.io.FileUtil
+	 * 创建后的文件名为 prefix[Random].suffix From com.jodd.io.FileUtil
 	 *
 	 * @param prefix    前缀，至少3个字符
 	 * @param suffix    后缀，如果null则使用默认.tmp
