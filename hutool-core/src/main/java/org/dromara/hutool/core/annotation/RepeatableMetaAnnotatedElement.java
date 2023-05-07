@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
  * @author huangchengxing
  * @since 6.0.0
  * @see RepeatableAnnotationCollector
+ * @param <T> AnnotationMapping类型
  */
 public class RepeatableMetaAnnotatedElement<T extends AnnotationMapping<Annotation>> implements AnnotatedElement, Iterable<T> {
 
@@ -282,9 +283,9 @@ public class RepeatableMetaAnnotatedElement<T extends AnnotationMapping<Annotati
 	 */
 	private List<Aggregation> initAggregations(final AnnotatedElement element) {
 		// TODO 若有可能，一并支持处理元注解中的可重复注解
-		List<Aggregation> result = new ArrayList<>();
+		final List<Aggregation> result = new ArrayList<>();
 		for (final Annotation declaredAnnotation : AnnotationUtil.getDeclaredAnnotations(element)) {
-			List<Aggregation> repeatableAnnotations = collectRepeatable(declaredAnnotation);
+			final List<Aggregation> repeatableAnnotations = collectRepeatable(declaredAnnotation);
 			if (CollUtil.isNotEmpty(repeatableAnnotations)) {
 				result.addAll(repeatableAnnotations);
 			}

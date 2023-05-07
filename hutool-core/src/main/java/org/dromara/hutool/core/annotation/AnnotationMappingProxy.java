@@ -90,7 +90,7 @@ public final class AnnotationMappingProxy<T extends Annotation> implements Invoc
 	 * @param annotation 属性映射
 	 */
 	private AnnotationMappingProxy(final AnnotationMapping<T> annotation) {
-		int methodCount = annotation.getAttributes().length;
+		final int methodCount = annotation.getAttributes().length;
 		this.methods = new HashMap<>(methodCount + 5);
 		this.valueCache = new SafeConcurrentHashMap<>(methodCount);
 		this.mapping = annotation;
@@ -123,7 +123,7 @@ public final class AnnotationMappingProxy<T extends Annotation> implements Invoc
 		methods.put("hashCode", (method, args) -> proxyHashCode());
 		methods.put("annotationType", (method, args) -> proxyAnnotationType());
 		methods.put("getMapping", (method, args) -> proxyGetMapping());
-		for (Method attribute : mapping.getAttributes()) {
+		for (final Method attribute : mapping.getAttributes()) {
 			methods.put(attribute.getName(), (method, args) -> getAttributeValue(method.getName(), method.getReturnType()));
 		}
 	}
@@ -148,7 +148,7 @@ public final class AnnotationMappingProxy<T extends Annotation> implements Invoc
 	/**
 	 * 代理{@link Annotation#equals(Object)}方法
 	 */
-	private boolean proxyEquals(Object o) {
+	private boolean proxyEquals(final Object o) {
 		return Objects.equals(mapping, o);
 	}
 

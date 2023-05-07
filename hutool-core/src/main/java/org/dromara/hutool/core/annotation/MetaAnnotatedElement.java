@@ -41,6 +41,7 @@ import java.util.function.BiFunction;
  * @author huangchengxing
  * @see ResolvedAnnotationMapping
  * @since 6.0.0
+ * @param <T> AnnotationMapping类型
  */
 public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> implements AnnotatedElement, Iterable<T> {
 
@@ -124,7 +125,7 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 	 * @return 是否
 	 */
 	@Override
-	public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
+	public boolean isAnnotationPresent(final Class<? extends Annotation> annotationType) {
 		return getMapping(annotationType)
 			.isPresent();
 	}
@@ -299,7 +300,7 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 		if (Objects.isNull(annotationMappings)) {
 			synchronized (this) {
 				if (Objects.isNull(annotationMappings)) {
-					Map<Class<? extends Annotation>, T> mappings = new LinkedHashMap<>(8);
+					final Map<Class<? extends Annotation>, T> mappings = new LinkedHashMap<>(8);
 					initAnnotationMappings(mappings);
 					this.annotationMappings = Collections.unmodifiableMap(mappings);
 				}
@@ -319,7 +320,7 @@ public class MetaAnnotatedElement<T extends AnnotationMapping<Annotation>> imple
 			.forEach(deque::addLast);
 		while (!deque.isEmpty()) {
 			// 若已有该类型的注解，则不再进行扫描
-			T mapping = deque.removeFirst();
+			final T mapping = deque.removeFirst();
 			if (!isNeedMapping(mappings, mapping)) {
 				continue;
 			}
