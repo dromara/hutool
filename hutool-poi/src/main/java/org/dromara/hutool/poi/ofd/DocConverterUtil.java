@@ -13,6 +13,7 @@
 package org.dromara.hutool.poi.ofd;
 
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.ofdrw.converter.export.*;
 import org.ofdrw.converter.ofdconverter.DocConverter;
 import org.ofdrw.converter.ofdconverter.ImageConverter;
 import org.ofdrw.converter.ofdconverter.PDFConverter;
@@ -28,7 +29,7 @@ import java.nio.file.Path;
  *     <li>OFD TEXT 相互转换</li>
  *     <li>OFD 图片 相互转换</li>
  * </ul>
- *
+ * <p>
  * 具体见:https://toscode.gitee.com/ofdrw/ofdrw/blob/master/ofdrw-converter/doc/CONVERTER.md
  *
  * @author looly
@@ -78,6 +79,89 @@ public class DocConverterUtil {
 			for (final Path image : images) {
 				converter.convert(image);
 			}
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * OFD转图片
+	 *
+	 * @param src       ODF路径
+	 * @param targetDir 生成图片存放目录
+	 * @param imgType   生成图片的格式，如 JPG、PNG、GIF、BMP、SVG
+	 * @param ppm       转换图片质量，每毫米像素数量(Pixels per millimeter)
+	 */
+	public static void odfToImage(final Path src, final Path targetDir, final String imgType, final double ppm) {
+		if ("svg".equalsIgnoreCase(imgType)) {
+			odfToSvg(src, targetDir, ppm);
+		}
+		try (final ImageExporter exporter = new ImageExporter(src, targetDir, imgType, ppm)) {
+			exporter.export();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * OFD转HTML
+	 *
+	 * @param src        ODF路径
+	 * @param targetPath 生成HTML路径
+	 */
+	public static void odfToHtml(final Path src, final Path targetPath) {
+		try (final HTMLExporter exporter = new HTMLExporter(src, targetPath)) {
+			exporter.export();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * OFD转文本
+	 *
+	 * @param src        ODF路径
+	 * @param targetPath 生成文本路径
+	 */
+	public static void odfToText(final Path src, final Path targetPath) {
+		try (final TextExporter exporter = new TextExporter(src, targetPath)) {
+			exporter.export();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * OFD转PDF
+	 *
+	 * @param src        ODF路径
+	 * @param targetPath 生成PDF路径
+	 */
+	public static void odfToPdf(final Path src, final Path targetPath) {
+		try (final OFDExporter exporter = new PDFExporterPDFBox(src, targetPath)) {
+			exporter.export();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		} catch (final Exception e) {
+			// 当用户未引入PDF-BOX时,尝试iText
+			try (final OFDExporter exporter = new PDFExporterIText(src, targetPath)) {
+				exporter.export();
+			} catch (final IOException e2) {
+				throw new IORuntimeException(e);
+			}
+		}
+	}
+
+	/**
+	 * OFD转SVG
+	 *
+	 * @param src       ODF路径
+	 * @param targetDir 生成SVG存放目录
+	 * @param ppm       转换图片质量，每毫米像素数量(Pixels per millimeter)
+	 */
+	private static void odfToSvg(final Path src, final Path targetDir, final double ppm) {
+		try (final SVGExporter exporter = new SVGExporter(src, targetDir, ppm)) {
+			exporter.export();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
