@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.reflect;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.NullWrapperBean;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.convert.BasicType;
@@ -20,10 +21,11 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.net.url.URLDecoder;
 import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.tree.hierarchy.HierarchyIteratorUtil;
+import org.dromara.hutool.core.tree.hierarchy.HierarchyUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
@@ -33,14 +35,9 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -710,44 +707,6 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 获取指定类的所有父类，结果不包括指定类本身<br>
-	 * 如果无父类，返回一个空的列表
-	 *
-	 * @param clazz 类, 可以为{@code null}
-	 * @return 所有父类列表，参数为{@code null} 则返回{@code null}
-	 */
-	public static List<Class<?>> getSuperClasses(final Class<?> clazz) {
-		if (clazz == null) {
-			return null;
-		}
-		final List<Class<?>> classes = new ArrayList<>();
-		Class<?> superclass = clazz.getSuperclass();
-		while (superclass != null) {
-			classes.add(superclass);
-			superclass = superclass.getSuperclass();
-		}
-		return classes;
-	}
-
-	/**
-	 * 获取指定类及其父类所有的实现接口。<br>
-	 * 结果顺序取决于查找顺序，当前类在前，父类的接口在后。
-	 *
-	 * @param cls 被查找的类
-	 * @return 接口列表，若提供的查找类为{@code null}，返回{@code null}
-	 */
-	public static List<Class<?>> getInterfaces(final Class<?> cls) {
-		if (cls == null) {
-			return null;
-		}
-
-		final LinkedHashSet<Class<?>> interfacesFound = new LinkedHashSet<>();
-		getInterfaces(cls, interfacesFound);
-
-		return new ArrayList<>(interfacesFound);
-	}
-
-	/**
 	 * 加载指定名称的类，支持：
 	 * <ul>
 	 *     <li>替换"/"为"."</li>
@@ -810,21 +769,104 @@ public class ClassUtil {
 		return clazz;
 	}
 
-	/**
-	 * 获取指定类的的接口列表
-	 *
-	 * @param clazz           指定类
-	 * @param interfacesFound 接口Set
-	 */
-	private static void getInterfaces(Class<?> clazz, final HashSet<Class<?>> interfacesFound) {
-		while (clazz != null) {
-			for (final Class<?> i : clazz.getInterfaces()) {
-				if (interfacesFound.add(i)) {
-					getInterfaces(i, interfacesFound);
-				}
-			}
 
-			clazz = clazz.getSuperclass();
+	/**
+	 * 获取指定类的所有父类，结果不包括指定类本身<br>
+	 * 如果无父类，返回一个空的列表
+	 *
+	 * @param clazz 类, 可以为{@code null}
+	 * @return 指定类的所有父类列表，如果无父类，返回一个空的列表
+	 */
+	public static List<Class<?>> getSuperClasses(final Class<?> clazz) {
+		if (clazz == null) {
+			return Collections.emptyList();
 		}
+		List<Class<?>> superclasses = new ArrayList<>();
+		traverseTypeHierarchy(clazz, t -> !t.isInterface(), superclasses::add, false);
+		return superclasses;
+	}
+
+	/**
+	 * 获取指定类及其父类所有的实现接口。<br>
+	 * 结果顺序取决于查找顺序，当前类在前，父类的接口在后。
+	 *
+	 * @param cls 被查找的类
+	 * @return 接口列表，若提供的查找类为{@code null}，则返回空列表
+	 */
+	public static List<Class<?>> getInterfaces(final Class<?> cls) {
+		if (cls == null) {
+			return Collections.emptyList();
+		}
+		List<Class<?>> interfaces = new ArrayList<>();
+		traverseTypeHierarchy(cls, t -> true, t -> {
+			if (t.isInterface()) {
+				interfaces.add(t);
+			}
+		}, false);
+		return interfaces;
+	}
+
+	/**
+	 * 按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口，直到{@code terminator}返回{@code false}
+	 *
+	 * @param root 根类
+	 * @param terminator 对遍历到的每个类与接口执行的校验，若为{@code false}则立刻中断遍历
+	 */
+	public static void traverseTypeHierarchyWhile(
+		final Class<?> root, Predicate<Class<?>> terminator) {
+		traverseTypeHierarchyWhile(root, t -> true, terminator);
+	}
+
+	/**
+	 * 按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口，直到{@code terminator}返回{@code false}
+	 *
+	 * @param root 根类
+	 * @param filter 过滤器，被过滤的类及其层级结构中的类与接口将被忽略
+	 * @param terminator 对遍历到的每个类与接口执行的校验，若为{@code false}则立刻中断遍历
+	 */
+	public static void traverseTypeHierarchyWhile(
+		final Class<?> root, final Predicate<Class<?>> filter, final Predicate<Class<?>> terminator) {
+		HierarchyUtil.traverseByBreadthFirst(
+			root, filter,
+			HierarchyIteratorUtil.scan(ClassUtil::getNextTypeHierarchies, terminator.negate())
+		);
+	}
+
+	/**
+	 * <p>按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口。<br />
+	 * 类遍历顺序如下：
+	 * <ul>
+	 *     <li>离{@code type}距离越近，则顺序越靠前；</li>
+	 *     <li>与{@code type}距离相同，则父类优先于接口；</li>
+	 *     <li>与{@code type}距离相同的接口，则顺序遵循接口在{@link Class#getInterfaces()}的顺序；</li>
+	 * </ul>
+	 *
+	 * @param root 根类
+	 * @param filter 过滤器，被过滤的类及其层级结构中的类与接口将被忽略
+	 * @param consumer 对遍历到的每个类与接口执行的操作，每个类和接口都只会被访问一次
+	 * @param includeRoot 是否包括根类
+	 */
+	public static void traverseTypeHierarchy(
+		final Class<?> root, final Predicate<Class<?>> filter, final Consumer<Class<?>> consumer, boolean includeRoot) {
+		Objects.requireNonNull(root);
+		Objects.requireNonNull(filter);
+		Objects.requireNonNull(consumer);
+		Function<Class<?>, Collection<Class<?>>> function = t -> {
+			if (includeRoot || !root.equals(t)) {
+				consumer.accept(t);
+			}
+			return getNextTypeHierarchies(t);
+		};
+		HierarchyUtil.traverseByBreadthFirst(root, filter, HierarchyIteratorUtil.scan(function));
+	}
+
+	private static Set<Class<?>> getNextTypeHierarchies(Class<?> t) {
+		Set<Class<?>> next = new LinkedHashSet<>();
+		Class<?> superclass = t.getSuperclass();
+		if (Objects.nonNull(superclass)) {
+			next.add(superclass);
+		}
+		next.addAll(Arrays.asList(t.getInterfaces()));
+		return next;
 	}
 }
