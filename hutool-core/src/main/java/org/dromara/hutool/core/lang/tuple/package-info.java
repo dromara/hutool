@@ -14,6 +14,7 @@
  * 元组相关封装，包括：
  * <ul>
  *     <li>类似Python元组的{@link org.dromara.hutool.core.lang.tuple.Tuple}</li>
+ *     <li>二元组{@link org.dromara.hutool.core.lang.tuple.Pair}</li>
  *     <li>三元组{@link org.dromara.hutool.core.lang.tuple.Triple}</li>
  * </ul>
  *
