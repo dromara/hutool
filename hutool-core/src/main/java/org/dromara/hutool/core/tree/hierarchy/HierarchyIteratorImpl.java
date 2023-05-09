@@ -50,7 +50,7 @@ public class HierarchyIteratorImpl<H, R> implements HierarchyIterator<H, R> {
 	 *
 	 * @param result    结果
 	 * @param hierarchy 当前层级
-	 * @return 向容器中添加元素的方法
+	 * @return 下一需要遍历的层级
 	 */
 	@Override
 	public Collection<H> nextHierarchies(final R result, final H hierarchy) {
