@@ -28,6 +28,8 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
@@ -2321,4 +2323,175 @@ public class CollUtil {
 		return collection.add(object);
 	}
 
+	// ------------------------------------------------------------------------------------------------- diff
+
+	/**
+	 * 对比找出两个{@link Collection}变动，前者（coll1）相对于后者（coll2）的变动，该方法只可提取新增的和删除的元素
+	 *
+	 * @param coll1     原始集合
+	 * @param coll2     对比集合
+	 * @param keyMapper 生成对比键的映射函数
+	 * @param <T>       集合中元素类型
+	 * @param <K>       对比的key值类型
+	 * @return 比较结果，key：coll1对比coll2里面新增的；value：coll1对比coll2里面删除的；
+	 *
+	 * <pre>{@code
+	 * 		// 对下面的People集合使用id进行对比，筛选出新增的和删除的
+	 * 		List<People> coll1 = ListUtil.of(new People(1L, "Tom"), new People(2L, "Tony"));
+	 * 		List<People> coll2 = ListUtil.of(new People(2L, "Tony2"), new People(null, "Jerry"));
+	 *
+	 * 		MutableEntry<List<People>, List<People>> pair = CollUtil.diff(coll1, coll2, People::getId);
+	 *
+	 * 		System.out.println("新增的：" + pair.getKey());
+	 * 		System.out.println("删除的：" + pair.getValue());
+	 *
+	 * 		// 控制台输出
+	 * 		// 新增的：[People(id=null, name=Jerry)]
+	 * 		// 删除的：[People(id=1, name=Tom)]
+	 * }</pre>
+	 * @see #diff(Collection, Collection, Function, BiPredicate, BiFunction)
+	 * @see #diff(Collection, Collection, Function, Function, BiPredicate, BiFunction)
+	 */
+	public static <T, K> MutableEntry<List<T>, List<T>> diff(Collection<T> coll1, Collection<T> coll2, Function<T, K> keyMapper) {
+		Triple<List<T>, List<T>, List<Object>> triple = diff(coll1, coll2, keyMapper, keyMapper, null, null);
+		return MutableEntry.of(triple.getLeft(), triple.getMiddle());
+	}
+
+	/**
+	 * 对比找出两个{@link Collection}变动，前者（coll1）相对于后者（coll2）的变动，该方法可提取新增、删除和修改的元素
+	 *
+	 * @param coll1         原始集合
+	 * @param coll2         对比集合
+	 * @param keyMapper     生成对比键的映射函数
+	 * @param equalFunction 对比函数，比较键一样的元素是否发生变化
+	 * @param mergeFunction 元素变动处理选择器，必填参数，apply第一个参数为原始集合元素，第二个参数为对比集合元素
+	 * @param <T>           集合中元素类型
+	 * @param <K>           对比的key值类型
+	 * @param <R>           变更的新旧元素合并后的类型
+	 * @return 比较结果，left：coll1对比coll2里面新增的；middle：coll1对比coll2里面删除的；right：coll1对比coll2里面发生改变的
+	 * <pre>{@code
+	 * 		// 对下面的People集合使用id进行对比，筛选出新增的和删除的
+	 * 		List<People> coll1 = ListUtil.of(new People(1L, "Tom"), new People(2L, "Tony"));
+	 * 		List<People> coll2 = ListUtil.of(new People(2L, "Tony2"), new People(null, "Jerry"));
+	 *
+	 * 		Triple<List<People>, List<People>, List<People>> triple =
+	 * 				CollUtil.diff(
+	 * 						coll1,
+	 * 						coll2,
+	 * 						People::getId,
+	 * 						(p1, p2) -> p1.getName().equals(p2.getName()),
+	 * 						(p1, p2) -> p2);
+	 *
+	 * 		System.out.println("新增的：" + triple.getLeft());
+	 * 		System.out.println("删除的：" + triple.getMiddle());
+	 * 		System.out.println("修改的：" + triple.getRight());
+	 *
+	 * 		// 控制台输出
+	 * 		// 新增的：[People(id=null, name=Jerry)]
+	 * 		// 删除的：[People(id=1, name=Tom)]
+	 * 		// 修改的：[People(id=2, name=Tony2)]
+	 * }</pre>
+	 * @see #diff(Collection, Collection, Function)
+	 * @see #diff(Collection, Collection, Function, Function, BiPredicate, BiFunction)
+	 */
+	public static <T, K, R>
+	Triple<List<T>, List<T>, List<R>>
+	diff(Collection<T> coll1, Collection<T> coll2, Function<T, K> keyMapper, BiPredicate<T, T> equalFunction, BiFunction<T, T, R> mergeFunction) {
+		return diff(coll1, coll2, keyMapper, keyMapper, equalFunction, mergeFunction);
+	}
+
+	/**
+	 * 对比找出两个{@link Collection}变动，前者（coll1）相对于后者（coll2）的变动，该方法可提取新增、删除和修改的元素
+	 *
+	 * @param collForT      原始集合
+	 * @param collForU      对比集合
+	 * @param keyMapperForT 原始集合生成对比键的映射函数
+	 * @param keyMapperForU 对比集合生成对比键的映射函数
+	 * @param equalFunction 对比函数，比较键一样的元素是否发生变化
+	 * @param mergeFunction 元素变动处理选择器，必填参数，apply第一个参数为原始集合元素，第二个参数为对比集合元素
+	 * @param <T>           原始集合（coll1）中元素类型
+	 * @param <U>           对比集合（coll2）中元素类型
+	 * @param <K>           对比的key值类型
+	 * @param <R>           变更的新旧元素合并后的类型
+	 * @return 比较结果，left：coll1对比coll2里面新增的；middle：coll1对比coll2里面删除的；right：coll1对比coll2里面发生改变的
+	 * <pre>{@code
+	 * 		// 对下面的People集合使用id进行对比，筛选出新增的和删除的
+	 * 		List<People> coll1 = ListUtil.of(new People(1L, "Tom"), new People(2L, "Tony"));
+	 * 		List<American> coll2 = ListUtil.of(new American(2L, "Tony2"), new American(null, "Jerry"));
+	 *
+	 * 		Triple<List<American>, List<People>, List<American>> triple =
+	 * 				CollUtil.diff(
+	 * 						coll1,
+	 * 						coll2,
+	 * 						People::getId,
+	 * 						American::getId,
+	 * 						(p, a) -> p.getName().equals(a.getName()),
+	 * 						(p, a) -> a);
+	 *
+	 * 		System.out.println("新增的：" + triple.getLeft());
+	 * 		System.out.println("删除的：" + triple.getMiddle());
+	 * 		System.out.println("修改的：" + triple.getRight());
+	 *
+	 * 		// 控制台输出
+	 * 		// 新增的：[American(id=null, name=Jerry)]
+	 * 		// 删除的：[People(id=1, name=Tom)]
+	 * 		// 修改的：[American(id=2, name=Tony2)]
+	 * }</pre>
+	 * @see #diff(Collection, Collection, Function)
+	 * @see #diff(Collection, Collection, Function, BiPredicate, BiFunction)
+	 */
+	public static <T, U, K, R>
+	Triple<List<U>, List<T>, List<R>>
+	diff(Collection<T> collForT, Collection<U> collForU, Function<T, K> keyMapperForT, Function<U, K> keyMapperForU, BiPredicate<T, U> equalFunction, BiFunction<T, U, R> mergeFunction) {
+		Assert.notNull(keyMapperForT);
+		Assert.notNull(keyMapperForU);
+		// 记录 collForT 里面新加的元素
+		List<U> addElementList = new ArrayList<>();
+		// 记录 collForT 里面删除的元素
+		List<T> removeElementList = new ArrayList<>();
+		// 记录 collForT 里面修改的元素
+		List<R> modifyElementList = new ArrayList<>();
+
+		if (isEmpty(collForT)) {
+			if (!isEmpty(collForU)) {
+				addElementList.addAll(collForU);
+			}
+			return Triple.of(addElementList, removeElementList, modifyElementList);
+		}
+		if (isEmpty(collForU)) {
+			if (!isEmpty(collForT)) {
+				removeElementList.addAll(collForT);
+			}
+			return Triple.of(addElementList, removeElementList, modifyElementList);
+		}
+
+		// 为了保证之前集合的元素顺序，这里使用 LinkedHashMap 和 LinkedHashSet
+		LinkedHashMap<K, T> mapForT = collForT.stream().collect(Collectors.toMap(keyMapperForT, t -> t, (t, t2) -> t, LinkedHashMap::new));
+		LinkedHashMap<K, U> mapForU = collForU.stream().collect(Collectors.toMap(keyMapperForU, u -> u, (u, u2) -> u, LinkedHashMap::new));
+		LinkedHashSet<K> unionKeySet = new LinkedHashSet<>();
+		unionKeySet.addAll(mapForU.keySet());
+		unionKeySet.addAll(mapForT.keySet());
+
+		for (K k : unionKeySet) {
+			T t = mapForT.get(k);
+			U u = mapForU.get(k);
+			if (Objects.isNull(t)) {
+				// collForT 里面新加的
+				addElementList.add(u);
+			} else if (Objects.isNull(u)) {
+				// collForT 里面删除的
+				removeElementList.add(t);
+			} else {
+				if (Objects.nonNull(equalFunction)) {
+					boolean equal = equalFunction.test(t, u);
+					if (!equal) {
+						// collForT 里面变动的
+						R apply = mergeFunction.apply(t, u);
+						modifyElementList.add(apply);
+					}
+				}
+			}
+		}
+		return Triple.of(addElementList, removeElementList, modifyElementList);
+	}
 }
