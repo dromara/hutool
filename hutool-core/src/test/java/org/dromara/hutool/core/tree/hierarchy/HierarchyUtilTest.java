@@ -32,7 +32,7 @@ class HierarchyUtilTest {
 		private String value;
 		private List<Node> children;
 
-		public Node(String parent, String value) {
+		public Node(final String parent, final String value) {
 			this.parent = parent;
 			this.value = value;
 		}
@@ -46,25 +46,25 @@ class HierarchyUtilTest {
 		root = new Node(null, "0");
 
 		// 第二层
-		Node first1 = new Node(root.value, "0-1");
-		Node first2 = new Node(root.value, "0-2");
-		Node first3 = new Node(root.value, "0-3");
+		final Node first1 = new Node(root.value, "0-1");
+		final Node first2 = new Node(root.value, "0-2");
+		final Node first3 = new Node(root.value, "0-3");
 		root.setChildren(Arrays.asList(first1, first2, first3));
 
 		// 第三层
-		Node second11 = new Node(first1.value, "0-1-1");
-		Node second12 = new Node(first1.value, "0-1-2");
-		Node second13 = new Node(first1.value, "0-1-3");
+		final Node second11 = new Node(first1.value, "0-1-1");
+		final Node second12 = new Node(first1.value, "0-1-2");
+		final Node second13 = new Node(first1.value, "0-1-3");
 		first1.setChildren(Arrays.asList(second11, second12, second13));
 
-		Node second21 = new Node(first2.value, "0-2-1");
-		Node second22 = new Node(first2.value, "0-2-2");
-		Node second23 = new Node(first2.value, "0-2-3");
+		final Node second21 = new Node(first2.value, "0-2-1");
+		final Node second22 = new Node(first2.value, "0-2-2");
+		final Node second23 = new Node(first2.value, "0-2-3");
 		first2.setChildren(Arrays.asList(second21, second22, second23));
 
-		Node second31 = new Node(first3.value, "0-3-1");
-		Node second32 = new Node(first3.value, "0-3-2");
-		Node second33 = new Node(first3.value, "0-3-3");
+		final Node second31 = new Node(first3.value, "0-3-1");
+		final Node second32 = new Node(first3.value, "0-3-2");
+		final Node second33 = new Node(first3.value, "0-3-3");
 		first3.setChildren(Arrays.asList(second31, second32, second33));
 	}
 
