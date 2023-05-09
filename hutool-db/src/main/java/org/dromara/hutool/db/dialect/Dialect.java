@@ -160,8 +160,10 @@ public interface Dialect extends Serializable {
 	 * @since 5.7.2
 	 */
 	default PreparedStatement psForCount(final Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+		// https://gitee.com/dromara/hutool/issues/I713XQ
+		// 为了兼容informix等数据库，此处使用count(*)而非count(1)
 		sqlBuilder = sqlBuilder
-				.insertPreFragment("SELECT count(1) from(")
+				.insertPreFragment("SELECT count(*) from(")
 				// issue#I3IJ8X@Gitee，在子查询时需设置单独别名，此处为了防止和用户的表名冲突，使用自定义的较长别名
 				.append(") hutool_alias_count_");
 		return psForPage(conn, sqlBuilder, null);
