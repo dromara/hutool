@@ -302,9 +302,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	 * @since 6.0.0
 	 */
 	public byte[] encrypt(final byte[] data, final byte[] salt) {
-		lock.lock();
-
 		byte[] result;
+		lock.lock();
 		try {
 			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, salt);
 			result = cipher.doFinal(paddingDataWithZero(data, cipher.getBlockSize()));
@@ -318,9 +317,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 
 	@Override
 	public void encrypt(final InputStream data, final OutputStream out, final boolean isClose) throws IORuntimeException {
-		lock.lock();
-
 		CipherOutputStream cipherOutputStream = null;
+		lock.lock();
 		try {
 			final Cipher cipher = initMode(Cipher.ENCRYPT_MODE, null);
 			cipherOutputStream = new CipherOutputStream(out, cipher);
@@ -358,10 +356,9 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 	public byte[] decrypt(final byte[] bytes) {
 		final int blockSize;
 		final byte[] decryptData;
-
 		lock.lock();
-		final byte[] salt = SaltMagic.getSalt(bytes);
 		try {
+			final byte[] salt = SaltMagic.getSalt(bytes);
 			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, salt);
 			blockSize = cipher.getBlockSize();
 			decryptData = cipher.doFinal(SaltMagic.getData(bytes));
@@ -376,8 +373,8 @@ public class SymmetricCrypto implements SymmetricEncryptor, SymmetricDecryptor, 
 
 	@Override
 	public void decrypt(final InputStream data, final OutputStream out, final boolean isClose) throws IORuntimeException {
-		lock.lock();
 		CipherInputStream cipherInputStream = null;
+		lock.lock();
 		try {
 			final Cipher cipher = initMode(Cipher.DECRYPT_MODE, null);
 			cipherInputStream = new CipherInputStream(data, cipher);
