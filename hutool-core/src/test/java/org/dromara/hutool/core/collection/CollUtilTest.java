@@ -5,6 +5,7 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -16,24 +17,7 @@ import lombok.ToString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -1152,5 +1136,63 @@ public class CollUtilTest {
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 3)));
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	static class People {
+		private Long id;
+		private String name;
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	static class American {
+		private Long id;
+		private String name;
+	}
+
+	@Test
+	public void diffTest() {
+		People p1 = new People(1L, "Tom");
+		People p2 = new People(2L, "Tony");
+		People p2p = new People(2L, "Tony2");
+		People p3 = new People(null, "Jerry");
+		List<People> coll1 = ListUtil.of(p1, p2);
+		List<People> coll2 = ListUtil.of(p2p, p3);
+		// 通过 People 的 id 来比较出新增的和删除的
+		AbstractMap.SimpleEntry<List<People>, List<People>> pair = CollUtil.diff(coll1, coll2, People::getId);
+		Assertions.assertTrue(CollUtil.isEqualList(pair.getKey(), ListUtil.of(p3)));
+		Assertions.assertTrue(CollUtil.isEqualList(pair.getValue(), ListUtil.of(p1)));
+
+		// 通过 Person 的 id 来比较出新增和删除的，通过 name 比较出修改的（修改的集合里面为自己选择出来的）
+		Triple<List<People>, List<People>, List<People>> triple1 =
+				CollUtil.diff(
+						coll1,
+						coll2,
+						People::getId,
+						(people, people2) -> people.getName().equals(people2.getName()),
+						(people, people2) -> people2);
+		Assertions.assertTrue(CollUtil.isEqualList(triple1.getLeft(), ListUtil.of(p3)));
+		Assertions.assertTrue(CollUtil.isEqualList(triple1.getMiddle(), ListUtil.of(p1)));
+		Assertions.assertTrue(CollUtil.isEqualList(triple1.getRight(), ListUtil.of(p2p)));
+
+		// 两个包含不同元素集合比较，key都为元素的id，比较出新增的，删除的，修改的
+		American a1 = new American(2L, "Tony2");
+		American a2 = new American(null, "Jerry");
+		List<American> coll3 = ListUtil.of(a1, a2);
+		Triple<List<American>, List<People>, List<American>> triple2 =
+				CollUtil.diff(
+						coll1,
+						coll3,
+						People::getId,
+						American::getId,
+						(people, american) -> people.getName().equals(american.getName()),
+						(people, american) -> american);
+		Assertions.assertTrue(CollUtil.isEqualList(triple2.getLeft(), ListUtil.of(a2)));
+		Assertions.assertTrue(CollUtil.isEqualList(triple2.getMiddle(), ListUtil.of(p1)));
+		Assertions.assertTrue(CollUtil.isEqualList(triple2.getRight(), ListUtil.of(a1)));
 	}
 }
