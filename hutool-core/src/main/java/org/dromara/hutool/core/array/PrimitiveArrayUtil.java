@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.array;
 
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.RandomUtil;
@@ -1290,6 +1291,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static byte[] sub(final byte[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1327,6 +1329,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static int[] sub(final int[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1364,6 +1367,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static long[] sub(final long[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1401,6 +1405,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static short[] sub(final short[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1438,6 +1443,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static char[] sub(final char[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1475,6 +1481,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static double[] sub(final double[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1512,6 +1519,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static float[] sub(final float[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;
@@ -1549,6 +1557,7 @@ public class PrimitiveArrayUtil {
 	 * @since 4.5.2
 	 */
 	public static boolean[] sub(final boolean[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = Array.getLength(array);
 		if (start < 0) {
 			start += length;

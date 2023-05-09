@@ -1213,7 +1213,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * 获取子数组
 	 *
 	 * @param <T>   数组元素类型
-	 * @param array 数组
+	 * @param array 数组，不允许为空
 	 * @param start 开始位置（包括）
 	 * @param end   结束位置（不包括）
 	 * @return 新的数组
@@ -1221,6 +1221,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @since 4.2.2
 	 */
 	public static <T> T[] sub(final T[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
 		final int length = length(array);
 		if (start < 0) {
 			start += length;
