@@ -144,8 +144,8 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	 * @param withMissCount 是否计数丢失数
 	 */
 	private void remove(final K key, final boolean withMissCount) {
-		lock.lock();
 		CacheObj<K, V> co;
+		lock.lock();
 		try {
 			co = removeWithoutLock(key, withMissCount);
 		} finally {
