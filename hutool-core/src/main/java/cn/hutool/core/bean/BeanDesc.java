@@ -2,6 +2,7 @@ package cn.hutool.core.bean;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -13,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述<br>
@@ -144,7 +146,7 @@ public class BeanDesc implements Serializable {
 		PropDesc prop;
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类
-			if (false == ModifierUtil.isStatic(field) && false == ReflectUtil.isOuterClassField(field)) {
+			if (!ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field)) {
 				prop = createProp(field, gettersAndSetters);
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
 				this.propMap.putIfAbsent(prop.getFieldName(), prop);
@@ -211,13 +213,18 @@ public class BeanDesc implements Serializable {
 				}
 			} else if (isMatchSetter(methodName, fieldName, isBooleanField, ignoreCase)) {
 				// setter方法的参数类型和字段类型必须一致，或参数类型是字段类型的子类
-				if(fieldType.isAssignableFrom(method.getParameterTypes()[0])){
-					setter = method;
+				if (fieldType.isAssignableFrom(method.getParameterTypes()[0])) {
+					if (setter != null && isBooleanField) {
+						// 存在多个方法能匹配的情况下，优先适配setXXX的方法
+						if (Objects.equals(ignoreCase ? methodName.toLowerCase() : methodName,
+							"set" + (ignoreCase ? fieldName.toLowerCase() : CharSequenceUtil.upperFirst(fieldName)))
+						) {
+							setter = method;
+						}
+					} else {
+						setter = method;
+					}
 				}
-			}
-			if (null != getter && null != setter) {
-				// 如果Getter和Setter方法都找到了，不再继续寻找
-				break;
 			}
 		}
 
@@ -251,7 +258,7 @@ public class BeanDesc implements Serializable {
 			handledFieldName = fieldName.toLowerCase();
 			fieldName = handledFieldName;
 		} else {
-			handledFieldName = StrUtil.upperFirst(fieldName);
+			handledFieldName = CharSequenceUtil.upperFirst(fieldName);
 		}
 
 		// 针对Boolean类型特殊检查
@@ -259,8 +266,8 @@ public class BeanDesc implements Serializable {
 			if (fieldName.startsWith("is")) {
 				// 字段已经是is开头
 				if (methodName.equals(fieldName) // isName -》 isName
-						|| ("get" + handledFieldName).equals(methodName)// isName -》 getIsName
-						|| ("is" + handledFieldName).equals(methodName)// isName -》 isIsName
+					|| ("get" + handledFieldName).equals(methodName)// isName -》 getIsName
+					|| ("is" + handledFieldName).equals(methodName)// isName -》 isIsName
 				) {
 					return true;
 				}
@@ -299,11 +306,11 @@ public class BeanDesc implements Serializable {
 			handledFieldName = fieldName.toLowerCase();
 			fieldName = handledFieldName;
 		} else {
-			handledFieldName = StrUtil.upperFirst(fieldName);
+			handledFieldName = CharSequenceUtil.upperFirst(fieldName);
 		}
 
 		// 非标准Setter方法跳过
-		if (false == methodName.startsWith("set")) {
+		if (!methodName.startsWith("set")) {
 			return false;
 		}
 
@@ -311,7 +318,7 @@ public class BeanDesc implements Serializable {
 		if (isBooleanField && fieldName.startsWith("is")) {
 			// 字段是is开头
 			if (("set" + StrUtil.removePrefix(fieldName, "is")).equals(methodName)// isName -》 setName
-					|| ("set" + handledFieldName).equals(methodName)// isName -》 setIsName
+				|| ("set" + handledFieldName).equals(methodName)// isName -》 setIsName
 			) {
 				return true;
 			}

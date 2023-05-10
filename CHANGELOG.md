@@ -17,6 +17,7 @@
 * 【core  】      修复JSONUtil.toBean目标存在Map字段无序问题（issue#I6YN2A@Gitee）
 * 【http  】      修复HttpDownloader.downloadFile 方法缺少static问题（issue#I6Z8VU@Gitee）
 * 【core  】      修复NumberUtil mul 传入null的string入参报错问题（issue#I70JB3@Gitee）
+* 【core  】      修复BeanDesc.getBeanDesc方法set方法赋值错误（issue#3096@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.18 (2023-04-27)

@@ -7,7 +7,6 @@ import org.junit.Test;
  * {@link BeanDesc} 单元测试类
  *
  * @author looly
- *
  */
 public class BeanDescTest {
 
@@ -55,6 +54,14 @@ public class BeanDescTest {
 	}
 
 	@Test
+	public void propDescOfBooleanTest3() {
+		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+
+		Assert.assertEquals("setLastPage", desc.getSetter("lastPage").getName());
+		Assert.assertEquals("setIsLastPage", desc.getSetter("isLastPage").getName());
+	}
+
+	@Test
 	public void getSetTest() {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -72,6 +79,24 @@ public class BeanDescTest {
 		private boolean isAdmin;
 		private boolean isSuper;
 		private boolean gender;
+		private Boolean lastPage;
+		private Boolean isLastPage;
+
+		public Boolean getLastPage() {
+			return this.lastPage;
+		}
+
+		public void setLastPage(final Boolean lastPage) {
+			this.lastPage = lastPage;
+		}
+
+		public Boolean getIsLastPage() {
+			return this.isLastPage;
+		}
+
+		public void setIsLastPage(final Boolean isLastPage) {
+			this.isLastPage = isLastPage;
+		}
 
 		public String getName() {
 			return name;
@@ -120,7 +145,15 @@ public class BeanDescTest {
 
 		@Override
 		public String toString() {
-			return "User [name=" + name + ", age=" + age + ", isAdmin=" + isAdmin + ", gender=" + gender + "]";
+			return "User{" +
+				"name='" + name + '\'' +
+				", age=" + age +
+				", isAdmin=" + isAdmin +
+				", isSuper=" + isSuper +
+				", gender=" + gender +
+				", lastPage=" + lastPage +
+				", isLastPage=" + isLastPage +
+				'}';
 		}
 	}
 }
