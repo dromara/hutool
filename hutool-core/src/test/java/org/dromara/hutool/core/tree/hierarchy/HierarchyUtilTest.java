@@ -12,13 +12,12 @@
 
 package org.dromara.hutool.core.tree.hierarchy;
 
+import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * test for {@link HierarchyUtil}
@@ -27,63 +26,72 @@ import java.util.stream.Collectors;
  */
 class HierarchyUtilTest {
 
-	private Map<String, String> tree;
+	@Data
+	static class Node {
+		private String parent;
+		private String value;
+		private List<Node> children;
+
+		public Node(final String parent, final String value) {
+			this.parent = parent;
+			this.value = value;
+		}
+	}
+
+	private Node root;
 
 	@BeforeEach
 	void init() {
-		tree = new LinkedHashMap<>();
-
 		// 根节点
-		tree.put("0", null);
+		root = new Node(null, "0");
 
-		// 第一层
-		tree.put("0-1", "0");
-		tree.put("0-2", "0");
-		tree.put("0-3", "0");
+		// 第二层
+		final Node first1 = new Node(root.value, "0-1");
+		final Node first2 = new Node(root.value, "0-2");
+		final Node first3 = new Node(root.value, "0-3");
+		root.setChildren(Arrays.asList(first1, first2, first3));
 
 		// 第三层
-		tree.put("0-1-1", "0-1");
-		tree.put("0-1-2", "0-1");
-		tree.put("0-1-3", "0-1");
+		final Node second11 = new Node(first1.value, "0-1-1");
+		final Node second12 = new Node(first1.value, "0-1-2");
+		final Node second13 = new Node(first1.value, "0-1-3");
+		first1.setChildren(Arrays.asList(second11, second12, second13));
 
-		tree.put("0-2-1", "0-2");
-		tree.put("0-2-2", "0-2");
-		tree.put("0-2-3", "0-2");
+		final Node second21 = new Node(first2.value, "0-2-1");
+		final Node second22 = new Node(first2.value, "0-2-2");
+		final Node second23 = new Node(first2.value, "0-2-3");
+		first2.setChildren(Arrays.asList(second21, second22, second23));
 
-		tree.put("0-3-1", "0-3");
-		tree.put("0-3-2", "0-3");
-		tree.put("0-3-3", "0-3");
+		final Node second31 = new Node(first3.value, "0-3-1");
+		final Node second32 = new Node(first3.value, "0-3-2");
+		final Node second33 = new Node(first3.value, "0-3-3");
+		first3.setChildren(Arrays.asList(second31, second32, second33));
 	}
 
 	@Test
 	void testTraverseByBreadthFirst() {
-		// 按广度优先遍历所有节点
-		final Set<String> nodes = new LinkedHashSet<>();
-		HierarchyUtil.traverseByBreadthFirst("0", HierarchyIteratorUtil.scan(t -> {
-			nodes.add(t);
-			return tree.entrySet().stream()
-				.filter(e -> Objects.equals(t, e.getValue()))
-				.map(Map.Entry::getKey)
-				.collect(Collectors.toList());
+		// // 按广度优先遍历所有节点
+		final List<String> nodes = new ArrayList<>();
+		HierarchyUtil.traverseByBreadthFirst(root, HierarchyIteratorUtil.scan(t -> {
+			nodes.add(t.getValue());
+			return t.getChildren();
 		}));
 		Assertions.assertEquals(13, nodes.size());
 		Assertions.assertEquals(
-			new LinkedHashSet<>(Arrays.asList("0", "0-1", "0-2", "0-3", "0-1-1", "0-1-2", "0-1-3", "0-2-1", "0-2-2", "0-2-3", "0-3-1", "0-3-2", "0-3-3")),
-			nodes
+				Arrays.asList("0", "0-1", "0-2", "0-3", "0-1-1", "0-1-2", "0-1-3", "0-2-1", "0-2-2", "0-2-3", "0-3-1", "0-3-2", "0-3-3"),
+				nodes
 		);
 
 		// 按广度优先寻找 0-2-3
-		final String target = HierarchyUtil.traverseByBreadthFirst("0", HierarchyIteratorUtil.find(parentFinder(),
-			t -> Objects.equals(t, "0-2-3") ? t : null
+		final String target = HierarchyUtil.traverseByBreadthFirst(root, HierarchyIteratorUtil.find(Node::getChildren,
+				t -> Objects.equals(t.getValue(), "0-2-3") ? t.getValue() : null
 		));
 		Assertions.assertEquals("0-2-3", target);
 
 		// 按广度优先获取 0-2 的所有子节点
-		final List<String> children = HierarchyUtil.traverseByBreadthFirst(
-			"0", HierarchyIteratorUtil.collect(parentFinder(),
-				t -> Objects.equals(tree.get(t), "0-2") ? t : null
-			)
-		);
+		final List<String> children = HierarchyUtil.traverseByBreadthFirst(root, HierarchyIteratorUtil.collect(Node::getChildren,
+				t -> Objects.equals(t.getParent(), "0-2") ? t.getValue() : null
+		));
 		Assertions.assertEquals(3, children.size());
 		Assertions.assertEquals(new ArrayList<>(Arrays.asList("0-2-1", "0-2-2", "0-2-3")), children);
 	}
@@ -92,40 +100,28 @@ class HierarchyUtilTest {
 	void testTraverseByDepthFirst() {
 		// 按深度优先遍历所有节点
 		final Set<String> nodes = new LinkedHashSet<>();
-		HierarchyUtil.traverseByDepthFirst("0", HierarchyIteratorUtil.scan(t -> {
-			nodes.add(t);
-			return tree.entrySet().stream()
-				.filter(e -> Objects.equals(t, e.getValue()))
-				.map(Map.Entry::getKey)
-				.collect(Collectors.toList());
+		HierarchyUtil.traverseByDepthFirst(root, HierarchyIteratorUtil.scan(t -> {
+			nodes.add(t.getValue());
+			return t.getChildren();
 		}));
 		Assertions.assertEquals(13, nodes.size());
 		Assertions.assertEquals(
-			new LinkedHashSet<>(Arrays.asList("0", "0-1", "0-1-1", "0-1-2", "0-1-3", "0-2", "0-2-1", "0-2-2", "0-2-3", "0-3", "0-3-1", "0-3-2", "0-3-3")),
-			nodes
+				new LinkedHashSet<>(Arrays.asList("0", "0-1", "0-1-1", "0-1-2", "0-1-3", "0-2", "0-2-1", "0-2-2", "0-2-3", "0-3", "0-3-1", "0-3-2", "0-3-3")),
+				nodes
 		);
 
 		// 按深度优先寻找 0-2-3
-		final String target = HierarchyUtil.traverseByDepthFirst("0", HierarchyIteratorUtil.find(parentFinder(),
-			t -> Objects.equals(t, "0-2-3") ? t : null
+		final String target = HierarchyUtil.traverseByDepthFirst(root, HierarchyIteratorUtil.find(Node::getChildren,
+				t -> Objects.equals(t.getValue(), "0-2-3") ? t.getValue() : null
 		));
 		Assertions.assertEquals("0-2-3", target);
 
 		// 按深度优先获取 0-2 的所有子节点
-		final List<String> children = HierarchyUtil.traverseByDepthFirst(
-			"0", HierarchyIteratorUtil.collect(parentFinder(),
-				t -> Objects.equals(tree.get(t), "0-2") ? t : null
-			)
-		);
+		final List<String> children = HierarchyUtil.traverseByDepthFirst(root, HierarchyIteratorUtil.collect(Node::getChildren,
+				t -> Objects.equals(t.getParent(), "0-2") ? t.getValue() : null
+		));
 		Assertions.assertEquals(3, children.size());
 		Assertions.assertEquals(new ArrayList<>(Arrays.asList("0-2-1", "0-2-2", "0-2-3")), children);
 	}
 
-	private Function<String, Collection<String>> parentFinder() {
-		return t -> tree.entrySet()
-			.stream()
-			.filter(e -> Objects.equals(t, e.getValue()))
-			.map(Map.Entry::getKey)
-			.collect(Collectors.toList());
-	}
 }

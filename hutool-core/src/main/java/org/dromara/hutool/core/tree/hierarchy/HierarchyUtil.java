@@ -35,11 +35,11 @@ import java.util.function.Predicate;
  * Node root = Tree.build();
  * // 从树结构中通过深度优先查找某个节点
  * Node target = HierarchyUtil.traverseByDepthFirst(
- * 	root, HierarchyUtil.finder(Node::getChildren, node -> Objects.equals(node.getId(), "target") ? node : null)
+ * 	root, HierarchyIteratorUtil.find(Node::getChildren, node -> Objects.equals(node.getId(), "target") ? node : null)
  * );
  * // 从树结构中通过广度优先获取其所有的子节点
  * List<Node> nodes = HierarchyUtil.traverseByBreadthFirst(
- * 	root, HierarchyUtil.collector(Node::getChildren)
+ * 	root, HierarchyIteratorUtil.collect(Node::getChildren)
  * );
  * }</pre>
  *
@@ -123,17 +123,15 @@ public class HierarchyUtil {
 		Objects.requireNonNull(hierarchyIterator);
 
 		// 遍历层级结构
-		final Predicate<? super H> hierarchyFilter = filter.negate();
 		final LinkedList<H> queue = new LinkedList<>();
 		final Set<H> accessed = new HashSet<>();
 		queue.add(hierarchy);
 		while (!queue.isEmpty()) {
 			// 跳过已经访问过或者被过滤的层级结构
 			final H curr = queue.removeFirst();
-			if (accessed.contains(curr) || hierarchyFilter.test(curr)) {
+			if (!accessed.add(curr) || !filter.test(curr)) {
 				continue;
 			}
-			accessed.add(curr);
 
 			// 若迭代器返回true，则结束遍历
 			if (hierarchyIterator.isBreak(curr)) {
