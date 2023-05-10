@@ -365,7 +365,7 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @return 掩码位，例如 24
 	 * @throws IllegalArgumentException 子网掩码非法
 	 */
-	public static Integer getMaskBitByMask(final String mask) {
+	public static int getMaskBitByMask(final String mask) {
 		final Integer maskBit = MaskBit.getMaskBit(mask);
 		Assert.notNull(maskBit, "Invalid netmask：{}", mask);
 		return maskBit;
