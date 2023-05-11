@@ -2,12 +2,13 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.19.M1 (2023-05-09)
+# 5.8.19.M1 (2023-05-11)
 
 ### 🐣新特性
 * 【db    】      优化HttpRequest.toString()内容打印（issue#3072@Github）
 * 【poi   】      优化Sax方式读取时空白行返回0，修改为返回-1（issue#I6WYF6@Gitee）
 * 【db    】      优化count查询兼容informix（issue#I713XQ@Gitee）
+* 【core  】      去除Opt头部的GPL协议头（pr#995@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
