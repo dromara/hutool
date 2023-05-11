@@ -156,8 +156,7 @@ public class BeanDesc implements Serializable {
 		PropDesc prop;
 		for (final Field field : FieldUtil.getFields(this.beanClass)) {
 			// 排除静态属性和对象子类
-			if (!ModifierUtil.isStatic(field) &&
-				!FieldUtil.isOuterClassField(field)) {
+			if (!ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field)) {
 				prop = createProp(field, gettersAndSetters);
 				// 只有不存在时才放入，防止父类属性覆盖子类属性
 				this.propMap.putIfAbsent(prop.getFieldName(), prop);
