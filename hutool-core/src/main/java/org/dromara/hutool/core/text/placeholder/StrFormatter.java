@@ -13,8 +13,11 @@
 package org.dromara.hutool.core.text.placeholder;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.placeholder.template.NamedPlaceholderStrTemplate;
+import org.dromara.hutool.core.text.placeholder.template.SinglePlaceholderStrTemplate;
 
 import java.util.Map;
 
@@ -24,6 +27,7 @@ import java.util.Map;
  * @author Looly
  */
 public class StrFormatter {
+	private static final WeakConcurrentMap<Map.Entry<CharSequence, Object>, StrTemplate> CACHE = new WeakConcurrentMap<>();
 
 	/**
 	 * 格式化字符串<br>
@@ -61,9 +65,8 @@ public class StrFormatter {
 		if (StrUtil.isBlank(strPattern) || StrUtil.isBlank(placeHolder) || ArrayUtil.isEmpty(argArray)) {
 			return strPattern;
 		}
-		return StrTemplate.of(strPattern)
-				.placeholder(placeHolder)
-				.build()
+		return ((SinglePlaceholderStrTemplate) CACHE.computeIfAbsent(MutableEntry.of(strPattern, placeHolder), k ->
+				StrTemplate.of(strPattern).placeholder(placeHolder).build()))
 				.format(argArray);
 	}
 
@@ -85,12 +88,21 @@ public class StrFormatter {
 			return template.toString();
 		}
 
-		final NamedPlaceholderStrTemplate.Builder builder = StrTemplate.ofNamed(template.toString());
-		if (ignoreNull) {
-			builder.addFeatures(StrTemplate.Feature.FORMAT_NULL_VALUE_TO_WHOLE_PLACEHOLDER);
-		} else {
-			builder.addFeatures(StrTemplate.Feature.FORMAT_NULL_VALUE_TO_EMPTY);
-		}
-		return builder.build().format(map);
+		return ((NamedPlaceholderStrTemplate) CACHE.computeIfAbsent(MutableEntry.of(template, ignoreNull), k -> {
+			final NamedPlaceholderStrTemplate.Builder builder = StrTemplate.ofNamed(template.toString());
+			if (ignoreNull) {
+				builder.addFeatures(StrTemplate.Feature.FORMAT_NULL_VALUE_TO_WHOLE_PLACEHOLDER);
+			} else {
+				builder.addFeatures(StrTemplate.Feature.FORMAT_NULL_VALUE_TO_EMPTY);
+			}
+			return builder.build();
+		})).format(map);
+	}
+
+	/**
+	 * 清空缓存
+	 */
+	public static void clear() {
+		CACHE.clear();
 	}
 }

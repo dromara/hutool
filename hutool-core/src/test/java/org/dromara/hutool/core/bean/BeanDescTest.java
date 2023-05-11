@@ -55,6 +55,14 @@ public class BeanDescTest {
 	}
 
 	@Test
+	public void propDescOfBooleanTest3() {
+		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+
+		Assertions.assertEquals("setLastPage", desc.getSetter("lastPage").getName());
+		Assertions.assertEquals("setIsLastPage", desc.getSetter("isLastPage").getName());
+	}
+
+	@Test
 	public void getSetTest() {
 		final BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 
@@ -72,6 +80,8 @@ public class BeanDescTest {
 		private boolean isAdmin;
 		private boolean isSuper;
 		private boolean gender;
+		private Boolean lastPage;
+		private Boolean isLastPage;
 
 		public String getName() {
 			return name;
@@ -116,6 +126,22 @@ public class BeanDescTest {
 
 		public void setGender(final boolean gender) {
 			this.gender = gender;
+		}
+
+		public Boolean getIsLastPage() {
+			return this.isLastPage;
+		}
+
+		public void setIsLastPage(final Boolean isLastPage) {
+			this.isLastPage = isLastPage;
+		}
+
+		public Boolean getLastPage() {
+			return this.lastPage;
+		}
+
+		public void setLastPage(final Boolean lastPage) {
+			this.lastPage = lastPage;
 		}
 
 		@Override
