@@ -431,6 +431,10 @@ public class FileUtilTest {
 		// pr#2617@Github
 		mimeType = FileUtil.getMimeType("test.wgt");
 		Assertions.assertEquals("application/widget", mimeType);
+
+		// issue#3092
+		mimeType = FileUtil.getMimeType("https://xxx.oss-cn-hangzhou.aliyuncs.com/xxx.webp");
+		Assertions.assertEquals("image/webp", mimeType);
 	}
 
 	@Test
