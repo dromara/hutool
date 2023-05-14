@@ -2695,6 +2695,8 @@ public class FileUtil extends PathUtil {
 			return "application/x-7z-compressed";
 		} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
 			return "application/widget";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".webp")) {
+			return "image/webp";
 		}
 
 		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
