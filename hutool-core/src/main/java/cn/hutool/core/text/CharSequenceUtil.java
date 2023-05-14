@@ -4158,6 +4158,58 @@ public class CharSequenceUtil {
 	}
 
 	/**
+	 * 给定字符串全部转小写，null 返回 null。
+	 *
+	 * <pre>
+	 * StrUtil.lowerCase(null)                 = null
+	 * StrUtil.lowerCase("")                   = ""
+	 * StrUtil.lowerCase("The dog has a BONE") = "the dog has a bone"
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @return 转为小写后的字符串
+	 * @since 5.8.19
+	 */
+	public static String lowerCase(final String str) {
+		if (isEmpty(str)) {
+			return str;
+		}
+
+		final char[] buffer = str.toCharArray();
+		for (int i = 0; i < buffer.length; i++) {
+			final char ch = buffer[i];
+			buffer[i] = Character.toLowerCase(ch);
+		}
+		return new String(buffer);
+    }
+	
+	/**
+	 * 给定字符串全部转大写，null 返回 null。
+	 *
+	 * <pre>
+	 * StrUtil.lowerCase(null)                 = null
+	 * StrUtil.lowerCase("")                   = ""
+	 * StrUtil.lowerCase("The dog has a BONE") = "THE DOG HAS A BONE"
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @return 转为大写后的字符串
+	 * @since 5.8.19
+	 */
+	public static String upperCase(final String str) {
+		if (isEmpty(str)) {
+			return str;
+		}
+
+		final char[] buffer = str.toCharArray();
+		for (int i = 0; i < buffer.length; i++) {
+			final char ch = buffer[i];
+			buffer[i] = Character.toUpperCase(ch);
+		}
+		return new String(buffer);
+    }
+	
+	/**
 	 * 切换给定字符串中的大小写。大写转小写，小写转大写。
 	 *
 	 * <pre>
