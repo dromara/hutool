@@ -258,6 +258,20 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void lowerCaseTest() {
+		final StringBuilder sb = new StringBuilder("the dog has a bone");
+		final String s = StrUtil.lowerCase("The dog has a BONE");
+		Assert.assertEquals(s, sb.toString());
+	}
+	
+	@Test
+	public void upperCaseTest() {
+		final StringBuilder sb = new StringBuilder("THE DOG HAS A BONE");
+		final String s = StrUtil.upperCase("The dog has a BONE");
+		Assert.assertEquals(s, sb.toString());
+	}
+		
+	@Test
 	public void upperFirstTest() {
 		final StringBuilder sb = new StringBuilder("KEY");
 		final String s = StrUtil.upperFirst(sb);
