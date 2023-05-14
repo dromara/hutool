@@ -31,10 +31,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 邮件工具类，基于javax.mail封装
+ * 邮件工具类，基于jakarta.mail封装
  *
  * @author looly
- * @since 3.1.2
+ * @since 6.0.0
  */
 public class MailUtil {
 	/**
@@ -387,7 +387,7 @@ public class MailUtil {
 		}
 
 		return isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
-				: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
+			: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------ Private method start
