@@ -3483,23 +3483,27 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
-		if (null == contentType) {
-			// 补充一些常用的mimeType
-			if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
-				contentType = "text/css";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
-				contentType = "application/x-javascript";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
-				contentType = "application/x-rar-compressed";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
-				contentType = "application/x-7z-compressed";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
-				contentType = "application/widget";
-			}
+		if(StrUtil.isBlank(filePath)){
+			return null;
 		}
 
-		// 补充
+		// 补充一些常用的mimeType
+		if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
+			return "text/css";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
+			return "application/x-javascript";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
+			return "application/x-rar-compressed";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
+			return "application/x-7z-compressed";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
+			return "application/widget";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".webp")) {
+			// JDK8不支持
+			return "image/webp";
+		}
+
+		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
 		if (null == contentType) {
 			contentType = getMimeType(Paths.get(filePath));
 		}

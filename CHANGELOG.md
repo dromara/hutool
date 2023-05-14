@@ -10,6 +10,7 @@
 * 【db    】      优化count查询兼容informix（issue#I713XQ@Gitee）
 * 【core  】      去除Opt头部的GPL协议头（pr#995@Gitee）
 * 【core  】      邮箱校验添加对中文的支持（pr#997@Gitee）
+* 【core  】      FileUtil.getMimeType增加webp识别（pr#997@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
