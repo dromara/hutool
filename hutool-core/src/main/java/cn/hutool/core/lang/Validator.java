@@ -55,6 +55,12 @@ public class Validator {
 	 * 邮件
 	 */
 	public final static Pattern EMAIL = PatternPool.EMAIL;
+
+	/**
+	 * 邮件（包含中文）
+	 */
+	public final static Pattern EMAIL_WITH_CHINESE = PatternPool.EMAIL_WITH_CHINESE;
+
 	/**
 	 * 移动电话
 	 */
@@ -683,6 +689,21 @@ public class Validator {
 	public static boolean isEmail(CharSequence value) {
 		return isMatchRegex(EMAIL, value);
 	}
+
+	/**
+	 * 验证是否为可用邮箱地址（兼容中文邮箱地址）
+	 *
+	 * @param value 值
+	 * @param includChinese 包含中文标识
+	 * @return true为可用邮箱地址
+	 */
+	public static boolean isEmail(CharSequence value,boolean includChinese) {
+		if (includChinese){
+			return isMatchRegex(EMAIL_WITH_CHINESE, value);
+		}
+		return isEmail(value);
+	}
+
 
 	/**
 	 * 验证是否为可用邮箱地址

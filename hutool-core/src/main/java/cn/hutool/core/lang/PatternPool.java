@@ -54,6 +54,11 @@ public class PatternPool {
 	 * 注意email 要宽松一点。比如 jetz.chong@hutool.cn、jetz-chong@ hutool.cn、jetz_chong@hutool.cn、dazhi.duan@hutool.cn 宽松一点把，都算是正常的邮箱
 	 */
 	public final static Pattern EMAIL = Pattern.compile(RegexPool.EMAIL, Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * 规则同EMAIL，添加了对中文的支持
+	 */
+	public final static Pattern EMAIL_WITH_CHINESE = Pattern.compile(RegexPool.EMAIL_WITH_CHINESE,Pattern.CASE_INSENSITIVE);
 	/**
 	 * 移动电话
 	 */

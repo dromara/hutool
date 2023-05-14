@@ -113,6 +113,8 @@ public class ValidatorTest {
 		Assert.assertTrue(email3);
 		boolean email4 = Validator.isEmail("xiaolei.Lu@aaa.b");
 		Assert.assertTrue(email4);
+		boolean email5 = Validator.isEmail("luxiaolei_路小磊@路小磊.com",true);
+		Assert.assertTrue(email5);
 	}
 
 	@Test
