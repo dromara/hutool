@@ -57,7 +57,6 @@ public class ZipStreamResource implements ZipResource {
 	@Override
 	public InputStream get(final String path) {
 		try {
-			this.in.reset();
 			ZipEntry zipEntry;
 			while (null != (zipEntry = in.getNextEntry())) {
 				if (zipEntry.getName().equals(path)) {
