@@ -109,7 +109,6 @@ public class ZipReader implements Closeable {
 			}
 		} else {
 			try {
-				this.in.reset();
 				ZipEntry zipEntry;
 				while (null != (zipEntry = in.getNextEntry())) {
 					if (zipEntry.getName().equals(path)) {
