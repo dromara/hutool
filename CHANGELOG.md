@@ -9,6 +9,7 @@
 * 【poi   】      优化Sax方式读取时空白行返回0，修改为返回-1（issue#I6WYF6@Gitee）
 * 【db    】      优化count查询兼容informix（issue#I713XQ@Gitee）
 * 【core  】      去除Opt头部的GPL协议头（pr#995@Gitee）
+* 【core  】      邮箱校验添加对中文的支持（pr#997@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
