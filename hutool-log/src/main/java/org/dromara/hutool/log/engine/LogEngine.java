@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.log.engine;
 
+import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.log.Log;
 
 /**
@@ -44,4 +45,26 @@ public interface LogEngine {
 	 * @return 日志对象
 	 */
 	Log createLog(Class<?> clazz);
+
+	/**
+	 * 获得日志对象（单例）
+	 *
+	 * @param name 日志对象名
+	 * @return 日志对象
+	 */
+	default Log getLog(final String name) {
+		// 将引擎名称和日期名称关联，以便在引擎更换后重新获取引擎。
+		return Singleton.get(getName() + name, () -> createLog(name));
+	}
+
+	/**
+	 * 获得日志对象（单例）
+	 *
+	 * @param clazz 日志对应类
+	 * @return 日志对象
+	 */
+	default Log getLog(final Class<?> clazz) {
+		// 将引擎名称和日期名称关联，以便在引擎更换后重新获取引擎。
+		return Singleton.get(getName() + clazz.getName(), () -> createLog(clazz));
+	}
 }

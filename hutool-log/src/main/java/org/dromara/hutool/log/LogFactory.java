@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.log;
 
-import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.log.engine.LogEngineFactory;
 
 /**
@@ -29,7 +28,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public static Log getLog(final String name) {
-		return Singleton.get(name, () -> LogEngineFactory.getEngine().createLog(name));
+		return LogEngineFactory.getEngine().getLog(name);
 	}
 
 	/**
@@ -39,6 +38,6 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public static Log getLog(final Class<?> clazz) {
-		return Singleton.get(clazz.getName(), () -> LogEngineFactory.getEngine().createLog(clazz));
+		return LogEngineFactory.getEngine().getLog(clazz);
 	}
 }

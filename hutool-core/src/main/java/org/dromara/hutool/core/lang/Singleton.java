@@ -12,12 +12,11 @@
 
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.classloader.ClassLoaderUtil;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -64,21 +63,6 @@ public final class Singleton {
 	@SuppressWarnings("unchecked")
 	public static <T> T get(final String key, final SerSupplier<T> supplier) {
 		return (T) POOL.computeIfAbsent(key, (k)-> supplier.get());
-	}
-
-	/**
-	 * 获得指定类的单例对象<br>
-	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
-	 *
-	 * @param <T>       单例对象类型
-	 * @param className 类名
-	 * @param params    构造参数
-	 * @return 单例对象
-	 */
-	public static <T> T get(final String className, final Object... params) {
-		Assert.notBlank(className, "Class name must be not blank !");
-		final Class<T> clazz = ClassLoaderUtil.loadClass(className);
-		return get(clazz, params);
 	}
 
 	/**

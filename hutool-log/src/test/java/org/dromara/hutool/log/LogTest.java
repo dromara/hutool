@@ -39,4 +39,9 @@ public class LogTest {
 		log.info(null);
 		log.warn(null);
 	}
+
+	@Test
+	void getLogByClassTest() {
+		Log.get(LogTest.class);
+	}
 }
