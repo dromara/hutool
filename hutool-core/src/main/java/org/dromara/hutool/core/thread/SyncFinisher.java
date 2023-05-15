@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.lang.Console;
 
 import java.io.Closeable;
 import java.util.LinkedHashSet;
@@ -54,6 +55,11 @@ public class SyncFinisher implements Closeable {
 	private CountDownLatch endLatch;
 
 	/**
+	 * 异常处理
+	 */
+	private Thread.UncaughtExceptionHandler exceptionHandler;
+
+	/**
 	 * 构造
 	 *
 	 * @param threadSize 线程数
@@ -72,6 +78,17 @@ public class SyncFinisher implements Closeable {
 	 */
 	public SyncFinisher setBeginAtSameTime(final boolean isBeginAtSameTime) {
 		this.isBeginAtSameTime = isBeginAtSameTime;
+		return this;
+	}
+
+	/**
+	 * 设置异常处理
+	 *
+	 * @param exceptionHandler 异常处理器
+	 * @return this
+	 */
+	public SyncFinisher setExceptionHandler(final Thread.UncaughtExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
 		return this;
 	}
 
@@ -139,10 +156,11 @@ public class SyncFinisher implements Closeable {
 		endLatch = new CountDownLatch(workers.size());
 
 		if (null == this.executorService || this.executorService.isShutdown()) {
-			this.executorService = ThreadUtil.newExecutor(threadSize);
+			this.executorService = buildExecutor();
 		}
 		for (final Worker worker : workers) {
-			executorService.submit(worker);
+			//executorService.submit(worker);
+			executorService.execute(worker);
 		}
 		// 保证所有worker同时开始
 		this.beginLatch.countDown();
@@ -240,5 +258,17 @@ public class SyncFinisher implements Closeable {
 		 * 任务内容
 		 */
 		public abstract void work();
+	}
+
+	/**
+	 * 构建线程池，加入了自定义的异常处理
+	 *
+	 * @return {@link ExecutorService}
+	 */
+	private ExecutorService buildExecutor() {
+		return ExecutorBuilder.of()
+			.setCorePoolSize(threadSize)
+			.setThreadFactory(new NamedThreadFactory("hutool-", null, false, exceptionHandler))
+			.build();
 	}
 }
