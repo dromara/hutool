@@ -2,7 +2,7 @@ package org.dromara.hutool.db;
 
 import org.dromara.hutool.db.handler.EntityListHandler;
 import org.dromara.hutool.db.sql.Condition;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -119,7 +119,7 @@ public class DbTest {
 				Condition.parse("age", "< 100")
 		);
 		for (final Entity entity : find) {
-			StaticLog.debug("{}", entity);
+			LogUtil.debug("{}", entity);
 		}
 		Assertions.assertEquals("unitTestUser", find.get(0).get("name"));
 	}

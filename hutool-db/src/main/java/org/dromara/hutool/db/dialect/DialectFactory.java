@@ -24,7 +24,7 @@ import org.dromara.hutool.db.dialect.impl.PhoenixDialect;
 import org.dromara.hutool.db.dialect.impl.PostgresqlDialect;
 import org.dromara.hutool.db.dialect.impl.SqlServer2012Dialect;
 import org.dromara.hutool.db.dialect.impl.Sqlite3Dialect;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -51,7 +51,7 @@ public class DialectFactory implements DriverNamePool {
 	 */
 	public static Dialect newDialect(final String driverName) {
 		final Dialect dialect = internalNewDialect(driverName);
-		StaticLog.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
+		LogUtil.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		return dialect;
 	}
 

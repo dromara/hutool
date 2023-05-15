@@ -16,7 +16,7 @@ import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.pinyin.PinyinException;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 简单拼音引擎工厂，用于根据用户引入的拼音库jar，自动创建对应的拼音引擎对象<br>
@@ -43,7 +43,7 @@ public class PinyinEngineFactory {
 	 */
 	public static PinyinEngine createEngine() {
 		final PinyinEngine engine = doCreateEngine();
-		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 

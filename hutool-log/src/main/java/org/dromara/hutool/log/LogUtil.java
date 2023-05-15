@@ -21,8 +21,8 @@ import org.dromara.hutool.log.level.Level;
  *
  * @author Looly
  */
-public class StaticLog {
-	private static final String FQCN = StaticLog.class.getName();
+public class LogUtil {
+	private static final String FQCN = LogUtil.class.getName();
 
 	// ----------------------------------------------------------- Log method start
 	// ------------------------ Trace

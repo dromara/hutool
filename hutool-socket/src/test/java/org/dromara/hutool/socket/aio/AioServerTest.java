@@ -4,7 +4,7 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.io.buffer.BufferUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import java.nio.ByteBuffer;
 
@@ -17,7 +17,7 @@ public class AioServerTest {
 
 			@Override
 			public void accept(final AioSession session) {
-				StaticLog.debug("【客户端】：{} 连接。", session.getRemoteAddress());
+				LogUtil.debug("【客户端】：{} 连接。", session.getRemoteAddress());
 				session.write(BufferUtil.ofUtf8("=== Welcome to Hutool socket server. ==="));
 			}
 

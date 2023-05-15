@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds;
 
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.RuntimeUtil;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 全局单例数据源工厂<br>
@@ -36,7 +36,7 @@ public class GlobalDSFactory {
 		RuntimeUtil.addShutdownHook(()->{
 			if (null != factory) {
 				IoUtil.closeQuietly(factory);
-				StaticLog.debug("DataSource: [{}] closed.", factory.getDataSourceName());
+				LogUtil.debug("DataSource: [{}] closed.", factory.getDataSourceName());
 				factory = null;
 			}
 		});
@@ -83,7 +83,7 @@ public class GlobalDSFactory {
 				IoUtil.closeQuietly(factory);
 			}
 
-			StaticLog.debug("Custom use [{}] DataSource.", customDSFactory.getDataSourceName());
+			LogUtil.debug("Custom use [{}] DataSource.", customDSFactory.getDataSourceName());
 			factory = customDSFactory;
 		}
 		return factory;

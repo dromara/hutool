@@ -24,7 +24,7 @@ import org.dromara.hutool.cron.pattern.CronPattern;
 import org.dromara.hutool.cron.task.InvokeTask;
 import org.dromara.hutool.cron.task.RunnableTask;
 import org.dromara.hutool.cron.task.Task;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 import org.dromara.hutool.setting.Setting;
 
 import java.io.Serializable;
@@ -221,7 +221,7 @@ public class Scheduler implements Serializable {
 						jobClass = group + CharUtil.DOT + jobClass;
 					}
 					final String pattern = entry.getValue();
-					StaticLog.debug("Load job: {} {}", pattern, jobClass);
+					LogUtil.debug("Load job: {} {}", pattern, jobClass);
 					try {
 						// issue#I5E7BM@Gitee，自定义ID避免重复从配置文件加载
 						schedule("id_" + jobClass, pattern, new InvokeTask(jobClass));

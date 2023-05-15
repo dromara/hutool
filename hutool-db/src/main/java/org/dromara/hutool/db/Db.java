@@ -17,7 +17,7 @@ import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectFactory;
 import org.dromara.hutool.db.ds.DSUtil;
 import org.dromara.hutool.db.transaction.TransactionLevel;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -190,7 +190,7 @@ public class Db extends AbstractDb<Db> {
 			try {
 				conn.rollback();
 			} catch (final Exception e) {
-				StaticLog.error(e);
+				LogUtil.error(e);
 			}
 		}
 	}
@@ -206,7 +206,7 @@ public class Db extends AbstractDb<Db> {
 			try {
 				conn.setAutoCommit(autoCommit);
 			} catch (final Exception e) {
-				StaticLog.error(e);
+				LogUtil.error(e);
 			}
 		}
 	}

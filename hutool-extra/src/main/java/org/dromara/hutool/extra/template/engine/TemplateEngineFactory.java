@@ -18,7 +18,7 @@ import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateException;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 简单模板引擎工厂，用于根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
@@ -58,7 +58,7 @@ public class TemplateEngineFactory {
 	 */
 	public static TemplateEngine createEngine(final TemplateConfig config) {
 		final TemplateEngine engine = doCreateEngine(config);
-		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 

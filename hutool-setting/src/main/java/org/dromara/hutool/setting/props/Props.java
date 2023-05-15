@@ -33,7 +33,7 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -360,7 +360,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 				BeanUtil.setProperty(bean, StrUtil.subSuf(key, prefix.length()), entry.getValue());
 			} catch (final Exception e) {
 				// 忽略注入失败的字段（这些字段可能用于其它配置）
-				StaticLog.debug("Ignore property: [{}],because of: {}", key, e);
+				LogUtil.debug("Ignore property: [{}],because of: {}", key, e);
 			}
 		}
 

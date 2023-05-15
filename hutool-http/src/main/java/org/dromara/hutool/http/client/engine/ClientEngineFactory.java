@@ -17,7 +17,7 @@ import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * Http客户端引擎工厂类
@@ -56,7 +56,7 @@ public class ClientEngineFactory {
 	 */
 	public static ClientEngine createEngine() {
 		final ClientEngine engine = doCreateEngine();
-		StaticLog.debug("Use [{}] Http Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		LogUtil.debug("Use [{}] Http Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 

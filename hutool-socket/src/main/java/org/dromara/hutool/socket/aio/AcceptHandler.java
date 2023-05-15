@@ -16,7 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 接入完成回调，单例使用
@@ -43,7 +43,7 @@ public class AcceptHandler implements CompletionHandler<AsynchronousSocketChanne
 
 	@Override
 	public void failed(final Throwable exc, final AioServer aioServer) {
-		StaticLog.error(exc);
+		LogUtil.error(exc);
 	}
 
 }

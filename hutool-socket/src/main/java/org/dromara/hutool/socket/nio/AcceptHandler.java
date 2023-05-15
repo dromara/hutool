@@ -13,7 +13,7 @@
 package org.dromara.hutool.socket.nio;
 
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import java.io.IOException;
 import java.nio.channels.CompletionHandler;
@@ -33,7 +33,7 @@ public class AcceptHandler implements CompletionHandler<ServerSocketChannel, Nio
 		try {
 			// 获取连接到此服务器的客户端通道
 			socketChannel = serverSocketChannel.accept();
-			StaticLog.debug("Client [{}] accepted.", socketChannel.getRemoteAddress());
+			LogUtil.debug("Client [{}] accepted.", socketChannel.getRemoteAddress());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -44,7 +44,7 @@ public class AcceptHandler implements CompletionHandler<ServerSocketChannel, Nio
 
 	@Override
 	public void failed(final Throwable exc, final NioServer nioServer) {
-		StaticLog.error(exc);
+		LogUtil.error(exc);
 	}
 
 }

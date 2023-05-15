@@ -27,7 +27,7 @@ import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 import org.dromara.hutool.setting.props.Props;
 
 import java.io.File;
@@ -232,7 +232,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 				}
 			});
 			this.watchMonitor.start();
-			StaticLog.debug("Auto load for [{}] listenning...", this.resource.getUrl());
+			LogUtil.debug("Auto load for [{}] listenning...", this.resource.getUrl());
 		} else {
 			IoUtil.closeQuietly(this.watchMonitor);
 			this.watchMonitor = null;
@@ -273,7 +273,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public Object getObjByGroup(final CharSequence key, final CharSequence group, final Object defaultValue) {
 		final String result = this.groupedMap.get(group, key);
 		if (result == null && logIfNull) {
-			StaticLog.debug("No key [{}] in group [{}] !", key, group);
+			LogUtil.debug("No key [{}] in group [{}] !", key, group);
 		}
 		return result;
 	}

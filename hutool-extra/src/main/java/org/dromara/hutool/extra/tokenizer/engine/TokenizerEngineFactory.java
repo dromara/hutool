@@ -16,7 +16,7 @@ import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.TokenizerException;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 简单分词引擎工厂，用于根据用户引入的分词引擎jar，自动创建对应的引擎
@@ -42,7 +42,7 @@ public class TokenizerEngineFactory {
 	 */
 	public static TokenizerEngine createEngine() {
 		final TokenizerEngine engine = doCreateEngine();
-		StaticLog.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		LogUtil.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 

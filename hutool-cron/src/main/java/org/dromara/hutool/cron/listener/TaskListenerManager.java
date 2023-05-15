@@ -13,7 +13,7 @@
 package org.dromara.hutool.cron.listener;
 
 import org.dromara.hutool.cron.TaskExecutor;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class TaskListenerManager implements Serializable {
 					listener.onFailed(executor, exception);
 				}
 			}else{
-				StaticLog.error(exception, exception.getMessage());
+				LogUtil.error(exception, exception.getMessage());
 			}
 		}
 	}

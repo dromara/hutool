@@ -62,7 +62,7 @@ import java.util.function.Supplier;
  *     <li>去除两边的指定所有字符：trim</li>
  *     <li>去除两边的指定所有字符包装和去除包装：wrap</li>
  * </ul>
- *
+ * <p>
  * 需要注意的是，strip、trim、wrap（unWrap）的策略不同：
  * <ul>
  *     <li>strip： 强调去除两边或某一边的指定字符串，这个字符串不会重复去除，如果一边不存在，另一边不影响去除</li>
@@ -1538,12 +1538,22 @@ public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 截取字符串,从指定位置开始,截取指定长度的字符串<br>
-	 * author weibaohui
+	 * 当fromIndex为正数时，这个index指的是插空位置，如下：
+	 * <pre>
+	 *     0   1   2   3   4
+	 *       A   B   C   D
+	 * </pre>
+	 * 当fromIndex为负数时，为反向插空位置，其中-1表示最后一个字符之前的位置：
+	 * <pre>
+	 *       -3   -2   -1   length
+	 *     A    B    C    D
+	 * </pre>
 	 *
 	 * @param input     原始字符串
-	 * @param fromIndex 开始的index,包括
+	 * @param fromIndex 开始的index,包括，可以为负数
 	 * @param length    要截取的长度
 	 * @return 截取后的字符串
+	 * author weibaohui
 	 */
 	public static String subByLength(final String input, final int fromIndex, final int length) {
 		if (isEmpty(input)) {

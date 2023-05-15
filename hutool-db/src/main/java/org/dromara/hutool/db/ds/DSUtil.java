@@ -16,7 +16,7 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.spi.ListServiceLoader;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.GlobalDbConfig;
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 import org.dromara.hutool.setting.Setting;
 
 import javax.naming.InitialContext;
@@ -42,7 +42,7 @@ public class DSUtil {
 		try {
 			return getJndiDS(jndiName);
 		} catch (final DbRuntimeException e) {
-			StaticLog.error(e.getCause(), "Find JNDI datasource error!");
+			LogUtil.error(e.getCause(), "Find JNDI datasource error!");
 		}
 		return null;
 	}
@@ -108,7 +108,7 @@ public class DSUtil {
 	 */
 	public static DSFactory createFactory(final Setting setting) {
 		final DSFactory dsFactory = _createFactory(setting);
-		StaticLog.debug("Use [{}] DataSource As Default.", dsFactory.getDataSourceName());
+		LogUtil.debug("Use [{}] DataSource As Default.", dsFactory.getDataSourceName());
 		return dsFactory;
 	}
 

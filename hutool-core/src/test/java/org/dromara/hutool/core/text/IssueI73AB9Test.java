@@ -10,27 +10,23 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.socket.aio;
+package org.dromara.hutool.core.text;
 
-import java.nio.ByteBuffer;
+import org.dromara.hutool.core.lang.Console;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.dromara.hutool.log.LogUtil;
+public class IssueI73AB9Test {
 
-/**
- * 简易IO信息处理类<br>
- * 简单实现了accept和failed事件
- *
- * @author looly
- *
- */
-public abstract class SimpleIoAction implements IoAction<ByteBuffer> {
-
-	@Override
-	public void accept(final AioSession session) {
-	}
-
-	@Override
-	public void failed(final Throwable exc, final AioSession session) {
-		LogUtil.error(exc);
+	/**
+	 * https://gitee.com/dromara/hutool/issues/I73AB9
+	 */
+	@Test
+	void subWithLengthTest() {
+		final String str = "7814A103447E";
+		String s = StrUtil.subByLength(str, -4, 2);
+		Assertions.assertEquals("03", s);
+		s = StrUtil.subByLength(str, -2, 2);
+		Assertions.assertEquals("44", s);
 	}
 }

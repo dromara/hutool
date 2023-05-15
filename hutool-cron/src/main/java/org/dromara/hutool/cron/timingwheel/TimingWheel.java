@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.cron.timingwheel;
 
-import org.dromara.hutool.log.StaticLog;
+import org.dromara.hutool.log.LogUtil;
 
 import java.util.function.Consumer;
 
@@ -108,7 +108,7 @@ public class TimingWheel {
 			//当前时间轮可以容纳该任务 加入时间槽
 			final long virtualId = expiration / tickMs;
 			final int index = (int) (virtualId % wheelSize);
-			StaticLog.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
+			LogUtil.debug("tickMs: {} ------index: {} ------expiration: {}", tickMs, index, expiration);
 
 			final TimerTaskList timerTaskList = timerTaskLists[index];
 			timerTaskList.addTask(timerTask);
