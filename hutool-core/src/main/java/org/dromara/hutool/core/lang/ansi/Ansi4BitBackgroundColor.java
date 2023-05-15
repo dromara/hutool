@@ -111,7 +111,7 @@ public enum Ansi4BitBackgroundColor implements AnsiElement {
 
 	private final int code;
 
-	Ansi4BitBackgroundColor(int code) {
+	Ansi4BitBackgroundColor(final int code) {
 		this.code = code;
 	}
 
@@ -131,7 +131,7 @@ public enum Ansi4BitBackgroundColor implements AnsiElement {
 	 * @param isBackground 是否背景色
 	 * @return 颜色代码
 	 */
-	public int getCode(boolean isBackground) {
+	public int getCode(final boolean isBackground) {
 		return isBackground ? this.code : this.code - 10;
 	}
 
@@ -155,8 +155,8 @@ public enum Ansi4BitBackgroundColor implements AnsiElement {
 	 * @param code Ansi 4bit 颜色代码
 	 * @return Ansi4BitBackgroundColor
 	 */
-	public static Ansi4BitBackgroundColor of(int code) {
-		for (Ansi4BitBackgroundColor item : Ansi4BitBackgroundColor.values()) {
+	public static Ansi4BitBackgroundColor of(final int code) {
+		for (final Ansi4BitBackgroundColor item : Ansi4BitBackgroundColor.values()) {
 			if (item.getCode() == code) {
 				return item;
 			}
