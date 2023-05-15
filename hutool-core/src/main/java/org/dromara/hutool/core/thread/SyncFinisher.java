@@ -159,7 +159,6 @@ public class SyncFinisher implements Closeable {
 			this.executorService = buildExecutor();
 		}
 		for (final Worker worker : workers) {
-			//executorService.submit(worker);
 			executorService.execute(worker);
 		}
 		// 保证所有worker同时开始
