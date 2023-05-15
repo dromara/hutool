@@ -23,6 +23,7 @@ import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.regex.ReUtil;
@@ -890,22 +891,17 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File createTempFile(final String prefix, final String suffix, final File dir, final boolean isReCreat) throws IORuntimeException {
-		int exceptionsCount = 0;
-		while (true) {
-			try {
-				final File file = File.createTempFile(prefix, suffix, mkdir(dir)).getCanonicalFile();
-				if (isReCreat) {
-					//noinspection ResultOfMethodCallIgnored
-					file.delete();
-					//noinspection ResultOfMethodCallIgnored
-					file.createNewFile();
-				}
-				return file;
-			} catch (final IOException ioex) { // fixes java.io.WinNTFileSystem.createFileExclusively access denied
-				if (++exceptionsCount >= 50) {
-					throw new IORuntimeException(ioex);
-				}
+		try {
+			final File file = PathUtil.createTempFile(prefix, suffix, null == dir ? null : dir.toPath()).toFile().getCanonicalFile();
+			if (isReCreat) {
+				//noinspection ResultOfMethodCallIgnored
+				file.delete();
+				//noinspection ResultOfMethodCallIgnored
+				file.createNewFile();
 			}
+			return file;
+		} catch (final IOException e) { // fixes java.io.WinNTFileSystem.createFileExclusively access denied
+			throw new IORuntimeException(e);
 		}
 	}
 	// endregion
