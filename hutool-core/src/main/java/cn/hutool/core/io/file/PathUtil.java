@@ -669,6 +669,34 @@ public class PathUtil {
 	}
 
 	/**
+	 * 创建临时文件<br>
+	 * 创建后的文件名为 prefix[Random].suffix From com.jodd.io.FileUtil
+	 *
+	 * @param prefix    前缀，至少3个字符
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param dir       临时文件创建的所在目录
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 6.0.0
+	 */
+	public static Path createTempFile(final String prefix, final String suffix, final Path dir) throws IORuntimeException {
+		int exceptionsCount = 0;
+		while (true) {
+			try {
+				if(null == dir){
+					return Files.createTempFile(prefix, suffix);
+				}else{
+					return Files.createTempFile(mkdir(dir), prefix, suffix);
+				}
+			} catch (final IOException ioex) { // fixes java.io.WinNTFileSystem.createFileExclusively access denied
+				if (++exceptionsCount >= 50) {
+					throw new IORuntimeException(ioex);
+				}
+			}
+		}
+	}
+
+	/**
 	 * 删除文件或空目录，不追踪软链
 	 *
 	 * @param path 文件对象

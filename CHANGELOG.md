@@ -22,6 +22,7 @@
 * 【http  】      修复HttpDownloader.downloadFile 方法缺少static问题（issue#I6Z8VU@Gitee）
 * 【core  】      修复NumberUtil mul 传入null的string入参报错问题（issue#I70JB3@Gitee）
 * 【core  】      修复ZipReader.get调用reset异常问题（issue#3099@Github）
+* 【core  】      修复FileUtil.createTempFile可能导致的漏洞（issue#3103@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.18 (2023-04-27)
