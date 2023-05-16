@@ -95,7 +95,7 @@ public class StreamArchiver implements Archiver {
 			//issue#I5J33E，支持tgz格式解压
 			try {
 				this.out = new TarArchiveOutputStream(new GzipCompressorOutputStream(targetStream));
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
 			return;
@@ -150,6 +150,7 @@ public class StreamArchiver implements Archiver {
 		return this;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
 		try {
