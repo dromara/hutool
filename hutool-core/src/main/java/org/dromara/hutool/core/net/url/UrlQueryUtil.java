@@ -23,6 +23,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * URL中查询字符串部分的封装工具，类似于：
+ * <pre>
+ *   key1=v1&amp;key2=&amp;key3=v3
+ * </pre>
+ *
+ * @author looly
+ */
 public class UrlQueryUtil {
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式，会自动url编码键和值
