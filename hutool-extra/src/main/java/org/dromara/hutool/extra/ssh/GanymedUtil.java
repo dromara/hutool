@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Ganymed-SSH2封装，见：http://www.ganymed.ethz.ch/ssh2/
+ * Ganymed-SSH2封装，见：https://www.ganymed.ethz.ch/ssh2/
  *
  * @author looly
  * @since 5.5.3
