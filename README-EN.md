@@ -111,7 +111,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 [📘Chinese documentation](https://www.hutool.cn/docs/)
 
-[📘Chinese back-up documentation](https://plus.hutool.cn/docs/#/)
+[📘Chinese back-up documentation](https://plus.hutool.cn/)
 
 [📙API](https://apidoc.gitee.com/dromara/hutool/)
 
