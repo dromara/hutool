@@ -41,6 +41,10 @@ public class HttpGlobalConfig implements Serializable {
 	private static int maxRedirectCount = 0;
 	private static boolean ignoreEOFError = true;
 	private static boolean decodeUrl = false;
+	/**
+	 * 是否从响应正文中的meta标签获取编码信息
+	 */
+	private static boolean getCharsetFromContent = true;
 
 	/**
 	 * 获取全局默认的超时时长
@@ -186,5 +190,25 @@ public class HttpGlobalConfig implements Serializable {
 	 */
 	synchronized public static void closeCookie() {
 		GlobalCookieManager.setCookieManager(null);
+	}
+
+	/**
+	 * 设置是否从响应正文中的meta标签获取编码信息
+	 *
+	 * @param customGetCharsetFromContent 是否从响应正文中的meta标签获取编码信息
+	 * @since 6.0.0
+	 */
+	synchronized public static void setGetCharsetFromContent(final boolean customGetCharsetFromContent){
+		getCharsetFromContent = customGetCharsetFromContent;
+	}
+
+	/**
+	 * 是否从响应正文中的meta标签获取编码信息
+	 *
+	 * @return 是否从响应正文中的meta标签获取编码信息
+	 * @since 6.0.0
+	 */
+	public static boolean isGetCharsetFromContent(){
+		return getCharsetFromContent;
 	}
 }

@@ -76,7 +76,8 @@ public class JdkHttpResponse implements Response, Closeable {
 	 * @param isAsync        是否异步
 	 * @param isIgnoreBody   是否忽略读取响应体
 	 */
-	protected JdkHttpResponse(final JdkHttpConnection httpConnection, final boolean ignoreEOFError, final Charset requestCharset, final boolean isAsync, final boolean isIgnoreBody) {
+	protected JdkHttpResponse(final JdkHttpConnection httpConnection, final boolean ignoreEOFError,
+							  final Charset requestCharset, final boolean isAsync, final boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.ignoreEOFError = ignoreEOFError;
 		this.requestCharset = requestCharset;

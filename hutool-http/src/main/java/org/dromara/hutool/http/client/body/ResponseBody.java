@@ -22,6 +22,7 @@ import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.HttpGlobalConfig;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.html.HtmlUtil;
 import org.dromara.hutool.http.meta.HeaderName;
@@ -98,7 +99,7 @@ public class ResponseBody implements HttpBody, Closeable {
 	 * @return 响应字符串
 	 */
 	public String getString() {
-		return HtmlUtil.getString(getBytes(), response.charset(), true);
+		return HtmlUtil.getString(getBytes(), response.charset(), HttpGlobalConfig.isGetCharsetFromContent());
 	}
 
 	/**
