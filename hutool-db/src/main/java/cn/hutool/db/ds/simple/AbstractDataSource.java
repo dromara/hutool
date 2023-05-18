@@ -53,4 +53,13 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		throw new SQLFeatureNotSupportedException("DataSource can't support getParentLogger method!");
 	}
+
+	@Override
+	public AbstractDataSource clone() {
+		try {
+			return (AbstractDataSource) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
+	}
 }
