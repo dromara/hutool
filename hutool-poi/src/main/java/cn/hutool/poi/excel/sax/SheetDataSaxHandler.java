@@ -90,7 +90,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 			return;
 		}
 
-		if (false == this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -123,7 +123,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 			return;
 		}
 
-		if (false == this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -139,7 +139,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 
 	@Override
 	public void characters(char[] ch, int start, int length) {
-		if (false == this.isInSheetData) {
+		if (!this.isInSheetData) {
 			// 非sheetData标签，忽略解析
 			return;
 		}
@@ -239,7 +239,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 
 		final String contentStr = StrUtil.trim(lastContent);
 		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
-		if (false == this.lastFormula.isEmpty()) {
+		if (!this.lastFormula.isEmpty()) {
 			value = new FormulaCellValue(StrUtil.trim(lastFormula), value);
 		}
 		addCellValue(curCell++, value);
@@ -264,7 +264,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	 * @param isEnd         是否为最后一个单元格
 	 */
 	private void fillBlankCell(String preCoordinate, String curCoordinate, boolean isEnd) {
-		if (false == curCoordinate.equals(preCoordinate)) {
+		if (!curCoordinate.equals(preCoordinate)) {
 			int len = ExcelSaxUtil.countNullCell(preCoordinate, curCoordinate);
 			if (isEnd) {
 				len++;

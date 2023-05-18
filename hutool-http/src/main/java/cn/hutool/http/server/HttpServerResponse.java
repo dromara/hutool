@@ -349,7 +349,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(InputStream in, int length) {
-		if (false == isSendCode) {
+		if (!isSendCode) {
 			sendOk(Math.max(0, length));
 		}
 		OutputStream out = null;
@@ -427,7 +427,7 @@ public class HttpServerResponse extends HttpServerBase {
 	public HttpServerResponse write(InputStream in, int length, String contentType, String fileName) {
 		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 
-		if (false == contentType.startsWith("text/")) {
+		if (!contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
 			setHeader(Header.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
 		}
