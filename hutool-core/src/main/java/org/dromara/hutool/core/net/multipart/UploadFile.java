@@ -96,7 +96,7 @@ public class UploadFile {
 	public File write(File destination) throws IOException {
 		assertValid();
 
-		if (destination.isDirectory() == true) {
+		if (destination.isDirectory()) {
 			destination = new File(destination, this.header.getFileName());
 		}
 		if (data != null) {
