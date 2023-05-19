@@ -25,6 +25,7 @@
 * 【core  】      修复ZipReader.get调用reset异常问题（issue#3099@Github）
 * 【core  】      修复FileUtil.createTempFile可能导致的漏洞（issue#3103@Github）
 * 【cron  】      修复SystemTimer无法结束进程问题（issue#3090@Github）
+* 【core  】      修复BeanUtil.copyToList复制Long等类型错误问题（issue#3091@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.18 (2023-04-27)
