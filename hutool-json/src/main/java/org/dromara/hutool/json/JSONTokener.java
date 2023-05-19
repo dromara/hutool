@@ -248,9 +248,14 @@ public class JSONTokener extends ReaderWrapper {
 			c = this.next();
 			switch (c) {
 				case 0:
+					throw this.syntaxError("Unterminated string");
 				case '\n':
 				case '\r':
-					throw this.syntaxError("Unterminated string");
+					//throw this.syntaxError("Unterminated string");
+					// https://gitee.com/dromara/hutool/issues/I76CSU
+					// 兼容非转义符
+					sb.append(c);
+					break;
 				case '\\':// 转义符
 					c = this.next();
 					switch (c) {
