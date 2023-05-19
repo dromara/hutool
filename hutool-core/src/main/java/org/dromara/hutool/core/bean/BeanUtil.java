@@ -737,7 +737,14 @@ public class BeanUtil {
 		if (collection.isEmpty()) {
 			return new ArrayList<>(0);
 		}
+
+		// issue#3091
+		if(ClassUtil.isBasicType(targetType) || String.class == targetType){
+			return Convert.toList(targetType, collection);
+		}
+
 		return collection.stream().map((source) -> {
+
 			final T target = ConstructorUtil.newInstanceIfPossible(targetType);
 			copyProperties(source, target, copyOptions);
 			return target;

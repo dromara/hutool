@@ -300,6 +300,15 @@ public class PropDesc {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "PropDesc{" +
+			"field=" + field +
+			", getter=" + getter +
+			", setter=" + setter +
+			'}';
+	}
+
 	//------------------------------------------------------------------------------------ Private method start
 
 	/**

@@ -77,6 +77,7 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	public BeanCopier(final Object source, final T target, final Type targetType, final CopyOptions copyOptions) {
 		Assert.notNull(source, "Source bean must be not null!");
 		Assert.notNull(target, "Target bean must be not null!");
+
 		final Copier<T> copier;
 		if (source instanceof Map) {
 			if (target instanceof Map) {
@@ -85,11 +86,9 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				copier = new MapToBeanCopier<>((Map<?, ?>) source, target, targetType, copyOptions);
 			}
 		} else if (source instanceof ValueProvider) {
-			//noinspection unchecked
 			copier = new ValueProviderToBeanCopier<>((ValueProvider<String>) source, target, targetType, copyOptions);
 		} else {
 			if (target instanceof Map) {
-				//noinspection unchecked
 				copier = (Copier<T>) new BeanToMapCopier(source, (Map<?, ?>) target, targetType, copyOptions);
 			} else {
 				copier = new BeanToBeanCopier<>(source, target, targetType, copyOptions);
