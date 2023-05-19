@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.19.M1 (2023-05-15)
+# 5.8.19.M1 (2023-05-19)
 
 ### 🐣新特性
 * 【db    】      优化HttpRequest.toString()内容打印（issue#3072@Github）
@@ -12,6 +12,7 @@
 * 【core  】      邮箱校验添加对中文的支持（pr#997@Gitee）
 * 【core  】      FileUtil.getMimeType增加webp识别（pr#997@Gitee）
 * 【core  】      SyncFinisher增加setExceptionHandler方法（issue#I716SX@Gitee）
+* 【core  】      FileTypeUtil.getType增加文件判断（pr#3112@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）

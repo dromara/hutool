@@ -1,11 +1,12 @@
 package cn.hutool.core.io;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -195,6 +196,9 @@ public class FileTypeUtil {
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
 	public static String getType(File file,boolean isExact) throws IORuntimeException  {
+		if(false == FileUtil.isFile(file)){
+			throw new IllegalArgumentException("Not a regular file!");
+		}
 		FileInputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
