@@ -199,14 +199,14 @@ public class FileTypeUtil {
 		FileInputStream in = null;
 		try {
 			BasicFileAttributes attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-			if (attrs.isOther()) throw new IORuntimeException("Not a regular file "+file);
+			if (attrs.isOther() || !FileUtil.isFile(file)) {
+				throw new IllegalArgumentException("Not a regular file " + file);
+			}
 			in = IoUtil.toStream(file);
 			return getType(in, file.getName(),isExact);
 		}catch (IOException e) {
 		} finally {
-			if(in !=null){
-				IoUtil.close(in);
-			}
+			IoUtil.close(in);
 		}
 		return FileUtil.extName(file.getName());
 	}
