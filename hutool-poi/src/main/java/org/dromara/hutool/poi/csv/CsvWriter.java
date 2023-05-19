@@ -49,11 +49,12 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private final CsvWriteConfig config;
 	/**
-	 * 是否处于新行开始
+	 * 是否处于新行开始，新行开始用于标识是否在写出字段前写出一个分隔符
 	 */
 	private boolean newline = true;
 	/**
-	 * 是否首行，即CSV开始的位置，当初始化时默认为true，一旦写入内容，为false
+	 * 是否首行，即CSV开始的位置，当初始化时默认为true，一旦写入内容，为false<br>
+	 * 用于标识是否补充换行符
 	 */
 	private boolean isFirstLine = true;
 
@@ -354,8 +355,12 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		return this;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
+		if(this.config.endingLineBreak){
+			writeLine();
+		}
 		IoUtil.closeQuietly(this.writer);
 	}
 

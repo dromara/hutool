@@ -35,7 +35,13 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	/**
 	 * 是否使用安全模式，对可能存在DDE攻击的内容进行替换
 	 */
-	protected boolean  ddeSafe;
+	protected boolean ddeSafe;
+
+	/**
+	 * 文件末尾是否添加换行符<br>
+	 * 按照https://datatracker.ietf.org/doc/html/rfc4180#section-2 规范，末尾换行符可有可无。
+	 */
+	protected boolean endingLineBreak;
 
 	/**
 	 * 默认配置
@@ -75,9 +81,20 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	 * @param ddeSafe dde安全
 	 * @return this
 	 */
-	public CsvWriteConfig setDdeSafe(final boolean ddeSafe){
+	public CsvWriteConfig setDdeSafe(final boolean ddeSafe) {
 		this.ddeSafe = ddeSafe;
 		return this;
 	}
 
+	/**
+	 * 文件末尾是否添加换行符<br>
+	 * 按照https://datatracker.ietf.org/doc/html/rfc4180#section-2 规范，末尾换行符可有可无。
+	 *
+	 * @param endingLineBreak 文件末尾是否添加换行符
+	 * @return this
+	 */
+	public CsvWriteConfig setEndingLineBreak(final boolean endingLineBreak) {
+		this.endingLineBreak = endingLineBreak;
+		return this;
+	}
 }

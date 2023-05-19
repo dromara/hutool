@@ -2051,7 +2051,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedWriter getWriter(final File file, final Charset charset, final boolean isAppend) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, charset).getWriter(isAppend);
+		return FileWriter.of(file, charset).getWriter(isAppend);
 	}
 
 	/**
@@ -2148,7 +2148,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeString(final String content, final File file, final Charset charset) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, charset).write(content);
+		return FileWriter.of(file, charset).write(content);
 	}
 
 	/**
@@ -2200,7 +2200,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File appendString(final String content, final File file, final Charset charset) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, charset).append(content);
+		return FileWriter.of(file, charset).append(content);
 	}
 
 	/**
@@ -2349,7 +2349,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(final Collection<T> list, final File file, final Charset charset, final boolean isAppend) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, charset).writeLines(list, isAppend);
+		return FileWriter.of(file, charset).writeLines(list, isAppend);
 	}
 
 	/**
@@ -2364,7 +2364,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.5
 	 */
 	public static File writeUtf8Map(final Map<?, ?> map, final File file, final String kvSeparator, final boolean isAppend) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, CharsetUtil.UTF_8).writeMap(map, kvSeparator, isAppend);
+		return FileWriter.of(file, CharsetUtil.UTF_8).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**
@@ -2380,7 +2380,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.0.5
 	 */
 	public static File writeMap(final Map<?, ?> map, final File file, final Charset charset, final String kvSeparator, final boolean isAppend) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(file, charset).writeMap(map, kvSeparator, isAppend);
+		return FileWriter.of(file, charset).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**
@@ -2420,7 +2420,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeBytes(final byte[] data, final File dest, final int off, final int len, final boolean isAppend) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(dest).write(data, off, len, isAppend);
+		return FileWriter.of(dest).write(data, off, len, isAppend);
 	}
 
 	/**
@@ -2447,7 +2447,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.5.6
 	 */
 	public static File writeFromStream(final InputStream in, final File dest, final boolean isCloseIn) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileWriter.of(dest).writeFromStream(in, isCloseIn);
+		return FileWriter.of(dest).writeFromStream(in, isCloseIn);
 	}
 
 	/**
