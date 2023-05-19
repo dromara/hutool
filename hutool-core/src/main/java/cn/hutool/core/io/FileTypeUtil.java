@@ -9,7 +9,8 @@ import java.io.*;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
-
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
 /**
  * 文件类型判断工具类
  *
@@ -197,11 +198,17 @@ public class FileTypeUtil {
 	public static String getType(File file,boolean isExact) throws IORuntimeException  {
 		FileInputStream in = null;
 		try {
+			BasicFileAttributes attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+			if (attrs.isOther()) throw new IORuntimeException("Not a regular file "+file);
 			in = IoUtil.toStream(file);
 			return getType(in, file.getName(),isExact);
+		}catch (IOException e) {
 		} finally {
-			IoUtil.close(in);
+			if(in !=null){
+				IoUtil.close(in);
+			}
 		}
+		return FileUtil.extName(file.getName());
 	}
 
 	/**
