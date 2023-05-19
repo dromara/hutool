@@ -1113,18 +1113,10 @@ public class CharSequenceUtil extends StrValidator {
 	 *
 	 * @param str    字符串
 	 * @param prefix 前缀
-	 * @return 切掉后的字符串，若前缀不是 preffix， 返回原字符串
+	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefix(final CharSequence str, final CharSequence prefix) {
-		if (isEmpty(str) || isEmpty(prefix)) {
-			return str(str);
-		}
-
-		final String str2 = str.toString();
-		if (str2.startsWith(prefix.toString())) {
-			return subSuf(str2, prefix.length());// 截取后半段
-		}
-		return str2;
+		return removePrefix(str, prefix, false);
 	}
 
 	/**
@@ -1135,12 +1127,24 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefixIgnoreCase(final CharSequence str, final CharSequence prefix) {
+		return removePrefix(str, prefix, true);
+	}
+
+	/**
+	 * 去掉指定前缀
+	 *
+	 * @param str        字符串
+	 * @param prefix     前缀
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
+	 */
+	public static String removePrefix(final CharSequence str, final CharSequence prefix, final boolean ignoreCase) {
 		if (isEmpty(str) || isEmpty(prefix)) {
 			return str(str);
 		}
 
 		final String str2 = str.toString();
-		if (startWithIgnoreCase(str, prefix)) {
+		if (startWith(str, prefix, ignoreCase)) {
 			return subSuf(str2, prefix.length());// 截取后半段
 		}
 		return str2;

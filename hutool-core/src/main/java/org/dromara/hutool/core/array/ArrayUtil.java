@@ -103,6 +103,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 
 	// ---------------------------------------------------------------------- isBlank
+
 	/**
 	 * <p>指定字符串数组中，是否包含空字符串。</p>
 	 * <p>如果指定的字符串数组的长度为 0，或者其中的任意一个元素是空字符串，则返回 true。</p>
@@ -1187,6 +1188,23 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 获取满足条件的第一个元素
+	 *
+	 * @param array     数组
+	 * @param predicate 条件
+	 * @param <E>       元素类型
+	 * @return 满足条件的第一个元素，未找到返回{@code null}
+	 */
+	public static <E> E get(final E[] array, final Predicate<E> predicate) {
+		for (final E e : array) {
+			if (predicate.test(e)) {
+				return e;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 获取数组中所有指定位置的元素值，组成新数组
 	 *
 	 * @param <T>     数组元素类型
@@ -1249,12 +1267,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param array        数组
 	 * @param beginInclude 开始位置（包括）
 	 * @param endExclude   结束位置（不包括）
+	 * @param <A>          数组类型
 	 * @return 新的数组
 	 * @since 4.0.6
-	 * @param <A> 数组类型
 	 */
 	public static <A> A sub(final A array,
-							   final int beginInclude, final int endExclude) {
+							final int beginInclude, final int endExclude) {
 		return ArrayWrapper.of(array).getSub(beginInclude, endExclude);
 	}
 
@@ -1265,12 +1283,12 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @param beginInclude 开始位置（包括）
 	 * @param endExclude   结束位置（不包括）
 	 * @param step         步进
+	 * @param <A>          数组类型
 	 * @return 新的数组
 	 * @since 4.0.6
-	 * @param <A> 数组类型
 	 */
 	public static <A> A sub(final A array,
-							   final int beginInclude, final int endExclude, final int step) {
+							final int beginInclude, final int endExclude, final int step) {
 		return ArrayWrapper.of(array).getSub(beginInclude, endExclude, step);
 	}
 
