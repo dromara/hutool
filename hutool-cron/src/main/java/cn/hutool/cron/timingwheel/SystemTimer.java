@@ -31,6 +31,7 @@ public class SystemTimer {
 	 * 轮询delayQueue获取过期任务线程
 	 */
 	private ExecutorService bossThreadPool;
+	private volatile boolean isRunning;
 
 	/**
 	 * 构造
@@ -56,6 +57,7 @@ public class SystemTimer {
 	 */
 	public SystemTimer start() {
 		bossThreadPool = ThreadUtil.newSingleExecutor();
+		isRunning = true;
 		bossThreadPool.submit(() -> {
 			while (true) {
 				if(false == advanceClock()){
@@ -70,6 +72,7 @@ public class SystemTimer {
 	 * 强制结束
 	 */
 	public void stop(){
+		this.isRunning = false;
 		this.bossThreadPool.shutdown();
 	}
 
@@ -91,6 +94,9 @@ public class SystemTimer {
 	 * @return 是否结束
 	 */
 	private boolean advanceClock() {
+		if(false == isRunning){
+			return false;
+		}
 		try {
 			TimerTaskList timerTaskList = poll();
 			if (null != timerTaskList) {
