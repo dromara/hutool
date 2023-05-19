@@ -334,8 +334,13 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		return this;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
+		if(this.config.endingLineBreak){
+			//https://gitee.com/dromara/hutool/issues/I75K5G
+			writeLine();
+		}
 		IoUtil.close(this.writer);
 	}
 

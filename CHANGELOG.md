@@ -13,6 +13,7 @@
 * 【core  】      FileUtil.getMimeType增加webp识别（pr#997@Gitee）
 * 【core  】      SyncFinisher增加setExceptionHandler方法（issue#I716SX@Gitee）
 * 【core  】      FileTypeUtil.getType增加文件判断（pr#3112@Github）
+* 【core  】      增加CsvWriteConfig.setEndingLineBreak配置项（issue#I75K5G@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
