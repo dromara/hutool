@@ -208,6 +208,9 @@ public class FileTypeUtil {
 	 * @throws IORuntimeException  读取文件引起的异常
 	 */
 	public static String getType(final File file, final boolean isExact) throws IORuntimeException  {
+		if(false == FileUtil.isFile(file)){
+			throw new IllegalArgumentException("Not a regular file!");
+		}
 		InputStream in = null;
 		try {
 			in = IoUtil.toStream(file);

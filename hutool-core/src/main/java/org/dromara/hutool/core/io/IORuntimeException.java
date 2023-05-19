@@ -12,14 +12,14 @@
 
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.exception.HutoolException;
 
 /**
  * IO运行时异常，常用于对IOException的包装
  *
- * @author xiaoleilu
+ * @author looly
  */
-public class IORuntimeException extends RuntimeException {
+public class IORuntimeException extends HutoolException {
 	private static final long serialVersionUID = 8247610319171014183L;
 
 	/**
@@ -54,7 +54,7 @@ public class IORuntimeException extends RuntimeException {
 	 * @param params          参数
 	 */
 	public IORuntimeException(final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params));
+		super(messageTemplate, params);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class IORuntimeException extends RuntimeException {
 	 * @param params          参数
 	 */
 	public IORuntimeException(final Throwable cause, final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params), cause);
+		super(cause, messageTemplate, params);
 	}
 
 	/**

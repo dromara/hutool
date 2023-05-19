@@ -513,6 +513,17 @@ public class PathUtil {
 	}
 
 	/**
+	 * 判断是否为其它类型文件，即非文件、非目录、非链接。
+	 *
+	 * @param path 被检查的文件（非空）
+	 * @return 是否为其它类型文件
+	 * @since 6.0.0
+	 */
+	public static boolean isOther(final Path path) {
+		return getAttributes(path, false).isOther();
+	}
+
+	/**
 	 * 判断文件或目录是否存在
 	 *
 	 * @param path          文件，{@code null}返回{@code false}
@@ -615,9 +626,9 @@ public class PathUtil {
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Random].suffix From com.jodd.io.FileUtil
 	 *
-	 * @param prefix    前缀，至少3个字符
-	 * @param suffix    后缀，如果null则使用默认.tmp
-	 * @param dir       临时文件创建的所在目录
+	 * @param prefix 前缀，至少3个字符
+	 * @param suffix 后缀，如果null则使用默认.tmp
+	 * @param dir    临时文件创建的所在目录
 	 * @return 临时文件
 	 * @throws IORuntimeException IO异常
 	 * @since 6.0.0
@@ -626,9 +637,9 @@ public class PathUtil {
 		int exceptionsCount = 0;
 		while (true) {
 			try {
-				if(null == dir){
+				if (null == dir) {
 					return Files.createTempFile(prefix, suffix);
-				}else{
+				} else {
 					return Files.createTempFile(mkdir(dir), prefix, suffix);
 				}
 			} catch (final IOException ioex) { // fixes java.io.WinNTFileSystem.createFileExclusively access denied
