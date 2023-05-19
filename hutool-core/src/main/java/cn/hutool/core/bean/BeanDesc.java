@@ -310,9 +310,9 @@ public class BeanDesc implements Serializable {
 		// 针对Boolean类型特殊检查
 		if (isBooleanField && fieldName.startsWith("is")) {
 			// 字段是is开头
-			if (("set" + StrUtil.removePrefix(fieldName, "is")).equals(methodName)// isName -》 setName
-					|| ("set" + handledFieldName).equals(methodName)// isName -》 setIsName
-			) {
+			if ((("set" + StrUtil.removePrefix(fieldName, "is")).equals(methodName) // isName -》 setName
+				|| ("set" + handledFieldName).equals(methodName)) // isName -》 setIsName
+				&& !methodName.startsWith("setIs")) { // 排除 "setIs" 前缀
 				return true;
 			}
 		}
