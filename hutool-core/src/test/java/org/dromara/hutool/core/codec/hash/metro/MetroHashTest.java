@@ -97,7 +97,7 @@ public class MetroHashTest {
 		final String[] result = new String[10000000];
 		int index = 0;
 		while (index < 10000000) {
-			result[index++] = RandomUtil.randomString(RandomUtil.randomInt(64));
+			result[index++] = RandomUtil.randomStringLower(RandomUtil.randomInt(64));
 		}
 		return result;
 	}

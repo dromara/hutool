@@ -48,9 +48,13 @@ public class RandomUtil {
 	 */
 	public static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
 	/**
-	 * 用于随机选的字符和数字
+	 * 用于随机选的字符和数字（小写）
 	 */
-	public static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
+	public static final String BASE_CHAR_NUMBER_LOWER = BASE_CHAR + BASE_NUMBER;
+	/**
+	 * 用于随机选的字符和数字（包括大写和小写字母）
+	 */
+	public static final String BASE_CHAR_NUMBER = BASE_CHAR.toUpperCase() + BASE_CHAR_NUMBER_LOWER;
 
 	/**
 	 * 获取随机数生成器对象<br>
@@ -528,13 +532,23 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得一个随机的字符串（只包含数字和字符）
+	 * 获得一个随机的字符串（只包含数字和大小写字母）
 	 *
 	 * @param length 字符串的长度
 	 * @return 随机字符串
 	 */
 	public static String randomString(final int length) {
-		return randomString(BASE_CHAR_NUMBER, length);
+		return randomStringLower(BASE_CHAR_NUMBER, length);
+	}
+
+	/**
+	 * 获得一个随机的字符串（只包含数字和小写字母）
+	 *
+	 * @param length 字符串的长度
+	 * @return 随机字符串
+	 */
+	public static String randomStringLower(final int length) {
+		return randomStringLower(BASE_CHAR_NUMBER_LOWER, length);
 	}
 
 	/**
@@ -545,7 +559,7 @@ public class RandomUtil {
 	 * @since 4.0.13
 	 */
 	public static String randomStringUpper(final int length) {
-		return randomString(BASE_CHAR_NUMBER, length).toUpperCase();
+		return randomStringLower(BASE_CHAR_NUMBER_LOWER, length).toUpperCase();
 	}
 
 	/**
@@ -556,9 +570,9 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomStringWithoutStr(final int length, final String elemData) {
-		String baseStr = BASE_CHAR_NUMBER;
+		String baseStr = BASE_CHAR_NUMBER_LOWER;
 		baseStr = StrUtil.removeAll(baseStr, elemData.toLowerCase().toCharArray());
-		return randomString(baseStr, length);
+		return randomStringLower(baseStr, length);
 	}
 
 	/**
@@ -568,7 +582,7 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomNumbers(final int length) {
-		return randomString(BASE_NUMBER, length);
+		return randomStringLower(BASE_NUMBER, length);
 	}
 
 	/**
@@ -578,7 +592,7 @@ public class RandomUtil {
 	 * @param length     字符串的长度
 	 * @return 随机字符串
 	 */
-	public static String randomString(final String baseString, int length) {
+	public static String randomStringLower(final String baseString, int length) {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}
@@ -612,7 +626,7 @@ public class RandomUtil {
 	 * @since 3.1.2
 	 */
 	public static char randomChar() {
-		return randomChar(BASE_CHAR_NUMBER);
+		return randomChar(BASE_CHAR_NUMBER_LOWER);
 	}
 
 	/**

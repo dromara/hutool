@@ -461,7 +461,7 @@ public class StrUtilTest {
 	@Test
 	public void briefTest() {
 		// case: 1 至 str.length - 1
-		final String str = RandomUtil.randomString(RandomUtil.randomInt(1, 100));
+		final String str = RandomUtil.randomStringLower(RandomUtil.randomInt(1, 100));
 		for (int maxLength = 1; maxLength < str.length(); maxLength++) {
 			final String brief = StrUtil.brief(str, maxLength);
 			Assertions.assertEquals(brief.length(), maxLength);

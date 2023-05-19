@@ -46,7 +46,7 @@ public class RandomGenerator extends AbstractGenerator {
 
 	@Override
 	public String generate() {
-		return RandomUtil.randomString(this.baseStr, this.length);
+		return RandomUtil.randomStringLower(this.baseStr, this.length);
 	}
 
 	@Override

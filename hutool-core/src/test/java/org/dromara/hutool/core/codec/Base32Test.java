@@ -38,7 +38,7 @@ public class Base32Test {
 
 	@Test
 	public void encodeAndDecodeRandomTest(){
-		final String a = RandomUtil.randomString(RandomUtil.randomInt(1000));
+		final String a = RandomUtil.randomStringLower(RandomUtil.randomInt(1000));
 		final String encode = Base32.encode(a);
 		final String decodeStr = Base32.decodeStr(encode);
 		Assertions.assertEquals(a, decodeStr);

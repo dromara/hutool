@@ -15,7 +15,6 @@ package org.dromara.hutool.core.func;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.StopWatch;
-import org.dromara.hutool.core.func.FunctionPool;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ public class FunctionPoolTest {
 		// 测试数据
 		final ArrayList<char[]> list = ListUtil.of();
 		for (int i = 0; i < 100000; i++) {
-			list.add(RandomUtil.randomString(100).toCharArray());
+			list.add(RandomUtil.randomStringLower(100).toCharArray());
 		}
 
 		final StopWatch stopWatch = DateUtil.createStopWatch();

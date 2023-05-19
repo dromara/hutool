@@ -47,9 +47,9 @@ public class TextSimilarityTest {
 	@Disabled
 	void longestCommonSubstringLengthTest() {
 		// https://github.com/dromara/hutool/issues/3045
-		final String strCommon = RandomUtil.randomString(1024 * 32);
-		final String strA = RandomUtil.randomString(1024 * 32) + strCommon;
-		final String strB = RandomUtil.randomString(1024 * 32) + strCommon;
+		final String strCommon = RandomUtil.randomStringLower(1024 * 32);
+		final String strA = RandomUtil.randomStringLower(1024 * 32) + strCommon;
+		final String strB = RandomUtil.randomStringLower(1024 * 32) + strCommon;
 
 		final int i = TextSimilarity.longestCommonSubstringLength(strA, strB);
 		Console.log(i);

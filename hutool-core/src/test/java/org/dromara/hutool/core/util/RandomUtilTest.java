@@ -16,7 +16,6 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -90,7 +89,7 @@ public class RandomUtilTest {
 
 	@Test
 	public void randomStringOfLengthTest(){
-		final String s = RandomUtil.randomString("123", -1);
+		final String s = RandomUtil.randomStringLower("123", -1);
 		Assertions.assertNotNull(s);
 	}
 

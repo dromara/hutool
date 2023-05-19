@@ -13,7 +13,7 @@ public class ZucTest {
 		final byte[] iv = RandomUtil.randomBytes(16);
 		final ZUC zuc = new ZUC(ZUC.ZUCAlgorithm.ZUC_128, secretKey, iv);
 
-		final String msg = RandomUtil.randomString(500);
+		final String msg = RandomUtil.randomStringLower(500);
 		final byte[] crypt2 = zuc.encrypt(msg);
 		final String msg2 = zuc.decryptStr(crypt2, CharsetUtil.UTF_8);
 		Assertions.assertEquals(msg, msg2);
@@ -25,7 +25,7 @@ public class ZucTest {
 		final byte[] iv = RandomUtil.randomBytes(25);
 		final ZUC zuc = new ZUC(ZUC.ZUCAlgorithm.ZUC_256, secretKey, iv);
 
-		final String msg = RandomUtil.randomString(500);
+		final String msg = RandomUtil.randomStringLower(500);
 		final byte[] crypt2 = zuc.encrypt(msg);
 		final String msg2 = zuc.decryptStr(crypt2, CharsetUtil.UTF_8);
 		Assertions.assertEquals(msg, msg2);

@@ -25,7 +25,7 @@ public class LRUCacheTest {
 		final LRUCache<String, String> cache = CacheUtil.newLRUCache(100, 10);
 		for (int i = 0; i < 10000; i++) {
 			//ThreadUtil.execute(()-> cache.put(RandomUtil.randomString(5), "1243", 10));
-			ThreadUtil.execute(()-> cache.get(RandomUtil.randomString(5), ()->RandomUtil.randomString(10)));
+			ThreadUtil.execute(()-> cache.get(RandomUtil.randomStringLower(5), ()->RandomUtil.randomStringLower(10)));
 		}
 		ThreadUtil.sleep(3000);
 	}

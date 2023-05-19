@@ -43,7 +43,7 @@ public class DialectFactoryTest {
 		//map.put("hive",DRIVER_HIVE);
 
 		map.forEach((k,v) -> Assertions.assertEquals(v,
-				DialectFactory.identifyDriver(k+ RandomUtil.randomString(2),null) ));
+				DialectFactory.identifyDriver(k+ RandomUtil.randomStringLower(2),null) ));
 
 	}
 }

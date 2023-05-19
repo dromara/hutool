@@ -193,7 +193,7 @@ public class RSATest {
 		final byte[] keyBytes = Base64.decode(publicKeyStr);
 		final PublicKey publicKey = KeyUtil.generateRSAPublicKey(keyBytes);
 
-		final byte[] data = RandomUtil.randomString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 16).getBytes();
+		final byte[] data = RandomUtil.randomStringLower("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 16).getBytes();
 		//长度不满足128补0
 		final byte[] finalData = ArrayUtil.resize(data, 128);
 
