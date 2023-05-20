@@ -6,6 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -42,8 +45,12 @@ public class Tailer implements Serializable {
 	/** 定时任务检查间隔时长 */
 	private final long period;
 
+	private final String filePath;
+
 	private final RandomAccessFile randomAccessFile;
 	private final ScheduledExecutorService executorService;
+
+	private WatchMonitor fileDeleteWatchMonitor;
 
 	/**
 	 * 构造，默认UTF-8编码
@@ -94,6 +101,7 @@ public class Tailer implements Serializable {
 		this.initReadLine = initReadLine;
 		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
 		this.executorService = Executors.newSingleThreadScheduledExecutor();
+		this.filePath=file.getAbsolutePath();
 	}
 
 	/**
@@ -116,12 +124,25 @@ public class Tailer implements Serializable {
 			throw new IORuntimeException(e);
 		}
 
-		final LineReadWatcher lineReadWatcher = new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler);
+		final LineReadWatcher lineReadWatcher = new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler){
+			@Override
+			public void onDelete(WatchEvent<?> event, Path currentPath) {
+				super.onDelete(event, currentPath);
+				Path deletedPath = (Path) event.context();
+				if (deletedPath.toString().equals(FileUtil.file(filePath).getName())) {
+					stop();
+					throw new IORuntimeException("{} has been deleted", filePath);
+				}
+			}
+		};
 		final ScheduledFuture<?> scheduledFuture = this.executorService.scheduleAtFixedRate(//
 				lineReadWatcher, //
 				0, //
 				this.period, TimeUnit.MILLISECONDS//
 		);
+		fileDeleteWatchMonitor = WatchMonitor.create(this.filePath, WatchMonitor.ENTRY_DELETE);
+		fileDeleteWatchMonitor.setWatcher(lineReadWatcher);
+		fileDeleteWatchMonitor.start();
 
 		if (false == async) {
 			try {
@@ -142,6 +163,7 @@ public class Tailer implements Serializable {
 			this.executorService.shutdown();
 		}finally {
 			IoUtil.close(this.randomAccessFile);
+			fileDeleteWatchMonitor.close();
 		}
 	}
 
