@@ -87,7 +87,7 @@ public class HttpUtilTest {
 		// 测试url中带有空格的情况
 		final byte[] str = HttpRequest.get("http://img01.fs.yiban.cn/mobile/2D0Y71").execute().bodyBytes();
 
-		FileUtil.writeBytes(str, "f:/test/2D.jpg");
+		FileUtil.writeBytes(str, FileUtil.getTmpDirPath()+"/test/2D.jpg");
 		Console.log(str);
 	}
 

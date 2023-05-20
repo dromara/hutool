@@ -127,7 +127,7 @@ public class ExcelWriteTest {
 		writer.writeRow(row2);
 
 		// 生成文件或导出Excel
-		writer.flush(FileUtil.file("f:/test/writeWithSheetTest.xlsx"));
+		writer.flush(FileUtil.file(FileUtil.getTmpDirPath()+"/test/writeWithSheetTest.xlsx"));
 
 		writer.close();
 	}
@@ -294,7 +294,7 @@ public class ExcelWriteTest {
 		row1.put("考试日期", DateUtil.date());
 
 		// 通过工具类创建writer
-		String path = "f:/test/writeMapWithStyleTest.xlsx";
+		String path = FileUtil.getTmpDirPath()+"/test/writeMapWithStyleTest.xlsx";
 		FileUtil.del(path);
 		ExcelWriter writer = ExcelUtil.getWriter(path);
 		writer.setStyleSet(null);
@@ -363,7 +363,7 @@ public class ExcelWriteTest {
 
 		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
 		// 通过工具类创建writer
-		String file = "f:/test/test_alias.xlsx";
+		String file = FileUtil.getTmpDirPath()+"/test/test_alias.xlsx";
 		FileUtil.del(file);
 		ExcelWriter writer = ExcelUtil.getWriter(file);
 		writer.setOnlyAlias(true);
@@ -493,7 +493,7 @@ public class ExcelWriteTest {
 
 		List<cn.hutool.poi.excel.OrderExcel> rows = CollUtil.newArrayList(order1, order2);
 		// 通过工具类创建writer
-		String file = "f:/test/writeBeanTest2.xlsx";
+		String file = FileUtil.getTmpDirPath()+"/test/writeBeanTest2.xlsx";
 		FileUtil.del(file);
 		ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题

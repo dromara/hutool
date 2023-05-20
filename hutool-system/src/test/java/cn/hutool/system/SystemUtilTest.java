@@ -19,6 +19,7 @@ public class SystemUtilTest {
 	public void getCurrentPidTest() {
 		final long pid = SystemUtil.getCurrentPID();
 		Assert.assertTrue(pid > 0);
+		Console.log(pid);
 	}
 
 	@Test
