@@ -6,6 +6,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.io.watch.SimpleWatcher;
+import cn.hutool.core.io.watch.WatchKind;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
@@ -46,11 +48,10 @@ public class Tailer implements Serializable {
 	private final long period;
 
 	private final String filePath;
-
 	private final RandomAccessFile randomAccessFile;
 	private final ScheduledExecutorService executorService;
-
 	private WatchMonitor fileDeleteWatchMonitor;
+	private boolean stopOnDelete;
 
 	/**
 	 * 构造，默认UTF-8编码
@@ -105,6 +106,15 @@ public class Tailer implements Serializable {
 	}
 
 	/**
+	 * 设置删除文件后是否退出并抛出异常
+	 *
+	 * @param stopOnDelete 删除文件后是否退出并抛出异常
+	 */
+	public void setStopOnDelete(final boolean stopOnDelete) {
+		this.stopOnDelete = stopOnDelete;
+	}
+
+	/**
 	 * 开始监听
 	 */
 	public void start() {
@@ -124,25 +134,26 @@ public class Tailer implements Serializable {
 			throw new IORuntimeException(e);
 		}
 
-		final LineReadWatcher lineReadWatcher = new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler){
-			@Override
-			public void onDelete(WatchEvent<?> event, Path currentPath) {
-				super.onDelete(event, currentPath);
-				Path deletedPath = (Path) event.context();
-				if (deletedPath.toString().equals(FileUtil.file(filePath).getName())) {
-					stop();
-					throw new IORuntimeException("{} has been deleted", filePath);
-				}
-			}
-		};
+		final LineReadWatcher lineReadWatcher = new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler);
 		final ScheduledFuture<?> scheduledFuture = this.executorService.scheduleAtFixedRate(//
 				lineReadWatcher, //
 				0, //
 				this.period, TimeUnit.MILLISECONDS//
 		);
-		fileDeleteWatchMonitor = WatchMonitor.create(this.filePath, WatchMonitor.ENTRY_DELETE);
-		fileDeleteWatchMonitor.setWatcher(lineReadWatcher);
-		fileDeleteWatchMonitor.start();
+
+		// 监听删除
+		if(stopOnDelete){
+			fileDeleteWatchMonitor = WatchMonitor.create(this.filePath, WatchKind.DELETE.getValue());
+			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
+				@Override
+				public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+					super.onDelete(event, currentPath);
+					stop();
+					throw new IORuntimeException("{} has been deleted", filePath);
+				}
+			});
+			fileDeleteWatchMonitor.start();
+		}
 
 		if (false == async) {
 			try {
