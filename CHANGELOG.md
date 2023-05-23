@@ -15,6 +15,7 @@
 * 【core  】      FileTypeUtil.getType增加文件判断（pr#3112@Github）
 * 【core  】      增加CsvWriteConfig.setEndingLineBreak配置项（issue#I75K5G@Gitee）
 * 【core  】      增加Tailer追踪文件时文件被删除的处理情况（pr#3115@Github）
+* 【core  】      DelegatedExecutorService构造方法设置成public（issue#I77LUE@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
