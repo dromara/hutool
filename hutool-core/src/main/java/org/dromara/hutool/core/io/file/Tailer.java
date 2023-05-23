@@ -16,6 +16,9 @@ import org.dromara.hutool.core.date.DateUnit;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.watch.SimpleWatcher;
+import org.dromara.hutool.core.io.watch.WatchKind;
+import org.dromara.hutool.core.io.watch.WatchMonitor;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.text.CharUtil;
@@ -26,6 +29,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -56,8 +61,12 @@ public class Tailer implements Serializable {
 	/** 定时任务检查间隔时长 */
 	private final long period;
 
+	private final String filePath;
 	private final RandomAccessFile randomAccessFile;
 	private final ScheduledExecutorService executorService;
+	private WatchMonitor fileDeleteWatchMonitor;
+
+	private boolean stopOnDelete;
 
 	/**
 	 * 构造，默认UTF-8编码
@@ -102,12 +111,22 @@ public class Tailer implements Serializable {
 	 */
 	public Tailer(final File file, final Charset charset, final SerConsumer<String> lineHandler, final int initReadLine, final long period) {
 		checkFile(file);
+		this.filePath = file.getAbsolutePath();
 		this.charset = charset;
 		this.lineHandler = lineHandler;
 		this.period = period;
 		this.initReadLine = initReadLine;
 		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
 		this.executorService = Executors.newSingleThreadScheduledExecutor();
+	}
+
+	/**
+	 * 设置删除文件后是否退出并抛出异常
+	 *
+	 * @param stopOnDelete 删除文件后是否退出并抛出异常
+	 */
+	public void setStopOnDelete(final boolean stopOnDelete) {
+		this.stopOnDelete = stopOnDelete;
 	}
 
 	/**
@@ -137,6 +156,20 @@ public class Tailer implements Serializable {
 				this.period, TimeUnit.MILLISECONDS//
 		);
 
+		// 监听删除
+		if(stopOnDelete){
+			fileDeleteWatchMonitor = WatchMonitor.of(this.filePath, WatchKind.DELETE.getValue());
+			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
+				@Override
+				public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+					super.onDelete(event, currentPath);
+					stop();
+					throw new IORuntimeException("{} has been deleted", filePath);
+				}
+			});
+			fileDeleteWatchMonitor.start();
+		}
+
 		if (!async) {
 			try {
 				scheduledFuture.get();
@@ -156,6 +189,7 @@ public class Tailer implements Serializable {
 			this.executorService.shutdown();
 		} finally {
 			IoUtil.closeQuietly(this.randomAccessFile);
+			fileDeleteWatchMonitor.close();
 		}
 	}
 

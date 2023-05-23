@@ -61,7 +61,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param url    URL
-	 * @param events 监听的事件列表
+	 * @param events 监听的事件列表，见{@link WatchKind}
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final URL url, final WatchEvent.Kind<?>... events) {
@@ -72,7 +72,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param url      URL
-	 * @param events   监听的事件列表
+	 * @param events   监听的事件列表，见{@link WatchKind}
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
@@ -84,7 +84,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param uri    URI
-	 * @param events 监听的事件列表
+	 * @param events 监听的事件列表，见{@link WatchKind}
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final URI uri, final WatchEvent.Kind<?>... events) {
@@ -95,7 +95,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param uri      URI
-	 * @param events   监听的事件列表
+	 * @param events   监听的事件列表，见{@link WatchKind}
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
@@ -107,7 +107,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param file   文件
-	 * @param events 监听的事件列表
+	 * @param events 监听的事件列表，见{@link WatchKind}
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final File file, final WatchEvent.Kind<?>... events) {
@@ -118,7 +118,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param file     文件
-	 * @param events   监听的事件列表
+	 * @param events   监听的事件列表，见{@link WatchKind}
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
@@ -130,7 +130,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param path   路径
-	 * @param events 监听的事件列表
+	 * @param events 监听的事件列表，见{@link WatchKind}
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final String path, final WatchEvent.Kind<?>... events) {
@@ -141,7 +141,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param path     路径
-	 * @param events   监听的事件列表
+	 * @param events   监听的事件列表，见{@link WatchKind}
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
@@ -153,7 +153,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param path   路径
-	 * @param events 监听事件列表
+	 * @param events 监听事件列表，见{@link WatchKind}
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final Path path, final WatchEvent.Kind<?>... events) {
@@ -164,7 +164,7 @@ public class WatchMonitor extends WatchServer {
 	 * 创建并初始化监听
 	 *
 	 * @param path     路径
-	 * @param events   监听事件列表
+	 * @param events   监听事件列表，见{@link WatchKind}
 	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
