@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.19.M1 (2023-05-23)
+# 5.8.19.M1 (2023-05-25)
 
 ### 🐣新特性
 * 【db    】      优化HttpRequest.toString()内容打印（issue#3072@Github）
@@ -16,6 +16,7 @@
 * 【core  】      增加CsvWriteConfig.setEndingLineBreak配置项（issue#I75K5G@Gitee）
 * 【core  】      增加Tailer追踪文件时文件被删除的处理情况（pr#3115@Github）
 * 【core  】      DelegatedExecutorService构造方法设置成public（issue#I77LUE@Gitee）
+* 【core  】      切面代理工具中的cglib支持多参数构造生成（issue#I74EX7@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
