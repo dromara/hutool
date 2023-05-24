@@ -14,6 +14,9 @@ package org.dromara.hutool.extra.aop;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.extra.aop.aspects.SimpleAspect;
+import org.dromara.hutool.extra.aop.engine.ProxyEngine;
+import org.dromara.hutool.extra.aop.engine.jdk.JdkProxyEngine;
+import org.dromara.hutool.extra.aop.engine.spring.SpringCglibProxyEngine;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -24,7 +27,31 @@ public class IssueI74EX7Test {
 	@Test
 	void proxyTest() {
 		final SmsBlend smsBlend = new SmsBlendImpl(1);
-		ProxyUtil.proxy(smsBlend, new SimpleAspect(){
+		final ProxyEngine engine = new JdkProxyEngine();
+		engine.proxy(smsBlend, new SimpleAspect(){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean before(final Object target, final Method method, final Object[] args) {
+				Console.log("切面进入");
+				return true;
+			}
+
+			@Override
+			public boolean after(final Object target, final Method method, final Object[] args, final Object returnVal) {
+				Console.log("代理Object："+target.toString());
+				Console.log("代理方法："+method.getName());
+				Console.log("代理参数："+ Arrays.toString(args));
+				return super.after(target, method, args, returnVal);
+			}
+		});
+	}
+
+	@Test
+	void cglibProxyTest() {
+		final SmsBlend smsBlend = new SmsBlendImpl(1);
+		final ProxyEngine engine = new SpringCglibProxyEngine();
+		engine.proxy(smsBlend, new SimpleAspect(){
 			private static final long serialVersionUID = 1L;
 
 			@Override
