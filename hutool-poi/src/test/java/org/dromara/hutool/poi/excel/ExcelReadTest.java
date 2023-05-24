@@ -38,7 +38,7 @@ public class ExcelReadTest {
 		reader.setHeaderAlias(headerAlias);
 
 		// 读取list时默认首个非空行为标题
-		final List<List<Object>> read = reader.read();
+		final List<List<Object>> read = reader.read(0, Integer.MAX_VALUE, true);
 		Assertions.assertEquals("userName", read.get(0).get(0));
 		Assertions.assertEquals("storageName", read.get(0).get(1));
 		Assertions.assertEquals("checkPerm", read.get(0).get(2));

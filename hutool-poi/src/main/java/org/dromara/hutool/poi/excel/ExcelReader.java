@@ -208,7 +208,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * @return 行的集合，一行使用List表示
 	 */
 	public List<List<Object>> read(final int startRowIndex, final int endRowIndex) {
-		return read(startRowIndex, endRowIndex, true);
+		return read(startRowIndex, endRowIndex, false);
 	}
 
 	/**
