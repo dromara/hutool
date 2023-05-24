@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.aop;
 
-import lombok.Data;
+import lombok.Setter;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.extra.aop.aspects.SimpleAspect;
 import org.dromara.hutool.extra.aop.engine.ProxyEngine;
@@ -66,7 +66,7 @@ public class IssueI74EX7Test {
 		}
 	}
 
-	@Data
+	@Setter
 	public static class SmsBlendImplWithoutConstructor implements SmsBlend{
 
 		private int status;
