@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.aop;
 
+import lombok.Data;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.extra.aop.aspects.SimpleAspect;
 import org.dromara.hutool.extra.aop.engine.ProxyEngine;
@@ -19,55 +20,32 @@ import org.dromara.hutool.extra.aop.engine.jdk.JdkProxyEngine;
 import org.dromara.hutool.extra.aop.engine.spring.SpringCglibProxyEngine;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
 public class IssueI74EX7Test {
 
 	@Test
 	void proxyTest() {
 		final SmsBlend smsBlend = new SmsBlendImpl(1);
 		final ProxyEngine engine = new JdkProxyEngine();
-		engine.proxy(smsBlend, new SimpleAspect(){
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean before(final Object target, final Method method, final Object[] args) {
-				Console.log("切面进入");
-				return true;
-			}
-
-			@Override
-			public boolean after(final Object target, final Method method, final Object[] args, final Object returnVal) {
-				Console.log("代理Object："+target.toString());
-				Console.log("代理方法："+method.getName());
-				Console.log("代理参数："+ Arrays.toString(args));
-				return super.after(target, method, args, returnVal);
-			}
-		});
+		engine.proxy(smsBlend, new SimpleAspect());
 	}
 
+	/**
+	 * https://gitee.com/dromara/hutool/issues/I74EX7<br>
+	 * Enhancer.create()默认调用无参构造，有参构造或者多个构造没有很好的兼容。
+	 *
+	 */
 	@Test
 	void cglibProxyTest() {
 		final SmsBlend smsBlend = new SmsBlendImpl(1);
 		final ProxyEngine engine = new SpringCglibProxyEngine();
-		engine.proxy(smsBlend, new SimpleAspect(){
-			private static final long serialVersionUID = 1L;
+		engine.proxy(smsBlend, new SimpleAspect());
+	}
 
-			@Override
-			public boolean before(final Object target, final Method method, final Object[] args) {
-				Console.log("切面进入");
-				return true;
-			}
-
-			@Override
-			public boolean after(final Object target, final Method method, final Object[] args, final Object returnVal) {
-				Console.log("代理Object："+target.toString());
-				Console.log("代理方法："+method.getName());
-				Console.log("代理参数："+ Arrays.toString(args));
-				return super.after(target, method, args, returnVal);
-			}
-		});
+	@Test
+	void cglibProxyWithoutConstructorTest() {
+		final SmsBlend smsBlend = new SmsBlendImplWithoutConstructor();
+		final ProxyEngine engine = new SpringCglibProxyEngine();
+		engine.proxy(smsBlend, new SimpleAspect());
 	}
 
 	public interface SmsBlend{
@@ -76,11 +54,22 @@ public class IssueI74EX7Test {
 
 	public static class SmsBlendImpl implements SmsBlend{
 
-		private int status;
+		private final int status;
 
 		public SmsBlendImpl(final int status) {
 			this.status = status;
 		}
+
+		@Override
+		public void send() {
+			Console.log("sms send." + status);
+		}
+	}
+
+	@Data
+	public static class SmsBlendImplWithoutConstructor implements SmsBlend{
+
+		private int status;
 
 		@Override
 		public void send() {
