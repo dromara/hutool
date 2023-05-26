@@ -20,11 +20,28 @@ import java.util.List;
 
 public class IssueI73770Test {
 
+	private final String sql = "select * from user where id = ?";
+
 	@Test
-	void pageTest() {
+	void pageForEntityResultTest() {
+		final PageResult<Entity> result = Db.of()
+			.page(sql, new Page(0, 10), 9);
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(9, result.get(0).get("id"));
+	}
+
+	@Test
+	void pageForBeanResultTest() {
+		final PageResult<User> result = Db.of()
+				.pageForBeanResult(sql, new Page(0, 10), User.class, 9);
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(9, result.get(0).getId());
+	}
+
+	@Test
+	void pageForBeanListTest() {
 		final List<User> result = Db.of()
-			.pageForBeanList("select * from user where id = ?"
-				, new Page(0, 10), User.class, 9);
+			.pageForBeanList(sql, new Page(0, 10), User.class, 9);
 		Assertions.assertEquals(1, result.size());
 		Assertions.assertEquals(9, result.get(0).getId());
 	}

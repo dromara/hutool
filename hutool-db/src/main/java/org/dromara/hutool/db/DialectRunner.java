@@ -12,11 +12,11 @@
 
 package org.dromara.hutool.db;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.db.dialect.Dialect;
 import org.dromara.hutool.db.dialect.DialectFactory;
 import org.dromara.hutool.db.handler.NumberHandler;
@@ -306,8 +306,8 @@ public class DialectRunner implements Serializable {
 		}
 		try {
 			return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
-							SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
-					new NumberHandler()).longValue();
+					SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
+				new NumberHandler()).longValue();
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
 		}
@@ -324,12 +324,11 @@ public class DialectRunner implements Serializable {
 	 */
 	public PageResult<Entity> page(final Connection conn, final Query query) throws DbRuntimeException {
 		final Page page = query.getPage();
-		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(),
-						// 分页查询中总数的查询要去掉分页信息
-						(int) count(conn, query.clone().setPage(null))),
-				this.caseInsensitive);
-		return page(conn, query, pageResultHandler);
+		final PageResultHandler<Entity> entityResultHandler = PageResultHandler.of(
+			// 分页查询中总数的查询要去掉分页信息
+			new PageResult<>(page, (int) count(conn, query.clone().setPage(null))));
+
+		return page(conn, query, entityResultHandler.setCaseInsensitive(caseInsensitive));
 	}
 
 	/**
@@ -367,10 +366,10 @@ public class DialectRunner implements Serializable {
 	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public PageResult<Entity> page(final Connection conn, final SqlBuilder sqlBuilder, final Page page) throws DbRuntimeException {
-		final PageResultHandler pageResultHandler = new PageResultHandler(
-				new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(conn, sqlBuilder)),
-				this.caseInsensitive);
-		return page(conn, sqlBuilder, page, pageResultHandler);
+		final PageResultHandler<Entity> entityResultHandler = PageResultHandler.of(
+			new PageResult<>(page, (int) count(conn, sqlBuilder)));
+
+		return page(conn, sqlBuilder, page, entityResultHandler.setCaseInsensitive(caseInsensitive));
 	}
 
 	/**

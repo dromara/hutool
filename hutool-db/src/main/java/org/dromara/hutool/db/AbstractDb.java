@@ -745,6 +745,22 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	 * @param params          参数
 	 * @return 结果对象
 	 */
+	public <T> PageResult<T> pageForBeanResult(final CharSequence sql, final Page page,
+									   final Class<T> elementBeanType, final Object... params) {
+		final PageResult<T> result = new PageResult<>(page, (int) count(sql, params));
+		return page(sql, page, PageResultHandler.of(elementBeanType, result), params);
+	}
+
+	/**
+	 * 分页查询，结果为Bean列表，不计算总数<br>
+	 *
+	 * @param <T>             Bean类型
+	 * @param sql             SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page            分页对象
+	 * @param elementBeanType 结果集处理对象
+	 * @param params          参数
+	 * @return 结果对象
+	 */
 	public <T> List<T> pageForBeanList(final CharSequence sql, final Page page,
 									   final Class<T> elementBeanType, final Object... params) {
 		return page(sql, page, BeanListHandler.of(elementBeanType), params);

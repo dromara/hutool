@@ -25,6 +25,9 @@ import java.util.ArrayList;
 public class PageResult<T> extends ArrayList<T> {
 	private static final long serialVersionUID = 9056411043515781783L;
 
+	/**
+	 * 默认每页结果数
+	 */
 	public static final int DEFAULT_PAGE_SIZE = Page.DEFAULT_PAGE_SIZE;
 
 	/**
@@ -64,6 +67,17 @@ public class PageResult<T> extends ArrayList<T> {
 
 		this.page = Math.max(page, 0);
 		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param page  分页对象
+	 * @param total 结果总数
+	 * @since 6.0.0
+	 */
+	public PageResult(final Page page, final int total) {
+		this(page.getPageNumber(), page.getPageSize(), total);
 	}
 
 	/**
