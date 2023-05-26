@@ -17,6 +17,7 @@
 * 【core  】      增加Tailer追踪文件时文件被删除的处理情况（pr#3115@Github）
 * 【core  】      DelegatedExecutorService构造方法设置成public（issue#I77LUE@Gitee）
 * 【core  】      切面代理工具中的cglib支持多参数构造生成（issue#I74EX7@Gitee）
+* 【poi   】      添加writeCellValue的重载，以支持isHeader（pr#1002@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复URLUtil.decode无法解码UTF-16问题（issue#3063@Github）
