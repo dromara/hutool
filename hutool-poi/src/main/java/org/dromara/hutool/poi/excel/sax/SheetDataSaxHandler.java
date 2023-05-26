@@ -12,15 +12,14 @@
 
 package org.dromara.hutool.poi.excel.sax;
 
-import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.poi.excel.cell.values.FormulaCellValue;
-import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.poi.excel.cell.values.FormulaCellValue;
+import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -259,9 +258,16 @@ public class SheetDataSaxHandler extends DefaultHandler {
 		padCell(preCoordinate, curCoordinate, false);
 
 		final String contentStr = StrUtil.trim(lastContent);
-		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
-		if (this.lastFormula.length() > 0) {
-			value = new FormulaCellValue(StrUtil.trim(lastFormula), value);
+		final Object value;
+		if(this.lastFormula.length() > 0){
+			if(CellDataType.NULL == this.cellDataType){
+				// 对于公式，默认值类型为数字
+				this.cellDataType = CellDataType.NUMBER;
+			}
+			value = new FormulaCellValue(StrUtil.trim(lastFormula),
+				ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString));
+		}else{
+			value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
 		}
 		addCellValue(curCell++, value);
 	}
@@ -316,7 +322,10 @@ public class SheetDataSaxHandler extends DefaultHandler {
 				this.numFmtString = ObjUtil.defaultIfNull(
 					xssfCellStyle.getDataFormatString(),
 					() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
-				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
+
+				// 日期格式的单元格可能没有t元素
+				if ((CellDataType.NUMBER == this.cellDataType || CellDataType.NULL == this.cellDataType)
+					&& ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
 					cellDataType = CellDataType.DATE;
 				}
 			}

@@ -64,8 +64,8 @@ public enum CellDataType {
 	 */
 	public static CellDataType of(final String name) {
 		if(null == name) {
-			//默认数字
-			return NUMBER;
+			//默认空
+			return NULL;
 		}
 
 		if(BOOL.name.equals(name)) {
