@@ -204,7 +204,7 @@ public class ExcelSaxReadTest {
 		// 非日期格式不做转换
 		Assertions.assertEquals("112233", rows.get(2));
 		// 读取实际值，而非带有格式处理过的值
-		Assertions.assertEquals("1000", rows.get(3));
+		Assertions.assertEquals("1000.0", rows.get(3));
 		Assertions.assertEquals("2012-12-21 00:00:00", rows.get(4));
 	}
 

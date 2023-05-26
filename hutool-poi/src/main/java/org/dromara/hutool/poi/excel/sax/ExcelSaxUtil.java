@@ -44,9 +44,13 @@ import java.io.InputStream;
  */
 public class ExcelSaxUtil {
 
-	// 填充字符串
+	/**
+	 * 填充字符串
+ 	 */
 	public static final char CELL_FILL_CHAR = '@';
-	// 列的最大位数
+	/**
+	 * 列的最大位数
+	 */
 	public static final int MAX_CELL_BIT = 3;
 
 	/**
@@ -103,13 +107,6 @@ public class ExcelSaxUtil {
 					result = value;
 				}
 				break;
-			case NUMBER:
-				try {
-					result = getNumberValue(value, numFmtString);
-				} catch (final NumberFormatException e) {
-					result = value;
-				}
-				break;
 			case DATE:
 				try {
 					result = getDateValue(value);
@@ -118,7 +115,11 @@ public class ExcelSaxUtil {
 				}
 				break;
 			default:
-				result = value;
+				try {
+					result = getNumberValue(value, numFmtString);
+				} catch (final NumberFormatException e) {
+					result = value;
+				}
 				break;
 		}
 		return result;

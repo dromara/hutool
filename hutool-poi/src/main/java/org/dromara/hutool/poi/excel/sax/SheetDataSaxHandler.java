@@ -267,6 +267,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 			value = new FormulaCellValue(StrUtil.trim(lastFormula),
 				ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString));
 		}else{
+			// since 6.0.0，默认的cellDataType是NULL而非NUMBER
 			value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
 		}
 		addCellValue(curCell++, value);
