@@ -1105,49 +1105,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 5.1.4
 	 */
 	public ExcelWriter writeCellValue(String locationRef, Object value) {
-		return writeCellValue(locationRef, value, false);
-	}
-
-	/**
-	 * 给指定单元格赋值，使用默认单元格样式
-	 *
-	 * @param locationRef 单元格地址标识符，例如A11，B5
-	 * @param value       值
-	 * @param isHeader    是否为Header
-	 * @return this
-	 * @since 5.1.4
-	 */
-	public ExcelWriter writeCellValue(String locationRef, Object value, boolean isHeader) {
 		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value, isHeader);
+		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value);
 	}
 
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
 	 *
-	 * @param x        X坐标，从0计数，即列号
-	 * @param y        Y坐标，从0计数，即行号
-	 * @param value    值
+	 * @param x     X坐标，从0计数，即列号
+	 * @param y     Y坐标，从0计数，即行号
+	 * @param value 值
 	 * @return this
 	 * @since 4.0.2
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
-		return writeCellValue(x, y, value, false);
-	}
-
-	/**
-	 * 给指定单元格赋值，使用默认单元格样式
-	 *
-	 * @param x        X坐标，从0计数，即列号
-	 * @param y        Y坐标，从0计数，即行号
-	 * @param value    值
-	 * @param isHeader 是否为Header
-	 * @return this
-	 * @since 4.0.2
-	 */
-	public ExcelWriter writeCellValue(int x, int y, Object value, boolean isHeader) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, this.styleSet, isHeader);
+		CellUtil.setCellValue(cell, value, this.styleSet, false);
 		return this;
 	}
 
