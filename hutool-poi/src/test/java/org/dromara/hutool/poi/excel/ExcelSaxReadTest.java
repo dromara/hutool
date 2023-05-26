@@ -1,6 +1,7 @@
 package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -217,14 +218,13 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	//@Disabled
 	public void readBlankTest() {
 		final File file = FileUtil.file("aaa.xlsx");
 
-		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
+		final List<List<Object>> list = ListUtil.of();
+		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> list.add(rowList));
 
-		Console.log("-------------------------------------");
-		ExcelUtil.getReader(file).read().forEach(Console::log);
+		Assertions.assertEquals("[, 女, , 43.22]", list.get(3).toString());
 	}
 
 	@Test

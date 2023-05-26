@@ -85,7 +85,7 @@ public class ExcelSaxUtil {
 			cellDataType = CellDataType.NULL;
 		}
 
-		Object result;
+		Object result = null;
 		switch (cellDataType) {
 			case BOOL:
 				result = (value.charAt(0) != '0');
@@ -117,7 +117,10 @@ public class ExcelSaxUtil {
 			default:
 				try {
 					result = getNumberValue(value, numFmtString);
-				} catch (final NumberFormatException e) {
+				} catch (final NumberFormatException ignore) {
+				}
+
+				if(null == result){
 					result = value;
 				}
 				break;
