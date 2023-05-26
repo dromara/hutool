@@ -32,6 +32,7 @@
 * 【cron  】      修复SystemTimer无法结束进程问题（issue#3090@Github）
 * 【core  】      修复BeanUtil.copyToList复制Long等类型错误问题（issue#3091@Github）
 * 【poi   】      修复MapRowHandler结果Map无序问题（issue#I71SE8@Github）
+* 【db    】      修复SqlExecutor.execute执行ORACLE insert into select报ORA-00933问题（issue#I778U7@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.18 (2023-04-27)

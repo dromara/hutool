@@ -124,6 +124,21 @@ public class StatementUtil {
 	 * @since 3.2.3
 	 */
 	public static PreparedStatement prepareStatement(Connection conn, String sql, Object... params) throws SQLException {
+		return prepareStatement(GlobalDbConfig.returnGeneratedKey, conn, sql, params);
+	}
+
+	/**
+	 * 创建{@link PreparedStatement}
+	 *
+	 * @param returnGeneratedKey 当为insert语句时，是否返回主键
+	 * @param conn   数据库连接
+	 * @param sql    SQL语句，使用"?"做为占位符
+	 * @param params "?"对应参数列表
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 5.8.19
+	 */
+	public static PreparedStatement prepareStatement(boolean returnGeneratedKey, Connection conn, String sql, Object... params) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 		sql = sql.trim();
 
@@ -136,7 +151,7 @@ public class StatementUtil {
 
 		SqlLog.INSTANCE.log(sql, ArrayUtil.isEmpty(params) ? null : params);
 		PreparedStatement ps;
-		if (GlobalDbConfig.returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
+		if (returnGeneratedKey && StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		} else {
