@@ -38,18 +38,36 @@ public class CellLocation implements Serializable {
 		this.y = y;
 	}
 
+	/**
+	 * 获取x（列）号
+	 *
+	 * @return x（列）号
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * 设置x（列）号
+	 *
+	 * @param x x（列）号
+	 */
 	public void setX(final int x) {
 		this.x = x;
 	}
 
+	/**
+	 * 获取y（行）号
+	 * @return y（行）号
+	 */
 	public int getY() {
 		return y;
 	}
 
+	/**
+	 * 设置y（行）号
+	 * @param y y（行）号
+	 */
 	public void setY(final int y) {
 		this.y = y;
 	}
@@ -74,8 +92,8 @@ public class CellLocation implements Serializable {
 	@Override
 	public String toString() {
 		return "CellLocation{" +
-				"x=" + x +
-				", y=" + y +
-				'}';
+			"x=" + x +
+			", y=" + y +
+			'}';
 	}
 }

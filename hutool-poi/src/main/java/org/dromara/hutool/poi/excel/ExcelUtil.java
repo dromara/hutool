@@ -13,13 +13,12 @@
 package org.dromara.hutool.poi.excel;
 
 import org.dromara.hutool.core.exception.DependencyException;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.core.regex.ReUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.poi.PoiChecker;
 import org.dromara.hutool.poi.excel.cell.CellLocation;
+import org.dromara.hutool.poi.excel.cell.CellLocationUtil;
 import org.dromara.hutool.poi.excel.sax.ExcelSaxReader;
 import org.dromara.hutool.poi.excel.sax.ExcelSaxUtil;
 import org.dromara.hutool.poi.excel.sax.handler.RowHandler;
@@ -464,19 +463,7 @@ public class ExcelUtil {
 	 * @since 4.1.20
 	 */
 	public static String indexToColName(int index) {
-		if (index < 0) {
-			return null;
-		}
-		final StringBuilder colName = StrUtil.builder();
-		do {
-			if (colName.length() > 0) {
-				index--;
-			}
-			final int remainder = index % 26;
-			colName.append((char) (remainder + 'A'));
-			index = (index - remainder) / 26;
-		} while (index > 0);
-		return colName.reverse().toString();
+		return CellLocationUtil.indexToColName(index);
 	}
 
 	/**
@@ -487,17 +474,7 @@ public class ExcelUtil {
 	 * @since 4.1.20
 	 */
 	public static int colNameToIndex(final String colName) {
-		final int length = colName.length();
-		char c;
-		int index = -1;
-		for (int i = 0; i < length; i++) {
-			c = Character.toUpperCase(colName.charAt(i));
-			if (Character.isDigit(c)) {
-				break;// 确定指定的char值是否为数字
-			}
-			index = (index + 1) * 26 + (int) c - 'A';
-		}
-		return index;
+		return CellLocationUtil.colNameToIndex(colName);
 	}
 
 	/**
@@ -509,8 +486,6 @@ public class ExcelUtil {
 	 * @since 5.1.4
 	 */
 	public static CellLocation toLocation(final String locationRef) {
-		final int x = colNameToIndex(locationRef);
-		final int y = ReUtil.getFirstNumber(locationRef) - 1;
-		return new CellLocation(x, y);
+		return CellLocationUtil.toLocation(locationRef);
 	}
 }

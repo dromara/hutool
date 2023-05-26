@@ -919,7 +919,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeImg(final File imgFile, final int imgType, final int dx1, final int dy1, final int dx2,
 								final int dy2, final int col1, final int row1, final int col2, final int row2) {
 		return writeImg(FileUtil.readBytes(imgFile), imgType, dx1,
-				dy1, dx2, dy2, col1, row1, col2, row2);
+			dy1, dx2, dy2, col1, row1, col2, row2);
 	}
 
 	/**
@@ -927,15 +927,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 添加图片到当前sheet中
 	 *
 	 * @param pictureData 数据bytes
-	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param dx1     起始单元格中的x坐标
-	 * @param dy1     起始单元格中的y坐标
-	 * @param dx2     结束单元格中的x坐标
-	 * @param dy2     结束单元格中的y坐标
-	 * @param col1    指定起始的列，下标从0开始
-	 * @param row1    指定起始的行，下标从0开始
-	 * @param col2    指定结束的列，下标从0开始
-	 * @param row2    指定结束的行，下标从0开始
+	 * @param imgType     图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param dx1         起始单元格中的x坐标
+	 * @param dy1         起始单元格中的y坐标
+	 * @param dx2         结束单元格中的x坐标
+	 * @param dy2         结束单元格中的y坐标
+	 * @param col1        指定起始的列，下标从0开始
+	 * @param row1        指定起始的行，下标从0开始
+	 * @param col2        指定结束的列，下标从0开始
+	 * @param row2        指定结束的行，下标从0开始
 	 * @return this
 	 * @author vhukze
 	 * @since 5.8.0
@@ -1042,7 +1042,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			} else {
 				rowMap = (Map) rowBean;
 			}
-		}else if(rowBean instanceof Iterable){
+		} else if (rowBean instanceof Iterable) {
 			// issue#2398@Github
 			// MapWrapper由于实现了Iterable接口，应该优先按照Map处理
 			return writeRow((Iterable<?>) rowBean);
@@ -1097,7 +1097,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			for (final Table.Cell<?, ?, ?> cell : aliasTable) {
 				// 首先查找原名对应的列号
 				location = this.headLocationCache.get(StrUtil.toString(cell.getRowKey()));
-				if(null == location){
+				if (null == location) {
 					// 未找到，则查找别名对应的列号
 					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
 				}
@@ -1149,8 +1149,21 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 4.0.2
 	 */
 	public ExcelWriter writeCellValue(final int x, final int y, final Object value) {
+		return writeCellValue(x, y, value, false);
+	}
+
+	/**
+	 * 给指定单元格赋值，使用默认单元格样式
+	 *
+	 * @param x        X坐标，从0计数，即列号
+	 * @param y        Y坐标，从0计数，即行号
+	 * @param isHeader 是否为Header
+	 * @param value    值
+	 * @return this
+	 */
+	public ExcelWriter writeCellValue(final int x, final int y, final Object value, final boolean isHeader) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, this.styleSet, false, this.cellEditor);
+		CellUtil.setCellValue(cell, value, this.styleSet, isHeader, this.cellEditor);
 		return this;
 	}
 
@@ -1375,9 +1388,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private Table<?, ?, ?> aliasTable(final Map<?, ?> rowMap) {
 		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			rowMap.forEach((key, value)-> filteredTable.put(key, key, value));
-		}else{
-			rowMap.forEach((key, value)->{
+			rowMap.forEach((key, value) -> filteredTable.put(key, key, value));
+		} else {
+			rowMap.forEach((key, value) -> {
 				final String aliasName = this.headerAlias.get(StrUtil.toString(key));
 				if (null != aliasName) {
 					// 别名键值对加入
