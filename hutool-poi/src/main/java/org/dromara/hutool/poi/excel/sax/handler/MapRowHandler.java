@@ -47,7 +47,7 @@ public abstract class MapRowHandler extends AbstractRowHandler<Map<String, Objec
 	public MapRowHandler(final int headerRowIndex, final int startRowIndex, final int endRowIndex){
 		super(startRowIndex, endRowIndex);
 		this.headerRowIndex = headerRowIndex;
-		this.convertFunc = (rowList)-> IterUtil.toMap(headerList, rowList);
+		this.convertFunc = (rowList)-> IterUtil.toMap(headerList, rowList, true);
 	}
 
 	@Override
