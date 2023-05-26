@@ -22,10 +22,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.Entity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +52,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 
 	/**
 	 * 设置SQL日志
+	 *
 	 * @param sqlLog {@link SqlLog}
 	 * @return this
 	 */
@@ -98,6 +96,7 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 
 	/**
 	 * 设置是否返回主键
+	 *
 	 * @param returnGeneratedKey 是否返回主键
 	 * @return this
 	 */
@@ -166,6 +165,26 @@ public class StatementBuilder implements Builder<StatementWrapper> {
 			throw new DbRuntimeException(e);
 		}
 		return ps;
+	}
+
+	/**
+	 * 创建存储过程或函数调用的{@link StatementWrapper}
+	 *
+	 * @return StatementWrapper
+	 * @since 6.0.0
+	 */
+	public CallableStatement buildForCall() {
+		Assert.notBlank(sql, "Sql String must be not blank!");
+		sqlLog.log(sql, ArrayUtil.isEmpty(params) ? null : params);
+
+		try {
+			return (CallableStatement) StatementWrapper
+				.of(connection.prepareCall(sql))
+				.fillArrayParam(params)
+				.getRaw();
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
 	}
 
 	/**

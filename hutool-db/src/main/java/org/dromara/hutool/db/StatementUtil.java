@@ -40,10 +40,9 @@ public class StatementUtil {
 	 * @param conn       数据库连接
 	 * @param sqlBuilder {@link SqlBuilder}包括SQL语句和参数
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 4.1.3
 	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final SqlBuilder sqlBuilder) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, final SqlBuilder sqlBuilder) {
 		return prepareStatement(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
 	}
 
@@ -54,10 +53,9 @@ public class StatementUtil {
 	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Collection<Object> params) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Collection<Object> params) {
 		return prepareStatement(conn, sql, params.toArray(new Object[0]));
 	}
 
@@ -68,13 +66,27 @@ public class StatementUtil {
 	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表或者Map表示命名参数
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
-	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Object... params) throws SQLException {
+	public static PreparedStatement prepareStatement(final Connection conn, final String sql, final Object... params) {
+		return prepareStatement(GlobalDbConfig.returnGeneratedKey, conn, sql, params);
+	}
+
+	/**
+	 * 创建{@link PreparedStatement}
+	 *
+	 * @param returnGeneratedKey 当为insert语句时，是否返回主键
+	 * @param conn   数据库连接
+	 * @param sql    SQL语句，使用"?"做为占位符
+	 * @param params "?"对应参数列表或者Map表示命名参数
+	 * @return {@link PreparedStatement}
+	 * @since 5.8.19
+	 */
+	public static PreparedStatement prepareStatement(final boolean returnGeneratedKey,
+													 final Connection conn, final String sql, final Object... params) {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setReturnGeneratedKey(returnGeneratedKey)
 			.setSqlLog(SqlLog.INSTANCE)
 			.setSql(sql)
 			.setParams(params)
@@ -88,10 +100,9 @@ public class StatementUtil {
 	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Object[]... paramsBatch) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Object[]... paramsBatch) {
 		return prepareStatementForBatch(conn, sql, new ArrayIter<>(paramsBatch));
 	}
 
@@ -102,13 +113,13 @@ public class StatementUtil {
 	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Iterable<Object[]> paramsBatch) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql,
+															 final Iterable<Object[]> paramsBatch) {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setReturnGeneratedKey(false)
 			.setSqlLog(SqlLog.INSTANCE)
 			.setSql(sql)
 			.buildForBatch(paramsBatch);
@@ -122,13 +133,13 @@ public class StatementUtil {
 	 * @param fields   字段列表，用于获取对应值
 	 * @param entities "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
-	 * @throws SQLException SQL异常
 	 * @since 4.6.7
 	 */
-	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql, final Iterable<String> fields, final Entity... entities) throws SQLException {
+	public static PreparedStatement prepareStatementForBatch(final Connection conn, final String sql,
+															 final Iterable<String> fields, final Entity... entities) {
 		return StatementBuilder.of()
 			.setConnection(conn)
-			.setReturnGeneratedKey(GlobalDbConfig.returnGeneratedKey)
+			.setReturnGeneratedKey(false)
 			.setSqlLog(SqlLog.INSTANCE)
 			.setSql(sql)
 			.buildForBatch(fields, entities);
@@ -144,14 +155,13 @@ public class StatementUtil {
 	 * @throws SQLException SQL异常
 	 * @since 4.1.13
 	 */
-	public static CallableStatement prepareCall(final Connection conn, String sql, final Object... params) throws SQLException {
-		Assert.notBlank(sql, "Sql String must be not blank!");
-
-		sql = sql.trim();
-		SqlLog.INSTANCE.log(sql, params);
-		final CallableStatement call = conn.prepareCall(sql);
-		fillArrayParam(call, params);
-		return call;
+	public static CallableStatement prepareCall(final Connection conn, final String sql, final Object... params) throws SQLException {
+		return StatementBuilder.of()
+			.setConnection(conn)
+			.setSqlLog(SqlLog.INSTANCE)
+			.setSql(sql)
+			.setParams(params)
+			.buildForCall();
 	}
 
 	// region ----- getGeneratedKey

@@ -61,7 +61,7 @@ public class SqlExecutor {
 	public static int execute(final Connection conn, final String sql, final Object... params) throws DbRuntimeException {
 		PreparedStatement ps = null;
 		try {
-			ps = StatementUtil.prepareStatement(conn, sql, params);
+			ps = StatementUtil.prepareStatement(false, conn, sql, params);
 			return ps.executeUpdate();
 		} catch (final SQLException e) {
 			throw new DbRuntimeException(e);
@@ -143,7 +143,7 @@ public class SqlExecutor {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = StatementUtil.prepareStatement(conn, sql, params);
+			ps = StatementUtil.prepareStatement(true, conn, sql, params);
 			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			if (rs != null && rs.next()) {
@@ -275,10 +275,8 @@ public class SqlExecutor {
 	public static <T> T query(final Connection conn, final String sql, final RsHandler<T> rsh, final Object... params) throws DbRuntimeException {
 		PreparedStatement ps = null;
 		try {
-			ps = StatementUtil.prepareStatement(conn, sql, params);
+			ps = StatementUtil.prepareStatement(false, conn, sql, params);
 			return executeQuery(ps, rsh);
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
 		} finally {
 			IoUtil.closeQuietly(ps);
 		}
