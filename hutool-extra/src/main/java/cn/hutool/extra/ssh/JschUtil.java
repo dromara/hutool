@@ -155,6 +155,7 @@ public class JschUtil {
 	 * @param sshUser    用户名
 	 * @param privateKey 私钥内容
 	 * @param passphrase 私钥文件的密码，可以为null
+	 * @param timeOut    超时时长
 	 * @return SSH会话
 	 * @since 5.8.18
 	 */
