@@ -166,11 +166,16 @@ public class ExcelSaxReadTest {
 
 	@Test
 	public void formulaRead07Test() {
+		// since 6.0.0修改
+		// 默认不在行尾对齐单元格，因此只读取了有第二个值的行
 		final List<Object> rows = new ArrayList<>();
-		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0, (i, i1, list) ->
-				rows.add(list.get(1)));
+		ExcelUtil.readBySax("data_for_sax_test.xlsx", 0, (i, i1, list) -> {
+			if(list.size() > 1){
+				rows.add(list.get(1));
+			}
+		});
 
-		final FormulaCellValue value = (FormulaCellValue) rows.get(3);
+		final FormulaCellValue value = (FormulaCellValue) rows.get(1);
 		Assertions.assertEquals(50L, value.getResult());
 	}
 
@@ -211,12 +216,13 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	@Disabled
+	//@Disabled
 	public void readBlankTest() {
-		final File file = new File("D:/test/b.xlsx");
+		final File file = FileUtil.file("aaa.xlsx");
 
-		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> rowList.forEach(Console::log));
+		ExcelUtil.readBySax(file, 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 
+		Console.log("-------------------------------------");
 		ExcelUtil.getReader(file).read().forEach(Console::log);
 	}
 

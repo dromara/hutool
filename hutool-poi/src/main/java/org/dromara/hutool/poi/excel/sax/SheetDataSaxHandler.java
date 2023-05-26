@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel.sax;
 
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.poi.excel.cell.values.FormulaCellValue;
@@ -36,6 +37,13 @@ import java.util.List;
  * @since 5.5.3
  */
 public class SheetDataSaxHandler extends DefaultHandler {
+
+	/**
+	 * 行处理器
+	 */
+	protected RowHandler rowHandler;
+	// 配置项：是否对齐数据，即在行尾补充null cell
+	private final boolean padCellAtEndOfRow;
 
 	// 单元格的格式表，对应style.xml
 	protected StylesTable stylesTable;
@@ -77,16 +85,13 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	/**
 	 * 构造
 	 *
-	 * @param rowHandler 行处理器
+	 * @param rowHandler        行处理器
+	 * @param padCellAtEndOfRow 是否对齐数据，即在行尾补充null cell
 	 */
-	public SheetDataSaxHandler(final RowHandler rowHandler) {
+	public SheetDataSaxHandler(final RowHandler rowHandler, final boolean padCellAtEndOfRow) {
 		this.rowHandler = rowHandler;
+		this.padCellAtEndOfRow = padCellAtEndOfRow;
 	}
-
-	/**
-	 * 行处理器
-	 */
-	protected RowHandler rowHandler;
 
 	/**
 	 * 设置行处理器
@@ -228,8 +233,8 @@ public class SheetDataSaxHandler extends DefaultHandler {
 		}
 
 		// 补全一行尾部可能缺失的单元格
-		if (maxCellCoordinate != null) {
-			fillBlankCell(curCoordinate, maxCellCoordinate, true);
+		if (padCellAtEndOfRow && maxCellCoordinate != null) {
+			padCell(curCoordinate, maxCellCoordinate, true);
 		}
 
 		rowHandler.handle(sheetIndex, rowNumber, rowCellList);
@@ -251,7 +256,7 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	 */
 	private void endCell() {
 		// 补全单元格之间的空格
-		fillBlankCell(preCoordinate, curCoordinate, false);
+		padCell(preCoordinate, curCoordinate, false);
 
 		final String contentStr = StrUtil.trim(lastContent);
 		Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStrings, this.numFmtString);
@@ -279,14 +284,14 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	 * @param curCoordinate 当前单元格坐标
 	 * @param isEnd         是否为最后一个单元格
 	 */
-	private void fillBlankCell(final String preCoordinate, final String curCoordinate, final boolean isEnd) {
+	private void padCell(final String preCoordinate, final String curCoordinate, final boolean isEnd) {
 		if (!curCoordinate.equals(preCoordinate)) {
 			int len = ExcelSaxUtil.countNullCell(preCoordinate, curCoordinate);
 			if (isEnd) {
 				len++;
 			}
 			while (len-- > 0) {
-				addCellValue(curCell++, StrUtil.EMPTY);
+				addCellValue(curCell++, null);
 			}
 		}
 	}
@@ -309,8 +314,8 @@ public class SheetDataSaxHandler extends DefaultHandler {
 				// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
 				final int numFmtIndex = xssfCellStyle.getDataFormat();
 				this.numFmtString = ObjUtil.defaultIfNull(
-						xssfCellStyle.getDataFormatString(),
-						() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
+					xssfCellStyle.getDataFormatString(),
+					() -> BuiltinFormats.getBuiltinFormat(numFmtIndex));
 				if (CellDataType.NUMBER == this.cellDataType && ExcelSaxUtil.isDateFormat(numFmtIndex, numFmtString)) {
 					cellDataType = CellDataType.DATE;
 				}

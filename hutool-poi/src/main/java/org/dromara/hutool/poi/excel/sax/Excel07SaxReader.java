@@ -44,10 +44,20 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	/**
 	 * 构造
 	 *
-	 * @param rowHandler 行处理器
+	 * @param rowHandler        行处理器
 	 */
 	public Excel07SaxReader(final RowHandler rowHandler) {
-		this.handler = new SheetDataSaxHandler(rowHandler);
+		this(rowHandler, false);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param rowHandler        行处理器
+	 * @param padCellAtEndOfRow 是否对齐数据，即在行尾补充null cell
+	 */
+	public Excel07SaxReader(final RowHandler rowHandler, final boolean padCellAtEndOfRow) {
+		this.handler = new SheetDataSaxHandler(rowHandler, padCellAtEndOfRow);
 	}
 
 	/**
@@ -69,7 +79,7 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 
 	@Override
 	public Excel07SaxReader read(final File file, final String idOrRidOrSheetName) throws POIException {
-		try (final OPCPackage open = OPCPackage.open(file, PackageAccess.READ)){
+		try (final OPCPackage open = OPCPackage.open(file, PackageAccess.READ)) {
 			return read(open, idOrRidOrSheetName);
 		} catch (final InvalidFormatException | IOException e) {
 			throw new POIException(e);
@@ -107,8 +117,8 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	/**
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
-	 * @param opcPackage {@link OPCPackage}，Excel包，读取后不关闭
-	 * @param idOrRidOrSheetName    Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param opcPackage         {@link OPCPackage}，Excel包，读取后不关闭
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
@@ -125,8 +135,8 @@ public class Excel07SaxReader implements ExcelSaxReader<Excel07SaxReader> {
 	/**
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 *
-	 * @param xssfReader {@link XSSFReader}，Excel读取器
-	 * @param idOrRidOrSheetName    Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
+	 * @param xssfReader         {@link XSSFReader}，Excel读取器
+	 * @param idOrRidOrSheetName Excel中的sheet id或者rid编号或sheet名，rid必须加rId前缀，例如rId1，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 * @since 5.4.4
