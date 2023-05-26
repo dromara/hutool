@@ -12,15 +12,26 @@
 
 package org.dromara.hutool.db;
 
-import org.dromara.hutool.db.ds.DSUtil;
-import org.junit.jupiter.api.Disabled;
+import lombok.Data;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class IssueI73770Test {
 
 	@Test
-	@Disabled
 	void pageTest() {
-		DSUtil.getDS("mysql");
+		final List<User> result = Db.of()
+			.pageForBeanList("select * from user where id = ?"
+				, new Page(0, 10), User.class, 9);
+		Assertions.assertEquals(1, result.size());
+		Assertions.assertEquals(9, result.get(0).getId());
+	}
+
+	@Data
+	static class User{
+		private Integer id;
+		private String name;
 	}
 }

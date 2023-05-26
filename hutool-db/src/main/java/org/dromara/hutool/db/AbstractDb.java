@@ -64,6 +64,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// ------------------------------------------------------- Constructor end
 
 	// region ----- query
+
 	/**
 	 * 查询
 	 *
@@ -205,6 +206,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- execute
+
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除
@@ -302,6 +304,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// ---------------------------------------------------------------------------- CRUD start
 
 	// region ----- insert
+
 	/**
 	 * 插入数据
 	 *
@@ -415,6 +418,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- del
+
 	/**
 	 * 删除数据
 	 *
@@ -447,6 +451,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- update
+
 	/**
 	 * 更新数据<br>
 	 * 更新条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
@@ -498,6 +503,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- find
+
 	/**
 	 * 查询<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
@@ -672,6 +678,7 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- count
+
 	/**
 	 * 结果的条目数
 	 *
@@ -727,6 +734,22 @@ public abstract class AbstractDb<R extends AbstractDb<R>> extends DefaultConnect
 	// endregion
 
 	// region ----- page
+
+	/**
+	 * 分页查询，结果为Bean列表，不计算总数<br>
+	 *
+	 * @param <T>             Bean类型
+	 * @param sql             SQL构建器，可以使用{@link SqlBuilder#of(CharSequence)} 包装普通SQL
+	 * @param page            分页对象
+	 * @param elementBeanType 结果集处理对象
+	 * @param params          参数
+	 * @return 结果对象
+	 */
+	public <T> List<T> pageForBeanList(final CharSequence sql, final Page page,
+									   final Class<T> elementBeanType, final Object... params) {
+		return page(sql, page, BeanListHandler.of(elementBeanType), params);
+	}
+
 	/**
 	 * 分页查询，结果为Entity列表，不计算总数<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
