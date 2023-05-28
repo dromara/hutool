@@ -45,9 +45,10 @@ public class UrlQuery {
 	/**
 	 * 是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
 	 */
-	private final boolean isStrict;
+	private boolean isStrict;
 
 	// region ----- of
+
 	/**
 	 * 构建UrlQuery
 	 *
@@ -147,6 +148,15 @@ public class UrlQuery {
 		}
 		this.isFormUrlEncoded = isFormUrlEncoded;
 		this.isStrict = isStrict;
+	}
+
+	/**
+	 * 设置是否严格模式
+	 *
+	 * @param strict 是否严格模式
+	 */
+	public void setStrict(final boolean strict) {
+		isStrict = strict;
 	}
 
 	/**
@@ -267,7 +277,7 @@ public class UrlQuery {
 			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
 		}
 
-		if(isStrict){
+		if (isStrict) {
 			return build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset, encodePercent);
 		}
 		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
