@@ -12,9 +12,6 @@
 
 package org.dromara.hutool.core.lang.tuple;
 
-import org.dromara.hutool.core.exception.CloneException;
-
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -26,15 +23,13 @@ import java.util.Objects;
  * @author kirno7
  * @since 6.0.0
  */
-public class Triple<L, M, R> implements Serializable, Cloneable {
+public class Triple<L, M, R> extends Pair<L, R> {
 	private static final long serialVersionUID = 1L;
 
-	protected L left;
 	protected M middle;
-	protected R right;
 
 	/**
-	 * 构建ImmutableTriple对象
+	 * 构建Triple对象
 	 *
 	 * @param <L>    左值类型
 	 * @param <M>    中值类型
@@ -42,7 +37,7 @@ public class Triple<L, M, R> implements Serializable, Cloneable {
 	 * @param left   左值
 	 * @param middle 中值
 	 * @param right  右值
-	 * @return ImmutableTriple
+	 * @return Triple
 	 * @since 6.0.0
 	 */
 	public static <L, M, R> Triple<L, M, R> of(final L left, final M middle, final R right) {
@@ -57,21 +52,11 @@ public class Triple<L, M, R> implements Serializable, Cloneable {
 	 * @param right  右值
 	 */
 	public Triple(final L left, final M middle, final R right) {
-		this.left = left;
+		super(left, right);
 		this.middle = middle;
-		this.right = right;
 	}
 
 	// region ----- getXXX
-	/**
-	 * 获取左值
-	 *
-	 * @return 左值
-	 */
-	public L getLeft() {
-		return this.left;
-	}
-
 	/**
 	 * 获取中值
 	 *
@@ -79,15 +64,6 @@ public class Triple<L, M, R> implements Serializable, Cloneable {
 	 */
 	public M getMiddle() {
 		return this.middle;
-	}
-
-	/**
-	 * 获取右值
-	 *
-	 * @return 右值
-	 */
-	public R getRight() {
-		return this.right;
 	}
 	// endregion
 
@@ -107,23 +83,16 @@ public class Triple<L, M, R> implements Serializable, Cloneable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(getLeft())
-			^ Objects.hashCode(getMiddle())
-			^ Objects.hashCode(getRight());
+		return Objects.hash(this.left, this.middle, this.right);
 	}
 
 	@Override
 	public String toString() {
-		return "Triple {" + "left=" + getLeft() + ", middle=" + getMiddle() + ", right=" + getRight() + '}';
+		return "Triple{" + "left=" + getLeft() + ", middle=" + getMiddle() + ", right=" + getRight() + '}';
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Triple<L, M, R> clone() {
-		try {
-			return (Triple<L, M, R>) super.clone();
-		} catch (final CloneNotSupportedException e) {
-			throw new CloneException(e);
-		}
+		return (Triple<L, M, R>) super.clone();
 	}
 }
