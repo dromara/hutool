@@ -67,7 +67,7 @@ public class ObjectUtil {
 	 * @since 3.0.7
 	 */
 	public static boolean notEqual(Object obj1, Object obj2) {
-		return false == equal(obj1, obj2);
+		return !equal(obj1, obj2);
 	}
 
 	/**
@@ -206,7 +206,9 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 检查对象是否不为null
+	 * 检查对象是否不为null<br>
+	 * 判断标准为：
+	 *
 	 * <pre>
 	 * 1. != null
 	 * 2. not equals(null)
@@ -216,8 +218,7 @@ public class ObjectUtil {
 	 * @return 是否为非null
 	 */
 	public static boolean isNotNull(Object obj) {
-		//noinspection ConstantConditions
-		return null != obj && false == obj.equals(null);
+		return !isNull(obj);
 	}
 
 	/**
