@@ -1106,7 +1106,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
 	 * @return this
 	 */
-	public ExcelWriter writeCol(Map<?,?> colMap, boolean isWriteKeyAsHead){
+	public ExcelWriter writeCol(Map<?,? extends Iterable<?>> colMap, boolean isWriteKeyAsHead){
 		return writeCol(colMap, 0, isWriteKeyAsHead);
 	}
 
@@ -1121,11 +1121,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
 	 * @return this
 	 */
-	public ExcelWriter writeCol(Map<?,?> colMap, int startColIndex, boolean isWriteKeyAsHead){
+	public ExcelWriter writeCol(Map<?,? extends Iterable<?>> colMap, int startColIndex, boolean isWriteKeyAsHead){
 		for (Object k : colMap.keySet()) {
-			Object v = colMap.get(k);
-			if(v instanceof Iterable){
-				writeCol(isWriteKeyAsHead?k:null,startColIndex, (Iterable<?>) v, startColIndex != colMap.size() - 1);
+			Iterable<?> v = colMap.get(k);
+			if(v != null){
+				writeCol(isWriteKeyAsHead?k:null,startColIndex, v, startColIndex != colMap.size() - 1);
 				startColIndex ++;
 			}
 		}
