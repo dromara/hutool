@@ -52,7 +52,7 @@ public class UrlEncodedFormBody extends FormBody<UrlEncodedFormBody> {
 
 	@Override
 	public void write(final OutputStream out) {
-		final byte[] bytes = ByteUtil.toBytes(UrlQuery.of(form, true).build(charset), charset);
+		final byte[] bytes = ByteUtil.toBytes(UrlQuery.of(form, true, false).build(charset), charset);
 		IoUtil.write(out, false, bytes);
 	}
 

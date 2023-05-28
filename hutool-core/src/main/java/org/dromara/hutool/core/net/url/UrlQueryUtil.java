@@ -77,7 +77,7 @@ public class UrlQueryUtil {
 	 * @since 5.7.16
 	 */
 	public static String toQuery(final Map<String, ?> paramMap, final Charset charset, final boolean isFormUrlEncoded) {
-		return UrlQuery.of(paramMap, isFormUrlEncoded).build(charset);
+		return UrlQuery.of(paramMap, isFormUrlEncoded, false).build(charset);
 	}
 
 	/**

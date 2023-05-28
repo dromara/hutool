@@ -24,6 +24,7 @@ import org.dromara.hutool.core.codec.PercentCodec;
 public class RFC3986 {
 
 	/**
+	 * 通用URI组件分隔符<br>
 	 * gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 	 */
 	public static final PercentCodec GEN_DELIMS = PercentCodec.Builder.of(":/?#[]@").build();
@@ -40,6 +41,7 @@ public class RFC3986 {
 	public static final PercentCodec RESERVED = PercentCodec.Builder.of(GEN_DELIMS).or(SUB_DELIMS).build();
 
 	/**
+	 * 非保留字符，即URI中不作为分隔符使用的字符<br>
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"<br>
 	 * see: <a href="https://www.ietf.org/rfc/rfc3986.html#section-2.3">https://www.ietf.org/rfc/rfc3986.html#section-2.3</a>
 	 */
@@ -82,10 +84,24 @@ public class RFC3986 {
 	public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.Builder.of(QUERY).removeSafe('&').build();
 
 	/**
+	 * query中的value编码器，严格模式，value中不能包含任何分隔符。
+	 *
+	 * @since 6.0.0
+	 */
+	public static final PercentCodec QUERY_PARAM_VALUE_STRICT = UNRESERVED;
+
+	/**
 	 * query中的key<br>
 	 * key不能包含"{@code &}" 和 "="
 	 */
 	public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.Builder.of(QUERY_PARAM_VALUE).removeSafe('=').build();
+
+	/**
+	 * query中的key编码器，严格模式，key中不能包含任何分隔符。
+	 *
+	 * @since 6.0.0
+	 */
+	public static final PercentCodec QUERY_PARAM_NAME_STRICT = UNRESERVED;
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"

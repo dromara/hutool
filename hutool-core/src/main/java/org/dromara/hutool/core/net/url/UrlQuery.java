@@ -42,6 +42,31 @@ public class UrlQuery {
 	 * 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 */
 	private final boolean isFormUrlEncoded;
+	/**
+	 * 是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
+	 */
+	private final boolean isStrict;
+
+	// region ----- of
+	/**
+	 * 构建UrlQuery
+	 *
+	 * @return UrlQuery
+	 */
+	public static UrlQuery of() {
+		return of(false, false);
+	}
+
+	/**
+	 * 构建UrlQuery
+	 *
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @param isStrict         是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
+	 * @return UrlQuery
+	 */
+	public static UrlQuery of(final boolean isFormUrlEncoded, final boolean isStrict) {
+		return new UrlQuery(null, isFormUrlEncoded, isStrict);
+	}
 
 	/**
 	 * 构建UrlQuery
@@ -50,7 +75,7 @@ public class UrlQuery {
 	 * @return UrlQuery
 	 */
 	public static UrlQuery of(final Map<? extends CharSequence, ?> queryMap) {
-		return new UrlQuery(queryMap);
+		return of(queryMap, false, false);
 	}
 
 	/**
@@ -58,10 +83,11 @@ public class UrlQuery {
 	 *
 	 * @param queryMap         初始化的查询键值对
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @param isStrict         是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
 	 * @return UrlQuery
 	 */
-	public static UrlQuery of(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded) {
-		return new UrlQuery(queryMap, isFormUrlEncoded);
+	public static UrlQuery of(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded, final boolean isStrict) {
+		return new UrlQuery(queryMap, isFormUrlEncoded, isStrict);
 	}
 
 	/**
@@ -85,7 +111,7 @@ public class UrlQuery {
 	 * @since 5.5.8
 	 */
 	public static UrlQuery of(final String queryStr, final Charset charset, final boolean autoRemovePath) {
-		return of(queryStr, charset, autoRemovePath, false);
+		return of(queryStr, charset, autoRemovePath, false, false);
 	}
 
 	/**
@@ -95,47 +121,24 @@ public class UrlQuery {
 	 * @param charset          decode用的编码，null表示不做decode
 	 * @param autoRemovePath   是否自动去除path部分，{@code true}则自动去除第一个?前的内容
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @param isStrict         是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
 	 * @return UrlQuery
 	 * @since 5.7.16
 	 */
-	public static UrlQuery of(final String queryStr, final Charset charset, final boolean autoRemovePath, final boolean isFormUrlEncoded) {
-		return new UrlQuery(isFormUrlEncoded).parse(queryStr, charset, autoRemovePath);
+	public static UrlQuery of(final String queryStr, final Charset charset, final boolean autoRemovePath
+		, final boolean isFormUrlEncoded, final boolean isStrict) {
+		return new UrlQuery(null, isFormUrlEncoded, isStrict).parse(queryStr, charset, autoRemovePath);
 	}
-
-	/**
-	 * 构造
-	 */
-	public UrlQuery() {
-		this(null);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
-	 * @since 5.7.16
-	 */
-	public UrlQuery(final boolean isFormUrlEncoded) {
-		this(null, isFormUrlEncoded);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param queryMap 初始化的查询键值对
-	 */
-	public UrlQuery(final Map<? extends CharSequence, ?> queryMap) {
-		this(queryMap, false);
-	}
+	// endregion
 
 	/**
 	 * 构造
 	 *
 	 * @param queryMap         初始化的查询键值对
 	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
-	 * @since 5.7.16
+	 * @param isStrict         是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
 	 */
-	public UrlQuery(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded) {
+	public UrlQuery(final Map<? extends CharSequence, ?> queryMap, final boolean isFormUrlEncoded, final boolean isStrict) {
 		if (MapUtil.isNotEmpty(queryMap)) {
 			query = new TableMap<>(queryMap.size());
 			addAll(queryMap);
@@ -143,6 +146,7 @@ public class UrlQuery {
 			query = new TableMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
 		}
 		this.isFormUrlEncoded = isFormUrlEncoded;
+		this.isStrict = isStrict;
 	}
 
 	/**
@@ -263,6 +267,9 @@ public class UrlQuery {
 			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
 		}
 
+		if(isStrict){
+			return build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset, encodePercent);
+		}
 		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
 	}
 
@@ -274,9 +281,9 @@ public class UrlQuery {
 	 *     <li>如果value为{@code null}，只保留key，如key1对应value为{@code null}生成类似于{@code key1&key2=v2}形式</li>
 	 * </ul>
 	 *
-	 * @param keyCoder      键值对中键的编码器
-	 * @param valueCoder    键值对中值的编码器
-	 * @param charset       encode编码，null表示不做encode编码
+	 * @param keyCoder   键值对中键的编码器
+	 * @param valueCoder 键值对中值的编码器
+	 * @param charset    encode编码，null表示不做encode编码
 	 * @return URL查询字符串
 	 * @since 5.7.16
 	 */

@@ -121,7 +121,7 @@ public final class UrlBuilder implements Builder<String> {
 
 		httpUrl = StrUtil.trimPrefix(httpUrl);
 		// issue#I66CIR
-		if(!StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")){
+		if (!StrUtil.startWithAnyIgnoreCase(httpUrl, "http://", "https://")) {
 			httpUrl = "http://" + httpUrl;
 		}
 
@@ -175,8 +175,8 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public static UrlBuilder of(final String scheme, final String host, final int port, final String path, final String query, final String fragment, final Charset charset) {
 		return of(scheme, host, port,
-				UrlPath.of(path, charset),
-				UrlQuery.of(query, charset, false), fragment, charset);
+			UrlPath.of(path, charset),
+			UrlQuery.of(query, charset, false), fragment, charset);
 	}
 
 	/**
@@ -434,7 +434,7 @@ public final class UrlBuilder implements Builder<String> {
 	}
 
 	/**
-	 * 添加查询项，支持重复键
+	 * 添加查询项，支持重复键，默认非严格模式
 	 *
 	 * @param key   键
 	 * @param value 值
@@ -446,7 +446,7 @@ public final class UrlBuilder implements Builder<String> {
 		}
 
 		if (this.query == null) {
-			this.query = new UrlQuery();
+			this.query = UrlQuery.of();
 		}
 		this.query.add(key, value);
 		return this;
