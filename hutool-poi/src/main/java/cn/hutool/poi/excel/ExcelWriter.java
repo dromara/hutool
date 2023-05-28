@@ -1097,6 +1097,87 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 从第1列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Map<?,?> colMap, boolean isWriteKeyAsHead){
+		return writeCol(colMap, 0, isWriteKeyAsHead);
+	}
+
+	/**
+	 * 从指定列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param startColIndex    起始的列号，从0开始
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Map<?,?> colMap, int startColIndex, boolean isWriteKeyAsHead){
+		for (Object k : colMap.keySet()) {
+			Object v = colMap.get(k);
+			if(v instanceof Iterable){
+				writeCol(isWriteKeyAsHead?k:null,startColIndex, (Iterable<?>) v, startColIndex != colMap.size() - 1);
+				startColIndex ++;
+			}
+		}
+		return this;
+	}
+
+
+	/**
+	 * 为第一列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Object headerVal, Iterable<?> colData, boolean isResetRowIndex){
+		return writeCol(headerVal,0,colData,isResetRowIndex);
+	}
+
+	/**
+	 * 为第指定列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colIndex        列index
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Object headerVal, int colIndex, Iterable<?> colData, boolean isResetRowIndex){
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		int currentRowIndex = currentRow.get();
+		if(null != headerVal){
+			writeCellValue(colIndex, currentRowIndex, headerVal,true);
+			currentRowIndex++;
+		}
+		for (Object colDatum : colData) {
+			writeCellValue(colIndex, currentRowIndex, colDatum);
+			currentRowIndex++;
+		}
+		if(!isResetRowIndex){
+			currentRow.set(currentRowIndex);
+		}
+		return this;
+	}
+
+	/**
 	 * 给指定单元格赋值，使用默认单元格样式，默认不是Header
 	 *
 	 * @param locationRef 单元格地址标识符，例如A11，B5
