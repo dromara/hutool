@@ -154,9 +154,11 @@ public class UrlQuery {
 	 * 设置是否严格模式
 	 *
 	 * @param strict 是否严格模式
+	 * @return this
 	 */
-	public void setStrict(final boolean strict) {
+	public UrlQuery setStrict(final boolean strict) {
 		isStrict = strict;
+		return this;
 	}
 
 	/**
