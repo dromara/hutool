@@ -144,4 +144,15 @@ public class UrlQueryTest {
 		final UrlQuery query = UrlQuery.of(queryStr, null);
 		Assert.assertEquals(queryStr, query.toString());
 	}
+
+	@Test
+	public void issueI78PB1Test() {
+		// 严格模式
+		final UrlQuery query = new UrlQuery().setStrict(true);
+		query.add(":/?#[]@!$&'()*+,;= ", ":/?#[]@!$&'()*+,;= ");
+
+		final String string = query.build(CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D%20=" +
+			"%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D%20", string);
+	}
 }
