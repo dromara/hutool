@@ -318,7 +318,7 @@ public class MethodMatcherUtil {
 	 * @return 方法匹配器
 	 */
 	public static MethodMatcher forNameIgnoreCaseAndStrictParameterTypes(
-		final String methodName, Class<?>... parameterTypes) {
+		final String methodName, final Class<?>... parameterTypes) {
 		Objects.requireNonNull(methodName);
 		Objects.requireNonNull(parameterTypes);
 		return allMatch(forNameIgnoreCase(methodName), forStrictParameterTypes(parameterTypes));
@@ -352,8 +352,8 @@ public class MethodMatcherUtil {
 	 *     <li>参数类型是否匹配，允许参数类型为方法参数类型的子类，若参数类型为{@code null}则表示匹配无参数的方法；</li>
 	 * </ul>
 	 *
-	 * @param methodName 方法名
-	 * @param returnType 返回值类型，若为{@code null}则表示匹配无返回值的方法
+	 * @param methodName     方法名
+	 * @param returnType     返回值类型，若为{@code null}则表示匹配无返回值的方法
 	 * @param parameterTypes 参数类型，若为{@code null}则表示匹配无参数的方法
 	 * @return 方法匹配器
 	 */
@@ -375,8 +375,8 @@ public class MethodMatcherUtil {
 	 *     <li>参数类型是否匹配，要求参数类型与方法参数类型完全一致，若参数类型为{@code null}则表示匹配无参数的方法；</li>
 	 * </ul>
 	 *
-	 * @param methodName 方法名
-	 * @param returnType 返回值类型，若为{@code null}则表示匹配无返回值的方法
+	 * @param methodName     方法名
+	 * @param returnType     返回值类型，若为{@code null}则表示匹配无返回值的方法
 	 * @param parameterTypes 参数类型，若为{@code null}则表示匹配无参数的方法
 	 * @return 方法匹配器
 	 */
@@ -474,7 +474,7 @@ public class MethodMatcherUtil {
 	 * @param count 参数个数
 	 * @return 方法匹配器
 	 */
-	public static MethodMatcher forParameterCount(int count) {
+	public static MethodMatcher forParameterCount(final int count) {
 		return method -> method.getParameterCount() == count;
 	}
 
@@ -568,7 +568,7 @@ public class MethodMatcherUtil {
 
 	@NotNull
 	private static MethodMatcher mostSpecificStrictParameterTypesMatcher(
-		Class<?>[] parameterTypes, BiPredicate<Class<?>, Class<?>> typeMatcher) {
+		final Class<?>[] parameterTypes, final BiPredicate<Class<?>, Class<?>> typeMatcher) {
 		Objects.requireNonNull(parameterTypes);
 		// 若参数为空，则表示匹配无参数方法
 		if (parameterTypes.length == 0) {

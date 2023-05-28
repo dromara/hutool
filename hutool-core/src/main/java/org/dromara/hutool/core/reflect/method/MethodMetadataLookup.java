@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 /**
  * 方法的元数据查找器，参照 spring 的 {@code MethodIntrospector.MetadataLookup}，用于从方法上获得特定的元数据。
  *
+ * @param <T> 返回类型
  * @author huangchengxing
  * @see MethodMatcher
  * @see MethodMatcherUtil

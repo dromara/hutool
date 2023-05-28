@@ -18,23 +18,14 @@ import java.util.function.Predicate;
 public interface MethodMatcher extends MethodMetadataLookup<Boolean>, Predicate<Method> {
 
 	/**
-	 * 检查方法是否匹配
-	 *
-	 * @param method 方法
-	 * @return 结果
-	 */
-	boolean test(Method method);
-
-	/**
 	 * 返回一个组合的条件，当且仅当所有条件都符合时，才返回{@code true}，
-	 * 等同于{@link Predicate#and(Predicate)}.
 	 *
 	 * @param other 其他条件
 	 * @return 条件
 	 * @throws NullPointerException 当other为null时抛出
 	 */
 	@Override
-	default MethodMatcher and(Predicate<? super Method> other) {
+	default MethodMatcher and(final Predicate<? super Method> other) {
 		Objects.requireNonNull(other);
 		return t -> test(t) && other.test(t);
 	}
@@ -57,7 +48,7 @@ public interface MethodMatcher extends MethodMetadataLookup<Boolean>, Predicate<
 	 * @throws NullPointerException 当other为null时抛出
 	 */
 	@Override
-	default MethodMatcher or(Predicate<? super Method> other) {
+	default MethodMatcher or(final Predicate<? super Method> other) {
 		Objects.requireNonNull(other);
 		return t -> test(t) || other.test(t);
 	}
@@ -69,7 +60,7 @@ public interface MethodMatcher extends MethodMetadataLookup<Boolean>, Predicate<
 	 * @return 结果
 	 */
 	@Override
-	default Boolean inspect(Method method) {
+	default Boolean inspect(final Method method) {
 		return test(method) ? Boolean.TRUE : null;
 	}
 }
