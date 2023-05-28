@@ -77,7 +77,27 @@ public class UrlQueryUtil {
 	 * @since 5.7.16
 	 */
 	public static String toQuery(final Map<String, ?> paramMap, final Charset charset, final boolean isFormUrlEncoded) {
-		return UrlQuery.of(paramMap, isFormUrlEncoded, false).build(charset);
+		return toQuery(paramMap, charset, isFormUrlEncoded, false);
+	}
+
+	/**
+	 * 将Map形式的Form表单数据转换为Url参数形式<br>
+	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
+	 * 会自动url编码键和值
+	 *
+	 * <pre>
+	 * key1=v1&amp;key2=&amp;key3=v3
+	 * </pre>
+	 *
+	 * @param paramMap         表单数据
+	 * @param charset          编码，null表示不encode键值对
+	 * @param isFormUrlEncoded 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * @param isStrict         是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
+	 * @return url参数
+	 */
+	public static String toQuery(final Map<String, ?> paramMap, final Charset charset
+		, final boolean isFormUrlEncoded, final boolean isStrict) {
+		return UrlQuery.of(paramMap, isFormUrlEncoded, isStrict).build(charset);
 	}
 
 	/**
@@ -156,7 +176,7 @@ public class UrlQueryUtil {
 						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=');
 					} else {
 						builder.append(RFC3986.QUERY_PARAM_NAME.encode(name, charset)).append('=')
-								.append(RFC3986.QUERY_PARAM_VALUE.encode(queryPart.substring(pos, i), charset)).append('&');
+							.append(RFC3986.QUERY_PARAM_VALUE.encode(queryPart.substring(pos, i), charset)).append('&');
 					}
 					name = null;
 				}
