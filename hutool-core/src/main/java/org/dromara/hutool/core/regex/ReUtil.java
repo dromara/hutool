@@ -23,7 +23,7 @@ import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.*;

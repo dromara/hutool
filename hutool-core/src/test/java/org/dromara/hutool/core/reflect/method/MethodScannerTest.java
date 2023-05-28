@@ -96,7 +96,7 @@ class MethodScannerTest {
 	void testGetWithMetadataFromSpecificMethods() {
 		// find first oneArgMethod method
 		Method[] methods = MethodScanner.getMethods(Child.class);
-		Map.Entry<Method, Boolean> actual = MethodScanner.getWithMetadataFromSpecificMethods(methods, MethodMatcherUtils.forName("oneArgMethod"));
+		Map.Entry<Method, Boolean> actual = MethodScanner.getWithMetadataFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
 		Assertions.assertNotNull(actual);
 		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual.getKey());
@@ -108,7 +108,7 @@ class MethodScannerTest {
 	void testGetFromSpecificMethods() {
 		// find first oneArgMethod method
 		Method[] methods = MethodScanner.getMethods(Child.class);
-		Method actual = MethodScanner.getFromSpecificMethods(methods, MethodMatcherUtils.forName("oneArgMethod"));
+		Method actual = MethodScanner.getFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
 		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual);
 	}

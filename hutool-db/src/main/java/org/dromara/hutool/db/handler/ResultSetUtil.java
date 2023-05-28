@@ -17,7 +17,7 @@ import org.dromara.hutool.core.bean.PropDesc;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;

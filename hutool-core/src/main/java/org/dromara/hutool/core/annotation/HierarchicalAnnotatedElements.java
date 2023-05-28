@@ -14,7 +14,7 @@ package org.dromara.hutool.core.annotation;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 

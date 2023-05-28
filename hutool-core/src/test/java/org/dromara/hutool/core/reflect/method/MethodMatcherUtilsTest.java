@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * test for {@link MethodMatcherUtils}
+ * test for {@link MethodMatcherUtil}
  *
  * @author huangchengxing
  */
@@ -47,25 +47,25 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void testForName() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forName("noneReturnNoArgs");
+		MethodMatcher methodMatcher = MethodMatcherUtil.forName("noneReturnNoArgs");
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 	}
 
 	@Test
 	void forNameIgnoreCase() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNameIgnoreCase("noneReturnNoArgs");
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNameIgnoreCase("noneReturnNoArgs");
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		// if name is upper case, it will be ignored
-		methodMatcher = MethodMatcherUtils.forNameIgnoreCase("NONERETURNNOARGS");
+		methodMatcher = MethodMatcherUtil.forNameIgnoreCase("NONERETURNNOARGS");
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 	}
 
 	@Test
 	void forNoneReturnType() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNoneReturnType();
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNoneReturnType();
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -76,7 +76,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forReturnType() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forReturnType(Collection.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forReturnType(Collection.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -87,7 +87,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forStrictReturnType() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forStrictReturnType(Collection.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forStrictReturnType(Collection.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -95,7 +95,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		// only match return type is strict equal to parameter type
-		methodMatcher = MethodMatcherUtils.forStrictReturnType(List.class);
+		methodMatcher = MethodMatcherUtil.forStrictReturnType(List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -106,7 +106,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forParameterCount() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forParameterCount(2);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forParameterCount(2);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -115,30 +115,30 @@ class MethodMatcherUtilsTest {
 	@Test
 	void forMostSpecificParameterTypes() {
 		// match none args method
-		MethodMatcher methodMatcher = MethodMatcherUtils.forMostSpecificParameterTypes();
+		MethodMatcher methodMatcher = MethodMatcherUtil.forMostSpecificParameterTypes();
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 
 		// match all args types
-		methodMatcher = MethodMatcherUtils.forMostSpecificParameterTypes(null, null);
+		methodMatcher = MethodMatcherUtil.forMostSpecificParameterTypes(null, null);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 
 		// match first arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificParameterTypes(CharSequence.class, null);
+		methodMatcher = MethodMatcherUtil.forMostSpecificParameterTypes(CharSequence.class, null);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 
 		// match second arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificParameterTypes(null, Collection.class);
+		methodMatcher = MethodMatcherUtil.forMostSpecificParameterTypes(null, Collection.class);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 
 		// match two arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificParameterTypes(CharSequence.class, Collection.class);
+		methodMatcher = MethodMatcherUtil.forMostSpecificParameterTypes(CharSequence.class, Collection.class);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
@@ -147,34 +147,34 @@ class MethodMatcherUtilsTest {
 	@Test
 	void forMostSpecificStrictParameterTypes() {
 		// match none args method
-		MethodMatcher methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes();
+		MethodMatcher methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes();
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 
 		// match all args types
-		methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes(null, null);
+		methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes(null, null);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 
 		// match first arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes(CharSequence.class, null);
+		methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes(CharSequence.class, null);
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
-		methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes(String.class, null);
+		methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes(String.class, null);
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 
 		// match second arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes(null, Collection.class);
+		methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes(null, Collection.class);
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 
 		// match two arg type
-		methodMatcher = MethodMatcherUtils.forMostSpecificStrictParameterTypes(CharSequence.class, Collection.class);
+		methodMatcher = MethodMatcherUtil.forMostSpecificStrictParameterTypes(CharSequence.class, Collection.class);
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
@@ -182,7 +182,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forParameterTypes();
+		MethodMatcher methodMatcher = MethodMatcherUtil.forParameterTypes();
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -190,7 +190,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 		// match parameter types is empty
-		methodMatcher = MethodMatcherUtils.forParameterTypes(CharSequence.class, Collection.class);
+		methodMatcher = MethodMatcherUtil.forParameterTypes(CharSequence.class, Collection.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -201,7 +201,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forStrictParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forStrictParameterTypes();
+		MethodMatcher methodMatcher = MethodMatcherUtil.forStrictParameterTypes();
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -210,7 +210,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
 		// cannot match assignable parameter types
-		methodMatcher = MethodMatcherUtils.forStrictParameterTypes(CharSequence.class, Collection.class);
+		methodMatcher = MethodMatcherUtil.forStrictParameterTypes(CharSequence.class, Collection.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -219,7 +219,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
 		// only match parameter types is strict equal to parameter type
-		methodMatcher = MethodMatcherUtils.forStrictParameterTypes(String.class, List.class);
+		methodMatcher = MethodMatcherUtil.forStrictParameterTypes(String.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -230,7 +230,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void noneMatch() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.noneMatch();
+		MethodMatcher methodMatcher = MethodMatcherUtil.noneMatch();
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -239,9 +239,9 @@ class MethodMatcherUtilsTest {
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 
 		// combine with other matchers
-		methodMatcher = MethodMatcherUtils.noneMatch(
-			MethodMatcherUtils.forName("noneReturnNoArgs"),
-			MethodMatcherUtils.forReturnType(Collection.class)
+		methodMatcher = MethodMatcherUtil.noneMatch(
+			MethodMatcherUtil.forName("noneReturnNoArgs"),
+			MethodMatcherUtil.forReturnType(Collection.class)
 		);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnOneArgs));
@@ -249,7 +249,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void anyMatch() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.anyMatch();
+		MethodMatcher methodMatcher = MethodMatcherUtil.anyMatch();
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -258,9 +258,9 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
 		// combine with other matchers
-		methodMatcher = MethodMatcherUtils.anyMatch(
-			MethodMatcherUtils.forName("noneReturnNoArgs"),
-			MethodMatcherUtils.forReturnType(Collection.class)
+		methodMatcher = MethodMatcherUtil.anyMatch(
+			MethodMatcherUtil.forName("noneReturnNoArgs"),
+			MethodMatcherUtil.forReturnType(Collection.class)
 		);
 		Assertions.assertTrue(methodMatcher.test(returnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
@@ -269,7 +269,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void allMatch() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.allMatch();
+		MethodMatcher methodMatcher = MethodMatcherUtil.allMatch();
 		Assertions.assertTrue(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -278,9 +278,9 @@ class MethodMatcherUtilsTest {
 		Assertions.assertTrue(methodMatcher.test(returnTwoArgs));
 
 		// combine with other matchers
-		methodMatcher = MethodMatcherUtils.allMatch(
-			MethodMatcherUtils.forName("noneReturnNoArgs"),
-			MethodMatcherUtils.forReturnType(Collection.class)
+		methodMatcher = MethodMatcherUtil.allMatch(
+			MethodMatcherUtil.forName("noneReturnNoArgs"),
+			MethodMatcherUtil.forReturnType(Collection.class)
 		);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
@@ -292,7 +292,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void isPublic() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.isPublic();
+		MethodMatcher methodMatcher = MethodMatcherUtil.isPublic();
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -303,7 +303,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void isStatic() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.isStatic();
+		MethodMatcher methodMatcher = MethodMatcherUtil.isStatic();
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -314,7 +314,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void isPublicStatic() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.isPublicStatic();
+		MethodMatcher methodMatcher = MethodMatcherUtil.isPublicStatic();
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -325,7 +325,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forModifiers() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forModifiers(Modifier.PUBLIC, Modifier.STATIC);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forModifiers(Modifier.PUBLIC, Modifier.STATIC);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -336,7 +336,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forNameAndParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNameAndParameterTypes("noneReturnTwoArgs", CharSequence.class, List.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNameAndParameterTypes("noneReturnTwoArgs", CharSequence.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -347,7 +347,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forNameAndStrictParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNameAndStrictParameterTypes("noneReturnTwoArgs", CharSequence.class, List.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNameAndStrictParameterTypes("noneReturnTwoArgs", CharSequence.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -355,7 +355,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
-		methodMatcher = MethodMatcherUtils.forNameAndStrictParameterTypes("returnTwoArgs", String.class, List.class);
+		methodMatcher = MethodMatcherUtil.forNameAndStrictParameterTypes("returnTwoArgs", String.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -366,7 +366,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forNameIgnoreCaseAndParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNameIgnoreCaseAndParameterTypes("NONEReturnTWOArgs", CharSequence.class, List.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNameIgnoreCaseAndParameterTypes("NONEReturnTWOArgs", CharSequence.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -374,7 +374,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
-		methodMatcher = MethodMatcherUtils.forNameIgnoreCaseAndParameterTypes("ReturnTWOArgs", String.class, List.class);
+		methodMatcher = MethodMatcherUtil.forNameIgnoreCaseAndParameterTypes("ReturnTWOArgs", String.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -385,7 +385,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forNameIgnoreCaseAndStrictParameterTypes() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forNameIgnoreCaseAndStrictParameterTypes("NONEReturnTWOArgs", CharSequence.class, List.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forNameIgnoreCaseAndStrictParameterTypes("NONEReturnTWOArgs", CharSequence.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -393,7 +393,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
-		methodMatcher = MethodMatcherUtils.forNameIgnoreCaseAndStrictParameterTypes("ReturnTWOArgs", String.class, List.class);
+		methodMatcher = MethodMatcherUtil.forNameIgnoreCaseAndStrictParameterTypes("ReturnTWOArgs", String.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -404,7 +404,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forStrictMethodSignature() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forStrictMethodSignature("noneReturnTwoArgs", null, CharSequence.class, Collection.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forStrictMethodSignature("noneReturnTwoArgs", null, CharSequence.class, Collection.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs2));
@@ -412,7 +412,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
-		methodMatcher = MethodMatcherUtils.forStrictMethodSignature("noneReturnTwoArgs", null, String.class, List.class);
+		methodMatcher = MethodMatcherUtil.forStrictMethodSignature("noneReturnTwoArgs", null, String.class, List.class);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs2));
@@ -423,7 +423,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forStrictMethodSignatureWithMethod() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forStrictMethodSignature(noneReturnTwoArgs);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forStrictMethodSignature(noneReturnTwoArgs);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -431,7 +431,7 @@ class MethodMatcherUtilsTest {
 		Assertions.assertFalse(methodMatcher.test(returnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(returnTwoArgs));
 
-		methodMatcher = MethodMatcherUtils.forStrictMethodSignature(returnTwoArgs);
+		methodMatcher = MethodMatcherUtil.forStrictMethodSignature(returnTwoArgs);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnTwoArgs));
@@ -442,7 +442,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forMethodSignatureWithMethod() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forMethodSignature(noneReturnTwoArgs2);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forMethodSignature(noneReturnTwoArgs2);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
 		Assertions.assertFalse(methodMatcher.test(noneReturnOneArgs));
 		Assertions.assertTrue(methodMatcher.test(noneReturnTwoArgs));
@@ -454,7 +454,7 @@ class MethodMatcherUtilsTest {
 
 	@Test
 	void forMethodSignature() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forMethodSignature(
+		MethodMatcher methodMatcher = MethodMatcherUtil.forMethodSignature(
 			"noneReturnTwoArgs", null, CharSequence.class, Collection.class
 		);
 		Assertions.assertFalse(methodMatcher.test(noneReturnNoArgs));
@@ -470,17 +470,17 @@ class MethodMatcherUtilsTest {
 	@SneakyThrows
 	void forGetterMethodWithField() {
 		Field nameField = Foo.class.getDeclaredField("name");
-		MethodMatcher methodMatcher = MethodMatcherUtils.forGetterMethod(nameField);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forGetterMethod(nameField);
 		Method getName = Foo.class.getMethod("getName");
 		Assertions.assertTrue(methodMatcher.test(getName));
 
 		Field flagField = Foo.class.getDeclaredField("flag");
-		methodMatcher = MethodMatcherUtils.forGetterMethod(flagField);
+		methodMatcher = MethodMatcherUtil.forGetterMethod(flagField);
 		Method isFlag = Foo.class.getMethod("isFlag");
 		Assertions.assertTrue(methodMatcher.test(isFlag));
 
 		Field objectField = Foo.class.getDeclaredField("object");
-		methodMatcher = MethodMatcherUtils.forGetterMethod(objectField);
+		methodMatcher = MethodMatcherUtil.forGetterMethod(objectField);
 		Method object = Foo.class.getMethod("object");
 		Assertions.assertTrue(methodMatcher.test(object));
 	}
@@ -488,15 +488,15 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void forGetterMethod() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forGetterMethod("name", String.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forGetterMethod("name", String.class);
 		Method getName = Foo.class.getMethod("getName");
 		Assertions.assertTrue(methodMatcher.test(getName));
 
-		methodMatcher = MethodMatcherUtils.forGetterMethod("flag", boolean.class);
+		methodMatcher = MethodMatcherUtil.forGetterMethod("flag", boolean.class);
 		Method isFlag = Foo.class.getMethod("isFlag");
 		Assertions.assertTrue(methodMatcher.test(isFlag));
 
-		methodMatcher = MethodMatcherUtils.forGetterMethod("object", Object.class);
+		methodMatcher = MethodMatcherUtil.forGetterMethod("object", Object.class);
 		Method object = Foo.class.getMethod("object");
 		Assertions.assertTrue(methodMatcher.test(object));
 	}
@@ -505,17 +505,17 @@ class MethodMatcherUtilsTest {
 	@SneakyThrows
 	void forSetterMethodWithField() {
 		Field nameField = Foo.class.getDeclaredField("name");
-		MethodMatcher methodMatcher = MethodMatcherUtils.forSetterMethod(nameField);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forSetterMethod(nameField);
 		Method setName = Foo.class.getMethod("setName", String.class);
 		Assertions.assertTrue(methodMatcher.test(setName));
 
 		Field flagField = Foo.class.getDeclaredField("flag");
-		methodMatcher = MethodMatcherUtils.forSetterMethod(flagField);
+		methodMatcher = MethodMatcherUtil.forSetterMethod(flagField);
 		Method setFlag = Foo.class.getMethod("setFlag", boolean.class);
 		Assertions.assertTrue(methodMatcher.test(setFlag));
 
 		Field objectField = Foo.class.getDeclaredField("object");
-		methodMatcher = MethodMatcherUtils.forSetterMethod(objectField);
+		methodMatcher = MethodMatcherUtil.forSetterMethod(objectField);
 		Method object = Foo.class.getMethod("object", Object.class);
 		Assertions.assertTrue(methodMatcher.test(object));
 	}
@@ -523,15 +523,15 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void forSetterMethod() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.forSetterMethod("name", String.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.forSetterMethod("name", String.class);
 		Method setName = Foo.class.getMethod("setName", String.class);
 		Assertions.assertTrue(methodMatcher.test(setName));
 
-		methodMatcher = MethodMatcherUtils.forSetterMethod("flag", boolean.class);
+		methodMatcher = MethodMatcherUtil.forSetterMethod("flag", boolean.class);
 		Method setFlag = Foo.class.getMethod("setFlag", boolean.class);
 		Assertions.assertTrue(methodMatcher.test(setFlag));
 
-		methodMatcher = MethodMatcherUtils.forSetterMethod("object", Object.class);
+		methodMatcher = MethodMatcherUtil.forSetterMethod("object", Object.class);
 		Method object = Foo.class.getMethod("object", Object.class);
 		Assertions.assertTrue(methodMatcher.test(object));
 	}
@@ -539,7 +539,7 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void hasDeclaredAnnotation() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.hasDeclaredAnnotation(GrandParentAnnotation.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.hasDeclaredAnnotation(GrandParentAnnotation.class);
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
@@ -549,13 +549,13 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void hasAnnotation() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.hasAnnotation(GrandParentAnnotation.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.hasAnnotation(GrandParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("noneAnnotated")));
 
-		methodMatcher = MethodMatcherUtils.hasAnnotation(ParentAnnotation.class);
+		methodMatcher = MethodMatcherUtil.hasAnnotation(ParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
@@ -565,19 +565,19 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void hasAnnotationOnDeclaringClass() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.hasAnnotationOnDeclaringClass(GrandParentAnnotation.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.hasAnnotationOnDeclaringClass(GrandParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("noneAnnotated")));
 
-		methodMatcher = MethodMatcherUtils.hasAnnotationOnDeclaringClass(ParentAnnotation.class);
+		methodMatcher = MethodMatcherUtil.hasAnnotationOnDeclaringClass(ParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("noneAnnotated")));
 
-		methodMatcher = MethodMatcherUtils.hasAnnotationOnDeclaringClass(ChildAnnotation.class);
+		methodMatcher = MethodMatcherUtil.hasAnnotationOnDeclaringClass(ChildAnnotation.class);
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
@@ -587,19 +587,19 @@ class MethodMatcherUtilsTest {
 	@Test
 	@SneakyThrows
 	void hasAnnotationOnMethodOrDeclaringClass() {
-		MethodMatcher methodMatcher = MethodMatcherUtils.hasAnnotationOnMethodOrDeclaringClass(GrandParentAnnotation.class);
+		MethodMatcher methodMatcher = MethodMatcherUtil.hasAnnotationOnMethodOrDeclaringClass(GrandParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("noneAnnotated")));
 
-		methodMatcher = MethodMatcherUtils.hasAnnotationOnMethodOrDeclaringClass(ParentAnnotation.class);
+		methodMatcher = MethodMatcherUtil.hasAnnotationOnMethodOrDeclaringClass(ParentAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("noneAnnotated")));
 
-		methodMatcher = MethodMatcherUtils.hasAnnotationOnMethodOrDeclaringClass(ChildAnnotation.class);
+		methodMatcher = MethodMatcherUtil.hasAnnotationOnMethodOrDeclaringClass(ChildAnnotation.class);
 		Assertions.assertTrue(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByChildAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByParentAnnotation")));
 		Assertions.assertFalse(methodMatcher.test(AnnotatedClass.class.getDeclaredMethod("annotatedByGrandParentAnnotation")));

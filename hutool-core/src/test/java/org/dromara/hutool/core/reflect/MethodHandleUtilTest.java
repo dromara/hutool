@@ -1,6 +1,8 @@
 package org.dromara.hutool.core.reflect;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
+import org.dromara.hutool.core.reflect.method.MethodHandleUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

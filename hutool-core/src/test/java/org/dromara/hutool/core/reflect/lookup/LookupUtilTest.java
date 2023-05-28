@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.reflect.lookup;
 
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

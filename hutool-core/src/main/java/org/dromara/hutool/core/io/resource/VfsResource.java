@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;

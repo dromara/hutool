@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * 若方法符合条件，则返回{@link Boolean#TRUE}，否则返回{@code null}。
  *
  * @author huangchengxing
- * @see MethodMatcherUtils
+ * @see MethodMatcherUtil
  * @see MethodMetadataLookup
  * @since 6.0.0
  */

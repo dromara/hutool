@@ -18,7 +18,7 @@ import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONArray;

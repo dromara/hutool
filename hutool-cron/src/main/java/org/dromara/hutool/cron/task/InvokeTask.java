@@ -15,7 +15,7 @@ package org.dromara.hutool.cron.task;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.cron.CronException;
 

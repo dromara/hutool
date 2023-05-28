@@ -14,7 +14,7 @@ package org.dromara.hutool.core.reflect.kotlin;
 
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.lang.reflect.Method;
 import java.util.List;

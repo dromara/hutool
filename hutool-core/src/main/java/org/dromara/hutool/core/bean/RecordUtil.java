@@ -15,7 +15,7 @@ package org.dromara.hutool.core.bean;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.util.JdkUtil;
 
 import java.lang.reflect.Method;

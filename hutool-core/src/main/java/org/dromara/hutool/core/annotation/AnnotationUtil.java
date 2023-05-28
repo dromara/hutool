@@ -20,7 +20,7 @@ import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;

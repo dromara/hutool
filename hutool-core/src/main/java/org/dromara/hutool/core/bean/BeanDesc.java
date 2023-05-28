@@ -16,7 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;

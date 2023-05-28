@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.reflect;
+package org.dromara.hutool.core.reflect.method;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.NullWrapperBean;
@@ -22,6 +22,9 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 

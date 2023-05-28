@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  *
  * @author huangchengxing
  * @see MethodMatcher
- * @see MethodMatcherUtils
+ * @see MethodMatcherUtil
  * @since 6.0.0
  */
 @FunctionalInterface

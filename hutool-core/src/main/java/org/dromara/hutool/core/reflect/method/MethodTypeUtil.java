@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.reflect;
+package org.dromara.hutool.core.reflect.method;
 
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;

@@ -19,7 +19,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 
 import java.io.Serializable;

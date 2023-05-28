@@ -17,6 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
+import org.dromara.hutool.core.reflect.method.MethodHandleUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Array;

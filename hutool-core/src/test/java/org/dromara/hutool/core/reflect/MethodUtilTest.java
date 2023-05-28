@@ -5,6 +5,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.test.bean.ExamInfoDict;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.JdkUtil;
 import org.junit.jupiter.api.Assertions;

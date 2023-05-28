@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * @see MethodMatcher
  * @since 6.0.0
  */
-public class MethodMatcherUtils {
+public class MethodMatcherUtil {
 
 
 	/**

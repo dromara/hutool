@@ -18,6 +18,8 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.*;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
+import org.dromara.hutool.core.reflect.method.MethodTypeUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Executable;

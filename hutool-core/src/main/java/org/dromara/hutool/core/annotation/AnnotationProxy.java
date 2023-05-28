@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.annotation;
 
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;

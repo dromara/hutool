@@ -16,7 +16,7 @@ import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.Serializable;
 import java.util.Map;

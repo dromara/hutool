@@ -18,7 +18,7 @@ import org.dromara.hutool.core.lang.EnumItem;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.util.EnumUtil;
 

@@ -6,7 +6,6 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
 import org.dromara.hutool.core.reflect.ClassUtil;
-import org.dromara.hutool.core.reflect.MethodUtil;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -41,7 +40,7 @@ import java.util.function.Predicate;
  * <pre>{@code
  * 		Map<Method, Annotation> methods = MethodScanner.findFromAllMethods(Foo.class, method -> method.getAnnotation(Annotation.class));
  * }</pre>
- * 此外，对于一些无需获取元数据的查找，我们可以使用{@link MethodMatcherUtils}提供的一些内置实现：
+ * 此外，对于一些无需获取元数据的查找，我们可以使用{@link MethodMatcherUtil}提供的一些内置实现：
  * <pre>{@code
  * 		// 查找所有静态公开方法
  * 		Set<Method> methods = MethodScanner.findFromAllMethods(Foo.class, MethodMatcherUtils.isPublicStatic());
@@ -60,7 +59,7 @@ import java.util.function.Predicate;
  * @author huangchengxing
  * @see MethodMetadataLookup
  * @see MethodMatcher
- * @see MethodMatcherUtils
+ * @see MethodMatcherUtil
  * @since 6.0.0
  */
 public class MethodScanner {
