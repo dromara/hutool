@@ -148,7 +148,7 @@ public class UrlQueryTest {
 	@Test
 	void issueI78PB1Test() {
 		// 严格模式
-		final UrlQuery query = UrlQuery.of(false, true);
+		final UrlQuery query = UrlQuery.of(UrlQuery.EncodeMode.STRICT);
 		query.add(":/?#[]@!$&'()*+,;= ", ":/?#[]@!$&'()*+,;= ");
 
 		final String string = query.build(CharsetUtil.UTF_8);
