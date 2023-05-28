@@ -1,6 +1,7 @@
 package org.dromara.hutool.core.reflect.method;
 
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.annotation.Alias;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,27 +24,27 @@ class MethodScannerTest {
 	@Test
 	void testGetMethods() {
 		Assertions.assertEquals(0, MethodScanner.getMethods(null).length);
-		Method[] actual = MethodScanner.getMethods(Child.class);
+		final Method[] actual = MethodScanner.getMethods(Child.class);
 		Assertions.assertSame(actual, MethodScanner.getMethods(Child.class));
-		Method[] expected = Child.class.getMethods();
+		final Method[] expected = Child.class.getMethods();
 		Assertions.assertArrayEquals(expected, actual);
 	}
 
 	@Test
 	void testGetDeclaredMethods() {
 		Assertions.assertEquals(0, MethodScanner.getDeclaredMethods(null).length);
-		Method[] actual = MethodScanner.getDeclaredMethods(Child.class);
+		final Method[] actual = MethodScanner.getDeclaredMethods(Child.class);
 		Assertions.assertSame(actual, MethodScanner.getDeclaredMethods(Child.class));
-		Method[] expected = Child.class.getDeclaredMethods();
+		final Method[] expected = Child.class.getDeclaredMethods();
 		Assertions.assertArrayEquals(expected, actual);
 	}
 
 	@Test
 	void testGetAllMethods() {
 		Assertions.assertEquals(0, MethodScanner.getAllMethods(null).length);
-		Method[] actual = MethodScanner.getAllMethods(Child.class);
+		final Method[] actual = MethodScanner.getAllMethods(Child.class);
 		// get declared method from child、parent、grandparent
-		Method[] expected = Stream.of(Child.class, Parent.class, Interface.class, Object.class)
+		final Method[] expected = Stream.of(Child.class, Parent.class, Interface.class, Object.class)
 			.flatMap(c -> Stream.of(MethodScanner.getDeclaredMethods(c)))
 			.toArray(Method[]::new);
 		Assertions.assertArrayEquals(expected, actual);
@@ -51,9 +52,9 @@ class MethodScannerTest {
 
 	@Test
 	void testClearCaches() {
-		Method[] declaredMethods = MethodScanner.getDeclaredMethods(Child.class);
+		final Method[] declaredMethods = MethodScanner.getDeclaredMethods(Child.class);
 		Assertions.assertSame(declaredMethods, MethodScanner.getDeclaredMethods(Child.class));
-		Method[] methods = MethodScanner.getMethods(Child.class);
+		final Method[] methods = MethodScanner.getMethods(Child.class);
 		Assertions.assertSame(methods, MethodScanner.getMethods(Child.class));
 
 		// clear method cache
@@ -66,28 +67,28 @@ class MethodScannerTest {
 	@Test
 	void testFindWithMetadataFromSpecificMethods() {
 		Assertions.assertTrue(MethodScanner.findWithMetadataFromSpecificMethods(null, m -> m.getAnnotation(Annotation.class)).isEmpty());
-		Method[] methods = MethodScanner.getMethods(Child.class);
-		Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromSpecificMethods(methods, m -> m.getAnnotation(Annotation.class));
+		final Method[] methods = MethodScanner.getMethods(Child.class);
+		final Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromSpecificMethods(methods, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.containsKey(expectedMethod));
 
 		// check annotation
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.get(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindFromSpecificMethods() {
-		Method[] methods = MethodScanner.getMethods(Child.class);
-		Set<Method> actual = MethodScanner.findFromSpecificMethods(methods, m -> m.getAnnotation(Annotation.class));
+		final Method[] methods = MethodScanner.getMethods(Child.class);
+		final Set<Method> actual = MethodScanner.findFromSpecificMethods(methods, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.contains(expectedMethod));
 	}
 
@@ -95,10 +96,10 @@ class MethodScannerTest {
 	@Test
 	void testGetWithMetadataFromSpecificMethods() {
 		// find first oneArgMethod method
-		Method[] methods = MethodScanner.getMethods(Child.class);
-		Map.Entry<Method, Boolean> actual = MethodScanner.getWithMetadataFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
+		final Method[] methods = MethodScanner.getMethods(Child.class);
+		final Map.Entry<Method, Boolean> actual = MethodScanner.getWithMetadataFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
 		Assertions.assertNotNull(actual);
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual.getKey());
 		Assertions.assertTrue(actual.getValue());
 	}
@@ -107,145 +108,145 @@ class MethodScannerTest {
 	@Test
 	void testGetFromSpecificMethods() {
 		// find first oneArgMethod method
-		Method[] methods = MethodScanner.getMethods(Child.class);
-		Method actual = MethodScanner.getFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method[] methods = MethodScanner.getMethods(Child.class);
+		final Method actual = MethodScanner.getFromSpecificMethods(methods, MethodMatcherUtil.forName("oneArgMethod"));
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual);
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindWithMetadataFromMethods() {
-		Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.containsKey(expectedMethod));
 
 		// check annotation
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.get(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindFromMethods() {
-		Set<Method> actual = MethodScanner.findFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Set<Method> actual = MethodScanner.findFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.contains(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetWithMetadataFromMethods() {
-		Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertNotNull(actual);
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual.getKey());
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.getValue());
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetFromMethods() {
-		Method actual = MethodScanner.getFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method actual = MethodScanner.getFromMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual);
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindWithMetadataFromDeclaredMethods() {
-		Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
+		final Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.containsKey(expectedMethod));
 
 		// check annotation
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.get(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindFromDeclaredMethods() {
-		Set<Method> actual = MethodScanner.findFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
+		final Set<Method> actual = MethodScanner.findFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.contains(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetWithMetadataFromDeclaredMethods() {
-		Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
+		final Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertNotNull(actual);
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual.getKey());
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.getValue());
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetFromDeclaredMethods() {
-		Method actual = MethodScanner.getFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method actual = MethodScanner.getFromDeclaredMethods(Parent.class, m -> m.getAnnotation(Annotation.class));
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual);
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindWithMetadataFromAllMethods() {
-		Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Map<Method, Annotation> actual = MethodScanner.findWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.containsKey(expectedMethod));
 
 		// check annotation
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.get(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testFindFromAllMethods() {
-		Set<Method> actual = MethodScanner.findFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Set<Method> actual = MethodScanner.findFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertEquals(1, actual.size());
 
 		// check method
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertTrue(actual.contains(expectedMethod));
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetWithMetadataFromAllMethods() {
-		Assertions.assertNull(MethodScanner.getWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Deprecated.class)));
-		Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		Assertions.assertNull(MethodScanner.getWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Alias.class)));
+		final Map.Entry<Method, Annotation> actual = MethodScanner.getWithMetadataFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
 		Assertions.assertNotNull(actual);
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual.getKey());
-		Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
+		final Annotation expectedAnnotation = expectedMethod.getAnnotation(Annotation.class);
 		Assertions.assertEquals(expectedAnnotation, actual.getValue());
 	}
 
 	@SneakyThrows
 	@Test
 	void testGetFromAllMethods() {
-		Method actual = MethodScanner.getFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
-		Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
+		final Method actual = MethodScanner.getFromAllMethods(Child.class, m -> m.getAnnotation(Annotation.class));
+		final Method expectedMethod = Parent.class.getDeclaredMethod("oneArgMethod", String.class);
 		Assertions.assertEquals(expectedMethod, actual);
 	}
 
@@ -270,7 +271,7 @@ class MethodScannerTest {
 
 		@Annotation("oneArgMethod")
 		@Override
-		public void oneArgMethod(String arg) { }
+		public void oneArgMethod(final String arg) { }
 	}
 
 	public static class Child extends Parent implements Interface {

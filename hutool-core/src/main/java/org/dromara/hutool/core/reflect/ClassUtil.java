@@ -781,7 +781,7 @@ public class ClassUtil {
 		if (clazz == null) {
 			return Collections.emptyList();
 		}
-		List<Class<?>> superclasses = new ArrayList<>();
+		final List<Class<?>> superclasses = new ArrayList<>();
 		traverseTypeHierarchy(clazz, t -> !t.isInterface(), superclasses::add, false);
 		return superclasses;
 	}
@@ -797,7 +797,7 @@ public class ClassUtil {
 		if (cls == null) {
 			return Collections.emptyList();
 		}
-		List<Class<?>> interfaces = new ArrayList<>();
+		final List<Class<?>> interfaces = new ArrayList<>();
 		traverseTypeHierarchy(cls, t -> true, t -> {
 			if (t.isInterface()) {
 				interfaces.add(t);
@@ -813,7 +813,7 @@ public class ClassUtil {
 	 * @param terminator 对遍历到的每个类与接口执行的校验，若为{@code false}则立刻中断遍历
 	 */
 	public static void traverseTypeHierarchyWhile(
-		final Class<?> root, Predicate<Class<?>> terminator) {
+		final Class<?> root, final Predicate<Class<?>> terminator) {
 		traverseTypeHierarchyWhile(root, t -> true, terminator);
 	}
 
@@ -847,11 +847,11 @@ public class ClassUtil {
 	 * @param includeRoot 是否包括根类
 	 */
 	public static void traverseTypeHierarchy(
-		final Class<?> root, final Predicate<Class<?>> filter, final Consumer<Class<?>> consumer, boolean includeRoot) {
+		final Class<?> root, final Predicate<Class<?>> filter, final Consumer<Class<?>> consumer, final boolean includeRoot) {
 		Objects.requireNonNull(root);
 		Objects.requireNonNull(filter);
 		Objects.requireNonNull(consumer);
-		Function<Class<?>, Collection<Class<?>>> function = t -> {
+		final Function<Class<?>, Collection<Class<?>>> function = t -> {
 			if (includeRoot || !root.equals(t)) {
 				consumer.accept(t);
 			}
@@ -860,9 +860,9 @@ public class ClassUtil {
 		HierarchyUtil.traverseByBreadthFirst(root, filter, HierarchyIteratorUtil.scan(function));
 	}
 
-	private static Set<Class<?>> getNextTypeHierarchies(Class<?> t) {
-		Set<Class<?>> next = new LinkedHashSet<>();
-		Class<?> superclass = t.getSuperclass();
+	private static Set<Class<?>> getNextTypeHierarchies(final Class<?> t) {
+		final Set<Class<?>> next = new LinkedHashSet<>();
+		final Class<?> superclass = t.getSuperclass();
 		if (Objects.nonNull(superclass)) {
 			next.add(superclass);
 		}
