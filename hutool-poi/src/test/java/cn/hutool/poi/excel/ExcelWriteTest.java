@@ -885,4 +885,35 @@ public class ExcelWriteTest {
 		final String disposition = writer.getDisposition("测试A12.xlsx", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("attachment; filename=\"%E6%B5%8B%E8%AF%95A12.xlsx\"", disposition);
 	}
+
+	@Test
+	@Ignore
+	public void writeColTest(){
+		ExcelWriter writer = ExcelUtil.getWriter("G:\\test.xlsx");
+		List<Integer> list= new ArrayList<>();
+		for (int i = 0; i < 20; i++) {
+			list.add(i);
+		}
+		writer.writeCol("header1",0,list,true);
+		writer.writeCol("header2",1,list,false);
+		writer.writeCol("header3",0,list,true);
+		writer.writeCol("header4",1,list,false);
+
+		Map<String,List<Integer>> map1 = new LinkedHashMap<>();
+		map1.put("map1_header1",list);
+		map1.put("map1_header2",list);
+		map1.put("map1_header3",list);
+		map1.put("map1_header4",list);
+
+		Map<String,List<Integer>> map2 = new LinkedHashMap<>();
+		map2.put("map2_header1",list);
+		map2.put("map2_header2",list);
+		map2.put("map2_header3",list);
+		map2.put("map2_header4",list);
+
+		writer.writeCol(map1,true);
+		writer.writeCol(map2,false);
+
+		writer.close();
+	}
 }
