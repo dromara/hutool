@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.apache.poi.ss.usermodel.*;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -22,12 +23,6 @@ import org.dromara.hutool.poi.excel.cell.CellLocation;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -87,6 +82,16 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	public Workbook getWorkbook() {
 		return this.workbook;
+	}
+
+	/**
+	 * 创建字体
+	 *
+	 * @return 字体
+	 * @since 4.1.0
+	 */
+	public Font createFont() {
+		return getWorkbook().createFont();
 	}
 
 	/**

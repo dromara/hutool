@@ -12,52 +12,32 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.apache.poi.common.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.comparator.IndexedComparator;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.map.TableMap;
 import org.dromara.hutool.core.map.multi.RowKeyTable;
 import org.dromara.hutool.core.map.multi.Table;
-import org.dromara.hutool.core.net.url.URLEncoder;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.poi.excel.cell.CellEditor;
 import org.dromara.hutool.poi.excel.cell.CellLocation;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.Align;
-import org.apache.poi.common.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HeaderFooter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -818,6 +798,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		return this;
 	}
 
+	// region ----- writeImg
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 添加图片到当前sheet中 / 默认图片类型png / 默认的起始坐标和结束坐标都为0
@@ -915,7 +896,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		patriarch.createPicture(anchor, this.workbook.addPicture(pictureData, imgType));
 		return this;
 	}
+	// endregion
 
+	// region ----- writeRow
 	/**
 	 * 写出一行标题数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
@@ -1084,7 +1067,92 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false, this.cellEditor);
 		return this;
 	}
+	// endregion
 
+	// region ----- writeCol
+	/**
+	 * 从第1列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(final Map<?,? extends Iterable<?>> colMap, final boolean isWriteKeyAsHead){
+		return writeCol(colMap, 0, isWriteKeyAsHead);
+	}
+
+	/**
+	 * 从指定列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param startColIndex    起始的列号，从0开始
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(final Map<?,? extends Iterable<?>> colMap, int startColIndex, final boolean isWriteKeyAsHead){
+		for (final Object k : colMap.keySet()) {
+			final Iterable<?> v = colMap.get(k);
+			if(v != null){
+				writeCol(isWriteKeyAsHead?k:null,startColIndex, v, startColIndex != colMap.size() - 1);
+				startColIndex ++;
+			}
+		}
+		return this;
+	}
+
+
+	/**
+	 * 为第一列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(final Object headerVal, final Iterable<?> colData, final boolean isResetRowIndex){
+		return writeCol(headerVal,0,colData,isResetRowIndex);
+	}
+
+	/**
+	 * 为第指定列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colIndex        列index
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(final Object headerVal, final int colIndex, final Iterable<?> colData, final boolean isResetRowIndex){
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		int currentRowIndex = currentRow.get();
+		if(null != headerVal){
+			writeCellValue(colIndex, currentRowIndex, headerVal,true);
+			currentRowIndex++;
+		}
+		for (final Object colDatum : colData) {
+			writeCellValue(colIndex, currentRowIndex, colDatum);
+			currentRowIndex++;
+		}
+		if(!isResetRowIndex){
+			currentRow.set(currentRowIndex);
+		}
+		return this;
+	}
+	// endregion
+
+	// region ----- writeCellValue
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
 	 *
@@ -1125,7 +1193,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		CellUtil.setCellValue(cell, value, this.styleSet, isHeader, this.cellEditor);
 		return this;
 	}
+	// endregion
 
+	// region ----- setStyle
 	/**
 	 * 设置某个单元格的样式<br>
 	 * 此方法用于多个单元格共享样式的情况<br>
@@ -1240,17 +1310,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		return this;
 	}
+	// endregion
 
-	/**
-	 * 创建字体
-	 *
-	 * @return 字体
-	 * @since 4.1.0
-	 */
-	public Font createFont() {
-		return getWorkbook().createFont();
-	}
-
+	// region ----- flush
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
@@ -1311,6 +1373,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		return this;
 	}
+	// endregion
 
 	/**
 	 * 关闭工作簿<br>
@@ -1335,7 +1398,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.styleSet = null;
 	}
 
-	// -------------------------------------------------------------------------- Private method start
+	// region ----- Private method start
 
 	/**
 	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key<br>
@@ -1382,5 +1445,5 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		return aliasComparator;
 	}
-	// -------------------------------------------------------------------------- Private method end
+	// endregion
 }
