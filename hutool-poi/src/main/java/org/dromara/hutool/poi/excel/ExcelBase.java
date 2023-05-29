@@ -12,8 +12,12 @@
 
 package org.dromara.hutool.poi.excel;
 
+import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.net.url.URLEncoder;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.poi.excel.cell.CellLocation;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.dromara.hutool.poi.excel.style.StyleUtil;
@@ -30,6 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.Closeable;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -509,6 +514,45 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	public boolean isXlsx() {
 		return this.sheet instanceof XSSFSheet || this.sheet instanceof SXSSFSheet;
+	}
+
+	/**
+	 * 获取Content-Type头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
+	 *
+	 * <pre>
+	 * response.setContentType(excelWriter.getContentType());
+	 * </pre>
+	 *
+	 * @return Content-Type值
+	 * @since 5.6.7
+	 */
+	public String getContentType() {
+		return isXlsx() ? ExcelUtil.XLSX_CONTENT_TYPE : ExcelUtil.XLS_CONTENT_TYPE;
+	}
+
+	/**
+	 * 获取Content-Disposition头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
+	 *
+	 * <pre>
+	 * response.setHeader("Content-Disposition", excelWriter.getDisposition("test.xlsx", CharsetUtil.CHARSET_UTF_8));
+	 * </pre>
+	 *
+	 * @param fileName 文件名，如果文件名没有扩展名，会自动按照生成Excel类型补齐扩展名，如果提供空，使用随机UUID
+	 * @param charset  编码，null则使用默认UTF-8编码
+	 * @return Content-Disposition值
+	 */
+	public String getDisposition(String fileName, Charset charset) {
+		if (null == charset) {
+			charset = CharsetUtil.UTF_8;
+		}
+
+		if (StrUtil.isBlank(fileName)) {
+			// 未提供文件名使用随机UUID作为文件名
+			fileName = IdUtil.fastSimpleUUID();
+		}
+
+		fileName = StrUtil.addSuffixIfNot(URLEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
+		return StrUtil.format("attachment; filename=\"{}\"", fileName);
 	}
 
 	/**

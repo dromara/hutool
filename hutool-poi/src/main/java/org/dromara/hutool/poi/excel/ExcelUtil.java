@@ -462,7 +462,7 @@ public class ExcelUtil {
 	 * @return 0-》A; 1-》B...26-》AA
 	 * @since 4.1.20
 	 */
-	public static String indexToColName(int index) {
+	public static String indexToColName(final int index) {
 		return CellLocationUtil.indexToColName(index);
 	}
 

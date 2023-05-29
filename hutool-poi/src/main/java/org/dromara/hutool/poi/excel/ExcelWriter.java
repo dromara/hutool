@@ -100,8 +100,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	private final AtomicInteger currentRow;
 
-	// -------------------------------------------------------------------------- Constructor start
-
+	// region Constructors
 	/**
 	 * 构造，默认生成xls格式的Excel文件<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
@@ -202,8 +201,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.styleSet = new StyleSet(workbook);
 		this.currentRow = new AtomicInteger(0);
 	}
-
-	// -------------------------------------------------------------------------- Constructor end
+	// endregion
 
 	/**
 	 * 设置单元格值处理逻辑<br>
@@ -382,45 +380,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public int getCurrentRow() {
 		return this.currentRow.get();
-	}
-
-	/**
-	 * 获取Content-Disposition头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
-	 *
-	 * <pre>
-	 * response.setHeader("Content-Disposition", excelWriter.getDisposition("test.xlsx", CharsetUtil.CHARSET_UTF_8));
-	 * </pre>
-	 *
-	 * @param fileName 文件名，如果文件名没有扩展名，会自动按照生成Excel类型补齐扩展名，如果提供空，使用随机UUID
-	 * @param charset  编码，null则使用默认UTF-8编码
-	 * @return Content-Disposition值
-	 */
-	public String getDisposition(String fileName, Charset charset) {
-		if (null == charset) {
-			charset = CharsetUtil.UTF_8;
-		}
-
-		if (StrUtil.isBlank(fileName)) {
-			// 未提供文件名使用随机UUID作为文件名
-			fileName = IdUtil.fastSimpleUUID();
-		}
-
-		fileName = StrUtil.addSuffixIfNot(URLEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
-		return StrUtil.format("attachment; filename=\"{}\"", fileName);
-	}
-
-	/**
-	 * 获取Content-Type头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
-	 *
-	 * <pre>
-	 * response.setContentType(excelWriter.getContentType());
-	 * </pre>
-	 *
-	 * @return Content-Type值
-	 * @since 5.6.7
-	 */
-	public String getContentType() {
-		return isXlsx() ? ExcelUtil.XLSX_CONTENT_TYPE : ExcelUtil.XLS_CONTENT_TYPE;
 	}
 
 	/**
