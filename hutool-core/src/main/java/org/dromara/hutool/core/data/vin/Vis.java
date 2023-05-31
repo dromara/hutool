@@ -1,4 +1,4 @@
-package org.dromara.hutool.extra.vehicle.vin;
+package org.dromara.hutool.core.data.vin;
 
 import java.time.Year;
 import java.util.Arrays;

@@ -1,31 +1,30 @@
-package org.dromara.hutool.extra.vehicle.vin;
+package org.dromara.hutool.core.data.vin;
 
 /**
- * 数字字码.
+ * 可以是字母或者数字的字码
  *
  * @author dax
- * @since 2023 /5/14 17:42
+ * @since 2023 /5/14 17:56
  */
-class NumericVinCode implements MaskVinCode {
+class AlphanumericVinCode implements MaskVinCode {
 	private final String code;
 	private final int index;
 	private final int mask;
+
 
 	/**
 	 * 该构造会校验字码是否符合GB16735标准
 	 *
 	 * @param code  字码值
 	 * @param index 索引位
-	 * @throws IllegalArgumentException 校验
 	 */
-	NumericVinCode(String code, int index) throws IllegalArgumentException {
-
-		if (!NUMERIC.matcher(code).matches()) {
-			throw new IllegalArgumentException("索引为 " + index + " 的字码必须是数字");
-		}
+	AlphanumericVinCode(String code, int index) {
 		this.code = code;
 		this.index = index;
-		this.mask = Integer.parseInt(code) * WEIGHT_FACTORS.get(index);
+		int weight = WEIGHT_FACTORS.get(index);
+		mask = NUMERIC.matcher(this.code).matches() ?
+			Integer.parseInt(this.code) * weight :
+			VinCodeMaskEnum.valueOf(this.code).getMaskCode() * weight;
 	}
 
 	@Override
@@ -43,10 +42,9 @@ class NumericVinCode implements MaskVinCode {
 		return index;
 	}
 
-
 	@Override
 	public String toString() {
-		return "NumericCode{" +
+		return "AlphanumericVinCode{" +
 			"code='" + code + '\'' +
 			", index=" + index +
 			", mask=" + mask +

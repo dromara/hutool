@@ -1,6 +1,6 @@
-package org.dromara.hutool.extra.vehicle;
+package org.dromara.hutool.core.data;
 
-import org.dromara.hutool.extra.vehicle.vin.Vin;
+import org.dromara.hutool.core.data.vin.Vin;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,7 @@ import java.time.Year;
  * @author VampireAchao
  * @since 2023/5/31 14:43
  */
-public class VehicleTest {
+public class VinTest {
 
 	@Test
 	public void parseVinTest() {
