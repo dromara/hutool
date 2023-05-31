@@ -17,7 +17,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Provider;
 
 /**
- * {@link org.bouncycastle.jce.provider.BouncyCastleProvider} 工厂类
+ * {@link BouncyCastleProvider} 工厂类
  *
  * @author looly
  * @since 6.0.0
