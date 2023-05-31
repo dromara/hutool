@@ -809,7 +809,7 @@ public class MapUtil {
 	 *
 	 * @param <K> 键和值类型
 	 * @param <V> 键和值类型
-	 * @param map Map对象，键值类型必须一致
+	 * @param map Map对象
 	 * @return 互换后的Map
 	 * @since 5.2.6
 	 */
