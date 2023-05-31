@@ -33,9 +33,9 @@ import java.util.function.Predicate;
  * 若我们希望获得类所有方法范围中首个匹配的方法，则应当调用{@link #getFromAllMethods}。
  *
  * <p><strong>匹配规则</strong>
- * <p>方法查找的规则由{@link MethodMetadataLookup}实现。<br />
- * 规定，当{@link MethodMetadataLookup#inspect(Method)}方法返回元数据不为{@code null}时，则认为方法与其匹配，返回结果时将同时返回匹配的方法与元数据。<br />
- * 因此，我们可以通过实现{@link MethodMetadataLookup}接口来同时实现方法的查找与元数据的获取：<br />
+ * <p>方法查找的规则由{@link MethodMetadataLookup}实现。<br>
+ * 规定，当{@link MethodMetadataLookup#inspect(Method)}方法返回元数据不为{@code null}时，则认为方法与其匹配，返回结果时将同时返回匹配的方法与元数据。<br>
+ * 因此，我们可以通过实现{@link MethodMetadataLookup}接口来同时实现方法的查找与元数据的获取：<br>
  * 比如，我们希望查找所有方法上带有{@code Annotation}注解的方法，则可以实现如下：
  * <pre>{@code
  * 		Map<Method, Annotation> methods = MethodScanner.findFromAllMethods(Foo.class, method -> method.getAnnotation(Annotation.class));
@@ -51,9 +51,9 @@ import java.util.function.Predicate;
  * <p><strong>缓存</strong>
  * <p>对于{@link #getDeclaredMethods}与{@link #getMethods}方法与基于这两个方法实现的，
  * 所有{@code xxxFromMethods}与{@code xxxFromDeclaredMethods}方法，
- * 都提供了缓存基于{@link WeakConcurrentMap}的缓存支持。<br />
+ * 都提供了缓存基于{@link WeakConcurrentMap}的缓存支持。<br>
  * {@link #getAllMethods}与所有{@code xxxFromAllMethods}方法都基于{@link #getDeclaredMethods}实现，
- * 但是每次全量查找，都需要重新遍历类层级结构，因此会带来一定的额外的性能损耗。<br />
+ * 但是每次全量查找，都需要重新遍历类层级结构，因此会带来一定的额外的性能损耗。<br>
  * 缓存在GC时会被回收，但是也可以通过{@link #clearCaches}手动清除缓存。
  *
  * @author huangchengxing

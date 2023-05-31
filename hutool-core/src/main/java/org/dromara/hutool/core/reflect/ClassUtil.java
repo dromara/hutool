@@ -833,7 +833,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * <p>按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口。<br />
+	 * <p>按广度优先遍历包括{@code root}在内，其层级结构中的所有类和接口。<br>
 	 * 类遍历顺序如下：
 	 * <ul>
 	 *     <li>离{@code type}距离越近，则顺序越靠前；</li>

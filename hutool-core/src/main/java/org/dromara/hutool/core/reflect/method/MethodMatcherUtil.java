@@ -125,7 +125,7 @@ public class MethodMatcherUtil {
 	// region ============= 注解 =============
 
 	/**
-	 * <p>用于匹配被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br />
+	 * <p>用于匹配被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br>
 	 * 比如：指定注解为 {@code @Annotation}，则匹配直接被{@code @Annotation}标注的方法。
 	 *
 	 * @param annotationType 注解类型
@@ -137,7 +137,7 @@ public class MethodMatcherUtil {
 	}
 
 	/**
-	 * <p>用于匹配被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br />
+	 * <p>用于匹配被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br>
 	 * 比如：指定注解为 {@code @Annotation}，则匹配:
 	 * <ul>
 	 *     <li>被{@code @Annotation}标注的方法；</li>
@@ -153,7 +153,7 @@ public class MethodMatcherUtil {
 	}
 
 	/**
-	 * <p>用于匹配声明方法的类的层级接口中，存在任意类被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br />
+	 * <p>用于匹配声明方法的类的层级接口中，存在任意类被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br>
 	 * 比如：指定注解为 {@code @Annotation}，则匹配:
 	 * <ul>
 	 *     <li>声明方法的类被{@code @Annotation}标注的方法；</li>
@@ -169,7 +169,7 @@ public class MethodMatcherUtil {
 	}
 
 	/**
-	 * <p>用于匹配方法本身或声明方法的类上，直接被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br />
+	 * <p>用于匹配方法本身或声明方法的类上，直接被指定注解标注、或注解层级结构中存在指定注解的方法的方法匹配器。<br>
 	 * 比如：指定注解为 {@code @Annotation}，则匹配:
 	 * <ul>
 	 *     <li>被{@code @Annotation}标注的方法；</li>
@@ -503,7 +503,7 @@ public class MethodMatcherUtil {
 	 *         </ul>
 	 *     </li>
 	 * </ul>
-	 * 比如：<br />
+	 * 比如：<br>
 	 * 若存在三参数方法{@code method(String, Integer, Object)}，支持以下匹配：
 	 * <ul>
 	 *     <li>{@code forMostSpecificParameterTypes(CharSequence.class, Number.class, Object.class)}</li>
@@ -535,7 +535,7 @@ public class MethodMatcherUtil {
 	 *         </ul>
 	 *     </li>
 	 * </ul>
-	 * 比如：<br />
+	 * 比如：<br>
 	 * 若存在三参数方法{@code method(String, Integer, Object)}，支持以下匹配：
 	 * <ul>
 	 *     <li>{@code forMostSpecificParameterTypes(String.class, Integer.class, Object.class)}</li>
