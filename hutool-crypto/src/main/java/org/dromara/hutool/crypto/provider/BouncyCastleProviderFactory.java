@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.crypto.provider;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.security.Provider;
 
 /**
@@ -24,7 +26,7 @@ public class BouncyCastleProviderFactory implements ProviderFactory {
 
 	@Override
 	public Provider create() {
-		return new org.bouncycastle.jce.provider.BouncyCastleProvider();
+		return new BouncyCastleProvider();
 	}
 
 }
