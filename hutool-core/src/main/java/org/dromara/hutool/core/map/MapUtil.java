@@ -976,7 +976,7 @@ public class MapUtil extends MapGetUtil {
 
 	/**
 	 * 重命名键<br>
-	 * 实现方式为一处然后重新put，当旧的key不存在直接返回<br>
+	 * 实现方式为移除然后重新put，当旧的key不存在直接返回<br>
 	 * 当新的key存在，抛出{@link IllegalArgumentException} 异常
 	 *
 	 * @param <K>    key的类型
