@@ -62,13 +62,19 @@ public class ZipWriter implements Closeable {
 	private final ZipOutputStream out;
 
 	/**
+	 * 自定义缓存大小
+	 */
+	private int bufferSize = IoUtil.DEFAULT_BUFFER_SIZE;
+
+	// region ----- Constructors
+	/**
 	 * 构造
 	 *
 	 * @param zipFile 生成的Zip文件
 	 * @param charset 编码
 	 */
 	public ZipWriter(final File zipFile, final Charset charset) {
-		this.out = getZipOutputStream(zipFile, charset);
+		this(getZipOutputStream(zipFile, charset));
 	}
 
 	/**
@@ -78,7 +84,7 @@ public class ZipWriter implements Closeable {
 	 * @param charset 编码
 	 */
 	public ZipWriter(final OutputStream out, final Charset charset) {
-		this.out = ZipUtil.getZipOutputStream(out, charset);
+		this(ZipUtil.getZipOutputStream(out, charset));
 	}
 
 	/**
@@ -88,6 +94,18 @@ public class ZipWriter implements Closeable {
 	 */
 	public ZipWriter(final ZipOutputStream out) {
 		this.out = out;
+	}
+	// endregion
+
+	/**
+	 * 自定义压缩缓存大小，特定条件下调节性能
+	 *
+	 * @param bufferSize 缓存大小
+	 * @return this
+	 */
+	public ZipWriter setBufferSize(final int bufferSize) {
+		this.bufferSize = bufferSize;
+		return this;
 	}
 
 	/**
@@ -293,10 +311,11 @@ public class ZipWriter implements Closeable {
 	 */
 	private ZipWriter putEntry(final String path, final InputStream in) throws IORuntimeException {
 		final ZipEntry entry = new ZipEntry(path);
+		final ZipOutputStream out = this.out;
 		try {
 			out.putNextEntry(entry);
 			if (null != in) {
-				IoUtil.copy(in, out);
+				IoUtil.copy(in, out, bufferSize);
 			}
 			out.closeEntry();
 		} catch (final IOException e) {
@@ -305,7 +324,7 @@ public class ZipWriter implements Closeable {
 			IoUtil.closeQuietly(in);
 		}
 
-		IoUtil.flush(this.out);
+		IoUtil.flush(out);
 		return this;
 	}
 }
