@@ -1,9 +1,15 @@
 package org.dromara.hutool.core.stream;
 
+import lombok.Builder;
+import lombok.Data;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.comparator.CompareUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -553,7 +559,33 @@ public class EasyStreamTest {
 		final Opt<BigDecimal> emptyBigDecimalAvg = EasyStream.of(bigDecimalEmptyList)
 				.avg(Function.identity(), 2, RoundingMode.HALF_UP);
 		Assertions.assertFalse(emptyBigDecimalAvg.isPresent());
+	}
 
+	/**
+	 * https://github.com/dromara/hutool/pull/3128
+	 */
+	@Test
+	void testStreamBigDecimal() {
+		final List<BigDecimalTest> testList = ListUtil.of();
+		for (int i = 0; i < 5; i++) {
+			final BigDecimalTest test = BigDecimalTest.builder()
+				.name("test" + i)
+				.count(new BigDecimal(i+1))
+				.build();
+			testList.add(test);
+		}
 
+		final BigDecimal sum = EasyStream.of(testList).sum(BigDecimalTest::getCount);
+		Assertions.assertEquals(15, sum.intValue());
+
+		final BigDecimal avg = EasyStream.of(testList).avg(BigDecimalTest::getCount).get();
+		Assertions.assertEquals(3, avg.intValue());
+	}
+
+	@Data
+	@Builder
+	private static class BigDecimalTest{
+		private String name;
+		private BigDecimal count;
 	}
 }

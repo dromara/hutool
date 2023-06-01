@@ -84,7 +84,7 @@ public class EasyStream<T> extends AbstractEnhancedWrappedStream<T, EasyStream<T
 		super(ObjUtil.isNull(stream) ? Stream.empty() : stream);
 	}
 
-	// region Static method
+	// ----- region Static method
 	// --------------------------------------------------------------- Static method start
 
 	/**
