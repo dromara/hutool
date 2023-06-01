@@ -1,9 +1,15 @@
 package cn.hutool.core.stream;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.RandomUtil;
+import lombok.Builder;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,6 +57,47 @@ public class CollectorUtilTest {
 				.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf));
 		Assert.assertEquals(Arrays.asList("2", "2", "4"), map2.get(Boolean.TRUE));
 		Assert.assertEquals(Arrays.asList("1", "1", "3"), map2.get(Boolean.FALSE));
+
+	}
+
+	@Data
+	@Builder
+	private static class BigDecimalTest{
+		private String name;
+		private BigDecimal count;
+	}
+
+	@Test
+	public void testStreamBigDecimal(){
+
+		List<BigDecimalTest> testList = ListUtil.toList();
+
+		for (int i = 0; i < 5; i++) {
+			BigDecimalTest test = BigDecimalTest.builder()
+				.name("test" + i)
+				.count(RandomUtil.randomBigDecimal().setScale(5, RoundingMode.HALF_UP))
+				.build();
+			testList.add(test);
+		}
+
+		testList.forEach(System.out::println);
+
+		BigDecimal sum = testList.stream().collect(CollectorUtil.summingBigDecimal(BigDecimalTest::getCount));
+		Assert.assertNotNull(sum);
+		System.out.println("求和：" + sum);
+
+		BigDecimal max = testList.stream().collect(CollectorUtil.maxByBigDecimal(BigDecimalTest::getCount));
+		Assert.assertNotNull(max);
+		System.out.println("最大值：" + max);
+
+		BigDecimal min = testList.stream().collect(CollectorUtil.minByBigDecimal(BigDecimalTest::getCount));
+		Assert.assertNotNull(min);
+		System.out.println("最小值：" + min);
+
+		BigDecimal avg = testList.stream().collect(CollectorUtil.averagingBigDecimal(BigDecimalTest::getCount, 2, RoundingMode.HALF_UP));
+		Assert.assertNotNull(avg);
+		System.out.println("平均值：" + avg);
+
 
 	}
 }

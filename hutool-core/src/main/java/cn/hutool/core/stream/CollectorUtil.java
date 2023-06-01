@@ -1,8 +1,11 @@
 package cn.hutool.core.stream;
 
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.stream.function.ToBigDecimalFunction;
 import cn.hutool.core.util.StrUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -310,5 +313,90 @@ public class CollectorUtil {
 			final Function<? super T, ? extends R> valueMapper) {
 		return groupingBy(classifier, valueMapper, ArrayList::new, HashMap::new);
 	}
+
+	/**
+	 * 对集合中BigDecimal类型求和
+	 *
+	 * @param <T>    元素类型
+	 * @param mapper 提取要求和的属性的函数
+	 * @return {@link Collector}
+	 */
+	public static <T> Collector<T, ?, BigDecimal> summingBigDecimal(ToBigDecimalFunction<? super T> mapper) {
+		return new SimpleCollector<>(
+			() -> new BigDecimal[]{BigDecimal.ZERO},
+			(a, t) -> {
+				a[0] = a[0].add(mapper.applyAsBigDecimal(t));
+			},
+			(a, b) -> {
+				a[0] = a[0].add(b[0]);
+				return a;
+			},
+			a -> a[0], CH_NOID);
+	}
+
+	/**
+	 * 对集合中BigDecimal求最大值
+	 *
+	 * @param <T>    元素类型
+	 * @param mapper 提取要求和的属性的函数
+	 * @return {@link Collector}
+	 */
+	public static <T> Collector<T, ?, BigDecimal> maxByBigDecimal(ToBigDecimalFunction<? super T> mapper) {
+		return new SimpleCollector<>(
+			() -> new BigDecimal[]{new BigDecimal(Long.MIN_VALUE)},
+			(a, t) -> {
+				a[0] = a[0].max(mapper.applyAsBigDecimal(t));
+			},
+			(a, b) -> {
+				a[0] = a[0].max(b[0]);
+				return a;
+			},
+			a -> a[0], CH_NOID);
+	}
+
+	/**
+	 * 对集合中BigDecimal求最小值
+	 *
+	 * @param <T>    元素类型
+	 * @param mapper 提取要求和的属性的函数
+	 * @return {@link Collector}
+	 */
+	public static <T> Collector<T, ?, BigDecimal> minByBigDecimal(ToBigDecimalFunction<? super T> mapper) {
+		return new SimpleCollector<>(
+			() -> new BigDecimal[]{new BigDecimal(Long.MAX_VALUE)},
+			(a, t) -> {
+				a[0] = a[0].min(mapper.applyAsBigDecimal(t));
+			},
+			(a, b) -> {
+				a[0] = a[0].min(b[0]);
+				return a;
+			},
+			a -> a[0], CH_NOID);
+	}
+
+	/**
+	 * 对集合中BigDecimal求平均值
+	 *
+	 * @param <T>          元素类型
+	 * @param mapper       提取要求和的属性的函数
+	 * @param newScale     保留小数位数
+	 * @param roundingMode 舍入模式
+	 * @return {@link Collector}
+	 */
+	public static <T> Collector<T, ?, BigDecimal> averagingBigDecimal(ToBigDecimalFunction<? super T> mapper,
+																	  int newScale, RoundingMode roundingMode) {
+		return new SimpleCollector<>(
+			() -> new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO},
+			(a, t) -> {
+				a[0] = a[0].add(mapper.applyAsBigDecimal(t));
+				a[1] = a[1].add(BigDecimal.ONE);
+			},
+			(a, b) -> {
+				a[0] = a[0].add(b[0]);
+				return a;
+			},
+			a -> a[0].divide(a[1], roundingMode).setScale(newScale, roundingMode), CH_NOID);
+	}
+
 
 }
