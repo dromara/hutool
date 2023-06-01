@@ -16,7 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 行处理器，用于处理一行数据
+ * 行处理器，用于处理一行数据<br>
+ * 传入前，须调用{@link ResultSet#next()}定位到行。
  *
  * @param <R> 一行数据处理后的结果类型
  * @author looly
