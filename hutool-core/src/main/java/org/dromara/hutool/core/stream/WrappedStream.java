@@ -281,7 +281,6 @@ public interface WrappedStream<T, S extends WrappedStream<T, S>> extends Stream<
 	@Override
 	default <A> A[] toArray(final IntFunction<A[]> generator) {
 		Objects.requireNonNull(generator);
-		//noinspection SuspiciousToArrayCall
 		return unwrap().toArray(generator);
 	}
 

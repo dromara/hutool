@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.math;
 
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.math.BigInteger;
@@ -287,10 +288,14 @@ public class NumberParser {
 	 *
 	 * @return 数字
 	 */
-	private Number doParse(final String numberStr) {
+	private Number doParse(String numberStr) {
 		Locale locale = this.locale;
 		if (null == locale) {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
+		}
+		if(StrUtil.startWith(numberStr, CharUtil.PLUS)){
+			// issue#I79VS7
+			numberStr = StrUtil.subSuf(numberStr, 1);
 		}
 		try {
 			final NumberFormat format = NumberFormat.getInstance(locale);
