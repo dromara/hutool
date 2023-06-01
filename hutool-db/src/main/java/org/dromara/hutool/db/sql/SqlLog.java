@@ -13,7 +13,6 @@
 package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.log.Log;
-import org.dromara.hutool.log.LogFactory;
 import org.dromara.hutool.log.level.Level;
 
 /**
