@@ -278,4 +278,11 @@ public class MapUtilTest {
 		final Map<Object, Object> map = MapUtil.createMap(MapUtil.view(new HashMap<>()).getClass());
 		Assertions.assertEquals(HashMap.class, map.getClass());
 	}
+
+	@Test
+	public void renameKeyTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
+		final Map<String, Object> map = MapUtil.renameKey(v1, "name", "newName");
+		Assertions.assertEquals("张三", map.get("newName"));
+	}
 }
