@@ -13,9 +13,9 @@
 package org.dromara.hutool.db.handler;
 
 import org.dromara.hutool.db.Entity;
+import org.dromara.hutool.db.handler.row.EntityRowHandler;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -56,9 +56,10 @@ public class EntityHandler implements RsHandler<Entity>{
 
 	@Override
 	public Entity handle(final ResultSet rs) throws SQLException {
-		final ResultSetMetaData  meta = rs.getMetaData();
-		final int columnCount = meta.getColumnCount();
+		if(rs.next()){
+			return new EntityRowHandler(rs.getMetaData(), this.caseInsensitive, true).handle(rs);
+		}
 
-		return rs.next() ? ResultSetUtil.toEntity(columnCount, meta, rs, this.caseInsensitive) : null;
+		return null;
 	}
 }

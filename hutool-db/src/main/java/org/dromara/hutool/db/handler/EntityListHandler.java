@@ -12,11 +12,13 @@
 
 package org.dromara.hutool.db.handler;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.db.Entity;
+import org.dromara.hutool.db.handler.row.EntityRowHandler;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,6 +58,14 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 
 	@Override
 	public List<Entity> handle(final ResultSet rs) throws SQLException {
-		return ResultSetUtil.toEntityList(rs, new ArrayList<>(), this.caseInsensitive);
+		final ResultSetMetaData meta = rs.getMetaData();
+		final EntityRowHandler rowHandler = new EntityRowHandler(meta, caseInsensitive, true);
+
+		final List<Entity> result = ListUtil.of();
+		while (rs.next()){
+			result.add(rowHandler.handle(rs));
+		}
+
+		return result;
 	}
 }

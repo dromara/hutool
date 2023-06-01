@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.db.handler;
 
+import org.dromara.hutool.db.handler.row.ListRowHandler;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,9 +37,10 @@ public class ValueListHandler implements RsHandler<List<List<Object>>>{
 
 	@Override
 	public List<List<Object>> handle(final ResultSet rs) throws SQLException {
+		final ListRowHandler<Object> listRowHandler = new ListRowHandler<>(rs.getMetaData(), Object.class);
 		final ArrayList<List<Object>> result = new ArrayList<>();
 		while (rs.next()) {
-			result.add(ResultSetUtil.handleRowToList(rs));
+			result.add(listRowHandler.handle(rs));
 		}
 		return result;
 	}

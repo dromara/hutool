@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.db.handler;
 
+import org.dromara.hutool.db.handler.row.BeanRowHandler;
+
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -39,14 +40,19 @@ public class BeanHandler<E> implements RsHandler<E>{
 		return new BeanHandler<>(beanType);
 	}
 
+	/**
+	 * 构造
+	 * @param beanType Bean类型
+	 */
 	public BeanHandler(final Class<E> beanType) {
 		this.elementBeanType = beanType;
 	}
 
 	@Override
 	public E handle(final ResultSet rs) throws SQLException {
-		final ResultSetMetaData  meta = rs.getMetaData();
-		final int columnCount = meta.getColumnCount();
-		return rs.next() ? ResultSetUtil.toBean(columnCount, meta, rs, this.elementBeanType) : null;
+		if(rs.next()){
+			return new BeanRowHandler<>(rs.getMetaData(), elementBeanType, true).handle(rs);
+		}
+		return null;
 	}
 }

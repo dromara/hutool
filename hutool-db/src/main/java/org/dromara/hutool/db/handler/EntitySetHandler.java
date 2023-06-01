@@ -13,6 +13,7 @@
 package org.dromara.hutool.db.handler;
 
 import org.dromara.hutool.db.Entity;
+import org.dromara.hutool.db.handler.row.EntityRowHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,6 +56,14 @@ public class EntitySetHandler implements RsHandler<LinkedHashSet<Entity>>{
 
 	@Override
 	public LinkedHashSet<Entity> handle(final ResultSet rs) throws SQLException {
-		return ResultSetUtil.toEntityList(rs, new LinkedHashSet<>(), this.caseInsensitive);
+		final EntityRowHandler rowHandler =
+			new EntityRowHandler(rs.getMetaData(), caseInsensitive, true);
+
+		final LinkedHashSet<Entity> result = new LinkedHashSet<>();
+		while (rs.next()){
+			result.add(rowHandler.handle(rs));
+		}
+
+		return result;
 	}
 }
