@@ -600,4 +600,12 @@ public class NumberUtilTest {
 		Assert.assertFalse(NumberUtil.isIn(new BigDecimal("0.23"),new BigDecimal("0.12"),new BigDecimal("0.22")));
 		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("-0.12"),new BigDecimal("-0.3"),new BigDecimal("0")));
 	}
+
+	@Test
+	public void issueI79VS7Test() {
+		final String value = "+0.003";
+		if(NumberUtil.isNumber(value)) {
+			Assert.assertEquals(0.003, NumberUtil.parseNumber(value).doubleValue(), 0);
+		}
+	}
 }
