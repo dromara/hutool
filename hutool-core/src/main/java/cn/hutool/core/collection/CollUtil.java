@@ -667,6 +667,36 @@ public class CollUtil {
 		return currentAlaDatas;
 	}
 
+	/**
+	 * 是否至少有一个符合判断条件
+	 *
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param predicate 自定义判断函数
+	 * @return 是否有一个值匹配 布尔值
+	 */
+	public static <T>boolean anyMatch(Collection<T> collection,Predicate<T> predicate){
+		if(isEmpty(collection)){
+			return Boolean.FALSE;
+		}
+		return collection.stream().anyMatch(predicate);
+	}
+
+	/**
+	 * 是否全部匹配判断条件
+	 *
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param predicate  自定义判断函数
+	 * @return 是否全部匹配 布尔值
+	 */
+	public static <T>boolean allMatch(Collection<T> collection,Predicate<T> predicate){
+		if(isEmpty(collection)){
+			return Boolean.FALSE;
+		}
+		return collection.stream().allMatch(predicate);
+	}
+
 	// ----------------------------------------------------------------------------------------------- new HashSet
 
 	/**
