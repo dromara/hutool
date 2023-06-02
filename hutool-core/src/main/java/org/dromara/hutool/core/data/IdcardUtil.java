@@ -168,7 +168,7 @@ public class IdcardUtil {
 	 * @param  idCard 18位身份编码
 	 * @return 15位身份编码
 	 */
-	public static String convert18To15(String idCard) {
+	public static String convert18To15(final String idCard) {
 		if (StrUtil.isNotBlank(idCard) && IdcardUtil.isValidCard18(idCard)) {
 			return idCard.substring(0, 6) + idCard.substring(8, idCard.length() - 1);
 		}
@@ -559,7 +559,7 @@ public class IdcardUtil {
 	public static int getGender(String idcard) {
 		Assert.notBlank(idcard);
 		final int len = idcard.length();
-		if (len < CHINA_ID_MIN_LENGTH) {
+		if (!(len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH)) {
 			throw new IllegalArgumentException("ID Card length must be 15 or 18");
 		}
 
