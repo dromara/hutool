@@ -1057,4 +1057,13 @@ public class CollUtilTest {
 		final Object first = CollUtil.getFirst(nullList);
 		Assert.assertNull(first);
 	}
+
+	@Test
+	public void testMatch() {
+		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+		Assert.assertTrue(CollUtil.anyMatch(list, i -> i == 1));
+		Assert.assertFalse(CollUtil.anyMatch(list, i -> i > 6));
+		Assert.assertFalse(CollUtil.allMatch(list, i -> i == 1));
+		Assert.assertTrue(CollUtil.allMatch(list, i -> i <= 6));
+	}
 }
