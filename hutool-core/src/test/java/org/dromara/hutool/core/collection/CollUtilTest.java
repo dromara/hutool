@@ -137,6 +137,7 @@ public class CollUtilTest {
 		Assertions.assertEquals(srcList, answerList);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Test
 	public void isNotEmptyTest() {
 		Assertions.assertFalse(CollUtil.isNotEmpty((Collection<?>) null));
@@ -505,9 +506,9 @@ public class CollUtilTest {
 		);
 
 		final Map<String, Integer> map = CollUtil.fieldValueAsMap(list, "name", "age");
-		Assertions.assertEquals(new Integer(12), map.get("张三"));
-		Assertions.assertEquals(new Integer(13), map.get("李四"));
-		Assertions.assertEquals(new Integer(14), map.get("王五"));
+		Assertions.assertEquals(Integer.valueOf(12), map.get("张三"));
+		Assertions.assertEquals(Integer.valueOf(13), map.get("李四"));
+		Assertions.assertEquals(Integer.valueOf(14), map.get("王五"));
 	}
 
 	@Test
@@ -1152,5 +1153,14 @@ public class CollUtilTest {
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3, 3)));
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(1, 2, 3)));
 		Assertions.assertFalse(CollUtil.isEqualList(list, ListUtil.of(4, 3, 2, 1)));
+	}
+
+	@Test
+	public void testMatch() {
+		final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+		Assertions.assertTrue(CollUtil.anyMatch(list, i -> i == 1));
+		Assertions.assertFalse(CollUtil.anyMatch(list, i -> i > 6));
+		Assertions.assertFalse(CollUtil.allMatch(list, i -> i == 1));
+		Assertions.assertTrue(CollUtil.allMatch(list, i -> i <= 6));
 	}
 }

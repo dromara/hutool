@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.collection;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.codec.hash.Hash32;
 import org.dromara.hutool.core.collection.iter.IterUtil;
@@ -25,9 +26,9 @@ import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
@@ -35,7 +36,6 @@ import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.stream.StreamUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
@@ -51,7 +51,6 @@ import java.util.stream.Collectors;
  * 集合相关工具类
  * <p>
  * 此工具方法针对{@link Collection}或{@link Iterable}及其实现类封装的工具。
- * <p>
  *
  * @author Looly
  * @see IterUtil
@@ -1070,12 +1069,12 @@ public class CollUtil {
 	public static <T, R> List<R> map(final Iterable<T> collection, final Function<? super T, ? extends R> mapper, final boolean ignoreNull) {
 		if (ignoreNull) {
 			return StreamUtil.of(collection)
-					// 检查映射前的结果
-					.filter(Objects::nonNull)
-					.map(mapper)
-					// 检查映射后的结果
-					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
+				// 检查映射前的结果
+				.filter(Objects::nonNull)
+				.map(mapper)
+				// 检查映射后的结果
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 		}
 		return StreamUtil.of(collection).map(mapper).collect(Collectors.toList());
 	}
@@ -1317,7 +1316,7 @@ public class CollUtil {
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param predicate    匹配器，为空则全部匹配
+	 * @param predicate  匹配器，为空则全部匹配
 	 * @return 位置数组
 	 */
 	public static <T> List<Integer> indexListOfAll(final Collection<T> collection, final Predicate<T> predicate) {
@@ -2321,4 +2320,33 @@ public class CollUtil {
 		return collection.add(object);
 	}
 
+	/**
+	 * 是否至少有一个符合判断条件
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合
+	 * @param predicate  自定义判断函数
+	 * @return 是否有一个值匹配 布尔值
+	 */
+	public static <T> boolean anyMatch(final Collection<T> collection, final Predicate<T> predicate) {
+		if (isEmpty(collection)) {
+			return Boolean.FALSE;
+		}
+		return collection.stream().anyMatch(predicate);
+	}
+
+	/**
+	 * 是否全部匹配判断条件
+	 *
+	 * @param <T>        集合元素类型
+	 * @param collection 集合
+	 * @param predicate  自定义判断函数
+	 * @return 是否全部匹配 布尔值
+	 */
+	public static <T> boolean allMatch(final Collection<T> collection, final Predicate<T> predicate) {
+		if (isEmpty(collection)) {
+			return Boolean.FALSE;
+		}
+		return collection.stream().allMatch(predicate);
+	}
 }
