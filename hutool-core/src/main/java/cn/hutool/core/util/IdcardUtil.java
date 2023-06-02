@@ -552,7 +552,7 @@ public class IdcardUtil {
 	public static int getGenderByIdCard(String idcard) {
 		Assert.notBlank(idcard);
 		final int len = idcard.length();
-		if (len < CHINA_ID_MIN_LENGTH) {
+		if (!(len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH)) {
 			throw new IllegalArgumentException("ID Card length must be 15 or 18");
 		}
 
