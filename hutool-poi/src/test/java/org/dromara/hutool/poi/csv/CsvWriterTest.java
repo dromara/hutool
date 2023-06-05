@@ -37,7 +37,7 @@ public class CsvWriterTest {
 		final CsvWriter writer = CsvUtil.getWriter(fileName, CharsetUtil.UTF_8);
 		final List<String> list = new ArrayList<>();
 		for (int i = 0; i < 10000; i++) {
-			list.add(i+"");
+			list.add(String.valueOf(i));
 		}
 		Console.log("{} : {}", fileName, list.size());
 		for (final String s : list) {
@@ -65,11 +65,11 @@ public class CsvWriterTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void writeAppendTest(){
 		final CsvWriter writer = CsvUtil.getWriter(
 				FileUtil.file("d:/test/writeAppendTest.csv"),
-				CharsetUtil.CHARSET_GBK, true);
+				CharsetUtil.GBK, true);
 
 		writer.writeHeaderLine("name", "gender", "address");
 		writer.writeLine("张三", "男", "XX市XX区");

@@ -58,7 +58,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 */
 	private boolean isFirstLine = true;
 
-	// --------------------------------------------------------------------------------------------------- Constructor start
+	// region ----- Constructors
 
 	/**
 	 * 构造，覆盖已有文件（如果存在），默认编码UTF-8
@@ -141,7 +141,10 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 * @param config   写出配置，null则使用默认配置
 	 */
 	public CsvWriter(final File file, final Charset charset, final boolean isAppend, final CsvWriteConfig config) {
-		this(FileUtil.getWriter(file, charset, isAppend), isAppend?(config==null?CsvWriteConfig.defaultConfig().setEndingLineBreak(true):config.setEndingLineBreak(true)):config);
+		this(FileUtil.getWriter(file, charset, isAppend),
+			// https://gitee.com/dromara/hutool/pulls/1011
+			isAppend?(config==null?CsvWriteConfig.defaultConfig().setEndingLineBreak(true)
+				:config.setEndingLineBreak(true)):config);
 	}
 
 	/**
@@ -163,7 +166,7 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 		this.writer = (writer instanceof BufferedWriter) ? writer : new BufferedWriter(writer);
 		this.config = ObjUtil.defaultIfNull(config, CsvWriteConfig::defaultConfig);
 	}
-	// --------------------------------------------------------------------------------------------------- Constructor end
+	// endregion
 
 	/**
 	 * 设置是否始终使用文本分隔符，文本包装符，默认false，按需添加
