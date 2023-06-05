@@ -376,6 +376,7 @@ public class FileWriter extends FileWrapper {
 	 */
 	public BufferedWriter getWriter(boolean isAppend) throws IORuntimeException {
 		try {
+
 			return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FileUtil.touch(file), isAppend), charset));
 		} catch (Exception e) {
 			throw new IORuntimeException(e);
