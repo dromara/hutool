@@ -130,11 +130,11 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	 *
 	 * @param file     CSV文件
 	 * @param charset  编码
-	 * @param isAppend 是否追加
+	 * @param isAppend 是否追加，append模式下，endingLineBreak自动设置为true
 	 * @param config   写出配置，null则使用默认配置
 	 */
 	public CsvWriter(File file, Charset charset, boolean isAppend, CsvWriteConfig config) {
-		this(FileUtil.getWriter(file, charset, isAppend), config);
+		this(FileUtil.getWriter(file, charset, isAppend), isAppend?(config==null?CsvWriteConfig.defaultConfig().setEndingLineBreak(true):config.setEndingLineBreak(true)):config);
 	}
 
 	/**
