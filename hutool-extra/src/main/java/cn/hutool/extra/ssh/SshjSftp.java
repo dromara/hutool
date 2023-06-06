@@ -93,6 +93,21 @@ public class SshjSftp extends AbstractFtp {
 	}
 
 	/**
+	 * 构造
+	 *
+	 * @param ssh 自定义实例化好的{@link SSHClient}
+	 * @since 5.7.22
+	 */
+	public SshjSftp(SSHClient ssh) {
+		super(FtpConfig.create());
+		this.ssh = ssh;
+		try {
+			this.sftp = ssh.newSFTPClient();
+		} catch (IOException e) {
+			throw new FtpException("sftp 初始化失败.", e);
+		}
+	}
+	/**
 	 * SSH 初始化并创建一个sftp客户端.
 	 *
 	 * @author youyongkun
