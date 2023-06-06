@@ -31,7 +31,8 @@ public interface Table<R, C, V> extends Iterable<Table.Cell<R, C, V>> {
 	 * @return 是否包含映射
 	 */
 	default boolean contains(R rowKey, C columnKey) {
-		return Opt.ofNullable(getRow(rowKey)).map((map) -> map.containsKey(columnKey)).get();
+		return Opt.ofNullable(getRow(rowKey)).map((map) -> map.containsKey(columnKey))
+			.orElse(false);
 	}
 
 	//region Row
