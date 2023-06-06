@@ -16,12 +16,21 @@ import cn.hutool.core.util.StrUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -2285,6 +2294,27 @@ public class DateUtil extends CalendarUtil {
 	 */
 	public static int getLastDayOfMonth(Date date){
 		return date(date).getLastDayOfMonth();
+	}
+
+	/**
+	 * 检查是不是合法的日期时间字符串
+	 *
+	 * @param date       日期
+	 * @param dateFormat 日期格式
+	 * @return boolean
+	 * @see String
+	 * @see String
+	 * @see boolean
+	 * @since 5.8.20
+	 */
+	public static boolean isDateValid(String date, String dateFormat) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
+		try {
+			LocalDate.parse(date, formatter);
+			return true;
+		} catch (DateTimeParseException e) {
+			return false;
+		}
 	}
 
 	// ------------------------------------------------------------------------ Private method start

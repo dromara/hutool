@@ -1148,4 +1148,10 @@ public class DateUtilTest {
 		final Calendar c = DateUtil.calendar(date);
 		Assert.assertEquals(DateUtil.date(c), date);
 	}
+
+	@Test
+	public void isDateValid() {
+		String dateStr = "2023-06-06";
+		Assert.assertTrue(DateUtil.isDateValid(dateStr, "yyyy-MM-dd"));
+	}
 }
