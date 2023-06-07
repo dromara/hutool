@@ -66,6 +66,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	void addTest5() {
+		final BigDecimal add = NumberUtil.add(1686036549717L, 1000);
+		Assertions.assertEquals(1686036550717L, add.longValue());
+	}
+
+	@Test
 	public void addBlankTest() {
 		final BigDecimal result = NumberUtil.add("123", " ");
 		Assertions.assertEquals(new BigDecimal("123"), result);
