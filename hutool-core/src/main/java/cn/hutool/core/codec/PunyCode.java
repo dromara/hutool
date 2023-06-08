@@ -36,7 +36,6 @@ public class PunyCode {
 	 */
 	public static String encodeDomain(String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		domain = domain.toLowerCase();
 		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() * 4);
 		for (final String str : split) {
@@ -157,7 +156,6 @@ public class PunyCode {
 	 */
 	public static String decodeDomain(String domain) throws UtilException {
 		Assert.notNull(domain, "domain must not be null!");
-		domain = domain.toLowerCase();
 		final List<String> split = StrUtil.split(domain, CharUtil.DOT);
 		final StringBuilder result = new StringBuilder(domain.length() / 4 + 1);
 		for (final String str : split) {
