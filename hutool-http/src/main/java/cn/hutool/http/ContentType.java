@@ -43,7 +43,11 @@ public enum ContentType {
 	/**
 	 * application/octet-stream编码
 	 */
-	OCTET_STREAM("application/octet-stream");
+	OCTET_STREAM("application/octet-stream"),
+	/**
+	 * text/event-stream编码
+	 */
+	EVENT_STREAM("text/event-stream");
 
 	private final String value;
 

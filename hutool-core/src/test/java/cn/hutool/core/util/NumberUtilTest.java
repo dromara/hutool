@@ -61,6 +61,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void addTest5() {
+		final double add = NumberUtil.add(1686036549717D, 1000D);
+		Assert.assertEquals(1686036550717D, add, 0);
+	}
+
+	@Test
 	public void isIntegerTest() {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));
