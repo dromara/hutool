@@ -23,6 +23,11 @@ import java.nio.charset.Charset;
 public class FtpConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 创建默认配置
+	 *
+	 * @return FtpConfig
+	 */
 	public static FtpConfig of() {
 		return new FtpConfig();
 	}
@@ -77,11 +82,11 @@ public class FtpConfig implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param host               主机
-	 * @param port               端口
-	 * @param user               用户名
-	 * @param password           密码
-	 * @param charset            编码
+	 * @param host     主机
+	 * @param port     端口
+	 * @param user     用户名
+	 * @param password 密码
+	 * @param charset  编码
 	 */
 	public FtpConfig(final String host, final int port, final String user, final String password, final Charset charset) {
 		this(host, port, user, password, charset, null, null);

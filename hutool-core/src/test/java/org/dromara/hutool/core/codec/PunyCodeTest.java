@@ -19,8 +19,8 @@ public class PunyCodeTest {
 	@Test
 	public void encodeDecodeTest2(){
 		// 无需编码和解码
-		String text = "Hutool";
-		String strPunyCode = PunyCode.encode(text);
+		final String text = "Hutool";
+		final String strPunyCode = PunyCode.encode(text);
 		Assertions.assertEquals("Hutool", strPunyCode);
 	}
 
@@ -59,10 +59,10 @@ public class PunyCodeTest {
 
 	@Test
 	public void encodeEncodeDomainTest2(){
-		String domain = "赵新虎.com";
-		String strPunyCode = PunyCode.encodeDomain(domain);
+		final String domain = "赵新虎.com";
+		final String strPunyCode = PunyCode.encodeDomain(domain);
 		Assertions.assertEquals("xn--efvz93e52e.com", strPunyCode);
-		String decode = PunyCode.decodeDomain(strPunyCode);
+		final String decode = PunyCode.decodeDomain(strPunyCode);
 		Assertions.assertEquals(domain, decode);
 	}
 }
