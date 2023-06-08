@@ -89,7 +89,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public String readString() throws IORuntimeException{
-		// TODO JDK11+不再推荐使用这种方式，推荐使用Files.readString
+		// JDK11+不再推荐使用这种方式，推荐使用Files.readString
 		return new String(readBytes(), this.charset);
 	}
 

@@ -1654,7 +1654,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static String readString(final File file, final Charset charset) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileReader.of(file, charset).readString();
+		return FileReader.of(file, charset).readString();
 	}
 
 	/**
@@ -1747,7 +1747,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(final File file, final Charset charset, final T collection) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileReader.of(file, charset).readLines(collection);
+		return FileReader.of(file, charset).readLines(collection);
 	}
 
 	/**
@@ -1878,7 +1878,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void readLines(final File file, final Charset charset, final SerConsumer<String> lineHandler) throws IORuntimeException {
-		org.dromara.hutool.core.io.file.FileReader.of(file, charset).readLines(lineHandler);
+		FileReader.of(file, charset).readLines(lineHandler);
 	}
 
 	/**
@@ -1994,7 +1994,7 @@ public class FileUtil extends PathUtil {
 	 * @since 3.1.1
 	 */
 	public static <T> T read(final File file, final Charset charset, final SerFunction<BufferedReader, T> readerHandler) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileReader.of(file, charset).read(readerHandler);
+		return FileReader.of(file, charset).read(readerHandler);
 	}
 	// endregion
 
@@ -2472,7 +2472,7 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static long writeToStream(final File file, final OutputStream out) throws IORuntimeException {
-		return org.dromara.hutool.core.io.file.FileReader.of(file).writeToStream(out);
+		return FileReader.of(file).writeToStream(out);
 	}
 
 	/**
