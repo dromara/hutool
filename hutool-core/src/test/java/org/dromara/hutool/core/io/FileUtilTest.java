@@ -494,4 +494,11 @@ public class FileUtilTest {
 		final byte[] bytes = FileUtil.readBytes("test.properties");
 		Assertions.assertEquals(125, bytes.length);
 	}
+
+	@Test
+	void checkSlipTest() {
+		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+			FileUtil.checkSlip(FileUtil.file("test/a"), FileUtil.file("test/../a"));
+		});
+	}
 }

@@ -2638,18 +2638,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File checkSlip(final File parentFile, final File file) throws IllegalArgumentException {
 		if (null != parentFile && null != file) {
-			String parentCanonicalPath;
-			String canonicalPath;
-			try {
-				parentCanonicalPath = parentFile.getCanonicalPath();
-				canonicalPath = file.getCanonicalPath();
-			} catch (final IOException e) {
-				// issue#I4CWMO@Gitee
-				// getCanonicalPath有时会抛出奇怪的IO异常，此时忽略异常，使用AbsolutePath判断。
-				parentCanonicalPath = parentFile.getAbsolutePath();
-				canonicalPath = file.getAbsolutePath();
-			}
-			if (!canonicalPath.startsWith(parentCanonicalPath)) {
+			if(!file.toPath().startsWith(parentFile.toPath())){
 				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 			}
 		}

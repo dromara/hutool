@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 非对称基础，提供锁、私钥和公钥的持有
  *
+ * @param <T> this类型
  * @author Looly
  * @since 3.3.0
  */
