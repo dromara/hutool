@@ -60,7 +60,7 @@ public class IdcardUtilTest {
 
 	@Test
 	public void convert18To15Test() {
-		String idcard15 = IdcardUtil.convert18To15("150102198807303035");
+		final String idcard15 = IdcardUtil.convert18To15("150102198807303035");
 		Assertions.assertEquals(ID_15, idcard15);
 	}
 
