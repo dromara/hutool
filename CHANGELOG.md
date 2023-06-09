@@ -15,6 +15,7 @@
 * 【core  】      修复umberUtil.parseNumber对+解析问题（issue#I79VS7@Gitee）
 * 【core  】      修复IdcardUtil.getGenderByIdCard存在潜在的异常（pr#1007@Gitee）
 * 【core  】      修复Table#contains空指针问题（issue#3135@Gitee）
+* 【core  】      修复FileUtil.checkSlip方法缺陷
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.19(2023-05-27)

@@ -532,4 +532,11 @@ public class FileUtilTest {
 		// 当复制文件到目标目录的时候，返回复制的目标文件，而非目录
 		Console.log(copy);
 	}
+
+	@Test
+	public void checkSlipTest() {
+		Assert.assertThrows(IllegalArgumentException.class, ()->{
+			FileUtil.checkSlip(FileUtil.file("test/a"), FileUtil.file("test/../a"));
+		});
+	}
 }
