@@ -1,5 +1,9 @@
 package cn.hutool.crypto.asymmetric;
 
+import cn.hutool.crypto.asymmetric.paillier.Paillier;
+import cn.hutool.crypto.asymmetric.paillier.PaillierKeyPair;
+import cn.hutool.crypto.asymmetric.paillier.PaillierPrivateKey;
+import cn.hutool.crypto.asymmetric.paillier.PaillierpublicKey;
 import org.junit.Test;
 
 import java.math.BigInteger;
