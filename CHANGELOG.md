@@ -9,7 +9,6 @@
 * 【poi   】      添加系列方法writeCol，以支持按列输出（pr#1003@Gitee）
 * 【core  】      CollUtil新增anyMatch和allMatch方法（pr#1008@Gitee）
 * 【core  】      CsvWriter如果开启了append=true，默认自动开启endingLineBreak=true（pr#1010@Gitee）
-* 【crypto】      添加同态加密算法Paillier（pr#1010@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复TreeUtil.getParentsName()获取到的路径集合中存在值为null的路径名称问题（issue#I795IN@Gitee）
