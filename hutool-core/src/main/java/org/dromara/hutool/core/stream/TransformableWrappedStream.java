@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.stream;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -19,7 +20,6 @@ import org.dromara.hutool.core.lang.mutable.MutableInt;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -279,12 +279,13 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S peekIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		if (isParallel()) {
+		final boolean isParallel = isParallel();
+		if (isParallel) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
 			return wrap(EasyStream.of(idxMap.entrySet())
-					.parallel(isParallel())
-					.peek(e -> action.accept(e.getValue(), e.getKey()))
-					.map(Map.Entry::getValue));
+				.parallel()
+				.peek(e -> action.accept(e.getValue(), e.getKey()))
+				.map(Map.Entry::getValue));
 		} else {
 			final AtomicInteger index = new AtomicInteger(NOT_FOUND_ELEMENT_INDEX);
 			return peek(e -> action.accept(e, index.incrementAndGet()));
@@ -383,12 +384,12 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default S filterIdx(final BiPredicate<? super T, Integer> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
+		final boolean isParallel = isParallel();
+		if (isParallel) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
-			return wrap(EasyStream.of(idxMap.entrySet())
-					.parallel(isParallel())
-					.filter(e -> predicate.test(e.getValue(), e.getKey()))
-					.map(Map.Entry::getValue));
+			return wrap(EasyStream.of(idxMap.entrySet()).parallel()
+				.filter(e -> predicate.test(e.getValue(), e.getKey()))
+				.map(Map.Entry::getValue));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return filter(e -> predicate.test(e, index.incrementAndGet()));
@@ -440,11 +441,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default <R> EasyStream<R> flatMapIdx(final BiFunction<? super T, Integer, ? extends Stream<? extends R>> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isParallel()) {
+		final boolean isParallel = isParallel();
+		if (isParallel) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
-			return EasyStream.of(idxMap.entrySet())
-					.parallel(isParallel())
-					.flatMap(e -> mapper.apply(e.getValue(), e.getKey()));
+			return EasyStream.of(idxMap.entrySet()).parallel()
+				.flatMap(e -> mapper.apply(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return flatMap(e -> mapper.apply(e, index.incrementAndGet()));
@@ -553,11 +554,11 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 */
 	default <R> EasyStream<R> mapIdx(final BiFunction<? super T, Integer, ? extends R> mapper) {
 		Objects.requireNonNull(mapper);
-		if (isParallel()) {
+		final boolean isParallel = isParallel();
+		if (isParallel) {
 			final Map<Integer, T> idxMap = easyStream().toIdxMap();
-			return EasyStream.of(idxMap.entrySet())
-					.parallel(isParallel())
-					.map(e -> mapper.apply(e.getValue(), e.getKey()));
+			return EasyStream.of(idxMap.entrySet()).parallel()
+				.map(e -> mapper.apply(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			return map(e -> mapper.apply(e, index.incrementAndGet()));

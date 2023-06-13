@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.core.stream;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.mutable.MutableInt;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.function.*;
@@ -214,7 +214,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default <U> Map<Integer, U> toIdxMap(final Function<? super T, ? extends U> valueMapper) {
 		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-		return EasyStream.of(toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
+		return EasyStream.of(parallel().toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
 	}
 
 	// region ============ to zip ============
@@ -505,9 +505,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		if (isParallel()) {
-			EasyStream.of(toIdxMap().entrySet()).parallel(isParallel())
-					.forEach(e -> action.accept(e.getValue(), e.getKey()));
+		final boolean isParallel = isParallel();
+		if (isParallel) {
+			EasyStream.of(toIdxMap().entrySet()).parallel()
+				.forEach(e -> action.accept(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
@@ -522,10 +523,10 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		if (isParallel()) {
-			EasyStream.of(toIdxMap().entrySet())
-					.parallel(isParallel())
-					.forEachOrdered(e -> action.accept(e.getValue(), e.getKey()));
+		final boolean isParallel = isParallel();
+		if (isParallel) {
+			EasyStream.of(toIdxMap().entrySet()).parallel()
+				.forEachOrdered(e -> action.accept(e.getValue(), e.getKey()));
 		} else {
 			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
 			unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
