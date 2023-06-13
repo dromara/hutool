@@ -269,16 +269,12 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	default int findFirstIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_ELEMENT_INDEX;
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().filter(e -> {
-				index.increment();
-				return predicate.test(e);
-			}).findFirst();// 此处只做计数，不需要值
-			return index.get();
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().filter(e -> {
+			index.increment();
+			return predicate.test(e);
+		}).findFirst();// 此处只做计数，不需要值
+		return index.get();
 	}
 
 	/**
@@ -317,17 +313,13 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default int findLastIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_ELEMENT_INDEX;
-		} else {
-			final MutableInt idxRef = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			forEachIdx((e, i) -> {
-				if (predicate.test(e)) {
-					idxRef.set(i);
-				}
-			});
-			return idxRef.get();
-		}
+		final MutableInt idxRef = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		forEachIdx((e, i) -> {
+			if (predicate.test(e)) {
+				idxRef.set(i);
+			}
+		});
+		return idxRef.get();
 	}
 
 	/**
@@ -505,14 +497,8 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		final boolean isParallel = isParallel();
-		if (isParallel) {
-			EasyStream.of(toIdxMap().entrySet()).parallel()
-				.forEach(e -> action.accept(e.getValue(), e.getKey()));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
 	}
 
 	/**
@@ -523,14 +509,8 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		final boolean isParallel = isParallel();
-		if (isParallel) {
-			EasyStream.of(toIdxMap().entrySet()).parallel()
-				.forEachOrdered(e -> action.accept(e.getValue(), e.getKey()));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
 	}
 
 	// endregion
