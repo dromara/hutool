@@ -214,7 +214,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default <U> Map<Integer, U> toIdxMap(final Function<? super T, ? extends U> valueMapper) {
 		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-		return EasyStream.of(parallel().toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
+		return EasyStream.of(sequential().toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
 	}
 
 	// region ============ to zip ============
