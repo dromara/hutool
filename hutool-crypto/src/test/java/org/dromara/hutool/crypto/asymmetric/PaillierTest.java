@@ -15,14 +15,12 @@ package org.dromara.hutool.crypto.asymmetric;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.crypto.asymmetric.paillier.PaillierCrypto;
 import org.dromara.hutool.crypto.asymmetric.paillier.PaillierKeyPairGenerator;
-import org.dromara.hutool.crypto.asymmetric.paillier.PaillierProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.Security;
 
 public class PaillierTest {
 	@Test
@@ -35,7 +33,6 @@ public class PaillierTest {
 
 	@Test
 	void keyPairGeneratorByJceTest() throws NoSuchAlgorithmException {
-		Security.addProvider(new PaillierProvider());
 		final KeyPairGenerator generator = KeyPairGenerator.getInstance("Paillier");
 		final KeyPair keyPair = generator.generateKeyPair();
 		Assertions.assertNotNull(keyPair.getPrivate());

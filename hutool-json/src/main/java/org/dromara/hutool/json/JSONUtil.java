@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.text.StrUtil;
@@ -27,7 +28,10 @@ import org.dromara.hutool.json.writer.JSONValueWriter;
 import org.dromara.hutool.json.writer.JSONWriter;
 import org.dromara.hutool.json.xml.JSONXMLUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -388,7 +392,8 @@ public class JSONUtil {
 			return ((JSON) json).toBean(type);
 		}
 
-		throw new JSONException("Unsupported json string to bean : {}", json);
+		//issue#I7CW27，其他类型使用默认转换
+		return Convert.convert(type, json);
 	}
 	// -------------------------------------------------------------------- toBean end
 

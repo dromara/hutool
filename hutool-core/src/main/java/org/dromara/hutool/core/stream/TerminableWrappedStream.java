@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.core.stream;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.mutable.MutableInt;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
-import org.dromara.hutool.core.array.ArrayUtil;
 
 import java.util.*;
 import java.util.function.*;
@@ -214,7 +214,7 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default <U> Map<Integer, U> toIdxMap(final Function<? super T, ? extends U> valueMapper) {
 		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-		return EasyStream.of(toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
+		return EasyStream.of(sequential().toList()).toMap(e -> index.incrementAndGet(), valueMapper, (l, r) -> r);
 	}
 
 	// region ============ to zip ============
@@ -269,16 +269,12 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	default int findFirstIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_ELEMENT_INDEX;
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().filter(e -> {
-				index.increment();
-				return predicate.test(e);
-			}).findFirst();// 此处只做计数，不需要值
-			return index.get();
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().filter(e -> {
+			index.increment();
+			return predicate.test(e);
+		}).findFirst();// 此处只做计数，不需要值
+		return index.get();
 	}
 
 	/**
@@ -317,17 +313,13 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default int findLastIdx(final Predicate<? super T> predicate) {
 		Objects.requireNonNull(predicate);
-		if (isParallel()) {
-			return NOT_FOUND_ELEMENT_INDEX;
-		} else {
-			final MutableInt idxRef = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			forEachIdx((e, i) -> {
-				if (predicate.test(e)) {
-					idxRef.set(i);
-				}
-			});
-			return idxRef.get();
-		}
+		final MutableInt idxRef = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		forEachIdx((e, i) -> {
+			if (predicate.test(e)) {
+				idxRef.set(i);
+			}
+		});
+		return idxRef.get();
 	}
 
 	/**
@@ -505,13 +497,8 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		if (isParallel()) {
-			EasyStream.of(toIdxMap().entrySet()).parallel(isParallel())
-					.forEach(e -> action.accept(e.getValue(), e.getKey()));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().forEach(e -> action.accept(e, index.incrementAndGet()));
 	}
 
 	/**
@@ -522,14 +509,8 @@ public interface TerminableWrappedStream<T, S extends TerminableWrappedStream<T,
 	 */
 	default void forEachOrderedIdx(final BiConsumer<? super T, Integer> action) {
 		Objects.requireNonNull(action);
-		if (isParallel()) {
-			EasyStream.of(toIdxMap().entrySet())
-					.parallel(isParallel())
-					.forEachOrdered(e -> action.accept(e.getValue(), e.getKey()));
-		} else {
-			final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
-			unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
-		}
+		final MutableInt index = new MutableInt(NOT_FOUND_ELEMENT_INDEX);
+		unwrap().forEachOrdered(e -> action.accept(e, index.incrementAndGet()));
 	}
 
 	// endregion
