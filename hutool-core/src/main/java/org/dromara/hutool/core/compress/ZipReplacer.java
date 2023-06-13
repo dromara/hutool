@@ -32,9 +32,9 @@ public class ZipReplacer {
 	 * @param charset      读取编码格式
 	 * @param charsetOut   输出编码格式
 	 */
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, File[] replaceFiles, Charset charset, Charset charsetOut) {
-//		记录zip中是否存在相同路径的文件， 是 更新文件 否，添加文件
-		boolean[] updates = new boolean[replaceFiles.length];
+	public static void replace(File srcFile, File tarFile, String[] innerFiles, List<File> replaceFiles, Charset charset, Charset charsetOut) {
+		//		记录zip中是否存在相同路径的文件， 是 更新文件 否，添加文件
+		boolean[] updates = new boolean[replaceFiles.size()];
 		try (ZipFile zipFile = new ZipFile(srcFile, charset);
 			 FileOutputStream fos = new FileOutputStream(tarFile);
 			 ZipOutputStream zos = new ZipOutputStream(fos);
@@ -50,7 +50,7 @@ public class ZipReplacer {
 //					存在同路径文件，替换
 					if (update) {
 						updates[i] = true;
-						data.put(zipEntryInName, FileUtil.getInputStream(replaceFiles[i]));
+						data.put(zipEntryInName, FileUtil.getInputStream(replaceFiles.get(i)));
 						break;
 					}
 				}
@@ -63,7 +63,7 @@ public class ZipReplacer {
 			for (int i = 0; i < updates.length; i++) {
 				if (!updates[i]) {
 //					原zip中不存在同路径文件，添加到制定目录
-					data.put(innerFiles[i], FileUtil.getInputStream(replaceFiles[i]));
+					data.put(innerFiles[i], FileUtil.getInputStream(replaceFiles.get(i)));
 				}
 			}
 			for (String key : data.keySet()) {
@@ -73,10 +73,8 @@ public class ZipReplacer {
 			throw new IORuntimeException(e);
 		}
 	}
-
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, List<File> replaceFiles, Charset charset, Charset charsetOut) {
-		File[] files = replaceFiles.toArray(new File[0]);
-		replace(srcFile, tarFile, innerFiles, files, charset, charsetOut);
+	public static void replace(File srcFile, File tarFile, String[] innerFiles, File[] replaceFiles, Charset charset, Charset charsetOut) {
+		replace(srcFile, tarFile, innerFiles, Arrays.asList(replaceFiles), charset, charsetOut);
 	}
 
 	public static void replace(File srcFile, File tarFile, String[] innerFiles, String[] replaceFiles, Charset charset, Charset charsetOut) {
