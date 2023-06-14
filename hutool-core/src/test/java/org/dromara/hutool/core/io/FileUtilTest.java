@@ -24,15 +24,16 @@ import java.util.List;
 public class FileUtilTest {
 
 	@Test
-	public void fileTest() {
+	void fileTest1() {
+		final File file = FileUtil.file("d:/aaa", "bbb");
+		Assertions.assertNotNull(file);
+	}
+
+	@Test
+	public void fileTest2() {
 		Assertions.assertThrows(IllegalArgumentException.class, ()->{
-			final File file = FileUtil.file("d:/aaa", "bbb");
-			Assertions.assertNotNull(file);
-
 			// 构建目录中出现非子目录抛出异常
-			FileUtil.file(file, "../ccc");
-
-			FileUtil.file("E:/");
+			FileUtil.file("d:/aaa/bbb", "../ccc");
 		});
 	}
 

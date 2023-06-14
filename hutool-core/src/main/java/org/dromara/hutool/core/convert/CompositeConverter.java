@@ -148,7 +148,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 尝试转Bean
-		if (BeanUtil.isBean(rowType)) {
+		if (BeanUtil.isWritableBean(rowType)) {
 			return (T) BeanConverter.INSTANCE.convert(type, value);
 		}
 

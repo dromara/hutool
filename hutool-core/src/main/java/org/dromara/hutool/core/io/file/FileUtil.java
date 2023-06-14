@@ -23,6 +23,7 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.BOMInputStream;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.regex.ReUtil;
@@ -142,6 +143,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	// region ----- loop and walk
+
 	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
 	 * 如果提供file为文件，直接返回过滤结果
@@ -273,6 +275,7 @@ public class FileUtil extends PathUtil {
 	// endregion
 
 	// region ----- file and newFile
+
 	/**
 	 * 创建File对象，相当于调用new File()，不做任何处理
 	 *
@@ -419,6 +422,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	// region ----- exists
+
 	/**
 	 * 判断文件是否存在，如果path为null，则返回false
 	 *
@@ -468,6 +472,7 @@ public class FileUtil extends PathUtil {
 	// endregion
 
 	// region ----- lastModifiedTime
+
 	/**
 	 * 指定文件最后修改时间
 	 *
@@ -590,6 +595,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	// region ----- touch
+
 	/**
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
@@ -803,6 +809,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	// region ----- createTempFile
+
 	/**
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Random].tmp
@@ -939,10 +946,10 @@ public class FileUtil extends PathUtil {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
 		return copy(
-						src.toPath(),
-						target.toPath(),
-						isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
-				.toFile();
+			src.toPath(),
+			target.toPath(),
+			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+			.toFile();
 	}
 
 	/**
@@ -965,10 +972,10 @@ public class FileUtil extends PathUtil {
 		Assert.notNull(src, "Src file must be not null!");
 		Assert.notNull(target, "target file must be not null!");
 		return copyContent(
-						src.toPath(),
-						target.toPath(),
-						isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
-				.toFile();
+			src.toPath(),
+			target.toPath(),
+			isOverride ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{})
+			.toFile();
 	}
 
 	/**
@@ -1210,8 +1217,8 @@ public class FileUtil extends PathUtil {
 		if (!file1.exists() || !file2.exists()) {
 			// 两个文件都不存在判断其路径是否相同， 对于一个存在一个不存在的情况，一定不相同
 			return !file1.exists()//
-					&& !file2.exists()//
-					&& pathEquals(file1, file2);
+				&& !file2.exists()//
+				&& pathEquals(file1, file2);
 		}
 		return equals(file1.toPath(), file2.toPath());
 	}
@@ -1501,6 +1508,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	// region ----- in
+
 	/**
 	 * 获得输入流
 	 *
@@ -1598,6 +1606,7 @@ public class FileUtil extends PathUtil {
 	// endregion
 
 	// region ----- read
+
 	/**
 	 * 读取文件所有数据<br>
 	 * 文件的长度不能超过Integer.MAX_VALUE
@@ -2101,6 +2110,7 @@ public class FileUtil extends PathUtil {
 	// endregion
 
 	// region ----- write and append
+
 	/**
 	 * 将String写入文件，覆盖模式，字符集为UTF-8
 	 *
@@ -2638,11 +2648,23 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File checkSlip(final File parentFile, final File file) throws IllegalArgumentException {
 		if (null != parentFile && null != file) {
-			if(!file.toPath().startsWith(parentFile.toPath())){
+			if (!startsWith(parentFile, file)) {
 				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 			}
 		}
 		return file;
+	}
+
+	/**
+	 * 检查父文件是否为文件真正的父目录
+	 *
+	 * @param parentFile 父目录
+	 * @param file       文件
+	 * @return 是否为文件真正的父目录
+	 */
+	public static boolean startsWith(final File parentFile, final File file) {
+		return PathUtil.toAbsNormal(parentFile.toPath())
+			.startsWith(PathUtil.toAbsNormal(file.toPath()));
 	}
 
 	/**
@@ -2664,7 +2686,7 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(final String filePath) {
-		if(StrUtil.isBlank(filePath)){
+		if (StrUtil.isBlank(filePath)) {
 			return null;
 		}
 
@@ -2790,8 +2812,8 @@ public class FileUtil extends PathUtil {
 		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
 		fileName = fileName.replace(CharUtil.BACKSLASH, CharUtil.SLASH);
 		if (!isWindows()
-				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
-				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
+			// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
+			&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
 			// 使用/拆分路径（zip中无\），级联创建父目录
 			final List<String> pathParts = SplitUtil.split(fileName, StrUtil.SLASH, false, true);

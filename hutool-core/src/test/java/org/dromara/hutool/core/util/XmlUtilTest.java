@@ -32,6 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.xpath.XPathConstants;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -379,5 +380,30 @@ public class XmlUtilTest {
 		private String name;
 		private String age;
 		private String email;
+	}
+
+	@Test
+	public void issue3139Test() {
+		final String xml = "<r>\n" +
+			"  <c>\n" +
+			"     <s>1</s>\n" +
+			"     <p>str</p>\n" +
+			"  </c>\n" +
+			"</r>";
+
+		final R r = XmlUtil.xmlToBean(XmlUtil.parseXml(xml), R.class);
+		Assertions.assertEquals("1", r.getC().get(0).getS());
+		Assertions.assertEquals("str", r.getC().get(0).getP());
+	}
+
+	@Data
+	static class C {
+		String s;
+		String p;
+	}
+
+	@Data
+	static class R {
+		List<C> c;
 	}
 }

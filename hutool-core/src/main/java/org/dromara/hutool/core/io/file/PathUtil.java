@@ -32,6 +32,7 @@ import java.util.List;
  * @since 5.4.1
  */
 public class PathUtil {
+
 	/**
 	 * 目录是否为空
 	 *
@@ -559,8 +560,28 @@ public class PathUtil {
 	 * @since 5.5.5
 	 */
 	public static Path toAbsNormal(final Path path) {
-		Assert.notNull(path);
+		if (null == path) {
+			return null;
+		}
 		return path.toAbsolutePath().normalize();
+	}
+
+	/**
+	 * 获取实际路径，路径文件必须存在
+	 *
+	 * @param path 路径
+	 * @return 实际路径
+	 * @throws IORuntimeException IO异常，如文件不存在等
+	 */
+	public static Path toRealPath(Path path) throws IORuntimeException{
+		if (null != path) {
+			try {
+				path = path.toRealPath();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+		return path;
 	}
 
 	/**

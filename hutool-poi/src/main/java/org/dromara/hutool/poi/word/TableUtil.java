@@ -102,7 +102,7 @@ public class TableUtil {
 		final Map rowMap;
 		if(rowBean instanceof Map) {
 			rowMap = (Map) rowBean;
-		} else if (BeanUtil.isBean(rowBean.getClass())) {
+		} else if (BeanUtil.isWritableBean(rowBean.getClass())) {
 			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 		} else {
 			// 其它转为字符串默认输出

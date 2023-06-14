@@ -15,6 +15,7 @@ package org.dromara.hutool.core.collection;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.codec.hash.Hash32;
+import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.iter.IteratorEnumeration;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
@@ -1553,6 +1554,10 @@ public class CollUtil {
 			// String按照逗号分隔的列表对待
 			final String arrayStr = StrUtil.unWrap((CharSequence) value, '[', ']');
 			iter = SplitUtil.splitTrim(arrayStr, StrUtil.COMMA).iterator();
+		} else if(value instanceof Map && BeanUtil.isWritableBean(TypeUtil.getClass(elementType))){
+			//https://github.com/dromara/hutool/issues/3139
+			// 如果值为Map，而目标为一个Bean，则Map应整体转换为Bean，而非拆分成Entry转换
+			iter = new ArrayIter<>(new Object[]{value});
 		} else {
 			iter = IterUtil.getIter(value);
 		}
@@ -2032,7 +2037,7 @@ public class CollUtil {
 
 			@Override
 			public int hash32(final T t) {
-				if (null == t || !BeanUtil.isBean(t.getClass())) {
+				if (null == t || !BeanUtil.isWritableBean(t.getClass())) {
 					// 非Bean放在同一子分组中
 					return 0;
 				}

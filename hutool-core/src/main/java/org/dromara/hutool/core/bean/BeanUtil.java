@@ -77,11 +77,14 @@ public class BeanUtil {
 	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isReadableBean(final Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
 		return hasGetter(clazz) || hasPublicField(clazz);
 	}
 
 	/**
-	 * 判断是否为Bean对象，判定方法是：
+	 * 判断是否为可写Bean对象，判定方法是：
 	 *
 	 * <pre>
 	 *     1、是否存在只有一个参数的setXXX方法
@@ -93,7 +96,10 @@ public class BeanUtil {
 	 * @see #hasSetter(Class)
 	 * @see #hasPublicField(Class)
 	 */
-	public static boolean isBean(final Class<?> clazz) {
+	public static boolean isWritableBean(final Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
 		return hasSetter(clazz) || hasPublicField(clazz);
 	}
 

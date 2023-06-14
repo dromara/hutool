@@ -39,7 +39,7 @@ public class BeanUtilTest {
 	public void isBeanTest() {
 
 		// HashMap不包含setXXX方法，不是bean
-		final boolean isBean = BeanUtil.isBean(HashMap.class);
+		final boolean isBean = BeanUtil.isWritableBean(HashMap.class);
 		Assertions.assertFalse(isBean);
 	}
 

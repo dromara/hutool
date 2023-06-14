@@ -211,7 +211,7 @@ public class JSONConverter implements Converter {
 		}
 
 		// 尝试转Bean
-		if (BeanUtil.isBean(rawType)) {
+		if (BeanUtil.isWritableBean(rawType)) {
 			// issue#I5WDP0 对于Kotlin对象，由于参数可能非空限制，导致无法创建一个默认的对象再赋值
 			if(KClassUtil.isKotlinClass(rawType) && json instanceof JSONGetter){
 				return KClassUtil.newInstance(rawType, new JSONGetterValueProvider<>((JSONGetter<String>)json));

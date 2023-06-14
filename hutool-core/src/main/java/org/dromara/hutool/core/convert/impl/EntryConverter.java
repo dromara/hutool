@@ -77,7 +77,7 @@ public class EntryConverter implements Converter {
 		} else if (value instanceof CharSequence) {
 			final CharSequence str = (CharSequence) value;
 			map = strToMap(str);
-		} else if (BeanUtil.isBean(value.getClass())) {
+		} else if (BeanUtil.isWritableBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 		}
 

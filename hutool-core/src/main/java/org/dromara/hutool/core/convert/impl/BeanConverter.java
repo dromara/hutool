@@ -23,7 +23,6 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapProxy;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -87,7 +86,7 @@ public class BeanConverter implements Converter, Serializable {
 	private Object convertInternal(final Type targetType, final Class<?> targetClass, final Object value) {
 		if (value instanceof Map ||
 				value instanceof ValueProvider ||
-				BeanUtil.isBean(value.getClass())) {
+				BeanUtil.isWritableBean(value.getClass())) {
 			if (value instanceof Map && targetClass.isInterface()) {
 				// 将Map动态代理为Bean
 				return MapProxy.of((Map<?, ?>) value).toProxyBean(targetClass);

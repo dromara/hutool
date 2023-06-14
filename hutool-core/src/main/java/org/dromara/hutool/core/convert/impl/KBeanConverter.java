@@ -69,7 +69,7 @@ public class KBeanConverter implements Converter, Serializable {
 			valueProvider = (ValueProvider<String>) value;
 		} else if(value instanceof Map){
 			valueProvider = new MapValueProvider((Map<String, ?>) value);
-		} else if(BeanUtil.isBean(value.getClass())){
+		} else if(BeanUtil.isWritableBean(value.getClass())){
 			valueProvider = new BeanValueProvider(value);
 		}
 

@@ -84,7 +84,7 @@ public class MapConverter implements Converter, Serializable {
 
 			map = MapUtil.createMap(TypeUtil.getClass(targetType), LinkedHashMap::new);
 			convertMapToMap(keyType, valueType, (Map) value, map);
-		} else if (BeanUtil.isBean(value.getClass())) {
+		} else if (BeanUtil.isWritableBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 			// 二次转换，转换键值类型
 			map = convert(targetType, keyType, valueType, map);
