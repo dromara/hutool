@@ -2175,7 +2175,13 @@ public class CollUtil {
 		if (value instanceof Iterator) {
 			iter = (Iterator) value;
 		} else if (value instanceof Iterable) {
-			iter = ((Iterable) value).iterator();
+			if(value instanceof Map && BeanUtil.isBean(TypeUtil.getClass(elementType))){
+				//https://github.com/dromara/hutool/issues/3139
+				// 如果值为Map，而目标为一个Bean，则Map应整体转换为Bean，而非拆分成Entry转换
+				iter = new ArrayIter<>(new Object[]{value});
+			}else{
+				iter = ((Iterable) value).iterator();
+			}
 		} else if (value instanceof Enumeration) {
 			iter = new EnumerationIter<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
