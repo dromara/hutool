@@ -401,12 +401,12 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 给定字符串是否以任何一个字符串结尾（忽略大小写）<br>
+	 * 给定字符串是否以任何一个字符串开始（忽略大小写）<br>
 	 * 给定字符串和数组为空都返回false
 	 *
 	 * @param str      给定字符串
-	 * @param suffixes 需要检测的结尾字符串
-	 * @return 给定字符串是否以任何一个字符串结尾
+	 * @param suffixes 需要检测的开始字符串
+	 * @return 给定字符串是否以任何一个字符串开始
 	 * @since 6.0.0
 	 */
 	public static boolean startWithAnyIgnoreCase(final CharSequence str, final CharSequence... suffixes) {
