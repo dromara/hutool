@@ -19,7 +19,8 @@
 * 【extra 】      修复Sftp中exists方法父目录不存在时报错（issue#I7CSQ9@Gitee）
 * 【extra 】      修复xml转json再转bean失败问题（issue#3139@Github）
 * 【poi   】      修复RowUtil传入参数错误问题（issue#3139@Github）
-* 【poi   】      修复XmlUtil.xmlToBean空节点转换失败问题（issue#3136@Github）
+* 【core  】      修复XmlUtil.xmlToBean空节点转换失败问题（issue#3136@Github）
+* 【core  】      修复CVE-2023-3276漏洞，XmlUtil.readBySax问题（issue#I7DX8W@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.19(2023-05-27)
