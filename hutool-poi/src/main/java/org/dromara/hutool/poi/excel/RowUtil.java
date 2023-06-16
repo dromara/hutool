@@ -141,7 +141,7 @@ public class RowUtil {
 			return;
 		}
 		// 插入位置的行，如果插入的行不存在则创建新行
-		final Row sourceRow = Optional.ofNullable(sheet.getRow(startRow)).orElseGet(() -> sheet.createRow(insertNumber));
+		final Row sourceRow = getOrCreateRow(sheet, startRow);
 		// 从插入行开始到最后一行向下移动
 		sheet.shiftRows(startRow, sheet.getLastRowNum(), insertNumber, true, false);
 
