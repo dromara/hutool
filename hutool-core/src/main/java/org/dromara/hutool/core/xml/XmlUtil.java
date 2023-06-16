@@ -10,26 +10,22 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.xml;
 
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.BiMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.escape.EscapeUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.dromara.hutool.core.util.CharsetUtil;
+import org.w3c.dom.*;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,16 +35,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -56,20 +44,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.beans.XMLEncoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * XML工具类<br>
@@ -309,6 +285,16 @@ public class XmlUtil {
 			factory = SAXParserFactory.newInstance();
 			factory.setValidating(false);
 			factory.setNamespaceAware(namespaceAware);
+
+			// https://blog.spoock.com/2018/10/23/java-xxe/
+			try{
+				factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+				factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+				factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			} catch (final Exception ignore){
+				// ignore
+			}
 		}
 		// 2.从解析工厂获取解析器
 		final SAXParser parse;
@@ -323,8 +309,15 @@ public class XmlUtil {
 			// 3.得到解读器
 			reader = parse.getXMLReader();
 			// 防止XEE攻击，见：https://www.jianshu.com/p/1a857905b22c
+			// https://blog.spoock.com/2018/10/23/java-xxe/
+			reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			//  忽略外部DTD
+			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+			// 不包括外部一般实体。
 			reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
+			// 不包含外部参数实体或外部DTD子集。
 			reader.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
+
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (final ParserConfigurationException | SAXException e) {
@@ -654,6 +647,7 @@ public class XmlUtil {
 		} else {
 			factory = DocumentBuilderFactory.newInstance();
 		}
+
 		// 默认打开NamespaceAware，getElementsByTagNameNS可以使用命名空间
 		factory.setNamespaceAware(namespaceAware);
 		return disableXXE(factory);

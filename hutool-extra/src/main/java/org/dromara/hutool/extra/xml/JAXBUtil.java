@@ -17,7 +17,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;

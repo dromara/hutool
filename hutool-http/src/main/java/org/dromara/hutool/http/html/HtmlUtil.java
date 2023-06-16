@@ -17,7 +17,7 @@ import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;

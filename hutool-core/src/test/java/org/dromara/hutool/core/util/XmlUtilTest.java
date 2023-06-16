@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.util;
 
+import lombok.Data;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
@@ -19,8 +20,7 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.core.map.MapUtil;
-import lombok.Data;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -22,7 +22,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 
 /**
  * SOAP相关工具类

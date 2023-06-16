@@ -19,7 +19,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 import org.dromara.hutool.http.client.HeaderOperation;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;

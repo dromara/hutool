@@ -1,7 +1,7 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 import org.dromara.hutool.json.xml.JSONXMLSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -17,7 +17,7 @@ import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.util.XmlUtil;
+import org.dromara.hutool.core.xml.XmlUtil;
 
 import java.io.InputStream;
 import java.io.Reader;

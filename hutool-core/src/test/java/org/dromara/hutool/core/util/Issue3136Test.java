@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.util;
 
 import lombok.Data;
+import org.dromara.hutool.core.xml.XmlUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
