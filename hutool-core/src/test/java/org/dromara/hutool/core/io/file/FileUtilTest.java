@@ -19,6 +19,8 @@ import org.dromara.hutool.core.util.SystemUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -40,7 +42,7 @@ public class FileUtilTest {
 
 	@Test
 	public void fileTest2() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			// 构建目录中出现非子目录抛出异常
 			FileUtil.file("d:/aaa/bbb", "../ccc");
 		});
@@ -82,7 +84,7 @@ public class FileUtilTest {
 	@Test
 	@Disabled
 	public void renameToSubTest() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			// 移动到子目录，报错
 			FileUtil.move(FileUtil.file("d:/test/a"), FileUtil.file("d:/test/a/c"), false);
 		});
@@ -250,7 +252,9 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@EnabledForJreRange(max = JRE.JAVA_8)
 	public void listFileNamesTest() {
+		// JDK9+中，由于模块化问题，获取的classoath路径非项目下，而是junit下的。
 		List<String> names = FileUtil.listFileNames("classpath:");
 		Assertions.assertTrue(names.contains("hutool.jpg"));
 
@@ -366,11 +370,11 @@ public class FileUtilTest {
 
 	@Test
 	public void extNameTest() {
-		String path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
+		String path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
 		String mainName = FileNameUtil.extName(path);
 		Assertions.assertEquals("", mainName);
 
-		path =  FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
+		path = FileUtil.isWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
 		mainName = FileNameUtil.extName(path);
 		Assertions.assertEquals("", mainName);
 
@@ -400,7 +404,9 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@EnabledForJreRange(max = JRE.JAVA_8)
 	public void getWebRootTest() {
+		// JDK9+环境中，由于模块问题，junit获取的classpath路径和实际不同
 		final File webRoot = FileUtil.getWebRoot();
 		Assertions.assertNotNull(webRoot);
 		Assertions.assertEquals("hutool-core", webRoot.getName());
@@ -463,20 +469,20 @@ public class FileUtilTest {
 
 	@Test
 	@Disabled
-	public void appendLinesTest(){
+	public void appendLinesTest() {
 		final List<String> list = ListUtil.of("a", "b", "c");
 		FileUtil.appendLines(list, FileUtil.file("d:/test/appendLines.txt"), CharsetUtil.UTF_8);
 	}
 
 	@Test
-	public void createTempFileTest(){
+	public void createTempFileTest() {
 		final File nullDirTempFile = FileUtil.createTempFile();
 		Assertions.assertTrue(nullDirTempFile.exists());
 
-		final File suffixDirTempFile = FileUtil.createTempFile(".xlsx",true);
+		final File suffixDirTempFile = FileUtil.createTempFile(".xlsx", true);
 		Assertions.assertEquals("xlsx", FileNameUtil.getSuffix(suffixDirTempFile));
 
-		final File prefixDirTempFile = FileUtil.createTempFile("prefix",".xlsx",true);
+		final File prefixDirTempFile = FileUtil.createTempFile("prefix", ".xlsx", true);
 		Console.log(prefixDirTempFile);
 		Assertions.assertTrue(FileNameUtil.getPrefix(prefixDirTempFile).startsWith("prefix"));
 	}
@@ -490,7 +496,7 @@ public class FileUtilTest {
 	}
 
 	@Test
-	public void isAbsolutePathTest(){
+	public void isAbsolutePathTest() {
 		String path = "d:/test\\aaa.txt";
 		Assertions.assertTrue(FileUtil.isAbsolutePath(path));
 
@@ -506,7 +512,7 @@ public class FileUtilTest {
 
 	@Test
 	void checkSlipTest() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			FileUtil.checkSlip(FileUtil.file("test/a"), FileUtil.file("test/../a"));
 		});
 	}

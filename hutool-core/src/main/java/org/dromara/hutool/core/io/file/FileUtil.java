@@ -23,6 +23,7 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.BOMInputStream;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.regex.ReUtil;
@@ -2558,6 +2559,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File getWebRoot() {
 		final String classPath = ClassUtil.getClassPath();
+		Console.log(classPath);
 		if (StrUtil.isNotBlank(classPath)) {
 			return getParent(file(classPath), 2);
 		}

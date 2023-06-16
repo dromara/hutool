@@ -4,6 +4,8 @@ import org.dromara.hutool.core.io.resource.ClassPathResource;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -22,12 +24,24 @@ public class ClassPathResourceTest {
 		Assertions.assertTrue(StrUtil.isNotEmpty(content));
 	}
 
-	@Test
+	@Test()
+	@EnabledForJreRange(max = JRE.JAVA_8)
 	public void readStringTest2() {
+		// JDK9+中因为模块的加入，根路径读取可能为空
 		// 读取classpath根目录测试
 		final ClassPathResource resource = new ClassPathResource("/");
 		final String content = resource.readUtf8Str();
 		Assertions.assertTrue(StrUtil.isNotEmpty(content));
+	}
+
+	@Test()
+	@EnabledForJreRange(min = JRE.JAVA_9)
+	public void readStringTestForJdk9() {
+		// JDK9+中因为模块的加入，根路径读取可能为空
+		// 读取classpath根目录测试
+		final ClassPathResource resource = new ClassPathResource("/");
+		final String content = resource.readUtf8Str();
+		Assertions.assertTrue(StrUtil.isEmpty(content));
 	}
 
 	@Test
