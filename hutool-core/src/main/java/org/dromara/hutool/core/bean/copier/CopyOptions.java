@@ -63,7 +63,7 @@ public class CopyOptions implements Serializable {
 	private BiPredicate<Field, Object> propertiesFilter;
 
 	/**
-	 * 字段属性名和属性值编辑器，，用于自定义属性转换规则（例如驼峰转下划线等），自定义属性值转换规则（例如null转""等）
+	 * 字段属性名和属性值编辑器，用于自定义属性转换规则（例如驼峰转下划线等），自定义属性值转换规则（例如null转""等）
 	 */
 	protected UnaryOperator<MutableEntry<String, Object>> fieldEditor;
 
@@ -338,6 +338,7 @@ public class CopyOptions implements Serializable {
 	 * @param value 值
 	 * @return 是否保留
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	protected boolean testPropertyFilter(final Field field, final Object value) {
 		return null == this.propertiesFilter || this.propertiesFilter.test(field, value);
 	}

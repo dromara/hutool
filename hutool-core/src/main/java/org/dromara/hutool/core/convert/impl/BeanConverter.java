@@ -23,6 +23,7 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapProxy;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -97,6 +98,9 @@ public class BeanConverter implements Converter, Serializable {
 		} else if (value instanceof byte[]) {
 			// 尝试反序列化
 			return SerializeUtil.deserialize((byte[]) value);
+		} else if(StrUtil.isEmptyIfStr(value)){
+			// issue#3136
+			return null;
 		}
 
 		throw new ConvertException("Unsupported source type: [{}] to [{}]", value.getClass(), targetType);

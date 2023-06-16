@@ -20,6 +20,7 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.BiMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -988,7 +989,8 @@ public class XmlUtil {
 	}
 
 	/**
-	 * XML转Java Bean
+	 * XML转Java Bean<br>
+	 * 如果XML根节点只有一个，且节点名和Bean的名称一致，则直接转换子节点
 	 *
 	 * @param <T>  bean类型
 	 * @param node XML节点
