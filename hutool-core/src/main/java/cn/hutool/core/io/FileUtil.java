@@ -3459,23 +3459,11 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
 		if (null != parentFile && null != file) {
-			if (false == startsWith(parentFile, file)) {
+			if (false == isSub(parentFile, file)) {
 				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 			}
 		}
 		return file;
-	}
-
-	/**
-	 * 检查父文件是否为文件真正的父目录
-	 *
-	 * @param parentFile 父目录
-	 * @param file       文件
-	 * @return 是否为文件真正的父目录
-	 */
-	public static boolean startsWith(final File parentFile, final File file) {
-		return PathUtil.toAbsNormal(parentFile.toPath())
-			.startsWith(PathUtil.toAbsNormal(file.toPath()));
 	}
 
 	/**

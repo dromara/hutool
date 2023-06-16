@@ -20,8 +20,14 @@ import java.util.List;
  */
 public class FileUtilTest {
 
+	@Test
+	public void fileTest1() {
+		final File file = FileUtil.file("d:/aaa", "bbb");
+		Assert.assertNotNull(file);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
-	public void fileTest() {
+	public void fileTest2() {
 		final File file = FileUtil.file("d:/aaa", "bbb");
 		Assert.assertNotNull(file);
 
