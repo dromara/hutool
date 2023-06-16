@@ -13,38 +13,26 @@
 package org.dromara.hutool.core.xml;
 
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.map.BiMap;
-import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.text.escape.EscapeUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.parsers.DocumentBuilder;
 import java.beans.XMLEncoder;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -52,115 +40,11 @@ import java.util.*;
  * 此工具使用w3c dom工具，不需要依赖第三方包。<br>
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作
  *
- * @author xiaoleilu
+ * @author looly
  */
-public class XmlUtil {
+public class XmlUtil extends XmlConstants {
 
-	/**
-	 * 字符串常量：XML 不间断空格转义 {@code "&nbsp;" -> " "}
-	 */
-	public static final String NBSP = "&nbsp;";
-
-	/**
-	 * 字符串常量：XML And 符转义 {@code "&amp;" -> "&"}
-	 */
-	public static final String AMP = "&amp;";
-
-	/**
-	 * 字符串常量：XML 双引号转义 {@code "&quot;" -> "\""}
-	 */
-	public static final String QUOTE = "&quot;";
-
-	/**
-	 * 字符串常量：XML 单引号转义 {@code "&apos" -> "'"}
-	 */
-	public static final String APOS = "&apos;";
-
-	/**
-	 * 字符串常量：XML 小于号转义 {@code "&lt;" -> "<"}
-	 */
-	public static final String LT = "&lt;";
-
-	/**
-	 * 字符串常量：XML 大于号转义 {@code "&gt;" -> ">"}
-	 */
-	public static final String GT = "&gt;";
-
-	/**
-	 * 在XML中无效的字符 正则
-	 */
-	public static final String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
-	/**
-	 * 在XML中注释的内容 正则
-	 */
-	public static final String COMMENT_REGEX = "(?s)<!--.+?-->";
-	/**
-	 * XML格式化输出默认缩进量
-	 */
-	public static final int INDENT_DEFAULT = 2;
-
-	/**
-	 * 默认的DocumentBuilderFactory实现
-	 */
-	private static String defaultDocumentBuilderFactory = "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl";
-
-	/**
-	 * 是否打开命名空间支持
-	 */
-	private static boolean namespaceAware = true;
-	/**
-	 * Sax读取器工厂缓存
-	 */
-	private static SAXParserFactory factory;
-
-	/**
-	 * 禁用默认的DocumentBuilderFactory，禁用后如果有第三方的实现（如oracle的xdb包中的xmlparse），将会自动加载实现。
-	 */
-	synchronized public static void disableDefaultDocumentBuilderFactory() {
-		defaultDocumentBuilderFactory = null;
-	}
-
-	/**
-	 * 设置是否打开命名空间支持，默认打开
-	 *
-	 * @param isNamespaceAware 是否命名空间支持
-	 * @since 5.3.1
-	 */
-	synchronized public static void setNamespaceAware(final boolean isNamespaceAware) {
-		namespaceAware = isNamespaceAware;
-	}
-
-	// -------------------------------------------------------------------------------------- Read
-
-	/**
-	 * 读取解析XML文件
-	 *
-	 * @param file XML文件
-	 * @return XML文档对象
-	 */
-	public static Document readXML(File file) {
-		Assert.notNull(file, "Xml file is null !");
-		if (!file.exists()) {
-			throw new HutoolException("File [{}] not a exist!", file.getAbsolutePath());
-		}
-		if (!file.isFile()) {
-			throw new HutoolException("[{}] not a file!", file.getAbsolutePath());
-		}
-
-		try {
-			file = file.getCanonicalFile();
-		} catch (final IOException e) {
-			// ignore
-		}
-
-		BufferedInputStream in = null;
-		try {
-			in = FileUtil.getInputStream(file);
-			return readXML(in);
-		} finally {
-			IoUtil.closeQuietly(in);
-		}
-	}
+	// region ----- readXml
 
 	/**
 	 * 读取解析XML文件<br>
@@ -171,12 +55,34 @@ public class XmlUtil {
 	 * @return XML文档对象
 	 * @since 3.0.9
 	 */
-	public static Document readXML(String pathOrContent) {
+	public static Document readXml(String pathOrContent) {
 		pathOrContent = StrUtil.trim(pathOrContent);
 		if (StrUtil.startWith(pathOrContent, '<')) {
 			return parseXml(pathOrContent);
 		}
-		return readXML(FileUtil.file(pathOrContent));
+		return readXml(FileUtil.file(pathOrContent));
+	}
+
+	/**
+	 * 读取解析XML文件
+	 *
+	 * @param file XML文件
+	 * @return XML文档对象
+	 */
+	public static Document readXml(final File file) {
+		Assert.notNull(file, "Xml file is null !");
+		if (!file.exists()) {
+			throw new HutoolException("File [{}] not a exist!", file.getAbsolutePath());
+		}
+		if (!file.isFile()) {
+			throw new HutoolException("[{}] not a file!", file.getAbsolutePath());
+		}
+
+		try (final BufferedInputStream in = FileUtil.getInputStream(file)) {
+			return readXml(in);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -188,8 +94,8 @@ public class XmlUtil {
 	 * @throws HutoolException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(final InputStream inputStream) throws HutoolException {
-		return readXML(new InputSource(inputStream));
+	public static Document readXml(final InputStream inputStream) throws HutoolException {
+		return readXml(new InputSource(inputStream), true);
 	}
 
 	/**
@@ -200,26 +106,42 @@ public class XmlUtil {
 	 * @throws HutoolException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(final Reader reader) throws HutoolException {
-		return readXML(new InputSource(reader));
+	public static Document readXml(final Reader reader) throws HutoolException {
+		return readXml(new InputSource(reader), true);
 	}
 
 	/**
 	 * 读取解析XML文件<br>
 	 * 编码在XML中定义
 	 *
-	 * @param source {@link InputSource}
+	 * @param namespaceAware 是否打开命名空间支持
+	 * @param source         {@link InputSource}
 	 * @return XML文档对象
-	 * @since 3.0.9
 	 */
-	public static Document readXML(final InputSource source) {
-		final DocumentBuilder builder = createDocumentBuilder();
+	public static Document readXml(final InputSource source, final boolean namespaceAware) {
+		final DocumentBuilder builder = DocumentBuilderUtil.createDocumentBuilder(namespaceAware);
 		try {
 			return builder.parse(source);
 		} catch (final Exception e) {
 			throw new HutoolException(e, "Parse XML from stream error!");
 		}
 	}
+
+	/**
+	 * 将String类型的XML转换为XML文档
+	 *
+	 * @param xmlStr XML字符串
+	 * @return XML文档
+	 */
+	public static Document parseXml(final String xmlStr) {
+		if (StrUtil.isBlank(xmlStr)) {
+			throw new IllegalArgumentException("XML content string is empty !");
+		}
+		return readXml(StrUtil.getReader(cleanInvalid(xmlStr)));
+	}
+	// endregion
+
+	// region ----- readBySax
 
 	/**
 	 * 使用Sax方式读取指定的XML<br>
@@ -280,67 +202,11 @@ public class XmlUtil {
 	 * @since 5.4.4
 	 */
 	public static void readBySax(final InputSource source, final ContentHandler contentHandler) {
-		// 1.获取解析工厂
-		if (null == factory) {
-			factory = SAXParserFactory.newInstance();
-			factory.setValidating(false);
-			factory.setNamespaceAware(namespaceAware);
-
-			// https://blog.spoock.com/2018/10/23/java-xxe/
-			try{
-				factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-				factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-				factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-				factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			} catch (final Exception ignore){
-				// ignore
-			}
-		}
-		// 2.从解析工厂获取解析器
-		final SAXParser parse;
-		final XMLReader reader;
-		try {
-			parse = factory.newSAXParser();
-			if (contentHandler instanceof DefaultHandler) {
-				parse.parse(source, (DefaultHandler) contentHandler);
-				return;
-			}
-
-			// 3.得到解读器
-			reader = parse.getXMLReader();
-			// 防止XEE攻击，见：https://www.jianshu.com/p/1a857905b22c
-			// https://blog.spoock.com/2018/10/23/java-xxe/
-			reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-			//  忽略外部DTD
-			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
-			// 不包括外部一般实体。
-			reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
-			// 不包含外部参数实体或外部DTD子集。
-			reader.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
-
-			reader.setContentHandler(contentHandler);
-			reader.parse(source);
-		} catch (final ParserConfigurationException | SAXException e) {
-			throw new HutoolException(e);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		XmlSaxReader.of(source).read(contentHandler);
 	}
+	// endregion
 
-	/**
-	 * 将String类型的XML转换为XML文档
-	 *
-	 * @param xmlStr XML字符串
-	 * @return XML文档
-	 */
-	public static Document parseXml(String xmlStr) {
-		if (StrUtil.isBlank(xmlStr)) {
-			throw new IllegalArgumentException("XML content string is empty !");
-		}
-		xmlStr = cleanInvalid(xmlStr);
-		return readXML(StrUtil.getReader(xmlStr));
-	}
-	// -------------------------------------------------------------------------------------- Write
+	// region ----- write
 
 	/**
 	 * 将XML文档转换为String<br>
@@ -357,18 +223,6 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档转换为String<br>
-	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
-	 * 默认非格式化输出，若想格式化请使用{@link #format(Document)}
-	 *
-	 * @param doc XML文档
-	 * @return XML字符串
-	 */
-	public static String toStr(final Document doc) {
-		return toStr((Node) doc);
-	}
-
-	/**
-	 * 将XML文档转换为String<br>
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
 	 *
 	 * @param doc      XML文档
@@ -377,20 +231,7 @@ public class XmlUtil {
 	 * @since 5.4.5
 	 */
 	public static String toStr(final Node doc, final boolean isPretty) {
-		return toStr(doc, CharsetUtil.NAME_UTF_8, isPretty);
-	}
-
-	/**
-	 * 将XML文档转换为String<br>
-	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
-	 *
-	 * @param doc      XML文档
-	 * @param isPretty 是否格式化输出
-	 * @return XML字符串
-	 * @since 3.0.9
-	 */
-	public static String toStr(final Document doc, final boolean isPretty) {
-		return toStr((Node) doc, isPretty);
+		return toStr(doc, CharsetUtil.UTF_8, isPretty);
 	}
 
 	/**
@@ -403,22 +244,8 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.4.5
 	 */
-	public static String toStr(final Node doc, final String charset, final boolean isPretty) {
+	public static String toStr(final Node doc, final Charset charset, final boolean isPretty) {
 		return toStr(doc, charset, isPretty, false);
-	}
-
-	/**
-	 * 将XML文档转换为String<br>
-	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
-	 *
-	 * @param doc      XML文档
-	 * @param charset  编码
-	 * @param isPretty 是否格式化输出
-	 * @return XML字符串
-	 * @since 3.0.9
-	 */
-	public static String toStr(final Document doc, final String charset, final boolean isPretty) {
-		return toStr((Node) doc, charset, isPretty);
 	}
 
 	/**
@@ -432,13 +259,9 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 5.1.2
 	 */
-	public static String toStr(final Node doc, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
+	public static String toStr(final Node doc, final Charset charset, final boolean isPretty, final boolean omitXmlDeclaration) {
 		final StringWriter writer = StrUtil.getWriter();
-		try {
-			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);
-		} catch (final Exception e) {
-			throw new HutoolException(e, "Trans xml document to string error!");
-		}
+		write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);
 		return writer.toString();
 	}
 
@@ -468,35 +291,16 @@ public class XmlUtil {
 	 * 将XML文档写入到文件<br>
 	 * 使用Document中的编码
 	 *
-	 * @param doc          XML文档
-	 * @param absolutePath 文件绝对路径，不存在会自动创建
-	 */
-	public static void toFile(final Document doc, final String absolutePath) {
-		toFile(doc, absolutePath, null);
-	}
-
-	/**
-	 * 将XML文档写入到文件<br>
-	 *
 	 * @param doc     XML文档
-	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
-	 * @param charsetName 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param file    文件
+	 * @param charset 编码
 	 */
-	public static void toFile(final Document doc, final String path, String charsetName) {
-		if (StrUtil.isBlank(charsetName)) {
-			charsetName = doc.getXmlEncoding();
-		}
-		if (StrUtil.isBlank(charsetName)) {
-			charsetName = CharsetUtil.NAME_UTF_8;
-		}
-
-		BufferedWriter writer = null;
-		try {
-			writer = FileUtil.getWriter(path, CharsetUtil.charset(charsetName), false);
-			write(doc, writer, charsetName, INDENT_DEFAULT);
-		} finally {
-			IoUtil.closeQuietly(writer);
-		}
+	public static void write(final Document doc, final File file, final Charset charset) {
+		XmlWriter.of(doc)
+			.setCharset(charset)
+			.setIndent(INDENT_DEFAULT)
+			.setOmitXmlDeclaration(false)
+			.write(file);
 	}
 
 	/**
@@ -508,8 +312,8 @@ public class XmlUtil {
 	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 3.0.9
 	 */
-	public static void write(final Node node, final Writer writer, final String charset, final int indent) {
-		transform(new DOMSource(node), new StreamResult(writer), charset, indent);
+	public static void write(final Node node, final Writer writer, final Charset charset, final int indent) {
+		write(node, writer, charset, indent, false);
 	}
 
 	/**
@@ -522,8 +326,12 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void write(final Node node, final Writer writer, final String charset, final int indent, final boolean omitXmlDeclaration) {
-		transform(new DOMSource(node), new StreamResult(writer), charset, indent, omitXmlDeclaration);
+	public static void write(final Node node, final Writer writer, final Charset charset, final int indent, final boolean omitXmlDeclaration) {
+		XmlWriter.of(node)
+			.setCharset(charset)
+			.setIndent(indent)
+			.setOmitXmlDeclaration(omitXmlDeclaration)
+			.write(writer);
 	}
 
 	/**
@@ -535,8 +343,8 @@ public class XmlUtil {
 	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.8
 	 */
-	public static void write(final Node node, final OutputStream out, final String charset, final int indent) {
-		transform(new DOMSource(node), new StreamResult(out), charset, indent);
+	public static void write(final Node node, final OutputStream out, final Charset charset, final int indent) {
+		write(node, out, charset, indent, false);
 	}
 
 	/**
@@ -549,60 +357,17 @@ public class XmlUtil {
 	 * @param omitXmlDeclaration 是否输出 xml Declaration
 	 * @since 5.1.2
 	 */
-	public static void write(final Node node, final OutputStream out, final String charset, final int indent, final boolean omitXmlDeclaration) {
-		transform(new DOMSource(node), new StreamResult(out), charset, indent, omitXmlDeclaration);
+	public static void write(final Node node, final OutputStream out,
+							 final Charset charset, final int indent, final boolean omitXmlDeclaration) {
+		XmlWriter.of(node)
+			.setCharset(charset)
+			.setIndent(indent)
+			.setOmitXmlDeclaration(omitXmlDeclaration)
+			.write(out);
 	}
+	// endregion
 
-	/**
-	 * 将XML文档写出<br>
-	 * 格式化输出逻辑参考：<a href="https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java">https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java</a>
-	 *
-	 * @param source  源
-	 * @param result  目标
-	 * @param charset 编码
-	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
-	 * @since 4.0.9
-	 */
-	public static void transform(final Source source, final Result result, final String charset, final int indent) {
-		transform(source, result, charset, indent, false);
-	}
-
-	/**
-	 * 将XML文档写出<br>
-	 * 格式化输出逻辑参考：<a href="https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java">https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java</a>
-	 *
-	 * @param source             源
-	 * @param result             目标
-	 * @param charset            编码
-	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
-	 * @param omitXmlDeclaration 是否输出 xml Declaration
-	 * @since 5.1.2
-	 */
-	public static void transform(final Source source, final Result result, final String charset, final int indent, final boolean omitXmlDeclaration) {
-		final TransformerFactory factory = TransformerFactory.newInstance();
-		try {
-			// 防止XXE攻击，见：https://www.jianshu.com/p/1a857905b22c
-			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-			final Transformer xformer = factory.newTransformer();
-			if (indent > 0) {
-				xformer.setOutputProperty(OutputKeys.INDENT, "yes");
-				//fix issue#1232@Github
-				xformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
-				xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
-			}
-			if (StrUtil.isNotBlank(charset)) {
-				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
-			}
-			if (omitXmlDeclaration) {
-				xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			}
-			xformer.transform(source, result);
-		} catch (final Exception e) {
-			throw new HutoolException(e, "Trans xml document to string error!");
-		}
-	}
-
-	// -------------------------------------------------------------------------------------- Create
+	// region ----- create
 
 	/**
 	 * 创建XML文档<br>
@@ -612,45 +377,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Document createXml() {
-		return createDocumentBuilder().newDocument();
-	}
-
-	/**
-	 * 创建 DocumentBuilder
-	 *
-	 * @return DocumentBuilder
-	 * @since 4.1.2
-	 */
-	public static DocumentBuilder createDocumentBuilder() {
-		final DocumentBuilder builder;
-		try {
-			builder = createDocumentBuilderFactory().newDocumentBuilder();
-		} catch (final Exception e) {
-			throw new HutoolException(e, "Create xml document error!");
-		}
-		return builder;
-	}
-
-	/**
-	 * 创建{@link DocumentBuilderFactory}
-	 * <p>
-	 * 默认使用"com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"<br>
-	 * 如果使用第三方实现，请调用{@link #disableDefaultDocumentBuilderFactory()}
-	 * </p>
-	 *
-	 * @return {@link DocumentBuilderFactory}
-	 */
-	public static DocumentBuilderFactory createDocumentBuilderFactory() {
-		final DocumentBuilderFactory factory;
-		if (StrUtil.isNotEmpty(defaultDocumentBuilderFactory)) {
-			factory = DocumentBuilderFactory.newInstance(defaultDocumentBuilderFactory, null);
-		} else {
-			factory = DocumentBuilderFactory.newInstance();
-		}
-
-		// 默认打开NamespaceAware，getElementsByTagNameNS可以使用命名空间
-		factory.setNamespaceAware(namespaceAware);
-		return disableXXE(factory);
+		return DocumentBuilderUtil.createDocumentBuilder(true).newDocument();
 	}
 
 	/**
@@ -678,6 +405,7 @@ public class XmlUtil {
 		doc.appendChild(null == namespace ? doc.createElement(rootElementName) : doc.createElementNS(namespace, rootElementName));
 		return doc;
 	}
+	// endregion
 
 	// -------------------------------------------------------------------------------------- Function
 
@@ -714,7 +442,8 @@ public class XmlUtil {
 		if (xmlContent == null) {
 			return null;
 		}
-		return xmlContent.replaceAll(INVALID_REGEX, "");
+
+		return ReUtil.replaceAll(xmlContent, INVALID_PATTERN, StrUtil.EMPTY);
 	}
 
 	/**
@@ -728,7 +457,7 @@ public class XmlUtil {
 		if (xmlContent == null) {
 			return null;
 		}
-		return xmlContent.replaceAll(COMMENT_REGEX, StrUtil.EMPTY);
+		return ReUtil.replaceAll(xmlContent, COMMENT_PATTERN, StrUtil.EMPTY);
 	}
 
 	/**
@@ -844,131 +573,19 @@ public class XmlUtil {
 		}
 	}
 
+	// region ----- xmlToMap or xmlToBean
 	/**
-	 * 创建XPath<br>
-	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
+	 * XML转Java Bean<br>
+	 * 如果XML根节点只有一个，且节点名和Bean的名称一致，则直接转换子节点
 	 *
-	 * @return {@link XPath}
-	 * @since 3.2.0
+	 * @param <T>       bean类型
+	 * @param node      XML节点
+	 * @param beanClass bean类
+	 * @return bean
+	 * @since 5.2.4
 	 */
-	public static XPath createXPath() {
-		return XPathFactory.newInstance().newXPath();
-	}
-
-	/**
-	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
-	 *
-	 * @param expression XPath表达式
-	 * @param source     资源，可以是Docunent、Node节点等
-	 * @return 匹配返回类型的值
-	 * @since 4.0.9
-	 */
-	public static Element getElementByXPath(final String expression, final Object source) {
-		return (Element) getNodeByXPath(expression, source);
-	}
-
-	/**
-	 * 通过XPath方式读取XML的NodeList<br>
-	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
-	 *
-	 * @param expression XPath表达式
-	 * @param source     资源，可以是Docunent、Node节点等
-	 * @return NodeList
-	 * @since 4.0.9
-	 */
-	public static NodeList getNodeListByXPath(final String expression, final Object source) {
-		return (NodeList) getByXPath(expression, source, XPathConstants.NODESET);
-	}
-
-	/**
-	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
-	 *
-	 * @param expression XPath表达式
-	 * @param source     资源，可以是Docunent、Node节点等
-	 * @return 匹配返回类型的值
-	 * @since 4.0.9
-	 */
-	public static Node getNodeByXPath(final String expression, final Object source) {
-		return (Node) getByXPath(expression, source, XPathConstants.NODE);
-	}
-
-	/**
-	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：<a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a>
-	 *
-	 * @param expression XPath表达式
-	 * @param source     资源，可以是Docunent、Node节点等
-	 * @param returnType 返回类型，{@link javax.xml.xpath.XPathConstants}
-	 * @return 匹配返回类型的值
-	 * @since 3.2.0
-	 */
-	public static Object getByXPath(final String expression, final Object source, final QName returnType) {
-		NamespaceContext nsContext = null;
-		if (source instanceof Node) {
-			nsContext = new UniversalNamespaceCache((Node) source, false);
-		}
-		return getByXPath(expression, source, returnType, nsContext);
-	}
-
-	/**
-	 * 通过XPath方式读取XML节点等信息<br>
-	 * Xpath相关文章：<br>
-	 * <a href="https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html">https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html</a><br>
-	 * <a href="https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/">https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/</a>
-	 *
-	 * @param expression XPath表达式
-	 * @param source     资源，可以是Docunent、Node节点等
-	 * @param returnType 返回类型，{@link javax.xml.xpath.XPathConstants}
-	 * @param nsContext  {@link NamespaceContext}
-	 * @return 匹配返回类型的值
-	 * @since 5.3.1
-	 */
-	public static Object getByXPath(final String expression, final Object source, final QName returnType, final NamespaceContext nsContext) {
-		final XPath xPath = createXPath();
-		if (null != nsContext) {
-			xPath.setNamespaceContext(nsContext);
-		}
-		try {
-			if (source instanceof InputSource) {
-				return xPath.evaluate(expression, (InputSource) source, returnType);
-			} else {
-				return xPath.evaluate(expression, source, returnType);
-			}
-		} catch (final XPathExpressionException e) {
-			throw new HutoolException(e);
-		}
-	}
-
-	/**
-	 * 转义XML特殊字符:
-	 *
-	 * <pre>
-	 * &amp; (ampersand) 替换为 &amp;amp;
-	 * &lt; (小于) 替换为 &amp;lt;
-	 * &gt; (大于) 替换为 &amp;gt;
-	 * &quot; (双引号) 替换为 &amp;quot;
-	 * </pre>
-	 *
-	 * @param string 被替换的字符串
-	 * @return 替换后的字符串
-	 * @since 4.0.8
-	 */
-	public static String escape(final String string) {
-		return EscapeUtil.escapeHtml4(string);
-	}
-
-	/**
-	 * 反转义XML特殊字符:
-	 *
-	 * @param string 被替换的字符串
-	 * @return 替换后的字符串
-	 * @see EscapeUtil#unescape(String)
-	 * @since 5.0.6
-	 */
-	public static String unescape(final String string) {
-		return EscapeUtil.unescapeHtml4(string);
+	public static <T> T xmlToBean(final Node node, final Class<T> beanClass) {
+		return XmlMapper.of(node).toBean(beanClass);
 	}
 
 	/**
@@ -979,40 +596,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Map<String, Object> xmlToMap(final String xmlStr) {
-		return xmlToMap(xmlStr, new HashMap<>());
-	}
-
-	/**
-	 * XML转Java Bean<br>
-	 * 如果XML根节点只有一个，且节点名和Bean的名称一致，则直接转换子节点
-	 *
-	 * @param <T>  bean类型
-	 * @param node XML节点
-	 * @param bean bean类
-	 * @return bean
-	 * @since 5.2.4
-	 */
-	public static <T> T xmlToBean(final Node node, final Class<T> bean) {
-		final Map<String, Object> map = xmlToMap(node);
-		if (null != map && map.size() == 1) {
-			final String nodeName = CollUtil.getFirst(map.keySet());
-			if (bean.getSimpleName().equalsIgnoreCase(nodeName)) {
-				// 只有key和bean的名称匹配时才做单一对象转换
-				return BeanUtil.toBean(CollUtil.get(map.values(), 0), bean);
-			}
-		}
-		return BeanUtil.toBean(map, bean);
-	}
-
-	/**
-	 * XML格式字符串转换为Map
-	 *
-	 * @param node XML节点
-	 * @return XML数据转换后的Map
-	 * @since 4.0.8
-	 */
-	public static Map<String, Object> xmlToMap(final Node node) {
-		return xmlToMap(node, new HashMap<>());
+		return xmlToMap(xmlStr, new LinkedHashMap<>());
 	}
 
 	/**
@@ -1033,6 +617,17 @@ public class XmlUtil {
 	}
 
 	/**
+	 * XML格式字符串转换为Map
+	 *
+	 * @param node XML节点
+	 * @return XML数据转换后的Map
+	 * @since 4.0.8
+	 */
+	public static Map<String, Object> xmlToMap(final Node node) {
+		return xmlToMap(node, new LinkedHashMap<>());
+	}
+
+	/**
 	 * XML节点转换为Map
 	 *
 	 * @param node   XML节点
@@ -1040,52 +635,13 @@ public class XmlUtil {
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
 	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> xmlToMap(final Node node, Map<String, Object> result) {
-		if (null == result) {
-			result = new HashMap<>();
-		}
-		final NodeList nodeList = node.getChildNodes();
-		final int length = nodeList.getLength();
-		Node childNode;
-		Element childEle;
-		for (int i = 0; i < length; ++i) {
-			childNode = nodeList.item(i);
-			if (!isElement(childNode)) {
-				continue;
-			}
-
-			childEle = (Element) childNode;
-			final Object value = result.get(childEle.getNodeName());
-			final Object newValue;
-			if (childEle.hasChildNodes()) {
-				// 子节点继续递归遍历
-				final Map<String, Object> map = xmlToMap(childEle);
-				if (MapUtil.isNotEmpty(map)) {
-					newValue = map;
-				} else {
-					newValue = childEle.getTextContent();
-				}
-			} else {
-				newValue = childEle.getTextContent();
-			}
-
-
-			if (null != newValue) {
-				if (null != value) {
-					if (value instanceof List) {
-						((List<Object>) value).add(newValue);
-					} else {
-						result.put(childEle.getNodeName(), ListUtil.of(value, newValue));
-					}
-				} else {
-					result.put(childEle.getNodeName(), newValue);
-				}
-			}
-		}
+	public static Map<String, Object> xmlToMap(final Node node, final Map<String, Object> result) {
+		XmlMapper.of(node).toMap(result);
 		return result;
 	}
+	// endregion
 
+	// region ----- toXml
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
@@ -1106,7 +662,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, "xml"), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
+		return toStr(mapToXml(data, "xml"), CharsetUtil.UTF_8, false, omitXmlDeclaration);
 	}
 
 	/**
@@ -1145,7 +701,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, false, omitXmlDeclaration);
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, false, omitXmlDeclaration);
 	}
 
 	/**
@@ -1160,7 +716,7 @@ public class XmlUtil {
 	 * @since 5.1.2
 	 */
 	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final boolean isPretty, final boolean omitXmlDeclaration) {
-		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.NAME_UTF_8, isPretty, omitXmlDeclaration);
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty, omitXmlDeclaration);
 	}
 
 	/**
@@ -1175,7 +731,7 @@ public class XmlUtil {
 	 * @return XML格式的字符串
 	 * @since 5.1.2
 	 */
-	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final String charset, final boolean isPretty, final boolean omitXmlDeclaration) {
+	public static String mapToXmlStr(final Map<?, ?> data, final String rootName, final String namespace, final Charset charset, final boolean isPretty, final boolean omitXmlDeclaration) {
 		return toStr(mapToXml(data, rootName, namespace), charset, isPretty, omitXmlDeclaration);
 	}
 
@@ -1245,8 +801,9 @@ public class XmlUtil {
 			return null;
 		}
 		return mapToXml(BeanUtil.beanToMap(bean, false, ignoreNull),
-				bean.getClass().getSimpleName(), namespace);
+			bean.getClass().getSimpleName(), namespace);
 	}
+	// endregion
 
 	/**
 	 * 给定节点是否为{@link Element} 类型节点
@@ -1259,6 +816,7 @@ public class XmlUtil {
 		return (null != node) && Node.ELEMENT_NODE == node.getNodeType();
 	}
 
+	// region ----- append
 	/**
 	 * 在已有节点上创建子节点
 	 *
@@ -1309,6 +867,8 @@ public class XmlUtil {
 	public static void append(final Node node, final Object data) {
 		append(getOwnerDocument(node), node, data);
 	}
+	// endregion
+
 	// ---------------------------------------------------------------------------------------- Private method start
 
 	/**
@@ -1390,149 +950,6 @@ public class XmlUtil {
 	 */
 	private static Node appendText(final Document doc, final Node node, final CharSequence text) {
 		return node.appendChild(doc.createTextNode(StrUtil.str(text)));
-	}
-
-	/**
-	 * 关闭XXE，避免漏洞攻击<br>
-	 * see: <a href="https://www.owasp.org/index.php/XML_External_Entity_">https://www.owasp.org/index.php/XML_External_Entity_</a>(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
-	 *
-	 * @param dbf DocumentBuilderFactory
-	 * @return DocumentBuilderFactory
-	 */
-	private static DocumentBuilderFactory disableXXE(final DocumentBuilderFactory dbf) {
-		String feature;
-		try {
-			// This is the PRIMARY defense. If DTDs (doctypes) are disallowed, almost all XML entity attacks are prevented
-			// Xerces 2 only - http://xerces.apache.org/xerces2-j/features.html#disallow-doctype-decl
-			feature = "http://apache.org/xml/features/disallow-doctype-decl";
-			dbf.setFeature(feature, true);
-			// If you can't completely disable DTDs, then at least do the following:
-			// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-general-entities
-			// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-general-entities
-			// JDK7+ - http://xml.org/sax/features/external-general-entities
-			feature = "http://xml.org/sax/features/external-general-entities";
-			dbf.setFeature(feature, false);
-			// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-parameter-entities
-			// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-parameter-entities
-			// JDK7+ - http://xml.org/sax/features/external-parameter-entities
-			feature = "http://xml.org/sax/features/external-parameter-entities";
-			dbf.setFeature(feature, false);
-			// Disable external DTDs as well
-			feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-			dbf.setFeature(feature, false);
-			// and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity Attacks"
-			dbf.setXIncludeAware(false);
-			dbf.setExpandEntityReferences(false);
-		} catch (final ParserConfigurationException e) {
-			// ignore
-		}
-		return dbf;
-	}
-
-	/**
-	 * 全局命名空间上下文<br>
-	 * 见：<a href="https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/">https://www.ibm.com/developerworks/cn/xml/x-nmspccontext/</a>
-	 */
-	public static class UniversalNamespaceCache implements NamespaceContext {
-		private static final String DEFAULT_NS = "DEFAULT";
-		private final BiMap<String, String> prefixUri = new BiMap<>(new HashMap<>());
-
-		/**
-		 * This constructor parses the document and stores all namespaces it can
-		 * find. If toplevelOnly is true, only namespaces in the root are used.
-		 *
-		 * @param node         source Node
-		 * @param toplevelOnly restriction of the search to enhance performance
-		 */
-		public UniversalNamespaceCache(final Node node, final boolean toplevelOnly) {
-			examineNode(node.getFirstChild(), toplevelOnly);
-		}
-
-		/**
-		 * A single node is read, the namespace attributes are extracted and stored.
-		 *
-		 * @param node            to examine
-		 * @param attributesOnly, if true no recursion happens
-		 */
-		private void examineNode(final Node node, final boolean attributesOnly) {
-			final NamedNodeMap attributes = node.getAttributes();
-			if (null != attributes) {
-				final int length = attributes.getLength();
-				for (int i = 0; i < length; i++) {
-					final Node attribute = attributes.item(i);
-					storeAttribute(attribute);
-				}
-			}
-
-			if (!attributesOnly) {
-				final NodeList childNodes = node.getChildNodes();
-				//noinspection ConstantConditions
-				if(null != childNodes){
-					Node item;
-					final int childLength = childNodes.getLength();
-					for (int i = 0; i < childLength; i++) {
-						item = childNodes.item(i);
-						if (item.getNodeType() == Node.ELEMENT_NODE)
-							examineNode(item, false);
-					}
-				}
-			}
-		}
-
-		/**
-		 * This method looks at an attribute and stores it, if it is a namespace
-		 * attribute.
-		 *
-		 * @param attribute to examine
-		 */
-		private void storeAttribute(final Node attribute) {
-			if (null == attribute) {
-				return;
-			}
-			// examine the attributes in namespace xmlns
-			if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(attribute.getNamespaceURI())) {
-				// Default namespace xmlns="uri goes here"
-				if (XMLConstants.XMLNS_ATTRIBUTE.equals(attribute.getNodeName())) {
-					prefixUri.put(DEFAULT_NS, attribute.getNodeValue());
-				} else {
-					// The defined prefixes are stored here
-					prefixUri.put(attribute.getLocalName(), attribute.getNodeValue());
-				}
-			}
-
-		}
-
-		/**
-		 * This method is called by XPath. It returns the default namespace, if the
-		 * prefix is null or "".
-		 *
-		 * @param prefix to search for
-		 * @return uri
-		 */
-		@Override
-		public String getNamespaceURI(final String prefix) {
-			if (prefix == null || XMLConstants.DEFAULT_NS_PREFIX.equals(prefix)) {
-				return prefixUri.get(DEFAULT_NS);
-			} else {
-				return prefixUri.get(prefix);
-			}
-		}
-
-		/**
-		 * This method is not needed in this context, but can be implemented in a
-		 * similar way.
-		 */
-		@Override
-		public String getPrefix(final String namespaceURI) {
-			return prefixUri.getInverse().get(namespaceURI);
-		}
-
-		@Override
-		public Iterator<String> getPrefixes(final String namespaceURI) {
-			// Not implemented
-			return null;
-		}
-
 	}
 	// ---------------------------------------------------------------------------------------- Private method end
 

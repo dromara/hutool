@@ -1,5 +1,6 @@
 package org.dromara.hutool.core.text.escape;
 
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -65,5 +66,12 @@ public class EscapeUtilTest {
 		final String str = "&apos;some text with single quotes&apos;";
 		final String s = EscapeUtil.unescapeHtml4(str);
 		Assertions.assertEquals("'some text with single quotes'", s);
+	}
+
+	@Test
+	public void escapeXmlTest(){
+		final String a = "<>";
+		final String escape = EscapeUtil.escape(a);
+		Console.log(escape);
 	}
 }

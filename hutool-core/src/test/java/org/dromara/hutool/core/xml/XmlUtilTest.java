@@ -10,17 +10,18 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.xml;
 
 import lombok.Data;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.xml.XmlUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -46,13 +47,13 @@ public class XmlUtilTest {
 	@Test
 	public void parseTest() {
 		final String result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
-				+ "<returnsms>"//
-				+ "<returnstatus>Success</returnstatus>"//
-				+ "<message>ok</message>"//
-				+ "<remainpoint>1490</remainpoint>"//
-				+ "<taskID>885</taskID>"//
-				+ "<successCounts>1</successCounts>"//
-				+ "</returnsms>";
+			+ "<returnsms>"//
+			+ "<returnstatus>Success</returnstatus>"//
+			+ "<message>ok</message>"//
+			+ "<remainpoint>1490</remainpoint>"//
+			+ "<taskID>885</taskID>"//
+			+ "<successCounts>1</successCounts>"//
+			+ "</returnsms>";
 		final Document docResult = XmlUtil.parseXml(result);
 		final String elementText = XmlUtil.elementText(docResult.getDocumentElement(), "returnstatus");
 		Assertions.assertEquals("Success", elementText);
@@ -62,29 +63,29 @@ public class XmlUtilTest {
 	@Disabled
 	public void writeTest() {
 		final String result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
-				+ "<returnsms>"//
-				+ "<returnstatus>Success（成功）</returnstatus>"//
-				+ "<message>ok</message>"//
-				+ "<remainpoint>1490</remainpoint>"//
-				+ "<taskID>885</taskID>"//
-				+ "<successCounts>1</successCounts>"//
-				+ "</returnsms>";
+			+ "<returnsms>"//
+			+ "<returnstatus>Success（成功）</returnstatus>"//
+			+ "<message>ok</message>"//
+			+ "<remainpoint>1490</remainpoint>"//
+			+ "<taskID>885</taskID>"//
+			+ "<successCounts>1</successCounts>"//
+			+ "</returnsms>";
 		final Document docResult = XmlUtil.parseXml(result);
-		XmlUtil.toFile(docResult, "e:/aaa.xml", "utf-8");
+		XmlUtil.write(docResult, FileUtil.file("d:/test/aaa.xml"), CharsetUtil.UTF_8);
 	}
 
 	@Test
 	public void xpathTest() {
 		final String result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
-				+ "<returnsms>"//
-				+ "<returnstatus>Success（成功）</returnstatus>"//
-				+ "<message>ok</message>"//
-				+ "<remainpoint>1490</remainpoint>"//
-				+ "<taskID>885</taskID>"//
-				+ "<successCounts>1</successCounts>"//
-				+ "</returnsms>";
+			+ "<returnsms>"//
+			+ "<returnstatus>Success（成功）</returnstatus>"//
+			+ "<message>ok</message>"//
+			+ "<remainpoint>1490</remainpoint>"//
+			+ "<taskID>885</taskID>"//
+			+ "<successCounts>1</successCounts>"//
+			+ "</returnsms>";
 		final Document docResult = XmlUtil.parseXml(result);
-		final Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
+		final Object value = XPathUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
 		Assertions.assertEquals("ok", value);
 	}
 
@@ -92,21 +93,21 @@ public class XmlUtilTest {
 	public void xpathTest2() {
 		final String result = ResourceUtil.readUtf8Str("test.xml");
 		final Document docResult = XmlUtil.parseXml(result);
-		final Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
+		final Object value = XPathUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
 		Assertions.assertEquals("ok", value);
 	}
 
 	@Test
 	public void xmlToMapTest() {
 		final String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
-				+ "<returnsms>"//
-				+ "<returnstatus>Success</returnstatus>"//
-				+ "<message>ok</message>"//
-				+ "<remainpoint>1490</remainpoint>"//
-				+ "<taskID>885</taskID>"//
-				+ "<successCounts>1</successCounts>"//
-				+ "<newNode><sub>subText</sub></newNode>"//
-				+ "</returnsms>";
+			+ "<returnsms>"//
+			+ "<returnstatus>Success</returnstatus>"//
+			+ "<message>ok</message>"//
+			+ "<remainpoint>1490</remainpoint>"//
+			+ "<taskID>885</taskID>"//
+			+ "<successCounts>1</successCounts>"//
+			+ "<newNode><sub>subText</sub></newNode>"//
+			+ "</returnsms>";
 		final Map<String, Object> map = XmlUtil.xmlToMap(xml);
 
 		Assertions.assertEquals(6, map.size());
@@ -130,51 +131,51 @@ public class XmlUtilTest {
 	@Test
 	public void mapToXmlTest() {
 		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())//
-				.put("name", "张三")//
-				.put("age", 12)//
-				.put("game", MapUtil.builder(new LinkedHashMap<String, Object>()).put("昵称", "Looly").put("level", 14).build())//
-				.build();
+			.put("name", "张三")//
+			.put("age", 12)//
+			.put("game", MapUtil.builder(new LinkedHashMap<String, Object>()).put("昵称", "Looly").put("level", 14).build())//
+			.build();
 		final Document doc = XmlUtil.mapToXml(map, "user");
 		// Console.log(XmlUtil.toStr(doc, false));
 		Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"//
-						+ "<user>"//
-						+ "<name>张三</name>"//
-						+ "<age>12</age>"//
-						+ "<game>"//
-						+ "<昵称>Looly</昵称>"//
-						+ "<level>14</level>"//
-						+ "</game>"//
-						+ "</user>", //
-				XmlUtil.toStr(doc, false));
+				+ "<user>"//
+				+ "<name>张三</name>"//
+				+ "<age>12</age>"//
+				+ "<game>"//
+				+ "<昵称>Looly</昵称>"//
+				+ "<level>14</level>"//
+				+ "</game>"//
+				+ "</user>", //
+			XmlUtil.toStr(doc, false));
 	}
 
 	@Test
 	public void mapToXmlTest2() {
 		// 测试List
 		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())
-				.put("Town", ListUtil.of("town1", "town2"))
-				.build();
+			.put("Town", ListUtil.of("town1", "town2"))
+			.build();
 
 		final Document doc = XmlUtil.mapToXml(map, "City");
 		Assertions.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-						"<City>" +
-						"<Town>town1</Town>" +
-						"<Town>town2</Town>" +
-						"</City>",
-				XmlUtil.toStr(doc));
+				"<City>" +
+				"<Town>town1</Town>" +
+				"<Town>town2</Town>" +
+				"</City>",
+			XmlUtil.toStr(doc));
 	}
 
 	@Test
 	public void readTest() {
-		final Document doc = XmlUtil.readXML("test.xml");
+		final Document doc = XmlUtil.readXml("test.xml");
 		Assertions.assertNotNull(doc);
 	}
 
 	@Test
-	public void readBySaxTest(){
+	public void readBySaxTest() {
 		final Set<String> eles = SetUtil.of(
-				"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
-		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler(){
+			"returnsms", "returnstatus", "message", "remainpoint", "taskID", "successCounts");
+		XmlUtil.readBySax(ResourceUtil.getStream("test.xml"), new DefaultHandler() {
 			@Override
 			public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
 				Assertions.assertTrue(eles.contains(localName));
@@ -186,8 +187,8 @@ public class XmlUtilTest {
 	public void mapToXmlTestWithOmitXmlDeclaration() {
 
 		final Map<String, Object> map = MapBuilder.of(new LinkedHashMap<String, Object>())
-				.put("name", "ddatsh")
-				.build();
+			.put("name", "ddatsh")
+			.build();
 		final String xml = XmlUtil.mapToXmlStr(map, true);
 		Assertions.assertEquals("<xml><name>ddatsh</name></xml>", xml);
 	}
@@ -195,18 +196,18 @@ public class XmlUtilTest {
 	@Test
 	public void getByPathTest() {
 		final String xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-				"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-				"  <soap:Body>\n" +
-				"    <ns2:testResponse xmlns:ns2=\"http://ws.xxx.com/\">\n" +
-				"      <return>2020/04/15 21:01:21</return>\n" +
-				"    </ns2:testResponse>\n" +
-				"  </soap:Body>\n" +
-				"</soap:Envelope>\n";
+			"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+			"  <soap:Body>\n" +
+			"    <ns2:testResponse xmlns:ns2=\"http://ws.xxx.com/\">\n" +
+			"      <return>2020/04/15 21:01:21</return>\n" +
+			"    </ns2:testResponse>\n" +
+			"  </soap:Body>\n" +
+			"</soap:Envelope>\n";
 
-		final Document document = XmlUtil.readXML(xmlStr);
-		final Object value = XmlUtil.getByXPath(
-				"//soap:Envelope/soap:Body/ns2:testResponse/return",
-				document, XPathConstants.STRING);//
+		final Document document = XmlUtil.readXml(xmlStr);
+		final Object value = XPathUtil.getByXPath(
+			"//soap:Envelope/soap:Body/ns2:testResponse/return",
+			document, XPathConstants.STRING);//
 		Assertions.assertEquals("2020/04/15 21:01:21", value);
 	}
 
@@ -267,7 +268,7 @@ public class XmlUtilTest {
 	}
 
 	@Test
-	public void xmlToBeanTest2(){
+	public void xmlToBeanTest2() {
 		@Data
 		class SmsRes {
 			private String code;
@@ -298,7 +299,7 @@ public class XmlUtilTest {
 
 	@Test
 	@Disabled
-	public void formatTest(){
+	public void formatTest() {
 		// https://github.com/looly/hutool/pull/1234
 		final Document xml = XmlUtil.createXml("NODES");
 		xml.setXmlStandalone(true);
@@ -325,22 +326,15 @@ public class XmlUtilTest {
 
 		parentNode.item(0).appendChild(parent1Node);
 
-		final String format = XmlUtil.toStr(xml,"GBK",true);
+		final String format = XmlUtil.toStr(xml, CharsetUtil.GBK, true);
 		Console.log(format);
 	}
 
 	@Test
-	public void escapeTest(){
-		final String a = "<>";
-		final String escape = XmlUtil.escape(a);
-		Console.log(escape);
-	}
-
-	@Test
-	public void getParamTest(){
+	public void getParamTest() {
 		final String xml = "<Config name=\"aaaa\">\n" +
-				"    <url>222222</url>\n" +
-				"</Config>";
+			"    <url>222222</url>\n" +
+			"</Config>";
 
 		final Document doc = XmlUtil.parseXml(xml);
 		final String name = doc.getDocumentElement().getAttribute("name");
@@ -349,24 +343,23 @@ public class XmlUtilTest {
 
 	@Test
 	@Disabled
-	public void issueI5DO8ETest(){
+	public void issueI5DO8ETest() {
 		// 增加子节点后，格式会错乱，JDK的bug
-		XmlUtil.setNamespaceAware(false);
 		final String xmlStr = ResourceUtil.readUtf8Str("issueI5DO8E.xml");
-		final Document doc = XmlUtil.readXML(xmlStr);
+		final Document doc = XmlUtil.readXml(xmlStr);
 
 		final Element item = doc.createElement("item");
 		item.setAttribute("id", "cover-image");
-		final Element manifestEl = XmlUtil.getElementByXPath("//package/manifest", doc);
+		final Element manifestEl = XPathUtil.getElementByXPath("//package/manifest", doc);
 		manifestEl.appendChild(item);
 
 		Console.log(XmlUtil.format(doc));
 	}
 
 	@Test
-	public void xmlStrToBeanTest(){
+	public void xmlStrToBeanTest() {
 		final String xml = "<userInfo><name>张三</name><age>20</age><email>zhangsan@example.com</email></userInfo>";
-		final Document document = XmlUtil.readXML(xml);
+		final Document document = XmlUtil.readXml(xml);
 		final UserInfo userInfo = XmlUtil.xmlToBean(document, UserInfo.class);
 		Assertions.assertEquals("张三", userInfo.getName());
 		Assertions.assertEquals("20", userInfo.getAge());
