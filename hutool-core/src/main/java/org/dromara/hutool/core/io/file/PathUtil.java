@@ -14,7 +14,6 @@ package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.*;

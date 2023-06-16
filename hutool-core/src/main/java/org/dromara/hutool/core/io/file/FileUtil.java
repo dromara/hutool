@@ -23,7 +23,6 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.io.stream.BOMInputStream;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.regex.ReUtil;
@@ -2648,23 +2647,12 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File checkSlip(final File parentFile, final File file) throws IllegalArgumentException {
 		if (null != parentFile && null != file) {
-			if (!startsWith(parentFile, file)) {
-				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
+			if (!isSub(parentFile, file)) {
+				throw new IllegalArgumentException(StrUtil.format(
+					"New file [{}] is outside of the parent dir: [{}]", file, parentFile));
 			}
 		}
 		return file;
-	}
-
-	/**
-	 * 检查父文件是否为文件真正的父目录
-	 *
-	 * @param parentFile 父目录
-	 * @param file       文件
-	 * @return 是否为文件真正的父目录
-	 */
-	public static boolean startsWith(final File parentFile, final File file) {
-		return PathUtil.toAbsNormal(parentFile.toPath())
-			.startsWith(PathUtil.toAbsNormal(file.toPath()));
 	}
 
 	/**
@@ -2727,8 +2715,8 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 判断给定的目录是否为给定文件或文件夹的子目录
 	 *
-	 * @param parent 父目录
-	 * @param sub    子目录
+	 * @param parent 父目录，非空
+	 * @param sub    子目录，非空
 	 * @return 子目录是否为父目录的子目录
 	 * @since 4.5.4
 	 */

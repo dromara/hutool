@@ -1,6 +1,5 @@
 package org.dromara.hutool.core.io;
 
-import org.dromara.hutool.core.util.ManifestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

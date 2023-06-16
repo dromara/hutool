@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.util;
+package org.dromara.hutool.core.io;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
