@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
+package cn.hutool.core.util;
+
+import lombok.Data;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Issue3136Test {
+
+	@Test
+	public void xmlToBeanTest() {
+		final String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code><message></message></response>";
+		final SmsRes smsRes = XmlUtil.xmlToBean(XmlUtil.parseXml(xmlStr).getDocumentElement(), SmsRes.class);
+
+		Assert.assertEquals("02", smsRes.getCode());
+		Assert.assertNull(smsRes.getMessage());
+	}
+
+	@Data
+	static class SmsRes {
+		/**
+		 * 状态码.
+		 */
+		private String code;
+
+		/**
+		 * 消息.
+		 */
+		private Message message;
+	}
+
+	@Data
+	static class Message {
+
+		/**
+		 * 消息项.
+		 */
+		private List<MessageItem> item = new ArrayList<>();
+	}
+
+	@Data
+	static class MessageItem {
+
+		/**
+		 * 手机号.
+		 */
+		private String desmobile;
+		/**
+		 * 消息id.
+		 */
+		private String msgid;
+	}
+}
