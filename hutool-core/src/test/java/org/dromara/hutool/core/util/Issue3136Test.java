@@ -24,6 +24,9 @@ import java.util.List;
  */
 public class Issue3136Test {
 
+	/**
+	 * 此用例中，message节点无content，理解为空节点，转换为map后，此节点值为""，转为对象时，理应为null
+	 */
 	@Test
 	void xmlToBeanTest() {
 		final String xmlStr = "<?xml version=\"1.0\" encoding=\"gbk\" ?><response><code>02</code><message></message></response>";
