@@ -30,7 +30,10 @@ import org.dromara.hutool.db.sql.QuoteWrapper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * ANSI SQL 方言
@@ -67,7 +70,8 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
-		final Set<String> fields = CollUtil.filter(entities[0].keySet(), StrUtil::isNotBlank);
+		final List<String> fields =
+				 entities[0].keySet().stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
 		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
 	}
 
