@@ -36,7 +36,6 @@ import java.util.Set;
  * ANSI SQL 方言
  *
  * @author loolly
- *
  */
 public class AnsiSqlDialect implements Dialect {
 	private static final long serialVersionUID = 2088101129774974580L;
@@ -67,7 +66,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
-		final Set<String> fields=CollUtil.remove(entities[0].keySet(),StrUtil::isBlank);
+		final Set<String> fields = CollUtil.remove(entities[0].keySet(), StrUtil::isBlank);
 		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
 	}
 
@@ -119,7 +118,7 @@ public class AnsiSqlDialect implements Dialect {
 	@Override
 	public PreparedStatement psForPage(final Connection conn, SqlBuilder sqlBuilder, final Page page) throws SQLException {
 		// 根据不同数据库在查询SQL语句基础上包装其分页的语句
-		if(null != page){
+		if (null != page) {
 			sqlBuilder = wrapPageSql(sqlBuilder.orderBy(page.getOrders()), page);
 		}
 		return StatementUtil.prepareStatement(conn, sqlBuilder);
@@ -137,10 +136,10 @@ public class AnsiSqlDialect implements Dialect {
 	protected SqlBuilder wrapPageSql(final SqlBuilder find, final Page page) {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
 		return find
-				.append(" limit ")
-				.append(page.getPageSize())
-				.append(" offset ")
-				.append(page.getStartPosition());
+			.append(" limit ")
+			.append(page.getPageSize())
+			.append(" offset ")
+			.append(page.getStartPosition());
 	}
 
 	@Override
