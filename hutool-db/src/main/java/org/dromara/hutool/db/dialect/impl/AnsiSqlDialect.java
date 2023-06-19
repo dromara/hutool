@@ -70,8 +70,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.of(quoteWrapper).insert(entities[0], this.dialectName());
-		final List<String> fields =
-				 entities[0].keySet().stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
+		final Set<String> fields=CollUtil.remove(entities[0].keySet(),StrUtil::isBlank);
 		return StatementUtil.prepareStatementForBatch(conn, insert.build(), fields, entities);
 	}
 
