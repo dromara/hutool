@@ -127,12 +127,16 @@ public class OkHttpEngine implements ClientEngine {
 		final okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
 			.url(message.url().toURL());
 
+		// 填充方法
 		final String method = message.method().name();
 		if (HttpMethod.permitsRequestBody(method)) {
 			builder.method(method, new OkHttpRequestBody(message.body()));
 		} else {
 			builder.method(method, null);
 		}
+
+		// 填充头信息
+		message.headers().forEach((key, values)-> values.forEach(value-> builder.addHeader(key, value)));
 
 		return builder.build();
 	}
