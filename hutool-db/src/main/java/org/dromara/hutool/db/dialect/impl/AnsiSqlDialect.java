@@ -30,10 +30,7 @@ import org.dromara.hutool.db.sql.QuoteWrapper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * ANSI SQL 方言
