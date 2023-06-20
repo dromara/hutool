@@ -7,6 +7,9 @@ import org.dromara.hutool.core.thread.ThreadUtil;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -110,39 +113,6 @@ public class RetryUtil {
 			.execute()
 			.get()
 			.orElseGet(recover);
-	}
-
-
-	/**
-	 * 从不停止的执行方法
-	 *
-	 * @param run   执行方法
-	 * @param delay 间隔时间
-	 * @param isEx  true：出现异常继续执行；false：则出现异常跳出执行。
-	 */
-	public static void ofNeverStop(Runnable run, Duration delay, boolean isEx) {
-		while (true) {
-			try {
-				run.run();
-			} catch (Throwable e) {
-				if (!isEx) {
-					break;
-				}
-			} finally {
-				ThreadUtil.sleep(delay.toMillis());
-			}
-		}
-	}
-
-	/**
-	 * 从不停止的执行方法，异步执行
-	 *
-	 * @param run   执行方法
-	 * @param delay 间隔时间
-	 * @param isEx  true：出现异常继续执行；false：则出现异常跳出执行。
-	 */
-	public static void ofNeverStopAsync(Runnable run, Duration delay, boolean isEx) {
-		CompletableFuture.runAsync(() -> ofNeverStop(run, delay, isEx), GlobalThreadPool.getExecutor());
 	}
 
 }

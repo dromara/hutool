@@ -72,20 +72,4 @@ public class RetryUtilTest {
 		Assertions.assertEquals("ok", result);
 	}
 
-
-	@Test
-	public void neverStop() {
-		//异步一直执行
-		RetryUtil.ofNeverStopAsync(() -> {
-			System.out.println("async -->");
-		}, Duration.ofSeconds(1), true);
-
-		System.out.println(" ================ ");
-		//同步一直执行
-		RetryUtil.ofNeverStop(() -> {
-			System.out.println(123);
-		}, Duration.ofSeconds(3), true);
-
-
-	}
 }
