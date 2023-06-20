@@ -16,8 +16,8 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.reflect.FieldUtil;
-import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.BooleanUtil;
 
@@ -152,6 +152,36 @@ public class BeanDesc implements Serializable {
 	 * 只有与属性关联的相关Getter和Setter方法才会被读取，无关的getXXX和setXXX都被忽略
 	 */
 	private void init() {
+		if (RecordUtil.isRecord(this.beanClass)) {
+			initForRecord();
+		} else{
+			initForBean();
+		}
+	}
+
+	/**
+	 * 针对Record类的反射初始化
+	 */
+	private void initForRecord() {
+		final Method[] getters = MethodUtil.getPublicMethods(this.beanClass, method -> 0 == method.getParameterCount());
+		for (final Field field : FieldUtil.getFields(this.beanClass)) {
+			// 排除静态属性和对象子类
+			if (!ModifierUtil.isStatic(field) && !FieldUtil.isOuterClassField(field)) {
+				for (final Method getter : getters) {
+					if (field.getName().equals(getter.getName())) {
+						//record对象，getter方法与字段同名
+						final PropDesc prop = new PropDesc(field, getter, null);
+						this.propMap.putIfAbsent(prop.getFieldName(), prop);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 普通Bean初始化
+	 */
+	private void initForBean() {
 		final Method[] gettersAndSetters = MethodUtil.getPublicMethods(this.beanClass, MethodUtil::isGetterOrSetterIgnoreCase);
 		PropDesc prop;
 		for (final Field field : FieldUtil.getFields(this.beanClass)) {
@@ -299,7 +329,7 @@ public class BeanDesc implements Serializable {
 
 			if (StrUtil.startWith(fieldName, "is", ignoreCase)) {
 				// isName -》 isName
-				if(StrUtil.equals(fieldName, m.getName(), ignoreCase)){
+				if (StrUtil.equals(fieldName, m.getName(), ignoreCase)) {
 					return true;
 				}
 			}

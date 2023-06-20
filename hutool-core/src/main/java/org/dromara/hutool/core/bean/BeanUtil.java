@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
@@ -19,6 +20,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.impl.RecordConverter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.MapUtil;
@@ -27,24 +29,12 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.ModifierUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
+import java.beans.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -678,9 +668,15 @@ public class BeanUtil {
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 * @return 目标对象
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T copyProperties(final Object source, final Class<T> tClass, final String... ignoreProperties) {
 		if (null == source) {
 			return null;
+		}
+		if(RecordUtil.isRecord(tClass)){
+			// issue#I7EO3U
+			// 转换record时，ignoreProperties无效
+			return (T) RecordConverter.INSTANCE.convert(tClass, source);
 		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
 		copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
