@@ -14,10 +14,80 @@ import static java.util.Objects.nonNull;
 /**
  * 重试任务类
  *
+ * @param <T> 任务结果类型
  * @author kongweiguang
  * @since 6.0.0
  */
 public class RetryableTask<T> {
+
+	// region ----- retryFor
+
+	/**
+	 * 重试根据指定的异常，没有返回值
+	 *
+	 * @param <T> 返回值类型
+	 * @param run 执行的方法 {@link Runnable}
+	 * @param ths 指定异常 {@link Throwable}，匹配任意一个异常时重试
+	 * @return 当前对象
+	 */
+	@SafeVarargs
+	public static <T> RetryableTask<T> retryForExceptions(final Runnable run, final Class<? extends Throwable>... ths) {
+		return retryForExceptions(() -> {
+			run.run();
+			return null;
+		}, ths);
+	}
+
+	/**
+	 * 重试根据指定的异常，有返回值
+	 *
+	 * @param <T> 返回值类型
+	 * @param sup 执行的方法 {@link Supplier}
+	 * @param ths 指定异常 {@link Throwable}，匹配任意一个异常时重试
+	 * @return 当前对象
+	 */
+	@SafeVarargs
+	public static <T> RetryableTask<T> retryForExceptions(final Supplier<T> sup, final Class<? extends Throwable>... ths) {
+		Assert.isTrue(ths.length != 0, "exs cannot be empty");
+
+		final BiPredicate<T, Throwable> strategy = (t, e) -> {
+			if (nonNull(e)) {
+				return Arrays.stream(ths).anyMatch(ex -> ex.isAssignableFrom(e.getClass()));
+			}
+			return false;
+		};
+
+		return new RetryableTask<>(sup, strategy);
+	}
+
+	/**
+	 * 重试根据指定的策略，没有返回值
+	 *
+	 * @param <T>       返回值类型
+	 * @param run       执行的方法 {@link Runnable}
+	 * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
+	 * @return 当前对象
+	 */
+	public static <T> RetryableTask<T> retryForPredicate(final Runnable run, final BiPredicate<T, Throwable> predicate) {
+		return retryForPredicate(() -> {
+			run.run();
+			return null;
+		}, predicate);
+	}
+
+	/**
+	 * 重试根据指定的策略，没有返回值
+	 *
+	 * @param <T>       返回值类型
+	 * @param sup       执行的方法 {@link  Supplier}
+	 * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
+	 * @return 当前对象
+	 */
+	public static <T> RetryableTask<T> retryForPredicate(final Supplier<T> sup, final BiPredicate<T, Throwable> predicate) {
+		return new RetryableTask<>(sup, predicate);
+	}
+	// endregion
+
 	/**
 	 * 执行结果
 	 */
@@ -43,9 +113,9 @@ public class RetryableTask<T> {
 	 * 构造方法，内部使用，调用请使用请用ofXXX
 	 *
 	 * @param sup       执行的方法
-	 * @param predicate 策略 {@link BiPredicate}
+	 * @param predicate 策略 {@link BiPredicate}，返回{@code true}时表示重试
 	 */
-	private RetryableTask(Supplier<T> sup, BiPredicate<T, Throwable> predicate) {
+	private RetryableTask(final Supplier<T> sup, final BiPredicate<T, Throwable> predicate) {
 		Assert.notNull(sup, "task parameter cannot be null");
 		Assert.notNull(predicate, "predicate parameter cannot be null");
 
@@ -53,81 +123,13 @@ public class RetryableTask<T> {
 		this.sup = sup;
 	}
 
-
-	/**
-	 * 重试根据指定的异常，没有返回值
-	 *
-	 * @param <T> 返回值类型
-	 * @param run 执行的方法 {@link Runnable}
-	 * @param ths 指定异常 {@link Throwable}
-	 * @return 当前对象 {@link RetryableTask}
-	 */
-	@SafeVarargs
-	public static <T> RetryableTask<T> retryForExceptions(Runnable run, Class<? extends Throwable>... ths) {
-		return retryForExceptions(() -> {
-			run.run();
-			return null;
-		}, ths);
-	}
-
-	/**
-	 * 重试根据指定的策略，没有返回值
-	 *
-	 * @param <T>       返回值类型
-	 * @param run       执行的方法 {@link Runnable}
-	 * @param predicate 策略 {@link BiPredicate}
-	 * @return 当前对象 {@link RetryableTask}
-	 */
-	public static <T> RetryableTask<T> retryForPredicate(Runnable run, BiPredicate<T, Throwable> predicate) {
-		return retryForPredicate(() -> {
-			run.run();
-			return null;
-		}, predicate);
-	}
-
-	/**
-	 * 重试根据指定的异常，有返回值
-	 *
-	 * @param <T> 返回值类型
-	 * @param sup 执行的方法 {@link Supplier}
-	 * @param ths 指定异常 {@link Throwable}
-	 * @return 当前对象 {@link RetryableTask}
-	 */
-	@SafeVarargs
-	public static <T> RetryableTask<T> retryForExceptions(Supplier<T> sup, Class<? extends Throwable>... ths) {
-		Assert.isTrue(ths.length != 0, "exs cannot be empty");
-
-		BiPredicate<T, Throwable> strategy = (t, e) -> {
-			if (nonNull(e)) {
-				return Arrays.stream(ths).anyMatch(ex -> ex.isAssignableFrom(e.getClass()));
-			}
-			return false;
-		};
-
-		return new RetryableTask<>(sup, strategy);
-	}
-
-
-	/**
-	 * 重试根据指定的策略，没有返回值
-	 *
-	 * @param <T>       返回值类型
-	 * @param sup       执行的方法 {@link  Supplier}
-	 * @param predicate 策略 {@link BiPredicate}
-	 * @return 当前对象 {@link RetryableTask}
-	 */
-	public static <T> RetryableTask<T> retryForPredicate(Supplier<T> sup, BiPredicate<T, Throwable> predicate) {
-		return new RetryableTask<>(sup, predicate);
-	}
-
-
 	/**
 	 * 最大重试次数
 	 *
 	 * @param maxAttempts 次数
-	 * @return 当前对象 {@link RetryableTask}
+	 * @return 当前对象
 	 */
-	public RetryableTask<T> maxAttempts(long maxAttempts) {
+	public RetryableTask<T> maxAttempts(final long maxAttempts) {
 		Assert.isTrue(this.maxAttempts > 0, "maxAttempts must be greater than 0");
 
 		this.maxAttempts = maxAttempts;
@@ -138,9 +140,9 @@ public class RetryableTask<T> {
 	 * 重试间隔时间
 	 *
 	 * @param delay 间隔时间
-	 * @return 当前对象 {@link RetryableTask}
+	 * @return 当前对象
 	 */
-	public RetryableTask<T> delay(Duration delay) {
+	public RetryableTask<T> delay(final Duration delay) {
 		Assert.notNull(this.delay, "delay parameter cannot be null");
 
 		this.delay = delay;
@@ -168,7 +170,7 @@ public class RetryableTask<T> {
 	/**
 	 * 同步执行重试方法
 	 *
-	 * @return 当前对象 {@link RetryableTask}
+	 * @return 当前对象
 	 */
 	public RetryableTask<T> execute() {
 		return doExecute();
@@ -177,25 +179,25 @@ public class RetryableTask<T> {
 	/**
 	 * 开始重试
 	 *
-	 * @return 当前对象 {@link RetryableTask}
+	 * @return 当前对象
 	 **/
 	private RetryableTask<T> doExecute() {
 		Throwable th = null;
 
 		while (--this.maxAttempts >= 0) {
-
 			try {
 				this.result = this.sup.get();
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				th = t;
-			} finally {
-				//判断重试
-				if (this.predicate.test(this.result, th)) {
-					ThreadUtil.sleep(delay.toMillis());
-				} else {
-					break;
-				}
 			}
+
+			//判断重试
+			if (!this.predicate.test(this.result, th)) {
+				// 条件不满足时，跳出
+				break;
+			}
+
+			ThreadUtil.sleep(delay.toMillis());
 		}
 
 		return this;

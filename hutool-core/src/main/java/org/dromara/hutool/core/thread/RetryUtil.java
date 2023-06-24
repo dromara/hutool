@@ -1,15 +1,20 @@
-package org.dromara.hutool.core.util;
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
+package org.dromara.hutool.core.thread;
 
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.thread.GlobalThreadPool;
-import org.dromara.hutool.core.thread.RetryableTask;
-import org.dromara.hutool.core.thread.ThreadUtil;
 
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -33,8 +38,8 @@ public class RetryUtil {
 	 * @param recover     达到最大重试次数后执行的备用方法，入参是重试过程中的异常
 	 * @param exs         指定的异常类型需要重试
 	 */
-	@SafeVarargs
-	public static void ofException(Runnable run, long maxAttempts, Duration delay, Runnable recover, Class<? extends Throwable>... exs) {
+	public static void ofException(final Runnable run, final long maxAttempts, final Duration delay,
+								   final Runnable recover, Class<? extends Throwable>... exs) {
 		if (ArrayUtil.isEmpty(exs)) {
 			exs = ArrayUtil.append(exs, RuntimeException.class);
 		}
@@ -61,8 +66,8 @@ public class RetryUtil {
 	 * @param <T>         结果类型
 	 * @return 执行结果
 	 */
-	@SafeVarargs
-	public static <T> T ofException(Supplier<T> sup, long maxAttempts, Duration delay, Supplier<T> recover, Class<? extends Throwable>... exs) {
+	public static <T> T ofException(final Supplier<T> sup, final long maxAttempts, final Duration delay,
+									final Supplier<T> recover, Class<? extends Throwable>... exs) {
 		if (ArrayUtil.isEmpty(exs)) {
 			exs = ArrayUtil.append(exs, RuntimeException.class);
 		}
@@ -84,7 +89,8 @@ public class RetryUtil {
 	 * @param recover     达到最大重试次数后执行的备用方法，入参是重试过程中的异常
 	 * @param predicate   自定义重试条件
 	 */
-	public static void ofPredicate(Runnable run, long maxAttempts, Duration delay, Supplier<Void> recover, BiPredicate<Void, Throwable> predicate) {
+	public static void ofPredicate(final Runnable run, final long maxAttempts, final Duration delay,
+								   final Supplier<Void> recover, final BiPredicate<Void, Throwable> predicate) {
 		RetryableTask.retryForPredicate(run, predicate)
 			.delay(delay)
 			.maxAttempts(maxAttempts)
@@ -106,7 +112,8 @@ public class RetryUtil {
 	 * @param <T>         结果类型
 	 * @return 执行结果
 	 */
-	public static <T> T ofPredicate(Supplier<T> sup, long maxAttempts, Duration delay, Supplier<T> recover, BiPredicate<T, Throwable> predicate) {
+	public static <T> T ofPredicate(final Supplier<T> sup, final long maxAttempts, final Duration delay,
+									final Supplier<T> recover, final BiPredicate<T, Throwable> predicate) {
 		return RetryableTask.retryForPredicate(sup, predicate)
 			.delay(delay)
 			.maxAttempts(maxAttempts)
