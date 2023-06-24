@@ -2110,7 +2110,7 @@ public class CollUtil {
 	 * @since 4.6.5
 	 */
 	public static <T extends Comparable<? super T>> T max(final Collection<T> coll) {
-		return Collections.max(coll);
+		return isEmpty(coll) ? null : Collections.max(coll);
 	}
 
 	/**
@@ -2123,7 +2123,7 @@ public class CollUtil {
 	 * @since 4.6.5
 	 */
 	public static <T extends Comparable<? super T>> T min(final Collection<T> coll) {
-		return Collections.min(coll);
+		return isEmpty(coll) ? null : Collections.min(coll);
 	}
 
 	/**
