@@ -1066,4 +1066,22 @@ public class CollUtilTest {
 		Assert.assertFalse(CollUtil.allMatch(list, i -> i == 1));
 		Assert.assertTrue(CollUtil.allMatch(list, i -> i <= 6));
 	}
+
+	@Test
+	public void maxTest() {
+		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+		Assert.assertEquals((Integer) 6, CollUtil.max(list));
+	}
+
+	@Test
+	public void maxEmptyTest() {
+		final List<? extends Comparable> emptyList = Collections.emptyList();
+		Assert.assertNull(CollUtil.max(emptyList));
+	}
+
+	@Test
+	public void minNullTest() {
+		Assert.assertNull(CollUtil.max(null));
+	}
+
 }
