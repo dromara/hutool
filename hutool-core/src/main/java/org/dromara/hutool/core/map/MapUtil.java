@@ -1013,15 +1013,7 @@ public class MapUtil extends MapGetUtil {
 			return map;
 		}
 
-		final Iterator<Entry<K, V>> iter = map.entrySet().iterator();
-		Entry<K, V> entry;
-		while (iter.hasNext()) {
-			entry = iter.next();
-			if (null == entry.getValue()) {
-				iter.remove();
-			}
-		}
-
+		map.entrySet().removeIf(entry -> null == entry.getValue());
 		return map;
 	}
 

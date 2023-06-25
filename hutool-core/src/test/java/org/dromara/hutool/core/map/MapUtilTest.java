@@ -285,4 +285,11 @@ public class MapUtilTest {
 		final Map<String, Object> map = MapUtil.renameKey(v1, "name", "newName");
 		Assertions.assertEquals("张三", map.get("newName"));
 	}
+
+	@Test
+	public void removeNullValueTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", null).set("age", null);
+		final Map<String, Object> map = MapUtil.removeNullValue(v1);
+		Assertions.assertEquals(1, map.size());
+	}
 }
