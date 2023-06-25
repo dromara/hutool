@@ -3,6 +3,7 @@ package cn.hutool.core.convert;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.impl.*;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
@@ -319,6 +320,12 @@ public class ConverterRegistry implements Serializable {
 			return (T) arrayConverter.convert(value, defaultValue);
 		}
 
+		// issue#I7FQ29 Class
+		if("java.lang.Class".equals(rowType.getName())){
+			final ClassConverter converter = new ClassConverter();
+			return (T) converter.convert(value, (Class<?>) defaultValue);
+		}
+
 		// 表示非需要特殊转换的对象
 		return null;
 	}
@@ -398,7 +405,6 @@ public class ConverterRegistry implements Serializable {
 		defaultConverterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
 
 		// 其它类型
-		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
 		defaultConverterMap.put(Locale.class, new LocaleConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
