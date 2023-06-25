@@ -3,10 +3,7 @@ package cn.hutool.core.map;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.lang.*;
 import cn.hutool.core.stream.CollectorUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.JdkUtil;
@@ -687,6 +684,11 @@ public class MapUtil {
 			return map2;
 		}
 
+		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
+		if(false == map2.isEmpty()){
+			map2.clear();
+		}
+
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
@@ -761,6 +763,11 @@ public class MapUtil {
 		}
 		if (isEmpty(map)) {
 			return map2;
+		}
+
+		// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
+		if(false == map2.isEmpty()){
+			map2.clear();
 		}
 
 		for (K key : keys) {
