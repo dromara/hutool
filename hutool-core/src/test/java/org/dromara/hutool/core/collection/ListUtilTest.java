@@ -2,6 +2,7 @@ package org.dromara.hutool.core.collection;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.date.StopWatch;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.page.PageInfo;
@@ -78,7 +79,7 @@ public class ListUtilTest {
 
 	@Test
 	public void splitAvgNotZero() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()->{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			// limit不能小于等于0
 			ListUtil.avgPartition(Arrays.asList(1, 2, 3, 4), 0);
 		});
@@ -122,7 +123,7 @@ public class ListUtilTest {
 	public void pageTest2() {
 		final List<Integer> a = ListUtil.ofLinked(1, 2, 3, 4, 5);
 		final int[] d1 = ListUtil.page(a, PageInfo.of(a.size(), 8).setFirstPageNo(0).setPageNo(0))
-				.stream().mapToInt(Integer::valueOf).toArray();
+			.stream().mapToInt(Integer::valueOf).toArray();
 		Assertions.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, d1);
 	}
 
@@ -170,11 +171,11 @@ public class ListUtilTest {
 		}
 
 		final List<TestBean> beanList = ListUtil.of(
-				new TestBean(2, "test2"),
-				new TestBean(1, "test1"),
-				new TestBean(5, "test5"),
-				new TestBean(4, "test4"),
-				new TestBean(3, "test3")
+			new TestBean(2, "test2"),
+			new TestBean(1, "test1"),
+			new TestBean(5, "test5"),
+			new TestBean(4, "test4"),
+			new TestBean(3, "test3")
 		);
 
 		final List<TestBean> order = ListUtil.sortByProperty(beanList, "order");
@@ -245,13 +246,13 @@ public class ListUtilTest {
 	}
 
 	@Test
-	public void ofCopyOnWriteTest(){
+	public void ofCopyOnWriteTest() {
 		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite(ListUtil.of("a", "b"));
 		Assertions.assertEquals(2, strings.size());
 	}
 
 	@Test
-	public void ofCopyOnWriteTest2(){
+	public void ofCopyOnWriteTest2() {
 		final CopyOnWriteArrayList<String> strings = ListUtil.ofCopyOnWrite("a", "b");
 		Assertions.assertEquals(2, strings.size());
 	}
@@ -268,5 +269,23 @@ public class ListUtilTest {
 		final List<Integer> list = ListUtil.of(1, 2, 3);
 
 		ListUtil.reverseNew(list);
+	}
+
+	@Test
+	public void flatListTest1() {
+		List<List<List<String>>> list = Arrays.asList(Arrays.asList(Arrays.asList("1", "2", "3"), Arrays.asList("5", "6", "7")));
+
+		List<String> objects = ListUtil.flatList(list);
+
+		Assertions.assertArrayEquals(new String[]{"1", "2", "3", "5", "6", "7"}, objects.toArray());
+	}
+
+
+	@Test
+	public void flatListTest2() {
+		List<List<List<String>>> list = Arrays.asList(Arrays.asList(Arrays.asList("1", "2", "3"), Arrays.asList("5", "6", "7")));
+
+		List<Integer> objects = ListUtil.flatList(list, Convert::toInt);
+		Assertions.assertArrayEquals(new Integer[]{1, 2, 3, 5, 6, 7}, objects.toArray());
 	}
 }
