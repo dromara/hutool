@@ -231,6 +231,11 @@ public class CompositeConverter extends RegisterConverter {
 			return (T) KBeanConverter.INSTANCE.convert(type, value);
 		}
 
+		// issue#I7FQ29 Class
+		if("java.lang.Class".equals(rowType.getName())){
+			return (T) ClassConverter.INSTANCE.convert(type, value);
+		}
+
 		// 表示非需要特殊转换的对象
 		return null;
 	}
