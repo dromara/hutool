@@ -416,13 +416,20 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 
 	/**
 	 * 获取Excel写出器<br>
-	 * 在读取Excel并做一定编辑后，获取写出器写出<br>
-	 * 注意，只读方式下，此方法无效
+	 * 在读取Excel并做一定编辑后，获取写出器写出，规则如下：
+	 * <ul>
+	 *     <li>1. 当从流中读取时，转换为Writer直接使用Sheet对象，此时修改不会影响源文件，Writer中flush需要指定新的路径。</li>
+	 *     <li>2. 当从文件读取时，直接获取文件及sheet名称，此时可以修改原文件。</li>
+	 * </ul>
 	 *
 	 * @return {@link ExcelWriter}
 	 * @since 4.0.6
 	 */
 	public ExcelWriter getWriter() {
+		if(null == this.destFile){
+			// 非读取文件形式，直接获取sheet操作。
+			return new ExcelWriter(this.sheet);
+		}
 		return ExcelUtil.getWriter(this.destFile, this.sheet.getSheetName());
 	}
 
