@@ -3,6 +3,7 @@ package org.dromara.hutool.core.collection;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
@@ -460,9 +461,9 @@ public class CollUtilTest {
 	@Test
 	public void sortByPropertyTest() {
 		final List<TestBean> list = ListUtil.of(
-				new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
-				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
-				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
+			new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+			new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+			new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
 		);
 
 		CollUtil.sortByProperty(list, "createTime");
@@ -474,9 +475,9 @@ public class CollUtilTest {
 	@Test
 	public void sortByPropertyTest2() {
 		final List<TestBean> list = ListUtil.of(
-				new TestBean("张三", 0, DateUtil.parse("2018-05-01")), //
-				new TestBean("李四", -12, DateUtil.parse("2018-03-01")), //
-				new TestBean("王五", 23, DateUtil.parse("2018-04-01"))//
+			new TestBean("张三", 0, DateUtil.parse("2018-05-01")), //
+			new TestBean("李四", -12, DateUtil.parse("2018-03-01")), //
+			new TestBean("王五", 23, DateUtil.parse("2018-04-01"))//
 		);
 
 		CollUtil.sortByProperty(list, "age");
@@ -488,8 +489,8 @@ public class CollUtilTest {
 	@Test
 	public void fieldValueMapTest() {
 		final List<TestBean> list = ListUtil.of(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
-				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
-				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
+			new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+			new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
 		);
 
 		final Map<String, TestBean> map = CollUtil.fieldValueMap(list, "name");
@@ -501,8 +502,8 @@ public class CollUtilTest {
 	@Test
 	public void fieldValueAsMapTest() {
 		final List<TestBean> list = ListUtil.of(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
-				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
-				new TestBean("王五", 14, DateUtil.parse("2018-04-01"))//
+			new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+			new TestBean("王五", 14, DateUtil.parse("2018-04-01"))//
 		);
 
 		final Map<String, Integer> map = CollUtil.fieldValueAsMap(list, "name", "age");
@@ -669,7 +670,7 @@ public class CollUtilTest {
 
 	@Test
 	public void subInput1PositiveNegativePositiveOutputArrayIndexOutOfBoundsException() {
-		Assertions.assertThrows(IndexOutOfBoundsException.class, ()->{
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
 			// Arrange
 			final List<Integer> list = new ArrayList<>();
 			list.add(null);
@@ -821,8 +822,8 @@ public class CollUtilTest {
 		oldMap.put("c", "134");
 
 		final Map<String, Long> map = IterUtil.toMap(oldMap.entrySet(),
-				Map.Entry::getKey,
-				entry -> Long.parseLong(entry.getValue()));
+			Map.Entry::getKey,
+			entry -> Long.parseLong(entry.getValue()));
 
 		Assertions.assertEquals(1L, (long) map.get("a"));
 		Assertions.assertEquals(12L, (long) map.get("b"));
@@ -900,12 +901,12 @@ public class CollUtilTest {
 	public void setValueByMapTest() {
 		// https://gitee.com/dromara/hutool/pulls/482
 		final List<Person> people = Arrays.asList(
-				new Person("aa", 12, "man", 1),
-				new Person("bb", 13, "woman", 2),
-				new Person("cc", 14, "man", 3),
-				new Person("dd", 15, "woman", 4),
-				new Person("ee", 16, "woman", 5),
-				new Person("ff", 17, "man", 6)
+			new Person("aa", 12, "man", 1),
+			new Person("bb", 13, "woman", 2),
+			new Person("cc", 14, "man", 3),
+			new Person("dd", 15, "woman", 4),
+			new Person("ee", 16, "woman", 5),
+			new Person("ff", 17, "man", 6)
 		);
 
 		final Map<Integer, String> genderMap = new HashMap<>();
@@ -946,12 +947,12 @@ public class CollUtilTest {
 	@Test
 	public void distinctByFunctionTest() {
 		final List<Person> people = Arrays.asList(
-				new Person("aa", 12, "man", 1),
-				new Person("bb", 13, "woman", 2),
-				new Person("cc", 14, "man", 3),
-				new Person("dd", 15, "woman", 4),
-				new Person("ee", 16, "woman", 5),
-				new Person("ff", 17, "man", 6)
+			new Person("aa", 12, "man", 1),
+			new Person("bb", 13, "woman", 2),
+			new Person("cc", 14, "man", 3),
+			new Person("dd", 15, "woman", 4),
+			new Person("ee", 16, "woman", 5),
+			new Person("ff", 17, "man", 6)
 		);
 
 		// 覆盖模式下ff覆盖了aa，ee覆盖了bb
@@ -986,10 +987,10 @@ public class CollUtilTest {
 	@Test
 	public void mapBeanTest() {
 		final List<Person> people = Arrays.asList(
-				new Person("aa", 12, "man", 1),
-				new Person("bb", 13, "woman", 2),
-				new Person("cc", 14, "man", 3),
-				new Person("dd", 15, "woman", 4)
+			new Person("aa", 12, "man", 1),
+			new Person("bb", 13, "woman", 2),
+			new Person("cc", 14, "man", 3),
+			new Person("dd", 15, "woman", 4)
 		);
 
 		final List<Object> extract = CollUtil.map(people, Person::getName);
@@ -1006,10 +1007,10 @@ public class CollUtilTest {
 	@Test
 	public void transTest() {
 		final List<Person> people = Arrays.asList(
-				new Person("aa", 12, "man", 1),
-				new Person("bb", 13, "woman", 2),
-				new Person("cc", 14, "man", 3),
-				new Person("dd", 15, "woman", 4)
+			new Person("aa", 12, "man", 1),
+			new Person("bb", 13, "woman", 2),
+			new Person("cc", 14, "man", 3),
+			new Person("dd", 15, "woman", 4)
 		);
 
 		final Collection<String> trans = CollUtil.trans(people, Person::getName);
@@ -1046,8 +1047,8 @@ public class CollUtilTest {
 		Assertions.assertNotNull(list);
 
 		Assertions.assertEquals(
-				ListUtil.of(1, 2, 3, 4),
-				CollUtil.unionAll(ListUtil.of(1), ListUtil.of(2), ListUtil.of(3), ListUtil.of(4))
+			ListUtil.of(1, 2, 3, 4),
+			CollUtil.unionAll(ListUtil.of(1), ListUtil.of(2), ListUtil.of(3), ListUtil.of(4))
 		);
 	}
 
@@ -1083,14 +1084,14 @@ public class CollUtilTest {
 		Assertions.assertFalse(CollUtil.addIfAbsent(null, "123"));
 		Assertions.assertFalse(CollUtil.addIfAbsent(ListUtil.of("123"), "123"));
 		Assertions.assertFalse(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
-				new Animal("jack", 20)));
+			new Animal("jack", 20)));
 
 		// 正常情况
 		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of("456"), "123"));
 		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
-				new Dog("jack", 20)));
+			new Dog("jack", 20)));
 		Assertions.assertTrue(CollUtil.addIfAbsent(ListUtil.of(new Animal("jack", 20)),
-				new Animal("tom", 20)));
+			new Animal("tom", 20)));
 	}
 
 	@Data
@@ -1180,5 +1181,52 @@ public class CollUtilTest {
 	@Test
 	public void minNullTest() {
 		Assertions.assertNull(CollUtil.max(null));
+	}
+
+
+	@Test
+	public void flatListTest1() {
+		List<List<List<String>>> list = Arrays.asList(Arrays.asList(Arrays.asList("1", "2", "3"), Arrays.asList("5", "6", "7")));
+
+		List<Object> objects = CollUtil.flat(list);
+
+		Assertions.assertArrayEquals(new String[]{"1", "2", "3", "5", "6", "7"}, objects.toArray());
+	}
+
+
+	@Test
+	public void flatListTest2() {
+		List<List<List<String>>> list = Arrays.asList(
+			Arrays.asList(
+				Arrays.asList("a"),
+				Arrays.asList("b", "c"),
+				Arrays.asList("d", "e", "f")
+			),
+			Arrays.asList(
+				Arrays.asList("g", "h", "i"),
+				Arrays.asList("j", "k", "l")
+			)
+		);
+		List<Object> flat = CollUtil.flat(list);
+		Assertions.assertArrayEquals(new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
+
+	}
+
+
+	@Test
+	void flatListTest3() {
+		List<List<List<String>>> list = Arrays.asList(
+			Arrays.asList(
+				Arrays.asList("a"),
+				Arrays.asList("b", "c", null),
+				Arrays.asList("d", "e", "f")
+			),
+			Arrays.asList(
+				Arrays.asList("g", "h", "i"),
+				Arrays.asList("j", "k", "l")
+			)
+		);
+		List<Object> flat = CollUtil.flat(list, false);
+		Assertions.assertArrayEquals(new String[]{"a", "b", "c", null, "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
 	}
 }

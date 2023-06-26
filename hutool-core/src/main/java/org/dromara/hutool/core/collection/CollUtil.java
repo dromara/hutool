@@ -34,6 +34,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.stream.StreamUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -1554,7 +1555,7 @@ public class CollUtil {
 			// String按照逗号分隔的列表对待
 			final String arrayStr = StrUtil.unWrap((CharSequence) value, '[', ']');
 			iter = SplitUtil.splitTrim(arrayStr, StrUtil.COMMA).iterator();
-		} else if(value instanceof Map && BeanUtil.isWritableBean(TypeUtil.getClass(elementType))){
+		} else if (value instanceof Map && BeanUtil.isWritableBean(TypeUtil.getClass(elementType))) {
 			//https://github.com/dromara/hutool/issues/3139
 			// 如果值为Map，而目标为一个Bean，则Map应整体转换为Bean，而非拆分成Entry转换
 			iter = new ArrayIter<>(new Object[]{value});
@@ -2353,5 +2354,49 @@ public class CollUtil {
 			return Boolean.FALSE;
 		}
 		return collection.stream().allMatch(predicate);
+	}
+
+	/**
+	 * 结构多层集合
+	 * 例如：List<List<List<String>>> 解构成 List<String>
+	 *
+	 * @param collection 需要解构的集合
+	 * @return 解构后的集合
+	 */
+	public static List<Object> flat(Collection<?> collection) {
+		return flat(collection, true);
+	}
+
+	/**
+	 * 结构多层集合
+	 * 例如：List<List<List<String>>> 解构成 List<String>
+	 * <p>
+	 * skipNull的作用是当集合里面有个值为空，当为true是解构后的集合里面没有null值，如果为false则会在解构后的集合里面有努力了。
+	 *
+	 * @param collection 需要结构的集合
+	 * @param skipNull   是否跳过空的值
+	 * @return 解构后的集合
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static List<Object> flat(Collection<?> collection, boolean skipNull) {
+		LinkedList queue = EasyStream.of(collection)
+			.collect(Collectors.toCollection(LinkedList::new));
+
+		List<Object> result = new ArrayList<>();
+
+		while (!queue.isEmpty()) {
+			Object t = queue.removeFirst();
+
+			if (skipNull && t == null) {
+				continue;
+			}
+
+			if (t instanceof Collection) {
+				queue.addAll((Collection<?>) t);
+			} else {
+				result.add(t);
+			}
+		}
+		return result;
 	}
 }

@@ -27,7 +27,6 @@ import org.dromara.hutool.core.util.ObjUtil;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -749,46 +748,4 @@ public class ListUtil {
 		}
 		return resList;
 	}
-
-	/**
-	 * 解构list里面的list为单个list
-	 *
-	 * @param list 传入的list集合
-	 * @param <T>  返回的元素类型
-	 * @return 解构后的list集合
-	 */
-	public static <T> List<T> flatList(List<?> list) {
-		return flatList(list, Function.identity());
-	}
-
-	/**
-	 * 解构list里面的list，并可以对每个元素操作
-	 *
-	 * @param list      传入的list集合
-	 * @param operation 对每个元素进行操作
-	 * @param <T>       返回的元素类型
-	 * @param <O>       最内侧的元素类型
-	 * @return 解构后的list集合
-	 */
-	@SuppressWarnings("all")
-	public static <T, O> List<T> flatList(List<?> list, Function<O, T> operation) {
-		List<T> result = new ArrayList<>();
-
-		if (list == null || list.isEmpty()) {
-			return result;
-		}
-
-		if (list.get(0) instanceof List) {
-			for (List<?> subList : (List<List<?>>) list) {
-				result.addAll(flatList(subList, operation));
-			}
-		} else {
-			for (Object item : list) {
-				result.add(operation.apply((O) item));
-			}
-		}
-
-		return result;
-	}
-
 }
