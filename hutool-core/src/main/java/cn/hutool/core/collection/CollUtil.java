@@ -79,7 +79,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
+	public static <T> Collection<T> union(Collection<? extends T> coll1, Collection<? extends T> coll2) {
 		if (isEmpty(coll1) && isEmpty(coll2)) {
 			return new ArrayList<>();
 		}
@@ -117,9 +117,9 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Collection<T> union(Collection<? extends T> coll1, Collection<? extends T> coll2, Collection<? extends T>... otherColls) {
 		Collection<T> union = union(coll1, coll2);
-		for (Collection<T> coll : otherColls) {
+		for (Collection<? extends T> coll : otherColls) {
 			if (isEmpty(coll)) {
 				continue;
 			}
@@ -141,7 +141,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link LinkedHashSet}
 	 */
 	@SafeVarargs
-	public static <T> Set<T> unionDistinct(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> Set<T> unionDistinct(Collection<? extends T> coll1, Collection<? extends T> coll2, Collection<? extends T>... otherColls) {
 		final Set<T> result;
 		if (isEmpty(coll1)) {
 			result = new LinkedHashSet<>();
@@ -154,7 +154,7 @@ public class CollUtil {
 		}
 
 		if (ArrayUtil.isNotEmpty(otherColls)) {
-			for (Collection<T> otherColl : otherColls) {
+			for (Collection<? extends T> otherColl : otherColls) {
 				if (isEmpty(otherColl)) {
 					continue;
 				}
@@ -178,7 +178,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> List<T> unionAll(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
+	public static <T> List<T> unionAll(Collection<? extends T> coll1, Collection<? extends T> coll2, Collection<? extends T>... otherColls) {
 		if (CollUtil.isEmpty(coll1) && CollUtil.isEmpty(coll2) && ArrayUtil.isEmpty(otherColls)) {
 			return new ArrayList<>(0);
 		}
@@ -188,7 +188,7 @@ public class CollUtil {
 		totalSize += size(coll1);
 		totalSize += size(coll2);
 		if (otherColls != null) {
-			for (final Collection<T> otherColl : otherColls) {
+			for (final Collection<? extends T> otherColl : otherColls) {
 				totalSize += size(otherColl);
 			}
 		}
@@ -205,7 +205,7 @@ public class CollUtil {
 			return res;
 		}
 
-		for (final Collection<T> otherColl : otherColls) {
+		for (final Collection<? extends T> otherColl : otherColls) {
 			if (otherColl != null) {
 				res.addAll(otherColl);
 			}
@@ -537,7 +537,7 @@ public class CollUtil {
 	 * @return {@link Map}
 	 * @see IterUtil#countMap(Iterator)
 	 */
-	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
+	public static <T> Map<T, Integer> countMap(Iterable<? extends T> collection) {
 		return IterUtil.countMap(null == collection ? null : collection.iterator());
 	}
 
@@ -750,7 +750,7 @@ public class CollUtil {
 	 * @param collection 集合
 	 * @return HashSet对象
 	 */
-	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
+	public static <T> HashSet<T> newHashSet(Collection<? extends T> collection) {
 		return newHashSet(false, collection);
 	}
 
@@ -762,7 +762,7 @@ public class CollUtil {
 	 * @param collection 集合，用于初始化Set
 	 * @return HashSet对象
 	 */
-	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
+	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<? extends T> collection) {
 		return isSorted ? new LinkedHashSet<>(collection) : new HashSet<>(collection);
 	}
 

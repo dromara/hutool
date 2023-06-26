@@ -151,7 +151,7 @@ public class IterUtil {
 	 * @param iter {@link Iterator}，如果为null返回一个空的Map
 	 * @return {@link Map}
 	 */
-	public static <T> Map<T, Integer> countMap(Iterator<T> iter) {
+	public static <T> Map<T, Integer> countMap(Iterator<? extends T> iter) {
 		final HashMap<T, Integer> countMap = new HashMap<>();
 		if (null != iter) {
 			T t;

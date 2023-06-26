@@ -5,6 +5,21 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,8 +27,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.*;
 
 /**
  * 集合工具类单元测试
@@ -1051,6 +1064,26 @@ public class CollUtilTest {
 		}
 	}
 
+	@ToString(callSuper = true)
+	@EqualsAndHashCode(callSuper = true)
+	@Data
+	static class Cat extends Animal {
+
+		public Cat(String name, Integer age) {
+			super(name, age);
+		}
+	}
+
+	@ToString(callSuper = true)
+	@EqualsAndHashCode(callSuper = true)
+	@Data
+	static class Pig extends Animal {
+
+		public Pig(String name, Integer age) {
+			super(name, age);
+		}
+	}
+
 	@Test
 	public void getFirstTest() {
 		final List<?> nullList = null;
@@ -1084,4 +1117,18 @@ public class CollUtilTest {
 		Assert.assertNull(CollUtil.max(null));
 	}
 
+	@Test
+	public void unionExtendTest() {
+		List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
+		List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
+		Assert.assertEquals(CollUtil.union(dog, cat).size(), 4);
+	}
+
+	@Test
+	public void unionAllExtendTest() {
+		List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
+		List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
+		List<Pig> pig = Arrays.asList(new Pig("pig1", 12), new Pig("pig2", 12));
+		Assert.assertEquals(CollUtil.union(dog, cat, pig).size(), dog.size() + cat.size() + pig.size());
+	}
 }
