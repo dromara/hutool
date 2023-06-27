@@ -297,7 +297,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> union(final Collection<T>... colls) {
+	public static <T> Collection<T> union(final Collection<? extends T>... colls) {
 		return CollectionOperation.of(colls).union();
 	}
 
@@ -312,7 +312,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link LinkedHashSet}
 	 */
 	@SafeVarargs
-	public static <T> Set<T> unionDistinct(final Collection<T>... colls) {
+	public static <T> Set<T> unionDistinct(final Collection<? extends T>... colls) {
 		return CollectionOperation.of(colls).unionDistinct();
 	}
 
@@ -327,7 +327,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> List<T> unionAll(final Collection<T>... colls) {
+	public static <T> List<T> unionAll(final Collection<? extends T>... colls) {
 		return CollectionOperation.of(colls).unionAll();
 	}
 
