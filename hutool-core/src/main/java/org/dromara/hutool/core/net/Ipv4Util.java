@@ -17,9 +17,10 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.text.CharUtil;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -567,6 +568,34 @@ public class Ipv4Util implements Ipv4Pool {
 				throw new IllegalArgumentException("Illegal position of ip Long: " + position);
 		}
 	}
+
+	/**
+	 * 检测指定 IP 地址是否匹配通配符 wildcard
+	 *
+	 * @param wildcard   通配符，如 192.168.*.1
+	 * @param ipAddress 待检测的 IP 地址
+	 * @return 是否匹配
+	 */
+	public static boolean matches(final String wildcard, final String ipAddress) {
+		if (!ReUtil.isMatch(PatternPool.IPV4, ipAddress)) {
+			return false;
+		}
+
+		final String[] wildcardSegments = SplitUtil.splitToArray(wildcard, StrUtil.DOT);
+		final String[] ipSegments = SplitUtil.splitToArray(ipAddress, StrUtil.DOT);
+
+		if (wildcardSegments.length != ipSegments.length) {
+			return false;
+		}
+
+		for (int i = 0; i < wildcardSegments.length; i++) {
+			if (!"*".equals(wildcardSegments[i]) && !wildcardSegments[i].equals(ipSegments[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	//-------------------------------------------------------------------------------- Private method start
 
 	/**

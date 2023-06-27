@@ -1,247 +1,84 @@
+/*
+ * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Hutool is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ */
+
 package org.dromara.hutool.core.compress;
 
-import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
+import java.util.Map;
 
-public class ZipReplacer {
+/**
+ * Zip文件替换，用户替换源Zip文件，并生成新的文件
+ *
+ * @author looly
+ * @since 6.0.0
+ */
+public class ZipReplacer implements Closeable {
+
+	private final ZipReader zipReader;
+	private final boolean ignoreCase;
+
+	private final Map<String, Resource> replacedResources = new HashMap<>();
 
 	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
+	 * 构造
 	 *
-	 * @param srcFile      源文件
-	 * @param tarFile      输出文件
-	 * @param innerFiles   替换文件在zip中的相对路径
-	 * @param replaceFiles 替换文件到系统中到存储路径
-	 * @param charset      读取编码格式
-	 * @param charsetOut   输出编码格式
+	 * @param zipReader  ZipReader
+	 * @param ignoreCase 是否忽略path大小写
 	 */
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, List<File> replaceFiles, Charset charset, Charset charsetOut) {
-		//		记录zip中是否存在相同路径的文件， 是 更新文件 否，添加文件
-		boolean[] updates = new boolean[replaceFiles.size()];
-		try (ZipFile zipFile = new ZipFile(srcFile, charset);
-			 FileOutputStream fos = new FileOutputStream(tarFile);
-			 ZipOutputStream zos = new ZipOutputStream(fos);
-			 ZipWriter zipWriter = new ZipWriter(zos, charsetOut)) {
-			HashMap<String, InputStream> data = new HashMap<>();
-			for (Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements(); ) {
-				ZipEntry zipEntryIn = entries.nextElement();
-				String zipEntryInName = zipEntryIn.getName();
-//				false 未被替换
-				boolean update = false;
-				for (int i = 0; i < innerFiles.length; i++) {
-					update = samePath(zipEntryInName, innerFiles[i]);
-//					存在同路径文件，替换
-					if (update) {
-						updates[i] = true;
-						data.put(zipEntryInName, FileUtil.getInputStream(replaceFiles.get(i)));
-						break;
-					}
-				}
-//				不存在同路径文件，直接添加原zipEntry
-				if (!update) {
-					data.put(zipEntryInName, ZipUtil.getStream(zipFile, zipEntryIn));
+	public ZipReplacer(final ZipReader zipReader, final boolean ignoreCase) {
+		this.zipReader = zipReader;
+		this.ignoreCase = ignoreCase;
+	}
+
+	/**
+	 * 增加替换的内容，如果路径不匹配，则不做替换，也不加入
+	 *
+	 * @param entryPath 路径
+	 * @param resource  被压缩的内容
+	 * @return this
+	 */
+	public ZipReplacer addReplace(final String entryPath, final Resource resource) {
+		replacedResources.put(entryPath, resource);
+		return this;
+	}
+
+	/**
+	 * 写出到{@link ZipWriter}
+	 *
+	 * @param writer {@link ZipWriter}
+	 */
+	public void write(final ZipWriter writer) {
+		zipReader.read((entry) -> {
+			String entryName;
+			for (final String key : replacedResources.keySet()) {
+				entryName = entry.getName();
+				if (isSamePath(entryName, key, ignoreCase)) {
+					writer.add(key, replacedResources.get(key).getStream());
+				} else {
+					writer.add(entryName, zipReader.get(entryName));
 				}
 			}
-//			确认replaceFiles是否替换原zip中文件，没有替换直接添加
-			for (int i = 0; i < updates.length; i++) {
-				if (!updates[i]) {
-//					原zip中不存在同路径文件，添加到制定目录
-					data.put(innerFiles[i], FileUtil.getInputStream(replaceFiles.get(i)));
-				}
-			}
-			for (String key : data.keySet()) {
-				zipWriter.add(key, data.get(key));
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, File[] replaceFiles, Charset charset, Charset charsetOut) {
-		replace(srcFile, tarFile, innerFiles, Arrays.asList(replaceFiles), charset, charsetOut);
+		});
 	}
 
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, String[] replaceFiles, Charset charset, Charset charsetOut) {
-		List<File> files = Arrays.stream(replaceFiles).map(FileUtil::file).collect(Collectors.toList());
-		replace(srcFile, tarFile, innerFiles, files, charset, charsetOut);
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFile      源文件
-	 * @param tarFile      输出文件
-	 * @param innerFiles   替换文件在zip中的相对路径
-	 * @param replaceFiles 替换文件到系统中到存储路径
-	 * @param charset      读取输出编码格式
-	 */
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, String[] replaceFiles, Charset charset) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, charset, charset);
-	}
-
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, File[] replaceFiles, Charset charset) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, charset, charset);
-	}
-
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, List<File> replaceFiles, Charset charset) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, charset, charset);
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFile      源文件
-	 * @param tarFile      输出文件
-	 * @param innerFiles   要替换文件在zip中的相对路径
-	 * @param replaceFiles 替换文件到系统中到存储路径
-	 */
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, String[] replaceFiles) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, File[] replaceFiles) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(File srcFile, File tarFile, String[] innerFiles, List<File> replaceFiles) {
-		replace(srcFile, tarFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFile      源文件，也是输出路径
-	 * @param innerFiles   替换文件在zip中的相对路径
-	 * @param replaceFiles 替换文件到系统中到存储路径
-	 * @param charset      读取输出编码格式
-	 */
-	public static void replace(File srcFile, String[] innerFiles, String[] replaceFiles, Charset charset) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, charset);
-	}
-
-	public static void replace(File srcFile, String[] innerFiles, File[] replaceFiles, Charset charset) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, charset);
-	}
-
-	public static void replace(File srcFile, String[] innerFiles, List<File> replaceFiles, Charset charset) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, charset);
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFile      源文件
-	 * @param innerFiles   要替换文件在zip中的相对路径
-	 * @param replaceFiles 要替换的文件绝对路径
-	 */
-	public static void replace(File srcFile, String[] innerFiles, String[] replaceFiles) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(File srcFile, String[] innerFiles, File[] replaceFiles) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(File srcFile, String[] innerFiles, List<File> replaceFiles) {
-		replace(srcFile, srcFile, innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFilePath  源文件路径
-	 * @param tarFilePath  输出文件路径
-	 * @param innerFiles   要替换文件在zip中的相对路径
-	 * @param replaceFiles 要替换的文件绝对路径
-	 * @param charset      读取编码格式
-	 * @param charsetOut   输出编码格式
-	 */
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, String[] replaceFiles, Charset charset, Charset charsetOut) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charsetOut);
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, File[] replaceFiles, Charset charset, Charset charsetOut) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charsetOut);
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, List<File> replaceFiles, Charset charset, Charset charsetOut) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charsetOut);
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFilePath  zip源文件路径
-	 * @param tarFilePath  zip输出文件路径
-	 * @param innerFiles   要替换文件在zip中的相对路径
-	 * @param replaceFiles 要替换的文件绝对路径
-	 * @param charset      读取输出编码格式
-	 */
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, String[] replaceFiles, Charset charset) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charset);
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, File[] replaceFiles, Charset charset) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charset);
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, List<File> replaceFiles, Charset charset) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, charset, charset);
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFilePath  源文件路径
-	 * @param tarFilePath  输出文件路径
-	 * @param innerFiles   替换文件在zip中的相对路径
-	 * @param replaceFiles 替换文件到系统中到存储路径
-	 */
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, String[] replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, File[] replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(String srcFilePath, String tarFilePath, String[] innerFiles, List<File> replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(tarFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	/**
-	 * 不解压zip，替换文件内容，也可用于转换zip编码格式
-	 *
-	 * @param srcFilePath  源文件路径，也是输出路径
-	 * @param innerFiles   要替换文件在zip中的相对路径
-	 * @param replaceFiles 要替换的文件绝对路径
-	 */
-	public static void replace(String srcFilePath, String[] innerFiles, String[] replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(srcFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(String srcFilePath, String[] innerFiles, File[] replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(srcFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
-	}
-
-	public static void replace(String srcFilePath, String[] innerFiles, List<File> replaceFiles) {
-		replace(FileUtil.file(srcFilePath), FileUtil.file(srcFilePath), innerFiles, replaceFiles, CharsetUtil.defaultCharset());
+	@Override
+	public void close() throws IOException {
+		this.zipReader.close();
 	}
 
 	/**
@@ -252,25 +89,9 @@ public class ZipReplacer {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return ture 路径相等
 	 */
-	public static boolean samePath(String entryPath, String targetPath, boolean ignoreCase) {
-
-		entryPath = entryPath.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator));
-		targetPath = targetPath.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator));
-		if (entryPath.startsWith(File.separator)) {
-			entryPath = entryPath.substring(1);
-		}
-		if (targetPath.startsWith(File.separator)) {
-			targetPath = targetPath.substring(1);
-		}
-
-		if (ignoreCase) {
-			return StrUtil.equalsIgnoreCase(entryPath, targetPath);
-		} else {
-			return StrUtil.equals(entryPath, targetPath);
-		}
-	}
-
-	public static boolean samePath(String entryPath, String targetPath) {
-		return samePath(entryPath, targetPath, true);
+	private static boolean isSamePath(String entryPath, String targetPath, final boolean ignoreCase) {
+		entryPath = StrUtil.removePrefix(FileUtil.normalize(entryPath), StrUtil.SLASH);
+		targetPath = StrUtil.removePrefix(FileUtil.normalize(targetPath), StrUtil.SLASH);
+		return StrUtil.equals(entryPath, targetPath, ignoreCase);
 	}
 }

@@ -229,4 +229,13 @@ public class Ipv4UtilTest {
 		final boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
 		Assertions.assertTrue(match);
 	}
+
+	@Test
+	public void matchesTest() {
+		final boolean matches1 = Ipv4Util.matches("127.*.*.1", "127.0.0.1");
+		Assertions.assertTrue(matches1);
+
+		final boolean matches2 = Ipv4Util.matches("192.168.*.1", "127.0.0.1");
+		Assertions.assertFalse(matches2);
+	}
 }
