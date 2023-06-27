@@ -113,7 +113,7 @@ public class SettingLoader {
 				if (line == null) {
 					break;
 				}
-				line = line.trim();
+				line = StrUtil.trim(line);
 				// 跳过注释行和空行
 				if (StrUtil.isBlank(line) || StrUtil.startWith(line, COMMENT_FLAG_PRE)) {
 					continue;
@@ -121,7 +121,7 @@ public class SettingLoader {
 
 				// 记录分组名
 				if (StrUtil.isSurround(line, CharUtil.BRACKET_START, CharUtil.BRACKET_END)) {
-					group = line.substring(1, line.length() - 1).trim();
+					group = StrUtil.trim(line.substring(1, line.length() - 1));
 					continue;
 				}
 
@@ -131,12 +131,12 @@ public class SettingLoader {
 					continue;
 				}
 
-				String value = keyValue[1].trim();
+				String value = StrUtil.trim(keyValue[1]);
 				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
 				if (this.isUseVariable) {
 					value = replaceVar(group, value);
 				}
-				this.groupedMap.put(group, keyValue[0].trim(), value);
+				this.groupedMap.put(group, StrUtil.trim(keyValue[0]), value);
 			}
 		} finally {
 			IoUtil.close(reader);
