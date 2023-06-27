@@ -108,6 +108,15 @@ public class Ipv4UtilTest {
 	}
 
 	@Test
+	public void matchesTest() {
+		boolean matches1 = Ipv4Util.matches("127.*.*.1", "127.0.0.1");
+		Assert.assertTrue("IP地址通配符匹配1", matches1);
+
+		boolean matches2 = Ipv4Util.matches("192.168.*.1", "127.0.0.1");
+		Assert.assertFalse("IP地址通配符匹配2", matches2);
+	}
+
+	@Test
 	public void ipv4ToLongTest(){
 		long l = Ipv4Util.ipv4ToLong("127.0.0.1");
 		Assert.assertEquals(2130706433L, l);
