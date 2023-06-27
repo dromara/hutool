@@ -366,6 +366,33 @@ public class Ipv4Util {
 		return isInnerIp;
 	}
 
+	/**
+	 * 检测指定 IP 地址是否匹配通配符 wildcard
+	 *
+	 * @param pattern   通配符，如 192.168.*.1
+	 * @param ipAddress 待检测的 IP 地址
+	 * @return 是否匹配
+	 */
+	public static boolean matches(String pattern, String ipAddress) {
+		if (!Validator.isMatchRegex(PatternPool.IPV4, ipAddress)) {
+			return false;
+		}
+
+		String[] patternSegments = pattern.split("\\.");
+		String[] ipSegments = ipAddress.split("\\.");
+
+		if (patternSegments.length != ipSegments.length) {
+			return false;
+		}
+
+		for (int i = 0; i < patternSegments.length; i++) {
+			if (!"*".equals(patternSegments[i]) && !patternSegments[i].equals(ipSegments[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	//-------------------------------------------------------------------------------- Private method start
 
 	/**
