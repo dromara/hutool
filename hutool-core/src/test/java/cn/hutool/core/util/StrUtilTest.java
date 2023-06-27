@@ -1,10 +1,11 @@
 package cn.hutool.core.util;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * 字符串工具类单元测试
@@ -647,5 +648,44 @@ public class StrUtilTest {
 		final String template = "I''m {0} years old.";
 		final String result = StrUtil.indexedFormat(template, 10);
 		Assert.assertEquals("I'm 10 years old.", result);
+	}
+
+	@Test
+	public void truncateUtf8Test() {
+		String str = "这是This一段中英文";
+		String ret = StrUtil.truncateUtf8(str, 12);
+		Assert.assertEquals("这是Thi...", ret);
+
+		ret = StrUtil.truncateUtf8(str, 13);
+		Assert.assertEquals("这是This...", ret);
+
+		ret = StrUtil.truncateUtf8(str, 14);
+		Assert.assertEquals("这是This...", ret);
+
+		ret = StrUtil.truncateUtf8(str, 999);
+		Assert.assertEquals(str, ret);
+	}
+
+	@Test
+	public void truncateGb18030Test() {
+		String str = "这是This一段中英文";
+		String ret = StrUtil.truncateGb18030(str, 12);
+		Assert.assertEquals("这是This...", ret);
+
+		ret = StrUtil.truncateGb18030(str, 13);
+		Assert.assertEquals("这是This一...", ret);
+
+		ret = StrUtil.truncateGb18030(str, 14);
+		Assert.assertEquals("这是This一...", ret);
+
+		ret = StrUtil.truncateGb18030(str, 999);
+		Assert.assertEquals(str, ret);
+	}
+
+	@Test
+	public void truncateByByteLengthTest() {
+		String str = "This is English";
+		String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
+		Assert.assertEquals("This is En", ret);
 	}
 }

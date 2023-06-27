@@ -1,16 +1,20 @@
 package cn.hutool.core.util;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.text.TextSimilarity;
-
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.Map;
 
 /**
  * 字符串工具类
@@ -265,8 +269,8 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 *
 	 * @param obj 对象
 	 * @return 字符串
-	 * @since 4.1.3
 	 * @see String#valueOf(Object)
+	 * @since 4.1.3
 	 */
 	public static String toString(Object obj) {
 		return String.valueOf(obj);
@@ -467,5 +471,74 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String format(CharSequence template, Map<?, ?> map, boolean ignoreNull) {
 		return StrFormatter.format(template, map, ignoreNull);
+	}
+
+	/**
+	 * 截断字符串，使用其按照UTF-8编码为字节后不超过maxBytes长度。截断后自动追加省略号(...)
+	 * 用于存储数据库varchar且编码为UTF-8的字段
+	 *
+	 * @param str      java字符串
+	 * @param maxBytes 最大字节长度
+	 * @return 截断后的字符
+	 */
+	public static String truncateUtf8(String str, int maxBytes) {
+		Charset charset = StandardCharsets.UTF_8;
+		//UTF-8编码单个字符最大长度4
+		return truncateByByteLength(str, charset, maxBytes, 4, true);
+	}
+
+	/**
+	 * 截断字符串，使用其按照GB18030编码为字节后不超过maxBytes长度。截断后自动追加省略号(...)
+	 * 用于存储数据库varchar且编码为GB2312，GBK，GB18030的字段
+	 *
+	 * @param str
+	 * @param maxBytes
+	 * @return
+	 */
+	public static String truncateGb18030(String str, int maxBytes) {
+		Charset charset = Charset.forName("GB18030");
+		//GB18030编码单个字符最大长度2
+		return truncateByByteLength(str, charset, maxBytes, 2, true);
+	}
+
+	/**
+	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度
+	 *
+	 * @param str        原始字符串
+	 * @param charset    指定编码
+	 * @param maxBytes   最大字节数
+	 * @param factor     速算因子，取该编码下单个字符的最大可能字节数
+	 * @param appendDots 截断后是否追加省略号(...)
+	 * @return
+	 */
+	public static String truncateByByteLength(String str, Charset charset, int maxBytes, int factor,
+			boolean appendDots) {
+		//字符数*速算因子<=最大字节数
+		if (str == null || str.length() * factor <= maxBytes) {
+			return str;
+		}
+		byte[] sba = str.getBytes(charset);
+		if (sba.length <= maxBytes) {
+			return str;
+		}
+		//限制字节数
+		int limitBytes;
+		if (appendDots) {
+			limitBytes = maxBytes - "...".getBytes(charset).length;
+		} else {
+			limitBytes = maxBytes;
+		}
+		ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
+		CharBuffer cb = CharBuffer.allocate(limitBytes);
+		CharsetDecoder decoder = charset.newDecoder();
+		//忽略被截断的字符
+		decoder.onMalformedInput(CodingErrorAction.IGNORE);
+		decoder.decode(bb, cb, true);
+		decoder.flush(cb);
+		String result = new String(cb.array(), 0, cb.position());
+		if (appendDots) {
+			return result + "...";
+		}
+		return result;
 	}
 }
