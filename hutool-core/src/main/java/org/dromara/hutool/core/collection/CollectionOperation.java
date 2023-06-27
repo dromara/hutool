@@ -45,7 +45,7 @@ public class CollectionOperation<E> {
 	 * @return CollectionOperation
 	 */
 	@SafeVarargs
-	public static <E> CollectionOperation<E> of(final Collection<E>... colls) {
+	public static <E> CollectionOperation<E> of(final Collection<? extends E>... colls) {
 		return new CollectionOperation<>(colls);
 	}
 
@@ -56,8 +56,9 @@ public class CollectionOperation<E> {
 	 *
 	 * @param colls 集合数组
 	 */
-	public CollectionOperation(final Collection<E>[] colls) {
-		this.colls = colls;
+	@SuppressWarnings("unchecked")
+	public CollectionOperation(final Collection<? extends E>[] colls) {
+		this.colls = (Collection<E>[]) colls;
 	}
 
 	/**
