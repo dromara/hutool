@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -369,24 +370,25 @@ public class Ipv4Util {
 	/**
 	 * 检测指定 IP 地址是否匹配通配符 wildcard
 	 *
-	 * @param pattern   通配符，如 192.168.*.1
+	 * @param wildcard   通配符，如 192.168.*.1
 	 * @param ipAddress 待检测的 IP 地址
 	 * @return 是否匹配
 	 */
-	public static boolean matches(String pattern, String ipAddress) {
-		if (!Validator.isMatchRegex(PatternPool.IPV4, ipAddress)) {
+	public static boolean matches(String wildcard, String ipAddress) {
+		if (false == ReUtil.isMatch(PatternPool.IPV4, ipAddress)) {
 			return false;
 		}
 
-		String[] patternSegments = pattern.split("\\.");
-		String[] ipSegments = ipAddress.split("\\.");
+		final String[] wildcardSegments = wildcard.split("\\.");
+		final String[] ipSegments = ipAddress.split("\\.");
 
-		if (patternSegments.length != ipSegments.length) {
+		if (wildcardSegments.length != ipSegments.length) {
 			return false;
 		}
 
-		for (int i = 0; i < patternSegments.length; i++) {
-			if (!"*".equals(patternSegments[i]) && !patternSegments[i].equals(ipSegments[i])) {
+		for (int i = 0; i < wildcardSegments.length; i++) {
+			if (false == "*".equals(wildcardSegments[i])
+				&& false == wildcardSegments[i].equals(ipSegments[i])) {
 				return false;
 			}
 		}
