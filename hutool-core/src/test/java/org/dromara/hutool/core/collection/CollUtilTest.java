@@ -1115,7 +1115,7 @@ public class CollUtilTest {
 	@Data
 	static class Cat extends Animal {
 
-		public Cat(String name, Integer age) {
+		public Cat(final String name, final Integer age) {
 			super(name, age);
 		}
 	}
@@ -1125,7 +1125,7 @@ public class CollUtilTest {
 	@Data
 	static class Pig extends Animal {
 
-		public Pig(String name, Integer age) {
+		public Pig(final String name, final Integer age) {
 			super(name, age);
 		}
 	}
@@ -1204,24 +1204,24 @@ public class CollUtilTest {
 
 	@Test
 	public void unionExtendTest() {
-		List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
-		List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
+		final List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
+		final List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
 		Assertions.assertEquals(CollUtil.union(dog, cat).size(), dog.size() + cat.size());
 	}
 
 	@Test
 	public void unionAllExtendTest() {
-		List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
-		List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
-		List<Pig> pig = Arrays.asList(new Pig("pig1", 12), new Pig("pig2", 12));
+		final List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog2", 12));
+		final List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
+		final List<Pig> pig = Arrays.asList(new Pig("pig1", 12), new Pig("pig2", 12));
 		Assertions.assertEquals(CollUtil.unionAll(dog, cat, pig).size(), dog.size() + cat.size() + pig.size());
 	}
 
 	@Test
 	public void unionDistinctExtendTest() {
-		List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog1", 12)); // same
-		List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
-		List<Pig> pig = Arrays.asList(new Pig("pig1", 12), new Pig("pig2", 12));
+		final List<Dog> dog = Arrays.asList(new Dog("dog1", 12), new Dog("dog1", 12)); // same
+		final List<Cat> cat = Arrays.asList(new Cat("cat1", 12), new Cat("cat2", 12));
+		final List<Pig> pig = Arrays.asList(new Pig("pig1", 12), new Pig("pig2", 12));
 		Assertions.assertEquals(CollUtil.unionDistinct(dog, cat, pig).size(), 5);
 	}
 }
