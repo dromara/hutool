@@ -34,7 +34,7 @@ import java.util.Objects;
  * JDK7中<strong>BigDecimal(double val)</strong>构造方法的结果有一定的不可预知性，例如：
  *
  * <pre>
- * new BigDecimal(0.1)
+ * new BigDecimal(0.1)和 BigDecimal.valueOf(0.1)
  * </pre>
  * <p>
  * 表示的不是<strong>0.1</strong>而是<strong>0.1000000000000000055511151231257827021181583404541015625</strong>
