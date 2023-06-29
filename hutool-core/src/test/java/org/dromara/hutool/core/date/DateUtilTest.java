@@ -1088,4 +1088,11 @@ public class DateUtilTest {
 		Assertions.assertEquals(71, DateUtil.age(DateUtil.parse("1952-02-13"), DateUtil.parse("2023-02-14")));
 		Assertions.assertEquals(0, DateUtil.age(DateUtil.parse("2023-02-14"), DateUtil.parse("2023-02-14")));
 	}
+
+	@Test
+	void issueI7H34NTest() {
+		final DateTime parse = DateUtil.parse("2019-10-22T09:56:03.000123Z");
+		Assertions.assertNotNull(parse);
+		Assertions.assertEquals("2019-10-22 09:56:03", parse.toString());
+	}
 }

@@ -16,6 +16,7 @@ import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.format.DefaultDateBasic;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
@@ -53,8 +54,9 @@ public class ISO8601DateParser extends DefaultDateBasic implements DateParser {
 
 			final int patternLength = DatePattern.UTC_MS_PATTERN.length();
 			// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
-			// -4 ~ -6范围表示匹配毫秒1~3位的情况
-			if (length <= patternLength - 4 && length >= patternLength - 6) {
+			// 2018-09-13T05:34:31.1Z - 2018-09-13T05:34:31.000000Z
+			if (length <= patternLength && length >= patternLength - 6) {
+				// 毫秒部分1-7位支持
 				return new DateTime(source, DatePattern.UTC_MS_FORMAT);
 			}
 		} else if (StrUtil.contains(source, '+')) {
