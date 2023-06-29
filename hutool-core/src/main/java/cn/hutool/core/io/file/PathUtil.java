@@ -620,8 +620,9 @@ public class PathUtil {
 	public static String getMimeType(Path file) {
 		try {
 			return Files.probeContentType(file);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+		} catch (IOException ignore) {
+			// issue#3179，使用OpenJDK可能抛出NoSuchFileException，此处返回null
+			return null;
 		}
 	}
 
