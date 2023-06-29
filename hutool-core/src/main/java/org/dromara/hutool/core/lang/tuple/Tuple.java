@@ -35,6 +35,17 @@ import java.util.stream.StreamSupport;
 public class Tuple implements Iterable<Object>, Serializable, Cloneable {
 	private static final long serialVersionUID = -7689304393482182157L;
 
+	/**
+	 * 构建Tuple对象
+	 *
+	 * @param members 成员数组
+	 * @return Tuple
+	 * @since 6.0.0
+	 */
+	public static Tuple of(final Object... members) {
+		return new Tuple(members);
+	}
+
 	private final Object[] members;
 	private int hashCode;
 	private boolean cacheHash;

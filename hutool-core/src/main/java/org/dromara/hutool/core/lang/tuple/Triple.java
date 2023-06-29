@@ -26,8 +26,6 @@ import java.util.Objects;
 public class Triple<L, M, R> extends Pair<L, R> {
 	private static final long serialVersionUID = 1L;
 
-	protected M middle;
-
 	/**
 	 * 构建Triple对象
 	 *
@@ -43,6 +41,8 @@ public class Triple<L, M, R> extends Pair<L, R> {
 	public static <L, M, R> Triple<L, M, R> of(final L left, final M middle, final R right) {
 		return new Triple<>(left, middle, right);
 	}
+
+	protected M middle;
 
 	/**
 	 * 构造
