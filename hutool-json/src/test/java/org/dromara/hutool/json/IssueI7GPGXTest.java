@@ -13,6 +13,7 @@
 package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,17 @@ import org.junit.jupiter.api.Test;
 public class IssueI7GPGXTest {
 	@Test
 	public void pairToBeanTest() {
-		final Pair<String, Boolean> hutoolPair = new Pair<>("test1", true);
+		final Pair<String, Boolean> hutoolPair = Pair.of("test1", true);
 		final String a = JSONUtil.toJsonStr(hutoolPair);
 		final Pair<String, Boolean> pair = JSONUtil.toBean(a, new TypeReference<Pair<String, Boolean>>() {});
 		Assertions.assertEquals(hutoolPair, pair);
+	}
+
+	@Test
+	void tripleToBeanTest() {
+		final Triple<String, Integer, Boolean> hutoolTriple = Triple.of("aaa", 123, true);
+		final String a = JSONUtil.toJsonStr(hutoolTriple);
+		final Triple<String, Integer, Boolean> pair = JSONUtil.toBean(a, new TypeReference<Triple<String, Integer, Boolean>>() {});
+		Assertions.assertEquals(hutoolTriple, pair);
 	}
 }

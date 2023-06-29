@@ -32,7 +32,7 @@ import java.util.Map;
  *     <li>{@link Map}</li>
  *     <li>{@link Map.Entry}</li>
  *     <li>带分隔符的字符串，支持分隔符{@code :}、{@code =}、{@code ,}</li>
- *     <li>Bean，包含{@code getKey}和{@code getValue}方法</li>
+ *     <li>Bean，包含{@code getLeft}和{@code getRight}方法</li>
  * </ul>
  *
  * @author looly
@@ -49,23 +49,23 @@ public class PairConverter implements Converter {
 		if (targetType instanceof TypeReference) {
 			targetType = ((TypeReference<?>) targetType).getType();
 		}
-		final Type keyType = TypeUtil.getTypeArgument(targetType, 0);
-		final Type valueType = TypeUtil.getTypeArgument(targetType, 1);
+		final Type leftType = TypeUtil.getTypeArgument(targetType, 0);
+		final Type rightType = TypeUtil.getTypeArgument(targetType, 1);
 
-		return convert(keyType, valueType, value);
+		return convert(leftType, rightType, value);
 	}
 
 	/**
 	 * 转换对象为指定键值类型的指定类型Map
 	 *
-	 * @param keyType   键类型
-	 * @param valueType 值类型
+	 * @param leftType  键类型
+	 * @param rightType 值类型
 	 * @param value     被转换的值
 	 * @return 转换后的Map
 	 * @throws ConvertException 转换异常或不支持的类型
 	 */
 	@SuppressWarnings("rawtypes")
-	public Pair<?, ?> convert(final Type keyType, final Type valueType, final Object value)
+	public Pair<?, ?> convert(final Type leftType, final Type rightType, final Object value)
 		throws ConvertException {
 		Map map = null;
 		if (value instanceof Map.Entry) {
@@ -79,12 +79,12 @@ public class PairConverter implements Converter {
 		} else if (value instanceof CharSequence) {
 			final CharSequence str = (CharSequence) value;
 			map = strToMap(str);
-		} else if (BeanUtil.isWritableBean(value.getClass())) {
+		} else if (BeanUtil.isReadableBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 		}
 
 		if (null != map) {
-			return mapToPair(keyType, valueType, map);
+			return mapToPair(leftType, rightType, map);
 		}
 
 		throw new ConvertException("Unsupported to map from [{}] of type: {}", value, value.getClass().getName());
@@ -109,12 +109,12 @@ public class PairConverter implements Converter {
 	}
 
 	/**
-	 * Map转Entry
+	 * Map转Pair
 	 *
 	 * @param keyType   键类型
 	 * @param valueType 值类型
 	 * @param map       被转换的map
-	 * @return Entry
+	 * @return Pair
 	 */
 	@SuppressWarnings("rawtypes")
 	private static Pair<?, ?> mapToPair(final Type keyType, final Type valueType, final Map map) {

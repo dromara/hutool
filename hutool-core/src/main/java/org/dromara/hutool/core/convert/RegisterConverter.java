@@ -16,6 +16,7 @@ import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Triple;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.reflect.TypeUtil;
 
@@ -216,6 +217,7 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
-		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 5.7.16
+		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 6.0.0
+		defaultConverterMap.put(Triple.class, TripleConverter.INSTANCE);// since 6.0.0
 	}
 }
