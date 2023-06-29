@@ -15,6 +15,7 @@
 * 【core  】      修复序列化和反序列化Class问题（issue#I7FQ29@Gitee）
 * 【setting】     修复utf8-bom的setting文件读取问题（issue#I7G34E@Gitee）
 * 【core  】      修复PathUtil.getMimeType可能造成的异常（issue#3179@Github）
+* 【core  】      修复Pair序列化转换无效问题（issue#I7GPGX@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.20(2023-06-16)

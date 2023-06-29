@@ -14,20 +14,16 @@ package cn.hutool.json;
 
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.lang.TypeReference;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class IssueI7GPGXTest {
-	@Test
-	public void toBeanTest() throws NoSuchMethodException {
-		Pair<String, Boolean> hutoolPair = getHutoolPair();
-		String a = JSONUtil.toJsonStr(hutoolPair);
-		System.out.println(a);
-		System.out.println("=====================================");
-		Pair<String, Boolean> pair = JSONUtil.toBean(a, new TypeReference<Pair<String, Boolean>>() {}, false);
-		System.out.println(JSONUtil.toJsonStr(pair));
-	}
 
-	public static Pair<String, Boolean> getHutoolPair() {
-		return new Pair<>("test1", true);
+	@Test
+	public void toBeanTest() {
+		final Pair<String, Boolean> hutoolPair = new Pair<>("test1", true);
+		final String a = JSONUtil.toJsonStr(hutoolPair);
+		final Pair<String, Boolean> pair = JSONUtil.toBean(a, new TypeReference<Pair<String, Boolean>>() {}, false);
+		Assert.assertEquals(hutoolPair, pair);
 	}
 }

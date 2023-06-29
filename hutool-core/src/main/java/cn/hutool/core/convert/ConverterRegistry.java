@@ -42,7 +42,7 @@ public class ConverterRegistry implements Serializable {
 	/**
 	 * 默认类型转换器
 	 */
-	private Map<Type, Converter<?>> defaultConverterMap;
+	private Map<Class<?>, Converter<?>> defaultConverterMap;
 	/**
 	 * 用户自定义类型转换器
 	 */
@@ -154,7 +154,7 @@ public class ConverterRegistry implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> Converter<T> getDefaultConverter(Type type) {
-		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(type);
+		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(TypeUtil.getClass(type));
 	}
 
 	/**
