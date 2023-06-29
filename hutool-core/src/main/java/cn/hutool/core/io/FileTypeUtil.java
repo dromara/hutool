@@ -78,7 +78,7 @@ public class FileTypeUtil {
 	/**
 	 * 根据文件流的头部信息获得文件类型<br>
 	 * 注意此方法会读取头部一些bytes，造成此流接下来读取时缺少部分bytes<br>
-	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
+	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
 	 * @param in {@link InputStream}
 	 * @param isExact 是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
 	 * @return 类型，文件的扩展名，未找到为{@code null}
@@ -93,7 +93,7 @@ public class FileTypeUtil {
 	/**
 	 * 根据文件流的头部信息获得文件类型<br>
 	 * 注意此方法会读取头部64个bytes，造成此流接下来读取时缺少部分bytes<br>
-	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
+	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
 	 * @param in {@link InputStream}
 	 * @return 类型，文件的扩展名，未找到为{@code null}
 	 * @throws IORuntimeException  读取流引起的异常
@@ -105,7 +105,7 @@ public class FileTypeUtil {
 	/**
 	 * 根据文件流的头部信息获得文件类型
 	 * 注意此方法会读取头部64个bytes，造成此流接下来读取时缺少部分bytes<br>
-	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
+	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
 	 *
 	 * <pre>
 	 *     1、无法识别类型默认按照扩展名识别
@@ -125,7 +125,7 @@ public class FileTypeUtil {
 	/**
 	 * 根据文件流的头部信息获得文件类型
 	 * 注意此方法会读取头部一些bytes，造成此流接下来读取时缺少部分bytes<br>
-	 * 因此如果想服用此流，流需支持{@link InputStream#reset()}方法。
+	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
 	 *
 	 * <pre>
 	 *     1、无法识别类型默认按照扩展名识别

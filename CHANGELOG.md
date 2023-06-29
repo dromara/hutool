@@ -8,6 +8,7 @@
 * 【core  】      list 为空时，CollUtil.max等返回null而非异常（pr#1027@Gitee）
 * 【poi   】      ExcelReader.getWriter逻辑变更，当从非文件读取时，获取sheet，而非空表格。
 * 【core  】      Ipv4Util 新增方法：检测指定 IP 地址是否匹配通配符（pr#3171@Github）
+* 【core  】      DateUtil.parse适配6位毫秒格式（issue#I7H34N@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复MapUtil工具使用filter方法构造传入参数结果问题（issue#3162@Github）

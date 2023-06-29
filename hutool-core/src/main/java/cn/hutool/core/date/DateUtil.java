@@ -856,7 +856,8 @@ public class DateUtil extends CalendarUtil {
 			final int patternLength = DatePattern.UTC_MS_PATTERN.length();
 			// 格式类似：2018-09-13T05:34:31.999Z，-4表示减去4个单引号的长度
 			// -4 ~ -6范围表示匹配毫秒1~3位的情况
-			if (length <= patternLength - 4 && length >= patternLength - 6) {
+			if (length <= patternLength && length >= patternLength - 6) {
+				// issue#I7H34N，支持最多6位毫秒
 				return parse(utcString, DatePattern.UTC_MS_FORMAT);
 			}
 		} else if (StrUtil.contains(utcString, '+')) {
