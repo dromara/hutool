@@ -124,7 +124,7 @@ public class JSONConverter implements Converter {
 	 *     <li>String: 转换为相应的对象，"和'包围的字符串返回原字符串，""返回{@code null}</li>
 	 *     <li>Array、Iterable、Iterator：转换为JSONArray</li>
 	 *     <li>Bean对象：转为JSONObject</li>
-	 *     <li>Number：返回原对象</li>
+	 *     <li>Number、Boolean：返回原对象</li>
 	 *     <li>null：返回{@code null}</li>
 	 * </ul>
 	 *
@@ -138,7 +138,7 @@ public class JSONConverter implements Converter {
 			return null;
 		}
 		final JSON json;
-		if (obj instanceof JSON || obj instanceof Number) {
+		if (obj instanceof JSON || obj instanceof Number || obj instanceof Boolean) {
 			return obj;
 		} else if (obj instanceof CharSequence) {
 			final String jsonStr = StrUtil.trim((CharSequence) obj);
