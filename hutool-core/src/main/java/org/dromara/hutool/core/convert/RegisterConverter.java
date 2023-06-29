@@ -15,7 +15,9 @@ package org.dromara.hutool.core.convert;
 import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.reflect.TypeUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -65,7 +67,7 @@ public class RegisterConverter implements Converter, Serializable {
 	/**
 	 * 默认类型转换器
 	 */
-	private Map<Type, Converter> defaultConverterMap;
+	private Map<Class<?>, Converter> defaultConverterMap;
 	/**
 	 * 用户自定义类型转换器
 	 */
@@ -120,7 +122,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 * @return 转换器
 	 */
 	public Converter getDefaultConverter(final Type type) {
-		return (null == defaultConverterMap) ? null : defaultConverterMap.get(type);
+		return (null == defaultConverterMap) ? null : defaultConverterMap.get(TypeUtil.getClass(type));
 	}
 
 	/**
@@ -214,5 +216,6 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
+		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 5.7.16
 	}
 }
