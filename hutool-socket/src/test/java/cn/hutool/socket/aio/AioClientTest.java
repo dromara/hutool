@@ -14,7 +14,7 @@ public class AioClientTest {
 	public static void main(String[] args) throws IOException {
 		final AsynchronousChannelGroup GROUP = AsynchronousChannelGroup.withFixedThreadPool(//
 				RuntimeUtil.getProcessorCount(), // 默认线程池大小
-				ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
+				ThreadFactoryBuilder.create().setNamePrefix("Hutool-socket-").build()//
 		);
 
 		AioClient client = new AioClient(new InetSocketAddress("localhost", 8899), new SimpleIoAction() {
