@@ -24,6 +24,11 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 public class ClassConverter extends AbstractConverter {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 单例
+	 */
+	public static ClassConverter INSTANCE = new ClassConverter();
+
 	private final boolean isInitialized;
 
 	/**

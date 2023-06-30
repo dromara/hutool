@@ -125,7 +125,7 @@ public class SettingLoader {
 				if (line == null) {
 					break;
 				}
-				line = line.trim();
+				line = StrUtil.trim(line);
 				// 跳过注释行和空行
 				if (StrUtil.isBlank(line) || StrUtil.startWith(line, COMMENT_FLAG_PRE)) {
 					continue;
@@ -133,7 +133,7 @@ public class SettingLoader {
 
 				// 记录分组名
 				if (StrUtil.isWrap(line, CharUtil.BRACKET_START, CharUtil.BRACKET_END)) {
-					group = line.substring(1, line.length() - 1).trim();
+					group = StrUtil.trim(line.substring(1, line.length() - 1));
 					continue;
 				}
 
@@ -149,7 +149,7 @@ public class SettingLoader {
 				if (this.isUseVariable) {
 					value = replaceVar(group, value);
 				}
-				this.groupedMap.put(group, keyValue[0].trim(), value);
+				this.groupedMap.put(group, StrUtil.trim(keyValue[0]), value);
 			}
 		} finally {
 			IoUtil.closeQuietly(reader);

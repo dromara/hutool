@@ -287,9 +287,33 @@ public class CharSequenceUtilTest {
 
 	@Test
 	void codeLengthTest() {
-		String a = "🍒🐽";
+		final String a = "🍒🐽";
 		final int i = StrUtil.codeLength(a);
 		Assertions.assertEquals(4, a.length());
 		Assertions.assertEquals(2, i);
+	}
+
+	@Test
+	public void limitByteLengthUtf8Test() {
+		final String str = "这是This一段中英文";
+		String ret = StrUtil.limitByteLengthUtf8(str, 12,  true);
+		Assertions.assertEquals("这是Thi...", ret);
+
+		ret = StrUtil.limitByteLengthUtf8(str, 13, true);
+		Assertions.assertEquals("这是This...", ret);
+
+		ret = StrUtil.limitByteLengthUtf8(str, 14, true);
+		Assertions.assertEquals("这是This...", ret);
+
+		ret = StrUtil.limitByteLengthUtf8(str, 999, true);
+		Assertions.assertEquals(str, ret);
+	}
+
+	@Test
+	public void limitByteLengthTest() {
+		final String str = "This is English";
+		final String ret = StrUtil.limitByteLength(str, CharsetUtil.ISO_8859_1,10, 1, false);
+		Assertions.assertEquals("This is En", ret);
+
 	}
 }

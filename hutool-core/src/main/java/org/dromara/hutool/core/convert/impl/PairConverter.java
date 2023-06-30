@@ -18,75 +18,73 @@ import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * {@link Map.Entry} 转换器，支持以下类型转为Entry
+ * {@link Pair} 转换器，支持以下类型转为Pair
  * <ul>
  *     <li>{@link Map}</li>
  *     <li>{@link Map.Entry}</li>
  *     <li>带分隔符的字符串，支持分隔符{@code :}、{@code =}、{@code ,}</li>
- *     <li>Bean，包含{@code getKey}和{@code getValue}方法</li>
+ *     <li>Bean，包含{@code getLeft}和{@code getRight}方法</li>
  * </ul>
  *
  * @author looly
  */
-public class EntryConverter implements Converter {
+public class PairConverter implements Converter {
 
 	/**
 	 * 单例
 	 */
-	public static final EntryConverter INSTANCE = new EntryConverter();
+	public static final PairConverter INSTANCE = new PairConverter();
 
 	@Override
 	public Object convert(Type targetType, final Object value) throws ConvertException {
 		if (targetType instanceof TypeReference) {
 			targetType = ((TypeReference<?>) targetType).getType();
 		}
-		final Type keyType = TypeUtil.getTypeArgument(targetType, 0);
-		final Type valueType = TypeUtil.getTypeArgument(targetType, 1);
+		final Type leftType = TypeUtil.getTypeArgument(targetType, 0);
+		final Type rightType = TypeUtil.getTypeArgument(targetType, 1);
 
-		return convert(targetType, keyType, valueType, value);
+		return convert(leftType, rightType, value);
 	}
 
 	/**
 	 * 转换对象为指定键值类型的指定类型Map
 	 *
-	 * @param targetType 目标的Map类型
-	 * @param keyType    键类型
-	 * @param valueType  值类型
-	 * @param value      被转换的值
+	 * @param leftType  键类型
+	 * @param rightType 值类型
+	 * @param value     被转换的值
 	 * @return 转换后的Map
 	 * @throws ConvertException 转换异常或不支持的类型
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map.Entry<?, ?> convert(final Type targetType, final Type keyType, final Type valueType, final Object value)
+	public Pair<?, ?> convert(final Type leftType, final Type rightType, final Object value)
 		throws ConvertException {
 		Map map = null;
 		if (value instanceof Map.Entry) {
 			final Map.Entry entry = (Map.Entry) value;
 			map = MapUtil.of(entry.getKey(), entry.getValue());
-		}else if (value instanceof Pair) {
+		} else if (value instanceof Pair) {
 			final Pair entry = (Pair<?, ?>) value;
 			map = MapUtil.of(entry.getLeft(), entry.getRight());
-		}else if (value instanceof Map) {
+		} else if (value instanceof Map) {
 			map = (Map) value;
 		} else if (value instanceof CharSequence) {
 			final CharSequence str = (CharSequence) value;
 			map = strToMap(str);
-		} else if (BeanUtil.isWritableBean(value.getClass())) {
+		} else if (BeanUtil.isReadableBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
 		}
 
 		if (null != map) {
-			return mapToEntry(targetType, keyType, valueType, map);
+			return mapToPair(leftType, rightType, map);
 		}
 
 		throw new ConvertException("Unsupported to map from [{}] of type: {}", value, value.getClass().getName());
@@ -111,32 +109,31 @@ public class EntryConverter implements Converter {
 	}
 
 	/**
-	 * Map转Entry
+	 * Map转Pair
 	 *
-	 * @param targetType 目标的Map类型
-	 * @param keyType    键类型
-	 * @param valueType  值类型
-	 * @param map        被转换的map
-	 * @return Entry
+	 * @param keyType   键类型
+	 * @param valueType 值类型
+	 * @param map       被转换的map
+	 * @return Pair
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Map.Entry<?, ?> mapToEntry(final Type targetType, final Type keyType, final Type valueType, final Map map) {
+	private static Pair<?, ?> mapToPair(final Type keyType, final Type valueType, final Map map) {
 
-		Object key = null;
-		Object value = null;
+		Object left = null;
+		Object right = null;
 		if (1 == map.size()) {
 			final Map.Entry entry = (Map.Entry) map.entrySet().iterator().next();
-			key = entry.getKey();
-			value = entry.getValue();
+			left = entry.getKey();
+			right = entry.getValue();
 		} else if (2 == map.size()) {
-			key = map.get("key");
-			value = map.get("value");
+			left = map.get("left");
+			right = map.get("right");
 		}
 
 		final CompositeConverter convert = CompositeConverter.getInstance();
-		return (Map.Entry<?, ?>) ConstructorUtil.newInstance(TypeUtil.getClass(targetType),
-			TypeUtil.isUnknown(keyType) ? key : convert.convert(keyType, key),
-			TypeUtil.isUnknown(valueType) ? value : convert.convert(valueType, value)
+		return Pair.of(
+			TypeUtil.isUnknown(keyType) ? left : convert.convert(keyType, left),
+			TypeUtil.isUnknown(valueType) ? right : convert.convert(valueType, right)
 		);
 	}
 }

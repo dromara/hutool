@@ -32,7 +32,11 @@ import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.util.HashSet;
@@ -3182,6 +3186,59 @@ public class CharSequenceUtil extends StrValidator {
 			return string.toString();
 		}
 		return sub(string, 0, length) + "...";
+	}
+
+	/**
+	 * 截断字符串，使用UTF8编码为字节后不超过maxBytes长度
+	 *
+	 * @param str            原始字符串
+	 * @param maxBytesLength 最大字节数
+	 * @param appendDots     截断后是否追加省略号(...)
+	 * @return 限制后的长度
+	 */
+	public static String limitByteLengthUtf8(final CharSequence str, final int maxBytesLength, final boolean appendDots) {
+		return limitByteLength(str, CharsetUtil.UTF_8, maxBytesLength, 4, appendDots);
+	}
+
+	/**
+	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度
+	 *
+	 * @param str            原始字符串
+	 * @param charset        指定编码
+	 * @param maxBytesLength 最大字节数
+	 * @param factor         速算因子，取该编码下单个字符的最大可能字节数
+	 * @param appendDots     截断后是否追加省略号(...)
+	 * @return 限制后的长度
+	 */
+	public static String limitByteLength(final CharSequence str, final Charset charset, final int maxBytesLength,
+										 final int factor, final boolean appendDots) {
+		//字符数*速算因子<=最大字节数
+		if (str == null || str.length() * factor <= maxBytesLength) {
+			return str(str);
+		}
+		final byte[] sba = ByteUtil.toBytes(str, charset);
+		if (sba.length <= maxBytesLength) {
+			return str(str);
+		}
+		//限制字节数
+		final int limitBytes;
+		if (appendDots) {
+			limitBytes = maxBytesLength - "...".getBytes(charset).length;
+		} else {
+			limitBytes = maxBytesLength;
+		}
+		final ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
+		final CharBuffer cb = CharBuffer.allocate(limitBytes);
+		final CharsetDecoder decoder = charset.newDecoder();
+		//忽略被截断的字符
+		decoder.onMalformedInput(CodingErrorAction.IGNORE);
+		decoder.decode(bb, cb, true);
+		decoder.flush(cb);
+		final String result = new String(cb.array(), 0, cb.position());
+		if (appendDots) {
+			return result + "...";
+		}
+		return result;
 	}
 	// endregion
 

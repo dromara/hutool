@@ -15,16 +15,7 @@ package org.dromara.hutool.core.thread;
 import org.dromara.hutool.core.lang.builder.Builder;
 import org.dromara.hutool.core.util.ObjUtil;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * {@link ThreadPoolExecutor} 建造者
@@ -42,8 +33,10 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	private static final long serialVersionUID = 1L;
 
-	/** 默认的等待队列容量 */
-	public static final int DEFAULT_QUEUE_CAPACITY = 1024;
+	/**
+	 * 默认的等待队列容量
+	 */
+	public static final int DEFAULT_QUEUE_CAPACITY = Integer.MAX_VALUE;
 
 	/**
 	 * 初始池大小
@@ -135,6 +128,18 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	public ExecutorBuilder setWorkQueue(final BlockingQueue<Runnable> workQueue) {
 		this.workQueue = workQueue;
 		return this;
+	}
+
+	/**
+	 * 使用{@link LinkedBlockingQueue} 作为等待队列<br>
+	 * 队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
+	 *
+	 * @param capacity 队列容量
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ExecutorBuilder useLinkedBlockingQueue(final int capacity) {
+		return setWorkQueue(new LinkedBlockingQueue<>(capacity));
 	}
 
 	/**
@@ -257,12 +262,12 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 		final RejectedExecutionHandler handler = ObjUtil.defaultIfNull(builder.handler, RejectPolicy.ABORT.getValue());
 
 		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(//
-				corePoolSize, //
-				maxPoolSize, //
-				keepAliveTime, TimeUnit.NANOSECONDS, //
-				workQueue, //
-				threadFactory, //
-				handler//
+			corePoolSize, //
+			maxPoolSize, //
+			keepAliveTime, TimeUnit.NANOSECONDS, //
+			workQueue, //
+			threadFactory, //
+			handler//
 		);
 		if (null != builder.allowCoreThreadTimeOut) {
 			threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);

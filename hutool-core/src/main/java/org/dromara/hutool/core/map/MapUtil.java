@@ -253,16 +253,21 @@ public class MapUtil extends MapGetUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> createMap(final Class<?> mapType, final Supplier<Map<K, V>> defaultMap) {
-		if (null == mapType || mapType.isAssignableFrom(AbstractMap.class)) {
-			return defaultMap.get();
-		} else {
-			try {
-				return (Map<K, V>) ConstructorUtil.newInstance(mapType);
-			} catch (final Exception e) {
-				// 不支持的map类型，返回默认的HashMap
-				return defaultMap.get();
-			}
+		Map<K, V> result = null;
+		if (null != mapType && !mapType.isAssignableFrom(AbstractMap.class)) {
+			result = (Map<K, V>) ConstructorUtil.newInstanceIfPossible(mapType);
 		}
+
+		if(null == result){
+			result = defaultMap.get();
+		}
+
+		if(!result.isEmpty()){
+			// issue#3162@Github，在构造中put值，会导致新建map带有值内容，此处清空
+			result.clear();
+		}
+
+		return result;
 	}
 
 	// ----------------------------------------------------------------------------------------------- value of
@@ -657,16 +662,12 @@ public class MapUtil extends MapGetUtil {
 	 * @param editor 编辑器接口
 	 * @return 编辑后的Map
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> edit(final Map<K, V> map, final UnaryOperator<Entry<K, V>> editor) {
 		if (null == map || null == editor) {
 			return map;
 		}
 
-		Map<K, V> map2 = ConstructorUtil.newInstanceIfPossible(map.getClass());
-		if (null == map2) {
-			map2 = new HashMap<>(map.size(), 1f);
-		}
+		final Map<K, V> map2 = createMap(map.getClass(), ()-> new HashMap<>(map.size(), 1f));
 		if (isEmpty(map)) {
 			return map2;
 		}
@@ -680,6 +681,8 @@ public class MapUtil extends MapGetUtil {
 		}
 		return map2;
 	}
+
+
 
 	/**
 	 * 过滤<br>
@@ -739,10 +742,7 @@ public class MapUtil extends MapGetUtil {
 			return map;
 		}
 
-		Map<K, V> map2 = ConstructorUtil.newInstanceIfPossible(map.getClass());
-		if (null == map2) {
-			map2 = new HashMap<>(map.size(), 1f);
-		}
+		final Map<K, V> map2 = createMap(map.getClass(), ()-> new HashMap<>(map.size(), 1f));
 		if (isEmpty(map)) {
 			return map2;
 		}
@@ -1013,15 +1013,7 @@ public class MapUtil extends MapGetUtil {
 			return map;
 		}
 
-		final Iterator<Entry<K, V>> iter = map.entrySet().iterator();
-		Entry<K, V> entry;
-		while (iter.hasNext()) {
-			entry = iter.next();
-			if (null == entry.getValue()) {
-				iter.remove();
-			}
-		}
-
+		map.entrySet().removeIf(entry -> null == entry.getValue());
 		return map;
 	}
 

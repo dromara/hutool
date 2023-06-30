@@ -2,6 +2,7 @@ package org.dromara.hutool.json;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.json.serialize.JSONStringer;
@@ -333,5 +334,11 @@ public class JSONUtilTest {
 		private int[] c = new int[0];
 		private Byte[] d = new Byte[0];
 		private Byte[] e = new Byte[1];
+	}
+
+	@Test
+	void toJsonStrOfBooleanTest() {
+		final String jsonStr = JSONUtil.toJsonStr(true);
+		Assertions.assertEquals("true", jsonStr);
 	}
 }

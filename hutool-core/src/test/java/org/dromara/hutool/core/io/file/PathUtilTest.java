@@ -93,4 +93,10 @@ public class PathUtilTest {
 	public void moveTest2(){
 		PathUtil.move(Paths.get("D:\\project\\test1.txt"), Paths.get("D:\\project\\test2.txt"), false);
 	}
+
+	@Test
+	public void issue3179Test() {
+		final String mimeType = PathUtil.getMimeType(Paths.get("xxxx.jpg"));
+		Assertions.assertEquals("image/jpeg", mimeType);
+	}
 }

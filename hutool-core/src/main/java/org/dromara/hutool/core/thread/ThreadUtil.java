@@ -40,25 +40,6 @@ import java.util.function.Supplier;
 public class ThreadUtil {
 
 	/**
-	 * 新建一个线程池，默认的策略如下：
-	 * <pre>
-	 *    1. 初始线程数为corePoolSize指定的大小
-	 *    2. 没有最大线程数限制
-	 *    3. 默认使用LinkedBlockingQueue，默认队列大小为1024
-	 * </pre>
-	 *
-	 * @param corePoolSize 同时执行的线程数大小
-	 * @return ExecutorService
-	 */
-	public static ExecutorService newExecutor(final int corePoolSize) {
-		final ExecutorBuilder builder = ExecutorBuilder.of();
-		if (corePoolSize > 0) {
-			builder.setCorePoolSize(corePoolSize);
-		}
-		return builder.build();
-	}
-
-	/**
 	 * 获得一个新的线程池，默认的策略如下：
 	 * <pre>
 	 *    1. 初始线程数为 0
@@ -86,10 +67,25 @@ public class ThreadUtil {
 	 */
 	public static ExecutorService newSingleExecutor() {
 		return ExecutorBuilder.of()//
-				.setCorePoolSize(1)//
-				.setMaxPoolSize(1)//
-				.setKeepAliveTime(0)//
-				.buildFinalizable();
+			.setCorePoolSize(1)//
+			.setMaxPoolSize(1)//
+			.setKeepAliveTime(0)//
+			.buildFinalizable();
+	}
+
+	/**
+	 * 新建一个线程池，默认的策略如下：
+	 * <pre>
+	 *    1. 初始线程数为poolSize指定的大小
+	 *    2. 最大线程数为poolSize指定的大小
+	 *    3. 默认使用LinkedBlockingQueue，默认无界队列
+	 * </pre>
+	 *
+	 * @param poolSize 同时执行的线程数大小
+	 * @return ExecutorService
+	 */
+	public static ExecutorService newExecutor(final int poolSize) {
+		return newExecutor(poolSize, poolSize);
 	}
 
 	/**
@@ -102,9 +98,9 @@ public class ThreadUtil {
 	 */
 	public static ThreadPoolExecutor newExecutor(final int corePoolSize, final int maximumPoolSize) {
 		return ExecutorBuilder.of()
-				.setCorePoolSize(corePoolSize)
-				.setMaxPoolSize(maximumPoolSize)
-				.build();
+			.setCorePoolSize(corePoolSize)
+			.setMaxPoolSize(maximumPoolSize)
+			.build();
 	}
 
 	/**
@@ -119,10 +115,10 @@ public class ThreadUtil {
 	 */
 	public static ExecutorService newExecutor(final int corePoolSize, final int maximumPoolSize, final int maximumQueueSize) {
 		return ExecutorBuilder.of()
-				.setCorePoolSize(corePoolSize)
-				.setMaxPoolSize(maximumPoolSize)
-				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
-				.build();
+			.setCorePoolSize(corePoolSize)
+			.setMaxPoolSize(maximumPoolSize)
+			.useLinkedBlockingQueue(maximumQueueSize)
+			.build();
 	}
 
 	/**
@@ -184,7 +180,7 @@ public class ThreadUtil {
 	 */
 	public static ExecutorService newFixedExecutor(final int nThreads, final int maximumQueueSize, final String threadNamePrefix, final boolean isBlocked) {
 		return newFixedExecutor(nThreads, maximumQueueSize, threadNamePrefix,
-				(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
+			(isBlocked ? RejectPolicy.BLOCK : RejectPolicy.ABORT).getValue());
 	}
 
 	/**
@@ -207,11 +203,11 @@ public class ThreadUtil {
 												   final String threadNamePrefix,
 												   final RejectedExecutionHandler handler) {
 		return ExecutorBuilder.of()
-				.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
-				.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
-				.setThreadFactory(createThreadFactory(threadNamePrefix))
-				.setHandler(handler)
-				.build();
+			.setCorePoolSize(nThreads).setMaxPoolSize(nThreads)
+			.setWorkQueue(new LinkedBlockingQueue<>(maximumQueueSize))
+			.setThreadFactory(createThreadFactory(threadNamePrefix))
+			.setHandler(handler)
+			.build();
 	}
 
 	/**

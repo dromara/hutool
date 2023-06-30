@@ -12,36 +12,14 @@
 
 package org.dromara.hutool.core.convert;
 
-import org.dromara.hutool.core.convert.impl.AtomicBooleanConverter;
-import org.dromara.hutool.core.convert.impl.AtomicIntegerArrayConverter;
-import org.dromara.hutool.core.convert.impl.AtomicLongArrayConverter;
-import org.dromara.hutool.core.convert.impl.AtomicReferenceConverter;
-import org.dromara.hutool.core.convert.impl.BooleanConverter;
-import org.dromara.hutool.core.convert.impl.CalendarConverter;
-import org.dromara.hutool.core.convert.impl.CharacterConverter;
-import org.dromara.hutool.core.convert.impl.CharsetConverter;
-import org.dromara.hutool.core.convert.impl.ClassConverter;
-import org.dromara.hutool.core.convert.impl.CurrencyConverter;
-import org.dromara.hutool.core.convert.impl.DateConverter;
-import org.dromara.hutool.core.convert.impl.DurationConverter;
-import org.dromara.hutool.core.convert.impl.LocaleConverter;
-import org.dromara.hutool.core.convert.impl.OptConverter;
-import org.dromara.hutool.core.convert.impl.OptionalConverter;
-import org.dromara.hutool.core.convert.impl.PathConverter;
-import org.dromara.hutool.core.convert.impl.PeriodConverter;
-import org.dromara.hutool.core.convert.impl.ReferenceConverter;
-import org.dromara.hutool.core.convert.impl.StackTraceElementConverter;
-import org.dromara.hutool.core.convert.impl.StringConverter;
-import org.dromara.hutool.core.convert.impl.TemporalAccessorConverter;
-import org.dromara.hutool.core.convert.impl.TimeZoneConverter;
-import org.dromara.hutool.core.convert.impl.URIConverter;
-import org.dromara.hutool.core.convert.impl.URLConverter;
-import org.dromara.hutool.core.convert.impl.UUIDConverter;
-import org.dromara.hutool.core.convert.impl.XMLGregorianCalendarConverter;
-import org.dromara.hutool.core.convert.impl.ZoneIdConverter;
+import org.dromara.hutool.core.convert.impl.*;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.lang.Opt;
+import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Triple;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
+import org.dromara.hutool.core.reflect.TypeUtil;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -52,27 +30,9 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Currency;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicLongArray;
@@ -109,7 +69,7 @@ public class RegisterConverter implements Converter, Serializable {
 	/**
 	 * 默认类型转换器
 	 */
-	private Map<Type, Converter> defaultConverterMap;
+	private Map<Class<?>, Converter> defaultConverterMap;
 	/**
 	 * 用户自定义类型转换器
 	 */
@@ -164,7 +124,7 @@ public class RegisterConverter implements Converter, Serializable {
 	 * @return 转换器
 	 */
 	public Converter getDefaultConverter(final Type type) {
-		return (null == defaultConverterMap) ? null : defaultConverterMap.get(type);
+		return (null == defaultConverterMap) ? null : defaultConverterMap.get(TypeUtil.getClass(type));
 	}
 
 	/**
@@ -248,7 +208,6 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(AtomicLongArray.class, new AtomicLongArrayConverter());
 
 		// 其它类型
-		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
 		defaultConverterMap.put(ZoneId.class, new ZoneIdConverter());
 		defaultConverterMap.put(Locale.class, new LocaleConverter());
@@ -259,5 +218,8 @@ public class RegisterConverter implements Converter, Serializable {
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 		defaultConverterMap.put(Opt.class, new OptConverter());// since 5.7.16
+		defaultConverterMap.put(Pair.class, PairConverter.INSTANCE);// since 6.0.0
+		defaultConverterMap.put(Triple.class, TripleConverter.INSTANCE);// since 6.0.0
+		defaultConverterMap.put(Tuple.class, TupleConverter.INSTANCE);// since 6.0.0
 	}
 }

@@ -285,4 +285,26 @@ public class MapUtilTest {
 		final Map<String, Object> map = MapUtil.renameKey(v1, "name", "newName");
 		Assertions.assertEquals("张三", map.get("newName"));
 	}
+
+	@Test
+	public void removeNullValueTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", null).set("age", null);
+		final Map<String, Object> map = MapUtil.removeNullValue(v1);
+		Assertions.assertEquals(1, map.size());
+	}
+
+	@Test
+	public void issue3162Test() {
+		final Map<String, Object> map = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put("a", "1");
+				put("b", "2");
+				put("c", "3");
+			}};
+		final Map<String, Object> filtered = MapUtil.filter(map, "a", "b");
+		Assertions.assertEquals(2, filtered.size());
+		Assertions.assertEquals("1", filtered.get("a"));
+		Assertions.assertEquals("2", filtered.get("b"));
+	}
 }

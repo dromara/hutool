@@ -22,7 +22,7 @@ public class MetaUtilTest {
 	@Test
 	public void getTablesTest() {
 		final List<String> tables = MetaUtil.getTables(ds);
-		Assertions.assertEquals("user", tables.get(0));
+		Assertions.assertTrue(tables.contains("user"));
 	}
 
 	@Test
