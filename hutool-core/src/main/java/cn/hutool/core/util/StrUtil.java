@@ -488,20 +488,6 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 截断字符串，使用其按照GB18030编码为字节后不超过maxBytes长度。截断后自动追加省略号(...)
-	 * 用于存储数据库varchar且编码为GB2312，GBK，GB18030的字段
-	 *
-	 * @param str
-	 * @param maxBytes
-	 * @return
-	 */
-	public static String truncateGb18030(String str, int maxBytes) {
-		Charset charset = Charset.forName("GB18030");
-		//GB18030编码单个字符最大长度2
-		return truncateByByteLength(str, charset, maxBytes, 2, true);
-	}
-
-	/**
 	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度
 	 *
 	 * @param str        原始字符串
@@ -517,25 +503,25 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		if (str == null || str.length() * factor <= maxBytes) {
 			return str;
 		}
-		byte[] sba = str.getBytes(charset);
+		final byte[] sba = str.getBytes(charset);
 		if (sba.length <= maxBytes) {
 			return str;
 		}
 		//限制字节数
-		int limitBytes;
+		final int limitBytes;
 		if (appendDots) {
 			limitBytes = maxBytes - "...".getBytes(charset).length;
 		} else {
 			limitBytes = maxBytes;
 		}
-		ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
-		CharBuffer cb = CharBuffer.allocate(limitBytes);
-		CharsetDecoder decoder = charset.newDecoder();
+		final ByteBuffer bb = ByteBuffer.wrap(sba, 0, limitBytes);
+		final CharBuffer cb = CharBuffer.allocate(limitBytes);
+		final CharsetDecoder decoder = charset.newDecoder();
 		//忽略被截断的字符
 		decoder.onMalformedInput(CodingErrorAction.IGNORE);
 		decoder.decode(bb, cb, true);
 		decoder.flush(cb);
-		String result = new String(cb.array(), 0, cb.position());
+		final String result = new String(cb.array(), 0, cb.position());
 		if (appendDots) {
 			return result + "...";
 		}

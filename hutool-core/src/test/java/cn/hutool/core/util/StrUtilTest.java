@@ -652,7 +652,7 @@ public class StrUtilTest {
 
 	@Test
 	public void truncateUtf8Test() {
-		String str = "这是This一段中英文";
+		final String str = "这是This一段中英文";
 		String ret = StrUtil.truncateUtf8(str, 12);
 		Assert.assertEquals("这是Thi...", ret);
 
@@ -667,25 +667,9 @@ public class StrUtilTest {
 	}
 
 	@Test
-	public void truncateGb18030Test() {
-		String str = "这是This一段中英文";
-		String ret = StrUtil.truncateGb18030(str, 12);
-		Assert.assertEquals("这是This...", ret);
-
-		ret = StrUtil.truncateGb18030(str, 13);
-		Assert.assertEquals("这是This一...", ret);
-
-		ret = StrUtil.truncateGb18030(str, 14);
-		Assert.assertEquals("这是This一...", ret);
-
-		ret = StrUtil.truncateGb18030(str, 999);
-		Assert.assertEquals(str, ret);
-	}
-
-	@Test
 	public void truncateByByteLengthTest() {
-		String str = "This is English";
-		String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
+		final String str = "This is English";
+		final String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
 		Assert.assertEquals("This is En", ret);
 	}
 }

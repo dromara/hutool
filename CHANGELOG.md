@@ -10,6 +10,7 @@
 * 【core  】      Ipv4Util 新增方法：检测指定 IP 地址是否匹配通配符（pr#3171@Github）
 * 【core  】      DateUtil.parse适配6位毫秒格式（issue#I7H34N@Gitee）
 * 【core  】      RandomUtil增加可选是否包含边界的重载（issue#3182@Github）
+* 【core  】      StrUtil增加truncateByByteLength方法（pr#3176@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复MapUtil工具使用filter方法构造传入参数结果问题（issue#3162@Github）
