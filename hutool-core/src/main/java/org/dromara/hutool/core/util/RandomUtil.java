@@ -56,6 +56,8 @@ public class RandomUtil {
 	 */
 	public static final String BASE_CHAR_NUMBER = BASE_CHAR.toUpperCase() + BASE_CHAR_NUMBER_LOWER;
 
+	// region ----- get or create Random
+
 	/**
 	 * 获取随机数生成器对象<br>
 	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
@@ -165,6 +167,7 @@ public class RandomUtil {
 	public static Random getRandom(final boolean isSecure) {
 		return isSecure ? getSecureRandom() : getRandom();
 	}
+	// endregion
 
 	/**
 	 * 获得随机Boolean值
@@ -177,6 +180,18 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 随机bytes
+	 *
+	 * @param length 长度
+	 * @return bytes
+	 */
+	public static byte[] randomBytes(final int length) {
+		final byte[] bytes = new byte[length];
+		getRandom().nextBytes(bytes);
+		return bytes;
+	}
+
+	/**
 	 * 随机汉字（'\u4E00'-'\u9FFF'）
 	 *
 	 * @return 随机的汉字字符
@@ -186,16 +201,7 @@ public class RandomUtil {
 		return (char) randomInt('\u4E00', '\u9FFF');
 	}
 
-	/**
-	 * 获得指定范围内的随机数
-	 *
-	 * @param min 最小数（包含）
-	 * @param max 最大数（不包含）
-	 * @return 随机数
-	 */
-	public static int randomInt(final int min, final int max) {
-		return getRandom().nextInt(min, max);
-	}
+	// region ----- randomInt
 
 	/**
 	 * 获得随机数int值
@@ -210,26 +216,62 @@ public class RandomUtil {
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 *
-	 * @param limit 限制随机数的范围，不包括这个数
+	 * @param limitExclude 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 * @see Random#nextInt(int)
 	 */
-	public static int randomInt(final int limit) {
-		return getRandom().nextInt(limit);
+	public static int randomInt(final int limitExclude) {
+		return getRandom().nextInt(limitExclude);
 	}
 
 	/**
-	 * 获得指定范围内的随机数[min, max)
+	 * 获得指定范围内的随机数
 	 *
-	 * @param min 最小数（包含）
-	 * @param max 最大数（不包含）
+	 * @param minInclude 最小数（包含）
+	 * @param maxExclude 最大数（不包含）
 	 * @return 随机数
-	 * @see ThreadLocalRandom#nextLong(long, long)
-	 * @since 3.3.0
 	 */
-	public static long randomLong(final long min, final long max) {
-		return getRandom().nextLong(min, max);
+	public static int randomInt(final int minInclude, final int maxExclude) {
+		return randomInt(minInclude, maxExclude, true, false);
 	}
+
+	/**
+	 * 获得指定范围内的随机数
+	 *
+	 * @param min        最小数
+	 * @param max        最大数
+	 * @param includeMin 是否包含最小值
+	 * @param includeMax 是否包含最大值
+	 * @return 随机数
+	 */
+	public static int randomInt(int min, int max, final boolean includeMin, final boolean includeMax) {
+		if (!includeMin) {
+			min++;
+		}
+		if (includeMax) {
+			max--;
+		}
+		return getRandom().nextInt(min, max);
+	}
+
+	/**
+	 * 创建指定长度的随机索引
+	 *
+	 * @param length 长度
+	 * @return 随机索引
+	 * @since 5.2.1
+	 */
+	public static int[] randomInts(final int length) {
+		final int[] range = NumberUtil.range(length);
+		for (int i = 0; i < length; i++) {
+			final int random = randomInt(i, length);
+			ArrayUtil.swap(range, i, random);
+		}
+		return range;
+	}
+	// endregion
+
+	// region ----- randomLong
 
 	/**
 	 * 获得随机数
@@ -245,39 +287,114 @@ public class RandomUtil {
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 *
-	 * @param limit 限制随机数的范围，不包括这个数
+	 * @param limitExclude 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 * @see ThreadLocalRandom#nextLong(long)
 	 */
-	public static long randomLong(final long limit) {
-		return getRandom().nextLong(limit);
+	public static long randomLong(final long limitExclude) {
+		return getRandom().nextLong(limitExclude);
+	}
+
+	/**
+	 * 获得指定范围内的随机数[min, max)
+	 *
+	 * @param minInclude 最小数（包含）
+	 * @param maxExclude 最大数（不包含）
+	 * @return 随机数
+	 * @see ThreadLocalRandom#nextLong(long, long)
+	 * @since 3.3.0
+	 */
+	public static long randomLong(final long minInclude, final long maxExclude) {
+		return randomLong(minInclude, maxExclude, true, false);
 	}
 
 	/**
 	 * 获得指定范围内的随机数
 	 *
-	 * @param min 最小数（包含）
-	 * @param max 最大数（不包含）
+	 * @param min        最小数
+	 * @param max        最大数
+	 * @param includeMin 是否包含最小值
+	 * @param includeMax 是否包含最大值
+	 * @return 随机数
+	 */
+	public static long randomLong(long min, long max, final boolean includeMin, final boolean includeMax) {
+		if (!includeMin) {
+			min++;
+		}
+		if (includeMax) {
+			max--;
+		}
+		return getRandom().nextLong(min, max);
+	}
+	// endregion
+
+	// region ----- randomFloat
+
+	/**
+	 * 获得随机数[0, 1)
+	 *
+	 * @return 随机数
+	 * @see ThreadLocalRandom#nextFloat()
+	 */
+	public static float randomFloat() {
+		return getRandom().nextFloat();
+	}
+
+	/**
+	 * 获得指定范围内的随机数 [0,limit)
+	 *
+	 * @param limitExclude 限制随机数的范围，不包括这个数
+	 * @return 随机数
+	 */
+	public static float randomFloat(final float limitExclude) {
+		return randomFloat(0, limitExclude);
+	}
+
+	/**
+	 * 获得指定范围内的随机数[min, max)
+	 *
+	 * @param minInclude 最小数（包含）
+	 * @param maxExclude 最大数（不包含）
+	 * @return 随机数
+	 * @see ThreadLocalRandom#nextFloat()
+	 */
+	public static float randomFloat(final float minInclude, final float maxExclude) {
+		if (minInclude == maxExclude) {
+			return minInclude;
+		}
+
+		return minInclude + ((maxExclude - minInclude) * getRandom().nextFloat());
+	}
+	// endregion
+
+	// region ----- randomDouble
+
+	/**
+	 * 获得指定范围内的随机数
+	 *
+	 * @param minInclude 最小数（包含）
+	 * @param maxExclude 最大数（不包含）
 	 * @return 随机数
 	 * @see ThreadLocalRandom#nextDouble(double, double)
 	 * @since 3.3.0
 	 */
-	public static double randomDouble(final double min, final double max) {
-		return getRandom().nextDouble(min, max);
+	public static double randomDouble(final double minInclude, final double maxExclude) {
+		return getRandom().nextDouble(minInclude, maxExclude);
 	}
 
 	/**
 	 * 获得指定范围内的随机数
 	 *
-	 * @param min          最小数（包含）
-	 * @param max          最大数（不包含）
+	 * @param minInclude   最小数（包含）
+	 * @param maxExclude   最大数（不包含）
 	 * @param scale        保留小数位数
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 随机数
 	 * @since 4.0.8
 	 */
-	public static double randomDouble(final double min, final double max, final int scale, final RoundingMode roundingMode) {
-		return NumberUtil.round(randomDouble(min, max), scale, roundingMode).doubleValue();
+	public static double randomDouble(final double minInclude, final double maxExclude, final int scale,
+									  final RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(minInclude, maxExclude), scale, roundingMode).doubleValue();
 	}
 
 	/**
@@ -327,6 +444,9 @@ public class RandomUtil {
 	public static double randomDouble(final double limit, final int scale, final RoundingMode roundingMode) {
 		return NumberUtil.round(randomDouble(limit), scale, roundingMode).doubleValue();
 	}
+	// endregion
+
+	// region ----- randomBigDecimal
 
 	/**
 	 * 获得指定范围内的随机数[0, 1)
@@ -341,37 +461,28 @@ public class RandomUtil {
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 *
-	 * @param limit 最大数（不包含）
+	 * @param limitExclude 最大数（不包含）
 	 * @return 随机数
 	 * @since 4.0.9
 	 */
-	public static BigDecimal randomBigDecimal(final BigDecimal limit) {
-		return NumberUtil.toBigDecimal(getRandom().nextDouble(limit.doubleValue()));
+	public static BigDecimal randomBigDecimal(final BigDecimal limitExclude) {
+		return NumberUtil.toBigDecimal(getRandom().nextDouble(limitExclude.doubleValue()));
 	}
 
 	/**
 	 * 获得指定范围内的随机数
 	 *
-	 * @param min 最小数（包含）
-	 * @param max 最大数（不包含）
+	 * @param minInclude 最小数（包含）
+	 * @param maxExclude 最大数（不包含）
 	 * @return 随机数
 	 * @since 4.0.9
 	 */
-	public static BigDecimal randomBigDecimal(final BigDecimal min, final BigDecimal max) {
-		return NumberUtil.toBigDecimal(getRandom().nextDouble(min.doubleValue(), max.doubleValue()));
+	public static BigDecimal randomBigDecimal(final BigDecimal minInclude, final BigDecimal maxExclude) {
+		return NumberUtil.toBigDecimal(getRandom().nextDouble(minInclude.doubleValue(), maxExclude.doubleValue()));
 	}
+	// endregion
 
-	/**
-	 * 随机bytes
-	 *
-	 * @param length 长度
-	 * @return bytes
-	 */
-	public static byte[] randomBytes(final int length) {
-		final byte[] bytes = new byte[length];
-		getRandom().nextBytes(bytes);
-		return bytes;
-	}
+	// region ----- randomEle
 
 	/**
 	 * 随机获得列表中的元素
@@ -470,8 +581,8 @@ public class RandomUtil {
 	/**
 	 * 生成从种子中获取随机数字
 	 *
-	 * @param size  指定产生随机数的个数
-	 * @param seed  种子，用于取随机数的int池
+	 * @param size 指定产生随机数的个数
+	 * @param seed 种子，用于取随机数的int池
 	 * @return 随机int数组
 	 * @since 5.4.5
 	 */
@@ -514,22 +625,9 @@ public class RandomUtil {
 
 		return result;
 	}
+	// endregion
 
-	/**
-	 * 创建指定长度的随机索引
-	 *
-	 * @param length 长度
-	 * @return 随机索引
-	 * @since 5.2.1
-	 */
-	public static int[] randomInts(final int length) {
-		final int[] range = NumberUtil.range(length);
-		for (int i = 0; i < length; i++) {
-			final int random = randomInt(i, length);
-			ArrayUtil.swap(range, i, random);
-		}
-		return range;
-	}
+	// region ----- randomString
 
 	/**
 	 * 获得一个随机的字符串（只包含数字和大小写字母）
@@ -596,7 +694,7 @@ public class RandomUtil {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}
-		if(length < 1){
+		if (length < 1) {
 			length = 1;
 		}
 
@@ -608,6 +706,9 @@ public class RandomUtil {
 		}
 		return sb.toString();
 	}
+	// endregion
+
+	// region ---- randomChar
 
 	/**
 	 * 随机数字，数字为0~9单个数字
@@ -639,6 +740,9 @@ public class RandomUtil {
 	public static char randomChar(final String baseString) {
 		return baseString.charAt(randomInt(baseString.length()));
 	}
+	// endregion
+
+	// region ----- weightRandom
 
 	/**
 	 * 带有权重的随机生成器
@@ -663,6 +767,9 @@ public class RandomUtil {
 	public static <T> WeightRandomSelector<T> weightRandom(final Iterable<WeightObj<T>> weightObjs) {
 		return new WeightRandomSelector<>(weightObjs);
 	}
+	// endregion
+
+	// region ----- randomDate
 
 	/**
 	 * 以当天为基准，随机产生一个日期
@@ -693,5 +800,5 @@ public class RandomUtil {
 
 		return DateUtil.offset(baseDate, dateField, randomInt(min, max));
 	}
-
+	// endregion
 }

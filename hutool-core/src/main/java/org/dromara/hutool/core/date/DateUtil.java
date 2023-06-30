@@ -57,6 +57,7 @@ public class DateUtil extends CalendarUtil {
 			"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"// 时间标准
 	};
 
+	// region  ----- date
 	/**
 	 * 当前时间，转换为{@link DateTime}对象
 	 *
@@ -184,6 +185,7 @@ public class DateUtil extends CalendarUtil {
 		}
 		return new DateTime(temporalAccessor);
 	}
+	// endregion
 
 	/**
 	 * 当前时间的时间戳
@@ -1688,6 +1690,7 @@ public class DateUtil extends CalendarUtil {
 		return sb.toString();
 	}
 
+	// region ----- range
 	/**
 	 * 创建日期范围生成器
 	 *
@@ -1793,6 +1796,7 @@ public class DateUtil extends CalendarUtil {
 	public static List<DateTime> rangeToList(final Date start, final Date end, final DateField unit, final int step) {
 		return ListUtil.of((Iterable<DateTime>) new DateRange(start, end, unit, step));
 	}
+	// endregion
 
 	/**
 	 * 通过生日计算星座
