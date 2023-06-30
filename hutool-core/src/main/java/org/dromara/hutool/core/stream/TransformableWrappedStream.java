@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.stream;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -486,6 +487,16 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 		return wrap(flatMap(recursive).peek(e -> childrenSetter.accept(e, null)));
 	}
 
+	/**
+	 * 如果当前元素是集合，则会解构当前集合
+	 *
+	 * @param clazz 解构后元素的类型
+	 * @param <R>   函数执行后返回的类型
+	 * @return EasyStream 一个流
+	 */
+	default <R> EasyStream<R> flatObj(Class<R> clazz) {
+		return EasyStream.of(CollUtil.flat(nonNull().collect(Collectors.toList()))).map(clazz::cast);
+	}
 	// endregion
 
 	// region ============ map ============

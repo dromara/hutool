@@ -2357,7 +2357,7 @@ public class CollUtil {
 	}
 
 	/**
-	 * 结构多层集合
+	 * 解构多层集合
 	 * 例如：List<List<List<String>>> 解构成 List<String>
 	 *
 	 * @param collection 需要解构的集合
@@ -2371,7 +2371,7 @@ public class CollUtil {
 	 * 结构多层集合
 	 * 例如：List<List<List<String>>> 解构成 List<String>
 	 * <p>
-	 * skipNull的作用是当集合里面有个值为空，当为true是解构后的集合里面没有null值，如果为false则会在解构后的集合里面有努力了。
+	 * skipNull如果为true, 则解构后的集合里不包含null值，为false则会包含null值。
 	 *
 	 * @param collection 需要结构的集合
 	 * @param skipNull   是否跳过空的值

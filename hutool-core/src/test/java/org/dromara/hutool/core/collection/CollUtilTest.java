@@ -1,40 +1,19 @@
 package org.dromara.hutool.core.collection;
 
+import lombok.*;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.comparator.CompareUtil;
-import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.StrUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -1229,4 +1208,5 @@ public class CollUtilTest {
 		List<Object> flat = CollUtil.flat(list, false);
 		Assertions.assertArrayEquals(new String[]{"a", "b", "c", null, "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
 	}
+
 }

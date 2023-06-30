@@ -708,4 +708,23 @@ public class AbstractEnhancedWrappedStreamTest {
 		private List<Tree> children;
 	}
 
+
+
+	@Test
+	void test() {
+		List<List<List<String>>> list = Arrays.asList(
+			Arrays.asList(
+				Arrays.asList("a"),
+				Arrays.asList("b", "c"),
+				Arrays.asList("d", "e", "f")
+			),
+			Arrays.asList(
+				Arrays.asList("g", "h", "i"),
+				Arrays.asList("j", "k", "l")
+			)
+		);
+		List<String> r = EasyStream.of(list).flatObj(String.class).toList();
+		Assertions.assertArrayEquals(new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"}, r.toArray());
+	}
+
 }
