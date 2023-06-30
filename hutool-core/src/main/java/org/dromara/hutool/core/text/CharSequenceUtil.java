@@ -3189,6 +3189,18 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 截断字符串，使用UTF8编码为字节后不超过maxBytes长度
+	 *
+	 * @param str            原始字符串
+	 * @param maxBytesLength 最大字节数
+	 * @param appendDots     截断后是否追加省略号(...)
+	 * @return 限制后的长度
+	 */
+	public static String limitByteLengthUtf8(final String str, final int maxBytesLength, final boolean appendDots) {
+		return limitByteLength(str, CharsetUtil.UTF_8, maxBytesLength, 4, appendDots);
+	}
+
+	/**
 	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度
 	 *
 	 * @param str            原始字符串
