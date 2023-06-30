@@ -18,6 +18,8 @@ import org.dromara.hutool.core.text.StrUtil;
 import java.math.BigInteger;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 /**
  * 数学相关方法工具类<br>
  * 此工具类与{@link NumberUtil}属于一类工具，NumberUtil偏向于简单数学计算的封装，MathUtil偏向复杂数学计算
@@ -31,11 +33,12 @@ public class MathUtil {
 	 * 0-20对应的阶乘，超过20的阶乘会超过Long.MAX_VALUE
 	 */
 	private static final long[] FACTORIALS = new long[]{
-			1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
-			87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
-			2432902008176640000L};
+		1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L, 6227020800L,
+		87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L, 121645100408832000L,
+		2432902008176640000L};
 
 	//--------------------------------------------------------------------------------------------- Arrangement
+
 	/**
 	 * 计算排列数，即A(n, m) = n!/(n-m)!
 	 *
@@ -61,7 +64,7 @@ public class MathUtil {
 	 * 排列选择（从列表中选择n个排列）
 	 *
 	 * @param datas 待选列表
-	 * @param m 选择个数
+	 * @param m     选择个数
 	 * @return 所有排列列表
 	 */
 	public static List<String[]> arrangementSelect(final String[] datas, final int m) {
@@ -79,6 +82,7 @@ public class MathUtil {
 	}
 
 	//--------------------------------------------------------------------------------------------- Combination
+
 	/**
 	 * 计算组合数，即C(n, m) = n!/((n-m)!* m!)
 	 *
@@ -94,7 +98,7 @@ public class MathUtil {
 	 * 组合选择（从列表中选择n个组合）
 	 *
 	 * @param datas 待选列表
-	 * @param m 选择个数
+	 * @param m     选择个数
 	 * @return 所有组合列表
 	 */
 	public static List<String[]> combinationSelect(final String[] datas, final int m) {
@@ -270,19 +274,57 @@ public class MathUtil {
 	}
 
 	/**
-	 * 最大公约数
+	 * 最大公约数<br>
+	 * 见：https://stackoverflow.com/questions/4009198/java-get-greatest-common-divisor<br>
+	 * 来自Guava的IntMath.gcd
 	 *
-	 * @param m 第一个值
-	 * @param n 第二个值
+	 * @param a 第一个值
+	 * @param b 第二个值
 	 * @return 最大公约数
 	 */
-	public static int divisor(int m, int n) {
-		while (m % n != 0) {
-			final int temp = m % n;
-			m = n;
-			n = temp;
+	public static int gcd(int a, int b) {
+		/*
+		 * The reason we require both arguments to be >= 0 is because otherwise, what do you return on
+		 * gcd(0, Integer.MIN_VALUE)? BigInteger.gcd would return positive 2^31, but positive 2^31
+		 * isn't an int.
+		 */
+		Assert.isTrue(a >= 0, "a must be >= 0");
+		Assert.isTrue(b >= 0, "b must be >= 0");
+		if (a == 0) {
+			// 0 % b == 0, so b divides a, but the converse doesn't hold.
+			// BigInteger.gcd is consistent with this decision.
+			return b;
+		} else if (b == 0) {
+			return a; // similar logic
 		}
-		return n;
+		/*
+		 * Uses the binary GCD algorithm; see http://en.wikipedia.org/wiki/Binary_GCD_algorithm.
+		 * This is >40% faster than the Euclidean algorithm in benchmarks.
+		 */
+		final int aTwos = Integer.numberOfTrailingZeros(a);
+		a >>= aTwos; // divide out all 2s
+		final int bTwos = Integer.numberOfTrailingZeros(b);
+		b >>= bTwos; // divide out all 2s
+		while (a != b) { // both a, b are odd
+			// The key to the binary GCD algorithm is as follows:
+			// Both a and b are odd.  Assume a > b; then gcd(a - b, b) = gcd(a, b).
+			// But in gcd(a - b, b), a - b is even and b is odd, so we can divide out powers of two.
+
+			// We bend over backwards to avoid branching, adapting a technique from
+			// http://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
+
+			final int delta = a - b; // can't overflow, since a and b are nonnegative
+
+			final int minDeltaOrZero = delta & (delta >> (Integer.SIZE - 1));
+			// equivalent to Math.min(delta, 0)
+
+			a = delta - minDeltaOrZero - minDeltaOrZero; // sets a to Math.abs(a - b)
+			// a is now nonnegative and even
+
+			b += minDeltaOrZero; // sets b to min(old a, b)
+			a >>= Integer.numberOfTrailingZeros(a); // divide out all 2s, since 2 doesn't divide b
+		}
+		return a << min(aTwos, bTwos);
 	}
 
 	/**
@@ -293,7 +335,7 @@ public class MathUtil {
 	 * @return 最小公倍数
 	 */
 	public static int multiple(final int m, final int n) {
-		return m * n / divisor(m, n);
+		return m * n / gcd(m, n);
 	}
 
 	private static int mathSubNode(final int selectNum, final int minNum) {
