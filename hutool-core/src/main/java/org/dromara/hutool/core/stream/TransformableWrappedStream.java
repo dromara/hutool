@@ -488,8 +488,8 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	}
 
 	/**
-	 * 如果当前元素是集合，则会解构当前集合
-	 *
+	 * 如果当前元素是集合，则会将集合中的元素解构出来
+	 * 例如：List&lt;List&lt;List&lt;String&gt;&gt;&gt; 解构成 List&lt;String&gt;
 	 * @param clazz 解构后元素的类型
 	 * @param <R>   函数执行后返回的类型
 	 * @return EasyStream 一个流
