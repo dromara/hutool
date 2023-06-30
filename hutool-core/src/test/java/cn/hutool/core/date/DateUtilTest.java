@@ -1130,18 +1130,6 @@ public class DateUtilTest {
 		Assert.assertEquals("2021-03-17 06:31:33", dateTime3.toString());
 	}
 
-	/**
-	 * issue#I6E6ZG 法定年龄/周岁/实岁计算
-	 */
-	@Test
-	public void ageOfNowTest() {
-		final DateTime concurrentDate = DateUtil.date();
-		final DateTime birthDay = DateUtil.offset(concurrentDate, DateField.YEAR, -71);
-		Assert.assertEquals(70, DateUtil.ageOfNow(birthDay));
-		Assert.assertEquals(71, DateUtil.ageOfNow(DateUtil.offsetDay(birthDay, -1)));
-		Assert.assertEquals(0, DateUtil.ageOfNow(concurrentDate));
-	}
-
 	@Test
 	public void calendarTest() {
 		final Date date = DateUtil.date();

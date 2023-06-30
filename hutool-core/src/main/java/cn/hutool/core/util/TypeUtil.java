@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.reflect.ActualTypeMapperPool;
 
@@ -9,6 +10,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -263,24 +266,70 @@ public class TypeUtil {
 	 * @return {@link ParameterizedType}
 	 * @since 4.5.2
 	 */
-	public static ParameterizedType toParameterizedType(Type type) {
-		ParameterizedType result = null;
+	public static ParameterizedType toParameterizedType(final Type type) {
+		return toParameterizedType(type, 0);
+	}
+
+	/**
+	 * 将{@link Type} 转换为{@link ParameterizedType}<br>
+	 * {@link ParameterizedType}用于获取当前类或父类中泛型参数化后的类型<br>
+	 * 一般用于获取泛型参数具体的参数类型，例如：
+	 *
+	 * <pre>{@code
+	 *   class A<T>
+	 *   class B extends A<String>;
+	 * }</pre>
+	 * <p>
+	 * 通过此方法，传入B.class即可得到B对应的{@link ParameterizedType}，从而获取到String
+	 *
+	 * @param type           {@link Type}
+	 * @param interfaceIndex 实现的第几个接口
+	 * @return {@link ParameterizedType}
+	 * @since 4.5.2
+	 */
+	public static ParameterizedType toParameterizedType(final Type type, final int interfaceIndex) {
 		if (type instanceof ParameterizedType) {
-			result = (ParameterizedType) type;
-		} else if (type instanceof Class) {
-			final Class<?> clazz = (Class<?>) type;
-			Type genericSuper = clazz.getGenericSuperclass();
-			if (null == genericSuper || Object.class.equals(genericSuper)) {
-				// 如果类没有父类，而是实现一些定义好的泛型接口，则取接口的Type
-				final Type[] genericInterfaces = clazz.getGenericInterfaces();
-				if (ArrayUtil.isNotEmpty(genericInterfaces)) {
-					// 默认取第一个实现接口的泛型Type
-					genericSuper = genericInterfaces[0];
+			return (ParameterizedType) type;
+		}
+
+		if (type instanceof Class) {
+			final ParameterizedType[] generics = getGenerics((Class<?>) type);
+			if(generics.length > interfaceIndex){
+				return generics[interfaceIndex];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 获取指定类所有泛型父类和泛型接口
+	 *
+	 * @param clazz 类
+	 * @return 泛型父类或接口数组
+	 * @since 6.0.0
+	 */
+	public static ParameterizedType[] getGenerics(final Class<?> clazz) {
+		final List<ParameterizedType> result = new ArrayList<>();
+		// 泛型父类（父类及祖类优先级高）
+		final Type genericSuper = clazz.getGenericSuperclass();
+		if(null != genericSuper && !Object.class.equals(genericSuper)){
+			final ParameterizedType parameterizedType = toParameterizedType(genericSuper);
+			if(null != parameterizedType){
+				result.add(parameterizedType);
+			}
+		}
+
+		// 泛型接口
+		final Type[] genericInterfaces = clazz.getGenericInterfaces();
+		if (ArrayUtil.isNotEmpty(genericInterfaces)) {
+			for (final Type genericInterface : genericInterfaces) {
+				if (genericInterface instanceof ParameterizedType) {
+					result.add((ParameterizedType) genericInterface);
 				}
 			}
-			result = toParameterizedType(genericSuper);
 		}
-		return result;
+		return result.toArray(new ParameterizedType[0]);
 	}
 
 	/**
