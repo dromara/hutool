@@ -3196,7 +3196,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @param appendDots     截断后是否追加省略号(...)
 	 * @return 限制后的长度
 	 */
-	public static String limitByteLengthUtf8(final String str, final int maxBytesLength, final boolean appendDots) {
+	public static String limitByteLengthUtf8(final CharSequence str, final int maxBytesLength, final boolean appendDots) {
 		return limitByteLength(str, CharsetUtil.UTF_8, maxBytesLength, 4, appendDots);
 	}
 
@@ -3210,15 +3210,15 @@ public class CharSequenceUtil extends StrValidator {
 	 * @param appendDots     截断后是否追加省略号(...)
 	 * @return 限制后的长度
 	 */
-	public static String limitByteLength(final String str, final Charset charset, final int maxBytesLength,
+	public static String limitByteLength(final CharSequence str, final Charset charset, final int maxBytesLength,
 										 final int factor, final boolean appendDots) {
 		//字符数*速算因子<=最大字节数
 		if (str == null || str.length() * factor <= maxBytesLength) {
-			return str;
+			return str(str);
 		}
-		final byte[] sba = str.getBytes(charset);
+		final byte[] sba = ByteUtil.toBytes(str, charset);
 		if (sba.length <= maxBytesLength) {
-			return str;
+			return str(str);
 		}
 		//限制字节数
 		final int limitBytes;
