@@ -12,21 +12,28 @@
 
 package org.dromara.hutool.db;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 public class IssueI7GUKOTest {
+
 	@Test
 	void entityTest() {
 		final Entity entity = Entity.of("data")
-			.set("sort", "test")
+			.set("sort", "")
 			.set("pcode", "test")
-			.set("code", "test")
+			.set("code", "")
 			.set("define", "test")
-			.set("icon", "test")
+			.set("icon", "")
 			.set("label", "test")
 			.set("stu", "test");
 
 		Assertions.assertEquals("[sort, pcode, code, define, icon, label, stu]", entity.keySet().toString());
+
+		final Set<String> keys = CollUtil.removeEmpty(entity.keySet());
+		Assertions.assertEquals("[sort, pcode, code, define, icon, label, stu]", keys.toString());
 	}
 }

@@ -305,7 +305,7 @@ public class TypeUtil {
 
 		if (type instanceof Class) {
 			final ParameterizedType[] generics = getGenerics((Class<?>) type);
-			if(generics.length > interfaceIndex){
+			if (generics.length > interfaceIndex) {
 				return generics[interfaceIndex];
 			}
 		}
@@ -315,6 +315,10 @@ public class TypeUtil {
 
 	/**
 	 * 获取指定类所有泛型父类和泛型接口
+	 * <ul>
+	 *     <li>指定类及其所有的泛型父类</li>
+	 *     <li>指定类实现的直接泛型接口</li>
+	 * </ul>
 	 *
 	 * @param clazz 类
 	 * @return 泛型父类或接口数组
@@ -324,9 +328,9 @@ public class TypeUtil {
 		final List<ParameterizedType> result = ListUtil.of(false);
 		// 泛型父类（父类及祖类优先级高）
 		final Type genericSuper = clazz.getGenericSuperclass();
-		if(null != genericSuper && !Object.class.equals(genericSuper)){
+		if (null != genericSuper && !Object.class.equals(genericSuper)) {
 			final ParameterizedType parameterizedType = toParameterizedType(genericSuper);
-			if(null != parameterizedType){
+			if (null != parameterizedType) {
 				result.add(parameterizedType);
 			}
 		}
