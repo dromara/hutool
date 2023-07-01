@@ -2378,8 +2378,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static List<Object> flat(Collection<?> collection, boolean skipNull) {
-		LinkedList queue = EasyStream.of(collection)
-			.collect(Collectors.toCollection(LinkedList::new));
+		LinkedList<Object> queue = new LinkedList<>(collection);
 
 		List<Object> result = new ArrayList<>();
 
