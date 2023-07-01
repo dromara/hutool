@@ -2385,12 +2385,10 @@ public class CollUtil {
 		while (!queue.isEmpty()) {
 			Object t = queue.removeFirst();
 
-			if (skipNull && t == null) {
-				continue;
-			}
-
 			if (t instanceof Collection) {
 				queue.addAll((Collection<?>) t);
+			} else if (skipNull && t == null) {
+				continue;
 			} else {
 				result.add(t);
 			}
