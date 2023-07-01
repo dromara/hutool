@@ -2368,7 +2368,7 @@ public class CollUtil {
 	}
 
 	/**
-	 * 结构多层集合
+	 * 解构多层集合
 	 * 例如：List&lt;List&lt;List&lt;String&gt;&gt;&gt; 解构成 List&lt;String&gt;
 	 * skipNull如果为true, 则解构后的集合里不包含null值，为false则会包含null值。
 	 *
