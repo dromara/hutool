@@ -723,7 +723,7 @@ public class AbstractEnhancedWrappedStreamTest {
 				Arrays.asList("j", "k", "l")
 			)
 		);
-		List<String> r = EasyStream.of(list).flatObj(String.class).toList();
+		List<String> r = EasyStream.of(list).<String>flat().toList();
 		Assertions.assertArrayEquals(new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"}, r.toArray());
 	}
 
