@@ -34,7 +34,6 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
-import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.stream.StreamUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
