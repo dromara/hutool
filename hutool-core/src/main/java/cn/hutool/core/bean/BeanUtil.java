@@ -994,15 +994,17 @@ public class BeanUtil {
 			return false;
 		}
 
-		Map<String, Object> sourceFieldsMap = BeanUtil.beanToMap(source);
-		Map<String, Object> targetFieldsMap = BeanUtil.beanToMap(target);
+		final Map<String, Object> sourceFieldsMap = BeanUtil.beanToMap(source);
+		final Map<String, Object> targetFieldsMap = BeanUtil.beanToMap(target);
 
-		Set<String> sourceFields = sourceFieldsMap.keySet();
+		final Set<String> sourceFields = sourceFieldsMap.keySet();
 		sourceFields.removeAll(Arrays.asList(ignoreProperties));
 
 		for (String field : sourceFields) {
-			if (ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))) {
-				return false;
+			if(sourceFieldsMap.containsKey(field) && targetFieldsMap.containsKey(field)){
+				if (ObjectUtil.notEqual(sourceFieldsMap.get(field), targetFieldsMap.get(field))) {
+					return false;
+				}
 			}
 		}
 
