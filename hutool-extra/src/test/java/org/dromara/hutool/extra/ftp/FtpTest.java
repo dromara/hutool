@@ -1,5 +1,6 @@
 package org.dromara.hutool.extra.ftp;
 
+import org.apache.commons.net.ftp.FTPSClient;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -10,6 +11,18 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 public class FtpTest {
+
+	@Test
+	@Disabled
+	public void ftpsTest() {
+		final FTPSClient ftpsClient = new FTPSClient();
+		final Ftp ftp = new Ftp(ftpsClient);
+
+		ftp.cd("/file/aaa");
+		Console.log(ftp.pwd());
+
+		IoUtil.closeQuietly(ftp);
+	}
 
 	@Test
 	@Disabled
