@@ -1,5 +1,6 @@
 package org.dromara.hutool.crypto.asymmetric;
 
+import org.bouncycastle.jce.spec.IESParameterSpec;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,15 +10,23 @@ public class ECIESTest {
 	@Test
 	public void eciesTest(){
 		final ECIES ecies = new ECIES();
+		final IESParameterSpec iesParameterSpec = new IESParameterSpec(null, null, 128);
+		ecies.setAlgorithmParameterSpec(iesParameterSpec);
 
 		doTest(ecies, ecies);
 	}
 
 	@Test
 	public void eciesTest2(){
+		final IESParameterSpec iesParameterSpec = new IESParameterSpec(null, null, 128);
+
 		final ECIES ecies = new ECIES();
+		ecies.setAlgorithmParameterSpec(iesParameterSpec);
+
 		final byte[] privateKeyBytes = ecies.getPrivateKey().getEncoded();
 		final ECIES ecies2 = new ECIES(privateKeyBytes, null);
+		ecies2.setAlgorithmParameterSpec(iesParameterSpec);
+
 
 		doTest(ecies, ecies2);
 	}
