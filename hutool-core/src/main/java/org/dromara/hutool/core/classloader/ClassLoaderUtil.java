@@ -13,6 +13,8 @@
 package org.dromara.hutool.core.classloader;
 
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.lang.caller.CallerUtil;
 import org.dromara.hutool.core.reflect.ClassDescUtil;
 
 import java.io.File;
@@ -27,19 +29,21 @@ import java.io.File;
 public class ClassLoaderUtil {
 
 	/**
-	 * 获取{@link ClassLoader}<br>
-	 * 获取顺序如下：<br>
-	 *
-	 * <pre>
-	 * 1、获取当前线程的ContextClassLoader
-	 * 2、获取当前类对应的ClassLoader
-	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
-	 * </pre>
+	 * 获取{@link ClassLoader}，获取顺序如下：
+	 * <ol>
+	 *     <li>获取调用者的ContextClassLoader</li>
+	 *     <li>获取当前线程的ContextClassLoader</li>
+	 *     <li>获取ClassLoaderUtil对应的ClassLoader</li>
+	 *     <li>获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）</li>
+	 * </ol>
 	 *
 	 * @return 类加载器
 	 */
 	public static ClassLoader getClassLoader() {
-		ClassLoader classLoader = getContextClassLoader();
+		ClassLoader classLoader = CallerUtil.getCallerCaller().getClassLoader();
+		if(null == classLoader){
+			classLoader = getContextClassLoader();
+		}
 		if (classLoader == null) {
 			classLoader = ClassLoaderUtil.class.getClassLoader();
 			if (null == classLoader) {
@@ -47,6 +51,16 @@ public class ClassLoaderUtil {
 			}
 		}
 		return classLoader;
+	}
+
+	/**
+	 * 获取调用者的{@link ClassLoader}
+	 *
+	 * @return {@link ClassLoader}
+	 * @since 6.0.0
+	 */
+	public static ClassLoader getCallerClassLoader() {
+		return CallerUtil.getCallerCaller().getClassLoader();
 	}
 
 	/**

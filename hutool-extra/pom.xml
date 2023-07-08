@@ -32,7 +32,7 @@
 		<Automatic-Module-Name>org.dromara.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.14.1.RELEASE</beetl.version>
+		<beetl.version>3.15.6.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<enjoy.version>4.9.21</enjoy.version>
@@ -43,7 +43,7 @@
 		<zxing.version>3.5.1</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
-		<spring-boot.version>2.7.10</spring-boot.version>
+		<spring-boot.version>2.7.13</spring-boot.version>
 	</properties>
 
 	<dependencies>

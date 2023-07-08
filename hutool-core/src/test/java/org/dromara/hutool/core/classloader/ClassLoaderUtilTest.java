@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 public class ClassLoaderUtilTest {
 
 	@Test
+	void getCallerClassLoaderTest() {
+		final ClassLoader callerClassLoader = ClassLoaderUtil.getCallerClassLoader();
+		Assertions.assertEquals(ClassLoaderUtilTest.class.getClassLoader(), callerClassLoader);
+	}
+
+	@Test
 	public void isPresentTest() {
 		final boolean present = ClassLoaderUtil.isPresent("org.dromara.hutool.core.classloader.ClassLoaderUtil");
 		Assertions.assertTrue(present);
