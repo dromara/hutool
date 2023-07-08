@@ -19,7 +19,7 @@
 	<properties>
 		<Automatic-Module-Name>cn.hutool.crypto</Automatic-Module-Name>
 		<!-- versions -->
-		<bouncycastle.version>1.74</bouncycastle.version>
+		<bouncycastle.version>1.75</bouncycastle.version>
 	</properties>
 
 	<dependencies>
