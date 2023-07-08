@@ -16,7 +16,6 @@ import java.util.Map;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SpringUtilWithAutoConfigTest.Demo2.class})
-//@Import(spring.org.dromara.hutool.extra.SpringUtil.class)
 @EnableAutoConfiguration
 public class SpringUtilWithAutoConfigTest {
 

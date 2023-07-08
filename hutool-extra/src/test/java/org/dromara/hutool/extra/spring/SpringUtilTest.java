@@ -21,6 +21,8 @@ import java.util.Map;
 //@Import(spring.org.dromara.hutool.extra.SpringUtil.class)
 public class SpringUtilTest {
 
+
+
 	/**
 	 * 注册验证bean
 	 */

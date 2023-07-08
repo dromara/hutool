@@ -12,20 +12,14 @@
 
 package org.dromara.hutool.extra.spring;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -42,28 +36,15 @@ import java.util.Map;
  * @author loolly
  * @since 5.1.0
  */
-@Component
-public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextAware {
+public class SpringUtil implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-	/**
-	 * "@PostConstruct"注解标记的类中，由于ApplicationContext还未加载，导致空指针<br>
-	 * 因此实现BeanFactoryPostProcessor注入ConfigurableListableBeanFactory实现bean的操作
-	 */
-	private static ConfigurableListableBeanFactory beanFactory;
 	/**
 	 * Spring应用上下文环境
 	 */
-	private static ApplicationContext applicationContext;
+	private static ConfigurableApplicationContext applicationContext;
 
-	@SuppressWarnings("NullableProblems")
 	@Override
-	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		SpringUtil.beanFactory = beanFactory;
-	}
-
-	@SuppressWarnings("NullableProblems")
-	@Override
-	public void setApplicationContext(final ApplicationContext applicationContext) {
+	public void initialize(final ConfigurableApplicationContext applicationContext) {
 		SpringUtil.applicationContext = applicationContext;
 	}
 
@@ -83,7 +64,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.7.0
 	 */
 	public static ListableBeanFactory getBeanFactory() {
-		final ListableBeanFactory factory =  null == beanFactory ? applicationContext : beanFactory;
+		final ListableBeanFactory factory = applicationContext;
 		if(null == factory){
 			throw new HutoolException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
 		}
@@ -98,15 +79,7 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.7.7
 	 */
 	public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws HutoolException {
-		final ConfigurableListableBeanFactory factory;
-		if (null != beanFactory) {
-			factory = beanFactory;
-		} else if (applicationContext instanceof ConfigurableApplicationContext) {
-			factory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
-		} else {
-			throw new HutoolException("No ConfigurableListableBeanFactory from context!");
-		}
-		return factory;
+		return applicationContext.getBeanFactory();
 	}
 
 	//通过name获取 Bean.
