@@ -37,7 +37,7 @@
 		<!-- 测试特殊算法 -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15to18</artifactId>
+			<artifactId>bcpkix-jdk18on</artifactId>
 			<version>${bouncycastle.version}</version>
 			<scope>test</scope>
 		</dependency>
