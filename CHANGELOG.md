@@ -2,6 +2,27 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.20(2023-06-16)
+
+### 🐣新特性
+* 【core  】      UrlQuery增加setStrict方法，区分是否严格模式（issue#I78PB1@Gitee）
+* 【poi   】      添加系列方法writeCol，以支持按列输出（pr#1003@Gitee）
+* 【core  】      CollUtil新增anyMatch和allMatch方法（pr#1008@Gitee）
+* 【core  】      CsvWriter如果开启了append=true，默认自动开启endingLineBreak=true（pr#1010@Gitee）
+
+### 🐞Bug修复
+* 【core  】      修复TreeUtil.getParentsName()获取到的路径集合中存在值为null的路径名称问题（issue#I795IN@Gitee）
+* 【core  】      修复umberUtil.parseNumber对+解析问题（issue#I79VS7@Gitee）
+* 【core  】      修复IdcardUtil.getGenderByIdCard存在潜在的异常（pr#1007@Gitee）
+* 【core  】      修复Table#contains空指针问题（issue#3135@Gitee）
+* 【core  】      修复FileUtil.checkSlip方法缺陷（issue#3140@Github）
+* 【extra 】      修复Sftp中exists方法父目录不存在时报错（issue#I7CSQ9@Gitee）
+* 【extra 】      修复xml转json再转bean失败问题（issue#3139@Github）
+* 【poi   】      修复RowUtil传入参数错误问题（issue#3139@Github）
+* 【core  】      修复XmlUtil.xmlToBean空节点转换失败问题（issue#3136@Github）
+* 【core  】      修复CVE-2023-3276漏洞，XmlUtil.readBySax问题（issue#I7DX8W@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
 # 5.8.19(2023-05-27)
 
 ### 🐣新特性

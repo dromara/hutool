@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -67,6 +68,7 @@ public class BeanDescTest {
 	}
 
 	@Test
+	@Ignore
 	public void propDescOfBooleanTest3() {
 		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
 

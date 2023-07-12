@@ -113,6 +113,11 @@ public abstract class AbstractFtp implements Closeable {
 		}
 		// 文件验证
 		final String dir = StrUtil.emptyToDefault(StrUtil.removeSuffix(path, fileName), ".");
+		// issue#I7CSQ9 检查父目录为目录且是否存在
+		if(false == isDir(dir)){
+			return false;
+		}
+
 		final List<String> names;
 		try {
 			names = ls(dir);

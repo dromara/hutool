@@ -61,6 +61,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void addTest5() {
+		final double add = NumberUtil.add(1686036549717D, 1000D);
+		Assert.assertEquals(1686036550717D, add, 0);
+	}
+
+	@Test
 	public void isIntegerTest() {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));
@@ -599,5 +605,13 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("1"),new BigDecimal("0"),new BigDecimal("2")));
 		Assert.assertFalse(NumberUtil.isIn(new BigDecimal("0.23"),new BigDecimal("0.12"),new BigDecimal("0.22")));
 		Assert.assertTrue(NumberUtil.isIn(new BigDecimal("-0.12"),new BigDecimal("-0.3"),new BigDecimal("0")));
+	}
+
+	@Test
+	public void issueI79VS7Test() {
+		final String value = "+0.003";
+		if(NumberUtil.isNumber(value)) {
+			Assert.assertEquals(0.003, NumberUtil.parseNumber(value).doubleValue(), 0);
+		}
 	}
 }

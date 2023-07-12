@@ -809,7 +809,7 @@ public class MapUtil {
 	 *
 	 * @param <K> 键和值类型
 	 * @param <V> 键和值类型
-	 * @param map Map对象，键值类型必须一致
+	 * @param map Map对象
 	 * @return 互换后的Map
 	 * @since 5.2.6
 	 */
@@ -1305,7 +1305,7 @@ public class MapUtil {
 
 	/**
 	 * 重命名键<br>
-	 * 实现方式为一处然后重新put，当旧的key不存在直接返回<br>
+	 * 实现方式为移除然后重新put，当旧的key不存在直接返回<br>
 	 * 当新的key存在，抛出{@link IllegalArgumentException} 异常
 	 *
 	 * @param <K>    key的类型

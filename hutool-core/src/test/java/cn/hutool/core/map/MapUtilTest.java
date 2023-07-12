@@ -232,4 +232,11 @@ public class MapUtilTest {
 		final String s = MapUtil.joinIgnoreNull(v1, ",", "=");
 		Assert.assertEquals("id=12,name=张三", s);
 	}
+
+	@Test
+	public void renameKeyTest() {
+		final Dict v1 = Dict.of().set("id", 12).set("name", "张三").set("age", null);
+		Map<String, Object> map = MapUtil.renameKey(v1, "name", "newName");
+		Assert.assertEquals("张三", map.get("newName"));
+	}
 }

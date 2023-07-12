@@ -70,10 +70,24 @@ public class RFC3986 {
 	public static final PercentCodec QUERY_PARAM_VALUE = PercentCodec.of(QUERY).removeSafe('&');
 
 	/**
+	 * query中的value编码器，严格模式，value中不能包含任何分隔符。
+	 *
+	 * @since 6.0.0
+	 */
+	public static final PercentCodec QUERY_PARAM_VALUE_STRICT = UNRESERVED;
+
+	/**
 	 * query中的key<br>
 	 * key不能包含"{@code &}" 和 "="
 	 */
 	public static final PercentCodec QUERY_PARAM_NAME = PercentCodec.of(QUERY_PARAM_VALUE).removeSafe('=');
+
+	/**
+	 * query中的key编码器，严格模式，key中不能包含任何分隔符。
+	 *
+	 * @since 6.0.0
+	 */
+	public static final PercentCodec QUERY_PARAM_NAME_STRICT = UNRESERVED;
 
 	/**
 	 * unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"

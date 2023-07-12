@@ -2601,6 +2601,9 @@ public class NumberUtil {
 		if (StrUtil.startWithIgnoreCase(numberStr, "0x")) {
 			// 0x04表示16进制数
 			return Long.parseLong(numberStr.substring(2), 16);
+		}else if(StrUtil.startWith(numberStr, '+')){
+			// issue#I79VS7
+			numberStr = StrUtil.subSuf(numberStr, 1);
 		}
 
 		try {

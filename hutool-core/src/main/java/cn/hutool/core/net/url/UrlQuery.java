@@ -33,6 +33,10 @@ public class UrlQuery {
 	 * 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 */
 	private final boolean isFormUrlEncoded;
+	/**
+	 * 是否严格模式，严格模式下，query的name和value中均不允许有分隔符。
+	 */
+	private boolean isStrict;
 
 	/**
 	 * 构建UrlQuery
@@ -134,6 +138,17 @@ public class UrlQuery {
 			query = new TableMap<>(MapUtil.DEFAULT_INITIAL_CAPACITY);
 		}
 		this.isFormUrlEncoded = isFormUrlEncoded;
+	}
+
+	/**
+	 * 设置是否严格模式
+	 * @param strict 是否严格模式
+	 * @return this
+	 * @since 5.8.20
+	 */
+	public UrlQuery setStrict(final boolean strict) {
+		isStrict = strict;
+		return this;
 	}
 
 	/**
@@ -254,6 +269,9 @@ public class UrlQuery {
 			return build(FormUrlencoded.ALL, FormUrlencoded.ALL, charset, encodePercent);
 		}
 
+		if (isStrict) {
+			return build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset, encodePercent);
+		}
 		return build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
 	}
 

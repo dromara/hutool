@@ -44,4 +44,20 @@ public class CsvWriterTest {
 		}
 		writer.close();
 	}
+
+	@Test
+	@Ignore
+	public void writeAppendTest(){
+		final CsvWriter writer = CsvUtil.getWriter(
+				FileUtil.file("d:/test/writeAppendTest.csv"),
+				CharsetUtil.CHARSET_GBK, true);
+
+		writer.writeHeaderLine("name", "gender", "address");
+		writer.writeLine("张三", "男", "XX市XX区");
+		writer.writeLine("李四", "男", "XX市XX区,01号");
+
+		writer.writeLine("张三2", "男", "XX市XX区");
+		writer.writeLine("李四2", "男", "XX市XX区,01号");
+		writer.close();
+	}
 }

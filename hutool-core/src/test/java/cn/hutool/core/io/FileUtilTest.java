@@ -20,8 +20,14 @@ import java.util.List;
  */
 public class FileUtilTest {
 
+	@Test
+	public void fileTest1() {
+		final File file = FileUtil.file("d:/aaa", "bbb");
+		Assert.assertNotNull(file);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
-	public void fileTest() {
+	public void fileTest2() {
 		final File file = FileUtil.file("d:/aaa", "bbb");
 		Assert.assertNotNull(file);
 
@@ -531,5 +537,12 @@ public class FileUtilTest {
 		final File copy = FileUtil.copy("d:/test/qrcodeCustom.png", "d:/test/pic", false);
 		// 当复制文件到目标目录的时候，返回复制的目标文件，而非目录
 		Console.log(copy);
+	}
+
+	@Test
+	public void checkSlipTest() {
+		Assert.assertThrows(IllegalArgumentException.class, ()->{
+			FileUtil.checkSlip(FileUtil.file("test/a"), FileUtil.file("test/../a"));
+		});
 	}
 }

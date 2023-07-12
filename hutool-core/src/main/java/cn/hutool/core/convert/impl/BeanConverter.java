@@ -9,6 +9,7 @@ import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -79,6 +80,9 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 		} else if(value instanceof byte[]){
 			// 尝试反序列化
 			return ObjectUtil.deserialize((byte[])value);
+		} else if(StrUtil.isEmptyIfStr(value)){
+			// issue#3136
+			return null;
 		}
 
 		throw new ConvertException("Unsupported source type: {}", value.getClass());
