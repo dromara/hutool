@@ -35,6 +35,19 @@ public class EnableRequestJsonTest {
 		public String a = "testA";
 
 		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			TestA testA = (TestA) o;
+			return Objects.equals(a, testA.a);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(a);
+		}
+
+		@Override
 		public String toString() {
 			return "TestA{" +
 					"a='" + a + '\'' +
@@ -44,6 +57,19 @@ public class EnableRequestJsonTest {
 
 	public static class TestB {
 		public String b = "testB";
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			TestB testB = (TestB) o;
+			return Objects.equals(b, testB.b);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(b);
+		}
 
 		@Override
 		public String toString() {
