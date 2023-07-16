@@ -89,4 +89,15 @@ public class DesensitizedUtilTest {
 		Assert.assertEquals("陕A1****D", DesensitizedUtil.carLicense("陕A12345D"));
 		Assert.assertEquals("京A123", DesensitizedUtil.carLicense("京A123"));
 	}
+
+	@Test
+	public void bankCardTest(){
+		Assert.assertEquals(null, DesensitizedUtil.bankCard(null));
+		Assert.assertEquals("", DesensitizedUtil.bankCard(""));
+		Assert.assertEquals("1234 **** **** **** **** 9", DesensitizedUtil.bankCard("1234 2222 3333 4444 6789 9"));
+		Assert.assertEquals("1234 **** **** **** **** 91", DesensitizedUtil.bankCard("1234 2222 3333 4444 6789 91"));
+		Assert.assertEquals("1234 **** **** **** 6789", DesensitizedUtil.bankCard("1234 2222 3333 4444 6789"));
+		Assert.assertEquals("1234 **** **** **** 678", DesensitizedUtil.bankCard("1234 2222 3333 4444 678"));
+
+	}
 }
