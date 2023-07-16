@@ -2357,7 +2357,7 @@ public class CollUtil {
 
 	/**
 	 * 解构多层集合
-	 * 例如：List&lt;List&lt;List&lt;String&gt;&gt;&gt; 解构成 List&lt;String&gt;
+	 * 例如：{@code List<List<List<String>>> 解构成 List<String>}
 	 *
 	 * @param collection 需要解构的集合
 	 * @return 解构后的集合
