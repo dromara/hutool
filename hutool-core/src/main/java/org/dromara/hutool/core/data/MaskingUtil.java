@@ -336,13 +336,14 @@ public class MaskingUtil {
 		if (StrUtil.isBlank(bankCardNo)) {
 			return bankCardNo;
 		}
-		bankCardNo = StrUtil.trim(bankCardNo);
+		bankCardNo = StrUtil.cleanBlank(bankCardNo);
 		if (bankCardNo.length() < 9) {
 			return bankCardNo;
 		}
 
 		final int length = bankCardNo.length();
-		final int midLength = length - 8;
+		final int endLength= length % 4 == 0 ? 4 : length % 4;
+		final int midLength = length - 4 - endLength;
 		final StringBuilder buf = new StringBuilder();
 
 		buf.append(bankCardNo, 0, 4);
@@ -352,7 +353,7 @@ public class MaskingUtil {
 			}
 			buf.append('*');
 		}
-		buf.append(CharUtil.SPACE).append(bankCardNo, length - 4, length);
+		buf.append(CharUtil.SPACE).append(bankCardNo, length - endLength, length);
 		return buf.toString();
 	}
 

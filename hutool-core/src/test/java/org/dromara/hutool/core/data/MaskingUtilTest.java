@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.data;
 
-import org.dromara.hutool.core.data.MaskingUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class MaskingUtilTest {
 
 	@Test
-	public void desensitizedTest() {
+	public void maskingTest() {
 		Assertions.assertEquals("0", MaskingUtil.masking("100", MaskingUtil.MaskingType.USER_ID));
 		Assertions.assertEquals("段**", MaskingUtil.masking("段正淳", MaskingUtil.MaskingType.CHINESE_NAME));
 		Assertions.assertEquals("5***************1X", MaskingUtil.masking("51343620000320711X", MaskingUtil.MaskingType.ID_CARD));
@@ -101,5 +100,16 @@ public class MaskingUtilTest {
 		Assertions.assertEquals("苏D4***0", MaskingUtil.carLicense("苏D40000"));
 		Assertions.assertEquals("陕A1****D", MaskingUtil.carLicense("陕A12345D"));
 		Assertions.assertEquals("京A123", MaskingUtil.carLicense("京A123"));
+	}
+
+	@Test
+	public void bankCardTest(){
+		Assertions.assertNull(MaskingUtil.bankCard(null));
+		Assertions.assertEquals("", MaskingUtil.bankCard(""));
+		Assertions.assertEquals("1234 **** **** **** **** 9", MaskingUtil.bankCard("1234 2222 3333 4444 6789 9"));
+		Assertions.assertEquals("1234 **** **** **** **** 91", MaskingUtil.bankCard("1234 2222 3333 4444 6789 91"));
+		Assertions.assertEquals("1234 **** **** **** 6789", MaskingUtil.bankCard("1234 2222 3333 4444 6789"));
+		Assertions.assertEquals("1234 **** **** **** 678", MaskingUtil.bankCard("1234 2222 3333 4444 678"));
+
 	}
 }
