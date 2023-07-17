@@ -91,22 +91,22 @@ public class StreamArchiver implements Archiver {
 	 * @param targetStream 归档输出的流
 	 */
 	public StreamArchiver(final Charset charset, final String archiverName, final OutputStream targetStream) {
-		if("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)){
+		if ("tgz".equalsIgnoreCase(archiverName) || "tar.gz".equalsIgnoreCase(archiverName)) {
 			//issue#I5J33E，支持tgz格式解压
 			try {
 				this.out = new TarArchiveOutputStream(new GzipCompressorOutputStream(targetStream));
 			} catch (final IOException e) {
 				throw new IORuntimeException(e);
 			}
-			return;
+		} else {
+			final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
+			try {
+				this.out = factory.createArchiveOutputStream(archiverName, targetStream);
+			} catch (final ArchiveException e) {
+				throw new CompressException(e);
+			}
 		}
 
-		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
-		try {
-			this.out = factory.createArchiveOutputStream(archiverName, targetStream);
-		} catch (final ArchiveException e) {
-			throw new CompressException(e);
-		}
 
 		//特殊设置
 		if (this.out instanceof TarArchiveOutputStream) {
