@@ -70,14 +70,36 @@ public class AsymmetricJWTSigner implements JWTSigner {
 
 	@Override
 	public String sign(final String headerBase64, final String payloadBase64) {
-		return Base64.encodeUrlSafe(sign.sign(StrUtil.format("{}.{}", headerBase64, payloadBase64)));
+		final String dataStr = StrUtil.format("{}.{}", headerBase64, payloadBase64);
+		return Base64.encodeUrlSafe(sign(ByteUtil.toBytes(dataStr, charset)));
+	}
+
+	/**
+	 * 签名字符串数据
+	 *
+	 * @param data 数据
+	 * @return 签名
+	 */
+	protected byte[] sign(byte[] data) {
+		return sign.sign(data);
 	}
 
 	@Override
 	public boolean verify(final String headerBase64, final String payloadBase64, final String signBase64) {
-		return sign.verify(
+		return verify(
 				ByteUtil.toBytes(StrUtil.format("{}.{}", headerBase64, payloadBase64), charset),
 				Base64.decode(signBase64));
+	}
+
+	/**
+	 * 验签数据
+	 *
+	 * @param data   数据
+	 * @param signed 签名
+	 * @return 是否通过
+	 */
+	protected boolean verify(byte[] data, byte[] signed) {
+		return sign.verify(data, signed);
 	}
 
 	@Override

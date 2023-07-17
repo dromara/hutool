@@ -13,6 +13,7 @@
 package org.dromara.hutool.json.jwt.signers;
 
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.regex.ReUtil;
 
 import java.security.Key;
 import java.security.KeyPair;
@@ -261,6 +262,12 @@ public class JWTSignerUtil {
 		if (null == algorithmId || NoneJWTSigner.ID_NONE.equals(algorithmId)) {
 			return none();
 		}
+
+		// issue3205@Github
+		if(ReUtil.isMatch("es\\d{3}", algorithmId.toLowerCase())){
+			return new EllipticCurveJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), keyPair);
+		}
+
 		return new AsymmetricJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), keyPair);
 	}
 
@@ -278,6 +285,11 @@ public class JWTSignerUtil {
 			return NoneJWTSigner.NONE;
 		}
 		if (key instanceof PrivateKey || key instanceof PublicKey) {
+			// issue3205@Github
+			if(ReUtil.isMatch("ES\\d{3}", algorithmId)){
+				return new EllipticCurveJWTSigner(algorithmId, key);
+			}
+
 			return new AsymmetricJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
 		}
 		return new HMacJWTSigner(AlgorithmUtil.getAlgorithm(algorithmId), key);
