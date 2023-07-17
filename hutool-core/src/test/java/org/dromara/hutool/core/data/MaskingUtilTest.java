@@ -43,7 +43,7 @@ public class MaskingUtilTest {
 		Assertions.assertEquals("d*************@gmail.com.cn", MaskingUtil.masking("duandazhi-jack@gmail.com.cn", MaskingUtil.MaskingType.EMAIL));
 		Assertions.assertEquals("**********", MaskingUtil.masking("1234567890", MaskingUtil.MaskingType.PASSWORD));
 		Assertions.assertEquals("1101 **** **** **** 3256", MaskingUtil.masking("11011111222233333256", MaskingUtil.MaskingType.BANK_CARD));
-		Assertions.assertEquals("6227 **** **** *** 5123", MaskingUtil.masking("6227880100100105123", MaskingUtil.MaskingType.BANK_CARD));
+		Assertions.assertEquals("6227 **** **** **** 123", MaskingUtil.masking("6227880100100105123", MaskingUtil.MaskingType.BANK_CARD));
 		Assertions.assertEquals("192.*.*.*", MaskingUtil.masking("192.168.1.1", MaskingUtil.MaskingType.IPV4));
 		Assertions.assertEquals("2001:*:*:*:*:*:*:*", MaskingUtil.masking("2001:0db8:86a3:08d3:1319:8a2e:0370:7344", MaskingUtil.MaskingType.IPV6));
 	}
