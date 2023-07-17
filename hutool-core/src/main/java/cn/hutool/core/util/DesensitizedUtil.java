@@ -307,26 +307,30 @@ public class DesensitizedUtil {
 	}
 
 	/**
-	 * 银行卡号脱敏
-	 * eg: 1101 **** **** **** 3256
+	 * 【银行卡号脱敏】由于银行卡号长度不定，所以只展示前4位，后面的位数根据卡号决定展示1-4位
+	 *  例如：
+	 *  1. "1234 2222 3333 4444 6789 9" ==》"1234 **** **** **** **** 9"
+	 * 	2. "1234 2222 3333 4444 6789 91" ==》"1234 **** **** **** **** 91"
+	 * 	3. "1234 2222 3333 4444 678" ==> "1234 **** **** **** 678"
+	 * 	4. "1234 2222 3333 4444 6789" ==》 "1234 **** **** **** 6789"
 	 *
 	 * @param bankCardNo 银行卡号
 	 * @return 脱敏之后的银行卡号
-	 * @since 5.6.3
 	 */
 	public static String bankCard(String bankCardNo) {
 		if (StrUtil.isBlank(bankCardNo)) {
 			return bankCardNo;
 		}
-		bankCardNo = StrUtil.trim(bankCardNo);
+		bankCardNo = StrUtil.replace(bankCardNo," ","");
 		if (bankCardNo.length() < 9) {
 			return bankCardNo;
 		}
 
 		final int length = bankCardNo.length();
-		final int midLength = length - 8;
-		final StringBuilder buf = new StringBuilder();
+		final int endLength= length % 4 == 0 ? 4 : length % 4;
+		final int midLength = length - 4 - endLength;
 
+		final StringBuilder buf = new StringBuilder();
 		buf.append(bankCardNo, 0, 4);
 		for (int i = 0; i < midLength; ++i) {
 			if (i % 4 == 0) {
@@ -334,7 +338,7 @@ public class DesensitizedUtil {
 			}
 			buf.append('*');
 		}
-		buf.append(CharUtil.SPACE).append(bankCardNo, length - 4, length);
+		buf.append(CharUtil.SPACE).append(bankCardNo, length - endLength, length);
 		return buf.toString();
 	}
 
