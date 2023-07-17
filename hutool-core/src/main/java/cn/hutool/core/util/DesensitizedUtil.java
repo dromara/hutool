@@ -321,7 +321,7 @@ public class DesensitizedUtil {
 		if (StrUtil.isBlank(bankCardNo)) {
 			return bankCardNo;
 		}
-		bankCardNo = StrUtil.replace(bankCardNo," ","");
+		bankCardNo = StrUtil.cleanBlank(bankCardNo);
 		if (bankCardNo.length() < 9) {
 			return bankCardNo;
 		}
