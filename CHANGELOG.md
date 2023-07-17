@@ -24,6 +24,7 @@
 * 【core  】      修复BeanUtil.isCommonFieldsEqual判空导致的问题
 * 【extra 】      修复CompressUtil.createArchiver 将文件压缩为tgz时文件名规则无效问题（issue#I7LLL7@Gitee）
 * 【core  】      修复脱敏银行卡号长度bug（pr#3210@Github）
+* 【jwt   】      修复JWTSignerUtil中ES256签名不符合规范问题（issue#3205@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.20(2023-06-16)
