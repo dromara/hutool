@@ -495,7 +495,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 * @param maxBytes   最大字节数
 	 * @param factor     速算因子，取该编码下单个字符的最大可能字节数
 	 * @param appendDots 截断后是否追加省略号(...)
-	 * @return
+	 * @return 截断后的字符串
 	 */
 	public static String truncateByByteLength(String str, Charset charset, int maxBytes, int factor,
 			boolean appendDots) {
