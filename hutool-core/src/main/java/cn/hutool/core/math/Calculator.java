@@ -1,6 +1,5 @@
 package cn.hutool.core.math;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 

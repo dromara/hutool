@@ -18,10 +18,15 @@ public class MvelEngine implements ExpressionEngine {
 	 * 构造
 	 */
 	public MvelEngine(){
+		checkEngineExist(null);
 	}
 
 	@Override
 	public Object eval(String expression, Map<String, Object> context) {
 		return MVEL.eval(expression, context);
+	}
+
+	private void checkEngineExist(MVEL mvel){
+		// do nothing
 	}
 }

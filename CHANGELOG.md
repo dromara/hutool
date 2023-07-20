@@ -27,6 +27,7 @@
 * 【core  】      修复脱敏银行卡号长度bug（pr#3210@Github）
 * 【jwt   】      修复JWTSignerUtil中ES256签名不符合规范问题（issue#3205@Github）
 * 【core  】      修复UserInfo获取country问题（issue#I7MCKW@Gitee）
+* 【extra 】      修复MVEL加载错误问题（issue#3214@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.20(2023-06-16)
