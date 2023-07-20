@@ -29,6 +29,7 @@
 * 【jwt   】      修复JWTSignerUtil中ES256签名不符合规范问题（issue#3205@Github）
 * 【core  】      修复UserInfo获取country问题（issue#I7MCKW@Gitee）
 * 【extra 】      修复MVEL加载错误问题（issue#3214@Github）
+* 【json  】      修复JSONBeanParser在遇到List时没有被正确递归问题（issue#I7M2GZ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.20(2023-06-16)
