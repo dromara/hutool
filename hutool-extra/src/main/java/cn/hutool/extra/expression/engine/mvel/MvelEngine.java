@@ -14,11 +14,14 @@ import java.util.Map;
  */
 public class MvelEngine implements ExpressionEngine {
 
+	static {
+		checkEngineExist(MVEL.class);
+	}
+
 	/**
 	 * 构造
 	 */
 	public MvelEngine(){
-		checkEngineExist(null);
 	}
 
 	@Override
@@ -26,7 +29,7 @@ public class MvelEngine implements ExpressionEngine {
 		return MVEL.eval(expression, context);
 	}
 
-	private void checkEngineExist(MVEL mvel){
+	private static void checkEngineExist(Class<?> clazz){
 		// do nothing
 	}
 }
