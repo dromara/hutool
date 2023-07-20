@@ -14,6 +14,7 @@
 * 【core  】      身份证工具类isValidCard18、isValidCard15入参null直接返回null（pr#1034@Gitee）
 * 【http  】      使用multiparty方式支持body参数（issue#3158@Github）
 * 【core  】      ZipReader增加setMaxSizeDiff方法，自定义或关闭ZipBomb（issue#3018@Github）
+* 【db    】      Query.of(entity)构建时传入fields（issue#I7M5JU@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复MapUtil工具使用filter方法构造传入参数结果问题（issue#3162@Github）

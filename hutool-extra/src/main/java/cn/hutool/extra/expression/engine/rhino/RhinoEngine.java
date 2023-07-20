@@ -17,6 +17,10 @@ import java.util.Map;
  */
 public class RhinoEngine implements ExpressionEngine {
 
+	static {
+		checkEngineExist(Context.class);
+	}
+
 	@Override
 	public Object eval(String expression, Map<String, Object> context) {
 		final Context ctx = Context.enter();
@@ -30,5 +34,9 @@ public class RhinoEngine implements ExpressionEngine {
 		final Object result = ctx.evaluateString(scope, expression, "rhino.js", 1, null);
 		Context.exit();
 		return result;
+	}
+
+	private static void checkEngineExist(Class<?> clazz){
+		// do nothing
 	}
 }

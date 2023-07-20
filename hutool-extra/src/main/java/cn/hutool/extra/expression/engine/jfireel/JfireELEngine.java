@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public class JfireELEngine implements ExpressionEngine {
 
+	static {
+		checkEngineExist(Expression.class);
+	}
+
 	/**
 	 * 构造
 	 */
@@ -23,5 +27,9 @@ public class JfireELEngine implements ExpressionEngine {
 	@Override
 	public Object eval(String expression, Map<String, Object> context) {
 		return Expression.parse(expression).calculate(context);
+	}
+
+	private static void checkEngineExist(Class<?> clazz){
+		// do nothing
 	}
 }
