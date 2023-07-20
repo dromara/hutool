@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.db.sql;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.db.DbRuntimeException;
@@ -19,6 +20,7 @@ import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.Page;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * 查询对象，用于传递查询所需的字段值<br>
@@ -26,30 +28,45 @@ import java.util.Collection;
  * 如果想自定义返回结果，则可在查询对象中自定义要查询的字段名，分页{@link Page}信息来自定义结果。
  *
  * @author Looly
- *
  */
 public class Query implements Cloneable {
 
-	/** 查询的字段名列表 */
+	/**
+	 * 查询的字段名列表
+	 */
 	Collection<String> fields;
-	/** 查询的表名 */
+	/**
+	 * 查询的表名
+	 */
 	String[] tableNames;
-	/** 查询的条件语句 */
+	/**
+	 * 查询的条件语句
+	 */
 	Condition[] where;
-	/** 分页对象 */
+	/**
+	 * 分页对象
+	 */
 	Page page;
 
 	/**
 	 * 从{@link Entity}构建Query
+	 *
 	 * @param where 条件查询{@link Entity}，包含条件Map和表名
 	 * @return Query
 	 * @since 5.5.3
 	 */
-	public static Query of(final Entity where){
-		return new Query(SqlUtil.buildConditions(where), where.getTableName());
+	public static Query of(final Entity where) {
+		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
+		final Set<String> fieldNames = where.getFieldNames();
+		if (CollUtil.isNotEmpty(fieldNames)) {
+			query.setFields(fieldNames);
+		}
+
+		return query;
 	}
 
 	// --------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 *
@@ -63,7 +80,7 @@ public class Query implements Cloneable {
 	/**
 	 * 构造
 	 *
-	 * @param where 条件语句
+	 * @param where      条件语句
 	 * @param tableNames 表名
 	 */
 	public Query(final Condition[] where, final String... tableNames) {
@@ -73,8 +90,8 @@ public class Query implements Cloneable {
 	/**
 	 * 构造
 	 *
-	 * @param where 条件语句
-	 * @param page 分页
+	 * @param where      条件语句
+	 * @param page       分页
 	 * @param tableNames 表名
 	 */
 	public Query(final Condition[] where, final Page page, final String... tableNames) {
@@ -84,10 +101,10 @@ public class Query implements Cloneable {
 	/**
 	 * 构造
 	 *
-	 * @param fields 字段
+	 * @param fields     字段
 	 * @param tableNames 表名
-	 * @param where 条件
-	 * @param page 分页
+	 * @param where      条件
+	 * @param page       分页
 	 */
 	public Query(final Collection<String> fields, final String[] tableNames, final Condition[] where, final Page page) {
 		this.fields = fields;
@@ -98,6 +115,7 @@ public class Query implements Cloneable {
 	// --------------------------------------------------------------- Constructor end
 
 	// --------------------------------------------------------------- Getters and Setters start
+
 	/**
 	 * 获得查询的字段名列表
 	 *
@@ -206,7 +224,7 @@ public class Query implements Cloneable {
 	@Override
 	public Query clone() {
 		try {
-			return  (Query) super.clone();
+			return (Query) super.clone();
 		} catch (final CloneNotSupportedException e) {
 			throw new AssertionError();
 		}
