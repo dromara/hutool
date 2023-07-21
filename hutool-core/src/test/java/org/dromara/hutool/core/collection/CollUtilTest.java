@@ -8,7 +8,6 @@ import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -1206,19 +1205,21 @@ public class CollUtilTest {
 	}
 
 
+	@SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
 	@Test
 	public void flatListTest1() {
-		List<List<List<String>>> list = Arrays.asList(Arrays.asList(Arrays.asList("1", "2", "3"), Arrays.asList("5", "6", "7")));
+		final List<List<List<String>>> list = Arrays.asList(Arrays.asList(Arrays.asList("1", "2", "3"), Arrays.asList("5", "6", "7")));
 
-		List<Object> objects = CollUtil.flat(list);
+		final List<Object> objects = CollUtil.flat(list);
 
 		Assertions.assertArrayEquals(new String[]{"1", "2", "3", "5", "6", "7"}, objects.toArray());
 	}
 
 
+	@SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
 	@Test
 	public void flatListTest2() {
-		List<List<List<String>>> list = Arrays.asList(
+		final List<List<List<String>>> list = Arrays.asList(
 			Arrays.asList(
 				Arrays.asList("a"),
 				Arrays.asList("b", "c"),
@@ -1229,15 +1230,16 @@ public class CollUtilTest {
 				Arrays.asList("j", "k", "l")
 			)
 		);
-		List<Object> flat = CollUtil.flat(list);
+		final List<Object> flat = CollUtil.flat(list);
 		Assertions.assertArrayEquals(new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
 
 	}
 
 
+	@SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
 	@Test
 	void flatListTest3() {
-		List<List<List<String>>> list = Arrays.asList(
+		final List<List<List<String>>> list = Arrays.asList(
 			Arrays.asList(
 				Arrays.asList("a"),
 				Arrays.asList("b", "c", null),
@@ -1248,7 +1250,7 @@ public class CollUtilTest {
 				Arrays.asList("j", "k", "l")
 			)
 		);
-		List<Object> flat = CollUtil.flat(list, false);
+		final List<Object> flat = CollUtil.flat(list, false);
 		Assertions.assertArrayEquals(new String[]{"a", "b", "c", null, "d", "e", "f", "g", "h", "i", "j", "k", "l"}, flat.toArray());
 	}
 

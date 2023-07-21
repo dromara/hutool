@@ -2359,10 +2359,11 @@ public class CollUtil {
 	 * 解构多层集合
 	 * 例如：{@code List<List<List<String>>> 解构成 List<String>}
 	 *
+	 * @param <T>        元素类型
 	 * @param collection 需要解构的集合
 	 * @return 解构后的集合
 	 */
-	public static <T> List<T> flat(Collection<?> collection) {
+	public static <T> List<T> flat(final Collection<?> collection) {
 		return flat(collection, true);
 	}
 
@@ -2372,18 +2373,19 @@ public class CollUtil {
 	 * <p>
 	 * skipNull如果为true, 则解构后的集合里不包含null值，为false则会包含null值。
 	 *
+	 * @param <T>        元素类型
 	 * @param collection 需要结构的集合
 	 * @param skipNull   是否跳过空的值
 	 * @return 解构后的集合
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> List<T> flat(Collection<?> collection, boolean skipNull) {
-		LinkedList<Object> queue = new LinkedList<>(collection);
+	public static <T> List<T> flat(final Collection<?> collection, final boolean skipNull) {
+		final LinkedList<Object> queue = new LinkedList<>(collection);
 
-		List<Object> result = new ArrayList<>();
+		final List<Object> result = new ArrayList<>();
 
-		while (!queue.isEmpty()) {
-			Object t = queue.removeFirst();
+		while (isNotEmpty(queue)) {
+			final Object t = queue.removeFirst();
 
 			if (skipNull && t == null) {
 				continue;

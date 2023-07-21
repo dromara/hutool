@@ -493,6 +493,7 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 	 *
 	 * @param <R> 函数执行后返回的List里面的类型
 	 * @return EasyStream 一个流
+	 * @since 6.0.0
 	 */
 	default <R> EasyStream<R> flat() {
 		return EasyStream.of(CollUtil.flat(nonNull().collect(Collectors.toList())));
