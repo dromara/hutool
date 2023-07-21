@@ -30,6 +30,7 @@
 * 【core  】      修复UserInfo获取country问题（issue#I7MCKW@Gitee）
 * 【extra 】      修复MVEL加载错误问题（issue#3214@Github）
 * 【json  】      修复JSONBeanParser在遇到List时没有被正确递归问题（issue#I7M2GZ@Gitee）
+* 【core  】      修复VersionComparator对1.0.3及1.0.2a比较有误的问题（pr#1043@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.20(2023-06-16)
