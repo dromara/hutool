@@ -53,4 +53,10 @@ public class VersionComparatorTest {
 		VersionComparator other = new VersionComparator();
 		Assert.assertNotEquals(first, other);
 	}
+
+	@Test
+	public void versionComparatorTest7() {
+		int compare = VersionComparator.INSTANCE.compare("1.12.2", "1.12.1c");
+		Assert.assertTrue(compare > 0);
+	}
 }
