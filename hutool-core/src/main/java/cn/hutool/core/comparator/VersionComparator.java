@@ -1,7 +1,10 @@
 package cn.hutool.core.comparator;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
@@ -41,6 +44,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 * compare("v1", null) &gt; 0
 	 * compare("1.0.0", "1.0.2") &lt; 0
 	 * compare("1.0.2", "1.0.2a") &lt; 0
+	 * compare("1.0.3", "1.0.2a") &gt; 0
 	 * compare("1.13.0", "1.12.1c") &gt; 0
 	 * compare("V0.0.20170102", "V0.0.20170101") &gt; 0
 	 * </pre>
@@ -75,6 +79,14 @@ public class VersionComparator implements Comparator<String>, Serializable {
 			diff = v1.length() - v2.length();
 			if (0 == diff) {
 				diff = v1.compareTo(v2);
+			}else {
+				//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，
+				int v1Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v1, 0), 0);
+				int v2Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v2, 0), 0);
+				int diff1 = v1Num - v2Num;
+				if (diff1 != 0) {
+					diff = diff1;
+				}
 			}
 			if(diff != 0) {
 				//已有结果，结束
