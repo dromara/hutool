@@ -24,7 +24,6 @@ import org.dromara.hutool.setting.Setting;
  * @author Luxiaolei
  */
 public final class DbUtil {
-	private final static Log log = Log.get();
 
 	/**
 	 * 从配置文件中读取SQL打印选项，读取后会去除相应属性
@@ -34,25 +33,24 @@ public final class DbUtil {
 	 */
 	public static void setShowSqlGlobal(final Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL), false);
-		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL), false);
-		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS), false);
+		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL));
+		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL));
+		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS));
 		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();
 		}
-		final Level level = Convert.toEnum(Level.class, sqlLevelStr, Level.DEBUG);
-		log.debug("Show sql: [{}], format sql: [{}], show params: [{}], level: [{}]", isShowSql, isFormatSql, isShowParams, level);
+		final Level level = Convert.toEnum(Level.class, sqlLevelStr);
 		setShowSqlGlobal(isShowSql, isFormatSql, isShowParams, level);
 	}
 
 	/**
 	 * 设置全局配置：是否通过debug日志显示SQL
 	 *
-	 * @param isShowSql    是否显示SQL
-	 * @param isFormatSql  是否格式化显示的SQL
-	 * @param isShowParams 是否打印参数
-	 * @param level        SQL打印到的日志等级
+	 * @param isShowSql    是否显示SQL，{@code null}表示保持默认
+	 * @param isFormatSql  是否格式化显示的SQL，{@code null}表示保持默认
+	 * @param isShowParams 是否打印参数，{@code null}表示保持默认
+	 * @param level        日志级别，{@code null}表示保持默认
 	 * @see GlobalDbConfig#setShowSql(boolean, boolean, boolean, Level)
 	 * @since 4.1.7
 	 */

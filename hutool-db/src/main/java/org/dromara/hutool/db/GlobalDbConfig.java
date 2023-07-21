@@ -112,10 +112,10 @@ public class GlobalDbConfig {
 	/**
 	 * 设置全局配置：是否通过debug日志显示SQL
 	 *
-	 * @param isShowSql    是否显示SQL
-	 * @param isFormatSql  是否格式化显示的SQL
-	 * @param isShowParams 是否打印参数
-	 * @param level        SQL打印到的日志等级
+	 * @param isShowSql    是否显示SQL，{@code null}表示保持默认
+	 * @param isFormatSql  是否格式化显示的SQL，{@code null}表示保持默认
+	 * @param isShowParams 是否打印参数，{@code null}表示保持默认
+	 * @param level        日志级别，{@code null}表示保持默认
 	 */
 	public static void setShowSql(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
 		SqlLog.INSTANCE.init(isShowSql, isFormatSql, isShowParams, level);
