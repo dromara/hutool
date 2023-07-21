@@ -20,6 +20,13 @@ public class AioClientTest {
 			}
 		});
 
+		//线程休息1秒，然后client 和 server 初始化完再连接
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
 		client.write(ByteBuffer.wrap("Hello".getBytes()));
 		client.read();
 
