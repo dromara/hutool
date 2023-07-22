@@ -261,4 +261,21 @@ public class ListUtilTest {
 		final List<Integer> reverse = ListUtil.reverseNew(view);
 		Assert.assertEquals("[3, 2, 1]", reverse.toString());
 	}
+
+	@Test
+	public void overlapPartitionTest() {
+		List<List<Integer>> lists = ListUtil.overlapPartition(null, 2, 0);
+		Assert.assertEquals("[]", lists.toString());
+		lists = ListUtil.overlapPartition(ListUtil.empty(), 2, 0);
+		Assert.assertEquals("[]", lists.toString());
+		lists = ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 2, 0);
+		Assert.assertEquals("[[1, 2], [3, 4], [5]]", lists.toString());
+		lists = ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 2, 1);
+		Assert.assertEquals("[[1, 2], [2, 3], [3, 4], [4, 5]]", lists.toString());
+		lists = ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 3, 2);
+		Assert.assertEquals("[[1, 2, 3], [2, 3, 4], [3, 4, 5]]", lists.toString());
+		lists = ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 6, 1);
+		Assert.assertEquals("[[1, 2, 3, 4, 5]]", lists.toString());
+		Assert.assertThrows(IllegalArgumentException.class, () -> ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 2, 2));
+	}
 }

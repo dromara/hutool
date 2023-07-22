@@ -680,4 +680,54 @@ public class ListUtil {
 			}
 		}
 	}
+
+	/**
+	 * 可重叠分段，对集合按照指定的每段长度和每段的可重叠长度分段，每一个段为单独的集合，返回这个集合的列表
+	 *
+	 * <p>
+	 * 需要特别注意的是，此方法调用{@link List#subList(int, int)}切分List，
+	 * 此方法返回的是原List的视图，也就是说原List有变更，切分后的结果也会变更。
+	 * </p>
+	 *
+	 * <p>例：</p>
+	 * <pre>
+	 *     ListUtil.overlapPartition(null, 2, 0);	// []
+	 *     ListUtil.overlapPartition(ListUtil.empty(), 2, 0);	// []
+	 *     ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 2, 0);	// [[1, 2], [3, 4], [5]]
+	 *     ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 2, 1);	// [[1, 2], [2, 3], [3, 4], [4, 5]]
+	 *     ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 3, 2);	// [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+	 *     ListUtil.overlapPartition(Arrays.asList(1, 2, 3, 4, 5), 6, 1);	// [[1, 2, 3, 4, 5]]
+	 * </pre>
+	 *
+	 * @param <T>         元素类型
+	 * @param list        列表
+	 * @param size        每段长度
+	 * @param overlapSize 每段的可重叠长度
+	 * @return 分段列表
+	 * @throws IllegalArgumentException 指定的每段长度必须大于每段的可重叠长度，否则抛出{@code java.lang.IllegalArgumentException}
+	 * @author jin7
+	 * @since 6.0.0
+	 */
+	public static <T> List<List<T>> overlapPartition(List<T> list, int size, int overlapSize) {
+		if (size <= overlapSize) {
+			throw new IllegalArgumentException("The size must be greater than the overlapSize");
+		}
+		List<List<T>> lists = new ArrayList<>();
+		if (list != null && list.size() > 0) {
+			if (list.size() <= size) {
+				lists.add(list);
+			} else {
+				for (int i = 0; i < list.size(); ) {
+					int toIndex = Math.min(list.size(), i + size);
+					List<T> subList = list.subList(i, toIndex);
+					if (i == list.size() - overlapSize) {
+						break;
+					}
+					lists.add(subList);
+					i = toIndex - overlapSize;
+				}
+			}
+		}
+		return lists;
+	}
 }
