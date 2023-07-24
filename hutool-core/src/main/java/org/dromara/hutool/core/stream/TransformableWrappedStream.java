@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.stream;
 
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.lang.Console;
@@ -484,6 +485,18 @@ public interface TransformableWrappedStream<T, S extends TransformableWrappedStr
 				.unshift(e);
 		recursiveRef.set(recursive);
 		return wrap(flatMap(recursive).peek(e -> childrenSetter.accept(e, null)));
+	}
+
+	/**
+	 * 如果当前元素是集合，则会将集合中的元素解构出来
+	 * 例如：{@code List<List<List<String>>> 解构成 List<String>}
+	 *
+	 * @param <R> 函数执行后返回的List里面的类型
+	 * @return EasyStream 一个流
+	 * @since 6.0.0
+	 */
+	default <R> EasyStream<R> flat() {
+		return EasyStream.of(CollUtil.flat(nonNull().collect(Collectors.toList())));
 	}
 
 	// endregion

@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.core.comparator;
 
+import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -87,6 +90,15 @@ public class VersionComparator implements Comparator<String>, Serializable {
 			diff = v1.length() - v2.length();
 			if (0 == diff) {
 				diff = v1.compareTo(v2);
+			}else {
+				// https://gitee.com/dromara/hutool/pulls/1043
+				//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，
+				final int v1Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v1, 0), 0);
+				final int v2Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v2, 0), 0);
+				final int diff1 = v1Num - v2Num;
+				if (diff1 != 0) {
+					diff = diff1;
+				}
 			}
 			if(diff != 0) {
 				//已有结果，结束

@@ -50,16 +50,26 @@ public class SqlLog {
 	/**
 	 * 设置全局配置：是否通过debug日志显示SQL
 	 *
-	 * @param isShowSql    是否显示SQL
-	 * @param isFormatSql  是否格式化显示的SQL
-	 * @param isShowParams 是否打印参数
-	 * @param level        日志级别
+	 * @param isShowSql    是否显示SQL，{@code null}表示保持默认
+	 * @param isFormatSql  是否格式化显示的SQL，{@code null}表示保持默认
+	 * @param isShowParams 是否打印参数，{@code null}表示保持默认
+	 * @param level        日志级别，{@code null}表示保持默认
 	 */
-	public void init(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
-		this.showSql = isShowSql;
-		this.formatSql = isFormatSql;
-		this.showParams = isShowParams;
-		this.level = level;
+	public void init(final Boolean isShowSql, final Boolean isFormatSql, final Boolean isShowParams, final Level level) {
+		if (null != isShowSql) {
+			this.showSql = isShowSql;
+		}
+		if (null != isFormatSql) {
+			this.formatSql = isFormatSql;
+		}
+		if (null != isShowParams) {
+			this.showParams = isShowParams;
+		}
+		if (null != level) {
+			this.level = level;
+		}
+		log.debug("Show sql: [{}], format sql: [{}], show params: [{}], level: [{}]",
+			this.showSql, this.formatSql, this.showParams, this.level);
 	}
 
 	/**
