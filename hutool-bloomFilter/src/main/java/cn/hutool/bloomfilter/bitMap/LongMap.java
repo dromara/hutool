@@ -8,10 +8,10 @@ import java.io.Serializable;
  * @author loolly
  *
  */
-public class LongMap implements BitMap, Serializable {
+class LongMap implements LongBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final long[] longs;
+	protected final long[] longs;
 
 	/**
 	 * 构造

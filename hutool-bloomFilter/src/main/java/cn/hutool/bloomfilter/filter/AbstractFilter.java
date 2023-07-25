@@ -2,8 +2,8 @@ package cn.hutool.bloomfilter.filter;
 
 import cn.hutool.bloomfilter.BloomFilter;
 import cn.hutool.bloomfilter.bitMap.BitMap;
-import cn.hutool.bloomfilter.bitMap.IntMap;
-import cn.hutool.bloomfilter.bitMap.LongMap;
+import cn.hutool.bloomfilter.bitMap.IntBitMaps;
+import cn.hutool.bloomfilter.bitMap.LongBitMaps;
 
 /**
  * 抽象Bloom过滤器
@@ -49,10 +49,10 @@ public abstract class AbstractFilter implements BloomFilter {
 		this.size = maxValue;
 		switch (machineNum) {
 		case BitMap.MACHINE32:
-			bm = new IntMap((int) (size / machineNum));
+			bm = IntBitMaps.create((int) (size / machineNum));
 			break;
 		case BitMap.MACHINE64:
-			bm = new LongMap((int) (size / machineNum));
+			bm = LongBitMaps.create((int) (size / machineNum));
 			break;
 		default:
 			throw new RuntimeException("Error Machine number!");

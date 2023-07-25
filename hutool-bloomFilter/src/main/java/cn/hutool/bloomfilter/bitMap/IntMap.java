@@ -8,15 +8,15 @@ import java.io.Serializable;
  * @author loolly
  *
  */
-public class IntMap implements BitMap, Serializable {
+class IntMap implements IntBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final int[] ints;
+	protected final int[] ints;
 
 	/**
 	 * 构造
 	 */
-	public IntMap() {
+	IntMap() {
 		ints = new int[93750000];
 	}
 
@@ -25,7 +25,7 @@ public class IntMap implements BitMap, Serializable {
 	 *
 	 * @param size 容量
 	 */
-	public IntMap(int size) {
+	IntMap(int size) {
 		ints = new int[size];
 	}
 
@@ -49,5 +49,4 @@ public class IntMap implements BitMap, Serializable {
 		int c = (int) (i & (BitMap.MACHINE32 - 1));
 		ints[r] &= ~(1 << c);
 	}
-
 }

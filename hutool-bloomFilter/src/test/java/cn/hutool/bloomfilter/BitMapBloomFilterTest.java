@@ -1,11 +1,9 @@
 package cn.hutool.bloomfilter;
 
+import cn.hutool.bloomfilter.bitMap.*;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import cn.hutool.bloomfilter.bitMap.IntMap;
-import cn.hutool.bloomfilter.bitMap.LongMap;
 
 public class BitMapBloomFilterTest {
 
@@ -24,7 +22,7 @@ public class BitMapBloomFilterTest {
 	@Test
 	@Ignore
 	public void testIntMap(){
-		IntMap intMap = new IntMap();
+		IntBitMap intMap = IntBitMaps.create();
 
 		for (int i = 0 ; i < 32; i++) {
 			intMap.add(i);
@@ -40,7 +38,7 @@ public class BitMapBloomFilterTest {
 	@Test
 	@Ignore
 	public void testLongMap(){
-		LongMap longMap = new LongMap();
+		LongBitMap longMap = new LongBitMap();
 
 		for (int i = 0 ; i < 64; i++) {
 			longMap.add(i);
