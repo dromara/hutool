@@ -16,8 +16,8 @@ class LongMap implements LongBitMap, Serializable {
 	public static final long MIN = 0;
 
 
-	protected final long[] longs;
-	protected long max;
+	private final long[] longs;
+	private final long max;
 
 
 	/**
@@ -59,7 +59,7 @@ class LongMap implements LongBitMap, Serializable {
 
 	protected void doAdd(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i & (BitMap.MACHINE64 - 1));
+		long c = i & (BitMap.MACHINE64 - 1);
 		longs[r] = longs[r] | (1L << c);
 	}
 
@@ -74,7 +74,7 @@ class LongMap implements LongBitMap, Serializable {
 
 	protected boolean doContains(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i & (BitMap.MACHINE64 - 1));
+		long c = i & (BitMap.MACHINE64 - 1);
 		return ((longs[r] >>> c) & 1) == 1;
 	}
 
@@ -89,9 +89,10 @@ class LongMap implements LongBitMap, Serializable {
 
 	protected void doRemove(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i & (BitMap.MACHINE64 - 1));
+		long c = i & (BitMap.MACHINE64 - 1);
 		longs[r] &= ~(1L << c);
 	}
+
 
 	@Override
 	public long getMin() {

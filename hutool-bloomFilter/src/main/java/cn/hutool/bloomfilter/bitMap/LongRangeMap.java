@@ -8,7 +8,7 @@ package cn.hutool.bloomfilter.bitMap;
 class LongRangeMap extends LongMap {
 	private static final long serialVersionUID = 1L;
 
-	// the range
+
 	private final long min;
 
 
@@ -22,7 +22,6 @@ class LongRangeMap extends LongMap {
 		super(size, LongBitMaps.computeMax(size, min));
 		this.min = min;
 	}
-
 
 	/**
 	 * 构造
@@ -54,6 +53,7 @@ class LongRangeMap extends LongMap {
 		i -= min;
 		super.doRemove(i);
 	}
+
 
 	@Override
 	public long getMin() {

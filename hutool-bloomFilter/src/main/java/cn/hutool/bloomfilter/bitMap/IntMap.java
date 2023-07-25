@@ -18,8 +18,8 @@ class IntMap implements IntBitMap, Serializable {
 	public static final long MIN = 0;
 
 
-	protected final int[] ints;
-	protected long max;
+	private final int[] ints;
+	private final long max;
 
 	/**
 	 * 构造
