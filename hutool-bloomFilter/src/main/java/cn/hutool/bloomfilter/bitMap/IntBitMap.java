@@ -8,7 +8,7 @@ package cn.hutool.bloomfilter.bitMap;
 public interface IntBitMap extends BitMap {
 
 	/**
-	 * 一个IntBitMap最大可以存放的最大数字量，但要注意内存溢出
+	 * 一个IntBitMap可以存放的最大数字量，但要注意内存溢出
 	 */
 	long MAX_TOTAL = (long) Integer.MAX_VALUE * MACHINE32;
 
