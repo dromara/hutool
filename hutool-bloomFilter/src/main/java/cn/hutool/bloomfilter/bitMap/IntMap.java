@@ -10,18 +10,20 @@ import java.io.Serializable;
 class IntMap implements IntBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	// Integer.MAX_VALUE / MACHINE32 + (Integer.MAX_VALUE % MACHINE32 > 0 ? 1 : 0)
+	public static final int DEFAULT_SIZE = 67108864;
+
 	private static final long MIN = 0;
 
 
 	protected final int[] ints;
 	protected long max;
 
-
 	/**
 	 * 构造
 	 */
 	IntMap() {
-		this(93750000);
+		this(DEFAULT_SIZE);
 	}
 
 	/**

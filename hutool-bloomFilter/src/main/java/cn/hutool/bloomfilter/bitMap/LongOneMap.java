@@ -28,6 +28,8 @@ class LongOneMap implements LongBitMap, Serializable {
 	public void add(long i) {
 		if (i == onlyOneValue) {
 			this.exist = true;
+		} else {
+			throw new IllegalArgumentException("The value " + i + " is out the range [" + onlyOneValue + "," + onlyOneValue + "].");
 		}
 	}
 

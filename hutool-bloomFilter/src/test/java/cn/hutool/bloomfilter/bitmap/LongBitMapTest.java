@@ -1,5 +1,6 @@
 package cn.hutool.bloomfilter.bitmap;
 
+import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,6 +40,8 @@ public class LongBitMapTest {
 
 
 	private void test(LongBitMap bm, long min, long max) {
+		System.out.println("bm: " + bm.getClass().getSimpleName() + ", size: " + ObjectSizeCalculator.getObjectSize(bm));
+
 		// range: min and max
 		Assert.assertEquals(bm.getMin(), min);
 		Assert.assertEquals(bm.getMax(), max);
@@ -71,7 +74,12 @@ public class LongBitMapTest {
 		Assert.assertFalse(bm.contains(min - 1));
 		Assert.assertFalse(bm.contains(max + 1));
 
-		// contains
-		Assert.assertFalse(bm.contains((max + min) / 2));
+		// other value
+		long median = (max + min) / 2;
+		Assert.assertFalse(bm.contains(median));
+		bm.add(median);
+		Assert.assertTrue(bm.contains(median));
+		bm.remove(median);
+		Assert.assertFalse(bm.contains(median));
 	}
 }

@@ -1,9 +1,8 @@
 package cn.hutool.bloomfilter.bitmap;
 
+import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static cn.hutool.bloomfilter.bitmap.BitMap.MACHINE32;
 
 /**
  * @see IntBitMaps
@@ -12,8 +11,8 @@ public class IntBitMapTest {
 
 	@Test
 	public void testIntMap() {
-		final long min = 0;
-		final long max = 93750000L * MACHINE32 - 1;
+		final int min = 0;
+		final long max = Integer.MAX_VALUE;
 
 		IntBitMap bm = IntBitMaps.create();
 		this.test(bm, min, max);
@@ -26,7 +25,6 @@ public class IntBitMapTest {
 
 		IntBitMap bm = IntBitMaps.createOfRange(min, max);
 		this.test(bm, min, max);
-
 	}
 
 	@Test
@@ -39,7 +37,9 @@ public class IntBitMapTest {
 	}
 
 
-	private void test(IntBitMap bm, long min, long max) {
+	private void test(IntBitMap bm, int min, long max) {
+		System.out.println("bm: " + bm.getClass().getSimpleName() + ", objectSize: " + ObjectSizeCalculator.getObjectSize(bm));
+
 		// range: min and max
 		Assert.assertEquals(bm.getMin(), min);
 		Assert.assertEquals(bm.getMax(), max);
@@ -72,7 +72,12 @@ public class IntBitMapTest {
 		Assert.assertFalse(bm.contains(min - 1));
 		Assert.assertFalse(bm.contains(max + 1));
 
-		// contains
-		Assert.assertFalse(bm.contains((max + min) / 2));
+		// other value
+		long median = (max + min) / 2;
+		Assert.assertFalse(bm.contains(median));
+		bm.add(median);
+		Assert.assertTrue(bm.contains(median));
+		bm.remove(median);
+		Assert.assertFalse(bm.contains(median));
 	}
 }
