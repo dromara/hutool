@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * @author wangliang181230
  * @see IntBitMaps
  */
 public class IntBitMapTest {
@@ -65,6 +66,19 @@ public class IntBitMapTest {
 			Assert.assertEquals(bm.getClass(), IntRangeMap.class);
 			this.test(bm, min, max);
 		}
+
+		{
+			max = IntBitMap.MAX_TOTAL;
+
+			min = 0;
+			testTooBiggerRange(min, max);
+
+			min = -1;
+			testTooBiggerRange(min, max);
+
+			min = Integer.MIN_VALUE;
+			testTooBiggerRange(min, max);
+		}
 	}
 
 
@@ -107,7 +121,7 @@ public class IntBitMapTest {
 		Assert.assertFalse(bm.contains(i));
 	}
 
-	private void testTooBiggerRange(LongBitMap bm, final long minFinal, final long maxFinal) {
+	private void testTooBiggerRange(final long minFinal, final long maxFinal) {
 		Assert.assertThrows(IllegalArgumentException.class, () -> {
 			IntBitMaps.createOfRange(minFinal, maxFinal);
 		});

@@ -7,6 +7,7 @@ import org.junit.Test;
 import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE64;
 
 /**
+ * @author wangliang181230
  * @see LongBitMaps
  */
 public class LongBitMapTest {
@@ -51,19 +52,34 @@ public class LongBitMapTest {
 			bm = LongBitMaps.createOfRange(min, max);
 			Assert.assertEquals(bm.getClass(), LongRangeMap.class);
 			this.test(bm, min, max);
+
+			min = 0;
+			bm = LongBitMaps.createOfRange(min, max);
+			Assert.assertEquals(bm.getClass(), LongMap.class);
+			this.test(bm, min, max);
+
+			min = -1;
+			bm = LongBitMaps.createOfRange(min, max);
+			Assert.assertEquals(bm.getClass(), LongRangeMap.class);
+			this.test(bm, min, max);
+
+			min = Integer.MIN_VALUE;
+			bm = LongBitMaps.createOfRange(min, max);
+			Assert.assertEquals(bm.getClass(), LongRangeMap.class);
+			this.test(bm, min, max);
 		}
 
 		{
 			max = LongBitMap.MAX_TOTAL;
 
 			min = 0;
-			testTooBiggerRange(bm, min, max);
+			testTooBiggerRange(min, max);
 
 			min = -1;
-			testTooBiggerRange(bm, min, max);
+			testTooBiggerRange(min, max);
 
 			min = Long.MIN_VALUE;
-			testTooBiggerRange(bm, min, max);
+			testTooBiggerRange(min, max);
 		}
 	}
 
@@ -109,7 +125,7 @@ public class LongBitMapTest {
 		Assert.assertFalse(bm.contains(i));
 	}
 
-	private void testTooBiggerRange(LongBitMap bm, final long minFinal, final long maxFinal) {
+	private void testTooBiggerRange(final long minFinal, final long maxFinal) {
 		Assert.assertThrows(IllegalArgumentException.class, () -> {
 			LongBitMaps.createOfRange(minFinal, maxFinal);
 		});
