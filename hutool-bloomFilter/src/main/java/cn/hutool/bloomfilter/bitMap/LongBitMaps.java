@@ -9,6 +9,11 @@ import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE64;
  */
 public class LongBitMaps {
 
+	private LongBitMaps() {
+		throw new UnsupportedOperationException("Instantiation of LongBitMaps class is not allowed");
+	}
+
+
 	public static LongBitMap create() {
 		return new LongMap();
 	}

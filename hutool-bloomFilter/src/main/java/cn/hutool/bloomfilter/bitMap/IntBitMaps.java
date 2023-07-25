@@ -9,6 +9,11 @@ import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE32;
  */
 public class IntBitMaps {
 
+	private IntBitMaps() {
+		throw new UnsupportedOperationException("Instantiation of IntBitMaps class is not allowed");
+	}
+
+
 	public static IntBitMap create() {
 		return new IntMap();
 	}

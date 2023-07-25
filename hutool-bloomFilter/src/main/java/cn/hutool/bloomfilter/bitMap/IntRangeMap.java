@@ -8,6 +8,7 @@ package cn.hutool.bloomfilter.bitMap;
 class IntRangeMap extends IntMap {
 	private static final long serialVersionUID = 1L;
 
+	// the range
 	private final int min;
 	private final int max;
 

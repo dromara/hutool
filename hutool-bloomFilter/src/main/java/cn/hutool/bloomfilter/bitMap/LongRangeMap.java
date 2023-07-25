@@ -8,6 +8,7 @@ package cn.hutool.bloomfilter.bitMap;
 class LongRangeMap extends LongMap {
 	private static final long serialVersionUID = 1L;
 
+	// the range
 	private final long min;
 	private final long max;
 
