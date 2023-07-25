@@ -1,4 +1,4 @@
-package cn.hutool.bloomfilter.bitmap;
+package cn.hutool.bloomfilter.bitMap;
 
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.junit.Assert;

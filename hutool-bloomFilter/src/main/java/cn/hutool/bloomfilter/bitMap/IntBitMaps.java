@@ -1,6 +1,6 @@
-package cn.hutool.bloomfilter.bitmap;
+package cn.hutool.bloomfilter.bitMap;
 
-import static cn.hutool.bloomfilter.bitmap.BitMap.MACHINE32;
+import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE32;
 
 /**
  * 用于创建IntBitMap的工具类

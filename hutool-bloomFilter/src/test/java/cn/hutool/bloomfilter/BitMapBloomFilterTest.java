@@ -1,6 +1,6 @@
 package cn.hutool.bloomfilter;
 
-import cn.hutool.bloomfilter.bitmap.*;
+import cn.hutool.bloomfilter.bitMap.*;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

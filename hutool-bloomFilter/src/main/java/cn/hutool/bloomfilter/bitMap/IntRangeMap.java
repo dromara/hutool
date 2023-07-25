@@ -1,4 +1,4 @@
-package cn.hutool.bloomfilter.bitmap;
+package cn.hutool.bloomfilter.bitMap;
 
 /**
  * 允许设置值范围的变种IntMap

@@ -1,10 +1,10 @@
-package cn.hutool.bloomfilter.bitmap;
+package cn.hutool.bloomfilter.bitMap;
 
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static cn.hutool.bloomfilter.bitmap.BitMap.MACHINE64;
+import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE64;
 
 /**
  * @see LongBitMaps

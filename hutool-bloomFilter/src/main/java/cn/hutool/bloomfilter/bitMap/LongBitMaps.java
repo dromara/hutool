@@ -1,6 +1,6 @@
-package cn.hutool.bloomfilter.bitmap;
+package cn.hutool.bloomfilter.bitMap;
 
-import static cn.hutool.bloomfilter.bitmap.BitMap.MACHINE64;
+import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE64;
 
 /**
  * 用于创建LongBitMap的工具类

@@ -1,9 +1,9 @@
 package cn.hutool.bloomfilter.filter;
 
 import cn.hutool.bloomfilter.BloomFilter;
-import cn.hutool.bloomfilter.bitmap.BitMap;
-import cn.hutool.bloomfilter.bitmap.IntBitMaps;
-import cn.hutool.bloomfilter.bitmap.LongBitMaps;
+import cn.hutool.bloomfilter.bitMap.BitMap;
+import cn.hutool.bloomfilter.bitMap.IntBitMaps;
+import cn.hutool.bloomfilter.bitMap.LongBitMaps;
 
 /**
  * 抽象Bloom过滤器
