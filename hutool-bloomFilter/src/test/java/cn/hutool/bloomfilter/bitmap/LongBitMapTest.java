@@ -13,28 +13,30 @@ public class LongBitMapTest {
 
 	@Test
 	public void testLongMap() {
-		final long min = 0;
-		final long max = 93750000L * MACHINE64 - 1;
-
+		long min = 0;
+		long max = 93750000L * MACHINE64 - 1;
 		LongBitMap bm = LongBitMaps.create();
 		this.test(bm, min, max);
 	}
 
 	@Test
 	public void testLongOneMap() {
-		final long min = 1;
-		final long max = 1;
-
+		long min = 1;
+		long max = 1;
 		LongBitMap bm = LongBitMaps.createOfRange(min, max);
 		this.test(bm, min, max);
 	}
 
 	@Test
 	public void testLongRangeMap() {
-		final long min = -1000;
-		final long max = 1000;
-
+		long min = -1000L;
+		long max = 1000L;
 		LongBitMap bm = LongBitMaps.createOfRange(min, max);
+		this.test(bm, min, max);
+
+		min = 2000L;
+		max = 3000L;
+		bm = LongBitMaps.createOfRange(min, max);
 		this.test(bm, min, max);
 	}
 

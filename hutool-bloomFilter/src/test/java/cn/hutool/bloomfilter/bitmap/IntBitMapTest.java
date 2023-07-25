@@ -11,28 +11,30 @@ public class IntBitMapTest {
 
 	@Test
 	public void testIntMap() {
-		final int min = 0;
-		final long max = Integer.MAX_VALUE;
-
+		int min = 0;
+		long max = Integer.MAX_VALUE;
 		IntBitMap bm = IntBitMaps.create();
 		this.test(bm, min, max);
 	}
 
 	@Test
 	public void testIntOneMap() {
-		final int min = 1;
-		final int max = 1;
-
+		int min = 1;
+		int max = 1;
 		IntBitMap bm = IntBitMaps.createOfRange(min, max);
 		this.test(bm, min, max);
 	}
 
 	@Test
 	public void testIntRangeMap() {
-		final int min = -1000;
-		final int max = 1000;
-
+		int min = -1000;
+		int max = 1000;
 		IntBitMap bm = IntBitMaps.createOfRange(min, max);
+		this.test(bm, min, max);
+
+		min = 2000;
+		max = 3000;
+		bm = IntBitMaps.createOfRange(min, max);
 		this.test(bm, min, max);
 	}
 
