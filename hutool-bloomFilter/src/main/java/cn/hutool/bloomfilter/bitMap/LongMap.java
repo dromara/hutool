@@ -11,7 +11,9 @@ import java.io.Serializable;
 class LongMap implements LongBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final long MIN = 0;
+	public static final int DEFAULT_SIZE = 93750000;
+
+	public static final long MIN = 0;
 
 
 	protected final long[] longs;
@@ -22,7 +24,7 @@ class LongMap implements LongBitMap, Serializable {
 	 * 构造
 	 */
 	LongMap() {
-		this(93750000);
+		this(DEFAULT_SIZE);
 	}
 
 	/**

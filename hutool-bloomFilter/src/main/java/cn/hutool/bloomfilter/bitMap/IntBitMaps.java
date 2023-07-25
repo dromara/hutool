@@ -58,11 +58,25 @@ public class IntBitMaps {
 	}
 
 	public static int computeSize(long min, long max) {
+		// 交换值
+		if (min > max) {
+			long temp = min;
+			min = max;
+			max = temp;
+		}
+
 		long total = max - min + 1;
+		if (total <= 0 && total <= min) {
+			throw new IllegalArgumentException("The range[" + min + "," + max + "] is too bigger.");
+		}
+
 		return computeSize(total);
 	}
 
 	public static long computeTotal(int size) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("Invalid size: " + size);
+		}
 		return (long) size * MACHINE32;
 	}
 
@@ -71,7 +85,11 @@ public class IntBitMaps {
 	}
 
 	public static long computeMax(int size, long min) {
-		return computeMax(size) + min;
+		long max = computeMax(size) + min;
+		if (max <= min) {
+			throw new IllegalArgumentException("Maximum value out of range: " + max);
+		}
+		return max;
 	}
 
 }
