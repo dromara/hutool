@@ -7,6 +7,12 @@ package cn.hutool.bloomfilter.bitmap;
  */
 public interface IntBitMap extends BitMap {
 
+	long MAX_TOTAL = (long) Integer.MAX_VALUE * MACHINE32;
+
+	// 当min=0时，max的最大值
+	long MAX_VALUE = MAX_TOTAL - 1;
+
+
 	long getMin();
 
 	long getMax();

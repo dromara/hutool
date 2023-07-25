@@ -19,7 +19,7 @@ class LongRangeMap extends LongMap {
 	 * @param min  最小值
 	 */
 	LongRangeMap(int size, long min) {
-		super(size, min + (long) size * MACHINE32 - 1);
+		super(size, LongBitMaps.computeMax(size, min));
 		this.min = min;
 	}
 

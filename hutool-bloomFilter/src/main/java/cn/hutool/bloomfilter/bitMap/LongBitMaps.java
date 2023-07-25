@@ -40,8 +40,12 @@ public class LongBitMaps {
 			return new LongOneMap(min);
 		}
 
-		long diff = max - min;
-		int size = (int) diff / MACHINE64 + (diff % MACHINE64 > 0 ? 1 : 0);
+		long total = max - min + 1L;
+		if (total <= 0 || total > LongBitMap.MAX_TOTAL) {
+			throw new IllegalArgumentException("The range[" + min + "," + max + "] is too bigger.");
+		}
+		int size = computeSize(total);
+
 
 		if (min == 0) {
 			return new LongMap(size, max);
@@ -50,4 +54,24 @@ public class LongBitMaps {
 		}
 	}
 
+	public static int computeSize(long max) {
+		return (int) (max / MACHINE64 + (max % MACHINE64 > 0 ? 1 : 0));
+	}
+
+	public static int computeSize(long min, long max) {
+		long total = max - min + 1;
+		return computeSize(total);
+	}
+
+	public static long computeTotal(int size) {
+		return (long) size * MACHINE64;
+	}
+
+	public static long computeMax(int size) {
+		return computeTotal(size) - 1;
+	}
+
+	public static long computeMax(int size, long min) {
+		return computeMax(size) + min;
+	}
 }

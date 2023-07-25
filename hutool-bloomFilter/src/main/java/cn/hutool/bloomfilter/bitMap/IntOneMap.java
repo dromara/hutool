@@ -10,7 +10,7 @@ import java.io.Serializable;
 class IntOneMap implements IntBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private final int onlyOneValue;
+	private final long onlyOneValue;
 	private volatile boolean exist = false;
 
 
@@ -19,7 +19,7 @@ class IntOneMap implements IntBitMap, Serializable {
 	 *
 	 * @param onlyOneValue 唯一一个值
 	 */
-	IntOneMap(int onlyOneValue) {
+	IntOneMap(long onlyOneValue) {
 		this.onlyOneValue = onlyOneValue;
 	}
 
@@ -55,7 +55,7 @@ class IntOneMap implements IntBitMap, Serializable {
 		return onlyOneValue;
 	}
 
-	public int getOnlyOneValue() {
+	public long getOnlyOneValue() {
 		return onlyOneValue;
 	}
 }

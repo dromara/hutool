@@ -11,7 +11,7 @@ class IntMap implements IntBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// Integer.MAX_VALUE / MACHINE32 + (Integer.MAX_VALUE % MACHINE32 > 0 ? 1 : 0)
-	public static final int DEFAULT_SIZE = 67108864;
+	public static final int DEFAULT_SIZE = IntBitMaps.computeSize(Integer.MAX_VALUE);
 
 	private static final long MIN = 0;
 
@@ -32,7 +32,7 @@ class IntMap implements IntBitMap, Serializable {
 	 * @param size 容量
 	 */
 	IntMap(int size) {
-		this(size, (long) size * MACHINE32 - 1);
+		this(size, IntBitMaps.computeMax(size));
 	}
 
 	/**

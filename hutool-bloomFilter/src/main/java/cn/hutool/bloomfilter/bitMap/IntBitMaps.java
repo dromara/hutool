@@ -22,7 +22,7 @@ public class IntBitMaps {
 		return new IntMap(size);
 	}
 
-	public static IntBitMap create(int size, int min) {
+	public static IntBitMap create(int size, long min) {
 		if (min == 0) {
 			return new IntMap(size);
 		} else {
@@ -30,24 +30,48 @@ public class IntBitMaps {
 		}
 	}
 
-	public static IntBitMap createOfRange(int min, int max) {
+	public static IntBitMap createOfRange(long min, long max) {
 		// 交换值
 		if (min > max) {
-			int temp = min;
+			long temp = min;
 			min = max;
 			max = temp;
 		} else if (min == max) {
 			return new IntOneMap(min);
 		}
 
-		int diff = max - min;
-		int size = diff / MACHINE32 + (diff % MACHINE32 > 0 ? 1 : 0);
+		long total = max - min + 1L;
+		if (total <= 0 || total > IntBitMap.MAX_TOTAL) {
+			throw new IllegalArgumentException("The range[" + min + "," + max + "] is too bigger.");
+		}
+		int size = computeSize(total);
 
 		if (min == 0) {
 			return new IntMap(size, max);
 		} else {
 			return new IntRangeMap(size, min, max);
 		}
+	}
+
+	public static int computeSize(long max) {
+		return (int) (max / MACHINE32 + (max % MACHINE32 > 0 ? 1 : 0));
+	}
+
+	public static int computeSize(long min, long max) {
+		long total = max - min + 1;
+		return computeSize(total);
+	}
+
+	public static long computeTotal(int size) {
+		return (long) size * MACHINE32;
+	}
+
+	public static long computeMax(int size) {
+		return computeTotal(size) - 1;
+	}
+
+	public static long computeMax(int size, long min) {
+		return computeMax(size) + min;
 	}
 
 }

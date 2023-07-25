@@ -18,8 +18,8 @@ class IntRangeMap extends IntMap {
 	 * @param size 容量
 	 * @param min  最小值
 	 */
-	IntRangeMap(int size, int min) {
-		super(size, min + (long) size * MACHINE32 - 1);
+	IntRangeMap(int size, long min) {
+		super(size, IntBitMaps.computeMax(size, min));
 		this.min = min;
 	}
 
@@ -31,7 +31,7 @@ class IntRangeMap extends IntMap {
 	 * @param min  最小值
 	 * @param max  最大值
 	 */
-	IntRangeMap(int size, int min, int max) {
+	IntRangeMap(int size, long min, long max) {
 		super(size, max);
 		this.min = min;
 	}

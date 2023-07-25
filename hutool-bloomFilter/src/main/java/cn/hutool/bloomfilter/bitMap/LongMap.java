@@ -30,7 +30,7 @@ class LongMap implements LongBitMap, Serializable {
 	 * @param size 容量
 	 */
 	LongMap(int size) {
-		this(size, (long) size * MACHINE64 - 1);
+		this(size, LongBitMaps.computeMax(size));
 	}
 
 	/**
