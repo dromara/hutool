@@ -1,6 +1,6 @@
 package cn.hutool.bloomfilter;
 
-import cn.hutool.bloomfilter.bitMap.*;
+import cn.hutool.bloomfilter.bitmap.*;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class BitMapBloomFilterTest {
 	@Test
 	@Ignore
 	public void testLongMap(){
-		LongBitMap longMap = new LongBitMap();
+		LongBitMap longMap = LongBitMaps.create();
 
 		for (int i = 0 ; i < 64; i++) {
 			longMap.add(i);

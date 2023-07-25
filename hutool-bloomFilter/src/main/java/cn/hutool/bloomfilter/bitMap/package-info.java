@@ -4,4 +4,4 @@
  * @author looly
  *
  */
-package cn.hutool.bloomfilter.bitMap;
+package cn.hutool.bloomfilter.bitmap;

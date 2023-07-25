@@ -1,4 +1,4 @@
-package cn.hutool.bloomfilter.bitMap;
+package cn.hutool.bloomfilter.bitmap;
 
 import java.io.Serializable;
 
