@@ -72,6 +72,15 @@ public class LongBitMapTest {
 		{
 			max = LongBitMap.MAX_TOTAL;
 
+			try {
+				min = 1;
+				bm = LongBitMaps.createOfRange(min, max);
+				Assert.assertEquals(bm.getClass(), LongRangeMap.class);
+				this.test(bm, min, max);
+			} catch (java.lang.OutOfMemoryError e) {
+				e.printStackTrace();
+			}
+
 			min = 0;
 			testTooBiggerRange(min, max);
 
