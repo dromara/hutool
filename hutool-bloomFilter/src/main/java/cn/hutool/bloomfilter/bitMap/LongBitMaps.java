@@ -1,7 +1,9 @@
 package cn.hutool.bloomfilter.bitMap;
 
+import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE64;
+
 /**
- * 用于创建LongMap的工具类
+ * 用于创建LongBitMap的工具类
  *
  * @author wangliang181230
  */
@@ -29,9 +31,11 @@ public class LongBitMaps {
 			int temp = min;
 			min = max;
 			max = temp;
+		} else if (min == max) {
+			return new LongOneMap(min);
 		}
 
-		int size = max - min + 1;
+		int size = (max - min + 1) / MACHINE64;
 		return create(min, size);
 	}
 

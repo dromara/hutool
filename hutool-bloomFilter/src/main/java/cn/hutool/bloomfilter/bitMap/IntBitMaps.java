@@ -1,7 +1,9 @@
 package cn.hutool.bloomfilter.bitMap;
 
+import static cn.hutool.bloomfilter.bitMap.BitMap.MACHINE32;
+
 /**
- * 用于创建IntMap的工具类
+ * 用于创建IntBitMap的工具类
  *
  * @author wangliang181230
  */
@@ -29,9 +31,11 @@ public class IntBitMaps {
 			int temp = min;
 			min = max;
 			max = temp;
+		} else if (min == max) {
+			return new IntOneMap(min);
 		}
 
-		int size = max - min + 1;
+		int size = (max - min + 1) / MACHINE32;
 		return create(min, size);
 	}
 

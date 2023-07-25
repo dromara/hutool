@@ -1,7 +1,5 @@
 package cn.hutool.bloomfilter.bitMap;
 
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
-
 import java.io.Serializable;
 
 /**
@@ -28,12 +26,14 @@ class LongOneMap implements LongBitMap, Serializable {
 
 	@Override
 	public void add(long i) {
-		this.exist = (i == onlyOneValue);
+		if (i == onlyOneValue) {
+			this.exist = true;
+		}
 	}
 
 	@Override
 	public boolean contains(long i) {
-		return this.exist && i == onlyOneValue;
+		return i == onlyOneValue && this.exist;
 	}
 
 	@Override
@@ -46,10 +46,5 @@ class LongOneMap implements LongBitMap, Serializable {
 
 	public long getOnlyOneValue() {
 		return onlyOneValue;
-	}
-
-	public static void main(String[] args) throws Exception {
-		System.out.println(ObjectSizeCalculator.getObjectSize(new LongMap(1)));
-		System.out.println(ObjectSizeCalculator.getObjectSize(new LongOneMap(1)));
 	}
 }

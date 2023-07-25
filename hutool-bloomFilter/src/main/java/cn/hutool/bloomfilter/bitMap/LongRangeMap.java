@@ -1,7 +1,7 @@
 package cn.hutool.bloomfilter.bitMap;
 
 /**
- * 过滤器BitMap在32位机器上.这个类能发生更好的效果.一般情况下建议使用此类
+ * 允许设置值范围的变种LongMap
  *
  * @author wangliang181230
  */
@@ -21,7 +21,7 @@ class LongRangeMap extends LongMap {
 	LongRangeMap(long min, int size) {
 		super(size);
 		this.min = min;
-		this.max = min + size - 1;
+		this.max = min + (long) size * MACHINE64 - 1;
 	}
 
 
