@@ -23,7 +23,7 @@ public class IntBitMapTest {
 		long min = 1;
 		long max = 1;
 		IntBitMap bm = IntBitMaps.createOfRange(min, max);
-		Assert.assertEquals(bm.getClass(), IntOneMap.class);
+		Assert.assertEquals(bm.getClass(), SingleValueBitMap.class);
 		this.test(bm, min, max);
 	}
 

@@ -37,7 +37,7 @@ public class LongBitMaps {
 			min = max;
 			max = temp;
 		} else if (min == max) {
-			return new LongOneMap(min);
+			return new SingleValueBitMap(min);
 		}
 
 		long total = max - min + 1L;

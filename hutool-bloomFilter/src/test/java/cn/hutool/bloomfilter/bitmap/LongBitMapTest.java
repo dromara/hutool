@@ -25,7 +25,7 @@ public class LongBitMapTest {
 		long min = 1L;
 		long max = 1L;
 		LongBitMap bm = LongBitMaps.createOfRange(min, max);
-		Assert.assertEquals(bm.getClass(), LongOneMap.class);
+		Assert.assertEquals(bm.getClass(), SingleValueBitMap.class);
 		this.test(bm, min, max);
 	}
 
