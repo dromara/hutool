@@ -9,60 +9,54 @@ class IntRangeMap extends IntMap {
 	private static final long serialVersionUID = 1L;
 
 	// the range
-	private final int min;
-	private final int max;
+	protected final long min;
 
 
 	/**
 	 * 构造
 	 *
-	 * @param min  最小值
 	 * @param size 容量
+	 * @param min  最小值
 	 */
-	IntRangeMap(int min, int size) {
-		super(size);
+	IntRangeMap(int size, int min) {
+		super(size, min + (long) size * MACHINE32 - 1);
 		this.min = min;
-		this.max = min + size * MACHINE32 - 1;
+	}
+
+
+	/**
+	 * 构造
+	 *
+	 * @param size 容量
+	 * @param min  最小值
+	 * @param max  最大值
+	 */
+	IntRangeMap(int size, int min, int max) {
+		super(size, max);
+		this.min = min;
 	}
 
 
 	@Override
-	public void add(long i) {
-		if (i < min || i > max) {
-			return;
-		}
-
+	public void doAdd(long i) {
 		i -= min;
-		super.add(i);
+		super.doAdd(i);
 	}
 
 	@Override
-	public boolean contains(long i) {
-		if (i < min || i > max) {
-			return false;
-		}
-
+	public boolean doContains(long i) {
 		i -= min;
-		return super.contains(i);
+		return super.doContains(i);
 	}
 
 	@Override
-	public void remove(long i) {
-		if (i < min || i > max) {
-			return;
-		}
-
+	public void doRemove(long i) {
 		i -= min;
-		super.remove(i);
+		super.doRemove(i);
 	}
 
 	@Override
-	public int getMin() {
+	public long getMin() {
 		return min;
-	}
-
-	@Override
-	public int getMax() {
-		return max;
 	}
 }

@@ -22,26 +22,32 @@ public class LongBitMaps {
 		return new LongMap(size);
 	}
 
-	public static LongBitMap create(int min, int size) {
+	public static LongBitMap create(int size, long min) {
 		if (min == 0) {
 			return new LongMap(size);
 		} else {
-			return new LongRangeMap(min, size);
+			return new LongRangeMap(size, min);
 		}
 	}
 
-	public static LongBitMap createOfRange(int min, int max) {
+	public static LongBitMap createOfRange(long min, long max) {
 		// 交换值
 		if (min > max) {
-			int temp = min;
+			long temp = min;
 			min = max;
 			max = temp;
 		} else if (min == max) {
 			return new LongOneMap(min);
 		}
 
-		int size = (max - min + 1) / MACHINE64;
-		return create(min, size);
+		long diff = max - min;
+		int size = (int) diff / MACHINE64 + (diff % MACHINE64 > 0 ? 1 : 0);
+
+		if (min == 0) {
+			return new LongMap(size, max);
+		} else {
+			return new LongRangeMap(size, min, max);
+		}
 	}
 
 }

@@ -28,6 +28,8 @@ class IntOneMap implements IntBitMap, Serializable {
 	public void add(long i) {
 		if (i == onlyOneValue) {
 			this.exist = true;
+		} else {
+			throw new IllegalArgumentException("The value " + i + " is out the range [" + onlyOneValue + "," + onlyOneValue + "].");
 		}
 	}
 
@@ -44,12 +46,12 @@ class IntOneMap implements IntBitMap, Serializable {
 	}
 
 	@Override
-	public int getMin() {
+	public long getMin() {
 		return onlyOneValue;
 	}
 
 	@Override
-	public int getMax() {
+	public long getMax() {
 		return onlyOneValue;
 	}
 

@@ -10,59 +10,53 @@ class LongRangeMap extends LongMap {
 
 	// the range
 	private final long min;
-	private final long max;
 
 
 	/**
 	 * 构造
 	 *
-	 * @param min  最小值
 	 * @param size 容量
+	 * @param min  最小值
 	 */
-	LongRangeMap(long min, int size) {
-		super(size);
+	LongRangeMap(int size, long min) {
+		super(size, min + (long) size * MACHINE32 - 1);
 		this.min = min;
-		this.max = min + (long) size * MACHINE64 - 1;
+	}
+
+
+	/**
+	 * 构造
+	 *
+	 * @param size 容量
+	 * @param min  最小值
+	 * @param max  最大值
+	 */
+	LongRangeMap(int size, long min, long max) {
+		super(size, max);
+		this.min = min;
 	}
 
 
 	@Override
-	public void add(long i) {
-		if (i < min || i > max) {
-			return;
-		}
-
+	public void doAdd(long i) {
 		i -= min;
-		super.add(i);
+		super.doAdd(i);
 	}
 
 	@Override
-	public boolean contains(long i) {
-		if (i < min || i > max) {
-			return false;
-		}
-
+	public boolean doContains(long i) {
 		i -= min;
-		return super.contains(i);
+		return super.doContains(i);
 	}
 
 	@Override
-	public void remove(long i) {
-		if (i < min || i > max) {
-			return;
-		}
-
+	public void doRemove(long i) {
 		i -= min;
-		super.remove(i);
+		super.doRemove(i);
 	}
 
 	@Override
 	public long getMin() {
 		return min;
-	}
-
-	@Override
-	public long getMax() {
-		return max;
 	}
 }

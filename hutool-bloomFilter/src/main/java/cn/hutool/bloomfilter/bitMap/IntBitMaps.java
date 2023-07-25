@@ -22,11 +22,11 @@ public class IntBitMaps {
 		return new IntMap(size);
 	}
 
-	public static IntBitMap create(int min, int size) {
+	public static IntBitMap create(int size, int min) {
 		if (min == 0) {
 			return new IntMap(size);
 		} else {
-			return new IntRangeMap(min, size);
+			return new IntRangeMap(size, min);
 		}
 	}
 
@@ -40,8 +40,14 @@ public class IntBitMaps {
 			return new IntOneMap(min);
 		}
 
-		int size = (max - min + 1) / MACHINE32;
-		return create(min, size);
+		int diff = max - min;
+		int size = diff / MACHINE32 + (diff % MACHINE32 > 0 ? 1 : 0);
+
+		if (min == 0) {
+			return new IntMap(size, max);
+		} else {
+			return new IntRangeMap(size, min, max);
+		}
 	}
 
 }

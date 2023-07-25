@@ -7,8 +7,8 @@ package cn.hutool.bloomfilter.bitmap;
  */
 public interface IntBitMap extends BitMap {
 
-	int getMin();
+	long getMin();
 
-	int getMax();
+	long getMax();
 
 }
