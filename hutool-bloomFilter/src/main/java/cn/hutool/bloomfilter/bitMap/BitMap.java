@@ -4,8 +4,9 @@ package cn.hutool.bloomfilter.bitMap;
  * BitMap接口，用于将某个int或long值映射到一个数组中，从而判定某个值是否存在
  *
  * @author looly
+ *
  */
-public interface BitMap {
+public interface BitMap{
 
 	int MACHINE32 = 32;
 	int MACHINE64 = 64;
