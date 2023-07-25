@@ -56,11 +56,12 @@ class LongRangeMap extends LongMap {
 		super.remove(i);
 	}
 
-
+	@Override
 	public long getMin() {
 		return min;
 	}
 
+	@Override
 	public long getMax() {
 		return max;
 	}

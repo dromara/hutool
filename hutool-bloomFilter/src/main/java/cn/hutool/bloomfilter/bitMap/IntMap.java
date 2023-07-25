@@ -49,4 +49,14 @@ class IntMap implements IntBitMap, Serializable {
 		int c = (int) (i & (BitMap.MACHINE32 - 1));
 		ints[r] &= ~(1 << c);
 	}
+
+	@Override
+	public int getMin() {
+		return 0;
+	}
+
+	@Override
+	public int getMax() {
+		return ints.length * MACHINE32 - 1;
+	}
 }

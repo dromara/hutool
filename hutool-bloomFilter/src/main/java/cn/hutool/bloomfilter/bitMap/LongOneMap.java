@@ -43,6 +43,16 @@ class LongOneMap implements LongBitMap, Serializable {
 		}
 	}
 
+	@Override
+	public long getMin() {
+		return onlyOneValue;
+	}
+
+	@Override
+	public long getMax() {
+		return onlyOneValue;
+	}
+
 
 	public long getOnlyOneValue() {
 		return onlyOneValue;

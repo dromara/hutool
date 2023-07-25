@@ -6,4 +6,9 @@ package cn.hutool.bloomfilter.bitMap;
  * @author wangliang181230
  */
 public interface LongBitMap extends BitMap {
+
+	long getMin();
+
+	long getMax();
+
 }

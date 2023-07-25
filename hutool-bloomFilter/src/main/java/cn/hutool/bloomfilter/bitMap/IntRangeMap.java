@@ -56,11 +56,12 @@ class IntRangeMap extends IntMap {
 		super.remove(i);
 	}
 
-
+	@Override
 	public int getMin() {
 		return min;
 	}
 
+	@Override
 	public int getMax() {
 		return max;
 	}

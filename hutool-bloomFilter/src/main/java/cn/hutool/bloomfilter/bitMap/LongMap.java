@@ -6,7 +6,6 @@ import java.io.Serializable;
  * 过滤器BitMap在64位机器上.这个类能发生更好的效果.一般机器不建议使用
  *
  * @author loolly
- *
  */
 class LongMap implements LongBitMap, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -48,6 +47,16 @@ class LongMap implements LongBitMap, Serializable {
 		int r = (int) (i / BitMap.MACHINE64);
 		long c = i & (BitMap.MACHINE64 - 1);
 		longs[r] &= ~(1L << c);
+	}
+
+	@Override
+	public long getMin() {
+		return 0;
+	}
+
+	@Override
+	public long getMax() {
+		return (long) longs.length * MACHINE64 - 1;
 	}
 
 }

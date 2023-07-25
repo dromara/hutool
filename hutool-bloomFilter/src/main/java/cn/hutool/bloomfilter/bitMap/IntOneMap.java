@@ -43,6 +43,15 @@ class IntOneMap implements IntBitMap, Serializable {
 		}
 	}
 
+	@Override
+	public int getMin() {
+		return onlyOneValue;
+	}
+
+	@Override
+	public int getMax() {
+		return onlyOneValue;
+	}
 
 	public int getOnlyOneValue() {
 		return onlyOneValue;
