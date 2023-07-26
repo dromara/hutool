@@ -2,6 +2,7 @@ package org.dromara.hutool.socket.aio;
 
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.thread.ThreadUtil;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -20,11 +21,7 @@ public class AioClientTest {
 			}
 		});
 		//线程休息1秒，然后client 和 server 初始化完再连接
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		ThreadUtil.sleep(1000);
 
 		client.write(ByteBuffer.wrap("Hello".getBytes()));
 		client.read();
