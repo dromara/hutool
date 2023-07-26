@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.21(2023-07-20)
+# 5.8.21(2023-07-26)
 
 ### 🐣新特性
 * 【core  】      list 为空时，CollUtil.max等返回null而非异常（pr#1027@Gitee）
@@ -15,6 +15,7 @@
 * 【http  】      使用multiparty方式支持body参数（issue#3158@Github）
 * 【core  】      ZipReader增加setMaxSizeDiff方法，自定义或关闭ZipBomb（issue#3018@Github）
 * 【db    】      Query.of(entity)构建时传入fields（issue#I7M5JU@Gitee）
+* 【db    】      clickhouse驱动名称变更为com.clickhouse.jdbc.ClickHouseDriver（issue#3224@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复MapUtil工具使用filter方法构造传入参数结果问题（issue#3162@Github）
