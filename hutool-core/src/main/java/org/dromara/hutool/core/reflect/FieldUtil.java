@@ -56,18 +56,30 @@ public class FieldUtil {
 	/**
 	 * 获取字段名，如果存在{@link Alias}注解，读取注解的值作为名称
 	 *
-	 * @param field 字段
+	 * @param field    字段
 	 * @return 字段名
-	 * @since 5.1.6
 	 */
 	public static String getFieldName(final Field field) {
+		return getFieldName(field, true);
+	}
+
+	/**
+	 * 获取字段名，可选是否使用{@link Alias}注解，读取注解的值作为名称
+	 *
+	 * @param field    字段
+	 * @param useAlias 是否检查并使用{@link Alias}注解
+	 * @return 字段名
+	 */
+	public static String getFieldName(final Field field, final boolean useAlias) {
 		if (null == field) {
 			return null;
 		}
 
-		final Alias alias = field.getAnnotation(Alias.class);
-		if (null != alias) {
-			return alias.value();
+		if (useAlias) {
+			final Alias alias = field.getAnnotation(Alias.class);
+			if (null != alias) {
+				return alias.value();
+			}
 		}
 
 		return field.getName();
