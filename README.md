@@ -12,7 +12,7 @@
 	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
-	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL2/index.html">
+	<a target="_blank" href="http://license.coscl.org.cn/MulanPubL-2.0">
 		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
