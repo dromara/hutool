@@ -54,7 +54,7 @@ public class Browser extends UserAgentInfo {
 			// 联想浏览器
 			new Browser("Lenovo", "SLBrowser", "SLBrowser/([\\d\\w\\.\\-]+)"),
 			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg|EdgA)\\/([\\d\\w\\.\\-]+)"),
-			new Browser("Chrome", "chrome", Other_Version),
+			new Browser("Chrome", "chrome|(iphone.*crios.*safari)", "(?:Chrome|CriOS)\\/([\\d\\w\\.\\-]+)"),
 			new Browser("Firefox", "firefox", Other_Version),
 			new Browser("IEMobile", "iemobile", Other_Version),
 			new Browser("Android Browser", "android", "version\\/([\\d\\w\\.\\-]+)"),
