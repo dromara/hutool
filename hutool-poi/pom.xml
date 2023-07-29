@@ -52,12 +52,6 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>${poi.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>log4j-api</artifactId>
-					<groupId>org.apache.logging.log4j</groupId>
-				</exclusion>
-			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<!-- OFD -->
