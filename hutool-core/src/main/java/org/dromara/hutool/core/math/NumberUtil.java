@@ -638,6 +638,20 @@ public class NumberUtil extends NumberValidator {
 		format.setMaximumFractionDigits(scale);
 		return format.format(number);
 	}
+
+	/**
+	 * 格式化千分位表示方式，小数采用四舍五入方式
+	 *
+	 * @param number 值
+	 * @param scale  保留小数位数
+	 * @return 千分位数字
+	 * @since 6.0.0
+	 */
+	public static String formatThousands(final double number, final int scale) {
+		final NumberFormat format = NumberFormat.getNumberInstance();
+		format.setMaximumFractionDigits(scale);
+		return format.format(number);
+	}
 	// endregion
 
 	// region ----- range

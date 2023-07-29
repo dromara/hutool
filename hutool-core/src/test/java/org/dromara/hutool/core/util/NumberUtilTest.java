@@ -746,4 +746,12 @@ public class NumberUtilTest {
 	void issueI6ZD1RTest() {
 		Assertions.assertFalse(NumberUtil.isInteger("999999999999999"));
 	}
+
+	@Test
+	void formatThousands() {
+		// issue#I7OIA6
+		Assertions.assertEquals(
+			"123,456,789.111111",
+			NumberUtil.formatThousands(123456789.111111D, 6));
+	}
 }
