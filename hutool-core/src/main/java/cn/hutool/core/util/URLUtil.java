@@ -776,4 +776,51 @@ public class URLUtil extends URLEncodeUtil {
 
 		return builder.toString();
 	}
+
+	/**
+	 * 获取URL对应数据长度
+	 * <ul>
+	 *     <li>如果URL为文件，转换为文件获取文件长度。</li>
+	 *     <li>其它情况获取{@link URLConnection#getContentLengthLong()}</li>
+	 * </ul>
+	 *
+	 * @param url URL
+	 * @return 长度
+	 * @since 6.0.0
+	 */
+	public static long size(final URL url) {
+		if (URLUtil.isFileURL(url)) {
+			// 如果资源以独立文件形式存在，尝试获取文件长度
+			final File file = FileUtil.file(url);
+			final long length = file.length();
+			if (length == 0L && !file.exists()) {
+				throw new IORuntimeException("File not exist or size is zero!");
+			}
+			return length;
+		} else {
+			// 如果资源打在jar包中或来自网络，使用网络请求长度
+			// issue#3226, 来自Spring的AbstractFileResolvingResource
+			try {
+				final URLConnection con = url.openConnection();
+				useCachesIfNecessary(con);
+				if (con instanceof HttpURLConnection) {
+					final HttpURLConnection httpCon = (HttpURLConnection) con;
+					httpCon.setRequestMethod("HEAD");
+				}
+				return con.getContentLengthLong();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
+	}
+
+	/**
+	 * 如果连接为JNLP方式，则打开缓存
+	 *
+	 * @param con {@link URLConnection}
+	 * @since 6.0.0
+	 */
+	public static void useCachesIfNecessary(final URLConnection con) {
+		con.setUseCaches(con.getClass().getSimpleName().startsWith("JNLP"));
+	}
 }
