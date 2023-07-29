@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>com.clickhouse</groupId>
 			<artifactId>clickhouse-jdbc</artifactId>
-			<version>0.4.1</version>
+			<version>0.4.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
