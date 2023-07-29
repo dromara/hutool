@@ -426,4 +426,34 @@ public class UserAgentUtilTest {
 		Assertions.assertEquals("Windows", ua.getPlatform().toString());
 		Assertions.assertFalse(ua.isMobile());
 	}
+
+	/**
+	 * <a href="https://gitee.com/dromara/hutool/issues/I7OTCU">fix : issues I7OTCU </a>
+	 */
+	@Test
+	public void issuseI7OTCUTest() {
+		// MAC Chrome 浏览器 ua
+		final String uaStr = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+		final UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assertions.assertEquals("Chrome", ua.getBrowser().toString());
+		Assertions.assertEquals("114.0.0.0", ua.getVersion());
+		Assertions.assertEquals("Webkit", ua.getEngine().toString());
+		Assertions.assertEquals("537.36", ua.getEngineVersion());
+		Assertions.assertEquals("OSX", ua.getOs().toString());
+		Assertions.assertEquals("10_15_7", ua.getOsVersion());
+		Assertions.assertEquals("Mac", ua.getPlatform().toString());
+		Assertions.assertFalse(ua.isMobile());
+
+		// iphone Chrome 浏览器ua
+		final String uaStr2 = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1";
+		final UserAgent ua2 = UserAgentUtil.parse(uaStr2);
+		Assertions.assertEquals("Chrome", ua2.getBrowser().toString());
+		Assertions.assertEquals("56.0.2924.75", ua2.getVersion());
+		Assertions.assertEquals("Webkit", ua2.getEngine().toString());
+		Assertions.assertEquals("602.1.50", ua2.getEngineVersion());
+		Assertions.assertEquals("iPhone", ua2.getOs().toString());
+		Assertions.assertEquals("10_3", ua2.getOsVersion());
+		Assertions.assertEquals("iPhone", ua2.getPlatform().toString());
+		Assertions.assertTrue(ua2.isMobile());
+	}
 }
