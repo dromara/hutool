@@ -233,6 +233,9 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public ChannelSftp getClient() {
+		if(false == this.channel.isConnected()){
+			init();
+		}
 		return this.channel;
 	}
 
@@ -244,7 +247,7 @@ public class Sftp extends AbstractFtp {
 	@Override
 	public String pwd() {
 		try {
-			return channel.pwd();
+			return getClient().pwd();
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -258,7 +261,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public String home() {
 		try {
-			return channel.getHome();
+			return getClient().getHome();
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -339,7 +342,7 @@ public class Sftp extends AbstractFtp {
 	public List<LsEntry> lsEntries(String path, Filter<LsEntry> filter) {
 		final List<LsEntry> entryList = new ArrayList<>();
 		try {
-			channel.ls(path, entry -> {
+			getClient().ls(path, entry -> {
 				final String fileName = entry.getFilename();
 				if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
 					if (null == filter || filter.accept(entry)) {
@@ -364,7 +367,7 @@ public class Sftp extends AbstractFtp {
 			return true;
 		}
 		try {
-			this.channel.mkdir(dir);
+			getClient().mkdir(dir);
 			return true;
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
@@ -375,7 +378,7 @@ public class Sftp extends AbstractFtp {
 	public boolean isDir(String dir) {
 		final SftpATTRS sftpATTRS;
 		try {
-			sftpATTRS = this.channel.stat(dir);
+			sftpATTRS = getClient().stat(dir);
 		} catch (SftpException e) {
 			final String msg = e.getMessage();
 			// issue#I4P9ED@Gitee
@@ -403,7 +406,7 @@ public class Sftp extends AbstractFtp {
 			return true;
 		}
 		try {
-			channel.cd(directory.replace('\\', '/'));
+			getClient().cd(directory.replace('\\', '/'));
 			return true;
 		} catch (SftpException e) {
 			throw new FtpException(e);
@@ -418,7 +421,7 @@ public class Sftp extends AbstractFtp {
 	@Override
 	public boolean delFile(String filePath) {
 		try {
-			channel.rm(filePath);
+			getClient().rm(filePath);
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -437,6 +440,8 @@ public class Sftp extends AbstractFtp {
 		if (false == cd(dirPath)) {
 			return false;
 		}
+
+		final ChannelSftp channel = getClient();
 
 		Vector<LsEntry> list;
 		try {
@@ -562,7 +567,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp put(String srcFilePath, String destPath, SftpProgressMonitor monitor, Mode mode) {
 		try {
-			channel.put(srcFilePath, destPath, monitor, mode.ordinal());
+			getClient().put(srcFilePath, destPath, monitor, mode.ordinal());
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -581,7 +586,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp put(InputStream srcStream, String destPath, SftpProgressMonitor monitor, Mode mode) {
 		try {
-			channel.put(srcStream, destPath, monitor, mode.ordinal());
+			getClient().put(srcStream, destPath, monitor, mode.ordinal());
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -644,7 +649,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp get(String src, String dest) {
 		try {
-			channel.get(src, dest);
+			getClient().get(src, dest);
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -661,7 +666,7 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp get(String src, OutputStream out) {
 		try {
-			channel.get(src, out);
+			getClient().get(src, out);
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
