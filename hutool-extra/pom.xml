@@ -70,6 +70,12 @@
 			<artifactId>velocity-engine-core</artifactId>
 			<version>${velocity.version}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -100,6 +106,10 @@
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>osgl-version</artifactId>
+					<groupId>org.osgl</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -361,12 +371,20 @@
 			<version>${spring-boot.version}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>snakeyaml</artifactId>
 					<groupId>org.yaml</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j-to-slf4j</artifactId>
+					<groupId>org.apache.logging.log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jul-to-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -403,6 +421,10 @@
 				<exclusion>
 					<artifactId>apiguardian-api</artifactId>
 					<groupId>org.apiguardian</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>heaven</artifactId>
+					<groupId>com.github.houbb</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -459,6 +481,14 @@
 				<exclusion>
 					<artifactId>json-path</artifactId>
 					<groupId>com.jayway.jsonpath</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>byte-buddy</artifactId>
+					<groupId>net.bytebuddy</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit-jupiter-api</artifactId>
+					<groupId>org.junit.jupiter</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
