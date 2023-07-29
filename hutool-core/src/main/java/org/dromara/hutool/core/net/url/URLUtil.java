@@ -734,7 +734,7 @@ public class URLUtil {
 			// issue#3226, 来自Spring的AbstractFileResolvingResource
 			try {
 				final URLConnection con = url.openConnection();
-				NetUtil.useCachesIfNecessary(con);
+				useCachesIfNecessary(con);
 				if (con instanceof HttpURLConnection) {
 					final HttpURLConnection httpCon = (HttpURLConnection) con;
 					httpCon.setRequestMethod("HEAD");
@@ -744,5 +744,15 @@ public class URLUtil {
 				throw new IORuntimeException(e);
 			}
 		}
+	}
+
+	/**
+	 * 如果连接为JNLP方式，则打开缓存
+	 *
+	 * @param con {@link URLConnection}
+	 * @since 6.0.0
+	 */
+	public static void useCachesIfNecessary(final URLConnection con) {
+		con.setUseCaches(con.getClass().getSimpleName().startsWith("JNLP"));
 	}
 }
