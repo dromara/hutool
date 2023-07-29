@@ -5,6 +5,7 @@ import cn.hutool.extra.expression.ExpressionException;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ public class QLExpressEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(final String expression, final Map<String, Object> context) {
+	public Object eval(final String expression, final Map<String, Object> context, Collection<Class<?>> allowClassSet) {
 		final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
 		defaultContext.putAll(context);
 		try {

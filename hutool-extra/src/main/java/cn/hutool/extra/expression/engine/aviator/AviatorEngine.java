@@ -1,9 +1,13 @@
 package cn.hutool.extra.expression.engine.aviator;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.expression.ExpressionEngine;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
+import com.googlecode.aviator.Options;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -25,7 +29,10 @@ public class AviatorEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
+		// issue#I6AJWJ
+		engine.setOption(Options.ALLOWED_CLASS_SET,
+			CollUtil.isEmpty(allowClassSet) ? Collections.emptySet() : CollUtil.newHashSet(allowClassSet));
 		return engine.execute(expression, context);
 	}
 

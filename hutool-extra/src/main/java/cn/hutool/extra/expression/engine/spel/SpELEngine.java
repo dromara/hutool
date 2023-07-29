@@ -6,6 +6,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class SpELEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
 		final EvaluationContext evaluationContext = new StandardEvaluationContext();
 		context.forEach(evaluationContext::setVariable);
 		return parser.parseExpression(expression).getValue(evaluationContext);
