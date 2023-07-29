@@ -107,10 +107,6 @@
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>osgl-version</artifactId>
-					<groupId>org.osgl</groupId>
-				</exclusion>
 			</exclusions>
 			<optional>true</optional>
 		</dependency>
@@ -375,10 +371,6 @@
 					<groupId>org.yaml</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>logback-classic</artifactId>
-					<groupId>ch.qos.logback</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>log4j-to-slf4j</artifactId>
 					<groupId>org.apache.logging.log4j</groupId>
 				</exclusion>
@@ -421,10 +413,6 @@
 				<exclusion>
 					<artifactId>apiguardian-api</artifactId>
 					<groupId>org.apiguardian</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>heaven</artifactId>
-					<groupId>com.github.houbb</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -489,18 +477,6 @@
 				<exclusion>
 					<artifactId>junit-jupiter-api</artifactId>
 					<groupId>org.junit.jupiter</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.3.7</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
