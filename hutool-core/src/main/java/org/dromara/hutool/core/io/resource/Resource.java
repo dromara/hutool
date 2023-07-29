@@ -59,6 +59,13 @@ public interface Resource {
 	URL getUrl();
 
 	/**
+	 * 获取资源大小
+	 *
+	 * @return 资源大小
+	 */
+	long size();
+
+	/**
 	 * 获得 {@link InputStream}
 	 *
 	 * @return {@link InputStream}

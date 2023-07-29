@@ -90,6 +90,11 @@ public class FileResource implements Resource, Serializable {
 	}
 
 	@Override
+	public long size() {
+		return this.file.length();
+	}
+
+	@Override
 	public InputStream getStream() throws NoResourceException {
 		return FileUtil.getInputStream(this.file);
 	}

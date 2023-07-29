@@ -52,6 +52,11 @@ public class HttpResource implements Resource, Serializable {
 	}
 
 	@Override
+	public long size() {
+		return resource.size();
+	}
+
+	@Override
 	public InputStream getStream() {
 		return resource.getStream();
 	}

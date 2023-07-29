@@ -65,6 +65,11 @@ public class BytesResource implements Resource, Serializable {
 	}
 
 	@Override
+	public long size() {
+		return this.bytes.length;
+	}
+
+	@Override
 	public InputStream getStream() {
 		return new ByteArrayInputStream(this.bytes);
 	}

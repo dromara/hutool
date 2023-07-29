@@ -112,6 +112,7 @@ public class VfsResource implements Resource {
 	 *
 	 * @return VFS文件大小
 	 */
+	@Override
 	public long size() {
 		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_SIZE);
 	}

@@ -71,6 +71,11 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	}
 
 	@Override
+	public long size() {
+		return resources.get(cursor).size();
+	}
+
+	@Override
 	public InputStream getStream() {
 		return resources.get(cursor).getStream();
 	}

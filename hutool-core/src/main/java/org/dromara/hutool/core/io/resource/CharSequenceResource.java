@@ -78,6 +78,11 @@ public class CharSequenceResource implements Resource, Serializable {
 	}
 
 	@Override
+	public long size() {
+		return data.length();
+	}
+
+	@Override
 	public InputStream getStream() {
 		return new ByteArrayInputStream(readBytes());
 	}

@@ -12,16 +12,15 @@
 
 package org.dromara.hutool.core.io.resource;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.net.NetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 
 /**
  * URL资源访问类
@@ -76,6 +75,11 @@ public class UrlResource implements Resource, Serializable{
 	@Override
 	public URL getUrl(){
 		return this.url;
+	}
+
+	@Override
+	public long size() {
+		return URLUtil.size(this.url);
 	}
 
 	@Override

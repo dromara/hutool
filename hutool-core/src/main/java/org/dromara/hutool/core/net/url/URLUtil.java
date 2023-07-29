@@ -17,8 +17,10 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.net.NetUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
@@ -112,12 +114,12 @@ public class URLUtil {
 	 *
 	 * @param uri {@link URI}
 	 * @return URL对象
-	 * @see URI#toURL()
 	 * @throws HutoolException {@link MalformedURLException}包装，URI格式有问题时抛出
+	 * @see URI#toURL()
 	 * @since 5.7.21
 	 */
 	public static URL url(final URI uri) throws HutoolException {
-		if(null == uri){
+		if (null == uri) {
 			return null;
 		}
 		try {
@@ -146,7 +148,7 @@ public class URLUtil {
 	 * @since 4.1.1
 	 */
 	public static URL url(String url, final URLStreamHandler handler) {
-		if(null == url){
+		if (null == url) {
 			return null;
 		}
 
@@ -176,7 +178,7 @@ public class URLUtil {
 	 * @since 5.5.2
 	 */
 	public static URI getStringURI(final CharSequence content) {
-		if(null == content){
+		if (null == content) {
 			return null;
 		}
 		final String contentStr = StrUtil.addPrefixIfNot(content, "string:///");
@@ -420,8 +422,8 @@ public class URLUtil {
 		Assert.notNull(url, "URL must be not null");
 		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_FILE.equals(protocol) || //
-				URL_PROTOCOL_VFSFILE.equals(protocol) || //
-				URL_PROTOCOL_VFS.equals(protocol));
+			URL_PROTOCOL_VFSFILE.equals(protocol) || //
+			URL_PROTOCOL_VFS.equals(protocol));
 	}
 
 	/**
@@ -434,9 +436,9 @@ public class URLUtil {
 		Assert.notNull(url, "URL must be not null");
 		final String protocol = url.getProtocol();
 		return (URL_PROTOCOL_JAR.equals(protocol) || //
-				URL_PROTOCOL_ZIP.equals(protocol) || //
-				URL_PROTOCOL_VFSZIP.equals(protocol) || //
-				URL_PROTOCOL_WSJAR.equals(protocol));
+			URL_PROTOCOL_ZIP.equals(protocol) || //
+			URL_PROTOCOL_VFSZIP.equals(protocol) || //
+			URL_PROTOCOL_WSJAR.equals(protocol));
 	}
 
 	/**
@@ -449,7 +451,7 @@ public class URLUtil {
 	public static boolean isJarFileURL(final URL url) {
 		Assert.notNull(url, "URL must be not null");
 		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
-				url.getPath().toLowerCase().endsWith(FileNameUtil.EXT_JAR));
+			url.getPath().toLowerCase().endsWith(FileNameUtil.EXT_JAR));
 	}
 
 	/**
@@ -705,5 +707,42 @@ public class URLUtil {
 		builder.append(',').append(data);
 
 		return builder.toString();
+	}
+
+	/**
+	 * 获取URL对应数据长度
+	 * <ul>
+	 *     <li>如果URL为文件，转换为文件获取文件长度。</li>
+	 *     <li>其它情况获取{@link URLConnection#getContentLengthLong()}</li>
+	 * </ul>
+	 *
+	 * @param url URL
+	 * @return 长度
+	 * @since 6.0.0
+	 */
+	public static long size(final URL url) {
+		if (URLUtil.isFileURL(url)) {
+			// 如果资源以独立文件形式存在，尝试获取文件长度
+			final File file = FileUtil.file(url);
+			final long length = file.length();
+			if (length == 0L && !file.exists()) {
+				throw new IORuntimeException("File not exist or size is zero!");
+			}
+			return length;
+		} else {
+			// 如果资源打在jar包中或来自网络，使用网络请求长度
+			// issue#3226, 来自Spring的AbstractFileResolvingResource
+			try {
+				final URLConnection con = url.openConnection();
+				NetUtil.useCachesIfNecessary(con);
+				if (con instanceof HttpURLConnection) {
+					final HttpURLConnection httpCon = (HttpURLConnection) con;
+					httpCon.setRequestMethod("HEAD");
+				}
+				return con.getContentLengthLong();
+			} catch (final IOException e) {
+				throw new IORuntimeException(e);
+			}
+		}
 	}
 }

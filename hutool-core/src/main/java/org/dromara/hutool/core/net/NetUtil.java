@@ -679,7 +679,14 @@ public class NetUtil {
 		return name;
 	}
 
-	// ----------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 如果连接为JNLP方式，则打开缓存
+	 *
+	 * @param con {@link URLConnection}
+	 * @since 6.0.0
+	 */
+	public static void useCachesIfNecessary(URLConnection con) {
+		con.setUseCaches(con.getClass().getSimpleName().startsWith("JNLP"));
+	}
 
-	// ----------------------------------------------------------------------------------------- Private method end
 }

@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.io.resource;
 
-import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -25,24 +24,72 @@ import org.dromara.hutool.core.text.StrUtil;
 public class NoResourceException extends IORuntimeException {
 	private static final long serialVersionUID = -623254467603299129L;
 
-	public NoResourceException(final Throwable e) {
-		super(ExceptionUtil.getMessage(e), e);
+	/**
+	 * 构造
+	 */
+	public NoResourceException() {
+		super();
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param e 异常
+	 */
+	public NoResourceException(final Throwable e) {
+		super(e);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 */
 	public NoResourceException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * 构造
+	 *
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
 	public NoResourceException(final String messageTemplate, final Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public NoResourceException(final String message, final Throwable throwable) {
-		super(message, throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message 消息
+	 * @param cause   被包装的子异常
+	 */
+	public NoResourceException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
-	public NoResourceException(final Throwable throwable, final String messageTemplate, final Object... params) {
-		super(StrUtil.format(messageTemplate, params), throwable);
+	/**
+	 * 构造
+	 *
+	 * @param message            消息
+	 * @param cause              被包装的子异常
+	 * @param enableSuppression  是否启用抑制
+	 * @param writableStackTrace 堆栈跟踪是否应该是可写的
+	 */
+	public NoResourceException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param cause           被包装的子异常
+	 * @param messageTemplate 消息模板
+	 * @param params          参数
+	 */
+	public NoResourceException(final Throwable cause, final String messageTemplate, final Object... params) {
+		super(StrUtil.format(messageTemplate, params), cause);
 	}
 
 	/**

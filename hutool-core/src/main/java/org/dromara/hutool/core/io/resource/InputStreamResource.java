@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.core.io.resource;
 
+import org.dromara.hutool.core.io.IORuntimeException;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
@@ -57,6 +60,15 @@ public class InputStreamResource implements Resource, Serializable {
 	@Override
 	public URL getUrl() {
 		return null;
+	}
+
+	@Override
+	public long size() {
+		try {
+			return this.in.available();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	@Override
