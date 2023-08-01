@@ -1299,10 +1299,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	 * @return 数组字符串，与集合转字符串格式相同
 	 */
 	public static String toString(final Object obj) {
-		if (null == obj) {
+		if (Objects.isNull(obj)) {
 			return null;
 		}
-
 		if (obj instanceof long[]) {
 			return Arrays.toString((long[]) obj);
 		} else if (obj instanceof int[]) {

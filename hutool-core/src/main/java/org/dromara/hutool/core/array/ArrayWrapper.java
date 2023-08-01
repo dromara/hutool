@@ -569,37 +569,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 
 	@Override
 	public String toString() {
-		final A array = this.array;
-		if (null == array) {
-			return null;
-		}
-
-		if (array instanceof long[]) {
-			return Arrays.toString((long[]) array);
-		} else if (array instanceof int[]) {
-			return Arrays.toString((int[]) array);
-		} else if (array instanceof short[]) {
-			return Arrays.toString((short[]) array);
-		} else if (array instanceof char[]) {
-			return Arrays.toString((char[]) array);
-		} else if (array instanceof byte[]) {
-			return Arrays.toString((byte[]) array);
-		} else if (array instanceof boolean[]) {
-			return Arrays.toString((boolean[]) array);
-		} else if (array instanceof float[]) {
-			return Arrays.toString((float[]) array);
-		} else if (array instanceof double[]) {
-			return Arrays.toString((double[]) array);
-		} else if (ArrayUtil.isArray(array)) {
-			// 对象数组
-			try {
-				return Arrays.deepToString((Object[]) array);
-			} catch (final Exception ignore) {
-				//ignore
-			}
-		}
-
-		return array.toString();
+		return ArrayUtil.toString(this.array);
 	}
 
 	// region ----- private methods
