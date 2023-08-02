@@ -78,7 +78,15 @@ public class DesensitizedUtil {
 		/**
 		 * 定义了一个first_mask的规则，只显示第一个字符。
 		 */
-		FIRST_MASK
+		FIRST_MASK,
+		/**
+		 * 清空为null
+		 */
+		CLEAR_TO_NULL,
+		/**
+		 * 清空为""
+		 */
+		CLEAR_TO_EMPTY
 	}
 
 	/**
@@ -148,9 +156,35 @@ public class DesensitizedUtil {
 			case FIRST_MASK:
 				newStr = firstMask(String.valueOf(str));
 				break;
+			case CLEAR_TO_EMPTY:
+				newStr = clear();
+				break;
+			case CLEAR_TO_NULL:
+				newStr = clearToNull();
+				break;
 			default:
 		}
 		return newStr;
+	}
+
+	/**
+	 * 清空为空字符串
+	 *
+	 * @return 清空后的值
+	 * @since 5.8.22
+	 */
+	public static String clear() {
+		return StrUtil.EMPTY;
+	}
+
+	/**
+	 * 清空为{@code null}
+	 *
+	 * @return 清空后的值(null)
+	 * @since 5.8.22
+	 */
+	public static String clearToNull() {
+		return null;
 	}
 
 	/**
@@ -308,8 +342,8 @@ public class DesensitizedUtil {
 
 	/**
 	 * 【银行卡号脱敏】由于银行卡号长度不定，所以只展示前4位，后面的位数根据卡号决定展示1-4位
-	 *  例如：
-	 *  <pre>{@code
+	 * 例如：
+	 * <pre>{@code
 	 *      1. "1234 2222 3333 4444 6789 9"    ->   "1234 **** **** **** **** 9"
 	 *      2. "1234 2222 3333 4444 6789 91"   ->   "1234 **** **** **** **** 91"
 	 *      3. "1234 2222 3333 4444 678"       ->    "1234 **** **** **** 678"
@@ -329,7 +363,7 @@ public class DesensitizedUtil {
 		}
 
 		final int length = bankCardNo.length();
-		final int endLength= length % 4 == 0 ? 4 : length % 4;
+		final int endLength = length % 4 == 0 ? 4 : length % 4;
 		final int midLength = length - 4 - endLength;
 
 		final StringBuilder buf = new StringBuilder();

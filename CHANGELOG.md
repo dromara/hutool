@@ -6,6 +6,7 @@
 
 ### 🐣新特性
 * 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Github）
+* 【core  】      DesensitizedUtil增加清空策略（issue#I7PUJ2@Github）
 
 ### 🐞Bug修复
 

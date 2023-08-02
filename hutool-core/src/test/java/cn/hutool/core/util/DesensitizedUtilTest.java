@@ -14,6 +14,8 @@ public class DesensitizedUtilTest {
 	@Test
 	public void desensitizedTest() {
 		Assert.assertEquals("0", DesensitizedUtil.desensitized("100", DesensitizedUtil.DesensitizedType.USER_ID));
+		Assert.assertEquals("", DesensitizedUtil.desensitized("100", DesensitizedUtil.DesensitizedType.CLEAR_TO_EMPTY));
+		Assert.assertNull(DesensitizedUtil.desensitized("100", DesensitizedUtil.DesensitizedType.CLEAR_TO_NULL));
 		Assert.assertEquals("段**", DesensitizedUtil.desensitized("段正淳", DesensitizedUtil.DesensitizedType.CHINESE_NAME));
 		Assert.assertEquals("5***************1X", DesensitizedUtil.desensitized("51343620000320711X", DesensitizedUtil.DesensitizedType.ID_CARD));
 		Assert.assertEquals("0915*****79", DesensitizedUtil.desensitized("09157518479", DesensitizedUtil.DesensitizedType.FIXED_PHONE));
