@@ -21,6 +21,7 @@ import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.JRE;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -753,5 +754,18 @@ public class NumberUtilTest {
 		Assertions.assertEquals(
 			"123,456,789.111111",
 			NumberUtil.formatThousands(123456789.111111D, 6));
+	}
+
+	@Test
+	void nullToZeroTest() {
+		Assertions.assertEquals(0, NumberUtil.nullToZero((Integer)null));
+		Assertions.assertEquals(0L, NumberUtil.nullToZero((Long)null));
+		Assertions.assertEquals(0D, NumberUtil.nullToZero((Double)null));
+		Assertions.assertEquals(0D, NumberUtil.nullToZero((Double)null));
+		Assertions.assertEquals(0F, NumberUtil.nullToZero((Float) null));
+		Assertions.assertEquals(0, NumberUtil.nullToZero((Short) null));
+		Assertions.assertEquals(0, NumberUtil.nullToZero((Byte) null));
+		Assertions.assertEquals(BigDecimal.ZERO, NumberUtil.nullToZero((BigDecimal) null));
+		Assertions.assertEquals(BigInteger.ZERO, NumberUtil.nullToZero((BigInteger) null));
 	}
 }

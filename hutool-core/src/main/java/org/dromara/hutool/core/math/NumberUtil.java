@@ -1013,26 +1013,98 @@ public class NumberUtil extends NumberValidator {
 	}
 
 	/**
-	 * 空转0
-	 *
-	 * @param decimal {@link BigDecimal}，可以为{@code null}
-	 * @return {@link BigDecimal}参数为空时返回0的值
-	 * @since 3.0.9
-	 */
-	public static BigDecimal null2Zero(final BigDecimal decimal) {
-		return ObjUtil.defaultIfNull(decimal, BigDecimal.ZERO);
-	}
-
-	/**
 	 * 如果给定值为0，返回1，否则返回原值
 	 *
 	 * @param value 值
 	 * @return 1或非0值
 	 * @since 3.1.2
 	 */
-	public static int zero2One(final int value) {
+	public static int zeroToOne(final int value) {
 		return 0 == value ? 1 : value;
 	}
+
+	// region nullToZero
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static int nullToZero(final Integer number) {
+		return number == null ? 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static long nullToZero(final Long number) {
+		return number == null ? 0L : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static double nullToZero(final Double number) {
+		return number == null ? 0.0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static float nullToZero(final Float number) {
+		return number == null ? 0.0f : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static short nullToZero(final Short number) {
+		return number == null ? (short) 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static byte nullToZero(final Byte number) {
+		return number == null ? (byte) 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static BigInteger nullToZero(final BigInteger number) {
+		return number == null ? BigInteger.ZERO : number;
+	}
+
+	/**
+	 * 空转0
+	 *
+	 * @param decimal {@link BigDecimal}，可以为{@code null}
+	 * @return {@link BigDecimal}参数为空时返回0的值
+	 * @since 3.0.9
+	 */
+	public static BigDecimal nullToZero(final BigDecimal decimal) {
+		return ObjUtil.defaultIfNull(decimal, BigDecimal.ZERO);
+	}
+	// endregion
 
 	/**
 	 * 创建{@link BigInteger}，支持16进制、10进制和8进制，如果传入空白串返回null<br>
