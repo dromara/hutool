@@ -148,6 +148,9 @@ public class PathMover {
 
 		final CopyOption[] options = this.options;
 
+		// 自动创建目标的父目录
+		PathUtil.mkParentDirs(target);
+
 		// 移动失败，可能是跨分区移动导致的，采用递归移动方式
 		walkMove(src, target, options);
 		return target;
