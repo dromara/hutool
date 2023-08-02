@@ -944,19 +944,15 @@ public class NumberUtil extends NumberValidator {
 			return BigDecimal.ZERO;
 		}
 
-		try {
-			// 支持类似于 1,234.55 格式的数字
-			final Number number = parseNumber(numberStr);
-			if (number instanceof BigDecimal) {
-				return (BigDecimal) number;
-			} else {
-				return new BigDecimal(number.toString());
-			}
-		} catch (final Exception ignore) {
+		// issue#3241，优先调用构造解析
+		try{
+			return new BigDecimal(numberStr);
+		} catch (final Exception ignore){
 			// 忽略解析错误
 		}
 
-		return new BigDecimal(numberStr);
+		// 支持类似于 1,234.55 格式的数字
+		return toBigDecimal(parseNumber(numberStr));
 	}
 
 	/**
