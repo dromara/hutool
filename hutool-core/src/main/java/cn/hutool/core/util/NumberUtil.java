@@ -2307,9 +2307,10 @@ public class NumberUtil {
 	 * @param decimal {@link BigDecimal}，可以为{@code null}
 	 * @return {@link BigDecimal}参数为空时返回0的值
 	 * @since 3.0.9
+	 * @deprecated 请使用 {@link #nullToZero(BigDecimal)}
 	 */
+	@Deprecated
 	public static BigDecimal null2Zero(BigDecimal decimal) {
-
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
 
@@ -2322,6 +2323,86 @@ public class NumberUtil {
 	 */
 	public static int zero2One(int value) {
 		return 0 == value ? 1 : value;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static int nullToZero(Integer number) {
+		return number == null ? 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static long nullToZero(Long number) {
+		return number == null ? 0L : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static double nullToZero(Double number) {
+		return number == null ? 0.0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static float nullToZero(Float number) {
+		return number == null ? 0.0f : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static short nullToZero(Short number) {
+		return number == null ? (short) 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static byte nullToZero(Byte number) {
+		return number == null ? (byte) 0 : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static BigDecimal nullToZero(BigDecimal number) {
+		return number == null ? BigDecimal.ZERO : number;
+	}
+
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 *
+	 * @param number 值
+	 * @return 1或非0值
+	 */
+	public static BigInteger nullToZero(BigInteger number) {
+		return number == null ? BigInteger.ZERO : number;
 	}
 
 	/**
