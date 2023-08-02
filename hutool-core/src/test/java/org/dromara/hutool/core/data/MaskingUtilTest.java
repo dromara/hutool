@@ -25,6 +25,9 @@ public class MaskingUtilTest {
 
 	@Test
 	public void maskingTest() {
+		Assertions.assertEquals("", MaskingUtil.masking("100", MaskingUtil.MaskingType.CLEAR_TO_EMPTY));
+		Assertions.assertNull(MaskingUtil.masking("100", MaskingUtil.MaskingType.CLEAR_TO_NULL));
+
 		Assertions.assertEquals("0", MaskingUtil.masking("100", MaskingUtil.MaskingType.USER_ID));
 		Assertions.assertEquals("段**", MaskingUtil.masking("段正淳", MaskingUtil.MaskingType.CHINESE_NAME));
 		Assertions.assertEquals("5***************1X", MaskingUtil.masking("51343620000320711X", MaskingUtil.MaskingType.ID_CARD));
@@ -103,7 +106,7 @@ public class MaskingUtilTest {
 	}
 
 	@Test
-	public void bankCardTest(){
+	public void bankCardTest() {
 		Assertions.assertNull(MaskingUtil.bankCard(null));
 		Assertions.assertEquals("", MaskingUtil.bankCard(""));
 		Assertions.assertEquals("1234 **** **** **** **** 9", MaskingUtil.bankCard("1234 2222 3333 4444 6789 9"));

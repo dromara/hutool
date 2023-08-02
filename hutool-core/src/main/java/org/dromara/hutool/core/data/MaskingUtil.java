@@ -96,7 +96,15 @@ public class MaskingUtil {
 		/**
 		 * 定义了一个first_mask的规则，只显示第一个字符。
 		 */
-		FIRST_MASK
+		FIRST_MASK,
+		/**
+		 * 清空为null
+		 */
+		CLEAR_TO_NULL,
+		/**
+		 * 清空为""
+		 */
+		CLEAR_TO_EMPTY
 	}
 
 	/**
@@ -115,7 +123,7 @@ public class MaskingUtil {
 	 * MaskingUtil.masking("192.168.1.1", MaskingUtil.DesensitizedType.IPV4)) = "192.*.*.*"
 	 * </pre>
 	 *
-	 * @param str              字符串
+	 * @param str         字符串
 	 * @param maskingType 脱敏类型;可以脱敏：用户id、中文名、身份证号、座机号、手机号、地址、电子邮件、密码
 	 * @return 脱敏之后的字符串
 	 * @author dazer and neusoft and qiaomu
@@ -166,9 +174,35 @@ public class MaskingUtil {
 			case FIRST_MASK:
 				newStr = firstMask(String.valueOf(str));
 				break;
+			case CLEAR_TO_EMPTY:
+				newStr = clear();
+				break;
+			case CLEAR_TO_NULL:
+				newStr = clearToNull();
+				break;
 			default:
 		}
 		return newStr;
+	}
+
+	/**
+	 * 清空为空字符串
+	 *
+	 * @return 清空后的值
+	 * @since 5.8.22
+	 */
+	public static String clear() {
+		return StrUtil.EMPTY;
+	}
+
+	/**
+	 * 清空为{@code null}
+	 *
+	 * @return 清空后的值(null)
+	 * @since 5.8.22
+	 */
+	public static String clearToNull() {
+		return null;
 	}
 
 	/**
@@ -342,7 +376,7 @@ public class MaskingUtil {
 		}
 
 		final int length = bankCardNo.length();
-		final int endLength= length % 4 == 0 ? 4 : length % 4;
+		final int endLength = length % 4 == 0 ? 4 : length % 4;
 		final int midLength = length - 4 - endLength;
 		final StringBuilder buf = new StringBuilder();
 
