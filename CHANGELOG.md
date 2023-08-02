@@ -5,10 +5,11 @@
 # 5.8.22(2023-08-02)
 
 ### 🐣新特性
-* 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Github）
-* 【core  】      DesensitizedUtil增加清空策略（issue#I7PUJ2@Github）
+* 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Gitee）
+* 【core  】      DesensitizedUtil增加清空策略（issue#I7PUJ2@Gitee）
 
 ### 🐞Bug修复
+* 【core  】      NumberUtil.toBigDecimal转换科学计数法问题（issue#3241@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)

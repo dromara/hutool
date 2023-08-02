@@ -249,6 +249,8 @@ public class NumberUtilTest {
 
 		bigDecimal = NumberUtil.toBigDecimal("1,234.56D");
 		Assert.assertEquals("1234.56", bigDecimal.toString());
+
+		Assert.assertEquals(new BigDecimal("9.0E+7"), NumberUtil.toBigDecimal("9.0E+7"));
 	}
 
 	@Test
