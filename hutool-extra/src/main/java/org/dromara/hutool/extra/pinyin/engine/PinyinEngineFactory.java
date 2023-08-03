@@ -33,7 +33,7 @@ public class PinyinEngineFactory {
 	 */
 	public static PinyinEngine getEngine(){
 		final PinyinEngine engine = Singleton.get(PinyinEngine.class.getName(), PinyinEngineFactory::createEngine);
-		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		LogUtil.debug("Use [{}] Pinyin Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 

@@ -32,7 +32,9 @@ public class TokenizerEngineFactory {
 	 * @return 单例的TokenizerEngine
 	 */
 	public static TokenizerEngine getEngine(){
-		return Singleton.get(TokenizerEngine.class.getName(), TokenizerEngineFactory::createEngine);
+		final TokenizerEngine engine = Singleton.get(TokenizerEngine.class.getName(), TokenizerEngineFactory::createEngine);
+		LogUtil.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		return engine;
 	}
 
 	/**
@@ -41,9 +43,7 @@ public class TokenizerEngineFactory {
 	 * @return {@link TokenizerEngine}
 	 */
 	public static TokenizerEngine createEngine() {
-		final TokenizerEngine engine = doCreateEngine();
-		LogUtil.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
-		return engine;
+		return doCreateEngine();
 	}
 
 	/**

@@ -14,6 +14,8 @@ package org.dromara.hutool.extra.aop.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.spi.SpiUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.log.LogUtil;
 
 /**
  * 代理引擎简单工厂<br>
@@ -29,7 +31,9 @@ public class ProxyEngineFactory {
 	 * @return 单例的ProxyEngine
 	 */
 	public static ProxyEngine getEngine() {
-		return Singleton.get(ProxyEngine.class.getName(), ProxyEngineFactory::createEngine);
+		final ProxyEngine engine = Singleton.get(ProxyEngine.class.getName(), ProxyEngineFactory::createEngine);
+		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		return engine;
 	}
 
 	/**

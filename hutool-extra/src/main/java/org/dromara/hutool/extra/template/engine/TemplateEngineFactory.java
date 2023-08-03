@@ -35,7 +35,9 @@ public class TemplateEngineFactory {
 	 * @return 单例的TemplateEngine
 	 */
 	public static TemplateEngine getEngine() {
-		return Singleton.get(TemplateEngine.class.getName(), TemplateEngineFactory::createEngine);
+		final TemplateEngine engine = Singleton.get(TemplateEngine.class.getName(), TemplateEngineFactory::createEngine);
+		LogUtil.debug("Use [{}] Template Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		return engine;
 	}
 
 	/**
@@ -57,9 +59,7 @@ public class TemplateEngineFactory {
 	 * @return {@link TemplateEngine}
 	 */
 	public static TemplateEngine createEngine(final TemplateConfig config) {
-		final TemplateEngine engine = doCreateEngine(config);
-		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
-		return engine;
+		return doCreateEngine(config);
 	}
 
 	/**
