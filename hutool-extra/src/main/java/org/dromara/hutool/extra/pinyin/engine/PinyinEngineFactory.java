@@ -32,7 +32,9 @@ public class PinyinEngineFactory {
 	 * @return 单例的PinyinEngine
 	 */
 	public static PinyinEngine getEngine(){
-		return Singleton.get(PinyinEngine.class.getName(), PinyinEngineFactory::createEngine);
+		final PinyinEngine engine = Singleton.get(PinyinEngine.class.getName(), PinyinEngineFactory::createEngine);
+		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
+		return engine;
 	}
 
 	/**
@@ -42,9 +44,7 @@ public class PinyinEngineFactory {
 	 * @return {@link PinyinEngine}
 	 */
 	public static PinyinEngine createEngine() {
-		final PinyinEngine engine = doCreateEngine();
-		LogUtil.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
-		return engine;
+		return doCreateEngine();
 	}
 
 	/**
