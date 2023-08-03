@@ -236,7 +236,7 @@ public class JSONWriter extends Writer {
 	}
 
 	/**
-	 * 写出换换行符
+	 * 写出换行符
 	 *
 	 * @return this
 	 */
@@ -266,7 +266,7 @@ public class JSONWriter extends Writer {
 	/**
 	 * 写入原始字符值，不做任何处理
 	 *
-	 * @param c 字符串
+	 * @param c 字符
 	 * @return this
 	 */
 	public JSONWriter writeRaw(final char c) {
