@@ -35,13 +35,20 @@ import java.net.URL;
 public class LogEngineFactory {
 
 	/**
+	 * issue#I7PHNT，嵌套使用Singleton.get时在JDK9+会引起Recursive update问题，此处日志单独使用单例
+	 */
+	private static class InstanceHolder {
+		public static final LogEngine INSTANCE = createEngine();
+	}
+
+	/**
 	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
 	 * 获得的是单例的TemplateEngine
 	 *
 	 * @return 单例的TemplateEngine
 	 */
 	public static LogEngine getEngine() {
-		return Singleton.get(LogEngineFactory.class.getName(), LogEngineFactory::createEngine);
+		return InstanceHolder.INSTANCE;
 	}
 
 	/**
