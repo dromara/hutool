@@ -609,6 +609,15 @@ public class SqlBuilder implements Builder<String> {
 		return this.build();
 	}
 
+	/**
+	 * 格式化SQL语句
+	 * @return SqlBuilder
+	 */
+	public SqlBuilder format() {
+		this.sql.replace(0, this.sql.length(), SqlFormatter.format(this.sql.toString()));
+		return this;
+	}
+
 	// --------------------------------------------------------------- private method start
 
 	/**
