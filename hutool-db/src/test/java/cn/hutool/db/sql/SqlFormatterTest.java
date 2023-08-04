@@ -11,4 +11,11 @@ public class SqlFormatterTest {
 		String sql = "(select 1 from dual) union all (select 1 from dual)";
 		SqlFormatter.format(sql);
 	}
+
+	@Test
+	public void testKeyword() {
+		String sql = "select * from `order`";
+		String format = SqlFormatter.format(sql);
+		System.out.println(format);
+	}
 }

@@ -110,6 +110,12 @@ public class SqlFormatter {
 						t = this.tokens.nextToken();
 						this.token += t;
 					} while (!"\"".equals(t));
+				} else if ("`".equals(this.token)) {
+					String t;
+					do {
+						t = this.tokens.nextToken();
+						this.token += t;
+					} while (!"`".equals(t));
 				}
 
 				if ((this.afterByOrSetOrFromOrSelect) && (",".equals(this.token))) {
