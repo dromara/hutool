@@ -122,6 +122,12 @@ public class SqlFormatter {
 						t = this.tokens.nextToken();
 						this.token += t;
 					} while (!"\"".equals(t));
+				} else if ("`".equals(this.token)) {
+					String t;
+					do {
+						t = this.tokens.nextToken();
+						this.token += t;
+					} while (!"`".equals(t));
 				}
 
 				if ((this.afterByOrSetOrFromOrSelect) && (",".equals(this.token))) {
@@ -320,7 +326,7 @@ public class SqlFormatter {
 		}
 
 		private static boolean isFunctionName(final String tok) {
-			if(StrUtil.isEmpty(tok)){
+			if (StrUtil.isEmpty(tok)) {
 				return true;
 			}
 			final char begin = tok.charAt(0);
