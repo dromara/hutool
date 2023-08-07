@@ -50,6 +50,9 @@ public class Column implements Serializable, Cloneable {
 	 * 大小或数据长度
 	 */
 	private long size;
+	/**
+	 * 保留小数位数
+	 */
 	private Integer digit;
 	/**
 	 * 是否为可空
