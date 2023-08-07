@@ -117,7 +117,6 @@
 									<artifact>*:*</artifact>
 									<excludes>
 										<exclude>META-INF/maven/**</exclude>
-										<exclude>META-INF/*.MF</exclude>
 									</excludes>
 								</filter>
 							</filters>
