@@ -22,9 +22,6 @@ import org.dromara.hutool.core.xml.XmlUtil;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -70,10 +67,10 @@ public class StringConverter extends AbstractConverter {
 			return ((TimeZone) value).getID();
 		} else if (value instanceof org.w3c.dom.Node) {
 			return XmlUtil.toStr((org.w3c.dom.Node) value);
-		} else if (value instanceof Clob) {
-			return clobToStr((Clob) value);
-		} else if (value instanceof Blob) {
-			return blobToStr((Blob) value);
+		} else if (value instanceof java.sql.Clob) {
+			return clobToStr((java.sql.Clob) value);
+		} else if (value instanceof java.sql.Blob) {
+			return blobToStr((java.sql.Blob) value);
 		} else if (value instanceof Type) {
 			return ((Type) value).getTypeName();
 		}
@@ -85,16 +82,16 @@ public class StringConverter extends AbstractConverter {
 	/**
 	 * Clob字段值转字符串
 	 *
-	 * @param clob {@link Clob}
+	 * @param clob {@link java.sql.Clob}
 	 * @return 字符串
 	 * @since 5.4.5
 	 */
-	private static String clobToStr(final Clob clob) {
+	private static String clobToStr(final java.sql.Clob clob) {
 		Reader reader = null;
 		try {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
-		} catch (final SQLException e) {
+		} catch (final java.sql.SQLException e) {
 			throw new ConvertException(e);
 		} finally {
 			IoUtil.closeQuietly(reader);
@@ -104,16 +101,16 @@ public class StringConverter extends AbstractConverter {
 	/**
 	 * Blob字段值转字符串
 	 *
-	 * @param blob    {@link Blob}
+	 * @param blob    {@link java.sql.Blob}
 	 * @return 字符串
 	 * @since 5.4.5
 	 */
-	private static String blobToStr(final Blob blob) {
+	private static String blobToStr(final java.sql.Blob blob) {
 		InputStream in = null;
 		try {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, CharsetUtil.UTF_8);
-		} catch (final SQLException e) {
+		} catch (final java.sql.SQLException e) {
 			throw new ConvertException(e);
 		} finally {
 			IoUtil.closeQuietly(in);
