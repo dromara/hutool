@@ -8,7 +8,6 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -83,10 +82,8 @@ public class CopyOptions implements Serializable {
 			return null;
 		}
 
-		final String name = value.getClass().getName();
-		if(ArrayUtil.contains(new String[]{"cn.hutool.json.JSONObject", "cn.hutool.json.JSONArray"}, name)){
-			// 由于设计缺陷导致JSON转Bean时无法使用自定义的反序列化器，此处采用反射方式修复bug，此类问题会在6.x解决
-			return ReflectUtil.invoke(value, "toBean", ObjectUtil.defaultIfNull(type, Object.class));
+		if(value instanceof IJSONTypeConverter) {
+			return ((IJSONTypeConverter)value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
 		}
 
 		return Convert.convertWithCheck(type, value, null, ignoreError);
