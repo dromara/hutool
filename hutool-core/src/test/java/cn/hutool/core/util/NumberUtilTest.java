@@ -616,4 +616,12 @@ public class NumberUtilTest {
 			Assert.assertEquals(0.003, NumberUtil.parseNumber(value).doubleValue(), 0);
 		}
 	}
+
+	@Test
+	public void issueI7R2B6Test() {
+		Assert.assertEquals(61.67D,
+			NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2), 0.01);
+
+		Console.log(NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2));
+	}
 }
