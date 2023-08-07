@@ -14,7 +14,6 @@ package org.dromara.hutool.db;
 
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.log.Log;
 import org.dromara.hutool.log.level.Level;
 import org.dromara.hutool.setting.Setting;
 
@@ -33,9 +32,9 @@ public final class DbUtil {
 	 */
 	public static void setShowSqlGlobal(final Setting setting) {
 		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL));
-		final boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL));
-		final boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS));
+		final Boolean isShowSql = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_SQL));
+		final Boolean isFormatSql = Convert.toBoolean(setting.remove(DSKeys.KEY_FORMAT_SQL));
+		final Boolean isShowParams = Convert.toBoolean(setting.remove(DSKeys.KEY_SHOW_PARAMS));
 		String sqlLevelStr = setting.remove(DSKeys.KEY_SQL_LEVEL);
 		if (null != sqlLevelStr) {
 			sqlLevelStr = sqlLevelStr.toUpperCase();
@@ -51,10 +50,10 @@ public final class DbUtil {
 	 * @param isFormatSql  是否格式化显示的SQL，{@code null}表示保持默认
 	 * @param isShowParams 是否打印参数，{@code null}表示保持默认
 	 * @param level        日志级别，{@code null}表示保持默认
-	 * @see GlobalDbConfig#setShowSql(boolean, boolean, boolean, Level)
+	 * @see GlobalDbConfig#setShowSql(Boolean, Boolean, Boolean, Level)
 	 * @since 4.1.7
 	 */
-	public static void setShowSqlGlobal(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
+	public static void setShowSqlGlobal(final Boolean isShowSql, final Boolean isFormatSql, final Boolean isShowParams, final Level level) {
 		GlobalDbConfig.setShowSql(isShowSql, isFormatSql, isShowParams, level);
 	}
 

@@ -117,7 +117,7 @@ public class GlobalDbConfig {
 	 * @param isShowParams 是否打印参数，{@code null}表示保持默认
 	 * @param level        日志级别，{@code null}表示保持默认
 	 */
-	public static void setShowSql(final boolean isShowSql, final boolean isFormatSql, final boolean isShowParams, final Level level) {
+	public static void setShowSql(final Boolean isShowSql, final Boolean isFormatSql, final Boolean isShowParams, final Level level) {
 		SqlLog.INSTANCE.init(isShowSql, isFormatSql, isShowParams, level);
 	}
 }
