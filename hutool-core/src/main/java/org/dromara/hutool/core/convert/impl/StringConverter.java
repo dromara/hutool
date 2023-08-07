@@ -13,14 +13,11 @@
 package org.dromara.hutool.core.convert.impl;
 
 import org.dromara.hutool.core.convert.AbstractConverter;
-import org.dromara.hutool.core.convert.ConvertException;
-import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.convert.impl.stringer.BlobStringer;
+import org.dromara.hutool.core.convert.impl.stringer.ClobStringer;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.xml.XmlUtil;
 
-import java.io.InputStream;
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,52 +65,14 @@ public class StringConverter extends AbstractConverter {
 		} else if (value instanceof org.w3c.dom.Node) {
 			return XmlUtil.toStr((org.w3c.dom.Node) value);
 		} else if (value instanceof java.sql.Clob) {
-			return clobToStr((java.sql.Clob) value);
+			return ClobStringer.INSTANCE.apply(value);
 		} else if (value instanceof java.sql.Blob) {
-			return blobToStr((java.sql.Blob) value);
+			return BlobStringer.INSTANCE.apply(value);
 		} else if (value instanceof Type) {
 			return ((Type) value).getTypeName();
 		}
 
 		// 其它情况
 		return convertToStr(value);
-	}
-
-	/**
-	 * Clob字段值转字符串
-	 *
-	 * @param clob {@link java.sql.Clob}
-	 * @return 字符串
-	 * @since 5.4.5
-	 */
-	private static String clobToStr(final java.sql.Clob clob) {
-		Reader reader = null;
-		try {
-			reader = clob.getCharacterStream();
-			return IoUtil.read(reader);
-		} catch (final java.sql.SQLException e) {
-			throw new ConvertException(e);
-		} finally {
-			IoUtil.closeQuietly(reader);
-		}
-	}
-
-	/**
-	 * Blob字段值转字符串
-	 *
-	 * @param blob    {@link java.sql.Blob}
-	 * @return 字符串
-	 * @since 5.4.5
-	 */
-	private static String blobToStr(final java.sql.Blob blob) {
-		InputStream in = null;
-		try {
-			in = blob.getBinaryStream();
-			return IoUtil.read(in, CharsetUtil.UTF_8);
-		} catch (final java.sql.SQLException e) {
-			throw new ConvertException(e);
-		} finally {
-			IoUtil.closeQuietly(in);
-		}
 	}
 }
