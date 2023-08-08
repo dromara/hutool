@@ -255,7 +255,12 @@ public class MapUtil extends MapGetUtil {
 	public static <K, V> Map<K, V> createMap(final Class<?> mapType, final Supplier<Map<K, V>> defaultMap) {
 		Map<K, V> result = null;
 		if (null != mapType && !mapType.isAssignableFrom(AbstractMap.class)) {
-			result = (Map<K, V>) ConstructorUtil.newInstanceIfPossible(mapType);
+			try{
+				result = (Map<K, V>) ConstructorUtil.newInstanceIfPossible(mapType);
+			} catch (final Exception ignore){
+				// JDK9+抛出java.lang.reflect.InaccessibleObjectException
+				// 跳过
+			}
 		}
 
 		if(null == result){

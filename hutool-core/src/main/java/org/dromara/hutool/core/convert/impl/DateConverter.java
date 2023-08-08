@@ -16,7 +16,6 @@ import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.date.SqlDateUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
@@ -113,17 +112,8 @@ public class DateConverter extends AbstractConverter {
 		if (DateTime.class == targetClass) {
 			return date;
 		}
-		if (java.sql.Date.class == targetClass) {
-			return SqlDateUtil.date(date);
-		}
-		if (java.sql.Time.class == targetClass) {
-			return SqlDateUtil.time(date);
-		}
-		if (java.sql.Timestamp.class == targetClass) {
-			return SqlDateUtil.timestamp(date);
-		}
 
-		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", targetClass.getName()));
+		return wrap(targetClass, date.getTime());
 	}
 
 	/**

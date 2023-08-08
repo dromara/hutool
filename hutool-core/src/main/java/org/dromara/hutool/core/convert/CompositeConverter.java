@@ -22,6 +22,7 @@ import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -179,6 +180,11 @@ public class CompositeConverter extends RegisterConverter {
 	private <T> T convertSpecial(final Type type, final Class<T> rowType, final Object value, final T defaultValue) {
 		if (null == rowType) {
 			return null;
+		}
+
+		// 日期、java.sql中的日期以及自定义日期统一处理
+		if(Date.class.isAssignableFrom(rowType)){
+			return DateConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 集合转换（含有泛型参数，不可以默认强转）

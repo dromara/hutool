@@ -176,13 +176,6 @@ public class RegisterConverter implements Converter, Serializable {
 		// 日期时间
 		defaultConverterMap.put(Calendar.class, new CalendarConverter());
 		defaultConverterMap.put(XMLGregorianCalendar.class, new XMLGregorianCalendarConverter());
-		defaultConverterMap.put(java.util.Date.class, DateConverter.INSTANCE);
-		defaultConverterMap.put(DateTime.class, DateConverter.INSTANCE);
-
-		// 日期时间 java.sql
-		defaultConverterMap.put(java.sql.Date.class, DateConverter.INSTANCE);
-		defaultConverterMap.put(java.sql.Time.class, DateConverter.INSTANCE);
-		defaultConverterMap.put(java.sql.Timestamp.class, DateConverter.INSTANCE);
 
 		// 日期时间 JDK8+(since 5.0.0)
 		defaultConverterMap.put(TemporalAccessor.class, TemporalAccessorConverter.INSTANCE);

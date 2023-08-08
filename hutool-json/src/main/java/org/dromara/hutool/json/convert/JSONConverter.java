@@ -255,6 +255,11 @@ public class JSONConverter implements Converter {
 			return null;
 		}
 
+		// 日期、java.sql中的日期以及自定义日期统一处理
+		if(Date.class.isAssignableFrom(rowType)){
+			return (T) DateConverter.INSTANCE.convert(type, value);
+		}
+
 		// 集合转换（含有泛型参数，不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
 			return (T) CollectionConverter.INSTANCE.convert(type, value);
