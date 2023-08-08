@@ -1,6 +1,7 @@
 package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.TransIter;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
@@ -110,7 +111,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 					try {
 						v = supplier.call();
 					} catch (Exception e) {
-						throw new RuntimeException(e);
+						throw ExceptionUtil.wrapRuntime(e);
 					}
 					put(key, v);
 				}

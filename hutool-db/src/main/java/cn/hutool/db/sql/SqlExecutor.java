@@ -1,6 +1,7 @@
 package cn.hutool.db.sql;
 
 import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
@@ -299,7 +300,7 @@ public class SqlExecutor {
 			if(e instanceof SQLException){
 				throw (SQLException) e;
 			}
-			throw new RuntimeException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		} finally {
 			DbUtil.close(ps);
 		}

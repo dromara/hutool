@@ -531,7 +531,7 @@ public class IoUtil extends NioUtil {
 			int i = in.available();
 			return readHex(in, Math.min(8192, in.available()), false);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 

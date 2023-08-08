@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.func;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
+
 import java.io.Serializable;
 
 /**
@@ -35,7 +37,7 @@ public interface VoidFunc<P> extends Serializable {
 		try {
 			call(parameters);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 }

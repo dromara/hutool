@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -398,7 +399,7 @@ public class ClassScanner implements Serializable {
 			classesOfLoadError.add(className);
 		} catch (Throwable e) {
 			if (false == this.ignoreLoadError) {
-				throw new RuntimeException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			} else {
 				classesOfLoadError.add(className);
 			}

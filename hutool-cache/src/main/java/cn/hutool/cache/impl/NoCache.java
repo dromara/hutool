@@ -1,6 +1,7 @@
 package cn.hutool.cache.impl;
 
 import cn.hutool.cache.Cache;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.func.Func0;
 
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class NoCache<K, V> implements Cache<K, V> {
 		try {
 			return (null == supplier) ? null : supplier.call();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 

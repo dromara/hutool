@@ -2,6 +2,7 @@ package cn.hutool.cache.impl;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheListener;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.mutable.Mutable;
 import cn.hutool.core.lang.mutable.MutableObj;
@@ -120,7 +121,9 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 					try {
 						v = supplier.call();
 					} catch (Exception e) {
-						throw new RuntimeException(e);
+						// issue#I7RJZT 运行时异常不做包装
+						throw ExceptionUtil.wrapRuntime(e);
+						//throw new RuntimeException(e);
 					}
 					put(key, v, this.timeout);
 				} else {
