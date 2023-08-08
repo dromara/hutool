@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
  * 使用此接口避免使用反射调用toBean方法而性能太差。
  *
  * @author mkeq
+ * @since 5.8.22
  */
 public interface IJSONTypeConverter {
 

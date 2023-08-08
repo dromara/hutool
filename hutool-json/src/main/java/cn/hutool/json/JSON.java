@@ -178,7 +178,7 @@ public interface JSON extends Cloneable, Serializable, IJSONTypeConverter {
 	 * @since 3.0.8
 	 */
 	default <T> T toBean(Type type) {
-		return toBean(type, getConfig().isIgnoreError());
+		return JSONConverter.jsonConvert(type, this, getConfig());
 	}
 
 	/**

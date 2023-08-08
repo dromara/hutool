@@ -8,6 +8,7 @@
 * 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Gitee）
 * 【core  】      DesensitizedUtil增加清空策略（issue#I7PUJ2@Gitee）
 * 【all   】      修改异常包装策略：运行时异常不包装，只包装非运行时异常（issue#I7RJZT@Gitee）
+* 【cor   】      增加IJSONTypeConverter，避免反射调用（pr#1051@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复NumberUtil.toBigDecimal转换科学计数法问题（issue#3241@Github）
