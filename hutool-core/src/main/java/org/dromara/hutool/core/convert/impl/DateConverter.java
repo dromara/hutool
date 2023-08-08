@@ -16,6 +16,7 @@ import org.dromara.hutool.core.convert.AbstractConverter;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.SqlDateUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
@@ -88,8 +89,8 @@ public class DateConverter extends AbstractConverter {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);
 			final DateTime dateTime = StrUtil.isBlank(this.format) //
-					? DateUtil.parse(valueStr) //
-					: DateUtil.parse(valueStr, this.format);
+				? DateUtil.parse(valueStr) //
+				: DateUtil.parse(valueStr, this.format);
 			if (null != dateTime) {
 				return wrap(targetClass, dateTime);
 			}
@@ -117,7 +118,14 @@ public class DateConverter extends AbstractConverter {
 	}
 
 	/**
-	 * java.util.Date转为子类型
+	 * 时间戳转为子类型，支持：
+	 * <ul>
+	 *     <li>{@link java.util.Date}</li>
+	 *     <li>{@link DateTime}</li>
+	 *     <li>{@link java.sql.Date}</li>
+	 *     <li>{@link java.sql.Time}</li>
+	 *     <li>{@link java.sql.Timestamp}</li>
+	 * </ul>
 	 *
 	 * @param mills Date
 	 * @return 目标类型对象
@@ -130,16 +138,7 @@ public class DateConverter extends AbstractConverter {
 		if (DateTime.class == targetClass) {
 			return DateUtil.date(mills);
 		}
-		if (java.sql.Date.class == targetClass) {
-			return new java.sql.Date(mills);
-		}
-		if (java.sql.Time.class == targetClass) {
-			return new java.sql.Time(mills);
-		}
-		if (java.sql.Timestamp.class == targetClass) {
-			return new java.sql.Timestamp(mills);
-		}
 
-		throw new UnsupportedOperationException(StrUtil.format("Unsupported target Date type: {}", targetClass.getName()));
+		return SqlDateUtil.wrap(targetClass, mills);
 	}
 }
