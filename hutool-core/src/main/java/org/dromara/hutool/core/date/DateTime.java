@@ -22,7 +22,6 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -722,24 +721,6 @@ public class DateTime extends Date {
 	 */
 	public Date toJdkDate() {
 		return new Date(this.getTime());
-	}
-
-	/**
-	 * 转为{@link Timestamp}
-	 *
-	 * @return {@link Timestamp}
-	 */
-	public Timestamp toTimestamp() {
-		return new Timestamp(this.getTime());
-	}
-
-	/**
-	 * 转为 {@link java.sql.Date}
-	 *
-	 * @return {@link java.sql.Date}
-	 */
-	public java.sql.Date toSqlDate() {
-		return new java.sql.Date(getTime());
 	}
 
 	/**

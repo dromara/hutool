@@ -17,6 +17,7 @@ import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.text.CharUtil;
@@ -367,9 +368,7 @@ public class NetUtil {
 			throw new HutoolException(e);
 		}
 
-		if (networkInterfaces == null) {
-			throw new HutoolException("Get network interface error!");
-		}
+		Assert.notNull(networkInterfaces, ()-> new HutoolException("Get network interface error!"));
 
 		final LinkedHashSet<InetAddress> ipSet = new LinkedHashSet<>();
 

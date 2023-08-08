@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
@@ -50,7 +51,7 @@ public interface SerConsumer3<P1, P2, P3> extends Serializable {
 		try {
 			accepting(p1, p2, p3);
 		} catch (final Exception e) {
-			throw new HutoolException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 

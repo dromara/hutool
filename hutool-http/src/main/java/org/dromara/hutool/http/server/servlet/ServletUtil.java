@@ -568,7 +568,7 @@ public class ServletUtil {
 			writer.write(text);
 			writer.flush();
 		} catch (final IOException e) {
-			throw new HutoolException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.closeQuietly(writer);
 		}

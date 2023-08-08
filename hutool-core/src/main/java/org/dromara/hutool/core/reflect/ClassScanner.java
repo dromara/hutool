@@ -15,6 +15,8 @@ package org.dromara.hutool.core.reflect;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
+import org.dromara.hutool.core.exception.ExceptionUtil;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
@@ -408,7 +410,7 @@ public class ClassScanner implements Serializable {
 			classesOfLoadError.add(className);
 		} catch (final Throwable e){
 			if(!this.ignoreLoadError) {
-				throw new RuntimeException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}else{
 				classesOfLoadError.add(className);
 			}

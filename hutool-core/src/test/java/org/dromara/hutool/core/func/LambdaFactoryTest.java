@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
 import org.junit.jupiter.api.Assertions;
@@ -322,7 +323,7 @@ public class LambdaFactoryTest {
 			try {
 				return get0();
 			} catch (final Throwable e) {
-				throw new RuntimeException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}
 		}
 	}

@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.func;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
@@ -54,7 +55,7 @@ public interface SerBiPredicate<T, U> extends BiPredicate<T, U>, Serializable {
 		try {
 			return testing(t, u);
 		} catch (final Exception e) {
-			throw new HutoolException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 

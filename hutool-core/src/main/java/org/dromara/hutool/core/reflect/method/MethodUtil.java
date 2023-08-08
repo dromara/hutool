@@ -18,6 +18,7 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Singleton;
@@ -753,7 +754,7 @@ public class MethodUtil {
 				return invoke(isSingleton ? Singleton.get(clazz) : ConstructorUtil.newInstance(clazz), method, args);
 			}
 		} catch (final Exception e) {
-			throw new HutoolException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 

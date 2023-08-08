@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.text.StrUtil;
@@ -79,7 +80,7 @@ public class JdkClientEngine implements ClientEngine {
 		} catch (final IOException e) {
 			// 出错后关闭连接
 			IoUtil.closeQuietly(this);
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 
 		return sendRedirectIfPossible(message, isAsync);

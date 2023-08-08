@@ -1,5 +1,6 @@
 package org.dromara.hutool.poi.excel;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.poi.excel.cell.CellUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -42,7 +43,7 @@ public class IssueI6MBS5Test {
 			CellUtil.setComment(cell, "commonText", "ascend", null);
 			workbook.write(Files.newOutputStream(file.toPath()));
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 }

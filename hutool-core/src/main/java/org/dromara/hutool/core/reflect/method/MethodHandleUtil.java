@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.reflect.method;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.lookup.LookupUtil;
@@ -51,7 +52,7 @@ public class MethodHandleUtil {
 		try {
 			return (T) methodHandle.invokeWithArguments(args);
 		} catch (final Throwable e) {
-			throw new RuntimeException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 
@@ -114,10 +115,7 @@ public class MethodHandleUtil {
 			}
 			return (T) handle.invokeWithArguments(args);
 		} catch (final Throwable e) {
-			if(e instanceof RuntimeException){
-				throw (RuntimeException)e;
-			}
-			throw new HutoolException(e);
+			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
 }

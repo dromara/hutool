@@ -119,7 +119,7 @@ public class LineReader extends ReaderWrapper implements Iterable<String> {
 				try {
 					return readLine();
 				} catch (final IOException e) {
-					throw new RuntimeException(e);
+					throw new IORuntimeException(e);
 				}
 			}
 		};

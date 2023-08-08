@@ -47,7 +47,7 @@ public class ImgMetaUtil {
 		} catch (final ImageProcessingException e) {
 			throw new HutoolException(e);
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 		return getOrientation(metadata);
 	}

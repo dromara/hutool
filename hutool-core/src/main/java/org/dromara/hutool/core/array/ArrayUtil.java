@@ -18,6 +18,7 @@ import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.collection.set.UniqueKeySet;
 import org.dromara.hutool.core.comparator.CompareUtil;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
@@ -1156,7 +1157,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 						return (Object[]) obj;
 				}
 			} catch (final Exception e) {
-				throw new HutoolException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}
 		}
 		throw new HutoolException(StrUtil.format("[{}] is not Array!", obj.getClass()));

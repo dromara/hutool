@@ -26,6 +26,7 @@ import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
 import org.dromara.hutool.core.convert.CompositeConverter;
 import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.SerBiConsumer;
 import org.dromara.hutool.core.func.SerConsumer3;
@@ -764,7 +765,7 @@ public class CollUtil {
 				if (null != superclass && collectionType != superclass) {
 					return create(superclass);
 				}
-				throw new HutoolException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}
 		}
 		return list;

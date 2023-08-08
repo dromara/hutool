@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.swing.img;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 
@@ -76,7 +77,7 @@ public class FontUtil {
 			try {
 				return Font.createFont(Font.TYPE1_FONT, fontFile);
 			} catch (final Exception e1) {
-				throw new HutoolException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -98,7 +99,7 @@ public class FontUtil {
 			try {
 				return Font.createFont(Font.TYPE1_FONT, fontStream);
 			} catch (final Exception e1) {
-				throw new HutoolException(e1);
+				throw ExceptionUtil.wrapRuntime(e1);
 			}
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);

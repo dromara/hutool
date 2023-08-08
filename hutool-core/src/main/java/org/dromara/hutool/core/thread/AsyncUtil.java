@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.thread;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.stream.StreamUtil;
 
@@ -211,7 +212,7 @@ public class AsyncUtil {
 					if (eHandler != null) {
 						return eHandler.apply(ex);
 					} else {
-						throw new RuntimeException(ex);
+						throw ExceptionUtil.wrapRuntime(ex);
 					}
 				}
 			})

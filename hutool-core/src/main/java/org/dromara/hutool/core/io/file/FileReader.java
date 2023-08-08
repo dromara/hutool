@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.io.file;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
@@ -31,34 +32,37 @@ import java.util.function.Predicate;
  * 文件读取器
  *
  * @author Looly
- *
  */
 public class FileReader extends FileWrapper {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 创建 FileReader
-	 * @param file 文件
+	 *
+	 * @param file    文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 * @return FileReader
 	 */
-	public static FileReader of(final File file, final Charset charset){
+	public static FileReader of(final File file, final Charset charset) {
 		return new FileReader(file, charset);
 	}
 
 	/**
 	 * 创建 FileReader, 编码：{@link FileWrapper#DEFAULT_CHARSET}
+	 *
 	 * @param file 文件
 	 * @return FileReader
 	 */
-	public static FileReader of(final File file){
+	public static FileReader of(final File file) {
 		return new FileReader(file, DEFAULT_CHARSET);
 	}
 
 	// ------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
-	 * @param file 文件
+	 *
+	 * @param file    文件
 	 * @param charset 编码，使用 {@link CharsetUtil}
 	 */
 	public FileReader(final File file, final Charset charset) {
@@ -88,7 +92,7 @@ public class FileReader extends FileWrapper {
 	 * @return 内容
 	 * @throws IORuntimeException IO异常
 	 */
-	public String readString() throws IORuntimeException{
+	public String readString() throws IORuntimeException {
 		// JDK11+不再推荐使用这种方式，推荐使用Files.readString
 		return new String(readBytes(), this.charset);
 	}
@@ -96,7 +100,7 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 从文件中读取每一行数据
 	 *
-	 * @param <T> 集合类型
+	 * @param <T>        集合类型
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
@@ -108,15 +112,15 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 从文件中读取每一行数据
 	 *
-	 * @param <T> 集合类型
+	 * @param <T>        集合类型
 	 * @param collection 集合
-	 * @param predicate 断言，断言为真的加入到提供的集合中
+	 * @param predicate  断言，断言为真的加入到提供的集合中
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
 	 */
 	public <T extends Collection<String>> T readLines(final T collection, final Predicate<String> predicate) throws IORuntimeException {
 		readLines((SerConsumer<String>) s -> {
-			if(null == predicate || predicate.test(s)){
+			if (null == predicate || predicate.test(s)) {
 				collection.add(s);
 			}
 		});
@@ -130,7 +134,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.0.9
 	 */
-	public void readLines(final SerConsumer<String> lineHandler) throws IORuntimeException{
+	public void readLines(final SerConsumer<String> lineHandler) throws IORuntimeException {
 		BufferedReader reader = null;
 		try {
 			reader = FileUtil.getReader(file, charset);
@@ -153,7 +157,7 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 *
-	 * @param <T> 读取的结果对象类型
+	 * @param <T>           读取的结果对象类型
 	 * @param readerHandler Reader处理类
 	 * @return 从文件中read出的数据
 	 * @throws IORuntimeException IO异常
@@ -165,13 +169,7 @@ public class FileReader extends FileWrapper {
 			reader = FileUtil.getReader(this.file, charset);
 			result = readerHandler.applying(reader);
 		} catch (final Exception e) {
-			if(e instanceof IOException){
-				throw new IORuntimeException(e);
-			} else if(e instanceof RuntimeException){
-				throw (RuntimeException)e;
-			} else{
-				throw new HutoolException(e);
-			}
+			throw ExceptionUtil.wrapRuntime(e);
 		} finally {
 			IoUtil.closeQuietly(reader);
 		}
@@ -216,19 +214,19 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 将文件写入流中
 	 *
-	 * @param out 流
+	 * @param out        流
 	 * @param isCloseOut 是否关闭输出流
 	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 * @since 5.5.2
 	 */
 	public long writeToStream(final OutputStream out, final boolean isCloseOut) throws IORuntimeException {
-		try (final FileInputStream in = new FileInputStream(this.file)){
+		try (final FileInputStream in = new FileInputStream(this.file)) {
 			return IoUtil.copy(in, out);
-		}catch (final IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
-		} finally{
-			if(isCloseOut){
+		} finally {
+			if (isCloseOut) {
 				IoUtil.closeQuietly(out);
 			}
 		}

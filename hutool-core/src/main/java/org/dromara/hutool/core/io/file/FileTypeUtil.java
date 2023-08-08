@@ -271,7 +271,7 @@ public class FileTypeUtil {
 		try {
 			return IoUtil.readHex(in, Math.min(8192, in.available()), false);
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 

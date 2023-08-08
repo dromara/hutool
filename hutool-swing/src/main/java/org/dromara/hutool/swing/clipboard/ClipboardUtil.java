@@ -12,16 +12,11 @@
 
 package org.dromara.hutool.swing.clipboard;
 
-import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.exception.ExceptionUtil;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.datatransfer.*;
 import java.io.IOException;
 
 /**
@@ -82,7 +77,7 @@ public class ClipboardUtil {
 			try {
 				return content.getTransferData(flavor);
 			} catch (final UnsupportedFlavorException | IOException e) {
-				throw new HutoolException(e);
+				throw ExceptionUtil.wrapRuntime(e);
 			}
 		}
 		return null;

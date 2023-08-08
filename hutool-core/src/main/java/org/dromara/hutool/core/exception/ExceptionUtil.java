@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.exception;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -19,6 +20,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.text.CharUtil;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -66,10 +68,13 @@ public class ExceptionUtil {
 	 * @return 运行时异常
 	 */
 	public static RuntimeException wrapRuntime(final Throwable throwable) {
+		if(throwable instanceof IOException){
+			return new IORuntimeException(throwable);
+		}
 		if (throwable instanceof RuntimeException) {
 			return (RuntimeException) throwable;
 		}
-		return new RuntimeException(throwable);
+		return new HutoolException(throwable);
 	}
 
 	/**

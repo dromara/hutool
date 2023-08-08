@@ -76,7 +76,7 @@ public class PathDeleter {
 		try (final Stream<Path> list = Files.list(this.path)){
 			list.forEach(PathUtil::del);
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class PathDeleter {
 		try {
 			Files.walkFileTree(path, DelVisitor.INSTANCE);
 		} catch (final IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
