@@ -550,12 +550,14 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 		}
 
 		int compare;
-		for (int i = 0; i < this.length; i++) {
+		for (int i = 0; i < this.length - 1; i++) {
 			compare = comparator.compare(get(i), get(i + 1));
-			if ((isDESC && compare < 0) ||
-				(!isDESC && compare > 0)) {
-				// 反序，前一个小于后一个则返回错
-				// 正序，前一个大于后一个则返回错
+			// 反序，前一个小于后一个则返回错
+			if (isDESC && compare < 0) {
+				return false;
+			}
+			// 正序，前一个大于后一个则返回错
+			if(!isDESC && compare > 0){
 				return false;
 			}
 		}
