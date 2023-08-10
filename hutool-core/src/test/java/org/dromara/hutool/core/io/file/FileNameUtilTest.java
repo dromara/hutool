@@ -38,6 +38,8 @@ public class FileNameUtilTest {
 		Assertions.assertEquals("../../bar", FileNameUtil.normalize("../../bar"));
 		Assertions.assertEquals("C:/bar", FileNameUtil.normalize("/C:/bar"));
 		Assertions.assertEquals("C:", FileNameUtil.normalize("C:"));
+
+		// issue#3253，smb保留格式
 		Assertions.assertEquals("\\/192.168.1.1/Share/", FileNameUtil.normalize("\\\\192.168.1.1\\Share\\"));
 	}
 

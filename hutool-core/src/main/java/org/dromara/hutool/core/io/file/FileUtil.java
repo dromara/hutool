@@ -1399,6 +1399,7 @@ public class FileUtil extends PathUtil {
 	 * <li>2. 多个 / 转换为一个 /</li>
 	 * <li>3. 去除左边空格</li>
 	 * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
+	 * <li>5. SMB路径保留，如\\127.0.0.0\a\b.zip</li>
 	 * </ol>
 	 * <p>
 	 * 栗子：

@@ -330,6 +330,7 @@ public class FileNameUtil {
 	 * <li>2. 多个 / 转换为一个 /</li>
 	 * <li>3. 去除左边空格</li>
 	 * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
+	 * <li>5. SMB路径保留，如\\127.0.0.0\a\b.zip</li>
 	 * </ol>
 	 * <p>
 	 * 栗子：
@@ -360,6 +361,11 @@ public class FileNameUtil {
 			return null;
 		}
 
+		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
+		if (path.startsWith("\\\\")) {
+			return path;
+		}
+
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
 		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
@@ -374,10 +380,6 @@ public class FileNameUtil {
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH);
 		// 去除开头空白符，末尾空白符合法，不去除
 		pathToUse = StrUtil.trimPrefix(pathToUse);
-		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
-		if (path.startsWith("\\\\")) {
-			pathToUse = "\\" + pathToUse;
-		}
 
 		String prefix = StrUtil.EMPTY;
 		final int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
