@@ -25,7 +25,9 @@ public class Connector {
 	private String password;
 	private String group;
 
-	// ----------------------------------------------------------------------- 构造 start
+	/**
+	 * 构造
+	 */
 	public Connector() {
 	}
 
@@ -56,7 +58,6 @@ public class Connector {
 		this.user = user;
 		this.password = password;
 	}
-	// ----------------------------------------------------------------------- 构造 end
 
 	/**
 	 * 获得主机名
