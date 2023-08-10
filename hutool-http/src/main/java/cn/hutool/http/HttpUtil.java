@@ -678,13 +678,22 @@ public class HttpUtil {
 	 * @return 合成后的URL
 	 */
 	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncodeParams) {
-		if (isEncodeParams && StrUtil.contains(url, '?')) {
-			// 在需要编码的情况下，如果url中已经有部分参数，则编码之
-			url = encodeParams(url, charset);
-		}
-
 		// url和参数是分别编码的
-		return urlWithForm(url, toParams(form, charset), charset, false);
+		return urlWithForm(url, toParams(form, charset), charset, isEncodeParams);
+	}
+
+	/**
+	 * 将表单数据加到URL中（用于GET表单提交）
+	 * 表单的键值对会被url编码，但是url中原参数不会被编码
+	 *  且对form参数进行  FormUrlEncoded ，x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 *
+	 * @param url            URL
+	 * @param form           表单数据
+	 * @param charset        编码   null表示不encode键值对
+	 * @return 合成后的URL
+	 */
+	public static String urlWithFormUrlEncoded(String url, Map<String, Object> form, Charset charset) {
+		return urlWithForm(url, toParams(form, charset, true), charset, true);
 	}
 
 	/**
