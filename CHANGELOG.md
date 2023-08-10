@@ -16,6 +16,7 @@
 * 【core  】      修复PathUtil.moveContent当target不存在时会报错问题（issue#3238@Github）
 * 【db    】      修复SqlUtil.formatSql 格式化的sql换行异常（pr#3247@Github）
 * 【core  】      修复DateUtil.parse 给定一个时间解析错误问题（issue#I7QI6R@Gitee）
+* 【core  】      修复FileUtil无法正确识别Smb网络存储的路径问题（issue#3253@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)
