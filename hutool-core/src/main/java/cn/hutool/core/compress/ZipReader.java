@@ -102,7 +102,7 @@ public class ZipReader implements Closeable {
 	 *
 	 * @param maxSizeDiff 检查ZipBomb文件差异倍数，-1表示不检查ZipBomb
 	 * @return this
-	 * @since 6.0.0
+	 * @since 5.8.21
 	 */
 	public ZipReader setMaxSizeDiff(final int maxSizeDiff) {
 		this.maxSizeDiff = maxSizeDiff;
