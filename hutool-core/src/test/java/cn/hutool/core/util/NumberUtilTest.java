@@ -622,6 +622,6 @@ public class NumberUtilTest {
 		Assert.assertEquals(61.67D,
 			NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2), 0.01);
 
-		Console.log(NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2));
+		Assert.assertEquals(61.67, NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2), 0.01);
 	}
 }
