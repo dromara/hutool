@@ -468,5 +468,17 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson-spring-boot-starter</artifactId>
+			<version>3.17.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.9.1</version>
+		</dependency>
+
 	</dependencies>
 </project>
