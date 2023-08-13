@@ -53,7 +53,8 @@ public enum GlobalHeaders {
 
 		header(Header.ACCEPT, "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
 		header(Header.ACCEPT_ENCODING, "gzip, deflate", true);
-		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
+		// issue#3258，某些场景（如国外）不能指定中文
+		//header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
 		// 此Header只有在post请求中有用，因此在HttpRequest的method方法中设置此头信息，此处去掉
 		// header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(CharsetUtil.CHARSET_UTF_8), true);
 		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 Hutool", true);
