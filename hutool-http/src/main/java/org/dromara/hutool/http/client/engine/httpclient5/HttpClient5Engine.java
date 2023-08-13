@@ -31,6 +31,7 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
@@ -153,13 +154,15 @@ public class HttpClient5Engine implements ClientEngine {
 
 		// 填充自定义消息体
 		final HttpBody body = message.body();
-		request.setEntity(new HttpClient5BodyEntity(
-			// 用户自定义的内容类型
-			message.header(HeaderName.CONTENT_TYPE),
-			// 用户自定义编码
-			message.charset(),
-			message.isChunked(),
-			body));
+		if(null != body){
+			request.setEntity(new HttpClient5BodyEntity(
+				// 用户自定义的内容类型
+				message.header(HeaderName.CONTENT_TYPE),
+				// 用户自定义编码
+				message.charset(),
+				message.isChunked(),
+				body));
+		}
 
 		return request;
 	}

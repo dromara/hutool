@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.http.client.ClientConfig;
+import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
@@ -112,7 +113,7 @@ public class OkHttpEngine implements ClientEngine {
 		}
 
 		// 默认关闭自动跳转
-		builder.followRedirects(false);
+		builder.setFollowRedirects$okhttp(false);
 
 		this.client = builder.build();
 	}
@@ -129,8 +130,11 @@ public class OkHttpEngine implements ClientEngine {
 
 		// 填充方法
 		final String method = message.method().name();
-		if (HttpMethod.permitsRequestBody(method)) {
-			builder.method(method, new OkHttpRequestBody(message.body()));
+		final HttpBody body = message.body();
+		// if (HttpMethod.permitsRequestBody(method)) {
+		if (null != body) {
+			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充
+			builder.method(method, new OkHttpRequestBody(body));
 		} else {
 			builder.method(method, null);
 		}
@@ -150,10 +154,10 @@ public class OkHttpEngine implements ClientEngine {
 	private static void setProxy(final OkHttpClient.Builder builder, final ClientConfig config) {
 		final HttpProxy proxy = config.getProxy();
 		if (null != proxy) {
-			builder.proxy(proxy);
+			builder.setProxy$okhttp(proxy);
 			final PasswordAuthentication auth = proxy.getAuth();
 			if (null != auth) {
-				builder.proxyAuthenticator(new BasicProxyAuthenticator(auth));
+				builder.setProxyAuthenticator$okhttp(new BasicProxyAuthenticator(auth));
 			}
 		}
 	}

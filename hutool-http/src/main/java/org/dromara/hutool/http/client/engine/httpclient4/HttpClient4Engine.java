@@ -18,7 +18,8 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -31,10 +32,10 @@ import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
@@ -77,7 +78,7 @@ public class HttpClient4Engine implements ClientEngine {
 	public Response send(final Request message) {
 		initEngine();
 
-		final HttpEntityEnclosingRequestBase request = buildRequest(message);
+		final HttpUriRequest request = buildRequest(message);
 		final CloseableHttpResponse response;
 		try {
 			response = this.engine.execute(request);
@@ -137,35 +138,33 @@ public class HttpClient4Engine implements ClientEngine {
 	 * 构建请求体
 	 *
 	 * @param message {@link Request}
-	 * @return {@link HttpEntityEnclosingRequestBase}
+	 * @return {@link HttpUriRequest}
 	 */
-	private static HttpEntityEnclosingRequestBase buildRequest(final Request message) {
+	private static HttpUriRequest buildRequest(final Request message) {
 		final UrlBuilder url = message.url();
 		Assert.notNull(url, "Request URL must be not null!");
 		final URI uri = url.toURI();
 
-		final HttpEntityEnclosingRequestBase request = new HttpEntityEnclosingRequestBase() {
-			@Override
-			public String getMethod() {
-				return message.method().name();
-			}
-		};
-		request.setURI(uri);
+		final RequestBuilder requestBuilder = RequestBuilder
+			.create(message.method().name())
+			.setUri(uri);
 
 		// 填充自定义头
-		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
+		message.headers().forEach((k, v1) -> v1.forEach((v2) -> requestBuilder.addHeader(k, v2)));
 
 		// 填充自定义消息体
 		final HttpBody body = message.body();
-		request.setEntity(new HttpClient4BodyEntity(
-			// 用户自定义的内容类型
-			message.header(HeaderName.CONTENT_TYPE),
-			// 用户自定义编码
-			message.charset(),
-			message.isChunked(),
-			body));
+		if(null != body){
+			requestBuilder.setEntity(new HttpClient4BodyEntity(
+				// 用户自定义的内容类型
+				message.header(HeaderName.CONTENT_TYPE),
+				// 用户自定义编码
+				message.charset(),
+				message.isChunked(),
+				body));
+		}
 
-		return request;
+		return requestBuilder.build();
 	}
 
 	/**
