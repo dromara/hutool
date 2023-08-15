@@ -11,6 +11,7 @@
 * 【core  】      增加IJSONTypeConverter，避免反射调用（pr#1051@Gitee）
 * 【http  】      优化HttpUtil.urlWithForm方法（pr#1052@Gitee）
 * 【http  】      优化HttpUtil.urlWithForm方法（pr#1052@Gitee）
+* 【cron  】      优化PatternParser支持年的步进（issue#I7SMP7@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复NumberUtil.toBigDecimal转换科学计数法问题（issue#3241@Github）
