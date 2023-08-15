@@ -84,7 +84,7 @@ public class PartParser {
 		}
 
 		final List<Integer> values = parseArray(value);
-		if (values.size() == 0) {
+		if (values.isEmpty()) {
 			throw new CronException("Invalid part value: [{}]", value);
 		}
 
@@ -261,6 +261,12 @@ public class PartParser {
 		// 周日可以用0或7表示，统一转换为0
 		if(Part.DAY_OF_WEEK.equals(this.part) && Week.SUNDAY.getIso8601Value() == i){
 			i = Week.SUNDAY.ordinal();
+		}
+
+		// issue#I7SMP7
+		// 年的形式中，如果类似于*/2，不做范围检查
+		if(Part.YEAR.equals(this.part)){
+			return i;
 		}
 
 		return part.checkValue(i);
