@@ -41,6 +41,6 @@ public class PropertyComparator<T> extends FuncComparator<T> {
 	 * @param isNullGreater {@code null}值是否排在后（从小到大排序）
 	 */
 	public PropertyComparator(final String property, final boolean isNullGreater) {
-		super(isNullGreater, (bean)-> BeanUtil.getProperty(bean, property));
+		super(isNullGreater, true, (bean)-> BeanUtil.getProperty(bean, property));
 	}
 }

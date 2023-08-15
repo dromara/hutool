@@ -50,7 +50,7 @@ public class FieldsComparator<T> extends NullComparator<T> {
 			for (final String fieldName : fieldNames) {
 				field = FieldUtil.getField(beanClass, fieldName);
 				Assert.notNull(field, "Field [{}] not found in Class [{}]", fieldName, beanClass.getName());
-				final int compare = new FieldComparator<>(field).compare(a, b);
+				final int compare = new FieldComparator<>(true, false, field).compare(a, b);
 				if (0 != compare) {
 					return compare;
 				}
