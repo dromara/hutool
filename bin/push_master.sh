@@ -12,6 +12,9 @@
 # See the Mulan PSL v2 for more details.
 #
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
+
 echo -e "\033[32mCheckout to v6-master\033[0m"
 git checkout v6-master
 

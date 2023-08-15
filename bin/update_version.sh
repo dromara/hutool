@@ -18,6 +18,9 @@
 # 2. 替换README.md和docs中的版本号
 #------------------------------------------------
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
+
 if [ -z "$1" ]; then
         echo "ERROR: 新版本不存在，请指定参数1"
         exit
@@ -30,4 +33,4 @@ mvn versions:set -DnewVersion=$1
 version=${1%-SNAPSHOT}
 
 # 替换其它地方的版本
-"$(pwd)"/bin/replaceVersion.sh "$version"
+"$(dirname ${BASH_SOURCE[0]})"/replaceVersion.sh "$version"

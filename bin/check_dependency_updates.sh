@@ -16,4 +16,6 @@
 # Check dependency, thanks to t-io
 #--------------------------------------
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
 mvn versions:display-dependency-updates

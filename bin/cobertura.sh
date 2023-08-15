@@ -12,4 +12,6 @@
 # See the Mulan PSL v2 for more details.
 #
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
 exec mvn cobertura:cobertura

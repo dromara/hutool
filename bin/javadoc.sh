@@ -12,5 +12,8 @@
 # See the Mulan PSL v2 for more details.
 #
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
+
 # 多模块聚合文档，生成在target/site/apidocs
 exec mvn javadoc:aggregate

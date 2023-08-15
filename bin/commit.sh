@@ -12,7 +12,10 @@
 # See the Mulan PSL v2 for more details.
 #
 
+# show Hutool logo
+"$(dirname ${BASH_SOURCE[0]})"/logo.sh
+
 git add .
 git commit -am "$1"
 
-bin/push_dev.sh
+"$(dirname ${BASH_SOURCE[0]})"/push_dev.sh
