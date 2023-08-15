@@ -624,4 +624,10 @@ public class NumberUtilTest {
 
 		Assert.assertEquals(61.67, NumberUtil.div(NumberUtil.mul(15858155520D, 100), 25715638272D, 2), 0.01);
 	}
+
+	@Test
+	public void issueI7R2B6Test2() {
+		final BigDecimal mul = NumberUtil.mul((Number) 15858155520D, 100.0);
+		Assert.assertEquals("1585815552000", mul.toString());
+	}
 }
