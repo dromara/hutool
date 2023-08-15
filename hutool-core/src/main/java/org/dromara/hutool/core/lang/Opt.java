@@ -33,6 +33,7 @@ import java.util.stream.Stream;
  * @param <T> 包裹里元素的类型
  * @author VampireAchao
  * @author Cizai
+ * @author kongweiguang
  * @see java.util.Optional
  */
 public class Opt<T> {
@@ -213,7 +214,7 @@ public class Opt<T> {
 	}
 
 	/**
-	 * 如果包裹内容失败了，就执行传入的操作({@link Consumer#accept})
+	 * 如果包裹内容失败了，同时是指定的异常执行传入的操作({@link Consumer#accept})
 	 *
 	 * <p> 例如如果值存在就打印结果
 	 * <pre>{@code
