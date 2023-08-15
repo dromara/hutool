@@ -130,7 +130,7 @@ public class DbTest {
 			ps.setFetchSize(Integer.MIN_VALUE);
 			ps.setFetchDirection(ResultSet.FETCH_FORWARD);
 			return ps;
-		}), new EntityListHandler());
+		}), EntityListHandler.create());
 	}
 
 	@Test

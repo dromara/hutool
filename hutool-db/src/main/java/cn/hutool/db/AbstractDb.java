@@ -624,7 +624,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findAll(Entity where) throws SQLException {
-		return find(where, EntityListHandler.create());
+		return find(where, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**

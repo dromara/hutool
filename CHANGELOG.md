@@ -19,6 +19,7 @@
 * 【core  】      修复DateUtil.parse 给定一个时间解析错误问题（issue#I7QI6R@Gitee）
 * 【core  】      去除默认的ACCEPT_LANGUAGE（issue#3258@Github）
 * 【core  】      修复FieldsComparator比较结果不正确问题（issue#3259@Github）
+* 【core  】      修复Db.findAll全局忽略大小写无效问题（issue#I7T30Y@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)

@@ -108,7 +108,7 @@ public class CRUDTest {
 
 	@Test
 	public void findTest() throws SQLException {
-		List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), EntityListHandler.create());
 		Assert.assertFalse(find.isEmpty());
 	}
 
