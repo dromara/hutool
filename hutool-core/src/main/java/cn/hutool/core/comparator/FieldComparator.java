@@ -33,19 +33,21 @@ public class FieldComparator<T> extends FuncComparator<T> {
 	 * @param field 字段
 	 */
 	public FieldComparator(Field field) {
-		this(true, field);
+		this(true, true, field);
 	}
 
 	/**
 	 * 构造
 	 *
 	 * @param nullGreater 是否{@code null}在后
+	 * @param compareSelf 在字段值相同情况下，是否比较对象本身。
+	 *                    如果此项为{@code false}，字段值比较后为0会导致对象被认为相同，可能导致被去重。
 	 * @param field       字段
 	 */
-	public FieldComparator(boolean nullGreater, Field field) {
-		super(nullGreater, (bean) ->
-				(Comparable<?>) ReflectUtil.getFieldValue(bean,
-						Assert.notNull(field, "Field must be not null!")));
+	public FieldComparator(boolean nullGreater, boolean compareSelf, Field field) {
+		super(nullGreater, compareSelf, (bean) ->
+			(Comparable<?>) ReflectUtil.getFieldValue(bean,
+				Assert.notNull(field, "Field must be not null!")));
 	}
 
 	/**

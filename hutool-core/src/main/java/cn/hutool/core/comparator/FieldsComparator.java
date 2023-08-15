@@ -38,7 +38,8 @@ public class FieldsComparator<T> extends NullComparator<T> {
 			for (String fieldName : fieldNames) {
 				field = ClassUtil.getDeclaredField(beanClass, fieldName);
 				Assert.notNull(field, "Field [{}] not found in Class [{}]", fieldName, beanClass.getName());
-				final int compare = new FieldComparator<>(field).compare(a, b);
+				// issue#3259，多个字段比较时，允许字段值重复
+				final int compare = new FieldComparator<>(true, false, field).compare(a, b);
 				if (0 != compare) {
 					return compare;
 				}

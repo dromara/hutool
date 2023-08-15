@@ -13,16 +13,31 @@ import java.util.function.Function;
 public class FuncComparator<T> extends NullComparator<T> {
 	private static final long serialVersionUID = 1L;
 
+	private final boolean compareSelf;
 	private final Function<T, Comparable<?>> func;
 
 	/**
 	 * 构造
 	 *
 	 * @param nullGreater 是否{@code null}在后
-	 * @param func        比较项获取函数
+	 * @param func        比较项获取函数，此函数根据传入的一个对象，生成对应的可比较对象，然后根据这个返回值比较
 	 */
 	public FuncComparator(boolean nullGreater, Function<T, Comparable<?>> func) {
+		this(nullGreater, true, func);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param nullGreater 是否{@code null}在后
+	 * @param compareSelf 在字段值相同情况下，是否比较对象本身。
+	 *                       如果此项为{@code false}，字段值比较后为0会导致对象被认为相同，可能导致被去重。
+	 * @param func        比较项获取函数，此函数根据传入的一个对象，生成对应的可比较对象，然后根据这个返回值比较
+	 * @since 5.8.22
+	 */
+	public FuncComparator(boolean nullGreater, boolean compareSelf, Function<T, Comparable<?>> func) {
 		super(nullGreater, null);
+		this.compareSelf = compareSelf;
 		this.func = func;
 	}
 
@@ -43,7 +58,7 @@ public class FuncComparator<T> extends NullComparator<T> {
 	/**
 	 * 对象及对应比较的值的综合比较<br>
 	 * 考虑到如果对象对应的比较值相同，如对象的字段值相同，则返回相同结果，此时在TreeMap等容器比较去重时会去重。<br>
-	 * 因此需要比较下对象本身以避免去重
+	 * 因此当{@link #compareSelf}为{@code true}时需要比较下对象本身以避免去重
 	 *
 	 * @param o1 对象1
 	 * @param o2 对象2
@@ -54,7 +69,7 @@ public class FuncComparator<T> extends NullComparator<T> {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private int compare(T o1, T o2, Comparable v1, Comparable v2) {
 		int result = ObjectUtil.compare(v1, v2, this.nullGreater);
-		if (0 == result) {
+		if (compareSelf && 0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况
 			result = CompareUtil.compare(o1, o2, this.nullGreater);
 		}
