@@ -31,7 +31,7 @@ public class ConcurentTest {
 		for(int i = 0; i < 10000; i++) {
 			ThreadUtil.execute(() -> {
 				final List<Entity> find;
-				find = db.find(ListUtil.of("name AS name2"), Entity.of("user"), new EntityListHandler());
+				find = db.find(ListUtil.of("name AS name2"), Entity.of("user"), EntityListHandler.of());
 				Console.log(find);
 			});
 		}

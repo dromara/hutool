@@ -23,17 +23,20 @@ import java.util.List;
 
 /**
  * 结果集处理类 ，处理出的结果为Entity列表
- * @author loolly
  *
+ * @author loolly
  */
-public class EntityListHandler implements RsHandler<List<Entity>>{
+public class EntityListHandler implements RsHandler<List<Entity>> {
 	private static final long serialVersionUID = -2846240126316979895L;
 
-	/** 是否大小写不敏感 */
+	/**
+	 * 是否大小写不敏感
+	 */
 	private final boolean caseInsensitive;
 
 	/**
-	 * 创建一个 EntityListHandler对象
+	 * 创建一个 EntityListHandler对象，默认大小写敏感
+	 *
 	 * @return EntityListHandler对象
 	 */
 	public static EntityListHandler of() {
@@ -41,7 +44,7 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 	}
 
 	/**
-	 * 构造
+	 * 构造，默认大小写敏感
 	 */
 	public EntityListHandler() {
 		this(false);
@@ -62,7 +65,7 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 		final EntityRowHandler rowHandler = new EntityRowHandler(meta, caseInsensitive, true);
 
 		final List<Entity> result = ListUtil.of();
-		while (rs.next()){
+		while (rs.next()) {
 			result.add(rowHandler.handle(rs));
 		}
 

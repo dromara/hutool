@@ -114,7 +114,7 @@ public class CRUDTest {
 
 	@Test
 	public void findTest() {
-		final List<Entity> find = db.find(ListUtil.of("name AS name2"), Entity.of("user"), new EntityListHandler());
+		final List<Entity> find = db.find(ListUtil.of("name AS name2"), Entity.of("user"), EntityListHandler.of());
 		Assertions.assertFalse(find.isEmpty());
 	}
 
