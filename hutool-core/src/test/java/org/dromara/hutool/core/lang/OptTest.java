@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.management.monitor.MonitorSettingException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -68,8 +69,8 @@ public class OptTest {
 		Opt.ofNullable("hutool").peeks(user::setUsername, user::setNickname);
 		// 也可以在适当的地方换行使得代码的可读性提高
 		Opt.of(user).peeks(
-				u -> Assertions.assertEquals("hutool", u.getNickname()),
-				u -> Assertions.assertEquals("hutool", u.getUsername())
+			u -> Assertions.assertEquals("hutool", u.getNickname()),
+			u -> Assertions.assertEquals("hutool", u.getUsername())
 		);
 		Assertions.assertEquals("hutool", user.getNickname());
 		Assertions.assertEquals("hutool", user.getUsername());
@@ -77,8 +78,8 @@ public class OptTest {
 		// 注意，传入的lambda中，对包裹内的元素执行赋值操作并不会影响到原来的元素,这是java语言的特性。。。
 		// 这也是为什么我们需要getter和setter而不直接给bean中的属性赋值中的其中一个原因
 		final String name = Opt.ofNullable("hutool").peeks(
-				username -> username = "123", username -> username = "456",
-				n -> Assertions.assertEquals("hutool", n)).get();
+			username -> username = "123", username -> username = "456",
+			n -> Assertions.assertEquals("hutool", n)).get();
 		Assertions.assertEquals("hutool", name);
 
 		// 当然，以下情况不会抛出NPE，但也没什么意义
@@ -104,7 +105,7 @@ public class OptTest {
 
 	@Test
 	public void orElseThrowTest() {
-		Assertions.assertThrows(NoSuchElementException.class, ()->{
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
 			// 获取一个不可能为空的值，否则抛出NoSuchElementException异常
 			final Object obj = Opt.ofNullable(null).orElseThrow();
 			Assertions.assertNull(obj);
@@ -113,7 +114,7 @@ public class OptTest {
 
 	@Test
 	public void orElseThrowTest2() {
-		Assertions.assertThrows(IllegalStateException.class, ()->{
+		Assertions.assertThrows(IllegalStateException.class, () -> {
 			// 获取一个不可能为空的值，否则抛出自定义异常
 			final Object assignException = Opt.ofNullable(null).orElseThrow(IllegalStateException::new);
 			Assertions.assertNull(assignException);
@@ -127,8 +128,8 @@ public class OptTest {
 		final String key = "key";
 		map.put(key, 1);
 		Opt.ofNullable(map.get(key))
-				.ifPresent(v -> map.put(key, v + 1))
-				.orElseRun(() -> map.remove(key));
+			.ifPresent(v -> map.put(key, v + 1))
+			.orElseRun(() -> map.remove(key));
 		Assertions.assertEquals((Object) 2, map.get(key));
 	}
 
@@ -140,7 +141,7 @@ public class OptTest {
 //		Opt.ofNullable(userList).map(List::stream).flatMap(Stream::findFirst);
 		// 现在，兼容
 		final User user = Opt.ofNullable(userList).map(List::stream)
-				.flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
+			.flattedMap(Stream::findFirst).orElseGet(User.builder()::build);
 		Assertions.assertNull(user.getUsername());
 		Assertions.assertNull(user.getNickname());
 	}
@@ -194,8 +195,8 @@ public class OptTest {
 				}
 			});
 			Assertions.assertTrue(
-					(i % 2 == 0 && opt.getThrowable() instanceof IllegalStateException) ||
-							(i % 2 != 0 && opt.getThrowable() instanceof NullPointerException)
+				(i % 2 == 0 && opt.getThrowable() instanceof IllegalStateException) ||
+					(i % 2 != 0 && opt.getThrowable() instanceof NullPointerException)
 			);
 		});
 	}
@@ -207,5 +208,15 @@ public class OptTest {
 	static class User {
 		private String username;
 		private String nickname;
+	}
+
+	@Test
+	void testFail() {
+		Opt.ofTry(() -> 1 / 0)
+			.ifFail(Console::log)
+			.ifFail(Console::log, ArithmeticException.class)
+			.ifFail(Console::log, NullPointerException.class)
+			.ifFail(Console::log, NullPointerException.class, MonitorSettingException.class)
+		;
 	}
 }
