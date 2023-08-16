@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * 树工具类
@@ -221,26 +222,7 @@ public class TreeUtil {
 	 * @since 5.2.4
 	 */
 	public static <T> List<CharSequence> getParentsName(final MapTree<T> node, final boolean includeCurrentNode) {
-		final List<CharSequence> result = new ArrayList<>();
-		if (null == node) {
-			return result;
-		}
-
-		if (includeCurrentNode) {
-			result.add(node.getName());
-		}
-
-		MapTree<T> parent = node.getParent();
-		CharSequence name;
-		while (null != parent) {
-			name = parent.getName();
-			parent = parent.getParent();
-			if(null != name || null != parent){
-				// issue#I795IN，根节点的null不加入
-				result.add(name);
-			}
-		}
-		return result;
+		return getParents(node, includeCurrentNode, MapTree::getName);
 	}
 
 	/**
@@ -256,24 +238,53 @@ public class TreeUtil {
 	 * @return 所有父节点ID列表，node为null返回空List
 	 * @since 5.8.22
 	 */
-	public static <T> List<T> getParentsId(MapTree<T> node, boolean includeCurrentNode) {
-		final List<T> result = new ArrayList<>();
+	public static <T> List<T> getParentsId(final MapTree<T> node, final boolean includeCurrentNode) {
+		return getParents(node, includeCurrentNode,  MapTree::getId);
+	}
+
+	/**
+	 *  获取所有父节点指定函数结果列表
+	 *
+	 * @param <T>                节点ID类型
+	 * @param <E>                字段值类型
+	 * @param node               节点
+	 * @param includeCurrentNode 是否包含当前节点的名称
+	 * @param fieldFunc           获取父节点名称的函数
+	 * @return 所有父节点字段值列表，node为null返回空List
+	 * @since 6.0.0
+	 */
+	public static <T, E> List<E> getParents(final MapTree<T> node, final boolean includeCurrentNode, final Function<MapTree<T>, E> fieldFunc) {
+		final List<E> result = new ArrayList<>();
 		if (null == node) {
 			return result;
 		}
 
 		if (includeCurrentNode) {
-			result.add(node.getId());
+			result.add(fieldFunc.apply(node));
 		}
 
 		MapTree<T> parent = node.getParent();
-		T id;
+		E fieldValue;
 		while (null != parent) {
-			id = parent.getId();
+			fieldValue = fieldFunc.apply(parent);
 			parent = parent.getParent();
+			if(null != fieldValue || null != parent){
+				// issue#I795IN，根节点的null不加入
+				result.add(fieldValue);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 获取所有父节点ID列表
+	 *
+	 * <p>
+	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
+			parent = parent.getParent();) {
 			if(null != id || null != parent){
 				// issue#I795IN，根节点的null不加入
-				result.add(id);
+				result.add(fieldFunc.apply(parent));
 			}
 		}
 		return result;
