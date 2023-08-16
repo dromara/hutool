@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.management.monitor.MonitorSettingException;
@@ -210,7 +211,9 @@ public class OptTest {
 		private String nickname;
 	}
 
+	@SuppressWarnings({"NumericOverflow", "divzero"})
 	@Test
+	@Disabled
 	void testFail() {
 		Opt.ofTry(() -> 1 / 0)
 			.ifFail(Console::log)

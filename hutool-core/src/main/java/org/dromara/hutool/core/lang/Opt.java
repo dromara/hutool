@@ -192,18 +192,18 @@ public class Opt<T> {
 	}
 
 	/**
-	 * 如果包裹内容失败了，就执行传入的操作({@link Consumer#accept})
+	 * 如果包裹内容失败了，则执行传入的操作({@link Consumer#accept})
 	 *
-	 * <p> 例如如果值存在就打印结果
+	 * <p> 例如执行有异常就打印结果
 	 * <pre>{@code
-	 * Opt.ofTry(() -> 1 / 0).ifFail(Console::log);
+	 *     Opt.ofTry(() -> 1 / 0).ifFail(Console::log);
 	 * }</pre>
 	 *
 	 * @param action 你想要执行的操作
 	 * @return this
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
-	public Opt<T> ifFail(final Consumer<? super Throwable> action) {
+	public Opt<T> ifFail(final Consumer<? super Throwable> action) throws NullPointerException{
 		Objects.requireNonNull(action, "action is null");
 
 		if (isFail()) {
@@ -218,16 +218,16 @@ public class Opt<T> {
 	 *
 	 * <p> 例如如果值存在就打印结果
 	 * <pre>{@code
-	 * Opt.ofTry(() -> 1 / 0).ifFail(Console::log, ArithmeticException.class);
+	 *     Opt.ofTry(() -> 1 / 0).ifFail(Console::log, ArithmeticException.class);
 	 * }</pre>
 	 *
 	 * @param action 你想要执行的操作
-	 * @param exs    抛出相应异常执行操作
+	 * @param exs    限定的异常
 	 * @return this
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
 	@SafeVarargs
-	public final Opt<T> ifFail(final Consumer<? super Throwable> action, final Class<? extends Throwable>... exs) {
+	public final Opt<T> ifFail(final Consumer<? super Throwable> action, final Class<? extends Throwable>... exs) throws NullPointerException{
 		Objects.requireNonNull(action, "action is null");
 
 		if (isFail() && EasyStream.of(exs).anyMatch(e -> e.isAssignableFrom(throwable.getClass()))) {
