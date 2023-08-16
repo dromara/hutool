@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.poi.word;
 
+import org.apache.poi.common.usermodel.PictureType;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.poi.exceptions.POIException;
@@ -27,11 +27,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.awt.Font;
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * Word docx生成器
@@ -51,7 +47,11 @@ public class Word07Writer implements Closeable {
 	 */
 	protected boolean isClosed;
 
-	// -------------------------------------------------------------------------- Constructor start
+	// region ----- Constructor start
+
+	/**
+	 * 构造
+	 */
 	public Word07Writer() {
 		this(new XWPFDocument());
 	}
@@ -85,7 +85,7 @@ public class Word07Writer implements Closeable {
 		this.destFile = destFile;
 	}
 
-	// -------------------------------------------------------------------------- Constructor end
+	// endregion
 
 	/**
 	 * 获取{@link XWPFDocument}
@@ -152,8 +152,8 @@ public class Word07Writer implements Closeable {
 	 *
 	 * @param data 表格数据，多行数据。元素表示一行数据，当为集合或者数组时，为一行；当为Map或者Bean时key表示标题，values为数据
 	 * @return this
-	 * @since 4.5.16
 	 * @see TableUtil#createTable(XWPFDocument, Iterable)
+	 * @since 4.5.16
 	 */
 	public Word07Writer addTable(final Iterable<?> data) {
 		TableUtil.createTable(this.doc, data);
@@ -171,15 +171,7 @@ public class Word07Writer implements Closeable {
 	 */
 	public Word07Writer addPicture(final File picFile, final int width, final int height) {
 		final String fileName = picFile.getName();
-		final String extName = FileNameUtil.extName(fileName).toUpperCase();
-		PicType picType;
-		try {
-			picType = PicType.valueOf(extName);
-		} catch (final IllegalArgumentException e) {
-			// 默认值
-			picType = PicType.JPEG;
-		}
-		return addPicture(FileUtil.getInputStream(picFile), picType, fileName, width, height);
+		return addPicture(FileUtil.getInputStream(picFile), PictureTypeUtil.getType(fileName), fileName, width, height);
 	}
 
 	/**
@@ -193,7 +185,7 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @since 5.1.6
 	 */
-	public Word07Writer addPicture(final InputStream in, final PicType picType, final String fileName, final int width, final int height) {
+	public Word07Writer addPicture(final InputStream in, final PictureType picType, final String fileName, final int width, final int height) {
 		return addPicture(in, picType, fileName, width, height, ParagraphAlignment.CENTER);
 	}
 
@@ -209,12 +201,12 @@ public class Word07Writer implements Closeable {
 	 * @return this
 	 * @since 5.2.4
 	 */
-	public Word07Writer addPicture(final InputStream in, final PicType picType, final String fileName, final int width, final int height, final ParagraphAlignment align) {
+	public Word07Writer addPicture(final InputStream in, final PictureType picType, final String fileName, final int width, final int height, final ParagraphAlignment align) {
 		final XWPFParagraph paragraph = doc.createParagraph();
 		paragraph.setAlignment(align);
 		final XWPFRun run = paragraph.createRun();
 		try {
-			run.addPicture(in, picType.getValue(), fileName, Units.toEMU(width), Units.toEMU(height));
+			run.addPicture(in, picType, fileName, Units.toEMU(width), Units.toEMU(height));
 		} catch (final InvalidFormatException e) {
 			throw new POIException(e);
 		} catch (final IOException e) {
@@ -223,6 +215,34 @@ public class Word07Writer implements Closeable {
 			IoUtil.closeQuietly(in);
 		}
 
+		return this;
+	}
+
+	/**
+	 * 增加多张图片，单独成段落，增加后图片流关闭
+	 *
+	 * @param width    图片统一宽度
+	 * @param height   图片统一高度
+	 * @param picFiles 图片列表
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public Word07Writer addPictures(final int width, final int height, final File... picFiles) {
+		final XWPFParagraph paragraph = doc.createParagraph();
+		XWPFRun run;
+		try {
+			for (final File picFile : picFiles) {
+				run = paragraph.createRun();
+				final String name = picFile.getName();
+				try(final BufferedInputStream in = FileUtil.getInputStream(picFile)){
+					run.addPicture(in, PictureTypeUtil.getType(name), name, Units.toEMU(width), Units.toEMU(height));
+				}
+			}
+		} catch (final InvalidFormatException e) {
+			throw new POIException(e);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 		return this;
 	}
 
@@ -289,6 +309,7 @@ public class Word07Writer implements Closeable {
 	 * 关闭Word文档<br>
 	 * 如果用户设定了目标文件，先写出目标文件后给关闭工作簿
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public void close() {
 		if (null != this.destFile) {
