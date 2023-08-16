@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.22(2023-08-15)
+# 5.8.22(2023-08-16)
 
 ### 🐣新特性
 * 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Gitee）
@@ -12,6 +12,7 @@
 * 【http  】      优化HttpUtil.urlWithForm方法（pr#1052@Gitee）
 * 【http  】      优化HttpUtil.urlWithForm方法（pr#1052@Gitee）
 * 【cron  】      优化PatternParser支持年的步进（issue#I7SMP7@Gitee）
+* 【core  】      TreeUtil增加getParentsId方法（issue#I7TDCF@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复NumberUtil.toBigDecimal转换科学计数法问题（issue#3241@Github）
