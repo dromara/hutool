@@ -13,6 +13,7 @@ package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.func.SerSupplier;
+import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Collection;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
  * @param <T> 包裹里元素的类型
  * @author VampireAchao
  * @author Cizai
+ * @author kongweiguang
  * @see java.util.Optional
  */
 public class Opt<T> {
@@ -187,6 +189,52 @@ public class Opt<T> {
 	 */
 	public boolean isFail() {
 		return null != this.throwable;
+	}
+
+	/**
+	 * 如果包裹内容失败了，就执行传入的操作({@link Consumer#accept})
+	 *
+	 * <p> 例如如果值存在就打印结果
+	 * <pre>{@code
+	 * Opt.ofTry(() -> 1 / 0).ifFail(Console::log);
+	 * }</pre>
+	 *
+	 * @param action 你想要执行的操作
+	 * @return this
+	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
+	 */
+	public Opt<T> ifFail(final Consumer<? super Throwable> action) {
+		Objects.requireNonNull(action, "action is null");
+
+		if (isFail()) {
+			action.accept(throwable);
+		}
+
+		return this;
+	}
+
+	/**
+	 * 如果包裹内容失败了，同时是指定的异常执行传入的操作({@link Consumer#accept})
+	 *
+	 * <p> 例如如果值存在就打印结果
+	 * <pre>{@code
+	 * Opt.ofTry(() -> 1 / 0).ifFail(Console::log, ArithmeticException.class);
+	 * }</pre>
+	 *
+	 * @param action 你想要执行的操作
+	 * @param exs    抛出相应异常执行操作
+	 * @return this
+	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
+	 */
+	@SafeVarargs
+	public final Opt<T> ifFail(final Consumer<? super Throwable> action, final Class<? extends Throwable>... exs) {
+		Objects.requireNonNull(action, "action is null");
+
+		if (isFail() && EasyStream.of(exs).anyMatch(e -> e.isAssignableFrom(throwable.getClass()))) {
+			action.accept(throwable);
+		}
+
+		return this;
 	}
 
 	/**
