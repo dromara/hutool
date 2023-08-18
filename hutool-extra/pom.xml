@@ -34,6 +34,9 @@
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<spring-boot.version>2.7.14</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
+		<redisson.version>3.17.1</redisson.version>
+		<aspectjweaver.version>1.9.9.1</aspectjweaver.version>
+		<redis.version>2.3.12.RELEASE</redis.version>
 	</properties>
 
 	<dependencies>
@@ -472,12 +475,38 @@
 		<dependency>
 			<groupId>org.redisson</groupId>
 			<artifactId>redisson-spring-boot-starter</artifactId>
-			<version>3.17.1</version>
+			<version>${redisson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>1.9.9.1</version>
+			<version>${aspectjweaver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>${redis.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-beans</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>5.2.2.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-beans</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>

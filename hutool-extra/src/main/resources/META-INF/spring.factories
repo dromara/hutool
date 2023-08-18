@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.hutool.extra.spring.SpringUtil
+cn.hutool.extra.spring.SpringUtil,\
+cn.hutool.extra.redisson.config.AutoRedissonLockConfiguration

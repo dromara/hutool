@@ -1,8 +1,5 @@
 package cn.hutool.extra.redisson;
 
-import cn.hutool.core.lang.Assert;
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,13 +13,10 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -32,8 +26,11 @@ import java.util.concurrent.locks.Lock;
 @Aspect
 public class LockInterceptor {
 
-	@Resource
-	private RedissonClient client;
+	private final RedissonClient client;
+
+	public LockInterceptor(RedissonClient client) {
+		this.client = client;
+	}
 
 	@Pointcut("@annotation(cn.hutool.extra.redisson.RedissonLock)")
 	public void pointcut() {
@@ -48,7 +45,7 @@ public class LockInterceptor {
 		String keyString;
 		Lock underLock;
 		try {
-			Map<String, Object> params = _params(point);
+			Map<String, Object> params = getParams(point);
 			EvaluationContext context = new StandardEvaluationContext(String.class);
 			if (!params.isEmpty()) {
 				params.forEach(context::setVariable);
@@ -61,7 +58,9 @@ public class LockInterceptor {
 		} catch (Exception e1) {
 			throw new RuntimeException("分布式锁获取失败");
 		}
-		Assert.isTrue(isLocked, lock.errorCode());
+		if (!isLocked) {
+			throw new RuntimeException(lock.errorCode());
+		}
 		try {
 			return point.proceed();
 		} finally {
@@ -88,7 +87,7 @@ public class LockInterceptor {
 		String[] keySpels = key.keys();
 		List<Object> keyValues = new ArrayList<>();
 		for (String keySpel : keySpels) {
-			if (StringUtils.isNotBlank(keySpel)) {
+			if (StringUtils.hasText(keySpel)) {
 				Expression expression = new SpelExpressionParser().parseExpression(keySpel);
 				Object object = expression.getValue(context);
 				keyValues.add(object);
@@ -97,16 +96,16 @@ public class LockInterceptor {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder append = builder.append(key.prefix());
 		for (Object item : keyValues) {
-			append.append(item.toString()).append(key.delimiter());
+			append.append(key.delimiter()).append(item.toString());
 		}
 		return append.toString();
 	}
 
-	private Map<String, Object> _params(ProceedingJoinPoint joinPoint) {
+	private Map<String, Object> getParams(ProceedingJoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
 		Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
 		String[] parameterNames = new DefaultParameterNameDiscoverer().getParameterNames(method);
-		Map<String, Object> paramMap = Maps.newHashMap();
+		Map<String, Object> paramMap = new HashMap<>();
 		for (int i = 0; i < Objects.requireNonNull(parameterNames).length; i++) {
 			paramMap.put(parameterNames[i], args[i]);
 		}
