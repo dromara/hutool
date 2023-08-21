@@ -54,6 +54,10 @@ public class MailAccount implements Serializable {
 	 */
 	private Integer port;
 	/**
+ 	* 设置协议 imap、smtp 等
+  	*/
+	private String protocol = "smtp";
+	/**
 	 * 是否需要用户名密码验证
 	 */
 	private Boolean auth;
@@ -200,6 +204,26 @@ public class MailAccount implements Serializable {
 		return this;
 	}
 
+	/**
+	 * 获得 protocol 协议类型
+	 *
+	 * @return SMTP服务端口
+	 */
+	public String getProtocol() {
+		return protocol;
+	}
+
+	/**
+	 * 设置 protocol 协议类型 imap、stmp 等
+	 *
+	 * @param protocol 协议类型
+	 * @return this
+	 */
+	public MailAccount setPort(String protocol) {
+		this.protocol = protocol;
+		return this;
+	}
+	
 	/**
 	 * 是否需要用户名密码验证
 	 *
@@ -570,7 +594,7 @@ public class MailAccount implements Serializable {
 		System.setProperty(SPLIT_LONG_PARAMS, String.valueOf(this.splitlongparameters));
 
 		final Properties p = new Properties();
-		p.put(MAIL_PROTOCOL, "smtp");
+		p.put(MAIL_PROTOCOL, protocol);
 		p.put(SMTP_HOST, this.host);
 		p.put(SMTP_PORT, String.valueOf(this.port));
 		p.put(SMTP_AUTH, String.valueOf(this.auth));
