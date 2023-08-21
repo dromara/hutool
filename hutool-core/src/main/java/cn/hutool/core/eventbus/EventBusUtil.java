@@ -19,7 +19,7 @@ public class EventBusUtil {
 	/**
 	 * 返回默认的AsyncEventBus
 	 */
-	public static EventBus getDefaultAsync() {
+	public static AsyncEventBus getDefaultAsync() {
 		return SingletonAsyncEventBus.EVENT_BUS;
 	}
 
@@ -28,6 +28,6 @@ public class EventBusUtil {
 	}
 
 	private static class SingletonAsyncEventBus {
-		private static final AsyncEventBus EVENT_BUS = new AsyncEventBus(ThreadUtil.newExecutor());
+		private static final AsyncEventBus EVENT_BUS = new AsyncEventBus(ThreadUtil.newSingleExecutor());
 	}
 }

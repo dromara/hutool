@@ -1,6 +1,7 @@
 package cn.hutool.core.eventbus;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -60,13 +61,14 @@ public class EventBusUtilTest {
 		EventBusUtil.getDefaultAsync().register(new SubListener1());
 		EventBusUtil.getDefaultAsync().post(new ApplicationPreparedEvent("applicationPrepare"));
 		EventBusUtil.getDefaultAsync().post(new ApplicationReadyEvent("applicationReady"));
+		ThreadUtil.safeSleep(2000);
 		Assert.assertEquals(2, EventBusUtil.getDefaultAsync().size());
 		Assert.assertEquals(0, EventBusUtil.getDefault().size());
 	}
 
 	@Subscribe
 	public void sub1(ApplicationPreparedEvent event) {
-		Console.log("sub1");
+		Console.log("sub1: " + Thread.currentThread().getName());
 		Assert.assertEquals("applicationPrepare", event.getValue());
 	}
 }
