@@ -407,7 +407,7 @@ public class Ipv4Util {
 	 */
 	public static Long getEndIpLong(String ip, int maskBit) {
 		return getBeginIpLong(ip, maskBit)
-				+ ~ipv4ToLong(getMaskByMaskBit(maskBit));
+				+ (0xffffffffL & ~ipv4ToLong(getMaskByMaskBit(maskBit)));
 	}
 
 	/**
