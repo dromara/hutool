@@ -130,7 +130,8 @@ public class PartParser {
 		if (size == 1) {// 普通形式
 			results = parseRange(value, -1);
 		} else if (size == 2) {// 间隔形式
-			final int step = parseNumber(parts.get(1));
+			// issue#I7SMP7，步进不检查范围
+			final int step = parseNumber(parts.get(1), false);
 			if (step < 1) {
 				throw new CronException("Non positive divisor for field: [{}]", value);
 			}
@@ -163,7 +164,7 @@ public class PartParser {
 			//根据步进的第一个数字确定起始时间，类似于 12/3则从12（秒、分等）开始
 			int minValue = part.getMin();
 			if (false == isMatchAllStr(value)) {
-				minValue = Math.max(minValue, parseNumber(value));
+				minValue = Math.max(minValue, parseNumber(value, true));
 			} else {
 				//在全匹配模式下，如果步进不存在，表示步进为1
 				if (step < 1) {
@@ -190,15 +191,15 @@ public class PartParser {
 		List<String> parts = StrUtil.split(value, '-');
 		int size = parts.size();
 		if (size == 1) {// 普通值
-			final int v1 = parseNumber(value);
+			final int v1 = parseNumber(value, true);
 			if (step > 0) {//类似 20/2的形式
 				NumberUtil.appendRange(v1, part.getMax(), step, results);
 			} else {
 				results.add(v1);
 			}
 		} else if (size == 2) {// range值
-			final int v1 = parseNumber(parts.get(0));
-			final int v2 = parseNumber(parts.get(1));
+			final int v1 = parseNumber(parts.get(0), true);
+			final int v2 = parseNumber(parts.get(1), true);
 			if (step < 1) {
 				//在range模式下，如果步进不存在，表示步进为1
 				step = 1;
@@ -233,10 +234,11 @@ public class PartParser {
 	 * 解析单个int值，支持别名
 	 *
 	 * @param value 被解析的值
+	 * @param checkValue 是否检查值在有效范围内
 	 * @return 解析结果
 	 * @throws CronException 当无效数字或无效别名时抛出
 	 */
-	private int parseNumber(String value) throws CronException {
+	private int parseNumber(String value, boolean checkValue) throws CronException {
 		int i;
 		try {
 			i = Integer.parseInt(value);
@@ -254,13 +256,7 @@ public class PartParser {
 			i = Week.SUNDAY.ordinal();
 		}
 
-		// issue#I7SMP7
-		// 年的形式中，如果类似于*/2，不做范围检查
-		if(Part.YEAR.equals(this.part)){
-			return i;
-		}
-
-		return part.checkValue(i);
+		return checkValue ? part.checkValue(i) : i;
 	}
 
 	/**
