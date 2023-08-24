@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: LockInterceptorTest
+  redis:
+    # 配置本地redis的host
+    host:
+    port: 6379
+    # 配置本地的redis的密码
+    password:
+    timeout: 30000
+    lettuce:
+      pool:
+        max-active: 100
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 1

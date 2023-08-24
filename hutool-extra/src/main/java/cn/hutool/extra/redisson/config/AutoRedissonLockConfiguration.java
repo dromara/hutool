@@ -8,36 +8,39 @@ import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 /**
  * Author: miracle
  * Date: 2023/8/11 13:40
  */
 @Configuration
-@AutoConfigureAfter(value = {LettuceConnectionFactory.class})
+@EnableConfigurationProperties({RedisProperties.class})
 @ConditionalOnClass(value = {RedisConfiguration.class, RedissonClient.class})
+@AutoConfigureAfter(value = {RedisAutoConfiguration.class})
 public class AutoRedissonLockConfiguration {
 
-	private final LettuceConnectionFactory lettuceConnectionFactory;
+	private final RedisProperties redisProperties;
 
-	public AutoRedissonLockConfiguration(LettuceConnectionFactory lettuceConnectionFactory) {
-		this.lettuceConnectionFactory = lettuceConnectionFactory;
+	public AutoRedissonLockConfiguration(RedisProperties redisProperties) {
+		this.redisProperties = redisProperties;
 	}
 
 	@Bean
 	public RedissonClient redissonClient() {
 		Config config = new Config();
-		String address = "redis://" + lettuceConnectionFactory.getHostName() + ":" + lettuceConnectionFactory.getPort();
+		String address = "redis://" + redisProperties.getHost() + ":" + redisProperties.getPort();
 		//使用json序列化方式
 		config.setCodec(new JsonJacksonCodec());
 		config.useSingleServer().setAddress(address);
 		SingleServerConfig singleServerConfig = config.useSingleServer();
-		singleServerConfig.setPassword(lettuceConnectionFactory.getPassword());
-		singleServerConfig.setDatabase(lettuceConnectionFactory.getDatabase());
+		singleServerConfig.setPassword(redisProperties.getPassword());
+		singleServerConfig.setDatabase(redisProperties.getDatabase());
 		return Redisson.create(config);
 	}
 

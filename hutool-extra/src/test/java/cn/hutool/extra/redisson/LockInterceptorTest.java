@@ -1,5 +1,6 @@
 package cn.hutool.extra.redisson;
 
+import cn.hutool.extra.redisson.config.AutoRedissonLockConfiguration;
 import cn.hutool.extra.redisson.demo.RedissonDemo;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -7,7 +8,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -23,8 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Date: 2023/8/16 16:13
  */
 @RunWith(SpringRunner.class)
-@Import({RedissonDemo.class})
+@Import({LettuceConnectionFactory.class, RedissonDemo.class, AutoRedissonLockConfiguration.class})
 @SpringBootTest(classes = LockInterceptorTest.class)
+@ActiveProfiles
+@EnableAspectJAutoProxy
 public class LockInterceptorTest {
 
 	@Autowired

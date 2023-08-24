@@ -15,7 +15,7 @@ public class RedissonDemo {
 
 	private final AtomicInteger init = new AtomicInteger(0);
 
-	@RedissonLock(key = @LockKey(prefix = "demo", keys = "#name"))
+	@RedissonLock(key = @LockKey(prefix = "demo", keys = "#name"), waitTime = 30000)
 	public Integer lock(String name) {
 		int i = init.addAndGet(1);
 		System.out.println(name + ":" + i);
