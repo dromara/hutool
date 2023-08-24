@@ -16,6 +16,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.HttpUtil;
@@ -31,6 +32,7 @@ import org.dromara.hutool.http.meta.Method;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.List;
 
 /**
  * 基于JDK的UrlConnection的Http客户端引擎实现
@@ -208,8 +210,20 @@ public class JdkClientEngine implements ClientEngine {
 			if (!location.startsWith("/")) {
 				location = StrUtil.addSuffixIfNot(parentUrl.getPathStr(), "/") + location;
 			}
+
+			// issue#3265, 相对路径中可能存在参数，单独处理参数
+			final String query;
+			final List<String> split = SplitUtil.split(location, "?", 2, true, true);
+			if (split.size() == 2) {
+				// 存在参数
+				location = split.get(0);
+				query = split.get(1);
+			} else {
+				query = null;
+			}
+
 			redirectUrl = UrlBuilder.of(parentUrl.getScheme(), parentUrl.getHost(), parentUrl.getPort(),
-					location, null, null, parentUrl.getCharset());
+					location, query, null, parentUrl.getCharset());
 		} else {
 			redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 		}
