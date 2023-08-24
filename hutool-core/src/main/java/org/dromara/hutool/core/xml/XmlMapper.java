@@ -116,7 +116,6 @@ public class XmlMapper {
 			}
 
 			childEle = (Element) childNode;
-			final Object value = result.get(childEle.getNodeName());
 			final Object newValue;
 			if (childEle.hasChildNodes()) {
 				// 子节点继续递归遍历
@@ -131,6 +130,7 @@ public class XmlMapper {
 			}
 
 			if (null != newValue) {
+				final Object value = result.get(childEle.getNodeName());
 				if (null != value) {
 					if (value instanceof List) {
 						((List<Object>) value).add(newValue);

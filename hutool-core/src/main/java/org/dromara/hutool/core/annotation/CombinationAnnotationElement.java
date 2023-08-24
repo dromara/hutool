@@ -169,7 +169,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 			annotationType = annotation.annotationType();
 			if (!META_ANNOTATIONS.contains(annotationType)
 					// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
-					&& !declaredAnnotationMap.containsKey(annotationType)) {
+					&& !annotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					annotationMap.put(annotationType, annotation);
 				}
