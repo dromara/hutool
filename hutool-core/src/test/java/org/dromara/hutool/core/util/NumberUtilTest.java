@@ -771,4 +771,10 @@ public class NumberUtilTest {
 		Assertions.assertEquals(BigDecimal.ZERO, NumberUtil.nullToZero((BigDecimal) null));
 		Assertions.assertEquals(BigInteger.ZERO, NumberUtil.nullToZero((BigInteger) null));
 	}
+
+	@Test
+	public void isValidNumberTest() {
+		final boolean validNumber = NumberUtil.isValidNumber(1);
+		Assertions.assertTrue(validNumber);
+	}
 }
