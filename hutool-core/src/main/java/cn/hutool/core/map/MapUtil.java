@@ -5,10 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.*;
 import cn.hutool.core.stream.CollectorUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.JdkUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -841,6 +838,20 @@ public class MapUtil {
 	}
 
 	/**
+	 * 排序已有Map，Key有序的Map，使用默认Key排序方式（字母顺序）
+	 * value为Map类型时对其递归排序
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @param map Map
+	 * @return TreeMap
+	 * @see #newTreeMap(Map, Comparator)
+	 */
+	public static <K, V> TreeMap<K, V> sortLoop(Map<K, V> map) {
+		return sort(map, null, Boolean.TRUE);
+	}
+
+	/**
 	 * 排序已有Map，Key有序的Map
 	 *
 	 * @param <K>        key的类型
@@ -852,8 +863,33 @@ public class MapUtil {
 	 * @since 4.0.1
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
+		return sort(map, comparator, Boolean.FALSE);
+	}
+
+	/**
+	 * 排序已有Map，Key有序的Map
+	 *
+	 * @param <K>        key的类型
+	 * @param <V>        value的类型
+	 * @param map        Map，为null返回null
+	 * @param comparator Key比较器
+	 * @param loop 		 value为Map类型时是否对其递归排序
+	 * @return TreeMap，map为null返回null
+	 * @see #newTreeMap(Map, Comparator)
+	 */
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator, Boolean loop) {
 		if (null == map) {
 			return null;
+		}
+
+		// value为Map类型时对其递归排序
+		if (ObjectUtil.equals(Boolean.TRUE, loop)){
+			map.forEach((k,v)->{
+				if (v instanceof Map) {
+					TreeMap sortValue = sort((Map)v, comparator, Boolean.TRUE);
+					map.put(k, (V)sortValue);
+				}
+			});
 		}
 
 		if (map instanceof TreeMap) {
