@@ -2,6 +2,7 @@ package cn.hutool.crypto;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
@@ -55,6 +56,28 @@ import java.util.Map;
  * @author Looly, Gsealy
  */
 public class SecureUtil {
+
+	/**
+	 * SecretKey 转为 base64字符串
+	 *
+	 * @param secretKey 密钥
+	 * @return {@link String}
+	 */
+	public static String toBase64StringKey(SecretKey secretKey) {
+		Assert.notNull(secretKey, "SecretKey is NULL!");
+		byte[] keyExternal = secretKey.getEncoded();
+		return Base64.encode(keyExternal);
+	}
+
+	/**
+	 * 生成字符串密钥
+	 *
+	 * @param algorithm 算法
+	 * @return {@link String}
+	 */
+	public static String generateStringKey(String algorithm) {
+		return toBase64StringKey(KeyUtil.generateKey(algorithm));
+	}
 
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
