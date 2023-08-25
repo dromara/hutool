@@ -57,17 +57,6 @@ import java.util.Map;
 public class SecureUtil {
 
 	/**
-	 * 默认密钥字节数
-	 *
-	 * <pre>
-	 * RSA/DSA
-	 * Default Keysize 1024
-	 * Keysize must be a multiple of 64, ranging from 512 to 1024 (inclusive).
-	 * </pre>
-	 */
-	public static final int DEFAULT_KEY_SIZE = KeyUtil.DEFAULT_KEY_SIZE;
-
-	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 *
 	 * @param algorithm 算法，支持PBE算法
