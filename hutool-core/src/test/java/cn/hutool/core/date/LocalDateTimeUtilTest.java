@@ -29,8 +29,9 @@ public class LocalDateTimeUtilTest {
 		Assert.assertNotNull(of);
 		Assert.assertEquals(dateStr, of.toString());
 
+		// 不加Z是标准当地时间，与UTC时间不同
 		of = LocalDateTimeUtil.ofUTC(dt.getTime());
-		Assert.assertEquals(dateStr, of.toString());
+		Assert.assertNotEquals(dateStr, of.toString());
 	}
 
 	@Test

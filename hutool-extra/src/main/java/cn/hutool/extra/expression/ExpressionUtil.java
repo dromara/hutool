@@ -1,7 +1,9 @@
 package cn.hutool.extra.expression;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.extra.expression.engine.ExpressionFactory;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -29,6 +31,19 @@ public class ExpressionUtil {
 	 * @return 执行结果
 	 */
 	public static Object eval(String expression, Map<String, Object> context) {
-		return getEngine().eval(expression, context);
+		return eval(expression, context, ListUtil.empty());
+	}
+
+	/**
+	 * 执行表达式
+	 *
+	 * @param expression 表达式
+	 * @param context    表达式上下文，用于存储表达式中所需的变量值等
+	 * @param allowClassSet 允许的Class白名单
+	 * @return 执行结果
+	 * @since 5.8.21
+	 */
+	public static Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
+		return getEngine().eval(expression, context, allowClassSet);
 	}
 }

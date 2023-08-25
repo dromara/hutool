@@ -172,9 +172,8 @@ public class SheetDataSaxHandler extends DefaultHandler {
 	 */
 	private void startRow(Attributes attributes) {
 		final String rValue = AttributeName.r.getValue(attributes);
-		if (null != rValue) {
-			this.rowNumber = Long.parseLong(rValue) - 1;
-		}
+		// https://gitee.com/dromara/hutool/issues/I6WYF6
+		this.rowNumber = (null == rValue) ? -1 : Long.parseLong(rValue) - 1;
 	}
 
 	/**

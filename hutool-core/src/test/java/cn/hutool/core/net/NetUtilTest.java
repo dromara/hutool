@@ -23,37 +23,37 @@ public class NetUtilTest {
 	@Test
 	@Ignore
 	public void getLocalhostStrTest() {
-		String localhost = NetUtil.getLocalhostStr();
+		final String localhost = NetUtil.getLocalhostStr();
 		Assert.assertNotNull(localhost);
 	}
 
 	@Test
 	@Ignore
 	public void getLocalhostTest() {
-		InetAddress localhost = NetUtil.getLocalhost();
+		final InetAddress localhost = NetUtil.getLocalhost();
 		Assert.assertNotNull(localhost);
 	}
 
 	@Test
 	@Ignore
 	public void getLocalMacAddressTest() {
-		String macAddress = NetUtil.getLocalMacAddress();
+		final String macAddress = NetUtil.getLocalMacAddress();
 		Assert.assertNotNull(macAddress);
 
 		// 验证MAC地址正确
-		boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
+		final boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
 		Assert.assertTrue(match);
 	}
 
 	@Test
 	public void longToIpTest() {
-		String ipv4 = NetUtil.longToIpv4(2130706433L);
+		final String ipv4 = NetUtil.longToIpv4(2130706433L);
 		Assert.assertEquals("127.0.0.1", ipv4);
 	}
 
 	@Test
 	public void ipToLongTest() {
-		long ipLong = NetUtil.ipv4ToLong("127.0.0.1");
+		final long ipLong = NetUtil.ipv4ToLong("127.0.0.1");
 		Assert.assertEquals(2130706433L, ipLong);
 	}
 
@@ -65,7 +65,7 @@ public class NetUtilTest {
 
 	@Test
 	public void parseCookiesTest(){
-		String cookieStr = "cookieName=\"cookieValue\";Path=\"/\";Domain=\"cookiedomain.com\"";
+		final String cookieStr = "cookieName=\"cookieValue\";Path=\"/\";Domain=\"cookiedomain.com\"";
 		final List<HttpCookie> httpCookies = NetUtil.parseCookies(cookieStr);
 		Assert.assertEquals(1, httpCookies.size());
 
@@ -78,8 +78,15 @@ public class NetUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void getLocalHostNameTest() {
+		// 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
 		Assert.assertNotNull(NetUtil.getLocalHostName());
+	}
+
+	@Test
+	public void getLocalHostTest() {
+		Assert.assertNotNull(NetUtil.getLocalhost());
 	}
 
 	@Test
@@ -90,7 +97,7 @@ public class NetUtilTest {
 	@Test
 	@Ignore
 	public void isOpenTest(){
-		InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
+		final InetSocketAddress address = new InetSocketAddress("www.hutool.cn", 443);
 		Assert.assertTrue(NetUtil.isOpen(address, 200));
 	}
 

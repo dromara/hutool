@@ -80,6 +80,12 @@ public class PathUtilTest {
 		Assert.assertEquals("application/x-7z-compressed", contentType);
 	}
 
+	@Test
+	public void issue3179Test() {
+		final String mimeType = PathUtil.getMimeType(Paths.get("xxxx.jpg"));
+		Assert.assertEquals("image/jpeg", mimeType);
+	}
+
 	/**
 	 * issue#2893 target不存在空导致异常
 	 */

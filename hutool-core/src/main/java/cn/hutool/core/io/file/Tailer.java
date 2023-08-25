@@ -6,6 +6,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.io.watch.SimpleWatcher;
+import cn.hutool.core.io.watch.WatchKind;
+import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -15,6 +18,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -42,8 +47,11 @@ public class Tailer implements Serializable {
 	/** 定时任务检查间隔时长 */
 	private final long period;
 
+	private final String filePath;
 	private final RandomAccessFile randomAccessFile;
 	private final ScheduledExecutorService executorService;
+	private WatchMonitor fileDeleteWatchMonitor;
+	private boolean stopOnDelete;
 
 	/**
 	 * 构造，默认UTF-8编码
@@ -94,6 +102,16 @@ public class Tailer implements Serializable {
 		this.initReadLine = initReadLine;
 		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
 		this.executorService = Executors.newSingleThreadScheduledExecutor();
+		this.filePath=file.getAbsolutePath();
+	}
+
+	/**
+	 * 设置删除文件后是否退出并抛出异常
+	 *
+	 * @param stopOnDelete 删除文件后是否退出并抛出异常
+	 */
+	public void setStopOnDelete(final boolean stopOnDelete) {
+		this.stopOnDelete = stopOnDelete;
 	}
 
 	/**
@@ -123,6 +141,20 @@ public class Tailer implements Serializable {
 				this.period, TimeUnit.MILLISECONDS//
 		);
 
+		// 监听删除
+		if(stopOnDelete){
+			fileDeleteWatchMonitor = WatchMonitor.create(this.filePath, WatchKind.DELETE.getValue());
+			fileDeleteWatchMonitor.setWatcher(new SimpleWatcher(){
+				@Override
+				public void onDelete(final WatchEvent<?> event, final Path currentPath) {
+					super.onDelete(event, currentPath);
+					stop();
+					throw new IORuntimeException("{} has been deleted", filePath);
+				}
+			});
+			fileDeleteWatchMonitor.start();
+		}
+
 		if (false == async) {
 			try {
 				scheduledFuture.get();
@@ -142,6 +174,7 @@ public class Tailer implements Serializable {
 			this.executorService.shutdown();
 		}finally {
 			IoUtil.close(this.randomAccessFile);
+			fileDeleteWatchMonitor.close();
 		}
 	}
 

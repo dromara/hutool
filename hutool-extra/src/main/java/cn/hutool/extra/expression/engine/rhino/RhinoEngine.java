@@ -6,6 +6,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -17,8 +18,12 @@ import java.util.Map;
  */
 public class RhinoEngine implements ExpressionEngine {
 
+	static {
+		checkEngineExist(Context.class);
+	}
+
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
 		final Context ctx = Context.enter();
 		final Scriptable scope = ctx.initStandardObjects();
 		if (MapUtil.isNotEmpty(context)) {
@@ -30,5 +35,9 @@ public class RhinoEngine implements ExpressionEngine {
 		final Object result = ctx.evaluateString(scope, expression, "rhino.js", 1, null);
 		Context.exit();
 		return result;
+	}
+
+	private static void checkEngineExist(Class<?> clazz){
+		// do nothing
 	}
 }

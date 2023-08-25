@@ -8,6 +8,9 @@ import java.security.Provider;
  * @author looly
  */
 public enum GlobalBouncyCastleProvider {
+	/**
+	 * 单例
+	 */
 	INSTANCE;
 
 	private Provider provider;
@@ -16,7 +19,7 @@ public enum GlobalBouncyCastleProvider {
 	GlobalBouncyCastleProvider() {
 		try {
 			this.provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 	}

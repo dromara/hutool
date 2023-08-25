@@ -472,7 +472,11 @@ public class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
-		return parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError)).toBean(beanType);
+		final JSON json = parse(jsonString, JSONConfig.create().setIgnoreError(ignoreError));
+		if(null == json){
+			return null;
+		}
+		return json.toBean(beanType);
 	}
 
 	/**

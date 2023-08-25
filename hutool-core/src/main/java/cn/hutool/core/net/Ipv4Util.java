@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -364,6 +365,34 @@ public class Ipv4Util {
 
 		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || LOCAL_IP.equals(ipAddress);
 		return isInnerIp;
+	}
+
+	/**
+	 * 检测指定 IP 地址是否匹配通配符 wildcard
+	 *
+	 * @param wildcard   通配符，如 192.168.*.1
+	 * @param ipAddress 待检测的 IP 地址
+	 * @return 是否匹配
+	 */
+	public static boolean matches(String wildcard, String ipAddress) {
+		if (false == ReUtil.isMatch(PatternPool.IPV4, ipAddress)) {
+			return false;
+		}
+
+		final String[] wildcardSegments = wildcard.split("\\.");
+		final String[] ipSegments = ipAddress.split("\\.");
+
+		if (wildcardSegments.length != ipSegments.length) {
+			return false;
+		}
+
+		for (int i = 0; i < wildcardSegments.length; i++) {
+			if (false == "*".equals(wildcardSegments[i])
+				&& false == wildcardSegments[i].equals(ipSegments[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	//-------------------------------------------------------------------------------- Private method start

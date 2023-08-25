@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -915,7 +916,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].tmp
+	 * 创建后的文件名为 prefix[Random.tmp
 	 *
 	 * @param dir 临时文件创建的所在目录
 	 * @return 临时文件
@@ -926,7 +927,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].tmp。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].tmp。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -941,7 +942,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].suffix。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -958,7 +959,7 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Randon].suffix。
+	 * 在默认临时文件目录下创建临时文件，创建后的文件名为 prefix[Random].suffix。
 	 * 默认临时文件目录由系统属性 {@code java.io.tmpdir} 指定。
 	 * 在 UNIX 系统上，此属性的默认值通常是 {@code "tmp"} 或 {@code "vartmp"}；
 	 * 在 Microsoft Windows 系统上，它通常是 {@code "C:\\WINNT\\TEMP"}。
@@ -977,7 +978,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].tmp
+	 * 创建后的文件名为 prefix[Random].tmp
 	 *
 	 * @param dir       临时文件创建的所在目录
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
@@ -990,7 +991,7 @@ public class FileUtil extends PathUtil {
 
 	/**
 	 * 创建临时文件<br>
-	 * 创建后的文件名为 prefix[Randon].suffix From com.jodd.io.FileUtil
+	 * 创建后的文件名为 prefix[Random].suffix From com.jodd.io.FileUtil
 	 *
 	 * @param prefix    前缀，至少3个字符
 	 * @param suffix    后缀，如果null则使用默认.tmp
@@ -1003,7 +1004,9 @@ public class FileUtil extends PathUtil {
 		int exceptionsCount = 0;
 		while (true) {
 			try {
-				File file = File.createTempFile(prefix, suffix, mkdir(dir)).getCanonicalFile();
+				// https://github.com/dromara/hutool/issues/3103
+				//File file = File.createTempFile(prefix, suffix, mkdir(dir)).getCanonicalFile();
+				final File file = PathUtil.createTempFile(prefix, suffix, null == dir ? null : dir.toPath()).toFile().getCanonicalFile();
 				if (isReCreat) {
 					//noinspection ResultOfMethodCallIgnored
 					file.delete();
@@ -1115,7 +1118,7 @@ public class FileUtil extends PathUtil {
 	 * 情况如下：
 	 *
 	 * <pre>
-	 * 1、src和dest都为目录，则将src下所有文件（包括子目录）拷贝到dest下
+	 * 1、src和dest都为目录，则将src下所有文件（不包括子目录）拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
 	 * </pre>
@@ -2371,6 +2374,19 @@ public class FileUtil extends PathUtil {
 	/**
 	 * 从文件中读取每一行数据
 	 *
+	 * @param file   文件
+	 * @param filter 过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readUtf8Lines(File file, Predicate<String> filter) throws IORuntimeException {
+		return readLines(file, CharsetUtil.CHARSET_UTF_8, filter);
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
 	 * @param file    文件
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
@@ -2390,6 +2406,25 @@ public class FileUtil extends PathUtil {
 	 */
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<>());
+	}
+
+	/**
+	 * 从文件中读取每一行数据
+	 *
+	 * @param file    文件
+	 * @param charset 字符集
+	 * @param filter  过滤器
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(File file, Charset charset, Predicate<String> filter) throws IORuntimeException {
+		final List<String> result = new ArrayList<>();
+		readLines(file, charset, (LineHandler) line -> {
+			if (filter.test(line)) {
+				result.add(line);
+			}
+		});
+		return result;
 	}
 
 	/**
@@ -3424,18 +3459,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
 		if (null != parentFile && null != file) {
-			String parentCanonicalPath;
-			String canonicalPath;
-			try {
-				parentCanonicalPath = parentFile.getCanonicalPath();
-				canonicalPath = file.getCanonicalPath();
-			} catch (IOException e) {
-				// issue#I4CWMO@Gitee
-				// getCanonicalPath有时会抛出奇怪的IO异常，此时忽略异常，使用AbsolutePath判断。
-				parentCanonicalPath = parentFile.getAbsolutePath();
-				canonicalPath = file.getAbsolutePath();
-			}
-			if (false == canonicalPath.startsWith(parentCanonicalPath)) {
+			if (false == isSub(parentFile, file)) {
 				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 			}
 		}
@@ -3450,23 +3474,27 @@ public class FileUtil extends PathUtil {
 	 * @since 4.1.15
 	 */
 	public static String getMimeType(String filePath) {
-		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
-		if (null == contentType) {
-			// 补充一些常用的mimeType
-			if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
-				contentType = "text/css";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
-				contentType = "application/x-javascript";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
-				contentType = "application/x-rar-compressed";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
-				contentType = "application/x-7z-compressed";
-			} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
-				contentType = "application/widget";
-			}
+		if(StrUtil.isBlank(filePath)){
+			return null;
 		}
 
-		// 补充
+		// 补充一些常用的mimeType
+		if (StrUtil.endWithIgnoreCase(filePath, ".css")) {
+			return "text/css";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".js")) {
+			return "application/x-javascript";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".rar")) {
+			return "application/x-rar-compressed";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".7z")) {
+			return "application/x-7z-compressed";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".wgt")) {
+			return "application/widget";
+		} else if (StrUtil.endWithIgnoreCase(filePath, ".webp")) {
+			// JDK8不支持
+			return "image/webp";
+		}
+
+		String contentType = URLConnection.getFileNameMap().getContentTypeFor(filePath);
 		if (null == contentType) {
 			contentType = getMimeType(Paths.get(filePath));
 		}

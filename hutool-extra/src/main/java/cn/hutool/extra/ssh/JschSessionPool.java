@@ -61,6 +61,22 @@ public enum JschSessionPool {
 	}
 
 	/**
+	 * 获得一个SSH跳板机会话，重用已经使用的会话
+	 *
+	 * @param sshHost    跳板机主机
+	 * @param sshPort    跳板机端口
+	 * @param sshUser    跳板机用户名
+	 * @param prvkey     跳板机私钥内容
+	 * @param passphrase 跳板机私钥密码
+	 * @return SSH会话
+	 * @since 5.8.18
+	 */
+	public Session getSession(String sshHost, int sshPort, String sshUser, byte[] prvkey, byte[] passphrase) {
+		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
+		return this.cache.get(key, Session::isConnected, ()->JschUtil.openSession(sshHost, sshPort, sshUser, prvkey, passphrase));
+	}
+
+	/**
 	 * 加入Session
 	 *
 	 * @param key     键

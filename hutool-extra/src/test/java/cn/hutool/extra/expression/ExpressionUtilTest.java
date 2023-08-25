@@ -33,7 +33,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("a-(b-c)", dict);
+		final Object eval = engine.eval("a-(b-c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
@@ -44,7 +44,7 @@ public class ExpressionUtilTest {
 		final String exps2="if(a>0){return 100;}";
 		final Map<String,Object> map2=new HashMap<>();
 		map2.put("a", 1);
-		final Object eval1 = engine.eval(exps2, map2);
+		final Object eval1 = engine.eval(exps2, map2, null);
 		Assert.assertEquals(100, eval1);
 	}
 
@@ -56,7 +56,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("a-(b-c)", dict);
+		final Object eval = engine.eval("a-(b-c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
@@ -68,7 +68,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("a-(b-c)", dict);
+		final Object eval = engine.eval("a-(b-c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
@@ -80,7 +80,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("#a-(#b-#c)", dict);
+		final Object eval = engine.eval("#a-(#b-#c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
@@ -92,7 +92,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("a-(b-c)", dict);
+		final Object eval = engine.eval("a-(b-c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 
@@ -104,7 +104,7 @@ public class ExpressionUtilTest {
 				.set("a", 100.3)
 				.set("b", 45)
 				.set("c", -199.100);
-		final Object eval = engine.eval("a-(b-c)", dict);
+		final Object eval = engine.eval("a-(b-c)", dict, null);
 		Assert.assertEquals(-143.8, (double)eval, 0);
 	}
 

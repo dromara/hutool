@@ -154,34 +154,34 @@ public abstract class DSFactory implements Closeable, Serializable{
 	private static DSFactory doCreate(Setting setting) {
 		try {
 			return new HikariDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 		try {
 			return new DruidDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 		try {
 			return new TomcatDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			//如果未引入包，此处会报org.apache.tomcat.jdbc.pool.PoolConfiguration未找到错误
 			//因为org.apache.tomcat.jdbc.pool.DataSource实现了此接口，会首先检查接口的存在与否
 			// ignore
 		}
 		try {
 			return new BeeDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 		try {
 			return new DbcpDSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 		try {
 			return new C3p0DSFactory(setting);
-		} catch (NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError | NoSuchMethodError e) {
 			// ignore
 		}
 		return new PooledDSFactory(setting);

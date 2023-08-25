@@ -86,14 +86,13 @@ public class StreamArchiver implements Archiver {
 			} catch (IOException e) {
 				throw new IORuntimeException(e);
 			}
-			return;
-		}
-
-		final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
-		try {
-			this.out = factory.createArchiveOutputStream(archiverName, targetStream);
-		} catch (ArchiveException e) {
-			throw new CompressException(e);
+		} else {
+			final ArchiveStreamFactory factory = new ArchiveStreamFactory(charset.name());
+			try {
+				this.out = factory.createArchiveOutputStream(archiverName, targetStream);
+			} catch (ArchiveException e) {
+				throw new CompressException(e);
+			}
 		}
 
 		//特殊设置

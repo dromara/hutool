@@ -1,6 +1,6 @@
 package cn.hutool.http.ssl;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.JdkUtil;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -22,7 +22,7 @@ public class DefaultSSLInfo {
 
 	static {
 		TRUST_ANY_HOSTNAME_VERIFIER = new TrustAnyHostnameVerifier();
-		if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
+		if (JdkUtil.IS_ANDROID) {
 			// 兼容android低版本SSL连接
 			DEFAULT_SSF = new AndroidSupportSSLFactory();
 		} else {

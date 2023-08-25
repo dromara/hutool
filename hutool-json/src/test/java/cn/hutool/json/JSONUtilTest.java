@@ -34,6 +34,16 @@ public class JSONUtilTest {
 	/**
 	 * 数字解析为JSONArray报错
 	 */
+	@Test
+	public void parseNumberToJSONArrayTest2() {
+		final JSONArray json = JSONUtil.parseArray(123L,
+				JSONConfig.create().setIgnoreError(true));
+		Assert.assertNotNull(json);
+	}
+
+	/**
+	 * 数字解析为JSONArray报错
+	 */
 	@Test(expected = JSONException.class)
 	public void parseNumberTest() {
 		final JSONArray json = JSONUtil.parseArray(123L);
@@ -45,7 +55,7 @@ public class JSONUtilTest {
 	 */
 	@Test
 	public void parseNumberTest2() {
-		final JSONObject json = JSONUtil.parseObj(123L);
+		final JSONObject json = JSONUtil.parseObj(123L, JSONConfig.create().setIgnoreError(true));
 		Assert.assertEquals(new JSONObject(), json);
 	}
 

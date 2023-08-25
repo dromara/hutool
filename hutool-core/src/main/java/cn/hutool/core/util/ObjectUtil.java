@@ -7,7 +7,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,8 +52,8 @@ public class ObjectUtil {
 	 * @see Objects#equals(Object, Object)
 	 */
 	public static boolean equal(Object obj1, Object obj2) {
-		if (obj1 instanceof BigDecimal && obj2 instanceof BigDecimal) {
-			return NumberUtil.equals((BigDecimal) obj1, (BigDecimal) obj2);
+		if (obj1 instanceof Number && obj2 instanceof Number) {
+			return NumberUtil.equals((Number) obj1, (Number) obj2);
 		}
 		return Objects.equals(obj1, obj2);
 	}
@@ -588,10 +587,11 @@ public class ObjectUtil {
 	 *
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
+	 * @param acceptClasses 白名单的类
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(byte[] bytes) {
-		return SerializeUtil.deserialize(bytes);
+	public static <T> T deserialize(byte[] bytes, Class<?>... acceptClasses) {
+		return SerializeUtil.deserialize(bytes, acceptClasses);
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 当前行
 	 */
-	private AtomicInteger currentRow = new AtomicInteger(0);
+	private final AtomicInteger currentRow;
 	/**
 	 * 是否只保留别名对应的字段
 	 */
@@ -182,6 +182,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter(Sheet sheet) {
 		super(sheet);
 		this.styleSet = new StyleSet(workbook);
+		this.currentRow = new AtomicInteger(0);
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
@@ -690,7 +691,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 合并某行的单元格，并写入对象到单元格<br>
-	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 *
 	 * @param firstRow         起始行，0开始
@@ -897,15 +897,15 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 添加图片到当前sheet中
 	 *
 	 * @param pictureData 数据bytes
-	 * @param imgType 图片类型，对应poi中Workbook类中的图片类型2-7变量
-	 * @param dx1     起始单元格中的x坐标
-	 * @param dy1     起始单元格中的y坐标
-	 * @param dx2     结束单元格中的x坐标
-	 * @param dy2     结束单元格中的y坐标
-	 * @param col1    指定起始的列，下标从0开始
-	 * @param row1    指定起始的行，下标从0开始
-	 * @param col2    指定结束的列，下标从0开始
-	 * @param row2    指定结束的行，下标从0开始
+	 * @param imgType     图片类型，对应poi中Workbook类中的图片类型2-7变量
+	 * @param dx1         起始单元格中的x坐标
+	 * @param dy1         起始单元格中的y坐标
+	 * @param dx2         结束单元格中的x坐标
+	 * @param dy2         结束单元格中的y坐标
+	 * @param col1        指定起始的列，下标从0开始
+	 * @param row1        指定起始的行，下标从0开始
+	 * @param col2        指定结束的列，下标从0开始
+	 * @param row2        指定结束的行，下标从0开始
 	 * @return this
 	 * @author vhukze
 	 * @since 5.8.0
@@ -1012,7 +1012,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			} else {
 				rowMap = (Map) rowBean;
 			}
-		}else if(rowBean instanceof Iterable){
+		} else if (rowBean instanceof Iterable) {
 			// issue#2398@Github
 			// MapWrapper由于实现了Iterable接口，应该优先按照Map处理
 			return writeRow((Iterable<?>) rowBean);
@@ -1067,7 +1067,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			for (Table.Cell<?, ?, ?> cell : aliasTable) {
 				// 首先查找原名对应的列号
 				location = this.headLocationCache.get(StrUtil.toString(cell.getRowKey()));
-				if(null == location){
+				if (null == location) {
 					// 未找到，则查找别名对应的列号
 					location = this.headLocationCache.get(StrUtil.toString(cell.getColumnKey()));
 				}
@@ -1097,7 +1097,88 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
-	 * 给指定单元格赋值，使用默认单元格样式
+	 * 从第1列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Map<?,? extends Iterable<?>> colMap, boolean isWriteKeyAsHead){
+		return writeCol(colMap, 0, isWriteKeyAsHead);
+	}
+
+	/**
+	 * 从指定列开始按列写入数据(index 从0开始)<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param colMap           一列的数据
+	 * @param startColIndex    起始的列号，从0开始
+	 * @param isWriteKeyAsHead 是否将Map的Key作为表头输出，如果为True第一行为表头，紧接着为values
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Map<?,? extends Iterable<?>> colMap, int startColIndex, boolean isWriteKeyAsHead){
+		for (Object k : colMap.keySet()) {
+			Iterable<?> v = colMap.get(k);
+			if(v != null){
+				writeCol(isWriteKeyAsHead?k:null,startColIndex, v, startColIndex != colMap.size() - 1);
+				startColIndex ++;
+			}
+		}
+		return this;
+	}
+
+
+	/**
+	 * 为第一列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Object headerVal, Iterable<?> colData, boolean isResetRowIndex){
+		return writeCol(headerVal,0,colData,isResetRowIndex);
+	}
+
+	/**
+	 * 为第指定列写入数据<br>
+	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 *
+	 * @param headerVal       表头名称,如果为null则不写入
+	 * @param colIndex        列index
+	 * @param colData         需要写入的列数据
+	 * @param isResetRowIndex 如果为true，写入完毕后Row index 将会重置为写入之前的未知，如果为false，写入完毕后Row index将会在写完的数据下方
+	 * @return this
+	 */
+	public ExcelWriter writeCol(Object headerVal, int colIndex, Iterable<?> colData, boolean isResetRowIndex){
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		int currentRowIndex = currentRow.get();
+		if(null != headerVal){
+			writeCellValue(colIndex, currentRowIndex, headerVal,true);
+			currentRowIndex++;
+		}
+		for (Object colDatum : colData) {
+			writeCellValue(colIndex, currentRowIndex, colDatum);
+			currentRowIndex++;
+		}
+		if(!isResetRowIndex){
+			currentRow.set(currentRowIndex);
+		}
+		return this;
+	}
+
+	/**
+	 * 给指定单元格赋值，使用默认单元格样式，默认不是Header
 	 *
 	 * @param locationRef 单元格地址标识符，例如A11，B5
 	 * @param value       值
@@ -1105,12 +1186,25 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 5.1.4
 	 */
 	public ExcelWriter writeCellValue(String locationRef, Object value) {
-		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
-		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value);
+		return writeCellValue(locationRef, value, false);
 	}
 
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @param value       值
+	 * @param isHeader    是否为Header
+	 * @return this
+	 * @since 5.1.4
+	 */
+	public ExcelWriter writeCellValue(String locationRef, Object value, boolean isHeader) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value, isHeader);
+	}
+
+	/**
+	 * 给指定单元格赋值，使用默认单元格样式，默认不是Header
 	 *
 	 * @param x     X坐标，从0计数，即列号
 	 * @param y     Y坐标，从0计数，即行号
@@ -1119,8 +1213,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 4.0.2
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
+		return writeCellValue(x, y, value, false);
+	}
+
+	/**
+	 * 给指定单元格赋值，使用默认单元格样式
+	 *
+	 * @param x            X坐标，从0计数，即列号
+	 * @param y            Y坐标，从0计数，即行号
+	 * @param isHeader     是否为Header
+	 * @param value        值
+	 * @return this
+	 * @since 4.0.2
+	 */
+	public ExcelWriter writeCellValue(int x, int y, Object value, boolean isHeader) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, this.styleSet, false);
+		CellUtil.setCellValue(cell, value, this.styleSet, isHeader);
 		return this;
 	}
 
@@ -1329,7 +1437,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		super.close();
 
 		// 清空对象
-		this.currentRow = null;
+		this.currentRow.set(0);
 		this.styleSet = null;
 	}
 
@@ -1345,9 +1453,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private Table<?, ?, ?> aliasTable(Map<?, ?> rowMap) {
 		final Table<Object, Object, Object> filteredTable = new RowKeyTable<>(new LinkedHashMap<>(), TableMap::new);
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			rowMap.forEach((key, value)-> filteredTable.put(key, key, value));
-		}else{
-			rowMap.forEach((key, value)->{
+			rowMap.forEach((key, value) -> filteredTable.put(key, key, value));
+		} else {
+			rowMap.forEach((key, value) -> {
 				final String aliasName = this.headerAlias.get(StrUtil.toString(key));
 				if (null != aliasName) {
 					// 别名键值对加入

@@ -137,7 +137,7 @@ public class ThreadUtil {
 	 * <pre>
 	 *     1. 核心线程数与最大线程数为nThreads指定的大小
 	 *     2. 默认使用LinkedBlockingQueue，默认队列大小为1024
-	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 *     3. 如果isBlocked为{@code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
 	 * </pre>
 	 *
 	 * @param nThreads         线程池大小
@@ -156,7 +156,7 @@ public class ThreadUtil {
 	 * <pre>
 	 *     1. 核心线程数与最大线程数为nThreads指定的大小
 	 *     2. 默认使用LinkedBlockingQueue
-	 *     3. 如果isBlocked为{code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
+	 *     3. 如果isBlocked为{@code true}，当执行拒绝策略的时候会处于阻塞状态，直到能添加到队列中或者被{@link Thread#interrupt()}中断
 	 * </pre>
 	 *
 	 * @param nThreads         线程池大小

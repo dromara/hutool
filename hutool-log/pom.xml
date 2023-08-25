@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.15</version>
+		<version>5.8.21</version>
 	</parent>
 
 	<artifactId>hutool-log</artifactId>
@@ -21,11 +21,12 @@
 
 		<!-- versions -->
 		<slf4j.version>1.7.36</slf4j.version>
-		<logback.version>1.4.5</logback.version>
+		<logback.version>1.4.6</logback.version>
 		<log4j.version>1.2.17</log4j.version>
 		<log4j2.version>2.20.0</log4j2.version>
 		<commons-logging.version>1.2</commons-logging.version>
 		<tinylog.version>1.3.6</tinylog.version>
+		<tinylog2.version>2.6.1</tinylog2.version>
 		<!-- 此处固定3.4.x，支持到jdk8 -->
 		<jboss-logging.version>3.4.3.Final</jboss-logging.version>
 		<logtube.version>0.45.0</logtube.version>
@@ -78,7 +79,7 @@
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
-			<version>2.6.0</version>
+			<version>${tinylog2.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -104,7 +105,7 @@
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
-			<version>2.6.0</version>
+			<version>${tinylog2.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

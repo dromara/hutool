@@ -6,9 +6,11 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -66,6 +68,16 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 
 	@Override
 	protected T convertInternal(Object value) {
+		final Class<?>[] interfaces = this.beanClass.getInterfaces();
+		for (Class<?> anInterface : interfaces) {
+			if("cn.hutool.json.JSONBeanParser".equals(anInterface.getName())){
+				// issue#I7M2GZ
+				final T obj = ReflectUtil.newInstanceIfPossible(this.beanClass);
+				ReflectUtil.invoke(obj, "parse", value);
+				return obj;
+			}
+		}
+
 		if(value instanceof Map ||
 				value instanceof ValueProvider ||
 				BeanUtil.isBean(value.getClass())) {
@@ -79,6 +91,9 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 		} else if(value instanceof byte[]){
 			// 尝试反序列化
 			return ObjectUtil.deserialize((byte[])value);
+		} else if(StrUtil.isEmptyIfStr(value)){
+			// issue#3136
+			return null;
 		}
 
 		throw new ConvertException("Unsupported source type: {}", value.getClass());

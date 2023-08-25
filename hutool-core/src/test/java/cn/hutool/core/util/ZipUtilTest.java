@@ -214,4 +214,12 @@ public class ZipUtilTest {
 		// long size = 636*1024L;
 		unzip(zipFile, file, size);
 	}
+
+	@Test
+	@Ignore
+	public void issue3018Test() {
+		ZipUtil.unzip(
+				FileUtil.getInputStream("d:/test/default.zip")
+		, FileUtil.file("d:/test/"), CharsetUtil.CHARSET_UTF_8);
+	}
 }

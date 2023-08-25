@@ -620,8 +620,9 @@ public class PathUtil {
 	public static String getMimeType(Path file) {
 		try {
 			return Files.probeContentType(file);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+		} catch (IOException ignore) {
+			// issue#3179，使用OpenJDK可能抛出NoSuchFileException，此处返回null
+			return null;
 		}
 	}
 
@@ -666,6 +667,34 @@ public class PathUtil {
 			return null;
 		}
 		return path.getFileName().toString();
+	}
+
+	/**
+	 * 创建临时文件<br>
+	 * 创建后的文件名为 prefix[Random].suffix From com.jodd.io.FileUtil
+	 *
+	 * @param prefix    前缀，至少3个字符
+	 * @param suffix    后缀，如果null则使用默认.tmp
+	 * @param dir       临时文件创建的所在目录
+	 * @return 临时文件
+	 * @throws IORuntimeException IO异常
+	 * @since 6.0.0
+	 */
+	public static Path createTempFile(final String prefix, final String suffix, final Path dir) throws IORuntimeException {
+		int exceptionsCount = 0;
+		while (true) {
+			try {
+				if(null == dir){
+					return Files.createTempFile(prefix, suffix);
+				}else{
+					return Files.createTempFile(mkdir(dir), prefix, suffix);
+				}
+			} catch (final IOException ioex) { // fixes java.io.WinNTFileSystem.createFileExclusively access denied
+				if (++exceptionsCount >= 50) {
+					throw new IORuntimeException(ioex);
+				}
+			}
+		}
 	}
 
 	/**

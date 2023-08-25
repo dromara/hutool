@@ -5,6 +5,7 @@ package cn.hutool.json;
  *
  * @author Looly
  * @since 5.7.8
+ * @param <T> 参数类型
  */
 public interface JSONBeanParser<T> {
 

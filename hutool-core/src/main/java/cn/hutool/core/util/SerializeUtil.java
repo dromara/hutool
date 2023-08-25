@@ -2,9 +2,12 @@ package cn.hutool.core.util;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.ValidateObjectInputStream;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -59,9 +62,15 @@ public class SerializeUtil {
 	 *
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
+	 * @param acceptClasses 白名单的类
 	 * @return 反序列化后的对象
 	 */
-	public static <T> T deserialize(byte[] bytes) {
-		return IoUtil.readObj(new ByteArrayInputStream(bytes));
+	public static <T> T deserialize(byte[] bytes, Class<?>... acceptClasses) {
+		try {
+			return IoUtil.readObj(new ValidateObjectInputStream(
+					new ByteArrayInputStream(bytes), acceptClasses));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 }

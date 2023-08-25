@@ -271,6 +271,9 @@ public class IdcardUtil {
 	 * @since 5.5.7
 	 */
 	public static boolean isValidCard18(String idcard, boolean ignoreCase) {
+		if (idcard == null) {
+			return false;
+		}
 		if (CHINA_ID_MAX_LENGTH != idcard.length()) {
 			return false;
 		}
@@ -304,6 +307,9 @@ public class IdcardUtil {
 	 * @return 是否合法
 	 */
 	public static boolean isValidCard15(String idcard) {
+		if (idcard == null) {
+			return false;
+		}
 		if (CHINA_ID_MIN_LENGTH != idcard.length()) {
 			return false;
 		}
@@ -552,7 +558,7 @@ public class IdcardUtil {
 	public static int getGenderByIdCard(String idcard) {
 		Assert.notBlank(idcard);
 		final int len = idcard.length();
-		if (len < CHINA_ID_MIN_LENGTH) {
+		if (!(len == CHINA_ID_MIN_LENGTH || len == CHINA_ID_MAX_LENGTH)) {
 			throw new IllegalArgumentException("ID Card length must be 15 or 18");
 		}
 

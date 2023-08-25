@@ -1,5 +1,7 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.JdkUtil;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -69,6 +71,10 @@ public class SafeConcurrentHashMap<K, V> extends ConcurrentHashMap<K, V> {
 
 	@Override
 	public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-		return MapUtil.computeIfAbsent(this, key, mappingFunction);
+		if (JdkUtil.IS_JDK8) {
+			return MapUtil.computeIfAbsentForJdk8(this, key, mappingFunction);
+		} else {
+			return super.computeIfAbsent(key, mappingFunction);
+		}
 	}
 }

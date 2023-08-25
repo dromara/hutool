@@ -36,4 +36,14 @@ public class RowKeyTableTest {
 		Assert.assertEquals(1, column.size());
 		Assert.assertEquals(new Integer(4), column.get(1));
 	}
+
+	@Test
+	public void issue3135Test() {
+		final Table<Integer, Integer, Integer> table = new RowKeyTable<>();
+		table.put(1, 2, 3);
+		table.put(1, 6, 4);
+
+		Assert.assertNull(table.getRow(2));
+		Assert.assertFalse(table.contains(2, 3));
+	}
 }

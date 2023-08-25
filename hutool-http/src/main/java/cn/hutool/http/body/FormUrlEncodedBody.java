@@ -3,6 +3,7 @@ package cn.hutool.http.body;
 import cn.hutool.core.net.url.UrlQuery;
 import cn.hutool.core.util.StrUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -35,4 +36,10 @@ public class FormUrlEncodedBody extends BytesBody {
 		super(StrUtil.bytes(UrlQuery.of(form, true).build(charset), charset));
 	}
 
+	@Override
+	public String toString() {
+		final ByteArrayOutputStream result = new ByteArrayOutputStream();
+		write(result);
+		return result.toString();
+	}
 }

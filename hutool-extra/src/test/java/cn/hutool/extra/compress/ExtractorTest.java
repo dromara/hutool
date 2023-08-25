@@ -13,7 +13,7 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void zipTest() {
-		Extractor extractor = CompressUtil.createExtractor(
+		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				FileUtil.file("d:/test/c_1344112734760931330_20201230104703032.zip"));
 
@@ -23,7 +23,7 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void sevenZTest() {
-		Extractor extractor = CompressUtil.createExtractor(
+		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				FileUtil.file("d:/test/compress/test.7z"));
 
@@ -33,7 +33,7 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void tgzTest() {
-		Extractor extractor = CompressUtil.createExtractor(
+		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				"tgz",
 				FileUtil.file("d:/test/test.tgz"));
@@ -44,10 +44,10 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void sevenZTest2() {
-		File targetDir = FileUtil.file("d:/test/sevenZ2/");
+		final File targetDir = FileUtil.file("d:/test/sevenZ2/");
 		FileUtil.clean(targetDir);
 		//
-		Extractor extractor = CompressUtil.createExtractor(
+		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				FileUtil.file("D:/System-Data/Downloads/apache-tomcat-10.0.27.7z"));
 
@@ -57,10 +57,10 @@ public class ExtractorTest {
 	@Test
 	@Ignore
 	public void zipTest2() {
-		File targetDir = FileUtil.file("d:/test/zip2/");
+		final File targetDir = FileUtil.file("d:/test/zip2/");
 		FileUtil.clean(targetDir);
 		//
-		Extractor extractor = CompressUtil.createExtractor(
+		final Extractor extractor = CompressUtil.createExtractor(
 				CharsetUtil.defaultCharset(),
 				FileUtil.file("D:/System-Data/Downloads/apache-tomcat-10.0.27.zip"));
 

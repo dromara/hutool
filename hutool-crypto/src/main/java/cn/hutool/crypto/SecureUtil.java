@@ -1058,6 +1058,20 @@ public class SecureUtil {
 	}
 
 	/**
+	 * 创建{@link MessageDigest}，使用JDK默认的Provider<br>
+	 *
+	 * @param algorithm 算法
+	 * @return {@link MessageDigest}
+	 */
+	public static MessageDigest createJdkMessageDigest(final String algorithm) {
+		try {
+			return MessageDigest.getInstance(algorithm);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+	}
+
+	/**
 	 * 创建{@link Mac}
 	 *
 	 * @param algorithm 算法

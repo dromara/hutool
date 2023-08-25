@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.util.ClassUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -42,5 +43,14 @@ public class ClassScanerTest {
 		final Set<Class<?>> classes = classScanner.scan(false);
 		Console.log(classes.size());
 		Console.log(classScanner.getClassesOfLoadError());
+	}
+
+	@Test
+	@Ignore
+	public void scanJavaLang() {
+		final Set<Class<?>> classes = ClassUtil.scanPackage("java.lang");
+		for (final Class<?> aClass : classes) {
+			Console.log(aClass.getName());
+		}
 	}
 }

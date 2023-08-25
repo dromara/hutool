@@ -218,9 +218,14 @@ public class TreeUtil {
 		}
 
 		Tree<T> parent = node.getParent();
+		CharSequence name;
 		while (null != parent) {
-			result.add(parent.getName());
+			name = parent.getName();
 			parent = parent.getParent();
+			if(null != name || null != parent){
+				// issue#I795IN，根节点的null不加入
+				result.add(name);
+			}
 		}
 		return result;
 	}

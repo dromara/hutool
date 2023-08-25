@@ -22,7 +22,7 @@ import java.security.Provider;
 /**
  * 摘要算法<br>
  * 注意：此对象实例化后为非线程安全！
- * 
+ *
  * @author Looly
  *
  */
@@ -40,7 +40,7 @@ public class Digester implements Serializable {
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param algorithm 算法枚举
 	 */
 	public Digester(DigestAlgorithm algorithm) {
@@ -49,7 +49,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param algorithm 算法枚举
 	 */
 	public Digester(String algorithm) {
@@ -58,7 +58,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param algorithm 算法
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
 	 * @since 4.5.1
@@ -69,7 +69,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param algorithm 算法
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
 	 * @since 4.5.1
@@ -77,11 +77,20 @@ public class Digester implements Serializable {
 	public Digester(String algorithm, Provider provider) {
 		init(algorithm, provider);
 	}
+
+	/**
+	 * 构造
+	 *
+	 * @param messageDigest {@link MessageDigest}
+	 */
+	public Digester(final MessageDigest messageDigest) {
+		this.digest = messageDigest;
+	}
 	// ------------------------------------------------------------------------------------------- Constructor end
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param algorithm 算法
 	 * @param provider 算法提供者，null表示JDK默认，可以引入Bouncy Castle等来提供更多算法支持
 	 * @return Digester
@@ -99,10 +108,10 @@ public class Digester implements Serializable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 设置加盐内容
-	 * 
+	 *
 	 * @param salt 盐值
 	 * @return this
 	 * @since 4.4.3
@@ -115,18 +124,18 @@ public class Digester implements Serializable {
 	/**
 	 * 设置加盐的位置，只有盐值存在时有效<br>
 	 * 加盐的位置指盐位于数据byte数组中的位置，例如：
-	 * 
+	 *
 	 * <pre>
 	 * data: 0123456
 	 * </pre>
-	 * 
+	 *
 	 * 则当saltPosition = 2时，盐位于data的1和2中间，即第二个空隙，即：
-	 * 
+	 *
 	 * <pre>
 	 * data: 01[salt]23456
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param saltPosition 盐的位置
 	 * @return this
 	 * @since 4.4.3
@@ -138,7 +147,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 设置重复计算摘要值次数
-	 * 
+	 *
 	 * @param digestCount 摘要值次数
 	 * @return this
 	 */
@@ -149,7 +158,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 重置{@link MessageDigest}
-	 * 
+	 *
 	 * @return this
 	 * @since 4.5.1
 	 */
@@ -161,7 +170,7 @@ public class Digester implements Serializable {
 	// ------------------------------------------------------------------------------------------- Digest
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charsetName 编码
 	 * @return 摘要
@@ -169,10 +178,10 @@ public class Digester implements Serializable {
 	public byte[] digest(String data, String charsetName) {
 		return digest(data, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
@@ -184,7 +193,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
@@ -194,7 +203,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成文件摘要，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charsetName 编码
 	 * @return 摘要
@@ -202,10 +211,10 @@ public class Digester implements Serializable {
 	public String digestHex(String data, String charsetName) {
 		return digestHex(data, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 生成文件摘要，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param charset 编码
 	 * @return 摘要
@@ -217,7 +226,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成文件摘要
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
@@ -228,7 +237,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成文件摘要<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
@@ -246,7 +255,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成文件摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return 摘要
 	 */
@@ -256,7 +265,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要，考虑加盐和重复摘要次数
-	 * 
+	 *
 	 * @param data 数据bytes
 	 * @return 摘要bytes
 	 */
@@ -284,7 +293,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
@@ -294,7 +303,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要，使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @return 摘要bytes
 	 */
@@ -305,7 +314,7 @@ public class Digester implements Serializable {
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return 摘要
 	 */
@@ -315,7 +324,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
@@ -325,7 +334,7 @@ public class Digester implements Serializable {
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}
-		
+
 		byte[] result;
 		try {
 			if (ArrayUtil.isEmpty(this.salt)) {
@@ -336,14 +345,14 @@ public class Digester implements Serializable {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		
+
 		return resetAndRepeatDigest(result);
 	}
 
 	/**
 	 * 生成摘要，并转为16进制字符串<br>
 	 * 使用默认缓存大小，见 {@link IoUtil#DEFAULT_BUFFER_SIZE}
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要
@@ -354,7 +363,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 获得 {@link MessageDigest}
-	 * 
+	 *
 	 * @return {@link MessageDigest}
 	 */
 	public MessageDigest getDigest() {
@@ -363,7 +372,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 获取散列长度，0表示不支持此方法
-	 * 
+	 *
 	 * @return 散列长度，0表示不支持此方法
 	 * @since 4.5.0
 	 */
@@ -374,7 +383,7 @@ public class Digester implements Serializable {
 	// -------------------------------------------------------------------------------- Private method start
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
@@ -391,7 +400,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param data {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
@@ -430,7 +439,7 @@ public class Digester implements Serializable {
 
 	/**
 	 * 生成摘要
-	 * 
+	 *
 	 * @param datas 数据bytes
 	 * @return 摘要bytes
 	 * @since 4.4.3
@@ -447,7 +456,7 @@ public class Digester implements Serializable {
 	/**
 	 * 重复计算摘要，取决于{@link #digestCount} 值<br>
 	 * 每次计算摘要前都会重置{@link #digest}
-	 * 
+	 *
 	 * @param digestData 第一次摘要过的数据
 	 * @return 摘要
 	 */

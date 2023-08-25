@@ -2,15 +2,7 @@ package cn.hutool.poi.excel;
 
 import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Hyperlink;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -244,8 +236,8 @@ public class StyleSet implements Serializable {
 		}
 
 		if (value instanceof Date
-				|| value instanceof TemporalAccessor
-				|| value instanceof Calendar) {
+			|| value instanceof TemporalAccessor
+			|| value instanceof Calendar) {
 			// 日期单独定义格式
 			if (null != this.cellStyleForDate) {
 				style = this.cellStyleForDate;
@@ -253,7 +245,7 @@ public class StyleSet implements Serializable {
 		} else if (value instanceof Number) {
 			// 数字单独定义格式
 			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) &&
-					null != this.cellStyleForNumber) {
+				null != this.cellStyleForNumber) {
 				style = this.cellStyleForNumber;
 			}
 		} else if (value instanceof Hyperlink) {

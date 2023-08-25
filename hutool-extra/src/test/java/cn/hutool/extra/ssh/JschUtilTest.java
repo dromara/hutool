@@ -7,9 +7,11 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Jsch工具类单元测试
- * 
+ *
  * @author looly
  *
  */
@@ -47,7 +49,7 @@ public class JschUtilTest {
 		sftp.mkDirs("/opt/test/aaa/bbb");
 		Console.log("OK");
 	}
-	
+
 	@Test
 	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {
@@ -80,5 +82,39 @@ public class JschUtilTest {
 	@Ignore
 	public void getSessionTest(){
 		JschUtil.getSession("192.168.1.134", 22, "root", "aaa", null);
+	}
+	@Test
+	@Ignore
+	public void sftpPrivateKeyTest(){
+		Session session = JschUtil.getSession("192.168.1.109", 22, "root", ("-----BEGIN RSA PRIVATE KEY-----\n" +
+			"MIIEpAIBAAKCAQEA5SJ1bjhSA0uQJjbbF/LCFiQvs+nMKgkSnSE+JEll7azv7jnh\n" +
+			"oBEJdg63tf66oDXCDCMdrYbTtenw1TqkQI2PO8sHuvAZ2UUjqk5zlcrWLiNTCWBw\n" +
+			"IgIxbVj3/nQliaZSufLxepf8qr6wXWP/PG6p+ScFhTSGjK2Z4r/t9cqPaTtfYJye\n" +
+			"lbXNsrn0JK99XGj3cNvHzljAHRUCwGRTiHAOJ7Gk9WLGcZQRKuMPrQFMnoLoxZ8m\n" +
+			"0y+1+AoND6pKLad9/52JCHBi5d7XgwPPEKxVqi8Aklpgb45G4A3FXSKx3tkolXAP\n" +
+			"3zGm95CwmqdI9Q8t72SkOWDJR4lFPb12k6H0FwIDAQABAoIBAQCTeO4jllQSktuf\n" +
+			"/MZeT3vjTD73iI5Cr7wvLWoVaLgVlKyHovE4WD7CoQ5UMDJlUrQlo6RCPvibqIm8\n" +
+			"cxWsBnAdh7rd8hJw6DLgNcXmrrnS0CFtc4g4Gzk8q3pRZueSBF5SF66bvJ5+NmTE\n" +
+			"dsubVY5IMXk4FmpSuJjGe8jn3QsYKkptOa/s28UekaWzqnstIx42IgS33w7qpUx9\n" +
+			"v0XKoOCj41HxwGYexNmOiIufh6dEzZtNZGQb+f7JiIpbClpCXO0Dfi+jkNOBjI6Z\n" +
+			"VMLxIdAZpb9Q97g03hWxH+ZQ9UBeYc9n4p2UzKMnXMBM0lu/cx++hyu6OfAxL8Yr\n" +
+			"eeZEMIrBAoGBAPslHABM0tCf2UC0vs0mfQFqQiO+Mu9Lp6wGbtvNPt+aNdw+ia+g\n" +
+			"CPcvBWdpMKq6eg8XEwLZ59YyoBDlipCG4h/5Xq4wyf77ydamy9mdH6nOcuUDy9KH\n" +
+			"07O39wDdU8EH9Jq29lUYIQgkakRGpi45unq10eo8zAy0ggN1hgI1tYwpAoGBAOmQ\n" +
+			"bB8hj1e1ozrrMWSv/xIntmRGswR+RwLCJECJy/Oai3SvdB9L1Rh1SUOD6Q/vakXd\n" +
+			"pYAzEkEAxm6h+YecxhlwiOFi8rLAWYMLu31LH7WGGVM7SvwLxB/YmL/hpZ0Jqrc6\n" +
+			"Au8MoQtFDtP7IntRkC70Sx7GoKqKudFJlnzyv4Y/AoGAHImn9+TC48/2KOMg90DT\n" +
+			"XZDMeTFIqmZnZCXK/RECfvgP/LnifWFrA2OFcq3CSPQtoH9XurA2JuHTzHe42hlp\n" +
+			"ooZ8msCSg3XrBogni8/N5EbASYO36nFivf4+hAuiU8HqqpX1wc+fGUTCCoYYphIL\n" +
+			"PZxhgQNtkFgGmgwFsUSXH5kCgYEAtvxoSSeQ1yW+Qb3cD8d3LjEgy4U8YavRVI7n\n" +
+			"ugx7VlphIcUIVDCkPio9gQDKyqpG93/EVyEsDvNdg3WxOpcP+QRaqUJNZNAgEPRT\n" +
+			"KsF9kUkDdFsCz18kg9K9Ma/Ggbb+Idj4TXL2hQ7QpDGf/T+Ul8TbSbxSSeqv1BE0\n" +
+			"LqY8eR8CgYBqzKpZcqnNuuwZgdLEnZ/rQoeubw4cHoMWBOkP0N/+mgcE/eEpkr0n\n" +
+			"9llf+wJg96adgqhwlEHkOMQdsF+FfQA5yJWW4FHA8bfA9YsxjBgheL2RU1Z2iTp4\n" +
+			"aLmoAsh17p8MGk/3Zfh10t3tq4c67WlFS2kX2qPBXuwDnm51iNyp2A==\n" +
+			"-----END RSA PRIVATE KEY-----\n").getBytes(StandardCharsets.UTF_8), null);
+		Sftp sftp = JschUtil.createSftp(session);
+		sftp.mkDirs("/opt/test/aaa1/bbb1");
+		Console.log("OK");
 	}
 }

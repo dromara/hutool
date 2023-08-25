@@ -52,9 +52,9 @@ public class HttpRequestTest {
 	@Test
 	@Ignore
 	public void toStringTest() {
-		final String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
+		final String url = "https://hutool.cn?ccc=你好";
 
-		final HttpRequest request = HttpRequest.get(url).body("a=乌海");
+		final HttpRequest request = HttpRequest.get(url).form("a", "测试");
 		Console.log(request.toString());
 	}
 

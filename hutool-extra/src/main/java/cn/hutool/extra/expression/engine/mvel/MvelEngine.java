@@ -3,6 +3,7 @@ package cn.hutool.extra.expression.engine.mvel;
 import cn.hutool.extra.expression.ExpressionEngine;
 import org.mvel2.MVEL;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -14,6 +15,10 @@ import java.util.Map;
  */
 public class MvelEngine implements ExpressionEngine {
 
+	static {
+		checkEngineExist(MVEL.class);
+	}
+
 	/**
 	 * 构造
 	 */
@@ -21,7 +26,11 @@ public class MvelEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
 		return MVEL.eval(expression, context);
+	}
+
+	private static void checkEngineExist(Class<?> clazz){
+		// do nothing
 	}
 }

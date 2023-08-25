@@ -293,6 +293,16 @@ public class XmlUtil {
 			factory = SAXParserFactory.newInstance();
 			factory.setValidating(false);
 			factory.setNamespaceAware(namespaceAware);
+
+			// https://blog.spoock.com/2018/10/23/java-xxe/
+			try{
+				factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+				factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+				factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			} catch (final Exception ignore){
+				// ignore
+			}
 		}
 		// 2.从解析工厂获取解析器
 		final SAXParser parse;
@@ -306,6 +316,16 @@ public class XmlUtil {
 
 			// 3.得到解读器
 			reader = parse.getXMLReader();
+			// 防止XEE攻击，见：https://www.jianshu.com/p/1a857905b22c
+			// https://blog.spoock.com/2018/10/23/java-xxe/
+			reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			//  忽略外部DTD
+			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
+			// 不包括外部一般实体。
+			reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
+			// 不包含外部参数实体或外部DTD子集。
+			reader.setFeature("http://xml.org/sax/features/external-parameter-entities",false);
+
 			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (ParserConfigurationException | SAXException e) {
@@ -982,9 +1002,10 @@ public class XmlUtil {
 		final Map<String, Object> map = xmlToMap(node);
 		if (null != map && map.size() == 1) {
 			final String simpleName = bean.getSimpleName();
-			if (map.containsKey(simpleName)) {
+			final String nodeName = CollUtil.getFirst(map.keySet());
+			if (simpleName.equalsIgnoreCase(nodeName)) {
 				// 只有key和bean的名称匹配时才做单一对象转换
-				return BeanUtil.toBean(map.get(simpleName), bean);
+				return BeanUtil.toBean(map.get(nodeName), bean);
 			}
 		}
 		return BeanUtil.toBean(map, bean);

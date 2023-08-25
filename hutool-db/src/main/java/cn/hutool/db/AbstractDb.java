@@ -889,7 +889,10 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 5.8.11
 	 */
 	public <T> PageResult<T> page(CharSequence sql, Page page, Class<T> elementBeanType, Object... params) throws SQLException {
-		return page(sql, page, (RsHandler<? extends PageResult<T>>) rs -> HandleHelper.handleRsToBeanList(rs, new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(sql, params)), elementBeanType), params);
+		final PageResult<T> result = new PageResult<>(page.getPageNumber(), page.getPageSize(), (int) count(sql, params));
+		return page(sql, page,
+			(RsHandler<? extends PageResult<T>>) rs -> HandleHelper.handleRsToBeanList(rs, result, elementBeanType),
+			params);
 	}
 
 	/**

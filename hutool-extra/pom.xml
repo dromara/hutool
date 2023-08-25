@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.15</version>
+		<version>5.8.21</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -20,11 +20,11 @@
 		<Automatic-Module-Name>cn.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.14.1.RELEASE</beetl.version>
+		<beetl.version>3.15.3.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<enjoy.version>5.0.3</enjoy.version>
-		<thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
+		<thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
 		<sshj.version>0.35.0</sshj.version>
@@ -32,7 +32,7 @@
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<spring-boot.version>2.7.5</spring-boot.version>
+		<spring-boot.version>2.7.10</spring-boot.version>
 		<cglib.version>3.3.0</cglib.version>
 	</properties>
 
@@ -257,7 +257,7 @@
 		<dependency>
 			<groupId>com.hankcs</groupId>
 			<artifactId>hanlp</artifactId>
-			<version>portable-1.8.3</version>
+			<version>portable-1.8.4</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -386,19 +386,7 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<artifactId>asm</artifactId>
-					<groupId>org.ow2.asm</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit-jupiter-api</artifactId>
+					<artifactId>junit-jupiter</artifactId>
 					<groupId>org.junit.jupiter</groupId>
 				</exclusion>
 			</exclusions>
@@ -440,7 +428,7 @@
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
-			<version>2.4.15.Final</version>
+			<version>2.4.14.Final</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -454,7 +442,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>5.3.23</version>
+			<version>5.3.26</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

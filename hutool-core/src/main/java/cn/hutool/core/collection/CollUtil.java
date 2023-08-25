@@ -371,7 +371,7 @@ public class CollUtil {
 				result.addAll(coll1);
 			}
 			result.removeAll(coll2);
-		} catch (UnsupportedOperationException e){
+		} catch (UnsupportedOperationException e) {
 			// 针对 coll1 为只读集合的补偿
 			result = CollUtil.create(AbstractCollection.class);
 			result.addAll(coll1);
@@ -665,6 +665,36 @@ public class CollUtil {
 			}
 		}
 		return currentAlaDatas;
+	}
+
+	/**
+	 * 是否至少有一个符合判断条件
+	 *
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param predicate 自定义判断函数
+	 * @return 是否有一个值匹配 布尔值
+	 */
+	public static <T>boolean anyMatch(Collection<T> collection,Predicate<T> predicate){
+		if(isEmpty(collection)){
+			return Boolean.FALSE;
+		}
+		return collection.stream().anyMatch(predicate);
+	}
+
+	/**
+	 * 是否全部匹配判断条件
+	 *
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param predicate  自定义判断函数
+	 * @return 是否全部匹配 布尔值
+	 */
+	public static <T>boolean allMatch(Collection<T> collection,Predicate<T> predicate){
+		if(isEmpty(collection)){
+			return Boolean.FALSE;
+		}
+		return collection.stream().allMatch(predicate);
 	}
 
 	// ----------------------------------------------------------------------------------------------- new HashSet
@@ -998,7 +1028,7 @@ public class CollUtil {
 	 *
 	 * @param <T>            集合元素类型
 	 * @param collectionType 集合类型，rawtype 如 ArrayList.class, EnumSet.class ...
-	 * @param elementType 集合元素类型
+	 * @param elementType    集合元素类型
 	 * @return 集合类型对应的实例
 	 * @since v5
 	 */
@@ -1189,11 +1219,12 @@ public class CollUtil {
 			return result;
 		}
 
-		ArrayList<T> subList = new ArrayList<>(size);
+		final int initSize = Math.min(collection.size(), size);
+		List<T> subList = new ArrayList<>(initSize);
 		for (T t : collection) {
 			if (subList.size() >= size) {
 				result.add(subList);
-				subList = new ArrayList<>(size);
+				subList = new ArrayList<>(initSize);
 			}
 			subList.add(t);
 		}
@@ -1740,7 +1771,7 @@ public class CollUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(Collection<?> collection) {
-		return false == isEmpty(collection);
+		return !isEmpty(collection);
 	}
 
 	/**
@@ -2144,7 +2175,13 @@ public class CollUtil {
 		if (value instanceof Iterator) {
 			iter = (Iterator) value;
 		} else if (value instanceof Iterable) {
-			iter = ((Iterable) value).iterator();
+			if(value instanceof Map && BeanUtil.isBean(TypeUtil.getClass(elementType))){
+				//https://github.com/dromara/hutool/issues/3139
+				// 如果值为Map，而目标为一个Bean，则Map应整体转换为Bean，而非拆分成Entry转换
+				iter = new ArrayIter<>(new Object[]{value});
+			}else{
+				iter = ((Iterable) value).iterator();
+			}
 		} else if (value instanceof Enumeration) {
 			iter = new EnumerationIter<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
@@ -2847,7 +2884,7 @@ public class CollUtil {
 	 * @since 4.6.5
 	 */
 	public static <T extends Comparable<? super T>> T max(Collection<T> coll) {
-		return Collections.max(coll);
+		return isEmpty(coll) ? null : Collections.max(coll);
 	}
 
 	/**
@@ -2860,7 +2897,7 @@ public class CollUtil {
 	 * @since 4.6.5
 	 */
 	public static <T extends Comparable<? super T>> T min(Collection<T> coll) {
-		return Collections.min(coll);
+		return isEmpty(coll) ? null : Collections.min(coll);
 	}
 
 	/**

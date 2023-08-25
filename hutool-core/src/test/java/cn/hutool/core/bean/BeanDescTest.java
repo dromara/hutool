@@ -1,6 +1,7 @@
 package cn.hutool.core.bean;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -66,12 +67,23 @@ public class BeanDescTest {
 		Assert.assertEquals("张三", value);
 	}
 
+	@Test
+	@Ignore
+	public void propDescOfBooleanTest3() {
+		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+
+		Assert.assertEquals("setLastPage", desc.getSetter("lastPage").getName());
+		Assert.assertEquals("setIsLastPage", desc.getSetter("isLastPage").getName());
+	}
+
 	public static class User {
 		private String name;
 		private int age;
 		private boolean isAdmin;
 		private boolean isSuper;
 		private boolean gender;
+		private Boolean lastPage;
+		private Boolean isLastPage;
 
 		public String getName() {
 			return name;
@@ -116,6 +128,22 @@ public class BeanDescTest {
 
 		public void setGender(boolean gender) {
 			this.gender = gender;
+		}
+
+		public Boolean getLastPage() {
+			return this.lastPage;
+		}
+
+		public void setLastPage(final Boolean lastPage) {
+			this.lastPage = lastPage;
+		}
+
+		public Boolean getIsLastPage() {
+			return this.isLastPage;
+		}
+
+		public void setIsLastPage(final Boolean isLastPage) {
+			this.isLastPage = isLastPage;
 		}
 
 		@Override

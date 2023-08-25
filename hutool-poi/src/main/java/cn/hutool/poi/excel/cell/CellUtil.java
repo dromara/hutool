@@ -455,12 +455,18 @@ public class CellUtil {
 		final CreationHelper factory = wb.getCreationHelper();
 		if (anchor == null) {
 			anchor = factory.createClientAnchor();
+			// 默认位置，在注释的单元格的右方
 			anchor.setCol1(cell.getColumnIndex() + 1);
 			anchor.setCol2(cell.getColumnIndex() + 3);
 			anchor.setRow1(cell.getRowIndex());
 			anchor.setRow2(cell.getRowIndex() + 2);
+			// 自适应
+			anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
 		}
 		final Comment comment = drawing.createCellComment(anchor);
+		// https://stackoverflow.com/questions/28169011/using-sxssfapache-poi-and-adding-comment-does-not-generate-proper-excel-file
+		// 修正在XSSFCell中未设置地址导致错位问题
+		comment.setAddress(cell.getAddress());
 		comment.setString(factory.createRichTextString(commentText));
 		comment.setAuthor(StrUtil.nullToEmpty(commentAuthor));
 		cell.setCellComment(comment);

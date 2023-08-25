@@ -1,6 +1,7 @@
 package cn.hutool.crypto.asymmetric;
 
 import cn.hutool.core.util.StrUtil;
+import org.bouncycastle.jce.spec.IESParameterSpec;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,15 +10,22 @@ public class ECIESTest {
 	@Test
 	public void eciesTest(){
 		final ECIES ecies = new ECIES();
+		final IESParameterSpec iesParameterSpec = new IESParameterSpec(null, null, 128);
+		ecies.setAlgorithmParameterSpec(iesParameterSpec);
 
 		doTest(ecies, ecies);
 	}
 
 	@Test
 	public void eciesTest2(){
+		final IESParameterSpec iesParameterSpec = new IESParameterSpec(null, null, 128);
+
 		final ECIES ecies = new ECIES();
+		ecies.setAlgorithmParameterSpec(iesParameterSpec);
+
 		final byte[] privateKeyBytes = ecies.getPrivateKey().getEncoded();
 		final ECIES ecies2 = new ECIES(privateKeyBytes, null);
+		ecies2.setAlgorithmParameterSpec(iesParameterSpec);
 
 		doTest(ecies, ecies2);
 	}

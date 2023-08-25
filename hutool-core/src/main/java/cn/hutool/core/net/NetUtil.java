@@ -16,30 +16,10 @@ import javax.naming.directory.Attributes;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.net.Authenticator;
-import java.net.DatagramSocket;
-import java.net.HttpCookie;
-import java.net.IDN;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * 网络相关工具
@@ -632,7 +612,8 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获取主机名称，一次获取会缓存名称
+	 * 获取主机名称，一次获取会缓存名称<br>
+	 * 注意此方法会触发反向DNS解析，导致阻塞，阻塞时间取决于网络！
 	 *
 	 * @return 主机名称
 	 * @since 5.4.4
@@ -643,6 +624,7 @@ public class NetUtil {
 		}
 
 		final InetAddress localhost = getLocalhost();
+
 		if (null != localhost) {
 			String name = localhost.getHostName();
 			if (StrUtil.isEmpty(name)) {

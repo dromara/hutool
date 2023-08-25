@@ -126,7 +126,7 @@ public class CharSequenceUtil {
 	 * @see #isBlank(CharSequence)
 	 */
 	public static boolean isNotBlank(CharSequence str) {
-		return false == isBlank(str);
+		return !isBlank(str);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class CharSequenceUtil {
 	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isNotEmpty(CharSequence str) {
-		return false == isEmpty(str);
+		return !isEmpty(str);
 	}
 
 	/**
@@ -780,12 +780,12 @@ public class CharSequenceUtil {
 	}
 
 	/**
-	 * 给定字符串是否以任何一个字符串结尾（忽略大小写）<br>
+	 * 给定字符串是否以任何一个字符串开始（忽略大小写）<br>
 	 * 给定字符串和数组为空都返回false
 	 *
 	 * @param str      给定字符串
-	 * @param suffixes 需要检测的结尾字符串
-	 * @return 给定字符串是否以任何一个字符串结尾
+	 * @param suffixes 需要检测的开始字符串
+	 * @return 给定字符串是否以任何一个字符串开始
 	 * @since 5.8.1
 	 */
 	public static boolean startWithAnyIgnoreCase(final CharSequence str, final CharSequence... suffixes) {
@@ -2142,9 +2142,9 @@ public class CharSequenceUtil {
 	 */
 	public static String subWithLength(String input, int fromIndex, int length) {
 		final int toIndex;
-		if(fromIndex < 0){
+		if (fromIndex < 0) {
 			toIndex = fromIndex - length;
-		}else{
+		} else {
 			toIndex = fromIndex + length;
 		}
 		return sub(input, fromIndex, toIndex);
@@ -4584,6 +4584,51 @@ public class CharSequenceUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 字符串1和字符串2的公共前缀
+	 *
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 字符串1和字符串2的公共前缀
+	 */
+	public static CharSequence commonPrefix(CharSequence str1, CharSequence str2) {
+		if (isEmpty(str1) || isEmpty(str2)) {
+			return EMPTY;
+		}
+		final int minLength = Math.min(str1.length(), str2.length());
+
+		int index = 0;
+
+		for (; index < minLength; index++) {
+
+			if (str1.charAt(index) != str2.charAt(index)) {
+				break;
+			}
+		}
+		return str1.subSequence(0, index);
+	}
+
+	/**
+	 * 字符串1和字符串2的公共后缀
+	 *
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 字符串1和字符串2的公共后缀
+	 */
+	public static CharSequence commonSuffix(CharSequence str1, CharSequence str2) {
+		if (isEmpty(str1) || isEmpty(str2)) {
+			return EMPTY;
+		}
+		int str1Index = str1.length() - 1;
+		int str2Index = str2.length() - 1;
+		for (; str1Index >= 0 && str2Index >= 0; str1Index--, str2Index--) {
+			if (str1.charAt(str1Index) != str2.charAt(str2Index)) {
+				break;
+			}
+		}
+		return str1.subSequence(str1Index + 1, str1.length());
 	}
 
 }

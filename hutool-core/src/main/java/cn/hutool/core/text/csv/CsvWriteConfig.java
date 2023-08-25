@@ -22,6 +22,12 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	protected char[] lineDelimiter = {CharUtil.CR, CharUtil.LF};
 
 	/**
+	 * 文件末尾是否添加换行符<br>
+	 * 按照https://datatracker.ietf.org/doc/html/rfc4180#section-2 规范，末尾换行符可有可无。
+	 */
+	protected boolean endingLineBreak;
+
+	/**
 	 * 默认配置
 	 *
 	 * @return 默认配置
@@ -49,6 +55,18 @@ public class CsvWriteConfig extends CsvConfig<CsvWriteConfig> implements Seriali
 	 */
 	public CsvWriteConfig setLineDelimiter(char[] lineDelimiter) {
 		this.lineDelimiter = lineDelimiter;
+		return this;
+	}
+
+	/**
+	 * 文件末尾是否添加换行符<br>
+	 * 按照https://datatracker.ietf.org/doc/html/rfc4180#section-2 规范，末尾换行符可有可无。
+	 *
+	 * @param endingLineBreak 文件末尾是否添加换行符
+	 * @return this
+	 */
+	public CsvWriteConfig setEndingLineBreak(boolean endingLineBreak) {
+		this.endingLineBreak = endingLineBreak;
 		return this;
 	}
 }

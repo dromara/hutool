@@ -25,7 +25,7 @@ public class DelegatedExecutorService extends AbstractExecutorService {
 	 *
 	 * @param executor {@link ExecutorService}
 	 */
-	DelegatedExecutorService(ExecutorService executor) {
+	public DelegatedExecutorService(ExecutorService executor) {
 		Assert.notNull(executor, "executor must be not null !");
 		e = executor;
 	}

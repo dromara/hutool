@@ -1,13 +1,13 @@
 package cn.hutool.core.io.watch;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.URLUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.URLUtil;
 
 /**
  * 监听工具类<br>
@@ -199,7 +199,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 */
 	public static WatchMonitor createAll(File file, int maxDepth, Watcher watcher) {
-		return createAll(file.toPath(), 0, watcher);
+		return createAll(file.toPath(), maxDepth, watcher);
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class WatchUtil {
 	 * @since 4.5.2
 	 */
 	public static WatchMonitor createModify(File file, int maxDepth, Watcher watcher) {
-		return createModify(file.toPath(), 0, watcher);
+		return createModify(file.toPath(), maxDepth, watcher);
 	}
 
 	/**

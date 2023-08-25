@@ -4,6 +4,7 @@ import cn.hutool.extra.expression.ExpressionEngine;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.MapContext;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -22,7 +23,7 @@ public class JexlEngine implements ExpressionEngine {
 	}
 
 	@Override
-	public Object eval(String expression, Map<String, Object> context) {
+	public Object eval(String expression, Map<String, Object> context, Collection<Class<?>> allowClassSet) {
 		final MapContext mapContext = new MapContext(context);
 
 		try{
