@@ -12,6 +12,14 @@ import java.lang.reflect.Type;
 public interface IJSONTypeConverter {
 
 	/**
+	 * 设置忽略错误属性
+	 *
+	 * @param ignoreError 是否忽略错误属性
+	 * @since 5.8.22
+	 */
+	void setIgnoreError(boolean ignoreError);
+
+	/**
 	 * 转为实体类对象
 	 *
 	 * @param <T>  Bean类型

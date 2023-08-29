@@ -83,7 +83,10 @@ public class CopyOptions implements Serializable {
 		}
 
 		if(value instanceof IJSONTypeConverter) {
-			return ((IJSONTypeConverter)value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
+			IJSONTypeConverter jsonTypeConverter = (IJSONTypeConverter)value;
+			// 设置ignoreError属性
+			jsonTypeConverter.setIgnoreError(ignoreError);
+			return jsonTypeConverter.toBean(ObjectUtil.defaultIfNull(type, Object.class));
 		}
 
 		return Convert.convertWithCheck(type, value, null, ignoreError);

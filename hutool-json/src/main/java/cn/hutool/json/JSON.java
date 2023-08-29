@@ -17,6 +17,15 @@ import java.lang.reflect.Type;
 public interface JSON extends Cloneable, Serializable, IJSONTypeConverter {
 
 	/**
+	 * 设置是否忽略错误属性
+	 *
+	 * @param ignoreError 是否忽略错误属性
+	 */
+	default void setIgnoreError(boolean ignoreError) {
+		getConfig().setIgnoreError(ignoreError);
+	}
+
+	/**
 	 * 获取JSON配置
 	 *
 	 * @return {@link JSONConfig}
