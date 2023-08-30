@@ -27,6 +27,7 @@
 * 【core  】      修复CombinationAnnotationElement判断循环问题（pr#3267@Github）
 * 【core  】      修复StrUtil#containsAny NPE问题（pr#1063@Gitee）
 * 【all   】      修复SONArray的add()方法抛出OutOfMemory异常问题（issue#3286@Github）
+* 【core  】      修复fillColumns空指针问题（issue#3284@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)
