@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class Issue3274Test {
 	@Test
-	public void test1(){
+	public void toBeanTest(){
 		final JSONObject entries = new JSONObject("{\n" +
 			"    \n" +
 			"    \"age\": 36,\n" +
