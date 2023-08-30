@@ -698,7 +698,7 @@ public class CharSequenceUtil extends StrValidator {
 			return null;
 		}
 		for (final CharSequence checkStr : testStrs) {
-			if (str.toString().contains(checkStr)) {
+			if (contains(str, checkStr)) {
 				return checkStr.toString();
 			}
 		}

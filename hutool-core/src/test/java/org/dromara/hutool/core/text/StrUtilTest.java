@@ -371,6 +371,10 @@ public class StrUtilTest {
 		Assertions.assertFalse(containsAny);
 		containsAny = StrUtil.containsAny("aaabbbccc", "d", "c");
 		Assertions.assertTrue(containsAny);
+
+		// https://gitee.com/dromara/hutool/issues/I7WSYD
+		containsAny = StrUtil.containsAny("你好啊", "嗯", null);
+		Assertions.assertFalse(containsAny);
 	}
 
 	@Test
