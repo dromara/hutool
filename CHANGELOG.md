@@ -25,7 +25,8 @@
 * 【core  】      修复Ipv4Util.getEndIpLong 取反符号导致数据越界（issue#I7U1OQ@Gitee）
 * 【http  】      修复302重定向时，Location中的问号被转义问题（issue#3265@Github）
 * 【core  】      修复CombinationAnnotationElement判断循环问题（pr#3267@Github）
-* 【core  】      修复StrUtil#containsAny NPE问题问题（pr#1063@Gitee）
+* 【core  】      修复StrUtil#containsAny NPE问题（pr#1063@Gitee）
+* 【all   】      修复SONArray的add()方法抛出OutOfMemory异常问题（issue#3286@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)

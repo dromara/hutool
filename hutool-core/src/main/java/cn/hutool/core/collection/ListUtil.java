@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.util.ArrayUtil;
@@ -431,6 +432,10 @@ public class ListUtil {
 		if (index < size) {
 			list.set(index, element);
 		} else {
+			// issue#3286, 增加安全检查，最多增加2倍
+			if(index > (list.size() + 1) * 2) {
+				throw new UtilException("Index is too large:", index);
+			}
 			for (int i = size; i < index; i++) {
 				list.add(paddingElement);
 			}

@@ -457,6 +457,10 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			InternalJSONUtil.testValidity(element);
 			this.rawList.add(index, JSONUtil.wrap(element, this.config));
 		} else {
+			// issue#3286, 增加安全检查，最多增加2倍
+			if(index > (this.size() + 1) * 2) {
+				throw new JSONException("Index is too large:", index);
+			}
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
 			}
