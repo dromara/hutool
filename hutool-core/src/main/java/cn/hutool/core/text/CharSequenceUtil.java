@@ -1064,7 +1064,7 @@ public class CharSequenceUtil {
 			return null;
 		}
 		for (CharSequence checkStr : testStrs) {
-			if (str.toString().contains(checkStr)) {
+			if (null != checkStr && str.toString().contains(checkStr)) {
 				return checkStr.toString();
 			}
 		}
