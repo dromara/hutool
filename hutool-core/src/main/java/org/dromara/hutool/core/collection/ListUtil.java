@@ -20,6 +20,7 @@ import org.dromara.hutool.core.collection.partition.RandomAccessAvgPartition;
 import org.dromara.hutool.core.collection.partition.RandomAccessPartition;
 import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.page.PageInfo;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -464,7 +465,7 @@ public class ListUtil {
 	 *
 	 * @param <T>            元素类型
 	 * @param list           List列表
-	 * @param index          位置
+	 * @param index          位置，不能大于(list.size()+1) * 2
 	 * @param element        新元素
 	 * @param paddingElement 填充的值
 	 * @return 原List
@@ -476,6 +477,10 @@ public class ListUtil {
 		if (index < size) {
 			list.set(index, element);
 		} else {
+			// issue#3286, 增加安全检查，最多增加2倍
+			if(index > (list.size() + 1) * 2) {
+				throw new HutoolException("Index is  too large:", index);
+			}
 			for (int i = size; i < index; i++) {
 				list.add(paddingElement);
 			}

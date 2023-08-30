@@ -456,13 +456,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			}
 			this.rawList.add(index, InternalJSONUtil.wrap(element, this.config));
 		} else {
-			// issue#3286, 如果用户指定的index太大，容易造成Java heap space错误。
-//			if (!config.isIgnoreNullValue()) {
-//				while (index != this.size()) {
-//					// 非末尾，则填充null
-//					this.add(null);
-//				}
-//			}
+			// 相对于5.x逻辑变更，当index大于size，则追加，而不是补充null，这样更加安全
 			this.add(element);
 		}
 
