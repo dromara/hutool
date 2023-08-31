@@ -15,6 +15,7 @@ package org.dromara.hutool.core.convert;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.RecordUtil;
 import org.dromara.hutool.core.convert.impl.*;
+import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.core.reflect.TypeUtil;
 import org.dromara.hutool.core.reflect.kotlin.KClassUtil;
@@ -24,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 复合转换器，融合了所有支持类型和自定义类型的转换规则
@@ -106,20 +108,34 @@ public class CompositeConverter extends RegisterConverter {
 	 * @throws ConvertException 转换器不存在
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Type type, final Object value, final T defaultValue, final boolean isCustomFirst) throws ConvertException {
+	public <T> T convert(Type type, Object value, final T defaultValue, final boolean isCustomFirst) throws ConvertException {
 		if (ObjUtil.isNull(value)) {
 			return defaultValue;
 		}
 		if (TypeUtil.isUnknown(type)) {
 			// 对于用户不指定目标类型的情况，返回原值
-			if(null == defaultValue){
+			if (null == defaultValue) {
 				return (T) value;
 			}
 			type = defaultValue.getClass();
 		}
 
+		// issue#I7WJHH，Opt和Optional处理
+		if (value instanceof Opt) {
+			value = ((Opt<T>) value).get();
+			if (ObjUtil.isNull(value)) {
+				return defaultValue;
+			}
+		}
+		if (value instanceof Optional) {
+			value = ((Optional<T>) value).orElse(null);
+			if (ObjUtil.isNull(value)) {
+				return defaultValue;
+			}
+		}
+
 		// value本身实现了Converter接口，直接调用
-		if(value instanceof Converter){
+		if (value instanceof Converter) {
 			return ((Converter) value).convert(type, value, defaultValue);
 		}
 
@@ -183,7 +199,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 日期、java.sql中的日期以及自定义日期统一处理
-		if(Date.class.isAssignableFrom(rowType)){
+		if (Date.class.isAssignableFrom(rowType)) {
 			return DateConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
@@ -198,7 +214,7 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// issue#I6SZYB Entry类（含有泛型参数，不可以默认强转）
-		if(Map.Entry.class.isAssignableFrom(rowType)){
+		if (Map.Entry.class.isAssignableFrom(rowType)) {
 			return (T) EntryConverter.INSTANCE.convert(type, value);
 		}
 
@@ -208,12 +224,12 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// 原始类型转换
-		if(rowType.isPrimitive()){
+		if (rowType.isPrimitive()) {
 			return PrimitiveConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
 		// 数字类型转换
-		if(Number.class.isAssignableFrom(rowType)){
+		if (Number.class.isAssignableFrom(rowType)) {
 			return NumberConverter.INSTANCE.convert(type, value, defaultValue);
 		}
 
@@ -228,17 +244,17 @@ public class CompositeConverter extends RegisterConverter {
 		}
 
 		// Record
-		if(RecordUtil.isRecord(rowType)){
+		if (RecordUtil.isRecord(rowType)) {
 			return (T) RecordConverter.INSTANCE.convert(type, value);
 		}
 
 		// Kotlin Bean
-		if(KClassUtil.isKotlinClass(rowType)){
+		if (KClassUtil.isKotlinClass(rowType)) {
 			return (T) KBeanConverter.INSTANCE.convert(type, value);
 		}
 
 		// issue#I7FQ29 Class
-		if("java.lang.Class".equals(rowType.getName())){
+		if ("java.lang.Class".equals(rowType.getName())) {
 			return (T) ClassConverter.INSTANCE.convert(type, value);
 		}
 
