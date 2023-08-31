@@ -193,6 +193,20 @@ public class ConverterRegistry implements Serializable {
 			type = defaultValue.getClass();
 		}
 
+		// issue#I7WJHH，Opt和Optional处理
+		if (value instanceof Opt) {
+			value = ((Opt<T>) value).get();
+			if (ObjUtil.isNull(value)) {
+				return defaultValue;
+			}
+		}
+		if (value instanceof Optional) {
+			value = ((Optional<T>) value).orElse(null);
+			if (ObjUtil.isNull(value)) {
+				return defaultValue;
+			}
+		}
+
 		if (type instanceof TypeReference) {
 			type = ((TypeReference<?>) type).getType();
 		}
