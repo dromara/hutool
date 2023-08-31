@@ -28,15 +28,16 @@ import java.util.Map;
  * @author kyao
  */
 public class HighMultiReplacer extends StrReplacer {
+	private static final long serialVersionUID = 1L;
 
-    private final AhoCorasickAutomaton ahoCorasickAutomaton;
+	private final AhoCorasickAutomaton ahoCorasickAutomaton;
 
     /**
      * 构造
      *
      * @param map key为需要被查找的字符串，value为对应的替换的值
      */
-    public HighMultiReplacer(Map<String, String> map) {
+    public HighMultiReplacer(final Map<String, String> map) {
         ahoCorasickAutomaton = new AhoCorasickAutomaton(map);
     }
 
@@ -46,19 +47,19 @@ public class HighMultiReplacer extends StrReplacer {
      * @param map key为需要被查找的字符串，value为对应的替换的值
      * @return org.dromara.hutool.core.text.replacer.HighMultiReplacer
      */
-    public static HighMultiReplacer of(Map<String, String> map) {
+    public static HighMultiReplacer of(final Map<String, String> map) {
         return new HighMultiReplacer(map);
     }
 
     @Override
-    protected int replace(CharSequence str, int pos, StringBuilder out) {
+    protected int replace(final CharSequence str, final int pos, final StringBuilder out) {
         ahoCorasickAutomaton.replace(str, out);
         return str.length();
     }
 
     @Override
     public CharSequence apply(final CharSequence str) {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         replace(str, 0, builder);
         return builder;
     }
@@ -77,7 +78,7 @@ public class HighMultiReplacer extends StrReplacer {
         /**
          * @param target 待查找的目标字符串集合
          */
-        public AhoCorasickAutomaton(Map<String, String> target) {
+        public AhoCorasickAutomaton(final Map<String, String> target) {
             root = new Node();
             this.target = target;
             buildTrieTree();
@@ -108,13 +109,13 @@ public class HighMultiReplacer extends StrReplacer {
          * 由目标字符串构建Trie树
          */
         private void buildTrieTree() {
-            for (String targetStr : target.keySet()) {
+            for (final String targetStr : target.keySet()) {
                 Node curr = root;
                 if (targetStr == null) {
                     continue;
                 }
                 for (int i = 0; i < targetStr.length(); i++) {
-                    char ch = targetStr.charAt(i);
+                    final char ch = targetStr.charAt(i);
                     Node node = curr.children.get(ch);
                     if (node == null) {
                         node = new Node();
@@ -132,10 +133,10 @@ public class HighMultiReplacer extends StrReplacer {
          */
         private void buildAcFromTrie() {
             /*广度优先遍历所使用的队列*/
-            LinkedList<Node> queue = new LinkedList<>();
+            final LinkedList<Node> queue = new LinkedList<>();
 
             /*单独处理根结点的所有孩子结点*/
-            for (Node x : root.children.values()) {
+            for (final Node x : root.children.values()) {
                 /*根结点的所有孩子结点的fail都指向根结点*/
                 x.fail = root;
                 queue.addLast(x);/*所有根结点的孩子结点入列*/
@@ -143,8 +144,8 @@ public class HighMultiReplacer extends StrReplacer {
 
             while (!queue.isEmpty()) {
                 /*确定出列结点的所有孩子结点的fail的指向*/
-                Node p = queue.removeFirst();
-                for (Map.Entry<Character, Node> entry : p.children.entrySet()) {
+                final Node p = queue.removeFirst();
+                for (final Map.Entry<Character, Node> entry : p.children.entrySet()) {
 
                     /*孩子结点入列*/
                     queue.addLast(entry.getValue());
@@ -176,14 +177,14 @@ public class HighMultiReplacer extends StrReplacer {
          * @param text          被替换的目标字符串
          * @param stringBuilder 替换后的结果
          */
-        public void replace(CharSequence text, StringBuilder stringBuilder) {
+        public void replace(final CharSequence text, final StringBuilder stringBuilder) {
             Node curr = root;
             int i = 0;
             while (i < text.length()) {
                 /*文本串中的字符*/
-                char ch = text.charAt(i);
+                final char ch = text.charAt(i);
                 /*文本串中的字符和AC自动机中的字符进行比较*/
-                Node node = curr.children.get(ch);
+                final Node node = curr.children.get(ch);
                 if (node != null) {
                     stringBuilder.append(ch);
                     /*若相等，自动机进入下一状态*/

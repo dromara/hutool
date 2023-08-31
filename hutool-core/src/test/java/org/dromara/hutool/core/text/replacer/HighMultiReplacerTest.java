@@ -10,7 +10,7 @@ public class HighMultiReplacerTest {
 
     @Test
     public void replaceTest() {
-        Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("abc", "bar");
         map.put("123", "1234");
         map.put("12", "哈哈哈");
@@ -18,7 +18,8 @@ public class HighMultiReplacerTest {
         map.put("你好", "hello world");
         map.put("AAACC", "%^$%$");
         map.put("_啊", "qqqq");
-        HighMultiReplacer replacer = HighMultiReplacer.of(map);
+
+        final HighMultiReplacer replacer = HighMultiReplacer.of(map);
         Assertions.assertEquals("bar哈哈哈hello world4", replacer.apply("abc12你好4").toString());
         Assertions.assertEquals("qqqq啊qqqq-啊", replacer.apply("_啊啊_啊-啊").toString());
         Assertions.assertEquals("哈哈哈3456789", replacer.apply("123456789").toString());
