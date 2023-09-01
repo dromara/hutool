@@ -15,6 +15,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.convert.impl.ArrayConverter;
+import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
@@ -25,12 +26,7 @@ import org.dromara.hutool.json.writer.JSONWriter;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -456,7 +452,15 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			}
 			this.rawList.add(index, InternalJSONUtil.wrap(element, this.config));
 		} else {
-			// 相对于5.x逻辑变更，当index大于size，则追加，而不是补充null，这样更加安全
+			// issue#3286, 如果用户指定的index太大，容易造成Java heap space错误。
+			if (!config.isIgnoreNullValue()) {
+				// issue#3286, 增加安全检查，最多增加10倍
+				Validator.checkIndexLimit(index, this.size());
+				while (index != this.size()) {
+					// 非末尾，则填充null
+					this.add(null);
+				}
+			}
 			this.add(element);
 		}
 

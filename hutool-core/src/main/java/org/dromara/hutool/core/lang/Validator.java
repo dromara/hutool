@@ -12,17 +12,17 @@
 
 package org.dromara.hutool.core.lang;
 
+import org.dromara.hutool.core.data.CreditCodeUtil;
+import org.dromara.hutool.core.data.IdcardUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.exception.ValidateException;
-import org.dromara.hutool.core.regex.PatternPool;
-import org.dromara.hutool.core.regex.RegexPool;
-import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.data.CreditCodeUtil;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.core.regex.PatternPool;
 import org.dromara.hutool.core.regex.ReUtil;
+import org.dromara.hutool.core.regex.RegexPool;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.data.IdcardUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
@@ -1237,6 +1237,25 @@ public class Validator {
 		final int len = StrUtil.byteLength(str, charset);
 		if (len < min || len > max) {
 			throw new ValidateException(errorMsg);
+		}
+	}
+
+	/**
+	 * 检查给定的index是否超出长度限制，默认检查超出倍数（10倍），此方法主要用于内部，检查包括：
+	 * <ul>
+	 *     <li>数组调用setOrPadding时，最多允许padding的长度</li>
+	 *     <li>List调用setOrPadding时，最多允许padding的长度</li>
+	 *     <li>JSONArray调用setOrPadding时，最多允许padding的长度</li>
+	 * </ul>
+	 *
+	 * @param index 索引
+	 * @param size  数组、列表长度
+	 * @since 6.0.0
+	 */
+	public static void checkIndexLimit(final int index, final int size) {
+		// issue#3286, 增加安全检查，最多增加10倍
+		if (index > (size + 1) * 10) {
+			throw new ValidateException("Index [{}] is too large for size: [{}]", index, size);
 		}
 	}
 }

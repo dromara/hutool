@@ -225,9 +225,9 @@ public class JSONArrayTest {
 		Assertions.assertEquals(1, jsonArray.size());
 
 		jsonArray = new JSONArray(JSONConfig.of().setIgnoreNullValue(false));
-		jsonArray.set(3, "test");
+		jsonArray.set(2, "test");
 		// 第三个位置插入值，0~2都是null
-		Assertions.assertEquals(4, jsonArray.size());
+		Assertions.assertEquals(3, jsonArray.size());
 	}
 
 	// https://github.com/dromara/hutool/issues/1858

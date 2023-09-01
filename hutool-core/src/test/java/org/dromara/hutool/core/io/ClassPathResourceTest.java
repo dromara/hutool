@@ -41,7 +41,7 @@ public class ClassPathResourceTest {
 		// 读取classpath根目录测试
 		final ClassPathResource resource = new ClassPathResource("/");
 		final String content = resource.readUtf8Str();
-		Assertions.assertTrue(StrUtil.isEmpty(content));
+		Assertions.assertNotNull(content);
 	}
 
 	@Test

@@ -2,9 +2,9 @@ package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.Wrapper;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -294,10 +294,8 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 		if (index < this.length) {
 			Array.set(array, index, value);
 		} else {
-			// issue#3286, 增加安全检查，最多增加2倍
-			if(index > (length + 1) * 2) {
-				throw new HutoolException("Index is  too large:", index);
-			}
+			// issue#3286, 增加安全检查，最多增加10倍
+			Validator.checkIndexLimit(index, this.length);
 
 			for (int i = length; i < index; i++) {
 				append(paddingElement);

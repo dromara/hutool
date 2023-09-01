@@ -20,8 +20,8 @@ import org.dromara.hutool.core.collection.partition.RandomAccessAvgPartition;
 import org.dromara.hutool.core.collection.partition.RandomAccessPartition;
 import org.dromara.hutool.core.comparator.PinyinComparator;
 import org.dromara.hutool.core.comparator.PropertyComparator;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.lang.page.PageInfo;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -477,10 +477,8 @@ public class ListUtil {
 		if (index < size) {
 			list.set(index, element);
 		} else {
-			// issue#3286, 增加安全检查，最多增加2倍
-			if(index > (list.size() + 1) * 2) {
-				throw new HutoolException("Index is  too large:", index);
-			}
+			// issue#3286, 增加安全检查，最多增加10倍
+			Validator.checkIndexLimit(index, size);
 			for (int i = size; i < index; i++) {
 				list.add(paddingElement);
 			}
