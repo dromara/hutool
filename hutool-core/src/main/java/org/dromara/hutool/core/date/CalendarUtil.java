@@ -573,7 +573,12 @@ public class CalendarUtil {
 	}
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * 计算相对于dateToCompare的年龄，常用于计算指定生日在某年的年龄<br>
+	 * 按照《最高人民法院关于审理未成年人刑事案件具体应用法律若干问题的解释》第二条规定刑法第十七条规定的“周岁”，按照公历的年、月、日计算，从周岁生日的第二天起算。
+	 * <ul>
+	 *     <li>2022-03-01出生，则相对2023-03-01，周岁为0，相对于2023-03-02才是1岁。</li>
+	 *     <li>1999-02-28出生，则相对2000-02-29，周岁为1</li>
+	 * </ul>
 	 *
 	 * @param birthday      生日
 	 * @param dateToCompare 需要对比的日期
@@ -745,7 +750,12 @@ public class CalendarUtil {
 	// endregion
 
 	/**
-	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * 计算相对于dateToCompare的年龄（周岁），常用于计算指定生日在某年的年龄<br>
+	 * 按照《最高人民法院关于审理未成年人刑事案件具体应用法律若干问题的解释》第二条规定刑法第十七条规定的“周岁”，按照公历的年、月、日计算，从周岁生日的第二天起算。
+	 * <ul>
+	 *     <li>2022-03-01出生，则相对2023-03-01，周岁为0，相对于2023-03-02才是1岁。</li>
+	 *     <li>1999-02-28出生，则相对2000-02-29，周岁为1</li>
+	 * </ul>
 	 *
 	 * @param birthday      生日
 	 * @param dateToCompare 需要对比的日期
@@ -762,8 +772,8 @@ public class CalendarUtil {
 		final int year = cal.get(Calendar.YEAR);
 		final int month = cal.get(Calendar.MONTH);
 		final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-		final boolean isLastDayOfMonth = dayOfMonth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+		// 复用cal
 		cal.setTimeInMillis(birthday);
 		int age = year - cal.get(Calendar.YEAR);
 		//当前日期，则为0岁
@@ -773,11 +783,9 @@ public class CalendarUtil {
 
 		final int monthBirth = cal.get(Calendar.MONTH);
 		if (month == monthBirth) {
-
 			final int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
-			final boolean isLastDayOfMonthBirth = dayOfMonthBirth == cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
-			if ((!isLastDayOfMonth || !isLastDayOfMonthBirth) && dayOfMonth <= dayOfMonthBirth) {
+			if (dayOfMonth <= dayOfMonthBirth) {
 				// 如果生日在当月，但是未达到生日当天的日期，年龄减一
 				age--;
 			}
