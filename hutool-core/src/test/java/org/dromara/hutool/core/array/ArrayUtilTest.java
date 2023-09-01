@@ -13,6 +13,7 @@
 package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.junit.jupiter.api.Assertions;
@@ -549,6 +550,14 @@ public class ArrayUtilTest {
 		arr2 = new int[0];
 		o = ArrayUtil.setOrAppend(arr2, 0, 2);
 		Assertions.assertArrayEquals(new int[]{2}, o);
+	}
+
+	@Test
+	void setOrPaddingTest(){
+		final String[] arr = new String[0];
+		final String[] newArr = ArrayUtil.setOrPadding(arr, 2, "Good");
+		Console.log(newArr);
+		Assertions.assertArrayEquals(new String[]{null, null, "Good"}, newArr);
 	}
 
 	@Test

@@ -2,8 +2,10 @@ package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.lang.reflect.Array;
@@ -267,6 +269,46 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	// endregion
 
 	/**
+	 * 将元素值设置为数组的某个位置，当index小于数组的长度时，替换指定位置的值，否则追加{@code null}或{@code 0}直到到达index后，设置值
+	 *
+	 * @param index 位置
+	 * @param value 新元素或新数组
+	 * @return this
+	 * @since 6.0.0
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayWrapper<A, E> setOrPadding(final int index, final E value) {
+		return setOrPadding(index, value, (E) ClassUtil.getDefaultValue(this.componentType));
+	}
+
+	/**
+	 * 将元素值设置为数组的某个位置，当index小于数组的长度时，替换指定位置的值，否则追加{@code paddingElement}直到到达index后，设置值
+	 *
+	 * @param index 位置
+	 * @param value 新元素或新数组
+	 * @param paddingElement 填充
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public ArrayWrapper<A, E> setOrPadding(final int index, final E value, final E paddingElement) {
+		if (index < this.length) {
+			Array.set(array, index, value);
+		} else {
+			// issue#3286, 增加安全检查，最多增加2倍
+			if(index > (length + 1) * 2) {
+				throw new HutoolException("Index is  too large:", index);
+			}
+
+			for (int i = length; i < index; i++) {
+				append(paddingElement);
+			}
+			append(value);
+		}
+
+		return this;
+	}
+
+	/**
 	 * 将元素值设置为数组的某个位置，当给定的index大于等于数组长度，则追加
 	 *
 	 * @param index 位置，大于等于长度则追加，否则替换
@@ -314,7 +356,7 @@ public class ArrayWrapper<A, E> implements Wrapper<A>, Iterable<E> {
 	 * @return 新数组
 	 */
 	public ArrayWrapper<A, E> insert(final int index, final E element) {
-		return insertArray(index, ArrayUtil.ofArray(element));
+		return insertArray(index, ArrayUtil.ofArray(element, this.componentType));
 	}
 
 	/**

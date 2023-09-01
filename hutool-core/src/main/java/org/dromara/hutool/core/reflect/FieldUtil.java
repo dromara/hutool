@@ -270,7 +270,7 @@ public class FieldUtil {
 	 * @throws HutoolException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws HutoolException {
-		Assert.notNull(obj);
+		Assert.notNull(obj,  "Object must be not null !");
 		Assert.notBlank(fieldName);
 
 		final Field field = getField((obj instanceof Class) ? (Class<?>) obj : obj.getClass(), fieldName);

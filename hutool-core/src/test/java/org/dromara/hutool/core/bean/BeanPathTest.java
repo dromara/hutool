@@ -149,6 +149,15 @@ public class BeanPathTest {
 	}
 
 	@Test
+	public void putTest() {
+		final Map<String, Object> map = new HashMap<>();
+
+		BeanPath beanPath = BeanPath.of("list[1].name");
+		beanPath.set(map, "张三");
+		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
+	}
+
+	@Test
 	public void putByPathTest() {
 		final Dict dict = new Dict();
 		BeanPath.of("aa.bb").set(dict, "BB");

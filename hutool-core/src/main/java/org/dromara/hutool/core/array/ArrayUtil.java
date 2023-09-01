@@ -21,6 +21,7 @@ import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrJoiner;
 import org.dromara.hutool.core.text.StrUtil;
@@ -551,6 +552,23 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			return ofArray(value, null == array ? null : array.getClass().getComponentType());
 		}
 		return ArrayWrapper.of(array).setOrAppend(index, value).getRaw();
+	}
+
+	/**
+	 * 将元素值设置为数组的某个位置，当index小于数组的长度时，替换指定位置的值，否则追加{@code null}或{@code 0}直到到达index后，设置值
+	 *
+	 * @param <A>   数组类型
+	 * @param array 已有数组
+	 * @param index 位置，大于等于长度则追加，否则替换
+	 * @param value 新值
+	 * @return 新数组或原有数组
+	 * @since 6.0.0
+	 */
+	public static <A> A setOrPadding(final A array, final int index, final Object value) {
+		if (index == 0 && isEmpty(array)) {
+			return ofArray(value, null == array ? null : array.getClass().getComponentType());
+		}
+		return ArrayWrapper.of(array).setOrPadding(index, value).getRaw();
 	}
 
 	/**

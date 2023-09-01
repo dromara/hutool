@@ -337,11 +337,10 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			// 相对于5.x逻辑变更，与数组逻辑保持一致
-			ListUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
+			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
 			// issue#3008，追加产生新数组，此处返回新数组
-			return ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
+			return ArrayUtil.setOrPadding(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
 			FieldUtil.setFieldValue(bean, fieldNameOrIndex, value);
