@@ -84,7 +84,7 @@ public class JSONParser {
 					}
 				default:
 					tokener.back();
-					key = tokener.nextValue().toString();
+					key = tokener.nextValue(true).toString();
 			}
 
 			// The key is followed by ':'.
@@ -94,7 +94,7 @@ public class JSONParser {
 				throw tokener.syntaxError("Expected a ':' after a key");
 			}
 
-			jsonObject.set(key, tokener.nextValue(), predicate);
+			jsonObject.set(key, tokener.nextValue(false), predicate);
 
 			// Pairs are separated by ','.
 
@@ -136,7 +136,7 @@ public class JSONParser {
 					jsonArray.addRaw(null, predicate);
 				} else {
 					x.back();
-					jsonArray.addRaw(x.nextValue(), predicate);
+					jsonArray.addRaw(x.nextValue(false), predicate);
 				}
 				switch (x.nextClean()) {
 					case CharUtil.COMMA:

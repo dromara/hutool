@@ -154,7 +154,7 @@ public class JSONConverter implements Converter {
 					return new JSONObject(jsonStr, config);
 				default:
 					// RFC8259，JSON字符串值、number, boolean, or null
-					final Object value = new JSONTokener(jsonStr, config).nextValue();
+					final Object value = new JSONTokener(jsonStr, config).nextValue(false);
 					if(ObjUtil.equals(value, jsonStr)){
 						// 原值返回，意味着非正常数字、Boolean或null
 						throw new JSONException("Unsupported JSON String: {}", jsonStr);

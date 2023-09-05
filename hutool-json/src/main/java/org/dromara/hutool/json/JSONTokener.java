@@ -345,15 +345,16 @@ public class JSONTokener extends ReaderWrapper {
 	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 * @throws JSONException 语法错误
 	 */
-	public Object nextValue() throws JSONException {
+	public Object nextValue(final boolean getOnlyStringValue) throws JSONException {
 		char c = this.nextClean();
-		final String string;
-
 		switch (c) {
 			case '"':
 			case '\'':
 				return this.nextString(c);
 			case '{':
+				if(getOnlyStringValue){
+					throw this.syntaxError("String value must not begin with '{'");
+				}
 				this.back();
 				try {
 					return new JSONObject(this, this.config);
@@ -361,6 +362,9 @@ public class JSONTokener extends ReaderWrapper {
 					throw new JSONException("JSONObject depth too large to process.", e);
 				}
 			case '[':
+				if(getOnlyStringValue){
+					throw this.syntaxError("String value must not begin with '['");
+				}
 				this.back();
 				try {
 					return new JSONArray(this, this.config);
@@ -382,11 +386,11 @@ public class JSONTokener extends ReaderWrapper {
 		}
 		this.back();
 
-		string = sb.toString().trim();
-		if (0 == string.length()) {
+		final String valueString = sb.toString().trim();
+		if (valueString.isEmpty()) {
 			throw this.syntaxError("Missing value");
 		}
-		return InternalJSONUtil.stringToValue(string);
+		return getOnlyStringValue ? valueString : InternalJSONUtil.stringToValue(valueString);
 	}
 
 	/**
