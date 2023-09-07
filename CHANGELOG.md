@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.22(2023-08-16)
+# 5.8.22(2023-09-05)
 
 ### 🐣新特性
 * 【core  】      NumberUtil.nullToZero增加重载（issue#I7PPD2@Gitee）
@@ -22,6 +22,15 @@
 * 【core  】      去除默认的ACCEPT_LANGUAGE（issue#3258@Github）
 * 【core  】      修复FieldsComparator比较结果不正确问题（issue#3259@Github）
 * 【core  】      修复Db.findAll全局忽略大小写无效问题（issue#I7T30Y@Gitee）
+* 【core  】      修复Ipv4Util.getEndIpLong 取反符号导致数据越界（issue#I7U1OQ@Gitee）
+* 【http  】      修复302重定向时，Location中的问号被转义问题（issue#3265@Github）
+* 【core  】      修复CombinationAnnotationElement判断循环问题（pr#3267@Github）
+* 【core  】      修复StrUtil#containsAny NPE问题（pr#1063@Gitee）
+* 【all   】      修复SONArray的add()方法抛出OutOfMemory异常问题（issue#3286@Github）
+* 【core  】      修复fillColumns空指针问题（issue#3284@Github）
+* 【core  】      修复Convert不能转换Optional和Opt问题（issue#I7WJHH@Gitee）
+* 【core  】      修复DateUtil.age年龄计算问题（issue#I7XMYW@Gitee）
+* 【core  】      修复JSONUtil.parse()溢出问题（issue#3289@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)

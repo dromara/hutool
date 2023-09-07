@@ -143,7 +143,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 			annotationType = annotation.annotationType();
 			// issue#I5FQGW@Gitee：跳过元注解和已经处理过的注解，防止递归调用
 			if (AnnotationUtil.isNotJdkMateAnnotation(annotationType)
-					&& false == declaredAnnotationMap.containsKey(annotationType)) {
+					&& false == annotationMap.containsKey(annotationType)) {
 				if(test(annotation)){
 					annotationMap.put(annotationType, annotation);
 				}

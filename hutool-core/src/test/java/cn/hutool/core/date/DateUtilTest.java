@@ -868,7 +868,9 @@ public class DateUtilTest {
 		final String d1 = "2000-02-29";
 		final String d2 = "2018-02-28";
 		final int age = DateUtil.age(DateUtil.parseDate(d1), DateUtil.parseDate(d2));
-		Assert.assertEquals(18, age);
+
+		// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
+		Assert.assertEquals(17, age);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -876,6 +878,28 @@ public class DateUtilTest {
 		final String d1 = "2019-02-29";
 		final String d2 = "2018-02-28";
 		DateUtil.age(DateUtil.parseDate(d1), DateUtil.parseDate(d2));
+	}
+
+	@Test
+	public void ageTest3() {
+		// 按照《最高人民法院关于审理未成年人刑事案件具体应用法律若干问题的解释》第二条规定刑法第十七条规定的“周岁”，按照公历的年、月、日计算，从周岁生日的第二天起算。
+		// 那我们认为就算当年是闰年，29日也算周岁生日的第二天，可以算作一岁
+		final String d1 = "1998-02-28";
+		final String d2 = "2000-02-29";
+		final int age = DateUtil.age(DateUtil.parse(d1), DateUtil.parse(d2));
+		// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
+		Assert.assertEquals(2, age);
+	}
+
+	@Test
+	public void ageTest4() {
+		// 按照《最高人民法院关于审理未成年人刑事案件具体应用法律若干问题的解释》第二条规定刑法第十七条规定的“周岁”，按照公历的年、月、日计算，从周岁生日的第二天起算。
+		// 那我们认为就算当年是闰年，29日也算周岁生日的第二天，可以算作一岁
+		final String d1 = "1999-02-28";
+		final String d2 = "2000-02-29";
+		final int age = DateUtil.age(DateUtil.parse(d1), DateUtil.parse(d2));
+		// issue#I6E6ZG，法定生日当天不算年龄，从第二天开始计算
+		Assert.assertEquals(1, age);
 	}
 
 	@Test

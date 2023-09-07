@@ -2948,10 +2948,10 @@ public class NumberUtil {
 	/**
 	 * 检查是否为有效的数字<br>
 	 * 检查Double和Float是否为无限大，或者Not a Number<br>
-	 * 非数字类型和Null将返回true
+	 * 非数字类型和Null将返回false
 	 *
 	 * @param number 被检查类型
-	 * @return 检查结果，非数字类型和Null将返回true
+	 * @return 检查结果，非数字类型和Null将返回false
 	 * @since 4.6.7
 	 */
 	public static boolean isValidNumber(Number number) {

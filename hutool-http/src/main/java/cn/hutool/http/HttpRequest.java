@@ -1293,13 +1293,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					final UrlBuilder redirectUrl;
 					String location = httpConnection.header(Header.LOCATION);
 					if (false == HttpUtil.isHttp(location) && false == HttpUtil.isHttps(location)) {
-						// issue#I5TPSY
-						// location可能为相对路径
+						// issue#I5TPSY, location可能为相对路径
 						if (false == location.startsWith("/")) {
 							location = StrUtil.addSuffixIfNot(this.url.getPathStr(), "/") + location;
 						}
+
+						// issue#3265, 相对路径中可能存在参数，单独处理参数
+						final String query;
+						final List<String> split = StrUtil.split(location, '?', 2);
+						if (split.size() == 2) {
+							// 存在参数
+							location = split.get(0);
+							query = split.get(1);
+						} else {
+							query = null;
+						}
 						redirectUrl = UrlBuilder.of(this.url.getScheme(), this.url.getHost(), this.url.getPort()
-								, location, null, null, this.charset);
+								, location, query, null, this.charset);
 					} else {
 						redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 					}

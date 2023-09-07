@@ -97,7 +97,7 @@ public class ConsoleTable {
 	 */
 	private void fillColumns(List<String> l, String[] columns) {
 		for (int i = 0; i < columns.length; i++) {
-			String column = columns[i];
+			String column = StrUtil.toString(columns[i]);
 			if (isSBCMode) {
 				column = Convert.toSBC(column);
 			}

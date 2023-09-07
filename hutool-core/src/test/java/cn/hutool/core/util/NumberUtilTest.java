@@ -221,6 +221,12 @@ public class NumberUtilTest {
 	}
 
 	@Test
+	public void isValidNumberTest() {
+		boolean validNumber = NumberUtil.isValidNumber(1);
+        Assert.assertTrue(validNumber);
+	}
+
+	@Test
 	public void decimalFormatMoneyTest() {
 		final double c = 299792400.543534534;
 
