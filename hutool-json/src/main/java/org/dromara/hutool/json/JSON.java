@@ -146,9 +146,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 */
 	default String toJSONString(final int indentFactor) throws JSONException {
 		final StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0, null).toString();
-		}
+		return this.write(sw, indentFactor, 0, null).toString();
 	}
 
 	/**
