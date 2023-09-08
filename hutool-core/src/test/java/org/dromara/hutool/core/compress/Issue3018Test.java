@@ -14,10 +14,12 @@ package org.dromara.hutool.core.compress;
 
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class Issue3018Test {
 	@Test
+	@Disabled
 	void unzipTest() {
 		ZipUtil.unzip(FileUtil.getInputStream("d:/test/default.zip"),
 			FileUtil.file("d:/test/"),
@@ -26,6 +28,7 @@ public class Issue3018Test {
 	}
 
 	@Test
+	@Disabled
 	void unzipFromFileTest() {
 		ZipUtil.unzip("d:/test/default.zip");
 	}
