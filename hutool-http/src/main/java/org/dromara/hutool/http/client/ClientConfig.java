@@ -132,9 +132,8 @@ public class ClientConfig {
 	}
 
 	/**
-	 * 设置SSLSocketFactory<br>
-	 * 只针对HTTPS请求，如果不设置，使用默认的SSLSocketFactory<br>
-	 * 默认SSLSocketFactory为：SSLSocketFactoryBuilder.create().build();
+	 * 设置SSLInfo<br>
+	 * 只针对HTTPS请求，如果不设置，使用默认的{@link SSLInfo#TRUST_ANY}<br>
 	 *
 	 * @param sslInfo SSLInfo
 	 * @return this
