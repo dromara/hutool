@@ -19,7 +19,7 @@ import org.junit.Test;
 import javax.net.ssl.SSLSocketFactory;
 
 public class IssueI7ZRJUTest {
-	
+
 	@Test
 	@Ignore
 	public void getTest() {
