@@ -32,6 +32,7 @@
 * 【core  】      修复DateUtil.age年龄计算问题（issue#I7XMYW@Gitee）
 * 【core  】      修复JSONUtil.parse()溢出问题（issue#3289@Github）
 * 【core  】      修复Tailer stop NPE问题（pr#1067@Gitee）
+* 【json  】      修复toJSONString导致CPU使用率高的问题（issue#3297@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)
