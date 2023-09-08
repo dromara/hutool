@@ -144,6 +144,15 @@ public class ClientConfig {
 	}
 
 	/**
+	 * 打开SSL验证，即使用引擎默认的SSL验证方式
+	 *
+	 * @return this
+	 */
+	public ClientConfig enableSSLVerify(){
+		return setSSLInfo(SSLInfo.DEFAULT);
+	}
+
+	/**
 	 * 是否禁用缓存
 	 *
 	 * @return 是否禁用缓存

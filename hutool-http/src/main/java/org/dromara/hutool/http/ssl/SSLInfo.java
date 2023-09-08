@@ -176,6 +176,9 @@ public class SSLInfo {
 	 * @return {@link SSLSocketFactory}
 	 */
 	public SSLSocketFactory getSocketFactory() {
+		if(null == this.sslContext){
+			return null;
+		}
 		final SSLSocketFactory factory = this.sslContext.getSocketFactory();
 		return new CustomProtocolsSSLFactory(factory, this.protocols);
 	}

@@ -22,10 +22,11 @@ import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
-import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.body.StringBody;
 import org.dromara.hutool.http.client.body.UrlEncodedFormBody;
+import org.dromara.hutool.http.client.engine.ClientEngine;
+import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 
@@ -296,6 +297,16 @@ public class Request implements HeaderOperation<Request> {
 	 * @return 响应内容
 	 */
 	public Response send() {
-		return HttpUtil.send(this);
+		return send(ClientEngineFactory.getEngine());
+	}
+
+	/**
+	 * 发送请求
+	 *
+	 * @param engine 自自定义引擎
+	 * @return 响应内容
+	 */
+	public Response send(final ClientEngine engine){
+		return engine.send(this);
 	}
 }

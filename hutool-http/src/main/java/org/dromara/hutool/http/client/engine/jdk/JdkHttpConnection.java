@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
+import org.dromara.hutool.core.lang.Opt;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.HeaderOperation;
 import org.dromara.hutool.http.meta.Method;
@@ -221,8 +221,8 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection> {
 			// Https请求
 			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
-			httpsConn.setHostnameVerifier(ObjUtil.defaultIfNull(sslInfo.getHostnameVerifier(), SSLInfo.TRUST_ANY.getHostnameVerifier()));
-			httpsConn.setSSLSocketFactory(ObjUtil.defaultIfNull(sslInfo.getSocketFactory(), SSLInfo.TRUST_ANY.getSocketFactory()));
+			Opt.ofNullable(sslInfo.getHostnameVerifier()).ifPresent(httpsConn::setHostnameVerifier);
+			Opt.ofNullable(sslInfo.getSocketFactory()).ifPresent(httpsConn::setSSLSocketFactory);
 		}
 
 		return this;
