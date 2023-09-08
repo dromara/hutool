@@ -189,7 +189,7 @@ public class Tailer implements Serializable {
 			this.executorService.shutdown();
 		} finally {
 			IoUtil.closeQuietly(this.randomAccessFile);
-			fileDeleteWatchMonitor.close();
+			IoUtil.closeQuietly(this.fileDeleteWatchMonitor);
 		}
 	}
 
