@@ -20,7 +20,6 @@ import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateEngine;
 import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.loader.*;
-import org.beetl.core.GroupTemplate;
 
 /**
  * @author：zooooooooy
@@ -63,7 +62,7 @@ public class PebbleTemplateEngine implements TemplateEngine {
 	 * 创建引擎
 	 *
 	 * @param config 模板配置
-	 * @return {@link GroupTemplate}
+	 * @return PebbleEngine
 	 */
 	private static PebbleEngine createEngine(TemplateConfig config) {
 		if (null == config) {
