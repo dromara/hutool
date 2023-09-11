@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * Bean属性拷贝到Bean中的拷贝器
  *
+ * @author Admin
  * @param <S> 源Bean类型
  * @param <T> 目标Bean类型
  * @since 5.8.0
@@ -53,14 +54,14 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 				return;
 			}
 
-			sFieldName = copyOptions.editFieldName(sFieldName);
-			// 对key做转换，转换后为null的跳过
-			if (null == sFieldName) {
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sFieldName)) {
 				return;
 			}
 
-			// 忽略不需要拷贝的 key,
-			if (false == copyOptions.testKeyFilter(sFieldName)) {
+			sFieldName = copyOptions.editFieldName(sFieldName);
+			// 对key做转换，转换后为null的跳过
+			if (null == sFieldName) {
 				return;
 			}
 
