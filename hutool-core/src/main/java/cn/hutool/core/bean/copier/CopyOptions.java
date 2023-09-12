@@ -8,6 +8,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -78,12 +79,12 @@ public class CopyOptions implements Serializable {
 	 * 自定义类型转换器，默认使用全局万能转换器转换
 	 */
 	protected TypeConverter converter = (type, value) -> {
-		if(null == value){
+		if (null == value) {
 			return null;
 		}
 
-		if(value instanceof IJSONTypeConverter) {
-			return ((IJSONTypeConverter)value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
+		if (value instanceof IJSONTypeConverter) {
+			return ((IJSONTypeConverter) value).toBean(ObjectUtil.defaultIfNull(type, Object.class));
 		}
 
 		return Convert.convertWithCheck(type, value, null, ignoreError);
@@ -293,7 +294,7 @@ public class CopyOptions implements Serializable {
 	 */
 	protected Object editFieldValue(String fieldName, Object fieldValue) {
 		return (null != this.fieldValueEditor) ?
-				this.fieldValueEditor.apply(fieldName, fieldValue) : fieldValue;
+			this.fieldValueEditor.apply(fieldName, fieldValue) : fieldValue;
 	}
 
 	/**
@@ -343,7 +344,7 @@ public class CopyOptions implements Serializable {
 	 */
 	protected Object convertField(Type targetType, Object fieldValue) {
 		return (null != this.converter) ?
-				this.converter.convert(targetType, fieldValue) : fieldValue;
+			this.converter.convert(targetType, fieldValue) : fieldValue;
 	}
 
 	/**
@@ -375,6 +376,19 @@ public class CopyOptions implements Serializable {
 	 * @return 是否保留
 	 */
 	protected boolean testKeyFilter(Object key) {
-		return CollUtil.isEmpty(this.ignoreKeySet) || false == this.ignoreKeySet.contains(key);
+		if (CollUtil.isEmpty(this.ignoreKeySet)) {
+			return true;
+		}
+
+		if (ignoreCase) {
+			// 忽略大小写时要遍历检查
+			for (final String ignoreKey : this.ignoreKeySet) {
+				if (StrUtil.equalsIgnoreCase(key.toString(), ignoreKey)) {
+					return false;
+				}
+			}
+		}
+
+		return false == this.ignoreKeySet.contains(key);
 	}
 }

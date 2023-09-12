@@ -54,14 +54,14 @@ public class BeanToBeanCopier<S, T> extends AbsCopier<S, T> {
 				return;
 			}
 
-			// 忽略不需要拷贝的 key,
-			if (false == copyOptions.testKeyFilter(sFieldName)) {
-				return;
-			}
-
 			sFieldName = copyOptions.editFieldName(sFieldName);
 			// 对key做转换，转换后为null的跳过
 			if (null == sFieldName) {
+				return;
+			}
+
+			// 忽略不需要拷贝的 key,
+			if (false == copyOptions.testKeyFilter(sFieldName)) {
 				return;
 			}
 
