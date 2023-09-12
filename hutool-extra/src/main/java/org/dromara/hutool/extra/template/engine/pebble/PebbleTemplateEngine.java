@@ -22,7 +22,10 @@ import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.loader.*;
 
 /**
- * @author：zooooooooy
+ * Pebble(https://pebbletemplates.io/) 模板引擎
+ *
+ * @author zooooooooy
+ * @since 6.0.0
  */
 public class PebbleTemplateEngine implements TemplateEngine {
 
