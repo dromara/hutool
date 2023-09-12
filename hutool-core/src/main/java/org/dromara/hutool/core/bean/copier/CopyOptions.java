@@ -177,7 +177,13 @@ public class CopyOptions implements Serializable {
 	 * @return CopyOptions
 	 */
 	public CopyOptions setIgnoreProperties(final String... ignoreProperties) {
-		return setPropertiesFilter((field, o) -> !ArrayUtil.contains(ignoreProperties, field.getName()));
+		return setPropertiesFilter((field, o) -> {
+			if(ignoreCase){
+				// issue#I80FP4
+				return !ArrayUtil.containsIgnoreCase(ignoreProperties, field.getName());
+			}
+			return !ArrayUtil.contains(ignoreProperties, field.getName());
+		});
 	}
 
 	/**
