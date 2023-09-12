@@ -21,12 +21,15 @@ import org.dromara.hutool.core.io.SerializeUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.ModifierUtil;
+import org.dromara.hutool.core.reflect.ReflectUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.CharSequenceUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
@@ -493,5 +496,57 @@ public class ObjUtil {
 			return obj.toString();
 		}
 		return Convert.toStr(obj);
+	}
+
+	/**
+	 * 检查对象所有字段属性是否都为null<br>
+	 * 异常则返回false<br>
+	 * 判断标准为：
+	 *
+	 * <pre>
+	 * 1. == null
+	 * </pre>
+	 *
+	 * @param obj 对象
+	 * @return 该对象所有字段是否为null
+	 */
+	public static boolean isAllFieldNull(Object obj, boolean ignoreStaticFields) {
+		// 获取对象的所有字段（包括父类的字段）
+		Field[] fields = obj.getClass().getDeclaredFields();
+		// 遍历字段
+		for (Field field : fields) {
+			try {
+				// 设置字段可访问
+				ReflectUtil.setAccessible(field);
+				// 检查字段是否为静态字段
+				if (ignoreStaticFields && ModifierUtil.isStatic(field)) {
+					continue; // 如果是静态字段，ignoreStaticFields是true就跳过检查
+				}
+				// 检查字段值是否为null
+				if (field.get(obj) != null) {
+					return false; // 如果有一个字段不为null，则返回false
+				}
+			} catch (RuntimeException | IllegalAccessException e) {
+				// e.printStackTrace();
+				return false; // 抛出异常，则返回false
+			}
+		}
+		return true; // 所有字段都为null，返回true
+	}
+
+	/**
+	 * 检查对象所有字段属性是否都不为null<br>
+	 * 异常则返回true<br>
+	 * 判断标准为：
+	 *
+	 * <pre>
+	 * 1. == null
+	 * </pre>
+	 *
+	 * @param obj 对象
+	 * @return 该对象所有字段是否不为null
+	 */
+	public static boolean isAllFieldNotNull(Object obj, boolean ignoreStaticFields) {
+		return !isAllFieldNull(obj, ignoreStaticFields);
 	}
 }
