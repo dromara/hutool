@@ -358,7 +358,7 @@ public class PropDesc {
 	}
 
 	/**
-	 * 字段和Getter方法是否为Transient关键字修饰的
+	 * 字段是否为Transient关键字修饰,Getter方法是否被@Transient注解修饰 
 	 *
 	 * @return 是否为Transient关键字修饰的
 	 * @since 5.3.11
@@ -368,19 +368,16 @@ public class PropDesc {
 
 		// 检查Getter方法
 		if (false == isTransient && null != this.getter) {
-			isTransient = ModifierUtil.hasModifier(this.getter, ModifierUtil.ModifierType.TRANSIENT);
-
 			// 检查注解
-			if (false == isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
-			}
+			isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
 		}
 
 		return isTransient;
 	}
 
 	/**
-	 * 字段和Getter方法是否为Transient关键字修饰的
+	 * 字段是否为Transient关键字修饰,Setter方法是否被@Transient注解修饰 
+
 	 *
 	 * @return 是否为Transient关键字修饰的
 	 * @since 5.3.11
@@ -390,12 +387,8 @@ public class PropDesc {
 
 		// 检查Getter方法
 		if (false == isTransient && null != this.setter) {
-			isTransient = ModifierUtil.hasModifier(this.setter, ModifierUtil.ModifierType.TRANSIENT);
-
 			// 检查注解
-			if (false == isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.setter, Transient.class);
-			}
+			isTransient = AnnotationUtil.hasAnnotation(this.setter, Transient.class);
 		}
 
 		return isTransient;
