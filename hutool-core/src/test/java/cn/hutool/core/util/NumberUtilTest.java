@@ -273,8 +273,8 @@ public class NumberUtilTest {
 
 	@Test
 	public void parseIntTest() {
-		int number = NumberUtil.parseInt("0xFF");
-		Assert.assertEquals(255, number);
+		int number = NumberUtil.parseInt("0xFE");
+		Assert.assertEquals(254, number);
 
 		// 0开头
 		number = NumberUtil.parseInt("010");
