@@ -393,6 +393,9 @@ public class NumberUtilTest {
 		int number = NumberUtil.parseInt("0xFF");
 		Assertions.assertEquals(255, number);
 
+		number = NumberUtil.parseInt("0xFE");
+		Assertions.assertEquals(254, number);
+
 		// 0开头
 		number = NumberUtil.parseInt("010");
 		Assertions.assertEquals(10, number);
