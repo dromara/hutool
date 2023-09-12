@@ -18,6 +18,18 @@ public class IssueI80FP4Test {
 		Assert.assertNull(dest.getEnderDest());
 	}
 
+	@Test
+	public void copyPropertiesTest2() {
+		final Dest sourceDest = new Dest();
+		sourceDest.setCPF(33699);
+		sourceDest.setEnderDest("abc");
+
+		final Dest dest = new Dest();
+		final CopyOptions copyOptions = CopyOptions.create().setIgnoreNullValue(true).setIgnoreCase(true).setIgnoreProperties("enderdest");
+		BeanUtil.copyProperties(sourceDest, dest, copyOptions);
+		Assert.assertNull(dest.getEnderDest());
+	}
+
 	@Data
 	static class Dest{
 		private int cPF;

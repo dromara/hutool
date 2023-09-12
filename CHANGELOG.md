@@ -34,6 +34,7 @@
 * 【core  】      修复Tailer stop NPE问题（pr#1067@Gitee）
 * 【json  】      修复toJSONString导致CPU使用率高的问题（issue#3297@Github）
 * 【core  】      修复NumberUtil.parseInt 16进制解析错误的问题（pr#1071@Gitee）
+* 【core  】      修复CopyOptions.setIgnoreCase和setIgnoreProperties冲突问题（issue#I80FP4@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)
