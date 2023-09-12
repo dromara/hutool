@@ -43,6 +43,9 @@ public class Base64 {
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(final byte[] arr, final boolean lineSep) {
+		if (arr == null) {
+			return null;
+		}
 		return lineSep ?
 			java.util.Base64.getMimeEncoder().encode(arr) :
 			java.util.Base64.getEncoder().encode(arr);
@@ -99,6 +102,9 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(final byte[] source) {
+		if (source == null) {
+			return null;
+		}
 		return java.util.Base64.getEncoder().encodeToString(source);
 	}
 
@@ -110,6 +116,9 @@ public class Base64 {
 	 * @since 5.5.2
 	 */
 	public static String encodeWithoutPadding(final byte[] source) {
+		if (source == null) {
+			return null;
+		}
 		return java.util.Base64.getEncoder().withoutPadding().encodeToString(source);
 	}
 
@@ -121,6 +130,9 @@ public class Base64 {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(final byte[] source) {
+		if (source == null) {
+			return null;
+		}
 		return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(source);
 	}
 
@@ -132,6 +144,9 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encode(final InputStream in) {
+		if (in == null) {
+			return null;
+		}
 		return encode(IoUtil.readBytes(in));
 	}
 
@@ -143,6 +158,9 @@ public class Base64 {
 	 * @since 4.0.9
 	 */
 	public static String encodeUrlSafe(final InputStream in) {
+		if (in == null) {
+			return null;
+		}
 		return encodeUrlSafe(IoUtil.readBytes(in));
 	}
 

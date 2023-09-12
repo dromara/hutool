@@ -1617,6 +1617,9 @@ public class FileUtil extends PathUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(final File file) throws IORuntimeException {
+		if (null == file) {
+			return null;
+		}
 		return readBytes(file.toPath());
 	}
 
@@ -1689,9 +1692,7 @@ public class FileUtil extends PathUtil {
 	 * @since 5.7.10
 	 */
 	public static String readString(final URL url, final Charset charset) throws IORuntimeException {
-		if (url == null) {
-			throw new NullPointerException("Empty url provided!");
-		}
+		Assert.notNull(url, "Empty url provided!");
 
 		InputStream in = null;
 		try {

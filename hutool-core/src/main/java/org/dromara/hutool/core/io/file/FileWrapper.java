@@ -13,7 +13,9 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.File;
 import java.io.Serializable;
@@ -24,32 +26,37 @@ import java.nio.charset.StandardCharsets;
  * 文件包装器，扩展文件对象
  *
  * @author Looly
- *
  */
-public class FileWrapper implements Wrapper<File>, Serializable{
+public class FileWrapper implements Wrapper<File>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected File file;
 	protected Charset charset;
 
-	/** 默认编码：UTF-8 */
+	/**
+	 * 默认编码：UTF-8
+	 */
 	public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
 	// ------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
-	 * @param file 文件
-	 * @param charset 编码，使用 {@link CharsetUtil}
+	 *
+	 * @param file    文件（非{@code null}）
+	 * @param charset 编码，使用 {@link CharsetUtil}，传入{@code null}则使用默认编码{@link #DEFAULT_CHARSET}
 	 */
 	public FileWrapper(final File file, final Charset charset) {
-		this.file = file;
-		this.charset = charset;
+		this.file = Assert.notNull(file);
+		this.charset = ObjUtil.defaultIfNull(charset, DEFAULT_CHARSET);
 	}
 	// ------------------------------------------------------- Constructor end
 
 	// ------------------------------------------------------- Setters and Getters start start
+
 	/**
 	 * 获得文件
+	 *
 	 * @return 文件
 	 */
 	@Override
@@ -59,6 +66,7 @@ public class FileWrapper implements Wrapper<File>, Serializable{
 
 	/**
 	 * 设置文件
+	 *
 	 * @param file 文件
 	 * @return 自身
 	 */
@@ -69,6 +77,7 @@ public class FileWrapper implements Wrapper<File>, Serializable{
 
 	/**
 	 * 获得字符集编码
+	 *
 	 * @return 编码
 	 */
 	public Charset getCharset() {
@@ -77,6 +86,7 @@ public class FileWrapper implements Wrapper<File>, Serializable{
 
 	/**
 	 * 设置字符集编码
+	 *
 	 * @param charset 编码
 	 * @return 自身
 	 */
@@ -88,6 +98,7 @@ public class FileWrapper implements Wrapper<File>, Serializable{
 
 	/**
 	 * 可读的文件大小
+	 *
 	 * @return 大小
 	 */
 	public String readableFileSize() {
