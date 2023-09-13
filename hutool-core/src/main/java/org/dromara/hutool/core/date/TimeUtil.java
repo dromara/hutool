@@ -167,10 +167,27 @@ public class TimeUtil extends TemporalAccessorUtil {
 
 		if (temporalAccessor instanceof LocalDate) {
 			return ((LocalDate) temporalAccessor).atStartOfDay();
-		} else if (temporalAccessor instanceof Instant) {
+		} else if(temporalAccessor instanceof Instant){
 			return LocalDateTime.ofInstant((Instant) temporalAccessor, ZoneId.systemDefault());
-		} else if (temporalAccessor instanceof ZonedDateTime) {
-			return ((ZonedDateTime) temporalAccessor).toLocalDateTime();
+		}
+
+		// issue#3301
+		try{
+			return LocalDateTime.from(temporalAccessor);
+		} catch (final Exception ignore){
+			//ignore
+		}
+
+		try{
+			return ZonedDateTime.from(temporalAccessor).toLocalDateTime();
+		} catch (final Exception ignore){
+			//ignore
+		}
+
+		try{
+			return LocalDateTime.ofInstant(Instant.from(temporalAccessor), ZoneId.systemDefault());
+		} catch (final Exception ignore){
+			//ignore
 		}
 
 		return LocalDateTime.of(
