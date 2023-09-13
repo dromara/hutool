@@ -1,6 +1,5 @@
 package cn.hutool.core.date;
 
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -131,6 +130,13 @@ public class LocalDateTimeUtilTest {
 
 		offset = LocalDateTimeUtil.offset(localDateTime, -1, ChronoUnit.DAYS);
 		Assert.assertEquals("2020-01-22T12:23:56", offset.toString());
+	}
+
+	@Test
+	public void ofTest2(){
+		final Instant instant = Objects.requireNonNull(DateUtil.parse("2022-02-22")).toInstant();
+		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
+		Assert.assertEquals("2022-02-22T00:00", of.toString());
 	}
 
 	@Test
@@ -279,13 +285,6 @@ public class LocalDateTimeUtilTest {
 
 		final int weekOfYear2 = LocalDateTimeUtil.weekOfYear(date1.atStartOfDay());
 		Assert.assertEquals(5, weekOfYear2);
-	}
-
-	@Test
-	public void ofTest2(){
-		final Instant instant = Objects.requireNonNull(DateUtil.parse("2022-02-22")).toInstant();
-		final LocalDateTime of = LocalDateTimeUtil.of((TemporalAccessor) instant);
-		Console.log(of);
 	}
 
 	@Test

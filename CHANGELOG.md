@@ -35,6 +35,7 @@
 * 【json  】      修复toJSONString导致CPU使用率高的问题（issue#3297@Github）
 * 【core  】      修复NumberUtil.parseInt 16进制解析错误的问题（pr#1071@Gitee）
 * 【core  】      修复CopyOptions.setIgnoreCase和setIgnoreProperties冲突问题（issue#I80FP4@Gitee）
+* 【core  】      修复LocalDateTimeUtil.of 某些特殊TemporalAccessor无法返回正确结果的问题（issue#3301@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.21(2023-07-29)
