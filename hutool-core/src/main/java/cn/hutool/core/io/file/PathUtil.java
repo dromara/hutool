@@ -4,7 +4,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.file.visitor.DelVisitor;
-import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -20,7 +19,6 @@ import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
