@@ -1,6 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
