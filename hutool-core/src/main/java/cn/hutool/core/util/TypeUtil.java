@@ -1,6 +1,5 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.reflect.ActualTypeMapperPool;
 

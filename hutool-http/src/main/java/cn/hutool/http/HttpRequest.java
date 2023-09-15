@@ -8,7 +8,6 @@ import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.map.TableMap;
 import cn.hutool.core.net.SSLUtil;

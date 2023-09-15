@@ -12,7 +12,6 @@
 
 package cn.hutool.json;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.XmlUtil;
 import lombok.Data;
 import org.junit.Assert;
