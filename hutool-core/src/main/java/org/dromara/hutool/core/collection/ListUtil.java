@@ -593,7 +593,7 @@ public class ListUtil {
 	 * @return 分段列表
 	 * @since 5.4.5
 	 */
-	public static <T> List<List<T>> partition(final List<T> list, final int size) {
+	public static <T> List<List<T>> 	partition(final List<T> list, final int size) {
 		if (CollUtil.isEmpty(list)) {
 			return empty();
 		}
