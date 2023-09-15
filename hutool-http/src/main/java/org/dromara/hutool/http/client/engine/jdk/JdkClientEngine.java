@@ -42,7 +42,6 @@ import java.util.List;
 public class JdkClientEngine implements ClientEngine {
 
 	private ClientConfig config;
-	private JdkHttpConnection conn;
 	/**
 	 * 重定向次数计数器，内部使用
 	 */
@@ -56,10 +55,6 @@ public class JdkClientEngine implements ClientEngine {
 	@Override
 	public JdkClientEngine init(final ClientConfig config) {
 		this.config = config;
-		if(null != this.conn){
-			this.conn.disconnectQuietly();
-			this.conn = null;
-		}
 		return this;
 	}
 
@@ -76,16 +71,16 @@ public class JdkClientEngine implements ClientEngine {
 	 * @return {@link Response}
 	 */
 	public JdkHttpResponse send(final Request message, final boolean isAsync) {
-		initConn(message);
+		final JdkHttpConnection conn = buildConn(message);
 		try {
-			doSend(message);
+			doSend(conn, message);
 		} catch (final IOException e) {
 			// 出错后关闭连接
-			IoUtil.closeQuietly(this);
+			IoUtil.closeQuietly(conn);
 			throw new IORuntimeException(e);
 		}
 
-		return sendRedirectIfPossible(message, isAsync);
+		return sendRedirectIfPossible(conn, message, isAsync);
 	}
 
 	@Override
@@ -95,9 +90,7 @@ public class JdkClientEngine implements ClientEngine {
 
 	@Override
 	public void close() {
-		if (null != conn) {
-			conn.disconnectQuietly();
-		}
+		// do nothing
 	}
 
 	/**
@@ -106,28 +99,16 @@ public class JdkClientEngine implements ClientEngine {
 	 * @param message 请求消息
 	 * @throws IOException IO异常
 	 */
-	private void doSend(final Request message) throws IOException {
+	private void doSend(final JdkHttpConnection conn, final Request message) throws IOException {
 		final HttpBody body = message.body();
 		if (null != body) {
 			// 带有消息体，一律按照Rest方式发送
-			body.writeClose(this.conn.getOutputStream());
+			body.writeClose(conn.getOutputStream());
 			return;
 		}
 
 		// 非Rest简单GET请求
-		this.conn.connect();
-	}
-
-	/**
-	 * 初始化连接对象
-	 *
-	 * @param message 请求消息
-	 */
-	private void initConn(final Request message) {
-		// 执行下次请求时自动关闭上次请求（常用于转发）
-		IoUtil.closeQuietly(this);
-
-		this.conn = buildConn(message);
+		conn.connect();
 	}
 
 	/**
@@ -163,11 +144,11 @@ public class JdkClientEngine implements ClientEngine {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
+	 * @param conn {@link JdkHttpConnection}}
 	 * @param isAsync 最终请求是否异步
 	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
-	private JdkHttpResponse sendRedirectIfPossible(final Request message, final boolean isAsync) {
-		final JdkHttpConnection conn = this.conn;
+	private JdkHttpResponse sendRedirectIfPossible(JdkHttpConnection conn, final Request message, final boolean isAsync) {
 		// 手动实现重定向
 		if (message.maxRedirectCount() > 0) {
 			final int code;
@@ -175,7 +156,7 @@ public class JdkClientEngine implements ClientEngine {
 				code = conn.getCode();
 			} catch (final IOException e) {
 				// 错误时静默关闭连接
-				conn.disconnectQuietly();
+				conn.closeQuietly();
 				throw new HttpException(e);
 			}
 
@@ -191,7 +172,7 @@ public class JdkClientEngine implements ClientEngine {
 		}
 
 		// 最终页面
-		return new JdkHttpResponse(this.conn, true, message.charset(), isAsync,
+		return new JdkHttpResponse(conn, true, message.charset(), isAsync,
 				isIgnoreResponseBody(message.method()));
 	}
 

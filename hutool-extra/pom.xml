@@ -215,6 +215,12 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-core</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+
 		<!-- 二维码 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>

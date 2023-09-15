@@ -217,7 +217,7 @@ public class JdkHttpResponse implements Response, Closeable {
 		// 关闭流
 		IoUtil.closeQuietly(this.body);
 		// 关闭连接
-		this.httpConnection.disconnectQuietly();
+		this.httpConnection.closeQuietly();
 	}
 
 	@Override

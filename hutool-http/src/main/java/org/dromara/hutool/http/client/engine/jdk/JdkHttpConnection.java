@@ -22,6 +22,7 @@ import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,7 +38,7 @@ import java.util.Map;
  *
  * @author Looly
  */
-public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection> {
+public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Closeable {
 
 	private final URL url;
 	private final Proxy proxy;
@@ -316,34 +317,6 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection> {
 	}
 
 	/**
-	 * 静默断开连接。不抛出异常
-	 *
-	 * @return this
-	 * @since 4.6.0
-	 */
-	public JdkHttpConnection disconnectQuietly() {
-		try {
-			disconnect();
-		} catch (final Throwable e) {
-			// ignore
-		}
-
-		return this;
-	}
-
-	/**
-	 * 断开连接
-	 *
-	 * @return this
-	 */
-	public JdkHttpConnection disconnect() {
-		if (null != this.conn) {
-			this.conn.disconnect();
-		}
-		return this;
-	}
-
-	/**
 	 * 获得输入流对象<br>
 	 * 输入流对象用于读取数据
 	 *
@@ -417,6 +390,33 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection> {
 		sb.append("Request Method: ").append(this.getMethod()).append(StrUtil.CRLF);
 
 		return sb.toString();
+	}
+
+	/**
+	 * 静默断开连接。不抛出异常
+	 *
+	 * @return this
+	 * @since 4.6.0
+	 */
+	public JdkHttpConnection closeQuietly() {
+		try {
+			close();
+		} catch (final Throwable e) {
+			// ignore
+		}
+
+		return this;
+	}
+
+	/**
+	 * 断开连接
+	 *
+	 */
+	@Override
+	public void close() {
+		if (null != this.conn) {
+			this.conn.disconnect();
+		}
 	}
 
 }
