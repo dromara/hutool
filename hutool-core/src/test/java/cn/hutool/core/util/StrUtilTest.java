@@ -676,4 +676,24 @@ public class StrUtilTest {
 		final String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
 		Assert.assertEquals("This is En", ret);
 	}
+
+
+	@Test
+	public void lambdaOfTest() {
+		final String abc = "van";
+		final String[] a = new String[1];
+		// 更多的测试可查看 StringStreamUtilTest
+		StrFunctionUtil strFunctionUtil = StrUtil.lambdaOf(abc).then(str -> {
+			a[0] = "3";
+			Assert.assertEquals("van", str);
+		});
+		Assert.assertEquals("3", a[0]);
+
+		strFunctionUtil.then(() -> a[0] = "notBlank")
+				.ifBlankThen(() -> a[0] = "blank");
+		Assert.assertEquals("notBlank", a[0]);
+
+		final String str = "\taaa";
+		Assert.assertEquals("aaa", StrUtil.lambdaOf(str).apply(StrUtil::trim).blankReturn("abc"));
+	}
 }

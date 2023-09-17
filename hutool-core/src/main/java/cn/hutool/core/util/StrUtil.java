@@ -527,4 +527,40 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		}
 		return result;
 	}
+
+
+	/**
+	 * 将字符串转为StrFunctionUtil-函数式，进而可以使用链式写法替代原来的if等代码，使代码书写更加优雅
+	 *
+	 * <p>例1</p>
+	 * <li>曾经的判断字符串业务方法</li>
+	 *     void userSetName(User user, String name) {
+	 *         if (Boolean.FALSE.equals(StrUtil.isBlankIfStr(name))) {
+	 *         	   name = name + "@123";
+	 *             user.setName(name);
+	 *         }
+	 *     }
+	 * <li>使用链式处理之后的业务方法</li>
+	 *	   void userSetName(User user, String name) {
+	 *	   	   // 写起来非常简单且优雅
+	 *         StrUtil.lambdaOf(name).apply(str -> str + "@123").then(user::setName);
+	 *     }
+	 *
+	 * <br/>
+	 *
+	 * <p>例2</p>
+	 * <ul>
+	 *     <li>{@code StrUtil.lambdaOf("abc").then(() -> System.out.println(str))}</li>
+	 *     <li>{@code String myStr = StrUtil.lambdaOf("").blankReturn("abc")}</li>
+	 *     <li>{@code String trimStr = StrUtil.lambdaOf(str).apply(StrUtil::trim).blankReturn("abc")}</li>
+	 *     <li>{@code StrUtil.lambdaOf("").blankThrow(new MyException("发现空字符串"))}</li>
+	 *     <li>更多使用方法可查看{@link StrFunctionUtil}</li>
+	 * </ul>
+	 *
+	 * @param charSequence charSequence
+	 * @return StrFunctionUtil 字符串Lambda工具类
+	 */
+	public static StrFunctionUtil lambdaOf(CharSequence charSequence) {
+		return StrFunctionUtil.of(charSequence);
+	}
 }
