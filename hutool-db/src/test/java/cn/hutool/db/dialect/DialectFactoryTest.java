@@ -4,9 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import java.util.HashMap;
-
 import java.util.Map;
 
 import static cn.hutool.db.dialect.DriverNamePool.*;

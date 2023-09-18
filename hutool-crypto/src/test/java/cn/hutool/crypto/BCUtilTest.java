@@ -1,6 +1,5 @@
 package cn.hutool.crypto;
 
-import cn.hutool.crypto.BCUtil;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.junit.Assert;
