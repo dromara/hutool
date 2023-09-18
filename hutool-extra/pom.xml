@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0-M6</version>
+		<version>6.0.0-M7</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -32,19 +32,19 @@
 		<Automatic-Module-Name>org.dromara.hutool.extra</Automatic-Module-Name>
 		<!-- versions -->
 		<velocity.version>2.3</velocity.version>
-		<beetl.version>3.15.7.RELEASE</beetl.version>
+		<beetl.version>3.15.8.RELEASE</beetl.version>
 		<rythm.version>1.4.2</rythm.version>
 		<freemarker.version>2.3.32</freemarker.version>
 		<!-- 固定4.x -->
 		<enjoy.version>4.9.21</enjoy.version>
-		<thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
+		<thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
-		<sshj.version>0.35.0</sshj.version>
-		<zxing.version>3.5.1</zxing.version>
+		<sshj.version>0.36.0</sshj.version>
+		<zxing.version>3.5.2</zxing.version>
 		<net.version>3.9.0</net.version>
 		<emoji-java.version>5.1.1</emoji-java.version>
-		<spring-boot.version>2.7.14</spring-boot.version>
+		<spring-boot.version>2.7.15</spring-boot.version>
 	</properties>
 
 	<dependencies>
@@ -426,7 +426,7 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.14.5</version>
+			<version>1.14.8</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
@@ -497,7 +497,7 @@
 		<dependency>
 			<groupId>com.github.oshi</groupId>
 			<artifactId>oshi-core</artifactId>
-			<version>6.4.4</version>
+			<version>6.4.5</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>

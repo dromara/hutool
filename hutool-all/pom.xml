@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0-M6</version>
+		<version>6.0.0-M7</version>
 	</parent>
 
 	<artifactId>hutool-all</artifactId>

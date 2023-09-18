@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.dromara.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>6.0.0-M6</version>
+		<version>6.0.0-M7</version>
 	</parent>
 
 	<artifactId>hutool-http</artifactId>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>4.10.0</version>
+			<version>4.11.0</version>
 			<scope>provided</scope>
 		</dependency>
 
