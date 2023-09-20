@@ -21,7 +21,6 @@ import org.dromara.hutool.core.text.split.SplitUtil;
 import org.dromara.hutool.cron.CronException;
 import org.dromara.hutool.cron.pattern.Part;
 import org.dromara.hutool.cron.pattern.matcher.*;
-import org.dromara.hutool.cron.pattern.matcher.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,13 +212,12 @@ public class PartParser {
 				//在range模式下，如果步进不存在，表示步进为1
 				step = 1;
 			}
-			if (v1 < v2) {// 正常范围，例如：2-5
+			if (v1 <= v2) {// 正常范围，例如：2-5
+				// 对于类似3-3这种形式，忽略step，即3-3/2与单值3一致
 				NumberUtil.appendRange(v1, v2, step, results);
-			} else if (v1 > v2) {// 逆向范围，反选模式，例如：5-2
+			} else {// 逆向范围，反选模式，例如：5-2
 				NumberUtil.appendRange(v1, part.getMax(), step, results);
 				NumberUtil.appendRange(part.getMin(), v2, step, results);
-			} else {// v1 == v2，此时与单值模式一致
-				NumberUtil.appendRange(v1, part.getMax(), step, results);
 			}
 		} else {
 			throw new CronException("Invalid syntax of field: [{}]", value);
