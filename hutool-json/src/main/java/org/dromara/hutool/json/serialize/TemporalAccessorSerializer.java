@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.json.serialize;
 
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.json.JSON;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
@@ -19,6 +21,7 @@ import org.dromara.hutool.json.JSONObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.temporal.TemporalAccessor;
 
 /**
@@ -83,13 +86,46 @@ public class TemporalAccessorSerializer implements JSONSerializer<JSONObject, Te
 	@Override
 	public TemporalAccessor deserialize(final JSON json) {
 		final JSONObject jsonObject = (JSONObject) json;
-		if (LocalDate.class.equals(this.temporalAccessorClass)) {
-			return LocalDate.of(jsonObject.getInt(YEAR_KEY), jsonObject.getInt(MONTH_KEY), jsonObject.getInt(DAY_KEY));
-		} else if (LocalDateTime.class.equals(this.temporalAccessorClass)) {
-			return LocalDateTime.of(jsonObject.getInt(YEAR_KEY), jsonObject.getInt(MONTH_KEY), jsonObject.getInt(DAY_KEY),
-					jsonObject.getInt(HOUR_KEY), jsonObject.getInt(MINUTE_KEY), jsonObject.getInt(SECOND_KEY), jsonObject.getInt(NANO_KEY));
+		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
+			// 年
+			final Integer year = jsonObject.getInt(YEAR_KEY);
+			Assert.notNull(year, "Field 'year' must be not null");
+
+			// 月
+			final String monthStr = jsonObject.getStr(MONTH_KEY);
+			Assert.notNull(monthStr, "Field 'month' must be not null");
+			Integer month = NumberUtil.parseInt(monthStr, null);
+			if (null == month) {
+				final Month monthEnum = Month.valueOf(monthStr);
+				month = monthEnum.getValue();
+			}
+
+			// 日
+			Integer day = jsonObject.getInt(DAY_KEY);
+			if (null == day) {
+				day = jsonObject.getInt("dayOfMonth");
+				Assert.notNull(day, "Field 'day' or 'dayOfMonth' must be not null");
+			}
+
+			final LocalDate localDate = LocalDate.of(year, month, day);
+			if (LocalDate.class.equals(this.temporalAccessorClass)) {
+				return localDate;
+			}
+
+			// 时分秒毫秒
+			final LocalTime localTime = LocalTime.of(
+				jsonObject.getInt(HOUR_KEY, 0),
+				jsonObject.getInt(MINUTE_KEY, 0),
+				jsonObject.getInt(SECOND_KEY, 0),
+				jsonObject.getInt(NANO_KEY, 0));
+
+			return LocalDateTime.of(localDate, localTime);
 		} else if (LocalTime.class.equals(this.temporalAccessorClass)) {
-			return LocalTime.of(jsonObject.getInt(HOUR_KEY), jsonObject.getInt(MINUTE_KEY), jsonObject.getInt(SECOND_KEY), jsonObject.getInt(NANO_KEY));
+			return LocalTime.of(
+				jsonObject.getInt(HOUR_KEY),
+				jsonObject.getInt(MINUTE_KEY),
+				jsonObject.getInt(SECOND_KEY),
+				jsonObject.getInt(NANO_KEY));
 		}
 
 		throw new JSONException("Unsupported type from JSON: {}", this.temporalAccessorClass);
