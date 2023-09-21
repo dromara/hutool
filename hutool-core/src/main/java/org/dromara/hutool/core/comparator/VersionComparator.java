@@ -13,15 +13,14 @@
 package org.dromara.hutool.core.comparator;
 
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 版本比较器<br>
@@ -33,19 +32,34 @@ import java.util.List;
  * @author Looly
  * @since 4.0.2
  */
-public class VersionComparator implements Comparator<String>, Serializable {
-	private static final long serialVersionUID = 8083701245147495562L;
+public class VersionComparator extends NullComparator<String> implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	/** 单例 */
+	private static Pattern PATTERN_PRE_NUMBERS= Pattern.compile("^\\d+");
+
+	/**
+	 * 单例
+	 */
 	public static final VersionComparator INSTANCE = new VersionComparator();
 
 	/**
 	 * 默认构造
 	 */
 	public VersionComparator() {
+		this(false);
+	}
+
+	/**
+	 * 默认构造
+	 *
+	 * @param nullGreater 是否{@code null}最大，排在最后
+	 */
+	public VersionComparator(final boolean nullGreater) {
+		super(nullGreater, (VersionComparator::compareVersion));
 	}
 
 	// -----------------------------------------------------------------------------------------------------
+
 	/**
 	 * 比较两个版本<br>
 	 * null版本排在最小：即：
@@ -63,44 +77,35 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 * @param version1 版本1
 	 * @param version2 版本2
 	 */
-	@Override
-	public int compare(final String version1, final String version2) {
-		if(ObjUtil.equals(version1, version2)) {
-			return 0;
-		}
-		if (version1 == null && version2 == null) {
-			return 0;
-		} else if (version1 == null) {// null视为最小版本，排在前
-			return -1;
-		} else if (version2 == null) {
-			return 1;
-		}
-
+	private static int compareVersion(final String version1, final String version2) {
 		final List<String> v1s = SplitUtil.splitTrim(version1, StrUtil.DOT);
 		final List<String> v2s = SplitUtil.splitTrim(version2, StrUtil.DOT);
 
 		int diff = 0;
-		final int minLength = Math.min(v1s.size(), v2s.size());// 取最小长度值
+		final int minSize = Math.min(v1s.size(), v2s.size());// 取最小长度值
 		String v1;
 		String v2;
-		for (int i = 0; i < minLength; i++) {
+		for (int i = 0; i < minSize; i++) {
 			v1 = v1s.get(i);
 			v2 = v2s.get(i);
 			// 先比较长度
 			diff = v1.length() - v2.length();
 			if (0 == diff) {
+				// 长度相同，直接比较字符或数字
 				diff = v1.compareTo(v2);
-			}else {
-				// https://gitee.com/dromara/hutool/pulls/1043
-				//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，
-				final int v1Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v1, 0), 0);
-				final int v2Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v2, 0), 0);
-				final int diff1 = v1Num - v2Num;
-				if (diff1 != 0) {
-					diff = diff1;
+			} else {
+				// 不同长度，且含有字母
+				if(!NumberUtil.isNumber(v1) || !NumberUtil.isNumber(v2)){
+					//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，类似于 103 > 102a
+					final int v1Num = Convert.toInt(ReUtil.get(PATTERN_PRE_NUMBERS, v1, 0), 0);
+					final int v2Num = Convert.toInt(ReUtil.get(PATTERN_PRE_NUMBERS, v2, 0), 0);
+					final int diff1 = v1Num - v2Num;
+					if (diff1 != 0) {
+						diff = diff1;
+					}
 				}
 			}
-			if(diff != 0) {
+			if (diff != 0) {
 				//已有结果，结束
 				break;
 			}
