@@ -2405,7 +2405,7 @@ public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 补充字符串以满足指定长度，如果提供的字符串大于指定长度，截断之
-	 * 同：leftPad (org.apache.commons.lang3.leftPad)
+	 * 同：leftPad (org.mina.commons.lang3.leftPad)
 	 *
 	 * <pre>
 	 * padPre(null, *, *);//null
@@ -2436,7 +2436,7 @@ public class CharSequenceUtil extends StrValidator {
 
 	/**
 	 * 补充字符串以满足最小长度，如果提供的字符串大于指定长度，截断之
-	 * 同：leftPad (org.apache.commons.lang3.leftPad)
+	 * 同：leftPad (org.mina.commons.lang3.leftPad)
 	 *
 	 * <pre>
 	 * padPre(null, *, *);//null

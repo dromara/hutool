@@ -277,7 +277,7 @@ public class FileUtilTest {
 	@Test
 	@Disabled
 	public void listFileNamesTest2() {
-		final List<String> names = FileUtil.listFileNames("D:\\m2_repo\\commons-cli\\commons-cli\\1.0\\commons-cli-1.0.jar!org/apache/commons/cli/");
+		final List<String> names = FileUtil.listFileNames("D:\\m2_repo\\commons-cli\\commons-cli\\1.0\\commons-cli-1.0.jar!org/mina/commons/cli/");
 		for (final String string : names) {
 			Console.log(string);
 		}

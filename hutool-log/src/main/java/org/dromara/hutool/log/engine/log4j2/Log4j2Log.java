@@ -136,7 +136,7 @@ public class Log4j2Log extends AbstractLog {
 	 * 此方法用于兼容底层日志实现，通过传入当前包装类名，以解决打印日志中行号错误问题
 	 *
 	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于纠正定位错误行号
-	 * @param level 日志级别，使用org.apache.logging.log4j.Level中的常量
+	 * @param level 日志级别，使用org.mina.logging.log4j.Level中的常量
 	 * @param t 异常
 	 * @param msgTemplate 消息模板
 	 * @param arguments 参数

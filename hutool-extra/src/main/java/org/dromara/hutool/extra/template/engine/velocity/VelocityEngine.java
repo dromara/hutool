@@ -134,7 +134,7 @@ public class VelocityEngine implements TemplateEngine {
 		// loader
 		switch (config.getResourceMode()) {
 			case CLASSPATH:
-				ve.setProperty("resource.loader.file.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+				ve.setProperty("resource.loader.file.class", "org.mina.velocity.runtime.resource.loader.ClasspathResourceLoader");
 				break;
 			case FILE:
 				// path
@@ -145,7 +145,7 @@ public class VelocityEngine implements TemplateEngine {
 				break;
 			case WEB_ROOT:
 				ve.setProperty(Velocity.RESOURCE_LOADERS, "webapp");
-				ve.setProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.servlet.WebappLoader");
+				ve.setProperty("webapp.resource.loader.class", "org.mina.velocity.tools.view.servlet.WebappLoader");
 				ve.setProperty("webapp.resource.loader.path", ObjUtil.defaultIfNull(config.getPath(), StrUtil.SLASH));
 				break;
 			case STRING:

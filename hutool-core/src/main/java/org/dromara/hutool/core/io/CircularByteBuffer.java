@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 循环缓冲区
  *
- * @author apache commons io
+ * @author mina commons io
  */
 public class CircularByteBuffer {
 	private final byte[] buffer;

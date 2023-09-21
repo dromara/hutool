@@ -44,7 +44,7 @@ public class DocumentBuilderUtil {
 	/**
 	 * 创建{@link DocumentBuilderFactory}
 	 * <p>
-	 * 默认使用"com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"<br>
+	 * 默认使用"com.sun.org.mina.xerces.internal.jaxp.DocumentBuilderFactoryImpl"<br>
 	 * </p>
 	 *
 	 * @param namespaceAware 是否打开命名空间支持

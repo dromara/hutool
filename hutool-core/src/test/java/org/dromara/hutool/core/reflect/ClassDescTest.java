@@ -21,7 +21,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * 来自：org.apache.dubbo.common.utils.ClassDescUtilTest
+ * 来自：org.mina.dubbo.common.utils.ClassDescUtilTest
  */
 public class ClassDescTest {
 

@@ -100,7 +100,7 @@ public class ZipUtilTest {
 	@Test
 	@Disabled
 	public void unzipTest() {
-		final File unzip = ZipUtil.unzip("f:/test/apache-maven-3.6.2.zip", "f:\\test");
+		final File unzip = ZipUtil.unzip("f:/test/mina-maven-3.6.2.zip", "f:\\test");
 		Console.log(unzip);
 	}
 

@@ -113,7 +113,7 @@ public class Ftp extends AbstractFtp {
 	 * @param password           密码
 	 * @param charset            编码
 	 * @param serverLanguageCode 服务器语言 例如：zh
-	 * @param systemKey          服务器标识 例如：org.apache.commons.net.ftp.FTPClientConfig.SYST_NT
+	 * @param systemKey          服务器标识 例如：org.mina.commons.net.ftp.FTPClientConfig.SYST_NT
 	 */
 	public Ftp(final String host, final int port, final String user, final String password, final Charset charset, final String serverLanguageCode, final String systemKey) {
 		this(host, port, user, password, charset, serverLanguageCode, systemKey, null);
