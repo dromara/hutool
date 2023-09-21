@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 public class VersionComparator extends NullComparator<String> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static Pattern PATTERN_PRE_NUMBERS= Pattern.compile("^\\d+");
+	private static final Pattern PATTERN_PRE_NUMBERS= Pattern.compile("^\\d+");
 
 	/**
 	 * 单例
