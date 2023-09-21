@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 public class IssueI7ZRJUTest {
 
-	@SuppressWarnings({"resource", "TestFailedLine"})
+	@SuppressWarnings({"resource"})
 	@Test
 	@Disabled
 	void getBadSSlTest() {

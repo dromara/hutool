@@ -13,6 +13,7 @@
 package org.dromara.hutool.http.client.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
+import org.dromara.hutool.core.spi.ServiceLoader;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
@@ -46,6 +47,26 @@ public class ClientEngineFactory {
 	@SuppressWarnings("resource")
 	public static ClientEngine createEngine(final ClientConfig config) {
 		return createEngine().init(config);
+	}
+
+	/**
+	 * 创建自定义引擎
+	 *
+	 * @param engineName 引擎名称，忽略大小写，如`HttpClient4`、`HttpClient5`、`OkHttp`、`JdkClient`
+	 * @return 引擎
+	 * @throws HttpException 无对应名称的引擎
+	 */
+	public static ClientEngine createEngine(String engineName) throws HttpException {
+		if (!StrUtil.endWithIgnoreCase(engineName, "Engine")) {
+			engineName = engineName + "Engine";
+		}
+		final ServiceLoader<ClientEngine> list = SpiUtil.loadList(ClientEngine.class);
+		for (final String serviceName : list.getServiceNames()) {
+			if (StrUtil.endWithIgnoreCase(serviceName, engineName)) {
+				return list.getService(serviceName);
+			}
+		}
+		throw new HttpException("No such engine named: " + engineName);
 	}
 
 	/**

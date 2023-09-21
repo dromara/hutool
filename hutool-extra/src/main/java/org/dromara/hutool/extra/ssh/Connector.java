@@ -15,13 +15,12 @@ package org.dromara.hutool.extra.ssh;
 /**
  * 连接者对象，提供一些连接的基本信息
  *
- * @author Luxiaolei
- *
+ * @author looly
  */
 public class Connector {
 	private String host;
 	private int port;
-	private String user;
+	private String user = "root";
 	private String password;
 	private String group;
 
@@ -34,9 +33,9 @@ public class Connector {
 	/**
 	 * 构造
 	 *
-	 * @param user 用户名
+	 * @param user     用户名
 	 * @param password 密码
-	 * @param group 组
+	 * @param group    组
 	 */
 	public Connector(final String user, final String password, final String group) {
 		this.user = user;
@@ -47,9 +46,9 @@ public class Connector {
 	/**
 	 * 构造
 	 *
-	 * @param host 主机名
-	 * @param port 端口
-	 * @param user 用户名
+	 * @param host     主机名
+	 * @param port     端口
+	 * @param user     用户名
 	 * @param password 密码
 	 */
 	public Connector(final String host, final int port, final String user, final String password) {

@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.pinyin.engine.houbbpinyin;
+package org.dromara.hutool.extra.pinyin.engine.houbb;
 
 import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.github.houbb.pinyin.constant.enums.PinyinStyleEnum;
@@ -35,7 +35,7 @@ import com.github.houbb.pinyin.util.PinyinHelper;
  *
  * @author looly
  */
-public class HoubbPinyinEngine implements PinyinEngine {
+public class HoubbEngine implements PinyinEngine {
 
 	/**
 	 * 汉字拼音输出的格式
@@ -45,7 +45,7 @@ public class HoubbPinyinEngine implements PinyinEngine {
 	/**
 	 * 构造
 	 */
-	public HoubbPinyinEngine() {
+	public HoubbEngine() {
 		this(null);
 	}
 
@@ -54,7 +54,7 @@ public class HoubbPinyinEngine implements PinyinEngine {
 	 *
 	 * @param format 格式
 	 */
-	public HoubbPinyinEngine(final PinyinStyleEnum format) {
+	public HoubbEngine(final PinyinStyleEnum format) {
 		init(format);
 	}
 

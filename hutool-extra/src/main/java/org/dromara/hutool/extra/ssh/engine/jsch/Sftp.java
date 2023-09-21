@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.ssh;
+package org.dromara.hutool.extra.ssh.engine.jsch;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
@@ -26,6 +26,7 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
+import org.dromara.hutool.extra.ssh.SshException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -219,7 +220,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			channel.setFilenameEncoding(charset.toString());
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		this.channel = channel;
 	}
@@ -261,7 +262,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			return getClient().pwd();
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 	}
 
@@ -275,7 +276,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			return getClient().getHome();
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 	}
 
@@ -365,7 +366,7 @@ public class Sftp extends AbstractFtp {
 			});
 		} catch (final SftpException e) {
 			if (!StrUtil.startWithIgnoreCase(e.getMessage(), "No such file")) {
-				throw new JschRuntimeException(e);
+				throw new SshException(e);
 			}
 			// 文件不存在忽略
 		}
@@ -382,7 +383,7 @@ public class Sftp extends AbstractFtp {
 			getClient().mkdir(dir);
 			return true;
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 	}
 
@@ -435,7 +436,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			getClient().rm(filePath);
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return true;
 	}
@@ -459,7 +460,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			list = channel.ls(channel.pwd());
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 
 		String fileName;
@@ -483,7 +484,7 @@ public class Sftp extends AbstractFtp {
 			channel.rmdir(dirPath);
 			return true;
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 	}
 
@@ -583,7 +584,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			getClient().put(srcFilePath, destPath, monitor, mode.ordinal());
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return this;
 	}
@@ -602,7 +603,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			getClient().put(srcStream, destPath, monitor, mode.ordinal());
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return this;
 	}
@@ -630,7 +631,7 @@ public class Sftp extends AbstractFtp {
 	 * @param destDir    本地目录
 	 */
 	@Override
-	public void recursiveDownloadFolder(final String sourcePath, final File destDir) throws JschRuntimeException {
+	public void recursiveDownloadFolder(final String sourcePath, final File destDir) throws SshException {
 		String fileName;
 		String srcFile;
 		File destFile;
@@ -665,7 +666,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			getClient().get(src, dest);
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return this;
 	}
@@ -682,7 +683,7 @@ public class Sftp extends AbstractFtp {
 		try {
 			getClient().get(src, out);
 		} catch (final SftpException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return this;
 	}

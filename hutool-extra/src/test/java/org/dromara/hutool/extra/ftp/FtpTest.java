@@ -16,7 +16,7 @@ import org.apache.commons.net.ftp.FTPSClient;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.extra.ssh.Sftp;
+import org.dromara.hutool.extra.ssh.engine.jsch.Sftp;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

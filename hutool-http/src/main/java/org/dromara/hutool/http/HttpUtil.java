@@ -17,6 +17,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.client.ClientConfig;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.engine.ClientEngineFactory;
 import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.server.SimpleServer;
@@ -85,8 +86,8 @@ public class HttpUtil {
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final int timeout) {
 		return ClientEngineFactory.getEngine()
-				.init(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
-				.send(Request.of(urlString)).bodyStr();
+			.init(ClientConfig.of().setConnectionTimeout(timeout).setReadTimeout(timeout))
+			.send(Request.of(urlString)).bodyStr();
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class HttpUtil {
 	@SuppressWarnings("resource")
 	public static String get(final String urlString, final Map<String, Object> paramMap) {
 		return send(Request.of(urlString).form(paramMap))
-				.bodyStr();
+			.bodyStr();
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class HttpUtil {
 	@SuppressWarnings("resource")
 	public static String post(final String urlString, final Map<String, Object> paramMap) {
 		return send(Request.of(urlString).method(Method.POST).form(paramMap))
-				.bodyStr();
+			.bodyStr();
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class HttpUtil {
 	@SuppressWarnings("resource")
 	public static String post(final String urlString, final String body) {
 		return send(Request.of(urlString).method(Method.POST).body(body))
-				.bodyStr();
+			.bodyStr();
 	}
 
 	/**
@@ -140,18 +141,18 @@ public class HttpUtil {
 	 * @param request HTTP请求
 	 * @return HTTP响应
 	 */
-	public static Response send(final Request request){
+	public static Response send(final Request request) {
 		return ClientEngineFactory.getEngine().send(request);
 	}
 
 	/**
 	 * 将表单数据加到URL中（用于GET表单提交）
 	 * 表单的键值对会被url编码，但是url中原参数不会被编码
-	 *  且对form参数进行  FormUrlEncoded ，x-www-form-urlencoded模式，此模式下空格会编码为'+'
+	 * 且对form参数进行  FormUrlEncoded ，x-www-form-urlencoded模式，此模式下空格会编码为'+'
 	 *
-	 * @param url            URL
-	 * @param form           表单数据
-	 * @param charset        编码   null表示不encode键值对
+	 * @param url     URL
+	 * @param form    表单数据
+	 * @param charset 编码   null表示不encode键值对
 	 * @return 合成后的URL
 	 */
 	public static String urlWithFormUrlEncoded(final String url, final Map<String, Object> form, final Charset charset) {
@@ -211,6 +212,16 @@ public class HttpUtil {
 		}
 		urlBuilder.append(isEncode ? UrlQueryUtil.encodeQuery(queryString, charset) : queryString);
 		return urlBuilder.toString();
+	}
+
+	/**
+	 * 创建客户端引擎
+	 *
+	 * @param engineName 引擎名称
+	 * @return {@link ClientEngine}
+	 */
+	public static ClientEngine createClient(final String engineName) {
+		return ClientEngineFactory.createEngine(engineName);
 	}
 
 	/**

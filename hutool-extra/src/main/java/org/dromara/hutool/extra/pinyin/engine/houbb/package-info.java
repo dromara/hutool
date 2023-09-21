@@ -29,4 +29,4 @@
  *
  * @author looly
  */
-package org.dromara.hutool.extra.pinyin.engine.houbbpinyin;
+package org.dromara.hutool.extra.pinyin.engine.houbb;

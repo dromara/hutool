@@ -14,4 +14,4 @@ org.dromara.hutool.extra.pinyin.engine.tinypinyin.TinyPinyinEngine
 org.dromara.hutool.extra.pinyin.engine.jpinyin.JPinyinEngine
 org.dromara.hutool.extra.pinyin.engine.pinyin4j.Pinyin4jEngine
 org.dromara.hutool.extra.pinyin.engine.bopomofo4j.Bopomofo4jEngine
-org.dromara.hutool.extra.pinyin.engine.houbbpinyin.HoubbPinyinEngine
+org.dromara.hutool.extra.pinyin.engine.houbb.HoubbEngine

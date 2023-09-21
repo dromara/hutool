@@ -14,14 +14,6 @@ package org.dromara.hutool.extra.tokenizer;
 
 import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
-import org.dromara.hutool.extra.tokenizer.engine.analysis.SmartcnEngine;
-import org.dromara.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
-import org.dromara.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;
-import org.dromara.hutool.extra.tokenizer.engine.jcseg.JcsegEngine;
-import org.dromara.hutool.extra.tokenizer.engine.jieba.JiebaEngine;
-import org.dromara.hutool.extra.tokenizer.engine.mmseg.MmsegEngine;
-import org.dromara.hutool.extra.tokenizer.engine.mynlp.MynlpEngine;
-import org.dromara.hutool.extra.tokenizer.engine.word.WordEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +43,7 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void hanlpTest() {
-		final TokenizerEngine engine = new HanLPEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("hanlp");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这 两 个 方法 的 区别 在于 返回 值", resultStr);
@@ -59,7 +51,7 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void ikAnalyzerTest() {
-		final TokenizerEngine engine = new IKAnalyzerEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("IKAnalyzer");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这两个 方法 的 区别 在于 返回值", resultStr);
@@ -67,14 +59,14 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void jcsegTest() {
-		final TokenizerEngine engine = new JcsegEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Jcseg");
 		final Result result = engine.parse(text);
 		checkResult(result);
 	}
 
 	@Test
 	public void jiebaTest() {
-		final TokenizerEngine engine = new JiebaEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Jieba");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这 两个 方法 的 区别 在于 返回值", resultStr);
@@ -82,14 +74,14 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void mmsegTest() {
-		final TokenizerEngine engine = new MmsegEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Mmseg");
 		final Result result = engine.parse(text);
 		checkResult(result);
 	}
 
 	@Test
 	public void smartcnTest() {
-		final TokenizerEngine engine = new SmartcnEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Smartcn");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这 两 个 方法 的 区别 在于 返回 值", resultStr);
@@ -97,7 +89,7 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void wordTest() {
-		final TokenizerEngine engine = new WordEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Word");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这两个 方法 的 区别 在于 返回值", resultStr);
@@ -105,7 +97,7 @@ public class TokenizerUtilTest {
 
 	@Test
 	public void mynlpTest() {
-		final TokenizerEngine engine = new MynlpEngine();
+		final TokenizerEngine engine = TokenizerUtil.createEngine("Mynlp");
 		final Result result = engine.parse(text);
 		final String resultStr = IterUtil.join(result, " ");
 		Assertions.assertEquals("这 两个 方法 的 区别 在于 返回 值", resultStr);

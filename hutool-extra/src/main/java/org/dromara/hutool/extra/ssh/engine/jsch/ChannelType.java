@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.ssh;
+package org.dromara.hutool.extra.ssh.engine.jsch;
 
 /**
  * Jsch支持的Channel类型

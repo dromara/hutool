@@ -14,6 +14,7 @@ package org.dromara.hutool.core.spi;
 
 import org.dromara.hutool.core.cache.SimpleCache;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.resource.MultiResource;
 import org.dromara.hutool.core.io.resource.Resource;
@@ -24,10 +25,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * 列表类型的服务加载器，用于替换JDK提供的{@link java.util.ServiceLoader}<br>
@@ -136,6 +134,11 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 		return this.serviceNames.size();
 	}
 
+	@Override
+	public List<String> getServiceNames(){
+		return ListUtil.view(this.serviceNames);
+	}
+
 	/**
 	 * 获取指定服务的实现类
 	 *
@@ -148,7 +151,12 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 			return null;
 		}
 
-		return ClassLoaderUtil.loadClass(serviceClassName);
+		return getServiceClass(serviceClassName);
+	}
+
+	@Override
+	public Class<S> getServiceClass(final String serviceName) {
+		return ClassLoaderUtil.loadClass(serviceName);
 	}
 
 	/**
@@ -162,7 +170,12 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 		if (null == serviceClassName) {
 			return null;
 		}
-		return getServiceByName(serviceClassName);
+		return getService(serviceClassName);
+	}
+
+	@Override
+	public S getService(final String serviceName) {
+		return this.serviceCache.get(serviceName, () -> createService(serviceName));
 	}
 
 	@Override
@@ -177,7 +190,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 
 			@Override
 			public S next() {
-				return getServiceByName(nameIter.next());
+				return getService(nameIter.next());
 			}
 		};
 	}
@@ -223,7 +236,7 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 			line = line.substring(0, ci);
 		}
 		line = StrUtil.trim(line);
-		if (line.length() > 0) {
+		if (!line.isEmpty()) {
 			// 检查行
 			checkLine(resource, lineNo, line);
 			// 不覆盖模式
@@ -270,16 +283,6 @@ public class ListServiceLoader<S> extends AbsServiceLoader<S> {
 	 */
 	private void fail(final Resource resource, final int lineNo, final String msg) {
 		throw new SPIException(this.serviceClass + ":" + resource.getUrl() + ":" + lineNo + ": " + msg);
-	}
-
-	/**
-	 * 获取指定class名对应的服务，使用缓存，多次调用只返回相同的服务对象
-	 *
-	 * @param serviceClassName 服务名称
-	 * @return 服务对象
-	 */
-	private S getServiceByName(final String serviceClassName) {
-		return this.serviceCache.get(serviceClassName, () -> createService(serviceClassName));
 	}
 
 	/**

@@ -41,4 +41,14 @@ public class TokenizerUtil {
 	public static TokenizerEngine getEngine() {
 		return TokenizerEngineFactory.getEngine();
 	}
+
+	/**
+	 * 创建对应名称的分词引擎对象
+	 *
+	 * @param engineName 引擎名称
+	 * @return {@link TokenizerEngine}
+	 */
+	public static TokenizerEngine createEngine(final String engineName) {
+		return TokenizerEngineFactory.createEngine(engineName);
+	}
 }

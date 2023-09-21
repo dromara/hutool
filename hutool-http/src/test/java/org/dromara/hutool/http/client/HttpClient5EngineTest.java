@@ -13,8 +13,8 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.engine.ClientEngine;
-import org.dromara.hutool.http.client.engine.httpclient5.HttpClient5Engine;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class HttpClient5EngineTest {
 	@Test
 	@Disabled
 	public void getTest() {
-		final ClientEngine engine = new HttpClient5Engine();
+		final ClientEngine engine = HttpUtil.createClient("httpclient5");
 
 		final Request req = Request.of("https://www.hutool.cn/").method(Method.GET);
 		final Response res = engine.send(req);

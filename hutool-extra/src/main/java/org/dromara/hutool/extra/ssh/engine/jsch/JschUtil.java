@@ -10,8 +10,9 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.ssh;
+package org.dromara.hutool.extra.ssh.engine.jsch;
 
+import com.jcraft.jsch.*;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
@@ -19,7 +20,8 @@ import org.dromara.hutool.core.net.LocalPortGenerator;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import com.jcraft.jsch.*;
+import org.dromara.hutool.extra.ssh.Connector;
+import org.dromara.hutool.extra.ssh.SshException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +114,7 @@ public class JschUtil {
 			session.setTimeout(timeout);
 			session.connect(timeout);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return session;
 	}
@@ -132,7 +134,7 @@ public class JschUtil {
 		try {
 			session.connect();
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return session;
 	}
@@ -154,7 +156,7 @@ public class JschUtil {
 			session.setTimeout(timeout);
 			session.connect(timeout);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return session;
 	}
@@ -198,7 +200,7 @@ public class JschUtil {
 		try {
 			jsch.addIdentity(privateKeyPath, passphrase);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 
 		return createSession(jsch, sshHost, sshPort, sshUser);
@@ -231,7 +233,7 @@ public class JschUtil {
 		try {
 			session = jsch.getSession(sshUser, sshHost, sshPort);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 
 		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
@@ -248,9 +250,9 @@ public class JschUtil {
 	 * @param remotePort 远程端口
 	 * @param localPort  本地端口
 	 * @return 成功与否
-	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @throws SshException 端口绑定失败异常
 	 */
-	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final int localPort) throws JschRuntimeException {
+	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final int localPort) throws SshException {
 		return bindPort(session, remoteHost, remotePort, "127.0.0.1", localPort);
 	}
 
@@ -263,15 +265,15 @@ public class JschUtil {
 	 * @param localHost  本地主机
 	 * @param localPort  本地端口
 	 * @return 成功与否
-	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @throws SshException 端口绑定失败异常
 	 * @since 5.7.8
 	 */
-	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final String localHost, final int localPort) throws JschRuntimeException {
+	public static boolean bindPort(final Session session, final String remoteHost, final int remotePort, final String localHost, final int localPort) throws SshException {
 		if (session != null && session.isConnected()) {
 			try {
 				session.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
 			} catch (final JSchException e) {
-				throw new JschRuntimeException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
+				throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
 			}
 			return true;
 		}
@@ -288,15 +290,15 @@ public class JschUtil {
 	 * @param host     转发到的host
 	 * @param port     host上的端口
 	 * @return 成功与否
-	 * @throws JschRuntimeException 端口绑定失败异常
+	 * @throws SshException 端口绑定失败异常
 	 * @since 5.4.2
 	 */
-	public static boolean bindRemotePort(final Session session, final int bindPort, final String host, final int port) throws JschRuntimeException {
+	public static boolean bindRemotePort(final Session session, final int bindPort, final String host, final int port) throws SshException {
 		if (session != null && session.isConnected()) {
 			try {
 				session.setPortForwardingR(bindPort, host, port);
 			} catch (final JSchException e) {
-				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", bindPort, port);
+				throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
 			}
 			return true;
 		}
@@ -314,7 +316,7 @@ public class JschUtil {
 		try {
 			session.delPortForwardingL(localPort);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 	}
 
@@ -325,9 +327,9 @@ public class JschUtil {
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
 	 * @return 映射后的本地端口
-	 * @throws JschRuntimeException 连接异常
+	 * @throws SshException 连接异常
 	 */
-	public static int openAndBindPortToLocal(final Connector sshConn, final String remoteHost, final int remotePort) throws JschRuntimeException {
+	public static int openAndBindPortToLocal(final Connector sshConn, final String remoteHost, final int remotePort) throws SshException {
 		final Session session = openSession(sshConn.getHost(), sshConn.getPort(), sshConn.getUser(), sshConn.getPassword());
 		final int localPort = generateLocalPort();
 		bindPort(session, remoteHost, remotePort, localPort);
@@ -419,7 +421,7 @@ public class JschUtil {
 		try {
 			channel.connect(Math.max(timeout, 0));
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return channel;
 	}
@@ -440,7 +442,7 @@ public class JschUtil {
 			}
 			channel = session.openChannel(channelType.getValue());
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		}
 		return channel;
 	}
@@ -487,7 +489,7 @@ public class JschUtil {
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} catch (final JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new SshException(e);
 		} finally {
 			IoUtil.closeQuietly(in);
 			close(channel);

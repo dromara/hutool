@@ -21,6 +21,7 @@ import org.dromara.hutool.core.map.WeakConcurrentMap;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
@@ -28,6 +29,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * 简单缓存，无超时实现，默认使用{@link WeakConcurrentMap}实现缓存自动清理
@@ -211,5 +213,14 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 				return entry.setValue(value);
 			}
 		});
+	}
+
+	/**
+	 * 获取所有键
+	 *
+	 * @return 所有键
+	 */
+	public List<K> keys(){
+		return this.rawMap.keySet().stream().map(Mutable::get).collect(Collectors.toList());
 	}
 }

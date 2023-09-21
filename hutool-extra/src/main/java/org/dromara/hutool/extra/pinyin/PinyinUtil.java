@@ -26,6 +26,16 @@ import org.dromara.hutool.extra.pinyin.engine.PinyinEngineFactory;
 public class PinyinUtil {
 
 	/**
+	 * 创建拼音引擎
+	 *
+	 * @param engineName 引擎名称
+	 * @return {@link PinyinEngine}
+	 */
+	public static PinyinEngine createEngine(final String engineName) {
+		return PinyinEngineFactory.createEngine(engineName);
+	}
+
+	/**
 	 * 获得全局单例的拼音引擎
 	 *
 	 * @return 全局单例的拼音引擎

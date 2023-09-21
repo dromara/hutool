@@ -12,13 +12,13 @@
 
 package org.dromara.hutool.extra.pinyin;
 
-import org.dromara.hutool.extra.pinyin.engine.houbbpinyin.HoubbPinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class HoubbPinyinTest {
 
-	final HoubbPinyinEngine engine = new HoubbPinyinEngine();
+	final PinyinEngine engine = PinyinUtil.createEngine("houbb");
 
 	@Test
 	public void getFirstLetterTest(){

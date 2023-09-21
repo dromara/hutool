@@ -14,6 +14,7 @@ package org.dromara.hutool.core.spi;
 
 import org.dromara.hutool.core.cache.SimpleCache;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -21,6 +22,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -128,12 +130,12 @@ public class MapServiceLoader<S> extends AbsServiceLoader<S> {
 		return this.serviceProperties.size();
 	}
 
-	/**
-	 * 获取指定服务的实现类
-	 *
-	 * @param serviceName 服务名称
-	 * @return 服务名称对应的实现类
-	 */
+	@Override
+	public List<String> getServiceNames() {
+		return ListUtil.view(this.serviceCache.keys());
+	}
+
+	@Override
 	public Class<S> getServiceClass(final String serviceName) {
 		final String serviceClassName = this.serviceProperties.getProperty(serviceName);
 		if (StrUtil.isBlank(serviceClassName)) {
@@ -143,12 +145,7 @@ public class MapServiceLoader<S> extends AbsServiceLoader<S> {
 		return ClassLoaderUtil.loadClass(serviceClassName);
 	}
 
-	/**
-	 * 获取指定名称对应的服务，使用缓存，多次调用只返回相同的服务对象
-	 *
-	 * @param serviceName 服务名称
-	 * @return 服务对象
-	 */
+	@Override
 	public S getService(final String serviceName) {
 		return this.serviceCache.get(serviceName, () -> createService(serviceName));
 	}

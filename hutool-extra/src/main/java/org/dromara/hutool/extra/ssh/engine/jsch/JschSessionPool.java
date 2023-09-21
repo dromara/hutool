@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.ssh;
+package org.dromara.hutool.extra.ssh.engine.jsch;
 
 import org.dromara.hutool.core.cache.SimpleCache;
 import org.dromara.hutool.core.text.StrUtil;

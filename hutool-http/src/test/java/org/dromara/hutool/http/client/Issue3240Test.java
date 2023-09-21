@@ -13,9 +13,8 @@
 package org.dromara.hutool.http.client;
 
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.engine.ClientEngine;
-import org.dromara.hutool.http.client.engine.httpclient4.HttpClient4Engine;
-import org.dromara.hutool.http.client.engine.okhttp.OkHttpEngine;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ public class Issue3240Test {
 	@Disabled
 	void okHttpTest() {
 		String url = "https://gh.yubue.cn/https://github.com/espressif/arduino-esp32/releases/download/2.0.11/package_esp32_dev_index.json";
-		final ClientEngine engine = new OkHttpEngine();
+		final ClientEngine engine = HttpUtil.createClient("okhttp");
 		final Response send = engine.send(Request.of(url).method(Method.GET));
 		Console.log(send.body().getString());
 	}
@@ -34,7 +33,7 @@ public class Issue3240Test {
 	@Disabled
 	void httpClient4Test() {
 		String url = "https://gh.yubue.cn/https://github.com/espressif/arduino-esp32/releases/download/2.0.11/package_esp32_dev_index.json";
-		final ClientEngine engine = new HttpClient4Engine();
+		final ClientEngine engine = HttpUtil.createClient("okhttp");
 		final Response send = engine.send(Request.of(url).method(Method.GET));
 		Console.log(send.body().getString());
 	}

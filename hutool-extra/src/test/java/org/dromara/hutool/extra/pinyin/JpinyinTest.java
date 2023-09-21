@@ -12,13 +12,13 @@
 
 package org.dromara.hutool.extra.pinyin;
 
-import org.dromara.hutool.extra.pinyin.engine.jpinyin.JPinyinEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class JpinyinTest {
 
-	final JPinyinEngine engine = new JPinyinEngine();
+	final PinyinEngine engine = PinyinUtil.createEngine("jpinyin");
 
 	@Test
 	public void getFirstLetterByPinyin4jTest(){

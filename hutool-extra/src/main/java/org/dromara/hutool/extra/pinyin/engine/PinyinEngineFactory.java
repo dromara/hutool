@@ -13,6 +13,7 @@
 package org.dromara.hutool.extra.pinyin.engine;
 
 import org.dromara.hutool.core.lang.Singleton;
+import org.dromara.hutool.core.spi.ServiceLoader;
 import org.dromara.hutool.core.spi.SpiUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.pinyin.PinyinException;
@@ -45,6 +46,26 @@ public class PinyinEngineFactory {
 	 */
 	public static PinyinEngine createEngine() {
 		return doCreateEngine();
+	}
+
+	/**
+	 * 创建自定义引擎
+	 *
+	 * @param engineName 引擎名称，忽略大小写，如`Bopomofo4j`、`Houbb`、`JPinyin`、`Pinyin4j`、`TinyPinyin`
+	 * @return 引擎
+	 * @throws PinyinException 无对应名称的引擎
+	 */
+	public static PinyinEngine createEngine(String engineName) throws PinyinException {
+		if (!StrUtil.endWithIgnoreCase(engineName, "Engine")) {
+			engineName = engineName + "Engine";
+		}
+		final ServiceLoader<PinyinEngine> list = SpiUtil.loadList(PinyinEngine.class);
+		for (final String serviceName : list.getServiceNames()) {
+			if (StrUtil.endWithIgnoreCase(serviceName, engineName)) {
+				return list.getService(serviceName);
+			}
+		}
+		throw new PinyinException("No such engine named: " + engineName);
 	}
 
 	/**

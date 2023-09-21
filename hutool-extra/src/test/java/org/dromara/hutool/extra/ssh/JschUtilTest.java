@@ -15,6 +15,8 @@ package org.dromara.hutool.extra.ssh;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Console;
 import com.jcraft.jsch.Session;
+import org.dromara.hutool.extra.ssh.engine.jsch.JschUtil;
+import org.dromara.hutool.extra.ssh.engine.jsch.Sftp;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -74,7 +76,7 @@ public class JschUtilTest {
 			Console.log("isConnected " + sftp.getClient().isConnected());
 			Console.log("打印pwd: " + sftp.pwd());
 			Console.log("cd / : " + sftp.cd("/"));
-		}catch (final JschRuntimeException e) {
+		}catch (final SshException e) {
 			e.printStackTrace();
 		}
 

@@ -10,9 +10,16 @@
  * See the Mulan PSL v2 for more details.
  */
 
+package org.dromara.hutool.extra.ssh;
+
+import org.dromara.hutool.core.func.Wrapper;
+
+import java.io.Closeable;
+
 /**
- *  Jsch(http://www.jcraft.com/jsch/) 引擎封装
+ * SSH Session抽象
  *
- *  @author looly
+ * @author looly
  */
-package org.dromara.hutool.extra.ssh.engine.jsch;
+public interface Session extends Wrapper<Object>, Closeable {
+}

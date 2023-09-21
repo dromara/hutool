@@ -12,13 +12,13 @@
 
 package org.dromara.hutool.extra.pinyin;
 
-import org.dromara.hutool.extra.pinyin.engine.bopomofo4j.Bopomofo4jEngine;
+import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class Bopomofo4jTest {
 
-	final Bopomofo4jEngine engine = new Bopomofo4jEngine();
+	final PinyinEngine engine = PinyinUtil.createEngine("bopomofo4j");
 
 	@Test
 	public void getFirstLetterByBopomofo4jTest(){
