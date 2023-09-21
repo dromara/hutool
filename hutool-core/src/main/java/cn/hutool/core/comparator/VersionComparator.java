@@ -1,15 +1,12 @@
 package cn.hutool.core.comparator;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 版本比较器<br>
@@ -23,6 +20,8 @@ import java.util.List;
  */
 public class VersionComparator implements Comparator<String>, Serializable {
 	private static final long serialVersionUID = 8083701245147495562L;
+
+	private static final Pattern PATTERN_PRE_NUMBERS= Pattern.compile("^\\d+");
 
 	/** 单例 */
 	public static final VersionComparator INSTANCE = new VersionComparator();
@@ -80,12 +79,15 @@ public class VersionComparator implements Comparator<String>, Serializable {
 			if (0 == diff) {
 				diff = v1.compareTo(v2);
 			}else {
-				//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，
-				int v1Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v1, 0), 0);
-				int v2Num = Convert.toInt(ReUtil.get(PatternPool.NUMBERS, v2, 0), 0);
-				int diff1 = v1Num - v2Num;
-				if (diff1 != 0) {
-					diff = diff1;
+				// 不同长度，且含有字母
+				if(!NumberUtil.isNumber(v1) || !NumberUtil.isNumber(v2)){
+					//不同长度的先比较前面的数字；前面数字不相等时，按数字大小比较；数字相等的时候，继续按长度比较，类似于 103 > 102a
+					final int v1Num = Convert.toInt(ReUtil.get(PATTERN_PRE_NUMBERS, v1, 0), 0);
+					final int v2Num = Convert.toInt(ReUtil.get(PATTERN_PRE_NUMBERS, v2, 0), 0);
+					final int diff1 = v1Num - v2Num;
+					if (diff1 != 0) {
+						diff = diff1;
+					}
 				}
 			}
 			if(diff != 0) {
