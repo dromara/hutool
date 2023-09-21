@@ -13,10 +13,12 @@ import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.xfer.FileSystemFile;
+import org.apache.commons.net.DefaultSocketFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Proxy;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -80,7 +82,19 @@ public class SshjSftp extends AbstractFtp {
 	public SshjSftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
 		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
 	}
-
+	/**
+	 * 构造
+	 *
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名
+	 * @param sshPass 密码
+	 * @param charset 编码
+	 * @param proxy  代理 new Proxy(Proxy.Type.HTTP,new InetSocketAddress("127.0.0.1",15732))
+	 */
+	public SshjSftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset, Proxy proxy) {
+		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset).setProxy(proxy));
+	}
 	/**
 	 * 构造
 	 *
@@ -102,6 +116,9 @@ public class SshjSftp extends AbstractFtp {
 		this.ssh = new SSHClient();
 		ssh.addHostKeyVerifier(new PromiscuousVerifier());
 		try {
+			if (ftpConfig.getProxy() != null) {
+				ssh.setSocketFactory(new DefaultSocketFactory(ftpConfig.getProxy()));
+			}
 			ssh.connect(ftpConfig.getHost(), ftpConfig.getPort());
 			ssh.authPassword(ftpConfig.getUser(), ftpConfig.getPassword());
 			ssh.setRemoteCharset(ftpConfig.getCharset());

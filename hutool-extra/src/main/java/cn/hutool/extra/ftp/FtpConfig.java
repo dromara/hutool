@@ -1,6 +1,7 @@
 package cn.hutool.extra.ftp;
 
 import java.io.Serializable;
+import java.net.Proxy;
 import java.nio.charset.Charset;
 
 /**
@@ -55,7 +56,10 @@ public class FtpConfig implements Serializable {
 	 * 设置服务器系统关键词
 	 */
 	private String systemKey;
-
+	/**
+	 * 代理
+	 */
+	private Proxy proxy;
 	/**
 	 * 构造
 	 */
@@ -74,6 +78,7 @@ public class FtpConfig implements Serializable {
 	public FtpConfig(String host, int port, String user, String password, Charset charset) {
 		this(host, port, user, password, charset, null, null);
 	}
+
 
 	/**
 	 * 构造
@@ -175,6 +180,15 @@ public class FtpConfig implements Serializable {
 
 	public FtpConfig setSystemKey(String systemKey) {
 		this.systemKey = systemKey;
+		return this;
+	}
+
+	public Proxy getProxy() {
+		return proxy;
+	}
+
+	public FtpConfig setProxy(Proxy proxy) {
+		this.proxy = proxy;
 		return this;
 	}
 }

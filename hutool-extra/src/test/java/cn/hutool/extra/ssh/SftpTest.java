@@ -6,6 +6,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.List;
 
 /**
@@ -21,6 +23,8 @@ public class SftpTest {
 	@Before
 	@Ignore
 	public void init() {
+		// 代理
+		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.CHARSET_UTF_8, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 15732)));
 		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.CHARSET_UTF_8);
 	}
 
