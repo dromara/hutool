@@ -60,12 +60,7 @@ public class JschSession implements Session {
 		return this.raw;
 	}
 
-	/**
-	 * 是否连接状态
-	 *
-	 * @return 是否连接状态
-	 */
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	@Override
 	public boolean isConnected() {
 		return null != this.raw && this.raw.isConnected();
 	}
@@ -103,16 +98,15 @@ public class JschSession implements Session {
 	 * @throws SshException 端口绑定失败异常
 	 */
 	public boolean bindLocalPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws SshException {
-		if (!isConnected()) {
-			return false;
+		if (isConnected()) {
+			try {
+				this.raw.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
+			} catch (final JSchException e) {
+				throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
+			}
+			return true;
 		}
-
-		try {
-			this.raw.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
-		} catch (final JSchException e) {
-			throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
-		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -139,16 +133,15 @@ public class JschSession implements Session {
 	 * @throws SshException 端口绑定失败异常
 	 */
 	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws SshException {
-		if (!isConnected()) {
-			return false;
+		if (isConnected()) {
+			try {
+				this.raw.setPortForwardingR(bindPort, host, port);
+			} catch (final JSchException e) {
+				throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
+			}
+			return true;
 		}
-
-		try {
-			this.raw.setPortForwardingR(bindPort, host, port);
-		} catch (final JSchException e) {
-			throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
-		}
-		return true;
+		return false;
 	}
 
 	/**

@@ -76,6 +76,12 @@ public class GanymedSession implements Session {
 	}
 
 	@Override
+	public boolean isConnected() {
+		// 未找到合适的方法判断是否在线
+		return true;
+	}
+
+	@Override
 	public void close() throws IOException {
 		if (raw != null) {
 			raw.close();

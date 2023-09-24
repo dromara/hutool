@@ -74,11 +74,7 @@ public class SshjSession implements Session {
 		return raw;
 	}
 
-	/**
-	 * 是否连接状态
-	 *
-	 * @return 是否连接状态
-	 */
+	@Override
 	public boolean isConnected() {
 		return null != this.raw && (null == this.ssh || this.ssh.isConnected());
 	}

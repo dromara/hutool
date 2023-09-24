@@ -22,4 +22,11 @@ import java.io.Closeable;
  * @author looly
  */
 public interface Session extends Wrapper<Object>, Closeable {
+
+	/**
+	 * 是否连接状态
+	 *
+	 * @return 是否连接状态
+	 */
+	boolean isConnected();
 }
