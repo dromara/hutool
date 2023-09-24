@@ -10,10 +10,10 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.extra.ssh.engine.ganymed;
+package org.dromara.hutool.extra.ssh.engine.sshj;
 
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.StreamGobbler;
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -25,42 +25,52 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * {@link ch.ethz.ssh2.Session}包装
+ * 基于SSHJ（https://github.com/hierynomus/sshj）的Session封装
  *
  * @author looly
  */
-public class GanymedSession implements Session {
+public class SshjSession implements Session {
 
-	private final ch.ethz.ssh2.Session raw;
+	private SSHClient ssh;
+	private final net.schmizz.sshj.connection.channel.direct.Session raw;
 
 	/**
 	 * 构造
 	 *
 	 * @param connector {@link Connector}，保存连接和验证信息等
 	 */
-	public GanymedSession(final Connector connector) {
-		this(openSession(connector));
+	public SshjSession(final Connector connector) {
+		final SSHClient ssh = new SSHClient();
+		ssh.addHostKeyVerifier(new PromiscuousVerifier());
+		try {
+			ssh.connect(connector.getHost(), connector.getPort());
+			ssh.authPassword(connector.getUser(), connector.getPassword());
+			this.raw = ssh.startSession();
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		this.ssh = ssh;
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param raw {@link ch.ethz.ssh2.Session}
+	 * @param raw {@link net.schmizz.sshj.connection.channel.direct.Session}
 	 */
-	public GanymedSession(final ch.ethz.ssh2.Session raw) {
+	public SshjSession(final net.schmizz.sshj.connection.channel.direct.Session raw) {
 		this.raw = raw;
 	}
 
 	@Override
-	public ch.ethz.ssh2.Session getRaw() {
+	public Object getRaw() {
 		return raw;
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (raw != null) {
-			raw.close();
-		}
+		IoUtil.closeQuietly(this.raw);
+		IoUtil.closeQuietly(this.ssh);
 	}
 
 	/**
@@ -79,20 +89,23 @@ public class GanymedSession implements Session {
 			charset = CharsetUtil.UTF_8;
 		}
 
+		final net.schmizz.sshj.connection.channel.direct.Session.Command command;
+
 		// 发送命令
 		try {
-			this.raw.execCommand(cmd, charset.name());
+			command = this.raw.exec(cmd);
+			//command.join();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
 		// 错误输出
-		if(null != errStream){
-			IoUtil.copy(new StreamGobbler(this.raw.getStderr()), errStream);
+		if (null != errStream) {
+			IoUtil.copy(command.getErrorStream(), errStream);
 		}
 
 		// 结果输出
-		return IoUtil.read(new StreamGobbler(this.raw.getStdout()), charset);
+		return IoUtil.read(command.getInputStream(), charset);
 	}
 
 	/**
@@ -111,46 +124,22 @@ public class GanymedSession implements Session {
 			charset = CharsetUtil.UTF_8;
 		}
 
+		final net.schmizz.sshj.connection.channel.direct.Session.Shell shell;
 		try {
-			this.raw.requestDumbPTY();
+			shell = this.raw.startShell();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 
 		// 发送命令
-		IoUtil.write(this.raw.getStdin(), charset, true, cmd);
+		IoUtil.write(shell.getOutputStream(), charset, true, cmd);
 
 		// 错误输出
 		if (null != errStream) {
-			IoUtil.copy(new StreamGobbler(this.raw.getStderr()), errStream);
+			IoUtil.copy(shell.getErrorStream(), errStream);
 		}
 
 		// 结果输出
-		return IoUtil.read(new StreamGobbler(this.raw.getStdout()), charset);
-	}
-
-	/**
-	 * 初始化并打开新的Session
-	 *
-	 * @param connector {@link Connector}，保存连接和验证信息等
-	 * @return {@link ch.ethz.ssh2.Session}
-	 */
-	private static ch.ethz.ssh2.Session openSession(final Connector connector) {
-
-		// 建立连接
-		final Connection conn = new Connection(connector.getHost(), connector.getPort());
-		try {
-			conn.connect();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		// 打开会话
-		try {
-			conn.authenticateWithPassword(connector.getUser(), connector.getPassword());
-			return conn.openSession();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return IoUtil.read(shell.getInputStream(), charset);
 	}
 }

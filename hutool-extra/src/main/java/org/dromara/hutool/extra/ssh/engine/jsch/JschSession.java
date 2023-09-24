@@ -205,6 +205,7 @@ public class JschSession implements Session {
 		final ChannelExec channel = (ChannelExec) createChannel(ChannelType.EXEC);
 		channel.setCommand(ByteUtil.toBytes(cmd, charset));
 		channel.setInputStream(null);
+
 		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
@@ -234,7 +235,7 @@ public class JschSession implements Session {
 	 * @return {@link ChannelExec}
 	 * @since 5.2.5
 	 */
-	public static String execByShell(final String cmd, final Charset charset) {
+	public String execByShell(final String cmd, final Charset charset) {
 		final ChannelShell shell = openShell();
 		// 开始连接
 		shell.setPty(true);
