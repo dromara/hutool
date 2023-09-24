@@ -86,7 +86,9 @@ public class GanymedSession implements Session {
 	}
 
 	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
+	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
 	 *
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
@@ -99,7 +101,9 @@ public class GanymedSession implements Session {
 	}
 
 	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
+	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
 	 *
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
@@ -116,7 +120,7 @@ public class GanymedSession implements Session {
 			throw new IORuntimeException(e);
 		}
 
-		if(null == this.localPortForwarderMap){
+		if (null == this.localPortForwarderMap) {
 			this.localPortForwarderMap = new HashMap<>();
 		}
 
@@ -133,12 +137,12 @@ public class GanymedSession implements Session {
 	 * @throws IORuntimeException 端口解绑失败异常
 	 */
 	public void unBindLocalPort(final int localPort) throws IORuntimeException {
-		if(MapUtil.isEmpty(this.localPortForwarderMap)){
+		if (MapUtil.isEmpty(this.localPortForwarderMap)) {
 			return;
 		}
 
 		final LocalPortForwarder localPortForwarder = this.localPortForwarderMap.remove(localPort);
-		if(null != localPortForwarder){
+		if (null != localPortForwarder) {
 			try {
 				localPortForwarder.close();
 			} catch (final IOException e) {

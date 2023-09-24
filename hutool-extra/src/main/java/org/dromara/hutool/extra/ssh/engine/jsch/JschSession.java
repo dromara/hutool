@@ -76,7 +76,9 @@ public class JschSession implements Session {
 	}
 
 	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
+	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
 	 *
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
@@ -89,7 +91,9 @@ public class JschSession implements Session {
 	}
 
 	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
+	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
 	 *
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口

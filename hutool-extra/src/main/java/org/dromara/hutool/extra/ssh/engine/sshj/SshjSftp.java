@@ -12,19 +12,19 @@
 
 package org.dromara.hutool.extra.ssh.engine.sshj;
 
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.extra.ftp.AbstractFtp;
-import org.dromara.hutool.extra.ftp.FtpConfig;
-import org.dromara.hutool.extra.ftp.FtpException;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
-import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.xfer.FileSystemFile;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.CharsetUtil;
+import org.dromara.hutool.extra.ftp.AbstractFtp;
+import org.dromara.hutool.extra.ftp.FtpConfig;
+import org.dromara.hutool.extra.ftp.FtpException;
+import org.dromara.hutool.extra.ssh.Connector;
 
 import java.io.File;
 import java.io.IOException;
@@ -99,8 +99,19 @@ public class SshjSftp extends AbstractFtp {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	protected SshjSftp(final FtpConfig config) {
+	public SshjSftp(final FtpConfig config) {
 		super(config);
+		init();
+	}
+
+	/**
+	 * 构造
+	 * @param sshClient {@link SSHClient}
+	 * @param charset 编码
+	 */
+	public SshjSftp(final SSHClient sshClient, final Charset charset) {
+		super(FtpConfig.of().setCharset(charset));
+		this.ssh = sshClient;
 		init();
 	}
 
@@ -111,11 +122,14 @@ public class SshjSftp extends AbstractFtp {
 	 * @since 5.7.18
 	 */
 	public void init() {
-		this.ssh = new SSHClient();
-		ssh.addHostKeyVerifier(new PromiscuousVerifier());
+		this.ssh = SshjUtil.openClient(new Connector(
+			ftpConfig.getHost(),
+			ftpConfig.getPort(),
+			ftpConfig.getUser(),
+			ftpConfig.getPassword(),
+			ftpConfig.getConnectionTimeout()));
+
 		try {
-			ssh.connect(ftpConfig.getHost(), ftpConfig.getPort());
-			ssh.authPassword(ftpConfig.getUser(), ftpConfig.getPassword());
 			ssh.setRemoteCharset(ftpConfig.getCharset());
 			this.sftp = ssh.newSFTPClient();
 		} catch (final IOException e) {
