@@ -23,6 +23,7 @@ public class Connector {
 	private String user = "root";
 	private String password;
 	private String group;
+	private long timeout;
 
 	/**
 	 * 构造
@@ -52,10 +53,24 @@ public class Connector {
 	 * @param password 密码
 	 */
 	public Connector(final String host, final int port, final String user, final String password) {
+		this(host, port, user, password, 0);
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param host     主机名
+	 * @param port     端口
+	 * @param user     用户名
+	 * @param password 密码
+	 * @param timeout 连接超时时长，0表示默认
+	 */
+	public Connector(final String host, final int port, final String user, final String password, final long timeout) {
 		this.host = host;
 		this.port = port;
 		this.user = user;
 		this.password = password;
+		this.timeout = timeout;
 	}
 
 	/**
@@ -149,10 +164,35 @@ public class Connector {
 	}
 
 	/**
+	 * 获得连接超时时间
+	 *
+	 * @return 连接超时时间
+	 */
+	public long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * 设置连接超时时间
+	 *
+	 * @param timeout 连接超时时间
+	 */
+	public void setTimeout(final long timeout) {
+		this.timeout = timeout;
+	}
+
+	/**
 	 * toString方法仅用于测试显示
 	 */
 	@Override
 	public String toString() {
-		return "Connector [host=" + host + ", port=" + port + ", user=" + user + ", password=" + password + "]";
+		return "Connector{" +
+			"host='" + host + '\'' +
+			", port=" + port +
+			", user='" + user + '\'' +
+			", password='" + password + '\'' +
+			", group='" + group + '\'' +
+			", timeout=" + timeout +
+			'}';
 	}
 }

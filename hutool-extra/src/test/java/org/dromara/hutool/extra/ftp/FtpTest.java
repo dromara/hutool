@@ -16,7 +16,7 @@ import org.apache.commons.net.ftp.FTPSClient;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.extra.ssh.engine.jsch.Sftp;
+import org.dromara.hutool.extra.ssh.engine.jsch.JschSftp;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +94,7 @@ public class FtpTest {
 	@Test
 	@Disabled
 	public void recursiveDownloadFolderSftp() {
-		final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test");
+		final JschSftp ftp = new JschSftp("127.0.0.1", 22, "test", "test");
 
 		ftp.cd("/file/aaa");
 		Console.log(ftp.pwd());
@@ -131,7 +131,7 @@ public class FtpTest {
 	@Test
 	@Disabled
 	public void existSftpTest() {
-		try (final Sftp ftp = new Sftp("127.0.0.1", 22, "test", "test")) {
+		try (final JschSftp ftp = new JschSftp("127.0.0.1", 22, "test", "test")) {
 			Console.log(ftp.pwd());
 			Console.log(ftp.exist(null));
 			Console.log(ftp.exist(""));

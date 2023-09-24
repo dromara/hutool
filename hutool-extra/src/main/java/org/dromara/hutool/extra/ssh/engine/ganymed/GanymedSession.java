@@ -13,16 +13,22 @@
 package org.dromara.hutool.extra.ssh.engine.ganymed;
 
 import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.LocalPortForwarder;
 import ch.ethz.ssh2.StreamGobbler;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
 import org.dromara.hutool.extra.ssh.Session;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@link ch.ethz.ssh2.Session}包装
@@ -31,7 +37,10 @@ import java.nio.charset.Charset;
  */
 public class GanymedSession implements Session {
 
+	private Connection connection;
 	private final ch.ethz.ssh2.Session raw;
+
+	private Map<Integer, LocalPortForwarder> localPortForwarderMap;
 
 	/**
 	 * 构造
@@ -39,7 +48,17 @@ public class GanymedSession implements Session {
 	 * @param connector {@link Connector}，保存连接和验证信息等
 	 */
 	public GanymedSession(final Connector connector) {
-		this(openSession(connector));
+		this(GanymedUtil.openConnection(connector));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param connection {@link Connection}，连接对象
+	 */
+	public GanymedSession(final Connection connection) {
+		this(GanymedUtil.openSession(connection));
+		this.connection = connection;
 	}
 
 	/**
@@ -47,7 +66,7 @@ public class GanymedSession implements Session {
 	 *
 	 * @param raw {@link ch.ethz.ssh2.Session}
 	 */
-	public GanymedSession(final ch.ethz.ssh2.Session raw) {
+	private GanymedSession(final ch.ethz.ssh2.Session raw) {
 		this.raw = raw;
 	}
 
@@ -60,6 +79,104 @@ public class GanymedSession implements Session {
 	public void close() throws IOException {
 		if (raw != null) {
 			raw.close();
+		}
+		if (connection != null) {
+			connection.close();
+		}
+	}
+
+	/**
+	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 *
+	 * @param remoteHost 远程主机
+	 * @param remotePort 远程端口
+	 * @param localPort  本地端口
+	 * @return 成功与否
+	 * @throws IORuntimeException 端口绑定失败异常
+	 */
+	public boolean bindLocalPort(final String remoteHost, final int remotePort, final int localPort) throws IORuntimeException {
+		return bindLocalPort(remoteHost, remotePort, Ipv4Util.LOCAL_IP, localPort);
+	}
+
+	/**
+	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 *
+	 * @param remoteHost 远程主机
+	 * @param remotePort 远程端口
+	 * @param localHost  本地主机
+	 * @param localPort  本地端口
+	 * @return 成功与否
+	 * @throws IORuntimeException 端口绑定失败异常
+	 */
+	public boolean bindLocalPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws IORuntimeException {
+		final LocalPortForwarder localPortForwarder;
+		try {
+			localPortForwarder = this.connection.createLocalPortForwarder(new InetSocketAddress(localHost, localPort), remoteHost, remotePort);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		if(null == this.localPortForwarderMap){
+			this.localPortForwarderMap = new HashMap<>();
+		}
+
+		//加入记录
+		this.localPortForwarderMap.put(localPort, localPortForwarder);
+
+		return true;
+	}
+
+	/**
+	 * 解除本地端口映射
+	 *
+	 * @param localPort 需要解除的本地端口
+	 * @throws IORuntimeException 端口解绑失败异常
+	 */
+	public void unBindLocalPort(final int localPort) throws IORuntimeException {
+		if(MapUtil.isEmpty(this.localPortForwarderMap)){
+			return;
+		}
+
+		final LocalPortForwarder localPortForwarder = this.localPortForwarderMap.remove(localPort);
+		if(null != localPortForwarder){
+			try {
+				localPortForwarder.close();
+			} catch (final IOException e) {
+				// ignore
+			}
+		}
+	}
+
+	/**
+	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
+	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
+	 *
+	 * @param bindPort ssh服务端上要被绑定的端口
+	 * @param host     转发到的host
+	 * @param port     host上的端口
+	 * @return 成功与否
+	 * @throws IORuntimeException 端口绑定失败异常
+	 */
+	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws IORuntimeException {
+		try {
+			this.connection.requestRemotePortForwarding(Ipv4Util.LOCAL_IP, bindPort, host, port);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return true;
+	}
+
+	/**
+	 * 解除远程端口映射
+	 *
+	 * @param localPort 需要解除的本地端口
+	 * @throws IORuntimeException 端口解绑失败异常
+	 */
+	public void unBindRemotePort(final int localPort) throws IORuntimeException {
+		try {
+			this.connection.cancelRemotePortForwarding(localPort);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -87,7 +204,7 @@ public class GanymedSession implements Session {
 		}
 
 		// 错误输出
-		if(null != errStream){
+		if (null != errStream) {
 			IoUtil.copy(new StreamGobbler(this.raw.getStderr()), errStream);
 		}
 
@@ -127,30 +244,5 @@ public class GanymedSession implements Session {
 
 		// 结果输出
 		return IoUtil.read(new StreamGobbler(this.raw.getStdout()), charset);
-	}
-
-	/**
-	 * 初始化并打开新的Session
-	 *
-	 * @param connector {@link Connector}，保存连接和验证信息等
-	 * @return {@link ch.ethz.ssh2.Session}
-	 */
-	private static ch.ethz.ssh2.Session openSession(final Connector connector) {
-
-		// 建立连接
-		final Connection conn = new Connection(connector.getHost(), connector.getPort());
-		try {
-			conn.connect();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-
-		// 打开会话
-		try {
-			conn.authenticateWithPassword(connector.getUser(), connector.getPassword());
-			return conn.openSession();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
 	}
 }

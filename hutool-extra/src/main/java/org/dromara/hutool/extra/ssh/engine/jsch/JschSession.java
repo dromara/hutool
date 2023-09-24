@@ -15,6 +15,7 @@ package org.dromara.hutool.extra.ssh.engine.jsch;
 import com.jcraft.jsch.*;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
@@ -32,6 +33,7 @@ import java.nio.charset.Charset;
 public class JschSession implements Session {
 
 	private final com.jcraft.jsch.Session raw;
+	private final long timeout;
 
 	/**
 	 * 构造
@@ -39,28 +41,51 @@ public class JschSession implements Session {
 	 * @param connector {@link Connector}，保存连接和验证信息等
 	 */
 	public JschSession(final Connector connector) {
-		this(openSession(connector));
+		this(JschUtil.openSession(connector), connector.getTimeout());
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param raw {@link com.jcraft.jsch.Session}
+	 * @param raw     {@link com.jcraft.jsch.Session}
+	 * @param timeout 连接超时时常，0表示不限制
 	 */
-	public JschSession(final com.jcraft.jsch.Session raw) {
+	public JschSession(final com.jcraft.jsch.Session raw, final long timeout) {
 		this.raw = raw;
+		this.timeout = timeout;
 	}
 
 	@Override
-	public Object getRaw() {
-		return raw;
+	public com.jcraft.jsch.Session getRaw() {
+		return this.raw;
+	}
+
+	/**
+	 * 是否连接状态
+	 *
+	 * @return 是否连接状态
+	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public boolean isConnected() {
+		return null != this.raw && this.raw.isConnected();
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (raw != null && raw.isConnected()) {
-			raw.disconnect();
-		}
+		JschUtil.close(this.raw);
+	}
+
+	/**
+	 * 绑定端口到本地。 一个会话可绑定多个端口
+	 *
+	 * @param remoteHost 远程主机
+	 * @param remotePort 远程端口
+	 * @param localPort  本地端口
+	 * @return 成功与否
+	 * @throws SshException 端口绑定失败异常
+	 */
+	public boolean bindLocalPort(final String remoteHost, final int remotePort, final int localPort) throws SshException {
+		return bindLocalPort(remoteHost, remotePort, Ipv4Util.LOCAL_IP, localPort);
 	}
 
 	/**
@@ -73,16 +98,30 @@ public class JschSession implements Session {
 	 * @return 成功与否
 	 * @throws SshException 端口绑定失败异常
 	 */
-	public boolean bindPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws SshException {
-		if (this.raw != null && this.raw.isConnected()) {
-			try {
-				this.raw.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
-			} catch (final JSchException e) {
-				throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
-			}
-			return true;
+	public boolean bindLocalPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws SshException {
+		if (!isConnected()) {
+			return false;
 		}
-		return false;
+
+		try {
+			this.raw.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
+		} catch (final JSchException e) {
+			throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
+		}
+		return true;
+	}
+
+	/**
+	 * 解除远程端口映射
+	 *
+	 * @param localPort 需要解除的本地端口
+	 */
+	public void unBindLocalPort(final int localPort) {
+		try {
+			this.raw.delPortForwardingL(localPort);
+		} catch (final JSchException e) {
+			throw new SshException(e);
+		}
 	}
 
 	/**
@@ -96,25 +135,26 @@ public class JschSession implements Session {
 	 * @throws SshException 端口绑定失败异常
 	 */
 	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws SshException {
-		if (this.raw != null && this.raw.isConnected()) {
-			try {
-				this.raw.setPortForwardingR(bindPort, host, port);
-			} catch (final JSchException e) {
-				throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
-			}
-			return true;
+		if (!isConnected()) {
+			return false;
 		}
-		return false;
+
+		try {
+			this.raw.setPortForwardingR(bindPort, host, port);
+		} catch (final JSchException e) {
+			throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
+		}
+		return true;
 	}
 
 	/**
-	 * 解除端口映射
+	 * 解除远程端口映射
 	 *
 	 * @param localPort 需要解除的本地端口
 	 */
-	public void unBindPort(final int localPort) {
+	public void unBindRemotePort(final int localPort) {
 		try {
-			this.raw.delPortForwardingL(localPort);
+			this.raw.delPortForwardingR(localPort);
 		} catch (final JSchException e) {
 			throw new SshException(e);
 		}
@@ -127,16 +167,7 @@ public class JschSession implements Session {
 	 * @return {@link Channel}
 	 */
 	public Channel createChannel(final ChannelType channelType) {
-		final Channel channel;
-		try {
-			if (!this.raw.isConnected()) {
-				this.raw.connect();
-			}
-			channel = this.raw.openChannel(channelType.getValue());
-		} catch (final JSchException e) {
-			throw new SshException(e);
-		}
-		return channel;
+		return JschUtil.createChannel(this.raw, channelType, this.timeout);
 	}
 
 	/**
@@ -155,24 +186,17 @@ public class JschSession implements Session {
 	 * @return {@link Channel}
 	 */
 	public Channel openChannel(final ChannelType channelType) {
-		return openChannel(channelType, 0);
+		return JschUtil.openChannel(this.raw, channelType, this.timeout);
 	}
 
 	/**
-	 * 打开Channel连接
+	 * 打开SFTP会话
 	 *
-	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
-	 * @param timeout     连接超时时长，单位毫秒
-	 * @return {@link Channel}
+	 * @param charset 编码
+	 * @return {@link JschSftp}
 	 */
-	public Channel openChannel(final ChannelType channelType, final int timeout) {
-		final Channel channel = createChannel(channelType);
-		try {
-			channel.connect(Math.max(timeout, 0));
-		} catch (final JSchException e) {
-			throw new SshException(e);
-		}
-		return channel;
+	public JschSftp openSftp(final Charset charset) {
+		return new JschSftp(this.raw, charset, this.timeout);
 	}
 
 	/**
@@ -258,27 +282,5 @@ public class JschSession implements Session {
 				shell.disconnect();
 			}
 		}
-	}
-
-	/**
-	 * 创建{@link com.jcraft.jsch.Session}
-	 *
-	 * @param connector {@link Connector}，保存连接和验证信息等
-	 * @return {@link com.jcraft.jsch.Session}
-	 */
-	private static com.jcraft.jsch.Session openSession(final Connector connector) {
-		final JSch jsch = new JSch();
-		final com.jcraft.jsch.Session session;
-		try {
-			session = jsch.getSession(connector.getUser(), connector.getHost(), connector.getPort());
-		} catch (final JSchException e) {
-			throw new SshException(e);
-		}
-
-		session.setPassword(connector.getPassword());
-		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
-		session.setConfig("StrictHostKeyChecking", "no");
-
-		return session;
 	}
 }

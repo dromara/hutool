@@ -13,7 +13,6 @@
 package org.dromara.hutool.extra.ssh.engine.sshj;
 
 import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -40,17 +39,21 @@ public class SshjSession implements Session {
 	 * @param connector {@link Connector}，保存连接和验证信息等
 	 */
 	public SshjSession(final Connector connector) {
-		final SSHClient ssh = new SSHClient();
-		ssh.addHostKeyVerifier(new PromiscuousVerifier());
+		this(SshjUtil.openClient(connector));
+	}
+
+	/**
+	 * 构造
+	 *
+	 * @param ssh {@link SSHClient}
+	 */
+	public SshjSession(final SSHClient ssh) {
+		this.ssh = ssh;
 		try {
-			ssh.connect(connector.getHost(), connector.getPort());
-			ssh.authPassword(connector.getUser(), connector.getPassword());
 			this.raw = ssh.startSession();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-
-		this.ssh = ssh;
 	}
 
 	/**
@@ -63,8 +66,17 @@ public class SshjSession implements Session {
 	}
 
 	@Override
-	public Object getRaw() {
+	public net.schmizz.sshj.connection.channel.direct.Session getRaw() {
 		return raw;
+	}
+
+	/**
+	 * 是否连接状态
+	 *
+	 * @return 是否连接状态
+	 */
+	public boolean isConnected() {
+		return null != this.raw && (null == this.ssh || this.ssh.isConnected());
 	}
 
 	@Override

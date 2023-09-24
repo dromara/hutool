@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.ssh.engine.jsch;
 
+import com.jcraft.jsch.*;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -19,13 +20,9 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.ftp.AbstractFtp;
 import org.dromara.hutool.extra.ftp.FtpConfig;
 import org.dromara.hutool.extra.ftp.FtpException;
-import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SftpProgressMonitor;
+import org.dromara.hutool.extra.ssh.Connector;
 import org.dromara.hutool.extra.ssh.SshException;
 
 import java.io.File;
@@ -50,7 +47,7 @@ import java.util.function.Predicate;
  * @author looly
  * @since 4.0.2
  */
-public class Sftp extends AbstractFtp {
+public class JschSftp extends AbstractFtp {
 
 	private Session session;
 	private ChannelSftp channel;
@@ -65,7 +62,7 @@ public class Sftp extends AbstractFtp {
 	 * @param sshUser 远程主机用户名
 	 * @param sshPass 远程主机密码
 	 */
-	public Sftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
+	public JschSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
 		this(sshHost, sshPort, sshUser, sshPass, DEFAULT_CHARSET);
 	}
 
@@ -79,7 +76,7 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 * @since 4.1.14
 	 */
-	public Sftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
+	public JschSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
 		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
 	}
 
@@ -89,7 +86,7 @@ public class Sftp extends AbstractFtp {
 	 * @param config FTP配置
 	 * @since 5.3.3
 	 */
-	public Sftp(final FtpConfig config) {
+	public JschSftp(final FtpConfig config) {
 		this(config, true);
 	}
 
@@ -100,10 +97,10 @@ public class Sftp extends AbstractFtp {
 	 * @param init   是否立即初始化
 	 * @since 5.8.4
 	 */
-	public Sftp(final FtpConfig config, final boolean init) {
+	public JschSftp(final FtpConfig config, final boolean init) {
 		super(config);
 		if (init) {
-			init(config);
+			init();
 		}
 	}
 
@@ -111,45 +108,14 @@ public class Sftp extends AbstractFtp {
 	 * 构造
 	 *
 	 * @param session {@link Session}
-	 */
-	public Sftp(final Session session) {
-		this(session, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param session {@link Session}
-	 * @param charset 编码
-	 * @since 4.1.14
-	 */
-	public Sftp(final Session session, final Charset charset) {
-		super(FtpConfig.of().setCharset(charset));
-		init(session, charset);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param channel {@link ChannelSftp}
-	 * @param charset 编码
-	 */
-	public Sftp(final ChannelSftp channel, final Charset charset) {
-		super(FtpConfig.of().setCharset(charset));
-		init(channel, charset);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param session {@link Session}
 	 * @param charset 编码
 	 * @param timeOut 超时时间，单位毫秒
 	 * @since 5.8.4
 	 */
-	public Sftp(final Session session, final Charset charset, final long timeOut) {
+	public JschSftp(final Session session, final Charset charset, final long timeOut) {
 		super(FtpConfig.of().setCharset(charset).setConnectionTimeout(timeOut));
-		init(session, charset);
+		this.session = session;
+		init();
 	}
 
 	/**
@@ -160,73 +126,49 @@ public class Sftp extends AbstractFtp {
 	 * @param timeOut 超时时间，单位毫秒
 	 * @since 5.8.4
 	 */
-	public Sftp(final ChannelSftp channel, final Charset charset, final long timeOut) {
+	public JschSftp(final ChannelSftp channel, final Charset charset, final long timeOut) {
 		super(FtpConfig.of().setCharset(charset).setConnectionTimeout(timeOut));
-		init(channel, charset);
+		this.channel = channel;
+		init();
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 构造
-	 *
-	 * @param sshHost 远程主机
-	 * @param sshPort 远程主机端口
-	 * @param sshUser 远程主机用户名
-	 * @param sshPass 远程主机密码
-	 * @param charset 编码
-	 */
-	public void init(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
-		init(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
-	}
-
 	/**
 	 * 初始化
-	 *
-	 * @since 5.3.3
 	 */
+	@SuppressWarnings("resource")
 	public void init() {
-		init(this.ftpConfig);
-	}
+		if(null == this.channel){
+			if(null == this.session){
+				final FtpConfig config = this.ftpConfig;
+				this.session = new JschSession(new Connector(
+					config.getHost(),
+					config.getPort(),
+					config.getUser(),
+					config.getPassword(),
+					config.getConnectionTimeout()))
+					.getRaw();
+			}
 
-	/**
-	 * 初始化
-	 *
-	 * @param config FTP配置
-	 * @since 5.3.3
-	 */
-	public void init(final FtpConfig config) {
-		init(config.getHost(), config.getPort(), config.getUser(), config.getPassword(), config.getCharset());
-	}
+			// 创建Channel
+			try {
+				this.channel = (ChannelSftp) this.session.openChannel(ChannelType.SFTP.getValue());
+			} catch (final JSchException e) {
+				throw new SshException(e);
+			}
+		}
 
-	/**
-	 * 初始化
-	 *
-	 * @param session {@link Session}
-	 * @param charset 编码
-	 */
-	public void init(final Session session, final Charset charset) {
-		this.session = session;
-		init(JschUtil.openSftp(session, (int) this.ftpConfig.getConnectionTimeout()), charset);
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param channel {@link ChannelSftp}
-	 * @param charset 编码
-	 */
-	public void init(final ChannelSftp channel, final Charset charset) {
-		this.ftpConfig.setCharset(charset);
 		try {
-			channel.setFilenameEncoding(charset.toString());
-		} catch (final SftpException e) {
+			if(!channel.isConnected()){
+				channel.connect((int) Math.max(this.ftpConfig.getConnectionTimeout(), 0));
+			}
+			channel.setFilenameEncoding(this.ftpConfig.getCharset().toString());
+		} catch (final JSchException | SftpException e) {
 			throw new SshException(e);
 		}
-		this.channel = channel;
 	}
 
 	@Override
-	public Sftp reconnectIfTimeout() {
+	public JschSftp reconnectIfTimeout() {
 		if (StrUtil.isBlank(this.ftpConfig.getHost())) {
 			throw new FtpException("Host is blank!");
 		}
@@ -554,7 +496,7 @@ public class Sftp extends AbstractFtp {
 	 * @param destPath    目标路径，
 	 * @return this
 	 */
-	public Sftp put(final String srcFilePath, final String destPath) {
+	public JschSftp put(final String srcFilePath, final String destPath) {
 		return put(srcFilePath, destPath, Mode.OVERWRITE);
 	}
 
@@ -566,7 +508,7 @@ public class Sftp extends AbstractFtp {
 	 * @param mode        {@link Mode} 模式
 	 * @return this
 	 */
-	public Sftp put(final String srcFilePath, final String destPath, final Mode mode) {
+	public JschSftp put(final String srcFilePath, final String destPath, final Mode mode) {
 		return put(srcFilePath, destPath, null, mode);
 	}
 
@@ -580,7 +522,7 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 4.6.5
 	 */
-	public Sftp put(final String srcFilePath, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
+	public JschSftp put(final String srcFilePath, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
 		try {
 			getClient().put(srcFilePath, destPath, monitor, mode.ordinal());
 		} catch (final SftpException e) {
@@ -599,7 +541,7 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 5.7.16
 	 */
-	public Sftp put(final InputStream srcStream, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
+	public JschSftp put(final InputStream srcStream, final String destPath, final SftpProgressMonitor monitor, final Mode mode) {
 		try {
 			getClient().put(srcStream, destPath, monitor, mode.ordinal());
 		} catch (final SftpException e) {
@@ -662,7 +604,7 @@ public class Sftp extends AbstractFtp {
 	 * @param dest 目标文件路径
 	 * @return this
 	 */
-	public Sftp get(final String src, final String dest) {
+	public JschSftp get(final String src, final String dest) {
 		try {
 			getClient().get(src, dest);
 		} catch (final SftpException e) {
@@ -679,7 +621,7 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 * @since 5.7.0
 	 */
-	public Sftp get(final String src, final OutputStream out) {
+	public JschSftp get(final String src, final OutputStream out) {
 		try {
 			getClient().get(src, out);
 		} catch (final SftpException e) {
