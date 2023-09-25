@@ -468,4 +468,20 @@ public class UserAgentUtilTest {
 		Assertions.assertEquals("iPhone", ua2.getPlatform().toString());
 		Assertions.assertTrue(ua2.isMobile());
 	}
+
+	@Test
+	void issueI847JYTest() {
+		final String s = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) " +
+			"Mobile/15E148 SP-engine/2.80.0 main%2F1.0 baiduboxapp/13.42.0.11 (Baidu; P2 17.0) NABar/1.0 themeUA=Them";
+		final UserAgent ua2 = UserAgentUtil.parse(s);
+
+		Assertions.assertEquals("Baidu", ua2.getBrowser().toString());
+		Assertions.assertEquals("13.42.0.11", ua2.getVersion());
+		Assertions.assertEquals("Webkit", ua2.getEngine().toString());
+		Assertions.assertEquals("605.1.15", ua2.getEngineVersion());
+		Assertions.assertEquals("iPhone", ua2.getOs().toString());
+		Assertions.assertEquals("17_0", ua2.getOsVersion());
+		Assertions.assertEquals("iPhone", ua2.getPlatform().toString());
+		Assertions.assertTrue(ua2.isMobile());
+	}
 }
