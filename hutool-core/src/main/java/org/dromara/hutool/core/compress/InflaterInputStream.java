@@ -21,7 +21,7 @@ import java.util.zip.Inflater;
 
 /**
  * {@link java.util.zip.InflaterInputStream}包装实现，实现"deflate"算法解压<br>
- * 参考：org.mina.hc.client5.http.entity.DeflateInputStream
+ * 参考：org.apache.hc.client5.http.entity.DeflateInputStream
  *
  * @author looly
  */

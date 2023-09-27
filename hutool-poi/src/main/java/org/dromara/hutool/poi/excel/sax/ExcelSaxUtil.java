@@ -187,7 +187,7 @@ public class ExcelSaxUtil {
 		try {
 			xmlReader = XMLHelper.newXMLReader();
 		} catch (final SAXException | ParserConfigurationException e) {
-			if (e.getMessage().contains("org.mina.xerces.parsers.SAXParser")) {
+			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
 				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
 			} else {
 				throw new POIException(e);

@@ -55,11 +55,11 @@ public interface DriverNamePool {
 	/**
 	 * JDBC 驱动 Hive
 	 */
-	String DRIVER_HIVE = "org.mina.hadoop.hive.jdbc.HiveDriver";
+	String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
 	/**
 	 * JDBC 驱动 Hive2
 	 */
-	String DRIVER_HIVE2 = "org.mina.hive.jdbc.HiveDriver";
+	String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
 	/**
 	 * JDBC 驱动 H2
 	 */
@@ -67,7 +67,7 @@ public interface DriverNamePool {
 	/**
 	 * JDBC 驱动 Derby
 	 */
-	String DRIVER_DERBY = "org.mina.derby.jdbc.AutoloadedDriver";
+	String DRIVER_DERBY = "org.apache.derby.jdbc.AutoloadedDriver";
 	/**
 	 * JDBC 驱动 HSQLDB
 	 */
@@ -83,7 +83,7 @@ public interface DriverNamePool {
 	/**
 	 * JDBC 驱动 Ignite thin
 	 */
-	String DRIVER_IGNITE_THIN = "org.mina.ignite.IgniteJdbcThinDriver";
+	String DRIVER_IGNITE_THIN = "org.apache.ignite.IgniteJdbcThinDriver";
 	/**
 	 * JDBC 驱动 ClickHouse
 	 */
@@ -103,7 +103,7 @@ public interface DriverNamePool {
 	/**
 	 * JDBC 驱动 Apache Phoenix
 	 */
-	String DRIVER_PHOENIX = "org.mina.phoenix.jdbc.PhoenixDriver";
+	String DRIVER_PHOENIX = "org.apache.phoenix.jdbc.PhoenixDriver";
 	/**
 	 * JDBC 驱动 华为高斯
 	 */

@@ -12,10 +12,11 @@
 
 package org.dromara.hutool.poi.excel;
 
-import org.dromara.hutool.poi.excel.cell.values.NumericCellValue;
-import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
+import org.dromara.hutool.poi.excel.cell.values.NumericCellValue;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 public class NumericCellValueTest {
 
@@ -25,7 +26,7 @@ public class NumericCellValueTest {
 		final ExcelWriter writer = ExcelUtil.getWriter("1899bug_write.xlsx");
 		final Cell cell = reader.getCell(0, 0);
 		// 直接取值
-		// 和CellUtil.getCellValue(org.mina.poi.ss.usermodel.Cell)方法的结果一样
+		// 和CellUtil.getCellValue(org.apache.poi.ss.usermodel.Cell)方法的结果一样
 		// 1899-12-31 04:39:00
 		final Date cellValue = cell.getDateCellValue();
 		// 将这个值写入EXCEL中自定义样式的单元格，结果会是-1

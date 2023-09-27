@@ -27,7 +27,7 @@ import java.security.ProtectionDomain;
 
 /**
  * 类描述工具类<br>
- * 来自：org.mina.dubbo.common.utils.ReflectUtils<br>
+ * 来自：org.apache.dubbo.common.utils.ReflectUtils<br>
  * 在字节码中，类型表示如下：
  * <ul>
  *     <li>byte    =》 B</li>
