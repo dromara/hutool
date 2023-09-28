@@ -18,8 +18,6 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -100,7 +98,7 @@ public class ZipUtilTest {
 	@Test
 	@Disabled
 	public void unzipTest() {
-		final File unzip = ZipUtil.unzip("f:/test/mina-maven-3.6.2.zip", "f:\\test");
+		final File unzip = ZipUtil.unzip("f:/test/apache-maven-3.6.2.zip", "f:\\test");
 		Console.log(unzip);
 	}
 

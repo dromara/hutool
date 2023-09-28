@@ -66,7 +66,7 @@ public class ArchiverTest {
 	public void sevenZTest() {
 		final File file = FileUtil.file("d:/test/compress/test.7z");
 		CompressUtil.createArchiver(CharsetUtil.UTF_8, ArchiveStreamFactory.SEVEN_Z, file)
-				.add(FileUtil.file("d:/Java/mina-maven-3.8.1"), (f) -> {
+				.add(FileUtil.file("d:/Java/apache-maven-3.8.1"), (f) -> {
 					Console.log("Add: {}", f.getPath());
 					return true;
 				})
@@ -78,7 +78,7 @@ public class ArchiverTest {
 	public void tgzTest() {
 		final File file = FileUtil.file("d:/test/compress/test.tgz");
 		CompressUtil.createArchiver(CharsetUtil.UTF_8, "tgz", file)
-				.add(FileUtil.file("d:/Java/mina-maven-3.8.1"), (f) -> {
+				.add(FileUtil.file("d:/Java/apache-maven-3.8.1"), (f) -> {
 					Console.log("Add: {}", f.getPath());
 					return true;
 				})

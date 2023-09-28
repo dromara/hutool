@@ -22,7 +22,8 @@ import java.util.function.Predicate;
  * 包装 {@link Iterator}并根据{@link Predicate}定义，过滤元素输出<br>
  * 类实现来自Apache Commons Collection
  *
- * @author mina commons, looly
+ * @param <E> 元素类型
+ * @author Apahce-commons, looly
  * @since 5.8.0
  */
 public class FilterIter<E> implements Iterator<E> {

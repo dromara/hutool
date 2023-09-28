@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 基于 Apache FtpServer（http://mina.apache.org/ftpserver-project/）的FTP服务端简单封装。
+ * 基于 Apache FtpServer（http://apache.apache.org/ftpserver-project/）的FTP服务端简单封装。
  *
  * @author looly
  * @since 5.5.0

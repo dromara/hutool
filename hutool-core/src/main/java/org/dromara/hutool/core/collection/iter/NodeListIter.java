@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
  * <p>
  * 此 iterator 不支持 {@link #remove()} 方法。
  *
- * @author mina commons,looly
+ * @author Apache-commons,looly
  * @see NodeList
  * @since 5.8.0
  */
