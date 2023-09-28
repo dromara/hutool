@@ -42,10 +42,12 @@ public class JSONStrFormatter {
 				if (null == wrapChar) {
 					//字符串模式开始
 					wrapChar = key;
-				} else if (isEscapeMode) {
-					//在字符串模式下的转义
-					isEscapeMode = false;
 				} else if (wrapChar.equals(key)) {
+					if (isEscapeMode) {
+						//字符串模式下，遇到结束符号，也同时结束转义
+						isEscapeMode = false;
+					}
+
 					//字符串包装结束
 					wrapChar = null;
 				}
