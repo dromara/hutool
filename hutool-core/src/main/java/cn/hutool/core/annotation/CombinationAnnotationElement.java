@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -98,10 +99,12 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 */
 	private void init(AnnotatedElement element) {
 		final Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
+		Arrays.sort(declaredAnnotations, Comparator.comparing(Annotation::toString));
 		this.declaredAnnotationMap = new TableMap<>();
 		parseDeclared(declaredAnnotations);
 
 		final Annotation[] annotations = element.getAnnotations();
+		Arrays.sort(annotations, Comparator.comparing(Annotation::toString));
 		if (Arrays.equals(declaredAnnotations, annotations)) {
 			this.annotationMap = this.declaredAnnotationMap;
 		} else {
