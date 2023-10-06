@@ -358,7 +358,7 @@ public class Request implements HeaderOperation<Request> {
 		if (Method.GET.equals(method) && !this.isRest) {
 			final HttpBody body = this.body;
 			if (body instanceof FormBody) {
-				final UrlBuilder urlBuilder = UrlBuilder.of(this.url.toURL(), this.url.getCharset());
+				final UrlBuilder urlBuilder = UrlBuilder.of(this.url);
 				UrlQuery query = urlBuilder.getQuery();
 				if (null == query) {
 					query = UrlQuery.of();

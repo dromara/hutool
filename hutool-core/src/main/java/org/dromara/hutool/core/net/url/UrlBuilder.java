@@ -75,6 +75,19 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	private final boolean needEncodePercent;
 
+	// region ----- of
+
+	/**
+	 * 使用UrlBuilder构建UrlBuilder
+	 *
+	 * @param builder {@code UrlBuilder}
+	 * @return UrlBuilder
+	 */
+	public static UrlBuilder of(final UrlBuilder builder) {
+		return of(builder.getScheme(), builder.getHost(), builder.getPort(), builder.getPathStr(),
+			builder.getQueryStr(), builder.getFragment(), builder.getCharset());
+	}
+
 	/**
 	 * 使用URI构建UrlBuilder
 	 *
@@ -203,6 +216,7 @@ public final class UrlBuilder implements Builder<String> {
 	public static UrlBuilder of() {
 		return new UrlBuilder();
 	}
+	// endregion
 
 	/**
 	 * 构造

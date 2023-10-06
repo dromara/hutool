@@ -30,6 +30,21 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 
 	private final Map<K, V> map;
 
+	// region ----- of
+	/**
+	 * 创建Builder，默认HashMap实现
+	 *
+	 * @param <K>   Key类型
+	 * @param <V>   Value类型
+	 * @param key   键
+	 * @param value 值
+	 * @return MapBuilder
+	 */
+	public static <K, V> MapBuilder<K, V> of(final K key, final V value) {
+		final MapBuilder<K, V> builder = of();
+		return builder.put(key, value);
+	}
+
 	/**
 	 * 创建Builder，默认HashMap实现
 	 *
@@ -67,6 +82,7 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
 	public static <K, V> MapBuilder<K, V> of(final Map<K, V> map) {
 		return new MapBuilder<>(map);
 	}
+	// endregion
 
 	/**
 	 * 链式Map创建类

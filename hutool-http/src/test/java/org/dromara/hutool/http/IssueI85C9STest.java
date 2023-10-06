@@ -12,28 +12,42 @@
 
 package org.dromara.hutool.http;
 
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
-import org.dromara.hutool.http.client.engine.httpclient4.HttpClient4Engine;
+import org.dromara.hutool.http.client.engine.ClientEngine;
+import org.dromara.hutool.http.client.engine.okhttp.OkHttpEngine;
 import org.dromara.hutool.http.meta.Method;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-
 public class IssueI85C9STest {
 
+	private final ClientEngine  engine = new OkHttpEngine();
 
 	@Test
 	@Disabled
 	void getWithFormTest() {
+
 		final Response send = Request.of("http://localhost:8888/formTest")
 			.method(Method.GET)
-			.form(MapBuilder.of(new HashMap<String, Object>()).put("a", 1).put("b", 2).build())
-			.send(new HttpClient4Engine());
+			.setRest(true)
+			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
+			.send(engine);
 
-		Console.log(send.bodyStr());
+		Assertions.assertEquals("{a=[1], b=[2]}", send.bodyStr());
+	}
+
+	@Test
+	@Disabled
+	void getWithFormAndUrlParamTest() {
+
+		final Response send = Request.of("http://localhost:8888/formTest?c=3")
+			.method(Method.GET)
+			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
+			.send(engine);
+
+		Assertions.assertEquals("{a=[1], b=[2], c=[3]}", send.bodyStr());
 	}
 }
