@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -12,30 +12,24 @@
 
 package org.dromara.hutool.core.comparator;
 
+import java.text.Collator;
 import java.util.Locale;
 
 /**
- * 按照GBK拼音顺序对给定的汉字字符串排序
+ * 自定义语言环境 String 比较，可为自然语言文本构建搜索和排序例程。
  *
  * @author looly
- * @since 4.0.8
  */
-public class PinyinComparator extends LocaleComparator {
+public class LocaleComparator extends NullComparator<String> {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 构造，{@code null}最大，排在最后
-	 */
-	public PinyinComparator() {
-		this(true);
-	}
 
 	/**
 	 * 构造
 	 *
-	 * @param nullGreater 是否{@code null}最大，排在最后
+	 * @param nullGreater   是否{@code null}在后
+	 * @param desiredLocale 语言环境
 	 */
-	public PinyinComparator(final boolean nullGreater) {
-		super(nullGreater, Locale.CHINESE);
+	public LocaleComparator(final boolean nullGreater, final Locale desiredLocale) {
+		super(nullGreater, Collator.getInstance(desiredLocale));
 	}
 }
