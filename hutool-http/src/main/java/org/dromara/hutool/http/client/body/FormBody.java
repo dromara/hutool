@@ -56,6 +56,15 @@ public abstract class FormBody<T extends FormBody<T>> implements HttpBody {
 	}
 
 	/**
+	 * 获取表单内容
+	 *
+	 * @return 表单内容
+	 */
+	public Map<String, Object> form(){
+		return this.form;
+	}
+
+	/**
 	 * 设置map类型表单数据
 	 *
 	 * @param formMap 表单内容

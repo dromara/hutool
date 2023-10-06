@@ -105,9 +105,9 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	 */
 	public JdkHttpConnection setMethod(final Method method) {
 		if (Method.POST.equals(method) //
-				|| Method.PUT.equals(method)//
-				|| Method.PATCH.equals(method)//
-				|| Method.DELETE.equals(method)) {
+			|| Method.PUT.equals(method)//
+			|| Method.PATCH.equals(method)//
+			|| Method.DELETE.equals(method)) {
 			this.conn.setUseCaches(false);
 
 			// 增加PATCH方法支持
@@ -364,7 +364,11 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 		// 修改为POST，而且无法调用setRequestMethod方法修改，因此此处使用反射强制修改字段属性值
 		// https://stackoverflow.com/questions/978061/http-get-with-request-body/983458
 		if (method == Method.GET && method != getMethod()) {
-			FieldUtil.setFieldValue(this.conn, "method", Method.GET.name());
+			try {
+				FieldUtil.setFieldValue(this.conn, "method", Method.GET.name());
+			} catch (final RuntimeException ignore) {
+				// JDK9+中可能反射失败，忽略之
+			}
 		}
 
 		return out;
@@ -410,7 +414,6 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 
 	/**
 	 * 断开连接
-	 *
 	 */
 	@Override
 	public void close() {

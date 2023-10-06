@@ -17,11 +17,13 @@ import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.multi.ListValueMap;
 import org.dromara.hutool.core.net.url.UrlBuilder;
+import org.dromara.hutool.core.net.url.UrlQuery;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpGlobalConfig;
+import org.dromara.hutool.http.client.body.FormBody;
 import org.dromara.hutool.http.client.body.HttpBody;
 import org.dromara.hutool.http.client.body.StringBody;
 import org.dromara.hutool.http.client.body.UrlEncodedFormBody;
@@ -105,6 +107,10 @@ public class Request implements HeaderOperation<Request> {
 	 * 最大重定向次数
 	 */
 	private int maxRedirectCount;
+	/**
+	 * 是否是REST请求模式，REST模式运行GET请求附带body
+	 */
+	private boolean isRest;
 
 	/**
 	 * 默认构造
@@ -146,6 +152,15 @@ public class Request implements HeaderOperation<Request> {
 	 */
 	public UrlBuilder url() {
 		return url;
+	}
+
+	/**
+	 * 获取处理后的请求URL，即如果为非REST的GET请求，将form类型的body拼接为URL的一部分
+	 *
+	 * @return URL
+	 */
+	public UrlBuilder handledUrl() {
+		return urlWithParamIfGet();
 	}
 
 	/**
@@ -227,10 +242,22 @@ public class Request implements HeaderOperation<Request> {
 	/**
 	 * 获取请求体
 	 *
-	 * @return this
+	 * @return 请求体
 	 */
 	public HttpBody body() {
 		return this.body;
+	}
+
+	/**
+	 * 获取处理过的请求体，即如果是非REST的GET请求，始终返回{@code null}
+	 *
+	 * @return 请求体
+	 */
+	public HttpBody handledBody() {
+		if (Method.GET.equals(method) && !this.isRest) {
+			return null;
+		}
+		return body();
 	}
 
 	/**
@@ -292,6 +319,18 @@ public class Request implements HeaderOperation<Request> {
 	}
 
 	/**
+	 * 设置是否rest模式<br>
+	 * rest模式下get请求不会把参数附加到URL之后，而是作为body发送
+	 *
+	 * @param isRest 是否rest模式
+	 * @return this
+	 */
+	public Request setRest(final boolean isRest) {
+		this.isRest = isRest;
+		return this;
+	}
+
+	/**
 	 * 发送请求
 	 *
 	 * @return 响应内容
@@ -306,7 +345,30 @@ public class Request implements HeaderOperation<Request> {
 	 * @param engine 自自定义引擎
 	 * @return 响应内容
 	 */
-	public Response send(final ClientEngine engine){
+	public Response send(final ClientEngine engine) {
 		return engine.send(this);
+	}
+
+	/**
+	 * 对于GET请求将参数加到URL中<br>
+	 * 此处不对URL中的特殊字符做单独编码<br>
+	 * 对于非rest的GET请求，且处于重定向时，参数丢弃
+	 */
+	private UrlBuilder urlWithParamIfGet() {
+		if (Method.GET.equals(method) && !this.isRest) {
+			final HttpBody body = this.body;
+			if (body instanceof FormBody) {
+				final UrlBuilder urlBuilder = UrlBuilder.of(this.url.toURL(), this.url.getCharset());
+				UrlQuery query = urlBuilder.getQuery();
+				if (null == query) {
+					query = UrlQuery.of();
+					urlBuilder.setQuery(query);
+				}
+				query.addAll(((FormBody<?>) body).form());
+				return urlBuilder;
+			}
+		}
+
+		return this.url();
 	}
 }

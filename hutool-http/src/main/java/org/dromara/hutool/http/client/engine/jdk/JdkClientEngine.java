@@ -100,7 +100,7 @@ public class JdkClientEngine implements ClientEngine {
 	 * @throws IOException IO异常
 	 */
 	private void doSend(final JdkHttpConnection conn, final Request message) throws IOException {
-		final HttpBody body = message.body();
+		final HttpBody body = message.handledBody();
 		if (null != body) {
 			// 带有消息体，一律按照Rest方式发送
 			body.writeClose(conn.getOutputStream());
@@ -121,7 +121,7 @@ public class JdkClientEngine implements ClientEngine {
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 
 		final JdkHttpConnection conn = JdkHttpConnection
-				.of(message.url().toURL(), config.getProxy())
+				.of(message.handledUrl().toURL(), config.getProxy())
 				.setConnectTimeout(config.getConnectionTimeout())
 				.setReadTimeout(config.getReadTimeout())
 				.setMethod(message.method())//
@@ -162,7 +162,7 @@ public class JdkClientEngine implements ClientEngine {
 
 			if (code != HttpURLConnection.HTTP_OK) {
 				if (HttpStatus.isRedirected(code)) {
-					message.url(getLocationUrl(message.url(), conn.header(HeaderName.LOCATION)));
+					message.url(getLocationUrl(message.handledUrl(), conn.header(HeaderName.LOCATION)));
 					if (redirectCount < message.maxRedirectCount()) {
 						redirectCount++;
 						return send(message, isAsync);

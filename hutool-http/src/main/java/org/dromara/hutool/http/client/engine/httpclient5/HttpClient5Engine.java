@@ -31,15 +31,14 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.http.GlobalHeaders;
 import org.dromara.hutool.http.HttpException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
@@ -143,7 +142,7 @@ public class HttpClient5Engine implements ClientEngine {
 	 */
 	@SuppressWarnings("ConstantConditions")
 	private static ClassicHttpRequest buildRequest(final Request message) {
-		final UrlBuilder url = message.url();
+		final UrlBuilder url = message.handledUrl();
 		Assert.notNull(url, "Request URL must be not null!");
 		final URI uri = url.toURI();
 
@@ -153,7 +152,7 @@ public class HttpClient5Engine implements ClientEngine {
 		request.setHeaders(toHeaderList(message.headers()).toArray(new Header[0]));
 
 		// 填充自定义消息体
-		final HttpBody body = message.body();
+		final HttpBody body = message.handledBody();
 		if(null != body){
 			request.setEntity(new HttpClient5BodyEntity(
 				// 用户自定义的内容类型

@@ -141,7 +141,7 @@ public class HttpClient4Engine implements ClientEngine {
 	 * @return {@link HttpUriRequest}
 	 */
 	private static HttpUriRequest buildRequest(final Request message) {
-		final UrlBuilder url = message.url();
+		final UrlBuilder url = message.handledUrl();
 		Assert.notNull(url, "Request URL must be not null!");
 		final URI uri = url.toURI();
 
@@ -153,7 +153,7 @@ public class HttpClient4Engine implements ClientEngine {
 		message.headers().forEach((k, v1) -> v1.forEach((v2) -> requestBuilder.addHeader(k, v2)));
 
 		// 填充自定义消息体
-		final HttpBody body = message.body();
+		final HttpBody body = message.handledBody();
 		if(null != body){
 			requestBuilder.setEntity(new HttpClient4BodyEntity(
 				// 用户自定义的内容类型

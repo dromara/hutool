@@ -13,13 +13,12 @@
 package org.dromara.hutool.http.client.engine.okhttp;
 
 import okhttp3.OkHttpClient;
-import okhttp3.internal.http.HttpMethod;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.http.client.ClientConfig;
-import org.dromara.hutool.http.client.body.HttpBody;
-import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.client.body.HttpBody;
+import org.dromara.hutool.http.client.engine.ClientEngine;
 import org.dromara.hutool.http.proxy.HttpProxy;
 import org.dromara.hutool.http.ssl.SSLInfo;
 
@@ -126,14 +125,14 @@ public class OkHttpEngine implements ClientEngine {
 	 */
 	private static okhttp3.Request buildRequest(final Request message) {
 		final okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-			.url(message.url().toURL());
+			.url(message.handledUrl().toURL());
 
 		// 填充方法
 		final String method = message.method().name();
-		final HttpBody body = message.body();
+		final HttpBody body = message.handledBody();
 		// if (HttpMethod.permitsRequestBody(method)) {
 		if (null != body) {
-			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充
+			// 为了兼容支持rest请求，在此不区分是否为GET等方法，一律按照body是否有值填充，兼容
 			builder.method(method, new OkHttpRequestBody(body));
 		} else {
 			builder.method(method, null);
