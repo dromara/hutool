@@ -16,7 +16,7 @@ import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.engine.ClientEngine;
-import org.dromara.hutool.http.client.engine.okhttp.OkHttpEngine;
+import org.dromara.hutool.http.client.engine.httpclient5.HttpClient5Engine;
 import org.dromara.hutool.http.meta.Method;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 public class IssueI85C9STest {
 
-	private final ClientEngine  engine = new OkHttpEngine();
+	private final ClientEngine  engine = new HttpClient5Engine();
 
 	@Test
 	@Disabled
@@ -32,7 +32,6 @@ public class IssueI85C9STest {
 
 		final Response send = Request.of("http://localhost:8888/formTest")
 			.method(Method.GET)
-			.setRest(true)
 			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
 			.send(engine);
 
