@@ -18,12 +18,16 @@ import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.engine.httpclient4.HttpClient4Engine;
 import org.dromara.hutool.http.meta.Method;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
 public class IssueI85C9STest {
+
+
 	@Test
+	@Disabled
 	void getWithFormTest() {
 		final Response send = Request.of("http://localhost:8888/formTest")
 			.method(Method.GET)
