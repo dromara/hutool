@@ -301,11 +301,7 @@ public class ReflectUtil {
 		if (null != obj) {
 			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
 			if (null != fields) {
-				final Object[] values = new Object[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					values[i] = getFieldValue(obj, fields[i]);
-				}
-				return values;
+				return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
 			}
 		}
 		return null;
