@@ -2,12 +2,13 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.23(2023-09-28)
+# 5.8.23(2023-10-08)
 
 ### 🐣新特性
 * 【json  】      改进TemporalAccessorSerializer支持dayOfMonth和month枚举名（issue#I82AM8@Gitee）
 * 【core  】      新增ProxySocketFactory
 * 【http  】      UserAgent增加百度浏览器识别（issue#I847JY@Gitee）
+* 【core  】      ReflectUtil.getFieldsValue增加Filter重载（pr#1090@Gitee）
 
 ### 🐞Bug修复
 * 【cron  】      修复Cron表达式range解析错误问题（issue#I82CSH@Gitee）
