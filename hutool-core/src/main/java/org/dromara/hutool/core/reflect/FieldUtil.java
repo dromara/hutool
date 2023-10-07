@@ -248,14 +248,22 @@ public class FieldUtil {
 	 * @since 4.1.17
 	 */
 	public static Object[] getFieldsValue(final Object obj) {
+		return getFieldsValue(obj, null);
+	}
+
+	/**
+	 * 获取所有字段的值
+	 *
+	 * @param obj    bean对象，如果是static字段，此处为类class
+	 * @param filter 字段过滤器，{@code null}返回原集合
+	 * @return 字段值数组
+	 * @since 5.8.23
+	 */
+	public static Object[] getFieldsValue(final Object obj, final Predicate<Field> filter) {
 		if (null != obj) {
-			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass());
+			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
 			if (null != fields) {
-				final Object[] values = new Object[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					values[i] = getFieldValue(obj, fields[i]);
-				}
-				return values;
+				return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
 			}
 		}
 		return null;

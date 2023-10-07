@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.reflect;
 
+import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -50,5 +51,34 @@ public class FieldUtilTest {
 
 		final Field subField = FieldUtil.getField(ReflectUtilTest.TestSubClass.class, "subField");
 		Assertions.assertNotNull(subField);
+	}
+
+	@Test
+	void getFieldsValueTest() {
+		final TestBean testBean = new TestBean();
+		testBean.setA("A");
+		testBean.setB(1);
+
+		final Object[] fieldsValue = FieldUtil.getFieldsValue(testBean);
+		Assertions.assertEquals(2, fieldsValue.length);
+		Assertions.assertEquals("A", fieldsValue[0]);
+		Assertions.assertEquals(1, fieldsValue[1]);
+	}
+
+	@Test
+	void getFieldsValueTest2() {
+		final TestBean testBean = new TestBean();
+		testBean.setA("A");
+		testBean.setB(1);
+
+		final Object[] fieldsValue = FieldUtil.getFieldsValue(testBean, (field ->  field.getName().equals("a")));
+		Assertions.assertEquals(1, fieldsValue.length);
+		Assertions.assertEquals("A", fieldsValue[0]);
+	}
+
+	@Data
+	static class TestBean{
+		private String a;
+		private int b;
 	}
 }
