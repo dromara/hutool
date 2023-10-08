@@ -1006,6 +1006,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		config.addRequestInterceptor(interceptor);
 		return this;
 	}
+	/**
+	 * 设置拦截器，用于在请求异常重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 * @since 5.8.23
+	 */
+	public HttpRequest addExceptionInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		config.addExceptionInterceptor(interceptor);
+		return this;
+	}
 
 	/**
 	 * 设置拦截器，用于在请求前重新编辑请求
@@ -1049,7 +1060,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpResponse execute(boolean isAsync) {
-		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors);
+		return doExecute(isAsync, config.requestInterceptors, config.responseInterceptors,
+			config.exceptionInterceptors);
 	}
 
 	/**
@@ -1174,7 +1186,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	private HttpResponse doExecute(boolean isAsync, HttpInterceptor.Chain<HttpRequest> requestInterceptors,
-								   HttpInterceptor.Chain<HttpResponse> responseInterceptors) {
+								   HttpInterceptor.Chain<HttpResponse> responseInterceptors,
+								   HttpInterceptor.Chain<HttpRequest> exceptionInterceptors) {
 		if (null != requestInterceptors) {
 			for (HttpInterceptor<HttpRequest> interceptor : requestInterceptors) {
 				interceptor.process(this);
@@ -1185,8 +1198,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		urlWithParamIfGet();
 		// 初始化 connection
 		initConnection();
-		// 发送请求
-		send();
+		try {
+			// 发送请求
+			send();
+		}catch (Exception ex){
+			if (null != exceptionInterceptors) {
+				for (HttpInterceptor<HttpRequest> interceptor : exceptionInterceptors) {
+					interceptor.process(this);
+				}
+			}
+			throw ex;
+		}
 
 		// 手动实现重定向
 		HttpResponse httpResponse = sendRedirectIfPossible(isAsync);
@@ -1308,7 +1330,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 						redirectCount++;
 						// 重定向不再走过滤器
 						return doExecute(isAsync, config.interceptorOnRedirect ? config.requestInterceptors : null,
-								config.interceptorOnRedirect ? config.responseInterceptors : null);
+								config.interceptorOnRedirect ? config.responseInterceptors : null,
+								config.interceptorOnRedirect ? config.exceptionInterceptors : null);
 					}
 				}
 			}

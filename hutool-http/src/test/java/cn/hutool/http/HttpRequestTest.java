@@ -204,6 +204,7 @@ public class HttpRequestTest {
 		HttpUtil.createGet("https://hutool.cn")
 				.addInterceptor(Console::log)
 				.addResponseInterceptor((res)-> Console.log(res.getStatus()))
+				.addExceptionInterceptor(Console::log)
 				.execute();
 	}
 
@@ -211,6 +212,8 @@ public class HttpRequestTest {
 	@Ignore
 	public void addGlobalInterceptorTest() {
 		GlobalInterceptor.INSTANCE.addRequestInterceptor(Console::log);
+		GlobalInterceptor.INSTANCE.addResponseInterceptor((res)-> Console.log(res.getStatus()));
+		GlobalInterceptor.INSTANCE.addExceptionInterceptor(Console::log);
 		HttpUtil.createGet("https://hutool.cn").execute();
 	}
 

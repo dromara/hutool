@@ -81,6 +81,10 @@ public class HttpConfig {
 	 */
 	final HttpInterceptor.Chain<HttpRequest> requestInterceptors = GlobalInterceptor.INSTANCE.getCopiedRequestInterceptor();
 	/**
+	 * 请求异常的拦截器，用于在请求异常重新编辑请求
+	 */
+	final HttpInterceptor.Chain<HttpRequest> exceptionInterceptors = GlobalInterceptor.INSTANCE.getCopiedExceptionInterceptor();
+	/**
 	 * 响应后的拦截器，用于在响应后处理逻辑
 	 */
 	final HttpInterceptor.Chain<HttpResponse> responseInterceptors = GlobalInterceptor.INSTANCE.getCopiedResponseInterceptor();
@@ -278,6 +282,16 @@ public class HttpConfig {
 	 */
 	public HttpConfig addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
+		return this;
+	}
+	/**
+	 * 设置拦截器，用于在请求异常重新编辑请求
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 */
+	public HttpConfig addExceptionInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		this.exceptionInterceptors.addChain(interceptor);
 		return this;
 	}
 

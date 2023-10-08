@@ -11,6 +11,7 @@ public enum GlobalInterceptor {
 	INSTANCE;
 
 	private final HttpInterceptor.Chain<HttpRequest> requestInterceptors = new HttpInterceptor.Chain<>();
+	private final HttpInterceptor.Chain<HttpRequest> exceptionInterceptors = new HttpInterceptor.Chain<>();
 	private final HttpInterceptor.Chain<HttpResponse> responseInterceptors = new HttpInterceptor.Chain<>();
 
 	/**
@@ -21,6 +22,16 @@ public enum GlobalInterceptor {
 	 */
 	synchronized public GlobalInterceptor addRequestInterceptor(HttpInterceptor<HttpRequest> interceptor) {
 		this.requestInterceptors.addChain(interceptor);
+		return this;
+	}
+	/**
+	 * 设置拦截器，用于在请求中抛异常完成编辑或者读取
+	 *
+	 * @param interceptor 拦截器实现
+	 * @return this
+	 */
+	synchronized public GlobalInterceptor addExceptionInterceptor(HttpInterceptor<HttpRequest> interceptor) {
+		this.exceptionInterceptors.addChain(interceptor);
 		return this;
 	}
 
@@ -67,6 +78,16 @@ public enum GlobalInterceptor {
 	}
 
 	/**
+	 * 清空异常拦截器
+	 *
+	 * @return this
+	 */
+	synchronized public GlobalInterceptor clearException() {
+		exceptionInterceptors.clear();
+		return this;
+	}
+
+	/**
 	 * 复制请求过滤器列表
 	 *
 	 * @return {@link cn.hutool.http.HttpInterceptor.Chain}
@@ -74,6 +95,19 @@ public enum GlobalInterceptor {
 	HttpInterceptor.Chain<HttpRequest> getCopiedRequestInterceptor() {
 		final HttpInterceptor.Chain<HttpRequest> copied = new HttpInterceptor.Chain<>();
 		for (HttpInterceptor<HttpRequest> interceptor : this.requestInterceptors) {
+			copied.addChain(interceptor);
+		}
+		return copied;
+	}
+
+	/**
+	 * 复制异常过滤器列表
+	 *
+	 * @return {@link cn.hutool.http.HttpInterceptor.Chain}
+	 */
+	HttpInterceptor.Chain<HttpRequest> getCopiedExceptionInterceptor() {
+		final HttpInterceptor.Chain<HttpRequest> copied = new HttpInterceptor.Chain<>();
+		for (HttpInterceptor<HttpRequest> interceptor : this.exceptionInterceptors) {
 			copied.addChain(interceptor);
 		}
 		return copied;
