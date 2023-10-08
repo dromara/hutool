@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.http;
 
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapBuilder;
 import org.dromara.hutool.http.client.Request;
 import org.dromara.hutool.http.client.Response;
@@ -35,7 +36,9 @@ public class IssueI85C9STest {
 			.form(MapBuilder.of("a", (Object)1).put("b", 2).build())
 			.send(engine);
 
-		Assertions.assertEquals("{a=[1], b=[2]}", send.bodyStr());
+		final String bodyStr = send.bodyStr();
+		Console.log(bodyStr);
+		Assertions.assertEquals("{a=[1], b=[2]}", bodyStr);
 	}
 
 	@Test

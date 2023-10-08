@@ -12,9 +12,9 @@
 
 package org.dromara.hutool.http.client.engine.httpclient5;
 
+import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 import org.dromara.hutool.http.client.body.BytesBody;
 import org.dromara.hutool.http.client.body.HttpBody;
-import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -67,6 +67,6 @@ public class HttpClient5BodyEntity extends AbstractHttpEntity {
 
 	@Override
 	public long getContentLength() {
-		return 0;
+		return -1;
 	}
 }

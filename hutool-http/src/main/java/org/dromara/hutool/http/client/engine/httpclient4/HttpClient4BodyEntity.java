@@ -70,6 +70,6 @@ public class HttpClient4BodyEntity extends AbstractHttpEntity {
 
 	@Override
 	public long getContentLength() {
-		return 0;
+		return -1;
 	}
 }
