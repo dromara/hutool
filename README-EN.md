@@ -138,18 +138,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>org.dromara.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>6.0.0-M7</version>
+    <version>6.0.0-M8</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'org.dromara.hutool:hutool-all:6.0.0-M7'
+implementation 'org.dromara.hutool:hutool-all:6.0.0-M8'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0-M7/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/6.0.0-M8/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
