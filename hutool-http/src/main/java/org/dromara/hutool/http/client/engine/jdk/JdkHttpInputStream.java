@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.http.client.engine.jdk;
 
-import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.GlobalCompressStreamRegister;
 import org.dromara.hutool.http.HttpException;
@@ -106,14 +105,6 @@ public class JdkHttpInputStream extends InputStream {
 			return;
 		}
 
-		final String contentEncoding = response.contentEncoding();
-		final Class<? extends InputStream> streamClass = GlobalCompressStreamRegister.INSTANCE.get(contentEncoding);
-		if (null != streamClass) {
-			try {
-				this.in = ConstructorUtil.newInstance(streamClass, this.in);
-			} catch (final Exception ignore) {
-				// 对于构造错误的压缩算法，跳过之
-			}
-		}
+		this.in = GlobalCompressStreamRegister.INSTANCE.wrapStream(this.in, response.contentEncoding());
 	}
 }

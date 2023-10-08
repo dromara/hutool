@@ -12,12 +12,14 @@
 
 package org.dromara.hutool.http.client.engine.okhttp;
 
-import org.dromara.hutool.core.io.stream.EmptyInputStream;
-import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.http.client.Response;
 import kotlin.Pair;
 import okhttp3.Headers;
 import okhttp3.ResponseBody;
+import org.dromara.hutool.core.io.stream.EmptyInputStream;
+import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.http.GlobalCompressStreamRegister;
+import org.dromara.hutool.http.client.Response;
+import org.dromara.hutool.http.meta.HeaderName;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -77,7 +79,9 @@ public class OkHttpResponse implements Response {
 		if(null == body){
 			return EmptyInputStream.INSTANCE;
 		}
-		return body.byteStream();
+
+		return GlobalCompressStreamRegister.INSTANCE.wrapStream(body.byteStream(),
+			this.rawRes.header(HeaderName.CONTENT_ENCODING.getValue()));
 	}
 
 	@Override

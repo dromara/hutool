@@ -40,9 +40,7 @@ public class OkHttpEngine implements ClientEngine {
 	/**
 	 * 构造
 	 */
-	public OkHttpEngine() {
-		this.client = new OkHttpClient();
-	}
+	public OkHttpEngine() {}
 
 	@Override
 	public OkHttpEngine init(final ClientConfig config) {

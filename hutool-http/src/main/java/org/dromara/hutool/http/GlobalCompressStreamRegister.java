@@ -14,6 +14,7 @@ package org.dromara.hutool.http;
 
 import org.dromara.hutool.core.compress.InflaterInputStream;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
+import org.dromara.hutool.core.reflect.ConstructorUtil;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -43,6 +44,26 @@ public enum GlobalCompressStreamRegister {
 	GlobalCompressStreamRegister() {
 		compressMap.put("gzip", GZIPInputStream.class);
 		compressMap.put("deflate", InflaterInputStream.class);
+	}
+
+	/**
+	 * 包装原始响应流为指定压缩算法解压流
+	 *
+	 * @param in 原始响应流
+	 * @param contentEncoding 压缩编码，如gzip等
+	 * @return 包装后的响应流
+	 */
+	public InputStream wrapStream(final InputStream in, final String contentEncoding){
+		final Class<? extends InputStream> streamClass = get(contentEncoding);
+		if (null != streamClass) {
+			try {
+				return ConstructorUtil.newInstance(streamClass, in);
+			} catch (final Exception ignore) {
+				// 对于构造错误的压缩算法，跳过之
+			}
+		}
+
+		return in;
 	}
 
 	/**
