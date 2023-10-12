@@ -64,6 +64,22 @@ public class EnumUtilTest {
 	}
 
 	@Test
+	public void getEnumMapList(){
+		List<Map<String, Object>> enumMapList = EnumUtil.getEnumMapList(TestEnum.class);
+
+		Assert.assertEquals(3, enumMapList.size());
+
+		for (Map<String, Object> enumMap : enumMapList) {
+			Assert.assertTrue(enumMap.containsKey("enumConstantName"));
+			String enumConstantName = (String) enumMap.get("enumConstantName");
+			Assert.assertTrue(enumConstantName.equals("TEST1") || enumConstantName.equals("TEST2") || enumConstantName.equals("TEST3"));
+			Assert.assertTrue(enumMap.containsKey("type"));
+			Assert.assertEquals(TestEnum.valueOf(enumConstantName).getType(), enumMap.get("type"));
+			Assert.assertEquals(TestEnum.valueOf(enumConstantName).getName(), enumMap.get("name"));
+		}
+	}
+
+	@Test
 	public void getNameFieldMapTest() {
 		Map<String, Object> enumMap = EnumUtil.getNameFieldMap(TestEnum.class, "type");
 		assert enumMap != null;
