@@ -15,6 +15,7 @@
 * 【core  】      修复VersionComparator在极端数据排序时候违反了自反性问题（issue#I81N3H@Gitee）
 * 【json  】      修复JSONStrFormatter:format函数对于转义符号处理逻辑错误问题（issue#I84V6I@Gitee）
 * 【core  】      修复aop的afterException无法生效问题（issue#3329@Github）
+* 【core  】      修复TypeUtil.getClass方法强转报错问题（pr#1092@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.22(2023-09-13)
