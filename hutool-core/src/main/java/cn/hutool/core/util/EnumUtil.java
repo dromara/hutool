@@ -304,6 +304,35 @@ public class EnumUtil {
 	}
 
 	/**
+	 * 获取一个枚举类的所有字段及其对应的枚举常量，并将它们存储在一个List<Map<String, Object>>结构中返回<br>
+	 * 结果中List中的一个Map对应着一个枚举常量,其中Map的key为属性名，value为属性值,特殊的:我们会约定将"enumConstName"为key,枚举常量字段名为value放入Map中,用来标识这个Map对应的是哪个枚举常量
+	 *
+	 * @param enumClazz 需要获取字段的枚举类的Class对象
+	 * @return 包含枚举类所有字段及其对应枚举常量的List<Map<String, Object>>结构
+	 */
+	public static List<Map<String, Object>> getEnumMapList(final Class<? extends Enum<?>> enumClazz) {
+		List<Map<String, Object>> enumMapList = new ArrayList<>();
+		Enum<?>[] enumConstants = enumClazz.getEnumConstants();
+		Field[] declaredEnumFields = ClassUtil.getDeclaredFields(enumClazz);
+		for (Field declaredEnumField : declaredEnumFields) {
+			declaredEnumField.setAccessible(true);
+		}
+		for (Enum<?> enumConstant : enumConstants) {
+			Map<String, Object> map = new LinkedHashMap<>();
+			for (Field field : declaredEnumFields) {
+				if (field.isEnumConstant() && ObjectUtil.equal(ReflectUtil.getFieldValue(enumConstant,field), enumConstant)) {
+					map.put("enumConstantName", field.getName());
+				}
+				if (!field.isEnumConstant() && !field.isSynthetic() && !field.getName().contains("$VALUES")) {
+					map.put(field.getName(),ReflectUtil.getFieldValue(enumConstant,field));
+				}
+			}
+			enumMapList.add(map);
+		}
+		return enumMapList;
+	}
+
+	/**
 	 * 获得枚举名对应指定字段值的Map<br>
 	 * 键为枚举名，值为字段值
 	 *
