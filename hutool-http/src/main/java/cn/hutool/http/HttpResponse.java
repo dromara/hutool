@@ -23,7 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -224,6 +227,16 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public String getCookieValue(String name) {
 		final HttpCookie cookie = getCookie(name);
 		return (null == cookie) ? null : cookie.getValue();
+	}
+
+	/**
+	 * 获取返回头信息（不包含状态行）
+	 * @return 头部信息（不包含状态行）
+	 */
+	public Map<String, List<String>> getHeadersWithoutStatusLine() {
+		Map<String, List<String>> copyHeaders = new HashMap<>(headers);
+		copyHeaders.remove(null);
+		return Collections.unmodifiableMap(copyHeaders);
 	}
 	// ---------------------------------------------------------------- Http Response Header end
 
