@@ -1,6 +1,9 @@
 package cn.hutool.core.map;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -26,14 +29,35 @@ public class BiMap<K, V> extends MapWrapper<K, V> {
 	 */
 	public BiMap(Map<K, V> raw) {
 		super(raw);
+		if(raw instanceof HashMap){
+			inverse = new HashMap<>();
+		}else if(raw instanceof ConcurrentMap){
+			inverse = new ConcurrentHashMap<>();
+		}
 	}
 
 	@Override
 	public V put(K key, V value) {
+		if(super.containsKey(key)){
+			throw new IllegalArgumentException("value already present");
+		}
 		if (null != this.inverse) {
 			this.inverse.put(value, key);
 		}
 		return super.put(key, value);
+	}
+
+	/**
+	 * 如果已经存在绑定的键值对，用这个方法更改其绑定关系而不是put。直接使用put可能会破坏bimap的一对一特性
+	 *
+	 * @param key
+	 * @param value
+	 *
+	 */
+	public V forcePut(K key, V value){
+		V formerValue = super.remove(key);
+		inverse.remove(formerValue);
+		return put(key,value);
 	}
 
 	@Override
