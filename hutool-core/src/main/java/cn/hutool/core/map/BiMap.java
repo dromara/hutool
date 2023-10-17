@@ -10,7 +10,7 @@ import java.util.function.Function;
  * 值的顺序在HashMap中不确定，所以谁覆盖谁也不确定，在有序的Map中按照先后顺序覆盖，保留最后的值<br>
  * 它与TableMap的区别是，BiMap维护两个Map实现高效的正向和反向查找
  *
- * @param <K> 键类型
+ * @param <K> 键类型 //
  * @param <V> 值类型
  * @since 5.2.6
  */
