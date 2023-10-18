@@ -175,7 +175,12 @@ public class NamingCase {
 	}
 
 	/**
-	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。
+	 * 将连接符方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
+	 * 当otherCharToLower为{@code true}时，分为以下情况：
+	 * <ul>
+	 *     <li>如果给定字符串全部为大写，转换为小写，如NAME转为name。</li>
+	 *     <li>如果给定字符串大小写混合，认定为字符串已经是驼峰模式，只小写首字母，如TableName转换为tableName。</li>
+	 * </ul>
 	 *
 	 * @param name             转换前的自定义方式命名的字符串
 	 * @param symbol           原字符串中的连接符连接符
@@ -206,6 +211,13 @@ public class NamingCase {
 			}
 			return sb.toString();
 		} else {
+			if(otherCharToLower){
+				if(StrUtil.isUpperCase(name2)){
+					return name2.toLowerCase();
+				}
+				return StrUtil.lowerFirst(name2);
+			}
+
 			return name2;
 		}
 	}

@@ -22,7 +22,7 @@ public class NamingCaseTest {
 	public void toCamelCaseTest() {
 		Dict.of()
 				.set("Table_Test_Of_day","tableTestOfDay")
-				.set("TableTestOfDay","TableTestOfDay")
+				.set("TableTestOfDay","tableTestOfDay")
 				.set("abc_1d","abc1d")
 				.forEach((key, value) -> Assertions.assertEquals(value, NamingCase.toCamelCase(key)));
 	}
