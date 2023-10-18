@@ -25,8 +25,8 @@ public class BiMapTest {
 		biMap.put("aaa", 111);
 		biMap.put("bbb", 222);
 
-		Assertions.assertEquals(new Integer(111), biMap.get("aaa"));
-		Assertions.assertEquals(new Integer(222), biMap.get("bbb"));
+		Assertions.assertEquals(Integer.valueOf(111), biMap.get("aaa"));
+		Assertions.assertEquals(Integer.valueOf(222), biMap.get("bbb"));
 
 		Assertions.assertEquals("aaa", biMap.getKey(111));
 		Assertions.assertEquals("bbb", biMap.getKey(222));
@@ -39,7 +39,7 @@ public class BiMapTest {
 		biMap.put("bbb", 222);
 
 		biMap.computeIfAbsent("ccc", s -> 333);
-		Assertions.assertEquals(new Integer(333), biMap.get("ccc"));
+		Assertions.assertEquals(Integer.valueOf(333), biMap.get("ccc"));
 		Assertions.assertEquals("ccc", biMap.getKey(333));
 	}
 
@@ -50,7 +50,7 @@ public class BiMapTest {
 		biMap.put("bbb", 222);
 
 		biMap.putIfAbsent("ccc", 333);
-		Assertions.assertEquals(new Integer(333), biMap.get("ccc"));
+		Assertions.assertEquals(Integer.valueOf(333), biMap.get("ccc"));
 		Assertions.assertEquals("ccc", biMap.getKey(333));
 	}
 }
