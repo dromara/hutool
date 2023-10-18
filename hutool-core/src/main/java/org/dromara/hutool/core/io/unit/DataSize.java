@@ -197,7 +197,7 @@ public final class DataSize implements Comparable<DataSize> {
 	public static DataSize parse(final CharSequence text, final DataUnit defaultUnit) {
 		Assert.notNull(text, "Text must not be null");
 		try {
-			final Matcher matcher = PATTERN.matcher(text);
+			final Matcher matcher = PATTERN.matcher(StrUtil.cleanBlank(text));
 			Assert.state(matcher.matches(), "Does not match data size pattern");
 
 			final DataUnit unit = determineDataUnit(matcher.group(3), defaultUnit);
