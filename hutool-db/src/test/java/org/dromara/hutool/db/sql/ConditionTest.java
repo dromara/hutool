@@ -80,4 +80,10 @@ public class ConditionTest {
 		final Condition age = Condition.parse("age", "in 1,2,3");
 		Assertions.assertEquals("age IN (?,?,?)", age.toString());
 	}
+
+	@Test
+	void notInTest() {
+		final Condition age = Condition.parse("age", "not in 1,2,3");
+		Assertions.assertEquals("age NOT IN (?,?,?)", age.toString());
+	}
 }

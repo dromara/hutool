@@ -12,13 +12,13 @@
 
 package org.dromara.hutool.db.sql;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.text.CharUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -55,6 +55,7 @@ public class Condition implements Cloneable, Serializable {
 
 	private static final String OPERATOR_LIKE = "LIKE";
 	private static final String OPERATOR_IN = "IN";
+	private static final String OPERATOR_NOT_IN = "NOT IN";
 	private static final String OPERATOR_IS = "IS";
 	private static final String OPERATOR_IS_NOT = "IS NOT";
 	private static final String OPERATOR_BETWEEN = "BETWEEN";
@@ -262,6 +263,15 @@ public class Condition implements Cloneable, Serializable {
 	}
 
 	/**
+	 * 是否NOT IN条件
+	 *
+	 * @return 是否NOT IN条件
+	 */
+	public boolean isOperatorNotIn() {
+		return OPERATOR_NOT_IN.equalsIgnoreCase(this.operator);
+	}
+
+	/**
 	 * 是否IS条件
 	 *
 	 * @return 是否IS条件
@@ -355,7 +365,7 @@ public class Condition implements Cloneable, Serializable {
 
 		if (isOperatorBetween()) {
 			buildValuePartForBETWEEN(conditionStrBuilder, paramValues);
-		} else if (isOperatorIn()) {
+		} else if (isOperatorIn() || isOperatorNotIn()) {
 			// 类似：" (?,?,?)" 或者 " (1,2,3,4)"
 			buildValuePartForIN(conditionStrBuilder, paramValues);
 		} else {
@@ -502,13 +512,22 @@ public class Condition implements Cloneable, Serializable {
 			}
 		}
 
-		final List<String> strs = SplitUtil.split(valueStr, StrUtil.SPACE, 2, true, false);
+		final List<String> strs = SplitUtil.split(valueStr, StrUtil.SPACE, 3, true, false);
 		if (strs.size() < 2) {
+			// 无空格，按照普通值对待
 			return;
 		}
 
 		// 处理常用符号和IN
 		final String firstPart = strs.get(0).toUpperCase();
+
+		// issue#I892T5 处理NOT IN
+		if("NOT".equals(firstPart) && OPERATOR_IN.equalsIgnoreCase(strs.get(1))){
+			this.operator = OPERATOR_NOT_IN;
+			this.value = strs.get(2);
+			return;
+		}
+
 		if (OPERATORS.contains(firstPart)) {
 			this.operator = firstPart;
 			// 比较符号后跟大部分为数字，此处做转换（IN不做转换）
