@@ -14,7 +14,12 @@
 * 【cron  】      修复Cron表达式range解析错误问题（issue#I82CSH@Gitee）
 * 【core  】      修复VersionComparator在极端数据排序时候违反了自反性问题（issue#I81N3H@Gitee）
 * 【json  】      修复JSONStrFormatter:format函数对于转义符号处理逻辑错误问题（issue#I84V6I@Gitee）
+<<<<<<< HEAD
 * 【core  】      修复特定情况下BiMap覆盖Value后，仍能通过旧Value查询到Key问题（issue#I88R5M@Gitee）
+=======
+* 【core  】      修复aop的afterException无法生效问题（issue#3329@Github）
+* 【core  】      修复TypeUtil.getClass方法强转报错问题（pr#1092@Github）
+>>>>>>> fd9e1efa2860ded5cf2d1be5954fd87a2a5830fe
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.22(2023-09-13)
