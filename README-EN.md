@@ -208,10 +208,3 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 ## ⭐Star Hutool
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
-
-## 📌WeChat Official Account
-
-<div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
-	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
-</div>

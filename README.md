@@ -211,9 +211,3 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 ## ⭐Star Hutool
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
-
-## 📌 知识星球
-
-<div align="center">
-	<img src="https://hutool.cn/images/dromara/zsxq.jpg" height="150">
-</div>
