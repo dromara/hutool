@@ -512,7 +512,14 @@ public class Condition implements Cloneable, Serializable {
 			}
 		}
 
-		final List<String> strs = SplitUtil.split(valueStr, StrUtil.SPACE, 3, true, false);
+		// issue#I892T5 处理NOT IN
+		if(StrUtil.startWithIgnoreCase(valueStr, OPERATOR_NOT_IN)){
+			this.operator = OPERATOR_NOT_IN;
+			this.value = StrUtil.trim(StrUtil.subSuf(valueStr, OPERATOR_NOT_IN.length()));
+			return;
+		}
+
+		final List<String> strs = SplitUtil.split(valueStr, StrUtil.SPACE, 2, true, false);
 		if (strs.size() < 2) {
 			// 无空格，按照普通值对待
 			return;
@@ -520,13 +527,6 @@ public class Condition implements Cloneable, Serializable {
 
 		// 处理常用符号和IN
 		final String firstPart = strs.get(0).toUpperCase();
-
-		// issue#I892T5 处理NOT IN
-		if("NOT".equals(firstPart) && OPERATOR_IN.equalsIgnoreCase(strs.get(1))){
-			this.operator = OPERATOR_NOT_IN;
-			this.value = strs.get(2);
-			return;
-		}
 
 		if (OPERATORS.contains(firstPart)) {
 			this.operator = firstPart;
