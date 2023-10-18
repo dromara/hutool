@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.aop.engine.spring;
 
+import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.extra.aop.Aspect;
 import org.dromara.hutool.extra.aop.SimpleInterceptor;
 import org.springframework.cglib.proxy.MethodInterceptor;
@@ -47,10 +48,15 @@ public class SpringCglibInterceptor extends SimpleInterceptor implements MethodI
 		if (aspect.before(target, method, args)) {
 			try {
 				result = proxy.invoke(target, args);
-			} catch (final InvocationTargetException e) {
+			} catch (final Throwable e) {
+				Throwable throwable = e;
+				if(throwable instanceof  InvocationTargetException){
+					throwable = ((InvocationTargetException) throwable).getTargetException();
+				}
+
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
-				if (aspect.afterException(target, method, args, e.getTargetException())) {
-					throw e;
+				if (aspect.afterException(target, method, args, throwable)) {
+					throw throwable;
 				}
 			}
 		}

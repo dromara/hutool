@@ -82,6 +82,19 @@ public class TypeUtilTest {
 		Assertions.assertEquals(Long.class, idType);
 	}
 
+	@Test
+	public void getClasses() {
+		Method method = MethodUtil.getMethod(Parent.class, "getLevel");
+		Type returnType = TypeUtil.getReturnType(method);
+		Class<?> clazz = TypeUtil.getClass(returnType);
+		Assertions.assertEquals(Level1.class, clazz);
+
+		method = MethodUtil.getMethod(Level1.class, "getId");
+		returnType = TypeUtil.getReturnType(method);
+		clazz = TypeUtil.getClass(returnType);
+		Assertions.assertEquals(Object.class, clazz);
+	}
+
 	public static class Level3 extends Level2<Level3>{
 
 	}
@@ -93,6 +106,11 @@ public class TypeUtilTest {
 	@Data
 	public static class Level1<T>{
 		private T id;
+	}
+
+	@Data
+	public static class Parent<T extends Level1<B>, B extends Long> {
+		private T level;
 	}
 
 }

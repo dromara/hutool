@@ -52,7 +52,11 @@ public class TypeUtil {
 			} else if (type instanceof ParameterizedType) {
 				return (Class<?>) ((ParameterizedType) type).getRawType();
 			} else if (type instanceof TypeVariable) {
-				return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
+				//return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
+				final Type[] bounds = ((TypeVariable<?>) type).getBounds();
+				if (bounds.length == 1) {
+					return getClass(bounds[0]);
+				}
 			} else if (type instanceof WildcardType) {
 				final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
 				if (upperBounds.length == 1) {
