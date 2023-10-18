@@ -1376,7 +1376,7 @@ public class DateUtil extends CalendarUtil {
 	 * @return XX天XX小时XX分XX秒XX毫秒
 	 */
 	public static String formatBetween(final long betweenMs, final BetweenFormatter.Level level) {
-		return new BetweenFormatter(betweenMs, level).format();
+		return BetweenFormatter.of(betweenMs, level).format();
 	}
 
 	/**
@@ -1387,7 +1387,7 @@ public class DateUtil extends CalendarUtil {
 	 * @since 3.0.1
 	 */
 	public static String formatBetween(final long betweenMs) {
-		return new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
+		return BetweenFormatter.of(betweenMs, BetweenFormatter.Level.MILLISECOND).format();
 	}
 	// endregion
 
@@ -1660,7 +1660,7 @@ public class DateUtil extends CalendarUtil {
 
 		int result = 0;
 		for (int i = lastIndex; i >= 0; i--) {
-			result += Integer.parseInt(hms.get(i)) * Math.pow(60, (lastIndex - i));
+			result += (int) (Integer.parseInt(hms.get(i)) * Math.pow(60, (lastIndex - i)));
 		}
 		return result;
 	}

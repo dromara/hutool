@@ -42,15 +42,33 @@ public class BetweenFormatter implements Serializable {
 	 * 格式化级别的最大个数
 	 */
 	private final int levelMaxCount;
+	/**
+	 * 是否为简化模式，此标记用于自定义是否输出各个位数中间为0的部分<br>
+	 * 如为{@code true}，输出 1小时3秒，为{@code false}输出 1小时0分3秒
+	 */
+	private boolean simpleMode = true;
 
 	/**
-	 * 构造
+	 * 创建 BetweenFormatter
 	 *
 	 * @param betweenMs 日期间隔
 	 * @param level     级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
+	 * @return BetweenFormatter
 	 */
-	public BetweenFormatter(final long betweenMs, final Level level) {
-		this(betweenMs, level, 0);
+	public static BetweenFormatter of(final long betweenMs, final Level level) {
+		return of(betweenMs, level, 0);
+	}
+
+	/**
+	 * 创建 BetweenFormatter
+	 *
+	 * @param betweenMs     日期间隔
+	 * @param level         级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
+	 * @param levelMaxCount 格式化级别的最大个数，假如级别个数为1，但是级别到秒，那只显示一个级别
+	 * @return BetweenFormatter
+	 */
+	public static BetweenFormatter of(final long betweenMs, final Level level, final int levelMaxCount) {
+		return new BetweenFormatter(betweenMs, level, levelMaxCount);
 	}
 
 	/**
@@ -85,23 +103,38 @@ public class BetweenFormatter implements Serializable {
 			final int level = this.level.ordinal();
 			int levelCount = 0;
 
-			if (isLevelCountValid(levelCount) && 0 != day) {
+			// 天
+			if (isLevelCountValid(levelCount) && day > 0) {
 				sb.append(day).append(Level.DAY.name);
 				levelCount++;
 			}
-			if (isLevelCountValid(levelCount) && 0 != hour && level >= Level.HOUR.ordinal()) {
-				sb.append(hour).append(Level.HOUR.name);
-				levelCount++;
+
+			// 时
+			if (isLevelCountValid(levelCount) && level >= Level.HOUR.ordinal()) {
+				if(hour >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
+					sb.append(hour).append(Level.HOUR.name);
+					levelCount++;
+				}
 			}
-			if (isLevelCountValid(levelCount) && 0 != minute && level >= Level.MINUTE.ordinal()) {
-				sb.append(minute).append(Level.MINUTE.name);
-				levelCount++;
+
+			// 分
+			if (isLevelCountValid(levelCount) && level >= Level.MINUTE.ordinal()) {
+				if(minute >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
+					sb.append(minute).append(Level.MINUTE.name);
+					levelCount++;
+				}
 			}
-			if (isLevelCountValid(levelCount) && 0 != second && level >= Level.SECOND.ordinal()) {
-				sb.append(second).append(Level.SECOND.name);
-				levelCount++;
+
+			// 秒
+			if (isLevelCountValid(levelCount) && level >= Level.SECOND.ordinal()) {
+				if(second >0 || (!this.simpleMode && StrUtil.isNotEmpty(sb))){
+					sb.append(second).append(Level.SECOND.name);
+					levelCount++;
+				}
 			}
-			if (isLevelCountValid(levelCount) && 0 != millisecond && level >= Level.MILLISECOND.ordinal()) {
+
+			// 毫秒
+			if (isLevelCountValid(levelCount) && millisecond > 0 && level >= Level.MILLISECOND.ordinal()) {
 				sb.append(millisecond).append(Level.MILLISECOND.name);
 				// levelCount++;
 			}
@@ -127,9 +160,11 @@ public class BetweenFormatter implements Serializable {
 	 * 设置 时长毫秒数
 	 *
 	 * @param betweenMs 时长毫秒数
+	 * @return this
 	 */
-	public void setBetweenMs(final long betweenMs) {
+	public BetweenFormatter setBetweenMs(final long betweenMs) {
 		this.betweenMs = betweenMs;
+		return this;
 	}
 
 	/**
@@ -145,9 +180,23 @@ public class BetweenFormatter implements Serializable {
 	 * 设置格式化级别
 	 *
 	 * @param level 格式化级别
+	 * @return this
 	 */
-	public void setLevel(final Level level) {
+	public BetweenFormatter setLevel(final Level level) {
 		this.level = level;
+		return this;
+	}
+
+	/**
+	 * 是否为简化模式，此标记用于自定义是否输出各个位数中间为0的部分<br>
+	 * 如为{@code true}，输出 1小时3秒，为{@code false}输出 1小时0分3秒
+	 *
+	 * @param simpleMode 是否简化模式
+	 * @return this
+	 */
+	public BetweenFormatter setSimpleMode(boolean simpleMode) {
+		this.simpleMode = simpleMode;
+		return this;
 	}
 
 	/**
