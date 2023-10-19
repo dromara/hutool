@@ -66,19 +66,36 @@ public class MinaSession implements Session {
 	}
 
 	@Override
-	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
+	public void bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
 		try {
 			this.raw.startLocalPortForwarding(new SshdSocketAddress(localAddress), new SshdSocketAddress(remoteAddress));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return true;
 	}
 
 	@Override
 	public void unBindLocalPort(final InetSocketAddress localAddress) throws IORuntimeException {
 		try {
 			this.raw.stopLocalPortForwarding(new SshdSocketAddress(localAddress));
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	@Override
+	public void bindRemotePort(final InetSocketAddress remoteAddress, final InetSocketAddress localAddress) throws IORuntimeException {
+		try {
+			this.raw.startRemotePortForwarding(new SshdSocketAddress(remoteAddress), new SshdSocketAddress(localAddress));
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	@Override
+	public void unBindRemotePort(final InetSocketAddress remoteAddress) throws IORuntimeException{
+		try {
+			this.raw.stopRemotePortForwarding(new SshdSocketAddress(remoteAddress));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

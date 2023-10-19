@@ -18,7 +18,6 @@ import ch.ethz.ssh2.StreamGobbler;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
 import org.dromara.hutool.extra.ssh.Session;
@@ -92,7 +91,7 @@ public class GanymedSession implements Session {
 	}
 
 	@Override
-	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
+	public void bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
 		final LocalPortForwarder localPortForwarder;
 		try {
 			localPortForwarder = this.connection.createLocalPortForwarder(localAddress, remoteAddress.getHostName(), remoteAddress.getPort());
@@ -106,8 +105,6 @@ public class GanymedSession implements Session {
 
 		//加入记录
 		this.localPortForwarderMap.put(localAddress.toString(), localPortForwarder);
-
-		return true;
 	}
 
 	@Override
@@ -126,34 +123,20 @@ public class GanymedSession implements Session {
 		}
 	}
 
-	/**
-	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
-	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
-	 *
-	 * @param bindPort ssh服务端上要被绑定的端口
-	 * @param host     转发到的host
-	 * @param port     host上的端口
-	 * @return 成功与否
-	 * @throws IORuntimeException 端口绑定失败异常
-	 */
-	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws IORuntimeException {
+	@Override
+	public void bindRemotePort(final InetSocketAddress remoteAddress, final InetSocketAddress localAddress) throws IORuntimeException {
 		try {
-			this.connection.requestRemotePortForwarding(Ipv4Util.LOCAL_IP, bindPort, host, port);
+			this.connection.requestRemotePortForwarding(remoteAddress.getHostName(), remoteAddress.getPort(),
+				localAddress.getHostName(), localAddress.getPort());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return true;
 	}
 
-	/**
-	 * 解除远程端口映射
-	 *
-	 * @param localPort 需要解除的本地端口
-	 * @throws IORuntimeException 端口解绑失败异常
-	 */
-	public void unBindRemotePort(final int localPort) throws IORuntimeException {
+	@Override
+	public void unBindRemotePort(final InetSocketAddress remoteAddress) throws IORuntimeException {
 		try {
-			this.connection.cancelRemotePortForwarding(localPort);
+			this.connection.cancelRemotePortForwarding(remoteAddress.getPort());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

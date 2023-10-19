@@ -36,26 +36,24 @@ public interface Session extends Wrapper<Object>, Closeable {
 	/**
 	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
 	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如只有服务器能访问的内网数据库等
 	 *
 	 * @param localPort  本地端口
 	 * @param remoteAddress 远程主机和端口
-	 * @return 成功与否
 	 */
-	default boolean bindLocalPort(final int localPort, final InetSocketAddress remoteAddress) {
-		return bindLocalPort(new InetSocketAddress(localPort), remoteAddress);
+	default void bindLocalPort(final int localPort, final InetSocketAddress remoteAddress) {
+		bindLocalPort(new InetSocketAddress(localPort), remoteAddress);
 	}
 
 	/**
 	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
 	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
+	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如只有服务器能访问的内网数据库等
 	 *
 	 * @param localAddress  本地主机和端口
 	 * @param remoteAddress 远程主机和端口
-	 * @return 成功与否
 	 */
-	boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress);
+	void bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress);
 
 	/**
 	 * 解除本地端口映射
@@ -73,5 +71,23 @@ public interface Session extends Wrapper<Object>, Closeable {
 	 * @param localAddress 需要解除的本地地址
 	 */
 	void unBindLocalPort(final InetSocketAddress localAddress);
+
+	/**
+	 * 绑定ssh服务端的serverPort端口, 到本地主机的port端口上. <br>
+	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.<br>
+	 * 此方法用于在服务端访问本地资源，如服务器访问本机所在的数据库等。
+	 *
+	 * @param remoteAddress   ssh服务端上要被绑定的地址
+	 * @param localAddress     转发到的本地地址
+	 * @throws SshException 端口绑定失败异常
+	 */
+	void bindRemotePort(final InetSocketAddress remoteAddress, final InetSocketAddress localAddress);
+
+	/**
+	 * 解除远程端口映射
+	 *
+	 * @param remoteAddress 需要解除的远程地址和端口
+	 */
+	void unBindRemotePort(final InetSocketAddress remoteAddress);
 	// endregion
 }

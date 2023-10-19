@@ -74,16 +74,12 @@ public class JschSession implements Session {
 	}
 
 	@Override
-	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws SshException {
-		if (isConnected()) {
-			try {
-				this.raw.setPortForwardingL(localAddress.getHostName(), localAddress.getPort(), remoteAddress.getHostName(), remoteAddress.getPort());
-			} catch (final JSchException e) {
-				throw new SshException(e, "From [{}] mapping to [{}] error！", localAddress, remoteAddress);
-			}
-			return true;
+	public void bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws SshException {
+		try {
+			this.raw.setPortForwardingL(localAddress.getHostName(), localAddress.getPort(), remoteAddress.getHostName(), remoteAddress.getPort());
+		} catch (final JSchException e) {
+			throw new SshException(e, "From [{}] mapping to [{}] error！", localAddress, remoteAddress);
 		}
-		return false;
 	}
 
 	@Override
@@ -95,36 +91,20 @@ public class JschSession implements Session {
 		}
 	}
 
-	/**
-	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
-	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
-	 *
-	 * @param bindPort ssh服务端上要被绑定的端口
-	 * @param host     转发到的host
-	 * @param port     host上的端口
-	 * @return 成功与否
-	 * @throws SshException 端口绑定失败异常
-	 */
-	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws SshException {
-		if (isConnected()) {
-			try {
-				this.raw.setPortForwardingR(bindPort, host, port);
-			} catch (final JSchException e) {
-				throw new SshException(e, "From [{}] mapping to [{}] error！", bindPort, port);
-			}
-			return true;
+	@Override
+	public void bindRemotePort(final InetSocketAddress remoteAddress, final InetSocketAddress localAddress) throws SshException {
+		try {
+			this.raw.setPortForwardingR(remoteAddress.getHostName(), remoteAddress.getPort(),
+				localAddress.getHostName(), localAddress.getPort());
+		} catch (final JSchException e) {
+			throw new SshException(e, "From [{}] mapping to [{}] error！", remoteAddress, localAddress);
 		}
-		return false;
 	}
 
-	/**
-	 * 解除远程端口映射
-	 *
-	 * @param localPort 需要解除的本地端口
-	 */
-	public void unBindRemotePort(final int localPort) {
+	@Override
+	public void unBindRemotePort(final InetSocketAddress remoteAddress) {
 		try {
-			this.raw.delPortForwardingR(localPort);
+			this.raw.delPortForwardingR(remoteAddress.getHostName(), remoteAddress.getPort());
 		} catch (final JSchException e) {
 			throw new SshException(e);
 		}

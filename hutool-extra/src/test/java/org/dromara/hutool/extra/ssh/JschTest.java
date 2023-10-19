@@ -17,7 +17,6 @@ import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.engine.jsch.JschSession;
 import org.dromara.hutool.extra.ssh.engine.jsch.JschSftp;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -48,8 +47,7 @@ public class JschTest {
 		// 建立会话
 		final JschSession session = new JschSession(new Connector("looly.centos", 22, "test", "123456"));
 		// 绑定ssh服务端8089端口到本机的8000端口上
-		final boolean b = session.bindRemotePort(8089, "localhost", 8000);
-		Assertions.assertTrue(b);
+		session.bindRemotePort(new InetSocketAddress(8089), new InetSocketAddress("localhost", 8000));
 		// 保证一直运行
 	}
 

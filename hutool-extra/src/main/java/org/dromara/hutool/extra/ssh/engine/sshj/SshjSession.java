@@ -19,6 +19,7 @@ import net.schmizz.sshj.connection.channel.forwarded.SocketForwardingConnectList
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
 import org.dromara.hutool.extra.ssh.Session;
@@ -39,7 +40,7 @@ import java.util.Set;
  */
 public class SshjSession implements Session {
 
-	private SSHClient ssh;
+	private final SSHClient ssh;
 	private final net.schmizz.sshj.connection.channel.direct.Session raw;
 
 	private Map<String, ServerSocket> localPortForwarderMap;
@@ -94,7 +95,7 @@ public class SshjSession implements Session {
 	}
 
 	@Override
-	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
+	public void bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
 		final Parameters params = new Parameters(
 			localAddress.getHostName(), localAddress.getPort(),
 			remoteAddress.getHostName(), remoteAddress.getPort());
@@ -114,8 +115,6 @@ public class SshjSession implements Session {
 
 		//加入记录
 		this.localPortForwarderMap.put(localAddress.toString(), ss);
-
-		return true;
 	}
 
 	@Override
@@ -127,38 +126,33 @@ public class SshjSession implements Session {
 		IoUtil.closeQuietly(this.localPortForwarderMap.remove(localAddress.toString()));
 	}
 
-	/**
-	 * 绑定ssh服务端的serverPort端口, 到host主机的port端口上. <br>
-	 * 即数据从ssh服务端的serverPort端口, 流经ssh客户端, 达到host:port上.
-	 *
-	 * @param bindPort ssh服务端上要被绑定的端口
-	 * @param host     转发到的host
-	 * @param port     host上的端口
-	 * @return 成功与否
-	 * @throws IORuntimeException 端口绑定失败异常
-	 */
-	public boolean bindRemotePort(final int bindPort, final String host, final int port) throws IORuntimeException {
+	@Override
+	public void bindRemotePort(final InetSocketAddress remoteAddress, final InetSocketAddress localAddress) throws IORuntimeException {
 		try {
 			this.ssh.getRemotePortForwarder().bind(
-				new RemotePortForwarder.Forward(bindPort),
-				new SocketForwardingConnectListener(new InetSocketAddress(host, port))
+				new RemotePortForwarder.Forward(remoteAddress.getHostName(), remoteAddress.getPort()),
+				new SocketForwardingConnectListener(localAddress)
 			);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return true;
 	}
 
-	/**
-	 * 解除远程端口映射
-	 *
-	 * @param localPort 需要解除的本地端口
-	 */
-	public void unBindRemotePort(final int localPort) {
+	@Override
+	public void unBindRemotePort(final InetSocketAddress remoteAddress) {
+		final String hostName = remoteAddress.getHostName();
+		final int port = remoteAddress.getPort();
+
 		final RemotePortForwarder remotePortForwarder = this.ssh.getRemotePortForwarder();
 		final Set<RemotePortForwarder.Forward> activeForwards = remotePortForwarder.getActiveForwards();
 		for (final RemotePortForwarder.Forward activeForward : activeForwards) {
-			if (localPort == activeForward.getPort()) {
+			if (port == activeForward.getPort()) {
+				final String activeAddress = activeForward.getAddress();
+				if(StrUtil.isNotBlank(activeAddress) && !StrUtil.equalsIgnoreCase(hostName, activeAddress)){
+					// 对于用于已经定义的host，做对比，否则跳过
+					continue;
+				}
+
 				try {
 					remotePortForwarder.cancel(activeForward);
 				} catch (final IOException e) {
