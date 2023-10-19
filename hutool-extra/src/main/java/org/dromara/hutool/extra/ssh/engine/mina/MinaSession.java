@@ -16,6 +16,7 @@ import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ChannelShell;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.util.net.SshdSocketAddress;
+import org.apache.sshd.server.forward.AcceptAllForwardingFilter;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.extra.ssh.Connector;
@@ -43,6 +44,8 @@ public class MinaSession implements Session {
 	 */
 	public MinaSession(final Connector connector) {
 		this.sshClient = MinaUtil.openClient();
+		// https://github.com/apache/mina-sshd/blob/master/docs/port-forwarding.md#standard-port-forwarding
+		this.sshClient.setForwardingFilter(new AcceptAllForwardingFilter());
 		this.raw = MinaUtil.openSession(this.sshClient, connector);
 	}
 
