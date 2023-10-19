@@ -15,6 +15,7 @@ package org.dromara.hutool.extra.ssh.engine.mina;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ChannelShell;
 import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.util.net.SshdSocketAddress;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.extra.ssh.Connector;
@@ -22,6 +23,7 @@ import org.dromara.hutool.extra.ssh.Session;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 
 /**
@@ -63,6 +65,25 @@ public class MinaSession implements Session {
 		IoUtil.closeQuietly(this.sshClient);
 	}
 
+	@Override
+	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
+		try {
+			this.raw.startLocalPortForwarding(new SshdSocketAddress(localAddress), new SshdSocketAddress(remoteAddress));
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return true;
+	}
+
+	@Override
+	public void unBindLocalPort(final InetSocketAddress localAddress) throws IORuntimeException {
+		try {
+			this.raw.stopLocalPortForwarding(new SshdSocketAddress(localAddress));
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
 	/**
 	 * 执行Shell命令
 	 *
@@ -100,16 +121,16 @@ public class MinaSession implements Session {
 	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。
 	 * </p>
 	 *
-	 * @param cmd     命令
-	 * @param charset 发送和读取内容的编码
+	 * @param cmd       命令
+	 * @param charset   发送和读取内容的编码
 	 * @param errStream 异常输出位置
 	 * @return 结果
 	 */
-	public String execByShell(final String cmd, final Charset charset, final OutputStream errStream){
+	public String execByShell(final String cmd, final Charset charset, final OutputStream errStream) {
 		final ChannelShell shellChannel;
 		try {
 			shellChannel = this.raw.createShellChannel();
-			if(null != errStream){
+			if (null != errStream) {
 				shellChannel.setErr(errStream);
 			}
 			shellChannel.open().verify();
@@ -118,6 +139,6 @@ public class MinaSession implements Session {
 		}
 
 		IoUtil.write(shellChannel.getInvertedIn(), charset, false, cmd);
-		return IoUtil.read(shellChannel.getInvertedOut(),charset);
+		return IoUtil.read(shellChannel.getInvertedOut(), charset);
 	}
 }

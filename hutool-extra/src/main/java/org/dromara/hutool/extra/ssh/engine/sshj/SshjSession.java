@@ -19,11 +19,9 @@ import net.schmizz.sshj.connection.channel.forwarded.SocketForwardingConnectList
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
 import org.dromara.hutool.extra.ssh.Session;
-import org.dromara.hutool.extra.ssh.SshException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,7 +42,7 @@ public class SshjSession implements Session {
 	private SSHClient ssh;
 	private final net.schmizz.sshj.connection.channel.direct.Session raw;
 
-	private Map<Integer, ServerSocket> localPortForwarderMap;
+	private Map<String, ServerSocket> localPortForwarderMap;
 
 	/**
 	 * 构造
@@ -95,40 +93,16 @@ public class SshjSession implements Session {
 		return new SshjSftp(this.ssh, charset);
 	}
 
-	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
-	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
-	 *
-	 * @param remoteHost 远程主机
-	 * @param remotePort 远程端口
-	 * @param localPort  本地端口
-	 * @return 成功与否
-	 * @throws SshException 端口绑定失败异常
-	 */
-	public boolean bindLocalPort(final String remoteHost, final int remotePort, final int localPort) throws SshException {
-		return bindLocalPort(remoteHost, remotePort, Ipv4Util.LOCAL_IP, localPort);
-	}
-
-	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
-	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
-	 *
-	 * @param remoteHost 远程主机
-	 * @param remotePort 远程端口
-	 * @param localHost  本地主机
-	 * @param localPort  本地端口
-	 * @return 成功与否
-	 * @throws IORuntimeException 端口绑定失败异常
-	 */
-	public boolean bindLocalPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws IORuntimeException {
-		final Parameters params = new Parameters(localHost, localPort, remoteHost, remotePort);
+	@Override
+	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws IORuntimeException {
+		final Parameters params = new Parameters(
+			localAddress.getHostName(), localAddress.getPort(),
+			remoteAddress.getHostName(), remoteAddress.getPort());
 		final ServerSocket ss;
 		try {
 			ss = new ServerSocket();
 			ss.setReuseAddress(true);
-			ss.bind(new InetSocketAddress(params.getLocalHost(), params.getLocalPort()));
+			ss.bind(localAddress);
 			ssh.newLocalPortForwarder(params, ss).listen();
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
@@ -139,23 +113,18 @@ public class SshjSession implements Session {
 		}
 
 		//加入记录
-		this.localPortForwarderMap.put(localPort, ss);
+		this.localPortForwarderMap.put(localAddress.toString(), ss);
 
 		return true;
 	}
 
-	/**
-	 * 解除本地端口映射
-	 *
-	 * @param localPort 需要解除的本地端口
-	 * @throws IORuntimeException 端口解绑失败异常
-	 */
-	public void unBindLocalPort(final int localPort) throws IORuntimeException {
+	@Override
+	public void unBindLocalPort(final InetSocketAddress localAddress) throws IORuntimeException {
 		if (MapUtil.isEmpty(this.localPortForwarderMap)) {
 			return;
 		}
 
-		IoUtil.closeQuietly(this.localPortForwarderMap.remove(localPort));
+		IoUtil.closeQuietly(this.localPortForwarderMap.remove(localAddress.toString()));
 	}
 
 	/**

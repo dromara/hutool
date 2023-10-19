@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.net.InetSocketAddress;
+
 /**
  * Jsch工具类单元测试
  *
@@ -36,7 +38,7 @@ public class JschTest {
 		//新建会话，此会话用于ssh连接到跳板机（堡垒机），此处为10.1.1.1:22
 		final JschSession session = new JschSession(new Connector("looly.centos", 22, "test", "123456"));
 		// 将堡垒机保护的内网8080端口映射到localhost，我们就可以通过访问http://localhost:8080/访问内网服务了
-		session.bindLocalPort("172.20.12.123", 8080, 8080);
+		session.bindLocalPort(8080, new InetSocketAddress("172.20.12.123", 8080));
 	}
 
 	@SuppressWarnings("resource")

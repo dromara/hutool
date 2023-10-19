@@ -12,10 +12,12 @@
 
 package org.dromara.hutool.extra.ssh.engine.jsch;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSchException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.Ipv4Util;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.extra.ssh.Connector;
@@ -25,6 +27,7 @@ import org.dromara.hutool.extra.ssh.SshException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 
 /**
@@ -70,53 +73,23 @@ public class JschSession implements Session {
 		JschUtil.close(this.raw);
 	}
 
-	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
-	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
-	 *
-	 * @param remoteHost 远程主机
-	 * @param remotePort 远程端口
-	 * @param localPort  本地端口
-	 * @return 成功与否
-	 * @throws SshException 端口绑定失败异常
-	 */
-	public boolean bindLocalPort(final String remoteHost, final int remotePort, final int localPort) throws SshException {
-		return bindLocalPort(remoteHost, remotePort, Ipv4Util.LOCAL_IP, localPort);
-	}
-
-	/**
-	 * 绑定端口到本地。 一个会话可绑定多个端口<br>
-	 * 当请求localHost:localPort时，通过SSH到服务器，转发请求到remoteHost:remotePort<br>
-	 * 此方法用于访问本地无法访问但是服务器可以访问的地址，如内网数据库库等
-	 *
-	 * @param remoteHost 远程主机
-	 * @param remotePort 远程端口
-	 * @param localHost  本地主机
-	 * @param localPort  本地端口
-	 * @return 成功与否
-	 * @throws SshException 端口绑定失败异常
-	 */
-	public boolean bindLocalPort(final String remoteHost, final int remotePort, final String localHost, final int localPort) throws SshException {
+	@Override
+	public boolean bindLocalPort(final InetSocketAddress localAddress, final InetSocketAddress remoteAddress) throws SshException {
 		if (isConnected()) {
 			try {
-				this.raw.setPortForwardingL(localHost, localPort, remoteHost, remotePort);
+				this.raw.setPortForwardingL(localAddress.getHostName(), localAddress.getPort(), remoteAddress.getHostName(), remoteAddress.getPort());
 			} catch (final JSchException e) {
-				throw new SshException(e, "From [{}:{}] mapping to [{}:{}] error！", remoteHost, remotePort, localHost, localPort);
+				throw new SshException(e, "From [{}] mapping to [{}] error！", localAddress, remoteAddress);
 			}
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * 解除远程端口映射
-	 *
-	 * @param localPort 需要解除的本地端口
-	 */
-	public void unBindLocalPort(final int localPort) {
+	@Override
+	public void unBindLocalPort(final InetSocketAddress localAddress) {
 		try {
-			this.raw.delPortForwardingL(localPort);
+			this.raw.delPortForwardingL(localAddress.getHostName(), localAddress.getPort());
 		} catch (final JSchException e) {
 			throw new SshException(e);
 		}
