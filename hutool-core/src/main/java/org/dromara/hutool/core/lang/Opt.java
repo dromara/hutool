@@ -203,7 +203,7 @@ public class Opt<T> {
 	 * @return this
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
-	public Opt<T> ifFail(final Consumer<? super Throwable> action) throws NullPointerException{
+	public Opt<T> ifFail(final Consumer<? super Throwable> action) throws NullPointerException {
 		Objects.requireNonNull(action, "action is null");
 
 		if (isFail()) {
@@ -227,7 +227,7 @@ public class Opt<T> {
 	 * @throws NullPointerException 如果包裹里的值存在，但你传入的操作为{@code null}时抛出
 	 */
 	@SafeVarargs
-	public final Opt<T> ifFail(final Consumer<? super Throwable> action, final Class<? extends Throwable>... exs) throws NullPointerException{
+	public final Opt<T> ifFail(final Consumer<? super Throwable> action, final Class<? extends Throwable>... exs) throws NullPointerException {
 		Objects.requireNonNull(action, "action is null");
 
 		if (isFail() && EasyStream.of(exs).anyMatch(e -> e.isAssignableFrom(throwable.getClass()))) {
@@ -446,6 +446,17 @@ public class Opt<T> {
 	 */
 	public T orElseGet(final Supplier<? extends T> supplier) {
 		return isPresent() ? value : supplier.get();
+	}
+
+	/**
+	 * 如果包裹里元素的值存在，则返回该值，否则返回传入的操作执行后的返回值
+	 *
+	 * @param supplier 值不存在时需要执行的操作，返回一个类型与 包裹里元素类型 相同的元素
+	 * @return 如果包裹里元素的值存在，则返回该值，否则返回传入的操作执行后的返回值
+	 * @throws NullPointerException 如果之不存在，并且传入的操作为空，则抛出 {@code NPE}
+	 */
+	public Opt<T> orElseOpt(final Supplier<? extends T> supplier) {
+		return or(() -> Opt.ofNullable(supplier.get()));
 	}
 
 	/**

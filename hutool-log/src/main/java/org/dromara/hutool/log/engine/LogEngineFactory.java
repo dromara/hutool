@@ -87,6 +87,16 @@ public class LogEngineFactory {
 	}
 
 	/**
+	 * 创建指定日志实现引擎
+	 *
+	 * @param logEngineClass 引擎类
+	 * @return {@link LogEngine}
+	 */
+	public static LogEngine createEngine(final Class<? extends LogEngine> logEngineClass) {
+		return ConstructorUtil.newInstance(logEngineClass);
+	}
+
+	/**
 	 * 决定日志实现
 	 * <p>
 	 * 依次按照顺序检查日志库的jar是否被引入，如果未引入任何日志库，则检查ClassPath下的logging.properties，<br>
