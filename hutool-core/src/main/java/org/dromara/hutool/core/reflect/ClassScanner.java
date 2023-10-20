@@ -16,14 +16,13 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileNameUtil;
+import org.dromara.hutool.core.io.resource.JarResource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.net.url.URLDecoder;
-import org.dromara.hutool.core.net.url.URLUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 
@@ -268,7 +267,7 @@ public class ClassScanner implements Serializable {
 					scanFile(new File(URLDecoder.decode(url.getFile(), this.charset)), null);
 					break;
 				case "jar":
-					scanJar(URLUtil.getJarFile(url));
+					scanJar(new JarResource(url).getJarFile());
 					break;
 			}
 		}

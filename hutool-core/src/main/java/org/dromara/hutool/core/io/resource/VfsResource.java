@@ -16,6 +16,7 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -37,6 +38,7 @@ public class VfsResource implements Resource {
 	private static final Method VIRTUAL_FILE_METHOD_GET_LAST_MODIFIED;
 	private static final Method VIRTUAL_FILE_METHOD_TO_URL;
 	private static final Method VIRTUAL_FILE_METHOD_GET_NAME;
+	private static final Method VIRTUAL_FILE_METHOD_GET_PHYSICAL_FILE;
 
 	static {
 		final Class<?> virtualFile = ClassLoaderUtil.loadClass(VFS3_PKG + "VirtualFile");
@@ -47,6 +49,7 @@ public class VfsResource implements Resource {
 			VIRTUAL_FILE_METHOD_GET_LAST_MODIFIED = virtualFile.getMethod("getLastModified");
 			VIRTUAL_FILE_METHOD_TO_URL = virtualFile.getMethod("toURL");
 			VIRTUAL_FILE_METHOD_GET_NAME = virtualFile.getMethod("getName");
+			VIRTUAL_FILE_METHOD_GET_PHYSICAL_FILE = virtualFile.getMethod("getPhysicalFile");
 		} catch (final NoSuchMethodException ex) {
 			throw new IllegalStateException("Could not detect JBoss VFS infrastructure", ex);
 		}
@@ -115,6 +118,16 @@ public class VfsResource implements Resource {
 	@Override
 	public long size() {
 		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_SIZE);
+	}
+
+	/**
+	 * 获取物理文件对象
+	 *
+	 * @return 物理文件对象
+	 * @since 6.0.0
+	 */
+	public File getFile(){
+		return MethodUtil.invoke(virtualFile, VIRTUAL_FILE_METHOD_GET_PHYSICAL_FILE);
 	}
 
 }

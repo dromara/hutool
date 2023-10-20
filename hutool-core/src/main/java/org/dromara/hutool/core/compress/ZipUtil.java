@@ -23,9 +23,11 @@ import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.io.stream.LimitedInputStream;
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
-import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -983,6 +986,32 @@ public class ZipUtil {
 		}
 
 		return fileNames;
+	}
+
+	/**
+	 * 获取对应URL路径的jar文件，支持包括file://xxx这类路径<br>
+	 * 来自：org.springframework.core.io.support.PathMatchingResourcePatternResolver#getJarFile
+	 *
+	 * @param jarFileUrl jar文件路径
+	 * @return {@link JarFile}
+	 * @throws IORuntimeException IO异常
+	 * @since 6.0.0
+	 */
+	public static JarFile ofJar(String jarFileUrl) throws IORuntimeException{
+		Assert.notBlank(jarFileUrl, "Jar file url is blank!");
+
+		if(jarFileUrl.startsWith(URLUtil.FILE_URL_PREFIX)){
+			try{
+				jarFileUrl = URLUtil.toURI(jarFileUrl).getSchemeSpecificPart();
+			} catch (final HutoolException e){
+				jarFileUrl = jarFileUrl.substring(URLUtil.FILE_URL_PREFIX.length());
+			}
+		}
+		try {
+			return new JarFile(jarFileUrl);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------- Private method start

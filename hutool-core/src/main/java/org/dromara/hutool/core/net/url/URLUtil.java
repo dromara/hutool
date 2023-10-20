@@ -20,7 +20,6 @@ import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.NetUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
@@ -28,17 +27,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.JarURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.jar.JarFile;
 
 /**
  * URL（Uniform Resource Locator）统一资源定位符相关工具类
@@ -52,10 +43,11 @@ import java.util.jar.JarFile;
  *   protocol :// hostname[:port] / path / [:parameters][?query]#fragment
  * </pre>
  *
- * @author xiaoleilu
+ * @author looly
  */
 public class URLUtil {
 
+	// region const
 	/**
 	 * 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:"
 	 */
@@ -108,6 +100,7 @@ public class URLUtil {
 	 * WAR路径及内部文件路径分界符
 	 */
 	public static final String WAR_URL_SEPARATOR = "*/";
+	// endregion
 
 	/**
 	 * 将{@link URI}转换为{@link URL}
@@ -215,6 +208,8 @@ public class URLUtil {
 		}
 	}
 
+	// region getURL
+
 	/**
 	 * 获得URL
 	 *
@@ -243,14 +238,34 @@ public class URLUtil {
 	 *
 	 * @param file URL对应的文件对象
 	 * @return URL
-	 * @throws HutoolException MalformedURLException
+	 * @throws IORuntimeException URL格式错误
 	 */
 	public static URL getURL(final File file) {
 		Assert.notNull(file, "File is null !");
 		try {
 			return file.toURI().toURL();
 		} catch (final MalformedURLException e) {
-			throw new HutoolException(e, "Error occured when get URL!");
+			throw new IORuntimeException(e, "Error occurred when get URL!");
+		}
+	}
+
+	/**
+	 * 获取相对于给定URL的新的URL<br>
+	 * 来自：org.springframework.core.io.UrlResource#createRelativeURL
+	 *
+	 * @param url 基础URL
+	 * @param relativePath 相对路径
+	 * @return 相对于URL的子路径URL
+	 * @throws IORuntimeException URL格式错误
+	 * @since 6.0.0
+	 */
+	public static URL getURL(final URL url, String relativePath) throws HutoolException {
+		// # 在文件路径中合法，但是在URL中非法，此处转义
+		relativePath = StrUtil.replace(StrUtil.removePrefix(relativePath, StrUtil.SLASH), "#", "%23");
+		try {
+			return new URL(url, relativePath);
+		} catch (final MalformedURLException e) {
+			throw new IORuntimeException(e, "Error occurred when get URL!");
 		}
 	}
 
@@ -259,7 +274,7 @@ public class URLUtil {
 	 *
 	 * @param files URL对应的文件对象
 	 * @return URL
-	 * @throws HutoolException MalformedURLException
+	 * @throws IORuntimeException URL格式错误
 	 */
 	public static URL[] getURLs(final File... files) {
 		final URL[] urls = new URL[files.length];
@@ -268,11 +283,12 @@ public class URLUtil {
 				urls[i] = files[i].toURI().toURL();
 			}
 		} catch (final MalformedURLException e) {
-			throw new HutoolException(e, "Error occured when get URL!");
+			throw new IORuntimeException(e, "Error occurred when get URL!");
 		}
 
 		return urls;
 	}
+	// endregion
 
 	/**
 	 * 获取URL中域名部分，只保留URL中的协议（Protocol）、Host，其它为null。
@@ -351,6 +367,8 @@ public class URLUtil {
 		return (null != path) ? path : url.getPath();
 	}
 
+	// region toURI
+
 	/**
 	 * 转URL为URI
 	 *
@@ -409,6 +427,7 @@ public class URLUtil {
 			throw new HutoolException(e);
 		}
 	}
+	// endregion
 
 	/**
 	 * 提供的URL是否为文件<br>
@@ -482,21 +501,7 @@ public class URLUtil {
 		return IoUtil.toReader(getStream(url), charset);
 	}
 
-	/**
-	 * 从URL中获取JarFile
-	 *
-	 * @param url URL
-	 * @return JarFile
-	 * @since 4.1.5
-	 */
-	public static JarFile getJarFile(final URL url) {
-		try {
-			final JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
-			return urlConnection.getJarFile();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
+	// region normalize
 
 	/**
 	 * 标准化URL字符串，包括：
@@ -593,6 +598,7 @@ public class URLUtil {
 		}
 		return protocol + domain + StrUtil.emptyIfNull(path) + StrUtil.emptyIfNull(params);
 	}
+	// endregion
 
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
@@ -611,31 +617,7 @@ public class URLUtil {
 		return UrlQuery.of(paramMap).build(charset);
 	}
 
-	/**
-	 * 获取指定URL对应资源的内容长度，对于Http，其长度使用Content-Length头决定。
-	 *
-	 * @param url URL
-	 * @return 内容长度，未知返回-1
-	 * @throws IORuntimeException IO异常
-	 * @since 5.3.4
-	 */
-	public static long getContentLength(final URL url) throws IORuntimeException {
-		if (null == url) {
-			return -1;
-		}
-
-		URLConnection conn = null;
-		try {
-			conn = url.openConnection();
-			return conn.getContentLengthLong();
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			if (conn instanceof HttpURLConnection) {
-				((HttpURLConnection) conn).disconnect();
-			}
-		}
-	}
+	// region getDataUri
 
 	/**
 	 * Data URI Scheme封装，数据格式为Base64。data URI scheme 允许我们使用内联（inline-code）的方式在网页中包含数据，<br>
@@ -708,6 +690,7 @@ public class URLUtil {
 
 		return builder.toString();
 	}
+	// endregion
 
 	/**
 	 * 获取URL对应数据长度
@@ -732,16 +715,21 @@ public class URLUtil {
 		} else {
 			// 如果资源打在jar包中或来自网络，使用网络请求长度
 			// issue#3226, 来自Spring的AbstractFileResolvingResource
+			URLConnection conn = null;
 			try {
-				final URLConnection con = url.openConnection();
-				useCachesIfNecessary(con);
-				if (con instanceof HttpURLConnection) {
-					final HttpURLConnection httpCon = (HttpURLConnection) con;
+				conn = url.openConnection();
+				useCachesIfNecessary(conn);
+				if (conn instanceof HttpURLConnection) {
+					final HttpURLConnection httpCon = (HttpURLConnection) conn;
 					httpCon.setRequestMethod("HEAD");
 				}
-				return con.getContentLengthLong();
+				return conn.getContentLengthLong();
 			} catch (final IOException e) {
 				throw new IORuntimeException(e);
+			} finally {
+				if (conn instanceof HttpURLConnection) {
+					((HttpURLConnection) conn).disconnect();
+				}
 			}
 		}
 	}

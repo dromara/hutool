@@ -350,7 +350,7 @@ public class AntPathMatcher {
 				pos += skipped;
 				skipped = skipSegment(path, pos, pattDir);
 				if (skipped < pattDir.length()) {
-					return (skipped > 0 || (pattDir.length() > 0 && isWildcardChar(pattDir.charAt(0))));
+					return (skipped > 0 || (!pattDir.isEmpty() && isWildcardChar(pattDir.charAt(0))));
 				}
 				pos += skipped;
 			}
@@ -657,9 +657,9 @@ public class AntPathMatcher {
 
 
 	/**
-	 * Tests whether or not a string matches against a pattern via a {@link Pattern}.
+	 * Tests whether a string matches against a pattern via a {@link Pattern}.
 	 * <p>The pattern may contain special characters: '*' means zero or more characters; '?' means one and
-	 * only one character; '{' and '}' indicate a URI template pattern. For example <tt>/users/{user}</tt>.
+	 * only one character; '{' and '}' indicate a URI template pattern. For example {@code /users/{user}}.
 	 */
 	protected static class AntPathStringMatcher {
 

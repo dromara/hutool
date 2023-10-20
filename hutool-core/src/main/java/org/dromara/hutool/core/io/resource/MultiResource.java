@@ -53,9 +53,9 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * @param resources 资源列表
 	 */
 	public MultiResource(final Collection<Resource> resources) {
-		if(resources instanceof List) {
-			this.resources = (List<Resource>)resources;
-		}else {
+		if (resources instanceof List) {
+			this.resources = (List<Resource>) resources;
+		} else {
 			this.resources = ListUtil.of(resources);
 		}
 	}
@@ -138,11 +138,24 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 
 	/**
 	 * 增加资源
+	 *
 	 * @param resource 资源
 	 * @return this
 	 */
 	public MultiResource add(final Resource resource) {
 		this.resources.add(resource);
+		return this;
+	}
+
+	/**
+	 * 增加多个资源
+	 *
+	 * @param iterable 资源列表
+	 * @return this
+	 * @since 6.0.0
+	 */
+	public MultiResource addAll(final Iterable<? extends Resource> iterable) {
+		iterable.forEach((this::add));
 		return this;
 	}
 

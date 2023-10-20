@@ -12,22 +12,23 @@
 
 package org.dromara.hutool.core.io.resource;
 
-import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
-import org.dromara.hutool.core.net.NetUtil;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * URL资源访问类
- * @author Looly
  *
+ * @author Looly
  */
-public class UrlResource implements Resource, Serializable{
+public class UrlResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected URL url;
@@ -35,8 +36,10 @@ public class UrlResource implements Resource, Serializable{
 	protected String name;
 
 	//-------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
+	 *
 	 * @param uri URI
 	 * @since 5.7.21
 	 */
@@ -46,6 +49,7 @@ public class UrlResource implements Resource, Serializable{
 
 	/**
 	 * 构造
+	 *
 	 * @param url URL
 	 */
 	public UrlResource(final URL url) {
@@ -54,12 +58,13 @@ public class UrlResource implements Resource, Serializable{
 
 	/**
 	 * 构造
-	 * @param url URL，允许为空
+	 *
+	 * @param url  URL，允许为空
 	 * @param name 资源名称
 	 */
 	public UrlResource(final URL url, final String name) {
 		this.url = url;
-		if(null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())){
+		if (null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())) {
 			this.lastModified = FileUtil.file(url).lastModified();
 		}
 		this.name = ObjUtil.defaultIfNull(name, () -> (null != url ? FileNameUtil.getName(url.getPath()) : null));
@@ -73,7 +78,7 @@ public class UrlResource implements Resource, Serializable{
 	}
 
 	@Override
-	public URL getUrl(){
+	public URL getUrl() {
 		return this.url;
 	}
 
@@ -83,8 +88,8 @@ public class UrlResource implements Resource, Serializable{
 	}
 
 	@Override
-	public InputStream getStream() throws NoResourceException{
-		if(null == this.url){
+	public InputStream getStream() throws NoResourceException {
+		if (null == this.url) {
 			throw new NoResourceException("Resource URL is null!");
 		}
 		return URLUtil.getStream(url);
@@ -98,18 +103,31 @@ public class UrlResource implements Resource, Serializable{
 
 	/**
 	 * 获得File
+	 *
 	 * @return {@link File}
 	 */
-	public File getFile(){
+	public File getFile() {
 		return FileUtil.file(this.url);
 	}
 
 	/**
 	 * 返回路径
+	 *
 	 * @return 返回URL路径
 	 */
 	@Override
 	public String toString() {
 		return (null == this.url) ? "null" : this.url.toString();
+	}
+
+	/**
+	 * 获取相对于本资源的资源
+	 *
+	 * @param relativePath 相对路径
+	 * @return 子资源
+	 * @since 6.0.0
+	 */
+	public UrlResource createRelative(final String relativePath) {
+		return new UrlResource(URLUtil.getURL(getUrl(), relativePath));
 	}
 }
