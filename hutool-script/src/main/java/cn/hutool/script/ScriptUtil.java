@@ -11,6 +11,7 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.lang.ref.WeakReference;
 
 /**
  * 脚本工具类
@@ -21,7 +22,7 @@ public class ScriptUtil {
 
 	private static final ScriptEngineManager MANAGER = new ScriptEngineManager();
 	private static final WeakConcurrentMap<String, ScriptEngine> CACHE = new WeakConcurrentMap<>();
-
+	private static final ThreadLocal<WeakReference<ScriptEngine>> engineCache = new ThreadLocal<>();
 	/**
 	 * 获得单例的{@link ScriptEngine} 实例
 	 *
@@ -51,6 +52,30 @@ public class ScriptUtil {
 			throw new NullPointerException(StrUtil.format("Script for [{}] not support !", nameOrExtOrMime));
 		}
 		return engine;
+	}
+
+	/**
+	 * 多线程下获取线程安全的 ScriptEngine
+	 * @param nameOrExtOrMime nameOrExtOrMime 脚本语言名称或语言简写、扩展名
+	 * @return  {@link ScriptEngine} 实例
+	 */
+	public static ScriptEngine getScriptEngine(String nameOrExtOrMime) {
+		WeakReference<ScriptEngine> weakEngine = engineCache.get();
+		ScriptEngine engine = null;
+		if (weakEngine != null) {
+			engine = weakEngine.get();
+		}
+		if (engine == null) {
+			engine = createScript(nameOrExtOrMime);
+			engineCache.set(new WeakReference<>(engine));
+		}
+		return engine;
+	}
+	/**
+	 *  清理脚本引擎缓存，可以在执行完脚本的时候手动清理
+	 */
+	public static void cleanUp() {
+		engineCache.remove();
 	}
 
 	/**
@@ -278,4 +303,5 @@ public class ScriptUtil {
 		}
 		return null;
 	}
+
 }

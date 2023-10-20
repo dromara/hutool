@@ -9,10 +9,11 @@ import org.junit.Test;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 脚本单元测试类
- * 
+ *
  * @author looly
  *
  */
@@ -55,5 +56,48 @@ public class ScriptUtilTest {
 	public void groovyTest() throws ScriptException {
 		final ScriptEngine engine = ScriptUtil.getGroovyEngine();
 		engine.eval("println 'Hello Groovy'");
+	}
+
+	/**
+	 *  多线程环境下模拟脚本引擎变量交替初始化执行结果是否正确
+	 */
+	public static void groovySafeEnginTest() throws ScriptException {
+
+		new Thread(()->{
+			try {
+				System.out.println("groovySafeEnginTest-1-start");
+				ScriptEngine groovyEngine = ScriptUtil.getScriptEngine("groovy");
+				groovyEngine.put("s","test1");
+				Object result = groovyEngine.eval("return s");
+				System.out.println("线程1,s="+result);
+				TimeUnit.SECONDS.sleep(3);
+				groovyEngine.put("s","test1");
+				System.out.println("groovySafeEnginTest-1-end");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+		new Thread(()->{
+			try {
+				System.out.println("groovySafeEnginTest-2-start");
+				ScriptEngine groovyEngine = ScriptUtil.getScriptEngine("groovy");
+				groovyEngine.put("s","test2");
+				TimeUnit.SECONDS.sleep(4);
+				Object result = groovyEngine.eval("return s");
+				System.out.println("线程2,s="+result);
+				System.out.println("groovySafeEnginTest-2-end");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+	}
+
+	public static void main(String[] args) {
+		try {
+			groovySafeEnginTest();
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
 	}
 }
