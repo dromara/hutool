@@ -13,7 +13,7 @@
 package org.dromara.hutool.http.client.engine.jdk;
 
 import org.dromara.hutool.core.lang.Opt;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpException;
@@ -52,7 +52,7 @@ public class JdkHttpConnection implements HeaderOperation<JdkHttpConnection>, Cl
 	 * @return HttpConnection
 	 */
 	public static JdkHttpConnection of(final String urlStr, final Proxy proxy) {
-		return of(URLUtil.toUrlForHttp(urlStr), proxy);
+		return of(UrlUtil.toUrlForHttp(urlStr), proxy);
 	}
 
 	/**

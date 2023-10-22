@@ -13,7 +13,7 @@
 package org.dromara.hutool.swing;
 
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -44,7 +44,7 @@ public class DesktopUtil {
 	 * @param url URL地址
 	 */
 	public static void browse(final String url) {
-		browse(URLUtil.toURI(url));
+		browse(UrlUtil.toURI(url));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class DesktopUtil {
 	public static void mail(final String mailAddress) {
 		final Desktop dsktop = getDsktop();
 		try {
-			dsktop.mail(URLUtil.toURI(mailAddress));
+			dsktop.mail(UrlUtil.toURI(mailAddress));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}

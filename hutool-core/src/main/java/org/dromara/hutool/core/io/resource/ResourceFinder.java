@@ -17,8 +17,9 @@ import org.dromara.hutool.core.compress.ZipUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.AntPathMatcher;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -32,6 +33,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
+/**
+ * 资源查找器
+ */
 public class ResourceFinder {
 
 	private final ClassLoader classLoader;
@@ -54,9 +58,9 @@ public class ResourceFinder {
 	 * @return {@link MultiResource}
 	 */
 	public MultiResource find(final String locationPattern) {
-		// 根目录
+		// 根目录，如 "/WEB-INF/*.xml" 返回 "/WEB-INF/"
 		final String rootDirPath = determineRootDir(locationPattern);
-		// 子表达式
+		// 子表达式，如"/WEB-INF/*.xml" 返回 "*.xml"
 		final String subPattern = locationPattern.substring(rootDirPath.length());
 
 		final MultiResource result = new MultiResource();
@@ -98,7 +102,7 @@ public class ResourceFinder {
 
 		if (conn instanceof JarURLConnection) {
 			final JarURLConnection jarCon = (JarURLConnection) conn;
-			URLUtil.useCachesIfNecessary(jarCon);
+			UrlUtil.useCachesIfNecessary(jarCon);
 			jarFile = jarCon.getJarFile();
 			final JarEntry jarEntry = jarCon.getJarEntry();
 			rootEntryPath = (jarEntry != null ? jarEntry.getName() : StrUtil.EMPTY);
@@ -107,9 +111,9 @@ public class ResourceFinder {
 			// 去除子路径后重新获取jar文件
 			final String urlFile = rootDirURL.getFile();
 			try {
-				int separatorIndex = urlFile.indexOf(URLUtil.WAR_URL_SEPARATOR);
+				int separatorIndex = urlFile.indexOf(UrlUtil.WAR_URL_SEPARATOR);
 				if (separatorIndex == -1) {
-					separatorIndex = urlFile.indexOf(URLUtil.JAR_URL_SEPARATOR);
+					separatorIndex = urlFile.indexOf(UrlUtil.JAR_URL_SEPARATOR);
 				}
 				if (separatorIndex != -1) {
 					final  String jarFileUrl = urlFile.substring(0, separatorIndex);
@@ -136,7 +140,7 @@ public class ResourceFinder {
 				if (entryPath.startsWith(rootEntryPath)) {
 					final String relativePath = entryPath.substring(rootEntryPath.length());
 					if (pathMatcher.match(subPattern, relativePath)) {
-						result.add(ResourceUtil.getResource(URLUtil.getURL(rootDirURL, relativePath)));
+						result.add(ResourceUtil.getResource(UrlUtil.getURL(rootDirURL, relativePath)));
 					}
 				}
 			}
@@ -159,10 +163,26 @@ public class ResourceFinder {
 	protected MultiResource findInDir(final FileResource resource, final String subPattern) {
 		final MultiResource result = new MultiResource();
 		final File rootDir = resource.getFile();
+		if(!rootDir.exists() || !rootDir.isDirectory() || !rootDir.canRead()){
+			// 保证给定文件存在、为目录且可读
+			return result;
+		}
+
+		final String rootPath = rootDir.getAbsolutePath();
+		final String fullPattern = FileNameUtil.normalize(rootPath + StrUtil.SLASH + subPattern);
 		FileUtil.walkFiles(rootDir, (file -> {
-			if (pathMatcher.match(subPattern, file.getName())) {
-				result.add(new FileResource(file));
+			final String currentPath = StrUtil.normalize(file.getAbsolutePath());
+			if(file.isDirectory()){
+				// 检查目录是否满足表达式开始规则，满足则继续向下查找，否则跳过
+				return pathMatcher.matchStart(fullPattern, StrUtil.addSuffixIfNot(currentPath, StrUtil.SLASH));
 			}
+
+			if (pathMatcher.match(fullPattern, currentPath)) {
+				result.add(new FileResource(file));
+				return true;
+			}
+
+			return false;
 		}));
 
 		return result;

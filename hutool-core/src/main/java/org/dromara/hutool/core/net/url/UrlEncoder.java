@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
  * @author looly
  * @since 6.0.0
  */
-public class URLEncoder {
+public class UrlEncoder {
 
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;
 

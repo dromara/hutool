@@ -15,7 +15,7 @@ package org.dromara.hutool.core.io.resource;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.util.ObjUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -86,7 +86,7 @@ public class FileResource implements Resource, Serializable {
 
 	@Override
 	public URL getUrl(){
-		return URLUtil.getURL(this.file);
+		return UrlUtil.getURL(this.file);
 	}
 
 	@Override

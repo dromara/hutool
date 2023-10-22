@@ -16,7 +16,7 @@ import org.dromara.hutool.core.codec.binary.Base64;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.swing.captcha.generator.CodeGenerator;
 import org.dromara.hutool.swing.captcha.generator.RandomGenerator;
 import org.dromara.hutool.swing.img.ImgUtil;
@@ -214,7 +214,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @since 5.3.11
 	 */
 	public String getImageBase64Data(){
-		return URLUtil.getDataUriBase64("image/png", getImageBase64());
+		return UrlUtil.getDataUriBase64("image/png", getImageBase64());
 	}
 
 	/**

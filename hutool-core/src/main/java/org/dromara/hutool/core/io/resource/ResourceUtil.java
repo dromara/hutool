@@ -21,7 +21,7 @@ import org.dromara.hutool.core.net.url.UrlProtocolUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.BufferedReader;
@@ -239,7 +239,7 @@ public class ResourceUtil {
 	 */
 	public static Resource getResource(final String path) {
 		if (StrUtil.isNotBlank(path)) {
-			if (path.startsWith(URLUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
+			if (path.startsWith(UrlUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
 				return new FileResource(path);
 			}
 		}

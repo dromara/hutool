@@ -14,7 +14,7 @@ package org.dromara.hutool.http.client.cookie;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.http.client.engine.jdk.JdkHttpConnection;
 
 import java.io.IOException;
@@ -137,6 +137,6 @@ public class GlobalCookieManager {
 	 * @return URI
 	 */
 	private static URI getURI(final JdkHttpConnection conn){
-		return URLUtil.toURI(conn.getUrl());
+		return UrlUtil.toURI(conn.getUrl());
 	}
 }

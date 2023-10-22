@@ -24,7 +24,7 @@ import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.io.stream.LimitedInputStream;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
@@ -1000,11 +1000,11 @@ public class ZipUtil {
 	public static JarFile ofJar(String jarFileUrl) throws IORuntimeException{
 		Assert.notBlank(jarFileUrl, "Jar file url is blank!");
 
-		if(jarFileUrl.startsWith(URLUtil.FILE_URL_PREFIX)){
+		if(jarFileUrl.startsWith(UrlUtil.FILE_URL_PREFIX)){
 			try{
-				jarFileUrl = URLUtil.toURI(jarFileUrl).getSchemeSpecificPart();
+				jarFileUrl = UrlUtil.toURI(jarFileUrl).getSchemeSpecificPart();
 			} catch (final HutoolException e){
-				jarFileUrl = jarFileUrl.substring(URLUtil.FILE_URL_PREFIX.length());
+				jarFileUrl = jarFileUrl.substring(UrlUtil.FILE_URL_PREFIX.length());
 			}
 		}
 		try {

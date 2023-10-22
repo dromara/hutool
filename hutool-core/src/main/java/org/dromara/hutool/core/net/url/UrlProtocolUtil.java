@@ -17,6 +17,13 @@ import org.dromara.hutool.core.lang.Assert;
 
 import java.net.URL;
 
+/**
+ * URL协议相关工具类<br>
+ * 用于判断URL的协议类型，如jar或file等
+ *
+ * @author looly
+ * @since 6.0.0
+ */
 public class UrlProtocolUtil {
 	/**
 	 * URL 协议表示文件: "file"

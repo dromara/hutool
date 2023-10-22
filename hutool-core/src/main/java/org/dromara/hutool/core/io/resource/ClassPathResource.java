@@ -16,7 +16,7 @@ import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -108,7 +108,7 @@ public class ClassPathResource extends UrlResource {
 			return this.path;
 		}
 		// url在初始化的时候已经断言，此处始终不为null
-		return FileUtil.normalize(URLUtil.getDecodedPath(this.url));
+		return FileUtil.normalize(UrlUtil.getDecodedPath(this.url));
 	}
 
 	/**

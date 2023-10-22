@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.io.watch;
 
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class WatchUtil {
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final URL url, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return of(URLUtil.toURI(url), maxDepth, events);
+		return of(UrlUtil.toURI(url), maxDepth, events);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class WatchUtil {
 	 * @return {@link WatchMonitor}
 	 */
 	public static WatchMonitor ofAll(final URL url, final int maxDepth, final Watcher watcher) {
-		return ofAll(URLUtil.toURI(url), maxDepth, watcher);
+		return ofAll(UrlUtil.toURI(url), maxDepth, watcher);
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class WatchUtil {
 	 * @since 4.5.2
 	 */
 	public static WatchMonitor createModify(final URL url, final int maxDepth, final Watcher watcher) {
-		return createModify(URLUtil.toURI(url), maxDepth, watcher);
+		return createModify(UrlUtil.toURI(url), maxDepth, watcher);
 	}
 
 	/**

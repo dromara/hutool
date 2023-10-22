@@ -15,7 +15,7 @@ package org.dromara.hutool.http.server;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.net.url.URLEncoder;
+import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ByteUtil;
 import org.dromara.hutool.core.util.ObjUtil;
@@ -435,7 +435,7 @@ public class HttpServerResponse extends HttpServerBase {
 
 		if (!contentType.startsWith("text/")) {
 			// 非文本类型数据直接走下载
-			setHeader(HeaderName.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", URLEncoder.encodeAll(fileName, charset)));
+			setHeader(HeaderName.CONTENT_DISPOSITION, StrUtil.format("attachment;filename={}", UrlEncoder.encodeAll(fileName, charset)));
 		}
 		return write(in, length, contentType);
 	}

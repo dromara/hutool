@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -367,9 +367,9 @@ public class FileNameUtil {
 		}
 
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
-		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
+		String pathToUse = StrUtil.removePrefixIgnoreCase(path, UrlUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
-		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
+		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, UrlUtil.FILE_URL_PREFIX);
 
 		// 识别home目录形式，并转换为绝对路径
 		if (StrUtil.startWith(pathToUse, '~')) {

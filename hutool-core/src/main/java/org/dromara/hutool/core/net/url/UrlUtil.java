@@ -44,7 +44,7 @@ import java.util.Map;
  *
  * @author looly
  */
-public class URLUtil {
+public class UrlUtil {
 
 	// region const
 	/**
@@ -171,7 +171,7 @@ public class URLUtil {
 	public static URL toUrlForHttp(String urlStr, final URLStreamHandler handler) {
 		Assert.notBlank(urlStr, "Url is blank !");
 		// 编码空白符，防止空格引起的请求异常
-		urlStr = URLEncoder.encodeBlank(urlStr);
+		urlStr = UrlEncoder.encodeBlank(urlStr);
 		try {
 			return new URL(null, urlStr, handler);
 		} catch (final MalformedURLException e) {

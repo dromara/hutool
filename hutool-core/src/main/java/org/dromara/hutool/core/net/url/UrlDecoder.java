@@ -31,7 +31,7 @@ import java.nio.charset.Charset;
  *
  * @author looly
  */
-public class URLDecoder implements Serializable {
+public class UrlDecoder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.UTF_8;

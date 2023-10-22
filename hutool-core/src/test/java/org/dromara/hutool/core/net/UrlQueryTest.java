@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.net;
 
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.net.url.UrlBuilder;
 import org.dromara.hutool.core.net.url.UrlQuery;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -58,7 +58,7 @@ public class UrlQueryTest {
 	public void parseTest3() {
 		// issue#1688@Github
 		final String u = "https://www.baidu.com/proxy";
-		final UrlQuery query = UrlQuery.of(URLUtil.url(u).getQuery(), Charset.defaultCharset());
+		final UrlQuery query = UrlQuery.of(UrlUtil.url(u).getQuery(), Charset.defaultCharset());
 		Assertions.assertTrue(MapUtil.isEmpty(query.getQueryMap()));
 	}
 
@@ -75,13 +75,13 @@ public class UrlQueryTest {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("username", "SSM");
 		map.put("password", "123456");
-		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		String query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("username=SSM&password=123456", query);
 
 		map = new TreeMap<>();
 		map.put("username", "SSM");
 		map.put("password", "123456");
-		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("password=123456&username=SSM", query);
 	}
 
@@ -90,19 +90,19 @@ public class UrlQueryTest {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put(null, "SSM");
 		map.put("password", "123456");
-		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		String query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("password=123456", query);
 
 		map = new TreeMap<>();
 		map.put("username", "SSM");
 		map.put("password", "");
-		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("password=&username=SSM", query);
 
 		map = new TreeMap<>();
 		map.put("username", "SSM");
 		map.put("password", null);
-		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("password&username=SSM", query);
 	}
 
@@ -111,13 +111,13 @@ public class UrlQueryTest {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("key1&", "SSM");
 		map.put("key2", "123456&");
-		String query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		String query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("key1%26=SSM&key2=123456%26", query);
 
 		map = new TreeMap<>();
 		map.put("username=", "SSM");
 		map.put("password", "=");
-		query = URLUtil.buildQuery(map, StandardCharsets.UTF_8);
+		query = UrlUtil.buildQuery(map, StandardCharsets.UTF_8);
 		Assertions.assertEquals("password==&username%3D=SSM", query);
 	}
 

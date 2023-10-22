@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.net.url.UrlProtocolUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
@@ -45,7 +45,7 @@ public class UrlResource implements Resource, Serializable {
 	 * @since 5.7.21
 	 */
 	public UrlResource(final URI uri) {
-		this(URLUtil.url(uri), null);
+		this(UrlUtil.url(uri), null);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class UrlResource implements Resource, Serializable {
 
 	@Override
 	public long size() {
-		return URLUtil.size(this.url);
+		return UrlUtil.size(this.url);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class UrlResource implements Resource, Serializable {
 		if (null == this.url) {
 			throw new NoResourceException("Resource URL is null!");
 		}
-		return URLUtil.getStream(url);
+		return UrlUtil.getStream(url);
 	}
 
 	@Override
@@ -129,6 +129,6 @@ public class UrlResource implements Resource, Serializable {
 	 * @since 6.0.0
 	 */
 	public UrlResource createRelative(final String relativePath) {
-		return new UrlResource(URLUtil.getURL(getUrl(), relativePath));
+		return new UrlResource(UrlUtil.getURL(getUrl(), relativePath));
 	}
 }

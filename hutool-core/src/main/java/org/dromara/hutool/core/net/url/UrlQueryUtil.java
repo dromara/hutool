@@ -164,13 +164,13 @@ public class UrlQueryUtil {
 
 		// 结尾处理
 		if (null != name) {
-			builder.append(URLEncoder.encodeQuery(name, charset)).append('=');
+			builder.append(UrlEncoder.encodeQuery(name, charset)).append('=');
 		}
 		if (pos != i) {
 			if (null == name && pos > 0) {
 				builder.append('=');
 			}
-			builder.append(URLEncoder.encodeQuery(queryPart.substring(pos, i), charset));
+			builder.append(UrlEncoder.encodeQuery(queryPart.substring(pos, i), charset));
 		}
 
 		// 以&结尾则去除之

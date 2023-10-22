@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.compress.ZipUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -88,9 +88,9 @@ public class JarResource extends UrlResource {
 			return jarCon.getJarFile();
 		} else {
 			final String urlFile = getUrl().getFile();
-			int separatorIndex = urlFile.indexOf(URLUtil.WAR_URL_SEPARATOR);
+			int separatorIndex = urlFile.indexOf(UrlUtil.WAR_URL_SEPARATOR);
 			if (separatorIndex == -1) {
-				separatorIndex = urlFile.indexOf(URLUtil.JAR_URL_SEPARATOR);
+				separatorIndex = urlFile.indexOf(UrlUtil.JAR_URL_SEPARATOR);
 			}
 			if (separatorIndex != -1) {
 				return ZipUtil.ofJar(urlFile.substring(0, separatorIndex));

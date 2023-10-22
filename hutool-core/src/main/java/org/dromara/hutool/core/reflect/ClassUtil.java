@@ -19,8 +19,8 @@ import org.dromara.hutool.core.convert.BasicType;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.net.url.URLDecoder;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlDecoder;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
@@ -311,7 +311,7 @@ public class ClassUtil {
 		String path;
 		while (resources.hasMoreElements()) {
 			path = resources.nextElement().getPath();
-			paths.add(isDecode ? URLDecoder.decode(path, CharsetUtil.defaultCharset()) : path);
+			paths.add(isDecode ? UrlDecoder.decode(path, CharsetUtil.defaultCharset()) : path);
 		}
 		return paths;
 	}
@@ -335,7 +335,7 @@ public class ClassUtil {
 	 */
 	public static String getClassPath(final boolean isEncoded) {
 		final URL classPathUrl = ResourceUtil.getResourceUrl(StrUtil.EMPTY);
-		final String url = isEncoded ? classPathUrl.getPath() : URLUtil.getDecodedPath(classPathUrl);
+		final String url = isEncoded ? classPathUrl.getPath() : UrlUtil.getDecodedPath(classPathUrl);
 		return FileUtil.normalize(url);
 	}
 

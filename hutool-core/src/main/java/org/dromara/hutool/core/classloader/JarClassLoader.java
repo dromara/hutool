@@ -15,7 +15,7 @@ package org.dromara.hutool.core.classloader;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.File;
@@ -150,7 +150,7 @@ public class JarClassLoader extends URLClassLoader {
 	 * @since 4.4.2
 	 */
 	public JarClassLoader addURL(final File dir) {
-		super.addURL(URLUtil.getURL(dir));
+		super.addURL(UrlUtil.getURL(dir));
 		return this;
 	}
 

@@ -14,7 +14,7 @@ package org.dromara.hutool.swing.img;
 
 import org.dromara.hutool.core.io.file.FileTypeUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -105,7 +105,7 @@ public class ImgTest {
 		final File file = FileUtil.file(downloadFile);
 		final File fileScale = FileUtil.file(downloadFile + ".scale." + FileTypeUtil.getType(file));
 
-		final Image img = ImgUtil.getImage(URLUtil.getURL(file));
+		final Image img = ImgUtil.getImage(UrlUtil.getURL(file));
 		ImgUtil.scale(img, fileScale, 0.8f);
 	}
 

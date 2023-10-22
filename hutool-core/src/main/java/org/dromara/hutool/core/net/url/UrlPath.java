@@ -129,7 +129,7 @@ public class UrlPath {
 			if (StrUtil.isNotEmpty(path)) {
 				final List<String> split = SplitUtil.split(path, StrUtil.SLASH);
 				for (final String seg : split) {
-					addInternal(URLDecoder.decodeForPath(seg, charset), false);
+					addInternal(UrlDecoder.decodeForPath(seg, charset), false);
 				}
 			}
 		}

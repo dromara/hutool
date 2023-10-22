@@ -20,7 +20,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.resource.JarResource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.net.url.URLDecoder;
+import org.dromara.hutool.core.net.url.UrlDecoder;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -264,7 +264,7 @@ public class ClassScanner implements Serializable {
 		for (final URL url : ResourceUtil.getResourceUrlIter(this.packagePath, this.classLoader)) {
 			switch (url.getProtocol()) {
 				case "file":
-					scanFile(new File(URLDecoder.decode(url.getFile(), this.charset)), null);
+					scanFile(new File(UrlDecoder.decode(url.getFile(), this.charset)), null);
 					break;
 				case "jar":
 					scanJar(new JarResource(url).getJarFile());
@@ -326,7 +326,7 @@ public class ClassScanner implements Serializable {
 		final String[] javaClassPaths = SystemUtil.getJavaClassPaths();
 		for (String classPath : javaClassPaths) {
 			// bug修复，由于路径中空格和中文导致的Jar找不到
-			classPath = URLDecoder.decode(classPath, CharsetUtil.defaultCharset());
+			classPath = UrlDecoder.decode(classPath, CharsetUtil.defaultCharset());
 
 			scanFile(new File(classPath), null);
 		}

@@ -21,7 +21,7 @@ import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.stream.FastByteArrayOutputStream;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import javax.imageio.ImageIO;
@@ -1349,7 +1349,7 @@ public class ImgUtil {
 	 * @since 5.3.6
 	 */
 	public static String toBase64DataUri(final Image image, final String imageType) {
-		return URLUtil.getDataUri(
+		return UrlUtil.getDataUri(
 			"image/" + imageType, "base64",
 			toBase64(image, imageType));
 	}

@@ -27,7 +27,7 @@ public class IssueI6ZF6KTest {
 		final Map<String, Object> form = MapBuilder.<String, Object>of()
 			.put("condition", json)
 			.build();
-		final String requestBody = URLUtil.buildQuery(form, CharsetUtil.UTF_8);
+		final String requestBody = UrlUtil.buildQuery(form, CharsetUtil.UTF_8);
 		Console.log(requestBody);
 	}
 }

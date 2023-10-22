@@ -160,7 +160,7 @@ public final class UrlBuilder implements Builder<String> {
 	 */
 	public static UrlBuilder of(final String url, final Charset charset) {
 		Assert.notBlank(url, "Url must be not blank!");
-		return of(URLUtil.url(StrUtil.trim(url)), charset);
+		return of(UrlUtil.url(StrUtil.trim(url)), charset);
 	}
 
 	/**

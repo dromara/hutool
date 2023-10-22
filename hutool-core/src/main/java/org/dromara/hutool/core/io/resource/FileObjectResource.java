@@ -14,7 +14,7 @@ package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 
 import javax.tools.FileObject;
 import java.io.BufferedReader;
@@ -68,7 +68,7 @@ public class FileObjectResource implements Resource {
 
 	@Override
 	public long size() {
-		return URLUtil.size(getUrl());
+		return UrlUtil.size(getUrl());
 	}
 
 	@Override

@@ -15,7 +15,7 @@ package org.dromara.hutool.core.io.watch;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.file.PathUtil;
 import org.dromara.hutool.core.io.watch.watchers.WatcherChain;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
 
@@ -77,7 +77,7 @@ public class WatchMonitor extends WatchServer {
 	 * @return 监听对象
 	 */
 	public static WatchMonitor of(final URL url, final int maxDepth, final WatchEvent.Kind<?>... events) {
-		return of(URLUtil.toURI(url), maxDepth, events);
+		return of(UrlUtil.toURI(url), maxDepth, events);
 	}
 
 	/**

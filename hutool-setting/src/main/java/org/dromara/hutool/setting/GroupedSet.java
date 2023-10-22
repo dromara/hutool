@@ -14,7 +14,7 @@ package org.dromara.hutool.setting;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
@@ -83,7 +83,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
 
-		final URL url = URLUtil.getURL(pathBaseClassLoader);
+		final URL url = UrlUtil.getURL(pathBaseClassLoader);
 		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", pathBaseClassLoader));
 		}
@@ -100,7 +100,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		if (configFile == null) {
 			throw new RuntimeException("Null GroupSet file!");
 		}
-		final URL url = URLUtil.getURL(configFile);
+		final URL url = UrlUtil.getURL(configFile);
 		this.init(url, charset);
 	}
 
@@ -112,7 +112,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	 * @param charset 字符集
 	 */
 	public GroupedSet(final String path, final Class<?> clazz, final Charset charset) {
-		final URL url = URLUtil.getURL(path, clazz);
+		final URL url = UrlUtil.getURL(path, clazz);
 		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", path));
 		}

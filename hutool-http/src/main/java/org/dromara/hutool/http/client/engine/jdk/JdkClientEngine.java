@@ -148,7 +148,7 @@ public class JdkClientEngine implements ClientEngine {
 	 * @param isAsync 最终请求是否异步
 	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
-	private JdkHttpResponse sendRedirectIfPossible(JdkHttpConnection conn, final Request message, final boolean isAsync) {
+	private JdkHttpResponse sendRedirectIfPossible(final JdkHttpConnection conn, final Request message, final boolean isAsync) {
 		// 手动实现重定向
 		if (message.maxRedirectCount() > 0) {
 			final int code;

@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.net.url.URLEncoder;
+import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.poi.excel.cell.CellLocation;
@@ -556,7 +556,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 			fileName = IdUtil.fastSimpleUUID();
 		}
 
-		fileName = StrUtil.addSuffixIfNot(URLEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
+		fileName = StrUtil.addSuffixIfNot(UrlEncoder.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
 		return StrUtil.format("attachment; filename=\"{}\"", fileName);
 	}
 

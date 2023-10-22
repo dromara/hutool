@@ -24,7 +24,7 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.net.NetUtil;
-import org.dromara.hutool.core.net.url.URLEncoder;
+import org.dromara.hutool.core.net.url.UrlEncoder;
 import org.dromara.hutool.core.net.multipart.MultipartFormData;
 import org.dromara.hutool.core.net.multipart.UploadSetting;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
@@ -607,7 +607,7 @@ public class JakartaServletUtil {
 	 */
 	public static void write(final HttpServletResponse response, final InputStream in, final String contentType, final String fileName) {
 		final String charset = ObjUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.NAME_UTF_8);
-		final String encodeText = URLEncoder.encodeAll(fileName, CharsetUtil.charset(charset));
+		final String encodeText = UrlEncoder.encodeAll(fileName, CharsetUtil.charset(charset));
 		response.setHeader("Content-Disposition",
 				StrUtil.format("attachment;filename=\"{}\";filename*={}''{}", encodeText, charset, encodeText));
 		response.setContentType(contentType);

@@ -24,7 +24,7 @@ import org.dromara.hutool.core.io.stream.BOMInputStream;
 import org.dromara.hutool.core.io.unit.DataSizeUtil;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Console;
-import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.CharUtil;
@@ -43,6 +43,7 @@ import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
@@ -170,30 +171,6 @@ public class FileUtil extends PathUtil {
 	}
 
 	/**
-	 * 递归遍历目录并处理目录下的文件，可以处理目录或文件：
-	 * <ul>
-	 *     <li>非目录则直接调用{@link Consumer}处理</li>
-	 *     <li>目录则递归调用此方法处理</li>
-	 * </ul>
-	 *
-	 * @param file     文件或目录，文件直接处理
-	 * @param consumer 文件处理器，只会处理文件
-	 * @since 5.5.2
-	 */
-	public static void walkFiles(final File file, final Consumer<File> consumer) {
-		if (file.isDirectory()) {
-			final File[] subFiles = file.listFiles();
-			if (ArrayUtil.isNotEmpty(subFiles)) {
-				for (final File tmp : subFiles) {
-					walkFiles(tmp, consumer);
-				}
-			}
-		} else {
-			consumer.accept(file);
-		}
-	}
-
-	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
 	 * 如果提供file为文件，直接返回过滤结果
 	 *
@@ -228,6 +205,29 @@ public class FileUtil extends PathUtil {
 	 */
 	public static List<File> loopFiles(final File file) {
 		return loopFiles(file, null);
+	}
+
+	/**
+	 * 递归遍历目录并处理目录下的文件，可以处理目录或文件：
+	 * <ul>
+	 *     <li>目录和非目录均调用{@link Predicate}处理</li>
+	 *     <li>目录如果{@link Predicate#test(Object)}为{@code true}则递归调用此方法处理。</li>
+	 * </ul>
+	 * 此方法与{@link #loopFiles(File, FileFilter)}不同的是，处理目录判断，可减少无效目录的遍历。
+	 *
+	 * @param file     文件或目录，文件直接处理
+	 * @param predicate 文件处理器，只会处理文件
+	 * @since 5.5.2
+	 */
+	public static void walkFiles(final File file, final Predicate<File> predicate) {
+		if (predicate.test(file) && file.isDirectory()) {
+			final File[] subFiles = file.listFiles();
+			if (ArrayUtil.isNotEmpty(subFiles)) {
+				for (final File tmp : subFiles) {
+					walkFiles(tmp, predicate);
+				}
+			}
+		}
 	}
 
 	/**
@@ -397,7 +397,7 @@ public class FileUtil extends PathUtil {
 	 * @return File
 	 */
 	public static File file(final URL url) {
-		return new File(URLUtil.toURI(url));
+		return new File(UrlUtil.toURI(url));
 	}
 	// endregion
 
@@ -1095,7 +1095,7 @@ public class FileUtil extends PathUtil {
 		final URL url = ResourceUtil.getResourceUrl(normalPath, baseClass);
 		if (null != url) {
 			// 对于jar中文件包含file:前缀，需要去掉此类前缀，在此做标准化，since 3.0.8 解决中文或空格路径被编码的问题
-			return FileNameUtil.normalize(URLUtil.getDecodedPath(url));
+			return FileNameUtil.normalize(UrlUtil.getDecodedPath(url));
 		}
 
 		// 如果资源不存在，则返回一个拼接的资源绝对路径
