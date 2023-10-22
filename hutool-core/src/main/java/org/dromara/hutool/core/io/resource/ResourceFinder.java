@@ -14,13 +14,16 @@ package org.dromara.hutool.core.io.resource;
 
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.compress.ZipUtil;
+import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
 import org.dromara.hutool.core.text.AntPathMatcher;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -59,14 +62,18 @@ public class ResourceFinder {
 		final MultiResource result = new MultiResource();
 		// 遍历根目录下所有资源，并过滤保留符合条件的资源
 		for (final Resource rootResource : ResourceUtil.getResources(rootDirPath, classLoader)) {
-			if (URLUtil.isJarURL(rootResource.getUrl())) {
+			if (rootResource instanceof JarResource) {
+				// 在jar包中
 				try {
-					result.addAll(findInJar(rootResource, subPattern));
+					result.addAll(findInJar((JarResource) rootResource, subPattern));
 				} catch (final IOException e) {
 					throw new IORuntimeException(e);
 				}
+			} else if (rootResource instanceof FileResource) {
+				// 文件夹中
+				result.addAll(findInDir((FileResource) rootResource, subPattern));
 			} else {
-				result.addAll(findInDir(rootResource, subPattern));
+				throw new HutoolException("Unsupported resource type: {}", rootResource.getClass().getName());
 			}
 		}
 
@@ -81,12 +88,11 @@ public class ResourceFinder {
 	 * @return 符合条件的资源
 	 * @throws IOException IO异常
 	 */
-	protected MultiResource findInJar(final Resource rootResource, final String subPattern) throws IOException {
+	protected MultiResource findInJar(final JarResource rootResource, final String subPattern) throws IOException {
 		final URL rootDirURL = rootResource.getUrl();
 		final URLConnection conn = rootDirURL.openConnection();
 
 		final JarFile jarFile;
-		final String jarFileUrl;
 		String rootEntryPath;
 		final boolean closeJarFile;
 
@@ -98,7 +104,7 @@ public class ResourceFinder {
 			rootEntryPath = (jarEntry != null ? jarEntry.getName() : StrUtil.EMPTY);
 			closeJarFile = !jarCon.getUseCaches();
 		} else {
-			//
+			// 去除子路径后重新获取jar文件
 			final String urlFile = rootDirURL.getFile();
 			try {
 				int separatorIndex = urlFile.indexOf(URLUtil.WAR_URL_SEPARATOR);
@@ -106,7 +112,7 @@ public class ResourceFinder {
 					separatorIndex = urlFile.indexOf(URLUtil.JAR_URL_SEPARATOR);
 				}
 				if (separatorIndex != -1) {
-					jarFileUrl = urlFile.substring(0, separatorIndex);
+					final  String jarFileUrl = urlFile.substring(0, separatorIndex);
 					rootEntryPath = urlFile.substring(separatorIndex + 2);  // both separators are 2 chars
 					jarFile = ZipUtil.ofJar(jarFileUrl);
 				} else {
@@ -130,7 +136,7 @@ public class ResourceFinder {
 				if (entryPath.startsWith(rootEntryPath)) {
 					final String relativePath = entryPath.substring(rootEntryPath.length());
 					if (pathMatcher.match(subPattern, relativePath)) {
-						result.add(new UrlResource(URLUtil.getURL(rootDirURL, relativePath)));
+						result.add(ResourceUtil.getResource(URLUtil.getURL(rootDirURL, relativePath)));
 					}
 				}
 			}
@@ -143,8 +149,23 @@ public class ResourceFinder {
 		return result;
 	}
 
-	protected MultiResource findInDir(final Resource rootResource, final String subPattern) {
+	/**
+	 * 遍历目录查找指定表达式匹配的文件列表
+	 *
+	 * @param resource   文件资源
+	 * @param subPattern 子表达式
+	 * @return 满足条件的文件
+	 */
+	protected MultiResource findInDir(final FileResource resource, final String subPattern) {
+		final MultiResource result = new MultiResource();
+		final File rootDir = resource.getFile();
+		FileUtil.walkFiles(rootDir, (file -> {
+			if (pathMatcher.match(subPattern, file.getName())) {
+				result.add(new FileResource(file));
+			}
+		}));
 
+		return result;
 	}
 
 	/**

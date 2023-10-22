@@ -190,7 +190,7 @@ public final class Props extends Properties implements TypeGetter<CharSequence> 
 	 * @since 5.5.2
 	 */
 	public void load(final URL url) {
-		load(new UrlResource(url));
+		load(ResourceUtil.getResource(url));
 	}
 
 	/**

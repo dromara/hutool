@@ -15,6 +15,7 @@ package org.dromara.hutool.core.io.resource;
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.URLUtil;
+import org.dromara.hutool.core.net.url.UrlProtocolUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class UrlResource implements Resource, Serializable {
 	 */
 	public UrlResource(final URL url, final String name) {
 		this.url = url;
-		if (null != url && URLUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())) {
+		if (null != url && UrlProtocolUtil.URL_PROTOCOL_FILE.equals(url.getProtocol())) {
 			this.lastModified = FileUtil.file(url).lastModified();
 		}
 		this.name = ObjUtil.defaultIfNull(name, () -> (null != url ? FileNameUtil.getName(url.getPath()) : null));

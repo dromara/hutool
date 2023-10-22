@@ -17,6 +17,7 @@ import org.dromara.hutool.core.collection.iter.IterUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.net.url.UrlProtocolUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -253,6 +254,11 @@ public class ResourceUtil {
 	 * @since 6.0.0
 	 */
 	public static Resource getResource(final URL url) {
+		if(UrlProtocolUtil.isJarURL(url)){
+			return new JarResource(url);
+		} else if(UrlProtocolUtil.isFileURL(url)){
+			return new FileResource(url.getFile());
+		}
 		return new UrlResource(url);
 	}
 
