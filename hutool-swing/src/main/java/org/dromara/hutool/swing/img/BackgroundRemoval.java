@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.swing.img;
 
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.file.FileTypeUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -107,8 +108,7 @@ public class BackgroundRemoval {
 			// 图片输出的格式为 png
 			return ImageIO.write(backgroundRemoval(bufferedImage, override, tolerance), "png", output);
 		} catch (final IOException e) {
-			e.printStackTrace();
-			return false;
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -176,8 +176,7 @@ public class BackgroundRemoval {
 		try {
 			return backgroundRemoval(ImageIO.read(new ByteArrayInputStream(outputStream.toByteArray())), override, tolerance);
 		} catch (final IOException e) {
-			e.printStackTrace();
-			return null;
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -286,9 +285,8 @@ public class BackgroundRemoval {
 		try {
 			return getMainColor(ImageIO.read(input));
 		} catch (final IOException e) {
-			e.printStackTrace();
+			throw new IORuntimeException(e);
 		}
-		return "";
 	}
 
 	/**
