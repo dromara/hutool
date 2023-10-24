@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.http.server.handler;
 
+import org.dromara.hutool.http.server.HttpExchangeWrapper;
 import org.dromara.hutool.http.server.HttpServerRequest;
 import org.dromara.hutool.http.server.HttpServerResponse;
 import org.dromara.hutool.http.server.action.Action;
@@ -41,10 +42,18 @@ public class ActionHandler implements HttpHandler {
 
 	@Override
 	public void handle(final HttpExchange httpExchange) throws IOException {
-		action.doAction(
-				new HttpServerRequest(httpExchange),
-				new HttpServerResponse(httpExchange)
-		);
+		final HttpServerRequest request;
+		final HttpServerResponse response;
+		if (httpExchange instanceof HttpExchangeWrapper) {
+			// issue#3343 当使用Filter时，可能读取了请求参数，此时使用共享的req和res，可复用缓存
+			final HttpExchangeWrapper wrapper = (HttpExchangeWrapper) httpExchange;
+			request = wrapper.getRequest();
+			response = wrapper.getResponse();
+		} else {
+			request = new HttpServerRequest(httpExchange);
+			response = new HttpServerResponse(httpExchange);
+		}
+		action.doAction(request, response);
 		httpExchange.close();
 	}
 }
