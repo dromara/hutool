@@ -323,4 +323,9 @@ public class ValidatorTest {
 		Assertions.assertFalse(Validator.isChineseName("连逍遥0"));
 		Assertions.assertFalse(Validator.isChineseName("SHE"));
 	}
+
+	@Test
+	void issue3352Test() {
+		Validator.validateEmail("Zdd@hutool.cn", "test");
+	}
 }
