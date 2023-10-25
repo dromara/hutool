@@ -20,6 +20,7 @@
 * 【core  】      修复TypeUtil.getClass方法强转报错问题（pr#1092@Github）
 * 【core  】      修复DataSize.parse(size)不支持空格问题（issue#I88Z4Z@Gitee）
 * 【http  】      修复SimpleServer在添加的HttpFilter中有获取请求参数时报错问题（issue#3343@Github）
+* 【http  】      修复options请求无响应体问题
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.22(2023-09-13)

@@ -1404,7 +1404,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 是否忽略读取响应body部分<br>
-	 * HEAD、CONNECT、OPTIONS、TRACE方法将不读取响应体
+	 * HEAD、CONNECT、TRACE方法将不读取响应体
 	 *
 	 * @return 是否需要忽略响应body部分
 	 * @since 3.1.2
@@ -1412,7 +1412,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private boolean isIgnoreResponseBody() {
 		return Method.HEAD == this.method //
 				|| Method.CONNECT == this.method //
-				|| Method.OPTIONS == this.method //
 				|| Method.TRACE == this.method;
 	}
 
