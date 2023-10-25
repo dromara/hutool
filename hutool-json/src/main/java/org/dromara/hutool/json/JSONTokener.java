@@ -15,6 +15,7 @@ package org.dromara.hutool.json;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.ReaderWrapper;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,6 +57,7 @@ public class JSONTokener extends ReaderWrapper {
 	private final JSONConfig config;
 
 	// ------------------------------------------------------------------------------------ Constructor start
+
 	/**
 	 * 从InputStream中构建，使用UTF-8编码
 	 *
@@ -342,6 +344,7 @@ public class JSONTokener extends ReaderWrapper {
 	/**
 	 * 获得下一个值，值类型可以是Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 *
+	 * @param getOnlyStringValue 是否只获取String值
 	 * @return Boolean, Double, Integer, JSONArray, JSONObject, Long, or String
 	 * @throws JSONException 语法错误
 	 */
@@ -352,7 +355,7 @@ public class JSONTokener extends ReaderWrapper {
 			case '\'':
 				return this.nextString(c);
 			case '{':
-				if(getOnlyStringValue){
+				if (getOnlyStringValue) {
 					throw this.syntaxError("String value must not begin with '{'");
 				}
 				this.back();
@@ -362,7 +365,7 @@ public class JSONTokener extends ReaderWrapper {
 					throw new JSONException("JSONObject depth too large to process.", e);
 				}
 			case '[':
-				if(getOnlyStringValue){
+				if (getOnlyStringValue) {
 					throw this.syntaxError("String value must not begin with '['");
 				}
 				this.back();
@@ -390,7 +393,7 @@ public class JSONTokener extends ReaderWrapper {
 		if (valueString.isEmpty()) {
 			throw this.syntaxError("Missing value");
 		}
-		return getOnlyStringValue ? valueString : InternalJSONUtil.stringToValue(valueString);
+		return getOnlyStringValue ? valueString : JSONValueMapper.toJsonValue(valueString);
 	}
 
 	/**

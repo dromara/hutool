@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.json;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.codec.HexUtil;
 import org.dromara.hutool.core.convert.Convert;
@@ -20,25 +21,22 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.map.CaseInsensitiveLinkedMap;
 import org.dromara.hutool.core.map.CaseInsensitiveTreeMap;
 import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.TypeUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.text.CharUtil;
-import org.dromara.hutool.core.util.ObjUtil;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 import org.dromara.hutool.json.serialize.GlobalSerializeMapping;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
 import org.dromara.hutool.json.writer.GlobalValueWriterMapping;
 import org.dromara.hutool.json.writer.JSONValueWriter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -68,61 +66,7 @@ public final class InternalJSONUtil {
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
 	static Object wrap(final Object object, final JSONConfig jsonConfig) {
-		// null和自定义对象原样存储
-		if (null == object || null != InternalJSONUtil.getValueWriter(object)) {
-			return object;
-		}
-
-		if (object instanceof JSON //
-				|| object instanceof JSONStringer //
-				|| object instanceof CharSequence //
-				|| object instanceof Number //
-				|| ObjUtil.isBasicType(object) //
-		) {
-			if (!ObjUtil.isValidIfNumber(object)) {
-				throw new JSONException("JSON does not allow non-finite numbers.");
-			}
-			return object;
-		}
-
-		try {
-			// fix issue#1399@Github
-			if (object instanceof SQLException) {
-				return object.toString();
-			}
-
-			// JSONArray
-			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				return new JSONArray(object, jsonConfig);
-			}
-			// JSONObject
-			if (object instanceof Map || object instanceof Map.Entry) {
-				return new JSONObject(object, jsonConfig);
-			}
-
-			// 日期类型做包装，以便自定义输出格式
-			if (object instanceof Date
-					|| object instanceof Calendar
-					|| object instanceof TemporalAccessor
-			) {
-				// 日期类型保存原始类型，用于在writer时自定义转字符串
-				return object;
-			}
-			// 枚举类保存其字符串形式（4.0.2新增）
-			if (object instanceof Enum) {
-				return object.toString();
-			}
-
-			// Java内部类不做转换
-			if (ClassUtil.isJdkClass(object.getClass())) {
-				return object.toString();
-			}
-
-			// 默认按照JSONObject对待
-			return new JSONObject(object, jsonConfig);
-		} catch (final Exception exception) {
-			return null;
-		}
+		return JSONValueMapper.of(jsonConfig).map(object);
 	}
 
 	/**
@@ -165,51 +109,6 @@ public final class InternalJSONUtil {
 		} else {
 			return quote(value.toString());
 		}
-	}
-
-	/**
-	 * 尝试转换字符串为number, boolean, or null，无法转换返回String
-	 *
-	 * @param string A String.
-	 * @return A simple JSON value.
-	 */
-	public static Object stringToValue(final String string) {
-		// null处理
-		if (StrUtil.isEmpty(string) || StrUtil.NULL.equalsIgnoreCase(string)) {
-			return null;
-		}
-
-		// boolean处理
-		if ("true".equalsIgnoreCase(string)) {
-			return Boolean.TRUE;
-		}
-		if ("false".equalsIgnoreCase(string)) {
-			return Boolean.FALSE;
-		}
-
-		// Number处理
-		final char b = string.charAt(0);
-		if ((b >= '0' && b <= '9') || b == '-') {
-			try {
-				if (StrUtil.containsAnyIgnoreCase(string, ".", "e")) {
-					// pr#192@Gitee，Double会出现小数精度丢失问题，此处使用BigDecimal
-					return new BigDecimal(string);
-				} else {
-					final long myLong = Long.parseLong(string);
-					if (string.equals(Long.toString(myLong))) {
-						if (myLong == (int) myLong) {
-							return (int) myLong;
-						} else {
-							return myLong;
-						}
-					}
-				}
-			} catch (final Exception ignore) {
-			}
-		}
-
-		// 其它情况返回原String值下
-		return string;
 	}
 
 	/**

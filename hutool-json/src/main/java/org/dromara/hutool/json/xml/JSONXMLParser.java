@@ -13,9 +13,9 @@
 package org.dromara.hutool.json.xml;
 
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.InternalJSONUtil;
 import org.dromara.hutool.json.JSONException;
 import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.mapper.JSONValueMapper;
 
 /**
  * XML解析器，将XML解析为JSON对象
@@ -73,7 +73,7 @@ public class JSONXMLParser {
 				if ("CDATA".equals(token)) {
 					if (x.next() == '[') {
 						string = x.nextCDATA();
-						if (string.length() > 0) {
+						if (!string.isEmpty()) {
 							context.append("content", string);
 						}
 						return false;
@@ -137,7 +137,7 @@ public class JSONXMLParser {
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
 						}
-						jsonobject.append(string, keepStrings ? token : InternalJSONUtil.stringToValue((String) token));
+						jsonobject.append(string, keepStrings ? token : JSONValueMapper.toJsonValue((String) token));
 						token = null;
 					} else {
 						jsonobject.append(string, "");
@@ -148,7 +148,7 @@ public class JSONXMLParser {
 					if (x.nextToken() != JSONXMLUtil.GT) {
 						throw x.syntaxError("Misshaped tag");
 					}
-					if (jsonobject.size() > 0) {
+					if (!jsonobject.isEmpty()) {
 						context.append(tagName, jsonobject);
 					} else {
 						context.append(tagName, StrUtil.EMPTY);
@@ -166,15 +166,15 @@ public class JSONXMLParser {
 							return false;
 						} else if (token instanceof String) {
 							string = (String) token;
-							if (string.length() > 0) {
-								jsonobject.append("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
+							if (!string.isEmpty()) {
+								jsonobject.append("content", keepStrings ? token : JSONValueMapper.toJsonValue(string));
 							}
 
 						} else if (token == JSONXMLUtil.LT) {
 							// Nested element
 							if (parse(x, jsonobject, tagName, keepStrings)) {
-								if (jsonobject.size() == 0) {
-									context.append(tagName, "");
+								if (jsonobject.isEmpty()) {
+									context.append(tagName, StrUtil.EMPTY);
 								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
 									context.append(tagName, jsonobject.get("content"));
 								} else {
