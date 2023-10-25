@@ -11,6 +11,11 @@
  */
 
 /**
- * Bean和JSON之间的映射封装。
+ * Bean和JSON之间的映射封装，包括：
+ * <ul>
+ *     <li>JSONObjectMapper: 转换对象为JSONObject</li>
+ *     <li>JSONArrayMapper:  转换对象为JSONArray</li>
+ *     <li>JSONValueMapper:  转换对象为JSON值</li>
+ * </ul>
  */
 package org.dromara.hutool.json.mapper;
