@@ -199,6 +199,40 @@ public class Snowflake implements Serializable {
 	}
 
 	/**
+	 * 根据传入时间戳-计算ID起终点
+	 *
+	 * @param timestampStart 开始时间戳
+	 * @param timestampEnd   结束时间戳
+	 * @return key-ID起点，Value-ID终点
+	 * @since 5.8.24
+	 */
+	public Pair<Long, Long> getIdScopeByTimestamp(long timestampStart, long timestampEnd) {
+		return getIdScopeByTimestamp(timestampStart, timestampEnd, true);
+	}
+
+	/**
+	 * 根据传入时间戳-计算ID起终点 Gitee/issues/I60M14
+	 *
+	 * @param timestampStart        开始时间戳
+	 * @param timestampEnd          结束时间戳
+	 * @param ignoreCenterAndWorker 是否忽略数据中心和机器节点的占位，忽略后可获得分布式环境全局可信赖的起终点。
+	 * @return key-ID起点，Value-ID终点
+	 * @since 5.8.24
+	 */
+	public Pair<Long, Long> getIdScopeByTimestamp(long timestampStart, long timestampEnd, boolean ignoreCenterAndWorker) {
+		long startTimeMinId = (timestampStart - twepoch) << TIMESTAMP_LEFT_SHIFT;
+		long endTimeMinId = (timestampEnd - twepoch) << TIMESTAMP_LEFT_SHIFT;
+		if (ignoreCenterAndWorker) {
+			long endId = endTimeMinId | ~(-1 << TIMESTAMP_LEFT_SHIFT);
+			return Pair.of(startTimeMinId, endId);
+		} else {
+			long startId = startTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT);
+			long endId = endTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT) | SEQUENCE_MASK;
+			return Pair.of(startId, endId);
+		}
+	}
+
+	/**
 	 * 下一个ID
 	 *
 	 * @return ID
