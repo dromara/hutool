@@ -50,7 +50,8 @@ public class JdkClientEngine implements ClientEngine {
 	/**
 	 * 构造
 	 */
-	public JdkClientEngine() {}
+	public JdkClientEngine() {
+	}
 
 	@Override
 	public JdkClientEngine init(final ClientConfig config) {
@@ -121,17 +122,17 @@ public class JdkClientEngine implements ClientEngine {
 		final ClientConfig config = ObjUtil.defaultIfNull(this.config, ClientConfig::of);
 
 		final JdkHttpConnection conn = JdkHttpConnection
-				.of(message.handledUrl().toURL(), config.getProxy())
-				.setConnectTimeout(config.getConnectionTimeout())
-				.setReadTimeout(config.getReadTimeout())
-				.setMethod(message.method())//
-				.setSSLInfo(config.getSslInfo())
-				// 关闭JDK自动转发，采用手动转发方式
-				.setInstanceFollowRedirects(false)
-				.setChunkedStreamingMode(message.isChunked() ? 4096 : -1)
-				.setDisableCache(config.isDisableCache())
-				// 覆盖默认Header
-				.header(message.headers(), true);
+			.of(message.handledUrl().toURL(), config.getProxy())
+			.setConnectTimeout(config.getConnectionTimeout())
+			.setReadTimeout(config.getReadTimeout())
+			.setMethod(message.method())//
+			.setSSLInfo(config.getSslInfo())
+			// 关闭JDK自动转发，采用手动转发方式
+			.setInstanceFollowRedirects(false)
+			.setChunkedStreamingMode(message.isChunked() ? 4096 : -1)
+			.setDisableCache(config.isDisableCache())
+			// 覆盖默认Header
+			.header(message.headers(), true);
 
 		if (null == message.header(HeaderName.COOKIE)) {
 			// 用户没有自定义Cookie，则读取全局Cookie信息并附带到请求中
@@ -144,7 +145,7 @@ public class JdkClientEngine implements ClientEngine {
 	/**
 	 * 调用转发，如果需要转发返回转发结果，否则返回{@code null}
 	 *
-	 * @param conn {@link JdkHttpConnection}}
+	 * @param conn    {@link JdkHttpConnection}}
 	 * @param isAsync 最终请求是否异步
 	 * @return {@link JdkHttpResponse}，无转发返回 {@code null}
 	 */
@@ -173,7 +174,7 @@ public class JdkClientEngine implements ClientEngine {
 
 		// 最终页面
 		return new JdkHttpResponse(conn, true, message.charset(), isAsync,
-				isIgnoreResponseBody(message.method()));
+			isIgnoreResponseBody(message.method()));
 	}
 
 	/**
@@ -204,7 +205,7 @@ public class JdkClientEngine implements ClientEngine {
 			}
 
 			redirectUrl = UrlBuilder.of(parentUrl.getScheme(), parentUrl.getHost(), parentUrl.getPort(),
-					location, query, null, parentUrl.getCharset());
+				location, query, null, parentUrl.getCharset());
 		} else {
 			redirectUrl = UrlBuilder.ofHttpWithoutEncode(location);
 		}
@@ -214,14 +215,15 @@ public class JdkClientEngine implements ClientEngine {
 
 	/**
 	 * 是否忽略读取响应body部分<br>
-	 * HEAD、CONNECT、OPTIONS、TRACE方法将不读取响应体
+	 * HEAD、CONNECT、TRACE方法将不读取响应体
 	 *
 	 * @return 是否需要忽略响应body部分
 	 */
-	private static boolean isIgnoreResponseBody(final Method method) {
-		return Method.HEAD == method //
-				|| Method.CONNECT == method //
-				|| Method.OPTIONS == method //
-				|| Method.TRACE == method;
+	private boolean isIgnoreResponseBody(final Method method) {
+		//https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/OPTIONS
+		// OPTIONS请求可以带有响应体
+		return Method.HEAD == method
+			|| Method.CONNECT == method
+			|| Method.TRACE == method;
 	}
 }
