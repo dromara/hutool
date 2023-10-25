@@ -25,65 +25,40 @@ public class SnowflakeTest {
 	 */
 	@Test
 	public void snowflakeTestGetIdScope() {
-		long workerId = RandomUtil.randomLong(31);
-		long dataCenterId = RandomUtil.randomLong(31);
-		Snowflake idWorker = new Snowflake(workerId, dataCenterId);
-		long generatedId = idWorker.nextId();
+		final long workerId = RandomUtil.randomLong(31);
+		final long dataCenterId = RandomUtil.randomLong(31);
+		final Snowflake idWorker = new Snowflake(workerId, dataCenterId);
+		final long generatedId = idWorker.nextId();
 		// 随机忽略数据中心和工作机器的占位
-		boolean ignore = RandomUtil.randomBoolean();
-		long createTimestamp = idWorker.getGenerateDateTime(generatedId);
-		Pair<Long, Long> idScope = idWorker.getIdScopeByTimestamp(createTimestamp, createTimestamp, ignore);
-		long startId = idScope.getKey();
-		long endId = idScope.getValue();
+		final boolean ignore = RandomUtil.randomBoolean();
+		final long createTimestamp = idWorker.getGenerateDateTime(generatedId);
+		final Pair<Long, Long> idScope = idWorker.getIdScopeByTimestamp(createTimestamp, createTimestamp, ignore);
+		final long startId = idScope.getKey();
+		final long endId = idScope.getValue();
 
-		System.out.println(longToBinaryReadable(generatedId) + " = generatedId longToBinaryReadable");
-		System.out.println(longToBinaryReadable(startId) + " = startId longToBinaryReadable");
-		System.out.println(longToBinaryReadable(endId) + " = endId longToBinaryReadable");
 		// 起点终点相差比较
-		long trueOffSet = endId - startId;
+		final long trueOffSet = endId - startId;
 		// 忽略数据中心和工作机器时差值为22个1，否则为12个1
-		long expectedOffSet = ignore ? ~(-1 << 22) : ~(-1 << 12);
-		System.out.println("计算差值 = " + trueOffSet + ", 预期差值 = " + expectedOffSet);
+		final long expectedOffSet = ignore ? ~(-1 << 22) : ~(-1 << 12);
 		Assert.assertEquals(trueOffSet, expectedOffSet);
-	}
-
-	/**
-	 * long转雪花格式的2进制字符串
-	 *
-	 * @param number long值
-	 * @return 符号位（1bit）- 时间戳相对值（41bit）- 数据中心标志（5bit）- 机器标志（5bit）- 递增序号（12bit）
-	 */
-	private String longToBinaryReadable(long number) {
-		String binaryString = Long.toBinaryString(number);
-		StringBuilder sb = new StringBuilder(binaryString);
-		while (sb.length() < 64) {
-			sb.insert(0, '0');  // 在二进制字符串前面补零
-		}
-		sb
-				.insert(52, "-")
-				.insert(47, "-")
-				.insert(42, "-")
-				.insert(1, "-")
-		;
-		return sb.toString();
 	}
 
 	@Test
 	public void snowflakeTest1(){
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(0, 0);
-		long nextId = idWorker.nextId();
+		final Snowflake idWorker = new Snowflake(0, 0);
+		final long nextId = idWorker.nextId();
 		Assert.assertTrue(nextId > 0);
 	}
 
 	@Test
 	public void snowflakeTest(){
-		HashSet<Long> hashSet = new HashSet<>();
+		final HashSet<Long> hashSet = new HashSet<>();
 
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(0, 0);
+		final Snowflake idWorker = new Snowflake(0, 0);
 		for (int i = 0; i < 1000; i++) {
-			long id = idWorker.nextId();
+			final long id = idWorker.nextId();
 			hashSet.add(id);
 		}
 		Assert.assertEquals(1000L, hashSet.size());
@@ -92,8 +67,8 @@ public class SnowflakeTest {
 	@Test
 	public void snowflakeGetTest(){
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(1, 2);
-		long nextId = idWorker.nextId();
+		final Snowflake idWorker = new Snowflake(1, 2);
+		final long nextId = idWorker.nextId();
 
 		Assert.assertEquals(1, idWorker.getWorkerId(nextId));
 		Assert.assertEquals(2, idWorker.getDataCenterId(nextId));
@@ -104,9 +79,9 @@ public class SnowflakeTest {
 	@Ignore
 	public void uniqueTest(){
 		// 测试并发环境下生成ID是否重复
-		Snowflake snowflake = IdUtil.getSnowflake(0, 0);
+		final Snowflake snowflake = IdUtil.getSnowflake(0, 0);
 
-		Set<Long> ids = new ConcurrentHashSet<>();
+		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
 				if(false == ids.add(snowflake.nextId())){
@@ -143,7 +118,7 @@ public class SnowflakeTest {
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
 				false, Snowflake.DEFAULT_TIME_OFFSET, 100);
 
-		Set<Long> ids = new ConcurrentHashSet<>();
+		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
 				if(false == ids.add(snowflake.nextId())){

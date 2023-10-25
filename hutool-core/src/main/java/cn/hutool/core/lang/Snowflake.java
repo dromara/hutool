@@ -204,7 +204,7 @@ public class Snowflake implements Serializable {
 	 * @param timestampStart 开始时间戳
 	 * @param timestampEnd   结束时间戳
 	 * @return key-ID起点，Value-ID终点
-	 * @since 5.8.24
+	 * @since 5.8.23
 	 */
 	public Pair<Long, Long> getIdScopeByTimestamp(long timestampStart, long timestampEnd) {
 		return getIdScopeByTimestamp(timestampStart, timestampEnd, true);
@@ -217,7 +217,7 @@ public class Snowflake implements Serializable {
 	 * @param timestampEnd          结束时间戳
 	 * @param ignoreCenterAndWorker 是否忽略数据中心和机器节点的占位，忽略后可获得分布式环境全局可信赖的起终点。
 	 * @return key-ID起点，Value-ID终点
-	 * @since 5.8.24
+	 * @since 5.8.23
 	 */
 	public Pair<Long, Long> getIdScopeByTimestamp(long timestampStart, long timestampEnd, boolean ignoreCenterAndWorker) {
 		long startTimeMinId = (timestampStart - twepoch) << TIMESTAMP_LEFT_SHIFT;
