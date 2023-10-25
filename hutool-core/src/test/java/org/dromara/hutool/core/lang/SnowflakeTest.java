@@ -13,11 +13,13 @@
 package org.dromara.hutool.core.lang;
 
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.data.id.Snowflake;
+import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.ThreadUtil;
+import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -115,5 +117,28 @@ public class SnowflakeTest {
 				}
 			}
 		});
+	}
+
+	/**
+	 * 测试-根据传入时间戳-计算ID起终点
+	 */
+	@Test
+	public void snowflakeTestGetIdScope() {
+		final long workerId = RandomUtil.randomLong(31);
+		final long dataCenterId = RandomUtil.randomLong(31);
+		final Snowflake idWorker = new Snowflake(workerId, dataCenterId);
+		final long generatedId = idWorker.nextId();
+		// 随机忽略数据中心和工作机器的占位
+		final boolean ignore = RandomUtil.randomBoolean();
+		final long createTimestamp = idWorker.getGenerateDateTime(generatedId);
+		final Pair<Long, Long> idScope = idWorker.getIdScopeByTimestamp(createTimestamp, createTimestamp, ignore);
+		final long startId = idScope.getLeft();
+		final long endId = idScope.getRight();
+
+		// 起点终点相差比较
+		final long trueOffSet = endId - startId;
+		// 忽略数据中心和工作机器时差值为22个1，否则为12个1
+		final long expectedOffSet = ignore ? ~(-1 << 22) : ~(-1 << 12);
+		Assertions.assertEquals(trueOffSet, expectedOffSet);
 	}
 }

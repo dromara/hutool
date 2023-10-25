@@ -14,8 +14,9 @@ package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.date.SystemClock;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.util.RandomUtil;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.RandomUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -257,6 +258,40 @@ public class Snowflake implements Serializable {
 	 */
 	public String nextIdStr() {
 		return Long.toString(nextId());
+	}
+
+	/**
+	 * 根据传入时间戳-计算ID起终点
+	 *
+	 * @param timestampStart 开始时间戳
+	 * @param timestampEnd   结束时间戳
+	 * @return key-ID起点，Value-ID终点
+	 * @since 5.8.23
+	 */
+	public Pair<Long, Long> getIdScopeByTimestamp(final long timestampStart, final long timestampEnd) {
+		return getIdScopeByTimestamp(timestampStart, timestampEnd, true);
+	}
+
+	/**
+	 * 根据传入时间戳-计算ID起终点 Gitee/issues/I60M14
+	 *
+	 * @param timestampStart        开始时间戳
+	 * @param timestampEnd          结束时间戳
+	 * @param ignoreCenterAndWorker 是否忽略数据中心和机器节点的占位，忽略后可获得分布式环境全局可信赖的起终点。
+	 * @return key-ID起点，Value-ID终点
+	 * @since 5.8.23
+	 */
+	public Pair<Long, Long> getIdScopeByTimestamp(final long timestampStart, final long timestampEnd, final boolean ignoreCenterAndWorker) {
+		final long startTimeMinId = (timestampStart - twepoch) << TIMESTAMP_LEFT_SHIFT;
+		final long endTimeMinId = (timestampEnd - twepoch) << TIMESTAMP_LEFT_SHIFT;
+		if (ignoreCenterAndWorker) {
+			final long endId = endTimeMinId | ~(-1 << TIMESTAMP_LEFT_SHIFT);
+			return Pair.of(startTimeMinId, endId);
+		} else {
+			final long startId = startTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT);
+			final long endId = endTimeMinId | (dataCenterId << DATA_CENTER_ID_SHIFT) | (workerId << WORKER_ID_SHIFT) | SEQUENCE_MASK;
+			return Pair.of(startId, endId);
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------ Private method start

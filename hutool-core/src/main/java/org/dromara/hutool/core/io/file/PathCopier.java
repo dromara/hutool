@@ -128,6 +128,7 @@ public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
 		return copyFile(src, target, options);
 	}
 
+	// region private methods
 	/**
 	 * 拷贝目录下的所有文件或目录到目标目录中，此方法不支持文件对文件的拷贝。
 	 * <ul>
@@ -161,8 +162,8 @@ public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
 	 * @throws IORuntimeException IO异常
 	 */
 	private static Path copyFile(final Path src, final Path target, final CopyOption... options) throws IORuntimeException {
-		Assert.notNull(src, "Source File is null !");
-		Assert.notNull(target, "Destination File or directory is null !");
+		Assert.notNull(src, "Source file is null !");
+		Assert.notNull(target, "Target file or directory is null !");
 
 		final Path targetPath = PathUtil.isDirectory(target) ? target.resolve(src.getFileName()) : target;
 		// 创建级联父目录
@@ -173,4 +174,5 @@ public class PathCopier extends SrcToDestCopier<Path, PathCopier> {
 			throw new IORuntimeException(e);
 		}
 	}
+	// endregion
 }
