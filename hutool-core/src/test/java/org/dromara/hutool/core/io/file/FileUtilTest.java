@@ -294,6 +294,13 @@ public class FileUtilTest {
 
 	@Test
 	@Disabled
+	public void loopFileTest() {
+		final List<File> files = FileUtil.loopFiles("D:\\m2_repo\\cglib\\cglib\\3.3.0\\cglib-3.3.0.jar");
+		Console.log(files);
+	}
+
+	@Test
+	@Disabled
 	public void loopFilesTest2() {
 		FileUtil.loopFiles("").forEach(Console::log);
 	}

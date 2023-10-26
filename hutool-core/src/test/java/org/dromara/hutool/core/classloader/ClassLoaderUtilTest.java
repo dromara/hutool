@@ -12,9 +12,20 @@
 
 package org.dromara.hutool.core.classloader;
 
+import org.dromara.hutool.core.collection.iter.EnumerationIter;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.Dict;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.sql.Driver;
+import java.sql.DriverManager;
 
 public class ClassLoaderUtilTest {
 
@@ -60,5 +71,19 @@ public class ClassLoaderUtilTest {
 		private static class B{
 
 		}
+	}
+
+	@Test
+	@Disabled
+	void loadClassFromJarTest() {
+		final JarClassLoader classLoader = ClassLoaderUtil.getJarClassLoader(
+			FileUtil.file("D:\\m2_repo\\com\\sap\\cloud\\db\\jdbc\\ngdbc\\2.18.13\\ngdbc-2.18.13.jar"));
+
+		final Class<?> aClass = ClassUtil.forName("com.sap.db.jdbc.Driver", true, classLoader);
+		final Field instance = FieldUtil.getField(aClass, "INSTANCE");
+		Console.log(FieldUtil.getFieldValue(null, instance));
+
+		final Field version = FieldUtil.getField(aClass, "JAVA_VERSION");
+		Console.log(FieldUtil.getFieldValue(null, version));
 	}
 }

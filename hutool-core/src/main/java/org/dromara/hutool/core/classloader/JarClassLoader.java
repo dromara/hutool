@@ -14,6 +14,7 @@ package org.dromara.hutool.core.classloader;
 
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
@@ -125,10 +126,9 @@ public class JarClassLoader extends URLClassLoader {
 	 * @param jarFileOrDir jar文件或者jar文件所在目录
 	 * @return this
 	 */
+	@SuppressWarnings("resource")
 	public JarClassLoader addJar(final File jarFileOrDir) {
-		if (isJarFile(jarFileOrDir)) {
-			return addURL(jarFileOrDir);
-		}
+		// loopJar方法中，如果传入的是jar文件，直接返回此文件
 		final List<File> jars = loopJar(jarFileOrDir);
 		for (final File jar : jars) {
 			addURL(jar);
@@ -174,10 +174,8 @@ public class JarClassLoader extends URLClassLoader {
 	 * @since 4.4.2
 	 */
 	private static boolean isJarFile(final File file) {
-		if (!FileUtil.isFile(file)) {
-			return false;
-		}
-		return file.getPath().toLowerCase().endsWith(".jar");
+		return FileUtil.isFile(file) &&
+			FileNameUtil.isType(file.getName(), FileNameUtil.EXT_JAR);
 	}
 	// ------------------------------------------------------------------- Private method end
 }
