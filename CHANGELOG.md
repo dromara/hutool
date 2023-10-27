@@ -10,6 +10,7 @@
 * 【http  】      UserAgent增加百度浏览器识别（issue#I847JY@Gitee）
 * 【core  】      ReflectUtil.getFieldsValue增加Filter重载（pr#1090@Gitee）
 * 【core  】      Snowflake增加方法：根据传入时间戳，计算ID起终点（pr#1096@Gitee）
+* 【core  】      PathUtil增加loopFiles重载，可选是否追踪软链（issue#3353@Github）
 
 ### 🐞Bug修复
 * 【cron  】      修复Cron表达式range解析错误问题（issue#I82CSH@Gitee）
