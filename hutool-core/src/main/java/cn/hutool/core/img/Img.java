@@ -133,7 +133,7 @@ public class Img implements Serializable {
 	 * @return Img
 	 */
 	public static Img from(Image image) {
-		return new Img(ImgUtil.toBufferedImage(image));
+		return new Img(ImgUtil.castToBufferedImage(image, ImgUtil.IMAGE_TYPE_JPG));
 	}
 
 	/**
