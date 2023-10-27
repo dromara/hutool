@@ -445,17 +445,13 @@ public class ImgUtil {
 	 * 图像切割（指定切片的行数和列数）
 	 *
 	 * @param srcImageFile 源图像文件
-	 * @param destDir      切片目标文件夹
+	 * @param targetDir      切片目标文件夹
 	 * @param formatName   格式名称，即图片格式后缀
 	 * @param rows         目标切片行数。默认2，必须是范围 [1, 20] 之内
 	 * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
-	public static void sliceByRowsAndCols(final File srcImageFile, final File destDir, final String formatName, final int rows, final int cols) {
-		try {
-			sliceByRowsAndCols(ImageIO.read(srcImageFile), destDir, formatName, rows, cols);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public static void sliceByRowsAndCols(final File srcImageFile, final File targetDir, final String formatName, final int rows, final int cols) {
+		sliceByRowsAndCols(read(srcImageFile), targetDir, formatName, rows, cols);
 	}
 
 	/**
@@ -474,32 +470,27 @@ public class ImgUtil {
 			throw new IllegalArgumentException("Destination must be a Directory !");
 		}
 
-		try {
-			if (rows <= 0 || rows > 20) {
-				rows = 2; // 切片行数
-			}
-			if (cols <= 0 || cols > 20) {
-				cols = 2; // 切片列数
-			}
-			// 读取源图像
-			final BufferedImage bi = toBufferedImage(srcImage);
-			final int srcWidth = bi.getWidth(); // 源图宽度
-			final int srcHeight = bi.getHeight(); // 源图高度
+		if (rows <= 0 || rows > 20) {
+			rows = 2; // 切片行数
+		}
+		if (cols <= 0 || cols > 20) {
+			cols = 2; // 切片列数
+		}
+		// 读取源图像
+		final int srcWidth = srcImage.getWidth(null); // 源图宽度
+		final int srcHeight = srcImage.getHeight(null); // 源图高度
 
-			final int destWidth = NumberUtil.partValue(srcWidth, cols); // 每张切片的宽度
-			final int destHeight = NumberUtil.partValue(srcHeight, rows); // 每张切片的高度
+		final int targetWidth = NumberUtil.partValue(srcWidth, cols); // 每张切片的宽度
+		final int targetHeight = NumberUtil.partValue(srcHeight, rows); // 每张切片的高度
 
-			// 循环建立切片
-			Image tag;
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < cols; j++) {
-					tag = cut(bi, new Rectangle(j * destWidth, i * destHeight, destWidth, destHeight));
-					// 输出为文件
-					ImageIO.write(toRenderedImage(tag), formatName, new File(destDir, "_r" + i + "_c" + j + ".jpg"));
-				}
+		// 循环建立切片
+		Image tag;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				tag = cut(srcImage, new Rectangle(j * targetWidth, i * targetHeight, targetWidth, targetHeight));
+				// 输出为文件
+				write(tag, new File(destDir, "_r" + i + "_c" + j + "." +  formatName));
 			}
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
 		}
 	}
 	// endregion
@@ -558,8 +549,9 @@ public class ImgUtil {
 	 * @since 4.1.14
 	 */
 	public static void convert(final Image srcImage, final String formatName, final ImageOutputStream destImageStream, final boolean isSrcPng) {
+		final BufferedImage src = toBufferedImage(srcImage, isSrcPng ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		try {
-			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_RGB) : toBufferedImage(srcImage), formatName, destImageStream);
+			ImageIO.write(src, formatName, destImageStream);
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1148,30 +1140,32 @@ public class ImgUtil {
 	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制，使用 {@link BufferedImage#TYPE_INT_RGB} 模式。
 	 *
 	 * @param img {@link Image}
+	 * @param imageType 目标图片类型，例如jpg或png等
 	 * @return {@link BufferedImage}
 	 * @since 4.3.2
 	 */
-	public static RenderedImage toRenderedImage(final Image img) {
+	public static RenderedImage castToRenderedImage(final Image img, final String imageType) {
 		if (img instanceof RenderedImage) {
 			return (RenderedImage) img;
 		}
 
-		return copyImage(img, BufferedImage.TYPE_INT_RGB);
+		return toBufferedImage(img, imageType);
 	}
 
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
-	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制，使用 {@link BufferedImage#TYPE_INT_RGB} 模式
+	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制，使用 imageType 模式
 	 *
 	 * @param img {@link Image}
+	 * @param imageType 目标图片类型，例如jpg或png等
 	 * @return {@link BufferedImage}
 	 */
-	public static BufferedImage toBufferedImage(final Image img) {
+	public static BufferedImage castToBufferedImage(final Image img, final String imageType) {
 		if (img instanceof BufferedImage) {
 			return (BufferedImage) img;
 		}
 
-		return copyImage(img, BufferedImage.TYPE_INT_RGB);
+		return toBufferedImage(img, imageType);
 	}
 
 	/**

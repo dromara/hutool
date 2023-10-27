@@ -135,7 +135,7 @@ public class Img implements Serializable {
 	 * @return Img
 	 */
 	public static Img from(final Image image) {
-		return new Img(ImgUtil.toBufferedImage(image));
+		return new Img(ImgUtil.castToBufferedImage(image, ImgUtil.IMAGE_TYPE_JPG));
 	}
 
 	/**
@@ -368,7 +368,8 @@ public class Img implements Serializable {
 		final Image srcImage = getValidSrcImg();
 		fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
 
-		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+		final ImageFilter cropFilter = new CropImageFilter(
+			rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		this.targetImage = ImgUtil.filter(cropFilter, srcImage);
 		return this;
 	}
@@ -685,8 +686,8 @@ public class Img implements Serializable {
 	 */
 	public Img stroke(final Color color, final Stroke stroke) {
 		final BufferedImage image = ImgUtil.toBufferedImage(getValidSrcImg(), this.targetImageType);
-		final int width = image.getWidth(null);
-		final int height = image.getHeight(null);
+		final int width = image.getWidth();
+		final int height = image.getHeight();
 		final Graphics2D g = image.createGraphics();
 
 		g.setColor(ObjUtil.defaultIfNull(color, Color.BLACK));

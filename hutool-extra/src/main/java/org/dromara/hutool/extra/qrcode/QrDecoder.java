@@ -26,6 +26,7 @@ import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +75,8 @@ public class QrDecoder implements Decoder<Image, String> {
 		final MultiFormatReader formatReader = new MultiFormatReader();
 		formatReader.setHints(hints);
 
-		final LuminanceSource source = new BufferedImageLuminanceSource(ImgUtil.toBufferedImage(image));
+		final LuminanceSource source = new BufferedImageLuminanceSource(
+			ImgUtil.castToBufferedImage(image, ImgUtil.IMAGE_TYPE_JPG));
 
 		Result result = _decode(formatReader, new HybridBinarizer(source));
 		if (null == result) {

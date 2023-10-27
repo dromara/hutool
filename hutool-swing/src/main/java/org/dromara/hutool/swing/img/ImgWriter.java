@@ -69,7 +69,7 @@ public class ImgWriter {
 	 * @param imageType 图片类型（图片扩展名），{@code null}表示使用RGB模式（JPG）
 	 */
 	public ImgWriter(final Image image, final String imageType) {
-		this.image = ImgUtil.toRenderedImage(image);
+		this.image = ImgUtil.castToRenderedImage(image, imageType);
 		this.writer = ImgUtil.getWriter(image, imageType);
 	}
 
