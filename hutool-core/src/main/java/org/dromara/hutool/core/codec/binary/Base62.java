@@ -162,7 +162,7 @@ public class Base62 {
 	 *
 	 * @param source 被解码的Base62字符串
 	 * @param charset 字符集
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStr(final CharSequence source, final Charset charset) {
 		return StrUtil.str(decode(source), charset);
