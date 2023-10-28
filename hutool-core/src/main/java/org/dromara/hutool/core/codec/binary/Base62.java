@@ -141,7 +141,7 @@ public class Base62 {
 	 * Base62解码
 	 *
 	 * @param source 被解码的Base62字符串
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStrGbk(final CharSequence source) {
 		return decodeStr(source, CharsetUtil.GBK);
@@ -151,7 +151,7 @@ public class Base62 {
 	 * Base62解码
 	 *
 	 * @param source 被解码的Base62字符串
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStr(final CharSequence source) {
 		return decodeStr(source, DEFAULT_CHARSET);
