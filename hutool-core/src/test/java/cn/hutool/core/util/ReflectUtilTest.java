@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -225,8 +226,10 @@ public class ReflectUtilTest {
 		final Method[] methods = ReflectUtil.getMethods(TestInterface3.class);
 		Assert.assertEquals(4, methods.length);
 
+		Arrays.sort(methods, Comparator.comparing(Method::toString));
 		// 接口里，调用getMethods和getPublicMethods效果相同
 		final Method[] publicMethods = ReflectUtil.getPublicMethods(TestInterface3.class);
+		Arrays.sort(publicMethods, Comparator.comparing(Method::toString));
 		Assert.assertArrayEquals(methods, publicMethods);
 	}
 
