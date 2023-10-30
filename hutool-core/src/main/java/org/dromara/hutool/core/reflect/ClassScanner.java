@@ -17,6 +17,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.resource.JarResource;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
@@ -366,22 +367,26 @@ public class ClassScanner implements Serializable {
 	}
 
 	/**
-	 * 扫描jar包
+	 * 扫描jar包，扫描结束后关闭jar文件
 	 *
 	 * @param jar jar包
 	 */
 	private void scanJar(final JarFile jar) {
-		String name;
-		for (final JarEntry entry : new EnumerationIter<>(jar.entries())) {
-			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
-			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
-				if (name.endsWith(FileNameUtil.EXT_CLASS) && !entry.isDirectory()) {
-					final String className = name//
+		try{
+			String name;
+			for (final JarEntry entry : new EnumerationIter<>(jar.entries())) {
+				name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
+				if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
+					if (name.endsWith(FileNameUtil.EXT_CLASS) && !entry.isDirectory()) {
+						final String className = name//
 							.substring(0, name.length() - 6)//
 							.replace(CharUtil.SLASH, CharUtil.DOT);//
-					addIfAccept(loadClass(className));
+						addIfAccept(loadClass(className));
+					}
 				}
 			}
+		} finally {
+			IoUtil.closeQuietly(jar);
 		}
 	}
 
