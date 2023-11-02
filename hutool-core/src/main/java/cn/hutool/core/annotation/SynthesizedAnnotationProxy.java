@@ -95,7 +95,7 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		return Opt.ofNullable(methods.get(method.getName()))
 				.map(m -> m.apply(method, args))
-				.orElseGet(() -> ReflectUtil.invoke(this, method, args));
+				.orElseGet(() -> ReflectUtil.invoke(proxy, method, args));
 	}
 
 	// ========================= 代理方法 =========================

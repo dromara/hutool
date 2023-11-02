@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  */
 public class CacheableAnnotationAttribute implements AnnotationAttribute {
 
-	private boolean valueInvoked;
+	private volatile boolean valueInvoked;
 	private Object value;
 
 	private boolean defaultValueInvoked;
@@ -45,8 +45,12 @@ public class CacheableAnnotationAttribute implements AnnotationAttribute {
 	@Override
 	public Object getValue() {
 		if (!valueInvoked) {
-			valueInvoked = true;
-			value = ReflectUtil.invoke(annotation, attribute);
+			synchronized (this) {
+				if (!valueInvoked) {
+					valueInvoked = true;
+					value = ReflectUtil.invoke(annotation, attribute);
+				}
+			}
 		}
 		return value;
 	}

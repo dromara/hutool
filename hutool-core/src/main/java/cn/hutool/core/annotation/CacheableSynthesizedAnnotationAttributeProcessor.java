@@ -3,10 +3,10 @@ package cn.hutool.core.annotation;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.multi.RowKeyTable;
 import cn.hutool.core.map.multi.Table;
-import cn.hutool.core.util.ObjectUtil;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * <p>带缓存功能的{@link SynthesizedAnnotationAttributeProcessor}实现，
@@ -47,16 +47,19 @@ public class CacheableSynthesizedAnnotationAttributeProcessor implements Synthes
 	@Override
 	public <T> T getAttributeValue(String attributeName, Class<T> attributeType, Collection<? extends SynthesizedAnnotation> synthesizedAnnotations) {
 		Object value = valueCaches.get(attributeName, attributeType);
-		// 此处理论上不可能出现缓存值为nul的情况
-		if (ObjectUtil.isNotNull(value)) {
-			return (T)value;
+		if (Objects.isNull(value)) {
+			synchronized (valueCaches) {
+				value = valueCaches.get(attributeName, attributeType);
+				if (Objects.isNull(value)) {
+					value = synthesizedAnnotations.stream()
+						.filter(ma -> ma.hasAttribute(attributeName, attributeType))
+						.min(annotationComparator)
+						.map(ma -> ma.getAttributeValue(attributeName))
+						.orElse(null);
+					valueCaches.put(attributeName, attributeType, value);
+				}
+			}
 		}
-		value = synthesizedAnnotations.stream()
-			.filter(ma -> ma.hasAttribute(attributeName, attributeType))
-			.min(annotationComparator)
-			.map(ma -> ma.getAttributeValue(attributeName))
-			.orElse(null);
-		valueCaches.put(attributeName, attributeType, value);
 		return (T)value;
 	}
 }
