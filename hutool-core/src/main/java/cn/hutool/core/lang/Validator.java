@@ -111,7 +111,10 @@ public class Validator {
 	 * 驾驶证  别名：驾驶证档案编号、行驶证编号；12位数字字符串；仅限：中国驾驶证档案编号
 	 */
 	public final static Pattern CAR_DRIVING_LICENCE = PatternPool.CAR_DRIVING_LICENCE;
-
+	/**
+	 * 包含大小写字母、数字、特殊字符四种组合中的三种组合，符合的为强密码，不符合此种规则的为弱口令
+	 */
+	public final static Pattern STRONGPASSWORD = PatternPool.STRONGPASSWORD;
 	/**
 	 * 给定值是否为{@code true}
 	 *
@@ -1276,4 +1279,33 @@ public class Validator {
 			throw new ValidateException("Index [{}] is too large for size: [{}]", index, size);
 		}
 	}
+
+	/**
+	 * 强密码验证：
+	 * 所有口令（密码）位数必须大于等于8，至少包含大小写字母、数字、特殊字符四种组合中的三种组合，符合的为强密码，不符合此种规则的为弱口令
+	 *
+	 * @param value 值
+	 * @return 是否为强密码
+	 */
+	public static boolean isStrongPassword(CharSequence value) {
+		return isMatchRegex(STRONGPASSWORD, value);
+	}
+
+
+	/**
+	 * 验证是否为强密码
+	 *
+	 * @param <T>      字符串类型
+	 * @param value    值
+	 * @param errorMsg 验证错误的信息
+	 * @return 验证后的值
+	 * @throws ValidateException 验证异常
+	 */
+	public static <T extends CharSequence> T validateStrongPassword(T value, String errorMsg) throws ValidateException {
+		if (false == isStrongPassword(value)) {
+			throw new ValidateException(errorMsg);
+		}
+		return value;
+	}
+
 }

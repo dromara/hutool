@@ -265,4 +265,14 @@ public class ValidatorTest {
 		Assert.assertFalse(Validator.isChineseName("连逍遥0"));
 		Assert.assertFalse(Validator.isChineseName("SHE"));
 	}
+
+	@Test
+	public void isStrongPasswordTest() {
+		Assert.assertTrue(Validator.isStrongPassword("123QWE321."));
+		Assert.assertTrue(Validator.isStrongPassword("123QWE321("));
+		Assert.assertTrue(Validator.isStrongPassword("123qwe.+"));
+		Assert.assertTrue(Validator.isStrongPassword("123qweQWE"));
+		Assert.assertFalse(Validator.isStrongPassword("123QWE321"));
+		Assert.assertFalse(Validator.isStrongPassword("123qweQ"));
+	}
 }

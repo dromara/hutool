@@ -193,6 +193,11 @@ public class PatternPool {
 	 * 总结中国人姓名：2-60位，只能是中文和 ·
 	 */
 	public static final Pattern CHINESE_NAME = Pattern.compile(RegexPool.CHINESE_NAME);
+	/**
+	 * 强密码验证：
+	 * 所有口令（密码）位数必须大于等于8，至少包含大小写字母、数字、特殊字符四种组合中的三种组合，符合的为强密码，不符合此种规则的为弱口令
+	 */
+	public final static Pattern STRONGPASSWORD = Pattern.compile(RegexPool.STRONGPASSWORD);
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/**

@@ -222,4 +222,8 @@ public interface RegexPool {
 	 * 放宽汉字范围：如生僻姓名 刘欣䶮yǎn
 	 */
 	String CHINESE_NAME = "^[\u2E80-\u9FFF·]{2,60}$";
+	/**
+	 * 至少包含大小写字母、数字、特殊字符四种组合中的三种组合
+	 */
+	String STRONGPASSWORD = "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_]+$)(?![a-z0-9]+$)(?![a-z\\W_]+$)(?![0-9\\W_]+$)[a-zA-Z0-9\\W_]{8,}$";
 }
