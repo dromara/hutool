@@ -1,8 +1,10 @@
 package cn.hutool.core.util;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
@@ -675,5 +677,12 @@ public class StrUtilTest {
 		final String str = "This is English";
 		final String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
 		Assert.assertEquals("This is En", ret);
+	}
+	
+	@Test
+	public void toArrayTest() {
+		Collection<String> list = CollUtil.newArrayList("item0", "item1", "item2");
+		final String[] ret = StrUtil.toArray(list);
+		Assert.assertEquals(ret.length, 3);
 	}
 }
