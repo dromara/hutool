@@ -8,8 +8,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Map;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -526,5 +528,19 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 			return result + "...";
 		}
 		return result;
+	}
+	
+	/**
+	 * 将字符串集合转换为字符串数组
+	 *
+	 * @param collection  要转换的字符串集合
+	 * @return 字符串数组
+	 */
+	public static String[] toArray(Collection<String> collection) {
+		String[] array = {};
+		if (CollUtil.isEmpty(collection)) {
+			return array;
+		}
+		return collection.toArray(array);
 	}
 }
