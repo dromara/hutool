@@ -32,6 +32,7 @@ import org.dromara.hutool.json.*;
 import org.dromara.hutool.json.serialize.JSONDeserializer;
 import org.dromara.hutool.json.serialize.JSONStringer;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
@@ -49,7 +50,9 @@ import java.util.Map;
  * @author looly
  * @since 6.0.0
  */
-public class JSONConverter implements Converter {
+public class JSONConverter implements Converter, Serializable {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 单例
 	 */
