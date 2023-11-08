@@ -12,12 +12,6 @@
 
 package org.dromara.hutool.crypto.asymmetric;
 
-import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.codec.HexUtil;
-import org.dromara.hutool.crypto.bc.BCUtil;
-import org.dromara.hutool.crypto.CryptoException;
-import org.dromara.hutool.crypto.bc.ECKeyUtil;
-import org.dromara.hutool.crypto.SecureUtil;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.InvalidCipherTextException;
@@ -33,6 +27,11 @@ import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Hex;
+import org.dromara.hutool.core.codec.HexUtil;
+import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.crypto.CryptoException;
+import org.dromara.hutool.crypto.SecureUtil;
+import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.bc.SmUtil;
 
 import java.math.BigInteger;
@@ -104,8 +103,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public SM2(final byte[] privateKey, final byte[] publicKey) {
 		this(
-				ECKeyUtil.decodePrivateKeyParams(privateKey),
-				ECKeyUtil.decodePublicKeyParams(publicKey)
+			ECKeyUtil.decodePrivateKeyParams(privateKey),
+			ECKeyUtil.decodePublicKeyParams(publicKey)
 		);
 	}
 
@@ -118,7 +117,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKey  公钥
 	 */
 	public SM2(final PrivateKey privateKey, final PublicKey publicKey) {
-		this(BCUtil.toParams(privateKey), BCUtil.toParams(publicKey));
+		this(ECKeyUtil.toPrivateParams(privateKey), ECKeyUtil.toPublicParams(publicKey));
 		if (null != privateKey) {
 			this.privateKey = privateKey;
 		}
@@ -132,13 +131,13 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKeyHex      私钥16进制
+	 * @param privateKeyDValue   私钥16进制（私钥D值）
 	 * @param publicKeyPointXHex 公钥X16进制
 	 * @param publicKeyPointYHex 公钥Y16进制
 	 * @since 5.2.0
 	 */
-	public SM2(final String privateKeyHex, final String publicKeyPointXHex, final String publicKeyPointYHex) {
-		this(BCUtil.toSm2Params(privateKeyHex), BCUtil.toSm2Params(publicKeyPointXHex, publicKeyPointYHex));
+	public SM2(final String privateKeyDValue, final String publicKeyPointXHex, final String publicKeyPointYHex) {
+		this(ECKeyUtil.toSm2PrivateParams(privateKeyDValue), ECKeyUtil.toSm2PublicParams(publicKeyPointXHex, publicKeyPointYHex));
 	}
 
 	/**
@@ -146,13 +145,14 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 *
-	 * @param privateKey      私钥
-	 * @param publicKeyPointX 公钥X
-	 * @param publicKeyPointY 公钥Y
+	 * @param privateKeyDValue 私钥（D值）
+	 * @param publicKeyPointX  公钥X
+	 * @param publicKeyPointY  公钥Y
 	 * @since 5.2.0
 	 */
-	public SM2(final byte[] privateKey, final byte[] publicKeyPointX, final byte[] publicKeyPointY) {
-		this(BCUtil.toSm2Params(privateKey), BCUtil.toSm2Params(publicKeyPointX, publicKeyPointY));
+	public SM2(final byte[] privateKeyDValue, final byte[] publicKeyPointX, final byte[] publicKeyPointY) {
+		this(ECKeyUtil.toSm2PrivateParams(privateKeyDValue),
+			ECKeyUtil.toSm2PublicParams(publicKeyPointX, publicKeyPointY));
 	}
 
 	/**
@@ -182,8 +182,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	public SM2 init() {
 		if (null == this.privateKeyParams && null == this.publicKeyParams) {
 			super.initKeys();
-			this.privateKeyParams = BCUtil.toParams(this.privateKey);
-			this.publicKeyParams = BCUtil.toParams(this.publicKey);
+			this.privateKeyParams = ECKeyUtil.toPrivateParams(this.privateKey);
+			this.publicKeyParams = ECKeyUtil.toPublicParams(this.publicKey);
 		}
 		return this;
 	}
@@ -206,7 +206,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * C2 密文数据
 	 * </pre>
 	 *
-	 * @param data    被加密的bytes
+	 * @param data 被加密的bytes
 	 * @return 加密后的bytes
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.7.10
@@ -270,7 +270,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	/**
 	 * 使用私钥解密
 	 *
-	 * @param data    SM2密文，实际包含三部分：ECC公钥、真正的密文、公钥和原文的SM3-HASH值
+	 * @param data SM2密文，实际包含三部分：ECC公钥、真正的密文、公钥和原文的SM3-HASH值
 	 * @return 加密后的bytes
 	 * @throws CryptoException 包括InvalidKeyException和InvalidCipherTextException的包装异常
 	 * @since 5.7.10
@@ -441,7 +441,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		super.setPrivateKey(privateKey);
 
 		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
-		this.privateKeyParams = BCUtil.toParams(privateKey);
+		this.privateKeyParams = ECKeyUtil.toPrivateParams(privateKey);
 
 		return this;
 	}
@@ -463,7 +463,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		super.setPublicKey(publicKey);
 
 		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
-		this.publicKeyParams = BCUtil.toParams(publicKey);
+		this.publicKeyParams = ECKeyUtil.toPublicParams(publicKey);
 
 		return this;
 	}
@@ -535,7 +535,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @since 5.5.9
 	 */
 	public byte[] getD() {
-		return BigIntegers.asUnsignedByteArray(32,getDBigInteger());
+		return BigIntegers.asUnsignedByteArray(32, getDBigInteger());
 	}
 
 	/**

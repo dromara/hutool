@@ -12,14 +12,10 @@
 
 package org.dromara.hutool.crypto.bc;
 
-import org.dromara.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x9.X9ECParameters;
-import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
@@ -27,12 +23,11 @@ import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
-import org.dromara.hutool.crypto.*;
+import org.dromara.hutool.core.io.IORuntimeException;
+import org.dromara.hutool.crypto.KeyUtil;
+import org.dromara.hutool.crypto.SecureUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.ECPoint;
@@ -153,182 +148,6 @@ public class BCUtil {
 				x9ECParameters.getN(),
 				x9ECParameters.getH()
 		);
-	}
-
-	/**
-	 * 密钥转换为AsymmetricKeyParameter
-	 *
-	 * @param key PrivateKey或者PublicKey
-	 * @return ECPrivateKeyParameters或者ECPublicKeyParameters
-	 * @since 5.2.0
-	 */
-	public static AsymmetricKeyParameter toParams(final Key key) {
-		return ECKeyUtil.toParams(key);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param d 私钥d值
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toSm2Params(final String d) {
-		return ECKeyUtil.toSm2PrivateParams(d);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param dHex             私钥d值16进制字符串
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toParams(final String dHex, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPrivateParams(dHex, domainParameters);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param d 私钥d值
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toSm2Params(final byte[] d) {
-		return ECKeyUtil.toSm2PrivateParams(d);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param d                私钥d值
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toParams(final byte[] d, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPrivateParams(d, domainParameters);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param d 私钥d值
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toSm2Params(final BigInteger d) {
-		return ECKeyUtil.toSm2PrivateParams(d);
-	}
-
-	/**
-	 * 转换为 ECPrivateKeyParameters
-	 *
-	 * @param d                私钥d值
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPrivateKeyParameters
-	 */
-	public static ECPrivateKeyParameters toParams(final BigInteger d, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPrivateParams(d, domainParameters);
-	}
-
-	/**
-	 * 转换为ECPublicKeyParameters
-	 *
-	 * @param x                公钥X
-	 * @param y                公钥Y
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPublicKeyParameters
-	 */
-	public static ECPublicKeyParameters toParams(final BigInteger x, final BigInteger y, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPublicParams(x, y, domainParameters);
-	}
-
-	/**
-	 * 转换为SM2的ECPublicKeyParameters
-	 *
-	 * @param xHex 公钥X
-	 * @param yHex 公钥Y
-	 * @return ECPublicKeyParameters
-	 */
-	public static ECPublicKeyParameters toSm2Params(final String xHex, final String yHex) {
-		return ECKeyUtil.toSm2PublicParams(xHex, yHex);
-	}
-
-	/**
-	 * 转换为ECPublicKeyParameters
-	 *
-	 * @param xHex             公钥X
-	 * @param yHex             公钥Y
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPublicKeyParameters
-	 */
-	public static ECPublicKeyParameters toParams(final String xHex, final String yHex, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPublicParams(xHex, yHex, domainParameters);
-	}
-
-	/**
-	 * 转换为SM2的ECPublicKeyParameters
-	 *
-	 * @param xBytes 公钥X
-	 * @param yBytes 公钥Y
-	 * @return ECPublicKeyParameters
-	 */
-	public static ECPublicKeyParameters toSm2Params(final byte[] xBytes, final byte[] yBytes) {
-		return ECKeyUtil.toSm2PublicParams(xBytes, yBytes);
-	}
-
-	/**
-	 * 转换为ECPublicKeyParameters
-	 *
-	 * @param xBytes           公钥X
-	 * @param yBytes           公钥Y
-	 * @param domainParameters ECDomainParameters
-	 * @return ECPublicKeyParameters
-	 */
-	public static ECPublicKeyParameters toParams(final byte[] xBytes, final byte[] yBytes, final ECDomainParameters domainParameters) {
-		return ECKeyUtil.toPublicParams(xBytes, yBytes, domainParameters);
-	}
-
-	/**
-	 * 公钥转换为 {@link ECPublicKeyParameters}
-	 *
-	 * @param publicKey 公钥，传入null返回null
-	 * @return {@link ECPublicKeyParameters}或null
-	 */
-	public static ECPublicKeyParameters toParams(final PublicKey publicKey) {
-		return ECKeyUtil.toPublicParams(publicKey);
-	}
-
-	/**
-	 * 私钥转换为 {@link ECPrivateKeyParameters}
-	 *
-	 * @param privateKey 私钥，传入null返回null
-	 * @return {@link ECPrivateKeyParameters}或null
-	 */
-	public static ECPrivateKeyParameters toParams(final PrivateKey privateKey) {
-		return ECKeyUtil.toPrivateParams(privateKey);
-	}
-
-	/**
-	 * 读取PEM格式的私钥
-	 *
-	 * @param pemStream pem流
-	 * @return {@link PrivateKey}
-	 * @since 5.2.5
-	 * @see PemUtil#readPemPrivateKey(InputStream)
-	 */
-	public static PrivateKey readPemPrivateKey(final InputStream pemStream) {
-		return PemUtil.readPemPrivateKey(pemStream);
-	}
-
-	/**
-	 * 读取PEM格式的公钥
-	 *
-	 * @param pemStream pem流
-	 * @return {@link PublicKey}
-	 * @since 5.2.5
-	 * @see PemUtil#readPemPublicKey(InputStream)
-	 */
-	public static PublicKey readPemPublicKey(final InputStream pemStream) {
-		return PemUtil.readPemPublicKey(pemStream);
 	}
 
 	/**
