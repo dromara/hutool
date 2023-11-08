@@ -46,6 +46,13 @@
 
 -------------------------------------------------------------------------------
 
+<p align="center">
+	<a href="#">
+	<img alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
+</p>
+
+-------------------------------------------------------------------------------
+
 [**🌎中文说明**](README.md)
 
 -------------------------------------------------------------------------------
@@ -144,18 +151,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.22</version>
+    <version>5.8.23</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.22'
+implementation 'cn.hutool:hutool-all:5.8.23'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.22/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.23/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -208,10 +215,3 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 ## ⭐Star Hutool
 
 [![Stargazers over time](https://starchart.cc/dromara/hutool.svg)](https://starchart.cc/dromara/hutool)
-
-## 📌WeChat Official Account
-
-<div align="center">
-	<img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/qr_tuling.jpg" height="150">
-	<img src="https://dromara.org/img/qrcode/qrcode_1.png" height="150">
-</div>

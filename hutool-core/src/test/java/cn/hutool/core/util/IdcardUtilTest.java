@@ -148,4 +148,9 @@ public class IdcardUtilTest {
 		flag = IdcardUtil.isValidTWCard(errTwCard2);
 		Assert.assertFalse(flag);
 	}
+
+	@Test
+	public void issueI88YKMTest() {
+		Assert.assertTrue(IdcardUtil.isValidCard("111111111111111"));
+	}
 }

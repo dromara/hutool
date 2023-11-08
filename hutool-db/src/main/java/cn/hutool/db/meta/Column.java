@@ -258,7 +258,7 @@ public class Column implements Serializable, Cloneable {
 	 *
 	 * @return 大小或数据长度
 	 */
-	public int getDigit() {
+	public Integer getDigit() {
 		return digit;
 	}
 

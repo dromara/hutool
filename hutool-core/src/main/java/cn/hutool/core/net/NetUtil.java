@@ -24,12 +24,18 @@ import java.util.*;
 /**
  * 网络相关工具
  *
- * @author xiaoleilu
+ * @author looly
  */
 public class NetUtil {
 
+	/**
+	 * 本地IPv4地址
+	 */
 	public final static String LOCAL_IP = Ipv4Util.LOCAL_IP;
 
+	/**
+	 * 本地主机名称
+	 */
 	public static String localhostName;
 
 	/**
@@ -500,8 +506,8 @@ public class NetUtil {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(address -> {
 			// 非loopback地址，指127.*.*.*的地址
 			return false == address.isLoopbackAddress()
-					// 需为IPV4地址
-					&& address instanceof Inet4Address;
+				// 需为IPV4地址
+				&& address instanceof Inet4Address;
 		});
 
 		if (CollUtil.isNotEmpty(localAddressList)) {

@@ -43,10 +43,14 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 			try {
 //				result = proxy.invokeSuper(obj, args);
 				result = proxy.invoke(target, args);
-			} catch (InvocationTargetException e) {
+			} catch (final Throwable e) {
+				Throwable throwable = e;
+				if(throwable instanceof InvocationTargetException){
+					throwable = ((InvocationTargetException) throwable).getTargetException();
+				}
 				// 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
-				if (aspect.afterException(target, method, args, e.getTargetException())) {
-					throw e;
+				if (aspect.afterException(target, method, args, throwable)) {
+					throw throwable;
 				}
 			}
 		}

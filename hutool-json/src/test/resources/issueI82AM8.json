@@ -1,0 +1,46 @@
+{
+  "en": {
+    "testimonials": [
+      {
+        "createTime": {
+          "dayOfYear": 261,
+          "dayOfWeek": "MONDAY",
+          "year": 2023,
+          "month": "SEPTEMBER",
+          "nano": 0,
+          "monthValue": 9,
+          "dayOfMonth": 18,
+          "hour": 15,
+          "minute": 18,
+          "second": 0,
+          "chronology": {
+            "id": "ISO",
+            "calendarType": "iso8601"
+          }
+        }
+      }
+    ]
+  },
+  "zh": {
+    "testimonials": [
+      {
+        "createTime": {
+          "dayOfYear": 261,
+          "dayOfWeek": "MONDAY",
+          "year": 2023,
+          "month": "SEPTEMBER",
+          "nano": 0,
+          "monthValue": 9,
+          "dayOfMonth": 18,
+          "hour": 15,
+          "minute": 18,
+          "second": 0,
+          "chronology": {
+            "id": "ISO",
+            "calendarType": "iso8601"
+          }
+        }
+      }
+    ]
+  }
+}

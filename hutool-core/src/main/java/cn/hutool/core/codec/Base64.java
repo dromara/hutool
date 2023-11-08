@@ -251,7 +251,7 @@ public class Base64 {
 	 * base64解码
 	 *
 	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 * @since 4.3.2
 	 */
 	public static String decodeStrGbk(CharSequence source) {
@@ -262,7 +262,7 @@ public class Base64 {
 	 * base64解码
 	 *
 	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStr(CharSequence source) {
 		return Base64Decoder.decodeStr(source);
@@ -273,7 +273,7 @@ public class Base64 {
 	 *
 	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStr(CharSequence source, String charset) {
 		return decodeStr(source, CharsetUtil.charset(charset));
@@ -284,7 +284,7 @@ public class Base64 {
 	 *
 	 * @param source  被解码的base64字符串
 	 * @param charset 字符集
-	 * @return 被加密后的字符串
+	 * @return 密文解密的结果
 	 */
 	public static String decodeStr(CharSequence source, Charset charset) {
 		return Base64Decoder.decodeStr(source, charset);

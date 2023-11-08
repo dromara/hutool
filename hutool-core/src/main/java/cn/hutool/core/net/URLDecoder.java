@@ -1,6 +1,5 @@
 package cn.hutool.core.net;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;

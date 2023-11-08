@@ -187,7 +187,7 @@ public class ReflectUtil {
 	 * 如果子类与父类中存在同名字段，则这两个字段同时存在，子类字段在前，父类字段在后。
 	 *
 	 * @param beanClass   类
-	 * @param fieldFilter field过滤器，过滤掉不需要的field
+	 * @param fieldFilter field过滤器，过滤掉不需要的field，{@code null}返回原集合
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 * @since 5.7.14
@@ -286,14 +286,22 @@ public class ReflectUtil {
 	 * @since 4.1.17
 	 */
 	public static Object[] getFieldsValue(Object obj) {
+		return getFieldsValue(obj, null);
+	}
+
+	/**
+	 * 获取所有字段的值
+	 *
+	 * @param obj    bean对象，如果是static字段，此处为类class
+	 * @param filter 字段过滤器，，{@code null}返回原集合
+	 * @return 字段值数组
+	 * @since 5.8.23
+	 */
+	public static Object[] getFieldsValue(Object obj, Filter<Field> filter) {
 		if (null != obj) {
-			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass());
+			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass(), filter);
 			if (null != fields) {
-				final Object[] values = new Object[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					values[i] = getFieldValue(obj, fields[i]);
-				}
-				return values;
+				return ArrayUtil.map(fields, Object.class, field -> getFieldValue(obj, field));
 			}
 		}
 		return null;

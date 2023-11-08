@@ -1,7 +1,6 @@
 package cn.hutool.core.map;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;

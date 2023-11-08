@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.22</version>
+		<version>5.8.23-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -464,7 +464,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.22</version>
+			<version>1.24.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

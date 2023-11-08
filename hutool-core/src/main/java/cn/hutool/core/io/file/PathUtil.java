@@ -1,10 +1,10 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.visitor.CopyVisitor;
 import cn.hutool.core.io.file.visitor.DelVisitor;
-import cn.hutool.core.io.file.visitor.MoveVisitor;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -33,6 +32,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * NIO中Path对象操作封装
@@ -80,11 +80,26 @@ public class PathUtil {
 	 * @since 5.4.1
 	 */
 	public static List<File> loopFiles(Path path, int maxDepth, FileFilter fileFilter) {
+		return loopFiles(path, maxDepth, false, fileFilter);
+	}
+
+	/**
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果提供path为文件，直接返回过滤结果
+	 *
+	 * @param path          当前遍历文件或目录
+	 * @param maxDepth      遍历最大深度，-1表示遍历到没有目录为止
+	 * @param isFollowLinks 是否跟踪软链（快捷方式）
+	 * @param fileFilter    文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录，null表示接收全部文件
+	 * @return 文件列表
+	 * @since 5.4.1
+	 */
+	public static List<File> loopFiles(final Path path, final int maxDepth, final boolean isFollowLinks, final FileFilter fileFilter) {
 		final List<File> fileList = new ArrayList<>();
 
-		if (null == path || false == Files.exists(path)) {
+		if (!exists(path, isFollowLinks)) {
 			return fileList;
-		} else if (false == isDirectory(path)) {
+		} else if (!isDirectory(path, isFollowLinks)) {
 			final File file = path.toFile();
 			if (null == fileFilter || fileFilter.accept(file)) {
 				fileList.add(file);
@@ -92,10 +107,10 @@ public class PathUtil {
 			return fileList;
 		}
 
-		walkFiles(path, maxDepth, new SimpleFileVisitor<Path>() {
+		walkFiles(path, maxDepth, isFollowLinks, new SimpleFileVisitor<Path>() {
 
 			@Override
-			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+			public FileVisitResult visitFile(final Path path, final BasicFileAttributes attrs) {
 				final File file = path.toFile();
 				if (null == fileFilter || fileFilter.accept(file)) {
 					fileList.add(file);
@@ -129,14 +144,28 @@ public class PathUtil {
 	 * @since 4.6.3
 	 */
 	public static void walkFiles(Path start, int maxDepth, FileVisitor<? super Path> visitor) {
+		walkFiles(start, maxDepth, false, visitor);
+	}
+
+	/**
+	 * 遍历指定path下的文件并做处理
+	 *
+	 * @param start         起始路径，必须为目录
+	 * @param maxDepth      最大遍历深度，-1表示不限制深度
+	 * @param visitor       {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
+	 * @since 5.8.23
+	 */
+	public static void walkFiles(final Path start, int maxDepth, final boolean isFollowLinks, final FileVisitor<? super Path> visitor) {
 		if (maxDepth < 0) {
 			// < 0 表示遍历到最底层
 			maxDepth = Integer.MAX_VALUE;
 		}
 
 		try {
-			Files.walkFileTree(start, EnumSet.noneOf(FileVisitOption.class), maxDepth, visitor);
-		} catch (IOException e) {
+			Files.walkFileTree(start, getFileVisitOption(isFollowLinks), maxDepth, visitor);
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -283,8 +312,7 @@ public class PathUtil {
 		if (null == path) {
 			return false;
 		}
-		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
-		return Files.isDirectory(path, options);
+		return Files.isDirectory(path, getLinkOptions(isFollowLinks));
 	}
 
 	/**
@@ -368,9 +396,8 @@ public class PathUtil {
 			return null;
 		}
 
-		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
 		try {
-			return Files.readAttributes(path, BasicFileAttributes.class, options);
+			return Files.readAttributes(path, BasicFileAttributes.class, getLinkOptions(isFollowLinks));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -541,8 +568,7 @@ public class PathUtil {
 		if (null == path) {
 			return false;
 		}
-		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
-		return Files.isRegularFile(path, options);
+		return Files.isRegularFile(path, getLinkOptions(isFollowLinks));
 	}
 
 	/**
@@ -565,8 +591,7 @@ public class PathUtil {
 	 * @since 5.5.3
 	 */
 	public static boolean exists(Path path, boolean isFollowLinks) {
-		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
-		return Files.exists(path, options);
+		return Files.exists(path, getLinkOptions(isFollowLinks));
 	}
 
 	/**
@@ -713,5 +738,28 @@ public class PathUtil {
 				throw e;
 			}
 		}
+	}
+
+	/**
+	 * 构建是否追踪软链的选项
+	 *
+	 * @param isFollowLinks 是否追踪软链
+	 * @return 选项
+	 * @since 5.8.23
+	 */
+	public static LinkOption[] getLinkOptions(final boolean isFollowLinks) {
+		return isFollowLinks ? new LinkOption[0] : new LinkOption[]{LinkOption.NOFOLLOW_LINKS};
+	}
+
+	/**
+	 * 构建是否追踪软链的选项
+	 *
+	 * @param isFollowLinks 是否追踪软链
+	 * @return 选项
+	 * @since 5.8.23
+	 */
+	public static Set<FileVisitOption> getFileVisitOption(final boolean isFollowLinks) {
+		return isFollowLinks ? EnumSet.of(FileVisitOption.FOLLOW_LINKS) :
+			EnumSet.noneOf(FileVisitOption.class);
 	}
 }

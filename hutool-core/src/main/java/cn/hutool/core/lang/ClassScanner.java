@@ -5,6 +5,7 @@ import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.*;
 
@@ -356,22 +357,26 @@ public class ClassScanner implements Serializable {
 	}
 
 	/**
-	 * 扫描jar包
+	 * 扫描jar包，扫描结束后关闭jar文件
 	 *
 	 * @param jar jar包
 	 */
 	private void scanJar(JarFile jar) {
-		String name;
-		for (JarEntry entry : new EnumerationIter<>(jar.entries())) {
-			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
-			if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
-				if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
-					final String className = name//
+		try{
+			String name;
+			for (JarEntry entry : new EnumerationIter<>(jar.entries())) {
+				name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
+				if (StrUtil.isEmpty(packagePath) || name.startsWith(this.packagePath)) {
+					if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
+						final String className = name//
 							.substring(0, name.length() - 6)//
 							.replace(CharUtil.SLASH, CharUtil.DOT);//
-					addIfAccept(loadClass(className));
+						addIfAccept(loadClass(className));
+					}
 				}
 			}
+		} finally {
+			IoUtil.close(jar);
 		}
 	}
 

@@ -1,9 +1,5 @@
 package cn.hutool.json;
 
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONConfig;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.json.serialize.JSONDeserializer;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import lombok.Data;
