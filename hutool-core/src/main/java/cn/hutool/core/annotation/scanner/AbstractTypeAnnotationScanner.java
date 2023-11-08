@@ -185,7 +185,6 @@ public abstract class AbstractTypeAnnotationScanner<T extends AbstractTypeAnnota
 				scanInterfaceIfNecessary(nextClassQueue, targetClass);
 				// 处理层级索引和注解
 				final Annotation[] targetAnnotations = getAnnotationsFromTargetClass(annotatedEle, index, targetClass);
-				Arrays.sort(targetAnnotations, Comparator.comparing(Annotation::toString).reversed());
 				for (final Annotation annotation : targetAnnotations) {
 					if (AnnotationUtil.isNotJdkMateAnnotation(annotation.annotationType()) && filter.test(annotation)) {
 						consumer.accept(index, annotation);
