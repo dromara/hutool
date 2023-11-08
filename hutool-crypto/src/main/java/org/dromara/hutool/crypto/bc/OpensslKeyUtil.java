@@ -43,7 +43,7 @@ import java.security.PublicKey;
 
 /**
  * 基于bcpkix封装的Openssl相关工具，包括密钥转换、Pem密钥文件读取等<br>
- * 注意此工具需要引入org.bouncycastle:bcpkix-jdk15to18
+ * 注意此工具需要引入org.bouncycastle:bcpkix-jdk18on
  *
  * @author changhr2013, looly
  * @since 5.8.5

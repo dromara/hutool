@@ -42,7 +42,7 @@ import java.security.PublicKey;
 
 /**
  * SM国密算法工具类<br>
- * 此工具类依赖org.bouncycastle:bcprov-jdk15to18
+ * 此工具类依赖org.bouncycastle:bcprov-jdk18on
  *
  * <p>封装包括：</p>
  * <ul>
