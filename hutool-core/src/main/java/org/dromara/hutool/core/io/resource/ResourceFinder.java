@@ -216,6 +216,7 @@ public class ResourceFinder {
 	 * 根路径即不包含表达式的路径，如 "/WEB-INF/*.xml" 返回 "/WEB-INF/"
 	 *
 	 * @param location 路径表达式
+	 * @return root dir
 	 */
 	protected String determineRootDir(final String location) {
 		final int prefixEnd = location.indexOf(':') + 1;
@@ -231,10 +232,11 @@ public class ResourceFinder {
 
 	/**
 	 * 替换'\'为'/'
+	 *
 	 * @param path 路径
 	 * @return 替换后的路径
 	 */
-	private static String replaceBackSlash(final String path){
+	private static String replaceBackSlash(final String path) {
 		return StrUtil.isEmpty(path) ? path : path.replace(CharUtil.BACKSLASH, CharUtil.SLASH);
 	}
 }
