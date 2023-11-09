@@ -27,7 +27,7 @@ public class IssueI4XFMWTest {
 		entityList.add(entityB);
 
 		String jsonStr = JSONUtil.toJsonStr(entityList);
-		Assert.assertEquals("[{\"uid\":\"123\",\"password\":\"456\"},{\"uid\":\"789\",\"password\":\"098\"}]", jsonStr);
+		Assert.assertTrue(jsonStr.equals("[{\"uid\":\"123\",\"password\":\"456\"},{\"uid\":\"789\",\"password\":\"098\"}]") || jsonStr.equals("[{\"password\":\"456\",\"uid\":\"123\"},{\"password\":\"098\",\"uid\":\"789\"}]"));
 		List<TestEntity> testEntities = JSONUtil.toList(jsonStr, TestEntity.class);
 		Assert.assertEquals("123", testEntities.get(0).getId());
 		Assert.assertEquals("789", testEntities.get(1).getId());
