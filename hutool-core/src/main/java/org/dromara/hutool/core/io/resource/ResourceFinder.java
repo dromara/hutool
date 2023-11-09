@@ -12,12 +12,12 @@
 
 package org.dromara.hutool.core.io.resource;
 
+import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.collection.iter.EnumerationIter;
 import org.dromara.hutool.core.compress.ZipUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.file.FileNameUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.net.url.UrlUtil;
 import org.dromara.hutool.core.text.AntPathMatcher;
@@ -34,9 +34,32 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
 /**
- * 资源查找器
+ * 资源查找器<br>
+ * <p>
+ * 参考Spring的PathMatchingResourcePatternResolver，实现classpath资源查找，利用{@link AntPathMatcher}筛选资源。
+ *
+ * @author Spring, Looly
  */
 public class ResourceFinder {
+
+	/**
+	 * 构建新的ResourceFinder，使用当前环境的类加载器
+	 *
+	 * @return ResourceFinder
+	 */
+	public static ResourceFinder of() {
+		return of(ClassLoaderUtil.getClassLoader());
+	}
+
+	/**
+	 * 构建新的ResourceFinder
+	 *
+	 * @param classLoader 类加载器，用于限定查找范围
+	 * @return ResourceFinder
+	 */
+	public static ResourceFinder of(final ClassLoader classLoader) {
+		return new ResourceFinder(classLoader);
+	}
 
 	private final ClassLoader classLoader;
 	private final AntPathMatcher pathMatcher;
@@ -116,7 +139,7 @@ public class ResourceFinder {
 					separatorIndex = urlFile.indexOf(UrlUtil.JAR_URL_SEPARATOR);
 				}
 				if (separatorIndex != -1) {
-					final  String jarFileUrl = urlFile.substring(0, separatorIndex);
+					final String jarFileUrl = urlFile.substring(0, separatorIndex);
 					rootEntryPath = urlFile.substring(separatorIndex + 2);  // both separators are 2 chars
 					jarFile = ZipUtil.ofJar(jarFileUrl);
 				} else {
@@ -163,16 +186,16 @@ public class ResourceFinder {
 	protected MultiResource findInDir(final FileResource resource, final String subPattern) {
 		final MultiResource result = new MultiResource();
 		final File rootDir = resource.getFile();
-		if(!rootDir.exists() || !rootDir.isDirectory() || !rootDir.canRead()){
+		if (!rootDir.exists() || !rootDir.isDirectory() || !rootDir.canRead()) {
 			// 保证给定文件存在、为目录且可读
 			return result;
 		}
 
-		final String rootPath = rootDir.getAbsolutePath();
-		final String fullPattern = FileNameUtil.normalize(rootPath + StrUtil.SLASH + subPattern);
+		final String fullPattern = replaceBackSlash(rootDir.getAbsolutePath() + StrUtil.SLASH + subPattern);
+
 		FileUtil.walkFiles(rootDir, (file -> {
-			final String currentPath = StrUtil.normalize(file.getAbsolutePath());
-			if(file.isDirectory()){
+			final String currentPath = replaceBackSlash(file.getAbsolutePath());
+			if (file.isDirectory()) {
 				// 检查目录是否满足表达式开始规则，满足则继续向下查找，否则跳过
 				return pathMatcher.matchStart(fullPattern, StrUtil.addSuffixIfNot(currentPath, StrUtil.SLASH));
 			}
@@ -204,5 +227,14 @@ public class ResourceFinder {
 			rootDirEnd = prefixEnd;
 		}
 		return location.substring(0, rootDirEnd);
+	}
+
+	/**
+	 * 替换'\'为'/'
+	 * @param path 路径
+	 * @return 替换后的路径
+	 */
+	private static String replaceBackSlash(final String path){
+		return StrUtil.isEmpty(path) ? path : path.replace(CharUtil.BACKSLASH, CharUtil.SLASH);
 	}
 }
