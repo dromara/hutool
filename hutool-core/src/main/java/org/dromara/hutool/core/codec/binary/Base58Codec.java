@@ -16,6 +16,7 @@ import org.dromara.hutool.core.codec.Decoder;
 import org.dromara.hutool.core.codec.Encoder;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -25,7 +26,8 @@ import java.util.Arrays;
  * @author lin， looly
  * @since 5.7.22
  */
-public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]> {
+public class Base58Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例

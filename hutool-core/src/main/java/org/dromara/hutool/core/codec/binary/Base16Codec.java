@@ -17,6 +17,8 @@ import org.dromara.hutool.core.codec.Encoder;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serializable;
+
 /**
  * Base16（Hex）编码解码器<br>
  * 十六进制（简写为hex或下标16）在数学中是一种逢16进1的进位制，一般用数字0到9和字母A到F表示（其中:A~F即10~15）。<br>
@@ -25,7 +27,8 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author looly
  * @since 5.7.23
  */
-public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequence, byte[]> {
+public class Base16Codec implements Encoder<byte[], char[]>, Decoder<CharSequence, byte[]>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 编码解码器：小写

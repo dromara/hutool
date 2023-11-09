@@ -16,6 +16,8 @@ import org.dromara.hutool.core.codec.Decoder;
 import org.dromara.hutool.core.lang.mutable.MutableInt;
 import org.dromara.hutool.core.array.ArrayUtil;
 
+import java.io.Serializable;
+
 /**
  * Base64解码实现<br>
  * 此解码保留的原因是，JDK提供的解码需要指定是否为URL安全的或是否换行，此解码无需区分
@@ -23,7 +25,8 @@ import org.dromara.hutool.core.array.ArrayUtil;
  * @author looly
  *
  */
-public class Base64Decoder implements Decoder<byte[], byte[]> {
+public class Base64Decoder implements Decoder<byte[], byte[]>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象

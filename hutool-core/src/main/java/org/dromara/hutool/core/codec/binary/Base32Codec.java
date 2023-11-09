@@ -15,6 +15,7 @@ package org.dromara.hutool.core.codec.binary;
 import org.dromara.hutool.core.codec.Decoder;
 import org.dromara.hutool.core.codec.Encoder;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -31,7 +32,8 @@ import java.util.Arrays;
  * @author Looly
  * @since 5.8.0
  */
-public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]> {
+public class Base32Codec implements Encoder<byte[], String>, Decoder<CharSequence, byte[]>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
