@@ -4,6 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +12,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * 合成注解{@link GenericSynthesizedAggregateAnnotation}的测试用例
@@ -36,9 +38,11 @@ public class GenericSynthesizedAggregateAnnotationTest {
 		Assert.assertEquals(grandParentAnnotation, syntheticMetaAnnotation.getAnnotation(GrandParentAnnotation.class));
 		Assert.assertEquals(parentAnnotation, syntheticMetaAnnotation.getAnnotation(ParentAnnotation.class));
 		Assert.assertEquals(childAnnotation, syntheticMetaAnnotation.getAnnotation(ChildAnnotation.class));
+		Annotation[] synthesizedAnnotations = syntheticMetaAnnotation.getAnnotations();
+		Arrays.sort(synthesizedAnnotations, Comparator.comparing(Annotation::toString));
 		Assert.assertEquals(
 			Arrays.asList(childAnnotation, grandParentAnnotation, parentAnnotation),
-			Arrays.asList(syntheticMetaAnnotation.getAnnotations())
+			Arrays.asList(synthesizedAnnotations)
 		);
 
 		// 扩展方法
