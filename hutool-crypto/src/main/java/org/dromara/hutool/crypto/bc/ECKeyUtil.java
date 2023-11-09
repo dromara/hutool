@@ -41,7 +41,7 @@ import java.security.PublicKey;
 import java.security.spec.KeySpec;
 
 /**
- * EC密钥参数相关工具类封装
+ * 椭圆曲线EC(Elliptic Curves)密钥参数相关工具类封装
  *
  * @author looly
  * @since 5.4.3
@@ -319,7 +319,7 @@ public class ECKeyUtil {
 	public static PrivateKey toSm2PrivateKey(final ECPrivateKey privateKey) {
 		try {
 			final PrivateKeyInfo info = new PrivateKeyInfo(
-					new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, SmUtil.ID_SM2_PUBLIC_KEY_PARAM), privateKey);
+				new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, SmUtil.ID_SM2_PUBLIC_KEY_PARAM), privateKey);
 			return KeyUtil.generatePrivateKey("SM2", info.getEncoded());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
