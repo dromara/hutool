@@ -12,6 +12,11 @@
 
 package org.dromara.hutool.crypto.bc;
 
+import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
+import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
+import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.sec.ECPrivateKey;
@@ -38,6 +43,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.ECPublicKeySpec;
 import java.security.spec.KeySpec;
 
 /**
@@ -47,6 +53,73 @@ import java.security.spec.KeySpec;
  * @since 5.4.3
  */
 public class ECKeyUtil {
+
+	/**
+	 * 只获取私钥里的d，32位字节
+	 *
+	 * @param privateKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey
+	 * @return 压缩得到的X
+	 * @since 5.1.6
+	 */
+	public static byte[] encodeECPrivateKey(final PrivateKey privateKey) {
+		return ((BCECPrivateKey) privateKey).getD().toByteArray();
+	}
+
+	/**
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
+	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 *
+	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
+	 * @return 压缩得到的Q
+	 * @since 4.4.4
+	 */
+	public static byte[] encodeECPublicKey(final PublicKey publicKey) {
+		return encodeECPublicKey(publicKey, true);
+	}
+
+	/**
+	 * 编码压缩EC公钥（基于BouncyCastle），即Q值<br>
+	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 *
+	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
+	 * @param isCompressed 是否压缩
+	 * @return 得到的Q
+	 * @since 5.5.9
+	 */
+	public static byte[] encodeECPublicKey(final PublicKey publicKey, final boolean isCompressed) {
+		return ((BCECPublicKey) publicKey).getQ().getEncoded(isCompressed);
+	}
+
+	/**
+	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
+	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 *
+	 * @param encode    压缩公钥
+	 * @param curveName EC曲线名
+	 * @return 公钥
+	 * @since 4.4.4
+	 */
+	public static PublicKey decodeECPoint(final String encode, final String curveName) {
+		return decodeECPoint(SecureUtil.decode(encode), curveName);
+	}
+
+	/**
+	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）
+	 *
+	 * @param encodeByte 压缩公钥
+	 * @param curveName  EC曲线名，例如{@link SmUtil#SM2_DOMAIN_PARAMS}
+	 * @return 公钥
+	 * @since 4.4.4
+	 */
+	public static PublicKey decodeECPoint(final byte[] encodeByte, final String curveName) {
+		final X9ECParameters x9ECParameters = ECUtil.getNamedCurveByName(curveName);
+		final ECCurve curve = x9ECParameters.getCurve();
+		final java.security.spec.ECPoint point = EC5Util.convertPoint(curve.decodePoint(encodeByte));
+
+		// 根据曲线恢复公钥格式
+		final ECNamedCurveSpec ecSpec = new ECNamedCurveSpec(curveName, curve, x9ECParameters.getG(), x9ECParameters.getN());
+		return KeyUtil.generatePublicKey("EC", new ECPublicKeySpec(point, ecSpec));
+	}
 
 	/**
 	 * 密钥转换为AsymmetricKeyParameter

@@ -20,7 +20,7 @@ import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.RandomUtil;
 import org.dromara.hutool.crypto.asymmetric.AsymmetricAlgorithm;
-import org.dromara.hutool.crypto.bc.BCUtil;
+import org.dromara.hutool.crypto.bc.ECKeyUtil;
 import org.dromara.hutool.crypto.bc.SmUtil;
 import org.dromara.hutool.crypto.provider.GlobalProviderFactory;
 import org.dromara.hutool.crypto.symmetric.SymmetricAlgorithm;
@@ -724,7 +724,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static byte[] encodeECPublicKey(final PublicKey publicKey) {
-		return BCUtil.encodeECPublicKey(publicKey);
+		return ECKeyUtil.encodeECPublicKey(publicKey);
 	}
 
 	/**
@@ -737,7 +737,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(final String encode, final String curveName) {
-		return BCUtil.decodeECPoint(encode, curveName);
+		return ECKeyUtil.decodeECPoint(encode, curveName);
 	}
 
 	/**
@@ -750,7 +750,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(final byte[] encodeByte, final String curveName) {
-		return BCUtil.decodeECPoint(encodeByte, curveName);
+		return ECKeyUtil.decodeECPoint(encodeByte, curveName);
 	}
 
 	/**
