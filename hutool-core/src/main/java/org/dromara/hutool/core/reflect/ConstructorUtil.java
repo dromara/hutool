@@ -12,17 +12,13 @@
 
 package org.dromara.hutool.core.reflect;
 
-import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.map.WeakConcurrentMap;
-import org.dromara.hutool.core.reflect.lookup.LookupUtil;
-import org.dromara.hutool.core.reflect.method.MethodHandleUtil;
+import org.dromara.hutool.core.reflect.creator.DefaultObjectCreator;
+import org.dromara.hutool.core.reflect.creator.PossibleObjectCreator;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.util.*;
 
 /**
  * 反射中{@link Constructor}构造工具类，包括获取构造类和通过构造实例化对象相关工具
@@ -99,8 +95,9 @@ public class ConstructorUtil {
 	 * @return 对象
 	 * @throws HutoolException 包装各类异常
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(final String clazz) throws HutoolException {
-		return newInstance(ClassLoaderUtil.loadClass(clazz));
+		return (T) DefaultObjectCreator.of(clazz).create();
 	}
 
 	/**
@@ -113,9 +110,7 @@ public class ConstructorUtil {
 	 * @throws HutoolException 包装各类异常
 	 */
 	public static <T> T newInstance(final Class<T> clazz, final Object... params) throws HutoolException {
-		final Class<?>[] paramTypes = ClassUtil.getClasses(params);
-		final MethodHandle constructor = LookupUtil.findConstructor(clazz, paramTypes);
-		return MethodHandleUtil.invokeHandle(constructor, params);
+		return DefaultObjectCreator.of(clazz, params).create();
 	}
 
 	/**
@@ -133,55 +128,7 @@ public class ConstructorUtil {
 	 * @param type 被构造的类
 	 * @return 构造后的对象，构造失败返回{@code null}
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T newInstanceIfPossible(Class<T> type) {
-		Assert.notNull(type);
-
-		// 原始类型
-		if (type.isPrimitive()) {
-			return (T) ClassUtil.getPrimitiveDefaultValue(type);
-		}
-
-		// 某些特殊接口的实例化按照默认实现进行
-		if (type.isAssignableFrom(AbstractMap.class)) {
-			type = (Class<T>) HashMap.class;
-		} else if (type.isAssignableFrom(List.class)) {
-			type = (Class<T>) ArrayList.class;
-		} else if (type.isAssignableFrom(Set.class)) {
-			type = (Class<T>) HashSet.class;
-		}
-
-		try {
-			return newInstance(type);
-		} catch (final Exception e) {
-			// ignore
-			// 默认构造不存在的情况下查找其它构造
-		}
-
-		// 枚举
-		if (type.isEnum()) {
-			return type.getEnumConstants()[0];
-		}
-
-		// 数组
-		if (type.isArray()) {
-			return (T) Array.newInstance(type.getComponentType(), 0);
-		}
-
-		final Constructor<T>[] constructors = getConstructors(type);
-		Class<?>[] parameterTypes;
-		for (final Constructor<T> constructor : constructors) {
-			parameterTypes = constructor.getParameterTypes();
-			if (0 == parameterTypes.length) {
-				continue;
-			}
-			ReflectUtil.setAccessible(constructor);
-			try {
-				return constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
-			} catch (final Exception ignore) {
-				// 构造出错时继续尝试下一种构造方式
-			}
-		}
-		return null;
+	public static <T> T newInstanceIfPossible(final Class<T> type) {
+		return PossibleObjectCreator.of(type).create();
 	}
 }
