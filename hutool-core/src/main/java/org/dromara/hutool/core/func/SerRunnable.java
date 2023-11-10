@@ -14,7 +14,6 @@ package org.dromara.hutool.core.func;
 
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.stream.Stream;
@@ -40,7 +39,7 @@ public interface SerRunnable extends Runnable, Serializable {
 	 * @throws Exception wrapped checked exception
 	 * @see Thread#run()
 	 */
-	void running() throws Exception;
+	void running() throws Throwable;
 
 	/**
 	 * When an object implementing interface {@code Runnable} is used
@@ -57,7 +56,7 @@ public interface SerRunnable extends Runnable, Serializable {
 	default void run() {
 		try {
 			running();
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}

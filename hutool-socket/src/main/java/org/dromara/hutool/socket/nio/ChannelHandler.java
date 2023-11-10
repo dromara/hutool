@@ -27,5 +27,5 @@ public interface ChannelHandler {
 	 * @param socketChannel {@link SocketChannel}
 	 * @throws Exception 可能的处理异常
 	 */
-	void handle(SocketChannel socketChannel) throws Exception;
+	void handle(SocketChannel socketChannel) throws Throwable;
 }

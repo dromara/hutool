@@ -139,7 +139,7 @@ public class NioClient implements Closeable {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
 			try{
 				handler.handle(socketChannel);
-			} catch (final Exception e){
+			} catch (final Throwable e){
 				throw new SocketRuntimeException(e);
 			}
 		}

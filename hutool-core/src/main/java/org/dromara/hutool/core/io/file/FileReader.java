@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.io.file;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.func.SerConsumer;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -168,7 +167,7 @@ public class FileReader extends FileWrapper {
 		try {
 			reader = FileUtil.getReader(this.file, charset);
 			result = readerHandler.applying(reader);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		} finally {
 			IoUtil.closeQuietly(reader);

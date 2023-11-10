@@ -151,7 +151,7 @@ public class NioServer implements Closeable {
 			final SocketChannel socketChannel = (SocketChannel) key.channel();
 			try{
 				handler.handle(socketChannel);
-			} catch (final Exception e){
+			} catch (final Throwable e){
 				IoUtil.closeQuietly(socketChannel);
 				log.error(e);
 			}

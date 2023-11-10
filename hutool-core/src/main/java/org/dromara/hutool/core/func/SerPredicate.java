@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -38,7 +37,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	 * otherwise {@code false}
 	 * @throws Exception wrapped checked exception
 	 */
-	boolean testing(T t) throws Exception;
+	boolean testing(T t) throws Throwable;
 
 	/**
 	 * Evaluates this predicate on the given argument.
@@ -51,7 +50,7 @@ public interface SerPredicate<T> extends Predicate<T>, Serializable {
 	default boolean test(final T t) {
 		try {
 			return testing(t);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
