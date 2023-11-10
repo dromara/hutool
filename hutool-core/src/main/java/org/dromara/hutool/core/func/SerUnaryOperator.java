@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -36,7 +35,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	 * @return the function result
 	 * @throws Exception wrapped checked exception
 	 */
-	T applying(T t) throws Exception;
+	T applying(T t) throws Throwable;
 
 	/**
 	 * Applies this function to the given argument.
@@ -48,7 +47,7 @@ public interface SerUnaryOperator<T> extends UnaryOperator<T>, Serializable {
 	default T apply(final T t) {
 		try {
 			return applying(t);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}

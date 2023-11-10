@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -38,7 +37,7 @@ public interface SerConsumer3<P1, P2, P3> extends Serializable {
 	 * @param p3 参数三
 	 * @throws Exception wrapped checked exception
 	 */
-	void accepting(P1 p1, P2 p2, P3 p3) throws Exception;
+	void accepting(P1 p1, P2 p2, P3 p3) throws Throwable;
 
 	/**
 	 * 接收参数方法
@@ -50,7 +49,7 @@ public interface SerConsumer3<P1, P2, P3> extends Serializable {
 	default void accept(final P1 p1, final P2 p2, final P3 p3) {
 		try {
 			accepting(p1, p2, p3);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}

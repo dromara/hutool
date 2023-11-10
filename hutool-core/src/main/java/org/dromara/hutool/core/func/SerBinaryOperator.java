@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -38,7 +37,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	 * @return the function result
 	 * @throws Exception wrapped checked exception
 	 */
-	T applying(T t, T u) throws Exception;
+	T applying(T t, T u) throws Throwable;
 
 	/**
 	 * Applies this function to the given arguments.
@@ -51,7 +50,7 @@ public interface SerBinaryOperator<T> extends BinaryOperator<T>, Serializable {
 	default T apply(final T t, final T u) {
 		try {
 			return this.applying(t, u);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}

@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.function.Supplier;
@@ -35,7 +34,7 @@ public interface SerSupplier<R> extends Supplier<R>, Serializable {
 	 * @return a result
 	 * @throws Exception wrapped checked exception
 	 */
-	R getting() throws Exception;
+	R getting() throws Throwable;
 
 	/**
 	 * Gets a result.
@@ -46,7 +45,7 @@ public interface SerSupplier<R> extends Supplier<R>, Serializable {
 	default R get() {
 		try {
 			return getting();
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}

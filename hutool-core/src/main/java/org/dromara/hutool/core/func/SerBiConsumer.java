@@ -13,7 +13,6 @@
 package org.dromara.hutool.core.func;
 
 import org.dromara.hutool.core.exception.ExceptionUtil;
-import org.dromara.hutool.core.exception.HutoolException;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -50,7 +49,7 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	 * @param u the second input argument
 	 * @throws Exception wrapped checked exception for easy using
 	 */
-	void accepting(T t, U u) throws Exception;
+	void accepting(T t, U u) throws Throwable;
 
 	/**
 	 * Performs this operation on the given arguments.
@@ -62,7 +61,7 @@ public interface SerBiConsumer<T, U> extends BiConsumer<T, U>, Serializable {
 	default void accept(final T t, final U u) {
 		try {
 			accepting(t, u);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			throw ExceptionUtil.wrapRuntime(e);
 		}
 	}
