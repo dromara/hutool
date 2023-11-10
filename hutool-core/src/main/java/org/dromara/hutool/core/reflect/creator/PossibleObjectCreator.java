@@ -76,15 +76,10 @@ public class PossibleObjectCreator<T> implements ObjectCreator<T> {
 			return (T) ClassUtil.getPrimitiveDefaultValue(type);
 		}
 
-		// 某些特殊接口的实例化按照默认实现进行
-		if (type.isAssignableFrom(AbstractMap.class)) {
-			type = (Class<T>) HashMap.class;
-		} else if (type.isAssignableFrom(List.class)) {
-			type = (Class<T>) ArrayList.class;
-		} else if (type.isAssignableFrom(Set.class)) {
-			type = (Class<T>) HashSet.class;
-		}
+		// 处理接口和抽象类的默认值
+		type = (Class<T>) resolveType(type);
 
+		// 尝试默认构造实例化
 		try {
 			return DefaultObjectCreator.of(type).create();
 		} catch (final Exception e) {
@@ -102,6 +97,7 @@ public class PossibleObjectCreator<T> implements ObjectCreator<T> {
 			return (T) Array.newInstance(type.getComponentType(), 0);
 		}
 
+		// 查找合适构造
 		final Constructor<T>[] constructors = ConstructorUtil.getConstructors(type);
 		Class<?>[] parameterTypes;
 		for (final Constructor<T> constructor : constructors) {
@@ -117,5 +113,25 @@ public class PossibleObjectCreator<T> implements ObjectCreator<T> {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 某些特殊接口的实例化按照默认实现进行
+	 *
+	 * @param type 类型
+	 * @return 默认类型
+	 */
+	private static Class<?> resolveType(final Class<?> type) {
+		if (type.isAssignableFrom(AbstractMap.class)) {
+			return HashMap.class;
+		} else if (type.isAssignableFrom(List.class)) {
+			return ArrayList.class;
+		} else if (type == SortedSet.class) {
+			return TreeSet.class;
+		} else if (type.isAssignableFrom(Set.class)) {
+			return HashSet.class;
+		}
+
+		return type;
 	}
 }
