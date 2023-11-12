@@ -21,16 +21,16 @@
 
 		<!-- versions -->
 		<c3p0.version>0.9.5.5</c3p0.version>
-		<dbcp2.version>2.9.0</dbcp2.version>
+		<dbcp2.version>2.11.0</dbcp2.version>
 		<tomcat-jdbc.version>10.0.23</tomcat-jdbc.version>
-		<druid.version>1.2.16</druid.version>
+		<druid.version>1.2.20</druid.version>
 		<!-- 此处固定4.x，支持到JDK8 -->
 		<hikariCP.version>4.0.3</hikariCP.version>
 		<mongo4.version>4.9.1</mongo4.version>
-		<sqlite.version>3.42.0.0</sqlite.version>
+		<sqlite.version>3.43.2.2</sqlite.version>
 		<!-- 此处固定2.5.x，支持到JDK8 -->
 		<hsqldb.version>2.5.2</hsqldb.version>
-		<jedis.version>4.3.1</jedis.version>
+		<jedis.version>5.0.2</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>com.github.chris2018998</groupId>
 			<artifactId>beecp</artifactId>
-			<version>3.4.1</version>
+			<version>3.4.2</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -97,12 +97,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-pool2</artifactId>
-					<groupId>org.apache.commons</groupId>
-				</exclusion>
-			</exclusions>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -120,6 +114,10 @@
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-pool2</artifactId>
+					<groupId>org.apache.commons</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -147,7 +145,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.32</version>
+			<version>8.0.33</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -177,7 +175,7 @@
 		<dependency>
 			<groupId>com.clickhouse</groupId>
 			<artifactId>clickhouse-jdbc</artifactId>
-			<version>0.4.6</version>
+			<version>0.5.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
