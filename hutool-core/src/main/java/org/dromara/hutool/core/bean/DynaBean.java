@@ -12,6 +12,9 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.reflect.ClassUtil;
@@ -19,11 +22,13 @@ import org.dromara.hutool.core.reflect.ConstructorUtil;
 import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
  * 动态Bean，通过反射对Bean的相关方法做操作<br>
- * 支持Map和普通Bean
+ * 支持Map和普通Bean和Collection
  *
  * @author Looly
  * @since 3.0.7
@@ -81,6 +86,13 @@ public class DynaBean implements Cloneable, Serializable {
 	public <T> T get(final String fieldName) throws BeanException {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			return (T) ((Map<?, ?>) bean).get(fieldName);
+		} else if (bean instanceof Collection) {
+			try {
+				return (T) CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldName));
+			} catch (final NumberFormatException e) {
+				// 非数字，see pr#254@Gitee
+				return (T) CollUtil.map((Collection<?>) bean, (beanEle) -> BeanUtil.getFieldValue(beanEle, fieldName), false);
+			}
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
@@ -100,7 +112,9 @@ public class DynaBean implements Cloneable, Serializable {
 	public boolean containsProp(final String fieldName) {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			return ((Map<?, ?>) bean).containsKey(fieldName);
-		} else{
+		} else if (bean instanceof Collection) {
+			return CollUtil.size(bean) > Integer.parseInt(fieldName);
+		} else {
 			return null != BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 		}
 	}
@@ -132,6 +146,8 @@ public class DynaBean implements Cloneable, Serializable {
 	public void set(final String fieldName, final Object value) throws BeanException {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			((Map) bean).put(fieldName, value);
+		} else if (bean instanceof List) {
+			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldName), value);
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
