@@ -65,13 +65,21 @@ public class DynaBean implements Cloneable, Serializable {
 	 *
 	 * @param bean 原始Bean
 	 */
-	public DynaBean(Object bean) {
+	public DynaBean(final Object bean) {
 		Assert.notNull(bean);
 		if (bean instanceof DynaBean) {
-			bean = ((DynaBean) bean).getBean();
+			// 已经是动态Bean，则提取对象
+			this.bean = ((DynaBean) bean).getBean();
+			this.beanClass = ((DynaBean) bean).getBeanClass();
+		} else if (bean instanceof Class) {
+			// 用户传入类，默认按照此类的默认实例对待
+			this.bean = ConstructorUtil.newInstance((Class<?>) bean);
+			this.beanClass = (Class<?>) bean;
+		} else {
+			// 普通Bean
+			this.bean = bean;
+			this.beanClass = ClassUtil.getClass(bean);
 		}
-		this.bean = bean;
-		this.beanClass = ClassUtil.getClass(bean);
 	}
 
 	/**
@@ -151,7 +159,7 @@ public class DynaBean implements Cloneable, Serializable {
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
-				throw new BeanException("No public field or set method for {}", fieldName);
+				throw new BeanException("No public field or set method for '{}'", fieldName);
 			}
 			prop.setValue(bean, value);
 		}

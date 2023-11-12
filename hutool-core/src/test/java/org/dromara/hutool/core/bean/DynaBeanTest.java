@@ -70,7 +70,6 @@ public class DynaBeanTest {
 		Assertions.assertEquals("test for 李华", invoke);
 	}
 
-
 	@Test
 	public void beanByInstanceClazzConstructorTest() {
 		final String name_before = "李华";
