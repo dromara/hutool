@@ -35,7 +35,7 @@ public class CollectorUtil {
 	 * 说明已包含IDENTITY_FINISH特征 为 Characteristics.IDENTITY_FINISH 的缩写
 	 */
 	public static final Set<Collector.Characteristics> CH_ID
-			= Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+		= Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
 	/**
 	 * 说明不包含IDENTITY_FINISH特征
 	 */
@@ -80,11 +80,11 @@ public class CollectorUtil {
 													  final CharSequence suffix,
 													  final Function<T, ? extends CharSequence> toStringFunc) {
 		return new SimpleCollector<>(
-				() -> new StringJoiner(delimiter, prefix, suffix),
-				(joiner, ele) -> joiner.add(toStringFunc.apply(ele)),
-				StringJoiner::merge,
-				StringJoiner::toString,
-				Collections.emptySet()
+			() -> new StringJoiner(delimiter, prefix, suffix),
+			(joiner, ele) -> joiner.add(toStringFunc.apply(ele)),
+			StringJoiner::merge,
+			StringJoiner::toString,
+			Collections.emptySet()
 		);
 	}
 
@@ -208,11 +208,11 @@ public class CollectorUtil {
 	 * 提供对null值友好的groupingBy操作的{@link Collector}实现，
 	 * 对集合分组，然后对分组后的值集合进行映射
 	 *
-	 * @param classifier       分组依据
-	 * @param valueMapper      值映射方法
-	 * @param <T>              元素类型
-	 * @param <K>              键类型
-	 * @param <R>              值类型
+	 * @param classifier  分组依据
+	 * @param valueMapper 值映射方法
+	 * @param <T>         元素类型
+	 * @param <K>         键类型
+	 * @param <R>         值类型
 	 * @return {@link Collector}
 	 */
 	public static <T, K, R> Collector<T, ?, Map<K, List<R>>> groupingBy(
@@ -284,7 +284,7 @@ public class CollectorUtil {
 							 final BinaryOperator<U> mergeFunction,
 							 final Supplier<M> mapSupplier) {
 		final BiConsumer<M, T> accumulator
-				= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
+			= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
 		return new SimpleCollector<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
 	}
 
@@ -330,13 +330,18 @@ public class CollectorUtil {
 	 */
 	public static <K, V, R extends Map<K, List<V>>> Collector<Map<K, V>, ?, R> reduceListMap(final Supplier<R> mapSupplier) {
 		return Collectors.reducing(mapSupplier.get(), value -> {
-					final R result = mapSupplier.get();
-					value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
-					return result;
-				}, (l, r) -> {
-					r.forEach((k, v) -> l.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
-					return l;
-				}
+				final R result = mapSupplier.get();
+				value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
+				return result;
+			}, (l, r) -> {
+				final R resultMap = mapSupplier.get();
+				resultMap.putAll(l);
+				r.forEach((k, v) -> {
+					final List<V> list = resultMap.computeIfAbsent(k, i -> new ArrayList<>());
+					list.addAll(v);
+				});
+				return resultMap;
+			}
 		);
 	}
 
@@ -350,7 +355,7 @@ public class CollectorUtil {
 	 * @since 6.0.0
 	 */
 	public static <T, K> Collector<T, List<T>, EntryStream<K, T>> toEntryStream(
-			final Function<? super T, ? extends K> keyMapper) {
+		final Function<? super T, ? extends K> keyMapper) {
 		return toEntryStream(keyMapper, Function.identity());
 	}
 
@@ -366,7 +371,7 @@ public class CollectorUtil {
 	 * @since 6.0.0
 	 */
 	public static <T, K, V> Collector<T, List<T>, EntryStream<K, V>> toEntryStream(
-			final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends V> valueMapper) {
+		final Function<? super T, ? extends K> keyMapper, final Function<? super T, ? extends V> valueMapper) {
 		Objects.requireNonNull(keyMapper);
 		Objects.requireNonNull(valueMapper);
 		return transform(ArrayList::new, list -> EntryStream.of(list, keyMapper, valueMapper));
@@ -401,11 +406,11 @@ public class CollectorUtil {
 	 * @since 6.0.0
 	 */
 	public static <T, R, C extends Collection<T>> Collector<T, C, R> transform(
-			final Supplier<C> collFactory, final Function<C, R> mapper) {
+		final Supplier<C> collFactory, final Function<C, R> mapper) {
 		Objects.requireNonNull(collFactory);
 		Objects.requireNonNull(mapper);
 		return new SimpleCollector<>(
-				collFactory, C::add, (l1, l2) -> {
+			collFactory, C::add, (l1, l2) -> {
 			l1.addAll(l2);
 			return l1;
 		}, mapper, CH_NOID
@@ -458,8 +463,8 @@ public class CollectorUtil {
 								 final Collector<? super T, A, R> downstream) {
 		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
 		return new SimpleCollector<>(downstream.supplier(),
-				(r, t) -> Opt.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
-				downstream.combiner(), downstream.finisher(),
-				downstream.characteristics());
+			(r, t) -> Opt.of(t).filter(predicate).ifPresent(e -> downstreamAccumulator.accept(r, e)),
+			downstream.combiner(), downstream.finisher(),
+			downstream.characteristics());
 	}
 }

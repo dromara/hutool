@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.stream;
 
+import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.map.MapUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,22 @@ public class CollectorUtilTest {
 		Assertions.assertEquals(MapUtil.builder("苏格拉底", Arrays.asList(1, 2))
 						.put("特拉叙马霍斯", Arrays.asList(3, 1, 2)).build(),
 				nameScoresMap);
+
+		final List<Map<String, String>> data = ListUtil.of(
+			MapUtil.builder("name", "sam").put("count", "80").map(),
+			MapUtil.builder("name", "sam").put("count", "81").map(),
+			MapUtil.builder("name", "sam").put("count", "82").map(),
+			MapUtil.builder("name", "jack").put("count", "80").map(),
+			MapUtil.builder("name", "jack").put("count", "90").map()
+		);
+
+		final Map<String, Map<String, List<String>>> nameMap = data.stream()
+			.collect(Collectors.groupingBy(e -> e.get("name"), CollectorUtil.reduceListMap()));
+		Assertions.assertEquals(MapUtil.builder("jack", MapUtil.builder("name", Arrays.asList("jack", "jack"))
+				.put("count", Arrays.asList("80", "90")).build())
+			.put("sam", MapUtil.builder("name", Arrays.asList("sam", "sam", "sam"))
+				.put("count", Arrays.asList("80", "81", "82")).build())
+			.build(), nameMap);
 	}
 
 	@Test
@@ -93,7 +110,7 @@ public class CollectorUtilTest {
 
 	@Test
 	public void testGroupingByAfterValueMapped() {
-		List<Integer> list = Arrays.asList(1, 1, 2, 2, 3, 4);
+		final List<Integer> list = Arrays.asList(1, 1, 2, 2, 3, 4);
 		Map<Boolean, Set<String>> map = list.stream()
 			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf, LinkedHashSet::new, LinkedHashMap::new));
 
@@ -107,7 +124,7 @@ public class CollectorUtilTest {
 		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("2", "4")), map.get(Boolean.TRUE));
 		Assertions.assertEquals(new LinkedHashSet<>(Arrays.asList("1", "3")), map.get(Boolean.FALSE));
 
-		Map<Boolean, List<String>> map2 = list.stream()
+		final Map<Boolean, List<String>> map2 = list.stream()
 			.collect(CollectorUtil.groupingBy(t -> (t & 1) == 0, String::valueOf));
 		Assertions.assertEquals(Arrays.asList("2", "2", "4"), map2.get(Boolean.TRUE));
 		Assertions.assertEquals(Arrays.asList("1", "1", "3"), map2.get(Boolean.FALSE));
