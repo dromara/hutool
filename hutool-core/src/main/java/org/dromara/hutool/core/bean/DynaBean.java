@@ -37,54 +37,22 @@ public class DynaBean implements Cloneable, Serializable {
 	/**
 	 * 创建一个DynaBean
 	 *
-	 * @param bean 普通Bean
-	 * @return DynaBean
-	 */
-	public static DynaBean of(final Object bean) {
-		return new DynaBean(bean);
-	}
-
-	/**
-	 * 创建一个DynaBean
-	 *
-	 * @param beanClass Bean类
-	 * @return DynaBean
-	 */
-	public static DynaBean of(final Class<?> beanClass) {
-		return new DynaBean(beanClass);
-	}
-
-
-	/**
-	 * 创建一个DynaBean
-	 *
 	 * @param beanClass Bean类
 	 * @param params    构造Bean所需要的参数
 	 * @return DynaBean
 	 */
 	public static DynaBean of(final Class<?> beanClass, final Object... params) {
-		return new DynaBean(beanClass, params);
-	}
-
-	//------------------------------------------------------------------------ Constructor start
-
-	/**
-	 * 构造
-	 *
-	 * @param beanClass Bean类
-	 * @param params    构造Bean所需要的参数
-	 */
-	public DynaBean(final Class<?> beanClass, final Object... params) {
-		this(ConstructorUtil.newInstance(beanClass, params));
+		return of(ConstructorUtil.newInstance(beanClass, params));
 	}
 
 	/**
-	 * 构造
+	 * 创建一个DynaBean
 	 *
-	 * @param beanClass Bean类
+	 * @param bean 普通Bean
+	 * @return DynaBean
 	 */
-	public DynaBean(final Class<?> beanClass) {
-		this(ConstructorUtil.newInstance(beanClass));
+	public static DynaBean of(final Object bean) {
+		return new DynaBean(bean);
 	}
 
 	/**
@@ -100,7 +68,6 @@ public class DynaBean implements Cloneable, Serializable {
 		this.bean = bean;
 		this.beanClass = ClassUtil.getClass(bean);
 	}
-	//------------------------------------------------------------------------ Constructor end
 
 	/**
 	 * 获得字段对应值
