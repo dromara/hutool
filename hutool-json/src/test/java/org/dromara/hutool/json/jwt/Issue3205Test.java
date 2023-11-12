@@ -42,7 +42,7 @@ public class Issue3205Test {
 
 		final String token = jwt.sign();
 
-		final boolean signed = Jwts.parserBuilder().setSigningKey(keyPair.getPublic()).build().isSigned(token);
+		final boolean signed = Jwts.parser().verifyWith(keyPair.getPublic()).build().isSigned(token);
 
 		Assertions.assertTrue(signed);
 	}

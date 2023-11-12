@@ -51,9 +51,9 @@
 
 		<!-- versions -->
 		<compile.version>8</compile.version>
-		<junit.version>5.10.0</junit.version>
-		<lombok.version>1.18.28</lombok.version>
-		<kotlin-version>1.9.10</kotlin-version>
+		<junit.version>5.10.1</junit.version>
+		<lombok.version>1.18.30</lombok.version>
+		<kotlin-version>1.9.20</kotlin-version>
 	</properties>
 
 	<dependencies>
