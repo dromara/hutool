@@ -31,7 +31,7 @@
 	<properties>
 		<Automatic-Module-Name>org.dromara.hutool.poi</Automatic-Module-Name>
 		<!-- versions -->
-		<poi.version>5.2.3</poi.version>
+		<poi.version>5.2.4</poi.version>
 	</properties>
 
 	<dependencies>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>org.ofdrw</groupId>
 			<artifactId>ofdrw-full</artifactId>
-			<version>2.0.8</version>
+			<version>2.1.0</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
