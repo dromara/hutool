@@ -95,12 +95,13 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		return Opt.ofNullable(methods.get(method.getName()))
 				.map(m -> m.apply(method, args))
-				.orElseGet(() -> ReflectUtil.invoke(proxy, method, args));
+				.orElseGet(() -> ReflectUtil.invoke(annotation.getAnnotation(), method, args));
 	}
 
 	// ========================= 代理方法 =========================
 
 	void loadMethods() {
+		// 非用户属性
 		methods.put("toString", (method, args) -> proxyToString());
 		methods.put("hashCode", (method, args) -> proxyHashCode());
 		methods.put("getSynthesizedAnnotation", (method, args) -> proxyGetSynthesizedAnnotation());
@@ -114,9 +115,11 @@ public class SynthesizedAnnotationProxy implements InvocationHandler {
 		});
 		methods.put("getAttributeValue", (method, args) -> annotation.getAttributeValue((String) args[0]));
 		methods.put("annotationType", (method, args) -> annotation.annotationType());
-		for (final Method declaredMethod : ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType())) {
-			methods.put(declaredMethod.getName(), (method, args) -> proxyAttributeValue(method));
-		}
+
+		// 可以被合成的用户属性
+		Stream.of(ClassUtil.getDeclaredMethods(annotation.getAnnotation().annotationType()))
+			.filter(m -> !methods.containsKey(m.getName()))
+			.forEach(m -> methods.put(m.getName(), (method, args) -> proxyAttributeValue(method)));
 	}
 
 	private String proxyToString() {
