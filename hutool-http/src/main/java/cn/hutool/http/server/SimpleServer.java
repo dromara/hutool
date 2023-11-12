@@ -126,7 +126,8 @@ public class SimpleServer {
 		return addFilter(new SimpleFilter() {
 			@Override
 			public void doFilter(HttpExchange httpExchange, Chain chain) throws IOException {
-				filter.doFilter(new HttpServerRequest(httpExchange), new HttpServerResponse(httpExchange), chain);
+				final HttpExchangeWrapper httpExchangeWrapper = new HttpExchangeWrapper(httpExchange);
+				filter.doFilter(httpExchangeWrapper.getRequest(), httpExchangeWrapper.getResponse(), chain);
 			}
 		});
 	}

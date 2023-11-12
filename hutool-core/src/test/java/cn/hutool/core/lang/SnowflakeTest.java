@@ -4,6 +4,7 @@ import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -19,22 +20,45 @@ import java.util.Set;
  */
 public class SnowflakeTest {
 
+	/**
+	 * 测试-根据传入时间戳-计算ID起终点
+	 */
+	@Test
+	public void snowflakeTestGetIdScope() {
+		final long workerId = RandomUtil.randomLong(31);
+		final long dataCenterId = RandomUtil.randomLong(31);
+		final Snowflake idWorker = new Snowflake(workerId, dataCenterId);
+		final long generatedId = idWorker.nextId();
+		// 随机忽略数据中心和工作机器的占位
+		final boolean ignore = RandomUtil.randomBoolean();
+		final long createTimestamp = idWorker.getGenerateDateTime(generatedId);
+		final Pair<Long, Long> idScope = idWorker.getIdScopeByTimestamp(createTimestamp, createTimestamp, ignore);
+		final long startId = idScope.getKey();
+		final long endId = idScope.getValue();
+
+		// 起点终点相差比较
+		final long trueOffSet = endId - startId;
+		// 忽略数据中心和工作机器时差值为22个1，否则为12个1
+		final long expectedOffSet = ignore ? ~(-1 << 22) : ~(-1 << 12);
+		Assert.assertEquals(trueOffSet, expectedOffSet);
+	}
+
 	@Test
 	public void snowflakeTest1(){
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(0, 0);
-		long nextId = idWorker.nextId();
+		final Snowflake idWorker = new Snowflake(0, 0);
+		final long nextId = idWorker.nextId();
 		Assert.assertTrue(nextId > 0);
 	}
 
 	@Test
 	public void snowflakeTest(){
-		HashSet<Long> hashSet = new HashSet<>();
+		final HashSet<Long> hashSet = new HashSet<>();
 
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(0, 0);
+		final Snowflake idWorker = new Snowflake(0, 0);
 		for (int i = 0; i < 1000; i++) {
-			long id = idWorker.nextId();
+			final long id = idWorker.nextId();
 			hashSet.add(id);
 		}
 		Assert.assertEquals(1000L, hashSet.size());
@@ -43,8 +67,8 @@ public class SnowflakeTest {
 	@Test
 	public void snowflakeGetTest(){
 		//构建Snowflake，提供终端ID和数据中心ID
-		Snowflake idWorker = new Snowflake(1, 2);
-		long nextId = idWorker.nextId();
+		final Snowflake idWorker = new Snowflake(1, 2);
+		final long nextId = idWorker.nextId();
 
 		Assert.assertEquals(1, idWorker.getWorkerId(nextId));
 		Assert.assertEquals(2, idWorker.getDataCenterId(nextId));
@@ -55,9 +79,9 @@ public class SnowflakeTest {
 	@Ignore
 	public void uniqueTest(){
 		// 测试并发环境下生成ID是否重复
-		Snowflake snowflake = IdUtil.getSnowflake(0, 0);
+		final Snowflake snowflake = IdUtil.getSnowflake(0, 0);
 
-		Set<Long> ids = new ConcurrentHashSet<>();
+		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
 				if(false == ids.add(snowflake.nextId())){
@@ -94,7 +118,7 @@ public class SnowflakeTest {
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
 				false, Snowflake.DEFAULT_TIME_OFFSET, 100);
 
-		Set<Long> ids = new ConcurrentHashSet<>();
+		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
 				if(false == ids.add(snowflake.nextId())){

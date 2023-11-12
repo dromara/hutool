@@ -2,6 +2,33 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.23(2023-11-12)
+
+### 🐣新特性
+* 【json  】      改进TemporalAccessorSerializer支持dayOfMonth和month枚举名（issue#I82AM8@Gitee）
+* 【core  】      新增ProxySocketFactory
+* 【http  】      UserAgent增加百度浏览器识别（issue#I847JY@Gitee）
+* 【core  】      ReflectUtil.getFieldsValue增加Filter重载（pr#1090@Gitee）
+* 【core  】      Snowflake增加方法：根据传入时间戳，计算ID起终点（pr#1096@Gitee）
+* 【core  】      PathUtil增加loopFiles重载，可选是否追踪软链（issue#3353@Github）
+
+### 🐞Bug修复
+* 【cron  】      修复Cron表达式range解析错误问题（issue#I82CSH@Gitee）
+* 【core  】      修复VersionComparator在极端数据排序时候违反了自反性问题（issue#I81N3H@Gitee）
+* 【json  】      修复JSONStrFormatter:format函数对于转义符号处理逻辑错误问题（issue#I84V6I@Gitee）
+* 【core  】      修复特定情况下BiMap覆盖Value后，仍能通过旧Value查询到Key问题（issue#I88R5M@Gitee）
+* 【core  】      修复aop的afterException无法生效问题（issue#3329@Github）
+* 【core  】      修复TypeUtil.getClass方法强转报错问题（pr#1092@Github）
+* 【core  】      修复DataSize.parse(size)不支持空格问题（issue#I88Z4Z@Gitee）
+* 【http  】      修复SimpleServer在添加的HttpFilter中有获取请求参数时报错问题（issue#3343@Github）
+* 【http  】      修复options请求无响应体问题
+* 【core  】      ImgUtil的sliceByRowsAndCols背景无法透明问题（issue#3347@Github）
+* 【core  】      修复ClassUtil#scanJar未正确关闭文件问题（issue#3361@Github）
+* 【db    】      修复Column.getDigit返回值错误问题（issue#3370@Github）
+* 【core  】      修复合成注解在并发环境无法保证正确缓存属性值的问题（pr#1097@Gitee）
+* 【core  】      修复CollectorUtil.reduceListMap与collectors.groupby一起使用时出现与预期不符问题（pr#1102@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
 # 5.8.22(2023-09-13)
 
 ### 🐣新特性

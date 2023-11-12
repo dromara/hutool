@@ -30,7 +30,13 @@ public class BiMap<K, V> extends MapWrapper<K, V> {
 
 	@Override
 	public V put(K key, V value) {
+		final V oldValue = super.put(key, value);
 		if (null != this.inverse) {
+			if(null != oldValue){
+				// issue#I88R5M
+				// 如果put的key相同，value不同，需要在inverse中移除旧的关联
+				this.inverse.remove(oldValue);
+			}
 			this.inverse.put(value, key);
 		}
 		return super.put(key, value);

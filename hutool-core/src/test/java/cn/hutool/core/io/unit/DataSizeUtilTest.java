@@ -60,4 +60,11 @@ public class DataSizeUtilTest {
 		format = DataSizeUtil.format(1024L * 1024 * 1024 * 1024);
 		Assert.assertEquals("1 TB", format);
 	}
+
+	@Test
+	public void issueI88Z4ZTest() {
+		final String size = DataSizeUtil.format(10240000);
+		final long bytes = DataSize.parse(size).toBytes();
+		Assert.assertEquals(10244587, bytes);
+	}
 }

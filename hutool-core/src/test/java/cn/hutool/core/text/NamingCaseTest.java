@@ -1,6 +1,5 @@
 package cn.hutool.core.text;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharUtil;
 import org.junit.Assert;

@@ -1,5 +1,6 @@
 package cn.hutool.json.serialize;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
@@ -7,6 +8,7 @@ import cn.hutool.json.JSONObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.temporal.TemporalAccessor;
 
 /**
@@ -61,11 +63,33 @@ public class TemporalAccessorSerializer implements JSONObjectSerializer<Temporal
 	@Override
 	public TemporalAccessor deserialize(JSON json) {
 		final JSONObject jsonObject = (JSONObject) json;
-		if (LocalDate.class.equals(this.temporalAccessorClass)) {
-			return LocalDate.of(jsonObject.getInt(YEAR_KEY), jsonObject.getInt(MONTH_KEY), jsonObject.getInt(DAY_KEY));
-		} else if (LocalDateTime.class.equals(this.temporalAccessorClass)) {
-			return LocalDateTime.of(jsonObject.getInt(YEAR_KEY), jsonObject.getInt(MONTH_KEY), jsonObject.getInt(DAY_KEY),
-					jsonObject.getInt(HOUR_KEY), jsonObject.getInt(MINUTE_KEY), jsonObject.getInt(SECOND_KEY), jsonObject.getInt(NANO_KEY));
+		if (LocalDate.class.equals(this.temporalAccessorClass) || LocalDateTime.class.equals(this.temporalAccessorClass)) {
+			final Integer year = jsonObject.getInt(YEAR_KEY);
+			Assert.notNull(year, "Field 'year' must be not null");
+			Integer month = jsonObject.getInt(MONTH_KEY);
+			if (null == month) {
+				final Month monthEnum = Month.valueOf(jsonObject.getStr(MONTH_KEY));
+				Assert.notNull(monthEnum, "Field 'month' must be not null");
+				month = monthEnum.getValue();
+			}
+			Integer day = jsonObject.getInt(DAY_KEY);
+			if (null == day) {
+				day = jsonObject.getInt("dayOfMonth");
+				Assert.notNull(day, "Field 'day' or 'dayOfMonth' must be not null");
+			}
+
+			final LocalDate localDate = LocalDate.of(year, month, day);
+			if (LocalDate.class.equals(this.temporalAccessorClass)) {
+				return localDate;
+			}
+
+			final LocalTime localTime = LocalTime.of(
+				jsonObject.getInt(HOUR_KEY, 0),
+				jsonObject.getInt(MINUTE_KEY, 0),
+				jsonObject.getInt(SECOND_KEY, 0),
+				jsonObject.getInt(NANO_KEY, 0));
+
+			return LocalDateTime.of(localDate, localTime);
 		} else if (LocalTime.class.equals(this.temporalAccessorClass)) {
 			return LocalTime.of(jsonObject.getInt(HOUR_KEY), jsonObject.getInt(MINUTE_KEY), jsonObject.getInt(SECOND_KEY), jsonObject.getInt(NANO_KEY));
 		}

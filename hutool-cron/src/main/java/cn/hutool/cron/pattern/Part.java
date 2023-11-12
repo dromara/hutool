@@ -89,7 +89,7 @@ public enum Part {
 	 */
 	public int checkValue(int value) throws CronException {
 		Assert.checkBetween(value, min, max,
-				() -> new CronException("Value {} out of range: [{} , {}]", value, min, max));
+				() -> new CronException("{} value {} out of range: [{} , {}]", this.name(), value, min, max));
 		return value;
 	}
 

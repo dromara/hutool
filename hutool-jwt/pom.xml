@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.22</version>
+		<version>5.8.23</version>
 	</parent>
 
 	<artifactId>hutool-jwt</artifactId>
@@ -20,7 +20,8 @@
 		<Automatic-Module-Name>cn.hutool.jwt</Automatic-Module-Name>
 
 		<!-- versions -->
-		<bouncycastle.version>1.75</bouncycastle.version>
+		<bouncycastle.version>1.76</bouncycastle.version>
+		<jjwt.version>0.12.3</jjwt.version>
 	</properties>
 
 	<dependencies>
@@ -44,13 +45,13 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.5</version>
+			<version>${jjwt.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-gson</artifactId>
-			<version>0.11.5</version>
+			<version>${jjwt.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

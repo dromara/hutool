@@ -4,13 +4,13 @@ import cn.hutool.core.annotation.scanner.AnnotationScanner;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * {@link AnnotationSynthesizer}的基本实现
@@ -158,11 +158,19 @@ public abstract class AbstractAnnotationSynthesizer<T> implements AnnotationSynt
 	@SuppressWarnings("unchecked")
 	@Override
 	public <A extends Annotation> A synthesize(Class<A> annotationType) {
-		return (A)synthesizedProxyAnnotations.computeIfAbsent(annotationType, type -> {
-			final SynthesizedAnnotation synthesizedAnnotation = synthesizedAnnotationMap.get(annotationType);
-			return ObjectUtil.isNull(synthesizedAnnotation) ?
-				null : synthesize(annotationType, synthesizedAnnotation);
-		});
+		A annotation = (A)synthesizedProxyAnnotations.get(annotationType);
+		if (Objects.nonNull(annotation)) {
+			return annotation;
+		}
+		synchronized (synthesizedProxyAnnotations) {
+			annotation = (A)synthesizedProxyAnnotations.get(annotationType);
+			if (Objects.isNull(annotation)) {
+				final SynthesizedAnnotation synthesizedAnnotation = synthesizedAnnotationMap.get(annotationType);
+				annotation = synthesize(annotationType, synthesizedAnnotation);
+				synthesizedProxyAnnotations.put(annotationType, annotation);
+			}
+		}
+		return annotation;
 	}
 
 }

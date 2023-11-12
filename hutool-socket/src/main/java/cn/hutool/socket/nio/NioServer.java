@@ -3,7 +3,6 @@ package cn.hutool.socket.nio;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.Iterator;
 
 /**
  * 基于NIO的Socket服务端实现
- * 
+ *
  * @author looly
  *
  */
@@ -31,7 +30,7 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param port 端口
 	 */
 	public NioServer(int port) {
@@ -40,7 +39,7 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param address 地址和端口
 	 * @return this
 	 */
@@ -109,7 +108,7 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 开始监听
-	 * 
+	 *
 	 * @throws IOException IO异常
 	 */
 	private void doListen() throws IOException {
@@ -125,7 +124,7 @@ public class NioServer implements Closeable {
 
 	/**
 	 * 处理SelectionKey
-	 * 
+	 *
 	 * @param key SelectionKey
 	 */
 	private void handle(SelectionKey key) {

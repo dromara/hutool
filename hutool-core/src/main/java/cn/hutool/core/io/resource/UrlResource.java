@@ -1,14 +1,12 @@
 package cn.hutool.core.io.resource;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.URLUtil;
 
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * URL资源访问类
