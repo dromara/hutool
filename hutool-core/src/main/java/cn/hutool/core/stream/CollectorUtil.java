@@ -31,7 +31,7 @@ public class CollectorUtil {
 	 * 说明已包含IDENTITY_FINISH特征 为 Characteristics.IDENTITY_FINISH 的缩写
 	 */
 	public static final Set<Collector.Characteristics> CH_ID
-			= Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+		= Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
 	/**
 	 * 说明不包含IDENTITY_FINISH特征
 	 */
@@ -76,11 +76,11 @@ public class CollectorUtil {
 													  CharSequence suffix,
 													  Function<T, ? extends CharSequence> toStringFunc) {
 		return new SimpleCollector<>(
-				() -> new StringJoiner(delimiter, prefix, suffix),
-				(joiner, ele) -> joiner.add(toStringFunc.apply(ele)),
-				StringJoiner::merge,
-				StringJoiner::toString,
-				Collections.emptySet()
+			() -> new StringJoiner(delimiter, prefix, suffix),
+			(joiner, ele) -> joiner.add(toStringFunc.apply(ele)),
+			StringJoiner::merge,
+			StringJoiner::toString,
+			Collections.emptySet()
 		);
 	}
 
@@ -191,7 +191,7 @@ public class CollectorUtil {
 							 BinaryOperator<U> mergeFunction,
 							 Supplier<M> mapSupplier) {
 		BiConsumer<M, T> accumulator
-				= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
+			= (map, element) -> map.put(Opt.ofNullable(element).map(keyMapper).get(), Opt.ofNullable(element).map(valueMapper).get());
 		return new SimpleCollector<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
 	}
 
@@ -239,18 +239,15 @@ public class CollectorUtil {
 	 */
 	public static <K, V, R extends Map<K, List<V>>> Collector<Map<K, V>, ?, R> reduceListMap(final Supplier<R> mapSupplier) {
 		return Collectors.reducing(mapSupplier.get(), value -> {
-					final R result = mapSupplier.get();
-					value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
-					return result;
-				}, (l, r) -> {
-					R resultMap = mapSupplier.get();
-					resultMap.putAll(l);
-					r.forEach((k, v) -> {
-						List<V> list = resultMap.computeIfAbsent(k, i -> new ArrayList<>());
-						list.addAll(v);
-					});
-					return resultMap;
-				}
+				final R result = mapSupplier.get();
+				value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
+				return result;
+			}, (l, r) -> {
+				final R resultMap = mapSupplier.get();
+				resultMap.putAll(l);
+				r.forEach((k, v) -> resultMap.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
+				return resultMap;
+			}
 		);
 	}
 
@@ -270,12 +267,12 @@ public class CollectorUtil {
 	 * @return {@link Collector}
 	 */
 	public static <T, K, R, C extends Collection<R>, M extends Map<K, C>> Collector<T, ?, M> groupingBy(
-			final Function<? super T, ? extends K> classifier,
-			final Function<? super T, ? extends R> valueMapper,
-			final Supplier<C> valueCollFactory,
-			final Supplier<M> mapFactory) {
+		final Function<? super T, ? extends K> classifier,
+		final Function<? super T, ? extends R> valueMapper,
+		final Supplier<C> valueCollFactory,
+		final Supplier<M> mapFactory) {
 		return groupingBy(classifier, mapFactory, Collectors.mapping(
-				valueMapper, Collectors.toCollection(valueCollFactory)
+			valueMapper, Collectors.toCollection(valueCollFactory)
 		));
 	}
 
@@ -293,9 +290,9 @@ public class CollectorUtil {
 	 * @return {@link Collector}
 	 */
 	public static <T, K, R, C extends Collection<R>> Collector<T, ?, Map<K, C>> groupingBy(
-			final Function<? super T, ? extends K> classifier,
-			final Function<? super T, ? extends R> valueMapper,
-			final Supplier<C> valueCollFactory) {
+		final Function<? super T, ? extends K> classifier,
+		final Function<? super T, ? extends R> valueMapper,
+		final Supplier<C> valueCollFactory) {
 		return groupingBy(classifier, valueMapper, valueCollFactory, HashMap::new);
 	}
 
@@ -303,16 +300,16 @@ public class CollectorUtil {
 	 * 提供对null值友好的groupingBy操作的{@link Collector}实现，
 	 * 对集合分组，然后对分组后的值集合进行映射
 	 *
-	 * @param classifier       分组依据
-	 * @param valueMapper      值映射方法
-	 * @param <T>              元素类型
-	 * @param <K>              键类型
-	 * @param <R>              值类型
+	 * @param classifier  分组依据
+	 * @param valueMapper 值映射方法
+	 * @param <T>         元素类型
+	 * @param <K>         键类型
+	 * @param <R>         值类型
 	 * @return {@link Collector}
 	 */
 	public static <T, K, R> Collector<T, ?, Map<K, List<R>>> groupingBy(
-			final Function<? super T, ? extends K> classifier,
-			final Function<? super T, ? extends R> valueMapper) {
+		final Function<? super T, ? extends K> classifier,
+		final Function<? super T, ? extends R> valueMapper) {
 		return groupingBy(classifier, valueMapper, ArrayList::new, HashMap::new);
 	}
 
