@@ -336,10 +336,7 @@ public class CollectorUtil {
 			}, (l, r) -> {
 				final R resultMap = mapSupplier.get();
 				resultMap.putAll(l);
-				r.forEach((k, v) -> {
-					final List<V> list = resultMap.computeIfAbsent(k, i -> new ArrayList<>());
-					list.addAll(v);
-				});
+				r.forEach((k, v) -> resultMap.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
 				return resultMap;
 			}
 		);
