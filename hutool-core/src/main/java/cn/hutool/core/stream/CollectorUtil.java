@@ -243,8 +243,13 @@ public class CollectorUtil {
 					value.forEach((k, v) -> result.computeIfAbsent(k, i -> new ArrayList<>()).add(v));
 					return result;
 				}, (l, r) -> {
-					r.forEach((k, v) -> l.computeIfAbsent(k, i -> new ArrayList<>()).addAll(v));
-					return l;
+					R resultMap = mapSupplier.get();
+					resultMap.putAll(l);
+					r.forEach((k, v) -> {
+						List<V> list = resultMap.computeIfAbsent(k, i -> new ArrayList<>());
+						list.addAll(v);
+					});
+					return resultMap;
 				}
 		);
 	}
