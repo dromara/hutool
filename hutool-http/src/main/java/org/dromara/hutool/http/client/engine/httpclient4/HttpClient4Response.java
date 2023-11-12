@@ -16,6 +16,7 @@ import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.Response;
 import org.apache.http.Header;
 import org.apache.http.ParseException;
@@ -121,4 +122,10 @@ public class HttpClient4Response implements Response {
 	public void close() throws IOException {
 		rawRes.close();
 	}
+
+	@Override
+	public String toString() {
+		return HttpUtil.toString(this);
+	}
+
 }

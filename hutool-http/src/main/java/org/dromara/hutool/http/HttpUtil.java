@@ -23,6 +23,7 @@ import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.server.SimpleServer;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -233,5 +234,24 @@ public class HttpUtil {
 	 */
 	public static SimpleServer createServer(final int port) {
 		return new SimpleServer(port);
+	}
+
+	/**
+	 * 打印{@link Response} 为可读形式
+	 * @param response {@link Response}
+	 * @return 字符串
+	 */
+	public static String toString(final Response response) {
+		final StringBuilder sb = StrUtil.builder();
+		sb.append("Response Status: ").append(response.getStatus()).append(StrUtil.CRLF);
+		sb.append("Response Headers: ").append(StrUtil.CRLF);
+		for (final Map.Entry<String, List<String>> entry : response.headers().entrySet()) {
+			sb.append("    ").append(entry).append(StrUtil.CRLF);
+		}
+
+		sb.append("Response Body: ").append(StrUtil.CRLF);
+		sb.append("    ").append(response.bodyStr()).append(StrUtil.CRLF);
+
+		return sb.toString();
 	}
 }

@@ -18,6 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.HttpException;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.client.body.ResponseBody;
 import org.dromara.hutool.http.client.cookie.GlobalCookieManager;
@@ -222,16 +223,7 @@ public class JdkHttpResponse implements Response, Closeable {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = StrUtil.builder();
-		sb.append("Response Headers: ").append(StrUtil.CRLF);
-		for (final Entry<String, List<String>> entry : this.headers.entrySet()) {
-			sb.append("    ").append(entry).append(StrUtil.CRLF);
-		}
-
-		sb.append("Response Body: ").append(StrUtil.CRLF);
-		sb.append("    ").append(this.bodyStr()).append(StrUtil.CRLF);
-
-		return sb.toString();
+		return HttpUtil.toString(this);
 	}
 
 	// ---------------------------------------------------------------- Private method start

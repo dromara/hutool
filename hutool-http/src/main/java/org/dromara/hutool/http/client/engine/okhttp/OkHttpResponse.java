@@ -18,6 +18,7 @@ import okhttp3.ResponseBody;
 import org.dromara.hutool.core.io.stream.EmptyInputStream;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.GlobalCompressStreamRegister;
+import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.http.client.Response;
 import org.dromara.hutool.http.meta.HeaderName;
 
@@ -89,5 +90,10 @@ public class OkHttpResponse implements Response {
 		if(null != this.rawRes){
 			rawRes.close();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return HttpUtil.toString(this);
 	}
 }
