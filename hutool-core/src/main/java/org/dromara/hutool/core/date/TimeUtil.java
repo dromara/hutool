@@ -321,7 +321,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @since 5.3.10
 	 */
 	public static LocalDate parseDate(final CharSequence text, final DateTimeFormatter formatter) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 		if (null == formatter) {
@@ -339,7 +339,7 @@ public class TimeUtil extends TemporalAccessorUtil {
 	 * @return {@link LocalDateTime}
 	 */
 	public static LocalDate parseDate(final CharSequence text, final String format) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 		return parseDate(text, DateTimeFormatter.ofPattern(format));
