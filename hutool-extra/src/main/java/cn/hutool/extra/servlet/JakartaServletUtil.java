@@ -27,15 +27,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -97,7 +92,7 @@ public class JakartaServletUtil {
 	 * @since 4.0.2
 	 */
 	public static String getBody(ServletRequest request) {
-		try (final BufferedReader reader = request.getReader()) {
+		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8))) {
 			return IoUtil.read(reader);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
