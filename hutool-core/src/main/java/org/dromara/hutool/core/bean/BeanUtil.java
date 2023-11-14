@@ -355,7 +355,7 @@ public class BeanUtil {
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值，bean为{@code null}或者express为空，返回{@code null}
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -363,7 +363,7 @@ public class BeanUtil {
 		if (null == bean || StrUtil.isBlank(expression)) {
 			return null;
 		}
-		return (T) BeanPath.of(expression).get(bean);
+		return (T) BeanPathOld.of(expression).get(bean);
 	}
 
 	/**
@@ -372,11 +372,11 @@ public class BeanUtil {
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @param value      属性值
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 4.0.6
 	 */
 	public static void setProperty(final Object bean, final String expression, final Object value) {
-		BeanPath.of(expression).set(bean, value);
+		BeanPathOld.of(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link BeanPath} 单元测试
+ * {@link BeanPathOld} 单元测试
  *
  * @author looly
  *
@@ -73,7 +73,7 @@ public class BeanPathTest {
 
 	@Test
 	public void beanPathTest1() {
-		final BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
+		final BeanPathOld pattern = new BeanPathOld("userInfo.examInfoDict[0].id");
 		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
 		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
 		Assertions.assertEquals("0", pattern.patternParts.get(2));
@@ -83,7 +83,7 @@ public class BeanPathTest {
 
 	@Test
 	public void beanPathTest2() {
-		final BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
+		final BeanPathOld pattern = new BeanPathOld("[userInfo][examInfoDict][0][id]");
 		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
 		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
 		Assertions.assertEquals("0", pattern.patternParts.get(2));
@@ -92,7 +92,7 @@ public class BeanPathTest {
 
 	@Test
 	public void beanPathTest3() {
-		final BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
+		final BeanPathOld pattern = new BeanPathOld("['userInfo']['examInfoDict'][0]['id']");
 		Assertions.assertEquals("userInfo", pattern.patternParts.get(0));
 		Assertions.assertEquals("examInfoDict", pattern.patternParts.get(1));
 		Assertions.assertEquals("0", pattern.patternParts.get(2));
@@ -101,14 +101,14 @@ public class BeanPathTest {
 
 	@Test
 	public void getTest() {
-		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
+		final BeanPathOld pattern = BeanPathOld.of("userInfo.examInfoDict[0].id");
 		final Object result = pattern.get(tempMap);
 		Assertions.assertEquals(1, result);
 	}
 
 	@Test
 	public void setTest() {
-		final BeanPath pattern = BeanPath.of("userInfo.examInfoDict[0].id");
+		final BeanPathOld pattern = BeanPathOld.of("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		final Object result = pattern.get(tempMap);
 		Assertions.assertEquals(2, result);
@@ -116,7 +116,7 @@ public class BeanPathTest {
 
 	@Test
 	public void getMapTest () {
-		final BeanPath pattern = BeanPath.of("userInfo[id, photoPath]");
+		final BeanPathOld pattern = BeanPathOld.of("userInfo[id, photoPath]");
 		@SuppressWarnings("unchecked")
 		final Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
 		Assertions.assertEquals(1, result.get("id"));
@@ -129,13 +129,13 @@ public class BeanPathTest {
 		dataMap.put("aa", "value0");
 		dataMap.put("aa.bb.cc", "value111111");//     key   是类名 格式 带 ' . '
 
-		final BeanPath pattern = BeanPath.of("'aa.bb.cc'");
+		final BeanPathOld pattern = BeanPathOld.of("'aa.bb.cc'");
 		Assertions.assertEquals("value111111", pattern.get(dataMap));
 	}
 
 	@Test
 	public void compileTest(){
-		final BeanPath of = BeanPath.of("'abc.dd'.ee.ff'.'");
+		final BeanPathOld of = BeanPathOld.of("'abc.dd'.ee.ff'.'");
 		Assertions.assertEquals("abc.dd", of.getPatternParts().get(0));
 		Assertions.assertEquals("ee", of.getPatternParts().get(1));
 		Assertions.assertEquals("ff.", of.getPatternParts().get(2));
@@ -145,17 +145,17 @@ public class BeanPathTest {
 	public void issue2362Test() {
 		final Map<String, Object> map = new HashMap<>();
 
-		BeanPath beanPath = BeanPath.of("list[0].name");
+		BeanPathOld beanPath = BeanPathOld.of("list[0].name");
 		beanPath.set(map, "张三");
 		Assertions.assertEquals("{list=[{name=张三}]}", map.toString());
 
 		map.clear();
-		beanPath = BeanPath.of("list[1].name");
+		beanPath = BeanPathOld.of("list[1].name");
 		beanPath.set(map, "张三");
 		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
 
 		map.clear();
-		beanPath = BeanPath.of("list[0].1.name");
+		beanPath = BeanPathOld.of("list[0].1.name");
 		beanPath.set(map, "张三");
 		Assertions.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
 	}
@@ -164,7 +164,7 @@ public class BeanPathTest {
 	public void putTest() {
 		final Map<String, Object> map = new HashMap<>();
 
-		BeanPath beanPath = BeanPath.of("list[1].name");
+		final BeanPathOld beanPath = BeanPathOld.of("list[1].name");
 		beanPath.set(map, "张三");
 		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
 	}
@@ -172,7 +172,7 @@ public class BeanPathTest {
 	@Test
 	public void putByPathTest() {
 		final Dict dict = new Dict();
-		BeanPath.of("aa.bb").set(dict, "BB");
+		BeanPathOld.of("aa.bb").set(dict, "BB");
 		Assertions.assertEquals("{aa={bb=BB}}", dict.toString());
 	}
 
@@ -180,9 +180,9 @@ public class BeanPathTest {
 	public void appendArrayTest(){
 		// issue#3008@Github
 		final MyUser myUser = new MyUser();
-		BeanPath.of("hobby[0]").set(myUser, "LOL");
-		BeanPath.of("hobby[1]").set(myUser, "KFC");
-		BeanPath.of("hobby[2]").set(myUser, "COFFE");
+		BeanPathOld.of("hobby[0]").set(myUser, "LOL");
+		BeanPathOld.of("hobby[1]").set(myUser, "KFC");
+		BeanPathOld.of("hobby[2]").set(myUser, "COFFE");
 
 		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
 	}
@@ -191,9 +191,9 @@ public class BeanPathTest {
 	public void appendArrayTest2(){
 		// issue#3008@Github
 		final MyUser2 myUser = new MyUser2();
-		BeanPath.of("myUser.hobby[0]").set(myUser, "LOL");
-		BeanPath.of("myUser.hobby[1]").set(myUser, "KFC");
-		BeanPath.of("myUser.hobby[2]").set(myUser, "COFFE");
+		BeanPathOld.of("myUser.hobby[0]").set(myUser, "LOL");
+		BeanPathOld.of("myUser.hobby[1]").set(myUser, "KFC");
+		BeanPathOld.of("myUser.hobby[2]").set(myUser, "COFFE");
 
 		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getMyUser().getHobby()));
 	}

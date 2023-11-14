@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json;
 
-import org.dromara.hutool.core.bean.BeanPath;
+import org.dromara.hutool.core.bean.BeanPathOld;
 import org.dromara.hutool.core.convert.ConvertException;
 import org.dromara.hutool.core.convert.Converter;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
@@ -64,11 +64,11 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 *
 	 * @param expression 表达式
 	 * @return 对象
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 4.0.6
 	 */
 	default Object getByPath(final String expression) {
-		return BeanPath.of(expression).get(this);
+		return BeanPathOld.of(expression).get(this);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @param value      值
 	 */
 	default void putByPath(final String expression, final Object value) {
-		BeanPath.of(expression).set(this, value);
+		BeanPathOld.of(expression).set(this, value);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public interface JSON extends Converter, Cloneable, Serializable {
 	 * @param expression 表达式
 	 * @param resultType 返回值类型
 	 * @return 对象
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 4.0.6
 	 */
 	@SuppressWarnings("unchecked")

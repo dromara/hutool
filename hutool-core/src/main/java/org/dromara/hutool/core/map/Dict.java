@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.core.map;
 
-import org.dromara.hutool.core.bean.BeanPath;
+import org.dromara.hutool.core.bean.BeanPathOld;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.collection.set.SetUtil;
@@ -423,12 +423,12 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @param <T>        目标类型
 	 * @param expression 表达式
 	 * @return 对象
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 5.7.14
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(final String expression) {
-		return (T) BeanPath.of(expression).get(this);
+		return (T) BeanPathOld.of(expression).get(this);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @param expression 表达式
 	 * @param resultType 返回值类型
 	 * @return 对象
-	 * @see BeanPath#get(Object)
+	 * @see BeanPathOld#get(Object)
 	 * @since 5.7.14
 	 */
 	public <T> T getByPath(final String expression, final Type resultType) {

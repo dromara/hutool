@@ -46,7 +46,7 @@ import java.util.*;
  * @author Looly
  * @since 4.0.6
  */
-public class BeanPath implements Serializable {
+public class BeanPathOld implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -79,8 +79,8 @@ public class BeanPath implements Serializable {
 	 * @param expression 表达式
 	 * @return BeanPath
 	 */
-	public static BeanPath of(final String expression) {
-		return new BeanPath(expression);
+	public static BeanPathOld of(final String expression) {
+		return new BeanPathOld(expression);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class BeanPath implements Serializable {
 	 *
 	 * @param expression 表达式
 	 */
-	public BeanPath(final String expression) {
+	public BeanPathOld(final String expression) {
 		init(expression);
 	}
 

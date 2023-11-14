@@ -69,7 +69,7 @@ public abstract class StrTemplate {
 	 * @param template 字符串模板
 	 * @return 单占位符 模板对象的 Builder
 	 */
-	public static SinglePlaceholderStrTemplate.Builder of(String template) {
+	public static SinglePlaceholderStrTemplate.Builder of(final String template) {
 		return SinglePlaceholderStrTemplate.builder(template);
 	}
 
@@ -80,7 +80,7 @@ public abstract class StrTemplate {
 	 * @param template 字符串模板
 	 * @return 有前缀和后缀的占位符模板对象的 Builder
 	 */
-	public static NamedPlaceholderStrTemplate.Builder ofNamed(String template) {
+	public static NamedPlaceholderStrTemplate.Builder ofNamed(final String template) {
 		return NamedPlaceholderStrTemplate.builder(template);
 	}
 
@@ -192,7 +192,7 @@ public abstract class StrTemplate {
 		int startIdx = 0, findIdx;
 		boolean hasPlaceholder = false;
 		String text;
-		for (StrTemplateSegment segment : segments) {
+		for (final StrTemplateSegment segment : segments) {
 			if (segment instanceof LiteralSegment) {
 				text = segment.getText();
 				findIdx = str.indexOf(text, startIdx);
@@ -274,7 +274,7 @@ public abstract class StrTemplate {
 		int totalTextLength = this.fixedTextTotalLength;
 
 		String valueStr;
-		for (AbstractPlaceholderSegment segment : placeholderSegments) {
+		for (final AbstractPlaceholderSegment segment : placeholderSegments) {
 			// 根据 占位符 返回 需要序列化的值
 			valueStr = valueSupplier.apply(segment);
 			if (valueStr == null) {
@@ -287,7 +287,7 @@ public abstract class StrTemplate {
 		final StringBuilder sb = new StringBuilder(totalTextLength);
 		int index = 0;
 		// 构造格式化结果字符串
-		for (StrTemplateSegment segment : segments) {
+		for (final StrTemplateSegment segment : segments) {
 			if (segment instanceof LiteralSegment) {
 				sb.append(segment.getText());
 			}
@@ -331,7 +331,7 @@ public abstract class StrTemplate {
 	protected String formatBySegment(final Function<AbstractPlaceholderSegment, ?> valueSupplier) {
 		return formatRawBySegment(segment -> {
 			// 根据 占位符 返回 需要序列化的值
-			Object value = valueSupplier.apply(segment);
+			final Object value = valueSupplier.apply(segment);
 			if (value != null) {
 				if (value instanceof String) {
 					return (String) value;
@@ -428,7 +428,7 @@ public abstract class StrTemplate {
 		int startIdx = 0, findIdx;
 		AbstractPlaceholderSegment placeholderSegment = null;
 		String text;
-		for (StrTemplateSegment segment : segments) {
+		for (final StrTemplateSegment segment : segments) {
 			if (segment instanceof LiteralSegment) {
 				text = segment.getText();
 				// 查找固定文本
@@ -616,7 +616,7 @@ public abstract class StrTemplate {
 
 		// 计算 固定文本segment 的 数量 和 文本总长度
 		int literalSegmentSize = 0, fixedTextTotalLength = 0;
-		for (StrTemplateSegment segment : this.segments) {
+		for (final StrTemplateSegment segment : this.segments) {
 			if (segment instanceof LiteralSegment) {
 				++literalSegmentSize;
 				fixedTextTotalLength += segment.getText().length();
@@ -630,7 +630,7 @@ public abstract class StrTemplate {
 			this.placeholderSegments = Collections.emptyList();
 		} else {
 			final List<AbstractPlaceholderSegment> placeholderSegments = new ArrayList<>(placeholderSegmentsSize);
-			for (StrTemplateSegment segment : segments) {
+			for (final StrTemplateSegment segment : segments) {
 				if (segment instanceof AbstractPlaceholderSegment) {
 					placeholderSegments.add((AbstractPlaceholderSegment) segment);
 				}
@@ -646,14 +646,14 @@ public abstract class StrTemplate {
 	 * @param list                 已保存的segment列表
 	 * @param newText              新的固定文本
 	 */
-	protected void addLiteralSegment(boolean isLastLiteralSegment, List<StrTemplateSegment> list, String newText) {
+	protected void addLiteralSegment(final boolean isLastLiteralSegment, final List<StrTemplateSegment> list, final String newText) {
 		if (newText.isEmpty()) {
 			return;
 		}
 		if (isLastLiteralSegment) {
 			// 最后的固定文本segment 和 新固定文本 合并为一个
-			int lastIdx = list.size() - 1;
-			StrTemplateSegment lastLiteralSegment = list.get(lastIdx);
+			final int lastIdx = list.size() - 1;
+			final StrTemplateSegment lastLiteralSegment = list.get(lastIdx);
 			list.set(lastIdx, new LiteralSegment(lastLiteralSegment.getText() + newText));
 		} else {
 			list.add(new LiteralSegment(newText));
@@ -756,7 +756,7 @@ public abstract class StrTemplate {
 		 */
 		public BuilderChild addFeatures(final Feature... appendFeatures) {
 			if (ArrayUtil.isNotEmpty(appendFeatures)) {
-				for (Feature feature : appendFeatures) {
+				for (final Feature feature : appendFeatures) {
 					this.features = feature.set(this.features);
 				}
 			}
@@ -772,7 +772,7 @@ public abstract class StrTemplate {
 		 */
 		public BuilderChild removeFeatures(final Feature... removeFeatures) {
 			if (ArrayUtil.isNotEmpty(removeFeatures)) {
-				for (Feature feature : removeFeatures) {
+				for (final Feature feature : removeFeatures) {
 					this.features = feature.clear(this.features);
 				}
 			}
@@ -978,7 +978,7 @@ public abstract class StrTemplate {
 		 * @param bitStart 同组第一个策略的掩码位数
 		 * @param bitLen   同组策略数量
 		 */
-		Feature(int bitPos, int bitStart, int bitLen) {
+		Feature(final int bitPos, final int bitStart, final int bitLen) {
 			this.mask = 1 << bitPos;
 			this.clearMask = (-1 << (bitStart + bitLen)) | ((1 << bitStart) - 1);
 		}
@@ -989,7 +989,7 @@ public abstract class StrTemplate {
 		 * @param features 外部的策略值
 		 * @return 是否为当前策略
 		 */
-		public boolean contains(int features) {
+		public boolean contains(final int features) {
 			return (features & mask) != 0;
 		}
 
@@ -999,7 +999,7 @@ public abstract class StrTemplate {
 		 * @param features 外部的策略值
 		 * @return 添加后的策略值
 		 */
-		public int set(int features) {
+		public int set(final int features) {
 			return (features & clearMask) | mask;
 		}
 
@@ -1009,7 +1009,7 @@ public abstract class StrTemplate {
 		 * @param features 外部的策略值
 		 * @return 移除后的策略值
 		 */
-		public int clear(int features) {
+		public int clear(final int features) {
 			return (features & clearMask);
 		}
 
@@ -1019,13 +1019,13 @@ public abstract class StrTemplate {
 		 * @param features 策略枚举数组
 		 * @return 总的策略值
 		 */
-		public static int of(Feature... features) {
+		public static int of(final Feature... features) {
 			if (features == null) {
 				return 0;
 			}
 
 			int value = 0;
-			for (Feature feature : features) {
+			for (final Feature feature : features) {
 				value = feature.set(value);
 			}
 

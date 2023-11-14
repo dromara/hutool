@@ -99,7 +99,7 @@ public class DynaBean implements Cloneable, Serializable {
 				return (T) CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldName));
 			} catch (final NumberFormatException e) {
 				// 非数字，see pr#254@Gitee
-				return (T) CollUtil.map((Collection<?>) bean, (beanEle) -> BeanUtil.getFieldValue(beanEle, fieldName), false);
+				return (T) CollUtil.map((Collection<?>) bean, (beanEle) -> DynaBean.of(beanEle).get(fieldName), false);
 			}
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);

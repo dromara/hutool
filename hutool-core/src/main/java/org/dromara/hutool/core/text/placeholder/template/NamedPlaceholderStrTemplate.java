@@ -76,7 +76,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 
         // 记录 下标占位符 最大的 下标值
         if (!placeholderSegments.isEmpty()) {
-            for (AbstractPlaceholderSegment segment : placeholderSegments) {
+            for (final AbstractPlaceholderSegment segment : placeholderSegments) {
                 if (segment instanceof IndexedPlaceholderSegment) {
                     this.indexedSegmentMaxIdx = Math.max(this.indexedSegmentMaxIdx, ((IndexedPlaceholderSegment) segment).getIndex());
                 }
@@ -95,7 +95,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
 
         final int openLength = prefix.length();
         final int closeLength = suffix.length();
-        List<StrTemplateSegment> segments = new ArrayList<>();
+        final List<StrTemplateSegment> segments = new ArrayList<>();
         int closeCursor = 0;
         // 开始匹配
         final char[] src = template.toCharArray();
@@ -299,7 +299,7 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
      * @param missingIndexHandler 集合中不存在下标位置时的处理器，根据 下标 返回 代替值
      * @return 格式化字符串
      */
-    public String formatIndexed(final Collection<?> collection, IntFunction<String> missingIndexHandler) {
+    public String formatIndexed(final Collection<?> collection, final IntFunction<String> missingIndexHandler) {
         if (collection == null) {
             return getTemplate();
         }
@@ -579,6 +579,9 @@ public class NamedPlaceholderStrTemplate extends StrTemplate {
         return new Builder(template);
     }
 
+	/**
+	 * 构造器
+	 */
     public static class Builder extends AbstractBuilder<Builder, NamedPlaceholderStrTemplate> {
         /**
          * 占位符前缀，默认为 {@link NamedPlaceholderStrTemplate#DEFAULT_PREFIX}
