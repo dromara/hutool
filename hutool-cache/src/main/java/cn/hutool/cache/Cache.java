@@ -93,6 +93,21 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	V get(K key, boolean isUpdateLastAccess, Func0<V> supplier);
 
 	/**
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * <p>
+	 * 调用此方法时，会检查上次调用时间，如果与当前时间差值大于超时时间返回{@code null}，否则返回值。
+	 * <p>
+	 * 每次调用此方法会可选是否刷新最后访问时间，{@code true}表示会重新计算超时时间。
+	 *
+	 * @param key                键
+	 * @param isUpdateLastAccess 是否更新最后访问时间，即重新计算超时时间。
+	 * @param timeout 自定义超时时间
+	 * @param supplier           如果不存在回调方法，用于生产值对象
+	 * @return 值对象
+	 */
+	V get(K key, boolean isUpdateLastAccess, long timeout, Func0<V> supplier);
+
+	/**
 	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回{@code null}
 	 * <p>
 	 * 调用此方法时，会检查上次调用时间，如果与当前时间差值大于超时时间返回{@code null}，否则返回值。

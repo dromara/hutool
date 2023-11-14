@@ -5,6 +5,7 @@
 # 5.8.24(2023-11-14)
 
 ### 🐣新特性
+* 【cache 】      Cache增加get重载，可自定义超时时间（issue#I8G0DL@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）

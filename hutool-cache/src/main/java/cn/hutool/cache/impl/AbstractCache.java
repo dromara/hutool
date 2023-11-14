@@ -109,6 +109,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public V get(K key, boolean isUpdateLastAccess, Func0<V> supplier) {
+		return get(key, isUpdateLastAccess, this.timeout, supplier);
+	}
+
+	@Override
+	public V get(K key, boolean isUpdateLastAccess, long timeout, Func0<V> supplier) {
 		V v = get(key, isUpdateLastAccess);
 		if (null == v && null != supplier) {
 			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
@@ -125,7 +130,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 						throw ExceptionUtil.wrapRuntime(e);
 						//throw new RuntimeException(e);
 					}
-					put(key, v, this.timeout);
+					put(key, v, timeout);
 				} else {
 					v = co.get(isUpdateLastAccess);
 				}
