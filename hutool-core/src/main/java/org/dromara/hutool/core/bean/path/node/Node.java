@@ -31,6 +31,7 @@ public interface Node {
 	 *
 	 * @param bean  bean对象
 	 * @param value 节点值
+	 * @return bean对象。如果在原Bean对象基础上设置值，返回原Bean，否则返回新的Bean
 	 */
-	void setValue(Object bean, Object value);
+	Object setValue(Object bean, Object value);
 }

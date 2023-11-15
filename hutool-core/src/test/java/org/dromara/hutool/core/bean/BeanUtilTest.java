@@ -12,10 +12,16 @@
 
 package org.dromara.hutool.core.bean;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.dromara.hutool.core.annotation.Alias;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
+import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.map.MapBuilder;
@@ -23,11 +29,6 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import org.dromara.hutool.core.util.ObjUtil;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -767,8 +768,8 @@ public class BeanUtilTest {
 
 		testPojo.setTestPojo2List(new TestPojo2[]{testPojo2, testPojo3});
 
-		final BeanPathOld beanPath = BeanPathOld.of("testPojo2List.age");
-		final Object o = beanPath.get(testPojo);
+		final BeanPath beanPath = BeanPath.of("testPojo2List.age");
+		final Object o = beanPath.getValue(testPojo);
 
 		Assertions.assertEquals(Integer.valueOf(2), ArrayUtil.get(o, 0));
 		Assertions.assertEquals(Integer.valueOf(3), ArrayUtil.get(o, 1));

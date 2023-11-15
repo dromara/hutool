@@ -65,7 +65,7 @@ public class ListNode implements Node{
 	}
 
 	@Override
-	public void setValue(final Object bean, final Object value) {
+	public Object setValue(final Object bean, final Object value) {
 		throw new UnsupportedOperationException("Can not set value to multi names.");
 	}
 

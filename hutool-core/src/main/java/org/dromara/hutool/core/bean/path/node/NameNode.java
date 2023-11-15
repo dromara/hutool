@@ -55,8 +55,8 @@ public class NameNode implements Node {
 	}
 
 	@Override
-	public void setValue(final Object bean, final Object value) {
-		DynaBean.of(bean).set(this.name, value);
+	public Object setValue(final Object bean, final Object value) {
+		return DynaBean.of(bean).set(this.name, value).getBean();
 	}
 
 	@Override

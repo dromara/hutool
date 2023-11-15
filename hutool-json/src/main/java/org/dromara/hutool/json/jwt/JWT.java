@@ -340,7 +340,7 @@ public class JWT implements RegisteredPayload<JWT> {
 	 *
 	 * <p>此方法会补充如下的header：</p>
 	 * <ul>
-	 *     <li>当用户未定义"typ"时，赋默认值："JWT"</li>
+	 *     <li>当用户未定义"typ"时，不设置默认值</li>
 	 *     <li>当用户未定义"alg"时，根据传入的{@link JWTSigner}对象类型，赋值对应ID</li>
 	 * </ul>
 	 *
@@ -349,12 +349,6 @@ public class JWT implements RegisteredPayload<JWT> {
 	 */
 	public String sign(final JWTSigner signer) {
 		Assert.notNull(signer, () -> new JWTException("No Signer provided!"));
-
-		// 检查tye信息
-		final String type = (String) this.header.getClaim(JWTHeader.TYPE);
-		if (StrUtil.isBlank(type)) {
-			this.header.setType("JWT");
-		}
 
 		// 检查头信息中是否有算法信息
 		final String algorithm = (String) this.header.getClaim(JWTHeader.ALGORITHM);

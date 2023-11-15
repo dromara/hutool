@@ -12,8 +12,11 @@
 
 package org.dromara.hutool.core.bean.path;
 
+import lombok.Data;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.lang.test.bean.ExamInfoDict;
 import org.dromara.hutool.core.lang.test.bean.UserInfoDict;
+import org.dromara.hutool.core.map.Dict;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,5 +115,53 @@ public class BeanPathGetOrSetValueTest {
 		beanPath = BeanPath.of("list[0].1.name");
 		beanPath.setValue(map, "张三");
 		Assertions.assertEquals("{list=[[null, {name=张三}]]}", map.toString());
+	}
+
+	@Test
+	public void putTest() {
+		final Map<String, Object> map = new HashMap<>();
+
+		final BeanPath beanPath = BeanPath.of("list[1].name");
+		beanPath.setValue(map, "张三");
+		Assertions.assertEquals("{list=[null, {name=张三}]}", map.toString());
+	}
+
+	@Test
+	public void putByPathTest() {
+		final Dict dict = new Dict();
+		BeanPath.of("aa.bb").setValue(dict, "BB");
+		Assertions.assertEquals("{aa={bb=BB}}", dict.toString());
+	}
+
+	@Test
+	public void appendArrayTest(){
+		// issue#3008@Github
+		final MyUser myUser = new MyUser();
+		BeanPath.of("hobby[0]").setValue(myUser, "LOL");
+		BeanPath.of("hobby[1]").setValue(myUser, "KFC");
+		BeanPath.of("hobby[2]").setValue(myUser, "COFFE");
+
+		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getHobby()));
+	}
+
+	@Test
+	public void appendArrayTest2(){
+		// issue#3008@Github
+		final MyUser2 myUser = new MyUser2();
+		BeanPath.of("myUser.hobby[0]").setValue(myUser, "LOL");
+		BeanPath.of("myUser.hobby[1]").setValue(myUser, "KFC");
+		BeanPath.of("myUser.hobby[2]").setValue(myUser, "COFFE");
+
+		Assertions.assertEquals("[LOL, KFC, COFFE]", ArrayUtil.toString(myUser.getMyUser().getHobby()));
+	}
+
+	@Data
+	static class MyUser {
+		private String[] hobby;
+	}
+
+	@Data
+	static class MyUser2 {
+		private MyUser myUser;
 	}
 }

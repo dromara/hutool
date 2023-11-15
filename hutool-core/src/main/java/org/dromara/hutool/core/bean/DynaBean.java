@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.bean;
 
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.convert.Convert;
@@ -37,7 +38,7 @@ public class DynaBean implements Cloneable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final Class<?> beanClass;
-	private final Object bean;
+	private Object bean;
 
 	/**
 	 * 创建一个DynaBean
@@ -101,6 +102,13 @@ public class DynaBean implements Cloneable, Serializable {
 				// 非数字，see pr#254@Gitee
 				return (T) CollUtil.map((Collection<?>) bean, (beanEle) -> DynaBean.of(beanEle).get(fieldName), false);
 			}
+		} else if (ArrayUtil.isArray(bean)) {
+			try {
+				return ArrayUtil.get(bean, Integer.parseInt(fieldName));
+			} catch (final NumberFormatException e) {
+				// 非数字，see pr#254@Gitee
+				return (T) ArrayUtil.map(bean, Object.class, (beanEle) -> DynaBean.of(beanEle).get(fieldName));
+			}
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
@@ -148,21 +156,27 @@ public class DynaBean implements Cloneable, Serializable {
 	 *
 	 * @param fieldName 字段名
 	 * @param value     字段值
+	 * @return this;
 	 * @throws BeanException 反射获取属性值或字段值导致的异常
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void set(final String fieldName, final Object value) throws BeanException {
+	public DynaBean set(final String fieldName, final Object value) throws BeanException {
 		if (Map.class.isAssignableFrom(beanClass)) {
 			((Map) bean).put(fieldName, value);
 		} else if (bean instanceof List) {
 			ListUtil.setOrPadding((List) bean, Convert.toInt(fieldName), value);
+		} else if (ArrayUtil.isArray(bean)) {
+			// issue#3008，追加产生新数组，此处返回新数组
+			this.bean = ArrayUtil.setOrPadding(bean, Convert.toInt(fieldName), value);
 		} else {
 			final PropDesc prop = BeanUtil.getBeanDesc(beanClass).getProp(fieldName);
 			if (null == prop) {
 				throw new BeanException("No public field or set method for '{}'", fieldName);
 			}
-			prop.setValue(bean, value);
+
+			prop.setValue(bean, value, false, false);
 		}
+		return this;
 	}
 
 	/**

@@ -16,6 +16,7 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.copier.BeanCopier;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
 import org.dromara.hutool.core.bean.copier.ValueProvider;
+import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
@@ -67,7 +68,7 @@ public class BeanUtil {
 	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isReadableBean(final Class<?> clazz) {
-		if(null == clazz){
+		if (null == clazz) {
 			return false;
 		}
 		return hasGetter(clazz) || hasPublicField(clazz);
@@ -87,7 +88,7 @@ public class BeanUtil {
 	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isWritableBean(final Class<?> clazz) {
-		if(null == clazz){
+		if (null == clazz) {
 			return false;
 		}
 		return hasSetter(clazz) || hasPublicField(clazz);
@@ -244,7 +245,7 @@ public class BeanUtil {
 	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(final Class<?> clazz, final boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1f)
-				: new HashMap<>(propertyDescriptors.length, 1);
+			: new HashMap<>(propertyDescriptors.length, 1);
 
 		for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);
@@ -355,7 +356,7 @@ public class BeanUtil {
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值，bean为{@code null}或者express为空，返回{@code null}
-	 * @see BeanPathOld#get(Object)
+	 * @see BeanPath#getValue(Object)
 	 * @since 3.0.7
 	 */
 	@SuppressWarnings("unchecked")
@@ -363,7 +364,7 @@ public class BeanUtil {
 		if (null == bean || StrUtil.isBlank(expression)) {
 			return null;
 		}
-		return (T) BeanPathOld.of(expression).get(bean);
+		return (T) BeanPath.of(expression).getValue(bean);
 	}
 
 	/**
@@ -372,11 +373,11 @@ public class BeanUtil {
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @param value      属性值
-	 * @see BeanPathOld#get(Object)
+	 * @see BeanPath#setValue(Object, Object)
 	 * @since 4.0.6
 	 */
 	public static void setProperty(final Object bean, final String expression, final Object value) {
-		BeanPathOld.of(expression).set(bean, value);
+		BeanPath.of(expression).setValue(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
@@ -625,9 +626,9 @@ public class BeanUtil {
 		}
 
 		return BeanCopier.of(bean, targetMap,
-				CopyOptions.of()
-						.setIgnoreNullValue(ignoreNullValue)
-						.setFieldEditor(keyEditor)
+			CopyOptions.of()
+				.setIgnoreNullValue(ignoreNullValue)
+				.setFieldEditor(keyEditor)
 		).copy();
 	}
 
@@ -673,7 +674,7 @@ public class BeanUtil {
 		if (null == source) {
 			return null;
 		}
-		if(RecordUtil.isRecord(tClass)){
+		if (RecordUtil.isRecord(tClass)) {
 			// issue#I7EO3U
 			// 转换record时，ignoreProperties无效
 			return (T) RecordConverter.INSTANCE.convert(tClass, source);
@@ -741,7 +742,7 @@ public class BeanUtil {
 		}
 
 		// issue#3091
-		if(ClassUtil.isBasicType(targetType) || String.class == targetType){
+		if (ClassUtil.isBasicType(targetType) || String.class == targetType) {
 			return Convert.toList(targetType, collection);
 		}
 
@@ -864,7 +865,7 @@ public class BeanUtil {
 	 * @since 5.0.7
 	 */
 	public static boolean isNotEmpty(final Object bean, final String... ignoreFieldNames) {
-		if(null == bean){
+		if (null == bean) {
 			return false;
 		}
 
@@ -887,7 +888,7 @@ public class BeanUtil {
 	public static boolean hasNullField(final Object bean, final String... ignoreFieldNames) {
 		return checkBean(bean, field ->
 			(!ArrayUtil.contains(ignoreFieldNames, field.getName()))
-			&& null == FieldUtil.getFieldValue(bean, field)
+				&& null == FieldUtil.getFieldValue(bean, field)
 		);
 	}
 
@@ -913,11 +914,11 @@ public class BeanUtil {
 	 * 断言为{@code true} 时，返回{@code true}并不再检查后续字段；<br>
 	 * 断言为{@code false}时，继续检查后续字段
 	 *
-	 * @param bean Bean
+	 * @param bean      Bean
 	 * @param predicate 断言
 	 * @return 是否触发断言为真
 	 */
-	public static boolean checkBean(final Object bean, final Predicate<Field> predicate){
+	public static boolean checkBean(final Object bean, final Predicate<Field> predicate) {
 		if (null == bean) {
 			return true;
 		}

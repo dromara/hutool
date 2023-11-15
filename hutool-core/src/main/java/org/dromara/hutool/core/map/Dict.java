@@ -12,26 +12,21 @@
 
 package org.dromara.hutool.core.map;
 
-import org.dromara.hutool.core.bean.BeanPathOld;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.bean.copier.CopyOptions;
+import org.dromara.hutool.core.bean.path.BeanPath;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.CloneException;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.LambdaInfo;
 import org.dromara.hutool.core.func.LambdaUtil;
 import org.dromara.hutool.core.func.SerFunction;
 import org.dromara.hutool.core.func.SerSupplier;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.getter.TypeGetter;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 字典对象，扩充了LinkedHashMap中的方法
@@ -423,12 +418,12 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @param <T>        目标类型
 	 * @param expression 表达式
 	 * @return 对象
-	 * @see BeanPathOld#get(Object)
+	 * @see BeanPath#getValue(Object)
 	 * @since 5.7.14
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(final String expression) {
-		return (T) BeanPathOld.of(expression).get(this);
+		return (T) BeanPath.of(expression).getValue(this);
 	}
 
 	/**
@@ -453,7 +448,7 @@ public class Dict extends CustomKeyMap<String, Object> implements TypeGetter<Str
 	 * @param expression 表达式
 	 * @param resultType 返回值类型
 	 * @return 对象
-	 * @see BeanPathOld#get(Object)
+	 * @see BeanPath#getValue(Object)
 	 * @since 5.7.14
 	 */
 	public <T> T getByPath(final String expression, final Type resultType) {

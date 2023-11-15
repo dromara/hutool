@@ -171,23 +171,29 @@ public class BeanPath implements Iterator<BeanPath> {
 	 *
 	 * @param bean  Bean对象
 	 * @param value 设置的值
+	 * @return bean。如果在原Bean对象基础上设置值，返回原Bean，否则返回新的Bean
 	 */
-	public void setValue(Object bean, final Object value) {
-		Object parentBean;
-		BeanPath beanPath = this;
-		while (beanPath.hasNext()) {
-			parentBean = bean;
-			bean = beanPath.node.getValue(bean);
-			if (null == bean) {
-				final BeanPath child = beanPath.next();
-				bean = isListNode(child.node) ? new ArrayList<>() : new HashMap<>();
-				beanPath.node.setValue(parentBean, bean);
-				// 如果自定义put方法修改了value，此处二次get避免丢失
-				bean = beanPath.node.getValue(parentBean);
-			}
-			beanPath = beanPath.next();
+	public Object setValue(final Object bean, final Object value) {
+		if (!hasNext()) {
+			// 根节点，直接赋值
+			return this.node.setValue(bean, value);
 		}
-		beanPath.node.setValue(bean, value);
+
+		final BeanPath childBeanPath = next();
+		Object subBean = this.node.getValue(bean);
+		if (null == subBean) {
+			subBean = isListNode(childBeanPath.node) ? new ArrayList<>() : new HashMap<>();
+			this.node.setValue(bean, subBean);
+			// 如果自定义put方法修改了value，返回修改后的value，避免值丢失
+			subBean = this.node.getValue(bean);
+		}
+		// 递归逐层查找子节点，赋值
+		final Object newSubBean = childBeanPath.setValue(subBean, value);
+		if(newSubBean != subBean){
+			//对于数组对象，set新值后，会返回新的数组，此时将新对象再加入父bean中，覆盖旧数组
+			this.node.setValue(bean, newSubBean);
+		}
+		return bean;
 	}
 
 	@Override

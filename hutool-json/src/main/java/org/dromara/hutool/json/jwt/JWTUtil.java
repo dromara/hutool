@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.json.jwt;
 
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.jwt.signers.JWTSigner;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public class JWTUtil {
 	 * @return JWT Token
 	 */
 	public static String createToken(final Map<String, Object> payload, final byte[] key) {
-		return createToken(null, payload, key);
+		return createToken(MapUtil.of(JWTHeader.TYPE, "JWT"), payload, key);
 	}
 
 	/**

@@ -30,7 +30,8 @@ public class EmptyNode implements Node {
 	}
 
 	@Override
-	public void setValue(final Object bean, final Object value) {
+	public Object setValue(final Object bean, final Object value) {
 		// do nothing
+		return bean;
 	}
 }
