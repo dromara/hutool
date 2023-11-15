@@ -12,7 +12,6 @@
 
 package org.dromara.hutool.core.bean.path;
 
-import org.dromara.hutool.core.bean.BeanPathOld;
 import org.dromara.hutool.core.lang.test.bean.ExamInfoDict;
 import org.dromara.hutool.core.lang.test.bean.UserInfoDict;
 import org.junit.jupiter.api.Assertions;

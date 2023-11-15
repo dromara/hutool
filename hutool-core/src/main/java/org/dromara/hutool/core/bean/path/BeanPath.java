@@ -16,7 +16,6 @@ import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.bean.path.node.NameNode;
 import org.dromara.hutool.core.bean.path.node.Node;
 import org.dromara.hutool.core.bean.path.node.NodeFactory;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -45,7 +44,7 @@ import java.util.Iterator;
  * @author Looly
  * @since 6.0.0
  */
-public class BeanPath implements Node, Iterator<BeanPath> {
+public class BeanPath implements Iterator<BeanPath> {
 
 	/**
 	 * 表达式边界符号数组
@@ -153,35 +152,41 @@ public class BeanPath implements Node, Iterator<BeanPath> {
 		return new BeanPath(this.child);
 	}
 
-	@Override
+	/**
+	 * 获取路径对应的值
+	 *
+	 * @param bean Bean对象
+	 * @return 路径对应的值
+	 */
 	public Object getValue(final Object bean) {
-		Object value = this.node.getValue(bean);
-		if (hasNext()) {
-			value = next().getValue(value);
+		final Object value = this.node.getValue(bean);
+		if (!hasNext()) {
+			return value;
 		}
-		return value;
+		return next().getValue(value);
 	}
 
-	@Override
+	/**
+	 * 设置路径对应的值，如果路径节点为空，自动创建之
+	 *
+	 * @param bean  Bean对象
+	 * @param value 设置的值
+	 */
 	public void setValue(Object bean, final Object value) {
 		Object parentBean;
 		BeanPath beanPath = this;
 		while (beanPath.hasNext()) {
 			parentBean = bean;
 			bean = beanPath.node.getValue(bean);
-			beanPath = beanPath.next();
-			if(null == bean && beanPath.hasNext()){
-				final Node node = beanPath.node;
-				if(node instanceof NameNode){
-					bean = ((NameNode) node).isNumber() ? new ArrayList<>() : new HashMap<>();
-				}else{
-					throw new IllegalArgumentException("Invalid node to create sub bean");
-				}
+			if (null == bean) {
+				final BeanPath child = beanPath.next();
+				bean = isListNode(child.node) ? new ArrayList<>() : new HashMap<>();
 				beanPath.node.setValue(parentBean, bean);
+				// 如果自定义put方法修改了value，此处二次get避免丢失
+				bean = beanPath.node.getValue(parentBean);
 			}
+			beanPath = beanPath.next();
 		}
-
-		Console.log(beanPath, bean, value);
 		beanPath.node.setValue(bean, value);
 	}
 
@@ -191,5 +196,18 @@ public class BeanPath implements Node, Iterator<BeanPath> {
 			"node=" + node +
 			", child='" + child + '\'' +
 			'}';
+	}
+
+	/**
+	 * 子节点值是否为列表
+	 *
+	 * @param node 节点
+	 * @return 是否为列表
+	 */
+	private static boolean isListNode(final Node node) {
+		if (node instanceof NameNode) {
+			return ((NameNode) node).isNumber();
+		}
+		return false;
 	}
 }
