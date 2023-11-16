@@ -68,7 +68,15 @@ public class ReflectUtil {
 	 * @since 4.6.8
 	 */
 	public static <T extends AccessibleObject> T setAccessible(final T accessibleObject) throws SecurityException {
-		if (null != accessibleObject && !accessibleObject.isAccessible()) {
+		if(accessibleObject ==null){
+			return accessibleObject ;
+		}else if(accessibleObject instanceof Member ){
+			Member method = (Member) accessibleObject;
+			if ((!Modifier.isPublic(method.getModifiers()) ||
+					!Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !accessibleObject.isAccessible()){
+				accessibleObject.setAccessible(true);
+			}
+		}else if(false == accessibleObject.isAccessible()){
 			accessibleObject.setAccessible(true);
 		}
 		return accessibleObject;
