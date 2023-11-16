@@ -105,7 +105,7 @@ public class ByteString {
      * 将 {@code text} 编码为 UTF-8 字节序列，并将结果作为 {@code ByteString} 返回。
      *
      * @param text 字符串
-     * @return
+     * @return  ByteString
      */
 
 
@@ -115,10 +115,18 @@ public class ByteString {
 
     }
 
-    /**
-     * 如果两者的内容都匹配，则返回 true。
-     */
-    public static boolean equals( ByteString bs, ByteString other, boolean checkHash ) {
+
+
+	/**
+	 *
+	 * 如果两者的内容都匹配，则返回 true。
+	 *
+	 * @param bs  ByteString
+	 * @param other  ByteString
+	 * @param checkHash  checkHash
+	 * @return  是否相等
+	 */
+	public static boolean equals( ByteString bs, ByteString other, boolean checkHash ) {
         final int size = bs.bytes.length;
         if (size != other.bytes.length) {
             return false;
@@ -144,8 +152,12 @@ public class ByteString {
     }
 
 
-
-    public static ByteString bytesDefaultValue( String bytes ) {
+	/**
+	 *
+	 * @param bytes  字符串
+	 * @return  返回ByteString
+	 */
+	public static ByteString bytesDefaultValue( String bytes ) {
         return new ByteString(byteArrayDefaultValue(bytes));
     }
 
@@ -248,16 +260,20 @@ public class ByteString {
 
     /**
      * 使用相同的支持字节数组构造一个新的只读 {@code java.nio.ByteBuffer}。
+	 *
+	 *
      */
     public ByteBuffer asReadOnlyByteBuffer() {
         final ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
         return byteBuffer.asReadOnlyBuffer();
     }
 
-    /**
-     * 通过将字节解码为 UTF-8 构造一个新的 {@code String}。
-     */
-    public String toStringUtf8() {
+
+	/**
+	 * 通过将字节解码为 UTF-8 构造一个新的 {@code String}。
+	 * @return  新的字符串
+	 */
+	public String toStringUtf8() {
 
         return StrUtil.utf8Str(bytes);
     }
