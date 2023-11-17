@@ -4,9 +4,11 @@ import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -585,8 +587,8 @@ public class ObjectUtil {
 	 * 注意！！！ 此方法不会检查反序列化安全，可能存在反序列化漏洞风险！！！
 	 * </p>
 	 *
-	 * @param <T>   对象类型
-	 * @param bytes 反序列化的字节码
+	 * @param <T>           对象类型
+	 * @param bytes         反序列化的字节码
 	 * @param acceptClasses 白名单的类
 	 * @return 反序列化后的对象
 	 */
@@ -749,5 +751,145 @@ public class ObjectUtil {
 	 */
 	public static boolean isAllNotEmpty(Object... objs) {
 		return ArrayUtil.isAllNotEmpty(objs);
+	}
+
+	/**
+	 * 判断对象是否为 {@code null}，若为 {@code null} 则抛出 ValidateException 异常
+	 * <pre>
+	 * 默认异常为 ValidateException
+	 * 异常信息为 Target Must Be Not Null
+	 * </pre>
+	 *
+	 * @param object 被判断的对象
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfNull(Object object) {
+		throwIfNull(object, "Target Must Be Not Null");
+	}
+
+	/**
+	 * 判断对象是否为 {@code null}，若为 {@code null} 则抛出 ValidateException 异常
+	 *
+	 * @param object   被判断的对象
+	 * @param throwMsg 抛出异常的信息
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfNull(Object object, String throwMsg) {
+		throwIfNull(object, throwMsg, ValidateException.class);
+	}
+
+	/**
+	 * 判断对象是否为 {@code null}，若为 {@code null} 则抛出自定义运行时异常
+	 * <pre>
+	 * 默认异常为 ValidateException
+	 * </pre>
+	 *
+	 * @param object         被判断的对象
+	 * @param throwMsg       异常的信息
+	 * @param exceptionClass 异常类型， 需要此类继承运行时异常，并且提供字符串构造才能将 throwMsg 抛出
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfNull(Object object, String throwMsg, Class<? extends RuntimeException> exceptionClass) {
+		if (isNull(object)) {
+			try {
+				// 通过反射创建异常实例
+				try {
+					throw exceptionClass.getDeclaredConstructor(String.class).newInstance(throwMsg);
+				} catch (NoSuchMethodException e) {
+					throw exceptionClass.newInstance();
+				}
+			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+				// 处理异常实例化过程中的异常
+				throw new ValidateException(throwMsg);
+			}
+		}
+	}
+
+	/**
+	 * 判断对象是否为 {@code null}，若为 {@code null} 则抛出异常（由 exceptionSupplier 提供）
+	 *
+	 * @param object            被判断的对象
+	 * @param exceptionSupplier 运行时异常提供者
+	 * @param <X>               异常类型
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static <X extends RuntimeException> void throwIfNull(Object object, Supplier<? extends X> exceptionSupplier) throws X {
+		if (isNull(object)) {
+			throw exceptionSupplier.get();
+		}
+	}
+
+	/**
+	 * 判断对象是否为空，若为空则抛出 ValidateException 异常
+	 * <pre>
+	 * 默认异常为 ValidateException
+	 * 异常信息为 Target Must Be Not Empty
+	 * </pre>
+	 *
+	 * @param object 被判断的对象
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfEmpty(Object object) {
+		throwIfEmpty(object, "Target Must Be Not Empty");
+	}
+
+	/**
+	 * 判断对象是否为空，若为空则抛出 ValidateException 异常
+	 *
+	 * @param object   被判断的对象
+	 * @param throwMsg 抛出异常的信息
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfEmpty(Object object, String throwMsg) {
+		throwIfEmpty(object, throwMsg, ValidateException.class);
+	}
+
+	/**
+	 * 判断对象是否为空，若为空则抛出自定义运行时异常
+	 * <pre>
+	 * 默认异常为 ValidateException
+	 * </pre>
+	 *
+	 * @param object         被判断的对象
+	 * @param throwMsg       异常的信息
+	 * @param exceptionClass 异常类型， 需要此类继承运行时异常，并且提供字符串构造才能将 throwMsg 抛出
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static void throwIfEmpty(Object object, String throwMsg, Class<? extends RuntimeException> exceptionClass) {
+		if (isEmpty(object)) {
+			try {
+				// 通过反射创建异常实例
+				try {
+					throw exceptionClass.getDeclaredConstructor(String.class).newInstance(throwMsg);
+				} catch (NoSuchMethodException e) {
+					throw exceptionClass.newInstance();
+				}
+			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+				// 处理异常实例化过程中的异常
+				throw new ValidateException(throwMsg);
+			}
+		}
+	}
+
+	/**
+	 * 判断对象是否为空，若为空则抛出异常（由 exceptionSupplier 提供）
+	 *
+	 * @param object            被判断的对象
+	 * @param exceptionSupplier 运行时异常提供者
+	 * @param <X>               异常类型
+	 * @author XUEW
+	 * @since 5.8.17
+	 */
+	public static <X extends RuntimeException> void throwIfEmpty(Object object, Supplier<? extends X> exceptionSupplier) throws X {
+		if (isEmpty(object)) {
+			throw exceptionSupplier.get();
+		}
 	}
 }

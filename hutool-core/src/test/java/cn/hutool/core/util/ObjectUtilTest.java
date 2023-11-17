@@ -68,10 +68,10 @@ public class ObjectUtilTest {
 		final String nullValue = null;
 		final String dateStr = "2020-10-23 15:12:30";
 		Instant result1 = ObjectUtil.defaultIfNull(dateStr,
-				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+			(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result1);
 		Instant result2 = ObjectUtil.defaultIfNull(nullValue,
-				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+			(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result2);
 
 		Obj obj = new Obj();
@@ -88,10 +88,10 @@ public class ObjectUtilTest {
 		final String emptyValue = "";
 		final String dateStr = "2020-10-23 15:12:30";
 		Instant result1 = ObjectUtil.defaultIfEmpty(emptyValue,
-				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+			(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result1);
 		Instant result2 = ObjectUtil.defaultIfEmpty(dateStr,
-				(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
+			(source) -> DateUtil.parse(source, DatePattern.NORM_DATETIME_PATTERN).toInstant(), Instant.now());
 		Assert.assertNotNull(result2);
 	}
 
@@ -107,5 +107,38 @@ public class ObjectUtilTest {
 	public void isNotNullTest() {
 		String a = null;
 		Assert.assertFalse(ObjectUtil.isNotNull(a));
+	}
+
+	@Test
+	public void throwIfNullTest() {
+		String name = null;
+//	    ObjectUtil.throwIfNull(name);
+//	    ObjectUtil.throwIfNull(name, "名称不可为 null");
+//		ObjectUtil.throwIfNull(name, "名称不可为 null", NewRuntimeException.class);
+//		ObjectUtil.throwIfNull(name, () -> new NewRuntimeException("名称不可为 null"));
+	}
+
+	@Test
+	public void throwIfEmptyTest() {
+		String name = "";
+//	    ObjectUtil.throwIfEmpty(name);
+//	    ObjectUtil.throwIfEmpty(name, "名称不可为空");
+//		ObjectUtil.throwIfEmpty(name, "名称不可为空", NewRuntimeException.class);
+//		ObjectUtil.throwIfEmpty(name, () -> new NewRuntimeException("名称不可为空"));
+	}
+
+	/**
+	 * 自定义运行时异常用于 throwIfNull、throwIfEmpty 测试
+	 *
+	 * @author XUEW
+	 */
+	public static class NewRuntimeException extends RuntimeException {
+
+		public NewRuntimeException() {
+		}
+
+		public NewRuntimeException(String msg) {
+			super(msg);
+		}
 	}
 }
