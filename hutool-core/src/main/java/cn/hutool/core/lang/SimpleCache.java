@@ -97,27 +97,36 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 */
 	public V get(K key, Predicate<V> validPredicate, Func0<V> supplier) {
 		V v = get(key);
-		if((null != validPredicate && null != v && false == validPredicate.test(v))){
+		if ((null != validPredicate && null != v && !validPredicate.test(v))) {
 			v = null;
 		}
 		if (null == v && null != supplier) {
-			//每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
-			final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
-			keyLock.lock();
-			try {
-				// 双重检查，防止在竞争锁的过程中已经有其它线程写入
-				v = get(key);
-				if (null == v || (null != validPredicate && false == validPredicate.test(v))) {
-					try {
-						v = supplier.call();
-					} catch (Exception e) {
-						throw ExceptionUtil.wrapRuntime(e);
+			for (;;) {
+				// 每个key单独获取一把锁，降低锁的粒度提高并发能力，see pr#1385@Github
+				final Lock keyLock = keyLockMap.computeIfAbsent(key, k -> new ReentrantLock());
+				keyLock.lock();
+				if (keyLock != keyLockMap.get(key)) {
+					keyLock.unlock();
+				} else {
+					synchronized (keyLock) {
+						try {
+							// 双重检查，防止在竞争锁的过程中已经有其它线程写入
+							v = get(key);
+							if (null == v || (null != validPredicate && !validPredicate.test(v))) {
+								try {
+									v = supplier.call();
+								} catch (Exception e) {
+									throw ExceptionUtil.wrapRuntime(e);
+								}
+								put(key, v);
+							}
+						} finally {
+							keyLockMap.remove(key);
+							keyLock.unlock();
+						}
 					}
-					put(key, v);
+					break;
 				}
-			} finally {
-				keyLock.unlock();
-				keyLockMap.remove(key);
 			}
 		}
 
