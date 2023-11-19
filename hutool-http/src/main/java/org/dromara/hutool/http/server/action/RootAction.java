@@ -85,11 +85,13 @@ public class RootAction implements Action {
 					file = FileUtil.file(file, indexFileName);
 					if (file.exists() && file.isFile()) {
 						response.write(file);
+						return;
 					}
 				}
 			} else{
 				final String name = request.getParam("name");
 				response.write(file, name);
+				return;
 			}
 		}
 
