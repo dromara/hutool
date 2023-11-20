@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.db.ds.pooled;
 
+import org.dromara.hutool.core.func.Wrapper;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -36,7 +38,7 @@ import java.util.concurrent.Executor;
  * @author Looly
  *
  */
-public abstract class ConnectionWraper implements Connection{
+public abstract class ConnectionWrapper implements Connection, Wrapper<Connection> {
 
 	protected Connection raw;//真正的连接
 
@@ -300,9 +302,7 @@ public abstract class ConnectionWraper implements Connection{
 		return raw.getNetworkTimeout();
 	}
 
-	/**
-	 * @return 实际的连接对象
-	 */
+	@Override
 	public Connection getRaw(){
 		return this.raw;
 	}

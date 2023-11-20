@@ -26,7 +26,7 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class PooledConnection extends ConnectionWraper {
+public class PooledConnection extends ConnectionWrapper {
 
 	private final PooledDataSource ds;
 	private boolean isClosed;
