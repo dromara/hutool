@@ -14,6 +14,7 @@ package org.dromara.hutool.core.cache;
 
 import org.dromara.hutool.core.collection.iter.TransIter;
 import org.dromara.hutool.core.func.SerSupplier;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.mutable.Mutable;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
@@ -156,6 +157,7 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
 	 * @return 值
 	 */
 	public V put(final K key, final V value) {
+		Assert.notNull(value, "'value' must not be null");
 		// 独占写锁
 		lock.writeLock().lock();
 		try {
