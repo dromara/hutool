@@ -176,6 +176,9 @@ public class DialectFactory implements DriverNamePool {
 		} else if (nameContainsProductInfo.contains("sybase")) {
 			// Sybase
 			driver = DRIVER_SYBASE;
+		} else if (nameContainsProductInfo.contains("opengauss")) {
+			// OpenGauss
+			driver = DRIVER_OPENGAUSS;
 		}
 
 		return driver;

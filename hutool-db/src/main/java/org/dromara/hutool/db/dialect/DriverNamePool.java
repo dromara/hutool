@@ -120,5 +120,9 @@ public interface DriverNamePool {
 	 * JDBC 驱动 Sybase
 	 */
 	String DRIVER_SYBASE = "com.sybase.jdbc4.jdbc.SybDriver";
+	/**
+	 * JDBC 驱动 OpenGauss
+	 */
+	String DRIVER_OPENGAUSS = "org.opengauss.Driver";
 
 }
