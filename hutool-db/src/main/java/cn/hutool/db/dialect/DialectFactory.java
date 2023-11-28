@@ -161,9 +161,12 @@ public class DialectFactory implements DriverNamePool {
 		} else if (nameContainsProductInfo.contains("sybase")) {
 			// Sybase
 			driver = DRIVER_SYBASE;
-		}else if (nameContainsProductInfo.contains("mariadb")) {
+		} else if (nameContainsProductInfo.contains("mariadb")) {
 			// mariadb
 			driver = DRIVER_MARIADB;
+		} else if (nameContainsProductInfo.contains("opengauss")) {
+			// OpenGauss
+			driver = DRIVER_OPENGAUSS;
 		}
 
 		return driver;
