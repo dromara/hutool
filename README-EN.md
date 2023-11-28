@@ -47,10 +47,6 @@
 -------------------------------------------------------------------------------
 
 <p align="center">
-	特别赞助：<br>
-	<a href="https://vue.misboot.com/#/user/Login?from=hutool4">
-		<img style="width: 45%" alt="" src="https://plus.hutool.cn/images/ad/misboot/misboot-banner.jpg"/>
-	</a>
 	<a href="#"><img style="width: 45%" alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
 </p>
 
