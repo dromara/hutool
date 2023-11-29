@@ -3268,7 +3268,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends CharSequence> T firstNonEmpty(final T... strs) {
-		return ArrayUtil.firstMatch(StrUtil::isNotEmpty, strs);
+		return ArrayUtil.firstMatch(CharSequenceUtil::isNotEmpty, strs);
 	}
 
 	/**
@@ -3282,7 +3282,7 @@ public class CharSequenceUtil extends StrValidator {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends CharSequence> T firstNonBlank(final T... strs) {
-		return ArrayUtil.firstMatch(StrUtil::isNotBlank, strs);
+		return ArrayUtil.firstMatch(CharSequenceUtil::isNotBlank, strs);
 	}
 	// endregion
 
