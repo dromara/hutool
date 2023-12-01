@@ -109,7 +109,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 ## 📝Doc
 
-[📘Chinese documentation](https://www.hutool.cn/docs/)
+[📘Chinese documentation](https://doc.hutool.cn/pages/index/)
 
 [📘Chinese back-up documentation](https://plus.hutool.cn/docs/#/)
 

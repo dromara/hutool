@@ -102,7 +102,7 @@
 
 ## 📝文档
 
-[📘中文文档](https://www.hutool.cn/docs/)
+[📘中文文档](https://doc.hutool.cn/pages/index/)
 
 [📘中文备用文档](https://plus.hutool.cn/docs/#/)
 
