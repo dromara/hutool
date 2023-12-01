@@ -40,7 +40,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 时间工具类
+ * 日期时间工具类
  *
  * @author xiaoleilu
  * @see TimeUtil java8日志工具类
