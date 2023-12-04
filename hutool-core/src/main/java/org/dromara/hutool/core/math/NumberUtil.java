@@ -358,19 +358,6 @@ public class NumberUtil extends NumberValidator {
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
 	 * 例如保留2位小数：123.456789 =》 123.46
 	 *
-	 * @param numberStr 数字值的字符串表现形式
-	 * @param scale     保留小数位数
-	 * @return 新值
-	 */
-	public static BigDecimal round(final String numberStr, final int scale) {
-		return round(numberStr, scale, RoundingMode.HALF_UP);
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 =》 123.46
-	 *
 	 * @param number 数字值
 	 * @param scale  保留小数位数
 	 * @return 新值
@@ -391,7 +378,7 @@ public class NumberUtil extends NumberValidator {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(final String numberStr, final int scale) {
-		return round(numberStr, scale).toPlainString();
+		return roundStr(numberStr, scale, RoundingMode.HALF_UP);
 	}
 
 	/**
@@ -404,7 +391,7 @@ public class NumberUtil extends NumberValidator {
 	 * @return 新值
 	 */
 	public static BigDecimal round(final double v, final int scale, final RoundingMode roundingMode) {
-		return round(Double.toString(v), scale, roundingMode);
+		return round(toBigDecimal(v), scale, roundingMode);
 	}
 
 	/**
@@ -419,23 +406,6 @@ public class NumberUtil extends NumberValidator {
 	 */
 	public static String roundStr(final double v, final int scale, final RoundingMode roundingMode) {
 		return round(v, scale, roundingMode).toPlainString();
-	}
-
-	/**
-	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 =》 123.4567
-	 *
-	 * @param numberStr    数字值的字符串表现形式
-	 * @param scale        保留小数位数，如果传入小于0，则默认0
-	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
-	 * @return 新值
-	 */
-	public static BigDecimal round(final String numberStr, int scale, final RoundingMode roundingMode) {
-		Assert.notBlank(numberStr);
-		if (scale < 0) {
-			scale = 0;
-		}
-		return round(toBigDecimal(numberStr), scale, roundingMode);
 	}
 
 	/**
@@ -472,7 +442,7 @@ public class NumberUtil extends NumberValidator {
 	 * @since 3.2.2
 	 */
 	public static String roundStr(final String numberStr, final int scale, final RoundingMode roundingMode) {
-		return round(numberStr, scale, roundingMode).toPlainString();
+		return round(toBigDecimal(numberStr), scale, roundingMode).toPlainString();
 	}
 
 	/**
