@@ -182,10 +182,35 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.3.3
 	 */
 	public static String getProperty(String key) {
+		return getProperty(key, null);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param key 配置项key
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static String getProperty(String key, String defaultValue) {
+		return getProperty(key, String.class, defaultValue);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param key 配置项key
+	 * @param targetType 配置项类型
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static <T> T getProperty(String key, Class<T> targetType, T defaultValue) {
 		if (null == applicationContext) {
 			return null;
 		}
-		return applicationContext.getEnvironment().getProperty(key);
+		return applicationContext.getEnvironment().getProperty(key, targetType, defaultValue);
 	}
 
 	/**
