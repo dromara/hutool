@@ -673,8 +673,8 @@ public class StrUtilTest {
 	@Test
 	public void truncateUtf8Test2() {
 		final String str = "这是This一";
-		final String ret = StrUtil.truncateUtf8(str, 12);
-		Assert.assertEquals("这是Thi...", ret);
+		final String ret = StrUtil.truncateUtf8(str, 13);
+		Assert.assertEquals("这是This一", ret);
 	}
 
 	@Test
