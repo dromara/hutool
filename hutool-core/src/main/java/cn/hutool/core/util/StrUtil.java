@@ -1,6 +1,10 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.text.*;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.text.TextSimilarity;
 
 import java.io.StringReader;
 import java.io.StringWriter;
