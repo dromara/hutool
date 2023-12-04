@@ -103,6 +103,12 @@ public interface StrPool {
 	String DOUBLE_DOT = "..";
 
 	/**
+	 * 字符串常量：三点 {@code ".."} <br>
+	 * 解释：省略号，如：{@code "Hutool very good..."}
+	 */
+	String THREE_DOT = "...";
+
+	/**
 	 * 字符串常量：斜杠 {@code "/"}
 	 */
 	String SLASH = "/";

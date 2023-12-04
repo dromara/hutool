@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.text.*;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -9,12 +11,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.text.StrPool;
-import cn.hutool.core.text.TextSimilarity;
 
 /**
  * 字符串工具类
@@ -499,18 +495,19 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	 */
 	public static String truncateByByteLength(String str, Charset charset, int maxBytes, int factor,
 			boolean appendDots) {
+
 		//字符数*速算因子<=最大字节数
-		if (str == null || str.length() * factor <= maxBytes) {
+		if (str == null || (appendDots ? str.length() + THREE_DOT.length() : str.length()) * factor <= maxBytes) {
 			return str;
 		}
 		final byte[] sba = str.getBytes(charset);
-		if (sba.length <= maxBytes) {
+		if ((appendDots ? THREE_DOT.getBytes(charset).length + sba.length : sba.length) <= maxBytes) {
 			return str;
 		}
 		//限制字节数
 		final int limitBytes;
 		if (appendDots) {
-			limitBytes = maxBytes - "...".getBytes(charset).length;
+			limitBytes = maxBytes - THREE_DOT.getBytes(charset).length;
 		} else {
 			limitBytes = maxBytes;
 		}
@@ -523,7 +520,7 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 		decoder.flush(cb);
 		final String result = new String(cb.array(), 0, cb.position());
 		if (appendDots) {
-			return result + "...";
+			return result + THREE_DOT;
 		}
 		return result;
 	}

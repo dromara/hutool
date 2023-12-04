@@ -1,11 +1,11 @@
 package cn.hutool.core.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * 字符串工具类单元测试
@@ -656,7 +656,7 @@ public class StrUtilTest {
 
 	@Test
 	public void truncateUtf8Test() {
-		final String str = "这是This一段中英文";
+		final String str = "这是This一";
 		String ret = StrUtil.truncateUtf8(str, 12);
 		Assert.assertEquals("这是Thi...", ret);
 
