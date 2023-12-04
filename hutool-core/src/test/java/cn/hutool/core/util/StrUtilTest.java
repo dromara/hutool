@@ -671,6 +671,13 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void truncateUtf8Test2() {
+		final String str = "这是This一";
+		final String ret = StrUtil.truncateUtf8(str, 12);
+		Assert.assertEquals("这是Thi...", ret);
+	}
+
+	@Test
 	public void truncateByByteLengthTest() {
 		final String str = "This is English";
 		final String ret = StrUtil.truncateByByteLength(str, StandardCharsets.ISO_8859_1,10, 1, false);
