@@ -322,6 +322,13 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
+	public void limitByteLengthUtf8Test2() {
+		final String str = "这是This一";
+		final String ret = StrUtil.limitByteLengthUtf8(str, 12, true);
+		Assertions.assertEquals("这是Thi...", ret);
+	}
+
+	@Test
 	public void limitByteLengthTest() {
 		final String str = "This is English";
 		final String ret = StrUtil.limitByteLength(str, CharsetUtil.ISO_8859_1,10, 1, false);

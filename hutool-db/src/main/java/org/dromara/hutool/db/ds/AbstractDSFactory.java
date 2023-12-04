@@ -19,7 +19,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.DbUtil;
 import org.dromara.hutool.db.GlobalDbConfig;
-import org.dromara.hutool.db.dialect.DriverUtil;
+import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.setting.Setting;
 
 import javax.sql.DataSource;

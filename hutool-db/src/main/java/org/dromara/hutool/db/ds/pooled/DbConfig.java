@@ -13,7 +13,7 @@
 package org.dromara.hutool.db.ds.pooled;
 
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.dialect.DriverUtil;
+import org.dromara.hutool.db.driver.DriverUtil;
 
 import java.util.Properties;
 

@@ -15,7 +15,7 @@ package org.dromara.hutool.db.ds.pooled;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.dialect.DriverUtil;
+import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.db.ds.DSKeys;
 import org.dromara.hutool.setting.Setting;
 

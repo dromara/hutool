@@ -12,10 +12,9 @@
 
 package org.dromara.hutool.db.dialect;
 
-import org.dromara.hutool.core.classloader.ClassLoaderUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
-import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.db.driver.DriverUtil;
 import org.dromara.hutool.db.dialect.impl.AnsiSqlDialect;
 import org.dromara.hutool.db.dialect.impl.H2Dialect;
 import org.dromara.hutool.db.dialect.impl.MysqlDialect;
@@ -82,106 +81,6 @@ public class DialectFactory implements DriverNamePool {
 		}
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
 		return new AnsiSqlDialect();
-	}
-
-	/**
-	 * 通过JDBC URL等信息识别JDBC驱动名
-	 *
-	 * @param nameContainsProductInfo 包含数据库标识的字符串
-	 * @return 驱动
-	 */
-	public static String identifyDriver(final String nameContainsProductInfo) {
-		return identifyDriver(nameContainsProductInfo, null);
-	}
-
-	/**
-	 * 通过JDBC URL等信息识别JDBC驱动名
-	 *
-	 * @param nameContainsProductInfo 包含数据库标识的字符串
-	 * @param classLoader             类加载器，{@code null}表示默认上下文的类加载器
-	 * @return 驱动
-	 */
-	public static String identifyDriver(String nameContainsProductInfo, final ClassLoader classLoader) {
-		if (StrUtil.isBlank(nameContainsProductInfo)) {
-			return null;
-		}
-		// 全部转为小写，忽略大小写
-		nameContainsProductInfo = StrUtil.cleanBlank(nameContainsProductInfo.toLowerCase());
-
-		// 首先判断是否为标准的JDBC URL，截取jdbc:xxxx:中间部分
-		final String name = ReUtil.getGroup1("jdbc:(.*?):", nameContainsProductInfo);
-		if (StrUtil.isNotBlank(name)) {
-			nameContainsProductInfo = name;
-		}
-
-		String driver = null;
-		if (nameContainsProductInfo.contains("mysql") || nameContainsProductInfo.contains("cobar")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6, classLoader) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
-		} else if (nameContainsProductInfo.contains("mariadb")) {
-			// Mariadb
-			driver = DRIVER_MARIADB;
-		} else if (nameContainsProductInfo.contains("oracle")) {
-			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE, classLoader) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
-		} else if (nameContainsProductInfo.contains("postgresql")) {
-			driver = DRIVER_POSTGRESQL;
-		} else if (nameContainsProductInfo.contains("sqlite")) {
-			driver = DRIVER_SQLLITE3;
-		} else if (nameContainsProductInfo.contains("sqlserver") || nameContainsProductInfo.contains("microsoft")) {
-			driver = DRIVER_SQLSERVER;
-		} else if (nameContainsProductInfo.contains("hive2")) {
-			driver = DRIVER_HIVE2;
-		} else if (nameContainsProductInfo.contains("hive")) {
-			driver = DRIVER_HIVE;
-		} else if (nameContainsProductInfo.contains("h2")) {
-			driver = DRIVER_H2;
-		} else if (nameContainsProductInfo.contains("derby")) {
-			// 嵌入式Derby数据库
-			driver = DRIVER_DERBY;
-		} else if (nameContainsProductInfo.contains("hsqldb")) {
-			// HSQLDB
-			driver = DRIVER_HSQLDB;
-		} else if (nameContainsProductInfo.contains("dm")) {
-			// 达梦7
-			driver = DRIVER_DM7;
-		} else if (nameContainsProductInfo.contains("kingbase8")) {
-			// 人大金仓8
-			driver = DRIVER_KINGBASE8;
-		} else if (nameContainsProductInfo.contains("ignite")) {
-			// Ignite thin
-			driver = DRIVER_IGNITE_THIN;
-		} else if (nameContainsProductInfo.contains("clickhouse")) {
-			// ClickHouse
-			driver = DRIVER_CLICK_HOUSE;
-		} else if (nameContainsProductInfo.contains("highgo")) {
-			// 瀚高
-			driver = DRIVER_HIGHGO;
-		} else if (nameContainsProductInfo.contains("db2")) {
-			// DB2
-			driver = DRIVER_DB2;
-		} else if (nameContainsProductInfo.contains("xugu")) {
-			// 虚谷
-			driver = DRIVER_XUGU;
-		} else if (nameContainsProductInfo.contains("phoenix")) {
-			// Apache Phoenix
-			driver = DRIVER_PHOENIX;
-		} else if (nameContainsProductInfo.contains("zenith")) {
-			// 华为高斯
-			driver = DRIVER_GAUSS;
-		} else if (nameContainsProductInfo.contains("gbase")) {
-			// 南大通用数据库
-			driver = DRIVER_GBASE;
-		} else if (nameContainsProductInfo.contains("oscar")) {
-			// 神州数据库
-			driver = DRIVER_OSCAR;
-		} else if (nameContainsProductInfo.contains("sybase")) {
-			// Sybase
-			driver = DRIVER_SYBASE;
-		} else if (nameContainsProductInfo.contains("opengauss")) {
-			// OpenGauss
-			driver = DRIVER_OPENGAUSS;
-		}
-
-		return driver;
 	}
 
 	/**
