@@ -687,9 +687,11 @@ public class BeanUtil {
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 *
+	 * @param <T>              目标类型
 	 * @param source           源Bean对象
 	 * @param target           目标Bean对象
 	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final T target, final String... ignoreProperties) {
 		return copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
@@ -698,9 +700,11 @@ public class BeanUtil {
 	/**
 	 * 复制Bean对象属性<br>
 	 *
+	 * @param <T>        目标类型
 	 * @param source     源Bean对象
 	 * @param target     目标Bean对象
 	 * @param ignoreCase 是否忽略大小写
+	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final T target, final boolean ignoreCase) {
 		return BeanCopier.of(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
@@ -710,9 +714,11 @@ public class BeanUtil {
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 *
+	 * @param <T>         目标类型
 	 * @param source      源Bean对象
 	 * @param target      目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
+	 * @return 目标对象
 	 */
 	public static <T> T copyProperties(final Object source, final T target, final CopyOptions copyOptions) {
 		if (null == source || null == target) {
