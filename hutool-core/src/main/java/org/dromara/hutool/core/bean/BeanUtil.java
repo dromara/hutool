@@ -680,8 +680,7 @@ public class BeanUtil {
 			return (T) RecordConverter.INSTANCE.convert(tClass, source);
 		}
 		final T target = ConstructorUtil.newInstanceIfPossible(tClass);
-		copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
-		return target;
+		return copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
 	}
 
 	/**
@@ -692,8 +691,8 @@ public class BeanUtil {
 	 * @param target           目标Bean对象
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 */
-	public static void copyProperties(final Object source, final Object target, final String... ignoreProperties) {
-		copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
+	public static <T> T copyProperties(final Object source, final T target, final String... ignoreProperties) {
+		return copyProperties(source, target, CopyOptions.of().setIgnoreProperties(ignoreProperties));
 	}
 
 	/**
@@ -703,8 +702,8 @@ public class BeanUtil {
 	 * @param target     目标Bean对象
 	 * @param ignoreCase 是否忽略大小写
 	 */
-	public static void copyProperties(final Object source, final Object target, final boolean ignoreCase) {
-		BeanCopier.of(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
+	public static <T> T copyProperties(final Object source, final T target, final boolean ignoreCase) {
+		return BeanCopier.of(source, target, CopyOptions.of().setIgnoreCase(ignoreCase)).copy();
 	}
 
 	/**
@@ -715,11 +714,11 @@ public class BeanUtil {
 	 * @param target      目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
-	public static void copyProperties(final Object source, final Object target, final CopyOptions copyOptions) {
+	public static <T> T copyProperties(final Object source, final T target, final CopyOptions copyOptions) {
 		if (null == source || null == target) {
-			return;
+			return null;
 		}
-		BeanCopier.of(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::of)).copy();
+		return BeanCopier.of(source, target, ObjUtil.defaultIfNull(copyOptions, CopyOptions::of)).copy();
 	}
 
 	/**
