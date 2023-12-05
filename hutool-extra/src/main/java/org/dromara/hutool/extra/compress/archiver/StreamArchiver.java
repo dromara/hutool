@@ -192,6 +192,7 @@ public class StreamArchiver implements Archiver {
 					addInternal(childFile, entryName, predicate);
 				}
 			} else {
+				// 空文件夹也需要关闭
 				out.closeArchiveEntry();
 			}
 		} else {
