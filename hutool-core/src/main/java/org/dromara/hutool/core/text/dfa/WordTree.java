@@ -14,15 +14,11 @@ package org.dromara.hutool.core.text.dfa;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -251,8 +247,8 @@ public class WordTree extends HashMap<Character, WordTree> {
 	/**
 	 * 找出所有匹配的关键字<br>
 	 * <p>假如被检查文本是{@literal "abab"}<br>
-	 * 密集匹配原则：假如关键词有 ab,b，将匹配 [ab,b,ab]<br>
-	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * 密集匹配原则：假如关键词有 ab,b，将匹配 [ab,b,ab,b]<br>
+	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[ab]
 	 * </p>
 	 *
 	 * @param text           被检查的文本
@@ -279,6 +275,8 @@ public class WordTree extends HashMap<Character, WordTree> {
 			current = this;
 			wordBuffer.setLength(0);
 			keyBuffer.setLength(0);
+
+			FoundWord currentFoundWord = null;
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 				if (!charFilter.test(currentChar)) {
@@ -291,31 +289,34 @@ public class WordTree extends HashMap<Character, WordTree> {
 					}
 					continue;
 				} else if (!current.containsKey(currentChar)) {
-					//非关键字符被整体略过，重新以下个字符开始检查
+					// 节点不匹配，开始下一轮
 					break;
 				}
 				wordBuffer.append(currentChar);
 				keyBuffer.append(currentChar);
 				if (current.isEnd(currentChar)) {
 					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-					foundWords.add(new FoundWord(keyBuffer.toString(), wordBuffer.toString(), i, j));
-					if (limit > 0 && foundWords.size() >= limit) {
-						//超过匹配限制个数，直接返回
-						return foundWords;
-					}
+					currentFoundWord = new FoundWord(keyBuffer.toString(), wordBuffer.toString(), i, j);
+					//如果非密度匹配，跳过匹配到的词
 					if (!isDensityMatch) {
-						//如果非密度匹配，跳过匹配到的词
 						i = j;
-						break;
 					}
+
+					//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配
 					if (!isGreedMatch) {
-						//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配
 						break;
 					}
 				}
+				// 查找下一个节点，节点始终不会为null，因为当前阶段或匹配结束，或匹配不到结束
 				current = current.get(currentChar);
-				if (null == current) {
-					break;
+			}
+
+			// 本次循环结尾，加入遗留匹配的单词
+			if(null != currentFoundWord){
+				foundWords.add(currentFoundWord);
+				if (limit > 0 && foundWords.size() >= limit) {
+					//超过匹配限制个数，直接返回
+					return foundWords;
 				}
 			}
 		}

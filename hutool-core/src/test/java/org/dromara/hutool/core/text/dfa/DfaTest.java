@@ -22,7 +22,6 @@ import java.util.List;
  * DFA单元测试
  *
  * @author Looly
- *
  */
 public class DfaTest {
 
@@ -59,7 +58,9 @@ public class DfaTest {
 	}
 
 	/**
-	 * 贪婪非密集匹配原则测试
+	 * 贪婪非密集匹配原则测试<br>
+	 * 贪婪：最长匹配
+	 * 非密集：跳过匹配到的
 	 */
 	@Test
 	public void greedMatchTest() {
@@ -68,15 +69,16 @@ public class DfaTest {
 
 		// -----------------------------------------------------------------------------------------------------------------------------------
 		// 情况三：匹配到最长关键词，跳过已经匹配的关键词
-		// 匹配到【大】，由于非密集匹配，因此从下一个字符开始查找，匹配到【土豆】接着被匹配
+		// 匹配到【大】和【大土豆】，最长匹配则保留【大土豆】，非密集匹配，【土豆】跳过。
 		// 由于【刚出锅】被匹配，由于非密集匹配，【出锅】被跳过
 		final List<String> matchAll = tree.matchAll(text, -1, false, true);
-		Assertions.assertEquals(matchAll, ListUtil.of("大", "土^豆", "刚出锅"));
-
+		Assertions.assertEquals(ListUtil.of("大土^豆", "刚出锅"), matchAll);
 	}
 
 	/**
 	 * 密集匹配原则（最长匹配）和贪婪匹配原则测试
+	 * 贪婪：最长匹配
+	 * 密集：不跳过匹配到的
 	 */
 	@Test
 	public void densityAndGreedMatchTest() {
@@ -85,34 +87,29 @@ public class DfaTest {
 
 		// -----------------------------------------------------------------------------------------------------------------------------------
 		// 情况四：匹配到最长关键词，不跳过已经匹配的关键词（最全关键词）
-		// 匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配，由于不跳过已经匹配的关键词，土豆继续被匹配
+		// 匹配到【大】和【大土豆】，由于到最长匹配，因此【大土豆】保留，由于不跳过已经匹配的关键词，【土豆】继续被匹配
 		// 【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
 		final List<String> matchAll = tree.matchAll(text, -1, true, true);
-		Assertions.assertEquals(matchAll, ListUtil.of("大", "大土^豆", "土^豆", "刚出锅", "出锅"));
+		Assertions.assertEquals(ListUtil.of("大土^豆", "土^豆", "刚出锅", "出锅"), matchAll);
 
 	}
 
+	/**
+	 * 由于贪婪匹配，因此【赵】、【赵阿】都被跳过，只保留最长的【赵阿三】
+	 */
 	@Test
-	public void densityAndGreedMatchTest2(){
+	public void densityAndGreedMatchTest2() {
 		final WordTree tree = new WordTree();
 		tree.addWord("赵");
 		tree.addWord("赵阿");
 		tree.addWord("赵阿三");
 
 		final List<FoundWord> result = tree.matchAllWords("赵阿三在做什么", -1, true, true);
-		Assertions.assertEquals(3, result.size());
+		Assertions.assertEquals(1, result.size());
 
-		Assertions.assertEquals("赵", result.get(0).getWord());
+		Assertions.assertEquals("赵阿三", result.get(0).getWord());
 		Assertions.assertEquals(0, result.get(0).getBeginIndex().intValue());
-		Assertions.assertEquals(0, result.get(0).getEndIndex().intValue());
-
-		Assertions.assertEquals("赵阿", result.get(1).getWord());
-		Assertions.assertEquals(0, result.get(1).getBeginIndex().intValue());
-		Assertions.assertEquals(1, result.get(1).getEndIndex().intValue());
-
-		Assertions.assertEquals("赵阿三", result.get(2).getWord());
-		Assertions.assertEquals(0, result.get(2).getBeginIndex().intValue());
-		Assertions.assertEquals(2, result.get(2).getEndIndex().intValue());
+		Assertions.assertEquals(2, result.get(0).getEndIndex().intValue());
 	}
 
 	/**
@@ -128,7 +125,7 @@ public class DfaTest {
 	}
 
 	@Test
-	public void aTest(){
+	public void aTest() {
 		final WordTree tree = new WordTree();
 		tree.addWord("women");
 		final String text = "a WOMEN todo.".toLowerCase();
@@ -137,13 +134,13 @@ public class DfaTest {
 	}
 
 	@Test
-	public void clearTest(){
+	public void clearTest() {
 		WordTree tree = new WordTree();
 		tree.addWord("黑");
 		Assertions.assertTrue(tree.matchAll("黑大衣").contains("黑"));
 		//clear时直接调用Map的clear并没有把endCharacterSet清理掉
 		tree.clear();
-		tree.addWords("黑大衣","红色大衣");
+		tree.addWords("黑大衣", "红色大衣");
 
 		//clear() 覆写前 这里想匹配到黑大衣，但是却匹配到了黑
 //		Assertions.assertFalse(tree.matchAll("黑大衣").contains("黑大衣"));
@@ -155,12 +152,13 @@ public class DfaTest {
 
 		//如果不覆写只能通过new出新对象才不会有问题
 		tree = new WordTree();
-		tree.addWords("黑大衣","红色大衣");
+		tree.addWords("黑大衣", "红色大衣");
 		Assertions.assertTrue(tree.matchAll("黑大衣").contains("黑大衣"));
 		Assertions.assertTrue(tree.matchAll("红色大衣").contains("红色大衣"));
 	}
 
 	// ----------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 构建查找树
 	 *
@@ -175,5 +173,40 @@ public class DfaTest {
 		tree.addWord("刚出锅");
 		tree.addWord("出锅");
 		return tree;
+	}
+
+	@Test
+	void issueI8LAEWTest() {
+		final WordTree wordTree = new WordTree();
+		wordTree.addWords("UserServiceImpl", "UserService");
+
+		final String text = "This is test Service: UserServiceImpl UserServiceTest...";
+		final List<String> strings = wordTree.matchAll(text, -1, false, true);
+		Assertions.assertEquals("[UserServiceImpl, UserService]", strings.toString());
+	}
+
+	/**
+	 * 此测试验证边界问题，当最后一个字符匹配时的问题
+	 */
+	@Test
+	void matchAbTest() {
+		final WordTree wordTree = new WordTree();
+		wordTree.addWords("ab", "b");
+
+		// 非密集，非贪婪
+		List<String> strings = wordTree.matchAll("abab", -1, false, false);
+		Assertions.assertEquals("[ab, ab]", strings.toString());
+
+		// 密集，非贪婪
+		strings = wordTree.matchAll("abab", -1, true, false);
+		Assertions.assertEquals("[ab, b, ab, b]", strings.toString());
+
+		// 非密集，贪婪
+		strings = wordTree.matchAll("abab", -1, false, true);
+		Assertions.assertEquals("[ab, ab]", strings.toString());
+
+		// 密集，贪婪
+		strings = wordTree.matchAll("abab", -1, true, true);
+		Assertions.assertEquals("[ab, b, ab, b]", strings.toString());
 	}
 }
