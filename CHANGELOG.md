@@ -9,6 +9,7 @@
 * 【cache 】      JWT#sign增加重载，可选是否增加默认的typ参数（issue#3386@Github）
 * 【db    】      增加识别OpenGauss的驱动类（issue#I8K6C0@Gitee）
 * 【core  】      修复CharSequenceUtil注释和引用，避免循环引用
+* 【extra 】      SpringUtil增加getProperty重载（pr#1122@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）
