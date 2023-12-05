@@ -14,7 +14,6 @@ package org.dromara.hutool.core.text.dfa;
 
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
@@ -276,6 +275,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 			wordBuffer.setLength(0);
 			keyBuffer.setLength(0);
 
+			// 单次匹配，每次循环最多匹配一个词
 			FoundWord currentFoundWord = null;
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
@@ -302,7 +302,7 @@ public class WordTree extends HashMap<Character, WordTree> {
 						i = j;
 					}
 
-					//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配
+					//如果非贪婪匹配。当遇到第一个结尾标记就结束本轮匹配
 					if (!isGreedMatch) {
 						break;
 					}
