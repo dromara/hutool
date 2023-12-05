@@ -3305,65 +3305,60 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
-	 * 方法注释: <br>
-	 * 〈大写对应下标字母〉
+	 * 大写对应下标字母
 	 *
 	 * <pre>例如: str = name,index = 1, return nAme</pre>
 	 *
-	 * <p>搜索关键字:</p>
-	 * <tag>大写</tag>
-	 * <tag>大写下标</tag>
-	 * <tag>大写字母</tag>
-	 * <tag>大小写</tag>
-	 *
 	 * @param str   字符串
-	 * @param index 下标
-	 * @return java.lang.String 字符串
+	 * @param index 下标，支持负数，-1表示最后一个字符
+	 * @return 字符串
 	 */
-	public static String upperIndex(final CharSequence str, final int index) {
-
-		if (str == null) {
+	public static String upperAt(final CharSequence str, int index) {
+		if (null == str) {
 			return null;
 		}
 
-		if (str.length() > 0) {
-			final char charredAt = str.charAt(index);
-			if (Character.isLowerCase(charredAt)) {
-				return subPre(str, index) + Character.toUpperCase(charredAt) + subSuf(str, index + 1);
-			}
+		// 支持负数
+		final int length = str.length();
+		if (index < 0) {
+			index += length;
+		}
+		if (index < 0 || index >= length) {
+			return str.toString();
 		}
 
+		final char c = str.charAt(index);
+		if (Character.isLowerCase(c)) {
+			return subPre(str, index) + Character.toUpperCase(c) + subSuf(str, index + 1);
+		}
 		return str.toString();
-
 	}
 
 	/**
-	 * 方法注释: <br>
-	 * 〈小写对应下标字母〉
-	 *
-	 * <pre>例如: str = NAME,index = 1, return NaME</pre>
-	 *
-	 * <p>搜索关键字:</p>
-	 * <tag>小写</tag>
-	 * <tag>小写下标</tag>
-	 * <tag>小写字母</tag>
-	 * <tag>大小写</tag>
+	 * 小写对应下标字母<br>
+	 * 例如: str = NAME,index = 1, return NaME
 	 *
 	 * @param str   字符串
-	 * @param index 下标
-	 * @return java.lang.String 字符串
+	 * @param index 下标，支持负数，-1表示最后一个字符
+	 * @return 字符串
 	 */
-	public static String lowerIndex(final CharSequence str, final int index) {
-
+	public static String lowerAt(final CharSequence str, int index) {
 		if (str == null) {
 			return null;
 		}
 
-		if (str.length() > 0) {
-			final char charredAt = str.charAt(index);
-			if (Character.isUpperCase(charredAt)) {
-				return subPre(str, index) + Character.toLowerCase(charredAt) + subSuf(str, index + 1);
-			}
+		// 支持负数
+		final int length = str.length();
+		if (index < 0) {
+			index += length;
+		}
+		if (index < 0 || index >= length) {
+			return str.toString();
+		}
+
+		final char c = str.charAt(index);
+		if (Character.isUpperCase(c)) {
+			return subPre(str, index) + Character.toLowerCase(c) + subSuf(str, index + 1);
 		}
 
 		return str.toString();
@@ -3378,7 +3373,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 字符串
 	 */
 	public static String upperFirst(final CharSequence str) {
-		return upperIndex(str, 0);
+		return upperAt(str, 0);
 	}
 
 	/**
@@ -3389,7 +3384,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 字符串
 	 */
 	public static String lowerFirst(final CharSequence str) {
-		return lowerIndex(str, 0);
+		return lowerAt(str, 0);
 	}
 	// endregion
 

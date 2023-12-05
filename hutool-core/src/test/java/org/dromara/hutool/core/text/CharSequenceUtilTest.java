@@ -118,6 +118,12 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
+	void subPreTest() {
+		final String pre = CharSequenceUtil.subPre("abc", 0);
+		Assertions.assertEquals(StrUtil.EMPTY, pre);
+	}
+
+	@Test
 	public void startWithTest() {
 		// https://gitee.com/dromara/hutool/issues/I4MV7Q
 		Assertions.assertFalse(CharSequenceUtil.startWith("123", "123", false, true));
@@ -337,32 +343,31 @@ public class CharSequenceUtilTest {
 	}
 
 	@Test
-	public void upperIndexTest() {
-
+	void upperAtTest() {
 		final StringBuilder sb = new StringBuilder("key");
 
-		final String s1 = CharSequenceUtil.upperIndex(sb, 0);
+		final String s1 = CharSequenceUtil.upperAt(sb, 0);
 		Assertions.assertEquals("Key", s1);
 
-		final String s2 = CharSequenceUtil.upperIndex(sb, 1);
+		final String s2 = CharSequenceUtil.upperAt(sb, 1);
 		Assertions.assertEquals("kEy", s2);
 
-		final String s3 = CharSequenceUtil.upperIndex(sb, 2);
+		final String s3 = CharSequenceUtil.upperAt(sb, 2);
 		Assertions.assertEquals("keY", s3);
 
 	}
 
 	@Test
-	public void lowerIndexTest() {
+	void lowerAtTest() {
 		final StringBuilder sb = new StringBuilder("KEY");
 
-		final String s1 = CharSequenceUtil.lowerIndex(sb, 0);
+		final String s1 = CharSequenceUtil.lowerAt(sb, 0);
 		Assertions.assertEquals("kEY", s1);
 
-		final String s2 = CharSequenceUtil.lowerIndex(sb, 1);
+		final String s2 = CharSequenceUtil.lowerAt(sb, 1);
 		Assertions.assertEquals("KeY", s2);
 
-		final String s3 = CharSequenceUtil.lowerIndex(sb, 2);
+		final String s3 = CharSequenceUtil.lowerAt(sb, 2);
 		Assertions.assertEquals("KEy", s3);
 	}
 }
