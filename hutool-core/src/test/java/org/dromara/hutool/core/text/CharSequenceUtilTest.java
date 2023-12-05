@@ -335,4 +335,34 @@ public class CharSequenceUtilTest {
 		Assertions.assertEquals("This is En", ret);
 
 	}
+
+	@Test
+	public void upperIndexTest() {
+
+		final StringBuilder sb = new StringBuilder("key");
+
+		final String s1 = CharSequenceUtil.upperIndex(sb, 0);
+		Assertions.assertEquals("Key", s1);
+
+		final String s2 = CharSequenceUtil.upperIndex(sb, 1);
+		Assertions.assertEquals("kEy", s2);
+
+		final String s3 = CharSequenceUtil.upperIndex(sb, 2);
+		Assertions.assertEquals("keY", s3);
+
+	}
+
+	@Test
+	public void lowerIndexTest() {
+		final StringBuilder sb = new StringBuilder("KEY");
+
+		final String s1 = CharSequenceUtil.lowerIndex(sb, 0);
+		Assertions.assertEquals("kEY", s1);
+
+		final String s2 = CharSequenceUtil.lowerIndex(sb, 1);
+		Assertions.assertEquals("KeY", s2);
+
+		final String s3 = CharSequenceUtil.lowerIndex(sb, 2);
+		Assertions.assertEquals("KEy", s3);
+	}
 }

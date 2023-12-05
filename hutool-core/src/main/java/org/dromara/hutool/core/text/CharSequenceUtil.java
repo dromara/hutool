@@ -15,8 +15,8 @@ package org.dromara.hutool.core.text;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.comparator.VersionComparator;
-import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.func.SerFunction;
+import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.math.NumberUtil;
 import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.finder.CharFinder;
@@ -3305,6 +3305,72 @@ public class CharSequenceUtil extends StrValidator {
 	}
 
 	/**
+	 * 方法注释: <br>
+	 * 〈大写对应下标字母〉
+	 *
+	 * <pre>例如: str = name,index = 1, return nAme</pre>
+	 *
+	 * <p>搜索关键字:</p>
+	 * <tag>大写</tag>
+	 * <tag>大写下标</tag>
+	 * <tag>大写字母</tag>
+	 * <tag>大小写</tag>
+	 *
+	 * @param str   字符串
+	 * @param index 下标
+	 * @return java.lang.String 字符串
+	 */
+	public static String upperIndex(final CharSequence str, final int index) {
+
+		if (str == null) {
+			return null;
+		}
+
+		if (str.length() > 0) {
+			final char charredAt = str.charAt(index);
+			if (Character.isLowerCase(charredAt)) {
+				return subPre(str, index) + Character.toUpperCase(charredAt) + subSuf(str, index + 1);
+			}
+		}
+
+		return str.toString();
+
+	}
+
+	/**
+	 * 方法注释: <br>
+	 * 〈小写对应下标字母〉
+	 *
+	 * <pre>例如: str = NAME,index = 1, return NaME</pre>
+	 *
+	 * <p>搜索关键字:</p>
+	 * <tag>小写</tag>
+	 * <tag>小写下标</tag>
+	 * <tag>小写字母</tag>
+	 * <tag>大小写</tag>
+	 *
+	 * @param str   字符串
+	 * @param index 下标
+	 * @return java.lang.String 字符串
+	 */
+	public static String lowerIndex(final CharSequence str, final int index) {
+
+		if (str == null) {
+			return null;
+		}
+
+		if (str.length() > 0) {
+			final char charredAt = str.charAt(index);
+			if (Character.isUpperCase(charredAt)) {
+				return subPre(str, index) + Character.toLowerCase(charredAt) + subSuf(str, index + 1);
+			}
+		}
+
+		return str.toString();
+
+	}
+
+	/**
 	 * 大写首字母<br>
 	 * 例如：str = name, return Name
 	 *
@@ -3312,16 +3378,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 字符串
 	 */
 	public static String upperFirst(final CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (str.length() > 0) {
-			final char firstChar = str.charAt(0);
-			if (Character.isLowerCase(firstChar)) {
-				return Character.toUpperCase(firstChar) + subSuf(str, 1);
-			}
-		}
-		return str.toString();
+		return upperIndex(str, 0);
 	}
 
 	/**
@@ -3332,16 +3389,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @return 字符串
 	 */
 	public static String lowerFirst(final CharSequence str) {
-		if (null == str) {
-			return null;
-		}
-		if (str.length() > 0) {
-			final char firstChar = str.charAt(0);
-			if (Character.isUpperCase(firstChar)) {
-				return Character.toLowerCase(firstChar) + subSuf(str, 1);
-			}
-		}
-		return str.toString();
+		return lowerIndex(str, 0);
 	}
 	// endregion
 
