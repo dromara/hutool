@@ -191,6 +191,8 @@ public class StreamArchiver implements Archiver {
 				for (final File childFile : files) {
 					addInternal(childFile, entryName, predicate);
 				}
+			} else {
+				out.closeArchiveEntry();
 			}
 		} else {
 			if (file.isFile()) {
