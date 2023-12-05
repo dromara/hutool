@@ -46,6 +46,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * {@link CharSequence} 相关工具类封装，包括但不限于：
@@ -3025,10 +3027,10 @@ public class CharSequenceUtil extends StrValidator {
 	 * @param pattern    用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
 	 * @return 替换后的字符串
-	 * @see ReUtil#replaceAll(CharSequence, java.util.regex.Pattern, SerFunction)
+	 * @see ReUtil#replaceAll(CharSequence, Pattern, SerFunction)
 	 * @since 4.2.2
 	 */
-	public static String replace(final CharSequence str, final java.util.regex.Pattern pattern, final SerFunction<java.util.regex.Matcher, String> replaceFun) {
+	public static String replace(final CharSequence str, final Pattern pattern, final SerFunction<Matcher, String> replaceFun) {
 		return ReUtil.replaceAll(str, pattern, replaceFun);
 	}
 
@@ -3042,7 +3044,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @see ReUtil#replaceAll(CharSequence, String, SerFunction)
 	 * @since 4.2.2
 	 */
-	public static String replace(final CharSequence str, final String regex, final SerFunction<java.util.regex.Matcher, String> replaceFun) {
+	public static String replace(final CharSequence str, final String regex, final SerFunction<Matcher, String> replaceFun) {
 		return ReUtil.replaceAll(str, regex, replaceFun);
 	}
 
@@ -3113,6 +3115,46 @@ public class CharSequenceUtil extends StrValidator {
 			builder.append(set.contains(c) ? replacedStr : c);
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * 按照给定逻辑替换指定位置的字符，如字符大小写转换等
+	 *
+	 * @param str         字符串
+	 * @param index       位置，-1表示最后一个字符
+	 * @param replaceFunc 替换逻辑，给定原字符，返回新字符
+	 * @return 替换后的字符串
+	 * @since 6.0.0
+	 */
+	public static String replaceAt(final CharSequence str, int index, final Function<Character, Character> replaceFunc) {
+		if (str == null) {
+			return null;
+		}
+
+		// 支持负数
+		final int length = str.length();
+		if (index < 0) {
+			index += length;
+		}
+
+		final String string = str.toString();
+		if (index < 0 || index >= length) {
+			return string;
+		}
+
+		// 检查转换前后是否有编码，无变化则不转换，返回原字符串
+		final char c = string.charAt(index);
+		final Character newC = replaceFunc.apply(c);
+		if(c == newC){
+			// 无变化，返回原字符串
+			return string;
+		}
+
+		// 此处转换为字符数组
+		final char[] charArray = string.toCharArray();
+		charArray[index] = replaceFunc.apply(charArray[index]);
+
+		return String.valueOf(charArray);
 	}
 	// endregion
 
@@ -3323,15 +3365,20 @@ public class CharSequenceUtil extends StrValidator {
 		if (index < 0) {
 			index += length;
 		}
+
+		final String string = str.toString();
 		if (index < 0 || index >= length) {
-			return str.toString();
+			return string;
 		}
 
 		final char c = str.charAt(index);
 		if (Character.isLowerCase(c)) {
-			return subPre(str, index) + Character.toUpperCase(c) + subSuf(str, index + 1);
+			// return subPre(str, index) + Character.toUpperCase(c) + subSuf(str, index + 1);
+			final char[] charArray = string.toCharArray();
+			charArray[index] = Character.toUpperCase(c);
+			return String.valueOf(charArray);
 		}
-		return str.toString();
+		return string;
 	}
 
 	/**
@@ -3352,17 +3399,21 @@ public class CharSequenceUtil extends StrValidator {
 		if (index < 0) {
 			index += length;
 		}
+
+		final String string = str.toString();
 		if (index < 0 || index >= length) {
-			return str.toString();
+			return string;
 		}
 
 		final char c = str.charAt(index);
 		if (Character.isUpperCase(c)) {
-			return subPre(str, index) + Character.toLowerCase(c) + subSuf(str, index + 1);
+			// return subPre(str, index) + Character.toLowerCase(c) + subSuf(str, index + 1);
+			final char[] charArray = string.toCharArray();
+			charArray[index] = Character.toLowerCase(c);
+			return String.valueOf(charArray);
 		}
 
-		return str.toString();
-
+		return string;
 	}
 
 	/**
