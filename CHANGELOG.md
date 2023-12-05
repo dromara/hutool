@@ -15,6 +15,7 @@
 * 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）
 * 【http  】      修复RootAction send404 抛异常问题（pr#1107@Gitee）
 * 【extra 】      修复Archiver 最后一个 Entry 为空文件夹时未关闭 Entry问题（pr#1123@Gitee）
+* 【core  】      修复ImgUtil.convert png转jpg在jdk9+中失败问题（issue#I8L8UA@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)
