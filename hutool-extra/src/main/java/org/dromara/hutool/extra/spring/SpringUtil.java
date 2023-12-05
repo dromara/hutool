@@ -20,6 +20,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -65,7 +66,7 @@ public class SpringUtil implements ApplicationContextInitializer<ConfigurableApp
 	 */
 	public static ListableBeanFactory getBeanFactory() {
 		final ListableBeanFactory factory = applicationContext;
-		if(null == factory){
+		if (null == factory) {
 			throw new HutoolException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
 		}
 		return factory;
@@ -167,10 +168,45 @@ public class SpringUtil implements ApplicationContextInitializer<ConfigurableApp
 	 * @since 5.3.3
 	 */
 	public static String getProperty(final String key) {
-		if (null == applicationContext) {
-			return null;
-		}
-		return applicationContext.getEnvironment().getProperty(key);
+		final ConfigurableEnvironment environment = getEnvironment();
+		return null == environment ? null : environment.getProperty(key);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param key          配置项key
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static String getProperty(final String key, final String defaultValue) {
+		final ConfigurableEnvironment environment = getEnvironment();
+		return null == environment ? null : environment.getProperty(key, defaultValue);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param <T>          属性值类型
+	 * @param key          配置项key
+	 * @param targetType   配置项类型
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static <T> T getProperty(final String key, final Class<T> targetType, final T defaultValue) {
+		final ConfigurableEnvironment environment = getEnvironment();
+		return null == environment ? null : environment.getProperty(key, targetType, defaultValue);
+	}
+
+	/**
+	 * 获取环境属性
+	 *
+	 * @return {@link ConfigurableEnvironment}
+	 */
+	public static ConfigurableEnvironment getEnvironment() {
+		return null == applicationContext ? null : applicationContext.getEnvironment();
 	}
 
 	/**

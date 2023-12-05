@@ -501,28 +501,22 @@ public class ImgUtil {
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 *
 	 * @param srcImageFile  源图像文件
-	 * @param destImageFile 目标图像文件
+	 * @param targetImageFile 目标图像文件
 	 */
-	public static void convert(final File srcImageFile, final File destImageFile) {
+	public static void convert(final File srcImageFile, final File targetImageFile) {
 		Assert.notNull(srcImageFile);
-		Assert.notNull(destImageFile);
-		Assert.isFalse(srcImageFile.equals(destImageFile), "Src file is equals to dest file!");
+		Assert.notNull(targetImageFile);
+		Assert.isFalse(srcImageFile.equals(targetImageFile), "Src file is equals to dest file!");
 
 		// 通过扩展名检查图片类型，相同类型直接复制
 		final String srcExtName = FileNameUtil.extName(srcImageFile);
-		final String destExtName = FileNameUtil.extName(destImageFile);
+		final String destExtName = FileNameUtil.extName(targetImageFile);
 		if (StrUtil.equalsIgnoreCase(srcExtName, destExtName)) {
 			// 扩展名相同直接复制文件
-			FileUtil.copy(srcImageFile, destImageFile, true);
+			FileUtil.copy(srcImageFile, targetImageFile, true);
 		}
 
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = getImageOutputStream(destImageFile);
-			convert(read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
-		} finally {
-			IoUtil.closeQuietly(imageOutputStream);
-		}
+		Img.from(srcImageFile).write(targetImageFile);
 	}
 
 	/**
@@ -531,11 +525,11 @@ public class ImgUtil {
 	 *
 	 * @param srcStream  源图像流
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destStream 目标图像输出流
+	 * @param targetStream 目标图像输出流
 	 * @since 3.0.9
 	 */
-	public static void convert(final InputStream srcStream, final String formatName, final OutputStream destStream) {
-		write(read(srcStream), formatName, getImageOutputStream(destStream));
+	public static void convert(final InputStream srcStream, final String formatName, final OutputStream targetStream) {
+		write(read(srcStream), formatName, getImageOutputStream(targetStream));
 	}
 
 	/**
@@ -544,17 +538,11 @@ public class ImgUtil {
 	 *
 	 * @param srcImage        源图像流
 	 * @param formatName      包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destImageStream 目标图像输出流
-	 * @param isSrcPng        源图片是否为PNG格式
+	 * @param targetImageStream 目标图像输出流
 	 * @since 4.1.14
 	 */
-	public static void convert(final Image srcImage, final String formatName, final ImageOutputStream destImageStream, final boolean isSrcPng) {
-		final BufferedImage src = toBufferedImage(srcImage, isSrcPng ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(src, formatName, destImageStream);
-		} catch (final IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public static void convert(final Image srcImage, final String formatName, final ImageOutputStream targetImageStream) {
+		Img.from(srcImage).setTargetImageType(formatName).write(targetImageStream);
 	}
 	// endregion
 
