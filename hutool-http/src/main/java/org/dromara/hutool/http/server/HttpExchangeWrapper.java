@@ -16,7 +16,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpPrincipal;
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -140,13 +140,10 @@ public class DriverIdentifier {
 			return null;
 		}
 
-		for (final DriverMatcher driverMatcher : this.matcherList) {
-			if (driverMatcher.isMatch(jdbcUrl)) {
-				return driverMatcher.getClassName();
-			}
-		}
-
-		return null;
+		return this.matcherList.stream()
+			.filter(driverMatcher -> driverMatcher.test(jdbcUrl))
+			.findFirst()
+			.map(DriverMatcher::getClassName).orElse(null);
 	}
 
 	/**

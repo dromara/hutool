@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.json.serialize;
 
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 /**
  * {@code JSONString}接口定义了一个{@code toJSONString()}<br>

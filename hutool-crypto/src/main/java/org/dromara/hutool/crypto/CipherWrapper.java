@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.crypto;
 
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 import javax.crypto.Cipher;
 import java.security.InvalidAlgorithmParameterException;

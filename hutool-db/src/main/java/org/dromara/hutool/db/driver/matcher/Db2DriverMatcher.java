@@ -28,7 +28,7 @@ public class Db2DriverMatcher implements DriverMatcher {
 	private String jdbcUrl;
 
 	@Override
-	public boolean isMatch(final String jdbcUrl) {
+	public boolean test(final String jdbcUrl) {
 		this.jdbcUrl = jdbcUrl;
 		return jdbcUrl.startsWith("jdbc:db2:");
 	}

@@ -15,7 +15,7 @@ package org.dromara.hutool.core.map;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.ObjUtil;

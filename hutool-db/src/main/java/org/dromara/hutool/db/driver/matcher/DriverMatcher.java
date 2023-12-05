@@ -12,22 +12,16 @@
 
 package org.dromara.hutool.db.driver.matcher;
 
+import java.util.function.Predicate;
+
 /**
  * 驱动匹配接口，通过实现此接口，可以：<br>
- * 通过{@link #isMatch(String)} 判断JDBC URL 是否匹配驱动的要求<br>
+ * 通过{@link #test(Object)} 判断JDBC URL 是否匹配驱动的要求<br>
  * 通过{@link #getClassName()} 获取对应的驱动类名称
  *
  * @author looly
  */
-public interface DriverMatcher {
-
-	/**
-	 * 自定义规则是否匹配 JDBC URL
-	 *
-	 * @param jdbcUrl JDBC URL
-	 * @return 是否匹配
-	 */
-	boolean isMatch(final String jdbcUrl);
+public interface DriverMatcher extends Predicate<String> {
 
 	/**
 	 * 获取对应的驱动类名称

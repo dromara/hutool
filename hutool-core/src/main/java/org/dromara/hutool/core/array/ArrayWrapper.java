@@ -14,7 +14,7 @@ package org.dromara.hutool.core.array;
 
 import org.dromara.hutool.core.collection.iter.ArrayIter;
 import org.dromara.hutool.core.convert.Convert;
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.lang.Validator;
 import org.dromara.hutool.core.reflect.ClassUtil;

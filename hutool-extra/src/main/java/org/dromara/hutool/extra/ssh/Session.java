@@ -12,7 +12,7 @@
 
 package org.dromara.hutool.extra.ssh;
 
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.io.IORuntimeException;
 
 import java.io.Closeable;

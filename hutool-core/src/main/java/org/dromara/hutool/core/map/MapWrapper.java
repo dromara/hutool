@@ -13,7 +13,7 @@
 package org.dromara.hutool.core.map;
 
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 import org.dromara.hutool.core.util.ObjUtil;
 
 import java.io.IOException;

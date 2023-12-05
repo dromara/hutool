@@ -14,7 +14,7 @@ package org.dromara.hutool.crypto.digest;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.codec.HexUtil;
-import org.dromara.hutool.core.func.SimpleWrapper;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;

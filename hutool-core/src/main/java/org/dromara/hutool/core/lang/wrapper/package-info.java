@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,20 +10,8 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.func;
-
 /**
- * 包装接口
- *
- * @param <T> 原始对象类型
- * @author looly
- * @since 6.0.0
+ * 提供包装对象的抽象<br>
+ * 通过包装接口，实现装饰模式或代理模式，以增强或目标对象功能。
  */
-public interface Wrapper<T> {
-	/**
-	 * 获取原始对象
-	 *
-	 * @return 原始对象
-	 */
-	T getRaw();
-}
+package org.dromara.hutool.core.lang.wrapper;

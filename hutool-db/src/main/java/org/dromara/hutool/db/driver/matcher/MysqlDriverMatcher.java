@@ -34,7 +34,7 @@ public class MysqlDriverMatcher implements DriverMatcher {
 	}
 
 	@Override
-	public boolean isMatch(final String jdbcUrl) {
+	public boolean test(final String jdbcUrl) {
 		return jdbcUrl.startsWith("jdbc:mysql:")
 			// 阿里的Mysql分布式集群
 			|| jdbcUrl.startsWith("jdbc:cobar:")

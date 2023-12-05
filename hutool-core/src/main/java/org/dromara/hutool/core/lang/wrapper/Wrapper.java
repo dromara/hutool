@@ -10,30 +10,20 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.func;
+package org.dromara.hutool.core.lang.wrapper;
 
 /**
- * 简单包装对象
+ * 包装接口
  *
- * @param <T> 被包装对象类型
+ * @param <T> 原始对象类型
  * @author looly
  * @since 6.0.0
  */
-public class SimpleWrapper<T> implements Wrapper<T> {
-
-	protected final T raw;
-
+public interface Wrapper<T> {
 	/**
-	 * 构造
+	 * 获取原始对象
 	 *
-	 * @param raw 原始对象
+	 * @return 原始对象
 	 */
-	public SimpleWrapper(final T raw) {
-		this.raw = raw;
-	}
-
-	@Override
-	public T getRaw() {
-		return this.raw;
-	}
+	T getRaw();
 }

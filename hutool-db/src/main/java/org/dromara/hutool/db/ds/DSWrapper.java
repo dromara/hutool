@@ -14,7 +14,7 @@ package org.dromara.hutool.db.ds;
 
 import org.dromara.hutool.core.exception.CloneException;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.func.Wrapper;
+import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
 import javax.sql.DataSource;
 import java.io.Closeable;

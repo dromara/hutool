@@ -10,11 +10,30 @@
  * See the Mulan PSL v2 for more details.
  */
 
+package org.dromara.hutool.core.lang.wrapper;
+
 /**
- * 建造者工具<br>
- * 用于建造特定对象或结果，建造者模式的抽象。
+ * 简单包装对象
  *
+ * @param <T> 被包装对象类型
  * @author looly
- *
+ * @since 6.0.0
  */
-package org.dromara.hutool.core.lang.builder;
+public class SimpleWrapper<T> implements Wrapper<T> {
+
+	protected final T raw;
+
+	/**
+	 * 构造
+	 *
+	 * @param raw 原始对象
+	 */
+	public SimpleWrapper(final T raw) {
+		this.raw = raw;
+	}
+
+	@Override
+	public T getRaw() {
+		return this.raw;
+	}
+}

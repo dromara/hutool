@@ -14,7 +14,7 @@ package org.dromara.hutool.db.sql;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.iter.ArrayIter;
-import org.dromara.hutool.core.func.SimpleWrapper;
+import org.dromara.hutool.core.lang.wrapper.SimpleWrapper;
 import org.dromara.hutool.core.lang.Assert;
 
 import java.io.InputStream;

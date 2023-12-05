@@ -35,7 +35,7 @@ public class StartsWithDriverMatcher implements DriverMatcher {
 	}
 
 	@Override
-	public boolean isMatch(final String jdbcUrl) {
+	public boolean test(final String jdbcUrl) {
 		for (final String startsWithStr : startsWithStrs) {
 			if (jdbcUrl.startsWith(startsWithStr)) {
 				return true;
