@@ -3145,16 +3145,15 @@ public class CharSequenceUtil extends StrValidator {
 		// 检查转换前后是否有编码，无变化则不转换，返回原字符串
 		final char c = string.charAt(index);
 		final Character newC = replaceFunc.apply(c);
-		if(c == newC){
+		if (c == newC) {
 			// 无变化，返回原字符串
 			return string;
 		}
 
-		// 此处转换为字符数组
-		final char[] charArray = string.toCharArray();
-		charArray[index] = replaceFunc.apply(charArray[index]);
-
-		return String.valueOf(charArray);
+		// 此处不复用传入的CharSequence，防止修改原对象
+		final StringBuilder builder = new StringBuilder(str);
+		builder.setCharAt(index, replaceFunc.apply(c));
+		return builder.toString();
 	}
 	// endregion
 
@@ -3372,13 +3371,16 @@ public class CharSequenceUtil extends StrValidator {
 		}
 
 		final char c = str.charAt(index);
-		if (Character.isLowerCase(c)) {
-			// return subPre(str, index) + Character.toUpperCase(c) + subSuf(str, index + 1);
-			final char[] charArray = string.toCharArray();
-			charArray[index] = Character.toUpperCase(c);
-			return String.valueOf(charArray);
+		if (!Character.isLowerCase(c)) {
+			// 非小写不转换，某些字符非小写也非大写，一并略过
+			return string;
 		}
-		return string;
+
+		// 此处不复用传入的CharSequence，防止修改原对象
+		final StringBuilder builder = new StringBuilder(str);
+		builder.setCharAt(index, Character.toUpperCase(c));
+
+		return builder.toString();
 	}
 
 	/**
@@ -3406,14 +3408,16 @@ public class CharSequenceUtil extends StrValidator {
 		}
 
 		final char c = str.charAt(index);
-		if (Character.isUpperCase(c)) {
-			// return subPre(str, index) + Character.toLowerCase(c) + subSuf(str, index + 1);
-			final char[] charArray = string.toCharArray();
-			charArray[index] = Character.toLowerCase(c);
-			return String.valueOf(charArray);
+		if (!Character.isUpperCase(c)) {
+			// 非大写不转换，某些字符非小写也非大写，一并略过
+			return string;
 		}
 
-		return string;
+		// 此处不复用传入的CharSequence，防止修改原对象
+		final StringBuilder builder = new StringBuilder(str);
+		builder.setCharAt(index, Character.toLowerCase(c));
+
+		return builder.toString();
 	}
 
 	/**
@@ -3574,6 +3578,17 @@ public class CharSequenceUtil extends StrValidator {
 		return NamingCase.toCamelCase(name, symbol);
 	}
 	// endregion
+
+	/**
+	 * 创建StringBuilder对象<br>
+	 * 如果对象本身为{@link StringBuilder}，直接返回，否则新建
+	 *
+	 * @param str {@link CharSequence}
+	 * @return StringBuilder对象
+	 */
+	public static StringBuilder builder(final CharSequence str) {
+		return str instanceof StringBuilder ? (StringBuilder) str : new StringBuilder(str);
+	}
 
 	/**
 	 * 创建StringBuilder对象
