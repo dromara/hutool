@@ -991,10 +991,10 @@ public class NumberUtil extends NumberValidator {
 
 	// region nullToZero
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static int nullToZero(final Integer number) {
 		return number == null ? 0 : number;
@@ -1004,64 +1004,64 @@ public class NumberUtil extends NumberValidator {
 	 * 如果给定值为0，返回1，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static long nullToZero(final Long number) {
 		return number == null ? 0L : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static double nullToZero(final Double number) {
 		return number == null ? 0.0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static float nullToZero(final Float number) {
 		return number == null ? 0.0f : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static short nullToZero(final Short number) {
 		return number == null ? (short) 0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static byte nullToZero(final Byte number) {
 		return number == null ? (byte) 0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static BigInteger nullToZero(final BigInteger number) {
 		return number == null ? BigInteger.ZERO : number;
 	}
 
 	/**
-	 * 空转0
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param decimal {@link BigDecimal}，可以为{@code null}
 	 * @return {@link BigDecimal}参数为空时返回0的值
