@@ -262,16 +262,10 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * 移除key对应的对象，不加锁
 	 *
 	 * @param key           键
-	 * @param withMissCount 是否计数丢失数
 	 * @return 移除的对象，无返回null
 	 */
-	protected CacheObj<K, V> removeWithoutLock(final K key, final boolean withMissCount) {
-		final CacheObj<K, V> co = cacheMap.remove(MutableObj.of(key));
-		if (withMissCount) {
-			// 在丢失计数有效的情况下，移除一般为get时的超时操作，此处应该丢失数+1
-			this.missCount.increment();
-		}
-		return co;
+	protected CacheObj<K, V> removeWithoutLock(final K key) {
+		return cacheMap.remove(MutableObj.of(key));
 	}
 
 	/**

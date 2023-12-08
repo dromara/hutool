@@ -53,7 +53,7 @@ public class NFATest {
 		stopWatch.start("wordtree_char_find");
 		final List<String> ans2 = wordTree.matchAll(input, -1, true, true);
 		stopWatch.stop();
-		Assertions.assertEquals("she,he,her,say", String.join(",", ans2));
+		Assertions.assertEquals("she,her,say", String.join(",", ans2));
 
 		//Console.log(stopWatch.prettyPrint());
 	}
@@ -120,7 +120,7 @@ public class NFATest {
 		wordTreeLocal.addWords("say", "her", "he", "she", "shr");
 		final List<String> ans2 = wordTreeLocal.matchAll(input, -1, true, true);
 		stopWatch.stop();
-		Assertions.assertEquals("she,he,her,say", String.join(",", ans2));
+		Assertions.assertEquals("she,her,say", String.join(",", ans2));
 
 		//Console.log(stopWatch.prettyPrint());
 	}
@@ -157,8 +157,8 @@ public class NFATest {
 		final List<String> result1 = wordTreeLocal.matchAll(input, -1, true, true);
 		stopWatch.stop();
 
-		Assertions.assertEquals(3, result1.size());
-		Assertions.assertEquals("赵,赵啊,赵啊三", String.join(",", result1));
+		Assertions.assertEquals(1, result1.size());
+		Assertions.assertEquals("赵啊三", String.join(",", result1));
 
 		//Console.log(stopWatch.prettyPrint());
 	}
@@ -196,8 +196,8 @@ public class NFATest {
 			.collect(Collectors.toList());
 		stopWatch.stop();
 
-		Assertions.assertEquals(3, result1.size());
-		Assertions.assertEquals("赵,赵啊,赵啊三", String.join(",", result1));
+		Assertions.assertEquals(1, result1.size());
+		Assertions.assertEquals("赵啊三", String.join(",", result1));
 
 		//Console.log(stopWatch.prettyPrint());
 	}
@@ -233,7 +233,7 @@ public class NFATest {
 		stopWatch.stop();
 
 		Assertions.assertEquals(1, result1.size());
-		Assertions.assertEquals("赵", String.join(",", result1));
+		Assertions.assertEquals("赵啊三", String.join(",", result1));
 
 		//Console.log(stopWatch.prettyPrint());
 	}

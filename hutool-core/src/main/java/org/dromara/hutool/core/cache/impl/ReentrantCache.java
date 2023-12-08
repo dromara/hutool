@@ -30,7 +30,6 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	private static final long serialVersionUID = 1L;
 
 	// 一些特殊缓存，例如使用了LinkedHashMap的缓存，由于get方法也会改变Map的结构，导致无法使用读写锁
-	// TODO 最优的解决方案是使用Guava的ConcurrentLinkedHashMap，此处使用简化的互斥锁
 	protected final ReentrantLock lock = new ReentrantLock();
 
 	@Override
@@ -45,49 +44,12 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 
 	@Override
 	public boolean containsKey(final K key) {
-		lock.lock();
-		try {
-			// 不存在或已移除
-			final CacheObj<K, V> co = getWithoutLock(key);
-			if (co == null) {
-				return false;
-			}
-
-			if (!co.isExpired()) {
-				// 命中
-				return true;
-			}
-		} finally {
-			lock.unlock();
-		}
-
-		// 过期
-		remove(key, true);
-		return false;
+		return null != getOrRemoveExpired(key, false, false);
 	}
 
 	@Override
 	public V get(final K key, final boolean isUpdateLastAccess) {
-		CacheObj<K, V> co;
-		lock.lock();
-		try {
-			co = getWithoutLock(key);
-		} finally {
-			lock.unlock();
-		}
-
-		// 未命中
-		if (null == co) {
-			missCount.increment();
-			return null;
-		} else if (!co.isExpired()) {
-			hitCount.increment();
-			return co.get(isUpdateLastAccess);
-		}
-
-		// 过期，既不算命中也不算非命中
-		remove(key, true);
-		return null;
+		return getOrRemoveExpired(key, isUpdateLastAccess, true);
 	}
 
 	@Override
@@ -114,7 +76,16 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 
 	@Override
 	public void remove(final K key) {
-		remove(key, false);
+		CacheObj<K, V> co;
+		lock.lock();
+		try {
+			co = removeWithoutLock(key);
+		} finally {
+			lock.unlock();
+		}
+		if (null != co) {
+			onRemove(co.key, co.obj);
+		}
 	}
 
 	@Override
@@ -138,21 +109,37 @@ public abstract class ReentrantCache<K, V> extends AbstractCache<K, V> {
 	}
 
 	/**
-	 * 移除key对应的对象
-	 *
-	 * @param key           键
-	 * @param withMissCount 是否计数丢失数
+	 * 获得值或清除过期值
+	 * @param key 键
+	 * @param isUpdateLastAccess 是否更新最后访问时间
+	 * @param isUpdateCount 是否更新计数器
+	 * @return 值或null
 	 */
-	private void remove(final K key, final boolean withMissCount) {
+	private V getOrRemoveExpired(final K key, final boolean isUpdateLastAccess, final boolean isUpdateCount) {
 		CacheObj<K, V> co;
 		lock.lock();
 		try {
-			co = removeWithoutLock(key, withMissCount);
+			co = getWithoutLock(key);
+			if(null != co && co.isExpired()){
+				//过期移除
+				removeWithoutLock(key);
+				co = null;
+			}
 		} finally {
 			lock.unlock();
 		}
-		if (null != co) {
-			onRemove(co.key, co.obj);
+
+		// 未命中
+		if (null == co) {
+			if(isUpdateCount){
+				missCount.increment();
+			}
+			return null;
 		}
+
+		if(isUpdateCount){
+			hitCount.increment();
+		}
+		return co.get(isUpdateLastAccess);
 	}
 }

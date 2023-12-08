@@ -45,54 +45,12 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 
 	@Override
 	public boolean containsKey(final K key) {
-		final long stamp = lock.readLock();
-		try {
-			// 不存在或已移除
-			final CacheObj<K, V> co = getWithoutLock(key);
-			if (co == null) {
-				return false;
-			}
-
-			if (!co.isExpired()) {
-				// 命中
-				return true;
-			}
-		} finally {
-			lock.unlockRead(stamp);
-		}
-
-		// 过期
-		remove(key, true);
-		return false;
+		return null != get(key, false, false);
 	}
 
 	@Override
 	public V get(final K key, final boolean isUpdateLastAccess) {
-		// 尝试读取缓存，使用乐观读锁
-		long stamp = lock.tryOptimisticRead();
-		CacheObj<K, V> co = getWithoutLock(key);
-		if(!lock.validate(stamp)){
-			// 有写线程修改了此对象，悲观读
-			stamp = lock.readLock();
-			try {
-				co = getWithoutLock(key);
-			} finally {
-				lock.unlockRead(stamp);
-			}
-		}
-
-		// 未命中
-		if (null == co) {
-			missCount.increment();
-			return null;
-		} else if (!co.isExpired()) {
-			hitCount.increment();
-			return co.get(isUpdateLastAccess);
-		}
-
-		// 过期，既不算命中也不算非命中
-		remove(key, true);
-		return null;
+		return get(key, isUpdateLastAccess, true);
 	}
 
 	@Override
@@ -119,7 +77,16 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 
 	@Override
 	public void remove(final K key) {
-		remove(key, false);
+		final long stamp = lock.writeLock();
+		CacheObj<K, V> co;
+		try {
+			co = removeWithoutLock(key);
+		} finally {
+			lock.unlockWrite(stamp);
+		}
+		if (null != co) {
+			onRemove(co.key, co.obj);
+		}
 	}
 
 	@Override
@@ -133,21 +100,78 @@ public abstract class StampedCache<K, V> extends AbstractCache<K, V>{
 	}
 
 	/**
-	 * 移除key对应的对象
+	 * 获取值
+	 *
+	 * @param key                键
+	 * @param isUpdateLastAccess 是否更新最后修改时间
+	 * @param isUpdateCount      是否更新命中数，get时更新，contains时不更新
+	 * @return 值或null
+	 */
+	private V get(final K key, final boolean isUpdateLastAccess, final boolean isUpdateCount) {
+		// 尝试读取缓存，使用乐观读锁
+		long stamp = lock.tryOptimisticRead();
+		CacheObj<K, V> co = getWithoutLock(key);
+		if (false == lock.validate(stamp)) {
+			// 有写线程修改了此对象，悲观读
+			stamp = lock.readLock();
+			try {
+				co = getWithoutLock(key);
+			} finally {
+				lock.unlockRead(stamp);
+			}
+		}
+
+		// 未命中
+		if (null == co) {
+			if (isUpdateCount) {
+				missCount.increment();
+			}
+			return null;
+		} else if (false == co.isExpired()) {
+			if (isUpdateCount) {
+				hitCount.increment();
+			}
+			return co.get(isUpdateLastAccess);
+		}
+
+		// 悲观锁，二次检查
+		return getOrRemoveExpired(key, isUpdateCount);
+	}
+
+	/**
+	 * 同步获取值，如果过期则移除之
 	 *
 	 * @param key           键
-	 * @param withMissCount 是否计数丢失数
+	 * @param isUpdateCount 是否更新命中数，get时更新，contains时不更新
+	 * @return 有效值或null
 	 */
-	private void remove(final K key, final boolean withMissCount) {
+	private V getOrRemoveExpired(final K key, final boolean isUpdateCount) {
 		final long stamp = lock.writeLock();
 		CacheObj<K, V> co;
 		try {
-			co = removeWithoutLock(key, withMissCount);
+			co = getWithoutLock(key);
+			if (null == co) {
+				return null;
+			}
+			if (false == co.isExpired()) {
+				// 首先尝试获取值，如果值存在且有效，返回之
+				if (isUpdateCount) {
+					hitCount.increment();
+				}
+				return co.getValue();
+			}
+
+			// 无效移除
+			co = removeWithoutLock(key);
+			if(isUpdateCount){
+				missCount.increment();
+			}
 		} finally {
 			lock.unlockWrite(stamp);
 		}
 		if (null != co) {
 			onRemove(co.key, co.obj);
 		}
+		return null;
 	}
 }
