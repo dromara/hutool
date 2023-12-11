@@ -90,9 +90,12 @@ public class HexUtil {
 	 *
 	 * @param data        byte[]
 	 * @param toLowerCase {@code true} 传换成小写格式 ， {@code false} 传换成大写格式
-	 * @return 十六进制char[]
+	 * @return 十六进制char[]。如果提供的data为{@code null}，返回{@code null}
 	 */
 	public static char[] encodeHex(final byte[] data, final boolean toLowerCase) {
+		if(null == data){
+			return null;
+		}
 		return (toLowerCase ? Base16Codec.CODEC_LOWER : Base16Codec.CODEC_UPPER).encode(data);
 	}
 
@@ -135,7 +138,7 @@ public class HexUtil {
 	 * @return 十六进制String
 	 */
 	public static String encodeHexStr(final byte[] data, final boolean toLowerCase) {
-		return new String(encodeHex(data, toLowerCase));
+		return StrUtil.str(encodeHex(data, toLowerCase), CharsetUtil.UTF_8);
 	}
 
 	// ---------------------------------------------------------------------------------------------------- decode
