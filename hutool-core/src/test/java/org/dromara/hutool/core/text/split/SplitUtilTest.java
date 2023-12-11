@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.core.text.split;
 
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,7 @@ import java.util.List;
  * @author Looly
  *
  */
-public class StrSplitterTest {
+public class SplitUtilTest {
 
 	@Test
 	public void splitByCharTest(){
@@ -113,5 +115,11 @@ public class StrSplitterTest {
 		Assertions.assertEquals("01  8", strings.get(0));
 		Assertions.assertEquals("   345678901823456178", strings.get(1));
 		Assertions.assertEquals("", strings.get(2));
+	}
+
+	@Test
+	void issue3421Test() {
+		final List<String> strings = SplitUtil.splitByRegex("", "", 0, false, false);
+		Assertions.assertEquals(ListUtil.empty(), strings);
 	}
 }
