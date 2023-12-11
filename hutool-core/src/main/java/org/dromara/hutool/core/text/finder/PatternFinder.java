@@ -63,9 +63,16 @@ public class PatternFinder extends TextFinder {
 	@Override
 	public int start(final int from) {
 		if (matcher.find(from)) {
+			final int end = matcher.end();
 			// 只有匹配到的字符串结尾在limit范围内，才算找到
-			if(matcher.end() <= getValidEndIndex()){
-				return matcher.start();
+			if(end <= getValidEndIndex()){
+				final int start = matcher.start();
+				if(start == end){
+					// issue#3421，如果匹配空串，按照未匹配对待，避免死循环
+					return INDEX_NOT_FOUND;
+				}
+
+				return start;
 			}
 		}
 		return INDEX_NOT_FOUND;

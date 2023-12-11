@@ -258,7 +258,12 @@ public class SplitUtil {
 	}
 
 	/**
-	 * 通过正则切分字符串
+	 * 通过正则切分字符串，规则如下：
+	 * <ul>
+	 *     <li>当提供的str为{@code null}时，返回new ArrayList(0)</li>
+	 *     <li>当提供的str为{@code ""}时，返回[""]</li>
+	 *     <li>当提供的separatorRegex为empty(null or "")时，返回[str]，即只有原串一个元素的数组</li>
+	 * </ul>
 	 *
 	 * @param str            字符串
 	 * @param separatorRegex 分隔符正则
@@ -269,19 +274,19 @@ public class SplitUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> splitByRegex(final CharSequence str, final String separatorRegex, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		if (StrUtil.isEmpty(str)) {
-			return ListUtil.zero();
-		}
-		if(StrUtil.isEmpty(separatorRegex)){
-			return ListUtil.of(str.toString());
-		}
-		final Pattern pattern = PatternPool.get(separatorRegex);
-		return splitByRegex(str, pattern, limit, isTrim, ignoreEmpty);
+		return splitByRegex(str,
+			// 给定字符串或正则为empty，就不再需要解析pattern
+			(StrUtil.isEmpty(str) || StrUtil.isEmpty(separatorRegex)) ? null : PatternPool.get(separatorRegex),
+			limit, isTrim, ignoreEmpty);
 	}
 
 	/**
-	 * 通过正则切分字符串<br>
-	 * 如果为空字符串或者null 则返回空集合
+	 * 通过正则切分字符串，规则如下：
+	 * <ul>
+	 *     <li>当提供的str为{@code null}时，返回new ArrayList(0)</li>
+	 *     <li>当提供的str为{@code ""}时，返回[""]</li>
+	 *     <li>当提供的separatorRegex为empty(null or "")时，返回[str]，即只有原串一个元素的数组</li>
+	 * </ul>
 	 *
 	 * @param str              字符串
 	 * @param separatorPattern 分隔符正则{@link Pattern}
@@ -292,11 +297,18 @@ public class SplitUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> splitByRegex(final CharSequence str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
-		if (StrUtil.isEmpty(str)) {
+		if (null == str) {
 			return ListUtil.zero();
 		}
+		if(0 == str.length()){
+			return ignoreEmpty ? ListUtil.zero() : ListUtil.of(StrUtil.EMPTY);
+		}
 		if(null == separatorPattern){
-			return ListUtil.of(str.toString());
+			final String result = str.toString();
+			if(StrUtil.isEmpty(result)){
+				return ignoreEmpty ? ListUtil.zero() : ListUtil.of(StrUtil.EMPTY);
+			}
+			return ListUtil.of(result);
 		}
 		final SplitIter splitIter = new SplitIter(str, new PatternFinder(separatorPattern), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);

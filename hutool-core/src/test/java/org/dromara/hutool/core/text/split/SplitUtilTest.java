@@ -14,10 +14,12 @@ package org.dromara.hutool.core.text.split;
 
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.text.finder.PatternFinder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * {@link SplitUtil} 单元测试
@@ -120,9 +122,23 @@ public class SplitUtilTest {
 	@Test
 	void issue3421Test() {
 		List<String> strings = SplitUtil.splitByRegex("", "", 0, false, false);
-		Assertions.assertEquals(ListUtil.empty(), strings);
+		Assertions.assertEquals(ListUtil.of(""), strings);
 
 		strings = SplitUtil.splitByRegex("aaa", "", 0, false, false);
 		Assertions.assertEquals(ListUtil.of("aaa"), strings);
+
+		strings = SplitUtil.splitByRegex("", "aaa", 0, false, false);
+		Assertions.assertEquals(ListUtil.of(""), strings);
+
+		strings = SplitUtil.splitByRegex("", "", 0, false, true);
+		Assertions.assertEquals(ListUtil.of(), strings);
+	}
+
+	@Test
+	void issue3421Test2() {
+		// 测试在无前置判断时，是否死循环
+		final SplitIter splitIter = new SplitIter("", new PatternFinder(Pattern.compile("")), -1, false);
+		final List<String> list = splitIter.toList(false);
+		Assertions.assertEquals(ListUtil.of(""), list);
 	}
 }
