@@ -269,6 +269,12 @@ public class SplitUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> splitByRegex(final CharSequence str, final String separatorRegex, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
+		if (StrUtil.isEmpty(str)) {
+			return ListUtil.zero();
+		}
+		if(StrUtil.isEmpty(separatorRegex)){
+			return ListUtil.of(str.toString());
+		}
 		final Pattern pattern = PatternPool.get(separatorRegex);
 		return splitByRegex(str, pattern, limit, isTrim, ignoreEmpty);
 	}
@@ -288,6 +294,9 @@ public class SplitUtil {
 	public static List<String> splitByRegex(final CharSequence str, final Pattern separatorPattern, final int limit, final boolean isTrim, final boolean ignoreEmpty) {
 		if (StrUtil.isEmpty(str)) {
 			return ListUtil.zero();
+		}
+		if(null == separatorPattern){
+			return ListUtil.of(str.toString());
 		}
 		final SplitIter splitIter = new SplitIter(str, new PatternFinder(separatorPattern), limit, ignoreEmpty);
 		return splitIter.toList(isTrim);
