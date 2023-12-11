@@ -104,6 +104,18 @@ public class ImgUtilTest {
 
 	@Test
 	@Disabled
+	public void pressImageFullScreenTest() {
+		ImgUtil.pressImageFull(new File("/Users/imashimaro/Downloads/Background.png"),
+				new File("/Users/imashimaro/Downloads/Background_logo.png"),
+				new File("/Users/imashimaro/Downloads/logo.png"),
+				2,
+				30,
+				0.5F);
+
+	}
+
+	@Test
+	@Disabled
 	public void sliceByRowsAndColsTest() {
 		ImgUtil.sliceByRowsAndCols(FileUtil.file("d:/test/logo.jpg"), FileUtil.file("d:/test/dest"), ImgUtil.IMAGE_TYPE_JPEG, 1, 5);
 	}
