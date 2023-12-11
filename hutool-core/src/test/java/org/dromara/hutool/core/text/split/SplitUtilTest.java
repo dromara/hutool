@@ -119,7 +119,10 @@ public class SplitUtilTest {
 
 	@Test
 	void issue3421Test() {
-		final List<String> strings = SplitUtil.splitByRegex("", "", 0, false, false);
+		List<String> strings = SplitUtil.splitByRegex("", "", 0, false, false);
 		Assertions.assertEquals(ListUtil.empty(), strings);
+
+		strings = SplitUtil.splitByRegex("aaa", "", 0, false, false);
+		Assertions.assertEquals(ListUtil.of("aaa"), strings);
 	}
 }
