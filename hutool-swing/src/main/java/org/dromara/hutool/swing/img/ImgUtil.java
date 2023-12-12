@@ -844,6 +844,77 @@ public class ImgUtil {
 		return Img.from(srcImage).pressText(pressText, color, font, x, y, alpha).getImg();
 	}
 
+
+	/**
+	 * 给图片添加全屏文字水印<br>
+	 *
+	 * @param imageFile  源图像文件
+	 * @param destFile   目标图像文件
+	 * @param pressText  水印文字
+	 * @param color      水印的字体颜色
+	 * @param font       {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param lineHeight 行高
+	 * @param degree     水印文字旋转角度
+	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void pressTextFull(final File imageFile, final File destFile, final String pressText, final Color color, final Font font, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
+		pressTextFull(read(imageFile), destFile, pressText, color, font, lineHeight, degree, alpha);
+	}
+
+	/**
+	 * 给图片添加全屏文字水印<br>
+	 * 此方法并不关闭流
+	 *
+	 * @param srcStream  源图像流
+	 * @param destStream 目标图像流
+	 * @param pressText  水印文字
+	 * @param color      水印的字体颜色
+	 * @param font       {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param lineHeight 行高
+	 * @param degree     水印文字旋转角度
+	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void pressTextFull(final InputStream srcStream, final OutputStream destStream, final String pressText, final Color color, final Font font, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
+		writeJpg(pressTextFull(read(srcStream), pressText, color, font, lineHeight, degree, alpha), destStream);
+	}
+
+
+	/**
+	 * 给图片添加全屏文字水印<br>
+	 * 此方法并不关闭流
+	 * @param srcImage   源图像
+	 * @param destFile   目标图像文件
+	 * @param pressText  水印文字
+	 * @param color      水印的字体颜色
+	 * @param font       {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param lineHeight 行高
+	 * @param degree     水印文字旋转角度
+	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void pressTextFull(final Image srcImage, final File destFile, final String pressText, final Color color, final Font font, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
+		write(pressTextFull(srcImage, pressText, color, font, lineHeight, degree, alpha), destFile);
+	}
+
+	/**
+	 * 给图片添加全屏文字水印<br>
+	 * 此方法并不关闭流
+	 * @param srcImage   源图像
+	 * @param pressText  水印文字
+	 * @param color      水印的字体颜色
+	 * @param font       {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param lineHeight 行高
+	 * @param degree     旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 处理后的图像
+	 */
+	public static Image pressTextFull(final Image srcImage, final String pressText, final Color color, final Font font, final int lineHeight, final int degree, final float alpha) {
+		return Img.from(srcImage).pressTextFull(pressText, color, font, lineHeight, degree, alpha).getImg();
+	}
+
+
 	/**
 	 * 给图片添加图片水印
 	 *
@@ -968,6 +1039,56 @@ public class ImgUtil {
 	public static Image pressImage(final Image srcImage, final Image pressImg, final Rectangle rectangle, final float alpha) {
 		return Img.from(srcImage).pressImage(pressImg, rectangle, alpha).getImg();
 	}
+
+
+	/**
+	 * 给图片添加全屏图片水印<br>
+	 *
+	 * @param imageFile      源图像文件
+	 * @param destFile       目标图像文件
+	 * @param pressImageFile 水印图像文件
+	 * @param lineHeight     行高
+	 * @param degree         水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha          透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void pressImageFull(final File imageFile, final File destFile, final File pressImageFile, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
+		write(pressImageFull(read(imageFile), read(pressImageFile), lineHeight, degree, alpha), destFile);
+	}
+
+	/**
+	 * 给图片添加全屏图像水印<br>
+	 * 此方法并不关闭流
+	 *
+	 * @param srcStream   源图像流
+	 * @param destStream  目标图像流
+	 * @param pressStream 水印图像流
+	 * @param lineHeight  行高
+	 * @param degree      水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha       透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void pressImageFull(final InputStream srcStream, final OutputStream destStream, final InputStream pressStream, final int lineHeight, final int degree, final float alpha) throws IORuntimeException {
+		writeJpg(pressImageFull(read(srcStream), read(pressStream), lineHeight, degree, alpha), destStream);
+	}
+
+
+
+	/**
+	 * 给图片添加全屏图像水印<br>
+	 * 此方法并不关闭流
+	 * @param srcImage   源图像
+	 * @param pressImage 水印图像
+	 * @param lineHeight 行高
+	 * @param degree     水印图像旋转角度，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针，（单位：弧度），以圆点（0,0）为圆心，正代表顺时针，负代表逆时针
+	 * @param alpha      透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 处理后的图像
+	 */
+	public static Image pressImageFull(final Image srcImage, final Image pressImage, final int lineHeight, final int degree, final float alpha) {
+		return Img.from(srcImage).pressImageFull(pressImage, lineHeight, degree, alpha).getImg();
+	}
+
+
 	// endregion
 
 	// region ----- rotate
