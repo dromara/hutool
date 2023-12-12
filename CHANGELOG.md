@@ -11,6 +11,7 @@
 * 【core  】      修复CharSequenceUtil注释和引用，避免循环引用
 * 【extra 】      SpringUtil增加getProperty重载（pr#1122@Gitee）
 * 【core  】      FileTypeUtil增加null判断（issue#3419@Github）
+* 【core  】      DateUtil.parse支持毫秒时间戳（issue#I8NMP7@Gitee）
 
 ### 🐞Bug修复
 * 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）

@@ -981,6 +981,9 @@ public class DateUtil extends CalendarUtil {
 				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
 			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
+			}else if(length == 13){
+				// 时间戳
+				return date(NumberUtil.parseLong(dateStr));
 			}
 		} else if (ReUtil.isMatch(PatternPool.TIME, dateStr)) {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析

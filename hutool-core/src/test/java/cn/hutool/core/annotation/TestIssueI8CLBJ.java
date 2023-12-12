@@ -30,7 +30,7 @@ public class TestIssueI8CLBJ {
 			Thread thread = new Thread(() -> {
 				try {
 					String valueFieldName = annotation.valueFieldName();
-					System.out.println("valueFieldName:" + valueFieldName);
+					//Console.log("valueFieldName:" + valueFieldName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
