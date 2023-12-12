@@ -196,16 +196,15 @@ public class ByteUtilTest {
 
 	@Test
 	public void toUnsignedBitIndex() {
-		byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
-		List<Integer> list = ByteUtil.toUnsignedBitIndex(bytes);
-		Console.log(list);
+		final byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
+		final List<Integer> list = ByteUtil.toUnsignedBitIndex(bytes);
+		Assertions.assertEquals("[12, 13, 15, 16, 17, 24, 25, 26, 31, 33, 34, 37, 39, 41, 43, 44, 50, 52, 53, 54, 55, 56, 57]", list.toString());
 	}
 
 	@Test
 	public void bitCount() {
-		byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
-		int count = ByteUtil.bitCount(bytes);
-		Console.log(count);
+		final byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
+		final int count = ByteUtil.bitCount(bytes);
 		Assertions.assertEquals(count, ByteUtil.toUnsignedBitIndex(bytes).size());
 	}
 }

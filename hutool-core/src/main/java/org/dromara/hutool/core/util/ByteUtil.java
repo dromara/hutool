@@ -213,14 +213,14 @@ public class ByteUtil {
 	public static int toInt(final byte[] bytes, final int start, final ByteOrder byteOrder) {
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			return bytes[start] & 0xFF | //
-					(bytes[1 + start] & 0xFF) << 8 | //
-					(bytes[2 + start] & 0xFF) << 16 | //
-					(bytes[3 + start] & 0xFF) << 24; //
+				(bytes[1 + start] & 0xFF) << 8 | //
+				(bytes[2 + start] & 0xFF) << 16 | //
+				(bytes[3 + start] & 0xFF) << 24; //
 		} else {
 			return bytes[3 + start] & 0xFF | //
-					(bytes[2 + start] & 0xFF) << 8 | //
-					(bytes[1 + start] & 0xFF) << 16 | //
-					(bytes[start] & 0xFF) << 24; //
+				(bytes[2 + start] & 0xFF) << 8 | //
+				(bytes[1 + start] & 0xFF) << 16 | //
+				(bytes[start] & 0xFF) << 24; //
 		}
 
 	}
@@ -248,18 +248,18 @@ public class ByteUtil {
 
 		if (ByteOrder.LITTLE_ENDIAN == byteOrder) {
 			return new byte[]{ //
-					(byte) (intValue & 0xFF), //
-					(byte) ((intValue >> 8) & 0xFF), //
-					(byte) ((intValue >> 16) & 0xFF), //
-					(byte) ((intValue >> 24) & 0xFF) //
+				(byte) (intValue & 0xFF), //
+				(byte) ((intValue >> 8) & 0xFF), //
+				(byte) ((intValue >> 16) & 0xFF), //
+				(byte) ((intValue >> 24) & 0xFF) //
 			};
 
 		} else {
 			return new byte[]{ //
-					(byte) ((intValue >> 24) & 0xFF), //
-					(byte) ((intValue >> 16) & 0xFF), //
-					(byte) ((intValue >> 8) & 0xFF), //
-					(byte) (intValue & 0xFF) //
+				(byte) ((intValue >> 24) & 0xFF), //
+				(byte) ((intValue >> 16) & 0xFF), //
+				(byte) ((intValue >> 8) & 0xFF), //
+				(byte) (intValue & 0xFF) //
 			};
 		}
 
@@ -480,7 +480,7 @@ public class ByteUtil {
 			return ByteUtil.toBytes(number.shortValue(), byteOrder);
 		} else if (number instanceof Float) {
 			return toBytes(number.floatValue(), byteOrder);
-		} else if(number instanceof BigInteger){
+		} else if (number instanceof BigInteger) {
 			return ((BigInteger) number).toByteArray();
 		} else {
 			return toBytes(number.doubleValue(), byteOrder);
@@ -620,7 +620,7 @@ public class ByteUtil {
 	 * @return 连接后的byte[]
 	 * @since 6.0.0
 	 */
-	public static byte[] concat(final byte[]... byteArrays){
+	public static byte[] concat(final byte[]... byteArrays) {
 		int totalLength = 0;
 		for (final byte[] byteArray : byteArrays) {
 			totalLength += byteArray.length;
@@ -638,10 +638,11 @@ public class ByteUtil {
 	 *
 	 * @param buf 无符号bytes
 	 * @return 为 1 的个数
+	 * @see Integer#bitCount(int)
 	 */
 	public static int bitCount(final byte[] buf) {
 		int sum = 0;
-		for (byte b : buf) {
+		for (final byte b : buf) {
 			sum += Integer.bitCount((b & 0xFF));
 		}
 		return sum;
@@ -654,9 +655,9 @@ public class ByteUtil {
 	 * @return 位数为1的索引集合
 	 */
 	public static List<Integer> toUnsignedBitIndex(final byte[] bytes) {
-		List<Integer> idxList = new LinkedList<>();
-		StringBuilder sb = new StringBuilder();
-		for (byte b : bytes) {
+		final List<Integer> idxList = new LinkedList<>();
+		final StringBuilder sb = new StringBuilder();
+		for (final byte b : bytes) {
 			sb.append(StrUtil.padPre(Integer.toBinaryString((b & 0xFF)), 8, "0"));
 		}
 		final String bitStr = sb.toString();
