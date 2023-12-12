@@ -12,11 +12,13 @@
 
 package org.dromara.hutool.core.util;
 
+import org.dromara.hutool.core.lang.Console;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
 
 public class ByteUtilTest {
 	@Test
@@ -190,5 +192,20 @@ public class ByteUtilTest {
 		wrap.order(ByteOrder.BIG_ENDIAN);
 		aShort = wrap.getShort();
 		Assertions.assertEquals(a, aShort);
+	}
+
+	@Test
+	public void toUnsignedBitIndex() {
+		byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
+		List<Integer> list = ByteUtil.toUnsignedBitIndex(bytes);
+		Console.log(list);
+	}
+
+	@Test
+	public void bitCount() {
+		byte[] bytes = {0, 13, -64, -31, 101, 88, 47, -64};
+		int count = ByteUtil.bitCount(bytes);
+		Console.log(count);
+		Assertions.assertEquals(count, ByteUtil.toUnsignedBitIndex(bytes).size());
 	}
 }

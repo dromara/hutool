@@ -14,11 +14,14 @@ package org.dromara.hutool.core.util;
 
 import org.dromara.hutool.core.io.buffer.FastByteBuffer;
 import org.dromara.hutool.core.math.NumberUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.DoubleAdder;
@@ -628,5 +631,40 @@ public class ByteUtil {
 			buffer.append(byteArray);
 		}
 		return buffer.toArrayZeroCopyIfPossible();
+	}
+
+	/**
+	 * 统计byte中位数为1的个数
+	 *
+	 * @param buf 无符号bytes
+	 * @return 为 1 的个数
+	 */
+	public static int bitCount(final byte[] buf) {
+		int sum = 0;
+		for (byte b : buf) {
+			sum += Integer.bitCount((b & 0xFF));
+		}
+		return sum;
+	}
+
+	/**
+	 * 统计无符号bytes转为bit位数为1的索引集合
+	 *
+	 * @param bytes 无符号bytes
+	 * @return 位数为1的索引集合
+	 */
+	public static List<Integer> toUnsignedBitIndex(final byte[] bytes) {
+		List<Integer> idxList = new LinkedList<>();
+		StringBuilder sb = new StringBuilder();
+		for (byte b : bytes) {
+			sb.append(StrUtil.padPre(Integer.toBinaryString((b & 0xFF)), 8, "0"));
+		}
+		final String bitStr = sb.toString();
+		for (int i = 0; i < bitStr.length(); i++) {
+			if (bitStr.charAt(i) == '1') {
+				idxList.add(i);
+			}
+		}
+		return idxList;
 	}
 }
