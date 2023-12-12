@@ -20,6 +20,7 @@
 * 【core  】      修复ImgUtil.convert png转jpg在jdk9+中失败问题（issue#I8L8UA@Gitee）
 * 【cache 】      修复StampedCache的get方法非原子问题（issue#I8MEIX@Gitee）
 * 【core  】      修复StrSplitter.splitByRegex使用空参数导致的OOM问题（issue#3421@Github）
+* 【db    】      修复嵌套SQL中order by子句错误截断问题（issue#I89RXV@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)
