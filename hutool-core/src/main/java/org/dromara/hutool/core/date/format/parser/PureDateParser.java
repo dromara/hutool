@@ -16,6 +16,7 @@ import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.format.DefaultDateBasic;
+import org.dromara.hutool.core.math.NumberUtil;
 
 /**
  * 纯数字的日期字符串解析，支持格式包括；
@@ -24,6 +25,7 @@ import org.dromara.hutool.core.date.format.DefaultDateBasic;
  *   <li>yyyyMMddHHmmssSSS</li>
  *   <li>yyyyMMdd</li>
  *   <li>HHmmss</li>
+ *   <li>毫秒时间戳</li>
  * </ul>
  *
  * @author looly
@@ -49,6 +51,9 @@ public class PureDateParser extends DefaultDateBasic implements DateParser {
 			return new DateTime(source, DatePattern.PURE_DATE_FORMAT);
 		} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 			return new DateTime(source, DatePattern.PURE_TIME_FORMAT);
+		} else if(length == 13){
+			// 时间戳
+			return new DateTime(NumberUtil.parseLong(source));
 		}
 
 		throw new DateException("No pure format fit for date String [{}] !", source);

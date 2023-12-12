@@ -1130,4 +1130,11 @@ public class DateUtilTest {
 		Assertions.assertNotNull(parse);
 		Assertions.assertEquals("2019-10-22 09:56:03", parse.toString());
 	}
+
+	@Test
+	public void issueI8NMP7Test() {
+		final String str = "1702262524444";
+		final DateTime parse = DateUtil.parse(str);
+		Assertions.assertEquals("2023-12-11 10:42:04", Objects.requireNonNull(parse).toString());
+	}
 }
