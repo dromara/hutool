@@ -12,8 +12,12 @@
 
 package org.dromara.hutool.http.server;
 
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.stream.LimitedInputStream;
 import org.dromara.hutool.core.map.CaseInsensitiveMap;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.multi.ListValueMap;
@@ -22,7 +26,6 @@ import org.dromara.hutool.core.net.multipart.MultipartFormData;
 import org.dromara.hutool.core.net.multipart.UploadSetting;
 import org.dromara.hutool.core.net.url.UrlQueryUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 import org.dromara.hutool.core.util.ObjUtil;
 import org.dromara.hutool.http.meta.ContentTypeUtil;
@@ -30,8 +33,6 @@ import org.dromara.hutool.http.meta.HeaderName;
 import org.dromara.hutool.http.meta.Method;
 import org.dromara.hutool.http.useragent.UserAgent;
 import org.dromara.hutool.http.useragent.UserAgentUtil;
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -305,7 +306,24 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 流
 	 */
 	public InputStream getBodyStream() {
-		return this.httpExchange.getRequestBody();
+		InputStream bodyStream = this.httpExchange.getRequestBody();
+
+		//issue#I6Q30X，读取body长度，避免读取结束后无法正常结束问题
+		final String contentLengthStr = getHeader(HeaderName.CONTENT_LENGTH);
+		long contentLength = 0;
+		if(StrUtil.isNotBlank(contentLengthStr)){
+			try{
+				contentLength = Long.parseLong(contentLengthStr);
+			} catch (final NumberFormatException ignore){
+				// ignore
+			}
+		}
+
+		if(contentLength > 0){
+			bodyStream = new LimitedInputStream(bodyStream, contentLength);
+		}
+
+		return bodyStream;
 	}
 
 	/**

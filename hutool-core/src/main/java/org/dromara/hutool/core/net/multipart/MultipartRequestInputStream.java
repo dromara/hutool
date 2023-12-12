@@ -29,6 +29,11 @@ import java.nio.charset.Charset;
  */
 public class MultipartRequestInputStream extends BufferedInputStream {
 
+	/**
+	 * 构造
+	 *
+	 * @param in {@link InputStream}
+	 */
 	public MultipartRequestInputStream(final InputStream in) {
 		super(in);
 	}
@@ -101,6 +106,11 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	protected UploadFileHeader lastHeader;
 
+	/**
+	 * 获取最后的头信息
+	 *
+	 * @return 头信息
+	 */
 	public UploadFileHeader getLastHeader() {
 		return lastHeader;
 	}

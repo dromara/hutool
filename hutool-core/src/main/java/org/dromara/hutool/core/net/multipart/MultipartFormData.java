@@ -81,7 +81,7 @@ public class MultipartFormData {
 			if (header.isFile == true) {
 				// 文件类型的表单项
 				final String fileName = header.fileName;
-				if (fileName.length() > 0 && header.contentType.contains("application/x-macbinary")) {
+				if (!fileName.isEmpty() && header.contentType.contains("application/x-macbinary")) {
 					input.skipBytes(128);
 				}
 				final UploadFile newFile = new UploadFile(header, setting);
