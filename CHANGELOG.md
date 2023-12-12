@@ -21,6 +21,7 @@
 * 【cache 】      修复StampedCache的get方法非原子问题（issue#I8MEIX@Gitee）
 * 【core  】      修复StrSplitter.splitByRegex使用空参数导致的OOM问题（issue#3421@Github）
 * 【db    】      修复嵌套SQL中order by子句错误截断问题（issue#I89RXV@Gitee）
+* 【http  】      修复graalvm编译后，未读取Content-Length可能导致的读取时间过长问题（issue#I6Q30X@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)

@@ -3,6 +3,7 @@ package cn.hutool.http.server;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.LimitedInputStream;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.net.NetUtil;
@@ -294,7 +295,24 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 流
 	 */
 	public InputStream getBodyStream() {
-		return this.httpExchange.getRequestBody();
+		InputStream bodyStream = this.httpExchange.getRequestBody();
+
+		//issue#I6Q30X，读取body长度，避免读取结束后无法正常结束问题
+		final String contentLengthStr = getHeader(Header.CONTENT_LENGTH);
+		long contentLength = 0;
+		if(StrUtil.isNotBlank(contentLengthStr)){
+			try{
+				contentLength = Long.parseLong(contentLengthStr);
+			} catch (final NumberFormatException ignore){
+				// ignore
+			}
+		}
+
+		if(contentLength > 0){
+			bodyStream = new LimitedInputStream(bodyStream, contentLength);
+		}
+
+		return bodyStream;
 	}
 
 	/**
