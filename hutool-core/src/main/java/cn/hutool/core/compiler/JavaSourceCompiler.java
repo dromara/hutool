@@ -244,7 +244,7 @@ public class JavaSourceCompiler {
 		for (Resource resource : this.sourceList) {
 			if (resource instanceof FileResource) {
 				final File file = ((FileResource) resource).getFile();
-				FileUtil.walkFiles(file, (subFile) -> list.addAll(JavaFileObjectUtil.getJavaFileObjects(file)));
+				FileUtil.walkFiles(file, (subFile) -> list.addAll(JavaFileObjectUtil.getJavaFileObjects(subFile)));
 			} else {
 				list.add(new JavaSourceFileObject(resource.getName(), resource.getStream()));
 			}
