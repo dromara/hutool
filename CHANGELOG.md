@@ -24,6 +24,7 @@
 * 【db    】      修复嵌套SQL中order by子句错误截断问题（issue#I89RXV@Gitee）
 * 【http  】      修复graalvm编译后，未读取Content-Length可能导致的读取时间过长问题（issue#I6Q30X@Gitee）
 * 【core  】      修复JavaSourceCompiler.addSource目录处理错误问题（issue#3425@Github）
+* 【core  】      修复时间戳转Bean时异常问题（issue#I8NMP7@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)
