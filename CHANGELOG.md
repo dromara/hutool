@@ -2,7 +2,7 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.24(2023-12-13)
+# 5.8.24(2023-12-14)
 
 ### 🐣新特性
 * 【cache 】      Cache增加get重载，可自定义超时时间（issue#I8G0DL@Gitee）
@@ -12,6 +12,7 @@
 * 【extra 】      SpringUtil增加getProperty重载（pr#1122@Gitee）
 * 【core  】      FileTypeUtil增加null判断（issue#3419@Github）
 * 【core  】      DateUtil.parse支持毫秒时间戳（issue#I8NMP7@Gitee）
+* 【extra 】      优化TokenizerEngine使用IK分词器支持并发（pr#3427@Github）
 
 ### 🐞Bug修复
 * 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）

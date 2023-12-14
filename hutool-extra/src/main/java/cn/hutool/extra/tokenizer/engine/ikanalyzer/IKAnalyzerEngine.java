@@ -1,10 +1,8 @@
 package cn.hutool.extra.tokenizer.engine.ikanalyzer;
 
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
-import org.wltea.analyzer.cfg.Configuration;
 import org.wltea.analyzer.core.IKSegmenter;
 
 /**
@@ -15,27 +13,25 @@ import org.wltea.analyzer.core.IKSegmenter;
  */
 public class IKAnalyzerEngine implements TokenizerEngine {
 
-	private final IKSegmenter seg;
-
 	/**
 	 * 构造
 	 */
 	public IKAnalyzerEngine() {
-		this(new IKSegmenter(null, true));
 	}
 
 	/**
 	 * 构造
 	 *
 	 * @param seg {@link IKSegmenter}
+	 * @deprecated 并发问题，导致无法共用IKSegmenter，因此废弃
 	 */
+	@Deprecated
 	public IKAnalyzerEngine(IKSegmenter seg) {
-		this.seg = seg;
 	}
 
 	@Override
 	public Result parse(CharSequence text) {
-		IKSegmenter copySeg = new IKSegmenter(null, (Configuration) ReflectUtil.getFieldValue(this.seg, "cfg"));
+		final IKSegmenter copySeg = new IKSegmenter(null, true);
 		copySeg.reset(StrUtil.getReader(text));
 		return new IKAnalyzerResult(copySeg);
 	}
