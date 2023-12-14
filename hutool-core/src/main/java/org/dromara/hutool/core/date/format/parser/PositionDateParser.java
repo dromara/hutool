@@ -47,16 +47,4 @@ public interface PositionDateParser extends DateParser {
 	 * @throws IllegalArgumentException when Calendar has been set to be not lenient, and a parsed field is out of range.
 	 */
 	boolean parse(String source, ParsePosition pos, Calendar calendar);
-
-	/**
-	 * 根据 {@link ParsePosition} 给定将日期字符串解析并转换为  {@link Date} 对象<br>
-	 *
-	 * @param source A {@code String} whose beginning should be parsed.
-	 * @param pos    the parse position
-	 * @return a {@code java.util.Date} object
-	 * @see java.text.DateFormat#parseObject(String, ParsePosition)
-	 */
-	default Object parseObject(final String source, final ParsePosition pos) {
-		return parse(source, pos);
-	}
 }

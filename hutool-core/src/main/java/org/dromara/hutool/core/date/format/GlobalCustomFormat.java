@@ -47,8 +47,8 @@ public class GlobalCustomFormat {
 		parserMap = new SafeConcurrentHashMap<>();
 
 		// Hutool预设的几种自定义格式
-		putFormatter(FORMAT_SECONDS, (date) -> String.valueOf(Math.floorDiv(date.getTime(), 1000)));
-		putParser(FORMAT_SECONDS, (dateStr) -> DateUtil.date(Math.multiplyExact(Long.parseLong(dateStr.toString()), 1000)));
+		putFormatter(FORMAT_SECONDS, (date) -> String.valueOf(Math.floorDiv(date.getTime(), 1000L)));
+		putParser(FORMAT_SECONDS, (dateStr) -> DateUtil.date(Math.multiplyExact(Long.parseLong(dateStr.toString()), 1000L)));
 
 		putFormatter(FORMAT_MILLISECONDS, (date) -> String.valueOf(date.getTime()));
 		putParser(FORMAT_MILLISECONDS, (dateStr) -> DateUtil.date(Long.parseLong(dateStr.toString())));

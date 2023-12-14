@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.date.format.parser;
 
+import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.FastDatePrinter;
 import org.dromara.hutool.core.date.format.SimpleDateBasic;
@@ -20,21 +21,8 @@ import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.DateFormatSymbols;
-import java.text.ParseException;
 import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -236,16 +224,16 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 	}
 
 	@Override
-	public Date parse(final String source) throws ParseException {
+	public Date parse(final String source) throws DateException {
 		final ParsePosition pp = new ParsePosition(0);
 		final Date date = parse(source, pp);
 		if (date == null) {
 			// Add a note re supported date range
 			if (locale.equals(JAPANESE_IMPERIAL)) {
-				throw new ParseException("(The " + locale + " locale does not support dates before 1868 AD)\n" +
-						"Unparseable date: \"" + source, pp.getErrorIndex());
+				throw new DateException("(The " + locale + " locale does not support dates before 1868 AD)\n" +
+					"Unparseable date: \"" + source, pp.getErrorIndex());
 			}
-			throw new ParseException("Unparseable date: " + source, pp.getErrorIndex());
+			throw new DateException("Unparseable date: " + source, pp.getErrorIndex());
 		}
 		return date;
 	}
@@ -365,16 +353,6 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 
 		void createPattern(final String regex) {
 			this.pattern = Pattern.compile(regex);
-		}
-
-		/**
-		 * Is this field a number? The default implementation returns false.
-		 *
-		 * @return true, if field is a number
-		 */
-		@Override
-		boolean isNumber() {
-			return false;
 		}
 
 		@Override
@@ -505,11 +483,6 @@ public class FastDateParser extends SimpleDateBasic implements PositionDateParse
 		 */
 		CopyQuotedStrategy(final String formatField) {
 			this.formatField = formatField;
-		}
-
-		@Override
-		boolean isNumber() {
-			return false;
 		}
 
 		@Override

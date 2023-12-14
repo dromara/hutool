@@ -19,9 +19,6 @@ import org.dromara.hutool.core.date.format.FastDateFormat;
 import org.dromara.hutool.core.date.format.GlobalCustomFormat;
 import org.dromara.hutool.core.date.format.parser.*;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.math.NumberUtil;
-import org.dromara.hutool.core.regex.PatternPool;
-import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
 
@@ -807,21 +804,9 @@ public class DateUtil extends CalendarUtil {
 		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
 		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
 
-		if (PureDateParser.INSTANCE.test(dateStr)) {
-			// 纯数字形式
-			return PureDateParser.INSTANCE.parse(dateStr);
-		} else if (TimeParser.INSTANCE.test(dateStr)) {
-			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
-			return TimeParser.INSTANCE.parse(dateStr);
-		} else if (CSTDateParser.INSTANCE.test(dateStr)) {
-			// JDK的Date对象toString默认格式，类似于：
-			// Tue Jun 4 16:25:15 +0800 2019
-			// Thu May 16 17:57:18 GMT+08:00 2019
-			// Wed Aug 01 00:00:00 CST 2012
-			return CSTDateParser.INSTANCE.parse(dateStr);
-		} else if (ISO8601DateParser.INSTANCE.test(dateStr)) {
-			// ISO8601标准时间
-			return ISO8601DateParser.INSTANCE.parse(dateStr);
+		final Date result = RegisterDateParser.INSTANCE.parse(dateStr);
+		if(null != result){
+			return date(result);
 		}
 
 		//标准日期格式（包括单个数字的日期时间）

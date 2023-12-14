@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.date.format;
 
+import org.dromara.hutool.core.date.DateException;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.format.parser.FastDateParser;
 import org.dromara.hutool.core.date.format.parser.PositionDateParser;
@@ -344,7 +345,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 
 	// ----------------------------------------------------------------------- Parsing
 	@Override
-	public Date parse(final String source) throws ParseException {
+	public Date parse(final String source) throws DateException {
 		return parser.parse(source);
 	}
 
@@ -360,7 +361,7 @@ public class FastDateFormat extends Format implements PositionDateParser, DatePr
 
 	@Override
 	public Object parseObject(final String source, final ParsePosition pos) {
-		return parser.parseObject(source, pos);
+		return parser.parse(source, pos);
 	}
 
 	// ----------------------------------------------------------------------- Accessors
