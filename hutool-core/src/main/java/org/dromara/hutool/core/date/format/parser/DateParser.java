@@ -21,7 +21,7 @@ import java.util.Date;
  * 日期解析接口，用于解析日期字符串为 {@link Date} 对象<br>
  * Thanks to Apache Commons Lang 3.5
  */
-public interface DateParser extends DateBasic {
+public interface DateParser extends DateBasic{
 
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>

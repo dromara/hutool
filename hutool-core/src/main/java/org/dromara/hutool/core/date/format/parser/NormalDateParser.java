@@ -17,8 +17,11 @@ import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.format.DefaultDateBasic;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.CharUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * 标准日期字符串解析，支持格式；
@@ -33,13 +36,20 @@ import org.dromara.hutool.core.text.CharUtil;
  * @author looly
  * @since 6.0.0
  */
-public class NormalDateParser extends DefaultDateBasic implements DateParser {
+public class NormalDateParser extends DefaultDateBasic implements PredicateDateParser {
 	private static final long serialVersionUID = 1L;
+
+	private static final Pattern patternNorm = Pattern.compile("\\d{4}-\\d{1,2}-\\d{1,2}(\\s\\d{1,2}:\\d{1,2}(:\\d{1,2})?(.\\d{1,6})?)?");
 
 	/**
 	 * 单例
 	 */
 	public static NormalDateParser INSTANCE = new NormalDateParser();
+
+	@Override
+	public boolean test(final CharSequence dateStr) {
+		return ReUtil.isMatch(patternNorm, dateStr);
+	}
 
 	@Override
 	public DateTime parse(String source) {

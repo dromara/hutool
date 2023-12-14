@@ -31,13 +31,18 @@ import org.dromara.hutool.core.math.NumberUtil;
  * @author looly
  * @since 6.0.0
  */
-public class PureDateParser extends DefaultDateBasic implements DateParser {
+public class PureDateParser extends DefaultDateBasic implements PredicateDateParser {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
 	public static PureDateParser INSTANCE = new PureDateParser();
+
+	@Override
+	public boolean test(final CharSequence dateStr) {
+		return NumberUtil.isNumber(dateStr);
+	}
 
 	@Override
 	public DateTime parse(final String source) throws DateException {

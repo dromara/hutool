@@ -48,15 +48,6 @@ import java.util.stream.Collectors;
  */
 public class DateUtil extends CalendarUtil {
 
-	/**
-	 * java.util.Date EEE MMM zzz 缩写数组
-	 */
-	private final static String[] wtb = { //
-			"sun", "mon", "tue", "wed", "thu", "fri", "sat", // 星期
-			"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", // 月份
-			"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"// 时间标准
-	};
-
 	// region  ----- date
 	/**
 	 * 当前时间，转换为{@link DateTime}对象
@@ -816,26 +807,27 @@ public class DateUtil extends CalendarUtil {
 		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
 		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
 
-		if (NumberUtil.isNumber(dateStr)) {
+		if (PureDateParser.INSTANCE.test(dateStr)) {
 			// 纯数字形式
 			return PureDateParser.INSTANCE.parse(dateStr);
-		} else if (ReUtil.isMatch(PatternPool.TIME, dateStr)) {
+		} else if (TimeParser.INSTANCE.test(dateStr)) {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
 			return TimeParser.INSTANCE.parse(dateStr);
-		} else if (StrUtil.containsAnyIgnoreCase(dateStr, wtb)) {
+		} else if (CSTDateParser.INSTANCE.test(dateStr)) {
 			// JDK的Date对象toString默认格式，类似于：
 			// Tue Jun 4 16:25:15 +0800 2019
 			// Thu May 16 17:57:18 GMT+08:00 2019
 			// Wed Aug 01 00:00:00 CST 2012
 			return CSTDateParser.INSTANCE.parse(dateStr);
-		} else if (StrUtil.contains(dateStr, 'T')) {
+		} else if (ISO8601DateParser.INSTANCE.test(dateStr)) {
 			// ISO8601标准时间
 			return ISO8601DateParser.INSTANCE.parse(dateStr);
 		}
 
 		//标准日期格式（包括单个数字的日期时间）
 		dateStr = normalize(dateStr);
-		if (ReUtil.isMatch(DatePattern.REGEX_NORM, dateStr)) {
+
+		if (NormalDateParser.INSTANCE.test(dateStr)) {
 			return NormalDateParser.INSTANCE.parse(dateStr);
 		}
 

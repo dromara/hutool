@@ -15,6 +15,7 @@ package org.dromara.hutool.core.date.format.parser;
 import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.format.DefaultDateBasic;
+import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * CST日期字符串（JDK的Date对象toString默认格式）解析，支持格式类似于；
@@ -27,12 +28,27 @@ import org.dromara.hutool.core.date.format.DefaultDateBasic;
  * @author looly
  * @since 6.0.0
  */
-public class CSTDateParser extends DefaultDateBasic implements DateParser {
+public class CSTDateParser extends DefaultDateBasic implements PredicateDateParser {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * java.util.Date EEE MMM zzz 缩写数组
+	 */
+	private final static String[] wtb = { //
+		"sun", "mon", "tue", "wed", "thu", "fri", "sat", // 星期
+		"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", // 月份
+		"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"// 时间标准
+	};
+
 	/**
 	 * 单例对象
 	 */
 	public static CSTDateParser INSTANCE = new CSTDateParser();
+
+	@Override
+	public boolean test(final CharSequence dateStr) {
+		return StrUtil.containsAnyIgnoreCase(dateStr, wtb);
+	}
 
 	@Override
 	public DateTime parse(final String source) {

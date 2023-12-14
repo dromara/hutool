@@ -35,13 +35,18 @@ import org.dromara.hutool.core.text.CharUtil;
  * @author looly
  * @since 6.0.0
  */
-public class ISO8601DateParser extends DefaultDateBasic implements DateParser {
+public class ISO8601DateParser extends DefaultDateBasic implements PredicateDateParser {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例对象
 	 */
 	public static ISO8601DateParser INSTANCE = new ISO8601DateParser();
+
+	@Override
+	public boolean test(final CharSequence dateStr) {
+		return StrUtil.contains(dateStr, 'T');
+	}
 
 	@Override
 	public DateTime parse(String source) {

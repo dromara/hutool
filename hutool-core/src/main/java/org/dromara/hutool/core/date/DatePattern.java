@@ -87,20 +87,6 @@ import java.util.regex.Pattern;
  */
 public class DatePattern {
 
-	/**
-	 * 标准日期时间正则，每个字段支持单个数字或2个数字，包括：
-	 * <pre>
-	 *     yyyy-MM-dd HH:mm:ss.SSSSSS
-	 *     yyyy-MM-dd HH:mm:ss.SSS
-	 *     yyyy-MM-dd HH:mm:ss
-	 *     yyyy-MM-dd HH:mm
-	 *     yyyy-MM-dd
-	 * </pre>
-	 *
-	 * @since 5.3.6
-	 */
-	public static final Pattern REGEX_NORM = Pattern.compile("\\d{4}-\\d{1,2}-\\d{1,2}(\\s\\d{1,2}:\\d{1,2}(:\\d{1,2})?(.\\d{1,6})?)?");
-
 	// region Normal
 	//================================================== Normal ==================================================
 	/**

@@ -16,6 +16,8 @@ import org.dromara.hutool.core.date.DatePattern;
 import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.format.DefaultDateBasic;
+import org.dromara.hutool.core.regex.PatternPool;
+import org.dromara.hutool.core.regex.ReUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 /**
@@ -28,13 +30,18 @@ import org.dromara.hutool.core.text.StrUtil;
  * @author looly
  * @since 6.0.0
  */
-public class TimeParser extends DefaultDateBasic implements DateParser {
+public class TimeParser extends DefaultDateBasic implements PredicateDateParser {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 单例
 	 */
 	public static TimeParser INSTANCE = new TimeParser();
+
+	@Override
+	public boolean test(final CharSequence dateStr) {
+		return ReUtil.isMatch(PatternPool.TIME, dateStr);
+	}
 
 	@Override
 	public DateTime parse(String source) {
