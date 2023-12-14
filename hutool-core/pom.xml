@@ -5,6 +5,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<parent>
 		<groupId>cn.hutool</groupId>

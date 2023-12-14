@@ -82,6 +82,15 @@ public class Ipv4Util {
 	 * @return 区间地址
 	 */
 	public static List<String> list(String ip, int maskBit, boolean isAll) {
+		// Check if the maskBit is within the valid range
+		if (maskBit < 0 || maskBit > IP_MASK_MAX) {
+			throw new IllegalArgumentException("Invalid mask bit: " + maskBit);
+		}
+
+		if (maskBit < 8) {
+			throw new IllegalArgumentException("Mask bit too low: " + maskBit + ". Please make sure the mask bit is consistent with reality .");
+		}
+
 		if (maskBit == IP_MASK_MAX) {
 			final List<String> list = new ArrayList<>();
 			if (isAll) {
