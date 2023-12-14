@@ -56,7 +56,7 @@ public class PureDateParser extends DefaultDateBasic implements PredicateDatePar
 			return new DateTime(source, DatePattern.PURE_DATE_FORMAT);
 		} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 			return new DateTime(source, DatePattern.PURE_TIME_FORMAT);
-		} else if(length == 13){
+		} else if(length >= 11 && length <= 13){
 			// 时间戳
 			return new DateTime(NumberUtil.parseLong(source));
 		}
