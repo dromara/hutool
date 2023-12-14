@@ -26,45 +26,45 @@ import java.io.StringReader;
 
 /**
  * Jcseg分词引擎实现<br>
- * 项目地址：https://gitee.com/lionsoul/jcseg
+ * 项目地址：https://gitee.com/lionsoul/jcseg<br>
+ * {@link ISegment}非线程安全，每次单独创建
  *
  * @author looly
- *
  */
 public class JcsegEngine implements TokenizerEngine {
 
-	private final ISegment segment;
+	private final SegmenterConfig config;
+	private final ADictionary dic;
 
 	/**
 	 * 构造
 	 */
 	public JcsegEngine() {
 		// 创建SegmenterConfig分词配置实例，自动查找加载jcseg.properties配置项来初始化
-		final SegmenterConfig config = new SegmenterConfig(true);
-		// 创建默认单例词库实现，并且按照config配置加载词库
-		final ADictionary dic = DictionaryFactory.createSingletonDictionary(config);
-
-		// 依据给定的ADictionary和SegmenterConfig来创建ISegment
-		this.segment = ISegment.COMPLEX.factory.create(config, dic);
+		this(new SegmenterConfig(true));
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param segment {@link ISegment}
+	 * @param config {@link SegmenterConfig}
 	 */
-	public JcsegEngine(final ISegment segment) {
-		this.segment = segment;
+	public JcsegEngine(final SegmenterConfig config) {
+		this.config = config;
+		// 创建默认单例词库实现，并且按照config配置加载词库
+		this.dic = DictionaryFactory.createSingletonDictionary(config);
 	}
 
 	@Override
 	public Result parse(final CharSequence text) {
+		// 依据给定的ADictionary和SegmenterConfig来创建ISegment
+		final ISegment segment = ISegment.COMPLEX.factory.create(config, dic);
 		try {
-			this.segment.reset(new StringReader(StrUtil.str(text)));
+			segment.reset(new StringReader(StrUtil.str(text)));
 		} catch (final IOException e) {
 			throw new TokenizerException(e);
 		}
-		return new JcsegResult(this.segment);
+		return new JcsegResult(segment);
 	}
 
 }

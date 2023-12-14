@@ -22,6 +22,7 @@ import org.dromara.hutool.extra.tokenizer.Result;
 /**
  * Jieba分词引擎实现<br>
  * 项目地址：https://github.com/huaban/jieba-analysis
+ * {@link JiebaSegmenter#process(String, SegMode)} 线程安全
  *
  * @author looly
  *

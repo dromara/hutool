@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.extra.tokenizer.engine.ikanalyzer;
 
+import org.wltea.analyzer.cfg.Configuration;
+import org.wltea.analyzer.cfg.DefaultConfig;
 import org.wltea.analyzer.core.IKSegmenter;
 
 import org.dromara.hutool.core.text.StrUtil;
@@ -20,35 +22,44 @@ import org.dromara.hutool.extra.tokenizer.Result;
 
 /**
  * IKAnalyzer分词引擎实现<br>
- * 项目地址：https://github.com/yozhao/IKAnalyzer
+ * 项目地址：https://github.com/yozhao/IKAnalyzer<br>
+ * {@link IKSegmenter} 非线程全，因此每次单独创建对象
  *
  * @author looly
- *
  */
 public class IKAnalyzerEngine implements TokenizerEngine {
 
-	private final IKSegmenter seg;
+	private final Configuration cfg;
 
 	/**
 	 * 构造
-	 *
 	 */
 	public IKAnalyzerEngine() {
-		this(new IKSegmenter(null, true));
+		this(createDefaultConfig());
 	}
 
 	/**
 	 * 构造
-	 *
-	 * @param seg {@link IKSegmenter}
+	 * @param cfg 配置
 	 */
-	public IKAnalyzerEngine(final IKSegmenter seg) {
-		this.seg = seg;
+	public IKAnalyzerEngine(final Configuration cfg) {
+		cfg.setUseSmart(true);
+		this.cfg = cfg;
 	}
 
 	@Override
 	public Result parse(final CharSequence text) {
-		this.seg.reset(StrUtil.getReader(text));
-		return new IKAnalyzerResult(this.seg);
+		final IKSegmenter seg = new IKSegmenter(StrUtil.getReader(text), cfg);
+		return new IKAnalyzerResult(seg);
+	}
+
+	/**
+	 * 创建默认配置
+	 * @return {@link Configuration}
+	 */
+	private static Configuration createDefaultConfig(){
+		final Configuration configuration = DefaultConfig.getInstance();
+		configuration.setUseSmart(true);
+		return configuration;
 	}
 }

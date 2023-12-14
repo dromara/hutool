@@ -22,7 +22,8 @@ import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 
 /**
  * Word分词引擎实现<br>
- * 项目地址：https://github.com/ysc/word
+ * 项目地址：https://github.com/ysc/word<br>
+ * {@link Segmentation} 线程安全
  *
  * @author looly
  *

@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.tokenizer.engine.mmseg;
 
+import com.chenlb.mmseg4j.Seg;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.tokenizer.Result;
 import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
@@ -23,37 +24,35 @@ import java.io.StringReader;
 
 /**
  * mmseg4j分词引擎实现<br>
- * 项目地址：https://github.com/chenlb/mmseg4j-core
+ * 项目地址：https://github.com/chenlb/mmseg4j-core<br>
+ * {@link MMSeg}非线程安全，故单独创建之
  *
  * @author looly
- *
  */
 public class MmsegEngine implements TokenizerEngine {
 
-	private final MMSeg mmSeg;
+	private final Seg seg;
 
 	/**
 	 * 构造
 	 */
 	public MmsegEngine() {
-		final Dictionary dict = Dictionary.getInstance();
-		final ComplexSeg seg = new ComplexSeg(dict);
-		this.mmSeg = new MMSeg(new StringReader(""), seg);
+		this(new ComplexSeg(Dictionary.getInstance()));
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param mmSeg 模式{@link MMSeg}
+	 * @param seg 模式{@link Seg}
 	 */
-	public MmsegEngine(final MMSeg mmSeg) {
-		this.mmSeg = mmSeg;
+	public MmsegEngine(final Seg seg) {
+		this.seg = seg;
 	}
 
 	@Override
 	public Result parse(final CharSequence text) {
-		this.mmSeg.reset(StrUtil.getReader(text));
-		return new MmsegResult(this.mmSeg);
+		final MMSeg mmSeg = new MMSeg(StrUtil.getReader(text), seg);
+		return new MmsegResult(mmSeg);
 	}
 
 }

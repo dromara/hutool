@@ -21,10 +21,10 @@ import org.dromara.hutool.extra.tokenizer.engine.TokenizerEngine;
 
 /**
  * MYNLP 中文NLP工具包分词实现<br>
- * 项目地址：https://github.com/mayabot/mynlp/
+ * 项目地址：https://github.com/mayabot/mynlp/<br>
+ * {@link Lexer} 线程安全
  *
  * @author looly
- *
  */
 public class MynlpEngine implements TokenizerEngine {
 

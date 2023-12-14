@@ -21,10 +21,10 @@ import org.dromara.hutool.extra.tokenizer.Result;
 
 /**
  * HanLP分词引擎实现<br>
- * 项目地址：https://github.com/hankcs/HanLP
+ * 项目地址：https://github.com/hankcs/HanLP<br>
+ * {@link Segment#seg(String)}方法线程安全
  *
  * @author looly
- *
  */
 public class HanLPEngine implements TokenizerEngine {
 
@@ -32,7 +32,6 @@ public class HanLPEngine implements TokenizerEngine {
 
 	/**
 	 * 构造
-	 *
 	 */
 	public HanLPEngine() {
 		this(HanLP.newSegment());
