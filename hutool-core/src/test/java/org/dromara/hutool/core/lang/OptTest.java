@@ -168,7 +168,7 @@ public class OptTest {
 		final List<String> hutool = Opt.ofEmptyAble(Collections.<String>emptyList()).orElseGet(() -> Collections.singletonList("hutool"));
 		Assertions.assertEquals(past, hutool);
 		Assertions.assertEquals(Collections.singletonList("hutool"), hutool);
-		Assertions.assertTrue(Opt.ofEmptyAble(Arrays.asList(null, null, null)).isEmpty());
+		Assertions.assertFalse(Opt.ofEmptyAble(Arrays.asList(null, null, null)).isEmpty());
 	}
 
 	@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "ConstantConditions"})

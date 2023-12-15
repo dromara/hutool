@@ -11,10 +11,10 @@
  */
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.func.SerSupplier;
 import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.core.util.ObjUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -93,12 +93,12 @@ public class Opt<T> {
 	 *
 	 * @param <T>   包裹里元素的类型
 	 * @param <R>   集合值类型
-	 * @param value 传入需要包裹的元素
+	 * @param value 传入需要包裹的元素，支持CharSequence、Map、Iterable、Iterator、Array类型
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(final R value) {
-		return CollUtil.isEmpty(value) || CollUtil.getFirstNoneNull(value) == null ? empty() : new Opt<>(value);
+		return ObjUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
 	/**
