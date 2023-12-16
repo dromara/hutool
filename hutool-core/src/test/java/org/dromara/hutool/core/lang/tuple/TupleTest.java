@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,27 +10,21 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang;
+package org.dromara.hutool.core.lang.tuple;
 
-import org.dromara.hutool.core.collection.ConcurrentHashSet;
-import org.dromara.hutool.core.data.id.UUID;
-import org.dromara.hutool.core.thread.ThreadUtil;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.Locale;
+import java.util.TimeZone;
 
-public class UUIDTest {
+public class TupleTest {
 
-	/**
-	 * 测试UUID是否存在重复问题
-	 */
 	@Test
-	public void fastUUIDTest(){
-		final Set<String> set = new ConcurrentHashSet<>(100);
-		ThreadUtil.concurrencyTest(100, ()-> set.add(UUID.fastUUID().toString()));
-		Assertions.assertEquals(100, set.size());
+	public void hashCodeTest(){
+		final Tuple tuple = new Tuple(Locale.getDefault(), TimeZone.getDefault());
+		final Tuple tuple2 = new Tuple(Locale.getDefault(), TimeZone.getDefault());
+		Assertions.assertEquals(tuple, tuple2);
 	}
-
-
 }

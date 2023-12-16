@@ -260,7 +260,7 @@ public class IdUtil {
 	 * @since 5.7.18
 	 */
 	public static long getSnowflakeNextId() {
-		return getSnowflake().nextId();
+		return getSnowflake().next();
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class IdUtil {
 	 * @since 5.7.18
 	 */
 	public static String getSnowflakeNextIdStr() {
-		return getSnowflake().nextIdStr();
+		return getSnowflake().nextStr();
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,12 +10,13 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang;
+package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.collection.ConcurrentHashSet;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.data.id.Snowflake;
 import org.dromara.hutool.core.exception.HutoolException;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.thread.ThreadUtil;
@@ -38,7 +39,7 @@ public class SnowflakeTest {
 	public void snowflakeTest1(){
 		//构建Snowflake，提供终端ID和数据中心ID
 		final Snowflake idWorker = new Snowflake(0, 0);
-		final long nextId = idWorker.nextId();
+		final long nextId = idWorker.next();
 		Assertions.assertTrue(nextId > 0);
 	}
 
@@ -49,7 +50,7 @@ public class SnowflakeTest {
 		//构建Snowflake，提供终端ID和数据中心ID
 		final Snowflake idWorker = new Snowflake(0, 0);
 		for (int i = 0; i < 1000; i++) {
-			final long id = idWorker.nextId();
+			final long id = idWorker.next();
 			hashSet.add(id);
 		}
 		Assertions.assertEquals(1000L, hashSet.size());
@@ -59,7 +60,7 @@ public class SnowflakeTest {
 	public void snowflakeGetTest(){
 		//构建Snowflake，提供终端ID和数据中心ID
 		final Snowflake idWorker = new Snowflake(1, 2);
-		final long nextId = idWorker.nextId();
+		final long nextId = idWorker.next();
 
 		Assertions.assertEquals(1, idWorker.getWorkerId(nextId));
 		Assertions.assertEquals(2, idWorker.getDataCenterId(nextId));
@@ -75,7 +76,7 @@ public class SnowflakeTest {
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
-				if(!ids.add(snowflake.nextId())){
+				if(!ids.add(snowflake.next())){
 					throw new HutoolException("重复ID！");
 				}
 			}
@@ -85,7 +86,7 @@ public class SnowflakeTest {
 	@Test
 	public void getSnowflakeLengthTest(){
 		for (int i = 0; i < 1000; i++) {
-			final long l = IdUtil.getSnowflake(0, 0).nextId();
+			final long l = IdUtil.getSnowflake(0, 0).next();
 			Assertions.assertEquals(19, StrUtil.toString(l).length());
 		}
 	}
@@ -96,7 +97,7 @@ public class SnowflakeTest {
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
 				false, 2);
 		for (int i = 0; i < 1000; i++) {
-			final long id = snowflake.nextId();
+			final long id = snowflake.next();
 			Console.log(id);
 			ThreadUtil.sleep(10);
 		}
@@ -112,7 +113,7 @@ public class SnowflakeTest {
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
 			for (int i = 0; i < 50000; i++) {
-				if(!ids.add(snowflake.nextId())){
+				if(!ids.add(snowflake.next())){
 					throw new HutoolException("重复ID！");
 				}
 			}
@@ -127,7 +128,7 @@ public class SnowflakeTest {
 		final long workerId = RandomUtil.randomLong(31);
 		final long dataCenterId = RandomUtil.randomLong(31);
 		final Snowflake idWorker = new Snowflake(workerId, dataCenterId);
-		final long generatedId = idWorker.nextId();
+		final long generatedId = idWorker.next();
 		// 随机忽略数据中心和工作机器的占位
 		final boolean ignore = RandomUtil.randomBoolean();
 		final long createTimestamp = idWorker.getGenerateDateTime(generatedId);

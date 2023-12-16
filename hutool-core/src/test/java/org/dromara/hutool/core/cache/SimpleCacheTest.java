@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.core.lang;
+package org.dromara.hutool.core.cache;
 
 import org.dromara.hutool.core.cache.SimpleCache;
 import org.dromara.hutool.core.thread.ConcurrencyTester;

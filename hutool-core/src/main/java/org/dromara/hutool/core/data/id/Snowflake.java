@@ -14,6 +14,7 @@ package org.dromara.hutool.core.data.id;
 
 import org.dromara.hutool.core.date.SystemClock;
 import org.dromara.hutool.core.lang.Assert;
+import org.dromara.hutool.core.lang.generator.Generator;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.util.RandomUtil;
 
@@ -29,7 +30,7 @@ import java.util.Date;
  *
  * <pre>
  * 符号位（1bit）- 时间戳相对值（41bit）- 数据中心标志（5bit）- 机器标志（5bit）- 递增序号（12bit）
- * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
+ * (0) - (0000000000 0000000000 0000000000 0000000000 0) - (00000) - (00000) - (000000000000)
  * </pre>
  * <p>
  * 第一位为未使用(符号位表示正数)，接下来的41位为毫秒级时间(41位的长度可以使用69年)<br>
@@ -44,9 +45,8 @@ import java.util.Date;
  * @author Looly
  * @since 3.0.1
  */
-public class Snowflake implements Serializable {
+public class Snowflake implements Generator<Long>, Serializable {
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * 默认的起始时间，为Thu, 04 Nov 2010 01:42:54 GMT
@@ -54,13 +54,11 @@ public class Snowflake implements Serializable {
 	public static long DEFAULT_TWEPOCH = 1288834974657L;
 	private static final long WORKER_ID_BITS = 5L;
 	// 最大支持机器节点数0~31，一共32个
-	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-	private static final long MAX_WORKER_ID = -1L ^ (-1L << WORKER_ID_BITS);
+	private static final long MAX_WORKER_ID = ~(-1L << WORKER_ID_BITS);
 	private static final long DATA_CENTER_ID_BITS = 5L;
 	// 最大支持数据中心节点数0~31，一共32个
-	@SuppressWarnings({"PointlessBitwiseExpression", "FieldCanBeLocal"})
-	private static final long MAX_DATA_CENTER_ID = -1L ^ (-1L << DATA_CENTER_ID_BITS);
-	// 序列号12位（表示只允许workId的范围为：0-4095）
+	private static final long MAX_DATA_CENTER_ID = ~(-1L << DATA_CENTER_ID_BITS);
+	// 序列号12位（表示只允许序号的范围为：0-4095）
 	private static final long SEQUENCE_BITS = 12L;
 	// 机器节点左移12位
 	private static final long WORKER_ID_SHIFT = SEQUENCE_BITS;
@@ -193,7 +191,8 @@ public class Snowflake implements Serializable {
 	 *
 	 * @return ID
 	 */
-	public synchronized long nextId() {
+	@Override
+	public synchronized Long next() {
 		long timestamp = genTime();
 		if (timestamp < this.lastTimestamp) {
 			timestamp = lastTimestamp;
@@ -209,12 +208,8 @@ public class Snowflake implements Serializable {
 			}
 			this.sequence = sequence;
 		} else {
-			// issue#I51EJY
-			if (randomSequenceLimit > 1) {
-				sequence = RandomUtil.randomLong(randomSequenceLimit);
-			} else {
-				sequence = 0L;
-			}
+			// issue#I51EJY，通过随机数避免低频生成ID序号始终为0的问题
+			sequence = randomSequenceLimit > 1 ? RandomUtil.randomLong(randomSequenceLimit) : 0L;
 		}
 
 		lastTimestamp = timestamp;
@@ -230,8 +225,8 @@ public class Snowflake implements Serializable {
 	 *
 	 * @return ID 字符串形式
 	 */
-	public String nextIdStr() {
-		return Long.toString(nextId());
+	public String nextStr() {
+		return Long.toString(next());
 	}
 
 	/**

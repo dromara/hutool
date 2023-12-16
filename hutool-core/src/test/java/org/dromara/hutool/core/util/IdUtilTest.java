@@ -86,7 +86,7 @@ public class IdUtilTest {
 	@Test
 	public void getSnowflakeTest() {
 		final Snowflake snowflake = IdUtil.getSnowflake(1, 1);
-		final long id = snowflake.nextId();
+		final long id = snowflake.next();
 		Assertions.assertTrue(id > 0);
 	}
 
@@ -104,7 +104,7 @@ public class IdUtilTest {
 		for(int i =0; i < threadCount; i++) {
 			ThreadUtil.execute(() -> {
 				for(int i1 = 0; i1 < idCountPerThread; i1++) {
-					final long id = snowflake.nextId();
+					final long id = snowflake.next();
 					set.add(id);
 //						Console.log("Add new id: {}", id);
 				}
@@ -134,7 +134,7 @@ public class IdUtilTest {
 		for(int i =0; i < threadCount; i++) {
 			ThreadUtil.execute(() -> {
 				for(int i1 = 0; i1 < idCountPerThread; i1++) {
-					final long id = IdUtil.getSnowflake(1, 1).nextId();
+					final long id = IdUtil.getSnowflake(1, 1).next();
 					set.add(id);
 //						Console.log("Add new id: {}", id);
 				}
