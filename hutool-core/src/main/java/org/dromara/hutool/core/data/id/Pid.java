@@ -25,6 +25,9 @@ import java.lang.management.ManagementFactory;
  * @since 5.8.0
  */
 public enum Pid {
+	/**
+	 * 单例
+	 */
 	INSTANCE;
 
 	private final int pid;
