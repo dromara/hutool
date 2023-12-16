@@ -94,7 +94,7 @@ public class SnowflakeTest {
 	@Disabled
 	public void snowflakeRandomSequenceTest(){
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
-				false, Snowflake.DEFAULT_TIME_OFFSET, 2);
+				false, 2);
 		for (int i = 0; i < 1000; i++) {
 			final long id = snowflake.nextId();
 			Console.log(id);
@@ -107,7 +107,7 @@ public class SnowflakeTest {
 	public void uniqueOfRandomSequenceTest(){
 		// 测试并发环境下生成ID是否重复
 		final Snowflake snowflake = new Snowflake(null, 0, 0,
-				false, Snowflake.DEFAULT_TIME_OFFSET, 100);
+				false, 100);
 
 		final Set<Long> ids = new ConcurrentHashSet<>();
 		ThreadUtil.concurrencyTest(100, () -> {
