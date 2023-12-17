@@ -38,7 +38,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * <p>单元素的扩展流实现。基于原生Stream进行了封装和增强。<br>
- * 作者经对比了vavr、eclipse-collection、unwrap-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
+ * 作者经对比了vavr、eclipse-collection、stream-ex以及其他语言的api，结合日常使用习惯，进行封装和拓展
  * Stream为集合提供了一些易用api，它让开发人员能使用声明式编程的方式去编写代码。
  *
  * <p>中间操作和结束操作</p>
