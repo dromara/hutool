@@ -48,7 +48,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	private final PoolConfig config;
 	private final ObjectFactory<T> objectFactory;
 
-	private BlockingQueue<PartitionPoolable<T>> queue;
+	private BlockingQueue<Poolable<T>> queue;
 	// 记录对象总数（包括借出对象）
 	private int total;
 
@@ -59,7 +59,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	 * @param queue         阻塞队列类型
 	 * @param objectFactory 对象工厂，用于管理对象创建、检查和销毁
 	 */
-	public PoolPartition(final PoolConfig config, final BlockingQueue<PartitionPoolable<T>> queue, final ObjectFactory<T> objectFactory) {
+	public PoolPartition(final PoolConfig config, final BlockingQueue<Poolable<T>> queue, final ObjectFactory<T> objectFactory) {
 		this.config = config;
 		this.queue = queue;
 		this.objectFactory = objectFactory;
@@ -73,15 +73,15 @@ public class PoolPartition<T> implements ObjectPool<T> {
 
 	@SuppressWarnings("resource")
 	@Override
-	public PartitionPoolable<T> borrowObject() {
+	public Poolable<T> borrowObject() {
 		// 非阻塞获取
-		PartitionPoolable<T> poolable = this.queue.poll();
+		Poolable<T> poolable = this.queue.poll();
 		if (null != poolable) {
 			// 检查对象是否可用
 			if (this.objectFactory.validate(poolable.getRaw())) {
 				// 检查是否超过最长空闲时间
 				final long maxIdle = this.config.getMaxIdle();
-				if (maxIdle > 0 && (System.currentTimeMillis() - poolable.getLastBorrow()) <= maxIdle) {
+				if (maxIdle <= 0 || (System.currentTimeMillis() - poolable.getLastBorrow()) <= maxIdle) {
 					poolable.setLastBorrow(System.currentTimeMillis());
 					return poolable;
 				}
@@ -120,7 +120,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 		// 检查对象可用性
 		if (this.objectFactory.validate(poolable.getRaw())) {
 			try {
-				this.queue.put((PartitionPoolable<T>) poolable);
+				this.queue.put(poolable);
 			} catch (final InterruptedException e) {
 				throw new HutoolException(e);
 			}
@@ -194,7 +194,12 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	 *
 	 * @return {@link PartitionPoolable}
 	 */
-	protected PartitionPoolable<T> createPoolable() {
+	@SuppressWarnings("unchecked")
+	protected Poolable<T> createPoolable() {
+		final T t = objectFactory.create();
+		if (t instanceof Poolable) {
+			return (Poolable<T>) t;
+		}
 		return new PartitionPoolable<>(objectFactory.create(), this);
 	}
 
@@ -205,7 +210,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	 * @return 取出的池对象
 	 * @throws HutoolException 中断异常
 	 */
-	private PartitionPoolable<T> waitingPoll() throws HutoolException {
+	private Poolable<T> waitingPoll() throws HutoolException {
 		final long maxWait = this.config.getMaxWait();
 		try {
 			if (maxWait <= 0) {

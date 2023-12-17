@@ -12,8 +12,9 @@
 
 package org.dromara.hutool.db.ds.pooled;
 
-import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.pool.Poolable;
+import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
@@ -26,21 +27,20 @@ import java.util.Properties;
  *
  * @author Looly
  */
-public class PooledConnection extends ConnectionWrapper {
+public class PooledConnection extends ConnectionWrapper implements Poolable<Connection> {
 
-	private final PooledDataSource ds;
-	private boolean isClosed;
+	private final PooledDataSource dataSource;
+
+	private long lastBorrow = System.currentTimeMillis();
+	private boolean isClosed = false;
 
 	/**
 	 * 构造
 	 *
-	 * @param ds 数据源
-	 * @throws SQLException SQL异常
+	 * @param config 数据库配置
+	 * @param dataSource 数据源
 	 */
-	public PooledConnection(final PooledDataSource ds) throws SQLException {
-		this.ds = ds;
-		final PooledDbConfig config = ds.getConfig();
-
+	public PooledConnection(final PooledDbConfig config, final PooledDataSource dataSource) {
 		final Props info = new Props();
 		final String user = config.getUser();
 		if (user != null) {
@@ -57,56 +57,33 @@ public class PooledConnection extends ConnectionWrapper {
 			info.putAll(connProps);
 		}
 
-		this.raw = DriverManager.getConnection(config.getUrl(), info);
+		try {
+			this.raw = DriverManager.getConnection(config.getUrl(), info);
+		} catch (final SQLException e) {
+			throw new DbRuntimeException(e);
+		}
+
+		this.dataSource = dataSource;
 	}
 
-	/**
-	 * 构造
-	 *
-	 * @param ds   {@link PooledDataSource}
-	 * @param conn {@link Connection}
-	 */
-	public PooledConnection(final PooledDataSource ds, final Connection conn) {
-		this.ds = ds;
-		this.raw = conn;
-	}
-
-	/**
-	 * 重写关闭连接，实际操作是归还到连接池中
-	 */
 	@Override
 	public void close() {
-		this.ds.free(this);
 		this.isClosed = true;
+		dataSource.returnObject(this);
 	}
 
-	/**
-	 * 连接是否关闭，关闭条件：<br>
-	 * 1、被归还到池中
-	 * 2、实际连接已关闭
-	 */
 	@Override
-	public boolean isClosed() throws SQLException {
-		return isClosed || raw.isClosed();
+	public boolean isClosed() {
+		return this.isClosed;
 	}
 
-	/**
-	 * 打开连接
-	 *
-	 * @return this
-	 */
-	protected PooledConnection open() {
-		this.isClosed = false;
-		return this;
+	@Override
+	public long getLastBorrow() {
+		return lastBorrow;
 	}
 
-	/**
-	 * 释放连接
-	 *
-	 * @return this
-	 */
-	protected PooledConnection release() {
-		IoUtil.closeQuietly(this.raw);
-		return this;
+	@Override
+	public void setLastBorrow(final long lastBorrow) {
+		this.lastBorrow = lastBorrow;
 	}
 }

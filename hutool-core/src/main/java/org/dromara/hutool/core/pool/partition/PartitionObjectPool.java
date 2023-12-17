@@ -113,7 +113,7 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 	 * @param poolConfig 池配置
 	 * @return 队列
 	 */
-	protected BlockingQueue<PartitionPoolable<T>> createBlockingQueue(final PartitionPoolConfig poolConfig) {
+	protected BlockingQueue<Poolable<T>> createBlockingQueue(final PartitionPoolConfig poolConfig) {
 		return new ArrayBlockingQueue<>(poolConfig.getMaxSize());
 	}
 

@@ -54,12 +54,8 @@ public class PartitionPoolable<T> implements Poolable<T> {
 		return lastBorrow;
 	}
 
-	/**
-	 * 设置最后借出时间，在成功借出此对象时更新时间
-	 *
-	 * @param lastBorrow 最后借出时间
-	 */
-	protected void setLastBorrow(final long lastBorrow) {
+	@Override
+	public void setLastBorrow(final long lastBorrow) {
 		this.lastBorrow = lastBorrow;
 	}
 }

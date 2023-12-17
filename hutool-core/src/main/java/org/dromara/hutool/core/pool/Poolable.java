@@ -28,4 +28,11 @@ public interface Poolable<T> extends Wrapper<T> {
 	 * @return 最后借出时间
 	 */
 	long getLastBorrow();
+
+	/**
+	 * 设置最后借出时间，在成功借出此对象时更新时间
+	 *
+	 * @param lastBorrow 最后借出时间
+	 */
+	void setLastBorrow(final long lastBorrow);
 }

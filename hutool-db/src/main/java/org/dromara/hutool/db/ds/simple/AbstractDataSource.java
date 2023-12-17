@@ -24,10 +24,11 @@ import java.util.logging.Logger;
 
 /**
  * 数据源抽象实现
- * @author Looly
  *
+ * @author Looly
  */
-public abstract class AbstractDataSource implements DataSource, Cloneable, Closeable{
+public abstract class AbstractDataSource implements DataSource, Cloneable, Closeable {
+
 	@Override
 	public PrintWriter getLogWriter() {
 		return DriverManager.getLogWriter();
@@ -60,6 +61,7 @@ public abstract class AbstractDataSource implements DataSource, Cloneable, Close
 
 	/**
 	 * Support from JDK7
+	 *
 	 * @since 1.7
 	 */
 	@Override

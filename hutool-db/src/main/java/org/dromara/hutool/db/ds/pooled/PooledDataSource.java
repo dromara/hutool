@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 looly(loolly@aliyun.com)
+ * Copyright (c) 2023. looly(loolly@aliyun.com)
  * Hutool is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -12,102 +12,45 @@
 
 package org.dromara.hutool.db.ds.pooled;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.core.thread.ThreadUtil;
+import org.dromara.hutool.core.pool.ObjectFactory;
+import org.dromara.hutool.core.pool.ObjectPool;
+import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
+import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
- * 池化数据源
+ * 池化的数据源，用于管理数据库连接
  *
  * @author Looly
- *
+ * @since 6.0.0
  */
 public class PooledDataSource extends AbstractDataSource {
 
-	private Queue<PooledConnection> freePool;
-	private int activeCount; // 活跃连接数
-
-	private final PooledDbConfig config;
-
-	/**
-	 * 获得一个数据源
-	 *
-	 * @param group 数据源分组
-	 * @return {@code PooledDataSource}
-	 */
-	synchronized public static PooledDataSource getDataSource(final String group) {
-		return new PooledDataSource(group);
-	}
-
-	/**
-	 * 获得一个数据源，使用空分组
-	 *
-	 * @return {@code PooledDataSource}
-	 */
-	synchronized public static PooledDataSource getDataSource() {
-		return new PooledDataSource();
-	}
-
-	// -------------------------------------------------------------------- Constructor start
-	/**
-	 * 构造，读取默认的配置文件和默认分组
-	 */
-	public PooledDataSource() {
-		this(StrUtil.EMPTY);
-	}
-
-	/**
-	 * 构造，读取默认的配置文件
-	 *
-	 * @param group 分组
-	 */
-	public PooledDataSource(final String group) {
-		this(new DbSetting(), group);
-	}
+	private final ObjectPool<Connection> connPool;
 
 	/**
 	 * 构造
 	 *
-	 * @param setting 数据库配置文件对象
-	 * @param group 分组
-	 */
-	public PooledDataSource(final DbSetting setting, final String group) {
-		this(setting.getDbConfig(group));
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param config 数据库配置
+	 * @param config 数据库池配置
 	 */
 	public PooledDataSource(final PooledDbConfig config) {
-		this.config = config;
-		freePool = new LinkedList<>();
-		int initialSize = config.getInitialSize();
-		try {
-			while (initialSize-- > 0) {
-				freePool.offer(newConnection());
-			}
-		} catch (final SQLException e) {
-			throw new DbRuntimeException(e);
-		}
-	}
-	// -------------------------------------------------------------------- Constructor start
+		final PartitionPoolConfig poolConfig = (PartitionPoolConfig) PartitionPoolConfig.of()
+			.setPartitionSize(1)
+			.setMaxWait(config.getMaxWait())
+			.setMinSize(config.getInitialSize())
+			.setMaxSize(config.getMaxActive());
 
-	/**
-	 * 从数据库连接池中获取数据库连接对象
-	 */
+		this.connPool = new PartitionObjectPool<>(poolConfig, createConnFactory(config));
+	}
+
 	@Override
-	public synchronized Connection getConnection() throws SQLException {
-		return getConnection(config.getMaxWait());
+	public Connection getConnection() throws SQLException {
+		return (Connection) connPool.borrowObject();
 	}
 
 	@Override
@@ -115,84 +58,46 @@ public class PooledDataSource extends AbstractDataSource {
 		throw new SQLException("Pooled DataSource is not allow to get special Connection!");
 	}
 
-	/**
-	 * 释放连接，连接会被返回给连接池
-	 *
-	 * @param conn 连接
-	 * @return 释放成功与否
-	 */
-	protected synchronized boolean free(final PooledConnection conn) {
-		activeCount--;
-		return freePool.offer(conn);
-	}
-
-	/**
-	 * 创建新连接
-	 *
-	 * @return 新连接
-	 * @throws SQLException SQL异常
-	 */
-	public PooledConnection newConnection() throws SQLException {
-		return new PooledConnection(this);
-	}
-
-	public PooledDbConfig getConfig() {
-		return config;
-	}
-
-	/**
-	 * 获取连接对象
-	 *
-	 * @param wait 当池中无连接等待的毫秒数
-	 * @return 连接对象
-	 * @throws SQLException SQL异常
-	 */
-	public PooledConnection getConnection(final long wait) throws SQLException {
-		try {
-			return getConnectionDirect();
-		} catch (final Exception e) {
-			ThreadUtil.sleep(wait);
-		}
-		return getConnectionDirect();
-	}
-
 	@Override
-	synchronized public void close() {
-		if (CollUtil.isNotEmpty(this.freePool)) {
-			this.freePool.forEach(PooledConnection::release);
-			this.freePool.clear();
-			this.freePool = null;
-		}
-	}
-
-	@Override
-	protected void finalize() {
-		IoUtil.closeQuietly(this);
+	public void close() {
+		IoUtil.closeQuietly(this.connPool);
 	}
 
 	/**
-	 * 直接从连接池中获取连接，如果池中无连接直接抛出异常
+	 * 将连接返回到池中
 	 *
-	 * @return PooledConnection
-	 * @throws SQLException SQL异常
+	 * @param conn {@link PooledConnection}
 	 */
-	private PooledConnection getConnectionDirect() throws SQLException {
-		if (null == freePool) {
-			throw new SQLException("PooledDataSource is closed!");
-		}
-
-		final int maxActive = config.getMaxActive();
-		if (maxActive <= 0 || maxActive < this.activeCount) {
-			// 超过最大使用限制
-			throw new SQLException("In used Connection is more than Max Active.");
-		}
-
-		PooledConnection conn = freePool.poll();
-		if (null == conn || conn.open().isClosed()) {
-			conn = this.newConnection();
-		}
-		activeCount++;
-		return conn;
+	public void returnObject(final PooledConnection conn) {
+		this.connPool.returnObject(conn);
 	}
 
+	/**
+	 * 创建自定义的{@link PooledConnection}工厂类
+	 *
+	 * @param config 数据库配置
+	 * @return {@link ObjectFactory}
+	 */
+	private ObjectFactory<Connection> createConnFactory(final PooledDbConfig config) {
+		return new ObjectFactory<Connection>() {
+			@Override
+			public Connection create() {
+				return new PooledConnection(config, PooledDataSource.this);
+			}
+
+			@Override
+			public boolean validate(final Connection connection) {
+				try {
+					return null != connection && connection.isValid((int) config.getMaxWait());
+				} catch (final SQLException e) {
+					throw new DbRuntimeException(e);
+				}
+			}
+
+			@Override
+			public void destroy(final Connection connection) {
+				IoUtil.closeQuietly(connection);
+			}
+		};
+	}
 }
