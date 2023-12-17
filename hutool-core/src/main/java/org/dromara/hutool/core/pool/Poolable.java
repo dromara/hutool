@@ -14,6 +14,18 @@ package org.dromara.hutool.core.pool;
 
 import org.dromara.hutool.core.lang.wrapper.Wrapper;
 
+/**
+ * 池化对象
+ *
+ * @param <T> 对象类型
+ * @author Looly
+ */
 public interface Poolable<T> extends Wrapper<T> {
-	void returnObject();
+
+	/**
+	 * 获取最后借出时间
+	 *
+	 * @return 最后借出时间
+	 */
+	long getLastBorrow();
 }

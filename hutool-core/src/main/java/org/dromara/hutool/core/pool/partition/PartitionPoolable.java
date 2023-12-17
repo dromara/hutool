@@ -14,14 +14,27 @@ package org.dromara.hutool.core.pool.partition;
 
 import org.dromara.hutool.core.pool.Poolable;
 
+/**
+ * 分区可池化对象，此对象会同时持有原始对象和所在的分区
+ *
+ * @param <T> 对象类型
+ */
 public class PartitionPoolable<T> implements Poolable<T> {
 
 	private final T raw;
 	private final PoolPartition<T> partition;
+	private long lastBorrow;
 
-	public PartitionPoolable(final T raw, PoolPartition<T> partition) {
+	/**
+	 * 构造
+	 *
+	 * @param raw       原始对象
+	 * @param partition 对象所在分区
+	 */
+	public PartitionPoolable(final T raw, final PoolPartition<T> partition) {
 		this.raw = raw;
 		this.partition = partition;
+		this.lastBorrow = System.currentTimeMillis();
 	}
 
 	@Override
@@ -29,8 +42,24 @@ public class PartitionPoolable<T> implements Poolable<T> {
 		return this.raw;
 	}
 
-	@Override
+	/**
+	 * 归还对象
+	 */
 	public void returnObject() {
 		this.partition.returnObject(this);
+	}
+
+	@Override
+	public long getLastBorrow() {
+		return lastBorrow;
+	}
+
+	/**
+	 * 设置最后借出时间，在成功借出此对象时更新时间
+	 *
+	 * @param lastBorrow 最后借出时间
+	 */
+	protected void setLastBorrow(final long lastBorrow) {
+		this.lastBorrow = lastBorrow;
 	}
 }

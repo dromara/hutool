@@ -14,24 +14,52 @@ package org.dromara.hutool.core.pool.partition;
 
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.pool.ObjectFactory;
+import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.PoolConfig;
 import org.dromara.hutool.core.pool.Poolable;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class PoolPartition<T> implements Closeable {
+/**
+ * 对象池分区<br>
+ * 一个分区实际为一个小的对象池，持有一个阻塞队列。<br>
+ * 初始化时创建{@link PoolConfig#getMinSize()}个对象作为初始池对象.
+ *
+ * <p>
+ * 当借出对象时，从队列头部取出并验证，验证通过后使用，验证不通过直接调用{@link #free(Poolable)} 销毁并重新获取，
+ * 当池中对象都被借出（空了），创建新的对象并入队列，直到队列满为止，当满时等待归还，超时则报错。
+ * </p>
+ *
+ * <p>
+ * 当归还对象时，验证对象，不可用销毁之，可用入队列。
+ * </p>
+ *
+ * <p>
+ * 一个分区队列的实际
+ * </p>
+ *
+ * @param <T> 对象类型
+ */
+public class PoolPartition<T> implements ObjectPool<T> {
+	private static final long serialVersionUID = 1L;
 
 	private final PoolConfig config;
 	private final ObjectFactory<T> objectFactory;
 
-	private BlockingQueue<Poolable<T>> queue;
+	private BlockingQueue<PartitionPoolable<T>> queue;
 	// 记录对象总数（包括借出对象）
 	private int total;
 
-	public PoolPartition(PoolConfig config, BlockingQueue<Poolable<T>> queue, ObjectFactory<T> objectFactory) {
+	/**
+	 * 构造
+	 *
+	 * @param config        池配置
+	 * @param queue         阻塞队列类型
+	 * @param objectFactory 对象工厂，用于管理对象创建、检查和销毁
+	 */
+	public PoolPartition(final PoolConfig config, final BlockingQueue<PartitionPoolable<T>> queue, final ObjectFactory<T> objectFactory) {
 		this.config = config;
 		this.queue = queue;
 		this.objectFactory = objectFactory;
@@ -43,11 +71,26 @@ public class PoolPartition<T> implements Closeable {
 		total = minSize;
 	}
 
-	public Poolable<T> borrowObject() {
+	@SuppressWarnings("resource")
+	@Override
+	public PartitionPoolable<T> borrowObject() {
 		// 非阻塞获取
-		Poolable<T> poolable = this.queue.poll();
+		PartitionPoolable<T> poolable = this.queue.poll();
 		if (null != poolable) {
-			return poolable;
+			// 检查对象是否可用
+			if (this.objectFactory.validate(poolable.getRaw())) {
+				// 检查是否超过最长空闲时间
+				final long maxIdle = this.config.getMaxIdle();
+				if (maxIdle > 0 && (System.currentTimeMillis() - poolable.getLastBorrow()) <= maxIdle) {
+					poolable.setLastBorrow(System.currentTimeMillis());
+					return poolable;
+				}
+			}
+
+			// 对象不可用，销毁之
+			free(poolable);
+			// 继续借，而不扩容
+			return borrowObject();
 		}
 
 		// 扩容
@@ -61,24 +104,41 @@ public class PoolPartition<T> implements Closeable {
 		}
 
 		// 扩容成功，继续借对象
+		// 如果线程1扩容，但是被线程2借走，则继续递归扩容获取对象，直到获取到或全部借走为止
 		return borrowObject();
 	}
 
 	/**
 	 * 归还对象
 	 *
-	 * @param obj 归还的对象
+	 * @param poolable 归还的对象
 	 * @return this
 	 */
-	public PoolPartition<T> returnObject(final Poolable<T> obj) {
-		try {
-			this.queue.put(obj);
-		} catch (InterruptedException e) {
-			throw new HutoolException(e);
+	@SuppressWarnings("resource")
+	@Override
+	public PoolPartition<T> returnObject(final Poolable<T> poolable) {
+		// 检查对象可用性
+		if (this.objectFactory.validate(poolable.getRaw())) {
+			try {
+				this.queue.put((PartitionPoolable<T>) poolable);
+			} catch (final InterruptedException e) {
+				throw new HutoolException(e);
+			}
+		} else {
+			// 对象不可用
+			free(poolable);
 		}
+
 		return this;
 	}
 
+	/**
+	 * 扩容并填充对象池队列<br>
+	 * 如果传入的扩容大小大于可用大小（即扩容大小加现有大小大于最大大小，则实际扩容到最大）
+	 *
+	 * @param increaseSize 扩容大小
+	 * @return 实际扩容大小，0表示已经达到最大，未成功扩容
+	 */
 	public synchronized int increase(int increaseSize) {
 		if (increaseSize + total > config.getMaxSize()) {
 			increaseSize = config.getMaxSize() - total;
@@ -107,13 +167,19 @@ public class PoolPartition<T> implements Closeable {
 		return this;
 	}
 
-	/**
-	 * 获取对象总数，包括借出对象数
-	 *
-	 * @return 对象数
-	 */
+	@Override
 	public int getTotal() {
 		return this.total;
+	}
+
+	@Override
+	public int getIdleCount() {
+		return this.queue.size();
+	}
+
+	@Override
+	public int getActiveCount() {
+		return getTotal() - getIdleCount();
 	}
 
 	@Override
@@ -123,11 +189,23 @@ public class PoolPartition<T> implements Closeable {
 		this.queue = null;
 	}
 
-	protected Poolable<T> createPoolable() {
+	/**
+	 * 创建{@link PartitionPoolable}
+	 *
+	 * @return {@link PartitionPoolable}
+	 */
+	protected PartitionPoolable<T> createPoolable() {
 		return new PartitionPoolable<>(objectFactory.create(), this);
 	}
 
-	private Poolable<T> waitingPoll() {
+	/**
+	 * 从队列中取出头部的对象，如果队列为空，则等待<br>
+	 * 等待的时间取决于{@link PoolConfig#getMaxWait()}，小于等于0时一直等待，否则等待给定毫秒数
+	 *
+	 * @return 取出的池对象
+	 * @throws HutoolException 中断异常
+	 */
+	private PartitionPoolable<T> waitingPoll() throws HutoolException {
 		final long maxWait = this.config.getMaxWait();
 		try {
 			if (maxWait <= 0) {

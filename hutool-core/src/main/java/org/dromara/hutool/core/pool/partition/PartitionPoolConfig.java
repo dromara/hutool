@@ -20,12 +20,34 @@ import org.dromara.hutool.core.pool.PoolConfig;
  * @author looly
  */
 public class PartitionPoolConfig extends PoolConfig {
-	private int partitionSize;
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 创建{@code PartitionPoolConfig}
+	 *
+	 * @return {@code PartitionPoolConfig}
+	 */
+	public static PartitionPoolConfig of() {
+		return new PartitionPoolConfig();
+	}
+
+	private int partitionSize = 4;
+
+	/**
+	 * 获取分区大小
+	 *
+	 * @return 分区大小
+	 */
 	public int getPartitionSize() {
 		return partitionSize;
 	}
 
+	/**
+	 * 设置分区大小
+	 *
+	 * @param partitionSize 分区大小
+	 * @return this
+	 */
 	public PartitionPoolConfig setPartitionSize(final int partitionSize) {
 		this.partitionSize = partitionSize;
 		return this;

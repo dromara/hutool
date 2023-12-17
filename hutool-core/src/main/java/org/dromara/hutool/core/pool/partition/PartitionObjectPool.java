@@ -13,7 +13,9 @@
 package org.dromara.hutool.core.pool.partition;
 
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.pool.*;
+import org.dromara.hutool.core.pool.ObjectFactory;
+import org.dromara.hutool.core.pool.ObjectPool;
+import org.dromara.hutool.core.pool.Poolable;
 import org.dromara.hutool.core.thread.ThreadUtil;
 
 import java.io.IOException;
@@ -58,6 +60,7 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 	 *
 	 * @return 总数
 	 */
+	@Override
 	public int getTotal() {
 		int size = 0;
 		for (final PoolPartition<T> subPool : partitions) {
@@ -67,16 +70,33 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 	}
 
 	@Override
-	public Poolable<T> borrowObject() {
-		checkClosed();
-		final int partitionIndex = (int) (ThreadUtil.currentThreadId() % config.getPartitionSize());
-		return this.partitions[partitionIndex].borrowObject();
+	public int getIdleCount() {
+		int size = 0;
+		for (final PoolPartition<T> subPool : partitions) {
+			size += subPool.getIdleCount();
+		}
+		return size;
 	}
 
+	@Override
+	public int getActiveCount() {
+		int size = 0;
+		for (final PoolPartition<T> subPool : partitions) {
+			size += subPool.getActiveCount();
+		}
+		return size;
+	}
+
+	@Override
+	public Poolable<T> borrowObject() {
+		checkClosed();
+		return this.partitions[getPartitionIndex(this.config)].borrowObject();
+	}
+
+	@Override
 	public PartitionObjectPool<T> returnObject(final Poolable<T> obj) {
 		checkClosed();
-		final int partitionIndex = (int) (ThreadUtil.currentThreadId() % config.getPartitionSize());
-		this.partitions[partitionIndex].returnObject(obj);
+		this.partitions[getPartitionIndex(this.config)].returnObject(obj);
 		return this;
 	}
 
@@ -86,10 +106,32 @@ public class PartitionObjectPool<T> implements ObjectPool<T> {
 		IoUtil.closeQuietly(this.partitions);
 	}
 
-	protected BlockingQueue<Poolable<T>> createBlockingQueue(final PoolConfig poolConfig) {
+	/**
+	 * 创建阻塞队列，默认为{@link ArrayBlockingQueue}<br>
+	 * 如果需要自定义队列类型，子类重写此方法
+	 *
+	 * @param poolConfig 池配置
+	 * @return 队列
+	 */
+	protected BlockingQueue<PartitionPoolable<T>> createBlockingQueue(final PartitionPoolConfig poolConfig) {
 		return new ArrayBlockingQueue<>(poolConfig.getMaxSize());
 	}
 
+	/**
+	 * 获取当前线程被分配的分区<br>
+	 * 默认根据线程ID（TID）取分区大小余数<br>
+	 * 如果需要自定义，子类重写此方法
+	 *
+	 * @param poolConfig 池配置
+	 * @return 分配的分区
+	 */
+	protected int getPartitionIndex(final PartitionPoolConfig poolConfig) {
+		return (int) (ThreadUtil.currentThreadId() % poolConfig.getPartitionSize());
+	}
+
+	/**
+	 * 检查池是否关闭
+	 */
 	private void checkClosed() {
 		if (this.closed) {
 			throw new IllegalStateException("Object Pool is closed!");
