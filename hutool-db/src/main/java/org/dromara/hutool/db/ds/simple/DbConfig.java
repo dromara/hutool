@@ -10,7 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
-package org.dromara.hutool.db.ds.pooled;
+package org.dromara.hutool.db.ds.simple;
 
 import org.dromara.hutool.db.DbRuntimeException;
 import org.dromara.hutool.db.driver.DriverUtil;
@@ -24,22 +24,17 @@ import java.util.Properties;
  */
 public class DbConfig {
 
-	//-------------------------------------------------------------------- Fields start
 	private String driver;        //数据库驱动
 	private String url;            //jdbc url
 	private String user;            //用户名
 	private String pass;            //密码
 
-	private int initialSize;        //初始连接数
-	private int minIdle;            //最小闲置连接数
-	private int maxActive;        //最大活跃连接数
-	private long maxWait;        //获取连接的超时等待
-
 	// 连接配置
 	private Properties connProps;
-	//-------------------------------------------------------------------- Fields end
 
-	//-------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 */
 	public DbConfig() {
 	}
 
@@ -53,7 +48,6 @@ public class DbConfig {
 	public DbConfig(final String url, final String user, final String pass) {
 		init(url, user, pass);
 	}
-	//-------------------------------------------------------------------- Constructor end
 
 	/**
 	 * 初始化
@@ -74,7 +68,6 @@ public class DbConfig {
 		}
 	}
 
-	//-------------------------------------------------------------------- Getters and Setters start
 	public String getDriver() {
 		return driver;
 	}
@@ -107,38 +100,6 @@ public class DbConfig {
 		this.pass = pass;
 	}
 
-	public int getInitialSize() {
-		return initialSize;
-	}
-
-	public void setInitialSize(final int initialSize) {
-		this.initialSize = initialSize;
-	}
-
-	public int getMinIdle() {
-		return minIdle;
-	}
-
-	public void setMinIdle(final int minIdle) {
-		this.minIdle = minIdle;
-	}
-
-	public int getMaxActive() {
-		return maxActive;
-	}
-
-	public void setMaxActive(final int maxActive) {
-		this.maxActive = maxActive;
-	}
-
-	public long getMaxWait() {
-		return maxWait;
-	}
-
-	public void setMaxWait(final long maxWait) {
-		this.maxWait = maxWait;
-	}
-
 	public Properties getConnProps() {
 		return connProps;
 	}
@@ -153,5 +114,4 @@ public class DbConfig {
 		}
 		this.connProps.setProperty(key, value);
 	}
-	//-------------------------------------------------------------------- Getters and Setters end
 }

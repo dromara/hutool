@@ -36,22 +36,14 @@ public class SimpleDataSource extends AbstractDataSource {
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
 
-	// -------------------------------------------------------------------- Fields start
-	private String driver; // 数据库驱动
-	private String url; // jdbc url
-	private String user; // 用户名
-	private String pass; // 密码
-
-	// 连接配置
-	private Properties connProps;
-	// -------------------------------------------------------------------- Fields end
+	private final DbConfig config;
 
 	// -------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
 	 */
 	public SimpleDataSource() {
-		this(null);
+		this(StrUtil.EMPTY);
 	}
 
 	/**
@@ -73,150 +65,74 @@ public class SimpleDataSource extends AbstractDataSource {
 		if (null == setting) {
 			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		}
-		final Setting config = setting.getSetting(group);
-		if (MapUtil.isEmpty(config)) {
+		final Setting dbSetting = setting.getSetting(group);
+		if (MapUtil.isEmpty(dbSetting)) {
 			throw new DbRuntimeException("No DataSource config for group: [{}]", group);
 		}
 
-		init(//
-				config.getAndRemove(DSKeys.KEY_ALIAS_URL), //
-				config.getAndRemove(DSKeys.KEY_ALIAS_USER), //
-				config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD), //
-				config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER)//
-		);
+		final DbConfig dbConfig = new DbConfig();
 
-		// 其它连接参数
-		this.connProps = config.getProps(Setting.DEFAULT_GROUP);
+		// 基本信息
+		final String url = dbSetting.getAndRemove(DSKeys.KEY_ALIAS_URL);
+		if (StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
+		}
+		dbConfig.setUrl(url);
+
+		// 自动识别Driver
+		final String driver = dbSetting.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
+		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
+		dbConfig.setUser(dbSetting.getAndRemove(DSKeys.KEY_ALIAS_USER));
+		dbConfig.setPass(dbSetting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
+
+		// remarks等特殊配置，since 5.3.8
+		String connValue;
+		for (final String key : DSKeys.KEY_CONN_PROPS) {
+			connValue = dbSetting.get(key);
+			if(StrUtil.isNotBlank(connValue)){
+				dbConfig.addConnProps(key, connValue);
+			}
+		}
+
+		this.config = dbConfig;
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param url jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
+	 * @param config 数据库连接配置
 	 */
-	public SimpleDataSource(final String url, final String user, final String pass) {
-		init(url, user, pass);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param url jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
-	 * @param driver JDBC驱动类
-	 * @since 3.1.2
-	 */
-	public SimpleDataSource(final String url, final String user, final String pass, final String driver) {
-		init(url, user, pass, driver);
+	public SimpleDataSource(final DbConfig config) {
+		this.config = config;
 	}
 	// -------------------------------------------------------------------- Constructor end
 
-	/**
-	 * 初始化
-	 *
-	 * @param url jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
-	 */
-	public void init(final String url, final String user, final String pass) {
-		init(url, user, pass, null);
-	}
-
-	/**
-	 * 初始化
-	 *
-	 * @param url jdbc url
-	 * @param user 用户名
-	 * @param pass 密码
-	 * @param driver JDBC驱动类，传入空则自动识别驱动类
-	 * @since 3.1.2
-	 */
-	public void init(final String url, final String user, final String pass, final String driver) {
-		this.driver = StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url);
-		try {
-			Class.forName(this.driver);
-		} catch (final ClassNotFoundException e) {
-			throw new DbRuntimeException(e, "Get jdbc driver [{}] error!", driver);
-		}
-		this.url = url;
-		this.user = user;
-		this.pass = pass;
-	}
-
-	// -------------------------------------------------------------------- Getters and Setters start
-	public String getDriver() {
-		return driver;
-	}
-
-	public void setDriver(final String driver) {
-		this.driver = driver;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(final String url) {
-		this.url = url;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(final String user) {
-		this.user = user;
-	}
-
-	public String getPass() {
-		return pass;
-	}
-
-	public void setPass(final String pass) {
-		this.pass = pass;
-	}
-
-	public Properties getConnProps() {
-		return connProps;
-	}
-
-	public void setConnProps(final Properties connProps) {
-		this.connProps = connProps;
-	}
-
-	public void addConnProps(final String key, final String value){
-		if(null == this.connProps){
-			this.connProps = new Properties();
-		}
-		this.connProps.setProperty(key, value);
-	}
-	// -------------------------------------------------------------------- Getters and Setters end
-
 	@Override
 	public Connection getConnection() throws SQLException {
+		final DbConfig config = this.config;
 		final Props info = new Props();
-		if (this.user != null) {
-			info.setProperty("user", this.user);
+
+		final String user = config.getUser();
+		if (user != null) {
+			info.setProperty("user", user);
 		}
-		if (this.pass != null) {
-			info.setProperty("password", this.pass);
+		final String pass = config.getPass();
+		if (pass != null) {
+			info.setProperty("password", pass);
 		}
 
 		// 其它参数
-		final Properties connProps = this.connProps;
+		final Properties connProps = config.getConnProps();
 		if(MapUtil.isNotEmpty(connProps)){
 			info.putAll(connProps);
 		}
 
-		return DriverManager.getConnection(this.url, info);
+		return DriverManager.getConnection(config.getUrl(), info);
 	}
 
 	@Override
 	public Connection getConnection(final String username, final String password) throws SQLException {
-		return DriverManager.getConnection(this.url, username, password);
+		return DriverManager.getConnection(config.getUrl(), username, password);
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class PooledConnection extends ConnectionWrapper {
 	 */
 	public PooledConnection(final PooledDataSource ds) throws SQLException {
 		this.ds = ds;
-		final DbConfig config = ds.getConfig();
+		final PooledDbConfig config = ds.getConfig();
 
 		final Props info = new Props();
 		final String user = config.getUser();

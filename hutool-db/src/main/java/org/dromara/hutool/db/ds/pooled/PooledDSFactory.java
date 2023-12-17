@@ -51,27 +51,27 @@ public class PooledDSFactory extends AbstractDSFactory {
 
 	@Override
 	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
-		final DbConfig dbConfig = new DbConfig();
-		dbConfig.setUrl(jdbcUrl);
-		dbConfig.setDriver(driver);
-		dbConfig.setUser(user);
-		dbConfig.setPass(pass);
+		final PooledDbConfig pooledDbConfig = new PooledDbConfig();
+		pooledDbConfig.setUrl(jdbcUrl);
+		pooledDbConfig.setDriver(driver);
+		pooledDbConfig.setUser(user);
+		pooledDbConfig.setPass(pass);
 
 		// 连接池相关信息
-		dbConfig.setInitialSize(poolSetting.getInt("initialSize", 0));
-		dbConfig.setMinIdle(poolSetting.getInt("minIdle", 0));
-		dbConfig.setMaxActive(poolSetting.getInt("maxActive", 8));
-		dbConfig.setMaxWait(poolSetting.getLong("maxWait", 6000L));
+		pooledDbConfig.setInitialSize(poolSetting.getInt("initialSize", 0));
+		pooledDbConfig.setMinIdle(poolSetting.getInt("minIdle", 0));
+		pooledDbConfig.setMaxActive(poolSetting.getInt("maxActive", 8));
+		pooledDbConfig.setMaxWait(poolSetting.getLong("maxWait", 6000L));
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
 		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = poolSetting.get(key);
 			if(StrUtil.isNotBlank(connValue)){
-				dbConfig.addConnProps(key, connValue);
+				pooledDbConfig.addConnProps(key, connValue);
 			}
 		}
 
-		return new PooledDataSource(dbConfig);
+		return new PooledDataSource(pooledDbConfig);
 	}
 }

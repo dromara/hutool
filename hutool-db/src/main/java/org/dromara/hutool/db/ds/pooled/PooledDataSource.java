@@ -35,7 +35,7 @@ public class PooledDataSource extends AbstractDataSource {
 	private Queue<PooledConnection> freePool;
 	private int activeCount; // 活跃连接数
 
-	private final DbConfig config;
+	private final PooledDbConfig config;
 
 	/**
 	 * 获得一个数据源
@@ -88,7 +88,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 *
 	 * @param config 数据库配置
 	 */
-	public PooledDataSource(final DbConfig config) {
+	public PooledDataSource(final PooledDbConfig config) {
 		this.config = config;
 		freePool = new LinkedList<>();
 		int initialSize = config.getInitialSize();
@@ -136,7 +136,7 @@ public class PooledDataSource extends AbstractDataSource {
 		return new PooledConnection(this);
 	}
 
-	public DbConfig getConfig() {
+	public PooledDbConfig getConfig() {
 		return config;
 	}
 

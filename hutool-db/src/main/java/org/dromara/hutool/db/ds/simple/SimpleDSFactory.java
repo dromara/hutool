@@ -49,13 +49,10 @@ public class SimpleDSFactory extends AbstractDSFactory {
 
 	@Override
 	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
-		final SimpleDataSource ds = new SimpleDataSource(//
-				jdbcUrl, //
-				user, //
-				pass, //
-				driver//
-		);
-		ds.setConnProps(poolSetting.getProps(Setting.DEFAULT_GROUP));
-		return ds;
+		final DbConfig dbConfig = new DbConfig(jdbcUrl, user, pass);
+		dbConfig.setDriver(driver);
+		dbConfig.setConnProps(poolSetting.getProps(Setting.DEFAULT_GROUP));
+
+		return new SimpleDataSource(dbConfig);
 	}
 }

@@ -57,41 +57,41 @@ public class DbSetting {
 	 * @param group 分组
 	 * @return 分组
 	 */
-	public DbConfig getDbConfig(final String group) {
+	public PooledDbConfig getDbConfig(final String group) {
 		final Setting config = setting.getSetting(group);
 		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No Hutool pool config for group: [{}]", group);
 		}
 
-		final DbConfig dbConfig = new DbConfig();
+		final PooledDbConfig pooledDbConfig = new PooledDbConfig();
 
 		// 基本信息
 		final String url = config.getAndRemove(DSKeys.KEY_ALIAS_URL);
 		if (StrUtil.isBlank(url)) {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
-		dbConfig.setUrl(url);
+		pooledDbConfig.setUrl(url);
 		// 自动识别Driver
 		final String driver = config.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
-		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
-		dbConfig.setUser(config.getAndRemove(DSKeys.KEY_ALIAS_USER));
-		dbConfig.setPass(config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
+		pooledDbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
+		pooledDbConfig.setUser(config.getAndRemove(DSKeys.KEY_ALIAS_USER));
+		pooledDbConfig.setPass(config.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
 
 		// 连接池相关信息
-		dbConfig.setInitialSize(setting.getIntByGroup("initialSize", group, 0));
-		dbConfig.setMinIdle(setting.getIntByGroup("minIdle", group, 0));
-		dbConfig.setMaxActive(setting.getIntByGroup("maxActive", group, 8));
-		dbConfig.setMaxWait(setting.getLongByGroup("maxWait", group, 6000L));
+		pooledDbConfig.setInitialSize(setting.getIntByGroup("initialSize", group, 0));
+		pooledDbConfig.setMinIdle(setting.getIntByGroup("minIdle", group, 0));
+		pooledDbConfig.setMaxActive(setting.getIntByGroup("maxActive", group, 8));
+		pooledDbConfig.setMaxWait(setting.getLongByGroup("maxWait", group, 6000L));
 
 		// remarks等特殊配置，since 5.3.8
 		String connValue;
 		for (final String key : DSKeys.KEY_CONN_PROPS) {
 			connValue = config.get(key);
 			if(StrUtil.isNotBlank(connValue)){
-				dbConfig.addConnProps(key, connValue);
+				pooledDbConfig.addConnProps(key, connValue);
 			}
 		}
 
-		return dbConfig;
+		return pooledDbConfig;
 	}
 }
