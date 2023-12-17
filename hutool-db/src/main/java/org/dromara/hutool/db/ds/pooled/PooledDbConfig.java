@@ -23,8 +23,8 @@ public class PooledDbConfig extends DbConfig {
 
 	private int initialSize;        //初始连接数
 	private int minIdle;            //最小闲置连接数
-	private int maxActive;        //最大活跃连接数
-	private long maxWait;        //获取连接的超时等待
+	private int maxActive;          //最大活跃连接数
+	private long maxWait;           //连接的超时等待
 
 	/**
 	 * 构造
@@ -43,34 +43,74 @@ public class PooledDbConfig extends DbConfig {
 		super(url, user, pass);
 	}
 
+	/**
+	 * 获取初始大小
+	 *
+	 * @return 初始大小
+	 */
 	public int getInitialSize() {
 		return initialSize;
 	}
 
+	/**
+	 * 设置初始大小
+	 *
+	 * @param initialSize 初始大小
+	 */
 	public void setInitialSize(final int initialSize) {
 		this.initialSize = initialSize;
 	}
 
+	/**
+	 * 获取最小闲置连接数
+	 *
+	 * @return 最小闲置连接数
+	 */
 	public int getMinIdle() {
 		return minIdle;
 	}
 
+	/**
+	 * 设置最小闲置连接数
+	 *
+	 * @param minIdle 最小闲置连接数
+	 */
 	public void setMinIdle(final int minIdle) {
 		this.minIdle = minIdle;
 	}
 
+	/**
+	 * 获取最大活跃连接数
+	 *
+	 * @return 最大活跃连接数
+	 */
 	public int getMaxActive() {
 		return maxActive;
 	}
 
+	/**
+	 * 设置最大活跃连接数
+	 *
+	 * @param maxActive 最大活跃连接数
+	 */
 	public void setMaxActive(final int maxActive) {
 		this.maxActive = maxActive;
 	}
 
+	/**
+	 * 获取连接的超时等待
+	 *
+	 * @return 连接的超时等待
+	 */
 	public long getMaxWait() {
 		return maxWait;
 	}
 
+	/**
+	 * 设置连接的超时等待
+	 *
+	 * @param maxWait 连接的超时等待
+	 */
 	public void setMaxWait(final long maxWait) {
 		this.maxWait = maxWait;
 	}

@@ -13,11 +13,6 @@
 package org.dromara.hutool.db.ds.simple;
 
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.driver.DriverUtil;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
@@ -38,65 +33,6 @@ public class SimpleDataSource extends AbstractDataSource {
 
 	private final DbConfig config;
 
-	// -------------------------------------------------------------------- Constructor start
-	/**
-	 * 构造
-	 */
-	public SimpleDataSource() {
-		this(StrUtil.EMPTY);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param group 数据库配置文件中的分组
-	 */
-	public SimpleDataSource(final String group) {
-		this(null, group);
-	}
-
-	/**
-	 * 构造
-	 *
-	 * @param setting 数据库配置
-	 * @param group 数据库配置文件中的分组
-	 */
-	public SimpleDataSource(Setting setting, final String group) {
-		if (null == setting) {
-			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
-		}
-		final Setting dbSetting = setting.getSetting(group);
-		if (MapUtil.isEmpty(dbSetting)) {
-			throw new DbRuntimeException("No DataSource config for group: [{}]", group);
-		}
-
-		final DbConfig dbConfig = new DbConfig();
-
-		// 基本信息
-		final String url = dbSetting.getAndRemove(DSKeys.KEY_ALIAS_URL);
-		if (StrUtil.isBlank(url)) {
-			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
-		}
-		dbConfig.setUrl(url);
-
-		// 自动识别Driver
-		final String driver = dbSetting.getAndRemove(DSKeys.KEY_ALIAS_DRIVER);
-		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
-		dbConfig.setUser(dbSetting.getAndRemove(DSKeys.KEY_ALIAS_USER));
-		dbConfig.setPass(dbSetting.getAndRemove(DSKeys.KEY_ALIAS_PASSWORD));
-
-		// remarks等特殊配置，since 5.3.8
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = dbSetting.get(key);
-			if(StrUtil.isNotBlank(connValue)){
-				dbConfig.addConnProps(key, connValue);
-			}
-		}
-
-		this.config = dbConfig;
-	}
-
 	/**
 	 * 构造
 	 *
@@ -105,7 +41,6 @@ public class SimpleDataSource extends AbstractDataSource {
 	public SimpleDataSource(final DbConfig config) {
 		this.config = config;
 	}
-	// -------------------------------------------------------------------- Constructor end
 
 	@Override
 	public Connection getConnection() throws SQLException {
