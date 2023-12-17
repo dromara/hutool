@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 /**
  * 比较异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class ComparatorException extends HutoolException {
 	private static final long serialVersionUID = 4475602435485521971L;

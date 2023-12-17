@@ -681,6 +681,16 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 获取当前线程ID，即TID
+	 *
+	 * @return TID
+	 * @since 6.0.0
+	 */
+	public static long currentThreadId() {
+		return Thread.currentThread().getId();
+	}
+
+	/**
 	 * 创建线程工厂
 	 *
 	 * @param prefix   线程名前缀

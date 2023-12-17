@@ -15,7 +15,7 @@ package org.dromara.hutool.core.exception;
 /**
  * 验证异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class ValidateException extends StatefulException {
 	private static final long serialVersionUID = 6057602589533840889L;

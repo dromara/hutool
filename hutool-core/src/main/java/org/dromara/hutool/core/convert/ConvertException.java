@@ -19,7 +19,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * 转换异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class ConvertException extends HutoolException {
 	private static final long serialVersionUID = 4730597402855274362L;

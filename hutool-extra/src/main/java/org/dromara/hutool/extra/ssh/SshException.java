@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 /**
  * SSH异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class SshException extends HutoolException {
 	private static final long serialVersionUID = 1L;

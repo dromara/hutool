@@ -23,7 +23,7 @@ import java.util.TreeMap;
  * 算法实现：<a href="https://weblogs.java.net/blog/2007/11/27/consistent-hashing">https://weblogs.java.net/blog/2007/11/27/consistent-hashing</a>
  *
  * @param <T> 节点类型
- * @author xiaoleilu
+ * @author Looly
  */
 public class ConsistentHash<T> implements Serializable {
 	private static final long serialVersionUID = 1L;

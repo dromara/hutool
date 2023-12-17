@@ -27,7 +27,7 @@ import java.util.Map;
  * 字符串工具类<br>
  * 此工具主要针对单个字符串的操作
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class StrUtil extends CharSequenceUtil implements StrPool {
 

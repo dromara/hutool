@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 /**
  * 定时任务异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class CronException extends HutoolException {
 	private static final long serialVersionUID = 1L;

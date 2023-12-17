@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 /**
  * 模板异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class TemplateException extends HutoolException {
 	private static final long serialVersionUID = 8247610319171014183L;

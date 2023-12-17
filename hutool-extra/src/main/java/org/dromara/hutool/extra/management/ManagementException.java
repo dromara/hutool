@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * FtpException异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class ManagementException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

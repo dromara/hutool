@@ -40,7 +40,7 @@ import java.util.TimeZone;
  * 此类继承了{@link Date}，并提供扩展方法，如时区等。<br>
  * 此类重写了父类的{@code toString()}方法，返回值为"yyyy-MM-dd HH:mm:ss"格式
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class DateTime extends Date {
 	private static final long serialVersionUID = -5395712593979185936L;

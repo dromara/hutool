@@ -15,7 +15,7 @@ package org.dromara.hutool.core.exception;
 /**
  * 依赖异常
  *
- * @author xiaoleilu
+ * @author Looly
  * @since 4.0.10
  */
 public class DependencyException extends HutoolException {

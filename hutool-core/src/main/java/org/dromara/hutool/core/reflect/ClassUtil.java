@@ -43,7 +43,7 @@ import java.util.function.Predicate;
 /**
  * 类工具类 <br>
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class ClassUtil {
 
@@ -116,7 +116,7 @@ public class ClassUtil {
 	 * 例如：ClassUtil这个类<br>
 	 *
 	 * <pre>
-	 * isSimple为false: "com.xiaoleilu.hutool.util.ClassUtil"
+	 * isSimple为false: "org.dromara.hutool.core.reflect.ClassUtil"
 	 * isSimple为true: "ClassUtil"
 	 * </pre>
 	 *
@@ -551,7 +551,7 @@ public class ClassUtil {
 	/**
 	 * 获得给定类所在包的名称<br>
 	 * 例如：<br>
-	 * com.xiaoleilu.hutool.util.ClassUtil =》 com.xiaoleilu.hutool.util
+	 * org.dromara.hutool.core.reflect.ClassUtil =》 org.dromara.hutool.core.reflect
 	 *
 	 * @param clazz 类
 	 * @return 包名
@@ -571,7 +571,7 @@ public class ClassUtil {
 	/**
 	 * 获得给定类所在包的路径<br>
 	 * 例如：<br>
-	 * com.xiaoleilu.hutool.util.ClassUtil =》 com/xiaoleilu/hutool/util
+	 * org.dromara.hutool.core.reflect.ClassUtil =》 org/dromara/hutool/core/reflect
 	 *
 	 * @param clazz 类
 	 * @return 包名

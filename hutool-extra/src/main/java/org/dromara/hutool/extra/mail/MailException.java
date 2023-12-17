@@ -17,7 +17,7 @@ import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * 邮件异常
- * @author xiaoleilu
+ * @author Looly
  */
 public class MailException extends RuntimeException{
 	private static final long serialVersionUID = 8247610319171014183L;

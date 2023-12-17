@@ -17,7 +17,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * SOAP异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class SoapRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;

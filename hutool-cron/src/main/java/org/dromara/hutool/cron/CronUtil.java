@@ -28,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 此工具持有一个全局{@link Scheduler}，所有定时任务在同一个调度器中执行<br>
  * {@link #setMatchSecond(boolean)} 方法用于定义是否使用秒匹配模式，如果为true，则定时任务表达式中的第一位为秒，否则为分，默认是分
  *
- * @author xiaoleilu
+ * @author Looly
  *
  */
 public class CronUtil {

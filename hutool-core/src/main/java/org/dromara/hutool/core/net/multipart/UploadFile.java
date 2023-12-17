@@ -27,7 +27,7 @@ import java.nio.file.NoSuchFileException;
 /**
  * 上传的文件对象
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class UploadFile {
 

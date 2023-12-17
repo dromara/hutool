@@ -17,7 +17,7 @@ import org.dromara.hutool.core.exception.HutoolException;
 /**
  * Bean异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class BeanException extends HutoolException {
 	private static final long serialVersionUID = -8096998667745023423L;

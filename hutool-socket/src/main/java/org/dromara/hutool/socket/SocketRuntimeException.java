@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * Socket异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class SocketRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 8247610319171014183L;

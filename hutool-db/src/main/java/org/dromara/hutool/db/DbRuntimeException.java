@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * 数据库异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class DbRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 3624487785708765623L;

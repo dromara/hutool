@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Http请求工具类
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class HttpUtil {
 

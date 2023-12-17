@@ -15,7 +15,7 @@ package org.dromara.hutool.core.exception;
 /**
  * 克隆异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class CloneException extends HutoolException {
 	private static final long serialVersionUID = 6774837422188798989L;

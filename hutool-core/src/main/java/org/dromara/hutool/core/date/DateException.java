@@ -17,7 +17,7 @@ import org.dromara.hutool.core.text.StrUtil;
 
 /**
  * 工具类异常
- * @author xiaoleilu
+ * @author Looly
  */
 public class DateException extends RuntimeException{
 	private static final long serialVersionUID = 8247610319171014183L;

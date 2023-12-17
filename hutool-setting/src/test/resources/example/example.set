@@ -1,6 +1,6 @@
 # -------------------------------------------------------------
 # ----- GroupedSet File with UTF8-----
-# @see com.xiaoleilu.hutool.lang.GroupedSet
+# @see org.dromara.hutool.setting.GroupedSet
 # -------------------------------------------------------------
 
 无分组值1

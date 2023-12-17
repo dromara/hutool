@@ -233,7 +233,7 @@ public class SyncFinisher implements Closeable {
 	/**
 	 * 工作者，为一个线程
 	 *
-	 * @author xiaoleilu
+	 * @author Looly
 	 */
 	public abstract class Worker implements Runnable {
 

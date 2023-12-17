@@ -15,7 +15,7 @@ package org.dromara.hutool.core.exception;
 /**
  * 未初始化异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class NotInitedException extends HutoolException {
 	private static final long serialVersionUID = 8247610319171014183L;

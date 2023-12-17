@@ -15,7 +15,7 @@ package org.dromara.hutool.core.net.multipart;
 /**
  * 上传文件设定文件
  *
- * @author xiaoleilu
+ * @author Looly
  *
  */
 public class UploadSetting {

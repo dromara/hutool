@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * 日期时间工具类
  *
- * @author xiaoleilu
+ * @author Looly
  * @see TimeUtil java8日志工具类
  * @see DatePattern 日期常用格式工具类
  */

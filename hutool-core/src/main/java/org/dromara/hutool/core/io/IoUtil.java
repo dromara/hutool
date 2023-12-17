@@ -59,7 +59,7 @@ import java.util.Objects;
  * IO工具类<br>
  * IO工具类只是辅助流的读写，并不负责关闭流。原因是流可能被多次读写，读写关闭后容易造成问题。
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class IoUtil extends NioUtil {
 

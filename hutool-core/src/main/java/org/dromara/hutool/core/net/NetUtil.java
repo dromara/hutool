@@ -38,7 +38,7 @@ import java.util.function.Predicate;
 /**
  * 网络相关工具
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class NetUtil {
 

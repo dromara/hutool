@@ -21,7 +21,7 @@ import java.util.Set;
  * 基本变量类型的枚举<br>
  * 基本类型枚举包括原始类型和包装类型
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public enum BasicType {
 	/**

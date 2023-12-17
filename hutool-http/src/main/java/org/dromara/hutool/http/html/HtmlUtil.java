@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * <p>
  * 比如去掉指定标签（例如广告栏等）、去除JS、去掉样式等等，这些操作都可以使用此工具类完成。
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class HtmlUtil {
 

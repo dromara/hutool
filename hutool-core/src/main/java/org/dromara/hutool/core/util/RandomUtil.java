@@ -35,7 +35,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 随机工具类
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class RandomUtil {
 

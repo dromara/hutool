@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * POI异常
  *
- * @author xiaoleilu
+ * @author Looly
  */
 public class POIException extends RuntimeException {
 	private static final long serialVersionUID = 2711633732613506552L;

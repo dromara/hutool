@@ -18,7 +18,7 @@ import org.dromara.hutool.core.text.StrUtil;
 /**
  * 资源文件或资源不存在异常
  *
- * @author xiaoleilu
+ * @author Looly
  * @since 4.0.2
  */
 public class NoResourceException extends IORuntimeException {
