@@ -32,7 +32,7 @@ import java.util.function.*;
 /**
  * Lambda相关工具类
  *
- * @author looly, Scen
+ * @author looly, Scen，VampireAchao
  * @since 5.6.3
  */
 public class LambdaUtil {
