@@ -153,6 +153,19 @@ public class Money implements Serializable, Comparable<Money> {
 	 * 构造器。
 	 *
 	 * <p>
+	 * 创建一个具有金额{@code amount}元和指定币种编码{@code currencyCode}的货币对象。
+	 *
+	 * @param amount       金额，以元为单位。
+	 * @param currencyCode 币种编码。币种编码需要符合ISO 4217标准
+	 */
+	public Money(String amount, String currencyCode) {
+		this(new BigDecimal(amount), Currency.getInstance(currencyCode));
+	}
+
+	/**
+	 * 构造器。
+	 *
+	 * <p>
 	 * 创建一个具有金额{@code amount}元和指定币种{@code currency}的货币对象。
 	 * 如果金额不能转换为整数分，则使用指定的取整模式{@code roundingMode}取整。
 	 *
