@@ -25,7 +25,7 @@ public class MoneyTest {
 	}
 
 	@Test
-	public void test() {
+	public void currencyCodeTest() {
 		final Money money = new Money("1012.34", "USD");
 		Assert.assertEquals(101234L, money.getCent());
 		Assert.assertEquals(new BigDecimal("1012.34"), money.getAmount());
