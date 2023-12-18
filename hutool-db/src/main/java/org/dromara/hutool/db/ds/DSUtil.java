@@ -12,19 +12,15 @@
 
 package org.dromara.hutool.db.ds;
 
-import org.dromara.hutool.core.reflect.ConstructorUtil;
-import org.dromara.hutool.core.spi.ListServiceLoader;
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.GlobalDbConfig;
 import org.dromara.hutool.log.LogUtil;
-import org.dromara.hutool.setting.Setting;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * {@link DataSource}和{@link DSFactory}相关工具类<br>
+ * {@link DataSource}相关工具类<br>
  * 主要提供数据源工厂的创建和数据源的获取
  *
  * @author looly
@@ -78,7 +74,7 @@ public class DSUtil {
 	 * @return 数据源
 	 */
 	public static DataSource getDS(final String group) {
-		return GlobalDSFactory.get().getDataSource(group);
+		return DSPool.getInstance().getDataSource(group);
 	}
 
 	/**
@@ -95,47 +91,7 @@ public class DSUtil {
 	 * @return 自定义的数据源工厂
 	 */
 	public static DSFactory setGlobalDSFactory(final DSFactory dsFactory) {
-		return GlobalDSFactory.set(dsFactory);
-	}
-
-	/**
-	 * 创建数据源实现工厂<br>
-	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
-	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
-	 *
-	 * @param setting 数据库配置项
-	 * @return 日志实现类
-	 */
-	public static DSFactory createFactory(final Setting setting) {
-		final DSFactory dsFactory = _createFactory(setting);
-		LogUtil.debug("Use [{}] DataSource As Default.", dsFactory.getDataSourceName());
+		DSPool.getInstance().setFactory(dsFactory);
 		return dsFactory;
-	}
-
-	/**
-	 * 创建数据源实现工厂<br>
-	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
-	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; BeeCP &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled<br>
-	 * 见：META-INF/services/org.dromara.hutool.db.ds.DSFactory
-	 *
-	 * @param setting 数据库配置项
-	 * @return 日志实现类
-	 * @since 4.1.3
-	 */
-	private static DSFactory _createFactory(Setting setting) {
-		if (null == setting) {
-			setting = GlobalDbConfig.createDbSetting();
-		}
-		final ListServiceLoader<DSFactory> loader = ListServiceLoader.of(DSFactory.class);
-		final int size = loader.size();
-		for (int i = 0; i < size; i++) {
-			try {
-				return ConstructorUtil.newInstance(loader.getServiceClass(i), setting);
-			} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-				// ignore
-			}
-		}
-
-		throw new DbRuntimeException("No DSFactory implement available!");
 	}
 }

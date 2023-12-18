@@ -15,6 +15,7 @@ package org.dromara.hutool.db.ds.pooled;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.pool.Poolable;
 import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.ds.DbConfig;
 import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
@@ -40,7 +41,7 @@ public class PooledConnection extends ConnectionWrapper implements Poolable<Conn
 	 * @param config 数据库配置
 	 * @param dataSource 数据源
 	 */
-	public PooledConnection(final PooledDbConfig config, final PooledDataSource dataSource) {
+	public PooledConnection(final DbConfig config, final PooledDataSource dataSource) {
 		final Props info = new Props();
 		final String user = config.getUser();
 		if (user != null) {

@@ -12,13 +12,14 @@
 
 package org.dromara.hutool.db.ds.dbcp;
 
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * DBCP2数据源工厂类
@@ -26,50 +27,31 @@ import javax.sql.DataSource;
  * @author Looly
  *
  */
-public class DbcpDSFactory extends AbstractDSFactory {
-	private static final long serialVersionUID = -9133501414334104548L;
+public class DbcpDSFactory implements DSFactory {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 数据源名称：commons-dbcp2
-	 */
-	public static final String DS_NAME = "commons-dbcp2";
-
-	/**
-	 * 构造，使用默认配置文件
-	 */
-	public DbcpDSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置
-	 */
-	public DbcpDSFactory(final Setting setting) {
-		super(DS_NAME, BasicDataSource.class, setting);
+	@Override
+	public String getDataSourceName() {
+		return "commons-dbcp2";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
+	public DataSource createDataSource(final DbConfig config) {
 		final BasicDataSource ds = new BasicDataSource();
 
-		ds.setUrl(jdbcUrl);
-		ds.setDriverClassName(driver);
-		ds.setUsername(user);
-		ds.setPassword(pass);
+		ds.setUrl(config.getUrl());
+		ds.setDriverClassName(config.getDriver());
+		ds.setUsername(config.getUser());
+		ds.setPassword(config.getPass());
 
-		// remarks等特殊配置，since 5.3.8
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemove(key);
-			if(StrUtil.isNotBlank(connValue)){
-				ds.addConnectionProperty(key, connValue);
-			}
+		// 连接池和其它选项
+		Props.of(config.getPoolProps()).toBean(ds);
+
+		// 连接配置
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			connProps.forEach((key, value)->ds.addConnectionProperty(key.toString(), value.toString()));
 		}
-
-		// 注入属性
-		poolSetting.toBean(ds);
 
 		return ds;
 	}

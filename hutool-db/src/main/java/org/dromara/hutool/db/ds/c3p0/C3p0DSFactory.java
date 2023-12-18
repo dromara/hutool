@@ -12,17 +12,16 @@
 
 package org.dromara.hutool.db.ds.c3p0;
 
-import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.props.Props;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
+import java.util.Properties;
 
 /**
  * C3P0数据源工厂类
@@ -30,58 +29,35 @@ import java.beans.PropertyVetoException;
  * @author Looly
  *
  */
-public class C3p0DSFactory extends AbstractDSFactory {
+public class C3p0DSFactory implements DSFactory {
 	private static final long serialVersionUID = -6090788225842047281L;
 
-	/**
-	 * 数据源名称：C3P0
-	 */
-	public static final String DS_NAME = "C3P0";
-
-	/**
-	 * 构造，使用默认配置
-	 */
-	public C3p0DSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置
-	 */
-	public C3p0DSFactory(final Setting setting) {
-		super(DS_NAME, ComboPooledDataSource.class, setting);
+	@Override
+	public String getDataSourceName() {
+		return "C3P0";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
+	public DataSource createDataSource(final DbConfig config) {
 		final ComboPooledDataSource ds = new ComboPooledDataSource();
 
-		// remarks等特殊配置，since 5.3.8
-		final Props connProps = new Props();
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemove(key);
-			if(StrUtil.isNotBlank(connValue)){
-				connProps.setProperty(key, connValue);
-			}
-		}
-		if(MapUtil.isNotEmpty(connProps)){
-			ds.setProperties(connProps);
-		}
-
-		ds.setJdbcUrl(jdbcUrl);
+		ds.setJdbcUrl(config.getUrl());
 		try {
-			ds.setDriverClass(driver);
+			ds.setDriverClass(config.getDriver());
 		} catch (final PropertyVetoException e) {
 			throw new DbRuntimeException(e);
 		}
-		ds.setUser(user);
-		ds.setPassword(pass);
+		ds.setUser(config.getUser());
+		ds.setPassword(config.getPass());
 
-		// 注入属性
-		poolSetting.toBean(ds);
+		// 连接池和其它选项
+		Props.of(config.getPoolProps()).toBean(ds);
+
+		// 连接配置
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			ds.setProperties(connProps);
+		}
 
 		return ds;
 	}

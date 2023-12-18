@@ -14,55 +14,39 @@ package org.dromara.hutool.db.ds.bee;
 
 import cn.beecp.BeeDataSource;
 import cn.beecp.BeeDataSourceConfig;
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * BeeCP数据源工厂类
  *
  * @author Looly
  */
-public class BeeDSFactory extends AbstractDSFactory {
+public class BeeDSFactory implements DSFactory {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 连接池名称：BeeCP
-	 */
-	public static final String DS_NAME = "BeeCP";
-
-	/**
-	 * 构造，使用默认配置文件
-	 */
-	public BeeDSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置文件
-	 */
-	public BeeDSFactory(final Setting setting) {
-		super(DS_NAME, BeeDataSource.class, setting);
+	@Override
+	public String getDataSourceName() {
+		return "BeeCP";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
+	public DataSource createDataSource(final DbConfig config) {
+		final BeeDataSourceConfig beeConfig = new BeeDataSourceConfig(
+			config.getDriver(), config.getUrl(), config.getUser(), config.getPass());
 
-		final BeeDataSourceConfig beeConfig = new BeeDataSourceConfig(driver, jdbcUrl, user, pass);
-		poolSetting.toBean(beeConfig);
+		// 连接池和其它选项
+		Props.of(config.getPoolProps()).toBean(beeConfig);
 
-		// remarks等特殊配置，since 5.3.8
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemove(key);
-			if (StrUtil.isNotBlank(connValue)) {
-				beeConfig.addConnectProperty(key, connValue);
-			}
+		// 连接配置
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			connProps.forEach((key, value)->beeConfig.addConnectProperty(key.toString(), value));
 		}
 
 		return new BeeDataSource(beeConfig);

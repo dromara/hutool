@@ -88,7 +88,7 @@ public class PropsTest {
 		Assertions.assertEquals(DateUtil.parse("2020-01-01"), systemConfig.getCreateTime());
 		Assertions.assertEquals(true, systemConfig.getIsInit());
 		Assertions.assertEquals("1", systemConfig.getStairPlan());
-		Assertions.assertEquals(new Integer(2), systemConfig.getStageNum());
+		Assertions.assertEquals(Integer.valueOf(2), systemConfig.getStageNum());
 		Assertions.assertEquals("3", systemConfig.getVersion());
 	}
 
@@ -124,5 +124,16 @@ public class PropsTest {
 		private Date nextStageTime;//当前阶段结束日期/下一阶段开始日期
 	}
 
+	@Test
+	void getSubTest() {
+		final Props props = new Props();
+		props.set("a.b", "1");
+		props.set("a.c", "2");
+		props.set("b.a", "3");
 
+		final Props subProps = props.getSubProps("a");
+		Assertions.assertEquals(2, subProps.size());
+		Assertions.assertEquals("1", subProps.getStr("b"));
+		Assertions.assertEquals("2", subProps.getStr("c"));
+	}
 }

@@ -18,7 +18,9 @@ import org.dromara.hutool.core.pool.ObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionObjectPool;
 import org.dromara.hutool.core.pool.partition.PartitionPoolConfig;
 import org.dromara.hutool.db.DbRuntimeException;
+import org.dromara.hutool.db.ds.DbConfig;
 import org.dromara.hutool.db.ds.simple.AbstractDataSource;
+import org.dromara.hutool.setting.props.Props;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,6 +33,11 @@ import java.sql.SQLException;
  */
 public class PooledDataSource extends AbstractDataSource {
 
+	private static final String KEY_MAX_WAIT = "maxWait";
+	private static final String KEY_INITIAL_SIZE = "initialSize";
+	private static final String KEY_MAX_ACTIVE = "maxActive";
+
+	private final int maxWait;
 	private final ObjectPool<Connection> connPool;
 
 	/**
@@ -38,12 +45,16 @@ public class PooledDataSource extends AbstractDataSource {
 	 *
 	 * @param config 数据库池配置
 	 */
-	public PooledDataSource(final PooledDbConfig config) {
+	public PooledDataSource(final DbConfig config) {
+
+		final Props poolProps = Props.of(config.getPoolProps());
+		this.maxWait = poolProps.getInt(KEY_MAX_WAIT, 6000);
+
 		final PartitionPoolConfig poolConfig = (PartitionPoolConfig) PartitionPoolConfig.of()
 			.setPartitionSize(1)
-			.setMaxWait(config.getMaxWait())
-			.setMinSize(config.getInitialSize())
-			.setMaxSize(config.getMaxActive());
+			.setMaxWait(this.maxWait)
+			.setMinSize(poolProps.getInt(KEY_INITIAL_SIZE, 0))
+			.setMaxSize(poolProps.getInt(KEY_MAX_ACTIVE, 8));
 
 		this.connPool = new PartitionObjectPool<>(poolConfig, createConnFactory(config));
 	}
@@ -78,7 +89,7 @@ public class PooledDataSource extends AbstractDataSource {
 	 * @param config 数据库配置
 	 * @return {@link ObjectFactory}
 	 */
-	private ObjectFactory<Connection> createConnFactory(final PooledDbConfig config) {
+	private ObjectFactory<Connection> createConnFactory(final DbConfig config) {
 		return new ObjectFactory<Connection>() {
 			@Override
 			public Connection create() {
@@ -88,7 +99,8 @@ public class PooledDataSource extends AbstractDataSource {
 			@Override
 			public boolean validate(final Connection connection) {
 				try {
-					return null != connection && connection.isValid((int) config.getMaxWait());
+					return null != connection
+						&& connection.isValid(maxWait);
 				} catch (final SQLException e) {
 					throw new DbRuntimeException(e);
 				}

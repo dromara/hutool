@@ -12,10 +12,8 @@
 
 package org.dromara.hutool.db.ds.pooled;
 
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
+import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.DbConfig;
 
 import javax.sql.DataSource;
 
@@ -25,53 +23,16 @@ import javax.sql.DataSource;
  * @author Looly
  *
  */
-public class PooledDSFactory extends AbstractDSFactory {
+public class PooledDSFactory implements DSFactory {
 	private static final long serialVersionUID = 8093886210895248277L;
 
-	/**
-	 * 数据源名称：Hutool-Pooled-DataSource
-	 */
-	public static final String DS_NAME = "Hutool-Pooled-DataSource";
-
-	/**
-	 * 构造，使用默认配置文件
-	 */
-	public PooledDSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置
-	 */
-	public PooledDSFactory(final Setting setting) {
-		super(DS_NAME, PooledDataSource.class, setting);
+	@Override
+	public String getDataSourceName() {
+		return "Hutool-Pooled-DataSource";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
-		final PooledDbConfig pooledDbConfig = new PooledDbConfig();
-		pooledDbConfig.setUrl(jdbcUrl);
-		pooledDbConfig.setDriver(driver);
-		pooledDbConfig.setUser(user);
-		pooledDbConfig.setPass(pass);
-
-		// 连接池相关信息
-		pooledDbConfig.setInitialSize(poolSetting.getInt("initialSize", 0));
-		pooledDbConfig.setMinIdle(poolSetting.getInt("minIdle", 0));
-		pooledDbConfig.setMaxActive(poolSetting.getInt("maxActive", 8));
-		pooledDbConfig.setMaxWait(poolSetting.getLong("maxWait", 6000L));
-
-		// remarks等特殊配置，since 5.3.8
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = poolSetting.get(key);
-			if(StrUtil.isNotBlank(connValue)){
-				pooledDbConfig.addConnProps(key, connValue);
-			}
-		}
-
-		return new PooledDataSource(pooledDbConfig);
+	public DataSource createDataSource(final DbConfig config) {
+		return new PooledDataSource(config);
 	}
 }

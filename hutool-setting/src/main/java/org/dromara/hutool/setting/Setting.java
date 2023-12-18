@@ -383,20 +383,20 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 转换为Properties对象，原分组变为前缀
+	 * 转换为{@link Props}对象，原分组变为前缀
 	 *
-	 * @return Properties对象
+	 * @return {@link Props}对象
 	 */
-	public Properties toProperties() {
-		final Properties properties = new Properties();
+	public Props toProps() {
+		final Props props = new Props();
 		String group;
 		for (final Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			group = groupEntry.getKey();
 			for (final Entry<String, String> entry : groupEntry.getValue().entrySet()) {
-				properties.setProperty(StrUtil.isEmpty(group) ? entry.getKey() : group + CharUtil.DOT + entry.getKey(), entry.getValue());
+				props.setProperty(StrUtil.isEmpty(group) ? entry.getKey() : group + CharUtil.DOT + entry.getKey(), entry.getValue());
 			}
 		}
-		return properties;
+		return props;
 	}
 
 	/**

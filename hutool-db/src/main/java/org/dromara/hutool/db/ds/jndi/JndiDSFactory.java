@@ -14,9 +14,9 @@ package org.dromara.hutool.db.ds.jndi;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.DbRuntimeException;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
+import org.dromara.hutool.db.ds.DSFactory;
 import org.dromara.hutool.db.ds.DSUtil;
-import org.dromara.hutool.setting.Setting;
+import org.dromara.hutool.db.ds.DbConfig;
 
 import javax.sql.DataSource;
 
@@ -31,33 +31,17 @@ import javax.sql.DataSource;
  * @author Looly
  *
  */
-public class JndiDSFactory extends AbstractDSFactory {
+public class JndiDSFactory implements DSFactory {
 	private static final long serialVersionUID = 1573625812927370432L;
 
-	/**
-	 * 数据源名称：JNDI DataSource
-	 */
-	public static final String DS_NAME = "JNDI DataSource";
-
-	/**
-	 * 构造，使用默认配置文件
-	 */
-	public JndiDSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置
-	 */
-	public JndiDSFactory(final Setting setting) {
-		super(DS_NAME, null, setting);
+	@Override
+	public String getDataSourceName() {
+		return "JNDI DataSource";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
-		final String jndiName = poolSetting.getStr("jndi");
+	public DataSource createDataSource(final DbConfig config) {
+		final String jndiName = config.getPoolProps().getProperty("jndi");
 		if (StrUtil.isEmpty(jndiName)) {
 			throw new DbRuntimeException("No setting name [jndi] for this group.");
 		}

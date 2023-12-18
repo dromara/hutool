@@ -12,11 +12,7 @@
 
 package org.dromara.hutool.core.pool.partition;
 
-import org.dromara.hutool.core.exception.HutoolException;
-import org.dromara.hutool.core.pool.ObjectFactory;
-import org.dromara.hutool.core.pool.ObjectPool;
-import org.dromara.hutool.core.pool.PoolConfig;
-import org.dromara.hutool.core.pool.Poolable;
+import org.dromara.hutool.core.pool.*;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -99,7 +95,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 			poolable = waitingPoll();
 			if (null == poolable) {
 				// 池空间达到最大值，但是无可用对象
-				throw new HutoolException("Pool exhausted!");
+				throw new PoolException("Pool exhausted!");
 			}
 		}
 
@@ -122,7 +118,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 			try {
 				this.queue.put(poolable);
 			} catch (final InterruptedException e) {
-				throw new HutoolException(e);
+				throw new PoolException(e);
 			}
 		} else {
 			// 对象不可用
@@ -150,7 +146,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 			}
 			total += increaseSize;
 		} catch (final InterruptedException e) {
-			throw new HutoolException(e);
+			throw new PoolException(e);
 		}
 		return increaseSize;
 	}
@@ -208,9 +204,9 @@ public class PoolPartition<T> implements ObjectPool<T> {
 	 * 等待的时间取决于{@link PoolConfig#getMaxWait()}，小于等于0时一直等待，否则等待给定毫秒数
 	 *
 	 * @return 取出的池对象
-	 * @throws HutoolException 中断异常
+	 * @throws PoolException 中断异常
 	 */
-	private Poolable<T> waitingPoll() throws HutoolException {
+	private Poolable<T> waitingPoll() throws PoolException {
 		final long maxWait = this.config.getMaxWait();
 		try {
 			if (maxWait <= 0) {
@@ -218,7 +214,7 @@ public class PoolPartition<T> implements ObjectPool<T> {
 			}
 			return this.queue.poll(maxWait, TimeUnit.MILLISECONDS);
 		} catch (final InterruptedException e) {
-			throw new HutoolException(e);
+			throw new PoolException(e);
 		}
 	}
 }

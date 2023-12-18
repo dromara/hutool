@@ -1325,7 +1325,7 @@ public class CharSequenceUtil extends StrValidator {
 	 * @see #appendIfMissing(CharSequence, CharSequence, CharSequence...)
 	 */
 	public static String addSuffixIfNot(final CharSequence str, final CharSequence suffix) {
-		return appendIfMissing(str, suffix, suffix);
+		return appendIfMissing(str, suffix);
 	}
 	// endregion
 

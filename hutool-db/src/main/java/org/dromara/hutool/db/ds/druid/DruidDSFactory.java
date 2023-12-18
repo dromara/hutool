@@ -12,14 +12,15 @@
 
 package org.dromara.hutool.db.ds.druid;
 
-import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.db.ds.AbstractDSFactory;
-import org.dromara.hutool.db.ds.DSKeys;
-import org.dromara.hutool.setting.Setting;
-import org.dromara.hutool.setting.props.Props;
 import com.alibaba.druid.pool.DruidDataSource;
+import org.dromara.hutool.core.map.MapUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.db.ds.DSFactory;
+import org.dromara.hutool.db.ds.DbConfig;
+import org.dromara.hutool.setting.props.Props;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Druid数据源工厂类
@@ -27,53 +28,33 @@ import javax.sql.DataSource;
  * @author Looly
  *
  */
-public class DruidDSFactory extends AbstractDSFactory {
+public class DruidDSFactory implements DSFactory {
 	private static final long serialVersionUID = 4680621702534433222L;
 
-	/**
-	 * 数据源名称：Druid
-	 */
-	public static final String DS_NAME = "Druid";
-
-	/**
-	 * 构造，使用默认配置文件
-	 */
-	public DruidDSFactory() {
-		this(null);
-	}
-
-	/**
-	 * 构造，使用自定义配置文件
-	 *
-	 * @param setting 配置
-	 */
-	public DruidDSFactory(final Setting setting) {
-		super(DS_NAME, DruidDataSource.class, setting);
+	@Override
+	public String getDataSourceName() {
+		return "Druid";
 	}
 
 	@Override
-	protected DataSource createDataSource(final String jdbcUrl, final String driver, final String user, final String pass, final Setting poolSetting) {
+	public DataSource createDataSource(final DbConfig config) {
 		final DruidDataSource ds = new DruidDataSource();
 
 		// 基本信息
-		ds.setUrl(jdbcUrl);
-		ds.setDriverClassName(driver);
-		ds.setUsername(user);
-		ds.setPassword(pass);
+		ds.setUrl(config.getUrl());
+		ds.setDriverClassName(config.getDriver());
+		ds.setUsername(config.getUser());
+		ds.setPassword(config.getPass());
 
-		// remarks等特殊配置，since 5.3.8
-		// Druid中也可以通过 druid.connectProperties 属性设置
-		String connValue;
-		for (final String key : DSKeys.KEY_CONN_PROPS) {
-			connValue = poolSetting.getAndRemove(key);
-			if(StrUtil.isNotBlank(connValue)){
-				ds.addConnectionProperty(key, connValue);
-			}
+		// 连接配置
+		final Properties connProps = config.getConnProps();
+		if(MapUtil.isNotEmpty(connProps)){
+			connProps.forEach((key, value)->ds.addConnectionProperty(key.toString(), value.toString()));
 		}
 
 		// Druid连接池配置信息，规范化属性名
 		final Props druidProps = new Props();
-		poolSetting.forEach((key, value)-> druidProps.put(StrUtil.addPrefixIfNot(key, "druid."), value));
+		config.getPoolProps().forEach((key, value)-> druidProps.set(StrUtil.addPrefixIfNot(key.toString(), "druid."), value));
 		ds.configFromPropeties(druidProps);
 
 		//issue#I4ZKCW 某些非属性设置单独设置
