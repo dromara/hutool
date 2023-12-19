@@ -16,9 +16,13 @@ import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.thread.ThreadUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class SingletonTest {
 
@@ -64,5 +68,22 @@ public class SingletonTest {
 	@Data
 	static class C{
 		private B b = Singleton.get(B.class);
+	}
+
+	@Test
+	@Disabled
+	void issue3435Test() {
+		final String key = "123";
+		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		for (int i = 0; i < 100; i++) {
+			threadPoolExecutor.execute(() -> {
+				Singleton.get(key, () -> {
+					System.out.println(key);
+					return "123";
+				});
+			});
+		}
+
+		ThreadUtil.sleep(5000);
 	}
 }

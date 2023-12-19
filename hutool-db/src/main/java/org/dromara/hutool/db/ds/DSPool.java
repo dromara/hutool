@@ -13,6 +13,7 @@
 package org.dromara.hutool.db.ds;
 
 import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.lang.Singleton;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.map.SafeConcurrentHashMap;
 import org.dromara.hutool.core.spi.SpiUtil;
@@ -42,17 +43,13 @@ public class DSPool implements Closeable {
 
 	private static final String CONNECTION_PREFIX = "connection.";
 
-	private static class SingletonHolder {
-		private static final DSPool INSTANCE = new DSPool();
-	}
-
 	/**
 	 * 获取单例池对象
 	 *
 	 * @return 数据源池
 	 */
 	public static DSPool getInstance() {
-		return SingletonHolder.INSTANCE;
+		return Singleton.get(DSPool.class.getName(), DSPool::new);
 	}
 
 	/**

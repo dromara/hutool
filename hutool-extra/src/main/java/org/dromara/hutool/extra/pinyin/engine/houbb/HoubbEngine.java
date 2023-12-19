@@ -37,10 +37,8 @@ import com.github.houbb.pinyin.util.PinyinHelper;
  */
 public class HoubbEngine implements PinyinEngine {
 
-	/**
-	 * 汉字拼音输出的格式
-	 */
-	PinyinStyleEnum format;
+	// 汉字拼音输出的格式
+	private PinyinStyleEnum format;
 
 	/**
 	 * 构造

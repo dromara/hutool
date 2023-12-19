@@ -40,18 +40,31 @@ import com.github.stuxuhai.jpinyin.PinyinHelper;
 public class JPinyinEngine implements PinyinEngine {
 
 	//设置汉子拼音输出的格式
-	PinyinFormat format;
+	private PinyinFormat format;
 
-	public JPinyinEngine(){
+	/**
+	 * 构造
+	 */
+	public JPinyinEngine() {
 		this(null);
 	}
 
-	public JPinyinEngine(final PinyinFormat format){
+	/**
+	 * 构造
+	 *
+	 * @param format {@link PinyinFormat}
+	 */
+	public JPinyinEngine(final PinyinFormat format) {
 		init(format);
 	}
 
-	public void init(PinyinFormat format){
-		if(null == format){
+	/**
+	 * 初始化格式
+	 *
+	 * @param format 格式{@link PinyinFormat}
+	 */
+	public void init(PinyinFormat format) {
+		if (null == format) {
 			// 不加声调
 			format = PinyinFormat.WITHOUT_TONE;
 		}
