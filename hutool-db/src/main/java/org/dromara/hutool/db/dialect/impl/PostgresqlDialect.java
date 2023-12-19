@@ -14,6 +14,7 @@ package org.dromara.hutool.db.dialect.impl;
 
 import org.dromara.hutool.core.lang.Assert;
 import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.db.Entity;
 import org.dromara.hutool.db.StatementUtil;
@@ -28,14 +29,17 @@ import java.sql.SQLException;
 
 /**
  * Postgree方言
- * @author loolly
  *
+ * @author loolly
  */
-public class PostgresqlDialect extends AnsiSqlDialect{
+public class PostgresqlDialect extends AnsiSqlDialect {
 	private static final long serialVersionUID = 3889210427543389642L;
 
+	/**
+	 * 构造
+	 */
 	public PostgresqlDialect() {
-		quoteWrapper = new QuoteWrapper('"');
+		quoteWrapper = new QuoteWrapper(CharUtil.DOUBLE_QUOTES);
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 		final StringBuilder updateHolder = new StringBuilder();
 
 		// 构建字段部分和参数占位符部分
-		entity.forEach((field, value)->{
+		entity.forEach((field, value) -> {
 			if (StrUtil.isNotBlank(field)) {
 				if (fieldsPart.length() > 0) {
 					// 非第一个参数，追加逗号
@@ -65,7 +69,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 
 				final String wrapedField = (null != quoteWrapper) ? quoteWrapper.wrap(field) : field;
 				fieldsPart.append(wrapedField);
-				updateHolder.append(wrapedField).append("=EXCLUDED.").append(field);
+				updateHolder.append(wrapedField).append("=EXCLUDED.").append(wrapedField);
 				placeHolder.append("?");
 				builder.addParams(value);
 			}
@@ -76,14 +80,14 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 			tableName = this.quoteWrapper.wrap(tableName);
 		}
 		builder.append("INSERT INTO ").append(tableName)
-				// 字段列表
-				.append(" (").append(fieldsPart)
-				// 更新值列表
-				.append(") VALUES (").append(placeHolder)
-				// 定义检查冲突的主键或字段
-				.append(") ON CONFLICT (").append(ArrayUtil.join(keys,", "))
-				// 主键冲突后的更新操作
-				.append(") DO UPDATE SET ").append(updateHolder);
+			// 字段列表
+			.append(" (").append(fieldsPart)
+			// 更新值列表
+			.append(") VALUES (").append(placeHolder)
+			// 定义检查冲突的主键或字段
+			.append(") ON CONFLICT (").append(ArrayUtil.join(keys, ", "))
+			// 主键冲突后的更新操作
+			.append(") DO UPDATE SET ").append(updateHolder);
 
 		return StatementUtil.prepareStatement(conn, builder);
 	}
