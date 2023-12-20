@@ -147,6 +147,14 @@ public class URLUtil extends URLEncodeUtil {
 		try {
 			return new URL(null, url, handler);
 		} catch (MalformedURLException e) {
+			// issue#I8PY3Y
+			if(e.getMessage().contains("Accessing an URL protocol that was not enabled")){
+				// Graalvm打包需要手动指定参数开启协议：
+				// --enable-url-protocols=http
+				// --enable-url-protocols=https
+				throw new UtilException(e);
+			}
+
 			// 尝试文件路径
 			try {
 				return new File(url).toURI().toURL();

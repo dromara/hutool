@@ -29,6 +29,7 @@
 * 【core  】      修复时间戳转Bean时异常问题（issue#I8NMP7@Gitee）
 * 【core  】      修复PostgreSQL使用upsert字段大小写问题问题（issue#I8PB4X@Gitee）
 * 【extra 】      修复TinyPinyinEngine可能的空指针问题（issue#3437@Github）
+* 【core  】      修复graalvm原生打包使用http工具被转为file协议问题（issue#I8PY3Y@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)
