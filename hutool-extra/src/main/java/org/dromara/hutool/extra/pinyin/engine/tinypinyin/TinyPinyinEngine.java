@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.pinyin.engine.tinypinyin;
 
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.pinyin.engine.PinyinEngine;
 import com.github.promeg.pinyinhelper.Pinyin;
 
@@ -64,7 +65,8 @@ public class TinyPinyinEngine implements PinyinEngine {
 
 	@Override
 	public String getPinyin(final String str, final String separator) {
-		return Pinyin.toPinyin(str, separator).toLowerCase();
+		final String pinyin = Pinyin.toPinyin(str, separator);
+		return StrUtil.isEmpty(pinyin) ? pinyin : pinyin.toLowerCase();
 	}
 
 }
