@@ -22,6 +22,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
@@ -30,6 +31,8 @@ import java.util.Map;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SpringUtil.class, SpringUtilTest.Demo2.class})
+// @ActiveProfiles("dev") // SpringUtil.getActiveProfile()效果与下面方式一致
+@TestPropertySource(properties = {"spring.profiles.active=dev"})
 //@Import(spring.org.dromara.hutool.extra.SpringUtil.class)
 public class SpringUtilTest {
 
@@ -98,6 +101,16 @@ public class SpringUtilTest {
 		Assertions.assertNotNull(mapBean);
 		Assertions.assertEquals("value1", mapBean.get("key1"));
 		Assertions.assertEquals("value2", mapBean.get("key2"));
+	}
+
+	@Test
+	public void getActiveProfileTest() {
+		String activeProfile = SpringUtil.getActiveProfile();
+		String defaultProfile = SpringUtil.getProperty("spring.profiles.default");
+		String activeProfile2 = SpringUtil.getProperty("spring.profiles.active");
+		assert "dev".equals(activeProfile);
+		assert null == defaultProfile;
+		assert "dev".equals(activeProfile2);
 	}
 
 	@Data
