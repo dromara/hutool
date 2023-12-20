@@ -35,7 +35,7 @@ public class JschTest {
 	@Disabled
 	public void bindPortTest() {
 		//新建会话，此会话用于ssh连接到跳板机（堡垒机），此处为10.1.1.1:22
-		final JschSession session = new JschSession(new Connector("looly.centos", 22, "test", "123456"));
+		final JschSession session = new JschSession(Connector.of("looly.centos", 22, "test", "123456"));
 		// 将堡垒机保护的内网8080端口映射到localhost，我们就可以通过访问http://localhost:8080/访问内网服务了
 		session.bindLocalPort(8080, new InetSocketAddress("172.20.12.123", 8080));
 	}
@@ -45,7 +45,7 @@ public class JschTest {
 	@Disabled
 	public void bindRemotePort() {
 		// 建立会话
-		final JschSession session = new JschSession(new Connector("looly.centos", 22, "test", "123456"));
+		final JschSession session = new JschSession(Connector.of("looly.centos", 22, "test", "123456"));
 		// 绑定ssh服务端8089端口到本机的8000端口上
 		session.bindRemotePort(new InetSocketAddress(8089), new InetSocketAddress("localhost", 8000));
 		// 保证一直运行
@@ -55,7 +55,7 @@ public class JschTest {
 	@Test
 	@Disabled
 	public void sftpTest() {
-		final JschSession session = new JschSession(new Connector("looly.centos", 22, "root", "123456"));
+		final JschSession session = new JschSession(Connector.of("looly.centos", 22, "root", "123456"));
 		final JschSftp jschSftp = session.openSftp(CharsetUtil.UTF_8);
 		jschSftp.mkDirs("/opt/test/aaa/bbb");
 		Console.log("OK");
@@ -65,7 +65,7 @@ public class JschTest {
 	@Test
 	@Disabled
 	public void reconnectIfTimeoutTest() throws InterruptedException {
-		final JschSession session = new JschSession(new Connector("sunnyserver", 22,"mysftp","liuyang1234"));
+		final JschSession session = new JschSession(Connector.of("sunnyserver", 22,"mysftp","liuyang1234"));
 		final JschSftp jschSftp = session.openSftp(CharsetUtil.UTF_8);
 
 		Console.log("打印pwd: " + jschSftp.pwd());

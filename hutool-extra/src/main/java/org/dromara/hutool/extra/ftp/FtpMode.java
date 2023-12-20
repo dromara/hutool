@@ -22,8 +22,13 @@ package org.dromara.hutool.extra.ftp;
  * @since 4.1.19
  */
 public enum FtpMode {
-	/** 主动模式 */
+
+	/**
+	 * 主动模式
+	 */
 	Active,
-	/** 被动模式 */
+	/**
+	 * 被动模式
+	 */
 	Passive
 }

@@ -52,8 +52,7 @@ public class JschSftp extends AbstractFtp {
 	private Session session;
 	private ChannelSftp channel;
 
-	// ---------------------------------------------------------------------------------------- Constructor start
-
+	//region ----- of
 	/**
 	 * 构造
 	 *
@@ -61,9 +60,10 @@ public class JschSftp extends AbstractFtp {
 	 * @param sshPort 远程主机端口
 	 * @param sshUser 远程主机用户名
 	 * @param sshPass 远程主机密码
+	 * @return JschSftp
 	 */
-	public JschSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
-		this(sshHost, sshPort, sshUser, sshPass, DEFAULT_CHARSET);
+	public static JschSftp of(final String sshHost, final int sshPort, final String sshUser, final String sshPass) {
+		return of(sshHost, sshPort, sshUser, sshPass, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -74,11 +74,12 @@ public class JschSftp extends AbstractFtp {
 	 * @param sshUser 远程主机用户名
 	 * @param sshPass 远程主机密码
 	 * @param charset 编码
-	 * @since 4.1.14
+	 * @return JschSftp
 	 */
-	public JschSftp(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
-		this(new FtpConfig(sshHost, sshPort, sshUser, sshPass, charset));
+	public static JschSftp of(final String sshHost, final int sshPort, final String sshUser, final String sshPass, final Charset charset) {
+		return new JschSftp(new FtpConfig(Connector.of(sshHost, sshPort, sshUser, sshPass), charset));
 	}
+	// endregion
 
 	/**
 	 * 构造
@@ -132,20 +133,22 @@ public class JschSftp extends AbstractFtp {
 		init();
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
+
 	/**
 	 * 初始化
 	 */
 	@SuppressWarnings("resource")
 	public void init() {
-		if(null == this.channel){
-			if(null == this.session){
+		if (null == this.channel) {
+			if (null == this.session) {
 				final FtpConfig config = this.ftpConfig;
-				this.session = new JschSession(new Connector(
-					config.getHost(),
-					config.getPort(),
-					config.getUser(),
-					config.getPassword(),
-					config.getConnectionTimeout()))
+				final Connector connector = config.getConnector();
+				this.session = new JschSession(Connector.of(
+					connector.getHost(),
+					connector.getPort(),
+					connector.getUser(),
+					connector.getPassword(),
+					connector.getTimeout()))
 					.getRaw();
 			}
 
@@ -158,8 +161,8 @@ public class JschSftp extends AbstractFtp {
 		}
 
 		try {
-			if(!channel.isConnected()){
-				channel.connect((int) Math.max(this.ftpConfig.getConnectionTimeout(), 0));
+			if (!channel.isConnected()) {
+				channel.connect((int) Math.max(this.ftpConfig.getConnector().getTimeout(), 0));
 			}
 			channel.setFilenameEncoding(this.ftpConfig.getCharset().toString());
 		} catch (final JSchException | SftpException e) {
@@ -169,7 +172,7 @@ public class JschSftp extends AbstractFtp {
 
 	@Override
 	public JschSftp reconnectIfTimeout() {
-		if (StrUtil.isBlank(this.ftpConfig.getHost())) {
+		if (StrUtil.isBlank(this.ftpConfig.getConnector().getHost())) {
 			throw new FtpException("Host is blank!");
 		}
 		try {
@@ -188,7 +191,7 @@ public class JschSftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public ChannelSftp getClient() {
-		if(false == this.channel.isConnected()){
+		if (false == this.channel.isConnected()) {
 			init();
 		}
 		return this.channel;
@@ -462,7 +465,7 @@ public class JschSftp extends AbstractFtp {
 	@SuppressWarnings("resource")
 	@Override
 	public boolean uploadFile(final String destPath, final File file) {
-		if(!FileUtil.isFile(file)){
+		if (!FileUtil.isFile(file)) {
 			throw new FtpException("[{}] is not a file!", file);
 		}
 		this.mkDirs(destPath);
@@ -585,7 +588,7 @@ public class JschSftp extends AbstractFtp {
 			if (!item.getAttrs().isDir()) {
 				// 本地不存在文件或者ftp上文件有修改则下载
 				if (!FileUtil.exists(destFile)
-						|| (item.getAttrs().getMTime() > (destFile.lastModified() / 1000))) {
+					|| (item.getAttrs().getMTime() > (destFile.lastModified() / 1000))) {
 					download(srcFile, destFile);
 				}
 			} else {
@@ -638,11 +641,12 @@ public class JschSftp extends AbstractFtp {
 
 	@Override
 	public String toString() {
-		return "Sftp{" +
-				"host='" + this.ftpConfig.getHost() + '\'' +
-				", port=" + this.ftpConfig.getPort() +
-				", user='" + this.ftpConfig.getUser() + '\'' +
-				'}';
+		final Connector connector = this.ftpConfig.getConnector();
+		return "JschSftp{" +
+			"host='" + connector.getHost() + '\'' +
+			", port=" + connector.getPort() +
+			", user='" + connector.getUser() + '\'' +
+			'}';
 	}
 
 	/**

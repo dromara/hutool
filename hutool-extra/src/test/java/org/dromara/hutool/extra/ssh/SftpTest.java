@@ -34,7 +34,7 @@ public class SftpTest {
 	@BeforeEach
 	@Disabled
 	public void init() {
-		sshjSftp = new SshjSftp("ip", 22, "test", "test", CharsetUtil.UTF_8);
+		sshjSftp = SshjSftp.of("ip", 22, "test", "test");
 	}
 
 	@Test

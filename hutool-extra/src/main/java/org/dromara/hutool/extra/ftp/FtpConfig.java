@@ -12,6 +12,8 @@
 
 package org.dromara.hutool.extra.ftp;
 
+import org.dromara.hutool.extra.ssh.Connector;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 
@@ -32,31 +34,11 @@ public class FtpConfig implements Serializable {
 		return new FtpConfig();
 	}
 
-	/**
-	 * 主机
-	 */
-	private String host;
-	/**
-	 * 端口
-	 */
-	private int port;
-	/**
-	 * 用户名
-	 */
-	private String user;
-	/**
-	 * 密码
-	 */
-	private String password;
+	private Connector connector;
 	/**
 	 * 编码
 	 */
 	private Charset charset;
-
-	/**
-	 * 连接超时时长，单位毫秒
-	 */
-	private long connectionTimeout;
 
 	/**
 	 * Socket连接超时时长，单位毫秒
@@ -64,12 +46,12 @@ public class FtpConfig implements Serializable {
 	private long soTimeout;
 
 	/**
-	 * 设置服务器语言
+	 * 服务器语言
 	 */
 	private String serverLanguageCode;
 
 	/**
-	 * 设置服务器系统关键词
+	 * 服务器系统关键词
 	 */
 	private String systemKey;
 
@@ -82,114 +64,137 @@ public class FtpConfig implements Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param host     主机
-	 * @param port     端口
-	 * @param user     用户名
-	 * @param password 密码
-	 * @param charset  编码
+	 * @param connector 连接信息，包括host、port、user、password等信息
+	 * @param charset   编码
 	 */
-	public FtpConfig(final String host, final int port, final String user, final String password, final Charset charset) {
-		this(host, port, user, password, charset, null, null);
+	public FtpConfig(final Connector connector, final Charset charset) {
+		this(connector, charset, null, null);
 	}
 
 	/**
 	 * 构造
 	 *
-	 * @param host               主机
-	 * @param port               端口
-	 * @param user               用户名
-	 * @param password           密码
+	 * @param connector          连接信息，包括host、port、user、password等信息
 	 * @param charset            编码
 	 * @param serverLanguageCode 服务器语言
 	 * @param systemKey          系统关键字
-	 * @since 5.5.7
 	 */
-	public FtpConfig(final String host, final int port, final String user, final String password, final Charset charset, final String serverLanguageCode, final String systemKey) {
-		this.host = host;
-		this.port = port;
-		this.user = user;
-		this.password = password;
+	public FtpConfig(final Connector connector, final Charset charset, final String serverLanguageCode, final String systemKey) {
+		this.connector = connector;
 		this.charset = charset;
 		this.serverLanguageCode = serverLanguageCode;
 		this.systemKey = systemKey;
 	}
 
-	public String getHost() {
-		return host;
+	/**
+	 * 获取连接信息
+	 *
+	 * @return 连接信息
+	 */
+	public Connector getConnector() {
+		return connector;
 	}
 
-	public FtpConfig setHost(final String host) {
-		this.host = host;
+	/**
+	 * 设置连接信息
+	 *
+	 * @param connector 连接信息
+	 * @return this
+	 */
+	public FtpConfig setConnector(final Connector connector) {
+		this.connector = connector;
 		return this;
 	}
 
-	public int getPort() {
-		return port;
-	}
-
-	public FtpConfig setPort(final int port) {
-		this.port = port;
+	/**
+	 * 设置超时，注意此方法会调用{@link Connector#setTimeout(long)}<br>
+	 * 此方法需在{@link #setConnector(Connector)}后调用，否则会创建空的Connector
+	 * @param timeout 链接超时
+	 * @return this
+	 */
+	public FtpConfig setConnectionTimeout(final long timeout){
+		if(null == connector){
+			connector = Connector.of();
+		}
+		connector.setTimeout(timeout);
 		return this;
 	}
 
-	public String getUser() {
-		return user;
-	}
-
-	public FtpConfig setUser(final String user) {
-		this.user = user;
-		return this;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public FtpConfig setPassword(final String password) {
-		this.password = password;
-		return this;
-	}
-
+	/**
+	 * 获取编码
+	 *
+	 * @return 编码
+	 */
 	public Charset getCharset() {
 		return charset;
 	}
 
+	/**
+	 * 设置编码
+	 *
+	 * @param charset 编码
+	 * @return this
+	 */
 	public FtpConfig setCharset(final Charset charset) {
 		this.charset = charset;
 		return this;
 	}
 
-	public long getConnectionTimeout() {
-		return connectionTimeout;
-	}
-
-	public FtpConfig setConnectionTimeout(final long connectionTimeout) {
-		this.connectionTimeout = connectionTimeout;
-		return this;
-	}
-
+	/**
+	 * 获取读取数据超时时间
+	 *
+	 * @return 读取数据超时时间
+	 */
 	public long getSoTimeout() {
 		return soTimeout;
 	}
 
+	/**
+	 * 设置读取数据超时时间
+	 *
+	 * @param soTimeout 读取数据超时时间
+	 * @return this
+	 */
 	public FtpConfig setSoTimeout(final long soTimeout) {
 		this.soTimeout = soTimeout;
 		return this;
 	}
 
+	/**
+	 * 获取服务器语言
+	 *
+	 * @return 服务器语言
+	 */
 	public String getServerLanguageCode() {
 		return serverLanguageCode;
 	}
 
+	/**
+	 * 设置服务器语言
+	 *
+	 * @param serverLanguageCode 服务器语言
+	 * @return this
+	 */
 	public FtpConfig setServerLanguageCode(final String serverLanguageCode) {
 		this.serverLanguageCode = serverLanguageCode;
 		return this;
 	}
 
+	/**
+	 * 获取服务器系统关键词
+	 *
+	 * @return 服务器系统关键词
+	 */
 	public String getSystemKey() {
 		return systemKey;
 	}
 
+	/**
+	 * 设置服务器系统关键词
+	 *
+	 * @param systemKey 服务器系统关键词
+	 * @return this
+	 */
 	public FtpConfig setSystemKey(final String systemKey) {
 		this.systemKey = systemKey;
 		return this;
