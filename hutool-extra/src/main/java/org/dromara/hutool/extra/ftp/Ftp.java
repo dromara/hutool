@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.extra.ftp;
 
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.IORuntimeException;
@@ -348,6 +349,18 @@ public class Ftp extends AbstractFtp {
 	@Override
 	public List<String> ls(final String path) {
 		return ArrayUtil.map(lsFiles(path), FTPFile::getName);
+	}
+
+	/**
+	 * 遍历某个目录下所有文件和目录，不会递归遍历<br>
+	 * 此方法自动过滤"."和".."两种目录
+	 *
+	 * @param path      目录
+	 * @param predicate 过滤器，null表示不过滤，默认去掉"."和".."两种目录
+	 * @return 文件名或目录名列表
+	 */
+	public List<String> ls(final String path, final Predicate<FTPFile> predicate) {
+		return CollUtil.map(lsFiles(path, predicate), FTPFile::getName);
 	}
 
 	/**
