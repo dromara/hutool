@@ -36,8 +36,6 @@ import java.util.Map;
 //@Import(spring.org.dromara.hutool.extra.SpringUtil.class)
 public class SpringUtilTest {
 
-
-
 	/**
 	 * 注册验证bean
 	 */
@@ -105,9 +103,9 @@ public class SpringUtilTest {
 
 	@Test
 	public void getActiveProfileTest() {
-		String activeProfile = SpringUtil.getActiveProfile();
-		String defaultProfile = SpringUtil.getProperty("spring.profiles.default");
-		String activeProfile2 = SpringUtil.getProperty("spring.profiles.active");
+		final String activeProfile = SpringUtil.getActiveProfile();
+		final String defaultProfile = SpringUtil.getProperty("spring.profiles.default");
+		final String activeProfile2 = SpringUtil.getProperty("spring.profiles.active");
 		assert "dev".equals(activeProfile);
 		assert null == defaultProfile;
 		assert "dev".equals(activeProfile2);
