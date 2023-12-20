@@ -105,7 +105,6 @@ public class SpringUtilTest {
 
 	@Test
 	public void getActiveProfileTest() {
-
 		String activeProfile = SpringUtil.getActiveProfile();
 		String defaultProfile = SpringUtil.getProperty("spring.profiles.default");
 		String activeProfile2 = SpringUtil.getProperty("spring.profiles.active");
