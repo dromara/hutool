@@ -149,6 +149,8 @@ public final class HTMLFilter {
 		vAllowed.put("strong", no_atts);
 		vAllowed.put("i", no_atts);
 		vAllowed.put("em", no_atts);
+		// issue#3433
+		vAllowed.put("p", no_atts);
 
 		vSelfClosingTags = new String[]{"img"};
 		vNeedClosingTags = new String[]{"a", "b", "strong", "i", "em"};
@@ -429,7 +431,7 @@ public final class HTMLFilter {
 					ending = "";
 				}
 
-				if (ending == null || ending.length() < 1) {
+				if (ending == null || ending.isEmpty()) {
 					if (vTagCounts.containsKey(name)) {
 						vTagCounts.put(name, vTagCounts.get(name) + 1);
 					} else {
