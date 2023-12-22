@@ -744,19 +744,19 @@ public class CommonsFtp extends AbstractFtp {
 	/**
 	 * 读取文件为输入流
 	 *
-	 * @param path     服务端的文件路径
+	 * @param dir     服务端的文件目录
 	 * @param fileName 服务端的文件名
 	 * @return {@link InputStream}
 	 * @throws IORuntimeException IO异常
 	 */
-	public InputStream read(String path, String fileName) throws IORuntimeException {
+	public InputStream read(String dir, String fileName) throws IORuntimeException {
 		String pwd = null;
 		if (isBackToPwd()) {
 			pwd = pwd();
 		}
 
-		if (!cd(path)) {
-			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", path);
+		if (!cd(dir)) {
+			throw new FtpException("Change dir to [{}] error, maybe dir not exist!", dir);
 		}
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
