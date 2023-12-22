@@ -16,10 +16,13 @@ import org.apache.commons.net.ftp.FTPSClient;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.Console;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.ssh.engine.jsch.JschSftp;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class FtpTest {
@@ -125,6 +128,18 @@ public class FtpTest {
 			Console.log(ftp.pwd());
 			ftp.isDir("/test");
 			Console.log(ftp.pwd());
+		}
+	}
+
+	@Test
+	@Disabled
+	public void readTest() throws Exception {
+		try (final CommonsFtp ftp = CommonsFtp.of("localhost");
+			 final BufferedReader reader = new BufferedReader(new InputStreamReader(ftp.read("d://test/read/", "test.txt")))) {
+			String line;
+			while (StrUtil.isNotBlank(line = reader.readLine())) {
+				Console.log(line);
+			}
 		}
 	}
 

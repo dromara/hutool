@@ -6,6 +6,7 @@ import org.rythmengine.utils.F;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -153,4 +154,12 @@ public interface Ftp extends Closeable {
 	 * @since 5.3.5
 	 */
 	void recursiveDownloadFolder(String sourcePath, File destDir);
+
+	/**
+	 * 读取FTP服务器上的文件为输入流
+	 *
+	 * @param path 文件路径
+	 * @return {@link InputStream}
+	 */
+	InputStream read(String path);
 }
