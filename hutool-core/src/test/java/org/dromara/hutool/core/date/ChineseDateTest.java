@@ -174,4 +174,23 @@ public class ChineseDateTest {
 		chineseDate = new ChineseDate(1998, 5, 1, false);
 		Assertions.assertEquals("1998-05-26 00:00:00", chineseDate.getGregorianDate().toString());
 	}
+
+	@Test
+	public void equalsTest(){
+		// 二月初一
+		Date date1 = new Date(2023 - 1900, 1, 20);
+		// 润二月初一
+		Date date2 = new Date(2023 - 1900, 2, 22);
+
+		ChineseDate chineseDate1 = new ChineseDate(date1);
+		ChineseDate chineseDate2 = new ChineseDate(date2);
+		ChineseDate chineseDate3 = new ChineseDate(date2);
+
+		Assertions.assertEquals("2023-02-01", chineseDate1.toStringNormal());
+		Assertions.assertEquals("2023-02-01", chineseDate2.toStringNormal());
+		Assertions.assertEquals("2023-02-01", chineseDate3.toStringNormal());
+
+		Assertions.assertNotEquals(chineseDate1, chineseDate2);
+		Assertions.assertEquals(chineseDate2, chineseDate3);
+	}
 }
