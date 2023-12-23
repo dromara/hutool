@@ -1,8 +1,8 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.lang.func.VoidFunc0;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Collection;
@@ -80,12 +80,12 @@ public class Opt<T> {
 	 *
 	 * @param <T>   包裹里元素的类型
 	 * @param <R>   集合值类型
-	 * @param value 传入需要包裹的元素
+	 * @param value 传入需要包裹的元素，支持CharSequence、Map、Iterable、Iterator、Array类型
 	 * @return 一个包裹里元素可能为空的 {@code Opt}
 	 * @since 5.7.17
 	 */
 	public static <T, R extends Collection<T>> Opt<R> ofEmptyAble(R value) {
-		return CollectionUtil.isEmpty(value) ? empty() : new Opt<>(value);
+		return ObjectUtil.isEmpty(value) ? empty() : new Opt<>(value);
 	}
 
 	/**

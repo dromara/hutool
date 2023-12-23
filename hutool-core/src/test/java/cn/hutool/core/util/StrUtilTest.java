@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
@@ -668,6 +669,20 @@ public class StrUtilTest {
 
 		ret = StrUtil.truncateUtf8(str, 999);
 		Assert.assertEquals(str, ret);
+	}
+
+	@Test
+	public void truncateUtf8Test2() {
+		final String str = "这是This一";
+		final String ret = StrUtil.truncateUtf8(str, 13);
+		Assert.assertEquals("这是This一", ret);
+	}
+
+	@Test
+	public void truncateUtf8Test3() {
+		final String str = "一二三四";
+		final String ret = StrUtil.truncateUtf8(str, 11);
+		Assert.assertEquals("一二...", ret);
 	}
 
 	@Test

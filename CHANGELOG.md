@@ -2,6 +2,37 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
+# 5.8.24(2023-12-23)
+
+### 🐣新特性
+* 【cache 】      Cache增加get重载，可自定义超时时间（issue#I8G0DL@Gitee）
+* 【cache 】      JWT#sign增加重载，可选是否增加默认的typ参数（issue#3386@Github）
+* 【db    】      增加识别OpenGauss的驱动类（issue#I8K6C0@Gitee）
+* 【core  】      修复CharSequenceUtil注释和引用，避免循环引用
+* 【extra 】      SpringUtil增加getProperty重载（pr#1122@Gitee）
+* 【core  】      FileTypeUtil增加null判断（issue#3419@Github）
+* 【core  】      DateUtil.parse支持毫秒时间戳（issue#I8NMP7@Gitee）
+* 【extra 】      优化TokenizerEngine使用IK分词器支持并发（pr#3427@Github）
+* 【core  】      Opt.ofEmptyAble支持更多类型（issue#I8OOSY@Gitee）
+* 【http  】      HTMLFilter保留p标签（issue#3433@Gitee）
+
+### 🐞Bug修复
+* 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）
+* 【http  】      修复RootAction send404 抛异常问题（pr#1107@Gitee）
+* 【extra 】      修复Archiver 最后一个 Entry 为空文件夹时未关闭 Entry问题（pr#1123@Gitee）
+* 【core  】      修复ImgUtil.convert png转jpg在jdk9+中失败问题（issue#I8L8UA@Gitee）
+* 【cache 】      修复StampedCache的get方法非原子问题（issue#I8MEIX@Gitee）
+* 【core  】      修复StrSplitter.splitByRegex使用空参数导致的OOM问题（issue#3421@Github）
+* 【db    】      修复嵌套SQL中order by子句错误截断问题（issue#I89RXV@Gitee）
+* 【http  】      修复graalvm编译后，未读取Content-Length可能导致的读取时间过长问题（issue#I6Q30X@Gitee）
+* 【core  】      修复JavaSourceCompiler.addSource目录处理错误问题（issue#3425@Github）
+* 【core  】      修复时间戳转Bean时异常问题（issue#I8NMP7@Gitee）
+* 【core  】      修复PostgreSQL使用upsert字段大小写问题问题（issue#I8PB4X@Gitee）
+* 【extra 】      修复TinyPinyinEngine可能的空指针问题（issue#3437@Github）
+* 【core  】      修复graalvm原生打包使用http工具被转为file协议问题（issue#I8PY3Y@Gitee）
+* 【poi   】      修复cloneSheet参数错误导致非XSSFWorkbook错误命名问题（issue#I8QIBB@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
 # 5.8.23(2023-11-12)
 
 ### 🐣新特性

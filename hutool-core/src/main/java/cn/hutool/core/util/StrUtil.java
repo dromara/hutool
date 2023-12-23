@@ -488,7 +488,9 @@ public class StrUtil extends CharSequenceUtil implements StrPool {
 	}
 
 	/**
-	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度
+	 * 截断字符串，使用其按照指定编码为字节后不超过maxBytes长度<br>
+	 * 此方法用于截取总bytes数不超过指定长度，如果字符出没有超出原样输出，如果超出了，则截取掉超出部分，并可选添加...，
+	 * 但是添加“...”后总长度也不超过限制长度。
 	 *
 	 * @param str        原始字符串
 	 * @param charset    指定编码

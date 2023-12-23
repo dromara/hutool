@@ -22,6 +22,9 @@ import java.sql.SQLException;
 public class PostgresqlDialect extends AnsiSqlDialect{
 	private static final long serialVersionUID = 3889210427543389642L;
 
+	/**
+	 * 构造
+	 */
 	public PostgresqlDialect() {
 		wrapper = new Wrapper('"');
 	}
@@ -53,7 +56,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 
 				final String wrapedField = (null != wrapper) ? wrapper.wrap(field) : field;
 				fieldsPart.append(wrapedField);
-				updateHolder.append(wrapedField).append("=EXCLUDED.").append(field);
+				updateHolder.append(wrapedField).append("=EXCLUDED.").append(wrapedField);
 				placeHolder.append("?");
 				builder.addParams(value);
 			}

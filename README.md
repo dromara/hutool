@@ -47,8 +47,7 @@
 -------------------------------------------------------------------------------
 
 <p align="center">
-	<a href="#">
-	<img alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
+	<a href="#"><img style="width: 45%" alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -107,7 +106,7 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 
 ## 📝文档 
 
-[📘中文文档](https://www.hutool.cn/docs/)
+[📘中文文档](https://doc.hutool.cn/pages/index/)
 
 [📘中文备用文档](https://plus.hutool.cn/)
 
@@ -144,20 +143,20 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.23</version>
+    <version>5.8.24</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.23'
+implementation 'cn.hutool:hutool-all:5.8.24'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.23/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.24/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
@@ -212,6 +211,10 @@ Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过维护者是�
 3. 新加的方法不要使用第三方库的方法，Hutool遵循无依赖原则（除非在extra模块中加方法工具）。
 4. 请pull request到`v5-dev`分支。Hutool在5.x版本后使用了新的分支：`v5-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。
 5. 我们如果关闭了你的issue或pr，请不要诧异，这是我们保持问题处理整洁的一种方式，你依旧可以继续讨论，当有讨论结果时我们会重新打开。
+
+### 📖文档源码地址
+
+[文档源码地址](https://gitee.com/loolly_admin/hutool-doc-handy) 点击前往添砖加瓦
 
 -------------------------------------------------------------------------------
 

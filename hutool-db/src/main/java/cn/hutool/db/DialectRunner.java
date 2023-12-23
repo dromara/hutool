@@ -1,8 +1,11 @@
 package cn.hutool.db;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
@@ -18,6 +21,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 提供基于方言的原始增删改查执行封装
@@ -273,11 +278,14 @@ public class DialectRunner implements Serializable {
 		checkConn(conn);
 
 		String selectSql = sqlBuilder.build();
+
 		// 去除order by 子句
-		final int orderByIndex = StrUtil.lastIndexOfIgnoreCase(selectSql, " order by");
-		if (orderByIndex > 0) {
-			selectSql = StrUtil.subPre(selectSql, orderByIndex);
+		final Pattern pattern = PatternPool.get("(.*?)[\\s]order[\\s]by[\\s][^\\s]+\\s(asc|desc)?", Pattern.CASE_INSENSITIVE);
+		final Matcher matcher = pattern.matcher(selectSql);
+		if (matcher.matches()) {
+			selectSql = matcher.group(1);
 		}
+
 		return SqlExecutor.queryAndClosePs(dialect.psForCount(conn,
 				SqlBuilder.of(selectSql).addParams(sqlBuilder.getParamValueArray())),
 				new NumberHandler()).longValue();

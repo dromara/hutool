@@ -47,8 +47,7 @@
 -------------------------------------------------------------------------------
 
 <p align="center">
-	<a href="#">
-	<img alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
+	<a href="#"><img style="width: 45%" alt="" src="https://plus.hutool.cn/images/zanzhu.jpg"/></a>
 </p>
 
 -------------------------------------------------------------------------------
@@ -116,7 +115,7 @@ Each module can be introduced individually, or all modules can be introduced by 
 
 ## 📝Doc
 
-[📘Chinese documentation](https://www.hutool.cn/docs/)
+[📘Chinese documentation](https://doc.hutool.cn/pages/index/)
 
 [📘Chinese back-up documentation](https://plus.hutool.cn/)
 
@@ -151,18 +150,18 @@ We provide the T-Shirt and Sweater with Hutool Logo, please visit the shop：
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.23</version>
+    <version>5.8.24</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.23'
+implementation 'cn.hutool:hutool-all:5.8.24'
 ```
 
 ## 📥Download
 
-- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.23/)
+- [Maven Repo](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.24/)
 
 > 🔔️note:
 > Hutool 5.x supports JDK8+ and is not tested on Android platforms, and cannot guarantee that all tool classes or tool methods are available.
@@ -209,6 +208,10 @@ Hutool welcomes anyone to contribute code to Hutool, but the author suffers from
 2. Code indentation according to Eclipse.
 3. Newly added methods do not use third-party library methods，Unless the method tool is add to the '**extra module**'.
 4. Please pull request to the `v5-dev` branch. Hutool uses a new branch after 5.x: `v5-master` is the master branch, which indicates the version of the central library that has been released, and this branch does not allow pr or modifications.
+
+### 📖 Documentation source code
+
+[Documentation source code](https://gitee.com/loolly_admin/hutool-doc-handy)
 
 -------------------------------------------------------------------------------
 

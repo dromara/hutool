@@ -531,13 +531,7 @@ public class ImgUtil {
 			FileUtil.copy(srcImageFile, destImageFile, true);
 		}
 
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = getImageOutputStream(destImageFile);
-			convert(read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+		Img.from(srcImageFile).write(destImageFile);
 	}
 
 	/**
@@ -560,16 +554,25 @@ public class ImgUtil {
 	 * @param srcImage        源图像流
 	 * @param formatName      包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destImageStream 目标图像输出流
-	 * @param isSrcPng        源图片是否为PNG格式
 	 * @since 4.1.14
 	 */
+	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream) {
+		Img.from(srcImage).setTargetImageType(formatName).write(destImageStream);
+	}
+
+	/**
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
+	 *
+	 * @param srcImage        源图像流
+	 * @param formatName      包含格式非正式名称的 String：如JPG、JPEG、GIF等
+	 * @param destImageStream 目标图像输出流
+	 * @param isSrcPng        源图片是否为PNG格式（参数无效）
+	 * @since 4.1.14
+	 */
+	@Deprecated
 	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream, boolean isSrcPng) {
-		final BufferedImage src = toBufferedImage(srcImage, isSrcPng ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
-		try {
-			ImageIO.write(src, formatName, destImageStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		convert(srcImage, formatName, destImageStream);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- grey

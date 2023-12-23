@@ -71,8 +71,8 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 	 * @since 5.7.0
 	 */
 	public static ListableBeanFactory getBeanFactory() {
-		final ListableBeanFactory factory =  null == beanFactory ? applicationContext : beanFactory;
-		if(null == factory){
+		final ListableBeanFactory factory = null == beanFactory ? applicationContext : beanFactory;
+		if (null == factory) {
 			throw new UtilException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?");
 		}
 		return factory;
@@ -186,6 +186,38 @@ public class SpringUtil implements BeanFactoryPostProcessor, ApplicationContextA
 			return null;
 		}
 		return applicationContext.getEnvironment().getProperty(key);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param key          配置项key
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static String getProperty(String key, String defaultValue) {
+		if (null == applicationContext) {
+			return null;
+		}
+		return applicationContext.getEnvironment().getProperty(key, defaultValue);
+	}
+
+	/**
+	 * 获取配置文件配置项的值
+	 *
+	 * @param <T>          属性值类型
+	 * @param key          配置项key
+	 * @param targetType   配置项类型
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 * @since 5.8.24
+	 */
+	public static <T> T getProperty(String key, Class<T> targetType, T defaultValue) {
+		if (null == applicationContext) {
+			return null;
+		}
+		return applicationContext.getEnvironment().getProperty(key, targetType, defaultValue);
 	}
 
 	/**

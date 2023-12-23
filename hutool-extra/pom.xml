@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.23</version>
+		<version>5.8.24</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -394,7 +394,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.11</version>
+			<version>1.4.13</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>

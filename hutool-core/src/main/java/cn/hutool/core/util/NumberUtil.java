@@ -2321,80 +2321,80 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static int nullToZero(Integer number) {
 		return number == null ? 0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static long nullToZero(Long number) {
 		return number == null ? 0L : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static double nullToZero(Double number) {
 		return number == null ? 0.0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static float nullToZero(Float number) {
 		return number == null ? 0.0f : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static short nullToZero(Short number) {
 		return number == null ? (short) 0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static byte nullToZero(Byte number) {
 		return number == null ? (byte) 0 : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static BigDecimal nullToZero(BigDecimal number) {
 		return number == null ? BigDecimal.ZERO : number;
 	}
 
 	/**
-	 * 如果给定值为0，返回1，否则返回原值
+	 * 如果给定值为{@code null}，返回0，否则返回原值
 	 *
 	 * @param number 值
-	 * @return 1或非0值
+	 * @return 0或非0值
 	 */
 	public static BigInteger nullToZero(BigInteger number) {
 		return number == null ? BigInteger.ZERO : number;

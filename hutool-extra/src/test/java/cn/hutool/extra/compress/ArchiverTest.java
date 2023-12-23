@@ -72,4 +72,36 @@ public class ArchiverTest {
 				})
 				.finish().close();
 	}
+
+	/**
+	 * Add: D:\disk-all
+	 * Add: D:\disk-all\els-app
+	 * Add: D:\disk-all\els-app\db-backup
+	 * Add: D:\disk-all\els-app\新建 文本文档.txt
+	 * Add: D:\disk-all\新建 文本文档.txt
+	 * Add: D:\disk-all\新建文件夹
+	 */
+	@Test
+	@Ignore
+	public void emptyTest(){
+		final File file = FileUtil.file("d:/disk-all.tgz");
+		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, "tgz", file)
+			.add(FileUtil.file("D:\\disk-all"), (f)->{
+				Console.log("Add: {}", f.getPath());
+				return true;
+			})
+			.finish().close();
+	}
+
+	@Test
+	@Ignore
+	public void emptyZTest(){
+		final File file = FileUtil.file("d:/disk-all.7z");
+		CompressUtil.createArchiver(CharsetUtil.CHARSET_UTF_8, "7z", file)
+			.add(FileUtil.file("D:\\disk-all"), (f)->{
+				Console.log("Add: {}", f.getPath());
+				return true;
+			})
+			.finish().close();
+	}
 }

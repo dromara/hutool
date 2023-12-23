@@ -53,7 +53,7 @@ public class FileTypeUtil {
 	 * @return 文件类型，未找到为{@code null}
 	 */
 	public static String getType(String fileStreamHexHead) {
-		if(MapUtil.isNotEmpty(FILE_TYPE_MAP)){
+		if (MapUtil.isNotEmpty(FILE_TYPE_MAP)) {
 			for (final Entry<String, String> fileTypeEntry : FILE_TYPE_MAP.entrySet()) {
 				if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
 					return fileTypeEntry.getValue();
@@ -67,39 +67,44 @@ public class FileTypeUtil {
 	/**
 	 * 根据文件流的头部信息获得文件类型
 	 *
-	 * @param in 文件流
+	 * @param in           文件流
 	 * @param fileHeadSize 自定义读取文件头部的大小
 	 * @return 文件类型，未找到为{@code null}
 	 */
-	public static String getType(InputStream in,int fileHeadSize) throws IORuntimeException  {
-		return getType((IoUtil.readHex(in, fileHeadSize,false)));
+	public static String getType(InputStream in, int fileHeadSize) throws IORuntimeException {
+		return getType((IoUtil.readHex(in, fileHeadSize, false)));
 	}
 
 	/**
 	 * 根据文件流的头部信息获得文件类型<br>
 	 * 注意此方法会读取头部一些bytes，造成此流接下来读取时缺少部分bytes<br>
 	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
-	 * @param in {@link InputStream}
+	 *
+	 * @param in      {@link InputStream}
 	 * @param isExact 是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
-	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取流引起的异常
+	 * @return 类型，文件的扩展名，提供的in为{@code null}或未找到为{@code null}
+	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in,boolean isExact) throws  IORuntimeException  {
+	public static String getType(InputStream in, boolean isExact) throws IORuntimeException {
+		if (null == in) {
+			return null;
+		}
 		return isExact
-				?getType(IoUtil.readHex8192Upper(in))
-				:getType(IoUtil.readHex64Upper(in));
+			? getType(IoUtil.readHex8192Upper(in))
+			: getType(IoUtil.readHex64Upper(in));
 	}
 
 	/**
 	 * 根据文件流的头部信息获得文件类型<br>
 	 * 注意此方法会读取头部64个bytes，造成此流接下来读取时缺少部分bytes<br>
 	 * 因此如果想复用此流，流需支持{@link InputStream#reset()}方法。
+	 *
 	 * @param in {@link InputStream}
 	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取流引起的异常
+	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in) throws IORuntimeException  {
-		return getType(in,false);
+	public static String getType(InputStream in) throws IORuntimeException {
+		return getType(in, false);
 	}
 
 	/**
@@ -116,10 +121,10 @@ public class FileTypeUtil {
 	 * @param in       {@link InputStream}
 	 * @param filename 文件名
 	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取流引起的异常
+	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in, String filename) throws IORuntimeException  {
-		return getType(in,filename,false);
+	public static String getType(InputStream in, String filename) throws IORuntimeException {
+		return getType(in, filename, false);
 	}
 
 	/**
@@ -132,14 +137,15 @@ public class FileTypeUtil {
 	 *     2、xls、doc、msi头信息无法区分，按照扩展名区分
 	 *     3、zip可能为docx、xlsx、pptx、jar、war、ofd头信息无法区分，按照扩展名区分
 	 * </pre>
+	 *
 	 * @param in       {@link InputStream}
 	 * @param filename 文件名
-	 * @param isExact 是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
+	 * @param isExact  是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
 	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取流引起的异常
+	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in, String filename,boolean isExact) throws IORuntimeException  {
-		String typeName = getType(in,isExact);
+	public static String getType(InputStream in, String filename, boolean isExact) throws IORuntimeException {
+		String typeName = getType(in, isExact);
 		if (null == typeName) {
 			// 未成功识别类型，扩展名辅助识别
 			typeName = FileUtil.extName(filename);
@@ -190,19 +196,19 @@ public class FileTypeUtil {
 	 *     3、zip可能为jar、war头信息无法区分，按照扩展名区分
 	 * </pre>
 	 *
-	 * @param file 文件 {@link File}
+	 * @param file    文件 {@link File}
 	 * @param isExact 是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
 	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getType(File file,boolean isExact) throws IORuntimeException  {
-		if(false == FileUtil.isFile(file)){
+	public static String getType(File file, boolean isExact) throws IORuntimeException {
+		if (false == FileUtil.isFile(file)) {
 			throw new IllegalArgumentException("Not a regular file!");
 		}
 		FileInputStream in = null;
 		try {
 			in = IoUtil.toStream(file);
-			return getType(in, file.getName(),isExact);
+			return getType(in, file.getName(), isExact);
 		} finally {
 			IoUtil.close(in);
 		}
@@ -219,22 +225,22 @@ public class FileTypeUtil {
 	 *
 	 * @param file 文件 {@link File}
 	 * @return 类型，文件的扩展名，未找到为{@code null}
-	 * @throws IORuntimeException  读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getType(File file) throws IORuntimeException  {
-		return getType(file,false);
+	public static String getType(File file) throws IORuntimeException {
+		return getType(file, false);
 	}
 
 	/**
 	 * 通过路径获得文件类型
 	 *
-	 * @param path 路径，绝对路径或相对ClassPath的路径
+	 * @param path    路径，绝对路径或相对ClassPath的路径
 	 * @param isExact 是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配
 	 * @return 类型
-	 * @throws IORuntimeException  读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path,boolean isExact) throws IORuntimeException  {
-		return getType(FileUtil.file(path),isExact);
+	public static String getTypeByPath(String path, boolean isExact) throws IORuntimeException {
+		return getType(FileUtil.file(path), isExact);
 	}
 
 	/**
@@ -242,10 +248,10 @@ public class FileTypeUtil {
 	 *
 	 * @param path 路径，绝对路径或相对ClassPath的路径
 	 * @return 类型
-	 * @throws IORuntimeException  读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path) throws IORuntimeException  {
-		return getTypeByPath(path,false);
+	public static String getTypeByPath(String path) throws IORuntimeException {
+		return getTypeByPath(path, false);
 	}
 
 

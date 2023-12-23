@@ -318,7 +318,7 @@ public class LocalDateTimeUtil {
 	 * @since 5.3.10
 	 */
 	public static LocalDate parseDate(CharSequence text, DateTimeFormatter formatter) {
-		if (null == text) {
+		if (StrUtil.isBlank(text)) {
 			return null;
 		}
 		if (null == formatter) {
