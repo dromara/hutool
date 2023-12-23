@@ -18,11 +18,13 @@ import org.dromara.hutool.core.date.DateTime;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.date.TimeUtil;
 import org.dromara.hutool.core.date.Zodiac;
+import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 
 /**
@@ -404,24 +406,20 @@ public class ChineseDate {
 	}
 
 	@Override
-	public int hashCode() {
-		return getChineseDay().hashCode() ^ getChineseMonth().hashCode()
-			^ Integer.valueOf(getChineseYear()).hashCode();
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ChineseDate that = (ChineseDate) o;
+		return year == that.year && month == that.month && day == that.day;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj instanceof ChineseDate) {
-			ChineseDate other = (ChineseDate) obj;
-			return day == other.day
-				&& month == other.month
-				&& year == other.year
-				&& isLeapMonth == other.isLeapMonth;
-		}
-		return false;
+	public int hashCode() {
+		return Objects.hash(year, month, day);
 	}
 
 	// ------------------------------------------------------- private method start

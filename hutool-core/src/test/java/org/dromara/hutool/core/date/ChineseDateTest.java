@@ -17,6 +17,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -178,13 +179,13 @@ public class ChineseDateTest {
 	@Test
 	public void equalsTest(){
 		// 二月初一
-		Date date1 = new Date(2023 - 1900, 1, 20);
+		final Date date1 = DateUtil.date(LocalDate.of(2023, 2, 20));
 		// 润二月初一
-		Date date2 = new Date(2023 - 1900, 2, 22);
+		final Date date2 = DateUtil.date(LocalDate.of(2023, 3, 22));
 
-		ChineseDate chineseDate1 = new ChineseDate(date1);
-		ChineseDate chineseDate2 = new ChineseDate(date2);
-		ChineseDate chineseDate3 = new ChineseDate(date2);
+		final ChineseDate chineseDate1 = new ChineseDate(date1);
+		final ChineseDate chineseDate2 = new ChineseDate(date2);
+		final ChineseDate chineseDate3 = new ChineseDate(date2);
 
 		Assertions.assertEquals("2023-02-01", chineseDate1.toStringNormal());
 		Assertions.assertEquals("2023-02-01", chineseDate2.toStringNormal());
