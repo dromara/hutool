@@ -226,6 +226,17 @@ public class SshjSftp extends AbstractFtp {
 		}
 	}
 
+	/**
+	 * 读取远程文件输入流
+	 *
+	 * @param path 远程文件路径
+	 * @return {@link InputStream}
+	 */
+	@Override
+	public InputStream read(String path) {
+		throw new UnsupportedOperationException("sshjSftp不支持读取远程文件输入流!");
+	}
+
 	@Override
 	public void close() {
 		try {
