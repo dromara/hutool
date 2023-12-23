@@ -2,7 +2,6 @@ package org.dromara.hutool.extra.ftp;
 
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
-import org.rythmengine.utils.F;
 
 import java.io.Closeable;
 import java.io.File;
@@ -161,5 +160,5 @@ public interface Ftp extends Closeable {
 	 * @param path 文件路径
 	 * @return {@link InputStream}
 	 */
-	InputStream read(String path);
+	InputStream getFileStream(String path);
 }

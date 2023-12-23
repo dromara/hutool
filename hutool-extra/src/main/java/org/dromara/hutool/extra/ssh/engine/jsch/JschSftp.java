@@ -633,14 +633,8 @@ public class JschSftp extends AbstractFtp {
 		return this;
 	}
 
-	/**
-	 * 读取远程文件流
-	 *
-	 * @param path 远程文件路径
-	 * @return 输入流
-	 */
 	@Override
-	public InputStream read(String path) {
+	public InputStream getFileStream(final String path) {
 		try {
 			return getClient().get(path);
 		} catch (final SftpException e) {

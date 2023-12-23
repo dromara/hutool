@@ -56,6 +56,7 @@ public class CommonsFtp extends AbstractFtp {
 	public static final int DEFAULT_PORT = 21;
 
 	// region ----- of
+
 	/**
 	 * 构造CommonsFtp，匿名登录
 	 *
@@ -728,28 +729,22 @@ public class CommonsFtp extends AbstractFtp {
 		}
 	}
 
-	/**
-	 * 读取FTP服务器上的文件为输入流
-	 *
-	 * @param path 文件路径
-	 * @return {@link InputStream}
-	 */
 	@Override
-	public InputStream read(String path) {
+	public InputStream getFileStream(final String path) {
 		final String fileName = FileNameUtil.getName(path);
 		final String dir = StrUtil.removeSuffix(path, fileName);
-		return read(dir, fileName);
+		return getFileStream(dir, fileName);
 	}
 
 	/**
 	 * 读取文件为输入流
 	 *
-	 * @param dir     服务端的文件目录
+	 * @param dir      服务端的文件目录
 	 * @param fileName 服务端的文件名
 	 * @return {@link InputStream}
 	 * @throws IORuntimeException IO异常
 	 */
-	public InputStream read(String dir, String fileName) throws IORuntimeException {
+	public InputStream getFileStream(final String dir, final String fileName) throws IORuntimeException {
 		String pwd = null;
 		if (isBackToPwd()) {
 			pwd = pwd();
@@ -761,7 +756,7 @@ public class CommonsFtp extends AbstractFtp {
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 			return client.retrieveFileStream(fileName);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			if (isBackToPwd()) {

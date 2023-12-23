@@ -14,10 +14,12 @@ package org.dromara.hutool.extra.ssh.engine.sshj;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.xfer.FileSystemFile;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.io.IORuntimeException;
 import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.extra.ftp.AbstractFtp;
@@ -233,8 +235,15 @@ public class SshjSftp extends AbstractFtp {
 	 * @return {@link InputStream}
 	 */
 	@Override
-	public InputStream read(String path) {
-		throw new UnsupportedOperationException("sshjSftp不支持读取远程文件输入流!");
+	public InputStream getFileStream(final String path) {
+		final RemoteFile remoteFile;
+		try {
+			remoteFile = sftp.open(path);
+		} catch (final IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return remoteFile.new ReadAheadRemoteFileInputStream(16);
 	}
 
 	@Override

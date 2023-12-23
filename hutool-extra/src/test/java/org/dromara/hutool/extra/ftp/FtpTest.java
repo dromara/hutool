@@ -135,7 +135,7 @@ public class FtpTest {
 	@Disabled
 	public void readTest() throws Exception {
 		try (final CommonsFtp ftp = CommonsFtp.of("localhost");
-			 final BufferedReader reader = new BufferedReader(new InputStreamReader(ftp.read("d://test/read/", "test.txt")))) {
+			 final BufferedReader reader = new BufferedReader(new InputStreamReader(ftp.getFileStream("d://test/read/", "test.txt")))) {
 			String line;
 			while (StrUtil.isNotBlank(line = reader.readLine())) {
 				Console.log(line);
