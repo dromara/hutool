@@ -212,7 +212,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 			sheet = workbook.cloneSheet(sheetIndex, newSheetName);
 		} else {
 			sheet = this.workbook.cloneSheet(sheetIndex);
-			this.workbook.setSheetName(sheetIndex, newSheetName);
+			// issue#I8QIBB，clone后的sheet的index应该重新获取
+			this.workbook.setSheetName(workbook.getSheetIndex(sheet), newSheetName);
 		}
 		if (setAsCurrentSheet) {
 			this.sheet = sheet;
