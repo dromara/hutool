@@ -403,6 +403,27 @@ public class ChineseDate {
 		return String.format("%s%s年 %s%s", getCyclical(), getChineseZodiac(), getChineseMonthName(), getChineseDay());
 	}
 
+	@Override
+	public int hashCode() {
+		return getChineseDay().hashCode() ^ getChineseMonth().hashCode()
+			^ Integer.valueOf(getChineseYear()).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj instanceof ChineseDate) {
+			ChineseDate other = (ChineseDate) obj;
+			return day == other.day
+				&& month == other.month
+				&& year == other.year
+				&& isLeapMonth == other.isLeapMonth;
+		}
+		return false;
+	}
+
 	// ------------------------------------------------------- private method start
 
 	/**
