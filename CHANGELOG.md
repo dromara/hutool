@@ -2,10 +2,11 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.25(2023-12-24)
+# 5.8.25(2023-12-26)
 
 ### 🐣新特性
 ### 🐞Bug修复
+* 【core  】      修复StrJoin当append内容后调用length()会出现空指针问题（issue#3444@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.24(2023-12-23)
@@ -23,7 +24,7 @@
 * 【http  】      HTMLFilter保留p标签（issue#3433@Gitee）
 
 ### 🐞Bug修复
-* 【core  】      修复LocalDateTime#parseDate未判断空问题问题（issue#I8FN7F@Gitee）
+* 【core  】      修复LocalDateTime#parseDate未判断空问题（issue#I8FN7F@Gitee）
 * 【http  】      修复RootAction send404 抛异常问题（pr#1107@Gitee）
 * 【extra 】      修复Archiver 最后一个 Entry 为空文件夹时未关闭 Entry问题（pr#1123@Gitee）
 * 【core  】      修复ImgUtil.convert png转jpg在jdk9+中失败问题（issue#I8L8UA@Gitee）
@@ -33,7 +34,7 @@
 * 【http  】      修复graalvm编译后，未读取Content-Length可能导致的读取时间过长问题（issue#I6Q30X@Gitee）
 * 【core  】      修复JavaSourceCompiler.addSource目录处理错误问题（issue#3425@Github）
 * 【core  】      修复时间戳转Bean时异常问题（issue#I8NMP7@Gitee）
-* 【core  】      修复PostgreSQL使用upsert字段大小写问题问题（issue#I8PB4X@Gitee）
+* 【core  】      修复PostgreSQL使用upsert字段大小写问题（issue#I8PB4X@Gitee）
 * 【extra 】      修复TinyPinyinEngine可能的空指针问题（issue#3437@Github）
 * 【core  】      修复graalvm原生打包使用http工具被转为file协议问题（issue#I8PY3Y@Gitee）
 * 【poi   】      修复cloneSheet参数错误导致非XSSFWorkbook错误命名问题（issue#I8QIBB@Gitee）
