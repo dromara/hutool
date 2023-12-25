@@ -111,4 +111,13 @@ public class StrJoinerTest {
 		final StrJoiner merge = joiner1.merge(joiner2);
 		Assertions.assertEquals("[123,456,789]", merge.toString());
 	}
+
+	@Test
+	void issue3444Test() {
+		final StrJoiner strJoinerEmpty = StrJoiner.of(",");
+		Assertions.assertEquals(0, strJoinerEmpty.length());
+
+		final StrJoiner strJoinerWithContent = StrJoiner.of(",").append("haha");
+		Assertions.assertEquals(4, strJoinerWithContent.length());
+	}
 }

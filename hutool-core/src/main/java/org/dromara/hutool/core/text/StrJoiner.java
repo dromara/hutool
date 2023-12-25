@@ -379,7 +379,7 @@ public class StrJoiner implements Appendable, Serializable {
 	 * @since 5.7.22
 	 */
 	public int length() {
-		return (this.appendable != null ? this.appendable.toString().length() + suffix.length() :
+		return (this.appendable != null ? this.appendable.toString().length() + StrUtil.length(suffix) :
 				null == this.emptyResult ? -1 : emptyResult.length());
 	}
 
