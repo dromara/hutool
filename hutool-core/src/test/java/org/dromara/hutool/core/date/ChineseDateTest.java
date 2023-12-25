@@ -182,16 +182,22 @@ public class ChineseDateTest {
 		final Date date1 = DateUtil.date(LocalDate.of(2023, 2, 20));
 		// 润二月初一
 		final Date date2 = DateUtil.date(LocalDate.of(2023, 3, 22));
+		// 三月初一
+		final Date date4 = DateUtil.date(LocalDate.of(2023, 4, 20));
+
 
 		final ChineseDate chineseDate1 = new ChineseDate(date1);
 		final ChineseDate chineseDate2 = new ChineseDate(date2);
 		final ChineseDate chineseDate3 = new ChineseDate(date2);
+		final ChineseDate chineseDate4 = new ChineseDate(date4);
 
 		Assertions.assertEquals("2023-02-01", chineseDate1.toStringNormal());
 		Assertions.assertEquals("2023-02-01", chineseDate2.toStringNormal());
 		Assertions.assertEquals("2023-02-01", chineseDate3.toStringNormal());
+		Assertions.assertEquals("2023-03-01", chineseDate4.toStringNormal());
 
 		Assertions.assertNotEquals(chineseDate1, chineseDate2);
 		Assertions.assertEquals(chineseDate2, chineseDate3);
+		Assertions.assertNotEquals(chineseDate2, chineseDate4);
 	}
 }
