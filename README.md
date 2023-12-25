@@ -139,21 +139,21 @@
 <dependency>
 	<groupId>org.dromara.hutool</groupId>
 	<artifactId>hutool-all</artifactId>
-	<version>6.0.0-M9</version>
+	<version>6.0.0-M10</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 
 ```
-implementation 'org.dromara.hutool:hutool-all:6.0.0-M9'
+implementation 'org.dromara.hutool:hutool-all:6.0.0-M10'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/org/dromara/hutool/hutool-all/6.0.0-M9/)
+- [Maven中央库](https://repo1.maven.org/maven2/org/dromara/hutool/hutool-all/6.0.0-M10/)
 
 > 🔔️注意
 > Hutool 6.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。
