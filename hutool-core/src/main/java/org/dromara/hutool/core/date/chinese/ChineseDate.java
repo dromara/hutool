@@ -414,12 +414,12 @@ public class ChineseDate {
 			return false;
 		}
 		final ChineseDate that = (ChineseDate) o;
-		return year == that.year && month == that.month && day == that.day;
+		return year == that.year && month == that.month && day == that.day && isLeapMonth == that.isLeapMonth;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(year, month, day);
+		return Objects.hash(year, month, day, isLeapMonth);
 	}
 
 	// ------------------------------------------------------- private method start
