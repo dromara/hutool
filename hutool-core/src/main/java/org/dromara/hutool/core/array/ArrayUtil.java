@@ -21,7 +21,6 @@ import org.dromara.hutool.core.convert.Convert;
 import org.dromara.hutool.core.exception.ExceptionUtil;
 import org.dromara.hutool.core.exception.HutoolException;
 import org.dromara.hutool.core.lang.Assert;
-import org.dromara.hutool.core.lang.Console;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrJoiner;
 import org.dromara.hutool.core.text.StrUtil;
@@ -41,6 +40,8 @@ import java.util.stream.Collectors;
  * @author Looly
  */
 public class ArrayUtil extends PrimitiveArrayUtil {
+
+	// region ----- ofArray
 
 	/**
 	 * 转为数组，如果values为数组，返回，否则返回一个只有values一个元素的数组
@@ -102,9 +103,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> T[] ofArray(final Iterable<T> iterable, final Class<T> componentType) {
 		return ofArray(IterUtil.getIter(iterable), componentType);
 	}
+	// endregion
 
-
-	// ---------------------------------------------------------------------- isBlank
+	// region ----- isBlank
 
 	/**
 	 * <p>指定字符串数组中，是否包含空字符串。</p>
@@ -185,8 +186,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return true;
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- isEmpty
+	// region ----- isEmpty
 
 	/**
 	 * 数组是否为空
@@ -231,8 +233,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return true;
 	}
 
-	// ---------------------------------------------------------------------- isNotEmpty
-
 	/**
 	 * 数组是否为非空
 	 *
@@ -256,6 +256,79 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static boolean isNotEmpty(final Object array) {
 		return !isEmpty(array);
 	}
+
+	/**
+	 * 计算{@code null}或空元素对象的个数，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return {@code null}或空元素对象的个数
+	 * @since 4.5.18
+	 */
+	public static int emptyCount(final Object... args) {
+		int count = 0;
+		if (isNotEmpty(args)) {
+			for (final Object element : args) {
+				if (ObjUtil.isEmpty(element)) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
+	 * <p>如果提供的数组本身为空，则返回{@code false}</p>
+	 *
+	 * @param <T>  元素类型
+	 * @param args 被检查对象
+	 * @return 是否存在 {@code null} 或空对象
+	 * @since 4.5.18
+	 */
+	public static <T> boolean hasEmpty(final T[] args) {
+		if (isNotEmpty(args)) {
+			for (final T element : args) {
+				if (ObjUtil.isEmpty(element)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 是否所有元素都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
+	 *
+	 * @param <T>  元素类型
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都为空
+	 * @since 4.5.18
+	 */
+	public static <T> boolean isAllEmpty(final T[] args) {
+		for (final T obj : args) {
+			if (!ObjUtil.isEmpty(obj)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 是否所有元素都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
+	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都不为空
+	 * @since 4.5.18
+	 */
+	public static boolean isAllNotEmpty(final Object... args) {
+		return !hasEmpty(args);
+	}
+
+	// endregion
+
+	// region ----- isNull or hasNull
 
 	/**
 	 * 是否包含{@code null}元素
@@ -294,6 +367,20 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 是否所有元素都不为 {@code null}
+	 * <p>如果提供的数组为null，则返回{@code false}，如果提供的数组为空，则返回{@code true}</p>
+	 *
+	 * @param <T>   数组元素类型
+	 * @param array 被检查的数组
+	 * @return 是否所有元素都不为 {@code null}
+	 * @since 5.4.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean isAllNotNull(final T... array) {
+		return !hasNull(array);
+	}
+
+	/**
 	 * 是否包含非{@code null}元素<br>
 	 * <p>如果数组是{@code null}或者空，返回{@code false}，否则当数组中有非{@code null}元素时返回{@code true}</p>
 	 *
@@ -322,6 +409,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return firstMatch(ObjUtil::isNotNull, array);
 	}
+	// endregion
+
+	// region ----- match
 
 	/**
 	 * 返回数组中第一个匹配规则的值
@@ -374,7 +464,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		final ArrayWrapper<E[], E> arrayWrapper = ArrayWrapper.of(array);
 		return arrayWrapper.matchIndex(beginIndexInclude, matcher);
 	}
+	// endregion
 
+	// region ----- newArray
 	/**
 	 * 新建一个空数组
 	 *
@@ -398,7 +490,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static Object[] newArray(final int newSize) {
 		return new Object[newSize];
 	}
+	// endregion
 
+	// region ----- type
 	/**
 	 * 获取数组对象的元素类型，方法调用参数与返回结果举例：
 	 * <ul>
@@ -479,6 +573,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		System.arraycopy(array, 0, result, 0, array.length);
 		return result;
 	}
+	//endregion
+
+	// region ----- append
 
 	/**
 	 * 将新元素添加到已有数组中<br>
@@ -572,6 +669,45 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
+	 * 合并所有数组，返回合并后的新数组<br>
+	 * 忽略null的数组
+	 *
+	 * @param <T>    数组元素类型
+	 * @param arrays 数组集合
+	 * @return 合并后的数组
+	 */
+	@SafeVarargs
+	public static <T> T[] addAll(final T[]... arrays) {
+		if (arrays.length == 1) {
+			return arrays[0];
+		}
+
+		int length = 0;
+		for (final T[] array : arrays) {
+			if (isNotEmpty(array)) {
+				length += array.length;
+			}
+		}
+
+		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+		if (length == 0) {
+			return result;
+		}
+
+		length = 0;
+		for (final T[] array : arrays) {
+			if (isNotEmpty(array)) {
+				System.arraycopy(array, 0, result, length, array.length);
+				length += array.length;
+			}
+		}
+		return result;
+	}
+	// endregion
+
+	// region ----- replace or insert
+
+	/**
 	 * 从数组中的指定位置开始，按顺序使用新元素替换旧元素<br>
 	 * <ul>
 	 *     <li>如果 指定位置 为负数，那么生成一个新数组，其中新元素按顺序放在数组头部</li>
@@ -652,6 +788,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <A, T> A insert(final A array, final int index, final T... newElements) {
 		return ArrayWrapper.of(array).insert(index, newElements).getRaw();
 	}
+	// endregion
 
 	// region ----- resize
 
@@ -716,42 +853,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return resize(buffer, newSize, buffer.getClass().getComponentType());
 	}
 	// endregion
-
-	/**
-	 * 合并所有数组，返回合并后的新数组<br>
-	 * 忽略null的数组
-	 *
-	 * @param <T>    数组元素类型
-	 * @param arrays 数组集合
-	 * @return 合并后的数组
-	 */
-	@SafeVarargs
-	public static <T> T[] addAll(final T[]... arrays) {
-		if (arrays.length == 1) {
-			return arrays[0];
-		}
-
-		int length = 0;
-		for (final T[] array : arrays) {
-			if (isNotEmpty(array)) {
-				length += array.length;
-			}
-		}
-
-		final T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
-		if (length == 0) {
-			return result;
-		}
-
-		length = 0;
-		for (final T[] array : arrays) {
-			if (isNotEmpty(array)) {
-				System.arraycopy(array, 0, result, length, array.length);
-				length += array.length;
-			}
-		}
-		return result;
-	}
 
 	// region ----- copy and clone
 
@@ -846,6 +947,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return null;
 	}
 	// endregion
+
+	// region ----- filter
 
 	/**
 	 * 对每个数组元素执行指定操作，返回操作后的元素<br>
@@ -942,7 +1045,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static String[] nullToEmpty(final String[] array) {
 		return edit(array, t -> null == t ? StrUtil.EMPTY : t);
 	}
+	// endregion
 
+	// region ----- zip
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
 	 * 例如：<br>
@@ -990,8 +1095,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <K, V> Map<K, V> zip(final K[] keys, final V[] values) {
 		return zip(keys, values, false);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------- indexOf and lastIndexOf and contains
+	// region ----- indexOf and lastIndexOf and contains
 
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
@@ -1075,6 +1181,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return INDEX_NOT_FOUND;
 	}
+	// endregion
+
+	// region ----- contains
 
 	/**
 	 * 数组中是否包含指定元素
@@ -1137,8 +1246,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static boolean containsIgnoreCase(final CharSequence[] array, final CharSequence value) {
 		return indexOfIgnoreCase(array, value) > INDEX_NOT_FOUND;
 	}
-
-	// ------------------------------------------------------------------- Wrap and unwrap
+	// endregion
 
 	/**
 	 * 包装数组对象
@@ -1190,6 +1298,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static boolean isArray(final Object obj) {
 		return null != obj && obj.getClass().isArray();
 	}
+
+	// region ----- get
 
 	/**
 	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
@@ -1245,71 +1355,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return result;
 	}
-
-	/**
-	 * 获取子数组
-	 *
-	 * @param <T>   数组元素类型
-	 * @param array 数组，不允许为空
-	 * @param start 开始位置（包括）
-	 * @param end   结束位置（不包括）
-	 * @return 新的数组
-	 * @see Arrays#copyOfRange(Object[], int, int)
-	 * @since 4.2.2
-	 */
-	public static <T> T[] sub(final T[] array, int start, int end) {
-		Assert.notNull(array, "array must be not null !");
-		final int length = length(array);
-		if (start < 0) {
-			start += length;
-		}
-		if (end < 0) {
-			end += length;
-		}
-		if (start > end) {
-			final int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		if (start >= length) {
-			return newArray(array.getClass().getComponentType(), 0);
-		}
-		if (end > length) {
-			end = length;
-		}
-		return Arrays.copyOfRange(array, start, end);
-	}
-
-	/**
-	 * 获取子数组
-	 *
-	 * @param array        数组
-	 * @param beginInclude 开始位置（包括）
-	 * @param endExclude   结束位置（不包括）
-	 * @param <A>          数组类型
-	 * @return 新的数组
-	 * @since 4.0.6
-	 */
-	public static <A> A sub(final A array,
-							final int beginInclude, final int endExclude) {
-		return ArrayWrapper.of(array).getSub(beginInclude, endExclude);
-	}
-
-	/**
-	 * 获取子数组
-	 *
-	 * @param array        数组
-	 * @param beginInclude 开始位置（包括）
-	 * @param endExclude   结束位置（不包括）
-	 * @param step         步进
-	 * @param <A>          数组类型
-	 * @return 新的数组
-	 * @since 4.0.6
-	 */
-	public static <A> A sub(final A array,
-							final int beginInclude, final int endExclude, final int step) {
-		return ArrayWrapper.of(array).getSub(beginInclude, endExclude, step);
-	}
+	// endregion
 
 	/**
 	 * 数组或集合转String
@@ -1375,6 +1421,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return Array.getLength(array);
 	}
 
+	// region ----- join
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 *
@@ -1441,8 +1488,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		return StrJoiner.of(conjunction).append(array).toString();
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- remove
+	// region ----- remove
 
 	/**
 	 * 移除数组中对应位置的元素<br>
@@ -1460,8 +1508,6 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		return (T[]) remove((Object) array, index);
 	}
 
-	// ---------------------------------------------------------------------- removeEle
-
 	/**
 	 * 移除数组中指定的元素<br>
 	 * 只会移除匹配到的第一个元素<br>
@@ -1477,8 +1523,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> T[] removeEle(final T[] array, final T element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
+	// endregion
 
-	// ---------------------------------------------------------------------- Reverse array
+	// region ----- reverse
 
 	/**
 	 * 反转数组，会变更原数组
@@ -1518,8 +1565,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T> T[] reverse(final T[] array) {
 		return reverse(array, 0, array.length);
 	}
+	// endregion
 
-	// ------------------------------------------------------------------------------------------------------------ min and max
+	// region ----- min and max
 
 	/**
 	 * 取最小值
@@ -1588,11 +1636,13 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return max;
 	}
+	//endregion
 
-	// 使用Fisher–Yates洗牌算法，以线性时间复杂度打乱数组顺序
+	// region ----- shuffle
 
 	/**
-	 * 打乱数组顺序，会变更原数组
+	 * 打乱数组顺序，会变更原数组<br>
+	 * 使用Fisher–Yates洗牌算法，以线性时间复杂度打乱数组顺序
 	 *
 	 * @param <T>   元素类型
 	 * @param array 数组，会变更
@@ -1605,7 +1655,8 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	}
 
 	/**
-	 * 打乱数组顺序，会变更原数组
+	 * 打乱数组顺序，会变更原数组<br>
+	 * 使用Fisher–Yates洗牌算法，以线性时间复杂度打乱数组顺序
 	 *
 	 * @param <T>    元素类型
 	 * @param array  数组，会变更
@@ -1625,6 +1676,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		return array;
 	}
+	// endregion
+
+	// region ----- swap
 
 	/**
 	 * 交换数组中两个位置的值
@@ -1664,89 +1718,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		Array.set(array, index2, tmp);
 		return array;
 	}
+	//endregion
 
-	/**
-	 * 计算{@code null}或空元素对象的个数，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 *
-	 * @param args 被检查的对象,一个或者多个
-	 * @return {@code null}或空元素对象的个数
-	 * @since 4.5.18
-	 */
-	public static int emptyCount(final Object... args) {
-		int count = 0;
-		if (isNotEmpty(args)) {
-			for (final Object element : args) {
-				if (ObjUtil.isEmpty(element)) {
-					count++;
-				}
-			}
-		}
-		return count;
-	}
-
-	/**
-	 * 是否存在{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素<br>
-	 * <p>如果提供的数组本身为空，则返回{@code false}</p>
-	 *
-	 * @param <T>  元素类型
-	 * @param args 被检查对象
-	 * @return 是否存在 {@code null} 或空对象
-	 * @since 4.5.18
-	 */
-	public static <T> boolean hasEmpty(final T[] args) {
-		if (isNotEmpty(args)) {
-			for (final T element : args) {
-				if (ObjUtil.isEmpty(element)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 是否所有元素都为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
-	 *
-	 * @param <T>  元素类型
-	 * @param args 被检查的对象,一个或者多个
-	 * @return 是否都为空
-	 * @since 4.5.18
-	 */
-	public static <T> boolean isAllEmpty(final T[] args) {
-		for (final T obj : args) {
-			if (!ObjUtil.isEmpty(obj)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * 是否所有元素都不为{@code null}或空对象，通过{@link ObjUtil#isEmpty(Object)} 判断元素
-	 * <p>如果提供的数组本身为空，则返回{@code true}</p>
-	 *
-	 * @param args 被检查的对象,一个或者多个
-	 * @return 是否都不为空
-	 * @since 4.5.18
-	 */
-	public static boolean isAllNotEmpty(final Object... args) {
-		return !hasEmpty(args);
-	}
-
-	/**
-	 * 是否所有元素都不为 {@code null}
-	 * <p>如果提供的数组为null，则返回{@code false}，如果提供的数组为空，则返回{@code true}</p>
-	 *
-	 * @param <T>   数组元素类型
-	 * @param array 被检查的数组
-	 * @return 是否所有元素都不为 {@code null}
-	 * @since 5.4.0
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> boolean isAllNotNull(final T... array) {
-		return !hasNull(array);
-	}
+	// region ----- distinct
 
 	/**
 	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
@@ -1795,6 +1769,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 		}
 		return ofArray(set, (Class<T>) getComponentType(array));
 	}
+	// endregion
+
+	// region ----- map
 
 	/**
 	 * 按照指定规则，将一种类型的数组转换为另一种类型
@@ -1863,6 +1840,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 	public static <T, R> Set<R> mapToSet(final T[] array, final Function<? super T, ? extends R> func) {
 		return Arrays.stream(array).map(func).collect(Collectors.toSet());
 	}
+	// endregion
 
 	/**
 	 * 判断两个数组是否相等，判断依据包括数组长度和每个元素都相等。
@@ -1903,6 +1881,73 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 			// Not an array of primitives
 			return Arrays.deepEquals((Object[]) array1, (Object[]) array2);
 		}
+	}
+
+	// region ----- sub
+
+	/**
+	 * 获取子数组
+	 *
+	 * @param <T>   数组元素类型
+	 * @param array 数组，不允许为空
+	 * @param start 开始位置（包括）
+	 * @param end   结束位置（不包括）
+	 * @return 新的数组
+	 * @see Arrays#copyOfRange(Object[], int, int)
+	 * @since 4.2.2
+	 */
+	public static <T> T[] sub(final T[] array, int start, int end) {
+		Assert.notNull(array, "array must be not null !");
+		final int length = length(array);
+		if (start < 0) {
+			start += length;
+		}
+		if (end < 0) {
+			end += length;
+		}
+		if (start > end) {
+			final int tmp = start;
+			start = end;
+			end = tmp;
+		}
+		if (start >= length) {
+			return newArray(array.getClass().getComponentType(), 0);
+		}
+		if (end > length) {
+			end = length;
+		}
+		return Arrays.copyOfRange(array, start, end);
+	}
+
+	/**
+	 * 获取子数组
+	 *
+	 * @param array        数组
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
+	 * @param <A>          数组类型
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static <A> A sub(final A array,
+							final int beginInclude, final int endExclude) {
+		return ArrayWrapper.of(array).getSub(beginInclude, endExclude);
+	}
+
+	/**
+	 * 获取子数组
+	 *
+	 * @param array        数组
+	 * @param beginInclude 开始位置（包括）
+	 * @param endExclude   结束位置（不包括）
+	 * @param step         步进
+	 * @param <A>          数组类型
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static <A> A sub(final A array,
+							final int beginInclude, final int endExclude, final int step) {
+		return ArrayWrapper.of(array).getSub(beginInclude, endExclude, step);
 	}
 
 	/**
@@ -2003,8 +2048,9 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		return firstIndex;
 	}
+	// region
 
-	// O(n)时间复杂度检查数组是否有序
+	// region ----- isSorted O(n)时间复杂度检查数组是否有序
 
 	/**
 	 * 检查数组是否有序，升序或者降序，使用指定比较器比较
@@ -2166,6 +2212,7 @@ public class ArrayUtil extends PrimitiveArrayUtil {
 
 		return true;
 	}
+	// endregion
 
 	/**
 	 * 判断数组中是否有相同元素
