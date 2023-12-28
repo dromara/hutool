@@ -223,7 +223,7 @@ public class RandomUtil {
 			min++;
 		}
 		if (includeMax) {
-			max--;
+			max++;
 		}
 		return getRandom().nextInt(min, max);
 	}
@@ -296,7 +296,7 @@ public class RandomUtil {
 			min++;
 		}
 		if (includeMax) {
-			max--;
+			max++;
 		}
 		return getRandom().nextLong(min, max);
 	}
