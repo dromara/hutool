@@ -12,10 +12,10 @@
 
 package org.dromara.hutool.extra.xml;
 
+import jakarta.xml.bind.annotation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.annotation.*;
 
 /**
  * {@link JAXBUtil} 工具类

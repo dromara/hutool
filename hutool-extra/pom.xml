@@ -505,10 +505,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- 适配jdk升级到9及以上，移除了 javax.xml.bind (JAXB) 的问题; javax需要从外部引入 -->
+		<!--JAXB (JSR 222) JAXBUtil xml相关依赖-->
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.7</version>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -516,6 +518,12 @@
 					<groupId>com.sun.activation</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<!-- JAXB (JSR 222) Reference Implementation -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.activation</groupId>
