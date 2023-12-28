@@ -12,6 +12,7 @@
 
 package org.dromara.hutool.core.stream;
 
+import static java.util.Collections.singletonList;
 import lombok.Builder;
 import lombok.Data;
 import org.dromara.hutool.core.collection.ListUtil;
@@ -28,12 +29,38 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.singletonList;
-
 /**
  * @author VampireAchao
  */
 public class EasyStreamTest {
+
+
+	@Test
+	void testIterateHierarchies() {
+		// 创建一个三层的树结构，每个节点都有两个子节点
+		Node node = new Node("1", Arrays.asList(
+			new Node("1-1", Arrays.asList(
+				new Node("1-1-1", null),
+				new Node("1-1-2", null)
+			)),
+			new Node("1-2", Arrays.asList(
+				new Node("1-2-1", null),
+				new Node("1-2-2", null)
+			))
+		));
+
+		// 按广度度优先遍历树结构
+		List<String> allNodes = new ArrayList<>();
+		EasyStream.iterateHierarchies(node, node1 -> node1.children)
+			.forEach(node1 -> allNodes.add(node1.id));
+		Assertions.assertEquals(Arrays.asList("1", "1-1", "1-2", "1-1-1", "1-1-2", "1-2-1", "1-2-2"), allNodes);
+
+		// 按广度度优先遍历树结构，忽略id为1-1的节点与以其为根节点的子树
+		List<String> filteredNodes = new ArrayList<>();
+		EasyStream.iterateHierarchies(node, node1 -> node1.children, node1 -> !node1.id.equals("1-1"))
+			.forEach(node1 -> filteredNodes.add(node1.id));
+		Assertions.assertEquals(Arrays.asList("1", "1-2", "1-2-1", "1-2-2"), filteredNodes);
+	}
 
 	@Test
 	public void testConcat() {
@@ -567,5 +594,20 @@ public class EasyStreamTest {
 	private static class BigDecimalTest{
 		private String name;
 		private BigDecimal count;
+	}
+
+	/**
+	 * 节点
+	 */
+	private static class Node {
+		private final String id;
+		private List<Node> children;
+		private Node(String id, List<Node> children) {
+			this.id = id;
+			this.children = children;
+		}
+		public Node(String id) {
+			this.id = id;
+		}
 	}
 }

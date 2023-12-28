@@ -21,11 +21,10 @@ import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.net.url.UrlDecoder;
 import org.dromara.hutool.core.net.url.UrlUtil;
+import org.dromara.hutool.core.stream.EasyStream;
 import org.dromara.hutool.core.text.CharUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.text.split.SplitUtil;
-import org.dromara.hutool.core.tree.hierarchy.HierarchyIteratorUtil;
-import org.dromara.hutool.core.tree.hierarchy.HierarchyUtil;
 import org.dromara.hutool.core.util.CharsetUtil;
 
 import java.io.IOException;
@@ -826,10 +825,9 @@ public class ClassUtil {
 	 */
 	public static void traverseTypeHierarchyWhile(
 		final Class<?> root, final Predicate<Class<?>> filter, final Predicate<Class<?>> terminator) {
-		HierarchyUtil.traverseByBreadthFirst(
-			root, filter,
-			HierarchyIteratorUtil.scan(ClassUtil::getNextTypeHierarchies, terminator.negate())
-		);
+		EasyStream.iterateHierarchies(root, ClassUtil::getNextTypeHierarchies, filter)
+			.takeWhile(terminator)
+			.exec();
 	}
 
 	/**
@@ -857,7 +855,7 @@ public class ClassUtil {
 			}
 			return getNextTypeHierarchies(t);
 		};
-		HierarchyUtil.traverseByBreadthFirst(root, filter, HierarchyIteratorUtil.scan(function));
+		EasyStream.iterateHierarchies(root, function, filter).exec();
 	}
 
 	private static Set<Class<?>> getNextTypeHierarchies(final Class<?> t) {
