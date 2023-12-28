@@ -130,6 +130,27 @@ public class Ipv4Util implements Ipv4Pool {
 	 * @return 本机网卡IP地址，获取失败返回{@code null}
 	 */
 	public static InetAddress getLocalhostDirectly() {
+		return getLocalhostDirectly(false);
+	}
+
+	/**
+	 * 获取本机网卡IPv4地址，不使用缓存，规则如下：
+	 *
+	 * <ul>
+	 *     <li>必须非回路（loopback）地址、IPv4地址</li>
+	 *     <li>多网卡则返回第一个满足条件的地址</li>
+	 *     <li>如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * 此方法不会抛出异常，获取失败将返回{@code null}<br>
+	 * <p>
+	 * 见：https://github.com/dromara/hutool/issues/428
+	 *
+	 * @param includeSiteLocal 是否包含局域网地址，如10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
+	 * @return 本机网卡IP地址，获取失败返回{@code null}
+	 */
+	public static InetAddress getLocalhostDirectly(final boolean includeSiteLocal) {
 		final LinkedHashSet<InetAddress> localAddressList = NetUtil.localAddressList(address ->
 			// 需为IPV4地址
 			address instanceof Inet4Address
@@ -139,7 +160,7 @@ public class Ipv4Util implements Ipv4Pool {
 				// 10.0.0.0 ~ 10.255.255.255
 				// 172.16.0.0 ~ 172.31.255.255
 				// 192.168.0.0 ~ 192.168.255.255
-				&& !address.isSiteLocalAddress()
+				&& (includeSiteLocal || !address.isSiteLocalAddress())
 				// 非链路本地地址：169.254.0.0/16
 				&& !address.isLinkLocalAddress()
 		);
