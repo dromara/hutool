@@ -12,17 +12,24 @@
 
 package org.dromara.hutool.core.lang;
 
-import org.dromara.hutool.core.collection.CollUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.management.monitor.MonitorSettingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -234,4 +241,25 @@ public class OptTest {
 			.ifFail(Console::log, NullPointerException.class, MonitorSettingException.class)
 		;
 	}
+
+
+	@SuppressWarnings({"NumericOverflow", "divzero"})
+	@Test
+	@Disabled
+	void testFail1() {
+		final Integer i = Opt.ofTry(() -> 1 / 0)
+			.map(e -> 666)
+			.ifFail(Console::log)
+			.orElseGet(() -> 1);
+		Assertions.assertEquals(i, 1);
+	}
+
+	@SuppressWarnings({"NumericOverflow", "divzero"})
+	@Test
+	@Disabled
+	void testToEasyStream() {
+		final List<Integer> list = Opt.ofTry(() -> 1).toEasyStream().toList();
+		Assertions.assertArrayEquals(list.toArray(), new Integer[]{1});
+	}
+
 }
