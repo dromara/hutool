@@ -65,6 +65,7 @@ public class PostgresqlDialect extends AnsiSqlDialect{
 		String tableName = entity.getTableName();
 		if (null != this.wrapper) {
 			tableName = this.wrapper.wrap(tableName);
+			keys = wrapper.wrap(keys);
 		}
 		builder.append("INSERT INTO ").append(tableName)
 				// 字段列表
